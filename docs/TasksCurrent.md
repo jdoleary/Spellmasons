@@ -1,41 +1,49 @@
-- Optimize: targeting spells seem pretty slow in prediction
-- Prevent target snapping, it's frusterating as a user when trying to line up targeting spells
 - Record new trailer footage
+
+# Features
 - animate rend
-- Improve UX for shove so that it's clear when you're not close enough
-# 2022.10.15 Playtest
-- "All targets" copy is confusing if player doesn't understand targeting
 - how to show how much damage a queued spell will do
 - Permanent "you died" screen.
-# 2022.10.12
-- m: dragger cast animation
-- m: Balance dragger
----
-- *: fix save /load unit spawn issue
-    - bug: loading game files somehow results in units at 0,0
-- *: Add save/load to menu
-- m: cooldown instead of mana multiplier scaling
-- m: inventory should show current card cost and cooldown
----
-- larger enemies for variation
-- fix liquid fall in
-- Split sprite sheet for more efficient development
-- Add server history
-
-- This save file is giving me critical errors `saveFile-with-errors.json`
+- cooldown instead of mana multiplier scaling
 - Expanding should take longer to return to base mana like resurrect and summon decoy do
     - Do this with cooldowns
-- Find a way to make randomness fixed (like in spell "Displace" so that it doesn't get different random results on other people's screens
- and so that it wont change after another player casts)
-
-# Prediction issues
-- prediction should factor in standing on pickups, see video
-- **important** movement prediction is off when doing "clone + push" (something to do with the copy being added as a target?)
-# Brad playtest
-- resurrect should take longer to return to base mana
-    - this already is set but it didn't work in brad's playtest... hmm..
+- Add server history
+- inventory should show current card cost and cooldown
+- fix save /load unit spawn issue
+-  Add save/load to menu
+- m: dragger cast animation
+- m: Balance dragger
+# Bugs / Cleaning
+- "All targets" copy is confusing if player doesn't understand targeting
+- bug: loading game files somehow results in units at 0,0
+    - This might be units that I delete with adminmenu
 - bug: saw "this spell will damage you" after heal then end turn immediately
 - **important**: completely destroy the underworld object between playthroughs rather than just cleaning it up
+- fix liquid fall in
+- Find a way to make randomness fixed (like in spell "Displace" so that it doesn't get different random results on other people's screens and so that it wont change after another player casts)
+- This save file is giving me critical errors `saveFile-with-errors.json`
+- Improve UX for shove so that it's clear when you're not close enough
+- bug: inLiquid is lost when load occurs
+- small bugs:
+    - Sometimes it tries to path around things and wastes stamina if there isn't a straight line path
+    - sometimes when you walk you get stuck on a wall and it wastes stamina
+- melee prediction is still off
+    - simplest solution is just to make sure that units cannot do damage to the player if they aren't warning of damage incoming on the start of the turn
+- bug: **important** pressing 'alt' in chrome deselects the window and makes it stop accepting input
+    - This doesn't happen in fullscreen
+    - Test in windowed mode on Electron
+- bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
+    - this is a race condition because I'm still able to move freely after his cast triggers
+- fix fall in liquid so larger things (like rocks or vampires) fall in further so they don't overlap
+- Fix liquid glitches with prebuild liquid sets
+
+## Prediction issues
+- prediction should factor in standing on pickups, see video
+- **important** movement prediction is off when doing "clone + push" (something to do with the copy being added as a target?)
+# Balance 
+- resurrect should take longer to return to base mana
+    - this already is set but it didn't work in brad's playtest... hmm..
+# Content
 - Perks: the more dimentions you add the better!
     - Skill tree
     - Critical chances
@@ -44,7 +52,6 @@
         - even with the difficulty of the next level
     - pseudo class system
     - item that makes your stronger but it randomizes your spawn
-# Content todo
 - Rend
     - new sfx
     - new animation
@@ -54,35 +61,10 @@
 - Suffocate
     - new sfx
     - new animation
-# Tasks
-- bug: inLiquid is lost when load occurs
----
-- bug: I heard priest sfx but no animation and no effect occurred
-- fix fall in liquid so larger things (like rocks or vampires) fall in further so they don't overlap
-- Fix liquid glitches with prebuild liquid sets
----
-- bug: had an incorrect push prediction, see footage
+# Optimization
+- Split sprite sheet for more efficient development
+- Optimize: targeting spells seem pretty slow in prediction
 - optimize: Ihave duplicate units, pickups, and doodads in save due to serailizeForSaving having them in the underworld and extracting them to the top level too
-# Bugs
-- small bugs:
-    - Sometimes it tries to path around things and wastes stamina if there isn't a straight line path
-    - sometimes when you walk you get stuck on a wall and it wastes stamina
-- melee prediction is still off
-    - simplest solution is just to make sure that units cannot do damage to the player if they aren't warning of damage incoming on the start of the turn
-- bug: too many pushes or too fast can result in the unit clipping through walls.
-- bug: **important** pressing 'alt' in chrome deselects the window and makes it stop accepting input
-    - This doesn't happen in fullscreen
-    - Test in windowed mode on Electron
-- bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
-    - this is a race condition because I'm still able to move freely after his cast triggers
-
-# Long Term
-- How does endgame scale now that strength doesn't depend on the levelIndex?
-- What if cards could cost you things other than mana, like health, or even speed?? 0.o
-- Make pickups destructable (even portal - which could spawn in at another location if you destroy it - aim to plesantly suprise players)
-- Security
-    - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
-    - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
 
 ## Stretch Content
 - Add `cooldown` to spells rather than expense scaling
@@ -139,32 +121,23 @@
 - Idea: A spell to sacrifice ally unit immediately
 - Card: Mind Control (changes faction temporarily)
 - Feature: "Soul bind" - bound units share applied effects
-- Spell: A spell like AOE, but adds radius to existing spells
-- Spell: "Last Will" unit drops a potion on death
-- Jump card- to jump over walls
-- vortex card - to pull units in to a center location
 - Content: A spell to destroy corpses
     - and grant you mana, or health, or stamina?
     - corpse as currency
-- Soul capture (1 use, like pokeball)
-    - works for pickups too
 - What if monsters that go through portal come to next level with you, but you don't get more mana after the portal spawns
-- protection (targeting spell)
 - totems
 - auras
 - ricotche
 - task: Spell to trade mana for stamina
 - eagle eye
-- lance for targeting
 - destroy a corpse for mana
 - soul capture (like pokeball)
+    - works for pickups too
 - generic summon (1 for each enemy, does bigger and better enemies depending on stack)
 - explode a corpse (same as bloat?)
 - grow a barrier
 - slow/ cripple: reduce max stamina
 - set fires on board that spreads
-- damage spells:
-    - stomp: more damage the closer they are
 - Tornado: Travells through the map throwing things around (maybe a good enemy ability)
 
 ## Multiplayer Enhancements / issues

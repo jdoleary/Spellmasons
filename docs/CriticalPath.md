@@ -1,8 +1,6 @@
 # Desired Schedule
 - September / October
-    - Due Oct 16: Prepare for multi-user playtesting
-        - Playtest multiplayer again
-        - Fix inventory on small resoltion
+    - Playtest multiplayer again
 - November
     - Package as Electron App
     - Convenient multiplayer lobbying via steam
@@ -11,23 +9,13 @@
     - Cooldowns instead of mana multiplier
 - December / January
     - More content: Spells, enemies, boss, perks
-    - Steamdeck support / Controller Support / Accessability / Localization Language Support
+    - Steamdeck support / Controller Support / Accessability / Localization Language Support / Spellcheck
     - Release
 - Trademark Process - ongoing
 # Critical Path
 - Milestone | **Final Content**
     - Perks
     - resurrection particles
-    - add boulder
-        - movable cover
-        - deals damage when pushed
-    - Need spell effects
-        - aoe
-        - blood curse
-        - chain
-        - pull/push
-    - Liquid Splash Animation
-        - Lava, blood, Water
  Milestone | **Beta Testing** | Planning on October 1
     - Tutorial / Explain prompts based on user actions
     - Optimize game
@@ -43,13 +31,15 @@
     - Send out to testers
     - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
 - Milestone X | **Package as Electron App** | Planning on November 1
+    - Security
+        - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
+        - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
     - Menu for community server selector
     - Allow running local standalone server from inside app
     - Integrate Steam friends for joining the same server
     - [Storage and Persistence](https://cameronnokes.com/blog/how-to-store-user-data-in-electron/)
     - [AutoUpdate](https://github.com/vercel/hazel) Not needed because of updates through steam?
 - Milestone **Strech 1**
-    - Explosive barrels??
     - [Mod support](https://partner.steamgames.com/doc/features/workshop)
     - Hoist spells
         - Logic to avoid fizzle spells
@@ -68,7 +58,8 @@
         - one time: 50/50 chance to incrase max stat or decrease it
         - make 1 random spell permanently more expensive and another permanently cheaper
     - More enemies
-        - Color enemies different colors and give them different behavior. For example, a blue "poisoner" could be like the "smoker" from left4dead
+        - Ghost archer
+        - Bigger Golem
         - Boss enemies
 
 

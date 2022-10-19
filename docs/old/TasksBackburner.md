@@ -1,3 +1,4 @@
+- Make pickups destructable (even portal - which could spawn in at another location if you destroy it - aim to plesantly suprise players)
 - Cannot reproduce: **movement lines are spazzing out on Chrome**
 - Split summoners don't have enough mana to cast
 - **Prediction error with melee on live build!!! 0.117.0**
