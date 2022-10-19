@@ -60,11 +60,7 @@
 - bug: inLiquid is lost when load occurs
 ---
 - bug: I heard priest sfx but no animation and no effect occurred
-- Integrate doodad behavior
-    - Make doodads collidable (take up space)
-    - Make doodads block arrows
-    - fix fall in liquid so larger things (like rocks or vampires) fall in further so they don't overlap
-- Add a fullscreen button to options
+- fix fall in liquid so larger things (like rocks or vampires) fall in further so they don't overlap
 - Fix liquid glitches with prebuild liquid sets
 ---
 - bug: had an incorrect push prediction, see footage
