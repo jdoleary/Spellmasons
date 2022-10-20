@@ -31,8 +31,7 @@
 - bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
     - this is a race condition because I'm still able to move freely after his cast triggers
 - fix fall in liquid so larger things (like rocks or vampires) fall in further so they don't overlap
-- Fix liquid glitches with prebuild liquid sets
-
+- Fix liquid tile glitches with prebuild liquid sets
 ## Prediction issues
 - prediction should factor in standing on pickups, see video
 - **important** movement prediction is off when doing "clone + push" (something to do with the copy being added as a target?)
