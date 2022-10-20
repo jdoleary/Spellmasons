@@ -35,7 +35,7 @@ Pulls the target(s) towards the caster
     },
   },
 };
-const velocity_falloff = 0.93;
+const velocity_falloff = 0.91;
 export async function pull(pushedObject: HasSpace, towards: Vec2, quantity: number, underworld: Underworld, prediction: boolean): Promise<void> {
   // Set the velocity so it's just enough to pull the unit into you
   let velocity = multiply(1 - velocity_falloff, { x: towards.x - pushedObject.x, y: towards.y - pushedObject.y });
