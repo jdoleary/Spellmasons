@@ -7,6 +7,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { Vec2 } from '../jmath/Vec';
 import { distance, lerp } from '../jmath/math';
 import * as config from '../config';
+import { makeBurstParticles } from '../graphics/ParticleCollection';
 
 export const id = 'Burst';
 const maxDamage = 6;
@@ -49,8 +50,9 @@ Stackable.
           for (let unit of targets) {
             const damage = calculateDamage(quantity, state.casterUnit, unit);
             oneOffImage(unit, animationPath, containerSpells, resolve);
-            // const spellEffectImage = oneOffImage(unit, animationPath, containerSpells, resolve);
             Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
+            // Animate:
+            makeBurstParticles(unit, lerp(0.1, 1, damage / maxDamage), prediction);
           }
         } else {
           for (let unit of targets) {

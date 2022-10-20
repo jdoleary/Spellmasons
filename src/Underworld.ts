@@ -67,7 +67,7 @@ import { baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLi
 import { Material } from './Conway';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndexPreventWrap } from './jmath/ArrayUtil';
 import { raceTimeout } from './Promise';
-import { makeScrollDissapearParticles, updateParticlees } from './graphics/Particles';
+import { updateParticlees } from './graphics/Particles';
 import { elInstructions, processNextInQueueIfReady, setupNetworkHandlerGlobalFunctions } from './network/networkHandler';
 import { setupDevGlobalFunctions } from './devUtils';
 import type PieClient from '@websocketpie/client';
@@ -78,6 +78,7 @@ import type { TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
 import { explain, EXPLAIN_MISSED_SCROLL, EXPLAIN_SCROLL, EXPLAIN_WALK } from './graphics/Explain';
 import { calculateGameDifficulty } from './Difficulty';
+import { makeScrollDissapearParticles } from './graphics/ParticleCollection';
 
 export enum turn_phase {
   PlayerTurns,
