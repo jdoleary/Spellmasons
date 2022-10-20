@@ -22,7 +22,7 @@ export enum CardCategory {
   Mana,
   Curses,
   Blessings,
-  Other
+  Soul
 }
 export enum CardRarity {
   COMMON = 'COMMON',

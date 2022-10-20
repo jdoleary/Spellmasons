@@ -15,7 +15,7 @@ const id = 'clone';
 const spell: Spell = {
   card: {
     id,
-    category: CardCategory.Other,
+    category: CardCategory.Soul,
     manaCost: 80,
     healthCost: 0,
     probability: probabilityMap[CardRarity.FORBIDDEN],
