@@ -1,3 +1,4 @@
+- Should it show the upgrade screen if you already have all the spells?
 - Make sure particles like makeBurstParticles get cleaned up
 - Make pickups destructable (even portal - which could spawn in at another location if you destroy it - aim to plesantly suprise players)
 - Cannot reproduce: **movement lines are spazzing out on Chrome**

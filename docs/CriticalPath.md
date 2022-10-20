@@ -16,8 +16,7 @@
 - Milestone | **Final Content**
     - Perks
     - resurrection particles
- Milestone | **Beta Testing** | Planning on October 1
-    - Tutorial / Explain prompts based on user actions
+ Milestone | **Beta Testing**
     - Optimize game
         - setPath is constantly being called by all enemies
         - repelCircleFromLine is used for both unit crowding and wall physics and with wall physics it doesn't need a reference to underworld, that's only needed for unit crowding to make sure they don't crowd each other through walls

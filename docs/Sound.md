@@ -12,3 +12,4 @@
     - Dash
     - Targeting "charging noise"
     - Suffocate
+    - A "glug" sound effect for Last Will dropping potions
