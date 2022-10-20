@@ -15,7 +15,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.COMMON],
-    thumbnail: 'unknown.png',
+    thumbnail: 'spellIconDash.png',
     description: `
 Pulls the caster towards the target(s).
 ${id} must be cast on a target such as a unit or pickup.

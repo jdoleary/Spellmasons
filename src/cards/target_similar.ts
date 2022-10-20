@@ -21,7 +21,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
-    thumbnail: 'unknown.png',
+    thumbnail: 'spellIconTargetSimilar.png',
     requiresFollowingCard: true,
     description: `
 Targets the nearest entity of the same kind as the cast target.

@@ -24,7 +24,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.SPECIAL],
-    thumbnail: 'unknown.png',
+    thumbnail: 'spellIconTargetColumn.png',
     requiresFollowingCard: true,
     description: `
 Adds targets to the spell in a column.
