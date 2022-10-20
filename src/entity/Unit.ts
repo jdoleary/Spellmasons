@@ -346,6 +346,11 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
     }
   }
   setupShaders(loadedunit);
+  const sourceUnit = allUnits[loadedunit.unitSourceId];
+  if (sourceUnit && sourceUnit.init) {
+    // Initialize unit IF unit contains initialization function
+    sourceUnit.init(loadedunit, underworld);
+  }
   // Load in shader uniforms by ONLY setting the uniforms that are saved
   // it is important that the other objects stay exactly the same
   // or else the shader won't render
