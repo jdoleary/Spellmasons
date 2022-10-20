@@ -113,6 +113,73 @@ export function makeManaTrail(start: Vec2, target: Vec2) {
             spawnType: "point"
         }, [texture]));
 }
+export function makeScrollDissapearParticles(position: Vec2, prediction: boolean) {
+    if (prediction) {
+        // Don't show if just a prediction
+        return
+    }
+    const texture = createParticleTexture();
+    if (!texture) {
+        console.error('No texture for makeScrollDissapearParticles')
+        return
+    }
+    const config =
+        particles.upgradeConfig({
+            autoUpdate: true,
+            "alpha": {
+                "start": 1,
+                "end": 0
+            },
+            "scale": {
+                "start": 0.5,
+                "end": 2.0,
+                "minimumScaleMultiplier": 1
+            },
+            "color": {
+                "start": "#bd9a71",
+                "end": "#573e3d"
+            },
+            "speed": {
+                "start": 100,
+                "end": 50,
+                "minimumSpeedMultiplier": 1
+            },
+            "acceleration": {
+                "x": 0,
+                "y": -100
+            },
+            "maxSpeed": 0,
+            "startRotation": {
+                "min": -45,
+                "max": -135
+            },
+            "noRotation": false,
+            "rotationSpeed": {
+                "min": 0,
+                "max": 0
+            },
+            "lifetime": {
+                "min": 0.4,
+                "max": 0.8
+            },
+            "blendMode": "normal",
+            "frequency": 0.01,
+            "emitterLifetime": 0.5,
+            "maxParticles": 500,
+            "pos": {
+                "x": 0,
+                "y": 0
+            },
+            "addAtBack": false,
+            "spawnType": "circle",
+            "spawnCircle": {
+                "x": 0,
+                "y": 0,
+                "r": 15
+            }
+        }, [texture]);
+    simpleEmitter(position, config);
+}
 
 
 export function updateParticlees(delta: number, bloods: BloodParticle[], seedrandom: prng, underworld: Underworld) {

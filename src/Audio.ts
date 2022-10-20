@@ -54,6 +54,7 @@ export const sfx: { [key: string]: string } = {
     purify: './sound/sfx-from-val/purify.wav',
     push: './sound/sfx/push.wav',
     resurrect: './sound/sfx-from-val/resurrect.wav',
+    scroll_disappear: './sound/sfx/RPG3_FireMagicFlameThrower_P3_End01.wav',
     shield: './sound/sfx-from-val/shield.wav',
     summonDecoy: './sound/sfx-from-val/summon-decoy.wav',
     summonerDeath: './sound/sfx-from-val/summoner-death.wav',

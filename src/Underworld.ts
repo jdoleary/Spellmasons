@@ -67,7 +67,7 @@ import { baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLi
 import { Material } from './Conway';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndexPreventWrap } from './jmath/ArrayUtil';
 import { raceTimeout } from './Promise';
-import { updateParticlees } from './graphics/Particles';
+import { makeScrollDissapearParticles, updateParticlees } from './graphics/Particles';
 import { elInstructions, processNextInQueueIfReady, setupNetworkHandlerGlobalFunctions } from './network/networkHandler';
 import { setupDevGlobalFunctions } from './devUtils';
 import type PieClient from '@websocketpie/client';
@@ -1743,6 +1743,8 @@ export default class Underworld {
           await p.onTurnsLeftDone(p);
         }
         if (p.name == Pickup.CARDS_PICKUP_NAME) {
+          playSFXKey('scroll_disappear');
+          makeScrollDissapearParticles(p, false);
           explain(EXPLAIN_MISSED_SCROLL);
         }
         // Remove pickup
