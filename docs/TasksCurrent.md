@@ -20,7 +20,6 @@
 - Find a way to make randomness fixed (like in spell "Displace" so that it doesn't get different random results on other people's screens and so that it wont change after another player casts)
 - This save file is giving me critical errors `saveFile-with-errors.json`
 - Improve UX for shove so that it's clear when you're not close enough
-- bug: inLiquid is lost when load occurs
 - small bugs:
     - Sometimes it tries to path around things and wastes stamina if there isn't a straight line path
     - sometimes when you walk you get stuck on a wall and it wastes stamina

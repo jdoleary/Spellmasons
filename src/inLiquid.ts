@@ -4,6 +4,7 @@ import { isUnit, takeDamage } from "./entity/Unit";
 import { addMask, removeMask } from "./graphics/Image";
 import type Underworld from "./Underworld";
 
+export const LIQUID_MASK = 'liquid-mask';
 export function add(entity: HasSpace, underworld: Underworld, prediction: boolean) {
     // Can't set inLiquid if they are already in liquid
     if (!entity.inLiquid) {
@@ -12,7 +13,7 @@ export function add(entity: HasSpace, underworld: Underworld, prediction: boolea
             takeDamage(entity, lavaDamage, undefined, underworld, prediction);
         }
         if (entity.image) {
-            addMask(entity.image, 'liquid-mask');
+            addMask(entity.image, LIQUID_MASK);
         }
         if (!prediction) {
             playSFXKey(`fallIntoLiquid-${underworld.lastLevelCreated?.biome}`);

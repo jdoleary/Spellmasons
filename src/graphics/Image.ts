@@ -5,6 +5,7 @@ import Subsprites from '../Subsprites';
 import type { Vec2 } from "../jmath/Vec";
 import * as config from '../config';
 import { raceTimeout } from '../Promise';
+import { add, LIQUID_MASK } from '../inLiquid';
 
 export interface HasImage {
   image: IImageAnimated;
@@ -326,7 +327,7 @@ export function setPosition(image: IImageAnimated | undefined, pos: Vec2) {
   image.sprite.x = pos.x;
   image.sprite.y = pos.y;
 }
-const EXCLUDE_WARN_MISSING_SUBSPRITE = ['playerAttack'];
+const EXCLUDE_WARN_MISSING_SUBSPRITE = ['playerAttack', LIQUID_MASK];
 export function addSubSprite(image: IImageAnimated | undefined, imageName: string): PIXI.AnimatedSprite | PIXI.Sprite | undefined {
   if (!image) {
     return;
@@ -351,6 +352,10 @@ export function addSubSprite(image: IImageAnimated | undefined, imageName: strin
       // the false error reporting.
       if (!EXCLUDE_WARN_MISSING_SUBSPRITE.some(exclude => imageName.includes(exclude))) {
         console.error("Missing subsprite data for imageName", imageName)
+      }
+      // Special handling for restoring liquid mask since it isn't a regular subsprite
+      if (imageName == LIQUID_MASK) {
+        addMask(image, LIQUID_MASK);
       }
     }
   }
