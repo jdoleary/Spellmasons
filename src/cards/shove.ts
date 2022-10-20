@@ -17,7 +17,7 @@ const spell: Spell = {
     id,
     category: CardCategory.Movement,
     supportQuantity: true,
-    sfx: 'push',
+    sfx: 'shove',
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
