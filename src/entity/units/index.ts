@@ -50,8 +50,7 @@ export function registerUnits() {
   register(priest);
   register(poisoner);
   register(vampire);
-  // register(dragger);
-
+  register(dragger);
   register(playerUnit);
   register(decoy);
 }

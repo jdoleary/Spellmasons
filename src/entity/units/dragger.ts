@@ -1,3 +1,4 @@
+import type * as PIXI from 'pixi.js';
 import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import * as Unit from '../Unit';
@@ -6,6 +7,8 @@ import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { bloodDragger } from '../../graphics/ui/colors';
 import type Underworld from '../../Underworld';
 import { pull } from '../../cards/pull';
+import { containerProjectiles } from '../../graphics/PixiUtils';
+import { getAngleBetweenVec2s, Vec2 } from '../../jmath/Vec';
 
 const manaCostToCast = 15;
 const unit: UnitSource = {
@@ -68,6 +71,7 @@ const unit: UnitSource = {
           // Poisoners attack or move, not both; so clear their existing path
           unit.path = undefined;
           await Unit.playAnimation(unit, unit.animations.attack);
+          await animateDrag(unit, chosenUnit);
           await pull(chosenUnit, unit, 1, underworld, false);
         } else {
           // Only move if not in range
@@ -78,4 +82,73 @@ const unit: UnitSource = {
     }
   },
 };
+export async function animateDrag(start: Vec2, end: Vec2) {
+  if (!globalThis.pixi) {
+    return;
+  }
+  let count = 0;
+
+  const NUM_OF_POINTS = 20;
+  const ropeLength = math.distance(start, end) / NUM_OF_POINTS;
+
+  const points: PIXI.Point[] = [];
+
+  for (let i = 0; i < NUM_OF_POINTS; i++) {
+    points.push(new globalThis.pixi.Point(0, 0));
+  }
+
+  const strip = new globalThis.pixi.SimpleRope(globalThis.pixi.Texture.from('draggerMagic.png'), points);
+
+  strip.x = start.x;
+  strip.y = start.y;
+  // Make strip grow towards target
+  strip.rotation = getAngleBetweenVec2s(start, end);
+
+  containerProjectiles?.addChild(strip);
+  return new Promise<void>((resolve) => {
+    // start animating
+    requestAnimationFrame(animate);
+    const waveHeight = 10;
+    const endCount = 10;
+    let retracting = false;
+
+    function animate() {
+      if (retracting) {
+        count -= 0.5;
+      } else {
+        count += 0.2;
+      }
+      if (count >= endCount) {
+        resolve();
+        retracting = true;
+      }
+      const animatedLength = math.lerp(0, ropeLength, count / endCount);
+
+      for (let i = 0; i < points.length; i++) {
+        const point = points[i];
+        if (point) {
+          point.y = Math.sin((i * 0.5) + count) * waveHeight * i / 4;
+          point.x = i * animatedLength;
+          // Pull target back with last point
+          // if (retracting) {
+          //   const isLastPoint = i == points.length - 1;
+          //   if (isLastPoint) {
+          //     end.x = point.x;
+          //     end.y = point.y;
+          //   }
+          // }
+        }
+      }
+
+      if (retracting && count <= 0) {
+        // clean up
+        containerProjectiles?.removeChild(strip);
+
+      } else {
+        // keep animating
+        requestAnimationFrame(animate);
+      }
+    }
+  });
+}
 export default unit;

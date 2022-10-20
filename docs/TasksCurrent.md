@@ -11,9 +11,9 @@
 - inventory should show current card cost and cooldown
 - fix save /load unit spawn issue
 -  Add save/load to menu
-- m: dragger cast animation
 - m: Balance dragger
 # Bugs / Cleaning
+- bug: Dragger missing color filter after load, looks like poisoner
 - "All targets" copy is confusing if player doesn't understand targeting
 - bug: loading game files somehow results in units at 0,0
     - This might be units that I delete with adminmenu
