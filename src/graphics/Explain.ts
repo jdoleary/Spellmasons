@@ -1,3 +1,4 @@
+import { id } from '../cards/slash';
 import * as storage from '../storage';
 import Jprompt, { PromptArgs } from './Jprompt';
 import keyMapping, { keyToHumanReadable } from './ui/keyMapping';
@@ -58,6 +59,7 @@ export const EXPLAIN_MISSED_SCROLL = 'Missing Scroll Pickups';
 export const EXPLAIN_LIQUID_DAMAGE = 'Liquid Damage';
 export const EXPLAIN_BLESSINGS = 'Blessings';
 export const EXPLAIN_REMOVE_SPELLS = 'Remove Spells';
+export const EXPLAIN_FORGE_ORDER = 'Spell Forge Order';
 interface ExplainData {
     condition?: () => boolean;
     // Returns args to pass into Jprompt
@@ -144,6 +146,13 @@ Click and drag a spell to your toolbar to make it easily accessible.`, yesText: 
             imageSrc: 'images/explain/delete-queued-spells.gif', text: `Click on a spell to remove it or press ${keyToHumanReadable(keyMapping.dequeueSpell)} to remove the last spell.`, yesText: 'Okay'
         })
     },
+    [EXPLAIN_FORGE_ORDER]: {
+        prompt: () => ({
+            imageSrc: 'images/explain/forge-order.gif', text: `The order in which spells are forged may result in a different outcome.
+    
+In this example, "Connect" + "Push" + "${id}" will damage you instead of the 2nd Golem; whereas reversing the order of "Connect" and "Push" - so that "Push" comes first - will cause it to connect to the 2nd Golem instead of you.`, yesText: 'Okay'
+        })
+    },
 }
 globalThis.explainKeys = Object.keys(explainMap);
 export const autoExplains = [
@@ -155,7 +164,8 @@ export const autoExplains = [
     EXPLAIN_STACK,
     EXPLAIN_ATTENTION_MARKER_RANGED,
     EXPLAIN_CAMERA,
-    EXPLAIN_REMOVE_SPELLS
+    EXPLAIN_REMOVE_SPELLS,
+    EXPLAIN_FORGE_ORDER
 ]
 export function autoExplain() {
     for (let e of autoExplains) {
