@@ -13,12 +13,12 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
-    thumbnail: 'unknown.png',
+    thumbnail: 'spellIconPlusRadius.png',
     requiresFollowingCard: true,
     description: `
 Increases the radius of the impact of other spells.
 Works well with Bloat, Contageous, and Targeting Spells.
-Note ${id} only affects spells that are forged AFTER it.
+Note: ${id} only affects spells that are forged AFTER it.
 For example: ${id} then Connect will increase the Connect Radius.
     `,
     allowNonUnitTarget: true,
