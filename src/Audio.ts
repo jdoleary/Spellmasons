@@ -14,6 +14,7 @@ export const sfx: { [key: string]: string } = {
     click: './sound/sfx-from-val/click.wav',
     clone: './sound/sfx-from-val/clone.wav',
     contageousSplat: './sound/sfx-from-val/contageous.wav',
+    dash: './sound/sfx/RPG3_WindMagic_Cast02v3_P2_Shoot.wav',
     debilitate: './sound/sfx-from-val/debilitate.wav',
     decoyDeath: './sound/sfx/decoyDeath.wav',
     deny_range: './sound/sfx-from-val/deny_range.wav',
