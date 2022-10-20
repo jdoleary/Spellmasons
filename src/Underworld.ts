@@ -2751,7 +2751,7 @@ export default class Underworld {
     return {
       ...rest,
       players: this.players.map(Player.serialize),
-      units: this.units.map(Unit.serialize),
+      units: this.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
       pickups: this.pickups.map(Pickup.serialize),
       doodads: this.doodads.map(Doodad.serialize),
       // the state of the Random Number Generator

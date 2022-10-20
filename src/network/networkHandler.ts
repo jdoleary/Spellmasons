@@ -550,7 +550,7 @@ export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
       underworld: underworld.serializeForSaving(),
       phase: underworld.turn_phase,
       pickups: underworld.pickups.map(Pickup.serialize),
-      units: underworld.units.map(Unit.serialize),
+      units: underworld.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
       players: underworld.players.map(Player.serialize),
       doodads: underworld.doodads.map(Doodad.serialize),
     };
