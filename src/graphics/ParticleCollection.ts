@@ -4,7 +4,79 @@ import { rgb2hex } from '@pixi/utils';
 import { easeOutCubic } from '../jmath/Easing';
 import { lerp } from '../jmath/math';
 import { Vec2 } from '../jmath/Vec';
+import * as config from '../config';
 import { createHardCircleParticleTexture, createParticleTexture, simpleEmitter } from './Particles';
+export function makeResurrectParticles(position: Vec2, prediction: boolean) {
+    if (prediction) {
+        // Don't show if just a prediction
+        return
+    }
+    const texture = createParticleTexture();
+    if (!texture) {
+        console.error('No texture for particles')
+        return
+    }
+    const particleConfig =
+        particles.upgradeConfig({
+            autoUpdate: true,
+            "alpha": {
+                "start": 1,
+                "end": 0
+            },
+            "scale": {
+                "start": 0.25,
+                "end": 0.25,
+                "minimumScaleMultiplier": 1
+            },
+            "color": {
+                "start": "#ffffff",
+                "end": "#ffffff"
+            },
+            "speed": {
+                "start": 1,
+                "end": 1,
+                "minimumSpeedMultiplier": 1
+            },
+            "acceleration": {
+                "x": 0,
+                "y": -400
+            },
+            "maxSpeed": 0,
+            "startRotation": {
+                "min": 90,
+                "max": 90
+            },
+            "noRotation": false,
+            "rotationSpeed": {
+                "min": 0,
+                "max": 0
+            },
+            "lifetime": {
+                "min": 0.81,
+                "max": 0.4
+            },
+            "blendMode": "normal",
+            "frequency": 0.004,
+            // Matches the resurrect animation duration
+            "emitterLifetime": 0.7,
+            "maxParticles": 500,
+            "pos": {
+                "x": 0,
+                "y": 0
+            },
+            "addAtBack": false,
+            "spawnType": "rect",
+            "spawnRect": {
+                "x": -config.COLLISION_MESH_RADIUS / 2,
+                "y": 0,
+                "w": config.COLLISION_MESH_RADIUS,
+                "h": 20
+            }
+
+        }, [texture]);
+    simpleEmitter(position, particleConfig);
+
+}
 // Max final scale should be 1
 export function makeBurstParticles(position: Vec2, finalScale: number, prediction: boolean) {
     if (prediction) {
@@ -36,7 +108,7 @@ export function makeBurstParticles(position: Vec2, finalScale: number, predictio
                 lerp(startColor[1] || 0, endColor[1] || 0, lerpValue),
                 lerp(startColor[2] || 0, endColor[2] || 0, lerpValue),
             ])).toString(16)}`;
-            const config =
+            const particleConfig =
                 particles.upgradeConfig({
                     autoUpdate: true,
                     "alpha": {
@@ -86,7 +158,7 @@ export function makeBurstParticles(position: Vec2, finalScale: number, predictio
                     "addAtBack": true,
                     "spawnType": "point",
                 }, [texture]);
-            simpleEmitter(position, config);
+            simpleEmitter(position, particleConfig);
         }, ring * millisBetweenRings);
     }
 }
@@ -100,7 +172,7 @@ export function makeScrollDissapearParticles(position: Vec2, prediction: boolean
         console.error('No texture for makeScrollDissapearParticles')
         return
     }
-    const config =
+    const particleConfig =
         particles.upgradeConfig({
             autoUpdate: true,
             "alpha": {
@@ -155,5 +227,5 @@ export function makeScrollDissapearParticles(position: Vec2, prediction: boolean
                 "r": 15
             }
         }, [texture]);
-    simpleEmitter(position, config);
+    simpleEmitter(position, particleConfig);
 }

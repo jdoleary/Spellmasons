@@ -15,7 +15,6 @@
 # Critical Path
 - Milestone | **Final Content**
     - Perks
-    - resurrection particles
  Milestone | **Beta Testing**
     - Optimize game
         - setPath is constantly being called by all enemies
