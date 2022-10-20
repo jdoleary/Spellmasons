@@ -86,7 +86,7 @@ Multiple stacks of ${id} will increase the amount of damage done when the unit e
       } else {
         playSFXKey('bloatExplosion');
       }
-      makeBloatExplosionWithParticles(unit, prediction);
+      makeBloatExplosionWithParticles(unit, adjustedRadius / baseRadius, prediction);
       underworld.getUnitsWithinDistanceOfTarget(
         unit,
         adjustedRadius,
@@ -108,7 +108,7 @@ Multiple stacks of ${id} will increase the amount of damage done when the unit e
     }
   }
 };
-function makeBloatExplosionWithParticles(position: Vec2, prediction: boolean) {
+function makeBloatExplosionWithParticles(position: Vec2, size: number, prediction: boolean) {
   if (prediction) {
     // Don't show if just a prediction
     return
@@ -153,8 +153,8 @@ function makeBloatExplosionWithParticles(position: Vec2, prediction: boolean) {
         "max": 300
       },
       "lifetime": {
-        "min": 0.3,
-        "max": 0.3
+        "min": 0.3 * size,
+        "max": 0.3 * size
       },
       "blendMode": "normal",
       "frequency": 0.0001,
