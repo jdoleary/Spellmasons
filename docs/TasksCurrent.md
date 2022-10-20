@@ -9,7 +9,6 @@
     - Do this with cooldowns
 - Add server history
 - inventory should show current card cost and cooldown
-- fix save /load unit spawn issue
 -  Add save/load to menu
 # Bugs / Cleaning
 - "All targets" copy is confusing if player doesn't understand targeting

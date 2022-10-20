@@ -499,7 +499,11 @@ export async function runPredictions(underworld: Underworld) {
       const target = mousePos;
       const casterUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id)
       if (!casterUnit) {
-        console.error('Critical Error, caster unit not found');
+        if (underworld.unitsPrediction.length) {
+          console.error('Critical Error, caster unit not found');
+        } else {
+          // unitsPrediction is empty, this can happen after a load()
+        }
         return;
       }
       const cardIds = CardUI.getSelectedCardIds();

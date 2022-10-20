@@ -260,6 +260,7 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
     case MESSAGE_TYPES.LOAD_GAME_STATE:
       // Clean up old game state
       if (underworld) {
+        console.log('teardown: Clean up underworld in preparation for loading new gamestate.')
         underworld.cleanup();
       }
       handleLoadGameState(payload, underworld);
@@ -567,10 +568,15 @@ export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
   globalThis.load = async (title: string) => {
     const savedGameString = storage.get(savePrefix + title);
     if (savedGameString) {
-
-      await globalThis.startSingleplayer?.();
+      console.log('LOAD: connectToSingleplayer in preparation for load');
+      if (globalThis.connectToSingleplayer) {
+        await globalThis.connectToSingleplayer();
+      } else {
+        console.error('Unexpected: Attempting to load but globalThis.connectToSingleplayer is undefined');
+      }
 
       const { underworld: savedUnderworld, phase, units, players, pickups, doodads } = JSON.parse(savedGameString);
+      console.log('LOAD: send LOAD_GAME_STATE');
       underworld.pie.sendData({
         type: MESSAGE_TYPES.LOAD_GAME_STATE,
         underworld: savedUnderworld,

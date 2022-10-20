@@ -74,6 +74,9 @@ declare global {
     var volume: undefined | number;
     var volumeMusic: undefined | number;
     var volumeGame: undefined | number;
+    // connectToSingleplayer connects pieclient in solomode, it is called when loading a game
+    // or from startSingleplayer
+    var connectToSingleplayer: undefined | (() => Promise<void>);
     var startSingleplayer: undefined | (() => Promise<void>);
     var startMultiplayer: undefined | ((wsPieUrl: string) => Promise<void>);
     // Used to ensure that the current client's turn doesn't end while they are still walking

@@ -1552,6 +1552,11 @@ export default class Underworld {
     // that might prevent the upgrade screen from showing for some users in rare circumstances.
     // Better to have the upgrade screen tied to the network message.
     // Note: Upgrades must come AFTER resetPlayerForNextLevel, see commit for explanation
+    // ---
+    // Error note: If this function is logging an error it may be in the situation when
+    // a level is created during a LOAD in which case the player isn't synced yet.
+    // It may be okay to squelch that error in that specific case (when LOADing a save file)
+    // But for now I'll let it stand and leave this comment here for context.
     this.showUpgrades();
     // Reset diedDuringLevel now that we are starting a new level,
     // this must be called AFTER showUpgrades so that the players

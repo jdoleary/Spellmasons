@@ -190,19 +190,25 @@ export function setupPieAndUnderworld() {
     globalThis.pieDisconnect = pie.disconnect.bind(pie);
 
     globalThis.joinRoom = room_info => joinRoom(underworld, room_info);
-    globalThis.startSingleplayer = function startSingleplayer() {
-      console.log('Start Game: Attempt to start the game')
+    function connectToSingleplayer() {
       document.body?.classList.toggle('loading', true);
       return new Promise<void>((resolve) => {
         // setTimeout allows the UI to refresh before locking up the CPU with
         // heavy level generation code
         setTimeout(() => {
           connect_to_wsPie_server(undefined, underworld).then(() => {
-            underworld.lastLevelCreated = underworld.generateLevelDataSyncronous(0);
             joinRoom(underworld).then(resolve);
-
           })
         }, 10)
+      });
+
+    }
+    globalThis.connectToSingleplayer = connectToSingleplayer;
+    globalThis.startSingleplayer = function startSingleplayer() {
+      console.log('Start Game: Attempt to start the game')
+      return connectToSingleplayer().then(() => {
+        // Create first level
+        underworld.lastLevelCreated = underworld.generateLevelDataSyncronous(0);
       });
     }
     globalThis.setMenu?.('PLAY');
