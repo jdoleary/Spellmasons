@@ -1,6 +1,8 @@
 # Desired Schedule
 - September / October
     - Playtest multiplayer again
+    - Get Trailer Up
+    - Start Marketing
 - November
     - Package as Electron App
     - Convenient multiplayer lobbying via steam
@@ -8,14 +10,24 @@
     - [Beta Testing](https://partner.steamgames.com/doc/store/testing)
     - Cooldowns instead of mana multiplier
 - December / January
-    - More content: Spells, enemies, boss, perks
+    - More content: enemies, boss, perks
     - Steamdeck support / Controller Support / Accessability / Localization Language Support / Spellcheck
     - Release
 - Trademark Process - ongoing
 # Critical Path
-- Milestone | **Final Content**
-    - Perks
- Milestone | **Beta Testing**
+- Milestone | **More Enemies**
+    - More enemies
+        - Bigger Golem
+            - slam into the ground that does cone damage
+        - Ghost archer
+        - Lobber?
+        - Priest
+        - Summoner
+        - Vampire
+        - Boss enemies (bigger versions of common enemies)
+        - Mini bosses
+            - 2x size, 4x stats
+- Milestone | **Beta Testing**
     - Optimize game
         - setPath is constantly being called by all enemies
         - repelCircleFromLine is used for both unit crowding and wall physics and with wall physics it doesn't need a reference to underworld, that's only needed for unit crowding to make sure they don't crowd each other through walls
@@ -24,6 +36,7 @@
         - Check ImmediateModeSprites for leaks
         - Support huge numbers of mobs (100? 500? 1000?)
             - Profile and figure out where the weak points are
+        - Saw slowdown with "+ Radius" * 4 then Bloat, then Slice
     - Build following
     - Make survey
     - Send out to testers
@@ -55,11 +68,6 @@
         - % chance to freeze on damage
         - one time: 50/50 chance to incrase max stat or decrease it
         - make 1 random spell permanently more expensive and another permanently cheaper
-    - More enemies
-        - Ghost archer
-        - Bigger Golem
-        - Boss enemies
-
 
 ## Definition of Done
 - DONE Stable Multiplayer
@@ -69,19 +77,3 @@
 - Packaged in Electron App
 - Able to loop the game indefinitely with satisfying difficulty curve
 - Enough random elements that different playthroughs feel somewhat unique
-
-## Thoughts
-Don't get stuck on feature creep.  Finish the game and get it out so you can move on
-
-I will succeed with iterating on making many games similar to each other because I will continue to get better at them.  I must prioritize shipping and use hard deadlines to cut features so I don't get stuck with a forever project.
-
-## Advice from Elon:
-1. Make your requirements less dumb.  Everyone is wrong sometimes even smart people, and your requirements are definitely dumb
-2. Try very hard to delete the part or process.  If you're not occasionally adding things back in then you're not deleting enough.
-3. Simplify or optimize.  Note: It's the third step for a reason. Possibly the most common error of a smart engineer is to optimize a thing that should not exist.
-4. Accelerate cycle time.  You're moving too slowly, go faster.
-5. Automate
-
-## Advice from GMTK:
-- Players must be rewarded or forced to do something risky and fun or they'll do something easy and boring.
-- If something is at the heart of your game, it needs to shine through in every aspect.

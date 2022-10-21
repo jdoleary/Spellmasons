@@ -1,4 +1,7 @@
 - Record new trailer footage
+- Minibosses
+    - fix z-index
+    - fix attention marker placement due to scale
 
 # Features
 - animate rend
@@ -11,6 +14,7 @@
 - inventory should show current card cost and cooldown
 -  Add save/load to menu
 # Bugs / Cleaning
+- bug: Splitlimit is not working if you cast one at a time
 - You can't close popups on 1080x764 resolution
 - "All targets" copy is confusing if player doesn't understand targeting
 - bug: loading game files somehow results in units at 0,0
