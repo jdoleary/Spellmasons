@@ -47,7 +47,7 @@ Each stack of this spell will target an additional entity.
           // @ts-ignore Find similar units by unitSourceId, find similar pickups by name
           .filter(t => {
             if (isUnit(target)) {
-              return isUnit(t) && t.unitSourceId == target.unitSourceId;
+              return isUnit(t) && t.unitSourceId == target.unitSourceId && t.alive == target.alive;
             } else if (isPickup(target)) {
               return isPickup(t) && t.name == target.name;
             } else if (isDoodad(target)) {
