@@ -1,7 +1,5 @@
 - Record new trailer footage
 - Minibosses
-    - fix z-index
-
 # Features
 - animate rend
 - how to show how much damage a queued spell will do

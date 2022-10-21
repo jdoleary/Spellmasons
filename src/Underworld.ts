@@ -74,7 +74,7 @@ import type PieClient from '@websocketpie/client';
 import { makeForcePush } from './cards/push';
 import { createVisualLobbingProjectile } from './entity/Projectile';
 import { isOutOfRange } from './PlayerUtils';
-import type { TilingSprite } from 'pixi.js';
+import type { DisplayObject, TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
 import { explain, EXPLAIN_MISSED_SCROLL, EXPLAIN_SCROLL, EXPLAIN_WALK } from './graphics/Explain';
 import { calculateGameDifficulty } from './Difficulty';
@@ -670,7 +670,9 @@ export default class Underworld {
       }
     }
     // Sort unit sprites visually by y position (like "z-index")
-    containerUnits?.children.sort((a: any, b: any) => a.y - b.y)
+    containerUnits?.children.sort((a: DisplayObject, b: DisplayObject) => {
+      return (a.y + config.UNIT_SIZE_RADIUS * a.scale.y) - (b.y + config.UNIT_SIZE_RADIUS * b.scale.y)
+    });
 
     updateCameraPosition(this);
     this.drawEnemyAttentionMarkers();

@@ -10,6 +10,9 @@ export const RIGHT_CLICK_DOUBLE_DISTANCE_THRESHOLD = 30;
 export const PLAYER_BASE_HEALTH = 4;
 export const UNIT_MOVE_SPEED = 0.15;
 export const COLLISION_MESH_RADIUS = 32;
+// Though the size of the images for units are generally 64x64, the unit doesn't take up the full height
+// and the unit is generally 50px tall.
+export const UNIT_SIZE_RADIUS = 50 / 2;
 // Caution: Changing this may make scroll pickups that spawn in liquid
 // due to units falling in liquid unobtainable without movement spells.
 // SELECTABLE_RADIUS determines the radius of both pickups and 
