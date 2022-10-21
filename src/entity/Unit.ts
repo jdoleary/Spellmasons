@@ -998,11 +998,11 @@ export function makeMiniboss(unit: IUnit) {
   unit.isMiniboss = true;
   unit.name = `${unit.unitSourceId} MiniBoss`;
   if (unit.image) {
-    unit.image.sprite.scale.x = 2;
-    unit.image.sprite.scale.y = 2;
+    unit.image.sprite.scale.x = config.UNIT_MINIBOSS_SCALE_MULTIPLIER;
+    unit.image.sprite.scale.y = config.UNIT_MINIBOSS_SCALE_MULTIPLIER;
   }
-  unit.radius *= 2;
-  unit.moveSpeed *= 2;
+  unit.radius *= config.UNIT_MINIBOSS_SCALE_MULTIPLIER;
+  unit.moveSpeed *= config.UNIT_MINIBOSS_SCALE_MULTIPLIER;
   unit.healthMax *= config.UNIT_MINIBOSS_HEALTH_MULTIPLIER;
   unit.health = unit.healthMax;
   unit.manaMax *= config.UNIT_MINIBOSS_HEALTH_MULTIPLIER;
