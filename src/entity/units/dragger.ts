@@ -82,6 +82,8 @@ const unit: UnitSource = {
     }
   },
 };
+const forwardSpeed = 0.2;
+const backwardSpeed = 0.5;
 export async function animateDrag(start: Vec2, end: Vec2) {
   if (!globalThis.pixi) {
     return;
@@ -114,9 +116,9 @@ export async function animateDrag(start: Vec2, end: Vec2) {
 
     function animate() {
       if (retracting) {
-        count -= 0.5;
+        count -= backwardSpeed;
       } else {
-        count += 0.2;
+        count += forwardSpeed;
       }
       if (count >= endCount) {
         resolve();
@@ -127,7 +129,7 @@ export async function animateDrag(start: Vec2, end: Vec2) {
       for (let i = 0; i < points.length; i++) {
         const point = points[i];
         if (point) {
-          point.y = Math.sin((i * 0.5) + count) * waveHeight * i / 4;
+          point.y = Math.sin((i * 0.5) + count) * waveHeight * i / 8;
           point.x = i * animatedLength;
           // Pull target back with last point
           // if (retracting) {
