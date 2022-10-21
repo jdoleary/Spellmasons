@@ -1,6 +1,5 @@
 - Record new trailer footage
 - Insufficient health text is too big when zoomed in
-- blanace: miniboss summoner summons too frequently
 # Features
 - animate rend
 - how to show how much damage a queued spell will do

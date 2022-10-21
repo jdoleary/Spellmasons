@@ -1005,9 +1005,6 @@ export function makeMiniboss(unit: IUnit) {
   unit.moveSpeed *= config.UNIT_MINIBOSS_SCALE_MULTIPLIER;
   unit.healthMax *= config.UNIT_MINIBOSS_HEALTH_MULTIPLIER;
   unit.health = unit.healthMax;
-  unit.manaMax *= config.UNIT_MINIBOSS_HEALTH_MULTIPLIER;
-  unit.mana = unit.manaMax;
-  unit.manaPerTurn *= config.UNIT_MINIBOSS_HEALTH_MULTIPLIER;
   unit.damage *= config.UNIT_MINIBOSS_DAMAGE_MULTIPLIER;
 }
 // Makes a copy of the unit's data suitable for 
