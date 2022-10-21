@@ -1,5 +1,4 @@
 - Record new trailer footage
-- Minibosses
 # Features
 - animate rend
 - how to show how much damage a queued spell will do
@@ -14,8 +13,6 @@
 - bug: Splitlimit is not working if you cast one at a time
 - You can't close popups on 1080x764 resolution
 - "All targets" copy is confusing if player doesn't understand targeting
-- bug: loading game files somehow results in units at 0,0
-    - This might be units that I delete with adminmenu
 - bug: saw "this spell will damage you" after heal then end turn immediately
 - **important**: completely destroy the underworld object between playthroughs rather than just cleaning it up
 - fix liquid fall in
