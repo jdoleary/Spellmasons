@@ -1,4 +1,8 @@
 - Record new trailer footage
+- Target similar should check for alive status
+- Press z to make view follow you should dissapear with toggle UI
+- Insufficient health text is too big when zoomed in
+- blanace: miniboss summoner summons too frequently
 # Features
 - animate rend
 - how to show how much damage a queued spell will do
@@ -10,6 +14,10 @@
 - inventory should show current card cost and cooldown
 -  Add save/load to menu
 # Bugs / Cleaning
+- **important** bug: "fall out of liquid" can kick you into a wall's collision area
+    - Maybe use forceMove instead of a teleport so they don't go through walls
+- bug: health bars disappear when cone prediction is up
+- bug: push then cone triggered in wrong location, it should've triggered at the push location
 - bug: Splitlimit is not working if you cast one at a time
 - You can't close popups on 1080x764 resolution
 - "All targets" copy is confusing if player doesn't understand targeting
