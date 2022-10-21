@@ -23,7 +23,6 @@ export interface UnitDamage {
   damageTaken: number;
 
 }
-const animationPath = 'spell-effects/spellHurtCuts';
 const spell: Spell = {
   card: {
     id,
@@ -34,7 +33,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconBurst.png',
-    animationPath,
+    animationPath: '',
     sfx: 'rend',
     description: `
 Deals more damage based how close the target is to the caster.
@@ -49,7 +48,6 @@ Stackable.
           playDefaultSpellSFX(card, prediction);
           for (let unit of targets) {
             const damage = calculateDamage(quantity, state.casterUnit, unit);
-            oneOffImage(unit, animationPath, containerSpells, resolve);
             Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
             // Animate:
             makeBurstParticles(unit, lerp(0.1, 1, damage / maxDamage), prediction);
