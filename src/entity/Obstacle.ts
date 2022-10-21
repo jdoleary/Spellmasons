@@ -83,16 +83,15 @@ export function findSafeFallInPoint(currentPosition: Vec2, nextPosition: Vec2, u
 
 }
 // Prevent entity from being inLiquid but overlapping the non-liquid edge
-function fallInToSafeDistanceFromEdge(entity: HasSpace, poly: Polygon2) {
+function fallInOrOutToSafeDistanceFromEdge(entity: HasSpace, poly: Polygon2) {
   const lineSegments = toLineSegments(poly);
   for (let ls of lineSegments) {
     const intersection = findWherePointIntersectLineSegmentAtRightAngle(entity, ls);
     if (intersection) {
-      // Caution: this may not work on headless server since headless server doesn't have scale
-      const radius = config.COLLISION_MESH_RADIUS * (entity.image?.sprite.scale.x || 1)
+      const radius = config.COLLISION_MESH_RADIUS;
       if (distance(intersection, entity) <= radius) {
         // Move to make sure they are fully in the liquid:
-        const newPos = getCoordsAtDistanceTowardsTarget(intersection, entity, radius, true);
+        const newPos = entity.inLiquid ? getCoordsAtDistanceTowardsTarget(entity, intersection, radius, true) : getCoordsAtDistanceTowardsTarget(intersection, entity, radius, true);
         entity.x = newPos.x;
         entity.y = newPos.y;
       }
@@ -106,9 +105,7 @@ export function tryFallInOutOfLiquid(entity: HasSpace, underworld: Underworld, p
     for (let poly of underworld.liquidPolygons) {
       insideLiquid = isVec2InsidePolygon(entity, poly);
       if (insideLiquid) {
-        if (!entity.inLiquid) {
-          fallInToSafeDistanceFromEdge(entity, poly);
-        }
+        fallInOrOutToSafeDistanceFromEdge(entity, poly);
         inLiquid.add(entity, underworld, prediction);
         break;
       }
