@@ -64,6 +64,7 @@
     - new sfx
     - new animation
 # Optimization
+- QuerySelectorAll -> UpdateCardBadges is taking a lot of CPU
 - Split sprite sheet for more efficient development
 - Optimize: targeting spells seem pretty slow in prediction
 - optimize: Ihave duplicate units, pickups, and doodads in save due to serailizeForSaving having them in the underworld and extracting them to the top level too
