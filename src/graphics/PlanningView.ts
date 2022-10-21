@@ -696,7 +696,7 @@ export function updateTooltipContent(underworld: Underworld) {
         if (unitSource) {
           text += `\
 <img width="252" src="${Unit.getExplainPathForUnitId(unitSource.id)}"/>
-<h1>${unitSource.id}</h1>
+<h1>${globalThis.selectedUnit.name || unitSource.id}</h1>
 <hr/>
 <div>${unitSource.info.description.trim()}</div>
 <hr/>

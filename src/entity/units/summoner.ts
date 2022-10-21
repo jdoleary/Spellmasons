@@ -48,11 +48,11 @@ const unit: UnitSource = {
       unit.mana -= unit.manaCostToCast;
       await Unit.playComboAnimation(unit, unit.animations.attack, async () => {
         let sourceUnit = allUnits.archer;
-        let numberOfSummons = 3;
+        let numberOfSummons = 3 * (unit.isMiniboss ? 2 : 1);
         const enemyIsClose = underworld.units.filter(u => u.faction !== unit.faction).some(u => math.distance(unit, u) <= PLAYER_BASE_ATTACK_RANGE)
         if (enemyIsClose) {
           sourceUnit = allUnits.golem;
-          numberOfSummons = 5;
+          numberOfSummons = 5 * (unit.isMiniboss ? 2 : 1);
         }
         const spawns = underworld.findValidSpawns(unit, 20, 5);
         let lastPromise = Promise.resolve();

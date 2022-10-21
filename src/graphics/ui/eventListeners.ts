@@ -745,7 +745,7 @@ export function registerAdminContextMenuOptions(underworld: Underworld) {
       label: u.id,
       action: ({ pos }) => {
         if (pos) {
-          underworld.spawnEnemy(u.id, pos);
+          underworld.spawnEnemy(u.id, pos, false);
         }
       },
       supportInMultiplayer: true,
@@ -972,6 +972,18 @@ export function registerAdminContextMenuOptions(underworld: Underworld) {
       // message instead of ADMIN_COMMAND.  `supportInMultiplayer` is set to false so it doesn't
       // trigger an ADMIN_COMMAND message automatically
       supportInMultiplayer: false,
+      domQueryContainer: '#menu-selected-unit'
+
+    },
+    {
+      label: '👹 Make Miniboss',
+      action: () => {
+        const unit = underworld.units.find(u => u.id == globalThis.selectedUnit?.id);
+        if (unit) {
+          Unit.makeMiniboss(unit);
+        }
+      },
+      supportInMultiplayer: true,
       domQueryContainer: '#menu-selected-unit'
 
     },

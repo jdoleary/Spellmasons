@@ -24,8 +24,8 @@ async function healOneOf(self: Unit.IUnit, units: Unit.IUnit[], underworld: Unde
     if (Unit.inRange(self, ally)) {
       await Unit.playAnimation(self, unit.animations.attack);
       await animatePriestProjectileAndHit(self, ally);
-      // Heal for 2
-      Unit.takeDamage(ally, -2, undefined, underworld, false, undefined);
+      // Heal for damage amount (because damage scales when miniboss)
+      Unit.takeDamage(ally, -self.damage, undefined, underworld, false, undefined);
       // Remove mana once the cast occurs
       self.mana -= manaCostToCast;
       return true;
@@ -45,6 +45,7 @@ const unit: UnitSource = {
   unitProps: {
     attackRange: 264,
     healthMax: 2,
+    damage: 2,
     manaCostToCast
   },
   spawnParams: {

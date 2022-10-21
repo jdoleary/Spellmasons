@@ -283,6 +283,7 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
       const { color, name } = payload;
       if (fromPlayer) {
         fromPlayer.name = name;
+        fromPlayer.unit.name = name;
         if (globalThis.pixi && fromPlayer.unit.image) {
           // @ts-ignore jid is a custom identifier to id the text element used for the player name
           const nameText = fromPlayer.unit.image.sprite.children.find(child => child.jid == config.NAME_TEXT_ID) as PIXI.Text || new globalThis.pixi.Text();

@@ -79,6 +79,7 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   resolveDoneMoving: () => void;
   attackRange: number;
   name?: string;
+  isMiniboss: boolean;
   // Strength is a modifier which affects base stats used for scaling difficulty
   strength: number;
   // A copy of the units current scale for the prediction copy
@@ -154,6 +155,7 @@ export function create(
       stamina: 0,
       staminaMax,
       attackRange: 10 + config.COLLISION_MESH_RADIUS * 2,
+      isMiniboss: false,
       faction,
       image: prediction ? undefined : Image.create({ x, y }, defaultImagePath, containerUnits),
       defaultImagePath,
@@ -991,6 +993,21 @@ export async function runTurnStartEvents(unit: IUnit, prediction: boolean = fals
   }
   return abortTurn
 
+}
+export function makeMiniboss(unit: IUnit) {
+  unit.isMiniboss = true;
+  unit.name = `${unit.unitSourceId} MiniBoss`;
+  if (unit.image) {
+    unit.image.sprite.scale.x = 2;
+    unit.image.sprite.scale.y = 2;
+  }
+  unit.radius *= 2;
+  unit.healthMax *= config.UNIT_MINIBOSS_HEALTH_MULTIPLIER;
+  unit.health = unit.healthMax;
+  unit.manaMax *= config.UNIT_MINIBOSS_HEALTH_MULTIPLIER;
+  unit.mana = unit.manaMax;
+  unit.manaPerTurn *= config.UNIT_MINIBOSS_HEALTH_MULTIPLIER;
+  unit.damage *= config.UNIT_MINIBOSS_DAMAGE_MULTIPLIER;
 }
 // Makes a copy of the unit's data suitable for 
 // a predictionUnit

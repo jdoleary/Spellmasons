@@ -1014,7 +1014,7 @@ export default class Underworld {
       console.error('Could not find pickup with index', index);
     }
   }
-  spawnEnemy(id: string, coords: Vec2) {
+  spawnEnemy(id: string, coords: Vec2, isMiniboss: boolean) {
     const sourceUnit = allUnits[id];
     if (!sourceUnit) {
       console.error('Unit with id', id, 'does not exist.  Have you registered it in src/units/index.ts?');
@@ -1038,6 +1038,9 @@ export default class Underworld {
       this
     );
     unit.originalLife = true;
+    if (isMiniboss) {
+      Unit.makeMiniboss(unit);
+    }
 
   }
   testLevelData(): LevelData {
@@ -1197,12 +1200,18 @@ export default class Underworld {
         }
       }
     }
+    const numberOfMinibossesAllowed = Math.ceil(Math.max(0, (levelIndex - 4) / 4));
+    let numberOfMinibossesMade = 0;
     for (let id of unitIds) {
       if (validSpawnCoords.length == 0) { break; }
       const validSpawnCoordsIndex = randInt(this.random, 0, validSpawnCoords.length - 1);
       const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
       if (coord) {
-        levelData.enemies.push({ id, coord })
+        const isMiniboss = numberOfMinibossesAllowed > numberOfMinibossesMade;
+        if (isMiniboss) {
+          numberOfMinibossesMade++;
+        }
+        levelData.enemies.push({ id, coord, isMiniboss })
       }
     }
 
@@ -1528,7 +1537,7 @@ export default class Underworld {
       this.spawnPickup(p.index, p.coord);
     }
     for (let e of enemies) {
-      this.spawnEnemy(e.id, e.coord);
+      this.spawnEnemy(e.id, e.coord, e.isMiniboss);
     }
 
     // Show text in center of screen for the new level
@@ -2871,6 +2880,7 @@ export interface LevelData {
   enemies: {
     id: string,
     coord: Vec2,
+    isMiniboss: boolean
   }[];
 }
 const FIRST_TIME_PLAYING = 'first-time-playing';

@@ -39,6 +39,8 @@ export const STARTING_CARD_COUNT = 3;
 export const OBSTACLE_SIZE = COLLISION_MESH_RADIUS * 2;
 export const MAX_PLAYERS = 8;
 export const NUMBER_OF_TOOLBAR_SLOTS = 10;
+export const UNIT_MINIBOSS_HEALTH_MULTIPLIER = 3;
+export const UNIT_MINIBOSS_DAMAGE_MULTIPLIER = 2;
 
 // Mana
 export const MANA_GET_PER_TURN = 10;
