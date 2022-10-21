@@ -2,7 +2,6 @@
 - Record new trailer footage
 - **important** bug: "fall out of liquid" can kick you into a wall's collision area
     - Maybe use forceMove instead of a teleport so they don't go through walls
-- bug: push + cone triggered in wrong location, it should've triggered at the push location
 - bug: health bars disappear when cone prediction is up
 # Features
 - animate rend

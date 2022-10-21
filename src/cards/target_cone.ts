@@ -51,12 +51,12 @@ Adds targets to the spell in a cone shape.
           const color = outOfRange ? colors.outOfRangeGrey : colors.targetingSpellGreen
           drawUICone(target, adjustedRange, startAngle, endAngle, color);
         } else {
-          await animate(state.casterUnit, state.castLocation, adjustedRange, startAngle, endAngle, underworld);
+          await animate(state.casterUnit, target, adjustedRange, startAngle, endAngle, underworld);
         }
         const withinRadiusAndAngle = underworld.getPotentialTargets(
           prediction
         ).filter(t => {
-          return withinCone(state.casterUnit, state.castLocation, adjustedRange, startAngle, endAngle, t);
+          return withinCone(state.casterUnit, target, adjustedRange, startAngle, endAngle, t);
         });
         // Add entities to target
         withinRadiusAndAngle.forEach(e => addTarget(e, state));

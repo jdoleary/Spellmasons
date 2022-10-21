@@ -40,18 +40,18 @@ Adds targets to the spell in a column.
       targets = targets.length ? targets : [state.castLocation];
       const length = targets.length;
       const vector = normalizedVector(state.casterUnit, state.castLocation).vector || { x: 0, y: 0 };
-      const targetingColumn = getColumnPoints(state.castLocation, vector, width, depth);
       for (let i = 0; i < length; i++) {
         const target = targets[i];
         if (!target) {
           continue;
         }
+        const targetingColumn = getColumnPoints(target, vector, width, depth);
         // Draw visual circle for prediction
         if (prediction) {
           const color = outOfRange ? colors.outOfRangeGrey : colors.targetingSpellGreen
           drawUIPoly(targetingColumn, color);
         } else {
-          await animate(state.castLocation, vector, width, depth, underworld);
+          await animate(target, vector, width, depth, underworld);
         }
         const withinColumn = underworld.getPotentialTargets(
           prediction
