@@ -27,10 +27,10 @@ export function similarTriangles(X: number, Y: number, D: number, d: number): Ve
 // the vector 'start' to 'end'
 // --
 // hint: Use a negative length to move away from target
-export function getCoordsAtDistanceTowardsTarget(start: Vec2, target: Vec2, travelDist: number): Vec2 {
+export function getCoordsAtDistanceTowardsTarget(start: Vec2, target: Vec2, travelDist: number, allowMoveBeyondTarget: boolean = false): Vec2 {
   const distanceBetweenPoints = distance(start, target);
   // Travel at most length, however, don't move beyond target
-  if (travelDist >= distanceBetweenPoints) {
+  if (!allowMoveBeyondTarget && travelDist >= distanceBetweenPoints) {
     return target;
   }
   const result = similarTriangles(target.x - start.x, target.y - start.y, distanceBetweenPoints, travelDist)

@@ -1,13 +1,14 @@
 import { OBSTACLE_SIZE } from '../config';
-import { Vec2, subtract, magnitude, add, clone } from '../jmath/Vec';
+import { Vec2, subtract, magnitude, add, clone, getEndpointOfMagnitudeAlongVector } from '../jmath/Vec';
 import { IUnit } from './Unit';
-import { closestLineSegmentIntersectionWithLine, isOnOutside } from '../jmath/lineSegment';
+import { closestLineSegmentIntersectionWithLine, findWherePointIntersectLineSegmentAtRightAngle, isOnOutside } from '../jmath/lineSegment';
 import { Material } from '../Conway';
-import { isVec2InsidePolygon, Polygon2 } from '../jmath/Polygon2';
-import { distance, similarTriangles } from '../jmath/math';
+import { isVec2InsidePolygon, Polygon2, toLineSegments } from '../jmath/Polygon2';
+import { distance, getCoordsAtDistanceTowardsTarget, similarTriangles } from '../jmath/math';
 import type Underworld from '../Underworld';
 import * as inLiquid from '../inLiquid';
 import { HasSpace } from './Type';
+import * as config from '../config';
 export interface IObstacle {
   x: number;
   y: number;
@@ -81,6 +82,23 @@ export function findSafeFallInPoint(currentPosition: Vec2, nextPosition: Vec2, u
 
 
 }
+// Prevent entity from being inLiquid but overlapping the non-liquid edge
+function fallInToSafeDistanceFromEdge(entity: HasSpace, poly: Polygon2) {
+  const lineSegments = toLineSegments(poly);
+  for (let ls of lineSegments) {
+    const intersection = findWherePointIntersectLineSegmentAtRightAngle(entity, ls);
+    if (intersection) {
+      // Caution: this may not work on headless server since headless server doesn't have scale
+      const radius = config.COLLISION_MESH_RADIUS * (entity.image?.sprite.scale.x || 1)
+      if (distance(intersection, entity) <= radius) {
+        // Move to make sure they are fully in the liquid:
+        const newPos = getCoordsAtDistanceTowardsTarget(intersection, entity, radius, true);
+        entity.x = newPos.x;
+        entity.y = newPos.y;
+      }
+    }
+  }
+}
 
 export function tryFallInOutOfLiquid(entity: HasSpace, underworld: Underworld, prediction: boolean) {
   if (underworld.liquidPolygons.length) {
@@ -88,6 +106,9 @@ export function tryFallInOutOfLiquid(entity: HasSpace, underworld: Underworld, p
     for (let poly of underworld.liquidPolygons) {
       insideLiquid = isVec2InsidePolygon(entity, poly);
       if (insideLiquid) {
+        if (!entity.inLiquid) {
+          fallInToSafeDistanceFromEdge(entity, poly);
+        }
         inLiquid.add(entity, underworld, prediction);
         break;
       }
