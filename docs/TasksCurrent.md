@@ -1,5 +1,4 @@
 - Record new trailer footage
-- Press z to make view follow you should dissapear with toggle UI
 - Insufficient health text is too big when zoomed in
 - blanace: miniboss summoner summons too frequently
 # Features

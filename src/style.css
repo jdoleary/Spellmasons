@@ -557,6 +557,7 @@ kbd {
 }
 
 /* Hide HUD */
+body.view-Game.HUD-hidden #camera-recenter-tip,
 body.HUD-hidden .doob-stats,
 body.HUD-hidden #inspector-tooltip {
   display: none;
@@ -571,6 +572,7 @@ body.view-Game.hide-lobby #lobby {
   display: none;
 }
 
+body.view-Game.hide-card-holders #camera-recenter-tip,
 body.view-Game.hide-card-holders #lobby,
 .hide-card-holders #ui-positioner {
   display: none;
