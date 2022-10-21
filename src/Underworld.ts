@@ -802,7 +802,7 @@ export default class Underworld {
       // Offset exclamation mark just above the head of the unit
       const exclamationMarkPosition = withinCameraBounds({
         x: marker.pos.x, y: marker.pos.y
-          - config.HEALTH_BAR_UI_Y_POS
+          - config.HEALTH_BAR_UI_Y_POS * marker.scale
           - config.UNIT_UI_BAR_HEIGHT / zoom
           - markerHeightHalf
           - markerMarginAboveHealthBar / zoom

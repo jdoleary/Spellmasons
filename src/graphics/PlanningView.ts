@@ -535,7 +535,7 @@ export async function runPredictions(underworld: Underworld) {
             // player this function has to warn with an attention marker
             if (target === globalThis.player.unit) {
               if (underworld.canUnitAttackTarget(u, target) && u.mana >= u.manaCostToCast) {
-                globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u) });
+                globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u), scale: u.predictionScale || 1 });
               }
             }
           }

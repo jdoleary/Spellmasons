@@ -1,7 +1,6 @@
 - Record new trailer footage
 - Minibosses
     - fix z-index
-    - fix attention marker placement due to scale
 
 # Features
 - animate rend

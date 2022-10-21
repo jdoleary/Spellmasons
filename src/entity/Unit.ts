@@ -81,6 +81,12 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   name?: string;
   // Strength is a modifier which affects base stats used for scaling difficulty
   strength: number;
+  // A copy of the units current scale for the prediction copy
+  // prediction copies do not have an image property, so this property is saved here
+  // so that it may be accessed without making prediction units have a partial Image property
+  // (prediction units are known to not have an image, this shall not change, other parts of the code
+  // depends on this expectation)
+  predictionScale?: number;
   faction: Faction;
   UITargetCircleOffsetY: number;
   defaultImagePath: string;
@@ -1003,6 +1009,9 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
     ...rest,
     // Prediction units
     originalLife: false,
+    // A copy of the units y scale just for the prediction unit so that it will know
+    // how high up to display the attentionMarker
+    predictionScale: image?.sprite.scale.y,
     // prediction units INTENTIONALLY share a reference to the original
     // unit's path so that we can get the efficiency gains of
     // cached paths per unit.  If we made a deep copy instead, the
