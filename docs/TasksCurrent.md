@@ -1,5 +1,4 @@
 # Today
-- Zindex broken with dead units showing in front of miniboss summoner
 - bug: Split then purify on miniboss vamp resulted in decimal health
 - e: bug: health bars disappear when cone prediction is up
     - this is because unitOverlayGraphics is used for attack radiuses and health bars

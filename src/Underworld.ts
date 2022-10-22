@@ -671,7 +671,17 @@ export default class Underworld {
     }
     // Sort unit sprites visually by y position (like "z-index")
     containerUnits?.children.sort((a: DisplayObject, b: DisplayObject) => {
-      return (a.y + config.UNIT_SIZE_RADIUS * a.scale.y) - (b.y + config.UNIT_SIZE_RADIUS * b.scale.y)
+      // Protect against a DisplayObject with NaN from disrupting the entire sort
+      const A = (a.y + config.UNIT_SIZE_RADIUS * a.scale.y);
+      if (isNaN(A)) {
+        return -1;
+      }
+      // Protect against a DisplayObject with NaN from disrupting the entire sort
+      const B = (b.y + config.UNIT_SIZE_RADIUS * b.scale.y);
+      if (isNaN(B)) {
+        return 1;
+      }
+      return A - B
     });
 
     updateCameraPosition(this);
@@ -1672,11 +1682,17 @@ export default class Underworld {
     // this filters out PLAYER_CONTROLLED so that they don't get die()'d when they are inPortalb
     for (let u of this.units.filter(u => u.alive && u.unitType !== UnitType.PLAYER_CONTROLLED)) {
       if (this.lastLevelCreated) {
-        // TODO ensure that this works on headless
-        const originalTile = this.lastLevelCreated.imageOnlyTiles[vec2ToOneDimentionIndexPreventWrap({ x: Math.round(u.x / config.OBSTACLE_SIZE), y: Math.round(u.y / config.OBSTACLE_SIZE) }, this.lastLevelCreated.width)];
-        if (!originalTile || originalTile.image == '') {
-          console.error('Unit was force killed because they ended up out of bounds', u.unitSubType)
-          Unit.die(u, this, false);
+        // Don't kill out of bound units if they are already flagged for removal
+        // (Note: flaggedForRemoval units are set to NaN,NaN;  thus they are out of bounds, but 
+        // they will be cleaned up so they shouldn't be killed here as this check is just to ensure
+        // no living units that are unreachable hinder progressing through the game)
+        if (!u.flaggedForRemoval) {
+          // TODO ensure that this works on headless
+          const originalTile = this.lastLevelCreated.imageOnlyTiles[vec2ToOneDimentionIndexPreventWrap({ x: Math.round(u.x / config.OBSTACLE_SIZE), y: Math.round(u.y / config.OBSTACLE_SIZE) }, this.lastLevelCreated.width)];
+          if (!originalTile || originalTile.image == '') {
+            console.error('Unit was force killed because they ended up out of bounds', u.unitSubType)
+            Unit.die(u, this, false);
+          }
         }
       }
     }

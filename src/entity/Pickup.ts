@@ -70,6 +70,9 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
   }, underworld: Underworld, prediction: boolean) {
   const { name, description, imagePath, effect, scale, singleUse, animationSpeed, playerOnly = false, turnsLeftToGrab } = pickupSource;
   const { x, y } = pos
+  if (isNaN(x) || isNaN(y)) {
+    console.error('Unexpected: Created pickup at NaN', pickupSource, pos);
+  }
   const self: IPickup = {
     type: 'pickup',
     x,
