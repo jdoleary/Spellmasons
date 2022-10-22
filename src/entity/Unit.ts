@@ -718,6 +718,7 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
             warnings.push('kill');
           } else {
             warnings.push('damage');
+            console.warn('dev: this spell will damage you', JSON.stringify(predictionPlayerUnit), JSON.stringify(serialize(unit)));
           }
         }
 
