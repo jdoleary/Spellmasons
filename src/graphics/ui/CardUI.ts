@@ -427,7 +427,11 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
 
       }
       if (cost.healthCost > globalThis.player.unit.health) {
-        centeredFloatingText('Insufficient Health', colors.healthRed);
+        floatingText({
+          coords: underworld.getMousePos(),
+          text: 'Insufficient Health',
+          style: { fill: colors.errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
+        })
         deselectLastCard();
 
       }

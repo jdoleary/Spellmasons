@@ -1,7 +1,6 @@
 # Today
 - e: bug: health bars disappear when cone prediction is up
     - this is because unitOverlayGraphics is used for attack radiuses and health bars
-- e: Insufficient health text is too big when zoomed in
 # Features
 - animate rend
 - how to show how much damage a queued spell will do
