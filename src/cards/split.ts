@@ -35,6 +35,7 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
   }
   const healthChange = healthMax / unit.healthMax;
   unit.health *= healthChange;
+  unit.health = Math.floor(unit.health);
   unit.healthMax = healthMax;
   // Prevent unexpected overflow
   unit.health = Math.min(healthMax, unit.health);
@@ -42,12 +43,14 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
   // || 1 prevents div by 0 since some units don't have mana
   const manaChange = manaMax / (unit.manaMax || 1);
   unit.mana *= manaChange;
+  unit.mana = Math.floor(unit.mana);
   unit.manaMax = manaMax;
   // Prevent unexpected overflow
   unit.mana = Math.min(manaMax, unit.mana);
 
   const staminaChange = staminaMax / unit.staminaMax;
   unit.stamina *= staminaChange;
+  unit.stamina = Math.floor(unit.stamina);
   unit.staminaMax = staminaMax;
   // Prevent unexpected overflow
   unit.stamina = Math.min(staminaMax, unit.stamina);
