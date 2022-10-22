@@ -1,4 +1,5 @@
 # Today
+- Make Youtube short audio louder
 - e: bug: health bars disappear when cone prediction is up
     - this is because unitOverlayGraphics is used for attack radiuses and health bars
 # Features
