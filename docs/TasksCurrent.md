@@ -1,4 +1,7 @@
 # Today
+- If the last enemy you kill drops the scroll on the tutorial you won't be able to pick it up
+- Log ereror if client and server are out of date
+- in multiplayer, when one player leaves and window is not focused the camera spazzes out
 - Make Youtube short audio louder
 - e: bug: health bars disappear when cone prediction is up
     - this is because unitOverlayGraphics is used for attack radiuses and health bars
