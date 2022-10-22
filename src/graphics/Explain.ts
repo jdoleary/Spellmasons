@@ -4,6 +4,9 @@ import Jprompt, { PromptArgs } from './Jprompt';
 import keyMapping, { keyToHumanReadable } from './ui/keyMapping';
 const ALREADY_EXPLAINED = 'explained'
 export function explain(key: string, forceShow?: boolean) {
+    if (globalThis.headless) {
+        return;
+    }
     const explainData = explainMap[key];
     if (forceShow || !isAlreadyExplained(key)) {
         if (explainData) {

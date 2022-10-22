@@ -11,6 +11,9 @@ export interface PromptArgs {
 }
 export default async function Jprompt(prompt: PromptArgs): Promise<boolean> {
     const { text, noBtnText, noBtnKey, yesText, yesKey, yesKeyText = '', imageSrc, portal } = prompt;
+    if (globalThis.headless) {
+        return Promise.resolve(true);
+    }
     const el = document.createElement('div')
     el.classList.add('prompt');
     if (portal) {
