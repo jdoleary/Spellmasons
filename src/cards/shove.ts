@@ -22,7 +22,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.COMMON],
-    thumbnail: 'unknown.png',
+    thumbnail: 'spellIconShove.png',
     description: `
 A magical shove!
 Shoves the target, hard, away from you.
