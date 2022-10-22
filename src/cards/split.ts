@@ -1,15 +1,15 @@
 import { addTarget, getCurrentTargets, Spell } from './index';
 import * as Unit from '../entity/Unit';
 import { CardCategory, UnitSubType, UnitType } from '../types/commonTypes';
-import { jitter, Vec2 } from '../jmath/Vec';
-import * as config from '../config';
+import { Vec2 } from '../jmath/Vec';
 import { returnToDefaultSprite } from '../entity/Unit';
 import Underworld from '../Underworld';
 import { animateMitosis } from './clone';
 
 import { CardRarity, probabilityMap } from '../types/commonTypes';
+import floatingText from '../graphics/FloatingText';
 const id = 'split';
-const splitLimit = 4;
+const splitLimit = 3;
 function changeStatWithCap(unit: Unit.IUnit, statKey: 'health' | 'healthMax' | 'mana' | 'manaMax' | 'stamina' | 'staminaMax' | 'moveSpeed' | 'damage', multiplier: number) {
   if (unit[statKey] && typeof unit[statKey] === 'number') {
 
@@ -75,12 +75,12 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     };
   }
   const modifier = unit.modifiers[id];
-  // if (modifier.stacks && modifier.stacks >= 4) {
-  //   if (!prediction) {
-  //     floatingText({ coords: unit, text: 'Cannot split further' });
-  //   }
-  //   return;
-  // }
+  if (modifier.stacks && modifier.stacks >= splitLimit) {
+    if (!prediction) {
+      floatingText({ coords: unit, text: 'Cannot split further.  What are you trying to do?...Tear the fabric of reality apart!?' });
+    }
+    return;
+  }
   if (unit.image) {
     unit.image.sprite.scale.x *= scaleMultiplier;
     unit.image.sprite.scale.y *= scaleMultiplier;

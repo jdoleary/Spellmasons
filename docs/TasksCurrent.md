@@ -2,7 +2,6 @@
 - e: bug: health bars disappear when cone prediction is up
     - this is because unitOverlayGraphics is used for attack radiuses and health bars
 - e: Insufficient health text is too big when zoomed in
-- e: bug: Splitlimit is not working if you cast one at a time
 # Features
 - animate rend
 - how to show how much damage a queued spell will do
