@@ -15,6 +15,11 @@
     - Release
 - Trademark Process - ongoing
 # Critical Path
+- Major Tasks
+    - Fix liquid generation
+    - Fix movement prediction (see clone+push)
+    - More enemies
+    - Make weekly videos
 - Milestone | **More Enemies**
     - More enemies
         - Bigger Golem
@@ -24,9 +29,6 @@
         - Priest
         - Summoner
         - Vampire
-        - Boss enemies (bigger versions of common enemies)
-        - Mini bosses
-            - 2x size, 4x stats
 - Milestone | **Beta Testing**
     - Optimize game
         - setPath is constantly being called by all enemies
@@ -60,7 +62,7 @@
     - Server customization (like Worms Armageddon)
         - Turn time
         - Pvp mode (more factions)
-    - Perks | "upgrades" with some random attributes
+    - Perks | "upgrades" with some random attributes | The more dimentions you add the better!
         - % chance to get more stamina on level start
         - start level with 2x mana
         - % chance to start level with mob on your faction
@@ -68,6 +70,16 @@
         - % chance to freeze on damage
         - one time: 50/50 chance to incrase max stat or decrease it
         - make 1 random spell permanently more expensive and another permanently cheaper
+        - Skill tree
+        - Critical chances
+        - Time challenges - beat the level in less than 3 turns
+        - Make bets - risk / reward
+            - even with the difficulty of the next level
+        - pseudo class system
+        - item that makes your stronger but it randomizes your spawn
+- Other
+    - SEO https://support.google.com/webmasters/answer/9128669?utm_source=wnc_20079900&utm_medium=panel&utm_campaign=wnc_20079900&utm_content=msg_20079900&hl=en#zippy=%2Cbeginning-user-willing-to-learn%2Cseo-advanced-user
+    - Google Search Console: https://search.google.com/u/0/search-console?resource_id=sc-domain%3Aspellmasons.com
 
 ## Definition of Done
 - DONE Stable Multiplayer

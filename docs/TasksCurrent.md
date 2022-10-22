@@ -1,7 +1,10 @@
 # Today
-- Record new trailer footage
-- bug: health bars disappear when cone prediction is up
+- Zindex broken with dead units showing in front of miniboss summoner
+- bug: Split then purify on miniboss vamp resulted in decimal health
+- e: bug: health bars disappear when cone prediction is up
     - this is because unitOverlayGraphics is used for attack radiuses and health bars
+- e: Insufficient health text is too big when zoomed in
+- e: bug: Splitlimit is not working if you cast one at a time
 # Features
 - animate rend
 - how to show how much damage a queued spell will do
@@ -13,47 +16,31 @@
 - inventory should show current card cost and cooldown
 -  Add save/load to menu
 # Bugs / Cleaning
-- Insufficient health text is too big when zoomed in
-- **important** bug: "fall out of liquid" can kick you into a wall's collision area
-    - Maybe use forceMove instead of a teleport so they don't go through walls
-- bug: push then cone triggered in wrong location, it should've triggered at the push location
-- bug: health bars disappear when cone prediction is up
-- bug: Splitlimit is not working if you cast one at a time
-- You can't close popups on 1080x764 resolution
+- m: You can't close popups on 1080x764 resolution
 - "All targets" copy is confusing if player doesn't understand targeting
-- bug: saw "this spell will damage you" after heal then end turn immediately
-- **important**: completely destroy the underworld object between playthroughs rather than just cleaning it up
-- fix liquid fall in
+- h: bug: saw "this spell will damage you" after heal then end turn immediately
+- h: **important**: completely destroy the underworld object between playthroughs rather than just cleaning it up
 - Find a way to make randomness fixed (like in spell "Displace" so that it doesn't get different random results on other people's screens and so that it wont change after another player casts)
 - This save file is giving me critical errors `saveFile-with-errors.json`
 - Improve UX for shove so that it's clear when you're not close enough
-- small bugs:
-    - Sometimes it tries to path around things and wastes stamina if there isn't a straight line path
-    - sometimes when you walk you get stuck on a wall and it wastes stamina
-- melee prediction is still off
+- Sometimes it tries to path around things and wastes stamina if there isn't a straight line path
+- sometimes when you walk you get stuck on a wall and it wastes stamina
+- done?: melee prediction is still off
     - simplest solution is just to make sure that units cannot do damage to the player if they aren't warning of damage incoming on the start of the turn
-- bug: **important** pressing 'alt' in chrome deselects the window and makes it stop accepting input
+- h: bug: **important** pressing 'alt' in chrome deselects the window and makes it stop accepting input
     - This doesn't happen in fullscreen
     - Test in windowed mode on Electron
-- bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
+- h: bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
     - this is a race condition because I'm still able to move freely after his cast triggers
-- fix fall in liquid so larger things (like rocks or vampires) fall in further so they don't overlap
+- done?: fix fall in liquid so larger things (like rocks or vampires) fall in further so they don't overlap
 - Fix liquid tile glitches with prebuild liquid sets
+- resurrect should take longer to return to base mana
+    - this already is set but it didn't work in brad's playtest... hmm..
+- Ensure endPlayerTurnPhase kills out of bounds units on headless server
 ## Prediction issues
 - prediction should factor in standing on pickups, see video
 - **important** movement prediction is off when doing "clone + push" (something to do with the copy being added as a target?)
-# Balance 
-- resurrect should take longer to return to base mana
-    - this already is set but it didn't work in brad's playtest... hmm..
 # Content
-- Perks: the more dimentions you add the better!
-    - Skill tree
-    - Critical chances
-    - Time challenges - beat the level in less than 3 turns
-    - Make bets - risk / reward
-        - even with the difficulty of the next level
-    - pseudo class system
-    - item that makes your stronger but it randomizes your spawn
 - Rend
     - new sfx
     - new animation
@@ -70,6 +57,8 @@
 - optimize: Ihave duplicate units, pickups, and doodads in save due to serailizeForSaving having them in the underworld and extracting them to the top level too
 
 ## Stretch Content
+- Idea: "oh shit button": double the amount of mana you have this level but it reduces by half next level. " Break glass in case of emergency. Deal with the devil
+- Idea: Amplify spell: makes "multicast"
 - Add `cooldown` to spells rather than expense scaling
     - Add a spell that resets cooldowns
     - Add a curse that increases cooldowns
@@ -77,6 +66,7 @@
 - h: "Heat seeking" enemy or spell
 - idea: spell that triggers onDeath effects "Playdead"
 - Liquid: blood could apply a curse when you fall in, like slowed movement
+- Spell to slow movement
 - I need better targeting spells
     - Target by proximity with no limit?
         - Quantum link
@@ -118,8 +108,6 @@
 - juice: ultra badass spell should put in wide-screen black bars and take over the camera
     - and he could crouch and gather enegery
 - "heat seaking" missle unit, explodes on contact
-
-## New Spell Ideas
 - What if you could hit enemies with your staff to do damage / bat them away
 - Idea: A spell to sacrifice ally unit immediately
 - Card: Mind Control (changes faction temporarily)
@@ -142,18 +130,6 @@
 - slow/ cripple: reduce max stamina
 - set fires on board that spreads
 - Tornado: Travells through the map throwing things around (maybe a good enemy ability)
-
-## Multiplayer Enhancements / issues
-- if you choose a spawn position while another player is casting it waits and then spawns where you clicked, which can be confusing because it still looks like you can choose where to spawn
-- if you can MOVE_PLAYER while a super long cast is being triggered.
-    - you cannot, find a way to handle this for multiplayer so it's communicated that you have to wait to cast until someone else has finished casting
-    - IMPORTANT: Change the store description:  `Spellmasons uses innovative faction-based turns: You and your fellow mages can all move, cast and act simultaneously.` if needed
-- If player joins mid enemy movement it will force reset them
-    - this is still an issue: as of 2022-09-16
-## Misc
-- **critical** Improve sending castCards with targeting based on id not position
-- (wont do?) Make an overlay screen that blocks interaction while waiting for sync
-- Unit movement desync occurred between clients when one client has CPU throttled, the non throttled client has the unit move much farther
 - Jake boss ideas:
 ```
 Necromancer supreme. Conjura a bunch of guys to fight but is very fragile himself
@@ -166,3 +142,15 @@ Big slime? Keeps splitting into smaller slimes
 Maybe the final boss could be something ambiguous? Like "The Final Spell"
 And it's just ball of energy that can do weird stuff
 ```
+
+## Multiplayer Enhancements / issues
+- if you choose a spawn position while another player is casting it waits and then spawns where you clicked, which can be confusing because it still looks like you can choose where to spawn
+- if you can MOVE_PLAYER while a super long cast is being triggered.
+    - you cannot, find a way to handle this for multiplayer so it's communicated that you have to wait to cast until someone else has finished casting
+    - IMPORTANT: Change the store description:  `Spellmasons uses innovative faction-based turns: You and your fellow mages can all move, cast and act simultaneously.` if needed
+- If player joins mid enemy movement it will force reset them
+    - this is still an issue: as of 2022-09-16
+## Misc
+- **critical** Improve sending castCards with targeting based on id not position
+- (wont do?) Make an overlay screen that blocks interaction while waiting for sync
+- Unit movement desync occurred between clients when one client has CPU throttled, the non throttled client has the unit move much farther
