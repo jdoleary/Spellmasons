@@ -569,9 +569,6 @@ export default class Underworld {
             }
           }
         }
-        for (let p of this.pickups) {
-          Pickup.sync(p);
-        }
         // Sync Image even for non moving units since they may be moved by forces other than themselves
         // This keeps the unit.image in the same place as unit.x, unit.y
         Unit.syncImage(u)
@@ -668,6 +665,9 @@ export default class Underworld {
           }
         }
       }
+    }
+    for (let p of this.pickups) {
+      Pickup.sync(p);
     }
     // Sort unit sprites visually by y position (like "z-index")
     containerUnits?.children.sort((a: DisplayObject, b: DisplayObject) => {
