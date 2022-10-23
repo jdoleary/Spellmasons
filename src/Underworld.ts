@@ -2842,7 +2842,10 @@ export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, Underworl
 function getEnemiesForAltitude(underworld: Underworld): string[] {
   const { levelIndex } = underworld;
 
-  const numberOfUnits = levelIndex == 1 && isFirstTimePlaying() ? 2 : 3 + levelIndex;
+  const numberOfUnits = isFirstTimePlaying()
+    // Face a reduced number of enemies on firstTimePlaying
+    ? (levelIndex == 1 ? 1 : 2 + levelIndex)
+    : 3 + levelIndex;
   const possibleUnitsToChoose = Object.values(allUnits)
     .filter(u => u.spawnParams && u.spawnParams.unavailableUntilLevelIndex <= levelIndex)
     .map(u => ({ id: u.id, probability: u.spawnParams ? u.spawnParams.probability : 0 }))
