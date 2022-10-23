@@ -6,9 +6,15 @@
 - e: bug: health bars disappear when cone prediction is up
     - this is because unitOverlayGraphics is used for attack radiuses and health bars
 - Fix rejoining hack where people can just rejoin if they're dead to come back
-- Laggy on bad guys turn
+- **important** Laggy on bad guys turn
     - I think this is because of `global.requestAnimationFrame = (callback) => {`
-    - TODO: Rework gameloop for headless so that it executes immediately
+    - TODO: Rework gameloop for headless so that it executes immediately as subset of responsibilities
+        - Gameloop responsibilities:
+            1. run forceMoves
+            2. run unitloop
+                - handle unit movement
+                - handle unit inLiquid state
+                - check pickup collisions
 - explain that when you die in multiplayer you'll come back if your ally beats the level
 # Features
 - animate rend

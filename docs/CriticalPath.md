@@ -1,8 +1,9 @@
 # Desired Schedule
 - September / October
+    - Prep for playtest
+        - Fix headless gameloop so it executes immediately
     - Playtest multiplayer again
     - Get Trailer Up
-    - Start Marketing
 - November
     - Package as Electron App
     - Convenient multiplayer lobbying via steam
