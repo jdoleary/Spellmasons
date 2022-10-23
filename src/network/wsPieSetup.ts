@@ -127,7 +127,13 @@ function addHandlers(pie: PieClient, underworld: Underworld) {
     const elVersionInfoHeadless = document.getElementById('version-info-headless-server')
     if (elVersionInfoHeadless) {
       if (o?.hostAppVersion) {
-        elVersionInfoHeadless.innerText = `Server v${o?.hostAppVersion}`;
+        elVersionInfoHeadless.innerText = `Server v${o.hostAppVersion}`;
+        // Log error if client and server versions are minor or major out of sync:
+        const [clientMajor, clientMinor, clientPatch] = globalThis.SPELLMASONS_PACKAGE_VERSION.split('.');
+        const [serverMajor, serverMinor, serverPath] = o.hostAppVersion.split('.');
+        if (clientMajor !== serverMajor || clientMinor !== serverMinor) {
+          console.error(`Client ${globalThis.SPELLMASONS_PACKAGE_VERSION} and Server ${o.hostAppVersion} versions are out of sync`);
+        }
       } else {
         elVersionInfoHeadless.innerText = '';
 
