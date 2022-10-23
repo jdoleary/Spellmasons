@@ -21,7 +21,7 @@ const spell: Spell = {
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.COMMON],
+    probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconShove.png',
     description: `
 A magical shove!
