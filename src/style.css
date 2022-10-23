@@ -1003,6 +1003,32 @@ body.view-Menu .prompt:not(.forceShow) {
   color: white;
   /* prevent user from highlighting text or images in the prompt.  This is a game not a website, text shouldn't be copyable */
   user-select: none;
+  /* Ensure the button is always visible no matter the size
+  This is the reason that the prompt's button isn't within prompt-content
+  so that no matter how the prompt scales the button will be visible
+  */
+  display: flex;
+  flex-direction: column;
+}
+
+.prompt-content {
+  /* Ensure children elements don't overflow bigger than the screen */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+}
+
+@media (max-height: 1024px) {
+
+  /* Prevent image from taking up too much space on small screens */
+  .prompt-inner img {
+    max-height: 300px;
+  }
+}
+
+.prompt-inner img {
+  object-fit: contain;
 }
 
 .prompt-inner.thin {
@@ -1028,6 +1054,7 @@ body.view-Menu .prompt:not(.forceShow) {
   margin: 0 auto;
   padding: 0 8px;
   white-space: pre-line;
+  overflow-y: auto;
 }
 
 .jbutton {
@@ -1465,6 +1492,9 @@ body.auto-camera #camera-recenter-tip {
   border-image-source: url("/ui/Assets_Icon_Border_QtrCircle_3.png");
   border-image-width: 1;
   box-sizing: border-box;
+  /* Prevent child elements from becoming bigger than the screen */
+  max-height: 100%;
+  display: flex;
 }
 
 /* Supports a limited size so that the inventory will have a scrollbar */

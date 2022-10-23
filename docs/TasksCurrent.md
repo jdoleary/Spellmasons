@@ -5,7 +5,6 @@
 - Make Youtube short audio louder
 - e: bug: health bars disappear when cone prediction is up
     - this is because unitOverlayGraphics is used for attack radiuses and health bars
-- Fix explain popup on small resolutions, it doesn't fit well
 - Fix rejoining hack where people can just rejoin if they're dead to come back
 - Laggy on bad guys turn
     - I think this is because of `global.requestAnimationFrame = (callback) => {`

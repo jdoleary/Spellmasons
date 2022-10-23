@@ -22,9 +22,11 @@ export default async function Jprompt(prompt: PromptArgs): Promise<boolean> {
     el.innerHTML = `
 <div class="ui-border">
 <div class="prompt-inner ${!imageSrc ? 'thin' : ''}">
-    ${imageSrc ? `<div class="text-center"><img src="${imageSrc}"/></div>` : ''}
-    <div class="text">
-        ${text}
+    <div class="prompt-content">
+        ${imageSrc ? `<img src="${imageSrc}"/>` : ''}
+        <div class="text">
+            ${text}
+        </div>
     </div>
     <div class="button-holder">
         ${noBtnText ? `<button class="no jbutton" data-key="${noBtnKey}"> ${noBtnText}
