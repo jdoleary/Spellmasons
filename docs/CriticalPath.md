@@ -7,6 +7,7 @@
 - November
     - Package as Electron App
     - Convenient multiplayer lobbying via steam
+        - Prevent players from joining mid-round, notify "you will spawn once this level is complete"
     - Test on all 3 Operating Systems
     - [Beta Testing](https://partner.steamgames.com/doc/store/testing)
     - Cooldowns instead of mana multiplier
