@@ -166,7 +166,9 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string) {
       player.unit.image.sprite.filters = player.unit.image.sprite.filters.filter(f => f.jid != ROBE_COLOR_FILTER_ID);
     }
   } else {
-    console.error('Attempted to set color but could not');
+    if (!globalThis.headless) {
+      console.error('Attempted to set color but could not');
+    }
   }
 }
 export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld) {
