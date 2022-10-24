@@ -1,6 +1,12 @@
+# Pre playtest
+- Need a restart screen after a team wipe
+- No indication that it's the enemy's turn
+- In marketing, emphasize that it's turn based
+- Check balance difficulty for many players
+- Adaptive difficulty
 - Make lobby
     - Set your name, robe color, ready status
-# Gmaeloop refactor
+- Gmaeloop refactor
     - headless server didn't process push csast
     - add max loop count to protect against infinite
 # Today
