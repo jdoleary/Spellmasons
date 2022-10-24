@@ -2,8 +2,9 @@
 - September / October
     - Prep for playtest
         - Fix headless gameloop so it executes immediately
+        - Add lobby
     - Playtest multiplayer again
-    - Get Trailer Up
+    - Add Trailer
 - November
     - Package as Electron App
     - Convenient multiplayer lobbying via steam

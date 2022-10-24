@@ -1,3 +1,8 @@
+- Make lobby
+    - Set your name, robe color, ready status
+# Gmaeloop refactor
+    - headless server didn't process push csast
+    - add max loop count to protect against infinite
 # Today
 - in multiplayer, when one player leaves and window is not focused the camera spazzes out
 - Make Youtube short audio louder
@@ -14,6 +19,7 @@
                 - handle unit inLiquid state
                 - check pickup collisions
 - explain that when you die in multiplayer you'll come back if your ally beats the level
+- What to do with disconnected players when it goes to the next level?
 # Features
 - animate rend
 - how to show how much damage a queued spell will do
