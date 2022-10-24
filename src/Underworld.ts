@@ -389,54 +389,21 @@ export default class Underworld {
 
   }
   queueGameLoop = () => {
+    if (globalThis.headless) {
+      // headless server manages it's own gameloop.  See gameLoopHeadless
+      // This is so that it won't make players wait as it executes the NPC turn in real time
+      // it should execute the NPC turn as fast as it can possibly process.
+      console.log('Headless server has it\'s own gameloop and shall not execute this.gameLoop');
+      return;
+    }
     // prevent multiple gameLoop invokations being queued
     cancelAnimationFrame(requestAnimationFrameGameLoopId);
     // Invoke gameLoopUnits again next loop
-    requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop)
-
+    requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop);
   }
-  gameLoop = (timestamp: number) => {
-    if (this.players.filter(p => p.clientConnected).length == 0) {
-      console.log('Gameloop: pause; 0 connected players in game');
-      // Returning without requesting a new AnimationFrame is equivalent to 'pausing'
-      // the gameloop
-      return;
-    }
-
-    const deltaTime = timestamp - lastTime;
-    lastTime = timestamp;
-    const { zoom } = getCamera();
-
-    ImmediateMode.loop();
-
-    Unit.syncPlayerHealthManaUI(this);
-    globalThis.unitOverlayGraphics?.clear();
-
-    // Make liquid move to the right:
-    const scrollSpeed = deltaTime / config.LIQUID_X_SCROLL_SPEED;
-    for (let liquidSprite of this.liquidSprites) {
-      liquidSprite.tilePosition.x -= scrollSpeed;
-    }
-
-    // Sync css classes to handle changing the cursor
-    if (globalThis.player) {
-      document.body?.classList.toggle(CSSClasses.casting, CardUI.areAnyCardsSelected());
-      if (CardUI.areAnyCardsSelected()) {
-        const outOfRange = isOutOfRange(globalThis.player, this.getMousePos(), this)
-        document.body?.classList.toggle(CSSClasses.outOfRange, outOfRange);
-      } else {
-        // If there are no cards selected, ensure the out of range class is removed
-        document.body?.classList.toggle(CSSClasses.outOfRange, false);
-      }
-      // Turn off casting and outOfRange view if the player is viewing the walk rope
-      if (keyDown.showWalkRope) {
-        document.body?.classList.toggle(CSSClasses.casting, false);
-        document.body?.classList.toggle(CSSClasses.outOfRange, false);
-      }
-    }
-
-    const aliveNPCs = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
-    // Run all forces in this.forceMove
+  // Returns true if there is more processing yet to be done on the next
+  // gameloop
+  gameLoopForceMove = () => {
     for (let i = this.forceMove.length - 1; i >= 0; i--) {
       const forceMoveInst = this.forceMove[i];
       if (forceMoveInst) {
@@ -484,6 +451,163 @@ export default class Underworld {
         }
       }
     }
+    return !!this.forceMove.length;
+  }
+  // returns true if there is more processing yet to be done on the next game loop
+  gameLoopUnit = (u: Unit.IUnit, aliveNPCs: Unit.IUnit[], deltaTime: number): boolean => {
+    if (u.alive) {
+      while (u.path && u.path.points[0] && Vec.equal(Vec.round(u), Vec.round(u.path.points[0]))) {
+        // Remove next points until the next point is NOT equal to the unit's current position
+        // This prevent's "jittery" "slow" movement where it's moving less than {x:1.0, y:1.0}
+        // because the unit's position may have a decimal while the path does not so it'll stop
+        // moving when it reaches the target which may be less than 1.0 and 1.0 away.
+        u.path.points.shift();
+      }
+      // Only allow movement if the unit has stamina
+      if (u.path && u.path.points[0] && u.stamina > 0 && Unit.isUnitsTurnPhase(u, this)) {
+        // Move towards target
+        const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path.points[0], u.moveSpeed * deltaTime)
+        let moveDist = 0;
+        // For now, only AI units will collide with each other
+        // This is because the collisions were causing issues with player movement that I don't
+        // have time to solve at the moment.
+        if (u.unitType == UnitType.PLAYER_CONTROLLED) {
+          // Player units don't collide, they just move, and pathfinding keeps
+          // them from moving through walls
+          moveDist = math.distance(u, stepTowardsTarget);
+          u.x = stepTowardsTarget.x;
+          u.y = stepTowardsTarget.y;
+        } else {
+          // AI collide with each other and walls
+          const originalPosition = Vec.clone(u);
+          // Only move other NPCs out of the way, never move player units
+          moveWithCollisions(u, stepTowardsTarget, [...aliveNPCs, ...this.doodads], this);
+          moveDist = math.distance(originalPosition, u);
+          // Prevent moving into negative stamina.  This occurs rarely when
+          // the stamina is a fraction but above 0 and the moveDist is greater than the stamina.
+          // This check prevents the false-negative melee attack predictions
+          if (u.stamina - moveDist < 0) {
+            u.x = originalPosition.x;
+            u.y = originalPosition.y;
+            u.stamina = 0;
+          }
+        }
+
+        if (!isNaN(moveDist)) {
+          u.stamina -= moveDist;
+        }
+        // Only do this check if they are already in the liquid because units will never enter liquid
+        // just by moving themselves, they can only be forceMoved into liquid and that check happens 
+        // elsewhere
+        if (u.inLiquid) {
+          // Check if the unit was once in lava but now is out of the lava
+          Obstacle.tryFallInOutOfLiquid(u, this, false);
+        }
+        // If unit is MELEE and only has the final target left in the path, stop when it gets close enough
+        if (
+          u.path.points[0] && u.path.points.length == 1 && u.unitSubType == UnitSubType.MELEE && math.distance(u, u.path.points[0]) <= config.COLLISION_MESH_RADIUS * 2
+        ) {
+          // Once the unit reaches the target, shift so the next point in the path is the next target
+          u.path.points.shift();
+        }
+
+      }
+      // check for collisions with pickups in new location
+      this.checkPickupCollisions(u, false);
+      // Ensure that resolveDoneMoving is invoked when unit is out of stamina (and thus, done moving)
+      // or when find point in the path has been reached.
+      // This is necessary to end the moving units turn because elsewhere we are awaiting the fulfillment of that promise
+      // to know they are done moving
+      if (u.stamina <= 0 || !u.path || u.path.points.length === 0) {
+        u.resolveDoneMoving();
+        if (u.path) {
+          // Update last position that changed via own movement
+          u.path.lastOwnPosition = Vec.clone(u);
+        }
+        // done processing this unit for this unit's turn
+        return false;
+      }
+    } else {
+      // Unit is dead, no processing to be done
+      return false;
+    }
+    // more processing yet to be done
+    return true;
+  }
+  triggerGameLoopHeadless = () => {
+    if (globalThis.headless) {
+      // Now that NPC actions have been setup, trigger the gameLoopHeadless
+      // which will run until all actions are processed:
+      const headlessGameLoopPerfStart = performance.now();
+      let moreProcessingToBeDone = true;
+      let loopCount = 0;
+      while (moreProcessingToBeDone) {
+        loopCount++;
+        moreProcessingToBeDone = this._gameLoopHeadless();
+        if (loopCount > 1000) {
+          console.log('loop:', loopCount);
+        }
+      }
+      console.log('Headless server executed gameloop in ', (performance.now() - headlessGameLoopPerfStart).toFixed(2), ' millis.');
+    }
+  }
+  // Only to be invoked by triggerGameLoopHeadless
+  // Returns true if there is more processing to be done
+  _gameLoopHeadless = (): boolean => {
+    const stillProcessingForceMoves = this.gameLoopForceMove();
+    let stillProcessingUnits = 0;
+    const aliveNPCs = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
+    for (let u of this.units) {
+      const unitStillProcessing = this.gameLoopUnit(u, aliveNPCs, 16);
+      if (unitStillProcessing) {
+        stillProcessingUnits++;
+      }
+    }
+    return stillProcessingForceMoves || stillProcessingUnits > 0;
+  }
+  gameLoop = (timestamp: number) => {
+    if (this.players.filter(p => p.clientConnected).length == 0) {
+      console.log('Gameloop: pause; 0 connected players in game');
+      // Returning without requesting a new AnimationFrame is equivalent to 'pausing'
+      // the gameloop
+      return;
+    }
+
+    const deltaTime = timestamp - lastTime;
+    lastTime = timestamp;
+    const { zoom } = getCamera();
+
+    ImmediateMode.loop();
+
+    Unit.syncPlayerHealthManaUI(this);
+    globalThis.unitOverlayGraphics?.clear();
+
+    // Make liquid move to the right:
+    const scrollSpeed = deltaTime / config.LIQUID_X_SCROLL_SPEED;
+    for (let liquidSprite of this.liquidSprites) {
+      liquidSprite.tilePosition.x -= scrollSpeed;
+    }
+
+    // Sync css classes to handle changing the cursor
+    if (globalThis.player) {
+      document.body?.classList.toggle(CSSClasses.casting, CardUI.areAnyCardsSelected());
+      if (CardUI.areAnyCardsSelected()) {
+        const outOfRange = isOutOfRange(globalThis.player, this.getMousePos(), this)
+        document.body?.classList.toggle(CSSClasses.outOfRange, outOfRange);
+      } else {
+        // If there are no cards selected, ensure the out of range class is removed
+        document.body?.classList.toggle(CSSClasses.outOfRange, false);
+      }
+      // Turn off casting and outOfRange view if the player is viewing the walk rope
+      if (keyDown.showWalkRope) {
+        document.body?.classList.toggle(CSSClasses.casting, false);
+        document.body?.classList.toggle(CSSClasses.outOfRange, false);
+      }
+    }
+
+    const aliveNPCs = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
+    // Run all forces in this.forceMove
+    this.gameLoopForceMove();
 
     for (let doodad of this.doodads) {
       // Keep image in sync with position
@@ -497,78 +621,7 @@ export default class Underworld {
       const u = this.units[i];
       if (u) {
         const predictionUnit = !this.unitsPrediction ? undefined : this.unitsPrediction[i];
-        if (u.alive) {
-
-          while (u.path && u.path.points[0] && Vec.equal(Vec.round(u), Vec.round(u.path.points[0]))) {
-            // Remove next points until the next point is NOT equal to the unit's current position
-            // This prevent's "jittery" "slow" movement where it's moving less than {x:1.0, y:1.0}
-            // because the unit's position may have a decimal while the path does not so it'll stop
-            // moving when it reaches the target which may be less than 1.0 and 1.0 away.
-            u.path.points.shift();
-          }
-          // Only allow movement if the unit has stamina
-          if (u.path && u.path.points[0] && u.stamina > 0 && Unit.isUnitsTurnPhase(u, this)) {
-            // Move towards target
-            const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path.points[0], u.moveSpeed * deltaTime)
-            let moveDist = 0;
-            // For now, only AI units will collide with each other
-            // This is because the collisions were causing issues with player movement that I don't
-            // have time to solve at the moment.
-            if (u.unitType == UnitType.PLAYER_CONTROLLED) {
-              // Player units don't collide, they just move, and pathfinding keeps
-              // them from moving through walls
-              moveDist = math.distance(u, stepTowardsTarget);
-              u.x = stepTowardsTarget.x;
-              u.y = stepTowardsTarget.y;
-            } else {
-              // AI collide with each other and walls
-              const originalPosition = Vec.clone(u);
-              // Only move other NPCs out of the way, never move player units
-              moveWithCollisions(u, stepTowardsTarget, [...aliveNPCs, ...this.doodads], this);
-              moveDist = math.distance(originalPosition, u);
-              // Prevent moving into negative stamina.  This occurs rarely when
-              // the stamina is a fraction but above 0 and the moveDist is greater than the stamina.
-              // This check prevents the false-negative melee attack predictions
-              if (u.stamina - moveDist < 0) {
-                u.x = originalPosition.x;
-                u.y = originalPosition.y;
-                u.stamina = 0;
-              }
-            }
-
-            if (!isNaN(moveDist)) {
-              u.stamina -= moveDist;
-            }
-            // Only do this check if they are already in the liquid because units will never enter liquid
-            // just by moving themselves, they can only be forceMoved into liquid and that check happens 
-            // elsewhere
-            if (u.inLiquid) {
-              // Check if the unit was once in lava but now is out of the lava
-              Obstacle.tryFallInOutOfLiquid(u, this, false);
-            }
-            // If unit is MELEE and only has the final target left in the path, stop when it gets close enough
-            if (
-              u.path.points[0] && u.path.points.length == 1 && u.unitSubType == UnitSubType.MELEE && math.distance(u, u.path.points[0]) <= config.COLLISION_MESH_RADIUS * 2
-            ) {
-              // Once the unit reaches the target, shift so the next point in the path is the next target
-              u.path.points.shift();
-            }
-
-          }
-          // check for collisions with pickups in new location
-          this.checkPickupCollisions(u, false);
-          // Ensure that resolveDoneMoving is invoked when unit is out of stamina (and thus, done moving)
-          // or when find point in the path has been reached.
-          // This is necessary to end the moving units turn because elsewhere we are awaiting the fulfillment of that promise
-          // to know they are done moving
-          if (u.stamina <= 0 || !u.path || u.path.points.length === 0) {
-            u.resolveDoneMoving();
-            if (u.path) {
-              // Update last position that changed via own movement
-              u.path.lastOwnPosition = Vec.clone(u);
-            }
-          }
-        }
+        this.gameLoopUnit(u, aliveNPCs, deltaTime);
         // Sync Image even for non moving units since they may be moved by forces other than themselves
         // This keeps the unit.image in the same place as unit.x, unit.y
         Unit.syncImage(u)
@@ -593,17 +646,17 @@ export default class Underworld {
 
           // Only show health bar predictions on PlayerTurns, while players are able
           // to cast, otherwise it will show out of sync when NPCs do damage
-          if (this.turn_phase == turn_phase.PlayerTurns) {
+          if (this.turn_phase == turn_phase.PlayerTurns && globalThis.unitOverlayGraphics) {
             // Show how much damage they'll take on their health bar
-            globalThis.unitOverlayGraphics?.beginFill(healthBarHurtColor, 1.0);
+            globalThis.unitOverlayGraphics.beginFill(healthBarHurtColor, 1.0);
             if (predictionUnit) {
               const healthAfterHurt = predictionUnit.health;
               if (healthAfterHurt > u.health) {
-                globalThis.unitOverlayGraphics?.beginFill(healthBarHealColor, 1.0);
+                globalThis.unitOverlayGraphics.beginFill(healthBarHealColor, 1.0);
               }
               // const healthBarHurtWidth = Math.max(0, config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax);
               const healthBarHurtProps = getUIBarProps(u.x, u.y, u.health - healthAfterHurt, u.healthMax, zoom, u);
-              globalThis.unitOverlayGraphics?.drawRect(
+              globalThis.unitOverlayGraphics.drawRect(
                 // Show the healthBarHurtBar on the right side of the health  bar
                 healthBarHurtProps.x + config.UNIT_UI_BAR_WIDTH / zoom * healthAfterHurt / u.healthMax,
                 // Stack the health bar above the mana bar
@@ -619,25 +672,25 @@ export default class Underworld {
             }
           }
           // Draw mana bar
-          if (u.manaMax != 0) {
-            globalThis.unitOverlayGraphics?.lineStyle(0, 0x000000, 1.0);
-            globalThis.unitOverlayGraphics?.beginFill(colors.manaBlue, 1.0);
+          if (u.manaMax != 0 && globalThis.unitOverlayGraphics) {
+            globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
+            globalThis.unitOverlayGraphics.beginFill(colors.manaBlue, 1.0);
             const manaBarProps = getUIBarProps(u.x, u.y, u.mana, u.manaMax, zoom, u);
-            globalThis.unitOverlayGraphics?.drawRect(
+            globalThis.unitOverlayGraphics.drawRect(
               manaBarProps.x,
               manaBarProps.y,
               manaBarProps.width,
               manaBarProps.height);
             // Draw the mana that goes missing after a spell (useful for mana_burn)
             if (predictionUnit) {
-              globalThis.unitOverlayGraphics?.beginFill(colors.manaLostBlue, 1.0);
+              globalThis.unitOverlayGraphics.beginFill(colors.manaLostBlue, 1.0);
               const manaAfterSpell = predictionUnit.mana;
               const manaBarHurtProps = getUIBarProps(u.x, u.y, u.mana - manaAfterSpell, u.manaMax, zoom, u);
               // Only render hurt mana bar if it dips below mana max
               // (it can remain above mana max if mana is overfilled)
               if (manaAfterSpell < u.manaMax) {
                 const hurtX = manaBarHurtProps.x + config.UNIT_UI_BAR_WIDTH / zoom * manaAfterSpell / u.manaMax;
-                globalThis.unitOverlayGraphics?.drawRect(
+                globalThis.unitOverlayGraphics.drawRect(
                   // Show the manaBarHurtBar on the right side of the mana  bar
                   hurtX,
                   manaBarHurtProps.y,
@@ -2255,6 +2308,7 @@ export default class Underworld {
           );
         }
       }
+      this.triggerGameLoopHeadless();
       await Promise.all(animationPromises);
     }
 

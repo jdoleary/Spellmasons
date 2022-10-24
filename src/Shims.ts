@@ -19,7 +19,7 @@ global.document = {
     }
 };
 globalThis.addEventListener = function () { };
-const TICK_RATE = 16;
+const TICK_RATE = 0;
 console.log('TICK_RATE set to', TICK_RATE)
 
 global.cancelAnimationFrame = (id) => {

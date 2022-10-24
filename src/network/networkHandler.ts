@@ -351,7 +351,7 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
           // the local copies of other player's stay in sync with the server and aren't prematurely stopped due
           // to a stamina limitation
           fromPlayer.unit.stamina = 100;
-          await Unit.moveTowards(fromPlayer.unit, payload, underworld).then(() => {
+          const moveTowardsPromise = Unit.moveTowards(fromPlayer.unit, payload, underworld).then(() => {
             if (fromPlayer.unit.path?.points.length && fromPlayer.unit.stamina == 0) {
               // If they do not reach their destination, notify that they are out of stamina
               floatingText({
@@ -365,6 +365,9 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
             // to choose a new path next turn
             fromPlayer.unit.path = undefined;
           });
+          // Now that player movement has been set up, trigger the headless server to process it immediately
+          underworld.triggerGameLoopHeadless();
+          await moveTowardsPromise;
         }
       } else {
         console.error('Cannot move player, caster does not exist');
