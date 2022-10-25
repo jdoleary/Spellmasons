@@ -2640,6 +2640,10 @@ export default class Underworld {
           // but this disswades them from going around to pickup potions)
           playerUnit.health = playerUnit.healthMax;
           playerUnit.mana = playerUnit.manaMax;
+          // Since playerUnit's health and mana is reset, we need to immediately sync the prediction unit
+          // so that it doesn't inncorrectly warn "self damage due to spell" by seeing that the prediction unit
+          // has less health than the current player unit.
+          this.syncPlayerPredictionUnitOnly();
 
         }
       } else {

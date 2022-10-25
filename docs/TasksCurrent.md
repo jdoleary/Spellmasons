@@ -39,7 +39,6 @@
 # Bugs / Cleaning
 - m: You can't close popups on 1080x764 resolution
 - "All targets" copy is confusing if player doesn't understand targeting
-- h: bug: saw "this spell will damage you" after heal then end turn immediately
 - h: **important**: completely destroy the underworld object between playthroughs rather than just cleaning it up
 - Find a way to make randomness fixed (like in spell "Displace" so that it doesn't get different random results on other people's screens and so that it wont change after another player casts)
 - This save file is giving me critical errors `saveFile-with-errors.json`
