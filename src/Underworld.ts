@@ -1714,7 +1714,10 @@ export default class Underworld {
     return { x, y };
   }
   isGameOver(): boolean {
-    return !this.players.some(p => p.unit.alive);
+    // TODO will have to update this to allow PVP / factions
+    const playerFactions = this.players.map(p => p.unit.faction);
+    // Game is over once ALL units on player factions are dead (this includes player units)
+    return this.units.filter(u => playerFactions.includes(u.faction)).every(u => !u.alive);
   }
   goToNextPhaseIfAppropriate(): boolean {
     // Only move on from the player turn phase if there are players in the game,
@@ -1732,13 +1735,20 @@ export default class Underworld {
         console.log('PlayerTurn: Check end player turn phase; players havent ended turn yet:', activePlayers.filter(p => !p.endedTurn).map(p => p.clientId));
       }
     }
+    // If all connected players are dead
+    if (this.players.filter(p => p.clientConnected).every(p => !p.unit.alive)) {
+      // end the player turn phase to let the AI hash it out
+      // TODO will the stack just keep growing
+      this.endPlayerTurnPhase();
+      return true;
+    }
     return false;
   }
   endPlayerTurnPhase() {
     console.log('Underworld: TurnPhase: End player turn phase');
     // Safety, force die any units that are out of bounds (this should never happen)
     // Note: Player Controlled units are out of bounds when they are inPortal so that they don't collide,
-    // this filters out PLAYER_CONTROLLED so that they don't get die()'d when they are inPortalb
+    // this filters out PLAYER_CONTROLLED so that they don't get die()'d when they are inPortal
     for (let u of this.units.filter(u => u.alive && u.unitType !== UnitType.PLAYER_CONTROLLED)) {
       if (this.lastLevelCreated) {
         // Don't kill out of bound units if they are already flagged for removal
@@ -2008,6 +2018,18 @@ export default class Underworld {
         // Prevent infinite loop since there are no players
         // alive it would continue to loop endlessly and freeze up
         // the game if it didn't early return here
+        return;
+      }
+
+      // If all enemies are dead and all non portaled players are dead, make non portaled players portal
+      // so the game can continue
+      const allEnemiesAreDead = this.units.filter(u => u.faction == Faction.ENEMY).every(u => !u.alive);
+      if (allEnemiesAreDead && this.players.filter(p => !Player.inPortal(p) && !p.unit.alive)) {
+        this.players.forEach(p => {
+          Unit.resurrect(p.unit);
+          Player.enterPortal(p, this);
+        });
+        this.checkForEndOfLevel();
         return;
       }
       const wentToNextPhase = this.goToNextPhaseIfAppropriate();
