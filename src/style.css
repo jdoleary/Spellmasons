@@ -542,6 +542,11 @@ kbd {
   display: block;
 }
 
+#inventory-container .card-title,
+#card-holders-inner .card-title {
+  color: white;
+}
+
 .card-title {
   font-size: 12px;
   color: black;
