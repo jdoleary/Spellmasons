@@ -126,7 +126,6 @@ export function playSFX(path?: string) {
     if (!path) {
         return;
     }
-    console.log('sfx:', path);
     const lastTimeThisPathWasPlayed = lastPlayed[path];
     if (lastTimeThisPathWasPlayed && Date.now() - lastTimeThisPathWasPlayed <= 100) {
         console.log('Cancel playing sound', path, 'it was played too recently')
