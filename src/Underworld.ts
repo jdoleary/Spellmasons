@@ -544,11 +544,17 @@ export default class Underworld {
       while (moreProcessingToBeDone) {
         loopCount++;
         moreProcessingToBeDone = this._gameLoopHeadless();
-        if (loopCount > 1000) {
-          console.log('loop:', loopCount);
+        if (loopCount >= 1000 && loopCount % 500 == 0) {
+          console.error('Headless gameloop unexpectedly large loop count:', loopCount);
+        }
+        if (loopCount > 10000) {
+          // TODO: this number is arbitrary, test later levels and make sure this is high enough
+          // so that it doesn't early exit
+          console.error('Force return from headless gameloop to prevent infinite loop');
+          return
         }
       }
-      console.log('Headless server executed gameloop in ', (performance.now() - headlessGameLoopPerfStart).toFixed(2), ' millis.');
+      console.log('Headless server executed gameloop in ', (performance.now() - headlessGameLoopPerfStart).toFixed(2), ' millis with', loopCount, ' loops.');
     }
   }
   // Only to be invoked by triggerGameLoopHeadless

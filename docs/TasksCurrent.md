@@ -9,11 +9,7 @@
     - Adaptive difficulty
 - Make lobby
     - Set your name, robe color, ready status
-- bug: multiplayer: portal isn't synced if you refresh
-- bug: after refresh dead unit renders full healthbar in pixi
-- Gmaeloop refactor
-    - headless server didn't process push csast
-    - add max loop count to protect against infinite
+- Push predictions are off when on headless
 # Today
 - in multiplayer, when one player leaves and window is not focused the camera spazzes out
 - Make Youtube short audio louder
@@ -33,6 +29,8 @@
 - inventory should show current card cost and cooldown
 -  Add save/load to menu
 # Bugs / Cleaning
+- bug: multiplayer: portal isn't synced if you refresh
+- bug: after refresh dead unit renders full healthbar in pixi
 - m: You can't close popups on 1080x764 resolution
 - "All targets" copy is confusing if player doesn't understand targeting
 - h: **important**: completely destroy the underworld object between playthroughs rather than just cleaning it up
@@ -71,6 +69,7 @@
 - Split sprite sheet for more efficient development
 - Optimize: targeting spells seem pretty slow in prediction
 - optimize: Ihave duplicate units, pickups, and doodads in save due to serailizeForSaving having them in the underworld and extracting them to the top level too
+- Test early exit (infinite loop protection) for headless gameloop
 
 ## Stretch Content
 - Idea: "oh shit button": double the amount of mana you have this level but it reduces by half next level. " Break glass in case of emergency. Deal with the devil
