@@ -2,10 +2,15 @@
 - Need a restart screen after a team wipe
 - No indication that it's the enemy's turn
 - In marketing, emphasize that it's turn based
+    - Why this game might not be for you
+- Hide disconnected players in game screen but not in the lobby
+- Multiplayer voting
 - Check balance difficulty for many players
-- Adaptive difficulty
+    - Adaptive difficulty
 - Make lobby
     - Set your name, robe color, ready status
+- bug: multiplayer: portal isn't synced if you refresh
+- bug: after refresh dead unit renders full healthbar in pixi
 - Gmaeloop refactor
     - headless server didn't process push csast
     - add max loop count to protect against infinite
@@ -15,15 +20,6 @@
 - e: bug: health bars disappear when cone prediction is up
     - this is because unitOverlayGraphics is used for attack radiuses and health bars
 - Fix rejoining hack where people can just rejoin if they're dead to come back
-- **important** Laggy on bad guys turn
-    - I think this is because of `global.requestAnimationFrame = (callback) => {`
-    - TODO: Rework gameloop for headless so that it executes immediately as subset of responsibilities
-        - Gameloop responsibilities:
-            1. run forceMoves
-            2. run unitloop
-                - handle unit movement
-                - handle unit inLiquid state
-                - check pickup collisions
 - explain that when you die in multiplayer you'll come back if your ally beats the level
 - What to do with disconnected players when it goes to the next level?
 # Features

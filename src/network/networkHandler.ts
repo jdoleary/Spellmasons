@@ -375,7 +375,10 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
       break;
     case MESSAGE_TYPES.SPELL:
       if (fromPlayer) {
-        await handleSpell(fromPlayer, payload, underworld);
+        const handleSpellPromise = handleSpell(fromPlayer, payload, underworld);
+        // Now that spell has been cast, trigger the headless server to process it immediately
+        underworld.triggerGameLoopHeadless();
+        await handleSpellPromise;
       } else {
         console.error('Cannot cast, caster does not exist');
       }
