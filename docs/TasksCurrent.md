@@ -1,20 +1,24 @@
 # 2022-10-25
+## Priorities
+    - local client and server enters infinite turn loop if all players die (with no ally npcs)
+    - prevent auto join room
+    - Fix underworld cleanup so no state carries over
+    - **important**Allow multiplayer game restart after wipe
+        - All players return to lobby after 10 seconds
+        - cleans up underworld
+## All
+- bug: in multiplayer games units are spawning out of bounds
+- bug: when player rejoins a game the map is different
+- fix: menu leave room doesn't update svelte state
 - Turn phase testing:
     - if one player is portaled and the remaining player dies it should go to the next level
     - if no players are portaled and all players die and there are no ally npcs it should go to game over
     - if no players are portaled and all players die and there ARE npc allies it should run turn phases for NPCS
         - if NPC_ALLYs succeed it should go to next level
         - if NPC_Allys do not it should go to end game
-- don't auto connect gamename
-- bug: If server is currently in an infinite loop it won't process disconnect and will make the player wait when trying to exit the lobby
 - Handle GCing underworld by making a container object through which all functions that need access to it access it through
     - Then on cleanup, the container will just reassign a new underworld.
 - somehow changing servers resulted in the old underworld's state still hanging around in lobby
-- bug: When i hot reload code when players are waiting in lobby the server infinite loops
-- bug: It will take you into the lobby screen even if it fails to connect to the server
-- **important**Allow multiplayer game restart after wipe
-    - All players return to lobby after 10 seconds
-    - cleans up underworld
 - investigate: `// TODO will the stack just keep growing`
     - turn_phases should work on a queue not a stack (this is mostly relevant for singleplayer and when the NPCs are just hashing it out cause all the players are dead so it doesn't stack overflow)
 # Pre playtest
