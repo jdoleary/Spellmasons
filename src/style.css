@@ -984,14 +984,27 @@ body.your-turn #end-turn-btn:hover {
   display: none;
   margin: 0 auto;
   position: absolute;
-  width: 200px;
-  height: 200px;
+  width: 100vw;
+  height: 100vh;
   left: 0;
   right: 0;
+  justify-content: center;
+  align-items: center;
 }
 
 body.game-over #game-over {
-  display: block;
+  display: flex;
+}
+
+#game-over-modal {
+  min-width: 300px;
+  color: white;
+  gap: 20px;
+}
+
+#game-over-modal h1 {
+  text-align: center;
+  margin: 0;
 }
 
 body.view-Menu .prompt:not(.forceShow) {

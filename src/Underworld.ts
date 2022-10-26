@@ -985,6 +985,9 @@ export default class Underworld {
   cleanup() {
     console.log('teardown: Cleaning up underworld');
 
+    // Remove game-over popup
+    document.body.classList.toggle('game-over', false);
+
     // Remove all phase classes from body
     if (document && !globalThis.headless) {
       // @ts-expect-error Property 'values' does not exist on type 'DOMTokenList'
@@ -2015,6 +2018,7 @@ export default class Underworld {
       }
       const gameIsOver = this.isGameOver();
       if (gameIsOver) {
+        document.body.classList.toggle('game-over', true);
         // Prevent infinite loop since there are no players
         // alive it would continue to loop endlessly and freeze up
         // the game if it didn't early return here

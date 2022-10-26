@@ -135,6 +135,9 @@ export function addUnderworldEventListeners(underworld: Underworld) {
   const elEndTurnBtn: HTMLButtonElement = document.getElementById(
     endTurnBtnId,
   ) as HTMLButtonElement;
+  const elQuitButton: HTMLButtonElement = document.getElementById(
+    'quit',
+  ) as HTMLButtonElement;
 
   const listeners: {
     target: HTMLElement | typeof globalThis;
@@ -195,6 +198,17 @@ export function addUnderworldEventListeners(underworld: Underworld) {
         target: elEndTurnBtn,
         event: 'click',
         listener: endTurnBtnListener.bind(undefined, underworld)
+      },
+      {
+        target: elQuitButton,
+        event: 'click',
+        listener: () => {
+          if (globalThis.exitCurrentGame) {
+            globalThis.exitCurrentGame();
+          } else {
+            console.error('Unexpected: globalThis.exitCurrentGame is undefined.');
+          }
+        }
       },
     ];
   // Make 'closeMenu' available to the svelte menu
