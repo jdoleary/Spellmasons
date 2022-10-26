@@ -81,6 +81,9 @@ import { calculateGameDifficulty } from './Difficulty';
 import { makeScrollDissapearParticles } from './graphics/ParticleCollection';
 
 export enum turn_phase {
+  // turn_phase is Stalled when no one can act
+  // This may happen if all players disconnect
+  Stalled,
   PlayerTurns,
   NPC_ALLY,
   NPC_ENEMY,
@@ -112,7 +115,7 @@ export default class Underworld {
   levelIndex: number = -1;
   // for serializing random: prng
   RNGState?: SeedrandomState;
-  turn_phase: turn_phase = turn_phase.PlayerTurns;
+  turn_phase: turn_phase = turn_phase.Stalled;
   // An id incrementor to make sure no 2 units share the same id
   lastUnitId: number = -1;
   // A count of which turn it is, this is useful for
@@ -1795,7 +1798,8 @@ export default class Underworld {
     this.broadcastTurnPhase(turn_phase.NPC_ALLY);
   }
 
-  async endNPCTurnPhase() {
+  // This function is invoked when all factions have finished their turns
+  async endFullTurnCycle() {
     // Move onto next phase
     // --
     // Note: The reason this logic happens here instead of in initializeTurnPhase
@@ -1864,8 +1868,6 @@ export default class Underworld {
       // Cap manaPerTurn at manaMax
       unit.mana = Math.min(unit.mana, unit.manaMax);
     }
-
-    this.broadcastTurnPhase(turn_phase.PlayerTurns);
   }
   syncTurnMessage() {
     console.log('syncTurnMessage: phase:', turn_phase[this.turn_phase]);
@@ -2277,35 +2279,56 @@ export default class Underworld {
     if (phase) {
       switch (phase) {
         case turn_phase[turn_phase.PlayerTurns]:
-
-          for (let u of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED)) {
-            // Reset stamina for player units so they can move again
-            // Allow overfill with stamina potion so this only sets it UP to
-            // staminaMax, it won't lower it
-            if (u.stamina < u.staminaMax) {
-              u.stamina = u.staminaMax;
+          // Start the players' turn IF there is at least one player able to act
+          if (this.players.some(player => Player.ableToAct(player))) {
+            for (let u of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED)) {
+              // Reset stamina for player units so they can move again
+              // Allow overfill with stamina potion so this only sets it UP to
+              // staminaMax, it won't lower it
+              if (u.stamina < u.staminaMax) {
+                u.stamina = u.staminaMax;
+              }
             }
+            // Lastly, initialize the player turns.
+            // Note, it is possible that calling this will immediately end
+            // the player phase (if there are no players to take turns)
+            this.initializePlayerTurns();
+          } else {
+            // This is the only place where the turn_phase can become Stalled, when it is supposed
+            // to be player turns but there are no players able to act.
+            this.setTurnPhase(turn_phase.Stalled);
+            console.log('Turn Management: Skipping initializingPlayerTurns, no players ableToAct. Setting turn_phase to "Stalled"');
           }
-          // Lastly, initialize the player turns.
-          // Note, it is possible that calling this will immediately end
-          // the player phase (if there are no players to take turns)
-          this.initializePlayerTurns();
+          // Note: The player turn occurs asyncronously because it depends on player input so the call to
+          // `broadcastTurnPhase(turn_phase.NPC_ALLY)` happens elsewhere; whereas the other blocks in this function
+          // always move to the next faction turn on their last line before the break
           break;
         case turn_phase[turn_phase.NPC_ALLY]:
           // Clear enemy attentionMarkers since it's now their turn
           globalThis.attentionMarkers = [];
-          // Run AI unit actions
-          await this.executeNPCTurn(Faction.ALLY);
+          // Only execute turn if there are units to take the turn:
+          if (this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ALLY).length) {
+            // Run AI unit actions
+            await this.executeNPCTurn(Faction.ALLY);
+          } else {
+            console.log('Turn Management: Skipping executingNPCTurn for Faction.ALLY');
+          }
           // Now that allies are done taking their turn, change to NPC Enemy turn phase
           this.broadcastTurnPhase(turn_phase.NPC_ENEMY)
           break;
         case turn_phase[turn_phase.NPC_ENEMY]:
           // Clear enemy attentionMarkers since it's now their turn
           globalThis.attentionMarkers = [];
-          // Run AI unit actions
-          await this.executeNPCTurn(Faction.ENEMY);
-          // Set turn phase to player turn
-          this.endNPCTurnPhase();
+          // Only execute turn if there are units to take the turn:
+          if (this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ENEMY).length) {
+            // Run AI unit actions
+            await this.executeNPCTurn(Faction.ENEMY);
+          } else {
+            console.log('Turn Management: Skipping executingNPCTurn for Faction.ENEMY');
+          }
+          this.endFullTurnCycle();
+          // Loop: go back to the player turn
+          this.broadcastTurnPhase(turn_phase.PlayerTurns);
           break;
         default:
           break;
@@ -2782,9 +2805,8 @@ export default class Underworld {
 
   }
   // Returns an array of newly created players
-  ensureAllClientsHaveAssociatedPlayers(clients: string[]): Player.IPlayer[] {
+  ensureAllClientsHaveAssociatedPlayers(clients: string[]) {
     this.clients = clients;
-    let newlyCreatedPlayers: Player.IPlayer[] = [];
     // Ensure all clients have players
     for (let clientId of this.clients) {
       const player = this.players.find(p => p.clientId == clientId);
@@ -2792,8 +2814,7 @@ export default class Underworld {
         // If the client that joined does not have a player yet, make them one immediately
         // since all clients should always have a player associated
         console.log(`Setup: Create a Player instance for ${clientId}`)
-        const p = Player.create(clientId, this);
-        newlyCreatedPlayers.push(p);
+        Player.create(clientId, this);
       }
     }
     // Sync all players' connection statuses with the clients list
@@ -2838,7 +2859,12 @@ export default class Underworld {
         // todo sync doodads here
       });
     }
-    return newlyCreatedPlayers;
+
+    // Resume turn loop if currently stalled but now a player is able to act:
+    // See GameLoops.md for more details 
+    if (this.turn_phase == turn_phase.Stalled && this.players.some(player => Player.ableToAct(player))) {
+      this.broadcastTurnPhase(turn_phase.PlayerTurns);
+    }
   }
   syncPlayers(players: Player.IPlayerSerialized[]) {
     console.log('sync: Syncing players', JSON.stringify(players.map(p => p.clientId)));
