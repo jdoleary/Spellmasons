@@ -288,17 +288,26 @@ export function setClientConnected(player: IPlayer, connected: boolean, underwor
 }
 export function syncLobby(underworld: Underworld) {
   const playerColorToCss = (p: IPlayer) => `#${(p.color || 0xffffff).toString(16)}`;
-  globalThis.lobbyPlayerList = underworld.players.map(p => {
-    let status = 'Connected';
-    if (!p.clientConnected) {
-      status = 'Disconnected';
-    } else if (!p.isSpawned) {
-      status = 'Picking Start Point';
-    } else if (p.endedTurn) {
-      status = 'Waiting...';
-    }
-    return { name: p.name || p.clientId, status, color: playerColorToCss(p), ready: p.lobbyReady ? 'Ready' : 'Not Ready' };
-  });
+  globalThis.lobbyPlayerList = underworld.players
+    .sort((a, _b) => {
+      // Sort self to the top
+      if (a === globalThis.player) {
+        return -1;
+      } else {
+        return 0;
+      }
+    })
+    .map(p => {
+      let status = 'Connected';
+      if (!p.clientConnected) {
+        status = 'Disconnected';
+      } else if (!p.isSpawned) {
+        status = 'Picking Start Point';
+      } else if (p.endedTurn) {
+        status = 'Waiting...';
+      }
+      return { name: p.name || p.clientId, status, color: playerColorToCss(p), ready: p.lobbyReady ? 'Ready' : 'Not Ready' };
+    });
   // Update lobby element
   if (elInGameLobby) {
     if (underworld.players.length == 1) {
