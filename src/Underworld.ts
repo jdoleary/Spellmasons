@@ -2231,6 +2231,10 @@ export default class Underworld {
   // Do not confuse with initializeTurnPhase which runs initialization
   // logic when the turn phase changes.  Note: initializeTurnPhase
   // calls this function
+  // Important Note: This should never be called directly by a client, it shall only
+  // be triggered through a network message from the host which in turn invokes
+  // initializeTurnPhase (on each client and itself);
+  // otherwise the clients and host could get out of sync
   setTurnPhase(p: turn_phase) {
     console.log('setTurnPhase(', turn_phase[p], ')');
     this.turn_phase = p;
@@ -2300,16 +2304,20 @@ export default class Underworld {
             // the player phase (if there are no players to take turns)
             this.initializePlayerTurns();
           } else {
-            if (this.players.every(player => !Player.inPortal(player)) && this.players.some(player => player.clientConnected && !Player.inPortal(player) && !player.unit.alive)) {
+            // If there are players in the game but all are dead
+            if (this.players.every(player => !Player.inPortal(player)) && this.players.some(player => player.clientConnected && !Player.inPortal(player) && !player.unit.alive)
+              // AND there are some ally NPCs
+              && this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ALLY && u.alive).length) {
               // Special case: skip player turn and go right to NPC_ALLY in the event that 
-              // no players are portaled and there is a player that is both connected and dead
+              // no players are portaled and there is a player that is both connected and dead and there
+              // are living ALLY NPCs
               // go to the NPC ALLY phase.  If the NPC Allies overcome the enemies, the game will continue.
               this.broadcastTurnPhase(turn_phase.NPC_ALLY);
             } else {
 
               // This is the only place where the turn_phase can become Stalled, when it is supposed
               // to be player turns but there are no players able to act.
-              this.setTurnPhase(turn_phase.Stalled);
+              this.broadcastTurnPhase(turn_phase.Stalled);
               console.log('Turn Management: Skipping initializingPlayerTurns, no players ableToAct. Setting turn_phase to "Stalled"');
             }
           }
@@ -2321,7 +2329,7 @@ export default class Underworld {
           // Clear enemy attentionMarkers since it's now their turn
           globalThis.attentionMarkers = [];
           // Only execute turn if there are units to take the turn:
-          if (this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ALLY).length) {
+          if (this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ALLY && u.alive).length) {
             // Run AI unit actions
             await this.executeNPCTurn(Faction.ALLY);
           } else {
@@ -2334,7 +2342,7 @@ export default class Underworld {
           // Clear enemy attentionMarkers since it's now their turn
           globalThis.attentionMarkers = [];
           // Only execute turn if there are units to take the turn:
-          if (this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ENEMY).length) {
+          if (this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ENEMY && u.alive).length) {
             // Run AI unit actions
             await this.executeNPCTurn(Faction.ENEMY);
           } else {

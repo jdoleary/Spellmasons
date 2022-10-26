@@ -311,8 +311,9 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
           Player.setPlayerRobeColor(fromPlayer, color);
         }
         Player.syncLobby(underworld);
+        underworld.tryRestartTurnPhaseLoop();
       } else {
-        console.error('Cannot PLAYER_CONFIG, no associated player')
+        console.error('Cannot PLAYER_CONFIG, no associated player. Players:', underworld.players.map(p => p.clientId));
       }
       break;
     case MESSAGE_TYPES.SPAWN_PLAYER:
