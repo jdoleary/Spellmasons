@@ -1,6 +1,10 @@
 # 2022-10-25
+- I keep getting 'clientId' appended to my clientId so when I back out of a joined mlultiplayer game, it joins me as a new plaeyr
+- bug: pressing back when in mulpliplayer menu but connected to a game brings you to the "resume game" menu screen
     - fix: back button for nested menus such as Main -> Multiplayer -> Lobby
-    - Add lobby
+        - somehow changing servers resulted in the old underworld's state still hanging around in lobby
+    - bug: When i hot reload code when players are waiting in lobby the server infinite loops
+    - bug: It will take you into the lobby screen even if it fails to connect to the server
     - Allow multiplayer game restart after wipe
         - All players return to lobby after 10 seconds
         - cleans up underworld

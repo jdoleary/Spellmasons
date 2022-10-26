@@ -1370,6 +1370,14 @@ body.view-Lobby #lobby {
 
 }
 
+#in-game-lobby {
+  display: none;
+}
+
+body.view-Game #in-game-lobby {
+  display: block;
+}
+
 #instructions,
 #camera-recenter-tip {
   display: none;
