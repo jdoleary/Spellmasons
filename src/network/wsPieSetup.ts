@@ -172,19 +172,7 @@ export function setupPieAndUnderworld() {
     pie.useStats = true;
     console.log('Client: Initialize Underworld');
     const underworld = new Underworld(pie, Math.random().toString());
-    globalThis.connect_to_wsPie_server = wsUri => connect_to_wsPie_server(wsUri, underworld).then(() => {
-      // Auto join game if specified in url
-      let urlSearchParams = new URLSearchParams(location.search);
-      let gameName = urlSearchParams.get("game");
-      if (gameName) {
-        if (globalThis.joinRoom) {
-          globalThis.joinRoom({ name: gameName })
-        } else {
-          console.error('globalThis.joinRoom is undefined')
-        }
-      }
-
-    });
+    globalThis.connect_to_wsPie_server = wsUri => connect_to_wsPie_server(wsUri, underworld);
     globalThis.isConnected = pie.isConnected.bind(pie);
     globalThis.pieDisconnect = pie.disconnect.bind(pie);
     globalThis.pieLeaveRoom = pie.leaveRoom.bind(pie);
