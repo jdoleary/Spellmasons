@@ -1732,18 +1732,18 @@ export default class Underworld {
     // Game is over once ALL units on player factions are dead (this includes player units)
     return this.units.filter(u => playerFactions.includes(u.faction)).every(u => !u.alive);
   }
-  goToNextPhaseIfAppropriate(): boolean {
+  tryEndPlayerTurnPhase(): boolean {
+    let doEndPlayerTurnPhase = false;
     // Only move on from the player turn phase if there are players in the game,
     // otherwise, wait for players to be in the game so that the serve doesn't just 
     // run cycles pointlessly
-    const activePlayers = this.players.filter(Player.ableToAct)
+    const activePlayers = this.players.filter(Player.ableToAct);
     if (this.turn_phase === turn_phase.PlayerTurns && activePlayers.length > 0) {
       // If all players that can act have ended their turns...
       if (
         activePlayers.every(p => p.endedTurn)
       ) {
-        this.endPlayerTurnPhase();
-        return true;
+        doEndPlayerTurnPhase = true;
       } else {
         console.log('PlayerTurn: Check end player turn phase; players havent ended turn yet:', activePlayers.filter(p => !p.endedTurn).map(p => p.clientId));
       }
@@ -1751,51 +1751,50 @@ export default class Underworld {
     // If all connected players are dead
     if (this.players.filter(p => p.clientConnected).every(p => !p.unit.alive)) {
       // end the player turn phase to let the AI hash it out
-      // TODO will the stack just keep growing
-      this.endPlayerTurnPhase();
-      return true;
+      doEndPlayerTurnPhase = true;
     }
-    return false;
-  }
-  endPlayerTurnPhase() {
-    console.log('Underworld: TurnPhase: End player turn phase');
-    // Safety, force die any units that are out of bounds (this should never happen)
-    // Note: Player Controlled units are out of bounds when they are inPortal so that they don't collide,
-    // this filters out PLAYER_CONTROLLED so that they don't get die()'d when they are inPortal
-    for (let u of this.units.filter(u => u.alive && u.unitType !== UnitType.PLAYER_CONTROLLED)) {
-      if (this.lastLevelCreated) {
-        // Don't kill out of bound units if they are already flagged for removal
-        // (Note: flaggedForRemoval units are set to NaN,NaN;  thus they are out of bounds, but 
-        // they will be cleaned up so they shouldn't be killed here as this check is just to ensure
-        // no living units that are unreachable hinder progressing through the game)
-        if (!u.flaggedForRemoval) {
-          // TODO ensure that this works on headless
-          const originalTile = this.lastLevelCreated.imageOnlyTiles[vec2ToOneDimentionIndexPreventWrap({ x: Math.round(u.x / config.OBSTACLE_SIZE), y: Math.round(u.y / config.OBSTACLE_SIZE) }, this.lastLevelCreated.width)];
-          if (!originalTile || originalTile.image == '') {
-            console.error('Unit was force killed because they ended up out of bounds', u.unitSubType)
-            Unit.die(u, this, false);
+    if (doEndPlayerTurnPhase) {
+      console.log('Underworld: TurnPhase: End player turn phase');
+      // Safety, force die any units that are out of bounds (this should never happen)
+      // Note: Player Controlled units are out of bounds when they are inPortal so that they don't collide,
+      // this filters out PLAYER_CONTROLLED so that they don't get die()'d when they are inPortal
+      for (let u of this.units.filter(u => u.alive && u.unitType !== UnitType.PLAYER_CONTROLLED)) {
+        if (this.lastLevelCreated) {
+          // Don't kill out of bound units if they are already flagged for removal
+          // (Note: flaggedForRemoval units are set to NaN,NaN;  thus they are out of bounds, but 
+          // they will be cleaned up so they shouldn't be killed here as this check is just to ensure
+          // no living units that are unreachable hinder progressing through the game)
+          if (!u.flaggedForRemoval) {
+            // TODO ensure that this works on headless
+            const originalTile = this.lastLevelCreated.imageOnlyTiles[vec2ToOneDimentionIndexPreventWrap({ x: Math.round(u.x / config.OBSTACLE_SIZE), y: Math.round(u.y / config.OBSTACLE_SIZE) }, this.lastLevelCreated.width)];
+            if (!originalTile || originalTile.image == '') {
+              console.error('Unit was force killed because they ended up out of bounds', u.unitSubType)
+              Unit.die(u, this, false);
+            }
           }
         }
       }
-    }
-    // Decrement card usage counts,
-    // This makes spells less expensive
-    for (let p of this.players) {
-      for (let cardId of p.cards) {
-        // Decrement, cap at 0
-        const cardUsage = p.cardUsageCounts[cardId];
-        if (cardUsage !== undefined) {
-          p.cardUsageCounts[cardId] = Math.max(0, cardUsage - 1);
+      // Decrement card usage counts,
+      // This makes spells less expensive
+      for (let p of this.players) {
+        for (let cardId of p.cards) {
+          // Decrement, cap at 0
+          const cardUsage = p.cardUsageCounts[cardId];
+          if (cardUsage !== undefined) {
+            p.cardUsageCounts[cardId] = Math.max(0, cardUsage - 1);
+          }
         }
       }
+      updateManaCostUI(this);
+      // Move onto next phase
+      // Note: BroadcastTurnPhase should happen last because it
+      // queues up a unitsync, so if changes to the units
+      // were to happen AFTER broadcastTurnPhase they would be
+      // overwritten when the sync occurred
+      this.broadcastTurnPhase(turn_phase.NPC_ALLY);
+      return true;
     }
-    updateManaCostUI(this);
-    // Move onto next phase
-    // Note: BroadcastTurnPhase should happen last because it
-    // queues up a unitsync, so if changes to the units
-    // were to happen AFTER broadcastTurnPhase they would be
-    // overwritten when the sync occurred
-    this.broadcastTurnPhase(turn_phase.NPC_ALLY);
+    return false;
   }
 
   // This function is invoked when all factions have finished their turns
@@ -2045,7 +2044,7 @@ export default class Underworld {
         this.checkForEndOfLevel();
         return;
       }
-      const wentToNextPhase = this.goToNextPhaseIfAppropriate();
+      const wentToNextPhase = this.tryEndPlayerTurnPhase();
       if (wentToNextPhase) {
         return;
       }
@@ -2300,7 +2299,7 @@ export default class Underworld {
             console.log('Turn Management: Skipping initializingPlayerTurns, no players ableToAct. Setting turn_phase to "Stalled"');
           }
           // Note: The player turn occurs asyncronously because it depends on player input so the call to
-          // `broadcastTurnPhase(turn_phase.NPC_ALLY)` happens elsewhere; whereas the other blocks in this function
+          // `broadcastTurnPhase(turn_phase.NPC_ALLY)` happens inside tryEndPlayerTurnPhase(); whereas the other blocks in this function
           // always move to the next faction turn on their last line before the break
           break;
         case turn_phase[turn_phase.NPC_ALLY]:
