@@ -32,7 +32,7 @@ function connect_to_wsPie_server(wsUri: string | undefined, underworld: Underwor
   }
   addHandlers(pie, underworld);
   return new Promise<void>((resolve, reject) => {
-    const storedClientId = sessionStorage.getItem('pie-clientId');
+    const storedClientId = localStorage.getItem('pie-clientId');
     pie.onConnectInfo = (o) => {
       console.log('onConnectInfo', o);
       if (o.connected) {
@@ -147,7 +147,7 @@ function addHandlers(pie: PieClient, underworld: Underworld) {
       // Only store clientId if it is from a multiplayer session
       // 'solomode_client_id' comes from pieclient's solo mode
       if (o.clientId !== 'solomode_client_id') {
-        sessionStorage.setItem('pie-clientId', o.clientId);
+        localStorage.setItem('pie-clientId', o.clientId);
       }
     }
   };

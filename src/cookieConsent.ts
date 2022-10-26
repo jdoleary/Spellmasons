@@ -11,7 +11,7 @@ export default function cookieConsentPopup(forcePopup: boolean) {
 <div id="cookie-consent">
     <div id="cookie-consent-inner">
         <p>
-        Spellmasons uses cookies, localStorage, and sessionStorage to save your game progress, hide the tutorial if you've already completed it, and to store other game-related data.
+        Spellmasons uses cookies and localStorage to save your game progress, hide the tutorial if you've already completed it, and to store other game-related data.
         </p>
         <p>
         Please allow cookies for the best user experience.
