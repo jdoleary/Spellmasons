@@ -41,6 +41,7 @@
 - m: You can't close popups on 1080x764 resolution
 - "All targets" copy is confusing if player doesn't understand targeting
 - h: **important**: completely destroy the underworld object between playthroughs rather than just cleaning it up
+    - for now you can tell because lastUnitId isn't reset
 - Find a way to make randomness fixed (like in spell "Displace" so that it doesn't get different random results on other people's screens and so that it wont change after another player casts)
 - This save file is giving me critical errors `saveFile-with-errors.json`
 - Improve UX for shove so that it's clear when you're not close enough
