@@ -99,6 +99,9 @@ export const showUpgradesClassName = 'showUpgrades';
 
 let lastTime = 0;
 let requestAnimationFrameGameLoopId: number;
+const cleanupRegistry = new FinalizationRegistry((heldValue) => {
+  console.log('GC: Cleaned up ', heldValue);
+});
 export default class Underworld {
   seed: string;
   random: prng;
@@ -164,6 +167,8 @@ export default class Underworld {
   constructor(pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     this.pie = pie;
     this.seed = globalThis.seedOverride || seed;
+    // Nofity when Underworld is GC'd
+    cleanupRegistry.register(this, `underworld-${this.seed}`);
 
     // Initialize content
     Cards.registerCards(this);
