@@ -280,23 +280,30 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
       }
       break;
     case MESSAGE_TYPES.PLAYER_CONFIG:
-      const { color, name } = payload;
+      const { color, name, lobbyReady } = payload;
       if (fromPlayer) {
-        fromPlayer.name = name;
-        fromPlayer.unit.name = name;
-        if (globalThis.pixi && fromPlayer.unit.image) {
-          // @ts-ignore jid is a custom identifier to id the text element used for the player name
-          const nameText = fromPlayer.unit.image.sprite.children.find(child => child.jid == config.NAME_TEXT_ID) as PIXI.Text || new globalThis.pixi.Text();
-          // @ts-ignore jid is a custom identifier to id the text element used for the player name
-          nameText.jid = config.NAME_TEXT_ID;
-          fromPlayer.unit.image.sprite.addChild(nameText);
-          nameText.text = fromPlayer.name;
-          nameText.y = -config.COLLISION_MESH_RADIUS - config.NAME_TEXT_Y_OFFSET;
-          nameText.style = { fill: 'white', fontSize: config.NAME_TEXT_DEFAULT_SIZE, ...config.PIXI_TEXT_DROP_SHADOW };
-          nameText.anchor.x = 0.5;
-          nameText.anchor.y = 0.5;
+        if (lobbyReady !== undefined) {
+          fromPlayer.lobbyReady = lobbyReady;
         }
-        Player.setPlayerRobeColor(fromPlayer, color);
+        if (name !== undefined) {
+          fromPlayer.name = name;
+          fromPlayer.unit.name = name;
+          if (globalThis.pixi && fromPlayer.unit.image) {
+            // @ts-ignore jid is a custom identifier to id the text element used for the player name
+            const nameText = fromPlayer.unit.image.sprite.children.find(child => child.jid == config.NAME_TEXT_ID) as PIXI.Text || new globalThis.pixi.Text();
+            // @ts-ignore jid is a custom identifier to id the text element used for the player name
+            nameText.jid = config.NAME_TEXT_ID;
+            fromPlayer.unit.image.sprite.addChild(nameText);
+            nameText.text = fromPlayer.name;
+            nameText.y = -config.COLLISION_MESH_RADIUS - config.NAME_TEXT_Y_OFFSET;
+            nameText.style = { fill: 'white', fontSize: config.NAME_TEXT_DEFAULT_SIZE, ...config.PIXI_TEXT_DROP_SHADOW };
+            nameText.anchor.x = 0.5;
+            nameText.anchor.y = 0.5;
+          }
+        }
+        if (color !== undefined) {
+          Player.setPlayerRobeColor(fromPlayer, color);
+        }
         Player.syncLobby(underworld);
       } else {
         console.error('Cannot PLAYER_CONFIG, no associated player')
@@ -539,13 +546,18 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
 }
 
 export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
-  globalThis.configPlayer = ({ color, name }: { color: number, name: string }) => {
-    storage.set(config.STORAGE_ID_PLAYER_COLOR, color);
-    storage.set(config.STORAGE_ID_PLAYER_NAME, name || '');
+  globalThis.configPlayer = ({ color, name, lobbyReady }: { color?: number, name?: string, lobbyReady?: boolean }) => {
+    if (color !== undefined) {
+      storage.set(config.STORAGE_ID_PLAYER_COLOR, color);
+    }
+    if (name !== undefined) {
+      storage.set(config.STORAGE_ID_PLAYER_NAME, name || '');
+    }
     underworld.pie.sendData({
       type: MESSAGE_TYPES.PLAYER_CONFIG,
       color,
-      name
+      name,
+      lobbyReady
     });
   }
 
