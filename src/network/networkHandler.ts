@@ -284,6 +284,12 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
       if (fromPlayer) {
         if (lobbyReady !== undefined) {
           fromPlayer.lobbyReady = lobbyReady;
+          // If all connected players are also ready, start the game:
+          const connectedPlayers = underworld.players.filter(p => p.clientConnected);
+          if (connectedPlayers.length > 0 && connectedPlayers.every(p => p.lobbyReady)) {
+            console.log('Lobby: All players are ready, start game.');
+            setView(View.Game);
+          }
         }
         if (name !== undefined) {
           fromPlayer.name = name;
