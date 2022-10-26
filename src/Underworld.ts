@@ -2293,10 +2293,18 @@ export default class Underworld {
             // the player phase (if there are no players to take turns)
             this.initializePlayerTurns();
           } else {
-            // This is the only place where the turn_phase can become Stalled, when it is supposed
-            // to be player turns but there are no players able to act.
-            this.setTurnPhase(turn_phase.Stalled);
-            console.log('Turn Management: Skipping initializingPlayerTurns, no players ableToAct. Setting turn_phase to "Stalled"');
+            if (this.players.every(player => !Player.inPortal(player)) && this.players.some(player => player.clientConnected && !Player.inPortal(player) && !player.unit.alive)) {
+              // Special case: skip player turn and go right to NPC_ALLY in the event that 
+              // no players are portaled and there is a player that is both connected and dead
+              // go to the NPC ALLY phase.  If the NPC Allies overcome the enemies, the game will continue.
+              this.broadcastTurnPhase(turn_phase.NPC_ALLY);
+            } else {
+
+              // This is the only place where the turn_phase can become Stalled, when it is supposed
+              // to be player turns but there are no players able to act.
+              this.setTurnPhase(turn_phase.Stalled);
+              console.log('Turn Management: Skipping initializingPlayerTurns, no players ableToAct. Setting turn_phase to "Stalled"');
+            }
           }
           // Note: The player turn occurs asyncronously because it depends on player input so the call to
           // `broadcastTurnPhase(turn_phase.NPC_ALLY)` happens inside tryEndPlayerTurnPhase(); whereas the other blocks in this function
