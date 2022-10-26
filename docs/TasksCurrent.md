@@ -1,5 +1,6 @@
 # 2022-10-25
-- I keep getting 'clientId' appended to my clientId so when I back out of a joined mlultiplayer game, it joins me as a new plaeyr
+- Handle GCing underworld by making a container object through which all functions that need access to it access it through
+    - Then on cleanup, the container will just reassign a new underworld.
 - bug: pressing back when in mulpliplayer menu but connected to a game brings you to the "resume game" menu screen
     - fix: back button for nested menus such as Main -> Multiplayer -> Lobby
         - somehow changing servers resulted in the old underworld's state still hanging around in lobby
