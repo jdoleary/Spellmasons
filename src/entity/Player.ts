@@ -288,6 +288,17 @@ export function setClientConnected(player: IPlayer, connected: boolean, underwor
 }
 export function syncLobby(underworld: Underworld) {
   const playerColorToCss = (p: IPlayer) => `#${(p.color || 0xffffff).toString(16)}`;
+  globalThis.lobbyPlayerList = underworld.players.map(p => {
+    let status = 'Connected';
+    if (!p.clientConnected) {
+      status = 'Disconnected';
+    } else if (!p.isSpawned) {
+      status = 'Picking Start Point';
+    } else if (p.endedTurn) {
+      status = 'Waiting...';
+    }
+    return { name: p.name || p.clientId, status, color: playerColorToCss(p), ready: p.lobbyReady ? 'Ready' : 'Not Ready' };
+  });
   // Update lobby element
   if (elInGameLobby) {
     if (underworld.players.length == 1) {
@@ -295,17 +306,6 @@ export function syncLobby(underworld: Underworld) {
       elInGameLobby.innerHTML = '';
       return;
     }
-    globalThis.lobbyPlayerList = underworld.players.map(p => {
-      let status = 'Connected';
-      if (!p.clientConnected) {
-        status = 'Disconnected';
-      } else if (!p.isSpawned) {
-        status = 'Picking Start Point';
-      } else if (p.endedTurn) {
-        status = 'Waiting...';
-      }
-      return { name: p.name || p.clientId, status, color: playerColorToCss(p), ready: p.lobbyReady ? 'Ready' : 'Not Ready' };
-    });
     elInGameLobby.innerHTML = globalThis.lobbyPlayerList.map(p => {
       return `<div class="ui-border"><div class="player" style="color:${p.color}"><span class="player-name">${p.name}</span><span>${p.status}</span></div></div>`
     }).join('');
