@@ -21,7 +21,7 @@ import { IPickupSerialized, removePickup } from '../entity/Pickup';
 import { triggerAdminCommand } from '../graphics/ui/eventListeners';
 import { Vec2 } from '../jmath/Vec';
 import pingSprite from '../graphics/Ping';
-import { clearLastNonMenuView } from '../views';
+import { clearLastNonMenuView, setView, View } from '../views';
 import { autoExplain, explain, EXPLAIN_END_TURN } from '../graphics/Explain';
 import { cameraAutoFollow } from '../graphics/PixiUtils';
 
@@ -607,6 +607,8 @@ export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
     }
     // This prevents 'esc' key from going "back" to viewGame after the underworld is cleaned up
     clearLastNonMenuView();
+    // Ensure the menu is open
+    setView(View.Menu);
     return typeGuardHostApp(underworld.pie) ? Promise.resolve() : underworld.pie.disconnect();
   }
 }
