@@ -200,6 +200,7 @@ declare global {
     var isConnected: undefined | (() => boolean);
     // Disconnects pie from server
     var pieDisconnect: undefined | (() => Promise<void>);
+    var pieLeaveRoom: undefined | (() => void);
     // the currently selected unit, useful as a devTool, click on a unit and they will be available in the console
     var selectedUnit: Unit.IUnit | undefined;
     var selectedPickup: Pickup.IPickup | undefined;

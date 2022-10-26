@@ -187,6 +187,7 @@ export function setupPieAndUnderworld() {
     });
     globalThis.isConnected = pie.isConnected.bind(pie);
     globalThis.pieDisconnect = pie.disconnect.bind(pie);
+    globalThis.pieLeaveRoom = pie.leaveRoom.bind(pie);
 
     globalThis.joinRoom = room_info => joinRoom(underworld, room_info);
     function connectToSingleplayer() {
