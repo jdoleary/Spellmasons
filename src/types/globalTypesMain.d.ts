@@ -150,5 +150,5 @@ declare global {
     var menuExplain: (key: string) => void;
     var explainKeys: string[];
     // List of players to display in the lobby
-    var lobbyPlayerList: { name: string, clientConnected: boolean, color: string }[];
+    var lobbyPlayerList: { name: string, status: string, color: string, ready: string }[];
 }

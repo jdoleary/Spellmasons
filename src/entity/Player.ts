@@ -53,6 +53,7 @@ export interface IPlayer {
   // diedDuringLevel is used to make players that died miss the chance to get a perk at the beginning
   // of a new level
   diedDuringLevel: boolean;
+  lobbyReady: boolean;
 }
 export function inPortal(player: IPlayer): boolean {
   return isNaN(player.unit.x) || isNaN(player.unit.y) || player.unit.x === null || player.unit.y === null;
@@ -89,7 +90,8 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
     upgrades: [],
     upgradesLeftToChoose: config.STARTING_CARD_COUNT,
     perksLeftToChoose: 0,
-    diedDuringLevel: false
+    diedDuringLevel: false,
+    lobbyReady: false,
   };
 
   // Player units get full mana every turn
@@ -283,8 +285,8 @@ export function syncLobby(underworld: Underworld) {
       elInGameLobby.innerHTML = '';
       return;
     }
-    elInGameLobby.innerHTML = underworld.players.map(p => {
-      let status = '';
+    globalThis.lobbyPlayerList = underworld.players.map(p => {
+      let status = 'Connected';
       if (!p.clientConnected) {
         status = 'Disconnected';
       } else if (!p.isSpawned) {
@@ -292,9 +294,11 @@ export function syncLobby(underworld: Underworld) {
       } else if (p.endedTurn) {
         status = 'Waiting...';
       }
-      return `<div class="ui-border"><div class="player" style="color:${playerColorToCss(p)}"><span class="player-name">${p.name || (p == globalThis.player ? "You" : "Unnamed")}</span><span>${status}</span></div></div>`
+      return { name: p.name || p.clientId, status, color: playerColorToCss(p), ready: p.lobbyReady ? 'Ready' : 'Not Ready' };
+    });
+    elInGameLobby.innerHTML = globalThis.lobbyPlayerList.map(p => {
+      return `<div class="ui-border"><div class="player" style="color:${p.color}"><span class="player-name">${p.name}</span><span>${p.status}</span></div></div>`
     }).join('');
-    globalThis.lobbyPlayerList = underworld.players.map(p => ({ name: p.name || p.clientId, clientConnected: p.clientConnected, color: playerColorToCss(p) }));
   }
 }
 export function enterPortal(player: IPlayer, underworld: Underworld) {

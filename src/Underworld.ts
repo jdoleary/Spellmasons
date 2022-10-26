@@ -1575,7 +1575,6 @@ export default class Underworld {
     cameraAutoFollow(false);
     setCameraToMapCenter(this);
     document.body?.classList.toggle('loading', false);
-    setView(View.Game);
   }
   // creates a level from levelData
   createLevelSyncronous(levelData: LevelData) {

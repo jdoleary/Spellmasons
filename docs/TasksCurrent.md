@@ -1,4 +1,5 @@
 # 2022-10-25
+    - fix: back button for nested menus such as Main -> Multiplayer -> Lobby
     - Add lobby
     - Allow multiplayer game restart after wipe
         - All players return to lobby after 10 seconds

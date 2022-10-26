@@ -1107,12 +1107,6 @@ body.view-Menu .prompt:not(.forceShow) {
   padding: 0 15px;
 }
 
-td:first-child {
-  text-align: right;
-  border-right: 1px solid white;
-  padding-right: 4px;
-}
-
 #version-info-headless-server,
 #version-info,
 #seed {
