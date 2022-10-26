@@ -1,7 +1,7 @@
 :root {
   --selected-card-size: 32px;
   --mana: #00268d;
-  --stats-bar-background: #262324;
+  --ui-border-background-color: #262324;
 }
 
 .pad-15 {
@@ -255,8 +255,6 @@ invisibly blocked, change with caution! */
   justify-content: center;
   align-items: center;
   margin: 0 auto;
-  /* Same color as .ui-border's border */
-  background-color: var(--stats-bar-background);
 }
 
 #card-holders-inner {
@@ -721,8 +719,6 @@ body.your-turn #end-turn-btn:hover {
 }
 
 #inspector-tooltip-inner {
-  /* Same color as .ui-border's border */
-  background-color: var(--stats-bar-background);
   padding: 8px;
 }
 
@@ -763,8 +759,8 @@ body.your-turn #end-turn-btn:hover {
   height: 32px;
   flex: 1 1 0;
   border-radius: 3px;
-  border: 1px solid var(--stats-bar-background);
-  background-color: var(--stats-bar-background);
+  border: 1px solid var(--ui-border-background-color);
+  background-color: var(--ui-border-background-color);
 }
 
 .health-mana-bar:after {
@@ -990,12 +986,11 @@ body.your-turn #end-turn-btn:hover {
   position: absolute;
   width: 200px;
   height: 200px;
-  background-color: pink;
   left: 0;
   right: 0;
 }
 
-body.view-GameOver #game-over {
+body.game-over #game-over {
   display: block;
 }
 
@@ -1029,7 +1024,6 @@ body.view-Menu .prompt:not(.forceShow) {
 
 .prompt-inner {
   padding: 15px;
-  background-color: #262324;
   color: white;
   /* prevent user from highlighting text or images in the prompt.  This is a game not a website, text shouldn't be copyable */
   user-select: none;
@@ -1205,8 +1199,6 @@ body.open-inventory #inventory-container {
 
 
 #inventory-content {
-  /* Same color as .ui-border's border */
-  background-color: var(--stats-bar-background);
   /* Needed to display in front of pixi */
   z-index: 1;
   max-width: 600px;
@@ -1310,7 +1302,7 @@ body.open-inventory #inventory-icon {
   display: flex;
   width: 100%;
   justify-content: space-between;
-  background-color: #262324;
+  background-color: var(--ui-border-background-color);
 }
 
 body.view-Game #lobby {
@@ -1525,6 +1517,12 @@ body.auto-camera #camera-recenter-tip {
   /* Prevent child elements from becoming bigger than the screen */
   max-height: 100%;
   display: flex;
+}
+
+/* The immediate child of the .ui-border should have it's background colored the same
+as the ui-border itself */
+.ui-border>* {
+  background-color: var(--ui-border-background-color);
 }
 
 /* Supports a limited size so that the inventory will have a scrollbar */
