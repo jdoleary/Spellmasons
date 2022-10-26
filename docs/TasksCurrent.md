@@ -1,5 +1,6 @@
 # 2022-10-25
-- bug: When last player leaves server, server goes infinite loop
+- don't auto connect gamename
+- bug: clientId doesn't persist between refresh
 - bug: If server is currently in an infinite loop it won't process disconnect and will make the player wait when trying to exit the lobby
 - Handle GCing underworld by making a container object through which all functions that need access to it access it through
     - Then on cleanup, the container will just reassign a new underworld.
