@@ -1,15 +1,19 @@
+# 2022-10-25
+    - Add lobby
+    - Add Game Over screen
+    - investigate: `// TODO will the stack just keep growing`
+        - turn_phases should work on a queue not a stack
 # Pre playtest
 - Need a restart screen after a team wipe
 - No indication that it's the enemy's turn
-- In marketing, emphasize that it's turn based
-    - Why this game might not be for you
 - Hide disconnected players in game screen but not in the lobby
 - Multiplayer voting
-- Check balance difficulty for many players
-    - Adaptive difficulty
+- Adaptive difficulty
 - Make lobby
     - Set your name, robe color, ready status
 - Push predictions are off when on headless
+- if screen is too thin, hover card covers inventory
+- Fix push prediction with targeting spell together
 # Today
 - in multiplayer, when one player leaves and window is not focused the camera spazzes out
 - Make Youtube short audio louder
@@ -19,7 +23,10 @@
 - explain that when you die in multiplayer you'll come back if your ally beats the level
 - What to do with disconnected players when it goes to the next level?
 # Features
+- In marketing, emphasize that it's turn based
+    - Why this game might not be for you
 - animate rend
+- Add Game Over screen
 - how to show how much damage a queued spell will do
 - Permanent "you died" screen.
 - cooldown instead of mana multiplier scaling
