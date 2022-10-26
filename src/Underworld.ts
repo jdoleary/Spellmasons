@@ -539,6 +539,7 @@ export default class Underworld {
     // more processing yet to be done
     return true;
   }
+  // See GameLoops.md for more details
   triggerGameLoopHeadless = () => {
     if (globalThis.headless) {
       // Now that NPC actions have been setup, trigger the gameLoopHeadless
@@ -564,6 +565,7 @@ export default class Underworld {
   }
   // Only to be invoked by triggerGameLoopHeadless
   // Returns true if there is more processing to be done
+  // See GameLoops.md for more details
   _gameLoopHeadless = (): boolean => {
     const stillProcessingForceMoves = this.gameLoopForceMove();
     let stillProcessingUnits = 0;
@@ -576,6 +578,7 @@ export default class Underworld {
     }
     return stillProcessingForceMoves || stillProcessingUnits > 0;
   }
+  // See GameLoops.md for more details
   gameLoop = (timestamp: number) => {
     if (this.players.filter(p => p.clientConnected).length == 0) {
       console.log('Gameloop: pause; 0 connected players in game');
@@ -2246,6 +2249,7 @@ export default class Underworld {
   // Initialization logic that runs to setup a change of turn_phase
   // Invoked only through wsPie, use broadcastTurnPhase in game logic
   // when you want to set the turn_phase
+  // See GameLoops.md for more details
   async initializeTurnPhase(p: turn_phase) {
     console.log('initializeTurnPhase(', turn_phase[p], ')');
 

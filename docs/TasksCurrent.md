@@ -1,16 +1,16 @@
 # 2022-10-25
+- bug: When last player leaves server, server goes infinite loop
+- bug: If server is currently in an infinite loop it won't process disconnect and will make the player wait when trying to exit the lobby
 - Handle GCing underworld by making a container object through which all functions that need access to it access it through
     - Then on cleanup, the container will just reassign a new underworld.
-- bug: pressing back when in mulpliplayer menu but connected to a game brings you to the "resume game" menu screen
-    - fix: back button for nested menus such as Main -> Multiplayer -> Lobby
-        - somehow changing servers resulted in the old underworld's state still hanging around in lobby
-    - bug: When i hot reload code when players are waiting in lobby the server infinite loops
-    - bug: It will take you into the lobby screen even if it fails to connect to the server
-    - Allow multiplayer game restart after wipe
-        - All players return to lobby after 10 seconds
-        - cleans up underworld
-    - investigate: `// TODO will the stack just keep growing`
-        - turn_phases should work on a queue not a stack
+- somehow changing servers resulted in the old underworld's state still hanging around in lobby
+- bug: When i hot reload code when players are waiting in lobby the server infinite loops
+- bug: It will take you into the lobby screen even if it fails to connect to the server
+- **important**Allow multiplayer game restart after wipe
+    - All players return to lobby after 10 seconds
+    - cleans up underworld
+- investigate: `// TODO will the stack just keep growing`
+    - turn_phases should work on a queue not a stack
 # Pre playtest
 - Need a restart screen after a team wipe
 - No indication that it's the enemy's turn
