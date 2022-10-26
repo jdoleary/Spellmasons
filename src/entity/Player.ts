@@ -1,4 +1,5 @@
 import { PLAYER_BASE_HEALTH } from '../config';
+import * as storage from '../storage';
 import * as Unit from './Unit';
 import * as Image from '../graphics/Image';
 import * as Upgrade from '../Upgrade';
@@ -220,6 +221,15 @@ export function updateGlobalRefToCurrentClientPlayer(player: IPlayer, underworld
     // (when the level is created) is triggered before the player has been assigned.
     // This invokation prevents that rare case where players spawn with no starting upgrades
     underworld.showUpgrades();
+    // Resync player config from storage
+    const color = storage.get(config.STORAGE_ID_PLAYER_COLOR);
+    const name = storage.get(config.STORAGE_ID_PLAYER_NAME);
+    underworld.pie.sendData({
+      type: MESSAGE_TYPES.PLAYER_CONFIG,
+      color: color,
+      name: name
+    });
+
   }
 }
 // Converts a player entity into a serialized form

@@ -483,14 +483,6 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
         x: spawnPoint.x,
         y: spawnPoint.y,
       });
-      // Resync player config from storage
-      const color = storage.get(config.STORAGE_ID_PLAYER_COLOR);
-      const name = storage.get(config.STORAGE_ID_PLAYER_NAME);
-      underworld.pie.sendData({
-        type: MESSAGE_TYPES.PLAYER_CONFIG,
-        color: color,
-        name: name
-      });
       return;
     }
   }
