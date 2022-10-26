@@ -2207,6 +2207,13 @@ export default class Underworld {
     const y = randInt(seed || this.random, bounds.yMin || 0, bounds.yMax || 0);
     return { x, y };
   }
+  tryRestartTurnPhaseLoop() {
+    // See GameLoops.md for more details 
+    if (this.turn_phase == turn_phase.Stalled && this.players.some(player => Player.ableToAct(player))) {
+      console.log('Turn Management: Restarting turn loop with PlayerTurns')
+      this.broadcastTurnPhase(turn_phase.PlayerTurns);
+    }
+  }
   async broadcastTurnPhase(p: turn_phase) {
     // If host, send sync; if non-host, ignore 
     if (globalThis.isHost(this.pie)) {
@@ -2868,10 +2875,7 @@ export default class Underworld {
     }
 
     // Resume turn loop if currently stalled but now a player is able to act:
-    // See GameLoops.md for more details 
-    if (this.turn_phase == turn_phase.Stalled && this.players.some(player => Player.ableToAct(player))) {
-      this.broadcastTurnPhase(turn_phase.PlayerTurns);
-    }
+    this.tryRestartTurnPhaseLoop();
   }
   syncPlayers(players: Player.IPlayerSerialized[]) {
     console.log('sync: Syncing players', JSON.stringify(players.map(p => p.clientId)));

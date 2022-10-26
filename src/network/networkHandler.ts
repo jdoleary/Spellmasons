@@ -347,6 +347,7 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
         console.error('Cannot SPAWN_PLAYER, fromPlayer is undefined.')
       }
       Player.syncLobby(underworld);
+      underworld.tryRestartTurnPhaseLoop();
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
       if (fromPlayer == globalThis.player) {
