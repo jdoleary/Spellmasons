@@ -23,6 +23,7 @@ export enum View {
   Menu,
   Setup,
   Game,
+  Lobby,
   Disconnected
 }
 const elUpgradePicker = document.getElementById('upgrade-picker') as HTMLElement;

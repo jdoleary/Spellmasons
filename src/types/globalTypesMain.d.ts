@@ -131,8 +131,6 @@ declare global {
     var playSFX: ((path?: string) => void | undefined);
     var playSFXKey: ((key: string) => void | undefined);
     var sfx: { [key: string]: string } | undefined;
-    // svelte menu function to attempt to autoconnect if the queryString holds the info
-    var tryAutoConnect: undefined | (() => void);
     // Returns true if client is playing singleplayer OR if hostapp
     var isHost: (pie: PieClient | IHostApp) => boolean;
     // Returns pie.isConnected()
@@ -151,4 +149,6 @@ declare global {
     // Used in dev to prompt tutorial popup
     var menuExplain: (key: string) => void;
     var explainKeys: string[];
+    // List of players to display in the lobby
+    var lobbyPlayerList: { name: string, clientConnected: boolean, color: string }[];
 }

@@ -37,13 +37,6 @@ function connect_to_wsPie_server(wsUri: string | undefined, underworld: Underwor
       console.log('onConnectInfo', o);
       if (o.connected) {
         console.log("Pie: Successfully connected to PieServer.")
-        if (!(underworld.pie as PieClient).currentRoomInfo) {
-          // Go to menu if pieClient instance hasn't joined a room yet
-          setView(View.Menu);
-        } else {
-          // If it has joined a room go to the game view
-          setView(View.Game);
-        }
         resolve();
       } else {
         if (underworld) {
@@ -215,10 +208,11 @@ export function setupPieAndUnderworld() {
       return connectToSingleplayer().then(() => {
         // Create first level
         underworld.lastLevelCreated = underworld.generateLevelDataSyncronous(0);
+        // Go directly into the game
+        setView(View.Game);
       });
     }
     globalThis.setMenu?.('PLAY');
     setView(View.Menu);
-    globalThis.tryAutoConnect?.();
   }
 }

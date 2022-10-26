@@ -19,7 +19,7 @@ import * as push from '../cards/push';
 import * as pull from '../cards/pull';
 import { explain, EXPLAIN_BLESSINGS, EXPLAIN_LIQUID_DAMAGE } from '../graphics/Explain';
 
-const elLobby = document.getElementById('lobby') as (HTMLElement | undefined);
+const elInGameLobby = document.getElementById('in-game-lobby') as (HTMLElement | undefined);
 const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
@@ -275,14 +275,15 @@ export function setClientConnected(player: IPlayer, connected: boolean, underwor
   syncLobby(underworld);
 }
 export function syncLobby(underworld: Underworld) {
+  const playerColorToCss = (p: IPlayer) => `#${(p.color || 0xffffff).toString(16)}`;
   // Update lobby element
-  if (elLobby) {
+  if (elInGameLobby) {
     if (underworld.players.length == 1) {
       // Do not show lobby if there is only one player connected
-      elLobby.innerHTML = '';
+      elInGameLobby.innerHTML = '';
       return;
     }
-    elLobby.innerHTML = underworld.players.map(p => {
+    elInGameLobby.innerHTML = underworld.players.map(p => {
       let status = '';
       if (!p.clientConnected) {
         status = 'Disconnected';
@@ -291,8 +292,9 @@ export function syncLobby(underworld: Underworld) {
       } else if (p.endedTurn) {
         status = 'Waiting...';
       }
-      return `<div class="ui-border"><div class="player" style="color:#${(p.color || 0xffffff).toString(16)}"><span class="player-name">${p.name || (p == globalThis.player ? "You" : "Unnamed")}</span><span>${status}</span></div></div>`
+      return `<div class="ui-border"><div class="player" style="color:${playerColorToCss(p)}"><span class="player-name">${p.name || (p == globalThis.player ? "You" : "Unnamed")}</span><span>${status}</span></div></div>`
     }).join('');
+    globalThis.lobbyPlayerList = underworld.players.map(p => ({ name: p.name || p.clientId, clientConnected: p.clientConnected, color: playerColorToCss(p) }));
   }
 }
 export function enterPortal(player: IPlayer, underworld: Underworld) {

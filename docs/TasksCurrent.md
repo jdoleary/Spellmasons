@@ -1,6 +1,8 @@
 # 2022-10-25
     - Add lobby
-    - Add Game Over screen
+    - Allow multiplayer game restart after wipe
+        - All players return to lobby after 10 seconds
+        - cleans up underworld
     - investigate: `// TODO will the stack just keep growing`
         - turn_phases should work on a queue not a stack
 # Pre playtest
@@ -9,19 +11,11 @@
 - Hide disconnected players in game screen but not in the lobby
 - Multiplayer voting
 - Adaptive difficulty
-- Make lobby
-    - Set your name, robe color, ready status
 - Push predictions are off when on headless
-- if screen is too thin, hover card covers inventory
 - Fix push prediction with targeting spell together
-# Today
-- in multiplayer, when one player leaves and window is not focused the camera spazzes out
-- Make Youtube short audio louder
-- e: bug: health bars disappear when cone prediction is up
-    - this is because unitOverlayGraphics is used for attack radiuses and health bars
+- What to do with disconnected players when it goes to the next level?
 - Fix rejoining hack where people can just rejoin if they're dead to come back
 - explain that when you die in multiplayer you'll come back if your ally beats the level
-- What to do with disconnected players when it goes to the next level?
 # Features
 - In marketing, emphasize that it's turn based
     - Why this game might not be for you
@@ -36,9 +30,12 @@
 - inventory should show current card cost and cooldown
 -  Add save/load to menu
 # Bugs / Cleaning
+- if screen is too thin, hover card covers inventory
+- bug: health bars disappear when cone prediction is up
+    - this is because unitOverlayGraphics is used for attack radiuses and health bars
+- in multiplayer, when one player leaves and window is not focused the camera spazzes out
 - bug: multiplayer: portal isn't synced if you refresh
 - bug: after refresh dead unit renders full healthbar in pixi
-- m: You can't close popups on 1080x764 resolution
 - "All targets" copy is confusing if player doesn't understand targeting
 - h: **important**: completely destroy the underworld object between playthroughs rather than just cleaning it up
     - for now you can tell because lastUnitId isn't reset
@@ -63,6 +60,7 @@
 - prediction should factor in standing on pickups, see video
 - **important** movement prediction is off when doing "clone + push" (something to do with the copy being added as a target?)
 # Content
+- Make Youtube short audio louder
 - Rend
     - new sfx
     - new animation

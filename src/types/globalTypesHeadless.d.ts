@@ -83,7 +83,6 @@ declare global {
     // var playSFX: undefined;
     // var playSFXKey: undefined;
     // var sfx: undefined;
-    // var tryAutoConnect: undefined;
     var pixi: typeof PIXI | undefined;
     var latencyPanel: undefined | Stats.Panel;
     var runPredictionsPanel: undefined | Stats.Panel;
@@ -197,8 +196,6 @@ declare global {
     var playSFX: ((path?: string) => void | undefined);
     var playSFXKey: ((key: string) => void | undefined);
     var sfx: { [key: string]: string } | undefined;
-    // svelte menu function to attempt to autoconnect if the queryString holds the info
-    var tryAutoConnect: undefined | (() => void);
     // Returns pie.isConnected()
     var isConnected: undefined | (() => boolean);
     // Disconnects pie from server
@@ -215,4 +212,6 @@ declare global {
     // Used in dev to prompt tutorial popup
     var menuExplain: (key: string) => void;
     var explainKeys: string[];
+    // List of players to display in the lobby
+    var lobbyPlayerList: { name: string, clientConnected: boolean, color: string }[];
 }

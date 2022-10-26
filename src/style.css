@@ -1367,6 +1367,15 @@ body.view-Game #camera-recenter-tip {
   display: block;
 }
 
+body.view-Lobby #lobby {
+  display: block;
+}
+
+#lobby {
+  display: none;
+
+}
+
 #instructions,
 #camera-recenter-tip {
   display: none;
