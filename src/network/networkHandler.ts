@@ -107,7 +107,7 @@ function handleOnDataMessageSyncronously(d: OnDataArgs, underworld: Underworld) 
     const cachedQueue = JSON.stringify(onDataQueueContainer.queue.slice(0, arbitraryQueueStuckLimit));
     setTimeout(() => {
       if (cachedQueue == JSON.stringify(onDataQueueContainer.queue.slice(0, arbitraryQueueStuckLimit))) {
-        console.error("onData queue: growing unusually large: ", onDataQueueContainer.queue.length, "stuck on message: ", MESSAGE_TYPES[currentlyProcessingOnDataMessage.payload.type], currentlyProcessingOnDataMessage, 'Payload Types:', onDataQueueContainer.queue.map(x => MESSAGE_TYPES[x.payload.type]));
+        console.error("onData queue: growing unusually large: ", onDataQueueContainer.queue.length, "stuck on message: ", MESSAGE_TYPES[currentlyProcessingOnDataMessage.payload.type], JSON.stringify(currentlyProcessingOnDataMessage), 'Payload Types:', onDataQueueContainer.queue.map(x => MESSAGE_TYPES[x.payload.type]));
       } else {
         console.log('onData queue: Thought there might be a stuck queue but it resolved itself', cachedQueue, JSON.stringify(onDataQueueContainer.queue.slice(0, arbitraryQueueStuckLimit)));
       }
@@ -348,6 +348,14 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
         console.error('Cannot SPAWN_PLAYER, fromPlayer is undefined.')
       }
       Player.syncLobby(underworld);
+
+      // Resync player config from storage
+      underworld.pie.sendData({
+        type: MESSAGE_TYPES.PLAYER_CONFIG,
+        color: storage.get(config.STORAGE_ID_PLAYER_COLOR),
+        name: storage.get(config.STORAGE_ID_PLAYER_NAME)
+      });
+
       underworld.tryRestartTurnPhaseLoop();
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
@@ -356,6 +364,8 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
         // so that it is smooth
         break;
       }
+      // This check shouldn't have to be here but it protects against the game getting stuck stalled
+      underworld.tryRestartTurnPhaseLoop();
       if (fromPlayer) {
         // Only allow spawned players to move
         if (fromPlayer.isSpawned) {
