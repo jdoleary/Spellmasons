@@ -1,4 +1,3 @@
-- why does this message appear 4 times `Headless server has it's own gameloop and shall not execute this.gameLoop`
 - bug: lots of units that were inLiquid arenot but still have the mask in multiplayer
 - onData SPELL: doesn't print enough info in server logs
 - missing gold circle on player 2's feet

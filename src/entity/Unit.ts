@@ -645,7 +645,7 @@ export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | u
     return;
   }
   if (!prediction) {
-    console.log(`takeDamage: unit ${unit.id}; amount: ${amount}; events:`, unit.onDamageEvents);
+    // console.log(`takeDamage: unit ${unit.id}; amount: ${amount}; events:`, unit.onDamageEvents);
     // Only play hit animation if taking actual damage,
     // note: heals call takeDamage with a negative amount, so we don't want to play a hit animation when
     // player is healed

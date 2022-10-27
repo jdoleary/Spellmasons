@@ -401,7 +401,6 @@ export default class Underworld {
       // headless server manages it's own gameloop.  See gameLoopHeadless
       // This is so that it won't make players wait as it executes the NPC turn in real time
       // it should execute the NPC turn as fast as it can possibly process.
-      console.log('Headless server has it\'s own gameloop and shall not execute this.gameLoop');
       return;
     }
     // prevent multiple gameLoop invokations being queued
