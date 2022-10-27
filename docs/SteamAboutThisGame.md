@@ -17,7 +17,7 @@ Spellmasons engages your mind; come up with highly creative solutions to prevent
 
 # Short Description
 ```
-Spellmasons is a tactical roguelike where you devise ingenious spell combinations to overcome an onslaught of relentless enemies. Team up with your friends in online cooperative multiplayer, and delve into the intricacies of magic where clever combinations yield powerfully satisfying results.
+Spellmasons is a turn-based tactical roguelike where you devise ingenious spell combinations to overcome an onslaught of relentless enemies. Team up with your friends in online cooperative multiplayer, and delve into the intricacies of magic where clever combinations yield powerfully satisfying results.
 ```
 # Current "About this Game"
 ```

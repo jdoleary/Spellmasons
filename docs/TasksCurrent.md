@@ -1,15 +1,15 @@
 # 2022-10-25
 ## Priorities
-    - local client and server enters infinite turn loop if all players die (with no ally npcs)
-    - prevent auto join room
+- bug: too many player configs are being sent for some reason
     - Fix underworld cleanup so no state carries over
     - **important**Allow multiplayer game restart after wipe
         - All players return to lobby after 10 seconds
         - cleans up underworld
+        - Currently it just lets you exit to main menu but if you rejoin the game it still exists with everyone dead in it
 ## All
-- bug: in multiplayer games units are spawning out of bounds
-- bug: when player rejoins a game the map is different
-- fix: menu leave room doesn't update svelte state
+- fixed?
+    - bug: in multiplayer games units are spawning out of bounds
+    - bug: when player rejoins a game the map is different
 - Turn phase testing:
     - if one player is portaled and the remaining player dies it should go to the next level
     - if no players are portaled and all players die and there are no ally npcs it should go to game over
@@ -21,6 +21,7 @@
 - somehow changing servers resulted in the old underworld's state still hanging around in lobby
 - investigate: `// TODO will the stack just keep growing`
     - turn_phases should work on a queue not a stack (this is mostly relevant for singleplayer and when the NPCs are just hashing it out cause all the players are dead so it doesn't stack overflow)
+    - Just make it a while loop that triggers/awaits the next AI turn until it's the players tuurn
 # Pre playtest
 - Need a restart screen after a team wipe
 - No indication that it's the enemy's turn
