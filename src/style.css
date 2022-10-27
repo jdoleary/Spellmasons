@@ -1273,7 +1273,7 @@ body.open-inventory #inventory-container {
   width: 80px;
   height: 106px;
   background-image: url('images/card-designs/bookStone.png');
-  /* transition: all 0.1s; */
+  background-size: contain;
 }
 
 body.open-inventory #inventory-icon {
