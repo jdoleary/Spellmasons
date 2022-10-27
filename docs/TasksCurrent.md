@@ -1,6 +1,4 @@
 - _gameLoopHeadless exceeded call stack: https://sentry.io/organizations/jordan-oleary/issues/3691943465/?project=6306205&query=is%3Aunresolved&referrer=issue-stream
-- it goes to the next level when any player enters the portal
-- underworld is progressing 2 levels at a time
 # Brad Playtest
 - when in full screen escape leaves full screen in addition to opening menu
 - I got to pick 2 perks
