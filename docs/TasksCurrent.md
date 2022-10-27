@@ -1,3 +1,18 @@
+# Brad playtest 2:
+- he can't spawn in while i'm casint a spell
+    - same thing with casts, it waits
+- player thought stayed up even after he cast
+- **important** 'burst' may be broken with await
+- shove doesn't predict death
+- spawning on top of a stamina or mana potion doesn't overfill in multiplayer
+- EZ self cast, like alt clicking a spell self casts or something
+- melee prediction not working? See footage
+- should allow spell prediction even while an action is taking place - this not being here causes friction in multiplayer
+- sync issue: golem moving through frozen guys jumped back
+- spell pickup desync
+- "pull" desync again
+- health potion tooltip has a transparency issue
+---
 - fix CHHOSE_UPGRADE bug that allows devMode true players to have too many upgrades
 - manaburn can result in fractional health
 - **important** during my playtest: long pause after we both ended turn

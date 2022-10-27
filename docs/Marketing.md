@@ -1,3 +1,4 @@
+- article: https://howtomarketagame.com/2022/10/17/how-dome-keeper-achieved-a-million-dollar-launch/
 - UTM Link: https://store.steampowered.com/app/1618380/Spellmasons/?utm_source=CUSTOM_TAG
 - Timeline:
     - Now: Build endcap
@@ -221,6 +222,13 @@ https://partner.steamgames.com/doc/marketing/event_tools/embed
 - [ign](https://corp.ign.com/submit-a-game)
     - Requires DEMOn
 - [rock paper shotgun](https://www.rockpapershotgun.com/how-to-pitch-an-article-to-rock-paper-shotgun)
+- [Best Indie Games](https://www.youtube.com/c/ClemmyGames/about)
+- Retromation
+- SplatterCatGaming
+- Gautoz
+- Wanderbots
+- Angory Tom
+- DangerouslyFunny
 
 ## Trailer voiceover options
 - https://www.fiverr.com/danjohnsonvoice?source=gig_cards&referrer_gig_slug=deep-commanding-yet-gentle-voice-for-your-project&ref_ctx_id=41e0efeff17fa41d43a2ad2a44413e98&imp_id=dcf790d6-ef63-4dd5-9308-920565141982
