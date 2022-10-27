@@ -596,12 +596,12 @@ body.HUD-hidden #PIXI-holder {
 }
 
 
-body.view-Game.hide-lobby #lobby {
+body.view-Game.hide-lobby #in-game-lobby {
   display: none;
 }
 
 body.view-Game.hide-card-holders #camera-recenter-tip,
-body.view-Game.hide-card-holders #lobby,
+body.view-Game.hide-card-holders #in-game-lobby,
 .hide-card-holders #ui-positioner {
   display: none;
 }
@@ -1285,7 +1285,7 @@ body.open-inventory #inventory-icon {
   box-shadow: 0px 0px 11px 4px rgba(242, 234, 0, 1);
 }
 
-#lobby {
+#in-game-lobby {
   position: absolute;
   left: 0;
   top: 0;
@@ -1293,18 +1293,18 @@ body.open-inventory #inventory-icon {
   width: 380px;
 }
 
-#lobby .player-name {
+#in-game-lobby .player-name {
   font-weight: bold;
   /* filter: drop-shadow(1px 0px 0px white); */
 }
 
-#lobby .ui-border {
+#in-game-lobby .ui-border {
   margin: 15px;
   /* Smaller border than usual ui-border so more player names will fit */
   border-width: 9px;
 }
 
-#lobby .player {
+#in-game-lobby .player {
   color: white;
   display: flex;
   width: 100%;
@@ -1312,7 +1312,7 @@ body.open-inventory #inventory-icon {
   background-color: var(--ui-border-background-color);
 }
 
-body.view-Game #lobby {
+body.view-Game #in-game-lobby {
   display: block;
 }
 
