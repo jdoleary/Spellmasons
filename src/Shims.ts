@@ -24,6 +24,8 @@ global.cancelAnimationFrame = (id) => {
     clearTimeout(id);
 }
 global.requestAnimationFrame = (callback) => {
+    console.trace('Headless requestAnimationFrame shouldnt be called');
+    console.error('Headless invoked requestionAnimationFrame.  How to fix: Prevent it from calling requestAnimationFrame and instead optimize like was done with fly() and lob()')
     return callback(Date.now());
 }
 // Headless server plays no audio

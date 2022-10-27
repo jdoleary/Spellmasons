@@ -64,7 +64,11 @@ export function createVisualFlyingProjectile(
   // + 1000 is an arbitrary delay to give the original promise ample time to finish without a timeout error
   // being reported
   return raceTimeout(time_in_flight + 1000, 'createVisualFlyingProjectile', new Promise((resolve) => {
-    requestAnimationFrame((time) => fly(instance, time, resolve));
+    if (globalThis.headless) {
+      fly(instance, 0, resolve);
+    } else {
+      requestAnimationFrame((time) => fly(instance, time, resolve));
+    }
   }));
 }
 
@@ -86,6 +90,11 @@ function fly(
 
     instance.sprite.x = instance.x;
     instance.sprite.y = instance.y;
+  }
+  if (globalThis.headless) {
+    // Simulate finishing immediately on headless since there are no visuals:
+    // Note: this block must occur AFTER the instance is initialized
+    time = instance.endTime;
   }
   const t =
     (time - instance.startTime) / (instance.endTime - instance.startTime);
@@ -111,7 +120,11 @@ export function createVisualLobbingProjectile(
   // + 1000 is an arbitrary delay to give the original promise ample time to finish without a timeout error
   // being reported
   return raceTimeout(config.LOB_PROJECTILE_SPEED + 1000, 'createVisualLobbingProjectile', new Promise((resolve) => {
-    requestAnimationFrame((time) => lob(instance, time, resolve));
+    if (globalThis.headless) {
+      lob(instance, 0, resolve);
+    } else {
+      requestAnimationFrame((time) => lob(instance, time, resolve));
+    }
   }));
 }
 // Arbitrary lobHeight (negative so it lobs the projectile UP)
@@ -130,6 +143,11 @@ function lob(
   if (instance.sprite) {
     instance.sprite.x = instance.x;
     instance.sprite.y = instance.y;
+  }
+  if (globalThis.headless) {
+    // Simulate finishing immediately on headless since there are no visuals:
+    // Note: this block must occur AFTER the instance is initialized
+    time = instance.endTime;
   }
   const t =
     (time - instance.startTime) / (instance.endTime - instance.startTime);
