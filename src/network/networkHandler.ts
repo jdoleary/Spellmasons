@@ -365,8 +365,11 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
         // so that it is smooth
         break;
       }
-      // This check shouldn't have to be here but it protects against the game getting stuck stalled
-      underworld.tryRestartTurnPhaseLoop();
+      if (underworld.turn_phase == turn_phase.Stalled) {
+        // This check shouldn't have to be here but it protects against the game getting stuck in stalled phase
+        console.error('Game was in Stalled turn_phase when a player sent MESSAGE_TYPES.MOVE_PLAYER.');
+        underworld.tryRestartTurnPhaseLoop();
+      }
       if (fromPlayer) {
         // Only allow spawned players to move
         if (fromPlayer.isSpawned) {
@@ -401,6 +404,11 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
       break;
     case MESSAGE_TYPES.SPELL:
       if (fromPlayer) {
+        if (underworld.turn_phase == turn_phase.Stalled) {
+          // This check shouldn't have to be here but it protects against the game getting stuck in stalled phase
+          console.error('Game was in Stalled turn_phase when a player sent MESSAGE_TYPES.SPELL.');
+          underworld.tryRestartTurnPhaseLoop();
+        }
         const handleSpellPromise = handleSpell(fromPlayer, payload, underworld);
         // Now that spell has been cast, trigger the headless server to process it immediately
         underworld.triggerGameLoopHeadless();
