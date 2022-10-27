@@ -23,6 +23,7 @@ import { bloodColorDefault } from '../graphics/ui/colors';
 import { HasLife, HasMana, HasSpace, HasStamina } from './Type';
 import { collideWithLineSegments } from '../jmath/moveWithCollision';
 import { calculateGameDifficulty } from '../Difficulty';
+import * as inLiquid from '../inLiquid';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -390,6 +391,9 @@ export function syncronize(unitSerialized: IUnitSerialized, originalUnit: IUnit)
   // I'm choosing just to omit shaderUniforms from syncronize
   const { image, shaderUniforms, ...rest } = unitSerialized;
   Object.assign(originalUnit, rest);
+  if (!originalUnit.inLiquid) {
+    inLiquid.remove(originalUnit);
+  }
   // Note: returnToDefaultSprite must be called BEFORE Image.syncronize
   // to ensure that the originalUnit.image.sprite has a parent because
   // the parent could have been cleared previously.
