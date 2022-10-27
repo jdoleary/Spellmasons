@@ -2036,7 +2036,8 @@ export default class Underworld {
       // If all enemies are dead and all non portaled players are dead, make non portaled players portal
       // so the game can continue
       const allEnemiesAreDead = this.units.filter(u => u.faction == Faction.ENEMY).every(u => !u.alive);
-      if (allEnemiesAreDead && this.players.filter(p => !Player.inPortal(p) && !p.unit.alive)) {
+      if (allEnemiesAreDead && this.players.filter(p => !Player.inPortal(p)).every(p => !p.unit.alive)) {
+        console.log('Make dead, non-portaled players enter portal');
         this.players.forEach(p => {
           Unit.resurrect(p.unit);
           Player.enterPortal(p, this);
