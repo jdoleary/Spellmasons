@@ -107,7 +107,11 @@ export function playNextSong() {
     // task: Master all audio and sfx
     // task: Make independent volume sliders for audio and music
     musicInstance.volume = (globalThis.volume === undefined ? 1 : globalThis.volume) * (globalThis.volumeMusic === undefined ? 1 : globalThis.volumeMusic);
-    musicInstance.play();
+    try {
+        musicInstance.play();
+    } catch (e) {
+        console.log('Could not play music.  Caught: ', e);
+    }
 }
 
 export function playSFXKey(key?: string) {
