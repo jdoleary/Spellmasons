@@ -571,10 +571,12 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
         console.error("Attempting to cast while globalThis.player is undefined");
       }
     } else {
-      floatingText({
-        coords: mousePos,
-        text: 'You must wait for your turn to cast',
-      });
+      if (selfPlayer?.isSpawned) {
+        floatingText({
+          coords: mousePos,
+          text: 'You must wait for your turn to cast',
+        });
+      }
       playSFXKey('deny');
     }
   } else {
