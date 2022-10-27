@@ -1,3 +1,14 @@
+# Brad Playtest
+- Transparent perks
+- when in full screen escape leaves full screen in addition to opening menu
+- I got to pick 2 perks
+- pathing prediction messed up, see video
+- bug: push spell was reverted after server sync
+- drown was missing it's icon in player_thought
+- bug: you can cast drown even when they're not in water
+- fix: if you have a spell queued up and click out of bounds it does 2 floating text overlapping
+- dash,burst,slash didn't cast slash
+- out of range circle stuck up  with no spell
 # 2022-10-25
 ## Priorities
 - bug: too many player configs are being sent for some reason
