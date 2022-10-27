@@ -1,4 +1,8 @@
 export function set(key: string, value: any) {
+    if (globalThis.headless) {
+        // Headless server does not use storage
+        return;
+    }
     if (globalThis.allowCookies) {
         localStorage.setItem(key, value);
         console.log('Setting ', key, 'to', value, 'in local storage');
