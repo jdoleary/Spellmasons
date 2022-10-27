@@ -2221,7 +2221,7 @@ export default class Underworld {
   async broadcastTurnPhase(p: turn_phase) {
     // If host, send sync; if non-host, ignore 
     if (globalThis.isHost(this.pie)) {
-      console.log('Broadcast SET_PHASE:  turn_phase ==', turn_phase[p]);
+      console.log('Broadcast SET_PHASE: ', turn_phase[p]);
       this.pie.sendData({
         type: MESSAGE_TYPES.SET_PHASE,
         phase: p,
@@ -3002,7 +3002,6 @@ function getEnemiesForAltitude(underworld: Underworld): string[] {
       const chosenUnit = chooseObjectWithProbability(possibleUnitsToChoose, underworld.random)
       return chosenUnit ? [chosenUnit.id] : []
     })
-  console.log('Enemies:', unitIds);
   return unitIds;
 }
 
