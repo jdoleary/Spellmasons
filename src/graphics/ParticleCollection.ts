@@ -78,14 +78,22 @@ export function makeResurrectParticles(position: Vec2, prediction: boolean) {
 
 }
 // Max final scale should be 1
-export function makeBurstParticles(position: Vec2, finalScale: number, prediction: boolean) {
+export function makeBurstParticles(position: Vec2, finalScale: number, prediction: boolean, resolver?: () => void) {
     if (prediction) {
         // Don't show if just a prediction
+        if (resolver) {
+            // Resolve immediately
+            resolver();
+        }
         return
     }
     const texture = createHardCircleParticleTexture();
     if (!texture) {
         console.error('No texture for makeScrollDissapearParticles')
+        if (resolver) {
+            // Resolve immediately
+            resolver();
+        }
         return
     }
     const rings = 10;
@@ -159,6 +167,10 @@ export function makeBurstParticles(position: Vec2, finalScale: number, predictio
                     "spawnType": "point",
                 }, [texture]);
             simpleEmitter(position, particleConfig);
+            // Resolve promise, animation is done
+            if (resolver && ring == rings - 1) {
+                resolver();
+            }
         }, ring * millisBetweenRings);
     }
 }

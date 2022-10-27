@@ -2,7 +2,6 @@
 - he can't spawn in while i'm casint a spell
     - same thing with casts, it waits
 - player thought stayed up even after he cast
-- **important** 'burst' may be broken with await
 - shove doesn't predict death
 - spawning on top of a stamina or mana potion doesn't overfill in multiplayer
 - EZ self cast, like alt clicking a spell self casts or something

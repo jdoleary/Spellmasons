@@ -50,7 +50,7 @@ Stackable.
             const damage = calculateDamage(quantity, state.casterUnit, unit);
             Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
             // Animate:
-            makeBurstParticles(unit, lerp(0.1, 1, damage / maxDamage), prediction);
+            makeBurstParticles(unit, lerp(0.1, 1, damage / maxDamage), prediction, resolve);
           }
         } else {
           for (let unit of targets) {

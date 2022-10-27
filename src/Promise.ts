@@ -25,7 +25,6 @@ export function reportIfTakingTooLong(reportAfterMS: number, message: string, pr
     }, reportAfterMS);
 
     promise.then(() => {
-        console.log('jtest', Date.now() - start);
         clearTimeout(timeoutId);
     });
 
