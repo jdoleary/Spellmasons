@@ -45,27 +45,36 @@ export async function animateSpell(target: Vec2, imagePath: string): Promise<voi
 // Not to be confused with addOneOffAnimation
 // The main difference is that this function is not async and returns the image
 export function oneOffImage(coords: Vec2, imagePath: string, parent: Container | undefined, resolver?: () => void): Image.IImageAnimated | undefined {
-    // TODO: HOW TO RESOLVE THIS IN HEADLESS
-    const image = Image.create(
-        coords,
-        imagePath,
-        parent,
-        {
-            loop: false,
-            animationSpeed: 0.15,
-            onComplete: () => {
-                Image.hide(image)
-                Image.cleanup(image);
-                if (resolver) {
-                    resolver();
+    if (globalThis.headless) {
+        // Resolve immediately, headless does not have visuals and
+        // so it should resolve any promise that awaits the completion
+        // of an animation immediately.
+        if (resolver) {
+            resolver();
+        }
+        return
+    } else {
+        const image = Image.create(
+            coords,
+            imagePath,
+            parent,
+            {
+                loop: false,
+                animationSpeed: 0.15,
+                onComplete: () => {
+                    Image.hide(image)
+                    Image.cleanup(image);
+                    if (resolver) {
+                        resolver();
+                    }
                 }
             }
+        );
+        if (image) {
+            image.resolver = resolver;
         }
-    );
-    if (image) {
-        image.resolver = resolver;
+        return image;
     }
-    return image;
 }
 export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number = 0): CardCost {
     let cardCost = { manaCost: 0, healthCost: 0 }

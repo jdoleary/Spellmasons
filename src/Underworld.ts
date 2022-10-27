@@ -66,7 +66,7 @@ import { withinMeleeRange } from './entity/units/actions/golemAction';
 import { baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLimits, Limits as Limits, makeFinalTileImages, Map, Tile, toObstacle } from './MapOrganicCave';
 import { Material } from './Conway';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndexPreventWrap } from './jmath/ArrayUtil';
-import { raceTimeout } from './Promise';
+import { raceTimeout, reportIfTakingTooLong } from './Promise';
 import { updateParticlees } from './graphics/Particles';
 import { elInstructions, processNextInQueueIfReady, setupNetworkHandlerGlobalFunctions } from './network/networkHandler';
 import { setupDevGlobalFunctions } from './devUtils';
@@ -2675,7 +2675,7 @@ export default class Underworld {
         // Filter out protected units
         effectState.targetedUnits = effectState.targetedUnits.filter(u => !excludedTargets.includes(u));
 
-        effectState = await card.effect(effectState, card, quantity, this, prediction, outOfRange);
+        effectState = await reportIfTakingTooLong(10000, `${card.id};${prediction}`, card.effect(effectState, card, quantity, this, prediction, outOfRange));
 
         // Clear images from previous card before drawing the images from the new card
         containerSpells?.removeChildren();
