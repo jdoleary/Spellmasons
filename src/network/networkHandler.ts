@@ -30,13 +30,16 @@ export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THIN
 export const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
 export function onData(d: OnDataArgs, underworld: Underworld) {
   const { payload } = d;
+  if (!NO_LOG_LIST.includes(d.payload.type)) {
+    // Don't clog up server logs with payloads, leave that for the client which can handle them better
+    console.log("onData:", MESSAGE_TYPES[d.payload.type], globalThis.headless ? '' : d)
+  }
   const type: MESSAGE_TYPES = payload.type;
   switch (type) {
     case MESSAGE_TYPES.PING:
       pingSprite({ coords: payload as Vec2, color: underworld.players.find(p => p.clientId == d.fromClient)?.color });
       break;
     case MESSAGE_TYPES.INIT_GAME_STATE:
-      console.log("onData:", MESSAGE_TYPES[d.payload.type]);
       // If the underworld is not yet initialized for this client then
       // load the game state
       // INIT_GAME_STATE is only to be handled by clients who just
@@ -54,7 +57,6 @@ export function onData(d: OnDataArgs, underworld: Underworld) {
       }
       break;
     case MESSAGE_TYPES.LOAD_GAME_STATE:
-      console.log("onData:", MESSAGE_TYPES[d.payload.type]);
       // If a client loads a full game state, they should be fully synced
       // so clear the onDataQueue to prevent old messages from being processed
       onDataQueueContainer.queue = [d];
