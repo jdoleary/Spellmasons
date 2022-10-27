@@ -46,6 +46,9 @@ const spell: Spell = {
       // .filter: only target living units
       for (let unit of state.targetedUnits.filter(u => u.alive)) {
         Unit.addModifier(unit, id, underworld, prediction, quantity);
+        if (!prediction) {
+          floatingText({ coords: unit, text: `Added ${id}` });
+        }
       }
       return state;
     },
