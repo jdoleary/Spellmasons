@@ -9,7 +9,7 @@
 # Brad Playtest
 - multiple portal bug
 - when in full screen escape leaves full screen in addition to opening menu
-- I got to pick 2 perks
+    - https://stackoverflow.com/questions/72248081/preventing-electron-to-exit-fullscreen-on-escape
 - pathing prediction messed up, see video
 - bug: push spell was reverted after server sync
 - dash,burst,slash didn't cast slash
