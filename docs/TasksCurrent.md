@@ -1,3 +1,121 @@
+- fix CHHOSE_UPGRADE bug that allows devMode true players to have too many upgrades
+- got a sync error after bloat, slash and then slashes on the two targets that got moved by the bloat:
+```
+onData: SPELL 
+onData 118 : SPELL {
+  type: 0,
+  x: 898.5555554706185,
+  y: 519.3333333537664,
+  cards: [ 'Bloat', 'Slash', 'Slash' ]
+}
+Handle Spell: Bloat,Slash,Slash
+Headless server executed gameloop in  0.02  millis with 1  loops.
+No texture for makeBloatExplosion
+onData: SPELL 
+onData 119 : SPELL {
+  type: 0,
+  x: 1096.8888888888744,
+  y: 512.1111111111148,
+  cards: [ 'Slash', 'Slash' ]
+}
+Handle Spell: Slash,Slash
+Headless server executed gameloop in  11.18  millis with 65  loops.
+onData: MOVE_PLAYER 
+onData: MOVE_PLAYER 
+onData 120 : MOVE_PLAYER { type: 1, x: 1046.8333333333335, y: 451.2777777777779 }
+Headless server executed gameloop in  0.01  millis with 1  loops.
+onData 121 : MOVE_PLAYER { type: 1, x: 1030.3134830677504, y: 429.8945585105236 }
+Headless server executed gameloop in  0.08  millis with 14  loops.
+onData: MOVE_PLAYER 
+onData 122 : MOVE_PLAYER { type: 1, x: 1014.0425546629807, y: 408.32087650195905 }
+Headless server executed gameloop in  0.07  millis with 14  loops.
+onData: MOVE_PLAYER 
+onData 123 : MOVE_PLAYER { type: 1, x: 997.471730817783, y: 386.97455059829343 }
+Headless server executed gameloop in  0.05  millis with 14  loops.
+onData: MOVE_PLAYER 
+onData 124 : MOVE_PLAYER { type: 1, x: 981.9891292982113, y: 367.6402971443216 }
+Headless server executed gameloop in  0.05  millis with 12  loops.
+onData: SPELL 
+onData 125 : SPELL {
+  type: 0,
+  x: 905.0306017666906,
+  y: 252.7953414069806,
+  cards: [ 'Slash' ]
+}
+Handle Spell: Slash
+Headless server executed gameloop in  0.02  millis with 1  loops.
+Pickup: Drop scroll pickup 3 14 14
+onData: END_TURN 
+onData 126 : END_TURN { type: 9 }
+PlayerTurn: End player turn 916d6e15-9020-43e5-b698-883f4b477ab9
+syncTurnMessage: phase: PlayerTurns
+Underworld: TurnPhase: End player turn phase
+Broadcast SET_PHASE:  NPC_ALLY
+onData: SET_PHASE
+onData 127 : SET_PHASE phase: NPC_ALLY
+sync: SET_PHASE; syncs units and players
+sync: Syncing units [
+   3, 13, 14, 15,
+  16, 17, 18
+] [
+   3, 13, 14, 15,
+  16, 17, 18
+]
+sync: Syncing players ["916d6e15-9020-43e5-b698-883f4b477ab9"]
+initializeTurnPhase( NPC_ALLY )
+setTurnPhase( NPC_ALLY )
+syncTurnMessage: phase: NPC_ALLY
+Turn Management: Skipping executingNPCTurn for Faction.ALLY
+Broadcast SET_PHASE:  NPC_ENEMY
+onData: SET_PHASE
+onData 128 : SET_PHASE phase: NPC_ENEMY
+sync: SET_PHASE; syncs units and players
+sync: Syncing units [
+   3, 13, 14, 15,
+  16, 17, 18
+] [
+   3, 13, 14, 15,
+  16, 17, 18
+]
+sync: Syncing players ["916d6e15-9020-43e5-b698-883f4b477ab9"]
+initializeTurnPhase( NPC_ENEMY )
+setTurnPhase( NPC_ENEMY )
+syncTurnMessage: phase: NPC_ENEMY
+game: executeNPCTurn ENEMY
+Headless server executed gameloop in  0.04  millis with 1  loops.
+This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled 
+with .catch(). The promise rejected with the reason:
+RangeError: Maximum call stack size exceeded
+    at lerp (C:\git\Golems\headless-server-build\src\jmath\math.js:5:14)
+    at fly (C:\git\Golems\headless-server-build\src\entity\Projectile.js:84:34)
+    at C:\git\Golems\headless-server-build\src\entity\Projectile.js:95:41
+    at global.requestAnimationFrame (C:\git\Golems\headless-server-build\src\Shims.js:26:12)
+    at fly (C:\git\Golems\headless-server-build\src\entity\Projectile.js:95:9)
+    at C:\git\Golems\headless-server-build\src\entity\Projectile.js:95:41
+    at global.requestAnimationFrame (C:\git\Golems\headless-server-build\src\Shims.js:26:12)
+    at fly (C:\git\Golems\headless-server-build\src\entity\Projectile.js:95:9)
+    at C:\git\Golems\headless-server-build\src\entity\Projectile.js:95:41
+    at global.requestAnimationFrame (C:\git\Golems\headless-server-build\src\Shims.js:26:12)
+This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled 
+with .catch(). The promise rejected with the reason:
+RangeError: Maximum call stack size exceeded
+    at lerp (C:\git\Golems\headless-server-build\src\jmath\math.js:5:14)
+    at fly (C:\git\Golems\headless-server-build\src\entity\Projectile.js:84:34)
+    at C:\git\Golems\headless-server-build\src\entity\Projectile.js:95:41
+    at global.requestAnimationFrame (C:\git\Golems\headless-server-build\src\Shims.js:26:12)
+    at fly (C:\git\Golems\headless-server-build\src\entity\Projectile.js:95:9)
+    at C:\git\Golems\headless-server-build\src\entity\Projectile.js:95:41
+    at global.requestAnimationFrame (C:\git\Golems\headless-server-build\src\Shims.js:26:12)
+    at fly (C:\git\Golems\headless-server-build\src\entity\Projectile.js:95:9)
+    at C:\git\Golems\headless-server-build\src\entity\Projectile.js:95:41
+    at global.requestAnimationFrame (C:\git\Golems\headless-server-build\src\Shims.js:26:12)
+raceTimeout:  createVisualFlyingProjectile
+raceTimeout:  createVisualFlyingProjectile
+raceTimeout:  Unit.action; unitSourceId: archer; subType: 1
+raceTimeout:  Unit.action; unitSourceId: archer; subType: 1
+Headless server executed gameloop in  1.47  millis with 127  loops.
+```
+
 ---
 ## Instructions for playtest
 - If you see "Lost connection to server" just refresh and rejoin the game
