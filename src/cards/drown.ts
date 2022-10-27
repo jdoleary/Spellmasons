@@ -4,6 +4,7 @@ import { oneOffImage, playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
 import * as Unit from '../entity/Unit';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
+import floatingText from '../graphics/FloatingText';
 
 export const id = 'Drown';
 export interface UnitDamage {
@@ -30,13 +31,24 @@ const spell: Spell = {
 Deal ${damageDone} damage ONLY if target is submerged.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
-      // .filter: only target living units
-      const targets = state.targetedUnits.filter(u => u.alive)
-      if (!prediction) {
-        playSFXKey(`fallIntoLiquid-${underworld.lastLevelCreated?.biome}`);
+      // .filter: only target living units that are submerged
+      const targets = state.targetedUnits.filter(u => u.alive && u.inLiquid);
+      if (targets.length) {
+        if (!prediction) {
+          playSFXKey(`fallIntoLiquid-${underworld.lastLevelCreated?.biome}`);
+        }
+        for (let unit of targets) {
+          Unit.takeDamage(unit, damageDone, state.casterUnit, underworld, prediction, state);
+        }
       }
-      for (let unit of targets) {
-        Unit.takeDamage(unit, damageDone, state.casterUnit, underworld, prediction, state);
+      if (targets.length == 0) {
+        // No targets to cast on
+        // Refund mana
+        state.casterUnit.mana += state.aggregator.lastSpellCost;
+        if (!prediction) {
+          floatingText({ coords: state.casterUnit, text: 'No Targets are submerged' });
+
+        }
       }
       return state;
     },

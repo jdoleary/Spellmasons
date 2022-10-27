@@ -43,6 +43,8 @@ Note: You can deal damage if a unit is shoved hard enough into a wall.
         promises.push(forcePush(entity, awayFrom, velocityStartMagnitude * quantity, underworld, prediction));
       }
       if (targets.length == 0) {
+        // No targets to cast on
+        // Refund mana
         state.casterUnit.mana += state.aggregator.lastSpellCost;
         if (!prediction) {
           floatingText({ coords: state.casterUnit, text: 'No Targets close enough to shove\nMana Refunded' });
