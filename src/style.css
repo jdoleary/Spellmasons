@@ -113,7 +113,7 @@ body.view-Game.showUpgrades #upgrade-picker {
   align-items: center;
   display: flex;
   pointer-events: all;
-  max-height: 70vh;
+  max-height: 50vh;
 }
 
 #upgrade-picker-label {
