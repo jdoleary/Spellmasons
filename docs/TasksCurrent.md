@@ -1,4 +1,12 @@
 - fix CHHOSE_UPGRADE bug that allows devMode true players to have too many upgrades
+- manaburn can result in fractional health
+- **important** during my playtest: long pause after we both ended turn
+    - seems to be racetimeout with the glops, and one came back to life after sync
+    - some type of timeout with glops was causing sync issues because the players would continue to play but then it would sync and reset
+    - this also prevented us from entering portals because the server was stuck
+    - after test it appears it has something to do with the spell Bleed, maybe stacked
+- make spell text scrollable
+- You're able to cast into negative mana in multiplayer
 ---
 ## Instructions for playtest
 - If you see "Lost connection to server" just refresh and rejoin the game
