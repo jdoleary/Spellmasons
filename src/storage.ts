@@ -21,6 +21,10 @@ export function assign(key: string, value: object) {
     }
 }
 export function get(key: string): string | null {
+    if (globalThis.headless) {
+        // Headless server does not use storage
+        return null;
+    }
     if (globalThis.allowCookies) {
         return localStorage.getItem(key);
     } else {

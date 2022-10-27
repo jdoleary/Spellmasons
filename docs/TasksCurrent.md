@@ -1,3 +1,7 @@
+---
+## Instructions for playtest
+- If you see "Lost connection to server" just refresh and rejoin the game
+---
 - bug: lots of units that were inLiquid arenot but still have the mask in multiplayer
 - onData SPELL: doesn't print enough info in server logs
 - missing gold circle on player 2's feet

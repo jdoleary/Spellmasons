@@ -2105,7 +2105,11 @@ export default class Underworld {
       return;
     }
     if (!player) {
-      console.error('Cannot show upgrades, no globalThis.player');
+      // Only log error if this is not a headless instance because a headless instance
+      // will never have globalThis.player
+      if (!globalThis.headless) {
+        console.error('Cannot show upgrades, no globalThis.player');
+      }
       return
     }
     // Return immediately if player has no upgrades that left to pick from
@@ -2217,7 +2221,7 @@ export default class Underworld {
   async broadcastTurnPhase(p: turn_phase) {
     // If host, send sync; if non-host, ignore 
     if (globalThis.isHost(this.pie)) {
-      console.log('Broadcast turn phase', turn_phase[p]);
+      console.log('Broadcast SET_PHASE:  turn_phase ==', turn_phase[p]);
       this.pie.sendData({
         type: MESSAGE_TYPES.SET_PHASE,
         phase: p,

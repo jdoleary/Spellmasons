@@ -25,20 +25,10 @@ import { clearLastNonMenuView, setView, View } from '../views';
 import { autoExplain, explain, EXPLAIN_END_TURN } from '../graphics/Explain';
 import { cameraAutoFollow } from '../graphics/PixiUtils';
 
-const messageLog: any[] = [];
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 export const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
 export function onData(d: OnDataArgs, underworld: Underworld) {
-  if (!NO_LOG_LIST.includes(d.payload.type)) {
-    // Don't clog up server logs with payloads, leave that for the client which can handle them better
-    console.log("onData:", MESSAGE_TYPES[d.payload.type], globalThis.headless ? '' : d)
-  }
-  // Temporarily for development
-  // TODO: Remove for production, messageLog will take
-  // up a lot of memory for real games
-  messageLog.push(d);
-
   const { payload } = d;
   const type: MESSAGE_TYPES = payload.type;
   switch (type) {
@@ -46,6 +36,7 @@ export function onData(d: OnDataArgs, underworld: Underworld) {
       pingSprite({ coords: payload as Vec2, color: underworld.players.find(p => p.clientId == d.fromClient)?.color });
       break;
     case MESSAGE_TYPES.INIT_GAME_STATE:
+      console.log("onData:", MESSAGE_TYPES[d.payload.type]);
       // If the underworld is not yet initialized for this client then
       // load the game state
       // INIT_GAME_STATE is only to be handled by clients who just
@@ -63,6 +54,7 @@ export function onData(d: OnDataArgs, underworld: Underworld) {
       }
       break;
     case MESSAGE_TYPES.LOAD_GAME_STATE:
+      console.log("onData:", MESSAGE_TYPES[d.payload.type]);
       // If a client loads a full game state, they should be fully synced
       // so clear the onDataQueue to prevent old messages from being processed
       onDataQueueContainer.queue = [d];
@@ -129,15 +121,43 @@ export function processNextInQueueIfReady(underworld: Underworld) {
     console.error('underworld is undefined. This should never occur.')
   }
 }
+function logHandleOnDataMessage(type: MESSAGE_TYPES, payload: any, fromClient: string, underworld: Underworld) {
+  try {
+    if (!NO_LOG_LIST.includes(type)) {
+      // Count processed messages (but only those that aren't in the NO_LOG_LIST)
+      underworld.processedMessageCount++;
+      let payloadForLogging = payload;
+      // For headless, log only portions of some payloads so as to not swamp the logs with
+      // unnecessary info
+      if (globalThis.headless) {
+        switch (type) {
+          case MESSAGE_TYPES.SET_PHASE:
+            payloadForLogging = `phase: ${turn_phase[payload.phase]}`
+            break;
+          case MESSAGE_TYPES.CHOOSE_UPGRADE:
+            payloadForLogging = `${fromClient}: ${payload?.upgrade?.title}`
+            break;
+          case MESSAGE_TYPES.SYNC_PLAYERS:
+            payloadForLogging = `units: ${payload?.units.length}; players: ${payload?.players.length}`;
+            break;
+          case MESSAGE_TYPES.CREATE_LEVEL:
+            payloadForLogging = `levelIndex: ${payload?.level?.levelIndex}; enemies: ${payload?.level?.enemies.length}`;
+            break;
+        }
+      }
+      // Don't clog up server logs with payloads, leave that for the client which can handle them better
+      console.log("onData", underworld.processedMessageCount, ":", MESSAGE_TYPES[type], payloadForLogging)
+    }
+  } catch (e) {
+    console.error('Error in logging', e);
+  }
+
+}
 async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promise<any> {
-  underworld.processedMessageCount++;
   currentlyProcessingOnDataMessage = d;
   const { payload, fromClient } = d;
   const type: MESSAGE_TYPES = payload.type;
-  if (!NO_LOG_LIST.includes(type)) {
-    // Don't clog up server logs with payloads, leave that for the client which can handle them better
-    console.log("Handle ONDATA", underworld.processedMessageCount, MESSAGE_TYPES[type], globalThis.headless ? '' : payload)
-  }
+  logHandleOnDataMessage(type, payload, fromClient, underworld);
   // Get player of the client that sent the message 
   const fromPlayer = underworld.players.find((p) => p.clientId === fromClient);
   switch (type) {
@@ -543,6 +563,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
     console.error('Spell is invalid, it must have coordinates');
     return;
   }
+  console.log('Handle Spell:', payload?.cards.join(','));
 
   // TODO: Keep this around for when we have one-use cards
   // Card.removeCardsFromHand(caster, payload.cards);
