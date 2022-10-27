@@ -1,5 +1,5 @@
 import Underworld from "./Underworld";
 
 export function calculateGameDifficulty(underworld: Underworld) {
-    return underworld.players.filter(p => p.clientConnected).length;
+    return Math.min(3, underworld.players.filter(p => p.clientConnected).length);
 }
