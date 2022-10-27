@@ -520,6 +520,10 @@ kbd {
   display: flex;
   justify-content: center;
   align-items: center;
+  /* Ensure icons with no background share the same
+  background color as the default card */
+  background-color: #e7d1a6;
+
 }
 
 .card-thumb img {

@@ -1,6 +1,6 @@
 - turn_phase desync causes moveTowards to timeout for player, if it is in turn_phase stalled the player won't move
+- _gameLoopHeadless exceeded call stack: https://sentry.io/organizations/jordan-oleary/issues/3691943465/?project=6306205&query=is%3Aunresolved&referrer=issue-stream
 # Brad Playtest
-- Transparent perks
 - when in full screen escape leaves full screen in addition to opening menu
 - I got to pick 2 perks
 - pathing prediction messed up, see video
