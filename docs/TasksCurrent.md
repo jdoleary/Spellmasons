@@ -2,11 +2,9 @@
 ## Instructions for playtest
 - If you see "Lost connection to server" just refresh and rejoin the game
 ---
-- onData SPELL: doesn't print enough info in server logs
 - missing gold circle on player 2's feet
 - I dashed and then ended my turn immediately and I got reset to before where i dashed
 - headless server executed should count time, not loops to detect issue
-- _gameLoopHeadless exceeded call stack: https://sentry.io/organizations/jordan-oleary/issues/3691943465/?project=6306205&query=is%3Aunresolved&referrer=issue-stream
 # Brad Playtest
 - multiple portal bug
 - when in full screen escape leaves full screen in addition to opening menu

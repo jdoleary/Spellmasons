@@ -330,7 +330,7 @@ export function enterPortal(player: IPlayer, underworld: Underworld) {
 export function ableToAct(player: IPlayer) {
   const ableToTakeTurn = !inPortal(player) && player.unit.alive && player.clientConnected;
   if (!ableToTakeTurn) {
-    console.log(`Player ${player.clientId} unable to take turn`, 'inPortal:', inPortal(player), 'alive:', player.unit.alive, 'connected: ', player.clientConnected)
+    console.log(`Player ${player.clientId} unable to take turn.`, '!inPortal:', !inPortal(player), 'alive:', player.unit.alive, 'connected: ', player.clientConnected)
   }
   return ableToTakeTurn;
 }
