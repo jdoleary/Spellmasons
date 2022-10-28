@@ -1,37 +1,27 @@
 # Desired Schedule
-- September / October
-    - Prep for playtest
-        - Fix headless gameloop so it executes immediately
-        - Add lobby
-    - Playtest multiplayer again
+- October
     - Add Trailer
+        - Revise store copy so it's less wordy
+        - Add "why it might not be for you" gif and description
 - November
+    - [Set up Continuous Integration on Digital Ocean](https://docs.digitalocean.com/release-notes/app-platform/)
+    - Work through bug backlog
+    - [Beta Testing](https://partner.steamgames.com/doc/store/testing)
+    - Cooldowns instead of mana multiplier
+- December
     - Package as Electron App
     - Convenient multiplayer lobbying via steam
         - Prevent players from joining mid-round, notify "you will spawn once this level is complete"
     - Test on all 3 Operating Systems
-    - [Beta Testing](https://partner.steamgames.com/doc/store/testing)
-    - Cooldowns instead of mana multiplier
-- December / January
-    - More content: enemies, boss, perks
+- January
+    - Perks
     - Steamdeck support / Controller Support / Accessability / Localization Language Support / Spellcheck
     - Release
 - Trademark Process - ongoing
 # Critical Path
 - Major Tasks
     - Fix liquid generation
-    - Fix movement prediction (see clone+push)
-    - More enemies
     - Make weekly videos
-- Milestone | **More Enemies**
-    - More enemies
-        - Bigger Golem
-            - slam into the ground that does cone damage
-        - Ghost archer
-        - Lobber?
-        - Priest
-        - Summoner
-        - Vampire
 - Milestone | **Beta Testing**
     - Optimize game
         - setPath is constantly being called by all enemies
@@ -45,7 +35,6 @@
     - Build following
     - Make survey
     - Send out to testers
-    - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
 - Milestone X | **Package as Electron App** | Planning on November 1
     - Security
         - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility

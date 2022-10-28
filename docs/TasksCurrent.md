@@ -1,9 +1,9 @@
+- Steam description is too wordy, just tell 'em why it's awesome
 - bloat stacks don't work
 - when casting multiple spells, rendx3 player thought stayed up on multiplayer until end of NPC turn
 - debilitate doesn't stac
 # Set up continuous integration
 
-https://docs.digitalocean.com/release-notes/app-platform/
 App Platform now supports automatically re-deploying apps when updated container images are pushed to DigitalOcean Container Registry. See How to Deploy from Container Images for more information.
 ---
 
@@ -34,7 +34,6 @@ App Platform now supports automatically re-deploying apps when updated container
 - when in full screen escape leaves full screen in addition to opening menu
     - https://stackoverflow.com/questions/72248081/preventing-electron-to-exit-fullscreen-on-escape
 - pathing prediction messed up, see video
-- dash,burst,slash didn't cast slash
 - out of range circle stuck up  with no spell
 # 2022-10-25
 ## Priorities
@@ -69,6 +68,7 @@ App Platform now supports automatically re-deploying apps when updated container
 - What to do with disconnected players when it goes to the next level?
 - Fix rejoining hack where people can just rejoin if they're dead to come back
 - explain that when you die in multiplayer you'll come back if your ally beats the level
+- explain minibosses
 # Features
 - In marketing, emphasize that it's turn based
     - Why this game might not be for you
@@ -83,6 +83,7 @@ App Platform now supports automatically re-deploying apps when updated container
 - inventory should show current card cost and cooldown
 -  Add save/load to menu
 # Bugs / Cleaning
+- fix save/load  from menu screen, it needs to change the gameview
 - if screen is too thin, hover card covers inventory
 - bug: health bars disappear when cone prediction is up
     - this is because unitOverlayGraphics is used for attack radiuses and health bars
