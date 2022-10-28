@@ -1,3 +1,9 @@
+- 0: "Bloat" ​​ 1: "shove" ​​ 2: "Slash" ​​ 3: "Slash" ​​ 4: "Slash" desync with  the shove
+- Log errors along with the game name
+- split purify resulted in me being upsidedown
+- dragger sync error
+- dragger x and y went to null after "target similar, slash slash"
+- feature: secondary spellbar
 # Brad playtest 2:
 - he can't spawn in while i'm casint a spell
     - same thing with casts, it waits
@@ -188,6 +194,8 @@
 - Idea: A spell to sacrifice ally unit immediately
 - Card: Mind Control (changes faction temporarily)
 - Feature: "Soul bind" - bound units share applied effects
+- A spell that saves 40% of your current mana for next turn
+- A spell where you can save some of your health, mana, stamina in a potion
 - Content: A spell to destroy corpses
     - and grant you mana, or health, or stamina?
     - corpse as currency
