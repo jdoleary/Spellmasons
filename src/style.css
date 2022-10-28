@@ -724,6 +724,7 @@ body.your-turn #end-turn-btn:hover {
 
 #inspector-tooltip-inner {
   padding: 8px;
+  width: 100%;
 }
 
 #inspector-tooltip-container {

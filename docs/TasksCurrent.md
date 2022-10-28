@@ -14,7 +14,6 @@
 - sync issue: golem moving through frozen guys jumped back
 - spell pickup desync
 - "pull" desync again
-- health potion tooltip has a transparency issue
 ---
 - fix CHHOSE_UPGRADE bug that allows devMode true players to have too many upgrades
 - manaburn can result in fractional health
