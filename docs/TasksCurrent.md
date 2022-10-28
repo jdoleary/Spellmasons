@@ -1,6 +1,4 @@
-- 0: "Bloat" ​​ 1: "shove" ​​ 2: "Slash" ​​ 3: "Slash" ​​ 4: "Slash" desync with  the shove
 - Log errors along with the game name
-- dragger sync error
 - dragger x and y went to null after "target similar, slash slash"
 - feature: secondary spellbar
 # Brad playtest 2:
@@ -38,7 +36,6 @@
 - when in full screen escape leaves full screen in addition to opening menu
     - https://stackoverflow.com/questions/72248081/preventing-electron-to-exit-fullscreen-on-escape
 - pathing prediction messed up, see video
-- bug: push spell was reverted after server sync
 - dash,burst,slash didn't cast slash
 - out of range circle stuck up  with no spell
 # 2022-10-25
@@ -71,8 +68,6 @@
 - Hide disconnected players in game screen but not in the lobby
 - Multiplayer voting
 - Adaptive difficulty
-- Push predictions are off when on headless
-- Fix push prediction with targeting spell together
 - What to do with disconnected players when it goes to the next level?
 - Fix rejoining hack where people can just rejoin if they're dead to come back
 - explain that when you die in multiplayer you'll come back if your ally beats the level
@@ -118,7 +113,6 @@
 - Ensure endPlayerTurnPhase kills out of bounds units on headless server
 ## Prediction issues
 - prediction should factor in standing on pickups, see video
-- **important** movement prediction is off when doing "clone + push" (something to do with the copy being added as a target?)
 # Content
 - Make Youtube short audio louder
 - Rend

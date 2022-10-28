@@ -45,7 +45,6 @@ export async function pull(pushedObject: HasSpace, towards: Vec2, quantity: numb
     forceMoveInst = { canCreateSecondOrderPushes: true, alreadyCollided: [], pushedObject, velocity, velocity_falloff, resolve }
     if (prediction) {
       underworld.forceMovePrediction.push(forceMoveInst);
-      underworld.fullySimulateForceMovePredictions();
     } else {
       underworld.forceMove.push(forceMoveInst);
     }

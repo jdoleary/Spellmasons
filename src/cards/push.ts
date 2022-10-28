@@ -53,7 +53,6 @@ export function makeForcePush(args: forcePushArgs, underworld: Underworld, predi
   const forceMoveInst: ForceMove = { pushedObject, alreadyCollided: [], canCreateSecondOrderPushes, velocity, velocity_falloff, resolve }
   if (prediction) {
     underworld.forceMovePrediction.push(forceMoveInst);
-    underworld.fullySimulateForceMovePredictions();
   } else {
     underworld.forceMove.push(forceMoveInst);
   }

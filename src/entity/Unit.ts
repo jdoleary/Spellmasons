@@ -334,7 +334,7 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
   // Since resolveDoneMoving is about to be overwritten,
   // call it, just in case there is a pending promise (there shouldn't be)
   // so the promise doesn't hang forever
-  const loadedunit: IUnit = {
+  let loadedunit: IUnit = {
     ...restUnit,
     shaderUniforms: {},
     resolveDoneMoving: () => { },
@@ -368,7 +368,8 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
       loadedunit.shaderUniforms[key][keyUniform] = value;
     }
   }
-  underworld.addUnitToArray(loadedunit, prediction);
+  // Override ref since in prediction it makes a copy of the unit
+  loadedunit = underworld.addUnitToArray(loadedunit, prediction);
   if (!loadedunit.alive) {
     if (loadedunit.image) {
       // Ensure unit is on die sprite

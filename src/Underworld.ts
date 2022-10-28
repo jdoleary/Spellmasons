@@ -262,13 +262,6 @@ export default class Underworld {
   }
   // Simulate the forceMove until it's complete
   fullySimulateForceMovePredictions() {
-    if (this.forceMovePrediction.length > 1) {
-      // this function should only be invoked once per prediction, this check
-      // prevents it from being invoked more than once because any time a forceMovePrediction
-      // is added to the forceMovePrediction array this function will be invoked and it will run until
-      // all the forceMovePredictions associated are finished
-      return;
-    }
     const prediction = true;
     const PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD = 300;
     let loopCount = 0;
@@ -2539,11 +2532,14 @@ export default class Underworld {
       this.doodads.push(doodad);
     }
   }
-  addUnitToArray(unit: Unit.IUnit, prediction: boolean) {
+  addUnitToArray(unit: Unit.IUnit, prediction: boolean): Unit.IUnit {
     if (prediction && this.unitsPrediction) {
-      this.unitsPrediction.push(Unit.copyForPredictionUnit(unit, this));
+      const predictionCopy = Unit.copyForPredictionUnit(unit, this)
+      this.unitsPrediction.push(predictionCopy);
+      return predictionCopy;
     } else {
       this.units.push(unit);
+      return unit;
     }
   }
   removePickupFromArray(pickup: Pickup.IPickup, prediction: boolean) {
@@ -2675,7 +2671,11 @@ export default class Underworld {
         // Filter out protected units
         effectState.targetedUnits = effectState.targetedUnits.filter(u => !excludedTargets.includes(u));
 
-        effectState = await reportIfTakingTooLong(10000, `${card.id};${prediction}`, card.effect(effectState, card, quantity, this, prediction, outOfRange));
+        const cardEffectPromise = card.effect(effectState, card, quantity, this, prediction, outOfRange);
+        if (prediction) {
+          this.fullySimulateForceMovePredictions();
+        }
+        effectState = await reportIfTakingTooLong(10000, `${card.id};${prediction}`, cardEffectPromise);
 
         // Clear images from previous card before drawing the images from the new card
         containerSpells?.removeChildren();
