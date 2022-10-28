@@ -1,26 +1,16 @@
-- futher investigatet '  // Override ref since in prediction it makes a copy of the unit' from 06d754d2
-- Log errors along with the game name
+- futher investigate '  // Override ref since in prediction it makes a copy of the unit' from 06d754d2
 - dragger x and y went to null after "target similar, slash slash"
 - feature: secondary spellbar
 # Brad playtest 2:
 - he can't spawn in while i'm casint a spell
     - same thing with casts, it waits
-- player thought stayed up even after he cast
-- shove doesn't predict death
 - spawning on top of a stamina or mana potion doesn't overfill in multiplayer
 - EZ self cast, like alt clicking a spell self casts or something
 - melee prediction not working? See footage
 - should allow spell prediction even while an action is taking place - this not being here causes friction in multiplayer
 - sync issue: golem moving through frozen guys jumped back
-- spell pickup desync
-- "pull" desync again
 ---
 - fix CHHOSE_UPGRADE bug that allows devMode true players to have too many upgrades
-- **important** during my playtest: long pause after we both ended turn
-    - seems to be racetimeout with the glops, and one came back to life after sync
-    - some type of timeout with glops was causing sync issues because the players would continue to play but then it would sync and reset
-    - this also prevented us from entering portals because the server was stuck
-    - after test it appears it has something to do with the spell Bleed, maybe stacked
 - make spell text scrollable
 - You're able to cast into negative mana in multiplayer
 ---
