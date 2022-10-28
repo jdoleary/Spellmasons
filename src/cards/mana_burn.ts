@@ -37,7 +37,7 @@ Burn up to ${mana_burnt} of the targets' mana and cause ${health_burn_ratio * 10
       for (let unit of targets) {
         const unitManaBurnt = Math.min(unit.mana, mana_burnt);
         unit.mana -= unitManaBurnt;
-        const damage = unitManaBurnt * health_burn_ratio
+        const damage = Math.ceil(unitManaBurnt * health_burn_ratio);
         Unit.takeDamage(unit, damage, unit, underworld, prediction, state);
       }
       return state;
