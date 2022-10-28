@@ -435,6 +435,9 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
         // Now that spell has been cast, trigger the headless server to process it immediately
         underworld.triggerGameLoopHeadless();
         await handleSpellPromise;
+        // Trigger it again in case the result of any spells caused a forceMove to be added to the array
+        // such as Bloat's onDeath
+        underworld.triggerGameLoopHeadless();
       } else {
         console.error('Cannot cast, caster does not exist');
       }

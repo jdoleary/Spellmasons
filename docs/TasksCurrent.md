@@ -1,4 +1,3 @@
-- desync after bloat explosion
 - futher investigate '  // Override ref since in prediction it makes a copy of the unit' from 06d754d2
 - dragger x and y went to null after "target similar, slash slash"
 - feature: secondary spellbar
