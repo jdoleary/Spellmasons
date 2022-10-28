@@ -1,6 +1,5 @@
 - 0: "Bloat" ​​ 1: "shove" ​​ 2: "Slash" ​​ 3: "Slash" ​​ 4: "Slash" desync with  the shove
 - Log errors along with the game name
-- split purify resulted in me being upsidedown
 - dragger sync error
 - dragger x and y went to null after "target similar, slash slash"
 - feature: secondary spellbar

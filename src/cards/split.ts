@@ -28,10 +28,10 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
     return;
   }
   // Safely restore unit's original properties
-  const { scale, healthMax, manaMax, staminaMax, damage, moveSpeed } = unit.modifiers[id].originalStats;
+  const { scaleX, scaleY, healthMax, manaMax, staminaMax, damage, moveSpeed } = unit.modifiers[id].originalStats;
   if (unit.image) {
-    unit.image.sprite.scale.x = scale;
-    unit.image.sprite.scale.y = scale;
+    unit.image.sprite.scale.x = scaleX;
+    unit.image.sprite.scale.y = scaleY;
   }
   const healthChange = healthMax / unit.healthMax;
   unit.health *= healthChange;
@@ -65,7 +65,8 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     unit.modifiers[id] = {
       isCurse: true,
       originalStats: {
-        scale: unit.image && unit.image.sprite.scale.x || 1,
+        scaleX: unit.image && unit.image.sprite.scale.x || 1,
+        scaleY: unit.image && unit.image.sprite.scale.y || 1,
         healthMax,
         manaMax,
         staminaMax,
