@@ -1,3 +1,12 @@
+- bloat stacks don't work
+- when casting multiple spells, rendx3 player thought stayed up on multiplayer until end of NPC turn
+- debilitate doesn't stac
+# Set up continuous integration
+
+https://docs.digitalocean.com/release-notes/app-platform/
+App Platform now supports automatically re-deploying apps when updated container images are pushed to DigitalOcean Container Registry. See How to Deploy from Container Images for more information.
+---
+
 - futher investigate '  // Override ref since in prediction it makes a copy of the unit' from 06d754d2
 - dragger x and y went to null after "target similar, slash slash"
 - feature: secondary spellbar
