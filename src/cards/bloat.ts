@@ -17,7 +17,8 @@ const damage = 1;
 const baseRadius = 140;
 function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra?: any) {
   // First time setup
-  if (!unit.modifiers[id]) {
+  const modifier = unit.modifiers[id];
+  if (!modifier) {
     unit.modifiers[id] = {
       isCurse: true,
       quantity,
@@ -32,6 +33,9 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity:
       // Visually "bloat" the image
       unit.image.sprite.scale.x = 1.5;
     }
+  } else {
+    modifier.quantity += quantity;
+
   }
 }
 function remove(unit: IUnit, underworld: Underworld) {

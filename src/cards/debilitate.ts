@@ -31,7 +31,7 @@ Makes the target(s) take double damage whenever they receive damage.
         playDefaultSpellSFX(card, prediction);
         await playDefaultSpellAnimation(card, targets, prediction);
         for (let unit of targets) {
-          Unit.addModifier(unit, id, underworld, prediction);
+          Unit.addModifier(unit, id, underworld, prediction, quantity);
         }
       }
       return state;
@@ -54,10 +54,12 @@ Makes the target(s) take double damage whenever they receive damage.
   },
   events: {
     onDamage: (unit, amount, _underworld, damageDealer) => {
+      const quantity = unit.modifiers[id]?.quantity || 1;
       // Magnify positive damage
       if (amount > 0) {
-        return amount * 2;
+        return amount * 2 * quantity;
       } else {
+        // Do not magnify negative damage (which is healing)
         return amount;
       }
     },
@@ -67,14 +69,16 @@ Makes the target(s) take double damage whenever they receive damage.
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
   // First time setup
   if (!unit.modifiers[id]) {
-    unit.modifiers[id] = { isCurse: true };
-  }
-  // Add event, stackable via quantity
-  for (let i = 0; i < quantity; i++) {
+    unit.modifiers[id] = {
+      isCurse: true,
+      quantity
+    };
     unit.onDamageEvents.push(id);
+    // Add subsprite image
+    Image.addSubSprite(unit.image, imageName);
+  } else {
+    unit.modifiers[id].quantity += quantity;
   }
 
-  // Add subsprite image
-  Image.addSubSprite(unit.image, imageName);
 }
 export default spell;
