@@ -6,23 +6,9 @@ https://docs.digitalocean.com/products/app-platform/how-to/add-deploy-do-button/
 ```
 
 # For Spellmasons developers
-View the official Spellmasons Server image at https://hub.docker.com/repository/docker/jordanoleary/smms
 
-To update the official image:
-1. Build the headless server code
-`npm run headless-build-only`
-2. Run DockerDesktop
-3. Build
-`docker build . -t jordanoleary/smms`
-4. Test the image
-`docker container run -p 8080:8080/tcp jordanoleary/smms`
-5. Push a new image to the docker repo:
-`docker push jordanoleary/smms`
-
-To update a community server running on Digital Ocean
-1. Login to digital ocean
-2. Find the app
-3. Actions > Force Rebuild and Redeploy (There is no need to clear the build cache)
+Run `./deploy.sh` to build and push a new image.
+Digital Ocean will automatically update the app once a new image is pushed.
 
 ## Running the server locally with node
 `npm i`

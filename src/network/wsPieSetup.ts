@@ -23,7 +23,7 @@ import { version } from '../../package.json';
 // Locally hosted, externally accessed (use your own IP)
 // const wsUri = 'ws://68.48.199.138:7337';
 // Current digital ocean wsPie app:
-// const wsUri = 'wss://sea-lion-app-hjub5.ondigitalocean.app/';
+// const wsUri = 'wss://orca-app-99xgk.ondigitalocean.app/';
 function connect_to_wsPie_server(wsUri: string | undefined, underworld: Underworld): Promise<void> {
   const pie = underworld.pie;
   if (typeGuardHostApp(pie)) {

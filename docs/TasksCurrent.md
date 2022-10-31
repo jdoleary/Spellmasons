@@ -1,9 +1,4 @@
 - Steam description is too wordy, just tell 'em why it's awesome
-# Set up continuous integration
-
-App Platform now supports automatically re-deploying apps when updated container images are pushed to DigitalOcean Container Registry. See How to Deploy from Container Images for more information.
----
-
 - futher investigate '  // Override ref since in prediction it makes a copy of the unit' from 06d754d2
 - dragger x and y went to null after "target similar, slash slash"
 - feature: secondary spellbar
