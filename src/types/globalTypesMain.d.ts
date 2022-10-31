@@ -41,8 +41,6 @@ declare global {
     var clientId: undefined | string;
     var animatingSpells: undefined | boolean;
     var view: undefined | View;
-    // For development use
-    var giveMeCard: undefined | ((cardId: string, quantity: number) => void);
     // Set to true in developer console to see debug information
     var showDebug: undefined | boolean;
     // Draw the "walk rope" to show a player how far they can travel.
@@ -94,7 +92,7 @@ declare global {
     // Used to introduce new enemies
     var enemyEncountered: undefined | string[];
     // Make me superhuman (used for dev)
-    var superMe: undefined | ((underworld: Underworld) => void);
+    var superMe: undefined | ((underworld: Underworld, player?: Player.IPlayer) => void);
     // Shows icons above the heads of enemies who will damage you next turn
     // scale is the scale of the unit.  Larger units need their marker positioned higher
     var attentionMarkers: undefined | { imagePath: string, pos: Vec2, scale: number }[];

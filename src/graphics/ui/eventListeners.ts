@@ -669,12 +669,12 @@ export function registerAdminContextMenuOptions(underworld: Underworld) {
   const options: AdminContextMenuOption[] = [
     {
       label: '🦸‍♂️ Super Me',
-      action: () => {
+      action: ({ clientId }: { clientId?: string }) => {
         if (superMe) {
-          superMe(underworld);
+          superMe(underworld, underworld.players.find(p => p.clientId == clientId) || globalThis.player);
         }
       },
-      supportInMultiplayer: false,
+      supportInMultiplayer: true,
       domQueryContainer: '#menu-self',
     },
     {

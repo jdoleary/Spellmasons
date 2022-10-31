@@ -7,7 +7,7 @@ import * as Unit from './entity/Unit';
 import { UnitType } from './types/commonTypes';
 import * as Cards from './cards';
 import { syncInventory } from './graphics/ui/CardUI';
-import { addCardToHand } from './entity/Player';
+import { addCardToHand, IPlayer } from './entity/Player';
 
 // Development helpers
 // Note: clicking on a unit will assign them to `selectedUnit` so they are available in the browser console
@@ -59,15 +59,6 @@ export function setupDevGlobalFunctions(underworld: Underworld) {
         // so that it can be accessed by a developer in client
         window.devUnderworld = underworld;
     }
-    // TODO remove dev helper function for production release
-    globalThis.giveMeCard = (cardId: string) => {
-        const card = Cards.allCards[cardId];
-        if (card) {
-            addCardToHand(card, globalThis.player, underworld);
-        } else {
-            console.log('card', card, 'not found');
-        }
-    };
     globalThis.devKillAll = () => {
         underworld.units.filter(u => u.unitType !== UnitType.PLAYER_CONTROLLED).forEach(u => Unit.die(u, underworld, false));
     }
@@ -78,26 +69,32 @@ export function setupDevGlobalFunctions(underworld: Underworld) {
             }
         }
     }
-    globalThis.superMe = () => {
-        if (globalThis.player) {
-
-            globalThis.player.unit.health = 10000;
-            globalThis.player.unit.healthMax = 10000;
-            globalThis.player.unit.mana = 10000;
-            globalThis.player.unit.manaMax = 10000;
+    globalThis.superMe = (underworld: Underworld, player?: IPlayer) => {
+        if (player) {
+            player.unit.health = 10000;
+            player.unit.healthMax = 10000;
+            player.unit.mana = 10000;
+            player.unit.manaMax = 10000;
             // Give me all cards
-            if (globalThis.giveMeCard) {
-                Object.keys(Cards.allCards).forEach(globalThis.giveMeCard);
-            }
+            Object.keys(Cards.allCards).forEach(cardId => {
+                const card = Cards.allCards[cardId];
+                if (card) {
+                    addCardToHand(card, player, underworld);
+                } else {
+                    console.log('card', card, 'not found');
+                }
+            });
             // Run farther! Jump higher!
-            globalThis.player.unit.staminaMax = 10000;
-            globalThis.player.unit.stamina = globalThis.player.unit.staminaMax;
-            globalThis.player.unit.moveSpeed = 0.3;
+            player.unit.staminaMax = 10000;
+            player.unit.stamina = player.unit.staminaMax;
+            player.unit.moveSpeed = 0.3;
             // Now that player's health and mana has changed we must sync
             // unitsPrediction so that the player's prediction copy
             // has the same mana and health
             underworld.syncPredictionEntities();
             syncInventory(undefined, underworld);
+        } else {
+            console.error('Cannot superMe, player argument not specified');
         }
     }
 
