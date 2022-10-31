@@ -7,6 +7,7 @@ import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import floatingText from '../graphics/FloatingText';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
+import { getOrInitModifier } from './util';
 
 export const id = 'Blood Curse';
 export function hasBloodCurse(unit: IUnit): boolean {
@@ -23,18 +24,20 @@ function add(unit: IUnit, underworld: Underworld) {
     return;
   }
 
-  unit.modifiers[id] = { isCurse: true };
-  // Add event
-  unit.onDamageEvents.push(id);
+  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity: 1 }, () => {
+    // Add event
+    unit.onDamageEvents.push(id);
 
-  unit.healthMax *= healthMultiplier;
-  unit.health *= healthMultiplier;
+    unit.healthMax *= healthMultiplier;
+    unit.health *= healthMultiplier;
 
-  // If unit belongs to player
-  const player = underworld.players.find(p => p.unit == unit)
-  if (player) {
-    addCardToHand(allCards[id], player, underworld);
-  }
+    // If unit belongs to player
+    const player = underworld.players.find(p => p.unit == unit)
+    if (player) {
+      addCardToHand(allCards[id], player, underworld);
+    }
+  });
+
 }
 function remove(unit: IUnit, underworld: Underworld) {
   // remove subsprite image

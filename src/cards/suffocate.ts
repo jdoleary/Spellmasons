@@ -8,17 +8,11 @@ import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import floatingText from '../graphics/FloatingText';
 import * as colors from '../graphics/ui/colors';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
+import { getOrInitModifier } from './util';
 
 export const id = 'suffocate';
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
-  // TODO: how does suffocate stack if it was already previously applied and it is applied again later
-
-  // First time setup
-  if (!unit.modifiers[id]) {
-    unit.modifiers[id] = {
-      isCurse: true,
-      turnsLeftToLive: 1 + Math.ceil(unit.health / 2 / quantity)
-    };
+  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity }, () => {
     // Add event
     if (!unit.onTurnStartEvents.includes(id)) {
       unit.onTurnStartEvents.push(id);
@@ -28,9 +22,12 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
       if (spell.modifiers?.subsprite) {
         Image.addSubSprite(unit.image, spell.modifiers.subsprite.imageName);
       }
-      // Temporarily use floating text until spell animation is finished
-      floatingText({ coords: unit, text: id });
     }
+  });
+  modifier.turnsLeftToLive = 1 + Math.ceil(unit.health / 2 / modifier.quantity)
+  if (!prediction) {
+    // Temporarily use floating text until spell animation is finished
+    floatingText({ coords: unit, text: id });
     updateTooltip(unit);
   }
 }
@@ -39,7 +36,6 @@ function updateTooltip(unit: Unit.IUnit) {
     // Set tooltip:
     unit.modifiers[id].tooltip = `${unit.modifiers[id].turnsLeftToLive} turns until suffocation`
   }
-
 }
 
 const spell: Spell = {

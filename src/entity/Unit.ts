@@ -24,6 +24,7 @@ import { HasLife, HasMana, HasSpace, HasStamina } from './Type';
 import { collideWithLineSegments } from '../jmath/moveWithCollision';
 import { calculateGameDifficulty } from '../Difficulty';
 import * as inLiquid from '../inLiquid';
+import { Modifier } from '../cards/util';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -110,12 +111,7 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   onTurnEndEvents: string[];
   animations: UnitAnimations;
   sfx: UnitSFX;
-  modifiers: {
-    [name: string]: {
-      isCurse: boolean;
-      [key: string]: any;
-    };
-  };
+  modifiers: { [key: string]: Modifier };
 }
 export function create(
   unitSourceId: string,

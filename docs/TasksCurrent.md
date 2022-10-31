@@ -1,7 +1,4 @@
 - Steam description is too wordy, just tell 'em why it's awesome
-- bloat stacks don't work
-- when casting multiple spells, rendx3 player thought stayed up on multiplayer until end of NPC turn
-- debilitate doesn't stac
 # Set up continuous integration
 
 App Platform now supports automatically re-deploying apps when updated container images are pushed to DigitalOcean Container Registry. See How to Deploy from Container Images for more information.
@@ -83,6 +80,7 @@ App Platform now supports automatically re-deploying apps when updated container
 - inventory should show current card cost and cooldown
 -  Add save/load to menu
 # Bugs / Cleaning
+- cursor doesn't change if you add or remove a spell without moving the cursor
 - fix save/load  from menu screen, it needs to change the gameview
 - if screen is too thin, hover card covers inventory
 - bug: health bars disappear when cone prediction is up

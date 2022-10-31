@@ -7,6 +7,7 @@ import * as config from '../config'
 import type Underworld from '../Underworld';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
+import { getOrInitModifier } from './util';
 
 export const id = 'freeze';
 const imageName = 'spell-effects/spellFreeze_still.png';
@@ -77,8 +78,8 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
       // Decrement how many turns left the unit is frozen
       const modifier = unit.modifiers[id];
       if (modifier) {
-        modifier.turnsLeft--;
-        if (modifier.turnsLeft <= 0) {
+        modifier.quantity--;
+        if (modifier.quantity <= 0) {
           Unit.removeModifier(unit, id, underworld);
         }
       }
@@ -88,10 +89,8 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
 };
 
 function add(unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) {
-  // First time setup
-  if (!unit.modifiers[id]) {
-    unit.radius = config.COLLISION_MESH_RADIUS
-    unit.modifiers[id] = { isCurse: true };
+  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity }, () => {
+    unit.radius = config.COLLISION_MESH_RADIUS;
     // Immediately set stamina to 0 so they can't move
     unit.stamina = 0;
     // Add event
@@ -118,14 +117,8 @@ function add(unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, qua
         underworld.endPlayerTurn(player.clientId);
       }
     }
-  }
-  const modifier = unit.modifiers[id];
-  if (modifier) {
-    // Increment the number of turns that freeze is applied (can stack)
-    modifier.turnsLeft = (modifier.turnsLeft || 0) + quantity;
-  } else {
-    console.error('Freeze modifier does not exist')
-  }
+
+  });
 }
 function remove(unit: Unit.IUnit) {
   unit.radius = config.UNIT_BASE_RADIUS

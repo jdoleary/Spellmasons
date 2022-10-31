@@ -8,6 +8,7 @@ import { animateMitosis } from './clone';
 
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import floatingText from '../graphics/FloatingText';
+import { getOrInitModifier } from './util';
 const id = 'split';
 const splitLimit = 3;
 function changeStatWithCap(unit: Unit.IUnit, statKey: 'health' | 'healthMax' | 'mana' | 'manaMax' | 'stamina' | 'staminaMax' | 'moveSpeed' | 'damage', multiplier: number) {
@@ -59,24 +60,21 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
   unit.moveSpeed = moveSpeed;
 }
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
-  // First time setup
-  if (!unit.modifiers[id]) {
-    const { healthMax, manaMax, staminaMax, damage, moveSpeed } = unit;
-    unit.modifiers[id] = {
-      isCurse: true,
-      originalStats: {
-        scaleX: unit.image && unit.image.sprite.scale.x || 1,
-        scaleY: unit.image && unit.image.sprite.scale.y || 1,
-        healthMax,
-        manaMax,
-        staminaMax,
-        damage,
-        moveSpeed
-      }
-    };
-  }
-  const modifier = unit.modifiers[id];
-  if (modifier.stacks && modifier.stacks >= splitLimit) {
+  const { healthMax, manaMax, staminaMax, damage, moveSpeed } = unit;
+  const modifier = getOrInitModifier(unit, id, {
+    isCurse: true,
+    quantity,
+    originalStats: {
+      scaleX: unit.image && unit.image.sprite.scale.x || 1,
+      scaleY: unit.image && unit.image.sprite.scale.y || 1,
+      healthMax,
+      manaMax,
+      staminaMax,
+      damage,
+      moveSpeed
+    }
+  }, () => { });
+  if (modifier.quantity && modifier.quantity >= splitLimit) {
     if (!prediction) {
       floatingText({ coords: unit, text: 'Cannot split further.  What are you trying to do?...Tear the fabric of reality apart!?' });
     }
@@ -94,12 +92,6 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
   changeStatWithCap(unit, 'staminaMax', addMultiplier);
   changeStatWithCap(unit, 'damage', addMultiplier);
   unit.moveSpeed *= addMultiplier;
-  // Increment the number of stacks
-  if (modifier) {
-    modifier.stacks = (modifier.stacks || 0) + quantity;
-  } else {
-    console.error(`${id} modifier does not exist`)
-  }
 }
 const spell: Spell = {
   card: {

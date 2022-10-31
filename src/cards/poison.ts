@@ -8,6 +8,7 @@ import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import floatingText from '../graphics/FloatingText';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
+import { getOrInitModifier } from './util';
 
 export const id = 'poison';
 function init(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
@@ -26,11 +27,7 @@ function init(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
   }
 }
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
-  // First time setup
-  if (!unit.modifiers[id]) {
-    unit.modifiers[id] = {
-      isCurse: true,
-    };
+  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity }, () => {
     // Add event
     if (!unit.onTurnStartEvents.includes(id)) {
       unit.onTurnStartEvents.push(id);
@@ -42,14 +39,8 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
         init(unit, underworld, prediction);
       }
     }
-  }
-  // Increment the number of stacks of poison 
-  const modifier = unit.modifiers[id];
-  if (modifier) {
-    modifier.stacks = (modifier.stacks || 0) + quantity;
-  } else {
-    console.error(`${id} modifier does not exist`)
-  }
+
+  });
 }
 
 const spell: Spell = {
@@ -106,7 +97,7 @@ at the start of the unit's turn.
       // they assume prediction damage is only from their direct cast, not including the start of the next turn
       if (!prediction) {
         if (modifier) {
-          const damage = modifier.stacks || 1
+          const damage = modifier.quantity || 1
           takeDamage(unit, damage, unit, underworld, prediction, undefined);
           floatingText({
             coords: unit, text: `${damage} poison damage`,

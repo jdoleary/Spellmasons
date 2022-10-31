@@ -746,7 +746,7 @@ function modifiersToText(modifiers: object): string {
   }
   let message = '';
   for (let [key, value] of Object.entries(modifiers)) {
-    message += `<div style="line-height:16px"><img width="16px" height="16px" src="images/spell/${allCards[key]?.thumbnail}"> ${value.tooltip || `${key} ${value.stacks || value.turnsLeft || value.damage_block || value.quantity || ''}`}</div>`
+    message += `<div style="line-height:16px"><img width="16px" height="16px" src="images/spell/${allCards[key]?.thumbnail}"> ${value.tooltip || `${key} ${value.quantity || ''}`}</div>`
   }
   return message;
 

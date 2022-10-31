@@ -10,20 +10,14 @@ import { createParticleTexture, simpleEmitter } from '../graphics/Particles';
 import { Vec2 } from '../jmath/Vec';
 import * as colors from '../graphics/ui/colors';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
+import { getOrInitModifier } from './util';
 
 const id = 'Bloat';
 const imageName = 'explode-on-death.png';
 const damage = 1;
 const baseRadius = 140;
 function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra?: any) {
-  // First time setup
-  const modifier = unit.modifiers[id];
-  if (!modifier) {
-    unit.modifiers[id] = {
-      isCurse: true,
-      quantity,
-      radius: extra && extra.radius || 0
-    };
+  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity }, () => {
     // Add event
     if (!unit.onDeathEvents.includes(id)) {
       unit.onDeathEvents.push(id);
@@ -33,10 +27,12 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity:
       // Visually "bloat" the image
       unit.image.sprite.scale.x = 1.5;
     }
-  } else {
-    modifier.quantity += quantity;
-
+  });
+  if (!modifier.radius) {
+    modifier.radius = 0;
   }
+  modifier.radius = extra && extra.radius || 0;
+
 }
 function remove(unit: IUnit, underworld: Underworld) {
   if (unit.image) {

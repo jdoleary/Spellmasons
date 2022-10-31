@@ -2661,10 +2661,14 @@ export default class Underworld {
         // targeting when it occurs. But for now since it's the only use, "Protection"
         // is hard-coded here
         excludedTargets = excludedTargets.concat(effectState.targetedUnits.filter(u => {
-          const excluded = !!u.modifiers[protection.id];
+          const protectionModifier = u.modifiers[protection.id];
+          const excluded = !!protectionModifier;
           if (excluded) {
-            protection.notifyProtected(u);
-            Unit.removeModifier(u, protection.id, this);
+            protection.notifyProtected(u, prediction);
+            protectionModifier.quantity -= 1;
+            if (protectionModifier.quantity <= 0) {
+              Unit.removeModifier(u, protection.id, this);
+            }
           }
           return excluded;
         }));

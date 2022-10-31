@@ -8,21 +8,17 @@ import { chooseObjectWithProbability } from '../jmath/rand';
 import seedrandom from 'seedrandom';
 import floatingText from '../graphics/FloatingText';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
+import { getOrInitModifier } from './util';
 
 const id = 'Last Will';
 const imageName = 'unknown.png';
 function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number) {
-  // First time setup
-  if (!unit.modifiers[id]) {
-    unit.modifiers[id] = {
-      isCurse: false,
-      quantity
-    };
+  const modifier = getOrInitModifier(unit, id, {isCurse:false,quantity}, () => {
     // Add event
     if (!unit.onDeathEvents.includes(id)) {
       unit.onDeathEvents.push(id);
     }
-  }
+  });
 }
 function remove(unit: IUnit, underworld: Underworld) {
   if (unit.image) {

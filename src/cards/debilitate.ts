@@ -5,6 +5,7 @@ import type Underworld from '../Underworld';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
+import { getOrInitModifier } from './util';
 
 const id = 'Debilitate';
 const imageName = 'spellIconDebilitate.png';
@@ -67,18 +68,10 @@ Makes the target(s) take double damage whenever they receive damage.
 };
 
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
-  // First time setup
-  if (!unit.modifiers[id]) {
-    unit.modifiers[id] = {
-      isCurse: true,
-      quantity
-    };
+  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity }, () => {
     unit.onDamageEvents.push(id);
     // Add subsprite image
     Image.addSubSprite(unit.image, imageName);
-  } else {
-    unit.modifiers[id].quantity += quantity;
-  }
-
+  });
 }
 export default spell;
