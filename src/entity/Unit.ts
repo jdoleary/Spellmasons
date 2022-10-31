@@ -12,7 +12,7 @@ import Events from '../Events';
 import makeAllRedShader from '../graphics/shaders/selected';
 import { addLerpable } from '../lerpList';
 import { allUnits } from './units';
-import { allModifiers, EffectState } from '../cards';
+import { allCards, allModifiers, EffectState } from '../cards';
 import { checkIfNeedToClearTooltip, clearSpellEffectProjection } from '../graphics/PlanningView';
 import floatingText, { centeredFloatingText } from '../graphics/FloatingText';
 import Underworld, { turn_phase } from '../Underworld';
@@ -245,13 +245,16 @@ function setupShaders(unit: IUnit) {
   }
 }
 
-export function addModifier(unit: IUnit, key: string, underworld: Underworld, prediction: boolean, quantity: number = 1, extra?: object) {
+export function addModifier(unit: IUnit, key: string, underworld: Underworld, prediction: boolean, quantity?: number, extra?: object) {
   if (unit.alive) {
     // Call custom modifier's add function
     const modifier = allModifiers[key];
     if (modifier) {
       if (modifier.add) {
-        modifier.add(unit, underworld, prediction, quantity, extra);
+        if (allCards[key]?.supportQuantity && quantity == undefined) {
+          console.error('Dev warning:', key, 'supportsQuantity; however quantity was not provided to the addModifier function.');
+        }
+        modifier.add(unit, underworld, prediction, quantity || 1, extra);
       } else {
         console.error('No "add" modifier for ', key);
       }
