@@ -21,7 +21,7 @@ export interface UnitDamage {
   damageTaken: number;
 
 }
-const animationPath = 'spell-effects/spellHurtCuts';
+const animationPath = 'spell-effects/spellRend';
 const spell: Spell = {
   card: {
     id,
@@ -52,10 +52,10 @@ For example:
         if (!prediction) {
           playDefaultSpellSFX(card, prediction);
           for (let unit of targets) {
-            oneOffImage(unit, animationPath, containerSpells, resolve);
             const spellEffectImage = oneOffImage(unit, animationPath, containerSpells, resolve);
             if (spellEffectImage) {
-              spellEffectImage.sprite.scale.x = -1;
+              spellEffectImage.sprite.scale.x = quantity / 6;
+              spellEffectImage.sprite.scale.y = quantity / 6;
             }
             Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
           }
