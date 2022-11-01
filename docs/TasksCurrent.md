@@ -1,11 +1,6 @@
 # Low hanging fruit
 - animate rend
-- animate bleed
-    - do emitters clean themselves up
-    - how to await emitter
-- Test Game Over screen on multip
-- cursor doesn't change if you add or remove a spell without moving the cursor
-ayer
+- Test Game Over screen on multiplayer
 - bug: health bars disappear when cone prediction is up
     - this is because unitOverlayGraphics is used for attack radiuses and health bars
 
