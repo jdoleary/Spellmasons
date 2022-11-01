@@ -16,12 +16,17 @@ export const containerParticles = !globalThis.pixi ? undefined : new globalThis.
     uvs: false,
     tint: true
 });
-export function simpleEmitter(position: Vec2, config: particles.EmitterConfigV3) {
+export function simpleEmitter(position: Vec2, config: particles.EmitterConfigV3, resolver?: () => void) {
     if (!containerParticles) {
         return undefined
     }
     const emitter = new particles.Emitter(containerParticles, config);
     emitter.updateOwnerPos(position.x, position.y);
+    emitter.playOnceAndDestroy(() => {
+        if (resolver) {
+            resolver();
+        }
+    })
     return emitter;
 
 }
