@@ -7,7 +7,6 @@
 - Steam description is too wordy, just tell 'em why it's awesome
 - futher investigate '  // Override ref since in prediction it makes a copy of the unit' from 06d754d2
 - dragger x and y went to null after "target similar, slash slash"
-- feature: secondary spellbar
 # Brad playtest 2:
 - he can't spawn in while i'm casint a spell
     - same thing with casts, it waits
@@ -59,14 +58,11 @@
     - Just make it a while loop that triggers/awaits the next AI turn until it's the players tuurn
 # Pre playtest
 - Need a restart screen after a team wipe
-- No indication that it's the enemy's turn
 - Hide disconnected players in game screen but not in the lobby
 - Multiplayer voting
 - Adaptive difficulty
 - What to do with disconnected players when it goes to the next level?
 - Fix rejoining hack where people can just rejoin if they're dead to come back
-- explain that when you die in multiplayer you'll come back if your ally beats the level
-- explain minibosses
 # Features
 - In marketing, emphasize that it's turn based
     - Why this game might not be for you
@@ -124,6 +120,7 @@
 - Test early exit (infinite loop protection) for headless gameloop
 
 ## Stretch Content
+- feature: secondary spellbar
 - Idea: "oh shit button": double the amount of mana you have this level but it reduces by half next level. " Break glass in case of emergency. Deal with the devil
 - Idea: Amplify spell: makes "multicast"
 - Add `cooldown` to spells rather than expense scaling

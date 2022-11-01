@@ -25,6 +25,7 @@ import { collideWithLineSegments } from '../jmath/moveWithCollision';
 import { calculateGameDifficulty } from '../Difficulty';
 import * as inLiquid from '../inLiquid';
 import { Modifier } from '../cards/util';
+import { explain, EXPLAIN_DEATH, EXPLAIN_MINI_BOSSES } from '../graphics/Explain';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -611,6 +612,7 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
     clearSpellEffectProjection(underworld);
     CardUI.clearSelectedCards(underworld);
     centeredFloatingText(`💀 You Died 💀`, 'red');
+    explain(EXPLAIN_DEATH);
     playSFXKey('game_over');
   }
   // In the event that this unit that just died is the selected unit,
@@ -1000,6 +1002,7 @@ export async function runTurnStartEvents(unit: IUnit, prediction: boolean = fals
 }
 export function makeMiniboss(unit: IUnit) {
   unit.isMiniboss = true;
+  explain(EXPLAIN_MINI_BOSSES);
   unit.name = `${unit.unitSourceId} MiniBoss`;
   if (unit.image) {
     unit.image.sprite.scale.x = config.UNIT_MINIBOSS_SCALE_MULTIPLIER;

@@ -63,6 +63,8 @@ export const EXPLAIN_LIQUID_DAMAGE = 'Liquid Damage';
 export const EXPLAIN_BLESSINGS = 'Blessings';
 export const EXPLAIN_REMOVE_SPELLS = 'Remove Spells';
 export const EXPLAIN_FORGE_ORDER = 'Spell Forge Order';
+export const EXPLAIN_DEATH = 'Surviving Death';
+export const EXPLAIN_MINI_BOSSES = 'Mini Bosses';
 interface ExplainData {
     condition?: () => boolean;
     // Returns args to pass into Jprompt
@@ -154,6 +156,16 @@ Click and drag a spell to your toolbar to make it easily accessible.`, yesText: 
             imageSrc: 'images/explain/forge-order.gif', text: `The order in which spells are forged may result in a different outcome.
     
 In this example, "Connect" + "Push" + "${id}" will damage you instead of the 2nd Golem; whereas reversing the order of "Connect" and "Push" - so that "Push" comes first - will cause it to connect to the 2nd Golem instead of you.`, yesText: 'Okay'
+        })
+    },
+    [EXPLAIN_DEATH]: {
+        prompt: () => ({
+            imageSrc: 'images/explain/death.gif', text: `You have died. If you have any allies in your faction they will continue to fight on your behalf; and if they defeat the enemy factions you will be resurrected and continue to the next level.`, yesText: 'Okay'
+        })
+    },
+    [EXPLAIN_MINI_BOSSES]: {
+        prompt: () => ({
+            imageSrc: 'images/explain/minibosses.gif', text: `Minibosses are larger than their meager counterparts, have more health and do more damage.  Take extra caution when facing one.`, yesText: 'Got it!'
         })
     },
 }
