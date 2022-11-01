@@ -6,6 +6,82 @@ import { lerp } from '../jmath/math';
 import { Vec2 } from '../jmath/Vec';
 import * as config from '../config';
 import { createHardCircleParticleTexture, createParticleTexture, simpleEmitter } from './Particles';
+import { bleedInstantKillProportion } from '../cards/bleed';
+export function makeBleedParticles(position: Vec2, prediction: boolean, proportion: number, resolver?: (value: any | PromiseLike<any>) => void) {
+    if (prediction) {
+        // Don't show if just a prediction
+        return
+    }
+    // proportion goes from 0.0 to bleedInstantKillProportion;
+    // convert to 0.0 to 1.0
+    proportion = lerp(0, 1, proportion / bleedInstantKillProportion);
+    if (proportion == 0) {
+        // Do not emit particles if proportion is 0 because then bleed did no damage
+        return;
+    }
+    const texture = createParticleTexture();
+    if (!texture) {
+        console.error('No texture for particles')
+        return
+    }
+    const particleConfig =
+        particles.upgradeConfig({
+            autoUpdate: true,
+            "alpha": {
+                "start": 1,
+                "end": 1
+            },
+            "scale": {
+                "start": 1.2 * Math.min(1, proportion * 2),
+                "end": 0.25,
+                "minimumScaleMultiplier": 1
+            },
+            "color": {
+                "start": "#c72828",
+                "end": "#870303"
+            },
+            "speed": {
+                "start": 10,
+                "end": 0,
+                "minimumSpeedMultiplier": 1
+            },
+            "acceleration": {
+                "x": 0,
+                "y": 40
+            },
+            "maxSpeed": 0,
+            "startRotation": {
+                "min": 90,
+                "max": 90
+            },
+            "noRotation": false,
+            "rotationSpeed": {
+                "min": 0,
+                "max": 0
+            },
+            "lifetime": {
+                "min": 1,
+                "max": 1
+            },
+            "blendMode": "normal",
+            "frequency": 0.01,
+            "emitterLifetime": 1,
+            "maxParticles": 100 * proportion * proportion,
+            "pos": {
+                "x": 0,
+                "y": 0
+            },
+            "addAtBack": true,
+            "spawnType": "circle",
+            "spawnCircle": {
+                "x": 0,
+                "y": 0,
+                "r": 10
+            }
+        }, [texture]);
+    simpleEmitter({ x: position.x, y: position.y - config.COLLISION_MESH_RADIUS / 2 }, particleConfig, resolver);
+
+}
 export function makeResurrectParticles(position: Vec2, prediction: boolean) {
     if (prediction) {
         // Don't show if just a prediction
