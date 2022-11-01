@@ -1,3 +1,15 @@
+# Low hanging fruit
+- animate rend
+- animate bleed
+    - do emitters clean themselves up
+    - how to await emitter
+- Test Game Over screen on multip
+- cursor doesn't change if you add or remove a spell without moving the cursor
+ayer
+- bug: health bars disappear when cone prediction is up
+    - this is because unitOverlayGraphics is used for attack radiuses and health bars
+
+---
 - Steam description is too wordy, just tell 'em why it's awesome
 - futher investigate '  // Override ref since in prediction it makes a copy of the unit' from 06d754d2
 - dragger x and y went to null after "target similar, slash slash"
@@ -64,8 +76,6 @@
 # Features
 - In marketing, emphasize that it's turn based
     - Why this game might not be for you
-- animate rend
-- Add Game Over screen
 - how to show how much damage a queued spell will do
 - Permanent "you died" screen.
 - cooldown instead of mana multiplier scaling
@@ -75,11 +85,8 @@
 - inventory should show current card cost and cooldown
 -  Add save/load to menu
 # Bugs / Cleaning
-- cursor doesn't change if you add or remove a spell without moving the cursor
 - fix save/load  from menu screen, it needs to change the gameview
 - if screen is too thin, hover card covers inventory
-- bug: health bars disappear when cone prediction is up
-    - this is because unitOverlayGraphics is used for attack radiuses and health bars
 - in multiplayer, when one player leaves and window is not focused the camera spazzes out
 - bug: multiplayer: portal isn't synced if you refresh
 - bug: after refresh dead unit renders full healthbar in pixi
@@ -102,7 +109,6 @@
 - Fix liquid tile glitches with prebuild liquid sets
 - resurrect should take longer to return to base mana
     - this already is set but it didn't work in brad's playtest... hmm..
-- Ensure endPlayerTurnPhase kills out of bounds units on headless server
 ## Prediction issues
 - prediction should factor in standing on pickups, see video
 # Content

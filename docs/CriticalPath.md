@@ -1,10 +1,8 @@
 # Desired Schedule
-- October
+- November
     - Add Trailer
         - Revise store copy so it's less wordy
         - Add "why it might not be for you" gif and description
-- November
-    - [Set up Continuous Integration on Digital Ocean](https://docs.digitalocean.com/release-notes/app-platform/)
     - Work through bug backlog
     - [Beta Testing](https://partner.steamgames.com/doc/store/testing)
     - Cooldowns instead of mana multiplier
