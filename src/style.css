@@ -196,16 +196,17 @@ body #card-inspect {
 }
 
 body.open-inventory #card-inspect {
-  padding-left: 200px;
+  /* padding-left: 200px; */
+  padding: 60px 0;
 
 }
 
 #card-inspect {
-  position: fixed;
+  /* position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 100%; */
   justify-content: center;
   align-items: center;
   pointer-events: none;
@@ -245,6 +246,11 @@ invisibly blocked, change with caution! */
   /* reenable pointer events so card holders can be interacted with
   since it's parent #ui-positioner has pointer events off */
   pointer-events: all;
+}
+
+#card-holders-border {
+  /* Keep centered on screen */
+  margin: 0 auto;
 }
 
 #card-holders {
@@ -544,7 +550,10 @@ kbd {
   display: block;
 }
 
-#inventory-container .card-title,
+#inventory-container .card-title {
+  color: #280a08;
+}
+
 #card-holders-inner .card-title {
   color: white;
 }
@@ -1201,19 +1210,26 @@ body.draggingCamera {
 }
 
 body.open-inventory #inventory-container {
-  display: block;
+  display: flex;
+  gap: 140px;
 }
 
 #inventory-container {
   display: none;
   overflow-y: hidden;
+  background-image: url('/ui/bookOpenNoBM200.png');
+  width: 1262px;
+  height: 766px;
+  padding: 20px 114px;
+  box-sizing: border-box;
+
 }
 
 
 #inventory-content {
   /* Needed to display in front of pixi */
   z-index: 1;
-  max-width: 600px;
+  width: 460px;
   display: flex;
   flex-direction: column;
   /* Always be at least big enough for 3 spells side-by-side. This is just visual appeal*/
@@ -1233,7 +1249,7 @@ body.open-inventory #inventory-container {
 
 #inventory-content .category-label {
   display: none;
-  color: white;
+  color: #280a08;
   white-space: nowrap;
 }
 
@@ -1249,8 +1265,8 @@ body.open-inventory #inventory-container {
 
 
 #inventory-content::-webkit-scrollbar-thumb {
-  background-color: darkgrey;
-  outline: 1px solid slategrey;
+  /* background-color: darkgrey;
+  outline: 1px solid slategrey; */
 }
 
 .slot {

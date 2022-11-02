@@ -1,3 +1,7 @@
+- New screenshots
+- UI: Fix card inspect with spellbook
+- UI: Allow inventory to scale on smaller resolutions
+- bug: In multiplayer: target similar, damage x3 on 2 draggers made their position go to null null
 # Low hanging fruit
 - Add cooldowns
     - Add spell that clears cooldowns
@@ -40,6 +44,7 @@
 - fixed?
     - bug: in multiplayer games units are spawning out of bounds
     - bug: when player rejoins a game the map is different
+        - This might be fixed once I fully GC underworld between uses
 - Turn phase testing:
     - if one player is portaled and the remaining player dies it should go to the next level
     - if no players are portaled and all players die and there are no ally npcs it should go to game over
