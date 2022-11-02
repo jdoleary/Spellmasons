@@ -1224,7 +1224,7 @@ body.draggingCamera {
 
 body.open-inventory #inventory-container {
   display: flex;
-  gap: 140px;
+  justify-content: space-between;
 }
 
 #inventory-container {
