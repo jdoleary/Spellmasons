@@ -60,7 +60,7 @@ const dragstart = (ev: any) => {
 
 }
 // Displays a full card with info on inspect-mode + hover of card
-const elCardInspect = document.getElementById('card-inspect');
+const elCardInspects = document.querySelectorAll('.card-inspect');
 export function setupCardUIEventListeners(underworld: Underworld) {
 
   if (!globalThis.headless) {
@@ -143,8 +143,8 @@ export function clearCurrentlyShownCard() {
   if (globalThis.headless) { return; }
   // Clear cardInspect when the mouse leaves elCardHolders so that the large card
   // doesn't stay in the center of the screen
-  if (elCardInspect) {
-    elCardInspect.innerHTML = '';
+  if (elCardInspects.length) {
+    elCardInspects.forEach(el => { el.innerHTML = ''; });
   }
   currentlyShownCardId = '';
 }
@@ -153,10 +153,12 @@ function showFullCard(card: Cards.ICard) {
   // Prevent changing the DOM more than necessary
   if (card.id != currentlyShownCardId) {
     currentlyShownCardId = card.id;
-    if (elCardInspect) {
-      // Clear previous
-      elCardInspect.innerHTML = '';
-      elCardInspect.appendChild(createCardElement(card));
+    if (elCardInspects.length) {
+      elCardInspects.forEach(el => {
+        // Clear previous
+        el.innerHTML = '';
+        el.appendChild(createCardElement(card));
+      });
     } else {
       console.error('card-inspect div does not exist');
     }

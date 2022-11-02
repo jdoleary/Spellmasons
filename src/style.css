@@ -126,7 +126,7 @@ body.view-Game.showUpgrades #upgrade-picker {
 }
 
 #upgrade-picker .card,
-#card-inspect .card {
+.card-inspect .card {
   /* width: 100%;
   width: 462px; */
   width: unset;
@@ -139,7 +139,7 @@ body.view-Game.showUpgrades #upgrade-picker {
 
 
 #upgrade-picker .card-badge,
-#card-inspect .card-badge {
+.card-inspect .card-badge {
   width: 44px;
   height: 44px;
   line-height: 44px;
@@ -148,7 +148,7 @@ body.view-Game.showUpgrades #upgrade-picker {
 }
 
 #upgrade-picker .card-inner,
-#card-inspect .card-inner {
+.card-inspect .card-inner {
 
   /* padding: 39px; */
   /* padding-top: 38px; */
@@ -159,7 +159,7 @@ body.view-Game.showUpgrades #upgrade-picker {
 }
 
 #upgrade-picker .card-title,
-#card-inspect .card-title {
+.card-inspect .card-title {
   text-align: center;
   color: black;
   font-size: 24px;
@@ -175,13 +175,13 @@ body.view-Game.showUpgrades #upgrade-picker {
 }
 
 #upgrade-picker .card-thumb,
-#card-inspect .card-thumb {
+.card-inspect .card-thumb {
   width: 100%;
   aspect-ratio: 1/1;
 }
 
 #upgrade-picker .card-thumb img,
-#card-inspect .card-thumb img {
+.card-inspect .card-thumb img {
   width: 100%;
   height: unset;
   aspect-ratio: 1/1;
@@ -191,22 +191,33 @@ body.view-Game.showUpgrades #upgrade-picker {
 }
 
 
-body #card-inspect {
+body .card-inspect {
   display: flex;
 }
 
-body.open-inventory #card-inspect {
-  /* padding-left: 200px; */
-  padding: 60px 0;
-
+/* There are 2 card-inspect elemnets, one is inside the inventory book the other is outside
+for when the user is hovering spells on the toolbar.  These styles ensures only one shows at a time */
+body.open-inventory #inventory-container .card-inspect {
+  display: block;
 }
 
-#card-inspect {
-  /* position: fixed;
+body.open-inventory .card-inspect {
+  display: none;
+}
+
+#inventory-container .card-inspect {
+  position: initial;
+  width: auto;
+  height: auto;
+  padding: 60px 0;
+}
+
+.card-inspect {
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%; */
+  height: 100%;
   justify-content: center;
   align-items: center;
   pointer-events: none;
@@ -215,7 +226,7 @@ body.open-inventory #card-inspect {
   z-index: 2;
 }
 
-#card-inspect:empty {
+.card-inspect:empty {
   display: none;
 }
 
@@ -351,34 +362,34 @@ invisibly blocked, change with caution! */
   height: var(--selected-card-size);
 }
 
-#card-inspect .card,
+.card-inspect .card,
 #upgrade-picker .card {
   background-image: url('images/card-designs/card-COMMON.png');
   background-size: contain;
   background-repeat: no-repeat;
 }
 
-#card-inspect .card.COMMON,
+.card-inspect .card.COMMON,
 #upgrade-picker .card.COMMON {
   background-image: url('images/card-designs/card-COMMON.png');
 }
 
-#card-inspect .card.SPECIAL,
+.card-inspect .card.SPECIAL,
 #upgrade-picker .card.SPECIAL {
   background-image: url('images/card-designs/card-SPECIAL.png');
 }
 
-#card-inspect .card.UNCOMMON,
+.card-inspect .card.UNCOMMON,
 #upgrade-picker .card.UNCOMMON {
   background-image: url('images/card-designs/card-UNCOMMON.png');
 }
 
-#card-inspect .card.RARE,
+.card-inspect .card.RARE,
 #upgrade-picker .card.RARE {
   background-image: url('images/card-designs/card-RARE.png');
 }
 
-#card-inspect .card.FORBIDDEN,
+.card-inspect .card.FORBIDDEN,
 #upgrade-picker .card.FORBIDDEN {
   background-image: url('images/card-designs/card-FORBIDDEN.png');
 }
@@ -546,7 +557,7 @@ kbd {
 }
 
 #upgrade-picker-content .card-rarity,
-#card-inspect .card-rarity {
+.card-inspect .card-rarity {
   display: block;
 }
 
@@ -574,7 +585,7 @@ kbd {
   margin-right: -20%;
 }
 
-#card-inspect .card-title {
+.card-inspect .card-title {
   font-size: 30px;
   font-weight: bold;
 }
@@ -593,7 +604,7 @@ kbd {
 }
 
 #upgrade-picker-content .card-description,
-#card-inspect .card-description {
+.card-inspect .card-description {
   display: flex;
 }
 
