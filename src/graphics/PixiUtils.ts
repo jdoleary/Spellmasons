@@ -157,6 +157,8 @@ if (globalThis.pixi && containerUI && app && containerRadiusUI) {
   containerUI.addChild(globalThis.debugGraphics);
   globalThis.unitOverlayGraphics = new globalThis.pixi.Graphics();
   containerUI.addChild(globalThis.unitOverlayGraphics);
+  globalThis.selectedUnitGraphics = new globalThis.pixi.Graphics();
+  containerUI.addChild(globalThis.selectedUnitGraphics);
   globalThis.walkPathGraphics = new globalThis.pixi.Graphics();
   containerUI.addChild(globalThis.walkPathGraphics);
   globalThis.thinkingPlayerGraphics = new globalThis.pixi.Graphics();

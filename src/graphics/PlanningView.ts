@@ -55,7 +55,7 @@ export function initPlanningView() {
 }
 let lastSpotCurrentPlayerTurnCircle: Vec2 = { x: 0, y: 0 };
 export function updatePlanningView(underworld: Underworld) {
-  if (planningViewGraphics && globalThis.unitOverlayGraphics && labelText) {
+  if (planningViewGraphics && globalThis.unitOverlayGraphics && labelText && globalThis.selectedUnitGraphics) {
     const mouseTarget = underworld.getMousePos();
     planningViewGraphics.clear();
     if (labelText) {
@@ -108,21 +108,21 @@ export function updatePlanningView(underworld: Underworld) {
           }
           if (archerTarget) {
             const attackLine = { p1: globalThis.selectedUnit, p2: archerTarget };
-            globalThis.unitOverlayGraphics.moveTo(attackLine.p1.x, attackLine.p1.y);
+            globalThis.selectedUnitGraphics.moveTo(attackLine.p1.x, attackLine.p1.y);
             if (canAttack) {
               const color = colors.healthRed;
               // Draw a red line, showing that you are in danger
-              globalThis.unitOverlayGraphics.lineStyle(3, color, 0.7);
-              globalThis.unitOverlayGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
-              globalThis.unitOverlayGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
+              globalThis.selectedUnitGraphics.lineStyle(3, color, 0.7);
+              globalThis.selectedUnitGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
+              globalThis.selectedUnitGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
             } else {
               // Draw a grey line  showing that the target is blocked
-              globalThis.unitOverlayGraphics.lineStyle(3, colors.outOfRangeGrey, 0.7);
-              globalThis.unitOverlayGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
-              globalThis.unitOverlayGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
+              globalThis.selectedUnitGraphics.lineStyle(3, colors.outOfRangeGrey, 0.7);
+              globalThis.selectedUnitGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
+              globalThis.selectedUnitGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
             }
           }
-          globalThis.unitOverlayGraphics.drawCircle(
+          globalThis.selectedUnitGraphics.drawCircle(
             globalThis.selectedUnit.x,
             globalThis.selectedUnit.y,
             globalThis.selectedUnit.attackRange
@@ -139,9 +139,9 @@ export function updatePlanningView(underworld: Underworld) {
               : globalThis.selectedUnit.faction == Faction.ALLY
                 ? colors.attackRangeAlly
                 : colors.attackRangeEnemy;
-            globalThis.unitOverlayGraphics.lineStyle(2, rangeCircleColor, 1.0);
+            globalThis.selectedUnitGraphics.lineStyle(2, rangeCircleColor, 1.0);
             if (globalThis.selectedUnit.unitSubType === UnitSubType.RANGED_RADIUS) {
-              globalThis.unitOverlayGraphics.drawCircle(
+              globalThis.selectedUnitGraphics.drawCircle(
                 globalThis.selectedUnit.x,
                 globalThis.selectedUnit.y,
                 globalThis.selectedUnit.attackRange
@@ -151,7 +151,7 @@ export function updatePlanningView(underworld: Underworld) {
               labelText.x = labelPosition.x;
               labelText.y = labelPosition.y;
             } else if (globalThis.selectedUnit.unitSubType === UnitSubType.SUPPORT_CLASS) {
-              globalThis.unitOverlayGraphics.drawCircle(
+              globalThis.selectedUnitGraphics.drawCircle(
                 globalThis.selectedUnit.x,
                 globalThis.selectedUnit.y,
                 globalThis.selectedUnit.attackRange
@@ -161,18 +161,18 @@ export function updatePlanningView(underworld: Underworld) {
               labelText.x = labelPosition.x;
               labelText.y = labelPosition.y;
             } else if (globalThis.selectedUnit.unitSubType === UnitSubType.MELEE) {
-              globalThis.unitOverlayGraphics.drawCircle(
+              globalThis.selectedUnitGraphics.drawCircle(
                 globalThis.selectedUnit.x,
                 globalThis.selectedUnit.y,
                 globalThis.selectedUnit.staminaMax + globalThis.selectedUnit.attackRange
               );
-              globalThis.unitOverlayGraphics.endFill();
+              globalThis.selectedUnitGraphics.endFill();
               labelText.text = 'Attack Range';
               const labelPosition = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.staminaMax + globalThis.selectedUnit.attackRange }, labelText.width / 2);
               labelText.x = labelPosition.x;
               labelText.y = labelPosition.y;
             } else if (globalThis.selectedUnit.unitSubType === UnitSubType.PLAYER_CONTROLLED) {
-              drawCastRangeCircle(globalThis.selectedUnit, globalThis.selectedUnit.attackRange, globalThis.unitOverlayGraphics)
+              drawCastRangeCircle(globalThis.selectedUnit, globalThis.selectedUnit.attackRange, globalThis.selectedUnitGraphics)
             }
           }
         }
@@ -198,7 +198,7 @@ export function updatePlanningView(underworld: Underworld) {
 
       // Override other graphics (like selected unit) when out of range info is showing
       labelText.text = '';
-      globalThis.unitOverlayGraphics.clear();
+      globalThis.selectedUnitGraphics.clear();
     }
     // Draw prediction circles
     if (unitOverlayGraphics) {

@@ -1,11 +1,6 @@
 # Low hanging fruit
 - Add cooldowns
     - Add spell that clears cooldowns
----
-- bug: health bars disappear when cone prediction is up
-    - this is because unitOverlayGraphics is used for attack radiuses and health bars
-
----
 - Steam description is too wordy, just tell 'em why it's awesome
 - futher investigate '  // Override ref since in prediction it makes a copy of the unit' from 06d754d2
 - dragger x and y went to null after "target similar, slash slash"
