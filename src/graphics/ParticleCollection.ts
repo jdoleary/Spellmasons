@@ -7,7 +7,7 @@ import { Vec2 } from '../jmath/Vec';
 import * as config from '../config';
 import { createHardCircleParticleTexture, createParticleTexture, simpleEmitter } from './Particles';
 import { bleedInstantKillProportion } from '../cards/bleed';
-export function makeBleedParticles(position: Vec2, prediction: boolean, proportion: number, resolver?: (value: any | PromiseLike<any>) => void) {
+export function makeBleedParticles(position: Vec2, prediction: boolean, proportion: number, resolver?: () => void) {
     if (prediction) {
         // Don't show if just a prediction
         return
