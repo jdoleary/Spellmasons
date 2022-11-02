@@ -10,6 +10,7 @@ global.document = {
     getElementById: () => fakeElement,
     createElement: () => fakeElement,
     querySelector: () => fakeElement,
+    querySelectorAll: () => [],
     body: {
         classList: {
             add: () => { },
