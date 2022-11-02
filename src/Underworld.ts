@@ -1108,7 +1108,6 @@ export default class Underworld {
       sourceUnit.info.image,
       UnitType.AI,
       sourceUnit.info.subtype,
-      calculateGameDifficulty(this),
       sourceUnit.unitProps,
       this
     );
@@ -1170,7 +1169,7 @@ export default class Underworld {
       width,
       pickups: [],
       enemies: [
-        // { id: 'vampire', coord: { x: 64, y: 64 }, strength: 1 }
+        // { id: 'vampire', coord: { x: 64, y: 64 } }
       ],
 
     }
@@ -2801,7 +2800,7 @@ export default class Underworld {
           // Note: Unit.syncronize maintains the player.unit reference
           Unit.syncronize(syncUnit, currentUnit);
         } else {
-          const newUnit = Unit.create(syncUnit.unitSourceId, syncUnit.x, syncUnit.y, syncUnit.faction, syncUnit.defaultImagePath, syncUnit.unitType, syncUnit.unitSubType, syncUnit.strength, undefined, this);
+          const newUnit = Unit.create(syncUnit.unitSourceId, syncUnit.x, syncUnit.y, syncUnit.faction, syncUnit.defaultImagePath, syncUnit.unitType, syncUnit.unitSubType, undefined, this);
           Unit.syncronize(syncUnit, newUnit);
         }
       }
@@ -2866,7 +2865,7 @@ export default class Underworld {
       // Adjust npc unit strength when the number of players changes
       // Do NOT adjust player unit strength
       if (unit.unitType !== UnitType.PLAYER_CONTROLLED) {
-        Unit.adjustUnitStrength(unit, unit.strength, newDifficulty);
+        Unit.adjustUnitDifficulty(unit, newDifficulty);
       }
     });
     console.log('The number of players has changed, adjusting game difficulty to ', newDifficulty, ' for ', this.players.filter(p => p.clientConnected).length, ' connected players.');

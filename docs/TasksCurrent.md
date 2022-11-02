@@ -1,4 +1,8 @@
 # Low hanging fruit
+- bug: multiplayer: portal isn't synced if you refresh
+- Add cooldowns
+    - Add spell that clears cooldowns
+---
 - Test Game Over screen on multiplayer
 - bug: health bars disappear when cone prediction is up
     - this is because unitOverlayGraphics is used for attack radiuses and health bars
@@ -78,8 +82,6 @@
 - fix save/load  from menu screen, it needs to change the gameview
 - if screen is too thin, hover card covers inventory
 - in multiplayer, when one player leaves and window is not focused the camera spazzes out
-- bug: multiplayer: portal isn't synced if you refresh
-- bug: after refresh dead unit renders full healthbar in pixi
 - "All targets" copy is confusing if player doesn't understand targeting
 - h: **important**: completely destroy the underworld object between playthroughs rather than just cleaning it up
     - for now you can tell because lastUnitId isn't reset
@@ -95,7 +97,6 @@
     - Test in windowed mode on Electron
 - h: bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
     - this is a race condition because I'm still able to move freely after his cast triggers
-- done?: fix fall in liquid so larger things (like rocks or vampires) fall in further so they don't overlap
 - Fix liquid tile glitches with prebuild liquid sets
 - resurrect should take longer to return to base mana
     - this already is set but it didn't work in brad's playtest... hmm..
@@ -105,10 +106,8 @@
 - Make Youtube short audio louder
 - Rend
     - new sfx
-    - new animation
 - Bleed
     - new sfx
-    - new animation
 - Suffocate
     - new sfx
     - new animation

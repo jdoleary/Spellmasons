@@ -53,7 +53,6 @@ Multiple sequential decoy spells will create a decoy with more health.
           sourceUnit.info.image,
           UnitType.AI,
           sourceUnit.info.subtype,
-          0,
           sourceUnit.unitProps,
           underworld,
           prediction

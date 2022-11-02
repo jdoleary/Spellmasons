@@ -80,7 +80,6 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
       userSource.info.image,
       UnitType.PLAYER_CONTROLLED,
       userSource.info.subtype,
-      1,
       undefined,
       underworld
     ),

@@ -83,8 +83,6 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   attackRange: number;
   name?: string;
   isMiniboss: boolean;
-  // Strength is a modifier which affects base stats used for scaling difficulty
-  strength: number;
   // A copy of the units current scale for the prediction copy
   // prediction copies do not have an image property, so this property is saved here
   // so that it may be accessed without making prediction units have a partial Image property
@@ -122,13 +120,12 @@ export function create(
   defaultImagePath: string,
   unitType: UnitType,
   unitSubType: UnitSubType,
-  strength: number,
   sourceUnitProps: Partial<IUnit> = {},
   underworld: Underworld,
   prediction?: boolean,
 ): IUnit {
-  const health = Math.round(config.UNIT_BASE_HEALTH * strength);
-  const mana = Math.round(config.UNIT_BASE_MANA * strength);
+  const health = config.UNIT_BASE_HEALTH;
+  const mana = config.UNIT_BASE_MANA;
   const staminaMax = config.UNIT_BASE_STAMINA;
   const sourceUnit = allUnits[unitSourceId];
   if (sourceUnit) {
@@ -144,7 +141,6 @@ export function create(
       unitSourceId,
       x: spawnPoint.x,
       y: spawnPoint.y,
-      strength,
       originalLife: false,
       radius: config.UNIT_BASE_RADIUS,
       path: undefined,
@@ -185,7 +181,6 @@ export function create(
       UITargetCircleOffsetY: -10
     }, sourceUnitProps);
 
-    adjustUnitStrength(unit, unit.strength, calculateGameDifficulty(underworld));
 
     // Since unit stats can be overridden with sourceUnitProps
     // Ensure that the unit starts will full mana and health
@@ -197,6 +192,11 @@ export function create(
     if (unit.staminaMax === 0) {
       unit.stamina = 0;
     }
+
+    // Note: This must be invoked after initial setting of stat and statMax (health, mana, stamina, etc) so that it can scale
+    // stat relative to maxStat
+    adjustUnitDifficulty(unit, calculateGameDifficulty(underworld));
+
     unit.image?.sprite.scale.set(config.NON_HEAVY_UNIT_SCALE);
     setupShaders(unit);
     if (sourceUnit.init) {
@@ -216,18 +216,35 @@ export function create(
   }
 }
 
-// sets all the properties that depend on strength
-export function adjustUnitStrength(unit: IUnit, strength: number, difficulty: number) {
-  unit.strength = strength;
+// sets all the properties that depend on difficulty
+export function adjustUnitDifficulty(unit: IUnit, difficulty: number) {
+  // Don't let difficulty be 0 which can occur on 0 player multiplayer games
+  // which would initialize all units to 0 health
+  if (difficulty == 0) {
+    difficulty = 1;
+  }
   const source = allUnits[unit.unitSourceId];
   if (source) {
-    unit.damage = Math.round(source.unitProps.damage !== undefined ? source.unitProps.damage : config.UNIT_BASE_DAMAGE * strength);
-    const health = Math.round((source.unitProps.healthMax !== undefined ? source.unitProps.healthMax : config.UNIT_BASE_HEALTH) * difficulty);
-    unit.healthMax = health;
-    unit.health = health;
-    const mana = Math.round(source.unitProps.manaMax !== undefined ? source.unitProps.manaMax : config.UNIT_BASE_MANA * strength);
-    unit.manaMax = mana;
-    unit.mana = mana;
+    // Damage should remain unaffected by difficulty
+    unit.damage = Math.round(source.unitProps.damage !== undefined ? source.unitProps.damage : config.UNIT_BASE_DAMAGE);
+    const healthMax = Math.round((source.unitProps.healthMax !== undefined ? source.unitProps.healthMax : config.UNIT_BASE_HEALTH) * difficulty);
+    const oldHealthRatio = (unit.health / unit.healthMax) || 0;
+    unit.healthMax = healthMax;
+    // Maintain the ratio of health when adjusting difficulty so that an adjustment in difficulty doesn't renew units to max heatlh
+    unit.health = healthMax * oldHealthRatio;
+    if (isNaN(unit.health)) {
+      unit.health = healthMax;
+      console.error('Unit.health is NaN');
+    }
+    const manaMax = Math.round(source.unitProps.manaMax !== undefined ? source.unitProps.manaMax : config.UNIT_BASE_MANA);
+    // Maintain the ratio of mana when adjusting difficulty so that an adjustment in difficulty doesn't renew units to max mana
+    const oldManaRatio = (unit.mana / unit.manaMax) || 0;
+    unit.manaMax = manaMax;
+    unit.mana = manaMax * oldManaRatio;
+    if (isNaN(unit.mana)) {
+      unit.mana = manaMax;
+      console.error('Unit.mana is NaN');
+    }
   } else {
     console.error('missing unit source');
   }
