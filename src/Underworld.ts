@@ -2698,25 +2698,23 @@ export default class Underworld {
       let timeBetweenPickupFly = 100;
       // Make scroll pickups fly to player
       const getFlyingPickupPromises = this.pickups.filter(p => p.name == Pickup.CARDS_PICKUP_NAME).map(pickup => {
-        return new Promise<void>((resolve) => {
-
+        return raceTimeout(5000, 'spawnPortalFlyScrolls', new Promise<void>((resolve) => {
           timeBetweenPickupFly += 100;
           // Make the pickup fly to the player. this gives them some time so it doesn't trigger immediately.
           setTimeout(() => {
-            if (globalThis.player) {
-              if (pickup.image) {
-                pickup.image.sprite.visible = false;
-              }
-              createVisualLobbingProjectile(pickup, globalThis.player.unit, pickup.imagePath).then(() => {
+            if (pickup.image) {
+              pickup.image.sprite.visible = false;
+            }
+            for (let p of this.players) {
+              createVisualLobbingProjectile(pickup, p.unit, pickup.imagePath).then(() => {
                 // Convenience: Pickup any CARD_PICKUP_NAME left automatically, so that they aren't left behind
-                if (globalThis.player) {
-                  Pickup.triggerPickup(pickup, globalThis.player.unit, this, false);
-                }
+                Pickup.triggerPickup(pickup, p.unit, this, false);
                 resolve();
               });
             }
-          }, timeBetweenPickupFly)
-        })
+          }, timeBetweenPickupFly);
+          Pickup.removePickup(pickup, this, false);
+        }))
       });
 
       await Promise.all(getFlyingPickupPromises);

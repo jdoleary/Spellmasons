@@ -1,5 +1,4 @@
 # Low hanging fruit
-- bug: multiplayer: portal isn't synced if you refresh
 - Add cooldowns
     - Add spell that clears cooldowns
 ---
