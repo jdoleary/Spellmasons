@@ -58,6 +58,7 @@ export function updatePlanningView(underworld: Underworld) {
   if (planningViewGraphics && globalThis.unitOverlayGraphics && labelText && globalThis.selectedUnitGraphics) {
     const mouseTarget = underworld.getMousePos();
     planningViewGraphics.clear();
+    globalThis.selectedUnitGraphics.clear();
     if (labelText) {
       labelText.text = '';
       labelText.style.fill = biomeTextColor(underworld.lastLevelCreated?.biome)
