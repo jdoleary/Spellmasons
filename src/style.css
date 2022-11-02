@@ -2,6 +2,8 @@
   --selected-card-size: 32px;
   --mana: #00268d;
   --ui-border-background-color: #262324;
+  --book-leather-dark: #280a08;
+  --book-leather-light: #501512;
 }
 
 .pad-15 {
@@ -562,7 +564,7 @@ kbd {
 }
 
 #inventory-container .card-title {
-  color: #280a08;
+  color: var(--book-leather-dark);
 }
 
 #card-holders-inner .card-title {
@@ -1260,7 +1262,7 @@ body.open-inventory #inventory-container {
 
 #inventory-content .category-label {
   display: none;
-  color: #280a08;
+  color: var(--book-leather-dark);
   white-space: nowrap;
 }
 
@@ -1276,8 +1278,9 @@ body.open-inventory #inventory-container {
 
 
 #inventory-content::-webkit-scrollbar-thumb {
-  /* background-color: darkgrey;
-  outline: 1px solid slategrey; */
+  background-color: var(--book-leather-light);
+  border-radius: 5px;
+  outline: 1px solid var(--book-leather-dark);
 }
 
 .slot {
