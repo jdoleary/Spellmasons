@@ -2,7 +2,6 @@
 - Add cooldowns
     - Add spell that clears cooldowns
 ---
-- Test Game Over screen on multiplayer
 - bug: health bars disappear when cone prediction is up
     - this is because unitOverlayGraphics is used for attack radiuses and health bars
 

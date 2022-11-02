@@ -1717,11 +1717,15 @@ export default class Underworld {
     );
     return { x, y };
   }
-  isGameOver(): boolean {
+  tryGameOver(): boolean {
     // TODO will have to update this to allow PVP / factions
     const playerFactions = this.players.map(p => p.unit.faction);
     // Game is over once ALL units on player factions are dead (this includes player units)
-    return this.units.filter(u => playerFactions.includes(u.faction)).every(u => !u.alive);
+    const isOver = this.units.filter(u => playerFactions.includes(u.faction)).every(u => !u.alive);
+    if (isOver) {
+      document.body.classList.toggle('game-over', true);
+    }
+    return isOver;
   }
   tryEndPlayerTurnPhase(): boolean {
     let doEndPlayerTurnPhase = false;
@@ -1862,7 +1866,7 @@ export default class Underworld {
   syncTurnMessage() {
     console.log('syncTurnMessage: phase:', turn_phase[this.turn_phase]);
     let yourTurn = false;
-    if (!this.isGameOver() && this.turn_phase === turn_phase.PlayerTurns) {
+    if (!this.tryGameOver() && this.turn_phase === turn_phase.PlayerTurns) {
       if (!globalThis.player?.endedTurn) {
         yourTurn = true;
       }
@@ -2015,9 +2019,8 @@ export default class Underworld {
       if (wentToNextLevel) {
         return;
       }
-      const gameIsOver = this.isGameOver();
+      const gameIsOver = this.tryGameOver();
       if (gameIsOver) {
-        document.body.classList.toggle('game-over', true);
         // Prevent infinite loop since there are no players
         // alive it would continue to loop endlessly and freeze up
         // the game if it didn't early return here

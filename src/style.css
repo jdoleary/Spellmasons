@@ -997,7 +997,7 @@ body.your-turn #end-turn-btn:hover {
   align-items: center;
 }
 
-body.game-over #game-over {
+body.view-Game.game-over #game-over {
   display: flex;
 }
 
