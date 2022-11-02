@@ -31,12 +31,11 @@
 - out of range circle stuck up  with no spell
 # 2022-10-25
 ## Priorities
-- bug: too many player configs are being sent for some reason
-    - Fix underworld cleanup so no state carries over
-    - **important**Allow multiplayer game restart after wipe
-        - All players return to lobby after 10 seconds
-        - cleans up underworld
-        - Currently it just lets you exit to main menu but if you rejoin the game it still exists with everyone dead in it
+- Fix underworld cleanup so no state carries over
+- **important**Allow multiplayer game restart after wipe
+    - All players return to lobby after 10 seconds
+    - cleans up underworld
+    - Currently it just lets you exit to main menu but if you rejoin the game it still exists with everyone dead in it
 ## All
 - fixed?
     - bug: in multiplayer games units are spawning out of bounds

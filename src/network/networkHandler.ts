@@ -341,8 +341,16 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
       break;
     case MESSAGE_TYPES.SPAWN_PLAYER:
       if (fromPlayer) {
+        // If the spawned player is the current client's player
         if (fromPlayer == globalThis.player) {
           autoExplain();
+          // When player spawns, send their config from storage
+          // to the server
+          underworld.pie.sendData({
+            type: MESSAGE_TYPES.PLAYER_CONFIG,
+            color: storage.get(config.STORAGE_ID_PLAYER_COLOR),
+            name: storage.get(config.STORAGE_ID_PLAYER_NAME),
+          });
         }
         if (!(isNaN(payload.x) && isNaN(payload.y))) {
           fromPlayer.isSpawned = true;
@@ -372,12 +380,6 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
       }
       Player.syncLobby(underworld);
 
-      // Resync player config from storage
-      underworld.pie.sendData({
-        type: MESSAGE_TYPES.PLAYER_CONFIG,
-        color: storage.get(config.STORAGE_ID_PLAYER_COLOR),
-        name: storage.get(config.STORAGE_ID_PLAYER_NAME)
-      });
 
       underworld.tryRestartTurnPhaseLoop();
       break;
