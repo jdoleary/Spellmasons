@@ -2694,7 +2694,7 @@ export default class Underworld {
     return effectState;
   }
   async checkIfShouldSpawnPortal() {
-    if (this.units.filter(u => u.faction == Faction.ENEMY).every(u => !u.alive)) {
+    if (this.units.filter(u => u.faction == Faction.ENEMY && !u.flaggedForRemoval).every(u => !u.alive)) {
       let timeBetweenPickupFly = 100;
       // Make scroll pickups fly to player
       const getFlyingPickupPromises = this.pickups.filter(p => p.name == Pickup.CARDS_PICKUP_NAME).map(pickup => {
