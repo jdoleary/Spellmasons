@@ -176,7 +176,10 @@ export function setupPieAndUnderworld() {
     globalThis.connect_to_wsPie_server = wsUri => connect_to_wsPie_server(wsUri, overworld);
     globalThis.isConnected = pie.isConnected.bind(pie);
     globalThis.pieDisconnect = pie.disconnect.bind(pie);
-    globalThis.pieLeaveRoom = pie.leaveRoom.bind(pie);
+    globalThis.pieLeaveRoom = () => {
+      globalThis.exitCurrentGame?.();
+      pie.leaveRoom();
+    }
 
     globalThis.joinRoom = room_info => joinRoom(overworld, room_info);
     function connectToSingleplayer() {
