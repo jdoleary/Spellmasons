@@ -84,6 +84,9 @@ function floatAway(instance: FText, resolve: (value: void) => void) {
       if (instance.pixiText.parent) {
         instance.pixiText.parent.removeChild(instance.pixiText);
       }
+      // Must manually clean up pixiText
+      // https://www.html5gamedevs.com/topic/31749-how-to-cleaning-up-all-pixi-sprites-and-textures/?do=findComment&comment=182386
+      instance.pixiText.destroy(true);
       resolve();
     } else {
       requestAnimationFrame(() => floatAway(instance, resolve));

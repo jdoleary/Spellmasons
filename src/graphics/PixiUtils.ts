@@ -640,7 +640,12 @@ export function pixiText(text: string, style: Partial<PIXI.ITextStyle>): PIXI.Te
   if (!globalThis.pixi) {
     return undefined;
   }
-  return new globalThis.pixi.Text(text, style);
+  const textSprite = new globalThis.pixi.Text(text, style);
+  // Pixi Text has to be manually destroyed so it needs an identifier
+  // so I know that the sprite needs to be manually cleaned up.
+  // @ts-ignore jid is a custom identifier to id the text element used
+  textSprite.jid = config.NAME_TEXT_ID;
+  return textSprite;
 }
 
 // Non particle engine particles

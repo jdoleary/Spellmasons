@@ -74,6 +74,12 @@ export function cleanup(image?: IImageAnimated) {
       image.resolver();
     }
     if (image.sprite) {
+      // Manually destroy Pixi Text
+      // https://www.html5gamedevs.com/topic/31749-how-to-cleaning-up-all-pixi-sprites-and-textures/?do=findComment&comment=182386
+      // @ts-ignore jid is a custom identifier to id the text element used for the player name
+      image.sprite.children.filter(c => c.jid == config.NAME_TEXT_ID).forEach(pixiText => {
+        pixiText.destroy(true);
+      })
       // Remove subsprites
       image.sprite.removeChildren();
       if (image.sprite.parent) {
