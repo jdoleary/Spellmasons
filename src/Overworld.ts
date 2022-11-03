@@ -24,14 +24,15 @@ export default function makeOverworld(pie: PieClient | IHostApp, seed: string): 
     };
     changeUnderworld(overworld, overworld.underworld);
 
+    // Initialize content
+    Cards.registerCards(overworld);
+    Units.registerUnits();
+
     addOverworldEventListeners(overworld);
     registerAdminContextMenuOptions(overworld);
     // Setup global functions that need access to underworld:
     setupNetworkHandlerGlobalFunctions(overworld);
     setupDevGlobalFunctions(overworld);
-    // Initialize content
-    Cards.registerCards(overworld);
-    Units.registerUnits();
 
     // Setup UI event listeners
     CardUI.setupCardUIEventListeners(overworld);
