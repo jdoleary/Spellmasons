@@ -52,6 +52,8 @@ export default function makeOverworld(pie: PieClient | IHostApp, seed: string): 
     return overworld;
 }
 export function changeUnderworld(overworld: Overworld, newUnderworld: Underworld) {
+    // Clean up previous underworld:
+    overworld.underworld.cleanup();
     overworld.underworld = newUnderworld;
     // Set back ref
     overworld.underworld.overworld = overworld;
