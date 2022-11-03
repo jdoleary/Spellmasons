@@ -1,55 +1,15 @@
 # Low hanging fruit
 - Steam description is too wordy, just tell 'em why it's awesome
 # Brad playtest 2:
-- futher investigate '  // Override ref since in prediction it makes a copy of the unit' from 06d754d2
-- dragger x and y went to null after "target similar, slash slash"
-- he can't spawn in while i'm casint a spell
-    - same thing with casts, it waits
 - spawning on top of a stamina or mana potion doesn't overfill in multiplayer
 - EZ self cast, like alt clicking a spell self casts or something
 - melee prediction not working? See footage
 - should allow spell prediction even while an action is taking place - this not being here causes friction in multiplayer
 - sync issue: golem moving through frozen guys jumped back
----
 - make spell text scrollable
-- You're able to cast into negative mana in multiplayer
----
-## Instructions for playtest
-- If you see "Lost connection to server" just refresh and rejoin the game
----
-- missing gold circle on player 2's feet
-- I dashed and then ended my turn immediately and I got reset to before where i dashed
 - headless server executed should count time, not loops to detect issue
-# Brad Playtest
-- multiple portal bug
 - when in full screen escape leaves full screen in addition to opening menu
     - https://stackoverflow.com/questions/72248081/preventing-electron-to-exit-fullscreen-on-escape
-- pathing prediction messed up, see video
-- out of range circle stuck up  with no spell
-# 2022-10-25
-## Priorities
-- Fix underworld cleanup so no state carries over
-- **important**Allow multiplayer game restart after wipe
-    - All players return to lobby after 10 seconds
-    - cleans up underworld
-    - Currently it just lets you exit to main menu but if you rejoin the game it still exists with everyone dead in it
-## All
-- fixed?
-    - bug: in multiplayer games units are spawning out of bounds
-    - bug: when player rejoins a game the map is different
-        - This might be fixed once I fully GC underworld between uses
-- Turn phase testing:
-    - if one player is portaled and the remaining player dies it should go to the next level
-    - if no players are portaled and all players die and there are no ally npcs it should go to game over
-    - if no players are portaled and all players die and there ARE npc allies it should run turn phases for NPCS
-        - if NPC_ALLYs succeed it should go to next level
-        - if NPC_Allys do not it should go to end game
-- Handle GCing underworld by making a container object through which all functions that need access to it access it through
-    - Then on cleanup, the container will just reassign a new underworld.
-- somehow changing servers resulted in the old underworld's state still hanging around in lobby
-- investigate: `// TODO will the stack just keep growing`
-    - turn_phases should work on a queue not a stack (this is mostly relevant for singleplayer and when the NPCs are just hashing it out cause all the players are dead so it doesn't stack overflow)
-    - Just make it a while loop that triggers/awaits the next AI turn until it's the players tuurn
 # Pre playtest
 - Need a restart screen after a team wipe
 - Hide disconnected players in game screen but not in the lobby
@@ -58,6 +18,10 @@
 - What to do with disconnected players when it goes to the next level?
 - Fix rejoining hack where people can just rejoin if they're dead to come back
 # Features
+- **important**Allow multiplayer game restart after wipe
+    - All players return to lobby after 10 seconds
+    - cleans up underworld
+    - Currently it just lets you exit to main menu but if you rejoin the game it still exists with everyone dead in it
 - In marketing, emphasize that it's turn based
     - Why this game might not be for you
 - how to show how much damage a queued spell will do
@@ -69,6 +33,20 @@
 - Add save/load to menu
 - Feature request: UI Scaling
 # Bugs / Cleaning
+- he can't spawn in while i'm casint a spell
+    - same thing with casts, it waits
+- futher investigate '  // Override ref since in prediction it makes a copy of the unit' from 06d754d2
+- Turn phase testing:
+    - if one player is portaled and the remaining player dies it should go to the next level
+    - if no players are portaled and all players die and there are no ally npcs it should go to game over
+    - if no players are portaled and all players die and there ARE npc allies it should run turn phases for NPCS
+        - if NPC_ALLYs succeed it should go to next level
+        - if NPC_Allys do not it should go to end game
+- investigate: `// TODO will the stack just keep growing`
+    - turn_phases should work on a queue not a stack (this is mostly relevant for singleplayer and when the NPCs are just hashing it out cause all the players are dead so it doesn't stack overflow)
+    - Just make it a while loop that triggers/awaits the next AI turn until it's the players tuurn
+- dragger x and y went to null after "target similar, slash slash"
+- You're able to cast into negative mana in multiplayer
 - UI: Allow inventory to scale on smaller resolutions
 - bug: In multiplayer: target similar, damage x3 on 2 draggers made their position go to null null
 - fix save/load  from menu screen, it needs to change the gameview
@@ -105,6 +83,7 @@
 - Optimize: targeting spells seem pretty slow in prediction
 - optimize: Ihave duplicate units, pickups, and doodads in save due to serailizeForSaving having them in the underworld and extracting them to the top level too
 - Test early exit (infinite loop protection) for headless gameloop
+- [Clean up PIXI textures properly](https://www.html5gamedevs.com/topic/31749-how-to-cleaning-up-all-pixi-sprites-and-textures/)
 
 ## Stretch Content
 - feature: secondary spellbar
