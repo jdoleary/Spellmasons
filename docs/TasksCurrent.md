@@ -1,6 +1,5 @@
 # Low hanging fruit
 - Steam description is too wordy, just tell 'em why it's awesome
-- bug: you can get to the multiplayer menu when you're not supposed to be able to if you join a multiplayer game and then hit escape twice to open the menu twice it goes to the multiplayer menu 
 # Pre playtest
 - Need a restart screen after a team wipe
 - Hide disconnected players in game screen but not in the lobby
