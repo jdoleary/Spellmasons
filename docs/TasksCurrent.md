@@ -1,5 +1,4 @@
 # Low hanging fruit
-- inventory should show current card cost and cooldown
 - Steam description is too wordy, just tell 'em why it's awesome
 - h: **important**: completely destroy the underworld object between playthroughs rather than just cleaning it up
     - for now you can tell because lastUnitId isn't reset

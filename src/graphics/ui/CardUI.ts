@@ -670,11 +670,11 @@ export function updateCardBadges(underworld: Underworld) {
       const cost = calculateCostForSingleCard(card, (globalThis.player.cardUsageCounts[card.id] || 0) + selectedCardElementsOfSameId.length * card.expenseScaling);
       const cardManaQueryString = `.card[data-card-id="${card.id}"] .card-mana-badge`;
       const cardHealthQueryString = `.card[data-card-id="${card.id}"] .card-health-badge`;
-      const elBadges = Array.from(document.querySelectorAll(`#card-hand ${cardManaQueryString}, #inventory ${cardManaQueryString}`));
+      const elBadges = Array.from(document.querySelectorAll(`#card-hand ${cardManaQueryString}, #inventory-content ${cardManaQueryString}`));
       for (let elBadge of elBadges) {
         updateManaBadge(elBadge, cost.manaCost, card);
       }
-      const elBadgeHealths = Array.from(document.querySelectorAll(`#card-hand ${cardHealthQueryString}, #inventory ${cardHealthQueryString}`));
+      const elBadgeHealths = Array.from(document.querySelectorAll(`#card-hand ${cardHealthQueryString}, #inventory-content ${cardHealthQueryString}`));
       // onDamageEvents alter the healthCost of cards that cost health to cast
       // such as 'bite', 'vulnerable', or 'shield'
       for (let elBadgeHealth of elBadgeHealths) {
