@@ -1,15 +1,5 @@
 # Low hanging fruit
 - Steam description is too wordy, just tell 'em why it's awesome
-# Brad playtest 2:
-- spawning on top of a stamina or mana potion doesn't overfill in multiplayer
-- EZ self cast, like alt clicking a spell self casts or something
-- melee prediction not working? See footage
-- should allow spell prediction even while an action is taking place - this not being here causes friction in multiplayer
-- sync issue: golem moving through frozen guys jumped back
-- make spell text scrollable
-- headless server executed should count time, not loops to detect issue
-- when in full screen escape leaves full screen in addition to opening menu
-    - https://stackoverflow.com/questions/72248081/preventing-electron-to-exit-fullscreen-on-escape
 # Pre playtest
 - Need a restart screen after a team wipe
 - Hide disconnected players in game screen but not in the lobby
@@ -18,6 +8,8 @@
 - What to do with disconnected players when it goes to the next level?
 - Fix rejoining hack where people can just rejoin if they're dead to come back
 # Features
+- should allow spell prediction even while an action is taking place - this not being here causes friction in multiplayer
+- EZ self cast, like alt clicking a spell self casts or something
 - **important**Allow multiplayer game restart after wipe
     - All players return to lobby after 10 seconds
     - cleans up underworld
@@ -33,6 +25,11 @@
 - Add save/load to menu
 - Feature request: UI Scaling
 # Bugs / Cleaning
+- when in full screen escape leaves full screen in addition to opening menu
+    - https://stackoverflow.com/questions/72248081/preventing-electron-to-exit-fullscreen-on-escape
+- sync issue: golem moving through frozen guys jumped back
+- spawning on top of a stamina or mana potion doesn't overfill in multiplayer
+    - verified 2022-11-03
 - he can't spawn in while i'm casint a spell
     - same thing with casts, it waits
 - futher investigate '  // Override ref since in prediction it makes a copy of the unit' from 06d754d2
@@ -82,8 +79,6 @@
 - QuerySelectorAll -> UpdateCardBadges is taking a lot of CPU
 - Optimize: targeting spells seem pretty slow in prediction
 - optimize: Ihave duplicate units, pickups, and doodads in save due to serailizeForSaving having them in the underworld and extracting them to the top level too
-- Test early exit (infinite loop protection) for headless gameloop
-- [Clean up PIXI textures properly](https://www.html5gamedevs.com/topic/31749-how-to-cleaning-up-all-pixi-sprites-and-textures/)
 
 ## Stretch Content
 - feature: secondary spellbar
@@ -184,5 +179,4 @@ And it's just ball of energy that can do weird stuff
     - this is still an issue: as of 2022-09-16
 ## Misc
 - **critical** Improve sending castCards with targeting based on id not position
-- (wont do?) Make an overlay screen that blocks interaction while waiting for sync
 - Unit movement desync occurred between clients when one client has CPU throttled, the non throttled client has the unit move much farther
