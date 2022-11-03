@@ -8,6 +8,7 @@ import { UnitType } from './types/commonTypes';
 import * as Cards from './cards';
 import { syncInventory } from './graphics/ui/CardUI';
 import { addCardToHand, IPlayer } from './entity/Player';
+import { Overworld } from './Overworld';
 
 // Development helpers
 // Note: clicking on a unit will assign them to `selectedUnit` so they are available in the browser console
@@ -52,18 +53,12 @@ export default function devUtils(graphics: PIXI.Graphics) {
     }
     return { debugDrawLineSegments, debugDrawVec2s }
 }
-export function setupDevGlobalFunctions(underworld: Underworld) {
-    if (typeof window !== 'undefined') {
-        // @ts-ignore: window.devUnderworld is NOT typed in globalThis intentionally
-        // so that it will not be used elsewhere, but it is assigned here
-        // so that it can be accessed by a developer in client
-        window.devUnderworld = underworld;
-    }
+export function setupDevGlobalFunctions(overworld: Overworld) {
     globalThis.devKillAll = () => {
-        underworld.units.filter(u => u.unitType !== UnitType.PLAYER_CONTROLLED).forEach(u => Unit.die(u, underworld, false));
+        overworld.underworld.units.filter(u => u.unitType !== UnitType.PLAYER_CONTROLLED).forEach(u => Unit.die(u, overworld.underworld, false));
     }
     globalThis.devRemoveAllEnemies = () => {
-        for (let u of underworld.units) {
+        for (let u of overworld.underworld.units) {
             if (u.faction !== globalThis.player?.unit.faction) {
                 Unit.cleanup(u);
             }

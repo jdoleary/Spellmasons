@@ -16,6 +16,7 @@ import {
   onWindowBlur,
   mouseOverHandler,
 } from './graphics/ui/eventListeners';
+import { Overworld } from './Overworld';
 import Underworld from './Underworld';
 
 // A view is not shared between players in the same game, a player could choose any view at any time
@@ -106,7 +107,7 @@ export function setView(v: View) {
 }
 
 // zoom camera
-function zoom(underworld: Underworld, e: WheelEvent) {
+function zoom(overworld: Overworld, e: WheelEvent) {
   if (globalThis.view !== View.Game) {
     return;
   }
@@ -131,7 +132,7 @@ function zoom(underworld: Underworld, e: WheelEvent) {
 
 
 const endTurnBtnId = 'end-turn-btn';
-export function addUnderworldEventListeners(underworld: Underworld) {
+export function addOverworldEventListeners(overworld: Overworld) {
   if (globalThis.headless) { return; }
   const elEndTurnBtn: HTMLButtonElement = document.getElementById(
     endTurnBtnId,
@@ -148,57 +149,57 @@ export function addUnderworldEventListeners(underworld: Underworld) {
       {
         target: globalThis,
         event: 'keydown',
-        listener: keydownListener.bind(undefined, underworld)
+        listener: keydownListener.bind(undefined, overworld)
       },
       {
         target: globalThis,
         event: 'keyup',
-        listener: keyupListener.bind(undefined, underworld)
+        listener: keyupListener.bind(undefined, overworld)
       },
       {
         target: document.body,
         event: 'contextmenu',
-        listener: contextmenuHandler.bind(undefined, underworld)
+        listener: contextmenuHandler.bind(undefined, overworld)
       },
       {
         target: elPIXIHolder,
         event: 'click',
-        listener: clickHandler.bind(undefined, underworld)
+        listener: clickHandler.bind(undefined, overworld)
       },
       {
         target: document.body,
         event: 'mousedown',
-        listener: mouseDownHandler.bind(undefined, underworld)
+        listener: mouseDownHandler.bind(undefined, overworld)
       },
       {
         target: globalThis,
         event: 'mouseup',
-        listener: mouseUpHandler.bind(undefined, underworld)
+        listener: mouseUpHandler.bind(undefined, overworld)
       },
       {
         target: document.body,
         event: 'mouseover',
-        listener: mouseOverHandler.bind(undefined, underworld)
+        listener: mouseOverHandler.bind(undefined, overworld)
       },
       {
         target: globalThis,
         event: 'blur',
-        listener: onWindowBlur.bind(undefined, underworld)
+        listener: onWindowBlur.bind(undefined, overworld)
       },
       {
         target: document.body,
         event: 'wheel',
-        listener: zoom.bind(undefined, underworld)
+        listener: zoom.bind(undefined, overworld)
       },
       {
         target: document.body,
         event: 'mousemove',
-        listener: mouseMove.bind(undefined, underworld)
+        listener: mouseMove.bind(undefined, overworld)
       },
       {
         target: elEndTurnBtn,
         event: 'click',
-        listener: endTurnBtnListener.bind(undefined, underworld)
+        listener: endTurnBtnListener.bind(undefined, overworld)
       },
       {
         target: elQuitButton,
@@ -218,7 +219,7 @@ export function addUnderworldEventListeners(underworld: Underworld) {
     target.addEventListener(event, listener);
   }
 
-  return function removeUnderworldEventListeners() {
+  return function removeOverworldEventListeners() {
     if (globalThis.headless) { return; }
     for (let { target, event, listener } of listeners) {
       target.removeEventListener(event, listener);

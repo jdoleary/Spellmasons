@@ -16,6 +16,7 @@ import * as storage from '../storage';
 import { updateGlobalRefToCurrentClientPlayer } from '../entity/Player';
 import Underworld from '../Underworld';
 import { version } from '../../package.json';
+import makeOverworld, { Overworld } from '../Overworld';
 // Locally hosted, locally accessed
 // const wsUri = 'ws://localhost:8080';
 // Locally hosted, available to LAN (use your own IP)
@@ -24,13 +25,13 @@ import { version } from '../../package.json';
 // const wsUri = 'ws://68.48.199.138:7337';
 // Current digital ocean wsPie app:
 // const wsUri = 'wss://orca-app-99xgk.ondigitalocean.app/';
-function connect_to_wsPie_server(wsUri: string | undefined, underworld: Underworld): Promise<void> {
-  const pie = underworld.pie;
+function connect_to_wsPie_server(wsUri: string | undefined, overworld: Overworld): Promise<void> {
+  const pie = overworld.pie;
   if (typeGuardHostApp(pie)) {
     console.error('This file should only ever be used with the client, never with the Headless Server');
     return Promise.reject();
   }
-  addHandlers(pie, underworld);
+  addHandlers(pie, overworld);
   return new Promise<void>((resolve, reject) => {
     const storedClientId = localStorage.getItem('pie-clientId');
     pie.onConnectInfo = (o) => {
@@ -39,8 +40,8 @@ function connect_to_wsPie_server(wsUri: string | undefined, underworld: Underwor
         console.log("Pie: Successfully connected to PieServer.")
         resolve();
       } else {
-        if (underworld) {
-          underworld.cleanup();
+        if (overworld.underworld) {
+          overworld.underworld.cleanup();
           if (view == View.Game) {
             setView(View.Disconnected);
           }
@@ -76,12 +77,12 @@ function defaultRoomInfo(_room_info = {}): Room {
   return room_info;
 }
 
-export function joinRoom(underworld: Underworld, _room_info = {}): Promise<void> {
-  if (!underworld.pie) {
+export function joinRoom(overworld: Overworld, _room_info = {}): Promise<void> {
+  if (!overworld.pie) {
     console.error('Could not join room, pie instance is undefined');
     return Promise.reject();
   }
-  const pie = underworld.pie;
+  const pie = overworld.pie;
   if (typeGuardHostApp(pie)) {
     console.error('wsPieSetup is for client only, not host app. This function should never be called with a pie of IHostApp');
     return Promise.reject();
@@ -113,7 +114,7 @@ export function joinRoom(underworld: Underworld, _room_info = {}): Promise<void>
   });
 }
 
-function addHandlers(pie: PieClient, underworld: Underworld) {
+function addHandlers(pie: PieClient, overworld: Overworld) {
   pie.onServerAssignedData = (o) => {
     console.log('Pie: set globalThis.clientId:', o.clientId, o);
     // The headless server's version
@@ -137,10 +138,10 @@ function addHandlers(pie: PieClient, underworld: Underworld) {
 
     }
     globalThis.clientId = o.clientId;
-    if (underworld) {
-      const selfPlayer = underworld.players.find(p => p.clientId == globalThis.clientId);
+    if (overworld.underworld) {
+      const selfPlayer = overworld.underworld.players.find(p => p.clientId == globalThis.clientId);
       if (selfPlayer) {
-        updateGlobalRefToCurrentClientPlayer(selfPlayer, underworld);
+        updateGlobalRefToCurrentClientPlayer(selfPlayer, overworld.underworld);
       }
     }
     if (globalThis.allowCookies) {
@@ -151,9 +152,9 @@ function addHandlers(pie: PieClient, underworld: Underworld) {
       }
     }
   };
-  pie.onData = d => onData(d, underworld);
+  pie.onData = d => onData(d, overworld);
   pie.onError = ({ message }: { message: any }) => console.error('wsPie Error:', message);
-  pie.onClientPresenceChanged = c => onClientPresenceChanged(c, underworld);
+  pie.onClientPresenceChanged = c => onClientPresenceChanged(c, overworld.underworld);
   pie.onLatency = (l) => {
     if (globalThis.latencyPanel) {
       globalThis.latencyPanel.update(l.average, l.max);
@@ -171,21 +172,21 @@ export function setupPieAndUnderworld() {
     // useStats must be true for latency information to come through
     pie.useStats = true;
     console.log('Client: Initialize Underworld');
-    const underworld = new Underworld(pie, Math.random().toString());
-    globalThis.connect_to_wsPie_server = wsUri => connect_to_wsPie_server(wsUri, underworld);
+    const overworld = makeOverworld(pie, Math.random().toString());
+    globalThis.connect_to_wsPie_server = wsUri => connect_to_wsPie_server(wsUri, overworld);
     globalThis.isConnected = pie.isConnected.bind(pie);
     globalThis.pieDisconnect = pie.disconnect.bind(pie);
     globalThis.pieLeaveRoom = pie.leaveRoom.bind(pie);
 
-    globalThis.joinRoom = room_info => joinRoom(underworld, room_info);
+    globalThis.joinRoom = room_info => joinRoom(overworld, room_info);
     function connectToSingleplayer() {
       document.body?.classList.toggle('loading', true);
       return new Promise<void>((resolve) => {
         // setTimeout allows the UI to refresh before locking up the CPU with
         // heavy level generation code
         setTimeout(() => {
-          connect_to_wsPie_server(undefined, underworld).then(() => {
-            joinRoom(underworld).then(resolve);
+          connect_to_wsPie_server(undefined, overworld).then(() => {
+            joinRoom(overworld).then(resolve);
           })
         }, 10)
       });
@@ -196,7 +197,7 @@ export function setupPieAndUnderworld() {
       console.log('Start Game: Attempt to start the game')
       return connectToSingleplayer().then(() => {
         // Create first level
-        underworld.lastLevelCreated = underworld.generateLevelDataSyncronous(0);
+        overworld.underworld.lastLevelCreated = overworld.underworld.generateLevelDataSyncronous(0);
         // Go directly into the game
         setView(View.Game);
       });

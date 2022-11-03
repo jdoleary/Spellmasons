@@ -5,6 +5,7 @@ import { chooseObjectWithProbability } from './jmath/rand';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import { IPlayer } from './entity/Player';
 import Underworld from './Underworld';
+import { Overworld } from './Overworld';
 export interface IUpgrade {
   title: string;
   type: 'perk' | 'card';
@@ -70,7 +71,7 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
   }
   return upgrades;
 }
-export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underworld: Underworld) {
+export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, overworld: Overworld) {
   if (globalThis.headless) {
     // There is no DOM in headless mode
     return;
@@ -125,7 +126,7 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
   element.addEventListener('click', (e) => {
     // Prevent click from "falling through" upgrade and propagating to vote for overworld level
     e.stopPropagation();
-    underworld.pie.sendData({
+    overworld.pie.sendData({
       type: MESSAGE_TYPES.CHOOSE_UPGRADE,
       upgrade,
     });

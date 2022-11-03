@@ -20,6 +20,7 @@ import './Shims';
 import { IHostApp, onClientPresenceChanged } from './network/networkUtil';
 import Underworld from './Underworld';
 import { onData } from './network/networkHandler';
+import makeOverworld, { Overworld } from "./Overworld";
 const pie = require('@websocketpie/server');
 globalThis.SPELLMASONS_PACKAGE_VERSION = version;
 // Init underworld so that when clients join they can use it as the canonical
@@ -37,11 +38,11 @@ function headlessStartGame() {
             const hostAppInst = new HostApp();
             console.log('Start Game: Attempt to start the game')
             console.log('Host: Start game / Initialize Underworld');
-            hostAppInst.underworld = new Underworld(hostAppInst, Math.random().toString());
+            hostAppInst.overworld.underworld = new Underworld(hostAppInst, Math.random().toString());
             // Generate the level data
-            hostAppInst.underworld.lastLevelCreated = hostAppInst.underworld.generateLevelDataSyncronous(0);
+            hostAppInst.overworld.underworld.lastLevelCreated = hostAppInst.overworld.underworld.generateLevelDataSyncronous(0);
             // Actually create it
-            hostAppInst.underworld.createLevelSyncronous(hostAppInst.underworld.lastLevelCreated);
+            hostAppInst.overworld.underworld.createLevelSyncronous(hostAppInst.overworld.underworld.lastLevelCreated);
             return hostAppInst;
         }
     });
@@ -64,15 +65,15 @@ class HostApp implements IHostApp {
     version = version;
     // Automatically overridden when passed into pie.startServer
     sendData: (msg: string) => void = () => { };
-    underworld: Underworld;
+    overworld: Overworld;
     constructor() {
-        this.underworld = new Underworld(this, Math.random().toString());
+        this.overworld = makeOverworld(this, Math.random().toString());
     }
     onData(data: any) {
-        onData(data, this.underworld);
+        onData(data, this.overworld);
     }
     cleanup() {
-        this.underworld.cleanup();
+        this.overworld.underworld.cleanup();
     }
     // The host will receive all data that is send from a client
     // to the @websocketpie/server
@@ -104,7 +105,7 @@ class HostApp implements IHostApp {
                 // }
                 break;
             case MessageType.ClientPresenceChanged:
-                onClientPresenceChanged(message as any, this.underworld);
+                onClientPresenceChanged(message as any, this.overworld.underworld);
                 // this._updateDebugInfo(message);
                 // // If client is accepting the onClientPresenceChanged callback,
                 // // send the message to it

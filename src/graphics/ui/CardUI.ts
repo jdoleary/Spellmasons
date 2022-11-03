@@ -14,6 +14,7 @@ import Underworld from '../../Underworld';
 import { CardCategory, CardRarity, probabilityMap } from '../../types/commonTypes';
 import { MESSAGE_TYPES } from '../../types/MessageTypes';
 import { explain, EXPLAIN_END_TURN } from '../Explain';
+import { Overworld } from '../../Overworld';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
@@ -61,14 +62,14 @@ const dragstart = (ev: any) => {
 }
 // Displays a full card with info on inspect-mode + hover of card
 const elCardInspects = document.querySelectorAll('.card-inspect');
-export function setupCardUIEventListeners(underworld: Underworld) {
+export function setupCardUIEventListeners(overworld: Overworld) {
 
   if (!globalThis.headless) {
     elInvButton?.addEventListener('click', (e) => {
       // Prevent a click on the inventory button from triggering other click listeners
       // (like casting an active spell)
       e.stopPropagation();
-      toggleInventory(undefined, undefined, underworld);
+      toggleInventory(undefined, undefined, overworld.underworld);
     });
     elCardHand.style['gap'] = `${gapBetweenCards}px`;
     elSelectedCards.style['gap'] = `${gapBetweenCards}px`;
@@ -99,12 +100,12 @@ export function setupCardUIEventListeners(underworld: Underworld) {
           globalThis.player.cards[dropIndex] = cardId;
         }
         // Send new card order to server 
-        underworld.pie.sendData({
+        overworld.pie.sendData({
           type: MESSAGE_TYPES.PLAYER_CARDS,
           cards: globalThis.player.cards,
         });
-        recalcPositionForCards(globalThis.player, underworld);
-        syncInventory(undefined, underworld);
+        recalcPositionForCards(globalThis.player, overworld.underworld);
+        syncInventory(undefined, overworld.underworld);
       } else {
         console.error('Something went wrong dragndropping card', dropIndex, dragCard);
       }

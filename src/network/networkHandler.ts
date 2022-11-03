@@ -24,11 +24,12 @@ import pingSprite from '../graphics/Ping';
 import { clearLastNonMenuView, setView, View } from '../views';
 import { autoExplain, explain, EXPLAIN_END_TURN } from '../graphics/Explain';
 import { cameraAutoFollow } from '../graphics/PixiUtils';
+import { changeUnderworld, Overworld } from '../Overworld';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 export const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
-export function onData(d: OnDataArgs, underworld: Underworld) {
+export function onData(d: OnDataArgs, overworld: Overworld) {
   const { payload } = d;
   if (!NO_LOG_LIST.includes(d.payload.type)) {
     // Don't clog up server logs with payloads, leave that for the client which can handle them better
@@ -37,7 +38,7 @@ export function onData(d: OnDataArgs, underworld: Underworld) {
   const type: MESSAGE_TYPES = payload.type;
   switch (type) {
     case MESSAGE_TYPES.PING:
-      pingSprite({ coords: payload as Vec2, color: underworld.players.find(p => p.clientId == d.fromClient)?.color });
+      pingSprite({ coords: payload as Vec2, color: overworld.underworld.players.find(p => p.clientId == d.fromClient)?.color });
       break;
     case MESSAGE_TYPES.INIT_GAME_STATE:
       // If the underworld is not yet initialized for this client then
@@ -46,12 +47,12 @@ export function onData(d: OnDataArgs, underworld: Underworld) {
       // connected to the room and need the first transfer of game state
       // This is why it is okay that updating the game state happens 
       // asynchronously.
-      if (underworld.lastLevelCreated === undefined) {
+      if (overworld.underworld.lastLevelCreated === undefined) {
         // If a client loads a full game state, they should be fully synced
         // so clear the onDataQueue to prevent old messages from being processed
         // after the full gamestate sync
         onDataQueueContainer.queue = [d];
-        handleLoadGameState(payload, underworld);
+        handleLoadGameState(payload, overworld);
       } else {
         console.log('Ignoring INIT_GAME_STATE because underworld has already been initialized.');
       }
@@ -60,10 +61,6 @@ export function onData(d: OnDataArgs, underworld: Underworld) {
       // If a client loads a full game state, they should be fully synced
       // so clear the onDataQueue to prevent old messages from being processed
       onDataQueueContainer.queue = [d];
-      // Reset processedMessageCount since once a client loads a new state
-      // it will be synced with all the others and they can all start counting again
-      // from 0 to see if they're up to date.
-      underworld.processedMessageCount = 0;
       // The LOAD_GAME_STATE message is tricky, it is an 
       // exception to the normal pattern used
       // with the queue, but it should still be processed sequentially to prevent
@@ -74,16 +71,16 @@ export function onData(d: OnDataArgs, underworld: Underworld) {
       // we just skip right to calling processNextInQueue since this message
       // can execute regardless of whether readyState.isReady() is true or not
       // --
-      processNextInQueueIfReady(underworld);
+      processNextInQueueIfReady(overworld);
       break;
     default:
       // MESSAGE_TYPES in HANDLE_IMMEDIATELY are not to be queued and can be processed
       // as soon as they are received.
       if (Object.values(HANDLE_IMMEDIATELY).includes(d.payload.type)) {
-        handleOnDataMessage(d, underworld)
+        handleOnDataMessage(d, overworld)
       } else {
         // All other messages should be handled one at a time to prevent desync
-        handleOnDataMessageSyncronously(d, underworld);
+        handleOnDataMessageSyncronously(d, overworld);
       }
       break;
   }
@@ -91,7 +88,7 @@ export function onData(d: OnDataArgs, underworld: Underworld) {
 let onDataQueueContainer = messageQueue.makeContainer<OnDataArgs>();
 // Waits until a message is done before it will continue to process more messages that come through
 // This ensures that players can't move in the middle of when spell effects are occurring for example.
-function handleOnDataMessageSyncronously(d: OnDataArgs, underworld: Underworld) {
+function handleOnDataMessageSyncronously(d: OnDataArgs, overworld: Overworld) {
   // Queue message for processing one at a time
   onDataQueueContainer.queue.push(d);
   // 10 is an arbitrary limit which will report that something may be wrong
@@ -109,19 +106,15 @@ function handleOnDataMessageSyncronously(d: OnDataArgs, underworld: Underworld) 
     }, 5000);
   }
   // process the "next" (the one that was just added) immediately
-  processNextInQueueIfReady(underworld);
+  processNextInQueueIfReady(overworld);
 }
 // currentlyProcessingOnDataMessage is used to help with bug reports to show
 // which message is stuck and didn't finish being processed.
 let currentlyProcessingOnDataMessage: any = null;
-export function processNextInQueueIfReady(underworld: Underworld) {
+export function processNextInQueueIfReady(overworld: Overworld) {
   // If game is ready to process messages, begin processing
   // (if not, they will remain in the queue until the game is ready)
-  if (underworld) {
-    messageQueue.processNextInQueue(onDataQueueContainer, d => handleOnDataMessage(d, underworld));
-  } else {
-    console.error('underworld is undefined. This should never occur.')
-  }
+  messageQueue.processNextInQueue(onDataQueueContainer, d => handleOnDataMessage(d, overworld));
 }
 function logHandleOnDataMessage(type: MESSAGE_TYPES, payload: any, fromClient: string, underworld: Underworld) {
   try {
@@ -155,45 +148,15 @@ function logHandleOnDataMessage(type: MESSAGE_TYPES, payload: any, fromClient: s
   }
 
 }
-async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promise<any> {
+async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise<any> {
   currentlyProcessingOnDataMessage = d;
   const { payload, fromClient } = d;
   const type: MESSAGE_TYPES = payload.type;
+  const { underworld } = overworld;
   logHandleOnDataMessage(type, payload, fromClient, underworld);
   // Get player of the client that sent the message 
   const fromPlayer = underworld.players.find((p) => p.clientId === fromClient);
   switch (type) {
-    // Checks to see if desync has occurred between clients
-    // It is important that this message is handled syncronously, so we don't get 
-    // false positives (reporting on desyncs when it's client-only state such as moveTarget -
-    // moveTarget changes rapidly in the gameLoop, if it were to be factored into the hash, 
-    // there would easily be false positives where it reports that clients are out of sync
-    // when really they just took a snapshot (the hash) at slightly different times when executing
-    // the same messages.
-    // case MESSAGE_TYPES.GAMESTATE_HASH:
-    //   const hostClientsHash = payload.hash;
-    //   if (underworld.processedMessageCount != payload.processedMessageCount) {
-    //     console.log('Skip hash comparison as one of the clients is still catching up to the other in the message queue', underworld.processedMessageCount, payload.processedMessageCount)
-    //     break;
-    //   }
-    //   const currentSerializedGameState = underworld.serializeForHash();
-    //   const currentHash = hash(JSON.stringify(currentSerializedGameState));
-    //   if (currentHash != hostClientsHash) {
-    //     console.error(`Desync: ${underworld.processedMessageCount} ${payload.processedMessageCount} Out of sync with host, ${currentHash} ${hostClientsHash} (${hash(payload.state)})`);
-    //     // TODO: Remove floating text for production
-    //     floatingText({
-    //       coords: { x: MAP_WIDTH / 2, y: MAP_HEIGHT / 2 }, text: "Out of sync with host!",
-    //       style: {
-    //         fill: 'red',
-    //         fontSize: '60px',
-    //       },
-    //     })
-    //     console.log("gamestate diff:\n", diff(currentSerializedGameState, JSON.parse(payload.state)));
-    //     underworld.pie.sendData({
-    //       type: MESSAGE_TYPES.DESYNC
-    //     });
-    //   }
-    //   break;
     case MESSAGE_TYPES.PLAYER_THINKING:
       const thinkingPlayer = underworld.players.find(p => p.clientId === fromClient)
       if (thinkingPlayer && thinkingPlayer != globalThis.player) {
@@ -219,13 +182,9 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
       break;
     case MESSAGE_TYPES.REQUEST_SYNC_GAME_STATE:
       // If host, send sync; if non-host, ignore 
-      if (globalThis.isHost(underworld.pie)) {
+      if (globalThis.isHost(overworld.pie)) {
         console.log('Host: Sending game state for REQUEST_SYNC_GAME_STATE')
-        if (underworld.pie) {
-          hostGiveClientGameState(fromClient, underworld, underworld.lastLevelCreated, MESSAGE_TYPES.LOAD_GAME_STATE);
-        } else {
-          console.error('Cannot send response to REQUEST_SYNC_GAME_STATE, underworld.pie is undefined')
-        }
+        hostGiveClientGameState(fromClient, underworld, underworld.lastLevelCreated, MESSAGE_TYPES.LOAD_GAME_STATE);
       }
       break;
     case MESSAGE_TYPES.SYNC_PLAYERS:
@@ -281,12 +240,7 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
 
       break;
     case MESSAGE_TYPES.LOAD_GAME_STATE:
-      // Clean up old game state
-      if (underworld) {
-        console.log('teardown: Clean up underworld in preparation for loading new gamestate.')
-        underworld.cleanup();
-      }
-      handleLoadGameState(payload, underworld);
+      handleLoadGameState(payload, overworld);
       break;
     case MESSAGE_TYPES.ENTER_PORTAL:
       if (fromPlayer) {
@@ -346,7 +300,7 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
           autoExplain();
           // When player spawns, send their config from storage
           // to the server
-          underworld.pie.sendData({
+          overworld.pie.sendData({
             type: MESSAGE_TYPES.PLAYER_CONFIG,
             color: storage.get(config.STORAGE_ID_PLAYER_COLOR),
             name: storage.get(config.STORAGE_ID_PLAYER_NAME),
@@ -489,11 +443,21 @@ async function handleLoadGameState(payload: {
   units: Unit.IUnitSerialized[],
   players: Player.IPlayerSerialized[],
   doodads: Doodad.IDoodadSerialized[]
-}, underworld: Underworld) {
+}, overworld: Overworld) {
   console.log("Setup: Load game state", payload)
+  // Clean up old game state
+  if (overworld.underworld) {
+    console.log('teardown: Clean up underworld in preparation for loading new gamestate.')
+    overworld.underworld.cleanup();
+  }
   const { underworld: payloadUnderworld, phase, pickups, units, players, doodads } = payload
   // Sync underworld properties
   const loadedGameState: IUnderworldSerializedForSyncronize = { ...payloadUnderworld };
+
+  // Create a new underworld to sync with the payload so that no old state carries over
+  const underworld = new Underworld(overworld.pie, loadedGameState.seed);
+  changeUnderworld(overworld, underworld);
+
   const level = loadedGameState.lastLevelCreated;
   if (!level) {
     console.error('Cannot handleLoadGameState, level is undefined');
@@ -501,7 +465,6 @@ async function handleLoadGameState(payload: {
   }
   underworld.levelIndex = loadedGameState.levelIndex;
 
-  underworld.seed = loadedGameState.seed;
   if (loadedGameState.RNGState) {
     underworld.syncronizeRNG(loadedGameState.RNGState);
   }
@@ -542,9 +505,6 @@ async function handleLoadGameState(payload: {
 
   // Load units
   if (units) {
-    // Clean up previous units if they exist
-    underworld.units.map(Unit.cleanup)
-
     underworld.units = units.map(u => Unit.load(u, underworld, false));
   }
   // Note: Players should sync after units are loaded so
@@ -600,7 +560,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
   }
 }
 
-export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
+export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
   globalThis.configPlayer = ({ color, name, lobbyReady }: { color?: number, name?: string, lobbyReady?: boolean }) => {
     if (color !== undefined) {
       storage.set(config.STORAGE_ID_PLAYER_COLOR, color);
@@ -608,7 +568,7 @@ export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
     if (name !== undefined) {
       storage.set(config.STORAGE_ID_PLAYER_NAME, name || '');
     }
-    underworld.pie.sendData({
+    overworld.pie.sendData({
       type: MESSAGE_TYPES.PLAYER_CONFIG,
       color,
       name,
@@ -622,12 +582,12 @@ export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
 
   globalThis.save = (title: string) => {
     const saveObject = {
-      underworld: underworld.serializeForSaving(),
-      phase: underworld.turn_phase,
-      pickups: underworld.pickups.map(Pickup.serialize),
-      units: underworld.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
-      players: underworld.players.map(Player.serialize),
-      doodads: underworld.doodads.map(Doodad.serialize),
+      underworld: overworld.underworld.serializeForSaving(),
+      phase: overworld.underworld.turn_phase,
+      pickups: overworld.underworld.pickups.map(Pickup.serialize),
+      units: overworld.underworld.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
+      players: overworld.underworld.players.map(Player.serialize),
+      doodads: overworld.underworld.doodads.map(Doodad.serialize),
     };
     try {
       storage.set(
@@ -651,7 +611,7 @@ export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
 
       const { underworld: savedUnderworld, phase, units, players, pickups, doodads } = JSON.parse(savedGameString);
       console.log('LOAD: send LOAD_GAME_STATE');
-      underworld.pie.sendData({
+      overworld.pie.sendData({
         type: MESSAGE_TYPES.LOAD_GAME_STATE,
         underworld: savedUnderworld,
         pickups,
@@ -669,13 +629,13 @@ export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
   globalThis.exitCurrentGame = function exitCurrentGame(): Promise<void> {
     // Go back to the main PLAY menu
     globalThis.setMenu?.('PLAY');
-    if (underworld) {
-      underworld.cleanup();
+    if (overworld.underworld) {
+      overworld.underworld.cleanup();
     }
     // This prevents 'esc' key from going "back" to viewGame after the underworld is cleaned up
     clearLastNonMenuView();
     // Ensure the menu is open
     setView(View.Menu);
-    return typeGuardHostApp(underworld.pie) ? Promise.resolve() : underworld.pie.disconnect();
+    return typeGuardHostApp(overworld.pie) ? Promise.resolve() : overworld.pie.disconnect();
   }
 }

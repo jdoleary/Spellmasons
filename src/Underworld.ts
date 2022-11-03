@@ -53,8 +53,7 @@ import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle, closestLineSegmentIntersection } from './jmath/lineSegment';
 import { expandPolygon, isVec2InsidePolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './jmath/Polygon2';
 import { calculateDistanceOfVec2Array, findPath } from './jmath/Pathfinding';
-import { addUnderworldEventListeners, setView, View } from './views';
-import { keyDown, mouseMove, registerAdminContextMenuOptions } from './graphics/ui/eventListeners';
+import { keyDown, mouseMove } from './graphics/ui/eventListeners';
 import Jprompt from './graphics/Jprompt';
 import { collideWithLineSegments, ForceMove, forceMovePreventForceThroughWall, isVecIntersectingVecWithCustomRadius, moveWithCollisions } from './jmath/moveWithCollision';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './config';
@@ -68,8 +67,7 @@ import { Material } from './Conway';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndexPreventWrap } from './jmath/ArrayUtil';
 import { raceTimeout, reportIfTakingTooLong } from './Promise';
 import { updateParticlees } from './graphics/Particles';
-import { elInstructions, processNextInQueueIfReady, setupNetworkHandlerGlobalFunctions } from './network/networkHandler';
-import { setupDevGlobalFunctions } from './devUtils';
+import { elInstructions } from './network/networkHandler';
 import type PieClient from '@websocketpie/client';
 import { makeForcePush } from './cards/push';
 import { createVisualLobbingProjectile } from './entity/Projectile';
@@ -79,6 +77,7 @@ import { HasSpace } from './entity/Type';
 import { explain, EXPLAIN_MISSED_SCROLL, EXPLAIN_SCROLL, EXPLAIN_WALK } from './graphics/Explain';
 import { calculateGameDifficulty } from './Difficulty';
 import { makeScrollDissapearParticles } from './graphics/ParticleCollection';
+import { changeUnderworld, Overworld } from './Overworld';
 
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
@@ -105,8 +104,14 @@ let requestAnimationFrameGameLoopId: number;
 const cleanupRegistry = new FinalizationRegistry((heldValue) => {
   console.log('GC: Cleaned up ', heldValue);
 });
+let localUnderworldCount = 0;
 export default class Underworld {
   seed: string;
+  // A simple number to keep track of which underworld this is
+  // Used for development to help ensure that all references to the underworld are current
+  localUnderworldNumber: number;
+  // A backreference to it's parent container
+  overworld?: Overworld;
   random: prng;
   pie: PieClient | IHostApp;
   // a list of clientIds
@@ -169,35 +174,19 @@ export default class Underworld {
 
   constructor(pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     this.pie = pie;
+    this.localUnderworldNumber = ++localUnderworldCount;
+    if (typeof window !== 'undefined') {
+      // @ts-ignore: window.devUnderworld is NOT typed in globalThis intentionally
+      // so that it will not be used elsewhere, but it is assigned here
+      // so that it can be accessed by a developer in client.
+      // It should always be set to the latest underworld
+      window.devUnderworld = this;
+    }
     this.seed = globalThis.seedOverride || seed;
     // Nofity when Underworld is GC'd
-    cleanupRegistry.register(this, `underworld-${this.seed}`);
-
-    // Initialize content
-    Cards.registerCards(this);
-    Units.registerUnits();
-    // Add event listeners and store the remove function which is returned
-    this.removeEventListeners = addUnderworldEventListeners(this);
-    registerAdminContextMenuOptions(this);
-
-    // Setup global functions that need access to underworld:
-    setupNetworkHandlerGlobalFunctions(this);
-    setupDevGlobalFunctions(this);
-
-    // Setup UI event listeners
-    CardUI.setupCardUIEventListeners(this);
+    cleanupRegistry.register(this, `underworld-${this.seed}-${this.localUnderworldNumber}`);
 
     this.random = this.syncronizeRNG(RNGState);
-
-    // When the game is ready to process wsPie messages, begin
-    // processing them
-    // The game is ready when the following have been loaded
-    // - wsPieConnection
-    // - wsPieRoomJoined 
-    // - pixiAssets 
-    // - content (register cards and untis)
-    // - underworld
-    processNextInQueueIfReady(this);
   }
   // Returns all potentially targetable entities
   // See cards/index.ts's getCurrentTargets() for the function that returns 
@@ -751,7 +740,11 @@ export default class Underworld {
     this.drawResMarkers();
     this.drawPlayerThoughts();
     updatePlanningView(this);
-    mouseMove(this);
+    if (this.overworld) {
+      mouseMove(this.overworld);
+    } else {
+      console.error('Cannot invoke mouseMove, this.overworld is undefined.');
+    }
     // Particles
     updateParticlees(deltaTime, this.bloods, this.random, this);
 
@@ -1020,6 +1013,13 @@ export default class Underworld {
     this.lastLevelCreated = undefined;
 
     globalThis.updateInGameMenuStatus?.()
+
+    // Creating a new underworld:
+    if (this.overworld) {
+      changeUnderworld(this.overworld, new Underworld(this.pie, Math.random().toString()));
+    } else {
+      console.error('Cannot create new underworld, this.overworld is undefined');
+    }
 
   }
   // cacheWalls updates underworld.walls array
@@ -1526,6 +1526,8 @@ export default class Underworld {
   }
 
   cleanUpLevel() {
+    globalThis.attentionMarkers = [];
+    globalThis.resMarkers = [];
     // Now that it's a new level clear out the level's dodads such as
     // bone dust left behind from destroyed corpses
     containerDoodads?.removeChildren();
@@ -2139,12 +2141,18 @@ export default class Underworld {
         document.body?.classList.toggle(showUpgradesClassName, false);
         queueCenteredFloatingText('No more spell upgrades to pick from.');
       } else {
-        const elUpgrades = upgrades.map((upgrade) => Upgrade.createUpgradeElement(upgrade, player, this));
+        const elUpgrades = upgrades.map((upgrade) => {
+          if (this.overworld) {
+            return Upgrade.createUpgradeElement(upgrade, player, this.overworld);
+          } else {
+            console.error('No overworld, cannot create upgrade elements');
+            return undefined;
+          }
+        });
         if (elUpgradePickerContent) {
           elUpgradePickerContent.innerHTML = '';
           for (let elUpgrade of elUpgrades) {
             if (elUpgrade) {
-
               elUpgradePickerContent.appendChild(elUpgrade);
               if (globalThis.devMode && elUpgrade == elUpgrades[0]) {
                 elUpgrade.click();
