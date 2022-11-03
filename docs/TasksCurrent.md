@@ -1,5 +1,6 @@
 # Low hanging fruit
 - Steam description is too wordy, just tell 'em why it's awesome
+- Escape should close the inventory without clearing spells
 # Pre playtest
 - Need a restart screen after a team wipe
 - Hide disconnected players in game screen but not in the lobby

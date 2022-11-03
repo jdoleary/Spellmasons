@@ -3,7 +3,7 @@
     - Add Trailer
         - Revise store copy so it's less wordy
         - Add "why it might not be for you" gif and description
-    - Work through bug backlog
+    - **Work through bug backlog**
     - Make gameplay video with Brad
 - December
     - Package as Electron App
@@ -15,13 +15,14 @@
     - Test on all 3 Operating Systems
     - Steamdeck support / Controller Support / Accessability / Localization Language Support / Spellcheck
     - Release
-- Trademark Process - ongoing
+- Beyond Release
+    - More enemies
+    - More spells
 # Critical Path
 - Major Tasks
     - Fix liquid generation
     - Make weekly videos
-- Milestone | **Beta Testing**
-    - Optimize game
+- Milestone | **Optimize game**
         - setPath is constantly being called by all enemies
         - repelCircleFromLine is used for both unit crowding and wall physics and with wall physics it doesn't need a reference to underworld, that's only needed for unit crowding to make sure they don't crowd each other through walls
         - Memory Leaks: call destroy() on any Graphics object you no longer need to avoid memory leaks.
@@ -41,11 +42,6 @@
     - [AutoUpdate](https://github.com/vercel/hazel) Not needed because of updates through steam?
 - Milestone **Strech 1**
     - [Mod support](https://partner.steamgames.com/doc/features/workshop)
-    - Hoist spells
-        - Logic to avoid fizzle spells
-            - Don't cast res on no dead
-            - do this by hoisting and checking pre-cast
-            - How to resurrect units you are standing on top of (blocking?)
     - Server customization (like Worms Armageddon)
         - Turn time
         - Pvp mode (more factions)
@@ -60,7 +56,7 @@
         - Skill tree
         - Critical chances
         - Time challenges - beat the level in less than 3 turns
-        - Make bets - risk / reward
+        - Make wagers - risk / reward
             - even with the difficulty of the next level
         - pseudo class system
         - item that makes your stronger but it randomizes your spawn
@@ -74,5 +70,4 @@
 - DONE Complete Menu with options
 - Bug Reporting built in (e.g. Save game state and send it to me)
 - Packaged in Electron App
-- Able to loop the game indefinitely with satisfying difficulty curve
-- Enough random elements that different playthroughs feel somewhat unique
+- Simple to connect with friends in multiplayer
