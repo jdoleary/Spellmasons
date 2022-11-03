@@ -20,7 +20,7 @@ import './Shims';
 import { IHostApp, onClientPresenceChanged } from './network/networkUtil';
 import Underworld from './Underworld';
 import { onData } from './network/networkHandler';
-import makeOverworld, { Overworld } from "./Overworld";
+import makeOverworld, { changeUnderworld, Overworld } from "./Overworld";
 const pie = require('@websocketpie/server');
 globalThis.SPELLMASONS_PACKAGE_VERSION = version;
 // Init underworld so that when clients join they can use it as the canonical
@@ -38,7 +38,7 @@ function headlessStartGame() {
             const hostAppInst = new HostApp();
             console.log('Start Game: Attempt to start the game')
             console.log('Host: Start game / Initialize Underworld');
-            hostAppInst.overworld.underworld = new Underworld(hostAppInst, Math.random().toString());
+            changeUnderworld(hostAppInst.overworld, new Underworld(hostAppInst, Math.random().toString()));
             // Generate the level data
             hostAppInst.overworld.underworld.lastLevelCreated = hostAppInst.overworld.underworld.generateLevelDataSyncronous(0);
             // Actually create it
@@ -105,6 +105,7 @@ class HostApp implements IHostApp {
                 // }
                 break;
             case MessageType.ClientPresenceChanged:
+                console.log('jtest, clientPresenceChanged', this.overworld, this.overworld.underworld.overworld);
                 onClientPresenceChanged(message as any, this.overworld.underworld);
                 // this._updateDebugInfo(message);
                 // // If client is accepting the onClientPresenceChanged callback,
