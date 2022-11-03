@@ -56,6 +56,7 @@
 
 - Homepage / Marketing / Steam Page / Email Signup
     - Marketing (Tell a story)
+        - Short Description: "Spellmasons is a turn-based, tactical roguelike. String together combinations of spells that effect each other, plan your next move with friends in online cooperative multiplayer"
         - Short Description: "Spellmasons is a turn-based tactical roguelike where you devise ingenious spell combinations to overcome an onslaught of relentless enemies.  Team up with your friends in online cooperative multiplayer to vanquish your foes together and unleash even more magical chaos!"
         - Elevator Pitch: "Multiplayer Tactical Wizardry. Spellmasons"
         - "Spellmasons is a tactical roguelike where you devise ingenious spell combinations to overcome an onslaught of relentless enemies."

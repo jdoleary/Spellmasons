@@ -4,14 +4,15 @@
         - Revise store copy so it's less wordy
         - Add "why it might not be for you" gif and description
     - Work through bug backlog
-    - Cooldowns instead of mana multiplier
+    - Make gameplay video with Brad
 - December
     - Package as Electron App
     - Convenient multiplayer lobbying via steam
         - Prevent players from joining mid-round, notify "you will spawn once this level is complete"
-    - Test on all 3 Operating Systems
-- January
+    - Cooldowns instead of mana multiplier
     - Perks
+- January
+    - Test on all 3 Operating Systems
     - Steamdeck support / Controller Support / Accessability / Localization Language Support / Spellcheck
     - Release
 - Trademark Process - ongoing

@@ -25,6 +25,7 @@
 - Add save/load to menu
 - Feature request: UI Scaling
 # Bugs / Cleaning
+- loading a game shows "game-over" and disconnected player
 - when in full screen escape leaves full screen in addition to opening menu
     - https://stackoverflow.com/questions/72248081/preventing-electron-to-exit-fullscreen-on-escape
 - sync issue: golem moving through frozen guys jumped back
