@@ -258,7 +258,11 @@ export function load(player: IPlayerSerialized, underworld: Underworld) {
   updateGlobalRefToCurrentClientPlayer(playerLoaded, underworld);
   CardUI.recalcPositionForCards(playerLoaded, underworld);
   underworld.players.push(playerLoaded);
-  setClientConnected(playerLoaded, underworld.clients.includes(player.clientId), underworld);
+  if (underworld.overworld) {
+    setClientConnected(playerLoaded, underworld.overworld.clients.includes(player.clientId), underworld);
+  } else {
+    console.error('cannot set client connected, no overworld');
+  }
   underworld.queueGameLoop();
   setPlayerRobeColor(playerLoaded, playerLoaded.color);
   return playerLoaded;

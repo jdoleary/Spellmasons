@@ -114,8 +114,6 @@ export default class Underworld {
   overworld?: Overworld;
   random: prng;
   pie: PieClient | IHostApp;
-  // a list of clientIds
-  clients: string[] = [];
   // The index of the level the players are on
   levelIndex: number = -1;
   // for serializing random: prng
@@ -1724,9 +1722,7 @@ export default class Underworld {
     const playerFactions = this.players.map(p => p.unit.faction);
     // Game is over once ALL units on player factions are dead (this includes player units)
     const isOver = this.units.filter(u => playerFactions.includes(u.faction)).every(u => !u.alive);
-    if (isOver) {
-      document.body.classList.toggle('game-over', true);
-    }
+    document.body.classList.toggle('game-over', isOver);
     return isOver;
   }
   tryEndPlayerTurnPhase(): boolean {
@@ -2844,9 +2840,13 @@ export default class Underworld {
   }
   // Returns an array of newly created players
   ensureAllClientsHaveAssociatedPlayers(clients: string[]) {
-    this.clients = clients;
+    if (!this.overworld) {
+      console.error('Cannot sync clients, no overworld');
+      return;
+    }
+    this.overworld.clients = clients;
     // Ensure all clients have players
-    for (let clientId of this.clients) {
+    for (let clientId of this.overworld.clients) {
       const player = this.players.find(p => p.clientId == clientId);
       if (!player) {
         // If the client that joined does not have a player yet, make them one immediately

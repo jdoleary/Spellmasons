@@ -10,8 +10,10 @@ import * as CardUI from './graphics/ui/CardUI';
 import { addOverworldEventListeners } from "./views";
 
 export interface Overworld {
-    underworld: Underworld;
     pie: PieClient | IHostApp;
+    // a list of clientIds
+    clients: string[];
+    underworld: Underworld;
 }
 // Overworld exists so that functions that need a reference to an underworld
 // can hold on to a persistant reference which CONTAINS the lastest underworld reference.
@@ -20,6 +22,7 @@ export interface Overworld {
 export default function makeOverworld(pie: PieClient | IHostApp, seed: string): Overworld {
     const overworld = {
         pie,
+        clients: [],
         underworld: new Underworld(pie, seed),
     };
     changeUnderworld(overworld, overworld.underworld);
