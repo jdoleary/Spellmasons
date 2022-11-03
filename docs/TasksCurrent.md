@@ -1,5 +1,6 @@
 # Low hanging fruit
 - Steam description is too wordy, just tell 'em why it's awesome
+- bug: you can get to the multiplayer menu when you're not supposed to be able to if you join a multiplayer game and then hit escape twice to open the menu twice, then if you leave the room and join a new one there will be underworld conflicts
 # Pre playtest
 - Need a restart screen after a team wipe
 - Hide disconnected players in game screen but not in the lobby
@@ -25,8 +26,10 @@
 - Add save/load to menu
 - Feature request: UI Scaling
 # Bugs / Cleaning
-- loading a game shows "game-over" and disconnected player
-    - This is related to onClientPresenceChanged
+- If you start a singleplayer game and then join a multiplayer game you keep your gamestate, this is a bug: it should update your underworld
+    - containerUnits has duplicates
+- Images stick around after you join a new game in multiplayer
+    - replicatable with admin "delete all enemies"
 - when in full screen escape leaves full screen in addition to opening menu
     - https://stackoverflow.com/questions/72248081/preventing-electron-to-exit-fullscreen-on-escape
 - sync issue: golem moving through frozen guys jumped back
