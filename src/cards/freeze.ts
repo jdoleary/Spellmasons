@@ -31,7 +31,11 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);
       if (targets.length) {
-        await Promise.all([playDefaultSpellAnimation(card, targets, prediction), playDefaultSpellSFX(card, prediction)]);
+        let spellAnimationPromise = Promise.resolve();
+        targets.forEach(t => {
+          spellAnimationPromise = Image.addOneOffAnimation(t, 'spell-effects/spellFreeze');
+        })
+        await Promise.all([spellAnimationPromise, playDefaultSpellSFX(card, prediction)]);
         for (let unit of targets) {
           Unit.addModifier(unit, id, underworld, prediction, quantity);
         }
