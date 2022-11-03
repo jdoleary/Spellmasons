@@ -980,6 +980,8 @@ export default class Underworld {
   // if an object stops being used.  It does not empty the underworld arrays, by design.
   cleanup() {
     console.log('teardown: Cleaning up underworld');
+    globalThis.attentionMarkers = [];
+    globalThis.resMarkers = [];
 
     // Remove game-over popup
     document.body.classList.toggle('game-over', false);
@@ -1526,8 +1528,6 @@ export default class Underworld {
   }
 
   cleanUpLevel() {
-    globalThis.attentionMarkers = [];
-    globalThis.resMarkers = [];
     // Now that it's a new level clear out the level's dodads such as
     // bone dust left behind from destroyed corpses
     containerDoodads?.removeChildren();
