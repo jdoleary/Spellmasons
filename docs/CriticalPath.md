@@ -4,7 +4,6 @@
         - Revise store copy so it's less wordy
         - Add "why it might not be for you" gif and description
     - Work through bug backlog
-    - [Beta Testing](https://partner.steamgames.com/doc/store/testing)
     - Cooldowns instead of mana multiplier
 - December
     - Package as Electron App
@@ -30,9 +29,6 @@
         - Support huge numbers of mobs (100? 500? 1000?)
             - Profile and figure out where the weak points are
         - Saw slowdown with "+ Radius" * 4 then Bloat, then Slice
-    - Build following
-    - Make survey
-    - Send out to testers
 - Milestone X | **Package as Electron App** | Planning on November 1
     - Security
         - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
@@ -74,7 +70,7 @@
 ## Definition of Done
 - DONE Stable Multiplayer
 - Supports 1000 units
-- Complete Menu with options
+- DONE Complete Menu with options
 - Bug Reporting built in (e.g. Save game state and send it to me)
 - Packaged in Electron App
 - Able to loop the game indefinitely with satisfying difficulty curve

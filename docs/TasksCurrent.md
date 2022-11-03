@@ -1,14 +1,11 @@
-- New screenshots
-- UI: Fix card inspect with spellbook
-- UI: Allow inventory to scale on smaller resolutions
-- bug: In multiplayer: target similar, damage x3 on 2 draggers made their position go to null null
 # Low hanging fruit
-- Add cooldowns
-    - Add spell that clears cooldowns
+- inventory should show current card cost and cooldown
 - Steam description is too wordy, just tell 'em why it's awesome
+- h: **important**: completely destroy the underworld object between playthroughs rather than just cleaning it up
+    - for now you can tell because lastUnitId isn't reset
+# Brad playtest 2:
 - futher investigate '  // Override ref since in prediction it makes a copy of the unit' from 06d754d2
 - dragger x and y went to null after "target similar, slash slash"
-# Brad playtest 2:
 - he can't spawn in while i'm casint a spell
     - same thing with casts, it waits
 - spawning on top of a stamina or mana potion doesn't overfill in multiplayer
@@ -17,7 +14,6 @@
 - should allow spell prediction even while an action is taking place - this not being here causes friction in multiplayer
 - sync issue: golem moving through frozen guys jumped back
 ---
-- fix CHHOSE_UPGRADE bug that allows devMode true players to have too many upgrades
 - make spell text scrollable
 - You're able to cast into negative mana in multiplayer
 ---
@@ -73,18 +69,17 @@
 - Expanding should take longer to return to base mana like resurrect and summon decoy do
     - Do this with cooldowns
 - Add server history
-- inventory should show current card cost and cooldown
--  Add save/load to menu
+- Add save/load to menu
+- Feature request: UI Scaling
 # Bugs / Cleaning
+- UI: Allow inventory to scale on smaller resolutions
+- bug: In multiplayer: target similar, damage x3 on 2 draggers made their position go to null null
 - fix save/load  from menu screen, it needs to change the gameview
 - if screen is too thin, hover card covers inventory
 - in multiplayer, when one player leaves and window is not focused the camera spazzes out
 - "All targets" copy is confusing if player doesn't understand targeting
-- h: **important**: completely destroy the underworld object between playthroughs rather than just cleaning it up
-    - for now you can tell because lastUnitId isn't reset
 - Find a way to make randomness fixed (like in spell "Displace" so that it doesn't get different random results on other people's screens and so that it wont change after another player casts)
 - This save file is giving me critical errors `saveFile-with-errors.json`
-- Improve UX for shove so that it's clear when you're not close enough
 - Sometimes it tries to path around things and wastes stamina if there isn't a straight line path
 - sometimes when you walk you get stuck on a wall and it wastes stamina
 - done?: melee prediction is still off
@@ -110,7 +105,6 @@
     - new animation
 # Optimization
 - QuerySelectorAll -> UpdateCardBadges is taking a lot of CPU
-- Split sprite sheet for more efficient development
 - Optimize: targeting spells seem pretty slow in prediction
 - optimize: Ihave duplicate units, pickups, and doodads in save due to serailizeForSaving having them in the underworld and extracting them to the top level too
 - Test early exit (infinite loop protection) for headless gameloop
