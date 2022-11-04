@@ -171,7 +171,7 @@ body.view-Game.showUpgrades #upgrade-picker {
   /* Style title */
   background-color: #e7d1a6;
   border: 8px solid #b0935a;
-  width: 50%;
+  min-width: 50%;
   margin: 0 auto;
   transform: translate(0px, -18px);
 }
