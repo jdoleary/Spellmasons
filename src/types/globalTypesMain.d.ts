@@ -152,4 +152,6 @@ declare global {
     var explainKeys: string[];
     // List of players to display in the lobby
     var lobbyPlayerList: { name: string, status: string, color: string, ready: string }[];
+    var i18n: (key: string) => string;
+    var setLanguage: (langCode: string) => void;
 }
