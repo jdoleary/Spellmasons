@@ -1,9 +1,10 @@
 const fs = require('node:fs');
+const path = require('node:path');
 const readline = require('node:readline');
 const languages = [];
 
 async function processLineByLine() {
-    const fileStream = fs.createReadStream('localizationSource.csv');
+    const fileStream = fs.createReadStream(path.join(__dirname, 'localizationSource.csv'));
 
     const rl = readline.createInterface({
         input: fileStream,
@@ -31,7 +32,7 @@ async function processLineByLine() {
     }
     // Now output each in a file:
     console.log(languages);
-    const outPath = './localization.json';
+    const outPath = path.join(__dirname, './localization.json');
     fs.writeFileSync(outPath, JSON.stringify(languages));
     console.log('File written to ', outPath);
 }

@@ -2,3 +2,42 @@ Language,English,French,Italian,German,Spanish,Japanses,Portuguese-Brazil,Arabic
 LanguageCode,en,fr,it,de,es,ja,pt,ar,ko,ru,zh-CN,zh-TW,pl
 greeting,hello,bonjour,ciao,hallo,Hola,こんにちは,olá,أهلا,안녕하세요,привет,你好,你好,Witam
 test,Press the 1️ button,Appuyez sur le bouton 1️,Premere il pulsante 1️,Drücken Sie die 1️ -Taste,Presione el botón 1min,1️ボタンを押します,Pressione o botão 1️,اضغط على زر 1,1️ 버튼을 누릅니다,Нажмите кнопку 1️,按1️按钮,按1️按鈕,Naciśnij przycisk 1️
+Your Turn,Your Turn,À ton tour,Il tuo turno,Du bist dran,Tu turno,あなたの番,Sua vez,دورك,네 차례 야,Твоя очередь,到你了,到你了,Twoja kolej
+Maximum shield,Maximum shield,Bouclier maximal,SHIELD massimo,Maximaler Schild,Escudo máximo,最大シールド,Escudo máximo,أقصى درع,최대 방패,Максимальный щит,最大盾牌,最大盾牌,Maksymalna tarcza
+slash,slash,sabrer,barra,Schrägstrich,barra oblicua,スラッシュ,golpear,خفض,삭감,снесение,削减,削減,ciąć
+rend,rend,déchirer,Rend,zerreißen,desgarrar,レンド,rend,الاداء,찢다,ренд,渲染,渲染,rozdzierać
+bleed,bleed,saigner,sanguinare,bluten,sangrar,出血,sangrar,ينزف,출혈,истекать кровью,流血,流血,krwawić
+suffocate,suffocate,étouffer,soffocare,ersticken,sofocar,窒息します,sufocar,خنق,질식,задушить,窒息,窒息,dusić
+heal,heal,guérir,guarire,heilen,sanar,癒し,curar,شفاء - يشفى,치유하다,лечить,愈合,癒合,leczyć
+target circle,target circle,cercle cible,Cerchio target,Zielkreis,círculo objetivo,ターゲットサークル,Círculo de destino,دائرة الهدف,대상 원,Целевой круг,目标圆,目標圓,Koło docelowe
+connect,connect,relier,Collegare,verbinden,conectar,接続,conectar,الاتصال,연결하다,соединять,连接,連接,łączyć
+contaminate,contaminate,contaminer,contaminare,verunreinigen,contaminar,汚染,contaminar,تلوث,오염,загрязнять,污染,污染,zanieczyścić
+freeze,freeze,gel,congelare,einfrieren,congelar,氷結,congelar,تجميد,얼다,заморозить,冻结,凍結,zamrażać
+resurrect,resurrect,ressusciter,resuscita,Wiederbelebung,resucitar,復活,ressuscitar,إحياء,부활,воскресить,复活,復活,wskrzesić
+shield,shield,bouclier,scudo,Schild,escudo,シールド,escudo,درع,방패,щит,盾,盾,tarcza
+poison,poison,poison,veleno,Gift,veneno,毒,tóxico,سم,독,яд,毒,毒,zatruć
+purify,purify,purifier,purificare,reinigen,purificar,清める,purificar,تنقية,정화하십시오,очистить,净化,淨化,oczyścić
+swap,swap,échanger,scambio,Tauschen,intercambio,スワップ,troca,تبديل,교환,менять,交换,交換,zamieniać
+displace,displace,déplacer,spostare,verdrängen,desplazar,置き換えます,deslocar,إزاحة,바꾸어 놓다,вытеснять,取代,取代,wypierać
+debilitate,debilitate,débiliter,debilitare,entkräften,debilitar,衰弱します,debilitar,الوهن,쇠약,ослаблять,虚弱,虛弱,osłabiać czyjeś siły
+protection,protection,protection,protezione,Schutz,proteccion,保護,proteção,الحماية,보호,защита,保护,保護,ochrona
+clone,clone,cloner,clone,Klon,clon,クローン,clone,استنساخ,클론,клон,克隆,克隆,klon
+mana_burn,mana_burn,mana_burn,Mana_burn,MANA_BURN,Mana_Burn,mana_burn,mana_burn,mana_burn,Mana_burn,mana_burn,mana_burn,mana_burn,mana_burn
+mana_steam,mana_steam,mana_steam,mana_steam,MANA_STEAM,Mana_Steam,mana_steam,mana_steam,mana_steam,mana_steam,mana_steam,mana_steam,mana_steam,mana_steam
+blood curse,blood curse,malonière,Maledizione del sangue,Blutfluch,maldición de sangre,血の呪い,Maldição do sangue,لعنة الدم,혈액 저주,Кровавое проклятие,血诅咒,血詛咒,Klątwa krwi
+push,push,pousser,spingere,drücken,empujar,押す,Empurre,يدفع,푸시,толкать,推,推,naciskać
+pull,pull,tirer,tiro,ziehen,jalar,引く,puxar,يحذب,당기다,тянуть,拉,拉,ciągnąć
+vortex,vortex,vortex,vortice,Wirbel,vórtice,渦,vórtice,دوامة,와동,вихрь,涡流,渦流,wir
+dash,dash,se précipiter,trattino,Bindestrich,estrellarse,ダッシュ,traço,اندفاع,대시,бросаться,短跑,短跑,kropla
+repel,repel,repousser,respingere,abstoßen,repeler,反発,repelir,صد,격퇴,отталкиваться,击退,擊退,odpychać
+decoy,decoy,faire dure,esca,Köder,señuelo,デコイ,chamariz,شرك,유인 못,приманка,诱饵,誘餌,maniak
+bloat,bloat,gonfler,gonfiare,aufblähen,inflar,膨らんだ,inchar,منتفخ,고창증,раздувать,膨胀,膨脹,nadąć
+last will,last will,dernière volonté,ultima volontà,letzter Wille,último deseo,最後の意志,última vontade,الوصية الأخيرة,마지막 의지,последнее желание,遗愿,遺願,Ostatnia wola
+split,split,diviser,diviso,Teilt,separar,スプリット,dividir,ينقسم,나뉘다,расколоть,分裂,分裂,rozdzielać
+drown,drown,noyer,annegare,ertrinken,ahogar,溺れる,afogar,يغرق,안 들리게 하다,тонуть,淹,淹,utopić
+target similar,target similar,cible similaire,target simile,Ziel ähnlich,objetivo similar,ターゲットも同様です,alvo semelhante,هدف مماثل,대상이 비슷합니다,Цель аналогично,目标相似,目標相似,cel podobny
+target cone,target cone,cône cible,cono target,Zielkegel,cono objetivo,ターゲットコーン,Cone alvo,الهدف المخروط,대상 콘,Целевой конус,靶锥,靶錐,Stożek docelowy
+plus radius,plus radius,plus le rayon,Più raggio,Plus Radius,Radio más,プラス半径,mais raio,بالإضافة إلى دائرة نصف قطرها,또한 반경,плюс радиус,加上半径,加上半徑,Plus promień
+shove,shove,pousser,spingere,schieben,empujón,突き出します,empurrão,دفع,지지,засунуть,推,推,pchnięcie
+target column,target column,colonne cible,colonna target,Zielspalte,columna objetivo,ターゲット列,coluna de destino,العمود الهدف,대상 열,Целевой столбец,目标列,目標列,Kolumna docelowa
+burst,burst,éclatement,scoppiare,platzen,ráfaga,バースト,explodido,انفجار,터지다,лопаться,爆裂,爆裂,pękać

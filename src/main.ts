@@ -1,7 +1,6 @@
 // set window defaults, must be called before setupAll()
 import { setupPixi } from './graphics/PixiUtils';
-import setupLocalization from './localization';
-setupLocalization();
+import './localization';
 import { initPlanningView } from './graphics/PlanningView';
 import { setupAudio, playNextSong, playSFX, playSFXKey, sfx } from './Audio';
 import cookieConsentPopup from './cookieConsent';

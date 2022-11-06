@@ -14,7 +14,8 @@
     "prepare": "husky install",
     "headless-build-only": "tsc --project tsconfig.headless.json --outDir headless-server-build/",
     "headless-run-server": "node headless-server-build/src/HeadlessServer.js",
-    "headless": "npm run headless-build-only && npm run headless-run-server"
+    "headless": "npm run headless-build-only && npm run headless-run-server",
+    "parseLocalization": "node public/localization/parseLocalizationSource.js"
   },
   "repository": {
     "type": "git",
