@@ -1,4 +1,7 @@
-# Low hanging fruit
+# Monday 
+- Escape should close the inventory without clearing spells
+- fix responsivity for inventory
+- improve: let units die all the way before the next spell is cast
 - RECORD NEW CLIPS FOR TRAILER
     - Show targeting spells, separate from the UI hiding
     - Spells to show:
@@ -9,20 +12,26 @@
         - Mana steal
     - Scenes to show:
         - Multiplayer
-- Spells currently covered in trailer:
-    - Slice
-    - Rez
-    - Clone
-    - Pull
-    - Bloat
-    - Decoy
-    - Push
-    - Poison
-    - Contageous
-    - Swap
-- Escape should close the inventory without clearing spells
-- fix responsivity for inventory
-- improve: let units die all the way before the next spell is cast
+        - Show that it's turn based "Your Turn"
+    - Spells currently covered in trailer:
+        - Slice
+        - Rez
+        - Clone
+        - Pull
+        - Bloat
+        
+        - Decoy
+        - Push
+        - Poison
+        - Contageous
+        - Swap
+# Wednesday
+    - Optimize
+    - Other (e) rated bugs
+
+# Thursday
+    - 
+
 
 # Bugs / Cleaning
 - (e) fix save/load  from menu screen, it needs to change the gameview

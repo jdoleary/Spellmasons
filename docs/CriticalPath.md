@@ -4,15 +4,18 @@
     - Add "why it might not be for you" gif and description
     - **Work through bug backlog**
     - Optimize
-    - Last few sound fx
     - Make gameplay video with Brad
 - December
     - Package as Electron App
+    - Establish Minimum System Requirements and update Steam Page
     - Convenient multiplayer lobbying via steam
         - Prevent players from joining mid-round, notify "you will spawn once this level is complete"
 - January
+    - Last few sound fx
     - Test on all 3 Operating Systems
     - Steamdeck support / Controller Support / Accessability / Localization Language Support / Spellcheck
+        - https://github.com/infusion/node-gamecontroller
+        - https://github.com/andrew/node-xbox-controller
     - Release
 - Beyond Release
     - More enemies
