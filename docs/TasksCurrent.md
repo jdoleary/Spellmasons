@@ -1,6 +1,76 @@
 # Low hanging fruit
-- Steam description is too wordy, just tell 'em why it's awesome
+- RECORD NEW CLIPS FOR TRAILER
+    - Show targeting spells, separate from the UI hiding
+    - Spells to show:
+        - Freeze
+        - Debilitate
+        - Burst
+        - Mana burn
+        - Mana steal
+    - Scenes to show:
+        - Multiplayer
+- Spells currently covered in trailer:
+    - Slice
+    - Rez
+    - Clone
+    - Pull
+    - Bloat
+    - Decoy
+    - Push
+    - Poison
+    - Contageous
+    - Swap
 - Escape should close the inventory without clearing spells
+- fix responsivity for inventory
+- improve: let units die all the way before the next spell is cast
+
+# Bugs / Cleaning
+- (e) fix save/load  from menu screen, it needs to change the gameview
+- (e) in multiplayer, when one player leaves and window is not focused the camera spazzes out
+- (e) splitx3 + kill + res resurrected a bunch of small split minibosses into regular sized minibosses
+- (e) If you start a singleplayer game and then join a multiplayer game you keep your gamestate, this is a bug: it should update your underworld
+    - containerUnits has duplicates
+- (e) spawning on top of a stamina or mana potion doesn't overfill in multiplayer
+    - verified 2022-11-03
+---
+- (?) Images stick around after you join a new game in multiplayer
+    - replicatable with admin "delete all enemies"
+- when in full screen escape leaves full screen in addition to opening menu
+    - https://stackoverflow.com/questions/72248081/preventing-electron-to-exit-fullscreen-on-escape
+- sync issue: golem moving through frozen guys jumped back
+- (m) load is broken, it GCs a BUNCh of underworlds
+- (m) You're able to cast into negative mana in multiplayer
+- (m) UI: Allow inventory to scale on smaller resolutions
+- (m) if screen is too thin, hover card covers inventory
+- "All targets" copy is confusing if player doesn't understand targeting
+- Find a way to make randomness fixed (like in spell "Displace" so that it doesn't get different random results on other people's screens and so that it wont change after another player casts)
+- This save file is giving me critical errors `saveFile-with-errors.json`
+- (h) Sometimes it tries to path around things and wastes stamina if there isn't a straight line path
+- (h) sometimes when you walk you get stuck on a wall and it wastes stamina
+- (h) bug: In multiplayer: target similar, damage x3 on 2 draggers made their position go to null null
+- (h) done?: melee prediction is still off
+    - simplest solution is just to make sure that units cannot do damage to the player if they aren't warning of damage incoming on the start of the turn
+- h: bug: **important** pressing 'alt' in chrome deselects the window and makes it stop accepting input
+    - This doesn't happen in fullscreen
+    - Test in windowed mode on Electron
+- h: bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
+    - this is a race condition because I'm still able to move freely after his cast triggers
+- Fix liquid tile glitches with prebuild liquid sets
+- resurrect should take longer to return to base mana
+    - this already is set but it didn't work in brad's playtest... hmm..
+- he can't spawn in while i'm casing a spell
+    - same thing with casts, it waits
+- futher investigate '  // Override ref since in prediction it makes a copy of the unit' from 06d754d2
+- Turn phase testing:
+    - if one player is portaled and the remaining player dies it should go to the next level
+    - if no players are portaled and all players die and there are no ally npcs it should go to game over
+    - if no players are portaled and all players die and there ARE npc allies it should run turn phases for NPCS
+        - if NPC_ALLYs succeed it should go to next level
+        - if NPC_Allys do not it should go to end game
+- investigate: `// TODO will the stack just keep growing`
+    - turn_phases should work on a queue not a stack (this is mostly relevant for singleplayer and when the NPCs are just hashing it out cause all the players are dead so it doesn't stack overflow)
+    - Just make it a while loop that triggers/awaits the next AI turn until it's the players tuurn
+- dragger x and y went to null after "target similar, slash slash"
 # Pre playtest
 - Need a restart screen after a team wipe
 - Hide disconnected players in game screen but not in the lobby
@@ -25,50 +95,6 @@
 - Add server history
 - Add save/load to menu
 - Feature request: UI Scaling
-# Bugs / Cleaning
-- If you start a singleplayer game and then join a multiplayer game you keep your gamestate, this is a bug: it should update your underworld
-    - containerUnits has duplicates
-- Images stick around after you join a new game in multiplayer
-    - replicatable with admin "delete all enemies"
-- when in full screen escape leaves full screen in addition to opening menu
-    - https://stackoverflow.com/questions/72248081/preventing-electron-to-exit-fullscreen-on-escape
-- sync issue: golem moving through frozen guys jumped back
-- spawning on top of a stamina or mana potion doesn't overfill in multiplayer
-    - verified 2022-11-03
-- he can't spawn in while i'm casint a spell
-    - same thing with casts, it waits
-- futher investigate '  // Override ref since in prediction it makes a copy of the unit' from 06d754d2
-- Turn phase testing:
-    - if one player is portaled and the remaining player dies it should go to the next level
-    - if no players are portaled and all players die and there are no ally npcs it should go to game over
-    - if no players are portaled and all players die and there ARE npc allies it should run turn phases for NPCS
-        - if NPC_ALLYs succeed it should go to next level
-        - if NPC_Allys do not it should go to end game
-- investigate: `// TODO will the stack just keep growing`
-    - turn_phases should work on a queue not a stack (this is mostly relevant for singleplayer and when the NPCs are just hashing it out cause all the players are dead so it doesn't stack overflow)
-    - Just make it a while loop that triggers/awaits the next AI turn until it's the players tuurn
-- dragger x and y went to null after "target similar, slash slash"
-- You're able to cast into negative mana in multiplayer
-- UI: Allow inventory to scale on smaller resolutions
-- bug: In multiplayer: target similar, damage x3 on 2 draggers made their position go to null null
-- fix save/load  from menu screen, it needs to change the gameview
-- if screen is too thin, hover card covers inventory
-- in multiplayer, when one player leaves and window is not focused the camera spazzes out
-- "All targets" copy is confusing if player doesn't understand targeting
-- Find a way to make randomness fixed (like in spell "Displace" so that it doesn't get different random results on other people's screens and so that it wont change after another player casts)
-- This save file is giving me critical errors `saveFile-with-errors.json`
-- Sometimes it tries to path around things and wastes stamina if there isn't a straight line path
-- sometimes when you walk you get stuck on a wall and it wastes stamina
-- done?: melee prediction is still off
-    - simplest solution is just to make sure that units cannot do damage to the player if they aren't warning of damage incoming on the start of the turn
-- h: bug: **important** pressing 'alt' in chrome deselects the window and makes it stop accepting input
-    - This doesn't happen in fullscreen
-    - Test in windowed mode on Electron
-- h: bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
-    - this is a race condition because I'm still able to move freely after his cast triggers
-- Fix liquid tile glitches with prebuild liquid sets
-- resurrect should take longer to return to base mana
-    - this already is set but it didn't work in brad's playtest... hmm..
 ## Prediction issues
 - prediction should factor in standing on pickups, see video
 # Content
