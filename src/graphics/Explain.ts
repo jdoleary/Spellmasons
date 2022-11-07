@@ -120,7 +120,7 @@ Note: You may still cast even when you are out of stamina.`, yesText: 'Okay'
     [EXPLAIN_INVENTORY]: {
         prompt: () => ({
             imageSrc: 'images/explain/inventory.gif', text: `Spells are stored in your inventory.Open your inventory by clicking on the Spell Book or by pressing ${keyToHumanReadable(keyMapping.openInventory)}.
-Click and drag a spell to your toolbar to make it easily accessible.`, yesText: 'I\'m so organized!'
+Click and drag a spell to your toolbar to make it easily accessible.`, yesText: "I'm so organized!"
         })
 
     },

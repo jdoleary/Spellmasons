@@ -25,16 +25,16 @@ export default async function Jprompt(prompt: PromptArgs): Promise<boolean> {
     <div class="prompt-content">
         ${imageSrc ? `<img src="${imageSrc}"/>` : ''}
         <div class="text">
-            ${text}
+            ${globalThis.i18n(text)}
         </div>
     </div>
     <div class="button-holder">
-        ${noBtnText ? `<button class="no jbutton" data-key="${noBtnKey}"> ${noBtnText}
+        ${noBtnText ? `<button class="no jbutton" data-key="${noBtnKey}"> ${globalThis.i18n(noBtnText)}
             <div class="hotkey-badge-holder">
                 <kbd class="hotkey-badge">${noBtnKey}</kbd>
             </div>
         </button>` : ''}
-        <button class="yes jbutton" ${yesKey ? `data-key="${yesKey}"` : ''}>${yesText}
+        <button class="yes jbutton" ${yesKey ? `data-key="${yesKey}"` : ''}>${globalThis.i18n(yesText)}
             <div class="hotkey-badge-holder">
                 <kbd class="hotkey-badge">${yesKeyText}</kbd>
             </div>

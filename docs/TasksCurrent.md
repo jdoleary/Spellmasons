@@ -1,6 +1,4 @@
 # Monday 
-- Only display "are you sure you want to disconnect from server" if you are connected to server
-- Add localization to menu
 - RECORD NEW CLIPS FOR TRAILER
     - Show targeting spells, separate from the UI hiding
     - Spells to show:
