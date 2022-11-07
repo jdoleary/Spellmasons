@@ -13,7 +13,8 @@
 - January
     - Last few sound fx
     - Test on all 3 Operating Systems
-    - Steamdeck support / Controller Support / Accessability / Localization Language Support / Spellcheck
+    - Accessability / Localization Language Support / Spellcheck
+    - Steamdeck support / Controller Support 
         - https://github.com/infusion/node-gamecontroller
         - https://github.com/andrew/node-xbox-controller
     - Release

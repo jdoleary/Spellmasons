@@ -1,7 +1,10 @@
+export function areCookiesAllowed() {
+    return localStorage.getItem('cookieConsent') === 'allowed';
+}
 export default function cookieConsentPopup(forcePopup: boolean) {
     // If user has already allowed cookies, don't show the popup
     if (!forcePopup && localStorage.getItem('cookieConsent') === 'allowed') {
-        globalThis.allowCookies = true;
+        globalThis.allowCookies = areCookiesAllowed();
         console.log('Setup: Cookie consent:', globalThis.allowCookies);
         return
     }

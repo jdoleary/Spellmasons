@@ -19,6 +19,7 @@ async function processLineByLine() {
         const key = columns[0].toLowerCase();
         columns.slice(1).forEach((value, column) => {
             if (rowNumber == 1) {
+                console.log('i18n: Process', key, value);
                 languages[column] = { [key]: value };
             } else {
                 if (!languages[column]) {
@@ -27,11 +28,9 @@ async function processLineByLine() {
                 languages[column][key] = value;
             }
         });
-        // Each line in input.txt will be successively available here as `line`.
-        console.log(`Line from file: ${line}`);
     }
     // Now output each in a file:
-    console.log(languages);
+    // console.log(languages);
     const outPath = path.join(__dirname, './localization.json');
     fs.writeFileSync(outPath, JSON.stringify(languages));
     console.log('File written to ', outPath);

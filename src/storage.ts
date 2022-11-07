@@ -1,3 +1,5 @@
+import { areCookiesAllowed } from "./cookieConsent";
+
 export function set(key: string, value: any) {
     if (globalThis.headless) {
         // Headless server does not use storage
@@ -29,7 +31,7 @@ export function get(key: string): string | null {
         // Headless server does not use storage
         return null;
     }
-    if (globalThis.allowCookies) {
+    if (globalThis.allowCookies || areCookiesAllowed()) {
         return localStorage.getItem(key);
     } else {
         console.log(`Could not retrieve "${key}" from storage, without cookie consent`);

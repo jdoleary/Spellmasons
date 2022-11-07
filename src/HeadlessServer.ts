@@ -105,7 +105,6 @@ class HostApp implements IHostApp {
                 // }
                 break;
             case MessageType.ClientPresenceChanged:
-                console.log('jtest, clientPresenceChanged', this.overworld, this.overworld.underworld.overworld);
                 onClientPresenceChanged(message as any, this.overworld.underworld);
                 // this._updateDebugInfo(message);
                 // // If client is accepting the onClientPresenceChanged callback,

@@ -1,3 +1,4 @@
+import './localization';
 import * as PIXI from 'pixi.js';
 import * as storage from './storage';
 import * as config from './config';
