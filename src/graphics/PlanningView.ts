@@ -202,7 +202,7 @@ export function updatePlanningView(underworld: Underworld) {
       globalThis.selectedUnitGraphics.clear();
     }
     // Draw prediction circles
-    if (unitOverlayGraphics) {
+    if (unitOverlayGraphics && !globalThis.isHUDHidden) {
       for (let { points, color, text } of uiPolys) {
         // Draw color stored in prediction unless the UI is currently warning that the user
         // is aiming out of range, then override the color with grey

@@ -734,9 +734,6 @@ export function toggleHUD() {
   if (containerPlanningView) {
     containerPlanningView.visible = visible
   }
-  if (containerUI) {
-    containerUI.visible = visible;
-  }
   if (containerPlayerThinking) {
     containerPlayerThinking.visible = visible;
   }

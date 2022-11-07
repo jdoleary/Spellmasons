@@ -624,7 +624,7 @@ export default class Underworld {
         // Draw unit overlay graphics
         //--
         // Prevent drawing unit overlay graphics when a unit is in the portal
-        if (u.x !== null && u.y !== null) {
+        if (u.x !== null && u.y !== null && !globalThis.isHUDHidden) {
           // Draw health bar
           const healthBarColor = u.faction == Faction.ALLY ? healthAllyGreen : healthRed;
           const healthBarHurtColor = u.faction == Faction.ALLY ? 0x235730 : healthHurtRed;
