@@ -1,5 +1,4 @@
 # Monday 
-- Escape should close the inventory without clearing spells
 - fix responsivity for inventory
 - improve: let units die all the way before the next spell is cast
 - RECORD NEW CLIPS FOR TRAILER

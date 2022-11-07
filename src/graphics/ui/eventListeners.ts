@@ -86,11 +86,15 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
 
   switch (event.code) {
     case keyMapping.clearQueuedSpell:
-      const thereWasTooltipActive = clearTooltipSelection();
-      const thereWereCardsSelected = CardUI.areAnyCardsSelected();
       const thereWasInventoryOpen = document.body?.classList.contains(CardUI.openInvClass);
       // force close inventory
       CardUI.toggleInventory(undefined, false, overworld.underworld);
+      if (thereWasInventoryOpen) {
+        // If inventory was open, don't clear selected cards
+        return;
+      }
+      const thereWasTooltipActive = clearTooltipSelection();
+      const thereWereCardsSelected = CardUI.areAnyCardsSelected();
       CardUI.clearSelectedCards(overworld.underworld);
       if (!thereWasTooltipActive && !thereWereCardsSelected && !thereWasInventoryOpen) {
         // Otherwise finally toggle menu
