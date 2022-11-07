@@ -75,9 +75,6 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     }
   }, () => { });
   if (modifier.quantity && modifier.quantity >= splitLimit) {
-    if (!prediction) {
-      floatingText({ coords: unit, text: 'Cannot split further.  What are you trying to do?...Tear the fabric of reality apart!?' });
-    }
     return;
   }
   if (unit.image) {
