@@ -16,7 +16,7 @@ async function processLineByLine() {
     for await (const line of rl) {
         rowNumber++;
         const columns = line.split(',');
-        const key = columns[0];
+        const key = columns[0].toLowerCase();
         columns.slice(1).forEach((value, column) => {
             if (rowNumber == 1) {
                 languages[column] = { [key]: value };

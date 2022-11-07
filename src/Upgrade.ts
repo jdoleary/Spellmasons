@@ -108,7 +108,7 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, overwor
   elCardInner.appendChild(thumbHolder);
   const title = document.createElement('h2');
   title.classList.add('card-title');
-  title.innerText = upgrade.title;
+  title.innerText = i18n(upgrade.title);
   elCardInner.appendChild(title);
   const rarityText = document.createElement('div');
   rarityText.classList.add('card-rarity')

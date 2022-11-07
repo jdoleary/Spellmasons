@@ -21,8 +21,8 @@ displace,displace,déplacer,spostare,verdrängen,desplazar,置き換えます,de
 debilitate,debilitate,débiliter,debilitare,entkräften,debilitar,衰弱します,debilitar,الوهن,쇠약,ослаблять,虚弱,虛弱,osłabiać czyjeś siły
 protection,protection,protection,protezione,Schutz,proteccion,保護,proteção,الحماية,보호,защита,保护,保護,ochrona
 clone,clone,cloner,clone,Klon,clon,クローン,clone,استنساخ,클론,клон,克隆,克隆,klon
-mana_burn,mana_burn,mana_burn,Mana_burn,MANA_BURN,Mana_Burn,mana_burn,mana_burn,mana_burn,Mana_burn,mana_burn,mana_burn,mana_burn,mana_burn
-mana_steam,mana_steam,mana_steam,mana_steam,MANA_STEAM,Mana_Steam,mana_steam,mana_steam,mana_steam,mana_steam,mana_steam,mana_steam,mana_steam,mana_steam
+mana burn,mana burn,mana brûler,Mana Burn,Mana brennen,Mana Burn,マナ・バーン,Mana Burn,مانا حرق,마나 화상,мана сжигает,法力烧伤,法力燒傷,Mana Burn
+mana steal,mana steal,mana voler,mana ruba,Mana Steal,robo de maná,マナ盗み,Mana roube,مانا سرقة,마나 도둑질,Мана украсть,法力偷,法力偷,Kradnie many
 blood curse,blood curse,malonière,Maledizione del sangue,Blutfluch,maldición de sangre,血の呪い,Maldição do sangue,لعنة الدم,혈액 저주,Кровавое проклятие,血诅咒,血詛咒,Klątwa krwi
 push,push,pousser,spingere,drücken,empujar,押す,Empurre,يدفع,푸시,толкать,推,推,naciskać
 pull,pull,tirer,tiro,ziehen,jalar,引く,puxar,يحذب,당기다,тянуть,拉,拉,ciągnąć
@@ -40,3 +40,18 @@ plus radius,plus radius,plus le rayon,Più raggio,Plus Radius,Radio más,プラ�
 shove,shove,pousser,spingere,schieben,empujón,突き出します,empurrão,دفع,지지,засунуть,推,推,pchnięcie
 target column,target column,colonne cible,colonna target,Zielspalte,columna objetivo,ターゲット列,coluna de destino,العمود الهدف,대상 열,Целевой столбец,目标列,目標列,Kolumna docelowa
 burst,burst,éclatement,scoppiare,platzen,ráfaga,バースト,explodido,انفجار,터지다,лопаться,爆裂,爆裂,pękać
+out of range!,Out of Range!,Hors de portée!,Fuori dal limite!,Außer Reichweite!,¡Fuera de rango!,範囲外！,Fora de alcance!,خارج النطاق!,범위 밖!,Вне диапазона!,超出范围！,超出範圍！,Poza zakresem!
+Invalid Spawn Location,Invalid Spawn Location,Emplacement d'apparition non valide,Posizione di spawn non valida,Ungültiger Spawn -Standort,Ubicación de desove no válida,無効なスポーン位置,Localização inválida de desova,موقع تفرخ غير صالح,잘못된 스폰 위치,Неверное местоположение нереста,无效的产卵位置,無效的產卵位置,Nieprawidłowa lokalizacja odrodzenia
+Insufficient Mana,Insufficient Mana,Mana insuffisant,Mana insufficiente,Unzureichendes Mana,Maná insuficiente,不十分なマナ,Mana insuficiente,مانا غير كافية,불충분 한 마나,Недостаточная мана,法力不足,法力不足,Niewystarczająca mana
+Mana Remaining,Mana Remaining,Mana restant,Mana rimanente,Mana verbleiben,Mana restante,マナが残っています,Mana restante,مانا تبقى,남은 마나,Мана остается,剩下的法力,剩下的法力,Mana pozostała
+Insufficient Health,Insufficient Health,Santé insuffisante,Salute insufficiente,Unzureichende Gesundheit,Salud insuficiente,健康不足,Saúde insuficiente,الصحة غير كافية,건강이 불충분합니다,Недостаточное здоровье,健康不足,健康不足,Niewystarczające zdrowie
+This spell will kill you,This spell will kill you,Ce sort vous tuera,Questo incantesimo ti ucciderà,Dieser Zauber wird dich töten,Este hechizo te matará,この呪文はあなたを殺します,Este feitiço vai te matar,هذه التعويذة سوف يقتلك,이 주문은 당신을 죽일 것입니다,Это заклинание убьет вас,这个咒语会杀死你,這個咒語會殺死你,To zaklęcie cię zabije
+This spell will damage & curse you,This spell will damage & curse you,Ce sort vous endommagera et vous maudira,Questo incantesimo ti danneggerà e ti maledirà,Dieser Zauber wird Sie beschädigen und verfluchen,Este hechizo te dañará y maldecirá,この呪文はあなたを傷つけ、呪います,Este feitiço vai danificar e amaldiçoar você,هذه التعويذة ستضر وتلعقك,이 주문은 당신을 손상시키고 저주합니다,Это заклинание повредит и проклят вас,这个咒语会损害和诅咒你,這個咒語會損害和詛咒你,To zaklęcie cię uszkodzi i przeklina
+This spell will curse you,This spell will curse you,Ce sort vous maudira,Questo incantesimo ti maledirà,Dieser Zauber wird dich verfluchen,Este hechizo te maldecirá,この呪文はあなたを呪うでしょう,Este feitiço vai amaldiçoar você,هذه التعويذة سوف تلعنك,이 주문은 당신을 저주 할 것입니다,Это заклинание проклинает вас,这个咒语会诅咒你,這個咒語會詛咒你,To zaklęcie cię przeklą
+Damage,Damage,Dégâts,Danno,Schaden,Daño,ダメージ,Dano,تلف,손상,Наносить ущерб,损害,損害,Szkoda
+Movement,Movement,Mouvement,Movimento,Bewegung,Movimienot,動き,Movimento,حركة,움직임,Движение,移动,移動,Ruch
+Targeting,Targeting,Ciblage,Targeting,Targeting,Orientación,ターゲティング,Alvejando,الاستهداف,타겟팅,Таргетинг,定位,定位,Celowanie
+Mana,Mana,Mana,Mana,Mana,Maná,マナ,Mana,مانا,마나,Мана,法力,法力,Mana
+Curses,Curses,Malédictions,Maledizioni,Flüche,Maldiciones,呪い,Maldições,لعنات,저주,Проклятия,诅咒,詛咒,Pomstowanie
+Blessings,Blessings,Bénédictions,Benedizioni,Segen,Bendiciones,祝福,Bênçãos,بركات,축복,Благословения,祝福,祝福,Błogosławieństwa
+Soul,Soul,Âme,Anima,Seele,Alma,魂,Alma,روح,영혼,Душа,灵魂,靈魂,Dusza

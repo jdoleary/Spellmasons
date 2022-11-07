@@ -32,7 +32,7 @@ function resetInventoryContent() {
       }
       const elLabel = document.createElement('div');
       elLabel.classList.add('category-label');
-      elLabel.innerText = category.toString();
+      elLabel.innerText = i18n(category.toString());
       elLabel.dataset.category = category.toString();
       elInvContent.appendChild(elLabel);
       const el = document.createElement('div');
@@ -549,7 +549,7 @@ function createNonCardInventoryElement(thumbnailPath: string, titleText: string)
   elCardInner.appendChild(thumbHolder);
   const title = document.createElement('div');
   title.classList.add('card-title');
-  title.innerHTML = titleText;
+  title.innerHTML = i18n(titleText);
   elCardInner.appendChild(title);
   return element;
 }
@@ -591,7 +591,7 @@ function createCardElement(content: Cards.ICard) {
   elCardInner.appendChild(thumbHolder);
   const title = document.createElement('div');
   title.classList.add('card-title');
-  title.innerHTML = content.id.split('_').join(' ');
+  title.innerHTML = i18n(content.id.split('_').join(' '));
   elCardInner.appendChild(title);
   const rarityText = document.createElement('div');
   rarityText.classList.add('card-rarity')

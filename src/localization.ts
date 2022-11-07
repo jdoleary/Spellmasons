@@ -2,7 +2,7 @@ import languages from '../public/localization/localization.json';
 let languageObject: { [key: string]: string };
 function i18n(key: string): string {
     if (languageObject) {
-        const result = languageObject[key];
+        const result = languageObject[key.toLowerCase()];
         if (result) {
             return result;
         } else {
@@ -17,10 +17,10 @@ function i18n(key: string): string {
     return key;
 }
 function setLanguage(langCode: string) {
-    const newLanguage = languages.find(l => l.LanguageCode == langCode);
+    const newLanguage = languages.find(l => l.languagecode == langCode);
     if (newLanguage) {
         languageObject = newLanguage;
-        console.log('i18n: Set language to', newLanguage.Language);
+        console.log('i18n: Set language to', newLanguage.language);
     } else {
         console.error('i18n: Could not find language with code', langCode)
     }

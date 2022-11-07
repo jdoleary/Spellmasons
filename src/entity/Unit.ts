@@ -748,7 +748,7 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
           warnings.push('curse');
         }
         if (warnings.length) {
-          elCautionBoxText.innerText += 'This spell will ' + warnings.join(' & ') + ' you';
+          elCautionBoxText.innerText += i18n('This spell will ' + warnings.join(' & ') + ' you');
         }
 
         // Make visible if it has a message to share
@@ -783,7 +783,7 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
   const manaRatio3 = (Math.max(0, unit.mana - unit.manaMax * 2)) / unit.manaMax;
   elManaBar3.style["width"] = `${100 * Math.min(manaRatio3, 1)}%`;
   if (predictionPlayerUnit && predictionPlayerUnit.mana !== unit.mana) {
-    elManaLabel.innerHTML = `${predictionPlayerUnit.mana} Mana Left`;
+    elManaLabel.innerHTML = `${predictionPlayerUnit.mana} ${i18n('Mana Remaining')}`;
   } else {
     elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax}`;
   }
