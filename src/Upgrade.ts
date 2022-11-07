@@ -119,7 +119,7 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, overwor
   const desc = document.createElement('div');
   desc.classList.add('card-description');
   const descriptionText = document.createElement('div');
-  descriptionText.innerHTML = upgrade.description(player);
+  descriptionText.innerHTML = upgrade.description(player).trimStart();
   desc.appendChild(descriptionText);
 
   elCardInner.appendChild(desc);
