@@ -745,6 +745,13 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       action: ({ pos }) => {
         if (pos) {
           overworld.underworld.spawnEnemy(u.id, pos, false);
+          // Orient newly spawned units towards the player
+          if (globalThis.player) {
+            const justSpawnedUnit = overworld.underworld.units[overworld.underworld.units.length - 1];
+            if (justSpawnedUnit) {
+              Unit.orient(justSpawnedUnit, globalThis.player.unit);
+            }
+          }
         }
       },
       supportInMultiplayer: true,
