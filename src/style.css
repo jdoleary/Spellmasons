@@ -280,7 +280,17 @@ invisibly blocked, change with caution! */
   display: flex;
   align-items: flex-start;
   flex-direction: column-reverse;
-  gap: 20px;
+  gap: 8px;
+}
+
+@media (max-height: 1024px) {
+  #card-holders-inner {
+    gap: 0;
+  }
+
+  #card-holders #card-hand {
+    padding-bottom: 4px;
+  }
 }
 
 
@@ -292,7 +302,7 @@ invisibly blocked, change with caution! */
 
 #card-holders #card-hand {
   /* Leave room for the names of the spells */
-  padding-bottom: 20px;
+  padding-bottom: 10px;
 }
 
 /* Give selected spells a rounded look to differentiate them */
@@ -586,6 +596,28 @@ kbd {
   margin-left: -20%;
   margin-right: -20%;
 }
+
+@media (max-height: 1024px) {
+
+  #upgrade-picker .card-inner .card-title,
+  .card-inspect .card-inner .card-title {
+    font-size: 1em;
+    border-width: 1px;
+    transform: translate(0px, -8px);
+  }
+
+  #upgrade-picker-content .card-rarity,
+  .card-inspect .card-rarity {
+    display: none;
+  }
+
+  .card-description {
+    font-size: 0.7em;
+    transform: translate(0px, -8px);
+  }
+}
+
+
 
 .card-inspect .card-title {
   font-size: 30px;
