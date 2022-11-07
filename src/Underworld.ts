@@ -263,7 +263,7 @@ export default class Underworld {
           const startPos = Vec.clone(forceMoveInst.pushedObject);
           const done = this.runForceMove(forceMoveInst, prediction);
           // Draw prediction lines
-          if (globalThis.predictionGraphics) {
+          if (globalThis.predictionGraphics && !globalThis.isHUDHidden) {
             globalThis.predictionGraphics.lineStyle(4, colors.forceMoveColor, 1.0);
             globalThis.predictionGraphics.moveTo(startPos.x, startPos.y);
             globalThis.predictionGraphics.lineTo(forceMoveInst.pushedObject.x, forceMoveInst.pushedObject.y);
@@ -273,7 +273,7 @@ export default class Underworld {
           }
           if (done) {
             // Draw a circle at the end position
-            if (globalThis.predictionGraphics) {
+            if (globalThis.predictionGraphics && !globalThis.isHUDHidden) {
               globalThis.predictionGraphics.drawCircle(forceMoveInst.pushedObject.x, forceMoveInst.pushedObject.y, 3);
             }
             forceMoveInst.resolve();
@@ -848,6 +848,10 @@ export default class Underworld {
   }
   drawEnemyAttentionMarkers() {
     if (!globalThis.attentionMarkers) {
+      return;
+    }
+    if (globalThis.isHUDHidden) {
+      // Don't draw attention markers if the hud is hidden
       return;
     }
     // Draw attention markers which show if an NPC will

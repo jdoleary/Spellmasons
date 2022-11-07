@@ -580,7 +580,7 @@ export function clearSpellEffectProjection(underworld: Underworld) {
 }
 
 export function drawPredictionLine(start: Vec2, end: Vec2) {
-  if (predictionGraphics) {
+  if (predictionGraphics && !globalThis.isHUDHidden) {
     predictionGraphics.lineStyle(3, colors.targetingSpellGreen, 1.0);
     predictionGraphics.moveTo(start.x, start.y);
     predictionGraphics.lineTo(end.x, end.y);
@@ -626,6 +626,9 @@ export function setPredictionGraphicsLineStyle(color: number) {
   }
 }
 export function drawPredictionCircleFill(target: Vec2, radius: number, text: string = 'Connect Area') {
+  if (globalThis.isHUDHidden) {
+    return;
+  }
   if (globalThis.radiusGraphics) {
     globalThis.radiusGraphics.lineStyle(1, 0x000000, 0.0);
     globalThis.radiusGraphics.beginFill(0xFFFFFF, 1.0);
@@ -840,6 +843,9 @@ export function getUIBarProps(x: number, y: number, numerator: number, denominat
 
 let warnings = new Set();
 export function addWarningAtMouse(warning: string) {
+  if (globalThis.isHUDHidden) {
+    return
+  }
   warnings.add(warning);
 }
 export function removeWarningAtMouse(warning: string) {
