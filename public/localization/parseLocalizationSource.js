@@ -4,7 +4,7 @@ const readline = require('node:readline');
 const languages = [];
 
 async function processLineByLine() {
-    const fileStream = fs.createReadStream(path.join(__dirname, 'localizationSource.csv'));
+    const fileStream = fs.createReadStream(path.join(__dirname, 'localizationSource.tsv'));
 
     const rl = readline.createInterface({
         input: fileStream,
@@ -15,17 +15,18 @@ async function processLineByLine() {
     let rowNumber = 0;
     for await (const line of rl) {
         rowNumber++;
-        const columns = line.split(',');
+        const columns = line.split('\t');
         const key = columns[0].toLowerCase();
         columns.slice(1).forEach((value, column) => {
             if (rowNumber == 1) {
                 console.log('i18n: Process', key, value);
                 languages[column] = { [key]: value };
             } else {
-                if (!languages[column]) {
-                    console.error(`languages[${column}] does not exist but should have been initialized in row 1`);
+                if (languages[column]) {
+                    languages[column][key] = value;
+                } else {
+                    console.error(`languages[${column}] ${key} ${value} does not exist but should have been initialized in row 1`);
                 }
-                languages[column][key] = value;
             }
         });
     }
