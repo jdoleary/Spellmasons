@@ -86,6 +86,8 @@ Clones each target
                 const clone = Pickup.load(target, underworld, prediction);
                 if (clone) {
                   Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
+                  // Add the clone as a target
+                  addTarget(clone, state);
                 }
               } else {
                 floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
@@ -98,6 +100,8 @@ Clones each target
                 if (clone) {
                   target.x = validSpawnCoords.x;
                   target.y = validSpawnCoords.y;
+                  // Add the clone as a target
+                  addTarget(clone, state);
                 }
               } else {
                 floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
