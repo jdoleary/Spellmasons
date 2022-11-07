@@ -1,5 +1,4 @@
 # Monday 
-- improve: let units die all the way before the next spell is cast
 - RECORD NEW CLIPS FOR TRAILER
     - Show targeting spells, separate from the UI hiding
     - Spells to show:

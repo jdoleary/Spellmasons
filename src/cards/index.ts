@@ -50,6 +50,7 @@ import plus_radius from './plus_radius';
 import shove from './shove';
 import target_column from './target_column';
 import burst from './burst';
+import devRecordDelay from './devRecordDelay';
 
 import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
@@ -120,6 +121,9 @@ function register(spell: Spell, overworld: Overworld) {
   }
 }
 export function registerCards(overworld: Overworld) {
+  if (location.href.includes('localhost')) {
+    register(devRecordDelay, overworld);
+  }
   register(slash, overworld);
   register(rend, overworld);
   register(bleed, overworld);
