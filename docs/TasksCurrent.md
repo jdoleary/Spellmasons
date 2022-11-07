@@ -27,7 +27,7 @@
     - Other (e) rated bugs
 
 # Thursday
-    - 
+    - Push latest to server and prod
 
 
 # Bugs / Cleaning
