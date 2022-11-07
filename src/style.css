@@ -247,7 +247,7 @@ body.open-inventory .card-inspect {
 #ui-holder {
   display: flex;
   flex-direction: column-reverse;
-  align-items: flex-start;
+  align-items: center;
   margin: 0 auto;
 }
 
