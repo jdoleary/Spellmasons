@@ -31,6 +31,7 @@
 
 
 # Bugs / Cleaning
+- don't lose player progress when changing the language refreshes the website.
 - (e) fix save/load  from menu screen, it needs to change the gameview
 - (e) in multiplayer, when one player leaves and window is not focused the camera spazzes out
 - (e) splitx3 + kill + res resurrected a bunch of small split minibosses into regular sized minibosses
@@ -85,6 +86,7 @@
 - What to do with disconnected players when it goes to the next level?
 - Fix rejoining hack where people can just rejoin if they're dead to come back
 # Features
+- see stash "add i18n to explain prompts"
 - should allow spell prediction even while an action is taking place - this not being here causes friction in multiplayer
 - EZ self cast, like alt clicking a spell self casts or something
 - **important**Allow multiplayer game restart after wipe
