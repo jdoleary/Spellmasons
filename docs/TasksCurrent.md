@@ -1,37 +1,15 @@
-# Monday 
-- RECORD NEW CLIPS FOR TRAILER
-    - Show targeting spells, separate from the UI hiding
-    - Spells to show:
-        - Freeze
-        - Debilitate
-        - Burst
-        - Mana burn
-        - Mana steal
-    - Scenes to show:
-        - Multiplayer
-        - Show that it's turn based "Your Turn"
-    - Spells currently covered in trailer:
-        - Slice
-        - Rez
-        - Clone
-        - Pull
-        - Bloat
-        
-        - Decoy
-        - Push
-        - Poison
-        - Contageous
-        - Swap
 # Wednesday
+    - Fix loading bug
     - Optimize
     - Other (e) rated bugs
 
 # Thursday
-    - Fix joining multiplayer or loading game gets into GC loop
+    - Fix joining multiplayer gets into GC loop
     - Push latest to server and prod
 
 
 # Bugs / Cleaning
+- push + radius*2 + connect + damage isn't damaging the connected units (note, the pushed unit ends up in lava)
 - don't lose player progress when changing the language refreshes the website.
 - (e) fix save/load  from menu screen, it needs to change the gameview
 - (e) in multiplayer, when one player leaves and window is not focused the camera spazzes out

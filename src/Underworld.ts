@@ -107,6 +107,8 @@ const cleanupRegistry = new FinalizationRegistry((heldValue) => {
 let localUnderworldCount = 0;
 export default class Underworld {
   seed: string;
+  // True when the underworld has been cleaned up and is no longer fit for use
+  cleanedUp: boolean = false;
   // A simple number to keep track of which underworld this is
   // Used for development to help ensure that all references to the underworld are current
   localUnderworldNumber: number;
@@ -981,7 +983,13 @@ export default class Underworld {
   // cleanup cleans up all assets that must be manually removed (for now `Image`s)
   // if an object stops being used.  It does not empty the underworld arrays, by design.
   cleanup() {
+    if (this.cleanedUp) {
+      // Prevent cleaning up an underworld more than once
+      console.warn('Prevented cleaning up underworld multiple times');
+      return;
+    }
     console.log('teardown: Cleaning up underworld');
+    this.cleanedUp = true;
     globalThis.attentionMarkers = [];
     globalThis.resMarkers = [];
 
