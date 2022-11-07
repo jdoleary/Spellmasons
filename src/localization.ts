@@ -25,8 +25,9 @@ function setLanguage(langCode: string) {
         console.error('i18n: Could not find language with code', langCode)
     }
 }
-// Default to english
-setLanguage('en');
+// Default to japanese on development so I can see what's localized and what's not
+// Default to english otherwise
+setLanguage(location.href.includes('localhost') ? 'ja' : 'en');
 // Make localization functions available to Svelte menu
 globalThis.i18n = i18n;
 globalThis.setLanguage = setLanguage;
