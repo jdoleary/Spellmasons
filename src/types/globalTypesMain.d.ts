@@ -156,4 +156,5 @@ declare global {
     var setLanguage: (langCode: string, doStore: boolean) => void;
     var getSupportedLanguages: () => { language: string, code: string }[];
     var getChosenLanguageCode: () => string;
+    var getTranslation: (key: string, mapping: LanguageMapping) => string;
 }

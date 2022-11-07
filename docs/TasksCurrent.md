@@ -27,6 +27,7 @@
     - Other (e) rated bugs
 
 # Thursday
+    - Fix joining multiplayer or loading game gets into GC loop
     - Push latest to server and prod
 
 

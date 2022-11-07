@@ -1,7 +1,6 @@
 # Desired Schedule
 - November
     - Add Trailer
-    - Add "why it might not be for you" gif and description
     - **Work through bug backlog**
     - Optimize
     - Make gameplay video with Brad
