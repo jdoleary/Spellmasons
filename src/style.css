@@ -200,7 +200,8 @@ body .card-inspect {
 /* There are 2 card-inspect elemnets, one is inside the inventory book the other is outside
 for when the user is hovering spells on the toolbar.  These styles ensures only one shows at a time */
 body.open-inventory #inventory-container .card-inspect {
-  display: block;
+  display: flex;
+  justify-content: center;
 }
 
 body.open-inventory .card-inspect {
@@ -209,9 +210,8 @@ body.open-inventory .card-inspect {
 
 #inventory-container .card-inspect {
   position: initial;
-  width: auto;
-  height: auto;
-  padding: 60px 0;
+  width: 42%;
+  height: 100%;
 }
 
 .card-inspect {
@@ -1224,29 +1224,37 @@ body.draggingCamera {
 
 body.open-inventory #inventory-container {
   display: flex;
-  justify-content: space-between;
 }
 
 #inventory-container {
   display: none;
   overflow-y: hidden;
   background-image: url('/ui/bookOpenNoBM200.png');
-  width: 1262px;
+  /* width: 1262px;
+  height: 766px; */
+  background-size: contain;
+  aspect-ratio: 1262/766;
   height: 766px;
-  padding: 20px 114px;
+  max-height: 100%;
+  padding: 20px 0;
   box-sizing: border-box;
 
+}
+
+.book-padding {
+  width: 8%;
+  height: 100%;
 }
 
 
 #inventory-content {
   /* Needed to display in front of pixi */
   z-index: 1;
-  width: 460px;
+  /* width is half of the width of the book minus the .book-padding width which
+  covers the page art */
+  width: 42%;
   display: flex;
   flex-direction: column;
-  /* Always be at least big enough for 3 spells side-by-side. This is just visual appeal*/
-  min-width: 240px;
   /* Prevent highlighting text, because no blocks of text should need to be copied and
   it looks bad */
   user-select: none;
