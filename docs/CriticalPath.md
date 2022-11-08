@@ -1,12 +1,6 @@
 # Desired Schedule
-- November
-    - Add Trailer
-    - **Work through bug backlog**
-    - Optimize
-    - Make gameplay video with Brad
 - December
     - Package as Electron App
-    - Establish Minimum System Requirements and update Steam Page
     - Convenient multiplayer lobbying via steam
         - Prevent players from joining mid-round, notify "you will spawn once this level is complete"
 - January

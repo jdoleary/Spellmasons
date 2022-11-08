@@ -1,12 +1,16 @@
-# Wednesday
-    - Fix loading game state bug
-    - Optimize
+# Thursday / Friday
+    - Refactor the html localization to use a data attribute so it doesn't have to have each element manually translated
     - Other (e) rated bugs
-
-# Thursday
-    - Fix joining multiplayer gets into GC loop
+    - Optimize
     - Push latest to server and prod
 
+# Nov Week 3
+    - Make gameplay video with Brad
+    - Add Trailer
+    - Establish Minimum System Requirements and update Steam Page
+    - Begin real marketing
+# Nov Week 4
+# Nov Week 5 / Jan Week 1
 
 # Bugs / Cleaning
 - push + radius*2 + connect + damage isn't damaging the connected units (note, the pushed unit ends up in lava)
@@ -14,8 +18,6 @@
 - (e) fix save/load  from menu screen, it needs to change the gameview
 - (e) in multiplayer, when one player leaves and window is not focused the camera spazzes out
 - (e) splitx3 + kill + res resurrected a bunch of small split minibosses into regular sized minibosses
-- (e) If you start a singleplayer game and then join a multiplayer game you keep your gamestate, this is a bug: it should update your underworld
-    - containerUnits has duplicates
 - (e) spawning on top of a stamina or mana potion doesn't overfill in multiplayer
     - verified 2022-11-03
 ---
