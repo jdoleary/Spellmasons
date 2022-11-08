@@ -1,5 +1,5 @@
 # Wednesday
-    - Fix loading bug
+    - Fix loading game state bug
     - Optimize
     - Other (e) rated bugs
 
@@ -9,6 +9,8 @@
 
 
 # Bugs / Cleaning
+- (e) quit to main menu no longer takes you back to the main menu
+    - This happens because the svelte prop inGame depends on the non undefined value window.player and ever since the overworld refactor, whenever an underworld is cleaned up a new one takes it's place so that overworld is never without an underworld
 - push + radius*2 + connect + damage isn't damaging the connected units (note, the pushed unit ends up in lava)
     - This is because the unit died when it fell in the lava so connect didn't connect it to other living units
 - don't lose player progress when changing the language refreshes the website.
