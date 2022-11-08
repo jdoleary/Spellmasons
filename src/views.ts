@@ -194,9 +194,9 @@ export function addOverworldEventListeners(overworld: Overworld) {
         // invoked from within the underworld without the underworld having to have a circular
         // reference to the overworld.  It needs to be invoked from within the underworld so
         // that it can update visuals that usually only update when the mousemoves.
-        listener: () => {
+        listener: (e: MouseEvent) => {
           if (overworld.underworld) {
-            mouseMove(overworld.underworld);
+            mouseMove(overworld.underworld, e);
           }
         }
       },
