@@ -123,3 +123,23 @@ host	Host Game	Jeu hôte	Game ospite	Gastspiel	Juego de acogida	ホストゲー�
 join	Join Game	Rejoins une partie	Unisciti al gioco	Spiel beitreten	Unete al juego	ゲームに参加します	Entrar no jogo	انضم للعبة	게임에 가입하십시오	Присоединяйся к игре	加入游戏	加入遊戲	Dołącz do gry
 Ready	Ready	Prêt	Pronto	Bereit	Listo	準備	Preparar	مستعد	준비가 된	Готовый	准备好	準備好	Gotowy
 Leave Room	Leave Room	Quitter la pièce	Lasciare la stanza	Zimmer verlassen	Dejar la habitación	部屋を出ます	Deixe espaço	غادر الغرفة	방을 떠나라	Покинуть комнату	留出空间	留出空間	Opuść pokój
+per turn	per turn	par tour	per turno	pro Runde	por turno	ターンごと	por turno	لكل منعطف	턴당	за ход	每回合	每回合	na rundę
+mana burn	mana burn	mana brûler	Mana Burn	Mana brennen	Mana Burn	マナ・バーン	Mana Burn	مانا حرق	마나 화상	мана сжигает	法力烧伤	法力燒傷	Mana Burn
+mana steal	mana steal	mana voler	mana ruba	Mana Steal	robo de maná	マナ盗み	Mana roube	مانا سرقة	마나 도둑질	Мана украсть	法力偷	法力偷	Kradnie many
+mana potion	Mana Potion	Potion de mana	Pozione di mana	Mana Trank	Poción de maná	マナポーション	Mana Poção	مانا جرعة	마나 물약	Мана зелье	法力药水	法力藥水	Eliksja Mana
+health potion	Health Potion	Potion de vie	Pozione per la salute	Gesundheitstrank	Poción de salud	健康ポーション	Poção de saúde	جرعة الصحة	건강의 묘약	Здоровое зелье	健康药水	健康藥水	Mikstura zdrowia
+stamina potion	Stamina Potion	Potion d'endurance	Pozione di resistenza	Ausdauer Trank	Poción de resistencia	スタミナポーション	Poção de resistência	جرعة القدرة على التحمل	체력 물약	Зелье выносливости	耐力药水	耐力藥水	Eliksja wytrzymałej
+spells	Spells	Sorts	Incantesimi	Zauber	Hechizo	呪文	Feitiços	نوبات	주문	Заклинания	咒语	咒語	Zaklęcia
+portal	Portal	Portail	Portale	Portal	Portal	ポータル	Portal	منفذ	문	Портал	门户网站	門戶網站	Portal
+trap	Trap	Piège	Trappola	Fangen	Trampa	トラップ	Armadilha	فخ	덫	Ловушка	陷阱	陷阱	Pułapka
+Golem	Golem	Golem	GOLEM	Golem	Golem	ゴーレム	Golem	جوليم	골렘	Голем	魔像	魔像	Golem
+Archer	Archer	Archer	Arciere	Bogenschütze	Arquero	射手	Arqueiro	آرتشر	궁수	Лучник	射手	射手	Łucznik
+Glop	Glop	Glop	Glop	Glop	Glop	glop	Grop	غلوب	glop	Глянец	格洛普	格洛普	Glop
+Summoner	Summoner	Invocateur	evocatore	Beschwörer	Invocador	サモナー	Invocador	استدعاء	소환사	Призыватель	召唤者	召喚者	Przywołanie
+Priest	Priest	Prêtre	Sacerdote	Priester	Sacerdote	祭司	Padre	كاهن	성직자	Священник	牧师	牧師	Kapłan
+Poisoner	Poisoner	Empoisonneur	Avvelenatore	Giftmörder	Envenenador	中毒	Envenenador	المسمم	포독	Отравитель	毒药	毒藥	Truciciel
+Vampire	Vampire	Vampire	Vampiro	Vampir	Vampiro	吸血鬼	Vampiro	مصاص دماء	흡혈귀	Вампир	吸血鬼	吸血鬼	Wampir
+Decoy	Decoy	Faire dure	Esca	Köder	Señuelo	デコイ	Chamariz	شرك	유인 못	Приманка	诱饵	誘餌	Maniak
+Dragger	Dragger	Chasser	Dragger	Dragger	Drager	ドラッガー	Dragger	دررا	드래그	Загрязнение	拖拉机	拖拉機	Dragger
+Ally	Ally	Allié	Alleato	Verbündete	Aliado	味方	Aliado	حليف	동맹국	Союзник	盟国	盟國	Sprzymierzyć
+Enemy	Enemy	Ennemi	Nemico	Feind	Enemigo	敵	Inimigo	العدو	적	Враг	敌人	敵人	Wróg

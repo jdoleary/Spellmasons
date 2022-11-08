@@ -698,16 +698,18 @@ export function updateTooltipContent(underworld: Underworld) {
         }
         const unitSource = allUnits[globalThis.selectedUnit.unitSourceId]
         if (unitSource) {
+          // NOTE: globalThis.selectedUnit.name is NOT localized on purpose
+          // because those are user provided names
           text += `\
 <img width="252" src="${Unit.getExplainPathForUnitId(unitSource.id)}"/>
-<h1>${globalThis.selectedUnit.name || unitSource.id}</h1>
+<h1>${globalThis.selectedUnit.name || i18n(unitSource.id)}</h1>
 <hr/>
-<div>${unitSource.info.description.trim()}</div>
+<div>${i18n(unitSource.info.description.trim())}</div>
 <hr/>
-${globalThis.selectedUnit.faction == Faction.ALLY ? '🤝' : '⚔️️'} ${Faction[globalThis.selectedUnit.faction]}
+${globalThis.selectedUnit.faction == Faction.ALLY ? '🤝' : '⚔️️'} ${i18n((Faction[globalThis.selectedUnit.faction] || '').toString())}
 🗡️ ${globalThis.selectedUnit.damage}
 ❤️ ${globalThis.selectedUnit.health}/${globalThis.selectedUnit.healthMax}
-🔵 Mana ${globalThis.selectedUnit.mana}/${globalThis.selectedUnit.manaMax} + ${globalThis.selectedUnit.manaPerTurn} per turn
+🔵 ${i18n('Mana')} ${globalThis.selectedUnit.mana}/${globalThis.selectedUnit.manaMax} + ${globalThis.selectedUnit.manaPerTurn} ${i18n('per turn')}
 
 ${modifiersToText(globalThis.selectedUnit.modifiers)}
 ${unitSource.extraTooltipInfo ? unitSource.extraTooltipInfo() : ''}
@@ -727,9 +729,9 @@ ${cards}
     case "pickup":
       if (globalThis.selectedPickup) {
         text += `\
-<h1>${globalThis.selectedPickup.name}</h1>
+<h1>${i18n(globalThis.selectedPickup.name)}</h1>
 <hr/>
-${globalThis.selectedPickup.description}
+${i18n(globalThis.selectedPickup.description)}
 <hr/>
       `;
       }

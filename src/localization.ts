@@ -1,19 +1,25 @@
 import languages from '../public/localization/localization.json';
+import { elEndTurnBtnInner } from './HTMLElements';
 import * as storage from './storage';
 interface LanguageMapping {
     [key: string]: string
 }
 let languageMapping: { [key: string]: string };
 let chosenLanguageCode: string;
+const cachedErrorsReported: string[] = [];
 const STORAGE_LANGUAGE_CODE_KEY = 'language';
 function returnTranslation(key: string, map: LanguageMapping): string {
     const result = map[key.toLowerCase()];
     if (result) {
         return result;
     } else {
-        // If something hasn't been localized yet, report it with console.error and return the key so
-        // the string isn't totally empty as the key might just be an english string for now
-        console.error(`i18n: Language ${map.language} has no value for key ${key}`);
+        // Prevent reporting error more than once
+        if (!cachedErrorsReported.includes(key)) {
+            // If something hasn't been localized yet, report it with console.error and return the key so
+            // the string isn't totally empty as the key might just be an english string for now
+            console.error(`i18n: Language ${map.language} has no value for key ${key}`);
+            cachedErrorsReported.push(key);
+        }
         return key;
     }
 }
@@ -43,6 +49,11 @@ function setLanguage(langCode: string, store: boolean) {
         if (store) {
             storage.set(STORAGE_LANGUAGE_CODE_KEY, langCode);
         }
+        // Manually update html as needed:
+        if (elEndTurnBtnInner) {
+            elEndTurnBtnInner.innerText = i18n('end turn');
+        }
+
         console.log('i18n: Set language to', newLanguage.language);
     } else {
         console.error('i18n: Could not find language with code', langCode)

@@ -16,8 +16,8 @@ import {
   onWindowBlur,
   mouseOverHandler,
 } from './graphics/ui/eventListeners';
+import { elEndTurnBtn } from './HTMLElements';
 import { Overworld } from './Overworld';
-import Underworld from './Underworld';
 
 // A view is not shared between players in the same game, a player could choose any view at any time
 export enum View {
@@ -131,12 +131,8 @@ function zoom(overworld: Overworld, e: WheelEvent) {
 }
 
 
-const endTurnBtnId = 'end-turn-btn';
 export function addOverworldEventListeners(overworld: Overworld) {
   if (globalThis.headless) { return; }
-  const elEndTurnBtn: HTMLButtonElement = document.getElementById(
-    endTurnBtnId,
-  ) as HTMLButtonElement;
   const elQuitButton: HTMLButtonElement = document.getElementById(
     'quit',
   ) as HTMLButtonElement;

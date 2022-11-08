@@ -65,6 +65,8 @@
 - Adaptive difficulty
 - What to do with disconnected players when it goes to the next level?
 - Fix rejoining hack where people can just rejoin if they're dead to come back
+# Localization
+- All tooltip info
 # Features
 - see stash "add i18n to explain prompts"
 - should allow spell prediction even while an action is taking place - this not being here causes friction in multiplayer
