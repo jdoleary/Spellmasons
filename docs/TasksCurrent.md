@@ -9,6 +9,7 @@
 
 
 # Bugs / Cleaning
+- (e) MMB no longer drags camera
 - push + radius*2 + connect + damage isn't damaging the connected units (note, the pushed unit ends up in lava)
     - This is because the unit died when it fell in the lava so connect didn't connect it to other living units
 - (e) fix save/load  from menu screen, it needs to change the gameview
