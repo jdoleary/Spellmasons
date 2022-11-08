@@ -114,7 +114,7 @@ Yikes!	Yikes!	Yikes!	Yikes!	Yikes!	¡Ay!	うわぁ！	Caramba!	yikes!	이키스!
 Bummer	Bummer	Dommage	Bummer	Mist	Gorrón	バマー	Desapontamento	المشكله	범 메르	Облом	bummer	bummer	Porażka
 Got it!	Got it!	J'ai compris!	Fatto!	Ich habs!	¡Entiendo!	とった！	Entendi!	فهمتك!	알았어요!	Понятно!	知道了！	知道了！	Rozumiem!
 no	no	non	No	nein	no	番号	não	رقم	아니요	нет	不	不	nie
-restart for language change	The new language selection will take effect in the menu after you restart the game.	La nouvelle sélection de la langue prendra effet dans le menu après avoir redémarré le jeu.	La nuova selezione della lingua avrà effetto nel menu dopo aver riavviato il gioco.	Die neue Sprachauswahl wird im Menü wirksam, nachdem Sie das Spiel neu gestartet haben.	La nueva selección de idiomas entrará en vigencia en el menú después de reiniciar el juego.	ゲームを再起動すると、新しい言語の選択がメニューで有効になります。	A nova seleção de idiomas entrará em vigor no menu depois de reiniciar o jogo.	سيصبح اختيار اللغة الجديد ساري المفعول في القائمة بعد إعادة تشغيل اللعبة.	새로운 언어 선택은 게임을 다시 시작한 후 메뉴에서 적용됩니다.	Новый выбор языка вступит в силу в меню после перезапуска игры.	重新启动游戏后，新的语言选择将在菜单中生效。	重新啟動遊戲後，新的語言選擇將在菜單中生效。	Nowy wybór języka wejdzie w menu po ponownym uruchomieniu gry.
+-no longer needed-	-	-	-	- -	-	 - 	-	-	-	-	 - 	 - 	-
 how to move title	How to Move	Comment bouger	Come muoversi	Wie man sich bewegen	Cómo mover	移動方法	Como se mover	كيفية التحرك	이동하는 방법	Как двигаться	如何移动	如何移動	Jak się poruszać
 how to move description	Hold right mouse button to walk towards your cursor.	Tenez le bouton droit de la souris pour marcher vers votre curseur.	Tieni premuto il pulsante del mouse a destra per camminare verso il cursore.	Halten Sie die rechte Maustaste, um in Richtung Ihres Cursors zu gehen.	Mantenga presionado el botón del mouse derecho para caminar hacia su cursor.	右マウスボタンを押して、カーソルに向かって歩きます。	Segure o botão direito do mouse para caminhar em direção ao seu cursor.	امسك زر الماوس الأيمن للسير نحو المؤشر.	오른쪽 마우스 버튼을 누르면 커서를 향해 걸어갑니다.	Держите правую кнопку мыши, чтобы идти к своему курсору.	按住右鼠标按钮向光标行驶。	按住右鼠標按鈕向光標行駛。	Przytrzymaj prawy przycisk myszy, aby iść w kierunku kursora.
 forge spells title	How to Forge Spells!	Comment forger des sorts!	Come stringere gli incantesimi!	Wie man Zauber fügt!	¡Cómo forjar hechizos!	呪文を偽造する方法！	Como forjar feitiços!	كيفية صياغة نوبات!	주문을 위조하는 방법!	Как подделать заклинания!	如何锻造咒语！	如何鍛造咒語！	Jak tworzyć zaklęcia!
@@ -143,3 +143,11 @@ Decoy	Decoy	Faire dure	Esca	Köder	Señuelo	デコイ	Chamariz	شرك	유인 못
 Dragger	Dragger	Chasser	Dragger	Dragger	Drager	ドラッガー	Dragger	دررا	드래그	Загрязнение	拖拉机	拖拉機	Dragger
 Ally	Ally	Allié	Alleato	Verbündete	Aliado	味方	Aliado	حليف	동맹국	Союзник	盟国	盟國	Sprzymierzyć
 Enemy	Enemy	Ennemi	Nemico	Feind	Enemigo	敵	Inimigo	العدو	적	Враг	敌人	敵人	Wróg
+game name	Game Name	Nom de jeu	Nome del gioco	Spielname	Nombre del juego	ゲーム名	Nome do jogo	اسم اللعبة	게임 이름	Имя игры	游戏名称	遊戲名稱	Nazwa gry
+game lobby	Game Lobby	Hall du jeu	Lobby di gioco	Spiellobby	Lobby del juego	ゲームロビー	Lobby do jogo	ردهة اللعبة	게임 로비	Игровое лобби	游戏大厅	遊戲大廳	Lobby gry
+waiting...	Waiting...	Attendre...	In attesa...	Warten...	Esperando...	待っている...	Espera...	انتظار...	대기 중...	Ожидающий...	等待...	等待...	Czekanie...
+picking start point	Picking Start Point	Point de départ	Punto di partenza di raccolta	Startpunkt auswählen	Punto de inicio de selección	スタートポイントを選びます	Escolha do ponto de partida	اختيار نقطة البدء	선택 시작점	Выбор начальной точки	选择起点	選擇起點	Wybór punktu początkowego
+Disconnected	Disconnected	Débranché	Disconnesso	Getrennt	Desconectado	切断された	Desconectado	انقطع الاتصال	연결이 끊어졌습니다	Отключен	断开连接	斷開連接	Niepowiązany
+Connected	Connected	Lié	Collegato	In Verbindung gebracht	Conectado	接続	Conectado	متصل	연결	Связано	连接的	連接的	Połączony
+Not Ready	Not Ready	Pas prêt	Non pronto	Nicht bereit	No está listo	準備ができていない	Não está pronto	غير جاهز	준비되지 않았습니다	Не готов	还没好	還沒好	Nie gotowy
+game over	Game Over	Jeu terminé	Gioco finito	Spiel ist aus	Juego terminado	ゲームオーバー	Fim de jogo	انتهت اللعبة	게임 끝	Игра закончена	游戏结束	遊戲結束	Koniec gry

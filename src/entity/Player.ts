@@ -293,15 +293,15 @@ export function syncLobby(underworld: Underworld) {
       }
     })
     .map(p => {
-      let status = 'Connected';
+      let status = i18n('Connected');
       if (!p.clientConnected) {
-        status = 'Disconnected';
+        status = i18n('Disconnected');
       } else if (!p.isSpawned) {
-        status = 'Picking Start Point';
+        status = i18n('Picking Start Point');
       } else if (p.endedTurn) {
-        status = 'Waiting...';
+        status = i18n('Waiting...');
       }
-      return { name: p.name || p.clientId, status, color: playerColorToCss(p), ready: p.lobbyReady ? 'Ready' : 'Not Ready' };
+      return { name: p.name || p.clientId, status, color: playerColorToCss(p), ready: p.lobbyReady ? i18n('Ready') : i18n('Not Ready') };
     });
   // Update lobby element
   if (elInGameLobby) {

@@ -1,5 +1,5 @@
 import languages from '../public/localization/localization.json';
-import { elEndTurnBtnInner } from './HTMLElements';
+import { elEndTurnBtnInner, elLocalizeGameOver, elLocalizeQuitToMainMenu } from './HTMLElements';
 import * as storage from './storage';
 interface LanguageMapping {
     [key: string]: string
@@ -52,6 +52,12 @@ function setLanguage(langCode: string, store: boolean) {
         // Manually update html as needed:
         if (elEndTurnBtnInner) {
             elEndTurnBtnInner.innerText = i18n('end turn');
+        }
+        if (elLocalizeGameOver) {
+            elLocalizeGameOver.innerText = i18n('game over');
+        }
+        if (elLocalizeQuitToMainMenu) {
+            elLocalizeQuitToMainMenu.innerText = i18n('quit to main menu');
         }
 
         console.log('i18n: Set language to', newLanguage.language);
