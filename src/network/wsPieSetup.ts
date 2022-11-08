@@ -91,6 +91,8 @@ export function joinRoom(overworld: Overworld, _room_info = {}): Promise<void> {
   // Lowercase room name so capitalization won't cause confusion
   // when people are trying to join each other's games
   room_info.name = room_info.name.toLowerCase();
+  // Create a new underworld to sync with the payload so that no old state carries over
+  new Underworld(overworld, overworld.pie, 'seed-will-be-initialized-during INIT_GAME_STATE');
   return pie.joinRoom(room_info, true).then(() => {
     console.log('Pie: You are now in the room', JSON.stringify(room_info, null, 2));
     // Useful for development to get into the game quickly
@@ -154,7 +156,7 @@ function addHandlers(pie: PieClient, overworld: Overworld) {
   };
   pie.onData = d => onData(d, overworld);
   pie.onError = ({ message }: { message: any }) => console.error('wsPie Error:', message);
-  pie.onClientPresenceChanged = c => onClientPresenceChanged(c, overworld.underworld);
+  pie.onClientPresenceChanged = c => onClientPresenceChanged(c, overworld);
   pie.onLatency = (l) => {
     if (globalThis.latencyPanel) {
       globalThis.latencyPanel.update(l.average, l.max);
@@ -172,7 +174,7 @@ export function setupPieAndUnderworld() {
     // useStats must be true for latency information to come through
     pie.useStats = true;
     console.log('Client: Initialize Underworld');
-    const overworld = makeOverworld(pie, Math.random().toString());
+    const overworld = makeOverworld(pie);
     globalThis.connect_to_wsPie_server = wsUri => connect_to_wsPie_server(wsUri, overworld);
     globalThis.isConnected = pie.isConnected.bind(pie);
     globalThis.pieDisconnect = pie.disconnect.bind(pie);
@@ -198,9 +200,14 @@ export function setupPieAndUnderworld() {
     globalThis.connectToSingleplayer = connectToSingleplayer;
     globalThis.startSingleplayer = function startSingleplayer() {
       console.log('Start Game: Attempt to start the game')
+      new Underworld(overworld, pie, Math.random().toString());
       return connectToSingleplayer().then(() => {
         // Create first level
-        overworld.underworld.lastLevelCreated = overworld.underworld.generateLevelDataSyncronous(0);
+        if (overworld.underworld) {
+          overworld.underworld.lastLevelCreated = overworld.underworld.generateLevelDataSyncronous(0);
+        } else {
+          console.error('Overworld does not have underworld, cannot setup first level');
+        }
         // Go directly into the game
         setView(View.Game);
       });

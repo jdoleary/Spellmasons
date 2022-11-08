@@ -41,4 +41,5 @@ global.unitOverlayGraphics = undefined;
 global.predictionGraphics = undefined;
 global.planningViewGraphics = undefined;
 global.hoverTarget = undefined;
+global.location = undefined;
 export { };

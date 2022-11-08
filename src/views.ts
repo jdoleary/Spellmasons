@@ -194,7 +194,15 @@ export function addOverworldEventListeners(overworld: Overworld) {
       {
         target: document.body,
         event: 'mousemove',
-        listener: mouseMove.bind(undefined, overworld)
+        // mousemove receives the underworld instead of the overworld so that it can be
+        // invoked from within the underworld without the underworld having to have a circular
+        // reference to the overworld.  It needs to be invoked from within the underworld so
+        // that it can update visuals that usually only update when the mousemoves.
+        listener: () => {
+          if (overworld.underworld) {
+            mouseMove(overworld.underworld);
+          }
+        }
       },
       {
         target: elEndTurnBtn,

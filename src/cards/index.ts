@@ -121,7 +121,7 @@ function register(spell: Spell, overworld: Overworld) {
   }
 }
 export function registerCards(overworld: Overworld) {
-  if (location.href.includes('localhost')) {
+  if (location && location.href.includes('localhost')) {
     register(devRecordDelay, overworld);
   }
   register(slash, overworld);
@@ -171,6 +171,10 @@ function cardToUpgrade(c: ICard, overworld: Overworld): IUpgrade {
     // TODO: Feature creep: What if you could UPGRADE the effect of a spell!! 0.o
     maxCopies: 1,
     effect: (player) => {
+      if (!overworld.underworld) {
+        console.error('Cannot add card to hand, underworld is undefined');
+        return;
+      }
       addCardToHand(c, player, overworld.underworld);
     },
     probability: c.probability,

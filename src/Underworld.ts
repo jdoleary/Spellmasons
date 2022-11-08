@@ -74,10 +74,9 @@ import { createVisualLobbingProjectile } from './entity/Projectile';
 import { isOutOfRange } from './PlayerUtils';
 import type { DisplayObject, TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
-import { explain, EXPLAIN_MISSED_SCROLL, EXPLAIN_SCROLL, EXPLAIN_WALK } from './graphics/Explain';
-import { calculateGameDifficulty } from './Difficulty';
+import { explain, EXPLAIN_MISSED_SCROLL, EXPLAIN_SCROLL } from './graphics/Explain';
 import { makeScrollDissapearParticles } from './graphics/ParticleCollection';
-import { changeUnderworld, Overworld } from './Overworld';
+import { Overworld } from './Overworld';
 
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
@@ -107,13 +106,11 @@ const cleanupRegistry = new FinalizationRegistry((heldValue) => {
 let localUnderworldCount = 0;
 export default class Underworld {
   seed: string;
-  // True when the underworld has been cleaned up and is no longer fit for use
-  cleanedUp: boolean = false;
   // A simple number to keep track of which underworld this is
   // Used for development to help ensure that all references to the underworld are current
   localUnderworldNumber: number;
   // A backreference to it's parent container
-  overworld?: Overworld;
+  overworld: Overworld;
   random: prng;
   pie: PieClient | IHostApp;
   // The index of the level the players are on
@@ -172,8 +169,13 @@ export default class Underworld {
   removeEventListeners: undefined | (() => void);
   bloods: BloodParticle[] = [];
 
-  constructor(pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
+  constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
+    // Clean up previous underworld:
+    overworld.underworld?.cleanup();
+    console.log('Setup: Creating new underworld');
     this.pie = pie;
+    this.overworld = overworld;
+    this.overworld.underworld = this;
     this.localUnderworldNumber = ++localUnderworldCount;
     if (typeof window !== 'undefined') {
       // @ts-ignore: window.devUnderworld is NOT typed in globalThis intentionally
@@ -740,11 +742,7 @@ export default class Underworld {
     this.drawResMarkers();
     this.drawPlayerThoughts();
     updatePlanningView(this);
-    if (this.overworld) {
-      mouseMove(this.overworld);
-    } else {
-      console.error('Cannot invoke mouseMove, this.overworld is undefined.');
-    }
+    mouseMove(this);
     // Particles
     updateParticlees(deltaTime, this.bloods, this.random, this);
 
@@ -983,13 +981,9 @@ export default class Underworld {
   // cleanup cleans up all assets that must be manually removed (for now `Image`s)
   // if an object stops being used.  It does not empty the underworld arrays, by design.
   cleanup() {
-    if (this.cleanedUp) {
-      // Prevent cleaning up an underworld more than once
-      console.warn('Prevented cleaning up underworld multiple times');
-      return;
-    }
     console.log('teardown: Cleaning up underworld');
-    this.cleanedUp = true;
+    // Dereference underworld
+    this.overworld.underworld = undefined;
     globalThis.attentionMarkers = [];
     globalThis.resMarkers = [];
 
@@ -1025,14 +1019,6 @@ export default class Underworld {
     this.lastLevelCreated = undefined;
 
     globalThis.updateInGameMenuStatus?.()
-
-    // Creating a new underworld:
-    if (this.overworld) {
-      changeUnderworld(this.overworld, new Underworld(this.pie, Math.random().toString()));
-    } else {
-      console.error('Cannot create new underworld, this.overworld is undefined');
-    }
-
   }
   // cacheWalls updates underworld.walls array
   // with the walls for the edge of the map
@@ -2149,14 +2135,7 @@ export default class Underworld {
         document.body?.classList.toggle(showUpgradesClassName, false);
         queueCenteredFloatingText('No more spell upgrades to pick from.');
       } else {
-        const elUpgrades = upgrades.map((upgrade) => {
-          if (this.overworld) {
-            return Upgrade.createUpgradeElement(upgrade, player, this.overworld);
-          } else {
-            console.error('No overworld, cannot create upgrade elements');
-            return undefined;
-          }
-        });
+        const elUpgrades = upgrades.map((upgrade) => Upgrade.createUpgradeElement(upgrade, player, this));
         if (elUpgradePickerContent) {
           elUpgradePickerContent.innerHTML = '';
           for (let elUpgrade of elUpgrades) {
@@ -2850,69 +2829,6 @@ export default class Underworld {
     }
 
   }
-  // Returns an array of newly created players
-  ensureAllClientsHaveAssociatedPlayers(clients: string[]) {
-    if (!this.overworld) {
-      console.error('Cannot sync clients, no overworld');
-      return;
-    }
-    this.overworld.clients = clients;
-    // Ensure all clients have players
-    for (let clientId of this.overworld.clients) {
-      const player = this.players.find(p => p.clientId == clientId);
-      if (!player) {
-        // If the client that joined does not have a player yet, make them one immediately
-        // since all clients should always have a player associated
-        console.log(`Setup: Create a Player instance for ${clientId}`)
-        Player.create(clientId, this);
-      }
-    }
-    // Sync all players' connection statuses with the clients list
-    // This ensures that there are no players left that think they're connected
-    // but are not a part of the clients list
-    let clientsToSendGameState = [];
-    for (let player of this.players) {
-      const wasConnected = player.clientConnected;
-      const isConnected = clients.includes(player.clientId);
-      Player.setClientConnected(player, isConnected, this);
-      if (!wasConnected && isConnected) {
-        clientsToSendGameState.push(player.clientId);
-      }
-    }
-    // Since the player's array length has changed, recalculate all
-    // unit strengths.  This must happen BEFORE clients are given the gamestate
-    const newDifficulty = calculateGameDifficulty(this);
-    this.units.forEach(unit => {
-      // Adjust npc unit strength when the number of players changes
-      // Do NOT adjust player unit strength
-      if (unit.unitType !== UnitType.PLAYER_CONTROLLED) {
-        Unit.adjustUnitDifficulty(unit, newDifficulty);
-      }
-    });
-    console.log('The number of players has changed, adjusting game difficulty to ', newDifficulty, ' for ', this.players.filter(p => p.clientConnected).length, ' connected players.');
-
-    // Send game state after units' strength has been recalculated
-    for (let clientId of clientsToSendGameState) {
-      // Send the lastest gamestate to that client so they can be up-to-date:
-      // Note: It is important that this occurs AFTER the player instance is created for the
-      // client who just joined
-      // If the game has already started (e.g. the host has already joined), send the initial state to the new 
-      // client only so they can load
-      hostGiveClientGameState(clientId, this, this.lastLevelCreated, MESSAGE_TYPES.INIT_GAME_STATE);
-    }
-
-    if (globalThis.isHost(this.pie)) {
-      this.pie.sendData({
-        type: MESSAGE_TYPES.SYNC_PLAYERS,
-        units: this.units.map(Unit.serialize),
-        players: this.players.map(Player.serialize)
-        // todo sync doodads here
-      });
-    }
-
-    // Resume turn loop if currently stalled but now a player is able to act:
-    this.tryRestartTurnPhaseLoop();
-  }
   syncPlayers(players: Player.IPlayerSerialized[]) {
     console.log('sync: Syncing players', JSON.stringify(players.map(p => p.clientId)));
     // Clear previous players array
@@ -3005,7 +2921,7 @@ type IUnderworldSerialized = Omit<typeof Underworld, "pie" | "overworld" | "prot
   };
 type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
 type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underworld>, null | undefined>;
-export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "pie" | "debugGraphics" | "players" | "units" | "pickups" | "obstacles" | "random" | "gameLoop">;
+export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "pie" | "overworld" | "debugGraphics" | "players" | "units" | "pickups" | "obstacles" | "random" | "gameLoop">;
 
 // TODO: enforce max units at level index
 // Idea: Higher probability of tougher units at certain levels

@@ -55,9 +55,19 @@ export default function devUtils(graphics: PIXI.Graphics) {
 }
 export function setupDevGlobalFunctions(overworld: Overworld) {
     globalThis.devKillAll = () => {
-        overworld.underworld.units.filter(u => u.unitType !== UnitType.PLAYER_CONTROLLED).forEach(u => Unit.die(u, overworld.underworld, false));
+        if (!overworld.underworld) {
+            console.error('Cannot "devKillAll Units", underworld is undefined');
+            return;
+        }
+        for (let unit of overworld.underworld.units.filter(u => u.unitType !== UnitType.PLAYER_CONTROLLED)) {
+            Unit.die(unit, overworld.underworld, false)
+        }
     }
     globalThis.devRemoveAllEnemies = () => {
+        if (!overworld.underworld) {
+            console.error('Cannot "devRemoveAllEnemies Units", underworld is undefined');
+            return;
+        }
         for (let u of overworld.underworld.units) {
             if (u.faction !== globalThis.player?.unit.faction) {
                 Unit.cleanup(u);

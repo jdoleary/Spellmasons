@@ -18,9 +18,9 @@ Sentry.setTag("SpellmasonsRunner", "HeadlessServer");
 
 import './Shims';
 import { IHostApp, onClientPresenceChanged } from './network/networkUtil';
-import Underworld from './Underworld';
 import { onData } from './network/networkHandler';
-import makeOverworld, { changeUnderworld, Overworld } from "./Overworld";
+import makeOverworld, { Overworld } from "./Overworld";
+import Underworld from "./Underworld";
 const pie = require('@websocketpie/server');
 globalThis.SPELLMASONS_PACKAGE_VERSION = version;
 // Init underworld so that when clients join they can use it as the canonical
@@ -38,11 +38,14 @@ function headlessStartGame() {
             const hostAppInst = new HostApp();
             console.log('Start Game: Attempt to start the game')
             console.log('Host: Start game / Initialize Underworld');
-            changeUnderworld(hostAppInst.overworld, new Underworld(hostAppInst, Math.random().toString()));
-            // Generate the level data
-            hostAppInst.overworld.underworld.lastLevelCreated = hostAppInst.overworld.underworld.generateLevelDataSyncronous(0);
-            // Actually create it
-            hostAppInst.overworld.underworld.createLevelSyncronous(hostAppInst.overworld.underworld.lastLevelCreated);
+            if (hostAppInst.overworld.underworld) {
+                // Generate the level data
+                hostAppInst.overworld.underworld.lastLevelCreated = hostAppInst.overworld.underworld.generateLevelDataSyncronous(0);
+                // Actually create it
+                hostAppInst.overworld.underworld.createLevelSyncronous(hostAppInst.overworld.underworld.lastLevelCreated);
+            } else {
+                console.error('hostApp overworld does not have an underworld to initialize.');
+            }
             return hostAppInst;
         }
     });
@@ -67,13 +70,13 @@ class HostApp implements IHostApp {
     sendData: (msg: string) => void = () => { };
     overworld: Overworld;
     constructor() {
-        this.overworld = makeOverworld(this, Math.random().toString());
+        this.overworld = makeOverworld(this);
+        new Underworld(this.overworld, this.overworld.pie, Math.random().toString());
     }
     onData(data: any) {
         onData(data, this.overworld);
     }
     cleanup() {
-        this.overworld.underworld.cleanup();
     }
     // The host will receive all data that is send from a client
     // to the @websocketpie/server
@@ -105,7 +108,7 @@ class HostApp implements IHostApp {
                 // }
                 break;
             case MessageType.ClientPresenceChanged:
-                onClientPresenceChanged(message as any, this.overworld.underworld);
+                onClientPresenceChanged(message as any, this.overworld);
                 // this._updateDebugInfo(message);
                 // // If client is accepting the onClientPresenceChanged callback,
                 // // send the message to it

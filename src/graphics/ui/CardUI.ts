@@ -69,7 +69,12 @@ export function setupCardUIEventListeners(overworld: Overworld) {
       // Prevent a click on the inventory button from triggering other click listeners
       // (like casting an active spell)
       e.stopPropagation();
-      toggleInventory(undefined, undefined, overworld.underworld);
+      if (overworld.underworld) {
+        toggleInventory(undefined, undefined, overworld.underworld);
+      } else {
+        console.error('Cannot toggleInventory, underworld is undefined');
+
+      }
     });
     elCardHand.style['gap'] = `${gapBetweenCards}px`;
     elSelectedCards.style['gap'] = `${gapBetweenCards}px`;
@@ -104,8 +109,12 @@ export function setupCardUIEventListeners(overworld: Overworld) {
           type: MESSAGE_TYPES.PLAYER_CARDS,
           cards: globalThis.player.cards,
         });
-        recalcPositionForCards(globalThis.player, overworld.underworld);
-        syncInventory(undefined, overworld.underworld);
+        if (overworld.underworld) {
+          recalcPositionForCards(globalThis.player, overworld.underworld);
+          syncInventory(undefined, overworld.underworld);
+        } else {
+          console.error('Cannot drop card on toolbar, underworld is undefined.');
+        }
       } else {
         console.error('Something went wrong dragndropping card', dropIndex, dragCard);
       }

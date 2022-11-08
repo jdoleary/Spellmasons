@@ -71,11 +71,12 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
   }
   return upgrades;
 }
-export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, overworld: Overworld) {
+export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underworld: Underworld) {
   if (globalThis.headless) {
     // There is no DOM in headless mode
     return;
   }
+  const { pie } = underworld;
   const element = document.createElement('div');
   element.classList.add('card', 'upgrade', cardRarityAsString(upgrade));
   element.dataset.upgrade = upgrade.title;
@@ -126,7 +127,7 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, overwor
   element.addEventListener('click', (e) => {
     // Prevent click from "falling through" upgrade and propagating to vote for overworld level
     e.stopPropagation();
-    overworld.pie.sendData({
+    pie.sendData({
       type: MESSAGE_TYPES.CHOOSE_UPGRADE,
       upgrade,
     });

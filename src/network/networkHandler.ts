@@ -24,7 +24,7 @@ import pingSprite from '../graphics/Ping';
 import { clearLastNonMenuView, setView, View } from '../views';
 import { autoExplain, explain, EXPLAIN_END_TURN } from '../graphics/Explain';
 import { cameraAutoFollow } from '../graphics/PixiUtils';
-import { changeUnderworld, Overworld } from '../Overworld';
+import { Overworld } from '../Overworld';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -36,9 +36,14 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
     console.log("onData:", MESSAGE_TYPES[d.payload.type], globalThis.headless ? '' : d)
   }
   const type: MESSAGE_TYPES = payload.type;
+  const { underworld } = overworld;
+  if (!underworld) {
+    console.error('Cannot process onData, underworld does not exist');
+    return;
+  }
   switch (type) {
     case MESSAGE_TYPES.PING:
-      pingSprite({ coords: payload as Vec2, color: overworld.underworld.players.find(p => p.clientId == d.fromClient)?.color });
+      pingSprite({ coords: payload as Vec2, color: underworld.players.find(p => p.clientId == d.fromClient)?.color });
       break;
     case MESSAGE_TYPES.INIT_GAME_STATE:
       // If the underworld is not yet initialized for this client then
@@ -47,7 +52,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       // connected to the room and need the first transfer of game state
       // This is why it is okay that updating the game state happens 
       // asynchronously.
-      if (overworld.underworld.lastLevelCreated === undefined) {
+      if (underworld.lastLevelCreated === undefined) {
         // If a client loads a full game state, they should be fully synced
         // so clear the onDataQueue to prevent old messages from being processed
         // after the full gamestate sync
@@ -153,6 +158,10 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
   const { payload, fromClient } = d;
   const type: MESSAGE_TYPES = payload.type;
   const { underworld } = overworld;
+  if (!underworld) {
+    console.error('Cannot handleOnDataMessage, underworld does not exist');
+    return;
+  }
   logHandleOnDataMessage(type, payload, fromClient, underworld);
   // Get player of the client that sent the message 
   const fromPlayer = underworld.players.find((p) => p.clientId === fromClient);
@@ -445,18 +454,13 @@ async function handleLoadGameState(payload: {
   doodads: Doodad.IDoodadSerialized[]
 }, overworld: Overworld) {
   console.log("Setup: Load game state", payload)
-  // Clean up old game state
-  if (overworld.underworld) {
-    console.log('teardown: Clean up underworld in preparation for loading new gamestate.')
-    overworld.underworld.cleanup();
-  }
   const { underworld: payloadUnderworld, phase, pickups, units, players, doodads } = payload
   // Sync underworld properties
   const loadedGameState: IUnderworldSerializedForSyncronize = { ...payloadUnderworld };
-
-  // Create a new underworld to sync with the payload so that no old state carries over
-  const underworld = new Underworld(overworld.pie, loadedGameState.seed);
-  changeUnderworld(overworld, underworld);
+  const { underworld } = overworld;
+  if (!underworld) {
+    return console.error('Cannot handleLoadGameState, underworld is undefined');
+  }
 
   const level = loadedGameState.lastLevelCreated;
   if (!level) {
@@ -583,13 +587,18 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
   globalThis.getAllSaveFiles = () => Object.keys(localStorage).filter(x => x.startsWith(savePrefix)).map(x => x.substring(savePrefix.length));
 
   globalThis.save = (title: string) => {
+    const { underworld } = overworld;
+    if (!underworld) {
+      console.error('Cannot save game, underworld does not exist');
+      return;
+    }
     const saveObject = {
-      underworld: overworld.underworld.serializeForSaving(),
-      phase: overworld.underworld.turn_phase,
-      pickups: overworld.underworld.pickups.map(Pickup.serialize),
-      units: overworld.underworld.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
-      players: overworld.underworld.players.map(Player.serialize),
-      doodads: overworld.underworld.doodads.map(Doodad.serialize),
+      underworld: underworld.serializeForSaving(),
+      phase: underworld.turn_phase,
+      pickups: underworld.pickups.map(Pickup.serialize),
+      units: underworld.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
+      players: underworld.players.map(Player.serialize),
+      doodads: underworld.doodads.map(Doodad.serialize),
     };
     try {
       storage.set(

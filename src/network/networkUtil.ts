@@ -6,6 +6,7 @@ import * as Pickup from '../entity/Pickup';
 import * as Doodad from '../entity/Doodad';
 import Underworld from '../Underworld';
 import type PieClient from '@websocketpie/client';
+import { ensureAllClientsHaveAssociatedPlayers, Overworld } from '../Overworld';
 
 // Copied from PieClient.d.ts so as to not have to import PieClient
 export interface ClientPresenceChangedArgs {
@@ -13,10 +14,10 @@ export interface ClientPresenceChangedArgs {
     clients: string[];
     time: number;
 }
-export function onClientPresenceChanged(o: ClientPresenceChangedArgs, underworld: Underworld) {
+export function onClientPresenceChanged(o: ClientPresenceChangedArgs, overworld: Overworld) {
     console.log('clientPresenceChanged', o);
     // Ensure each client corresponds with a Player instance
-    underworld.ensureAllClientsHaveAssociatedPlayers(o.clients);
+    ensureAllClientsHaveAssociatedPlayers(overworld, o.clients);
 }
 export function hostGiveClientGameState(clientId: string, underworld: Underworld, level: LevelData | undefined, message_type: MESSAGE_TYPES.INIT_GAME_STATE | MESSAGE_TYPES.LOAD_GAME_STATE) {
     // Only the host should be sending INIT_GAME_STATE messages

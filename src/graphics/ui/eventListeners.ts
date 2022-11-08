@@ -23,7 +23,7 @@ import { isOutOfRange } from '../../PlayerUtils';
 import { vec2ToOneDimentionIndexPreventWrap } from '../../jmath/ArrayUtil';
 import * as Vec from '../../jmath/Vec';
 import { Vec2 } from '../../jmath/Vec';
-import { biome_level_index_map, showUpgradesClassName } from '../../Underworld';
+import Underworld, { biome_level_index_map, showUpgradesClassName } from '../../Underworld';
 import { toLineSegments } from '../../jmath/Polygon2';
 import { closestLineSegmentIntersection } from '../../jmath/lineSegment';
 import { allUnits } from '../../entity/units';
@@ -63,7 +63,8 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
   if (globalThis.view !== View.Game) {
     return;
   }
-  if (!overworld.underworld) {
+  const { underworld } = overworld;
+  if (!underworld) {
     return
   }
 
@@ -88,21 +89,21 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
     case keyMapping.clearQueuedSpell:
       const thereWasInventoryOpen = document.body?.classList.contains(CardUI.openInvClass);
       // force close inventory
-      CardUI.toggleInventory(undefined, false, overworld.underworld);
+      CardUI.toggleInventory(undefined, false, underworld);
       if (thereWasInventoryOpen) {
         // If inventory was open, don't clear selected cards
         return;
       }
       const thereWasTooltipActive = clearTooltipSelection();
       const thereWereCardsSelected = CardUI.areAnyCardsSelected();
-      CardUI.clearSelectedCards(overworld.underworld);
+      CardUI.clearSelectedCards(underworld);
       if (!thereWasTooltipActive && !thereWereCardsSelected && !thereWasInventoryOpen) {
         // Otherwise finally toggle menu
         toggleMenu();
       }
       break;
     case keyMapping.openInventory:
-      CardUI.toggleInventory(undefined, undefined, overworld.underworld);
+      CardUI.toggleInventory(undefined, undefined, underworld);
       event.preventDefault();
       break;
     case keyMapping.dequeueSpell:
@@ -113,7 +114,7 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
       // When the walkRope turns on clear the spell effect projection
       // so the user can focus on the information that the walk rope is 
       // communicating
-      clearSpellEffectProjection(overworld.underworld);
+      clearSpellEffectProjection(underworld);
       break;
     // Camera movement
     case keyMapping.cameraUp:
@@ -133,7 +134,7 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
       cameraAutoFollow(false);
       break;
     case keyMapping.ping:
-      const mouseTarget = overworld.underworld.getMousePos();
+      const mouseTarget = underworld.getMousePos();
       overworld.pie.sendData({
         type: MESSAGE_TYPES.PING,
         x: mouseTarget.x,
@@ -146,7 +147,7 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
         // Make camera follow player unit 
         cameraAutoFollow(true)
       } else {
-        const mouseTarget = overworld.underworld.getMousePos();
+        const mouseTarget = underworld.getMousePos();
         floatingText({
           coords: mouseTarget,
           text: 'You must spawn first'
@@ -155,10 +156,10 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
       }
       break;
     case keyMapping.openInventory2:
-      CardUI.toggleInventory(undefined, undefined, overworld.underworld);
+      CardUI.toggleInventory(undefined, undefined, underworld);
       break;
     case keyMapping.endTurn:
-      overworld.underworld.endMyTurn();
+      underworld.endMyTurn();
       break;
     case keyMapping.spell1:
       CardUI.selectCardByIndex(0);
@@ -219,12 +220,12 @@ export function keyupListener(overworld: Overworld, event: KeyboardEvent) {
 }
 
 export function endTurnBtnListener(overworld: Overworld, e: MouseEvent) {
-  overworld.underworld.endMyTurn();
+  overworld.underworld?.endMyTurn();
   e.preventDefault();
   e.stopPropagation();
   return false;
 }
-const sendMovePlayer = throttle((overworld: Overworld) => {
+const sendMovePlayer = throttle((underworld: Underworld) => {
   if (globalThis.player) {
     if (globalThis.player.isSpawned && !inPortal(globalThis.player)) {
       // This should never happen
@@ -233,7 +234,7 @@ const sendMovePlayer = throttle((overworld: Overworld) => {
         console.error('Stamina is NaN!');
         globalThis.player.unit.stamina = 0;
       }
-      overworld.pie.sendData({
+      underworld.pie.sendData({
         type: MESSAGE_TYPES.MOVE_PLAYER,
         ...Vec.clone(globalThis.player.unit),
       });
@@ -253,24 +254,25 @@ const notifyYouMustWaitForYourTurn = throttle((target: Vec2) => {
   });
 }, 400, { trailing: true });
 
-export function mouseMove(overworld: Overworld, e?: MouseEvent) {
+export function mouseMove(underworld: Underworld, e?: MouseEvent) {
   // Only handle clicks when viewing the Game
   if (globalThis.view !== View.Game) {
     return;
   }
-  if (!overworld.underworld) {
-    return
+  if (!underworld) {
+    console.error('Cannot run mouseMove, underworld is undefined');
+    return;
   }
-  const mouseTarget = overworld.underworld.getMousePos();
+  const mouseTarget = underworld.getMousePos();
   // Move the spawn "ghost" around so players can see where they will
   // spawn if they click
   if (globalThis.player && !globalThis.player.isSpawned &&
     !document.body?.classList.contains(showUpgradesClassName)) {
     const spawnPoint = { ...mouseTarget, radius: config.COLLISION_MESH_RADIUS }
-    collideWithLineSegments(spawnPoint, overworld.underworld.walls, overworld.underworld);
+    collideWithLineSegments(spawnPoint, underworld.walls, underworld);
     if (globalThis.player.unit.image) {
       globalThis.player.unit.image.sprite.alpha = 0.5;
-      if (overworld.underworld.isCoordOnWallTile(spawnPoint) || isOutOfBounds(spawnPoint, overworld.underworld)) {
+      if (underworld.isCoordOnWallTile(spawnPoint) || isOutOfBounds(spawnPoint, underworld)) {
         globalThis.player.unit.x = NaN;
         globalThis.player.unit.y = NaN;
       } else {
@@ -289,22 +291,22 @@ export function mouseMove(overworld: Overworld, e?: MouseEvent) {
 
   if (globalThis.player) {
     if (keyDown.showWalkRope) {
-      drawWalkRope(mouseTarget, overworld.underworld);
+      drawWalkRope(mouseTarget, underworld);
     } else {
       globalThis.walkPathGraphics?.clear();
     }
     if (globalThis.RMBDown) {
-      if (overworld.underworld.isMyTurn()) {
+      if (underworld.isMyTurn()) {
         if (globalThis.player.isSpawned) {
           // If player is able to move
           if (Unit.canMove(globalThis.player.unit)) {
             // Move towards mouseTarget, but stop pathing where the direct path intersects a wall
             // This ensures that the player will always move in the direction of the mouse
             // and won't path in an unexpected direction to attempt to get to the final destination.
-            const intersection = closestLineSegmentIntersection({ p1: globalThis.player.unit, p2: mouseTarget }, overworld.underworld.walls) || mouseTarget;
-            Unit._moveTowards(globalThis.player.unit, intersection, overworld.underworld);
+            const intersection = closestLineSegmentIntersection({ p1: globalThis.player.unit, p2: mouseTarget }, underworld.walls) || mouseTarget;
+            Unit._moveTowards(globalThis.player.unit, intersection, underworld);
             // Send current player movements to server
-            sendMovePlayer(overworld);
+            sendMovePlayer(underworld);
 
           } else {
             if (!globalThis.notifiedOutOfStamina) {
@@ -328,13 +330,13 @@ export function mouseMove(overworld: Overworld, e?: MouseEvent) {
     }
   }
 
-  runPredictions(overworld.underworld);
+  runPredictions(underworld);
 
   // TODO: optimize this function by not rerunning parts if mouse & player.unit position
   // havent changed since last call.
 
   // Show faint circle on clickable entities on hover:
-  drawCircleUnderTarget(mouseTarget, overworld.underworld, 1.0, globalThis.planningViewGraphics);
+  drawCircleUnderTarget(mouseTarget, underworld, 1.0, globalThis.planningViewGraphics);
 
 
   // Test pathing
@@ -350,10 +352,10 @@ export function mouseMove(overworld: Overworld, e?: MouseEvent) {
         globalThis.debugGraphics?.lineTo(point.x, point.y);
       }
     }
-    const mouseTarget = overworld.underworld.getMousePos();
+    const mouseTarget = underworld.getMousePos();
     const cellX = Math.round(mouseTarget.x / config.OBSTACLE_SIZE);
     const cellY = Math.round(mouseTarget.y / config.OBSTACLE_SIZE);
-    const originalTile = overworld.underworld.lastLevelCreated?.imageOnlyTiles[vec2ToOneDimentionIndexPreventWrap({ x: cellX, y: cellY }, overworld.underworld.lastLevelCreated?.width)];
+    const originalTile = underworld.lastLevelCreated?.imageOnlyTiles[vec2ToOneDimentionIndexPreventWrap({ x: cellX, y: cellY }, underworld.lastLevelCreated?.width)];
     const originalTileImage = originalTile ? originalTile.image : '';
     (document.getElementById('debug-info') as HTMLElement).innerText = `x:${Math.round(mouseTarget.x)}, y:${Math.round(mouseTarget.y)}
     cellX: ${cellX}, cellY: ${cellY}
@@ -366,36 +368,36 @@ export function mouseMove(overworld: Overworld, e?: MouseEvent) {
     // globalThis.debugGraphics?.lineTo(cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2);
     // globalThis.debugGraphics?.lineTo(cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2);
     // Draw the pathing walls
-    for (let lineSegment of overworld.underworld.pathingLineSegments) {
+    for (let lineSegment of underworld.pathingLineSegments) {
       globalThis.debugGraphics?.lineStyle(2, 0xffaabb, 1.0);
       globalThis.debugGraphics?.moveTo(lineSegment.p1.x, lineSegment.p1.y);
       globalThis.debugGraphics?.lineTo(lineSegment.p2.x, lineSegment.p2.y);
     }
     // Draw liquid polygons
-    for (let lineSegment of overworld.underworld.liquidPolygons.map(toLineSegments).flat()) {
+    for (let lineSegment of underworld.liquidPolygons.map(toLineSegments).flat()) {
       globalThis.debugGraphics?.lineStyle(4, 0x34b7eb, 1.0);
       globalThis.debugGraphics?.moveTo(lineSegment.p1.x, lineSegment.p1.y);
       globalThis.debugGraphics?.lineTo(lineSegment.p2.x, lineSegment.p2.y);
     }
     // Draw bounds that prevent movement
-    for (let bound of overworld.underworld.liquidBounds) {
+    for (let bound of underworld.liquidBounds) {
       globalThis.debugGraphics?.lineStyle(2, 0x0000ff, 1.0);
       globalThis.debugGraphics?.moveTo(bound.p1.x, bound.p1.y);
       globalThis.debugGraphics?.lineTo(bound.p2.x, bound.p2.y);
     }
     // Draw walls that prevent line of sight 
-    for (let wall of overworld.underworld.walls) {
+    for (let wall of underworld.walls) {
       globalThis.debugGraphics?.lineStyle(2, 0x00ff00, 1.0);
       globalThis.debugGraphics?.moveTo(wall.p1.x, wall.p1.y);
       globalThis.debugGraphics?.lineTo(wall.p2.x, wall.p2.y);
     }
     // Draw underworld limits
     // globalThis.debugGraphics?.lineStyle(2, 0xff0000, 1.0);
-    // globalThis.debugGraphics?.moveTo(overworld.underworld.limits.xMin, overworld.underworld.limits.yMin);
-    // globalThis.debugGraphics?.lineTo(overworld.underworld.limits.xMax, overworld.underworld.limits.yMin);
-    // globalThis.debugGraphics?.lineTo(overworld.underworld.limits.xMax, overworld.underworld.limits.yMax);
-    // globalThis.debugGraphics?.lineTo(overworld.underworld.limits.xMin, overworld.underworld.limits.yMax);
-    // globalThis.debugGraphics?.lineTo(overworld.underworld.limits.xMin, overworld.underworld.limits.yMin);
+    // globalThis.debugGraphics?.moveTo(underworld.limits.xMin, underworld.limits.yMin);
+    // globalThis.debugGraphics?.lineTo(underworld.limits.xMax, underworld.limits.yMin);
+    // globalThis.debugGraphics?.lineTo(underworld.limits.xMax, underworld.limits.yMax);
+    // globalThis.debugGraphics?.lineTo(underworld.limits.xMin, underworld.limits.yMax);
+    // globalThis.debugGraphics?.lineTo(underworld.limits.xMin, underworld.limits.yMin);
 
   }
 }
@@ -415,7 +417,11 @@ export function mouseDownHandler(overworld: Overworld, e: MouseEvent) {
       // Prevent right click from moving player if right clicking on toolbar
       return;
     }
-    globalThis.setRMBDown?.(true, overworld.underworld);
+    if (overworld.underworld) {
+      globalThis.setRMBDown?.(true, overworld.underworld);
+    } else {
+      console.error('Cannot setRMBDown, underworld does not exist.');
+    }
   }
 }
 export function mouseUpHandler(overworld: Overworld, e: MouseEvent) {
@@ -427,7 +433,11 @@ export function mouseUpHandler(overworld: Overworld, e: MouseEvent) {
   }
   if (e.button == 2) {
     globalThis.walkPathGraphics?.clear();
-    globalThis.setRMBDown?.(false, overworld.underworld);
+    if (overworld.underworld) {
+      globalThis.setRMBDown?.(false, overworld.underworld);
+    } else {
+      console.error('Cannot setRMBDown, underworld does not exist.');
+    }
     e.preventDefault();
   }
 }
@@ -455,12 +465,13 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
   if (globalThis.view !== View.Game) {
     return;
   }
-  if (!overworld.underworld) {
+  const { underworld } = overworld;
+  if (!underworld) {
     return;
   }
-  const mousePos = overworld.underworld.getMousePos();
+  const mousePos = underworld.getMousePos();
 
-  if (isOutOfBounds(mousePos, overworld.underworld)) {
+  if (isOutOfBounds(mousePos, underworld)) {
     // Disallow click out of bounds
     floatingText({
       coords: mousePos,
@@ -474,8 +485,8 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
   if (selfPlayer && !selfPlayer.isSpawned &&
     !document.body?.classList.contains(showUpgradesClassName)) {
     const spawnPoint = { ...mousePos, radius: config.COLLISION_MESH_RADIUS }
-    collideWithLineSegments(spawnPoint, overworld.underworld.walls, overworld.underworld);
-    if (overworld.underworld.isCoordOnWallTile(spawnPoint)) {
+    collideWithLineSegments(spawnPoint, underworld.walls, underworld);
+    if (underworld.isCoordOnWallTile(spawnPoint)) {
       floatingText({
         coords: mousePos,
         text: 'Invalid Spawn Location'
@@ -495,7 +506,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
   // If a spell exists (based on the combination of cards selected)...
   if (CardUI.areAnyCardsSelected()) {
     // Only allow casting in the proper phase and on player's turn only
-    if (overworld.underworld.isMyTurn()) {
+    if (underworld.isMyTurn()) {
       // If the player casting is the current client player
       if (selfPlayer) {
         // cast the spell
@@ -528,7 +539,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
           // Then cancel casting:
           return
         }
-        if (isOutOfRange(selfPlayer, mousePos, overworld.underworld)) {
+        if (isOutOfRange(selfPlayer, mousePos, underworld)) {
           // If there is no target at end range, just show that they are trying to cast out of range
           floatingText({
             coords: target,
@@ -541,7 +552,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         // Abort casting if there is no unitAtCastLocation
         // unless the first card (like AOE) specifically allows casting
         // on non unit targets
-        const hasTarget = hasTargetAtPosition(target, overworld.underworld);
+        const hasTarget = hasTargetAtPosition(target, underworld);
         if ((!hasTarget) && cards.length && cards[0] && !cards[0].allowNonUnitTarget) {
           floatingText({
             coords: target,
@@ -559,7 +570,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
           // Cancel Casting
           return
         }
-        clearSpellEffectProjection(overworld.underworld);
+        clearSpellEffectProjection(underworld);
         // Clear resMarkers so they don't hang around once the spell is cast
         globalThis.resMarkers = [];
 
@@ -569,9 +580,9 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
           y: target.y,
           cards: cardIds,
         });
-        CardUI.clearSelectedCards(overworld.underworld);
+        CardUI.clearSelectedCards(underworld);
         // Now that the cast has begun, clear the prediction tint so it doesn't color the targeted units anymore
-        clearTints(overworld.underworld);
+        clearTints(underworld);
       } else {
         console.error("Attempting to cast while globalThis.player is undefined");
       }
@@ -585,7 +596,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
       playSFXKey('deny');
     }
   } else {
-    updateTooltipSelection(mousePos, overworld.underworld);
+    updateTooltipSelection(mousePos, underworld);
   }
   tryShowDevContextMenu(overworld, e, mousePos);
 }
@@ -675,7 +686,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     {
       label: '🦸‍♂️ Super Me',
       action: ({ clientId }: { clientId?: string }) => {
-        if (superMe) {
+        if (superMe && overworld.underworld) {
           superMe(overworld.underworld, overworld.underworld.players.find(p => p.clientId == clientId) || globalThis.player);
         }
       },
@@ -686,6 +697,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       label: '☄️ Teleport Here',
       action: (props) => {
         const { clientId, pos } = props;
+        if (!overworld.underworld) {
+          console.error('Cannot teleport, underworld does not exist');
+          return;
+        }
         const player = overworld.underworld.players.find(p => p.clientId == clientId);
         if (player && pos) {
           player.unit.x = pos.x;
@@ -723,6 +738,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     ...Pickup.pickups.map<AdminContextMenuOption>(p => ({
       label: p.name,
       action: ({ pos }) => {
+        if (!overworld.underworld) {
+          console.error('Cannot spawn pickup, underworld does not exist');
+          return;
+        }
         if (pos) {
           Pickup.create({ pos, pickupSource: p }, overworld.underworld, false);
         }
@@ -733,6 +752,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     ...Doodad.doodads.map<AdminContextMenuOption>(d => ({
       label: d.name,
       action: ({ pos }) => {
+        if (!overworld.underworld) {
+          console.error('Cannot spawn doodad, underworld does not exist');
+          return;
+        }
         if (pos) {
           Doodad.create({ pos, source: d }, overworld.underworld, false);
         }
@@ -744,6 +767,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       label: u.id,
       action: ({ pos }) => {
         if (pos) {
+          if (!overworld.underworld) {
+            console.error('Cannot spawn unit, underworld does not exist');
+            return;
+          }
           overworld.underworld.spawnEnemy(u.id, pos, false);
           // Orient newly spawned units towards the player
           if (globalThis.player) {
@@ -760,12 +787,16 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     {
       label: 'Kill all Enemies',
       action: () => {
+        if (!overworld.underworld) {
+          console.error('Cannot "Kill all Enemies", underworld does not exist');
+          return;
+        }
         // Remove without blood, remember clean up will just
         // flag them for deletion, they will be removed from the array
         // at the start of the next turn.
-        overworld.underworld.units.filter(u => u.faction == Faction.ENEMY).forEach(u => {
-          Unit.die(u, overworld.underworld, false);
-        });
+        for (let unit of overworld.underworld.units.filter(u => u.faction == Faction.ENEMY)) {
+          Unit.die(unit, overworld.underworld, false);
+        }
       },
       supportInMultiplayer: true,
       domQueryContainer: '#menu-global'
@@ -773,6 +804,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     {
       label: 'Delete all Enemies',
       action: () => {
+        if (!overworld.underworld) {
+          console.error('Cannot "Delete all Enemies", underworld does not exist');
+          return;
+        }
         // Remove without blood, remember clean up will just
         // flag them for deletion, they will be removed from the array
         // at the start of the next turn.
@@ -788,7 +823,13 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     {
       label: 'Delete all Pickups',
       action: () => {
-        overworld.underworld.pickups.forEach(p => Pickup.removePickup(p, overworld.underworld, false));
+        if (!overworld.underworld) {
+          console.error('Cannot "Delete all Pickups", underworld does not exist');
+          return;
+        }
+        for (let pickup of overworld.underworld.pickups) {
+          Pickup.removePickup(pickup, overworld.underworld, false);
+        }
       },
       supportInMultiplayer: true,
       domQueryContainer: '#menu-global'
@@ -805,6 +846,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       label: 'Skip to Water Biome',
       action: () => {
         if (globalThis.player) {
+          if (!overworld.underworld) {
+            console.error('Cannot "Skip to Water Biome", underworld does not exist');
+            return;
+          }
           overworld.underworld.levelIndex = biome_level_index_map.water;
           Player.enterPortal(globalThis.player, overworld.underworld);
         }
@@ -816,6 +861,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       label: 'Skip to Lava Biome',
       action: () => {
         if (globalThis.player) {
+          if (!overworld.underworld) {
+            console.error('Cannot "Skip to Lava Biome", underworld does not exist');
+            return;
+          }
           overworld.underworld.levelIndex = biome_level_index_map.lava;
           Player.enterPortal(globalThis.player, overworld.underworld);
         }
@@ -827,6 +876,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       label: 'Skip to Blood Biome',
       action: () => {
         if (globalThis.player) {
+          if (!overworld.underworld) {
+            console.error('Cannot "Skip to Blood Biome", underworld does not exist');
+            return;
+          }
           overworld.underworld.levelIndex = biome_level_index_map.blood;
           Player.enterPortal(globalThis.player, overworld.underworld);
         }
@@ -838,6 +891,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       label: 'Skip to Ghost Biome',
       action: () => {
         if (globalThis.player) {
+          if (!overworld.underworld) {
+            console.error('Cannot "Skip to Ghost Biome", underworld does not exist');
+            return;
+          }
           overworld.underworld.levelIndex = biome_level_index_map.ghost;
           Player.enterPortal(globalThis.player, overworld.underworld);
         }
@@ -848,6 +905,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     {
       label: 'Regenerate Level',
       action: () => {
+        if (!overworld.underworld) {
+          console.error('Cannot "Regenerate Level", underworld does not exist');
+          return;
+        }
         overworld.underworld.generateLevelData(overworld.underworld.levelIndex);
       },
       supportInMultiplayer: false,
@@ -856,6 +917,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     {
       label: '✖️ Delete',
       action: ({ selectedUnitid }) => {
+        if (!overworld.underworld) {
+          console.error('Cannot "delete unit", underworld does not exist');
+          return;
+        }
         // Remove without blood, remember clean up will just
         // flag them for deletion, they will be removed from the array
         // at the start of the next turn.
@@ -870,6 +935,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     {
       label: '🔪 Die',
       action: ({ selectedUnitid }) => {
+        if (!overworld.underworld) {
+          console.error('Cannot admin kill unit, underworld does not exist');
+          return;
+        }
         const unit = overworld.underworld.units.find(u => u.id == selectedUnitid);
         if (unit) {
           Unit.die(unit, overworld.underworld, false);
@@ -882,6 +951,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     {
       label: '🏳️ Change Faction',
       action: ({ selectedUnitid }) => {
+        if (!overworld.underworld) {
+          console.error('Cannot admin change unit faction, underworld does not exist');
+          return;
+        }
         const unit = overworld.underworld.units.find(u => u.id == selectedUnitid);
         if (unit) {
           if (unit.faction == Faction.ALLY) {
@@ -907,6 +980,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     {
       label: '❤️ Set Health',
       action: () => {
+        if (!overworld.underworld) {
+          console.error('Cannot admin set unit health, underworld does not exist');
+          return;
+        }
         const health = prompt('Choose a new max health')
         const parsedHealth = parseInt(health || '');
         if (!isNaN(parsedHealth) && globalThis.selectedUnit) {
@@ -932,6 +1009,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     {
       label: '🔵 Set Mana',
       action: () => {
+        if (!overworld.underworld) {
+          console.error('Cannot admin set unit mana, underworld does not exist');
+          return;
+        }
         const mana = prompt('Choose a new max mana')
         const parsedMana = parseInt(mana || '');
         if (!isNaN(parsedMana)) {
@@ -958,6 +1039,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     {
       label: '👟 Set Stamina',
       action: () => {
+        if (!overworld.underworld) {
+          console.error('Cannot admin set unit stamina, underworld does not exist');
+          return;
+        }
         const stamina = prompt('Choose a new max stamina')
         const parsedStamina = parseInt(stamina || '');
         if (!isNaN(parsedStamina)) {
@@ -984,6 +1069,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     {
       label: '👹 Make Miniboss',
       action: () => {
+        if (!overworld.underworld) {
+          console.error('Cannot admin make unit miniboss, underworld does not exist');
+          return;
+        }
         const unit = overworld.underworld.units.find(u => u.id == globalThis.selectedUnit?.id);
         if (unit) {
           Unit.makeMiniboss(unit);
@@ -1007,6 +1096,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     {
       label: '️✖️ Delete',
       action: ({ selectedPickupLocation }) => {
+        if (!overworld.underworld) {
+          console.error('Cannot admin delete pickup, underworld does not exist');
+          return;
+        }
         if (selectedPickupLocation) {
           const pickup = overworld.underworld.pickups.find(p => p.x == selectedPickupLocation.x && p.y == selectedPickupLocation.y);
           if (pickup) {
@@ -1024,6 +1117,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
   }
 }
 function createContextMenuOptions(menu: HTMLElement, overworld: Overworld) {
+  if (!overworld.underworld) {
+    console.error('Cannot create context menu options, underworld does not exist');
+    return;
+  }
   for (let { label, action, domQueryContainer, supportInMultiplayer } of Object.values(adminCommands)) {
     // Make DOM button to trigger command
     let el = document.createElement('li');
