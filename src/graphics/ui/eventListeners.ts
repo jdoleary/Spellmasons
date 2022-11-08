@@ -543,7 +543,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
           // If there is no target at end range, just show that they are trying to cast out of range
           floatingText({
             coords: target,
-            text: 'Out of Range!'
+            text: 'Out of Range'
           });
           playSFXKey('deny_range');
           // Cancel Casting

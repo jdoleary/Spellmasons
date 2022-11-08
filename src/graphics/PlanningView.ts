@@ -241,7 +241,7 @@ export function updatePlanningView(underworld: Underworld) {
     }
     // Draw warnings
     if (mouseLabelText && globalThis.player) {
-      const text = Array.from(warnings).join('\n');
+      const text = Array.from(warnings).map(i18n).join('\n');
       mouseLabelText.text = text;
       mouseLabelText.style.fill = colors.errorRed;
       mouseLabelText.style.align = 'center';
@@ -637,8 +637,8 @@ export function drawPredictionCircleFill(target: Vec2, radius: number, text: str
     if (labelText) {
       // Exception: Don't override label text if text is
       // currently telling the user that they are aiming out of range
-      if (labelText.text !== TEXT_OUT_OF_RANGE) {
-        labelText.text = text;
+      if (labelText.text !== i18n(TEXT_OUT_OF_RANGE)) {
+        labelText.text = i18n(text);
         const labelPosition = withinCameraBounds({ x: target.x, y: target.y + radius }, labelText.width / 2);
         labelText.x = labelPosition.x;
         labelText.y = labelPosition.y;
@@ -841,7 +841,7 @@ export function getUIBarProps(x: number, y: number, numerator: number, denominat
   }
 }
 
-let warnings = new Set();
+let warnings = new Set<string>();
 export function addWarningAtMouse(warning: string) {
   if (globalThis.isHUDHidden) {
     return
