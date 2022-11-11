@@ -15,6 +15,7 @@ import { HasSpace } from './Type';
 import { explain, EXPLAIN_INVENTORY, EXPLAIN_OVERFILL, tutorialCompleteTask, updateTutorialChecklist } from '../graphics/Explain';
 
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
+export const PICKUP_IMAGE_PATH = 'pickups/scroll';
 type IPickupEffect = ({ unit, player, pickup, prediction }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld, prediction: boolean }) => boolean | undefined;
 export function isPickup(maybePickup: any): maybePickup is IPickup {
   return maybePickup && maybePickup.type == 'pickup';
@@ -305,7 +306,7 @@ export const pickups: IPickupSource[] = [
     },
   },
   {
-    imagePath: 'pickups/scroll',
+    imagePath: PICKUP_IMAGE_PATH,
     name: CARDS_PICKUP_NAME,
     description: 'Grants the player a new spell',
     probability: 0,

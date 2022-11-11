@@ -726,13 +726,17 @@ export default class Underworld {
     }
     // Sort unit sprites visually by y position (like "z-index")
     containerUnits?.children.sort((a: DisplayObject, b: DisplayObject) => {
+      // @ts-ignore: imagePath is a custom property I added to display objects of Image
+      let aExtraHeight = a.imagePath == Pickup.PICKUP_IMAGE_PATH ? 15 : 0;
+      // @ts-ignore: imagePath is a custom property I added to display objects of Image
+      let bExtraHeight = b.imagePath == Pickup.PICKUP_IMAGE_PATH ? 15 : 0;
       // Protect against a DisplayObject with NaN from disrupting the entire sort
-      const A = (a.y + config.UNIT_SIZE_RADIUS * a.scale.y);
+      const A = (a.y + aExtraHeight + config.UNIT_SIZE_RADIUS * a.scale.y);
       if (isNaN(A)) {
         return -1;
       }
       // Protect against a DisplayObject with NaN from disrupting the entire sort
-      const B = (b.y + config.UNIT_SIZE_RADIUS * b.scale.y);
+      const B = (b.y + bExtraHeight + config.UNIT_SIZE_RADIUS * b.scale.y);
       if (isNaN(B)) {
         return 1;
       }

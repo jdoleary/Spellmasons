@@ -15,7 +15,6 @@
 - **critical** miniboss vampire was able to move without playing walking animation during the ranged unit turn phase and then continue walking on his own
 - Update inventory gif to show book
 - Multiplayer starts on tutorial level
-- scroll is visibly sorted behind dead units
 
 - push + radius*2 + connect + damage isn't damaging the connected units (note, the pushed unit ends up in lava)
     - This is because the unit died when it fell in the lava so connect didn't connect it to other living units
