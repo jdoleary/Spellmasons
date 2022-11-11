@@ -16,7 +16,6 @@
     - This is because the unit died when it fell in the lava so connect didn't connect it to other living units
 - (e) fix save/load  from menu screen, it needs to change the gameview
 - (e) in multiplayer, when one player leaves and window is not focused the camera spazzes out
-- (e) splitx3 + kill + res resurrected a bunch of small split minibosses into regular sized minibosses
 - (e) spawning on top of a stamina or mana potion doesn't overfill in multiplayer
     - verified 2022-11-03
 ---

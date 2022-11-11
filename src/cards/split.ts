@@ -7,7 +7,6 @@ import Underworld from '../Underworld';
 import { animateMitosis } from './clone';
 
 import { CardRarity, probabilityMap } from '../types/commonTypes';
-import floatingText from '../graphics/FloatingText';
 import { getOrInitModifier } from './util';
 const id = 'split';
 const splitLimit = 3;
@@ -73,7 +72,11 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
       damage,
       moveSpeed
     }
-  }, () => { });
+  }, () => {
+    if (!unit.onDeathEvents.includes(id)) {
+      unit.onDeathEvents.push(id);
+    }
+  });
   if (modifier.quantity && modifier.quantity >= splitLimit) {
     return;
   }
@@ -188,6 +191,18 @@ Cannot split further than ${splitLimit} times.
   modifiers: {
     add,
     remove
+  },
+  events: {
+    onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
+      // Special case: Remove the 'split' modifier on death
+      // This is because without this, when a unit dies, the automatic
+      // removing of modifiers would cause split's custom remove function to be invoked
+      // which restores the unit's original size and stats.  However, split's stat changes
+      // should become perminant after death.  This prevents resurrecting a split unit from
+      // restoring the units original size and stats which is unexpected behavior and therefore
+      // undesireable.
+      delete unit.modifiers[id];
+    }
   }
 };
 export default spell;
