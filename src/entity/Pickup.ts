@@ -451,7 +451,7 @@ export const pickups: IPickupSource[] = [
     scale: 1.0,
     playerOnly: true,
     singleUse: true,
-    description: `Restores ${healthPotionRestoreAmount} health.`,
+    description: `Restores ${healthPotionRestoreAmount} health.  Can only be picked up and used when you are at less than full health.`,
     effect: ({ player, underworld, prediction }) => {
       // Only trigger the health potion if the player will be affected by the health potion
       // Normally that's when they have less than full health, but there's an exception where
