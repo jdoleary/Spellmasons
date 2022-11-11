@@ -28,16 +28,6 @@ function returnTranslation(key: string, map: LanguageMapping): string {
         return key;
     }
 }
-function getTranslation(key: string, languageCode: string) {
-    const language = languages.find(l => l.languagecode == languageCode);
-    if (language) {
-        return returnTranslation(key, language);
-    } else {
-        console.error('i18n: Could not find language with code', languageCode)
-    }
-    return key;
-
-}
 function i18n(key: string): string {
     if (languageMapping) {
         return returnTranslation(key, languageMapping);
@@ -83,4 +73,3 @@ globalThis.i18n = i18n;
 globalThis.setLanguage = setLanguage;
 globalThis.getSupportedLanguages = getSupportedLanguages;
 globalThis.getChosenLanguageCode = getChosenLanguageCode;
-globalThis.getTranslation = getTranslation;

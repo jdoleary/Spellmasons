@@ -1,5 +1,5 @@
 import { id } from '../cards/slash';
-import { elTutorialChecklist, elTutorialChecklistInner } from '../HTMLElements';
+import { elTutorialChecklistInner } from '../HTMLElements';
 import * as storage from '../storage';
 import Jprompt, { PromptArgs } from './Jprompt';
 import { bloodDecoy } from './ui/colors';
