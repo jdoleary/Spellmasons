@@ -13,7 +13,7 @@ import { getOrInitModifier } from './util';
 const id = 'Last Will';
 const imageName = 'unknown.png';
 function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number) {
-  const modifier = getOrInitModifier(unit, id, {isCurse:false,quantity}, () => {
+  const modifier = getOrInitModifier(unit, id, { isCurse: false, quantity }, () => {
     // Add event
     if (!unit.onDeathEvents.includes(id)) {
       unit.onDeathEvents.push(id);
@@ -37,7 +37,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconLastWill.png',
-    description: `Drop a random potion on death.`,
+    description: `Target drops a random potion on death.`,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       for (let unit of state.targetedUnits.filter(u => u.alive)) {
