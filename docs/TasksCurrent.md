@@ -12,6 +12,23 @@
 # Nov Week 5 / Jan Week 1
 
 # Bugs / Cleaning
+- Russell Playtest
+    - level 1 in tutorial shouldn't have any liquid
+    - Persistant tooltip about how to move until they do
+    - Maybe have a persistant checklist
+    - Explain that you can cast more than once in a turn
+    - Ending turn caused a 2nd portal to appear/ or was it hovering overhimself with slash?
+    - explain that you can only pickup potions when you are hurt
+    - infinite stamina after portal
+    - "All targets" in slash is confusing if targeting spells haven't been introduced yet
+    - Last Will copy is confusing if player doesn't understand that it's a blessing
+    - he went to retrieve a mana potion after the portal had spawned, I should remove them or something once the portal spawns
+    - Attention Markers are staying behind after a unit moves
+    - You should be able to destroy traps by attacking them
+    - Mana steal should specify "IF a target has mana"
+    - mana steal's health cost disappeared
+    - miniboss vampire was able to move without playing walking animation during the ranged unit turn phase and then continue walking on his own
+
 - (e) singleplayer is always seeding the same level
 - push + radius*2 + connect + damage isn't damaging the connected units (note, the pushed unit ends up in lava)
     - This is because the unit died when it fell in the lava so connect didn't connect it to other living units
@@ -21,7 +38,6 @@
 - when in full screen escape leaves full screen in addition to opening menu
     - https://stackoverflow.com/questions/72248081/preventing-electron-to-exit-fullscreen-on-escape
 - sync issue: golem moving through frozen guys jumped back
-- (m) load is broken, it GCs a BUNCh of underworlds
 - (m) You're able to cast into negative mana in multiplayer
 - "All targets" copy is confusing if player doesn't understand targeting
 - Find a way to make randomness fixed (like in spell "Displace" so that it doesn't get different random results on other people's screens and so that it wont change after another player casts)
