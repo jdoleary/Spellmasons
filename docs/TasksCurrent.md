@@ -1,23 +1,21 @@
-# Friday
-    - Address Russell playtest tasks
-    - Push latest to server and prod
 # Nov Week 3
     - Optimize
     - Make gameplay video with Brad
     - Add Trailer
-    - Establish Minimum System Requirements and update Steam Page
     - Begin real marketing
 # Nov Week 4
-# Nov Week 5 / Jan Week 1
+    - Key Binding Config page
+# Nov Week 5 / Dec Week 1
+    - Publish 1st steam build
+    - Store localization
+    - Cloud Saves
+    - Steam Achievements
 
 # Bugs / Cleaning
+- **critical** miniboss vampire was able to move without playing walking animation during the ranged unit turn phase and then continue walking on his own
+- Update inventory gif to show book
+- Multiplayer starts on tutorial level
 - scroll is visibly sorted behind dead units
-- Russell Playtest
-    - Ending turn caused a 2nd portal to appear/ or was it hovering overhimself with slash?
-    - he went to retrieve a mana potion after the portal had spawned, I should remove them or something once the portal spawns
-    - Attention Markers are staying behind after a unit moves
-    - mana steal's health cost disappeared
-    - **critical** miniboss vampire was able to move without playing walking animation during the ranged unit turn phase and then continue walking on his own
 
 - push + radius*2 + connect + damage isn't damaging the connected units (note, the pushed unit ends up in lava)
     - This is because the unit died when it fell in the lava so connect didn't connect it to other living units
@@ -67,6 +65,7 @@
 # Localization
 - All tooltip info
 # Features
+- Remove mana potions after portal spawns??
 - see stash "add i18n to explain prompts"
 - should allow spell prediction even while an action is taking place - this not being here causes friction in multiplayer
 - EZ self cast, like alt clicking a spell self casts or something

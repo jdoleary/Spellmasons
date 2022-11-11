@@ -1,6 +1,12 @@
 # Desired Schedule
+- November
+    - Optimize
+        - Check optimization for rendering menu in other languages
+    - Finish bugs
 - December
     - Package as Electron App
+    - Establish Minimum System Requirements and update Steam Page
+    - December 1st. Submit build to steam for approval
     - Convenient multiplayer lobbying via steam
         - Prevent players from joining mid-round, notify "you will spawn once this level is complete"
 - January

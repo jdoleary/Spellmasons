@@ -1,3 +1,8 @@
+- Russell Playtest
+    - Ending turn caused a 2nd portal to appear/ or was it hovering overhimself with slash?
+    - he went to retrieve a mana potion after the portal had spawned, I should remove them or something once the portal spawns
+    - Attention Markers are staying behind after a unit moves
+    - mana steal's health cost disappeared
 - You should be able to destroy traps by attacking them
 - spawning on top of a stamina or mana potion doesn't overfill in multiplayer
   - fixed? Could not reproduce 2022-11-11
