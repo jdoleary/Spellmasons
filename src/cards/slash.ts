@@ -31,7 +31,7 @@ const spell: Spell = {
     animationPath,
     sfx: 'hurt',
     description: `
-Deals ${damageDone} damage to all targets.    
+Deals ${damageDone} damage
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       let animationDelaySum = 0;

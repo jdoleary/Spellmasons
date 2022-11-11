@@ -18,7 +18,6 @@
     - Ending turn caused a 2nd portal to appear/ or was it hovering overhimself with slash?
     - explain that you can only pickup potions when you are hurt
     - infinite stamina after portal
-    - "All targets" in slash is confusing if targeting spells haven't been introduced yet
     - Last Will copy is confusing if player doesn't understand that it's a blessing
     - he went to retrieve a mana potion after the portal had spawned, I should remove them or something once the portal spawns
     - Attention Markers are staying behind after a unit moves
