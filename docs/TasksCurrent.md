@@ -12,22 +12,17 @@
 # Nov Week 5 / Jan Week 1
 
 # Bugs / Cleaning
+- (e) singleplayer is always seeding the same level
 - push + radius*2 + connect + damage isn't damaging the connected units (note, the pushed unit ends up in lava)
     - This is because the unit died when it fell in the lava so connect didn't connect it to other living units
 - (e) fix save/load  from menu screen, it needs to change the gameview
 - (e) in multiplayer, when one player leaves and window is not focused the camera spazzes out
-- (e) spawning on top of a stamina or mana potion doesn't overfill in multiplayer
-    - verified 2022-11-03
 ---
-- (?) Images stick around after you join a new game in multiplayer
-    - replicatable with admin "delete all enemies"
 - when in full screen escape leaves full screen in addition to opening menu
     - https://stackoverflow.com/questions/72248081/preventing-electron-to-exit-fullscreen-on-escape
 - sync issue: golem moving through frozen guys jumped back
 - (m) load is broken, it GCs a BUNCh of underworlds
 - (m) You're able to cast into negative mana in multiplayer
-- (m) UI: Allow inventory to scale on smaller resolutions
-- (m) if screen is too thin, hover card covers inventory
 - "All targets" copy is confusing if player doesn't understand targeting
 - Find a way to make randomness fixed (like in spell "Displace" so that it doesn't get different random results on other people's screens and so that it wont change after another player casts)
 - This save file is giving me critical errors `saveFile-with-errors.json`

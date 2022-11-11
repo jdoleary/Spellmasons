@@ -1,3 +1,5 @@
+- spawning on top of a stamina or mana potion doesn't overfill in multiplayer
+  - fixed? Could not reproduce 2022-11-11
 - Steam description is too wordy, just tell 'em why it's awesome
 - missing gold circle on player 2's feet
 - bug: If server is currently in an infinite loop it won't process disconnect and will make the player wait when trying to exit the lobby

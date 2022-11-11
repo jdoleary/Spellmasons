@@ -129,8 +129,6 @@ body.view-Game.showUpgrades #upgrade-picker {
 
 #upgrade-picker .card,
 .card-inspect .card {
-  /* width: 100%;
-  width: 462px; */
   width: unset;
   height: 744px;
   max-height: 100%;
@@ -212,20 +210,26 @@ body.open-inventory .card-inspect {
   position: initial;
   width: 42%;
   height: 100%;
+  /* ensure that the card fits nicely within the book page */
+  padding: 15px;
+  box-sizing: border-box;
 }
 
+
 .card-inspect {
-  position: fixed;
+  /* position: fixed; */
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   pointer-events: none;
   flex-direction: column;
   /* Render over top of card hand */
   z-index: 2;
+  /* Ensure that it doesn't grow bigger than it's flex container */
+  padding-top: 15px;
+  overflow: hidden
 }
 
 .card-inspect:empty {
