@@ -92,7 +92,7 @@ export function joinRoom(overworld: Overworld, _room_info = {}): Promise<void> {
   // when people are trying to join each other's games
   room_info.name = room_info.name.toLowerCase();
   // Create a new underworld to sync with the payload so that no old state carries over
-  new Underworld(overworld, overworld.pie, 'seed-will-be-initialized-during INIT_GAME_STATE');
+  new Underworld(overworld, overworld.pie, Math.random().toString());
   return pie.joinRoom(room_info, true).then(() => {
     console.log('Pie: You are now in the room', JSON.stringify(room_info, null, 2));
     // Useful for development to get into the game quickly
