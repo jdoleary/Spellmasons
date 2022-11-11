@@ -16,9 +16,7 @@ import Underworld from '../Underworld';
 import { lerp } from "../jmath/math"
 import * as inLiquid from '../inLiquid';
 import * as slash from '../cards/slash';
-import * as push from '../cards/push';
-import * as pull from '../cards/pull';
-import { explain, EXPLAIN_BLESSINGS, EXPLAIN_LIQUID_DAMAGE } from '../graphics/Explain';
+import { explain, EXPLAIN_BLESSINGS, isTutorialComplete } from '../graphics/Explain';
 
 const elInGameLobby = document.getElementById('in-game-lobby') as (HTMLElement | undefined);
 const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
@@ -357,9 +355,9 @@ export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | u
   // Players may not have more than 1 of a particular card, because now, cards are
   // not removed when cast
   if (!player.inventory.includes(card.id)) {
-    if (card.id == push.id || card.id == pull.id) {
-      explain(EXPLAIN_LIQUID_DAMAGE);
-    } else if (card.category == CardCategory.Blessings) {
+    // Only explain blessings if the tutorial is already done,
+    // we don't want it to interrupt the natural flow of the tutorial
+    if (isTutorialComplete() && card.category == CardCategory.Blessings) {
       explain(EXPLAIN_BLESSINGS);
     }
     player.inventory.push(card.id);

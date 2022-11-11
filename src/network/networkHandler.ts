@@ -22,7 +22,7 @@ import { triggerAdminCommand } from '../graphics/ui/eventListeners';
 import { Vec2 } from '../jmath/Vec';
 import pingSprite from '../graphics/Ping';
 import { clearLastNonMenuView, setView, View } from '../views';
-import { autoExplain, explain, EXPLAIN_END_TURN } from '../graphics/Explain';
+import { autoExplain, explain, EXPLAIN_END_TURN, tutorialCompleteTask } from '../graphics/Explain';
 import { cameraAutoFollow } from '../graphics/PixiUtils';
 import { Overworld } from '../Overworld';
 
@@ -306,6 +306,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       if (fromPlayer) {
         // If the spawned player is the current client's player
         if (fromPlayer == globalThis.player) {
+          tutorialCompleteTask('spawn');
           autoExplain();
           // When player spawns, send their config from storage
           // to the server

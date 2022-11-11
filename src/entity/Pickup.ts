@@ -12,7 +12,7 @@ import { manaBlue, stamina } from '../graphics/ui/colors';
 import Underworld from '../Underworld';
 import { hasBloodCurse } from '../cards/blood_curse';
 import { HasSpace } from './Type';
-import { explain, EXPLAIN_INVENTORY, EXPLAIN_OVERFILL } from '../graphics/Explain';
+import { explain, EXPLAIN_INVENTORY, EXPLAIN_OVERFILL, tutorialCompleteTask, updateTutorialChecklist } from '../graphics/Explain';
 
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 type IPickupEffect = ({ unit, player, pickup, prediction }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld, prediction: boolean }) => boolean | undefined;
@@ -293,6 +293,7 @@ export const pickups: IPickupSource[] = [
         underworld.pie.sendData({
           type: MESSAGE_TYPES.ENTER_PORTAL
         });
+        tutorialCompleteTask('portal');
       }
       // Move the player unit so they don't continue to trigger the pickup more than once
       if (player && player.unit) {
@@ -321,6 +322,7 @@ export const pickups: IPickupSource[] = [
           explain(EXPLAIN_INVENTORY);
         }
       }
+      tutorialCompleteTask('pickupScroll');
       return true;
     },
   },

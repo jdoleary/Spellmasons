@@ -1633,3 +1633,43 @@ as the ui-border itself */
   height: 100%;
   overflow-y: hidden;
 }
+
+.showTutorial #tutorial-checklist {
+  display: block;
+}
+
+/* Override hide tutorial checklist if not in view-Game */
+body:not(.view-Game) #tutorial-checklist {
+  display: none;
+}
+
+#tutorial-checklist {
+  display: none;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+  position: absolute;
+  left: 8px;
+  /* Leave room for top of screen tooltip such as "Press z to recenter camera" */
+  top: 48px;
+  color: white;
+}
+
+#tutorial-checklist h1 {
+  margin: 0;
+}
+
+#tutorial-checklist-inner {
+  padding-left: 15px;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+#tutorial-checklist-inner div.complete {
+  color: #aaa;
+}
+
+#tutorial-checklist-inner span.text.complete {
+  text-decoration: line-through;
+}

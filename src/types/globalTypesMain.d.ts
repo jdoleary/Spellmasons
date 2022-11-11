@@ -10,6 +10,8 @@ import type { View } from '../views';
 import type { Faction } from './commonTypes';
 import type { IPickup } from '../entity/Pickup';
 import type { IHostApp } from '../network/networkUtil';
+import type { LanguageMapping } from '../localization';
+import type { TutorialChecklist } from '../graphics/Explain';
 
 declare global {
     var pixi: typeof PIXI | undefined;
@@ -157,4 +159,7 @@ declare global {
     var getSupportedLanguages: () => { language: string, code: string }[];
     var getChosenLanguageCode: () => string;
     var getTranslation: (key: string, mapping: LanguageMapping) => string;
+    // Tutorial
+    var doUpdateTutorialChecklist: boolean;
+    var resetTutorial: () => void;
 }

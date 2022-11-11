@@ -6,7 +6,7 @@ Note: HTML that needs to be localized simply needs a data-localize-text attribut
           `<div data-localize-text="Quit to Main Menu"></div>`
 Now, it will automatically be localized when setLanguage is called.
 */
-interface LanguageMapping {
+export interface LanguageMapping {
     [key: string]: string
 }
 let languageMapping: { [key: string]: string };

@@ -74,7 +74,7 @@ import { createVisualLobbingProjectile } from './entity/Projectile';
 import { isOutOfRange } from './PlayerUtils';
 import type { DisplayObject, TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
-import { explain, EXPLAIN_MISSED_SCROLL, EXPLAIN_SCROLL } from './graphics/Explain';
+import { explain, EXPLAIN_MISSED_SCROLL, EXPLAIN_SCROLL, isTutorialComplete, tutorialCompleteTask, tutorialShowTask } from './graphics/Explain';
 import { makeScrollDissapearParticles } from './graphics/ParticleCollection';
 import { Overworld } from './Overworld';
 
@@ -95,6 +95,7 @@ const elUpgradePicker = document.getElementById('upgrade-picker') as (HTMLElemen
 const elUpgradePickerContent = document.getElementById('upgrade-picker-content') as (HTMLElement | undefined);
 const elSeed = document.getElementById('seed') as (HTMLElement | undefined);
 const elUpgradePickerLabel = document.getElementById('upgrade-picker-label') as (HTMLElement | undefined);
+let firstTimePlaying = !isTutorialComplete();
 
 export const showUpgradesClassName = 'showUpgrades';
 
@@ -219,6 +220,7 @@ export default class Underworld {
       const pickupSource = Pickup.pickups.find(p => p.name == Pickup.CARDS_PICKUP_NAME)
       if (pickupSource) {
         Pickup.create({ pos: enemyKilledPos, pickupSource }, this, false);
+        tutorialShowTask('pickupScroll');
       } else {
         console.error('pickupSource for', Pickup.CARDS_PICKUP_NAME, ' not found');
         return
@@ -1207,7 +1209,7 @@ export default class Underworld {
       biome = biome_ghost;
     }
 
-    const useTutorialStartLevel = isFirstTimePlaying() && levelIndex == 0
+    const useTutorialStartLevel = !isTutorialComplete() && levelIndex == 0;
     const caveParams = useTutorialStartLevel
       ? caveSizes.tutorial
       : (levelIndex > 6
@@ -2570,6 +2572,11 @@ export default class Underworld {
       globalThis.castThisTurn = true;
     }
 
+    if (!prediction) {
+      tutorialCompleteTask('cast');
+      tutorialCompleteTask('castMultipleInOneTurn', () => casterUnit.mana < casterUnit.manaMax);
+    }
+
     let effectState: Cards.EffectState = {
       cardIds,
       casterCardUsage,
@@ -2929,7 +2936,7 @@ export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, Underworl
 function getEnemiesForAltitude(underworld: Underworld): string[] {
   const { levelIndex } = underworld;
 
-  const numberOfUnits = isFirstTimePlaying()
+  const numberOfUnits = firstTimePlaying
     // Face a reduced number of enemies on firstTimePlaying
     ? (levelIndex == 1 ? 1 : 2 + levelIndex)
     : 3 + levelIndex;
@@ -2987,15 +2994,4 @@ export interface LevelData {
     coord: Vec2,
     isMiniboss: boolean
   }[];
-}
-const FIRST_TIME_PLAYING = 'first-time-playing';
-let cachedFirstTimePlaying: boolean | undefined = undefined;
-// Returns a value that remains the same as the first time this function was invoked for the duration of the play session
-function isFirstTimePlaying() {
-  if (cachedFirstTimePlaying === undefined) {
-    const NO = 'no';
-    cachedFirstTimePlaying = !globalThis.headless && storage.get(FIRST_TIME_PLAYING) !== NO;
-    storage.set(FIRST_TIME_PLAYING, NO);
-  }
-  return cachedFirstTimePlaying
 }

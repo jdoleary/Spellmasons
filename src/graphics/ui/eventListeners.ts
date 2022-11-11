@@ -34,7 +34,7 @@ import keyMapping from './keyMapping';
 import { inPortal } from '../../entity/Player';
 import * as Doodad from '../../entity/Doodad';
 import { hasTargetAtPosition } from '../../cards';
-import { explain, EXPLAIN_END_TURN } from '../Explain';
+import { explain, EXPLAIN_END_TURN, tutorialCompleteTask, updateTutorialChecklist } from '../Explain';
 import { Overworld } from '../../Overworld';
 
 export const keyDown = {
@@ -145,7 +145,8 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
       if (globalThis.player?.isSpawned) {
 
         // Make camera follow player unit 
-        cameraAutoFollow(true)
+        cameraAutoFollow(true);
+        tutorialCompleteTask('recenterCamera');
       } else {
         const mouseTarget = underworld.getMousePos();
         floatingText({
@@ -290,6 +291,7 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
     const { zoom } = getCamera();
     cameraAutoFollow(false);
     moveCamera(-movementX / zoom, -movementY / zoom);
+    tutorialCompleteTask('camera');
   }
 
   if (globalThis.player) {
@@ -310,6 +312,7 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
             Unit._moveTowards(globalThis.player.unit, intersection, underworld);
             // Send current player movements to server
             sendMovePlayer(underworld);
+            tutorialCompleteTask('moved', () => !!globalThis.player && globalThis.player.unit.stamina <= globalThis.player.unit.staminaMax * 0.7);
 
           } else {
             if (!globalThis.notifiedOutOfStamina) {

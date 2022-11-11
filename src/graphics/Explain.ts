@@ -1,6 +1,8 @@
 import { id } from '../cards/slash';
+import { elTutorialChecklist, elTutorialChecklistInner } from '../HTMLElements';
 import * as storage from '../storage';
 import Jprompt, { PromptArgs } from './Jprompt';
+import { bloodDecoy } from './ui/colors';
 import keyMapping, { keyToHumanReadable } from './ui/keyMapping';
 const ALREADY_EXPLAINED = 'explained'
 export function explain(key: string, forceShow?: boolean) {
@@ -171,8 +173,6 @@ In this example, "Connect" + "Push" + "${id}" will damage you instead of the 2nd
 }
 globalThis.explainKeys = Object.keys(explainMap);
 export const autoExplains = [
-    EXPLAIN_WALK,
-    EXPLAIN_CAST,
     EXPLAIN_ATTENTION_MARKER_MELEE,
     EXPLAIN_MANA_COST,
     EXPLAIN_WALK_ROPE,
@@ -183,12 +183,162 @@ export const autoExplains = [
     EXPLAIN_FORGE_ORDER
 ]
 export function autoExplain() {
-    for (let e of autoExplains) {
-        if (!isAlreadyExplained(e)) {
-            explain(e);
-            // Stop after finding one that needs explaining
-            return;
+    // @ts-ignore: This global isn't on the server
+    if (globalThis.devUnderworld && globalThis.devUnderworld.levelIndex > 2) {
+        for (let e of autoExplains) {
+            if (!isAlreadyExplained(e)) {
+                explain(e);
+                // Stop after finding one that needs explaining
+                return;
+            }
         }
     }
 
+}
+export function setTutorialVisiblity(visible: boolean) {
+    document.body.classList.toggle('showTutorial', visible);
+    globalThis.doUpdateTutorialChecklist = visible;
+    updateTutorialChecklist()
+}
+interface TutorialChecklistItem {
+    visible: boolean;
+    complete: boolean;
+    text: string;
+    nextVisibleTasks: (keyof TutorialChecklist)[];
+    showExplainPopup: string[];
+}
+export interface TutorialChecklist {
+    spawn: TutorialChecklistItem;
+    moved: TutorialChecklistItem;
+    portal: TutorialChecklistItem;
+    cast: TutorialChecklistItem;
+    castMultipleInOneTurn: TutorialChecklistItem;
+    camera: TutorialChecklistItem;
+    recenterCamera: TutorialChecklistItem;
+    pickupScroll: TutorialChecklistItem;
+}
+const tutorialChecklist: TutorialChecklist = {
+    spawn: {
+        visible: true,
+        complete: false,
+        text: "Click somewhere on the grass to choose a spawn point.",
+        nextVisibleTasks: ['moved', 'portal'],
+        showExplainPopup: [],
+    },
+    moved: {
+        visible: false,
+        complete: false,
+        text: "Hold right mouse button to walk towards your cursor",
+        nextVisibleTasks: [],
+        showExplainPopup: [EXPLAIN_WALK],
+    },
+    portal: {
+        visible: false,
+        complete: false,
+        text: "Move into the portal to go to the next level",
+        nextVisibleTasks: ['camera', 'cast'],
+        showExplainPopup: [],
+    },
+    cast: {
+        visible: false,
+        complete: false,
+        text: "Click on a spell from your toolbar to queue it up and then click on a target to cast it",
+        nextVisibleTasks: ['castMultipleInOneTurn'],
+        showExplainPopup: [EXPLAIN_CAST],
+    },
+    castMultipleInOneTurn: {
+        visible: false,
+        complete: false,
+        text: "Cast more than once in a single turn",
+        nextVisibleTasks: [],
+        showExplainPopup: [],
+    },
+    camera: {
+        visible: false,
+        complete: false,
+        text: "Move the camera with W,A,S, and D keys or by holding and dragging Middle Mouse Button",
+        nextVisibleTasks: ['recenterCamera'],
+        showExplainPopup: [],
+    },
+    recenterCamera: {
+        visible: false,
+        complete: false,
+        text: "Recenter the camera with the Z key",
+        nextVisibleTasks: [],
+        showExplainPopup: [],
+    },
+    pickupScroll: {
+        visible: false,
+        complete: false,
+        text: "Pickup a spell scroll to get more spells",
+        nextVisibleTasks: [],
+        showExplainPopup: [],
+    }
+}
+export function updateTutorialChecklist() {
+    let html = `<h1>${i18n('Tutorial')}</h1>`;
+    for (let item of Object.values(tutorialChecklist)) {
+        if (item.visible) {
+            html += `<div class="${item.complete ? 'complete' : ''}">${item.complete ? '&#x2611;' : '&#x2610;'} <span class="text ${item.complete ? 'complete' : ''}">${i18n(item.text)}</span></div>`
+        }
+    }
+    elTutorialChecklistInner.innerHTML = html;
+}
+export function tutorialCompleteTask(key: keyof TutorialChecklist, condition?: () => boolean) {
+    if (globalThis.doUpdateTutorialChecklist && (condition ? condition() : true)) {
+        const task = tutorialChecklist[key];
+        if (task) {
+            console.log('Tutorial: Complete task', task.text);
+            task.complete = true;
+            for (let nextTask of task.nextVisibleTasks) {
+                tutorialShowTask(nextTask);
+            }
+            if (Object.keys(tutorialChecklist).every(key => tutorialChecklist[key as keyof TutorialChecklist].complete)) {
+                setTutorialVisiblity(false);
+                setTutorialComplete();
+            }
+            updateTutorialChecklist();
+        } else {
+            console.error('No such tutorial task with key', key);
+        }
+    }
+
+}
+export function tutorialShowTask(key: keyof TutorialChecklist) {
+    if (globalThis.doUpdateTutorialChecklist) {
+        const task = tutorialChecklist[key];
+        if (task) {
+            task.visible = true;
+            updateTutorialChecklist();
+        } else {
+            console.error('No such tutorial task with key', key);
+        }
+    }
+}
+const TUTORIAL_COMPLETE = 'tutorial-complete';
+let cachedTutorialComplete: boolean | undefined = undefined;
+const YES = 'yes';
+function setTutorialComplete() {
+    console.log('Tutorial: Player finished tutorial!')
+    cachedTutorialComplete = true;
+    storage.set(TUTORIAL_COMPLETE, YES);
+}
+globalThis.resetTutorial = function resetTutorial() {
+    cachedTutorialComplete = false;
+    storage.set(TUTORIAL_COMPLETE, undefined);
+    for (let item of Object.values(tutorialChecklist)) {
+        item.complete = false;
+    }
+    setTutorialVisiblity(true);
+    alert('Tutorial has been reset');
+}
+// Returns a value that remains the same as the first time this function was invoked for the duration of the play session
+export function isTutorialComplete() {
+    if (cachedTutorialComplete === undefined) {
+        cachedTutorialComplete = !globalThis.headless && storage.get(TUTORIAL_COMPLETE) == YES;
+    }
+    if (!cachedTutorialComplete) {
+        setTutorialVisiblity(true);
+    }
+    return cachedTutorialComplete;
 }
