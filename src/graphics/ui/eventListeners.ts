@@ -248,10 +248,13 @@ const sendMovePlayer = throttle((underworld: Underworld) => {
 
 }, 200, { trailing: true });
 const notifyYouMustWaitForYourTurn = throttle((target: Vec2) => {
-  floatingText({
-    coords: target,
-    text: 'You must wait for your turn\nto move',
-  });
+  // Only notify if they are spawned in
+  if (globalThis.player?.isSpawned) {
+    floatingText({
+      coords: target,
+      text: 'You must wait for your turn\nto move',
+    });
+  }
 }, 400, { trailing: true });
 
 export function mouseMove(underworld: Underworld, e?: MouseEvent) {
