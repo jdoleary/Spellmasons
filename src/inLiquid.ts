@@ -1,6 +1,7 @@
 import { lavaDamage } from "./entity/Obstacle";
 import { HasSpace } from "./entity/Type";
 import { isUnit, takeDamage } from "./entity/Unit";
+import { explain, EXPLAIN_LIQUID_DAMAGE } from "./graphics/Explain";
 import { addMask, removeMask } from "./graphics/Image";
 import type Underworld from "./Underworld";
 
@@ -10,6 +11,7 @@ export function add(entity: HasSpace, underworld: Underworld, prediction: boolea
     if (!entity.inLiquid) {
         entity.inLiquid = true;
         if (isUnit(entity)) {
+            explain(EXPLAIN_LIQUID_DAMAGE);
             takeDamage(entity, lavaDamage, undefined, underworld, prediction);
         }
         if (entity.image) {
