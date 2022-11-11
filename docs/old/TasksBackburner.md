@@ -1,3 +1,4 @@
+- You should be able to destroy traps by attacking them
 - spawning on top of a stamina or mana potion doesn't overfill in multiplayer
   - fixed? Could not reproduce 2022-11-11
 - Steam description is too wordy, just tell 'em why it's awesome

@@ -176,6 +176,13 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string) {
 export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld) {
   // Set the player so they can choose their next spawn
   player.isSpawned = false;
+  // Update player position to be NOT NaN or null (which indicates that the player is in portal),
+  // instead, the player is now spawning so their position should be a number.
+  // This is important because it allows the player to see enemy attentionMarkers when
+  // they are choosing their spwan; whereas if the position remained NaN or null inPortal would
+  // return true and it wouldn't run predictions on them.
+  player.unit.x = -1000;
+  player.unit.y = -1000;
 
   if (elInstructions && globalThis.player == player) {
     elInstructions.innerHTML = 'Choose a place to spawn with <img src="mouse-LMB-bg.png" alt="Left Mouse Button"/>'
