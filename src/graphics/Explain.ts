@@ -337,6 +337,10 @@ globalThis.resetTutorial = function resetTutorial() {
 }
 // Returns a value that remains the same as the first time this function was invoked for the duration of the play session
 export function isTutorialComplete() {
+    if (globalThis.headless) {
+        cachedTutorialComplete = true;
+        return cachedTutorialComplete;
+    }
     if (cachedTutorialComplete === undefined) {
         cachedTutorialComplete = !globalThis.headless && storage.get(TUTORIAL_COMPLETE) == YES;
     }
