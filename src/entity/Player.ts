@@ -316,7 +316,7 @@ export function syncLobby(underworld: Underworld) {
       return;
     }
     elInGameLobby.innerHTML = globalThis.lobbyPlayerList.map(p => {
-      return `<div class="ui-border"><div class="player" style="color:${p.color}"><span class="player-name">${p.name}</span><span>${p.status}</span></div></div>`
+      return `<div class="ui-border"><div class="player"><span class="player-name"><span style="color:${p.color}">⬤&nbsp;</span>${p.name}</span><span>${p.status}</span></div></div>`
     }).join('');
   }
 }
