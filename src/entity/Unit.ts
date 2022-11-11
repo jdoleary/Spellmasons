@@ -628,7 +628,7 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   if (globalThis.player && globalThis.player.unit == unit) {
     clearSpellEffectProjection(underworld);
     CardUI.clearSelectedCards(underworld);
-    centeredFloatingText(`💀 You Died 💀`, 'red');
+    centeredFloatingText(`You Died`, 'red');
     explain(EXPLAIN_DEATH);
     playSFXKey('game_over');
   }
