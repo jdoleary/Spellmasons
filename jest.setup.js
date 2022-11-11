@@ -1,13 +1,16 @@
 window.animationManager = {
-  animate: () => {},
-  addAnimation: () => {},
-  setTransform: () => {},
-  startAnimate: () => {},
-  startGroup: () => {},
-  endGroup: () => {},
+  animate: () => { },
+  addAnimation: () => { },
+  setTransform: () => { },
+  startAnimate: () => { },
+  startGroup: () => { },
+  endGroup: () => { },
 };
 
-window.alert = () => {}
+window.usingTestRunner = true;
+// Stub out translation for testing
+window.i18n = (text) => text;
+window.alert = () => { }
 
 // Overwrite Jest's obnoxious changes to console.log
 const util = require('util')

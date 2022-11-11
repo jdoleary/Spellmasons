@@ -276,6 +276,9 @@ const tutorialChecklist: TutorialChecklist = {
     }
 }
 export function updateTutorialChecklist() {
+    if (globalThis.usingTestRunner) {
+        return;
+    }
     let html = `<h1>${i18n('Tutorial')}</h1>`;
     for (let item of Object.values(tutorialChecklist)) {
         if (item.visible) {

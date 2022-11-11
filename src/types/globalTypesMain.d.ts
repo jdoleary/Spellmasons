@@ -161,4 +161,6 @@ declare global {
     // Tutorial
     var doUpdateTutorialChecklist: boolean;
     var resetTutorial: () => void;
+
+    var usingTestRunner: boolean;
 }
