@@ -22,9 +22,9 @@
     - he went to retrieve a mana potion after the portal had spawned, I should remove them or something once the portal spawns
     - Attention Markers are staying behind after a unit moves
     - You should be able to destroy traps by attacking them
-    - Mana steal should specify "IF a target has mana"
     - mana steal's health cost disappeared
     - miniboss vampire was able to move without playing walking animation during the ranged unit turn phase and then continue walking on his own
+    - Attention markers don't show anymore when you're picking your spawn
 
 - push + radius*2 + connect + damage isn't damaging the connected units (note, the pushed unit ends up in lava)
     - This is because the unit died when it fell in the lava so connect didn't connect it to other living units
