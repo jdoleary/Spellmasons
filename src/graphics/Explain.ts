@@ -221,7 +221,7 @@ const tutorialChecklist: TutorialChecklist = {
     spawn: {
         visible: true,
         complete: false,
-        text: "Click somewhere on the grass to choose a spawn point.",
+        text: "Click somewhere on the grass to choose a spawn point",
         nextVisibleTasks: ['moved', 'portal'],
         showExplainPopup: [],
     },
