@@ -42,4 +42,6 @@ global.predictionGraphics = undefined;
 global.planningViewGraphics = undefined;
 global.hoverTarget = undefined;
 global.location = undefined;
+// No translations should be done on the server, just return the original text.
+global.i18n = (text) => text;
 export { };
