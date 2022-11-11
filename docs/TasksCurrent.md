@@ -15,7 +15,6 @@
 
 # Bugs / Cleaning
 - make potions disappear with same effect as a disappearing scroll on the end of the level
-- Resetting the tutorial should reset EXPLAINS too
 - **critical** miniboss vampire was able to move without playing walking animation during the ranged unit turn phase and then continue walking on his own
 - Update inventory gif to show book
 - Multiplayer starts on tutorial level

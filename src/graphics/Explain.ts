@@ -2,7 +2,6 @@ import { id } from '../cards/slash';
 import { elTutorialChecklistInner } from '../HTMLElements';
 import * as storage from '../storage';
 import Jprompt, { PromptArgs } from './Jprompt';
-import { bloodDecoy } from './ui/colors';
 import keyMapping, { keyToHumanReadable } from './ui/keyMapping';
 const ALREADY_EXPLAINED = 'explained'
 export function explain(key: string, forceShow?: boolean) {
@@ -333,6 +332,10 @@ globalThis.resetTutorial = function resetTutorial() {
         item.complete = false;
     }
     setTutorialVisiblity(true);
+    // Reset all explain prompts when tutorial is reset
+    for (let explainKey of explainKeys) {
+        storage.set(explainKey, undefined);
+    }
     alert('Tutorial has been reset');
 }
 // Returns a value that remains the same as the first time this function was invoked for the duration of the play session
