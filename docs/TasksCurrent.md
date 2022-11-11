@@ -11,13 +11,13 @@
 # Nov Week 5 / Jan Week 1
 
 # Bugs / Cleaning
+- scroll is visibly sorted behind dead units
 - Russell Playtest
     - Ending turn caused a 2nd portal to appear/ or was it hovering overhimself with slash?
     - he went to retrieve a mana potion after the portal had spawned, I should remove them or something once the portal spawns
     - Attention Markers are staying behind after a unit moves
     - mana steal's health cost disappeared
-    - miniboss vampire was able to move without playing walking animation during the ranged unit turn phase and then continue walking on his own
-    - ensure the tutorial stays up until all items are completed
+    - **critical** miniboss vampire was able to move without playing walking animation during the ranged unit turn phase and then continue walking on his own
 
 - push + radius*2 + connect + damage isn't damaging the connected units (note, the pushed unit ends up in lava)
     - This is because the unit died when it fell in the lava so connect didn't connect it to other living units
