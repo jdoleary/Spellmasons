@@ -11,6 +11,7 @@ import Underworld, { Biome } from "./Underworld";
 
 export const caveSizes: { [size: string]: CaveParams } = {
     'tutorial': {
+        numberOfLiquidSources: 0,
         minThickness: config.OBSTACLE_SIZE,
         startThickness: 150,
         startPointJitter: 0,
@@ -33,6 +34,7 @@ export const caveSizes: { [size: string]: CaveParams } = {
     }
 }
 interface CaveParams {
+    numberOfLiquidSources?: number;
     minThickness: number;
     startThickness: number;
     // How far apart the starting points of the cave
@@ -161,7 +163,7 @@ export function generateCave(params: CaveParams, biome: Biome, underworld: Under
     // 2nd pass for semi-walls
     conway(materials, width, conwayState, underworld);
     // 3rd pass to grow liquid pools.  Number of pools is relative to map width
-    placeLiquidSources(materials, width, Math.floor(width / 5), underworld);
+    placeLiquidSources(materials, width, params.numberOfLiquidSources !== undefined ? params.numberOfLiquidSources : Math.floor(width / 5), underworld);
     conway(materials, width, conwayState, underworld);
 
 

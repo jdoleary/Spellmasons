@@ -12,9 +12,9 @@
 
 # Bugs / Cleaning
 - Russell Playtest
-    - level 1 in tutorial shouldn't have any liquid
     - Persistant tooltip about how to move until they do
-    - Maybe have a persistant checklist
+        - Maybe have a persistant checklist
+    - Explain liquid damage the first time it happens
     - Explain that you can cast more than once in a turn
     - Ending turn caused a 2nd portal to appear/ or was it hovering overhimself with slash?
     - explain that you can only pickup potions when you are hurt
