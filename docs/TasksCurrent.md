@@ -1,5 +1,4 @@
 # Thursday / Friday
-    - Refactor the html localization to use a data attribute so it doesn't have to have each element manually translated
     - Other (e) rated bugs
     - Optimize
     - Push latest to server and prod

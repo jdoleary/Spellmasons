@@ -1,6 +1,11 @@
 import languages from '../public/localization/localization.json';
-import { elEndTurnBtnInner, elLocalizeGameOver, elLocalizeQuitToMainMenu } from './HTMLElements';
 import * as storage from './storage';
+
+/*
+Note: HTML that needs to be localized simply needs a data-localize-text attribute like so:
+          `<div data-localize-text="Quit to Main Menu"></div>`
+Now, it will automatically be localized when setLanguage is called.
+*/
 interface LanguageMapping {
     [key: string]: string
 }
@@ -49,15 +54,14 @@ function setLanguage(langCode: string, store: boolean) {
         if (store) {
             storage.set(STORAGE_LANGUAGE_CODE_KEY, langCode);
         }
-        // Manually update html as needed:
-        if (elEndTurnBtnInner) {
-            elEndTurnBtnInner.innerText = i18n('end turn');
-        }
-        if (elLocalizeGameOver) {
-            elLocalizeGameOver.innerText = i18n('game over');
-        }
-        if (elLocalizeQuitToMainMenu) {
-            elLocalizeQuitToMainMenu.innerText = i18n('quit to main menu');
+        // Automatically translate elements with the data-localize-text attribute
+        for (let el of Array.from<HTMLElement>(document.querySelectorAll('[data-localize-text]'))) {
+            if (el) {
+                const text = el.dataset.localizeText;
+                if (text) {
+                    el.innerHTML = i18n(text);
+                }
+            }
         }
 
         console.log('i18n: Set language to', newLanguage.language);
