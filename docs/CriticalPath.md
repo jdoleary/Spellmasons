@@ -10,18 +10,19 @@
     - Convenient multiplayer lobbying via steam
         - Prevent players from joining mid-round, notify "you will spawn once this level is complete"
 - January
+    - Icons for perks
     - Last few sound fx
     - Test on all 3 Operating Systems
     - Accessability / Localization Language Support / Spellcheck
-    - Steamdeck support / Controller Support 
-        - https://github.com/infusion/node-gamecontroller
-        - https://github.com/andrew/node-xbox-controller
     - Release
 - Beyond Release
     - More enemies
     - More spells
     - Cooldowns instead of mana multiplier
     - Perks
+    - Steamdeck support / Controller Support 
+        - https://github.com/infusion/node-gamecontroller
+        - https://github.com/andrew/node-xbox-controller
 # Critical Path
 - Major Tasks
     - Fix liquid generation

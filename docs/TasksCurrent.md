@@ -1,19 +1,28 @@
 # Friday
     - Finish Trailer
+        - bloat scene is missing audio, poison scene is too loud
 # Nov Week 3
     - Optimize
-    - Make gameplay video with Brad
+    - Bugs
     - Add Trailer
     - Begin real marketing
 # Nov Week 4
     - Key Binding Config page
+    - Make gameplay video with Brad
 # Nov Week 5 / Dec Week 1
+    - Steam Store localization
     - Publish 1st steam build
-    - Store localization
     - Cloud Saves
     - Steam Achievements
 
 # Bugs / Cleaning
+- If you try to join a multiplayer game in two tabs on the same browser you get an infinite spinner even tho there is an error in console
+- visually, minibosses move too fast
+- modifier doesn't say "bloat 2" if you cast two bloats
+- archer still had freeze modifier listed in tooltip even after the freeze disappeared naturally on the next turn
+    - freeze is behaving weird in Russell's playtest, it's not ticking down as it should
+        - maybe it has to do with it being triggered off of chain? he also had bloat on
+- frozen units start animating again after they take damage
 - make potions disappear with same effect as a disappearing scroll on the end of the level
 - **critical** miniboss vampire was able to move without playing walking animation during the ranged unit turn phase and then continue walking on his own
 - Update inventory gif to show book
