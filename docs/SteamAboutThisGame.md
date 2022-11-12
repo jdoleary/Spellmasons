@@ -21,21 +21,23 @@ Spellmasons is a turn-based tactical roguelike where you devise ingenious spell 
 ```
 # Current "About this Game"
 ```
-Spellmasons is a tactical, turn-based, roguelike where you and your friends play as mages who combine spells on-the-spot to address the unique challenges of each moment!
+Spellmasons is a turn-based, tactical roguelike where you and your friends play as mages who combine spells on-the-spot to address the unique challenges of each moment!
 
 [img]{STEAM_APP_IMAGE}/extras/combine-spells.png[/img]
-[img]{STEAM_APP_IMAGE}/extras/ae-swap-connect-hurt-600x300.gif[/img]
+[img]{STEAM_APP_IMAGE}/extras/ae-swap-connect-hurt-600x300-small-fr.gif[/img]
 Conjure spells from an ever-growing repertoire in order to survive against an onslaught of enemies, save your friends, and ultimately devastate the great danger that opposes you.
 
 [img]{STEAM_APP_IMAGE}/extras/use-the-environment.png[/img]
-[img]{STEAM_APP_IMAGE}/extras/use-environment-600x300.gif[/img]
+[img]{STEAM_APP_IMAGE}/extras/use-environment-600x300-small-fr.gif[/img]
 Each level is procedurally generated, providing you with ample new means of cheating death and cleverly dispatching your enemies.  As you learn the many ways that your spells combine with each other and how they affect your enemies, your allies, and the environment, you will become more resourceful and adept at handling the most difficult encounters.
 
 [img]{STEAM_APP_IMAGE}/extras/rescue-your-friends.png[/img]
-[img]{STEAM_APP_IMAGE}/extras/heal-friend-600x300.gif[/img]
+[img]{STEAM_APP_IMAGE}/extras/heal-friend-600x300-small-fr.gif[/img]
 Spellmasons supports online multiplayer so you can coordinate and strategize with your friends!  Spellmasons is turn-based, but uses faction-based turns so you and your fellow mages can all move, cast and act simultaneously.
 
 [img]{STEAM_APP_IMAGE}/extras/become-absurdly-powerful.png[/img]
-[img]{STEAM_APP_IMAGE}/extras/akira-moment-600x300.gif[/img]
+[img]{STEAM_APP_IMAGE}/extras/akira-moment-600x300-small-fr.gif[/img]
 Unleash dangerously powerful endgame spell combinations where one small difference can mean the simultaneous death of every enemy on the map or the end of your run!
+
+Spellmasons is a slow-paced, thoughtful, turn-based game.  If you like to take your time, think of a clever or creative solution and watch it unfold just as you had planned, then this is the right kind of game for you!
 ```

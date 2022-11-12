@@ -1,14 +1,13 @@
-# Friday
-    - Finish Trailer
-        - bloat scene is missing audio, poison scene is too loud
+# Saturday 
+    - Finish Trailer - balance audio
 # Nov Week 3
     - Optimize
     - Bugs
     - Add Trailer
-    - Begin real marketing
+    - Begin YouTube marketing
 # Nov Week 4
     - Key Binding Config page
-    - Make gameplay video with Brad
+    - Make gameplay video with Brad, add it to Steam and YouTube
 # Nov Week 5 / Dec Week 1
     - Steam Store localization
     - Publish 1st steam build
