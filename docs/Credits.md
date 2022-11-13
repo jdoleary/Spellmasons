@@ -6,3 +6,6 @@ BananaMilk | Music
 Lost Lumens, Brad Clark | Audio Mastering
 Matt Sweda | Concept Ideation Assistance
 Kacey Misskelley | User Experience Research
+Rachel Bruhn | Playtesting
+Jakob Free | Playtesting
+Russell Champoux | Playtesting

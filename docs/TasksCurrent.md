@@ -6,8 +6,8 @@
     - tell the last person they need to end their turn
     - disconnected player still shows in in-game lobby
     - doesn't save tutorial status
-# Saturday 
-    - Finish Trailer - balance audio
+# Sunday
+    - Fix trailer volume, too loud
 # Nov Week 3
     - Optimize
     - Bugs
