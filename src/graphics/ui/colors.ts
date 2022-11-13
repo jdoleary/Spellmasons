@@ -66,7 +66,6 @@ export const robeColors = [
 // // From https://stackoverflow.com/a/13348458/4418836
 // export function desaturateColor(color: string, saturation: number): string {
 //     var col = hexToRgb(color);
-//     debugger
 //     if (col) {
 //         var gray = col.r * 0.3086 + col.g * 0.6094 + col.b * 0.0820;
 

@@ -51,6 +51,7 @@ import shove from './shove';
 import target_column from './target_column';
 import burst from './burst';
 import devRecordDelay from './devRecordDelay';
+import registerSummoningSickness from '../modifierSummoningSickness';
 
 import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
@@ -68,19 +69,46 @@ export interface Modifiers {
   add?: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra?: object) => void;
   remove?: (unit: Unit.IUnit, underworld: Underworld) => void;
 }
+interface Events {
+  onDamage?: onDamage;
+  onDeath?: onDeath;
+  onMove?: onMove;
+  onAgro?: onAgro;
+  onTurnStart?: onTurnStart;
+  onTurnEnd?: onTurnEnd;
+
+}
 export interface Spell {
   card: ICard;
   // modifiers keep track of additional state on an individual unit basis
   modifiers?: Modifiers;
   // events trigger custom behavior when some event occurs
-  events?: {
-    onDamage?: onDamage;
-    onDeath?: onDeath;
-    onMove?: onMove;
-    onAgro?: onAgro;
-    onTurnStart?: onTurnStart;
-    onTurnEnd?: onTurnEnd;
-  };
+  events?: Events;
+}
+export function registerModifiers(id: string, modifiers: Modifiers) {
+
+  allModifiers[id] = modifiers;
+}
+export function registerEvents(id: string, events: Events) {
+  if (events.onAgro) {
+    Events.onAgroSource[id] = events.onAgro;
+  }
+  if (events.onDamage) {
+    Events.onDamageSource[id] = events.onDamage;
+  }
+  if (events.onDeath) {
+    Events.onDeathSource[id] = events.onDeath;
+  }
+  if (events.onMove) {
+    Events.onMoveSource[id] = events.onMove;
+  }
+  if (events.onTurnStart) {
+    Events.onTurnStartSource[id] = events.onTurnStart;
+  }
+  if (events.onTurnEnd) {
+    Events.onTurnEndSource[id] = events.onTurnEnd;
+  }
+
 }
 
 function register(spell: Spell, overworld: Overworld) {
@@ -90,7 +118,7 @@ function register(spell: Spell, overworld: Overworld) {
   allCards[id] = card;
   // Add modifiers to allModifiers
   if (spell.modifiers) {
-    allModifiers[id] = spell.modifiers;
+    registerModifiers(id, spell.modifiers);
   }
   // Add card as upgrade:
   upgradeCardsSource.push(cardToUpgrade(card, overworld));
@@ -100,24 +128,7 @@ function register(spell: Spell, overworld: Overworld) {
   }
   // Add events
   if (events) {
-    if (events.onAgro) {
-      Events.onAgroSource[id] = events.onAgro;
-    }
-    if (events.onDamage) {
-      Events.onDamageSource[id] = events.onDamage;
-    }
-    if (events.onDeath) {
-      Events.onDeathSource[id] = events.onDeath;
-    }
-    if (events.onMove) {
-      Events.onMoveSource[id] = events.onMove;
-    }
-    if (events.onTurnStart) {
-      Events.onTurnStartSource[id] = events.onTurnStart;
-    }
-    if (events.onTurnEnd) {
-      Events.onTurnEndSource[id] = events.onTurnEnd;
-    }
+    registerEvents(id, events);
   }
 }
 export function registerCards(overworld: Overworld) {
@@ -161,6 +172,10 @@ export function registerCards(overworld: Overworld) {
   register(shove, overworld);
   register(target_column, overworld);
   register(burst, overworld);
+
+  // Register floating modifier (non-card);
+  registerSummoningSickness();
+
 }
 function cardToUpgrade(c: ICard, overworld: Overworld): IUpgrade {
   return {

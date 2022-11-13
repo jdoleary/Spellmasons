@@ -5,8 +5,8 @@ import * as math from '../../jmath/math';
 import Underworld from '../../Underworld';
 import { oneOffImage } from '../../cards/cardUtils';
 import { containerUnits } from '../../graphics/PixiUtils';
-import { chooseObjectWithProbability } from '../../jmath/rand';
 import { PLAYER_BASE_ATTACK_RANGE } from '../../config';
+import { summoningSicknessId } from '../../modifierSummoningSickness';
 
 const manaCostToCast = 30;
 const unit: UnitSource = {
@@ -73,6 +73,8 @@ const unit: UnitSource = {
                 sourceUnit.unitProps,
                 underworld
               );
+              // Add summoning sickeness so they can't act after they are summoned
+              Unit.addModifier(summonedUnit, summoningSicknessId, underworld, false);
               const summonPromise = new Promise<void>(resolve => oneOffImage(coords, 'units/summonerMagic', containerUnits, resolve)).then(() => {
                 Unit.moveTowards(summonedUnit, unit, underworld);
               });
