@@ -1652,8 +1652,7 @@ body:not(.view-Game) #tutorial-checklist {
   z-index: 1;
   position: absolute;
   left: 8px;
-  /* Leave room for top of screen tooltip such as "Press z to recenter camera" */
-  top: 48px;
+  top: 8px;
   color: white;
 }
 
