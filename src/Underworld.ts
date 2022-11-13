@@ -2348,7 +2348,7 @@ export default class Underworld {
           } else {
             console.log('Turn Management: Skipping executingNPCTurn for Faction.ENEMY');
           }
-          this.endFullTurnCycle();
+          await this.endFullTurnCycle();
           // Loop: go back to the player turn
           this.broadcastTurnPhase(turn_phase.PlayerTurns);
           break;
