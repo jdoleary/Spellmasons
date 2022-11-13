@@ -2714,13 +2714,15 @@ export default class Underworld {
             if (pickup.image) {
               pickup.image.sprite.visible = false;
             }
+            const flyingPickupPromises = [];
             for (let p of this.players) {
-              createVisualLobbingProjectile(pickup, p.unit, pickup.imagePath).then(() => {
-                // Convenience: Pickup any CARD_PICKUP_NAME left automatically, so that they aren't left behind
-                Pickup.triggerPickup(pickup, p.unit, this, false);
+              flyingPickupPromises.push(createVisualLobbingProjectile(pickup, p.unit, pickup.imagePath))
+            }
+            Promise.all(flyingPickupPromises)
+              .then(() => {
+                this.players.forEach(p => Pickup.givePlayerUpgrade(p, this));
                 resolve();
               });
-            }
           }, timeBetweenPickupFly);
           Pickup.removePickup(pickup, this, false);
         }))

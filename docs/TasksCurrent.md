@@ -1,8 +1,5 @@
 - Watch Russell Playtest
 - Russell Feedback
-    - Summoners don't have attention markers for the units that they summon
-        - you should give them "summoning sickness"
-    - Bug: Getting 2 spells in multiplayer
     - Early levels in multiplayer have too few enemiesb
     - his name didn't persist
     - introduce spells more slowly

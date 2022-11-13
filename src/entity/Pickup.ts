@@ -315,14 +315,8 @@ export const pickups: IPickupSource[] = [
     turnsLeftToGrab: 4,
     playerOnly: true,
     effect: ({ unit, player, underworld }) => {
-      // All players get to pick a new upgrade when one picks up the scroll.
-      underworld.players.forEach(p => p.upgradesLeftToChoose++);
-      underworld.showUpgrades();
-      if (player && player == globalThis.player) {
-        if (player.inventory.length > 10) {
-          explain(EXPLAIN_INVENTORY);
-        }
-      }
+      // Give EVERY player an upgrade when any one player picks up a scroll
+      underworld.players.forEach(p => givePlayerUpgrade(p, underworld));
       tutorialCompleteTask('pickupScroll');
       return true;
     },
@@ -478,3 +472,13 @@ export const pickups: IPickupSource[] = [
     },
   },
 ];
+export function givePlayerUpgrade(p: Player.IPlayer, underworld: Underworld) {
+  // All players get to pick a new upgrade when one picks up the scroll.
+  p.upgradesLeftToChoose++;
+  underworld.showUpgrades();
+  if (player && player == globalThis.player) {
+    if (player.inventory.length > 10) {
+      explain(EXPLAIN_INVENTORY);
+    }
+  }
+}
