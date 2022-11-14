@@ -1,10 +1,6 @@
 # Nov Week 3
-    - Add Trailer
-    - Steam Store localization
-    ---
     - Optimize
     - Bugs
-    - Begin YouTube marketing
 # Nov Week 4
     - Key Binding Config page
     - Make gameplay video with Brad, add it to Steam and YouTube
