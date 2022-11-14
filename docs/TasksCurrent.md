@@ -1,3 +1,18 @@
+# Nov Week 3
+    - Add Trailer
+    - Steam Store localization
+    ---
+    - Optimize
+    - Bugs
+    - Begin YouTube marketing
+# Nov Week 4
+    - Key Binding Config page
+    - Make gameplay video with Brad, add it to Steam and YouTube
+# Nov Week 5 / Dec Week 1
+    - Publish 1st steam build
+    - Cloud Saves
+    - Steam Achievements
+
 - Watch Russell Playtest
 - Russell Feedback
     - Early levels in multiplayer have too few enemiesb
@@ -6,22 +21,6 @@
     - tell the last person they need to end their turn
     - disconnected player still shows in in-game lobby
     - doesn't save tutorial status
-# Sunday
-    - Fix trailer volume, too loud
-# Nov Week 3
-    - Optimize
-    - Bugs
-    - Add Trailer
-    - Begin YouTube marketing
-# Nov Week 4
-    - Key Binding Config page
-    - Make gameplay video with Brad, add it to Steam and YouTube
-# Nov Week 5 / Dec Week 1
-    - Steam Store localization
-    - Publish 1st steam build
-    - Cloud Saves
-    - Steam Achievements
-
 # Bugs / Cleaning
 - If you try to join a multiplayer game in two tabs on the same browser you get an infinite spinner even tho there is an error in console
 - visually, minibosses move too fast
