@@ -6,6 +6,7 @@
     - Make gameplay video with Brad, add it to Steam and YouTube
 # Nov Week 5 / Dec Week 1
     - Publish 1st steam build
+        - Fix onbeforeunload for electron
     - Cloud Saves
     - Steam Achievements
 

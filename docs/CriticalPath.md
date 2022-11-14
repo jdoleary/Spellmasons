@@ -16,6 +16,8 @@
     - Icons for perks
     - Last few sound fx
     - Test on all 3 Operating Systems
+        - How will electronEntryPoint.js's protocol.interceptFileProtocol work on other OS's
+        - what happens if you move the file after the install, do the urls still resolve properly
     - Accessability / Localization Language Support / Spellcheck
     - Release
 - Beyond Release
