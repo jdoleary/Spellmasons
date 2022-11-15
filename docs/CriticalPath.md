@@ -3,17 +3,14 @@
     - Optimize
         - Check optimization for rendering menu in other languages
     - Finish bugs
-- December
     - Package as Electron App
-    - Localize store page
-        - [Google Translate API](https://cloud.google.com/translate/pricing)
-        - C:\Users\Jordan\Desktop\Spellmasons\LocalizationSteamStore\storepage_364762_english.json
+    - Submit build to steam for approval
+- December
     - Establish Minimum System Requirements and update Steam Page
-    - December 1st. Submit build to steam for approval
     - Convenient multiplayer lobbying via steam
         - Prevent players from joining mid-round, notify "you will spawn once this level is complete"
 - January
-    - Icons for perks
+    - Perks
     - Last few sound fx
     - Test on all 3 Operating Systems
         - How will electronEntryPoint.js's protocol.interceptFileProtocol work on other OS's

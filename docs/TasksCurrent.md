@@ -1,12 +1,12 @@
 # Nov Week 3
-    - Optimize
-    - Bugs
-# Nov Week 4
-    - Key Binding Config page
-    - Make gameplay video with Brad, add it to Steam and YouTube
-# Nov Week 5 / Dec Week 1
     - Publish 1st steam build
         - Fix onbeforeunload for electron
+    - Bugs
+# Nov Week 4
+    - Optimize
+    - Make gameplay video with Brad, add it to Steam and YouTube
+# Nov Week 5 / Dec Week 1
+    - Key Binding Config page
     - Cloud Saves
     - Steam Achievements
 
