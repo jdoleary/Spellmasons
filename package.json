@@ -7,7 +7,7 @@
   "scripts": {
     "start": "vite",
     "electronStart": "npm run build && npm run electronStartNoJsBuild",
-    "electronStartNoJsBuild": "cp package.json build/package.json && cp electronEntryPoint.js build/electronEntryPoint.js && electron build/.",
+    "electronStartNoJsBuild": "cp forge.config.js build/forge.config.js && cp package.json build/package.json && cp electronEntryPoint.js build/electronEntryPoint.js && pushd && cd build && electron-forge start && popd",
     "electronOnly": "electron .",
     "tsc": "tsc",
     "build": "tsc && vite build",
@@ -19,7 +19,9 @@
     "headless-build-only": "tsc --project tsconfig.headless.json --outDir headless-server-build/",
     "headless-run-server": "node headless-server-build/src/HeadlessServer.js",
     "headless": "npm run headless-build-only && npm run headless-run-server",
-    "parseLocalization": "node public/localization/parseLocalizationSource.js"
+    "parseLocalization": "node public/localization/parseLocalizationSource.js",
+    "forgePackage": "electron-forge package",
+    "forgeMake": "electron-forge make --platform=win32"
   },
   "repository": {
     "type": "git",
@@ -31,6 +33,11 @@
   "devDependencies": {
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-typescript": "^7.12.7",
+    "@electron-forge/cli": "^6.0.3",
+    "@electron-forge/maker-deb": "^6.0.3",
+    "@electron-forge/maker-rpm": "^6.0.3",
+    "@electron-forge/maker-squirrel": "^6.0.3",
+    "@electron-forge/maker-zip": "^6.0.3",
     "@jest/globals": "^26.6.2",
     "@types/jest": "^26.0.20",
     "@types/lodash.throttle": "^4.1.7",
@@ -57,6 +64,7 @@
     "@sentry/tracing": "^6.19.7",
     "@websocketpie/client": "^0.15.11",
     "@websocketpie/server": "^0.9.0",
+    "electron-squirrel-startup": "^1.0.0",
     "lodash.throttle": "^4.1.1",
     "object-hash": "^3.0.0",
     "pixi.js": "^6.4.2",

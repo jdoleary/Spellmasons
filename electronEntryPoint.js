@@ -1,6 +1,5 @@
 const { app, BrowserWindow, protocol } = require('electron');
 const path = require('node:path');
-
 const createWindow = () => {
     const win = new BrowserWindow({
         width: 800,
@@ -26,6 +25,7 @@ app.whenReady().then(() => {
         }
     });
 });
+if (require('electron-squirrel-startup')) app.quit();
 
 // TODO: main.js's onbeforeunload prevents the game from closing
 app.on('window-all-closed', () => {
