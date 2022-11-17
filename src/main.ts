@@ -22,6 +22,7 @@ import Underworld from './Underworld';
 import type PieClient from '@websocketpie/client';
 import { setupPieAndUnderworld } from './network/wsPieSetup';
 import { returnToDefaultSprite } from './entity/Unit';
+import Jprompt from './graphics/Jprompt';
 
 const YES = 'yes'
 const SKIP_TUTORIAL = 'skipTutorial';
@@ -130,4 +131,13 @@ if (globalThis.isElectron) {
 // asks "are you sure?" every time
 if (!globalThis.devMode && !globalThis.isElectron) {
   globalThis.onbeforeunload = function () { return "Are you sure you want to quit?"; };
+}
+
+globalThis.fullyExitGame = () => {
+  Jprompt({ text: 'Are you sure you wish to exit to Desktop?', noBtnText: 'Cancel', noBtnKey: 'Escape', yesText: 'Quit', forceShow: true }).then(doQuit => {
+    if (doQuit) {
+      window.close();
+    }
+  });
+
 }

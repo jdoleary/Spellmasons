@@ -19,8 +19,7 @@ export function explain(key: string, forceShow?: boolean) {
                     // and rendering into a portal
                     portal.innerHTML = "";
                 }
-                Jprompt({ ...explainData.prompt(), portal: forceShow ? (portal || undefined) : undefined });
-                document.querySelectorAll('.prompt').forEach(el => el.classList.add('forceShow'));
+                Jprompt({ ...explainData.prompt(), portal: forceShow ? (portal || undefined) : undefined, forceShow });
                 storage.set(key, ALREADY_EXPLAINED);
             }
         } else {

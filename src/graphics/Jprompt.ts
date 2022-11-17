@@ -8,14 +8,16 @@ export interface PromptArgs {
     imageSrc?: string;
     // Render inside
     portal?: HTMLElement;
+    // forceShow will override the css that prevents the jprompt from rendering in the menu view
+    forceShow?: boolean;
 }
 export default async function Jprompt(prompt: PromptArgs): Promise<boolean> {
-    const { text, noBtnText, noBtnKey, yesText, yesKey, yesKeyText = '', imageSrc, portal } = prompt;
+    const { text, noBtnText, noBtnKey, yesText, yesKey, yesKeyText = '', imageSrc, portal, forceShow } = prompt;
     if (globalThis.headless) {
         return Promise.resolve(true);
     }
     const el = document.createElement('div')
-    el.classList.add('prompt');
+    el.classList.add('prompt', forceShow ? 'forceShow' : '');
     if (portal) {
         el.classList.add('in-portal');
     }

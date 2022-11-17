@@ -225,4 +225,5 @@ declare global {
     var resetTutorial: () => void;
 
     var usingTestRunner: boolean;
+    var fullyExitGame: () => void;
 }
