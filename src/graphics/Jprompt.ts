@@ -17,7 +17,10 @@ export default async function Jprompt(prompt: PromptArgs): Promise<boolean> {
         return Promise.resolve(true);
     }
     const el = document.createElement('div')
-    el.classList.add('prompt', forceShow ? 'forceShow' : '');
+    el.classList.add('prompt');
+    if (forceShow) {
+        el.classList.add('forceShow');
+    }
     if (portal) {
         el.classList.add('in-portal');
     }
