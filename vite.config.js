@@ -7,5 +7,6 @@ export default defineConfig(({ command, mode }) => ({
         chunkSizeWarningLimit: 1000000,
         outDir: 'build',
         assetsDir: '.',
-    }
+    },
+    base: '',
 }));
