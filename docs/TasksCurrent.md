@@ -20,7 +20,6 @@
     - doesn't save tutorial status
 # Bugs / Cleaning
 - If you try to join a multiplayer game in two tabs on the same browser you get an infinite spinner even tho there is an error in console
-- visually, minibosses move too fast
 - archer still had freeze modifier listed in tooltip even after the freeze disappeared naturally on the next turn
     - freeze is behaving weird in Russell's playtest, it's not ticking down as it should
         - maybe it has to do with it being triggered off of chain? he also had bloat on

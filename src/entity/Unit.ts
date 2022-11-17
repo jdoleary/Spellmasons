@@ -1026,7 +1026,6 @@ export function makeMiniboss(unit: IUnit) {
     unit.image.sprite.scale.y = config.UNIT_MINIBOSS_SCALE_MULTIPLIER;
   }
   unit.radius *= config.UNIT_MINIBOSS_SCALE_MULTIPLIER;
-  unit.moveSpeed *= config.UNIT_MINIBOSS_SCALE_MULTIPLIER;
   unit.healthMax *= config.UNIT_MINIBOSS_HEALTH_MULTIPLIER;
   unit.health = unit.healthMax;
   unit.damage *= config.UNIT_MINIBOSS_DAMAGE_MULTIPLIER;
