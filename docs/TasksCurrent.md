@@ -1,4 +1,5 @@
 # Nov Week 3
+    - Fix 'prompt() / confim() is and will not be supported' for electron build.
     - Optimize
     - Bugs
 # Nov Week 4
