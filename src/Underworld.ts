@@ -101,9 +101,9 @@ export const showUpgradesClassName = 'showUpgrades';
 
 let lastTime = 0;
 let requestAnimationFrameGameLoopId: number;
-const cleanupRegistry = new FinalizationRegistry((heldValue) => {
+const cleanupRegistry = globalThis.hasOwnProperty('FinalizationRegistry') ? new FinalizationRegistry((heldValue) => {
   console.log('GC: Cleaned up ', heldValue);
-});
+}) : undefined;
 let localUnderworldCount = 0;
 export default class Underworld {
   seed: string;
@@ -187,7 +187,7 @@ export default class Underworld {
     }
     this.seed = globalThis.seedOverride || seed;
     // Nofity when Underworld is GC'd
-    cleanupRegistry.register(this, `underworld-${this.seed}-${this.localUnderworldNumber}`);
+    cleanupRegistry?.register(this, `underworld-${this.seed}-${this.localUnderworldNumber}`);
 
     this.random = this.syncronizeRNG(RNGState);
   }
