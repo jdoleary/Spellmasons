@@ -122,6 +122,8 @@ declare global {
     var seedOverride: string | undefined;
     // devMode: auto picks character and upgrades
     var devMode: undefined | boolean;
+    // Set to true if the build is run as a desktop app through electron
+    var isElectron: undefined | boolean;
     // Allows toggling off hud and access to the admin menu
     var adminMode: undefined | boolean;
     var devKillAll: undefined | (() => void);
