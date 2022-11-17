@@ -2705,6 +2705,12 @@ export default class Underworld {
   async checkIfShouldSpawnPortal() {
     if (this.units.filter(u => u.faction == Faction.ENEMY && !u.flaggedForRemoval).every(u => !u.alive)) {
       let timeBetweenPickupFly = 100;
+      // Make all potion pickups disappear so as to not compell players to waste time walking around picking them
+      // all up
+      this.pickups.filter(p => p.name !== Pickup.CARDS_PICKUP_NAME).forEach(p => {
+        makeScrollDissapearParticles(p, false);
+        Pickup.removePickup(p, this, false);
+      });
       // Make scroll pickups fly to player
       const getFlyingPickupPromises = this.pickups.filter(p => p.name == Pickup.CARDS_PICKUP_NAME).map(pickup => {
         return raceTimeout(5000, 'spawnPortalFlyScrolls', new Promise<void>((resolve) => {
