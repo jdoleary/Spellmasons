@@ -70,3 +70,14 @@ export const LIQUID_X_SCROLL_SPEED = 400; // higher is slower
 export const LIQUID_DISPLACEMENT_SPEED = 0.1;
 export const LIQUID_DISPLACEMENT_SCALE = 0.6;
 export const PIXI_TEXT_DROP_SHADOW = { dropShadow: true, dropShadowDistance: 1 };
+
+// Perks
+export const plusRangeMinusHealth_rangeProportion = 1.25;
+export const plusRangeMinusHealth_healthProportion = 0.5;
+
+export const plusStaminaMinusHealth_staminaProportion = 1.25;
+export const plusStaminaMinusHealth_healthProportion = 0.5;
+
+
+export const plusManaMinusStamina_manaProportion = 2.0;
+export const plusManaMinusStamina_staminaProportion = 0.6;

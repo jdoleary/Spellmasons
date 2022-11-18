@@ -6,6 +6,7 @@ import { MESSAGE_TYPES } from './types/MessageTypes';
 import { IPlayer } from './entity/Player';
 import Underworld from './Underworld';
 import { Overworld } from './Overworld';
+import { plusManaMinusStamina_manaProportion, plusManaMinusStamina_staminaProportion, plusRangeMinusHealth_healthProportion, plusRangeMinusHealth_rangeProportion, plusStaminaMinusHealth_healthProportion, plusStaminaMinusHealth_staminaProportion } from './config';
 export interface IUpgrade {
   title: string;
   type: 'perk' | 'card';
@@ -153,6 +154,7 @@ export const upgradeSourceWhenDead: IUpgrade[] = [
     cost: { healthCost: 0, manaCost: 0 },
   },
 ];
+
 export const upgradeStatsSource: IUpgrade[] = [
   {
     title: '+ Max Health',
@@ -191,6 +193,66 @@ export const upgradeStatsSource: IUpgrade[] = [
       underworld.syncPlayerPredictionUnitOnly();
     },
     probability: 30,
+    cost: { healthCost: 0, manaCost: 0 },
+  },
+  {
+    title: '+ Stamina, - Health',
+    type: 'perk',
+    description: (player) =>
+      `Increases your stamina by ${Math.floor(100 * plusStaminaMinusHealth_staminaProportion)}% but decreased your max health by ${Math.floor(100 * plusStaminaMinusHealth_healthProportion)}%`,
+    thumbnail: 'images/spell/unknown.png',
+    effect: (player, underworld) => {
+      player.unit.healthMax *= plusStaminaMinusHealth_healthProportion;
+      player.unit.health = player.unit.healthMax;
+      player.unit.stamina *= plusStaminaMinusHealth_staminaProportion;
+      // Now that the player unit's properties have changed ,sync the new
+      // state with the player's predictionUnit so it is properly
+      // refelcted in the bar
+      // (note: this would be auto corrected on the next mouse move anyway)
+      underworld.syncPlayerPredictionUnitOnly();
+    },
+    probability: 20,
+    cost: { healthCost: 0, manaCost: 0 },
+  },
+  {
+    title: '+ Range, - Health',
+    type: 'perk',
+    description: (player) =>
+      `Increases your cast range by ${Math.floor(100 * plusRangeMinusHealth_rangeProportion)}% but decreased your max health by ${Math.floor(100 * plusRangeMinusHealth_healthProportion)}%`,
+    thumbnail: 'images/spell/unknown.png',
+    effect: (player, underworld) => {
+      player.unit.healthMax *= plusRangeMinusHealth_healthProportion;
+      player.unit.health = player.unit.healthMax;
+      player.unit.attackRange *= plusRangeMinusHealth_rangeProportion;
+      // Now that the player unit's properties have changed, sync the new
+      // state with the player's predictionUnit so it is properly
+      // refelcted in the bar
+      // (note: this would be auto corrected on the next mouse move anyway)
+      underworld.syncPlayerPredictionUnitOnly();
+    },
+    probability: 20,
+    cost: { healthCost: 0, manaCost: 0 },
+  },
+  {
+    title: '++ Mana, - Stamina',
+    type: 'perk',
+    description: (player) =>
+      `Increases your mana by ${Math.floor(100 * plusManaMinusStamina_manaProportion)}% but decreased your max stamina by ${Math.floor(100 * plusManaMinusStamina_staminaProportion)}%`,
+    thumbnail: 'images/spell/unknown.png',
+    effect: (player, underworld) => {
+      player.unit.manaMax *= plusManaMinusStamina_manaProportion;
+      player.unit.mana = player.unit.manaMax;
+      player.unit.staminaMax *= plusManaMinusStamina_staminaProportion;
+      // Round to a whole number
+      player.unit.staminaMax = Math.floor(player.unit.staminaMax);
+      player.unit.stamina = player.unit.staminaMax;
+      // Now that the player unit's properties have changed, sync the new
+      // state with the player's predictionUnit so it is properly
+      // refelcted in the bar
+      // (note: this would be auto corrected on the next mouse move anyway)
+      underworld.syncPlayerPredictionUnitOnly();
+    },
+    probability: 1000,
     cost: { healthCost: 0, manaCost: 0 },
   },
   // Temp remove cast range upgrade because it greatly affects the difficulty of the game
