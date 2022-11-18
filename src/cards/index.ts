@@ -45,6 +45,7 @@ import lastWill from './lastwill';
 import split from './split';
 import drown from './drown';
 import target_similar from './target_similar';
+import target_all from './target_all';
 import target_cone from './target_cone';
 import plus_radius from './plus_radius';
 import shove from './shove';
@@ -167,6 +168,7 @@ export function registerCards(overworld: Overworld) {
   register(split, overworld);
   register(drown, overworld);
   register(target_similar, overworld);
+  register(target_all, overworld);
   register(target_cone, overworld);
   register(plus_radius, overworld);
   register(shove, overworld);
