@@ -1,3 +1,6 @@
+- frozen units start animating again after they take damage
+- (solved?)bug: Multiplayer starts on tutorial level
+- Update inventory gif to show book
 - Russell Playtest
     - Ending turn caused a 2nd portal to appear/ or was it hovering overhimself with slash?
     - he went to retrieve a mana potion after the portal had spawned, I should remove them or something once the portal spawns

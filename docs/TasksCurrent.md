@@ -1,7 +1,9 @@
 # Nov Week 3
+ - bug: wsPie, adding a client from a tab where the client is already in the room fails the first time but succeeds the second time.
     - Publish 1st steam build
     - Make menu options scrollable on small screens
     - Bugs
+    - Fix: should not broadcast latency warning for a message that fails with a rejected promise
 # Nov Week 4
     - Optimize
     - Make gameplay video with Brad, add it to Steam and YouTube
@@ -23,10 +25,7 @@
 - archer still had freeze modifier listed in tooltip even after the freeze disappeared naturally on the next turn
     - freeze is behaving weird in Russell's playtest, it's not ticking down as it should
         - maybe it has to do with it being triggered off of chain? he also had bloat on
-- frozen units start animating again after they take damage
 - **critical** miniboss vampire was able to move without playing walking animation during the ranged unit turn phase and then continue walking on his own
-- Update inventory gif to show book
-- Multiplayer starts on tutorial level
 
 - push + radius*2 + connect + damage isn't damaging the connected units (note, the pushed unit ends up in lava)
     - This is because the unit died when it fell in the lava so connect didn't connect it to other living units
@@ -76,6 +75,7 @@
 # Localization
 - All tooltip info
 # Features
+- resume previous run button
 - Remove mana potions after portal spawns??
 - see stash "add i18n to explain prompts"
 - should allow spell prediction even while an action is taking place - this not being here causes friction in multiplayer
@@ -111,6 +111,11 @@
 - optimize: Ihave duplicate units, pickups, and doodads in save due to serailizeForSaving having them in the underworld and extracting them to the top level too
 
 ## Stretch Content
+- Target all (corpse, unit, or pickup based on first selection - but it also targets you)
+- summon spells
+- unlimited range (also target yourself)
+- blood archer - fires 3 times (at different enemies if available)
+- perk: increase attack range - cut health in half
 - feature: secondary spellbar
 - Idea: "oh shit button": double the amount of mana you have this level but it reduces by half next level. " Break glass in case of emergency. Deal with the devil
 - Idea: Amplify spell: makes "multicast"
