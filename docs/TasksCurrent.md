@@ -1,9 +1,7 @@
 # Nov Week 3
- - bug: wsPie, adding a client from a tab where the client is already in the room fails the first time but succeeds the second time.
-    - Publish 1st steam build
-    - Make menu options scrollable on small screens
-    - Bugs
-    - Fix: should not broadcast latency warning for a message that fails with a rejected promise
+- Publish 1st steam build
+- Bugs
+- Fix: should not broadcast latency warning for a message that fails with a rejected promise
 # Nov Week 4
     - Optimize
     - Make gameplay video with Brad, add it to Steam and YouTube
