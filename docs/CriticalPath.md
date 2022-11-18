@@ -1,19 +1,21 @@
 # Desired Schedule
 - November
-    - Fix app icon
     - Optimize
-        - Check optimization for rendering menu in other languages
+        - Check optimization for rendering menu in other languages, it seems like the inventory is super slow when it's in another language
     - Finish bugs
 - December
-    - Establish Minimum System Requirements and update Steam Page
     - Convenient multiplayer lobbying via steam
         - Prevent players from joining mid-round, notify "you will spawn once this level is complete"
-    - Improve exe packaging for steam updates
+    - Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
 - January
     - Icons for perks
     - Last few sound fx
-    - Test on all 3 Operating Systems
+    - Establish Minimum System Requirements and update Steam Page
     - Accessability / Localization Language Support / Spellcheck
+    - Squirrel Tasks
+        - Ensure 'electron-squirrel-startup' is handled correctly
+        - Ensure start app isn't added to desktop
+    - Electron Security
     - Release
 - Beyond Release
     - More enemies
@@ -74,5 +76,5 @@
 - Supports 1000 units
 - DONE Complete Menu with options
 - Bug Reporting built in (e.g. Save game state and send it to me)
-- Packaged in Electron App
+- DONE Packaged in Electron App
 - Simple to connect with friends in multiplayer

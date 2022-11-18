@@ -8,7 +8,8 @@ import floatingText from '../graphics/FloatingText';
 import { addWarningAtMouse } from '../graphics/PlanningView';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
-export const id = 'decoy';
+const id = 'decoy';
+export { id as decoyId };
 const spell: Spell = {
   card: {
     id,

@@ -32,8 +32,10 @@ export default function makeOverworld(pie: PieClient | IHostApp): Overworld {
     };
 
     // Initialize content
-    Cards.registerCards(overworld);
+    // Note: Units must be registered before cards so that summon_generic
+    // can access all the unit ids
     Units.registerUnits();
+    Cards.registerCards(overworld);
 
     addOverworldEventListeners(overworld);
     registerAdminContextMenuOptions(overworld);

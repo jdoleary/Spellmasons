@@ -39,7 +39,8 @@ import pull from './pull';
 import vortex from './vortex';
 import dash from './dash';
 import repel from './repel';
-import decoy from './summon_decoy';
+import decoy, { decoyId } from './summon_decoy';
+import summon_generic from './summon_generic';
 import explode from './bloat';
 import lastWill from './lastwill';
 import split from './split';
@@ -61,6 +62,7 @@ import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import { HasSpace } from '../entity/Type';
 import { Overworld } from '../Overworld';
+import { allUnits } from '../entity/units';
 export interface Modifiers {
   subsprite?: Subsprite;
   // run special init logic (usually for visuals) when a modifier is added or loaded
@@ -174,6 +176,11 @@ export function registerCards(overworld: Overworld) {
   register(shove, overworld);
   register(target_column, overworld);
   register(burst, overworld);
+  // .filter so that it doesn't override custom card summon_decoy
+  for (let unitId of Object.keys(allUnits).filter(id => id !== decoyId)) {
+    const spell = summon_generic(unitId);
+    register(spell, overworld);
+  }
 
   // Register floating modifier (non-card);
   registerSummoningSickness();
