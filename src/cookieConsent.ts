@@ -2,6 +2,11 @@ export function areCookiesAllowed() {
     return localStorage.getItem('cookieConsent') === 'allowed';
 }
 export default function cookieConsentPopup(forcePopup: boolean) {
+    // Cookie check not needed on electron
+    if (globalThis.isElectron) {
+        allow();
+        return;
+    }
     // If user has already allowed cookies, don't show the popup
     if (!forcePopup && localStorage.getItem('cookieConsent') === 'allowed') {
         globalThis.allowCookies = areCookiesAllowed();
