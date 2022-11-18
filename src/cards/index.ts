@@ -39,7 +39,7 @@ import pull from './pull';
 import vortex from './vortex';
 import dash from './dash';
 import repel from './repel';
-import decoy, { decoyId } from './summon_decoy';
+import decoy from './summon_decoy';
 import summon_generic from './summon_generic';
 import explode from './bloat';
 import lastWill from './lastwill';
@@ -176,10 +176,11 @@ export function registerCards(overworld: Overworld) {
   register(shove, overworld);
   register(target_column, overworld);
   register(burst, overworld);
-  // .filter so that it doesn't override custom card summon_decoy
-  for (let unitId of Object.keys(allUnits).filter(id => id !== decoyId)) {
+  for (let unitId of Object.keys(allUnits)) {
     const spell = summon_generic(unitId);
-    register(spell, overworld);
+    if (spell) {
+      register(spell, overworld);
+    }
   }
 
   // Register floating modifier (non-card);

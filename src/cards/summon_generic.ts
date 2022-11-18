@@ -8,14 +8,47 @@ import floatingText from '../graphics/FloatingText';
 import { addWarningAtMouse } from '../graphics/PlanningView';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
-export default function makeSpellForUnitId(unitId: string): Spell {
+
+const overrides: { [unitId: string]: { exclude: boolean, properties: { manaCost?: number } } } = {
+    'decoy': {
+        exclude: true,
+        properties: {}
+    },
+    'Spellmason': {
+        exclude: true,
+        properties: {}
+    },
+    'glop': {
+        exclude: false,
+        properties: {
+            manaCost: 80
+        }
+    },
+    'vampire': {
+        exclude: false,
+        properties: {
+            manaCost: 100
+        }
+    },
+    'summoner': {
+        exclude: false,
+        properties: {
+            manaCost: 120
+        }
+    }
+}
+export default function makeSpellForUnitId(unitId: string): Spell | undefined {
+    const override = overrides[unitId];
+    if (override && override.exclude) {
+        return undefined;
+    }
     return {
         card: {
             id: unitId,
             category: CardCategory.Soul,
             sfx: 'summonDecoy',
             supportQuantity: false,
-            manaCost: 60,
+            manaCost: override?.properties?.manaCost !== undefined ? override.properties.manaCost : 60,
             healthCost: 0,
             expenseScaling: 3,
             probability: probabilityMap[CardRarity.SPECIAL],
