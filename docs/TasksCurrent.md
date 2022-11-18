@@ -1,4 +1,5 @@
 # Nov Week 3
+- Update the spellmasons build to not have the devtools open and then mark it ready for review
 - Publish 1st steam build
 - Bugs
 - Fix: should not broadcast latency warning for a message that fails with a rejected promise

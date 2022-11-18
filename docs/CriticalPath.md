@@ -1,5 +1,6 @@
 # Desired Schedule
 - November
+    - Sign code for windows
     - December 1st. Submit build to steam for approval for all OSs
     - Optimize
         - Check optimization for rendering menu in other languages
