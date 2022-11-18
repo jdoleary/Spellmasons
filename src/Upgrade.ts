@@ -5,8 +5,9 @@ import { chooseObjectWithProbability } from './jmath/rand';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import { IPlayer } from './entity/Player';
 import Underworld from './Underworld';
-import { Overworld } from './Overworld';
-import { plusManaMinusStamina_manaProportion, plusManaMinusStamina_staminaProportion, plusRangeMinusHealth_healthProportion, plusRangeMinusHealth_rangeProportion, plusStaminaMinusHealth_healthProportion, plusStaminaMinusHealth_staminaProportion } from './config';
+import * as Unit from './entity/Unit';
+import { maybeManaOverfillProportionChance, plusManaMinusStamina_manaProportion, plusManaMinusStamina_staminaProportion, plusRangeMinusHealth_healthProportion, plusRangeMinusHealth_rangeProportion, plusStaminaMinusHealth_healthProportion, plusStaminaMinusHealth_staminaProportion } from './config';
+import { maybeManaOverfillId } from './modifieMaybeManaOverfill';
 export interface IUpgrade {
   title: string;
   type: 'perk' | 'card';
@@ -252,7 +253,21 @@ export const upgradeStatsSource: IUpgrade[] = [
       // (note: this would be auto corrected on the next mouse move anyway)
       underworld.syncPlayerPredictionUnitOnly();
     },
-    probability: 1000,
+    probability: 10,
+    cost: { healthCost: 0, manaCost: 0 },
+  },
+  {
+    title: 'Maybe Mana Overfill',
+    type: 'perk',
+    description: (player) =>
+      `Grants a ${Math.floor(100 * maybeManaOverfillProportionChance)}% chance on the start of every turn that you will get 2x mana for that turn.`,
+    thumbnail: 'images/spell/unknown.png',
+    effect: (player, underworld) => {
+      Unit.addModifier(player.unit, maybeManaOverfillId, underworld, false);
+
+
+    },
+    probability: 10,
     cost: { healthCost: 0, manaCost: 0 },
   },
   // Temp remove cast range upgrade because it greatly affects the difficulty of the game

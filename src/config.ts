@@ -81,3 +81,5 @@ export const plusStaminaMinusHealth_healthProportion = 0.5;
 
 export const plusManaMinusStamina_manaProportion = 2.0;
 export const plusManaMinusStamina_staminaProportion = 0.6;
+
+export const maybeManaOverfillProportionChance = 0.2;
