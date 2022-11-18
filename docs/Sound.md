@@ -4,6 +4,7 @@
     - **not** for hover states
 
 - Spells
+    - "Level up" when you get scroll
     - Rend
     - Drown
     - Bleed

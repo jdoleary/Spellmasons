@@ -1,6 +1,5 @@
 # Nov Week 3
-- Update the spellmasons build to not have the devtools open and then mark it ready for review
-- Publish 1st steam build
+- Since the game starts in fullscreen, toggle fullscreen button no longer works
 - Bugs
 - Fix: should not broadcast latency warning for a message that fails with a rejected promise
 # Nov Week 4
@@ -97,6 +96,7 @@
 - prediction should factor in standing on pickups, see video
 # Content
 - Make Youtube short audio louder
+- SFX for when you pickup scroll
 - Rend
     - new sfx
 - Bleed
