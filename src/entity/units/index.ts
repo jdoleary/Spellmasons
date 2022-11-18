@@ -37,6 +37,7 @@ import poisoner from './poisoner';
 import vampire from './vampire';
 import decoy from './decoy';
 import dragger from './dragger';
+import blood_archer from './blood_archer';
 import Underworld from '../../Underworld';
 
 function register(unit: UnitSource) {
@@ -53,6 +54,7 @@ export function registerUnits() {
   register(dragger);
   register(playerUnit);
   register(decoy);
+  register(blood_archer);
 }
 
 
