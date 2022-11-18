@@ -52,6 +52,7 @@ import plus_radius from './plus_radius';
 import shove from './shove';
 import target_column from './target_column';
 import burst from './burst';
+import slow from './slow';
 import devRecordDelay from './devRecordDelay';
 import registerSummoningSickness from '../modifierSummoningSickness';
 
@@ -176,6 +177,7 @@ export function registerCards(overworld: Overworld) {
   register(shove, overworld);
   register(target_column, overworld);
   register(burst, overworld);
+  register(slow, overworld);
   for (let unitId of Object.keys(allUnits)) {
     const spell = summon_generic(unitId);
     if (spell) {
