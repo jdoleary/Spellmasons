@@ -112,7 +112,8 @@ export function joinRoom(overworld: Overworld, _room_info = {}): Promise<void> {
       // FUTURE: THis might be a good place to view the lobby
     }
   }).catch((err: string) => {
-    console.error(err);
+    console.error('wsPieSetup: Failed to join room:', err);
+    return Promise.reject(err);
   });
 }
 
