@@ -23,7 +23,6 @@ export default function registerSummoningSickness() {
             // Seeded random based on the turn so it's consistent across all clients
             const random = seedrandom(`${underworld.seed}-${underworld.levelIndex}-${underworld.turn_number}`);
             const pick = random.quick();
-            console.log('jtest', pick);
             const doGiveOverfill = pick <= maybeManaOverfillProportionChance;
             if (doGiveOverfill && !prediction) {
                 unit.mana += unit.manaMax;
