@@ -3,50 +3,66 @@
 import { Material } from "./Conway";
 import * as Vec from './jmath/Vec';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex } from "./jmath/ArrayUtil";
+import { rotateMatrix } from "./jmath/math";
 
 // 1: liquid
 export default [
-    toMaterials([
+    ...registerPool([
+        1
+    ], 1),
+    ...registerPool([
         0, 0,
         1, 0,
         1, 0,
         1, 1,
     ], 2),
-    toMaterials([
+    ...registerPool([
         1, 1, 1, 1, 1
     ], 5),
-    toMaterials([
+    ...registerPool([
         1,
         1,
         1,
         1,
         1
     ], 1),
-    toMaterials([
+    ...registerPool([
         1, 1, 1,
         1, 1, 1,
         1, 1, 1,
     ], 3),
-    toMaterials([
+    ...registerPool([
         1, 0, 0, 1,
         1, 0, 0, 1,
         1, 0, 0, 1,
     ], 4),
-    toMaterials([
+    ...registerPool([
         1, 0, 0, 0,
         1, 0, 0, 0,
         1, 0, 0, 0,
         1, 1, 1, 1,
     ], 4),
 ]
-function toMaterials(matrixContents: number[], width: number): { width: number, materials: Material[] } {
+function registerPool(matrixContents: number[], width: number): { width: number, contents: Material[] }[] {
     // Surround with 2 layers of ground so that they don't collide with other stamps
     // The first layer of ground leaves room for liquid corner pieces
     let surroundedTiles = surround(matrixContents, width);
     // The second layer of ground makes sure there's a margin between liquid pools so they don't
     // intersect in weird ways
     surroundedTiles = surround(surroundedTiles.contents, surroundedTiles.width);
-    return { width: surroundedTiles.width, materials: surroundedTiles.contents.map(x => x === 1 ? Material.LIQUID : Material.GROUND) };
+
+    const newWidth = surroundedTiles.width;
+    surroundedTiles.contents = surroundedTiles.contents.map(x => x === 1 ? Material.LIQUID : Material.GROUND)
+    // Not get all 4 rotations:
+    const rotation1 = rotateMatrix(surroundedTiles.contents, newWidth);
+    const rotation2 = rotateMatrix(rotation1.contents, rotation1.width);
+    const rotation3 = rotateMatrix(rotation2.contents, rotation2.width);
+    return [
+        surroundedTiles,
+        rotation1,
+        rotation2,
+        rotation3,
+    ];
 }
 interface Matrix {
     width: number,

@@ -8,7 +8,7 @@ import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex, vec2ToOneDimentionInd
 import { conway, ConwayState, Material } from "./Conway";
 import type { IObstacle } from "./entity/Obstacle";
 import Underworld, { Biome } from "./Underworld";
-import LiquidPools, { doStampsOverlap, matrixToReadable, stampMatricies } from './LiquidPools';
+import LiquidPools, { doStampsOverlap, stampMatricies } from './LiquidPools';
 
 export const caveSizes: { [size: string]: CaveParams } = {
     'tutorial': {
@@ -217,7 +217,7 @@ function stampLiquids(materials: Material[], width: number, underworld: Underwor
         if (stamp) {
             const stampRecord = {
                 start: startStampPosition,
-                end: Vec.add(startStampPosition, oneDimentionIndexToVec2(stamp.materials.length - 1, stamp.width))
+                end: Vec.add(startStampPosition, oneDimentionIndexToVec2(stamp.contents.length - 1, stamp.width))
             };
             // Make sure there are no collisions with other stamps:
             for (let otherStamp of stampedRecords) {
@@ -229,7 +229,7 @@ function stampLiquids(materials: Material[], width: number, underworld: Underwor
             }
             stampedRecords.push(stampRecord);
             // Override current materials:
-            stampMatricies(materials, width, stamp.materials, stamp.width, startStampPosition);
+            stampMatricies(materials, width, stamp.contents, stamp.width, startStampPosition);
         }
     }
 
