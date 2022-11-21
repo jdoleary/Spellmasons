@@ -8,7 +8,7 @@ import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex, vec2ToOneDimentionInd
 import { conway, ConwayState, Material } from "./Conway";
 import type { IObstacle } from "./entity/Obstacle";
 import Underworld, { Biome } from "./Underworld";
-import LiquidPools from './LiquidPools';
+import LiquidPools, { stampArrays } from './LiquidPools';
 
 export const caveSizes: { [size: string]: CaveParams } = {
     'tutorial': {
@@ -198,23 +198,45 @@ export function generateCave(params: CaveParams, biome: Biome, underworld: Under
 
 }
 
+interface Stamp {
+    start: Vec.Vec2,
+    end: Vec.Vec2
+}
+function doStampsOverlap(s1: Stamp, s2: Stamp): boolean {
+    return Vec.isBetween(s1.start, s2.start, s2.end) || Vec.isBetween(s1.end, s2.start, s2.end)
+}
+
 function stampLiquids(materials: Material[], width: number, underworld: Underworld) {
-    const stamp = LiquidPools[0];
-    // Start the stamp
-    const chosenIndex = randInt(underworld.random, 0, materials.length);
-    const startStampPosition = oneDimentionIndexToVec2(chosenIndex, width);
-    console.log('jtest stamp at', startStampPosition);
-    if (stamp) {
-        // Override current materials:
-        for (let stampIndex = 0; stampIndex < stamp.materials.length; stampIndex++) {
-            const material = stamp.materials[stampIndex];
-            if (material) {
-                const stampPosition = oneDimentionIndexToVec2(stampIndex, stamp.width);
-                const overridePosition = Vec.add(startStampPosition, stampPosition);
-                console.log('jtest replace', overridePosition, material);
-                const overrideIndex = vec2ToOneDimentionIndex(overridePosition, width);
-                materials[overrideIndex] = material;
+    const NUMBER_OF_POOLS = 4;
+    let failedAttempts = 0;
+    const stampedRecords = [];
+    make_pool:
+    for (let i = 0; i < NUMBER_OF_POOLS; i++) {
+        console.log('jtest make pool', failedAttempts);
+        if (failedAttempts > 100) {
+            return;
+        }
+        const stamp = LiquidPools[randInt(underworld.random, 0, LiquidPools.length)];
+        // Start the stamp
+        const chosenIndex = randInt(underworld.random, 0, materials.length);
+        const startStampPosition = oneDimentionIndexToVec2(chosenIndex, width);
+        console.log('jtest stamp at', startStampPosition);
+        if (stamp) {
+            const stampRecord = {
+                start: startStampPosition,
+                end: Vec.add(startStampPosition, oneDimentionIndexToVec2(stamp.materials.length - 1, stamp.width))
+            };
+            // Make sure there are no collisions with other stamps:
+            for (let otherStamp of stampedRecords) {
+                if (doStampsOverlap(stampRecord, otherStamp)) {
+                    failedAttempts++;
+                    i--;
+                    continue make_pool;
+                }
             }
+            stampedRecords.push(stampRecord);
+            // Override current materials:
+            stampArrays(materials, width, stamp.materials, stamp.width, startStampPosition);
         }
     }
 

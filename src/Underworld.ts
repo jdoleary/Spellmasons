@@ -186,7 +186,7 @@ export default class Underworld {
       window.devUnderworld = this;
     }
     this.seed = globalThis.seedOverride || seed;
-    // this.seed = '0.7731948171682899';
+    this.seed = '0.5718743770819112';
     // Nofity when Underworld is GC'd
     cleanupRegistry?.register(this, `underworld-${this.seed}-${this.localUnderworldNumber}`);
 
