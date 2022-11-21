@@ -548,7 +548,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
     let animationKey = 'playerAttackEpic';
     if (payload.cards.length < 3) {
       animationKey = 'playerAttackSmall';
-    } else if (payload.cards.length < 5) {
+    } else if (payload.cards.length < 6) {
       animationKey = 'playerAttackMedium0';
     }
     const keyMoment = () => underworld.castCards(caster.cardUsageCounts, caster.unit, payload.cards, payload, false, false);
