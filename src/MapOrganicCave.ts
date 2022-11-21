@@ -213,6 +213,13 @@ function stampLiquids(materials: Material[], width: number, underworld: Underwor
         const stamp = LiquidPools[randInt(underworld.random, 0, LiquidPools.length)];
         // Start the stamp
         const chosenIndex = randInt(underworld.random, 0, materials.length);
+        // Ensure that the start point is already a ground material to prevent
+        // the liquid from being stamped in an "island" surrounded by walls
+        if (materials[chosenIndex] !== Material.GROUND) {
+            failedAttempts++;
+            i--;
+            continue make_pool;
+        }
         const startStampPosition = oneDimentionIndexToVec2(chosenIndex, width);
         if (stamp) {
             const stampRecord = {
