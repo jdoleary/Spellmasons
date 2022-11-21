@@ -186,6 +186,7 @@ export default class Underworld {
       window.devUnderworld = this;
     }
     this.seed = globalThis.seedOverride || seed;
+    // this.seed = '0.7731948171682899';
     // Nofity when Underworld is GC'd
     cleanupRegistry?.register(this, `underworld-${this.seed}-${this.localUnderworldNumber}`);
 
@@ -1214,11 +1215,12 @@ export default class Underworld {
     }
 
     const useTutorialStartLevel = !isTutorialComplete() && levelIndex == 0;
-    const caveParams = useTutorialStartLevel
-      ? caveSizes.tutorial
-      : (levelIndex > 6
-        ? caveSizes.medium
-        : caveSizes.small);
+    // const caveParams = useTutorialStartLevel
+    //   ? caveSizes.tutorial
+    //   : (levelIndex > 6
+    //     ? caveSizes.medium
+    //     : caveSizes.small);
+    const caveParams = caveSizes.medium;
 
     const { map, limits } = generateCave(caveParams || caveSizes.small, biome, this);
     const { tiles, liquid, width } = map;

@@ -7,8 +7,6 @@ import type PieClient from '@websocketpie/client';
 import type { Vec2 } from '../jmath/Vec';
 import type { View } from '../views';
 import type { IHostApp } from '../network/networkUtil';
-import type { LanguageMapping } from '../localization';
-import type { TutorialChecklist } from '../graphics/Explain';
 
 declare global {
     var SPELLMASONS_PACKAGE_VERSION: string;

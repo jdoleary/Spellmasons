@@ -1670,3 +1670,11 @@ body:not(.view-Game) #tutorial-checklist {
 #tutorial-checklist-inner div.complete {
   color: #aaa;
 }
+
+#debug-info {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: rgba(255, 255, 255, 0.5);
+
+}

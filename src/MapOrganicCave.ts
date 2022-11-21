@@ -5,9 +5,10 @@ import { randFloat, randInt } from "./jmath/rand";
 import * as Vec from "./jmath/Vec";
 import * as config from './config';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex, vec2ToOneDimentionIndexPreventWrap } from "./jmath/ArrayUtil";
-import { conway, ConwayState, placeLiquidSources } from "./Conway";
+import { conway, ConwayState, Material } from "./Conway";
 import type { IObstacle } from "./entity/Obstacle";
 import Underworld, { Biome } from "./Underworld";
+import LiquidPools from './LiquidPools';
 
 export const caveSizes: { [size: string]: CaveParams } = {
     'tutorial': {
@@ -158,14 +159,11 @@ export function generateCave(params: CaveParams, biome: Biome, underworld: Under
         // will decrease
         liquidSpreadChanceFalloff: 2
     }
+    stampLiquids(materials, width, underworld);
     // 1st pass for walls
     conway(materials, width, conwayState, underworld);
     // 2nd pass for semi-walls
     conway(materials, width, conwayState, underworld);
-    // 3rd pass to grow liquid pools.  Number of pools is relative to map width
-    placeLiquidSources(materials, width, params.numberOfLiquidSources !== undefined ? params.numberOfLiquidSources : Math.floor(width / 5), underworld);
-    conway(materials, width, conwayState, underworld);
-
 
     // Convert array of materials into tiles for use by WFC
     let tiles: Tile[] = materials.map((m, i) => {
@@ -197,6 +195,30 @@ export function generateCave(params: CaveParams, biome: Biome, underworld: Under
     };
     convertBaseTilesToFinalTiles(map);
     return { map, limits: bounds };
+
+}
+
+function stampLiquids(materials: Material[], width: number, underworld: Underworld) {
+    const stamp = LiquidPools[0];
+    // Start the stamp
+    const chosenIndex = randInt(underworld.random, 0, materials.length);
+    const startStampPosition = oneDimentionIndexToVec2(chosenIndex, width);
+    console.log('jtest stamp at', startStampPosition);
+    if (stamp) {
+        // Override current materials:
+        for (let stampIndex = 0; stampIndex < stamp.materials.length; stampIndex++) {
+            const material = stamp.materials[stampIndex];
+            if (material) {
+                const stampPosition = oneDimentionIndexToVec2(stampIndex, stamp.width);
+                const overridePosition = Vec.add(startStampPosition, stampPosition);
+                console.log('jtest replace', overridePosition, material);
+                const overrideIndex = vec2ToOneDimentionIndex(overridePosition, width);
+                materials[overrideIndex] = material;
+            }
+        }
+    }
+
+
 
 }
 const west: Vec.Vec2 = { x: -1, y: 0 };
@@ -238,24 +260,6 @@ export function convertBaseTilesToFinalTiles(map: Map) {
         }
     }
     const size = width * height;
-    function changeTileToLiquidIf3NeighborsAreLiquid(position: Vec.Vec2) {
-        const neighbors = Object.values(SIDES).flatMap(side => {
-            const cell = getCell(map, Vec.add(position, side));
-            // Checking for cell.image intentionally excludes the "empty" cell
-            return cell && cell.image ? [{ cell, side }] : [];
-        });
-        if (neighbors.filter(n => n.cell.image == baseTiles.liquid).length >= 3) {
-            changeTile(vec2ToOneDimentionIndex(position, width), baseTiles.liquid);
-            // Check all neighbors now that one of them might now be surrounded by 3
-            neighbors.filter(n => n.cell.image == baseTiles.ground).forEach(n => changeTileToLiquidIf3NeighborsAreLiquid(cellCoordToIndexPosition(n.cell)));
-        }
-
-    }
-    // All tiles with >= 3 base liquid tile neighbors turn to base liquid
-    for (let i = 0; i < size; i++) {
-        const position = oneDimentionIndexToVec2(i, width);
-        changeTileToLiquidIf3NeighborsAreLiquid(position);
-    }
     // Outline all base tiles with finalized tiles:
     const originalMap = { ...map, tiles: JSON.parse(JSON.stringify(map.tiles)) };
     const finalTileImages = makeFinalTileImages(map.biome);
@@ -516,12 +520,6 @@ export interface Map {
 }
 function getCell(map: Map, position: Vec.Vec2): Tile | undefined {
     return map.tiles[vec2ToOneDimentionIndexPreventWrap(position, map.width)];
-}
-enum Material {
-    EMPTY,
-    LIQUID,
-    GROUND,
-    WALL,
 }
 export const baseTiles = {
     empty: '',
