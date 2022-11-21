@@ -1214,12 +1214,11 @@ export default class Underworld {
     }
 
     const useTutorialStartLevel = !isTutorialComplete() && levelIndex == 0;
-    // const caveParams = useTutorialStartLevel
-    //   ? caveSizes.tutorial
-    //   : (levelIndex > 6
-    //     ? caveSizes.medium
-    //     : caveSizes.small);
-    const caveParams = caveSizes.medium;
+    const caveParams = useTutorialStartLevel
+      ? caveSizes.tutorial
+      : (levelIndex > 6
+        ? caveSizes.medium
+        : caveSizes.small);
 
     const { map, limits } = generateCave(caveParams || caveSizes.small, biome, this);
     const { tiles, liquid, width } = map;

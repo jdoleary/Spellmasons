@@ -121,7 +121,7 @@ globalThis.skipTutorial = () => {
 globalThis.enemyEncountered = JSON.parse(storage.get(ENEMY_ENCOUNTERED_STORAGE_KEY) || '[]');
 console.log('Setup: initializing enemyEncountered as', globalThis.enemyEncountered);
 
-globalThis.showDebug = true;
+globalThis.showDebug = false;
 
 if (globalThis.isElectron) {
   console.log('RUNNING AS DESKTOP APP')
