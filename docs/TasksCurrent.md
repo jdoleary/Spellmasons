@@ -19,6 +19,7 @@
     - disconnected player still shows in in-game lobby
     - doesn't save tutorial status
 # Bugs / Cleaning
+- 0.3587810153606119 see level 2 for missing walls on top after tutorial level
 - Prevent liquid pools from spawning in a place with no way to reach them
 - Add blood_archer.gif for explain
 - If you try to join a multiplayer game in two tabs on the same browser you get an infinite spinner even tho there is an error in console
