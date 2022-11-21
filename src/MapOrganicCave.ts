@@ -8,7 +8,7 @@ import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex, vec2ToOneDimentionInd
 import { conway, ConwayState, Material } from "./Conway";
 import type { IObstacle } from "./entity/Obstacle";
 import Underworld, { Biome } from "./Underworld";
-import LiquidPools, { stampMatricies } from './LiquidPools';
+import LiquidPools, { doStampsOverlap, stampMatricies } from './LiquidPools';
 
 export const caveSizes: { [size: string]: CaveParams } = {
     'tutorial': {
@@ -198,13 +198,6 @@ export function generateCave(params: CaveParams, biome: Biome, underworld: Under
 
 }
 
-interface Stamp {
-    start: Vec.Vec2,
-    end: Vec.Vec2
-}
-function doStampsOverlap(s1: Stamp, s2: Stamp): boolean {
-    return Vec.isBetween(s1.start, s2.start, s2.end) || Vec.isBetween(s1.end, s2.start, s2.end)
-}
 
 function stampLiquids(materials: Material[], width: number, underworld: Underworld) {
     const NUMBER_OF_POOLS = 4;

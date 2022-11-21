@@ -60,8 +60,17 @@ function matrixToReadable(matrix: number[], width: number) {
 }
 
 // Stamp one array over top of another overriding the source's values
+// Stamps from the top left of the stamp to the bottom right starting at
+// the startStampPosition on the source matrix
 // Mutates source
 export function stampMatricies(source: any[], sourceWidth: number, stamp: any[], stampWidth: number, startStampPosition: Vec.Vec2) {
+    // Abort if stamp would overflow
+    const lastStampPosition = Vec.add(startStampPosition, oneDimentionIndexToVec2(stamp.length - 1, stampWidth));
+    const lastStampIndexOnMatrix = vec2ToOneDimentionIndex(lastStampPosition, sourceWidth);
+    if (lastStampPosition.x >= sourceWidth || lastStampIndexOnMatrix >= source.length) {
+        return;
+    }
+
     for (let stampIndex = 0; stampIndex < stamp.length; stampIndex++) {
         const material = stamp[stampIndex];
         if (material) {
@@ -72,4 +81,11 @@ export function stampMatricies(source: any[], sourceWidth: number, stamp: any[],
         }
     }
 
+}
+interface Stamp {
+    start: Vec.Vec2,
+    end: Vec.Vec2
+}
+export function doStampsOverlap(s1: Stamp, s2: Stamp): boolean {
+    return Vec.isBetween(s1.start, s2.start, s2.end) || Vec.isBetween(s1.end, s2.start, s2.end)
 }
