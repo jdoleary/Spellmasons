@@ -56,39 +56,6 @@ export function conway(tiles: Material[], widthOf2DArray: number, state: ConwayS
         }
     }
 }
-// export function placeLiquidSources(tiles: Material[], widthOf2DArray: number, numberOfLiquidSources: number, underworld: Underworld) {
-//     if (numberOfLiquidSources == 0) {
-//         return;
-//     }
-//     let candidatesForLiquidSource = [];
-//     for (let i = 0; i < tiles.length; i++) {
-//         const tile = tiles[i];
-//         if (tile == Material.GROUND) {
-//             const neighbors = getNeighbors(i, tiles, widthOf2DArray);
-//             // If all of it's neighbors are ground it is a candidate for liquid pool
-//             if (neighbors.every(t => t && t == Material.GROUND)) {
-//                 candidatesForLiquidSource.push(i);
-//             }
-//         }
-//     }
-//     const chosenLiquidIndexes: number[] = [];
-//     choose_random_liquid:
-//     for (let i = 0; (i < tiles.length && chosenLiquidIndexes.length < numberOfLiquidSources); i++) {
-//         const chosenIndex = candidatesForLiquidSource[randInt(underworld.random, 0, candidatesForLiquidSource.length)];
-
-//         const goodIndex = tryToChooseIndex(chosenIndex, chosenLiquidIndexes, tiles, widthOf2DArray);
-//         if (goodIndex) {
-//             chosenLiquidIndexes.push(goodIndex);
-
-//         }
-//     }
-//     for (let index of chosenLiquidIndexes) {
-//         if (index !== undefined && tiles[index] !== undefined) {
-//             tiles[index] = Material.LIQUID
-//         }
-//     }
-// }
-
 // Return each neighbor tile index of a given tile index
 export function getNeighborIndices(tileIndex: number, widthOf2DArray: number): (number | undefined)[] {
     const { x, y } = oneDimentionIndexToVec2(tileIndex, widthOf2DArray);
@@ -103,25 +70,4 @@ export function getNeighborIndices(tileIndex: number, widthOf2DArray: number): (
         vec2ToOneDimentionIndexPreventWrap({ x: x - 1, y: y }, widthOf2DArray),
     ];
     return neighbors;
-}
-
-function tryToChooseIndex(chosenIndex: number | undefined, chosenLiquidIndexes: number[], tiles: Material[], widthOf2DArray: number): number | undefined {
-    if (chosenIndex !== undefined && tiles[chosenIndex] !== undefined) {
-        // Ensure the chosenIndex isn't bad in relation to other liquid pools which would cause
-        // malformed ground and liquid walls
-        // for (let preLiquidIndex of chosenLiquidIndexes) {
-        //     const otherPosition = oneDimentionIndexToVec2(preLiquidIndex, widthOf2DArray);
-        //     const position = oneDimentionIndexToVec2(chosenIndex, widthOf2DArray);
-        //     const dist = distance(position, otherPosition);
-        //     if (dist <= Math.SQRT2 * 2 && dist > Math.SQRT2) {
-        //         // Bad location, too close to other liquid (but not touching) and could cause abberant liquid borders
-        //         return undefined;
-        //     }
-        // }
-        return chosenIndex;
-    } else {
-        console.error('Attempted to place liquid tile but undefined');
-        return undefined;
-    }
-
 }
