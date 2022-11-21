@@ -273,6 +273,7 @@ const tutorialChecklist: TutorialChecklist = {
         showExplainPopup: [],
     }
 }
+
 export function updateTutorialChecklist() {
     if (globalThis.usingTestRunner) {
         return;
@@ -285,12 +286,14 @@ export function updateTutorialChecklist() {
     }
     elTutorialChecklistInner.innerHTML = html;
 }
+const COMPLETE = 'complete';
 export function tutorialCompleteTask(key: keyof TutorialChecklist, condition?: () => boolean) {
     if (globalThis.doUpdateTutorialChecklist && (condition ? condition() : true)) {
         const task = tutorialChecklist[key];
         if (task) {
             console.log('Tutorial: Complete task', task.text);
             task.complete = true;
+            storage.set(getTutorialStorageKey(key), COMPLETE);
             for (let nextTask of task.nextVisibleTasks) {
                 tutorialShowTask(nextTask);
             }
@@ -310,11 +313,18 @@ export function tutorialShowTask(key: keyof TutorialChecklist) {
         const task = tutorialChecklist[key];
         if (task) {
             task.visible = true;
-            updateTutorialChecklist();
+            if (storage.get(getTutorialStorageKey(key)) === COMPLETE) {
+                tutorialCompleteTask(key);
+            }
+            setTutorialVisiblity(true);
         } else {
             console.error('No such tutorial task with key', key);
         }
     }
+}
+function getTutorialStorageKey(key: string): string {
+    return `tutorial_${key}`;
+
 }
 const TUTORIAL_COMPLETE = 'tutorial-complete';
 let cachedTutorialComplete: boolean | undefined = undefined;

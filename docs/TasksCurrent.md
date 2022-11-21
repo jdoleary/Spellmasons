@@ -1,12 +1,11 @@
-# Nov Week 3
-- Fix tutorial so it doesn't keep popping up
-- Since the game starts in fullscreen, toggle fullscreen button no longer works
-- Bugs
-- Fix: should not broadcast latency warning for a message that fails with a rejected promise
 # Nov Week 4
+    - Since the game starts in fullscreen, toggle fullscreen button no longer works
+    - Bugs
+    - Fix: should not broadcast latency warning for a message that fails with a rejected promise
     - Optimize
     - Make gameplay video with Brad, add it to Steam and YouTube
 # Nov Week 5 / Dec Week 1
+    - Default wizard name to steam name if connected to steam
     - Key Binding Config page
     - Cloud Saves
     - Steam Achievements
