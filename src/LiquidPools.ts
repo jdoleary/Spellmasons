@@ -55,8 +55,8 @@ interface Matrix {
 export function surround(matrixContents: number[], width: number): Matrix {
     const newWidth = width + 2;
     const out: Matrix = { width: newWidth, contents: [] };
-    const height = oneDimentionIndexToVec2(matrixContents.length - 1, width).y;
-    const newHeight = height + 3;
+    const height = oneDimentionIndexToVec2(matrixContents.length - 1, width).y + 1;
+    const newHeight = height + 2;
     // Initialize the new array
     for (let x = 0; x < newWidth; x++) {
         for (let y = 0; y < newHeight; y++) {
