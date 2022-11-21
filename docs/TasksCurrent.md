@@ -20,6 +20,7 @@
     - disconnected player still shows in in-game lobby
     - doesn't save tutorial status
 # Bugs / Cleaning
+- Prevent liquid pools from spawning in a place with no way to reach them
 - Add blood_archer.gif for explain
 - If you try to join a multiplayer game in two tabs on the same browser you get an infinite spinner even tho there is an error in console
 - archer still had freeze modifier listed in tooltip even after the freeze disappeared naturally on the next turn
@@ -49,7 +50,6 @@
     - Test in windowed mode on Electron
 - h: bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
     - this is a race condition because I'm still able to move freely after his cast triggers
-- Fix liquid tile glitches with prebuild liquid sets
 - resurrect should take longer to return to base mana
     - this already is set but it didn't work in brad's playtest... hmm..
 - he can't spawn in while i'm casing a spell

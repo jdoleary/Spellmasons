@@ -1,7 +1,5 @@
 # Desired Schedule
 - November
-    - Fix liquid bugs
-        - just make sure no new liquid tile can be placed within 3 squares of an existing tile of a different body of water
     - Optimize
         - Check optimization for rendering menu in other languages, it seems like the inventory is super slow when it's in another language
     - Finish bugs
