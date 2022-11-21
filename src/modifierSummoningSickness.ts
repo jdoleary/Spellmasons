@@ -29,7 +29,6 @@ export default function registerSummoningSickness() {
             // prevents players from moving when they have summoning sickness)
             // and then returning true also ends their turn.
             unit.stamina = 0;
-            // console.log('jtest remove summoning sickness', unit.id, underworld.units.length)
             // Unit.removeModifier(unit, summoningSicknessId, underworld);
             // Skip turn
             return true;

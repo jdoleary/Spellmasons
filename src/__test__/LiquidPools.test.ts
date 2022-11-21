@@ -48,7 +48,7 @@ describe('LiquidPools', () => {
         // in order to prevent overflow.  There are other ways this could be
         // handled, but this is the simplest to prevent a stamp from
         // corrupting the source by wrapping in the event that it would overflow
-        it.only('should not stamp if the stamp would overflow the source - overflow wide', () => {
+        it('should not stamp if the stamp would overflow the source - overflow wide', () => {
             const source = [
                 0, 0, 0,
                 0, 0, 0,
@@ -62,7 +62,7 @@ describe('LiquidPools', () => {
             stampMatricies(source, 3, stamp, 3, { x: 1, y: 0 });
             expect(source).toEqual(expected);
         });
-        it.only('should not stamp if the stamp would overflow the source - overflow tall', () => {
+        it('should not stamp if the stamp would overflow the source - overflow tall', () => {
             const source = [
                 0, 0, 0,
                 0, 0, 0,

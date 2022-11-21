@@ -8,7 +8,7 @@ import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex, vec2ToOneDimentionInd
 import { conway, ConwayState, Material } from "./Conway";
 import type { IObstacle } from "./entity/Obstacle";
 import Underworld, { Biome } from "./Underworld";
-import LiquidPools, { doStampsOverlap, stampMatricies } from './LiquidPools';
+import LiquidPools, { doStampsOverlap, matrixToReadable, stampMatricies } from './LiquidPools';
 
 export const caveSizes: { [size: string]: CaveParams } = {
     'tutorial': {
@@ -203,9 +203,10 @@ function stampLiquids(materials: Material[], width: number, underworld: Underwor
     const NUMBER_OF_POOLS = 4;
     let failedAttempts = 0;
     const stampedRecords = [];
+    // Make a new liquid pool
     make_pool:
     for (let i = 0; i < NUMBER_OF_POOLS; i++) {
-        console.log('jtest make pool', failedAttempts);
+        // Prevent infinite loop if it cannot find a new place for a pool
         if (failedAttempts > 100) {
             return;
         }
@@ -213,7 +214,6 @@ function stampLiquids(materials: Material[], width: number, underworld: Underwor
         // Start the stamp
         const chosenIndex = randInt(underworld.random, 0, materials.length);
         const startStampPosition = oneDimentionIndexToVec2(chosenIndex, width);
-        console.log('jtest stamp at', startStampPosition);
         if (stamp) {
             const stampRecord = {
                 start: startStampPosition,
