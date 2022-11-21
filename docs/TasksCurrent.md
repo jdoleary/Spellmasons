@@ -1,4 +1,5 @@
 # Nov Week 3
+- Fix tutorial so it doesn't keep popping up
 - Since the game starts in fullscreen, toggle fullscreen button no longer works
 - Bugs
 - Fix: should not broadcast latency warning for a message that fails with a rejected promise

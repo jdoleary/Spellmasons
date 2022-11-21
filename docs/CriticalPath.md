@@ -1,14 +1,16 @@
 # Desired Schedule
 - November
+    - Fix liquid bugs
+        - just make sure no new liquid tile can be placed within 3 squares of an existing tile of a different body of water
     - Optimize
         - Check optimization for rendering menu in other languages, it seems like the inventory is super slow when it's in another language
     - Finish bugs
 - December
+    - Icons for perks
     - Convenient multiplayer lobbying via steam
         - Prevent players from joining mid-round, notify "you will spawn once this level is complete"
     - Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
 - January
-    - Icons for perks
     - Last few sound fx
     - Establish Minimum System Requirements and update Steam Page
     - Accessability / Localization Language Support / Spellcheck
@@ -22,13 +24,7 @@
     - More spells
     - Cooldowns instead of mana multiplier
     - Perks
-    - Steamdeck support / Controller Support 
-        - https://github.com/infusion/node-gamecontroller
-        - https://github.com/andrew/node-xbox-controller
 # Critical Path
-- Major Tasks
-    - Fix liquid generation
-    - Make weekly videos
 - Milestone | **Optimize game**
         - setPath is constantly being called by all enemies
         - repelCircleFromLine is used for both unit crowding and wall physics and with wall physics it doesn't need a reference to underworld, that's only needed for unit crowding to make sure they don't crowd each other through walls
