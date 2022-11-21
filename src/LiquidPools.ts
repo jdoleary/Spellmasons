@@ -16,31 +16,31 @@ export default [
         1, 1, 1, 1, 1
     ], 5)
 ]
-function toMaterials(tiles: number[], width: number): { width: number, materials: Material[] } {
+function toMaterials(matrixContents: number[], width: number): { width: number, materials: Material[] } {
     // Surround with 2 layers of ground so that they don't collide with other stamps
     // The first layer of ground leaves room for liquid corner pieces
-    let surroundedTiles = surround(tiles, width);
+    let surroundedTiles = surround(matrixContents, width);
     // surroundedTiles = surround(surroundedTiles.tiles, surroundedTiles.width);
-    return { width, materials: surroundedTiles.tiles.map(x => x === 1 ? Material.LIQUID : Material.GROUND) };
+    return { width, materials: surroundedTiles.contents.map(x => x === 1 ? Material.LIQUID : Material.GROUND) };
 }
-interface Tiles {
+interface Matrix {
     width: number,
-    tiles: number[]
+    contents: number[]
 }
-export function surround(tiles: number[], width: number): Tiles {
+export function surround(matrixContents: number[], width: number): Matrix {
     const newWidth = width + 2;
-    const out: Tiles = { width: newWidth, tiles: [] };
-    const height = oneDimentionIndexToVec2(tiles.length - 1, width).y;
+    const out: Matrix = { width: newWidth, contents: [] };
+    const height = oneDimentionIndexToVec2(matrixContents.length - 1, width).y;
     const newHeight = height + 3;
     // Initialize the new array
     for (let x = 0; x < newWidth; x++) {
         for (let y = 0; y < newHeight; y++) {
             const index = vec2ToOneDimentionIndex({ x, y }, newWidth);
-            out.tiles[index] = 0;
+            out.contents[index] = 0;
         }
     }
     // Stamp the old one over top of it:
-    stampArrays(out.tiles, out.width, tiles, width, { x: 1, y: 1 });
+    stampMatricies(out.contents, out.width, matrixContents, width, { x: 1, y: 1 });
     return out;
 
 }
@@ -61,7 +61,7 @@ function matrixToReadable(matrix: number[], width: number) {
 
 // Stamp one array over top of another overriding the source's values
 // Mutates source
-export function stampArrays(source: any[], sourceWidth: number, stamp: any[], stampWidth: number, startStampPosition: Vec.Vec2) {
+export function stampMatricies(source: any[], sourceWidth: number, stamp: any[], stampWidth: number, startStampPosition: Vec.Vec2) {
     for (let stampIndex = 0; stampIndex < stamp.length; stampIndex++) {
         const material = stamp[stampIndex];
         if (material) {

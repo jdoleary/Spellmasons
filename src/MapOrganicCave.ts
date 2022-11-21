@@ -8,7 +8,7 @@ import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex, vec2ToOneDimentionInd
 import { conway, ConwayState, Material } from "./Conway";
 import type { IObstacle } from "./entity/Obstacle";
 import Underworld, { Biome } from "./Underworld";
-import LiquidPools, { stampArrays } from './LiquidPools';
+import LiquidPools, { stampMatricies } from './LiquidPools';
 
 export const caveSizes: { [size: string]: CaveParams } = {
     'tutorial': {
@@ -236,7 +236,7 @@ function stampLiquids(materials: Material[], width: number, underworld: Underwor
             }
             stampedRecords.push(stampRecord);
             // Override current materials:
-            stampArrays(materials, width, stamp.materials, stamp.width, startStampPosition);
+            stampMatricies(materials, width, stamp.materials, stamp.width, startStampPosition);
         }
     }
 

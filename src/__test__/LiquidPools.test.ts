@@ -1,10 +1,10 @@
-import { stampArrays, surround } from "../LiquidPools";
+import { stampMatricies, surround } from "../LiquidPools";
 
 describe('LiquidPools', () => {
     describe('stampArrays', () => {
         it('should stamp one array overtop of another - basic', () => {
             const source = [0, 0, 0];
-            stampArrays(source, 3, [1], 1, { x: 1, y: 0 });
+            stampMatricies(source, 3, [1], 1, { x: 1, y: 0 });
             const expected = [0, 1, 0];
             expect(source).toEqual(expected);
         });
@@ -18,7 +18,7 @@ describe('LiquidPools', () => {
                 1, 2,
                 3, 4,
             ]
-            stampArrays(source, 3, stamp, 2, { x: 1, y: 1 });
+            stampMatricies(source, 3, stamp, 2, { x: 1, y: 1 });
             const expected = [
                 0, 0, 0,
                 0, 1, 2,
@@ -36,7 +36,7 @@ describe('LiquidPools', () => {
                 1, 2,
                 3, 4,
             ]
-            stampArrays(source, 3, stamp, 2, { x: 0, y: 1 });
+            stampMatricies(source, 3, stamp, 2, { x: 0, y: 1 });
             const expected = [
                 0, 0, 0,
                 1, 2, 0,
@@ -55,7 +55,7 @@ describe('LiquidPools', () => {
                 1, 2, 3,
                 4, 5, 6
             ]
-            stampArrays(source, 3, stamp, 3, { x: 1, y: 0 });
+            stampMatricies(source, 3, stamp, 3, { x: 1, y: 0 });
             const expected = [
                 0, 1, 2, 3,
                 0, 4, 5, 6,
