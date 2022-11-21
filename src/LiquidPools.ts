@@ -14,14 +14,39 @@ export default [
     ], 2),
     toMaterials([
         1, 1, 1, 1, 1
-    ], 5)
+    ], 5),
+    toMaterials([
+        1,
+        1,
+        1,
+        1,
+        1
+    ], 1),
+    toMaterials([
+        1, 1, 1,
+        1, 1, 1,
+        1, 1, 1,
+    ], 3),
+    toMaterials([
+        1, 0, 0, 1,
+        1, 0, 0, 1,
+        1, 0, 0, 1,
+    ], 4),
+    toMaterials([
+        1, 0, 0, 0,
+        1, 0, 0, 0,
+        1, 0, 0, 0,
+        1, 1, 1, 1,
+    ], 4),
 ]
 function toMaterials(matrixContents: number[], width: number): { width: number, materials: Material[] } {
     // Surround with 2 layers of ground so that they don't collide with other stamps
     // The first layer of ground leaves room for liquid corner pieces
     let surroundedTiles = surround(matrixContents, width);
-    // surroundedTiles = surround(surroundedTiles.tiles, surroundedTiles.width);
-    return { width, materials: surroundedTiles.contents.map(x => x === 1 ? Material.LIQUID : Material.GROUND) };
+    // The second layer of ground makes sure there's a margin between liquid pools so they don't
+    // intersect in weird ways
+    surroundedTiles = surround(surroundedTiles.contents, surroundedTiles.width);
+    return { width: surroundedTiles.width, materials: surroundedTiles.contents.map(x => x === 1 ? Material.LIQUID : Material.GROUND) };
 }
 interface Matrix {
     width: number,
@@ -47,7 +72,7 @@ export function surround(matrixContents: number[], width: number): Matrix {
 
 // For development, prints a matrix in a way in which it is easily
 // readable.  Works well only with single digit contents 0-9
-function matrixToReadable(matrix: number[], width: number) {
+export function matrixToReadable(matrix: number[], width: number) {
     let out = '';
     for (let i = 0; i < matrix.length; i++) {
         const value = matrix[i];
