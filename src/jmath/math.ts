@@ -1,3 +1,5 @@
+import { matrixToReadable } from '../LiquidPools';
+import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex } from './ArrayUtil';
 import { Vec2 } from './Vec';
 // https://webdva.github.io/how-i-implemented-client-side-linear-interpolation/
 export function lerp(start: number, end: number, time: number) {
@@ -99,4 +101,17 @@ export function* honeycombGenerator(radius: number, start: Vec2, loopLimit: numb
     }
   }
 
+}
+
+// Rotates a matrix clockwise once
+export function rotateMatrix(array: any[], width: number): { contents: any[], width: number } {
+  const height = oneDimentionIndexToVec2(array.length - 1, width).y + 1;
+  const rotated: typeof array = [];
+  for (let i = 0; i < width; i++) {
+    for (let j = height - 1; j >= 0; j--) {
+      const value = array[vec2ToOneDimentionIndex({ x: i, y: j }, width)];
+      rotated.push(value);
+    }
+  }
+  return { contents: rotated, width: height };
 }
