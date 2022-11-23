@@ -180,4 +180,11 @@ declare global {
     // Expose storage functions so golems-menu can access them:
     var storageSet: (key: string, value: string) => void;
     var storageGet: (key: string) => string | null;
+    // If this program is running via electron, electron will set
+    // diskStorage as a global so that the code in this repo can
+    // save files to disk instead of to local storage
+    var diskStorage: undefined | {
+        set: (key, value) => void,
+        get: (key) => string
+    }
 }
