@@ -226,4 +226,9 @@ declare global {
     var fullyExitGame: () => void;
     // Mapping of game controls
     var controlMap: { [key: string]: string[] };
+    // Returns a standardized keycode for mouse buttons
+    // to make input reassignment easier
+    var mouseButtonToKeyCode: (button: number) => string;
+    // Save control scheme
+    var persistControls: () => void;
 }

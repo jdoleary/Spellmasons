@@ -1,4 +1,5 @@
 # Nov Week 4
+
     - Bugs
     - Optimize
     - Since the game starts in fullscreen, toggle fullscreen button no longer works
@@ -6,7 +7,6 @@
     - Make gameplay video with Brad, add it to Steam and YouTube
 # Nov Week 5 / Dec Week 1
     - Default wizard name to steam name if connected to steam
-    - Key Binding Config page
     - Cloud Saves
     - Steam Achievements
 
@@ -19,6 +19,7 @@
     - disconnected player still shows in in-game lobby
     - doesn't save tutorial status
 # Bugs / Cleaning
+- Does mouse back button make the page go back in electron??
 - Add blood_archer.gif for explain
 - If you try to join a multiplayer game in two tabs on the same browser you get an infinite spinner even tho there is an error in console
 - archer still had freeze modifier listed in tooltip even after the freeze disappeared naturally on the next turn

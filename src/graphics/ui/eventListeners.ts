@@ -63,6 +63,9 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
   if (globalThis.view !== View.Game) {
     return;
   }
+  if (event.code == 'Tab') {
+    event.preventDefault();
+  }
   const { underworld } = overworld;
   if (!underworld) {
     return
@@ -84,8 +87,17 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
     // Return immediately, prompt hotkey overrides other hotkeys
     return;
   }
-
-  switch (getKeyCodeMapping(event.code)) {
+  handleInputDown(getKeyCodeMapping(event.code), overworld);
+}
+function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworld) {
+  if (keyCodeMapping === undefined) {
+    return;
+  }
+  const { underworld } = overworld;
+  if (!underworld) {
+    return;
+  }
+  switch (keyCodeMapping) {
     case 'clearQueuedSpell':
       const thereWasInventoryOpen = document.body?.classList.contains(CardUI.openInvClass);
       // force close inventory
@@ -104,7 +116,6 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
       break;
     case 'openInventory':
       CardUI.toggleInventory(undefined, undefined, underworld);
-      event.preventDefault();
       break;
     case 'dequeueSpell':
       CardUI.deselectLastCard();
@@ -186,9 +197,11 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
     case 'spell9':
       CardUI.selectCardByIndex(8);
       break;
-    case 'spell10':
+    case 'spell0':
       CardUI.selectCardByIndex(9);
       break;
+    default:
+      console.log('Input: code', keyCodeMapping, 'not handled');
   }
 }
 
@@ -197,7 +210,13 @@ export function keyupListener(overworld: Overworld, event: KeyboardEvent) {
   if (globalThis.view !== View.Game) {
     return;
   }
-  switch (getKeyCodeMapping(event.code)) {
+  handleInputUp(getKeyCodeMapping(event.code), overworld);
+}
+function handleInputUp(keyCodeMapping: string | undefined, overworld: Overworld) {
+  if (keyCodeMapping === undefined) {
+    return;
+  }
+  switch (keyCodeMapping) {
     case 'showWalkRope':
       keyDown.showWalkRope = false;
       break;
@@ -423,10 +442,13 @@ export function mouseDownHandler(overworld: Overworld, e: MouseEvent) {
     if (overworld.underworld) {
       globalThis.setRMBDown?.(true, overworld.underworld);
     } else {
-      console.error('Cannot setRMBDown, underworld does not exist.');
+      console.log('Did not setRMBDown, underworld does not exist.');
     }
+  } else {
+    handleInputDown(getKeyCodeMapping(globalThis.mouseButtonToKeyCode(e.button)), overworld);
   }
 }
+globalThis.mouseButtonToKeyCode = (button: number) => `Mouse ${button}`;
 export function mouseUpHandler(overworld: Overworld, e: MouseEvent) {
   // Turn MMBDown off for any click to protect against it getting stuck
   // as flagged "down"
@@ -439,9 +461,11 @@ export function mouseUpHandler(overworld: Overworld, e: MouseEvent) {
     if (overworld.underworld) {
       globalThis.setRMBDown?.(false, overworld.underworld);
     } else {
-      console.error('Cannot setRMBDown, underworld does not exist.');
+      console.log('Did not setRMBDown, underworld does not exist.');
     }
     e.preventDefault();
+  } else {
+    handleInputUp(getKeyCodeMapping(globalThis.mouseButtonToKeyCode(e.button)), overworld);
   }
 }
 

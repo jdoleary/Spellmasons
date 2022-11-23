@@ -1,3 +1,4 @@
+import * as storage from '../../storage';
 const mapping = {
     showWalkRope: ['KeyF'],
     clearQueuedSpell: ['Escape'],
@@ -15,12 +16,18 @@ const mapping = {
     spell7: ['Digit7'],
     spell8: ['Digit8'],
     spell9: ['Digit9'],
-    spell10: ['Digit0'],
+    spell0: ['Digit0'],
     cameraUp: ['KeyW'],
     cameraDown: ['KeyS'],
     cameraLeft: ['KeyA'],
     cameraRight: ['KeyD'],
 }
+const STORAGE_CONTROLS_KEY = 'controls';
+// Get saved controls from storage:
+const savedControls = JSON.parse(storage.get(STORAGE_CONTROLS_KEY) || '{}');
+console.log('Retrieved saved controls:', savedControls);
+// Overwrite mapping with savedControls while maintaining the object reference
+Object.assign(mapping, savedControls);
 globalThis.controlMap = mapping;
 export default mapping;
 
@@ -38,4 +45,8 @@ export function getKeyCodeMapping(keyCode: string): string | undefined {
         }
     }
     return undefined;
+}
+globalThis.persistControls = () => {
+    console.log('jtest persist', mapping)
+    storage.set(STORAGE_CONTROLS_KEY, JSON.stringify(mapping));
 }
