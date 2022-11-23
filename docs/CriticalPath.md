@@ -3,12 +3,19 @@
     - Optimize
         - Check optimization for rendering menu in other languages, it seems like the inventory is super slow when it's in another language
     - Finish bugs
+    - Submit demo to IGN
 - December
     - Icons for perks
     - Convenient multiplayer lobbying via steam
         - Prevent players from joining mid-round, notify "you will spawn once this level is complete"
+        - GameLobbyJoinRequested_t
+            - https://partner.steamgames.com/doc/api/ISteamFriends
+        - [sdk api overview](https://partner.steamgames.com/doc/sdk/api)
+        - [Call c from node](https://koistya.medium.com/how-to-call-c-c-code-from-node-js-86a773033892)
+    - [Controller Input](https://learn.microsoft.com/en-us/windows/win32/xinput/getting-started-with-xinput)
     - Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
 - January
+    - [Steamworks web api](https://partner.steamgames.com/doc/webapi_overview)
     - Last few sound fx
     - Establish Minimum System Requirements and update Steam Page
     - Accessability / Localization Language Support / Spellcheck
