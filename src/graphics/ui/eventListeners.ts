@@ -30,7 +30,7 @@ import { allUnits } from '../../entity/units';
 import { Faction } from '../../types/commonTypes';
 import * as Freeze from '../../cards/freeze';
 import { collideWithLineSegments } from '../../jmath/moveWithCollision';
-import keyMapping from './keyMapping';
+import { getKeyCodeMapping } from './keyMapping';
 import { inPortal } from '../../entity/Player';
 import * as Doodad from '../../entity/Doodad';
 import { hasTargetAtPosition } from '../../cards';
@@ -85,8 +85,8 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
     return;
   }
 
-  switch (event.code) {
-    case keyMapping.clearQueuedSpell:
+  switch (getKeyCodeMapping(event.code)) {
+    case 'clearQueuedSpell':
       const thereWasInventoryOpen = document.body?.classList.contains(CardUI.openInvClass);
       // force close inventory
       CardUI.toggleInventory(undefined, false, underworld);
@@ -102,14 +102,14 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
         toggleMenu();
       }
       break;
-    case keyMapping.openInventory:
+    case 'openInventory':
       CardUI.toggleInventory(undefined, undefined, underworld);
       event.preventDefault();
       break;
-    case keyMapping.dequeueSpell:
+    case 'dequeueSpell':
       CardUI.deselectLastCard();
       break;
-    case keyMapping.showWalkRope:
+    case 'showWalkRope':
       keyDown.showWalkRope = true;
       // When the walkRope turns on clear the spell effect projection
       // so the user can focus on the information that the walk rope is 
@@ -117,23 +117,23 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
       clearSpellEffectProjection(underworld);
       break;
     // Camera movement
-    case keyMapping.cameraUp:
+    case 'cameraUp':
       keyDown.cameraUp = true;
       cameraAutoFollow(false);
       break;
-    case keyMapping.cameraLeft:
+    case 'cameraLeft':
       keyDown.cameraLeft = true;
       cameraAutoFollow(false);
       break;
-    case keyMapping.cameraDown:
+    case 'cameraDown':
       keyDown.cameraDown = true;
       cameraAutoFollow(false);
       break;
-    case keyMapping.cameraRight:
+    case 'cameraRight':
       keyDown.cameraRight = true;
       cameraAutoFollow(false);
       break;
-    case keyMapping.ping:
+    case 'ping':
       const mouseTarget = underworld.getMousePos();
       overworld.pie.sendData({
         type: MESSAGE_TYPES.PING,
@@ -141,7 +141,7 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
         y: mouseTarget.y
       });
       break;
-    case keyMapping.recenterCamera:
+    case 'recenterCamera':
       if (globalThis.player?.isSpawned) {
 
         // Make camera follow player unit 
@@ -156,40 +156,37 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
         playSFXKey('deny');
       }
       break;
-    case keyMapping.openInventory2:
-      CardUI.toggleInventory(undefined, undefined, underworld);
-      break;
-    case keyMapping.endTurn:
+    case 'endTurn':
       underworld.endMyTurn();
       break;
-    case keyMapping.spell1:
+    case 'spell1':
       CardUI.selectCardByIndex(0);
       break;
-    case keyMapping.spell2:
+    case 'spell2':
       CardUI.selectCardByIndex(1);
       break;
-    case keyMapping.spell3:
+    case 'spell3':
       CardUI.selectCardByIndex(2);
       break;
-    case keyMapping.spell4:
+    case 'spell4':
       CardUI.selectCardByIndex(3);
       break;
-    case keyMapping.spell5:
+    case 'spell5':
       CardUI.selectCardByIndex(4);
       break;
-    case keyMapping.spell6:
+    case 'spell6':
       CardUI.selectCardByIndex(5);
       break;
-    case keyMapping.spell7:
+    case 'spell7':
       CardUI.selectCardByIndex(6);
       break;
-    case keyMapping.spell8:
+    case 'spell8':
       CardUI.selectCardByIndex(7);
       break;
-    case keyMapping.spell9:
+    case 'spell9':
       CardUI.selectCardByIndex(8);
       break;
-    case keyMapping.spell10:
+    case 'spell10':
       CardUI.selectCardByIndex(9);
       break;
   }
@@ -200,21 +197,21 @@ export function keyupListener(overworld: Overworld, event: KeyboardEvent) {
   if (globalThis.view !== View.Game) {
     return;
   }
-  switch (event.code) {
-    case keyMapping.showWalkRope:
+  switch (getKeyCodeMapping(event.code)) {
+    case 'showWalkRope':
       keyDown.showWalkRope = false;
       break;
     // Camera movement
-    case 'KeyW':
+    case 'cameraUp':
       keyDown.cameraUp = false;
       break;
-    case 'KeyA':
+    case 'cameraLeft':
       keyDown.cameraLeft = false;
       break;
-    case 'KeyS':
+    case 'cameraDown':
       keyDown.cameraDown = false;
       break;
-    case 'KeyD':
+    case 'cameraRight':
       keyDown.cameraRight = false;
       break;
   }
