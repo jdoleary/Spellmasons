@@ -21,6 +21,7 @@ const mapping = {
     cameraLeft: ['KeyA'],
     cameraRight: ['KeyD'],
 }
+globalThis.controlMap = mapping;
 export default mapping;
 
 export function keyToHumanReadable(keyboardKey: string[]): string {

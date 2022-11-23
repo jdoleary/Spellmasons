@@ -224,4 +224,6 @@ declare global {
 
     var usingTestRunner: boolean;
     var fullyExitGame: () => void;
+    // Mapping of game controls
+    var controlMap: { [key: string]: string[] };
 }
