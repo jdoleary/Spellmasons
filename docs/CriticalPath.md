@@ -23,6 +23,7 @@
         - Ensure 'electron-squirrel-startup' is handled correctly
         - Ensure start app isn't added to desktop
     - Electron Security
+    - Make storage.js use SteamCloud
     - Release
 - Beyond Release
     - More enemies
