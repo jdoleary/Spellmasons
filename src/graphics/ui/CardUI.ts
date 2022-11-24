@@ -463,7 +463,7 @@ export function getSelectedCardIds(): string[] {
   if (elSelectedCards && elSelectedCards.classList.contains('hide')) {
     return [];
   }
-  return Array.from(document.querySelectorAll('.card.selected')).map((el) =>
+  return Array.from(document.querySelectorAll('#selected-cards .card.selected')).map((el) =>
     el instanceof HTMLElement ? el.dataset.cardId || '' : '',
   );
 }
