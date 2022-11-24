@@ -813,9 +813,9 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     })),
     {
       label: 'Spawn many enemies',
-      action: () => {
-        if (overworld.underworld && globalThis.player) {
-          const spawns = overworld.underworld.findValidSpawns(globalThis.player.unit, 20, 5);
+      action: ({ pos }) => {
+        if (pos && overworld.underworld) {
+          const spawns = overworld.underworld.findValidSpawns(pos, 20, 5);
           for (let spawn of spawns) {
             overworld.underworld.spawnEnemy('golem', spawn, false);
           }
