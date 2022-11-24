@@ -43,6 +43,7 @@
     - Support huge numbers of mobs (100? 500? 1000?)
         - Profile and figure out where the weak points are
     - Saw slowdown with "+ Radius" * 4 then Bloat, then Slice
+    - updateCameraPosition is somehow taking a long time
 - Milestone | **Finish Gameplay**
     - More enemies
     - End of game scaling
