@@ -30,6 +30,10 @@
     - More spells
     - Cooldowns instead of mana multiplier
     - Perks
+- Support hosting a server from in the game exe
+- Server Browser
+- "How To" guides
+- Allow opening dev tools in exe
 # Critical Path
 - Milestone | **Optimize game**
         - setPath is constantly being called by all enemies
@@ -40,6 +44,14 @@
         - Support huge numbers of mobs (100? 500? 1000?)
             - Profile and figure out where the weak points are
         - Saw slowdown with "+ Radius" * 4 then Bloat, then Slice
+- Milestone | **Finish Gameplay**
+    - More enemies
+    - End of game scaling
+    - Perks
+- Milestone | **Efficient Game Updates**
+    - Move game logic to js files that live near the executable
+        - This is necessary to support steam workshop mods
+    - Don't obfuscate
 - Milestone X | **Package as Electron App** | Planning on November 1
     - Security
         - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
@@ -47,8 +59,6 @@
     - Menu for community server selector
     - Allow running local standalone server from inside app
     - Integrate Steam friends for joining the same server
-    - [Storage and Persistence](https://cameronnokes.com/blog/how-to-store-user-data-in-electron/)
-    - [AutoUpdate](https://github.com/vercel/hazel) Not needed because of updates through steam?
 - Milestone **Strech 1**
     - [Mod support](https://partner.steamgames.com/doc/features/workshop)
     - Server customization (like Worms Armageddon)
