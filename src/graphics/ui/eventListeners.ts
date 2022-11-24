@@ -812,6 +812,19 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       domQueryContainer: '#menu-spawn'
     })),
     {
+      label: 'Spawn many enemies',
+      action: () => {
+        if (overworld.underworld && globalThis.player) {
+          const spawns = overworld.underworld.findValidSpawns(globalThis.player.unit, 20, 5);
+          for (let spawn of spawns) {
+            overworld.underworld.spawnEnemy('golem', spawn, false);
+          }
+        }
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '#menu-spawn'
+    },
+    {
       label: 'Kill all Enemies',
       action: () => {
         if (!overworld.underworld) {
