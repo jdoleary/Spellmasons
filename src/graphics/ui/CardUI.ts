@@ -675,20 +675,42 @@ export function updateCardBadges(underworld: Underworld) {
     }
     // Update cards in hand and inventory
     const cards = Cards.getCardsFromIds(globalThis.player.cards);
+    const badgesById: { [cardId: string]: { mana: HTMLElement[], health: HTMLElement[] } } = {}
+    function populateBadgesById(attr: 'mana' | 'health') {
+      Array.from(document.querySelectorAll(`#card-hand .card .card-${attr}-badge, #inventory-content .card .card-${attr}-badge`)).forEach((badge) => {
+        const cardEl = badge.closest('.card') as (HTMLElement | undefined);
+        if (cardEl) {
+          const cardId = cardEl.dataset.cardId;
+          if (cardId !== undefined) {
+            let badgeRecord = badgesById[cardId]
+            if (!badgeRecord) {
+              badgeRecord = {
+                mana: [],
+                health: []
+              }
+              badgesById[cardId] = badgeRecord;
+            }
+            badgeRecord[attr].push(badge as HTMLElement);
+          }
+
+        }
+      });
+    }
+    populateBadgesById('mana');
+    populateBadgesById('health');
     for (let card of cards) {
-      const selectedCardElementsOfSameId = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"]`);
+      const selectedCardElementsOfSameId = selectedCards.filter(c => c.id == card.id);
       const cost = calculateCostForSingleCard(card, (globalThis.player.cardUsageCounts[card.id] || 0) + selectedCardElementsOfSameId.length * card.expenseScaling);
-      const cardManaQueryString = `.card[data-card-id="${card.id}"] .card-mana-badge`;
-      const cardHealthQueryString = `.card[data-card-id="${card.id}"] .card-health-badge`;
-      const elBadges = Array.from(document.querySelectorAll(`#card-hand ${cardManaQueryString}, #inventory-content ${cardManaQueryString}`));
-      for (let elBadge of elBadges) {
-        updateManaBadge(elBadge, cost.manaCost, card);
-      }
-      const elBadgeHealths = Array.from(document.querySelectorAll(`#card-hand ${cardHealthQueryString}, #inventory-content ${cardHealthQueryString}`));
-      // onDamageEvents alter the healthCost of cards that cost health to cast
-      // such as 'bite', 'vulnerable', or 'shield'
-      for (let elBadgeHealth of elBadgeHealths) {
-        updateHealthBadge(elBadgeHealth, composeOnDamageEvents(predictionPlayerUnit, cost.healthCost, underworld, true), card);
+      const badgeRecord = badgesById[card.id];
+      if (badgeRecord) {
+        for (let elBadge of badgeRecord.mana) {
+          updateManaBadge(elBadge, cost.manaCost, card);
+        }
+        // onDamageEvents alter the healthCost of cards that cost health to cast
+        // such as 'bite', 'vulnerable', or 'shield'
+        for (let elBadgeHealth of badgeRecord.health) {
+          updateHealthBadge(elBadgeHealth, composeOnDamageEvents(predictionPlayerUnit, cost.healthCost, underworld, true), card);
+        }
       }
     }
 
