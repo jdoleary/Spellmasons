@@ -17,7 +17,6 @@
     - disconnected player still shows in in-game lobby
     - doesn't save tutorial status
 # Bugs / Cleaning
-- Does mouse back button make the page go back in electron??
 - Add blood_archer.gif for explain
 - If you try to join a multiplayer game in two tabs on the same browser you get an infinite spinner even tho there is an error in console
 - archer still had freeze modifier listed in tooltip even after the freeze disappeared naturally on the next turn

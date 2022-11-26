@@ -47,6 +47,5 @@ export function getKeyCodeMapping(keyCode: string): string | undefined {
     return undefined;
 }
 globalThis.persistControls = () => {
-    console.log('jtest persist', mapping)
     storage.set(STORAGE_CONTROLS_KEY, JSON.stringify(mapping));
 }
