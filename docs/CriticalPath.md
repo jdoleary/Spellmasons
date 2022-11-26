@@ -44,6 +44,7 @@
         - Profile and figure out where the weak points are
     - Saw slowdown with "+ Radius" * 4 then Bloat, then Slice
     - updateCameraPosition is somehow taking a long time
+    - copyForPredictionUnit is slow for many units
 - Milestone | **Finish Gameplay**
     - More enemies
     - End of game scaling

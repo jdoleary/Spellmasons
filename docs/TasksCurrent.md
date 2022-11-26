@@ -1,10 +1,9 @@
 # Nov Week 4
-
-    - Bugs
     - Optimize
     - Since the game starts in fullscreen, toggle fullscreen button no longer works
     - Fix: should not broadcast latency warning for a message that fails with a rejected promise
     - Make gameplay video with Brad, add it to Steam and YouTube
+        - Bugs
 # Nov Week 5 / Dec Week 1
     - Default wizard name to steam name if connected to steam
     - Cloud Saves
