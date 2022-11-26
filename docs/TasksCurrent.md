@@ -3,19 +3,11 @@
     - Fix: should not broadcast latency warning for a message that fails with a rejected promise
     - Make gameplay video with Brad, add it to Steam and YouTube
         - Bugs
+    - Send out Demo
 # Nov Week 5 / Dec Week 1
     - Default wizard name to steam name if connected to steam
     - Cloud Saves
     - Steam Achievements
-
-- Watch Russell Playtest
-- Russell Feedback
-    - Early levels in multiplayer have too few enemiesb
-    - his name didn't persist
-    - introduce spells more slowly
-    - tell the last person they need to end their turn
-    - disconnected player still shows in in-game lobby
-    - doesn't save tutorial status
 # Bugs / Cleaning
 - Add blood_archer.gif for explain
 - If you try to join a multiplayer game in two tabs on the same browser you get an infinite spinner even tho there is an error in console

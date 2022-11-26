@@ -1,3 +1,11 @@
+- Watch Russell Playtest
+- Russell Feedback
+    - Early levels in multiplayer have too few enemiesb
+    - his name didn't persist
+    - introduce spells more slowly
+    - tell the last person they need to end their turn
+    - disconnected player still shows in in-game lobby
+    - doesn't save tutorial status
 - frozen units start animating again after they take damage
 - (solved?)bug: Multiplayer starts on tutorial level
 - Update inventory gif to show book
