@@ -1,6 +1,5 @@
 # Nov Week 4
     - Optimize
-    - Since the game starts in fullscreen, toggle fullscreen button no longer works
     - Fix: should not broadcast latency warning for a message that fails with a rejected promise
     - Make gameplay video with Brad, add it to Steam and YouTube
         - Bugs
