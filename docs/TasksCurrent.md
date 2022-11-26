@@ -59,23 +59,16 @@
 - All tooltip info
 # Features
 - Need a restart screen after a team wipe
-- see stash "add i18n to explain prompts"
+- Add localization to explain prompts - see stash "add i18n to explain prompts"
 - should allow spell prediction even while an action is taking place - this not being here causes friction in multiplayer
 - EZ self cast, like alt clicking a spell self casts or something
 - **important**Allow multiplayer game restart after wipe
     - All players return to lobby after 10 seconds
     - cleans up underworld
     - Currently it just lets you exit to main menu but if you rejoin the game it still exists with everyone dead in it
-- In marketing, emphasize that it's turn based
-    - Why this game might not be for you
 - how to show how much damage a queued spell will do
-- Permanent "you died" screen.
 - cooldown instead of mana multiplier scaling
-- Expanding should take longer to return to base mana like resurrect and summon decoy do
-    - Do this with cooldowns
-- Add server history
-- Add save/load to menu
-- Feature request: UI Scaling
+- Add cooldown to "Expanding"
 ## Prediction issues
 - prediction should factor in standing on pickups, see video
 # Content

@@ -177,4 +177,7 @@ declare global {
     var savePrefix: string;
     // The name of the quicksave file
     var quicksaveKey: string;
+    // Expose storage functions so golems-menu can access them:
+    var storageSet: (key: string, value: string) => void;
+    var storageGet: (key: string) => string | null;
 }

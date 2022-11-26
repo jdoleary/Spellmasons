@@ -42,3 +42,5 @@ export function get(key: string): string | null {
     }
 
 }
+globalThis.storageSet = set;
+globalThis.storageGet = get;

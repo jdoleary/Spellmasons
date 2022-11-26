@@ -231,8 +231,14 @@ declare global {
     var mouseButtonToKeyCode: (button: number) => string;
     // Save control scheme
     var persistControls: () => void;
+
+    // Expose to global so that menu can "resume run"
     // The string that prefixes the localStorage save files
     var savePrefix: string;
     // The name of the quicksave file
     var quicksaveKey: string;
+
+    // Expose storage functions so golems-menu can access them:
+    var storageSet: (key: string, value: string) => void;
+    var storageGet: (key: string) => string | null;
 }
