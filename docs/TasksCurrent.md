@@ -1,14 +1,16 @@
 # Nov Week 4
-    - Fix: should not broadcast latency warning for a message that fails with a rejected promise
     - Make gameplay video with Brad, add it to Steam and YouTube
         - Bugs
     - Send out Demo
+    - Rethink next trailer
 # Nov Week 5 / Dec Week 1
     - Add "resume run"
     - Default wizard name to steam name if connected to steam
     - Cloud Saves
     - Steam Achievements
 # Bugs / Cleaning
+- Hide disconnected players in game screen but not in the lobby
+- Fix: should not broadcast latency warning for a message that fails with a rejected promise
 - Add blood_archer.gif for explain
 - If you try to join a multiplayer game in two tabs on the same browser you get an infinite spinner even tho there is an error in console
 - archer still had freeze modifier listed in tooltip even after the freeze disappeared naturally on the next turn
@@ -21,8 +23,6 @@
 - (e) fix save/load  from menu screen, it needs to change the gameview
 - (e) in multiplayer, when one player leaves and window is not focused the camera spazzes out
 ---
-- when in full screen escape leaves full screen in addition to opening menu
-    - https://stackoverflow.com/questions/72248081/preventing-electron-to-exit-fullscreen-on-escape
 - sync issue: golem moving through frozen guys jumped back
 - (m) You're able to cast into negative mana in multiplayer
 - "All targets" copy is confusing if player doesn't understand targeting
@@ -33,9 +33,6 @@
 - (h) bug: In multiplayer: target similar, damage x3 on 2 draggers made their position go to null null
 - (h) done?: melee prediction is still off
     - simplest solution is just to make sure that units cannot do damage to the player if they aren't warning of damage incoming on the start of the turn
-- h: bug: **important** pressing 'alt' in chrome deselects the window and makes it stop accepting input
-    - This doesn't happen in fullscreen
-    - Test in windowed mode on Electron
 - h: bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
     - this is a race condition because I'm still able to move freely after his cast triggers
 - resurrect should take longer to return to base mana
@@ -54,8 +51,6 @@
     - Just make it a while loop that triggers/awaits the next AI turn until it's the players tuurn
 - dragger x and y went to null after "target similar, slash slash"
 # Pre playtest
-- Need a restart screen after a team wipe
-- Hide disconnected players in game screen but not in the lobby
 - Multiplayer voting
 - Adaptive difficulty
 - What to do with disconnected players when it goes to the next level?
@@ -63,7 +58,7 @@
 # Localization
 - All tooltip info
 # Features
-- Remove mana potions after portal spawns??
+- Need a restart screen after a team wipe
 - see stash "add i18n to explain prompts"
 - should allow spell prediction even while an action is taking place - this not being here causes friction in multiplayer
 - EZ self cast, like alt clicking a spell self casts or something
