@@ -63,7 +63,6 @@
 # Localization
 - All tooltip info
 # Features
-- resume previous run button
 - Remove mana potions after portal spawns??
 - see stash "add i18n to explain prompts"
 - should allow spell prediction even while an action is taking place - this not being here causes friction in multiplayer

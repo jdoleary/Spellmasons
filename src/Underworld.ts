@@ -1726,6 +1726,10 @@ export default class Underworld {
     const playerFactions = this.players.map(p => p.unit.faction);
     // Game is over once ALL units on player factions are dead (this includes player units)
     const isOver = this.units.filter(u => playerFactions.includes(u.faction)).every(u => !u.alive);
+    // Remove quicksave on game over since the game is no longer 'resumable"
+    if (isOver) {
+      storage.remove(`${globalThis.savePrefix}${globalThis.quicksaveKey}`);
+    }
     document.body.classList.toggle('game-over', isOver);
     return isOver;
   }
@@ -1953,9 +1957,8 @@ export default class Underworld {
         // so I can jump back to right before I ended my turn
         if (devMode) {
           if (globalThis.save) {
-            const saveGameName = 'quicksave';
-            console.info(`Dev: quick saving game as "${saveGameName}"`);
-            globalThis.save(saveGameName);
+            console.info(`Dev: quick saving game as "${globalThis.quicksaveKey}"`);
+            globalThis.save(globalThis.quicksaveKey);
           }
         }
         let affirm = true

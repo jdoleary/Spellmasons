@@ -1,5 +1,8 @@
 import { areCookiesAllowed } from "./cookieConsent";
 
+export function remove(key: string) {
+    localStorage.removeItem(key);
+}
 export function set(key: string, value: any) {
     if (globalThis.headless) {
         // Headless server does not use storage

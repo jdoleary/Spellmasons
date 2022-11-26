@@ -173,4 +173,8 @@ declare global {
     var mouseButtonToKeyCode: (button: number) => string;
     // Save control scheme
     var persistControls: () => void;
+    // The string that prefixes the localStorage save files
+    var savePrefix: string;
+    // The name of the quicksave file
+    var quicksaveKey: string;
 }

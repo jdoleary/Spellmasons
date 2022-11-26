@@ -584,8 +584,8 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
   }
 
 
-  const savePrefix = 'spellmasons-save-';
-  globalThis.getAllSaveFiles = () => Object.keys(localStorage).filter(x => x.startsWith(savePrefix)).map(x => x.substring(savePrefix.length));
+  globalThis.savePrefix = 'spellmasons-save-';
+  globalThis.getAllSaveFiles = () => Object.keys(localStorage).filter(x => x.startsWith(globalThis.savePrefix)).map(x => x.substring(globalThis.savePrefix.length));
 
   globalThis.save = (title: string) => {
     const { underworld } = overworld;
@@ -603,7 +603,7 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
     };
     try {
       storage.set(
-        savePrefix + title,
+        globalThis.savePrefix + title,
         JSON.stringify(saveObject),
       );
     } catch (e) {
@@ -612,7 +612,7 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
     }
   };
   globalThis.load = async (title: string) => {
-    const savedGameString = storage.get(savePrefix + title);
+    const savedGameString = storage.get(globalThis.savePrefix + title);
     if (savedGameString) {
       console.log('LOAD: connectToSingleplayer in preparation for load');
       if (globalThis.connectToSingleplayer) {
