@@ -1,10 +1,10 @@
 # Nov Week 4
-    - Optimize
     - Fix: should not broadcast latency warning for a message that fails with a rejected promise
     - Make gameplay video with Brad, add it to Steam and YouTube
         - Bugs
     - Send out Demo
 # Nov Week 5 / Dec Week 1
+    - Add "resume run"
     - Default wizard name to steam name if connected to steam
     - Cloud Saves
     - Steam Achievements

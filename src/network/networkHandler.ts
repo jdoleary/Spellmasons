@@ -632,6 +632,7 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
         units,
         players
       });
+      setView(View.Game);
 
     } else {
       console.error('no save game found with title', title);
