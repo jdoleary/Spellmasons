@@ -2,7 +2,6 @@
 
     - Bugs
     - Optimize
-        - short circuit melee can attack target by only checking path if player (only player???) is WITHIN their stamina radius.  This should help a lot when there are a large quantity of units.
     - Since the game starts in fullscreen, toggle fullscreen button no longer works
     - Fix: should not broadcast latency warning for a message that fails with a rejected promise
     - Make gameplay video with Brad, add it to Steam and YouTube

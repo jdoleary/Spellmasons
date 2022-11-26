@@ -2404,25 +2404,33 @@ export default class Underworld {
     }
     switch (u.unitSubType) {
       case UnitSubType.MELEE:
-        this.setPath(u, attackTarget);
-        if (u.path && u.path.points.length) {
-          // Returns true if melee unit WILL be within range once their done moving
-          // (Note: Does not take into account dynamic obstacles)
-          // (Note: lastPointInPath may be beyond where the unit's stamina will allow them to go in one turn)
-          const lastPointInPath = u.path.points[u.path.points.length - 1]
-          if (lastPointInPath && !withinMeleeRange({ ...u, ...lastPointInPath }, attackTarget)) {
-            // Note: a unit's path isn't guarunteed to include the target (if 
-            // they can't find a valid path it won't include the target)
-            // So if the lastPointInPath isn't relatively close to the target,
-            // return false because the path doesn't make it all the way to the target
-            return false;
+        // optimization: Only calculate full path if the unit is less than or equal to their remaining
+        // stamina because they certainly cannot attack the target if the target is beyond their stamina radius
+        // but we need to calculate the full path if they are within the stamina radius because the path
+        // might require that they travel farther than they are able to in one turn.
+        if (math.distance(u, attackTarget) <= u.stamina) {
+          this.setPath(u, attackTarget);
+          if (u.path && u.path.points.length) {
+            // Returns true if melee unit WILL be within range once their done moving
+            // (Note: Does not take into account dynamic obstacles)
+            // (Note: lastPointInPath may be beyond where the unit's stamina will allow them to go in one turn)
+            const lastPointInPath = u.path.points[u.path.points.length - 1]
+            if (lastPointInPath && !withinMeleeRange({ ...u, ...lastPointInPath }, attackTarget)) {
+              // Note: a unit's path isn't guarunteed to include the target (if 
+              // they can't find a valid path it won't include the target)
+              // So if the lastPointInPath isn't relatively close to the target,
+              // return false because the path doesn't make it all the way to the target
+              return false;
+            }
+            const maxPathDistance = u.attackRange + u.staminaMax;
+            const dist = calculateDistanceOfVec2Array([u, ...u.path.points]);
+            return !!u.path.points.length && dist <= maxPathDistance;
+          } else {
+            // Returns true if melee unit is ALREADY within range
+            return withinMeleeRange(u, attackTarget)
           }
-          const maxPathDistance = u.attackRange + u.staminaMax;
-          const dist = calculateDistanceOfVec2Array([u, ...u.path.points]);
-          return !!u.path.points.length && dist <= maxPathDistance;
         } else {
-          // Returns true if melee unit is ALREADY within range
-          return withinMeleeRange(u, attackTarget)
+          return false;
         }
       case UnitSubType.RANGED_LOS:
         return u.alive && this.hasLineOfSight(u, attackTarget) && Unit.inRange(u, attackTarget);
