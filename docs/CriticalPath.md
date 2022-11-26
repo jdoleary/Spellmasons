@@ -1,11 +1,9 @@
 # Desired Schedule
 - November
-    - Optimize
-        - Check optimization for rendering menu in other languages, it seems like the inventory is super slow when it's in another language
-    - Finish bugs
     - Submit demo to IGN
 - December
     - Icons for perks
+    - Start reaching out to steamers and reviewers and send demo
     - Convenient multiplayer lobbying via steam
         - Prevent players from joining mid-round, notify "you will spawn once this level is complete"
         - GameLobbyJoinRequested_t
