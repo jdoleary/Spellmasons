@@ -12,6 +12,7 @@
     - Steam Achievements
     - Add sentry errors to electron node files
 # Bugs / Cleaning
+- handle loading a save file where the player has not spawned in yet.  see 87374022
 - Hide disconnected players in game screen but not in the lobby
 - Fix: should not broadcast latency warning for a message that fails with a rejected promise
 - Add blood_archer.gif for explain
