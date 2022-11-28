@@ -11,18 +11,22 @@ export const TUTORIAL_COMPLETE = 'tutorial-complete';
 export const ENEMY_ENCOUNTERED_STORAGE_KEY = 'enemyEncountered';
 globalThis.STORAGE_ID_UI_ZOOM = STORAGE_ID_UI_ZOOM;
 
-let cachedSettings: { [key: string]: string } = {};
 // Initialize settings once the settings object is loaded
 // If this is running as an electron app, get settings from storage
 // If this is not running as an electron app, just resolve immediately
 // because settings can be gotten syncronously from local storage
 (globalThis.isElectron && globalThis.diskStorage ?
     globalThis.diskStorage.getDiskStorage().then(settings => {
-        cachedSettings = settings;
-        console.log('Setup: Got settings from disk:', cachedSettings);
+        console.log('Setup: Got settings from disk:', settings);
+        // Cache settings from disk in localStorage so they can
+        // be access syncronously
+        for (let [key, value] of Object.entries(settings || {})) {
+            localStorage.setItem(key, value);
+        }
     })
     : Promise.resolve())
     .then(() => {
+        console.log('Setup: Initializing saved settings');
         // Default language to english if no language is stored:
         const storedLanguageCode = get(STORAGE_LANGUAGE_CODE_KEY);
         setLanguage(storedLanguageCode ? storedLanguageCode : 'en', false);
@@ -78,11 +82,11 @@ export function set(key: string, value: any) {
     }
     if (globalThis.isElectron || globalThis.allowCookies) {
         if (globalThis.diskStorage) {
-            if (cachedSettings) {
-                cachedSettings[key] = value;
-            } else {
-                console.error('cachedDiskStorageObject is undefined');
-            }
+            // Store both on disk and in local storage
+            // because local storage is used for accessing the
+            // settings in game while the diskStorage is only used
+            // once when the app boots
+            localStorage.setItem(key, value);
             globalThis.diskStorage.set(key, value);
         } else {
             localStorage.setItem(key, value);
@@ -111,20 +115,9 @@ export function get(key: string): string | null {
         return null;
     }
     if (globalThis.allowCookies || areCookiesAllowed()) {
-        if (globalThis.diskStorage) {
-            if (cachedSettings) {
-                const savedValue = cachedSettings[key] || null;
-                console.log('storage: get from diskStorage ', key, 'as', savedValue);
-                return savedValue;
-            } else {
-                console.error('cachedDiskStorageObject is undefined');
-                return null;
-            }
-        } else {
-            const savedValue = localStorage.getItem(key);
-            console.log(`storage: get "${key}" as ${savedValue}`);
-            return savedValue;
-        }
+        const savedValue = localStorage.getItem(key);
+        console.log(`storage: get "${key}" as ${savedValue}`);
+        return savedValue;
     } else {
         console.log(`Could not retrieve "${key}" from storage, without cookie consent`);
         return null;
