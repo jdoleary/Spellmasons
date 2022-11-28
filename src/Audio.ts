@@ -143,56 +143,41 @@ export function playSFX(path?: string) {
     audioInstance.play();
 
 }
-let allowDemoSound = false;
 const demoSoundThrottle = 150;
 const demoSoundWhenChangingVolume = throttle(() => {
-    if (allowDemoSound) {
-        globalThis.playSFXKey('unitDamage');
-    }
+    globalThis.playSFXKey('unitDamage');
 }, demoSoundThrottle, { trailing: true })
-const STORAGE_OPTIONS = 'OPTIONS';
+
 export function setupAudio() {
     console.log('Setup: Audio');
-    globalThis.changeVolume = (volume: number) => {
+    globalThis.changeVolume = (volume: number, saveSetting: boolean = true) => {
         globalThis.volume = volume;
-        storage.assign(STORAGE_OPTIONS, { volume: globalThis.volume });
         if (musicInstance) {
             musicInstance.volume = globalThis.volume * (globalThis.volumeMusic === undefined ? 1 : globalThis.volumeMusic);
         }
-        // Play a sound so it'll show the user how loud it is
-        demoSoundWhenChangingVolume()
+        if (saveSetting) {
+
+            storage.assign(storage.STORAGE_OPTIONS, { volume: globalThis.volume });
+            // Play a sound so it'll show the user how loud it is
+            demoSoundWhenChangingVolume()
+        }
     };
-    globalThis.changeVolumeMusic = (volume: number) => {
+    globalThis.changeVolumeMusic = (volume: number, saveSetting: boolean = true) => {
         globalThis.volumeMusic = volume;
-        storage.assign(STORAGE_OPTIONS, { volumeMusic: globalThis.volumeMusic });
+        if (saveSetting) {
+            storage.assign(storage.STORAGE_OPTIONS, { volumeMusic: globalThis.volumeMusic });
+        }
         if (musicInstance) {
             musicInstance.volume = (globalThis.volume === undefined ? 1 : globalThis.volume) * globalThis.volumeMusic;
         }
         playMusicIfNotAlreadyPlaying();
     };
-    globalThis.changeVolumeGame = (volume: number) => {
+    globalThis.changeVolumeGame = (volume: number, saveSetting: boolean = true) => {
         globalThis.volumeGame = volume;
-        // Play a sound so it'll show the user how loud it is
-        demoSoundWhenChangingVolume();
-        storage.assign(STORAGE_OPTIONS, { volumeGame: globalThis.volumeGame });
+        if (saveSetting) {
+            // Play a sound so it'll show the user how loud it is
+            demoSoundWhenChangingVolume();
+            storage.assign(storage.STORAGE_OPTIONS, { volumeGame: globalThis.volumeGame });
+        }
     };
-    // Retrieve audio settings from storage
-    const storedOptions = storage.get(STORAGE_OPTIONS);
-    if (storedOptions !== null) {
-        const options = JSON.parse(storedOptions);
-        if (options.volume !== undefined) {
-            globalThis.changeVolume(options.volume);
-        }
-        if (options.volumeMusic !== undefined) {
-            globalThis.changeVolumeMusic(options.volumeMusic);
-        }
-        if (options.volumeGame !== undefined) {
-            globalThis.changeVolumeGame(options.volumeGame);
-        }
-    }
-    // Now that volume has been initially set, play demo sound when user changes
-    // volume
-    setTimeout(() => {
-        allowDemoSound = true;
-    }, demoSoundThrottle * 2);
 }

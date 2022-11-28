@@ -134,9 +134,9 @@ declare global {
     var allowCookies: undefined | boolean;
     var configPlayer: undefined | (({ color, name }: { color?: number, name?: string, lobbyReady?: boolean }) => void);
     var playMusic: undefined | (() => void);
-    var changeVolume: undefined | ((volume: number) => void);
-    var changeVolumeMusic: undefined | ((volume: number) => void);
-    var changeVolumeGame: undefined | ((volume: number) => void);
+    var changeVolume: undefined | ((volume: number, saveSetting: boolean) => void);
+    var changeVolumeMusic: undefined | ((volume: number, saveSetting: boolean) => void);
+    var changeVolumeGame: undefined | ((volume: number, saveSetting: boolean) => void);
     var volume: undefined | number;
     var volumeMusic: undefined | number;
     var volumeGame: undefined | number;

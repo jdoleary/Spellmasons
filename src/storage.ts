@@ -1,16 +1,37 @@
 import { areCookiesAllowed } from "./cookieConsent";
-import { STORAGE_LANGUAGE_CODE_KEY } from "./localization";
+export const STORAGE_OPTIONS = 'OPTIONS';
+export const STORAGE_LANGUAGE_CODE_KEY = 'language';
 let cachedSettings: { [key: string]: string } = {};
+// Initialize settings once the settings object is loaded
 // If this is running as an electron app, get settings from storage
-if (globalThis.isElectron && globalThis.diskStorage) {
+// If this is not running as an electron app, just resolve immediately
+// because settings can be gotten syncronously from local storage
+(globalThis.isElectron && globalThis.diskStorage ?
     globalThis.diskStorage.getDiskStorage().then(settings => {
         cachedSettings = settings;
         console.log('Setup: Got settings from disk:', cachedSettings);
+    })
+    : Promise.resolve())
+    .then(() => {
+        // Default language to english if no language is stored:
+        const storedLanguageCode = get(STORAGE_LANGUAGE_CODE_KEY);
+        setLanguage(storedLanguageCode ? storedLanguageCode : 'en', false);
+        // Retrieve audio settings from storage
+        const storedOptions = get(STORAGE_OPTIONS);
+        if (storedOptions !== null) {
+            const options = JSON.parse(storedOptions);
+            if (globalThis.changeVolume && options.volume !== undefined) {
+                globalThis.changeVolume(options.volume, false);
+            }
+            if (globalThis.changeVolumeMusic && options.volumeMusic !== undefined) {
+                globalThis.changeVolumeMusic(options.volumeMusic, false);
+            }
+            if (globalThis.changeVolumeGame && options.volumeGame !== undefined) {
+                globalThis.changeVolumeGame(options.volumeGame, false);
+            }
+        }
     });
-    // Default language to english if no language is stored:
-    const storedLanguageCode = get(STORAGE_LANGUAGE_CODE_KEY);
-    setLanguage(storedLanguageCode ? storedLanguageCode : 'en', false);
-}
+
 export function remove(key: string) {
     localStorage.removeItem(key);
 }
