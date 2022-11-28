@@ -8,7 +8,7 @@
         - Communicate the big idea
 # Nov Week 5 / Dec Week 1
     - Default wizard name to steam name if connected to steam
-    - Cloud Saves
+    - Test Cloud Saves
     - Steam Achievements
     - Add sentry errors to electron node files
 # Bugs / Cleaning
