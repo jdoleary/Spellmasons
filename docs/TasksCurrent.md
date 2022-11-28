@@ -3,11 +3,14 @@
         - Bugs
     - Send out Demo
     - Rethink next trailer
+        - Remove "dead time"
+        - get into the action fast
+        - Communicate the big idea
 # Nov Week 5 / Dec Week 1
-    - Add "resume run"
     - Default wizard name to steam name if connected to steam
     - Cloud Saves
     - Steam Achievements
+    - Add sentry errors to electron node files
 # Bugs / Cleaning
 - Hide disconnected players in game screen but not in the lobby
 - Fix: should not broadcast latency warning for a message that fails with a rejected promise
@@ -57,9 +60,9 @@
 - Fix rejoining hack where people can just rejoin if they're dead to come back
 # Localization
 - All tooltip info
+- Explain prompts - see stash "add i18n to explain prompts"
 # Features
 - Need a restart screen after a team wipe
-- Add localization to explain prompts - see stash "add i18n to explain prompts"
 - should allow spell prediction even while an action is taking place - this not being here causes friction in multiplayer
 - EZ self cast, like alt clicking a spell self casts or something
 - **important**Allow multiplayer game restart after wipe
@@ -80,7 +83,6 @@
     - new sfx
 - Suffocate
     - new sfx
-    - new animation
 # Optimization
 - Optimize: targeting spells seem pretty slow in prediction
 - optimize: Ihave duplicate units, pickups, and doodads in save due to serailizeForSaving having them in the underworld and extracting them to the top level too

@@ -1,8 +1,8 @@
 # Desired Schedule
 - November
+    - Icons for perks
     - Submit demo to IGN
 - December
-    - Icons for perks
     - Start reaching out to steamers and reviewers and send demo
     - Convenient multiplayer lobbying via steam
         - Prevent players from joining mid-round, notify "you will spawn once this level is complete"
