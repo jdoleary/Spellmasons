@@ -245,7 +245,14 @@ declare global {
     // diskStorage as a global so that the code in this repo can
     // save files to disk instead of to local storage
     var diskStorage: undefined | {
-        set: (key, value) => void,
-        get: (key) => string
+        set: (key, value) => void
+    }
+    // Since Electron can only return function values asyncronously,
+    // we cache the settings here so that they can return syncronously and they
+    // are updated from disk when the application starts and are updated
+    // individually whenever a setting is changed.
+    // Note: This global variable is immutabel because it was set in electron
+    var cachedDiskStorageObject: undefined | {
+        [key: string]: string
     }
 }

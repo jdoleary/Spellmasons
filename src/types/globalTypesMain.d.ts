@@ -187,4 +187,12 @@ declare global {
         set: (key, value) => void,
         get: (key) => string
     }
+    // Since Electron can only return function values asyncronously,
+    // we cache the settings here so that they can return syncronously and they
+    // are updated from disk when the application starts and are updated
+    // individually whenever a setting is changed.
+    // Note: This global variable is immutabel because it was set in electron
+    var cachedDiskStorageObject: undefined | {
+        [key: string]: string
+    }
 }

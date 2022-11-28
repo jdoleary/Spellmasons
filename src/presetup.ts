@@ -1,3 +1,7 @@
+if (globalThis.isElectron) {
+    console.log('globalThis.isElectron == true; RUNNING AS DESKTOP APP')
+}
+console.log('Setup: presetup.ts')
 import './localization';
 import * as PIXI from 'pixi.js';
 import * as storage from './storage';
@@ -25,4 +29,3 @@ if (!color) {
     const newColor = robeColors[Math.floor(Math.random() * robeColors.length)] || 0xef476f;
     storage.set(config.STORAGE_ID_PLAYER_COLOR, newColor);
 }
-console.log('Setup: presetup.ts')
