@@ -1,10 +1,16 @@
 import { areCookiesAllowed } from "./cookieConsent";
-
-// Make deep copy of globalThis.cachedDiskStorageObject
-// because the global version is immutable because it was set in electron
-// and we need a mutable copy so that we can update it in this file when
-// what is stored changes.
-const cachedStorageObject = JSON.parse(JSON.stringify(globalThis.cachedDiskStorageObject));
+import { STORAGE_LANGUAGE_CODE_KEY } from "./localization";
+let cachedSettings: { [key: string]: string } = {};
+// If this is running as an electron app, get settings from storage
+if (globalThis.isElectron && globalThis.diskStorage) {
+    globalThis.diskStorage.getDiskStorage().then(settings => {
+        cachedSettings = settings;
+        console.log('Setup: Got settings from disk:', cachedSettings);
+    });
+    // Default language to english if no language is stored:
+    const storedLanguageCode = get(STORAGE_LANGUAGE_CODE_KEY);
+    setLanguage(storedLanguageCode ? storedLanguageCode : 'en', false);
+}
 export function remove(key: string) {
     localStorage.removeItem(key);
 }
@@ -16,8 +22,8 @@ export function set(key: string, value: any) {
     }
     if (globalThis.isElectron || globalThis.allowCookies) {
         if (globalThis.diskStorage) {
-            if (cachedStorageObject) {
-                cachedStorageObject[key] = value;
+            if (cachedSettings) {
+                cachedSettings[key] = value;
             } else {
                 console.error('cachedDiskStorageObject is undefined');
             }
@@ -50,8 +56,8 @@ export function get(key: string): string | null {
     }
     if (globalThis.allowCookies || areCookiesAllowed()) {
         if (globalThis.diskStorage) {
-            if (cachedStorageObject) {
-                const savedValue = cachedStorageObject[key] || null;
+            if (cachedSettings) {
+                const savedValue = cachedSettings[key] || null;
                 console.log('storage: get from diskStorage ', key, 'as', savedValue);
                 return savedValue;
             } else {
@@ -60,7 +66,7 @@ export function get(key: string): string | null {
             }
         } else {
             const savedValue = localStorage.getItem(key);
-            console.log('storage: get', key, 'as', savedValue);
+            console.log(`storage: get "${key}" as ${savedValue}`);
             return savedValue;
         }
     } else {

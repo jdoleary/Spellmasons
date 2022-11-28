@@ -12,7 +12,6 @@ export interface LanguageMapping {
 let languageMapping: { [key: string]: string };
 let chosenLanguageCode: string;
 const cachedErrorsReported: string[] = [];
-const STORAGE_LANGUAGE_CODE_KEY = 'language';
 function returnTranslation(key: string, map: LanguageMapping): string {
     const result = map[key.toLowerCase()];
     if (result) {
@@ -42,7 +41,7 @@ function setLanguage(langCode: string, store: boolean) {
         languageMapping = newLanguage;
         chosenLanguageCode = langCode;
         if (store) {
-            storage.set(STORAGE_LANGUAGE_CODE_KEY, langCode);
+            storage.set(storage.STORAGE_LANGUAGE_CODE_KEY, langCode);
         }
         // Automatically translate elements with the data-localize-text attribute
         for (let el of Array.from<HTMLElement>(document.querySelectorAll('[data-localize-text]'))) {
@@ -58,6 +57,10 @@ function setLanguage(langCode: string, store: boolean) {
     } else {
         console.error('i18n: Could not find language with code', langCode)
     }
+    // Force the menu to rerender now that the language has changed
+    if (globalThis.refreshMenu) {
+        globalThis.refreshMenu();
+    }
 }
 function getSupportedLanguages() {
     return languageMapping ? languages.map(l => ({ language: l.language, code: l.languagecode })) : [];
@@ -66,8 +69,7 @@ function getChosenLanguageCode() {
     return chosenLanguageCode;
 }
 // Default to english
-const storedLanguageCode = storage.get(STORAGE_LANGUAGE_CODE_KEY);
-setLanguage(storedLanguageCode ? storedLanguageCode : 'en', false);
+setLanguage('en', false);
 // Make localization functions available to Svelte menu
 globalThis.i18n = i18n;
 globalThis.setLanguage = setLanguage;

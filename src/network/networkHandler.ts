@@ -584,7 +584,6 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
   }
 
 
-  globalThis.savePrefix = 'spellmasons-save-';
   globalThis.getAllSaveFiles = () => Object.keys(localStorage).filter(x => x.startsWith(globalThis.savePrefix)).map(x => x.substring(globalThis.savePrefix.length));
 
   globalThis.save = (title: string) => {
