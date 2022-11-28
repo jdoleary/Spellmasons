@@ -15,8 +15,6 @@ cookieConsentPopup(false);
 // This import is critical so that the svelte menu has access to
 // the pie globals
 import './network/wsPieSetup';
-import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './config';
-import { MESSAGE_TYPES } from './types/MessageTypes';
 import { IHostApp, typeGuardHostApp } from './network/networkUtil';
 import Underworld from './Underworld';
 import type PieClient from '@websocketpie/client';
@@ -118,8 +116,7 @@ globalThis.setRMBDown = (isDown: boolean, underworld: Underworld) => {
 globalThis.skipTutorial = () => {
   storage.set(SKIP_TUTORIAL, YES);
 }
-globalThis.enemyEncountered = JSON.parse(storage.get(ENEMY_ENCOUNTERED_STORAGE_KEY) || '[]');
-console.log('Setup: initializing enemyEncountered as', globalThis.enemyEncountered);
+globalThis.enemyEncountered = [];
 
 globalThis.showDebug = false;
 // Prevent accidental back button only when not in devMode

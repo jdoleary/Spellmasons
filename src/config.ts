@@ -53,7 +53,6 @@ export const MANA_GET_PER_TURN = 10;
 export const UNIT_BASE_RADIUS = COLLISION_MESH_RADIUS / 4;
 
 export const CAMERA_BASE_SPEED = 20;
-export const ENEMY_ENCOUNTERED_STORAGE_KEY = 'enemyEncountered';
 export const DEFAULT_ANIMATION_SPEED = 0.132;
 
 export const CAST_RANGE_COYOTE_MARGIN = 25;
@@ -61,9 +60,6 @@ export const CAST_RANGE_COYOTE_MARGIN = 25;
 export const NAME_TEXT_ID = 'nameText';
 export const NAME_TEXT_DEFAULT_SIZE = 20;
 export const NAME_TEXT_Y_OFFSET = 20
-
-export const STORAGE_ID_PLAYER_COLOR = 'player-color';
-export const STORAGE_ID_PLAYER_NAME = 'player-name';
 
 // Liquid animation settings
 export const LIQUID_X_SCROLL_SPEED = 400; // higher is slower

@@ -1,6 +1,16 @@
 import { areCookiesAllowed } from "./cookieConsent";
+import { robeColors } from "./graphics/ui/colors";
+import { fullyUpdateControls } from "./graphics/ui/keyMapping";
 export const STORAGE_OPTIONS = 'OPTIONS';
 export const STORAGE_LANGUAGE_CODE_KEY = 'language';
+export const STORAGE_ID_PLAYER_COLOR = 'player-color';
+export const STORAGE_ID_PLAYER_NAME = 'player-name';
+export const STORAGE_ID_UI_ZOOM = 'uiZoom';
+export const STORAGE_CONTROLS_KEY = 'controls';
+export const TUTORIAL_COMPLETE = 'tutorial-complete';
+export const ENEMY_ENCOUNTERED_STORAGE_KEY = 'enemyEncountered';
+globalThis.STORAGE_ID_UI_ZOOM = STORAGE_ID_UI_ZOOM;
+
 let cachedSettings: { [key: string]: string } = {};
 // Initialize settings once the settings object is loaded
 // If this is running as an electron app, get settings from storage
@@ -30,6 +40,31 @@ let cachedSettings: { [key: string]: string } = {};
                 globalThis.changeVolumeGame(options.volumeGame, false);
             }
         }
+        // Default stored color if player doesn't already have one stored
+        const color = get(STORAGE_ID_PLAYER_COLOR);
+        if (!color) {
+            const newColor = robeColors[Math.floor(Math.random() * robeColors.length)] || 0xef476f;
+            set(STORAGE_ID_PLAYER_COLOR, newColor);
+        }
+        // Set uiZoom:
+        if (globalThis.electronSettings) {
+            const uiZoom = get(STORAGE_ID_UI_ZOOM);
+            if (uiZoom) {
+                globalThis.electronSettings.setUIZoom(parseFloat(uiZoom));
+            }
+        } else {
+            console.error('globalThis.electronSettings is undefined, cannot set uiZoom');
+        }
+        // Update controls:
+        // Get saved controls from storage:
+        const savedControls = JSON.parse(get(STORAGE_CONTROLS_KEY) || '{}');
+        console.log('Retrieved saved controls:', savedControls);
+        fullyUpdateControls(savedControls);
+        // Update enemy encountered:
+        globalThis.enemyEncountered = JSON.parse(get(ENEMY_ENCOUNTERED_STORAGE_KEY) || '[]');
+        console.log('Setup: initializing enemyEncountered as', globalThis.enemyEncountered);
+
+
     });
 
 export function remove(key: string) {

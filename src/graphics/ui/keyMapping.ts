@@ -22,14 +22,14 @@ const mapping = {
     cameraLeft: ['KeyA'],
     cameraRight: ['KeyD'],
 }
-const STORAGE_CONTROLS_KEY = 'controls';
-// Get saved controls from storage:
-const savedControls = JSON.parse(storage.get(STORAGE_CONTROLS_KEY) || '{}');
-console.log('Retrieved saved controls:', savedControls);
-// Overwrite mapping with savedControls while maintaining the object reference
-Object.assign(mapping, savedControls);
 globalThis.controlMap = mapping;
 export default mapping;
+
+export function fullyUpdateControls(newMapping: any) {
+    // Overwrite mapping with newMappping while maintaining the object reference
+    Object.assign(mapping, newMapping);
+
+}
 
 export function keyToHumanReadable(keyboardKey: string[]): string {
     const keyString = keyboardKey.join(' or ')
@@ -47,5 +47,5 @@ export function getKeyCodeMapping(keyCode: string): string | undefined {
     return undefined;
 }
 globalThis.persistControls = () => {
-    storage.set(STORAGE_CONTROLS_KEY, JSON.stringify(mapping));
+    storage.set(storage.STORAGE_CONTROLS_KEY, JSON.stringify(mapping));
 }

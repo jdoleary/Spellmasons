@@ -56,7 +56,6 @@ import { calculateDistanceOfVec2Array, findPath } from './jmath/Pathfinding';
 import { keyDown, mouseMove } from './graphics/ui/eventListeners';
 import Jprompt from './graphics/Jprompt';
 import { collideWithLineSegments, ForceMove, forceMovePreventForceThroughWall, isVecIntersectingVecWithCustomRadius, moveWithCollisions } from './jmath/moveWithCollision';
-import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './config';
 import { getBestRangedLOSTarget } from './entity/units/actions/rangedAction';
 import { hostGiveClientGameState, IHostApp } from './network/networkUtil';
 import { healthAllyGreen, healthHurtRed, healthRed } from './graphics/ui/colors';
@@ -95,7 +94,6 @@ const elUpgradePicker = document.getElementById('upgrade-picker') as (HTMLElemen
 const elUpgradePickerContent = document.getElementById('upgrade-picker-content') as (HTMLElement | undefined);
 const elSeed = document.getElementById('seed') as (HTMLElement | undefined);
 const elUpgradePickerLabel = document.getElementById('upgrade-picker-label') as (HTMLElement | undefined);
-let firstTimePlaying = !isTutorialComplete();
 
 export const showUpgradesClassName = 'showUpgrades';
 
@@ -1101,7 +1099,7 @@ export default class Underworld {
     }
     if (globalThis.enemyEncountered && !globalThis.enemyEncountered.includes(id)) {
       globalThis.enemyEncountered.push(id);
-      storage.set(ENEMY_ENCOUNTERED_STORAGE_KEY, JSON.stringify(globalThis.enemyEncountered));
+      storage.set(storage.ENEMY_ENCOUNTERED_STORAGE_KEY, JSON.stringify(globalThis.enemyEncountered));
       Jprompt({ imageSrc: Unit.getExplainPathForUnitId(id), text: `<h1>${id}</h1>` + '\n' + sourceUnit.info.description, yesText: 'Okay!' });
     }
     let unit: Unit.IUnit = Unit.create(
@@ -2960,6 +2958,7 @@ export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, Underworl
 function getEnemiesForAltitude(underworld: Underworld): string[] {
   const { levelIndex } = underworld;
 
+  const firstTimePlaying = !isTutorialComplete();
   const numberOfUnits = firstTimePlaying
     // Face a reduced number of enemies on firstTimePlaying
     ? (levelIndex == 1 ? 1 : 2 + levelIndex)

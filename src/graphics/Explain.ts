@@ -326,17 +326,16 @@ function getTutorialStorageKey(key: string): string {
     return `tutorial_${key}`;
 
 }
-const TUTORIAL_COMPLETE = 'tutorial-complete';
 let cachedTutorialComplete: boolean | undefined = undefined;
 const YES = 'yes';
 function setTutorialComplete() {
     console.log('Tutorial: Player finished tutorial!')
     cachedTutorialComplete = true;
-    storage.set(TUTORIAL_COMPLETE, YES);
+    storage.set(storage.TUTORIAL_COMPLETE, YES);
 }
 globalThis.resetTutorial = function resetTutorial() {
     cachedTutorialComplete = false;
-    storage.set(TUTORIAL_COMPLETE, undefined);
+    storage.set(storage.TUTORIAL_COMPLETE, undefined);
     for (let item of Object.values(tutorialChecklist)) {
         item.complete = false;
     }
@@ -354,7 +353,7 @@ export function isTutorialComplete() {
         return cachedTutorialComplete;
     }
     if (cachedTutorialComplete === undefined) {
-        cachedTutorialComplete = !globalThis.headless && storage.get(TUTORIAL_COMPLETE) == YES;
+        cachedTutorialComplete = !globalThis.headless && storage.get(storage.TUTORIAL_COMPLETE) == YES;
     }
     if (!cachedTutorialComplete) {
         setTutorialVisiblity(true);

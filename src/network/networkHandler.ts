@@ -312,8 +312,8 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           // to the server
           overworld.pie.sendData({
             type: MESSAGE_TYPES.PLAYER_CONFIG,
-            color: storage.get(config.STORAGE_ID_PLAYER_COLOR),
-            name: storage.get(config.STORAGE_ID_PLAYER_NAME),
+            color: storage.get(storage.STORAGE_ID_PLAYER_COLOR),
+            name: storage.get(storage.STORAGE_ID_PLAYER_NAME),
           });
         }
         if (!(isNaN(payload.x) && isNaN(payload.y))) {
@@ -570,10 +570,10 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
 export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
   globalThis.configPlayer = ({ color, name, lobbyReady }: { color?: number, name?: string, lobbyReady?: boolean }) => {
     if (color !== undefined) {
-      storage.set(config.STORAGE_ID_PLAYER_COLOR, color);
+      storage.set(storage.STORAGE_ID_PLAYER_COLOR, color);
     }
     if (name !== undefined) {
-      storage.set(config.STORAGE_ID_PLAYER_NAME, name || '');
+      storage.set(storage.STORAGE_ID_PLAYER_NAME, name || '');
     }
     overworld.pie.sendData({
       type: MESSAGE_TYPES.PLAYER_CONFIG,

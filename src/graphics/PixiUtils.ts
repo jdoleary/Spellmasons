@@ -734,7 +734,7 @@ export function toggleHUD() {
   // Toggling HUD off should also set the music to 0 since music will
   // be added in post production for recording
   if (!visible && globalThis.changeVolumeMusic) {
-    globalThis.changeVolumeMusic(0);
+    globalThis.changeVolumeMusic(0, false);
   }
   if (containerPlanningView) {
     containerPlanningView.visible = visible

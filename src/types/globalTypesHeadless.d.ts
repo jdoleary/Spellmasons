@@ -249,4 +249,10 @@ declare global {
         set: (key, value) => void;
         getDiskStorage: () => Promise<{ [key: string]: string }>;
     }
+    // Exposed to global so that golems-menu can access it
+    var STORAGE_ID_UI_ZOOM: undefined | string;
+    var electronSettings: undefined | {
+        setFullscreen: (value: boolean) => void;
+        setUIZoom: (value: number) => void;
+    }
 }

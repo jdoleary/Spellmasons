@@ -25,9 +25,3 @@ globalThis.quicksaveKey = 'quicksave';
 // TODO: Remove from svelte menu, music is now played when level is created.
 // TODO: Ensure music works on electron without being associated with a button press
 globalThis.playMusic = () => { };
-// Default stored color if player doesn't already have one stored
-const color = storage.get(config.STORAGE_ID_PLAYER_COLOR);
-if (!color) {
-    const newColor = robeColors[Math.floor(Math.random() * robeColors.length)] || 0xef476f;
-    storage.set(config.STORAGE_ID_PLAYER_COLOR, newColor);
-}
