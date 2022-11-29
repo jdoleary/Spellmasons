@@ -1,3 +1,12 @@
+- change rarity of summon spells
+- archers should advance if out of range
+- optimize: slowdown with lots of archers, lots of corpses, when i did corpse explosion
+    - maybe if i remove second order pushes it will be faster?
+- queued up spells can be hard to see
+- corpse explosion should do 3 damage
+- fix graduation of unavailableUntilLevelIndex
+    - 
+
 # Nov Week 4
     - Make gameplay video with Brad, add it to Steam and YouTube
         - Bugs
@@ -16,6 +25,7 @@
             - https://partner.steamgames.com/doc/features/achievements/ach_guide
     - Add sentry errors to electron node files
 # Bugs / Cleaning
+- vamp miniboss got stuck where he has stamina and a path (with no points), but wont move; i think it's because i summoned an archer and the archer was part way in liquid but didn't show it and so he didn't have a path to the archer
 - perf issue in save 'aoe-freeze'
 - handle loading a save file where the player has not spawned in yet.  see 87374022
 - Hide disconnected players in game screen but not in the lobby
