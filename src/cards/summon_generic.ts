@@ -44,6 +44,21 @@ export default function makeSpellForUnitId(unitId: string): Spell | undefined {
     if (override && override.exclude) {
         return undefined;
     }
+    const unitAppearsAtLevelIndex = sourceUnit.spawnParams?.unavailableUntilLevelIndex || 1;
+    let rarity = CardRarity.COMMON;
+    if (unitAppearsAtLevelIndex < 4) {
+        rarity = CardRarity.COMMON
+    } else if (unitAppearsAtLevelIndex < 6) {
+        rarity = CardRarity.SPECIAL;
+    } else if (unitAppearsAtLevelIndex < 8) {
+        rarity = CardRarity.UNCOMMON;
+    } else if (unitAppearsAtLevelIndex < 10) {
+        rarity = CardRarity.RARE;
+    } else {
+        rarity = CardRarity.FORBIDDEN;
+    }
+
+
     return {
         card: {
             id: unitId,
@@ -54,7 +69,7 @@ export default function makeSpellForUnitId(unitId: string): Spell | undefined {
             manaCost: Math.max(60, (sourceUnit.spawnParams?.unavailableUntilLevelIndex || 1) * 20),
             healthCost: 0,
             expenseScaling: 3,
-            probability: probabilityMap[CardRarity.SPECIAL],
+            probability: probabilityMap[rarity],
             thumbnail: `spellIconSummon${unitId}.png`,
             description: `
 Summons a ${unitId} to fight for your faction.
