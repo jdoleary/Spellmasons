@@ -53,6 +53,7 @@ import shove from './shove';
 import target_column from './target_column';
 import burst from './burst';
 import slow from './slow';
+import death_wager from './death_wager';
 import devRecordDelay from './devRecordDelay';
 import registerSummoningSickness from '../modifierSummoningSickness';
 import registerMaybeManaOverfill from '../modifieMaybeManaOverfill';
@@ -179,6 +180,7 @@ export function registerCards(overworld: Overworld) {
   register(target_column, overworld);
   register(burst, overworld);
   register(slow, overworld);
+  register(death_wager, overworld);
   for (let unitId of Object.keys(allUnits)) {
     const spell = summon_generic(unitId);
     if (spell) {
