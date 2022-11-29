@@ -34,6 +34,7 @@ import archer from './archer';
 import lobber from './lobber';
 import summoner from './summoner';
 import priest from './priest';
+import darkPriest from './darkPriest';
 import poisoner from './poisoner';
 import vampire from './vampire';
 import decoy from './decoy';
@@ -50,6 +51,7 @@ export function registerUnits() {
   register(lobber);
   register(summoner);
   register(priest);
+  register(darkPriest);
   register(poisoner);
   register(vampire);
   register(dragger);

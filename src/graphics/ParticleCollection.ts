@@ -317,3 +317,66 @@ export function makeScrollDissapearParticles(position: Vec2, prediction: boolean
         }, [texture]);
     simpleEmitter(position, particleConfig);
 }
+export function makeDarkPriestAttackParticles(position: Vec2, prediction: boolean, resolver?: () => void) {
+    if (prediction) {
+        // Don't show if just a prediction
+        return
+    }
+    const texture = createHardCircleParticleTexture();
+    if (!texture) {
+        console.error('No texture for particles')
+        return
+    }
+    const particleConfig =
+        particles.upgradeConfig({
+            autoUpdate: true,
+            "alpha": {
+                "start": 1,
+                "end": 0
+            },
+            "scale": {
+                "start": 0.4,
+                "end": 0.3,
+                "minimumScaleMultiplier": 1
+            },
+            "color": {
+                "start": "#962d2d",
+                "end": "#ffffff"
+            },
+            "speed": {
+                "start": 200,
+                "end": 0,
+                "minimumSpeedMultiplier": 1
+            },
+            "acceleration": {
+                "x": 0,
+                "y": 0
+            },
+            "maxSpeed": 0,
+            "startRotation": {
+                "min": -90,
+                "max": -90
+            },
+            "noRotation": false,
+            "rotationSpeed": {
+                "min": 0,
+                "max": 0
+            },
+            "lifetime": {
+                "min": 0.8,
+                "max": 0.8
+            },
+            "blendMode": "normal",
+            "frequency": 0.005,
+            "emitterLifetime": 0.5,
+            "maxParticles": 100,
+            "pos": {
+                "x": 0,
+                "y": 0
+            },
+            "addAtBack": true,
+            "spawnType": "point"
+        }, [texture]);
+    simpleEmitter({ x: position.x, y: position.y }, particleConfig, resolver);
+
+}
