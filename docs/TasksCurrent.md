@@ -1,5 +1,4 @@
 # Nov Week 4
-    - Fix blood archer showing too many attack lines
     - fix dragger and poisoner and priest and summoner not using attackTargets in action()
         - will it work right in prediction??
         - refactor action's attackTargets and canAttackTarget which are often unused or overridden

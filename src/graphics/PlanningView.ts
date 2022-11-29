@@ -97,7 +97,13 @@ export function updatePlanningView(underworld: Underworld) {
         // If globalThis.selectedUnit is an archer, draw LOS attack line
         //  instead of attack range for them
         if (globalThis.selectedUnit.unitSubType == UnitSubType.RANGED_LOS) {
-          const archerTargets = (getBestRangedLOSTarget(globalThis.selectedUnit, underworld) || []);
+          const unitSource = allUnits[globalThis.selectedUnit.unitSourceId];
+          let archerTargets: Unit.IUnit[] = [];
+          if (unitSource) {
+            archerTargets = unitSource.getUnitAttackTargets(globalThis.selectedUnit, underworld);
+          } else {
+            console.error('Cannot find unitSource for ', globalThis.selectedUnit.unitSourceId);
+          }
           // If they don't have a target they can actually attack
           // draw a line to the closest enemy that they would target if
           // they had LOS
