@@ -196,7 +196,7 @@ export function autoExplain() {
 export function setTutorialVisiblity(visible: boolean) {
     document.body.classList.toggle('showTutorial', visible);
     globalThis.doUpdateTutorialChecklist = visible;
-    updateTutorialChecklist()
+    updateTutorialChecklist();
 }
 interface TutorialChecklistItem {
     visible: boolean;
@@ -297,16 +297,12 @@ export function tutorialCompleteTask(key: keyof TutorialChecklist, condition?: (
             for (let nextTask of task.nextVisibleTasks) {
                 tutorialShowTask(nextTask);
             }
-            if (Object.keys(tutorialChecklist).every(key => tutorialChecklist[key as keyof TutorialChecklist].complete)) {
-                setTutorialVisiblity(false);
-                setTutorialComplete();
-            }
             updateTutorialChecklist();
+            isTutorialComplete();
         } else {
             console.error('No such tutorial task with key', key);
         }
     }
-
 }
 export function tutorialShowTask(key: keyof TutorialChecklist) {
     if (globalThis.doUpdateTutorialChecklist) {
@@ -326,18 +322,11 @@ function getTutorialStorageKey(key: string): string {
     return `tutorial_${key}`;
 
 }
-let cachedTutorialComplete: boolean | undefined = undefined;
-const YES = 'yes';
-function setTutorialComplete() {
-    console.log('Tutorial: Player finished tutorial!')
-    cachedTutorialComplete = true;
-    storage.set(storage.TUTORIAL_COMPLETE, YES);
-}
 globalThis.resetTutorial = function resetTutorial() {
-    cachedTutorialComplete = false;
-    storage.set(storage.TUTORIAL_COMPLETE, undefined);
-    for (let item of Object.values(tutorialChecklist)) {
+    for (let key of Object.keys(tutorialChecklist)) {
+        const item = tutorialChecklist[key as keyof TutorialChecklist];
         item.complete = false;
+        storage.set(getTutorialStorageKey(key), undefined);
     }
     setTutorialVisiblity(true);
     // Reset all explain prompts when tutorial is reset
@@ -349,14 +338,21 @@ globalThis.resetTutorial = function resetTutorial() {
 // Returns a value that remains the same as the first time this function was invoked for the duration of the play session
 export function isTutorialComplete() {
     if (globalThis.headless) {
-        cachedTutorialComplete = true;
-        return cachedTutorialComplete;
+        // Never run the tutorial on a headless server because it is hosting games for clients
+        return true;
     }
-    if (cachedTutorialComplete === undefined) {
-        cachedTutorialComplete = !globalThis.headless && storage.get(storage.TUTORIAL_COMPLETE) == YES;
+    // Update tutorialChecklist from storage:
+    for (let key of Object.keys(tutorialChecklist)) {
+        const item = tutorialChecklist[key as keyof TutorialChecklist];
+        if (storage.get(getTutorialStorageKey(key)) === COMPLETE) {
+            item.complete = true;
+        }
     }
-    if (!cachedTutorialComplete) {
+    if (Object.keys(tutorialChecklist).every(key => tutorialChecklist[key as keyof TutorialChecklist].complete)) {
+        setTutorialVisiblity(false);
+        return true;
+    } else {
         setTutorialVisiblity(true);
+        return false;
     }
-    return cachedTutorialComplete;
 }

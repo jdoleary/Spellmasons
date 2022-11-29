@@ -1,7 +1,7 @@
 # Nov Week 4
     - Make gameplay video with Brad, add it to Steam and YouTube
         - Bugs
-    - Send out Demo
+        - Send out Demo
     - Rethink next trailer
         - Remove "dead time"
         - get into the action fast
@@ -10,6 +10,8 @@
     - Default wizard name to steam name if connected to steam
     - Test Cloud Saves
     - Steam Achievements
+        - https://github.com/node-ffi/node-ffi
+        - https://partner.steamgames.com/doc/features/achievements/ach_guide
     - Add sentry errors to electron node files
 # Bugs / Cleaning
 - handle loading a save file where the player has not spawned in yet.  see 87374022
