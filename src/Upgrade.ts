@@ -200,7 +200,7 @@ export const upgradeStatsSource: IUpgrade[] = [
     title: '+ Stamina, - Health',
     type: 'perk',
     description: (player) =>
-      `Increases your stamina by ${Math.floor(100 * plusStaminaMinusHealth_staminaProportion)}% but decreased your max health by ${Math.floor(100 * plusStaminaMinusHealth_healthProportion)}%`,
+      `Increases your stamina to ${Math.floor(100 * plusStaminaMinusHealth_staminaProportion)}% but decreased your max health to ${Math.floor(100 * plusStaminaMinusHealth_healthProportion)}%`,
     thumbnail: 'images/spell/unknown.png',
     effect: (player, underworld) => {
       player.unit.healthMax *= plusStaminaMinusHealth_healthProportion;
@@ -219,7 +219,7 @@ export const upgradeStatsSource: IUpgrade[] = [
     title: '+ Range, - Health',
     type: 'perk',
     description: (player) =>
-      `Increases your cast range by ${Math.floor(100 * plusRangeMinusHealth_rangeProportion)}% but decreased your max health by ${Math.floor(100 * plusRangeMinusHealth_healthProportion)}%`,
+      `Increases your cast range to ${Math.floor(100 * plusRangeMinusHealth_rangeProportion)}% but decreased your max health to ${Math.floor(100 * plusRangeMinusHealth_healthProportion)}%`,
     thumbnail: 'images/spell/unknown.png',
     effect: (player, underworld) => {
       player.unit.healthMax *= plusRangeMinusHealth_healthProportion;
@@ -238,7 +238,7 @@ export const upgradeStatsSource: IUpgrade[] = [
     title: '++ Mana, - Stamina',
     type: 'perk',
     description: (player) =>
-      `Increases your mana by ${Math.floor(100 * plusManaMinusStamina_manaProportion)}% but decreased your max stamina by ${Math.floor(100 * plusManaMinusStamina_staminaProportion)}%`,
+      `Increases your mana to ${Math.floor(100 * plusManaMinusStamina_manaProportion)}% but decreased your max stamina to ${Math.floor(100 * plusManaMinusStamina_staminaProportion)}%`,
     thumbnail: 'images/spell/unknown.png',
     effect: (player, underworld) => {
       player.unit.manaMax *= plusManaMinusStamina_manaProportion;
@@ -257,7 +257,7 @@ export const upgradeStatsSource: IUpgrade[] = [
     cost: { healthCost: 0, manaCost: 0 },
   },
   {
-    title: 'Maybe Mana Overfill',
+    title: 'Overflowing Mana',
     type: 'perk',
     description: (player) =>
       `Grants a ${Math.floor(100 * maybeManaOverfillProportionChance)}% chance on the start of every turn that you will get 2x mana for that turn.`,
