@@ -213,7 +213,7 @@ export function create(
 
     underworld.addUnitToArray(unit, prediction || false);
     // Check to see if unit interacts with liquid
-    Obstacle.tryFallInOutOfLiquid(unit, underworld, false);
+    Obstacle.tryFallInOutOfLiquid(unit, underworld, prediction || false);
 
     return unit;
   } else {
