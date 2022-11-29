@@ -28,6 +28,7 @@ import { Modifier } from '../cards/util';
 import { explain, EXPLAIN_DEATH, EXPLAIN_MINI_BOSSES } from '../graphics/Explain';
 import { ARCHER_ID } from './units/archer';
 import { BLOOD_ARCHER_ID } from './units/blood_archer';
+import * as Obstacle from './Obstacle';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -211,6 +212,8 @@ export function create(
 
 
     underworld.addUnitToArray(unit, prediction || false);
+    // Check to see if unit interacts with liquid
+    Obstacle.tryFallInOutOfLiquid(unit, underworld, false);
 
     return unit;
   } else {
