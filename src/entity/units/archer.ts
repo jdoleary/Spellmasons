@@ -6,6 +6,7 @@ import * as math from '../../jmath/math';
 import { Vec2 } from '../../jmath/Vec';
 import Underworld from '../../Underworld';
 import { getBestRangedLOSTarget } from './actions/rangedAction';
+import * as config from '../../config';
 
 export const ARCHER_ID = 'archer';
 const unit: UnitSource = {
@@ -71,9 +72,12 @@ const unit: UnitSource = {
         }, { dist: Number.MAX_SAFE_INTEGER, pos: undefined })
 
         if (moveChoice.pos) {
+          // Move to sight lines
           await Unit.moveTowards(unit, moveChoice.pos, underworld);
-        } else {
           // Move closer
+          // The following is a hacky way to make them move in range, but not too close, to the enemy
+          const distanceToEnemy = math.distance(unit, closestEnemy);
+          unit.stamina = Math.min(unit.stamina, distanceToEnemy + config.COLLISION_MESH_RADIUS - unit.attackRange);
           await Unit.moveTowards(unit, closestEnemy, underworld);
         }
       }

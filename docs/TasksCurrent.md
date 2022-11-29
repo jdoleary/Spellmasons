@@ -1,4 +1,3 @@
-- archers should advance if out of range
 # Nov Week 4
     - Make gameplay video with Brad, add it to Steam and YouTube
         - Bugs
