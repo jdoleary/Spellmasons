@@ -1,7 +1,4 @@
 # Nov Week 4
-    - fix dragger and poisoner and priest and summoner not using attackTargets in action()
-        - will it work right in prediction??
-        - refactor action's attackTargets and canAttackTarget which are often unused or overridden
     - Make gameplay video with Brad, add it to Steam and YouTube
         - Bugs
         - Send out Demo
