@@ -197,7 +197,7 @@ export const upgradeStatsSource: IUpgrade[] = [
     cost: { healthCost: 0, manaCost: 0 },
   },
   {
-    title: '+ Stamina, - Health',
+    title: 'Quickling',
     type: 'perk',
     description: (player) =>
       `Increases your stamina to ${Math.floor(100 * plusStaminaMinusHealth_staminaProportion)}% but decreased your max health to ${Math.floor(100 * plusStaminaMinusHealth_healthProportion)}%`,
@@ -216,7 +216,7 @@ export const upgradeStatsSource: IUpgrade[] = [
     cost: { healthCost: 0, manaCost: 0 },
   },
   {
-    title: '+ Range, - Health',
+    title: 'Glass Sniper',
     type: 'perk',
     description: (player) =>
       `Increases your cast range to ${Math.floor(100 * plusRangeMinusHealth_rangeProportion)}% but decreased your max health to ${Math.floor(100 * plusRangeMinusHealth_healthProportion)}%`,
@@ -235,7 +235,7 @@ export const upgradeStatsSource: IUpgrade[] = [
     cost: { healthCost: 0, manaCost: 0 },
   },
   {
-    title: '++ Mana, - Stamina',
+    title: 'Stone Tower',
     type: 'perk',
     description: (player) =>
       `Increases your mana to ${Math.floor(100 * plusManaMinusStamina_manaProportion)}% but decreased your max stamina to ${Math.floor(100 * plusManaMinusStamina_staminaProportion)}%`,
