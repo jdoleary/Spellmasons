@@ -173,7 +173,7 @@ export const upgradeStatsSource: IUpgrade[] = [
       // (note: this would be auto corrected on the next mouse move anyway)
       underworld.syncPlayerPredictionUnitOnly();
     },
-    probability: 30,
+    probability: 40,
     cost: { healthCost: 0, manaCost: 0 },
   },
   {
@@ -193,7 +193,7 @@ export const upgradeStatsSource: IUpgrade[] = [
       // (note: this would be auto corrected on the next mouse move anyway)
       underworld.syncPlayerPredictionUnitOnly();
     },
-    probability: 30,
+    probability: 40,
     cost: { healthCost: 0, manaCost: 0 },
   },
   {
@@ -204,6 +204,8 @@ export const upgradeStatsSource: IUpgrade[] = [
     thumbnail: 'images/spell/unknown.png',
     effect: (player, underworld) => {
       player.unit.healthMax *= plusStaminaMinusHealth_healthProportion;
+      // Round to a whole number
+      player.unit.healthMax = Math.max(1, Math.floor(player.unit.healthMax));
       player.unit.health = player.unit.healthMax;
       player.unit.stamina *= plusStaminaMinusHealth_staminaProportion;
       // Now that the player unit's properties have changed ,sync the new
@@ -212,7 +214,7 @@ export const upgradeStatsSource: IUpgrade[] = [
       // (note: this would be auto corrected on the next mouse move anyway)
       underworld.syncPlayerPredictionUnitOnly();
     },
-    probability: 20,
+    probability: 10,
     cost: { healthCost: 0, manaCost: 0 },
   },
   {
@@ -223,6 +225,8 @@ export const upgradeStatsSource: IUpgrade[] = [
     thumbnail: 'images/spell/unknown.png',
     effect: (player, underworld) => {
       player.unit.healthMax *= plusRangeMinusHealth_healthProportion;
+      // Round to a whole number
+      player.unit.healthMax = Math.max(1, Math.floor(player.unit.healthMax));
       player.unit.health = player.unit.healthMax;
       player.unit.attackRange *= plusRangeMinusHealth_rangeProportion;
       // Now that the player unit's properties have changed, sync the new
@@ -231,7 +235,7 @@ export const upgradeStatsSource: IUpgrade[] = [
       // (note: this would be auto corrected on the next mouse move anyway)
       underworld.syncPlayerPredictionUnitOnly();
     },
-    probability: 20,
+    probability: 10,
     cost: { healthCost: 0, manaCost: 0 },
   },
   {
@@ -242,6 +246,8 @@ export const upgradeStatsSource: IUpgrade[] = [
     thumbnail: 'images/spell/unknown.png',
     effect: (player, underworld) => {
       player.unit.manaMax *= plusManaMinusStamina_manaProportion;
+      // Round to a whole number
+      player.unit.manaMax = Math.floor(player.unit.manaMax);
       player.unit.mana = player.unit.manaMax;
       player.unit.staminaMax *= plusManaMinusStamina_staminaProportion;
       // Round to a whole number
@@ -264,37 +270,35 @@ export const upgradeStatsSource: IUpgrade[] = [
     thumbnail: 'images/spell/unknown.png',
     effect: (player, underworld) => {
       Unit.addModifier(player.unit, maybeManaOverfillId, underworld, false);
-
-
     },
-    probability: 10,
+    probability: 5,
     cost: { healthCost: 0, manaCost: 0 },
   },
-  // Temp remove cast range upgrade because it greatly affects the difficulty of the game
-  // {
-  //   title: '+ Cast Range',
-  //   description: (player) =>
-  //     `Increases your maximum cast range by ${castRangeIncreaseProportion * 100}%`,
-  //   thumbnail: 'images/upgrades/todo.png',
-  //   effect: (player) => {
-  //     player.unit.attackRange += player.unit.attackRange * castRangeIncreaseProportion;
-  //   },
-  //   probability: 30,
-  //   cost: { healthCost: 0, manaCost: 0 },
-  // },
-  // Temp remove stamina upgrade because stamina greatly affects the difficulty of the game
-  // {
-  //   title: '+ Max Stamina',
-  //   description: (player) =>
-  //     `Increases your stamina by ${maxStaminaIncreaseProportion * 100}%`,
-  //   thumbnail: 'images/spell/walk.png',
-  //   effect: (player) => {
-  //     player.unit.staminaMax += player.unit.staminaMax * maxStaminaIncreaseProportion;
-  //     player.unit.stamina = player.unit.staminaMax;
-  //   },
-  //   probability: 30,
-  //   cost: { healthCost: 0, manaCost: 0 },
-  // },
+  {
+    title: '+ Cast Range',
+    type: 'perk',
+    description: (player) =>
+      `Increases your maximum cast range by ${castRangeIncreaseProportion * 100}%`,
+    thumbnail: 'images/upgrades/todo.png',
+    effect: (player) => {
+      player.unit.attackRange += player.unit.attackRange * castRangeIncreaseProportion;
+    },
+    probability: 20,
+    cost: { healthCost: 0, manaCost: 0 },
+  },
+  {
+    title: '+ Max Stamina',
+    type: 'perk',
+    description: (player) =>
+      `Increases your stamina by ${maxStaminaIncreaseProportion * 100}%`,
+    thumbnail: 'images/spell/walk.png',
+    effect: (player) => {
+      player.unit.staminaMax += player.unit.staminaMax * maxStaminaIncreaseProportion;
+      player.unit.stamina = player.unit.staminaMax;
+    },
+    probability: 20,
+    cost: { healthCost: 0, manaCost: 0 },
+  },
 ];
 const maxManaIncreaseAmount = 10;
 const castRangeIncreaseProportion = 0.1;

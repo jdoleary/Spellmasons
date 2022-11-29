@@ -1,4 +1,3 @@
-- perk can make health a fraction
 - camera is weridly offcenter when it's following you, maybe because the size of the map changed due to liquid stamping?
 - stacked unit summons should spread out
 # Nov Week 4
