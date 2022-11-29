@@ -8,7 +8,7 @@ import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex, vec2ToOneDimentionInd
 import { conway, ConwayState, Material } from "./Conway";
 import type { IObstacle } from "./entity/Obstacle";
 import Underworld, { Biome } from "./Underworld";
-import LiquidPools, { doStampsOverlap, stampMatricies } from './LiquidPools';
+import LiquidPools, { doStampsOverlap, stampMatricies, surround } from './LiquidPools';
 
 export const caveSizes: { [size: string]: CaveParams } = {
     'tutorial': {
@@ -99,9 +99,9 @@ export function generateCave(params: CaveParams, biome: Biome, underworld: Under
     // globalThis.debugCave.lineTo(crawlerBounds.xMin, crawlerBounds.yMin);
 
     // + 2 leaves room on the right side and bottom side for surrounding walls
-    const width = Math.ceil((crawlerBounds.xMax - crawlerBounds.xMin) / config.OBSTACLE_SIZE) + 2;
-    const height = Math.ceil((crawlerBounds.yMax - crawlerBounds.yMin) / config.OBSTACLE_SIZE) + 2;
-    const materials: Material[] = Array(width * height).fill(Material.EMPTY);
+    let width = Math.ceil((crawlerBounds.xMax - crawlerBounds.xMin) / config.OBSTACLE_SIZE) + 2;
+    let height = Math.ceil((crawlerBounds.yMax - crawlerBounds.yMin) / config.OBSTACLE_SIZE) + 2;
+    let materials: Material[] = Array(width * height).fill(Material.EMPTY);
     // Normalize crawlers to 0,0 in upper left corner
     function normalizeTo00(points: Vec.Vec2[]): Vec.Vec2[] {
         return points.map(p => ({ x: p.x - crawlerBounds.xMin, y: p.y - crawlerBounds.yMin }))
@@ -160,6 +160,14 @@ export function generateCave(params: CaveParams, biome: Biome, underworld: Under
         liquidSpreadChanceFalloff: 2
     }
     stampLiquids(materials, width, underworld);
+    // Increase the size of the map on all sides so that no stamped liquid pools
+    // touch the outside edge which would break the pathing polygons of the walls
+    const { contents: matrixContents, width: newWidth } = surround(materials, width);
+    // Reassign width, height and materials array now that it has grown
+    width = newWidth;
+    height = Math.floor(matrixContents.length / width);
+    materials = matrixContents;
+
     // 1st pass for walls
     conway(materials, width, conwayState, underworld);
     // 2nd pass for semi-walls

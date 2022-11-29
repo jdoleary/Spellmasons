@@ -390,11 +390,11 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
     globalThis.debugGraphics?.lineTo(cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2);
     globalThis.debugGraphics?.lineTo(cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2);
     // Draw the pathing walls
-    // for (let lineSegment of underworld.pathingLineSegments) {
-    //   globalThis.debugGraphics?.lineStyle(2, 0xffaabb, 1.0);
-    //   globalThis.debugGraphics?.moveTo(lineSegment.p1.x, lineSegment.p1.y);
-    //   globalThis.debugGraphics?.lineTo(lineSegment.p2.x, lineSegment.p2.y);
-    // }
+    for (let lineSegment of underworld.pathingLineSegments) {
+      globalThis.debugGraphics?.lineStyle(2, 0xffaabb, 1.0);
+      globalThis.debugGraphics?.moveTo(lineSegment.p1.x, lineSegment.p1.y);
+      globalThis.debugGraphics?.lineTo(lineSegment.p2.x, lineSegment.p2.y);
+    }
     // Draw liquid polygons
     for (let lineSegment of underworld.liquidPolygons.map(toLineSegments).flat()) {
       globalThis.debugGraphics?.lineStyle(4, 0x34b7eb, 1.0);
