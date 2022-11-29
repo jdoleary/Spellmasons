@@ -11,7 +11,7 @@ import { easeOutCubic } from '../jmath/Easing';
 import * as config from '../config';
 import * as colors from '../graphics/ui/colors';
 
-const id = 'Target All';
+const id = 'Target Kind';
 const spell: Spell = {
   card: {
     id,
