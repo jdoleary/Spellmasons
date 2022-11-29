@@ -7,20 +7,22 @@ import * as config from '../../config';
 import Underworld from '../../Underworld';
 import { makeDarkPriestAttackParticles } from '../../graphics/ParticleCollection';
 
-const manaCostToCast = 30;
-const NUMBER_OF_GEISERS = 6;
+const manaCostToCast = 60;
+const NUMBER_OF_GEYSERS = 6;
 const unit: UnitSource = {
   id: 'dark priest',
   info: {
-    description: 'Releasing geysers of dark energy, the dark priest damages it\'s enemies in a long line.',
+    description: `Releasing geysers of dark energy, the dark priest can attack up to ${NUMBER_OF_GEYSERS} of enemies at once.`,
     image: 'units/priestIdle',
-    subtype: UnitSubType.SUPPORT_CLASS,
+    subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
     attackRange: 264,
     healthMax: 6,
     damage: 4,
-    manaCostToCast
+    manaCostToCast,
+    manaMax: manaCostToCast * 2,
+    manaPerTurn: 30
   },
   spawnParams: {
     probability: 20,
@@ -62,49 +64,33 @@ const unit: UnitSource = {
     let didAction = false;
     // If they have enough mana
     if (unit.mana >= manaCostToCast) {
-      const attackTarget = attackTargets && attackTargets[0];
-      if (attackTarget) {
+      if (attackTargets.length) {
         // Attack or move, not both; so clear their existing path
         unit.path = undefined;
-        const distToAttackTarget = math.distance(unit, attackTarget);
-        let geiserPromises = [];
+        let geyserPromises = [];
         await Unit.playAnimation(unit, unit.animations.attack);
         // Remove mana once the cast occurs
         unit.mana -= manaCostToCast;
         didAction = true;
-        for (let i = 0; i < NUMBER_OF_GEISERS; i++) {
-          geiserPromises.push(new Promise<void>((resolve) => {
-            const nextGeiserPosition = math.getCoordsAtDistanceTowardsTarget(unit, attackTarget, distToAttackTarget + config.COLLISION_MESH_RADIUS * 2 * i, true);
-            if (underworld.isCoordOnWallTile(nextGeiserPosition)) {
-              resolve();
-              return;
-            }
-            // Space them out in time
-            setTimeout(() => {
-              makeDarkPriestAttackParticles(nextGeiserPosition, false, resolve);
-              const withinRadius = underworld.getEntitiesWithinDistanceOfTarget(
-                nextGeiserPosition,
-                config.COLLISION_MESH_RADIUS * 2,
-                false
-              );
-              // Wait a moment before dealing damage
-              setTimeout(() => {
-                withinRadius.forEach(entity => {
-                  if (Unit.isUnit(entity)) {
-                    Unit.takeDamage(entity, unit.damage, undefined, underworld, false);
-                  }
-                });
-              }, 100);
+        for (let i = 0; i < attackTargets.length; i++) {
+          const attackTarget = attackTargets[i];
+          if (attackTarget) {
 
-            }, 100 * i);
-          }));
+            geyserPromises.push(new Promise<void>((resolve) => {
+              // Space them out in time
+              setTimeout(() => {
+                makeDarkPriestAttackParticles(attackTarget, false, resolve);
+                setTimeout(() => {
+                  Unit.takeDamage(attackTarget, unit.damage, undefined, underworld, false);
+                }, math.distance(unit, attackTarget));
+              }, 100 * i);
+            }));
+          }
         }
-        await Promise.all(geiserPromises);
+        await Promise.all(geyserPromises);
       }
     }
-    console.log('jtest', didAction)
     if (!didAction) {
-      console.log('jtest move toward')
       // Move to closest enemy
       const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
       if (closestEnemy) {
@@ -116,13 +102,16 @@ const unit: UnitSource = {
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-    const closestUnit = Unit.findClosestUnitInDifferentFaction(unit, underworld);
-    if (closestUnit) {
-      return [closestUnit];
-    } else {
-      return [];
-    }
+    return Unit.livingUnitsInDifferentFaction(unit, underworld)
+      .filter(u => math.distance(unit, u) <= unit.attackRange)
+      .map(u => ({ unit: u, dist: math.distance(unit, u) }))
+      .sort((a, b) => {
+        return a.dist - b.dist;
+      })
+      .map(x => x.unit)
+      .slice(0, NUMBER_OF_GEYSERS);
   }
 };
+
 
 export default unit;

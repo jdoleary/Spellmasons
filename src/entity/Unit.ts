@@ -937,7 +937,6 @@ export function _moveTowards(unit: IUnit, target: Vec2, underworld: Underworld) 
 }
 // moveTo moves a unit, considering all the in-game blockers
 export function moveTowards(unit: IUnit, target: Vec2, underworld: Underworld): Promise<void> {
-  console.log('jtest move towards', unit, target);
   if (!canMove(unit)) {
     console.log('cannot move')
     return Promise.resolve();

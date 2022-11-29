@@ -16,6 +16,7 @@
             - https://partner.steamgames.com/doc/features/achievements/ach_guide
     - Add sentry errors to electron node files
 # Bugs / Cleaning
+- perf issue in save 'aoe-freeze'
 - handle loading a save file where the player has not spawned in yet.  see 87374022
 - Hide disconnected players in game screen but not in the lobby
 - Fix: should not broadcast latency warning for a message that fails with a rejected promise
