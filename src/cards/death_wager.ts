@@ -20,9 +20,10 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.FORBIDDEN],
+    allowNonUnitTarget: true,
     thumbnail: 'unknown.png',
     description: `
-Reset all spell costs to their default and reduce your max health by ${reduceMaxHealthPreportion}%.
+Reset all spell costs back to their default and reduce your max health by ${Math.round(reduceMaxHealthPreportion * 100)}%.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       const player = underworld.players.find(p => p.unit == state.casterUnit);
