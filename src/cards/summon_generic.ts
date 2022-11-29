@@ -72,7 +72,7 @@ export default function makeSpellForUnitId(unitId: string): Spell | undefined {
             probability: probabilityMap[rarity],
             thumbnail: `spellIconSummon${unitId}.png`,
             description: `
-Summons a ${unitId} to fight for your faction.
+Summons ${unitId[0]?.toLowerCase() == 'a' ? `an ${unitId}` : `a ${unitId}`} to fight for your faction.
     `,
             allowNonUnitTarget: true,
             effect: async (state, card, quantity, underworld, prediction) => {
