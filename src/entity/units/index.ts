@@ -51,21 +51,21 @@ function register(unit: UnitSource) {
 }
 export function registerUnits() {
   register(golem);
-  register(bloodGolem);
   register(archer);
   register(lobber);
-  register(greenGlop);
-  register(summoner);
-  register(darkSummoner);
   register(priest);
-  register(darkPriest);
   register(poisoner);
   register(vampire);
-  register(sandVampire);
   register(dragger);
+  register(summoner);
+  register(bloodGolem);
+  register(blood_archer);
+  register(greenGlop);
+  register(sandVampire);
+  register(darkSummoner);
+  register(darkPriest);
   register(playerUnit);
   register(decoy);
-  register(blood_archer);
 }
 
 

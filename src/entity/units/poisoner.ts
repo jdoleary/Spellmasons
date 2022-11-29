@@ -23,7 +23,7 @@ const unit: UnitSource = {
   },
   spawnParams: {
     probability: 20,
-    unavailableUntilLevelIndex: 7,
+    unavailableUntilLevelIndex: 6,
   },
   animations: {
     idle: 'units/poisIdle',

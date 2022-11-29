@@ -22,7 +22,7 @@ const unit: UnitSource = {
   },
   spawnParams: {
     probability: 15,
-    unavailableUntilLevelIndex: 14,
+    unavailableUntilLevelIndex: 10,
   },
   animations: {
     idle: 'units/vampireIdle',
