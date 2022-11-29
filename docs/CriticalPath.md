@@ -2,6 +2,7 @@
 - November
     - Icons for perks
     - Submit demo to IGN
+        - need gameplay video first
 - December
     - Start reaching out to steamers and reviewers and send demo
     - Convenient multiplayer lobbying via steam

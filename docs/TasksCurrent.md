@@ -7,11 +7,12 @@
         - get into the action fast
         - Communicate the big idea
 # Nov Week 5 / Dec Week 1
-    - Default wizard name to steam name if connected to steam
     - Test Cloud Saves
-    - Steam Achievements
-        - https://github.com/node-ffi/node-ffi
-        - https://partner.steamgames.com/doc/features/achievements/ach_guide
+    - Steam SDK
+        - Default wizard name to steam name if connected to steam
+        - Steam Achievements
+            - https://github.com/node-ffi/node-ffi
+            - https://partner.steamgames.com/doc/features/achievements/ach_guide
     - Add sentry errors to electron node files
 # Bugs / Cleaning
 - handle loading a save file where the player has not spawned in yet.  see 87374022
