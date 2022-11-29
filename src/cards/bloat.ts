@@ -80,7 +80,7 @@ Multiple stacks of ${id} will increase the amount of damage done when the unit e
   events: {
     onDeath: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
       const quantity = unit.modifiers[id]?.quantity || 1;
-      const adjustedRadius = baseRadius + unit.modifiers[id]?.radius || 0;
+      const adjustedRadius = baseRadius + (unit.modifiers[id]?.radius || 0);
       if (prediction) {
         drawUICircle(unit, adjustedRadius, colors.healthRed, 'Explosion Radius');
       } else {

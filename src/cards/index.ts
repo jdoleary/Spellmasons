@@ -42,6 +42,7 @@ import repel from './repel';
 import decoy from './summon_decoy';
 import summon_generic from './summon_generic';
 import explode from './bloat';
+import corpse_explosion from './corpse_explosion';
 import lastWill from './lastwill';
 import split from './split';
 import drown from './drown';
@@ -169,6 +170,7 @@ export function registerCards(overworld: Overworld) {
   register(repel, overworld);
   register(decoy, overworld);
   register(explode, overworld);
+  register(corpse_explosion, overworld);
   register(lastWill, overworld);
   register(split, overworld);
   register(drown, overworld);
