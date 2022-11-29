@@ -40,6 +40,7 @@ import priest from './priest';
 import darkPriest from './darkPriest';
 import poisoner from './poisoner';
 import vampire from './vampire';
+import sandVampire from './sandVampire';
 import decoy from './decoy';
 import dragger from './dragger';
 import blood_archer from './blood_archer';
@@ -60,6 +61,7 @@ export function registerUnits() {
   register(darkPriest);
   register(poisoner);
   register(vampire);
+  register(sandVampire);
   register(dragger);
   register(playerUnit);
   register(decoy);
