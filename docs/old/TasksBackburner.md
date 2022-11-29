@@ -1,3 +1,4 @@
+- stacked unit summons should spread out
 - Watch Russell Playtest
 - Russell Feedback
     - Early levels in multiplayer have too few enemiesb
