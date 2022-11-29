@@ -5,9 +5,11 @@ import { createVisualFlyingProjectile } from '../Projectile';
 import * as math from '../../jmath/math';
 import { Vec2 } from '../../jmath/Vec';
 import Underworld from '../../Underworld';
+import { getBestRangedLOSTarget } from './actions/rangedAction';
 
+export const ARCHER_ID = 'Archer';
 const unit: UnitSource = {
-  id: 'archer',
+  id: ARCHER_ID,
   info: {
     description: 'An archer will try to get close enough to shoot you but not much closer.  It can only shoot you if there aren\'t any walls between you both.',
     image: 'units/archerIdle',
@@ -34,10 +36,11 @@ const unit: UnitSource = {
     damage: 'archerHurt',
     death: 'archerDeath',
   },
-  action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, underworld: Underworld, _canAttackTarget: boolean) => {
+  action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, _canAttackTarget: boolean) => {
     // Archer just checks attackTarget, not canAttackTarget to know if it can attack because getBestRangedLOSTarget() will return undefined
     // if it can't attack any targets
     const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
+    const attackTarget = attackTargets && attackTargets[0];
     // Attack
     if (attackTarget) {
       // Archers attack or move, not both; so clear their existing path
@@ -76,5 +79,8 @@ const unit: UnitSource = {
       }
     }
   },
+  getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
+    return getBestRangedLOSTarget(unit, underworld);
+  }
 };
 export default unit;

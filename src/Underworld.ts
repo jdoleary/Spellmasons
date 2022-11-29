@@ -2382,11 +2382,11 @@ export default class Underworld {
         }
         const unitSource = allUnits[u.unitSourceId];
         if (unitSource) {
-          const target = this.getUnitAttackTarget(u);
+          const targets = unitSource.getUnitAttackTargets(u, this);
           // Add unit action to the array of promises to wait for
           // TODO: Prevent golems from attacking if they are out of range
           // like when they are around a corner
-          let promise = raceTimeout(5000, `Unit.action; unitSourceId: ${u.unitSourceId}; subType: ${u.unitSubType}`, unitSource.action(u, target, this, this.canUnitAttackTarget(u, target)));
+          let promise = raceTimeout(5000, `Unit.action; unitSourceId: ${u.unitSourceId}; subType: ${u.unitSubType}`, unitSource.action(u, targets, this, this.canUnitAttackTarget(u, targets && targets[0])));
           animationPromises.push(promise);
         } else {
           console.error(
@@ -2446,26 +2446,6 @@ export default class Underworld {
         return false;
     }
 
-  }
-  getUnitAttackTarget(u: Unit.IUnit): Unit.IUnit | undefined {
-    switch (u.unitSubType) {
-      case UnitSubType.MELEE:
-        return Unit.findClosestUnitInDifferentFaction(u, this);
-      case UnitSubType.RANGED_LOS:
-        return getBestRangedLOSTarget(u, this);
-      case UnitSubType.RANGED_RADIUS:
-        return Unit.findClosestUnitInDifferentFaction(u, this);
-      case UnitSubType.PLAYER_CONTROLLED:
-        // Ignore player controlled units, they don't get an attack target assigned by
-        // the game, they choose their own.
-        return undefined;
-      case UnitSubType.SUPPORT_CLASS:
-        // Support class units don't have attack targets
-        return undefined;
-      default:
-        console.error('Cannot determine attackTarget, unit sub type is unaccounted for', UnitSubType[u.unitSubType], u.unitSubType)
-        return undefined;
-    }
   }
   getEntitiesWithinDistanceOfTarget(target: Vec2, distance: number, prediction: boolean) {
     const withinDistance: HasSpace[] = [];

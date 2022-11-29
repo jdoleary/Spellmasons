@@ -6,11 +6,14 @@ import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import * as math from '../../jmath/math';
 import { Vec2 } from '../../jmath/Vec';
 import Underworld from '../../Underworld';
+import { getBestRangedLOSTarget } from './actions/rangedAction';
 
+const NUMBER_OF_UNITS_BLOOD_ARCHER_CAN_ATTACK = 3;
+export const BLOOD_ARCHER_ID = 'Blood Archer';
 const unit: UnitSource = {
-  id: 'blood_archer',
+  id: BLOOD_ARCHER_ID,
   info: {
-    description: 'An archer will try to get close enough to shoot you but not much closer.  It can only shoot you if there aren\'t any walls between you both.',
+    description: `The blood archer will fire it\'s arrows at ${NUMBER_OF_UNITS_BLOOD_ARCHER_CAN_ATTACK} enemies simultaneously.`,
     image: 'units/archerIdle',
     subtype: UnitSubType.RANGED_LOS,
   },
@@ -55,24 +58,27 @@ const unit: UnitSource = {
       );
     }
   },
-  action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, underworld: Underworld, _canAttackTarget: boolean) => {
+  action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, _canAttackTarget: boolean) => {
     // Archer just checks attackTarget, not canAttackTarget to know if it can attack because getBestRangedLOSTarget() will return undefined
     // if it can't attack any targets
     const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
     // Attack
-    if (attackTarget) {
+    if (attackTargets && attackTargets[0]) {
       // Archers attack or move, not both; so clear their existing path
       unit.path = undefined;
-      Unit.orient(unit, attackTarget);
+      Unit.orient(unit, attackTargets[0]);
       await Unit.playComboAnimation(unit, unit.animations.attack, () => {
-        return createVisualFlyingProjectile(
-          unit,
-          attackTarget,
-          'projectile/arrow',
-        ).then(() => {
-          Unit.takeDamage(attackTarget, unit.damage, unit, underworld, false, undefined, { thinBloodLine: true });
-        });
-
+        let flyingProjectilePromise = Promise.resolve();
+        for (let target of attackTargets) {
+          flyingProjectilePromise = createVisualFlyingProjectile(
+            unit,
+            target,
+            'projectile/arrow',
+          ).then(() => {
+            Unit.takeDamage(target, unit.damage, unit, underworld, false, undefined, { thinBloodLine: true });
+          });
+        }
+        return flyingProjectilePromise;
       });
     } else {
       // Movement:
@@ -97,5 +103,8 @@ const unit: UnitSource = {
       }
     }
   },
+  getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
+    return getBestRangedLOSTarget(unit, underworld).slice(0, NUMBER_OF_UNITS_BLOOD_ARCHER_CAN_ATTACK);
+  }
 };
 export default unit;

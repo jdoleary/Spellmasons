@@ -37,10 +37,11 @@ const unit: UnitSource = {
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     Unit.addModifier(unit, blood_curse.id, underworld, false);
   },
-  action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, underworld: Underworld, canAttackTarget: boolean) => {
+  action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     if (!Unit.canMove(unit)) {
       return;
     }
+    const attackTarget = attackTargets && attackTargets[0];
     if (!attackTarget) {
       // Do not move if they don't have a target
       return;
@@ -72,6 +73,14 @@ const unit: UnitSource = {
         // in case to prevent the false-negative (which could ruin a run for a player and is super unfair.) 
         console.error('Melee prediction was incorrect!', unit.stamina, `${unit.x}, ${unit.y}`, `${attackTarget.x},${attackTarget.y}`, unit.attackRange)
       }
+    }
+  },
+  getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
+    const closestUnit = Unit.findClosestUnitInDifferentFaction(unit, underworld);
+    if (closestUnit) {
+      return [closestUnit];
+    } else {
+      return [];
     }
   }
 };

@@ -33,7 +33,8 @@ const unit: UnitSource = {
     radius: config.COLLISION_MESH_RADIUS,
     bloodColor: bloodDecoy
   },
-  action: async (_self: Unit.IUnit, _attackTarget: Unit.IUnit | undefined, _underworld: Underworld, _canAttackTarget: boolean) => { }
+  action: async (_self: Unit.IUnit, _attackTargets: Unit.IUnit[], _underworld: Underworld, _canAttackTarget: boolean) => { },
+  getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => { return []; }
 };
 
 export default unit;

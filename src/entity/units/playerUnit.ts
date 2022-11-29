@@ -14,7 +14,8 @@ const unit: UnitSource = {
   },
   unitProps: {},
   // This is how a user unit would act if controlled by AI (this can happen if you clone yourself)
-  action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, underworld: Underworld, canAttackTarget: boolean) => {
+  action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
+    const attackTarget = attackTargets && attackTargets[0];
     // Attack
     if (attackTarget && canAttackTarget) {
       // Archers attack or move, not both; so clear their existing path
@@ -31,6 +32,14 @@ const unit: UnitSource = {
       unit.stamina = Math.min(unit.stamina, distanceToEnemy - unit.attackRange);
       await Unit.moveTowards(unit, closestEnemy, underworld);
     }
+  },
+  getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
+    // const closestUnit = Unit.findClosestUnitInDifferentFaction(unit, underworld);
+    // if (closestUnit) {
+    //   return [closestUnit];
+    // } else {
+    return [];
+    // }
   },
   animations: {
     idle: 'units/playerIdle',

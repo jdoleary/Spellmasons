@@ -6,6 +6,7 @@ import * as math from '../../jmath/math';
 import * as poison from '../../cards/poison';
 import { bloodPoisoner } from '../../graphics/ui/colors';
 import * as Image from '../../graphics/Image';
+import Underworld from '../../Underworld';
 
 const unit: UnitSource = {
   id: 'poisoner',
@@ -35,15 +36,9 @@ const unit: UnitSource = {
     damage: 'poisonerHurt',
     death: 'poisonerDeath'
   },
-  action: async (unit: Unit.IUnit, _attackTarget, underworld) => {
-    const nonPoisonedEnemyUnits = underworld.units.filter(
-      (u) =>
-        u.faction !== unit.faction &&
-        u.alive &&
-        u.modifiers.poison === undefined,
-    );
-    if (nonPoisonedEnemyUnits.length) {
-      const chosenUnit = nonPoisonedEnemyUnits[0];
+  action: async (unit: Unit.IUnit, attackTargets, underworld) => {
+    if (attackTargets.length) {
+      const chosenUnit = attackTargets[0];
       if (chosenUnit) {
         if (Unit.inRange(unit, chosenUnit) && unit.mana >= unit.manaCostToCast) {
           unit.mana - unit.manaCostToCast;
@@ -68,5 +63,14 @@ const unit: UnitSource = {
       }
     }
   },
+  getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
+    const nonPoisonedEnemyUnits = underworld.units.filter(
+      (u) =>
+        u.faction !== unit.faction &&
+        u.alive &&
+        u.modifiers.poison === undefined,
+    );
+    return nonPoisonedEnemyUnits;
+  }
 };
 export default unit;

@@ -2,6 +2,8 @@ import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import { action } from './actions/golemAction';
 import * as config from '../../config'
+import * as Unit from '../Unit';
+import type Underworld from '../../Underworld';
 
 const unit: UnitSource = {
   id: 'golem',
@@ -34,6 +36,14 @@ const unit: UnitSource = {
     death: 'golemDeath'
   },
   action,
+  getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
+    const closestUnit = Unit.findClosestUnitInDifferentFaction(unit, underworld);
+    if (closestUnit) {
+      return [closestUnit];
+    } else {
+      return [];
+    }
+  }
 };
 
 export default unit;

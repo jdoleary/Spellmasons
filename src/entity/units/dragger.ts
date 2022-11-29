@@ -57,14 +57,9 @@ const unit: UnitSource = {
       );
     }
   },
-  action: async (unit: Unit.IUnit, _attackTarget, underworld) => {
-    const livingEnemyUnits = underworld.units.filter(
-      (u) =>
-        u.faction !== unit.faction &&
-        u.alive
-    );
-    if (livingEnemyUnits.length) {
-      const chosenUnit = livingEnemyUnits[0];
+  action: async (unit: Unit.IUnit, attackTargets, underworld) => {
+    if (attackTargets.length) {
+      const chosenUnit = attackTargets[0];
       if (chosenUnit) {
         if (Unit.inRange(unit, chosenUnit) && unit.mana >= unit.manaCostToCast) {
           unit.mana - unit.manaCostToCast;
@@ -81,6 +76,14 @@ const unit: UnitSource = {
       }
     }
   },
+  getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
+    const livingEnemyUnits = underworld.units.filter(
+      (u) =>
+        u.faction !== unit.faction &&
+        u.alive
+    );
+    return livingEnemyUnits;
+  }
 };
 const forwardSpeed = 0.2;
 const backwardSpeed = 0.5;

@@ -97,30 +97,35 @@ export function updatePlanningView(underworld: Underworld) {
         // If globalThis.selectedUnit is an archer, draw LOS attack line
         //  instead of attack range for them
         if (globalThis.selectedUnit.unitSubType == UnitSubType.RANGED_LOS) {
-          let archerTarget = getBestRangedLOSTarget(globalThis.selectedUnit, underworld);
+          const archerTargets = (getBestRangedLOSTarget(globalThis.selectedUnit, underworld) || []);
           // If they don't have a target they can actually attack
           // draw a line to the closest enemy that they would target if
           // they had LOS
           let canAttack = true;
-          if (!archerTarget) {
-            archerTarget = Unit.findClosestUnitInDifferentFaction(globalThis.selectedUnit, underworld);
+          if (!archerTargets.length) {
+            const nextTarget = Unit.findClosestUnitInDifferentFaction(globalThis.selectedUnit, underworld)
+            if (nextTarget) {
+              archerTargets.push(nextTarget);
+            }
             // If getBestRangedLOSTarget returns undefined, the archer doesn't have a valid attack target
             canAttack = false;
           }
-          if (archerTarget) {
-            const attackLine = { p1: globalThis.selectedUnit, p2: archerTarget };
-            globalThis.selectedUnitGraphics.moveTo(attackLine.p1.x, attackLine.p1.y);
-            if (canAttack) {
-              const color = colors.healthRed;
-              // Draw a red line, showing that you are in danger
-              globalThis.selectedUnitGraphics.lineStyle(3, color, 0.7);
-              globalThis.selectedUnitGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
-              globalThis.selectedUnitGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
-            } else {
-              // Draw a grey line  showing that the target is blocked
-              globalThis.selectedUnitGraphics.lineStyle(3, colors.outOfRangeGrey, 0.7);
-              globalThis.selectedUnitGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
-              globalThis.selectedUnitGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
+          if (archerTargets.length) {
+            for (let target of archerTargets) {
+              const attackLine = { p1: globalThis.selectedUnit, p2: target };
+              globalThis.selectedUnitGraphics.moveTo(attackLine.p1.x, attackLine.p1.y);
+              if (canAttack) {
+                const color = colors.healthRed;
+                // Draw a red line, showing that you are in danger
+                globalThis.selectedUnitGraphics.lineStyle(3, color, 0.7);
+                globalThis.selectedUnitGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
+                globalThis.selectedUnitGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
+              } else {
+                // Draw a grey line  showing that the target is blocked
+                globalThis.selectedUnitGraphics.lineStyle(3, colors.outOfRangeGrey, 0.7);
+                globalThis.selectedUnitGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
+                globalThis.selectedUnitGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
+              }
             }
           }
           globalThis.selectedUnitGraphics.drawCircle(
@@ -530,14 +535,24 @@ export async function runPredictions(underworld: Underworld) {
           }
           // Only check for threats if the threat is alive and AI controlled
           if (u.alive && u.unitType == UnitType.AI) {
-            const target = underworld.getUnitAttackTarget(u);
-            // Only bother determining if the unit can attack the target 
-            // if the target is the current player, because that's the only
-            // player this function has to warn with an attention marker
-            if (target === globalThis.player.unit) {
-              if (underworld.canUnitAttackTarget(u, target) && u.mana >= u.manaCostToCast) {
-                globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u), scale: u.predictionScale || 1 });
+            const unitSource = allUnits[u.unitSourceId];
+            if (unitSource) {
+              const targets = unitSource.getUnitAttackTargets(u, underworld);
+              if (targets) {
+                for (let target of targets) {
+                  // Only bother determining if the unit can attack the target 
+                  // if the target is the current player, because that's the only
+                  // player this function has to warn with an attention marker
+                  if (target === globalThis.player.unit) {
+                    if (underworld.canUnitAttackTarget(u, target) && u.mana >= u.manaCostToCast) {
+                      globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u), scale: u.predictionScale || 1 });
+                    }
+                  }
+                }
               }
+            } else {
+              console.error('Cannot find unit source for unitSourceId', u.unitSourceId);
+
             }
           }
         }

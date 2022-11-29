@@ -3,10 +3,12 @@ import { distance } from '../../../jmath/math';
 import * as Unit from '../../Unit';
 import Underworld from '../../../Underworld';
 
-export async function action(unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, underworld: Underworld, _canAttackTarget: boolean) {
+export async function action(unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, _canAttackTarget: boolean) {
   if (!Unit.canMove(unit)) {
     return;
   }
+  // Attack only one target
+  const attackTarget = attackTargets && attackTargets[0];
   if (!attackTarget) {
     // Do not move if they don't have a target
     return;

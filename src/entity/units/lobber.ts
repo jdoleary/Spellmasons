@@ -42,7 +42,8 @@ const unit: UnitSource = {
       unit.image.sprite.anchor.y = 0.3;
     }
   },
-  action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, underworld: Underworld, canAttackTarget: boolean) => {
+  action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
+    const attackTarget = attackTargets && attackTargets[0];
     // Attack
     if (attackTarget && canAttackTarget && unit.mana >= unit.manaCostToCast) {
       unit.mana -= unit.manaCostToCast;
@@ -74,6 +75,14 @@ const unit: UnitSource = {
       }
     }
   },
+  getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
+    const closestUnit = Unit.findClosestUnitInDifferentFaction(unit, underworld);
+    if (closestUnit) {
+      return [closestUnit];
+    } else {
+      return [];
+    }
+  }
 };
 
 export default unit;

@@ -26,6 +26,8 @@ import { calculateGameDifficulty } from '../Difficulty';
 import * as inLiquid from '../inLiquid';
 import { Modifier } from '../cards/util';
 import { explain, EXPLAIN_DEATH, EXPLAIN_MINI_BOSSES } from '../graphics/Explain';
+import { ARCHER_ID } from './units/archer';
+import { BLOOD_ARCHER_ID } from './units/blood_archer';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -1037,9 +1039,14 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
   // so that the prediction unit will have a reference to
   // a real path object
   if (!u.path) {
-    const target = underworld.getUnitAttackTarget(u);
-    if (target) {
-      underworld.setPath(u, target);
+    const unitSource = allUnits[u.unitSourceId];
+    if (unitSource) {
+      const targets = unitSource.getUnitAttackTargets(u, underworld);
+      if (targets && targets[0]) {
+        underworld.setPath(u, targets[0]);
+      }
+    } else {
+      console.error('Cannot find unitSource for id', u.unitSourceId);
     }
   }
   const { image, resolveDoneMoving, modifiers, ...rest } = u;
@@ -1096,7 +1103,7 @@ const subTypeAttentionMarkerMapping = {
 
 }
 export function subTypeToAttentionMarkerImage(unit: IUnit): string {
-  if (unit.unitSourceId == 'archer') {
+  if (unit.unitSourceId == ARCHER_ID || unit.unitSourceId == BLOOD_ARCHER_ID) {
     // Return a special archer badge for archers since they are ranged but don't use magic
     return 'badgeArcher.png';
   } else {

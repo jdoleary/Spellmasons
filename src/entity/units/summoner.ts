@@ -97,7 +97,9 @@ const unit: UnitSource = {
       }
 
     }
-
   },
+  getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
+    return [];
+  }
 };
 export default unit;

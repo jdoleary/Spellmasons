@@ -7,13 +7,14 @@ interface ConstructorInfo {
   subtype: UnitSubType;
 }
 export type UnitAction = {
-  (self: Unit.IUnit, attackTarget: Unit.IUnit | undefined, underworld: Underworld, canAttackTarget: boolean): Promise<void>;
+  (self: Unit.IUnit, attackTargets: Unit.IUnit[], underworld: Underworld, canAttackTarget: boolean): Promise<void>;
 };
 export interface UnitSource {
   id: string;
   info: ConstructorInfo;
   init?: (unit: Unit.IUnit, underworld: Underworld) => void;
   action: UnitAction;
+  getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => Unit.IUnit[];
   unitProps: Partial<Unit.IUnit>;
   extraTooltipInfo?: () => string;
   spawnParams?: SpawnParams;

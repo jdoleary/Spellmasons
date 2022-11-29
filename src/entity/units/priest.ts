@@ -66,18 +66,14 @@ const unit: UnitSource = {
   extraTooltipInfo: () => {
     return `Mana cost per cast: ${manaCostToCast}`;
   },
-  action: async (unit: Unit.IUnit, _attackTarget, underworld: Underworld) => {
+  action: async (unit: Unit.IUnit, attackTargets, underworld: Underworld) => {
     let didAction = false;
     const closestAlly = Unit.findClosestUnitInSameFaction(unit, underworld);
     // If they have enough mana
     if (unit.mana >= manaCostToCast) {
-      // Heal (in order to damage) enemy vampires
-      const enemyVampires = underworld.units.filter(
-        u => u.faction !== unit.faction && hasBloodCurse(u)
-      );
-      if (enemyVampires.length) {
+      if (attackTargets.length) {
         // Heal to damage enemy vampires
-        didAction = await healOneOf(unit, enemyVampires, underworld);
+        didAction = await healOneOf(unit, attackTargets, underworld);
       } else {
         // Heal an ally
         const damagedAllys = underworld.units.filter(
@@ -120,6 +116,13 @@ const unit: UnitSource = {
       }
     }
   },
+  getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
+    // Heal (in order to damage) enemy vampires
+    const enemyVampires = underworld.units.filter(
+      u => u.faction !== unit.faction && hasBloodCurse(u)
+    );
+    return enemyVampires;
+  }
 };
 
 export default unit;
