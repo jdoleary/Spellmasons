@@ -33,14 +33,14 @@ globalThis.STORAGE_ID_UI_ZOOM = STORAGE_ID_UI_ZOOM;
         const storedOptions = get(STORAGE_OPTIONS);
         if (storedOptions !== null) {
             const options = JSON.parse(storedOptions);
-            if (globalThis.changeVolume && options.volume !== undefined) {
-                globalThis.changeVolume(options.volume, false);
+            if (options.volume !== undefined) {
+                globalThis.volume = options.volume;
             }
-            if (globalThis.changeVolumeMusic && options.volumeMusic !== undefined) {
-                globalThis.changeVolumeMusic(options.volumeMusic, false);
+            if (options.volumeMusic !== undefined) {
+                globalThis.volumeMusic = options.volumeMusic;
             }
-            if (globalThis.changeVolumeGame && options.volumeGame !== undefined) {
-                globalThis.changeVolumeGame(options.volumeGame, false);
+            if (options.volumeGame !== undefined) {
+                globalThis.volumeGame = options.volumeGame;
             }
         }
         // Default stored color if player doesn't already have one stored
