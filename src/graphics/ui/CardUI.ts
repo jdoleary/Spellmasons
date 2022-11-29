@@ -257,7 +257,14 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
       if (!a || !b) {
         return 0;
       } else {
-        return b?.probability - a?.probability;
+        // Sort cards by probability
+        const probabilityDifference = b.probability - a.probability;
+        // If probability is identical, sort by mana cost
+        if (probabilityDifference == 0) {
+          return a.manaCost - b.manaCost;
+        } else {
+          return probabilityDifference;
+        }
       }
     });
     for (let card of invCards) {
