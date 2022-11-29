@@ -1,3 +1,7 @@
+- perk can make health a fraction
+- camera is weridly offcenter when it's following you, maybe because the size of the map changed due to liquid stamping?
+- queing up a summon spell and hovering over liquid makes the fall in liquid sound
+- stacked unit summons should spread out
 # Nov Week 4
     - Make gameplay video with Brad, add it to Steam and YouTube
         - Bugs

@@ -1,6 +1,5 @@
 # Desired Schedule
 - November
-    - Icons for perks
     - Submit demo to IGN
         - need gameplay video first
 - December
@@ -13,8 +12,13 @@
         - [Call c from node](https://koistya.medium.com/how-to-call-c-c-code-from-node-js-86a773033892)
     - [Controller Input](https://learn.microsoft.com/en-us/windows/win32/xinput/getting-started-with-xinput)
     - Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
+    - Server Browser
 - January
+    - Support hosting a server from in the game exe
+    - Balance Enemies
+    - Balance Perks
     - [Steamworks web api](https://partner.steamgames.com/doc/webapi_overview)
+    - Icons for perks
     - Last few sound fx
     - Establish Minimum System Requirements and update Steam Page
     - Accessability / Localization Language Support / Spellcheck
@@ -24,13 +28,7 @@
     - Electron Security
     - Make storage.js use SteamCloud
     - Release
-- Beyond Release
-    - More enemies
-    - More spells
-    - Cooldowns instead of mana multiplier
-    - Perks
-- Support hosting a server from in the game exe
-- Server Browser
+    
 - "How To" guides
 - Allow opening dev tools in exe
 # Critical Path
@@ -45,9 +43,8 @@
     - updateCameraPosition is somehow taking a long time
     - copyForPredictionUnit is slow for many units
 - Milestone | **Finish Gameplay**
-    - More enemies
     - End of game scaling
-    - Perks
+    - More Perks
 - Milestone | **Efficient Game Updates**
     - Move game logic to js files that live near the executable
         - This is necessary to support steam workshop mods
@@ -66,7 +63,6 @@
         - Pvp mode (more factions)
     - Perks | "upgrades" with some random attributes | The more dimentions you add the better!
         - % chance to get more stamina on level start
-        - start level with 2x mana
         - % chance to start level with mob on your faction
         - % chance that casting wont consume mana
         - % chance to freeze on damage
@@ -79,14 +75,13 @@
             - even with the difficulty of the next level
         - pseudo class system
         - item that makes your stronger but it randomizes your spawn
-- Other
-    - SEO https://support.google.com/webmasters/answer/9128669?utm_source=wnc_20079900&utm_medium=panel&utm_campaign=wnc_20079900&utm_content=msg_20079900&hl=en#zippy=%2Cbeginning-user-willing-to-learn%2Cseo-advanced-user
-    - Google Search Console: https://search.google.com/u/0/search-console?resource_id=sc-domain%3Aspellmasons.com
 
 ## Definition of Done
 - DONE Stable Multiplayer
-- Supports 1000 units
+- DONE Supports 100 units
 - DONE Complete Menu with options
-- Bug Reporting built in (e.g. Save game state and send it to me)
 - DONE Packaged in Electron App
+- Supports 1000 units
+- Bug Reporting built in (e.g. Save game state and send it to me)
 - Simple to connect with friends in multiplayer
+- Test on Slow Computer

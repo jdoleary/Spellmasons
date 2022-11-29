@@ -21,24 +21,26 @@ const overrides: { [unitId: string]: { exclude: boolean, properties: { manaCost?
     'glop': {
         exclude: false,
         properties: {
-            manaCost: 80
         }
     },
     'vampire': {
         exclude: false,
         properties: {
-            manaCost: 100
         }
     },
     'summoner': {
         exclude: false,
         properties: {
-            manaCost: 120
         }
     }
 }
 export default function makeSpellForUnitId(unitId: string): Spell | undefined {
     const override = overrides[unitId];
+    const sourceUnit = allUnits[unitId];
+    if (!sourceUnit) {
+        console.error('Could not find source unit for ', unitId);
+        return undefined;
+    }
     if (override && override.exclude) {
         return undefined;
     }
@@ -48,7 +50,8 @@ export default function makeSpellForUnitId(unitId: string): Spell | undefined {
             category: CardCategory.Soul,
             sfx: 'summonDecoy',
             supportQuantity: false,
-            manaCost: override?.properties?.manaCost !== undefined ? override.properties.manaCost : 60,
+            // Make mana cost dependent on how late they show up in the game
+            manaCost: Math.max(60, (sourceUnit.spawnParams?.unavailableUntilLevelIndex || 1) * 20),
             healthCost: 0,
             expenseScaling: 3,
             probability: probabilityMap[CardRarity.SPECIAL],
