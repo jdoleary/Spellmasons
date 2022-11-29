@@ -9,6 +9,7 @@ export const STORAGE_ID_UI_ZOOM = 'uiZoom';
 export const STORAGE_CONTROLS_KEY = 'controls';
 export const ENEMY_ENCOUNTERED_STORAGE_KEY = 'enemyEncountered';
 globalThis.STORAGE_ID_UI_ZOOM = STORAGE_ID_UI_ZOOM;
+globalThis.enemyEncountered = [];
 
 // Initialize settings once the settings object is loaded
 // If this is running as an electron app, get settings from storage

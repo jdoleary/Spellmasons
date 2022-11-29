@@ -116,7 +116,6 @@ globalThis.setRMBDown = (isDown: boolean, underworld: Underworld) => {
 globalThis.skipTutorial = () => {
   storage.set(SKIP_TUTORIAL, YES);
 }
-globalThis.enemyEncountered = [];
 
 globalThis.showDebug = false;
 // Prevent accidental back button only when not in devMode
