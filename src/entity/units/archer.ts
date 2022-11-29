@@ -7,7 +7,7 @@ import { Vec2 } from '../../jmath/Vec';
 import Underworld from '../../Underworld';
 import { getBestRangedLOSTarget } from './actions/rangedAction';
 
-export const ARCHER_ID = 'Archer';
+export const ARCHER_ID = 'archer';
 const unit: UnitSource = {
   id: ARCHER_ID,
   info: {
