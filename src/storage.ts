@@ -11,63 +11,65 @@ export const ENEMY_ENCOUNTERED_STORAGE_KEY = 'enemyEncountered';
 globalThis.STORAGE_ID_UI_ZOOM = STORAGE_ID_UI_ZOOM;
 globalThis.enemyEncountered = [];
 
-// Initialize settings once the settings object is loaded
-// If this is running as an electron app, get settings from storage
-// If this is not running as an electron app, just resolve immediately
-// because settings can be gotten syncronously from local storage
-(globalThis.isElectron && globalThis.diskStorage ?
-    globalThis.diskStorage.getDiskStorage().then(settings => {
-        console.log('Setup: Got settings from disk:', settings);
-        // Cache settings from disk in localStorage so they can
-        // be access syncronously
-        for (let [key, value] of Object.entries(settings || {})) {
-            localStorage.setItem(key, value);
-        }
-    })
-    : Promise.resolve())
-    .then(() => {
-        console.log('Setup: Initializing saved settings');
-        // Default language to english if no language is stored:
-        const storedLanguageCode = get(STORAGE_LANGUAGE_CODE_KEY);
-        setLanguage(storedLanguageCode ? storedLanguageCode : 'en', false);
-        // Retrieve audio settings from storage
-        const storedOptions = get(STORAGE_OPTIONS);
-        if (storedOptions !== null) {
-            const options = JSON.parse(storedOptions);
-            if (options.volume !== undefined) {
-                globalThis.volume = options.volume;
+export function getSavedData() {
+    // Initialize settings once the settings object is loaded
+    // If this is running as an electron app, get settings from storage
+    // If this is not running as an electron app, just resolve immediately
+    // because settings can be gotten syncronously from local storage
+    (globalThis.isElectron && globalThis.diskStorage ?
+        globalThis.diskStorage.getDiskStorage().then(settings => {
+            console.log('Setup: Got settings from disk:', settings);
+            // Cache settings from disk in localStorage so they can
+            // be access syncronously
+            for (let [key, value] of Object.entries(settings || {})) {
+                localStorage.setItem(key, value);
             }
-            if (options.volumeMusic !== undefined) {
-                globalThis.volumeMusic = options.volumeMusic;
+        })
+        : Promise.resolve())
+        .then(() => {
+            console.log('Setup: Initializing saved settings');
+            // Default language to english if no language is stored:
+            const storedLanguageCode = get(STORAGE_LANGUAGE_CODE_KEY);
+            setLanguage(storedLanguageCode ? storedLanguageCode : 'en', false);
+            // Retrieve audio settings from storage
+            const storedOptions = get(STORAGE_OPTIONS);
+            if (storedOptions !== null) {
+                const options = JSON.parse(storedOptions);
+                if (options.volume !== undefined) {
+                    globalThis.volume = options.volume;
+                }
+                if (options.volumeMusic !== undefined) {
+                    globalThis.volumeMusic = options.volumeMusic;
+                }
+                if (options.volumeGame !== undefined) {
+                    globalThis.volumeGame = options.volumeGame;
+                }
             }
-            if (options.volumeGame !== undefined) {
-                globalThis.volumeGame = options.volumeGame;
+            // Default stored color if player doesn't already have one stored
+            const color = get(STORAGE_ID_PLAYER_COLOR);
+            if (!color) {
+                const newColor = robeColors[Math.floor(Math.random() * robeColors.length)] || 0xef476f;
+                set(STORAGE_ID_PLAYER_COLOR, newColor);
             }
-        }
-        // Default stored color if player doesn't already have one stored
-        const color = get(STORAGE_ID_PLAYER_COLOR);
-        if (!color) {
-            const newColor = robeColors[Math.floor(Math.random() * robeColors.length)] || 0xef476f;
-            set(STORAGE_ID_PLAYER_COLOR, newColor);
-        }
-        // Set uiZoom:
-        if (globalThis.electronSettings) {
-            const uiZoom = get(STORAGE_ID_UI_ZOOM);
-            if (uiZoom) {
-                globalThis.electronSettings.setUIZoom(parseFloat(uiZoom));
+            // Set uiZoom:
+            if (globalThis.electronSettings) {
+                const uiZoom = get(STORAGE_ID_UI_ZOOM);
+                if (uiZoom) {
+                    globalThis.electronSettings.setUIZoom(parseFloat(uiZoom));
+                }
+            } else {
+                console.error('globalThis.electronSettings is undefined, cannot set uiZoom');
             }
-        } else {
-            console.error('globalThis.electronSettings is undefined, cannot set uiZoom');
-        }
-        // Update controls:
-        // Get saved controls from storage:
-        const savedControls = JSON.parse(get(STORAGE_CONTROLS_KEY) || '{}');
-        console.log('Retrieved saved controls:', savedControls);
-        fullyUpdateControls(savedControls);
-        // Update enemy encountered:
-        globalThis.enemyEncountered = JSON.parse(get(ENEMY_ENCOUNTERED_STORAGE_KEY) || '[]');
-        console.log('Setup: initializing enemyEncountered as', globalThis.enemyEncountered);
-    });
+            // Update controls:
+            // Get saved controls from storage:
+            const savedControls = JSON.parse(get(STORAGE_CONTROLS_KEY) || '{}');
+            console.log('Retrieved saved controls:', savedControls);
+            fullyUpdateControls(savedControls);
+            // Update enemy encountered:
+            globalThis.enemyEncountered = JSON.parse(get(ENEMY_ENCOUNTERED_STORAGE_KEY) || '[]');
+            console.log('Setup: initializing enemyEncountered as', globalThis.enemyEncountered);
+        });
+}
 
 export function remove(key: string) {
     localStorage.removeItem(key);
