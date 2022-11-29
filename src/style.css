@@ -315,6 +315,10 @@ invisibly blocked, change with caution! */
 }
 
 #selected-cards {
+  /* Room so the ui border doesn't overlap with card mana badges;
+  the unusual padding is because the mana badges stick out to the upper left so this 
+  custom padding makes them centered in the ui-border */
+  padding: 10px 1px 3px 10px;
   /* Selected cards should always have height even when empty so that the inventory doesn't move
   when cards are added to this element */
   min-height: 48px;
@@ -355,6 +359,18 @@ invisibly blocked, change with caution! */
 .card.selected:last-child:after {
   content: "";
 }
+
+/* Ensure last selected card doesn't have trailing extra space */
+.card.selected:last-child {
+  width: 32px;
+}
+
+/* Ensure last selected card doesn't have trailing extra space */
+.card.selected:last-child:after {
+  content: '';
+  padding: 0;
+}
+
 
 .card.selected:after {
   content: "›";

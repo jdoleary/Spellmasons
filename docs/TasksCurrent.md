@@ -1,7 +1,6 @@
 - archers should advance if out of range
 - optimize: slowdown with lots of archers, lots of corpses, when i did corpse explosion
     - maybe if i remove second order pushes it will be faster?
-- queued up spells can be hard to see
 - fix graduation of unavailableUntilLevelIndex
     - 
 

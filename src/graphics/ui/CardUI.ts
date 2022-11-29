@@ -227,6 +227,7 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined, under
   // Remove all current selected cards
   if (elSelectedCards) {
     elSelectedCards.innerHTML = '';
+    manageSelectedCardsParentVisibility();
   } else {
     console.error('elSelectedCards is null');
   }
@@ -378,6 +379,7 @@ function addListenersToCardElement(
       if (index !== -1) {
         cardsSelected.splice(index, 1);
         element.remove();
+        manageSelectedCardsParentVisibility();
         // When a card is deselected, clear the currently shown card
         // so that it doesn't continue to hover over the gameboard
         // for a card that is now deselected
@@ -401,6 +403,7 @@ export function deselectLastCard() {
     const cardGroup = elSelectedCards.children.item(elSelectedCards.children.length - 1) as HTMLElement;
     if (cardGroup) {
       (cardGroup.children.item(0) as HTMLElement).click();
+      manageSelectedCardsParentVisibility();
     } else {
       console.warn(`Cannot deselect last card in selected cards`)
     }
@@ -433,6 +436,7 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
       clone.classList.add('requires-following-card')
     }
     elSelectedCards.appendChild(clone);
+    manageSelectedCardsParentVisibility();
     const cost = updateManaCostUI(underworld);
     if (globalThis.player) {
       if (cost.manaCost > globalThis.player.unit.mana) {
@@ -493,8 +497,21 @@ export function clearSelectedCards(underworld: Underworld) {
       );
     }
   });
+  manageSelectedCardsParentVisibility();
   // Now that there are no more selected cards, update the spell effect projection
   runPredictions(underworld);
+}
+function manageSelectedCardsParentVisibility() {
+  if (elSelectedCards.parentElement) {
+    if (elSelectedCards.innerHTML == '') {
+      elSelectedCards.parentElement.style.visibility = 'hidden';
+    } else {
+      elSelectedCards.parentElement.style.visibility = 'visible';
+    }
+  } else {
+    console.error('Unexpected: elSelectedCards has no parent');
+  }
+
 }
 export function cardRarityAsString(content: { probability: number }): string {
   return CardRarity[cardProbabilityToRarity(content)] || '';
