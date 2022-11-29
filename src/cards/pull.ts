@@ -42,7 +42,10 @@ export async function pull(pushedObject: HasSpace, towards: Vec2, quantity: numb
   velocity = multiply(quantity, velocity);
   let forceMoveInst: ForceMove;
   return await raceTimeout(2000, 'Pull', new Promise<void>((resolve) => {
-    forceMoveInst = { canCreateSecondOrderPushes: true, alreadyCollided: [], pushedObject, velocity, velocity_falloff, resolve }
+    // Experiment: canCreateSecondOrderPushes now is ALWAYS disabled.
+    // I've had feedback that it's suprising - which is bad for a tactical game
+    // also I suspect it has significant performance costs for levels with many enemies
+    forceMoveInst = { canCreateSecondOrderPushes: false, alreadyCollided: [], pushedObject, velocity, velocity_falloff, resolve }
     if (prediction) {
       underworld.forceMovePrediction.push(forceMoveInst);
     } else {

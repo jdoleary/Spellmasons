@@ -50,7 +50,10 @@ export function makeForcePush(args: forcePushArgs, underworld: Underworld, predi
   const { pushedObject, awayFrom, resolve, velocityStartMagnitude, canCreateSecondOrderPushes } = args;
   const velocity = similarTriangles(pushedObject.x - awayFrom.x, pushedObject.y - awayFrom.y, distance(pushedObject, awayFrom), velocityStartMagnitude);
   const velocity_falloff = 0.93;
-  const forceMoveInst: ForceMove = { pushedObject, alreadyCollided: [], canCreateSecondOrderPushes, velocity, velocity_falloff, resolve }
+  // Experiment: canCreateSecondOrderPushes now is ALWAYS disabled.
+  // I've had feedback that it's suprising - which is bad for a tactical game
+  // also I suspect it has significant performance costs for levels with many enemies
+  const forceMoveInst: ForceMove = { pushedObject, alreadyCollided: [], canCreateSecondOrderPushes: false, velocity, velocity_falloff, resolve }
   if (prediction) {
     underworld.forceMovePrediction.push(forceMoveInst);
   } else {
@@ -62,7 +65,10 @@ export function makeForcePush(args: forcePushArgs, underworld: Underworld, predi
 export async function forcePush(pushedObject: HasSpace, awayFrom: Vec2, magnitude: number, underworld: Underworld, prediction: boolean): Promise<void> {
   let forceMoveInst: ForceMove;
   return await raceTimeout(3000, 'Push', new Promise<void>((resolve) => {
-    forceMoveInst = makeForcePush({ pushedObject, awayFrom, velocityStartMagnitude: magnitude, resolve, canCreateSecondOrderPushes: true }, underworld, prediction);
+    // Experiment: canCreateSecondOrderPushes is now ALWAYS disabled.
+    // I've had feedback that it's suprising - which is bad for a tactical game
+    // also I suspect it has significant performance costs for levels with many enemies
+    forceMoveInst = makeForcePush({ pushedObject, awayFrom, velocityStartMagnitude: magnitude, resolve, canCreateSecondOrderPushes: false }, underworld, prediction);
   })).then(() => {
     if (forceMoveInst) {
       forceMoveInst.timedOut = true;
