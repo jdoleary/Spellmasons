@@ -32,6 +32,7 @@ import playerUnit from './playerUnit';
 import golem from './golem';
 import archer from './archer';
 import lobber from './lobber';
+import greenGlop from './greenGlop';
 import summoner from './summoner';
 import priest from './priest';
 import darkPriest from './darkPriest';
@@ -49,6 +50,7 @@ export function registerUnits() {
   register(golem);
   register(archer);
   register(lobber);
+  register(greenGlop);
   register(summoner);
   register(priest);
   register(darkPriest);
