@@ -11,8 +11,7 @@ import * as colors from '../graphics/ui/colors';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 const id = 'Corpse Explosion';
-const imageName = 'explode-on-death.png';
-const damage = 2;
+const damage = 3;
 const baseRadius = 140;
 
 const spell: Spell = {
