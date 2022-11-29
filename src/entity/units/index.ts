@@ -34,6 +34,7 @@ import archer from './archer';
 import lobber from './lobber';
 import greenGlop from './greenGlop';
 import summoner from './summoner';
+import darkSummoner from './darkSummoner';
 import priest from './priest';
 import darkPriest from './darkPriest';
 import poisoner from './poisoner';
@@ -52,6 +53,7 @@ export function registerUnits() {
   register(lobber);
   register(greenGlop);
   register(summoner);
+  register(darkSummoner);
   register(priest);
   register(darkPriest);
   register(poisoner);

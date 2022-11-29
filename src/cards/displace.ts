@@ -13,7 +13,7 @@ import * as colors from '../graphics/ui/colors';
 import { prng } from '../jmath/rand';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
-function findRandomDisplaceLocation(underworld: Underworld, radius: number, seed: prng): Vec2 | undefined {
+export function findRandomDisplaceLocation(underworld: Underworld, radius: number, seed: prng): Vec2 | undefined {
   let isValid = false;
   let randomCoord;
   const infiniteLoopLimit = 100;
