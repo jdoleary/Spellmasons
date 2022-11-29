@@ -6,6 +6,7 @@
         - Bugs
         - Send out Demo
     - Rethink next trailer
+        - Lead with "fun"
         - Remove "dead time"
         - get into the action fast
         - Communicate the big idea
@@ -18,6 +19,11 @@
             - https://partner.steamgames.com/doc/features/achievements/ach_guide
     - Add sentry errors to electron node files
 # Bugs / Cleaning
+- why does it keep introducint golems over and over 
+- save file "shove" guy went through wall
+    - this is because the wall polys are missing entirely when liquids are stamped right up against the edge of the underworld
+        - see stampLiquids
+- summoners that summon while in water, their summons aren't "in water"
 - handle loading a save file where the player has not spawned in yet.  see 87374022
 - Hide disconnected players in game screen but not in the lobby
 - Fix: should not broadcast latency warning for a message that fails with a rejected promise
