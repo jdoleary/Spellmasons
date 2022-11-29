@@ -1827,8 +1827,6 @@ export default class Underworld {
           // @ts-ignore: jid is a custom identifier to differentiate this child sprite
           const timeCircleSprite = p.image?.sprite.children.find(c => c.jid == Pickup.TIME_CIRCLE_JID);
           if (timeCircleSprite) {
-            // @ts-ignore for some reason ts is flagging this as an error but it works fine
-            // in pixi.
             const timeCircleColorFilter = new MultiColorReplaceFilter(
               [
                 // Change to red to warn the player that it's about to disappear

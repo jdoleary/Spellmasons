@@ -40,8 +40,6 @@ const unit: UnitSource = {
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     if (unit.image && unit.image.sprite && unit.image.sprite.filters) {
       unit.image.sprite.filters.push(
-        // @ts-ignore for some reason ts is flagging this as an error but it works fine
-        // in pixi.
         new MultiColorReplaceFilter(
           [
             [0x9a7d7d, 0xc14646], // skin head

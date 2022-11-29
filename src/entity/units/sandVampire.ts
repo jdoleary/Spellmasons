@@ -16,13 +16,13 @@ const unit: UnitSource = {
   },
   unitProps: {
     manaMax: 60,
-    healthMax: 7,
-    damage: 5,
+    healthMax: 12,
+    damage: 10,
     bloodColor: 0x293a1b
   },
   spawnParams: {
     probability: 15,
-    unavailableUntilLevelIndex: 5,
+    unavailableUntilLevelIndex: 14,
   },
   animations: {
     idle: 'units/vampireIdle',

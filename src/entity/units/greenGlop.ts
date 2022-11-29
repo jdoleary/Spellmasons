@@ -45,8 +45,6 @@ const unit: UnitSource = {
     }
     if (unit.image && unit.image.sprite && unit.image.sprite.filters) {
       unit.image.sprite.filters.push(
-        // @ts-ignore for some reason ts is flagging this as an error but it works fine
-        // in pixi.
         new MultiColorReplaceFilter(
           [
             [0x5fcde4, 0x58b866], // main blue

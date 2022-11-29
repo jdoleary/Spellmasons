@@ -67,8 +67,6 @@ Sacrifice some of own health to steal up to ${mana_stolen} mana from each target
                     }
                     // Change the health color to blue
                     animationSprite.filters.push(
-                      // @ts-ignore for some reason ts is flagging this as an error but it works fine
-                      // in pixi.
                       new MultiColorReplaceFilter(
                         [
                           [0xff0000, manaBlue],

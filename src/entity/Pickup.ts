@@ -357,8 +357,6 @@ export const pickups: IPickupSource[] = [
             }
             // Change the health color to yellow 
             animationSprite.filters.push(
-              // @ts-ignore for some reason ts is flagging this as an error but it works fine
-              // in pixi.
               new MultiColorReplaceFilter(
                 [
                   [0xff0000, stamina],
@@ -416,8 +414,6 @@ export const pickups: IPickupSource[] = [
             }
             // Change the health color to blue
             animationSprite.filters.push(
-              // @ts-ignore for some reason ts is flagging this as an error but it works fine
-              // in pixi.
               new MultiColorReplaceFilter(
                 [
                   [0xff0000, manaBlue],
