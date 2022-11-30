@@ -3,6 +3,8 @@
     - Submit demo to IGN
         - need gameplay video first
 - December
+    - Optimize runPredictions
+        - especially with expanding + corpse explosion
     - Start reaching out to steamers and reviewers and send demo
     - Convenient multiplayer lobbying via steam
         - Prevent players from joining mid-round, notify "you will spawn once this level is complete"

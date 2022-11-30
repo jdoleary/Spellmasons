@@ -1,4 +1,6 @@
 # Nov Week 4
+    - balance "bloat" cost and damage
+    - show blood curse visually
     - Make gameplay video with Brad, add it to Steam and YouTube
         - Bugs
         - Send out Demo
