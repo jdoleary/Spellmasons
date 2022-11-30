@@ -76,7 +76,8 @@ const unit: UnitSource = {
               const pointAtRightAngleToArrowPath = findWherePointIntersectLineSegmentAtRightAngle(u, { p1: unit, p2: target });
               const willBeStruckByArrow = !pointAtRightAngleToArrowPath ? false : math.distance(u, pointAtRightAngleToArrowPath) <= config.COLLISION_MESH_RADIUS * 2
               // Note: Filter out target as target will take full damage
-              return u.alive && willBeStruckByArrow && u !== target;
+              // Note: Filter out self as the ghost archer's arrow shouldn't damage itself
+              return u.alive && willBeStruckByArrow && u !== target && u !== unit;
             },
           ).forEach(pierceTarget => {
             // Fake the collision by just calculating a delay based on the speed of the projectile
