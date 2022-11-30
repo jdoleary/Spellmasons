@@ -72,7 +72,7 @@ export const sfx: { [key: string]: string } = {
 };
 const music = [
     './sound/music/ChainingSpells.m4a',
-    './sound/music/FirstSteps.mp3',
+    './sound/music/FirstSteps2.mp3',
     './sound/music/DeepWandering.mp3',
     './sound/music/ItShallNotFindMe.mp3',
     './sound/music/BleedingSynth.mp3',
