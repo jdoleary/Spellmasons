@@ -17,6 +17,7 @@ import * as colors from './graphics/ui/colors';
 import * as protection from './cards/protection';
 import * as resurrect from './cards/resurrect';
 import * as shield from './cards/shield';
+import * as fortify from './cards/fortify';
 import * as CSSClasses from './CSSClasses';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { MESSAGE_TYPES } from './types/MessageTypes';
@@ -707,7 +708,7 @@ export default class Underworld {
           globalThis.unitOverlayGraphics?.endFill();
         }
         // Animate shield modifier sprites
-        if (u.modifiers[shield.id] && u.image) {
+        if ((u.modifiers[shield.id] || u.modifiers[fortify.id]) && u.image) {
           // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
           // which is used for identifying the sprite or animation that is currently active
           const modifierSprite = u.image.sprite.children.find(c => c.imagePath == shield.modifierImagePath)

@@ -24,6 +24,7 @@ import contagious from './contagious';
 import freeze from './freeze';
 import raise_dead from './resurrect';
 import shield from './shield';
+import fortify from './fortify';
 import swap from './swap';
 import displace from './displace';
 import purify from './purify';
@@ -153,6 +154,7 @@ export function registerCards(overworld: Overworld) {
   register(freeze, overworld);
   register(raise_dead, overworld);
   register(shield, overworld);
+  register(fortify, overworld);
   register(poison, overworld);
   register(purify, overworld);
   register(swap, overworld);
