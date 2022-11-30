@@ -44,6 +44,7 @@ import sandVampire from './sandVampire';
 import decoy from './decoy';
 import dragger from './dragger';
 import blood_archer from './blood_archer';
+import ghost_archer from './ghost_archer';
 import Underworld from '../../Underworld';
 
 function register(unit: UnitSource) {
@@ -60,6 +61,7 @@ export function registerUnits() {
   register(summoner);
   register(bloodGolem);
   register(blood_archer);
+  register(ghost_archer);
   register(greenGlop);
   register(sandVampire);
   register(darkSummoner);
