@@ -11,7 +11,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
 export const id = 'slow';
-const changeProportion = 0.75;
+const changeProportion = 0.80;
 function remove(unit: Unit.IUnit, underworld: Underworld) {
   if (!unit.modifiers[id]) {
     console.error(`Missing modifier object for ${id}; cannot remove.  This should never happen`);
@@ -57,7 +57,7 @@ const spell: Spell = {
     thumbnail: 'unknown.png',
     animationPath: '',
     description: `
-Slows the target by ${Math.floor(changeProportion * 100)}%.
+Reduces the targets maxStamina to ${Math.floor(changeProportion * 100)}%.
 Stackable.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
