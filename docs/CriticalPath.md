@@ -16,6 +16,7 @@
     - Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
     - Server Browser
 - January
+    - How to visually stack modifiers such as blood_curse and debilitate
     - Support hosting a server from in the game exe
     - Balance Enemies
     - Balance Perks

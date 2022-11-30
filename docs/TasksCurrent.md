@@ -1,6 +1,6 @@
 # Nov Week 4
-    - balance "bloat" cost and damage
-    - show blood curse visually
+    - make ghost archer whose arrows pierce
+    - show blood curse visually, just like debilitate
     - Make gameplay video with Brad, add it to Steam and YouTube
         - Bugs
         - Send out Demo
@@ -107,7 +107,6 @@
 - Add `cooldown` to spells rather than expense scaling
     - Add a spell that resets cooldowns
     - Add a curse that increases cooldowns
-- h: piercing archers
 - h: "Heat seeking" enemy or spell
 - idea: spell that triggers onDeath effects "Playdead"
 - Liquid: blood could apply a curse when you fall in, like slowed movement
@@ -130,6 +129,7 @@
 - Piercing arrows as default for archers
 - perk: long range cast only
 - perk: Start each level with 2x mana overfill
+- perk: Swap your max health and max mana
 - Idea: Level up spells along with perks
     - Leveling up could auto increase quantity / lower mana cost / speed mana recovery
 - Idea: "overwatch" where some archers can shoot even not on their turn if you walk in their LOS
