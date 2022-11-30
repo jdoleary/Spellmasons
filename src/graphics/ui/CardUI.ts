@@ -3,7 +3,7 @@ import * as colors from './colors';
 import * as Cards from '../../cards';
 import * as config from '../../config';
 import {
-  runPredictions,
+  clearSpellEffectProjection,
   updateManaCostUI,
 } from '../PlanningView';
 import { calculateCostForSingleCard } from '../../cards/cardUtils';
@@ -499,7 +499,7 @@ export function clearSelectedCards(underworld: Underworld) {
   });
   manageSelectedCardsParentVisibility();
   // Now that there are no more selected cards, update the spell effect projection
-  runPredictions(underworld);
+  clearSpellEffectProjection(underworld);
 }
 function manageSelectedCardsParentVisibility() {
   if (elSelectedCards.parentElement) {
