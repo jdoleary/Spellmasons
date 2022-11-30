@@ -17,6 +17,8 @@
             - https://partner.steamgames.com/doc/features/achievements/ach_guide
     - Add sentry errors to electron node files
 # Bugs / Cleaning
+- attentionMarkers remain active for a unit that was going to hit you but died at the same time that you died
+    - reason: it doesn't refresh between ranged unit turn and melee unit turn
 - vamp miniboss got stuck where he has stamina and a path (with no points), but wont move; i think it's because i summoned an archer and the archer was part way in liquid but didn't show it and so he didn't have a path to the archer
 - handle loading a save file where the player has not spawned in yet.  see 87374022
 - Hide disconnected players in game screen but not in the lobby
