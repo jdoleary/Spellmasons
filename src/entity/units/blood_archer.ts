@@ -58,7 +58,6 @@ const unit: UnitSource = {
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, _canAttackTarget: boolean) => {
     // Archer just checks attackTarget, not canAttackTarget to know if it can attack because getBestRangedLOSTarget() will return undefined
     // if it can't attack any targets
-    const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
     // Attack
     if (attackTargets && attackTargets[0]) {
       // Archers attack or move, not both; so clear their existing path
@@ -78,6 +77,7 @@ const unit: UnitSource = {
         return flyingProjectilePromise;
       });
     } else {
+      const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
       // Movement:
       // Intelligently move the archer to a position where it can see the enemy
       if (closestEnemy) {
