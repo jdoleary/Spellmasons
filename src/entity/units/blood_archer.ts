@@ -9,11 +9,12 @@ import Underworld from '../../Underworld';
 import { getBestRangedLOSTarget } from './actions/rangedAction';
 
 const NUMBER_OF_UNITS_BLOOD_ARCHER_CAN_ATTACK = 3;
+const NUMBER_OF_UNITS_MINIBOSS_BLOOD_ARCHER_CAN_ATTACK = 6;
 export const BLOOD_ARCHER_ID = 'Blood Archer';
 const unit: UnitSource = {
   id: BLOOD_ARCHER_ID,
   info: {
-    description: `The blood archer will fire it\'s arrows at ${NUMBER_OF_UNITS_BLOOD_ARCHER_CAN_ATTACK} enemies simultaneously.`,
+    description: `The blood archer will fire it\'s arrows at ${NUMBER_OF_UNITS_BLOOD_ARCHER_CAN_ATTACK} enemies simultaneously.  (Miniboss Blood Archers can attack ${NUMBER_OF_UNITS_MINIBOSS_BLOOD_ARCHER_CAN_ATTACK} enemies at once.)`,
     image: 'units/archerIdle',
     subtype: UnitSubType.RANGED_LOS,
   },
@@ -101,7 +102,7 @@ const unit: UnitSource = {
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-    return getBestRangedLOSTarget(unit, underworld).slice(0, NUMBER_OF_UNITS_BLOOD_ARCHER_CAN_ATTACK);
+    return getBestRangedLOSTarget(unit, underworld).slice(0, unit.isMiniboss ? NUMBER_OF_UNITS_MINIBOSS_BLOOD_ARCHER_CAN_ATTACK : NUMBER_OF_UNITS_BLOOD_ARCHER_CAN_ATTACK);
   }
 };
 export default unit;
