@@ -25,6 +25,8 @@ function add(unit: IUnit, underworld: Underworld) {
   }
 
   const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity: 1 }, () => {
+    // Add subsprite image
+    Image.addSubSprite(unit.image, imageName);
     // Add event
     unit.onDamageEvents.push(id);
 
@@ -49,6 +51,7 @@ function remove(unit: IUnit, underworld: Underworld) {
   unit.healthMax = Math.round(unit.healthMax);
 }
 
+const imageName = 'spellIconBloodCurse.png';
 const spell: Spell = {
   card: {
     id,
@@ -57,7 +60,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
-    thumbnail: 'spellIconBloodCurse.png',
+    thumbnail: imageName,
     description: `A unit cursed with ${id} will receive 2 times their max health but any future healing will be taken as damage`,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
@@ -72,7 +75,18 @@ const spell: Spell = {
     remove,
     // init is noop; not needed to restore bloodcurse
     init: () => { },
-    subsprite: undefined,
+    subsprite: {
+      imageName,
+      alpha: 1.0,
+      anchor: {
+        x: 0,
+        y: 0,
+      },
+      scale: {
+        x: 0.25,
+        y: 0.25,
+      },
+    },
   },
   events: {
     onDamage: (unit: IUnit, amount: number, _underworld: Underworld, prediction: boolean, damageDealer?: IUnit) => {

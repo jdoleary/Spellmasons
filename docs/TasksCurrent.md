@@ -1,6 +1,5 @@
 # Nov Week 4
     - make ghost archer whose arrows pierce
-    - show blood curse visually, just like debilitate
     - Make gameplay video with Brad, add it to Steam and YouTube
         - Bugs
         - Send out Demo
