@@ -89,6 +89,15 @@
 - optimize: Ihave duplicate units, pickups, and doodads in save due to serailizeForSaving having them in the underworld and extracting them to the top level too
 
 ## Stretch Content
+- **contender** Content: "Orge" enemies that get stronger for every ally of theirs that dies
+- **contender** Idea: A spell to sacrifice ally unit immediately
+- **contender** destroy a corpse for mana
+- **contender** grow a barrier
+- **contender** Feature: "Soul bind" - bound units share applied effects (or maybe just damage)
+- **contender** set fires on board that spreads that does damage on turn start if you're standing near
+---
+- juice: ultra badass spell should put in wide-screen black bars and take over the camera
+    - and he could crouch and gather enegery
 - unlimited range (also target yourself)
 - Idea: "oh shit button": double the amount of mana you have this level but it reduces by half next level. " Break glass in case of emergency. Deal with the devil
 - Idea: Amplify spell: makes "multicast"
@@ -109,57 +118,26 @@
     - already: targets, quantity
     - new: radius, amount
 - Feature: perks
-- Ghost archers: Arrow only hits target, no piercing
-- Piercing arrows as default for archers
 - perk: long range cast only
-- perk: Start each level with 2x mana overfill
 - perk: Swap your max health and max mana
-- Idea: Level up spells along with perks
-    - Leveling up could auto increase quantity / lower mana cost / speed mana recovery
 - Idea: "overwatch" where some archers can shoot even not on their turn if you walk in their LOS
-- What if potions drop from slain enemies instead of being just pickups on the ground, it would be more exciting if you needed one and it dropped.
-- whole bodies of liquid should be selectable so that they can be frozen
-    - freezable liquid to walk over
-- Cannot be combined with other spells
-    - card to temporarily increase cast range
 - Content: Time crystal releases something when it breaks
-- Content: "Orge" enemies that get stronger for every ally of theirs that dies
 - An enemy that consumes allies to get stronger
 - idea; one use bargains (deals with the devil) that mix up your max stats.  or have a50% chance of good or bad outcome
 - Card: An attack range minimum but not a maximum so you CAN"T attack if they are too close
-- Casting curses on liquid should change the liquid type (lava/hurt, purify/water, poison)
-- Change AOE behavior so that it just expands radius
-    - This radius expansion should work for ANY spell that uses a radius: vortex, bloat, chain, etc
-    - Maybe it only modifies the spell directly after it
 - idea: summoner spells like elden ring
     - they split your stats
 - enemy that debuffs blessings
-- juice: ultra badass spell should put in wide-screen black bars and take over the camera
-    - and he could crouch and gather enegery
 - "heat seaking" missle unit, explodes on contact
-- What if you could hit enemies with your staff to do damage / bat them away
-- Idea: A spell to sacrifice ally unit immediately
 - Card: Mind Control (changes faction temporarily)
-- Feature: "Soul bind" - bound units share applied effects
 - A spell that saves 40% of your current mana for next turn
 - A spell where you can save some of your health, mana, stamina in a potion
-- Content: A spell to destroy corpses
-    - and grant you mana, or health, or stamina?
-    - corpse as currency
 - What if monsters that go through portal come to next level with you, but you don't get more mana after the portal spawns
 - totems
 - auras
 - ricotche
 - task: Spell to trade mana for stamina
 - eagle eye
-- destroy a corpse for mana
-- soul capture (like pokeball)
-    - works for pickups too
-- generic summon (1 for each enemy, does bigger and better enemies depending on stack)
-- explode a corpse (same as bloat?)
-- grow a barrier
-- slow/ cripple: reduce max stamina
-- set fires on board that spreads
 - Tornado: Travells through the map throwing things around (maybe a good enemy ability)
 - Jake boss ideas:
 ```
