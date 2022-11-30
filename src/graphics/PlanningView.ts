@@ -533,33 +533,31 @@ export async function runPredictions(underworld: Underworld) {
       // Displays markers above units heads if they will attack the current client's unit
       // next turn
       globalThis.attentionMarkers = [];
-      if (globalThis.player) {
-        for (let u of underworld.unitsPrediction) {
-          const skipTurn = await Unit.runTurnStartEvents(u, true, underworld);
-          if (skipTurn) {
-            continue;
-          }
-          // Only check for threats if the threat is alive and AI controlled
-          if (u.alive && u.unitType == UnitType.AI) {
-            const unitSource = allUnits[u.unitSourceId];
-            if (unitSource) {
-              const targets = unitSource.getUnitAttackTargets(u, underworld);
-              if (targets) {
-                for (let target of targets) {
-                  // Only bother determining if the unit can attack the target 
-                  // if the target is the current player, because that's the only
-                  // player this function has to warn with an attention marker
-                  if (target === globalThis.player.unit) {
-                    if (underworld.canUnitAttackTarget(u, target)) {
-                      globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u), scale: u.predictionScale || 1 });
-                    }
+      for (let u of underworld.unitsPrediction) {
+        const skipTurn = await Unit.runTurnStartEvents(u, true, underworld);
+        if (skipTurn) {
+          continue;
+        }
+        // Only check for threats if the threat is alive and AI controlled
+        if (u.alive && u.unitType == UnitType.AI) {
+          const unitSource = allUnits[u.unitSourceId];
+          if (unitSource) {
+            const targets = unitSource.getUnitAttackTargets(u, underworld);
+            if (targets) {
+              for (let target of targets) {
+                // Only bother determining if the unit can attack the target 
+                // if the target is the current player, because that's the only
+                // player this function has to warn with an attention marker
+                if (target === globalThis.player.unit) {
+                  if (underworld.canUnitAttackTarget(u, target)) {
+                    globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u), scale: u.predictionScale || 1 });
                   }
                 }
               }
-            } else {
-              console.error('Cannot find unit source for unitSourceId', u.unitSourceId);
-
             }
+          } else {
+            console.error('Cannot find unit source for unitSourceId', u.unitSourceId);
+
           }
         }
       }
