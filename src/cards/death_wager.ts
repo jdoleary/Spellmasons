@@ -23,7 +23,7 @@ const spell: Spell = {
     allowNonUnitTarget: true,
     thumbnail: 'unknown.png',
     description: `
-Reset all spell costs back to their default and reduce your max health by ${Math.round(reduceMaxHealthPreportion * 100)}%.
+Reset all spell costs back to their default and reduce your max health by ${Math.round(reduceMaxHealthPreportion * 100)}% permanently.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       const player = underworld.players.find(p => p.unit == state.casterUnit);
