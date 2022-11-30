@@ -177,6 +177,25 @@ export const upgradeStatsSource: IUpgrade[] = [
     cost: { healthCost: 0, manaCost: 0 },
   },
   {
+    title: '++ Max Health',
+    type: 'perk',
+    description: (player) =>
+      `Increases your max health from ${player.unit.healthMax} to ${player.unit.healthMax + maxHealthIncreaseAmount * 2
+      }`,
+    thumbnail: 'images/upgrades/plus_max_health.png',
+    effect: (player, underworld) => {
+      player.unit.healthMax += maxHealthIncreaseAmount * 2;
+      player.unit.health = player.unit.healthMax;
+      // Now that the player unit's mana has increased,sync the new
+      // mana state with the player's predictionUnit so it is properly
+      // refelcted in the health bar
+      // (note: this would be auto corrected on the next mouse move anyway)
+      underworld.syncPlayerPredictionUnitOnly();
+    },
+    probability: 20,
+    cost: { healthCost: 0, manaCost: 0 },
+  },
+  {
     title: '+ Max Mana',
     type: 'perk',
     description: (player) =>
@@ -194,6 +213,26 @@ export const upgradeStatsSource: IUpgrade[] = [
       underworld.syncPlayerPredictionUnitOnly();
     },
     probability: 40,
+    cost: { healthCost: 0, manaCost: 0 },
+  },
+  {
+    title: '++ Max Mana',
+    type: 'perk',
+    description: (player) =>
+      `Increases your mana from ${player.unit.manaMax} to ${player.unit.manaMax + maxManaIncreaseAmount * 2
+      }`,
+    thumbnail: 'images/upgrades/todo.png',
+    effect: (player, underworld) => {
+      player.unit.manaMax += maxManaIncreaseAmount * 2;
+      player.unit.mana = player.unit.manaMax;
+      player.unit.manaPerTurn = player.unit.manaMax;
+      // Now that the player unit's mana has increased,sync the new
+      // mana state with the player's predictionUnit so it is properly
+      // refelcted in the health bar
+      // (note: this would be auto corrected on the next mouse move anyway)
+      underworld.syncPlayerPredictionUnitOnly();
+    },
+    probability: 20,
     cost: { healthCost: 0, manaCost: 0 },
   },
   {
