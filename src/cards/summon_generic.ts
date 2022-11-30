@@ -70,7 +70,7 @@ export default function makeSpellForUnitId(unitId: string): Spell | undefined {
             healthCost: 0,
             expenseScaling: 3,
             probability: probabilityMap[rarity],
-            thumbnail: `spellIconSummon${unitId}.png`,
+            thumbnail: `spellIconSummon${unitId.split(' ').join('')}.png`,
             description: `
 Summons ${unitId[0]?.toLowerCase() == 'a' ? `an ${unitId}` : `a ${unitId}`} to fight for your faction.
     `,
