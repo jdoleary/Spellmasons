@@ -14,7 +14,7 @@ import { getOrInitModifier } from './util';
 
 const id = 'Bloat';
 const imageName = 'explode-on-death.png';
-const damage = 2;
+const damage = 4;
 const baseRadius = 140;
 function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra?: any) {
   const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity }, () => {
