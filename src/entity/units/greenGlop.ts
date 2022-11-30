@@ -47,10 +47,10 @@ const unit: UnitSource = {
       unit.image.sprite.filters.push(
         new MultiColorReplaceFilter(
           [
-            [0x5fcde4, 0x58b866], // main blue
-            [0x67c3d7, 0x63c572], //darker blue
+            [0x5fcde4, 0x63c572], // main blue
+            [0x67c3d7, 0x58b866], //darker blue
           ],
-          0.1
+          0.05
         )
       );
     }
