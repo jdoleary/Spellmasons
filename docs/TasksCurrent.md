@@ -1,5 +1,5 @@
 # Nov Week 4
-    - make ghost archer whose arrows pierce
+    - allow shield to stack, but make the mana scale alot
     - Make gameplay video with Brad, add it to Steam and YouTube
         - Bugs
         - Send out Demo
@@ -9,31 +9,31 @@
         - get into the action fast
         - Communicate the big idea
 # Nov Week 5 / Dec Week 1
+    - Add explain gifs for new units
     - Test Cloud Saves
     - Steam SDK
         - Default wizard name to steam name if connected to steam
         - Steam Achievements
             - https://github.com/node-ffi/node-ffi
             - https://partner.steamgames.com/doc/features/achievements/ach_guide
+        - User id should match steam id?
     - Add sentry errors to electron node files
 # Bugs / Cleaning
 - res markers don't show if the unit is alive but will be killed and then resurrected
-- vamp miniboss got stuck where he has stamina and a path (with no points), but wont move; i think it's because i summoned an archer and the archer was part way in liquid but didn't show it and so he didn't have a path to the archer
+- **critical** vamp miniboss got stuck where he has stamina and a path (with no points), but wont move; i think it's because i summoned an archer and the archer was part way in liquid but didn't show it and so he didn't have a path to the archer
 - handle loading a save file where the player has not spawned in yet.  see 87374022
 - Hide disconnected players in game screen but not in the lobby
 - Fix: should not broadcast latency warning for a message that fails with a rejected promise
-- Add blood_archer.gif for explain
 - If you try to join a multiplayer game in two tabs on the same browser you get an infinite spinner even tho there is an error in console
 - archer still had freeze modifier listed in tooltip even after the freeze disappeared naturally on the next turn
     - freeze is behaving weird in Russell's playtest, it's not ticking down as it should
         - maybe it has to do with it being triggered off of chain? he also had bloat on
 - **critical** miniboss vampire was able to move without playing walking animation during the ranged unit turn phase and then continue walking on his own
 
-- push + radius*2 + connect + damage isn't damaging the connected units (note, the pushed unit ends up in lava)
+- **important** push + radius*2 + connect + damage isn't damaging the connected units (note, the pushed unit ends up in lava)
     - This is because the unit died when it fell in the lava so connect didn't connect it to other living units
-- (e) fix save/load  from menu screen, it needs to change the gameview
-- (e) in multiplayer, when one player leaves and window is not focused the camera spazzes out
 ---
+- (e) in multiplayer, when one player leaves and window is not focused the camera spazzes out
 - sync issue: golem moving through frozen guys jumped back
 - (m) You're able to cast into negative mana in multiplayer
 - "All targets" copy is confusing if player doesn't understand targeting
@@ -72,7 +72,6 @@
 # Features
 - Need a restart screen after a team wipe
 - should allow spell prediction even while an action is taking place - this not being here causes friction in multiplayer
-- EZ self cast, like alt clicking a spell self casts or something
 - **important**Allow multiplayer game restart after wipe
     - All players return to lobby after 10 seconds
     - cleans up underworld
@@ -81,27 +80,16 @@
 - cooldown instead of mana multiplier scaling
 - Add cooldown to "Expanding"
 ## Prediction issues
-- prediction should factor in standing on pickups, see video
+- prediction should factor in standing on pickups
+    - this can be reproduced by standing on health pot and queuing up just enough slash spells to kill you and triggering it.  You will see that it predicts that you will die but you don't because as soon as you first take damage the health pot triggers
 # Content
 - Make Youtube short audio louder
-- SFX for when you pickup scroll
-- Rend
-    - new sfx
-- Bleed
-    - new sfx
-- Suffocate
-    - new sfx
 # Optimization
 - Optimize: targeting spells seem pretty slow in prediction
 - optimize: Ihave duplicate units, pickups, and doodads in save due to serailizeForSaving having them in the underworld and extracting them to the top level too
 
 ## Stretch Content
-- Target all (corpse, unit, or pickup based on first selection - but it also targets you)
-- summon spells
 - unlimited range (also target yourself)
-- blood archer - fires 3 times (at different enemies if available)
-- perk: increase attack range - cut health in half
-- feature: secondary spellbar
 - Idea: "oh shit button": double the amount of mana you have this level but it reduces by half next level. " Break glass in case of emergency. Deal with the devil
 - Idea: Amplify spell: makes "multicast"
 - Add `cooldown` to spells rather than expense scaling
@@ -110,13 +98,9 @@
 - h: "Heat seeking" enemy or spell
 - idea: spell that triggers onDeath effects "Playdead"
 - Liquid: blood could apply a curse when you fall in, like slowed movement
-- Spell to slow movement
 - I need better targeting spells
     - Target by proximity with no limit?
         - Quantum link
-    - Target ALL units with ... some unifying feature
-- Late game version of lobber: moves and casts in the same turn.  Make sure to get prediction right
-- Idea: Blessing that blocks all damage for one turn. "Fortify"
 - thought: Spellmasons should have some element of risk/reward like 50% chance to double damage of next spell or something like that.  Think of my experience with slice and dice where I got a dice side that did 24 damage and affected the guy below.  If you could always have that it's no fun, too easy but because you can only sometimes get it when you're lucky is what makes it exciting.
     - also one-use spells could work well
 - add ghost archer

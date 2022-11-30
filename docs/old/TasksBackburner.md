@@ -1,3 +1,5 @@
+- feature: secondary spellbar
+- EZ self cast, like alt clicking a spell self casts or something
 - stacked unit summons should spread out
 - Watch Russell Playtest
 - Russell Feedback

@@ -15,6 +15,7 @@
     - [Controller Input](https://learn.microsoft.com/en-us/windows/win32/xinput/getting-started-with-xinput)
     - Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
     - Server Browser
+    - feature: Allow multiplayer game to restart after wipe
 - January
     - How to visually stack modifiers such as blood_curse and debilitate
     - Support hosting a server from in the game exe
