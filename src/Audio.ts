@@ -75,6 +75,7 @@ const music = [
     './sound/music/FirstSteps.mp3',
     './sound/music/DeepWandering.mp3',
     './sound/music/ItShallNotFindMe.mp3',
+    './sound/music/BleedingSynth.mp3',
 ]
 
 // Preload all sounds
