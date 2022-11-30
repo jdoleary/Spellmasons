@@ -170,7 +170,9 @@ export function registerCards(overworld: Overworld) {
   register(repel, overworld);
   register(decoy, overworld);
   register(explode, overworld);
-  register(corpse_explosion, overworld);
+  // Temporarily remove corpse_explosion until optimization
+  // issues are solved
+  // register(corpse_explosion, overworld);
   register(lastWill, overworld);
   register(split, overworld);
   register(drown, overworld);
