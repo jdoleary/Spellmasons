@@ -41,16 +41,17 @@ const unit: UnitSource = {
       unit.image.sprite.filters.push(
         new MultiColorReplaceFilter(
           [
+            [0x0c456f, 0x563d2a], // rear foot
             [0x6896d1, 0xb98553], // skin light
             [0x5280bc, 0xa37242], // skin medium
-            [0x3767a4, 0x815933], // skin dark
-            [0x0c456f, 0x4f371f], // skin darkest
+            [0x3767a4, 0x815933], // skin dark / foot
+            [0x0c456f, 0xff371f], // skin darkest
             [0xf1fa68, 0x293a1b], // bubbles
             [0x42d9d3, 0x513c20], // mouth
-            [0x2280cf, 0x96683c], // rear foot
-            // [0x1969bd, 0x7c5631], // rear foot outline
+            [0x2280cf, 0x96683c], // foot
+            [0x1969bd, 0x7c5631], // foot outline
           ],
-          0.2
+          0.1
         )
       );
     }
