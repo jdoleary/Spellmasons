@@ -91,6 +91,10 @@ body.view-Menu #underworld-container {
   pointer-events: none;
 }
 
+body.viewingCinematicCamera #upgrade-picker {
+  /* Do not view while the cinematic camera has control of the viewer */
+  visibility: hidden;
+}
 
 #upgrade-picker {
   position: fixed;

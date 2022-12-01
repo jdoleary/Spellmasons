@@ -1,6 +1,8 @@
+- Uncommon cards are showing up on level 1 when you don't have near the mana to cast them
+- make build and test steam cloud saves and new install directory
+---
 - Build: Log to local file
 - Nice camera
-    - introduce new levels
     - exciting akira moment
 - Make gameplay video with Brad, add it to Steam and YouTube
     - Bugs

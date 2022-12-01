@@ -198,4 +198,6 @@ declare global {
     var cinematicCameraTarget: Vec2 | undefined;
     var cinematicCameraEnabled: boolean;
     var setCinematicCameraEnabled: undefined | ((enabled: boolean, saveSetting: boolean) => void);
+    // It should only be defined when there is a cinematic to skip
+    var skipCinematic: undefined | (() => void);
 }

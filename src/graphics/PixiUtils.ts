@@ -251,17 +251,30 @@ export function runCinematicLevelCamera(underworld: Underworld) {
   const cinematicCameraCSSClass = 'viewingCinematicCamera';
   document.body?.classList.toggle(cinematicCameraCSSClass, true);
   return new Promise<void>(resolve => {
+    globalThis.skipCinematic = () => {
+      resolve();
+      // Once resolved, set skipCinematic to undefined
+      // It should only be defined when there is a cinematic to skip
+      globalThis.skipCinematic = undefined;
+    }
     setCameraToMapCenter(underworld);
     const realCam = getCamera();
     const mapCenter = getMapCenter(underworld);
     // The greater the margin, the closer the unit scanned will get to
     // the center of the camera before the camera moves on
     const margin = 6;
-    const firstUnitToView = underworld.units.sort((a, b) => {
+    const targetsScanned: Vec2[] = [];
+    function getCameraScanUnits(): Vec2[] {
+      return underworld.units
+        .filter(u => !targetsScanned.includes(u))
+        // Filter out unspawned player character
+        .filter(u => u.unitSourceId !== spellmasonUnitId)
+    }
+    const firstUnitToView = getCameraScanUnits().sort((a, b) => {
       return math.distance(a, { x: 0, y: 0 }) - math.distance(b, { x: 0, y: 0 });
     })[0];
     if (!firstUnitToView) {
-      console.error('No units to show');
+      // First tutorial level has no units, resolve immediately
       resolve();
       return;
     }
@@ -278,12 +291,17 @@ export function runCinematicLevelCamera(underworld: Underworld) {
       x: firstUnitToView.x, y: firstUnitToView.y,
       target: undefined,
       lastTarget: firstUnitToView,
-      targetsScanned: [],
+      targetsScanned,
     }
     globalThis.zoomTarget = 2.0;
     cameraAutoFollow(true);
     let lastTime: number | undefined = undefined;
     const loop = (timestamp: number) => {
+      if (globalThis.skipCinematic === undefined) {
+        // If skipCinematic has been invoked (it sets itself to undefined once invoked)
+        // then stop animating the loop
+        return;
+      }
       if (lastTime === undefined) {
         lastTime = timestamp;
         requestAnimationFrame(loop);
@@ -294,10 +312,7 @@ export function runCinematicLevelCamera(underworld: Underworld) {
       // Get new Target
       if (cinematicCam.target == undefined) {
         // Choose new target that is closest to current target
-        const nextTarget = underworld.units
-          .filter(u => !cinematicCam.targetsScanned.includes(u))
-          // Filter out unspawned player character
-          .filter(u => u.unitSourceId !== spellmasonUnitId)
+        const nextTarget = getCameraScanUnits()
           .sort((a, b) => {
             return math.distance(a, cinematicCam.lastTarget) - math.distance(b, cinematicCam.lastTarget);
           })[0]
@@ -314,8 +329,6 @@ export function runCinematicLevelCamera(underworld: Underworld) {
       cinematicCam.x = stepTowardsTarget.x;
       cinematicCam.y = stepTowardsTarget.y;
       if (cinematicCam.target == mapCenter && math.distance(cinematicCam, mapCenter) < 1) {
-        console.log('Cinematic Cam: done')
-        cameraAutoFollow(false);
         globalThis.zoomTarget = 1.6;
         resolve();
         return;
@@ -342,6 +355,8 @@ export function runCinematicLevelCamera(underworld: Underworld) {
     document.body?.classList.toggle('viewingCinematicCamera', false);
     // Clear cinematic camera control:
     globalThis.cinematicCameraTarget = undefined;
+    cameraAutoFollow(false);
+    console.log('Cinematic Cam: done')
   });
 
 }

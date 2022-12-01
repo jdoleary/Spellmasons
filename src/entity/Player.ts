@@ -224,7 +224,12 @@ export function updateGlobalRefToCurrentClientPlayer(player: IPlayer, underworld
     // to protect against the race condition where the primary call to showUpgrades
     // (when the level is created) is triggered before the player has been assigned.
     // This invokation prevents that rare case where players spawn with no starting upgrades
-    underworld.showUpgrades();
+    // ---
+    // The timeout prevents upgrades from rendering for a moment and then quickly disappearing
+    // when runCinematicCamera hides the upgrade screen while it's animating
+    setTimeout(() => {
+      underworld.showUpgrades();
+    }, 100);
 
   }
 }

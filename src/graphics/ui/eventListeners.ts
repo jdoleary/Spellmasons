@@ -71,6 +71,15 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
     return
   }
 
+  // Allow skipping the cinematic with escape
+  if (event.code == 'Escape') {
+    if (globalThis.skipCinematic) {
+      console.log('Skipping cinematic');
+      globalThis.skipCinematic();
+      return;
+    }
+  }
+
   // Possibly handle hotkey for Jprompt:
   // note: :last-child targets the top most prompt if there are more than one
   const promptYesBtn = document.querySelector(`.prompt:last-child .yes[data-key="${event.code}"]`) as HTMLElement;
@@ -500,6 +509,11 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
   }
   const { underworld } = overworld;
   if (!underworld) {
+    return;
+  }
+  if (globalThis.skipCinematic) {
+    console.log('Skipping cinematic');
+    globalThis.skipCinematic();
     return;
   }
   const mousePos = underworld.getMousePos();
