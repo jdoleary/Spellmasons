@@ -1,4 +1,26 @@
 
+## 2022.12.01
+Working on dynamically loading js to ensure that the steam install stays small for updates.
+Turns out that the exe output by Squirrel is actually just an installer, not the game's exe.
+Once installed, the game exe is placed `C:\Users\Jordan\AppData\Local\spellmasons\app-1.0.0`
+as well as all the javascript and assets that it runs.  So you can either load javascript via 
+Electron relative to the exe (the game not the installer) path like so:
+```js
+  // Load javascript
+  const fileContents = fs.readFileSync('testDynamicImport.js', { encoding: 'utf-8' });
+  console.log('Electron: javascript', fileContents);
+  mainWindow.webContents.executeJavaScript(fileContents);
+```
+or you can put the js in `C:\Users\Jordan\AppData\Local\spellmasons\app-1.0.0\resources\app\src\build` and load it from js like so:
+```js
+// Dynamically import game scripts:
+for (let url of ['./testDynamicImport2.js']) {
+    console.log('Experiment: Attempting to import 2', url);
+    const script = document.createElement("script");  // create a script DOM node
+    script.src = url;  // set its src to the provided URL
+    document.head.appendChild(script);
+}
+```
 ---
 - Use transform3d functions to trigger hardware acceleration: "In essence, any transform that has a 3D operation as one of its functions will trigger hardware compositing, even when the actual transform is 2D, or not doing anything at all (such as translate3d(0,0,0)). Note this is just current behaviour, and could change in the future (which is why we don’t document or encourage it). But it is very helpful in some situations and can significantly improve redraw performance."
 ## 2022.09.11

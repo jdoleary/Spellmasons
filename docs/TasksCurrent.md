@@ -1,3 +1,4 @@
+- build: remove unneeded nuget package from build output?
 - Uncommon cards are showing up on level 1 when you don't have near the mana to cast them
 - make build and test steam cloud saves and new install directory
 ---
