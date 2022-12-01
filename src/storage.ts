@@ -31,10 +31,13 @@ export function getSavedData() {
             // Default language to english if no language is stored:
             const storedLanguageCode = get(STORAGE_LANGUAGE_CODE_KEY);
             setLanguage(storedLanguageCode ? storedLanguageCode : 'en', false);
-            // Retrieve audio settings from storage
+            // Retrieve settings from storage
             const storedOptions = get(STORAGE_OPTIONS);
             if (storedOptions !== null) {
                 const options = JSON.parse(storedOptions);
+                if (options.cinematicCameraEnabled !== undefined) {
+                    globalThis.cinematicCameraEnabled = options.cinematicCameraEnabled;
+                }
                 if (options.volume !== undefined) {
                     globalThis.volume = options.volume;
                 }
@@ -124,5 +127,12 @@ export function get(key: string): string | null {
     }
 
 }
+
+globalThis.setCinematicCameraEnabled = (enabled: boolean, saveSetting: boolean = true) => {
+    globalThis.cinematicCameraEnabled = enabled;
+    if (saveSetting) {
+        assign(STORAGE_OPTIONS, { cinematicCameraEnabled: enabled });
+    }
+};
 globalThis.storageSet = set;
 globalThis.storageGet = get;

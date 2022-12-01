@@ -18,6 +18,7 @@ globalThis.setupPixiPromise = new Promise((resolve) => {
 globalThis.volume = 1.0;
 globalThis.volumeMusic = 0.5;
 globalThis.volumeGame = 0.25;
+globalThis.cinematicCameraEnabled = true;
 globalThis.savePrefix = 'spellmasons-save-';
 globalThis.quicksaveKey = 'quicksave';
 storage.getSavedData();

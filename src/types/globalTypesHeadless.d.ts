@@ -257,4 +257,6 @@ declare global {
     }
     // A target that controls what the cinematic camera is moving to
     var cinematicCameraTarget: Vec2 | undefined;
+    var cinematicCameraEnabled: boolean;
+    var setCinematicCameraEnabled: undefined | ((enabled: boolean, saveSetting: boolean) => void);
 }

@@ -42,6 +42,7 @@ global.predictionGraphics = undefined;
 global.planningViewGraphics = undefined;
 global.hoverTarget = undefined;
 global.location = undefined;
+global.cinematicCameraEnabled = false;
 // No translations should be done on the server, just return the original text.
 global.i18n = (text) => text;
 export { };

@@ -245,6 +245,9 @@ export function withinCameraBounds(position: Vec2, marginHoriz?: number): Vec2 {
   return withinBoundsPos;
 }
 export function runCinematicLevelCamera(underworld: Underworld) {
+  if (!globalThis.cinematicCameraEnabled) {
+    return Promise.resolve();
+  }
   const cinematicCameraCSSClass = 'viewingCinematicCamera';
   document.body?.classList.toggle(cinematicCameraCSSClass, true);
   return new Promise<void>(resolve => {
