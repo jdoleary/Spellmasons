@@ -2104,20 +2104,20 @@ export default class Underworld {
   showUpgrades() {
     const player = globalThis.player;
     if (document.body?.classList.contains(showUpgradesClassName)) {
-      console.log('showUpgrades was called but it is already visible so this function returns immediately to avoid regenerating upgrades');
+      console.log('showUpgrades: showUpgrades was called but it is already visible so this function returns immediately to avoid regenerating upgrades');
       return;
     }
     if (!player) {
       // Only log error if this is not a headless instance because a headless instance
       // will never have globalThis.player
       if (!globalThis.headless) {
-        console.error('Cannot show upgrades, no globalThis.player');
+        console.error('showUpgrades: Cannot show upgrades, no globalThis.player');
       }
       return
     }
     // Return immediately if player has no upgrades that left to pick from
     if (player.upgradesLeftToChoose <= 0 && player.perksLeftToChoose <= 0) {
-      console.log('Closing upgrade screen, nothing left to pick')
+      console.log('showUpgrades: Closing upgrade screen, nothing left to pick')
       return;
     }
     const isPerk = player.upgradesLeftToChoose == 0;
@@ -2138,7 +2138,7 @@ export default class Underworld {
     // Generate Upgrades
     document.body?.classList.toggle(showUpgradesClassName, true);
     if (!elUpgradePicker || !elUpgradePickerContent) {
-      console.error('elUpgradePicker or elUpgradePickerContent are undefined.');
+      console.error('showUpgrades: elUpgradePicker or elUpgradePickerContent are undefined.');
     }
     if (player) {
       const upgrades = Upgrade.generateUpgrades(player, 3, minimumProbability, isPerk);
@@ -2157,13 +2157,13 @@ export default class Underworld {
                 elUpgrade.click();
               }
             } else {
-              console.warn('Upgrade is undefined, this block should never be executed in headless mode')
+              console.warn('showUpgrades: Upgrade is undefined, this block should never be executed in headless mode')
             }
           }
         }
       }
     } else {
-      console.error('Upgrades cannot be generated, player not found');
+      console.error('showUpgrades: Upgrades cannot be generated, player not found');
     }
   }
 
