@@ -5,6 +5,7 @@ import { raceTimeout } from "../Promise";
 import * as Image from '../graphics/Image';
 import { containerSpells } from "../graphics/PixiUtils";
 import { Container } from "pixi.js";
+import { chooseOneOf } from "../jmath/rand";
 export interface CardCost {
     manaCost: number;
     healthCost: number;
@@ -13,7 +14,7 @@ export function playSpellSFX(sfxKey: string, prediction: boolean) {
     // Play the card sound effect:
     if (!prediction && sfxKey) {
         if (globalThis.playSFX && globalThis.sfx) {
-            globalThis.playSFX(globalThis.sfx[sfxKey]);
+            globalThis.playSFX(chooseOneOf(globalThis.sfx[sfxKey]));
         }
     }
 }
@@ -21,7 +22,7 @@ export function playDefaultSpellSFX(card: ICard, prediction: boolean) {
     // Play the card sound effect:
     if (!prediction && card.sfx) {
         if (globalThis.playSFX && globalThis.sfx) {
-            globalThis.playSFX(globalThis.sfx[card.sfx]);
+            globalThis.playSFX(chooseOneOf(globalThis.sfx[card.sfx]));
         }
     }
 }

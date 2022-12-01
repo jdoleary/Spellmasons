@@ -194,7 +194,7 @@ declare global {
     var playNextSong: undefined | (() => void | undefined);
     var playSFX: ((path?: string) => void | undefined);
     var playSFXKey: ((key: string) => void | undefined);
-    var sfx: { [key: string]: string } | undefined;
+    var sfx: { [key: string]: string[] } | undefined;
     // Returns pie.isConnected()
     var isConnected: undefined | (() => boolean);
     // Disconnects pie from server

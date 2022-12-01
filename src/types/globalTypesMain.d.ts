@@ -134,7 +134,7 @@ declare global {
     var playNextSong: undefined | (() => void | undefined);
     var playSFX: ((path?: string) => void | undefined);
     var playSFXKey: ((key: string) => void | undefined);
-    var sfx: { [key: string]: string } | undefined;
+    var sfx: { [key: string]: string[] } | undefined;
     // Returns true if client is playing singleplayer OR if hostapp
     var isHost: (pie: PieClient | IHostApp) => boolean;
     // Returns pie.isConnected()
