@@ -222,6 +222,12 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         // Sync data for units
         units?: Unit.IUnitSerialized[],
       }
+      // Do not set the phase redundantly, this can occur due to tryRestartTurnPhaseLoop
+      // being invoked multiple times before the first message is processed.  This is normal.
+      if (underworld.turn_phase == phase) {
+        console.debug(`Phase is already set to ${turn_phase[phase]}; Aborting SET_PHASE.`);
+        return;
+      }
 
       if (units) {
         underworld.syncUnits(units);
