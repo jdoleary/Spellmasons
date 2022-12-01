@@ -1,4 +1,3 @@
-- Ghost archer should target farthest enemy
 - Nice camera
     - introduce new levels
     - exciting akira moment

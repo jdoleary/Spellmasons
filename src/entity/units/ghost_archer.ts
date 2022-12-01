@@ -15,7 +15,7 @@ export const GHOST_ARCHER_ID = 'Ghost Archer';
 const unit: UnitSource = {
   id: GHOST_ARCHER_ID,
   info: {
-    description: `The Ghost Archer\'s arrows pierce units, dealing 1/2 damage to them, on it\'s way to it\'s target. `,
+    description: `The Ghost Archer\'s arrows pierce units, dealing 1/2 damage to them, on it\'s way to it\'s target. It will target the farthest enemy that it is able to attack.`,
     image: 'units/archerIdle',
     subtype: UnitSubType.RANGED_LOS,
   },
@@ -123,7 +123,7 @@ const unit: UnitSource = {
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-    return getBestRangedLOSTarget(unit, underworld).slice(0, NUMBER_OF_UNITS_GHOST_ARCHER_CAN_ATTACK);
+    return getBestRangedLOSTarget(unit, underworld, false).slice(0, NUMBER_OF_UNITS_GHOST_ARCHER_CAN_ATTACK);
   }
 };
 export default unit;
