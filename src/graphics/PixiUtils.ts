@@ -251,12 +251,7 @@ export function runCinematicLevelCamera(underworld: Underworld) {
   const cinematicCameraCSSClass = 'viewingCinematicCamera';
   document.body?.classList.toggle(cinematicCameraCSSClass, true);
   return new Promise<void>(resolve => {
-    globalThis.skipCinematic = () => {
-      resolve();
-      // Once resolved, set skipCinematic to undefined
-      // It should only be defined when there is a cinematic to skip
-      globalThis.skipCinematic = undefined;
-    }
+    globalThis.skipCinematic = resolve;
     setCameraToMapCenter(underworld);
     const realCam = getCamera();
     const mapCenter = getMapCenter(underworld);
@@ -352,6 +347,10 @@ export function runCinematicLevelCamera(underworld: Underworld) {
     }
     requestAnimationFrame(loop);
   }).then(() => {
+    // skipCinematic should only be defined when there is a cinematic to skip
+    // It is used in some places throughout the codebase to check if a cinematic
+    // is currently playing
+    globalThis.skipCinematic = undefined;
     document.body?.classList.toggle('viewingCinematicCamera', false);
     // Clear cinematic camera control:
     globalThis.cinematicCameraTarget = undefined;
