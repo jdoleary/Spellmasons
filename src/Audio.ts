@@ -72,6 +72,11 @@ export const sfx: { [key: string]: string } = {
     vampireDeath: './sound/sfx-from-val/vampire-death.wav',
     vampireHurt: './sound/sfx-from-val/vampire-hurt.wav',
     yourTurn: './sound/sfx-from-val/your-turn.wav',
+    targeting: './sound/sfx-3/Targeting.wav',
+    targetAquired0: './sound/sfx-3/Target-001.wav',
+    targetAquired1: './sound/sfx-3/Target-002.wav',
+    targetAquired2: './sound/sfx-3/Target-003.wav',
+    targetAquired3: './sound/sfx-3/Target-004.wav',
 
 };
 const music = [

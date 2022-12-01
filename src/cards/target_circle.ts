@@ -8,6 +8,7 @@ import Underworld from '../Underworld';
 import * as config from '../config';
 import { easeOutCubic } from '../jmath/Easing';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
+import { HasSpace } from '../entity/Type';
 
 const id = 'Target Circle';
 const baseRadius = 140;
@@ -65,6 +66,10 @@ Adds a radius to the spell so it can affect more targets.
 async function animate(pos: Vec2, radius: number, underworld: Underworld) {
   const iterations = 100;
   const millisBetweenIterations = 8;
+  // Keep track of which entities have been targeted so far for the sake
+  // of making a new sfx when a new entity gets targeted
+  const entitiesTargeted: HasSpace[] = [];
+  playSFXKey('targeting');
   // "iterations + 10" gives it a little extra time so it doesn't timeout right when the animation would finish on time
   return raceTimeout(millisBetweenIterations * (iterations + 10), 'animatedExpand', new Promise<void>(resolve => {
     for (let i = 0; i < iterations; i++) {
@@ -85,6 +90,11 @@ async function animate(pos: Vec2, radius: number, underworld: Underworld) {
             false
           );
           withinRadius.forEach(v => {
+            if (!entitiesTargeted.includes(v)) {
+              entitiesTargeted.push(v);
+              let sfxNumber = Math.floor(i / (iterations / 4));
+              playSFXKey(`targetAquired${sfxNumber}`);
+            }
             globalThis.predictionGraphics?.drawCircle(v.x, v.y, config.COLLISION_MESH_RADIUS);
           })
         }

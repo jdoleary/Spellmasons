@@ -53,6 +53,7 @@ Targets everything of the same type of the original target.  Matches units, corp
             }
           });
         if (!prediction) {
+          playSFXKey('targeting');
           // Animate lines to new targets
           await animate(target, newTargets, [target]);
           // Animate circles for all now-selected targets
@@ -71,6 +72,9 @@ Targets everything of the same type of the original target.  Matches units, corp
 async function animate(pos: Vec2, newTargets: Vec2[], oldTargets: Vec2[]) {
   const iterations = 100;
   const millisBetweenIterations = 4;
+  // Keep track of which entities have been targeted so far for the sake
+  // of making a new sfx when a new entity gets targeted
+  const entitiesTargeted: Vec2[] = [];
   // "iterations + 10" gives it a little extra time so it doesn't timeout right when the animation would finish on time
   return raceTimeout(millisBetweenIterations * (iterations + 10), 'animatedConnect', new Promise<void>(resolve => {
     for (let i = 0; i < iterations; i++) {
@@ -93,6 +97,11 @@ async function animate(pos: Vec2, newTargets: Vec2[], oldTargets: Vec2[]) {
           });
           // Draw completed lines and circles on old targets
           oldTargets.forEach(target => {
+            if (!entitiesTargeted.includes(target)) {
+              entitiesTargeted.push(target);
+              let sfxNumber = Math.floor(i / (iterations / 4));
+              playSFXKey(`targetAquired${sfxNumber}`);
+            }
             // globalThis.predictionGraphics?.moveTo(pos.x, pos.y);
             // globalThis.predictionGraphics?.lineTo(target.x, target.y);
             globalThis.predictionGraphics?.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);

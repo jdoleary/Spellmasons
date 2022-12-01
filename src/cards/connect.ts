@@ -75,6 +75,7 @@ All connected beings will be affected by the following spells in your cast.
           } else {
             const alreadyAnimated: HasSpace[] = [...state.targetedUnits];
             for (let { chainSource, entity } of chained) {
+              playSFXKey('targeting');
               await animate(chainSource, [entity], alreadyAnimated);
               alreadyAnimated.push(entity);
             }
@@ -149,6 +150,9 @@ async function getTouchingTargetableEntitiesRecursive(
         }
         connected.push({ chainSource: coords, entity: t });
         chainState.limitTargetsLeft--;
+        if (!prediction) {
+          playSFXKey(`targetAquired0`);
+        }
         const newTouching = await getTouchingTargetableEntitiesRecursive(t.x, t.y, potentialTargets, radius, prediction, chainState, recurseLevel + 1, typeFilter, ignore)
         connected = connected.concat(newTouching);
       }

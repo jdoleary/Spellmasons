@@ -10,6 +10,7 @@ import type Underworld from '../Underworld';
 import { raceTimeout } from '../Promise';
 import { easeOutCubic } from '../jmath/Easing';
 import * as config from '../config';
+import { HasSpace } from '../entity/Type';
 
 const id = 'Target Cone';
 const range = 240;
@@ -80,6 +81,10 @@ function withinCone(origin: Vec2, coneStartPoint: Vec2, radius: number, startAng
 async function animate(origin: Vec2, coneStartPoint: Vec2, radius: number, startAngle: number, endAngle: number, underworld: Underworld) {
   const iterations = 100;
   const millisBetweenIterations = 8;
+  // Keep track of which entities have been targeted so far for the sake
+  // of making a new sfx when a new entity gets targeted
+  const entitiesTargeted: HasSpace[] = [];
+  playSFXKey('targeting');
   // "iterations + 10" gives it a little extra time so it doesn't timeout right when the animation would finish on time
   return raceTimeout(millisBetweenIterations * (iterations + 10), 'animatedExpand', new Promise<void>(resolve => {
     for (let i = 0; i < iterations; i++) {
@@ -100,6 +105,11 @@ async function animate(origin: Vec2, coneStartPoint: Vec2, radius: number, start
             return withinCone(origin, coneStartPoint, animatedRadius, startAngle, endAngle, t);
           });
           withinRadiusAndAngle.forEach(v => {
+            if (!entitiesTargeted.includes(v)) {
+              entitiesTargeted.push(v);
+              let sfxNumber = Math.floor(i / (iterations / 4));
+              playSFXKey(`targetAquired${sfxNumber}`);
+            }
             globalThis.predictionGraphics?.drawCircle(v.x, v.y, config.COLLISION_MESH_RADIUS);
           })
         }

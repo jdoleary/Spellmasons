@@ -11,6 +11,7 @@ import type Underworld from '../Underworld';
 import { raceTimeout } from '../Promise';
 import { easeOutCubic } from '../jmath/Easing';
 import * as config from '../config';
+import { HasSpace } from '../entity/Type';
 
 const id = 'Target Column';
 const range = 200;
@@ -77,6 +78,10 @@ function getColumnPoints(castLocation: Vec2, vector: Vec2, width: number, depth:
 async function animate(castLocation: Vec2, vector: Vec2, width: number, depth: number, underworld: Underworld) {
   const iterations = 100;
   const millisBetweenIterations = 8;
+  // Keep track of which entities have been targeted so far for the sake
+  // of making a new sfx when a new entity gets targeted
+  const entitiesTargeted: HasSpace[] = [];
+  playSFXKey('targeting');
   // "iterations + 10" gives it a little extra time so it doesn't timeout right when the animation would finish on time
   return raceTimeout(millisBetweenIterations * (iterations + 10), 'animatedExpand', new Promise<void>(resolve => {
     for (let i = 0; i < iterations; i++) {
@@ -98,6 +103,11 @@ async function animate(castLocation: Vec2, vector: Vec2, width: number, depth: n
             return isVec2InsidePolygon(t, targetingColumn);
           });
           withinColumn.forEach(v => {
+            if (!entitiesTargeted.includes(v)) {
+              entitiesTargeted.push(v);
+              let sfxNumber = Math.floor(i / (iterations / 4));
+              playSFXKey(`targetAquired${sfxNumber}`);
+            }
             globalThis.predictionGraphics?.drawCircle(v.x, v.y, config.COLLISION_MESH_RADIUS);
           })
         }
