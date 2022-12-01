@@ -318,6 +318,7 @@ export const pickups: IPickupSource[] = [
       // Give EVERY player an upgrade when any one player picks up a scroll
       underworld.players.forEach(p => givePlayerUpgrade(p, underworld));
       tutorialCompleteTask('pickupScroll');
+      playSFXKey('levelUp');
       return true;
     },
   },

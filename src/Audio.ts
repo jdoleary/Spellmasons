@@ -77,6 +77,7 @@ export const sfx: { [key: string]: string } = {
     targetAquired1: './sound/sfx-3/Target-002.wav',
     targetAquired2: './sound/sfx-3/Target-003.wav',
     targetAquired3: './sound/sfx-3/Target-004.wav',
+    levelUp: './sound/sfx-3/LvlUp.wav'
 
 };
 const music = [
@@ -128,6 +129,7 @@ export function playSFXKey(key?: string) {
     if (!key) {
         return
     }
+    console.log('jtest key:', key)
     const path = sfx[key];
     if (path) {
         playSFX(path);
