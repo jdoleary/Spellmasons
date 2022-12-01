@@ -295,23 +295,24 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
   const mouseTarget = underworld.getMousePos();
   // Move the spawn "ghost" around so players can see where they will
   // spawn if they click
-  if (globalThis.cinematicCameraTarget !== undefined) {
-    if (globalThis.player && globalThis.player.unit.image) {
-      globalThis.player.unit.image.sprite.alpha = 0.0;
-    }
-  } else {
-    if (globalThis.player && !globalThis.player.isSpawned &&
-      !document.body?.classList.contains(showUpgradesClassName)) {
-      const spawnPoint = { ...mouseTarget, radius: config.COLLISION_MESH_RADIUS }
-      collideWithLineSegments(spawnPoint, underworld.walls, underworld);
-      if (globalThis.player.unit.image) {
-        globalThis.player.unit.image.sprite.alpha = 0.5;
-        if (underworld.isCoordOnWallTile(spawnPoint) || isOutOfBounds(spawnPoint, underworld)) {
-          globalThis.player.unit.x = NaN;
-          globalThis.player.unit.y = NaN;
-        } else {
-          globalThis.player.unit.x = spawnPoint.x;
-          globalThis.player.unit.y = spawnPoint.y;
+  if (globalThis.player && !globalThis.player?.isSpawned) {
+    if (globalThis.cinematicCameraTarget !== undefined) {
+      // Ensure spawn "ghost" isn't visible while cinematic camera is moving
+      globalThis.player.unit.x = NaN;
+      globalThis.player.unit.y = NaN;
+    } else {
+      if (!document.body?.classList.contains(showUpgradesClassName)) {
+        const spawnPoint = { ...mouseTarget, radius: config.COLLISION_MESH_RADIUS }
+        collideWithLineSegments(spawnPoint, underworld.walls, underworld);
+        if (globalThis.player.unit.image) {
+          globalThis.player.unit.image.sprite.alpha = 0.5;
+          if (underworld.isCoordOnWallTile(spawnPoint) || isOutOfBounds(spawnPoint, underworld)) {
+            globalThis.player.unit.x = NaN;
+            globalThis.player.unit.y = NaN;
+          } else {
+            globalThis.player.unit.x = spawnPoint.x;
+            globalThis.player.unit.y = spawnPoint.y;
+          }
         }
       }
     }
