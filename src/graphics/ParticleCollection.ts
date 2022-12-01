@@ -17,6 +17,9 @@ export function makeBleedParticles(position: Vec2, prediction: boolean, proporti
     proportion = lerp(0, 1, proportion / bleedInstantKillProportion);
     if (proportion == 0) {
         // Do not emit particles if proportion is 0 because then bleed did no damage
+        if (resolver) {
+            resolver();
+        }
         return;
     }
     const texture = createParticleTexture();
