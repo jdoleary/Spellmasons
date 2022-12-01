@@ -526,12 +526,16 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
       });
       playSFXKey('deny');
     } else {
-      // Spawn player:
-      overworld.pie.sendData({
-        type: MESSAGE_TYPES.SPAWN_PLAYER,
-        x: spawnPoint.x,
-        y: spawnPoint.y,
-      });
+      if (globalThis.cinematicCameraTarget !== undefined) {
+        console.log('Cannot spawn during cinematic intro')
+      } else {
+        // Spawn player:
+        overworld.pie.sendData({
+          type: MESSAGE_TYPES.SPAWN_PLAYER,
+          x: spawnPoint.x,
+          y: spawnPoint.y,
+        });
+      }
       return;
     }
   }
