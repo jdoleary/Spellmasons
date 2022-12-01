@@ -5,8 +5,9 @@ import * as math from '../../jmath/math';
 import Underworld from '../../Underworld';
 import * as slash from '../../cards/slash';
 
+export const spellmasonUnitId = 'Spellmason';
 const unit: UnitSource = {
-  id: 'Spellmason',
+  id: spellmasonUnitId,
   info: {
     description: 'You and your kin are Spellmasons: mighty wizards that forge magic with nothing but a bit of ingenuity and some mana.',
     image: 'units/playerIdle',

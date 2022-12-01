@@ -98,10 +98,6 @@ export const elPIXIHolder = document.getElementById('PIXI-holder') as HTMLElemen
 let centeredTextAnimating = false;
 let centeredTextQueue: { text: string, fill: string | number }[] = [];
 export function queueCenteredFloatingText(text: string, fill: string | number = 'white') {
-  if (globalThis.devMode) {
-    // skip floating text in dev mode for sake of time
-    return;
-  }
   if (!centeredTextAnimating) {
     centeredFloatingText(text, fill);
   } else {

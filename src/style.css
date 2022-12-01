@@ -1453,6 +1453,11 @@ body.casting .ui-border {
   cursor: url('cursor.png'), auto;
 }
 
+body.viewingCinematicCamera #instructions {
+  /* Do not view instructions while the cinematic camera has control of the viewer */
+  visibility: hidden;
+}
+
 body.view-Game #instructions,
 body.view-Game #camera-recenter-tip {
   display: block;

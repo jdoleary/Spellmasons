@@ -41,8 +41,10 @@ import {
   setAbyssColor,
   setCameraToMapCenter,
   addPixiTilingSprite,
+  getMapCenter,
+  runCinematicLevelCamera,
 } from './graphics/PixiUtils';
-import floatingText, { queueCenteredFloatingText } from './graphics/FloatingText';
+import floatingText, { elPIXIHolder, queueCenteredFloatingText } from './graphics/FloatingText';
 import { UnitType, Faction, UnitSubType } from './types/commonTypes';
 import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
@@ -1575,11 +1577,14 @@ export default class Underworld {
     }
   }
   postSetupLevel() {
-    // Set the first turn phase
-    this.broadcastTurnPhase(turn_phase.PlayerTurns);
-    cameraAutoFollow(false);
-    setCameraToMapCenter(this);
     document.body?.classList.toggle('loading', false);
+    runCinematicLevelCamera(this).then(() => {
+      console.log('Cinematic Cam: Finished');
+      // Set the first turn phase
+      this.broadcastTurnPhase(turn_phase.PlayerTurns);
+      cameraAutoFollow(false);
+      setCameraToMapCenter(this);
+    });
   }
   // creates a level from levelData
   createLevelSyncronous(levelData: LevelData) {

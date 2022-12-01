@@ -15,6 +15,7 @@ import { addMarginToRect, isWithinRect, Rect } from '../jmath/Rect';
 import { inPortal } from '../entity/Player';
 import KeyMapping, { keyToHumanReadable } from './ui/keyMapping';
 import { tutorialCompleteTask, tutorialShowTask, updateTutorialChecklist } from './Explain';
+import { spellmasonUnitId } from '../entity/units/playerUnit';
 
 // if PIXI is finished setting up
 let isReady = false;
@@ -243,6 +244,104 @@ export function withinCameraBounds(position: Vec2, marginHoriz?: number): Vec2 {
   }
   return withinBoundsPos;
 }
+export function runCinematicLevelCamera(underworld: Underworld) {
+  const cinematicCameraCSSClass = 'viewingCinematicCamera';
+  document.body?.classList.toggle(cinematicCameraCSSClass, true);
+  return new Promise<void>(resolve => {
+    setCameraToMapCenter(underworld);
+    const realCam = getCamera();
+    const mapCenter = getMapCenter(underworld);
+    // The greater the margin, the closer the unit scanned will get to
+    // the center of the camera before the camera moves on
+    const margin = 6;
+    const firstUnitToView = underworld.units.sort((a, b) => {
+      return math.distance(a, { x: 0, y: 0 }) - math.distance(b, { x: 0, y: 0 });
+    })[0];
+    if (!firstUnitToView) {
+      console.error('No units to show');
+      resolve();
+      return;
+    }
+    const cinematicCameraMoveSpeed = 0.3;
+    let cinematicCam: {
+      radius: number;
+      x: number;
+      y: number;
+      target: Vec2 | undefined;
+      lastTarget: Vec2;
+      targetsScanned: Vec2[];
+    } = {
+      radius: Math.min(elPIXIHolder.clientWidth, elPIXIHolder.clientHeight) / realCam.zoom / margin,
+      x: firstUnitToView.x, y: firstUnitToView.y,
+      target: undefined,
+      lastTarget: firstUnitToView,
+      targetsScanned: [],
+    }
+    globalThis.zoomTarget = 2.0;
+    cameraAutoFollow(true);
+    let lastTime: number | undefined = undefined;
+    const loop = (timestamp: number) => {
+      if (lastTime === undefined) {
+        lastTime = timestamp;
+        requestAnimationFrame(loop);
+        return;
+      }
+      const elapsed = timestamp - lastTime;
+      lastTime = timestamp;
+      // Get new Target
+      if (cinematicCam.target == undefined) {
+        // Choose new target that is closest to current target
+        const nextTarget = underworld.units
+          .filter(u => !cinematicCam.targetsScanned.includes(u))
+          // Filter out unspawned player character
+          .filter(u => u.unitSourceId !== spellmasonUnitId)
+          .sort((a, b) => {
+            return math.distance(a, cinematicCam.lastTarget) - math.distance(b, cinematicCam.lastTarget);
+          })[0]
+        if (nextTarget == undefined) {
+          // All units have been scanned, move to map center
+          console.log('Cinematic Cam: go to map center', mapCenter);
+          cinematicCam.target = mapCenter;
+        } else {
+          cinematicCam.target = nextTarget;
+        }
+      }
+      // Move camera:
+      const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(cinematicCam, cinematicCam.target, cinematicCameraMoveSpeed * elapsed)
+      cinematicCam.x = stepTowardsTarget.x;
+      cinematicCam.y = stepTowardsTarget.y;
+      if (cinematicCam.target == mapCenter && math.distance(cinematicCam, mapCenter) < 1) {
+        console.log('Cinematic Cam: done')
+        cameraAutoFollow(false);
+        globalThis.zoomTarget = 1.6;
+        resolve();
+        return;
+      }
+      globalThis.cinematicCameraTarget = cinematicCam;
+      // Scan for targets that it's seen:
+      for (let unit of underworld.units) {
+        if (math.distance(cinematicCam, unit) <= cinematicCam.radius) {
+          if (!cinematicCam.targetsScanned.includes(unit)) {
+            cinematicCam.targetsScanned.push(unit);
+            if (unit == cinematicCam.target) {
+              cinematicCam.lastTarget = cinematicCam.target;
+              // Set undefined so it will grab the next target on next loop
+              cinematicCam.target = undefined;
+            }
+          }
+
+        }
+      }
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  }).then(() => {
+    document.body?.classList.toggle('viewingCinematicCamera', false);
+    // Clear cinematic camera control:
+    globalThis.cinematicCameraTarget = undefined;
+  });
+
+}
 
 // Used for moving the camera with middle mouse button (like in Dota2)
 export function moveCamera(x: number, y: number) {
@@ -271,9 +370,13 @@ export function getCamera() {
     zoom: !app ? 1 : app.stage.scale.x
   }
 }
+export function getMapCenter(underworld: Underworld): Vec2 {
+  return { x: (underworld.limits.xMax - underworld.limits.xMin) / 2, y: (underworld.limits.yMax - underworld.limits.yMin) / 2 }
+
+}
 export function setCameraToMapCenter(underworld: Underworld) {
   // Set camera to the center of the map
-  utilProps.camera = { x: (underworld.limits.xMax - underworld.limits.xMin) / 2, y: (underworld.limits.yMax - underworld.limits.yMin) / 2 };
+  utilProps.camera = getMapCenter(underworld);
 }
 let lastZoom = globalThis.zoomTarget;
 export function updateCameraPosition(underworld: Underworld) {
@@ -295,11 +398,17 @@ export function updateCameraPosition(underworld: Underworld) {
     case View.Game:
       if (globalThis.player) {
         if (utilProps.doCameraAutoFollow) {
-          if (!inPortal(globalThis.player) && globalThis.player.unit.alive) {
-            // Follow current client player
-            utilProps.camera = clone(globalThis.player.unit);
+          if (globalThis.cinematicCameraTarget) {
+            // Cinematic camera has control
+            utilProps.camera = clone(globalThis.cinematicCameraTarget);
           } else {
-            setCameraToMapCenter(underworld);
+
+            if (!inPortal(globalThis.player) && globalThis.player.unit.alive) {
+              // Follow current client player
+              utilProps.camera = clone(globalThis.player.unit);
+            } else {
+              setCameraToMapCenter(underworld);
+            }
           }
         }
         // Allow camera movement via WSAD
