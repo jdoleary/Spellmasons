@@ -2,7 +2,7 @@ import { HasLife } from '../entity/Type';
 import * as Unit from '../entity/Unit';
 import { lerp } from '../jmath/math';
 import { CardCategory } from '../types/commonTypes';
-import { playDefaultSpellSFX } from './cardUtils';
+import { playDefaultSpellSFX, playSpellSFX } from './cardUtils';
 import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { makeBleedParticles } from '../graphics/ParticleCollection';
@@ -40,7 +40,7 @@ const spell: Spell = {
     thumbnail: 'spellIconBleed.png',
     // no animation path, animation is done with particles
     animationPath: '',
-    sfx: 'rend',
+    sfx: '',
     description: `
 Deals more damage based on how much health the target is missing.
 
@@ -54,16 +54,27 @@ Target with full health will take no damage.
       await new Promise<void>((resolve) => {
         // .filter: only target living units
         const targets = state.targetedUnits.filter(u => u.alive)
-        if (!prediction) {
-          playDefaultSpellSFX(card, prediction);
-        }
+        let biggestProportion = 0;
         for (let unit of targets) {
           const proportion = calculateDamageProportion(unit);
+          if (proportion > biggestProportion) {
+            biggestProportion = proportion;
+          }
           const damage = calculateDamageFromProportion(unit, proportion);
           if (!prediction) {
             makeBleedParticles(unit, prediction, proportion, resolve);
           }
           Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
+        }
+        if (!prediction) {
+          if (biggestProportion < bleedInstantKillProportion / 3) {
+            playSpellSFX('bleedSmall', prediction);
+          } else if (biggestProportion < 2 * bleedInstantKillProportion / 3) {
+            playSpellSFX('bleedMedium', prediction);
+          } else {
+            playSpellSFX('bleedLarge', prediction);
+
+          }
         }
         if (prediction) {
           resolve();

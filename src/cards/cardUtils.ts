@@ -9,6 +9,14 @@ export interface CardCost {
     manaCost: number;
     healthCost: number;
 }
+export function playSpellSFX(sfxKey: string, prediction: boolean) {
+    // Play the card sound effect:
+    if (!prediction && sfxKey) {
+        if (globalThis.playSFX && globalThis.sfx) {
+            globalThis.playSFX(globalThis.sfx[sfxKey]);
+        }
+    }
+}
 export function playDefaultSpellSFX(card: ICard, prediction: boolean) {
     // Play the card sound effect:
     if (!prediction && card.sfx) {
