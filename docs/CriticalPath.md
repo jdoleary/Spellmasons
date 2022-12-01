@@ -16,6 +16,7 @@
     - Optimize runPredictions
         - especially with expanding + corpse explosion
 - January
+    - Use Steamworks "Currator Connect" Tool
     - How to visually stack modifiers such as blood_curse and debilitate
     - Support hosting a server from in the game exe
     - Balance Enemies
