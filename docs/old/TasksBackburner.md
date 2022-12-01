@@ -1,3 +1,4 @@
+- [Controller Input](https://learn.microsoft.com/en-us/windows/win32/xinput/getting-started-with-xinput)
 - feature: secondary spellbar
 - EZ self cast, like alt clicking a spell self casts or something
 - stacked unit summons should spread out

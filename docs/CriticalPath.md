@@ -3,19 +3,18 @@
     - Submit demo to IGN
         - need gameplay video first
 - December
-    - Optimize runPredictions
-        - especially with expanding + corpse explosion
+    - feature: Allow multiplayer game to restart after wipe
+    - Server Browser
     - Start reaching out to steamers and reviewers and send demo
     - Convenient multiplayer lobbying via steam
         - Prevent players from joining mid-round, notify "you will spawn once this level is complete"
         - GameLobbyJoinRequested_t
             - https://partner.steamgames.com/doc/api/ISteamFriends
         - [sdk api overview](https://partner.steamgames.com/doc/sdk/api)
-        - [Call c from node](https://koistya.medium.com/how-to-call-c-c-code-from-node-js-86a773033892)
-    - [Controller Input](https://learn.microsoft.com/en-us/windows/win32/xinput/getting-started-with-xinput)
+        - [Call c from node](https://github.com/node-ffi/node-ffi/wiki/Node-FFI-Tutorial)
     - Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
-    - Server Browser
-    - feature: Allow multiplayer game to restart after wipe
+    - Optimize runPredictions
+        - especially with expanding + corpse explosion
 - January
     - How to visually stack modifiers such as blood_curse and debilitate
     - Support hosting a server from in the game exe
@@ -33,6 +32,14 @@
     - Make storage.js use SteamCloud
     - Release
     
+- Gameplay Trailer
+- Cut Demo
+- Reach out to streamers and Reviewers
+- Short circuit expensive runPredictions
+    - Any way to make many forceMoves run asyncronously?
+- Exe optimized for updates & modding?
+- Dynamic difficulty?
+    - Allow spawning enemies sooner based on lifetime performance?
 - "How To" guides
 - Allow opening dev tools in exe
 # Critical Path

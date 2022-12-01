@@ -1,13 +1,16 @@
-# Nov Week 4
-    - allow shield to stack, but make the mana scale alot
-    - Make gameplay video with Brad, add it to Steam and YouTube
-        - Bugs
-        - Send out Demo
-    - Rethink next trailer
-        - Lead with "fun"
-        - Remove "dead time"
-        - get into the action fast
-        - Communicate the big idea
+- Ghost archer should target farthest enemy
+- Nice camera
+    - introduce new levels
+    - exciting akira moment
+- allow shield to stack, but make the mana scale alot
+- Make gameplay video with Brad, add it to Steam and YouTube
+    - Bugs
+    - Send out Demo
+- Rethink next trailer
+    - Lead with "fun"
+    - Remove "dead time"
+    - get into the action fast
+    - Communicate the big idea
 # Nov Week 5 / Dec Week 1
     - Add explain gifs for new units
     - Test Cloud Saves
@@ -70,7 +73,8 @@
 - All tooltip info
 - Explain prompts - see stash "add i18n to explain prompts"
 # Features
-- Need a restart screen after a team wipe
+- A way to "sell spells to get to choose a new one"
+- Need a restart screen after a team wipe on multiplayer
 - should allow spell prediction even while an action is taking place - this not being here causes friction in multiplayer
 - **important**Allow multiplayer game restart after wipe
     - All players return to lobby after 10 seconds
