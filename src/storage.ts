@@ -119,7 +119,6 @@ export function get(key: string): string | null {
     }
     if (globalThis.allowCookies || areCookiesAllowed()) {
         const savedValue = localStorage.getItem(key);
-        console.log(`storage: get "${key}" as ${savedValue}`);
         return savedValue;
     } else {
         console.log(`Could not retrieve "${key}" from storage, without cookie consent`);
