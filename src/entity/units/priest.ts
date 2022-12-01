@@ -3,7 +3,7 @@ import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import * as math from '../../jmath/math';
 import { createVisualFlyingProjectile } from '../Projectile';
-import Shield from '../../cards/shield';
+import * as shield from '../../cards/shield';
 import { hasBloodCurse } from '../../cards/blood_curse';
 import Underworld from '../../Underworld';
 import * as Image from '../../graphics/Image';
@@ -68,7 +68,6 @@ const unit: UnitSource = {
   },
   action: async (unit: Unit.IUnit, attackTargets, underworld: Underworld) => {
     let didAction = false;
-    const closestAlly = Unit.findClosestUnitInSameFaction(unit, underworld);
     // If they have enough mana
     if (unit.mana >= manaCostToCast) {
       if (attackTargets.length) {
@@ -85,14 +84,15 @@ const unit: UnitSource = {
         if (damagedAllys.length) {
           didAction = await healOneOf(unit, damagedAllys, underworld);
         } else {
+          const closestNonShieldedAlly = Unit.livingUnitsInSameFaction(unit, underworld).filter(u => u.modifiers[shield.id] === undefined)[0];
           // if there are no damaged allies cast shield on the closest:
-          if (closestAlly && closestAlly.unitSubType !== UnitSubType.SUPPORT_CLASS) {
-            if (Unit.inRange(unit, closestAlly)) {
+          if (closestNonShieldedAlly && closestNonShieldedAlly.unitSubType !== UnitSubType.SUPPORT_CLASS) {
+            if (Unit.inRange(unit, closestNonShieldedAlly)) {
               playSFXKey('priestAttack');
               await Unit.playAnimation(unit, unit.animations.attack);
-              await animatePriestProjectileAndHit(unit, closestAlly);
+              await animatePriestProjectileAndHit(unit, closestNonShieldedAlly);
               // prediction is false because unit.action doesn't yet ever occur during a prediction
-              Unit.addModifier(closestAlly, Shield.card.id, underworld, false);
+              Unit.addModifier(closestNonShieldedAlly, shield.id, underworld, false);
               // Remove mana once the cast occurs
               unit.mana -= manaCostToCast;
               didAction = true;
@@ -102,6 +102,7 @@ const unit: UnitSource = {
       }
     }
     if (!didAction) {
+      const closestAlly = Unit.findClosestUnitInSameFaction(unit, underworld);
       // Move to closest ally
       if (closestAlly) {
         const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestAlly, unit.stamina);

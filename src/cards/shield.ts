@@ -6,15 +6,12 @@ import { CardCategory } from '../types/commonTypes';
 import type Underworld from '../Underworld';
 import { playDefaultSpellSFX } from './cardUtils';
 import * as config from '../config';
-import throttle from 'lodash.throttle';
-import { Vec2 } from '../jmath/Vec';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
 export const id = 'shield';
 export const modifierImagePath = 'spell-effects/modifierShield.png';
 const damageBlocked = 3;
-const maxStack = 1;
 const spell: Spell = {
   card: {
     id,
@@ -23,7 +20,7 @@ const spell: Spell = {
     supportQuantity: true,
     manaCost: 60,
     healthCost: 0,
-    expenseScaling: 1,
+    expenseScaling: 3,
     probability: probabilityMap[CardRarity.SPECIAL],
     thumbnail: 'spellIconShield.png',
     animationPath: 'spell-effects/spellShield',
@@ -109,10 +106,6 @@ function updateTooltip(unit: Unit.IUnit) {
   }
 }
 
-const notifyMaximumShield = throttle((coords: Vec2) => {
-  floatingText({ coords, text: `Maximum shield` });
-}, 1000, { trailing: true });
-
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
   const modifier = getOrInitModifier(unit, id, { isCurse: false, quantity }, () => {
     // Add event
@@ -124,12 +117,6 @@ function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, qu
   // Note: This is only adding the quantity of this invokation, NOT any preexisting
   // modifier.quantity that may have existed from previous invokations of this spell
   modifier.damage_block = (modifier.damage_block || 0) + damageBlocked * quantity;
-  const maxBlock = maxStack * damageBlocked;
-  if (modifier.damage_block > maxBlock) {
-    // Cap how much shield a unit can have
-    modifier.damage_block = maxBlock;
-    notifyMaximumShield(unit);
-  }
   updateTooltip(unit);
 }
 export default spell;

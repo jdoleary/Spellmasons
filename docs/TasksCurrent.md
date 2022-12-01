@@ -1,7 +1,6 @@
 - Nice camera
     - introduce new levels
     - exciting akira moment
-- allow shield to stack, but make the mana scale alot
 - Make gameplay video with Brad, add it to Steam and YouTube
     - Bugs
     - Send out Demo
