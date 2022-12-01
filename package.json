@@ -6,7 +6,8 @@
   "scripts": {
     "start": "vite",
     "tsc": "tsc",
-    "build": "tsc && vite build && rm -r ../Golems-Electron-Build/src/build && cp -r build/ ../Golems-Electron-Build/src/",
+    "build": "tsc && vite build",
+    "build-for-electron": "tsc && vite build && rm -r ../Golems-Electron-Build/src/build && cp -r build/ ../Golems-Electron-Build/src/",
     "preview": "vite preview",
     "test": "tsc && jest",
     "format": "prettier --write \"src/**/*.{ts,js}\"",
