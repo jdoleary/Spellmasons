@@ -1918,7 +1918,7 @@ export default class Underworld {
         // Do not continue with initialization
         continue;
       }
-      if (player == globalThis.player) {
+      if (player == globalThis.player && globalThis.player.isSpawned) {
         // Notify the current player that their turn is starting
         queueCenteredFloatingText(`Your Turn`);
         // Don't play turn sfx when recording
