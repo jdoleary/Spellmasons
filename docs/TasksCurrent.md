@@ -39,6 +39,7 @@
         - User id should match steam id?
     - Add sentry errors to electron node files
 # Bugs / Cleaning
+- target cone doesn't draw a circle around the first guy
 - during cinematic introduction your health bars remain from the last level
 - res markers don't show if the unit is alive but will be killed and then resurrected
 - **critical** vamp miniboss got stuck where he has stamina and a path (with no points), but wont move; i think it's because i summoned an archer and the archer was part way in liquid but didn't show it and so he didn't have a path to the archer
