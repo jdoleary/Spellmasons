@@ -1088,7 +1088,8 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
               unitId: unit.id,
               stats: {
                 manaMax: parsedMana,
-                mana: parsedMana
+                mana: parsedMana,
+                manaPerTurn: parsedMana,
               }
             });
           }
