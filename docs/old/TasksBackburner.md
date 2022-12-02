@@ -1,3 +1,5 @@
+- capture soul doesn't work on Player unit
+    - This is because there is no SummonSPellmason card at the moment
 - UI: should be able to drag a spell off the bar to open the slot
   - see stash `allow drag card away from toolbar to dissapear it`
 - [Controller Input](https://learn.microsoft.com/en-us/windows/win32/xinput/getting-started-with-xinput)

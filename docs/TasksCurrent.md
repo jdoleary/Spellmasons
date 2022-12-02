@@ -1,8 +1,5 @@
-- capture soul doesn't work on Player unit
-    - This is because there is no SummonSPellmason card at the moment
 - cinematic cam gets stuck in multiplayer until you click to skip it
 
-- Add new target variations from Val in folder "target variations 3"
 - UI: Button to dismiss tutorial
 - Upgrade choosing should occur after you finish, not before you start a level.  Maybe when you portal
 - Multiplayer: you can't pick an upgrade while other's spells are playing out
