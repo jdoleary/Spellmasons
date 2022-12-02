@@ -91,9 +91,13 @@ body.view-Menu #underworld-container {
   pointer-events: none;
 }
 
+/* Hide UI elements while cinematic camera has control of the view
+so as to not obstruct the cinematic view */
+body.viewingCinematicCamera #tutorial-checklist,
+body.viewingCinematicCamera #in-game-lobby,
+body.viewingCinematicCamera #ui-holder,
 body.viewingCinematicCamera .prompt,
 body.viewingCinematicCamera #upgrade-picker {
-  /* Do not view while the cinematic camera has control of the viewer */
   visibility: hidden;
 }
 
