@@ -66,7 +66,7 @@ export default function makeSpellForUnitId(unitId: string): Spell | undefined {
             sfx: 'summonDecoy',
             supportQuantity: false,
             // Make mana cost dependent on how late they show up in the game
-            manaCost: Math.max(60, (sourceUnit.spawnParams?.unavailableUntilLevelIndex || 1) * 20),
+            manaCost: 2 * Math.max(60, (sourceUnit.spawnParams?.unavailableUntilLevelIndex || 1) * 20),
             healthCost: 0,
             expenseScaling: 3,
             probability: probabilityMap[rarity],

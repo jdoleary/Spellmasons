@@ -1,8 +1,9 @@
+- capture soul doesn't work on Player unit
+- does capture soul work on multiplayer?
+
 - Add new target variations from Val in folder "target variations 3"
 - UI: Button to dismiss tutorial
 - Upgrade choosing should occur after you finish, not before you start a level.  Maybe when you portal
-- Summoning is too convenient and easy and circumvents the core mechanic
-    - Should be substantially more expensive
 - Multiplayer: you can't pick an upgrade while other's spells are playing out
 - Prediction issue: Dragger pulled me and then I got hit by people that didn't warn attention
 - Multiplayer: Dragger pull is desyncing
