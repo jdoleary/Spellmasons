@@ -34,7 +34,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconBurst.png',
     animationPath: '',
-    sfx: 'rend',
+    sfx: 'burst',
     description: `
 Deals more damage based how close the target is to the caster.
 Maximum damage is ${maxDamage}.

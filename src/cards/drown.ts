@@ -26,7 +26,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.SPECIAL],
     thumbnail: 'spellIconDrown.png',
-    sfx: 'rend',
+    sfx: 'drown',
     description: `
 Deal ${damageDone} damage ONLY if target is submerged.
     `,
@@ -35,7 +35,8 @@ Deal ${damageDone} damage ONLY if target is submerged.
       const targets = state.targetedUnits.filter(u => u.alive && u.inLiquid);
       if (targets.length) {
         if (!prediction) {
-          playSFXKey(`fallIntoLiquid-${underworld.lastLevelCreated?.biome}`);
+          playDefaultSpellSFX(card, prediction);
+          // playSFXKey(`fallIntoLiquid-${underworld.lastLevelCreated?.biome}`);
         }
         for (let unit of targets) {
           Unit.takeDamage(unit, damageDone, state.casterUnit, underworld, prediction, state);
