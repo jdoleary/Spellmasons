@@ -58,10 +58,10 @@ export function cleanUpTrail(trail: Trail) {
         trails.splice(i, 1)
     }
 }
-export function makeManaTrail(start: Vec2, target: Vec2) {
+export function makeManaTrail(start: Vec2, target: Vec2): Promise<void> {
     const texture = createParticleTexture();
     if (!texture) {
-        return undefined
+        return Promise.resolve();
     }
     return addTrail(
         start,

@@ -41,7 +41,7 @@ Sacrifice some of own health to steal up to ${mana_stolen} mana from each target
         const manaTrailPromises = [];
         if (!prediction) {
           for (let i = 0; i < quantity * NUMBER_OF_ANIMATED_TRAILS; i++) {
-            manaTrailPromises.push(makeManaTrail(unit, caster)?.then(() => {
+            manaTrailPromises.push(makeManaTrail(unit, caster).then(() => {
               const manaStolenPerTrail = Math.floor(unitManaStolen / NUMBER_OF_ANIMATED_TRAILS)
               state.casterUnit.mana += manaStolenPerTrail;
               if (!prediction) {

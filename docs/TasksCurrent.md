@@ -1,6 +1,5 @@
 - Add new target variations from Val in folder "target variations 3"
 - UI: Button to dismiss tutorial
-- After Brad manasteals from me, it subtracts that from the amount he gets next turn
 - Upgrade choosing should occur after you finish, not before you start a level.  Maybe when you portal
 - Summoning is too convenient and easy and circumvents the core mechanic
     - Should be substantially more expensive
