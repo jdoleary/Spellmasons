@@ -12,6 +12,10 @@ globalThis.STORAGE_ID_UI_ZOOM = STORAGE_ID_UI_ZOOM;
 globalThis.enemyEncountered = [];
 
 export function getSavedData() {
+    if (globalThis.headless) {
+        // Headless server does not use storage
+        return;
+    }
     // Initialize settings once the settings object is loaded
     // If this is running as an electron app, get settings from storage
     // If this is not running as an electron app, just resolve immediately
@@ -75,6 +79,10 @@ export function getSavedData() {
 }
 
 export function remove(key: string) {
+    if (globalThis.headless) {
+        // Headless server does not use storage
+        return;
+    }
     localStorage.removeItem(key);
 }
 export function set(key: string, value: any) {

@@ -9,22 +9,8 @@
 - Multiplayer: Dragger pull is desyncing
 - Multiplayer: lobby shouldn't say "connected" in game, "waiting..." should be "done"
 - Multiplayer menu bug: join lobby, Go into color picker, press escape twice, menu gets stuck on resume game screen
-- Multiplayer bug: we joined a game, it was on turn-phase stalled and it didn't get unstuck even after we spawned
-    - It looks like this error made ALL rooms stall
-    ```
-    [smms] [2022-12-02 00:45:43] This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). The promise rejected with the reason:
-[smms] [2022-12-02 00:45:43] ReferenceError: localStorage is not defined
-[smms] [2022-12-02 00:45:43]     at Object.remove (/app/headless-server-build/src/storage.js:81:5)
-[smms] [2022-12-02 00:45:43]     at Underworld.tryGameOver (/app/headless-server-build/src/Underworld.js:1888:21)
-[smms] [2022-12-02 00:45:43]     at Underworld.syncTurnMessage (/app/headless-server-build/src/Underworld.js:2023:19)
-[smms] [2022-12-02 00:45:43]     at Underworld.setTurnPhase (/app/headless-server-build/src/Underworld.js:2399:14)
-[smms] [2022-12-02 00:45:43]     at Underworld.<anonymous> (/app/headless-server-build/src/Underworld.js:2433:18)
-[smms] [2022-12-02 00:45:43]     at Generator.next (<anonymous>)
-[smms] [2022-12-02 00:45:43]     at /app/headless-server-build/src/Underworld.js:31:71
-[smms] [2022-12-02 00:45:43]     at new Promise (<anonymous>)
-[smms] [2022-12-02 00:45:43]     at __awaiter (/app/headless-server-build/src/Underworld.js:27:12)
-[smms] [2022-12-02 00:45:43]     at Underworld.initializeTurnPhase (/app/headless-server-build/src/Underworld.js:2424:16)
-```
+- wsPie: isolate errors that occur in a given room to that room,
+ensure that if one room crashees it won't cause others to lock up
 - UX: Zoom in is faster than zoom out
 - Bug: When I quit it prompted brad to pick new spells
 - Summoner icons aren't working - due to case

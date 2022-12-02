@@ -45,4 +45,9 @@ global.location = undefined;
 global.cinematicCameraEnabled = false;
 // No translations should be done on the server, just return the original text.
 global.i18n = (text) => text;
+global.localStorage = {
+    removeItem: () => { },
+    getItem: () => 'headless server does not use localStorage',
+    setItem: () => { },
+}
 export { };
