@@ -12,9 +12,9 @@ const spell: Spell = {
   card: {
     id,
     category: CardCategory.Soul,
-    manaCost: 80,
+    manaCost: 40,
     healthCost: 0,
-    probability: probabilityMap[CardRarity.FORBIDDEN],
+    probability: probabilityMap[CardRarity.RARE],
     expenseScaling: 2,
     thumbnail: 'unknown.png',
     description: `
