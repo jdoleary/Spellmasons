@@ -41,7 +41,6 @@ import {
   setAbyssColor,
   setCameraToMapCenter,
   addPixiTilingSprite,
-  getMapCenter,
   runCinematicLevelCamera,
 } from './graphics/PixiUtils';
 import floatingText, { elPIXIHolder, queueCenteredFloatingText } from './graphics/FloatingText';

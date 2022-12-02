@@ -213,7 +213,6 @@ export function playSFXKey(key?: string) {
     if (paths) {
         const path = chooseOneOf(paths);
         if (path) {
-            console.log('jtest play audio', path);
             playSFX(path);
         } else {
             console.error('Error choosing random sfx from ', key);
