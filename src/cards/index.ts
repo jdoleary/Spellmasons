@@ -32,6 +32,7 @@ import poison from './poison';
 import debilitate from './debilitate';
 import * as protection from './protection';
 import clone from './clone';
+import capture_soul from './capture_soul';
 import mana_burn from './mana_burn';
 import mana_steal from './mana_steal';
 import vampire_bite from './blood_curse';
@@ -187,6 +188,7 @@ export function registerCards(overworld: Overworld) {
   register(burst, overworld);
   register(slow, overworld);
   register(death_wager, overworld);
+  register(capture_soul, overworld);
   for (let unitId of Object.keys(allUnits)) {
     const spell = summon_generic(unitId);
     if (spell) {

@@ -69,7 +69,8 @@ export default function makeSpellForUnitId(unitId: string): Spell | undefined {
             manaCost: 2 * Math.max(60, (sourceUnit.spawnParams?.unavailableUntilLevelIndex || 1) * 20),
             healthCost: 0,
             expenseScaling: 3,
-            probability: probabilityMap[rarity],
+            // These cards are not available as upgrades and must be accessed through capture_soul
+            probability: 0,
             thumbnail: `spellIconSummon_${unitId.split(' ').join('').toLowerCase()}.png`,
             description: `
 Summons ${unitId[0]?.toLowerCase() == 'a' ? `an ${unitId}` : `a ${unitId}`} to fight for your faction.
