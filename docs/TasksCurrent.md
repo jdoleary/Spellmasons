@@ -3,18 +3,17 @@
 - Upgrade choosing should occur after you finish, not before you start a level.  Maybe when you portal
 - Summoning is too convenient and easy and circumvents the core mechanic
     - Should be substantially more expensive
-- Improve cinematic cam by just doing a scan left to right, zoomed out
 - Multiplayer: you can't pick an upgrade while other's spells are playing out
 - Prediction issue: Dragger pulled me and then I got hit by people that didn't warn attention
 - Multiplayer: Dragger pull is desyncing
 - Multiplayer: lobby shouldn't say "connected" in game, "waiting..." should be "done"
 - Multiplayer menu bug: join lobby, Go into color picker, press escape twice, menu gets stuck on resume game screen
-- wsPie: isolate errors that occur in a given room to that room,
-ensure that if one room crashees it won't cause others to lock up
+- wsPie: isolate errors that occur in a given room to that room, ensure that if one room crashees it won't cause others to lock up
+    - see 4c56954a for example of error that could crash room
 - UX: Zoom in is faster than zoom out
 - Bug: When I quit it prompted brad to pick new spells
-- Summoner icons aren't working - due to case
 - make music play in menu
+
 - build: remove unneeded nuget package from build output?
 - Uncommon cards are showing up on level 1 when you don't have near the mana to cast them
 - make build and test steam cloud saves and new install directory

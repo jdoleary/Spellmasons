@@ -257,38 +257,36 @@ export function runCinematicLevelCamera(underworld: Underworld) {
     const mapCenter = getMapCenter(underworld);
     // The greater the margin, the closer the unit scanned will get to
     // the center of the camera before the camera moves on
-    const margin = 6;
-    const targetsScanned: Vec2[] = [];
+    const margin = 3;
     function getCameraScanUnits(): Vec2[] {
       return underworld.units
-        .filter(u => !targetsScanned.includes(u))
         // Filter out unspawned player character
         .filter(u => u.unitSourceId !== spellmasonUnitId)
     }
-    const firstUnitToView = getCameraScanUnits().sort((a, b) => {
+    const positionSortedUnits = getCameraScanUnits().sort((a, b) => {
       return math.distance(a, { x: 0, y: 0 }) - math.distance(b, { x: 0, y: 0 });
-    })[0];
-    if (!firstUnitToView) {
+    });
+    const firstUnitToView = positionSortedUnits[0];
+    const lastUnitToView = positionSortedUnits[positionSortedUnits.length - 1];
+    if (!firstUnitToView || !lastUnitToView) {
       // First tutorial level has no units, resolve immediately
       resolve();
       return;
     }
-    const cinematicCameraMoveSpeed = 0.3;
+    let cinematicCameraMoveSpeed = 0.3;
     let cinematicCam: {
       radius: number;
       x: number;
       y: number;
-      target: Vec2 | undefined;
+      target: Vec2;
       lastTarget: Vec2;
-      targetsScanned: Vec2[];
     } = {
       radius: Math.min(elPIXIHolder.clientWidth, elPIXIHolder.clientHeight) / realCam.zoom / margin,
       x: firstUnitToView.x, y: firstUnitToView.y,
-      target: undefined,
+      target: lastUnitToView,
       lastTarget: firstUnitToView,
-      targetsScanned,
     }
-    globalThis.zoomTarget = 2.0;
+    globalThis.zoomTarget = 1.2;
     cameraAutoFollow(true);
     let lastTime: number | undefined = undefined;
     const loop = (timestamp: number) => {
@@ -304,25 +302,11 @@ export function runCinematicLevelCamera(underworld: Underworld) {
       }
       const elapsed = timestamp - lastTime;
       lastTime = timestamp;
-      // Get new Target
-      if (cinematicCam.target == undefined) {
-        // Choose new target that is closest to current target
-        const nextTarget = getCameraScanUnits()
-          .sort((a, b) => {
-            return math.distance(a, cinematicCam.lastTarget) - math.distance(b, cinematicCam.lastTarget);
-          })[0]
-        if (nextTarget == undefined) {
-          // All units have been scanned, move to map center
-          console.log('Cinematic Cam: go to map center', mapCenter);
-          cinematicCam.target = mapCenter;
-        } else {
-          cinematicCam.target = nextTarget;
-        }
-      }
       // Move camera:
       const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(cinematicCam, cinematicCam.target, cinematicCameraMoveSpeed * elapsed)
       cinematicCam.x = stepTowardsTarget.x;
       cinematicCam.y = stepTowardsTarget.y;
+      // Once the camera is returning to the map center and it get's close enough, finish cinematic
       if (cinematicCam.target == mapCenter && math.distance(cinematicCam, mapCenter) < 1) {
         globalThis.zoomTarget = 1.6;
         resolve();
@@ -332,13 +316,13 @@ export function runCinematicLevelCamera(underworld: Underworld) {
       // Scan for targets that it's seen:
       for (let unit of underworld.units) {
         if (math.distance(cinematicCam, unit) <= cinematicCam.radius) {
-          if (!cinematicCam.targetsScanned.includes(unit)) {
-            cinematicCam.targetsScanned.push(unit);
-            if (unit == cinematicCam.target) {
-              cinematicCam.lastTarget = cinematicCam.target;
-              // Set undefined so it will grab the next target on next loop
-              cinematicCam.target = undefined;
-            }
+          if (unit == cinematicCam.target) {
+            cinematicCam.lastTarget = cinematicCam.target;
+            // All units have been scanned, move to map center
+            console.log('Cinematic Cam: go to map center', mapCenter);
+            // Speed camera up on the way back to the center
+            cinematicCameraMoveSpeed *= 1.8;
+            cinematicCam.target = mapCenter;
           }
 
         }
