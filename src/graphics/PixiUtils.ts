@@ -365,6 +365,9 @@ export function moveCamera(x: number, y: number) {
   utilProps.camera.x += x;
   utilProps.camera.y += y;
 }
+export function getCameraCenterInGameSpace(): Vec2 {
+  return clone(utilProps.camera);
+}
 
 export function isCameraAutoFollowing(): boolean {
   return utilProps.doCameraAutoFollow;
@@ -374,7 +377,17 @@ export function cameraAutoFollow(active: boolean) {
   utilProps.doCameraAutoFollow = active;
   if (!utilProps.doCameraAutoFollow && elCameraRecenterTip) {
     if (globalThis.player?.isSpawned) {
-      elCameraRecenterTip.innerHTML = `Press ${keyToHumanReadable(KeyMapping.recenterCamera)} to make the view auto follow you`;
+      const { zoom } = getCamera();
+      // divide by 2: changes it from diameter to radius
+      const screenRadiusInGameSpace = Math.min(elPIXIHolder.clientWidth, elPIXIHolder.clientHeight) / zoom / 2;
+      const marginProportion = 0.90;
+      const cameraGameSpaceCenterDistanceToPlayer = math.distance(getCameraCenterInGameSpace(), globalThis.player.unit);
+      // Only show recenter tip if player is near or beyond the edge of the screen
+      if (cameraGameSpaceCenterDistanceToPlayer > screenRadiusInGameSpace * marginProportion) {
+        elCameraRecenterTip.innerHTML = `Press ${keyToHumanReadable(KeyMapping.recenterCamera)} to make the view auto follow you`;
+      } else {
+        elCameraRecenterTip.innerHTML = '';
+      }
     }
   }
   document.body?.classList.toggle('auto-camera', active);

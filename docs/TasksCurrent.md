@@ -5,7 +5,6 @@
 - Upgrade choosing should occur after you finish, not before you start a level.  Maybe when you portal
 - Summoning is too convenient and easy and circumvents the core mechanic
     - Should be substantially more expensive
-- UI: ONly warn ""z" to follow" if the player is in the outside 20% of the screen or farther
 - Hide inventory on cinematic cam
 - Improve cinematic cam by just doing a scan left to right, zoomed out
 - Multiplayer: you can't pick an upgrade while other's spells are playing out
