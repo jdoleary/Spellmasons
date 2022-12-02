@@ -1,5 +1,6 @@
 - capture soul doesn't work on Player unit
-- does capture soul work on multiplayer?
+    - This is because there is no SummonSPellmason card at the moment
+- cinematic cam gets stuck in multiplayer until you click to skip it
 
 - Add new target variations from Val in folder "target variations 3"
 - UI: Button to dismiss tutorial
