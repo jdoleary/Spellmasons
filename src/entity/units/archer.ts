@@ -84,7 +84,13 @@ const unit: UnitSource = {
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-    return getBestRangedLOSTarget(unit, underworld);
+    const targets = getBestRangedLOSTarget(unit, underworld);
+    if (targets) {
+      // Normal archers can only attack one target;
+      return targets.slice(0, 1);
+    } else {
+      return [];
+    }
   }
 };
 export default unit;
