@@ -77,7 +77,7 @@ function getColumnPoints(castLocation: Vec2, vector: Vec2, width: number, depth:
 
 async function animate(castLocation: Vec2, vector: Vec2, width: number, depth: number, underworld: Underworld) {
   const iterations = 100;
-  const millisBetweenIterations = 8;
+  const millisBetweenIterations = 12;
   // Keep track of which entities have been targeted so far for the sake
   // of making a new sfx when a new entity gets targeted
   const entitiesTargeted: HasSpace[] = [];

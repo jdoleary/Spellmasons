@@ -80,7 +80,7 @@ function withinCone(origin: Vec2, coneStartPoint: Vec2, radius: number, startAng
 
 async function animate(origin: Vec2, coneStartPoint: Vec2, radius: number, startAngle: number, endAngle: number, underworld: Underworld) {
   const iterations = 100;
-  const millisBetweenIterations = 8;
+  const millisBetweenIterations = 12;
   // Keep track of which entities have been targeted so far for the sake
   // of making a new sfx when a new entity gets targeted
   const entitiesTargeted: HasSpace[] = [];

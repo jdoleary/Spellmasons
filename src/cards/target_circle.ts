@@ -65,7 +65,7 @@ Adds a radius to the spell so it can affect more targets.
 };
 async function animate(pos: Vec2, radius: number, underworld: Underworld) {
   const iterations = 100;
-  const millisBetweenIterations = 8;
+  const millisBetweenIterations = 12;
   // Keep track of which entities have been targeted so far for the sake
   // of making a new sfx when a new entity gets targeted
   const entitiesTargeted: HasSpace[] = [];
