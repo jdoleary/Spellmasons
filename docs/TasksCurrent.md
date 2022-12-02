@@ -8,7 +8,6 @@
 - Prediction issue: Dragger pulled me and then I got hit by people that didn't warn attention
 - Multiplayer: Dragger pull is desyncing
 - Multiplayer: lobby shouldn't say "connected" in game, "waiting..." should be "done"
-- UI: Change game over note, passing aggressive
 - Multiplayer menu bug: join lobby, Go into color picker, press escape twice, menu gets stuck on resume game screen
 - Multiplayer bug: we joined a game, it was on turn-phase stalled and it didn't get unstuck even after we spawned
     - It looks like this error made ALL rooms stall
