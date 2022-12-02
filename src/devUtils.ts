@@ -77,6 +77,7 @@ export function setupDevGlobalFunctions(overworld: Overworld) {
             player.unit.health = 10000;
             player.unit.healthMax = 10000;
             player.unit.mana = 10000;
+            player.unit.manaPerTurn = 10000;
             player.unit.manaMax = 10000;
             // Give me all cards
             Object.keys(Cards.allCards).forEach(cardId => {
