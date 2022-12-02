@@ -22,7 +22,7 @@ const spell: Spell = {
     expenseScaling: 2,
     thumbnail: 'spellIconClone.png',
     description: `
-Clones each target
+Clones each target.  Cloned units maintain their current faction.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       // Batch find targets that should be cloned
