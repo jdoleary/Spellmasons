@@ -57,7 +57,8 @@ export function registerUnits() {
   register(priest);
   register(poisoner);
   register(vampire);
-  register(dragger);
+  // TODO: Dragger is causing desync in multiplayer
+  // register(dragger);
   register(summoner);
   register(bloodGolem);
   register(blood_archer);
