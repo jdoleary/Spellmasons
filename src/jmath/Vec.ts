@@ -123,3 +123,6 @@ export function clampVector(vector: Vec2, maxMagnitude: number): Vec2 {
         return similarTriangles(vector.x, vector.y, mag, maxMagnitude);
     }
 }
+export function isInvalid(vector: Vec2 | undefined): boolean {
+    return !vector || isNaN(vector.x) || isNaN(vector.y);
+}

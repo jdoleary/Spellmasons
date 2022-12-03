@@ -23,7 +23,7 @@ import { Vec2 } from '../jmath/Vec';
 import pingSprite from '../graphics/Ping';
 import { clearLastNonMenuView, setView, View } from '../views';
 import { autoExplain, explain, EXPLAIN_END_TURN, tutorialCompleteTask } from '../graphics/Explain';
-import { cameraAutoFollow } from '../graphics/PixiUtils';
+import { cameraAutoFollow, runCinematicLevelCamera } from '../graphics/PixiUtils';
 import { Overworld } from '../Overworld';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -281,6 +281,11 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           if (connectedPlayers.length > 0 && connectedPlayers.every(p => p.lobbyReady)) {
             console.log('Lobby: All players are ready, start game.');
             setView(View.Game);
+            // Retrigger the cinematic camera since the first time
+            // a user joins a game from the lobby, postLevelSetup will
+            // already have completed before they enter View.Game, so now
+            // that they have, run the cinematic again.
+            runCinematicLevelCamera(underworld);
           }
         }
         if (name !== undefined) {

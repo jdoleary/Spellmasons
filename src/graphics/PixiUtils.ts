@@ -1,5 +1,5 @@
 import type * as PIXI from 'pixi.js';
-import { clone, equal, getAngleBetweenVec2sYInverted, Vec2 } from '../jmath/Vec';
+import { clone, equal, getAngleBetweenVec2sYInverted, isInvalid, Vec2 } from '../jmath/Vec';
 import { View } from '../views';
 import * as math from '../jmath/math';
 import * as config from '../config';
@@ -11,11 +11,10 @@ import { elPIXIHolder } from './FloatingText';
 import Underworld, { Biome } from '../Underworld';
 import { randFloat, randInt } from '../jmath/rand';
 import { IUnit } from '../entity/Unit';
-import { addMarginToRect, isWithinRect, Rect } from '../jmath/Rect';
+import { isWithinRect, Rect } from '../jmath/Rect';
 import { inPortal } from '../entity/Player';
 import KeyMapping, { keyToHumanReadable } from './ui/keyMapping';
-import { tutorialCompleteTask, tutorialShowTask, updateTutorialChecklist } from './Explain';
-import { spellmasonUnitId } from '../entity/units/playerUnit';
+import { tutorialCompleteTask } from './Explain';
 
 // if PIXI is finished setting up
 let isReady = false;
@@ -244,12 +243,20 @@ export function withinCameraBounds(position: Vec2, marginHoriz?: number): Vec2 {
   }
   return withinBoundsPos;
 }
-export function runCinematicLevelCamera(underworld: Underworld) {
+export function runCinematicLevelCamera(underworld: Underworld): Promise<void> {
+  if (globalThis.headless) {
+    return Promise.resolve();
+  }
   if (!globalThis.cinematicCameraEnabled) {
+    return Promise.resolve();
+  }
+  if (globalThis.view !== View.Game) {
+    // Do not run cinematic unless the player is looking at the game view
     return Promise.resolve();
   }
   const cinematicCameraCSSClass = 'viewingCinematicCamera';
   document.body?.classList.toggle(cinematicCameraCSSClass, true);
+
   return new Promise<void>(resolve => {
     globalThis.skipCinematic = resolve;
     setCameraToMapCenter(underworld);
@@ -258,17 +265,9 @@ export function runCinematicLevelCamera(underworld: Underworld) {
     // The greater the margin, the closer the unit scanned will get to
     // the center of the camera before the camera moves on
     const margin = 3;
-    function getCameraScanUnits(): Vec2[] {
-      return underworld.units
-        // Filter out unspawned player character
-        .filter(u => u.unitSourceId !== spellmasonUnitId)
-    }
-    const positionSortedUnits = getCameraScanUnits().sort((a, b) => {
-      return math.distance(a, { x: 0, y: 0 }) - math.distance(b, { x: 0, y: 0 });
-    });
-    const firstUnitToView = positionSortedUnits[0];
-    const lastUnitToView = positionSortedUnits[positionSortedUnits.length - 1];
-    if (!firstUnitToView || !lastUnitToView) {
+    const firstUnitToView = clampCameraPosition({ x: underworld.limits.xMin, y: underworld.limits.yMin }, realCam.zoom, underworld);//positionSortedUnits[0];
+    const lastUnitToView = clampCameraPosition({ x: underworld.limits.xMax, y: underworld.limits.yMax }, realCam.zoom, underworld);//positionSortedUnits[positionSortedUnits.length - 1];
+    if (!firstUnitToView || isInvalid(firstUnitToView) || !lastUnitToView || isInvalid(lastUnitToView)) {
       // First tutorial level has no units, resolve immediately
       resolve();
       return;
@@ -313,19 +312,14 @@ export function runCinematicLevelCamera(underworld: Underworld) {
         return;
       }
       globalThis.cinematicCameraTarget = cinematicCam;
-      // Scan for targets that it's seen:
-      for (let unit of underworld.units) {
-        if (math.distance(cinematicCam, unit) <= cinematicCam.radius) {
-          if (unit == cinematicCam.target) {
-            cinematicCam.lastTarget = cinematicCam.target;
-            // All units have been scanned, move to map center
-            console.log('Cinematic Cam: go to map center', mapCenter);
-            // Speed camera up on the way back to the center
-            cinematicCameraMoveSpeed *= 1.8;
-            cinematicCam.target = mapCenter;
-          }
-
-        }
+      // Does the radius encompass the target?
+      if (cinematicCam.target !== mapCenter && math.distance(cinematicCam, cinematicCam.target) <= cinematicCam.radius) {
+        cinematicCam.lastTarget = cinematicCam.target;
+        // All units have been scanned, move to map center
+        console.log('Cinematic Cam: go to map center', mapCenter);
+        // Speed camera up on the way back to the center
+        cinematicCameraMoveSpeed *= 1.8;
+        cinematicCam.target = mapCenter;
       }
       requestAnimationFrame(loop);
     }
@@ -445,35 +439,7 @@ export function updateCameraPosition(underworld: Underworld) {
         // Clamp centerTarget so that there isn't a lot of empty space
         // in the camera if the camera is in auto follow mode
         if (utilProps.doCameraAutoFollow) {
-          // Users can move the camera further if they are manually controlling the camera
-          // whereas if the camera is following a target it keeps more of the map on screen
-          const marginY = config.COLLISION_MESH_RADIUS * 4;
-          const marginX = config.COLLISION_MESH_RADIUS * 4;
-          // Clamp camera X
-          const mapLeftMostPoint = 0 - marginX;
-          const mapRightMostPoint = underworld.limits.xMax + marginX;
-          const camCenterXMin = mapLeftMostPoint + elPIXIHolder.clientWidth / 2 / zoom;
-          const camCenterXMax = mapRightMostPoint - elPIXIHolder.clientWidth / 2 / zoom;
-          // If the supposed minimum is more than the maximum, just center the camera:
-          if (camCenterXMin > camCenterXMax) {
-            utilProps.camera.x = (mapRightMostPoint + mapLeftMostPoint) / 2;
-          } else {
-            // clamp the camera x between the min and max possible camera targets
-            utilProps.camera.x = Math.min(camCenterXMax, Math.max(camCenterXMin, utilProps.camera.x));
-          }
-
-          //Clamp camera Y
-          const mapTopMostPoint = 0 - marginY;
-          const mapBottomMostPoint = underworld.limits.yMax + marginY;
-          const camCenterYMin = mapTopMostPoint + elPIXIHolder.clientHeight / 2 / zoom;
-          const camCenterYMax = mapBottomMostPoint - elPIXIHolder.clientHeight / 2 / zoom;
-          // If the supposed minimum is more than the maximum, just center the camera:
-          if (camCenterYMin > camCenterYMax) {
-            utilProps.camera.y = (mapBottomMostPoint + mapTopMostPoint) / 2;
-          } else {
-            // clamp the camera x between the min and max possible camera targets
-            utilProps.camera.y = Math.min(camCenterYMax, Math.max(camCenterYMin, utilProps.camera.y));
-          }
+          utilProps.camera = clampCameraPosition(utilProps.camera, zoom, underworld);
         }
 
         // Actuall move the camera to be centered on the centerTarget
@@ -534,6 +500,42 @@ export function updateCameraPosition(underworld: Underworld) {
       updateNameText(nameText, zoom);
     }
   })
+}
+// Clamp the camera position so it doesn't go too far out of bounds when autofollowing a target
+function clampCameraPosition(camPos: Vec2, zoom: number, underworld: Underworld): Vec2 {
+  const clampedPos = { x: 0, y: 0 };
+  // Users can move the camera further if they are manually controlling the camera
+  // whereas if the camera is following a target it keeps more of the map on screen
+  const marginY = config.COLLISION_MESH_RADIUS * 4;
+  const marginX = config.COLLISION_MESH_RADIUS * 4;
+  // Clamp camera X
+  const mapLeftMostPoint = 0 - marginX;
+  const mapRightMostPoint = underworld.limits.xMax + marginX;
+  const camCenterXMin = mapLeftMostPoint + elPIXIHolder.clientWidth / 2 / zoom;
+  const camCenterXMax = mapRightMostPoint - elPIXIHolder.clientWidth / 2 / zoom;
+  // If the supposed minimum is more than the maximum, just center the camera:
+  if (camCenterXMin > camCenterXMax) {
+    clampedPos.x = (mapRightMostPoint + mapLeftMostPoint) / 2;
+  } else {
+    // clamp the camera x between the min and max possible camera targets
+    clampedPos.x = Math.min(camCenterXMax, Math.max(camCenterXMin, camPos.x));
+  }
+
+  //Clamp camera Y
+  const mapTopMostPoint = 0 - marginY;
+  const mapBottomMostPoint = underworld.limits.yMax + marginY;
+  const camCenterYMin = mapTopMostPoint + elPIXIHolder.clientHeight / 2 / zoom;
+  const camCenterYMax = mapBottomMostPoint - elPIXIHolder.clientHeight / 2 / zoom;
+  // If the supposed minimum is more than the maximum, just center the camera:
+  if (camCenterYMin > camCenterYMax) {
+    clampedPos.y = (mapBottomMostPoint + mapTopMostPoint) / 2;
+  } else {
+    // clamp the camera x between the min and max possible camera targets
+    clampedPos.y = Math.min(camCenterYMax, Math.max(camCenterYMin, camPos.y));
+  }
+  return clampedPos;
+
+
 }
 export function updateNameText(nameText?: PIXI.Text, zoom?: number) {
   if (nameText) {

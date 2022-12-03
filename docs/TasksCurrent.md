@@ -1,10 +1,9 @@
-- cinematic cam gets stuck in multiplayer until you click to skip it
-
 - UI: Button to dismiss tutorial
 - Upgrade choosing should occur after you finish, not before you start a level.  Maybe when you portal
 - Multiplayer: you can't pick an upgrade while other's spells are playing out
-- Prediction issue: Dragger pulled me and then I got hit by people that didn't warn attention
-- Multiplayer: Dragger pull is desyncing
+- Dragger issues
+    - Prediction issue: Dragger pulled me and then I got hit by people that didn't warn attention
+    - Multiplayer: Dragger pull is desyncing
 - Multiplayer: lobby shouldn't say "connected" in game, "waiting..." should be "done"
 - Multiplayer menu bug: join lobby, Go into color picker, press escape twice, menu gets stuck on resume game screen
 - wsPie: isolate errors that occur in a given room to that room, ensure that if one room crashees it won't cause others to lock up
