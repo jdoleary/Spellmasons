@@ -11,6 +11,7 @@
             - [sdk api overview](https://partner.steamgames.com/doc/sdk/api)
             - [Call c from node](https://github.com/node-ffi/node-ffi/wiki/Node-FFI-Tutorial)
         - **big** Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
+    - build: remove unneeded nuget package from build output?
     - feature: Allow multiplayer game to restart after wipe
     - Start reaching out to steamers and reviewers and send demo
 - January
@@ -28,12 +29,15 @@
         - Ensure 'electron-squirrel-startup' is handled correctly
         - Ensure start app isn't added to desktop
     - Electron Security
+    - Verify Cloud Saves
     - Small
         - Add explain gifs for new units
         - Add sentry errors to electron node files
     - Server Browser
     - Balance Enemies
     - Balance Perks
+    - Update music so it only changes song group once you reach a new biome
+        - and so it will continue a song if the next level is in the same biome
     - Release
     
 - Rethink next trailer

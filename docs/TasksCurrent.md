@@ -1,29 +1,21 @@
 - Why did handleOnDataMessage throwing unhandled also prevent other instances of Underworld from working (they were stuck too???)
 - "lost connection to server" screen doeesn't offer you a way to reconnect or go back to menu
 - UX: Zoom in is faster than zoom out
-- Bug: When I quit it prompted brad to pick new spells
 - make music play in menu
 
-- build: remove unneeded nuget package from build output?
-- Uncommon cards are showing up on level 1 when you don't have near the mana to cast them
-- make build and test steam cloud saves and new install directory
----
-- Build: Log to local file
+# Nice to haves
 - Nice camera
     - exciting akira moment
 - Make gameplay video with Brad, add it to Steam and YouTube
     - Bugs
     - Send out Demo
-# Nov Week 5 / Dec Week 1
-    - Test Cloud Saves
 # Bugs / Cleaning
-- **critical** infinite loop occurs if you are dead and last enemy is killed by allied npc
+- **important** Cinematic camera restarts for all clients when a disconnected player rejoins
 - pieUrl is stored wrong in browser search bar so if you copy it after connecting it'd double encoded
 - res markers don't show if the unit is alive but will be killed and then resurrected
 - **critical** vamp miniboss got stuck where he has stamina and a path (with no points), but wont move; i think it's because i summoned an archer and the archer was part way in liquid but didn't show it and so he didn't have a path to the archer
-- handle loading a save file where the player has not spawned in yet.  see 87374022
 - Hide disconnected players in game screen but not in the lobby
-- Fix: should not broadcast latency warning for a message that fails with a rejected promise
+- Fix: should not broadcast latency warning for a message that failsc with a rejected promise
 - If you try to join a multiplayer game in two tabs on the same browser you get an infinite spinner even tho there is an error in console
 - archer still had freeze modifier listed in tooltip even after the freeze disappeared naturally on the next turn
     - freeze is behaving weird in Russell's playtest, it's not ticking down as it should
