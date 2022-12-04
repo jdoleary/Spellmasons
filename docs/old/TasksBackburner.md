@@ -1,3 +1,7 @@
+- Upgrade choosing should occur after you finish, not before you start a level.  Maybe when you portal
+- Dragger issues
+    - Prediction issue: Dragger pulled me and then I got hit by people that didn't warn attention
+    - Multiplayer: Dragger pull is desyncing
 - capture soul doesn't work on Player unit
     - This is because there is no SummonSPellmason card at the moment
 - UI: should be able to drag a spell off the bar to open the slot

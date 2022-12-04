@@ -52,6 +52,8 @@ export interface IPlayer {
   // diedDuringLevel is used to make players that died miss the chance to get a perk at the beginning
   // of a new level
   diedDuringLevel: boolean;
+  // note: menu depends on the name of this variable, if you refactor it
+  // refactor it in Golem-Menu repo too
   lobbyReady: boolean;
 }
 export function inPortal(player: IPlayer): boolean {

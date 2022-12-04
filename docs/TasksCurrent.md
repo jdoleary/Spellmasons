@@ -1,8 +1,3 @@
-- Multiplayer: Hitting escape after joining a lobby get's you stuck in the "Play" menu
-- Upgrade choosing should occur after you finish, not before you start a level.  Maybe when you portal
-- Dragger issues
-    - Prediction issue: Dragger pulled me and then I got hit by people that didn't warn attention
-    - Multiplayer: Dragger pull is desyncing
 - wsPie: isolate errors that occur in a given room to that room, ensure that if one room crashees it won't cause others to lock up
     - see 4c56954a for example of error that could crash room
 - UX: Zoom in is faster than zoom out
