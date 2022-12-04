@@ -1901,13 +1901,11 @@ export default class Underworld {
       player.endedTurn = false;
     }
     for (let player of this.players) {
-      // Give mana at the start of turn
-      const manaTillFull = player.unit.manaMax - player.unit.mana;
-      // Give the player their mana per turn but don't let it go beyond manaMax
-      // It's implemented this way instead of an actual capping in a setter so that
-      // mana CAN go beyond max for other reasons (like mana potions), by design
       if (player.unit.alive) {
-        player.unit.mana += Math.max(0, Math.min(player.unit.manaPerTurn, manaTillFull));
+        // Restore player to max mana at start of turn
+        // Let mana remain above max if it already is (due to other influences that may
+        // make it go above max like mana potions, spells, perks, etc);
+        player.unit.mana = Math.max(player.unit.manaMax, player.unit.mana);
       }
 
       // If this current player is NOT able to take their turn...

@@ -7,10 +7,8 @@
 - spellbook search bar
 - improve protedct\ion copy
 - bug: blood golem miniboss never shows attention marker
-- perk: maybe mana overfill proc'd and i got negative mana the next turn
-    - and it stays on me as a modifier
+- perk: maybe mana overfill stays on me as a modifier, look into this, it should remove self? no?
 - how to resolve clicking on multiple units overlapping
-- is overflowing mana borken
 - Why did handleOnDataMessage throwing unhandled also prevent other instances of Underworld from working (they were stuck too???)
 - "lost connection to server" screen doeesn't offer you a way to reconnect or go back to menu
 - UX: Zoom in is faster than zoom out
