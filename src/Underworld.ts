@@ -2218,6 +2218,15 @@ export default class Underworld {
     if (this.turn_phase == turn_phase.Stalled && this.players.some(player => Player.ableToAct(player))) {
       console.log('Turn Management: Restarting turn loop with PlayerTurns')
       this.broadcastTurnPhase(turn_phase.PlayerTurns);
+      // Special Case: in the event that a client is stuck with a stalled turn phase
+      // it can set itself back to PlayerTurns. (The server won't send another 
+      // SET_PHASE to player_turns message because it probably already is on player_turns
+      // and it won't send duplicate.)
+      // This is an extra safety to ensure that no client gets stuck.  And it called setTurnPhase
+      // directly by design because it's not initializing a turn_phase, just changing it.
+      if (!globalThis.isHost(this.pie)) {
+        this.setTurnPhase(turn_phase.PlayerTurns);
+      }
     }
   }
   async broadcastTurnPhase(p: turn_phase) {
