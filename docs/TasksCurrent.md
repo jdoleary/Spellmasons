@@ -10,7 +10,6 @@
     - Bugs
     - Send out Demo
 # Bugs / Cleaning
-- **important** Cinematic camera restarts for all clients when a disconnected player rejoins
 - pieUrl is stored wrong in browser search bar so if you copy it after connecting it'd double encoded
 - res markers don't show if the unit is alive but will be killed and then resurrected
 - **critical** vamp miniboss got stuck where he has stamina and a path (with no points), but wont move; i think it's because i summoned an archer and the archer was part way in liquid but didn't show it and so he didn't have a path to the archer

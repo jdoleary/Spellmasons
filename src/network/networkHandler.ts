@@ -300,11 +300,14 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           if (connectedPlayers.length > 0 && connectedPlayers.every(p => p.lobbyReady)) {
             console.log('Lobby: All players are ready, start game.');
             setView(View.Game);
-            // Retrigger the cinematic camera since the first time
-            // a user joins a game from the lobby, postLevelSetup will
-            // already have completed before they enter View.Game, so now
-            // that they have, run the cinematic again.
-            runCinematicLevelCamera(underworld);
+            // Only for self-player...
+            if (globalThis.player == fromPlayer) {
+              // Retrigger the cinematic camera since the first time
+              // a user joins a game from the lobby, postLevelSetup will
+              // already have completed before they enter View.Game, so now
+              // that they have, run the cinematic again.
+              runCinematicLevelCamera(underworld);
+            }
           }
         }
         if (name !== undefined) {
