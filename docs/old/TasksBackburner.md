@@ -1,3 +1,4 @@
+- see `// TODO does this cause an issue on headless?` in priest.ts
 - how to show how much damage a queued spell will do
 - cooldown instead of mana multiplier scaling
 - Multiplayer voting

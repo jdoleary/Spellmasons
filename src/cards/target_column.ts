@@ -76,6 +76,11 @@ function getColumnPoints(castLocation: Vec2, vector: Vec2, width: number, depth:
 }
 
 async function animate(castLocation: Vec2, vector: Vec2, width: number, depth: number, underworld: Underworld) {
+  if (globalThis.headless) {
+    // Animations do not occur on headless, so resolve immediately or else it
+    // will just waste cycles on the server
+    return Promise.resolve();
+  }
   const iterations = 100;
   const millisBetweenIterations = 12;
   // Keep track of which entities have been targeted so far for the sake

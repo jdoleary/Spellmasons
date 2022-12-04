@@ -10,6 +10,7 @@ import * as Image from '../../graphics/Image';
 
 const manaCostToCast = 30;
 async function animatePriestProjectileAndHit(self: Unit.IUnit, target: Unit.IUnit) {
+  // TODO does this cause an issue on headless?
   await createVisualFlyingProjectile(
     self,
     target,

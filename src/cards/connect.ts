@@ -162,6 +162,11 @@ async function getTouchingTargetableEntitiesRecursive(
 }
 
 async function animate(pos: Vec2, newTargets: Vec2[], oldTargets: Vec2[]) {
+  if (globalThis.headless) {
+    // Animations do not occur on headless, so resolve immediately or else it
+    // will just waste cycles on the server
+    return Promise.resolve();
+  }
   const iterations = 100;
   const millisBetweenIterations = 4;
   // "iterations + 10" gives it a little extra time so it doesn't timeout right when the animation would finish on time

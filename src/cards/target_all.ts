@@ -70,6 +70,11 @@ Targets everything of the same type of the original target.  Matches units, corp
 };
 
 async function animate(pos: Vec2, newTargets: Vec2[], oldTargets: Vec2[]) {
+  if (globalThis.headless) {
+    // Animations do not occur on headless, so resolve immediately or else it
+    // will just waste cycles on the server
+    return Promise.resolve();
+  }
   const iterations = 100;
   const millisBetweenIterations = 4;
   // Keep track of which entities have been targeted so far for the sake

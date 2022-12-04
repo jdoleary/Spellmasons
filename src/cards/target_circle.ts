@@ -64,6 +64,11 @@ Adds a radius to the spell so it can affect more targets.
   },
 };
 async function animate(pos: Vec2, radius: number, underworld: Underworld) {
+  if (globalThis.headless) {
+    // Animations do not occur on headless, so resolve immediately or else it
+    // will just waste cycles on the server
+    return Promise.resolve();
+  }
   const iterations = 100;
   const millisBetweenIterations = 12;
   // Keep track of which entities have been targeted so far for the sake
