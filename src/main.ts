@@ -22,9 +22,6 @@ import { setupPieAndUnderworld } from './network/wsPieSetup';
 import { returnToDefaultSprite } from './entity/Unit';
 import Jprompt from './graphics/Jprompt';
 
-const YES = 'yes'
-const SKIP_TUTORIAL = 'skipTutorial';
-
 // Globalize injected Audio functions
 globalThis.playNextSong = playNextSong;
 globalThis.playSFX = playSFX;
@@ -67,11 +64,6 @@ function setupAll() {
     console.log("Setup: Done loading Pixi assets.")
     initPlanningView();
     setupPieAndUnderworld();
-    // if (storage.get(SKIP_TUTORIAL) === YES) {
-    // } else {
-    //   globalThis.setMenu('TUTORIAL');
-    //   startTutorial();
-    // }
   }).catch(e => {
     console.error('Setup: Failed to setup pixi', e);
   });
@@ -112,9 +104,6 @@ globalThis.setRMBDown = (isDown: boolean, underworld: Underworld) => {
   // Reset notifiedOutOfStamina so that when RMB is pressed again, if the 
   // player is out of stamina it will notify them
   globalThis.notifiedOutOfStamina = false;
-}
-globalThis.skipTutorial = () => {
-  storage.set(SKIP_TUTORIAL, YES);
 }
 
 globalThis.showDebug = false;

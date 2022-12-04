@@ -99,6 +99,7 @@ declare global {
     var updateInGameMenuStatus: undefined | (() => void);
     // The menu will call this if the user chooses to skip the tutorial
     var skipTutorial: undefined | (() => void);
+    var isTutorialComplete: undefined | (() => boolean);
 
     var save: undefined | ((title: string) => void);
     var load: undefined | ((title: string) => void);

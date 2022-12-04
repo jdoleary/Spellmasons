@@ -1,4 +1,4 @@
-- UI: Button to dismiss tutorial
+- Multiplayer: Hitting escape after joining a lobby get's you stuck in the "Play" menu
 - Upgrade choosing should occur after you finish, not before you start a level.  Maybe when you portal
 - Dragger issues
     - Prediction issue: Dragger pulled me and then I got hit by people that didn't warn attention
