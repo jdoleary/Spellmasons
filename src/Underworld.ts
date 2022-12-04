@@ -2304,8 +2304,13 @@ export default class Underworld {
     if (phase) {
       switch (phase) {
         case turn_phase[turn_phase.PlayerTurns]:
-          // Start the players' turn IF there is at least one player able to act
-          if (this.players.some(player => Player.ableToAct(player))) {
+          if (this.players.every(p => !p.clientConnected)) {
+            // This is the only place where the turn_phase can become Stalled, when it is supposed
+            // to be player turns but there are no players connected.
+            this.broadcastTurnPhase(turn_phase.Stalled);
+            console.log('Turn Management: Skipping initializingPlayerTurns, no players connected. Setting turn_phase to "Stalled"');
+          } else {
+            // Start the players' turn
             for (let u of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED)) {
               // Reset stamina for player units so they can move again
               // Allow overfill with stamina potion so this only sets it UP to
@@ -2318,27 +2323,11 @@ export default class Underworld {
             // Note, it is possible that calling this will immediately end
             // the player phase (if there are no players to take turns)
             this.initializePlayerTurns();
-          } else {
-            // If there are players in the game but all are dead
-            if (this.players.every(player => !Player.inPortal(player)) && this.players.some(player => player.clientConnected && !Player.inPortal(player) && !player.unit.alive)
-              // AND there are some ally NPCs
-              && this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ALLY && u.alive).length) {
-              // Special case: skip player turn and go right to NPC_ALLY in the event that 
-              // no players are portaled and there is a player that is both connected and dead and there
-              // are living ALLY NPCs
-              // go to the NPC ALLY phase.  If the NPC Allies overcome the enemies, the game will continue.
-              this.broadcastTurnPhase(turn_phase.NPC_ALLY);
-            } else {
-
-              // This is the only place where the turn_phase can become Stalled, when it is supposed
-              // to be player turns but there are no players able to act.
-              this.broadcastTurnPhase(turn_phase.Stalled);
-              console.log('Turn Management: Skipping initializingPlayerTurns, no players ableToAct. Setting turn_phase to "Stalled"');
-            }
           }
           // Note: The player turn occurs asyncronously because it depends on player input so the call to
-          // `broadcastTurnPhase(turn_phase.NPC_ALLY)` happens inside tryEndPlayerTurnPhase(); whereas the other blocks in this function
-          // always move to the next faction turn on their last line before the break
+          // `broadcastTurnPhase(turn_phase.NPC_ALLY)` happens inside tryEndPlayerTurnPhase(); whereas the other blocks in
+          // this switch statement always move to the next faction turn on their last line before the break, but this one does
+          // not.
           break;
         case turn_phase[turn_phase.NPC_ALLY]:
           // Clear enemy attentionMarkers since it's now their turn
