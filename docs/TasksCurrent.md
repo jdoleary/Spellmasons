@@ -1,3 +1,4 @@
+- "lost connection to server" screen doeesn't offer you a way to reconnect or go back to menu
 - wsPie: isolate errors that occur in a given room to that room, ensure that if one room crashees it won't cause others to lock up
     - see 4c56954a for example of error that could crash room
 - UX: Zoom in is faster than zoom out
