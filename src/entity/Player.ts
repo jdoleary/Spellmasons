@@ -12,7 +12,7 @@ import defaultPlayerUnit from './units/playerUnit';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary } from '../graphics/ui/colors';
-import Underworld from '../Underworld';
+import Underworld, { turn_phase } from '../Underworld';
 import { lerp } from "../jmath/math"
 import * as inLiquid from '../inLiquid';
 import * as slash from '../cards/slash';
@@ -303,13 +303,13 @@ export function syncLobby(underworld: Underworld) {
       }
     })
     .map(p => {
-      let status = i18n('Connected');
+      let status = '';
       if (!p.clientConnected) {
         status = i18n('Disconnected');
       } else if (!p.isSpawned) {
         status = i18n('Picking Start Point');
-      } else if (p.endedTurn) {
-        status = i18n('Waiting...');
+      } else if (p.endedTurn && underworld.turn_phase == turn_phase.PlayerTurns) {
+        status = i18n('Ready for next turn');
       }
       return { name: p.name || p.clientId, status, color: playerColorToCss(p), ready: p.lobbyReady ? i18n('Ready') : i18n('Not Ready') };
     });

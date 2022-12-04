@@ -3,7 +3,6 @@
 - Dragger issues
     - Prediction issue: Dragger pulled me and then I got hit by people that didn't warn attention
     - Multiplayer: Dragger pull is desyncing
-- Multiplayer: lobby shouldn't say "connected" in game, "waiting..." should be "done"
 - Multiplayer menu bug: join lobby, Go into color picker, press escape twice, menu gets stuck on resume game screen
 - wsPie: isolate errors that occur in a given room to that room, ensure that if one room crashees it won't cause others to lock up
     - see 4c56954a for example of error that could crash room
