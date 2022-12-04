@@ -38,6 +38,7 @@
     - Balance Perks
     - Update music so it only changes song group once you reach a new biome
         - and so it will continue a song if the next level is in the same biome
+    - Manually test all spells for desync issues (in multiplayer)
     - Release
     
 - Rethink next trailer

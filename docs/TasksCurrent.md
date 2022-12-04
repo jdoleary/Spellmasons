@@ -1,8 +1,8 @@
 - if spell pick is up when level changes over it makes it look like it skipped cause it overrides with the perk pick, but the perk pick should wait it's turn
-- desync like 10 minutes in
 - one of the mana perks didn't increase his mana per turn
     - stone tower
 - mana steal from golem did damage to him but gave him no mana, refund health if it doesn't take mana
+    - `lastSpellCost` should work for health too
 - "capture soul" should "store" miniboss status
 - brad didn't know you could channel from your spellbook
 - suffocate should be more powerful
@@ -11,7 +11,6 @@
 - bug: blood golem miniboss never shows attention marker
 - perk: maybe mana overfill proc'd and i got negative mana the next turn
     - and it stays on me as a modifier
-- bug: chainx2 + shove6x desynced
 - how to resolve clicking on multiple units overlapping
 - is overflowing mana borken
 - Why did handleOnDataMessage throwing unhandled also prevent other instances of Underworld from working (they were stuck too???)

@@ -2679,6 +2679,9 @@ export default class Underworld {
         if (prediction) {
           this.fullySimulateForceMovePredictions();
         }
+        if (globalThis.headless) {
+          this.triggerGameLoopHeadless();
+        }
         effectState = await reportIfTakingTooLong(10000, `${card.id};${prediction}`, cardEffectPromise);
 
         // Clear images from previous card before drawing the images from the new card

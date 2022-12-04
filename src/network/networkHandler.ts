@@ -430,10 +430,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           console.error('Game was in Stalled turn_phase when a player sent MESSAGE_TYPES.SPELL.');
           underworld.tryRestartTurnPhaseLoop();
         }
-        const handleSpellPromise = handleSpell(fromPlayer, payload, underworld);
-        // Now that spell has been cast, trigger the headless server to process it immediately
-        underworld.triggerGameLoopHeadless();
-        await handleSpellPromise;
+        await handleSpell(fromPlayer, payload, underworld);
         // Trigger it again in case the result of any spells caused a forceMove to be added to the array
         // such as Bloat's onDeath
         underworld.triggerGameLoopHeadless();
