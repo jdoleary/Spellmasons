@@ -10,7 +10,7 @@ import * as config from '../config';
 import { makeBurstParticles } from '../graphics/ParticleCollection';
 
 export const id = 'Burst';
-const maxDamage = 6;
+const maxDamage = 5;
 function calculateDamage(stack: number, caster: Unit.IUnit, target: Vec2): number {
   const dist = distance(caster, target)
   return Math.ceil(lerp(0, maxDamage, 1 - dist / (caster.attackRange + config.COLLISION_MESH_RADIUS * 2)) * stack);
