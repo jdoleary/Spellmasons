@@ -313,7 +313,7 @@ export function syncLobby(underworld: Underworld) {
       } else if (p.endedTurn && underworld.turn_phase == turn_phase.PlayerTurns) {
         status = i18n('Ready for next turn');
       }
-      return { name: p.name || p.clientId, status, color: playerColorToCss(p), ready: p.lobbyReady ? i18n('Ready') : i18n('Not Ready') };
+      return { name: p.name || p.clientId, clientConnected: p.clientConnected, status, color: playerColorToCss(p), ready: p.lobbyReady ? i18n('Ready') : i18n('Not Ready') };
     });
   // Update lobby element
   if (elInGameLobby) {
@@ -322,7 +322,8 @@ export function syncLobby(underworld: Underworld) {
       elInGameLobby.innerHTML = '';
       return;
     }
-    elInGameLobby.innerHTML = globalThis.lobbyPlayerList.map(p => {
+    // filter: Don't show disconnected players in in-game lobby.
+    elInGameLobby.innerHTML = globalThis.lobbyPlayerList.filter(p => p.clientConnected).map(p => {
       return `<div class="ui-border"><div class="player"><span class="player-name"><span style="color:${p.color}">⬤&nbsp;</span>${p.name}</span><span>${p.status}</span></div></div>`
     }).join('');
   }

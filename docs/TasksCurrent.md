@@ -14,7 +14,6 @@
 - pieUrl is stored wrong in browser search bar so if you copy it after connecting it'd double encoded
 - res markers don't show if the unit is alive but will be killed and then resurrected
 - **critical** vamp miniboss got stuck where he has stamina and a path (with no points), but wont move; i think it's because i summoned an archer and the archer was part way in liquid but didn't show it and so he didn't have a path to the archer
-- Hide disconnected players in game screen but not in the lobby
 - Fix: should not broadcast latency warning for a message that failsc with a rejected promise
 - If you try to join a multiplayer game in two tabs on the same browser you get an infinite spinner even tho there is an error in console
 - archer still had freeze modifier listed in tooltip even after the freeze disappeared naturally on the next turn

@@ -214,7 +214,7 @@ declare global {
     var menuExplain: (key: string) => void;
     var explainKeys: string[];
     // List of players to display in the lobby
-    var lobbyPlayerList: { name: string, status: string, color: string, ready: string }[];
+    var lobbyPlayerList: { name: string, clientConnected: boolean, status: string, color: string, ready: string }[];
     var i18n: (key: string) => string;
     var setLanguage: (langCode: string, doStore: boolean) => void;
     var refreshMenu: undefined | (() => void);
