@@ -100,7 +100,9 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       // MESSAGE_TYPES in HANDLE_IMMEDIATELY are not to be queued and can be processed
       // as soon as they are received.
       if (Object.values(HANDLE_IMMEDIATELY).includes(d.payload.type)) {
-        handleOnDataMessage(d, overworld)
+        handleOnDataMessage(d, overworld).catch(e => {
+          console.error('handled: Error in immediate handleOnDataMessage:', e);
+        })
       } else {
         // All other messages should be handled one at a time to prevent desync
         handleOnDataMessageSyncronously(d, overworld);
@@ -137,7 +139,9 @@ let currentlyProcessingOnDataMessage: any = null;
 export function processNextInQueueIfReady(overworld: Overworld) {
   // If game is ready to process messages, begin processing
   // (if not, they will remain in the queue until the game is ready)
-  messageQueue.processNextInQueue(onDataQueueContainer, d => handleOnDataMessage(d, overworld));
+  messageQueue.processNextInQueue(onDataQueueContainer, d => handleOnDataMessage(d, overworld).catch(e => {
+    console.error('Handled: error in handleOnDataMessage:', e);
+  }));
 }
 function logHandleOnDataMessage(type: MESSAGE_TYPES, payload: any, fromClient: string, underworld: Underworld) {
   try {
