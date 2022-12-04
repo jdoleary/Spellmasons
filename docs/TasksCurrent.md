@@ -1,6 +1,5 @@
 - UI: Button to dismiss tutorial
 - Upgrade choosing should occur after you finish, not before you start a level.  Maybe when you portal
-- Multiplayer: you can't pick an upgrade while other's spells are playing out
 - Dragger issues
     - Prediction issue: Dragger pulled me and then I got hit by people that didn't warn attention
     - Multiplayer: Dragger pull is desyncing
@@ -38,6 +37,7 @@
         - User id should match steam id?
     - Add sentry errors to electron node files
 # Bugs / Cleaning
+- pieUrl is stored wrong in browser search bar so if you copy it after connecting it'd double encoded
 - target cone doesn't draw a circle around the first guy
 - during cinematic introduction your health bars remain from the last level
 - res markers don't show if the unit is alive but will be killed and then resurrected

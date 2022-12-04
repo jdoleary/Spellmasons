@@ -30,7 +30,7 @@ export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 export const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
 export function onData(d: OnDataArgs, overworld: Overworld) {
-  const { payload } = d;
+  const { payload, fromClient } = d;
   if (!NO_LOG_LIST.includes(d.payload.type)) {
     // Don't clog up server logs with payloads, leave that for the client which can handle them better
     console.log("onData:", MESSAGE_TYPES[d.payload.type], globalThis.headless ? '' : d)
@@ -60,6 +60,24 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         handleLoadGameState(payload, overworld);
       } else {
         console.log('Ignoring INIT_GAME_STATE because underworld has already been initialized.');
+      }
+      break;
+    case MESSAGE_TYPES.CHOOSE_UPGRADE:
+      console.log('onData: CHOOSE_UPGRADE', `${fromClient}: ${payload?.upgrade?.title}`);
+      // Get player of the client that sent the message 
+      const fromPlayer = underworld.players.find((p) => p.clientId === fromClient);
+      if (fromPlayer) {
+        const upgrade = getUpgradeByTitle(payload.upgrade.title);
+        if (upgrade) {
+          underworld.chooseUpgrade(fromPlayer, upgrade);
+        } else {
+          console.error(
+            'Cannot CHOOSE_UPGRADE, upgrade does not exist',
+            upgrade,
+          );
+        }
+      } else {
+        console.error('Cannot CHOOSE_UPGRADE, fromPlayer is undefined', fromPlayer)
       }
       break;
     case MESSAGE_TYPES.LOAD_GAME_STATE:
@@ -133,9 +151,6 @@ function logHandleOnDataMessage(type: MESSAGE_TYPES, payload: any, fromClient: s
         switch (type) {
           case MESSAGE_TYPES.SET_PHASE:
             payloadForLogging = `phase: ${turn_phase[payload.phase]}`
-            break;
-          case MESSAGE_TYPES.CHOOSE_UPGRADE:
-            payloadForLogging = `${fromClient}: ${payload?.upgrade?.title}`
             break;
           case MESSAGE_TYPES.SYNC_PLAYERS:
             payloadForLogging = `units: ${payload?.units.length}; players: ${payload?.players.length}`;
@@ -417,21 +432,6 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         underworld.triggerGameLoopHeadless();
       } else {
         console.error('Cannot cast, caster does not exist');
-      }
-      break;
-    case MESSAGE_TYPES.CHOOSE_UPGRADE:
-      const upgrade = getUpgradeByTitle(payload.upgrade.title);
-      if (fromPlayer) {
-        if (upgrade) {
-          underworld.chooseUpgrade(fromPlayer, upgrade);
-        } else {
-          console.error(
-            'Cannot CHOOSE_UPGRADE, upgrade does not exist',
-            upgrade,
-          );
-        }
-      } else {
-        console.error('Cannot CHOOSE_UPGRADE, fromPlayer is undefined', fromPlayer)
       }
       break;
     case MESSAGE_TYPES.END_TURN:
