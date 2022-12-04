@@ -1,7 +1,5 @@
 - Why did handleOnDataMessage throwing unhandled also prevent other instances of Underworld from working (they were stuck too???)
 - "lost connection to server" screen doeesn't offer you a way to reconnect or go back to menu
-- wsPie: isolate errors that occur in a given room to that room, ensure that if one room crashees it won't cause others to lock up
-    - see 4c56954a for example of error that could crash room
 - UX: Zoom in is faster than zoom out
 - Bug: When I quit it prompted brad to pick new spells
 - make music play in menu
@@ -16,25 +14,11 @@
 - Make gameplay video with Brad, add it to Steam and YouTube
     - Bugs
     - Send out Demo
-- Rethink next trailer
-    - Lead with "fun"
-    - Remove "dead time"
-    - get into the action fast
-    - Communicate the big idea
 # Nov Week 5 / Dec Week 1
-    - Add explain gifs for new units
     - Test Cloud Saves
-    - Steam SDK
-        - Default wizard name to steam name if connected to steam
-        - Steam Achievements
-            - https://github.com/node-ffi/node-ffi
-            - https://partner.steamgames.com/doc/features/achievements/ach_guide
-        - User id should match steam id?
-    - Add sentry errors to electron node files
 # Bugs / Cleaning
+- **critical** infinite loop occurs if you are dead and last enemy is killed by allied npc
 - pieUrl is stored wrong in browser search bar so if you copy it after connecting it'd double encoded
-- target cone doesn't draw a circle around the first guy
-- during cinematic introduction your health bars remain from the last level
 - res markers don't show if the unit is alive but will be killed and then resurrected
 - **critical** vamp miniboss got stuck where he has stamina and a path (with no points), but wont move; i think it's because i summoned an archer and the archer was part way in liquid but didn't show it and so he didn't have a path to the archer
 - handle loading a save file where the player has not spawned in yet.  see 87374022
@@ -45,10 +29,8 @@
     - freeze is behaving weird in Russell's playtest, it's not ticking down as it should
         - maybe it has to do with it being triggered off of chain? he also had bloat on
 - **critical** miniboss vampire was able to move without playing walking animation during the ranged unit turn phase and then continue walking on his own
-
 - **important** push + radius*2 + connect + damage isn't damaging the connected units (note, the pushed unit ends up in lava)
     - This is because the unit died when it fell in the lava so connect didn't connect it to other living units
----
 - (e) in multiplayer, when one player leaves and window is not focused the camera spazzes out
 - sync issue: golem moving through frozen guys jumped back
 - (m) You're able to cast into negative mana in multiplayer
@@ -62,8 +44,6 @@
     - simplest solution is just to make sure that units cannot do damage to the player if they aren't warning of damage incoming on the start of the turn
 - h: bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
     - this is a race condition because I'm still able to move freely after his cast triggers
-- resurrect should take longer to return to base mana
-    - this already is set but it didn't work in brad's playtest... hmm..
 - he can't spawn in while i'm casing a spell
     - same thing with casts, it waits
 - futher investigate '  // Override ref since in prediction it makes a copy of the unit' from 06d754d2

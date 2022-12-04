@@ -3,24 +3,22 @@
     - Submit demo to IGN
         - need gameplay video first
 - December
+    - Due 12/ 10
+        - **big** Convenient multiplayer lobbying via steam
+            - Prevent players from joining mid-round, notify "you will spawn once this level is complete"
+            - GameLobbyJoinRequested_t
+                - https://partner.steamgames.com/doc/api/ISteamFriends
+            - [sdk api overview](https://partner.steamgames.com/doc/sdk/api)
+            - [Call c from node](https://github.com/node-ffi/node-ffi/wiki/Node-FFI-Tutorial)
+        - **big** Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
     - feature: Allow multiplayer game to restart after wipe
-    - Server Browser
     - Start reaching out to steamers and reviewers and send demo
-    - Convenient multiplayer lobbying via steam
-        - Prevent players from joining mid-round, notify "you will spawn once this level is complete"
-        - GameLobbyJoinRequested_t
-            - https://partner.steamgames.com/doc/api/ISteamFriends
-        - [sdk api overview](https://partner.steamgames.com/doc/sdk/api)
-        - [Call c from node](https://github.com/node-ffi/node-ffi/wiki/Node-FFI-Tutorial)
-    - Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
+- January
     - Optimize runPredictions
         - especially with expanding + corpse explosion
-- January
     - Use Steamworks "Currator Connect" Tool
     - How to visually stack modifiers such as blood_curse and debilitate
     - Support hosting a server from in the game exe
-    - Balance Enemies
-    - Balance Perks
     - [Steamworks web api](https://partner.steamgames.com/doc/webapi_overview)
     - Icons for perks
     - Last few sound fx
@@ -30,9 +28,19 @@
         - Ensure 'electron-squirrel-startup' is handled correctly
         - Ensure start app isn't added to desktop
     - Electron Security
-    - Make storage.js use SteamCloud
+    - Small
+        - Add explain gifs for new units
+        - Add sentry errors to electron node files
+    - Server Browser
+    - Balance Enemies
+    - Balance Perks
     - Release
     
+- Rethink next trailer
+    - Lead with "fun"
+    - Remove "dead time"
+    - get into the action fast
+    - Communicate the big idea
 - Gameplay Trailer
 - Cut Demo
 - Reach out to streamers and Reviewers
