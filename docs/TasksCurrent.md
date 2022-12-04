@@ -1,3 +1,19 @@
+- if spell pick is up when level changes over it makes it look like it skipped cause it overrides with the perk pick, but the perk pick should wait it's turn
+- desync like 10 minutes in
+- one of the mana perks didn't increase his mana per turn
+    - stone tower
+- mana steal from golem did damage to him but gave him no mana, refund health if it doesn't take mana
+- "capture soul" should "store" miniboss status
+- brad didn't know you could channel from your spellbook
+- suffocate should be more powerful
+- spellbook search bar
+- improve protedct\ion copy
+- bug: blood golem miniboss never shows attention marker
+- perk: maybe mana overfill proc'd and i got negative mana the next turn
+    - and it stays on me as a modifier
+- bug: chainx2 + shove6x desynced
+- how to resolve clicking on multiple units overlapping
+- is overflowing mana borken
 - Why did handleOnDataMessage throwing unhandled also prevent other instances of Underworld from working (they were stuck too???)
 - "lost connection to server" screen doeesn't offer you a way to reconnect or go back to menu
 - UX: Zoom in is faster than zoom out
@@ -34,7 +50,7 @@
     - simplest solution is just to make sure that units cannot do damage to the player if they aren't warning of damage incoming on the start of the turn
 - h: bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
     - this is a race condition because I'm still able to move freely after his cast triggers
-- he can't spawn in while i'm casing a spell
+- Multiplayer: other players can't spawn in while another player is casing a spell
     - same thing with casts, it waits
 - futher investigate '  // Override ref since in prediction it makes a copy of the unit' from 06d754d2
 - Turn phase testing:
@@ -46,12 +62,7 @@
 - investigate: `// TODO will the stack just keep growing`
     - turn_phases should work on a queue not a stack (this is mostly relevant for singleplayer and when the NPCs are just hashing it out cause all the players are dead so it doesn't stack overflow)
     - Just make it a while loop that triggers/awaits the next AI turn until it's the players tuurn
-- dragger x and y went to null after "target similar, slash slash"
-# Pre playtest
-- Multiplayer voting
-- Adaptive difficulty
-- What to do with disconnected players when it goes to the next level?
-- Fix rejoining hack where people can just rejoin if they're dead to come back
+
 # Localization
 - All tooltip info
 - Explain prompts - see stash "add i18n to explain prompts"
@@ -63,9 +74,6 @@
     - All players return to lobby after 10 seconds
     - cleans up underworld
     - Currently it just lets you exit to main menu but if you rejoin the game it still exists with everyone dead in it
-- how to show how much damage a queued spell will do
-- cooldown instead of mana multiplier scaling
-- Add cooldown to "Expanding"
 ## Prediction issues
 - prediction should factor in standing on pickups
     - this can be reproduced by standing on health pot and queuing up just enough slash spells to kill you and triggering it.  You will see that it predicts that you will die but you don't because as soon as you first take damage the health pot triggers

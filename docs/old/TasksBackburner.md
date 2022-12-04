@@ -1,3 +1,10 @@
+- how to show how much damage a queued spell will do
+- cooldown instead of mana multiplier scaling
+- Multiplayer voting
+- Adaptive difficulty
+- What to do with disconnected players when it goes to the next level?
+- Fix rejoining hack where people can just rejoin if they're dead to come back
+- dragger x and y went to null after "target similar, slash slash"
 - Bug: When I quit it prompted brad to pick new spells
 - Upgrade choosing should occur after you finish, not before you start a level.  Maybe when you portal
 - Dragger issues
