@@ -203,9 +203,7 @@ export const upgradeStatsSource: IUpgrade[] = [
       }`,
     thumbnail: 'images/upgrades/todo.png',
     effect: (player, underworld) => {
-      player.unit.manaMax += maxManaIncreaseAmount;
-      player.unit.mana = player.unit.manaMax;
-      player.unit.manaPerTurn = player.unit.manaMax;
+      Unit.setPlayerManaMax(player.unit, player.unit.manaMax + maxManaIncreaseAmount);
       // Now that the player unit's mana has increased,sync the new
       // mana state with the player's predictionUnit so it is properly
       // refelcted in the health bar
@@ -223,9 +221,7 @@ export const upgradeStatsSource: IUpgrade[] = [
       }`,
     thumbnail: 'images/upgrades/todo.png',
     effect: (player, underworld) => {
-      player.unit.manaMax += maxManaIncreaseAmount * 2;
-      player.unit.mana = player.unit.manaMax;
-      player.unit.manaPerTurn = player.unit.manaMax;
+      Unit.setPlayerManaMax(player.unit, player.unit.manaMax + maxManaIncreaseAmount * 2);
       // Now that the player unit's mana has increased,sync the new
       // mana state with the player's predictionUnit so it is properly
       // refelcted in the health bar

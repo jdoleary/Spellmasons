@@ -29,6 +29,7 @@ import { explain, EXPLAIN_DEATH, EXPLAIN_MINI_BOSSES } from '../graphics/Explain
 import { ARCHER_ID } from './units/archer';
 import { BLOOD_ARCHER_ID } from './units/blood_archer';
 import * as Obstacle from './Obstacle';
+import { spellmasonUnitId } from './units/playerUnit';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -1087,6 +1088,9 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
 // there's a few considerations that I kept forgetting to update with it:
 // Notably: rounding and updating manaPerTurn too
 export function setPlayerManaMax(unit: IUnit, newValue: number) {
+  if (unit.unitSourceId !== spellmasonUnitId) {
+    console.error('setPlayerManaMax attempted on non player unit. This function is designed to update manaPerTurn too and so should only be used on player units.');
+  }
   // Round to a whole number
   newValue = Math.floor(newValue);
   unit.manaMax = newValue;
