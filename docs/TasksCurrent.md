@@ -1,6 +1,4 @@
 - if spell pick is up when level changes over it makes it look like it skipped cause it overrides with the perk pick, but the perk pick should wait it's turn
-- one of the mana perks didn't increase his mana per turn
-    - stone tower
 - mana steal from golem did damage to him but gave him no mana, refund health if it doesn't take mana
     - `lastSpellCost` should work for health too
 - "capture soul" should "store" miniboss status

@@ -1083,6 +1083,16 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
 
 }
 
+// A utility function for updating the player's mana max since
+// there's a few considerations that I kept forgetting to update with it:
+// Notably: rounding and updating manaPerTurn too
+export function setPlayerManaMax(unit: IUnit, newValue: number) {
+  // Round to a whole number
+  newValue = Math.floor(newValue);
+  unit.manaMax = newValue;
+  unit.manaPerTurn = newValue;
+  unit.mana = newValue;
+}
 // Returns true if it is currently this unit's turn phase
 export function isUnitsTurnPhase(unit: IUnit, underworld: Underworld): boolean {
   const { turn_phase: phase } = underworld;

@@ -284,10 +284,8 @@ export const upgradeStatsSource: IUpgrade[] = [
       `Increases your mana to ${Math.floor(100 * plusManaMinusStamina_manaProportion)}% but decreased your max stamina to ${Math.floor(100 * plusManaMinusStamina_staminaProportion)}%`,
     thumbnail: 'images/spell/unknown.png',
     effect: (player, underworld) => {
-      player.unit.manaMax *= plusManaMinusStamina_manaProportion;
-      // Round to a whole number
-      player.unit.manaMax = Math.floor(player.unit.manaMax);
-      player.unit.mana = player.unit.manaMax;
+      Unit.setPlayerManaMax(player.unit, player.unit.manaMax * plusManaMinusStamina_manaProportion);
+
       player.unit.staminaMax *= plusManaMinusStamina_staminaProportion;
       // Round to a whole number
       player.unit.staminaMax = Math.floor(player.unit.staminaMax);
