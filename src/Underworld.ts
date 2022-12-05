@@ -49,9 +49,9 @@ import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
 import Events from './Events';
 import { allUnits } from './entity/units';
-import { clearSpellEffectProjection, clearTints, getUIBarProps, isOutOfBounds, updateManaCostUI, updatePlanningView } from './graphics/PlanningView';
+import { clearSpellEffectProjection, clearTints, getUIBarProps, isOutOfBounds, updatePlanningView } from './graphics/PlanningView';
 import { chooseObjectWithProbability, prng, randInt, SeedrandomState } from './jmath/rand';
-import { calculateCost } from './cards/cardUtils';
+import { calculateCost, calculateCostForSingleCard } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle, closestLineSegmentIntersection } from './jmath/lineSegment';
 import { expandPolygon, isVec2InsidePolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './jmath/Polygon2';
 import { calculateDistanceOfVec2Array, findPath } from './jmath/Pathfinding';
@@ -73,7 +73,7 @@ import type PieClient from '@websocketpie/client';
 import { makeForcePush } from './cards/push';
 import { createVisualLobbingProjectile } from './entity/Projectile';
 import { isOutOfRange } from './PlayerUtils';
-import type { DisplayObject, TilingSprite } from 'pixi.js';
+import { DisplayObject, State, TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
 import { explain, EXPLAIN_MISSED_SCROLL, EXPLAIN_SCROLL, isTutorialComplete, tutorialCompleteTask, tutorialShowTask } from './graphics/Explain';
 import { makeScrollDissapearParticles } from './graphics/ParticleCollection';
@@ -1790,7 +1790,7 @@ export default class Underworld {
           }
         }
       }
-      updateManaCostUI(this);
+      CardUI.updateCardBadges(this);
       // Move onto next phase
       // Note: BroadcastTurnPhase should happen last because it
       // queues up a unitsync, so if changes to the units
@@ -2118,6 +2118,7 @@ export default class Underworld {
       console.log('showUpgrades: Closing upgrade screen, nothing left to pick')
       return;
     }
+    console.trace('showUpgrades');
     const isPerk = player.upgradesLeftToChoose == 0;
     let minimumProbability = 0;
     if (player.upgradesLeftToChoose > 0 && player.inventory.length < config.STARTING_CARD_COUNT) {
@@ -2571,6 +2572,7 @@ export default class Underworld {
 
     let effectState: Cards.EffectState = {
       cardIds,
+      shouldRefundLastSpell: false,
       casterCardUsage,
       casterUnit,
       targetedUnits: [],
@@ -2580,7 +2582,6 @@ export default class Underworld {
       aggregator: {
         unitDamage: [],
         radius: 0,
-        lastSpellCost: 0,
       },
     };
     const unitAtCastLocation = this.getUnitAt(castLocation, prediction);
@@ -2600,37 +2601,14 @@ export default class Underworld {
       // Prevent dead players from casting
       return effectState;
     }
-      const cards = Cards.getCardsFromIds(cardIds);
-      const spellCost = calculateCost(cards, casterCardUsage);
-      effectState.aggregator.lastSpellCost = spellCost.manaCost;
-      // Apply mana and health cost to caster
-      // Note: it is important that this is done BEFORE a card is actually cast because
-      // the card may affect the caster's mana
-      effectState.casterUnit.mana -= spellCost.manaCost;
-      Unit.takeDamage(effectState.casterUnit, spellCost.healthCost, effectState.casterUnit, this, prediction, effectState);
-      // Add expense scaling BEFORE card effects are invoked
-      // This is important because of 'trap' since trap removes
-      // the cards after it in the spell, it is important
-      // that they still get expense scaling
-      for (let cardId of effectState.cardIds) {
-        const card = Cards.allCards[cardId];
-        if (card) {
-          // Now that the caster is using the card, increment usage count
-          if (casterCardUsage[cardId] === undefined) {
-            casterCardUsage[cardId] = 0;
-          }
-          casterCardUsage[cardId] += card.expenseScaling;
-          if (!prediction) {
-            updateManaCostUI(this);
-          }
-        }
-      }
 
     // "quantity" is the number of identical cards cast in a row. Rather than casting the card sequentially
     // quantity allows the card to have a unique scaling effect when cast sequentially after itself.
     let quantity = 1;
     let excludedTargets: Unit.IUnit[] = [];
     for (let index = 0; index < effectState.cardIds.length; index++) {
+      // Reset flag that informs if the last spell was refunded.
+      effectState.shouldRefundLastSpell = false;
       const cardId = effectState.cardIds[index];
       if (cardId === undefined) {
         console.error('card id is undefined in loop', index, effectState.cardIds);
@@ -2677,6 +2655,33 @@ export default class Underworld {
           this.triggerGameLoopHeadless();
         }
         effectState = await reportIfTakingTooLong(10000, `${card.id};${prediction}`, cardEffectPromise);
+        if (!effectState.shouldRefundLastSpell) {
+          // Compute spell mana/health cost and add card usage count
+          // This happens after the spell is cast so that fizzle spells can be refunded
+          const spellCostTally = {
+            manaCost: 0,
+            healthCost: 0
+          };
+          for (let i = 0; i < quantity; i++) {
+            const singleCardCost = calculateCostForSingleCard(card, (casterCardUsage[card.id] || 0) + i);
+            spellCostTally.manaCost += singleCardCost.manaCost;
+            spellCostTally.healthCost += singleCardCost.healthCost;
+          }
+          // Apply mana and health cost to caster
+          // Note: it is important that this is done BEFORE a card is actually cast because
+          // the card may affect the caster's mana
+          effectState.casterUnit.mana -= spellCostTally.manaCost;
+          Unit.takeDamage(effectState.casterUnit, spellCostTally.healthCost, effectState.casterUnit, this, prediction, effectState);
+
+          // Increment card usage; now that the caster is using the card
+          if (casterCardUsage[cardId] === undefined) {
+            casterCardUsage[cardId] = 0;
+          }
+          casterCardUsage[cardId] += card.expenseScaling;
+          if (!prediction) {
+            CardUI.updateCardBadges(this);
+          }
+        }
 
         // Clear images from previous card before drawing the images from the new card
         containerSpells?.removeChildren();

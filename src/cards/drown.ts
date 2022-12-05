@@ -1,10 +1,8 @@
-import { containerSpells } from '../graphics/PixiUtils';
 import { CardCategory } from '../types/commonTypes';
-import { oneOffImage, playDefaultSpellSFX } from './cardUtils';
-import { Spell } from './index';
+import { playDefaultSpellSFX } from './cardUtils';
+import { refundLastSpell, Spell } from './index';
 import * as Unit from '../entity/Unit';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
-import floatingText from '../graphics/FloatingText';
 
 export const id = 'Drown';
 export interface UnitDamage {
@@ -42,14 +40,9 @@ Deal ${damageDone} damage ONLY if target is submerged.
           Unit.takeDamage(unit, damageDone, state.casterUnit, underworld, prediction, state);
         }
       }
+      // No targets to cast on. Refund mana
       if (targets.length == 0) {
-        // No targets to cast on
-        // Refund mana
-        state.casterUnit.mana += state.aggregator.lastSpellCost;
-        if (!prediction) {
-          floatingText({ coords: state.casterUnit, text: 'No Targets are submerged' });
-
-        }
+        refundLastSpell(state, prediction, 'No targets are submerged\nMana Refunded')
       }
       return state;
     },

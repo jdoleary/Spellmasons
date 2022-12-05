@@ -1,4 +1,4 @@
-import { getCurrentTargets, Spell } from './index';
+import { getCurrentTargets, refundLastSpell, Spell } from './index';
 import { distance } from '../jmath/math';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
@@ -6,7 +6,6 @@ import * as config from '../config';
 import { forcePush } from './push';
 import { drawUICircle } from '../graphics/PlanningView';
 import * as colors from '../graphics/ui/colors';
-import floatingText from '../graphics/FloatingText';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 export const id = 'shove';
@@ -42,13 +41,9 @@ Note: You can deal damage if a unit is shoved hard enough into a wall.
       for (let entity of targets) {
         promises.push(forcePush(entity, awayFrom, velocityStartMagnitude * quantity, underworld, prediction));
       }
+      // No targets to cast on. Refund mana
       if (targets.length == 0) {
-        // No targets to cast on
-        // Refund mana
-        state.casterUnit.mana += state.aggregator.lastSpellCost;
-        if (!prediction) {
-          floatingText({ coords: state.casterUnit, text: 'No Targets close enough to shove\nMana Refunded' });
-        }
+        refundLastSpell(state, prediction, 'No Targets close enough to shove\nMana Refunded')
       }
       await Promise.all(promises);
       return state;

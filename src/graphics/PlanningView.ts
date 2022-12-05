@@ -373,17 +373,6 @@ function drawCastRangeCircle(point: Vec2, range: number, graphics?: Graphics, te
     }
   }
 }
-export function updateManaCostUI(underworld: Underworld): CardCost {
-  if (globalThis.player) {
-    // Update the UI that shows how much cards cost
-    CardUI.updateCardBadges(underworld);
-    // Updates the mana cost
-    const cards = CardUI.getSelectedCards();
-    const cost = calculateCost(cards, globalThis.player.cardUsageCounts)
-    return cost;
-  }
-  return { manaCost: 0, healthCost: 0 };
-}
 export function clearTints(underworld: Underworld) {
   // Reset tints before setting new tints to show targeting
   underworld.units.forEach(unit => {
@@ -506,7 +495,7 @@ export async function runPredictions(underworld: Underworld) {
 
     if (globalThis.player) {
       underworld.syncPredictionEntities();
-      updateManaCostUI(underworld);
+      CardUI.updateCardBadges(underworld);
       // Dry run cast so the user can see what effect it's going to have
       const target = mousePos;
       const casterUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id)

@@ -1,6 +1,6 @@
 import * as Unit from '../entity/Unit';
 import { ColorOverlayFilter } from '@pixi/filter-color-overlay';
-import { Spell } from './index';
+import { refundLastSpell, Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
@@ -29,6 +29,7 @@ Resurrects a dead unit and converts them to the caster's faction.
       const firstDeadUnitAtCastLocation = underworld.getUnitsAt(state.castLocation, prediction).filter(u => !u.alive)[0]
       const animationPromises = [];
       const targets = [firstDeadUnitAtCastLocation, ...state.targetedUnits]
+      let resurrectedUnitCount = 0;
       for (let unit of targets) {
         if (unit && !unit.alive) {
           let colorOverlayFilter: ColorOverlayFilter;
@@ -40,6 +41,7 @@ Resurrects a dead unit and converts them to the caster's faction.
           }
           playDefaultSpellSFX(card, prediction);
           Unit.resurrect(unit);
+          resurrectedUnitCount++;
           makeResurrectParticles(unit, prediction);
           unit.health = unit.healthMax * resStatAmount;
           unit.mana = unit.manaMax * resStatAmount;
@@ -52,6 +54,9 @@ Resurrects a dead unit and converts them to the caster's faction.
         }
       }
       await Promise.all(animationPromises);
+      if (resurrectedUnitCount <= 0) {
+        refundLastSpell(state, prediction, 'None of the targets are dead\nRefunded mana');
+      }
       for (let unit of targets) {
         if (!unit) {
           continue;

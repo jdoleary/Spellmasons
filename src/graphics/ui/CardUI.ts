@@ -4,9 +4,8 @@ import * as Cards from '../../cards';
 import * as config from '../../config';
 import {
   clearSpellEffectProjection,
-  updateManaCostUI,
 } from '../PlanningView';
-import { calculateCostForSingleCard } from '../../cards/cardUtils';
+import { calculateCost, calculateCostForSingleCard } from '../../cards/cardUtils';
 import floatingText, { centeredFloatingText } from '../FloatingText';
 import { composeOnDamageEvents, copyForPredictionUnit } from '../../entity/Unit';
 import { NUMBER_OF_TOOLBAR_SLOTS } from '../../config';
@@ -437,7 +436,14 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
     }
     elSelectedCards.appendChild(clone);
     manageSelectedCardsParentVisibility();
-    const cost = updateManaCostUI(underworld);
+    updateCardBadges(underworld);
+    let cost = { manaCost: 0, healthCost: 0 };
+    if (globalThis.player) {
+      // Updates the mana cost
+      const cards = getSelectedCards();
+      cost = calculateCost(cards, globalThis.player.cardUsageCounts)
+    }
+
     if (globalThis.player) {
       if (cost.manaCost > globalThis.player.unit.mana) {
         floatingText({

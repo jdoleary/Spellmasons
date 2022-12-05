@@ -52,6 +52,7 @@
 
     
 - Rethink next trailer
+    - Needs more text explaining the concept
     - Lead with "fun"
     - Remove "dead time"
     - get into the action fast
@@ -79,6 +80,8 @@
     - copyForPredictionUnit is slow for many units
 - Milestone | **Finish Gameplay**
     - End of game scaling
+        - boss
+        - unlocks
     - More Perks
 - Milestone | **Efficient Game Updates**
     - Move game logic to js files that live near the executable

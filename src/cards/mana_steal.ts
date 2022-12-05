@@ -1,4 +1,4 @@
-import { Spell } from './index';
+import { refundLastSpell, Spell } from './index';
 import floatingText from '../graphics/FloatingText';
 import { addPixiSpriteAnimated } from '../graphics/PixiUtils';
 import { manaBlue } from '../graphics/ui/colors';
@@ -85,12 +85,16 @@ Sacrifice some of own health to steal up to ${mana_stolen} mana from each target
         promises.push((prediction ? Promise.resolve() : Promise.all(manaTrailPromises)));
       }
       await Promise.all(promises);
-      if (!prediction) {
-        floatingText({
-          coords: caster,
-          text: `+ ${totalManaStolen} Mana`,
-          style: { fill: 'blue', ...config.PIXI_TEXT_DROP_SHADOW }
-        });
+      if (totalManaStolen > 0) {
+        if (!prediction) {
+          floatingText({
+            coords: caster,
+            text: `+ ${totalManaStolen} Mana`,
+            style: { fill: 'blue', ...config.PIXI_TEXT_DROP_SHADOW }
+          });
+        }
+      } else {
+        refundLastSpell(state, prediction, 'No targets have mana to steal\nHealth cost refunded')
       }
       return state;
     },

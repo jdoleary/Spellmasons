@@ -1,3 +1,4 @@
+- Optimize: Due to the spell cost refactor, when you move your cursor with a spell queued, the mana cost flickers
 - Make picking an upgrade an awaitable message.  This will make it so that you don't finish entering the portal until you pick an upgrade.  And it will wait to take your screen to the next level until you are done picking
     - Show when waiting on other players to pick upgrades
     - Fix double spend, don't show upgrade screen for upgrades with pickup id that you've already picked for
@@ -5,9 +6,6 @@
 - update electron build to look in savesDir
     - game files install to: C:\Users\Jordan\AppData\Local\spellmasons
     - steam files download to: C:\Program Files (x86)\Steam\steamapps\common\Spellmasons
-- mana steal from golem did damage to him but gave him no mana, refund health if it doesn't take mana
-    - `lastSpellCost` should work for health too
-    - refund mana for resurrect if cast on living unit
 - "capture soul" should "store" miniboss status
 - suffocate should be more powerful
 - bug: blood golem miniboss never shows attention marker
@@ -151,6 +149,19 @@ Gotta be a dragon
 Big slime? Keeps splitting into smaller slimes
 Maybe the final boss could be something ambiguous? Like "The Final Spell"
 And it's just ball of energy that can do weird stuff
+```
+- Russell Boss idea:
+```
+hrm, ok here's a WILD idea. how about a non-moving boss that has a number of "tentacles" or some other non-moving bits around the map that you have to take care of before you can hit the boss?
+say like stationary spawning towers that spawn a dude every few turns
+i feel like a good final boss will bring a new mechanic to the game
+or maybe the separate tendrils give the boss different abilities each turn like self-casting heal or protection, having additional damage, having additional cast range, multi-attack, etc 
+so "hey let's kill the 'heal' tendril first!" "no! we have to get rid of the summon ones before we're overrun!"
+and i still like the idea of some spell cards or upgrade cards being "locked" until you achieve something in a run to unlock them
+i'm thinking of mechanics from like Slay the Spire here
+did you have a spell book from the main menu to show all available spells?
+also not related but it would be nice to be able to click enemies during the "pick your starting spot" time for when you can't remember the difference between a poisoner and a puller or the different archers
+but overall a boss with multiple "stages" or "parts" would be cool
 ```
 
 ## Multiplayer Enhancements / issues

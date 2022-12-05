@@ -69,6 +69,7 @@ import { CardCategory } from '../types/commonTypes';
 import { HasSpace } from '../entity/Type';
 import { Overworld } from '../Overworld';
 import { allUnits } from '../entity/units';
+import floatingText from '../graphics/FloatingText';
 export interface Modifiers {
   subsprite?: Subsprite;
   // run special init logic (usually for visuals) when a modifier is added or loaded
@@ -229,6 +230,7 @@ function cardToUpgrade(c: ICard, overworld: Overworld): IUpgrade {
 
 export interface EffectState {
   cardIds: string[];
+  shouldRefundLastSpell: boolean;
   casterCardUsage?: Player.CardUsage;
   casterUnit: Unit.IUnit;
   targetedUnits: Unit.IUnit[];
@@ -240,8 +242,19 @@ export interface EffectState {
   aggregator: {
     unitDamage: UnitDamage[],
     radius: number;
-    lastSpellCost: number;
   };
+}
+export function refundLastSpell(state: EffectState, prediction: boolean, floatingMessage?: string) {
+  // Only refund the spell when it's not a prediction so that
+  // it will show the mana cost in the UI of "remaining mana" even if
+  // they are not currently hovering a valid target.
+  if (!prediction) {
+    state.shouldRefundLastSpell = true;
+    if (floatingMessage) {
+      floatingText({ coords: state.casterUnit, text: floatingMessage });
+    }
+  }
+
 }
 export function hasTargetAtPosition(position: Vec2, underworld: Underworld): boolean {
   const unitAtCastLocation = underworld.getUnitAt(position);
