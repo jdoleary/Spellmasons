@@ -410,7 +410,6 @@ async function showCastCardsPrediction(underworld: Underworld, target: Vec2, cas
       cardIds,
       target,
       true,
-      false,
       outOfRange
     );
     // Clears unit tints in preparation for setting new tints to symbolize which units are targeted by spell
@@ -563,6 +562,7 @@ export async function runPredictions(underworld: Underworld) {
       }
     }
   }
+  Unit.syncPlayerHealthManaUI(underworld);
   if (globalThis.runPredictionsPanel) {
     globalThis.runPredictionsPanel.update(Date.now() - startTime, 300);
   }
