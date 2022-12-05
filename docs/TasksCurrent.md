@@ -1,4 +1,6 @@
-- green glop copy:"it's" to its
+- update electron build to look in savesDir
+    - game files install to: C:\Users\Jordan\AppData\Local\spellmasons
+    - steam files download to: C:\Program Files (x86)\Steam\steamapps\common\Spellmasons
 - i18n: Press 'z' to make camera follow you
 - if spell pick is up when level changes over it makes it look like it skipped cause it overrides with the perk pick, but the perk pick should wait it's turn
 - mana steal from golem did damage to him but gave him no mana, refund health if it doesn't take mana
@@ -15,10 +17,10 @@
 - "lost connection to server" screen doeesn't offer you a way to reconnect or go back to menu
 - UX: Zoom in is faster than zoom out
 - make music play in menu
+- explain 'ping' in multiplayer
 
+- make different liquid have different effects
 # Nice to haves
-- Nice camera
-    - exciting akira moment
 - Make gameplay video with Brad, add it to Steam and YouTube
     - Bugs
     - Send out Demo

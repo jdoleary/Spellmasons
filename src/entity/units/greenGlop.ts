@@ -13,7 +13,7 @@ const numberOfTargets = 6;
 const unit: UnitSource = {
   id: 'Green Glop',
   info: {
-    description: 'The Green Glop can attack up to 6 enemies.  It lobbs gloop high into the air to deal damage to it\'s enemies.  It can attack it\'s enemies from behind walls.',
+    description: 'The Green Glop can attack up to 6 enemies.  It lobbs gloop high into the air to deal damage to its enemies.  It can attack its enemies from behind walls.',
     image: 'units/lobberIdle',
     subtype: UnitSubType.RANGED_RADIUS,
   },

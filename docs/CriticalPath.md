@@ -35,6 +35,12 @@
         - and so it will continue a song if the next level is in the same biome
     - Manually test all spells for desync issues (in multiplayer)
     - Release
+- Extras
+    - tint levels just like enemies when looping??
+    - atmospheric effects like dust?
+    - Nice camera
+        - exciting akira moment
+
     
 - Rethink next trailer
     - Lead with "fun"
