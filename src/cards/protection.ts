@@ -25,7 +25,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.UNCOMMON],
     supportQuantity: true,
     thumbnail: 'spellIconProtection.png',
-    description: 'Prevents unit from being targeted by magic (helpful magic or harmful magic).',
+    description: 'Prevents unit from being affected by the next spell combination that targets them. (Nullifies both helpful magic or harmful magic)',
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);
