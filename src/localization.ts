@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/browser";
 import languages from '../public/localization/localization.json';
 import * as storage from './storage';
 
@@ -21,7 +22,11 @@ function returnTranslation(key: string, map: LanguageMapping): string {
         if (!cachedErrorsReported.includes(key)) {
             // If something hasn't been localized yet, report it with console.error and return the key so
             // the string isn't totally empty as the key might just be an english string for now
-            console.error(`i18n: Language ${map.language} has no value for key ${key}`);
+            Sentry.withScope(function (scope) {
+                scope.setLevel(Sentry.Severity.Warning);
+                // The exception has the event level set by the scope (info).
+                Sentry.captureException(new Error(`i18n: Language ${map.language} has no value for key ${key}`));
+            });
             cachedErrorsReported.push(key);
         }
         return key;
