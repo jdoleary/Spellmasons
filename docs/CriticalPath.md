@@ -4,13 +4,8 @@
         - need gameplay video first
 - December
     - Due 12/ 10
-        - **big** Convenient multiplayer lobbying via steam
-            - Prevent players from joining mid-round, notify "you will spawn once this level is complete"
-            - GameLobbyJoinRequested_t
-                - https://partner.steamgames.com/doc/api/ISteamFriends
-            - [sdk api overview](https://partner.steamgames.com/doc/sdk/api)
-            - [Call c from node](https://github.com/node-ffi/node-ffi/wiki/Node-FFI-Tutorial)
         - **big** Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
+            - use electron packaging
     - build: remove unneeded nuget package from build output?
     - feature: Allow multiplayer game to restart after wipe
     - Start reaching out to steamers and reviewers and send demo

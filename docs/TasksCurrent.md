@@ -1,3 +1,6 @@
+- maybe 'pull' should always pull a fixed distance so you could pull through you
+- green glop copy:"it's" to its
+- i18n: Press 'z' to make camera follow you
 - if spell pick is up when level changes over it makes it look like it skipped cause it overrides with the perk pick, but the perk pick should wait it's turn
 - mana steal from golem did damage to him but gave him no mana, refund health if it doesn't take mana
     - `lastSpellCost` should work for health too
@@ -7,7 +10,7 @@
 - spellbook search bar
 - improve protedct\ion copy
 - bug: blood golem miniboss never shows attention marker
-- perk: maybe mana overfill stays on me as a modifier, look into this, it should remove self? no?
+- bug: perk: maybe mana overfill stays on me as a modifier, look into this, it should remove self? no?
 - how to resolve clicking on multiple units overlapping
 - Why did handleOnDataMessage throwing unhandled also prevent other instances of Underworld from working (they were stuck too???)
 - "lost connection to server" screen doeesn't offer you a way to reconnect or go back to menu
