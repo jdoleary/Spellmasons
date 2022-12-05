@@ -729,8 +729,11 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
     // Label health without shield
     elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;
   }
-
   const predictionPlayerUnit = underworld.unitsPrediction.find(u => u.id == unit.id);
+  if (predictionPlayerUnit && predictionPlayerUnit.health !== unit.health) {
+    elHealthLabel.innerHTML = `${predictionPlayerUnit.health} ${i18n('Health Remaining')}`;
+  }
+
   // Set the health cost bar that shows how much health will be changed if the spell is cast
   if (predictionPlayerUnit) {
     const losingHealth = predictionPlayerUnit.health < unit.health;
