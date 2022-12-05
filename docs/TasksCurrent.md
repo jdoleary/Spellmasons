@@ -1,4 +1,3 @@
-- Optimize: Due to the spell cost refactor, when you move your cursor with a spell queued, the mana cost flickers
 - Make picking an upgrade an awaitable message.  This will make it so that you don't finish entering the portal until you pick an upgrade.  And it will wait to take your screen to the next level until you are done picking
     - Show when waiting on other players to pick upgrades
     - Fix double spend, don't show upgrade screen for upgrades with pickup id that you've already picked for

@@ -710,7 +710,7 @@ export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | u
   }
 
 }
-export function syncPlayerHealthManaUI(underworld: Underworld) {
+export function syncPlayerHealthManaUI(underworld: Underworld, predictionPlayerUnit: IUnit) {
   if (globalThis.headless) { return; }
   if (!(globalThis.player && elHealthBar && elManaBar && elStaminaBar && elHealthLabel && elManaLabel && elStaminaBarLabel)) {
     return
@@ -729,7 +729,6 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
     // Label health without shield
     elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;
   }
-  const predictionPlayerUnit = underworld.unitsPrediction.find(u => u.id == unit.id);
   if (predictionPlayerUnit && predictionPlayerUnit.health !== unit.health) {
     elHealthLabel.innerHTML = `${predictionPlayerUnit.health} ${i18n('Health Remaining')}`;
   }

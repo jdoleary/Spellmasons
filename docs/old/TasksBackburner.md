@@ -1,3 +1,4 @@
+- mana_steal health cost badge disappears if you have a shield on
 - how to resolve clicking on multiple units overlapping
   - Best strategy is just to refund mana for spells that have no effect like mana steal or resurrect
 - spellbook search bar

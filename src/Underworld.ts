@@ -581,7 +581,6 @@ export default class Underworld {
 
     ImmediateMode.loop();
 
-    Unit.syncPlayerHealthManaUI(this);
     globalThis.unitOverlayGraphics?.clear();
 
     // Make liquid move to the right:
@@ -2118,7 +2117,6 @@ export default class Underworld {
       console.log('showUpgrades: Closing upgrade screen, nothing left to pick')
       return;
     }
-    console.trace('showUpgrades');
     const isPerk = player.upgradesLeftToChoose == 0;
     let minimumProbability = 0;
     if (player.upgradesLeftToChoose > 0 && player.inventory.length < config.STARTING_CARD_COUNT) {
