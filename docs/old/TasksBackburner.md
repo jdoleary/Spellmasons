@@ -1,3 +1,6 @@
+- how to resolve clicking on multiple units overlapping
+  - Best strategy is just to refund mana for spells that have no effect like mana steal or resurrect
+- spellbook search bar
 - If all enemies are deleted, no portal spawns
 - see `// TODO does this cause an issue on headless?` in priest.ts
 - how to show how much damage a queued spell will do

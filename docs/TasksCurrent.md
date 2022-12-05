@@ -1,24 +1,24 @@
+- Make picking an upgrade an awaitable message.  This will make it so that you don't finish entering the portal until you pick an upgrade.  And it will wait to take your screen to the next level until you are done picking
+    - Show when waiting on other players to pick upgrades
+    - Fix double spend, don't show upgrade screen for upgrades with pickup id that you've already picked for
+- Visually change perk backgrounds so they don't look like spells
 - update electron build to look in savesDir
     - game files install to: C:\Users\Jordan\AppData\Local\spellmasons
     - steam files download to: C:\Program Files (x86)\Steam\steamapps\common\Spellmasons
-- i18n: Press 'z' to make camera follow you
-- if spell pick is up when level changes over it makes it look like it skipped cause it overrides with the perk pick, but the perk pick should wait it's turn
 - mana steal from golem did damage to him but gave him no mana, refund health if it doesn't take mana
     - `lastSpellCost` should work for health too
+    - refund mana for resurrect if cast on living unit
 - "capture soul" should "store" miniboss status
-- brad didn't know you could channel from your spellbook
 - suffocate should be more powerful
-- spellbook search bar
-- improve protedct\ion copy
 - bug: blood golem miniboss never shows attention marker
 - bug: perk: maybe mana overfill stays on me as a modifier, look into this, it should remove self? no?
-- how to resolve clicking on multiple units overlapping
 - Why did handleOnDataMessage throwing unhandled also prevent other instances of Underworld from working (they were stuck too???)
 - "lost connection to server" screen doeesn't offer you a way to reconnect or go back to menu
 - UX: Zoom in is faster than zoom out
 - make music play in menu
 - explain 'ping' in multiplayer
-
+- explain: brad didn't know you could channel from your spellbook
+    - rerecord explain inventory with new UI
 - make different liquid have different effects
 # Nice to haves
 - Make gameplay video with Brad, add it to Steam and YouTube
@@ -64,15 +64,17 @@
 
 # Localization
 - All tooltip info
+- Spell descriptions
 - Explain prompts - see stash "add i18n to explain prompts"
+- i18n: Press 'z' to make camera follow you
 # Features
-- A way to "sell spells to get to choose a new one"
 - Need a restart screen after a team wipe on multiplayer
+    - with voting??
+    - **important**Allow multiplayer game restart after wipe
+        - All players return to lobby after 10 seconds
+        - cleans up underworld
+        - Currently it just lets you exit to main menu but if you rejoin the game it still exists with everyone dead in it
 - should allow spell prediction even while an action is taking place - this not being here causes friction in multiplayer
-- **important**Allow multiplayer game restart after wipe
-    - All players return to lobby after 10 seconds
-    - cleans up underworld
-    - Currently it just lets you exit to main menu but if you rejoin the game it still exists with everyone dead in it
 ## Prediction issues
 - prediction should factor in standing on pickups
     - this can be reproduced by standing on health pot and queuing up just enough slash spells to kill you and triggering it.  You will see that it predicts that you will die but you don't because as soon as you first take damage the health pot triggers
@@ -135,6 +137,8 @@
 - task: Spell to trade mana for stamina
 - eagle eye
 - Tornado: Travells through the map throwing things around (maybe a good enemy ability)
+    - Or just spells that travel in the direction you send them
+- A way to "sell spells to get to choose a new one"
 - Jake boss ideas:
 ```
 Necromancer supreme. Conjura a bunch of guys to fight but is very fragile himself

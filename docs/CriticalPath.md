@@ -1,14 +1,21 @@
 # Desired Schedule
-- November
-    - Submit demo to IGN
-        - need gameplay video first
 - December
-    - Due 12/ 10
+    - Week of 2022-12-05
+        - Improve upgrades
+            - double spend
+            - when they pop up relative to cinematic
+        - refund fizzle spells
+        - update explains, add missing gifs
+        - build: remove unneeded nuget package from build output?
         - **big** Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
             - use electron packaging
-    - build: remove unneeded nuget package from build output?
-    - feature: Allow multiplayer game to restart after wipe
-    - Start reaching out to steamers and reviewers and send demo
+    - Week of 2022-12-12
+        - feature: Allow multiplayer game to restart after wipe
+    - Week of 2022-12-19
+    - Week of 2022-12-26
+        - Start reaching out to steamers and reviewers and send demo
+        - Submit demo to IGN
+            - need gameplay video first
 - January
     - Optimize runPredictions
         - especially with expanding + corpse explosion
