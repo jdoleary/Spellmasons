@@ -1,4 +1,4 @@
-import { multiply, Vec2 } from '../jmath/Vec';
+import { multiply, add, Vec2 } from '../jmath/Vec';
 import { getCurrentTargets, Spell } from './index';
 import type { Circle, ForceMove } from '../jmath/moveWithCollision';
 import { raceTimeout } from '../Promise';
@@ -7,8 +7,11 @@ import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import { HasSpace } from '../entity/Type';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
+import { distance, similarTriangles } from '../jmath/math';
+import { forcePush } from './push';
 
 export const id = 'pull';
+export const velocityStartMagnitude = 10;
 const spell: Spell = {
   card: {
     id,
@@ -27,8 +30,11 @@ Pulls the target(s) towards the caster
       let promises = [];
       playDefaultSpellSFX(card, prediction);
       const targets = getCurrentTargets(state);
+      const caster = state.casterUnit;
       for (let entity of targets) {
-        promises.push(pull(entity, state.casterUnit, quantity, underworld, prediction));
+        const dist = distance(caster, entity)
+        const awayFrom = add(caster, similarTriangles(entity.x - caster.x, entity.y - caster.y, dist, dist * 2));
+        promises.push(forcePush(entity, awayFrom, velocityStartMagnitude * quantity, underworld, prediction));
       }
       await Promise.all(promises);
       return state;

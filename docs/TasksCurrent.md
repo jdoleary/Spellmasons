@@ -1,4 +1,3 @@
-- maybe 'pull' should always pull a fixed distance so you could pull through you
 - green glop copy:"it's" to its
 - i18n: Press 'z' to make camera follow you
 - if spell pick is up when level changes over it makes it look like it skipped cause it overrides with the perk pick, but the perk pick should wait it's turn
