@@ -21,6 +21,7 @@
         - especially with expanding + corpse explosion
     - Use Steamworks "Currator Connect" Tool
     - How to visually stack modifiers such as blood_curse and debilitate
+        - On hover?
     - Support hosting a server from in the game exe
     - [Steamworks web api](https://partner.steamgames.com/doc/webapi_overview)
     - Icons for perks
@@ -38,6 +39,7 @@
     - Server Browser
     - Balance Enemies
     - Balance Perks
+    - Satisfying end game (like the literal throne in Nuclear Throne)
     - Update music so it only changes song group once you reach a new biome
         - and so it will continue a song if the next level is in the same biome
     - Manually test all spells for desync issues (in multiplayer)
