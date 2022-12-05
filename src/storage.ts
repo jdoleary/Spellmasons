@@ -59,13 +59,15 @@ export function getSavedData() {
                 set(STORAGE_ID_PLAYER_COLOR, newColor);
             }
             // Set uiZoom:
-            if (globalThis.electronSettings) {
-                const uiZoom = get(STORAGE_ID_UI_ZOOM);
-                if (uiZoom) {
-                    globalThis.electronSettings.setUIZoom(parseFloat(uiZoom));
+            if (globalThis.isElectron) {
+                if (globalThis.electronSettings) {
+                    const uiZoom = get(STORAGE_ID_UI_ZOOM);
+                    if (uiZoom) {
+                        globalThis.electronSettings.setUIZoom(parseFloat(uiZoom));
+                    }
+                } else {
+                    console.error('globalThis.electronSettings is undefined, cannot set uiZoom');
                 }
-            } else {
-                console.error('globalThis.electronSettings is undefined, cannot set uiZoom');
             }
             // Update controls:
             // Get saved controls from storage:
