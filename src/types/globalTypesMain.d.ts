@@ -121,8 +121,8 @@ declare global {
     var notifiedOutOfStamina: undefined | boolean;
     // Allows manually overriding the underworld seed via the JS console
     var seedOverride: string | undefined;
-    // devMode: auto picks character and upgrades
-    var devMode: undefined | boolean;
+    // devAutoPickUpgrades: auto pick upgrades
+    var devAutoPickUpgrades: undefined | boolean;
     // Set to true if the build is run as a desktop app through electron
     var isElectron: undefined | boolean;
     // Allows toggling off hud and access to the admin menu

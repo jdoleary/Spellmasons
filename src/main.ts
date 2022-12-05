@@ -33,7 +33,7 @@ globalThis.lobbyPlayerList = [];
 globalThis.playerWalkingPromise = Promise.resolve();
 globalThis.attentionMarkers = [];
 globalThis.resMarkers = [];
-globalThis.devMode = location.href.includes('localhost');
+globalThis.devAutoPickUpgrades = location.href.includes('localhost');
 globalThis.adminMode = location.href.includes('localhost');
 globalThis.zoomTarget = 1.8;
 // If the code in main runs this is NOT a headless instance, main.ts is the entrypoint for
@@ -45,8 +45,8 @@ globalThis.isHost = (pie: PieClient | IHostApp) => {
   // hostApp
   return typeGuardHostApp(pie) ? true : pie.soloMode;
 }
-if (globalThis.devMode) {
-  console.log('ADMIN: devMode = true! Character and upgrades will be picked automatically. Animations are sped up');
+if (globalThis.devAutoPickUpgrades) {
+  console.log('ADMIN: devAutoPickUpgrades = true! Character and upgrades will be picked automatically.');
 }
 
 setupAll();
@@ -107,10 +107,10 @@ globalThis.setRMBDown = (isDown: boolean, underworld: Underworld) => {
 }
 
 globalThis.showDebug = false;
-// Prevent accidental back button only when not in devMode
-// In devMode, lots of refreshing happens so it's annoying when it
+// Prevent accidental back button only when not developing locally
+// During development, lots of refreshing happens so it's annoying when it
 // asks "are you sure?" every time
-if (!globalThis.devMode && !globalThis.isElectron) {
+if (!location.href.includes('localhost') && !globalThis.isElectron) {
   globalThis.onbeforeunload = function () { return "Are you sure you want to quit?"; };
 }
 

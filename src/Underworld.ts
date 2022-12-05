@@ -1953,9 +1953,9 @@ export default class Underworld {
     if (globalThis.player) {
       // Turns can only be manually ended during the PlayerTurns phase
       if (this.isMyTurn()) {
-        // In devMode only, the game quicksaves for development purposes
+        // For local development only, the game quicksaves for development purposes
         // so I can jump back to right before I ended my turn
-        if (devMode) {
+        if (location.href.includes('localhost')) {
           // Check globalThis.player.isSpawned to prevent quicksaving an invalid underworld file
           if (globalThis.save && globalThis.player.isSpawned) {
             console.info(`Dev: quick saving game as "${globalThis.quicksaveKey}"`);
@@ -2152,7 +2152,7 @@ export default class Underworld {
           for (let elUpgrade of elUpgrades) {
             if (elUpgrade) {
               elUpgradePickerContent.appendChild(elUpgrade);
-              if (globalThis.devMode && elUpgrade == elUpgrades[0]) {
+              if (globalThis.devAutoPickUpgrades && elUpgrade == elUpgrades[0]) {
                 elUpgrade.click();
               }
             } else {

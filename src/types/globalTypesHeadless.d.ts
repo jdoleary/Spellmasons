@@ -73,7 +73,6 @@ declare global {
     // var RMBDown: undefined;
     // var setRMBDown: undefined;
     // var notifiedOutOfStamina: undefined;
-    // var devMode: undefined;
     // var map: any;
     // var devRemoveAllEnemies: undefined;
     // var playNextSong: undefined;
@@ -183,8 +182,8 @@ declare global {
     // Used to set Right mouse button down
     var setRMBDown: undefined | ((isDown: boolean, underworld: Underworld) => void);
     var notifiedOutOfStamina: undefined | boolean;
-    // devMode: auto picks character and upgrades
-    var devMode: undefined | boolean;
+    // devAutoPickUpgrades: auto pick upgrades
+    var devAutoPickUpgrades: undefined | boolean;
     // Set to true if the build is run as a desktop app through electron
     var isElectron: undefined | boolean;
     // Allows toggling off hud and access to the admin menu
