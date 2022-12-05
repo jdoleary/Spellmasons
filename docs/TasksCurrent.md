@@ -1,7 +1,9 @@
+- could prediction pushs hook into the same function that headless uses to calculate pushes all at once??
 - Make picking an upgrade an awaitable message.  This will make it so that you don't finish entering the portal until you pick an upgrade.  And it will wait to take your screen to the next level until you are done picking
     - Show when waiting on other players to pick upgrades
     - Fix double spend, don't show upgrade screen for upgrades with pickup id that you've already picked for
 - Visually change perk backgrounds so they don't look like spells
+    - what if perks displayed as a horizontal card
 - update electron build to look in savesDir
     - game files install to: C:\Users\Jordan\AppData\Local\spellmasons
     - steam files download to: C:\Program Files (x86)\Steam\steamapps\common\Spellmasons
@@ -10,6 +12,7 @@
 - bug: blood golem miniboss never shows attention marker
 - bug: perk: maybe mana overfill stays on me as a modifier, look into this, it should remove self? no?
 - Why did handleOnDataMessage throwing unhandled also prevent other instances of Underworld from working (they were stuck too???)
+- Balance summoners so they can't summon too much long term
 - "lost connection to server" screen doeesn't offer you a way to reconnect or go back to menu
 - UX: Zoom in is faster than zoom out
 - make music play in menu
@@ -162,6 +165,10 @@ did you have a spell book from the main menu to show all available spells?
 also not related but it would be nice to be able to click enemies during the "pick your starting spot" time for when you can't remember the difference between a poisoner and a puller or the different archers
 but overall a boss with multiple "stages" or "parts" would be cool
 ```
+- Boss:
+    - maybe the boss could have multiple phases
+    - Russell: A good boss introduces a new mechanic
+    - Maybe casts whatever spells you cast back at you? Jakes idea
 
 ## Multiplayer Enhancements / issues
 - if you choose a spawn position while another player is casting it waits and then spawns where you clicked, which can be confusing because it still looks like you can choose where to spawn

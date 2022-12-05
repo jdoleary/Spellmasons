@@ -247,17 +247,26 @@ export function runCinematicLevelCamera(underworld: Underworld): Promise<void> {
   if (globalThis.headless) {
     return Promise.resolve();
   }
-  if (!globalThis.cinematicCameraEnabled) {
-    return Promise.resolve();
-  }
   if (globalThis.view !== View.Game) {
+    console.log('Cinematic Cam: Skip, game view is not game')
     // Do not run cinematic unless the player is looking at the game view
     return Promise.resolve();
   }
+  console.log('Cinematic Cam: Start')
   const cinematicCameraCSSClass = 'viewingCinematicCamera';
   document.body?.classList.toggle(cinematicCameraCSSClass, true);
 
   return new Promise<void>(resolve => {
+    if (!globalThis.cinematicCameraEnabled) {
+      // Note: This intentionally resolves inside the promise so that
+      // even if a player has cinematicCameraEnabled set to false,
+      // it will still show them upgrades which is called in the then()
+      // callback for this promise.  Early `return Promise.resolves()` would
+      // skip this showUpgrades() invokation.
+      console.log('Cinematic Cam: Skip, cinematicCameraEnabled == false')
+      resolve();
+      return;
+    }
     globalThis.skipCinematic = resolve;
     setCameraToMapCenter(underworld);
     const realCam = getCamera();
@@ -334,6 +343,8 @@ export function runCinematicLevelCamera(underworld: Underworld): Promise<void> {
     globalThis.cinematicCameraTarget = undefined;
     cameraAutoFollow(false);
     console.log('Cinematic Cam: done')
+    // Note: Upgrades must come AFTER resetPlayerForNextLevel, see commit for explanation
+    underworld.showUpgrades();
   });
 
 }

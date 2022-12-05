@@ -221,18 +221,6 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
 export function updateGlobalRefToCurrentClientPlayer(player: IPlayer, underworld: Underworld) {
   if (globalThis.clientId === player.clientId) {
     globalThis.player = player;
-    // If the player has any upgrades that they need to choose it will show them.
-    // showUpgrades depends on having globalThis.player assigned, so this invokation is
-    // to protect against the race condition where the primary call to showUpgrades
-    // (when the level is created) is triggered before the player has been assigned.
-    // This invokation prevents that rare case where players spawn with no starting upgrades
-    // ---
-    // The timeout prevents upgrades from rendering for a moment and then quickly disappearing
-    // when runCinematicCamera hides the upgrade screen while it's animating
-    setTimeout(() => {
-      underworld.showUpgrades();
-    }, 100);
-
   }
 }
 // Converts a player entity into a serialized form

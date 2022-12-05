@@ -1,14 +1,14 @@
 # Desired Schedule
 - December
     - Week of 2022-12-05
+        - Design boss for endgame so I can give specs to Che
         - Improve upgrades
             - double spend
             - when they pop up relative to cinematic
-        - refund fizzle spells
         - update explains, add missing gifs
         - build: remove unneeded nuget package from build output?
         - **big** Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
-            - use electron packaging
+            - [use self-hosted electron packaging](https://github.com/vercel/hazel)
     - Week of 2022-12-12
         - feature: Allow multiplayer game to restart after wipe
     - Week of 2022-12-19
@@ -39,7 +39,8 @@
     - Server Browser
     - Balance Enemies
     - Balance Perks
-    - Satisfying end game (like the literal throne in Nuclear Throne)
+    - Satisfying end game (boss unit needed like the literal throne in Nuclear Throne)
+        - Obvious looping, maybe tint levels or something
     - Update music so it only changes song group once you reach a new biome
         - and so it will continue a song if the next level is in the same biome
     - Manually test all spells for desync issues (in multiplayer)
@@ -55,6 +56,7 @@
     - Needs more text explaining the concept
     - Lead with "fun"
     - Remove "dead time"
+    - Less time watching the Spellmason cast over and over, just cut to the spell
     - get into the action fast
     - Communicate the big idea
 - Gameplay Trailer

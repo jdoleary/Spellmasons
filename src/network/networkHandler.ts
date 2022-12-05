@@ -371,6 +371,13 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         } else {
           console.error('Cannot spawn player at NaN')
         }
+        // This check protects against potential bugs where the upgrade screen still hasn't come up
+        // by the time the player spawns
+        if (fromPlayer == globalThis.player && (globalThis.player.upgradesLeftToChoose > 0 || globalThis.player.perksLeftToChoose > 0)) {
+          console.error('Unexpected: player had unspent upgrade points when they spawned.');
+          underworld.showUpgrades();
+        }
+
       } else {
         console.error('Cannot SPAWN_PLAYER, fromPlayer is undefined.')
       }
