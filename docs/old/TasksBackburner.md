@@ -1,3 +1,5 @@
+- Unreproduced: Double spend issue with scroll pickups where if you pick one up while the other guy is casting and his cast kills the last mob so scrolls fly to you, you sometimes get to pick 2 upgrades??
+  - or maybe it was just that the last kill dropped a scroll and I mistook it for a bug
 - mana_steal health cost badge disappears if you have a shield on
 - how to resolve clicking on multiple units overlapping
   - Best strategy is just to refund mana for spells that have no effect like mana steal or resurrect

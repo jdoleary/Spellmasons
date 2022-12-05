@@ -2,14 +2,12 @@
 - December
     - Week of 2022-12-05
         - Design boss for endgame so I can give specs to Che
-        - Improve upgrades
-            - double spend
-            - when they pop up relative to cinematic
         - update explains, add missing gifs
         - build: remove unneeded nuget package from build output?
         - **big** Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
             - [use self-hosted electron packaging](https://github.com/vercel/hazel)
     - Week of 2022-12-12
+        - Verify that there are no bugs with showUpgrades refactor 02362aa9
         - feature: Allow multiplayer game to restart after wipe
     - Week of 2022-12-19
     - Week of 2022-12-26
