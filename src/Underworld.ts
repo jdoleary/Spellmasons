@@ -2555,8 +2555,6 @@ export default class Underworld {
     cardIds: string[],
     castLocation: Vec2,
     prediction: boolean,
-    // If true, prevents removing mana when spell is cast.  This is used for "trap" card
-    costPrepaid: boolean,
     // True if the cast is out of range, this can be used to draw UI elements differently
     // (like the color of a radius circle in the "Target Circle" card) to clue the user in to
     // the fact that the spell is out of range but it's showing them what would happen.
@@ -2602,7 +2600,6 @@ export default class Underworld {
       // Prevent dead players from casting
       return effectState;
     }
-    if (!costPrepaid) {
       const cards = Cards.getCardsFromIds(cardIds);
       const spellCost = calculateCost(cards, casterCardUsage);
       effectState.aggregator.lastSpellCost = spellCost.manaCost;
@@ -2628,7 +2625,6 @@ export default class Underworld {
           }
         }
       }
-    }
 
     // "quantity" is the number of identical cards cast in a row. Rather than casting the card sequentially
     // quantity allows the card to have a unique scaling effect when cast sequentially after itself.
