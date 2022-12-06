@@ -36,14 +36,7 @@ const spell: Spell = {
     sfx: 'rend',
     description: `
 Deals more damage based on the number of consecutive stacks of "${id}".
-For example:
-1 ${id}: ${calculateRendDamage(1)} damage
-2 ${id}: ${calculateRendDamage(2)} damage
-3 ${id}: ${calculateRendDamage(3)} damage
-4 ${id}: ${calculateRendDamage(4)} damage
-5 ${id}: ${calculateRendDamage(5)} damage
-6 ${id}: ${calculateRendDamage(6)} damage
-    `,
+How damage grows when stacking ${id}: ${calculateRendDamage(1)}, ${calculateRendDamage(2)}, ${calculateRendDamage(3)}, ${calculateRendDamage(4)}, ${calculateRendDamage(5)}, ${calculateRendDamage(6)}, ${calculateRendDamage(7)}, ${calculateRendDamage(8)}, ${calculateRendDamage(9)}, ${calculateRendDamage(10)}`,
     effect: async (state, card, quantity, underworld, prediction) => {
       await new Promise<void>((resolve) => {
         const damage = calculateRendDamage(quantity);

@@ -1,5 +1,8 @@
 # Desired Schedule
 - December
+    - How to visually stack modifiers such as blood_curse and debilitate
+    - New biomes via colorizing old biome tiles for looping
+    - Make game loop so you don't stay on ghost level forever
     - Week of 2022-12-05
         - Design boss for endgame so I can give specs to Che
             - Maybe auras, slow, dot, etc?
@@ -19,12 +22,10 @@
     - Optimize runPredictions
         - especially with expanding + corpse explosion
     - Use Steamworks "Currator Connect" Tool
-    - How to visually stack modifiers such as blood_curse and debilitate
         - On hover?
     - Support hosting a server from in the game exe
     - [Steamworks web api](https://partner.steamgames.com/doc/webapi_overview)
     - Icons for perks
-    - Last few sound fx
     - Establish Minimum System Requirements and update Steam Page
     - Accessability / Localization Language Support / Spellcheck
     - Squirrel Tasks
@@ -32,9 +33,7 @@
         - Ensure start app isn't added to desktop
     - Electron Security
     - Verify Cloud Saves
-    - Small
-        - Add explain gifs for new units
-        - Add sentry errors to electron node files
+    - Add sentry errors to electron node files
     - Server Browser
     - Balance Enemies
     - Balance Perks

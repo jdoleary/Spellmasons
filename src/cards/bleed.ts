@@ -46,7 +46,7 @@ Deals more damage based on how much health the target is missing.
 
 For example:
 Target with ${bleedInstantKillProportion * 100}% health will die.
-${[40, 65, 90].map(health => `Target with ${health}% health will take ${Math.floor(calculateDamageProportion({ health, healthMax: 100, alive: true }) * 100)}% of max health as damage`).join(`
+${[40, 65, 90].map(health => `${health}% health: ${Math.floor(calculateDamageProportion({ health, healthMax: 100, alive: true }) * 100)}% of max health as damage`).join(`
 `)}
 Target with full health will take no damage.
     `,
