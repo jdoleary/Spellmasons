@@ -1589,7 +1589,6 @@ export default class Underworld {
       // If in a multiplayer game and it's a few levels in (giving time for players to get situated)
       // explaining pinging
       if (this.players.length > 1 && this.levelIndex > 2) {
-        console.log('jtest explain ping')
         explain(EXPLAIN_PING);
       }
     });

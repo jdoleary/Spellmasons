@@ -7,7 +7,6 @@
 - Balance summoners so they can't summon too much long term
 - **Important** if when you go to view-Disconnected and you press escape to take you back to menu, when you reconnect to server there's no way to get back into the game due to menu state desync
     - also offer a way to exit to menu from view-Disconnected
-- make music play in menu
 - make different liquid have different effects
 - verify UI zoom restored from settings in electron app (due to 63643c06)
 # Nice to haves
