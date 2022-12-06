@@ -1204,7 +1204,11 @@ export default class Underworld {
     let biome: Biome = biome_water;
     const biomes: Biome[] = [biome_water, biome_lava, biome_blood, biome_ghost];
     const nextBiomeEveryXLevels = 3;
-    const loopedLevelIndex = Math.floor(levelIndex / nextBiomeEveryXLevels) % biomes.length;
+    const startLoopingLevelIndex = biomes.length * nextBiomeEveryXLevels
+    const loopedLevelIndex = levelIndex >= startLoopingLevelIndex
+      // Once the game starts looping, change biome every level
+      ? levelIndex % biomes.length
+      : Math.floor(levelIndex / nextBiomeEveryXLevels) % biomes.length;
     const nextBiome = biomes[loopedLevelIndex];
     if (nextBiome) {
       biome = nextBiome;
