@@ -1,13 +1,6 @@
 - update electron build to look in savesDir
     - game files install to: C:\Users\Jordan\AppData\Local\spellmasons
     - steam files download to: C:\Program Files (x86)\Steam\steamapps\common\Spellmasons
-- bug: blood golem miniboss never shows attention marker
-- bug: perk: maybe mana overfill stays on me as a modifier, look into this, it should remove self? no?
-- Why did handleOnDataMessage throwing unhandled also prevent other instances of Underworld from working (they were stuck too???)
-- Balance summoners so they can't summon too much long term
-- **Important** if when you go to view-Disconnected and you press escape to take you back to menu, when you reconnect to server there's no way to get back into the game due to menu state desync
-    - also offer a way to exit to menu from view-Disconnected
-- make different liquid have different effects
 - verify UI zoom restored from settings in electron app (due to 63643c06)
 # Nice to haves
 - Make gameplay video with Brad, add it to Steam and YouTube

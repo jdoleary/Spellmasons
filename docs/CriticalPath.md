@@ -15,6 +15,9 @@
         - **big** Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
             - [use self-hosted electron packaging](https://github.com/vercel/hazel)
     - Week of 2022-12-19
+        - Rework whole View.Disconnected flow.  Once the server disconnects theres no way back in and there's also no way to stop it from auto reconnecting.
+            - **Important** if when you go to view-Disconnected and you press escape to take you back to menu, when you reconnect to server there's no way to get back into the game due to menu state desync
+                - also offer a way to exit to menu from view-Disconnected
     - Week of 2022-12-26
         - Start reaching out to steamers and reviewers and send demo
         - Submit demo to IGN
