@@ -31,7 +31,6 @@ export function coordToPoly(coord: Vec2): Polygon2 {
   return bounds;
 }
 
-export const lavaDamage = 2;
 // Returns a point that would be "safe" to move a unit to where visually they would be completely submerged in liquid.
 // "safe" meaning visually safe so it doesn't look buggy where they are half submerged but also half on land
 export function findSafeFallInPoint(currentPosition: Vec2, nextPosition: Vec2, underworld: Underworld): { safeFallInPosition: Vec2, hitLava: boolean } {

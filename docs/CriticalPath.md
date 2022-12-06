@@ -2,7 +2,6 @@
 - December
     - How to visually stack modifiers such as blood_curse and debilitate
     - New biomes via colorizing old biome tiles for looping
-    - Make liquid in different biomes have different impacts
     - Week of 2022-12-05
         - Make and publish Gameplay trailer
         - Design boss for endgame so I can give specs to Che

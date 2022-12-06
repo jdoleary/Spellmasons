@@ -140,7 +140,7 @@ You can also forge spells by clicking on them in your inventory so you don't hav
     },
     [EXPLAIN_LIQUID_DAMAGE]: {
         prompt: () => ({
-            imageSrc: 'images/explain/liquid-damage.gif', text: `Units that fall into bodies of liquid will take damage.  Some units are stronger than others and will survive.`, yesText: 'Yikes!'
+            imageSrc: 'images/explain/liquid-damage.gif', text: `Units that fall into bodies of liquid will take damage.  Some units are stronger than others and will survive.  Some types of liquid will deal more damage than others.`, yesText: 'Yikes!'
         })
     },
     [EXPLAIN_BLESSINGS]: {
