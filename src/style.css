@@ -1247,7 +1247,7 @@ body.view-Disconnected #pie-disconnected {
 
 body.view-Disconnected #websocketpie-connection-status {
   display: block;
-  z-index: 1;
+  z-index: 3;
   position: absolute;
   top: 52%;
   right: 0;

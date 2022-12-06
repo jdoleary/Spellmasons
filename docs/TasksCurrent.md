@@ -5,7 +5,7 @@
 - bug: perk: maybe mana overfill stays on me as a modifier, look into this, it should remove self? no?
 - Why did handleOnDataMessage throwing unhandled also prevent other instances of Underworld from working (they were stuck too???)
 - Balance summoners so they can't summon too much long term
-- "lost connection to server" screen doeesn't offer you a way to reconnect or go back to menu
+- **Important** if when you go to view-Disconnected and you press escape to take you back to menu, when you reconnect to server there's no way to get back into the game due to menu state desync
 - UX: Zoom in is faster than zoom out
 - make music play in menu
 - explain 'ping' in multiplayer
