@@ -6,11 +6,9 @@
 - Why did handleOnDataMessage throwing unhandled also prevent other instances of Underworld from working (they were stuck too???)
 - Balance summoners so they can't summon too much long term
 - **Important** if when you go to view-Disconnected and you press escape to take you back to menu, when you reconnect to server there's no way to get back into the game due to menu state desync
-- UX: Zoom in is faster than zoom out
+    - also offer a way to exit to menu from view-Disconnected
 - make music play in menu
 - explain 'ping' in multiplayer
-- explain: brad didn't know you could channel from your spellbook
-    - rerecord explain inventory with new UI
 - make different liquid have different effects
 - verify UI zoom restored from settings in electron app (due to 63643c06)
 # Nice to haves

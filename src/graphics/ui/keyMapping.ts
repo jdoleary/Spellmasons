@@ -31,11 +31,11 @@ export function fullyUpdateControls(newMapping: any) {
 
 }
 
-export function keyToHumanReadable(keyboardKey: string[]): string {
-    const keyString = keyboardKey.join(' or ')
-        .split('Digit').join('')
-        .split('Key').join('');
-    return `<kbd>${keyString}</kbd>`;
+export function keyToHumanReadable(keyboardKeys: string[]): string {
+    return keyboardKeys.map(keyString =>
+        `<kbd>${keyString
+            .split('Digit').join('')
+            .split('Key').join('')}</kbd>`).join(' or ');
 }
 
 export function getKeyCodeMapping(keyCode: string): string | undefined {
