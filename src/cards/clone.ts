@@ -69,9 +69,8 @@ Clones each target.  Cloned units maintain their current faction.
                   }, 0) + 1;
                 }
                 // If the cloned unit is player controlled, make them be controlled by the AI
-                if (clone.unitSubType == UnitSubType.PLAYER_CONTROLLED) {
+                if (clone.unitType == UnitType.PLAYER_CONTROLLED) {
                   clone.unitType = UnitType.AI;
-                  clone.unitSubType = UnitSubType.RANGED_RADIUS;
                   returnToDefaultSprite(clone);
                 }
                 clone.x = validSpawnCoords.x;

@@ -183,8 +183,6 @@ export function updatePlanningView(underworld: Underworld) {
               const labelPosition = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.staminaMax + globalThis.selectedUnit.attackRange }, labelText.width / 2);
               labelText.x = labelPosition.x;
               labelText.y = labelPosition.y;
-            } else if (globalThis.selectedUnit.unitSubType === UnitSubType.PLAYER_CONTROLLED) {
-              drawCastRangeCircle(globalThis.selectedUnit, globalThis.selectedUnit.attackRange, globalThis.selectedUnitGraphics)
             }
           }
         }

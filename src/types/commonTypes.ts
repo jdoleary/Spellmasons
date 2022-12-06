@@ -7,7 +7,6 @@ export enum UnitSubType {
   RANGED_LOS,
   RANGED_RADIUS,
   SUPPORT_CLASS,
-  PLAYER_CONTROLLED,
 }
 
 export enum Faction {

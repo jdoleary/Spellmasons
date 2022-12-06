@@ -1,9 +1,10 @@
 import type { UnitSource } from './index';
-import { UnitSubType } from '../../types/commonTypes';
+import { UnitSubType, UnitType } from '../../types/commonTypes';
 import * as Unit from '../Unit';
 import * as math from '../../jmath/math';
 import Underworld from '../../Underworld';
 import * as slash from '../../cards/slash';
+import * as config from '../../config';
 
 export const spellmasonUnitId = 'Spellmason';
 const unit: UnitSource = {
@@ -11,9 +12,11 @@ const unit: UnitSource = {
   info: {
     description: 'You and your kin are Spellmasons: mighty wizards that forge magic with nothing but a bit of ingenuity and some mana.',
     image: 'units/playerIdle',
-    subtype: UnitSubType.PLAYER_CONTROLLED,
+    subtype: UnitSubType.RANGED_RADIUS,
   },
-  unitProps: {},
+  unitProps: {
+    attackRange: config.PLAYER_BASE_ATTACK_RANGE
+  },
   // This is how a user unit would act if controlled by AI (this can happen if you clone yourself)
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     const attackTarget = attackTargets && attackTargets[0];
@@ -35,12 +38,15 @@ const unit: UnitSource = {
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-    // const closestUnit = Unit.findClosestUnitInDifferentFaction(unit, underworld);
-    // if (closestUnit) {
-    //   return [closestUnit];
-    // } else {
+    if (unit.unitType == UnitType.AI) {
+      const closestUnit = Unit.findClosestUnitInDifferentFaction(unit, underworld);
+      if (closestUnit) {
+        return [closestUnit];
+      } else {
+        return [];
+      }
+    }
     return [];
-    // }
   },
   animations: {
     idle: 'units/playerIdle',
