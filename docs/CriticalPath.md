@@ -51,6 +51,7 @@
         - exciting akira moment
 
 - Allow over 3x mana? How else will people afford to summon expensive units?
+- Make all perks stackable
     
 - Rethink next trailer
     - Needs more text explaining the concept

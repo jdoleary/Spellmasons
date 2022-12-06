@@ -299,12 +299,12 @@ export const upgradeStatsSource: IUpgrade[] = [
     title: 'Overflowing Mana',
     type: 'perk',
     description: (player) =>
-      `Grants a ${Math.floor(100 * maybeManaOverfillProportionChance)}% chance on the start of every turn that you will get 2x mana for that turn.`,
+      `Grants a ${Math.floor(100 * maybeManaOverfillProportionChance)}% chance on the start of every turn that you will get 2x mana for that turn.  Stackable.`,
     thumbnail: 'images/spell/unknown.png',
     effect: (player, underworld) => {
       Unit.addModifier(player.unit, maybeManaOverfillId, underworld, false);
     },
-    probability: 5,
+    probability: 500,
     cost: { healthCost: 0, manaCost: 0 },
   },
   {

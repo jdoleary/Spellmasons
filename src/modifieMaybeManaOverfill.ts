@@ -20,10 +20,11 @@ export default function registerSummoningSickness() {
     });
     registerEvents(maybeManaOverfillId, {
         onTurnStart: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
+            const quantity = unit.modifiers[maybeManaOverfillId]?.quantity || 1;
             // Seeded random based on the turn so it's consistent across all clients
             const random = seedrandom(`${underworld.seed}-${underworld.levelIndex}-${underworld.turn_number}`);
             const pick = random.quick();
-            const doGiveOverfill = pick <= maybeManaOverfillProportionChance;
+            const doGiveOverfill = pick <= maybeManaOverfillProportionChance * quantity;
             if (doGiveOverfill && !prediction) {
                 unit.mana += unit.manaMax;
                 floatingText({ coords: unit, text: `Perk Applied! ${maybeManaOverfillId}` });

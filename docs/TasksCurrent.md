@@ -13,7 +13,6 @@
     - rerecord explain inventory with new UI
 - make different liquid have different effects
 - verify UI zoom restored from settings in electron app (due to 63643c06)
-- make maybeManaOverfill stackable
 # Nice to haves
 - Make gameplay video with Brad, add it to Steam and YouTube
     - Bugs
