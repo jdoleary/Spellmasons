@@ -23,7 +23,7 @@ import { isOutOfRange } from '../../PlayerUtils';
 import { vec2ToOneDimentionIndexPreventWrap } from '../../jmath/ArrayUtil';
 import * as Vec from '../../jmath/Vec';
 import { Vec2 } from '../../jmath/Vec';
-import Underworld, { biome_level_index_map, showUpgradesClassName } from '../../Underworld';
+import Underworld, { showUpgradesClassName } from '../../Underworld';
 import { toLineSegments } from '../../jmath/Polygon2';
 import { closestLineSegmentIntersection } from '../../jmath/lineSegment';
 import { allUnits } from '../../entity/units';
@@ -915,7 +915,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
             console.error('Cannot "Skip to Water Biome", underworld does not exist');
             return;
           }
-          overworld.underworld.levelIndex = biome_level_index_map.water;
+          overworld.underworld.levelIndex = 0;
           Player.enterPortal(globalThis.player, overworld.underworld);
         }
       },
@@ -930,7 +930,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
             console.error('Cannot "Skip to Lava Biome", underworld does not exist');
             return;
           }
-          overworld.underworld.levelIndex = biome_level_index_map.lava;
+          overworld.underworld.levelIndex = 3;
           Player.enterPortal(globalThis.player, overworld.underworld);
         }
       },
@@ -945,7 +945,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
             console.error('Cannot "Skip to Blood Biome", underworld does not exist');
             return;
           }
-          overworld.underworld.levelIndex = biome_level_index_map.blood;
+          overworld.underworld.levelIndex = 6;
           Player.enterPortal(globalThis.player, overworld.underworld);
         }
       },
@@ -960,7 +960,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
             console.error('Cannot "Skip to Ghost Biome", underworld does not exist');
             return;
           }
-          overworld.underworld.levelIndex = biome_level_index_map.ghost;
+          overworld.underworld.levelIndex = 9;
           Player.enterPortal(globalThis.player, overworld.underworld);
         }
       },

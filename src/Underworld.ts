@@ -1202,15 +1202,14 @@ export default class Underworld {
     const biome_blood: Biome = 'blood';
     const biome_ghost: Biome = 'ghost';
     let biome: Biome = biome_water;
-    const loopedLevelIndex = levelIndex % (biome_level_index_map.ghost + 3);
-    if (loopedLevelIndex >= biome_level_index_map.lava) {
-      biome = biome_lava;
-    }
-    if (loopedLevelIndex >= biome_level_index_map.blood) {
-      biome = biome_blood;
-    }
-    if (loopedLevelIndex >= biome_level_index_map.ghost) {
-      biome = biome_ghost;
+    const biomes: Biome[] = [biome_water, biome_lava, biome_blood, biome_ghost];
+    const nextBiomeEveryXLevels = 3;
+    const loopedLevelIndex = Math.floor(levelIndex / nextBiomeEveryXLevels) % biomes.length;
+    const nextBiome = biomes[loopedLevelIndex];
+    if (nextBiome) {
+      biome = nextBiome;
+    } else {
+      console.error('Could not find biome for levelIndex: ', levelIndex);
     }
 
     const useTutorialStartLevel = !isTutorialComplete() && levelIndex == 0;
@@ -2947,13 +2946,6 @@ function getEnemiesForAltitude(underworld: Underworld): string[] {
 
 // Explicit list of biome types
 export type Biome = 'water' | 'lava' | 'blood' | 'ghost';
-// Greather than X level index chooses the following biomes:
-export const biome_level_index_map: { [biome in Biome]: number } = {
-  water: 0,
-  lava: 3,
-  blood: 6,
-  ghost: 9
-}
 
 export function biomeTextColor(biome?: Biome): number | string {
   switch (biome) {
