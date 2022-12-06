@@ -79,7 +79,7 @@ const unit: UnitSource = {
               setTimeout(() => {
                 makeDarkPriestAttackParticles(attackTarget, false, resolve);
                 setTimeout(() => {
-                  Unit.takeDamage(attackTarget, unit.damage, undefined, underworld, false);
+                  Unit.takeDamage(attackTarget, unit.damage, attackTarget, underworld, false);
                 }, math.distance(unit, attackTarget));
               }, 100 * i);
             }));
