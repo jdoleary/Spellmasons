@@ -1202,13 +1202,14 @@ export default class Underworld {
     const biome_blood: Biome = 'blood';
     const biome_ghost: Biome = 'ghost';
     let biome: Biome = biome_water;
-    if (levelIndex >= biome_level_index_map.lava) {
+    const loopedLevelIndex = levelIndex % (biome_level_index_map.ghost + 3);
+    if (loopedLevelIndex >= biome_level_index_map.lava) {
       biome = biome_lava;
     }
-    if (levelIndex >= biome_level_index_map.blood) {
+    if (loopedLevelIndex >= biome_level_index_map.blood) {
       biome = biome_blood;
     }
-    if (levelIndex >= biome_level_index_map.ghost) {
+    if (loopedLevelIndex >= biome_level_index_map.ghost) {
       biome = biome_ghost;
     }
 

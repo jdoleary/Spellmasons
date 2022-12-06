@@ -6,7 +6,7 @@
     - game files install to: C:\Users\Jordan\AppData\Local\spellmasons
     - steam files download to: C:\Program Files (x86)\Steam\steamapps\common\Spellmasons
 - "capture soul" should "store" miniboss status
-- suffocate should be more powerful
+    - overflowing spell labels should wrap
 - bug: blood golem miniboss never shows attention marker
 - bug: perk: maybe mana overfill stays on me as a modifier, look into this, it should remove self? no?
 - Why did handleOnDataMessage throwing unhandled also prevent other instances of Underworld from working (they were stuck too???)
