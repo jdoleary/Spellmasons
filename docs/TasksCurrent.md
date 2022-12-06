@@ -8,7 +8,6 @@
 - **Important** if when you go to view-Disconnected and you press escape to take you back to menu, when you reconnect to server there's no way to get back into the game due to menu state desync
     - also offer a way to exit to menu from view-Disconnected
 - make music play in menu
-- explain 'ping' in multiplayer
 - make different liquid have different effects
 - verify UI zoom restored from settings in electron app (due to 63643c06)
 # Nice to haves
@@ -16,6 +15,7 @@
     - Bugs
     - Send out Demo
 # Bugs / Cleaning
+- bug: when one player went into a portal and the other had already ended their turn and the left over player died from ai (portal was spawned via admin menu), it correctly went to the next level but it generated 2 levels (skipping right to level 3)
 - pieUrl is stored wrong in browser search bar so if you copy it after connecting it'd double encoded
 - res markers don't show if the unit is alive but will be killed and then resurrected
 - **critical** vamp miniboss got stuck where he has stamina and a path (with no points), but wont move; i think it's because i summoned an archer and the archer was part way in liquid but didn't show it and so he didn't have a path to the archer

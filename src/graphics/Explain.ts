@@ -65,6 +65,7 @@ export const EXPLAIN_REMOVE_SPELLS = 'Remove Spells';
 export const EXPLAIN_FORGE_ORDER = 'Spell Forge Order';
 export const EXPLAIN_DEATH = 'Surviving Death';
 export const EXPLAIN_MINI_BOSSES = 'Mini Bosses';
+export const EXPLAIN_PING = 'Pinging';
 interface ExplainData {
     condition?: () => boolean;
     // Returns args to pass into Jprompt
@@ -167,6 +168,11 @@ In this example, "Connect" + "Push" + "${id}" will damage you instead of the 2nd
     [EXPLAIN_MINI_BOSSES]: {
         prompt: () => ({
             imageSrc: 'images/explain/minibosses.gif', text: `Minibosses are larger than their meager counterparts, have more health and do more damage.  Take extra caution when facing one.`, yesText: 'Got it!'
+        })
+    },
+    [EXPLAIN_PING]: {
+        prompt: () => ({
+            imageSrc: 'images/explain/ping.gif', text: `In multiplayer games, you can ping specific locations to help with communication by holding down ${keyToHumanReadable(keyMapping.ping)} and moving your mouse.`, yesText: 'Cool!'
         })
     },
 }

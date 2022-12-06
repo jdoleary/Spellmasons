@@ -1,3 +1,4 @@
+- UX: Zoom in is faster than zoom out
 - could prediction pushs hook into the same function that headless uses to calculate pushes all at once??
 - Visually change perk backgrounds so they don't look like spells
     - what if perks displayed as a horizontal card

@@ -75,7 +75,7 @@ import { createVisualLobbingProjectile } from './entity/Projectile';
 import { isOutOfRange } from './PlayerUtils';
 import { DisplayObject, State, TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
-import { explain, EXPLAIN_MISSED_SCROLL, EXPLAIN_SCROLL, isTutorialComplete, tutorialCompleteTask, tutorialShowTask } from './graphics/Explain';
+import { explain, EXPLAIN_MISSED_SCROLL, EXPLAIN_PING, EXPLAIN_SCROLL, isTutorialComplete, tutorialCompleteTask, tutorialShowTask } from './graphics/Explain';
 import { makeScrollDissapearParticles } from './graphics/ParticleCollection';
 import { Overworld } from './Overworld';
 
@@ -1586,6 +1586,12 @@ export default class Underworld {
       this.broadcastTurnPhase(turn_phase.PlayerTurns);
       cameraAutoFollow(false);
       setCameraToMapCenter(this);
+      // If in a multiplayer game and it's a few levels in (giving time for players to get situated)
+      // explaining pinging
+      if (this.players.length > 1 && this.levelIndex > 2) {
+        console.log('jtest explain ping')
+        explain(EXPLAIN_PING);
+      }
     });
   }
   // creates a level from levelData
