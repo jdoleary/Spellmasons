@@ -17,7 +17,7 @@ const imageName = 'explode-on-death.png';
 const damage = 4;
 const baseRadius = 140;
 function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra?: any) {
-  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity }, () => {
+  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
     // Add event
     if (!unit.onDeathEvents.includes(id)) {
       unit.onDeathEvents.push(id);

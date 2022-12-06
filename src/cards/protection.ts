@@ -10,7 +10,7 @@ import { getOrInitModifier } from './util';
 
 export const id = 'protection';
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
-  getOrInitModifier(unit, id, { isCurse: false, quantity }, () => { });
+  getOrInitModifier(unit, id, { isCurse: false, quantity, persistBetweenLevels: false }, () => { });
 }
 export const notifyProtected = throttle((coords: Vec2, prediction: boolean) => {
   floatingText({ coords, text: prediction ? 'Protection: spell will be nullified' : `Spell nullified by Protection` });

@@ -34,6 +34,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
   const modifier = getOrInitModifier(unit, id, {
     isCurse: true,
     quantity,
+    persistBetweenLevels: false,
     originalStats: {
       staminaMax,
       moveSpeed

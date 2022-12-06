@@ -12,7 +12,7 @@ import { getOrInitModifier } from './util';
 
 export const id = 'suffocate';
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
-  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity }, () => {
+  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
     // Add event
     if (!unit.onTurnStartEvents.includes(id)) {
       unit.onTurnStartEvents.push(id);

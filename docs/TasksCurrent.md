@@ -1,8 +1,5 @@
 - spellmason ai has super short cast range
 - could prediction pushs hook into the same function that headless uses to calculate pushes all at once??
-- Make picking an upgrade an awaitable message.  This will make it so that you don't finish entering the portal until you pick an upgrade.  And it will wait to take your screen to the next level until you are done picking
-    - Show when waiting on other players to pick upgrades
-    - Fix double spend, don't show upgrade screen for upgrades with pickup id that you've already picked for
 - Visually change perk backgrounds so they don't look like spells
     - what if perks displayed as a horizontal card
 - update electron build to look in savesDir
@@ -22,6 +19,7 @@
     - rerecord explain inventory with new UI
 - make different liquid have different effects
 - verify UI zoom restored from settings in electron app (due to 63643c06)
+- make maybeManaOverfill stackable
 # Nice to haves
 - Make gameplay video with Brad, add it to Steam and YouTube
     - Bugs

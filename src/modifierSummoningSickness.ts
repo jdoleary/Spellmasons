@@ -7,7 +7,7 @@ export const summoningSicknessId = 'summoningSickness';
 export default function registerSummoningSickness() {
     registerModifiers(summoningSicknessId, {
         add: (unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) => {
-            getOrInitModifier(unit, summoningSicknessId, { isCurse: true, quantity }, () => {
+            getOrInitModifier(unit, summoningSicknessId, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
                 // Immediately set stamina to 0 so they can't move
                 unit.stamina = 0;
                 // Add event

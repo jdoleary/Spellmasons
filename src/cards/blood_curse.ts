@@ -24,7 +24,7 @@ function add(unit: IUnit, underworld: Underworld) {
     return;
   }
 
-  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity: 1 }, () => {
+  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity: 1, persistBetweenLevels: false }, () => {
     // Add subsprite image
     Image.addSubSprite(unit.image, imageName);
     // Add event

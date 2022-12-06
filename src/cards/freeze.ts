@@ -93,7 +93,7 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
 };
 
 function add(unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) {
-  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity }, () => {
+  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
     unit.radius = config.COLLISION_MESH_RADIUS;
     // Immediately set stamina to 0 so they can't move
     unit.stamina = 0;

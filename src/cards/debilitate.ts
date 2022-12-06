@@ -68,7 +68,7 @@ Makes the target(s) take double damage whenever they receive damage.
 };
 
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
-  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity }, () => {
+  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
     unit.onDamageEvents.push(id);
     // Add subsprite image
     Image.addSubSprite(unit.image, imageName);

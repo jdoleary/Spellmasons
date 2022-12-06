@@ -4,15 +4,16 @@
     - New biomes via colorizing old biome tiles for looping
     - Make game loop so you don't stay on ghost level forever
     - Week of 2022-12-05
+        - Make and publish Gameplay trailer
         - Design boss for endgame so I can give specs to Che
             - Maybe auras, slow, dot, etc?
             - contain spell combos inside of onTurnStart?
         - build: remove unneeded nuget package from build output?
-        - **big** Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
-            - [use self-hosted electron packaging](https://github.com/vercel/hazel)
     - Week of 2022-12-12
         - Verify that there are no bugs with showUpgrades refactor 02362aa9
         - feature: Allow multiplayer game to restart after wipe
+        - **big** Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
+            - [use self-hosted electron packaging](https://github.com/vercel/hazel)
     - Week of 2022-12-19
     - Week of 2022-12-26
         - Start reaching out to steamers and reviewers and send demo

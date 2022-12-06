@@ -10,7 +10,7 @@ export const maybeManaOverfillId = 'Maybe Mana Overfill';
 export default function registerSummoningSickness() {
     registerModifiers(maybeManaOverfillId, {
         add: (unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) => {
-            getOrInitModifier(unit, maybeManaOverfillId, { isCurse: false, quantity }, () => {
+            getOrInitModifier(unit, maybeManaOverfillId, { isCurse: false, quantity, persistBetweenLevels: true }, () => {
                 // Add event
                 if (!unit.onTurnStartEvents.includes(maybeManaOverfillId)) {
                     unit.onTurnStartEvents.push(maybeManaOverfillId);
