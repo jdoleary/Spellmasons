@@ -616,7 +616,8 @@ kbd {
   color: black;
   text-align: center;
   text-transform: capitalize;
-  white-space: nowrap;
+  /* Allow wrapping for long spell names */
+  white-space: normal;
   /* max-height: 30px; */
   /* For new card template */
   padding: 4px;

@@ -191,9 +191,13 @@ export function registerCards(overworld: Overworld) {
   register(death_wager, overworld);
   register(capture_soul, overworld);
   for (let unitId of Object.keys(allUnits)) {
-    const spell = summon_generic(unitId);
+    const spell = summon_generic(unitId, false);
     if (spell) {
       register(spell, overworld);
+    }
+    const spellMiniboss = summon_generic(unitId, true);
+    if (spellMiniboss) {
+      register(spellMiniboss, overworld);
     }
   }
 

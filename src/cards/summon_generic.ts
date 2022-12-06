@@ -34,7 +34,7 @@ const overrides: { [unitId: string]: { exclude: boolean, properties: { manaCost?
         }
     }
 }
-export default function makeSpellForUnitId(unitId: string): Spell | undefined {
+export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean): Spell | undefined {
     const override = overrides[unitId];
     const sourceUnit = allUnits[unitId];
     if (!sourceUnit) {
@@ -61,12 +61,12 @@ export default function makeSpellForUnitId(unitId: string): Spell | undefined {
 
     return {
         card: {
-            id: unitId,
+            id: unitId + (asMiniboss ? ' Miniboss' : ''),
             category: CardCategory.Soul,
             sfx: 'summonDecoy',
             supportQuantity: false,
             // Make mana cost dependent on how late they show up in the game
-            manaCost: 2 * Math.max(60, (sourceUnit.spawnParams?.unavailableUntilLevelIndex || 1) * 20),
+            manaCost: 2 * Math.max(60, (sourceUnit.spawnParams?.unavailableUntilLevelIndex || 1) * 20) * (asMiniboss ? 2 : 1),
             healthCost: 0,
             expenseScaling: 3,
             // These cards are not available as upgrades and must be accessed through capture_soul
@@ -105,6 +105,9 @@ Summons ${unitId[0]?.toLowerCase() == 'a' ? `an ${unitId}` : `a ${unitId}`} to f
                         underworld,
                         prediction
                     );
+                    if (asMiniboss) {
+                        Unit.makeMiniboss(unit);
+                    }
                     addUnitTarget(unit, state);
 
                     if (!prediction) {
