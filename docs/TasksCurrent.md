@@ -1,3 +1,4 @@
+- spellmason ai has super short cast range
 - could prediction pushs hook into the same function that headless uses to calculate pushes all at once??
 - Make picking an upgrade an awaitable message.  This will make it so that you don't finish entering the portal until you pick an upgrade.  And it will wait to take your screen to the next level until you are done picking
     - Show when waiting on other players to pick upgrades

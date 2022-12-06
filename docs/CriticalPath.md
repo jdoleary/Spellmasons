@@ -2,7 +2,8 @@
 - December
     - Week of 2022-12-05
         - Design boss for endgame so I can give specs to Che
-        - update explains, add missing gifs
+            - Maybe auras, slow, dot, etc?
+            - contain spell combos inside of onTurnStart?
         - build: remove unneeded nuget package from build output?
         - **big** Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
             - [use self-hosted electron packaging](https://github.com/vercel/hazel)
