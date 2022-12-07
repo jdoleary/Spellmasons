@@ -57,7 +57,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         // so clear the onDataQueue to prevent old messages from being processed
         // after the full gamestate sync
         onDataQueueContainer.queue = [d];
-        handleLoadGameState(payload, overworld);
+        processNextInQueueIfReady(overworld);
       } else {
         console.log('Ignoring INIT_GAME_STATE because underworld has already been initialized.');
       }
@@ -273,8 +273,11 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       }
 
       break;
+    case MESSAGE_TYPES.INIT_GAME_STATE:
+      await handleLoadGameState(payload, overworld);
+      break;
     case MESSAGE_TYPES.LOAD_GAME_STATE:
-      handleLoadGameState(payload, overworld);
+      await handleLoadGameState(payload, overworld);
       break;
     case MESSAGE_TYPES.ENTER_PORTAL:
       if (fromPlayer) {
