@@ -93,6 +93,12 @@ export function setView(v: View) {
       if (globalThis.updateInGameMenuStatus) {
         globalThis.updateInGameMenuStatus();
       }
+      // Since svelte can't keep track of state outside of itself,
+      // any time the view switches back to the Menu it should force rerender
+      // so that it will have updated pie connection status for example
+      if (globalThis.refreshMenu) {
+        globalThis.refreshMenu();
+      }
       break;
     case View.Game:
       resizePixi();
@@ -135,6 +141,9 @@ export function addOverworldEventListeners(overworld: Overworld) {
   if (globalThis.headless) { return; }
   const elQuitButton: HTMLButtonElement = document.getElementById(
     'quit',
+  ) as HTMLButtonElement;
+  const elDisconnectButton: HTMLButtonElement = document.getElementById(
+    'disconnect-btn',
   ) as HTMLButtonElement;
 
   const listeners: {
@@ -210,6 +219,18 @@ export function addOverworldEventListeners(overworld: Overworld) {
         event: 'click',
         listener: () => {
           if (globalThis.exitCurrentGame) {
+            globalThis.exitCurrentGame();
+          } else {
+            console.error('Unexpected: globalThis.exitCurrentGame is undefined.');
+          }
+        }
+      },
+      {
+        target: elDisconnectButton,
+        event: 'click',
+        listener: () => {
+          if (globalThis.exitCurrentGame) {
+            // This will also disconnect from wsPie causing it to stop trying to reconnect.
             globalThis.exitCurrentGame();
           } else {
             console.error('Unexpected: globalThis.exitCurrentGame is undefined.');

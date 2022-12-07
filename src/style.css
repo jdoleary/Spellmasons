@@ -1232,6 +1232,7 @@ body.view-Menu .prompt:not(.forceShow) {
 
 body.view-Disconnected #pie-disconnected {
   display: flex;
+  gap: 16px;
   flex-direction: column;
   position: absolute;
   top: 0;
@@ -1249,7 +1250,7 @@ body.view-Disconnected #websocketpie-connection-status {
   display: block;
   z-index: 3;
   position: absolute;
-  top: 52%;
+  top: 44%;
   right: 0;
   bottom: 0;
   left: 0;
