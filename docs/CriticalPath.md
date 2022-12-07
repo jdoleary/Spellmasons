@@ -5,7 +5,6 @@
         - Design boss for endgame so I can give specs to Che
             - Maybe auras, slow, dot, etc?
             - contain spell combos inside of onTurnStart?
-        - feature: Allow multiplayer game to restart after wipe
         - **big** Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
             - [use self-hosted electron packaging](https://github.com/vercel/hazel)
         - Rework whole View.Disconnected flow.  Once the server disconnects theres no way back in and there's also no way to stop it from auto reconnecting.

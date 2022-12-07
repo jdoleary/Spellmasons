@@ -46,12 +46,6 @@
 - Explain prompts - see stash "add i18n to explain prompts"
 - i18n: Press 'z' to make camera follow you
 # Features
-- Need a restart screen after a team wipe on multiplayer
-    - with voting??
-    - **important**Allow multiplayer game restart after wipe
-        - All players return to lobby after 10 seconds
-        - cleans up underworld
-        - Currently it just lets you exit to main menu but if you rejoin the game it still exists with everyone dead in it
 - should allow spell prediction even while an action is taking place - this not being here causes friction in multiplayer
 ## Prediction issues
 - prediction should factor in standing on pickups

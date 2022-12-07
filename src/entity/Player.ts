@@ -221,6 +221,10 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
   player.unit.stamina = player.unit.staminaMax;
 
   Unit.returnToDefaultSprite(player.unit);
+
+  // Manage game over state so that if this is a restart
+  // and the game over window is currently up, it will dismiss it
+  underworld.tryGameOver();
 }
 // Keep a global reference to the current client's player
 export function updateGlobalRefToCurrentClientPlayer(player: IPlayer, underworld: Underworld) {

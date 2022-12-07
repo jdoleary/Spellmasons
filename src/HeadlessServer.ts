@@ -41,7 +41,7 @@ function headlessStartGame() {
             if (hostAppInst.overworld.underworld) {
                 // Generate the level data
                 hostAppInst.overworld.underworld.lastLevelCreated = hostAppInst.overworld.underworld.generateLevelDataSyncronous(0);
-                // Actually create it
+                // Actually create the level 
                 hostAppInst.overworld.underworld.createLevelSyncronous(hostAppInst.overworld.underworld.lastLevelCreated);
             } else {
                 console.error('hostApp overworld does not have an underworld to initialize.');

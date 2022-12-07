@@ -77,7 +77,7 @@ import { DisplayObject, State, TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
 import { explain, EXPLAIN_MISSED_SCROLL, EXPLAIN_PING, EXPLAIN_SCROLL, isTutorialComplete, tutorialCompleteTask, tutorialShowTask } from './graphics/Explain';
 import { makeScrollDissapearParticles } from './graphics/ParticleCollection';
-import { Overworld } from './Overworld';
+import { ensureAllClientsHaveAssociatedPlayers, Overworld } from './Overworld';
 
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
@@ -169,6 +169,8 @@ export default class Underworld {
   lastLevelCreated: LevelData | undefined;
   removeEventListeners: undefined | (() => void);
   bloods: BloodParticle[] = [];
+  // Keeps track of if the game has begun the process of restarting a new level after a Game Over
+  isRestarting: boolean = false;
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
@@ -1720,16 +1722,44 @@ export default class Underworld {
     );
     return { x, y };
   }
-  tryGameOver(): boolean {
+  isGameOver(): boolean {
+    const unspawnedPlayers = this.players.filter(p => !p.isSpawned);
     // TODO will have to update this to allow PVP / factions
     const playerFactions = this.players.map(p => p.unit.faction);
     // Game is over once ALL units on player factions are dead (this includes player units)
-    const isOver = this.units.filter(u => playerFactions.includes(u.faction)).every(u => !u.alive);
+    return unspawnedPlayers.length == 0 && this.units.filter(u => playerFactions.includes(u.faction)).every(u => !u.alive);
+  }
+  tryGameOver(): boolean {
+    const isOver = this.isGameOver();
     // Remove quicksave on game over since the game is no longer 'resumable"
     if (isOver) {
       storage.remove(`${globalThis.savePrefix}${globalThis.quicksaveKey}`);
     }
     document.body.classList.toggle('game-over', isOver);
+    if (globalThis.headless) {
+      if (isOver) {
+        const overworld = this.overworld;
+        const pie = this.pie;
+        // Only allow it to start the process of creating a new underworld once
+        // because this function tryGameOver should be able to be called any number
+        // of times and only the first time that it detects game over should it trigger
+        // a new game
+        if (!this.isRestarting) {
+          const millisTillRestart = 3000;
+          console.log('Host app game over', isOver, `restarting in ${Math.floor(millisTillRestart / 1000)} seconds`);
+          this.isRestarting = true;
+          setTimeout(() => {
+            const newUnderworld = new Underworld(overworld, pie, Math.random().toString());
+            // Add players back to underworld
+            ensureAllClientsHaveAssociatedPlayers(overworld, overworld.clients)
+            // Generate the level data
+            newUnderworld.lastLevelCreated = newUnderworld.generateLevelDataSyncronous(0);
+            // Actually create the level 
+            newUnderworld.createLevelSyncronous(newUnderworld.lastLevelCreated);
+          }, millisTillRestart);
+        }
+      }
+    }
     return isOver;
   }
   tryEndPlayerTurnPhase(): boolean {
