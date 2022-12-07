@@ -40,11 +40,8 @@ function connect_to_wsPie_server(wsUri: string | undefined, overworld: Overworld
         console.log("Pie: Successfully connected to PieServer.")
         resolve();
       } else {
-        if (overworld.underworld) {
-          overworld.underworld.cleanup();
-          if (view == View.Game) {
-            setView(View.Disconnected);
-          }
+        if (view == View.Game) {
+          setView(View.Disconnected);
         }
       }
     };
