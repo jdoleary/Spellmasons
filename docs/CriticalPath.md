@@ -1,27 +1,26 @@
 # Desired Schedule
 - December
-    - How to visually stack modifiers such as blood_curse and debilitate
-    - New biomes via colorizing old biome tiles for looping
-    - Week of 2022-12-05
+    - Main tasks
         - Make and publish Gameplay trailer
         - Design boss for endgame so I can give specs to Che
             - Maybe auras, slow, dot, etc?
             - contain spell combos inside of onTurnStart?
-        - build: remove unneeded nuget package from build output?
-    - Week of 2022-12-12
-        - Verify that there are no bugs with showUpgrades refactor 02362aa9
         - feature: Allow multiplayer game to restart after wipe
         - **big** Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
             - [use self-hosted electron packaging](https://github.com/vercel/hazel)
-    - Week of 2022-12-19
         - Rework whole View.Disconnected flow.  Once the server disconnects theres no way back in and there's also no way to stop it from auto reconnecting.
             - **Important** if when you go to view-Disconnected and you press escape to take you back to menu, when you reconnect to server there's no way to get back into the game due to menu state desync
                 - also offer a way to exit to menu from view-Disconnected
-    - Week of 2022-12-26
+    - Smaller Tasks
+        - verify `UI zoom` restored from settings in electron app (due to 63643c06)
         - Start reaching out to steamers and reviewers and send demo
         - Submit demo to IGN
             - need gameplay video first
+    - How to visually stack modifiers such as blood_curse and debilitate
+    - Verify that there are no bugs with showUpgrades refactor 02362aa9
 - January
+    - build: remove unneeded nuget package from build output?
+    - Invent new loop biomes by colorizing old biome tiles for looping
     - Optimize runPredictions
         - especially with expanding + corpse explosion
     - Use Steamworks "Currator Connect" Tool
@@ -56,16 +55,6 @@
 - Make all perks stackable
 - make music play in menu
     
-- Rethink next trailer
-    - Needs more text explaining the concept
-    - Lead with "fun"
-    - Remove "dead time"
-    - Less time watching the Spellmason cast over and over, just cut to the spell
-    - get into the action fast
-    - Communicate the big idea
-- Gameplay Trailer
-- Cut Demo
-- Reach out to streamers and Reviewers
 - Short circuit expensive runPredictions
     - Any way to make many forceMoves run asyncronously?
 - Exe optimized for updates & modding?
@@ -74,6 +63,33 @@
 - "How To" guides
 - Allow opening dev tools in exe
 # Critical Path
+- Milestone | **Trailers & Marketing**
+    - Gameplay Trailer
+    - The Release Trailer
+        - Rethink next trailer
+            - Needs more text explaining the concept
+            - Lead with "fun"
+            - Remove "dead time"
+            - Less time watching the Spellmason cast over and over, just cut to the spell
+            - get into the action fast
+            - Communicate the big idea
+    - Cut Demo
+    - Reach out to streamers & Reviewers
+- Milestone | **Finish Gameplay**
+    - End of game scaling
+        - boss
+        - unlocks
+    - More Perks
+- Milestone | **Efficient Game Updates**
+    - Move game logic to js files that live near the executable
+        - This is necessary to support steam workshop mods
+    - Don't obfuscate
+- Milestone X | **Package as Electron App**
+    - Security
+        - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
+        - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
+    - Menu for community server selector
+    - Allow running local standalone server from inside app
 - Milestone | **Optimize game**
     - repelCircleFromLine is used for both unit crowding and wall physics and with wall physics it doesn't need a reference to underworld, that's only needed for unit crowding to make sure they don't crowd each other through walls
     - Memory Leaks: call destroy() on any Graphics object you no longer need to avoid memory leaks.
@@ -84,22 +100,6 @@
     - Saw slowdown with "+ Radius" * 4 then Bloat, then Slice
     - updateCameraPosition is somehow taking a long time
     - copyForPredictionUnit is slow for many units
-- Milestone | **Finish Gameplay**
-    - End of game scaling
-        - boss
-        - unlocks
-    - More Perks
-- Milestone | **Efficient Game Updates**
-    - Move game logic to js files that live near the executable
-        - This is necessary to support steam workshop mods
-    - Don't obfuscate
-- Milestone X | **Package as Electron App** | Planning on November 1
-    - Security
-        - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
-        - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
-    - Menu for community server selector
-    - Allow running local standalone server from inside app
-    - Integrate Steam friends for joining the same server
 - Milestone **Strech 1**
     - [Mod support](https://partner.steamgames.com/doc/features/workshop)
     - Server customization (like Worms Armageddon)

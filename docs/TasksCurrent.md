@@ -1,7 +1,6 @@
 - update electron build to look in savesDir
     - game files install to: C:\Users\Jordan\AppData\Local\spellmasons
     - steam files download to: C:\Program Files (x86)\Steam\steamapps\common\Spellmasons
-- verify UI zoom restored from settings in electron app (due to 63643c06)
 # Nice to haves
 - Make gameplay video with Brad, add it to Steam and YouTube
     - Bugs
@@ -12,14 +11,12 @@
 - res markers don't show if the unit is alive but will be killed and then resurrected
 - **critical** vamp miniboss got stuck where he has stamina and a path (with no points), but wont move; i think it's because i summoned an archer and the archer was part way in liquid but didn't show it and so he didn't have a path to the archer
 - Fix: should not broadcast latency warning for a message that failsc with a rejected promise
-- If you try to join a multiplayer game in two tabs on the same browser you get an infinite spinner even tho there is an error in console
 - archer still had freeze modifier listed in tooltip even after the freeze disappeared naturally on the next turn
     - freeze is behaving weird in Russell's playtest, it's not ticking down as it should
         - maybe it has to do with it being triggered off of chain? he also had bloat on
 - **critical** miniboss vampire was able to move without playing walking animation during the ranged unit turn phase and then continue walking on his own
 - **important** push + radius*2 + connect + damage isn't damaging the connected units (note, the pushed unit ends up in lava)
     - This is because the unit died when it fell in the lava so connect didn't connect it to other living units
-- (e) in multiplayer, when one player leaves and window is not focused the camera spazzes out
 - sync issue: golem moving through frozen guys jumped back
 - (m) You're able to cast into negative mana in multiplayer
 - "All targets" copy is confusing if player doesn't understand targeting
@@ -28,8 +25,6 @@
 - (h) Sometimes it tries to path around things and wastes stamina if there isn't a straight line path
 - (h) sometimes when you walk you get stuck on a wall and it wastes stamina
 - (h) bug: In multiplayer: target similar, damage x3 on 2 draggers made their position go to null null
-- (h) done?: melee prediction is still off
-    - simplest solution is just to make sure that units cannot do damage to the player if they aren't warning of damage incoming on the start of the turn
 - h: bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
     - this is a race condition because I'm still able to move freely after his cast triggers
 - Multiplayer: other players can't spawn in while another player is casing a spell
