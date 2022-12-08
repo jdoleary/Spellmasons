@@ -1,12 +1,15 @@
 # Desired Schedule
 - December
     - Main tasks
-        - Make and publish Gameplay trailer
         - Design boss for endgame so I can give specs to Che
             - Maybe auras, slow, dot, etc?
             - contain spell combos inside of onTurnStart?
         - **big** Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
             - [use self-hosted electron packaging](https://github.com/vercel/hazel)
+            - it may be that the best way to do an incremental update is to figure out how to inject the js since it seems hazel does a full update too
+                - Since electron-forge / squirell won't let me change the install directory maybe I'll give Tauri a shot
+                - Alternatively I could just make updates use remote js that I host so it doesn't have to use local js or it could download that remote js to whereever the app is running.  The point is that I would host the updates myself
+        - Make and publish Gameplay trailer
     - Smaller Tasks
         - verify `UI zoom` restored from settings in electron app (due to 63643c06)
         - Start reaching out to steamers and reviewers and send demo
@@ -16,7 +19,9 @@
     - Verify that there are no bugs with showUpgrades refactor 02362aa9
 - January
     - build: remove unneeded nuget package from build output?
+        - Can't remove, it is the update file https://github.com/vercel/hazel#updatewin32versionreleases
     - Invent new loop biomes by colorizing old biome tiles for looping
+    - Red portal when you first loop
     - Optimize runPredictions
         - especially with expanding + corpse explosion
     - Use Steamworks "Currator Connect" Tool
