@@ -1,11 +1,4 @@
-- Boss Design:
-The more "advance notice" the players get the more interesting the boss is because they can react to it.
-So if you know where he's going to teleport a full turn before you can prepare for it.  If you know what mobs he's gunna consume you can interact with them or change them.
-Maybe the boss could be a larger, eviler spellmason.  Maybe with emanating particles.  He could teleport, spawn red portals that are linked to each other, summon guys, consume units to grow stronger etc.
-What is second stage?
-- update electron build to look in savesDir
-    - game files install to: C:\Users\Jordan\AppData\Local\spellmasons
-    - steam files download to: C:\Program Files (x86)\Steam\steamapps\common\Spellmasons
+- Restore underworld follow particles on load and serialize
 # Nice to haves
 - Make gameplay video with Brad, add it to Steam and YouTube
     - Bugs

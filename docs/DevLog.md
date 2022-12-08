@@ -1,4 +1,25 @@
+## 2022.12.08
 
+- game files install to: C:\Users\Jordan\AppData\Local\spellmasons
+- steam files download to: C:\Program Files (x86)\Steam\steamapps\common\Spellmasons
+**Solving efficient updates**
+- Requirements:
+  1. it should work regardless of where a user's steam install directory is
+  2. it should work on first run of the game, not needing a restart after downloading an update triggered by first run
+- Options:
+  - Pushing updates through Steam
+    - This doesn't work well because Squirrel installs the game files in a different directory than the steam install directory and it's difficult to determine where the steam install directory is so communicating between those directories would be unreliable
+  - Using Hazel or other build in electron update
+    - This appears to require installing the entire app every time an update is pushed
+    - This requires a restart after the update is installed so it doesn't support requirement #2
+  - Having electron just render play.spellmasons.com
+    - This would work like a regular website and so long as I have cache busting set up right it will satisfy both requirements.  The disadvantage is that an old version will be stored on steam perminantly and users will have to have an internet connection when the boot up the game in order to get the latest update
+
+**Boss Design**
+The more "advance notice" the players get the more interesting the boss is because they can react to it.
+So if you know where he's going to teleport a full turn before you can prepare for it.  If you know what mobs he's gunna consume you can interact with them or change them.
+Maybe the boss could be a larger, eviler spellmason.  Maybe with emanating particles.  He could teleport, spawn red portals that are linked to each other, summon guys, consume units to grow stronger etc.
+What is second stage?
 ## 2022.12.01
 Working on dynamically loading js to ensure that the steam install stays small for updates.
 Turns out that the exe output by Squirrel is actually just an installer, not the game's exe.

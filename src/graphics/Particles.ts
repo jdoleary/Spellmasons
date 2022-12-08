@@ -8,6 +8,7 @@ import seedrandom from 'seedrandom';
 import { raceTimeout } from '../Promise';
 import { BloodParticle, graphicsBloodSmear, tickParticle } from './PixiUtils';
 import type Underworld from '../Underworld';
+import { Container } from 'pixi.js';
 
 export const containerParticles = !globalThis.pixi ? undefined : new globalThis.pixi.ParticleContainer(5000, {
     scale: true,
@@ -16,11 +17,11 @@ export const containerParticles = !globalThis.pixi ? undefined : new globalThis.
     uvs: false,
     tint: true
 });
-export function simpleEmitter(position: Vec2, config: particles.EmitterConfigV3, resolver?: () => void) {
-    if (!containerParticles) {
+export function simpleEmitter(position: Vec2, config: particles.EmitterConfigV3, resolver?: () => void, container: Container = (containerParticles as Container)) {
+    if (!container) {
         return undefined
     }
-    const emitter = new particles.Emitter(containerParticles, config);
+    const emitter = new particles.Emitter(container, config);
     emitter.updateOwnerPos(position.x, position.y);
     emitter.playOnceAndDestroy(() => {
         if (resolver) {

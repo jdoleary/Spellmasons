@@ -7,6 +7,10 @@ import { Vec2 } from '../jmath/Vec';
 import * as config from '../config';
 import { createHardCircleParticleTexture, createParticleTexture, simpleEmitter } from './Particles';
 import { bleedInstantKillProportion } from '../cards/bleed';
+import { containerParticlesUnderUnits, containerPlanningView, containerUnits } from './PixiUtils';
+import { UnitAction } from '../entity/units';
+import { IUnit } from '../entity/Unit';
+import Underworld from '../Underworld';
 export function makeBleedParticles(position: Vec2, prediction: boolean, proportion: number, resolver?: () => void) {
     if (prediction) {
         // Don't show if just a prediction
@@ -381,5 +385,80 @@ export function makeDarkPriestAttackParticles(position: Vec2, prediction: boolea
             "spawnType": "point"
         }, [texture]);
     simpleEmitter({ x: position.x, y: position.y }, particleConfig, resolver);
+}
+export function makeCorruptionParticles(follow: IUnit, prediction: boolean, underworld: Underworld, resolver?: () => void) {
+    if (prediction) {
+        // Don't show if just a prediction
+        return
+    }
+    const texture = createParticleTexture();
+    if (!texture) {
+        console.error('No texture for particles')
+        return
+    }
+    const particleConfig =
+        particles.upgradeConfig({
+            autoUpdate: true,
+            "alpha": {
+                "start": 1,
+                "end": 0
+            },
+            "scale": {
+                "start": 1,
+                "end": 0.2,
+                "minimumScaleMultiplier": 1
+            },
+            "color": {
+                "start": "#321d73",
+                "end": "#9526cc"
+            },
+            "speed": {
+                "start": 20,
+                "end": 0,
+                "minimumSpeedMultiplier": 1
+            },
+            "acceleration": {
+                "x": 0,
+                "y": 0
+            },
+            "maxSpeed": 0,
+            "startRotation": {
+                "min": -90,
+                "max": -90
+            },
+            "noRotation": false,
+            "rotationSpeed": {
+                "min": 0,
+                "max": 0
+            },
+            "lifetime": {
+                "min": 3.5,
+                "max": 4
+            },
+            "blendMode": "normal",
+            "frequency": 0.01,
+            "emitterLifetime": -1,
+            "maxParticles": 500,
+            "pos": {
+                "x": 0.5,
+                "y": 0.5
+            },
+            "addAtBack": true,
+            "spawnType": "circle",
+            "spawnCircle": {
+                "x": 0,
+                "y": 0,
+                "r": 15
+            }
 
+        }, [texture]);
+    const emitter = simpleEmitter({ x: follow.x, y: follow.y }, particleConfig, resolver, containerParticlesUnderUnits);
+    if (emitter) {
+        underworld.particleFollowers.push({
+            emitter,
+            target: follow
+        })
+    } else {
+        console.error('Failed to create corruption particle emitter');
+    }
 }

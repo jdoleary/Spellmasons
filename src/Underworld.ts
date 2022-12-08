@@ -25,6 +25,7 @@ import {
   app,
   containerBoard,
   containerDoodads,
+  containerParticlesUnderUnits,
   containerSpells,
   containerUnits,
   updateCameraPosition,
@@ -78,6 +79,7 @@ import { HasSpace } from './entity/Type';
 import { explain, EXPLAIN_MISSED_SCROLL, EXPLAIN_PING, EXPLAIN_SCROLL, isTutorialComplete, tutorialCompleteTask, tutorialShowTask } from './graphics/Explain';
 import { makeScrollDissapearParticles } from './graphics/ParticleCollection';
 import { ensureAllClientsHaveAssociatedPlayers, Overworld } from './Overworld';
+import { Emitter } from '@pixi/particle-emitter';
 
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
@@ -171,6 +173,10 @@ export default class Underworld {
   bloods: BloodParticle[] = [];
   // Keeps track of if the game has begun the process of restarting a new level after a Game Over
   isRestarting: boolean = false;
+  particleFollowers: {
+    emitter: Emitter,
+    target: Unit.IUnit
+  }[] = []
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
@@ -721,6 +727,10 @@ export default class Underworld {
           }
         }
       }
+    }
+    // Now that units have moved update any particle emitters that are following them:
+    for (let { emitter, target } of this.particleFollowers) {
+      emitter.updateOwnerPos(target.x, target.y);
     }
     for (let p of this.pickups) {
       Pickup.sync(p);
@@ -1538,6 +1548,7 @@ export default class Underworld {
     // Now that it's a new level clear out the level's dodads such as
     // bone dust left behind from destroyed corpses
     containerDoodads?.removeChildren();
+    containerParticlesUnderUnits?.removeChildren();
     // Clean previous level info
     for (let i = this.units.length - 1; i >= 0; i--) {
       const u = this.units[i];

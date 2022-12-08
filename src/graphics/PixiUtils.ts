@@ -34,6 +34,7 @@ export const containerBoard = !globalThis.pixi ? undefined : new globalThis.pixi
 export const containerBloodSmear = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerRadiusUI = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerPlanningView = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
+export const containerParticlesUnderUnits = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerDoodads = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerUnits = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerSpells = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
@@ -122,6 +123,7 @@ if (globalThis.pixi && containerUI && app && containerRadiusUI) {
     containerRadiusUI &&
     containerPlanningView &&
     containerDoodads &&
+    containerParticlesUnderUnits &&
     containerUnits &&
     containerSpells &&
     containerProjectiles &&
@@ -139,6 +141,7 @@ if (globalThis.pixi && containerUI && app && containerRadiusUI) {
       containerRadiusUI,
       containerPlanningView,
       containerDoodads,
+      containerParticlesUnderUnits,
       containerUnits,
       containerSpells,
       containerProjectiles,
