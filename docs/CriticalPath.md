@@ -1,27 +1,24 @@
 # Desired Schedule
 - December
     - Main tasks
-        - Design boss for endgame so I can give specs to Che
-            - Maybe auras, slow, dot, etc?
-            - contain spell combos inside of onTurnStart?
-        - **big** Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
         - Make and publish Gameplay trailer
+        - **big** Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
     - Smaller Tasks
         - verify `UI zoom` restored from settings in electron app (due to 63643c06)
         - Start reaching out to steamers and reviewers and send demo
         - Submit demo to IGN
             - need gameplay video first
     - How to visually stack modifiers such as blood_curse and debilitate
+        - On hover?
     - Verify that there are no bugs with showUpgrades refactor 02362aa9
 - January
     - build: remove unneeded nuget package from build output?
         - Can't remove, it is the update file https://github.com/vercel/hazel#updatewin32versionreleases
+        - Maybe I can remove it if I don't use the built-in update
     - Invent new loop biomes by colorizing old biome tiles for looping
-    - Red portal when you first loop
     - Optimize runPredictions
         - especially with expanding + corpse explosion
     - Use Steamworks "Currator Connect" Tool
-        - On hover?
     - Support hosting a server from in the game exe
     - [Steamworks web api](https://partner.steamgames.com/doc/webapi_overview)
     - Icons for perks
@@ -47,6 +44,7 @@
     - atmospheric effects like dust?
     - Nice camera
         - exciting akira moment
+        - Cinematic boss intro
 
 - Allow over 3x mana? How else will people afford to summon expensive units?
 - Make all perks stackable
@@ -70,6 +68,24 @@
             - Less time watching the Spellmason cast over and over, just cut to the spell
             - get into the action fast
             - Communicate the big idea
+        - Scenes
+            - Spellmasons charges up epic cast, show priest getting decimated by slices
+        - Title Cards
+            - Devise
+        - Trailer Research - Show in moments what special about the game:
+            - "Each spell affects the next" is better than the ambiguous "combine spells"
+        - Trailer Research - FTL:
+            - Fades in UI
+            - Slow pan in of camera, swoop focus area of interest
+            - Lot of variety. Biome orders: grass, factory, desert (and cinematic event), lava (with time breach event)
+                - after that it cuts to title cards, then menus, then ice level, back to grass, snow, shows abilities like freeze and poison
+            - Shows In game planning view
+        - [Trailer Research - Spelunky 2](https://www.youtube.com/watch?v=Z6JVT2Sp8aQ):
+            - 15 seconds in, something funny
+            - you get an idea that it's a platformer right away
+            - then it slows down to give you an idea of what it's like
+            - title card: "Play with friends online"
+            
     - Cut Demo
     - Reach out to streamers & Reviewers
 - Milestone | **Finish Gameplay**

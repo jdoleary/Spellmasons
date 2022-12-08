@@ -20,6 +20,17 @@ The more "advance notice" the players get the more interesting the boss is becau
 So if you know where he's going to teleport a full turn before you can prepare for it.  If you know what mobs he's gunna consume you can interact with them or change them.
 Maybe the boss could be a larger, eviler spellmason.  Maybe with emanating particles.  He could teleport, spawn red portals that are linked to each other, summon guys, consume units to grow stronger etc.
 What is second stage?
+
+Boss aesthetic: Desaturated spellmason with eminating purple particles
+Abilities: 
+  - Consume NPCs to grow stronger
+    - use "mana trail" like particles but make it a health trail
+  - Can teleport but broadcasts teleport location one turn early.
+  - Can resurrect allies
+  - Can spawn "pickups" / red portals
+    - red portals take you to the another red portal and disappears after use
+      - maybe they hurt you when you go through them?
+
 ## 2022.12.01
 Working on dynamically loading js to ensure that the steam install stays small for updates.
 Turns out that the exe output by Squirrel is actually just an installer, not the game's exe.

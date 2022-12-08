@@ -1,5 +1,6 @@
 - Restore underworld follow particles on load and serialize
 # Nice to haves
+- Make magic color and robe color separately customizable
 - Make gameplay video with Brad, add it to Steam and YouTube
     - Bugs
     - Send out Demo
