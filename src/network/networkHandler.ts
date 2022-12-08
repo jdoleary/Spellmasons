@@ -294,7 +294,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       }
       break;
     case MESSAGE_TYPES.PLAYER_CONFIG:
-      const { color, name, lobbyReady } = payload;
+      const { color, colorMagic, name, lobbyReady } = payload;
       if (fromPlayer) {
         if (lobbyReady !== undefined) {
           fromPlayer.lobbyReady = lobbyReady;
@@ -329,7 +329,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           }
         }
         if (color !== undefined) {
-          Player.setPlayerRobeColor(fromPlayer, color);
+          Player.setPlayerRobeColor(fromPlayer, color, colorMagic);
         }
         Player.syncLobby(underworld);
         underworld.tryRestartTurnPhaseLoop();
@@ -592,9 +592,12 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
 }
 
 export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
-  globalThis.configPlayer = ({ color, name, lobbyReady }: { color?: number, name?: string, lobbyReady?: boolean }) => {
+  globalThis.configPlayer = ({ color, colorMagic, name, lobbyReady }: { color?: number, colorMagic?: number, name?: string, lobbyReady?: boolean }) => {
     if (color !== undefined) {
       storage.set(storage.STORAGE_ID_PLAYER_COLOR, color);
+    }
+    if (color !== undefined) {
+      storage.set(storage.STORAGE_ID_PLAYER_COLOR_MAGIC, colorMagic);
     }
     if (name !== undefined) {
       storage.set(storage.STORAGE_ID_PLAYER_NAME, name || '');
@@ -602,6 +605,7 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
     overworld.pie.sendData({
       type: MESSAGE_TYPES.PLAYER_CONFIG,
       color,
+      colorMagic,
       name,
       lobbyReady
     });

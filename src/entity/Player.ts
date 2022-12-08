@@ -31,6 +31,8 @@ export interface IPlayer {
   name: string;
   // color of robe
   color: number;
+  // color of the player's magic
+  colorMagic: number;
   endedTurn: boolean;
   // wsPie id
   clientId: string;
@@ -69,6 +71,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
     // to pie.clients
     clientConnected: false,
     color: 0xffffff,
+    colorMagic: playerCastAnimationColor,
     unit: Unit.create(
       userSource.id,
       // x,y of NaN denotes that the player unit is
@@ -123,12 +126,18 @@ const ROBE_COLOR_FILTER_ID = 'robeColorFilter';
 // more than once on a player object.  As of this writing it is only called on new player objects
 // Proceed with caution.
 // color: a color in hex such as 0xff0000
-export function setPlayerRobeColor(player: IPlayer, color: number | string) {
+export function setPlayerRobeColor(player: IPlayer, color: number | string, colorMagic?: number | string) {
   // Protect against hex number as string coming in from storage
   if (typeof color === 'string') {
     color = parseInt(color);
   }
+  // Protect against hex number as string coming in from storage
+  if (typeof colorMagic === 'string') {
+    colorMagic = parseInt(colorMagic);
+  }
+  console.log('jtest set color magic', colorMagic);
   player.color = color;
+  player.colorMagic = colorMagic || color;
   // Add player-specific shaders
   // regardless of if the image sprite changes to a new animation or not.
   if (player.unit.image && player.unit.image.sprite.filters) {
@@ -149,7 +158,7 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string) {
         [
           [playerCoatPrimary, color],
           [playerCoatSecondary, colorSecondary],
-          [playerCastAnimationColor, color],
+          [playerCastAnimationColor, colorMagic || color],
         ],
         0.1
       );

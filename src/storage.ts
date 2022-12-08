@@ -4,6 +4,7 @@ import { fullyUpdateControls } from "./graphics/ui/keyMapping";
 export const STORAGE_OPTIONS = 'OPTIONS';
 export const STORAGE_LANGUAGE_CODE_KEY = 'language';
 export const STORAGE_ID_PLAYER_COLOR = 'player-color';
+export const STORAGE_ID_PLAYER_COLOR_MAGIC = 'player-color-magic';
 export const STORAGE_ID_PLAYER_NAME = 'player-name';
 export const STORAGE_ID_UI_ZOOM = 'uiZoom';
 export const STORAGE_CONTROLS_KEY = 'controls';
