@@ -364,7 +364,7 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
     image: prediction
       ? undefined
       : unit.image
-        ? Image.load(unit.image, getParentContainer(unit.alive))
+        ? Image.load(unit.image, containerUnits)
         : Image.create({ x: unit.x, y: unit.y }, unit.defaultImagePath, containerUnits),
   };
   for (let key of Object.keys(loadedunit.modifiers)) {
@@ -456,9 +456,6 @@ export function returnToDefaultSprite(unit: IUnit) {
       changeToDieSprite(unit);
     }
   }
-}
-export function getParentContainer(alive: boolean): PIXI.Container | undefined {
-  return alive ? containerUnits : containerDoodads;
 }
 
 // ComboAnimations are a unit's primary animation that has to coordinate with other animations attached to the unit, like a player cast that
@@ -601,8 +598,6 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   }
   // Health should already be 0 but make sure it is for the sake of the UI bar
   unit.health = 0;
-  // Set unit.alive to false, this must come before getParentContainer
-  // so it'll know to put the new image in the right container
   unit.alive = false;
   // This check for unit.image prevents creating a corpse image when a predictionUnit
   // dies because a prediction unit won't have an image property
