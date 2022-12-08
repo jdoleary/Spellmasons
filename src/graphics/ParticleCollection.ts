@@ -5,10 +5,9 @@ import { easeOutCubic } from '../jmath/Easing';
 import { lerp } from '../jmath/math';
 import { Vec2 } from '../jmath/Vec';
 import * as config from '../config';
-import { createHardCircleParticleTexture, createParticleTexture, simpleEmitter } from './Particles';
+import { createHardCircleParticleTexture, createParticleTexture, simpleEmitter, wrappedEmitter } from './Particles';
 import { bleedInstantKillProportion } from '../cards/bleed';
-import { containerParticlesUnderUnits, containerPlanningView, containerUnits } from './PixiUtils';
-import { UnitAction } from '../entity/units';
+import { containerUnits } from './PixiUtils';
 import { IUnit } from '../entity/Unit';
 import Underworld from '../Underworld';
 export function makeBleedParticles(position: Vec2, prediction: boolean, proportion: number, resolver?: () => void) {
@@ -452,13 +451,19 @@ export function makeCorruptionParticles(follow: IUnit, prediction: boolean, unde
             }
 
         }, [texture]);
-    const emitter = simpleEmitter({ x: follow.x, y: follow.y }, particleConfig, resolver, containerParticlesUnderUnits);
-    if (emitter) {
-        underworld.particleFollowers.push({
-            emitter,
-            target: follow
-        })
+    if (containerUnits) {
+        const wrapped = wrappedEmitter(particleConfig, containerUnits, resolver);
+        if (wrapped) {
+            const { container, emitter } = wrapped;
+            underworld.particleFollowers.push({
+                displayObject: container,
+                emitter,
+                target: follow
+            })
+        } else {
+            console.error('Failed to create corruption particle emitter');
+        }
     } else {
-        console.error('Failed to create corruption particle emitter');
+        return;
     }
 }

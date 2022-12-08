@@ -43,6 +43,7 @@
     "vite": "^2.9.9"
   },
   "dependencies": {
+    "@pixi/filter-adjustment": "^4.2.0",
     "@pixi/filter-color-overlay": "^4.1.5",
     "@pixi/filter-glow": "^4.2.0",
     "@pixi/filter-multi-color-replace": "^4.2.0",

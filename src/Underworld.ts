@@ -174,6 +174,7 @@ export default class Underworld {
   // Keeps track of if the game has begun the process of restarting a new level after a Game Over
   isRestarting: boolean = false;
   particleFollowers: {
+    displayObject: DisplayObject,
     emitter: Emitter,
     target: Unit.IUnit
   }[] = []
@@ -729,7 +730,13 @@ export default class Underworld {
       }
     }
     // Now that units have moved update any particle emitters that are following them:
-    for (let { emitter, target } of this.particleFollowers) {
+    for (let { displayObject, emitter, target } of this.particleFollowers) {
+      // @ts-ignore: ySortPositionOverride is a custom property that I've added that was made
+      // to override the display order of this displayObject. It's usage here allows the particles
+      // for this emitter to be in their own container, that container renders them at the
+      // ySortPositionOverride relative to other units but the particles still remain in game space
+      // so that when the parent moves, the particles will list behind as you'd expect them to.
+      displayObject.ySortPositionOverride = target.y - 1;
       emitter.updateOwnerPos(target.x, target.y);
     }
     for (let p of this.pickups) {
@@ -741,13 +748,23 @@ export default class Underworld {
       let aExtraHeight = a.imagePath == Pickup.PICKUP_IMAGE_PATH ? 15 : 0;
       // @ts-ignore: imagePath is a custom property I added to display objects of Image
       let bExtraHeight = b.imagePath == Pickup.PICKUP_IMAGE_PATH ? 15 : 0;
+      // @ts-ignore: ySortPositionOverride is a custom property that I've added that was made
+      // specifically to be used in this context - sorting containerUnits - so that
+      // a display object may have a sort position that is different than it's actual
+      // y position
+      const ay = a.ySortPositionOverride !== undefined ? a.ySortPositionOverride : a.y;
       // Protect against a DisplayObject with NaN from disrupting the entire sort
-      const A = (a.y + aExtraHeight + config.UNIT_SIZE_RADIUS * a.scale.y);
+      const A = (ay + aExtraHeight + config.UNIT_SIZE_RADIUS * a.scale.y);
       if (isNaN(A)) {
         return -1;
       }
+      // @ts-ignore: ySortPositionOverride is a custom property that I've added that was made
+      // specifically to be used in this context - sorting containerUnits - so that
+      // a display object may have a sort position that is different than it's actual
+      // y position
+      const by = b.ySortPositionOverride !== undefined ? b.ySortPositionOverride : b.y;
       // Protect against a DisplayObject with NaN from disrupting the entire sort
-      const B = (b.y + bExtraHeight + config.UNIT_SIZE_RADIUS * b.scale.y);
+      const B = (by + bExtraHeight + config.UNIT_SIZE_RADIUS * b.scale.y);
       if (isNaN(B)) {
         return 1;
       }

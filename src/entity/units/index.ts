@@ -41,8 +41,10 @@ import darkPriest from './darkPriest';
 import poisoner from './poisoner';
 import vampire from './vampire';
 import sandVampire from './sandVampire';
+import bossmason from './bossmason';
 import decoy from './decoy';
-import dragger from './dragger';
+// TODO: Dragger is causing desync in multiplayer
+// import dragger from './dragger';
 import blood_archer from './blood_archer';
 import ghost_archer from './ghost_archer';
 import Underworld from '../../Underworld';
@@ -68,6 +70,7 @@ export function registerUnits() {
   register(darkSummoner);
   register(darkPriest);
   register(playerUnit);
+  register(bossmason);
   register(decoy);
 }
 

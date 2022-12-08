@@ -1,5 +1,4 @@
 import { PLAYER_BASE_HEALTH } from '../config';
-import * as storage from '../storage';
 import * as Unit from './Unit';
 import * as Image from '../graphics/Image';
 import * as Upgrade from '../Upgrade';
@@ -93,7 +92,6 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
     diedDuringLevel: false,
     lobbyReady: false,
   };
-
   // Player units get full mana every turn
   player.unit.manaPerTurn = player.unit.manaMax;
   // Player units shouldn't be pushed around

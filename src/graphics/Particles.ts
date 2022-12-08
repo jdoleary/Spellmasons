@@ -17,11 +17,37 @@ export const containerParticles = !globalThis.pixi ? undefined : new globalThis.
     uvs: false,
     tint: true
 });
-export function simpleEmitter(position: Vec2, config: particles.EmitterConfigV3, resolver?: () => void, container: Container = (containerParticles as Container)) {
+// Since emitters create particles in the same container the emitter is in, it is beneficial to have a wrapped
+// emitter that only creates particles in its own container.  Since containerUnits is always sorting itself
+// so it has proper z-index draw order, I don't want hundreds of particles to all be sorted individually.
+// For optimization, I'd rather just a parent container specifically for them be sorted.
+export function wrappedEmitter(config: particles.EmitterConfigV3, container: Container, resolver?: () => void) {
     if (!container) {
+        return undefined;
+    }
+    if (!globalThis.pixi) {
+        return undefined;
+    }
+    const emitterContainer = new globalThis.pixi.Container();
+    container.addChild(emitterContainer);
+    const emitter = new particles.Emitter(emitterContainer, config);
+    emitter.updateOwnerPos(0, 0);
+    emitter.playOnceAndDestroy(() => {
+        if (resolver) {
+            resolver();
+        }
+    });
+    return {
+        container: emitterContainer,
+        emitter
+    };
+
+}
+export function simpleEmitter(position: Vec2, config: particles.EmitterConfigV3, resolver?: () => void) {
+    if (!containerParticles) {
         return undefined
     }
-    const emitter = new particles.Emitter(container, config);
+    const emitter = new particles.Emitter(containerParticles, config);
     emitter.updateOwnerPos(position.x, position.y);
     emitter.playOnceAndDestroy(() => {
         if (resolver) {
