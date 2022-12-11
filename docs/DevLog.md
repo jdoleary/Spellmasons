@@ -26,10 +26,13 @@ Abilities:
   - Consume NPCs to grow stronger
     - use "mana trail" like particles but make it a health trail
   - Can teleport but broadcasts teleport location one turn early.
+    - the broadcast portal should be interactable
+  - boss visual progression: Evolving not just changing.  Research Dragonballz
   - Can resurrect allies
   - Can spawn "pickups" / red portals
     - red portals take you to the another red portal and disappears after use
       - maybe they hurt you when you go through them?
+  - Set fires that spread
 
 ## 2022.12.01
 Working on dynamically loading js to ensure that the steam install stays small for updates.

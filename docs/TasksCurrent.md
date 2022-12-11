@@ -1,4 +1,6 @@
+## 2022-12-09
 - Restore underworld follow particles on load and serialize
+- Outline release trailer scenes
 # Nice to haves
 - Make magic color and robe color separately customizable
 - Make gameplay video with Brad, add it to Steam and YouTube
