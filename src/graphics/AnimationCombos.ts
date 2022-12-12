@@ -23,20 +23,22 @@ const combos: { [spritePath: string]: AnimationCombo } = {
         companionAnimations: ['units/playerAttackZap'],
         SFX: ['playerCharacterMediumCast', 'playerCharacterMediumCast2'],
     },
-    'playerAttackMedium1': {
-        // At the moment the wizard's staff hits the ground
-        keyFrame: 7,
-        primaryAnimation: 'units/playerAttack',
-        companionAnimations: ['units/playerAttackSingle'],
-        SFX: ['playerCharacterMediumCast', 'playerCharacterMediumCast2'],
-    },
-    'playerAttackMedium2': {
-        // At the moment the wizard's staff hits the ground
-        keyFrame: 7,
-        primaryAnimation: 'units/playerAttack',
-        companionAnimations: ['units/playerAttackBomb'],
-        SFX: ['playerCharacterMediumCast', 'playerCharacterMediumCast2'],
-    },
+    // Currently unused: See Google Drive Spellmasons\Art & Assets\unusedAssets
+    // 'playerAttackMedium1': {
+    //     // At the moment the wizard's staff hits the ground
+    //     keyFrame: 7,
+    //     primaryAnimation: 'units/playerAttack',
+    //     companionAnimations: ['units/playerAttackSingle'],
+    //     SFX: ['playerCharacterMediumCast', 'playerCharacterMediumCast2'],
+    // },
+    // Currently unused: See Google Drive Spellmasons\Art & Assets\unusedAssets
+    // 'playerAttackMedium2': {
+    //     // At the moment the wizard's staff hits the ground
+    //     keyFrame: 7,
+    //     primaryAnimation: 'units/playerAttack',
+    //     companionAnimations: ['units/playerAttackBomb'],
+    //     SFX: ['playerCharacterMediumCast', 'playerCharacterMediumCast2'],
+    // },
     'playerAttackEpic': {
         keyFrame: 23,
         primaryAnimation: 'units/playerAttackEpic',
