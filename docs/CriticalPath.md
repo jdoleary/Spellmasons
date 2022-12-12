@@ -79,13 +79,14 @@
             - get into the action fast
             - Communicate the big idea
         - Scenes
-            - Spellmasons charges up epic cast, show priest getting decimated by slices
-            - One more scene TBD:
-            - Title Card: "Each spell affects the next"
-            - Scene demonstrating above title card - maybe decoy, push, bloat, slice
-            - Title Card: "Your creativity is your greatest weapon"
+            - Spellmasons charges up epic cast, show priest getting decimated by slices: \Art & Assets\footage-video\Trailer3\akira_priest-take2.mp4
+            - One more scene TBD: green-glop-kills-all?
+            - Title Card: "Each spell affects the next" / "Chain spells together"
+            - Scene demonstrating above title card - maybe decoy, push, bloat, slice: (footage-video/ads/ad2-combine-spells)
+            - Title Card: "Creativity is your power" \ "Ingenuity is your greatest asset"
             - Scene showing how making a small change can impact the outcome greatly
                 - footage-video/2ndRoundTrailerFootage/plan-in-out.mp4
+            - Title Card: "See the future"
         - Title Cards
             - Devise
         - Trailer Research - Show in moments what special about the game:
