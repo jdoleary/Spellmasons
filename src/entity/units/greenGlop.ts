@@ -5,10 +5,13 @@ import { UnitSubType } from '../../types/commonTypes';
 import { createVisualLobbingProjectile } from '../Projectile';
 import * as math from '../../jmath/math';
 import Underworld from '../../Underworld';
-import { bloodLobber } from '../../graphics/ui/colors';
 import * as config from '../../config';
 import * as Image from '../../graphics/Image';
 
+const greenGlopColorReplaceColors: [number, number][] = [
+  [0x5fcde4, 0x63c572],
+  [0x67c3d7, 0x58b866],
+];
 const numberOfTargets = 6;
 const unit: UnitSource = {
   id: 'Green Glop',
@@ -46,10 +49,7 @@ const unit: UnitSource = {
     if (unit.image && unit.image.sprite && unit.image.sprite.filters) {
       unit.image.sprite.filters.push(
         new MultiColorReplaceFilter(
-          [
-            [0x5fcde4, 0x63c572], // main blue
-            [0x67c3d7, 0x58b866], //darker blue
-          ],
+          greenGlopColorReplaceColors,
           0.05
         )
       );
@@ -73,11 +73,22 @@ const unit: UnitSource = {
                   unit,
                   attackTarget,
                   'projectile/lobberProjectile',
+                  {
+                    loop: true,
+                    colorReplace: {
+                      colors: greenGlopColorReplaceColors, epsilon: 0.2
+                    }
+                  }
                 ).then(() => {
                   if (attackTarget) {
                     Unit.takeDamage(attackTarget, unit.damage, attackTarget, underworld, false, undefined);
                     // Add projectile hit animation
-                    Image.addOneOffAnimation(attackTarget, 'projectile/lobberProjectileHit');
+                    Image.addOneOffAnimation(attackTarget, 'projectile/lobberProjectileHit', undefined, {
+                      loop: false,
+                      colorReplace: {
+                        colors: greenGlopColorReplaceColors, epsilon: 0.2
+                      }
+                    });
                   }
                   resolve()
                 });
