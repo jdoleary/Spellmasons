@@ -1,5 +1,5 @@
 import type * as PIXI from 'pixi.js';
-import { addPixiSpriteAnimated, containerProjectiles } from '../graphics/PixiUtils';
+import { addPixiSpriteAnimated, containerProjectiles, PixiSpriteOptions } from '../graphics/PixiUtils';
 import { lerp, distance } from '../jmath/math';
 import type { Vec2 } from '../jmath/Vec';
 import * as Vec from '../jmath/Vec';
@@ -21,8 +21,9 @@ function createProjectile(
   coords: Vec2,
   target: Vec2,
   imagePath: string,
+  options?: PixiSpriteOptions
 ): Projectile {
-  const sprite = addPixiSpriteAnimated(imagePath, containerProjectiles, { animationSpeed: 0.25, loop: true });
+  const sprite = addPixiSpriteAnimated(imagePath, containerProjectiles, Object.assign({ animationSpeed: 0.25, loop: true }, options || {}));
   if (sprite) {
 
     sprite.anchor.x = 0.5;
@@ -115,8 +116,9 @@ export function createVisualLobbingProjectile(
   coords: Vec2,
   target: Vec2,
   imagePath: string,
+  options?: PixiSpriteOptions
 ): Promise<void> {
-  const instance = createProjectile(coords, target, imagePath);
+  const instance = createProjectile(coords, target, imagePath, options);
   // + 1000 is an arbitrary delay to give the original promise ample time to finish without a timeout error
   // being reported
   return raceTimeout(config.LOB_PROJECTILE_SPEED + 1000, 'createVisualLobbingProjectile', new Promise((resolve) => {
