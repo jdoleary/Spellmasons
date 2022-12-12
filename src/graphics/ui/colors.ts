@@ -11,7 +11,7 @@ export const errorRed = 0xF93943;
 export const abyss = {
     'blood': 0x2d6265,
     'lava': 0x4b465c,
-    'water': 0xfcfde0,
+    'water': 0xf7f7e3,
     'ghost': 0x278b77
 }
 export const forceMoveColor = 0xffffff;
