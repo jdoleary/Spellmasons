@@ -34,8 +34,9 @@ import { getKeyCodeMapping } from './keyMapping';
 import { inPortal } from '../../entity/Player';
 import * as Doodad from '../../entity/Doodad';
 import { hasTargetAtPosition } from '../../cards';
-import { explain, EXPLAIN_END_TURN, tutorialCompleteTask, updateTutorialChecklist } from '../Explain';
+import { explain, EXPLAIN_END_TURN, tutorialCompleteTask } from '../Explain';
 import { Overworld } from '../../Overworld';
+import { summoningSicknessId } from '../../modifierSummoningSickness';
 
 export const keyDown = {
   showWalkRope: false,
@@ -1146,6 +1147,23 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       },
       supportInMultiplayer: true,
       domQueryContainer: '#menu-selected-unit'
+
+    },
+    {
+      label: 'Skip next turn action',
+      action: () => {
+        if (!overworld.underworld) {
+          console.error('Admin: Cannot apply summoning sickness, underworld does not exist');
+          return;
+        }
+        const unit = overworld.underworld.units.find(u => u.id == globalThis.selectedUnit?.id);
+        if (unit) {
+          Unit.addModifier(unit, summoningSicknessId, overworld.underworld, false);
+        }
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '#menu-selected-unit'
+
 
     },
     {
