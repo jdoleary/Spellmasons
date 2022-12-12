@@ -11,9 +11,10 @@ import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import seedrandom from 'seedrandom';
 import { findRandomDisplaceLocation } from '../../cards/displace';
 
+export const DARK_SUMMONER_ID = 'Dark Summoner';
 const manaCostToCast = 60;
 const unit: UnitSource = {
-  id: 'Dark Summoner',
+  id: DARK_SUMMONER_ID,
   info: {
     description: 'The Dark Summoner will ruin you if you give him too much time - he summons common summoners who will summon yet more enemies.',
     image: 'units/summonerIdle',

@@ -23,7 +23,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 3,
     probability: probabilityMap[CardRarity.FORBIDDEN],
-    thumbnail: 'unknown.png',
+    thumbnail: 'spellIconFortify.png',
     animationPath: 'spell-effects/spellShield',
     description: `
 Protects bearer all damage for the next turn.

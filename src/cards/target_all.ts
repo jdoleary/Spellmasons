@@ -21,7 +21,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.FORBIDDEN],
-    thumbnail: 'unknown.png',
+    thumbnail: 'spellIconTargetKind.png',
     requiresFollowingCard: true,
     description: `
 Targets everything of the same type of the original target.  Matches units, corpses, and pickups.

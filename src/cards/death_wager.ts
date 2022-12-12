@@ -21,7 +21,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.FORBIDDEN],
     allowNonUnitTarget: true,
-    thumbnail: 'unknown.png',
+    thumbnail: 'spellIconDeathWager.png',
     description: `
 Reset all spell costs back to their default and reduce your max health by ${Math.round(reduceMaxHealthPreportion * 100)}% permanently.
     `,

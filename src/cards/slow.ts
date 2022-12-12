@@ -55,7 +55,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
-    thumbnail: 'unknown.png',
+    thumbnail: 'spellIconSlow.png',
     animationPath: '',
     description: `
 Reduces the targets maxStamina to ${Math.floor(changeProportion * 100)}%.

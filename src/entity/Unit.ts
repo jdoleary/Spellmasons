@@ -30,6 +30,8 @@ import { ARCHER_ID } from './units/archer';
 import { BLOOD_ARCHER_ID } from './units/blood_archer';
 import * as Obstacle from './Obstacle';
 import { spellmasonUnitId } from './units/playerUnit';
+import { SUMMONER_ID } from './units/summoner';
+import { DARK_SUMMONER_ID } from './units/darkSummoner';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -1119,6 +1121,8 @@ export function subTypeToAttentionMarkerImage(unit: IUnit): string {
   if (unit.unitSourceId == ARCHER_ID || unit.unitSourceId == BLOOD_ARCHER_ID) {
     // Return a special archer badge for archers since they are ranged but don't use magic
     return 'badgeArcher.png';
+  } else if (unit.unitSourceId == SUMMONER_ID || unit.unitSourceId == DARK_SUMMONER_ID) {
+    return 'badgeSummon.png';
   } else {
     return subTypeAttentionMarkerMapping[unit.unitSubType];
   }

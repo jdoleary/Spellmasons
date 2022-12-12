@@ -16,7 +16,7 @@ const spell: Spell = {
     healthCost: 0,
     probability: probabilityMap[CardRarity.RARE],
     expenseScaling: 2,
-    thumbnail: 'unknown.png',
+    thumbnail: 'spellIconCaptureSoul.png',
     description: `
 Captures the soul of the targeted unit allowing you to summon them at will in the future.
 This spell is destroyed in the process.

@@ -8,9 +8,10 @@ import { containerUnits } from '../../graphics/PixiUtils';
 import { PLAYER_BASE_ATTACK_RANGE } from '../../config';
 import { summoningSicknessId } from '../../modifierSummoningSickness';
 
+export const SUMMONER_ID = 'summoner';
 const manaCostToCast = 30;
 const unit: UnitSource = {
-  id: 'summoner',
+  id: SUMMONER_ID,
   info: {
     description: 'A summoner uses mana to summon enemies.',
     image: 'units/summonerIdle',
