@@ -7,6 +7,7 @@ import * as poison from '../../cards/poison';
 import { bloodPoisoner } from '../../graphics/ui/colors';
 import * as Image from '../../graphics/Image';
 import Underworld from '../../Underworld';
+import * as config from '../../config';
 
 const unit: UnitSource = {
   id: 'poisoner',
@@ -56,9 +57,10 @@ const unit: UnitSource = {
             Image.addOneOffAnimation(chosenUnit, 'projectile/poisonerProjectileHit');
           });
         } else {
-          // Only move if not in range
-          const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, chosenUnit, unit.stamina);
-          await Unit.moveTowards(unit, moveTo, underworld);
+          const distanceToEnemy = math.distance(unit, chosenUnit);
+          // The following is a hacky way to make them not move too close to the enemy
+          unit.stamina = Math.min(unit.stamina, distanceToEnemy - config.COLLISION_MESH_RADIUS);
+          await Unit.moveTowards(unit, chosenUnit, underworld);
         }
       }
     }
