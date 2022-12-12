@@ -16,6 +16,7 @@ import { lerp } from "../jmath/math"
 import * as inLiquid from '../inLiquid';
 import * as slash from '../cards/slash';
 import { explain, EXPLAIN_BLESSINGS, isTutorialComplete } from '../graphics/Explain';
+import { lightenColor } from '../graphics/ui/colorUtil';
 
 const elInGameLobby = document.getElementById('in-game-lobby') as (HTMLElement | undefined);
 const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
@@ -135,30 +136,27 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string, colo
   if (typeof colorMagic === 'string') {
     colorMagic = parseInt(colorMagic);
   }
-  console.log('jtest set color magic', colorMagic);
   player.color = color;
   player.colorMagic = colorMagic || color;
   // Add player-specific shaders
   // regardless of if the image sprite changes to a new animation or not.
   if (player.unit.image && player.unit.image.sprite.filters) {
-    const r = Math.floor(color / 0x10000);
-    const g = Math.floor((color - r * 0x10000) / 0x100);
-    const b = Math.floor((color - r * 0x10000 - g * 0x100));
 
-    const lightenCoefficient = 0.3;
-    const r_secondary = Math.floor(lerp(r, 255, lightenCoefficient));
-    const g_secondary = Math.floor(lerp(g, 255, lightenCoefficient));
-    const b_secondary = Math.floor(lerp(b, 255, lightenCoefficient));
 
-    const colorSecondary = parseInt(`0x${r_secondary.toString(16)}${g_secondary.toString(16)}${b_secondary.toString(16)}`, 16);
+    const colorSecondary = lightenColor(color, 0.3);
     if (color && colorSecondary) {
-      // @ts-ignore for some reason ts is flagging this as an error but it works fine
-      // in pixi.
       const robeColorFilter = new MultiColorReplaceFilter(
         [
           [playerCoatPrimary, color],
           [playerCoatSecondary, colorSecondary],
-          [playerCastAnimationColor, colorMagic || color],
+          // Note: Most of the real color replace for the player's magic is done in 
+          // pixiUtils within addSpriteAnimated so that it only replaces the colors of 
+          // the magic.  When the replace was done here on the whole player sprite, the
+          // transparency of the magic caused color replace problems. However, there is
+          // some solid pink in the idle and walk animations which gets replaced right here
+          // with a smaller epsilon.  So the player magic color is replaced in multiple
+          // locations.
+          [playerCastAnimationColor, player.colorMagic],
         ],
         0.1
       );

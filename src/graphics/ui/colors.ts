@@ -24,7 +24,11 @@ export const bloodDragger = 0x83d7eb;
 
 export const playerCoatPrimary = 0x417F81;
 export const playerCoatSecondary = 0x70A5A7;
+export const playerCastAnimationGlow = 0xff5eb3;
 export const playerCastAnimationColor = 0xFFa1d3;
+export const playerCastAnimationColorMedium = 0xffc8e5;
+export const playerCastAnimationColorLighter = 0xffe4f2;
+export const playerCastAnimationColorLighter2 = 0xf6d9e8;
 export const attackRangeAlly = targetBlue;
 export const attackRangeEnemy = 0xd55656;
 
@@ -59,9 +63,7 @@ export const robeColors = [
     0xfcecc9, // blanched almond
     0x404e4e, // charcoal
     0x912f40, // red violet color wheel
-
-
-]
+];
 
 // // From https://stackoverflow.com/a/13348458/4418836
 // export function desaturateColor(color: string, saturation: number): string {

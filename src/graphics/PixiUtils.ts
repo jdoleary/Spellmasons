@@ -15,6 +15,7 @@ import { isWithinRect, Rect } from '../jmath/Rect';
 import { inPortal } from '../entity/Player';
 import KeyMapping, { keyToHumanReadable } from './ui/keyMapping';
 import { tutorialCompleteTask } from './Explain';
+import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 
 // if PIXI is finished setting up
 let isReady = false;
@@ -661,7 +662,10 @@ export interface PixiSpriteOptions {
   onFrameChange?: (currentFrame: number) => void,
   onComplete?: () => void,
   loop: boolean,
-  animationSpeed?: number
+  animationSpeed?: number,
+  // Allow for passing down color replace filter params.  This is currently used to
+  // customize the color of player magic layer
+  colorReplace?: { colors: [number, number][], epsilon: number }
 }
 // Allows files without access to locally scoped 'sheet' to get an 
 // animated texture from the sheet
@@ -707,6 +711,14 @@ export function addPixiSpriteAnimated(
       animatedSprite.onFrameChange = options.onFrameChange;
     }
     animatedSprite.loop = options.loop;
+    if (options.colorReplace) {
+      const robeMagicColorFilter = new MultiColorReplaceFilter(options.colorReplace.colors, options.colorReplace.epsilon);
+      if (!animatedSprite.filters) {
+        animatedSprite.filters = [];
+      }
+      animatedSprite.filters.push(robeMagicColorFilter);
+
+    }
     animatedSprite.play();
     // Adding imagePath to a PIXI.AnimatedSprite makes it a JSpriteAnimated object
     sprite = animatedSprite as JSpriteAnimated;

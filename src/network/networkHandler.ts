@@ -25,6 +25,8 @@ import { clearLastNonMenuView, setView, View } from '../views';
 import { autoExplain, explain, EXPLAIN_END_TURN, tutorialCompleteTask } from '../graphics/Explain';
 import { cameraAutoFollow, runCinematicLevelCamera } from '../graphics/PixiUtils';
 import { Overworld } from '../Overworld';
+import { playerCastAnimationColor, playerCastAnimationColorLighter, playerCastAnimationGlow } from '../graphics/ui/colors';
+import { lightenColor } from '../graphics/ui/colorUtil';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -563,9 +565,6 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
   }
   console.log('Handle Spell:', payload?.cards.join(','));
 
-  // TODO: Keep this around for when we have one-use cards
-  // Card.removeCardsFromHand(caster, payload.cards);
-
   // Only allow casting during the PlayerTurns phase
   if (underworld.turn_phase === turn_phase.PlayerTurns) {
     globalThis.animatingSpells = true;
@@ -576,7 +575,18 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
       animationKey = 'playerAttackMedium0';
     }
     const keyMoment = () => underworld.castCards(caster.cardUsageCounts, caster.unit, payload.cards, payload, false, false);
-    await Unit.playComboAnimation(caster.unit, animationKey, keyMoment, { animationSpeed: 0.2, loop: false });
+    const colorMagicMedium = lightenColor(caster.colorMagic, 0.3);
+    const colorMagicLight = lightenColor(caster.colorMagic, 0.6);
+    await Unit.playComboAnimation(caster.unit, animationKey, keyMoment, {
+      animationSpeed: 0.2, loop: false, colorReplace: {
+        colors: [
+          [playerCastAnimationGlow, caster.colorMagic],
+          [playerCastAnimationColor, colorMagicMedium],
+          [playerCastAnimationColorLighter, colorMagicLight],
+        ],
+        epsilon: 0.2
+      }
+    });
     globalThis.animatingSpells = false;
     // Check for dead players to end their turn,
     // this occurs here because spells may have caused their death
