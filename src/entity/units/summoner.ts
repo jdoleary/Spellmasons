@@ -15,7 +15,7 @@ const unit: UnitSource = {
   info: {
     description: 'A summoner uses mana to summon enemies.',
     image: 'units/summonerIdle',
-    subtype: UnitSubType.RANGED_RADIUS,
+    subtype: UnitSubType.SUPPORT_CLASS,
   },
   animations: {
     idle: 'units/summonerIdle',

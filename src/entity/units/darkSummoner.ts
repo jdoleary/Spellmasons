@@ -18,7 +18,7 @@ const unit: UnitSource = {
   info: {
     description: 'The Dark Summoner will ruin you if you give him too much time - he summons common summoners who will summon yet more enemies.',
     image: 'units/summonerIdle',
-    subtype: UnitSubType.RANGED_RADIUS,
+    subtype: UnitSubType.SUPPORT_CLASS,
   },
   animations: {
     idle: 'units/summonerIdle',

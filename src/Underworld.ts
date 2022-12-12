@@ -2492,7 +2492,7 @@ export default class Underworld {
       case UnitSubType.RANGED_RADIUS:
         return u.alive && Unit.inRange(u, attackTarget) && u.mana > u.manaCostToCast;
       case UnitSubType.SUPPORT_CLASS:
-        // Support classes (such as priests) dont attack
+        // Support classes (such as priests and summoners) dont attack targets
         return false;
       default:
         console.error('Cannot determine canUnitAttackTarget, unit sub type is unaccounted for', u.unitSubType)
