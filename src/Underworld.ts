@@ -2934,7 +2934,7 @@ export default class Underworld {
   // are removed
   serializeForSaving(): IUnderworldSerialized {
     const { pie, overworld, random, players, units, pickups, walls, pathingPolygons, liquidSprites,
-      unitsPrediction, pickupsPrediction, doodadsPrediction, ...rest } = this;
+      unitsPrediction, pickupsPrediction, doodadsPrediction, particleFollowers, ...rest } = this;
     return {
       ...rest,
       players: this.players.map(Player.serialize),
@@ -2966,7 +2966,7 @@ export default class Underworld {
   //   this.cacheWalls();
   // }
   serializeForSyncronize(): IUnderworldSerializedForSyncronize {
-    const { pie, overworld, players, units, pickups, random, gameLoop, ...rest } = this;
+    const { pie, overworld, players, units, pickups, random, gameLoop, particleFollowers, ...rest } = this;
     const serialized: IUnderworldSerializedForSyncronize = {
       ...rest,
       // the state of the Random Number Generator
@@ -2976,7 +2976,9 @@ export default class Underworld {
   }
 }
 
-type IUnderworldSerialized = Omit<typeof Underworld, "pie" | "overworld" | "prototype" | "players" | "units" | "unitsPrediction" | "pickups" | "pickupsPrediction" | "doodads" | "doodadsPrediction" | "random" | "turnInterval" | "liquidSprites"
+type IUnderworldSerialized = Omit<typeof Underworld, "pie" | "overworld" | "prototype" | "players" | "units"
+  | "unitsPrediction" | "pickups" | "pickupsPrediction" | "doodads" | "doodadsPrediction" | "random" | "turnInterval" | "liquidSprites"
+  | "particleFollowers"
   // walls and pathingPolygons are omitted because they are derived from obstacles when cacheWalls() in invoked
   | "walls" | "pathingPolygons"> & {
     players: Player.IPlayerSerialized[],

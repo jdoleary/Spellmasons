@@ -1,6 +1,4 @@
 ## 2022-12-09
-- Restore underworld follow particles on load and serialize
-    - for bossmason
 - Outline release trailer scenes
 # Nice to haves
 - Make magic color and robe color separately customizable
