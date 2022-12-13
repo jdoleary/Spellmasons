@@ -1,10 +1,17 @@
 ## 2022-12-09
 - Outline release trailer scenes
-# Nice to haves
+# Tasks
 - Make magic color and robe color separately customizable
 - Make gameplay video with Brad, add it to Steam and YouTube
     - Bugs
     - Send out Demo
+- verify `UI zoom` restored from settings in electron app (due to 63643c06)
+- How to visually stack modifiers such as blood_curse and debilitate
+    - On hover?
+- Verify that there are no bugs with showUpgrades refactor 02362aa9
+- Invent new loop biomes by colorizing old biome tiles for looping
+- Optimize runPredictions: especially with expanding + corpse explosion
+- Figure out how to support modding
 # Bugs / Cleaning
 - bug: when one player went into a portal and the other had already ended their turn and the left over player died from ai (portal was spawned via admin menu), it correctly went to the next level but it generated 2 levels (skipping right to level 3)
 - pieUrl is stored wrong in browser search bar so if you copy it after connecting it'd double encoded
@@ -65,6 +72,7 @@
 - **contender** grow a barrier
 - **contender** Feature: "Soul bind" - bound units share applied effects (or maybe just damage)
 - **contender** set fires on board that spreads that does damage on turn start if you're standing near
+- Spell: "Target Nearby" - Like what stomp used to be
 ---
 - juice: ultra badass spell should put in wide-screen black bars and take over the camera
     - and he could crouch and gather enegery

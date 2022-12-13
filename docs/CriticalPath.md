@@ -1,60 +1,45 @@
 # Desired Schedule
 - December
-    - Main tasks
+    - Week of 12/12
         - Make and publish Gameplay trailer
-        - **big** Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
-            - How to handle updates:
-                - Every release should make a manefest and a bunch of assets (.js, .css, .png, .mp3, etc) available on the static site.
-                - On every boot of the game it requests the manifest (which should be super quick). (make sure it never caches)
-                - If the request fails or timesout (no network, etc), just run the local version of the game
-                    - Give a button to manually update, maybe it's just a super slow network and they should be able to manually update if they are behind version
-                - Once it has the manifest, it then compares the version numbers, if the manifest has a greater version number it downloads all the assets in the manifest.
-                    - If full download is successful it replaces all the local assets and runs the game
-                    - if it's not, report the failure and run the game with the previous assets
-                - In this way, delta updates are possible, the user wont have to "restart to get updates" and it will work offline.
-    - Smaller Tasks
-        - verify `UI zoom` restored from settings in electron app (due to 63643c06)
-        - Start reaching out to steamers and reviewers and send demo
+        - Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
+            - See DevLog.md ### Plan for updates under 2022.12.12
+        - Cut demo exe
         - Submit demo to IGN
             - need gameplay video first
-    - How to visually stack modifiers such as blood_curse and debilitate
-        - On hover?
-    - Verify that there are no bugs with showUpgrades refactor 02362aa9
+        - Start reaching out to steamers and reviewers and send demo
 - January
-    - Figure out how to support modding
-    - build: remove unneeded nuget package from build output?
-        - Can't remove, it is the update file https://github.com/vercel/hazel#updatewin32versionreleases
-        - Maybe I can remove it if I don't use the built-in update
-    - Invent new loop biomes by colorizing old biome tiles for looping
-    - Optimize runPredictions
-        - especially with expanding + corpse explosion
-    - Use Steamworks "Currator Connect" Tool
-    - Support hosting a server from in the game exe
-    - [Steamworks web api](https://partner.steamgames.com/doc/webapi_overview)
-    - Icons for perks
-    - Establish Minimum System Requirements and update Steam Page
-    - Accessability / Localization Language Support / Spellcheck
-    - Squirrel Tasks
-        - Ensure 'electron-squirrel-startup' is handled correctly
-        - Ensure start app isn't added to desktop
-    - Electron Security
-    - Verify Cloud Saves
+    - Features / Content
+        - Support hosting a server from in the game exe
+        - Icons for perks
+        - Server Browser
+        - Balance Enemies
+        - Balance Perks
+        - Satisfying end game (boss unit needed like the literal throne in Nuclear Throne)
+            - Obvious looping, maybe tint levels or something
+            - tint levels just like enemies when looping??
+            - atmospheric effects like dust?
+            - Nice camera
+                - exciting akira moment
+                - Cinematic boss intro
+        - Update music so it only changes song group once you reach a new biome
+            - and so it will continue a song if the next level is in the same biome
+    - Publicity
+        - Use Steamworks "Currator Connect" Tool
+    - Build tasks
+        - Accessability / Localization Language Support / Spellcheck
+        - Establish Minimum System Requirements and update Steam Page
+        - build: remove unneeded nuget package from build output?
+            - Can't remove, it is the update file https://github.com/vercel/hazel#updatewin32versionreleases
+            - Maybe I can remove it if I don't use the built-in update
+        - Squirrel Tasks
+            - Ensure 'electron-squirrel-startup' is handled correctly
+            - Ensure start app isn't added to desktop
+        - Electron Security
+        - Verify Cloud Saves
     - Add sentry errors to electron node files
-    - Server Browser
-    - Balance Enemies
-    - Balance Perks
-    - Satisfying end game (boss unit needed like the literal throne in Nuclear Throne)
-        - Obvious looping, maybe tint levels or something
-    - Update music so it only changes song group once you reach a new biome
-        - and so it will continue a song if the next level is in the same biome
     - Manually test all spells for desync issues (in multiplayer)
     - Release
-- Extras
-    - tint levels just like enemies when looping??
-    - atmospheric effects like dust?
-    - Nice camera
-        - exciting akira moment
-        - Cinematic boss intro
 
 - Allow over 3x mana? How else will people afford to summon expensive units?
 - Make all perks stackable
@@ -66,10 +51,16 @@
 - Dynamic difficulty?
     - Allow spawning enemies sooner based on lifetime performance?
 - "How To" guides
+- Add codex where you can read about spells and enemies
 - Allow opening dev tools in exe
 # Critical Path
 - Milestone | **Trailers & Marketing**
     - Gameplay Trailer
+        - Narrated like Heat Sig trailer
+        - Explain why its specail (cast unlimited move unlimited)
+        - Spells can stand alone, but they're better together
+            - Show more complex combo
+        - Water accident
     - The Release Trailer
         - Rethink next trailer
             - Needs more text explaining the concept
@@ -87,6 +78,7 @@
             - Scene showing how making a small change can impact the outcome greatly
                 - footage-video/2ndRoundTrailerFootage/plan-in-out.mp4
             - Title Card: "See the future"
+            - Title Card: "Online Cooperative Multiplayer"
         - Title Cards
             - Devise
         - Trailer Research - Show in moments what special about the game:

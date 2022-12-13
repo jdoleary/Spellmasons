@@ -1,3 +1,22 @@
+## 2022.12.12
+Issues with current trailer:
+  - Cold open isn't UMPHY enough
+  - 2nd scene has too much deadspace
+  - Doesn't explain what's special about the game
+  - Scene 4 waits too long before player casts
+---
+Brad feedback for Gameplay trailer
+
+### Plan for updates
+  - How to handle updates:
+      - Every release should make a manefest and a bunch of assets (.js, .css, .png, .mp3, etc) available on the static site.
+      - On every boot of the game it requests the manifest (which should be super quick). (make sure it never caches)
+      - If the request fails or timesout (no network, etc), just run the local version of the game
+          - Give a button to manually update, maybe it's just a super slow network and they should be able to manually update if they are behind version
+      - Once it has the manifest, it then compares the version numbers, if the manifest has a greater version number it downloads all the assets in the manifest.
+          - If full download is successful it replaces all the local assets and runs the game
+          - if it's not, report the failure and run the game with the previous assets
+      - In this way, delta updates are possible, the user wont have to "restart to get updates" and it will work offline.
 ## 2022.12.08
 
 - game files install to: C:\Users\Jordan\AppData\Local\spellmasons

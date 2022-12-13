@@ -230,6 +230,7 @@ https://partner.steamgames.com/doc/marketing/event_tools/embed
 - Wanderbots
 - Angory Tom
 - DangerouslyFunny
+- CantPause
 
 ## Trailer voiceover options
 - https://www.fiverr.com/danjohnsonvoice?source=gig_cards&referrer_gig_slug=deep-commanding-yet-gentle-voice-for-your-project&ref_ctx_id=41e0efeff17fa41d43a2ad2a44413e98&imp_id=dcf790d6-ef63-4dd5-9308-920565141982
