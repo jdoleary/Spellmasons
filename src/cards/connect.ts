@@ -3,7 +3,7 @@ import { addTarget, addUnitTarget, getCurrentTargets, Spell } from './index';
 import * as Unit from '../entity/Unit';
 import * as colors from '../graphics/ui/colors';
 import * as config from '../config';
-import { CardCategory } from '../types/commonTypes';
+import { CardCategory, CardRarity, probabilityMap } from '../types/commonTypes';
 import { add, Vec2 } from '../jmath/Vec';
 import * as math from '../jmath/math';
 import { raceTimeout } from '../Promise';
@@ -22,7 +22,7 @@ const spell: Spell = {
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 30,
+    probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconConnect.png',
     supportQuantity: true,
     requiresFollowingCard: true,
