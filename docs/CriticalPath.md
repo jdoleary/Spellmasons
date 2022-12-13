@@ -41,7 +41,6 @@
     - Manually test all spells for desync issues (in multiplayer)
     - Release
 
-- Allow over 3x mana? How else will people afford to summon expensive units?
 - Make all perks stackable
 - make music play in menu
     

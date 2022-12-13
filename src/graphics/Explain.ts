@@ -96,7 +96,7 @@ Note: You may still cast even when you are out of stamina.`, yesText: 'Okay'
     },
     [EXPLAIN_OVERFILL]: {
         condition: () => !!globalThis.player && globalThis.player.unit.mana > globalThis.player.unit.manaMax,
-        prompt: () => ({ imageSrc: 'images/explain/mana-overfill.gif', text: 'You are able to fill your mana up to 3x its maximum amount using potions or spells.', yesText: 'Cool!' })
+        prompt: () => ({ imageSrc: 'images/explain/mana-overfill.gif', text: 'You are able to fill your mana beyond its maximum amount using potions or spells.', yesText: 'Cool!' })
 
     },
     [EXPLAIN_MANA_COST]: {
