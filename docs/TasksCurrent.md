@@ -1,4 +1,6 @@
 ## 2022-12-09
+- Trailer 3
+    - Add title: Tactical, turn-based, roguelike
 - Outline release trailer scenes
 # Tasks
 - Make magic color and robe color separately customizable

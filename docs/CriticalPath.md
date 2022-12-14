@@ -1,13 +1,20 @@
 # Desired Schedule
 - December
+- font search:
+    - constantia
+    - gorgia
+    - microsoft himilaya 
     - Week of 12/12
-        - Make and publish Gameplay trailer
         - Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
             - See DevLog.md ### Plan for updates under 2022.12.12
+            - C:\Users\Jordan\AppData\Local\spellmasons\app-1.0.0\resources\app\src\build
+            - Download the whole manifest, if it completes, replace it with build, then run the exe
+            - https://stackoverflow.com/questions/11944932/how-to-download-a-file-with-node-js-without-using-third-party-libraries
         - Cut demo exe
         - Submit demo to IGN
             - need gameplay video first
         - Start reaching out to steamers and reviewers and send demo
+        - Make and publish Revised Trailer
 - January
     - Features / Content
         - Support hosting a server from in the game exe
@@ -68,18 +75,6 @@
             - Less time watching the Spellmason cast over and over, just cut to the spell
             - get into the action fast
             - Communicate the big idea
-        - Scenes
-            - Spellmasons charges up epic cast, show priest getting decimated by slices: \Art & Assets\footage-video\Trailer3\akira_priest-take2.mp4
-            - One more scene TBD: green-glop-kills-all?
-            - Title Card: "Each spell affects the next" / "Chain spells together"
-            - Scene demonstrating above title card - maybe decoy, push, bloat, slice: (footage-video/ads/ad2-combine-spells)
-            - Title Card: "Creativity is your power" \ "Ingenuity is your greatest asset"
-            - Scene showing how making a small change can impact the outcome greatly
-                - footage-video/2ndRoundTrailerFootage/plan-in-out.mp4
-            - Title Card: "See the future"
-            - Title Card: "Online Cooperative Multiplayer"
-        - Title Cards
-            - Devise
         - Trailer Research - Show in moments what special about the game:
             - "Each spell affects the next" is better than the ambiguous "combine spells"
         - Trailer Research - FTL:
