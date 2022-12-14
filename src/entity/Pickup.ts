@@ -362,7 +362,7 @@ export const pickups: IPickupSource[] = [
                 [
                   [0xff0000, stamina],
                 ],
-                0.1
+                0.15
               )
             );
           }
@@ -419,7 +419,7 @@ export const pickups: IPickupSource[] = [
                 [
                   [0xff0000, manaBlue],
                 ],
-                0.1
+                0.15
               )
             );
           }
