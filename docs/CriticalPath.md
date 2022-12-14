@@ -1,9 +1,5 @@
 # Desired Schedule
 - December
-- font search:
-    - constantia
-    - gorgia
-    - microsoft himilaya 
     - Week of 12/12
         - Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
             - See DevLog.md ### Plan for updates under 2022.12.12

@@ -31,3 +31,7 @@ Minor versions are incremented for functional non-broken commit states that shou
 
 ## Backup
 Backup repositories are on Gitlab and Keybase.  The primary repository is on Github
+
+## Environments
+Pushing to `master` will update play.spellmasons.com which is used for testing (will be renamed eventually)
+Pushing to `production` branch will update assets.spellmasons.com which is what is used to pull production updates from
