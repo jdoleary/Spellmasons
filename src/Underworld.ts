@@ -1473,6 +1473,7 @@ export default class Underworld {
             if (sprite) {
               sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
               sprite.y = tile.y - config.COLLISION_MESH_RADIUS;
+              Image.addAdjustmentFilter(sprite, true);
             }
           }
         }
@@ -1498,6 +1499,7 @@ export default class Underworld {
         if (sprite) {
           sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
           sprite.y = tile.y - config.COLLISION_MESH_RADIUS;
+          Image.addAdjustmentFilter(sprite, true);
         }
       }
     }
@@ -1644,6 +1646,7 @@ export default class Underworld {
       if (sprite) {
         sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
         sprite.y = tile.y - config.COLLISION_MESH_RADIUS;
+        Image.addAdjustmentFilter(sprite, false);
         this.liquidSprites.push(sprite);
       }
     }

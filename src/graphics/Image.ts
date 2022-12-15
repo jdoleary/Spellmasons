@@ -1,11 +1,12 @@
 import type * as PIXI from 'pixi.js';
-
+import { AdjustmentFilter } from '@pixi/filter-adjustment';
 import { addPixiSprite, addPixiSpriteAnimated, getPixiTextureAnimated, PixiSpriteOptions } from './PixiUtils';
 import Subsprites from '../Subsprites';
 import type { Vec2 } from "../jmath/Vec";
 import * as config from '../config';
 import { raceTimeout } from '../Promise';
 import { add, LIQUID_MASK } from '../inLiquid';
+import { Sprite } from 'pixi.js';
 
 export interface HasImage {
   image: IImageAnimated;
@@ -431,4 +432,21 @@ export function addOneOffAnimation(imageHaver: any, spritePath: string, oneOffOp
       animationSprite.anchor.set(0.5);
     }
   }));
+}
+export function addAdjustmentFilter(sprite: Sprite, cacheSprite: boolean) {
+  const adjustmentFilter = new AdjustmentFilter({
+    saturation: 0.4,
+    contrast: 5,
+    brightness: 0.2
+  });
+  if (!sprite.filters) {
+    sprite.filters = [];
+  }
+  sprite.filters.push(adjustmentFilter);
+  if (cacheSprite) {
+    // Optimization: Cache the filter.  The bitmap will be frozen but this will save
+    // on running the filter every render
+    sprite.cacheAsBitmap = true;
+  }
+
 }
