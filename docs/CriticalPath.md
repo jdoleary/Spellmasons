@@ -1,32 +1,39 @@
 # Desired Schedule
 - December
-    - Week of 12/12
+    - 12/16
+        - publish Revised Trailer to youtube and steam
         - Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
             - See DevLog.md ### Plan for updates under 2022.12.12
             - C:\Users\Jordan\AppData\Local\spellmasons\app-1.0.0\resources\app\src\build
             - Download the whole manifest, if it completes, replace it with build, then run the exe
             - https://stackoverflow.com/questions/11944932/how-to-download-a-file-with-node-js-without-using-third-party-libraries
+            - Update frontend flow:
+                - Check for update
+                    - If same, continue with current version
+                    - If network error, continue with current version
+                    - If update available, download update and show update progress
+                        - If update fails, continue with current version
+                        - If update succeeds, replace old build by renaming and launch current version
         - Cut demo exe
-        - Submit demo to IGN
-            - need gameplay video first
+        - [Submit demo to IGN](https://corp.ign.com/submit-a-game)
         - Start reaching out to steamers and reviewers and send demo
-        - Make and publish Revised Trailer
-- January
-    - Features / Content
+    - Week of 12/19-12/23
         - Support hosting a server from in the game exe
-        - Icons for perks
-        - Server Browser
-        - Balance Enemies
-        - Balance Perks
         - Satisfying end game (boss unit needed like the literal throne in Nuclear Throne)
             - Obvious looping, maybe tint levels or something
             - tint levels just like enemies when looping??
+                - See branch `loop-tint-level`
             - atmospheric effects like dust?
             - Nice camera
                 - exciting akira moment
                 - Cinematic boss intro
         - Update music so it only changes song group once you reach a new biome
             - and so it will continue a song if the next level is in the same biome
+- January
+    - Features / Content
+        - Icons for perks
+        - Server Browser
+        - Balance Perks
     - Publicity
         - Use Steamworks "Currator Connect" Tool
     - Build tasks
