@@ -23,7 +23,7 @@ function downloadFile(downloadPath, savePath) {
                 });
             });
         } catch (e) {
-            console.error('Err downloading', savePath, err);
+            console.error('Err downloading', savePath, e);
             reject(e);
         }
     })
@@ -78,9 +78,6 @@ async function run() {
         } else {
             return downloadFile(`${downloadUrl}/${fileName}`, path.join(updateDir, fileName)).then(() => {
                 console.log(`Update progress: ${++countCompleteDownloadedFiles}/${manifestJson.files.length}`);
-            }).catch(e => {
-                console.error('Err downloading', fileName, e);
-                throw e;
             }).then(downloadNextFile);
         }
 
@@ -93,11 +90,17 @@ async function run() {
         downloadPromises.push(downloadNextFile());
     }
     await Promise.all(downloadPromises);
-    console.log('Fully finished downloading update');
+    if (countCompleteDownloadedFiles == manifestJson.files.length) {
+        console.log('Update fully downloaded');
+        // TODO: Rename update to build/ in electron and then redirect to the game index.html to start
+        // the game
+    } else {
+        console.log('Update failed.');
+    }
     console.timeEnd(performanceMeasureLabel);
 }
-try {
-    run();
-} catch (e) {
-    console.log('Err top level:', e);
-}
+run().catch(e => {
+    console.error('err top level:', e);
+    // Intentionally throw unhandled so that it stops execution
+    throw e;
+});

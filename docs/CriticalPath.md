@@ -1,19 +1,9 @@
 # Desired Schedule
 - December
     - 12/16
-        - publish Revised Trailer to youtube and steam
         - Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
-            - See DevLog.md ### Plan for updates under 2022.12.12
             - C:\Users\Jordan\AppData\Local\spellmasons\app-1.0.0\resources\app\src\build
-            - Download the whole manifest, if it completes, replace it with build, then run the exe
-            - https://stackoverflow.com/questions/11944932/how-to-download-a-file-with-node-js-without-using-third-party-libraries
-            - Update frontend flow:
-                - Check for update
-                    - If same, continue with current version
-                    - If network error, continue with current version
-                    - If update available, download update and show update progress
-                        - If update fails, continue with current version
-                        - If update succeeds, replace old build by renaming and launch current version
+            - Build update page to track the updates
         - Cut demo exe
         - [Submit demo to IGN](https://corp.ign.com/submit-a-game)
         - Start reaching out to steamers and reviewers and send demo
