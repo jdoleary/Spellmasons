@@ -29,6 +29,8 @@ function downloadFile(downloadPath, savePath) {
     })
 }
 async function run() {
+    const performanceMeasureLabel = 'downloadUpdate ran in';
+    console.time(performanceMeasureLabel);
     const updateDir = 'update';
     // Clean the current update directory if it exissts
     await new Promise((resolve, reject) => {
@@ -63,13 +65,36 @@ async function run() {
     console.log(`Update to ${manifestJson.version}`)
     let countCompleteDownloadedFiles = 0;
     let downloadPromises = [];
-    for (let file of manifestJson.files) {
-        downloadPromises.push(downloadFile(`${downloadUrl}/${file}`, path.join(updateDir, file)).then(() => {
-            console.log(`Update progress: ${++countCompleteDownloadedFiles}/${manifestJson.files.length}`);
-        }));
+    function* getFileNames() {
+        for (let file of manifestJson.files) {
+            yield file;
+        }
+    }
+    const fileNameGenerator = getFileNames();
+    function downloadNextFile() {
+        const { value: fileName, done } = fileNameGenerator.next();
+        if (done) {
+            return Promise.resolve();
+        } else {
+            return downloadFile(`${downloadUrl}/${fileName}`, path.join(updateDir, fileName)).then(() => {
+                console.log(`Update progress: ${++countCompleteDownloadedFiles}/${manifestJson.files.length}`);
+            }).catch(e => {
+                console.error('Err downloading', fileName, e);
+                throw e;
+            }).then(downloadNextFile);
+        }
+
+    }
+    const NUMBER_OF_FILES_TO_DOWNLOAD_SIMULTANEOUSLY = 10;
+    // Dev note: it took 31.409s with 2 channels
+    // Dev note: it took 11.193s with 10 channels
+    // Download up to NUMBER_OF_FILES_TO_DOWNLOAD_SIMULTANEOUSLY files at a time
+    for (let channelNumber = 0; channelNumber < NUMBER_OF_FILES_TO_DOWNLOAD_SIMULTANEOUSLY; channelNumber++) {
+        downloadPromises.push(downloadNextFile());
     }
     await Promise.all(downloadPromises);
     console.log('Fully finished downloading update');
+    console.timeEnd(performanceMeasureLabel);
 }
 try {
     run();
