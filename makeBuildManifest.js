@@ -1,8 +1,8 @@
 const { resolve, relative, join } = require('path');
 const { readdir, writeFile } = require('fs').promises;
+const { createHash } = require('node:crypto');
+const { createReadStream } = require('node:fs');
 const { version } = require('./package.json');
-// TODO: Possibly hash the files and check to see if
-// they have changed before pulling an update over the network: https://stackoverflow.com/a/18658613/4418836
 
 // from: https://stackoverflow.com/a/45130990/4418836
 async function* getFiles(dir) {
@@ -17,7 +17,7 @@ async function* getFiles(dir) {
     }
 }
 ; (async () => {
-    const fileNames = [];
+    const files = [];
     for await (const f of getFiles('./build')) {
         // Add file name relative to the domain
         // so, when I push to the `production` branch
@@ -26,12 +26,31 @@ async function* getFiles(dir) {
         // and since the url hosts the `build` directory statically,
         // this will list file names in the manifest as
         // `images/explain/cast.gif` instead of `build/images/explain.cast.gif`
-        fileNames.push(relative((__dirname, 'build'), f));
+
+        // https://nodejs.org/api/crypto.html#cryptocreatehashalgorithm-options
+        // Create a hash of the file contents:
+        const hashAlg = createHash('sha256');
+        const hash = await new Promise((resolve) => {
+            const input = createReadStream(f);
+            input.on('readable', () => {
+                // Only one element is going to be produced by the
+                // hash stream.
+                const data = input.read();
+                if (data)
+                    hashAlg.update(data);
+                else {
+                    const digest = hashAlg.digest('hex')
+                    console.log(`${digest} ${f}`);
+                    resolve(digest);
+                }
+            });
+        });
+        files.push({ path: relative((__dirname, 'build'), f), hash });
     }
     writeFile(join('build', 'manifest.json'), JSON.stringify(
         {
             version,
-            files: fileNames
+            files: files
         }
     ))
 })();
