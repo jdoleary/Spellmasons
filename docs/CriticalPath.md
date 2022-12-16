@@ -2,6 +2,7 @@
 - December
     - 12/16
         - Improve exe packaging for steam updates so it doesn't have to reinstall the whole thing every time
+            - How to keep handleSquirrelEvent from aborting the update when it returns??
             - C:\Users\Jordan\AppData\Local\spellmasons\app-1.0.0\resources\app\src\build
             - Build update page to track the updates
         - Cut demo exe
