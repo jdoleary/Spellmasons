@@ -30,6 +30,7 @@ function downloadFile(downloadPath, savePath) {
 }
 async function run() {
     const updateDir = 'update';
+    // Clean the current update directory if it exissts
     await new Promise((resolve, reject) => {
         if (fs.existsSync(updateDir)) {
             fs.rmdir(updateDir, { recursive: true }, err => {
@@ -46,6 +47,7 @@ async function run() {
     fs.mkdirSync(updateDir);
     const downloadUrl = 'https://assets.spellmasons.com'
     const fileName = 'manifest.json';
+    // Download the maifest which tells this script which files to download next
     const manifestContents = await downloadFile(`${downloadUrl}/${fileName}`, path.join(updateDir, fileName));
     if (!manifestContents) {
         throw new Error('Err: Unable to retrieve manifest');
@@ -53,8 +55,11 @@ async function run() {
     const manifestJson = JSON.parse(manifestContents);
     console.log(`Comparing versions.  Current: ${version}, Update: ${manifestJson.version}`);
     if (manifestJson.version == version) {
-        throw new Error('Versions are equal, do not update');
+        console.log('Versions are equal, do not update');
+        return;
     }
+
+    // Download all of the files in the manifest
     console.log(`Update to ${manifestJson.version}`)
     let countCompleteDownloadedFiles = 0;
     let downloadPromises = [];
