@@ -261,4 +261,8 @@ declare global {
     var setCinematicCameraEnabled: undefined | ((enabled: boolean, saveSetting: boolean) => void);
     // It should only be defined when there is a cinematic to skip
     var skipCinematic: undefined | (() => void);
+    // For the frontend to get the update status when electron updates the app
+    var update: undefined | {
+        onUpdateCounter: (callback: (_sender: any, updateState: ({ complete: boolean, error: string, progress: number })) => void) => void;
+    }
 }

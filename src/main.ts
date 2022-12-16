@@ -11,6 +11,9 @@ import './style.css';
 import './svelte-bundle.css';
 cookieConsentPopup(false);
 
+globalThis.update?.onUpdateCounter((_sender, updateState) => {
+  console.log('Electron app update:', updateState);
+})
 
 // This import is critical so that the svelte menu has access to
 // the pie globals
