@@ -37,8 +37,10 @@ Pushing to `master` will update play.spellmasons.com which is used for testing (
 Pushing to `production` branch will update assets.spellmasons.com which is what is used to pull production updates from
 
 ## Pushing a new version
-- Run `npm run build` in the `Golems-menu` repo
-- Run `npm run build-for-electron` in the `Golems` repo
-- Run `./deploy.sh` to push new version to the backend servers on Digital Ocean
-- Run `git push -u production master` to push Frontend update to https://assets.spellsmasons.com which allows games to pull updates
+- Run alias `publish` as a shortcut to update the master branch (this is not production) but it will update play.spellmasons.com
+- To Fully build and push a new version to production
+    - Run `npm run build` in the `Golems-menu` repo
+    - Run `npm run build-for-electron` in the `Golems` repo
+    - UPDATES BACKEND: Run `./deploy.sh` to push new version to the backend servers on Digital Ocean
+    - UPDATES FRONTEND: Run `git push -u production master` to push Frontend update to https://assets.spellsmasons.com which allows games to pull updates
 - Go to `Golems-Electron-Build` and follow instructions IF you need to push a new package to Steam; HOWEVER, you probably shouldn't.  Updates are designed to be downloaded through assets.spellmasons.com
