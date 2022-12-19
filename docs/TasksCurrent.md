@@ -1,5 +1,4 @@
 # 12/19
-    - Add new BananaMilk Song
     - Get Che specific example for perk icons
     - how does the manifest.json file itself get updated??
     - Add game log so you can both resume games and see your previous progress
