@@ -35,3 +35,10 @@ Backup repositories are on Gitlab and Keybase.  The primary repository is on Git
 ## Environments
 Pushing to `master` will update play.spellmasons.com which is used for testing (will be renamed eventually)
 Pushing to `production` branch will update assets.spellmasons.com which is what is used to pull production updates from
+
+## Pushing a new version
+- Run `npm run build` in the `Golems-menu` repo
+- Run `npm run build-for-electron` in the `Golems` repo
+- Run `./deploy.sh` to push new version to the backend servers on Digital Ocean
+- Run `git push -u production master` to push Frontend update to https://assets.spellsmasons.com which allows games to pull updates
+- Go to `Golems-Electron-Build` and follow instructions IF you need to push a new package to Steam; HOWEVER, you probably shouldn't.  Updates are designed to be downloaded through assets.spellmasons.com
