@@ -16,8 +16,8 @@ globalThis.setupPixiPromise = new Promise((resolve) => {
     globalThis.pixiPromiseResolver = resolve;
 })
 globalThis.volume = 1.0;
-globalThis.volumeMusic = 0.5;
-globalThis.volumeGame = 0.25;
+globalThis.volumeMusic = 0.6;
+globalThis.volumeGame = 0.6;
 globalThis.cinematicCameraEnabled = true;
 globalThis.savePrefix = 'spellmasons-save-';
 globalThis.quicksaveKey = 'quicksave';
