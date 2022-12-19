@@ -166,6 +166,13 @@ body.view-Game.showUpgrades #upgrade-picker {
   overflow: hidden;
 }
 
+#upgrade-picker .perk .card-title {
+  background-color: #262324;
+  border: 2px solid white;
+  padding: 4px;
+  color: white;
+}
+
 #upgrade-picker .card-title,
 .card-inspect .card-title {
   text-align: center;
@@ -572,6 +579,10 @@ kbd {
   flex-grow: 1;
 }
 
+.perk .card-thumb {
+  background-color: unset;
+}
+
 .card-thumb {
   width: 64px;
   display: flex;
@@ -653,6 +664,10 @@ kbd {
 .card-inspect .card-title {
   font-size: 30px;
   font-weight: bold;
+}
+
+.perk .card-description {
+  color: white;
 }
 
 .card-description {

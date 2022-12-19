@@ -80,7 +80,12 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
   }
   const { pie } = underworld;
   const element = document.createElement('div');
-  element.classList.add('card', 'upgrade', cardRarityAsString(upgrade));
+  element.classList.add('card', 'upgrade');
+  if (upgrade.type === 'perk') {
+    element.classList.add('perk', 'ui-border');
+  } else {
+    element.classList.add(cardRarityAsString(upgrade));
+  }
   element.dataset.upgrade = upgrade.title;
   const elCardInner = document.createElement('div');
   elCardInner.classList.add('card-inner');
@@ -113,11 +118,13 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
   title.classList.add('card-title');
   title.innerText = i18n(upgrade.title);
   elCardInner.appendChild(title);
+  if (upgrade.type === 'card') {
   const rarityText = document.createElement('div');
   rarityText.classList.add('card-rarity')
   rarityText.style.color = getCardRarityColor(upgrade);
   rarityText.innerHTML = cardRarityAsString(upgrade).toLocaleLowerCase();
   elCardInner.appendChild(rarityText);
+  }
 
   const desc = document.createElement('div');
   desc.classList.add('card-description');
