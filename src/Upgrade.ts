@@ -170,7 +170,7 @@ export const upgradeStatsSource: IUpgrade[] = [
     description: (player) =>
       `Increases your max health from ${player.unit.healthMax} to ${player.unit.healthMax + maxHealthIncreaseAmount
       }`,
-    thumbnail: 'images/upgrades/plus_max_health.png',
+    thumbnail: 'images/upgrades/health1.png',
     effect: (player, underworld) => {
       player.unit.healthMax += maxHealthIncreaseAmount;
       player.unit.health = player.unit.healthMax;
@@ -189,7 +189,7 @@ export const upgradeStatsSource: IUpgrade[] = [
     description: (player) =>
       `Increases your max health from ${player.unit.healthMax} to ${player.unit.healthMax + maxHealthIncreaseAmount * 2
       }`,
-    thumbnail: 'images/upgrades/plus_max_health.png',
+    thumbnail: 'images/upgrades/health2.png',
     effect: (player, underworld) => {
       player.unit.healthMax += maxHealthIncreaseAmount * 2;
       player.unit.health = player.unit.healthMax;
@@ -208,7 +208,7 @@ export const upgradeStatsSource: IUpgrade[] = [
     description: (player) =>
       `Increases your mana from ${player.unit.manaMax} to ${player.unit.manaMax + maxManaIncreaseAmount
       }`,
-    thumbnail: 'images/upgrades/todo.png',
+    thumbnail: 'images/upgrades/mana1.png',
     effect: (player, underworld) => {
       Unit.setPlayerManaMax(player.unit, player.unit.manaMax + maxManaIncreaseAmount);
       // Now that the player unit's mana has increased,sync the new
@@ -226,7 +226,7 @@ export const upgradeStatsSource: IUpgrade[] = [
     description: (player) =>
       `Increases your mana from ${player.unit.manaMax} to ${player.unit.manaMax + maxManaIncreaseAmount * 2
       }`,
-    thumbnail: 'images/upgrades/todo.png',
+    thumbnail: 'images/upgrades/mana2.png',
     effect: (player, underworld) => {
       Unit.setPlayerManaMax(player.unit, player.unit.manaMax + maxManaIncreaseAmount * 2);
       // Now that the player unit's mana has increased,sync the new
