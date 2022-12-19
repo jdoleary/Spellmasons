@@ -119,11 +119,11 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
   title.innerText = i18n(upgrade.title);
   elCardInner.appendChild(title);
   if (upgrade.type === 'card') {
-  const rarityText = document.createElement('div');
-  rarityText.classList.add('card-rarity')
-  rarityText.style.color = getCardRarityColor(upgrade);
-  rarityText.innerHTML = cardRarityAsString(upgrade).toLocaleLowerCase();
-  elCardInner.appendChild(rarityText);
+    const rarityText = document.createElement('div');
+    rarityText.classList.add('card-rarity')
+    rarityText.style.color = getCardRarityColor(upgrade);
+    rarityText.innerHTML = cardRarityAsString(upgrade).toLocaleLowerCase();
+    elCardInner.appendChild(rarityText);
   }
 
   const desc = document.createElement('div');
@@ -283,6 +283,7 @@ export const upgradeStatsSource: IUpgrade[] = [
   {
     title: 'Stone Tower',
     type: 'perk',
+    maxCopies: 1,
     description: (player) =>
       `Increases your mana to ${Math.floor(100 * plusManaMinusStamina_manaProportion)}% but decreased your max stamina to ${Math.floor(100 * plusManaMinusStamina_staminaProportion)}%`,
     thumbnail: 'images/spell/unknown.png',
@@ -305,6 +306,7 @@ export const upgradeStatsSource: IUpgrade[] = [
   {
     title: 'Overflowing Mana',
     type: 'perk',
+    maxCopies: 3,
     description: (player) =>
       `Grants a ${Math.floor(100 * maybeManaOverfillProportionChance)}% chance on the start of every turn that you will get 2x mana for that turn.  Stackable.`,
     thumbnail: 'images/spell/unknown.png',
@@ -331,7 +333,7 @@ export const upgradeStatsSource: IUpgrade[] = [
     type: 'perk',
     description: (player) =>
       `Increases your stamina by ${maxStaminaIncreaseProportion * 100}%`,
-    thumbnail: 'images/spell/walk.png',
+    thumbnail: 'images/spell/unknown.png',
     effect: (player) => {
       player.unit.staminaMax += player.unit.staminaMax * maxStaminaIncreaseProportion;
       player.unit.stamina = player.unit.staminaMax;
