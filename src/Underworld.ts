@@ -1250,7 +1250,9 @@ export default class Underworld {
       ? caveSizes.tutorial
       : (levelIndex > 6
         ? caveSizes.medium
-        : caveSizes.small);
+        : !isTutorialComplete()
+          ? caveSizes.extrasmall
+          : caveSizes.small);
 
     const { map, limits } = generateCave(caveParams || caveSizes.small, biome, this);
     const { tiles, liquid, width } = map;
