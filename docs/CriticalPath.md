@@ -1,6 +1,7 @@
 # Desired Schedule
 - December
     - 12/19
+        - Make server version update whenvever the assets subdomain updates
         - QA Demo
         - Cut demo exe
         - [Submit demo to IGN](https://corp.ign.com/submit-a-game)

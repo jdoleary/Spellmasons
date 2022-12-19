@@ -26,6 +26,7 @@ async function* getFiles(dir) {
         // and since the url hosts the `build` directory statically,
         // this will list file names in the manifest as
         // `images/explain/cast.gif` instead of `build/images/explain.cast.gif`
+        // WHEN YOU UPDATE MAKE SURE YOU ALSO UPDATE THE SERVER VERSION AND VERIFY THE VERSION NUMBER CHANGED.
 
         // https://nodejs.org/api/crypto.html#cryptocreatehashalgorithm-options
         // Create a hash of the file contents:

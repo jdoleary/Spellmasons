@@ -2,6 +2,11 @@
     - Get Che specific example for perk icons
     - how does the manifest.json file itself get updated??
     - Add game log so you can both resume games and see your previous progress
+        - Stats: object
+        - Duration 
+        - Victory
+        - Kills
+        - Resume?
     - Server Browser
 # Tasks
 - Make magic color and robe color separately customizable
