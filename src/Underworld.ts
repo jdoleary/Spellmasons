@@ -1281,20 +1281,8 @@ export default class Underworld {
     // Spawn units at the start of the level
     let unitIds = getEnemiesForAltitude(this);
     if (globalThis.allowCookies && useTutorialStartLevel) {
-      const portalPickupIndex = Pickup.pickups.findIndex(p => p.name == Pickup.PICKUP_PORTAL_NAME);
-      if (portalPickupIndex !== -1) {
-        const validSpawnCoordsIndex = randInt(this.random, 0, validSpawnCoords.length - 1);
-        const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
-        if (coord) {
-          levelData.pickups.push({ index: portalPickupIndex, coord })
-          unitIds = [];
-          this.levelIndex--;
-        } else {
-          console.error('could not find valid spawn for portal')
-        }
-      } else {
-        console.error('Could not find portal pickup to spawn it for first time player')
-      }
+      unitIds = [];
+      this.levelIndex--;
     }
     // TODO numberOfPickups should scale with level size
     const numberOfPickups = useTutorialStartLevel ? 0 : 4;

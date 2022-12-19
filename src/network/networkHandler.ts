@@ -373,6 +373,10 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           Image.show(fromPlayer.unit.image);
           fromPlayer.endedTurn = false;
           underworld.syncTurnMessage();
+          // Used for the tutorial but harmless if invoked under other circumstances.
+          // Spawns the portal after the player choses a spawn point if there are no
+          // enemies left
+          underworld.checkIfShouldSpawnPortal();
         } else {
           console.error('Cannot spawn player at NaN')
         }
