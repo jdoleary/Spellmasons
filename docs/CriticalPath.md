@@ -1,12 +1,14 @@
 # Desired Schedule
 - December
-    - 12/16
+    - 12/19
+        - QA Demo
         - Cut demo exe
         - [Submit demo to IGN](https://corp.ign.com/submit-a-game)
         - Start reaching out to steamers and reviewers and send demo
     - Week of 12/19-12/23
         - Support hosting a server from in the game exe
         - Satisfying end game (boss unit needed like the literal throne in Nuclear Throne)
+            - Maybe don't introduce only one new unit each level, think of how Nuclear Throne does mini bosses
             - Obvious looping, maybe tint levels or something
             - tint levels just like enemies when looping??
                 - See branch `loop-tint-level`
@@ -35,7 +37,9 @@
         - Electron Security
         - Verify Cloud Saves
     - Add sentry errors to electron node files
-    - Manually test all spells for desync issues (in multiplayer)
+    - Final QA
+        - Manually test all spells for desync issues (in multiplayer)
+        - Bulletproof Updating and Error Reporting
     - Release
 
 - Make all perks stackable
@@ -51,41 +55,13 @@
 - Allow opening dev tools in exe
 # Critical Path
 - Milestone | **Trailers & Marketing**
-    - Gameplay Trailer
-        - Narrated like Heat Sig trailer
-        - Explain why its specail (cast unlimited move unlimited)
-        - Spells can stand alone, but they're better together
-            - Show more complex combo
-        - Water accident
-    - The Release Trailer
-        - Rethink next trailer
-            - Needs more text explaining the concept
-            - Lead with "fun"
-            - Remove "dead time"
-            - Less time watching the Spellmason cast over and over, just cut to the spell
-            - get into the action fast
-            - Communicate the big idea
-        - Trailer Research - Show in moments what special about the game:
-            - "Each spell affects the next" is better than the ambiguous "combine spells"
-        - Trailer Research - FTL:
-            - Fades in UI
-            - Slow pan in of camera, swoop focus area of interest
-            - Lot of variety. Biome orders: grass, factory, desert (and cinematic event), lava (with time breach event)
-                - after that it cuts to title cards, then menus, then ice level, back to grass, snow, shows abilities like freeze and poison
-            - Shows In game planning view
-        - [Trailer Research - Spelunky 2](https://www.youtube.com/watch?v=Z6JVT2Sp8aQ):
-            - 15 seconds in, something funny
-            - you get an idea that it's a platformer right away
-            - then it slows down to give you an idea of what it's like
-            - title card: "Play with friends online"
-            
     - Cut Demo
     - Reach out to streamers & Reviewers
 - Milestone | **Finish Gameplay**
     - End of game scaling
         - boss
         - unlocks
-    - More Perks
+    - More Perks / Balance perks
 - Milestone | **Efficient Game Updates**
     - Move game logic to js files that live near the executable
         - This is necessary to support steam workshop mods
@@ -97,6 +73,7 @@
     - Menu for community server selector
     - Allow running local standalone server from inside app
 - Milestone | **Optimize game**
+    - Optimize runPredictions: especially with expanding + corpse explosion
     - repelCircleFromLine is used for both unit crowding and wall physics and with wall physics it doesn't need a reference to underworld, that's only needed for unit crowding to make sure they don't crowd each other through walls
     - Memory Leaks: call destroy() on any Graphics object you no longer need to avoid memory leaks.
     - Stress test droplets to see how many users they can support

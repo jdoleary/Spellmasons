@@ -1,3 +1,4 @@
+- Verify that there are no bugs with showUpgrades refactor 02362aa9
 - For updating the app:
     - How to keep handleSquirrelEvent from aborting the update when it returns??
 - UX: Zoom in is faster than zoom out
