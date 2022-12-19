@@ -40,6 +40,7 @@
     - Final QA
         - Manually test all spells for desync issues (in multiplayer)
         - Bulletproof Updating and Error Reporting
+    - Remove "Beta" Near version number
     - Release
 
 - Make all perks stackable

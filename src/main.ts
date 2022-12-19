@@ -80,7 +80,7 @@ function setupAll() {
   // Set UI version info
   const elVersionInfo = document.getElementById('version-info')
   if (elVersionInfo && globalThis.SPELLMASONS_PACKAGE_VERSION) {
-    elVersionInfo.innerText = `Client v${globalThis.SPELLMASONS_PACKAGE_VERSION}`;
+    elVersionInfo.innerText = `Spellmasons v${globalThis.SPELLMASONS_PACKAGE_VERSION} - Beta`;
   }
 }
 
