@@ -37,7 +37,9 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconLastWill.png',
-    description: `Target drops a random potion on death.`,
+    description: `Target drops a random potion on death.
+Not stackable.
+Note: Potions will disappear once the last enemy of the level is dispatched.`,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       for (let unit of state.targetedUnits.filter(u => u.alive)) {

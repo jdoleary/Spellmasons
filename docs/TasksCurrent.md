@@ -1,7 +1,6 @@
 - Retro playthrough:
     - too much tutorial showed on first play through
     - font it too small on cards
-    - last will stackable
     - last will didn't work when he was near water 5:35
     - got 2 spells instead of 1
     - improve the UI
