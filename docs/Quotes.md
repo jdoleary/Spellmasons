@@ -1,0 +1,5 @@
+- Retromation
+    - quote: "it's like a mechanical spell playground" -Retromation
+    - quote:"every single thing that I want to be doing keeps on working"
+    - quote: "I can't believe how cool this is.  This is everything"
+    - quote: "I could not be more impressed"

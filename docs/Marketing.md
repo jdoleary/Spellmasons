@@ -224,16 +224,17 @@ https://partner.steamgames.com/doc/marketing/event_tools/embed
     - Requires DEMOn
 - [rock paper shotgun](https://www.rockpapershotgun.com/how-to-pitch-an-article-to-rock-paper-shotgun)
 - [Best Indie Games](https://www.youtube.com/c/ClemmyGames/about)
-- Retromation: Asked for a Steam Key via email: TODO PROVIDE KEY
+- Retromation: Sent key
 - SplatterCatGaming (name: Matt)
 - Wanderbots
 - Angory Tom
 - DangerouslyFunny
 - CantPause
 - NorthernLion: Sent email
+- turnbasedtacticsgroup@gmail.com : Send invite through Curator Connect
 
 # Reviewers to give keys to
-- SilverSeraphym: via Discord
+- SilverSeraphym:  provided key via discord
 
 ## Reviewer Email Checklist:
 - Title "GAME NAME - Genre - Developer"

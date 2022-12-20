@@ -1,4 +1,41 @@
+- Retro playthrough:
+    - too much tutorial showed on first play through
+    - font it too small on cards
+    - last will stackable
+    - last will didn't work when he was near water 5:35
+    - got 2 spells instead of 1
+    - improve the UI
+    - UI has holes on some resolutionsb
+    - people (including myself) assumes the description of rend is additive instead of total
+    - allow hiding tutorialb
+    - skip tutorial button should ALSO be inside settings
+    - he's try8ng to right-click to cancel out spells 12:30
+    - rarity label is missing on cards now
+    - slow down rend animation
+    - update "target circle" copy
+    - push push dash combo is weird
+    - priest copy: "attack OF a different faction"n
+    - swap copy: "SOURCE target"
+    - connect push to self is not obvious what it does, same with connect swap
+    - idea for coop: classes so some wizards can specialize
+    - bug: music is only coming out of the left ear??
+    - "target cone" lock on is an issue when targeting self unintentionally
+    - i didn't see some of the "explains" when he played like spells combining explain
+    - copy of explain inventory: "Forge" is confusing
+    - "protection" should work for enemies casters such as poisoner and priestb
+    - simplify "debilitate"'s copy just say "stackable"
+    - UI bug: going through a portal should clear your current spell
 # 12/19
+    - Pushing an enemyh into lava (and they die) then casting connect on them won't connect to other living enemies
+    - even in singleplayer you can go negative mana if you queue it up while another spell is casting (and you still have the mana from before the current spell takes it)
+    - is burst too cheap??
+    - bug: by alt-tabbing during enemy turn they didn't move visually.  Then when I came back and ended my turn again they slid to where they would've been had they moved during their turn (without animate walking) and then walked another turn's distance and bit me without warning
+    - blood golem / blood archer / green glop / ghost archer / sand vamp explain is a broken image
+        - but ghost archer does show up locally
+    - bug: priest doesn't cast when he predicts he will visually
+    - If an enemy lines up perfectly with another and the direction it's going it can push the enemy.  Try to set up a ranged unit that pushes a melee unit closer and see if the melee unit hits you
+    - Don't change music until the biome changes
+    - fix slow copy "maxStamina"
     - Get Che specific example for perk icons
     - how does the manifest.json file itself get updated??
     - Add game log so you can both resume games and see your previous progress

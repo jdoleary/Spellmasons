@@ -41,3 +41,8 @@ Unleash dangerously powerful endgame spell combinations where one small differen
 
 Spellmasons is a slow-paced, thoughtful, turn-based game.  If you like to take your time, think of a clever or creative solution and watch it unfold just as you had planned, then this is the right kind of game for you!
 ```
+
+# Curator Connect message
+Spellmasons is a tactical, turn-based, roguelike about combining spells thoughtfully and cleverly to decimate your enemies!  As you become more powerful, you'll uncover the depth and vast possibilities available in the ways your spells synergize.
+
+It supports online cooperative play so if you are interested in trying co-op you can reach me at spellmasons@gmail.com or @spellmasons on twitter so I can set you up with a server to play on!Spellmasons is a tactical, turn-based, roguelike about combining spells thoughtfully and cleverly to decimate your enemies!  As you become more powerful, you'll uncover the depth and vast possibilities available in the ways your spells synergize.
