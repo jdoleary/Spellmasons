@@ -1702,8 +1702,9 @@ body:not(.view-Game) #tutorial-checklist {
   color: white;
 }
 
-#tutorial-checklist h1 {
+#tutorial-checklist h3 {
   margin: 0;
+  text-transform: capitalize;
 }
 
 #tutorial-checklist-inner {

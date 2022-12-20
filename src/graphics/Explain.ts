@@ -285,7 +285,7 @@ export function updateTutorialChecklist() {
     if (globalThis.usingTestRunner) {
         return;
     }
-    let html = `<h1>${i18n('Tutorial')}</h1>`;
+    let html = `<h3>${i18n('Tutorial')}</h3>`;
     for (let item of Object.values(tutorialChecklist)) {
         if (item.visible) {
             html += `<div class="${item.complete ? 'complete' : ''}">${item.complete ? '&#x2611;' : '&#x2610;'} <span class="text ${item.complete ? 'complete' : ''}">${i18n(item.text)}</span></div>`
