@@ -16,7 +16,6 @@
     - "target cone" lock on is an issue when targeting self unintentionally
     - "protection" should work for enemies casters such as poisoner and priestb
     - simplify "debilitate"'s copy just say "stackable"
-    - UI bug: going through a portal should clear your current spell
 # 12/19
     - Pushing an enemyh into lava (and they die) then casting connect on them won't connect to other living enemies
     - even in singleplayer you can go negative mana if you queue it up while another spell is casting (and you still have the mana from before the current spell takes it)

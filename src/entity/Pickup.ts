@@ -13,6 +13,7 @@ import Underworld from '../Underworld';
 import { hasBloodCurse } from '../cards/blood_curse';
 import { HasSpace } from './Type';
 import { explain, EXPLAIN_INVENTORY, EXPLAIN_OVERFILL, tutorialCompleteTask, updateTutorialChecklist } from '../graphics/Explain';
+import * as CardUI from '../graphics/ui/CardUI';
 
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 export const PICKUP_IMAGE_PATH = 'pickups/scroll';
@@ -294,6 +295,7 @@ export const pickups: IPickupSource[] = [
         underworld.pie.sendData({
           type: MESSAGE_TYPES.ENTER_PORTAL
         });
+        CardUI.clearSelectedCards(underworld);
         tutorialCompleteTask('portal');
       }
       // Move the player unit so they don't continue to trigger the pickup more than once
