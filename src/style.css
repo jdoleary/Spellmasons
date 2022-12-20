@@ -583,6 +583,10 @@ kbd {
   background-color: unset;
 }
 
+#upgrade-picker .card.perk {
+  background-image: none;
+}
+
 .card-thumb {
   width: 64px;
   display: flex;
