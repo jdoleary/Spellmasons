@@ -1,13 +1,11 @@
 - Retro playthrough:
-    - too much tutorial showed on first play through
     - font it too small on cards
     - last will didn't work when he was near water 5:35
     - got 2 spells instead of 1
     - improve the UI
-    - he's try8ng to right-click to cancel out spells 12:30
+    - he's trying to right-click to cancel out spells 12:30
     - rarity label is missing on cards now
     - push push dash combo is weird
-    - priest copy: "attack OF a different faction"n
     - connect push to self is not obvious what it does, same with connect swap
     - idea for coop: classes so some wizards can specialize
     - bug: music is only coming out of the left ear??

@@ -4,7 +4,7 @@ import { UnitSubType } from '../../types/commonTypes';
 import * as math from '../../jmath/math';
 import { createVisualFlyingProjectile } from '../Projectile';
 import * as shield from '../../cards/shield';
-import { hasBloodCurse } from '../../cards/blood_curse';
+import * as BloodCurse from '../../cards/blood_curse';
 import Underworld from '../../Underworld';
 import * as Image from '../../graphics/Image';
 
@@ -39,7 +39,7 @@ async function healOneOf(self: Unit.IUnit, units: Unit.IUnit[], underworld: Unde
 const unit: UnitSource = {
   id: 'priest',
   info: {
-    description: 'The priest heals its allies, and if its allies are at full health it will shield them.  Priests will also attack of a different faction if they have blood curse by healing them (heals are taken as damage when a unit is blood cursed).',
+    description: `The priest heals its allies, and if its allies are at full health it will shield them.  Priests will also attack units of a different faction if they have ${BloodCurse.id} by healing them (heals are taken as damage when a unit is blood cursed).`,
     image: 'units/priestIdle',
     subtype: UnitSubType.SUPPORT_CLASS,
   },
@@ -80,7 +80,7 @@ const unit: UnitSource = {
           // Only select allies, that are alive, that are damaged, and that aren't SUPPORT_CLASS cause it's
           // annoying when priests heal each other.
           // Also exclude vampires because vampires take health as DAMAGE! And we don't want priests hurting their ally vampires
-          (u) => u.faction === unit.faction && u.alive && u.health < u.healthMax && u.unitSubType !== UnitSubType.SUPPORT_CLASS && !hasBloodCurse(u),
+          (u) => u.faction === unit.faction && u.alive && u.health < u.healthMax && u.unitSubType !== UnitSubType.SUPPORT_CLASS && !BloodCurse.hasBloodCurse(u),
         );
         if (damagedAllys.length) {
           didAction = await healOneOf(unit, damagedAllys, underworld);
@@ -121,7 +121,7 @@ const unit: UnitSource = {
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
     // Heal (in order to damage) enemy vampires
     const enemyVampires = underworld.units.filter(
-      u => u.faction !== unit.faction && hasBloodCurse(u)
+      u => u.faction !== unit.faction && BloodCurse.hasBloodCurse(u)
     );
     return enemyVampires;
   }
