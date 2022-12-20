@@ -24,7 +24,7 @@ const spell: Spell = {
     thumbnail: 'spellIconExpanding.png',
     requiresFollowingCard: true,
     description: `
-Adds a radius to the spell so it can affect more targets.
+Adds targets to the spell in a circle.
 "${id}" can be cast multiple times in succession to stack it's effect.
     `,
     allowNonUnitTarget: true,
