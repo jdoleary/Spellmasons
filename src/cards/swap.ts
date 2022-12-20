@@ -23,7 +23,7 @@ const spell: Spell = {
     expenseScaling: 1,
     thumbnail: 'spellIconSwap.png',
     description: `
-Swaps the caster with the source target.
+Swaps the caster with the target.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       const { casterUnit } = state;

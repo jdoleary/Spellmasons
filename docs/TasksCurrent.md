@@ -9,7 +9,6 @@
     - rarity label is missing on cards now
     - push push dash combo is weird
     - priest copy: "attack OF a different faction"n
-    - swap copy: "SOURCE target"
     - connect push to self is not obvious what it does, same with connect swap
     - idea for coop: classes so some wizards can specialize
     - bug: music is only coming out of the left ear??
