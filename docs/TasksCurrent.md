@@ -11,7 +11,6 @@
     - skip tutorial button should ALSO be inside settings
     - he's try8ng to right-click to cancel out spells 12:30
     - rarity label is missing on cards now
-    - slow down rend animation
     - update "target circle" copy
     - push push dash combo is weird
     - priest copy: "attack OF a different faction"n

@@ -72,7 +72,7 @@ function animateRend(targets: Vec2[], quantity: number, prediction: boolean): Pr
                 containerSpells,
                 {
                   loop: false,
-                  animationSpeed: 0.3,
+                  animationSpeed: 0.2,
                   onComplete: () => {
                     Image.hide(image)
                     Image.cleanup(image);

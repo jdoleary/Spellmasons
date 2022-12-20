@@ -1,7 +1,5 @@
 - Make UI buttons on modals to match Jake's design 
-- Fix UI
 - blood golem / blood archer / green glop / ghost archer / sand vamp explain is a broken image
-- slow down Rend animation?
 # Desired Schedule
 - December
     - 12/19
