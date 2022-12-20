@@ -1,5 +1,3 @@
-- Fix tutorial
-    - Improve skippability
 - Make UI buttons on modals to match Jake's design 
 - Fix UI
 - blood golem / blood archer / green glop / ghost archer / sand vamp explain is a broken image

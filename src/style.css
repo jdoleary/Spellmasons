@@ -1718,6 +1718,11 @@ body:not(.view-Game) #tutorial-checklist {
   color: #aaa;
 }
 
+/* Allow clicking on twirl-down icon for completed tutorial items */
+#tutorial-checklist details {
+  pointer-events: all;
+}
+
 #debug-info {
   position: absolute;
   top: 8px;

@@ -286,9 +286,23 @@ export function updateTutorialChecklist() {
         return;
     }
     let html = `<h3>${i18n('Tutorial')}</h3>`;
-    for (let item of Object.values(tutorialChecklist)) {
+    const tutorialItems = Object.values(tutorialChecklist);
+    const completeTutorialItems = tutorialItems.filter(x => x.complete);
+    if (completeTutorialItems.length) {
+        let completedItemsHtml = '';
+        for (let item of completeTutorialItems) {
+            if (item.visible) {
+                completedItemsHtml += `<div class="complete">&#x2611; <span class="text complete">${i18n(item.text)}</span></div>`
+            }
+        }
+        html += `<details>
+            <summary>${i18n('Completed Tasks')} ${completeTutorialItems.length}/${tutorialItems.length}</summary>
+            ${completedItemsHtml}
+            </details>`
+    }
+    for (let item of tutorialItems.filter(x => !x.complete)) {
         if (item.visible) {
-            html += `<div class="${item.complete ? 'complete' : ''}">${item.complete ? '&#x2611;' : '&#x2610;'} <span class="text ${item.complete ? 'complete' : ''}">${i18n(item.text)}</span></div>`
+            html += `<div>&#x2610; <span class="text">${i18n(item.text)}</span></div>`
         }
     }
     elTutorialChecklistInner.innerHTML = html;
