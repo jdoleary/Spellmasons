@@ -23,7 +23,7 @@ const spell: Spell = {
     animationPath: 'spell-effects/spellDebilitate',
     description: `
 Makes the target(s) take double damage whenever they receive damage.
-"Debilitate" can be cast multiple times in succession to stack it's effect.
+Stackable.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
