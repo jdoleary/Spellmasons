@@ -6,9 +6,6 @@
     - got 2 spells instead of 1
     - improve the UI
     - UI has holes on some resolutionsb
-    - people (including myself) assumes the description of rend is additive instead of total
-    - allow hiding tutorialb
-    - skip tutorial button should ALSO be inside settings
     - he's try8ng to right-click to cancel out spells 12:30
     - rarity label is missing on cards now
     - update "target circle" copy

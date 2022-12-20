@@ -40,7 +40,7 @@ const spell: Spell = {
     sfx: 'rend',
     description: `
 Deals more damage based on the number of consecutive stacks of "${id}".
-How damage grows when stacking ${id}: ${calculateRendDamage(1)}, ${calculateRendDamage(2)}, ${calculateRendDamage(3)}, ${calculateRendDamage(4)}, ${calculateRendDamage(5)}, ${calculateRendDamage(6)}, ${calculateRendDamage(7)}, ${calculateRendDamage(8)}, ${calculateRendDamage(9)}, ${calculateRendDamage(10)}`,
+How total damage grows when stacking: ${calculateRendDamage(1)}, ${calculateRendDamage(2)}, ${calculateRendDamage(3)}, ${calculateRendDamage(4)}, ${calculateRendDamage(5)}, ${calculateRendDamage(6)}, ${calculateRendDamage(7)}, ${calculateRendDamage(8)}, ${calculateRendDamage(9)}, ${calculateRendDamage(10)}`,
     effect: async (state, card, quantity, underworld, prediction) => {
       const damage = calculateRendDamage(quantity);
       // .filter: only target living units
