@@ -21,7 +21,7 @@ async function* getFiles(dir) {
     for await (const f of getFiles('./build')) {
         // Add file name relative to the domain
         // so, when I push to the `production` branch
-        //(`git push -u production master`), all the file names
+        //(`git push production master`), all the file names
         // will be relative to where you can access them on the url
         // and since the url hosts the `build` directory statically,
         // this will list file names in the manifest as
