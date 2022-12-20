@@ -12,9 +12,9 @@ import { MESSAGE_TYPES } from '../types/MessageTypes';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary } from '../graphics/ui/colors';
 import Underworld, { turn_phase } from '../Underworld';
-import { lerp } from "../jmath/math"
 import * as inLiquid from '../inLiquid';
 import * as slash from '../cards/slash';
+import * as lastWill from '../cards/lastwill';
 import { explain, EXPLAIN_BLESSINGS, isTutorialComplete } from '../graphics/Explain';
 import { lightenColor } from '../graphics/ui/colorUtil';
 
@@ -368,7 +368,12 @@ export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | u
     // Only explain blessings if the tutorial is already done,
     // we don't want it to interrupt the natural flow of the tutorial
     if (isTutorialComplete() && card.category == CardCategory.Blessings) {
-      explain(EXPLAIN_BLESSINGS);
+      // Explain blessings once you get a blessings card
+      // UNLESS that card is last will because last will is a blessing meant to be
+      // cast on enemies
+      if (card.id !== lastWill.id) {
+        explain(EXPLAIN_BLESSINGS);
+      }
     }
     player.inventory.push(card.id);
     const emptySlotIndex = player.cards.indexOf('');

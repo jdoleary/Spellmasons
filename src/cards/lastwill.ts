@@ -10,7 +10,7 @@ import floatingText from '../graphics/FloatingText';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
-const id = 'Last Will';
+export const id = 'Last Will';
 const imageName = 'unknown.png';
 function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number) {
   const modifier = getOrInitModifier(unit, id, { isCurse: false, quantity, persistBetweenLevels: false }, () => {
