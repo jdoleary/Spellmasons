@@ -14,8 +14,6 @@
     - idea for coop: classes so some wizards can specialize
     - bug: music is only coming out of the left ear??
     - "target cone" lock on is an issue when targeting self unintentionally
-    - i didn't see some of the "explains" when he played like spells combining explain
-    - copy of explain inventory: "Forge" is confusing
     - "protection" should work for enemies casters such as poisoner and priestb
     - simplify "debilitate"'s copy just say "stackable"
     - UI bug: going through a portal should clear your current spell
