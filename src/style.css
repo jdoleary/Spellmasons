@@ -738,11 +738,12 @@ body.your-turn #end-turn-btn:hover {
   /* Overrides jbutton styles */
   /* Ensures that the toolbar remains centered on the screen */
   margin: 0;
+  /* background-clip ensures that the background color wont overlap the border */
+  background-clip: padding-box;
+  background-color: #483f8e;
 }
 
 #end-turn-btn-inner {
-  /* Matches border */
-  background-color: #483f8e;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -1668,11 +1669,8 @@ body.auto-camera #camera-recenter-tip {
   /* Prevent child elements from becoming bigger than the screen */
   max-height: 100%;
   display: flex;
-}
-
-/* The immediate child of the .ui-border should have it's background colored the same
-as the ui-border itself */
-.ui-border>* {
+  /* background-clip ensures that the background color wont overlap the border */
+  background-clip: padding-box;
   background-color: var(--ui-border-background-color);
 }
 
