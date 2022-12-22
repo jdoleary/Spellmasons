@@ -1281,14 +1281,6 @@ body.view-Menu #websocketpie-connection-status {
   display: block;
 }
 
-#websocketpie-connection-status {
-  display: none;
-  z-index: 1;
-  position: absolute;
-  top: 25px;
-  left: 25px;
-}
-
 /* Show that camera is being dragged with the mouse */
 body.draggingCamera {
   cursor: grabbing;
