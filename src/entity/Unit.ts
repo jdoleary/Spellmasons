@@ -268,23 +268,19 @@ function setupShaders(unit: IUnit) {
 }
 
 export function addModifier(unit: IUnit, key: string, underworld: Underworld, prediction: boolean, quantity?: number, extra?: object) {
-  if (unit.alive) {
-    // Call custom modifier's add function
-    const modifier = allModifiers[key];
-    if (modifier) {
-      if (modifier.add) {
-        if (allCards[key]?.supportQuantity && quantity == undefined) {
-          console.error('Dev warning:', key, 'supportsQuantity; however quantity was not provided to the addModifier function.');
-        }
-        modifier.add(unit, underworld, prediction, quantity || 1, extra);
-      } else {
-        console.error('No "add" modifier for ', key);
+  // Call custom modifier's add function
+  const modifier = allModifiers[key];
+  if (modifier) {
+    if (modifier.add) {
+      if (allCards[key]?.supportQuantity && quantity == undefined) {
+        console.error('Dev warning:', key, 'supportsQuantity; however quantity was not provided to the addModifier function.');
       }
+      modifier.add(unit, underworld, prediction, quantity || 1, extra);
     } else {
-      console.error('Modifier ', key, 'never registered.');
+      console.error('No "add" modifier for ', key);
     }
   } else {
-    console.log(`Ignoring addModifier ${key} for dead unit.  Dead units cannot receive modifiers`);
+    console.error('Modifier ', key, 'never registered.');
   }
 }
 
