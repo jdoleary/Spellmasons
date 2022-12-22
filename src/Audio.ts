@@ -154,7 +154,7 @@ export const sfx: { [key: string]: string[] } = {
     yourTurn: ['./sound/sfx/your-turn.mp3'],
 };
 const music = [
-    './sound/music/ChainingSpells.m4a',
+    './sound/music/ChainingSpells.mp3',
     './sound/music/FirstSteps2.mp3',
     './sound/music/DeepWandering.mp3',
     './sound/music/ItShallNotFindMe.mp3',
