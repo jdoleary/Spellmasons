@@ -42,7 +42,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.SUPPORT_CLASS,
   },
   unitProps: {
-    attackRange: 264,
+    attackRange: 500,
     healthMax: 2,
     damage: 2,
     manaCostToCast,
