@@ -21,7 +21,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
-    attackRange: 210,
+    attackRange: 400,
     bloodColor: 0x63c572,
     healthMax: 8,
     damage: 4,
