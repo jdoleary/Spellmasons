@@ -1,13 +1,23 @@
+- IMPORTANT: Fix music only coming out of one channel
 - Make UI buttons on modals to match Jake's design 
 - blood golem / blood archer / green glop / ghost archer / sand vamp explain is a broken image
+- Way to control Ally faction units, like follow me. Or go get them.
+- Need something to protect like the towers in into the breach, something to draw you out and make you take risks
+- Game is too easy right now, I think due to the perks
+- lava abyss color is off
+
+# PreRelease Top Priorities
+- Balanced / Difficult
+- Level Variety (not too samey)
+    - 2nd style level generator (close quarters)
+    - Improved enemy units spawn combinations
+- Boss
+- Looping
+- Server config by hose (pvp, worms armageddon style customizations)
 # Desired Schedule
 - December
-    - 12/19
         - Make server version update whenvever the assets subdomain updates
-        - QA Demo
-        - Cut demo exe
         - [Submit demo to IGN](https://corp.ign.com/submit-a-game)
-        - Start reaching out to steamers and reviewers and send demo
     - Week of 12/19-12/23
         - Support hosting a server from in the game exe
         - Satisfying end game (boss unit needed like the literal throne in Nuclear Throne)
@@ -58,18 +68,16 @@
 - Add codex where you can read about spells and enemies
 - Allow opening dev tools in exe
 # Critical Path
-- Milestone | **Trailers & Marketing**
-    - Cut Demo
-    - Reach out to streamers & Reviewers
 - Milestone | **Finish Gameplay**
     - End of game scaling
         - boss
         - unlocks
     - More Perks / Balance perks
-- Milestone | **Efficient Game Updates**
-    - Move game logic to js files that live near the executable
-        - This is necessary to support steam workshop mods
-    - Don't obfuscate
+    - Difficulty / Balance
+        - What drives difficulty
+            - Unplanned priorities
+            - Lack of resources
+            - Competing priorities
 - Milestone X | **Package as Electron App**
     - Security
         - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
