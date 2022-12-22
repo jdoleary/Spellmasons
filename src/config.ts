@@ -69,13 +69,13 @@ export const PIXI_TEXT_DROP_SHADOW = { dropShadow: true, dropShadowDistance: 1 }
 
 // Perks
 export const plusRangeMinusHealth_rangeProportion = 1.25;
-export const plusRangeMinusHealth_healthProportion = 0.5;
+export const plusRangeMinusHealth_healthProportion = 0.3;
 
 export const plusStaminaMinusHealth_staminaProportion = 1.25;
 export const plusStaminaMinusHealth_healthProportion = 0.5;
 
 
-export const plusManaMinusStamina_manaProportion = 2.0;
+export const plusManaMinusStamina_manaProportion = 1.2;
 export const plusManaMinusStamina_staminaProportion = 0.6;
 
 export const maybeManaOverfillProportionChance = 0.2;
