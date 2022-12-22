@@ -880,6 +880,8 @@ export default class Underworld {
     }
 
   }
+  // Draw attention markers which show if an NPC will
+  // attack you next turn
   drawEnemyAttentionMarkers() {
     if (!globalThis.attentionMarkers) {
       return;
@@ -888,8 +890,6 @@ export default class Underworld {
       // Don't draw attention markers if the hud is hidden
       return;
     }
-    // Draw attention markers which show if an NPC will
-    // attack you next turn
     const { zoom } = getCamera();
     // Note: this block must come after updating the camera position
     // 1/zoom keeps the attention marker the same size regardless of the level of zoom

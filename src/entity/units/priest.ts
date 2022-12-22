@@ -17,7 +17,7 @@ async function animatePriestProjectileAndHit(self: Unit.IUnit, target: Unit.IUni
     'projectile/priestProjectileCenter',
   );
 }
-async function healOneOf(self: Unit.IUnit, units: Unit.IUnit[], underworld: Underworld): Promise<boolean> {
+async function resurrectOneOf(self: Unit.IUnit, units: Unit.IUnit[], underworld: Underworld): Promise<boolean> {
   playSFXKey('priestAttack');
   for (let ally of units) {
     if (Unit.inRange(self, ally)) {
@@ -28,8 +28,6 @@ async function healOneOf(self: Unit.IUnit, units: Unit.IUnit[], underworld: Unde
         // Add summoning sickeness so they can't act after they are summoned
         Unit.addModifier(unit, summoningSicknessId, underworld, false);
       }
-      // // Remove mana once the cast occurs
-      // self.mana -= manaCostToCast;
       return true;
     }
   }
@@ -48,6 +46,7 @@ const unit: UnitSource = {
     healthMax: 2,
     damage: 2,
     manaCostToCast,
+    manaMax: manaCostToCast,
     manaPerTurn: manaCostToCast / 2
   },
   spawnParams: {
@@ -70,14 +69,11 @@ const unit: UnitSource = {
   },
   action: async (unit: Unit.IUnit, attackTargets, underworld: Underworld) => {
     let didAction = false;
-    // If they have enough mana
-    if (unit.mana >= manaCostToCast) {
-      if (attackTargets.length) {
-        // Priests attack or move, not both; so clear their existing path
-        unit.path = undefined;
-        // Resurrect dead ally
-        didAction = await healOneOf(unit, attackTargets, underworld);
-      }
+    if (attackTargets.length) {
+      // Priests attack or move, not both; so clear their existing path
+      unit.path = undefined;
+      // Resurrect dead ally
+      didAction = await resurrectOneOf(unit, attackTargets, underworld);
     }
     if (!didAction) {
       const closestAlly = Unit.findClosestUnitInSameFaction(unit, underworld);
@@ -96,6 +92,9 @@ const unit: UnitSource = {
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
+    if (unit.mana < manaCostToCast) {
+      return [];
+    }
     const resurrectableAllies = underworld.units.filter(u => u.faction == unit.faction && !u.alive);
     return resurrectableAllies;
   }

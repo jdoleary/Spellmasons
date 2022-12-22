@@ -527,8 +527,12 @@ export async function runPredictions(underworld: Underworld) {
         // Only check for threats if the threat is alive and AI controlled
         if (u.alive && u.unitType == UnitType.AI) {
           if (u.unitSubType == UnitSubType.SUPPORT_CLASS) {
-            if (u.mana >= u.manaCostToCast) {
-              globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u), scale: u.predictionScale || 1 });
+            const unitSource = allUnits[u.unitSourceId];
+            if (unitSource) {
+              const targets = unitSource.getUnitAttackTargets(u, underworld);
+              if (targets.length) {
+                globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u), scale: u.predictionScale || 1 });
+              }
             }
           } else {
             const unitSource = allUnits[u.unitSourceId];

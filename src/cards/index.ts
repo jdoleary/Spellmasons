@@ -65,7 +65,7 @@ import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
 import { addCardToHand } from '../entity/Player';
 import Underworld from '../Underworld';
-import { CardCategory } from '../types/commonTypes';
+import { CardCategory, UnitType } from '../types/commonTypes';
 import { HasSpace } from '../entity/Type';
 import { Overworld } from '../Overworld';
 import { allUnits } from '../entity/units';
@@ -252,7 +252,12 @@ export function refundLastSpell(state: EffectState, prediction: boolean, floatin
   // Only refund the spell when it's not a prediction so that
   // it will show the mana cost in the UI of "remaining mana" even if
   // they are not currently hovering a valid target.
-  if (!prediction) {
+  // ---
+  // Only allow refunding player units' mana. For example, if a priest casts resurrect
+  // on a dead enemy that has "protection" on it (so the resurrect fails), it should not refund
+  // priests mana.
+  // Refund is exclusively for the benefit of players so they don't get frusterated by fizzle spells.
+  if (!prediction && state.casterUnit.unitType == UnitType.PLAYER_CONTROLLED) {
     state.shouldRefundLastSpell = true;
     if (floatingMessage) {
       floatingText({ coords: state.casterUnit, text: floatingMessage });
