@@ -8,12 +8,12 @@ import floatingText from '../graphics/FloatingText';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
-export const id = 'protection';
+export const id = 'Nullify';
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
   getOrInitModifier(unit, id, { isCurse: false, quantity, persistBetweenLevels: false }, () => { });
 }
 export const notifyProtected = throttle((coords: Vec2, prediction: boolean) => {
-  floatingText({ coords, text: prediction ? 'Protection: spell will be nullified' : `Spell nullified by Protection` });
+  floatingText({ coords, text: prediction ? `spell will be nullified` : `Spell nullified` });
 }, 1000, { trailing: false });
 const spell: Spell = {
   card: {
@@ -27,8 +27,7 @@ const spell: Spell = {
     thumbnail: 'spellIconProtection.png',
     description: 'Prevents unit from being affected by the next spell combination that targets them. (Nullifies both helpful magic or harmful magic)',
     effect: async (state, card, quantity, underworld, prediction) => {
-      // .filter: only target living units
-      const targets = state.targetedUnits.filter(u => u.alive);
+      const targets = state.targetedUnits;
       for (let unit of targets) {
         Unit.addModifier(unit, id, underworld, prediction, quantity);
       }
