@@ -3,12 +3,12 @@ import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import * as math from '../../jmath/math';
 import { createVisualFlyingProjectile } from '../Projectile';
-import * as shield from '../../cards/shield';
-import * as BloodCurse from '../../cards/blood_curse';
+import * as resurrect from '../../cards/resurrect';
 import Underworld from '../../Underworld';
 import * as Image from '../../graphics/Image';
+import { summoningSicknessId } from '../../modifierSummoningSickness';
 
-const manaCostToCast = 30;
+const manaCostToCast = resurrect.default.card.manaCost;
 async function animatePriestProjectileAndHit(self: Unit.IUnit, target: Unit.IUnit) {
   // TODO does this cause an issue on headless?
   await createVisualFlyingProjectile(
@@ -16,8 +16,6 @@ async function animatePriestProjectileAndHit(self: Unit.IUnit, target: Unit.IUni
     target,
     'projectile/priestProjectileCenter',
   );
-  // Add projectile hit animation
-  Image.addOneOffAnimation(target, 'projectile/priestProjectileHit');
 }
 async function healOneOf(self: Unit.IUnit, units: Unit.IUnit[], underworld: Underworld): Promise<boolean> {
   playSFXKey('priestAttack');
@@ -25,12 +23,14 @@ async function healOneOf(self: Unit.IUnit, units: Unit.IUnit[], underworld: Unde
     if (Unit.inRange(self, ally)) {
       await Unit.playAnimation(self, unit.animations.attack);
       await animatePriestProjectileAndHit(self, ally);
-      // Heal for damage amount (because damage scales when miniboss)
-      Unit.takeDamage(ally, -self.damage, undefined, underworld, false, undefined);
-      // Remove mana once the cast occurs
-      self.mana -= manaCostToCast;
+      const { targetedUnits } = await underworld.castCards({}, self, [resurrect.id], ally, false);
+      for (let unit of targetedUnits) {
+        // Add summoning sickeness so they can't act after they are summoned
+        Unit.addModifier(unit, summoningSicknessId, underworld, false);
+      }
+      // // Remove mana once the cast occurs
+      // self.mana -= manaCostToCast;
       return true;
-      break;
     }
   }
   return false;
@@ -39,7 +39,7 @@ async function healOneOf(self: Unit.IUnit, units: Unit.IUnit[], underworld: Unde
 const unit: UnitSource = {
   id: 'priest',
   info: {
-    description: `The priest heals its allies, and if its allies are at full health it will shield them.  Priests will also attack units of a different faction if they have ${BloodCurse.id} by healing them (heals are taken as damage when a unit is blood cursed).`,
+    description: `The priest resurrects dead allies.`,
     image: 'units/priestIdle',
     subtype: UnitSubType.SUPPORT_CLASS,
   },
@@ -47,7 +47,8 @@ const unit: UnitSource = {
     attackRange: 264,
     healthMax: 2,
     damage: 2,
-    manaCostToCast
+    manaCostToCast,
+    manaPerTurn: manaCostToCast / 2
   },
   spawnParams: {
     probability: 20,
@@ -72,34 +73,10 @@ const unit: UnitSource = {
     // If they have enough mana
     if (unit.mana >= manaCostToCast) {
       if (attackTargets.length) {
-        // Heal to damage enemy vampires
+        // Priests attack or move, not both; so clear their existing path
+        unit.path = undefined;
+        // Resurrect dead ally
         didAction = await healOneOf(unit, attackTargets, underworld);
-      } else {
-        // Heal an ally
-        const damagedAllys = underworld.units.filter(
-          // Only select allies, that are alive, that are damaged, and that aren't SUPPORT_CLASS cause it's
-          // annoying when priests heal each other.
-          // Also exclude vampires because vampires take health as DAMAGE! And we don't want priests hurting their ally vampires
-          (u) => u.faction === unit.faction && u.alive && u.health < u.healthMax && u.unitSubType !== UnitSubType.SUPPORT_CLASS && !BloodCurse.hasBloodCurse(u),
-        );
-        if (damagedAllys.length) {
-          didAction = await healOneOf(unit, damagedAllys, underworld);
-        } else {
-          const closestNonShieldedAlly = Unit.livingUnitsInSameFaction(unit, underworld).filter(u => u.modifiers[shield.id] === undefined)[0];
-          // if there are no damaged allies cast shield on the closest:
-          if (closestNonShieldedAlly && closestNonShieldedAlly.unitSubType !== UnitSubType.SUPPORT_CLASS) {
-            if (Unit.inRange(unit, closestNonShieldedAlly)) {
-              playSFXKey('priestAttack');
-              await Unit.playAnimation(unit, unit.animations.attack);
-              await animatePriestProjectileAndHit(unit, closestNonShieldedAlly);
-              // prediction is false because unit.action doesn't yet ever occur during a prediction
-              Unit.addModifier(closestNonShieldedAlly, shield.id, underworld, false);
-              // Remove mana once the cast occurs
-              unit.mana -= manaCostToCast;
-              didAction = true;
-            }
-          }
-        }
       }
     }
     if (!didAction) {
@@ -119,11 +96,8 @@ const unit: UnitSource = {
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-    // Heal (in order to damage) enemy vampires
-    const enemyVampires = underworld.units.filter(
-      u => u.faction !== unit.faction && BloodCurse.hasBloodCurse(u)
-    );
-    return enemyVampires;
+    const resurrectableAllies = underworld.units.filter(u => u.faction == unit.faction && !u.alive);
+    return resurrectableAllies;
   }
 };
 

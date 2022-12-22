@@ -6,7 +6,7 @@ import { playDefaultSpellSFX } from './cardUtils';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { makeResurrectParticles } from '../graphics/ParticleCollection';
 
-const id = 'resurrect';
+export const id = 'resurrect';
 export const thumbnail = 'spellIconResurrect.png';
 // Brings stats back to this amount on res
 const resStatAmount = 1.0;
