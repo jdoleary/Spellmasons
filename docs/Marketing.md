@@ -225,6 +225,7 @@ https://partner.steamgames.com/doc/marketing/event_tools/embed
 - [rock paper shotgun](https://www.rockpapershotgun.com/how-to-pitch-an-article-to-rock-paper-shotgun)
 - [Best Indie Games](https://www.youtube.com/c/ClemmyGames/about)
 - Retromation: Sent key
+    - TODO: Reach out to rest of the Wholesomeverse
 - SplatterCatGaming (name: Matt)
 - Wanderbots
 - Angory Tom

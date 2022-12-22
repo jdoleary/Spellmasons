@@ -1,5 +1,3 @@
-- Hide "Not Connected" message
-- 
 - Retro playthrough:
     - font it too small on cards
     - last will didn't work when he was near water 5:35
