@@ -68,6 +68,12 @@ const combos: { [spritePath: string]: AnimationCombo } = {
         primaryAnimation: 'units/summonerAttack',
         companionAnimations: [],
         SFX: ['summonerSummon']
+    },
+    'units/poisAttack': {
+        keyFrame: 7,
+        primaryAnimation: 'units/poisAttack',
+        companionAnimations: [],
+        SFX: []
     }
 
 }

@@ -45,16 +45,17 @@ const unit: UnitSource = {
           unit.mana - unit.manaCostToCast;
           // Poisoners attack or move, not both; so clear their existing path
           unit.path = undefined;
-          await Unit.playAnimation(unit, unit.animations.attack);
-          createVisualLobbingProjectile(
-            unit,
-            chosenUnit,
-            'projectile/poisonerProjectile',
-          ).then(() => {
-            // prediction is false because unit.action doesn't yet ever occur during a prediction
-            Unit.addModifier(chosenUnit, poison.id, underworld, false);
-            // Add projectile hit animation
-            Image.addOneOffAnimation(chosenUnit, 'projectile/poisonerProjectileHit');
+          await Unit.playComboAnimation(unit, unit.animations.attack, async () => {
+            await createVisualLobbingProjectile(
+              unit,
+              chosenUnit,
+              'projectile/poisonerProjectile',
+            ).then(async () => {
+              // Add projectile hit animation
+              Image.addOneOffAnimation(chosenUnit, 'projectile/poisonerProjectileHit');
+              await underworld.castCards({}, unit, [poison.id], chosenUnit, false);
+            });
+
           });
         } else {
           const distanceToEnemy = math.distance(unit, chosenUnit);

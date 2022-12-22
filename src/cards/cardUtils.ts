@@ -3,7 +3,7 @@ import type { CardUsage } from "../entity/Player";
 import { Vec2 } from "../jmath/Vec";
 import { raceTimeout } from "../Promise";
 import * as Image from '../graphics/Image';
-import { containerSpells } from "../graphics/PixiUtils";
+import { containerProjectiles, containerSpells } from "../graphics/PixiUtils";
 import { Container } from "pixi.js";
 import { chooseOneOf } from "../jmath/rand";
 export interface CardCost {
@@ -48,7 +48,10 @@ export async function animateSpell(target: Vec2, imagePath: string): Promise<voi
     // This timeout value is arbitrary, meant to prevent and report an await hang
     // if somehow resolve is never called
     return raceTimeout(6000, `animateSpell: ${imagePath}`, new Promise<void>((resolve) => {
-        oneOffImage(target, imagePath, containerSpells, resolve);
+        // Poison effect goes in containerProjectiles so that it doesn't get cleared with other spells
+        // For example, it can be cast by a poisoner as part of the poisoners projectile
+        // and it works in the projectileContainer when cast by a player too
+        oneOffImage(target, imagePath, containerProjectiles, resolve);
     }));
 }
 // Not to be confused with addOneOffAnimation
