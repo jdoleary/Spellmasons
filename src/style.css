@@ -1407,7 +1407,7 @@ body.open-inventory #inventory-icon {
 }
 
 #in-game-lobby .ui-border {
-  margin: 15px;
+  margin: 4px;
   /* Smaller border than usual ui-border so more player names will fit */
   border-width: 9px;
 }
