@@ -234,6 +234,8 @@ https://partner.steamgames.com/doc/marketing/event_tools/embed
 - NorthernLion: Sent email
 - turnbasedtacticsgroup@gmail.com : Send invite through Curator Connect
 
+- Note: Use social proof, link Retro's video??
+
 # Reviewers to give keys to
 - SilverSeraphym:  provided key via discord
 

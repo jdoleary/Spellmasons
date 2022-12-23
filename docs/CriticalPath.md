@@ -7,6 +7,8 @@
 - lava abyss color is off
 
 # PreRelease Top Priorities
+- Fix my SEO for my spellmasons.com website so I can claim google knowledge panel
+    - Presskit tanked my SEO?
 - Balanced / Difficult
 - Level Variety (not too samey)
     - 2nd style level generator (close quarters)
@@ -16,7 +18,6 @@
 - Server config by host (pvp, worms armageddon style customizations)
 - Unit improvements to increase difficulty
     - Summoner should summon in random locations
-    - Priest should resurrect or teleport allies
 # Desired Schedule
 - December
         - Make server version update whenvever the assets subdomain updates
@@ -99,6 +100,7 @@
     - updateCameraPosition is somehow taking a long time
     - copyForPredictionUnit is slow for many units
 - Milestone **Strech 1**
+    - Pushing units into portal should do something
     - Protection should be able to be cast on dead units to keep priest from resurrecting them
     - [Mod support](https://partner.steamgames.com/doc/features/workshop)
     - Server customization (like Worms Armageddon)
