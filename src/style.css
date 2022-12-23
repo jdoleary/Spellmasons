@@ -522,8 +522,8 @@ invisibly blocked, change with caution! */
   color: #522626;
 }
 
-.jbutton .hotkey-badge-holder {
-  bottom: -16px;
+.button-wrapper .hotkey-badge-holder {
+  bottom: -27px;
 }
 
 .hotkey-badge-holder {
@@ -739,7 +739,7 @@ body.your-turn #end-turn-btn:hover {
   /* 106-16*2 = 74 */
   height: 74px;
   white-space: normal;
-  /* Overrides jbutton styles */
+  /* Overrides button-wrapper nstyles */
   /* Ensures that the toolbar remains centered on the screen */
   margin: 0;
   /* background-clip ensures that the background color wont overlap the border */
@@ -1189,10 +1189,12 @@ body.view-Menu .prompt:not(.forceShow) {
 .prompt .button-holder {
   display: flex;
   justify-content: space-between;
+  gap: 15px;
+  margin-top: 15px;
 }
 
 /* If prompt only has one button, center it */
-.prompt .button-holder .jbutton:first-child:nth-last-child(1) {
+.prompt .button-holder .button-wrapper:first-child:nth-last-child(1) {
   margin: 12px auto;
 }
 
@@ -1202,19 +1204,6 @@ body.view-Menu .prompt:not(.forceShow) {
   padding: 0 8px;
   white-space: pre-line;
   overflow-y: auto;
-}
-
-.jbutton {
-  height: 60px;
-  line-height: 40px;
-  font-size: 18px;
-  border-radius: 8px 8px;
-  border: 2px solid black;
-  text-align: center;
-  position: relative;
-  margin: 12px 8px;
-  white-space: nowrap;
-  padding: 0 15px;
 }
 
 #version-info-headless-server,
