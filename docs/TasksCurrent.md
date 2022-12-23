@@ -1,4 +1,15 @@
+- IMPORTANT: The "push" from the bloat explosion seems to be causing a location desync
+    - This is because the push happens onDeath event and that's not awaited.
+    - To reproduce, queue up a Bloat + slash to kill an enemy with another in the blast radius and end your turn before the spell has finished animating
+- bug: loaded from quicksave in multiplayer and got "CAnnot choose upgrade, from player is undefined"
+- Ghost archer doesn't come closer??
 - Make summoner summon units to random places
+- bug: I heard priest cast but he didn't (he was out of range of the corse)
+    - priest shows that it will attack even when it's out of range
+- bug: Prediction is wrong for potions dropped by last will because in non prediction is waits a moment before dropping them
+- poisoner moves too close instead of casting
+- Potential issue when both players are alt-tabbed and server restarts, the chrome one got the disconnected message but the other was on the "resume" menu screen and when I resumed it's stuck because it has the old game data but the server restarted (chrome player started a new game of the same name), and so firefox player has old game state and also cannot ready up because they are already in game.
+- bug: Player on firefox is missing gold circle after deathn
 - Retro playthrough:
     - font it too small on cards
     - last will didn't work when he was near water 5:35

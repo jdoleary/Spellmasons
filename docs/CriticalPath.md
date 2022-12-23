@@ -1,4 +1,9 @@
+- IMPORTANT: HOW DOES DIFFICULTY SCALE WITH A TON OF PLAYERS
 - IMPORTANT: Fix music only coming out of one channel
+    - itshallnotfindme sounds soft in the right ear
+    
+
+
 - Make UI buttons on modals to match Jake's design 
 - blood golem / blood archer / green glop / ghost archer / sand vamp explain is a broken image
 - Way to control Ally faction units, like follow me. Or go get them.
