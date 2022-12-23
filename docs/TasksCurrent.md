@@ -1,21 +1,22 @@
+# Priority
+- bug: I heard priest cast but he didn't (he was out of range of the corse)
+    - priest shows that it will attack even when it's out of range
+
+# To be Triaged
 - IMPORTANT: The "push" from the bloat explosion seems to be causing a location desync
     - This is because the push happens onDeath event and that's not awaited.
     - To reproduce, queue up a Bloat + slash to kill an enemy with another in the blast radius and end your turn before the spell has finished animating
 - bug: loaded from quicksave in multiplayer and got "CAnnot choose upgrade, from player is undefined"
+    - This is because save doesn't yet work in multiplayer
 - Ghost archer doesn't come closer??
 - Make summoner summon units to random places
-- bug: I heard priest cast but he didn't (he was out of range of the corse)
-    - priest shows that it will attack even when it's out of range
-- bug: Prediction is wrong for potions dropped by last will because in non prediction is waits a moment before dropping them
 - poisoner moves too close instead of casting
 - Potential issue when both players are alt-tabbed and server restarts, the chrome one got the disconnected message but the other was on the "resume" menu screen and when I resumed it's stuck because it has the old game data but the server restarted (chrome player started a new game of the same name), and so firefox player has old game state and also cannot ready up because they are already in game.
-- bug: Player on firefox is missing gold circle after deathn
 - Retro playthrough:
     - font it too small on cards
     - last will didn't work when he was near water 5:35
     - got 2 spells instead of 1
     - improve the UI
-    - he's trying to right-click to cancel out spells 12:30
     - rarity label is missing on cards now
     - push push dash combo is weird
     - connect push to self is not obvious what it does, same with connect swap
@@ -23,33 +24,38 @@
     - bug: music is only coming out of the left ear??
     - "target cone" lock on is an issue when targeting self unintentionally
     - "protection" should work for enemies casters such as poisoner and priestb
-# 12/19
-    - Pushing an enemyh into lava (and they die) then casting connect on them won't connect to other living enemies
-    - even in singleplayer you can go negative mana if you queue it up while another spell is casting (and you still have the mana from before the current spell takes it)
-    - is burst too cheap??
-    - bug: by alt-tabbing during enemy turn they didn't move visually.  Then when I came back and ended my turn again they slid to where they would've been had they moved during their turn (without animate walking) and then walked another turn's distance and bit me without warning
-    - blood golem / blood archer / green glop / ghost archer / sand vamp explain is a broken image
-        - but ghost archer does show up locally
-    - bug: priest doesn't cast when he predicts he will visually
-    - If an enemy lines up perfectly with another and the direction it's going it can push the enemy.  Try to set up a ranged unit that pushes a melee unit closer and see if the melee unit hits you
-    - Don't change music until the biome changes
-    - fix slow copy "maxStamina"
-    - Get Che specific example for perk icons
-    - how does the manifest.json file itself get updated??
-    - Add game log so you can both resume games and see your previous progress
-        - Stats: object
-        - Duration 
-        - Victory
-        - Kills
-        - Resume?
-    - Server Browser
 # Tasks
+- Game is too easy right now, I think due to the perks
+- Need something to protect like the towers in into the breach, something to draw you out and make you take risks
+- Way to control Ally faction units, like follow me. Or go get them.
+- is burst too cheap??
+- Don't change music until the biome changes
+- fix slow copy "maxStamina"
+- Add game log so you can both resume games and see your previous progress
+    - Stats: object
+    - Duration 
+    - Victory
+    - Kills
+    - Resume?
+- Server Browser
+- Pushing an enemyh into lava (and they die) then casting connect on them won't connect to other living enemies
 - Make magic color and robe color separately customizable
 - verify `UI zoom` restored from settings in electron app (due to 63643c06)
 - How to visually stack modifiers such as blood_curse and debilitate
     - On hover?
 - Invent new loop biomes by colorizing old biome tiles for looping
 # Bugs / Cleaning
+- IMPORTANT: HOW DOES DIFFICULTY SCALE WITH A TON OF PLAYERS
+- IMPORTANT: Fix music only coming out of one channel
+    - itshallnotfindme sounds soft in the right ear
+- lava abyss color is off
+- blood golem / blood archer / green glop / ghost archer / sand vamp explain is a broken image
+    - but ghost archer does show up locally
+- If an enemy lines up perfectly with another and the direction it's going it can push the enemy.  Try to set up a ranged unit that pushes a melee unit closer and see if the melee unit hits you
+- even in singleplayer you can go negative mana if you queue it up while another spell is casting (and you still have the mana from before the current spell takes it)
+- bug: by alt-tabbing during enemy turn they didn't move visually.  Then when I came back and ended my turn again they slid to where they would've been had they moved during their turn (without animate walking) and then walked another turn's distance and bit me without warning
+- bug: Prediction is wrong for potions dropped by last will because in non prediction is waits a moment before dropping them
+- bug: Player on firefox is missing gold circle after death
 - bug: when one player went into a portal and the other had already ended their turn and the left over player died from ai (portal was spawned via admin menu), it correctly went to the next level but it generated 2 levels (skipping right to level 3)
 - pieUrl is stored wrong in browser search bar so if you copy it after connecting it'd double encoded
 - res markers don't show if the unit is alive but will be killed and then resurrected

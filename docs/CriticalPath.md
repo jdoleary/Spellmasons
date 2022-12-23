@@ -1,19 +1,4 @@
-- IMPORTANT: HOW DOES DIFFICULTY SCALE WITH A TON OF PLAYERS
-- IMPORTANT: Fix music only coming out of one channel
-    - itshallnotfindme sounds soft in the right ear
-    
-
-
-- Make UI buttons on modals to match Jake's design 
-- blood golem / blood archer / green glop / ghost archer / sand vamp explain is a broken image
-- Way to control Ally faction units, like follow me. Or go get them.
-- Need something to protect like the towers in into the breach, something to draw you out and make you take risks
-- Game is too easy right now, I think due to the perks
-- lava abyss color is off
-
 # PreRelease Top Priorities
-- Fix my SEO for my spellmasons.com website so I can claim google knowledge panel
-    - Presskit tanked my SEO?
 - Balanced / Difficult
 - Level Variety (not too samey)
     - 2nd style level generator (close quarters)
@@ -25,9 +10,7 @@
     - Summoner should summon in random locations
 # Desired Schedule
 - December
-        - Make server version update whenvever the assets subdomain updates
-        - [Submit demo to IGN](https://corp.ign.com/submit-a-game)
-    - Week of 12/19-12/23
+        - DevOps: Make server version update whenvever the assets subdomain updates
         - Support hosting a server from in the game exe
         - Satisfying end game (boss unit needed like the literal throne in Nuclear Throne)
             - Maybe don't introduce only one new unit each level, think of how Nuclear Throne does mini bosses
@@ -41,6 +24,7 @@
         - Update music so it only changes song group once you reach a new biome
             - and so it will continue a song if the next level is in the same biome
 - January
+    - [Submit demo to IGN](https://corp.ign.com/submit-a-game)
     - Features / Content
         - Icons for perks
         - Server Browser
