@@ -42,7 +42,8 @@ const unit: UnitSource = {
   },
   spawnParams: {
     probability: 20,
-    unavailableUntilLevelIndex: 7,
+    budgetCost: 7,
+    unavailableUntilLevelIndex: 3,
   },
   extraTooltipInfo: () => {
     return `Mana cost per summon: ${manaCostToCast}`;

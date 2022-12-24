@@ -160,6 +160,7 @@ setTurnPhase( Stalled )
 - optimize: Ihave duplicate units, pickups, and doodads in save due to serailizeForSaving having them in the underworld and extracting them to the top level too
 
 ## Stretch Content
+- Make "Destroy  Corpse" spell which will be useful for dealing with priests
 - Trap Soul / Capture: Instantly traps an enemy's soul in your possesion removing them from the board.  When you release their soul they are restored to their last form but on your faction.  Requires low health to work.
 - Mind Control: Changes the faction of an enemy
 - **contender** Content: "Orge" enemies that get stronger for every ally of theirs that dies

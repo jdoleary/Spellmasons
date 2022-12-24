@@ -24,6 +24,11 @@ export interface UnitSource {
 
 interface SpawnParams {
   probability: number;
+  // The amount that a unit costs to spawn in the level's spawn budget.
+  // This ensures that level difficulty remains someone the same relative to index.
+  // For example, level 5 could have 1 super powerful guy and 4 small or 8 small and 0 super powerful
+  // but not 4 super powerful and 1 small.
+  budgetCost: number;
   unavailableUntilLevelIndex: number;
 }
 

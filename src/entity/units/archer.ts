@@ -24,7 +24,8 @@ const unit: UnitSource = {
   },
   spawnParams: {
     probability: 50,
-    unavailableUntilLevelIndex: 3,
+    budgetCost: 2,
+    unavailableUntilLevelIndex: 0,
   },
   animations: {
     idle: 'units/archerIdle',

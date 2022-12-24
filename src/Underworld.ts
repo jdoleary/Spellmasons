@@ -1281,7 +1281,7 @@ export default class Underworld {
     levelData.imageOnlyTiles = tiles.flatMap(x => x == undefined ? [] : [x]);
 
     // Spawn units at the start of the level
-    let unitIds = getEnemiesForAltitude(this);
+    let unitIds = getEnemiesForAltitude(this, this.levelIndex);
     if (globalThis.allowCookies && useTutorialStartLevel) {
       unitIds = [];
       this.levelIndex--;
@@ -2980,12 +2980,94 @@ type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? nev
 type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underworld>, null | undefined>;
 export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "pie" | "overworld" | "debugGraphics" | "players" | "units" | "pickups" | "obstacles" | "random" | "gameLoop" | "particleFollowers">;
 
-// TODO: enforce max units at level index
+// globalThis.testUnitAlgorithms = () => {
+
+//   console.log('Previous:')
+//   for (let i = 0; i < 10; i++) {
+//     const enemies = getEnemiesForAltitude(globalThis.devUnderworld, i)
+//     const sums = enemies.reduce((sums, cur) => {
+//       if (!sums[cur]) {
+//         sums[cur] = 1;
+//       } else {
+//         sums[cur] += 1
+//       }
+//       return sums;
+//     }, {})
+//     console.log(`level ${i}`, sums);
+//   }
+//   console.log('New:')
+//   for (let i = 0; i < 10; i++) {
+//     const enemies = getEnemiesForAltitude2(globalThis.devUnderworld, i)
+//     const sums = enemies.reduce((sums, cur) => {
+//       if (!sums[cur]) {
+//         sums[cur] = 1;
+//       } else {
+//         sums[cur] += 1
+//       }
+//       return sums;
+//     }, {})
+//     console.log(`level ${i}`, sums);
+//   }
+// }
+
+function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): string[] {
+  // Feel: Each level should feel "themed"
+  // Requirements
+  // - Any level, including starting levels, should have variety
+  // - The higher the level number the more types of enemies can spawn
+  // - The higher the level number the more amount of enemies can spawn
+  //   - But it should consider a budget, for example, lots of high level enemies should mean less low level enemies
+  const numberOfTypesOfEnemies = 2 + Math.floor(levelIndex / 2);
+  let possibleUnitsToChoose = Object.values(allUnits)
+    .filter(u => u.spawnParams && u.spawnParams.unavailableUntilLevelIndex <= levelIndex)
+    .map(u => ({ id: u.id, probability: u.spawnParams?.probability || 1, budgetCost: u.spawnParams?.budgetCost || 1 }))
+  const unitTypes = Array(numberOfTypesOfEnemies).fill(null)
+    // flatMap is used to remove any undefineds
+    .flatMap(() => {
+      const chosenUnitType = chooseObjectWithProbability(possibleUnitsToChoose, underworld.random)
+      // Remove chosen Unit type from pick source
+      if (chosenUnitType) {
+        possibleUnitsToChoose = possibleUnitsToChoose.filter(u => u.id !== chosenUnitType.id)
+        return [chosenUnitType]
+      }
+      return [];
+    })
+    // Sort by most expensive first
+    .sort((a, b) => b.budgetCost - a.budgetCost);
+  // Now that we've determined which unit types will be in the level we have to
+  // budget out the quantity
+  let units = [];
+  let budgetLeft = 10 + (levelIndex + 1) * (levelIndex + 1);
+  const totalBudget = budgetLeft;
+  // How we choose:
+  // 1. Start with the most expensive unit and random a number between 1 and 50% budget / unit budget cost
+  // 2. Keep iterating with other units
+  while (budgetLeft > 0) {
+    for (let chosenUnitType of unitTypes
+      // Sort by most expensive first
+      .sort((a, b) => b.budgetCost - a.budgetCost)) {
+      // Prevent overspend
+      if (chosenUnitType.budgetCost > budgetLeft) {
+        // Prevent infinite loop
+        budgetLeft--;
+        continue;
+      }
+      // Never let one unit type take up more than 70% of the budget
+      const maxNumberOfThisUnit = Math.floor(totalBudget * 0.7 / chosenUnitType.budgetCost);
+      const howMany = randInt(underworld.random, 1, maxNumberOfThisUnit);
+      // console.log('jtest budget', budgetLeft);
+      // console.log('jtest unit spawn', chosenUnitType, howMany, 'of possible:', maxNumberOfThisUnit);
+      for (let i = 0; i < howMany; i++) {
+        units.push(chosenUnitType.id);
+        budgetLeft -= chosenUnitType.budgetCost;
+      }
+    }
+  }
+  return units;
+}
+
 // Idea: Higher probability of tougher units at certain levels
-
-function getEnemiesForAltitude(underworld: Underworld): string[] {
-  const { levelIndex } = underworld;
-
+function getEnemiesForAltitude(underworld: Underworld, levelIndex: number): string[] {
   const firstTimePlaying = !isTutorialComplete();
   const numberOfUnits = firstTimePlaying
     // Face a reduced number of enemies on firstTimePlaying

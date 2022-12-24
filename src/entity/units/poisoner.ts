@@ -23,8 +23,9 @@ const unit: UnitSource = {
     manaCostToCast: 15
   },
   spawnParams: {
-    probability: 20,
-    unavailableUntilLevelIndex: 6,
+    probability: 15,
+    budgetCost: 5,
+    unavailableUntilLevelIndex: 2,
   },
   animations: {
     idle: 'units/poisIdle',
@@ -38,42 +39,41 @@ const unit: UnitSource = {
     death: 'poisonerDeath'
   },
   action: async (unit: Unit.IUnit, attackTargets, underworld) => {
-    if (attackTargets.length) {
-      const chosenUnit = attackTargets[0];
-      if (chosenUnit) {
-        if (Unit.inRange(unit, chosenUnit) && unit.mana >= unit.manaCostToCast) {
-          unit.mana - unit.manaCostToCast;
-          // Poisoners attack or move, not both; so clear their existing path
-          unit.path = undefined;
-          await Unit.playComboAnimation(unit, unit.animations.attack, async () => {
-            await createVisualLobbingProjectile(
-              unit,
-              chosenUnit,
-              'projectile/poisonerProjectile',
-            ).then(async () => {
-              // Add projectile hit animation
-              Image.addOneOffAnimation(chosenUnit, 'projectile/poisonerProjectileHit');
-              await underworld.castCards({}, unit, [poison.id], chosenUnit, false);
-            });
+    const chosenUnit = attackTargets[0];
+    if (chosenUnit) {
+      unit.mana - unit.manaCostToCast;
+      // Poisoners attack or move, not both; so clear their existing path
+      unit.path = undefined;
+      await Unit.playComboAnimation(unit, unit.animations.attack, async () => {
+        await createVisualLobbingProjectile(
+          unit,
+          chosenUnit,
+          'projectile/poisonerProjectile',
+        ).then(async () => {
+          // Add projectile hit animation
+          Image.addOneOffAnimation(chosenUnit, 'projectile/poisonerProjectileHit');
+          await underworld.castCards({}, unit, [poison.id], chosenUnit, false);
+        });
 
-          });
-        } else {
-          const distanceToEnemy = math.distance(unit, chosenUnit);
-          // The following is a hacky way to make them not move too close to the enemy
-          unit.stamina = Math.min(unit.stamina, distanceToEnemy - config.COLLISION_MESH_RADIUS);
-          await Unit.moveTowards(unit, chosenUnit, underworld);
-        }
+      });
+    } else {
+      const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
+      if (closestEnemy) {
+        const distanceToEnemy = math.distance(unit, closestEnemy);
+        // The following is a hacky way to make them not move too close to the enemy
+        unit.stamina = Math.min(unit.stamina, distanceToEnemy - config.COLLISION_MESH_RADIUS);
+        await Unit.moveTowards(unit, closestEnemy, underworld);
       }
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-    const nonPoisonedEnemyUnits = underworld.units.filter(
-      (u) =>
-        u.faction !== unit.faction &&
-        u.alive &&
-        u.modifiers.poison === undefined,
-    );
-    return nonPoisonedEnemyUnits;
+    const enemies = Unit.livingUnitsInDifferentFaction(unit, underworld);
+    const target = enemies[0];
+    if (target && Unit.inRange(unit, target) && unit.mana >= unit.manaCostToCast) {
+      return [target];
+    } else {
+      return [];
+    }
   }
 };
 export default unit;

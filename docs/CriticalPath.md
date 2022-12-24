@@ -2,7 +2,7 @@
 - Balanced / Difficult
 - Level Variety (not too samey)
     - 2nd style level generator (close quarters)
-    - Improved enemy units spawn combinations
+    - Test getEnemiesForAltitude2 for balance
 - Boss
 - Looping
 - Server config by host (pvp, worms armageddon style customizations)
