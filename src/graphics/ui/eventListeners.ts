@@ -838,13 +838,34 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       domQueryContainer: '#menu-spawn'
     })),
     {
-      label: 'Spawn many enemies',
+      label: '🦹‍♂️🦹‍♂️🦹‍♂️ Spawn many enemies',
       action: ({ pos }) => {
         if (pos && overworld.underworld) {
           const spawns = overworld.underworld.findValidSpawns(pos, 20, 5);
           for (let spawn of spawns) {
             overworld.underworld.spawnEnemy('golem', spawn, false);
           }
+        }
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '#menu-spawn'
+    },
+    {
+      label: '🦹‍♂️🧛‍♂️🧝‍♂️ Spawn All Enemies',
+      action: ({ pos }) => {
+        if (pos && overworld.underworld) {
+          const spawns = overworld.underworld.findValidSpawns(pos, 20, 5);
+          Object.keys(allUnits).forEach((unitId, index) => {
+            const spawn = spawns[index];
+            if (spawn) {
+              if (overworld && overworld.underworld) {
+                overworld.underworld.spawnEnemy(unitId, spawn, false);
+              }
+            } else {
+              console.log('Could not find valid spawn for Admin command Spawn All Enemies')
+            }
+
+          });
         }
       },
       supportInMultiplayer: true,
