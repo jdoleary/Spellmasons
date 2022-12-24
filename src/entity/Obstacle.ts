@@ -110,20 +110,27 @@ function fallInOrOutToSafeDistanceFromEdge(entity: HasSpace, poly: Polygon2, und
   }
 }
 
-export function tryFallInOutOfLiquid(entity: HasSpace, underworld: Underworld, prediction: boolean) {
+// Returns liquid polygon that coord is inside of
+export function isCoordInLiquid(coord: Vec2, underworld: Underworld): Polygon2 | undefined {
   if (underworld.liquidPolygons.length) {
     let insideLiquid = false;
     for (let poly of underworld.liquidPolygons) {
-      insideLiquid = isVec2InsidePolygon(entity, poly);
+      insideLiquid = isVec2InsidePolygon(coord, poly);
       if (insideLiquid) {
-        fallInOrOutToSafeDistanceFromEdge(entity, poly, underworld);
-        inLiquid.add(entity, underworld, prediction);
-        break;
+        return poly;
       }
     }
-    if (!insideLiquid) {
-      inLiquid.remove(entity);
-    }
   }
+  return undefined;
+}
 
+export function tryFallInOutOfLiquid(entity: HasSpace, underworld: Underworld, prediction: boolean) {
+  const insideLiquidPoly = isCoordInLiquid(entity, underworld);
+  if (insideLiquidPoly) {
+    fallInOrOutToSafeDistanceFromEdge(entity, insideLiquidPoly, underworld);
+    inLiquid.add(entity, underworld, prediction);
+  } else {
+    inLiquid.remove(entity);
+
+  }
 }
