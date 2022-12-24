@@ -4,7 +4,6 @@
 - Summoner new behavior
 # Priority
 - What happens if you press multiplayer 'connect' twice while it's still connecting
-- bug: if a player readies up after the current player has already seen cinematic it replays cinematic
 - bug: vampire stopped moving after being pushed
 - bug: server freaks out after players leave (when they're dead)
     - somehow got inconsistent maps; one client must've been holding on to an instance
