@@ -1745,7 +1745,8 @@ export default class Underworld {
     // TODO will have to update this to allow PVP / factions
     const playerFactions = this.players.map(p => p.unit.faction);
     // Game is over once ALL units on player factions are dead (this includes player units)
-    return unspawnedPlayers.length == 0 && this.units.filter(u => playerFactions.includes(u.faction)).every(u => !u.alive);
+    // so long as there are some players in the game.
+    return this.players.length !== 0 && unspawnedPlayers.length == 0 && this.units.filter(u => playerFactions.includes(u.faction)).every(u => !u.alive);
   }
   tryGameOver(): boolean {
     const isOver = this.isGameOver();
