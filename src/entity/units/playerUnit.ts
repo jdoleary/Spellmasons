@@ -7,7 +7,7 @@ import * as slash from '../../cards/slash';
 import * as config from '../../config';
 
 export const spellmasonUnitId = 'Spellmason';
-const unit: UnitSource = {
+const playerUnit: UnitSource = {
   id: spellmasonUnitId,
   info: {
     description: 'You and your kin are Spellmasons: mighty wizards that forge magic with nothing but a bit of ingenuity and some mana.',
@@ -60,4 +60,4 @@ const unit: UnitSource = {
     damage: 'unitDamage',
   }
 };
-export default unit;
+export default playerUnit;
