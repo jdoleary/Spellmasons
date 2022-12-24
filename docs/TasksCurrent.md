@@ -15,6 +15,15 @@
 - Protect production branch from unintentional pushes
 
 # To be Triaged
+- bug: resume last run breaks (i think due to multiplayer)
+- bug: Save named "test" doesn't show up in the load list
+- bug: I seem to be getting race timeouts for Bloat, Slash, Rend, Rend, Rend
+    - on the server it race timeouts animateRend and on the client it race timeout's Push
+    - bug: somehow a combination of bload and rend only is causing PUsh to timeout
+    - it has something to do with awaiting animateRend
+        - even if it resolves immediately
+        - it's the last prediction ones that timeout
+        - that's because it makes asyc the flow of card.effect and in castCards card.effect gets fullySimulateForceMovePredictions right after it
 - Revise confusing "Glass Sniper" copy
 - IMPORTANT: The "push" from the bloat explosion seems to be causing a location desync
     - This is because the push happens onDeath event and that's not awaited.
