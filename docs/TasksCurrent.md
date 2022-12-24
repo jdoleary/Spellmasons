@@ -4,8 +4,10 @@
 - Summoner new behavior
 # Priority
 - Make status page for app running headless server so I can tell how many users are connected, etc and historical info
+- Protect production branch from unintentional pushes
 
 # To be Triaged
+- Revise confusing "Glass Sniper" copy
 - IMPORTANT: The "push" from the bloat explosion seems to be causing a location desync
     - This is because the push happens onDeath event and that's not awaited.
     - To reproduce, queue up a Bloat + slash to kill an enemy with another in the blast radius and end your turn before the spell has finished animating
@@ -48,6 +50,8 @@
     - On hover?
 - Invent new loop biomes by colorizing old biome tiles for looping
 # Bugs / Cleaning
+- bug: miniboss glops targeting radius should be bigger, target column should be able to grab him from closer
+- bug: The server restarts immediately and suddenly when on game over.  It should give it some time or else it's suprising
 - bug: headless server has a loop where it continually tearsdown and creates a new underworld after the last player leaves
     - log: ```
     teardown: Cleaning up underworld
