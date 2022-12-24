@@ -6,8 +6,6 @@
 - Boss
 - Looping
 - Server config by host (pvp, worms armageddon style customizations)
-- Unit improvements to increase difficulty
-    - Summoner should summon in random locations
 # Desired Schedule
 - December
         - Add automated testing
