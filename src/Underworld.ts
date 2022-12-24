@@ -1741,12 +1741,14 @@ export default class Underworld {
     return { x, y };
   }
   isGameOver(): boolean {
-    const unspawnedPlayers = this.players.filter(p => !p.isSpawned && p.clientConnected);
     // TODO will have to update this to allow PVP / factions
     const playerFactions = this.players.map(p => p.unit.faction);
     // Game is over once ALL units on player factions are dead (this includes player units)
     // so long as there are some players in the game.
-    return this.players.length !== 0 && unspawnedPlayers.length == 0 && this.units.filter(u => playerFactions.includes(u.faction)).every(u => !u.alive);
+    const isAllyNPCAlive = this.units.filter(u => u.unitType == UnitType.AI && playerFactions.includes(u.faction)).some(u => u.alive);
+    // Note: unspawned players still own an "alive" unit
+    const isConnectedPlayerAlive = this.players.filter(p => p.clientConnected && p.unit.alive).some(p => p.unit.alive)
+    return this.players.length !== 0 && !isConnectedPlayerAlive && !isAllyNPCAlive;
   }
   tryGameOver(): boolean {
     const isOver = this.isGameOver();
@@ -1765,7 +1767,7 @@ export default class Underworld {
         // a new game
         if (!this.isRestarting) {
           const millisTillRestart = 3000;
-          console.log('Host app game over', isOver, `restarting in ${Math.floor(millisTillRestart / 1000)} seconds`);
+          console.log('-------------------Host app game over', isOver, `restarting in ${Math.floor(millisTillRestart / 1000)} seconds`);
           this.isRestarting = true;
           setTimeout(() => {
             const newUnderworld = new Underworld(overworld, pie, Math.random().toString());
@@ -2070,6 +2072,7 @@ export default class Underworld {
         return;
       }
       const gameIsOver = this.tryGameOver();
+      console.log('jtest is game over', gameIsOver);
       if (gameIsOver) {
         // Prevent infinite loop since there are no players
         // alive it would continue to loop endlessly and freeze up
