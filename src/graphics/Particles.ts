@@ -85,7 +85,7 @@ export function cleanUpTrail(trail: Trail) {
         trails.splice(i, 1)
     }
 }
-export function makeManaTrail(start: Vec2, target: Vec2): Promise<void> {
+export function makeManaTrail(start: Vec2, target: Vec2, colorStart: string, colorEnd: string): Promise<void> {
     const texture = createParticleTexture();
     if (!texture) {
         return Promise.resolve();
@@ -107,8 +107,8 @@ export function makeManaTrail(start: Vec2, target: Vec2): Promise<void> {
                 minimumScaleMultiplier: 1
             },
             color: {
-                start: "#e4f9ff",
-                end: "#3fcbff"
+                start: colorStart,
+                end: colorEnd
             },
             speed: {
                 start: 0,
