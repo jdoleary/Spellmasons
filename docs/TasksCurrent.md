@@ -5,6 +5,7 @@
 # Priority
 - What happens if you press multiplayer 'connect' twice while it's still connecting
 - bug: vampire stopped moving after being pushed
+    - after being pushed hard into a corner
 - bug: server freaks out after players leave (when they're dead)
     - somehow got inconsistent maps; one client must've been holding on to an instance
 - Make status page for app running headless server so I can tell how many users are connected, etc and historical info
