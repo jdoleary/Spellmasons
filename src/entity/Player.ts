@@ -312,6 +312,8 @@ export function syncLobby(underworld: Underworld) {
         status = i18n('Disconnected');
       } else if (!p.isSpawned) {
         status = i18n('Picking Start Point');
+      } else if (!p.unit.alive) {
+        status = i18n('Dead');
       } else if (p.endedTurn && underworld.turn_phase == turn_phase.PlayerTurns) {
         status = i18n('Ready for next turn');
       }
