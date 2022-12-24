@@ -3,6 +3,13 @@
 - All melee unit actions
 - Summoner new behavior
 # Priority
+- bug: player used stamina while spawning???
+- What happens if you press multiplayer 'connect' twice while it's still connecting
+- bug: Can make server infinite loop by starting a game with two players, spawn one in and kill him immediatley, disconnect the other without spawning
+- bug: if a player readies up after the current player has already seen cinematic it replays cinematic
+- bug: vampire stopped moving after being pushed
+- bug: server freaks out after players leave (when they're dead)
+    - somehow got inconsistent maps; one client must've been holding on to an instance
 - Make status page for app running headless server so I can tell how many users are connected, etc and historical info
 - Protect production branch from unintentional pushes
 
@@ -53,8 +60,9 @@
 - bug: miniboss glops targeting radius should be bigger, target column should be able to grab him from closer
 - bug: The server restarts immediately and suddenly when on game over.  It should give it some time or else it's suprising
 - bug: headless server has a loop where it continually tearsdown and creates a new underworld after the last player leaves
-    - log: ```
-    teardown: Cleaning up underworld
+    - log: 
+```
+teardown: Cleaning up underworld
 Setup: Creating new underworld
 RNG create with seed: 0.20819712145728242 , state:  true
 The number of players has changed, adjusting game difficulty to  0  for  0  connected players.
