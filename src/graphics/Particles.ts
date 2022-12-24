@@ -173,8 +173,12 @@ export function updateParticlees(delta: number, bloods: BloodParticle[], seedran
             t.angleRad = math.lerp(t.angleRad, targetRad, t.lerp);
         }
         t.emitter.updateOwnerPos(t.position.x, t.position.y);
-        if (Vec.equal(t.position, t.target) && t.emitter.particleCount == 0) {
-            cleanUpTrail(t);
+        if (Vec.equal(t.position, t.target)) {
+            // resolve trail as soon as it reaches it's target
+            t.resolver();
+            if (Vec.equal(t.position, t.target) && t.emitter.particleCount == 0) {
+                cleanUpTrail(t);
+            }
         }
     }
     // "graphics" particles
