@@ -41,6 +41,7 @@ Pushing to `production` branch will update assets.spellmasons.com which is what 
 - To Fully build and push a new version to production
     - Run `npm run build` in the `Golems-menu` repo
     - Run `npm run build-for-electron` in the `Golems` repo
+    - Run `backup` to push to gitlab and keybase
     - These 2 should always be done together:
         - UPDATES BACKEND: Run `./deploy.sh` to push new version to the backend servers on Digital Ocean
         - Note: Make sure to run the previous step to update the build manifest before pushing to production
