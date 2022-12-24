@@ -1766,7 +1766,7 @@ export default class Underworld {
         // of times and only the first time that it detects game over should it trigger
         // a new game
         if (!this.isRestarting) {
-          const millisTillRestart = 1000;
+          const millisTillRestart = 10000;
           console.log('-------------------Host app game over', isOver, `restarting in ${Math.floor(millisTillRestart / 1000)} seconds`);
           this.isRestarting = true;
           setTimeout(() => {
@@ -2072,7 +2072,6 @@ export default class Underworld {
         return;
       }
       const gameIsOver = this.tryGameOver();
-      console.log('jtest is game over', gameIsOver);
       if (gameIsOver) {
         // Prevent infinite loop since there are no players
         // alive it would continue to loop endlessly and freeze up
