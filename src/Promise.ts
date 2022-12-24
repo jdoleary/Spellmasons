@@ -3,7 +3,7 @@ export function raceTimeout(ms: number, message: string, promise: Promise<any>):
         let timeoutId = setTimeout(() => {
             console.error('raceTimeout: ', message);
             resolve(undefined);
-        }, ms)
+        }, ms);
         promise.then(x => {
             //console.log(x, message, 'finished after', Date.now() - start);
             // Ensure that the timeout doesn't trigger now that the promise has resolved

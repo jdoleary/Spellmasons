@@ -617,6 +617,19 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
     }
   }
 
+  // Invoke simulating forceMovePredictions after onDeath callbacks
+  // as the callbacks may create predictions that need to be processed such as
+  // bloat + die causing a push.  Otherwise a raceTimeout could occur
+  if (prediction) {
+    underworld.fullySimulateForceMovePredictions();
+  }
+  // Invoke gameLoopHeadless after onDeath callbacks
+  // as the callbacks may create predictions that need to be processed such as
+  // bloat + die causing a push.  Otherwise a raceTimeout could occur
+  if (globalThis.headless) {
+    underworld.triggerGameLoopHeadless();
+  }
+
   // Remove all modifiers
   // Note: This must come AFTER onDeathEvents or else it will remove the modifier
   // that added the onDeathEvent and the onDeathEvent won't trigger
