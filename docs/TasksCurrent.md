@@ -3,6 +3,9 @@
 - All melee unit actions
 - Summoner new behavior
 # Priority
+- bug: Updates are reupdating each time
+- bug: if I start a game, quit to main menu, go back to multiplayer I can't edit the server url field, until I alt tab and come back
+- bug: assets subdomain isn't updating in vercel
 - What happens if you press multiplayer 'connect' twice while it's still connecting
 - bug: vampire stopped moving after being pushed
     - after being pushed hard into a corner

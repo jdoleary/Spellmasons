@@ -43,5 +43,7 @@ Pushing to `production` branch will update assets.spellmasons.com which is what 
     - Run `npm run build-for-electron` in the `Golems` repo
     - These 2 should always be done together:
         - UPDATES BACKEND: Run `./deploy.sh` to push new version to the backend servers on Digital Ocean
-        - UPDATES FRONTEND: Run `git push production master` to push Frontend update to https://assets.spellsmasons.com which allows games to pull updates
+        - Note: Make sure to run the previous step to update the build manifest before pushing to production
+        - UPDATES FRONTEND: Run `git push https://github.com/jdoleary/spellmasons-build-assets-prod-2.git master` to push Frontend update to https://assets.spellsmasons.com which allows games to pull updates
+            - Use the url rather than adding a remote so you don't accidentally auto push to prod.  (Until I have set up actual devops)
 - Go to `Golems-Electron-Build` and follow instructions IF you need to push a new package to Steam; HOWEVER, you probably shouldn't.  Updates are designed to be downloaded through assets.spellmasons.com
