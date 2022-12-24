@@ -4,8 +4,8 @@
 - Summoner new behavior
 # Priority
 - bug: player used stamina while spawning???
+    - this happens after a game restart after a loss
 - What happens if you press multiplayer 'connect' twice while it's still connecting
-- bug: Can make server infinite loop by starting a game with two players, spawn one in and kill him immediatley, disconnect the other without spawning
 - bug: if a player readies up after the current player has already seen cinematic it replays cinematic
 - bug: vampire stopped moving after being pushed
 - bug: server freaks out after players leave (when they're dead)
