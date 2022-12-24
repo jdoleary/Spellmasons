@@ -6,8 +6,6 @@
 - Make status page for app running headless server so I can tell how many users are connected, etc and historical info
 
 # To be Triaged
-- menu: $isSingleplayer doesn't work when a game is started from "Resume Last Run" or "Load" buttons
-    - save load buttons not showing up in frontend on singleplayer anymore either
 - IMPORTANT: The "push" from the bloat explosion seems to be causing a location desync
     - This is because the push happens onDeath event and that's not awaited.
     - To reproduce, queue up a Bloat + slash to kill an enemy with another in the blast radius and end your turn before the spell has finished animating
@@ -50,6 +48,56 @@
     - On hover?
 - Invent new loop biomes by colorizing old biome tiles for looping
 # Bugs / Cleaning
+- bug: headless server has a loop where it continually tearsdown and creates a new underworld after the last player leaves
+    - log: ```
+    teardown: Cleaning up underworld
+Setup: Creating new underworld
+RNG create with seed: 0.20819712145728242 , state:  true
+The number of players has changed, adjusting game difficulty to  0  for  0  connected players.
+onData: SYNC_PLAYERS
+onData 1 : SYNC_PLAYERS units: 0; players: 0
+sync: SYNC_PLAYERS; syncs units and players
+sync: Syncing units [] []
+sync: Syncing players []
+Setup: generateLevelDataSyncronous 0
+Setup: generateRandomLevel 0
+onData: CREATE_LEVEL 
+Setup: createLevelSyncronous
+Setup: resetPlayerForNextLevel; reset all players
+Cinematic Cam: Finished
+Broadcast SET_PHASE:  PlayerTurns
+onData: SET_PHASE
+onData 2 : CREATE_LEVEL levelIndex: 0; enemies: 3
+sync: CREATE_LEVEL: Syncing / Creating level
+Setup: createLevelSyncronous
+Setup: resetPlayerForNextLevel; reset all players
+Cinematic Cam: Finished
+Broadcast SET_PHASE:  PlayerTurns
+onData: SET_PHASE
+onData 3 : SET_PHASE phase: PlayerTurns
+sync: SET_PHASE; syncs units and players
+sync: Syncing units [ 0, 1, 2 ] [ 3, 4, 5 ]
+Units array is out of order with canonical record. A full unit.sync should correct this issue.
+Units array is out of order with canonical record. A full unit.sync should correct this issue.
+Units array is out of order with canonical record. A full unit.sync should correct this issue.
+sync: Syncing players []
+initializeTurnPhase( PlayerTurns )
+setTurnPhase( PlayerTurns )
+syncTurnMessage: phase: PlayerTurns
+Host app game over true restarting in 3 seconds
+Broadcast SET_PHASE:  Stalled
+onData: SET_PHASE
+Turn Management: Skipping initializingPlayerTurns, no players connected. Setting turn_phase to "Stalled"        
+onData 4 : SET_PHASE phase: PlayerTurns
+sync: SET_PHASE; syncs units and players
+Phase is already set to PlayerTurns; Aborting SET_PHASE.
+onData 5 : SET_PHASE phase: Stalled
+sync: SET_PHASE; syncs units and players
+sync: Syncing units [ 0, 1, 2 ] [ 0, 1, 2 ]
+sync: Syncing players []
+initializeTurnPhase( Stalled )
+setTurnPhase( Stalled )
+    ```
 - IMPORTANT: HOW DOES DIFFICULTY SCALE WITH A TON OF PLAYERS
 - IMPORTANT: Fix music only coming out of one channel
     - itshallnotfindme sounds soft in the right ear
