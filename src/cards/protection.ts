@@ -30,6 +30,9 @@ const spell: Spell = {
       const targets = state.targetedUnits;
       for (let unit of targets) {
         Unit.addModifier(unit, id, underworld, prediction, quantity);
+        if (!prediction) {
+          floatingText({ coords: unit, text: 'Next spell will be nullified.' });
+        }
       }
       return state;
     },
