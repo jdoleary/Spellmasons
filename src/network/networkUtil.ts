@@ -18,6 +18,9 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs, overworld:
     console.log('clientPresenceChanged', o);
     // Ensure each client corresponds with a Player instance
     ensureAllClientsHaveAssociatedPlayers(overworld, o.clients);
+    if (overworld.underworld) {
+        overworld.underworld.tryGameOver();
+    }
 }
 export function hostGiveClientGameState(clientId: string, underworld: Underworld, level: LevelData | undefined, message_type: MESSAGE_TYPES.INIT_GAME_STATE | MESSAGE_TYPES.LOAD_GAME_STATE) {
     // Only the host should be sending INIT_GAME_STATE messages
