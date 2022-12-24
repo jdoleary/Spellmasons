@@ -10,6 +10,12 @@
     - Summoner should summon in random locations
 # Desired Schedule
 - December
+        - Add automated testing
+            - Allow seeded run
+            - Record actions and assert results
+            - Triggering clicks:
+                - https://stackoverflow.com/questions/57835535/trigger-click-event-at-x-y-coordinates-of-canvas-using-pure-vanilla-js
+                - https://stackoverflow.com/questions/2705583/how-to-simulate-a-click-with-javascript
         - DevOps: Make server version update whenvever the assets subdomain updates
         - Support hosting a server from in the game exe
         - Satisfying end game (boss unit needed like the literal throne in Nuclear Throne)
