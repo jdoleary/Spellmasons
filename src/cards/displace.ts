@@ -25,7 +25,7 @@ export function findRandomDisplaceLocation(underworld: Underworld, radius: numbe
       return undefined;
     }
     randomCoord = underworld.getRandomCoordsWithinBounds(underworld.limits, seed);
-    isValid = underworld.isPointValidSpawn(randomCoord, radius)
+    isValid = underworld.isPointValidSpawn(randomCoord, radius);
   } while (!isValid);
   return randomCoord
 

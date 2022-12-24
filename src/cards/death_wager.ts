@@ -1,11 +1,5 @@
 import { Spell } from './index';
-import floatingText from '../graphics/FloatingText';
-import { addPixiSpriteAnimated } from '../graphics/PixiUtils';
-import { manaBlue } from '../graphics/ui/colors';
-import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
-import { makeManaTrail } from '../graphics/Particles';
 import { CardCategory } from '../types/commonTypes';
-import { playDefaultSpellSFX } from './cardUtils';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 const id = 'death_wager';
