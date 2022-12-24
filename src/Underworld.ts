@@ -1766,7 +1766,7 @@ export default class Underworld {
         // of times and only the first time that it detects game over should it trigger
         // a new game
         if (!this.isRestarting) {
-          const millisTillRestart = 3000;
+          const millisTillRestart = 1000;
           console.log('-------------------Host app game over', isOver, `restarting in ${Math.floor(millisTillRestart / 1000)} seconds`);
           this.isRestarting = true;
           setTimeout(() => {
