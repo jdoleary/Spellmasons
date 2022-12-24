@@ -1,7 +1,13 @@
+# Validation
+- Next electron build, esure it logs       console.log("Register to receive Update events.");
+- All melee unit actions
+- Summoner new behavior
 # Priority
 - Make status page for app running headless server so I can tell how many users are connected, etc and historical info
 
 # To be Triaged
+- menu: $isSingleplayer doesn't work when a game is started from "Resume Last Run" or "Load" buttons
+    - save load buttons not showing up in frontend on singleplayer anymore either
 - IMPORTANT: The "push" from the bloat explosion seems to be causing a location desync
     - This is because the push happens onDeath event and that's not awaited.
     - To reproduce, queue up a Bloat + slash to kill an enemy with another in the blast radius and end your turn before the spell has finished animating
