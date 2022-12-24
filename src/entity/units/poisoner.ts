@@ -17,7 +17,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
-    attackRange: 210,
+    attackRange: 350,
     bloodColor: bloodPoisoner,
     healthMax: 6,
     manaCostToCast: 15
