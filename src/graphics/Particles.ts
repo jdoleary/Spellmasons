@@ -58,6 +58,8 @@ export function simpleEmitter(position: Vec2, config: particles.EmitterConfigV3,
 
 }
 interface Trail {
+    // lerp: 0.0 to 1.0; once lerp reaches 1.0 the angleRad will be set to the targetRadAngle
+    lerp: number;
     position: Vec2;
     target: Vec2;
     angleRad: number;
@@ -74,7 +76,7 @@ export function addTrail(position: Vec2, target: Vec2, startVelocity: number, an
     emitter.updateOwnerPos(position.x, position.y);
     // 3000 is an arbitrary timeout for now
     return raceTimeout(3000, 'trail', new Promise<void>((resolve) => {
-        trails.push({ position, target, velocity: startVelocity, angleRad: normalizeAngle(angleRad), emitter, resolver: resolve });
+        trails.push({ lerp: 0, position, target, velocity: startVelocity, angleRad: normalizeAngle(angleRad), emitter, resolver: resolve });
     }));
 }
 export function cleanUpTrail(trail: Trail) {
@@ -134,9 +136,9 @@ export function makeManaTrail(start: Vec2, target: Vec2, colorStart: string, col
                 max: 0.4
             },
             blendMode: "normal",
-            frequency: 0.021,
+            frequency: 0.011,
             emitterLifetime: -1,
-            maxParticles: 30,
+            maxParticles: 90,
             pos: {
                 x: 0,
                 y: 0
@@ -150,10 +152,9 @@ export function makeManaTrail(start: Vec2, target: Vec2, colorStart: string, col
 export function updateParticlees(delta: number, bloods: BloodParticle[], seedrandom: prng, underworld: Underworld) {
 
     // Emitters:
-    const inverseRotationSpeed = 10;
-    const velocityIncrease = 0.1;
+    const lerpSpeed = 0.01;
     for (let t of trails) {
-        const movementDirectionPos = math.getPosAtAngleAndDistance(t.position, t.angleRad, 100);
+        const movementDirectionPos = math.getPosAtAngleAndDistance(t.position, t.angleRad, 1000);
         t.position = math.getCoordsAtDistanceTowardsTarget(t.position, movementDirectionPos, t.velocity);
         const distanceToTarget = math.distance(t.position, t.target);
         if (distanceToTarget <= t.velocity * 2) {
@@ -163,15 +164,14 @@ export function updateParticlees(delta: number, bloods: BloodParticle[], seedran
             // Essentially, stop spawning new particles
             t.emitter.frequency = 10000;
         }
-        const targetRad = normalizeAngle(Vec.getAngleBetweenVec2s(t.position, t.target));
+        const targetRad = Vec.getAngleBetweenVec2s(t.position, t.target);
         const diffToTargetRad = Math.abs(targetRad - t.angleRad);
         if (Math.abs(diffToTargetRad) < 0.01) {
             t.angleRad = targetRad;
         } else {
-            t.angleRad += diffToTargetRad / inverseRotationSpeed;
+            t.lerp += lerpSpeed;
+            t.angleRad = math.lerp(t.angleRad, targetRad, t.lerp);
         }
-        t.angleRad = normalizeAngle(t.angleRad);
-        t.velocity += velocityIncrease;
         t.emitter.updateOwnerPos(t.position.x, t.position.y);
         if (Vec.equal(t.position, t.target) && t.emitter.particleCount == 0) {
             cleanUpTrail(t);
