@@ -1,10 +1,7 @@
 import * as particles from '@pixi/particle-emitter'
 import * as Vec from '../jmath/Vec';
 import { Vec2 } from '../jmath/Vec';
-import * as math from '../jmath/math';
 import { prng, randFloat } from '../jmath/rand';
-import { normalizeAngle } from '../jmath/Angle';
-import seedrandom from 'seedrandom';
 import { raceTimeout } from '../Promise';
 import { BloodParticle, graphicsBloodSmear, tickParticle } from './PixiUtils';
 import type Underworld from '../Underworld';
@@ -60,15 +57,33 @@ export function simpleEmitter(position: Vec2, config: particles.EmitterConfigV3,
 interface Trail {
     // lerp: 0.0 to 1.0; once lerp reaches 1.0 the angleRad will be set to the targetRadAngle
     lerp: number;
-    position: Vec2;
-    target: Vec2;
-    angleRad: number;
-    velocity: number;
+    position: Vec2,
+    moveFn: (lerpValue: number) => Vec2;
     emitter: particles.Emitter;
     resolver: () => void;
 }
+// written by ChatGPT:
+function createCurveTowardsFunction(start: Vec2, end: Vec2, control: Vec2): (t: number) => Vec2 {
+    // Calculate the coefficients of the cubic Bezier curve
+    // using the start, end, and control points
+    const cx = 3 * (control.x - start.x);
+    const bx = 3 * (end.x - control.x) - cx;
+    const ax = end.x - start.x - cx - bx;
+    const cy = 3 * (control.y - start.y);
+    const by = 3 * (end.y - control.y) - cy;
+    const ay = end.y - start.y - cy - by;
+
+    // Return a function that moves the start point towards the end point
+    // by a given amount (t) along the curve
+    return function moveTowards(t: number) {
+        // Calculate the new point on the curve using the cubic Bezier formula
+        const x = start.x + t * (cx + t * (bx + t * ax));
+        const y = start.y + t * (cy + t * (by + t * ay));
+        return { x, y };
+    }
+}
 const trails: Trail[] = [];
-export function addTrail(position: Vec2, target: Vec2, startVelocity: number, angleRad: number, config: particles.EmitterConfigV3): Promise<void> {
+export function addTrail(position: Vec2, target: Vec2, underworld: Underworld, config: particles.EmitterConfigV3): Promise<void> {
     if (!containerParticles) {
         return Promise.resolve();
     }
@@ -76,9 +91,11 @@ export function addTrail(position: Vec2, target: Vec2, startVelocity: number, an
     emitter.updateOwnerPos(position.x, position.y);
     // 3000 is an arbitrary timeout for now
     return raceTimeout(3000, 'trail', new Promise<void>((resolve) => {
-        trails.push({ lerp: 0, position, target, velocity: startVelocity, angleRad: normalizeAngle(angleRad), emitter, resolver: resolve });
+        const control = Vec.jitter(position, 300, underworld.random);
+        trails.push({ lerp: 0, position, moveFn: createCurveTowardsFunction(position, target, control), emitter, resolver: resolve });
     }));
 }
+
 export function cleanUpTrail(trail: Trail) {
     trail.emitter.destroy();
     trail.resolver();
@@ -87,7 +104,7 @@ export function cleanUpTrail(trail: Trail) {
         trails.splice(i, 1)
     }
 }
-export function makeManaTrail(start: Vec2, target: Vec2, colorStart: string, colorEnd: string): Promise<void> {
+export function makeManaTrail(start: Vec2, target: Vec2, underworld: Underworld, colorStart: string, colorEnd: string): Promise<void> {
     const texture = createParticleTexture();
     if (!texture) {
         return Promise.resolve();
@@ -95,8 +112,7 @@ export function makeManaTrail(start: Vec2, target: Vec2, colorStart: string, col
     return addTrail(
         start,
         target,
-        10,
-        randFloat(seedrandom(), 0, Math.PI * 2),
+        underworld,
         particles.upgradeConfig({
             autoUpdate: true,
             alpha: {
@@ -152,31 +168,18 @@ export function makeManaTrail(start: Vec2, target: Vec2, colorStart: string, col
 export function updateParticlees(delta: number, bloods: BloodParticle[], seedrandom: prng, underworld: Underworld) {
 
     // Emitters:
-    const lerpSpeed = 0.01;
+    const lerpSpeed = 0.02;
     for (let t of trails) {
-        const movementDirectionPos = math.getPosAtAngleAndDistance(t.position, t.angleRad, 1000);
-        t.position = math.getCoordsAtDistanceTowardsTarget(t.position, movementDirectionPos, t.velocity);
-        const distanceToTarget = math.distance(t.position, t.target);
-        if (distanceToTarget <= t.velocity * 2) {
-            // Stop moving and stop emitting new particles once it reaches it's destination
-            t.position = Vec.clone(t.target);
+        if (t.lerp <= 1.0) {
+            t.position = t.moveFn(t.lerp)
+            t.lerp += lerpSpeed;
             t.emitter.updateOwnerPos(t.position.x, t.position.y);
+        } else {
             // Essentially, stop spawning new particles
             t.emitter.frequency = 10000;
-        }
-        const targetRad = Vec.getAngleBetweenVec2s(t.position, t.target);
-        const diffToTargetRad = Math.abs(targetRad - t.angleRad);
-        if (Math.abs(diffToTargetRad) < 0.01) {
-            t.angleRad = targetRad;
-        } else {
-            t.lerp += lerpSpeed;
-            t.angleRad = math.lerp(t.angleRad, targetRad, t.lerp);
-        }
-        t.emitter.updateOwnerPos(t.position.x, t.position.y);
-        if (Vec.equal(t.position, t.target)) {
             // resolve trail as soon as it reaches it's target
             t.resolver();
-            if (Vec.equal(t.position, t.target) && t.emitter.particleCount == 0) {
+            if (t.emitter.particleCount == 0) {
                 cleanUpTrail(t);
             }
         }

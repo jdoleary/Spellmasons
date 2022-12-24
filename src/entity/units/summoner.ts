@@ -72,7 +72,7 @@ export async function summonerAction(unit: Unit.IUnit, ableToSummon: boolean, un
             sourceUnit = closeUnit;
           }
 
-          lastPromise = makeManaTrail(unit, coords, '#930e0e', '#ff0000').then(() => {
+          lastPromise = makeManaTrail(unit, coords, underworld, '#930e0e', '#ff0000').then(() => {
             if (sourceUnit) {
               const summonedUnit = Unit.create(
                 sourceUnit.id,
@@ -117,7 +117,7 @@ export async function summonerAction(unit: Unit.IUnit, ableToSummon: boolean, un
           new Promise<void>(resolve => oneOffImage(unit, 'units/summonerMagic', containerUnits, resolve)).then(() => {
             unit.x = -1000;
             unit.y = -1000;
-            makeManaTrail(teleportFromLocation, teleportToLocation, '#931e0e', '#ff0000').then(() => {
+            makeManaTrail(teleportFromLocation, teleportToLocation, underworld, '#774772', '#5b3357').then(() => {
               new Promise<void>(resolve => oneOffImage(teleportToLocation, 'units/summonerMagic', containerUnits, resolve)).then(() => {
                 unit.x = teleportToLocation.x;
                 unit.y = teleportToLocation.y;
