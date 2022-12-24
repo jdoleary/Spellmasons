@@ -63,7 +63,7 @@ import { getBestRangedLOSTarget } from './entity/units/actions/rangedAction';
 import { hostGiveClientGameState, IHostApp } from './network/networkUtil';
 import { healthAllyGreen, healthHurtRed, healthRed } from './graphics/ui/colors';
 import objectHash from 'object-hash';
-import { withinMeleeRange } from './entity/units/actions/golemAction';
+import { withinMeleeRange } from './entity/units/actions/meleeAction';
 import { baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLimits, Limits as Limits, makeFinalTileImages, Map, Tile, toObstacle } from './MapOrganicCave';
 import { Material } from './Conway';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndexPreventWrap } from './jmath/ArrayUtil';

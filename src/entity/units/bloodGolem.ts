@@ -1,6 +1,6 @@
 import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
-import { action } from './actions/golemAction';
+import { meleeAction } from './actions/meleeAction';
 import * as config from '../../config'
 import * as Unit from '../Unit';
 import type Underworld from '../../Underworld';
@@ -54,7 +54,13 @@ const unit: UnitSource = {
       );
     }
   },
-  action,
+  action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
+    await meleeAction(unit, attackTargets, underworld, async (attackTarget: Unit.IUnit) => {
+      await Unit.playComboAnimation(unit, unit.animations.attack, async () =>
+        Unit.takeDamage(attackTarget, unit.damage, unit, underworld, false, undefined)
+      );
+    })
+  },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
     const closestUnit = Unit.findClosestUnitInDifferentFaction(unit, underworld);
     if (closestUnit) {
