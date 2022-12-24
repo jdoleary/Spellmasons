@@ -61,6 +61,11 @@ function animateRend(targets: Vec2[], quantity: number, prediction: boolean): Pr
   if (!prediction) {
     return raceTimeout(500 + 120 * quantity, 'animateRend',
       new Promise<void>((resolve) => {
+        // Resolve immediately if there are no targets
+        if (targets.length == 0) {
+          resolve();
+          return
+        }
         for (let unit of targets) {
           // For rend effect only, make more instances going upward for each quantity
           for (let q = 0; q < quantity; q++) {
@@ -77,7 +82,6 @@ function animateRend(targets: Vec2[], quantity: number, prediction: boolean): Pr
                     Image.hide(image)
                     Image.cleanup(image);
                     if (isLastAnimatedInstance) {
-
                       resolve()
                     }
                   }
