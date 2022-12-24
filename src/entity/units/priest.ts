@@ -18,18 +18,19 @@ async function animatePriestProjectileAndHit(self: Unit.IUnit, target: Unit.IUni
   );
 }
 async function resurrectOneOf(self: Unit.IUnit, units: Unit.IUnit[], underworld: Underworld): Promise<boolean> {
+  if (units.length == 0) {
+    return false;
+  }
   playSFXKey('priestAttack');
   for (let ally of units) {
-    if (Unit.inRange(self, ally)) {
-      await Unit.playAnimation(self, unit.animations.attack);
-      await animatePriestProjectileAndHit(self, ally);
-      const { targetedUnits } = await underworld.castCards({}, self, [resurrect.id], ally, false);
-      for (let unit of targetedUnits) {
-        // Add summoning sickeness so they can't act after they are summoned
-        Unit.addModifier(unit, summoningSicknessId, underworld, false);
-      }
-      return true;
+    await Unit.playAnimation(self, unit.animations.attack);
+    await animatePriestProjectileAndHit(self, ally);
+    const { targetedUnits } = await underworld.castCards({}, self, [resurrect.id], ally, false);
+    for (let unit of targetedUnits) {
+      // Add summoning sickeness so they can't act after they are summoned
+      Unit.addModifier(unit, summoningSicknessId, underworld, false);
     }
+    return true;
   }
   return false;
 
@@ -95,7 +96,7 @@ const unit: UnitSource = {
     if (unit.mana < manaCostToCast) {
       return [];
     }
-    const resurrectableAllies = underworld.units.filter(u => u.faction == unit.faction && !u.alive);
+    const resurrectableAllies = underworld.units.filter(u => u.faction == unit.faction && !u.alive && Unit.inRange(unit, u));
     return resurrectableAllies;
   }
 };
