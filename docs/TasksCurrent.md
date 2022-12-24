@@ -1,6 +1,4 @@
 # Priority
-- bug: I heard priest cast but he didn't (he was out of range of the corse)
-    - priest shows that it will attack even when it's out of range
 - Make status page for app running headless server so I can tell how many users are connected, etc and historical info
 
 # To be Triaged
