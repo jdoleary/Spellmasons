@@ -96,7 +96,13 @@ const unit: UnitSource = {
     if (unit.mana < manaCostToCast) {
       return [];
     }
-    const resurrectableAllies = underworld.units.filter(u => u.faction == unit.faction && !u.alive && Unit.inRange(unit, u));
+    const resurrectableAllies = underworld.units.filter(u =>
+      u.faction == unit.faction
+      && !u.alive
+      && Unit.inRange(unit, u)
+      // Do not allow priest to rez each other.
+      // That would be super annoying for players
+      && u.unitSourceId !== unit.unitSourceId);
     return resurrectableAllies;
   }
 };
