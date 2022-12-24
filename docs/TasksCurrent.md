@@ -3,8 +3,6 @@
 - All melee unit actions
 - Summoner new behavior
 # Priority
-- bug: player used stamina while spawning???
-    - this happens after a game restart after a loss
 - What happens if you press multiplayer 'connect' twice while it's still connecting
 - bug: if a player readies up after the current player has already seen cinematic it replays cinematic
 - bug: vampire stopped moving after being pushed

@@ -189,6 +189,12 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
   player.unit.x = -1000;
   player.unit.y = -1000;
 
+  // Clear the player units path when resetting
+  // This prevents a bug where on a multiplayer game restart after a loss
+  // the player unit's stamina would drain while they were picking a spawn point
+  // because they still had a path set
+  player.unit.path = undefined;
+
   if (elInstructions && globalThis.player == player) {
     elInstructions.innerHTML = 'Choose a place to spawn with <img src="mouse-LMB-bg.png" alt="Left Mouse Button"/>'
   }
