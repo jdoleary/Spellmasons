@@ -1229,7 +1229,12 @@ function createContextMenuOptions(menu: HTMLElement, overworld: Overworld) {
   for (let { label, action, domQueryContainer, supportInMultiplayer } of Object.values(adminCommands)) {
     // Make DOM button to trigger command
     let el = document.createElement('li');
-    el.innerHTML = label
+    if (Object.keys(allUnits).includes(label)) {
+      // Add unit summon image to help identify them
+      el.innerHTML = `<img width="32px" height="32px" src="images/spell/spellIconSummon_${label.split(' ').join('').toLowerCase()}.png"/>&nbsp;${label}`
+    } else {
+      el.innerHTML = label;
+    }
     // cache mouse position when context menu is created
     const pos = overworld.underworld.getMousePos();
     el.addEventListener('click', () => {
