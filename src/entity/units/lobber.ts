@@ -18,14 +18,14 @@ const unit: UnitSource = {
   unitProps: {
     attackRange: 400,
     bloodColor: bloodLobber,
-    healthMax: 8,
+    healthMax: 6,
     damage: 2,
     manaCostToCast: 15
   },
   spawnParams: {
     probability: 40,
-    budgetCost: 3,
-    unavailableUntilLevelIndex: 0,
+    budgetCost: 4,
+    unavailableUntilLevelIndex: 2,
   },
   animations: {
     idle: 'units/lobberIdle',

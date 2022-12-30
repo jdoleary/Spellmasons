@@ -15,7 +15,7 @@ import { clone, Vec2 } from '../../jmath/Vec';
 import { isCoordInLiquid } from '../Obstacle';
 
 export const SUMMONER_ID = 'summoner';
-const manaCostToCast = 30;
+const manaCostToCast = 60;
 const unit: UnitSource = {
   id: SUMMONER_ID,
   info: {
