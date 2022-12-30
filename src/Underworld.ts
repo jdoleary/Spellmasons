@@ -1999,11 +1999,11 @@ export default class Underworld {
     if (globalThis.player) {
       // Turns can only be manually ended during the PlayerTurns phase
       if (this.isMyTurn()) {
-        // For local development only, the game quicksaves for development purposes
-        // so I can jump back to right before I ended my turn
-        if (location.href.includes('localhost')) {
-          // Check globalThis.player.isSpawned to prevent quicksaving an invalid underworld file
-          if (globalThis.save && globalThis.player.isSpawned) {
+        // Check globalThis.player.isSpawned to prevent quicksaving an invalid underworld file
+        if (globalThis.save && globalThis.player.isSpawned) {
+          // For now, only save if in a singleplayer game (as determined by solomode_client_id)
+          // because save support hasn't been added to multiplayer yet
+          if (globalThis.player.clientId == 'solomode_client_id') {
             console.info(`Dev: quick saving game as "${globalThis.quicksaveKey}"`);
             globalThis.save(globalThis.quicksaveKey);
           }
