@@ -3008,35 +3008,35 @@ type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? nev
 type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underworld>, null | undefined>;
 export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "pie" | "overworld" | "debugGraphics" | "players" | "units" | "pickups" | "obstacles" | "random" | "gameLoop" | "particleFollowers">;
 
-// globalThis.testUnitAlgorithms = () => {
+globalThis.testUnitAlgorithms = () => {
 
-//   console.log('Previous:')
-//   for (let i = 0; i < 10; i++) {
-//     const enemies = getEnemiesForAltitude(globalThis.devUnderworld, i)
-//     const sums = enemies.reduce((sums, cur) => {
-//       if (!sums[cur]) {
-//         sums[cur] = 1;
-//       } else {
-//         sums[cur] += 1
-//       }
-//       return sums;
-//     }, {})
-//     console.log(`level ${i}`, sums);
-//   }
-//   console.log('New:')
-//   for (let i = 0; i < 10; i++) {
-//     const enemies = getEnemiesForAltitude2(globalThis.devUnderworld, i)
-//     const sums = enemies.reduce((sums, cur) => {
-//       if (!sums[cur]) {
-//         sums[cur] = 1;
-//       } else {
-//         sums[cur] += 1
-//       }
-//       return sums;
-//     }, {})
-//     console.log(`level ${i}`, sums);
-//   }
-// }
+  console.log('Previous:')
+  for (let i = 0; i < 10; i++) {
+    const enemies = getEnemiesForAltitude(globalThis.devUnderworld, i)
+    const sums = enemies.reduce((sums, cur) => {
+      if (!sums[cur]) {
+        sums[cur] = 1;
+      } else {
+        sums[cur] += 1
+      }
+      return sums;
+    }, {})
+    console.log(`level ${i}`, sums);
+  }
+  console.log('New:')
+  for (let i = 0; i < 10; i++) {
+    const enemies = getEnemiesForAltitude2(globalThis.devUnderworld, i)
+    const sums = enemies.reduce((sums, cur) => {
+      if (!sums[cur]) {
+        sums[cur] = 1;
+      } else {
+        sums[cur] += 1
+      }
+      return sums;
+    }, {})
+    console.log(`level ${i}`, sums);
+  }
+}
 
 function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): string[] {
   // Feel: Each level should feel "themed"
@@ -3084,11 +3084,12 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
         budgetLeft--;
         continue;
       }
-      // Never let one unit type take up more than 70% of the budget
-      const maxNumberOfThisUnit = Math.floor(totalBudget * 0.7 / chosenUnitType.budgetCost);
+      // Never let one unit type take up more than 70% of the budget (this prevents a level from being
+      // mostly an expensive unit)
+      // and never let one unit type have more instances than the levelIndex (this prevents
+      // late game levels with a huge budget from having an absurd amount of cheap units)
+      const maxNumberOfThisUnit = Math.min(levelIndex, Math.floor(totalBudget * 0.7 / chosenUnitType.budgetCost));
       const howMany = randInt(underworld.random, 1, maxNumberOfThisUnit);
-      // console.log('jtest budget', budgetLeft);
-      // console.log('jtest unit spawn', chosenUnitType, howMany, 'of possible:', maxNumberOfThisUnit);
       for (let i = 0; i < howMany; i++) {
         units.push(chosenUnitType.id);
         budgetLeft -= chosenUnitType.budgetCost;
