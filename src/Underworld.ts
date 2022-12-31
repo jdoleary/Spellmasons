@@ -76,7 +76,7 @@ import { createVisualLobbingProjectile } from './entity/Projectile';
 import { isOutOfRange } from './PlayerUtils';
 import { DisplayObject, State, TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
-import { explain, EXPLAIN_MISSED_SCROLL, EXPLAIN_PING, EXPLAIN_SCROLL, isTutorialComplete, tutorialCompleteTask, tutorialShowTask } from './graphics/Explain';
+import { explain, EXPLAIN_MISSED_SCROLL, EXPLAIN_PING, EXPLAIN_SCROLL, isFirstTutorialStepComplete, tutorialCompleteTask, tutorialShowTask } from './graphics/Explain';
 import { makeScrollDissapearParticles } from './graphics/ParticleCollection';
 import { ensureAllClientsHaveAssociatedPlayers, Overworld } from './Overworld';
 import { Emitter } from '@pixi/particle-emitter';
@@ -1245,12 +1245,13 @@ export default class Underworld {
       console.error('Could not find biome for levelIndex: ', levelIndex);
     }
 
-    const useTutorialStartLevel = !isTutorialComplete() && levelIndex == 0;
+    const isTutorialRun = !isFirstTutorialStepComplete();
+    const useTutorialStartLevel = isTutorialRun && levelIndex == 0;
     const caveParams = useTutorialStartLevel
       ? caveSizes.tutorial
       : (levelIndex > 6
         ? caveSizes.medium
-        : !isTutorialComplete()
+        : isTutorialRun
           ? caveSizes.extrasmall
           : caveSizes.small);
 
@@ -1281,7 +1282,7 @@ export default class Underworld {
     levelData.imageOnlyTiles = tiles.flatMap(x => x == undefined ? [] : [x]);
 
     // Spawn units at the start of the level
-    let unitIds = getEnemiesForAltitude(this, this.levelIndex);
+    let unitIds = getEnemiesForAltitude2(this, isTutorialRun ? Math.max(this.levelIndex - 1, 0) : this.levelIndex);
     if (globalThis.allowCookies && useTutorialStartLevel) {
       unitIds = [];
       this.levelIndex--;
@@ -2983,35 +2984,35 @@ type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? nev
 type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underworld>, null | undefined>;
 export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "pie" | "overworld" | "debugGraphics" | "players" | "units" | "pickups" | "obstacles" | "random" | "gameLoop" | "particleFollowers">;
 
-// globalThis.testUnitAlgorithms = () => {
+globalThis.testUnitAlgorithms = () => {
 
-//   console.log('Previous:')
-//   for (let i = 0; i < 10; i++) {
-//     const enemies = getEnemiesForAltitude(globalThis.devUnderworld, i)
-//     const sums = enemies.reduce((sums, cur) => {
-//       if (!sums[cur]) {
-//         sums[cur] = 1;
-//       } else {
-//         sums[cur] += 1
-//       }
-//       return sums;
-//     }, {})
-//     console.log(`level ${i}`, sums);
-//   }
-//   console.log('New:')
-//   for (let i = 0; i < 10; i++) {
-//     const enemies = getEnemiesForAltitude2(globalThis.devUnderworld, i)
-//     const sums = enemies.reduce((sums, cur) => {
-//       if (!sums[cur]) {
-//         sums[cur] = 1;
-//       } else {
-//         sums[cur] += 1
-//       }
-//       return sums;
-//     }, {})
-//     console.log(`level ${i}`, sums);
-//   }
-// }
+  console.log('Previous:')
+  for (let i = 0; i < 10; i++) {
+    const enemies = getEnemiesForAltitude(globalThis.devUnderworld, i)
+    const sums = enemies.reduce((sums, cur) => {
+      if (!sums[cur]) {
+        sums[cur] = 1;
+      } else {
+        sums[cur] += 1
+      }
+      return sums;
+    }, {})
+    console.log(`level ${i}`, sums);
+  }
+  console.log('New:')
+  for (let i = 0; i < 10; i++) {
+    const enemies = getEnemiesForAltitude2(globalThis.devUnderworld, i)
+    const sums = enemies.reduce((sums, cur) => {
+      if (!sums[cur]) {
+        sums[cur] = 1;
+      } else {
+        sums[cur] += 1
+      }
+      return sums;
+    }, {})
+    console.log(`level ${i}`, sums);
+  }
+}
 
 function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): string[] {
   // Feel: Each level should feel "themed"
@@ -3040,7 +3041,8 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
   // Now that we've determined which unit types will be in the level we have to
   // budget out the quantity
   let units = [];
-  let budgetLeft = 10 + (levelIndex + 1) * (levelIndex + 1);
+  let budgetLeft = 2 + (levelIndex + 1) * (levelIndex + 1);
+  console.log('jtest budget', levelIndex, budgetLeft);
   const totalBudget = budgetLeft;
   // How we choose:
   // 1. Start with the most expensive unit and random a number between 1 and 50% budget / unit budget cost
@@ -3071,11 +3073,8 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
 
 // Idea: Higher probability of tougher units at certain levels
 function getEnemiesForAltitude(underworld: Underworld, levelIndex: number): string[] {
-  const firstTimePlaying = !isTutorialComplete();
-  const numberOfUnits = firstTimePlaying
-    // Face a reduced number of enemies on firstTimePlaying
-    ? (levelIndex == 1 ? 1 : 2 + levelIndex)
-    : 3 + levelIndex;
+  console.log('jtest get enemies', levelIndex);
+  const numberOfUnits = 3 + levelIndex;
   const possibleUnitsToChoose = Object.values(allUnits)
     .filter(u => u.spawnParams && u.spawnParams.unavailableUntilLevelIndex <= levelIndex)
     .map(u => ({ id: u.id, probability: u.spawnParams ? u.spawnParams.probability : 0 }))

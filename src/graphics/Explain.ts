@@ -374,13 +374,14 @@ export function isTutorialComplete() {
         return true;
     }
     // Update tutorialChecklist from storage:
-    for (let key of Object.keys(tutorialChecklist)) {
-        const item = tutorialChecklist[key as keyof TutorialChecklist];
+    const tutorialKeys: (keyof TutorialChecklist)[] = Object.keys(tutorialChecklist) as (keyof TutorialChecklist)[]
+    for (let key of tutorialKeys) {
+        const item = tutorialChecklist[key];
         if (storage.get(getTutorialStorageKey(key)) === COMPLETE) {
             item.complete = true;
         }
     }
-    if (Object.keys(tutorialChecklist).every(key => tutorialChecklist[key as keyof TutorialChecklist].complete)) {
+    if (tutorialKeys.every(key => tutorialChecklist[key].complete)) {
         setTutorialVisiblity(false);
         return true;
     } else {
@@ -389,3 +390,19 @@ export function isTutorialComplete() {
     }
 }
 globalThis.isTutorialComplete = isTutorialComplete;
+
+// Used to spawn the player into early tutorial levels if they've never played before
+// Will only return true for the first two steps of the tutorial, once they know how to
+// spawn and portal just let them play regular
+export function isFirstTutorialStepComplete() {
+    if (globalThis.headless) {
+        // Never run the tutorial on a headless server because it is hosting games for clients
+        return true;
+    }
+    const firstStepKeys: (keyof TutorialChecklist)[] = ['spawn', 'portal'];
+    if (firstStepKeys.every(key => tutorialChecklist[key].complete)) {
+        return true;
+    } else {
+        return false;
+    }
+}
