@@ -32,11 +32,9 @@ Minor versions are incremented for functional non-broken commit states that shou
 ## Backup
 Backup repositories are on Gitlab and Keybase.  The primary repository is on Github
 
-## Environments
-Pushing to `master` will update play.spellmasons.com which is used for testing (will be renamed eventually)
-To Update the headless servers, start Docker Desktop and run `./deploy.sh`
 
 ## Pushing a new version
+To Update the headless servers, start Docker Desktop and run `./deploy.sh`
 - Run alias `publish` as a shortcut to update the master branch (this is not production) but it will update play.spellmasons.com
 - To Fully build and push a new version to production
     - Run `npm run build` in the `Golems-menu` repo
