@@ -3008,35 +3008,35 @@ type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? nev
 type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underworld>, null | undefined>;
 export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "pie" | "overworld" | "debugGraphics" | "players" | "units" | "pickups" | "obstacles" | "random" | "gameLoop" | "particleFollowers">;
 
-globalThis.testUnitAlgorithms = () => {
+// globalThis.testUnitAlgorithms = () => {
 
-  console.log('Previous:')
-  for (let i = 0; i < 10; i++) {
-    const enemies = getEnemiesForAltitude(globalThis.devUnderworld, i)
-    const sums = enemies.reduce((sums, cur) => {
-      if (!sums[cur]) {
-        sums[cur] = 1;
-      } else {
-        sums[cur] += 1
-      }
-      return sums;
-    }, {})
-    console.log(`level ${i}`, sums);
-  }
-  console.log('New:')
-  for (let i = 0; i < 10; i++) {
-    const enemies = getEnemiesForAltitude2(globalThis.devUnderworld, i)
-    const sums = enemies.reduce((sums, cur) => {
-      if (!sums[cur]) {
-        sums[cur] = 1;
-      } else {
-        sums[cur] += 1
-      }
-      return sums;
-    }, {})
-    console.log(`level ${i}`, sums);
-  }
-}
+//   console.log('Previous:')
+//   for (let i = 0; i < 10; i++) {
+//     const enemies = getEnemiesForAltitude(globalThis.devUnderworld, i)
+//     const sums = enemies.reduce((sums, cur) => {
+//       if (!sums[cur]) {
+//         sums[cur] = 1;
+//       } else {
+//         sums[cur] += 1
+//       }
+//       return sums;
+//     }, {})
+//     console.log(`level ${i}`, sums);
+//   }
+//   console.log('New:')
+//   for (let i = 0; i < 10; i++) {
+//     const enemies = getEnemiesForAltitude2(globalThis.devUnderworld, i)
+//     const sums = enemies.reduce((sums, cur) => {
+//       if (!sums[cur]) {
+//         sums[cur] = 1;
+//       } else {
+//         sums[cur] += 1
+//       }
+//       return sums;
+//     }, {})
+//     console.log(`level ${i}`, sums);
+//   }
+// }
 
 function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): string[] {
   // Feel: Each level should feel "themed"
