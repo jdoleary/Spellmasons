@@ -74,12 +74,13 @@ import type PieClient from '@websocketpie/client';
 import { makeForcePush } from './cards/push';
 import { createVisualLobbingProjectile } from './entity/Projectile';
 import { isOutOfRange } from './PlayerUtils';
-import { DisplayObject, State, TilingSprite } from 'pixi.js';
+import { DisplayObject, TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
-import { explain, EXPLAIN_MISSED_SCROLL, EXPLAIN_PING, EXPLAIN_SCROLL, isFirstTutorialStepComplete, tutorialCompleteTask, tutorialShowTask } from './graphics/Explain';
+import { explain, EXPLAIN_MISSED_SCROLL, EXPLAIN_PING, EXPLAIN_SCROLL, isFirstTutorialStepComplete, isTutorialComplete, tutorialCompleteTask, tutorialShowTask } from './graphics/Explain';
 import { makeScrollDissapearParticles } from './graphics/ParticleCollection';
 import { ensureAllClientsHaveAssociatedPlayers, Overworld } from './Overworld';
 import { Emitter } from '@pixi/particle-emitter';
+import { golem_unit_id } from './entity/units/golem';
 
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
@@ -101,6 +102,8 @@ const elUpgradePickerLabel = document.getElementById('upgrade-picker-label') as 
 
 export const showUpgradesClassName = 'showUpgrades';
 
+// Must be out of Underworld context, so that it can get set on the first level only
+let isFirstEverPlaySession = false;
 let lastTime = 0;
 let requestAnimationFrameGameLoopId: number;
 const cleanupRegistry = globalThis.hasOwnProperty('FinalizationRegistry') ? new FinalizationRegistry((heldValue) => {
@@ -1245,9 +1248,12 @@ export default class Underworld {
       console.error('Could not find biome for levelIndex: ', levelIndex);
     }
 
-    const isTutorialRun = !isFirstTutorialStepComplete();
-    const useTutorialStartLevel = isTutorialRun && levelIndex == 0;
-    const caveParams = useTutorialStartLevel
+    const isTutorialRun = !isTutorialComplete();
+    if (levelIndex == 0) {
+      isFirstEverPlaySession = !isFirstTutorialStepComplete();
+    }
+    const isTutorialStartLevel = isFirstEverPlaySession && levelIndex == 0;
+    const caveParams = isTutorialStartLevel
       ? caveSizes.tutorial
       : (levelIndex > 6
         ? caveSizes.medium
@@ -1281,14 +1287,32 @@ export default class Underworld {
     // flatMap removes undefineds
     levelData.imageOnlyTiles = tiles.flatMap(x => x == undefined ? [] : [x]);
 
+    let levelIndexForEnemySpawn = levelIndex;
+    // Adjust difficulty via level index for tutorial runs so that it's not as hard
+    if (isFirstEverPlaySession) {
+      // This will trigger the first time they play which, working together with the next
+      // if block, results in a levelIndex of 2 less than it would be which allows the first
+      // 2 levels to be easier
+      levelIndexForEnemySpawn -= 1;
+    }
+    if (isTutorialRun) {
+      // This block works together with the above to make the very first run -2 easier
+      // but if the player plays again (not their first time), but haven't completed the tutorial
+      // this block will make it easier by -1
+      levelIndexForEnemySpawn -= 1;
+    }
+    // End Block: Adjust difficulty via level index for tutorial runs so that it's not as hard
+
     // Spawn units at the start of the level
-    let unitIds = getEnemiesForAltitude2(this, isTutorialRun ? Math.max(this.levelIndex - 1, 0) : this.levelIndex);
-    if (globalThis.allowCookies && useTutorialStartLevel) {
+    let unitIds = getEnemiesForAltitude2(this, levelIndexForEnemySpawn);
+    if (isTutorialStartLevel) {
       unitIds = [];
-      this.levelIndex--;
+    } else if (levelIndexForEnemySpawn < 0) {
+      unitIds = [golem_unit_id];
+
     }
     // TODO numberOfPickups should scale with level size
-    const numberOfPickups = useTutorialStartLevel ? 0 : 4;
+    const numberOfPickups = isTutorialStartLevel ? 0 : 4;
     for (let i = 0; i < numberOfPickups; i++) {
       if (validSpawnCoords.length == 0) { break; }
       const choice = chooseObjectWithProbability(Pickup.pickups.map((p, i) => ({ index: i, probability: p.probability })), this.random);
@@ -1705,7 +1729,7 @@ export default class Underworld {
     return level;
   }
   async generateLevelData(levelIndex: number): Promise<LevelData> {
-    console.log('Setup: generateLevelData')
+    console.log('Setup: generateLevelData');
     return new Promise<LevelData>(resolve => {
       document.body?.classList.toggle('loading', true);
       // setTimeout allows the UI to refresh before locking up the CPU with
@@ -3021,9 +3045,13 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
   // - The higher the level number the more types of enemies can spawn
   // - The higher the level number the more amount of enemies can spawn
   //   - But it should consider a budget, for example, lots of high level enemies should mean less low level enemies
-  const numberOfTypesOfEnemies = 2 + Math.floor(levelIndex / 2);
+
+  // Prevent negative values which can happen during tutorial
+  const adjustedLevelIndex = Math.max(0, levelIndex);
+
+  const numberOfTypesOfEnemies = 2 + Math.floor(adjustedLevelIndex / 2);
   let possibleUnitsToChoose = Object.values(allUnits)
-    .filter(u => u.spawnParams && u.spawnParams.unavailableUntilLevelIndex <= levelIndex)
+    .filter(u => u.spawnParams && u.spawnParams.unavailableUntilLevelIndex <= adjustedLevelIndex)
     .map(u => ({ id: u.id, probability: u.spawnParams?.probability || 1, budgetCost: u.spawnParams?.budgetCost || 1 }))
   const unitTypes = Array(numberOfTypesOfEnemies).fill(null)
     // flatMap is used to remove any undefineds
@@ -3041,8 +3069,7 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
   // Now that we've determined which unit types will be in the level we have to
   // budget out the quantity
   let units = [];
-  let budgetLeft = 2 + (levelIndex + 1) * (levelIndex + 1);
-  console.log('jtest budget', levelIndex, budgetLeft);
+  let budgetLeft = 2 + (adjustedLevelIndex + 1) * (adjustedLevelIndex + 1);
   const totalBudget = budgetLeft;
   // How we choose:
   // 1. Start with the most expensive unit and random a number between 1 and 50% budget / unit budget cost
@@ -3073,7 +3100,6 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
 
 // Idea: Higher probability of tougher units at certain levels
 function getEnemiesForAltitude(underworld: Underworld, levelIndex: number): string[] {
-  console.log('jtest get enemies', levelIndex);
   const numberOfUnits = 3 + levelIndex;
   const possibleUnitsToChoose = Object.values(allUnits)
     .filter(u => u.spawnParams && u.spawnParams.unavailableUntilLevelIndex <= levelIndex)

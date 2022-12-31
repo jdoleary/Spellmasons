@@ -5,8 +5,9 @@ import * as config from '../../config'
 import * as Unit from '../Unit';
 import type Underworld from '../../Underworld';
 
+export const golem_unit_id = 'golem'
 const unit: UnitSource = {
-  id: 'golem',
+  id: golem_unit_id,
   info: {
     description: 'A simple but persistant creature that will pursue its enemies and attack them if within arm\'s reach.',
     image: 'units/gruntIdle',
