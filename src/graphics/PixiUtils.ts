@@ -368,23 +368,29 @@ export function isCameraAutoFollowing(): boolean {
 const elCameraRecenterTip = document.getElementById('camera-recenter-tip');
 export function cameraAutoFollow(active: boolean) {
   utilProps.doCameraAutoFollow = active;
+  document.body?.classList.toggle('auto-camera', active);
+}
+
+// Show a tip when player is nearly offscreen to alert the player how to recenter
+// the camera
+export function tryShowRecenterTip() {
   if (!utilProps.doCameraAutoFollow && elCameraRecenterTip) {
     if (globalThis.player?.isSpawned) {
       const { zoom } = getCamera();
       // divide by 2: changes it from diameter to radius
       const screenRadiusInGameSpace = Math.min(elPIXIHolder.clientWidth, elPIXIHolder.clientHeight) / zoom / 2;
-      const marginProportion = 0.90;
+      const margin = config.COLLISION_MESH_RADIUS * 2;
       const cameraGameSpaceCenterDistanceToPlayer = math.distance(getCameraCenterInGameSpace(), globalThis.player.unit);
       // Only show recenter tip if player is near or beyond the edge of the screen
-      if (cameraGameSpaceCenterDistanceToPlayer > screenRadiusInGameSpace * marginProportion) {
-        elCameraRecenterTip.innerHTML = `Press ${keyToHumanReadable(KeyMapping.recenterCamera)} to make the view auto follow you`;
+      if (cameraGameSpaceCenterDistanceToPlayer + margin > screenRadiusInGameSpace) {
+        elCameraRecenterTip.innerHTML = `Press ${keyToHumanReadable(KeyMapping.recenterCamera)} ${i18n('to make the view auto follow you')}`;
       } else {
         elCameraRecenterTip.innerHTML = '';
       }
     }
   }
-  document.body?.classList.toggle('auto-camera', active);
 }
+
 export function getCamera() {
   return {
     x: !app ? 0 : -app.stage.x,
@@ -514,7 +520,9 @@ export function updateCameraPosition(underworld: Underworld) {
       const nameText = p.unit.image.sprite.children.find(c => c.jid === config.NAME_TEXT_ID) as undefined | PIXI.Text
       updateNameText(nameText, zoom);
     }
-  })
+  });
+
+  tryShowRecenterTip();
 }
 // Clamp the camera position so it doesn't go too far out of bounds when autofollowing a target
 function clampCameraPosition(camPos: Vec2, zoom: number, underworld: Underworld): Vec2 {
