@@ -34,7 +34,6 @@ Backup repositories are on Gitlab and Keybase.  The primary repository is on Git
 
 ## Environments
 Pushing to `master` will update play.spellmasons.com which is used for testing (will be renamed eventually)
-Run build first then, pushing to `production` branch will update assets.spellmasons.com which is what is used to pull production updates from
 To Update the headless servers, start Docker Desktop and run `./deploy.sh`
 
 ## Pushing a new version
