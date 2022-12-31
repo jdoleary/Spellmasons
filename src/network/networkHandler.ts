@@ -500,6 +500,9 @@ async function handleLoadGameState(payload: {
   }
   underworld.levelIndex = loadedGameState.levelIndex;
 
+  // Update the seed (this MUST come before syncronizeRNG)
+  underworld.seed = loadedGameState.seed;
+  // Now sync the seed-based RNG state
   if (loadedGameState.RNGState) {
     underworld.syncronizeRNG(loadedGameState.RNGState);
   }
