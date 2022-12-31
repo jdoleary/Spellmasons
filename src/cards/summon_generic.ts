@@ -62,6 +62,7 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean):
         rarity = CardRarity.FORBIDDEN;
     }
 
+    const expenseScaling = 5;
 
     return {
         card: {
@@ -70,14 +71,15 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean):
             sfx: 'summonDecoy',
             supportQuantity: false,
             // Make mana cost dependent on how late they show up in the game
-            manaCost: 2 * Math.max(60, (sourceUnit.spawnParams?.unavailableUntilLevelIndex || 1) * 20) * (asMiniboss ? 2 : 1),
+            manaCost: (sourceUnit.spawnParams?.budgetCost || 1) * 40 * (asMiniboss ? 2 : 1),
             healthCost: 0,
-            expenseScaling: 3,
+            expenseScaling,
             // These cards are not available as upgrades and must be accessed through capture_soul
             probability: 0,
             thumbnail: `spellIconSummon_${unitId.split(' ').join('').toLowerCase()}.png`,
             description: `
 Summons ${unitId[0]?.toLowerCase() == 'a' ? `an ${unitId}` : `a ${unitId}`} to fight for your faction.
+Takes ${expenseScaling} turns to return to original mana cost after casting.
     `,
             allowNonUnitTarget: true,
             effect: async (state, card, quantity, underworld, prediction) => {

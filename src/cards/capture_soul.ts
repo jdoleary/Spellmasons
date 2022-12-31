@@ -18,7 +18,8 @@ const spell: Spell = {
     expenseScaling: 2,
     thumbnail: 'spellIconCaptureSoul.png',
     description: `
-Captures the soul of the targeted unit allowing you to summon them at will in the future.
+Captures the soul of the targeted unit, granting you a summon card for that unit.
+The more powerful the captured soul is, the more mana it will cost to summon.
 This spell is destroyed in the process.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
