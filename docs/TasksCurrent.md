@@ -7,14 +7,12 @@
 - Add Boss and Looping (see branch `loop-tint-level`)
 
 # Validation
-- Next electron build, esure it logs       console.log("Register to receive Update events.");
-- All melee unit actions
-- Summoner new behavior
+- Done for now
 # Priority
+- bug: Getting "host app version doesn't match client version" on SOLOMODE
 - src: Issue with getEnemiesForAltitude2 based on budget it that it can make a TON of cheap units like in the 30s
 - bug: Updates are reupdating each time
 - bug: if I start a game, quit to main menu, go back to multiplayer I can't edit the server url field, until I alt tab and come back
-- bug: assets subdomain isn't updating in vercel
 - What happens if you press multiplayer 'connect' twice while it's still connecting
 - bug: vampire stopped moving after being pushed
     - after being pushed hard into a corner
