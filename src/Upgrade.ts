@@ -316,34 +316,34 @@ export const upgradeStatsSource: IUpgrade[] = [
     probability: 500,
     cost: { healthCost: 0, manaCost: 0 },
   },
-  // {
-  //   title: '+ Cast Range',
-  //   type: 'perk',
-  //   description: (player) =>
-  //     `Increases your maximum cast range by ${castRangeIncreaseProportion * 100}%`,
-  //   thumbnail: 'images/upgrades/todo.png',
-  //   effect: (player) => {
-  //     player.unit.attackRange += player.unit.attackRange * castRangeIncreaseProportion;
-  //   },
-  //   probability: 20,
-  //   cost: { healthCost: 0, manaCost: 0 },
-  // },
-  // {
-  //   title: '+ Max Stamina',
-  //   type: 'perk',
-  //   description: (player) =>
-  //     `Increases your stamina by ${maxStaminaIncreaseProportion * 100}%`,
-  //   thumbnail: 'images/spell/unknown.png',
-  //   effect: (player) => {
-  //     player.unit.staminaMax += player.unit.staminaMax * maxStaminaIncreaseProportion;
-  //     player.unit.stamina = player.unit.staminaMax;
-  //   },
-  //   probability: 20,
-  //   cost: { healthCost: 0, manaCost: 0 },
-  // },
+  {
+    title: '+ Cast Range',
+    type: 'perk',
+    description: (player) =>
+      `Increases your maximum cast range by ${castRangeIncreaseProportion * 100}%`,
+    thumbnail: 'images/upgrades/todo.png',
+    effect: (player) => {
+      player.unit.attackRange += player.unit.attackRange * castRangeIncreaseProportion;
+    },
+    probability: 20,
+    cost: { healthCost: 0, manaCost: 0 },
+  },
+  {
+    title: '+ Max Stamina',
+    type: 'perk',
+    description: (player) =>
+      `Increases your stamina by ${maxStaminaIncreaseProportion * 100}%`,
+    thumbnail: 'images/spell/unknown.png',
+    effect: (player) => {
+      player.unit.staminaMax += player.unit.staminaMax * maxStaminaIncreaseProportion;
+      player.unit.stamina = player.unit.staminaMax;
+    },
+    probability: 20,
+    cost: { healthCost: 0, manaCost: 0 },
+  },
 ];
 const maxManaIncreaseAmount = 10;
-const castRangeIncreaseProportion = 0.1;
+const castRangeIncreaseProportion = 0.2;
 const maxStaminaIncreaseProportion = 0.2;
 const maxHealthIncreaseAmount = 3;
 // const manaPerTurnIncreaseAmount = 8;
