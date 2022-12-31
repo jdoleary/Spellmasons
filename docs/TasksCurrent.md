@@ -5,6 +5,7 @@
 # Validation
 - Done for now
 # Priority
+- multi url was saved weird:`http://localhost:3000/?pieUrl=ws%3Alocalhost%3A8080&game=a`
 - Make capture soul cheaper
 - bug: Getting "host app version doesn't match client version" on SOLOMODE
 - src: Issue with getEnemiesForAltitude2 based on budget it that it can make a TON of cheap units like in the 30s
