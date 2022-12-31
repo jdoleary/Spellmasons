@@ -1,4 +1,5 @@
 # PreRelease Top Priorities
+- Prove that steam won't redownload the executable each time and will just change the deltas
 - Balanced / Difficult
 - Level Variety (not too samey)
     - 2nd style level generator (close quarters)
