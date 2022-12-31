@@ -46,5 +46,6 @@ To Update the headless servers, start Docker Desktop and run `./deploy.sh`
         - UPDATES BACKEND: Run `./deploy.sh` to push new version to the backend servers on Digital Ocean
         - Note: Make sure to run the previous step to update the build manifest before pushing to production
         - UPDATES FRONTEND: Run `git push https://github.com/jdoleary/spellmasons-build-assets-prod-2.git master` to push Frontend update to https://assets.spellsmasons.com which allows games to pull updates
+            - Note: You MUST push master branch or else it wont update the right domain name
             - Use the url rather than adding a remote so you don't accidentally auto push to prod.  (Until I have set up actual devops)
 - Go to `Golems-Electron-Build` and follow instructions IF you need to push a new package to Steam; HOWEVER, you probably shouldn't.  Updates are designed to be downloaded through assets.spellmasons.com
