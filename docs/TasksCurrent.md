@@ -1,8 +1,17 @@
+- Fix tutorial level spitting you out into too difficult level after it's done
+    - Tutorial level 3 is way too hard
+- Prevent from tutorial running over and over if you've already run the first level even if you haven't completed the whole tutorial
+- Figure out delta updates with new realization about Electron Forge.
+- Finalize getEnemiesForAltitude2
+    (fix too many cheap units problem)
+- Add Boss and Looping (see branch `loop-tint-level`)
+
 # Validation
 - Next electron build, esure it logs       console.log("Register to receive Update events.");
 - All melee unit actions
 - Summoner new behavior
 # Priority
+- src: Issue with getEnemiesForAltitude2 based on budget it that it can make a TON of cheap units like in the 30s
 - bug: Updates are reupdating each time
 - bug: if I start a game, quit to main menu, go back to multiplayer I can't edit the server url field, until I alt tab and come back
 - bug: assets subdomain isn't updating in vercel
@@ -15,6 +24,7 @@
 - Protect production branch from unintentional pushes
 
 # To be Triaged
+- sentry is logging onData 441 : SPELL [object Object] https://sentry.io/organizations/jordan-oleary/issues/3427377869/?project=6306205&query=is%3Aunresolved+%21level%3Awarning&referrer=issue-stream&statsPeriod=14d
 - bug: resume last run breaks (i think due to multiplayer)
 - bug: Save named "test" doesn't show up in the load list
 - bug: I seem to be getting race timeouts for Bloat, Slash, Rend, Rend, Rend
@@ -119,7 +129,7 @@ sync: Syncing units [ 0, 1, 2 ] [ 0, 1, 2 ]
 sync: Syncing players []
 initializeTurnPhase( Stalled )
 setTurnPhase( Stalled )
-    ```
+```
 - IMPORTANT: HOW DOES DIFFICULTY SCALE WITH A TON OF PLAYERS
 - IMPORTANT: Fix music only coming out of one channel
     - itshallnotfindme sounds soft in the right ear
@@ -204,17 +214,12 @@ setTurnPhase( Stalled )
 - h: "Heat seeking" enemy or spell
 - idea: spell that triggers onDeath effects "Playdead"
 - Liquid: blood could apply a curse when you fall in, like slowed movement
-- I need better targeting spells
-    - Target by proximity with no limit?
-        - Quantum link
 - thought: Spellmasons should have some element of risk/reward like 50% chance to double damage of next spell or something like that.  Think of my experience with slice and dice where I got a dice side that did 24 damage and affected the guy below.  If you could always have that it's no fun, too easy but because you can only sometimes get it when you're lucky is what makes it exciting.
     - also one-use spells could work well
-- add ghost archer
 - confuse spell
 - what attributes of a spell could be modified by other cards?
     - already: targets, quantity
     - new: radius, amount
-- Feature: perks
 - perk: long range cast only
 - perk: Swap your max health and max mana
 - Idea: "overwatch" where some archers can shoot even not on their turn if you walk in their LOS
@@ -222,8 +227,6 @@ setTurnPhase( Stalled )
 - An enemy that consumes allies to get stronger
 - idea; one use bargains (deals with the devil) that mix up your max stats.  or have a50% chance of good or bad outcome
 - Card: An attack range minimum but not a maximum so you CAN"T attack if they are too close
-- idea: summoner spells like elden ring
-    - they split your stats
 - enemy that debuffs blessings
 - "heat seaking" missle unit, explodes on contact
 - Card: Mind Control (changes faction temporarily)
