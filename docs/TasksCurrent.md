@@ -1,14 +1,13 @@
-- Finalize getEnemiesForAltitude2
-    (fix too many cheap units problem)
+- feature: Allow rerolling card selection
+- feature: Allow players to pick starting damage spell
+- feature: Randomly generated, improved perks (without names)
 - Add Boss and Looping (see branch `loop-tint-level`)
 
 # Validation
 - Done for now
 # Priority
 - multi url was saved weird:`http://localhost:3000/?pieUrl=ws%3Alocalhost%3A8080&game=a`
-- Make capture soul cheaper
 - bug: Getting "host app version doesn't match client version" on SOLOMODE
-- src: Issue with getEnemiesForAltitude2 based on budget it that it can make a TON of cheap units like in the 30s
 - bug: if I start a game, quit to main menu, go back to multiplayer I can't edit the server url field, until I alt tab and come back
 - What happens if you press multiplayer 'connect' twice while it's still connecting
 - bug: vampire stopped moving after being pushed
@@ -19,6 +18,8 @@
 - Protect production branch from unintentional pushes
 
 # To be Triaged
+- fix: tutorial comes up at the same time it asks you to pick a new spell
+- animate bloat
 - Remove "update" code in golems-menu
 - sentry is logging onData 441 : SPELL [object Object] https://sentry.io/organizations/jordan-oleary/issues/3427377869/?project=6306205&query=is%3Aunresolved+%21level%3Awarning&referrer=issue-stream&statsPeriod=14d
 - bug: resume last run breaks (i think due to multiplayer)

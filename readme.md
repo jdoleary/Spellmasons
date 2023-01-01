@@ -21,10 +21,6 @@ Using TexturePacker, add images, public/spell, and public/upgrades as smart fold
 Cards use a common api to allow for them to compose with each other.
 Some cards add modifiers and modifiers add events. Events are functions that are triggered when certain events occur.
 
-## Assets
-
-Using kenny game assets
-
 ## Notes
 
 Minor versions are incremented for functional non-broken commit states that should be able to run without changes.

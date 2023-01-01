@@ -1,12 +1,10 @@
 # PreRelease Top Priorities
-- Prove that steam won't redownload the executable each time and will just change the deltas
 - Balanced / Difficult
-- Level Variety (not too samey)
-    - 2nd style level generator (close quarters)
-    - Test getEnemiesForAltitude2 for balance
 - Boss
 - Looping
-- Server config by host (pvp, worms armageddon style customizations)
+- Extras
+    - 2nd style level generator (close quarters)
+    - Server config by host (pvp, worms armageddon style customizations)
 # Desired Schedule
 - December
         - Add automated testing
@@ -16,7 +14,6 @@
                 - https://stackoverflow.com/questions/57835535/trigger-click-event-at-x-y-coordinates-of-canvas-using-pure-vanilla-js
                 - https://stackoverflow.com/questions/2705583/how-to-simulate-a-click-with-javascript
         - DevOps: Make server version update whenvever the assets subdomain updates
-        - Support hosting a server from in the game exe
         - Satisfying end game (boss unit needed like the literal throne in Nuclear Throne)
             - Maybe don't introduce only one new unit each level, think of how Nuclear Throne does mini bosses
             - Obvious looping, maybe tint levels or something
@@ -29,27 +26,42 @@
         - Update music so it only changes song group once you reach a new biome
             - and so it will continue a song if the next level is in the same biome
 - January
-    - [Submit demo to IGN](https://corp.ign.com/submit-a-game)
-    - Features / Content
-        - Icons for perks
+    - Test sending `package` to steam instead of `make` installer
+        - Prove that steam won't redownload the executable each time and will just change the deltas
+        - Remove squirell code?
+        - Remove self-written update code
+    - Multiplayer
+        - Support hosting a server from in the game exe
         - Server Browser
-        - Balance Perks
-    - Publicity
-        - Use Steamworks "Currator Connect" Tool
+        - Server own-info page served over http
+        - Multiplayer save load with "take over player"
+        - Notify when version isn't same
+    - Features / Content
+        - Allow players to pick their starting damage spell
+        - Make pickups do something when destroyed
+        - Reroll / exchange cards (risk reward style)
+            - like maybe you can reroll but you have one less card to choose from each time
+        - Perks
+            - Styling for perks
+            - Use relative percentages rather than out of 100%
+            - Balance Perks
+            - Randomly generated perks
+        - Boss
+        - Looping
+        - Rerolling / exchanging spells
+        - Server Browser
+    - [Submit demo to IGN](https://corp.ign.com/submit-a-game)
     - Build tasks
         - Accessability / Localization Language Support / Spellcheck
         - Establish Minimum System Requirements and update Steam Page
-        - build: remove unneeded nuget package from build output?
-            - Can't remove, it is the update file https://github.com/vercel/hazel#updatewin32versionreleases
-            - Maybe I can remove it if I don't use the built-in update
-        - Squirrel Tasks
-            - Ensure 'electron-squirrel-startup' is handled correctly
-            - Ensure start app isn't added to desktop
         - Electron Security
+            - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
+            - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
         - Verify Cloud Saves
     - Add sentry errors to electron node files
     - Final QA
         - Manually test all spells for desync issues (in multiplayer)
+        - Test for desyncs on multiplayer
         - Bulletproof Updating and Error Reporting
     - Remove "Beta" Near version number
     - Release
@@ -76,12 +88,6 @@
             - Unplanned priorities
             - Lack of resources
             - Competing priorities
-- Milestone X | **Package as Electron App**
-    - Security
-        - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
-        - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
-    - Menu for community server selector
-    - Allow running local standalone server from inside app
 - Milestone | **Optimize game**
     - Optimize runPredictions: especially with expanding + corpse explosion
     - repelCircleFromLine is used for both unit crowding and wall physics and with wall physics it doesn't need a reference to underworld, that's only needed for unit crowding to make sure they don't crowd each other through walls
