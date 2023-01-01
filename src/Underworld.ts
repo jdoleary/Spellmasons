@@ -2138,10 +2138,12 @@ export default class Underworld {
           return;
         }
       }
+      // Reset reroll counter now that player has chosen a card
+      player.reroll = 0;
       // Decrement and 
       // Ensure it doesn't go negative
       player.upgradesLeftToChoose = Math.max(0, player.upgradesLeftToChoose - 1);
-    } else {
+    } else if (upgrade.type == 'perk') {
       if (player.perksLeftToChoose <= 0) {
         // if current player, manage the visibility of the upgrade screen
         if (player == globalThis.player) {
@@ -2156,9 +2158,17 @@ export default class Underworld {
       // Decrement and 
       // Ensure it doesn't go negative
       player.perksLeftToChoose = Math.max(0, player.perksLeftToChoose - 1);
+    } else if (upgrade.type == 'special') {
+      // Any future logic for special cards such as 'reroll' goes here
+
     }
     upgrade.effect(player, this);
-    player.upgrades.push(upgrade);
+
+    // Special upgrades don't get added to the upgrade list because they just
+    // execute some functionality on the client side
+    if (upgrade.type !== 'special') {
+      player.upgrades.push(upgrade);
+    }
     if (player == globalThis.player) {
       document.body?.querySelector(`.card[data-upgrade="${upgrade.title}"]`)?.classList.toggle('chosen', true);
       // Clear upgrades when current player has picked one
@@ -2210,7 +2220,12 @@ export default class Underworld {
       console.error('showUpgrades: elUpgradePicker or elUpgradePickerContent are undefined.');
     }
     if (player) {
-      const upgrades = Upgrade.generateUpgrades(player, 3, minimumProbability, isPerk);
+      const numberOfUpgradesToChooseFrom = 3 - player.reroll;
+      const upgrades = Upgrade.generateUpgrades(player, numberOfUpgradesToChooseFrom, minimumProbability, isPerk);
+      // Allow reroll if there is more than 1 upgrade to choose from
+      if (numberOfUpgradesToChooseFrom > 1) {
+        upgrades.push(Upgrade.rerollUpgrade);
+      }
       if (!upgrades.length) {
         // Player already has all the upgrades
         document.body?.classList.toggle(showUpgradesClassName, false);

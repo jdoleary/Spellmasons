@@ -57,6 +57,10 @@ export interface IPlayer {
   // note: menu depends on the name of this variable, if you refactor it
   // refactor it in Golem-Menu repo too
   lobbyReady: boolean;
+  // A counter that keeps track of how many times the player has rerolled
+  // their upgrade choice so that they get to pick from fewer each time they
+  // reroll.
+  reroll: number;
 }
 export function inPortal(player: IPlayer): boolean {
   return isNaN(player.unit.x) || isNaN(player.unit.y) || player.unit.x === null || player.unit.y === null;
@@ -95,6 +99,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
     perksLeftToChoose: 0,
     diedDuringLevel: false,
     lobbyReady: false,
+    reroll: 0,
   };
   // Player units get full mana every turn
   player.unit.manaPerTurn = player.unit.manaMax;

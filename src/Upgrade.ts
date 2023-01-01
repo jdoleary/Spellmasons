@@ -8,9 +8,10 @@ import Underworld from './Underworld';
 import * as Unit from './entity/Unit';
 import { maybeManaOverfillProportionChance, plusManaMinusStamina_manaProportion, plusManaMinusStamina_staminaProportion, plusRangeMinusHealth_healthProportion, plusRangeMinusHealth_rangeProportion, plusStaminaMinusHealth_healthProportion, plusStaminaMinusHealth_staminaProportion } from './config';
 import { maybeManaOverfillId } from './modifieMaybeManaOverfill';
+import { CardRarity, probabilityMap } from './types/commonTypes';
 export interface IUpgrade {
   title: string;
-  type: 'perk' | 'card';
+  type: 'perk' | 'card' | 'special';
   description: (player: IPlayer) => string;
   thumbnail: string;
   // The maximum number of copies a player can have of this upgrade
@@ -147,7 +148,7 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
   return element;
 }
 export function getUpgradeByTitle(title: string): IUpgrade | undefined {
-  const all_upgrades = [...upgradeCardsSource, ...upgradeSourceWhenDead, ...upgradeStatsSource];
+  const all_upgrades = [...upgradeCardsSource, ...upgradeSourceWhenDead, ...upgradeStatsSource, ...upgradeSpecialsSource];
   return all_upgrades.find((u) => u.title === title);
 }
 export const upgradeSourceWhenDead: IUpgrade[] = [
@@ -349,6 +350,19 @@ const maxHealthIncreaseAmount = 3;
 // const manaPerTurnIncreaseAmount = 8;
 
 export const upgradeCardsSource: IUpgrade[] = []
+export const rerollUpgrade: IUpgrade = {
+  title: 'Reroll',
+  type: 'special',
+  description: () => 'Regenerate upgrades; however you get one less upgrade to choose from',
+  thumbnail: 'images/spell/unknown.png',
+  effect: (player: IPlayer, underworld: Underworld) => {
+    player.reroll++;
+  },
+  // No fancy border
+  probability: probabilityMap[CardRarity.COMMON],
+  cost: { manaCost: 0, healthCost: 0 },
+}
+const upgradeSpecialsSource = [rerollUpgrade];
 
 // Template
 //   {

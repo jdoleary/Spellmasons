@@ -1,4 +1,3 @@
-- feature: Allow rerolling card selection
 - feature: Allow players to pick starting damage spell
 - feature: Randomly generated, improved perks (without names)
 - Add Boss and Looping (see branch `loop-tint-level`)
