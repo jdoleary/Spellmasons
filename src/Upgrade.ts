@@ -368,7 +368,7 @@ export const upgradeCardsSource: IUpgrade[] = []
 export const rerollUpgrade: IUpgrade = {
   title: 'Reroll',
   type: 'special',
-  description: () => 'Regenerate upgrades; however you get one less upgrade to choose from',
+  description: () => 'Regenerate upgrades, but you get one less option to choose from.',
   thumbnail: 'images/spell/unknown.png',
   effect: (player: IPlayer, underworld: Underworld) => {
     player.reroll++;
