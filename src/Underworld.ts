@@ -2127,6 +2127,8 @@ export default class Underworld {
   }
   chooseUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
     if (upgrade.type == 'card') {
+      // Reset reroll counter now that player has chosen a card
+      player.reroll = 0;
       if (player.upgradesLeftToChoose <= 0) {
         // if current player, manage the visibility of the upgrade screen
         if (player == globalThis.player) {
@@ -2138,12 +2140,12 @@ export default class Underworld {
           return;
         }
       }
-      // Reset reroll counter now that player has chosen a card
-      player.reroll = 0;
       // Decrement and 
       // Ensure it doesn't go negative
       player.upgradesLeftToChoose = Math.max(0, player.upgradesLeftToChoose - 1);
     } else if (upgrade.type == 'perk') {
+      // Reset reroll counter now that player has chosen a perk 
+      player.reroll = 0;
       if (player.perksLeftToChoose <= 0) {
         // if current player, manage the visibility of the upgrade screen
         if (player == globalThis.player) {
