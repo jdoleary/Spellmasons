@@ -6,7 +6,7 @@ import { oneOffImage, playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
-export const id = 'Slash';
+export const slashCardId = 'Slash';
 const damageDone = 2;
 export interface UnitDamage {
   id: number;
@@ -20,7 +20,7 @@ const animationPath = 'spell-effects/spellHurtCuts';
 const delayBetweenAnimationsStart = 400;
 const spell: Spell = {
   card: {
-    id,
+    id: slashCardId,
     category: CardCategory.Damage,
     supportQuantity: true,
     manaCost: 10,

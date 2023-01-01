@@ -42,7 +42,7 @@ const unit: UnitSource = {
       // Archers attack or move, not both; so clear their existing path
       unit.path = undefined;
       Unit.orient(unit, attackTarget);
-      const keyMoment = () => underworld.castCards({}, unit, [slash.id], attackTarget, false, false);
+      const keyMoment = () => underworld.castCards({}, unit, [slash.slashCardId], attackTarget, false, false);
       await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
     }
     // Movement:

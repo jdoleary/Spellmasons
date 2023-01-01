@@ -9,7 +9,7 @@ import { distance, lerp } from '../jmath/math';
 import * as config from '../config';
 import { makeBurstParticles } from '../graphics/ParticleCollection';
 
-export const id = 'Burst';
+export const burstCardId = 'Burst';
 const maxDamage = 5;
 function calculateDamage(stack: number, caster: Unit.IUnit, target: Vec2): number {
   const dist = distance(caster, target)
@@ -25,7 +25,7 @@ export interface UnitDamage {
 }
 const spell: Spell = {
   card: {
-    id,
+    id: burstCardId,
     category: CardCategory.Damage,
     supportQuantity: true,
     manaCost: 10,
@@ -36,7 +36,8 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'burst',
     description: `
-Deals more damage based how close the target is to the caster.
+Deals damage based how close the target is to the caster.
+The closer they are the higher the damage done.
 Maximum damage is ${maxDamage}.
 Stackable.
     `,

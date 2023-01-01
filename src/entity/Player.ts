@@ -110,14 +110,6 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
   player.unit.staminaMax = config.PLAYER_BASE_STAMINA;
   player.unit.stamina = config.PLAYER_BASE_STAMINA;
 
-  // Add initial upgrades
-  const hurtCardUpgrade = Upgrade.upgradeCardsSource.find(u => u.title == slash.id);
-  if (hurtCardUpgrade) {
-    underworld.chooseUpgrade(player, hurtCardUpgrade);
-  } else {
-    console.error('Could not start player with "hurt": upgrade not found');
-  }
-
   player.unit.health = PLAYER_BASE_HEALTH;
   player.unit.healthMax = PLAYER_BASE_HEALTH;
 

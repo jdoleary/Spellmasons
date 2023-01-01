@@ -10,7 +10,7 @@ import floatingText from '../graphics/FloatingText';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
-export const id = 'poison';
+export const poisonCardId = 'poison';
 function init(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
   if (spell.modifiers?.subsprite) {
     // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
@@ -27,10 +27,10 @@ function init(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
   }
 }
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
-  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
+  const modifier = getOrInitModifier(unit, poisonCardId, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
     // Add event
-    if (!unit.onTurnStartEvents.includes(id)) {
-      unit.onTurnStartEvents.push(id);
+    if (!unit.onTurnStartEvents.includes(poisonCardId)) {
+      unit.onTurnStartEvents.push(poisonCardId);
     }
     // Add subsprite image
     if (!prediction) {
@@ -45,7 +45,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
 
 const spell: Spell = {
   card: {
-    id,
+    id: poisonCardId,
     category: CardCategory.Curses,
     sfx: 'poison',
     supportQuantity: true,
@@ -56,9 +56,9 @@ const spell: Spell = {
     thumbnail: 'spellIconPoison.png',
     animationPath: 'spell-effects/spellPoison',
     description: `
-Poisons all target(s).  Poison will deal 1 base damage every turn
+Poisons all target(s).  ${poisonCardId} will deal 1 base damage every turn
 at the start of the unit's turn.
-"Poison" can be cast multiple times in succession to stack it's effect.
+Stackable.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
@@ -66,7 +66,7 @@ at the start of the unit's turn.
       if (targets.length) {
         await Promise.all([playDefaultSpellAnimation(card, targets, prediction), playDefaultSpellSFX(card, prediction)]);
         for (let unit of targets) {
-          Unit.addModifier(unit, id, underworld, prediction, quantity);
+          Unit.addModifier(unit, poisonCardId, underworld, prediction, quantity);
         }
       }
       return state;
@@ -92,7 +92,7 @@ at the start of the unit's turn.
   events: {
     onTurnStart: async (unit: IUnit, prediction: boolean, underworld: Underworld) => {
       // TODO: There was a bug here where somehow modifiers['poison'] was undefined after i did chain, vulx10, poisonx10
-      const modifier = unit.modifiers[id];
+      const modifier = unit.modifiers[poisonCardId];
       // Don't take damage on prediction because it is confusing for people to see the prediction damage that poison will do,
       // they assume prediction damage is only from their direct cast, not including the start of the next turn
       if (!prediction) {
@@ -104,7 +104,7 @@ at the start of the unit's turn.
             style: { fill: '#44b944' },
           });
         } else {
-          console.error(`Should have ${id} modifier on unit but it is missing`);
+          console.error(`Should have ${poisonCardId} modifier on unit but it is missing`);
         }
       }
       return false;

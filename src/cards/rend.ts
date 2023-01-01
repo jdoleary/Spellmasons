@@ -8,7 +8,7 @@ import * as Image from '../graphics/Image';
 import { clone, Vec2 } from '../jmath/Vec';
 import { raceTimeout } from '../Promise';
 
-export const id = 'Rend';
+export const rendCardId = 'Rend';
 function calculateRendDamage(stack: number): number {
   let damage = 0;
   for (let i = 1; i < stack + 1; i++) {
@@ -28,10 +28,10 @@ const spellRendAnimationHeight = 10;
 const animationPath = 'spell-effects/spellRend';
 const spell: Spell = {
   card: {
-    id,
+    id: rendCardId,
     category: CardCategory.Damage,
     supportQuantity: true,
-    manaCost: 8,
+    manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.SPECIAL],
@@ -39,8 +39,8 @@ const spell: Spell = {
     animationPath,
     sfx: 'rend',
     description: `
-Deals more damage based on the number of consecutive stacks of "${id}".
-How total damage grows when stacking: ${calculateRendDamage(1)}, ${calculateRendDamage(2)}, ${calculateRendDamage(3)}, ${calculateRendDamage(4)}, ${calculateRendDamage(5)}, ${calculateRendDamage(6)}, ${calculateRendDamage(7)}, ${calculateRendDamage(8)}, ${calculateRendDamage(9)}, ${calculateRendDamage(10)}`,
+Deals damage based on the number of consecutive stacks of ${rendCardId}.
+Total damage dealt for each consecutive ${rendCardId}: ${calculateRendDamage(1)}, ${calculateRendDamage(2)}, ${calculateRendDamage(3)}, ${calculateRendDamage(4)}, ${calculateRendDamage(5)}, ${calculateRendDamage(6)}, ${calculateRendDamage(7)}, ${calculateRendDamage(8)}, ${calculateRendDamage(9)}, ${calculateRendDamage(10)}`,
     effect: async (state, card, quantity, underworld, prediction) => {
       const damage = calculateRendDamage(quantity);
       // .filter: only target living units

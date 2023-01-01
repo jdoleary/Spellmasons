@@ -1,4 +1,4 @@
-import { id } from '../cards/slash';
+import { slashCardId } from '../cards/slash';
 import { elTutorialChecklistInner } from '../HTMLElements';
 import * as storage from '../storage';
 import Jprompt, { PromptArgs } from './Jprompt';
@@ -157,7 +157,7 @@ You can also combine spells by clicking on them in your inventory so you don't h
         prompt: () => ({
             imageSrc: 'images/explain/forge-order.gif', text: `The order in which spells are forged may result in a different outcome.
     
-In this example, "Connect" + "Push" + "${id}" will damage you instead of the 2nd Golem; whereas reversing the order of "Connect" and "Push" - so that "Push" comes first - will cause it to connect to the 2nd Golem instead of you.`, yesText: 'Okay'
+In this example, "Connect" + "Push" + "${slashCardId}" will damage you instead of the 2nd Golem; whereas reversing the order of "Connect" and "Push" - so that "Push" comes first - will cause it to connect to the 2nd Golem instead of you.`, yesText: 'Okay'
         })
     },
     [EXPLAIN_DEATH]: {

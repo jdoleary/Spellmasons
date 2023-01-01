@@ -52,7 +52,7 @@ const unit: UnitSource = {
         ).then(async () => {
           // Add projectile hit animation
           Image.addOneOffAnimation(chosenUnit, 'projectile/poisonerProjectileHit');
-          await underworld.castCards({}, unit, [poison.id], chosenUnit, false);
+          await underworld.castCards({}, unit, [poison.poisonCardId], chosenUnit, false);
         });
 
       });

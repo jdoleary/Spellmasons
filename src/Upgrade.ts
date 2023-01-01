@@ -9,6 +9,10 @@ import * as Unit from './entity/Unit';
 import { maybeManaOverfillProportionChance, plusManaMinusStamina_manaProportion, plusManaMinusStamina_staminaProportion, plusRangeMinusHealth_healthProportion, plusRangeMinusHealth_rangeProportion, plusStaminaMinusHealth_healthProportion, plusStaminaMinusHealth_staminaProportion } from './config';
 import { maybeManaOverfillId } from './modifieMaybeManaOverfill';
 import { CardRarity, probabilityMap } from './types/commonTypes';
+import { slashCardId } from './cards/slash';
+import { poisonCardId } from './cards/poison';
+import { burstCardId } from './cards/burst';
+import { rendCardId } from './cards/rend';
 export interface IUpgrade {
   title: string;
   type: 'perk' | 'card' | 'special';
@@ -42,13 +46,24 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
     // Now that upgrades are cards too, make sure it doesn't
     // show upgrades that the player already has as cards
     && !player.cards.includes(u.title)
-  const filteredUpgradeCardsSource = upgradeCardsSource.filter(filterUpgrades);
+  let filteredUpgradeCardsSource = upgradeCardsSource.filter(filterUpgrades);
   // Every other level, players get to choose from stas upgrades or card upgrades
   // Unless Player already has all of the upgrades, in which case they
   // only have stat upgrades to choose from
   let upgradeList = filteredUpgradeCardsSource.length === 0 || usePerks ? upgradeStatsSource.filter(filterUpgrades) : filteredUpgradeCardsSource;
   // Limit the rarity of cards that are possible to attain
   upgradeList = upgradeList.filter(u => u.probability >= minimumProbability);
+
+  // For first pick, override upgradeList with damage spells
+  if (player.upgrades.length == 0) {
+    // Ensure they pick from only damage cards
+    upgradeList = upgradeCardsSource.filter(c => [
+      slashCardId,
+      poisonCardId,
+      burstCardId,
+      rendCardId
+    ].includes(c.title));
+  }
 
   // Clone upgrades for later mutation
   const clonedUpgradeSource = [...upgradeList];
