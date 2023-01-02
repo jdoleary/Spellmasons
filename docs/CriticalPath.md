@@ -5,6 +5,7 @@
     - Finish Looping
         - (see branch `loop-tint-level`)
     - 2nd style level gen
+    - Fix small late game levels
 - January 1/8-1/14
     - Test sending `package` to steam instead of `make` installer
         - Prove that steam won't redownload the executable each time and will just change the deltas
@@ -20,26 +21,22 @@
     - Submit to IGN and others
     - Balanced / Difficult
 - January 1/22-1/28
-- December
-        - Add automated testing
-            - Allow seeded run
-            - Record actions and assert results
-            - Triggering clicks:
-                - https://stackoverflow.com/questions/57835535/trigger-click-event-at-x-y-coordinates-of-canvas-using-pure-vanilla-js
-                - https://stackoverflow.com/questions/2705583/how-to-simulate-a-click-with-javascript
-        - DevOps: Make server version update whenvever the assets subdomain updates
-        - Satisfying end game (boss unit needed like the literal throne in Nuclear Throne)
-            - Maybe don't introduce only one new unit each level, think of how Nuclear Throne does mini bosses
-            - Obvious looping, maybe tint levels or something
-            - tint levels just like enemies when looping??
-                - See branch `loop-tint-level`
-            - atmospheric effects like dust?
-            - Nice camera
-                - exciting akira moment
-                - Cinematic boss intro
-        - Update music so it only changes song group once you reach a new biome
-            - and so it will continue a song if the next level is in the same biome
-- January
+    - Prepare to ship
+        - Accessability / Localization Language Support / Spellcheck
+        - Establish Minimum System Requirements and update Steam Page
+        - Add sentry errors to electron node files
+        - Electron Security
+            - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
+            - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
+        - Verify Cloud Saves
+    - Final QA
+        - Manually test all spells for desync issues (in multiplayer)
+        - Test for desyncs on multiplayer
+        - Bulletproof Updating and Error Reporting
+- January 31 (check timezone)
+    - Remove "Beta" Near version number
+    - Release
+- Other 
     - Features / Content
         - Reroll / exchange cards (risk reward style)
             - like maybe you can reroll but you have one less card to choose from each time
@@ -47,43 +44,12 @@
             - Styling for perks
             - Use relative percentages rather than out of 100%
     - [Submit demo to IGN](https://corp.ign.com/submit-a-game)
-    - Build tasks
-        - Accessability / Localization Language Support / Spellcheck
-        - Establish Minimum System Requirements and update Steam Page
-        - Electron Security
-            - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
-            - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
-        - Verify Cloud Saves
-    - Add sentry errors to electron node files
-    - Final QA
-        - Manually test all spells for desync issues (in multiplayer)
-        - Test for desyncs on multiplayer
-        - Bulletproof Updating and Error Reporting
-    - Remove "Beta" Near version number
-    - Release
+    - make music play in menu
 
-- Make all perks stackable
-- make music play in menu
     
-- Short circuit expensive runPredictions
-    - Any way to make many forceMoves run asyncronously?
-- Exe optimized for updates & modding?
-- Dynamic difficulty?
-    - Allow spawning enemies sooner based on lifetime performance?
-- "How To" guides
 - Add codex where you can read about spells and enemies
 - Allow opening dev tools in exe
 # Critical Path
-- Milestone | **Finish Gameplay**
-    - End of game scaling
-        - boss
-        - unlocks
-    - More Perks / Balance perks
-    - Difficulty / Balance
-        - What drives difficulty
-            - Unplanned priorities
-            - Lack of resources
-            - Competing priorities
 - Milestone | **Optimize game**
     - Optimize runPredictions: especially with expanding + corpse explosion
     - repelCircleFromLine is used for both unit crowding and wall physics and with wall physics it doesn't need a reference to underworld, that's only needed for unit crowding to make sure they don't crowd each other through walls
@@ -120,10 +86,6 @@
         - item that makes your stronger but it randomizes your spawn
 
 ## Definition of Done
-- DONE Stable Multiplayer
-- DONE Supports 100 units
-- DONE Complete Menu with options
-- DONE Packaged in Electron App
 - Supports 1000 units
 - Bug Reporting built in (e.g. Save game state and send it to me)
 - Simple to connect with friends in multiplayer

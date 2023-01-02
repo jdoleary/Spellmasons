@@ -20,6 +20,7 @@
 - Protect production branch from unintentional pushes
 
 # To be Triaged
+- src: Make connect sort by same faction first
 - bug: clickign to cancel cinematic sometimest clicks on the upgrade accidentally
 - fix: tutorial comes up at the same time it asks you to pick a new spell
 - animate bloat

@@ -1,3 +1,32 @@
+- Difficulty / Balance
+    - What drives difficulty
+        - Unplanned priorities
+        - Lack of resources
+        - Competing priorities
+- Short circuit expensive runPredictions
+    - Any way to make many forceMoves run asyncronously?
+- Exe optimized for updates & modding?
+- Dynamic difficulty?
+    - Allow spawning enemies sooner based on lifetime performance?
+- "How To" guides
+- Satisfying end game (boss unit needed like the literal throne in Nuclear Throne)
+    - Maybe don't introduce only one new unit each level, think of how Nuclear Throne does mini bosses
+    - Obvious looping, maybe tint levels or something
+    - tint levels just like enemies when looping??
+        - See branch `loop-tint-level`
+    - atmospheric effects like dust?
+    - Nice camera
+        - exciting akira moment
+        - Cinematic boss intro
+- Update music so it only changes song group once you reach a new biome
+    - and so it will continue a song if the next level is in the same biome
+- Add automated testing
+    - Allow seeded run
+    - Record actions and assert results
+    - Triggering clicks:
+        - https://stackoverflow.com/questions/57835535/trigger-click-event-at-x-y-coordinates-of-canvas-using-pure-vanilla-js
+        - https://stackoverflow.com/questions/2705583/how-to-simulate-a-click-with-javascript
+- DevOps: Make server version update whenvever the assets subdomain updates
 - Verify that there are no bugs with showUpgrades refactor 02362aa9
 - For updating the app:
     - How to keep handleSquirrelEvent from aborting the update when it returns??
