@@ -98,10 +98,10 @@ export function generatePerks(number: number, underworld: Underworld): Attribute
             attribute = chooseOneOf(['staminaMax', 'healthMax', 'manaMax', 'attackRange']) || 'stamina';
             when = chooseOneOf<WhenUpgrade>(['immediately', 'everyLevel']) || 'immediately';
             if (when == 'everyLevel') {
-                amount = 1.10;
+                amount = 1.05;
                 certainty = 1.0;
             } else if (when == 'immediately') {
-                amount = 1.5;
+                amount = 1.2;
                 certainty = 1.0;
             }
         } else {
