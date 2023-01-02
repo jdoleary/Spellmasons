@@ -1,12 +1,9 @@
-- Perk commonality
-    - Choice / not min-max
-    - when: should be fixed for all 3
-    - chance: should be fixed for all 3
-- Make sure perks everyTurn don't proc after portal has spawned
 - balance perks
 
 # Validation
 - What happens if you pick up a scroll but you have all the spells
+- Perks
+- Make sure perks everyTurn don't proc after portal has spawned
 # Priority
 - multi url was saved weird:`http://localhost:3000/?pieUrl=ws%3Alocalhost%3A8080&game=a`
 - bug: Getting "host app version doesn't match client version" on SOLOMODE

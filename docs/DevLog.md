@@ -63,8 +63,14 @@ Brad feedback for Gameplay trailer
 **Boss Design**
 The more "advance notice" the players get the more interesting the boss is because they can react to it.
 So if you know where he's going to teleport a full turn before you can prepare for it.  If you know what mobs he's gunna consume you can interact with them or change them.
-Maybe the boss could be a larger, eviler spellmason.  Maybe with emanating particles.  He could teleport, spawn red portals that are linked to each other, summon guys, consume units to grow stronger etc.
+Maybe the boss could be a larger, eviler spellmason.  Maybe with emanating particles.  He could teleport, spawn red portals that are linked to each other, summon guys.
+First Stage
+  - Creates red portals that randomly link to each other
+  - Resurrects enemies
+  - AOE damage
+  - Self Heal
 What is second stage?
+  - Consumes all remaining enemy units and gains their stats
 
 Boss aesthetic: Desaturated spellmason with eminating purple particles
 Abilities: 

@@ -1,7 +1,7 @@
 # Desired Schedule
 - January 1/1-1/7
-    - Finish Perks
     - Finish Boss
+        - See **Boss Design** in DevLog
     - Prevent too small late game levels
 - January 1/8-1/14
     - Test sending `package` to steam instead of `make` installer
