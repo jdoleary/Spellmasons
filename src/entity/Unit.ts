@@ -32,6 +32,7 @@ import * as Obstacle from './Obstacle';
 import { spellmasonUnitId } from './units/playerUnit';
 import { SUMMONER_ID } from './units/summoner';
 import { DARK_SUMMONER_ID } from './units/darkSummoner';
+import { bossmasonUnitId } from './units/bossmason';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -1032,6 +1033,10 @@ export async function runTurnStartEvents(unit: IUnit, prediction: boolean = fals
 
 }
 export function makeMiniboss(unit: IUnit) {
+  if (unit.unitSourceId == bossmasonUnitId) {
+    // Bossmasons is already a boss and should not be made into a miniboss
+    return;
+  }
   unit.isMiniboss = true;
   explain(EXPLAIN_MINI_BOSSES);
   unit.name = `${unit.unitSourceId} MiniBoss`;

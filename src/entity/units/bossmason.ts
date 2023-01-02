@@ -8,9 +8,9 @@ import * as slash from '../../cards/slash';
 import * as config from '../../config';
 import { makeCorruptionParticles } from '../../graphics/ParticleCollection';
 
-export const spellmasonUnitId = 'Bossmason';
+export const bossmasonUnitId = 'Bossmason';
 const unit: UnitSource = {
-  id: spellmasonUnitId,
+  id: bossmasonUnitId,
   info: {
     description: 'A nexus of dark magic! Beware.',
     image: 'units/playerIdle',

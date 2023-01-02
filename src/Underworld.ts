@@ -82,6 +82,7 @@ import { ensureAllClientsHaveAssociatedPlayers, Overworld } from './Overworld';
 import { Emitter } from '@pixi/particle-emitter';
 import { golem_unit_id } from './entity/units/golem';
 import { createPerkElement, generatePerks, tryTriggerPerk } from './Perk';
+import { bossmasonUnitId } from './entity/units/bossmason';
 
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
@@ -3100,6 +3101,10 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
   let units = [];
   let budgetLeft = 2 + (adjustedLevelIndex + 1) * (adjustedLevelIndex + 1);
   const totalBudget = budgetLeft;
+  if (levelIndex == 11) {
+    budgetLeft -= 20;
+    units.push(bossmasonUnitId);
+  }
   // How we choose:
   // 1. Start with the most expensive unit and random a number between 1 and 50% budget / unit budget cost
   // 2. Keep iterating with other units
