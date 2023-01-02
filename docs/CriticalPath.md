@@ -1,11 +1,25 @@
-# PreRelease Top Priorities
-- Balanced / Difficult
-- Boss
-- Looping
-- Extras
-    - 2nd style level generator (close quarters)
-    - Server config by host (pvp, worms armageddon style customizations)
 # Desired Schedule
+- January 1/1-1/7
+    - Finish Perks
+    - Finish Boss
+    - Finish Looping
+        - (see branch `loop-tint-level`)
+    - 2nd style level gen
+- January 1/8-1/14
+    - Test sending `package` to steam instead of `make` installer
+        - Prove that steam won't redownload the executable each time and will just change the deltas
+        - Remove squirell code?
+        - Remove self-written update code
+    - Multiplayer
+        - Support hosting a server from in the game exe
+        - Server Browser
+        - Server own-info page served over http
+        - Multiplayer save load with "take over player"
+        - Notify when version isn't same
+- January 1/5-1/21
+    - Submit to IGN and others
+    - Balanced / Difficult
+- January 1/22-1/28
 - December
         - Add automated testing
             - Allow seeded run
@@ -26,30 +40,12 @@
         - Update music so it only changes song group once you reach a new biome
             - and so it will continue a song if the next level is in the same biome
 - January
-    - Test sending `package` to steam instead of `make` installer
-        - Prove that steam won't redownload the executable each time and will just change the deltas
-        - Remove squirell code?
-        - Remove self-written update code
-    - Multiplayer
-        - Support hosting a server from in the game exe
-        - Server Browser
-        - Server own-info page served over http
-        - Multiplayer save load with "take over player"
-        - Notify when version isn't same
     - Features / Content
-        - Allow players to pick their starting damage spell
-        - Make pickups do something when destroyed
         - Reroll / exchange cards (risk reward style)
             - like maybe you can reroll but you have one less card to choose from each time
         - Perks
             - Styling for perks
             - Use relative percentages rather than out of 100%
-            - Balance Perks
-            - Randomly generated perks
-        - Boss
-        - Looping
-        - Rerolling / exchanging spells
-        - Server Browser
     - [Submit demo to IGN](https://corp.ign.com/submit-a-game)
     - Build tasks
         - Accessability / Localization Language Support / Spellcheck
@@ -100,6 +96,8 @@
     - updateCameraPosition is somehow taking a long time
     - copyForPredictionUnit is slow for many units
 - Milestone **Strech 1**
+    - Make pickups do something when destroyed
+    - Server config by host (pvp, worms armageddon style customizations)
     - Pushing units into portal should do something
     - Protection should be able to be cast on dead units to keep priest from resurrecting them
     - [Mod support](https://partner.steamgames.com/doc/features/workshop)

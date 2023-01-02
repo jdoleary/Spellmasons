@@ -1,8 +1,9 @@
-- Magic arrow spell (travels out of range, like ghost arrow)
-- idea: trigger the spell on line segment intersection (throw the spell)
-- feature: Randomly generated, improved perks (without names)
-- Add Boss and Looping (see branch `loop-tint-level`)
-- bug: clickign to cancel cinematic sometimest clicks on the upgrade accidentally
+- Perk commonality
+    - Choice / not min-max
+    - when: should be fixed for all 3
+    - chance: should be fixed for all 3
+- Make sure perks everyTurn don't proc after portal has spawned
+- balance perks
 
 # Validation
 - What happens if you pick up a scroll but you have all the spells
@@ -19,6 +20,7 @@
 - Protect production branch from unintentional pushes
 
 # To be Triaged
+- bug: clickign to cancel cinematic sometimest clicks on the upgrade accidentally
 - fix: tutorial comes up at the same time it asks you to pick a new spell
 - animate bloat
 - Remove "update" code in golems-menu
@@ -190,6 +192,8 @@ setTurnPhase( Stalled )
 - optimize: Ihave duplicate units, pickups, and doodads in save due to serailizeForSaving having them in the underworld and extracting them to the top level too
 
 ## Stretch Content
+- Magic arrow spell (travels out of range, like ghost arrow)
+    - idea: trigger the spell on line segment intersection (throw the spell)
 - Make "Destroy  Corpse" spell which will be useful for dealing with priests
 - Trap Soul / Capture: Instantly traps an enemy's soul in your possesion removing them from the board.  When you release their soul they are restored to their last form but on your faction.  Requires low health to work.
 - Mind Control: Changes the faction of an enemy
