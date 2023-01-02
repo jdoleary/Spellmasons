@@ -23,11 +23,10 @@ export function createPerkElement(perk: AttributePerk, player: IPlayer, underwor
     desc.classList.add('card-description');
     const descriptionText = document.createElement('div');
     descriptionText.innerHTML = `
-Attribute: ${perkAttributeToString(perk.attribute)}
-When: ${perk.when}
-Amount: +${Math.round((perk.amount - 1.0) * 100)}%
-${perk.certainty < 1.0 ? `Chance: ${Math.round(perk.certainty * 100)}%` : ''}
-      `;
+${perk.certainty < 1.0 ? `🎲 ${Math.round(perk.certainty * 100)}% chance to increase` : `Increase`}
+${perkAttributeToString(perk.attribute)}
+by ${Math.round((perk.amount - 1.0) * 100)}%
+${perkWhenToString(perk.when)}`;
     desc.appendChild(descriptionText);
 
     elCardInner.appendChild(desc);
@@ -45,15 +44,38 @@ ${perk.certainty < 1.0 ? `Chance: ${Math.round(perk.certainty * 100)}%` : ''}
     return element;
 }
 
+function perkWhenToString(when: WhenUpgrade): string {
+    if (when == 'everyLevel') {
+        return 'at the start of every 🗺️ level';
+    } else if (when == 'everyTurn') {
+        return 'at the start of every 🕰️ turn️';
+    } else if (when == 'immediately') {
+        return '';
+    }
+    return '';
+}
 function perkAttributeToString(attr: string): string {
     if (attr == 'manaMax') {
-        return `Maximum <span class=''>Mana</span>`;
+        return `<span class=''>🔵 Mana permantently</span>`;
     }
     if (attr == 'healthMax') {
-        return `Maximum <span class=''>Health</span>`;
+        return `<span class=''>❤️ Health permanently</span>`;
     }
     if (attr == 'staminaMax') {
-        return `Maximum <span class=''>Stamina</span>`;
+        return `<span class=''>🏃‍♂️ Stamina permanently</span>`;
+    }
+    if (attr == 'mana') {
+        return `<span class=''>🔵 Mana temporarily</span>`;
+    }
+    if (attr == 'health') {
+        return `<span class=''>❤️ Health temporarily</span>`;
+    }
+    if (attr == 'stamina') {
+        return `<span class=''>🏃‍♂️ Stamina temporarily</span>`;
+    }
+    if (attr == 'attackRange') {
+        return `🎯 Cast Range`;
+
     }
     return attr;
 }
@@ -61,7 +83,7 @@ export type UpgradableAttribute = 'staminaMax' | 'stamina' | 'healthMax' | 'heal
 export type WhenUpgrade = 'immediately' | 'everyLevel' | 'everyTurn';
 export function generatePerks(number: number, underworld: Underworld): AttributePerk[] {
     const perks = [];
-    const preRolledCertainty = randFloat(underworld.random, 0.1, 0.3);
+    const preRolledCertainty = chooseOneOf([0.1, 0.2, 0.3]) || 0.2;
     for (let i = 0; i < number; i++) {
 
         let when: WhenUpgrade = 'immediately';// Default, should never be used
@@ -74,15 +96,12 @@ export function generatePerks(number: number, underworld: Underworld): Attribute
         const choiceAttributeType = chooseOneOf(['maxStat', 'stat']);
         if (choiceAttributeType == 'maxStat') {
             attribute = chooseOneOf(['staminaMax', 'healthMax', 'manaMax', 'attackRange']) || 'stamina';
-            when = chooseOneOf<WhenUpgrade>(['immediately', 'everyLevel', 'everyTurn']) || 'immediately';
+            when = chooseOneOf<WhenUpgrade>(['immediately', 'everyLevel']) || 'immediately';
             if (when == 'everyLevel') {
-                amount = 1.15;
+                amount = 1.10;
                 certainty = 1.0;
-            } else if (when == 'everyTurn') {
-                amount = 1.05;
-                certainty = preRolledCertainty;
             } else if (when == 'immediately') {
-                amount = 1.4;
+                amount = 1.5;
                 certainty = 1.0;
             }
         } else {
@@ -118,6 +137,12 @@ export function choosePerk(perk: AttributePerk, player: IPlayer, underworld: Und
         tryTriggerPerk(perk, player, 'immediately', underworld);
     } else {
         player.attributePerks.push(perk);
+        // Due to the perks showing up after tryTriggerPerk for the everyLevel perks has already been called,
+        // when a user chooses an everyLevel perk it should both trigger immediately, and get added to their
+        // attributePerks array
+        if (perk.when == 'everyLevel') {
+            tryTriggerPerk(perk, player, 'everyLevel', underworld);
+        }
     }
     // Reset reroll counter now that player has chosen a perk 
     player.reroll = 0;

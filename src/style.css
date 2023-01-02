@@ -166,6 +166,10 @@ body.view-Game.showUpgrades #upgrade-picker {
   overflow: hidden;
 }
 
+#upgrade-picker .perk .card-inner {
+  padding: 4px;
+}
+
 #upgrade-picker .perk .card-title {
   background-color: #262324;
   border: 2px solid white;
