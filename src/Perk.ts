@@ -1,4 +1,4 @@
-import { chooseOneOf } from "./jmath/rand";
+import { chooseOneOf, randFloat } from "./jmath/rand";
 import Underworld, { showUpgradesClassName } from "./Underworld";
 import floatingText from './graphics/FloatingText';
 import seedrandom from "seedrandom";
@@ -25,8 +25,8 @@ export function createPerkElement(perk: AttributePerk, player: IPlayer, underwor
     descriptionText.innerHTML = `
 Attribute: ${perkAttributeToString(perk.attribute)}
 When: ${perk.when}
-Amount: ${perk.amount}
-Certainty: ${perk.certainty}
+Amount: +${Math.round((perk.amount - 1.0) * 100)}%
+${perk.certainty < 1.0 ? `Chance: ${Math.round(perk.certainty * 100)}%` : ''}
       `;
     desc.appendChild(descriptionText);
 
@@ -47,13 +47,13 @@ Certainty: ${perk.certainty}
 
 function perkAttributeToString(attr: string): string {
     if (attr == 'manaMax') {
-        return 'Maximum Mana';
+        return `Maximum <span class=''>Mana</span>`;
     }
     if (attr == 'healthMax') {
-        return 'Maximum Health';
+        return `Maximum <span class=''>Health</span>`;
     }
     if (attr == 'staminaMax') {
-        return 'Maximum Stamina';
+        return `Maximum <span class=''>Stamina</span>`;
     }
     return attr;
 }
@@ -61,11 +61,11 @@ export type UpgradableAttribute = 'staminaMax' | 'stamina' | 'healthMax' | 'heal
 export type WhenUpgrade = 'immediately' | 'everyLevel' | 'everyTurn';
 export function generatePerks(number: number, underworld: Underworld): AttributePerk[] {
     const perks = [];
+    const preRolledCertainty = randFloat(underworld.random, 0.1, 0.3);
     for (let i = 0; i < number; i++) {
 
-        type Amount = 'large' | 'medium' | 'small';
         let when: WhenUpgrade = 'immediately';// Default, should never be used
-        let amount: Amount = 'small';// Default, should never be used
+        let amount = 1.1;// Default, should never be used
         // certainty is a preportion 0.0 - 1.0
         let certainty: number = 1.0;// Default, should never be used
         let attribute: UpgradableAttribute = 'stamina';//Default, should never be used
@@ -76,13 +76,13 @@ export function generatePerks(number: number, underworld: Underworld): Attribute
             attribute = chooseOneOf(['staminaMax', 'healthMax', 'manaMax', 'attackRange']) || 'stamina';
             when = chooseOneOf<WhenUpgrade>(['immediately', 'everyLevel', 'everyTurn']) || 'immediately';
             if (when == 'everyLevel') {
-                amount = 'medium';
+                amount = 1.15;
                 certainty = 1.0;
             } else if (when == 'everyTurn') {
-                amount = 'small';
-                // certainty = '%';
+                amount = 1.05;
+                certainty = preRolledCertainty;
             } else if (when == 'immediately') {
-                amount = 'large';
+                amount = 1.4;
                 certainty = 1.0;
             }
         } else {
@@ -91,23 +91,21 @@ export function generatePerks(number: number, underworld: Underworld): Attribute
             // upgrade if they were only changed once
             when = chooseOneOf<WhenUpgrade>(['everyLevel', 'everyTurn']) || 'everyLevel';
             if (when == 'everyLevel') {
-                amount = 'large';
+                amount = 1.8;
                 certainty = 1.0;
             } else if (when == 'everyTurn') {
-                amount = 'medium';
-                // certainty = '%';
+                amount = 1.4;
+                certainty = preRolledCertainty;
             } else {
                 console.error('Unexpected: Invalid when for regular stat perk');
             }
 
         }
-        const hardAmount = amount == 'large' ? 1.5
-            : amount == 'medium' ? 1.2 : 1.1
 
         perks.push({
             attribute,
             when,
-            amount: hardAmount,
+            amount,
             certainty
         });
     }
@@ -160,7 +158,6 @@ export function tryTriggerPerk(perk: AttributePerk, player: IPlayer, when: WhenU
         const random = seedrandom(`${underworld.seed}-${underworld.levelIndex}-${underworld.turn_number}`);
         const pick = random.quick();
         const doTriggerPerk = pick <= perk.certainty;
-        console.log('jtest perk:', perk, pick, doTriggerPerk)
         if (doTriggerPerk) {
             if (perk.attribute == 'manaMax' || perk.attribute == 'healthMax' || perk.attribute == 'staminaMax') {
                 setPlayerAttributeMax(player.unit, perk.attribute, player.unit[perk.attribute] * perk.amount)

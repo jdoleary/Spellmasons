@@ -173,6 +173,10 @@ body.view-Game.showUpgrades #upgrade-picker {
   color: white;
 }
 
+#upgrade-picker .perk .card-description {
+  font-size: 1.5em;
+}
+
 #upgrade-picker .card-title,
 .card-inspect .card-title {
   text-align: center;
