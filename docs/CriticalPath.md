@@ -18,6 +18,8 @@
         - Multiplayer save load with "take over player"
         - Notify when version isn't same
 - January 1/5-1/21
+    - BALANCE unit spawns especially on later levels
+        - Maybe not exponential?
     - Submit to IGN and others
     - Balanced / Difficult
 - January 1/22-1/28
