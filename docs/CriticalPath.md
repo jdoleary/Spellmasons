@@ -2,10 +2,7 @@
 - January 1/1-1/7
     - Finish Perks
     - Finish Boss
-    - Finish Looping
-        - (see branch `loop-tint-level`)
-    - 2nd style level gen
-    - Fix small late game levels
+    - Prevent too small late game levels
 - January 1/8-1/14
     - Test sending `package` to steam instead of `make` installer
         - Prove that steam won't redownload the executable each time and will just change the deltas
@@ -22,6 +19,10 @@
         - Maybe not exponential?
     - Submit to IGN and others
     - Balanced / Difficult
+    - 2nd algorithm for generating levels
+        - see branch 2nd-level-algorithm
+    - Finish Looping
+        - (see branch `loop-tint-level`)
 - January 1/22-1/28
     - Prepare to ship
         - Accessability / Localization Language Support / Spellcheck
