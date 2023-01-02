@@ -27,6 +27,7 @@ import { cameraAutoFollow, runCinematicLevelCamera } from '../graphics/PixiUtils
 import { Overworld } from '../Overworld';
 import { playerCastAnimationColor, playerCastAnimationColorLighter, playerCastAnimationGlow } from '../graphics/ui/colors';
 import { lightenColor } from '../graphics/ui/colorUtil';
+import { choosePerk } from '../Perk';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -64,6 +65,18 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         console.log('Ignoring INIT_GAME_STATE because underworld has already been initialized.');
       }
       break;
+    case MESSAGE_TYPES.CHOOSE_PERK:
+      {
+        console.log('onData: CHOOSE_PERK', `${fromClient}: ${JSON.stringify(payload?.perk || {})}`);
+        // Get player of the client that sent the message 
+        const fromPlayer = underworld.players.find((p) => p.clientId === fromClient);
+        if (fromPlayer) {
+          choosePerk(payload.perk, fromPlayer, underworld);
+        } else {
+          console.error('Cannot CHOOSE_PERK, fromPlayer is undefined', fromClient, fromPlayer)
+        }
+      }
+      break;
     case MESSAGE_TYPES.CHOOSE_UPGRADE:
       console.log('onData: CHOOSE_UPGRADE', `${fromClient}: ${payload?.upgrade?.title}`);
       // Get player of the client that sent the message 
@@ -79,7 +92,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
           );
         }
       } else {
-        console.error('Cannot CHOOSE_UPGRADE, fromPlayer is undefined', fromPlayer)
+        console.error('Cannot CHOOSE_UPGRADE, fromPlayer is undefined', fromClient, fromPlayer)
       }
       break;
     case MESSAGE_TYPES.LOAD_GAME_STATE:

@@ -1095,15 +1095,23 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
 // A utility function for updating the player's mana max since
 // there's a few considerations that I kept forgetting to update with it:
 // Notably: rounding and updating manaPerTurn too
-export function setPlayerManaMax(unit: IUnit, newValue: number) {
+export function setPlayerAttributeMax(unit: IUnit, attribute: 'manaMax' | 'healthMax' | 'staminaMax', newValue: number) {
   if (unit.unitSourceId !== spellmasonUnitId) {
-    console.error('setPlayerManaMax attempted on non player unit. This function is designed to update manaPerTurn too and so should only be used on player units.');
+    console.error('setPlayerAttributeMax attempted on non player unit. This function is designed to update manaPerTurn too and so should only be used on player units.');
   }
   // Round to a whole number
-  newValue = Math.floor(newValue);
-  unit.manaMax = newValue;
-  unit.manaPerTurn = newValue;
-  unit.mana = newValue;
+  newValue = Math.ceil(newValue);
+  if (attribute == 'manaMax') {
+    unit.manaMax = newValue;
+    unit.manaPerTurn = newValue;
+    unit.mana = newValue;
+  } else if (attribute == 'healthMax') {
+    unit.healthMax = newValue;
+    unit.health = newValue;
+  } else if (attribute == 'staminaMax') {
+    unit.staminaMax = newValue;
+    unit.stamina = newValue;
+  }
 }
 // Returns true if it is currently this unit's turn phase
 export function isUnitsTurnPhase(unit: IUnit, underworld: Underworld): boolean {

@@ -43,7 +43,7 @@ export function _chooseObjectWithProbability<T extends objectWithProbability>(ro
   return undefined;
 
 }
-export function chooseOneOf(arr?: any[]): any {
+export function chooseOneOf<T>(arr?: T[]): T | undefined {
   if (!arr) {
     return undefined;
   }

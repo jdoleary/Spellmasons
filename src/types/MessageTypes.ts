@@ -9,6 +9,7 @@ export enum MESSAGE_TYPES {
   PLAYER_CONFIG,
   ENTER_PORTAL,
   CHOOSE_UPGRADE,
+  CHOOSE_PERK,
   END_TURN,
   // INIT_GAME_STATE is very similar to LOAD_GAME_STATE, in fact, they run identical code
   // paths. 

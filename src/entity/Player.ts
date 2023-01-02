@@ -13,10 +13,10 @@ import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary } from '../graphics/ui/colors';
 import Underworld, { turn_phase } from '../Underworld';
 import * as inLiquid from '../inLiquid';
-import * as slash from '../cards/slash';
 import * as lastWill from '../cards/lastwill';
 import { explain, EXPLAIN_BLESSINGS, isTutorialComplete } from '../graphics/Explain';
 import { lightenColor } from '../graphics/ui/colorUtil';
+import { AttributePerk } from '../Perk';
 
 const elInGameLobby = document.getElementById('in-game-lobby') as (HTMLElement | undefined);
 const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
@@ -61,6 +61,7 @@ export interface IPlayer {
   // their upgrade choice so that they get to pick from fewer each time they
   // reroll.
   reroll: number;
+  attributePerks: AttributePerk[];
 }
 export function inPortal(player: IPlayer): boolean {
   return isNaN(player.unit.x) || isNaN(player.unit.y) || player.unit.x === null || player.unit.y === null;
@@ -100,6 +101,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
     diedDuringLevel: false,
     lobbyReady: false,
     reroll: 0,
+    attributePerks: []
   };
   // Player units get full mana every turn
   player.unit.manaPerTurn = player.unit.manaMax;

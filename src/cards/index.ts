@@ -59,7 +59,6 @@ import slow from './slow';
 import death_wager from './death_wager';
 import devRecordDelay from './devRecordDelay';
 import registerSummoningSickness from '../modifierSummoningSickness';
-import registerMaybeManaOverfill from '../modifieMaybeManaOverfill';
 
 import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
@@ -203,7 +202,6 @@ export function registerCards(overworld: Overworld) {
 
   // Register floating modifier (non-card);
   registerSummoningSickness();
-  registerMaybeManaOverfill();
 
 }
 function cardToUpgrade(c: ICard, overworld: Overworld): IUpgrade {

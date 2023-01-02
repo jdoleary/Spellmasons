@@ -81,6 +81,7 @@ import { makeScrollDissapearParticles } from './graphics/ParticleCollection';
 import { ensureAllClientsHaveAssociatedPlayers, Overworld } from './Overworld';
 import { Emitter } from '@pixi/particle-emitter';
 import { golem_unit_id } from './entity/units/golem';
+import { createPerkElement, generatePerks, tryTriggerPerk } from './Perk';
 
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
@@ -1681,6 +1682,10 @@ export default class Underworld {
     console.log('Setup: resetPlayerForNextLevel; reset all players')
     for (let player of this.players) {
       Player.resetPlayerForNextLevel(player, this);
+      // Trigger attributePerks
+      for (let perk of player.attributePerks) {
+        tryTriggerPerk(perk, player, 'everyLevel', this);
+      }
     }
     // Change song now that level has changed:
     if (globalThis.playNextSong) {
@@ -1994,6 +1999,10 @@ export default class Underworld {
           playSFXKey('yourTurn');
         }
       }
+      // Trigger attributePerks
+      for (let perk of player.attributePerks) {
+        tryTriggerPerk(perk, player, 'everyTurn', this);
+      }
       // Trigger onTurnStart Events
       const onTurnStartEventResults: boolean[] = await Promise.all(player.unit.onTurnStartEvents.map(
         async (eventName) => {
@@ -2143,23 +2152,6 @@ export default class Underworld {
       // Decrement and 
       // Ensure it doesn't go negative
       player.upgradesLeftToChoose = Math.max(0, player.upgradesLeftToChoose - 1);
-    } else if (upgrade.type == 'perk') {
-      // Reset reroll counter now that player has chosen a perk 
-      player.reroll = 0;
-      if (player.perksLeftToChoose <= 0) {
-        // if current player, manage the visibility of the upgrade screen
-        if (player == globalThis.player) {
-          console.log('Cannot choose another perk');
-          // Clear upgrades
-          document.body?.classList.toggle(showUpgradesClassName, false);
-          // There may be upgrades left to choose
-          this.showUpgrades();
-          return;
-        }
-      }
-      // Decrement and 
-      // Ensure it doesn't go negative
-      player.perksLeftToChoose = Math.max(0, player.perksLeftToChoose - 1);
     } else if (upgrade.type == 'special') {
       // Any future logic for special cards such as 'reroll' goes here
 
@@ -2223,27 +2215,47 @@ export default class Underworld {
     }
     if (player) {
       const numberOfUpgradesToChooseFrom = 3 - player.reroll;
-      const upgrades = Upgrade.generateUpgrades(player, numberOfUpgradesToChooseFrom, minimumProbability, isPerk);
-      // Allow reroll if there is more than 1 upgrade to choose from
-      if (numberOfUpgradesToChooseFrom > 1) {
-        upgrades.push(Upgrade.rerollUpgrade);
-      }
-      if (!upgrades.length) {
-        // Player already has all the upgrades
-        document.body?.classList.toggle(showUpgradesClassName, false);
-        queueCenteredFloatingText('No more spell upgrades to pick from.');
-      } else {
-        const elUpgrades = upgrades.map((upgrade) => Upgrade.createUpgradeElement(upgrade, player, this));
+      if (isPerk) {
+        const perks = generatePerks(3, this);
+        const elPerks = perks.map(perk => createPerkElement(perk, player, this));
         if (elUpgradePickerContent) {
           elUpgradePickerContent.innerHTML = '';
-          for (let elUpgrade of elUpgrades) {
+          for (let elUpgrade of elPerks) {
             if (elUpgrade) {
               elUpgradePickerContent.appendChild(elUpgrade);
-              if (globalThis.devAutoPickUpgrades && elUpgrade == elUpgrades[0]) {
+              if (globalThis.devAutoPickUpgrades && elUpgrade == elPerks[0]) {
                 elUpgrade.click();
               }
             } else {
-              console.warn('showUpgrades: Upgrade is undefined, this block should never be executed in headless mode')
+              console.warn('showUpgrades: perk is undefined, this block should never be executed in headless mode')
+            }
+          }
+        }
+
+      } else {
+
+        const upgrades = Upgrade.generateUpgrades(player, numberOfUpgradesToChooseFrom, minimumProbability, this);
+        // Allow reroll if there is more than 1 upgrade to choose from
+        if (numberOfUpgradesToChooseFrom > 1) {
+          upgrades.push(Upgrade.rerollUpgrade);
+        }
+        if (!upgrades.length) {
+          // Player already has all the upgrades
+          document.body?.classList.toggle(showUpgradesClassName, false);
+          queueCenteredFloatingText('No more spell upgrades to pick from.');
+        } else {
+          const elUpgrades = upgrades.map((upgrade) => Upgrade.createUpgradeElement(upgrade, player, this));
+          if (elUpgradePickerContent) {
+            elUpgradePickerContent.innerHTML = '';
+            for (let elUpgrade of elUpgrades) {
+              if (elUpgrade) {
+                elUpgradePickerContent.appendChild(elUpgrade);
+                if (globalThis.devAutoPickUpgrades && elUpgrade == elUpgrades[0]) {
+                  elUpgrade.click();
+                }
+              } else {
+                console.warn('showUpgrades: Upgrade is undefined, this block should never be executed in headless mode')
+              }
             }
           }
         }

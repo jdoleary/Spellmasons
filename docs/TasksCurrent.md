@@ -2,9 +2,10 @@
 - idea: trigger the spell on line segment intersection (throw the spell)
 - feature: Randomly generated, improved perks (without names)
 - Add Boss and Looping (see branch `loop-tint-level`)
+- bug: clickign to cancel cinematic sometimest clicks on the upgrade accidentally
 
 # Validation
-- Done for now
+- What happens if you pick up a scroll but you have all the spells
 # Priority
 - multi url was saved weird:`http://localhost:3000/?pieUrl=ws%3Alocalhost%3A8080&game=a`
 - bug: Getting "host app version doesn't match client version" on SOLOMODE

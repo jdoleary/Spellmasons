@@ -5,9 +5,6 @@ import { chooseObjectWithProbability } from './jmath/rand';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import { IPlayer } from './entity/Player';
 import Underworld from './Underworld';
-import * as Unit from './entity/Unit';
-import { maybeManaOverfillProportionChance, plusManaMinusStamina_manaProportion, plusManaMinusStamina_staminaProportion, plusRangeMinusHealth_healthProportion, plusRangeMinusHealth_rangeProportion, plusStaminaMinusHealth_healthProportion, plusStaminaMinusHealth_staminaProportion } from './config';
-import { maybeManaOverfillId } from './modifieMaybeManaOverfill';
 import { CardRarity, probabilityMap } from './types/commonTypes';
 import { slashCardId } from './cards/slash';
 import { poisonCardId } from './cards/poison';
@@ -15,7 +12,7 @@ import { burstCardId } from './cards/burst';
 import { rendCardId } from './cards/rend';
 export interface IUpgrade {
   title: string;
-  type: 'perk' | 'card' | 'special';
+  type: 'card' | 'special';
   description: (player: IPlayer) => string;
   thumbnail: string;
   // The maximum number of copies a player can have of this upgrade
@@ -30,9 +27,9 @@ export interface IUpgrade {
 // Chooses a random card based on the card's probabilities
 // minimumProbability ensures that super rare cards won't be presented too early on
 // onlyStats: means it'll present stats upgrades instead of card upgrades
-export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, minimumProbability: number, usePerks: boolean): IUpgrade[] {
+export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, minimumProbability: number, underworld: Underworld): IUpgrade[] {
   // Dead players choose special upgrades
-  if (usePerks && player.diedDuringLevel) {
+  if (player.diedDuringLevel) {
     return [...upgradeSourceWhenDead];
   }
   let upgrades: IUpgrade[] = [];
@@ -50,7 +47,7 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
   // Every other level, players get to choose from stas upgrades or card upgrades
   // Unless Player already has all of the upgrades, in which case they
   // only have stat upgrades to choose from
-  let upgradeList = filteredUpgradeCardsSource.length === 0 || usePerks ? upgradeStatsSource.filter(filterUpgrades) : filteredUpgradeCardsSource;
+  let upgradeList = filteredUpgradeCardsSource;
   // Limit the rarity of cards that are possible to attain
   upgradeList = upgradeList.filter(u => u.probability >= minimumProbability);
 
@@ -97,11 +94,7 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
   const { pie } = underworld;
   const element = document.createElement('div');
   element.classList.add('card', 'upgrade');
-  if (upgrade.type === 'perk') {
-    element.classList.add('perk', 'ui-border');
-  } else {
-    element.classList.add(cardRarityAsString(upgrade));
-  }
+  element.classList.add(cardRarityAsString(upgrade));
   element.dataset.upgrade = upgrade.title;
   const elCardInner = document.createElement('div');
   elCardInner.classList.add('card-inner');
@@ -163,14 +156,15 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
   return element;
 }
 export function getUpgradeByTitle(title: string): IUpgrade | undefined {
-  const all_upgrades = [...upgradeCardsSource, ...upgradeSourceWhenDead, ...upgradeStatsSource, ...upgradeSpecialsSource];
+  const all_upgrades = [...upgradeCardsSource, ...upgradeSourceWhenDead, ...upgradeSpecialsSource];
   return all_upgrades.find((u) => u.title === title);
 }
 export const upgradeSourceWhenDead: IUpgrade[] = [
   {
     title: 'Resurrect',
-    type: 'perk',
+    type: 'special',
     description: () => 'Resurrects you so the adventure can continue!',
+    // TODO needs new icon
     thumbnail: 'images/upgrades/resurrect.png',
     // Resurrection happens automatically at the start of each level
     effect: () => { },
@@ -178,191 +172,6 @@ export const upgradeSourceWhenDead: IUpgrade[] = [
     cost: { healthCost: 0, manaCost: 0 },
   },
 ];
-
-export const upgradeStatsSource: IUpgrade[] = [
-  {
-    title: '+ Max Health',
-    type: 'perk',
-    description: (player) =>
-      `Increases your max health from ${player.unit.healthMax} to ${player.unit.healthMax + maxHealthIncreaseAmount
-      }`,
-    thumbnail: 'images/upgrades/health1.png',
-    effect: (player, underworld) => {
-      player.unit.healthMax += maxHealthIncreaseAmount;
-      player.unit.health = player.unit.healthMax;
-      // Now that the player unit's mana has increased,sync the new
-      // mana state with the player's predictionUnit so it is properly
-      // refelcted in the health bar
-      // (note: this would be auto corrected on the next mouse move anyway)
-      underworld.syncPlayerPredictionUnitOnly();
-    },
-    probability: 40,
-    cost: { healthCost: 0, manaCost: 0 },
-  },
-  // {
-  //   title: '++ Max Health',
-  //   type: 'perk',
-  //   description: (player) =>
-  //     `Increases your max health from ${player.unit.healthMax} to ${player.unit.healthMax + maxHealthIncreaseAmount * 2
-  //     }`,
-  //   thumbnail: 'images/upgrades/health2.png',
-  //   effect: (player, underworld) => {
-  //     player.unit.healthMax += maxHealthIncreaseAmount * 2;
-  //     player.unit.health = player.unit.healthMax;
-  //     // Now that the player unit's mana has increased,sync the new
-  //     // mana state with the player's predictionUnit so it is properly
-  //     // refelcted in the health bar
-  //     // (note: this would be auto corrected on the next mouse move anyway)
-  //     underworld.syncPlayerPredictionUnitOnly();
-  //   },
-  //   probability: 20,
-  //   cost: { healthCost: 0, manaCost: 0 },
-  // },
-  {
-    title: '+ Max Mana',
-    type: 'perk',
-    description: (player) =>
-      `Increases your mana from ${player.unit.manaMax} to ${player.unit.manaMax + maxManaIncreaseAmount
-      }`,
-    thumbnail: 'images/upgrades/mana1.png',
-    effect: (player, underworld) => {
-      Unit.setPlayerManaMax(player.unit, player.unit.manaMax + maxManaIncreaseAmount);
-      // Now that the player unit's mana has increased,sync the new
-      // mana state with the player's predictionUnit so it is properly
-      // refelcted in the health bar
-      // (note: this would be auto corrected on the next mouse move anyway)
-      underworld.syncPlayerPredictionUnitOnly();
-    },
-    probability: 40,
-    cost: { healthCost: 0, manaCost: 0 },
-  },
-  // {
-  //   title: '++ Max Mana',
-  //   type: 'perk',
-  //   description: (player) =>
-  //     `Increases your mana from ${player.unit.manaMax} to ${player.unit.manaMax + maxManaIncreaseAmount * 2
-  //     }`,
-  //   thumbnail: 'images/upgrades/mana2.png',
-  //   effect: (player, underworld) => {
-  //     Unit.setPlayerManaMax(player.unit, player.unit.manaMax + maxManaIncreaseAmount * 2);
-  //     // Now that the player unit's mana has increased,sync the new
-  //     // mana state with the player's predictionUnit so it is properly
-  //     // refelcted in the health bar
-  //     // (note: this would be auto corrected on the next mouse move anyway)
-  //     underworld.syncPlayerPredictionUnitOnly();
-  //   },
-  //   probability: 20,
-  //   cost: { healthCost: 0, manaCost: 0 },
-  // },
-  {
-    title: 'Quickling',
-    type: 'perk',
-    description: (player) =>
-      `Increases your stamina to ${Math.floor(100 * plusStaminaMinusHealth_staminaProportion)}% but decreased your max health to ${Math.floor(100 * plusStaminaMinusHealth_healthProportion)}%`,
-    thumbnail: 'images/spell/unknown.png',
-    effect: (player, underworld) => {
-      player.unit.healthMax *= plusStaminaMinusHealth_healthProportion;
-      // Round to a whole number
-      player.unit.healthMax = Math.max(1, Math.floor(player.unit.healthMax));
-      player.unit.health = player.unit.healthMax;
-      player.unit.stamina *= plusStaminaMinusHealth_staminaProportion;
-      // Now that the player unit's properties have changed ,sync the new
-      // state with the player's predictionUnit so it is properly
-      // refelcted in the bar
-      // (note: this would be auto corrected on the next mouse move anyway)
-      underworld.syncPlayerPredictionUnitOnly();
-    },
-    probability: 10,
-    cost: { healthCost: 0, manaCost: 0 },
-  },
-  {
-    title: 'Glass Sniper',
-    type: 'perk',
-    description: (player) =>
-      `Increases your cast range to ${Math.floor(100 * plusRangeMinusHealth_rangeProportion)}% but decreased your max health to ${Math.floor(100 * plusRangeMinusHealth_healthProportion)}%`,
-    thumbnail: 'images/spell/unknown.png',
-    effect: (player, underworld) => {
-      player.unit.healthMax *= plusRangeMinusHealth_healthProportion;
-      // Round to a whole number
-      player.unit.healthMax = Math.max(1, Math.floor(player.unit.healthMax));
-      player.unit.health = player.unit.healthMax;
-      player.unit.attackRange *= plusRangeMinusHealth_rangeProportion;
-      // Now that the player unit's properties have changed, sync the new
-      // state with the player's predictionUnit so it is properly
-      // refelcted in the bar
-      // (note: this would be auto corrected on the next mouse move anyway)
-      underworld.syncPlayerPredictionUnitOnly();
-    },
-    probability: 10,
-    cost: { healthCost: 0, manaCost: 0 },
-  },
-  {
-    title: 'Stone Tower',
-    type: 'perk',
-    maxCopies: 1,
-    description: (player) =>
-      `Increases your mana to ${Math.floor(100 * plusManaMinusStamina_manaProportion)}% but decreased your max stamina to ${Math.floor(100 * plusManaMinusStamina_staminaProportion)}%`,
-    thumbnail: 'images/spell/unknown.png',
-    effect: (player, underworld) => {
-      Unit.setPlayerManaMax(player.unit, player.unit.manaMax * plusManaMinusStamina_manaProportion);
-
-      player.unit.staminaMax *= plusManaMinusStamina_staminaProportion;
-      // Round to a whole number
-      player.unit.staminaMax = Math.floor(player.unit.staminaMax);
-      player.unit.stamina = player.unit.staminaMax;
-      // Now that the player unit's properties have changed, sync the new
-      // state with the player's predictionUnit so it is properly
-      // refelcted in the bar
-      // (note: this would be auto corrected on the next mouse move anyway)
-      underworld.syncPlayerPredictionUnitOnly();
-    },
-    probability: 10,
-    cost: { healthCost: 0, manaCost: 0 },
-  },
-  {
-    title: 'Overflowing Mana',
-    type: 'perk',
-    maxCopies: 1,
-    description: (player) =>
-      `Grants a ${Math.floor(100 * maybeManaOverfillProportionChance)}% chance on the start of every turn that you will get 2x mana for that turn.`,
-    thumbnail: 'images/spell/unknown.png',
-    effect: (player, underworld) => {
-      Unit.addModifier(player.unit, maybeManaOverfillId, underworld, false);
-    },
-    probability: 500,
-    cost: { healthCost: 0, manaCost: 0 },
-  },
-  {
-    title: '+ Cast Range',
-    type: 'perk',
-    description: (player) =>
-      `Increases your maximum cast range by ${castRangeIncreaseProportion * 100}%`,
-    thumbnail: 'images/upgrades/todo.png',
-    effect: (player) => {
-      player.unit.attackRange += player.unit.attackRange * castRangeIncreaseProportion;
-    },
-    probability: 20,
-    cost: { healthCost: 0, manaCost: 0 },
-  },
-  {
-    title: '+ Max Stamina',
-    type: 'perk',
-    description: (player) =>
-      `Increases your stamina by ${maxStaminaIncreaseProportion * 100}%`,
-    thumbnail: 'images/spell/unknown.png',
-    effect: (player) => {
-      player.unit.staminaMax += player.unit.staminaMax * maxStaminaIncreaseProportion;
-      player.unit.stamina = player.unit.staminaMax;
-    },
-    probability: 20,
-    cost: { healthCost: 0, manaCost: 0 },
-  },
-];
-const maxManaIncreaseAmount = 10;
-const castRangeIncreaseProportion = 0.2;
-const maxStaminaIncreaseProportion = 0.2;
-const maxHealthIncreaseAmount = 3;
-// const manaPerTurnIncreaseAmount = 8;
 
 export const upgradeCardsSource: IUpgrade[] = []
 export const rerollUpgrade: IUpgrade = {
@@ -378,11 +187,3 @@ export const rerollUpgrade: IUpgrade = {
   cost: { manaCost: 0, healthCost: 0 },
 }
 const upgradeSpecialsSource = [rerollUpgrade];
-
-// Template
-//   {
-//     title: '',
-//     description: '',
-//     thumbnail: '.png',
-//     probability:1
-//   },
