@@ -2,10 +2,25 @@
 Better Perks
 
 Perks need to be randomly generated
-Attributes: health, mana, stamina, range, chances of things happening
-When: Immediately, Every Turn, Every Level
+Attributes: healthmax, manamax, staminamax, range, health, mana, stamina, chances of things happening
+When: Immediately, Every Level, Every Turn
+Amount: Lots, Medium, A little
 Certainty: yes, %
 Type: Perk, Curse
+
+Pairings:
+Group 1:
+  Attributes: max stats / range
+  When: Immediately (amount lots, certainty yes), Every Level (amount medium, certainty yes), Every Turn (amount little, certainty %)
+Group 2:
+  Attributes: temporary stats
+  When: Every Level, Every Turn
+  Certainty: %
+
+Examples:
+```
+% chance at the start of every turn to get x attribute changed
+```
 ## 2022.12.30
 I'm now confused about the updates.  There's 2 folders that comes out of an electron-forge make.  One is make/squirrel.windows/x64 which is the installer that puts the files in local appData and the other is Spellmasons-win32-x64 which seems to just be the exe (not the installer).  If I ship that via steam I can have steam manage the updates I think and it'll do delta updates.
 Okay, so it looks like the `Package` step makes the executable and the `Make` step makes an installer (so that you can distribute a single file rather than a folder with the executable and all it's associated files).  So I think I just need to run `Package` and distribute that through steam and I can skip all the installer stuff. [as i suspected](https://www.electronforge.io/core-concepts/build-lifecycle) and make step is what puts files in out/make which is where all the squirrel stuff / installer is, but since I'm distributing via Steam I don't need that.

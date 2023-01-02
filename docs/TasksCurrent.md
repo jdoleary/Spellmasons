@@ -1,3 +1,5 @@
+- Magic arrow spell (travels out of range, like ghost arrow)
+- idea: trigger the spell on line segment intersection (throw the spell)
 - feature: Randomly generated, improved perks (without names)
 - Add Boss and Looping (see branch `loop-tint-level`)
 
