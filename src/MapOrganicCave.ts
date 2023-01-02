@@ -5,7 +5,7 @@ import { randFloat, randInt } from "./jmath/rand";
 import * as Vec from "./jmath/Vec";
 import * as config from './config';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex, vec2ToOneDimentionIndexPreventWrap } from "./jmath/ArrayUtil";
-import { conway, ConwayState, Material } from "./Conway";
+import { conway, Material } from "./Conway";
 import type { IObstacle } from "./entity/Obstacle";
 import Underworld, { Biome } from "./Underworld";
 import LiquidPools, { doStampsOverlap, stampMatricies, surround } from './LiquidPools';
@@ -55,7 +55,128 @@ interface CaveParams {
 }
 const directionRandomAmount = Math.PI / 2;
 export interface Limits { xMin: number, xMax: number, yMin: number, yMax: number };
+
+
+// Level generation happens in a few different steps
+// An algorithm makes an array of Materials (Conway's Material.Ground and Material.Empty)
+// The array has a width so that it can be expressed as a 2D array.
+// Then stampLiquids is used to make pools of liquid in places where the ground is big enough
+// Then the conway algorithm is used to place walls and semi-walls
+// Then the materials array is converted into a tiles array
+// Then convertBaseTilesToFinalTiles is used to turn the tiles into their final images
 export function generateCave(params: CaveParams, biome: Biome, underworld: Underworld): { map: Map, limits: Limits } {
+    let { materials, width } = makeLevelMaterialsArray(params, underworld);
+    stampLiquids(materials, width, underworld);
+    // Increase the size of the map on all sides so that no stamped liquid pools
+    // touch the outside edge which would break the pathing polygons of the walls
+    const { contents: matrixContents, width: newWidth } = surround(materials, width);
+    // Reassign width, height and materials array now that it has grown
+    width = newWidth;
+    const height = Math.floor(matrixContents.length / width);
+    materials = matrixContents;
+
+    // 1st pass for walls
+    conway(materials, width, underworld);
+    // 2nd pass for semi-walls
+    conway(materials, width, underworld);
+
+    // Convert array of materials into tiles
+    let tiles: Tile[] = materials.map((m, i) => {
+        const dimentions = oneDimentionIndexToVec2(i, width);
+        let image = baseTiles.empty;
+        switch (m) {
+            case Material.GROUND:
+                image = baseTiles.ground;
+                break;
+            case Material.LIQUID:
+                image = baseTiles.liquid;
+                break;
+            case Material.WALL:
+                image = baseTiles.wall;
+                break;
+        }
+        return { image, x: dimentions.x * config.OBSTACLE_SIZE, y: dimentions.y * config.OBSTACLE_SIZE }
+    });
+    const bounds = getLimits(tiles);
+    const liquid = tiles.filter(t => t.image == baseTiles.liquid);
+
+
+    const map = {
+        biome,
+        liquid,
+        tiles,
+        width,
+        height
+    };
+    convertBaseTilesToFinalTiles(map);
+    return { map, limits: bounds };
+
+}
+
+
+function stampLiquids(materials: Material[], width: number, underworld: Underworld) {
+    const NUMBER_OF_POOLS = 4;
+    let failedAttempts = 0;
+    const stampedRecords = [];
+    // Make a new liquid pool
+    make_pool:
+    for (let i = 0; i < NUMBER_OF_POOLS; i++) {
+        // Prevent infinite loop if it cannot find a new place for a pool
+        if (failedAttempts > 100) {
+            return;
+        }
+        const stamp = LiquidPools[randInt(underworld.random, 0, LiquidPools.length)];
+        // Start the stamp
+        const chosenIndex = randInt(underworld.random, 0, materials.length);
+        // Ensure that the start point is already a ground material to prevent
+        // the liquid from being stamped in an "island" surrounded by walls
+        if (materials[chosenIndex] !== Material.GROUND) {
+            failedAttempts++;
+            i--;
+            continue make_pool;
+        }
+        const startStampPosition = oneDimentionIndexToVec2(chosenIndex, width);
+        if (stamp) {
+            const stampRecord = {
+                start: startStampPosition,
+                end: Vec.add(startStampPosition, oneDimentionIndexToVec2(stamp.contents.length - 1, stamp.width))
+            };
+            // Make sure there are no collisions with other stamps:
+            for (let otherStamp of stampedRecords) {
+                if (doStampsOverlap(stampRecord, otherStamp)) {
+                    failedAttempts++;
+                    i--;
+                    continue make_pool;
+                }
+            }
+            stampedRecords.push(stampRecord);
+            // Override current materials:
+            stampMatricies(materials, width, stamp.contents, stamp.width, startStampPosition);
+        }
+    }
+}
+function makeLevelMaterialsArray(params: CaveParams, underworld: Underworld) {
+    // return makeLevelMaterialsArrayCaveStyle(params, underworld);
+    return makeLevelMaterialsArrayRoomStyle(params, underworld);
+}
+function makeLevelMaterialsArrayRoomStyle(params: CaveParams, underworld: Underworld) {
+    let width = 64;
+    let height = 64;
+    let materials: Material[] = Array(width * height).fill(Material.EMPTY);
+    const NUMBER_OF_HALLS = 3;
+    for (let i = 0; i < NUMBER_OF_HALLS; i++) {
+        const MAX_WIDTH = 32;
+        const hallWidth = randInt(underworld.random, 1, MAX_WIDTH);
+        const hallHeight = randInt(underworld.random, 1, hallWidth >= MAX_WIDTH / 2 ? 6 : MAX_WIDTH);
+        let stamp: Material[] = Array(hallWidth * hallHeight).fill(Material.GROUND);
+        let stampPosition = { x: randInt(underworld.random, 0, width - 1), y: randInt(underworld.random, 0, height - 1) };
+        console.log('jtest stamp', hallWidth, 'by', hallHeight, 'position', stampPosition);
+        stampMatricies(materials, width, stamp, hallWidth, stampPosition);
+    }
+    return { width, materials }
+}
+// Returns a 1d array in the form {width:number, materials:Materials[]} which represents a 2d array
+function makeLevelMaterialsArrayCaveStyle(params: CaveParams, underworld: Underworld) {
     // Debug: Draw caves
     globalThis.debugCave?.clear();
     const minDirection = randFloat(underworld.random, Math.PI, Math.PI / 2);
@@ -159,103 +280,7 @@ export function generateCave(params: CaveParams, biome: Biome, underworld: Under
     //         globalThis.debugCave.lineStyle(1, 0x000000, 0.0);
     //     }
     // }
-    let conwayState: ConwayState = {
-        // 50%
-        percentChanceOfLiquidSpread: 10,
-        // how quickly the percentChanceOfLiquidSpread
-        // will decrease
-        liquidSpreadChanceFalloff: 2
-    }
-    stampLiquids(materials, width, underworld);
-    // Increase the size of the map on all sides so that no stamped liquid pools
-    // touch the outside edge which would break the pathing polygons of the walls
-    const { contents: matrixContents, width: newWidth } = surround(materials, width);
-    // Reassign width, height and materials array now that it has grown
-    width = newWidth;
-    height = Math.floor(matrixContents.length / width);
-    materials = matrixContents;
-
-    // 1st pass for walls
-    conway(materials, width, conwayState, underworld);
-    // 2nd pass for semi-walls
-    conway(materials, width, conwayState, underworld);
-
-    // Convert array of materials into tiles for use by WFC
-    let tiles: Tile[] = materials.map((m, i) => {
-        const dimentions = oneDimentionIndexToVec2(i, width);
-        let image = baseTiles.empty;
-        switch (m) {
-            case Material.GROUND:
-                image = baseTiles.ground;
-                break;
-            case Material.LIQUID:
-                image = baseTiles.liquid;
-                break;
-            case Material.WALL:
-                image = baseTiles.wall;
-                break;
-        }
-        return { image, x: dimentions.x * config.OBSTACLE_SIZE, y: dimentions.y * config.OBSTACLE_SIZE }
-    });
-    const bounds = getLimits(tiles);
-    const liquid = tiles.filter(t => t.image == baseTiles.liquid);
-
-
-    const map = {
-        biome,
-        liquid,
-        tiles,
-        width,
-        height
-    };
-    convertBaseTilesToFinalTiles(map);
-    return { map, limits: bounds };
-
-}
-
-
-function stampLiquids(materials: Material[], width: number, underworld: Underworld) {
-    const NUMBER_OF_POOLS = 4;
-    let failedAttempts = 0;
-    const stampedRecords = [];
-    // Make a new liquid pool
-    make_pool:
-    for (let i = 0; i < NUMBER_OF_POOLS; i++) {
-        // Prevent infinite loop if it cannot find a new place for a pool
-        if (failedAttempts > 100) {
-            return;
-        }
-        const stamp = LiquidPools[randInt(underworld.random, 0, LiquidPools.length)];
-        // Start the stamp
-        const chosenIndex = randInt(underworld.random, 0, materials.length);
-        // Ensure that the start point is already a ground material to prevent
-        // the liquid from being stamped in an "island" surrounded by walls
-        if (materials[chosenIndex] !== Material.GROUND) {
-            failedAttempts++;
-            i--;
-            continue make_pool;
-        }
-        const startStampPosition = oneDimentionIndexToVec2(chosenIndex, width);
-        if (stamp) {
-            const stampRecord = {
-                start: startStampPosition,
-                end: Vec.add(startStampPosition, oneDimentionIndexToVec2(stamp.contents.length - 1, stamp.width))
-            };
-            // Make sure there are no collisions with other stamps:
-            for (let otherStamp of stampedRecords) {
-                if (doStampsOverlap(stampRecord, otherStamp)) {
-                    failedAttempts++;
-                    i--;
-                    continue make_pool;
-                }
-            }
-            stampedRecords.push(stampRecord);
-            // Override current materials:
-            stampMatricies(materials, width, stamp.contents, stamp.width, startStampPosition);
-        }
-    }
-
-
+    return { materials, width }
 
 }
 const west: Vec.Vec2 = { x: -1, y: 0 };
@@ -395,6 +420,8 @@ export function convertBaseTilesToFinalTiles(map: Map) {
     }
 }
 
+// Uses crawler objects to create a Material array
+// Mutates caveMaterialsArray as the result
 function crawlersChangeTilesToMaterial(crawlers: CaveCrawler[], material: Material, caveWidth: number, caveHeight: number, caveMaterialsArray: Material[]) {
     for (let x = 0; x < caveWidth; x++) {
         for (let y = 0; y < caveHeight; y++) {

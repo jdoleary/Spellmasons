@@ -12,7 +12,7 @@ export enum Material {
 // 0,1,2
 // 7   3
 // 6,5,4
-function mutateViaRules(tile: Material, neighbors: (Material | undefined)[], state: ConwayState, underworld: Underworld): Material {
+function mutateViaRules(tile: Material, neighbors: (Material | undefined)[], underworld: Underworld): Material {
     // Replace empty tiles
     if (tile == Material.EMPTY) {
         if (neighbors.some(t => t && t == Material.GROUND)) {
@@ -43,16 +43,12 @@ export function getNeighbors(tileIndex: number, tiles: Material[], widthOf2DArra
 
 // Mutates tiles based on what the tile's neighbors are
 // Probably will need multiple passes to completely satisfy rules
-export interface ConwayState {
-    percentChanceOfLiquidSpread: number;
-    liquidSpreadChanceFalloff: number;
-}
-export function conway(tiles: Material[], widthOf2DArray: number, state: ConwayState, underworld: Underworld) {
+export function conway(tiles: Material[], widthOf2DArray: number, underworld: Underworld) {
     for (let i = 0; i < tiles.length; i++) {
         const tile = tiles[i];
         if (tile !== undefined) {
             const neighbors = getNeighbors(i, tiles, widthOf2DArray);
-            tiles[i] = mutateViaRules(tile, neighbors, state, underworld);
+            tiles[i] = mutateViaRules(tile, neighbors, underworld);
         }
     }
 }
