@@ -1,13 +1,13 @@
 # Desired Schedule
 - January 1/1-1/7
-    - Finish Boss
-        - See **Boss Design** in DevLog
-    - Prevent too small late game levels
-- January 1/8-1/14
     - Test sending `package` to steam instead of `make` installer
         - Prove that steam won't redownload the executable each time and will just change the deltas
         - Remove squirell code?
         - Remove self-written update code
+    - Finish Boss (wednesday)
+        - See **Boss Design** in DevLog
+    - Prevent too small late game levels
+- January 1/8-1/14
     - Multiplayer
         - Support hosting a server from in the game exe
         - Server Browser

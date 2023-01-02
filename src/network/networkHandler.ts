@@ -36,7 +36,11 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
   const { payload, fromClient } = d;
   if (!NO_LOG_LIST.includes(d.payload.type)) {
     // Don't clog up server logs with payloads, leave that for the client which can handle them better
-    console.log("onData:", MESSAGE_TYPES[d.payload.type], globalThis.headless ? '' : d)
+    try {
+      console.log("onData:", MESSAGE_TYPES[d.payload.type], globalThis.headless ? '' : JSON.stringify(d))
+    } catch (e) {
+      console.warn('Prevent error due to Stringify:', e);
+    }
   }
   const type: MESSAGE_TYPES = payload.type;
   const { underworld } = overworld;

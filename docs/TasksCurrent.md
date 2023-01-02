@@ -1,8 +1,10 @@
-- balance perks
+- There should be 2-3 spots where no enemies are allowed to spawn,
+    - end game maps are too crowded
 
 # Validation
 - What happens if you pick up a scroll but you have all the spells
 - Perks
+- balance perks
 - Make sure perks everyTurn don't proc after portal has spawned
 # Priority
 - multi url was saved weird:`http://localhost:3000/?pieUrl=ws%3Alocalhost%3A8080&game=a`
@@ -22,7 +24,6 @@
 - fix: tutorial comes up at the same time it asks you to pick a new spell
 - animate bloat
 - Remove "update" code in golems-menu
-- sentry is logging onData 441 : SPELL [object Object] https://sentry.io/organizations/jordan-oleary/issues/3427377869/?project=6306205&query=is%3Aunresolved+%21level%3Awarning&referrer=issue-stream&statsPeriod=14d
 - bug: resume last run breaks (i think due to multiplayer)
 - bug: Save named "test" doesn't show up in the load list
 - bug: I seem to be getting race timeouts for Bloat, Slash, Rend, Rend, Rend
