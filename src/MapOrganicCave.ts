@@ -28,16 +28,16 @@ export const caveSizes: { [size: string]: CaveParams } = {
     },
     'small': {
         minThickness: config.OBSTACLE_SIZE,
-        startThickness: 150,
-        startPointJitter: 400,
-        iterations: 12,
-        velocity: 60
+        startThickness: 10,
+        startPointJitter: 300,
+        iterations: 20,
+        velocity: 50
     },
     'medium': {
         minThickness: config.OBSTACLE_SIZE,
-        startThickness: 150,
-        startPointJitter: 500,
-        iterations: 15,
+        startThickness: 50,
+        startPointJitter: 1000,
+        iterations: 20,
         velocity: 80
     }
 }
@@ -156,8 +156,8 @@ function stampLiquids(materials: Material[], width: number, underworld: Underwor
     }
 }
 function makeLevelMaterialsArray(params: CaveParams, underworld: Underworld) {
-    // return makeLevelMaterialsArrayCaveStyle(params, underworld);
-    return makeLevelMaterialsArrayRoomStyle(params, underworld);
+    return makeLevelMaterialsArrayCaveStyle(params, underworld);
+    // return makeLevelMaterialsArrayRoomStyle(params, underworld);
 }
 function makeLevelMaterialsArrayRoomStyle(params: CaveParams, underworld: Underworld) {
     let width = 64;
