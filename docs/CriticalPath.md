@@ -1,11 +1,9 @@
 # Desired Schedule
 - January 1/1-1/7
-    - Thursday
-        - Test sending `package` to steam instead of `make` installer
-            - Prove that steam won't redownload the executable each time and will just change the deltas
-            - Remove squirell code?
-            - Remove self-written update code
     - Wednesday
+        - Update steam with `package` app
+            - Verify that it launches executable
+    - Thursday
         - Finish Boss
             - See **Boss Design** in DevLog
     - Prevent too small late game levels
