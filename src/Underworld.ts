@@ -1263,6 +1263,7 @@ export default class Underworld {
           ? caveSizes.extrasmall
           : caveSizes.small);
 
+    console.log('caveParams (to learn why some levels are too small)', caveParams);
     const { map, limits } = generateCave(caveParams || caveSizes.small, biome, this);
     const { tiles, liquid, width } = map;
     const levelData: LevelData = {
