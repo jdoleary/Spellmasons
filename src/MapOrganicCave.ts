@@ -160,17 +160,26 @@ function makeLevelMaterialsArray(params: CaveParams, underworld: Underworld) {
     return makeLevelMaterialsArrayRoomStyle(params, underworld);
 }
 function makeLevelMaterialsArrayRoomStyle(params: CaveParams, underworld: Underworld) {
-    let width = 64;
-    let height = 64;
+    let width = 32;
+    let height = 32;
     let materials: Material[] = Array(width * height).fill(Material.EMPTY);
     const NUMBER_OF_HALLS = 3;
+    let lastStamp: { position: Vec.Vec2, width: number, height: number } | undefined;
     for (let i = 0; i < NUMBER_OF_HALLS; i++) {
         const MAX_WIDTH = 32;
         const hallWidth = randInt(underworld.random, 1, MAX_WIDTH);
         const hallHeight = randInt(underworld.random, 1, hallWidth >= MAX_WIDTH / 2 ? 6 : MAX_WIDTH);
         let stamp: Material[] = Array(hallWidth * hallHeight).fill(Material.GROUND);
-        let stampPosition = { x: randInt(underworld.random, 0, width - 1), y: randInt(underworld.random, 0, height - 1) };
-        console.log('jtest stamp', hallWidth, 'by', hallHeight, 'position', stampPosition);
+        let stampPosition: Vec.Vec2 = lastStamp !== undefined
+            // Ensure all stamps after the first stamp are touching each other so you get one cohesive map
+            ? { x: randInt(underworld.random, lastStamp.position.x, lastStamp.position.x + lastStamp.width), y: randInt(underworld.random, lastStamp.position.y, lastStamp.position.y + lastStamp.height) }
+            // First stamp can be put anywhere
+            : { x: randInt(underworld.random, 0, width - 1), y: randInt(underworld.random, 0, height - 1) };
+        lastStamp = {
+            position: stampPosition,
+            width: hallHeight,
+            height: hallHeight
+        }
         stampMatricies(materials, width, stamp, hallWidth, stampPosition);
     }
     return { width, materials }
