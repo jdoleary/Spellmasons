@@ -160,27 +160,42 @@ function makeLevelMaterialsArray(params: CaveParams, underworld: Underworld) {
     return makeLevelMaterialsArrayRoomStyle(params, underworld);
 }
 function makeLevelMaterialsArrayRoomStyle(params: CaveParams, underworld: Underworld) {
-    let width = 32;
-    let height = 32;
+    let width = 64;
+    let height = 64;
     let materials: Material[] = Array(width * height).fill(Material.EMPTY);
     const NUMBER_OF_HALLS = 3;
     let lastStamp: { position: Vec.Vec2, width: number, height: number } | undefined;
     for (let i = 0; i < NUMBER_OF_HALLS; i++) {
-        const MAX_WIDTH = 32;
-        const hallWidth = randInt(underworld.random, 1, MAX_WIDTH);
-        const hallHeight = randInt(underworld.random, 1, hallWidth >= MAX_WIDTH / 2 ? 6 : MAX_WIDTH);
-        let stamp: Material[] = Array(hallWidth * hallHeight).fill(Material.GROUND);
+        // Limit height and width so you don't get halls that
+        // are too long
+        const MAX_STAMP_SIZE = 16;
+        let stampWidth = 1;
+        let stampHeight = 1;
+        if (i == 0) {
+            // First one should be square
+            stampWidth = randInt(underworld.random, 5, 7);
+            stampHeight = randInt(underworld.random, 5, 7);
+        } else if (i % 2 == 0) {
+            // wide
+            stampWidth = randInt(underworld.random, 6, MAX_STAMP_SIZE);
+            stampHeight = randInt(underworld.random, 1, 3);
+        } else {
+            //tall
+            stampWidth = randInt(underworld.random, 1, 3);
+            stampHeight = randInt(underworld.random, 6, MAX_STAMP_SIZE);
+        }
+        let stamp: Material[] = Array(stampWidth * stampHeight).fill(Material.GROUND);
         let stampPosition: Vec.Vec2 = lastStamp !== undefined
             // Ensure all stamps after the first stamp are touching each other so you get one cohesive map
             ? { x: randInt(underworld.random, lastStamp.position.x, lastStamp.position.x + lastStamp.width), y: randInt(underworld.random, lastStamp.position.y, lastStamp.position.y + lastStamp.height) }
             // First stamp can be put anywhere
-            : { x: randInt(underworld.random, 0, width - 1), y: randInt(underworld.random, 0, height - 1) };
+            : { x: randInt(underworld.random, 0, (width / 2) - 1 - stampWidth), y: randInt(underworld.random, 0, (height / 2) - 1 - stampHeight) };
         lastStamp = {
             position: stampPosition,
-            width: hallHeight,
-            height: hallHeight
+            width: stampWidth,
+            height: stampHeight
         }
-        stampMatricies(materials, width, stamp, hallWidth, stampPosition);
+        stampMatricies(materials, width, stamp, stampWidth, stampPosition);
     }
     return { width, materials }
 }
