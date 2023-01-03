@@ -1,11 +1,13 @@
 # Desired Schedule
 - January 1/1-1/7
-    - Test sending `package` to steam instead of `make` installer
-        - Prove that steam won't redownload the executable each time and will just change the deltas
-        - Remove squirell code?
-        - Remove self-written update code
-    - Finish Boss (wednesday)
-        - See **Boss Design** in DevLog
+    - Thursday
+        - Test sending `package` to steam instead of `make` installer
+            - Prove that steam won't redownload the executable each time and will just change the deltas
+            - Remove squirell code?
+            - Remove self-written update code
+    - Wednesday
+        - Finish Boss
+            - See **Boss Design** in DevLog
     - Prevent too small late game levels
 - January 1/8-1/14
     - Multiplayer
@@ -14,13 +16,13 @@
         - Server own-info page served over http
         - Multiplayer save load with "take over player"
         - Notify when version isn't same
+    - 2nd algorithm for generating levels
+        - see branch 2nd-level-algorithm
 - January 1/5-1/21
     - BALANCE unit spawns especially on later levels
         - Maybe not exponential?
     - Submit to IGN and others
     - Balanced / Difficult
-    - 2nd algorithm for generating levels
-        - see branch 2nd-level-algorithm
     - Finish Looping
         - (see branch `loop-tint-level`)
 - January 1/22-1/28

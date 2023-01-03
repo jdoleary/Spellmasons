@@ -1,6 +1,5 @@
-- There should be 2-3 spots where no enemies are allowed to spawn,
-    - end game maps are too crowded
 
+- Cinematic camera should just be a zoom in? or improved
 # Validation
 - What happens if you pick up a scroll but you have all the spells
 - Perks
@@ -19,6 +18,8 @@
 - Protect production branch from unintentional pushes
 
 # To be Triaged
+- There should be 2-3 spots where no enemies are allowed to spawn,
+    - end game maps are too crowded
 - src: Make connect sort by same faction first
 - bug: clickign to cancel cinematic sometimest clicks on the upgrade accidentally
 - fix: tutorial comes up at the same time it asks you to pick a new spell
