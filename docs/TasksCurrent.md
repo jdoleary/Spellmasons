@@ -18,6 +18,7 @@
 - Protect production branch from unintentional pushes
 
 # To be Triaged
+- todo: Bossmasons' casts aren't limited when he's out of mana
 - There should be 2-3 spots where no enemies are allowed to spawn,
     - end game maps are too crowded
 - src: Make connect sort by same faction first

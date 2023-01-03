@@ -64,16 +64,24 @@ Brad feedback for Gameplay trailer
     - This would work like a regular website and so long as I have cache busting set up right it will satisfy both requirements.  The disadvantage is that an old version will be stored on steam perminantly and users will have to have an internet connection when the boot up the game in order to get the latest update
 
 **Boss Design**
+Every turn the boss creates a red portal and will teleport to it next turn.
+The boss's regular casts are
+  - Summon
+  - AOE damage
+  - Cannot be frozen?
+
+- When you start the level there is only a few red portals
+- Stepping on one does damage to you
+- One of them becomes the bossmason
+- Other's become goons
+
+- (attack logic should occur in getUnitAttackTargets so it manages attentionmarker visibility)
+- Make sure red portals transfer any curses or modifiers to the units that spawn into them
+
+---
 The more "advance notice" the players get the more interesting the boss is because they can react to it.
 So if you know where he's going to teleport a full turn before you can prepare for it.  If you know what mobs he's gunna consume you can interact with them or change them.
 Maybe the boss could be a larger, eviler spellmason.  Maybe with emanating particles.  He could teleport, spawn red portals that are linked to each other, summon guys.
-First Stage
-  - Creates red portals that randomly link to each other
-  - Resurrects enemies
-  - AOE damage
-  - Self Heal
-What is second stage?
-  - Consumes all remaining enemy units and gains their stats
 
 Boss aesthetic: Desaturated spellmason with eminating purple particles
 Abilities: 

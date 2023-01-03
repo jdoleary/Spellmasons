@@ -6,6 +6,8 @@
     - Thursday
         - Finish Boss
             - See **Boss Design** in DevLog
+            - Implement red portals (those portals should technically be units so that modifiers will transfer)
+            - Implement aoe damage against enemies chain+hurt?
     - Prevent too small late game levels
 - January 1/8-1/14
     - Multiplayer

@@ -5,11 +5,11 @@ import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
-const id = 'purify';
+export const purifyCardId = 'purify';
 // Removes all curse modifiers
 const spell: Spell = {
   card: {
-    id,
+    id: purifyCardId,
     category: CardCategory.Blessings,
     sfx: 'purify',
     manaCost: 20,
