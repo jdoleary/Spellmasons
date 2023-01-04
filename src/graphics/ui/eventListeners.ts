@@ -627,6 +627,10 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         // Clear resMarkers so they don't hang around once the spell is cast
         globalThis.resMarkers = [];
 
+        // If multiplayer, play channelling animation until you are able to cast
+        if (overworld.underworld?.players.length || 0 > 1) {
+          Player.setSpellmasonsToChannellingAnimation(selfPlayer);
+        }
         overworld.pie.sendData({
           type: MESSAGE_TYPES.SPELL,
           x: target.x,

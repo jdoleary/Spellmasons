@@ -174,5 +174,6 @@ I have 8 working days until Erin and I leave on our June Trip.  By that time I t
 - Better Menu
 
 ## 2022.06.13
+tags: imageMagick reverse image
 Was able to horizontally flip images with the following command:
 `magick *.png -flop -set filename:base "%[basename]" "%[filename:base].png"`

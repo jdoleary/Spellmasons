@@ -1,13 +1,13 @@
 # Desired Schedule
 - January 1/1-1/7
     - Wednesday
-        - Update steam with `package` app
-            - Verify that it launches executable
-    - Thursday
         - Finish Boss
             - See **Boss Design** in DevLog
             - Implement red portals (those portals should technically be units so that modifiers will transfer)
             - Implement aoe damage against enemies chain+hurt?
+    - Thursday
+        - Update steam with `package` app
+            - Verify that it launches executable
     - Prevent too small late game levels
 - January 1/8-1/14
     - Multiplayer
@@ -16,13 +16,14 @@
         - Server own-info page served over http
         - Multiplayer save load with "take over player"
         - Notify when version isn't same
+        - Add Che book animation for when a player casts but is waiting
     - 2nd algorithm for generating levels
         - see branch 2nd-level-algorithm
 - January 1/5-1/21
     - BALANCE unit spawns especially on later levels
-        - Maybe not exponential?
-    - Submit to IGN and others
+        - Maybe not exponential budget?
     - Balanced / Difficult
+    - Submit to IGN and others
     - Finish Looping
         - (see branch `loop-tint-level`)
 - January 1/22-1/28
@@ -34,6 +35,10 @@
             - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
             - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
         - Verify Cloud Saves
+        - Perks
+            - Styling for perks
+            - Use relative percentages rather than out of 100%
+        - Achievements?
     - Final QA
         - Manually test all spells for desync issues (in multiplayer)
         - Test for desyncs on multiplayer
@@ -45,15 +50,11 @@
     - Features / Content
         - Reroll / exchange cards (risk reward style)
             - like maybe you can reroll but you have one less card to choose from each time
-        - Perks
-            - Styling for perks
-            - Use relative percentages rather than out of 100%
     - [Submit demo to IGN](https://corp.ign.com/submit-a-game)
     - make music play in menu
 
     
 - Add codex where you can read about spells and enemies
-- Allow opening dev tools in exe
 # Critical Path
 - Milestone | **Optimize game**
     - Optimize runPredictions: especially with expanding + corpse explosion

@@ -390,6 +390,49 @@ export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | u
     CardUI.recalcPositionForCards(player, underworld);
   }
 }
+export function setSpellmasonsToChannellingAnimation(player: IPlayer) {
+  const bookInAnimationPath = 'units/playerBookIn';
+  new Promise<void>((resolve) => {
+    if (player.unit.image) {
+      Image.changeSprite(
+        player.unit.image,
+        bookInAnimationPath,
+        player.unit.image.sprite.parent,
+        resolve,
+        {
+          loop: false,
+          // Play the book open animation a little faster than usual so
+          // the player can get on with idling
+          animationSpeed: 0.2
+        }
+      );
+      Image.addOneOffAnimation(player.unit, 'units/playerBookInMagic', { doRemoveWhenPrimaryAnimationChanges: true }, {
+        loop: false,
+        // Play the book open animation a little faster than usual so
+        // the player can get on with idling
+        animationSpeed: 0.2
+      });
+    } else {
+      resolve();
+    }
+  }).then(() => {
+    // Only change to playerBookIdle if the animation finished and was still the "book in" animation
+    if (player.unit.image && player.unit.image.sprite.imagePath == bookInAnimationPath) {
+      Image.changeSprite(
+        player.unit.image,
+        'units/playerBookIdle',
+        player.unit.image.sprite.parent,
+        undefined,
+        {
+          loop: true
+        }
+      );
+      Image.addOneOffAnimation(player.unit, 'units/playerBookIdleMagic', { doRemoveWhenPrimaryAnimationChanges: true }, { loop: true });
+    }
+
+  });
+
+}
 // This function fully deletes the cards from the player's hand
 export function removeCardsFromHand(player: IPlayer, cards: string[], underworld: Underworld) {
   player.cards = player.cards.filter(c => !cards.includes(c));

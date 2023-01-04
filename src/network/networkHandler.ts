@@ -587,6 +587,9 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
     console.error('Spell is invalid, it must have coordinates');
     return;
   }
+  // Clear out player thought (and the line that points to it) once they cast
+  delete underworld.playerThoughts[caster.clientId];
+
   console.log('Handle Spell:', payload?.cards.join(','));
 
   // Only allow casting during the PlayerTurns phase
@@ -597,6 +600,32 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
       animationKey = 'playerAttackSmall';
     } else if (payload.cards.length < 6) {
       animationKey = 'playerAttackMedium0';
+    }
+    if (['units/playerBookIn', 'units/playerBookIdle'].includes(caster.unit.image?.sprite.imagePath || '')) {
+      await new Promise<void>((resolve) => {
+        if (caster.unit.image) {
+          Image.changeSprite(
+            caster.unit.image,
+            'units/playerBookReturn',
+            caster.unit.image.sprite.parent,
+            resolve,
+            {
+              loop: false,
+              // Play the book close animation a little faster than usual so
+              // the player can get on with casting
+              animationSpeed: 0.2
+            }
+          );
+          Image.addOneOffAnimation(caster.unit, 'units/playerBookReturnMagic', { doRemoveWhenPrimaryAnimationChanges: true }, {
+            loop: false,
+            // Play the book close animation a little faster than usual so
+            // the player can get on with casting
+            animationSpeed: 0.2
+          });
+        } else {
+          resolve();
+        }
+      });
     }
     const keyMoment = () => underworld.castCards(caster.cardUsageCounts, caster.unit, payload.cards, payload, false, false);
     const colorMagicMedium = lightenColor(caster.colorMagic, 0.3);

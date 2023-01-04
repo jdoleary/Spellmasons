@@ -430,5 +430,13 @@ export function addOneOffAnimation(imageHaver: any, spritePath: string, oneOffOp
       animationSprite.doRemoveWhenPrimaryAnimationChanges = oneOffOptions?.doRemoveWhenPrimaryAnimationChanges || false;
       animationSprite.anchor.set(0.5);
     }
+    // Resolve if set to loop, since this sprite loops it will never finish animating
+    // (well, until it is removed), in which case the promise shouldn't wait for it.
+    // It might be misunderstood that this will resolve when the animating sprite is removed
+    // but I have no use-case for that at the moment and it would be a bit complicated to implement
+    // that so for now I will just resolve immediately if set to loop.
+    if (options?.loop) {
+      resolve();
+    }
   }));
 }
