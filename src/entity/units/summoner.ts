@@ -144,12 +144,14 @@ export function summonerGetUnitAttackTargets(unit: Unit.IUnit, underworld: Under
   }
   return [];
 }
-// Similar to findRandomDisplaceLocation except it omits liquid locations
+// Similar to findRandomDisplaceLocation except it omits liquid locations and locations near other units
+// and other pickups
 export function findRandomGroundLocation(underworld: Underworld, summoner: Unit.IUnit, seed: prng): Vec2 | undefined {
   let isValid = false;
   let randomCoord;
   const infiniteLoopLimit = 100;
   let i = 0;
+  whileloop:
   do {
     i++;
     if (i >= infiniteLoopLimit) {
@@ -157,6 +159,29 @@ export function findRandomGroundLocation(underworld: Underworld, summoner: Unit.
       return undefined;
     }
     randomCoord = underworld.getRandomCoordsWithinBounds(underworld.limits, seed);
+
+    // Omit location that intersects with unit
+    for (let u of underworld.units) {
+      // Note, units' radius is rather small (to allow for crowding), so
+      // this distance calculation uses neither the radius of the pickup
+      // nor the radius of the unit.  It is hard coded to 2 COLLISION_MESH_RADIUSES
+      // which is currently 64 px (or the average size of a unit);
+      if (math.distance(randomCoord, u) < config.COLLISION_MESH_RADIUS) {
+        isValid = false;
+        continue whileloop;
+      }
+    }
+    // Omit location that intersects with pickup
+    for (let pu of underworld.pickups) {
+      // Note, units' radius is rather small (to allow for crowding), so
+      // this distance calculation uses neither the radius of the pickup
+      // nor the radius of the unit.  It is hard coded to 2 COLLISION_MESH_RADIUSES
+      // which is currently 64 px (or the average size of a unit);
+      if (math.distance(randomCoord, pu) < config.COLLISION_MESH_RADIUS) {
+        isValid = false;
+        continue whileloop;
+      }
+    }
     // Only summon with the summoner's attack range
     isValid = math.distance(summoner, randomCoord) <= summoner.attackRange
       // Make sure the summon point is valid

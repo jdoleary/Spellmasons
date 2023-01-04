@@ -1,4 +1,5 @@
 
+
 - Cinematic camera should just be a zoom in? or improved
 # Validation
 - What happens if you pick up a scroll but you have all the spells
@@ -18,6 +19,7 @@
 - Protect production branch from unintentional pushes
 
 # To be Triaged
+- bug: you can zoom during cinematic
 - todo: Bossmasons' casts aren't limited when he's out of mana
 - There should be 2-3 spots where no enemies are allowed to spawn,
     - end game maps are too crowded

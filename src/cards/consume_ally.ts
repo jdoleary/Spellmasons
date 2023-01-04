@@ -40,7 +40,6 @@ Instantly kill an ally to gain their health
         const healthTrailPromises = [];
         if (!prediction) {
           const NUMBER_OF_ANIMATED_TRAILS = unitHealthStolen;
-          console.log('jtest', quantity, NUMBER_OF_ANIMATED_TRAILS);
           for (let i = 0; i < quantity * NUMBER_OF_ANIMATED_TRAILS; i++) {
             healthTrailPromises.push(makeManaTrail(unit, caster, underworld, '#ff6767n', '#ff0000').then(() => {
               // healthTrailPromises.push(makeManaTrail(unit, caster, underworld, '#fff9e4', '#ffcb3f').then(() => {

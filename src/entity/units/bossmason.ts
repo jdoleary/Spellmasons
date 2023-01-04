@@ -1,21 +1,26 @@
 import { AdjustmentFilter } from '@pixi/filter-adjustment';
-import type { UnitSource } from './index';
-import { UnitSubType, UnitType } from '../../types/commonTypes';
+import { allUnits, UnitSource } from './index';
+import { Faction, UnitSubType, UnitType } from '../../types/commonTypes';
 import * as Unit from '../Unit';
-import * as math from '../../jmath/math';
 import Underworld from '../../Underworld';
 import * as slash from '../../cards/slash';
 import * as config from '../../config';
 import { makeCorruptionParticles } from '../../graphics/ParticleCollection';
 import purify from '../../cards/purify';
 import consumeAlly from '../../cards/consume_ally';
-import { calculateCost } from '../../cards/cardUtils';
+import { calculateCost, oneOffImage } from '../../cards/cardUtils';
 import seedrandom from 'seedrandom';
 import { makeManaTrail } from '../../graphics/Particles';
 import { addPixiSpriteAnimated, containerUnits } from '../../graphics/PixiUtils';
 import { findRandomGroundLocation } from './summoner';
-import { pickups, PICKUP_SPIKES_NAME } from '../Pickup';
+import { pickups, PICKUP_SPIKES_NAME, RED_PORTAL, removePickup } from '../Pickup';
 import { Vec2 } from '../../jmath/Vec';
+import { skyBeam } from '../../VisualEffects';
+import * as Pickup from '../Pickup';
+import * as math from '../../jmath/math';
+import { summoningSicknessId } from '../../modifierSummoningSickness';
+import { BLOOD_GOLEM_ID } from './bloodGolem';
+import { BLOOD_ARCHER_ID } from './blood_archer';
 
 export const bossmasonUnitId = 'Bossmason';
 const bossmasonMana = 200;
@@ -51,8 +56,41 @@ const unit: UnitSource = {
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     // Attack or move, not both; so clear their existing path
     unit.path = undefined;
-    // Purify self if cursed
 
+    const seed = seedrandom(`${underworld.seed}-${underworld.turn_number}-${unit.id}`);
+
+    const redPortals = underworld.pickups.filter(p => p.name == RED_PORTAL);
+    const redPortalPickupSource = pickups.find(p => p.name == RED_PORTAL);
+    if (redPortalPickupSource) {
+      if (redPortals.length == 0) {
+        // Spawn new red portals
+        for (let i = 0; i < 5; i++) {
+          const coords = findRandomGroundLocation(underworld, unit, seed);
+          if (coords) {
+            Pickup.create({ pos: coords, pickupSource: redPortalPickupSource }, underworld, false);
+          }
+        }
+      } else {
+        // Teleport to a red portal
+        // and turn the rest into enemies
+        let bossmasonTeleported = false;
+        for (let portal of redPortals) {
+          if (!bossmasonTeleported) {
+            bossmasonTeleported = true;
+            skyBeam(unit);
+            unit.x = portal.x;
+            unit.y = portal.y;
+            removePickup(portal, underworld, false);
+          } else {
+            summonUnitAtPickup(portal, underworld);
+          }
+        }
+      }
+    } else {
+      console.error('Could not find redPortalPickupSource');
+    }
+
+    // Purify self if cursed
     let cost = calculateCost([purify.card], {});
     if (cost.manaCost <= unit.mana && unit.modifiers && Object.values(unit.modifiers).some(m => m.isCurse)) {
       const keyMoment = () => underworld.castCards({}, unit, [purify.card.id], unit, false, false);
@@ -75,7 +113,6 @@ const unit: UnitSource = {
       const keyMoment = () => {
         let lastPromise = Promise.resolve();
         let numberOfSummons = 8;
-        const seed = seedrandom(`${underworld.seed}-${underworld.turn_number}-${unit.id}`);
         for (let i = 0; i < numberOfSummons; i++) {
           const coords = findRandomGroundLocation(underworld, unit, seed);
           if (coords) {
@@ -91,14 +128,14 @@ const unit: UnitSource = {
       await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
     }
 
-    const attackTarget = attackTargets && attackTargets[0];
-    // Attack
-    // TODO: Check mana cost
-    if (attackTarget && canAttackTarget) {
-      Unit.orient(unit, attackTarget);
-      const keyMoment = () => underworld.castCards({}, unit, [slash.slashCardId], attackTarget, false, false);
-      await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
-    }
+    // const attackTarget = attackTargets && attackTargets[0];
+    // // Attack
+    // // TODO: Check mana cost
+    // if (attackTarget && canAttackTarget) {
+    //   Unit.orient(unit, attackTarget);
+    //   const keyMoment = () => underworld.castCards({}, unit, [slash.slashCardId], attackTarget, false, false);
+    //   await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
+    // }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
     // Should be always true, since bossmasons is always AI
@@ -165,6 +202,34 @@ function summonTrap(coords: Vec2, underworld: Underworld) {
   } else {
     console.error('Could not find trap pickup');
     return Promise.resolve();
+  }
+}
+function summonUnitAtPickup(pickup: Pickup.IPickup, underworld: Underworld) {
+  const enemyIsClose = underworld.units.filter(u => u.faction == Faction.ALLY).some(u => math.distance(pickup, u) <= config.PLAYER_BASE_ATTACK_RANGE)
+  let sourceUnit = allUnits[BLOOD_ARCHER_ID];
+  if (enemyIsClose) {
+    sourceUnit = allUnits[BLOOD_GOLEM_ID];
+  }
+
+  if (sourceUnit) {
+    const summonedUnit = Unit.create(
+      sourceUnit.id,
+      // Start the unit at the summoners location
+      pickup.x,
+      pickup.y,
+      // A unit always summons units in their own faction
+      Faction.ENEMY,
+      sourceUnit.info.image,
+      UnitType.AI,
+      sourceUnit.info.subtype,
+      sourceUnit.unitProps,
+      underworld
+    );
+    // Add summoning sickeness so they can't act after they are summoned
+    Unit.addModifier(summonedUnit, summoningSicknessId, underworld, false);
+    removePickup(pickup, underworld, false);
+  } else {
+    console.error('Source unit not found in summonUnitAtPickup', enemyIsClose)
   }
 
 }

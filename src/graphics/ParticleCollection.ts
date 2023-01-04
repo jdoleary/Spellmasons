@@ -470,6 +470,7 @@ export function makeCorruptionParticles(follow: IUnit, prediction: boolean, unde
     }
 }
 
+export const RED_PORTAL_JID = 'redPortal';
 export function makeRedPortal(position: Vec2, prediction: boolean) {
     if (prediction) {
         // Don't show if just a prediction

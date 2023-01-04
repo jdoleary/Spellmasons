@@ -17,7 +17,7 @@ import * as CardUI from '../graphics/ui/CardUI';
 import { bossmasonUnitId } from './units/bossmason';
 import { chooseOneOf } from '../jmath/rand';
 import { skyBeam } from '../VisualEffects';
-import { makeRedPortal, stopAndDestroyForeverEmitter } from '../graphics/ParticleCollection';
+import { makeRedPortal, RED_PORTAL_JID, stopAndDestroyForeverEmitter } from '../graphics/ParticleCollection';
 import * as particles from '@pixi/particle-emitter'
 
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
@@ -112,7 +112,7 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
       // Right now red portal is the only pickup that uses an emitter;
       // however if that changes in the future this should be refactored so
       // that there isn't a special case inside of Pickup.create
-      self.emitter = makeRedPortal({ x, y }, false)
+      assignEmitter(self, RED_PORTAL_JID);
     }
   }
 
@@ -137,6 +137,15 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
   underworld.addPickupToArray(self, prediction);
 
   return self;
+}
+function assignEmitter(pickup: IPickup, emitterId: string) {
+  if (emitterId == RED_PORTAL_JID) {
+    pickup.emitter = makeRedPortal(pickup, false);
+  } else {
+    console.error('Attempting to assignEmitter with unkown id:', emitterId);
+  }
+  // @ts-ignore: jid custom property for serialization
+  pickup.emitterJID = RED_PORTAL_JID;
 }
 function addText(pickup: IPickup) {
   if (pickup.real) {
@@ -176,17 +185,20 @@ export function setPosition(pickup: IPickup, x: number, y: number) {
   pickup.y = y;
   Image.setPosition(pickup.image, { x, y });
 }
-export type IPickupSerialized = Omit<IPickup, "image" | "effect" | "text" | "real"> & {
-  image?: Image.IImageAnimatedSerialized
+export type IPickupSerialized = Omit<IPickup, "image" | "effect" | "text" | "real" | "emitter"> & {
+  image?: Image.IImageAnimatedSerialized,
+  emitter?: string
 };
 export function serialize(p: IPickup): IPickupSerialized {
   // effect is a callback and cannot be serialized
   // real is a reference to self if self is not a prediction copy and cannot be serialized
   // because it would be cyclical
-  const { effect, text, real, ...rest } = p;
+  const { effect, text, real, emitter, ...rest } = p;
   const serialized: IPickupSerialized = {
     ...rest,
     image: p.image ? Image.serialize(p.image) : undefined,
+    // @ts-ignore: jid custom property for serialization
+    emitter: emitter?.jid
   };
   return serialized;
 }
@@ -204,6 +216,11 @@ export function load(pickup: IPickup, underworld: Underworld, prediction: boolea
     // So when you mutate the properties, the ref must stay the same.
     Object.assign(newPickup, toCopy);
     addText(newPickup);
+    // @ts-ignore: jid custom property for serialization
+    if (newPickup.emitter && newPickup.emitterJID) {
+      // @ts-ignore: jid custom property for serialization
+      assignEmitter(newPickup, newPickup.emitterJID);
+    }
     return newPickup;
   } else {
     console.error('Could not load pickup with path', pickup.imagePath);

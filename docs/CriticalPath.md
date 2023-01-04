@@ -5,8 +5,6 @@
             - This can happen if jitter puts the start points too close together
             - see branch `start-point-jitter`
         - Finish Boss
-            - See **Boss Design** in DevLog
-            - Implement red portals (those portals should technically be units so that modifiers will transfer)
             - Implement aoe damage against enemies chain+hurt?
     - Thursday
         - Update steam with `package` app

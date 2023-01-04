@@ -6,8 +6,9 @@ import * as Unit from '../Unit';
 import type Underworld from '../../Underworld';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 
+export const BLOOD_GOLEM_ID = 'Blood Golem';
 const unit: UnitSource = {
-  id: 'Blood Golem',
+  id: BLOOD_GOLEM_ID,
   info: {
     description: 'The blood golem is heaftier and more deadly than it\'s more common bretheren.',
     image: 'units/gruntIdle',
