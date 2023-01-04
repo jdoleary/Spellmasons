@@ -3,6 +3,7 @@
     - Thursday
         - Update steam with `package` app
             - Verify that it launches executable
+            - https://partner.steamgames.com/doc/store/testing
 - January 1/8-1/14
     - Multiplayer
         - Support hosting a server from in the game exe
@@ -10,9 +11,6 @@
         - Server own-info page served over http
         - Multiplayer save load with "take over player"
         - Notify when version isn't same
-        - Add Che book animation for when a player casts but is waiting
-    - 2nd algorithm for generating levels
-        - see branch 2nd-level-algorithm
 - January 1/5-1/21
     - Finish Boss
         - Implement aoe damage against enemies chain+hurt?
@@ -24,6 +22,7 @@
         - (see branch `loop-tint-level`)
 - January 1/22-1/28
     - Prepare to ship
+        - [Release Demo](https://partner.steamgames.com/doc/store/application/demos)
         - Accessability / Localization Language Support / Spellcheck
         - Establish Minimum System Requirements and update Steam Page
         - Add sentry errors to electron node files
@@ -43,6 +42,8 @@
     - Remove "Beta" Near version number
     - Release
 - Other 
+    - 2nd algorithm for generating levels
+        - see branch 2nd-level-algorithm
     - Features / Content
         - Reroll / exchange cards (risk reward style)
             - like maybe you can reroll but you have one less card to choose from each time
