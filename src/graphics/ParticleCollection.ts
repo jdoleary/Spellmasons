@@ -385,6 +385,8 @@ export function makeDarkPriestAttackParticles(position: Vec2, prediction: boolea
         }, [texture]);
     simpleEmitter({ x: position.x, y: position.y }, particleConfig, resolver);
 }
+
+// The bossmason's "cape"
 export function makeCorruptionParticles(follow: IUnit, prediction: boolean, underworld: Underworld, resolver?: () => void) {
     if (prediction) {
         // Don't show if just a prediction
@@ -466,6 +468,75 @@ export function makeCorruptionParticles(follow: IUnit, prediction: boolean, unde
     } else {
         return;
     }
+}
+
+export function makeRedPortal(position: Vec2, prediction: boolean) {
+    if (prediction) {
+        // Don't show if just a prediction
+        return
+    }
+    const texture = createParticleTexture();
+    if (!texture) {
+        console.error('No texture for particles')
+        return
+    }
+    const particleConfig =
+        particles.upgradeConfig({
+            autoUpdate: true,
+            "alpha": {
+                "start": 1,
+                "end": 1
+            },
+            "scale": {
+                "start": 1.0,
+                "end": 0.3,
+                "minimumScaleMultiplier": 1
+            },
+            "color": {
+                "start": "#520606",
+                "end": "#e03636"
+            },
+            "speed": {
+                "start": 20,
+                "end": 0,
+                "minimumSpeedMultiplier": 1
+            },
+            "acceleration": {
+                "x": 0,
+                "y": 0
+            },
+            "maxSpeed": 0,
+            "startRotation": {
+                "min": 0,
+                "max": 360
+            },
+            "noRotation": false,
+            "rotationSpeed": {
+                "min": 0,
+                "max": 0
+            },
+            "lifetime": {
+                "min": 1,
+                "max": 1
+            },
+            "blendMode": "normal",
+            "frequency": 0.005,
+            "emitterLifetime": -1,
+            "maxParticles": 1000,
+            "pos": {
+                "x": 0,
+                "y": 0
+            },
+            "addAtBack": false,
+            "spawnType": "rect",
+            "spawnRect": {
+                "x": -5 / 2,
+                "y": -17 / 2,
+                "w": 5,
+                "h": 17
+            }
+        }, [texture]);
+    return simpleEmitter(position, particleConfig);
 }
 // Turns up frequency so that it "stops" spawning new particles
 // (at lease for a long time), then destroy and cleanup the emitter

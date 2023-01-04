@@ -14,9 +14,16 @@ import { hasBloodCurse } from '../cards/blood_curse';
 import { HasSpace } from './Type';
 import { explain, EXPLAIN_INVENTORY, EXPLAIN_OVERFILL, tutorialCompleteTask, updateTutorialChecklist } from '../graphics/Explain';
 import * as CardUI from '../graphics/ui/CardUI';
+import { bossmasonUnitId } from './units/bossmason';
+import { chooseOneOf } from '../jmath/rand';
+import { skyBeam } from '../VisualEffects';
+import { makeRedPortal, stopAndDestroyForeverEmitter } from '../graphics/ParticleCollection';
+import * as particles from '@pixi/particle-emitter'
 
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 export const PICKUP_IMAGE_PATH = 'pickups/scroll';
+export const RED_PORTAL = 'Red Portal';
+const RED_PORTAL_DAMAGE = 4;
 type IPickupEffect = ({ unit, player, pickup, prediction }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld, prediction: boolean }) => boolean | undefined;
 export function isPickup(maybePickup: any): maybePickup is IPickup {
   return maybePickup && maybePickup.type == 'pickup';
@@ -42,7 +49,10 @@ export type IPickup = HasSpace & {
   // returns true if the pickup did in fact trigger - this is useful
   // for preventing one use health potions from triggering if the unit
   // already has max health
-  effect: IPickupEffect
+  effect: IPickupEffect;
+  emitter?: particles.Emitter;
+  flaggedForRemoval: boolean;
+
 }
 interface IPickupSource {
   name: string;
@@ -91,19 +101,27 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
     singleUse,
     playerOnly,
     effect,
-    onTurnsLeftDone
+    onTurnsLeftDone,
+    flaggedForRemoval: false
   };
   if (self.image) {
     self.image.sprite.scale.x = scale;
     self.image.sprite.scale.y = scale;
+    if (self.image.sprite && name == RED_PORTAL) {
+      Image.cleanup(self.image);
+      // Right now red portal is the only pickup that uses an emitter;
+      // however if that changes in the future this should be refactored so
+      // that there isn't a special case inside of Pickup.create
+      self.emitter = makeRedPortal({ x, y }, false)
+    }
   }
+
   if (turnsLeftToGrab) {
     self.turnsLeftToGrab = turnsLeftToGrab;
 
     // Only add timeCircle and text if the pickup has an image (meaning it is rendered)
     // Prediction pickups are not rendered and don't need these.
     if (self.image) {
-
       const timeCircle = addPixiSprite('time-circle.png', self.image.sprite);
       if (timeCircle) {
         // @ts-ignore jid is a custom identifier to id the text element used for the player name
@@ -193,7 +211,9 @@ export function load(pickup: IPickup, underworld: Underworld, prediction: boolea
   }
 }
 export function removePickup(pickup: IPickup, underworld: Underworld, prediction: boolean) {
+  pickup.flaggedForRemoval = true;
   Image.cleanup(pickup.image);
+  stopAndDestroyForeverEmitter(pickup.emitter);
   underworld.removePickupFromArray(pickup, prediction);
   checkIfNeedToClearTooltip();
   // Remove any associated forcePushs
@@ -204,6 +224,10 @@ export function removePickup(pickup: IPickup, underworld: Underworld, prediction
   }
 }
 export function triggerPickup(pickup: IPickup, unit: IUnit, underworld: Underworld, prediction: boolean) {
+  if (pickup.flaggedForRemoval) {
+    // Don't trigger pickup if flagged for removal
+    return;
+  }
   const player = underworld.players.find((p) => p.unit === unit);
   if (pickup.playerOnly && !player) {
     // If pickup is playerOnly, do not trigger if a player is not the one triggering it
@@ -277,6 +301,36 @@ export const pickups: IPickupSource[] = [
       }
       return false;
     }
+  },
+  {
+    imagePath: 'portal',
+    animationSpeed: -0.5,
+    playerOnly: true,
+    singleUse: false,
+    name: RED_PORTAL,
+    probability: 0,
+    scale: 1,
+    description:
+      `A portal that the ${bossmasonUnitId} uses to teleport around the map and to summon minions.
+      You can use it to travel between portals but you will take ${RED_PORTAL_DAMAGE} damage in the process.`,
+    effect: ({ unit, player, pickup, underworld }) => {
+      const otherRedPortals = underworld.pickups.filter(p => p.name == RED_PORTAL && p !== pickup)
+      const randomOtherRedPortal = chooseOneOf(otherRedPortals);
+      if (player) {
+        // Remove the pickups before teleporting the unit so they don't trigger
+        // the 2nd portal
+        removePickup(pickup, underworld, false);
+        if (randomOtherRedPortal) {
+          removePickup(randomOtherRedPortal, underworld, false);
+          player.unit.x = randomOtherRedPortal.x;
+          player.unit.y = randomOtherRedPortal.y;
+          skyBeam(pickup);
+          skyBeam(randomOtherRedPortal);
+        }
+        takeDamage(player.unit, RED_PORTAL_DAMAGE, undefined, underworld, false);
+      }
+      return true;
+    },
   },
   {
     imagePath: 'portal',
