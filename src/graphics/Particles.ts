@@ -6,6 +6,7 @@ import { raceTimeout } from '../Promise';
 import { BloodParticle, graphicsBloodSmear, tickParticle } from './PixiUtils';
 import type Underworld from '../Underworld';
 import { Container } from 'pixi.js';
+import { stopAndDestroyForeverEmitter } from './ParticleCollection';
 
 export const containerParticles = !globalThis.pixi ? undefined : new globalThis.pixi.ParticleContainer(5000, {
     scale: true,
@@ -175,8 +176,7 @@ export function updateParticlees(delta: number, bloods: BloodParticle[], seedran
             t.lerp += lerpSpeed;
             t.emitter.updateOwnerPos(t.position.x, t.position.y);
         } else {
-            // Essentially, stop spawning new particles
-            t.emitter.frequency = 10000;
+            stopAndDestroyForeverEmitter(t.emitter);
             // resolve trail as soon as it reaches it's target
             t.resolver();
             if (t.emitter.particleCount == 0) {

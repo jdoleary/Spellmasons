@@ -467,3 +467,16 @@ export function makeCorruptionParticles(follow: IUnit, prediction: boolean, unde
         return;
     }
 }
+// Turns up frequency so that it "stops" spawning new particles
+// (at lease for a long time), then destroy and cleanup the emitter
+export function stopAndDestroyForeverEmitter(emitter?: particles.Emitter) {
+    if (!emitter) {
+        return;
+    }
+    const timeout = 15000;
+    emitter.frequency = timeout;
+    setTimeout(() => {
+        emitter.cleanup();
+        emitter.destroy();
+    }, timeout - 1000)
+}
