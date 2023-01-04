@@ -201,12 +201,34 @@ function makeLevelMaterialsArrayRoomStyle(params: CaveParams, underworld: Underw
 }
 // Returns a 1d array in the form {width:number, materials:Materials[]} which represents a 2d array
 function makeLevelMaterialsArrayCaveStyle(params: CaveParams, underworld: Underworld) {
+    // Ensure it's not too close to all other crawlers' start positions which could 
+    // make a map too small
+    function protectAgainstTooClose(crawler: CaveCrawler, crawlers: CaveCrawler[]) {
+        const minimumDistanceFromAllOtherCrawlers = 600;
+        if (crawlers.every(otherCrawler => {
+            // Don't compare distance with self
+            if (otherCrawler == crawler) {
+                return true;
+            }
+            const otherCrawlerStartPosition = otherCrawler.path[0]
+            if (otherCrawlerStartPosition && distance(otherCrawlerStartPosition, crawler.position) < minimumDistanceFromAllOtherCrawlers) {
+                return true;
+            }
+            return false;
+        })) {
+            console.log('map gen: Protect against too close crawlers')
+            crawler.position.x += minimumDistanceFromAllOtherCrawlers;
+            crawler.position.y += minimumDistanceFromAllOtherCrawlers;
+
+        }
+
+    }
     // Debug: Draw caves
     globalThis.debugCave?.clear();
     const minDirection = randFloat(underworld.random, Math.PI, Math.PI / 2);
     const maxDirection = 0;
     let crawlers = [];
-    const NUMBER_OF_CRAWLERS = randInt(underworld.random, 2, 4);
+    const NUMBER_OF_CRAWLERS = randInt(underworld.random, 3, 4);
     for (let c = 0; c < NUMBER_OF_CRAWLERS - 1; c++) {
         const previousCrawler = crawlers[c - 1];
         const cc: CaveCrawler = {
@@ -236,6 +258,9 @@ function makeLevelMaterialsArrayCaveStyle(params: CaveParams, underworld: Underw
             right: [],
             rectangles: []
         }
+        // For the last crawler, check if it's too close to all other crawlers
+        // which could create a suprisingly / undesirably small map and adjust if so
+        protectAgainstTooClose(cc, crawlers);
         crawl(cc, previousCrawler.path[1] as Vec.Vec2, params, underworld);
         crawlers.push(cc);
     }
@@ -243,12 +268,12 @@ function makeLevelMaterialsArrayCaveStyle(params: CaveParams, underworld: Underw
     const crawlerBounds = getLimits(crawlers.map(c => [...c.left, ...c.right]).flat());
 
     // Debug Draw bounds
-    // globalThis.debugCave.lineStyle(2, 0xff0000, 1.0);
-    // globalThis.debugCave.moveTo(crawlerBounds.xMin, crawlerBounds.yMin);
-    // globalThis.debugCave.lineTo(crawlerBounds.xMin, crawlerBounds.yMax);
-    // globalThis.debugCave.lineTo(crawlerBounds.xMax, crawlerBounds.yMax);
-    // globalThis.debugCave.lineTo(crawlerBounds.xMax, crawlerBounds.yMin);
-    // globalThis.debugCave.lineTo(crawlerBounds.xMin, crawlerBounds.yMin);
+    // globalThis.debugCave?.lineStyle(2, 0xff0000, 1.0);
+    // globalThis.debugCave?.moveTo(crawlerBounds.xMin, crawlerBounds.yMin);
+    // globalThis.debugCave?.lineTo(crawlerBounds.xMin, crawlerBounds.yMax);
+    // globalThis.debugCave?.lineTo(crawlerBounds.xMax, crawlerBounds.yMax);
+    // globalThis.debugCave?.lineTo(crawlerBounds.xMax, crawlerBounds.yMin);
+    // globalThis.debugCave?.lineTo(crawlerBounds.xMin, crawlerBounds.yMin);
 
     // + 2 leaves room on the right side and bottom side for surrounding walls
     let width = Math.ceil((crawlerBounds.xMax - crawlerBounds.xMin) / config.OBSTACLE_SIZE) + 2;
@@ -271,13 +296,13 @@ function makeLevelMaterialsArrayCaveStyle(params: CaveParams, underworld: Underw
     // Debug draw caves
     // const styles = [0xff0000, 0x0000ff, 0xff00ff, 0x00ffff, 0xffff00];
     // function drawPathWithStyle(path: Vec.Vec2[], style: number, opacity: number) {
-    //     globalThis.debugCave.lineStyle(4, style, opacity);
+    //     globalThis.debugCave?.lineStyle(4, style, opacity);
     //     if (path[0]) {
-    //         globalThis.debugCave.moveTo(path[0].x, path[0].y);
+    //         globalThis.debugCave?.moveTo(path[0].x, path[0].y);
     //         // @ts-expect-error
-    //         globalThis.debugCave.drawCircle(path[1].x, path[1].y, 25);
+    //         globalThis.debugCave?.drawCircle(path[1].x, path[1].y, 25);
     //         for (let point of path) {
-    //             globalThis.debugCave.lineTo(point.x, point.y);
+    //             globalThis.debugCave?.lineTo(point.x, point.y);
     //         }
     //     }
 
@@ -287,12 +312,12 @@ function makeLevelMaterialsArrayCaveStyle(params: CaveParams, underworld: Underw
     //     const crawler = crawlers[i];
     //     if (crawler) {
     //         drawPathWithStyle(crawler.path, 0x000000, 0.1);
-    //         globalThis.debugCave.beginFill(styles[i % styles.length], 0.1);
+    //         globalThis.debugCave?.beginFill(styles[i % styles.length], 0.1);
     //         for (let rect of crawler.rectangles) {
     //             // @ts-expect-error
-    //             globalThis.debugCave.drawPolygon(rect);
+    //             globalThis.debugCave?.drawPolygon(rect);
     //         }
-    //         globalThis.debugCave.endFill();
+    //         globalThis.debugCave?.endFill();
     //     }
     // }
 
@@ -301,7 +326,7 @@ function makeLevelMaterialsArrayCaveStyle(params: CaveParams, underworld: Underw
     //     const crawler = crawlers[i];
     //     if (crawler) {
     //         drawPathWithStyle(crawler.path, styles[i % styles.length] as number, 0.1);
-    //         globalThis.debugCave.lineStyle(1, 0x000000, 0.0);
+    //         globalThis.debugCave?.lineStyle(1, 0x000000, 0.0);
     //     }
     // }
     return { materials, width }
@@ -466,13 +491,13 @@ function crawlersChangeTilesToMaterial(crawlers: CaveCrawler[], material: Materi
                 caveMaterialsArray[index] = material;
             }
             // Debug Draw dot grid
-            // globalThis.debugCave.lineStyle(2, isInside ? 0x00ff00 : 0xff0000, 1.0);
+            // globalThis.debugCave?.lineStyle(2, isInside ? 0x00ff00 : 0xff0000, 1.0);
             // if (isInside) {
-            //     globalThis.debugCave.beginFill(0x00ff00, 0.5);
-            //     globalThis.debugCave.drawRect(x, y, dotSize, dotSize);
-            //     globalThis.debugCave.endFill();
+            //     globalThis.debugCave?.beginFill(0x00ff00, 0.5);
+            //     globalThis.debugCave?.drawRect(x, y, dotSize, dotSize);
+            //     globalThis.debugCave?.endFill();
             // } else {
-            //     globalThis.debugCave.drawCircle(x, y, 4);
+            //     globalThis.debugCave?.drawCircle(x, y, 4);
             // }
         }
     }

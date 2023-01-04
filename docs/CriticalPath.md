@@ -1,11 +1,5 @@
 # Desired Schedule
 - January 1/1-1/7
-    - Wednesday
-        - Prevent too small late game levels
-            - This can happen if jitter puts the start points too close together
-            - see branch `start-point-jitter`
-        - Finish Boss
-            - Implement aoe damage against enemies chain+hurt?
     - Thursday
         - Update steam with `package` app
             - Verify that it launches executable
@@ -20,6 +14,8 @@
     - 2nd algorithm for generating levels
         - see branch 2nd-level-algorithm
 - January 1/5-1/21
+    - Finish Boss
+        - Implement aoe damage against enemies chain+hurt?
     - BALANCE unit spawns especially on later levels
         - Maybe not exponential budget?
     - Balanced / Difficult
