@@ -1,6 +1,9 @@
 # Desired Schedule
 - January 1/1-1/7
     - Wednesday
+        - Prevent too small late game levels
+            - This can happen if jitter puts the start points too close together
+            - see branch `start-point-jitter`
         - Finish Boss
             - See **Boss Design** in DevLog
             - Implement red portals (those portals should technically be units so that modifiers will transfer)
@@ -8,7 +11,6 @@
     - Thursday
         - Update steam with `package` app
             - Verify that it launches executable
-    - Prevent too small late game levels
 - January 1/8-1/14
     - Multiplayer
         - Support hosting a server from in the game exe
