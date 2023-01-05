@@ -17,31 +17,36 @@ export const caveSizes: { [size: string]: CaveParams } = {
         startThickness: 150,
         startPointJitter: 0,
         iterations: 1,
-        velocity: 60
+        velocity: 60,
+        allowSmallLevel: true,
     },
     'extrasmall': {
         minThickness: config.OBSTACLE_SIZE,
         startThickness: 150,
         startPointJitter: 200,
         iterations: 10,
-        velocity: 40
+        velocity: 40,
+        allowSmallLevel: true,
     },
     'small': {
         minThickness: config.OBSTACLE_SIZE,
         startThickness: 10,
         startPointJitter: 300,
         iterations: 20,
-        velocity: 50
+        velocity: 50,
+        allowSmallLevel: true,
     },
     'medium': {
         minThickness: config.OBSTACLE_SIZE,
         startThickness: 50,
         startPointJitter: 1000,
         iterations: 20,
-        velocity: 80
+        velocity: 80,
+        allowSmallLevel: false,
     }
 }
 interface CaveParams {
+    allowSmallLevel: boolean;
     numberOfLiquidSources?: number;
     minThickness: number;
     startThickness: number;
@@ -260,7 +265,9 @@ function makeLevelMaterialsArrayCaveStyle(params: CaveParams, underworld: Underw
         }
         // For the last crawler, check if it's too close to all other crawlers
         // which could create a suprisingly / undesirably small map and adjust if so
-        protectAgainstTooClose(cc, crawlers);
+        if (!params.allowSmallLevel) {
+            protectAgainstTooClose(cc, crawlers);
+        }
         crawl(cc, previousCrawler.path[1] as Vec.Vec2, params, underworld);
         crawlers.push(cc);
     }
