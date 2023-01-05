@@ -25,7 +25,7 @@ const unit: UnitSource = {
   spawnParams: {
     probability: 15,
     budgetCost: 5,
-    unavailableUntilLevelIndex: 5,
+    unavailableUntilLevelIndex: 3,
   },
   animations: {
     idle: 'units/poisIdle',

@@ -1,5 +1,8 @@
 # Desired Schedule
 - January 1/1-1/7
+    - BALANCE unit spawns especially on later levels
+        - Maybe not exponential budget?
+    - Balanced / Difficult
     - Friday - first thing in the morning
         - Update steam with `package` app
             - Add it to the test branch
@@ -9,25 +12,26 @@
             - Verify that it launches executable
             - Verify that delta updates work in steam
             - Update regular build and servers
+- January 1/8-1/14
     - Multiplayer
         - Support hosting a server from in the game exe
         - Server Browser
         - Multiplayer save load with "take over player"
         - Notify when version isn't same
-- January 1/8-1/14
-    - BALANCE unit spawns especially on later levels
-        - Maybe not exponential budget?
-    - Balanced / Difficult
 - January 1/5-1/21
     - Finish Boss
         - Implement aoe damage against enemies chain+hurt?
+    - A way to see your perks roll
+        - More descriptive than "perk applied!"
+        - Should be like "+ 120 stamina"
+        - Offset floating text for these
     - Submit to IGN and others
-    - Finish Looping
-        - (see branch `loop-tint-level`)
-    - Add ability to put notes in game
+    - Add ability to put user-facing text banners in game
         - scheduled downtime for servers
         - other annoucements
 - January 1/22-1/28
+    - Finish Looping
+        - (see branch `loop-tint-level`)
     - Prepare to ship
         - [Release Demo](https://partner.steamgames.com/doc/store/application/demos)
         - Accessability / Localization Language Support / Spellcheck
