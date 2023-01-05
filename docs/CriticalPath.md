@@ -1,5 +1,6 @@
 # Desired Schedule
 - January 1/1-1/7
+    - Solve targeting bug where if ranged units kill a unit the melee that were targeting that unit can now attack you without warning
     - BALANCE unit spawns especially on later levels
         - Maybe not exponential budget?
     - Balanced / Difficult
@@ -13,6 +14,7 @@
             - Verify that delta updates work in steam
             - Update regular build and servers
 - January 1/8-1/14
+    - Solve many enemies overkilling allied unit
     - Multiplayer
         - Support hosting a server from in the game exe
         - Server Browser

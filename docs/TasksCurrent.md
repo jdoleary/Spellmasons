@@ -1,8 +1,9 @@
 
-- BIG BUG: If multiple enemies are targeting an ally unit but it dies in the ranged turn the melee units can attack you without intention warning
+- **BIG BUG**: If multiple enemies are targeting an ally unit but it dies in the ranged turn the melee units can attack you without intention warning
 - Don't remove `quicksave` after death
 - starting levels are way too big now
 - prevent perks from being identical
+- 80% mana at the start of a level perk is too much
 
 - Cinematic camera should just be a zoom in? or improved
 # Validation
