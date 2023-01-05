@@ -2,13 +2,17 @@
 - January 1/1-1/7
     - Thursday
         - Update steam with `package` app
+            - Add it to the test branch
+                - https://partner.steamgames.com/doc/store/testing
+                - [Branches](https://partner.steamgames.com/doc/store/application/branches)
+                - testing branch pwd: thisisatestbranchnotforgeneraluserconsumption
+            - Download the test branch
             - Verify that it launches executable
-            - https://partner.steamgames.com/doc/store/testing
+            - Verify that delta updates work in steam
 - January 1/8-1/14
     - Multiplayer
         - Support hosting a server from in the game exe
         - Server Browser
-        - Server own-info page served over http
         - Multiplayer save load with "take over player"
         - Notify when version isn't same
 - January 1/5-1/21

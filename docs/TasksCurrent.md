@@ -7,6 +7,9 @@
 - balance perks
 - Make sure perks everyTurn don't proc after portal has spawned
 # Priority
+- Ws pie room privacy
+- summoner too much health?
+- bug: Card copy text overflow
 - multi url was saved weird:`http://localhost:3000/?pieUrl=ws%3Alocalhost%3A8080&game=a`
 - bug: Getting "host app version doesn't match client version" on SOLOMODE
 - bug: if I start a game, quit to main menu, go back to multiplayer I can't edit the server url field, until I alt tab and come back

@@ -31,10 +31,28 @@ globalThis.isHost = () => true;
 // Headless does not includee a player of it's own, it's just the host
 globalThis.player = undefined;
 
+// Koa app provides an http endpoint for returning server stats
+// whereas the game connects to the headless server via websockets
+const Koa = require('koa');
+const koaApp = new Koa();
+koaApp.use(async (ctx: any) => {
+    let returnString = JSON.stringify({ err: 'Error getting stats.' });
+    try {
+        returnString = JSON.stringify(await pie.getStats());
+    } catch (e) {
+        console.error('Unexpected failure getting stats:', e);
+
+    }
+    ctx.body = returnString;
+});
+// The http web server listens on 3001, whereas the websocket server
+// listens on another port
+koaApp.listen(3001);
+
 function headlessStartGame() {
-    console.log('Headless Server Started at port ', PORT)
+    console.log('Headless Server Started at port ', PORT);
     pie.startServer({
-        port: PORT, makeHostAppInstance: () => {
+        port: PORT, allowStats: true, makeHostAppInstance: () => {
             const hostAppInst = new HostApp();
             console.log('Start Game: Attempt to start the game')
             console.log('Host: Start game / Initialize Underworld');
