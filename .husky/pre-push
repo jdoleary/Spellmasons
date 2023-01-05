@@ -2,3 +2,8 @@
 . "$(dirname "$0")/_/husky.sh"
 
 npm test
+# This step isn't relevant for a push technically; however,
+# it is critical that a build occurs before the repo
+# `Golems-Electron-Build` pulls from this repos build directory
+# So i'm adding it to pre-push as a precaution
+npm run build

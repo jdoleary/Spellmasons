@@ -33,13 +33,8 @@ Backup repositories are on Gitlab and Keybase.  The primary repository is on Git
 To Update the headless servers, start Docker Desktop and run `./deploy.sh`
 - Run alias `publish` as a shortcut to update the master branch (this is not production) but it will update play.spellmasons.com
 - To Fully build and push a new version to production
-    - Run `npm run build` in the `Golems-menu` repo
-    - Run `npm run build-for-electron` in the `Golems` repo
+    - Run `npm run build` in the `Golems-menu` repo (if menu has changed)
     - Run `backup` to push to gitlab and keybase
     - These 2 should always be done together:
         - UPDATES BACKEND: Run `./deploy.sh` to push new version to the backend servers on Digital Ocean
-        - Note: Make sure to run the previous step to update the build manifest before pushing to production
-        - UPDATES FRONTEND: Run `git push https://github.com/jdoleary/spellmasons-build-assets-prod-2.git master` to push Frontend update to https://assets.spellsmasons.com which allows games to pull updates
-            - Note: You MUST push master branch or else it wont update the right domain name
-            - Use the url rather than adding a remote so you don't accidentally auto push to prod.  (Until I have set up actual devops)
-- Go to `Golems-Electron-Build` and follow instructions IF you need to push a new package to Steam; HOWEVER, you probably shouldn't.  Updates are designed to be downloaded through assets.spellmasons.com
+        - Go to `Golems-Electron-Build` and follow instructions to push a new package to Steam 
