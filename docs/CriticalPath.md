@@ -1,29 +1,32 @@
 # Desired Schedule
 - January 1/1-1/7
-    - Thursday
+    - Friday - first thing in the morning
         - Update steam with `package` app
             - Add it to the test branch
                 - https://partner.steamgames.com/doc/store/testing
                 - [Branches](https://partner.steamgames.com/doc/store/application/branches)
-                - testing branch pwd: thisisatestbranchnotforgeneraluserconsumption
             - Download the test branch
             - Verify that it launches executable
             - Verify that delta updates work in steam
-- January 1/8-1/14
+            - Update regular build and servers
     - Multiplayer
         - Support hosting a server from in the game exe
         - Server Browser
         - Multiplayer save load with "take over player"
         - Notify when version isn't same
-- January 1/5-1/21
-    - Finish Boss
-        - Implement aoe damage against enemies chain+hurt?
+- January 1/8-1/14
     - BALANCE unit spawns especially on later levels
         - Maybe not exponential budget?
     - Balanced / Difficult
+- January 1/5-1/21
+    - Finish Boss
+        - Implement aoe damage against enemies chain+hurt?
     - Submit to IGN and others
     - Finish Looping
         - (see branch `loop-tint-level`)
+    - Add ability to put notes in game
+        - scheduled downtime for servers
+        - other annoucements
 - January 1/22-1/28
     - Prepare to ship
         - [Release Demo](https://partner.steamgames.com/doc/store/application/demos)
@@ -69,6 +72,8 @@
     - updateCameraPosition is somehow taking a long time
     - copyForPredictionUnit is slow for many units
 - Milestone **Strech 1**
+    - Achievements
+    - Mods
     - Make pickups do something when destroyed
     - Server config by host (pvp, worms armageddon style customizations)
     - Pushing units into portal should do something
