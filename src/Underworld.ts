@@ -2831,7 +2831,7 @@ export default class Underworld {
 
       await Promise.all(getFlyingPickupPromises);
       // Spawn portal near each player
-      const portalPickup = Pickup.pickups.find(p => p.imagePath == 'portal');
+      const portalPickup = Pickup.pickups.find(p => p.name == Pickup.PICKUP_PORTAL_NAME);
       if (portalPickup) {
         for (let playerUnit of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
           const portalSpawnLocation = this.findValidSpawn(playerUnit, 4) || playerUnit;
