@@ -55,22 +55,22 @@ function perkWhenToString(when: WhenUpgrade): string {
 }
 function perkAttributeToIcon(attr: string): string {
     if (attr == 'manaMax') {
-        return `<span class=''>🔵</span>`;
+        return `🔵`;
     }
     if (attr == 'healthMax') {
-        return `<span class=''>❤️</span>`;
+        return `❤️`;
     }
     if (attr == 'staminaMax') {
-        return `<span class=''>🏃‍♂️</span>`;
+        return `🏃‍♂️`;
     }
     if (attr == 'mana') {
-        return `<span class=''>🔵</span>`;
+        return `🔵`;
     }
     if (attr == 'health') {
-        return `<span class=''>❤️</span>`;
+        return `❤️`;
     }
     if (attr == 'stamina') {
-        return `<span class=''>🏃‍♂️</span>`;
+        return `🏃‍♂️`;
     }
     if (attr == 'attackRange') {
         return `🎯`;
@@ -80,22 +80,22 @@ function perkAttributeToIcon(attr: string): string {
 }
 function perkAttributeToString(attr: string): string {
     if (attr == 'manaMax') {
-        return `<span class=''>Mana permantently</span>`;
+        return `Mana permantently`;
     }
     if (attr == 'healthMax') {
-        return `<span class=''>Health permanently</span>`;
+        return `Health permanently`;
     }
     if (attr == 'staminaMax') {
-        return `<span class=''>Stamina permanently</span>`;
+        return `Stamina permanently`;
     }
     if (attr == 'mana') {
-        return `<span class=''>Mana for one turn</span>`;
+        return `Mana for one turn`;
     }
     if (attr == 'health') {
-        return `<span class=''>Health for one turn</span>`;
+        return `Health for one turn`;
     }
     if (attr == 'stamina') {
-        return `<span class=''>Stamina for one turn</span>`;
+        return `Stamina for one turn`;
     }
     if (attr == 'attackRange') {
         return `Cast Range`;
@@ -221,6 +221,7 @@ export function tryTriggerPerk(perk: AttributePerk, player: IPlayer, when: WhenU
         const random = seedrandom(`${underworld.seed}-${underworld.levelIndex}-${underworld.turn_number}`);
         const pick = random.quick();
         const doTriggerPerk = pick <= perk.certainty;
+        const oldAttributeAmount = player.unit[perk.attribute];
         if (doTriggerPerk) {
             if (perk.attribute == 'manaMax' || perk.attribute == 'healthMax' || perk.attribute == 'staminaMax') {
                 setPlayerAttributeMax(player.unit, perk.attribute, player.unit[perk.attribute] * perk.amount)
@@ -229,7 +230,7 @@ export function tryTriggerPerk(perk: AttributePerk, player: IPlayer, when: WhenU
                 player.unit[perk.attribute] = Math.ceil(player.unit[perk.attribute]);
             }
             // TODO: offset multiple
-            floatingText({ coords: player.unit, text: `Perk Applied!` });
+            floatingText({ coords: player.unit, text: `+${player.unit[perk.attribute] - oldAttributeAmount} ${perkAttributeToString(perk.attribute)}` });
             // Now that the player unit's properties have changed, sync the new
             // state with the player's predictionUnit so it is properly
             // refelcted in the bar

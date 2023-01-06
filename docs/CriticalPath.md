@@ -25,8 +25,6 @@
     - Finish Boss
         - Implement aoe damage against enemies chain+hurt?
     - A way to see your perks roll
-        - More descriptive than "perk applied!"
-        - Should be like "+ 120 stamina"
         - Offset floating text for these
     - Submit to IGN and others
     - Add ability to put user-facing text banners in game
