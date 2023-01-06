@@ -1,5 +1,40 @@
 
 - **BIG BUG**: If multiple enemies are targeting an ally unit but it dies in the ranged turn the melee units can attack you without intention warning
+- Brad playtest
+    - SKULL SHOULD GO OVER YOUR OWN HEAD TOO IF SPELL WILL KILL YOU
+    - Perk choices: good, UX: bad
+    - Instead of "increase emoji cast range" just "+ 5% cast range"; "at the start of" -> "every level"; "temporarily" -> "single-turn"; OR "max stamina" / "overflow stamina"
+    - when you're spawning, if you hover a unit it should pop up their tooltip
+    - blood golem too powerful? shouldn't be able to do kill damage? or introduce later
+    - if a unit is ressed in lava do they take damage? and inLiquid
+    - every turn / every level should be presented first
+    - in your perk-picking screen you should be able to see your current perks
+    - "choose a place to spawn" should be hidden until you select an upgrade
+    - miniboss priest should be able to res multiple allies
+    - explain graphic for summoner icon
+    - casting hit box isn't big enough on minibosses
+    - increase all healths and damages by 10x
+    - debilitate cheaper and less effective
+    - + 5% health every level too much??
+    - Easy to not grow your max mana, maybe get some by default each level?
+    - maybe perks should do concrete amounts instead of %s
+    - weird line coming off of units that you pull into liquid on death
+    - suffocate copy "less MAX/base health"
+    - show how much damage you'll take when you end your turn
+    - turn off target snapping when your first spell is a targeting spell for convenience
+    - make perks rerollable
+    - spellbook animation is showing up in singleplayer
+        - but you still need it when you yourself are casting multiple at once
+    - miniboss shouldn't be possible on the same level that a unit first appears
+    - burst should memorize your position at time of cast, so that if you move after casting it keeps the position that it was when you cast
+    - levels can be way too big
+    - leaderboard
+    - ress should take a lot longer to cool down
+        - or maybe target circle should makes the spells that come after it tick up in how long they have to restore
+    - it is unclear which spells have what cooldowns
+    - AOE should have max targets just like "Connect"
+    - increase radius for connect and fix faction targeting so it doesn't hit you
+    
 - Don't remove `quicksave` after death
 - starting levels are way too big now
 - prevent perks from being identical
