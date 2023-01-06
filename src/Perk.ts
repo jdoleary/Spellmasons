@@ -5,7 +5,17 @@ import seedrandom from "seedrandom";
 import { IPlayer } from "./entity/Player";
 import { MESSAGE_TYPES } from "./types/MessageTypes";
 import { setPlayerAttributeMax } from "./entity/Unit";
+const elPerkList = document.getElementById('perkList');
+const elPerksEveryLevel = document.getElementById('perkEveryLevel');
+const elPerksEveryTurn = document.getElementById('perkEveryTurn');
 
+function getPerkText(perk: AttributePerk, omitWhen: boolean = false): string {
+    return `
+${perk.certainty < 1.0 ? `🎲 ${Math.round(perk.certainty * 100)}% chance to` : ``}
+${perkAttributeToIcon(perk.attribute)} +${Math.round((perk.amount - 1.0) * 100)}% ${perkAttributeToString(perk.attribute)}
+${omitWhen ? '' : perkWhenToString(perk.when)}`;
+
+}
 export function createPerkElement(perk: AttributePerk, player: IPlayer, underworld: Underworld) {
     if (globalThis.headless) {
         // There is no DOM in headless mode
@@ -22,10 +32,7 @@ export function createPerkElement(perk: AttributePerk, player: IPlayer, underwor
     const desc = document.createElement('div');
     desc.classList.add('card-description');
     const descriptionText = document.createElement('div');
-    descriptionText.innerHTML = `
-${perk.certainty < 1.0 ? `🎲 ${Math.round(perk.certainty * 100)}% chance to` : ``}
-${perkAttributeToIcon(perk.attribute)} +${Math.round((perk.amount - 1.0) * 100)}% ${perkAttributeToString(perk.attribute)}
-${perkWhenToString(perk.when)}`;
+    descriptionText.innerHTML = getPerkText(perk);
     desc.appendChild(descriptionText);
 
     elCardInner.appendChild(desc);
@@ -203,8 +210,22 @@ export function choosePerk(perk: AttributePerk, player: IPlayer, underworld: Und
         document.body?.classList.toggle(showUpgradesClassName, false);
         // Show next round of upgrades
         underworld.showUpgrades();
-
     }
+    if (!globalThis.headless) {
+        if (elPerkList && elPerksEveryLevel && elPerksEveryTurn) {
+            const everyLevel = player.attributePerks.filter(p => p.when == 'everyLevel');
+            const everyTurn = player.attributePerks.filter(p => p.when == 'everyTurn');
+            everyLevel.forEach(p => perkToListItem(p, elPerksEveryLevel));
+            everyTurn.forEach(p => perkToListItem(p, elPerksEveryTurn));
+        } else {
+            console.error('Could not render perkList')
+        }
+    }
+}
+function perkToListItem(perk: AttributePerk, container: HTMLElement) {
+    const el = document.createElement('div');
+    el.innerHTML = getPerkText(perk, true);
+    container.appendChild(el);
 }
 export interface AttributePerk {
     attribute: UpgradableAttribute;
