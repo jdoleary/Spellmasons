@@ -1,7 +1,7 @@
 import type * as PIXI from 'pixi.js';
 
 import { allUnits } from '../entity/units';
-import { containerSpells, containerUI, withinCameraBounds } from './PixiUtils';
+import { containerSpells, containerUI, getCamera, withinCameraBounds } from './PixiUtils';
 import { containerPlanningView } from './PixiUtils';
 import { Faction, UnitSubType, UnitType } from '../types/commonTypes';
 import { clone, equal, Vec2, round } from '../jmath/Vec';
@@ -11,9 +11,7 @@ import * as config from '../config';
 import * as Unit from '../entity/Unit';
 import * as Vec from '../jmath/Vec';
 import * as math from '../jmath/math';
-import { calculateCost, CardCost } from '../cards/cardUtils';
-import { closestLineSegmentIntersection } from '../jmath/lineSegment';
-import { getBestRangedLOSTarget } from '../entity/units/actions/rangedAction';
+import * as ImmediateMode from './ImmediateModeSprites';
 import * as colors from './ui/colors';
 import { isOutOfRange } from '../PlayerUtils';
 import { pointsEveryXDistanceAlongPath } from '../jmath/Pathfinding';
@@ -470,6 +468,95 @@ async function showCastCardsPrediction(underworld: Underworld, target: Vec2, cas
     return effectState.targetedUnits.length > 0 || effectState.targetedPickups.length > 0;
   }
   return false;
+}
+export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld, zoom: number) {
+  const u = underworld.units[unitIndex];
+  if (u) {
+    const predictionUnit = !underworld.unitsPrediction ? undefined : underworld.unitsPrediction[unitIndex];
+    // Draw unit overlay graphics
+    //--
+    // Prevent drawing unit overlay graphics when a unit is in the portal
+    if (u.x !== null && u.y !== null && !globalThis.isHUDHidden) {
+      // Draw health bar
+      const healthBarColor = u.faction == Faction.ALLY ? colors.healthAllyGreen : colors.healthRed;
+      const healthBarHurtColor = u.faction == Faction.ALLY ? 0x235730 : colors.healthHurtRed;
+      const healthBarHealColor = u.faction == Faction.ALLY ? 0x23ff30 : 0xff2828;
+      globalThis.unitOverlayGraphics?.lineStyle(0, 0x000000, 1.0);
+      globalThis.unitOverlayGraphics?.beginFill(healthBarColor, 1.0);
+      const healthBarProps = getUIBarProps(u.x, u.y, u.health, u.healthMax, zoom, u);
+      globalThis.unitOverlayGraphics?.drawRect(
+        healthBarProps.x,
+        // Stack the health bar above the mana bar
+        healthBarProps.y - config.UNIT_UI_BAR_HEIGHT / zoom,
+        healthBarProps.width,
+        healthBarProps.height
+      );
+
+      // Only show health bar predictions on PlayerTurns, while players are able
+      // to cast, otherwise it will show out of sync when NPCs do damage
+      if (underworld.turn_phase == turn_phase.PlayerTurns && globalThis.unitOverlayGraphics) {
+        // Show how much damage they'll take on their health bar
+        globalThis.unitOverlayGraphics.beginFill(healthBarHurtColor, 1.0);
+        if (predictionUnit) {
+          const healthAfterHurt = predictionUnit.health;
+          if (healthAfterHurt > u.health) {
+            globalThis.unitOverlayGraphics.beginFill(healthBarHealColor, 1.0);
+          }
+          // const healthBarHurtWidth = Math.max(0, config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax);
+          const healthBarHurtProps = getUIBarProps(u.x, u.y, u.health - healthAfterHurt, u.healthMax, zoom, u);
+          globalThis.unitOverlayGraphics.drawRect(
+            // Show the healthBarHurtBar on the right side of the health  bar
+            healthBarHurtProps.x + config.UNIT_UI_BAR_WIDTH / zoom * healthAfterHurt / u.healthMax,
+            // Stack the health bar above the mana bar
+            healthBarHurtProps.y - config.UNIT_UI_BAR_HEIGHT / zoom,
+            healthBarHurtProps.width,
+            healthBarHurtProps.height);
+          // Draw red death circle if a unit is currently alive, but wont be after cast
+          if (u.alive && !predictionUnit.alive) {
+            const skullPosition = withinCameraBounds({ x: u.x, y: u.y - config.COLLISION_MESH_RADIUS * 2 + 8 });
+            const imagePath = globalThis.player && u.faction === globalThis.player.unit.faction ? 'badgeDeathAlly.png' : 'badgeDeath.png';
+            ImmediateMode.draw(imagePath, skullPosition, (1 / zoom) + (Math.sin(Date.now() / 500) + 1) / 3);
+          }
+        }
+      }
+      // Draw mana bar
+      if (u.manaMax != 0 && globalThis.unitOverlayGraphics) {
+        globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
+        globalThis.unitOverlayGraphics.beginFill(colors.manaBlue, 1.0);
+        const manaBarProps = getUIBarProps(u.x, u.y, u.mana, u.manaMax, zoom, u);
+        globalThis.unitOverlayGraphics.drawRect(
+          manaBarProps.x,
+          manaBarProps.y,
+          manaBarProps.width,
+          manaBarProps.height);
+        // Draw the mana that goes missing after a spell (useful for mana_burn)
+        if (predictionUnit) {
+          globalThis.unitOverlayGraphics.beginFill(colors.manaLostBlue, 1.0);
+          // Math.max prevents the manabar from going negative
+          const manaAfterSpell = Math.max(0, predictionUnit.mana);
+          const manaBarHurtProps = getUIBarProps(u.x, u.y, u.mana - manaAfterSpell, u.manaMax, zoom, u);
+          // Only render hurt mana bar if it dips below mana max
+          // (it can remain above mana max if mana is overfilled)
+          if (manaAfterSpell < u.manaMax) {
+            const hurtX = manaBarHurtProps.x + config.UNIT_UI_BAR_WIDTH / zoom * manaAfterSpell / u.manaMax;
+            globalThis.unitOverlayGraphics.drawRect(
+              // Show the manaBarHurtBar on the right side of the mana  bar
+              hurtX,
+              manaBarHurtProps.y,
+              // Special width calculation required to prevent overfillmana
+              // from rendering wrongly 
+              manaBarProps.width - (hurtX - manaBarProps.x),
+              manaBarHurtProps.height);
+          }
+          // if (manaAfterSpell > u.mana) {
+          //   globalThis.unitOverlayGraphics?.beginFill(manaBarHealColor, 1.0);
+          // }
+        }
+      }
+      globalThis.unitOverlayGraphics?.endFill();
+    }
+
+  }
 }
 // predicts what will happen next turn
 // via enemy attention markers (showing if they will hurt you)

@@ -50,7 +50,7 @@ import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
 import Events from './Events';
 import { allUnits } from './entity/units';
-import { clearSpellEffectProjection, clearTints, getUIBarProps, isOutOfBounds, updatePlanningView } from './graphics/PlanningView';
+import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, getUIBarProps, isOutOfBounds, updatePlanningView } from './graphics/PlanningView';
 import { chooseObjectWithProbability, prng, randInt, SeedrandomState } from './jmath/rand';
 import { calculateCost, calculateCostForSingleCard } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle, closestLineSegmentIntersection } from './jmath/lineSegment';
@@ -639,92 +639,11 @@ export default class Underworld {
     for (let i = 0; i < this.units.length; i++) {
       const u = this.units[i];
       if (u) {
-        const predictionUnit = !this.unitsPrediction ? undefined : this.unitsPrediction[i];
         this.gameLoopUnit(u, aliveNPCs, deltaTime);
         // Sync Image even for non moving units since they may be moved by forces other than themselves
         // This keeps the unit.image in the same place as unit.x, unit.y
         Unit.syncImage(u)
-        // Draw unit overlay graphics
-        //--
-        // Prevent drawing unit overlay graphics when a unit is in the portal
-        if (u.x !== null && u.y !== null && !globalThis.isHUDHidden) {
-          // Draw health bar
-          const healthBarColor = u.faction == Faction.ALLY ? healthAllyGreen : healthRed;
-          const healthBarHurtColor = u.faction == Faction.ALLY ? 0x235730 : healthHurtRed;
-          const healthBarHealColor = u.faction == Faction.ALLY ? 0x23ff30 : 0xff2828;
-          globalThis.unitOverlayGraphics?.lineStyle(0, 0x000000, 1.0);
-          globalThis.unitOverlayGraphics?.beginFill(healthBarColor, 1.0);
-          const healthBarProps = getUIBarProps(u.x, u.y, u.health, u.healthMax, zoom, u);
-          globalThis.unitOverlayGraphics?.drawRect(
-            healthBarProps.x,
-            // Stack the health bar above the mana bar
-            healthBarProps.y - config.UNIT_UI_BAR_HEIGHT / zoom,
-            healthBarProps.width,
-            healthBarProps.height
-          );
-
-          // Only show health bar predictions on PlayerTurns, while players are able
-          // to cast, otherwise it will show out of sync when NPCs do damage
-          if (this.turn_phase == turn_phase.PlayerTurns && globalThis.unitOverlayGraphics) {
-            // Show how much damage they'll take on their health bar
-            globalThis.unitOverlayGraphics.beginFill(healthBarHurtColor, 1.0);
-            if (predictionUnit) {
-              const healthAfterHurt = predictionUnit.health;
-              if (healthAfterHurt > u.health) {
-                globalThis.unitOverlayGraphics.beginFill(healthBarHealColor, 1.0);
-              }
-              // const healthBarHurtWidth = Math.max(0, config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax);
-              const healthBarHurtProps = getUIBarProps(u.x, u.y, u.health - healthAfterHurt, u.healthMax, zoom, u);
-              globalThis.unitOverlayGraphics.drawRect(
-                // Show the healthBarHurtBar on the right side of the health  bar
-                healthBarHurtProps.x + config.UNIT_UI_BAR_WIDTH / zoom * healthAfterHurt / u.healthMax,
-                // Stack the health bar above the mana bar
-                healthBarHurtProps.y - config.UNIT_UI_BAR_HEIGHT / zoom,
-                healthBarHurtProps.width,
-                healthBarHurtProps.height);
-              // Draw red death circle if a unit is currently alive, but wont be after cast
-              if (u.alive && !predictionUnit.alive) {
-                const skullPosition = withinCameraBounds({ x: u.x, y: u.y - config.COLLISION_MESH_RADIUS * 2 + 8 });
-                const imagePath = globalThis.player && u.faction === globalThis.player.unit.faction ? 'badgeDeathAlly.png' : 'badgeDeath.png';
-                ImmediateMode.draw(imagePath, skullPosition, (1 / zoom) + (Math.sin(Date.now() / 500) + 1) / 3);
-              }
-            }
-          }
-          // Draw mana bar
-          if (u.manaMax != 0 && globalThis.unitOverlayGraphics) {
-            globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
-            globalThis.unitOverlayGraphics.beginFill(colors.manaBlue, 1.0);
-            const manaBarProps = getUIBarProps(u.x, u.y, u.mana, u.manaMax, zoom, u);
-            globalThis.unitOverlayGraphics.drawRect(
-              manaBarProps.x,
-              manaBarProps.y,
-              manaBarProps.width,
-              manaBarProps.height);
-            // Draw the mana that goes missing after a spell (useful for mana_burn)
-            if (predictionUnit) {
-              globalThis.unitOverlayGraphics.beginFill(colors.manaLostBlue, 1.0);
-              const manaAfterSpell = predictionUnit.mana;
-              const manaBarHurtProps = getUIBarProps(u.x, u.y, u.mana - manaAfterSpell, u.manaMax, zoom, u);
-              // Only render hurt mana bar if it dips below mana max
-              // (it can remain above mana max if mana is overfilled)
-              if (manaAfterSpell < u.manaMax) {
-                const hurtX = manaBarHurtProps.x + config.UNIT_UI_BAR_WIDTH / zoom * manaAfterSpell / u.manaMax;
-                globalThis.unitOverlayGraphics.drawRect(
-                  // Show the manaBarHurtBar on the right side of the mana  bar
-                  hurtX,
-                  manaBarHurtProps.y,
-                  // Special width calculation required to prevent overfillmana
-                  // from rendering wrongly 
-                  manaBarProps.width - (hurtX - manaBarProps.x),
-                  manaBarHurtProps.height);
-              }
-              // if (manaAfterSpell > u.mana) {
-              //   globalThis.unitOverlayGraphics?.beginFill(manaBarHealColor, 1.0);
-              // }
-            }
-          }
-          globalThis.unitOverlayGraphics?.endFill();
-        }
+        drawHealthBarAboveHead(i, this, zoom);
         // Animate shield modifier sprites
         if ((u.modifiers[shield.id] || u.modifiers[fortify.id]) && u.image) {
           // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
