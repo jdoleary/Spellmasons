@@ -32,6 +32,7 @@
     - Add ability to put user-facing text banners in game
         - scheduled downtime for servers
         - other annoucements
+    - Balance all audio
 - January 1/22-1/28
     - Finish Looping
         - (see branch `loop-tint-level`)

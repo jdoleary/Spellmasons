@@ -23,7 +23,7 @@
     - leaderboard
     -  maybe target circle should makes the spells that come after it tick up in how long they have to restore
     - it is unclear which spells have what cooldowns
-    - AOE should have max targets just like "Connect"
+    - **important** AOE should have max targets just like "Connect"
     - increase radius for connect and fix faction targeting so it doesn't hit you
     
 - Don't remove `quicksave` after death
