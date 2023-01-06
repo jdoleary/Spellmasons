@@ -2,12 +2,13 @@
 - **BIG BUG**: If multiple enemies are targeting an ally unit but it dies in the ranged turn the melee units can attack you without intention warning
 - Brad playtest
     - SKULL SHOULD GO OVER YOUR OWN HEAD TOO IF SPELL WILL KILL YOU
+        - the problem appears to be the targeted spellmason prediction unit in effect state is somehow different from the spellmason prediction unit in the array. Due to syncPlayerPredictionUnit.
     - Perk choices: good, UX: bad
-    - Instead of "increase emoji cast range" just "+ 5% cast range"; "at the start of" -> "every level"; "temporarily" -> "single-turn"; OR "max stamina" / "overflow stamina"
+        - Instead of "increase emoji cast range" just "+ 5% cast range"; "at the start of" -> "every level"; "temporarily" -> "single-turn"; OR "max stamina" / "overflow stamina"
+        - every turn / every level should be presented first
     - when you're spawning, if you hover a unit it should pop up their tooltip
     - blood golem too powerful? shouldn't be able to do kill damage? or introduce later
     - if a unit is ressed in lava do they take damage? and inLiquid
-    - every turn / every level should be presented first
     - in your perk-picking screen you should be able to see your current perks
     - "choose a place to spawn" should be hidden until you select an upgrade
     - miniboss priest should be able to res multiple allies
@@ -15,11 +16,10 @@
     - casting hit box isn't big enough on minibosses
     - increase all healths and damages by 10x
     - debilitate cheaper and less effective
-    - + 5% health every level too much??
     - Easy to not grow your max mana, maybe get some by default each level?
     - maybe perks should do concrete amounts instead of %s
     - weird line coming off of units that you pull into liquid on death
-    - suffocate copy "less MAX/base health"
+    - suffocate copy "less current health"
     - show how much damage you'll take when you end your turn
     - turn off target snapping when your first spell is a targeting spell for convenience
     - make perks rerollable

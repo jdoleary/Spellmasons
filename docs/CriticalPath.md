@@ -1,10 +1,11 @@
 # Desired Schedule
 - January 1/1-1/7
     - Solve targeting bug where if ranged units kill a unit the melee that were targeting that unit can now attack you without warning
+    - Brad playtest feedback
     - BALANCE unit spawns especially on later levels
         - Maybe not exponential budget?
     - Balanced / Difficult
-    - Friday - first thing in the morning
+    - Saturday - first thing in the morning
         - Update steam with `package` app
             - Add it to the test branch
                 - https://partner.steamgames.com/doc/store/testing
