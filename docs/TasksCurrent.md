@@ -5,7 +5,6 @@
         - Instead of "increase emoji cast range" just "+ 5% cast range"; "at the start of" -> "every level"; "temporarily" -> "single-turn"; OR "max stamina" / "overflow stamina"
         - every turn / every level should be presented first
     - blood golem too powerful? shouldn't be able to do kill damage? or introduce later
-    - if a unit is ressed in lava do they take damage? and inLiquid
     - in your perk-picking screen you should be able to see your current perks
     - explain graphic for summoner icon
     - casting hit box isn't big enough on minibosses
