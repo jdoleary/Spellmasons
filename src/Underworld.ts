@@ -2144,7 +2144,7 @@ export default class Underworld {
     if (player) {
       const numberOfUpgradesToChooseFrom = 3 - player.reroll;
       if (isPerk) {
-        const perks = generatePerks(3, this);
+        const perks = generatePerks(numberOfUpgradesToChooseFrom, this);
         const elPerks = perks.map(perk => createPerkElement(perk, player, this));
         if (elUpgradePickerContent) {
           elUpgradePickerContent.innerHTML = '';
@@ -2157,6 +2157,21 @@ export default class Underworld {
             } else {
               console.warn('showUpgrades: perk is undefined, this block should never be executed in headless mode')
             }
+          }
+          // Allow reroll if there is more than 1 upgrade to choose from
+          if (numberOfUpgradesToChooseFrom > 1) {
+            // Reroll perks button
+            const elRerollPerks = document.createElement('div');
+            elRerollPerks.innerHTML = 'reroll'
+            elRerollPerks.classList.add('ui-border');
+            elRerollPerks.style.color = 'white';
+            elRerollPerks.addEventListener('click', () => {
+              player.reroll++;
+              // Clear upgrades
+              document.body?.classList.toggle(showUpgradesClassName, false);
+              this.showUpgrades();
+            });
+            elUpgradePickerContent.appendChild(elRerollPerks);
           }
         }
 

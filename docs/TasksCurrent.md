@@ -15,7 +15,6 @@
     - weird line coming off of units that you pull into liquid on death
     - show how much damage you'll take when you end your turn
     - turn off target snapping when your first spell is a targeting spell for convenience
-    - make perks rerollable
     - spellbook animation is showing up in singleplayer
         - but you still need it when you yourself are casting multiple at once
     - burst should memorize your position at time of cast, so that if you move after casting it keeps the position that it was when you cast
