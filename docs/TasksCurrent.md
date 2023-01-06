@@ -7,7 +7,6 @@
     - blood golem too powerful? shouldn't be able to do kill damage? or introduce later
     - in your perk-picking screen you should be able to see your current perks
     - explain graphic for summoner icon
-    - casting hit box isn't big enough on minibosses
     - increase all healths and damages by 10x
     - debilitate cheaper and less effective
     - Easy to not grow your max mana, maybe get some by default each level?

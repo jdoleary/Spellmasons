@@ -2516,7 +2516,7 @@ export default class Underworld {
       // Filter for only valid units, not units with NaN location or waiting to be removed
       .filter(u => !u.flaggedForRemoval && !isNaN(u.x) && !isNaN(u.y))
       // Filter for units within SELECTABLE_RADIUS of coordinates
-      .filter(u => math.distance(u, coords) <= config.SELECTABLE_RADIUS)
+      .filter(u => math.distance(u, coords) <= (u.isMiniboss ? config.SELECTABLE_RADIUS * 2 : config.SELECTABLE_RADIUS))
       // Order by closest to coords
       .sort((a, b) => math.distance(a, coords) - math.distance(b, coords))
       // Sort dead units to the back, prefer selecting living units
