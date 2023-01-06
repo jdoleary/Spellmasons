@@ -244,8 +244,12 @@ export default class Underworld {
   }
   syncPlayerPredictionUnitOnly() {
     if (this.unitsPrediction && globalThis.player !== undefined) {
-      const predictionUnitIndex = this.unitsPrediction.findIndex(u => u.id == globalThis.player?.unit.id);
-      this.unitsPrediction[predictionUnitIndex] = Unit.copyForPredictionUnit(globalThis.player.unit, this);
+      const predictionUnit = this.unitsPrediction.find(u => u.id == globalThis.player?.unit.id);
+      if (predictionUnit) {
+        // Override the properties but keep the reference intact or else
+        // it will interfere with showing a skull above your own head if a spell will kill you
+        Object.assign(predictionUnit, Unit.copyForPredictionUnit(globalThis.player.unit, this));
+      }
     }
   }
   // Assigns this.unitsPrediction a copy of this.units
