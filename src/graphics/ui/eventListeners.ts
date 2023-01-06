@@ -15,6 +15,7 @@ import {
   isOutOfBounds,
   runPredictions,
   updateTooltipSelection,
+  updateTooltipSelectionWhileSpawning,
 } from '../PlanningView';
 import { toggleMenu, View } from '../../views';
 import * as config from '../../config';
@@ -376,6 +377,10 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
 
   // Show faint circle on clickable entities on hover:
   drawCircleUnderTarget(mouseTarget, underworld, 1.0, globalThis.planningViewGraphics);
+  // Show tooltip on hover when player is spawning because they can't click without
+  // spawning themselves in and they still need a way to inspect units
+  updateTooltipSelectionWhileSpawning(mouseTarget, underworld);
+  // TODO show tooltip info on hover when spawning
 
 
   // Test pathing

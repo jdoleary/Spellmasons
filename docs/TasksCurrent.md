@@ -6,7 +6,6 @@
     - Perk choices: good, UX: bad
         - Instead of "increase emoji cast range" just "+ 5% cast range"; "at the start of" -> "every level"; "temporarily" -> "single-turn"; OR "max stamina" / "overflow stamina"
         - every turn / every level should be presented first
-    - when you're spawning, if you hover a unit it should pop up their tooltip
     - blood golem too powerful? shouldn't be able to do kill damage? or introduce later
     - if a unit is ressed in lava do they take damage? and inLiquid
     - in your perk-picking screen you should be able to see your current perks

@@ -882,6 +882,43 @@ export function clearTooltipSelection(): boolean {
     return false;
   }
 }
+
+// A special slightly-modified copy of updateTooltipSelection to be used when
+// player is choosing a spawn point but also wants to inspect units or things on
+// the game field.
+export function updateTooltipSelectionWhileSpawning(mousePos: Vec2, underworld: Underworld) {
+  if (player && !player.isSpawned) {
+
+    // Find unit:
+    const units = underworld.getUnitsAt(mousePos);
+    // Omit the current player unit from the tooltip selection,
+    // because the player is currently looking for a spawn point,
+    // their self will always be the first unit returned from getUnitsAt
+    // and they want to inspect what's under them, not themself
+    if (units[0] == player.unit) {
+      units.shift();
+    }
+    const unit = units[0];
+    if (unit) {
+      globalThis.selectedUnit = unit;
+      selectedType = "unit";
+      return
+    } else {
+      globalThis.selectedUnit = undefined;
+    }
+    const pickup = underworld.getPickupAt(mousePos);
+    if (pickup) {
+      globalThis.selectedPickup = pickup;
+      selectedType = "pickup";
+      return
+    } else {
+      globalThis.selectedPickup = undefined;
+    }
+    // If nothing was found to select, null-out selectedType
+    // deselect
+    selectedType = null;
+  }
+}
 export function updateTooltipSelection(mousePos: Vec2, underworld: Underworld) {
 
   // Find unit:
