@@ -23,9 +23,8 @@ export function createPerkElement(perk: AttributePerk, player: IPlayer, underwor
     desc.classList.add('card-description');
     const descriptionText = document.createElement('div');
     descriptionText.innerHTML = `
-${perk.certainty < 1.0 ? `🎲 ${Math.round(perk.certainty * 100)}% chance to increase` : `Increase`}
-${perkAttributeToString(perk.attribute)}
-by ${Math.round((perk.amount - 1.0) * 100)}%
+${perk.certainty < 1.0 ? `🎲 ${Math.round(perk.certainty * 100)}% chance to` : ``}
+${perkAttributeToIcon(perk.attribute)} +${Math.round((perk.amount - 1.0) * 100)}% ${perkAttributeToString(perk.attribute)}
 ${perkWhenToString(perk.when)}`;
     desc.appendChild(descriptionText);
 
@@ -46,35 +45,60 @@ ${perkWhenToString(perk.when)}`;
 
 function perkWhenToString(when: WhenUpgrade): string {
     if (when == 'everyLevel') {
-        return 'at the start of every 🗺️ level';
+        return '🗺️ every level';
     } else if (when == 'everyTurn') {
-        return 'at the start of every 🕰️ turn️';
+        return '🕰️ every turn️';
     } else if (when == 'immediately') {
         return '';
     }
     return '';
 }
-function perkAttributeToString(attr: string): string {
+function perkAttributeToIcon(attr: string): string {
     if (attr == 'manaMax') {
-        return `<span class=''>🔵 Mana permantently</span>`;
+        return `<span class=''>🔵</span>`;
     }
     if (attr == 'healthMax') {
-        return `<span class=''>❤️ Health permanently</span>`;
+        return `<span class=''>❤️</span>`;
     }
     if (attr == 'staminaMax') {
-        return `<span class=''>🏃‍♂️ Stamina permanently</span>`;
+        return `<span class=''>🏃‍♂️</span>`;
     }
     if (attr == 'mana') {
-        return `<span class=''>🔵 Mana temporarily</span>`;
+        return `<span class=''>🔵</span>`;
     }
     if (attr == 'health') {
-        return `<span class=''>❤️ Health temporarily</span>`;
+        return `<span class=''>❤️</span>`;
     }
     if (attr == 'stamina') {
-        return `<span class=''>🏃‍♂️ Stamina temporarily</span>`;
+        return `<span class=''>🏃‍♂️</span>`;
     }
     if (attr == 'attackRange') {
-        return `🎯 Cast Range`;
+        return `🎯`;
+
+    }
+    return '';
+}
+function perkAttributeToString(attr: string): string {
+    if (attr == 'manaMax') {
+        return `<span class=''>Mana permantently</span>`;
+    }
+    if (attr == 'healthMax') {
+        return `<span class=''>Health permanently</span>`;
+    }
+    if (attr == 'staminaMax') {
+        return `<span class=''>Stamina permanently</span>`;
+    }
+    if (attr == 'mana') {
+        return `<span class=''>Mana for one turn</span>`;
+    }
+    if (attr == 'health') {
+        return `<span class=''>Health for one turn</span>`;
+    }
+    if (attr == 'stamina') {
+        return `<span class=''>Stamina for one turn</span>`;
+    }
+    if (attr == 'attackRange') {
+        return `Cast Range`;
 
     }
     return attr;
