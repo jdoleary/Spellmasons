@@ -7,7 +7,6 @@
     - blood golem too powerful? shouldn't be able to do kill damage? or introduce later
     - if a unit is ressed in lava do they take damage? and inLiquid
     - in your perk-picking screen you should be able to see your current perks
-    - "choose a place to spawn" should be hidden until you select an upgrade
     - miniboss priest should be able to res multiple allies
     - explain graphic for summoner icon
     - casting hit box isn't big enough on minibosses

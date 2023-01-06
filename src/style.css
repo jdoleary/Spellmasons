@@ -1477,6 +1477,12 @@ body.viewingCinematicCamera #instructions {
   visibility: hidden;
 }
 
+/* Hide instructions such as "Choose a place to spawn"
+until upgrades are done being picked */
+body.showUpgrades.view-Game #instructions {
+  display: none;
+}
+
 body.view-Game #instructions,
 body.view-Game #camera-recenter-tip {
   display: block;
