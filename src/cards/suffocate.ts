@@ -53,7 +53,7 @@ const spell: Spell = {
     description: `
 A curse that causes sudden death after a number of turns have passed.
 The number of turns are relative to the target's health when the curse it applied.
-Less health = quicker death.
+Less current health = quicker death.
 Stacking ${id} will make death occur in less turns.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {

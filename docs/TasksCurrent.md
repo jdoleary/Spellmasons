@@ -1,5 +1,6 @@
-
+- single player game overscreen should offer to restart at checkpoint
 - **BIG BUG**: If multiple enemies are targeting an ally unit but it dies in the ranged turn the melee units can attack you without intention warning
+- music is too soft relative to sfx
 - Brad playtest
     - Perk choices: good, UX: bad
         - Instead of "increase emoji cast range" just "+ 5% cast range"; "at the start of" -> "every level"; "temporarily" -> "single-turn"; OR "max stamina" / "overflow stamina"
@@ -12,7 +13,6 @@
     - Easy to not grow your max mana, maybe get some by default each level?
     - maybe perks should do concrete amounts instead of %s
     - weird line coming off of units that you pull into liquid on death
-    - suffocate copy "less current health"
     - show how much damage you'll take when you end your turn
     - turn off target snapping when your first spell is a targeting spell for convenience
     - make perks rerollable
