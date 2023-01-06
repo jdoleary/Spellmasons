@@ -17,22 +17,26 @@ async function animatePriestProjectileAndHit(self: Unit.IUnit, target: Unit.IUni
     'projectile/priestProjectileCenter',
   );
 }
-async function resurrectOneOf(self: Unit.IUnit, units: Unit.IUnit[], underworld: Underworld): Promise<boolean> {
+async function resurrectUnits(self: Unit.IUnit, units: Unit.IUnit[], underworld: Underworld): Promise<boolean> {
   if (units.length == 0) {
     return false;
   }
   playSFXKey('priestAttack');
+  let didResurrect = false;
+  await Unit.playAnimation(self, unit.animations.attack);
+  let promises = [];
   for (let ally of units) {
-    await Unit.playAnimation(self, unit.animations.attack);
-    await animatePriestProjectileAndHit(self, ally);
-    const { targetedUnits } = await underworld.castCards({}, self, [resurrect.id], ally, false);
-    for (let unit of targetedUnits) {
-      // Add summoning sickeness so they can't act after they are summoned
-      Unit.addModifier(unit, summoningSicknessId, underworld, false);
-    }
-    return true;
+    promises.push(animatePriestProjectileAndHit(self, ally).then(async () => {
+      const { targetedUnits } = await underworld.castCards({}, self, [resurrect.id], ally, false);
+      for (let unit of targetedUnits) {
+        // Add summoning sickeness so they can't act after they are summoned
+        Unit.addModifier(unit, summoningSicknessId, underworld, false);
+      }
+    }));
+    didResurrect = true;
   }
-  return false;
+  await Promise.all(promises);
+  return didResurrect;
 
 }
 const unit: UnitSource = {
@@ -75,7 +79,8 @@ const unit: UnitSource = {
       // Priests attack or move, not both; so clear their existing path
       unit.path = undefined;
       // Resurrect dead ally
-      didAction = await resurrectOneOf(unit, attackTargets, underworld);
+      const numberOfAlliesToRez = unit.isMiniboss ? 3 : 1;
+      didAction = await resurrectUnits(unit, attackTargets.slice(0, numberOfAlliesToRez), underworld);
     }
     if (!didAction) {
       const closestAlly = Unit.findClosestUnitInSameFaction(unit, underworld);
