@@ -1,7 +1,8 @@
 # Desired Schedule
 - January 1/1-1/7
+    - increase all healths and damages by 10x
+    - burst should memorize your position at time of cast, so that if you move after casting it keeps the position that it was when you cast
     - Solve targeting bug where if ranged units kill a unit the melee that were targeting that unit can now attack you without warning
-    - Brad playtest feedback
     - BALANCE unit spawns especially on later levels
         - Maybe not exponential budget?
     - Balanced / Difficult
@@ -25,6 +26,8 @@
     - Finish Boss
         - Implement aoe damage against enemies chain+hurt?
     - A way to see your perks roll
+        - Animated Perk List UI
+            - Are perk chances synced correctly in multiplayer?
         - Offset floating text for these
     - Submit to IGN and others
     - Add ability to put user-facing text banners in game
