@@ -14,7 +14,7 @@ import { HasSpace } from '../entity/Type';
 
 const id = 'Connect';
 const numberOfTargetsPerQuantity = 2;
-const baseRadius = 105;
+const baseRadius = config.PLAYER_BASE_ATTACK_RANGE - 10;
 const spell: Spell = {
   card: {
     id,
