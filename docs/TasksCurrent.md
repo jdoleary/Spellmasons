@@ -21,8 +21,7 @@
     - burst should memorize your position at time of cast, so that if you move after casting it keeps the position that it was when you cast
     - levels can be way too big
     - leaderboard
-    - ress should take a lot longer to cool down
-        - or maybe target circle should makes the spells that come after it tick up in how long they have to restore
+    -  maybe target circle should makes the spells that come after it tick up in how long they have to restore
     - it is unclear which spells have what cooldowns
     - AOE should have max targets just like "Connect"
     - increase radius for connect and fix faction targeting so it doesn't hit you
