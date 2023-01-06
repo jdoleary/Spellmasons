@@ -27,7 +27,6 @@
     
 - Don't remove `quicksave` after death
 - starting levels are way too big now
-- prevent perks from being identical
 - 80% mana at the start of a level perk is too much
 
 - Cinematic camera should just be a zoom in? or improved

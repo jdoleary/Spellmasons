@@ -106,8 +106,9 @@ function perkAttributeToString(attr: string): string {
 export type UpgradableAttribute = 'staminaMax' | 'stamina' | 'healthMax' | 'health' | 'manaMax' | 'mana' | 'attackRange'
 export type WhenUpgrade = 'immediately' | 'everyLevel' | 'everyTurn';
 export function generatePerks(number: number, underworld: Underworld): AttributePerk[] {
-    const perks = [];
+    const perks: AttributePerk[] = [];
     const preRolledCertainty = chooseOneOf([0.1, 0.2, 0.3]) || 0.2;
+    let failedDueToDuplicateCount = 0;
     for (let i = 0; i < number; i++) {
 
         let when: WhenUpgrade = 'immediately';// Default, should never be used
@@ -144,13 +145,26 @@ export function generatePerks(number: number, underworld: Underworld): Attribute
             }
 
         }
-
-        perks.push({
+        const newPerk = {
             attribute,
             when,
             amount,
             certainty
-        });
+        };
+
+        // Prevent duplicates
+        const duplicate = perks.find(p => JSON.stringify(p) == JSON.stringify(newPerk));
+        if (duplicate) {
+            i--;
+            failedDueToDuplicateCount++;
+            if (failedDueToDuplicateCount > 100) {
+                console.error('Infinite loop protection, could not generate unique perk', JSON.stringify(perks));
+                return perks;
+            }
+            continue;
+        }
+
+        perks.push(newPerk);
     }
 
     return perks;
