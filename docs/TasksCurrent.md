@@ -1,8 +1,6 @@
 
 - **BIG BUG**: If multiple enemies are targeting an ally unit but it dies in the ranged turn the melee units can attack you without intention warning
 - Brad playtest
-    - SKULL SHOULD GO OVER YOUR OWN HEAD TOO IF SPELL WILL KILL YOU
-        - the problem appears to be the targeted spellmason prediction unit in effect state is somehow different from the spellmason prediction unit in the array. Due to syncPlayerPredictionUnit.
     - Perk choices: good, UX: bad
         - Instead of "increase emoji cast range" just "+ 5% cast range"; "at the start of" -> "every level"; "temporarily" -> "single-turn"; OR "max stamina" / "overflow stamina"
         - every turn / every level should be presented first
