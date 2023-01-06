@@ -18,7 +18,6 @@
     - make perks rerollable
     - spellbook animation is showing up in singleplayer
         - but you still need it when you yourself are casting multiple at once
-    - miniboss shouldn't be possible on the same level that a unit first appears
     - burst should memorize your position at time of cast, so that if you move after casting it keeps the position that it was when you cast
     - levels can be way too big
     - leaderboard

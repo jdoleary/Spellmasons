@@ -1257,8 +1257,11 @@ export default class Underworld {
       if (validSpawnCoords.length == 0) { break; }
       const validSpawnCoordsIndex = randInt(this.random, 0, validSpawnCoords.length - 1);
       const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
+      const sourceUnit = allUnits[id];
+      // Disallow miniboss for a unit spawning on the first levelIndex that they are allowed to spawn
+      const minibossAllowed = (sourceUnit?.spawnParams?.unavailableUntilLevelIndex || 0) < levelIndex;
       if (coord) {
-        const isMiniboss = numberOfMinibossesAllowed > numberOfMinibossesMade;
+        const isMiniboss = !minibossAllowed ? false : numberOfMinibossesAllowed > numberOfMinibossesMade;
         if (isMiniboss) {
           numberOfMinibossesMade++;
         }
