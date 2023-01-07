@@ -16,6 +16,7 @@
         - Maybe not exponential budget?
     - Balanced / Difficult
 - January 1/8-1/14
+    - Email streamers, try to set up a multiplayer stream on release day
     - Solve many enemies overkilling allied unit
     - Multiplayer
         - Support hosting a server from in the game exe
