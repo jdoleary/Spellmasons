@@ -1,3 +1,5 @@
+- early levels are too big, later levels are too small
+- fix hover styling for perk reroll button
 - single player game overscreen should offer to restart at checkpoint
 - **BIG BUG**: If multiple enemies are targeting an ally unit but it dies in the ranged turn the melee units can attack you without intention warning
 - music is too soft relative to sfx

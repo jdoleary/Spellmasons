@@ -215,6 +215,9 @@ export function choosePerk(perk: AttributePerk, player: IPlayer, underworld: Und
         if (elPerkList && elPerksEveryLevel && elPerksEveryTurn) {
             const everyLevel = player.attributePerks.filter(p => p.when == 'everyLevel');
             const everyTurn = player.attributePerks.filter(p => p.when == 'everyTurn');
+            // Clear previous perks now that they will be replaced
+            elPerksEveryLevel.innerHTML = '';
+            elPerksEveryTurn.innerHTML = '';
             everyLevel.forEach(p => perkToListItem(p, elPerksEveryLevel));
             everyTurn.forEach(p => perkToListItem(p, elPerksEveryTurn));
         } else {
