@@ -2407,6 +2407,15 @@ export default class Underworld {
 
   async executeNPCTurn(faction: Faction) {
     console.log('game: executeNPCTurn', Faction[faction]);
+    const cachedTargets: { [id: number]: Unit.IUnit[] } = {};
+    for (let u of this.units.filter(
+      (u) => u.unitType === UnitType.AI && u.alive && u.faction == faction
+    )) {
+      const unitSource = allUnits[u.unitSourceId];
+      if (unitSource) {
+        cachedTargets[u.id] = unitSource.getUnitAttackTargets(u, this);
+      }
+    }
     for (let subTypes of [[UnitSubType.RANGED_LOS, UnitSubType.RANGED_RADIUS, UnitSubType.SUPPORT_CLASS], [UnitSubType.MELEE]]) {
       const animationPromises: Promise<void>[] = [];
       unitloop: for (let u of this.units.filter(
@@ -2425,7 +2434,7 @@ export default class Underworld {
         }
         const unitSource = allUnits[u.unitSourceId];
         if (unitSource) {
-          const targets = unitSource.getUnitAttackTargets(u, this);
+          const targets = cachedTargets[u.id] || [];
           // Add unit action to the array of promises to wait for
           // TODO: Prevent golems from attacking if they are out of range
           // like when they are around a corner

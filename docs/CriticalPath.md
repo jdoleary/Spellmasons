@@ -2,7 +2,6 @@
 - January 1/1-1/7
     - increase all healths and damages by 10x
     - burst should memorize your position at time of cast, so that if you move after casting it keeps the position that it was when you cast
-    - Solve targeting bug where if ranged units kill a unit the melee that were targeting that unit can now attack you without warning
     - BALANCE unit spawns especially on later levels
         - Maybe not exponential budget?
     - Balanced / Difficult
