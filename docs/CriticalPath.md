@@ -1,15 +1,6 @@
 # Desired Schedule
 - January 1/1-1/7
     - Why are later levels tiny and starting levels big?
-    - Saturday - first thing in the morning
-        - Update steam with `package` app
-            - Add it to the test branch
-                - https://partner.steamgames.com/doc/store/testing
-                - [Branches](https://partner.steamgames.com/doc/store/application/branches)
-            - Download the test branch
-            - Verify that it launches executable
-            - Verify that delta updates work in steam
-            - Update regular build and servers
     - increase all healths and damages by 10x
     - burst should memorize your position at time of cast, so that if you move after casting it keeps the position that it was when you cast
     - BALANCE unit spawns especially on later levels
