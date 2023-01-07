@@ -87,7 +87,7 @@ function perkAttributeToIcon(attr: string): string {
 }
 function perkAttributeToString(attr: string): string {
     if (attr == 'manaMax') {
-        return `Mana permantently`;
+        return `Mana permanently`;
     }
     if (attr == 'healthMax') {
         return `Health permanently`;

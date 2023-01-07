@@ -1731,11 +1731,15 @@ body:not(.view-Game) #tutorial-checklist {
 #perkList {
   position: absolute;
   right: 8px;
-  top: 0;
-  bottom: 0;
   pointer-events: none;
-  height: 100%;
   justify-content: center;
-  display: flex;
+  display: none;
   flex-direction: column;
+  z-index: 2;
+  padding: 16px;
+  color: white;
+}
+
+body.view-Game.showUpgrades #perkList {
+  display: flex;
 }
