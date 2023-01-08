@@ -1,5 +1,7 @@
 # Critical Path
 - January 1/8-1/14
+    - Prepare stable version for next Streamer outreach
+    - Streamer outreach
 - January 1/15-1/21
     - Finish Multiplayer
     - Localization

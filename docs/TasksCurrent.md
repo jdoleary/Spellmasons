@@ -1,6 +1,7 @@
 
 # Desired Schedule
 - January 1/8-1/14
+    - test new spells in multiplayer
     - Implement onColllision for arrow spells
     - Fix UI perk list when empty don't show
     - Map gen
