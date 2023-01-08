@@ -92,7 +92,7 @@ const unit: UnitSource = {
           flyingProjectilePromise = createVisualFlyingProjectile(
             unit,
             target,
-            'projectile/arrow',
+            'projectile/arrow_ghost',
           ).then(() => {
             Unit.takeDamage(target, unit.damage, unit, underworld, false, undefined, { thinBloodLine: true });
           });
