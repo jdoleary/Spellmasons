@@ -14,7 +14,7 @@ const spell: Spell = {
   card: {
     id: arrowCardId,
     category: CardCategory.Damage,
-    supportQuantity: true,
+    supportQuantity: false,
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
@@ -28,6 +28,7 @@ const spell: Spell = {
     description: `
 Fires a targeting arrow.
 The first entity that the arrow strikes becomes a target for the following spells.
+Does not stack.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       let targets: Vec2[] = state.targetedUnits;

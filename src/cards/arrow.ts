@@ -14,7 +14,7 @@ const spell: Spell = {
   card: {
     id: arrowCardId,
     category: CardCategory.Damage,
-    supportQuantity: true,
+    supportQuantity: false,
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
