@@ -763,9 +763,6 @@ const elInspectorTooltipContainer = document.getElementById(
 const elInspectorTooltipContent = document.getElementById(
   'inspector-tooltip-content',
 );
-const elInspectorTooltipImage: HTMLImageElement = (document.getElementById(
-  'inspector-tooltip-image',
-) as HTMLImageElement);
 
 let selectedType: "unit" | "pickup" | "obstacle" | null = null;
 export function updateTooltipContent(underworld: Underworld) {
@@ -782,7 +779,6 @@ export function updateTooltipContent(underworld: Underworld) {
   // Update information in content
   // show info on unit, pickup, etc clicked
   let text = '';
-  elInspectorTooltipImage.src = '';
   switch (selectedType) {
     case "unit":
       let cards = '';
@@ -818,14 +814,6 @@ ${modifiersToText(globalThis.selectedUnit.modifiers)}
 ${unitSource.extraTooltipInfo ? unitSource.extraTooltipInfo() : ''}
 ${cards}
       `;
-
-          // Temporarily disabled image since unit images are not in public folder
-          // and i don't want it to report a bunch of 404s
-          // const imagePath = Unit.getImagePathForUnitId(unitSource.id);
-          // if (elInspectorTooltipImage.src !== imagePath) {
-
-          //   elInspectorTooltipImage.src = imagePath;
-          // }
         }
       }
       break;
