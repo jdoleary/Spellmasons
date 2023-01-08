@@ -1,3 +1,85 @@
+
+# Desired Schedule
+- January 1/8-1/14
+    - Implement onColllision for arrow spells
+    - Fix UI perk list when empty don't show
+    - Map gen
+        - Make sure it jitters in all 4 directions so you don't end up with long diagonal maps too often
+    - Small changes
+        - validate mana_burn, suffocate due to health and damage 10xing
+        - burst should memorize your position at time of cast, so that if you move after casting it keeps the position that it was when you cast
+        - Offset floating text for perks when they proc
+    - BALANCE unit spawns especially on later levels
+        - Maybe not exponential budget?
+    - Test on different resolutions
+    - **Email streamers**, try to set up a multiplayer stream on release day
+    - Reach out to translators
+    - Balanced / Difficult
+    - Content: Add Copy Soul vs capture soul.  Capture soul should let you spawn them for no mana cost but they need to be below 25% health to be captured.  Copy Soul gives you the summon card.
+    - Solve many enemies overkilling allied unit
+    - Multiplayer
+        - LAN hosting: Support hosting a server from in the game exe
+        - Server Browser
+        - Multiplayer save load with "take over player"
+        - Notify when version isn't same
+- January 1/15-1/21
+    - small stuff
+        - fix being able to go negative mana if you queue a spell before the previous spell's mana is spent
+        - rename vampire or restore that it passes blood curse on to you when it bites
+        - multiplayer perk resurrect icon
+    - Balanced / Difficult
+    - Finish Boss
+        - Implement aoe damage against enemies chain+hurt?
+    - A way to see your perks roll
+        - Animated Perk List UI
+            - Are perk chances synced correctly in multiplayer?
+    - Submit to IGN and others
+    - Add ability to put user-facing text banners in game
+        - scheduled downtime for servers
+        - other annoucements
+    - Balance all music 
+    - Add secondary toolbars on the sides (only shown on drag)
+    - Add run stats in gameover screen / leaderboard
+    - Test on Slow Computer
+- January 1/22-1/28
+    - Allow for deleting saves
+    - Save files should be sorted by recency
+    - Finish Looping
+        - (see branch `loop-tint-level`)
+    - Make Demo as promised
+    - Prepare to ship
+        - [Release Demo](https://partner.steamgames.com/doc/store/application/demos)
+        - Accessability / Localization Language Support / Spellcheck
+        - Establish Minimum System Requirements and update Steam Page
+        - Add sentry errors to electron node files
+        - Electron Security
+            - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
+            - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
+        - Verify Cloud Saves
+        - Perks
+            - Styling for perks
+            - Use relative percentages rather than out of 100%
+        - Achievements?
+        - Accessability option to make text more readable
+    - Final QA
+        - Manually test all spells for desync issues (in multiplayer)
+        - Test for desyncs on multiplayer
+        - Bulletproof Updating and Error Reporting
+- January 31 (check timezone)
+    - Remove "Beta" Near version number
+    - Release
+- Other 
+    - 2nd algorithm for generating levels
+        - see branch 2nd-level-algorithm
+    - Features / Content
+        - Reroll / exchange cards (risk reward style)
+            - like maybe you can reroll but you have one less card to choose from each time
+    - [Submit demo to IGN](https://corp.ign.com/submit-a-game)
+    - make music play in menu
+
+    
+- Add codex where you can read about spells and enemies
+---
 - Need sound effect for bolt, improve bolt animation
 - Arrow collisions don't work right when used with target_circle first
 - Capture soul should kill the enemy and animate a soul coming too you.
@@ -324,3 +406,29 @@ but overall a boss with multiple "stages" or "parts" would be cool
 ## Misc
 - **critical** Improve sending castCards with targeting based on id not position
 - Unit movement desync occurred between clients when one client has CPU throttled, the non throttled client has the unit move much farther
+# Stretch Tasks
+- Achievements
+- Mods
+- Make pickups do something when destroyed
+    - Refactor arrow.ts to use getPotentialTargets instead of just underworld.units and unitsPrediction or else it will never strike pickups
+- Server config by host (pvp, worms armageddon style customizations)
+- Pushing units into portal should do something
+- Protection should be able to be cast on dead units to keep priest from resurrecting them
+- [Mod support](https://partner.steamgames.com/doc/features/workshop)
+- Server customization (like Worms Armageddon)
+    - Turn time
+    - Pvp mode (more factions)
+- Perks | "upgrades" with some random attributes | The more dimentions you add the better!
+    - % chance to get more stamina on level start
+    - % chance to start level with mob on your faction
+    - % chance that casting wont consume mana
+    - % chance to freeze on damage
+    - one time: 50/50 chance to incrase max stat or decrease it
+    - make 1 random spell permanently more expensive and another permanently cheaper
+    - Skill tree
+    - Critical chances
+    - Time challenges - beat the level in less than 3 turns
+    - Make wagers - risk / reward
+        - even with the difficulty of the next level
+    - pseudo class system
+    - item that makes your stronger but it randomizes your spawn

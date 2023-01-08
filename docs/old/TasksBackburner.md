@@ -1,3 +1,14 @@
+- Milestone | **Optimize game**
+    - Optimize runPredictions: especially with expanding + corpse explosion
+    - repelCircleFromLine is used for both unit crowding and wall physics and with wall physics it doesn't need a reference to underworld, that's only needed for unit crowding to make sure they don't crowd each other through walls
+    - Memory Leaks: call destroy() on any Graphics object you no longer need to avoid memory leaks.
+    - Stress test droplets to see how many users they can support
+    - Check ImmediateModeSprites for leaks
+    - Support huge numbers of mobs (100? 500? 1000?)
+        - Profile and figure out where the weak points are
+    - Saw slowdown with "+ Radius" * 4 then Bloat, then Slice
+    - updateCameraPosition is somehow taking a long time
+    - copyForPredictionUnit is slow for many units
 - Difficulty / Balance
     - What drives difficulty
         - Unplanned priorities
