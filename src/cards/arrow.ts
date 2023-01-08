@@ -9,7 +9,7 @@ import * as config from '../config';
 import { add, Vec2 } from '../jmath/Vec';
 
 export const arrowCardId = 'Arrow';
-const damageDone = 2;
+const damageDone = 1;
 const spell: Spell = {
   card: {
     id: arrowCardId,
@@ -26,15 +26,16 @@ const spell: Spell = {
     sfx: '',
     description: `
 Fires an arrow that deals ${damageDone} damage to the first unit that it strikes.
+Cannot pass through walls.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       let targets: Vec2[] = state.targetedUnits;
       targets = targets.length ? targets : [state.castLocation];
       for (let target of targets) {
+        const flightPath = add(state.casterUnit, math.similarTriangles(target.x - state.casterUnit.x, target.y - state.casterUnit.y, math.distance(state.casterUnit, target), 1000));
         // Get all units between source and target for the arrow to pierce:
         const firstTarget = (prediction ? underworld.unitsPrediction : underworld.units).find(
           (u) => {
-            const flightPath = add(state.casterUnit, math.similarTriangles(target.x - state.casterUnit.x, target.y - state.casterUnit.y, math.distance(state.casterUnit, target), 1000));
             const pointAtRightAngleToArrowPath = findWherePointIntersectLineSegmentAtRightAngle(u, { p1: state.casterUnit, p2: flightPath });
             const willBeStruckByArrow = !pointAtRightAngleToArrowPath ? false : math.distance(u, pointAtRightAngleToArrowPath) <= config.COLLISION_MESH_RADIUS * 2
             // Note: Filter out self as the arrow shouldn't damage caster
