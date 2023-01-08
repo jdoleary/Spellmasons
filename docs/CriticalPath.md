@@ -1,8 +1,6 @@
 # Desired Schedule
 - January 1/8-1/14
     - Add Che new art
-        - Spell bar
-            - Tell Che if it works
         - Arrow spells
         - Bolt Spell
     - Map gen
@@ -16,6 +14,9 @@
         - Change font (add license to Credits)
     - **Email streamers**, try to set up a multiplayer stream on release day
     - Reach out to translators
+    - Balanced / Difficult
+- January 1/8-1/14
+    - Solve many enemies overkilling allied unit
     - Multiplayer
         - LAN hosting: Support hosting a server from in the game exe
         - Server Browser

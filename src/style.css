@@ -10,11 +10,21 @@
   padding: 15px;
 }
 
+@font-face {
+  font-family: Silkscreen;
+  src: url('./font/Silkscreen/Silkscreen-Regular.ttf');
+}
+
 body {
   margin: 0;
   overflow: hidden;
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
+  font-family: 'Silkscreen', 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
     'Lucida Sans', Arial, sans-serif;
+}
+
+button,
+.button-text {
+  font-family: 'Silkscreen';
 }
 
 #PIXI-holder {
@@ -455,7 +465,8 @@ invisibly blocked, change with caution! */
 }
 
 .card-badge {
-  width: 24px;
+  /* min- allows mana badge to expand if it is triple digits */
+  min-width: 24px;
   height: 24px;
   line-height: 24px;
   border-radius: 24px;
@@ -1652,7 +1663,6 @@ body.auto-camera #camera-recenter-tip {
   box-sizing: border-box;
   padding: 10px;
   text-align: center;
-  font-family: sans-serif;
   font-size: 1.8em;
   z-index: 2;
 }
