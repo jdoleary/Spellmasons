@@ -1,11 +1,12 @@
 # Desired Schedule
 - January 1/8-1/14
-    - Map gen
-        - Make sure it jitters in all 4 directions so you don't end up with long diagonal maps too often
     - Add Che new art
         - Spell bar
+            - Tell Che if it works
         - Arrow spells
         - Bolt Spell
+    - Map gen
+        - Make sure it jitters in all 4 directions so you don't end up with long diagonal maps too often
     - BALANCE unit spawns especially on later levels
         - Maybe not exponential budget?
     - Small changes
@@ -16,7 +17,7 @@
     - **Email streamers**, try to set up a multiplayer stream on release day
     - Reach out to translators
     - Multiplayer
-        - Support hosting a server from in the game exe
+        - LAN hosting: Support hosting a server from in the game exe
         - Server Browser
         - Multiplayer save load with "take over player"
         - Notify when version isn't same
@@ -32,7 +33,9 @@
     - Add ability to put user-facing text banners in game
         - scheduled downtime for servers
         - other annoucements
-    - Balance all audio
+    - Balance all music 
+    - Add secondary toolbars on the sides (only shown on drag)
+    - Add run stats in gameover screen / leaderboard
 - January 1/22-1/28
     - Finish Looping
         - (see branch `loop-tint-level`)
@@ -72,6 +75,7 @@
 # Major Tasks
 - Finish Multiplayer Menu and LAN hosting
 - Localization
+- [Integrate Steam SDK](https://github.com/ceifa/steamworks.js)
 - Support modding
 # Critical Path
 - Milestone | **Optimize game**
