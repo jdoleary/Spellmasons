@@ -1795,6 +1795,10 @@ body:not(.view-Game) #tutorial-checklist {
   color: white;
 }
 
-body.view-Game.showUpgrades #perkList {
+#perkList h1 {
+  margin-top: 0;
+}
+
+body.view-Game.showUpgrades #perkList.visible {
   display: flex;
 }

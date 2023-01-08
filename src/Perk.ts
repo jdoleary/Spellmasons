@@ -213,13 +213,18 @@ export function choosePerk(perk: AttributePerk, player: IPlayer, underworld: Und
     }
     if (!globalThis.headless) {
         if (elPerkList && elPerksEveryLevel && elPerksEveryTurn) {
-            const everyLevel = player.attributePerks.filter(p => p.when == 'everyLevel');
-            const everyTurn = player.attributePerks.filter(p => p.when == 'everyTurn');
-            // Clear previous perks now that they will be replaced
-            elPerksEveryLevel.innerHTML = '';
-            elPerksEveryTurn.innerHTML = '';
-            everyLevel.forEach(p => perkToListItem(p, elPerksEveryLevel));
-            everyTurn.forEach(p => perkToListItem(p, elPerksEveryTurn));
+            if (player.attributePerks.length) {
+                elPerkList.classList.toggle('visible', true);
+                const everyLevel = player.attributePerks.filter(p => p.when == 'everyLevel');
+                const everyTurn = player.attributePerks.filter(p => p.when == 'everyTurn');
+                // Clear previous perks now that they will be replaced
+                elPerksEveryLevel.innerHTML = '';
+                elPerksEveryTurn.innerHTML = '';
+                everyLevel.forEach(p => perkToListItem(p, elPerksEveryLevel));
+                everyTurn.forEach(p => perkToListItem(p, elPerksEveryTurn));
+            } else {
+                elPerkList.classList.toggle('visible', false);
+            }
         } else {
             console.error('Could not render perkList')
         }

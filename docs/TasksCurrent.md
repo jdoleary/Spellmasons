@@ -1,9 +1,11 @@
+# Before next streamer outreach
+    - test new spells in multiplayer
+    - test perk list on small resoution
+    - test new toolbar on small resolution
 
 # Desired Schedule
 - January 1/8-1/14
-    - test new spells in multiplayer
     - Implement onColllision for arrow spells
-    - Fix UI perk list when empty don't show
     - Map gen
         - Make sure it jitters in all 4 directions so you don't end up with long diagonal maps too often
     - Small changes
