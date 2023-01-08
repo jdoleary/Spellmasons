@@ -1,3 +1,5 @@
+- Capture soul should kill the enemy and animate a soul coming too you.
+- Heat seeking skull with particle effects behind it.  You release it and it seeks out the nearest enemy to deal damage
 - early levels are too big, later levels are too small
 - fix hover styling for perk reroll button
 - single player game overscreen should offer to restart at checkpoint
@@ -269,7 +271,7 @@ setTurnPhase( Stalled )
 - enemy that debuffs blessings
 - "heat seaking" missle unit, explodes on contact
 - Card: Mind Control (changes faction temporarily)
-- A spell that saves 40% of your current mana for next turn
+- A spell that saves 40% of your current mana for next turn (added to spreadsheet)
 - A spell where you can save some of your health, mana, stamina in a potion
 - What if monsters that go through portal come to next level with you, but you don't get more mana after the portal spawns
 - totems

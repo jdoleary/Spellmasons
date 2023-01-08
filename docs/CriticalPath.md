@@ -1,13 +1,19 @@
 # Desired Schedule
-- January 1/1-1/7
-    - Why are later levels tiny and starting levels big?
+- January 1/8-1/14
     - increase all healths and damages by 10x
-    - burst should memorize your position at time of cast, so that if you move after casting it keeps the position that it was when you cast
+    - Map gen
+        - Make sure it jitters in all 4 directions so you don't end up with long diagonal maps too often
+    - Add Che new art
+        - Spell bar
+        - Arrow spells
+        - Bolt Spell
+    - Reach out to translators
+    - Email streamers, try to set up a multiplayer stream on release day
     - BALANCE unit spawns especially on later levels
         - Maybe not exponential budget?
+    - burst should memorize your position at time of cast, so that if you move after casting it keeps the position that it was when you cast
+    - Change font
     - Balanced / Difficult
-- January 1/8-1/14
-    - Email streamers, try to set up a multiplayer stream on release day
     - Solve many enemies overkilling allied unit
     - Multiplayer
         - Support hosting a server from in the game exe
