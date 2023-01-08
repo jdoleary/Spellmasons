@@ -1,7 +1,7 @@
 import { lineSegmentIntersection } from "./jmath/lineSegment";
 import { distance, lerp, similarTriangles } from "./jmath/math";
 import { isVec2InsidePolygon } from "./jmath/Polygon2";
-import { randFloat, randInt } from "./jmath/rand";
+import { randBool, randFloat, randInt, randSign } from "./jmath/rand";
 import * as Vec from "./jmath/Vec";
 import * as config from './config';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex, vec2ToOneDimentionIndexPreventWrap } from "./jmath/ArrayUtil";
@@ -18,7 +18,6 @@ export const caveSizes: { [size: string]: CaveParams } = {
         startPointJitter: 0,
         iterations: 1,
         velocity: 60,
-        allowSmallLevel: true,
     },
     'extrasmall': {
         minThickness: config.OBSTACLE_SIZE,
@@ -26,7 +25,6 @@ export const caveSizes: { [size: string]: CaveParams } = {
         startPointJitter: 200,
         iterations: 10,
         velocity: 40,
-        allowSmallLevel: true,
     },
     'small': {
         minThickness: config.OBSTACLE_SIZE,
@@ -34,19 +32,16 @@ export const caveSizes: { [size: string]: CaveParams } = {
         startPointJitter: 300,
         iterations: 20,
         velocity: 50,
-        allowSmallLevel: true,
     },
     'medium': {
         minThickness: config.OBSTACLE_SIZE,
         startThickness: 50,
-        startPointJitter: 1000,
+        startPointJitter: 500,
         iterations: 20,
         velocity: 80,
-        allowSmallLevel: false,
     }
 }
 interface CaveParams {
-    allowSmallLevel: boolean;
     numberOfLiquidSources?: number;
     minThickness: number;
     startThickness: number;
@@ -206,40 +201,22 @@ function makeLevelMaterialsArrayRoomStyle(params: CaveParams, underworld: Underw
 }
 // Returns a 1d array in the form {width:number, materials:Materials[]} which represents a 2d array
 function makeLevelMaterialsArrayCaveStyle(params: CaveParams, underworld: Underworld) {
-    // Ensure it's not too close to all other crawlers' start positions which could 
-    // make a map too small
-    function protectAgainstTooClose(crawler: CaveCrawler, crawlers: CaveCrawler[]) {
-        const minimumDistanceFromAllOtherCrawlers = 600;
-        if (crawlers.every(otherCrawler => {
-            // Don't compare distance with self
-            if (otherCrawler == crawler) {
-                return true;
-            }
-            const otherCrawlerStartPosition = otherCrawler.path[0]
-            if (otherCrawlerStartPosition && distance(otherCrawlerStartPosition, crawler.position) < minimumDistanceFromAllOtherCrawlers) {
-                return true;
-            }
-            return false;
-        })) {
-            console.log('map gen: Protect against too close crawlers')
-            crawler.position.x += minimumDistanceFromAllOtherCrawlers;
-            crawler.position.y += minimumDistanceFromAllOtherCrawlers;
-
-        }
-
-    }
     // Debug: Draw caves
     globalThis.debugCave?.clear();
     const minDirection = randFloat(underworld.random, Math.PI, Math.PI / 2);
     const maxDirection = 0;
     let crawlers = [];
-    const NUMBER_OF_CRAWLERS = randInt(underworld.random, 3, 4);
+    const NUMBER_OF_CRAWLERS = 4;//randInt(underworld.random, 3, 4);
     for (let c = 0; c < NUMBER_OF_CRAWLERS - 1; c++) {
         const previousCrawler = crawlers[c - 1];
+        const unsignedStartPosition = Vec.round(Vec.random(params.startPointJitter * 0.75, params.startPointJitter, underworld.random))
         const cc: CaveCrawler = {
             direction: randFloat(underworld.random, minDirection, maxDirection),
             thickness: params.startThickness,
-            position: Vec.round(Vec.random(-params.startPointJitter, params.startPointJitter, underworld.random)),
+            position: {
+                x: randSign(underworld.random) * unsignedStartPosition.x,
+                y: randSign(underworld.random) * unsignedStartPosition.y,
+            },
             path: [],
             left: [],
             right: [],
@@ -262,11 +239,6 @@ function makeLevelMaterialsArrayCaveStyle(params: CaveParams, underworld: Underw
             left: [],
             right: [],
             rectangles: []
-        }
-        // For the last crawler, check if it's too close to all other crawlers
-        // which could create a suprisingly / undesirably small map and adjust if so
-        if (!params.allowSmallLevel) {
-            protectAgainstTooClose(cc, crawlers);
         }
         crawl(cc, previousCrawler.path[1] as Vec.Vec2, params, underworld);
         crawlers.push(cc);

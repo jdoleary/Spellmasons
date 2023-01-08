@@ -1149,7 +1149,7 @@ export default class Underworld {
   // Returns undefined if it fails to make valid LevelData
   generateRandomLevelData(levelIndex: number): LevelData | undefined {
     console.log('Setup: generateRandomLevel', levelIndex);
-    if (!caveSizes.tutorial || !caveSizes.small || !caveSizes.medium) {
+    if (!caveSizes.tutorial || !caveSizes.small || !caveSizes.medium || !caveSizes.extrasmall) {
       console.error('Missing caveSize for generating level')
       return;
     }
@@ -1178,13 +1178,16 @@ export default class Underworld {
       isFirstEverPlaySession = !isFirstTutorialStepComplete();
     }
     const isTutorialStartLevel = isFirstEverPlaySession && levelIndex == 0;
-    const caveParams = isTutorialStartLevel
-      ? caveSizes.tutorial
-      : (levelIndex > 6
-        ? caveSizes.medium
-        : isTutorialRun
-          ? caveSizes.extrasmall
-          : caveSizes.small);
+    let caveParams = caveSizes.medium;
+    if (isTutorialStartLevel) {
+      caveParams = caveSizes.tutorial;
+    } else if (isTutorialRun) {
+      caveParams = caveSizes.extrasmall;
+    } else if (levelIndex < 2) {
+      caveParams = caveSizes.extrasmall;
+    } else if (levelIndex < 6) {
+      caveParams = caveSizes.small;
+    }
 
     console.log('map gen: caveParams (to learn why some levels are too small)', caveParams);
     const { map, limits } = generateCave(caveParams || caveSizes.small, biome, this);

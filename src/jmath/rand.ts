@@ -13,7 +13,14 @@ export interface SeedrandomState {
   j: number,
   S: number[]
 }
+export function randSign(seedrandomInstance: prng): number {
+  return randBool(seedrandomInstance) ? -1 : 1;
+}
 
+export function randBool(seedrandomInstance: prng): boolean {
+  const x: number = seedrandomInstance.quick();
+  return x < 0.5;
+}
 export function randInt(seedrandomInstance: prng, minInclusive: number, maxInclusive: number) {
   const x: number = seedrandomInstance.quick();
   return Math.round(x * (maxInclusive - minInclusive) + minInclusive);
