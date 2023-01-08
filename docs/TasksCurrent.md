@@ -1,3 +1,5 @@
+- Need sound effect for bolt, improve bolt animation
+- Arrow collisions don't work right when used with target_circle first
 - Capture soul should kill the enemy and animate a soul coming too you.
 - Heat seeking skull with particle effects behind it.  You release it and it seeks out the nearest enemy to deal damage
 - early levels are too big, later levels are too small

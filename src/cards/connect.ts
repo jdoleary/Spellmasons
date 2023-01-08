@@ -91,7 +91,7 @@ All connected beings will be affected by the following spells in your cast.
     },
   },
 };
-async function getTouchingTargetableEntitiesRecursive(
+export async function getTouchingTargetableEntitiesRecursive(
   x: number,
   y: number,
   potentialTargets: HasSpace[],

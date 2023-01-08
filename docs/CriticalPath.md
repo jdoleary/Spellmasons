@@ -1,8 +1,7 @@
 # Desired Schedule
 - January 1/8-1/14
-    - Add Che new art
-        - Arrow spells
-        - Bolt Spell
+    - Implement onColllision for arrow spells
+    - Bolt Spell
     - Map gen
         - Make sure it jitters in all 4 directions so you don't end up with long diagonal maps too often
     - BALANCE unit spawns especially on later levels
@@ -38,6 +37,8 @@
     - Add secondary toolbars on the sides (only shown on drag)
     - Add run stats in gameover screen / leaderboard
 - January 1/22-1/28
+    - Allow for deleting saves
+    - Save files should be sorted by recency
     - Finish Looping
         - (see branch `loop-tint-level`)
     - Make Demo as promised

@@ -62,6 +62,7 @@ import devRecordDelay from './devRecordDelay';
 import registerSummoningSickness from '../modifierSummoningSickness';
 import arrow from './arrow';
 import target_arrow from './target_arrow';
+import bolt from './bolt';
 
 import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
@@ -195,6 +196,7 @@ export function registerCards(overworld: Overworld) {
   register(consumeAlly, overworld);
   register(arrow, overworld);
   register(target_arrow, overworld);
+  register(bolt, overworld);
   for (let unitId of Object.keys(allUnits)) {
     const spell = summon_generic(unitId, false);
     if (spell) {
