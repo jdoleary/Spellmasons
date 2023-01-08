@@ -7,7 +7,7 @@ import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 export const slashCardId = 'Slash';
-const damageDone = 2;
+const damageDone = 20;
 export interface UnitDamage {
   id: number;
   x: number;

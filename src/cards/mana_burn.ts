@@ -7,7 +7,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 const id = 'mana_burn';
 const mana_burnt = 30;
-const health_burn_ratio = .1;
+const health_burn_ratio = 1;
 const spell: Spell = {
   card: {
     id,
@@ -20,7 +20,7 @@ const spell: Spell = {
     thumbnail: 'spellIconManaBurn.png',
     animationPath: 'spell-effects/spellManaBurn',
     description: `
-Burn up to ${mana_burnt} of the targets' mana and cause ${health_burn_ratio * 10} damage for every 10 mana burnt.
+Burn up to ${mana_burnt} of the targets' mana dealing damage based on the amount of mana burnt.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units

@@ -11,7 +11,7 @@ import { getOrInitModifier } from './util';
 
 export const id = 'shield';
 export const modifierImagePath = 'spell-effects/modifierShield.png';
-const damageBlocked = 3;
+const damageBlocked = 30;
 const spell: Spell = {
   card: {
     id,
@@ -26,6 +26,7 @@ const spell: Spell = {
     animationPath: 'spell-effects/spellShield',
     description: `
 Protects bearer from the next ${damageBlocked} damage that they would incur.
+Stackable.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units

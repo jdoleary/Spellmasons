@@ -1,21 +1,14 @@
-import { drawPredictionCircleFill, drawPredictionLine } from '../graphics/PlanningView';
-import { addTarget, addUnitTarget, getCurrentTargets, Spell } from './index';
+import { getCurrentTargets, Spell } from './index';
 import * as Unit from '../entity/Unit';
-import * as colors from '../graphics/ui/colors';
 import * as config from '../config';
 import { CardCategory, CardRarity, probabilityMap } from '../types/commonTypes';
-import { add, Vec2 } from '../jmath/Vec';
-import * as math from '../jmath/math';
-import { raceTimeout } from '../Promise';
-import { similarTriangles, distance } from '../jmath/math';
-import { easeOutCubic } from '../jmath/Easing';
 import { isPickup } from '../entity/Pickup';
 import { HasSpace } from '../entity/Type';
 import { getTouchingTargetableEntitiesRecursive } from './connect';
 
 const id = 'Bolt';
 const numberOfTargetsPerQuantity = 2;
-const damage = 2;
+const damage = 20;
 const baseRadius = config.PLAYER_BASE_ATTACK_RANGE - 10;
 const spell: Spell = {
   card: {

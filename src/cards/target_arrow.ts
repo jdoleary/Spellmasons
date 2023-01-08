@@ -13,7 +13,7 @@ export const arrowCardId = 'Target Arrow';
 const spell: Spell = {
   card: {
     id: arrowCardId,
-    category: CardCategory.Damage,
+    category: CardCategory.Targeting,
     supportQuantity: false,
     manaCost: 10,
     healthCost: 0,

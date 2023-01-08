@@ -48,8 +48,8 @@ const unit: UnitSource = {
   },
   unitProps: {
     attackRange: 500,
-    healthMax: 2,
-    damage: 2,
+    healthMax: 20,
+    damage: 20,
     manaCostToCast,
     manaMax: manaCostToCast,
     manaPerTurn: manaCostToCast / 2

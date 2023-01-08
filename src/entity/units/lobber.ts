@@ -18,8 +18,8 @@ const unit: UnitSource = {
   unitProps: {
     attackRange: 400,
     bloodColor: bloodLobber,
-    healthMax: 6,
-    damage: 2,
+    healthMax: 60,
+    damage: 20,
     manaCostToCast: 15
   },
   spawnParams: {

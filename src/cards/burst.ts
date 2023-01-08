@@ -1,7 +1,6 @@
 import * as Unit from '../entity/Unit';
-import { containerSpells } from '../graphics/PixiUtils';
 import { CardCategory } from '../types/commonTypes';
-import { oneOffImage, playDefaultSpellSFX } from './cardUtils';
+import { playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { Vec2 } from '../jmath/Vec';
@@ -10,7 +9,7 @@ import * as config from '../config';
 import { makeBurstParticles } from '../graphics/ParticleCollection';
 
 export const burstCardId = 'Burst';
-const maxDamage = 5;
+const maxDamage = 50;
 function calculateDamage(stack: number, caster: Unit.IUnit, target: Vec2): number {
   const dist = distance(caster, target)
   return Math.ceil(lerp(0, maxDamage, 1 - dist / (caster.attackRange + config.COLLISION_MESH_RADIUS * 2)) * stack);

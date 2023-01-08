@@ -216,6 +216,7 @@ function cardToUpgrade(c: ICard, overworld: Overworld): IUpgrade {
   return {
     title: c.id,
     type: 'card',
+    cardCategory: c.category,
     description: () => c.description.trim(),
     thumbnail: `images/spell/${c.thumbnail}`,
     // TODO: Feature creep: What if you could UPGRADE the effect of a spell!! 0.o

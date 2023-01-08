@@ -10,12 +10,12 @@ import * as colors from '../graphics/ui/colors';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
-export const id = 'suffocate';
+export const suffocateCardId = 'suffocate';
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
-  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
+  const modifier = getOrInitModifier(unit, suffocateCardId, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
     // Add event
-    if (!unit.onTurnStartEvents.includes(id)) {
-      unit.onTurnStartEvents.push(id);
+    if (!unit.onTurnStartEvents.includes(suffocateCardId)) {
+      unit.onTurnStartEvents.push(suffocateCardId);
     }
     // Add subsprite image
     if (!prediction) {
@@ -24,23 +24,23 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
       }
     }
   });
-  modifier.turnsLeftToLive = 1 + Math.ceil(unit.health / 2 / modifier.quantity)
+  modifier.turnsLeftToLive = 1 + Math.ceil(unit.health / 20 / modifier.quantity)
   if (!prediction) {
     // Temporarily use floating text until spell animation is finished
-    floatingText({ coords: unit, text: id });
+    floatingText({ coords: unit, text: suffocateCardId });
     updateTooltip(unit);
   }
 }
 function updateTooltip(unit: Unit.IUnit) {
-  if (unit.modifiers[id]) {
+  if (unit.modifiers[suffocateCardId]) {
     // Set tooltip:
-    unit.modifiers[id].tooltip = `${unit.modifiers[id].turnsLeftToLive} turns until suffocation`
+    unit.modifiers[suffocateCardId].tooltip = `${unit.modifiers[suffocateCardId].turnsLeftToLive} turns until suffocation`
   }
 }
 
 const spell: Spell = {
   card: {
-    id,
+    id: suffocateCardId,
     category: CardCategory.Curses,
     sfx: 'suffocate',
     supportQuantity: true,
@@ -54,7 +54,7 @@ const spell: Spell = {
 A curse that causes sudden death after a number of turns have passed.
 The number of turns are relative to the target's health when the curse it applied.
 Less current health = quicker death.
-Stacking ${id} will make death occur in less turns.
+Stacking ${suffocateCardId} will make death occur in less turns.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
@@ -62,7 +62,7 @@ Stacking ${id} will make death occur in less turns.
       if (targets.length) {
         await Promise.all([playDefaultSpellAnimation(card, targets, prediction), playDefaultSpellSFX(card, prediction)]);
         for (let unit of targets) {
-          Unit.addModifier(unit, id, underworld, prediction, quantity);
+          Unit.addModifier(unit, suffocateCardId, underworld, prediction, quantity);
         }
       }
       return state;
@@ -86,7 +86,7 @@ Stacking ${id} will make death occur in less turns.
   },
   events: {
     onTurnStart: async (unit: IUnit, prediction: boolean, underworld: Underworld) => {
-      const modifier = unit.modifiers[id];
+      const modifier = unit.modifiers[suffocateCardId];
       if (!prediction) {
         if (modifier) {
           // Decrement the turns left to live
@@ -100,7 +100,7 @@ Stacking ${id} will make death occur in less turns.
             });
           }
         } else {
-          console.error(`Should have ${id} modifier on unit but it is missing`);
+          console.error(`Should have ${suffocateCardId} modifier on unit but it is missing`);
         }
       }
       return false;

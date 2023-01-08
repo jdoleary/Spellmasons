@@ -330,7 +330,7 @@ export default class Underworld {
       // pushed object is a unit and stop velocity:
       if (Unit.isUnit(pushedObject)) {
         const magnitude = Vec.magnitude(velocity);
-        const damage = Math.ceil(Math.log(magnitude));
+        const damage = Math.ceil(Math.log(magnitude)) * 10;
         Unit.takeDamage(pushedObject, damage, Vec.add(pushedObject, { x: velocity.x, y: velocity.y }), this, prediction);
         if (!prediction) {
           floatingText({ coords: pushedObject, text: `${damage} Impact damage!` });

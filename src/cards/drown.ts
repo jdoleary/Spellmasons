@@ -4,7 +4,7 @@ import { refundLastSpell, Spell } from './index';
 import * as Unit from '../entity/Unit';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
-export const id = 'Drown';
+export const drownCardId = 'Drown';
 export interface UnitDamage {
   id: number;
   x: number;
@@ -13,10 +13,10 @@ export interface UnitDamage {
   damageTaken: number;
 
 }
-const damageDone = 4;
+const damageDone = 40;
 const spell: Spell = {
   card: {
-    id,
+    id: drownCardId,
     category: CardCategory.Damage,
     supportQuantity: false,
     manaCost: 10,

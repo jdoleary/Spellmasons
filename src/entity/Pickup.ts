@@ -23,7 +23,7 @@ import * as particles from '@pixi/particle-emitter'
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 export const PICKUP_IMAGE_PATH = 'pickups/scroll';
 export const RED_PORTAL = 'Red Portal';
-const RED_PORTAL_DAMAGE = 4;
+const RED_PORTAL_DAMAGE = 30;
 type IPickupEffect = ({ unit, player, pickup, prediction }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld, prediction: boolean }) => boolean | undefined;
 export function isPickup(maybePickup: any): maybePickup is IPickup {
   return maybePickup && maybePickup.type == 'pickup';

@@ -26,7 +26,7 @@ const unit: UnitSource = {
     death: 'summonerDeath'
   },
   unitProps: {
-    healthMax: 18,
+    healthMax: 180,
     damage: 0,
     attackRange: 550,
     manaCostToCast,

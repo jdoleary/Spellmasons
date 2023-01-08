@@ -33,7 +33,7 @@ const unit: UnitSource = {
   },
   unitProps: {
     attackRange: config.PLAYER_BASE_ATTACK_RANGE + 30,
-    healthMax: 60,
+    healthMax: 600,
     manaMax: bossmasonMana,
     manaPerTurn: bossmasonMana
   },

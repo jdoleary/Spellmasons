@@ -7,7 +7,7 @@ import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 const id = 'heal';
-const healAmount = 3;
+const healAmount = 30;
 
 const spell: Spell = {
   card: {

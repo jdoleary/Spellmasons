@@ -14,7 +14,7 @@ function calculateRendDamage(stack: number): number {
   for (let i = 1; i < stack + 1; i++) {
     damage += i;
   }
-  return damage;
+  return damage * 10;
 }
 export interface UnitDamage {
   id: number;

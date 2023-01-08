@@ -9,7 +9,7 @@ import * as config from '../config';
 import { add, Vec2 } from '../jmath/Vec';
 
 export const arrowCardId = 'Arrow';
-const damageDone = 1;
+const damageDone = 10;
 const spell: Spell = {
   card: {
     id: arrowCardId,

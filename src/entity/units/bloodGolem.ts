@@ -18,8 +18,8 @@ const unit: UnitSource = {
     staminaMax: config.UNIT_BASE_STAMINA * 1.2,
     attackRange: 10 + config.COLLISION_MESH_RADIUS * 2,
     manaMax: 0,
-    healthMax: 6,
-    damage: 5,
+    healthMax: 60,
+    damage: 50,
     bloodColor: 0x8a2e2e
   },
   spawnParams: {

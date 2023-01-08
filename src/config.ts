@@ -7,7 +7,7 @@
 export const RIGHT_CLICK_DOUBLE_MS_THRESHOLD = 500;
 export const RIGHT_CLICK_DOUBLE_DISTANCE_THRESHOLD = 30;
 
-export const PLAYER_BASE_HEALTH = 4;
+export const PLAYER_BASE_HEALTH = 40;
 export const UNIT_MOVE_SPEED = 0.15;
 export const COLLISION_MESH_RADIUS = 32;
 // Though the size of the images for units are generally 64x64, the unit doesn't take up the full height
@@ -26,14 +26,14 @@ export const UNIT_UI_BAR_WIDTH = 34;
 
 export const LOB_PROJECTILE_SPEED = 600; // in millis
 export const UNIT_SIZE = COLLISION_MESH_RADIUS * 2;
-export const UNIT_BASE_HEALTH = 4;
+export const UNIT_BASE_HEALTH = 40;
 export const UNIT_BASE_MANA = 60;
 export const UNIT_BASE_STAMINA = 300;
 // For game difficulty, I'm making the attack range less than the unit base stamina
 export const PLAYER_BASE_ATTACK_RANGE = UNIT_BASE_STAMINA * 0.8;
 // For game difficulty, player stamina less than the unit stamina so they can't run away without upgrading it
 export const PLAYER_BASE_STAMINA = UNIT_BASE_STAMINA * 0.7;
-export const UNIT_BASE_DAMAGE = 3;
+export const UNIT_BASE_DAMAGE = 30;
 export const NON_HEAVY_UNIT_SCALE = 1.0;
 export const STARTING_CARD_COUNT = 3;
 export const OBSTACLE_SIZE = COLLISION_MESH_RADIUS * 2;

@@ -5,14 +5,15 @@ import { chooseObjectWithProbability } from './jmath/rand';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import { IPlayer } from './entity/Player';
 import Underworld from './Underworld';
-import { CardRarity, probabilityMap } from './types/commonTypes';
-import { slashCardId } from './cards/slash';
+import { CardCategory, CardRarity, probabilityMap } from './types/commonTypes';
 import { poisonCardId } from './cards/poison';
-import { burstCardId } from './cards/burst';
-import { rendCardId } from './cards/rend';
+import { bleedCardId } from './cards/bleed';
+import { drownCardId } from './cards/drown';
+import { suffocateCardId } from './cards/suffocate';
 export interface IUpgrade {
   title: string;
   type: 'card' | 'special';
+  cardCategory?: CardCategory;
   description: (player: IPlayer) => string;
   thumbnail: string;
   // The maximum number of copies a player can have of this upgrade
@@ -51,15 +52,13 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
   // Limit the rarity of cards that are possible to attain
   upgradeList = upgradeList.filter(u => u.probability >= minimumProbability);
 
-  // For first pick, override upgradeList with damage spells
-  if (player.upgrades.length == 0) {
-    // Ensure they pick from only damage cards
-    upgradeList = upgradeCardsSource.filter(c => [
-      slashCardId,
-      poisonCardId,
-      burstCardId,
-      rendCardId
-    ].includes(c.title));
+  // For third pick, override upgradeList with damage spells
+  if (player.upgrades.length == 2) {
+    upgradeList = upgradeCardsSource
+      // Prevent picking the same upgrade twice
+      .filter(filterUpgrades)
+      // Ensure they pick from only damage cards
+      .filter(c => (![bleedCardId, drownCardId].includes(c.title) && c.cardCategory == CardCategory.Damage) || [poisonCardId, suffocateCardId].includes(c.title));
   }
 
   // Clone upgrades for later mutation

@@ -11,6 +11,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
 export const poisonCardId = 'poison';
+const baseDamage = 10;
 function init(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
   if (spell.modifiers?.subsprite) {
     // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
@@ -56,7 +57,7 @@ const spell: Spell = {
     thumbnail: 'spellIconPoison.png',
     animationPath: 'spell-effects/spellPoison',
     description: `
-Poisons all target(s).  ${poisonCardId} will deal 1 base damage every turn
+Poisons all target(s).  ${poisonCardId} will deal ${baseDamage} base damage every turn
 at the start of the unit's turn.
 Stackable.
     `,
@@ -97,7 +98,7 @@ Stackable.
       // they assume prediction damage is only from their direct cast, not including the start of the next turn
       if (!prediction) {
         if (modifier) {
-          const damage = modifier.quantity || 1
+          const damage = (modifier.quantity || 1) * baseDamage;
           takeDamage(unit, damage, unit, underworld, prediction, undefined);
           floatingText({
             coords: unit, text: `${damage} poison damage`,

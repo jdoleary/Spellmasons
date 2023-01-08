@@ -7,7 +7,7 @@ import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { makeBleedParticles } from '../graphics/ParticleCollection';
 
-export const id = 'Bleed';
+export const bleedCardId = 'Bleed';
 export interface UnitDamage {
   id: number;
   x: number;
@@ -30,7 +30,7 @@ function calculateDamageProportion(unit: HasLife): number {
 }
 const spell: Spell = {
   card: {
-    id,
+    id: bleedCardId,
     category: CardCategory.Damage,
     supportQuantity: false,
     manaCost: 10,

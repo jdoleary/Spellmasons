@@ -15,8 +15,8 @@ const unit: UnitSource = {
   },
   unitProps: {
     manaMax: 60,
-    healthMax: 7,
-    damage: 5,
+    healthMax: 70,
+    damage: 50,
     bloodColor: bloodVampire
   },
   spawnParams: {

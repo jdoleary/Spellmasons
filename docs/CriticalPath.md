@@ -1,13 +1,14 @@
 # Desired Schedule
 - January 1/8-1/14
     - Implement onColllision for arrow spells
-    - Bolt Spell
+    - Fix UI perk list when empty don't show
     - Map gen
         - Make sure it jitters in all 4 directions so you don't end up with long diagonal maps too often
     - BALANCE unit spawns especially on later levels
         - Maybe not exponential budget?
     - Small changes
         - increase all healths and damages by 10x
+            - validate mana_burn, suffocate
         - burst should memorize your position at time of cast, so that if you move after casting it keeps the position that it was when you cast
         - Solve many enemies overkilling allied unit
         - Change font (add license to Credits)
@@ -22,6 +23,10 @@
         - Multiplayer save load with "take over player"
         - Notify when version isn't same
 - January 1/15-1/21
+    - small stuff
+        - fix being able to go negative mana if you queue a spell before the previous spell's mana is spent
+        - rename vampire or restore that it passes blood curse on to you when it bites
+        - multiplayer perk resurrect icon
     - Balanced / Difficult
     - Finish Boss
         - Implement aoe damage against enemies chain+hurt?
