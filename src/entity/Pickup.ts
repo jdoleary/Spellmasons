@@ -547,7 +547,7 @@ export function givePlayerUpgrade(p: Player.IPlayer, underworld: Underworld) {
   p.upgradesLeftToChoose++;
   underworld.showUpgrades();
   if (player && player == globalThis.player) {
-    if (player.inventory.length > 10) {
+    if (player.inventory.length > config.NUMBER_OF_TOOLBAR_SLOTS) {
       explain(EXPLAIN_INVENTORY);
     }
   }

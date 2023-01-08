@@ -296,30 +296,9 @@ invisibly blocked, change with caution! */
 #card-holders {
   pointer-events: all;
   user-select: none;
-  display: flex;
   z-index: 1;
-  justify-content: center;
-  align-items: center;
   margin: 0 auto;
 }
-
-#card-holders-inner {
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column-reverse;
-  gap: 8px;
-}
-
-@media (max-height: 1024px) {
-  #card-holders-inner {
-    gap: 0;
-  }
-
-  #card-holders #card-hand {
-    padding-bottom: 4px;
-  }
-}
-
 
 #selected-cards,
 #card-holders #card-hand {
@@ -644,7 +623,8 @@ kbd {
   /* max-height: 30px; */
   /* For new card template */
   padding: 4px;
-  height: 18px;
+  height: 10px;
+  line-height: 10px;
   /* Allow text center even when text overflows */
   /* https://stackoverflow.com/a/28233945/4418836 */
   margin-left: -20%;
@@ -744,8 +724,7 @@ body.your-turn #end-turn-btn:hover {
   /* Match the size of the inventory icon so the toolbar remains centered */
   /* Note the width should take into account the border so 80-16*2 = 48 */
   width: 40px;
-  /* 106-16*2 = 74 */
-  height: 74px;
+  height: 60px;
   white-space: normal;
   /* Overrides button-wrapper nstyles */
   /* Ensures that the toolbar remains centered on the screen */
@@ -753,6 +732,10 @@ body.your-turn #end-turn-btn:hover {
   /* background-clip ensures that the background color wont overlap the border */
   background-clip: padding-box;
   background-color: #483f8e;
+  /* Position inside spellBar.png */
+  position: absolute;
+  right: 10px;
+  top: 19px
 }
 
 #end-turn-btn-inner {
@@ -849,13 +832,6 @@ body.your-turn #end-turn-btn:hover {
   text-align: center;
 }
 
-#health-mana-holder {
-  display: flex;
-  margin-top: 8px;
-  /* Allows children to grow */
-  width: 100%;
-}
-
 #ready-state {
   position: absolute;
   bottom: 10px;
@@ -864,45 +840,38 @@ body.your-turn #end-turn-btn:hover {
 }
 
 #health-mana {
-  display: flex;
-  justify-content: center;
   /* Display above pixi */
   z-index: 1;
-  gap: 15px;
-  /* Allows children to grow */
-  width: 100%;
 }
 
 .health-mana-bar {
   height: 32px;
-  flex: 1 1 0;
-  border-radius: 3px;
   border: 1px solid var(--ui-border-background-color);
   background-color: var(--ui-border-background-color);
 }
 
-.health-mana-bar:after {
-  border: 16px solid;
-  border-image-outset: 0;
-  border-image-repeat: stretch;
-  border-image-slice: 250;
-  border-image-source: url("/ui/Assets_Icon_Border_QtrCircle_2_stats_bar.png");
-  border-image-width: 9px 14px;
-  content: "";
-  position: relative;
-  width: 235px;
-  /* Prevents a graphics glitch that shows a solid color line under the status bar */
-  height: 0.5px;
-  display: inline-block;
-  position: absolute;
-  top: 0;
+#health {
+  left: 145px;
+  top: 16px;
+}
+
+#stamina {
+  left: 362px;
+  top: 16px;
+}
+
+#mana {
+  left: 579px;
+  top: 16px;
 }
 
 #health,
 #mana,
 #stamina {
   overflow: hidden;
-  position: relative;
+  position: absolute;
+  width: 194px;
+  height: 19px;
 }
 
 #health-mana .cost {
@@ -994,7 +963,7 @@ body.your-turn #end-turn-btn:hover {
   right: 0;
   bottom: 0;
   text-align: center;
-  line-height: 32px;
+  line-height: 19px;
   color: white;
 }
 
@@ -1370,6 +1339,69 @@ body.open-inventory #inventory-container {
   height: 64px;
 }
 
+#card-hand .slot:nth-of-type(1) {
+  position: absolute;
+  left: 119px;
+  top: 63px;
+  margin: 0;
+}
+
+#card-hand .slot:nth-of-type(2) {
+  position: absolute;
+  left: 196px;
+  top: 63px;
+  margin: 0;
+}
+
+#card-hand .slot:nth-of-type(3) {
+  position: absolute;
+  left: 273px;
+  top: 63px;
+  margin: 0;
+}
+
+#card-hand .slot:nth-of-type(4) {
+  position: absolute;
+  left: 350px;
+  top: 63px;
+  margin: 0;
+}
+
+#card-hand .slot:nth-of-type(5) {
+  position: absolute;
+  left: 427px;
+  top: 63px;
+  margin: 0;
+}
+
+#card-hand .slot:nth-of-type(6) {
+  position: absolute;
+  left: 504px;
+  top: 63px;
+  margin: 0;
+}
+
+#card-hand .slot:nth-of-type(7) {
+  position: absolute;
+  left: 581px;
+  top: 63px;
+  margin: 0;
+}
+
+#card-hand .slot:nth-of-type(8) {
+  position: absolute;
+  left: 658px;
+  top: 63px;
+  margin: 0;
+}
+
+#card-hand .slot:nth-of-type(9) {
+  position: absolute;
+  left: 735px;
+  top: 63px;
+  margin: 0;
+}
+
 .slot .card-inner,
 #inventory .card-inner {
   width: 64px;
@@ -1382,10 +1414,13 @@ body.open-inventory #inventory-container {
 }
 
 #inventory-icon {
-  width: 80px;
+  width: 78px;
   height: 106px;
   background-image: url('images/card-designs/bookStone.png');
   background-size: contain;
+  position: absolute;
+  left: 4px;
+  top: 7px;
 }
 
 body.open-inventory #inventory-icon {
@@ -1656,6 +1691,15 @@ body.auto-camera #camera-recenter-tip {
   border-left: 1px solid black;
 }
 
+#card-holders-border {
+  background-image: url("/ui/spellBar.png");
+  background-repeat: no-repeat;
+  margin-bottom: 8px;
+  /* Matches the dimentions of the spellBar.png exactly */
+  width: 919px;
+  height: 147px;
+  position: relative;
+}
 
 .ui-border {
   border: 16px solid;
