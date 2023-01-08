@@ -1480,6 +1480,7 @@ body.view-Game #in-game-lobby {
 
 /* Dev util right click context menu */
 #ctxmenu {
+  font-family: 'Lucida Sans', sans-serif;
   position: fixed;
   background: ghostwhite;
   color: black;
