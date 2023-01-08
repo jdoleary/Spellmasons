@@ -1,6 +1,7 @@
 import * as Unit from '../entity/Unit';
+import * as colors from '../graphics/ui/colors';
 import { CardCategory } from '../types/commonTypes';
-import { getCurrentTargets, refundLastSpell, Spell } from './index';
+import { addTarget, getCurrentTargets, refundLastSpell, Spell } from './index';
 import * as math from '../jmath/math';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { createVisualFlyingProjectile, SPEED_PER_MILLI } from '../entity/Projectile';
@@ -8,8 +9,7 @@ import { findWherePointIntersectLineSegmentAtRightAngle } from '../jmath/lineSeg
 import * as config from '../config';
 import { add, Vec2 } from '../jmath/Vec';
 
-export const arrowCardId = 'Arrow';
-const damageDone = 2;
+export const arrowCardId = 'Target Arrow';
 const spell: Spell = {
   card: {
     id: arrowCardId,
@@ -18,41 +18,64 @@ const spell: Spell = {
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.COMMON],
-    thumbnail: 'spellIconArrow.png',
+    probability: probabilityMap[CardRarity.UNCOMMON],
+    thumbnail: 'spellIconArrowGreen.png',
     // so that you can fire the arrow at targets out of range
     allowNonUnitTarget: true,
+    requiresFollowingCard: true,
     animationPath: '',
     sfx: '',
     description: `
-Fires an arrow that deals ${damageDone} damage to the first unit that it strikes.
+Fires a targeting arrow.
+The first entity that the arrow strikes becomes a target for the following spells.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       let targets: Vec2[] = state.targetedUnits;
       targets = targets.length ? targets : [state.castLocation];
       for (let target of targets) {
+        const flightPath = add(state.casterUnit, math.similarTriangles(target.x - state.casterUnit.x, target.y - state.casterUnit.y, math.distance(state.casterUnit, target), 1000));
         // Get all units between source and target for the arrow to pierce:
-        const firstTarget = (prediction ? underworld.unitsPrediction : underworld.units).find(
+        const firstTarget = underworld.getPotentialTargets(prediction).find(
           (u) => {
-            const flightPath = add(state.casterUnit, math.similarTriangles(target.x - state.casterUnit.x, target.y - state.casterUnit.y, math.distance(state.casterUnit, target), 1000));
             const pointAtRightAngleToArrowPath = findWherePointIntersectLineSegmentAtRightAngle(u, { p1: state.casterUnit, p2: flightPath });
+            // Never target self
+            if (Unit.isUnit(u) && u.id == state.casterUnit.id) {
+              return false
+            }
             const willBeStruckByArrow = !pointAtRightAngleToArrowPath ? false : math.distance(u, pointAtRightAngleToArrowPath) <= config.COLLISION_MESH_RADIUS * 2
-            // Note: Filter out self as the arrow shouldn't damage caster
-            return u.alive && willBeStruckByArrow && u.id !== state.casterUnit.id;
+            return willBeStruckByArrow;
           },
         );
         if (firstTarget) {
           // Prevent arrow from going through walls
           if (underworld.hasLineOfSight(state.casterUnit, firstTarget)) {
             if (prediction) {
-              Unit.takeDamage(firstTarget, damageDone, state.casterUnit, underworld, prediction, undefined, { thinBloodLine: true });
+              addTarget(firstTarget, state);
             } else {
               await createVisualFlyingProjectile(
                 state.casterUnit,
                 firstTarget,
-                'projectile/arrow',
+                'projectile/arrow_ghost',
               ).then(() => {
-                Unit.takeDamage(firstTarget, damageDone, state.casterUnit, underworld, prediction, undefined, { thinBloodLine: true });
+                addTarget(firstTarget, state);
+                // Animations do not occur on headless
+                if (!globalThis.headless) {
+                  return new Promise<void>((resolve) => {
+                    if (globalThis.predictionGraphics) {
+                      globalThis.predictionGraphics.clear();
+                      globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0)
+                      playSFXKey(`targetAquired0`);
+                      globalThis.predictionGraphics.drawCircle(firstTarget.x, firstTarget.y, config.COLLISION_MESH_RADIUS);
+                      // Show the targeting circle for a moment
+                      setTimeout(resolve, 300);
+                    } else {
+                      resolve();
+                    }
+                  }).then(() => {
+                    globalThis.predictionGraphics?.clear();
+                  });
+                }
+                return;
               });
             }
           } else {

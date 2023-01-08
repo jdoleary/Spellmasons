@@ -1,3 +1,5 @@
+## 2022.01.08
+When creating spells note that state.casterUnit is a prediction unit and you cannot test equality like `state.casterUnit == therealunit`. Instead, compare ids
 ## 2022.01.03
 Electron - only using `package` not `make`
 My findings show that electron is smart enough to not remake the exe (or have the contents different).  I made a branch in the `Golems-Electron-Build` repo called `executable` where I commit the out/Spellmasons-win32-x64 files and whenever I make a new build I can see which files change which should impact how Steam handles the update

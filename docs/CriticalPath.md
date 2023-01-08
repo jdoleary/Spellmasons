@@ -54,6 +54,7 @@
             - Styling for perks
             - Use relative percentages rather than out of 100%
         - Achievements?
+        - Accessability option to make text more readable
     - Final QA
         - Manually test all spells for desync issues (in multiplayer)
         - Test for desyncs on multiplayer
@@ -94,6 +95,7 @@
     - Achievements
     - Mods
     - Make pickups do something when destroyed
+        - Refactor arrow.ts to use getPotentialTargets instead of just underworld.units and unitsPrediction or else it will never strike pickups
     - Server config by host (pvp, worms armageddon style customizations)
     - Pushing units into portal should do something
     - Protection should be able to be cast on dead units to keep priest from resurrecting them
