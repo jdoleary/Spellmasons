@@ -6,8 +6,6 @@
 # Desired Schedule
 - January 1/8-1/14
     - Implement onColllision for arrow spells
-    - Map gen
-        - Make sure it jitters in all 4 directions so you don't end up with long diagonal maps too often
     - Small changes
         - validate mana_burn, suffocate due to health and damage 10xing
         - burst should memorize your position at time of cast, so that if you move after casting it keeps the position that it was when you cast

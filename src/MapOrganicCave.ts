@@ -206,16 +206,25 @@ function makeLevelMaterialsArrayCaveStyle(params: CaveParams, underworld: Underw
     const minDirection = randFloat(underworld.random, Math.PI, Math.PI / 2);
     const maxDirection = 0;
     let crawlers = [];
-    const NUMBER_OF_CRAWLERS = 4;//randInt(underworld.random, 3, 4);
+    const NUMBER_OF_CRAWLERS = 4;
+    // Make crawlers start in 4 opposite corners so they don't start too
+    // close to each other
+    const signs = [
+        { x: 1, y: 1 },
+        { x: -1, y: 1 },
+        { x: -1, y: -1 },
+        { x: 1, y: -1 },
+    ]
     for (let c = 0; c < NUMBER_OF_CRAWLERS - 1; c++) {
         const previousCrawler = crawlers[c - 1];
         const unsignedStartPosition = Vec.round(Vec.random(params.startPointJitter * 0.75, params.startPointJitter, underworld.random))
+        const sign = signs[c % signs.length] || { x: 1, y: 1 };
         const cc: CaveCrawler = {
             direction: randFloat(underworld.random, minDirection, maxDirection),
             thickness: params.startThickness,
             position: {
-                x: randSign(underworld.random) * unsignedStartPosition.x,
-                y: randSign(underworld.random) * unsignedStartPosition.y,
+                x: sign.x * unsignedStartPosition.x,
+                y: sign.y * unsignedStartPosition.y,
             },
             path: [],
             left: [],
