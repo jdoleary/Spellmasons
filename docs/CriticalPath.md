@@ -1,26 +1,27 @@
 # Desired Schedule
 - January 1/8-1/14
-    - increase all healths and damages by 10x
     - Map gen
         - Make sure it jitters in all 4 directions so you don't end up with long diagonal maps too often
     - Add Che new art
         - Spell bar
         - Arrow spells
         - Bolt Spell
-    - Reach out to translators
-    - Email streamers, try to set up a multiplayer stream on release day
     - BALANCE unit spawns especially on later levels
         - Maybe not exponential budget?
-    - burst should memorize your position at time of cast, so that if you move after casting it keeps the position that it was when you cast
-    - Change font
-    - Balanced / Difficult
-    - Solve many enemies overkilling allied unit
+    - Small changes
+        - increase all healths and damages by 10x
+        - burst should memorize your position at time of cast, so that if you move after casting it keeps the position that it was when you cast
+        - Solve many enemies overkilling allied unit
+        - Change font (add license to Credits)
+    - **Email streamers**, try to set up a multiplayer stream on release day
+    - Reach out to translators
     - Multiplayer
         - Support hosting a server from in the game exe
         - Server Browser
         - Multiplayer save load with "take over player"
         - Notify when version isn't same
-- January 1/5-1/21
+- January 1/15-1/21
+    - Balanced / Difficult
     - Finish Boss
         - Implement aoe damage against enemies chain+hurt?
     - A way to see your perks roll
@@ -35,6 +36,7 @@
 - January 1/22-1/28
     - Finish Looping
         - (see branch `loop-tint-level`)
+    - Make Demo as promised
     - Prepare to ship
         - [Release Demo](https://partner.steamgames.com/doc/store/application/demos)
         - Accessability / Localization Language Support / Spellcheck
@@ -66,6 +68,11 @@
 
     
 - Add codex where you can read about spells and enemies
+
+# Major Tasks
+- Finish Multiplayer Menu and LAN hosting
+- Localization
+- Support modding
 # Critical Path
 - Milestone | **Optimize game**
     - Optimize runPredictions: especially with expanding + corpse explosion
