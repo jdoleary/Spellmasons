@@ -2624,7 +2624,7 @@ export default class Underworld {
     // the fact that the spell is out of range but it's showing them what would happen.
     outOfRange?: boolean,
     magicColor?: number,
-    castPlayer?: Player.IPlayer,
+    casterPlayer?: Player.IPlayer,
   ): Promise<Cards.EffectState> {
     if (!prediction && casterUnit == (globalThis.player && globalThis.player.unit)) {
       globalThis.castThisTurn = true;
@@ -2640,6 +2640,7 @@ export default class Underworld {
       shouldRefundLastSpell: false,
       casterCardUsage,
       casterUnit,
+      casterPlayer,
       targetedUnits: [],
       targetedPickups: [],
       targetedDoodads: [],
@@ -2673,8 +2674,8 @@ export default class Underworld {
     // (burst relies on proximity to deal damage)
     // and then move, it can change the outcome from
     // different than what was predicted.  Same with arrow spells
-    if (castPlayer) {
-      castPlayer.isCasting = true;
+    if (casterPlayer) {
+      casterPlayer.isCasting = true;
     }
     const castingParticleEmitter = makeRisingParticles(effectState.casterUnit, prediction, hexToString(magicColor || 0xffffff), -1);
 
@@ -2778,8 +2779,8 @@ export default class Underworld {
     }
 
     // Make caster movable again now that they are done casting
-    if (castPlayer) {
-      castPlayer.isCasting = false;
+    if (casterPlayer) {
+      casterPlayer.isCasting = false;
     }
     stopAndDestroyForeverEmitter(castingParticleEmitter);
 

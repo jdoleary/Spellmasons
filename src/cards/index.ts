@@ -246,6 +246,7 @@ export interface EffectState {
   shouldRefundLastSpell: boolean;
   casterCardUsage?: Player.CardUsage;
   casterUnit: Unit.IUnit;
+  casterPlayer?: Player.IPlayer;
   targetedUnits: Unit.IUnit[];
   targetedPickups: Pickup.IPickup[];
   targetedDoodads: Doodad.IDoodad[];

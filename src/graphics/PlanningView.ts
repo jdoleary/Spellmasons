@@ -406,7 +406,9 @@ async function showCastCardsPrediction(underworld: Underworld, target: Vec2, cas
       cardIds,
       target,
       true,
-      outOfRange
+      outOfRange,
+      undefined,
+      globalThis.player
     );
     // Clears unit tints in preparation for setting new tints to symbolize which units are targeted by spell
     clearTints(underworld);
