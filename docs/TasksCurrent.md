@@ -7,16 +7,22 @@
 # Desired Schedule
 - January 1/8-1/14
     - Implement onColllision for arrow spells
-    - Small changes
-        - Offset floating text for perks when they proc
-        - Improve difficulty scaling with over 4 players
-        - Make ghost arrow spell for player
+        - Implement Ghost arrow
+        - Support prediction
+        - note: I should be able to calculates the results ahead of time
+            - Find flight path until it hits a wall
+            - detect ALL units that that line (the flight path goes through)
+            - order them by distance
+            - if the arrow pierces do what ghost_archer does to simulate
+            - if not, change the end destination to the first unit
+    - Offset floating text for perks when they proc
+    ---
+    - Improve difficulty scaling with over 4 players
     - BALANCE unit spawns especially on later levels
         - Maybe not exponential budget?
     - fix opening book animation playing when you don't have to wait to cast, allow it to exit early
     - Test on different resolutions
-    - Implement
-        - Ghost arrow
+    - Menu: Fix overflow for all pages rather than the one-off fixes I've been doing.
     - **Email streamers**, try to set up a multiplayer stream on release day
     - Reach out to translators
     - Balanced / Difficult
