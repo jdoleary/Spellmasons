@@ -57,12 +57,13 @@ import target_column from './target_column';
 import burst from './burst';
 import slow from './slow';
 import death_wager from './death_wager';
-import consumeAlly from './consume_ally';
+import sacrifice from './sacrifice';
 import devRecordDelay from './devRecordDelay';
 import registerSummoningSickness from '../modifierSummoningSickness';
 import arrow from './arrow';
 import target_arrow from './target_arrow';
 import bolt from './bolt';
+import conserve from './conserve';
 
 import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
@@ -193,10 +194,11 @@ export function registerCards(overworld: Overworld) {
   register(slow, overworld);
   register(death_wager, overworld);
   register(capture_soul, overworld);
-  register(consumeAlly, overworld);
+  register(sacrifice, overworld);
   register(arrow, overworld);
   register(target_arrow, overworld);
   register(bolt, overworld);
+  register(conserve, overworld);
   for (let unitId of Object.keys(allUnits)) {
     const spell = summon_generic(unitId, false);
     if (spell) {

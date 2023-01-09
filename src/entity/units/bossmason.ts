@@ -3,12 +3,11 @@ import { allUnits, UnitSource } from './index';
 import { Faction, UnitSubType, UnitType } from '../../types/commonTypes';
 import * as Unit from '../Unit';
 import Underworld from '../../Underworld';
-import * as slash from '../../cards/slash';
 import * as config from '../../config';
 import { makeCorruptionParticles } from '../../graphics/ParticleCollection';
 import purify from '../../cards/purify';
-import consumeAlly from '../../cards/consume_ally';
-import { calculateCost, oneOffImage } from '../../cards/cardUtils';
+import sacrifice from '../../cards/sacrifice';
+import { calculateCost } from '../../cards/cardUtils';
 import seedrandom from 'seedrandom';
 import { makeManaTrail } from '../../graphics/Particles';
 import { addPixiSpriteAnimated, containerUnits } from '../../graphics/PixiUtils';
@@ -98,11 +97,11 @@ const unit: UnitSource = {
       await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
     }
     // Consume allies if hurt
-    cost = calculateCost([consumeAlly.card], {});
+    cost = calculateCost([sacrifice.card], {});
     if (cost.manaCost <= unit.mana && unit.health < unit.healthMax) {
       const closestUnit = Unit.findClosestUnitInSameFaction(unit, underworld);
       if (closestUnit) {
-        const keyMoment = () => underworld.castCards({}, unit, [consumeAlly.card.id], closestUnit, false, false, magicColor);
+        const keyMoment = () => underworld.castCards({}, unit, [sacrifice.card.id], closestUnit, false, false, magicColor);
         await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
       }
     }
