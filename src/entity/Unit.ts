@@ -749,7 +749,7 @@ export function syncPlayerHealthManaUI(underworld: Underworld, predictionPlayerU
     elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;
   }
   if (predictionPlayerUnit && predictionPlayerUnit.health !== unit.health) {
-    elHealthLabel.innerHTML = `${predictionPlayerUnit.health} ${i18n('Health Remaining')}`;
+    elHealthLabel.innerHTML = `${predictionPlayerUnit.health} ${i18n('Remaining')}`;
   }
 
   // Set the health cost bar that shows how much health will be changed if the spell is cast
@@ -810,7 +810,7 @@ export function syncPlayerHealthManaUI(underworld: Underworld, predictionPlayerU
   const manaRatio3 = (Math.max(0, unit.mana - unit.manaMax * 2)) / unit.manaMax;
   elManaBar3.style["width"] = `${100 * Math.min(manaRatio3, 1)}%`;
   if (predictionPlayerUnit && predictionPlayerUnit.mana !== unit.mana) {
-    elManaLabel.innerHTML = `${predictionPlayerUnit.mana} ${i18n('Mana Remaining')}`;
+    elManaLabel.innerHTML = `${predictionPlayerUnit.mana} ${i18n('Remaining')}`;
   } else {
     elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax}`;
   }
