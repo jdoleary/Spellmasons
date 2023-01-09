@@ -11,21 +11,20 @@ import { explain, EXPLAIN_OVERFILL } from '../graphics/Explain';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { die } from '../entity/Unit';
 
-export const consumeAllyCardId = 'consumeAlly';
+export const consumeAllyCardId = 'Sacrifice';
 const spell: Spell = {
   card: {
     id: consumeAllyCardId,
-    category: CardCategory.Mana,
+    category: CardCategory.Soul,
     sfx: '',
     supportQuantity: true,
     manaCost: 30,
     healthCost: 0,
     expenseScaling: 1,
-    // not currently available for players, used in bossmason
-    probability: 0,
-    thumbnail: 'unknown.png',
+    probability: probabilityMap[CardRarity.UNCOMMON],
+    thumbnail: 'spellIconSacrifice.png',
     description: `
-Instantly kill an ally to gain their health
+Instantly kill an ally to gain their current health.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
@@ -42,7 +41,6 @@ Instantly kill an ally to gain their health
           const NUMBER_OF_ANIMATED_TRAILS = unitHealthStolen;
           for (let i = 0; i < quantity * NUMBER_OF_ANIMATED_TRAILS; i++) {
             healthTrailPromises.push(makeManaTrail(unit, caster, underworld, '#ff6767n', '#ff0000').then(() => {
-              // healthTrailPromises.push(makeManaTrail(unit, caster, underworld, '#fff9e4', '#ffcb3f').then(() => {
               const healthStolenPerTrail = Math.floor(unitHealthStolen / NUMBER_OF_ANIMATED_TRAILS)
               state.casterUnit.health += healthStolenPerTrail;
               if (!prediction) {
