@@ -1,3 +1,6 @@
+# Focus
+- Get build ready for streamers and reach out
+- Contact Translators
 # Before next streamer outreach
     - test new spells in multiplayer
     - test perk list on small resoution

@@ -619,8 +619,14 @@ kbd {
   color: var(--book-leather-dark);
 }
 
+#card-holders-inner {
+  left: 17px;
+  position: relative;
+}
+
 #card-holders-inner .card-title {
   color: white;
+  padding: 2px 4px;
 }
 
 .card-title {
@@ -717,24 +723,24 @@ body.your-turn #end-turn-btn {
 }
 
 body.your-turn #end-turn-btn:hover {
-  filter: brightness(145%);
+  filter: drop-shadow(0 0 0.4rem rgb(255, 255, 255));
 }
 
 #end-turn-btn {
-  border: 16px solid;
-  border-image-outset: 0;
-  border-image-repeat: stretch;
-  border-image-slice: 250;
-  border-image-source: url("/ui/Assets_Icon_Border_QtrCircle_1_Purple.png");
-  border-image-width: 1;
+  width: 94px;
+  height: 95px;
+  background-image: url('/ui/iconButtonBlankUp.png');
+}
+
+#end-turn-btn:active {
+  background-image: url('/ui/iconButtonBlankDown.png');
+}
+
+#end-turn-btn {
   /* z-index set explicitly to make sure it renders overtop of the cardhand so that it will
   change the cursor from a cursor-casting to just cursor */
   z-index: 2;
-  opacity: 0.5;
-  /* Match the size of the inventory icon so the toolbar remains centered */
-  /* Note the width should take into account the border so 80-16*2 = 48 */
-  width: 40px;
-  height: 60px;
+  opacity: 0.75;
   white-space: normal;
   /* Overrides button-wrapper nstyles */
   /* Ensures that the toolbar remains centered on the screen */
@@ -744,7 +750,7 @@ body.your-turn #end-turn-btn:hover {
   background-color: #483f8e;
   /* Position inside spellBar.png */
   position: absolute;
-  right: 10px;
+  right: 8px;
   top: 19px
 }
 
@@ -756,6 +762,7 @@ body.your-turn #end-turn-btn:hover {
   color: white;
   position: relative;
   text-align: center;
+  padding: 0 4px;
 }
 
 #end-turn-btn-inner .hotkey-badge-holder {
@@ -1435,7 +1442,7 @@ body.open-inventory #inventory-container {
   background-image: url('images/card-designs/bookStone.png');
   background-size: contain;
   position: absolute;
-  left: 4px;
+  left: 21px;
   top: 7px;
 }
 
@@ -1712,7 +1719,7 @@ body.auto-camera #camera-recenter-tip {
   background-repeat: no-repeat;
   margin-bottom: 8px;
   /* Matches the dimentions of the spellBar.png exactly */
-  width: 919px;
+  width: 954px;
   height: 147px;
   position: relative;
 }
