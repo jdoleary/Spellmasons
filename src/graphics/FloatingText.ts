@@ -26,7 +26,7 @@ export default function floatingText({
   container = containerFloatingText,
   style = { fill: 'white' },
   keepWithinCameraBounds = true
-}: FloatingTextInsructions) {
+}: FloatingTextInsructions): Promise<void> {
   if (!(globalThis.pixi && app && container)) {
     return Promise.resolve();
   }
