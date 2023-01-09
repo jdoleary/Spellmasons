@@ -6,30 +6,22 @@
 
 # Desired Schedule
 - January 1/8-1/14
-    - Implement onColllision for arrow spells
-        - Implement Ghost arrow
-        - Support prediction
-        - note: I should be able to calculates the results ahead of time
-            - Find flight path until it hits a wall
-            - detect ALL units that that line (the flight path goes through)
-            - order them by distance
-            - if the arrow pierces do what ghost_archer does to simulate
-            - if not, change the end destination to the first unit
     - Offset floating text for perks when they proc
-    ---
     - integrate Che new end turn btn
+    - Add health bar glow and replace screenshots on Steam
     - Improve difficulty scaling with over 4 players
     - BALANCE unit spawns especially on later levels
         - Maybe not exponential budget?
     - fix opening book animation playing when you don't have to wait to cast, allow it to exit early
     - Test on different resolutions
-    - Menu: Fix overflow for all pages rather than the one-off fixes I've been doing.
     - **Email streamers**, try to set up a multiplayer stream on release day
-    - Reach out to translators
+    - **Reach out to translators**
     - Balanced / Difficult
+    - Menu: Fix overflow for all pages rather than the one-off fixes I've been doing.
     - Content: Add Copy Soul vs capture soul.  Capture soul should let you spawn them for no mana cost but they need to be below 25% health to be captured.  Copy Soul gives you the summon card.
     - Solve many enemies overkilling allied unit
     - Add refunds to as many spells as possible if they have no effect
+    - Improve "Bolt" effects
     - Multiplayer
         - LAN hosting: Support hosting a server from in the game exe
         - Server Browser
