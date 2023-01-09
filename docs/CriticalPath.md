@@ -10,5 +10,6 @@
     - Double check Electron Security
     - [Integrate Steam SDK](https://github.com/ceifa/steamworks.js)
     - Support modding
+        - Include instructions from Modding.md
 - January 31 (check timezone)
     - Release Game and Demo
