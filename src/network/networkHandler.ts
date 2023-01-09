@@ -276,6 +276,14 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       if (players) {
         underworld.syncPlayers(players);
       }
+      // This should already be set to false after the spell completes but it is
+      // also set to false here as an extra protection measure just in case
+      for (let p of underworld.players) {
+        if (p.isCasting) {
+          console.error('Unexpected: player.isCasting was set to true during a SET_PHASE');
+        }
+        p.isCasting = false;
+      }
       // Use the internal setTurnPhrase now that the desired phase has been sent
       // via the public setTurnPhase
       await underworld.initializeTurnPhase(phase);
