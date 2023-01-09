@@ -39,6 +39,9 @@ export interface IPlayer {
   clientId: string;
   clientConnected: boolean;
   unit: Unit.IUnit;
+  // Used to prevent the player from moving while casting which can result in prediction
+  // inconsistencies
+  isCasting: boolean;
   isSpawned: boolean;
   // The spells that the player has on their toolbar
   cards: string[];
@@ -91,6 +94,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
       undefined,
       underworld
     ),
+    isCasting: false,
     isSpawned: false,
     cards: Array(config.NUMBER_OF_TOOLBAR_SLOTS).fill(''),
     inventory: [],

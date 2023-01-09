@@ -627,7 +627,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
         }
       });
     }
-    const keyMoment = () => underworld.castCards(caster.cardUsageCounts, caster.unit, payload.cards, payload, false, false, caster.colorMagic);
+    const keyMoment = () => underworld.castCards(caster.cardUsageCounts, caster.unit, payload.cards, payload, false, false, caster.colorMagic, caster);
     const colorMagicMedium = lightenColor(caster.colorMagic, 0.3);
     const colorMagicLight = lightenColor(caster.colorMagic, 0.6);
     await Unit.playComboAnimation(caster.unit, animationKey, keyMoment, {

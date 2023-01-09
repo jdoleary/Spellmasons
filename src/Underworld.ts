@@ -2624,6 +2624,7 @@ export default class Underworld {
     // the fact that the spell is out of range but it's showing them what would happen.
     outOfRange?: boolean,
     magicColor?: number,
+    castPlayer?: Player.IPlayer,
   ): Promise<Cards.EffectState> {
     if (!prediction && casterUnit == (globalThis.player && globalThis.player.unit)) {
       globalThis.castThisTurn = true;
@@ -2672,7 +2673,9 @@ export default class Underworld {
     // (burst relies on proximity to deal damage)
     // and then move, it can change the outcome from
     // different than what was predicted.  Same with arrow spells
-    effectState.casterUnit.immovable = true;
+    if (castPlayer) {
+      castPlayer.isCasting = true;
+    }
     const castingParticleEmitter = makeRisingParticles(effectState.casterUnit, prediction, hexToString(magicColor || 0xffffff), -1);
 
     // "quantity" is the number of identical cards cast in a row. Rather than casting the card sequentially
@@ -2775,7 +2778,9 @@ export default class Underworld {
     }
 
     // Make caster movable again now that they are done casting
-    effectState.casterUnit.immovable = false;
+    if (castPlayer) {
+      castPlayer.isCasting = false;
+    }
     stopAndDestroyForeverEmitter(castingParticleEmitter);
 
     return effectState;
