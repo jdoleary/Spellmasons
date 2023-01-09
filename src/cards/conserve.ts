@@ -58,7 +58,6 @@ Saves the rest of the targets' current mana for next turn.
   events: {
     onTurnStart: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
       const modifier = unit.modifiers[id];
-      console.log('jtest on turn start', unit);
       if (modifier) {
         setTimeout(() => {
           unit.mana += modifier.quantity;
