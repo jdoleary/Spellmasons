@@ -95,7 +95,7 @@ export function findArrowUnitCollisions(casterUnit: Unit.IUnit, target: Vec2, pr
       }
       const pointAtRightAngleToArrowPath = findWherePointIntersectLineSegmentAtRightAngle(u, arrowShootPath);
       // TODO: Validate: Will this hit miniboss since their radius is larger?
-      const willBeStruckByArrow = !pointAtRightAngleToArrowPath ? false : math.distance(u, pointAtRightAngleToArrowPath) <= config.COLLISION_MESH_RADIUS * 2
+      const willBeStruckByArrow = !pointAtRightAngleToArrowPath ? false : math.distance(u, pointAtRightAngleToArrowPath) <= config.COLLISION_MESH_RADIUS
       return willBeStruckByArrow;
     },
   ).sort((a, b) => {
