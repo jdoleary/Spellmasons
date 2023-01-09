@@ -785,6 +785,11 @@ body.your-turn #end-turn-btn:hover {
   }
 }
 
+body.showUpgrades #inspector-tooltip {
+  /* hide tooltip when choosing upgrades so it doesn't overlap */
+  display: none;
+}
+
 #inspector-tooltip {
   display: flex;
   flex-direction: column;
@@ -1807,6 +1812,10 @@ body.view-Game.showUpgrades #perkList.visible {
   width: 94px;
   height: 95px;
   background-image: url('/ui/iconRerollUp.png');
+}
+
+.reroll-btn:hover {
+  filter: drop-shadow(0 0 0.4rem rgb(255, 255, 255));
 }
 
 .reroll-btn:active {

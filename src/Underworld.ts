@@ -2213,6 +2213,9 @@ export default class Underworld {
         document.body?.classList.toggle(showUpgradesClassName, false);
         this.showUpgrades();
       });
+      elRerollPerks.addEventListener('mouseenter', (e) => {
+        playSFXKey('click');
+      });
       elUpgradePickerContent.appendChild(elRerollPerks);
     }
   }
