@@ -92,16 +92,3 @@ export const robeColors = [
 // function rgbToHex(r: number, g: number, b: number) {
 //     return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 // }
-
-// // From https://stackoverflow.com/a/13348458/4418836
-// function hexToRgb(hex: number) {
-//     const r = hex / 0x010000
-//     const b = (hex - 0xff0000) / 0x000100
-//     const g = (hex - 0xff0000 / 0x000001
-//     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-//     return result ? {
-//         r: parseInt(result[1] || '', 16),
-//         g: parseInt(result[2] || '', 16),
-//         b: parseInt(result[3] || '', 16)
-//     } : null;
-// }

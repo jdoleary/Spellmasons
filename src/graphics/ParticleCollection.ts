@@ -5,7 +5,7 @@ import { easeOutCubic } from '../jmath/Easing';
 import { lerp } from '../jmath/math';
 import { Vec2 } from '../jmath/Vec';
 import * as config from '../config';
-import { createHardCircleParticleTexture, createParticleTexture, simpleEmitter, wrappedEmitter } from './Particles';
+import { containerParticlesUnderUnits, createHardCircleParticleTexture, createParticleTexture, simpleEmitter, wrappedEmitter } from './Particles';
 import { bleedInstantKillProportion } from '../cards/bleed';
 import { containerUnits } from './PixiUtils';
 import { IUnit } from '../entity/Unit';
@@ -88,7 +88,7 @@ export function makeBleedParticles(position: Vec2, prediction: boolean, proporti
     simpleEmitter({ x: position.x, y: position.y - config.COLLISION_MESH_RADIUS / 2 }, particleConfig, resolver);
 
 }
-export function makeResurrectParticles(position: Vec2, prediction: boolean) {
+export function makeRisingParticles(position: Vec2, prediction: boolean, color: string = '#ffffff', emitterLifetime = 0.7) {
     if (prediction) {
         // Don't show if just a prediction
         return
@@ -111,8 +111,8 @@ export function makeResurrectParticles(position: Vec2, prediction: boolean) {
                 "minimumScaleMultiplier": 1
             },
             "color": {
-                "start": "#ffffff",
-                "end": "#ffffff"
+                "start": color,
+                "end": color
             },
             "speed": {
                 "start": 1,
@@ -139,8 +139,7 @@ export function makeResurrectParticles(position: Vec2, prediction: boolean) {
             },
             "blendMode": "normal",
             "frequency": 0.004,
-            // Matches the resurrect animation duration
-            "emitterLifetime": 0.7,
+            "emitterLifetime": emitterLifetime,
             "maxParticles": 500,
             "pos": {
                 "x": 0,
@@ -156,8 +155,7 @@ export function makeResurrectParticles(position: Vec2, prediction: boolean) {
             }
 
         }, [texture]);
-    simpleEmitter(position, particleConfig);
-
+    return simpleEmitter(position, particleConfig, undefined, containerParticlesUnderUnits);
 }
 // Max final scale should be 1
 export function makeBurstParticles(position: Vec2, finalScale: number, prediction: boolean, resolver?: () => void) {

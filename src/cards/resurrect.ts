@@ -4,7 +4,7 @@ import { refundLastSpell, Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
-import { makeResurrectParticles } from '../graphics/ParticleCollection';
+import { makeRisingParticles } from '../graphics/ParticleCollection';
 
 export const id = 'resurrect';
 export const thumbnail = 'spellIconResurrect.png';
@@ -39,7 +39,7 @@ Resurrects a dead unit and converts them to the caster's faction.
           playDefaultSpellSFX(card, prediction);
           Unit.resurrect(unit);
           resurrectedUnitCount++;
-          makeResurrectParticles(unit, prediction);
+          makeRisingParticles(unit, prediction);
           unit.health = unit.healthMax * resStatAmount;
           unit.mana = unit.manaMax * resStatAmount;
           Unit.changeFaction(unit, state.casterUnit.faction);

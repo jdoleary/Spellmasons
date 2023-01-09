@@ -6,7 +6,7 @@ import * as config from '../config';
 import { keyDown } from './ui/eventListeners';
 import * as colors from './ui/colors';
 import { JSpriteAnimated } from './Image';
-import { containerParticles } from './Particles';
+import { containerParticles, containerParticlesUnderUnits } from './Particles';
 import { elPIXIHolder } from './FloatingText';
 import Underworld, { Biome } from '../Underworld';
 import { randFloat, randInt } from '../jmath/rand';
@@ -35,7 +35,6 @@ export const containerBoard = !globalThis.pixi ? undefined : new globalThis.pixi
 export const containerBloodSmear = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerRadiusUI = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerPlanningView = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
-export const containerParticlesUnderUnits = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerDoodads = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerUnits = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerSpells = !globalThis.pixi ? undefined : new globalThis.pixi.Container();

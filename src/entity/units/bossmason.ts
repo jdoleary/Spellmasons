@@ -24,6 +24,7 @@ import { BLOOD_ARCHER_ID } from './blood_archer';
 
 export const bossmasonUnitId = 'Bossmason';
 const bossmasonMana = 200;
+const magicColor = 0x321d73;
 const unit: UnitSource = {
   id: bossmasonUnitId,
   info: {
@@ -93,7 +94,7 @@ const unit: UnitSource = {
     // Purify self if cursed
     let cost = calculateCost([purify.card], {});
     if (cost.manaCost <= unit.mana && unit.modifiers && Object.values(unit.modifiers).some(m => m.isCurse)) {
-      const keyMoment = () => underworld.castCards({}, unit, [purify.card.id], unit, false, false);
+      const keyMoment = () => underworld.castCards({}, unit, [purify.card.id], unit, false, false, magicColor);
       await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
     }
     // Consume allies if hurt
@@ -101,7 +102,7 @@ const unit: UnitSource = {
     if (cost.manaCost <= unit.mana && unit.health < unit.healthMax) {
       const closestUnit = Unit.findClosestUnitInSameFaction(unit, underworld);
       if (closestUnit) {
-        const keyMoment = () => underworld.castCards({}, unit, [consumeAlly.card.id], closestUnit, false, false);
+        const keyMoment = () => underworld.castCards({}, unit, [consumeAlly.card.id], closestUnit, false, false, magicColor);
         await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
       }
     }
@@ -133,7 +134,7 @@ const unit: UnitSource = {
     // // TODO: Check mana cost
     // if (attackTarget && canAttackTarget) {
     //   Unit.orient(unit, attackTarget);
-    //   const keyMoment = () => underworld.castCards({}, unit, [slash.slashCardId], attackTarget, false, false);
+    //   const keyMoment = () => underworld.castCards({}, unit, [slash.slashCardId], attackTarget, false, false, magicColor);
     //   await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
     // }
   },

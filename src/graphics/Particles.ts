@@ -5,7 +5,7 @@ import { prng, randFloat } from '../jmath/rand';
 import { raceTimeout } from '../Promise';
 import { BloodParticle, graphicsBloodSmear, tickParticle } from './PixiUtils';
 import type Underworld from '../Underworld';
-import { Container } from 'pixi.js';
+import { Container, ParticleContainer } from 'pixi.js';
 import { stopAndDestroyForeverEmitter } from './ParticleCollection';
 
 export const containerParticles = !globalThis.pixi ? undefined : new globalThis.pixi.ParticleContainer(5000, {
@@ -15,6 +15,14 @@ export const containerParticles = !globalThis.pixi ? undefined : new globalThis.
     uvs: false,
     tint: true
 });
+export const containerParticlesUnderUnits = !globalThis.pixi ? undefined : new globalThis.pixi.ParticleContainer(5000, {
+    scale: true,
+    position: true,
+    rotation: false,
+    uvs: false,
+    tint: true
+});
+
 // Since emitters create particles in the same container the emitter is in, it is beneficial to have a wrapped
 // emitter that only creates particles in its own container.  Since containerUnits is always sorting itself
 // so it has proper z-index draw order, I don't want hundreds of particles to all be sorted individually.
@@ -41,11 +49,11 @@ export function wrappedEmitter(config: particles.EmitterConfigV3, container: Con
     };
 
 }
-export function simpleEmitter(position: Vec2, config: particles.EmitterConfigV3, resolver?: () => void) {
+export function simpleEmitter(position: Vec2, config: particles.EmitterConfigV3, resolver?: () => void, container?: ParticleContainer) {
     if (!containerParticles) {
         return undefined
     }
-    const emitter = new particles.Emitter(containerParticles, config);
+    const emitter = new particles.Emitter(container || containerParticles, config);
     emitter.updateOwnerPos(position.x, position.y);
     emitter.playOnceAndDestroy(() => {
         if (resolver) {

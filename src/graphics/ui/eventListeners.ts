@@ -350,14 +350,22 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
 
           } else {
             if (!globalThis.notifiedOutOfStamina) {
-              floatingText({
-                coords: mouseTarget,
-                text: 'Out of stamina',
-              });
-              // Stop walk animation now that unit is out of stamina and not moving
-              Unit.returnToDefaultSprite(globalThis.player.unit);
-              explain(EXPLAIN_END_TURN);
-              playSFXKey('deny_stamina');
+              if (globalThis.player.unit.stamina <= 0) {
+
+                floatingText({
+                  coords: mouseTarget,
+                  text: 'Out of stamina',
+                });
+                // Stop walk animation now that unit is out of stamina and not moving
+                Unit.returnToDefaultSprite(globalThis.player.unit);
+                explain(EXPLAIN_END_TURN);
+                playSFXKey('deny_stamina');
+              } else if (globalThis.player.unit.immovable) {
+                floatingText({
+                  coords: mouseTarget,
+                  text: 'You cannot move while casting',
+                });
+              }
               globalThis.notifiedOutOfStamina = true;
             }
           }

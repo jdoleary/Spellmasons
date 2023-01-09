@@ -860,6 +860,10 @@ export function syncPlayerHealthManaUI(underworld: Underworld, predictionPlayerU
   }
 }
 export function canMove(unit: IUnit): boolean {
+  if (unit.immovable) {
+    console.log("canMove: false - unit is flagged as immovable")
+    return false;
+  }
   // Do not move if dead
   if (!unit.alive) {
     console.log("canMove: false - unit is not alive")

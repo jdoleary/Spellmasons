@@ -2,13 +2,15 @@
     - test new spells in multiplayer
     - test perk list on small resoution
     - test new toolbar on small resolution
+    - test multiplayer
 
 # Desired Schedule
 - January 1/8-1/14
     - Implement onColllision for arrow spells
     - Small changes
-        - burst should memorize your position at time of cast, so that if you move after casting it keeps the position that it was when you cast
         - Offset floating text for perks when they proc
+        - Improve difficulty scaling with over 4 players
+        - Make ghost arrow spell for player
     - BALANCE unit spawns especially on later levels
         - Maybe not exponential budget?
     - Test on different resolutions

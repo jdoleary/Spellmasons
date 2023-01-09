@@ -25,7 +25,6 @@ import {
   app,
   containerBoard,
   containerDoodads,
-  containerParticlesUnderUnits,
   containerSpells,
   containerUnits,
   updateCameraPosition,
@@ -68,7 +67,7 @@ import { baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLi
 import { Material } from './Conway';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndexPreventWrap } from './jmath/ArrayUtil';
 import { raceTimeout, reportIfTakingTooLong } from './Promise';
-import { updateParticlees } from './graphics/Particles';
+import { containerParticles, containerParticlesUnderUnits, updateParticlees } from './graphics/Particles';
 import { elInstructions } from './network/networkHandler';
 import type PieClient from '@websocketpie/client';
 import { makeForcePush } from './cards/push';
@@ -77,12 +76,13 @@ import { isOutOfRange } from './PlayerUtils';
 import { DisplayObject, TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
 import { explain, EXPLAIN_MISSED_SCROLL, EXPLAIN_PING, EXPLAIN_SCROLL, isFirstTutorialStepComplete, isTutorialComplete, tutorialCompleteTask, tutorialShowTask } from './graphics/Explain';
-import { makeScrollDissapearParticles } from './graphics/ParticleCollection';
+import { makeRisingParticles, makeScrollDissapearParticles, stopAndDestroyForeverEmitter } from './graphics/ParticleCollection';
 import { ensureAllClientsHaveAssociatedPlayers, Overworld } from './Overworld';
 import { Emitter } from '@pixi/particle-emitter';
 import { golem_unit_id } from './entity/units/golem';
 import { createPerkElement, generatePerks, tryTriggerPerk } from './Perk';
 import { bossmasonUnitId } from './entity/units/bossmason';
+import { hexToString } from './graphics/ui/colorUtil';
 
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
@@ -1512,6 +1512,7 @@ export default class Underworld {
     // Now that it's a new level clear out the level's dodads such as
     // bone dust left behind from destroyed corpses
     containerDoodads?.removeChildren();
+    containerParticles?.removeChildren();
     containerParticlesUnderUnits?.removeChildren();
     // Clean previous level info
     for (let i = this.units.length - 1; i >= 0; i--) {
@@ -2614,6 +2615,7 @@ export default class Underworld {
     // (like the color of a radius circle in the "Target Circle" card) to clue the user in to
     // the fact that the spell is out of range but it's showing them what would happen.
     outOfRange?: boolean,
+    magicColor?: number,
   ): Promise<Cards.EffectState> {
     if (!prediction && casterUnit == (globalThis.player && globalThis.player.unit)) {
       globalThis.castThisTurn = true;
@@ -2655,6 +2657,15 @@ export default class Underworld {
       // Prevent dead players from casting
       return effectState;
     }
+
+    // Make caster immobile while casting
+    // This prevents predictions frustrations for example:
+    // if they cast a long spell with a Burst at the end
+    // (burst relies on proximity to deal damage)
+    // and then move, it can change the outcome from
+    // different than what was predicted.  Same with arrow spells
+    effectState.casterUnit.immovable = true;
+    const castingParticleEmitter = makeRisingParticles(effectState.casterUnit, prediction, hexToString(magicColor || 0xffffff), -1);
 
     // "quantity" is the number of identical cards cast in a row. Rather than casting the card sequentially
     // quantity allows the card to have a unique scaling effect when cast sequentially after itself.
@@ -2708,7 +2719,14 @@ export default class Underworld {
         if (globalThis.headless) {
           this.triggerGameLoopHeadless();
         }
-        effectState = await reportIfTakingTooLong(10000, `${card.id};${prediction}`, cardEffectPromise);
+
+        // Await the cast
+        try {
+          effectState = await reportIfTakingTooLong(10000, `${card.id};${prediction}`, cardEffectPromise);
+        } catch (e) {
+          console.error('Unexpected error from card.effect', e);
+        }
+
         if (!effectState.shouldRefundLastSpell) {
           // Compute spell mana/health cost and add card usage count
           // This happens after the spell is cast so that fizzle spells can be refunded
@@ -2747,6 +2765,10 @@ export default class Underworld {
       // Clear spell animations once all cards are done playing their animations
       containerSpells?.removeChildren();
     }
+
+    // Make caster movable again now that they are done casting
+    effectState.casterUnit.immovable = false;
+    stopAndDestroyForeverEmitter(castingParticleEmitter);
 
     return effectState;
   }
