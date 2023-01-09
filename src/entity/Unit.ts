@@ -716,7 +716,7 @@ export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | u
     die(unit, underworld, prediction);
   }
 
-  if (unit.unitSourceId == spellmasonUnitId && !prediction) {
+  if (unit.id == globalThis.player?.unit.id && !prediction) {
     // Now that the player unit's properties have changed, sync the new
     // state with the player's predictionUnit so it is properly
     // refelcted in the bar
