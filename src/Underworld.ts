@@ -2165,27 +2165,13 @@ export default class Underworld {
           // Allow reroll if there is more than 1 upgrade to choose from
           if (numberOfUpgradesToChooseFrom > 1) {
             // Reroll perks button
-            const elRerollPerks = document.createElement('div');
-            elRerollPerks.innerHTML = 'reroll'
-            elRerollPerks.classList.add('ui-border');
-            elRerollPerks.style.color = 'white';
-            elRerollPerks.addEventListener('click', () => {
-              player.reroll++;
-              // Clear upgrades
-              document.body?.classList.toggle(showUpgradesClassName, false);
-              this.showUpgrades();
-            });
-            elUpgradePickerContent.appendChild(elRerollPerks);
+            this.addRerollButton(player);
           }
         }
 
       } else {
 
         const upgrades = Upgrade.generateUpgrades(player, numberOfUpgradesToChooseFrom, minimumProbability, this);
-        // Allow reroll if there is more than 1 upgrade to choose from
-        if (numberOfUpgradesToChooseFrom > 1) {
-          upgrades.push(Upgrade.rerollUpgrade);
-        }
         if (!upgrades.length) {
           // Player already has all the upgrades
           document.body?.classList.toggle(showUpgradesClassName, false);
@@ -2205,10 +2191,29 @@ export default class Underworld {
               }
             }
           }
+          // Allow reroll if there is more than 1 upgrade to choose from
+          if (numberOfUpgradesToChooseFrom > 1) {
+            this.addRerollButton(player);
+          }
         }
       }
     } else {
       console.error('showUpgrades: Upgrades cannot be generated, player not found');
+    }
+  }
+
+  addRerollButton(player: Player.IPlayer) {
+    if (elUpgradePickerContent) {
+      const elRerollPerks = document.createElement('div');
+      elRerollPerks.classList.add('reroll-btn');
+      elRerollPerks.style.color = 'white';
+      elRerollPerks.addEventListener('click', () => {
+        player.reroll++;
+        // Clear upgrades
+        document.body?.classList.toggle(showUpgradesClassName, false);
+        this.showUpgrades();
+      });
+      elUpgradePickerContent.appendChild(elRerollPerks);
     }
   }
 

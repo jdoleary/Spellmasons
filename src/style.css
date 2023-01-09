@@ -1802,3 +1802,13 @@ body:not(.view-Game) #tutorial-checklist {
 body.view-Game.showUpgrades #perkList.visible {
   display: flex;
 }
+
+.reroll-btn {
+  width: 94px;
+  height: 95px;
+  background-image: url('/ui/iconRerollUp.png');
+}
+
+.reroll-btn:active {
+  background-image: url('/ui/iconRerollDown.png');
+}

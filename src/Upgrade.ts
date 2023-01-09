@@ -155,7 +155,7 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
   return element;
 }
 export function getUpgradeByTitle(title: string): IUpgrade | undefined {
-  const all_upgrades = [...upgradeCardsSource, ...upgradeSourceWhenDead, ...upgradeSpecialsSource];
+  const all_upgrades = [...upgradeCardsSource, ...upgradeSourceWhenDead];
   return all_upgrades.find((u) => u.title === title);
 }
 export const upgradeSourceWhenDead: IUpgrade[] = [
@@ -173,16 +173,4 @@ export const upgradeSourceWhenDead: IUpgrade[] = [
 ];
 
 export const upgradeCardsSource: IUpgrade[] = []
-export const rerollUpgrade: IUpgrade = {
-  title: 'Reroll',
-  type: 'special',
-  description: () => 'Regenerate upgrades, but you get one less option to choose from.',
-  thumbnail: 'images/spell/unknown.png',
-  effect: (player: IPlayer, underworld: Underworld) => {
-    player.reroll++;
-  },
-  // No fancy border
-  probability: probabilityMap[CardRarity.COMMON],
-  cost: { manaCost: 0, healthCost: 0 },
-}
-const upgradeSpecialsSource = [rerollUpgrade];
+
