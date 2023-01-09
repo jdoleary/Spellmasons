@@ -1,13 +1,12 @@
 import * as Unit from '../entity/Unit';
 import * as colors from '../graphics/ui/colors';
 import { CardCategory } from '../types/commonTypes';
-import { addTarget, getCurrentTargets, refundLastSpell, Spell } from './index';
-import * as math from '../jmath/math';
+import { addTarget, refundLastSpell, Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
-import { createVisualFlyingProjectile, SPEED_PER_MILLI } from '../entity/Projectile';
-import { findWherePointIntersectLineSegmentAtRightAngle } from '../jmath/lineSegment';
+import { createVisualFlyingProjectile } from '../entity/Projectile';
 import * as config from '../config';
-import { add, Vec2 } from '../jmath/Vec';
+import { Vec2 } from '../jmath/Vec';
+import { findArrowUnitCollisions } from './arrow';
 
 export const arrowCardId = 'Target Arrow';
 const spell: Spell = {
@@ -33,37 +32,33 @@ Does not stack.
     effect: async (state, card, quantity, underworld, prediction) => {
       let targets: Vec2[] = state.targetedUnits;
       targets = targets.length ? targets : [state.castLocation];
-      for (let target of targets) {
-        const flightPath = add(state.casterUnit, math.similarTriangles(target.x - state.casterUnit.x, target.y - state.casterUnit.y, math.distance(state.casterUnit, target), 1000));
-        // Get all units between source and target for the arrow to pierce:
-        const firstTarget = underworld.getPotentialTargets(prediction).find(
-          (u) => {
-            const pointAtRightAngleToArrowPath = findWherePointIntersectLineSegmentAtRightAngle(u, { p1: state.casterUnit, p2: flightPath });
-            // Never target self
-            if (Unit.isUnit(u) && u.id == state.casterUnit.id) {
-              return false
-            }
-            const willBeStruckByArrow = !pointAtRightAngleToArrowPath ? false : math.distance(u, pointAtRightAngleToArrowPath) <= config.COLLISION_MESH_RADIUS * 2
-            return willBeStruckByArrow;
-          },
-        );
+      const promises = [];
+      const length = targets.length;
+      for (let i = 0; i < length; i++) {
+        const target = targets[i];
+        if (!target) {
+          continue;
+        }
+        const arrowUnitCollisions = findArrowUnitCollisions(state.casterUnit, target, prediction, underworld);
+        // This target arrow spell doesn't pierce
+        const firstTarget = arrowUnitCollisions[0];
         if (firstTarget) {
-          // Prevent arrow from going through walls
-          if (underworld.hasLineOfSight(state.casterUnit, firstTarget)) {
-            if (prediction) {
+          if (prediction) {
+            if (Unit.isUnit(firstTarget)) {
               addTarget(firstTarget, state);
-            } else {
-              await createVisualFlyingProjectile(
-                state.casterUnit,
-                firstTarget,
-                'projectile/arrow_ghost',
-              ).then(() => {
+            }
+          } else {
+            promises.push(createVisualFlyingProjectile(
+              state.casterUnit,
+              firstTarget,
+              'projectile/arrow_ghost',
+            ).then(() => {
+              if (Unit.isUnit(firstTarget)) {
                 addTarget(firstTarget, state);
                 // Animations do not occur on headless
                 if (!globalThis.headless) {
                   return new Promise<void>((resolve) => {
                     if (globalThis.predictionGraphics) {
-                      globalThis.predictionGraphics.clear();
                       globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0)
                       playSFXKey(`targetAquired0`);
                       globalThis.predictionGraphics.drawCircle(firstTarget.x, firstTarget.y, config.COLLISION_MESH_RADIUS);
@@ -72,20 +67,19 @@ Does not stack.
                     } else {
                       resolve();
                     }
-                  }).then(() => {
-                    globalThis.predictionGraphics?.clear();
-                  });
+                  })
                 }
-                return;
-              });
-            }
-          } else {
-            refundLastSpell(state, prediction, 'No target, mana refunded.')
+              }
+              return;
+            }));
           }
         } else {
           refundLastSpell(state, prediction, 'No target, mana refunded.')
         }
       }
+      await Promise.all(promises).then(() => {
+        globalThis.predictionGraphics?.clear();
+      });
       return state;
     },
   }

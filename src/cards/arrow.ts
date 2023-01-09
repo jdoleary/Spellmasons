@@ -1,12 +1,13 @@
 import * as Unit from '../entity/Unit';
 import { CardCategory } from '../types/commonTypes';
-import { getCurrentTargets, refundLastSpell, Spell } from './index';
+import { refundLastSpell, Spell } from './index';
 import * as math from '../jmath/math';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { createVisualFlyingProjectile, SPEED_PER_MILLI } from '../entity/Projectile';
-import { findWherePointIntersectLineSegmentAtRightAngle } from '../jmath/lineSegment';
+import { closestLineSegmentIntersectionWithLine, findWherePointIntersectLineSegmentAtRightAngle } from '../jmath/lineSegment';
 import * as config from '../config';
 import { add, Vec2 } from '../jmath/Vec';
+import Underworld from '../Underworld';
 
 export const arrowCardId = 'Arrow';
 const damageDone = 10;
@@ -32,32 +33,25 @@ Cannot pass through walls.
       let targets: Vec2[] = state.targetedUnits;
       targets = targets.length ? targets : [state.castLocation];
       for (let target of targets) {
-        const flightPath = add(state.casterUnit, math.similarTriangles(target.x - state.casterUnit.x, target.y - state.casterUnit.y, math.distance(state.casterUnit, target), 1000));
-        // Get all units between source and target for the arrow to pierce:
-        const firstTarget = (prediction ? underworld.unitsPrediction : underworld.units).find(
-          (u) => {
-            const pointAtRightAngleToArrowPath = findWherePointIntersectLineSegmentAtRightAngle(u, { p1: state.casterUnit, p2: flightPath });
-            const willBeStruckByArrow = !pointAtRightAngleToArrowPath ? false : math.distance(u, pointAtRightAngleToArrowPath) <= config.COLLISION_MESH_RADIUS * 2
-            // Note: Filter out self as the arrow shouldn't damage caster
-            return u.alive && willBeStruckByArrow && u.id !== state.casterUnit.id;
-          },
-        );
+        const arrowUnitCollisions = findArrowUnitCollisions(state.casterUnit, target, prediction, underworld);
+        // This regular arrow spell doesn't pierce
+        const firstTarget = arrowUnitCollisions[0];
         if (firstTarget) {
-          // Prevent arrow from going through walls
-          if (underworld.hasLineOfSight(state.casterUnit, firstTarget)) {
-            if (prediction) {
-              Unit.takeDamage(firstTarget, damageDone, state.casterUnit, underworld, prediction, undefined, { thinBloodLine: true });
-            } else {
-              await createVisualFlyingProjectile(
-                state.casterUnit,
-                firstTarget,
-                'projectile/arrow',
-              ).then(() => {
+          if (!prediction) {
+            await createVisualFlyingProjectile(
+              state.casterUnit,
+              firstTarget,
+              'projectile/arrow',
+            ).then(() => {
+              if (Unit.isUnit(firstTarget)) {
+
                 Unit.takeDamage(firstTarget, damageDone, state.casterUnit, underworld, prediction, undefined, { thinBloodLine: true });
-              });
-            }
+              }
+            });
           } else {
-            refundLastSpell(state, prediction, 'No target, mana refunded.')
+            if (Unit.isUnit(firstTarget)) {
+              Unit.takeDamage(firstTarget, damageDone, state.casterUnit, underworld, prediction, undefined, { thinBloodLine: true });
+            }
           }
         } else {
           refundLastSpell(state, prediction, 'No target, mana refunded.')
@@ -68,3 +62,39 @@ Cannot pass through walls.
   }
 };
 export default spell;
+
+export function findArrowUnitCollisions(casterUnit: Unit.IUnit, target: Vec2, prediction: boolean, underworld: Underworld): Vec2[] {
+  // Find a point that the arrow is shooting towards that is sure to be farther than the farthest wall
+  let endPoint = add(casterUnit, math.similarTriangles(target.x - casterUnit.x, target.y - casterUnit.y, math.distance(casterUnit, target), 10000));
+  let arrowShootPath = { p1: casterUnit, p2: endPoint };
+  // revise end point to stop where it hits the first wall
+  const LOSResult = closestLineSegmentIntersectionWithLine(arrowShootPath, underworld.walls);
+  const intersection = LOSResult ? LOSResult.intersection : undefined;
+  if (intersection) {
+    endPoint = intersection;
+    // revise arrow shoot path now that endpoint has changed
+    arrowShootPath = { p1: casterUnit, p2: endPoint };
+  } else {
+    console.error('Unexpected: arrow couldnt find wall to intersect with');
+  }
+  // Get all units between source and target for the arrow to pierce:
+  const hitTargets = (prediction ? underworld.unitsPrediction : underworld.units).filter(
+    (u) => {
+      if (!u.alive) {
+        return false;
+      }
+      // Note: Filter out self as the arrow shouldn't damage caster
+      if (u.id == casterUnit.id) {
+        return false;
+      }
+      const pointAtRightAngleToArrowPath = findWherePointIntersectLineSegmentAtRightAngle(u, arrowShootPath);
+      // TODO: Validate: Will this hit miniboss since their radius is larger?
+      const willBeStruckByArrow = !pointAtRightAngleToArrowPath ? false : math.distance(u, pointAtRightAngleToArrowPath) <= config.COLLISION_MESH_RADIUS * 2
+      return willBeStruckByArrow;
+    },
+  ).sort((a, b) => {
+    return math.distance(a, arrowShootPath.p1) - math.distance(b, arrowShootPath.p1);
+  });
+  // Return the endPoint so the arrow will fly and hit a wall even if it doesn't hit a unit
+  return hitTargets.length ? hitTargets : [endPoint];
+}
