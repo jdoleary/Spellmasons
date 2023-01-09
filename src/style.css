@@ -834,10 +834,6 @@ body.your-turn #end-turn-btn:hover {
   width: 100%;
 }
 
-#inspector-tooltip-inner img {
-  width: 100%;
-}
-
 #inspector-tooltip-container {
   color: white;
   width: 340px;

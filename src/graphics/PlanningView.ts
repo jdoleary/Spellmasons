@@ -800,7 +800,7 @@ export function updateTooltipContent(underworld: Underworld) {
           // NOTE: globalThis.selectedUnit.name is NOT localized on purpose
           // because those are user provided names
           text += `\
-<img width="252" src="${Unit.getExplainPathForUnitId(unitSource.id)}"/>
+<img width="100%" src="${Unit.getExplainPathForUnitId(unitSource.id)}"/>
 <h1>${globalThis.selectedUnit.name || i18n(unitSource.id)}</h1>
 <hr/>
 <div>${i18n(unitSource.info.description.trim())}</div>
