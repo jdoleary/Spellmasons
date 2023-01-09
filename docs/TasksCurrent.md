@@ -13,12 +13,16 @@
         - Make ghost arrow spell for player
     - BALANCE unit spawns especially on later levels
         - Maybe not exponential budget?
+    - fix opening book animation playing when you don't have to wait to cast, allow it to exit early
     - Test on different resolutions
+    - Implement
+        - Ghost arrow
     - **Email streamers**, try to set up a multiplayer stream on release day
     - Reach out to translators
     - Balanced / Difficult
     - Content: Add Copy Soul vs capture soul.  Capture soul should let you spawn them for no mana cost but they need to be below 25% health to be captured.  Copy Soul gives you the summon card.
     - Solve many enemies overkilling allied unit
+    - Add refunds to as many spells as possible if they have no effect
     - Multiplayer
         - LAN hosting: Support hosting a server from in the game exe
         - Server Browser
@@ -82,7 +86,7 @@
     
 - Add codex where you can read about spells and enemies
 ---
-- Need sound effect for bolt, improve bolt animation
+- Need sound effect for bolt, improve bolt animation, consume, conserve
 - Arrow collisions don't work right when used with target_circle first
 - Capture soul should kill the enemy and animate a soul coming too you.
 - Heat seeking skull with particle effects behind it.  You release it and it seeks out the nearest enemy to deal damage
