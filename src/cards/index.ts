@@ -64,6 +64,7 @@ import arrow from './arrow';
 import target_arrow from './target_arrow';
 import bolt from './bolt';
 import conserve from './conserve';
+import phantom_arrow from './phantom_arrow';
 
 import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
@@ -196,6 +197,7 @@ export function registerCards(overworld: Overworld) {
   register(capture_soul, overworld);
   register(sacrifice, overworld);
   register(arrow, overworld);
+  register(phantom_arrow, overworld);
   register(target_arrow, overworld);
   register(bolt, overworld);
   register(conserve, overworld);

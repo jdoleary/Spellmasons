@@ -3,8 +3,8 @@ import { CardCategory } from '../types/commonTypes';
 import { refundLastSpell, Spell } from './index';
 import * as math from '../jmath/math';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
-import { createVisualFlyingProjectile, SPEED_PER_MILLI } from '../entity/Projectile';
-import { closestLineSegmentIntersectionWithLine, findWherePointIntersectLineSegmentAtRightAngle } from '../jmath/lineSegment';
+import { createVisualFlyingProjectile } from '../entity/Projectile';
+import { closestLineSegmentIntersectionWithLine, findWherePointIntersectLineSegmentAtRightAngle, LineSegment } from '../jmath/lineSegment';
 import * as config from '../config';
 import { add, Vec2 } from '../jmath/Vec';
 import Underworld from '../Underworld';
@@ -62,8 +62,8 @@ Cannot pass through walls.
   }
 };
 export default spell;
-
-export function findArrowUnitCollisions(casterUnit: Unit.IUnit, target: Vec2, prediction: boolean, underworld: Underworld): Vec2[] {
+// Returns the start and end point that an arrow will take until it hits a wall
+export function findArrowPath(casterUnit: Unit.IUnit, target: Vec2, underworld: Underworld): LineSegment {
   // Find a point that the arrow is shooting towards that is sure to be farther than the farthest wall
   let endPoint = add(casterUnit, math.similarTriangles(target.x - casterUnit.x, target.y - casterUnit.y, math.distance(casterUnit, target), 10000));
   let arrowShootPath = { p1: casterUnit, p2: endPoint };
@@ -73,10 +73,16 @@ export function findArrowUnitCollisions(casterUnit: Unit.IUnit, target: Vec2, pr
   if (intersection) {
     endPoint = intersection;
     // revise arrow shoot path now that endpoint has changed
-    arrowShootPath = { p1: casterUnit, p2: endPoint };
+    return { p1: casterUnit, p2: endPoint };
   } else {
     console.error('Unexpected: arrow couldnt find wall to intersect with');
+    return { p1: casterUnit, p2: target };
   }
+
+}
+
+export function findArrowUnitCollisions(casterUnit: Unit.IUnit, target: Vec2, prediction: boolean, underworld: Underworld): Vec2[] {
+  const arrowShootPath = findArrowPath(casterUnit, target, underworld);
   // Get all units between source and target for the arrow to pierce:
   const hitTargets = (prediction ? underworld.unitsPrediction : underworld.units).filter(
     (u) => {
@@ -96,5 +102,5 @@ export function findArrowUnitCollisions(casterUnit: Unit.IUnit, target: Vec2, pr
     return math.distance(a, arrowShootPath.p1) - math.distance(b, arrowShootPath.p1);
   });
   // Return the endPoint so the arrow will fly and hit a wall even if it doesn't hit a unit
-  return hitTargets.length ? hitTargets : [endPoint];
+  return hitTargets.length ? hitTargets : [arrowShootPath.p2];
 }

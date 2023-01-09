@@ -17,6 +17,7 @@
             - if not, change the end destination to the first unit
     - Offset floating text for perks when they proc
     ---
+    - integrate Che new end turn btn
     - Improve difficulty scaling with over 4 players
     - BALANCE unit spawns especially on later levels
         - Maybe not exponential budget?
