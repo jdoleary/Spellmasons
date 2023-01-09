@@ -641,7 +641,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         globalThis.resMarkers = [];
 
         // If multiplayer, play channelling animation until you are able to cast
-        if (overworld.underworld?.players.length || 0 > 1) {
+        if ((overworld.underworld?.players.length || 0) > 1) {
           Player.setSpellmasonsToChannellingAnimation(selfPlayer);
         }
         overworld.pie.sendData({
