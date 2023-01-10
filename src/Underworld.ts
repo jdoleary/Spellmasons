@@ -1714,10 +1714,6 @@ export default class Underworld {
   }
   tryGameOver(): boolean {
     const isOver = this.isGameOver();
-    // Remove quicksave on game over since the game is no longer 'resumable"
-    if (isOver) {
-      storage.remove(`${globalThis.savePrefix}${globalThis.quicksaveKey}`);
-    }
     document.body.classList.toggle('game-over', isOver);
     if (globalThis.headless) {
       if (isOver) {
