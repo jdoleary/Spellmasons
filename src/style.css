@@ -191,6 +191,11 @@ body.view-Game.showUpgrades #upgrade-picker {
   font-size: 1.5em;
 }
 
+#upgrade-picker .FORBIDDEN .card-title,
+.card-inspect .FORBIDDEN .card-title {
+  outline: 4px solid #000000;
+}
+
 #upgrade-picker .card-title,
 .card-inspect .card-title {
   text-align: center;
@@ -199,12 +204,12 @@ body.view-Game.showUpgrades #upgrade-picker {
   margin: 0;
   padding: 0;
   height: unset;
-  /* Style title */
   background-color: #e7d1a6;
-  border: 8px solid #b0935a;
+  border: 8px solid #e7d1a6;
+  outline: 4px solid #b0935a;
   min-width: 50%;
   margin: 0 auto;
-  transform: translate(0px, -18px);
+  transform: translate(0px, -9px);
 }
 
 #upgrade-picker .card-thumb,
