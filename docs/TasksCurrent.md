@@ -1,19 +1,21 @@
 # Focus
 - Get build ready for streamers and reach out
+- Fix text overflow on spell cards ("connect", "decoy")
+- bug: blood golem somehow moved during ranged unit turn (i had just chain pushed damaged him) and killed me without forcasting it
+- bug: i18n target similar is keeping an exclamation emoji used for \n
 # Before next streamer outreach
+    - Improve difficulty scaling with over 4 players
+    - BALANCE unit spawns especially on later levels
+        - Maybe not exponential budget?
     - bug: changing color without clicking out of color picker changes robe but not magic color
     - test new spells in multiplayer
-    - test perk list on small resoution
-    - test new toolbar on small resolution
     - test multiplayer
+    - bug: every level perks are not triggering
 
 # Desired Schedule
 - word wrap on spells that are too long looks off
 - January 1/8-1/14
     - Offset floating text for perks when they proc
-    - Improve difficulty scaling with over 4 players
-    - BALANCE unit spawns especially on later levels
-        - Maybe not exponential budget?
     - fix opening book animation playing when you don't have to wait to cast, allow it to exit early
     - Test on different resolutions
     - **Email streamers**, try to set up a multiplayer stream on release day
@@ -87,7 +89,7 @@
     
 - Add codex where you can read about spells and enemies
 ---
-- Need sound effect for bolt, improve bolt animation, consume, conserve
+- Need sound effect for bolt, improve bolt animation, consume, conserve, reroll
 - Arrow collisions don't work right when used with target_circle first
 - Capture soul should kill the enemy and animate a soul coming too you.
 - Heat seeking skull with particle effects behind it.  You release it and it seeks out the nearest enemy to deal damage
