@@ -1732,7 +1732,7 @@ body.auto-camera #camera-recenter-tip {
 #card-holders-border {
   background-image: url("/ui/spellBar.png");
   background-repeat: no-repeat;
-  margin-bottom: 8px;
+  padding-bottom: 8px;
   /* Matches the dimentions of the spellBar.png exactly */
   width: 954px;
   height: 147px;
