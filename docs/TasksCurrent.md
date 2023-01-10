@@ -1,21 +1,20 @@
 # Focus
 - Get build ready for streamers and reach out
-- Fix text overflow on spell cards ("connect", "decoy")
+- Fix text overflow on spell cards ("connect", "decoy", "bleed")
 - bug: blood golem somehow moved during ranged unit turn (i had just chain pushed damaged him) and killed me without forcasting it
 - bug: i18n target similar is keeping an exclamation emoji used for \n
 # Before next streamer outreach
+    - test trigger perk certainty on multiplayer
     - Improve difficulty scaling with over 4 players
     - BALANCE unit spawns especially on later levels
         - Maybe not exponential budget?
     - bug: changing color without clicking out of color picker changes robe but not magic color
     - test new spells in multiplayer
     - test multiplayer
-    - bug: every level perks are not triggering
 
 # Desired Schedule
 - word wrap on spells that are too long looks off
 - January 1/8-1/14
-    - Offset floating text for perks when they proc
     - fix opening book animation playing when you don't have to wait to cast, allow it to exit early
     - Test on different resolutions
     - **Email streamers**, try to set up a multiplayer stream on release day
@@ -76,6 +75,8 @@
         - Bulletproof Updating and Error Reporting
 - January 31 (check timezone)
     - Remove "Beta" Near version number
+    - Verify release discount
+    - Add package for buying multiple copies
     - Release
 - Other 
     - 2nd algorithm for generating levels

@@ -179,14 +179,14 @@ export function generatePerks(number: number, underworld: Underworld): Attribute
 }
 export function choosePerk(perk: AttributePerk, player: IPlayer, underworld: Underworld) {
     if (perk.when == 'immediately') {
-        tryTriggerPerk(perk, player, 'immediately', underworld);
+        tryTriggerPerk(perk, player, 'immediately', underworld, 0);
     } else {
         player.attributePerks.push(perk);
         // Due to the perks showing up after tryTriggerPerk for the everyLevel perks has already been called,
         // when a user chooses an everyLevel perk it should both trigger immediately, and get added to their
         // attributePerks array
         if (perk.when == 'everyLevel') {
-            tryTriggerPerk(perk, player, 'everyLevel', underworld);
+            tryTriggerPerk(perk, player, 'everyLevel', underworld, 0);
         }
     }
     // Reset reroll counter now that player has chosen a perk 
@@ -244,10 +244,10 @@ export interface AttributePerk {
     amount: number;
 
 }
-export function tryTriggerPerk(perk: AttributePerk, player: IPlayer, when: WhenUpgrade, underworld: Underworld) {
+export function tryTriggerPerk(perk: AttributePerk, player: IPlayer, when: WhenUpgrade, underworld: Underworld, offsetNotifyByMs: number) {
     if (perk.when == when) {
         // Seeded random based on the turn so it's consistent across all clients
-        const random = seedrandom(`${underworld.seed}-${underworld.levelIndex}-${underworld.turn_number}`);
+        const random = seedrandom(`${underworld.seed}-${underworld.levelIndex}-${underworld.turn_number}-${player.clientId}`);
         const pick = random.quick();
         const doTriggerPerk = pick <= perk.certainty;
         const oldAttributeAmount = player.unit[perk.attribute];
@@ -258,8 +258,11 @@ export function tryTriggerPerk(perk: AttributePerk, player: IPlayer, when: WhenU
                 player.unit[perk.attribute] *= perk.amount;
                 player.unit[perk.attribute] = Math.ceil(player.unit[perk.attribute]);
             }
-            // TODO: offset multiple
-            floatingText({ coords: player.unit, text: `+${player.unit[perk.attribute] - oldAttributeAmount} ${perkAttributeToString(perk.attribute)}` });
+            if (player === globalThis.player) {
+                setTimeout(() => {
+                    floatingText({ coords: player.unit, text: `+${player.unit[perk.attribute] - oldAttributeAmount} ${perkAttributeToString(perk.attribute)}` });
+                }, offsetNotifyByMs);
+            }
             // Now that the player unit's properties have changed, sync the new
             // state with the player's predictionUnit so it is properly
             // refelcted in the bar

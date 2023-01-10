@@ -27,7 +27,7 @@ import { cameraAutoFollow, runCinematicLevelCamera } from '../graphics/PixiUtils
 import { Overworld } from '../Overworld';
 import { playerCastAnimationColor, playerCastAnimationColorLighter, playerCastAnimationGlow } from '../graphics/ui/colors';
 import { lightenColor } from '../graphics/ui/colorUtil';
-import { choosePerk } from '../Perk';
+import { choosePerk, tryTriggerPerk } from '../Perk';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -387,6 +387,14 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
             cameraAutoFollow(true);
           }
           Unit.setLocation(fromPlayer.unit, payload);
+          // Trigger 'everyLevel' attributePerks
+          // now that the player has spawned in at the new level
+          for (let i = 0; i < fromPlayer.attributePerks.length; i++) {
+            const perk = fromPlayer.attributePerks[i];
+            if (perk) {
+              tryTriggerPerk(perk, fromPlayer, 'everyLevel', underworld, 700 * i);
+            }
+          }
           // Detect if player spawns in liquid
           tryFallInOutOfLiquid(fromPlayer.unit, underworld, false);
           // Animate effect of unit spawning from the sky

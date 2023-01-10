@@ -1614,10 +1614,6 @@ export default class Underworld {
     console.log('Setup: resetPlayerForNextLevel; reset all players')
     for (let player of this.players) {
       Player.resetPlayerForNextLevel(player, this);
-      // Trigger attributePerks
-      for (let perk of player.attributePerks) {
-        tryTriggerPerk(perk, player, 'everyLevel', this);
-      }
     }
     // Change song now that level has changed:
     if (globalThis.playNextSong) {
@@ -1928,8 +1924,11 @@ export default class Underworld {
         }
       }
       // Trigger attributePerks
-      for (let perk of player.attributePerks) {
-        tryTriggerPerk(perk, player, 'everyTurn', this);
+      for (let i = 0; i < player.attributePerks.length; i++) {
+        const perk = player.attributePerks[i];
+        if (perk) {
+          tryTriggerPerk(perk, player, 'everyTurn', this, 700 * i);
+        }
       }
       // Trigger onTurnStart Events
       const onTurnStartEventResults: boolean[] = await Promise.all(player.unit.onTurnStartEvents.map(
