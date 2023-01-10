@@ -8,9 +8,35 @@
     - test multiplayer
 
 # Desired Schedule
+- i18n: level #
+    -    Restores stamina to #
+    - + radius to "Plus Radius"
+    - Deals 3 to any unit that touches it
+    - key to: Red Portal Description
+    - "Okay!" in game to "Okay" in i18n
+    - "Golem description"
+    - key to: "expalain forge order"
+    - key: "explain liquid damage"
+    - "explain minibosses"
+    - unit descriptions should have unit name separate from the i18n key so it can be within an <h1>
+    - health potion description
+    - 🍞 only modifies spells on its right
+    - explain end turn
+    - explain overfill
+    - glop description
+    - explain attention markers
+    - explain scrolls
+    - explain death
+    - explain portal
+    - skip tutorial detail
+    - 2 lines: "no targets close enough to shove" "mana refunded"
+    - archer description
+    - key rebinding: "spell 🍞"
+    - explain blessings
+    - skip tutorial are you sure
+    - to make view auto follow you
 - January 1/8-1/14
     - Offset floating text for perks when they proc
-    - integrate Che new end turn btn
     - Add health bar glow and replace screenshots on Steam
     - Improve difficulty scaling with over 4 players
     - BALANCE unit spawns especially on later levels
