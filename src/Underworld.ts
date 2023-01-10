@@ -2674,7 +2674,7 @@ export default class Underworld {
     // (burst relies on proximity to deal damage)
     // and then move, it can change the outcome from
     // different than what was predicted.  Same with arrow spells
-    if (casterPlayer) {
+    if (casterPlayer && !prediction) {
       casterPlayer.isCasting = true;
     }
     const castingParticleEmitter = makeRisingParticles(effectState.casterUnit, prediction, hexToString(magicColor || 0xffffff), -1);
@@ -2779,7 +2779,7 @@ export default class Underworld {
     }
 
     // Make caster movable again now that they are done casting
-    if (casterPlayer) {
+    if (casterPlayer && !prediction) {
       casterPlayer.isCasting = false;
     }
     stopAndDestroyForeverEmitter(castingParticleEmitter);

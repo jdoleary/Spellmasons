@@ -1,8 +1,7 @@
 # Focus
 - Get build ready for streamers and reach out
-- Finish localization for spell descriptions
-    - They need to be translated when they are used, not at compile time
 # Before next streamer outreach
+    - bug: changing color without clicking out of color picker changes robe but not magic color
     - test new spells in multiplayer
     - test perk list on small resoution
     - test new toolbar on small resolution
@@ -12,7 +11,6 @@
 - word wrap on spells that are too long looks off
 - January 1/8-1/14
     - Offset floating text for perks when they proc
-    - Add health bar glow and replace screenshots on Steam
     - Improve difficulty scaling with over 4 players
     - BALANCE unit spawns especially on later levels
         - Maybe not exponential budget?
