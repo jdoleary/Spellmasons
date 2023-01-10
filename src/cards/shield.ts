@@ -24,10 +24,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.SPECIAL],
     thumbnail: 'spellIconShield.png',
     animationPath: 'spell-effects/spellShield',
-    description: `
-Protects bearer from the next ${damageBlocked} damage that they would incur.
-Stackable.
-    `,
+    description: ['spell_shield', damageBlocked.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);

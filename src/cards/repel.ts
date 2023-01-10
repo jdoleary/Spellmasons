@@ -17,9 +17,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconRepel.png',
-    description: `
-Pushes the target(s) away from the cast location.
-    `,
+    description: 'spell_repel',
     effect: async (state, card, quantity, underworld, prediction) => {
       let promises = [];
       const awayFrom = state.castLocation;

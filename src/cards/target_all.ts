@@ -23,9 +23,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.FORBIDDEN],
     thumbnail: 'spellIconTargetKind.png',
     requiresFollowingCard: true,
-    description: `
-Targets everything of the same type of the original target.  Matches units, corpses, and pickups.
-    `,
+    description: 'spell_target_kind',
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
       // Note: This loop must NOT be a for..of and it must cache the length because it

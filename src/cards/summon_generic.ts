@@ -77,10 +77,7 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean):
             // These cards are not available as upgrades and must be accessed through capture_soul
             probability: 0,
             thumbnail: `spellIconSummon_${unitId.split(' ').join('').toLowerCase()}.png`,
-            description: `
-Summons ${unitId[0]?.toLowerCase() == 'a' ? `an ${unitId}` : `a ${unitId}`} to fight for your faction.
-Takes ${expenseScaling} turns to return to original mana cost after casting.
-    `,
+            description: [`spell_summon_generic`, unitId, expenseScaling.toString()],
             allowNonUnitTarget: true,
             effect: async (state, card, quantity, underworld, prediction) => {
                 const sourceUnit = allUnits[unitId];

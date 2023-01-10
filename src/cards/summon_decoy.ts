@@ -21,12 +21,7 @@ const spell: Spell = {
     expenseScaling: 3,
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconDecoy.png',
-    description: `
-Summons a decoy.
-The decoy attracts attacks for enemies that it is closer to that you are.
-The decoy has health but cannot move.  It will be destroyed when its health reaches 0.
-Multiple sequential decoy spells will create a decoy with more health.
-    `,
+    description: 'spell_summon_decoy',
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction) => {
       const unitId = 'decoy';

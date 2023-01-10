@@ -26,10 +26,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.SPECIAL],
     thumbnail: 'spellIconTargetCone.png',
     requiresFollowingCard: true,
-    description: `
-Adds targets to the spell in a cone shape.
-"${id}" can be cast multiple times in succession to expand the angle of the cone.
-    `,
+    description: 'spell_target_cone',
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
       const adjustedRange = range + state.aggregator.radius;

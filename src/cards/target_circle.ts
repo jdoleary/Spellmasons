@@ -23,10 +23,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconExpanding.png',
     requiresFollowingCard: true,
-    description: `
-Adds targets to the spell in a circle.
-"${id}" can be cast multiple times in succession to stack it's effect.
-    `,
+    description: 'spell_target_circle',
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
       const adjustedRange = baseRadius * quantity + state.aggregator.radius;

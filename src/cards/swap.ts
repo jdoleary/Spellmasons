@@ -22,9 +22,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.RARE],
     expenseScaling: 1,
     thumbnail: 'spellIconSwap.png',
-    description: `
-Swaps the caster with the target.
-    `,
+    description: 'spell_swap',
     effect: async (state, card, quantity, underworld, prediction) => {
       const { casterUnit } = state;
       playDefaultSpellSFX(card, prediction);

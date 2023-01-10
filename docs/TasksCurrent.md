@@ -9,6 +9,7 @@
     - test multiplayer
 
 # Desired Schedule
+- word wrap on spells that are too long looks off
 - January 1/8-1/14
     - Offset floating text for perks when they proc
     - Add health bar glow and replace screenshots on Steam

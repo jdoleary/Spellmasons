@@ -30,9 +30,7 @@ const spell: Spell = {
     thumbnail: 'spellIconHurt.png',
     animationPath,
     sfx: 'hurt',
-    description: `
-Deals ${damageDone} damage
-    `,
+    description: ['spell_slash', damageDone.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       let animationDelaySum = 0;
       // .filter: only target living units

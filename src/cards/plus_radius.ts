@@ -15,12 +15,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconPlusRadius.png',
     requiresFollowingCard: true,
-    description: `
-Increases the radius of the impact of other spells.
-Works well with Bloat, Contageous, and Targeting Spells.
-Note: ${id} only affects spells that are forged AFTER it.
-For example: ${id} then Connect will increase the Connect Radius.
-    `,
+    description: 'spell_plus_radius',
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
       const adjustedRadius = radiusIncreaseAmount * quantity;

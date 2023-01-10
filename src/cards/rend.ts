@@ -38,9 +38,7 @@ const spell: Spell = {
     thumbnail: 'spellIconRend.png',
     animationPath,
     sfx: 'rend',
-    description: `
-Deals damage based on the number of consecutive stacks of ${rendCardId}.
-Total damage dealt for each consecutive ${rendCardId}: ${calculateRendDamage(1)}, ${calculateRendDamage(2)}, ${calculateRendDamage(3)}, ${calculateRendDamage(4)}, ${calculateRendDamage(5)}, ${calculateRendDamage(6)}, ${calculateRendDamage(7)}, ${calculateRendDamage(8)}, ${calculateRendDamage(9)}, ${calculateRendDamage(10)}`,
+    description: ['spell_rend', `${calculateRendDamage(1)}, ${calculateRendDamage(2)}, ${calculateRendDamage(3)}, ${calculateRendDamage(4)}, ${calculateRendDamage(5)}, ${calculateRendDamage(6)}, ${calculateRendDamage(7)}, ${calculateRendDamage(8)}, ${calculateRendDamage(9)}, ${calculateRendDamage(10)}`],
     effect: async (state, card, quantity, underworld, prediction) => {
       const damage = calculateRendDamage(quantity);
       // .filter: only target living units

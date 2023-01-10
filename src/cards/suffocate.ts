@@ -50,12 +50,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconSuffocate.png',
     // animationPath: 'spell-effects/TODO',
-    description: `
-A curse that causes sudden death after a number of turns have passed.
-The number of turns are relative to the target's health when the curse it applied.
-Less current health = quicker death.
-Stacking ${suffocateCardId} will make death occur in less turns.
-    `,
+    description: 'spell_suffocate',
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);

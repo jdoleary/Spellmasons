@@ -20,9 +20,7 @@ const spell: Spell = {
     expenseScaling: 3,
     probability: probabilityMap[CardRarity.RARE],
     thumbnail,
-    description: `
-Resurrects a dead unit and converts them to the caster's faction.
-    `,
+    description: 'spell_resurrect',
     effect: async (state, card, quantity, underworld, prediction) => {
       const animationPromises = [];
       const targets = state.targetedUnits;

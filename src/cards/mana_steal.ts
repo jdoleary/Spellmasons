@@ -24,9 +24,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.SPECIAL],
     thumbnail: 'spellIconManaSteal.png',
-    description: `
-Sacrifice some of own health to steal up to ${mana_stolen} mana from each target.  Only works on unit's that have mana.
-    `,
+    description: ['spell_mana_steal', mana_stolen.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive && u.mana > 0);

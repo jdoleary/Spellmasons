@@ -18,10 +18,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconPurify.png',
     animationPath: 'spell-effects/spellPurify',
-    description: `
-Removes all curses from the target(s).
-A curse is a harmful modifier that is attached to a unit: for example: poison, bloat, and freeze are curses.
-    `,
+    description: 'spell_purify',
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);

@@ -24,11 +24,7 @@ const spell: Spell = {
     requiresFollowingCard: true,
     animationPath: '',
     sfx: '',
-    description: `
-Fires a targeting arrow.
-The first entity that the arrow strikes becomes a target for the following spells.
-Does not stack.
-    `,
+    description: 'spell_target_arrow',
     effect: async (state, card, quantity, underworld, prediction) => {
       let targets: Vec2[] = state.targetedUnits;
       targets = targets.length ? targets : [state.castLocation];

@@ -103,10 +103,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.FORBIDDEN],
     expenseScaling: 2,
     thumbnail: 'spellIconSplit.png',
-    description: `
-Splits the unit into 2 smaller weaker versions of itself.
-Cannot split further than ${splitLimit} times.
-    `,
+    description: ['spell_split', splitLimit.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // Batch find targets that should be cloned
       // Note: They need to be batched so that the new clones don't get cloned

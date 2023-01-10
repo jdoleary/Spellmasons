@@ -27,10 +27,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.SPECIAL],
     thumbnail: 'spellIconTargetColumn.png',
     requiresFollowingCard: true,
-    description: `
-Adds targets to the spell in a column.
-"${id}" can be cast multiple times in succession to expand the width of the column. 
-    `,
+    description: 'spell_target_column',
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
       const depth = range + state.aggregator.radius;

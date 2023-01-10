@@ -16,10 +16,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconVortex.png',
-    description: `
-Pulls the target(s) towards the cast location.
-Note: ${id} is best used with a Targeting spell so that the cast location is far away from the target.  Try using it with Connect or Target Cone to get a feel for how it works.
-    `,
+    description: 'spell_vortex',
     effect: async (state, card, quantity, underworld, prediction) => {
       let promises = [];
       playDefaultSpellSFX(card, prediction);

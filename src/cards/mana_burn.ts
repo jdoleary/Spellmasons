@@ -19,9 +19,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconManaBurn.png',
     animationPath: 'spell-effects/spellManaBurn',
-    description: `
-Burn up to ${mana_burnt} of the targets' mana dealing damage based on the amount of mana burnt.
-    `,
+    description: ['spell_mana_burn', mana_burnt.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive && u.mana > 0);

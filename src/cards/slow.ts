@@ -57,10 +57,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconSlow.png',
     animationPath: '',
-    description: `
-Reduces the targets maxStamina to ${Math.floor(changeProportion * 100)}%.
-Stackable.
-    `,
+    description: ['spell_slow', Math.floor(changeProportion * 100).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);

@@ -23,9 +23,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconSacrifice.png',
-    description: `
-Instantly kill an ally to gain their current health.
-    `,
+    description: 'spell_sacrifice',
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive && u.health > 0);

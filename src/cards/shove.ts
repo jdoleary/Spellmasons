@@ -22,12 +22,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconShove.png',
-    description: `
-A magical shove!
-Shoves the target, hard, away from you.
-The target must be within arm's reach.
-Note: You can deal damage if a unit is shoved hard enough into a wall.
-    `,
+    description: 'spell_shove',
     effect: async (state, card, quantity, underworld, prediction) => {
       let promises = [];
       const awayFrom = state.casterUnit;

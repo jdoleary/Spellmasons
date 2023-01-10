@@ -25,7 +25,8 @@ const spell: Spell = {
     thumbnail: 'spellIconTargetSimilar.png',
     requiresFollowingCard: true,
     description: `
-Targets the nearest entity of the same kind as the cast target.
+Targets the nearest entity of the same kind as the cast target.❕
+
 
 Each stack of this spell will target an additional entity.
     `,

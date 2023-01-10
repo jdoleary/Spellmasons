@@ -23,9 +23,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconPull.png',
-    description: `
-Pulls the target(s) towards the caster 
-    `,
+    description: 'spell_pull',
     effect: async (state, card, quantity, underworld, prediction) => {
       let promises = [];
       playDefaultSpellSFX(card, prediction);

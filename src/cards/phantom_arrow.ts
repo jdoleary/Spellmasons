@@ -23,11 +23,7 @@ const spell: Spell = {
     allowNonUnitTarget: true,
     animationPath: '',
     sfx: '',
-    description: `
-Fires an arrow that deals ${damageDone} damage.
-Pierces Units.
-Cannot pass through walls.
-    `,
+    description: ['spell_phantom_arrow', damageDone.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       let targets: Vec2[] = state.targetedUnits;
       targets = targets.length ? targets : [state.castLocation];

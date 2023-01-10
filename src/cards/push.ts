@@ -23,9 +23,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconPush.png',
-    description: `
-Pushes the target(s) away from the caster 
-    `,
+    description: 'spell_push',
     effect: async (state, card, quantity, underworld, prediction) => {
       let promises = [];
       const awayFrom = state.casterUnit;

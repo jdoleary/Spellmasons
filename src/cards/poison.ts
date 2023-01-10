@@ -56,11 +56,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconPoison.png',
     animationPath: 'spell-effects/spellPoison',
-    description: `
-Poisons all target(s).  ${poisonCardId} will deal ${baseDamage} base damage every turn
-at the start of the unit's turn.
-Stackable.
-    `,
+    description: ['spell_poison', baseDamage.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);
