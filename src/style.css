@@ -933,14 +933,14 @@ body.showUpgrades #inspector-tooltip {
 
 /* 2nd health fill is for shield */
 #health .fill:nth-child(2) {
-  background-color: #714d33;
+  background-color: #5c0009;
 }
 
 /* 2nd health cost is for shield */
 #health .cost:nth-child(4) {
   background: repeating-linear-gradient(45deg,
-      #714d33,
-      #714d33 10px,
+      #5c0009,
+      #5c0009 10px,
       rgba(0, 0, 0, 0.0) 10px,
       rgba(0, 0, 0, 0.0) 20px) fixed;
 }
