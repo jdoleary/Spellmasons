@@ -322,6 +322,7 @@ setTurnPhase( Stalled )
 # Optimization
 - Optimize: targeting spells seem pretty slow in prediction
 - optimize: Ihave duplicate units, pickups, and doodads in save due to serailizeForSaving having them in the underworld and extracting them to the top level too
+- Freeze + target circle +arrow slowed down the computer when only myself and 1 archer was selected while I was moving around
 
 ## Stretch Content
 - Magic arrow spell (travels out of range, like ghost arrow)
