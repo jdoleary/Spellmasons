@@ -23,10 +23,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconFreeze.png',
     animationPath: 'spell-effects/spellFreeze',
-    description: `
-Freezes the target(s) for 1 turn, preventing them from moving or acting.
-"Freeze" can be cast multiple times in succession to stack it's effect.
-    `,
+    description: 'spell_freeze',
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);

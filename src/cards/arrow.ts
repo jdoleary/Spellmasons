@@ -25,10 +25,7 @@ const spell: Spell = {
     allowNonUnitTarget: true,
     animationPath: '',
     sfx: '',
-    description: `
-Fires an arrow that deals ${damageDone} damage to the first unit that it strikes.
-Cannot pass through walls.
-    `,
+    description: ['spell_arrow', damageDone.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       let targets: Vec2[] = state.targetedUnits;
       targets = targets.length ? targets : [state.castLocation];

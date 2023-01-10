@@ -25,9 +25,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.SPECIAL],
     thumbnail: 'spellIconDrown.png',
     sfx: 'drown',
-    description: `
-Deal ${damageDone} damage ONLY if target is submerged.
-    `,
+    description: ['spell_drown', damageDone.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units that are submerged
       const targets = state.targetedUnits.filter(u => u.alive && u.inLiquid);

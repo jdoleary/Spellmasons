@@ -22,9 +22,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconConserve.png',
     animationPath: '',
-    description: `
-Saves the rest of the targets' current mana for next turn.
-    `,
+    description: 'spell_conserve',
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units with mana
       const targets = state.targetedUnits.filter(u => u.alive && u.mana > 0);

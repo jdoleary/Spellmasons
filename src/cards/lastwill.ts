@@ -37,9 +37,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconLastWill.png',
-    description: `Target drops a random potion on death.
-Not stackable.
-Note: Potions will disappear once the last enemy of the level is dispatched.`,
+    description: 'spell_last_will',
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       for (let unit of state.targetedUnits.filter(u => u.alive)) {
@@ -71,7 +69,7 @@ Note: Potions will disappear once the last enemy of the level is dispatched.`,
     onDeath: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
       const quantity = unit.modifiers[id]?.quantity || 1;
       // Unique for the unit and for quantity and same across all clients due to turn_number and unit.id
-      const seed = seedrandom(`${underworld.turn_number}-${unit.id}`);
+      const seed = seedrandom(`${underworld.turn_number} -${unit.id} `);
       for (let i = 0; i < quantity; i++) {
         const coord = underworld.findValidSpawn(unit, 3, 32);
         const choice = chooseObjectWithProbability(Pickup.pickups.map((p, index) => ({ index, probability: p.name.includes('Potion') ? p.probability : 0 })), seed);
@@ -91,7 +89,7 @@ Note: Potions will disappear once the last enemy of the level is dispatched.`,
 
             }
           } else {
-            console.warn(`Could not find spawn for pickup from ${id}`);
+            console.warn(`Could not find spawn for pickup from ${id} `);
           }
         } else {
           console.warn(`Could not choose valid pickup for ${id}`);

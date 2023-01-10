@@ -1,6 +1,7 @@
 # Focus
 - Get build ready for streamers and reach out
-- Contact Translators
+- Finish localization for spell descriptions
+    - They need to be translated when they are used, not at compile time
 # Before next streamer outreach
     - test new spells in multiplayer
     - test perk list on small resoution

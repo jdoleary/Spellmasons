@@ -75,6 +75,7 @@ import { HasSpace } from '../entity/Type';
 import { Overworld } from '../Overworld';
 import { allUnits } from '../entity/units';
 import floatingText from '../graphics/FloatingText';
+import { Localizable } from '../localization';
 export interface Modifiers {
   subsprite?: Subsprite;
   // run special init logic (usually for visuals) when a modifier is added or loaded
@@ -221,7 +222,7 @@ function cardToUpgrade(c: ICard, overworld: Overworld): IUpgrade {
     title: c.id,
     type: 'card',
     cardCategory: c.category,
-    description: () => c.description.trim(),
+    description: () => i18n(c.description).trim(),
     thumbnail: `images/spell/${c.thumbnail}`,
     // TODO: Feature creep: What if you could UPGRADE the effect of a spell!! 0.o
     maxCopies: 1,
@@ -303,7 +304,7 @@ export interface ICard {
   // The path for the animation effect when the spell is cast
   animationPath?: string;
   effect: EffectFn;
-  description: string;
+  description: Localizable;
   // requiresFollowingCard is for cards like chain or AOE that need another
   // card to follow them in order to have an effect
   requiresFollowingCard?: boolean;

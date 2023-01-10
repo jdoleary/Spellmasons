@@ -34,12 +34,7 @@ const spell: Spell = {
     thumbnail: 'spellIconBurst.png',
     animationPath: '',
     sfx: 'burst',
-    description: `
-Deals damage based how close the target is to the caster.
-The closer they are the higher the damage done.
-Maximum damage is ${maxDamage}.
-Stackable.
-    `,
+    description: ['spell_burst', maxDamage.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       await new Promise<void>((resolve) => {
         // .filter: only target living units

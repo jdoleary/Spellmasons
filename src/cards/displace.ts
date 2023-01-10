@@ -42,9 +42,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.RARE],
     expenseScaling: 1,
     thumbnail: 'spellIconDisplace.png',
-    description: `
-Teleport the target to a random location.
-    `,
+    description: 'spell_displace',
     effect: async (state, card, quantity, underworld, prediction) => {
       playDefaultSpellSFX(card, prediction);
       const targets = getCurrentTargets(state);

@@ -41,15 +41,14 @@ const spell: Spell = {
     // no animation path, animation is done with particles
     animationPath: '',
     sfx: '',
-    description: `
-Deals more damage based on how much health the target is missing.
-
-For example:
-Target with ${bleedInstantKillProportion * 100}% health will die.
-${[40, 65, 90].map(health => `${health}% health: ${Math.floor(calculateDamageProportion({ health, healthMax: 100, alive: true }) * 100)}% of max health as damage`).join(`
-`)}
-Target with full health will take no damage.
-    `,
+    description: ['spell_bleed', (bleedInstantKillProportion * 100).toString(),
+      '40',
+      Math.floor(calculateDamageProportion({ health: 40, healthMax: 100, alive: true }) * 100).toString(),
+      '65',
+      Math.floor(calculateDamageProportion({ health: 65, healthMax: 100, alive: true }) * 100).toString(),
+      '90',
+      Math.floor(calculateDamageProportion({ health: 90, healthMax: 100, alive: true }) * 100).toString(),
+    ],
     effect: async (state, card, quantity, underworld, prediction) => {
       await new Promise<void>((resolve) => {
         // .filter: only target living units

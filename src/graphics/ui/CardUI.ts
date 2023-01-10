@@ -640,7 +640,7 @@ function createCardElement(content: Cards.ICard) {
   const desc = document.createElement('div');
   desc.classList.add('card-description');
   if (content.description) {
-    desc.innerHTML = content.description.trimStart();
+    desc.innerHTML = i18n(content.description).trimStart();
   }
   elCardInner.appendChild(desc);
   return element;

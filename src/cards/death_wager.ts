@@ -16,9 +16,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.FORBIDDEN],
     allowNonUnitTarget: true,
     thumbnail: 'spellIconDeathWager.png',
-    description: `
-Reset all spell costs back to their default and reduce your max health by ${Math.round(reduceMaxHealthPreportion * 100)}% permanently.
-    `,
+    description: ['spell_death_wager', Math.round(reduceMaxHealthPreportion * 100).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       const player = underworld.players.find(p => p.unit == state.casterUnit);
       if (player) {

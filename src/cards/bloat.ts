@@ -51,8 +51,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconBloat.png',
-    description: `If a unit is cursed with ${id}, when it dies it will explode dealing ${damage} damage to all units within the explosion radius.
-Multiple stacks of ${id} will increase the amount of damage done when the unit explodes.`,
+    description: ['spell_bloat', id, damage.toString(), id],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       for (let unit of state.targetedUnits.filter(u => u.alive)) {

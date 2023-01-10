@@ -26,11 +26,7 @@ const spell: Spell = {
     thumbnail: 'spellIconConnect.png',
     supportQuantity: true,
     requiresFollowingCard: true,
-    description: `
-Link together enemies (and allys) in close proximity to each other.  
-Every subsequent instance of "${id}" will add up to ${numberOfTargetsPerQuantity} new targets to the spell.
-All connected beings will be affected by the following spells in your cast.
-    `,
+    description: ['spell_connect', id, numberOfTargetsPerQuantity.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       let limitTargetsLeft = numberOfTargetsPerQuantity * quantity;
       const potentialTargets = underworld.getPotentialTargets(prediction);

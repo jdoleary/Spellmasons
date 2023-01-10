@@ -16,10 +16,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconDash.png',
-    description: `
-Pulls the caster towards the target(s).
-${id} must be cast on a target such as a unit or pickup.
-    `,
+    description: 'spell_dash',
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = getCurrentTargets(state);
       for (let entity of targets) {

@@ -19,12 +19,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.RARE],
     expenseScaling: 2,
     thumbnail: 'spellIconCaptureSoul.png',
-    description: `
-Captures the soul of the targeted unit, granting you a summon card for that unit.
-Target must be alive and below ${healthThreshold} health.
-The more powerful the captured soul is, the more mana it will cost to summon.
-This spell is destroyed in the process.
-    `,
+    description: ['spell_capture_soul', healthThreshold.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       const player = state.casterPlayer;
       if (player) {

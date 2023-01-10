@@ -21,9 +21,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.FORBIDDEN],
     expenseScaling: 2,
     thumbnail: 'spellIconClone.png',
-    description: `
-Clones each target.  Cloned units maintain their current faction.
-    `,
+    description: 'spell_clone',
     effect: async (state, card, quantity, underworld, prediction) => {
       // Batch find targets that should be cloned
       // Note: They need to be batched so that the new clones don't get cloned

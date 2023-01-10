@@ -6,8 +6,6 @@ import { CardCategory } from '../types/commonTypes';
 import type Underworld from '../Underworld';
 import { playDefaultSpellSFX } from './cardUtils';
 import * as config from '../config';
-import throttle from 'lodash.throttle';
-import { Vec2 } from '../jmath/Vec';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
@@ -25,9 +23,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.FORBIDDEN],
     thumbnail: 'spellIconFortify.png',
     animationPath: 'spell-effects/spellShield',
-    description: `
-Protects bearer all damage for the next turn.
-    `,
+    description: 'spell_fortify',
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);

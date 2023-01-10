@@ -20,6 +20,9 @@ function returnTranslation(keyOrArray: Localizable, map: LanguageMapping): strin
         for (let replacer of replacers) {
             result = result.replace('🍞', replacer);
         }
+        result = result.replaceAll('❕', '\n');
+        // Replace any left over replacers with empty
+        result = result.replaceAll('🍞', '');
         if (result == 'Loading...') {
             console.error(`i18n: Key ${key} returned "Loading..." for language ${map.language}`);
             return key;

@@ -61,7 +61,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: imageName,
-    description: `A unit cursed with ${id} will receive 2 times their max health but any future healing will be taken as damage`,
+    description: ['spell_blood_curse'],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       for (let unit of state.targetedUnits.filter(u => u.alive)) {

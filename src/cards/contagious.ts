@@ -22,9 +22,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconContagious.png',
-    description: `
-Immediately spreads this unit's curses to other nearby units.
-    `,
+    description: 'spell_contageous',
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       for (let unit of state.targetedUnits.filter(u => u.alive)) {

@@ -21,9 +21,7 @@ const spell: Spell = {
     thumbnail: 'spellIconBolt.png',
     supportQuantity: true,
     requiresFollowingCard: false,
-    description: `
-Arcs electricity through nearby units dealing ${damage} damage to each.
-    `,
+    description: ['spell_bolt', damage.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       let limitTargetsLeft = numberOfTargetsPerQuantity * quantity;
       const potentialTargets = underworld.getPotentialTargets(prediction);

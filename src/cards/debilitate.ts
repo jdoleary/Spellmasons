@@ -9,6 +9,7 @@ import { getOrInitModifier } from './util';
 
 const id = 'Debilitate';
 const imageName = 'spellIconDebilitate.png';
+const proportion = 2;
 const spell: Spell = {
   card: {
     id,
@@ -21,10 +22,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconDebilitate.png',
     animationPath: 'spell-effects/spellDebilitate',
-    description: `
-Makes the target(s) take double damage whenever they receive damage.
-Stackable.
-    `,
+    description: ['spell_debilitate', (proportion * 100).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);
@@ -58,7 +56,7 @@ Stackable.
       const quantity = unit.modifiers[id]?.quantity || 1;
       // Magnify positive damage
       if (amount > 0) {
-        return amount * 2 * quantity;
+        return amount * proportion * quantity;
       } else {
         // Do not magnify negative damage (which is healing)
         return amount;

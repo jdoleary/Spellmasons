@@ -21,11 +21,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconHeal.png',
     animationPath: 'spell-effects/potionPickup',
-    description: `
-Heals all targets ${healAmount} HP.
-Will not heal beyond maximum health.
-Stackable.
-    `,
+    description: ['spell_heal', healAmount.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // Since all targets are animated simultaneously we only need to await
       // the latest one, no need to use Promise.all
