@@ -1608,7 +1608,7 @@ export default class Underworld {
 
     // Show text in center of screen for the new level
     queueCenteredFloatingText(
-      `Level ${this.levelIndex + 1}`,
+      ['Level', (this.levelIndex + 1).toString()],
       'white'
     );
     console.log('Setup: resetPlayerForNextLevel; reset all players')

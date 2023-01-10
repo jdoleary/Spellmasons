@@ -12,7 +12,7 @@ export const ARCHER_ID = 'archer';
 const unit: UnitSource = {
   id: ARCHER_ID,
   info: {
-    description: 'An archer will try to get close enough to shoot you but not much closer.  It can only shoot you if there aren\'t any walls between you both.',
+    description: 'archer description',
     image: 'units/archerIdle',
     subtype: UnitSubType.RANGED_LOS,
   },

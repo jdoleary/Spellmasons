@@ -382,7 +382,7 @@ export function tryShowRecenterTip() {
       const cameraGameSpaceCenterDistanceToPlayer = math.distance(getCameraCenterInGameSpace(), globalThis.player.unit);
       // Only show recenter tip if player is near or beyond the edge of the screen
       if (cameraGameSpaceCenterDistanceToPlayer + margin > screenRadiusInGameSpace) {
-        elCameraRecenterTip.innerHTML = `Press ${keyToHumanReadable(KeyMapping.recenterCamera)} ${i18n('to make the view auto follow you')}`;
+        elCameraRecenterTip.innerHTML = i18n(['Press 🍞 to make the view auto follow you', keyToHumanReadable(KeyMapping.recenterCamera)]);
       } else {
         elCameraRecenterTip.innerHTML = '';
       }

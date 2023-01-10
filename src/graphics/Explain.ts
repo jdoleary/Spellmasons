@@ -319,7 +319,7 @@ export function tutorialCompleteTask(key: keyof TutorialChecklist, condition?: (
     }
 }
 globalThis.skipTutorial = () => {
-    const yesSkip = confirm(i18n('Are you sure you want to skip the tutorial? (You can reset the tutorial in the menu)'))
+    const yesSkip = confirm(i18n('skip tutorial detail'))
     if (yesSkip) {
         for (let task of Object.keys(tutorialChecklist)) {
             tutorialCompleteTask(task as keyof TutorialChecklist);

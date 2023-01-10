@@ -97,15 +97,15 @@ function floatAway(instance: FText, resolve: (value: void) => void) {
 export const elPIXIHolder = document.getElementById('PIXI-holder') as HTMLElement;
 
 let centeredTextAnimating = false;
-let centeredTextQueue: { text: string, fill: string | number }[] = [];
-export function queueCenteredFloatingText(text: string, fill: string | number = 'white') {
+let centeredTextQueue: { text: Localizable, fill: string | number }[] = [];
+export function queueCenteredFloatingText(text: Localizable, fill: string | number = 'white') {
   if (!centeredTextAnimating) {
     centeredFloatingText(text, fill);
   } else {
     centeredTextQueue.push({ text, fill });
   }
 }
-export function centeredFloatingText(text: string, fill: string | number = 'white') {
+export function centeredFloatingText(text: Localizable, fill: string | number = 'white') {
   if (globalThis.headless) { return; }
   centeredTextAnimating = true;
   floatingText({

@@ -43,7 +43,7 @@ Note: You can deal damage if a unit is shoved hard enough into a wall.
       }
       // No targets to cast on. Refund mana
       if (targets.length == 0) {
-        refundLastSpell(state, prediction, 'No Targets close enough to shove\nMana Refunded')
+        refundLastSpell(state, prediction, 'No Targets close enough to shove')
       }
       await Promise.all(promises);
       return state;
