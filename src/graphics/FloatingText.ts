@@ -2,6 +2,7 @@ import type * as PIXI from 'pixi.js';
 import { Vec2 } from '../jmath/Vec';
 import * as config from '../config';
 import { app, containerFloatingText, containerUIFixed, withinCameraBounds } from './PixiUtils';
+import { Localizable } from '../localization';
 
 interface FText {
   startPosition: Vec2;
@@ -15,7 +16,7 @@ interface FText {
 }
 interface FloatingTextInsructions {
   coords: Vec2;
-  text: string;
+  text: Localizable;
   container?: PIXI.Container;
   style?: Partial<PIXI.ITextStyle>;
   keepWithinCameraBounds?: boolean;

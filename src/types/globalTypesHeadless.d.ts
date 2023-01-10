@@ -7,6 +7,7 @@ import type PieClient from '@websocketpie/client';
 import type { Vec2 } from '../jmath/Vec';
 import type { View } from '../views';
 import type { IHostApp } from '../network/networkUtil';
+import { Localizable } from '../localization';
 
 declare global {
     var SPELLMASONS_PACKAGE_VERSION: string;
@@ -214,7 +215,7 @@ declare global {
     var explainKeys: string[];
     // List of players to display in the lobby
     var lobbyPlayerList: { name: string, clientConnected: boolean, status: string, color: string, ready: string }[];
-    var i18n: (key: string) => string;
+    var i18n: (key: Localizable) => string;
     var setLanguage: (langCode: string, doStore: boolean) => void;
     var refreshMenu: undefined | (() => void);
     var getSupportedLanguages: () => { language: string, code: string }[];

@@ -1,5 +1,7 @@
+import { Localizable } from "../localization";
+
 export interface PromptArgs {
-    text: string;
+    text: Localizable;
     noBtnText?: string;
     noBtnKey?: string;
     yesText: string;

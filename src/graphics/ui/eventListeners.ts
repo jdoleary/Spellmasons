@@ -588,7 +588,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         if (lastCard && lastCard.requiresFollowingCard) {
           floatingText({
             coords: target,
-            text: `${lastCard.id} only modifies\nspells on its right`,
+            text: ['🍞 only modifies spells on its right', lastCard.id],
             style: { fill: 'red', ...config.PIXI_TEXT_DROP_SHADOW }
           });
           const elHints = document.querySelectorAll('.requires-following-card');

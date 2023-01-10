@@ -11,7 +11,7 @@ import * as Image from '../../graphics/Image';
 const unit: UnitSource = {
   id: 'glop',
   info: {
-    description: 'The Glop lobbs gloop high into the air to deal damage to it\'s enemies.  It can attack it\'s enemies from behind walls',
+    description: 'glop description',
     image: 'units/lobberIdle',
     subtype: UnitSubType.RANGED_RADIUS,
   },

@@ -19,6 +19,7 @@ import { chooseOneOf } from '../jmath/rand';
 import { skyBeam } from '../VisualEffects';
 import { makeRedPortal, RED_PORTAL_JID, stopAndDestroyForeverEmitter } from '../graphics/ParticleCollection';
 import * as particles from '@pixi/particle-emitter'
+import { Localizable } from '../localization';
 
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 export const PICKUP_IMAGE_PATH = 'pickups/scroll';
@@ -31,7 +32,7 @@ export function isPickup(maybePickup: any): maybePickup is IPickup {
 export type IPickup = HasSpace & {
   type: 'pickup';
   name: string;
-  description: string;
+  description: Localizable;
   imagePath: string;
   image?: Image.IImageAnimated;
   // if this IPickup is a prediction copy, real is a reference to the real pickup that it is a copy of
@@ -56,7 +57,7 @@ export type IPickup = HasSpace & {
 }
 interface IPickupSource {
   name: string;
-  description: string;
+  description: Localizable;
   imagePath: string;
   animationSpeed?: number;
   singleUse: boolean;
@@ -277,7 +278,7 @@ export const pickups: IPickupSource[] = [
     name: PICKUP_SPIKES_NAME,
     probability: 70,
     scale: 1,
-    description: `Deals ${spike_damage} to any unit that touches it`,
+    description: ['Deals 🍞 to any unit that touches it', spike_damage.toString()],
     effect: ({ unit, player, pickup, prediction, underworld }) => {
       if (unit) {
         // Play trap spring animation
@@ -327,9 +328,7 @@ export const pickups: IPickupSource[] = [
     name: RED_PORTAL,
     probability: 0,
     scale: 1,
-    description:
-      `A portal that the ${bossmasonUnitId} uses to teleport around the map and to summon minions.
-      You can use it to travel between portals but you will take ${RED_PORTAL_DAMAGE} damage in the process.`,
+    description: ['red portal description', bossmasonUnitId, RED_PORTAL_DAMAGE.toString()],
     effect: ({ unit, player, pickup, underworld }) => {
       const otherRedPortals = underworld.pickups.filter(p => p.name == RED_PORTAL && p !== pickup)
       const randomOtherRedPortal = chooseOneOf(otherRedPortals);
@@ -357,8 +356,7 @@ export const pickups: IPickupSource[] = [
     name: PICKUP_PORTAL_NAME,
     probability: 0,
     scale: 1,
-    description:
-      'Takes you to the next level when all players are either in the portal or dead.',
+    description: 'explain portal',
     effect: ({ unit, player, underworld }) => {
       // Only send the ENTER_PORTAL message from
       // the client of the player that entered the portal
@@ -381,7 +379,7 @@ export const pickups: IPickupSource[] = [
   {
     imagePath: PICKUP_IMAGE_PATH,
     name: CARDS_PICKUP_NAME,
-    description: 'Grants the player a new spell',
+    description: 'Pickup a spell scroll to get more spells',
     probability: 0,
     singleUse: true,
     scale: 0.5,
@@ -399,7 +397,7 @@ export const pickups: IPickupSource[] = [
     imagePath: 'pickups/staminaPotion',
     animationSpeed: 0.2,
     name: 'Stamina Potion',
-    description: `Restores stamina to 100%`,
+    description: ['Restores stamina to 🍞', '100%'],
     probability: 40,
     singleUse: true,
     scale: 1.0,
@@ -455,7 +453,7 @@ export const pickups: IPickupSource[] = [
     imagePath: 'pickups/manaPotion',
     animationSpeed: 0.2,
     name: 'Mana Potion',
-    description: `Restores ${manaPotionRestoreAmount} mana.  May overfill mana.`,
+    description: [`mana potion description`, manaPotionRestoreAmount.toString()],
     probability: 80,
     singleUse: true,
     scale: 1.0,
@@ -516,7 +514,7 @@ export const pickups: IPickupSource[] = [
     scale: 1.0,
     playerOnly: true,
     singleUse: true,
-    description: `Restores ${healthPotionRestoreAmount} health.  Can only be picked up and used when you are at less than full health.`,
+    description: ['health potion description', healthPotionRestoreAmount.toString()],
     effect: ({ player, underworld, prediction }) => {
       // Only trigger the health potion if the player will be affected by the health potion
       // Normally that's when they have less than full health, but there's an exception where

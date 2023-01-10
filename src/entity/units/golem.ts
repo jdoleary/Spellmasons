@@ -9,7 +9,7 @@ export const golem_unit_id = 'golem'
 const unit: UnitSource = {
   id: golem_unit_id,
   info: {
-    description: 'A simple but persistant creature that will pursue its enemies and attack them if within arm\'s reach.',
+    description: 'Golem description',
     image: 'units/gruntIdle',
     subtype: UnitSubType.MELEE,
   },

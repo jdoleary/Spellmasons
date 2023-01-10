@@ -10,7 +10,7 @@ import type { View } from '../views';
 import type { Faction } from './commonTypes';
 import type { IPickup } from '../entity/Pickup';
 import type { IHostApp } from '../network/networkUtil';
-import type { LanguageMapping } from '../localization';
+import type { LanguageMapping, Localizable } from '../localization';
 import type { TutorialChecklist } from '../graphics/Explain';
 
 declare global {
@@ -157,7 +157,7 @@ declare global {
     var explainKeys: string[];
     // List of players to display in the lobby
     var lobbyPlayerList: { name: string, clientConnected: boolean, status: string, color: string, ready: string }[];
-    var i18n: (key: string) => string;
+    var i18n: (key: Localizable) => string;
     var setLanguage: (langCode: string, doStore: boolean) => void;
     var refreshMenu: undefined | (() => void);
     var getSupportedLanguages: () => { language: string, code: string }[];

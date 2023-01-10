@@ -74,105 +74,98 @@ interface ExplainData {
 
 const explainMap: { [key: string]: ExplainData } = {
     [EXPLAIN_WALK]: {
-        prompt: () => ({ imageSrc: 'images/explain/walk.gif', text: '<h1>How to Move</h1>Hold right mouse button to walk towards your cursor.', yesText: 'Okay' })
+        prompt: () => ({ imageSrc: 'images/explain/walk.gif', text: 'explain move', yesText: 'Okay' })
     },
     [EXPLAIN_CAST]: {
-        prompt: () => ({ imageSrc: 'images/explain/cast.gif', text: `<h1>How to Forge Spells!</h1>Click on a spell or use its keyboard hotkey to queue it up. Left click on a target to unleash the queued spell.<br/><br/>Or if you change your mind, press ${keyToHumanReadable(keyMapping.clearQueuedSpell)} to clear a queued spell.`, yesText: 'Nice!' })
+        prompt: () => ({ imageSrc: 'images/explain/cast.gif', text: ['explain cast', keyToHumanReadable(keyMapping.clearQueuedSpell)], yesText: 'Nice!' })
     },
     [EXPLAIN_STACK]: {
-        prompt: () => ({ imageSrc: 'images/explain/stack-spells.gif', text: 'Many spells become more powerful if you stack multiple in a row.  Try combining different spells to find out how they might interact.', yesText: 'Intriguing...' })
+        prompt: () => ({ imageSrc: 'images/explain/stack-spells.gif', text: 'explain stack', yesText: 'Intriguing...' })
 
     },
     [EXPLAIN_WALK_ROPE]: {
-        prompt: () => ({ imageSrc: 'images/explain/walk-rope.gif', text: `Hold ${keyToHumanReadable(keyMapping.showWalkRope)} to see how far you can go with the stamina (the yellow line) that you have remaining. The blue circle shows you what your cast range would be if you moved to that location.`, yesText: 'Okay' })
+        prompt: () => ({ imageSrc: 'images/explain/walk-rope.gif', text: ['explain walk rope', keyToHumanReadable(keyMapping.showWalkRope)], yesText: 'Okay' })
 
     },
     [EXPLAIN_END_TURN]: {
         prompt: () => ({
-            imageSrc: 'images/explain/end-turn.gif', text: `Press ${keyToHumanReadable(keyMapping.endTurn)} or click the End Turn button to have your mana and stamina refilled.
-        
-Note: You may still cast even when you are out of stamina.`, yesText: 'Okay'
+            imageSrc: 'images/explain/end-turn.gif', text: ['explain end turn', keyToHumanReadable(keyMapping.endTurn)], yesText: 'Okay'
         })
     },
     [EXPLAIN_OVERFILL]: {
         condition: () => !!globalThis.player && globalThis.player.unit.mana > globalThis.player.unit.manaMax,
-        prompt: () => ({ imageSrc: 'images/explain/mana-overfill.gif', text: 'You are able to fill your mana beyond its maximum amount using potions or spells.', yesText: 'Cool!' })
+        prompt: () => ({ imageSrc: 'images/explain/mana-overfill.gif', text: 'explain overfill', yesText: 'Cool!' })
 
     },
     [EXPLAIN_MANA_COST]: {
-        prompt: () => ({ imageSrc: 'images/explain/mana-cost.gif', text: 'Spells cost more mana each time they are cast.  When you end your turn, the spells\' mana costs decrease until they return to the original cost.', yesText: 'Okay' })
+        prompt: () => ({ imageSrc: 'images/explain/mana-cost.gif', text: 'explain mana cost', yesText: 'Okay' })
 
     },
     [EXPLAIN_ATTENTION_MARKER_MELEE]: {
-        prompt: () => ({ imageSrc: 'images/explain/attentionMarkerMelee.gif', text: 'An icon will appear above the head of a melee enemy if you are close enough for them to attack you next turn.', yesText: 'Okay' })
+        prompt: () => ({ imageSrc: 'images/explain/attentionMarkerMelee.gif', text: 'explain attention markers melee', yesText: 'Okay' })
 
     },
     [EXPLAIN_ATTENTION_MARKER_RANGED]: {
-        prompt: () => ({ imageSrc: 'images/explain/attentionMarkerRanged.gif', text: 'An icon will appear above the head of an archer when they can see you; which means they will attack you next turn.', yesText: 'Okay' })
+        prompt: () => ({ imageSrc: 'images/explain/attentionMarkerRanged.gif', text: 'explain attention markers', yesText: 'Okay' })
 
     },
     [EXPLAIN_CAMERA]: {
         prompt: () => ({
-            imageSrc: 'images/explain/camera-movement.gif', text: `Move the camera by clicking and dragging Middle Mouse Button or by pressing ${keyToHumanReadable(keyMapping.cameraUp)}, ${keyToHumanReadable(keyMapping.cameraLeft)}, ${keyToHumanReadable(keyMapping.cameraDown)}, or ${keyToHumanReadable(keyMapping.cameraRight)}.
-            To make the camera auto follow your player again, press ${keyToHumanReadable(keyMapping.recenterCamera)}.`, yesText: 'Okay'
+            imageSrc: 'images/explain/camera-movement.gif', text: ['explain camera movement', keyToHumanReadable(keyMapping.cameraUp), keyToHumanReadable(keyMapping.cameraLeft), keyToHumanReadable(keyMapping.cameraDown), keyToHumanReadable(keyMapping.cameraRight), keyToHumanReadable(keyMapping.recenterCamera)], yesText: 'Okay'
         })
 
     },
     [EXPLAIN_INVENTORY]: {
         prompt: () => ({
-            imageSrc: 'images/explain/inventory.gif', text: `Spells are stored in your inventory.  Open your inventory by clicking on the Spell Book or by pressing ${keyToHumanReadable(keyMapping.openInventory)}.
-Click and drag a spell to your toolbar to make it easily accessible.
-You can also combine spells by clicking on them in your inventory so you don't have to have a spell on your toolbar in order to use it.`, yesText: "I'm so organized!"
+            imageSrc: 'images/explain/inventory.gif', text: ['explain inventory', keyToHumanReadable(keyMapping.openInventory)], yesText: "I'm so organized!"
         })
 
     },
     [EXPLAIN_SCROLL]: {
         prompt: () => ({
-            imageSrc: 'images/explain/scroll.gif', text: `Move onto a Scroll Pickup to aquire new spells. Scroll Pickups will disappear after a number of turns have passed so be careful to pick them up before it's too late!`, yesText: 'Okay'
+            imageSrc: 'images/explain/scroll.gif', text: 'explain scrolls', yesText: 'Okay'
         })
 
     },
     [EXPLAIN_MISSED_SCROLL]: {
         prompt: () => ({
-            imageSrc: 'images/explain/scroll-disappear.gif', text: `<h1>A Scroll has disappeared!</h1>Remember: Scrolls disappear after a number of turns have passed.  It is very important to pick them up before it is too late so you can get new spells.`, yesText: 'Bummer'
+            imageSrc: 'images/explain/scroll-disappear.gif', text: `explain scroll dissapear`, yesText: 'Bummer'
         })
 
     },
     [EXPLAIN_LIQUID_DAMAGE]: {
         prompt: () => ({
-            imageSrc: 'images/explain/liquid-damage.gif', text: `Units that fall into bodies of liquid will take damage.  Some units are stronger than others and will survive.  Some types of liquid will deal more damage than others.`, yesText: 'Yikes!'
+            imageSrc: 'images/explain/liquid-damage.gif', text: 'explain liquid damage', yesText: 'Yikes!'
         })
     },
     [EXPLAIN_BLESSINGS]: {
         prompt: () => ({
-            imageSrc: 'images/explain/bless-ally.gif', text: `Cast blessings on yourself or your allies to help them survive.`, yesText: 'Got it!'
+            imageSrc: 'images/explain/bless-ally.gif', text: `explain blessings`, yesText: 'Got it!'
         })
     },
     [EXPLAIN_REMOVE_SPELLS]: {
         prompt: () => ({
-            imageSrc: 'images/explain/delete-queued-spells.gif', text: `Click on a spell to remove it or press ${keyToHumanReadable(keyMapping.dequeueSpell)} to remove the last spell.`, yesText: 'Okay'
+            imageSrc: 'images/explain/delete-queued-spells.gif', text: ['explain remove spells', keyToHumanReadable(keyMapping.dequeueSpell)], yesText: 'Okay'
         })
     },
     [EXPLAIN_FORGE_ORDER]: {
         prompt: () => ({
-            imageSrc: 'images/explain/forge-order.gif', text: `The order in which spells are forged may result in a different outcome.
-    
-In this example, "Connect" + "Push" + "${slashCardId}" will damage you instead of the 2nd Golem; whereas reversing the order of "Connect" and "Push" - so that "Push" comes first - will cause it to connect to the 2nd Golem instead of you.`, yesText: 'Okay'
+            imageSrc: 'images/explain/forge-order.gif', text: 'explain forge order', yesText: 'Okay'
         })
     },
     [EXPLAIN_DEATH]: {
         prompt: () => ({
-            imageSrc: 'images/explain/death.gif', text: `You have died. If you have any allies in your faction they will continue to fight on your behalf; and if they defeat the enemy factions you will be resurrected and continue to the next level.`, yesText: 'Okay'
+            imageSrc: 'images/explain/death.gif', text: 'explain death', yesText: 'Okay'
         })
     },
     [EXPLAIN_MINI_BOSSES]: {
         prompt: () => ({
-            imageSrc: 'images/explain/minibosses.gif', text: `Minibosses are larger than their meager counterparts, have more health and do more damage.  Take extra caution when facing one.`, yesText: 'Got it!'
+            imageSrc: 'images/explain/minibosses.gif', text: 'explain minibosses', yesText: 'Got it!'
         })
     },
     [EXPLAIN_PING]: {
         prompt: () => ({
-            imageSrc: 'images/explain/ping.gif', text: `In multiplayer games, you can ping specific locations to help with communication by holding down ${keyToHumanReadable(keyMapping.ping)} and moving your mouse.`, yesText: 'Cool!'
+            imageSrc: 'images/explain/ping.gif', text: ['explain ping', keyToHumanReadable(keyMapping.ping)], yesText: 'Cool!'
         })
     },
 }

@@ -2,7 +2,7 @@ import { Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
-const id = '+ Radius';
+const id = 'Plus Radius';
 const radiusIncreaseAmount = 50;
 const spell: Spell = {
   card: {

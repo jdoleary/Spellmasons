@@ -13,9 +13,17 @@ export interface LanguageMapping {
 let languageMapping: { [key: string]: string };
 let chosenLanguageCode: string;
 const cachedErrorsReported: string[] = [];
-function returnTranslation(key: string, map: LanguageMapping): string {
-    const result = map[key.toLowerCase()];
+function returnTranslation(keyOrArray: Localizable, map: LanguageMapping): string {
+    const [key = '', ...replacers] = typeof keyOrArray === 'object' ? keyOrArray : [keyOrArray];
+    let result = map[key.toLowerCase()];
     if (result) {
+        for (let replacer of replacers) {
+            result = result.replace('🍞', replacer);
+        }
+        if (result == 'Loading...') {
+            console.error(`i18n: Key ${key} returned "Loading..." for language ${map.language}`);
+            return key;
+        }
         return result;
     } else {
         // Prevent reporting error more than once
@@ -25,20 +33,22 @@ function returnTranslation(key: string, map: LanguageMapping): string {
             Sentry.withScope(function (scope) {
                 scope.setLevel(Sentry.Severity.Warning);
                 // The exception has the event level set by the scope (info).
-                Sentry.captureException(new Error(`i18n: Language ${map.language} has no value for key ${key}`));
+                Sentry.captureException(new Error(`i18n: Language ${map.language} has no value for key ${keyOrArray}`));
             });
             cachedErrorsReported.push(key);
         }
         return key;
     }
 }
-function i18n(key: string): string {
+// If keyOrArray is an array the first element is the key and the following elements
+// replace each instance of '🍞' in a printf fashion
+function i18n(keyOrArray: Localizable): string {
     if (languageMapping) {
-        return returnTranslation(key, languageMapping);
+        return returnTranslation(keyOrArray, languageMapping);
     } else {
         console.error('i18n: languageObject has not been set.');
     }
-    return key;
+    return typeof keyOrArray === 'object' ? (keyOrArray[0] || '') : keyOrArray;
 }
 function setLanguage(langCode: string, store: boolean) {
     const newLanguage = languages.find(l => l.languagecode == langCode);
@@ -80,3 +90,5 @@ globalThis.i18n = i18n;
 globalThis.setLanguage = setLanguage;
 globalThis.getSupportedLanguages = getSupportedLanguages;
 globalThis.getChosenLanguageCode = getChosenLanguageCode;
+
+export type Localizable = string | string[];
