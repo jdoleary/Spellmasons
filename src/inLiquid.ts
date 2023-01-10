@@ -10,16 +10,16 @@ function doLiquidEffect(underworld: Underworld, unit: IUnit, prediction: boolean
     }
     switch (underworld.lastLevelCreated.biome) {
         case 'water':
-            takeDamage(unit, 2, undefined, underworld, prediction);
+            takeDamage(unit, 10, undefined, underworld, prediction);
             break;
         case 'lava':
-            takeDamage(unit, 3, undefined, underworld, prediction);
+            takeDamage(unit, 30, undefined, underworld, prediction);
             break;
         case 'blood':
-            takeDamage(unit, 4, undefined, underworld, prediction);
+            takeDamage(unit, 40, undefined, underworld, prediction);
             break;
         case 'ghost':
-            takeDamage(unit, 5, undefined, underworld, prediction);
+            takeDamage(unit, 50, undefined, underworld, prediction);
             break;
         default:
             console.error('Unknown biome')
