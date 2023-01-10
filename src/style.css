@@ -624,6 +624,16 @@ kbd {
   position: relative;
 }
 
+.health-mana-bar .fill:after {
+  content: "";
+  position: relative;
+  background-image: url('/ui/spellBarGloss.png');
+  width: 194px;
+  height: 19px;
+  display: block;
+  opacity: 0.4;
+}
+
 #card-holders-inner .card-title {
   color: white;
   padding: 2px 4px;
