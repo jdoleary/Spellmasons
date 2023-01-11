@@ -1,3 +1,29 @@
+## Brad Feedback
+- No spell should take more than 3 seconds (target column, target cone, target circle for example)
+- Menu button words aren't centered
+- pick a spell should come up after tutorial
+- toolbar is jumping around when you hover card
+- text is hard to read (focus on legibility)
+- some of the text is indented by a space
+- healthbar text gets blurry while hovering over push
+- end turn "spacebar" should flicker when you're out of mana too, not just stamina
+- it says "resume last run" even after he died, its the turn before you died; it doesn't make sense
+- bug: perk box doesn't reset between runs
+- range exception for arrows
+    - just warn "arrows have infinite range unless combined with other spells"
+- perk list is too wide, will overlap if you have many perks
+- sacrifice should be more rare
+- chain + arrow should shoot multiple at the same time
+- maybe prediction melee error attention markers
+- potion health not 10x'd yet?
+- mana goes negative if you kill yourself due to the subtracted mana from dying
+- Esc hotkey to menu doesn't work if you're hovering a inspect unit while spawning
+- i18n bug: "explain blessings" isn't being translated
+- "bleed" with quantity plays 2 animations
+- priest Ai doesn't seek out corpses
+- health perks aren't strong enough
+- does cone + column not work if your not hovering directly on a target?
+- target columns should show circles when it adds a target
 # Focus
 - Get build ready for streamers and reach out
 - Fix text overflow on spell cards ("connect", "decoy", "bleed")
@@ -115,7 +141,6 @@
     - turn off target snapping when your first spell is a targeting spell for convenience
     - spellbook animation is showing up in singleplayer
         - but you still need it when you yourself are casting multiple at once
-    - burst should memorize your position at time of cast, so that if you move after casting it keeps the position that it was when you cast
     - levels can be way too big
     - leaderboard
     -  maybe target circle should makes the spells that come after it tick up in how long they have to restore
