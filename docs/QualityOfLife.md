@@ -33,6 +33,8 @@
 - Save files should be sorted by recency
 - fix: tutorial comes up at the same time it asks you to pick a new spell
 - Remove customizing magic color
+- end turn "spacebar" should flicker when you're out of mana too, not just stamina
 
 ## Content
 - Way to control Ally faction units, like follow me. Or go get them.
+- Enemies should spawn in discrete clusters

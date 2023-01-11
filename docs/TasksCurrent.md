@@ -1,36 +1,67 @@
-## Brad Feedback
-- UI bug: toolbar is jumping around when you hover card
+## 2023.01.11
 - **Important** font is hard to read (focus on legibility)
+- i18n: Unit tooltip info
+    - ghost archer
+    - dark summoner
+    - dark priest
+    - poisoner
+    - priest
+    - vampire
+    - green glop
+    - blood archer
+    - blood golem
+    - decoy
+    - summoner
+- **Important** it says "resume last run" even after he died, its the turn before you died; it doesn't make sense
+- **important** i18n bug: "explain blessings" isn't being translated
+- **IMPORTANT**: HOW DOES DIFFICULTY SCALE WITH A TON OF PLAYERS
+- **BIG BUG**: If multiple enemies are targeting an ally unit but it dies in the ranged turn the melee units can attack you without intention warning
+- UI bug: toolbar is jumping around when you hover spell in toolbar
+
+## Brad Feedback
 ```
 Possible font options
 - https://fonts.google.com/specimen/Comfortaa?category=Display,Monospace
+    - circly, clear, not fantasy 6/10
 - https://fonts.google.com/specimen/Poiret+One?category=Display,Monospace
+    - thin, clear, interesting 6/10
+    - brad 3
 - https://fonts.google.com/specimen/Oleo+Script?category=Display,Monospace
+    - handwritten, bold, 5/10, maybe good for title
 - https://fonts.google.com/specimen/Forum?category=Display,Monospace
+    - clean, clear, serif, 7/10
+    - brad 2
 - https://fonts.google.com/specimen/Averia+Serif+Libre?category=Display,Monospace
+    - chunky, bold, 5/10 looks like newspaper ink
 - https://fonts.google.com/specimen/Averia+Libre?category=Display,Monospace
+    - chunky, bold, 5/10 looks like newspaper ink
 - https://fonts.google.com/specimen/Metamorphous?category=Display,Monospace
+    - vampire font 4/10
 - https://fonts.google.com/specimen/Jomhuria?category=Display,Monospace
+    - bold 4/10
+    - brad 1
 - https://fonts.google.com/specimen/Akaya+Kanadaka?category=Display,Monospace
+    - bold, handwrity 4/10
 - https://fonts.google.com/specimen/Oldenburg?category=Display,Monospace
+    - s is weird 3/10
 - https://fonts.google.com/specimen/Metal?category=Display,Monospace
+    - italic, clear 5/10
+    - brad 4
 
 Pixelated
 - https://fonts.google.com/specimen/Press+Start+2P?category=Display,Monospace
 - https://fonts.google.com/specimen/VT323?category=Display,Monospace
 ```
 - some of the text on card copy is indented by a space
-- end turn "spacebar" should flicker when you're out of mana too, not just stamina
-- **Important** it says "resume last run" even after he died, its the turn before you died; it doesn't make sense
 - sacrifice should be more rare
 - maybe prediction melee error attention markers
-- **important** i18n bug: "explain blessings" isn't being translated
 - priest Ai doesn't seek out corpses?
 - health perks aren't strong enough
 - does cone + column not work if your not hovering directly on a target?
-- **IMPORTANT**: HOW DOES DIFFICULTY SCALE WITH A TON OF PLAYERS
 - If an enemy lines up perfectly with another and the direction it's going it can push the enemy.  Try to set up a ranged unit that pushes a melee unit closer and see if the melee unit hits you
 # Focus
+- blood golem / blood archer / green glop / ghost archer / sand vamp explain is a broken image
+    - but ghost archer does show up locally
 - Get build ready for streamers and reach out
 - Fix text overflow on spell cards ("connect", "decoy", "bleed")
 - bug: blood golem somehow moved during ranged unit turn (i had just chain pushed damaged him) and killed me without forcasting it
@@ -49,7 +80,6 @@ Pixelated
 - January 1/8-1/14
     - Test on different resolutions
     - **Email streamers**, try to set up a multiplayer stream on release day
-    - **Reach out to translators**
     - Balanced / Difficult
     - Menu: Fix overflow for all pages rather than the one-off fixes I've been doing.
     - Content: Add Copy Soul vs capture soul.  Capture soul should let you spawn them for no mana cost but they need to be below 25% health to be captured.  Copy Soul gives you the summon card.
@@ -112,7 +142,6 @@ Pixelated
 - (fixed?) early levels are too big, later levels are too small
 - fix hover styling for perk reroll button
 - single player game overscreen should offer to restart at checkpoint
-- **BIG BUG**: If multiple enemies are targeting an ally unit but it dies in the ranged turn the melee units can attack you without intention warning
 - music is too soft relative to sfx
 - Brad playtest
     - Perk choices: good, UX: bad
@@ -266,8 +295,6 @@ setTurnPhase( Stalled )
 - IMPORTANT: Fix music only coming out of one channel
     - itshallnotfindme sounds soft in the right ear
 - lava abyss color is off
-- blood golem / blood archer / green glop / ghost archer / sand vamp explain is a broken image
-    - but ghost archer does show up locally
 - even in singleplayer you can go negative mana if you queue it up while another spell is casting (and you still have the mana from before the current spell takes it)
 - bug: by alt-tabbing during enemy turn they didn't move visually.  Then when I came back and ended my turn again they slid to where they would've been had they moved during their turn (without animate walking) and then walked another turn's distance and bit me without warning
 - bug: Prediction is wrong for potions dropped by last will because in non prediction is waits a moment before dropping them
@@ -304,8 +331,6 @@ setTurnPhase( Stalled )
     - turn_phases should work on a queue not a stack (this is mostly relevant for singleplayer and when the NPCs are just hashing it out cause all the players are dead so it doesn't stack overflow)
     - Just make it a while loop that triggers/awaits the next AI turn until it's the players tuurn
 
-# Localization
-- All tooltip info
 # Features
 - should allow spell prediction even while an action is taking place - this not being here causes friction in multiplayer
 ## Prediction issues
