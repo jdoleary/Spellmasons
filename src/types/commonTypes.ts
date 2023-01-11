@@ -31,10 +31,10 @@ export enum CardRarity {
   FORBIDDEN = 'FORBIDDEN'
 }
 export const probabilityMap: Record<CardRarity, number> = {
-  [CardRarity.COMMON]: 50,
-  [CardRarity.SPECIAL]: 20,
-  [CardRarity.UNCOMMON]: 10,
-  [CardRarity.RARE]: 5,
-  [CardRarity.FORBIDDEN]: 1
+  [CardRarity.COMMON]: 80,
+  [CardRarity.SPECIAL]: 50,
+  [CardRarity.UNCOMMON]: 30,
+  [CardRarity.RARE]: 10,
+  [CardRarity.FORBIDDEN]: 5
 
 }
