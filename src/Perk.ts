@@ -191,12 +191,6 @@ export function choosePerk(perk: AttributePerk, player: IPlayer, underworld: Und
         tryTriggerPerk(perk, player, 'immediately', underworld, 0);
     } else {
         player.attributePerks.push(perk);
-        // Due to the perks showing up after tryTriggerPerk for the everyLevel perks has already been called,
-        // when a user chooses an everyLevel perk it should both trigger immediately, and get added to their
-        // attributePerks array
-        if (perk.when == 'everyLevel') {
-            tryTriggerPerk(perk, player, 'everyLevel', underworld, 0);
-        }
     }
     // Reset reroll counter now that player has chosen a perk 
     player.reroll = 0;

@@ -1,6 +1,5 @@
 ## 2023.01.11
 - getting lots of melee predictions where they just dont attack now. see scratch file
-- everyLevel perks trigger twice now that I moved it to happen on spawn
 - save is broken on Electron build. Prompt is not supported
 - **IMPORTANT**: HOW DOES DIFFICULTY SCALE WITH A TON OF PLAYERS
 - UI bug: toolbar is jumping around when you hover spell in toolbar
