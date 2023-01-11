@@ -1,6 +1,5 @@
 # Quality of Life Tasks
 - No spell should take more than 3 seconds (target column, target cone, target circle for example)
-- Menu button words aren't centered
 - pick a spell should come up after tutorial
 - ui bug: healthbar text gets blurry while hovering over push
 - Make an "out of range" exception for arrows
