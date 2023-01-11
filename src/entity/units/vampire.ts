@@ -39,7 +39,7 @@ const unit: UnitSource = {
     Unit.addModifier(unit, blood_curse.id, underworld, false);
   },
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
-    await meleeAction(unit, attackTargets, underworld, async (attackTarget: Unit.IUnit) => {
+    await meleeAction(unit, attackTargets, underworld, canAttackTarget, async (attackTarget: Unit.IUnit) => {
       playSFXKey('vampireAttack');
       await Unit.playAnimation(unit, unit.animations.attack);
       // prediction is false because unit.action doesn't yet ever occur during a prediction

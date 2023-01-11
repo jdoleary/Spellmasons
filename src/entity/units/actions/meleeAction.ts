@@ -3,7 +3,7 @@ import { distance } from '../../../jmath/math';
 import * as Unit from '../../Unit';
 import Underworld from '../../../Underworld';
 
-export async function meleeAction(unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, attackCB: (attackTarget: Unit.IUnit) => Promise<void>) {
+export async function meleeAction(unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean, attackCB: (attackTarget: Unit.IUnit) => Promise<void>) {
   if (!Unit.canMove(unit)) {
     return;
   }
@@ -13,12 +13,10 @@ export async function meleeAction(unit: Unit.IUnit, attackTargets: Unit.IUnit[] 
     // Do not move if they don't have a target
     return;
   }
-  // Calculate ahead of time to ensure they won't attack if the badge doesn't show
-  const precalculatedCanAttack = underworld.canUnitAttackTarget(unit, attackTarget);
   // Movement
   await Unit.moveTowards(unit, attackTarget, underworld);
   // Attack
-  await meleeTryAttackClosestEnemy(unit, attackTarget, precalculatedCanAttack, () => attackCB(attackTarget));
+  await meleeTryAttackClosestEnemy(unit, attackTarget, canAttackTarget, () => attackCB(attackTarget));
 }
 // precalculatedCanAttack will prevent and report an attack that isn't expected.
 // Attacks must be expected so that the user is warned via an attentionMarker that they

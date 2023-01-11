@@ -2419,14 +2419,18 @@ export default class Underworld {
 
   async executeNPCTurn(faction: Faction) {
     console.log('game: executeNPCTurn', Faction[faction]);
-    const cachedTargets: { [id: number]: Unit.IUnit[] } = {};
+    const cachedTargets: { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } = {};
     for (let u of this.units.filter(
       (u) => u.unitType === UnitType.AI && u.alive && u.faction == faction
     )) {
       const unitSource = allUnits[u.unitSourceId];
       if (unitSource) {
-        cachedTargets[u.id] = unitSource.getUnitAttackTargets(u, this);
+        const targets = unitSource.getUnitAttackTargets(u, this);
+        cachedTargets[u.id] = { targets, canAttack: this.canUnitAttackTarget(u, targets && targets[0]) };
       }
+      // Set all units' stamina to 0 before their turn is initialized so that any melee units that have remaining stamina
+      // wont move during the ranged unit turn
+      u.stamina = 0;
     }
     for (let subTypes of [[UnitSubType.RANGED_LOS, UnitSubType.RANGED_RADIUS, UnitSubType.SUPPORT_CLASS], [UnitSubType.MELEE]]) {
       const animationPromises: Promise<void>[] = [];
@@ -2446,11 +2450,9 @@ export default class Underworld {
         }
         const unitSource = allUnits[u.unitSourceId];
         if (unitSource) {
-          const targets = cachedTargets[u.id] || [];
+          const { targets, canAttack } = cachedTargets[u.id] || { targets: [], canAttack: false };
           // Add unit action to the array of promises to wait for
-          // TODO: Prevent golems from attacking if they are out of range
-          // like when they are around a corner
-          let promise = raceTimeout(5000, `Unit.action; unitSourceId: ${u.unitSourceId}; subType: ${u.unitSubType}`, unitSource.action(u, targets, this, this.canUnitAttackTarget(u, targets && targets[0])));
+          let promise = raceTimeout(5000, `Unit.action; unitSourceId: ${u.unitSourceId}; subType: ${u.unitSubType}`, unitSource.action(u, targets, this, canAttack));
           animationPromises.push(promise);
         } else {
           console.error(
