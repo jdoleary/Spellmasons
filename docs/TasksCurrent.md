@@ -171,6 +171,7 @@
     - bug: music is only coming out of the left ear??
     - "target cone" lock on is an issue when targeting self unintentionally
     - "protection" should work for enemies casters such as poisoner and priestb
+- May have prediction errors with ranged units since they don't use canAttackTarget in their action().  See ac2c0b1f for more.  For now, we're safe since ranged units only ever move OR attack not both.
 # Tasks
 - Need something to protect like the towers in into the breach, something to draw you out and make you take risks
 - is burst too cheap??
