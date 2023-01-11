@@ -11,20 +11,19 @@
 }
 
 @font-face {
-  font-family: Silkscreen;
-  src: url('./font/Silkscreen/Silkscreen-Regular.ttf');
+  font-family: Forum;
+  src: url('./font/Forum-Regular.ttf');
 }
 
 body {
   margin: 0;
   overflow: hidden;
-  font-family: 'Silkscreen', 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
-    'Lucida Sans', Arial, sans-serif;
+  font-family: Forum;
 }
 
 button,
 .button-text {
-  font-family: 'Silkscreen';
+  font-family: Forum;
 }
 
 #PIXI-holder {
@@ -573,6 +572,7 @@ kbd {
   line-height: 1;
   padding: 2px 4px;
   white-space: nowrap;
+  font-family: Forum;
 }
 
 .card-inner {
@@ -612,7 +612,7 @@ kbd {
   text-align: center;
   color: white;
   text-transform: capitalize;
-  transform: translate(0px, -8px);
+  transform: translate(0px, -2px);
 }
 
 #upgrade-picker-content .card-rarity,
@@ -654,8 +654,8 @@ kbd {
   /* max-height: 30px; */
   /* For new card template */
   padding: 4px;
-  height: 10px;
-  line-height: 10px;
+  height: 13px;
+  line-height: 13px;
   /* Allow text center even when text overflows */
   /* https://stackoverflow.com/a/28233945/4418836 */
   margin-left: -20%;

@@ -1,5 +1,4 @@
 ## 2023.01.11
-- **Important** font is hard to read (focus on legibility)
 - i18n: Unit tooltip info
     - ghost archer
     - dark summoner
@@ -19,24 +18,6 @@
 - UI bug: toolbar is jumping around when you hover spell in toolbar
 
 ## Brad Feedback
-```
-Possible font options
-- https://fonts.google.com/specimen/Comfortaa?category=Display,Monospace
-    - circly, clear, not fantasy 6/10
-- https://fonts.google.com/specimen/Poiret+One?category=Display,Monospace
-    - thin, clear, interesting 6/10
-    - brad 3
-- https://fonts.google.com/specimen/Forum?category=Display,Monospace
-    - clean, clear, serif, 7/10
-    - brad 2
-- https://fonts.google.com/specimen/Jomhuria?category=Display,Monospace
-    - bold 4/10
-    - brad 1
-- https://fonts.google.com/specimen/Metal?category=Display,Monospace
-    - italic, clear 5/10
-    - brad 4
-
-```
 - some of the text on card copy is indented by a space
 - sacrifice should be more rare
 - maybe prediction melee error attention markers
