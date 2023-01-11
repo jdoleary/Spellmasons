@@ -1,15 +1,12 @@
 ## 2023.01.11
+- golem attack range shows bigger than it is
 - getting lots of melee predictions where they just dont attack now. see scratch file
+    - it's because their stamina is still low and hasn't been reset yet
 - save is broken on Electron build. Prompt is not supported
 - **IMPORTANT**: HOW DOES DIFFICULTY SCALE WITH A TON OF PLAYERS
-- UI bug: toolbar is jumping around when you hover spell in toolbar
-- missing decoy gif
-- Unexpected: arrow couldnt find wall to intersect with
 
 ## Brad Feedback
 - some of the text on card copy is indented by a space
-- sacrifice should be more rare
-- maybe prediction melee error attention markers
 - priest Ai doesn't seek out corpses?
 - health perks aren't strong enough
 - does cone + column not work if your not hovering directly on a target?
@@ -138,6 +135,9 @@
 - Make status page for app running headless server so I can tell how many users are connected, etc and historical info
 
 # To be Triaged
+- UI bug: toolbar is jumping around when you hover spell in toolbar
+- missing decoy gif
+- Unexpected: arrow couldnt find wall to intersect with
 - todo: Bossmasons' casts aren't limited when he's out of mana
 - There should be 2-3 spots where no enemies are allowed to spawn,
     - end game maps are too crowded
