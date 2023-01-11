@@ -48,7 +48,7 @@ export async function meleeTryAttackClosestEnemy(unit: Unit.IUnit, attackTarget:
       // It works by checking if they would have an attackBadge before movement, then after movement it wont let them attack even if they are in range.
       // In that case, it will hit this else block and report the error.  I suspect to never see this error logged in monitoring, but it's here just
       // in case to prevent the false-negative (which could ruin a run for a player and is super unfair.) 
-      console.error('Melee prediction was incorrect!', unit.stamina, `${unit.x}, ${unit.y}`, `${attackTarget.x},${attackTarget.y}`, unit.attackRange)
+      console.error('Melee prediction was incorrect! This is usually due to a stamina issue:', unit.stamina, `${unit.x}, ${unit.y}`, `${attackTarget.x},${attackTarget.y}`, unit.attackRange)
     } else {
       await goAheadAttackCB();
     }
