@@ -537,7 +537,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
     // Disallow click out of bounds
     floatingText({
       coords: mousePos,
-      text: 'Out of bounds!'
+      text: 'Out of bounds'
     })
     playSFXKey('deny');
     return;

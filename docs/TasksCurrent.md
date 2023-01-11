@@ -1,8 +1,8 @@
 ## 2023.01.11
-- i18n: Unit tooltip info
 - **IMPORTANT**: HOW DOES DIFFICULTY SCALE WITH A TON OF PLAYERS
-- **BIG BUG**: If multiple enemies are targeting an ally unit but it dies in the ranged turn the melee units can attack you without intention warning
 - UI bug: toolbar is jumping around when you hover spell in toolbar
+- missing decoy gif
+- Unexpected: arrow couldnt find wall to intersect with
 
 ## Brad Feedback
 - some of the text on card copy is indented by a space

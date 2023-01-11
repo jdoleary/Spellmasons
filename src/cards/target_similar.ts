@@ -24,12 +24,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconTargetSimilar.png',
     requiresFollowingCard: true,
-    description: `
-Targets the nearest entity of the same kind as the cast target.❕
-
-
-Each stack of this spell will target an additional entity.
-    `,
+    description: 'spell_target_similar',
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
       // Note: This loop must NOT be a for..of and it must cache the length because it
