@@ -80,7 +80,7 @@ import { makeRisingParticles, makeScrollDissapearParticles, stopAndDestroyForeve
 import { ensureAllClientsHaveAssociatedPlayers, Overworld } from './Overworld';
 import { Emitter } from '@pixi/particle-emitter';
 import { golem_unit_id } from './entity/units/golem';
-import { createPerkElement, generatePerks, tryTriggerPerk } from './Perk';
+import { cleanUpPerkList, createPerkElement, generatePerks, tryTriggerPerk, showPerkList, hidePerkList } from './Perk';
 import { bossmasonUnitId } from './entity/units/bossmason';
 import { hexToString } from './graphics/ui/colorUtil';
 
@@ -944,6 +944,7 @@ export default class Underworld {
   // if an object stops being used.  It does not empty the underworld arrays, by design.
   cleanup() {
     console.log('teardown: Cleaning up underworld');
+    cleanUpPerkList();
     // Dereference underworld
     this.overworld.underworld = undefined;
     globalThis.attentionMarkers = [];
@@ -2144,6 +2145,8 @@ export default class Underworld {
       const numberOfUpgradesToChooseFrom = 3 - player.reroll;
       if (isPerk) {
         const perks = generatePerks(numberOfUpgradesToChooseFrom, this);
+        // Show the perks that you already have
+        showPerkList(player);
         const elPerks = perks.map(perk => createPerkElement(perk, player, this));
         if (elUpgradePickerContent) {
           elUpgradePickerContent.innerHTML = '';
@@ -2165,6 +2168,8 @@ export default class Underworld {
         }
 
       } else {
+        // Only show upgrades, not perk list
+        hidePerkList();
 
         const upgrades = Upgrade.generateUpgrades(player, numberOfUpgradesToChooseFrom, minimumProbability, this);
         if (!upgrades.length) {

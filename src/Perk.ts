@@ -9,6 +9,15 @@ const elPerkList = document.getElementById('perkList');
 const elPerksEveryLevel = document.getElementById('perkEveryLevel');
 const elPerksEveryTurn = document.getElementById('perkEveryTurn');
 
+export function cleanUpPerkList() {
+    if (elPerksEveryLevel) {
+        elPerksEveryLevel.innerHTML = '';
+    }
+    if (elPerksEveryTurn) {
+        elPerksEveryTurn.innerHTML = '';
+    }
+}
+
 function getPerkText(perk: AttributePerk, omitWhen: boolean = false): string {
     return `
 ${perk.certainty < 1.0 ? `🎲 ${Math.round(perk.certainty * 100)}% chance to` : ``}
@@ -211,6 +220,13 @@ export function choosePerk(perk: AttributePerk, player: IPlayer, underworld: Und
         // Show next round of upgrades
         underworld.showUpgrades();
     }
+}
+export function hidePerkList() {
+    if (elPerkList) {
+        elPerkList.classList.toggle('visible', false);
+    }
+}
+export function showPerkList(player: IPlayer) {
     if (!globalThis.headless) {
         if (elPerkList && elPerksEveryLevel && elPerksEveryTurn) {
             if (player.attributePerks.length) {
@@ -223,12 +239,14 @@ export function choosePerk(perk: AttributePerk, player: IPlayer, underworld: Und
                 everyLevel.forEach(p => perkToListItem(p, elPerksEveryLevel));
                 everyTurn.forEach(p => perkToListItem(p, elPerksEveryTurn));
             } else {
+                console.log('PerkList: No perks to show.');
                 elPerkList.classList.toggle('visible', false);
             }
         } else {
             console.error('Could not render perkList')
         }
     }
+
 }
 function perkToListItem(perk: AttributePerk, container: HTMLElement) {
     const el = document.createElement('div');
