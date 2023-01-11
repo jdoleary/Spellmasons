@@ -264,8 +264,8 @@ export function triggerPickup(pickup: IPickup, unit: IUnit, underworld: Underwor
 }
 
 const manaPotionRestoreAmount = 40;
-const healthPotionRestoreAmount = 5;
-const spike_damage = 3;
+const healthPotionRestoreAmount = 50;
+const spike_damage = 30;
 export const CARDS_PICKUP_NAME = 'Spells';
 export const PICKUP_SPIKES_NAME = 'Trap';
 export const PICKUP_PORTAL_NAME = 'Portal';
