@@ -10,7 +10,7 @@ const manaCostToCast = 60;
 const unit: UnitSource = {
   id: DARK_SUMMONER_ID,
   info: {
-    description: 'The Dark Summoner will ruin you if you give him too much time - he summons common summoners who will summon yet more enemies.',
+    description: 'dark_summoner_copy',
     image: 'units/summonerIdle',
     subtype: UnitSubType.SUPPORT_CLASS,
   },

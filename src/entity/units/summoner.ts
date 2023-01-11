@@ -19,7 +19,7 @@ const manaCostToCast = 60;
 const unit: UnitSource = {
   id: SUMMONER_ID,
   info: {
-    description: 'A summoner uses mana to summon enemies.',
+    description: 'summoner_copy',
     image: 'units/summonerIdle',
     subtype: UnitSubType.SUPPORT_CLASS,
   },

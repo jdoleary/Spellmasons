@@ -805,7 +805,7 @@ export function updateTooltipContent(underworld: Underworld) {
 <img width="100%" src="${Unit.getExplainPathForUnitId(unitSource.id)}"/>
 <h1>${globalThis.selectedUnit.name || i18n(unitSource.id)}</h1>
 <hr/>
-<div>${i18n(unitSource.info.description.trim())}</div>
+<div>${i18n(unitSource.info.description)}</div>
 <hr/>
 ${globalThis.selectedUnit.faction == Faction.ALLY ? '🤝' : '⚔️️'} ${i18n((Faction[globalThis.selectedUnit.faction] || '').toString())}
 🗡️ ${globalThis.selectedUnit.damage}

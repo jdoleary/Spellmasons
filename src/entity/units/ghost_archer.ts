@@ -15,7 +15,7 @@ export const GHOST_ARCHER_ID = 'Ghost Archer';
 const unit: UnitSource = {
   id: GHOST_ARCHER_ID,
   info: {
-    description: `The Ghost Archer\'s arrows pierce units, dealing 1/2 damage to them, on it\'s way to it\'s target. It will target the farthest enemy that it is able to attack.`,
+    description: 'ghost_archer_copy',
     image: 'units/archerIdle',
     subtype: UnitSubType.RANGED_LOS,
   },

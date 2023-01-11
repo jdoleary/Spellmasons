@@ -12,7 +12,7 @@ import * as config from '../../config';
 const unit: UnitSource = {
   id: 'poisoner',
   info: {
-    description: 'A poisoner will cast a poison curse on it\'s enemies.',
+    description: 'poisoner_copy',
     image: 'units/poisIdle',
     subtype: UnitSubType.RANGED_RADIUS,
   },

@@ -2,7 +2,7 @@ import type * as Unit from '../Unit';
 import type { UnitSubType } from '../../types/commonTypes';
 
 interface ConstructorInfo {
-  description: string;
+  description: Localizable;
   image: string;
   subtype: UnitSubType;
 }
@@ -53,6 +53,7 @@ import decoy from './decoy';
 import blood_archer from './blood_archer';
 import ghost_archer from './ghost_archer';
 import Underworld from '../../Underworld';
+import { Localizable } from '../../localization';
 
 function register(unit: UnitSource) {
   allUnits[unit.id] = unit;

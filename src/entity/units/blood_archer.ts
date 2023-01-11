@@ -14,7 +14,7 @@ export const BLOOD_ARCHER_ID = 'Blood Archer';
 const unit: UnitSource = {
   id: BLOOD_ARCHER_ID,
   info: {
-    description: `The blood archer will fire it\'s arrows at ${NUMBER_OF_UNITS_BLOOD_ARCHER_CAN_ATTACK} enemies simultaneously.  (Miniboss Blood Archers can attack ${NUMBER_OF_UNITS_MINIBOSS_BLOOD_ARCHER_CAN_ATTACK} enemies at once.)`,
+    description: ['blood_archer_copy', NUMBER_OF_UNITS_BLOOD_ARCHER_CAN_ATTACK.toString(), NUMBER_OF_UNITS_MINIBOSS_BLOOD_ARCHER_CAN_ATTACK.toString()],
     image: 'units/archerIdle',
     subtype: UnitSubType.RANGED_LOS,
   },

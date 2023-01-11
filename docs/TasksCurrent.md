@@ -1,18 +1,5 @@
 ## 2023.01.11
 - i18n: Unit tooltip info
-    - ghost archer
-    - dark summoner
-    - dark priest
-    - poisoner
-    - priest
-    - vampire
-    - green glop
-    - blood archer
-    - blood golem
-    - decoy
-    - summoner
-- **Important** it says "resume last run" even after he died, its the turn before you died; it doesn't make sense
-- **important** i18n bug: "explain blessings" isn't being translated
 - **IMPORTANT**: HOW DOES DIFFICULTY SCALE WITH A TON OF PLAYERS
 - **BIG BUG**: If multiple enemies are targeting an ally unit but it dies in the ranged turn the melee units can attack you without intention warning
 - UI bug: toolbar is jumping around when you hover spell in toolbar

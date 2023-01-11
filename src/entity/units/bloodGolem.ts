@@ -10,7 +10,7 @@ export const BLOOD_GOLEM_ID = 'Blood Golem';
 const unit: UnitSource = {
   id: BLOOD_GOLEM_ID,
   info: {
-    description: 'The blood golem is heaftier and more deadly than it\'s more common bretheren.',
+    description: 'blood_golem_copy',
     image: 'units/gruntIdle',
     subtype: UnitSubType.MELEE,
   },

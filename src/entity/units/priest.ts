@@ -42,7 +42,7 @@ async function resurrectUnits(self: Unit.IUnit, units: Unit.IUnit[], underworld:
 const unit: UnitSource = {
   id: 'priest',
   info: {
-    description: `The priest resurrects dead allies.`,
+    description: 'priest_copy',
     image: 'units/priestIdle',
     subtype: UnitSubType.SUPPORT_CLASS,
   },

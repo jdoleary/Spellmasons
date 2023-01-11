@@ -9,7 +9,7 @@ import { bloodVampire } from '../../graphics/ui/colors';
 const unit: UnitSource = {
   id: 'vampire',
   info: {
-    description: 'A vampire is infected with Blood Curse.  Anyone with a blood curse get\'s 2x max health but takes heals as pure damage.',
+    description: 'vampire_copy',
     image: 'units/vampireIdle',
     subtype: UnitSubType.MELEE,
   },
@@ -42,6 +42,8 @@ const unit: UnitSource = {
     await meleeAction(unit, attackTargets, underworld, async (attackTarget: Unit.IUnit) => {
       playSFXKey('vampireAttack');
       await Unit.playAnimation(unit, unit.animations.attack);
+      // prediction is false because unit.action doesn't yet ever occur during a prediction
+      Unit.addModifier(attackTarget, blood_curse.id, underworld, false);
       Unit.takeDamage(attackTarget, unit.damage, unit, underworld, false, undefined);
     })
   },

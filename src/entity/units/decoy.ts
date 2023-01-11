@@ -8,7 +8,7 @@ import { bloodDecoy } from '../../graphics/ui/colors';
 const unit: UnitSource = {
   id: 'decoy',
   info: {
-    description: 'A decoy to distract enemies',
+    description: 'decoy_copy',
     image: 'units/decoy',
     subtype: UnitSubType.MELEE,
   },

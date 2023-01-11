@@ -12,7 +12,7 @@ const NUMBER_OF_GEYSERS = 6;
 const unit: UnitSource = {
   id: 'dark priest',
   info: {
-    description: `Releasing geysers of dark energy, the dark priest can attack up to ${NUMBER_OF_GEYSERS} of enemies at once.`,
+    description: ['dark_priest_copy', NUMBER_OF_GEYSERS.toString()],
     image: 'units/priestIdle',
     subtype: UnitSubType.RANGED_RADIUS,
   },
