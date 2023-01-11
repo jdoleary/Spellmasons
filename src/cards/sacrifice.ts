@@ -21,7 +21,7 @@ const spell: Spell = {
     manaCost: 30,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.UNCOMMON],
+    probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconSacrifice.png',
     description: 'spell_sacrifice',
     effect: async (state, card, quantity, underworld, prediction) => {
