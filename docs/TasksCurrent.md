@@ -1,5 +1,4 @@
 ## 2023.01.11
-- golem attack range shows bigger than it is
 - getting lots of melee predictions where they just dont attack now. see scratch file
     - it's because their stamina is still low and hasn't been reset yet
 - save is broken on Electron build. Prompt is not supported

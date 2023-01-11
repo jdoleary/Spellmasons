@@ -2472,11 +2472,13 @@ export default class Underworld {
     }
     switch (u.unitSubType) {
       case UnitSubType.MELEE:
+        const maxPathDistance = u.attackRange + u.stamina;
         // optimization: Only calculate full path if the unit is less than or equal to their remaining
-        // stamina because they certainly cannot attack the target if the target is beyond their stamina radius
+        // stamina and attackRange because they certainly cannot attack the target if the target
+        // is beyond their stamina radius and range
         // but we need to calculate the full path if they are within the stamina radius because the path
         // might require that they travel farther than they are able to in one turn.
-        if (math.distance(u, attackTarget) <= u.stamina) {
+        if (math.distance(u, attackTarget) <= maxPathDistance) {
           this.setPath(u, attackTarget);
           if (u.path && u.path.points.length) {
             // Returns true if melee unit WILL be within range once their done moving
@@ -2490,7 +2492,6 @@ export default class Underworld {
               // return false because the path doesn't make it all the way to the target
               return false;
             }
-            const maxPathDistance = u.attackRange + u.staminaMax;
             const dist = calculateDistanceOfVec2Array([u, ...u.path.points]);
             return !!u.path.points.length && dist <= maxPathDistance;
           } else {
