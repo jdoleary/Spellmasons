@@ -40,9 +40,10 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
       moveSpeed
     }
   }, () => { });
-  unit.moveSpeed *= changeProportion;
-  unit.staminaMax *= changeProportion;
-  unit.stamina *= changeProportion;
+  const quantityModifiedChangeProportion = Math.pow(changeProportion, quantity);
+  unit.moveSpeed *= quantityModifiedChangeProportion;
+  unit.staminaMax *= quantityModifiedChangeProportion;
+  unit.stamina *= quantityModifiedChangeProportion;
 }
 
 const spell: Spell = {
@@ -65,6 +66,9 @@ const spell: Spell = {
         await Promise.all([playDefaultSpellAnimation(card, targets, prediction), playDefaultSpellSFX(card, prediction)]);
         for (let unit of targets) {
           Unit.addModifier(unit, id, underworld, prediction, quantity);
+          if (!prediction) {
+            floatingText({ coords: unit, text: 'slow' });
+          }
         }
       }
       return state;
