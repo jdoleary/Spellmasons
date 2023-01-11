@@ -2425,6 +2425,8 @@ export default class Underworld {
     )) {
       const unitSource = allUnits[u.unitSourceId];
       if (unitSource) {
+        // Set unit stamina to max so that it can calculate if they can attack target
+        u.stamina = u.staminaMax;
         const targets = unitSource.getUnitAttackTargets(u, this);
         cachedTargets[u.id] = { targets, canAttack: this.canUnitAttackTarget(u, targets && targets[0]) };
       }
@@ -2437,6 +2439,7 @@ export default class Underworld {
       unitloop: for (let u of this.units.filter(
         (u) => u.unitType === UnitType.AI && u.alive && u.faction == faction && subTypes.includes(u.unitSubType),
       )) {
+        // Set unit stamina to max so that they may move now that it is their turn
         u.stamina = u.staminaMax;
         // Trigger onTurnStart Events
         const abortTurn = await Unit.runTurnStartEvents(u, false, this);
