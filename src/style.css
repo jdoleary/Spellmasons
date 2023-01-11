@@ -19,6 +19,8 @@ body {
   margin: 0;
   overflow: hidden;
   font-family: Forum;
+  /* Prevent highlighting text to copy it */
+  user-select: none;
 }
 
 button,
