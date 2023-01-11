@@ -1,29 +1,35 @@
 ## Brad Feedback
-- No spell should take more than 3 seconds (target column, target cone, target circle for example)
-- Menu button words aren't centered
-- pick a spell should come up after tutorial
-- toolbar is jumping around when you hover card
-- text is hard to read (focus on legibility)
-- some of the text is indented by a space
-- healthbar text gets blurry while hovering over push
+- UI bug: toolbar is jumping around when you hover card
+- **Important** font is hard to read (focus on legibility)
+```
+Possible font options
+- https://fonts.google.com/specimen/Comfortaa?category=Display,Monospace
+- https://fonts.google.com/specimen/Poiret+One?category=Display,Monospace
+- https://fonts.google.com/specimen/Oleo+Script?category=Display,Monospace
+- https://fonts.google.com/specimen/Forum?category=Display,Monospace
+- https://fonts.google.com/specimen/Averia+Serif+Libre?category=Display,Monospace
+- https://fonts.google.com/specimen/Averia+Libre?category=Display,Monospace
+- https://fonts.google.com/specimen/Metamorphous?category=Display,Monospace
+- https://fonts.google.com/specimen/Jomhuria?category=Display,Monospace
+- https://fonts.google.com/specimen/Akaya+Kanadaka?category=Display,Monospace
+- https://fonts.google.com/specimen/Oldenburg?category=Display,Monospace
+- https://fonts.google.com/specimen/Metal?category=Display,Monospace
+
+Pixelated
+- https://fonts.google.com/specimen/Press+Start+2P?category=Display,Monospace
+- https://fonts.google.com/specimen/VT323?category=Display,Monospace
+```
+- some of the text on card copy is indented by a space
 - end turn "spacebar" should flicker when you're out of mana too, not just stamina
-- it says "resume last run" even after he died, its the turn before you died; it doesn't make sense
-- bug: perk box doesn't reset between runs
-- range exception for arrows
-    - just warn "arrows have infinite range unless combined with other spells"
-- perk list is too wide, will overlap if you have many perks
+- **Important** it says "resume last run" even after he died, its the turn before you died; it doesn't make sense
 - sacrifice should be more rare
-- chain + arrow should shoot multiple at the same time
 - maybe prediction melee error attention markers
-- potion health not 10x'd yet?
-- mana goes negative if you kill yourself due to the subtracted mana from dying
-- Esc hotkey to menu doesn't work if you're hovering a inspect unit while spawning
-- i18n bug: "explain blessings" isn't being translated
-- "bleed" with quantity plays 2 animations
-- priest Ai doesn't seek out corpses
+- **important** i18n bug: "explain blessings" isn't being translated
+- priest Ai doesn't seek out corpses?
 - health perks aren't strong enough
 - does cone + column not work if your not hovering directly on a target?
-- target columns should show circles when it adds a target
+- **IMPORTANT**: HOW DOES DIFFICULTY SCALE WITH A TON OF PLAYERS
+- If an enemy lines up perfectly with another and the direction it's going it can push the enemy.  Try to set up a ranged unit that pushes a melee unit closer and see if the melee unit hits you
 # Focus
 - Get build ready for streamers and reach out
 - Fix text overflow on spell cards ("connect", "decoy", "bleed")
@@ -41,7 +47,6 @@
 # Desired Schedule
 - word wrap on spells that are too long looks off
 - January 1/8-1/14
-    - fix opening book animation playing when you don't have to wait to cast, allow it to exit early
     - Test on different resolutions
     - **Email streamers**, try to set up a multiplayer stream on release day
     - **Reach out to translators**
@@ -58,26 +63,20 @@
         - Notify when version isn't same
 - January 1/15-1/21
     - small stuff
-        - fix being able to go negative mana if you queue a spell before the previous spell's mana is spent
         - rename vampire or restore that it passes blood curse on to you when it bites
         - multiplayer perk resurrect icon
     - Balanced / Difficult
     - Finish Boss
         - Implement aoe damage against enemies chain+hurt?
-    - A way to see your perks roll
-        - Animated Perk List UI
-            - Are perk chances synced correctly in multiplayer?
+    - Are perk chances synced correctly in multiplayer?
     - Submit to IGN and others
     - Add ability to put user-facing text banners in game
         - scheduled downtime for servers
         - other annoucements
     - Balance all music 
-    - Add secondary toolbars on the sides (only shown on drag)
     - Add run stats in gameover screen / leaderboard
     - Test on Slow Computer
 - January 1/22-1/28
-    - Allow for deleting saves
-    - Save files should be sorted by recency
     - Finish Looping
         - (see branch `loop-tint-level`)
     - Make Demo as promised
@@ -90,9 +89,6 @@
             - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
             - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
         - Verify Cloud Saves
-        - Perks
-            - Styling for perks
-            - Use relative percentages rather than out of 100%
         - Achievements?
         - Accessability option to make text more readable
     - Final QA
@@ -107,20 +103,13 @@
 - Other 
     - 2nd algorithm for generating levels
         - see branch 2nd-level-algorithm
-    - Features / Content
-        - Reroll / exchange cards (risk reward style)
-            - like maybe you can reroll but you have one less card to choose from each time
     - [Submit demo to IGN](https://corp.ign.com/submit-a-game)
     - make music play in menu
-
-    
-- Add codex where you can read about spells and enemies
 ---
-- Need sound effect for bolt, improve bolt animation, consume, conserve, reroll
-- Arrow collisions don't work right when used with target_circle first
-- Capture soul should kill the enemy and animate a soul coming too you.
-- Heat seeking skull with particle effects behind it.  You release it and it seeks out the nearest enemy to deal damage
-- early levels are too big, later levels are too small
+- sfx: Need sound effect for bolt, improve bolt animation, consume, conserve, reroll
+- (fixed?) Arrow collisions don't work right when used with target_circle first
+- content: Heat seeking skull with particle effects behind it.  You release it and it seeks out the nearest enemy to deal damage
+- (fixed?) early levels are too big, later levels are too small
 - fix hover styling for perk reroll button
 - single player game overscreen should offer to restart at checkpoint
 - **BIG BUG**: If multiple enemies are targeting an ally unit but it dies in the ranged turn the melee units can attack you without intention warning
@@ -130,14 +119,11 @@
         - Instead of "increase emoji cast range" just "+ 5% cast range"; "at the start of" -> "every level"; "temporarily" -> "single-turn"; OR "max stamina" / "overflow stamina"
         - every turn / every level should be presented first
     - blood golem too powerful? shouldn't be able to do kill damage? or introduce later
-    - in your perk-picking screen you should be able to see your current perks
     - explain graphic for summoner icon
-    - increase all healths and damages by 10x
     - debilitate cheaper and less effective
-    - Easy to not grow your max mana, maybe get some by default each level?
+    - Easy to not grow your max mana, maybe get some by default each level? (and for health)
     - maybe perks should do concrete amounts instead of %s
     - weird line coming off of units that you pull into liquid on death
-    - show how much damage you'll take when you end your turn
     - turn off target snapping when your first spell is a targeting spell for convenience
     - spellbook animation is showing up in singleplayer
         - but you still need it when you yourself are casting multiple at once
@@ -148,14 +134,11 @@
     - **important** AOE should have max targets just like "Connect"
     - increase radius for connect and fix faction targeting so it doesn't hit you
     
-- Don't remove `quicksave` after death
-- starting levels are way too big now
 - 80% mana at the start of a level perk is too much
 
 - Cinematic camera should just be a zoom in? or improved
 # Validation
 - What happens if you pick up a scroll but you have all the spells
-- Perks
 - balance perks
 - Make sure perks everyTurn don't proc after portal has spawned
 # Priority
@@ -171,16 +154,12 @@
 - bug: server freaks out after players leave (when they're dead)
     - somehow got inconsistent maps; one client must've been holding on to an instance
 - Make status page for app running headless server so I can tell how many users are connected, etc and historical info
-- Protect production branch from unintentional pushes
 
 # To be Triaged
-- bug: you can zoom during cinematic
 - todo: Bossmasons' casts aren't limited when he's out of mana
 - There should be 2-3 spots where no enemies are allowed to spawn,
     - end game maps are too crowded
 - src: Make connect sort by same faction first
-- bug: clickign to cancel cinematic sometimest clicks on the upgrade accidentally
-- fix: tutorial comes up at the same time it asks you to pick a new spell
 - animate bloat
 - Remove "update" code in golems-menu
 - bug: resume last run breaks (i think due to multiplayer)
@@ -192,14 +171,12 @@
         - even if it resolves immediately
         - it's the last prediction ones that timeout
         - that's because it makes asyc the flow of card.effect and in castCards card.effect gets fullySimulateForceMovePredictions right after it
-- Revise confusing "Glass Sniper" copy
-- IMPORTANT: The "push" from the bloat explosion seems to be causing a location desync
+- (fixed?) IMPORTANT: The "push" from the bloat explosion seems to be causing a location desync
     - This is because the push happens onDeath event and that's not awaited.
     - To reproduce, queue up a Bloat + slash to kill an enemy with another in the blast radius and end your turn before the spell has finished animating
 - bug: loaded from quicksave in multiplayer and got "CAnnot choose upgrade, from player is undefined"
     - This is because save doesn't yet work in multiplayer
 - Ghost archer doesn't come closer??
-- Make summoner summon units to random places
 - poisoner moves too close instead of casting
 - Potential issue when both players are alt-tabbed and server restarts, the chrome one got the disconnected message but the other was on the "resume" menu screen and when I resumed it's stuck because it has the old game data but the server restarted (chrome player started a new game of the same name), and so firefox player has old game state and also cannot ready up because they are already in game.
 - Retro playthrough:
@@ -215,9 +192,7 @@
     - "target cone" lock on is an issue when targeting self unintentionally
     - "protection" should work for enemies casters such as poisoner and priestb
 # Tasks
-- Game is too easy right now, I think due to the perks
 - Need something to protect like the towers in into the breach, something to draw you out and make you take risks
-- Way to control Ally faction units, like follow me. Or go get them.
 - is burst too cheap??
 - Don't change music until the biome changes
 - fix slow copy "maxStamina"
@@ -288,20 +263,17 @@ sync: Syncing players []
 initializeTurnPhase( Stalled )
 setTurnPhase( Stalled )
 ```
-- IMPORTANT: HOW DOES DIFFICULTY SCALE WITH A TON OF PLAYERS
 - IMPORTANT: Fix music only coming out of one channel
     - itshallnotfindme sounds soft in the right ear
 - lava abyss color is off
 - blood golem / blood archer / green glop / ghost archer / sand vamp explain is a broken image
     - but ghost archer does show up locally
-- If an enemy lines up perfectly with another and the direction it's going it can push the enemy.  Try to set up a ranged unit that pushes a melee unit closer and see if the melee unit hits you
 - even in singleplayer you can go negative mana if you queue it up while another spell is casting (and you still have the mana from before the current spell takes it)
 - bug: by alt-tabbing during enemy turn they didn't move visually.  Then when I came back and ended my turn again they slid to where they would've been had they moved during their turn (without animate walking) and then walked another turn's distance and bit me without warning
 - bug: Prediction is wrong for potions dropped by last will because in non prediction is waits a moment before dropping them
 - bug: Player on firefox is missing gold circle after death
 - bug: when one player went into a portal and the other had already ended their turn and the left over player died from ai (portal was spawned via admin menu), it correctly went to the next level but it generated 2 levels (skipping right to level 3)
 - pieUrl is stored wrong in browser search bar so if you copy it after connecting it'd double encoded
-- res markers don't show if the unit is alive but will be killed and then resurrected
 - **critical** vamp miniboss got stuck where he has stamina and a path (with no points), but wont move; i think it's because i summoned an archer and the archer was part way in liquid but didn't show it and so he didn't have a path to the archer
 - Fix: should not broadcast latency warning for a message that failsc with a rejected promise
 - archer still had freeze modifier listed in tooltip even after the freeze disappeared naturally on the next turn
@@ -314,7 +286,6 @@ setTurnPhase( Stalled )
 - (m) You're able to cast into negative mana in multiplayer
 - "All targets" copy is confusing if player doesn't understand targeting
 - Find a way to make randomness fixed (like in spell "Displace" so that it doesn't get different random results on other people's screens and so that it wont change after another player casts)
-- This save file is giving me critical errors `saveFile-with-errors.json`
 - (h) Sometimes it tries to path around things and wastes stamina if there isn't a straight line path
 - (h) sometimes when you walk you get stuck on a wall and it wastes stamina
 - (h) bug: In multiplayer: target similar, damage x3 on 2 draggers made their position go to null null
@@ -335,9 +306,6 @@ setTurnPhase( Stalled )
 
 # Localization
 - All tooltip info
-- Spell descriptions
-- Explain prompts - see stash "add i18n to explain prompts"
-- i18n: Press 'z' to make camera follow you
 # Features
 - should allow spell prediction even while an action is taking place - this not being here causes friction in multiplayer
 ## Prediction issues

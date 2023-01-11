@@ -9,5 +9,6 @@
     - [Integrate Steam SDK](https://github.com/ceifa/steamworks.js)
     - Support modding
         - Include instructions from Modding.md
+    - QualityOfLife.md
 - January 31 (check timezone)
     - Release Game and Demo
