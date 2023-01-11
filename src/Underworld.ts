@@ -126,6 +126,8 @@ export default class Underworld {
   // for serializing random: prng
   RNGState?: SeedrandomState;
   turn_phase: turn_phase = turn_phase.Stalled;
+  // Governs which unitSubTypes are able to move at a given time
+  activeUnitSubTypes: UnitSubType[] = [];
   // An id incrementor to make sure no 2 units share the same id
   lastUnitId: number = -1;
   // A count of which turn it is, this is useful for
@@ -475,7 +477,7 @@ export default class Underworld {
         u.path.points.shift();
       }
       // Only allow movement if the unit has stamina
-      if (u.path && u.path.points[0] && u.stamina > 0 && Unit.isUnitsTurnPhase(u, this)) {
+      if (u.path && u.path.points[0] && u.stamina > 0 && Unit.isUnitsTurnPhase(u, this) && this.activeUnitSubTypes.includes(u.unitSubType)) {
         // Move towards target
         const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path.points[0], u.moveSpeed * deltaTime)
         let moveDist = 0;
@@ -1885,6 +1887,8 @@ export default class Underworld {
 
   }
   async initializePlayerTurns() {
+    // Set activeUnitSubTypes to RANGED_RADIUS so that players can move
+    this.activeUnitSubTypes = [UnitSubType.RANGED_RADIUS];
     for (let player of this.players) {
       // Reset player.endedTurn
       // --
@@ -2425,22 +2429,21 @@ export default class Underworld {
     )) {
       const unitSource = allUnits[u.unitSourceId];
       if (unitSource) {
-        // Set unit stamina to max so that it can calculate if they can attack target
+        // Set unit stamina to max so that they may move now that it is their turn
+        // Note: This must be done BEFORE caching targets and canUnitAttackTarget so that it
+        // will have stamina to make the canUnitAttackTarget evaluation
         u.stamina = u.staminaMax;
         const targets = unitSource.getUnitAttackTargets(u, this);
         cachedTargets[u.id] = { targets, canAttack: this.canUnitAttackTarget(u, targets && targets[0]) };
       }
-      // Set all units' stamina to 0 before their turn is initialized so that any melee units that have remaining stamina
-      // wont move during the ranged unit turn
-      u.stamina = 0;
     }
     for (let subTypes of [[UnitSubType.RANGED_LOS, UnitSubType.RANGED_RADIUS, UnitSubType.SUPPORT_CLASS], [UnitSubType.MELEE]]) {
       const animationPromises: Promise<void>[] = [];
+      // Set activeUnitSubTypes so that units whose turn it is may now spend stamina and move
+      this.activeUnitSubTypes = subTypes;
       unitloop: for (let u of this.units.filter(
         (u) => u.unitType === UnitType.AI && u.alive && u.faction == faction && subTypes.includes(u.unitSubType),
       )) {
-        // Set unit stamina to max so that they may move now that it is their turn
-        u.stamina = u.staminaMax;
         // Trigger onTurnStart Events
         const abortTurn = await Unit.runTurnStartEvents(u, false, this);
         if (abortTurn) {
