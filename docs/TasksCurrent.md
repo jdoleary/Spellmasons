@@ -1,4 +1,8 @@
 ## 2023.01.11
+- bug: blood golem somehow moved during ranged unit turn (i had just chain pushed damaged him) and killed me without forcasting it
+    - he's somehow able to move during the archer's turn which puts him in a position to attack
+    - it is indeed happening because the blood golem has non-zero stamina before his turn so he moves during teh ranged unit turn
+    - See reproducable save file in `scratch` file
 - **IMPORTANT**: HOW DOES DIFFICULTY SCALE WITH A TON OF PLAYERS
 - UI bug: toolbar is jumping around when you hover spell in toolbar
 - missing decoy gif
@@ -17,8 +21,6 @@
     - but ghost archer does show up locally
 - Get build ready for streamers and reach out
 - Fix text overflow on spell cards ("connect", "decoy", "bleed")
-- bug: blood golem somehow moved during ranged unit turn (i had just chain pushed damaged him) and killed me without forcasting it
-- bug: i18n target similar is keeping an exclamation emoji used for \n
 # Before next streamer outreach
     - test trigger perk certainty on multiplayer
     - Improve difficulty scaling with over 4 players
