@@ -28,7 +28,6 @@
 - fix being able to go negative mana if you queue a spell before the previous spell's mana is spent
 - A way to see your perks roll
     - Animated Perk List UI
-- Allow for deleting saves
 - Save files should be sorted by recency
 - fix: tutorial comes up at the same time it asks you to pick a new spell
 - Remove customizing magic color

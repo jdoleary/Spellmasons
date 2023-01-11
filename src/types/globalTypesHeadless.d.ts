@@ -102,6 +102,7 @@ declare global {
     var isTutorialComplete: undefined | (() => boolean);
 
     var save: undefined | ((title: string) => void);
+    var deleteSave: undefined | ((title: string) => void);
     var load: undefined | ((title: string) => void);
     var getAllSaveFiles: undefined | (() => string[]);
     // Current client's id

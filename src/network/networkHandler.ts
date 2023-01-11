@@ -717,6 +717,12 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       console.log('Failed to save', saveObject);
     }
   };
+  globalThis.deleteSave = (title: string) => {
+    const doDelete = confirm(i18n('Are you sure you want to delete this save file?'));
+    if (doDelete) {
+      storage.remove(globalThis.savePrefix + title);
+    }
+  }
   globalThis.load = async (title: string) => {
     const savedGameString = storage.get(globalThis.savePrefix + title);
     if (savedGameString) {
