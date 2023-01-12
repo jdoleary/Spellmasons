@@ -1,5 +1,4 @@
 # Quality of Life Tasks
-- No spell should take more than 3 seconds (target column, target cone, target circle for example)
 - pick a spell should come up after tutorial
 - ui bug: healthbar text gets blurry while hovering over push
 - Make an "out of range" exception for arrows
@@ -21,7 +20,6 @@
 
 
 ## Graphics
-- target columns should show circles when it adds a target
 - fix opening book animation playing when you don't have to wait to cast, allow it to exit early
 
 ## UI

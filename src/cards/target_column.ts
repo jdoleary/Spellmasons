@@ -38,6 +38,7 @@ const spell: Spell = {
       targets = targets.length ? targets : [state.castLocation];
       const length = targets.length;
       const vector = normalizedVector(state.casterUnit, state.castLocation).vector || { x: 0, y: 0 };
+      const animateColumns = [];
       for (let i = 0; i < length; i++) {
         const target = targets[i];
         if (!target) {
@@ -49,7 +50,7 @@ const spell: Spell = {
           const color = outOfRange ? colors.outOfRangeGrey : colors.targetingSpellGreen
           drawUIPoly(targetingColumn, color);
         } else {
-          await animate(target, vector, width, depth, underworld);
+          animateColumns.push({ castLocation: target, vector, width, depth });
         }
         const withinColumn = underworld.getPotentialTargets(
           prediction
@@ -59,6 +60,7 @@ const spell: Spell = {
         // Add entities to target
         withinColumn.forEach(e => addTarget(e, state));
       }
+      await animate(animateColumns, underworld);
 
       return state;
     },
@@ -72,10 +74,14 @@ function getColumnPoints(castLocation: Vec2, vector: Vec2, width: number, depth:
   return [p1, p2, p3, p4];
 }
 
-async function animate(castLocation: Vec2, vector: Vec2, width: number, depth: number, underworld: Underworld) {
+async function animate(columns: { castLocation: Vec2, vector: Vec2, width: number, depth: number }[], underworld: Underworld) {
   if (globalThis.headless) {
     // Animations do not occur on headless, so resolve immediately or else it
     // will just waste cycles on the server
+    return Promise.resolve();
+  }
+  if (columns.length == 0) {
+    // Prevent this function from running if there is nothing to animate
     return Promise.resolve();
   }
   const iterations = 100;
@@ -92,26 +98,30 @@ async function animate(castLocation: Vec2, vector: Vec2, width: number, depth: n
         if (globalThis.predictionGraphics) {
           globalThis.predictionGraphics.clear();
           globalThis.predictionGraphics.beginFill(colors.targetingSpellGreen, 0.2);
+          for (let column of columns) {
+            const { castLocation, vector, width, depth } = column
 
-          const animatedDepth = depth * easeOutCubic((i + 1) / iterations);
+            const animatedDepth = depth * easeOutCubic((i + 1) / iterations);
 
-          const targetingColumn = getColumnPoints(castLocation, vector, width, animatedDepth);
-          globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0)
-          globalThis.predictionGraphics.drawPolygon(targetingColumn as PIXI.Point[]);
-          globalThis.predictionGraphics.endFill();
-          const withinColumn = underworld.getPotentialTargets(
-            false
-          ).filter(t => {
-            return isVec2InsidePolygon(t, targetingColumn);
-          });
-          withinColumn.forEach(v => {
-            if (!entitiesTargeted.includes(v)) {
-              entitiesTargeted.push(v);
-              let sfxNumber = Math.floor(i / (iterations / 4));
-              playSFXKey(`targetAquired${sfxNumber}`);
-            }
-            globalThis.predictionGraphics?.drawCircle(v.x, v.y, config.COLLISION_MESH_RADIUS);
-          })
+            const targetingColumn = getColumnPoints(castLocation, vector, width, animatedDepth);
+            globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0)
+            globalThis.predictionGraphics.drawPolygon(targetingColumn as PIXI.Point[]);
+            globalThis.predictionGraphics.endFill();
+            const withinColumn = underworld.getPotentialTargets(
+              false
+            ).filter(t => {
+              return isVec2InsidePolygon(t, targetingColumn);
+            });
+            withinColumn.forEach(v => {
+              if (!entitiesTargeted.includes(v)) {
+                entitiesTargeted.push(v);
+                let sfxNumber = Math.floor(i / (iterations / 4));
+                playSFXKey(`targetAquired${sfxNumber}`);
+              }
+              globalThis.predictionGraphics?.drawCircle(v.x, v.y, config.COLLISION_MESH_RADIUS);
+            })
+          }
+
         }
         if (i >= iterations - 1) {
           resolve();

@@ -1,7 +1,11 @@
 ## 2023.01.11
-- getting lots of melee predictions where they just dont attack now. see scratch file
-    - it's because their stamina is still low and hasn't been reset yet
+- send Val gifs for new sounds
+- bug: Got "you cannot move while casting" but I was able to move anyway
+- Change bolt copy to explain how it stacks.
+- Change "Level X" text to the right font
 - save is broken on Electron build. Prompt is not supported
+    - prompt nor confirm are supported, use jprompt instead
+        - make jPrompt a global so svelte can use it (and you have to use forceShow so it'll show in menu)
 - **IMPORTANT**: HOW DOES DIFFICULTY SCALE WITH A TON OF PLAYERS
 
 ## Brad Feedback
@@ -16,6 +20,7 @@
 - Get build ready for streamers and reach out
 - Fix text overflow on spell cards ("connect", "decoy", "bleed")
 # Before next streamer outreach
+    - Check volume defaults
     - test trigger perk certainty on multiplayer
     - Improve difficulty scaling with over 4 players
     - BALANCE unit spawns especially on later levels
