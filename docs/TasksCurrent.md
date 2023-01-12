@@ -1,7 +1,15 @@
+# Before next streamer outreach
+    - **IMPORTANT**: HOW DOES DIFFICULTY SCALE WITH A TON OF PLAYERS
+    - Check volume defaults
+    - test all spells on multiplayer
+    - test trigger perk certainty on multiplayer
+    - Improve difficulty scaling with over 4 players
+    - BALANCE unit spawns especially on later levels
+        - Maybe not exponential budget?
+    - bug: changing color without clicking out of color picker changes robe but not magic color
 ## 2023.01.11
 - send Val gifs for new sounds
 - bug: Got "you cannot move while casting" but I was able to move anyway
-- **IMPORTANT**: HOW DOES DIFFICULTY SCALE WITH A TON OF PLAYERS
 
 ## Brad Feedback
 - some of the text on card copy is indented by a space
@@ -14,15 +22,6 @@
     - but ghost archer does show up locally
 - Get build ready for streamers and reach out
 - Fix text overflow on spell cards ("connect", "decoy", "bleed")
-# Before next streamer outreach
-    - Check volume defaults
-    - test trigger perk certainty on multiplayer
-    - Improve difficulty scaling with over 4 players
-    - BALANCE unit spawns especially on later levels
-        - Maybe not exponential budget?
-    - bug: changing color without clicking out of color picker changes robe but not magic color
-    - test new spells in multiplayer
-    - test multiplayer
 
 # Desired Schedule
 - word wrap on spells that are too long looks off
