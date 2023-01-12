@@ -7,7 +7,7 @@ import { HasSpace } from '../entity/Type';
 import { getTouchingTargetableEntitiesRecursive } from './connect';
 
 const id = 'Bolt';
-const numberOfTargetsPerQuantity = 2;
+const numberOfTargetsPerQuantity = 3;
 const damage = 20;
 const baseRadius = config.PLAYER_BASE_ATTACK_RANGE - 10;
 const spell: Spell = {
