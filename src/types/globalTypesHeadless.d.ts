@@ -8,6 +8,7 @@ import type { Vec2 } from '../jmath/Vec';
 import type { View } from '../views';
 import type { IHostApp } from '../network/networkUtil';
 import { Localizable } from '../localization';
+import { PromptArgs } from '../graphics/Jprompt';
 
 declare global {
     var SPELLMASONS_PACKAGE_VERSION: string;
@@ -267,4 +268,6 @@ declare global {
     var update: undefined | {
         onUpdateCounter: (callback: (_sender: any, updateState: ({ complete: boolean, error: string, progress: number })) => void) => void;
     }
+    var Jprompt: (prompt: PromptArgs) => Promise<boolean>;
+    var JtextPrompt: (prompt: PromptArgs) => Promise<string>;
 }

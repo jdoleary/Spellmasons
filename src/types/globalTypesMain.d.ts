@@ -12,6 +12,7 @@ import type { IPickup } from '../entity/Pickup';
 import type { IHostApp } from '../network/networkUtil';
 import type { LanguageMapping, Localizable } from '../localization';
 import type { TutorialChecklist } from '../graphics/Explain';
+import { PromptArgs } from '../graphics/Jprompt';
 
 declare global {
     var pixi: typeof PIXI | undefined;
@@ -206,4 +207,6 @@ declare global {
     var update: undefined | {
         onUpdateCounter: (callback: (_sender: any, updateState: ({ complete: boolean, error: string, progress: number })) => void) => void;
     }
+    var Jprompt: (prompt: PromptArgs) => Promise<boolean>;
+    var JtextPrompt: (prompt: PromptArgs) => Promise<string>;
 }
