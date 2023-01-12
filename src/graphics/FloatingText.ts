@@ -32,7 +32,7 @@ export default function floatingText({
     return Promise.resolve();
   }
   // Ensure style has drop shadow, but allow it to be overridden
-  style = Object.assign({ ...config.PIXI_TEXT_DROP_SHADOW }, style);
+  style = Object.assign({ ...config.PIXI_TEXT_DROP_SHADOW, fontFamily: 'Forum' }, style);
   const pixiText = new globalThis.pixi.Text(i18n(text), style);
   pixiText.x = coords.x;
   pixiText.y = coords.y;

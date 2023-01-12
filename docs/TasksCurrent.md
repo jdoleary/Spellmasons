@@ -2,7 +2,6 @@
 - send Val gifs for new sounds
 - bug: Got "you cannot move while casting" but I was able to move anyway
 - Change bolt copy to explain how it stacks.
-- Change "Level X" text to the right font
 - save is broken on Electron build. Prompt is not supported
     - prompt nor confirm are supported, use jprompt instead
         - make jPrompt a global so svelte can use it (and you have to use forceShow so it'll show in menu)

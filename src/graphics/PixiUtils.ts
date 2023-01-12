@@ -639,6 +639,7 @@ function loadTextures(): Promise<void> {
   return new Promise((resolve, reject) => {
     if (!globalThis.headless && globalThis.pixi) {
       const loader = globalThis.pixi.Loader.shared;
+      loader.add('Forum', './font/Forum/Forum-Regular.ttf');
       // loader.onProgress.add(a => console.log("onProgress", a)); // called once per loaded/errored file
       // loader.onError.add(e => console.error("Pixi loader on error:", e)); // called once per errored file
       // loader.onLoad.add(a => console.log("Pixi loader onLoad", a)); // called once per loaded file
@@ -803,7 +804,7 @@ export function pixiText(text: string, style: Partial<PIXI.ITextStyle>): PIXI.Te
   if (!globalThis.pixi) {
     return undefined;
   }
-  const textSprite = new globalThis.pixi.Text(text, style);
+  const textSprite = new globalThis.pixi.Text(text, { fontFamily: 'Forum', ...style });
   // Pixi Text has to be manually destroyed so it needs an identifier
   // so I know that the sprite needs to be manually cleaned up.
   // @ts-ignore jid is a custom identifier to id the text element used

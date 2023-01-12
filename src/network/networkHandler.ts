@@ -350,7 +350,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
             fromPlayer.unit.image.sprite.addChild(nameText);
             nameText.text = fromPlayer.name;
             nameText.y = -config.COLLISION_MESH_RADIUS - config.NAME_TEXT_Y_OFFSET;
-            nameText.style = { fill: 'white', fontSize: config.NAME_TEXT_DEFAULT_SIZE, ...config.PIXI_TEXT_DROP_SHADOW };
+            nameText.style = { fill: 'white', fontSize: config.NAME_TEXT_DEFAULT_SIZE, fontFamily: 'Forum', ...config.PIXI_TEXT_DROP_SHADOW };
             nameText.anchor.x = 0.5;
             nameText.anchor.y = 0.5;
           }

@@ -29,8 +29,8 @@ let planningViewGraphics: PIXI.Graphics | undefined;
 let predictionGraphics: PIXI.Graphics | undefined;
 // labelText is used to add a label to planningView circles 
 // so that the player knows what the circle is referencing.
-let labelText = !globalThis.pixi ? undefined : new globalThis.pixi.Text('', { fill: 'white', ...config.PIXI_TEXT_DROP_SHADOW });
-let mouseLabelText = !globalThis.pixi ? undefined : new globalThis.pixi.Text('', { fill: 'white', ...config.PIXI_TEXT_DROP_SHADOW });
+let labelText = !globalThis.pixi ? undefined : new globalThis.pixi.Text('', { fill: 'white', ...config.PIXI_TEXT_DROP_SHADOW, fontFamily: 'Forum' });
+let mouseLabelText = !globalThis.pixi ? undefined : new globalThis.pixi.Text('', { fill: 'white', ...config.PIXI_TEXT_DROP_SHADOW, fontFamily: 'Forum' });
 export function initPlanningView() {
   if (containerPlanningView && containerUI && globalThis.pixi) {
     planningViewGraphics = new globalThis.pixi.Graphics();
@@ -251,6 +251,11 @@ export function updatePlanningView(underworld: Underworld) {
       const text = Array.from(warnings).map(i18n).join('\n');
       mouseLabelText.text = text;
       mouseLabelText.style.fill = colors.errorRed;
+      // Make text crisper
+      mouseLabelText.style.fontSize = 64;
+      mouseLabelText.scale.x = 0.5;
+      mouseLabelText.scale.y = 0.5;
+
       mouseLabelText.style.align = 'center';
       const labelPosition = withinCameraBounds({ x: mouseTarget.x, y: mouseTarget.y - mouseLabelText.height * 2 }, mouseLabelText.width / 2);
       mouseLabelText.x = labelPosition.x;
