@@ -717,8 +717,8 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       console.log('Failed to save', saveObject);
     }
   };
-  globalThis.deleteSave = (title: string) => {
-    const doDelete = confirm(i18n('Are you sure you want to delete this save file?'));
+  globalThis.deleteSave = async (title: string) => {
+    const doDelete = await Jprompt({ text: 'Are you sure you want to delete this save file?', yesText: 'Yes', noBtnText: 'No', noBtnKey: 'Escape', forceShow: true })
     if (doDelete) {
       storage.remove(globalThis.savePrefix + title);
     }

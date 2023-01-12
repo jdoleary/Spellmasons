@@ -318,8 +318,8 @@ export function tutorialCompleteTask(key: keyof TutorialChecklist, condition?: (
         }
     }
 }
-globalThis.skipTutorial = () => {
-    const yesSkip = confirm(i18n('skip tutorial detail'))
+globalThis.skipTutorial = async () => {
+    const yesSkip = await Jprompt({ text: 'skip tutorial detail', yesText: 'Yes', noBtnText: 'Cancel', noBtnKey: 'Escape', forceShow: true })
     if (yesSkip) {
         for (let task of Object.keys(tutorialChecklist)) {
             tutorialCompleteTask(task as keyof TutorialChecklist);
@@ -358,7 +358,7 @@ globalThis.resetTutorial = function resetTutorial() {
     for (let explainKey of explainKeys) {
         storage.set(explainKey, undefined);
     }
-    alert('Tutorial has been reset');
+    Jprompt({ text: 'Tutorial has been reset', yesText: 'Okay', forceShow: true });
 }
 // Returns a value that remains the same as the first time this function was invoked for the duration of the play session
 export function isTutorialComplete() {

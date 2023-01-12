@@ -53,12 +53,38 @@ function nonUnderworldKeydownListener(event: KeyboardEvent) {
   if (globalThis.view == View.Game) {
     return;
   }
+  const shouldReturnImmediately = handleJPromptHotkeys(event);
+  if (shouldReturnImmediately) {
+    return;
+  }
   switch (event.code) {
     case 'Escape':
       toggleMenu();
       event.stopImmediatePropagation();
       break;
   }
+}
+// Returns true if caller should return immediately
+function handleJPromptHotkeys(event: KeyboardEvent) {
+  // Possibly handle hotkey for Jprompt:
+  // note: :last-child targets the top most prompt if there are more than one
+  const promptYesBtn = document.querySelector(`.prompt:last-child .yes[data-key="${event.code}"]`) as HTMLElement;
+  if (promptYesBtn) {
+    promptYesBtn.click();
+    // Return immediately, prompt hotkey overrides other hotkeys
+    return true;
+  }
+  // note: :last-child targets the top most prompt if there are more than one
+  const promptNoBtn = document.querySelector(`.prompt:last-child .no[data-key="${event.code}"]`) as HTMLElement;
+  if (promptNoBtn) {
+    // Event was handled
+    promptNoBtn.click();
+    // Return immediately, prompt hotkey overrides other hotkeys
+    return true;
+  }
+  // Don't cause caller to return
+  return false;
+
 }
 export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
   // Only handle hotkeys when viewing the Game
@@ -81,21 +107,8 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
       return;
     }
   }
-
-  // Possibly handle hotkey for Jprompt:
-  // note: :last-child targets the top most prompt if there are more than one
-  const promptYesBtn = document.querySelector(`.prompt:last-child .yes[data-key="${event.code}"]`) as HTMLElement;
-  if (promptYesBtn) {
-    promptYesBtn.click();
-    // Return immediately, prompt hotkey overrides other hotkeys
-    return;
-  }
-  // note: :last-child targets the top most prompt if there are more than one
-  const promptNoBtn = document.querySelector(`.prompt:last-child .no[data-key="${event.code}"]`) as HTMLElement;
-  if (promptNoBtn) {
-    // Event was handled
-    promptNoBtn.click();
-    // Return immediately, prompt hotkey overrides other hotkeys
+  const shouldReturnImmediately = handleJPromptHotkeys(event);
+  if (shouldReturnImmediately) {
     return;
   }
   handleInputDown(getKeyCodeMapping(event.code), overworld);
@@ -1270,8 +1283,6 @@ function createContextMenuOptions(menu: HTMLElement, overworld: Overworld) {
           const errMsg = 'This admin command is not broadcast to multiplayer';
           if (globalThis.player) {
             floatingText({ coords: globalThis.player.unit, style: { fill: 'red' }, text: errMsg })
-          } else {
-            alert(errMsg);
           }
         }
         action({ clientId: globalThis.clientId || '', pos });

@@ -1,9 +1,6 @@
 ## 2023.01.11
 - send Val gifs for new sounds
 - bug: Got "you cannot move while casting" but I was able to move anyway
-- save is broken on Electron build. Prompt is not supported
-    - prompt nor confirm are supported, use jprompt instead
-        - make jPrompt a global so svelte can use it (and you have to use forceShow so it'll show in menu)
 - **IMPORTANT**: HOW DOES DIFFICULTY SCALE WITH A TON OF PLAYERS
 
 ## Brad Feedback
@@ -88,6 +85,8 @@
     - [Submit demo to IGN](https://corp.ign.com/submit-a-game)
     - make music play in menu
 ---
+- How close am I to 5mb limit for save files? what to do if I go over?
+- menu: Skip tutorial button in settings doesn't go away once clicked
 - sfx: Need sound effect for bolt, improve bolt animation, consume, conserve, reroll
 - (fixed?) Arrow collisions don't work right when used with target_circle first
 - content: Heat seeking skull with particle effects behind it.  You release it and it seeks out the nearest enemy to deal damage

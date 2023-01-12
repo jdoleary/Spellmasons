@@ -99,11 +99,11 @@ declare global {
     // Used to tell the menu if a game is ongoing or not
     var updateInGameMenuStatus: undefined | (() => void);
     // The menu will call this if the user chooses to skip the tutorial
-    var skipTutorial: undefined | (() => void);
+    var skipTutorial: undefined | (() => Promise<void>);
     var isTutorialComplete: undefined | (() => boolean);
 
     var save: undefined | ((title: string) => void);
-    var deleteSave: undefined | ((title: string) => void);
+    var deleteSave: undefined | ((title: string) => Promise<void>);
     var load: undefined | ((title: string) => void);
     var getAllSaveFiles: undefined | (() => string[]);
     // Current client's id

@@ -111,25 +111,27 @@ async function JtextPrompt(prompt: PromptArgs): Promise<string> {
             ${globalThis.i18n(text)}
         </div>
     </div>
-    <input style="min-width:300px" class='${inputClass}'/>
-    <div class="button-holder">
-        ${noBtnText ? `<button class="no button-wrapper" data-key="${noBtnKey}"> 
-            <div class="button-inner">
-                ${globalThis.i18n(noBtnText)}
-                <div class="hotkey-badge-holder">
-                    <kbd class="hotkey-badge">${noBtnKey}</kbd>
+    <form style="width:auto">
+        <input style="min-width:300px" class='${inputClass}'/>
+        <div class="button-holder">
+            ${noBtnText ? `<button type="button" class="no button-wrapper" data-key="${noBtnKey}"> 
+                <div class="button-inner">
+                    ${globalThis.i18n(noBtnText)}
+                    <div class="hotkey-badge-holder">
+                        <kbd class="hotkey-badge">${noBtnKey}</kbd>
+                    </div>
                 </div>
-            </div>
-        </button>` : ''}
-        <button class="yes button-wrapper" ${yesKey ? `data-key="${yesKey}"` : ''}>
-            <div class="button-inner">
-                ${globalThis.i18n(yesText)}
-                <div class="hotkey-badge-holder">
-                    <kbd class="hotkey-badge">${yesKeyText}</kbd>
+            </button>` : ''}
+            <button type="submit" class="yes button-wrapper" ${yesKey ? `data-key="${yesKey}"` : ''}>
+                <div class="button-inner">
+                    ${globalThis.i18n(yesText)}
+                    <div class="hotkey-badge-holder">
+                        <kbd class="hotkey-badge">${yesKeyText}</kbd>
+                    </div>
                 </div>
-            </div>
-        </button>
-    </div>
+            </button>
+        </div>
+    </form>
 </div>
 </div>
 `;
@@ -138,11 +140,20 @@ async function JtextPrompt(prompt: PromptArgs): Promise<string> {
     } else {
         document.body?.appendChild(el);
     }
+    const elForm = el.querySelector(`form`) as (HTMLElement | undefined);
+    if (elForm) {
+        elForm.addEventListener('submit', e => {
+            e.preventDefault();
+        });
+    } else {
+        console.error('JtextPrompt form does not exist');
+    }
+    const input = el.querySelector(`.${inputClass}`) as (HTMLElement | undefined);
+    input?.focus();
 
     return new Promise<string>((res) => {
         const noBtn = el.querySelector('.no') as (HTMLElement | undefined);
         const yesBtn = el.querySelector('.yes') as (HTMLElement | undefined);
-        const input = el.querySelector(`.${inputClass}`) as (HTMLElement | undefined);
         let text = '';
         if (input) {
             input.addEventListener('keydown', (e) => {
