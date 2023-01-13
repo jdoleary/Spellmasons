@@ -532,7 +532,6 @@ async function handleLoadGameState(payload: {
     return;
   }
   underworld.levelIndex = loadedGameState.levelIndex;
-  underworld.activeUnitSubTypes = loadedGameState.activeUnitSubTypes;
 
   // Update the seed (this MUST come before syncronizeRNG)
   underworld.seed = loadedGameState.seed;
