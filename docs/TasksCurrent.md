@@ -14,7 +14,9 @@
     - "waiting" book comes out too early
     - bug: blood archer copy isn't translating on explain card
         - neither is ghost archer
-    - disconnected view's "Quit to main menu" button is too wide
+    - archer action is causing a racetimeout on headless for moveTowards
+        - I suspect this is because gameLoopUnit returns that it's done when units path is empty but since the archer gets two paths, it's not in fact done and it stops the loop before the archers action is complete
+    - menu: Multiplayer connect button is lowercase
     
 ## 2023.01.11
 - send Val gifs for new sounds
