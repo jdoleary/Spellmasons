@@ -13,10 +13,27 @@
         - he plays animation but doesn't move
             - it's because underworld.activeUnitSubtypes isn't synced
     - See perks when you click on your character
+    - mana_steal doesn't do enough health cost
+        - same with conserve, 10x them both
+    - bolt radius is too big, it hits you too
+    - "waiting" book comes out too early
+    - sync bug: archer movement is getting reset
+        - noticed: Headless gameloop unexpectedly large loop count: 10000
+        - spells: Arrow, last will, rend, burst, conserve, pull, shield
+        - spells player 2: rend, bloat, slash, mana steal, bolt, suffocate, freeze
+        - it looks like ARROW caused the issue
+        - some combination of push and arrow??
+        - actuall it seems it's just archer movement
+        - archers but not golems, and not glops
+    - bug: blood archer copy isn't translating on explain card
+        - neither is ghost archer
+    - bug: I spawned in and couldn't move again, due to activeUnitSubtypes being empty: []
+    - disconnected view's "Quit to main menu" button is too wide
     
 ## 2023.01.11
 - send Val gifs for new sounds
 - bug: Got "you cannot move while casting" but I was able to move anyway
+- mention c.a.geary1@gmail.com in comments if he helps with copy
 
 ## Brad Feedback
 - some of the text on card copy is indented by a space
