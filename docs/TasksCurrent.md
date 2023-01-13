@@ -1,12 +1,19 @@
 # Before next streamer outreach
-    - **IMPORTANT**: HOW DOES DIFFICULTY SCALE WITH A TON OF PLAYERS
+    - Improve difficulty scaling with over 4 players
+        - **IMPORTANT**: HOW DOES DIFFICULTY SCALE WITH A TON OF PLAYERS
     - Check volume defaults
     - test all spells on multiplayer
     - test trigger perk certainty on multiplayer
-    - Improve difficulty scaling with over 4 players
     - BALANCE unit spawns especially on later levels
         - Maybe not exponential budget?
     - bug: changing color without clicking out of color picker changes robe but not magic color
+    - Send 0XFF translation invite
+    - bug: player 2 doesn't get cinematic
+    - big bug: player 2 can't move
+        - he plays animation but doesn't move
+            - it's because underworld.activeUnitSubtypes isn't synced
+    - See perks when you click on your character
+    
 ## 2023.01.11
 - send Val gifs for new sounds
 - bug: Got "you cannot move while casting" but I was able to move anyway
