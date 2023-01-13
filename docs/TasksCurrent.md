@@ -13,8 +13,6 @@
         - he plays animation but doesn't move
             - it's because underworld.activeUnitSubtypes isn't synced
     - See perks when you click on your character
-    - mana_steal doesn't do enough health cost
-        - same with conserve, 10x them both
     - bolt radius is too big, it hits you too
     - "waiting" book comes out too early
     - bug: blood archer copy isn't translating on explain card

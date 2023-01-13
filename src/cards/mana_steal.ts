@@ -12,7 +12,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 const id = 'mana_steal';
 const mana_stolen = 20;
-const health_burn = 3;
+const health_burn = 30;
 const spell: Spell = {
   card: {
     id,
