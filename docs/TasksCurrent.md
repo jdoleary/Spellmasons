@@ -25,10 +25,13 @@
         - some combination of push and arrow??
         - actuall it seems it's just archer movement
         - archers but not golems, and not glops
+            - and it was only the regular archer, none of the other archers
+            - okay so what was happening was I made a typo long ago where I accidentally removed an `}else{` which caused the regular archer to invoke `await moveTowards()` twice in one action and after it completed the first the underworld.activeUnitSubtypes would change to melee and the archer would still have a path and stamina but not be moving because it wasn't their activeUnitSubType
     - bug: blood archer copy isn't translating on explain card
         - neither is ghost archer
     - bug: I spawned in and couldn't move again, due to activeUnitSubtypes being empty: []
     - disconnected view's "Quit to main menu" button is too wide
+    - abstract archer movement for all archers
     
 ## 2023.01.11
 - send Val gifs for new sounds
