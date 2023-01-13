@@ -2437,7 +2437,7 @@ export default class Underworld {
       u.stamina = 0;
     }
     for (let subTypes of [[UnitSubType.RANGED_LOS, UnitSubType.RANGED_RADIUS, UnitSubType.SUPPORT_CLASS], [UnitSubType.MELEE]]) {
-      const animationPromises: Promise<void>[] = [];
+      const actionPromises: Promise<void>[] = [];
       unitloop: for (let u of this.units.filter(
         (u) => u.unitType === UnitType.AI && u.alive && u.faction == faction && subTypes.includes(u.unitSubType),
       )) {
@@ -2458,7 +2458,7 @@ export default class Underworld {
           const { targets, canAttack } = cachedTargets[u.id] || { targets: [], canAttack: false };
           // Add unit action to the array of promises to wait for
           let promise = raceTimeout(5000, `Unit.action; unitSourceId: ${u.unitSourceId}; subType: ${u.unitSubType}`, unitSource.action(u, targets, this, canAttack));
-          animationPromises.push(promise);
+          actionPromises.push(promise);
         } else {
           console.error(
             'Could not find unit source data for',
@@ -2467,7 +2467,7 @@ export default class Underworld {
         }
       }
       this.triggerGameLoopHeadless();
-      await Promise.all(animationPromises);
+      await Promise.all(actionPromises);
     }
 
   }
