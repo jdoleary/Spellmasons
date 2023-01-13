@@ -1165,6 +1165,8 @@ export function subTypeToAttentionMarkerImage(unit: IUnit): string {
     return subTypeAttentionMarkerMapping[unit.unitSubType];
   }
 }
+// In a circle around the target with a radius of target to unit, find locations that have line of sight
+// and return them in an array
 export function findLOSLocation(unit: IUnit, target: Vec2, underworld: Underworld): Vec2[] {
   const dist = distance(unit, target);
   const angleToEnemy = Vec.getAngleBetweenVec2s(target, unit);

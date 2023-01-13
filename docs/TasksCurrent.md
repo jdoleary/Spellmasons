@@ -1,24 +1,20 @@
 # Before next streamer outreach
+    - **big** abstract archer movement for all archers
     - Improve difficulty scaling with over 4 players
         - **IMPORTANT**: HOW DOES DIFFICULTY SCALE WITH A TON OF PLAYERS
+    ---
     - Check volume defaults
     - test all spells on multiplayer
-    - test trigger perk certainty on multiplayer
     - BALANCE unit spawns especially on later levels
         - Maybe not exponential budget?
     - bug: changing color without clicking out of color picker changes robe but not magic color
-    - Send 0XFF translation invite
     - bug: player 2 doesn't get cinematic
-    - big bug: player 2 can't move
-        - he plays animation but doesn't move
-            - it's because underworld.activeUnitSubtypes isn't synced
     - See perks when you click on your character
     - bolt radius is too big, it hits you too
     - "waiting" book comes out too early
     - bug: blood archer copy isn't translating on explain card
         - neither is ghost archer
     - disconnected view's "Quit to main menu" button is too wide
-    - abstract archer movement for all archers
     
 ## 2023.01.11
 - send Val gifs for new sounds

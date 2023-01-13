@@ -7,6 +7,7 @@ import { Vec2 } from '../../jmath/Vec';
 import Underworld from '../../Underworld';
 import { getBestRangedLOSTarget } from './actions/rangedAction';
 import * as config from '../../config';
+import { closestLineSegmentIntersection } from '../../jmath/lineSegment';
 
 export const ARCHER_ID = 'archer';
 const unit: UnitSource = {
@@ -58,10 +59,13 @@ const unit: UnitSource = {
 
       });
     } else {
+      // If it gets to this block it means it is either out of range or cannot see enemy
       // Movement:
       const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
       // Intelligently move the archer to a position where it can see the enemy
       if (closestEnemy) {
+
+
         const moveOptions = Unit.findLOSLocation(unit, closestEnemy, underworld);
         const moveChoice = moveOptions.reduce<{ dist: number, pos: Vec2 | undefined }>((closest, cur) => {
           const dist = math.distance(cur, unit);
@@ -70,18 +74,17 @@ const unit: UnitSource = {
           } else {
             return closest
           }
-        }, { dist: Number.MAX_SAFE_INTEGER, pos: undefined })
+        }, { dist: Number.MAX_SAFE_INTEGER, pos: undefined });
 
         if (moveChoice.pos) {
           // Move to sight lines
           await Unit.moveTowards(unit, moveChoice.pos, underworld);
-        } else {
-          // Move closer
-          // The following is a hacky way to make them move in range, but not too close, to the enemy
-          const distanceToEnemy = math.distance(unit, closestEnemy);
-          unit.stamina = Math.min(unit.stamina, distanceToEnemy + config.COLLISION_MESH_RADIUS - unit.attackRange);
-          await Unit.moveTowards(unit, closestEnemy, underworld);
         }
+        // Move closer
+        // The following is a hacky way to make them move in range, but not too close, to the enemy
+        const distanceToEnemy = math.distance(unit, closestEnemy);
+        unit.stamina = Math.min(unit.stamina, distanceToEnemy + config.COLLISION_MESH_RADIUS - unit.attackRange);
+        await Unit.moveTowards(unit, closestEnemy, underworld);
       }
     }
   },
