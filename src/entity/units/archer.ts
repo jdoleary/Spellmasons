@@ -75,6 +75,7 @@ const unit: UnitSource = {
         if (moveChoice.pos) {
           // Move to sight lines
           await Unit.moveTowards(unit, moveChoice.pos, underworld);
+        } else {
           // Move closer
           // The following is a hacky way to make them move in range, but not too close, to the enemy
           const distanceToEnemy = math.distance(unit, closestEnemy);
