@@ -14,8 +14,6 @@
     - See perks when you click on your character
     - bolt radius is too big, it hits you too
     - "waiting" book comes out too early
-    - bug: blood archer copy isn't translating on explain card
-        - neither is ghost archer
     - menu: Multiplayer connect button is lowercase
     
 ## 2023.01.11
