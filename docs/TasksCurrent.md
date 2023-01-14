@@ -14,7 +14,7 @@
     - See perks when you click on your character
     - bolt radius is too big, it hits you too
     - "waiting" book comes out too early
-    - menu: Multiplayer connect button is lowercase
+    - Ensure late game units explain gifs show in final build
     
 ## 2023.01.11
 - send Val gifs for new sounds
