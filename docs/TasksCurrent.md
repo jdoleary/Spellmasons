@@ -1,7 +1,9 @@
 # Before next streamer outreach
+    - archer action is causing a racetimeout on headless for moveTowards
+        - I suspect this is because gameLoopUnit returns that it's done when units path is empty but since the archer gets two paths, it's not in fact done and it stops the loop before the archers action is complete
+        - Add a new function similar to moveTowards that allows a unit to move to one point and then another all with one await or see if headless server can invoke it's loop twice
     - **big** abstract archer movement for all archers
     - Improve difficulty scaling with over 4 players
-        - **IMPORTANT**: HOW DOES DIFFICULTY SCALE WITH A TON OF PLAYERS
     ---
     - Check volume defaults
     - test all spells on multiplayer
@@ -14,8 +16,6 @@
     - "waiting" book comes out too early
     - bug: blood archer copy isn't translating on explain card
         - neither is ghost archer
-    - archer action is causing a racetimeout on headless for moveTowards
-        - I suspect this is because gameLoopUnit returns that it's done when units path is empty but since the archer gets two paths, it's not in fact done and it stops the loop before the archers action is complete
     - menu: Multiplayer connect button is lowercase
     
 ## 2023.01.11
