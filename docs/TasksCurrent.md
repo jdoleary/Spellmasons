@@ -6,7 +6,6 @@
     - test all spells on multiplayer
     - BALANCE unit spawns especially on later levels
         - Maybe not exponential budget?
-    - bug: changing color without clicking out of color picker changes robe but not magic color
     - bug: player 2 doesn't get cinematic
     - See perks when you click on your character
     - bolt radius is too big, it hits you too
