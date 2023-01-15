@@ -8,8 +8,6 @@
     - bug: player 2 doesn't get cinematic
     - bolt radius is too big, it hits you too
     - "waiting" book comes out too early
-    - use jprompt for "Tutorial has been reset"
-    - Ensure late game units explain gifs show in final build
     
 ## 2023.01.11
 - send Val gifs for new sounds
@@ -29,6 +27,7 @@
 - Fix text overflow on spell cards ("connect", "decoy", "bleed")
 
 # Desired Schedule
+- Bossmason is missing explain gif
 - Restore dragger behavior? watch out for sync issues
 - word wrap on spells that are too long looks off
 - January 1/8-1/14

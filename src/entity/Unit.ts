@@ -1020,7 +1020,7 @@ export function syncImage(unit: IUnit) {
   }
 }
 export function getExplainPathForUnitId(id: string): string {
-  return "images/explain/units/" + id + ".gif";
+  return "images/explain/units/" + id.split(' ').join('') + ".gif";
 }
 export function inRange(unit: IUnit, coords: Vec2): boolean {
   return math.distance(unit, coords) <= unit.attackRange;
