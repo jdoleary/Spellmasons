@@ -5,7 +5,7 @@ import { createVisualFlyingProjectile } from '../Projectile';
 import * as math from '../../jmath/math';
 import { add, Vec2 } from '../../jmath/Vec';
 import Underworld from '../../Underworld';
-import { getBestRangedLOSTarget } from './actions/rangedAction';
+import { getBestRangedLOSTarget, rangedLOSMovement } from './actions/rangedAction';
 import * as config from '../../config';
 
 export const ARCHER_ID = 'archer';
@@ -59,34 +59,7 @@ const unit: UnitSource = {
       });
     } else {
       // If it gets to this block it means it is either out of range or cannot see enemy
-      // Movement:
-      const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
-      // Intelligently move the archer to a position where it can see the enemy
-      if (closestEnemy) {
-        const moveOptions = Unit.findLOSLocation(unit, closestEnemy, underworld);
-        const moveChoice = moveOptions.reduce<{ dist: number, pos: Vec2 | undefined }>((closest, cur) => {
-          const dist = math.distance(cur, unit);
-          if (dist < closest.dist) {
-            return { dist, pos: cur }
-          } else {
-            return closest
-          }
-        }, { dist: Number.MAX_SAFE_INTEGER, pos: undefined });
-
-        let startPoint: Vec2 = unit;
-        let moveTowardsPointsArray = [];
-        if (moveChoice.pos) {
-          startPoint = moveChoice.pos;
-          // Move to obtain Line of Sight to enemy
-          moveTowardsPointsArray.push(moveChoice.pos);
-        }
-        // Move closer until in range (or out of stamina)
-        const distanceToEnemy = math.distance(unit, closestEnemy);
-        // Find a point directly towards the enemy that is closer but only just enough to be in attacking range
-        const closerUntilInRangePoint = add(startPoint, math.similarTriangles(closestEnemy.x - startPoint.x, closestEnemy.y - startPoint.y, distanceToEnemy, distanceToEnemy + config.COLLISION_MESH_RADIUS - unit.attackRange));
-        moveTowardsPointsArray.push(closerUntilInRangePoint);
-        await Unit.moveTowardsMulti(unit, moveTowardsPointsArray, underworld);
-      }
+      await rangedLOSMovement(unit, underworld);
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {

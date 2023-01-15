@@ -1,8 +1,4 @@
 # Before next streamer outreach
-    - archer action is causing a racetimeout on headless for moveTowards
-        - I suspect this is because gameLoopUnit returns that it's done when units path is empty but since the archer gets two paths, it's not in fact done and it stops the loop before the archers action is complete
-        - Add a new function similar to moveTowards that allows a unit to move to one point and then another all with one await or see if headless server can invoke it's loop twice
-    - **big** abstract archer movement for all archers
     - Improve difficulty scaling with over 4 players
     ---
     - make "reset tutorial" also reset enemiesEncountered
@@ -35,6 +31,7 @@
 - Fix text overflow on spell cards ("connect", "decoy", "bleed")
 
 # Desired Schedule
+- Restore dragger behavior? watch out for sync issues
 - word wrap on spells that are too long looks off
 - January 1/8-1/14
     - Test on different resolutions

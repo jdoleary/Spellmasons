@@ -6,7 +6,7 @@ import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import * as math from '../../jmath/math';
 import { Vec2 } from '../../jmath/Vec';
 import Underworld from '../../Underworld';
-import { getBestRangedLOSTarget } from './actions/rangedAction';
+import { getBestRangedLOSTarget, rangedLOSMovement } from './actions/rangedAction';
 import { findWherePointIntersectLineSegmentAtRightAngle } from '../../jmath/lineSegment';
 import * as config from '../../config';
 
@@ -100,27 +100,8 @@ const unit: UnitSource = {
         return flyingProjectilePromise;
       });
     } else {
-      const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
-      // Movement:
-      // Intelligently move the archer to a position where it can see the enemy
-      if (closestEnemy) {
-        const moveOptions = Unit.findLOSLocation(unit, closestEnemy, underworld);
-        const moveChoice = moveOptions.reduce<{ dist: number, pos: Vec2 | undefined }>((closest, cur) => {
-          const dist = math.distance(cur, unit);
-          if (dist < closest.dist) {
-            return { dist, pos: cur }
-          } else {
-            return closest
-          }
-        }, { dist: Number.MAX_SAFE_INTEGER, pos: undefined })
-
-        if (moveChoice.pos) {
-          await Unit.moveTowards(unit, moveChoice.pos, underworld);
-        } else {
-          // Move closer
-          await Unit.moveTowards(unit, closestEnemy, underworld);
-        }
-      }
+      // If it gets to this block it means it is either out of range or cannot see enemy
+      await rangedLOSMovement(unit, underworld);
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
