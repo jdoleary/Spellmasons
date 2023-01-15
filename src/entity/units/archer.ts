@@ -3,11 +3,10 @@ import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import { createVisualFlyingProjectile } from '../Projectile';
 import * as math from '../../jmath/math';
-import { Vec2 } from '../../jmath/Vec';
+import { add, Vec2 } from '../../jmath/Vec';
 import Underworld from '../../Underworld';
 import { getBestRangedLOSTarget } from './actions/rangedAction';
 import * as config from '../../config';
-import { closestLineSegmentIntersection } from '../../jmath/lineSegment';
 
 export const ARCHER_ID = 'archer';
 const unit: UnitSource = {
@@ -64,8 +63,6 @@ const unit: UnitSource = {
       const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
       // Intelligently move the archer to a position where it can see the enemy
       if (closestEnemy) {
-
-
         const moveOptions = Unit.findLOSLocation(unit, closestEnemy, underworld);
         const moveChoice = moveOptions.reduce<{ dist: number, pos: Vec2 | undefined }>((closest, cur) => {
           const dist = math.distance(cur, unit);
@@ -76,15 +73,19 @@ const unit: UnitSource = {
           }
         }, { dist: Number.MAX_SAFE_INTEGER, pos: undefined });
 
+        let startPoint: Vec2 = unit;
+        let moveTowardsPointsArray = [];
         if (moveChoice.pos) {
-          // Move to sight lines
-          await Unit.moveTowards(unit, moveChoice.pos, underworld);
+          startPoint = moveChoice.pos;
+          // Move to obtain Line of Sight to enemy
+          moveTowardsPointsArray.push(moveChoice.pos);
         }
-        // Move closer
-        // The following is a hacky way to make them move in range, but not too close, to the enemy
+        // Move closer until in range (or out of stamina)
         const distanceToEnemy = math.distance(unit, closestEnemy);
-        unit.stamina = Math.min(unit.stamina, distanceToEnemy + config.COLLISION_MESH_RADIUS - unit.attackRange);
-        await Unit.moveTowards(unit, closestEnemy, underworld);
+        // Find a point directly towards the enemy that is closer but only just enough to be in attacking range
+        const closerUntilInRangePoint = add(startPoint, math.similarTriangles(closestEnemy.x - startPoint.x, closestEnemy.y - startPoint.y, distanceToEnemy, distanceToEnemy + config.COLLISION_MESH_RADIUS - unit.attackRange));
+        moveTowardsPointsArray.push(closerUntilInRangePoint);
+        await Unit.moveTowardsMulti(unit, moveTowardsPointsArray, underworld);
       }
     }
   },

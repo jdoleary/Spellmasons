@@ -947,12 +947,32 @@ export function _moveTowards(unit: IUnit, target: Vec2, underworld: Underworld) 
   underworld.setPath(unit, Vec.clone(target));
 }
 // moveTo moves a unit, considering all the in-game blockers
-export function moveTowards(unit: IUnit, target: Vec2, underworld: Underworld): Promise<void> {
+// Multi: many points to move towards in sequence.
+export function moveTowardsMulti(unit: IUnit, points: Vec2[], underworld: Underworld): Promise<void> {
+  // Do not calculate for a path with 0 points
+  if (points[0] === undefined) {
+    return Promise.resolve();
+  }
   if (!canMove(unit)) {
     console.log('cannot move')
     return Promise.resolve();
   }
-  _moveTowards(unit, target, underworld);
+  const [firstPoint, ...followingPoints] = points;
+  let lastPoint = firstPoint;
+  _moveTowards(unit, firstPoint, underworld);
+  if (unit.path) {
+
+    for (let point of followingPoints) {
+      const nextPath = underworld.calculatePathNoCache(lastPoint, point);
+      // Add the new points to the array
+      unit.path.points = unit.path.points.concat(nextPath.points);
+      unit.path.targetPosition = Vec.clone(point);
+
+      lastPoint = point;
+    }
+  } else {
+    console.error('Unexpected, unit does not have path object and so cannot add secondary point');
+  }
   // 300 + is an arbitrary time buffer to ensure that the raceTimeout
   // doesn't report a false positive if the duration it takes the moveTowards promise
   // to resolve is within a reasonable range
@@ -967,6 +987,10 @@ export function moveTowards(unit: IUnit, target: Vec2, underworld: Underworld): 
       returnToDefaultSprite(unit);
     }
   });
+}
+// moveTo moves a unit, considering all the in-game blockers
+export function moveTowards(unit: IUnit, point: Vec2, underworld: Underworld): Promise<void> {
+  return moveTowardsMulti(unit, [point], underworld);
 }
 
 // setLocation, unlike moveTo, simply sets a unit to a coordinate without
