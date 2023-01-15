@@ -1,7 +1,6 @@
 # Before next streamer outreach
     - Improve difficulty scaling with over 4 players
     ---
-    - make "reset tutorial" also reset enemiesEncountered
     - Check volume defaults
     - test all spells on multiplayer
     - BALANCE unit spawns especially on later levels
