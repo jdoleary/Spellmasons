@@ -1,3 +1,5 @@
+## 2023.01.15
+Refactoring moveTowards to support multi point paths
 ## 2023.01.09
 Modding
 I think I'll create a public github repo that has the typing files in it.  When the player builds their mod they'll have to copy the output to a mods/ file.  Then the electron app can scan that directory and add a `<script>` tag pointing to it to the HTML if they enable it.
