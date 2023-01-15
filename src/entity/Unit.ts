@@ -111,7 +111,6 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   // A list of names that correspond to Events.ts functions
   onDamageEvents: string[];
   onDeathEvents: string[];
-  onMoveEvents: string[];
   onAgroEvents: string[];
   onTurnStartEvents: string[];
   onTurnEndEvents: string[];
@@ -177,7 +176,6 @@ export function create(
       unitSubType,
       onDamageEvents: [],
       onDeathEvents: [],
-      onMoveEvents: [],
       onAgroEvents: [],
       onTurnStartEvents: [],
       onTurnEndEvents: [],
@@ -299,7 +297,6 @@ export function removeModifier(unit: IUnit, key: string, underworld: Underworld)
   }
   unit.onDamageEvents = unit.onDamageEvents.filter((e) => e !== key);
   unit.onDeathEvents = unit.onDeathEvents.filter((e) => e !== key);
-  unit.onMoveEvents = unit.onMoveEvents.filter((e) => e !== key);
   unit.onAgroEvents = unit.onAgroEvents.filter((e) => e !== key);
   unit.onTurnStartEvents = unit.onTurnStartEvents.filter((e) => e !== key);
   unit.onTurnEndEvents = unit.onTurnEndEvents.filter((e) => e !== key);
@@ -936,18 +933,6 @@ export function _moveTowards(unit: IUnit, target: Vec2, underworld: Underworld) 
     console.log('cannot move')
     return
   }
-  let coordinates = math.getCoordsAtDistanceTowardsTarget(
-    unit,
-    target,
-    unit.stamina
-  );
-  // Compose onMoveEvents
-  for (let eventName of unit.onMoveEvents) {
-    const fn = Events.onMoveSource[eventName];
-    if (fn) {
-      coordinates = fn(unit, coordinates);
-    }
-  }
   if (unit.image) {
     Image.changeSprite(
       unit.image,
@@ -1101,7 +1086,6 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
     stamina: rest.staminaMax,
     onDamageEvents: [...rest.onDamageEvents],
     onDeathEvents: [...rest.onDeathEvents],
-    onMoveEvents: [...rest.onMoveEvents],
     onAgroEvents: [...rest.onAgroEvents],
     onTurnStartEvents: [...rest.onTurnStartEvents],
     onTurnEndEvents: [...rest.onTurnEndEvents],
