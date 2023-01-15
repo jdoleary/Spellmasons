@@ -3,6 +3,7 @@ import * as Unit from '../../Unit';
 import * as math from '../../../jmath/math';
 import Underworld from '../../../Underworld';
 import { add, Vec2 } from '../../../jmath/Vec';
+import * as config from '../../../config';
 
 // closest: Sort targets closest to farthest
 export function getBestRangedLOSTarget(unit: Unit.IUnit, underworld: Underworld, closest: boolean = true): Unit.IUnit[] {
