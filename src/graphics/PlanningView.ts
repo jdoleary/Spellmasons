@@ -20,6 +20,7 @@ import { Graphics } from 'pixi.js';
 import { allCards } from '../cards';
 import { keyDown } from './ui/eventListeners';
 import { inPortal } from '../entity/Player';
+import { getPerkText } from '../Perk';
 
 const TEXT_OUT_OF_RANGE = 'Out of Range';
 // Graphics for rendering above board and walls but beneath units and doodads,
@@ -788,14 +789,28 @@ export function updateTooltipContent(underworld: Underworld) {
   let text = '';
   switch (selectedType) {
     case "unit":
-      let cards = '';
+      let playerSpecificInfo = '';
       if (globalThis.selectedUnit) {
         if (globalThis.selectedUnit.unitType === UnitType.PLAYER_CONTROLLED) {
           const player = underworld.players.find((p) => p.unit === globalThis.selectedUnit);
           if (player) {
-            cards =
-              'Cards: ' +
-              player.cards.join(', ');
+            playerSpecificInfo =
+              '<h3>Cards</h3>' +
+              player.cards.filter(x => x !== '').join(', ');
+
+            playerSpecificInfo += `<br/><h3>${i18n('Perks')}</h3>`;
+            const everyLevel = player.attributePerks.filter(p => p.when == 'everyLevel');
+            const everyTurn = player.attributePerks.filter(p => p.when == 'everyTurn');
+            // Add perk descriptions to player
+            playerSpecificInfo += `${i18n('Every level')}\n`;
+            for (let perk of everyLevel) {
+              playerSpecificInfo += getPerkText(perk, true).trim() + '\n';
+            }
+            playerSpecificInfo += `${i18n('Every turn')}\n`;
+            for (let perk of everyTurn) {
+              playerSpecificInfo += getPerkText(perk, true).trim() + '\n';
+            }
+
           } else {
             console.error('Tooltip: globalThis.selectedUnit is player controlled but does not exist in underworld.players array.');
             globalThis.selectedUnit = undefined;
@@ -804,6 +819,10 @@ export function updateTooltipContent(underworld: Underworld) {
         }
         const unitSource = allUnits[globalThis.selectedUnit.unitSourceId]
         if (unitSource) {
+          const extraText = `
+${modifiersToText(globalThis.selectedUnit.modifiers)}
+${unitSource.extraTooltipInfo ? unitSource.extraTooltipInfo() : ''}
+          `.trim();
           // NOTE: globalThis.selectedUnit.name is NOT localized on purpose
           // because those are user provided names
           text += `\
@@ -816,10 +835,8 @@ ${globalThis.selectedUnit.faction == Faction.ALLY ? '🤝' : '⚔️️'} ${i18n
 🗡️ ${globalThis.selectedUnit.damage}
 ❤️ ${globalThis.selectedUnit.health}/${globalThis.selectedUnit.healthMax}
 🔵 ${i18n('Mana')} ${globalThis.selectedUnit.mana}/${globalThis.selectedUnit.manaMax} + ${globalThis.selectedUnit.manaPerTurn} ${i18n('per turn')}
-
-${modifiersToText(globalThis.selectedUnit.modifiers)}
-${unitSource.extraTooltipInfo ? unitSource.extraTooltipInfo() : ''}
-${cards}
+${extraText}
+${playerSpecificInfo}
       `;
         }
       }

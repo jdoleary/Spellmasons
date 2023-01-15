@@ -6,7 +6,6 @@
     - BALANCE unit spawns especially on later levels
         - Maybe not exponential budget?
     - bug: player 2 doesn't get cinematic
-    - See perks when you click on your character
     - bolt radius is too big, it hits you too
     - "waiting" book comes out too early
     - Ensure late game units explain gifs show in final build

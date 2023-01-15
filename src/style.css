@@ -832,6 +832,14 @@ body.showUpgrades #inspector-tooltip {
   margin-bottom: 0;
 }
 
+#inspector-tooltip h2 {
+  margin-bottom: 0;
+}
+
+#inspector-tooltip h3 {
+  margin-bottom: 0;
+}
+
 #inspector-tooltip-content hr {
   margin: 0;
 }

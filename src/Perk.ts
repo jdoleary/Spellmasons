@@ -18,7 +18,8 @@ export function cleanUpPerkList() {
     }
 }
 
-function getPerkText(perk: AttributePerk, omitWhen: boolean = false): string {
+// if omitWhen is set to true, it won't  the 'when' attribute of the perk
+export function getPerkText(perk: AttributePerk, omitWhen: boolean = false): string {
     return `
 ${perk.certainty < 1.0 ? `🎲 ${Math.round(perk.certainty * 100)}% chance to` : ``}
 ${perkAttributeToIcon(perk.attribute)} +${Math.round((perk.amount - 1.0) * 100)}% ${perkAttributeToString(perk.attribute)}
