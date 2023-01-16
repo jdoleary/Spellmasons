@@ -1,4 +1,6 @@
 # Before next streamer outreach
+    - range exception for arrow spells
+    - plus radius overflows on 1920 x 1080 resolution full screen
     - Improve difficulty scaling with over 4 players
     - Check volume defaults
     - test all spells on multiplayer
