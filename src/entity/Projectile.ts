@@ -47,7 +47,7 @@ function createProjectile(
   };
 
 }
-export const SPEED_PER_MILLI = 0.7;
+export const SPEED_PER_MILLI = 0.9;
 export function createVisualFlyingProjectile(
   coords: Vec2,
   target: Vec2,
