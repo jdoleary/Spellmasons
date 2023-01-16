@@ -127,7 +127,7 @@ function addHandlers(pie: PieClient, overworld: Overworld) {
         const [serverMajor, serverMinor, serverPath] = o.hostAppVersion.split('.');
         console.log('jtest', clientMajor, serverMajor, clientMinor, serverMinor, clientMinor !== serverMinor);
         if (clientMajor !== serverMajor || clientMinor !== serverMinor) {
-          Jprompt({ text: 'Server and Game versions are out of sync.  Please reboot Steam to install the latest Spellmasons update or else you will encounter gameplay issues.', yesText: "Disconnect", forceShow: true }).then(() => {
+          Jprompt({ text: 'Server and Game versions are out of sync.  Update Spellmasons update or else you will encounter gameplay issues.', yesText: "Disconnect", forceShow: true, imageSrc: 'images/explain/verifyIntegrity.gif' }).then(() => {
             pie.disconnect();
             globalThis.syncConnectedWithPieState();
           });
