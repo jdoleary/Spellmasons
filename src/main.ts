@@ -10,6 +10,7 @@ globalThis.SPELLMASONS_PACKAGE_VERSION = version;
 import './style.css';
 import './svelte-bundle.css';
 cookieConsentPopup(false);
+console.log('At build time version will be 0.166.2, package.json version is ', version);
 
 // This import is critical so that the svelte menu has access to
 // the pie globals
