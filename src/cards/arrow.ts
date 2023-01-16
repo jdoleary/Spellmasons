@@ -30,7 +30,7 @@ const spell: Spell = {
       let targets: Vec2[] = state.targetedUnits;
       targets = targets.length ? targets : [state.castLocation];
       for (let target of targets) {
-        const arrowUnitCollisions = findArrowUnitCollisions(state.casterUnit, target, prediction, underworld);
+        const arrowUnitCollisions = findArrowCollisions(state.casterUnit, target, prediction, underworld);
         // This regular arrow spell doesn't pierce
         const firstTarget = arrowUnitCollisions[0];
         if (firstTarget) {
@@ -41,8 +41,10 @@ const spell: Spell = {
               'projectile/arrow',
             ).then(() => {
               if (Unit.isUnit(firstTarget)) {
-
                 Unit.takeDamage(firstTarget, damageDone, state.casterUnit, underworld, prediction, undefined, { thinBloodLine: true });
+              } else {
+                // TODO: If pickups become damagable, this will have to be adapted to not refund mana when it hits a pickup
+                refundLastSpell(state, prediction, 'No target, mana refunded.')
               }
             });
           } else {
@@ -78,7 +80,7 @@ export function findArrowPath(casterUnit: Unit.IUnit, target: Vec2, underworld: 
 
 }
 
-export function findArrowUnitCollisions(casterUnit: Unit.IUnit, target: Vec2, prediction: boolean, underworld: Underworld): Vec2[] {
+export function findArrowCollisions(casterUnit: Unit.IUnit, target: Vec2, prediction: boolean, underworld: Underworld): Vec2[] {
   const arrowShootPath = findArrowPath(casterUnit, target, underworld);
   // Get all units between source and target for the arrow to pierce:
   const hitTargets = (prediction ? underworld.unitsPrediction : underworld.units).filter(

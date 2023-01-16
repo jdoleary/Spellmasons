@@ -1,5 +1,5 @@
 # Before next streamer outreach
-    - arrows  should refund if they hit nothing
+    - add mana refunds for more spells (like slash)
 ---
     - plus radius overflows on 1920 x 1080 resolution full screen
     - Improve difficulty scaling with over 4 players

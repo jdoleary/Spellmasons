@@ -5,7 +5,7 @@ import * as math from '../jmath/math';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { createVisualFlyingProjectile, SPEED_PER_MILLI } from '../entity/Projectile';
 import { Vec2 } from '../jmath/Vec';
-import { findArrowPath, findArrowUnitCollisions } from './arrow';
+import { findArrowPath, findArrowCollisions } from './arrow';
 
 export const phantomArrowCardId = 'Phantom Arrow';
 const damageDone = 30;
@@ -29,7 +29,7 @@ const spell: Spell = {
       targets = targets.length ? targets : [state.castLocation];
       let promises = [];
       for (let target of targets) {
-        const arrowUnitCollisions = findArrowUnitCollisions(state.casterUnit, target, prediction, underworld);
+        const arrowCollisions = findArrowCollisions(state.casterUnit, target, prediction, underworld);
         const arrowShootPath = findArrowPath(state.casterUnit, target, underworld);
         if (!prediction) {
           promises.push(createVisualFlyingProjectile(
@@ -37,7 +37,7 @@ const spell: Spell = {
             arrowShootPath.p2,
             'projectile/arrow',
           ));
-          arrowUnitCollisions.forEach(pierceTarget => {
+          arrowCollisions.forEach(pierceTarget => {
             // Fake the collision by just calculating a delay based on the speed of the projectile
             const millisecondsUntilCollision = math.distance(arrowShootPath.p1, pierceTarget) / SPEED_PER_MILLI
             setTimeout(() => {
@@ -46,8 +46,12 @@ const spell: Spell = {
               }
             }, millisecondsUntilCollision);
           });
+          if (arrowCollisions.filter(x => Unit.isUnit(x)).length == 0) {
+            // TODO: If pickups become damagable, this will have to be adapted to not refund mana when it hits a pickup
+            refundLastSpell(state, prediction, 'No target, mana refunded.')
+          }
         } else {
-          for (let u of arrowUnitCollisions) {
+          for (let u of arrowCollisions) {
             if (Unit.isUnit(u)) {
               Unit.takeDamage(u, damageDone, state.casterUnit, underworld, prediction, undefined, { thinBloodLine: true });
             }

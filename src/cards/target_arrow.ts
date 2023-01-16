@@ -6,7 +6,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { createVisualFlyingProjectile } from '../entity/Projectile';
 import * as config from '../config';
 import { Vec2 } from '../jmath/Vec';
-import { findArrowUnitCollisions } from './arrow';
+import { findArrowCollisions } from './arrow';
 
 export const targetArrowCardId = 'Target Arrow';
 const spell: Spell = {
@@ -35,7 +35,7 @@ const spell: Spell = {
         if (!target) {
           continue;
         }
-        const arrowUnitCollisions = findArrowUnitCollisions(state.casterUnit, target, prediction, underworld);
+        const arrowUnitCollisions = findArrowCollisions(state.casterUnit, target, prediction, underworld);
         // This target arrow spell doesn't pierce
         const firstTarget = arrowUnitCollisions[0];
         if (firstTarget) {
@@ -65,6 +65,9 @@ const spell: Spell = {
                     }
                   })
                 }
+              } else {
+                // TODO: If pickups become damagable, this will have to be adapted to not refund mana when it hits a pickup
+                refundLastSpell(state, prediction, 'No target, mana refunded.')
               }
               return;
             }));
