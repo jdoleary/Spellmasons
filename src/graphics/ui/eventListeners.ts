@@ -38,6 +38,7 @@ import { hasTargetAtPosition } from '../../cards';
 import { explain, EXPLAIN_END_TURN, tutorialCompleteTask } from '../Explain';
 import { Overworld } from '../../Overworld';
 import { summoningSicknessId } from '../../modifierSummoningSickness';
+import { targetArrowCardId } from '../../cards/target_arrow';
 
 export const keyDown = {
   showWalkRope: false,
@@ -619,14 +620,18 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
           return
         }
         if (isOutOfRange(selfPlayer, mousePos, underworld)) {
-          // If there is no target at end range, just show that they are trying to cast out of range
-          floatingText({
-            coords: target,
-            text: 'Out of Range'
-          });
-          playSFXKey('deny_range');
-          // Cancel Casting
-          return;
+          // Exception, if all of the cards cast are arrow cards, let them cast out of range
+          // Exception, if first cardd is "Target Arrow", let them cast out of range
+          if (!cards.every(c => c.id.toLowerCase().includes('arrow')) && cards[0]?.id !== targetArrowCardId) {
+            // If there is no target at end range, just show that they are trying to cast out of range
+            floatingText({
+              coords: target,
+              text: 'Out of Range'
+            });
+            playSFXKey('deny_range');
+            // Cancel Casting
+            return;
+          }
         }
         // Abort casting if there is no unitAtCastLocation
         // unless the first card (like AOE) specifically allows casting

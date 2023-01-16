@@ -1,5 +1,4 @@
 # Before next streamer outreach
-    - range exception for arrow spells
     - arrows  should refund if they hit nothing
 ---
     - plus radius overflows on 1920 x 1080 resolution full screen

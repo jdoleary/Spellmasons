@@ -8,10 +8,10 @@ import * as config from '../config';
 import { Vec2 } from '../jmath/Vec';
 import { findArrowUnitCollisions } from './arrow';
 
-export const arrowCardId = 'Target Arrow';
+export const targetArrowCardId = 'Target Arrow';
 const spell: Spell = {
   card: {
-    id: arrowCardId,
+    id: targetArrowCardId,
     category: CardCategory.Targeting,
     supportQuantity: false,
     manaCost: 10,
