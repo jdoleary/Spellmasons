@@ -1,6 +1,4 @@
 # Before next streamer outreach
-    - make bolt and chain filter for same faction
-    ---
     - Improve difficulty scaling with over 4 players
     - Check volume defaults
     - test all spells on multiplayer

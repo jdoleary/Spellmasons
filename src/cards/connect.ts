@@ -39,8 +39,8 @@ const spell: Spell = {
         if (target) {
           const typeFilter = Unit.isUnit(target)
             ? (target.alive
-              // If target is a living unit, only chain to other living units
-              ? (x: any) => x.alive
+              // If target is a living unit, only chain to other living units in the same faction
+              ? (x: Unit.IUnit) => x.alive && x.faction == target.faction
               // If target is a dead unit, only chain to other dead units
               : (x: any) => !x.alive)
             : isPickup(target)
