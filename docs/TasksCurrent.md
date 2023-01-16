@@ -18,7 +18,6 @@
 - priest Ai doesn't seek out corpses?
 - health perks aren't strong enough
 - does cone + column not work if your not hovering directly on a target?
-- If an enemy lines up perfectly with another and the direction it's going it can push the enemy.  Try to set up a ranged unit that pushes a melee unit closer and see if the melee unit hits you
 # Focus
 - blood golem / blood archer / green glop / ghost archer / sand vamp explain is a broken image
     - but ghost archer does show up locally
