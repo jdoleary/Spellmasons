@@ -9,7 +9,7 @@ const spell: Spell = {
     id,
     category: CardCategory.Targeting,
     supportQuantity: true,
-    manaCost: 20,
+    manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
