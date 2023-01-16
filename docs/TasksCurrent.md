@@ -1,3 +1,11 @@
+# Before next streamer outreach
+- Fix difficulty balance, expontential is not right, too hard
+---
+- archer walked through wall. seed:0.0208468070041421
+    - TODO moveTowardsMulti is allowing units to walk through walls
+- level 5 is too hard without targeting spells, too many blood golems
+- perk stamina floating text should be Math.round()'d
+- archers are going through walls all of a sudden: 0.17662392682298678
 - Production build:
     - got prompt() error when I clicked save
     - save files should store version number
@@ -6,7 +14,7 @@
     - Steam says it's on the new version but it's not on the new JS
     - it said it was on the right version but it wasn't until I `Verified integrity of game files`
         - check cache in `C:\Users\Jordan\AppData\Roaming\Spellmasons`
-# Before next streamer outreach
+    - Delay "you cannot move while casting" so if the cast is almost over it won't show it
     - add mana refunds for more spells (like slash)
 ---
     - plus radius overflows on 1920 x 1080 resolution full screen

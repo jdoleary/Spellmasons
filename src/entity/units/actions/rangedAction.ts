@@ -34,19 +34,15 @@ export async function rangedLOSMovement(unit: Unit.IUnit, underworld: Underworld
             }
         }, { dist: Number.MAX_SAFE_INTEGER, pos: undefined });
 
-        let startPoint: Vec2 = unit;
-        let moveTowardsPointsArray = [];
-        if (moveChoice.pos) {
-            startPoint = moveChoice.pos;
-            // Move to obtain Line of Sight to enemy
-            moveTowardsPointsArray.push(moveChoice.pos);
+        if (moveChoice.pos && !underworld.hasLineOfSight(unit, closestEnemy)) {
+            await Unit.moveTowards(unit, moveChoice.pos, underworld);
+        } else {
+            // Move closer until in range (or out of stamina)
+            const distanceToEnemy = math.distance(unit, closestEnemy);
+            // Find a point directly towards the enemy that is closer but only just enough to be in attacking range
+            const closerUntilInRangePoint = add(unit, math.similarTriangles(closestEnemy.x - unit.x, closestEnemy.y - unit.y, distanceToEnemy, distanceToEnemy + config.COLLISION_MESH_RADIUS - unit.attackRange));
+            await Unit.moveTowards(unit, closerUntilInRangePoint, underworld);
         }
-        // Move closer until in range (or out of stamina)
-        const distanceToEnemy = math.distance(unit, closestEnemy);
-        // Find a point directly towards the enemy that is closer but only just enough to be in attacking range
-        const closerUntilInRangePoint = add(startPoint, math.similarTriangles(closestEnemy.x - startPoint.x, closestEnemy.y - startPoint.y, distanceToEnemy, distanceToEnemy + config.COLLISION_MESH_RADIUS - unit.attackRange));
-        moveTowardsPointsArray.push(closerUntilInRangePoint);
-        await Unit.moveTowardsMulti(unit, moveTowardsPointsArray, underworld);
     }
 
 }
