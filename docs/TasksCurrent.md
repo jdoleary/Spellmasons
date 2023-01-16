@@ -1,14 +1,15 @@
 # Before next streamer outreach
-    - Improve difficulty scaling with over 4 players
+    - make bolt and chain filter for same faction
     ---
+    - Improve difficulty scaling with over 4 players
     - Check volume defaults
     - test all spells on multiplayer
     - BALANCE unit spawns especially on later levels
         - Maybe not exponential budget?
     - bug: player 2 doesn't get cinematic
-    - bolt radius is too big, it hits you too
     - "waiting" book comes out too early
     
+    - add 0xFF to credits for italian translation
 ## 2023.01.11
 - send Val gifs for new sounds
 - bug: Got "you cannot move while casting" but I was able to move anyway
