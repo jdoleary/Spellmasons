@@ -3097,7 +3097,8 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
   // Now that we've determined which unit types will be in the level we have to
   // budget out the quantity
   let units = [];
-  let budgetLeft = 2 + (adjustedLevelIndex + 1) * (adjustedLevelIndex + 1);
+  let budgetLeft = (adjustedLevelIndex + 1) * Math.max(3, (adjustedLevelIndex + 1) - 3);
+  console.log('Budget for level index', adjustedLevelIndex, 'is', budgetLeft);
   const totalBudget = budgetLeft;
   if (levelIndex == 11) {
     budgetLeft -= 20;
