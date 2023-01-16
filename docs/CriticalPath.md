@@ -1,8 +1,6 @@
 # Critical Path
-- January 1/8-1/14
-    - Prepare stable version for next Streamer outreach
-        - See TasksCurrent: "# Before next streamer outreach"
 - January 1/15-1/21
+    - Streamer outreach
     - Finish Multiplayer
 - January 1/22-1/28
     - Double check Electron Security
@@ -10,5 +8,6 @@
     - Support modding
         - Include instructions from Modding.md
     - QualityOfLife.md
+    - Balance Songs and create soundtrack for sale (see Darkest Dungeon soundtrack page for how it should appear)
 - January 31 (check timezone)
     - Release Game and Demo

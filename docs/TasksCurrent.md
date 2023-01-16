@@ -1,3 +1,11 @@
+- Production build:
+    - got prompt() error when I clicked save
+    - save files should store version number
+    - did not see 'x' next to Load files
+    - when I join a game:`handleOnDataMessage: TypeError: a.onMoveEvents is not iterable`
+    - Steam says it's on the new version but it's not on the new JS
+    - it said it was on the right version but it wasn't until I `Verified integrity of game files`
+        - check cache in `C:\Users\Jordan\AppData\Roaming\Spellmasons`
 # Before next streamer outreach
     - add mana refunds for more spells (like slash)
 ---
