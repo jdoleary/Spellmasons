@@ -270,4 +270,6 @@ declare global {
     }
     var Jprompt: (prompt: PromptArgs) => Promise<boolean>;
     var JtextPrompt: (prompt: PromptArgs) => Promise<string>;
+    // Updates the server connection state in the menu
+    var syncConnectedWithPieState: () => void;
 }

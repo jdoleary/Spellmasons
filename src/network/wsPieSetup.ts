@@ -125,12 +125,15 @@ function addHandlers(pie: PieClient, overworld: Overworld) {
         // Log error if client and server versions are minor or major out of sync:
         const [clientMajor, clientMinor, clientPatch] = globalThis.SPELLMASONS_PACKAGE_VERSION.split('.');
         const [serverMajor, serverMinor, serverPath] = o.hostAppVersion.split('.');
+        console.log('jtest', clientMajor, serverMajor, clientMinor, serverMinor, clientMinor !== serverMinor);
         if (clientMajor !== serverMajor || clientMinor !== serverMinor) {
-          console.error(`Client ${globalThis.SPELLMASONS_PACKAGE_VERSION} and Server ${o.hostAppVersion} versions are out of sync`);
+          Jprompt({ text: 'Server and Game versions are out of sync.  Please reboot Steam to install the latest Spellmasons update or else you will encounter gameplay issues.', yesText: "Disconnect", forceShow: true }).then(() => {
+            pie.disconnect();
+            globalThis.syncConnectedWithPieState();
+          });
         }
       } else {
         elVersionInfoHeadless.innerText = '';
-
       }
     }
     if (o?.hostAppVersion !== version) {

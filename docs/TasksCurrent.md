@@ -1,7 +1,6 @@
 # Before next streamer outreach
     - range exception for arrow spells
     - arrows  should refund if they hit nothing
-    - warn version mismatch
 ---
     - plus radius overflows on 1920 x 1080 resolution full screen
     - Improve difficulty scaling with over 4 players
