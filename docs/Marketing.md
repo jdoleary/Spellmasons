@@ -224,20 +224,16 @@ https://partner.steamgames.com/doc/marketing/event_tools/embed
     - Requires DEMOn
 - [rock paper shotgun](https://www.rockpapershotgun.com/how-to-pitch-an-article-to-rock-paper-shotgun)
 - [Best Indie Games](https://www.youtube.com/c/ClemmyGames/about)
-- Retromation: Sent key
-    - TODO: Reach out to rest of the Wholesomeverse
-- SplatterCatGaming (name: Matt)
-- Wanderbots
-- Angory Tom
-- DangerouslyFunny
-- CantPause
+- Retromation: Waiting to hear back about multiplayer
+- SplatterCatGaming (name: Matt): waiting to hear back about multiplayer
+- Wanderbots: Waiting to see if Retro writes back first
+- Angory Tom: Messaged via twitter
+- DangerouslyFunny: Wait until he's active again to message
 - NorthernLion: Sent email
 - turnbasedtacticsgroup@gmail.com : Send invite through Curator Connect
 
 - Note: Use social proof, link Retro's video??
 
-# Reviewers to give keys to
-- SilverSeraphym:  provided key via discord
 
 ## Reviewer Email Checklist:
 - Title "GAME NAME - Genre - Developer"
