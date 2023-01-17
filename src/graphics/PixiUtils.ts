@@ -49,20 +49,22 @@ export const containerFloatingText = !globalThis.pixi ? undefined : new globalTh
 
 export const graphicsBloodSmear = !globalThis.pixi ? undefined : new globalThis.pixi.Graphics();
 export function cacheBlood() {
-  if (app && graphicsBloodSmear) {
-    if (containerCachedBlood) {
-      const bounds = app.stage.getBounds();
-      const renderTexture = RenderTexture.create({ width: bounds.width, height: bounds.height });
-      app.renderer.render(graphicsBloodSmear, { renderTexture });
-      const cachedBloodSprite = !globalThis.pixi ? undefined : new globalThis.pixi.Sprite(renderTexture);
-      if (cachedBloodSprite) {
-        containerCachedBlood.addChild(cachedBloodSprite);
-      }
-    } else {
-      console.log('Missing containerCachedBlood')
-    }
-    graphicsBloodSmear.clear();
-  }
+  console.log('TODO: cache blood issue: - relevant: https://www.html5gamedevs.com/topic/44884-firefox-requested-size-at-this-level-is-unsupported/ ');
+  return;
+  // if (app && graphicsBloodSmear) {
+  //   if (containerCachedBlood) {
+  //     const bounds = app.stage.getBounds();
+  //     const renderTexture = RenderTexture.create({ width: bounds.width, height: bounds.height });
+  //     app.renderer.render(graphicsBloodSmear, { renderTexture });
+  //     const cachedBloodSprite = !globalThis.pixi ? undefined : new globalThis.pixi.Sprite(renderTexture);
+  //     if (cachedBloodSprite) {
+  //       containerCachedBlood.addChild(cachedBloodSprite);
+  //     }
+  //   } else {
+  //     console.log('Missing containerCachedBlood')
+  //   }
+  //   graphicsBloodSmear.clear();
+  // }
 }
 if (containerBloodSmear && graphicsBloodSmear) {
   containerBloodSmear.addChild(graphicsBloodSmear);
