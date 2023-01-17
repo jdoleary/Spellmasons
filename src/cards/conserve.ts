@@ -8,11 +8,11 @@ import { makeRisingParticles } from '../graphics/ParticleCollection';
 import { manaBlue } from '../graphics/ui/colors';
 import { hexToString } from '../graphics/ui/colorUtil';
 
-export const id = 'conserve';
+export const conserveSpellId = 'conserve';
 const imageName = 'spell-effects/spellFreeze_still.png';
 const spell: Spell = {
   card: {
-    id,
+    id: conserveSpellId,
     category: CardCategory.Mana,
     sfx: '',
     supportQuantity: false,
@@ -28,7 +28,7 @@ const spell: Spell = {
       const targets = state.targetedUnits.filter(u => u.alive && u.mana > 0);
       if (targets.length) {
         for (let unit of targets) {
-          Unit.addModifier(unit, id, underworld, prediction, unit.mana);
+          Unit.addModifier(unit, conserveSpellId, underworld, prediction, unit.mana);
           unit.mana = 0;
           makeRisingParticles(unit, prediction, hexToString(manaBlue));
         }
@@ -55,11 +55,11 @@ const spell: Spell = {
   },
   events: {
     onTurnStart: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
-      const modifier = unit.modifiers[id];
+      const modifier = unit.modifiers[conserveSpellId];
       if (modifier) {
         setTimeout(() => {
           unit.mana += modifier.quantity;
-          Unit.removeModifier(unit, id, underworld);
+          Unit.removeModifier(unit, conserveSpellId, underworld);
         }, 0);
       }
       // Do not skip turn
@@ -70,9 +70,9 @@ const spell: Spell = {
 };
 
 function add(unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) {
-  getOrInitModifier(unit, id, { isCurse: false, quantity, persistBetweenLevels: false }, () => {
-    if (!unit.onTurnStartEvents.includes(id)) {
-      unit.onTurnStartEvents.push(id);
+  getOrInitModifier(unit, conserveSpellId, { isCurse: false, quantity, persistBetweenLevels: false }, () => {
+    if (!unit.onTurnStartEvents.includes(conserveSpellId)) {
+      unit.onTurnStartEvents.push(conserveSpellId);
     }
   });
 }
