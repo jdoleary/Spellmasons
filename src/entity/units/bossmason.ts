@@ -32,7 +32,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
-    attackRange: config.PLAYER_BASE_ATTACK_RANGE + 30,
+    attackRange: config.PLAYER_BASE_ATTACK_RANGE * 3,
     healthMax: 600,
     manaMax: bossmasonMana,
     manaPerTurn: bossmasonMana
