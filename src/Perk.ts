@@ -273,7 +273,7 @@ export function tryTriggerPerk(perk: AttributePerk, player: IPlayer, when: WhenU
             }
             if (player === globalThis.player) {
                 setTimeout(() => {
-                    floatingText({ coords: player.unit, text: `+${player.unit[perk.attribute] - oldAttributeAmount} ${perkAttributeToString(perk.attribute)}` });
+                    floatingText({ coords: player.unit, text: `+${Math.round(player.unit[perk.attribute] - oldAttributeAmount)} ${perkAttributeToString(perk.attribute)}` });
                 }, offsetNotifyByMs);
             }
             // Now that the player unit's properties have changed, sync the new
