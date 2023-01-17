@@ -48,7 +48,7 @@ export const containerFloatingText = !globalThis.pixi ? undefined : new globalTh
 
 
 export const graphicsBloodSmear = !globalThis.pixi ? undefined : new globalThis.pixi.Graphics();
-function saveBlood() {
+export function cacheBlood() {
   if (app && graphicsBloodSmear) {
     if (containerCachedBlood) {
       const bounds = app.stage.getBounds();
@@ -64,7 +64,6 @@ function saveBlood() {
     graphicsBloodSmear.clear();
   }
 }
-window.t = saveBlood;
 if (containerBloodSmear && graphicsBloodSmear) {
   containerBloodSmear.addChild(graphicsBloodSmear);
   graphicsBloodSmear.alpha = 0.5;

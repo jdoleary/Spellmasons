@@ -23,7 +23,7 @@ import { Vec2 } from '../jmath/Vec';
 import pingSprite from '../graphics/Ping';
 import { clearLastNonMenuView, setView, View } from '../views';
 import { autoExplain, explain, EXPLAIN_END_TURN, tutorialCompleteTask } from '../graphics/Explain';
-import { cameraAutoFollow, runCinematicLevelCamera } from '../graphics/PixiUtils';
+import { cacheBlood, cameraAutoFollow, runCinematicLevelCamera } from '../graphics/PixiUtils';
 import { Overworld } from '../Overworld';
 import { playerCastAnimationColor, playerCastAnimationColorLighter, playerCastAnimationGlow } from '../graphics/ui/colors';
 import { lightenColor } from '../graphics/ui/colorUtil';
@@ -656,6 +656,10 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
         epsilon: 0.2
       }
     });
+
+    // Optimize: Cache blood after every cast
+    cacheBlood();
+
     globalThis.animatingSpells = false;
     // Check for dead players to end their turn,
     // this occurs here because spells may have caused their death
