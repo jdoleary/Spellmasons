@@ -1046,7 +1046,6 @@ export default class Underworld {
   spawnPickup(index: number, coords: Vec2, prediction?: boolean) {
     const pickup = Pickup.pickups[index];
     if (pickup) {
-      console.log('jtest spawn pickup', pickup.name);
       Pickup.create({ pos: coords, pickupSource: pickup }, this, !!prediction);
     } else {
       console.error('Could not find pickup with index', index);
@@ -2834,21 +2833,25 @@ export default class Underworld {
       // Spawn portal near each player
       const portalPickup = Pickup.pickups.find(p => p.name == Pickup.PICKUP_PORTAL_NAME);
       if (portalPickup) {
-        for (let playerUnit of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
-          const portalSpawnLocation = this.findValidSpawn(playerUnit, 4) || playerUnit;
-          console.log('jtest spawn portal o', portalSpawnLocation)
-          Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup }, this, false);
-          // Give all player units infinite stamina when portal spawns for convenience.
-          playerUnit.stamina = Number.POSITIVE_INFINITY;
-          // Give all players max health and mana (it will be reset anyway when they are reset for the next level
-          // but this disswades them from going around to pickup potions)
-          playerUnit.health = playerUnit.healthMax;
-          playerUnit.mana = playerUnit.manaMax;
-          // Since playerUnit's health and mana is reset, we need to immediately sync the prediction unit
-          // so that it doesn't inncorrectly warn "self damage due to spell" by seeing that the prediction unit
-          // has less health than the current player unit.
-          this.syncPlayerPredictionUnitOnly();
+        const portalsAlreadySpawned = !!this.pickups.find(p => p.name === Pickup.PICKUP_PORTAL_NAME)
+        if (!portalsAlreadySpawned) {
+          for (let playerUnit of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
+            const portalSpawnLocation = this.findValidSpawn(playerUnit, 4) || playerUnit;
+            Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup }, this, false);
+            // Give all player units infinite stamina when portal spawns for convenience.
+            playerUnit.stamina = Number.POSITIVE_INFINITY;
+            // Give all players max health and mana (it will be reset anyway when they are reset for the next level
+            // but this disswades them from going around to pickup potions)
+            playerUnit.health = playerUnit.healthMax;
+            playerUnit.mana = playerUnit.manaMax;
+            // Since playerUnit's health and mana is reset, we need to immediately sync the prediction unit
+            // so that it doesn't inncorrectly warn "self damage due to spell" by seeing that the prediction unit
+            // has less health than the current player unit.
+            this.syncPlayerPredictionUnitOnly();
 
+          }
+        } else {
+          console.log('Portals have already been spawned, do not spawn additional');
         }
       } else {
         console.error('Portal pickup not found')

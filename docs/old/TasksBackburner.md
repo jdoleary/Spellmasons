@@ -1,4 +1,6 @@
 - Milestone | **Optimize game**
+  - optimize graphics objects:
+      - "Once a GraphicsGeometry list is built, you can re-use it in other Geometry objects as an optimization, by passing it into a new Geometry object's constructor. Because of this ability, it's important to call destroy() on Geometry objects once you are done with them, to properly dereference each GraphicsGeometry and prevent memory leaks."
     - Optimize runPredictions: especially with expanding + corpse explosion
     - repelCircleFromLine is used for both unit crowding and wall physics and with wall physics it doesn't need a reference to underworld, that's only needed for unit crowding to make sure they don't crowd each other through walls
     - Memory Leaks: call destroy() on any Graphics object you no longer need to avoid memory leaks.
