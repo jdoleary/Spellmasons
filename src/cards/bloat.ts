@@ -17,7 +17,13 @@ const imageName = 'explode-on-death.png';
 const damage = 40;
 const baseRadius = 140;
 function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra?: any) {
-  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
+  const modifier = getOrInitModifier(unit, id, {
+    isCurse: true, quantity, persistBetweenLevels: false,
+    originalStats: {
+      scaleX: unit.image && unit.image.sprite.scale.x || 1,
+      scaleY: unit.image && unit.image.sprite.scale.y || 1,
+    }
+  }, () => {
     // Add event
     if (!unit.onDeathEvents.includes(id)) {
       unit.onDeathEvents.push(id);
@@ -25,7 +31,7 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity:
     // Add subsprite image
     if (unit.image) {
       // Visually "bloat" the image
-      unit.image.sprite.scale.x = 1.5;
+      unit.image.sprite.scale.x *= 1.5;
     }
   });
   if (!modifier.radius) {
@@ -35,9 +41,13 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity:
 
 }
 function remove(unit: IUnit, underworld: Underworld) {
-  if (unit.image) {
-    // reset the scale
-    unit.image.sprite.scale.x = 1.0;
+  if (unit.modifiers && unit.modifiers[id] && unit.image) {
+    // Safely restore unit's original properties
+    const { scaleX, scaleY } = unit.modifiers[id].originalStats;
+    if (unit.image) {
+      unit.image.sprite.scale.x = scaleX;
+      unit.image.sprite.scale.y = scaleY;
+    }
   }
 }
 
