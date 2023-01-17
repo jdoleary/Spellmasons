@@ -71,7 +71,12 @@ const drop = (ev: any, overworld: Overworld, startIndex: number) => {
   const dropIndex = startIndex + (dropElement.parentNode ? Array.from(dropElement.parentNode.children).indexOf(dropElement) : -1);
   const cardId = dragCard && dragCard.dataset.cardId
   if (globalThis.player && dropIndex !== -1 && dragCard && cardId !== undefined) {
-    const startDragCardIndex = dragCard.parentNode && dragCard.closest('#card-hand') ? Array.from(dragCard.parentNode.children).indexOf(dragCard) : -1;
+    let startDragCardIndex = dragCard.parentNode && (dragCard.closest('#card-hand') || dragCard.closest('.floating-card-holder')) ? Array.from(dragCard.parentNode.children).indexOf(dragCard) : -1;
+    const containerIndexOffset = cardContainers.indexOf(dragCard.parentNode as HTMLElement);
+    // Change startDragCardIndex based on which card container it originated from
+    if (containerIndexOffset !== -1) {
+      startDragCardIndex += NUMBER_OF_TOOLBAR_SLOTS * containerIndexOffset;
+    }
     if (startDragCardIndex !== -1) {
       // Then the drag card is already in the toolbar and this is a swap between
       // two cards on the toolbar

@@ -96,7 +96,8 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
     ),
     isCasting: false,
     isSpawned: false,
-    cards: Array(config.NUMBER_OF_TOOLBAR_SLOTS).fill(''),
+    // *3 for all card containers including floating card containers
+    cards: Array(config.NUMBER_OF_TOOLBAR_SLOTS * 3).fill(''),
     inventory: [],
     cardUsageCounts: {},
     upgrades: [],
