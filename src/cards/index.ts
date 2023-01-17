@@ -200,7 +200,8 @@ export function registerCards(overworld: Overworld) {
   register(arrow, overworld);
   register(phantom_arrow, overworld);
   register(target_arrow, overworld);
-  register(bolt, overworld);
+  // TODO: Refactor bolt into soulbind, it didn't work out well as a spell
+  // register(bolt, overworld);
   register(conserve, overworld);
   for (let unitId of Object.keys(allUnits)) {
     const spell = summon_generic(unitId, false);
