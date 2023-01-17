@@ -45,6 +45,9 @@ function resetInventoryContent() {
 const elInvButton = document.getElementById('inventory-icon') as HTMLElement;
 // Where the non-selected cards are displayed
 const elCardHand = document.getElementById('card-hand') as HTMLElement;
+const elFloatingCardHolderLeft = document.getElementById('floating-card-holder-left') as HTMLElement;
+const elFloatingCardHolderRight = document.getElementById('floating-card-holder-right') as HTMLElement;
+const cardContainers = [elCardHand, elFloatingCardHolderLeft, elFloatingCardHolderRight];
 // Where the selected cards are displayed
 const elSelectedCards = document.getElementById('selected-cards') as HTMLElement;
 // Gap amount must be available programatically (not in css) so it can be
@@ -58,6 +61,42 @@ const dragstart = (ev: any) => {
     ev.preventDefault();
   }
 
+}
+const drop = (ev: any, overworld: Overworld, startIndex: number) => {
+  const dropElement = ((ev.target as HTMLElement).closest('.slot') as HTMLElement);
+  if (!dropElement) {
+    console.warn('Tried to drop spell but dropElement was null. This will happen if user drops spell between slots');
+    return;
+  }
+  const dropIndex = startIndex + (dropElement.parentNode ? Array.from(dropElement.parentNode.children).indexOf(dropElement) : -1);
+  const cardId = dragCard && dragCard.dataset.cardId
+  if (globalThis.player && dropIndex !== -1 && dragCard && cardId !== undefined) {
+    const startDragCardIndex = dragCard.parentNode && dragCard.closest('#card-hand') ? Array.from(dragCard.parentNode.children).indexOf(dragCard) : -1;
+    if (startDragCardIndex !== -1) {
+      // Then the drag card is already in the toolbar and this is a swap between
+      // two cards on the toolbar
+      const swapCard = globalThis.player.cards[dropIndex] || "";
+      globalThis.player.cards[dropIndex] = cardId;
+      globalThis.player.cards[startDragCardIndex] = swapCard;
+    } else {
+      // else a card is being dragged in from inventory
+      globalThis.player.cards[dropIndex] = cardId;
+    }
+    // Send new card order to server 
+    overworld.pie.sendData({
+      type: MESSAGE_TYPES.PLAYER_CARDS,
+      cards: globalThis.player.cards,
+    });
+    if (overworld.underworld) {
+      recalcPositionForCards(globalThis.player, overworld.underworld);
+      syncInventory(undefined, overworld.underworld);
+    } else {
+      console.error('Cannot drop card on toolbar, underworld is undefined.');
+    }
+  } else {
+    console.error('Something went wrong dragndropping card', dropIndex, dragCard);
+  }
+  ev.preventDefault();
 }
 // Displays a full card with info on inspect-mode + hover of card
 const elCardInspects = document.querySelectorAll('.card-inspect');
@@ -79,48 +118,22 @@ export function setupCardUIEventListeners(overworld: Overworld) {
     elSelectedCards.style['gap'] = `${gapBetweenCards}px`;
 
     elInvContent.addEventListener('dragstart', dragstart);
-    elCardHand.addEventListener('dragstart', dragstart);
-    elCardHand.addEventListener('dragover', ev => {
-      ev.preventDefault();
-    })
-    elCardHand.addEventListener('drop', ev => {
-      const dropElement = ((ev.target as HTMLElement).closest('.slot') as HTMLElement);
-      if (!dropElement) {
-        console.warn('Tried to drop spell but dropElement was null. This will happen if user drops spell between slots');
-        return;
-      }
-      const dropIndex = dropElement.parentNode ? Array.from(dropElement.parentNode.children).indexOf(dropElement) : -1;
-      const cardId = dragCard && dragCard.dataset.cardId
-      if (globalThis.player && dropIndex !== -1 && dragCard && cardId !== undefined) {
-        const startDragCardIndex = dragCard.parentNode && dragCard.closest('#card-hand') ? Array.from(dragCard.parentNode.children).indexOf(dragCard) : -1;
-        if (startDragCardIndex !== -1) {
-          // Then the drag card is already in the toolbar and this is a swap between
-          // two cards on the toolbar
-          const swapCard = globalThis.player.cards[dropIndex] || "";
-          globalThis.player.cards[dropIndex] = cardId;
-          globalThis.player.cards[startDragCardIndex] = swapCard;
-        } else {
-          // else a card is being dragged in from inventory
-          globalThis.player.cards[dropIndex] = cardId;
-        }
-        // Send new card order to server 
-        overworld.pie.sendData({
-          type: MESSAGE_TYPES.PLAYER_CARDS,
-          cards: globalThis.player.cards,
-        });
-        if (overworld.underworld) {
-          recalcPositionForCards(globalThis.player, overworld.underworld);
-          syncInventory(undefined, overworld.underworld);
-        } else {
-          console.error('Cannot drop card on toolbar, underworld is undefined.');
-        }
-      } else {
-        console.error('Something went wrong dragndropping card', dropIndex, dragCard);
-      }
-      ev.preventDefault();
-    })
-    addCardInspectHandlers(elCardHand);
     addCardInspectHandlers(elInvContent);
+    for (let i = 0; i < cardContainers.length; i++) {
+      const container = cardContainers[i];
+      if (container) {
+
+        container.addEventListener('dragstart', dragstart);
+        container.addEventListener('dragover', ev => {
+          ev.preventDefault();
+        });
+        container.addEventListener('drop', ev => drop(ev, overworld, (NUMBER_OF_TOOLBAR_SLOTS) * i));
+        addCardInspectHandlers(container);
+      } else {
+        console.error('Card container', i, 'does not exist');
+      }
+
+    }
   }
 }
 function addCardInspectHandlers(cardContainerElement: HTMLElement) {
@@ -188,39 +201,47 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined, under
     return;
   }
   // Remove all current cards:
-  if (elCardHand) {
-    elCardHand.innerHTML = '';
-  } else {
-    console.error('elCardHand is null');
+  for (let container of cardContainers) {
+    if (container) {
+      container.innerHTML = '';
+    } else {
+      console.error('card container is null');
+    }
   }
 
   // Reconcile the elements with the player's hand
-  for (let slotIndex = 0; slotIndex < NUMBER_OF_TOOLBAR_SLOTS; slotIndex++) {
+  // *3: for extra toolbar slots
+  for (let slotIndex = 0; slotIndex < NUMBER_OF_TOOLBAR_SLOTS * 3; slotIndex++) {
     const cardId = player.cards[slotIndex];
+    const container = cardContainers[Math.floor(slotIndex / NUMBER_OF_TOOLBAR_SLOTS)];
+    if (container) {
 
-    if (cardId) {
+      if (cardId) {
 
-      // Create UI element for card
-      const card = Cards.allCards[cardId];
-      // Note: Some upgrades don't have corresponding cards (such as resurrect)
-      if (card) {
-        const element = createCardElement(card);
-        element.draggable = true;
-        element.classList.add('slot');
-        // When the user clicks on a card
-        addListenersToCardElement(player, element, cardId, underworld);
-        addToolbarListener(element, slotIndex, underworld);
-        elCardHand.appendChild(element);
+        // Create UI element for card
+        const card = Cards.allCards[cardId];
+        // Note: Some upgrades don't have corresponding cards (such as resurrect)
+        if (card) {
+          const element = createCardElement(card);
+          element.draggable = true;
+          element.classList.add('slot');
+          // When the user clicks on a card
+          addListenersToCardElement(player, element, cardId, underworld);
+          addToolbarListener(element, slotIndex, underworld);
+          container.appendChild(element);
 
+        } else {
+          console.log(`No corresponding source card exists for "${cardId}"`);
+        }
       } else {
-        console.log(`No corresponding source card exists for "${cardId}"`);
+        // Slot is empty
+        const element = document.createElement('div');
+        element.classList.add('empty-slot', 'slot');
+        addToolbarListener(element, slotIndex, underworld);
+        container.appendChild(element);
       }
     } else {
-      // Slot is empty
-      const element = document.createElement('div');
-      element.classList.add('empty-slot', 'slot');
-      addToolbarListener(element, slotIndex, underworld);
-      elCardHand.appendChild(element);
+      console.error('No card container for slotIndex', slotIndex);
     }
   }
   // Remove all current selected cards

@@ -1851,3 +1851,52 @@ body.view-Game.showUpgrades #perkList.visible {
 .reroll-btn:active {
   background-image: url('/ui/iconRerollDown.png');
 }
+
+
+/* Extra toolbars for cards */
+#floating-card-holder-left {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+#floating-card-holder-right {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+/* Ensure slots don't block clicks unless they have a spell in them or 
+if the inventory is open in which case they can be used to drop spells into */
+.floating-card-holder,
+.floating-card-holder .slot.empty-slot {
+  pointer-events: none;
+}
+
+.open-inventory .floating-card-holder .slot.empty-slot,
+.floating-card-holder .slot {
+  pointer-events: all;
+}
+
+.floating-card-holder .slot,
+.floating-card-holder .slot .card-inner,
+.floating-card-holder .slot .card-thumb,
+.floating-card-holder .slot .card-thumb img {
+  width: 42px;
+  height: 42px;
+}
+
+.floating-card-holder .slot .card-title {
+  display: none;
+}
+
+/* Empty Slots shouldn't be visible unless the inventory is open */
+.floating-card-holder .empty-slot {
+  visibility: hidden;
+}
+
+.open-inventory .floating-card-holder .empty-slot {
+  visibility: visible;
+}
+
+/* Above: Extra toolbars for cards */

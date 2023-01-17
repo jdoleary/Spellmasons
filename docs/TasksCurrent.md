@@ -1,3 +1,6 @@
+- moving a spell in a floating container copies it instead of leaving an empty
+- Send Val gifs TUESDAY
+- Add "Nick 0xFF" to credits
 ## Brad playtest
 - As he was clicking to change his color he spawned because he was already ready, changing your color should unready you
     - or delay when you can click to sapwn
