@@ -1,3 +1,44 @@
+## Brad playtest
+- As he was clicking to change his color he spawned because he was already ready, changing your color should unready you
+    - or delay when you can click to sapwn
+    - or you can't spawn before you pick your cards
+- he moved and sync died issue at the beginning
+- he hacked mana by casting a 3rd arrow during a cast while the mana had not yet reduced
+- should permanent perks show up in perks list
+- decoy spell copy overflows on small resolution
+- refrase "for one turn, every level"
+- some spells are lowercase in player tooltip
+- split makes his move distance 25% instead of 50 because it slows you and reduces your stamina
+- res spell alone should prioritize targeting dead units over living
+- you should be able to kill yourself with health spells like conserve, but it stops you
+- can death wager kill you?
+- if you die to poison "your turn" + "you died" overlap
+- poisoner miniboss bloated killed then resurrected comes back thin
+- poisoner miniboss should do more quantity when poisoning
+- displace desync - cast on wrong guy??
+    - he was right next to him
+- **extra Wow style toolbars**
+- health bars render over player thought
+- explain in copy that bolt doesn't add to targeting
+- bolt should be cheaper
+- desync during ally npc turn? it also pauses
+- target arrow allows you to SELECT people out of range
+- bloated miniboss gets thin after dying
+- when perk list gets too big you should be able to scroll it
+- **optimize blood, when there's too much it lags**
+- too many dark summoners
+- boss masion should have more range
+- player status is dead even after resurrecting and he can't end turn
+- somehow bossmason was over max health
+- show visually bossmason purify self
+- every turn perks don't display quite right in toolbar the chance should be indented or soemthing
+- **target similar is too slow, make it concurrent**
+- **target similar should exclude already targeted units so it's not redundnat**
+- bossmason purifying himself doesn't remove the animated poison
+- resurrected sand vamp still had poison animation
+- bossmason particles should go out when he dies
+- Brad thoughts:
+    - bloat is too powerful
 # Before next streamer outreach
 - Fix difficulty balance, expontential is not right, too hard
 - Change "Escape" key hotkey button to "Esc"
