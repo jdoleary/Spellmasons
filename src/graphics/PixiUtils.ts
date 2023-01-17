@@ -1,4 +1,4 @@
-import type * as PIXI from 'pixi.js';
+import * as PIXI from 'pixi.js';
 import { clone, equal, getAngleBetweenVec2sYInverted, isInvalid, Vec2 } from '../jmath/Vec';
 import { View } from '../views';
 import * as math from '../jmath/math';
@@ -16,6 +16,7 @@ import { inPortal } from '../entity/Player';
 import KeyMapping, { keyToHumanReadable } from './ui/keyMapping';
 import { tutorialCompleteTask } from './Explain';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
+import { RenderTexture } from 'pixi.js';
 
 // if PIXI is finished setting up
 let isReady = false;
@@ -46,12 +47,33 @@ export const containerFloatingText = !globalThis.pixi ? undefined : new globalTh
 
 
 export const graphicsBloodSmear = !globalThis.pixi ? undefined : new globalThis.pixi.Graphics();
+function saveBlood() {
+  if (app && graphicsBloodSmear) {
+    if (containerBloodSmear) {
+      const bounds = app.stage.getBounds();
+      console.log('jtest save blood', bounds);
+
+      const renderTexture = RenderTexture.create({ width: bounds.width, height: bounds.height });
+      app.renderer.render(graphicsBloodSmear, { renderTexture });
+      const cachedBloodSprite = !globalThis.pixi ? undefined : new globalThis.pixi.Sprite(renderTexture);
+      if (cachedBloodSprite) {
+        // TODO: Clean up for next level
+        containerBloodSmear.addChild(cachedBloodSprite);
+      }
+    } else {
+      console.log('jtest no container blood sm')
+    }
+    graphicsBloodSmear.clear();
+  }
+}
+window.t = saveBlood;
 if (containerBloodSmear && graphicsBloodSmear) {
   containerBloodSmear.addChild(graphicsBloodSmear);
-  containerBloodSmear.alpha = 0.5;
+  graphicsBloodSmear.alpha = 0.5;
 }
 export const containerBloodParticles = !globalThis.pixi ? undefined : new globalThis.pixi.ParticleContainer();
 if (containerBloodSmear && containerBloodParticles) {
+  containerBloodParticles.alpha = 0.5;
   containerBloodSmear.addChild(containerBloodParticles);
 }
 let updateLiquidFilterIntervalId: NodeJS.Timer | undefined;

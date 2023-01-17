@@ -1045,6 +1045,7 @@ export default class Underworld {
   spawnPickup(index: number, coords: Vec2, prediction?: boolean) {
     const pickup = Pickup.pickups[index];
     if (pickup) {
+      console.log('jtest spawn pickup', pickup.name);
       Pickup.create({ pos: coords, pickupSource: pickup }, this, !!prediction);
     } else {
       console.error('Could not find pickup with index', index);
@@ -2832,6 +2833,7 @@ export default class Underworld {
       if (portalPickup) {
         for (let playerUnit of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
           const portalSpawnLocation = this.findValidSpawn(playerUnit, 4) || playerUnit;
+          console.log('jtest spawn portal o', portalSpawnLocation)
           Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup }, this, false);
           // Give all player units infinite stamina when portal spawns for convenience.
           playerUnit.stamina = Number.POSITIVE_INFINITY;

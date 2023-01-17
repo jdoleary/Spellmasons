@@ -1,3 +1,6 @@
+- optimize graphics objects:
+    - "Once a GraphicsGeometry list is built, you can re-use it in other Geometry objects as an optimization, by passing it into a new Geometry object's constructor. Because of this ability, it's important to call destroy() on Geometry objects once you are done with them, to properly dereference each GraphicsGeometry and prevent memory leaks."
+- I can make many portals spawn if I make many enemies, expand *2 + bloat + slash
 - save file sometimes truncates after space
 - Send Val gifs TUESDAY
 - Add "Nick 0xFF" to credits
@@ -454,6 +457,7 @@ but overall a boss with multiple "stages" or "parts" would be cool
 - **critical** Improve sending castCards with targeting based on id not position
 - Unit movement desync occurred between clients when one client has CPU throttled, the non throttled client has the unit move much farther
 # Stretch Tasks
+- Post game stats! (requested)
 - Achievements
 - Mods
 - Make pickups do something when destroyed
