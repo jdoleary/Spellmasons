@@ -1,4 +1,4 @@
-- moving a spell in a floating container copies it instead of leaving an empty
+- save file sometimes truncates after space
 - Send Val gifs TUESDAY
 - Add "Nick 0xFF" to credits
 ## Brad playtest
@@ -20,7 +20,6 @@
 - poisoner miniboss should do more quantity when poisoning
 - displace desync - cast on wrong guy??
     - he was right next to him
-- **extra Wow style toolbars**
 - health bars render over player thought
 - explain in copy that bolt doesn't add to targeting
 - bolt should be cheaper
@@ -35,8 +34,6 @@
 - somehow bossmason was over max health
 - show visually bossmason purify self
 - every turn perks don't display quite right in toolbar the chance should be indented or soemthing
-- **target similar is too slow, make it concurrent**
-- **target similar should exclude already targeted units so it's not redundnat**
 - bossmason purifying himself doesn't remove the animated poison
 - resurrected sand vamp still had poison animation
 - bossmason particles should go out when he dies

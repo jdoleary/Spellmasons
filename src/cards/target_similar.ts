@@ -32,7 +32,10 @@ const spell: Spell = {
       let targets: Vec2[] = getCurrentTargets(state);
       targets = targets.length ? targets : [state.castLocation];
       const length = targets.length;
+      const animators = [];
       for (let i = 0; i < length; i++) {
+        // Refresh the targets array so it excludes reselecting a target that was selected by the last iteration
+        targets = getCurrentTargets(state);
         const target = targets[i];
         if (!target) {
           continue;
@@ -55,63 +58,68 @@ const spell: Spell = {
         const newTargets = potentialTargets.slice(0, quantity);
         if (!prediction) {
           playSFXKey('targeting');
-          // Animate lines to new targets
-          await animate(target, newTargets, [target]);
-          // Animate circles for all now-selected targets
-          await animate(target, [], [target, ...newTargets]);
+          animators.push({ pos: target, newTargets });
         }
         for (let newTarget of newTargets) {
           addTarget(newTarget, state);
         }
       }
+      await animate(animators);
 
       return state;
     },
   },
 };
 
-async function animate(pos: Vec2, newTargets: Vec2[], oldTargets: Vec2[]) {
+async function animate(circles: { pos: Vec2, newTargets: Vec2[] }[]) {
   if (globalThis.headless) {
     // Animations do not occur on headless, so resolve immediately or else it
     // will just waste cycles on the server
     return Promise.resolve();
   }
+  if (circles.length == 0) {
+    // Prevent this function from running if there is nothing to animate
+    return Promise.resolve();
+  }
   const iterations = 100;
   const millisBetweenIterations = 4;
-  // Keep track of which entities have been targeted so far for the sake
-  // of making a new sfx when a new entity gets targeted
-  const entitiesTargeted: Vec2[] = [];
-  // "iterations + 10" gives it a little extra time so it doesn't timeout right when the animation would finish on time
-  return raceTimeout(millisBetweenIterations * (iterations + 10), 'animatedConnect', new Promise<void>(resolve => {
-    for (let i = 0; i < iterations; i++) {
+  const extraIterationsToShowAnimatedCircleAtEnd = 40;
+  // "+10" gives it a little extra time so it doesn't timeout right when the animation would finish on time
+  return raceTimeout(millisBetweenIterations * (iterations + extraIterationsToShowAnimatedCircleAtEnd + 10), 'animatedConnect', new Promise<void>(resolve => {
+    // +extraIterations... gives iterations some time to show the circle at the end
+    for (let i = 0; i < iterations + extraIterationsToShowAnimatedCircleAtEnd; i++) {
 
       setTimeout(() => {
         if (globalThis.predictionGraphics) {
           globalThis.predictionGraphics.clear();
           globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0);
-          // between 0 and 1;
-          const proportionComplete = easeOutCubic((i + 1) / iterations);
-          newTargets.forEach(target => {
+          for (let { pos, newTargets } of circles) {
+            // between 0 and 1;
+            const proportionComplete = easeOutCubic((i + 1) / iterations);
+            newTargets.forEach(target => {
 
-            globalThis.predictionGraphics?.moveTo(pos.x, pos.y);
-            const dist = math.distance(pos, target)
-            const pointApproachingTarget = add(pos, math.similarTriangles(target.x - pos.x, target.y - pos.y, dist, dist * proportionComplete));
-            globalThis.predictionGraphics?.lineTo(pointApproachingTarget.x, pointApproachingTarget.y);
-            if (proportionComplete >= 1) {
-              globalThis.predictionGraphics?.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
-            }
-          });
-          // Draw completed lines and circles on old targets
-          oldTargets.forEach(target => {
-            if (!entitiesTargeted.includes(target)) {
-              entitiesTargeted.push(target);
-              let sfxNumber = Math.floor(i / (iterations / 4));
-              playSFXKey(`targetAquired${sfxNumber}`);
-            }
-            // globalThis.predictionGraphics?.moveTo(pos.x, pos.y);
-            // globalThis.predictionGraphics?.lineTo(target.x, target.y);
-            globalThis.predictionGraphics?.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
-          });
+              globalThis.predictionGraphics?.moveTo(pos.x, pos.y);
+              const dist = math.distance(pos, target)
+              const pointApproachingTarget = add(pos, math.similarTriangles(target.x - pos.x, target.y - pos.y, dist, dist * proportionComplete));
+              globalThis.predictionGraphics?.lineTo(pointApproachingTarget.x, pointApproachingTarget.y);
+              if (proportionComplete >= 1) {
+                globalThis.predictionGraphics?.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
+                const sfxNumber = Math.floor(i / (iterations / 4));
+                playSFXKey(`targetAquired${sfxNumber}`);
+              }
+            });
+            // // Draw completed lines and circles on old targets
+            // oldTargets.forEach(target => {
+            //   if (!entitiesTargeted.includes(target)) {
+            //     entitiesTargeted.push(target);
+            //     let sfxNumber = Math.floor(i / (iterations / 4));
+            //     playSFXKey(`targetAquired${sfxNumber}`);
+            //   }
+            //   // globalThis.predictionGraphics?.moveTo(pos.x, pos.y);
+            //   // globalThis.predictionGraphics?.lineTo(target.x, target.y);
+            //   globalThis.predictionGraphics?.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
+            // });
+          }
         }
         if (i >= iterations - 1) {
           resolve();
