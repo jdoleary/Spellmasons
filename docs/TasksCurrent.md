@@ -1,3 +1,4 @@
+- Does cached blood get cleaned up if you quit and start a new level?
 - optimize graphics objects:
     - "Once a GraphicsGeometry list is built, you can re-use it in other Geometry objects as an optimization, by passing it into a new Geometry object's constructor. Because of this ability, it's important to call destroy() on Geometry objects once you are done with them, to properly dereference each GraphicsGeometry and prevent memory leaks."
 - I can make many portals spawn if I make many enemies, expand *2 + bloat + slash

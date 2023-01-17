@@ -33,6 +33,7 @@ if (globalThis.pixi) {
 export const app = !globalThis.pixi ? undefined : new globalThis.pixi.Application();
 export const containerLiquid = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerBoard = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
+export const containerCachedBlood = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerBloodSmear = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerRadiusUI = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerPlanningView = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
@@ -49,19 +50,16 @@ export const containerFloatingText = !globalThis.pixi ? undefined : new globalTh
 export const graphicsBloodSmear = !globalThis.pixi ? undefined : new globalThis.pixi.Graphics();
 function saveBlood() {
   if (app && graphicsBloodSmear) {
-    if (containerBloodSmear) {
+    if (containerCachedBlood) {
       const bounds = app.stage.getBounds();
-      console.log('jtest save blood', bounds);
-
       const renderTexture = RenderTexture.create({ width: bounds.width, height: bounds.height });
       app.renderer.render(graphicsBloodSmear, { renderTexture });
       const cachedBloodSprite = !globalThis.pixi ? undefined : new globalThis.pixi.Sprite(renderTexture);
       if (cachedBloodSprite) {
-        // TODO: Clean up for next level
-        containerBloodSmear.addChild(cachedBloodSprite);
+        containerCachedBlood.addChild(cachedBloodSprite);
       }
     } else {
-      console.log('jtest no container blood sm')
+      console.log('Missing containerCachedBlood')
     }
     graphicsBloodSmear.clear();
   }
@@ -141,6 +139,7 @@ if (globalThis.pixi && containerUI && app && containerRadiusUI) {
   if (
     containerLiquid &&
     containerBoard &&
+    containerCachedBlood &&
     containerBloodSmear &&
     containerRadiusUI &&
     containerPlanningView &&
@@ -159,6 +158,7 @@ if (globalThis.pixi && containerUI && app && containerRadiusUI) {
     utilProps.underworldPixiContainers = [
       containerLiquid,
       containerBoard,
+      containerCachedBlood,
       containerBloodSmear,
       containerRadiusUI,
       containerPlanningView,
