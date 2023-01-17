@@ -643,6 +643,9 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
         }
       });
     }
+    if (caster.colorMagic === null) {
+      caster.colorMagic = caster.color || 0xFFFFFF;
+    }
     const keyMoment = () => underworld.castCards(caster.cardUsageCounts, caster.unit, payload.cards, payload, false, false, caster.colorMagic, caster);
     const colorMagicMedium = lightenColor(caster.colorMagic, 0.3);
     const colorMagicLight = lightenColor(caster.colorMagic, 0.6);
