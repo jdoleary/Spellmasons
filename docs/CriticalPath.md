@@ -12,3 +12,6 @@
     - Balance Songs and create soundtrack for sale (see Darkest Dungeon soundtrack page for how it should appear)
 - January 31 (check timezone)
     - Release Game and Demo
+    - Make Package Discount
+    - Offer OST for purchase
+

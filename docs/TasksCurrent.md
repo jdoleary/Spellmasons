@@ -1,54 +1,28 @@
 - Make cacheBlood get called mid cast too, when the blood graphics object gets too big
 - save file sometimes truncates after space
-- Send Val gifs TUESDAY
-- Add "Nick 0xFF" to credits
 ## Brad playtest
 - As he was clicking to change his color he spawned because he was already ready, changing your color should unready you
     - or delay when you can click to sapwn
     - or you can't spawn before you pick your cards
 - he moved and sync died issue at the beginning
-- he hacked mana by casting a 3rd arrow during a cast while the mana had not yet reduced
-- should permanent perks show up in perks list
 - decoy spell copy overflows on small resolution
-- refrase "for one turn, every level"
 - some spells are lowercase in player tooltip
-- split makes his move distance 25% instead of 50 because it slows you and reduces your stamina
 - res spell alone should prioritize targeting dead units over living
-- you should be able to kill yourself with health spells like conserve, but it stops you
-- can death wager kill you?
 - if you die to poison "your turn" + "you died" overlap
 - poisoner miniboss bloated killed then resurrected comes back thin
 - poisoner miniboss should do more quantity when poisoning
 - displace desync - cast on wrong guy??
     - he was right next to him
-- health bars render over player thought
-- explain in copy that bolt doesn't add to targeting
-- bolt should be cheaper
-- desync during ally npc turn? it also pauses
-- target arrow allows you to SELECT people out of range
-- bloated miniboss gets thin after dying
-- when perk list gets too big you should be able to scroll it
-- **optimize blood, when there's too much it lags**
 - too many dark summoners
-- boss masion should have more range
-- player status is dead even after resurrecting and he can't end turn
-- somehow bossmason was over max health
-- show visually bossmason purify self
-- every turn perks don't display quite right in toolbar the chance should be indented or soemthing
 - bossmason purifying himself doesn't remove the animated poison
+    - Server issue??
 - resurrected sand vamp still had poison animation
 - bossmason particles should go out when he dies
 - Brad thoughts:
     - bloat is too powerful
-# Before next streamer outreach
-- Fix difficulty balance, expontential is not right, too hard
-- Change "Escape" key hotkey button to "Esc"
 ---
-- archer walked through wall. seed:0.0208468070041421
-    - TODO moveTowardsMulti is allowing units to walk through walls
+- Change "Escape" key hotkey button to "Esc"
 - level 5 is too hard without targeting spells, too many blood golems
-- perk stamina floating text should be Math.round()'d
-- archers are going through walls all of a sudden: 0.17662392682298678
 - Production build:
     - got prompt() error when I clicked save
     - save files should store version number
@@ -64,21 +38,13 @@
     - Improve difficulty scaling with over 4 players
     - Check volume defaults
     - test all spells on multiplayer
-    - BALANCE unit spawns especially on later levels
-        - Maybe not exponential budget?
     - bug: player 2 doesn't get cinematic
     - "waiting" book comes out too early
-    
-    - add 0xFF to credits for italian translation
 ## 2023.01.11
-- send Val gifs for new sounds
 - bug: Got "you cannot move while casting" but I was able to move anyway
 - mention c.a.geary1@gmail.com in comments if he helps with copy
-
 ## Brad Feedback
 - some of the text on card copy is indented by a space
-- priest Ai doesn't seek out corpses?
-- health perks aren't strong enough
 - does cone + column not work if your not hovering directly on a target?
 # Focus
 - blood golem / blood archer / green glop / ghost archer / sand vamp explain is a broken image
@@ -95,7 +61,6 @@
     - **Email streamers**, try to set up a multiplayer stream on release day
     - Balanced / Difficult
     - Menu: Fix overflow for all pages rather than the one-off fixes I've been doing.
-    - Content: Add Copy Soul vs capture soul.  Capture soul should let you spawn them for no mana cost but they need to be below 25% health to be captured.  Copy Soul gives you the summon card.
     - Solve many enemies overkilling allied unit
     - Add refunds to as many spells as possible if they have no effect
     - Improve "Bolt" effects
@@ -200,6 +165,7 @@
 - Make status page for app running headless server so I can tell how many users are connected, etc and historical info
 
 # To be Triaged
+- UI: health bars render over player thought
 - UI bug: toolbar is jumping around when you hover spell in toolbar
 - missing decoy gif
 - Unexpected: arrow couldnt find wall to intersect with
@@ -363,6 +329,8 @@ setTurnPhase( Stalled )
 - Freeze + target circle +arrow slowed down the computer when only myself and 1 archer was selected while I was moving around
 
 ## Stretch Content
+- Content: Add Copy Soul vs capture soul.  Capture soul should let you spawn them for no mana cost but they need to be below 25% health to be captured.  Copy Soul gives you the summon card.
+- Refactor Bolt to "Soul Bind"
 - Magic arrow spell (travels out of range, like ghost arrow)
     - idea: trigger the spell on line segment intersection (throw the spell)
 - Make "Destroy  Corpse" spell which will be useful for dealing with priests
