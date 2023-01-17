@@ -2,6 +2,7 @@
 - January 1/15-1/21
     - Streamer outreach
     - Finish Multiplayer
+    - Endgame Looping
 - January 1/22-1/28
     - Double check Electron Security
     - [Integrate Steam SDK](https://github.com/ceifa/steamworks.js)

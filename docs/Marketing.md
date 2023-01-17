@@ -229,7 +229,7 @@ https://partner.steamgames.com/doc/marketing/event_tools/embed
 - Wanderbots: Waiting to see if Retro writes back first
 - Angory Tom: Messaged via twitter
 - DangerouslyFunny: Wait until he's active again to message
-- NorthernLion: Sent email
+- NorthernLion: Wait until 1/23
 - turnbasedtacticsgroup@gmail.com : Send invite through Curator Connect
 
 - Note: Use social proof, link Retro's video??

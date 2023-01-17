@@ -1,5 +1,6 @@
 # Before next streamer outreach
 - Fix difficulty balance, expontential is not right, too hard
+- Change "Escape" key hotkey button to "Esc"
 ---
 - archer walked through wall. seed:0.0208468070041421
     - TODO moveTowardsMulti is allowing units to walk through walls
