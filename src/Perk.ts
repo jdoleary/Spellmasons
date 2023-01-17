@@ -106,13 +106,13 @@ function perkAttributeToString(attr: string): string {
         return `Stamina permanently`;
     }
     if (attr == 'mana') {
-        return `Mana for one turn`;
+        return `current Mana`;
     }
     if (attr == 'health') {
-        return `Health for one turn`;
+        return `current Health`;
     }
     if (attr == 'stamina') {
-        return `Stamina for one turn`;
+        return `current Stamina`;
     }
     if (attr == 'attackRange') {
         return `Cast Range`;

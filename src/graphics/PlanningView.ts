@@ -808,7 +808,15 @@ export function updateTooltipContent(underworld: Underworld) {
             }
             playerSpecificInfo += `${i18n('Every turn')}\n`;
             for (let perk of everyTurn) {
-              playerSpecificInfo += getPerkText(perk, true).trim() + '\n';
+              let perkString = getPerkText(perk, true).trim();
+              // Remove newline between chance and attribute when displayed in the tooltip so it displays on one line
+              // https://stackoverflow.com/a/10805198
+              perkString = perkString.replace(/[\n\r]/g, '');
+              // Simplify for tooltip
+              perkString = perkString.split('chance to').join('chance');
+              perkString = perkString.split('current ').join('');
+
+              playerSpecificInfo += perkString + '\n';
             }
 
           } else {
