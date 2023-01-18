@@ -1,7 +1,5 @@
 ## Bugs 
 - Desync during ally turn (as seen in brad playthrough)
-- bossmason blood portals stay up after load if they exist while saved
-    - after new run while red portals exist, they stick around for the new run too
 ## Content
 - Improve Bossmason behavior
     - No heal? or more obvious?

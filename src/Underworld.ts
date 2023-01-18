@@ -953,6 +953,7 @@ export default class Underworld {
   // if an object stops being used.  It does not empty the underworld arrays, by design.
   cleanup() {
     console.log('teardown: Cleaning up underworld');
+    this.cleanUpLevel();
     cleanUpPerkList();
     // Dereference underworld
     this.overworld.underworld = undefined;
@@ -978,7 +979,7 @@ export default class Underworld {
       Image.cleanup(u.image);
     }
     for (let x of this.pickups) {
-      Image.cleanup(x.image);
+      Pickup.removePickup(x, this, false);
     }
     this.players = [];
     this.units.forEach(u => Unit.cleanup(u));
