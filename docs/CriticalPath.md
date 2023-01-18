@@ -10,7 +10,6 @@
     - Test on Slow Computer
     - Verify Cloud Saves
 - January 31 (check timezone)
-    - Remove "Beta" Near version number
     - Release Game and Demo
     - Make Package Discount
     - Offer OST for purchase
