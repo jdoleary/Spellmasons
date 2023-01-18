@@ -1,5 +1,4 @@
 ## Bugs 
-- Prevent mana scamming (done by queing up a new spell while another one is still casting and the mana hasn't been removed yet)
 - Desync during ally turn (as seen in brad playthrough)
 ## Content
 - Improve Bossmason behavior

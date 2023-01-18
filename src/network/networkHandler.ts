@@ -13,6 +13,8 @@ import * as Pickup from '../entity/Pickup';
 import * as messageQueue from '../messageQueue';
 import * as storage from '../storage';
 import * as config from '../config';
+import * as Cards from '../cards';
+import * as colors from '../graphics/ui/colors';
 import { allUnits } from '../entity/units';
 import { hostGiveClientGameState, typeGuardHostApp } from './networkUtil';
 import { skyBeam } from '../VisualEffects';
@@ -28,6 +30,7 @@ import { Overworld } from '../Overworld';
 import { playerCastAnimationColor, playerCastAnimationColorLighter, playerCastAnimationGlow } from '../graphics/ui/colors';
 import { lightenColor } from '../graphics/ui/colorUtil';
 import { choosePerk, tryTriggerPerk } from '../Perk';
+import { calculateCost } from '../cards/cardUtils';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -605,6 +608,29 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
   }
   // Clear out player thought (and the line that points to it) once they cast
   delete underworld.playerThoughts[caster.clientId];
+
+  // Prevent mana scamming
+  // --
+  // Note: There is already a check on click, but this additional check is necessary to
+  // prevent players from queueing up a spell that would go beyond their eventual mana
+  // while a current spell is still in the process of being cast and thus removing
+  // their mana as it is cast
+  if (caster) {
+    const cards = Cards.getCardsFromIds(payload.cards);
+    const cost = calculateCost(cards, caster.cardUsageCounts);
+    if (cost.manaCost > caster.unit.mana) {
+      if (globalThis.player == caster) {
+        floatingText({
+          coords: caster.unit,
+          text: 'Insufficient Mana',
+          style: { fill: colors.errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
+        })
+        console.log('Spell could not be cast, insufficient mana');
+        // Return to prevent player from mana scamming
+        return;
+      }
+    }
+  }
 
   console.log('Handle Spell:', payload?.cards.join(','));
 
