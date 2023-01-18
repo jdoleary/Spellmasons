@@ -1,13 +1,16 @@
-- Make cacheBlood get called mid cast too, when the blood graphics object gets too big
-- save file sometimes truncates after space
+## Brad recommended priorities
+- Prevent game breaking perf issues **priority #1**
+    - Blood
+    - Prediction slowing down
+- Difficulty scaling over 4 players
 ## Brad playtest
+- save file truncates if it contains '-'
 - As he was clicking to change his color he spawned because he was already ready, changing your color should unready you
     - or delay when you can click to sapwn
     - or you can't spawn before you pick your cards
 - he moved and sync died issue at the beginning
 - decoy spell copy overflows on small resolution
 - some spells are lowercase in player tooltip
-- res spell alone should prioritize targeting dead units over living
 - if you die to poison "your turn" + "you died" overlap
 - poisoner miniboss bloated killed then resurrected comes back thin
 - poisoner miniboss should do more quantity when poisoning
@@ -22,12 +25,8 @@
     - bloat is too powerful
 ---
 - Change "Escape" key hotkey button to "Esc"
-- level 5 is too hard without targeting spells, too many blood golems
 - Production build:
-    - got prompt() error when I clicked save
     - save files should store version number
-    - did not see 'x' next to Load files
-    - when I join a game:`handleOnDataMessage: TypeError: a.onMoveEvents is not iterable`
     - Steam says it's on the new version but it's not on the new JS
     - it said it was on the right version but it wasn't until I `Verified integrity of game files`
         - check cache in `C:\Users\Jordan\AppData\Roaming\Spellmasons`
@@ -329,6 +328,8 @@ setTurnPhase( Stalled )
 - Freeze + target circle +arrow slowed down the computer when only myself and 1 archer was selected while I was moving around
 
 ## Stretch Content
+- Daily challenge
+- Idea: way to sacrifice health or mana to your ally
 - Content: Add Copy Soul vs capture soul.  Capture soul should let you spawn them for no mana cost but they need to be below 25% health to be captured.  Copy Soul gives you the summon card.
 - Refactor Bolt to "Soul Bind"
 - Magic arrow spell (travels out of range, like ghost arrow)
@@ -343,7 +344,6 @@ setTurnPhase( Stalled )
 - **contender** Feature: "Soul bind" - bound units share applied effects (or maybe just damage)
 - **contender** set fires on board that spreads that does damage on turn start if you're standing near
 - Spell: "Target Nearby" - Like what stomp used to be
----
 - juice: ultra badass spell should put in wide-screen black bars and take over the camera
     - and he could crouch and gather enegery
 - unlimited range (also target yourself)

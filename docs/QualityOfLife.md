@@ -1,5 +1,6 @@
 # Quality of Life Tasks
 - pick a spell should come up after tutorial
+    - multiple popups and cinematic cam simulataneous is clunky, keep things simple but progressing
 - ui bug: healthbar text gets blurry while hovering over push
 - Make an "out of range" exception for arrows
     - just warn "arrows have infinite range unless combined with other spells"
@@ -12,7 +13,6 @@
 - res markers don't show if the unit is alive but will be killed and then resurrected
 
 ## UX
-- Add secondary toolbars on the sides (only shown on drag)
 - Add codex where you can read about spells and enemies
 - (difficult to implement) show how much damage you'll take when you end your turn
 - bug: you can zoom during cinematic
@@ -26,9 +26,7 @@
 - fix being able to go negative mana if you queue a spell before the previous spell's mana is spent
 - A way to see your perks roll
     - Animated Perk List UI
-- Save files should be sorted by recency
 - fix: tutorial comes up at the same time it asks you to pick a new spell
-- Remove customizing magic color
 - end turn "spacebar" should flicker when you're out of mana too, not just stamina
 
 ## Content
