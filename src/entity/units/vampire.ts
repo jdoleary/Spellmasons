@@ -2,9 +2,12 @@ import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import * as blood_curse from '../../cards/blood_curse';
-import { meleeAction, meleeTryAttackClosestEnemy, withinMeleeRange } from './actions/meleeAction';
+import { meleeAction } from './actions/meleeAction';
 import Underworld from '../../Underworld';
 import { bloodVampire } from '../../graphics/ui/colors';
+import floatingText from '../../graphics/FloatingText';
+import * as config from '../../config';
+import * as colors from '../../graphics/ui/colors';
 
 const unit: UnitSource = {
   id: 'vampire',
@@ -43,6 +46,13 @@ const unit: UnitSource = {
       playSFXKey('vampireAttack');
       await Unit.playAnimation(unit, unit.animations.attack);
       // prediction is false because unit.action doesn't yet ever occur during a prediction
+      if (globalThis.player && attackTarget == globalThis.player.unit) {
+        floatingText({
+          coords: attackTarget,
+          text: blood_curse.id,
+          style: { fill: colors.healthRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
+        })
+      }
       Unit.addModifier(attackTarget, blood_curse.id, underworld, false);
       Unit.takeDamage(attackTarget, unit.damage, unit, underworld, false, undefined);
     })

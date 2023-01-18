@@ -4,7 +4,6 @@
 - Improve Bossmason behavior
     - No traps
     - No heal? or more obvious?
-- Floating text for blood curse from vampire
 - Sand vampire should be more than just a color reskin
 - Endgame Looping
 
