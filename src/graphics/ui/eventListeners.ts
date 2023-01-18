@@ -19,7 +19,7 @@ import {
 } from '../PlanningView';
 import { toggleMenu, View } from '../../views';
 import * as config from '../../config';
-import { cameraAutoFollow, containerCachedBlood, getCamera, graphicsBloodSmear, moveCamera, toggleHUD } from '../PixiUtils';
+import { cleanBlood, cameraAutoFollow, getCamera, moveCamera, toggleHUD } from '../PixiUtils';
 import { isOutOfRange } from '../../PlayerUtils';
 import { vec2ToOneDimentionIndexPreventWrap } from '../../jmath/ArrayUtil';
 import * as Vec from '../../jmath/Vec';
@@ -965,8 +965,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     {
       label: '🩸 Clean up Blood',
       action: () => {
-        graphicsBloodSmear?.clear();
-        containerCachedBlood?.removeChildren();
+        cleanBlood();
       },
       supportInMultiplayer: false,
       domQueryContainer: '#menu-global'

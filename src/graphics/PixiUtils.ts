@@ -33,7 +33,6 @@ if (globalThis.pixi) {
 export const app = !globalThis.pixi ? undefined : new globalThis.pixi.Application();
 export const containerLiquid = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerBoard = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
-export const containerCachedBlood = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerBloodSmear = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerRadiusUI = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerPlanningView = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
@@ -53,8 +52,17 @@ export const graphicsBloodSmear = !globalThis.pixi ? undefined : new globalThis.
 export const containerBloodParticles = !globalThis.pixi ? undefined : new globalThis.pixi.ParticleContainer();
 
 let tempBloodContainer: PIXI.Container | undefined;
-assignBloodElementsToContainer();
-function assignBloodElementsToContainer() {
+export function cleanBlood() {
+  // Remove blood
+  graphicsBloodSmear?.clear();
+  containerBloodParticles?.removeChildren();
+  containerBloodSmear?.removeChildren();
+
+  // Setup blood containers to receive new blood
+  resetupBloodContainers();
+
+}
+function resetupBloodContainers() {
   tempBloodContainer = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
   if (tempBloodContainer) {
     if (graphicsBloodSmear) {
@@ -80,13 +88,16 @@ export function cacheBlood() {
     }
     requestAnimationFrame(() => {
       console.log('cache blood2');
+      // Remove blood from particle container and graphics object now that the blood
+      // is cached in the tempBloodContainer
       containerBloodParticles?.removeChildren();
       graphicsBloodSmear?.clear();
-      assignBloodElementsToContainer();
+      // Reassign the temp blood container now that the previous one is cached and
+      // will not change
+      resetupBloodContainers();
     });
   }
 }
-window.t = cacheBlood;
 
 let updateLiquidFilterIntervalId: NodeJS.Timer | undefined;
 // Setup animated liquid displacement
@@ -153,7 +164,6 @@ if (globalThis.pixi && containerUI && app && containerRadiusUI) {
   if (
     containerLiquid &&
     containerBoard &&
-    containerCachedBlood &&
     containerBloodSmear &&
     containerRadiusUI &&
     containerPlanningView &&
@@ -172,7 +182,6 @@ if (globalThis.pixi && containerUI && app && containerRadiusUI) {
     utilProps.underworldPixiContainers = [
       containerLiquid,
       containerBoard,
-      containerCachedBlood,
       containerBloodSmear,
       containerRadiusUI,
       containerPlanningView,

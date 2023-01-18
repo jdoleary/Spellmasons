@@ -42,8 +42,7 @@ import {
   setCameraToMapCenter,
   addPixiTilingSprite,
   runCinematicLevelCamera,
-  containerCachedBlood,
-  cacheBlood,
+  cleanBlood,
 } from './graphics/PixiUtils';
 import floatingText, { elPIXIHolder, queueCenteredFloatingText } from './graphics/FloatingText';
 import { UnitType, Faction, UnitSubType } from './types/commonTypes';
@@ -1555,9 +1554,7 @@ export default class Underworld {
     containerLiquid?.removeChildren();
     cleanUpLiquidFilter();
     // Clean up blood
-    graphicsBloodSmear?.clear();
-    // Clear cached blood
-    containerCachedBlood?.removeChildren();
+    cleanBlood();
     this.imageOnlyTiles = [];
 
     // Clear card usage counts, otherwise players will be
