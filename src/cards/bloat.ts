@@ -168,7 +168,7 @@ function makeBloatExplosionWithParticles(position: Vec2, size: number, predictio
       "blendMode": "normal",
       "frequency": 0.0001,
       "emitterLifetime": 0.1,
-      "maxParticles": 2000,
+      "maxParticles": 300,
       "pos": {
         "x": 0,
         "y": 0
