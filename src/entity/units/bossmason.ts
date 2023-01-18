@@ -64,12 +64,22 @@ const unit: UnitSource = {
     if (redPortalPickupSource) {
       if (redPortals.length == 0) {
         // Spawn new red portals
-        for (let i = 0; i < 5; i++) {
-          const coords = findRandomGroundLocation(underworld, unit, seed);
-          if (coords) {
-            Pickup.create({ pos: coords, pickupSource: redPortalPickupSource }, underworld, false);
+        let numberOfSummons = 8;
+        const keyMoment = () => {
+          let lastPromise = Promise.resolve();
+          for (let i = 0; i < numberOfSummons; i++) {
+            const coords = findRandomGroundLocation(underworld, unit, seed);
+            if (coords) {
+              lastPromise = makeManaTrail(unit, coords, underworld, '#930e0e', '#ff0000').then(() => {
+                Pickup.create({ pos: coords, pickupSource: redPortalPickupSource }, underworld, false);
+              });
+            } else {
+              console.log("Summoner could not find valid spawn");
+            }
           }
-        }
+          return lastPromise;
+        };
+        await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
       } else {
         // Teleport to a red portal
         // and turn the rest into enemies
@@ -104,28 +114,6 @@ const unit: UnitSource = {
         const keyMoment = () => underworld.castCards({}, unit, [sacrifice.card.id], closestUnit, false, false, magicColor);
         await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
       }
-    }
-    // Summon Traps:
-    const summonTrapsManaCost = 50;
-    if (summonTrapsManaCost <= unit.mana) {
-      unit.mana -= summonTrapsManaCost;
-
-      const keyMoment = () => {
-        let lastPromise = Promise.resolve();
-        let numberOfSummons = 8;
-        for (let i = 0; i < numberOfSummons; i++) {
-          const coords = findRandomGroundLocation(underworld, unit, seed);
-          if (coords) {
-            lastPromise = makeManaTrail(unit, coords, underworld, '#930e0e', '#ff0000').then(() => {
-              return summonTrap(coords, underworld);
-            });
-          } else {
-            console.log("Summoner could not find valid spawn");
-          }
-        }
-        return lastPromise;
-      };
-      await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
     }
 
     // const attackTarget = attackTargets && attackTargets[0];
