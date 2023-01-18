@@ -25,8 +25,6 @@ function add(unit: IUnit, underworld: Underworld) {
   }
 
   const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity: 1, persistBetweenLevels: false }, () => {
-    // Add subsprite image
-    // Image.addSubSprite(unit.image, imageName);
     // Add event
     unit.onDamageEvents.push(id);
 
@@ -42,8 +40,6 @@ function add(unit: IUnit, underworld: Underworld) {
 
 }
 function remove(unit: IUnit, underworld: Underworld) {
-  // remove subsprite image
-  Image.removeSubSprite(unit.image, id);
 
   unit.health /= healthMultiplier;
   unit.health = Math.round(unit.health);
@@ -75,18 +71,6 @@ const spell: Spell = {
     remove,
     // init is noop; not needed to restore bloodcurse
     init: () => { },
-    subsprite: {
-      imageName,
-      alpha: 1.0,
-      anchor: {
-        x: 0,
-        y: 0,
-      },
-      scale: {
-        x: 0.25,
-        y: 0.25,
-      },
-    },
   },
   events: {
     onDamage: (unit: IUnit, amount: number, _underworld: Underworld, prediction: boolean, damageDealer?: IUnit) => {

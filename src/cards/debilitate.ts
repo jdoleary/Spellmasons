@@ -38,18 +38,6 @@ const spell: Spell = {
   },
   modifiers: {
     add,
-    subsprite: {
-      imageName,
-      alpha: 1.0,
-      anchor: {
-        x: 0,
-        y: 0,
-      },
-      scale: {
-        x: 0.25,
-        y: 0.25,
-      },
-    },
   },
   events: {
     onDamage: (unit, amount, _underworld, damageDealer) => {
@@ -68,8 +56,6 @@ const spell: Spell = {
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
   const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
     unit.onDamageEvents.push(id);
-    // Add subsprite image
-    Image.addSubSprite(unit.image, imageName);
   });
 }
 export default spell;
