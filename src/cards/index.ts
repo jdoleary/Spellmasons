@@ -285,6 +285,22 @@ export function hasTargetAtPosition(position: Vec2, underworld: Underworld): boo
   const doodadAtCastLocation = underworld.getDoodadAt(position);
   return !!unitAtCastLocation || !!pickupAtCastLocation || !!doodadAtCastLocation;
 }
+export function defaultTargetsForAllowNonUnitTargetTargetingSpell(targets: Vec2[], castLocation: Vec2, card: ICard): Vec2[] {
+  if (card.allowNonUnitTarget && card.category === CardCategory.Targeting) {
+    // Defaulting targets for a allowNonUnitTarget Targeting spell is handled specially:
+    // For most (other) spells, you want the spell to snap to the target for convenience,
+    // but for targeting spells you're often trying to pick a specific spot to target as many
+    // as possible, therefore we do not want any snaping.
+    // Returning just the castLocation when only one target (or less) is targeted
+    // means that the spell will cast on the castLocation rather than the center of 
+    // targets[0], which is some entity's (unit, pickup, doodad) center.
+    return targets.length <= 1 ? [castLocation] : targets;
+  } else {
+    console.error('defaultTargetsForAllowNonUnitTargetTargetingSpell was invoked on a card that it wasn\'t designed for:', card.id);
+    return targets;
+  }
+
+}
 // Returns all current targets of an effect / spell
 // See underworld.getPotentialTargets for the function that returns all targetable
 // entities

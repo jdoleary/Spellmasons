@@ -1,4 +1,4 @@
-import { addPickupTarget, addTarget, addUnitTarget, getCurrentTargets, Spell } from './index';
+import { addPickupTarget, addTarget, addUnitTarget, defaultTargetsForAllowNonUnitTargetTargetingSpell, getCurrentTargets, Spell } from './index';
 import { drawUICircle } from '../graphics/PlanningView';
 import { CardCategory } from '../types/commonTypes';
 import * as colors from '../graphics/ui/colors';
@@ -30,7 +30,7 @@ const spell: Spell = {
       // Note: This loop must NOT be a for..of and it must cache the length because it
       // mutates state.targetedUnits as it iterates.  Otherwise it will continue to loop as it grows
       let targets: Vec2[] = getCurrentTargets(state);
-      targets = targets.length ? targets : [state.castLocation];
+      targets = defaultTargetsForAllowNonUnitTargetTargetingSpell(targets, state.castLocation, card);
       const length = targets.length;
       const animateCircles = [];
       for (let i = 0; i < length; i++) {
