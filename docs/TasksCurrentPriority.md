@@ -28,6 +28,9 @@
 - Test in offline mode
 
 ## Features
+- Double check Electron Security
+    - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
+    - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
 - Server Browser
     - Since serving http server wont work on DO apps (can't support 2 ports), I could PUSH the data to my leaderboard / server info server rather than pull it.
 - Multiplayer
@@ -48,3 +51,5 @@
     - Most effective spell
 - Leaderboard
 - Modding
+    - Include instructions from Modding.md
+- QualityOfLife.md
