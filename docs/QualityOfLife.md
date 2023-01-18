@@ -3,13 +3,9 @@
 - pick a spell should come up after tutorial
     - multiple popups and cinematic cam simulataneous is clunky, keep things simple but progressing
 - ui bug: healthbar text gets blurry while hovering over push
-- Make an "out of range" exception for arrows
-    - just warn "arrows have infinite range unless combined with other spells"
 - perk list is too wide, will overlap if you have many perks
-- chain + arrow should shoot multiple at the same time
 - copy: Space needed in health potion copy
 - mana goes negative if you kill yourself due to the subtracted mana from dying
-- **Important** Esc hotkey to menu doesn't work if you're hovering a inspect unit while spawning
 - "bleed" with quantity plays 2 animations
 - res markers don't show if the unit is alive but will be killed and then resurrected
 
@@ -22,6 +18,7 @@
 
 ## Graphics
 - fix opening book animation playing when you don't have to wait to cast, allow it to exit early
+- play opening book animation when you are viewing your inventory
 
 ## UI
 - fix being able to go negative mana if you queue a spell before the previous spell's mana is spent

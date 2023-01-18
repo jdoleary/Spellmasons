@@ -4,22 +4,16 @@
         - Search for streamers who did Battle Brothers
     - Finish Multiplayer Supporting Features
 - January 1/22-1/28
-    - Create soundtrack for sale (see Darkest Dungeon soundtrack page for how it should appear)
     - Validate new Bossmason behavior
     - Update recommended Specs
     - Test on Slow Computer
     - Verify Cloud Saves
 - January 31 (check timezone)
     - Release Game and Demo
+        - https://partner.steamgames.com/doc/store/releasing
+        - Double check the package content https://partner.steamgames.com/store/packagelanding/574232
     - Make Package Discount
-    - Offer OST for purchase
+    - Offer Soundtrack for purchase (App 2289100)
     - Be logged into all socials and be responsive all day
     - Submit to Reviewers
         - Submit to IGN and others
-
-
-## Brad recommended priorities
-- Prevent game breaking perf issues **priority #1**
-    - Blood
-    - Prediction slowing down
-- Difficulty scaling over 4 players
