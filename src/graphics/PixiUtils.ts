@@ -47,34 +47,47 @@ export const containerUIFixed = !globalThis.pixi ? undefined : new globalThis.pi
 export const containerFloatingText = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 
 
+// Graphics used for painting blood trails
 export const graphicsBloodSmear = !globalThis.pixi ? undefined : new globalThis.pixi.Graphics();
-export function cacheBlood() {
-  console.log('TODO: cache blood issue: - relevant: https://www.html5gamedevs.com/topic/44884-firefox-requested-size-at-this-level-is-unsupported/ ');
-  return;
-  // if (app && graphicsBloodSmear) {
-  //   if (containerCachedBlood) {
-  //     const bounds = app.stage.getBounds();
-  //     const renderTexture = RenderTexture.create({ width: bounds.width, height: bounds.height });
-  //     app.renderer.render(graphicsBloodSmear, { renderTexture });
-  //     const cachedBloodSprite = !globalThis.pixi ? undefined : new globalThis.pixi.Sprite(renderTexture);
-  //     if (cachedBloodSprite) {
-  //       containerCachedBlood.addChild(cachedBloodSprite);
-  //     }
-  //   } else {
-  //     console.log('Missing containerCachedBlood')
-  //   }
-  //   graphicsBloodSmear.clear();
-  // }
-}
-if (containerBloodSmear && graphicsBloodSmear) {
-  containerBloodSmear.addChild(graphicsBloodSmear);
-  graphicsBloodSmear.alpha = 0.5;
-}
+// Container used for blood spatter particles
 export const containerBloodParticles = !globalThis.pixi ? undefined : new globalThis.pixi.ParticleContainer();
-if (containerBloodSmear && containerBloodParticles) {
-  containerBloodParticles.alpha = 0.5;
-  containerBloodSmear.addChild(containerBloodParticles);
+
+let tempBloodContainer: PIXI.Container | undefined;
+assignBloodElementsToContainer();
+function assignBloodElementsToContainer() {
+  tempBloodContainer = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
+  if (tempBloodContainer) {
+    if (graphicsBloodSmear) {
+      tempBloodContainer.addChild(graphicsBloodSmear);
+      graphicsBloodSmear.alpha = 0.5;
+    }
+    if (containerBloodParticles) {
+      containerBloodParticles.alpha = 0.5;
+      tempBloodContainer.addChild(containerBloodParticles);
+    }
+
+    containerBloodSmear?.addChild(tempBloodContainer);
+  }
+
 }
+
+
+export function cacheBlood() {
+  console.log('cache blood');
+  if (app) {
+    if (tempBloodContainer) {
+      tempBloodContainer.cacheAsBitmap = true
+    }
+    requestAnimationFrame(() => {
+      console.log('cache blood2');
+      containerBloodParticles?.removeChildren();
+      graphicsBloodSmear?.clear();
+      assignBloodElementsToContainer();
+    });
+  }
+}
+window.t = cacheBlood;
+
 let updateLiquidFilterIntervalId: NodeJS.Timer | undefined;
 // Setup animated liquid displacement
 export function setupLiquidFilter() {
