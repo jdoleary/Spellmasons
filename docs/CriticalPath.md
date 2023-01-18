@@ -1,6 +1,7 @@
 # Critical Path
 - January 1/15-1/21
     - Streamer outreach
+        - Search for streamers who did Battle Brothers
     - Finish Multiplayer
 - January 1/22-1/28
     - Double check Electron Security

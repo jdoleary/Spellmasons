@@ -40,6 +40,8 @@
 
 ## Features
 - Save / Load on multiplayer
+- Dynamic "Server Maintenance" notice
+    - other dynamic "non deploy" notices
 
 # Nice to haves
 - Stats in gameover screen
