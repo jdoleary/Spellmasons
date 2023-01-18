@@ -1,4 +1,3 @@
-- Cacheblood works now but it doesn't clear on load
 ## Brad recommended priorities
 - Prevent game breaking perf issues **priority #1**
     - Blood

@@ -43,6 +43,7 @@ import {
   addPixiTilingSprite,
   runCinematicLevelCamera,
   cleanBlood,
+  cacheBlood,
 } from './graphics/PixiUtils';
 import floatingText, { elPIXIHolder, queueCenteredFloatingText } from './graphics/FloatingText';
 import { UnitType, Faction, UnitSubType } from './types/commonTypes';
@@ -416,12 +417,13 @@ export default class Underworld {
   // Returns true if there is more processing yet to be done on the next
   // gameloop
   gameLoopForceMove = () => {
-    // const amountOfBloodGeometryPoints = graphicsBloodSmear?.geometry.points.length || 0;
-    // console.log('jtest', amountOfBloodGeometryPoints);
-    // if (amountOfBloodGeometryPoints >= 10_000) {
-    //   console.log('jtest cache blood')
-    //   cacheBlood();
-    // }
+    // Optimization cache blood whenever the blood smear particles get over a certain number
+    // to prevent slowdown
+    const amountOfBloodGeometryPoints = graphicsBloodSmear?.geometry.points.length || 0;
+    if (amountOfBloodGeometryPoints >= 100_000) {
+      cacheBlood();
+    }
+
     for (let i = this.forceMove.length - 1; i >= 0; i--) {
       const forceMoveInst = this.forceMove[i];
       if (forceMoveInst) {

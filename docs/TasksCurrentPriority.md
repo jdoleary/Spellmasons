@@ -20,7 +20,6 @@
     - Diversity of playstyle (classes?)
 
 ## Performance
-- Blood Optimization
 - Prediction slowing down
     - "You may still cast this spell, but it is too powerful to predict" (Get copy review)
 - Testing on worse devises

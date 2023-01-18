@@ -81,13 +81,11 @@ function resetupBloodContainers() {
 
 
 export function cacheBlood() {
-  console.log('cache blood');
   if (app) {
     if (tempBloodContainer) {
       tempBloodContainer.cacheAsBitmap = true
     }
     requestAnimationFrame(() => {
-      console.log('cache blood2');
       // Remove blood from particle container and graphics object now that the blood
       // is cached in the tempBloodContainer
       containerBloodParticles?.removeChildren();
