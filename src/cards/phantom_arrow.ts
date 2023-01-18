@@ -32,11 +32,15 @@ const spell: Spell = {
         const arrowCollisions = findArrowCollisions(state.casterUnit, target, prediction, underworld);
         const arrowShootPath = findArrowPath(state.casterUnit, target, underworld);
         if (!prediction) {
-          promises.push(createVisualFlyingProjectile(
+          // Promise.race ensures arrow promise doesn't take more than X milliseconds so that multiple arrows cast
+          // sequentially wont take too long to complete animating.
+          // Note: I don't forsee any issues with the following spell (say if a spell was chained after arrow) executing
+          // early
+          promises.push(Promise.race([new Promise(resolve => setTimeout(resolve, 200)), createVisualFlyingProjectile(
             arrowShootPath.p1,
             arrowShootPath.p2,
             'projectile/arrow',
-          ));
+          )]));
           arrowCollisions.forEach(pierceTarget => {
             // Fake the collision by just calculating a delay based on the speed of the projectile
             const millisecondsUntilCollision = math.distance(arrowShootPath.p1, pierceTarget) / SPEED_PER_MILLI

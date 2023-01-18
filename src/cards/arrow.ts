@@ -35,7 +35,11 @@ const spell: Spell = {
         const firstTarget = arrowUnitCollisions[0];
         if (firstTarget) {
           if (!prediction) {
-            await createVisualFlyingProjectile(
+            // Promise.race ensures arrow promise doesn't take more than X milliseconds so that multiple arrows cast
+            // sequentially wont take too long to complete animating.
+            // Note: I don't forsee any issues with the following spell (say if a spell was chained after arrow) executing
+            // early
+            await Promise.race([new Promise(resolve => setTimeout(resolve, 200)), createVisualFlyingProjectile(
               state.casterUnit,
               firstTarget,
               'projectile/arrow',
@@ -46,7 +50,7 @@ const spell: Spell = {
                 // TODO: If pickups become damagable, this will have to be adapted to not refund mana when it hits a pickup
                 refundLastSpell(state, prediction, 'No target, mana refunded.')
               }
-            });
+            })]);
           } else {
             if (Unit.isUnit(firstTarget)) {
               Unit.takeDamage(firstTarget, damageDone, state.casterUnit, underworld, prediction, undefined, { thinBloodLine: true });
