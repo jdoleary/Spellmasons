@@ -623,12 +623,12 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         }
         if (isOutOfRange(selfPlayer, mousePos, underworld)) {
           // Exception, if all of the cards cast are arrow cards, let them cast out of range
-          // Exception, if first cardd is "Target Arrow", let them cast out of range
-          if (cards.every(c => c.id.toLowerCase().includes('arrow')) && cards[0]?.id !== targetArrowCardId) {
-            // Change target to end of range so that the target arrow still has to travel and the spell
-            // wont be allowed to select someone beyond what the target arrow will travel to
-            target = Vec.add(selfPlayer.unit, similarTriangles(target.x - selfPlayer.unit.x, target.y - selfPlayer.unit.y, distance(selfPlayer.unit, target), selfPlayer.unit.attackRange));
-          } else {
+          let allowCastOutOfRange = false;
+          if (cards.every(c => c.id.toLowerCase().includes('arrow'))) {
+            allowCastOutOfRange = true;
+          }
+
+          if (!allowCastOutOfRange) {
             // If there is no target at end range, just show that they are trying to cast out of range
             floatingText({
               coords: target,

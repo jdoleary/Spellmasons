@@ -1,6 +1,5 @@
 ## Bugs 
 - Prevent mana scamming (done by queing up a new spell while another one is still casting and the mana hasn't been removed yet)
-- Fix target arrow issue (allows you to select people out of range)
 - Desync during ally turn (as seen in brad playthrough)
 - res spell alone should prioritize targeting dead units over living
     - reproduce: miniboss standing over corpse
@@ -28,6 +27,8 @@
 - Test in offline mode
 
 ## Features
+- Server Browser
+    - Since serving http server wont work on DO apps (can't support 2 ports), I could PUSH the data to my leaderboard / server info server rather than pull it.
 - Save / Load on multiplayer
 - Dynamic "Server Maintenance" notice
     - other dynamic "non deploy" notices
