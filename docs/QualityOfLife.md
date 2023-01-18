@@ -1,4 +1,5 @@
 # Quality of Life Tasks
+- Cinematic camera should just be a zoom in? or improved
 - pick a spell should come up after tutorial
     - multiple popups and cinematic cam simulataneous is clunky, keep things simple but progressing
 - ui bug: healthbar text gets blurry while hovering over push

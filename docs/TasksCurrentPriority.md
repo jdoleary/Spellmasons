@@ -1,10 +1,14 @@
 ## Bugs 
 - Desync during ally turn (as seen in brad playthrough)
+- Ask server for latests state after returning from alt-tab
+- Loading a game with a portal up - the portal comes back as a blood portal and you have no stamina
 ## Content
-- Improve Bossmason behavior
-    - No heal? or more obvious?
+- Bossmason
+    - Implement aoe damage against enemies chain+hurt?
+    - todo: Bossmasons' casts aren't limited when he's out of mana
 - Sand vampire should be more than just a color reskin
 - Endgame Looping
+    - (see branch `loop-tint-level`)
 
 ## Balance
 - Improve difficulty scaling with over 4 players
@@ -14,6 +18,8 @@
     - Diversity of playstyle (classes?)
 
 ## Performance
+- Freeze + target circle +arrow slowed down the computer when only myself and 1 archer was selected while I was moving around
+- Optimize: targeting spells seem pretty slow in prediction
 - Prediction slowing down
     - "You may still cast this spell, but it is too powerful to predict" (Get copy review)
 - Testing on worse devises
@@ -24,11 +30,21 @@
 ## Features
 - Server Browser
     - Since serving http server wont work on DO apps (can't support 2 ports), I could PUSH the data to my leaderboard / server info server rather than pull it.
-- Save / Load on multiplayer
+- Multiplayer
+    - LAN hosting: Support hosting a server from in the game exe
+    - Server Browser
+    - Multiplayer save load with "take over player"
+    - Ws pie room privacy
 - Dynamic "Server Maintenance" notice
     - other dynamic "non deploy" notices
 
-# Nice to haves
+## Clean
+- Ensure center text like "You died" doesn't overlap with other text
+
+## Nice to haves
 - Stats in gameover screen
+    - Duration
+    - Kills
+    - Most effective spell
 - Leaderboard
 - Modding

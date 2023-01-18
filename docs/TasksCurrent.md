@@ -1,13 +1,7 @@
-## Brad recommended priorities
-- Prevent game breaking perf issues **priority #1**
-    - Blood
-    - Prediction slowing down
-- Difficulty scaling over 4 players
+- **important** poisoner should have a cost to cast
+    - it does, maybe show in tooltip?
+- Stats stored in underworld?
 ## Brad playtest
-- save file truncates if it contains '-'
-- As he was clicking to change his color he spawned because he was already ready, changing your color should unready you
-    - or delay when you can click to sapwn
-    - or you can't spawn before you pick your cards
 - he moved and sync died issue at the beginning
 - decoy spell copy overflows on small resolution
 - some spells are lowercase in player tooltip
@@ -21,17 +15,8 @@
     - Server issue??
 - resurrected sand vamp still had poison animation
 - bossmason particles should go out when he dies
-- Brad thoughts:
-    - bloat is too powerful
 ---
-- Change "Escape" key hotkey button to "Esc"
-- Production build:
-    - save files should store version number
-    - Steam says it's on the new version but it's not on the new JS
-    - it said it was on the right version but it wasn't until I `Verified integrity of game files`
-        - check cache in `C:\Users\Jordan\AppData\Roaming\Spellmasons`
-    - Delay "you cannot move while casting" so if the cast is almost over it won't show it
-    - add mana refunds for more spells (like slash)
+- add mana refunds for more spells (like slash)
 ---
     - plus radius overflows on 1920 x 1080 resolution full screen
     - Improve difficulty scaling with over 4 players
@@ -42,14 +27,6 @@
 ## 2023.01.11
 - bug: Got "you cannot move while casting" but I was able to move anyway
 - mention c.a.geary1@gmail.com in comments if he helps with copy
-## Brad Feedback
-- some of the text on card copy is indented by a space
-- does cone + column not work if your not hovering directly on a target?
-# Focus
-- blood golem / blood archer / green glop / ghost archer / sand vamp explain is a broken image
-    - but ghost archer does show up locally
-- Get build ready for streamers and reach out
-- Fix text overflow on spell cards ("connect", "decoy", "bleed")
 
 # Desired Schedule
 - Bossmason is missing explain gif
@@ -57,75 +34,33 @@
 - word wrap on spells that are too long looks off
 - January 1/8-1/14
     - Test on different resolutions
-    - **Email streamers**, try to set up a multiplayer stream on release day
-    - Balanced / Difficult
     - Menu: Fix overflow for all pages rather than the one-off fixes I've been doing.
-    - Solve many enemies overkilling allied unit
     - Add refunds to as many spells as possible if they have no effect
-    - Improve "Bolt" effects
-    - Multiplayer
-        - LAN hosting: Support hosting a server from in the game exe
-        - Server Browser
-        - Multiplayer save load with "take over player"
-        - Notify when version isn't same
-- January 1/15-1/21
-    - small stuff
-        - rename vampire or restore that it passes blood curse on to you when it bites
-        - multiplayer perk resurrect icon
-    - Balanced / Difficult
-    - Finish Boss
-        - Implement aoe damage against enemies chain+hurt?
-    - Are perk chances synced correctly in multiplayer?
-    - Submit to IGN and others
-    - Add ability to put user-facing text banners in game
-        - scheduled downtime for servers
-        - other annoucements
-    - Balance all music 
-    - Add run stats in gameover screen / leaderboard
-    - Test on Slow Computer
 - January 1/22-1/28
-    - Finish Looping
-        - (see branch `loop-tint-level`)
-    - Make Demo as promised
     - Prepare to ship
         - [Release Demo](https://partner.steamgames.com/doc/store/application/demos)
         - Accessability / Localization Language Support / Spellcheck
         - Establish Minimum System Requirements and update Steam Page
         - Add sentry errors to electron node files
-        - Electron Security
-            - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
-            - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
-        - Verify Cloud Saves
         - Achievements?
         - Accessability option to make text more readable
     - Final QA
         - Manually test all spells for desync issues (in multiplayer)
         - Test for desyncs on multiplayer
         - Bulletproof Updating and Error Reporting
-- January 31 (check timezone)
-    - Remove "Beta" Near version number
-    - Verify release discount
-    - Add package for buying multiple copies
-    - Release
 - Other 
     - 2nd algorithm for generating levels
         - see branch 2nd-level-algorithm
     - [Submit demo to IGN](https://corp.ign.com/submit-a-game)
     - make music play in menu
 ---
-- How close am I to 5mb limit for save files? what to do if I go over?
+- **Important** How close am I to 5mb limit for save files? what to do if I go over?
 - menu: Skip tutorial button in settings doesn't go away once clicked
-- sfx: Need sound effect for bolt, improve bolt animation, consume, conserve, reroll
-- (fixed?) Arrow collisions don't work right when used with target_circle first
-- content: Heat seeking skull with particle effects behind it.  You release it and it seeks out the nearest enemy to deal damage
 - (fixed?) early levels are too big, later levels are too small
 - fix hover styling for perk reroll button
 - single player game overscreen should offer to restart at checkpoint
 - music is too soft relative to sfx
 - Brad playtest
-    - Perk choices: good, UX: bad
-        - Instead of "increase emoji cast range" just "+ 5% cast range"; "at the start of" -> "every level"; "temporarily" -> "single-turn"; OR "max stamina" / "overflow stamina"
-        - every turn / every level should be presented first
     - blood golem too powerful? shouldn't be able to do kill damage? or introduce later
     - explain graphic for summoner icon
     - debilitate cheaper and less effective
@@ -144,64 +79,33 @@
     
 - 80% mana at the start of a level perk is too much
 
-- Cinematic camera should just be a zoom in? or improved
-# Validation
-- What happens if you pick up a scroll but you have all the spells
-- balance perks
-- Make sure perks everyTurn don't proc after portal has spawned
 # Priority
-- Ws pie room privacy
 - summoner too much health?
 - bug: Card copy text overflow
 - multi url was saved weird:`http://localhost:3000/?pieUrl=ws%3Alocalhost%3A8080&game=a`
-- bug: Getting "host app version doesn't match client version" on SOLOMODE
 - bug: if I start a game, quit to main menu, go back to multiplayer I can't edit the server url field, until I alt tab and come back
 - What happens if you press multiplayer 'connect' twice while it's still connecting
 - bug: vampire stopped moving after being pushed
     - after being pushed hard into a corner
-- bug: server freaks out after players leave (when they're dead)
+- (fixed?) bug: server freaks out after players leave (when they're dead)
     - somehow got inconsistent maps; one client must've been holding on to an instance
-- Make status page for app running headless server so I can tell how many users are connected, etc and historical info
 
 # To be Triaged
-- UI: health bars render over player thought
 - UI bug: toolbar is jumping around when you hover spell in toolbar
 - missing decoy gif
 - Unexpected: arrow couldnt find wall to intersect with
-- todo: Bossmasons' casts aren't limited when he's out of mana
 - There should be 2-3 spots where no enemies are allowed to spawn,
     - end game maps are too crowded
-- src: Make connect sort by same faction first
-- animate bloat
 - Remove "update" code in golems-menu
-- bug: resume last run breaks (i think due to multiplayer)
-- bug: Save named "test" doesn't show up in the load list
-- bug: I seem to be getting race timeouts for Bloat, Slash, Rend, Rend, Rend
-    - on the server it race timeouts animateRend and on the client it race timeout's Push
-    - bug: somehow a combination of bload and rend only is causing PUsh to timeout
-    - it has something to do with awaiting animateRend
-        - even if it resolves immediately
-        - it's the last prediction ones that timeout
-        - that's because it makes asyc the flow of card.effect and in castCards card.effect gets fullySimulateForceMovePredictions right after it
-- (fixed?) IMPORTANT: The "push" from the bloat explosion seems to be causing a location desync
-    - This is because the push happens onDeath event and that's not awaited.
-    - To reproduce, queue up a Bloat + slash to kill an enemy with another in the blast radius and end your turn before the spell has finished animating
 - bug: loaded from quicksave in multiplayer and got "CAnnot choose upgrade, from player is undefined"
     - This is because save doesn't yet work in multiplayer
-- Ghost archer doesn't come closer??
-- poisoner moves too close instead of casting
 - Potential issue when both players are alt-tabbed and server restarts, the chrome one got the disconnected message but the other was on the "resume" menu screen and when I resumed it's stuck because it has the old game data but the server restarted (chrome player started a new game of the same name), and so firefox player has old game state and also cannot ready up because they are already in game.
 - Retro playthrough:
     - font it too small on cards
     - last will didn't work when he was near water 5:35
     - got 2 spells instead of 1
-    - improve the UI
-    - rarity label is missing on cards now
-    - push push dash combo is weird
     - connect push to self is not obvious what it does, same with connect swap
     - idea for coop: classes so some wizards can specialize
-    - bug: music is only coming out of the left ear??
-    - "target cone" lock on is an issue when targeting self unintentionally
     - "protection" should work for enemies casters such as poisoner and priestb
 - May have prediction errors with ranged units since they don't use canAttackTarget in their action().  See ac2c0b1f for more.  For now, we're safe since ranged units only ever move OR attack not both.
 # Tasks
@@ -209,81 +113,19 @@
 - is burst too cheap??
 - Don't change music until the biome changes
 - fix slow copy "maxStamina"
-- Add game log so you can both resume games and see your previous progress
-    - Stats: object
-    - Duration 
-    - Victory
-    - Kills
-    - Resume?
 - Server Browser
-- Pushing an enemyh into lava (and they die) then casting connect on them won't connect to other living enemies
+- Pushing an enemy into lava (and they die) then casting connect on them won't connect to other living enemies
 - Make magic color and robe color separately customizable
 - verify `UI zoom` restored from settings in electron app (due to 63643c06)
-- How to visually stack modifiers such as blood_curse and debilitate
-    - On hover?
 - Invent new loop biomes by colorizing old biome tiles for looping
 # Bugs / Cleaning
-- bug: miniboss glops targeting radius should be bigger, target column should be able to grab him from closer
-- bug: The server restarts immediately and suddenly when on game over.  It should give it some time or else it's suprising
-- bug: headless server has a loop where it continually tearsdown and creates a new underworld after the last player leaves
-    - log: 
-```
-teardown: Cleaning up underworld
-Setup: Creating new underworld
-RNG create with seed: 0.20819712145728242 , state:  true
-The number of players has changed, adjusting game difficulty to  0  for  0  connected players.
-onData: SYNC_PLAYERS
-onData 1 : SYNC_PLAYERS units: 0; players: 0
-sync: SYNC_PLAYERS; syncs units and players
-sync: Syncing units [] []
-sync: Syncing players []
-Setup: generateLevelDataSyncronous 0
-Setup: generateRandomLevel 0
-onData: CREATE_LEVEL 
-Setup: createLevelSyncronous
-Setup: resetPlayerForNextLevel; reset all players
-Cinematic Cam: Finished
-Broadcast SET_PHASE:  PlayerTurns
-onData: SET_PHASE
-onData 2 : CREATE_LEVEL levelIndex: 0; enemies: 3
-sync: CREATE_LEVEL: Syncing / Creating level
-Setup: createLevelSyncronous
-Setup: resetPlayerForNextLevel; reset all players
-Cinematic Cam: Finished
-Broadcast SET_PHASE:  PlayerTurns
-onData: SET_PHASE
-onData 3 : SET_PHASE phase: PlayerTurns
-sync: SET_PHASE; syncs units and players
-sync: Syncing units [ 0, 1, 2 ] [ 3, 4, 5 ]
-Units array is out of order with canonical record. A full unit.sync should correct this issue.
-Units array is out of order with canonical record. A full unit.sync should correct this issue.
-Units array is out of order with canonical record. A full unit.sync should correct this issue.
-sync: Syncing players []
-initializeTurnPhase( PlayerTurns )
-setTurnPhase( PlayerTurns )
-syncTurnMessage: phase: PlayerTurns
-Host app game over true restarting in 3 seconds
-Broadcast SET_PHASE:  Stalled
-onData: SET_PHASE
-Turn Management: Skipping initializingPlayerTurns, no players connected. Setting turn_phase to "Stalled"        
-onData 4 : SET_PHASE phase: PlayerTurns
-sync: SET_PHASE; syncs units and players
-Phase is already set to PlayerTurns; Aborting SET_PHASE.
-onData 5 : SET_PHASE phase: Stalled
-sync: SET_PHASE; syncs units and players
-sync: Syncing units [ 0, 1, 2 ] [ 0, 1, 2 ]
-sync: Syncing players []
-initializeTurnPhase( Stalled )
-setTurnPhase( Stalled )
-```
-- IMPORTANT: Fix music only coming out of one channel
-    - itshallnotfindme sounds soft in the right ear
-- lava abyss color is off
-- even in singleplayer you can go negative mana if you queue it up while another spell is casting (and you still have the mana from before the current spell takes it)
+- bug: Getting "host app version doesn't match client version" on SOLOMODE
+- arrow spell always shoots towards the center of the unit that it's going to hit which can look odd visually if you are targeting multiple units and one is in the way and intercepts it
+- UI: health bars render over player thought
+- save file truncates if it contains '-'
 - bug: by alt-tabbing during enemy turn they didn't move visually.  Then when I came back and ended my turn again they slid to where they would've been had they moved during their turn (without animate walking) and then walked another turn's distance and bit me without warning
 - bug: Prediction is wrong for potions dropped by last will because in non prediction is waits a moment before dropping them
-- bug: Player on firefox is missing gold circle after death
-- bug: when one player went into a portal and the other had already ended their turn and the left over player died from ai (portal was spawned via admin menu), it correctly went to the next level but it generated 2 levels (skipping right to level 3)
+- **important** bug: when one player went into a portal and the other had already ended their turn and the left over player died from ai (portal was spawned via admin menu), it correctly went to the next level but it generated 2 levels (skipping right to level 3)
 - pieUrl is stored wrong in browser search bar so if you copy it after connecting it'd double encoded
 - **critical** vamp miniboss got stuck where he has stamina and a path (with no points), but wont move; i think it's because i summoned an archer and the archer was part way in liquid but didn't show it and so he didn't have a path to the archer
 - Fix: should not broadcast latency warning for a message that failsc with a rejected promise
@@ -294,14 +136,12 @@ setTurnPhase( Stalled )
 - **important** push + radius*2 + connect + damage isn't damaging the connected units (note, the pushed unit ends up in lava)
     - This is because the unit died when it fell in the lava so connect didn't connect it to other living units
 - sync issue: golem moving through frozen guys jumped back
-- (m) You're able to cast into negative mana in multiplayer
 - "All targets" copy is confusing if player doesn't understand targeting
-- Find a way to make randomness fixed (like in spell "Displace" so that it doesn't get different random results on other people's screens and so that it wont change after another player casts)
 - (h) Sometimes it tries to path around things and wastes stamina if there isn't a straight line path
 - (h) sometimes when you walk you get stuck on a wall and it wastes stamina
-- (h) bug: In multiplayer: target similar, damage x3 on 2 draggers made their position go to null null
-- h: bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
+- **important** bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
     - this is a race condition because I'm still able to move freely after his cast triggers
+    - how to solve desyncs when allies move while you're casting
 - Multiplayer: other players can't spawn in while another player is casing a spell
     - same thing with casts, it waits
 - futher investigate '  // Override ref since in prediction it makes a copy of the unit' from 06d754d2
@@ -311,23 +151,15 @@ setTurnPhase( Stalled )
     - if no players are portaled and all players die and there ARE npc allies it should run turn phases for NPCS
         - if NPC_ALLYs succeed it should go to next level
         - if NPC_Allys do not it should go to end game
-- investigate: `// TODO will the stack just keep growing`
-    - turn_phases should work on a queue not a stack (this is mostly relevant for singleplayer and when the NPCs are just hashing it out cause all the players are dead so it doesn't stack overflow)
-    - Just make it a while loop that triggers/awaits the next AI turn until it's the players tuurn
-
-# Features
-- should allow spell prediction even while an action is taking place - this not being here causes friction in multiplayer
 ## Prediction issues
 - prediction should factor in standing on pickups
     - this can be reproduced by standing on health pot and queuing up just enough slash spells to kill you and triggering it.  You will see that it predicts that you will die but you don't because as soon as you first take damage the health pot triggers
-# Content
-- Make Youtube short audio louder
 # Optimization
-- Optimize: targeting spells seem pretty slow in prediction
 - optimize: Ihave duplicate units, pickups, and doodads in save due to serailizeForSaving having them in the underworld and extracting them to the top level too
-- Freeze + target circle +arrow slowed down the computer when only myself and 1 archer was selected while I was moving around
 
 ## Stretch Content
+- content: Heat seeking skull with particle effects behind it.  You release it and it seeks out the nearest enemy to deal damage
+- AI Enhancement: Solve many enemies overkilling allied unit
 - Daily challenge
 - Idea: way to sacrifice health or mana to your ally
 - Content: Add Copy Soul vs capture soul.  Capture soul should let you spawn them for no mana cost but they need to be below 25% health to be captured.  Copy Soul gives you the summon card.

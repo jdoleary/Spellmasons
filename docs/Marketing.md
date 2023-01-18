@@ -231,6 +231,11 @@ https://partner.steamgames.com/doc/marketing/event_tools/embed
 - DangerouslyFunny: Wait until he's active again to message
 - NorthernLion: Wait until 1/23
 - turnbasedtacticsgroup@gmail.com : Send invite through Curator Connect
+- Youtubers who stream Battle Brothers
+    - https://www.youtube.com/@FilthyRobot/about
+    - https://www.youtube.com/@RepublicOfPlay/about
+    - https://www.youtube.com/@CarveaHole/about
+    - https://www.youtube.com/@TheIndomitableSnowman/about
 
 - Note: Use social proof, link Retro's video??
 

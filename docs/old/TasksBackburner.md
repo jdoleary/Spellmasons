@@ -1,3 +1,15 @@
+- (unreproducable) bug: In multiplayer: target similar, damage x3 on 2 draggers made their position go to null null
+- everyTurn perks shouldn't proc after portal has spawned
+- animate bloat
+- Production build said it was updated via the version number but was somehow running an old version:
+    - save files should store version number
+    - Steam says it's on the new version but it's not on the new JS
+    - it said it was on the right version but it wasn't until I `Verified integrity of game files`
+        - check cache in `C:\Users\Jordan\AppData\Roaming\Spellmasons`
+    - Delay "you cannot move while casting" so if the cast is almost over it won't show it
+- As he was clicking to change his color he spawned because he was already ready, changing your color should unready you
+    - or delay when you can click to sapwn
+    - or you can't spawn before you pick your cards
 - Milestone | **Optimize game**
   - optimize graphics objects:
       - "Once a GraphicsGeometry list is built, you can re-use it in other Geometry objects as an optimization, by passing it into a new Geometry object's constructor. Because of this ability, it's important to call destroy() on Geometry objects once you are done with them, to properly dereference each GraphicsGeometry and prevent memory leaks."
