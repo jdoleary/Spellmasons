@@ -19,6 +19,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 3,
     probability: probabilityMap[CardRarity.RARE],
+    onlySelectDeadUnits: true,
     thumbnail,
     description: 'spell_resurrect',
     effect: async (state, card, quantity, underworld, prediction) => {

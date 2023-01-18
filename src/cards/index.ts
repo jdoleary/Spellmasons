@@ -320,6 +320,8 @@ export interface ICard {
   // If false, it will just invoke card.effect for the number of times that the card
   // is in the spell
   supportQuantity?: boolean;
+  // used to assist with targeting for spells that only affect dead units
+  onlySelectDeadUnits?: boolean;
   sfx?: string;
 }
 

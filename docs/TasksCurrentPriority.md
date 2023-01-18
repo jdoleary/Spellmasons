@@ -1,8 +1,6 @@
 ## Bugs 
 - Prevent mana scamming (done by queing up a new spell while another one is still casting and the mana hasn't been removed yet)
 - Desync during ally turn (as seen in brad playthrough)
-- res spell alone should prioritize targeting dead units over living
-    - reproduce: miniboss standing over corpse
 ## Content
 - Improve Bossmason behavior
     - No traps

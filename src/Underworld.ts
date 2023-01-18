@@ -2667,7 +2667,21 @@ export default class Underworld {
         radius: 0,
       },
     };
-    const unitAtCastLocation = this.getUnitAt(castLocation, prediction);
+
+    let unitsAtCastLocation = this.getUnitsAt(castLocation, prediction);
+    const firstCardId = effectState.cardIds[0];
+    if (firstCardId) {
+      const firstCard = Cards.allCards[firstCardId];
+      // If first card in spell has onlySelectDeadUnits to true,
+      // filter units for dead ones.  This prevents a living unit
+      // standing over a corpse from preventing the caster from
+      // selecting the corpse
+      if (firstCard && firstCard.onlySelectDeadUnits) {
+        unitsAtCastLocation = unitsAtCastLocation.filter(u => !u.alive);
+      }
+    }
+    // Get first unit at cast location
+    const unitAtCastLocation = unitsAtCastLocation[0];
     if (unitAtCastLocation) {
       Cards.addTarget(unitAtCastLocation, effectState);
     }
