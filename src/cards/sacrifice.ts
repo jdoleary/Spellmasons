@@ -16,7 +16,7 @@ const spell: Spell = {
   card: {
     id: consumeAllyCardId,
     category: CardCategory.Soul,
-    sfx: '',
+    sfx: 'sacrifice',
     supportQuantity: true,
     manaCost: 30,
     healthCost: 0,
@@ -74,6 +74,7 @@ const spell: Spell = {
         promises.push((prediction ? Promise.resolve() : Promise.all(healthTrailPromises)));
       }
       await Promise.all(promises);
+      playDefaultSpellSFX(card, prediction);
       if (totalHealthStolen > 0) {
         if (!prediction) {
           floatingText({

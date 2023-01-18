@@ -4,6 +4,7 @@ import throttle from 'lodash.throttle';
 import { chooseObjectWithProbability, chooseOneOf } from "./jmath/rand";
 
 export const sfx: { [key: string]: string[] } = {
+    arrow: ['./sound/sfx/arrow.mp3'],
     "fallIntoLiquid-blood": ['./sound/sfx/fall-into-liquid-blood.mp3'],
     "fallIntoLiquid-ghost": ['./sound/sfx/fall-into-liquid-blood.mp3'],
     "fallIntoLiquid-lava": ['./sound/sfx/fall-into-liquid-lava.mp3'],
@@ -28,6 +29,7 @@ export const sfx: { [key: string]: string[] } = {
     bleedSmall: ['./sound/sfx/BleedLow.mp3'],
     bloatExplosion: ['./sound/sfx/bloat.mp3'],
     burst: ['./sound/sfx/Burst_v2.mp3'],
+    captureSoul: ['./sound/sfx/capture_soul.mp3'],
     drown: ['./sound/sfx/Drown_v2.mp3'],
     suffocate: ['./sound/sfx/Suffocate_v2.mp3'],
     click: ['./sound/sfx/click.mp3'],
@@ -73,6 +75,7 @@ export const sfx: { [key: string]: string[] } = {
     playerCharacterMediumCast2: ['./sound/sfx/playerAttackMedium.mp3'],
     playerCharacterSmallCast: ['./sound/sfx/playerAttackSmall.mp3'],
     playerUnitDeath: ['./sound/sfx/player-character-death.mp3'],
+    phantomArrow: ['./sound/sfx/phantom_arrow.mp3'],
     poison: ['./sound/sfx/poison.mp3'],
     poisonerAttack: [
         './sound/sfx/poisoner-attack.mp3',
@@ -111,6 +114,7 @@ export const sfx: { [key: string]: string[] } = {
     push: ['./sound/sfx/push.mp3'],
     rend: ['./sound/sfx/rend.mp3'],
     resurrect: ['./sound/sfx/resurrect.mp3'],
+    sacrifice: ['./sound/sfx/sacrifice.mp3'],
     scroll_disappear: ['./sound/sfx/RPG3_FireMagicFlameThrower_P3_End01.mp3'],
     shield: ['./sound/sfx/shield.mp3'],
     shove: ['./sound/sfx/RPG3_GenericPunch_Impact04Crit.mp3'],

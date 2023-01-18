@@ -7,6 +7,7 @@ import { upgradeCardsSource } from '../Upgrade';
 import { recalcPositionForCards } from '../graphics/ui/CardUI';
 import floatingText from '../graphics/FloatingText';
 import { makeManaTrail } from '../graphics/Particles';
+import { playDefaultSpellSFX } from './cardUtils';
 
 const id = 'Capture Soul';
 const healthThreshold = 31;
@@ -19,6 +20,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.RARE],
     expenseScaling: 2,
     thumbnail: 'spellIconCaptureSoul.png',
+    sfx: 'captureSoul',
     description: ['spell_capture_soul', healthThreshold.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       const player = state.casterPlayer;
@@ -52,7 +54,9 @@ const spell: Spell = {
                 });
                 // Recalc cards so the card changes show up
                 recalcPositionForCards(player, underworld);
-                makeManaTrail(target, state.casterUnit, underworld, '#321d73', '#9526cc');
+                makeManaTrail(target, state.casterUnit, underworld, '#321d73', '#9526cc').then(() => {
+                  playDefaultSpellSFX(card, prediction);
+                });
               }
             }
             Unit.die(target, underworld, prediction);

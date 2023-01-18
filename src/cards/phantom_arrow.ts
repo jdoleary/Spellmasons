@@ -6,6 +6,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { createVisualFlyingProjectile, SPEED_PER_MILLI } from '../entity/Projectile';
 import { Vec2 } from '../jmath/Vec';
 import { findArrowPath, findArrowCollisions } from './arrow';
+import { playDefaultSpellSFX } from './cardUtils';
 
 export const phantomArrowCardId = 'Phantom Arrow';
 const damageDone = 30;
@@ -22,12 +23,13 @@ const spell: Spell = {
     // so that you can fire the arrow at targets out of range
     allowNonUnitTarget: true,
     animationPath: '',
-    sfx: '',
+    sfx: 'phantomArrow',
     description: ['spell_phantom_arrow', damageDone.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       let targets: Vec2[] = state.targetedUnits;
       targets = targets.length ? targets : [state.castLocation];
       let promises = [];
+      playDefaultSpellSFX(card, prediction);
       for (let target of targets) {
         const arrowCollisions = findArrowCollisions(state.casterUnit, target, prediction, underworld);
         const arrowShootPath = findArrowPath(state.casterUnit, target, underworld);

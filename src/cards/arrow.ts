@@ -8,6 +8,7 @@ import { closestLineSegmentIntersectionWithLine, findWherePointIntersectLineSegm
 import * as config from '../config';
 import { add, Vec2 } from '../jmath/Vec';
 import Underworld from '../Underworld';
+import { playDefaultSpellSFX } from './cardUtils';
 
 export const arrowCardId = 'Arrow';
 const damageDone = 10;
@@ -24,7 +25,7 @@ const spell: Spell = {
     // so that you can fire the arrow at targets out of range
     allowNonUnitTarget: true,
     animationPath: '',
-    sfx: '',
+    sfx: 'arrow',
     description: ['spell_arrow', damageDone.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       let targets: Vec2[] = state.targetedUnits;
@@ -34,6 +35,7 @@ const spell: Spell = {
         // This regular arrow spell doesn't pierce
         const firstTarget = arrowUnitCollisions[0];
         if (firstTarget) {
+          playDefaultSpellSFX(card, prediction);
           if (!prediction) {
             // Promise.race ensures arrow promise doesn't take more than X milliseconds so that multiple arrows cast
             // sequentially wont take too long to complete animating.
