@@ -1,3 +1,8 @@
+## Wednesday 1/19 Priorities (copies)
+- **important** Loading a game with a portal up - the portal comes back as a blood portal and you have no stamina
+- **easy** Double check Electron Security
+- **easy** Connect spell is slow when cast with multiple targets (after another targeting spell); make it concurrent like the others
+---
 - **important** poisoner should have a cost to cast
     - it does, maybe show in tooltip?
 - Stats stored in underworld?

@@ -20,8 +20,11 @@
 
 ## Performance
 - **easy** Connect spell is slow when cast with multiple targets (after another targeting spell); make it concurrent like the others
+- There is a long pause after using connect (after another targeting spell)
 - **important** Prediction slowing down on huge spells
     - "You may still cast this spell, but it is too powerful to predict" (Get copy review)
+    - I've now finished the prediction only running when necessary so the improvement is it'll only be slow while it's calculating but if you hold the mouse still it speeds back up
+    - Now I have to figure out how to early exit a prediction if a new one starts
 - Testing on worse devises
     - Test on worse processor
     - Test on less RAM
