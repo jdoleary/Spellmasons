@@ -34,8 +34,10 @@ const spell: Spell = {
       // mutates state.targetedUnits as it iterates.  Otherwise it will continue to loop as it grows
       const targets = getCurrentTargets(state);
       const length = targets.length;
+      const animationPromises = [];
       for (let i = 0; i < length; i++) {
         const target = targets[i];
+        let animationPromise = Promise.resolve();
         if (target) {
           const typeFilter = Unit.isUnit(target)
             ? (target.alive
@@ -69,19 +71,24 @@ const spell: Spell = {
               drawPredictionLine(chained_entity.chainSource, chained_entity.entity);
             });
           } else {
-            const alreadyAnimated: HasSpace[] = [...state.targetedUnits];
             for (let { chainSource, entity } of chained) {
               playSFXKey('targeting');
-              await animate(chainSource, [entity], alreadyAnimated);
-              alreadyAnimated.push(entity);
+              animationPromise = animationPromise.then(() => animate(chainSource, [entity]));
             }
             // Draw all final circles for a moment before casting
-            await animate({ x: 0, y: 0 }, [], alreadyAnimated);
+            animationPromise = animationPromise.then(() => animate({ x: 0, y: 0 }, []));
+            animationPromises.push(animationPromise);
           }
           // Update effectState targets
           chained.forEach(u => addTarget(u.entity, state))
         }
       }
+      await Promise.all(animationPromises).then(() => {
+        // Only clear graphics once all lines are done animating
+        if (!prediction) {
+          globalThis.predictionGraphics?.clear();
+        }
+      });
 
       return state;
     },
@@ -147,7 +154,7 @@ export async function getTouchingTargetableEntitiesRecursive(
         connected.push({ chainSource: coords, entity: t });
         chainState.limitTargetsLeft--;
         if (!prediction) {
-          playSFXKey(`targetAquired0`);
+          playSFXKey(`targetAquired${i % 4}`);
         }
         const newTouching = await getTouchingTargetableEntitiesRecursive(t.x, t.y, potentialTargets, radius, prediction, chainState, recurseLevel + 1, typeFilter, ignore)
         connected = connected.concat(newTouching);
@@ -157,24 +164,28 @@ export async function getTouchingTargetableEntitiesRecursive(
   return connected;
 }
 
-async function animate(pos: Vec2, newTargets: Vec2[], oldTargets: Vec2[]) {
+async function animate(pos: Vec2, newTargets: Vec2[]) {
   if (globalThis.headless) {
     // Animations do not occur on headless, so resolve immediately or else it
     // will just waste cycles on the server
     return Promise.resolve();
   }
   const iterations = 100;
-  const millisBetweenIterations = 4;
+  const millisBetweenIterations = 3;
+  let playedSound = false;
   // "iterations + 10" gives it a little extra time so it doesn't timeout right when the animation would finish on time
   return raceTimeout(millisBetweenIterations * (iterations + 10), 'animatedConnect', new Promise<void>(resolve => {
     for (let i = 0; i < iterations; i++) {
 
       setTimeout(() => {
         if (globalThis.predictionGraphics) {
-          globalThis.predictionGraphics.clear();
+          // globalThis.predictionGraphics.clear();
           globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0);
+          // iterations - 10 allows the lerp value to stay over 1 for a time so that it will animate the final
+          // select circle
+          // ---
           // between 0 and 1;
-          const proportionComplete = easeOutCubic((i + 1) / iterations);
+          const proportionComplete = easeOutCubic((i + 1) / (iterations - 10));
           newTargets.forEach(target => {
 
             globalThis.predictionGraphics?.moveTo(pos.x, pos.y);
@@ -183,14 +194,14 @@ async function animate(pos: Vec2, newTargets: Vec2[], oldTargets: Vec2[]) {
             globalThis.predictionGraphics?.lineTo(pointApproachingTarget.x, pointApproachingTarget.y);
             if (proportionComplete >= 1) {
               globalThis.predictionGraphics?.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
+              // Play sound when new target is animated to be selected
+              if (!playedSound) {
+                playedSound = true;
+                playSFXKey(`targetAquired${Math.floor(Math.random() * 4)}`);
+              }
             }
           });
-          // Draw completed lines and circles on old targets
-          oldTargets.forEach(target => {
-            // globalThis.predictionGraphics?.moveTo(pos.x, pos.y);
-            // globalThis.predictionGraphics?.lineTo(target.x, target.y);
-            globalThis.predictionGraphics?.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
-          });
+
         }
         if (i >= iterations - 1) {
           resolve();
@@ -198,8 +209,6 @@ async function animate(pos: Vec2, newTargets: Vec2[], oldTargets: Vec2[]) {
 
       }, millisBetweenIterations * i)
     }
-  })).then(() => {
-    globalThis.predictionGraphics?.clear();
-  });
+  }));
 }
 export default spell;
