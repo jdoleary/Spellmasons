@@ -104,7 +104,7 @@ async function animate(circles: { pos: Vec2, newTargets: Vec2[] }[]) {
               globalThis.predictionGraphics?.lineTo(pointApproachingTarget.x, pointApproachingTarget.y);
               if (proportionComplete >= 1) {
                 globalThis.predictionGraphics?.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
-                playSFXKey(`targetAquired${i % 4}`);
+                playSFXKey('targetAquired');
               }
             });
             // // Draw completed lines and circles on old targets
@@ -112,7 +112,7 @@ async function animate(circles: { pos: Vec2, newTargets: Vec2[] }[]) {
             //   if (!entitiesTargeted.includes(target)) {
             //     entitiesTargeted.push(target);
             //     let sfxNumber = Math.floor(i / (iterations / 4));
-            //     playSFXKey(`targetAquired${sfxNumber}`);
+            //     playSFXKey(`targetAquired`);
             //   }
             //   // globalThis.predictionGraphics?.moveTo(pos.x, pos.y);
             //   // globalThis.predictionGraphics?.lineTo(target.x, target.y);

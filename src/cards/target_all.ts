@@ -102,7 +102,7 @@ async function animate(pos: Vec2, newTargets: Vec2[], oldTargets: Vec2[]) {
           oldTargets.forEach(target => {
             if (!entitiesTargeted.includes(target)) {
               entitiesTargeted.push(target);
-              playSFXKey(`targetAquired${i % 4}`);
+              playSFXKey('targetAquired');
             }
             // globalThis.predictionGraphics?.moveTo(pos.x, pos.y);
             // globalThis.predictionGraphics?.lineTo(target.x, target.y);

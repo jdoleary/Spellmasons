@@ -113,6 +113,7 @@ export const sfx: { [key: string]: string[] } = {
     purify: ['./sound/sfx/purify.mp3'],
     push: ['./sound/sfx/push.mp3'],
     rend: ['./sound/sfx/rend.mp3'],
+    reroll: ['./sound/sfx/Reroll_v2-001.wav', './sound/sfx/Reroll_v2-002.wav', './sound/sfx/Reroll_v2-003.wav'],
     resurrect: ['./sound/sfx/resurrect.mp3'],
     sacrifice: ['./sound/sfx/sacrifice.mp3'],
     scroll_disappear: ['./sound/sfx/RPG3_FireMagicFlameThrower_P3_End01.mp3'],
@@ -134,10 +135,10 @@ export const sfx: { [key: string]: string[] } = {
         './sound/sfx/summoner-summon.mp3',
     ],
     swap: ['./sound/sfx/swap.mp3'],
-    targetAquired0: ['./sound/sfx/Target_variation-001.mp3'],
-    targetAquired1: ['./sound/sfx/Target_variation-002.mp3'],
-    targetAquired2: ['./sound/sfx/Target_variation-003.mp3'],
-    targetAquired3: ['./sound/sfx/Target_variation-004.mp3'],
+    targetAquired: ['./sound/sfx/Target_variation-001.mp3',
+        './sound/sfx/Target_variation-002.mp3',
+        './sound/sfx/Target_variation-003.mp3',
+        './sound/sfx/Target_variation-004.mp3'],
     targeting: ['./sound/sfx/Targeting_v3.mp3'],
     unitDamage: ['./sound/sfx/player-damage.mp3'],
     vampireAttack: [
@@ -215,6 +216,7 @@ export function playSFXKey(key?: string) {
     if (paths) {
         const path = chooseOneOf(paths);
         if (path) {
+            console.debug('sfx:', path);
             playSFX(path);
         } else {
             console.error('Error choosing random sfx from ', key);

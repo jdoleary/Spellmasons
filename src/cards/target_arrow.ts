@@ -56,7 +56,7 @@ const spell: Spell = {
                   return new Promise<void>((resolve) => {
                     if (globalThis.predictionGraphics) {
                       globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0)
-                      playSFXKey(`targetAquired0`);
+                      playSFXKey('targetAquired');
                       globalThis.predictionGraphics.drawCircle(firstTarget.x, firstTarget.y, config.COLLISION_MESH_RADIUS);
                       // Show the targeting circle for a moment
                       setTimeout(resolve, 300);

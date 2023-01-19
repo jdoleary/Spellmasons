@@ -154,7 +154,7 @@ export async function getTouchingTargetableEntitiesRecursive(
         connected.push({ chainSource: coords, entity: t });
         chainState.limitTargetsLeft--;
         if (!prediction) {
-          playSFXKey(`targetAquired${i % 4}`);
+          playSFXKey('targetAquired');
         }
         const newTouching = await getTouchingTargetableEntitiesRecursive(t.x, t.y, potentialTargets, radius, prediction, chainState, recurseLevel + 1, typeFilter, ignore)
         connected = connected.concat(newTouching);
@@ -197,7 +197,7 @@ async function animate(pos: Vec2, newTargets: Vec2[]) {
               // Play sound when new target is animated to be selected
               if (!playedSound) {
                 playedSound = true;
-                playSFXKey(`targetAquired${Math.floor(Math.random() * 4)}`);
+                playSFXKey('targetAquired');
               }
             }
           });
