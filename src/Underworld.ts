@@ -2218,6 +2218,7 @@ export default class Underworld {
       elRerollPerks.classList.add('reroll-btn');
       elRerollPerks.style.color = 'white';
       elRerollPerks.addEventListener('click', () => {
+        playSFXKey('reroll');
         player.reroll++;
         // Clear upgrades
         document.body?.classList.toggle(showUpgradesClassName, false);
