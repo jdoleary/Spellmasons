@@ -104,8 +104,7 @@ async function animate(circles: { pos: Vec2, newTargets: Vec2[] }[]) {
               globalThis.predictionGraphics?.lineTo(pointApproachingTarget.x, pointApproachingTarget.y);
               if (proportionComplete >= 1) {
                 globalThis.predictionGraphics?.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
-                const sfxNumber = Math.floor(i / (iterations / 4));
-                playSFXKey(`targetAquired${sfxNumber}`);
+                playSFXKey(`targetAquired${i % 4}`);
               }
             });
             // // Draw completed lines and circles on old targets

@@ -102,8 +102,7 @@ async function animate(circles: { pos: Vec2, radius: number }[], underworld: Und
             withinRadius.forEach(v => {
               if (!entitiesTargeted.includes(v)) {
                 entitiesTargeted.push(v);
-                const sfxNumber = Math.floor(i / (iterations / 4));
-                playSFXKey(`targetAquired${sfxNumber}`);
+                playSFXKey(`targetAquired${i % 4}`);
               }
               globalThis.predictionGraphics?.drawCircle(v.x, v.y, config.COLLISION_MESH_RADIUS);
             })
