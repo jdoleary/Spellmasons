@@ -1,5 +1,4 @@
 ## Bugs 
-- Esc hotkey to menu doesn't work if you're hovering a inspect unit while spawning
 - Desync during ally turn (as seen in brad playthrough)
 - Ask server for latest state after returning from alt-tab
 ## Content

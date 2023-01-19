@@ -1,7 +1,6 @@
 import * as storage from '../../storage';
 const mapping = {
     showWalkRope: ['KeyF'],
-    clearQueuedSpell: ['Escape'],
     dequeueSpell: ['Backspace'],
     openInventory: ['Tab', 'KeyI'],
     ping: ['KeyC'],
@@ -39,6 +38,11 @@ export function keyToHumanReadable(keyboardKeys: string[]): string {
 }
 
 export function getKeyCodeMapping(keyCode: string): string | undefined {
+    // Exception: Escape cannot be rebound because it has multiple
+    // uses can no label fits it well
+    if (keyCode == 'Escape') {
+        return 'Escape';
+    }
     for (let [mapCode, array] of Object.entries(mapping)) {
         if (array.includes(keyCode)) {
             return mapCode;

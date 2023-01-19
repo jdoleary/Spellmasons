@@ -125,7 +125,7 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
     return;
   }
   switch (keyCodeMapping) {
-    case 'clearQueuedSpell':
+    case 'Escape':
       const thereWasInventoryOpen = document.body?.classList.contains(CardUI.openInvClass);
       // force close inventory
       CardUI.toggleInventory(undefined, false, underworld);
@@ -133,7 +133,10 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
         // If inventory was open, don't clear selected cards
         return;
       }
-      const thereWasTooltipActive = clearTooltipSelection();
+      // Only allow clearing tooltip if the player is already spawned,
+      // if they are still spawning, the Escape key should toggle the menu
+      // rather than clearing a potential tooltip
+      const thereWasTooltipActive = globalThis.player?.isSpawned ? clearTooltipSelection() : false;
       const thereWereCardsSelected = CardUI.areAnyCardsSelected();
       CardUI.clearSelectedCards(underworld);
       // Rerun predictions after selected cards are cleared because the spell changed

@@ -83,7 +83,7 @@ const explainMap: { [key: string]: ExplainData } = {
         prompt: () => ({ imageSrc: 'images/explain/walk.gif', text: 'explain move', yesText: 'Okay' })
     },
     [EXPLAIN_CAST]: {
-        prompt: () => ({ imageSrc: 'images/explain/cast.gif', text: ['explain cast', keyToHumanReadable(keyMapping.clearQueuedSpell)], yesText: 'Nice!' })
+        prompt: () => ({ imageSrc: 'images/explain/cast.gif', text: ['explain cast', keyToHumanReadable(['Escape'])], yesText: 'Nice!' })
     },
     [EXPLAIN_STACK]: {
         prompt: () => ({ imageSrc: 'images/explain/stack-spells.gif', text: 'explain stack', yesText: 'Intriguing...' })
