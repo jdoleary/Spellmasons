@@ -70,9 +70,11 @@ const spell: Spell = {
           }
         }
       }
-      await new Promise((resolve) => {
-        setTimeout(resolve, animationDelaySum);
-      })
+      if (!prediction && !globalThis.headless) {
+        await new Promise((resolve) => {
+          setTimeout(resolve, animationDelaySum);
+        })
+      }
       return state;
     },
   },
