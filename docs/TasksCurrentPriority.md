@@ -47,7 +47,6 @@
         - other dynamic "non deploy" notices
 
 ## Clean
-- Ensure center text like "You died" doesn't overlap with other text (1/19)
 
 ## Nice to haves
 - Modding (1/30)

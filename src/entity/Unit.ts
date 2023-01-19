@@ -14,7 +14,7 @@ import { addLerpable } from '../lerpList';
 import { allUnits } from './units';
 import { allCards, allModifiers, EffectState } from '../cards';
 import { checkIfNeedToClearTooltip, clearSpellEffectProjection } from '../graphics/PlanningView';
-import floatingText, { centeredFloatingText } from '../graphics/FloatingText';
+import floatingText, { queueCenteredFloatingText } from '../graphics/FloatingText';
 import Underworld, { turn_phase } from '../Underworld';
 import combos from '../graphics/AnimationCombos';
 import { raceTimeout } from '../Promise';
@@ -638,7 +638,7 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   if (globalThis.player && globalThis.player.unit == unit) {
     clearSpellEffectProjection(underworld);
     CardUI.clearSelectedCards(underworld);
-    centeredFloatingText(`You Died`, 'red');
+    queueCenteredFloatingText(`You Died`, 'red');
     explain(EXPLAIN_DEATH);
     playSFXKey('game_over');
   }
