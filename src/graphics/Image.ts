@@ -153,9 +153,6 @@ export function changeSprite(image: IImageAnimated | undefined, imagePath: strin
       const { onFrameChange, onComplete, loop, animationSpeed } = options;
       sprite.onFrameChange = onFrameChange;
       sprite.loop = loop;
-      if (!loop && !resolver) {
-        console.warn('Sprite is changing to a non-looping sprite, but no resolver was provided.  Is this intentional?');
-      }
       if (animationSpeed !== undefined) {
         sprite.animationSpeed = animationSpeed;
       }
