@@ -1,10 +1,9 @@
 # Critical Path
 - January 1/15-1/21
+    - Finish Bossmason ans sandvampire
     - Finish Multiplayer Supporting Features
 - January 1/22-1/28
     - Streamer outreach
-        - Search for streamers who did Battle Brothers
-    - Validate new Bossmason behavior
     - Update recommended Specs
     - Test on Slow Computer
     - Verify Cloud Saves

@@ -8,6 +8,7 @@
 - Sand vampire should be more than just a color reskin (1/20)
 - Endgame Looping (1/28)
     - (see branch `loop-tint-level`)
+- Change song on new level? or no
 
 ## Balance
 - **important** Improve difficulty scaling with over 4 players (1/20)
@@ -27,11 +28,10 @@
     - Test on worse processor
     - Test on less RAM
 - Test in offline mode
+    - Does Golems-Menu Playfair display font load
 
 ## Features
-- **easy** Double check Electron Security
-    - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
-    - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
+- Add sentry monitoring to node / electron
 - Supporting app with Edge DB (1/19)
     - Stats in gameover screen
         - Duration
