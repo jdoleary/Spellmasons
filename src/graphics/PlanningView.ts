@@ -464,16 +464,6 @@ async function showCastCardsPrediction(underworld: Underworld, target: Vec2, cas
         }
       }
     }
-    for (let unitStats of effectState.aggregator.unitDamage) {
-      // If a unit is currently alive and will take fatal damage,
-      // draw red circle.
-      if (unitStats.health > 0 && unitStats.damageTaken >= unitStats.health) {
-        if (predictionGraphics) {
-          predictionGraphics.lineStyle(4, 0xff0000, 1.0);
-          predictionGraphics.drawCircle(unitStats.x, unitStats.y, config.COLLISION_MESH_RADIUS);
-        }
-      }
-    }
     return effectState.targetedUnits.length > 0 || effectState.targetedPickups.length > 0;
   }
   return false;
