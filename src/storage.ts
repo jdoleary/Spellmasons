@@ -1,4 +1,3 @@
-import { playMusicIfNotAlreadyPlaying } from "./Audio";
 import { areCookiesAllowed } from "./cookieConsent";
 import { robeColors } from "./graphics/ui/colors";
 import { fullyUpdateControls } from "./graphics/ui/keyMapping";
@@ -45,17 +44,16 @@ export function getSavedData() {
                     globalThis.cinematicCameraEnabled = options.cinematicCameraEnabled;
                 }
                 if (options.volume !== undefined) {
-                    globalThis.volume = options.volume;
+                    globalThis.changeVolume?.(options.volume, false)
                 }
                 if (options.volumeMusic !== undefined) {
-                    globalThis.volumeMusic = options.volumeMusic;
+                    globalThis.changeVolumeMusic?.(options.volumeMusic, false)
                 }
                 if (options.volumeGame !== undefined) {
-                    globalThis.volumeGame = options.volumeGame;
+                    globalThis.changeVolumeGame?.(options.volumeMusic, false)
                 }
             }
-            // Now that volume has been restored from settings play song in menu (this will only work in electron)
-            playMusicIfNotAlreadyPlaying();
+            globalThis.playMusicIfNotAlreadyPlaying?.();
             // Default stored color if player doesn't already have one stored
             const color = get(STORAGE_ID_PLAYER_COLOR);
             if (!color) {

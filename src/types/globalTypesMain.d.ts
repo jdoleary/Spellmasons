@@ -76,6 +76,7 @@ declare global {
     var changeVolume: undefined | ((volume: number, saveSetting: boolean) => void);
     var changeVolumeMusic: undefined | ((volume: number, saveSetting: boolean) => void);
     var changeVolumeGame: undefined | ((volume: number, saveSetting: boolean) => void);
+    var playMusicIfNotAlreadyPlaying: undefined | (() => void);
     var volume: undefined | number;
     var volumeMusic: undefined | number;
     var volumeGame: undefined | number;

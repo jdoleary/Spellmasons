@@ -186,6 +186,10 @@ export function playMusicIfNotAlreadyPlaying() {
         playNextSong();
     }
 }
+// Expose to global so storage.ts can call it without importing Audio.ts
+// because headless server cannot import Audio.ts
+globalThis.playMusicIfNotAlreadyPlaying = playMusicIfNotAlreadyPlaying;
+
 export function playNextSong() {
     console.log('playNextSong', musicInstance);
     // If there is currently a song playing, stop it
