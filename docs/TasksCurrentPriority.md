@@ -2,7 +2,6 @@
 - Esc hotkey to menu doesn't work if you're hovering a inspect unit while spawning
 - Desync during ally turn (as seen in brad playthrough)
 - Ask server for latest state after returning from alt-tab
-- **important** Loading a game with a portal up - the portal comes back as a blood portal and you have no stamina
 ## Content
 - Bossmason
     - Implement aoe damage against enemies chain+hurt?
@@ -19,8 +18,6 @@
     - Diversity of playstyle (classes?)
 
 ## Performance
-- **easy** Connect spell is slow when cast with multiple targets (after another targeting spell); make it concurrent like the others
-- There is a long pause after using connect (after another targeting spell)
 - **important** Prediction slowing down on huge spells
     - "You may still cast this spell, but it is too powerful to predict" (Get copy review)
     - I've now finished the prediction only running when necessary so the improvement is it'll only be slow while it's calculating but if you hold the mouse still it speeds back up

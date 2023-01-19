@@ -568,7 +568,7 @@ async function handleLoadGameState(payload: {
   }
   if (pickups) {
     for (let p of pickups) {
-      const pickup = Pickup.pickups.find(pickupSource => pickupSource.imagePath == p.imagePath);
+      const pickup = Pickup.pickups.find(pickupSource => pickupSource.name == p.name);
       if (pickup) {
         const newPickup = Pickup.create({ pos: { x: p.x, y: p.y }, pickupSource: pickup }, underworld, false);
         if (newPickup) {

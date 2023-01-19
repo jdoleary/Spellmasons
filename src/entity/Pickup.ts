@@ -206,7 +206,7 @@ export function serialize(p: IPickup): IPickupSerialized {
 // Reinitialize a pickup from another pickup object, this is used in loading game state after reconnect
 export function load(pickup: IPickup, underworld: Underworld, prediction: boolean): IPickup | undefined {
   // Get the pickup object
-  let foundPickup = pickups.find((p) => p.imagePath == pickup.imagePath);
+  let foundPickup = pickups.find((p) => p.name == pickup.name);
   if (foundPickup) {
     // TODO verify that complex pickup behavior like onTurnsLeftDone still work after load, traps
     // probably don't work after load because callbacks can't be serialized
@@ -321,7 +321,7 @@ export const pickups: IPickupSource[] = [
     }
   },
   {
-    imagePath: 'portal',
+    imagePath: '',
     animationSpeed: -0.5,
     playerOnly: true,
     singleUse: false,
