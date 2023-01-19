@@ -55,7 +55,6 @@
     - 2nd algorithm for generating levels
         - see branch 2nd-level-algorithm
     - [Submit demo to IGN](https://corp.ign.com/submit-a-game)
-    - make music play in menu
 ---
 - **Important** How close am I to 5mb limit for save files? what to do if I go over?
 - menu: Skip tutorial button in settings doesn't go away once clicked

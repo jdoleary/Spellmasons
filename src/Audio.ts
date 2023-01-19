@@ -179,7 +179,7 @@ Object.values(sfx).forEach(paths => {
 let songIndex = Math.round(Math.random() * music.length - 1);
 let musicInstance: HTMLAudioElement;
 // Used to ensure music is playing when adjusting audio volume
-function playMusicIfNotAlreadyPlaying() {
+export function playMusicIfNotAlreadyPlaying() {
     if (musicInstance) {
         musicInstance.play();
     } else {

@@ -1,3 +1,4 @@
+import { playMusicIfNotAlreadyPlaying } from "./Audio";
 import { areCookiesAllowed } from "./cookieConsent";
 import { robeColors } from "./graphics/ui/colors";
 import { fullyUpdateControls } from "./graphics/ui/keyMapping";
@@ -32,12 +33,12 @@ export function getSavedData() {
         })
         : Promise.resolve())
         .then(() => {
-            console.log('Setup: Initializing saved settings');
             // Default language to english if no language is stored:
             const storedLanguageCode = get(STORAGE_LANGUAGE_CODE_KEY);
             setLanguage(storedLanguageCode ? storedLanguageCode : 'en', false);
             // Retrieve settings from storage
             const storedOptions = get(STORAGE_OPTIONS);
+            console.log('Setup: Initializing saved settings', storedOptions);
             if (storedOptions !== null) {
                 const options = JSON.parse(storedOptions);
                 if (options.cinematicCameraEnabled !== undefined) {
@@ -53,6 +54,8 @@ export function getSavedData() {
                     globalThis.volumeGame = options.volumeGame;
                 }
             }
+            // Now that volume has been restored from settings play song in menu (this will only work in electron)
+            playMusicIfNotAlreadyPlaying();
             // Default stored color if player doesn't already have one stored
             const color = get(STORAGE_ID_PLAYER_COLOR);
             if (!color) {
