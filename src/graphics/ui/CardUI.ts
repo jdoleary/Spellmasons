@@ -3,7 +3,7 @@ import * as colors from './colors';
 import * as Cards from '../../cards';
 import * as config from '../../config';
 import {
-  clearSpellEffectProjection,
+  clearSpellEffectProjection, runPredictions,
 } from '../PlanningView';
 import { calculateCost, calculateCostForSingleCard } from '../../cards/cardUtils';
 import floatingText, { centeredFloatingText } from '../FloatingText';
@@ -450,25 +450,32 @@ function addListenersToCardElement(
     }
   });
 }
-export function deselectLastCard() {
+export function deselectLastCard(underworld?: Underworld) {
   if (globalThis.headless) { return; }
   if (elSelectedCards) {
     const cardGroup = elSelectedCards.children.item(elSelectedCards.children.length - 1) as HTMLElement;
     if (cardGroup) {
       (cardGroup.children.item(0) as HTMLElement).click();
       manageSelectedCardsParentVisibility();
+      if (underworld) {
+        runPredictions(underworld);
+      }
     } else {
       console.warn(`Cannot deselect last card in selected cards`)
     }
   }
 
 }
-export function selectCardByIndex(index: number) {
+export function selectCardByIndex(index: number, underworld?: Underworld) {
   if (globalThis.headless) { return; }
   if (elCardHand) {
     const cardGroup = elCardHand.children.item(index) as HTMLElement;
     if (cardGroup && cardGroup.children.item(0)) {
       (cardGroup.children.item(0) as HTMLElement).click();
+      if (underworld) {
+        // Update prediction now that the spell chain has changed
+        runPredictions(underworld);
+      }
     } else {
       console.warn(`Cannot select a card, no card in hand at index ${index}`)
     }

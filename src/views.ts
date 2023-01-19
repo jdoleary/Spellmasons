@@ -4,6 +4,7 @@ import {
   resizePixi,
   app,
 } from './graphics/PixiUtils';
+import { runPredictions } from './graphics/PlanningView';
 import {
   clickHandler,
   contextmenuHandler,
@@ -12,7 +13,7 @@ import {
   keyupListener,
   mouseDownHandler,
   mouseUpHandler,
-  mouseMove,
+  useMousePosition,
   onWindowBlur,
   mouseOverHandler,
 } from './graphics/ui/eventListeners';
@@ -205,7 +206,8 @@ export function addOverworldEventListeners(overworld: Overworld) {
         // that it can update visuals that usually only update when the mousemoves.
         listener: (e: MouseEvent) => {
           if (overworld.underworld) {
-            mouseMove(overworld.underworld, e);
+            useMousePosition(overworld.underworld, e);
+            runPredictions(overworld.underworld);
           }
         }
       },

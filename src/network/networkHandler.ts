@@ -31,6 +31,7 @@ import { playerCastAnimationColor, playerCastAnimationColorLighter, playerCastAn
 import { lightenColor } from '../graphics/ui/colorUtil';
 import { choosePerk, tryTriggerPerk } from '../Perk';
 import { calculateCost } from '../cards/cardUtils';
+import { runPredictions } from '../graphics/PlanningView';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -469,6 +470,10 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           // Now that player movement has been set up, trigger the headless server to process it immediately
           underworld.triggerGameLoopHeadless();
           await moveTowardsPromise;
+
+          // Trigger run predictions when the position of any player changes since
+          // this could change prediction results
+          runPredictions(underworld);
         }
       } else {
         console.error('Cannot move player, caster does not exist');

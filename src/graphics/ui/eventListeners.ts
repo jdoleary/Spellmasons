@@ -136,6 +136,10 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
       const thereWasTooltipActive = clearTooltipSelection();
       const thereWereCardsSelected = CardUI.areAnyCardsSelected();
       CardUI.clearSelectedCards(underworld);
+      // Rerun predictions after selected cards are cleared because the spell changed
+      if (underworld) {
+        runPredictions(underworld);
+      }
       if (!thereWasTooltipActive && !thereWereCardsSelected && !thereWasInventoryOpen) {
         // Otherwise finally toggle menu
         toggleMenu();
@@ -145,7 +149,7 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
       CardUI.toggleInventory(undefined, undefined, underworld);
       break;
     case 'dequeueSpell':
-      CardUI.deselectLastCard();
+      CardUI.deselectLastCard(underworld);
       break;
     case 'showWalkRope':
       keyDown.showWalkRope = true;
@@ -198,34 +202,34 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
       underworld.endMyTurn();
       break;
     case 'spell1':
-      CardUI.selectCardByIndex(0);
+      CardUI.selectCardByIndex(0, overworld.underworld);
       break;
     case 'spell2':
-      CardUI.selectCardByIndex(1);
+      CardUI.selectCardByIndex(1, overworld.underworld);
       break;
     case 'spell3':
-      CardUI.selectCardByIndex(2);
+      CardUI.selectCardByIndex(2, overworld.underworld);
       break;
     case 'spell4':
-      CardUI.selectCardByIndex(3);
+      CardUI.selectCardByIndex(3, overworld.underworld);
       break;
     case 'spell5':
-      CardUI.selectCardByIndex(4);
+      CardUI.selectCardByIndex(4, overworld.underworld);
       break;
     case 'spell6':
-      CardUI.selectCardByIndex(5);
+      CardUI.selectCardByIndex(5, overworld.underworld);
       break;
     case 'spell7':
-      CardUI.selectCardByIndex(6);
+      CardUI.selectCardByIndex(6, overworld.underworld);
       break;
     case 'spell8':
-      CardUI.selectCardByIndex(7);
+      CardUI.selectCardByIndex(7, overworld.underworld);
       break;
     case 'spell9':
-      CardUI.selectCardByIndex(8);
+      CardUI.selectCardByIndex(8, overworld.underworld);
       break;
     case 'spell0':
-      CardUI.selectCardByIndex(9);
+      CardUI.selectCardByIndex(9, overworld.underworld);
       break;
     default:
       console.log('Input: code', keyCodeMapping, 'not handled');
@@ -301,7 +305,8 @@ const notifyYouMustWaitForYourTurn = throttle((target: Vec2) => {
   }
 }, 400, { trailing: true });
 
-export function mouseMove(underworld: Underworld, e?: MouseEvent) {
+
+export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
   // Only handle clicks when viewing the Game
   if (globalThis.view !== View.Game) {
     return;
@@ -362,6 +367,9 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
             // and won't path in an unexpected direction to attempt to get to the final destination.
             const intersection = closestLineSegmentIntersection({ p1: globalThis.player.unit, p2: mouseTarget }, underworld.walls) || mouseTarget;
             Unit._moveTowards(globalThis.player.unit, intersection, underworld);
+            // Trigger mouse move so that predictions will run when the position of your own player changes since
+            // this could change prediction results
+            runPredictions(underworld);
             // Send current player movements to server
             sendMovePlayer(underworld);
             tutorialCompleteTask('moved', () => !!globalThis.player && globalThis.player.unit.stamina <= globalThis.player.unit.staminaMax * 0.7);
@@ -390,8 +398,6 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
       }
     }
   }
-
-  runPredictions(underworld);
 
   // TODO: optimize this function by not rerunning parts if mouse & player.unit position
   // havent changed since last call.

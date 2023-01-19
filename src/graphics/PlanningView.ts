@@ -21,6 +21,7 @@ import { allCards } from '../cards';
 import { keyDown } from './ui/eventListeners';
 import { inPortal } from '../entity/Player';
 import { getPerkText } from '../Perk';
+import { View } from '../views';
 
 const TEXT_OUT_OF_RANGE = 'Out of Range';
 // Graphics for rendering above board and walls but beneath units and doodads,
@@ -571,6 +572,9 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
 // your health and mana bar (the stripes)
 // and enemy health and mana bars
 export async function runPredictions(underworld: Underworld) {
+  if (globalThis.view !== View.Game) {
+    return;
+  }
   if (globalThis.animatingSpells) {
     // Do not change the hover icons when spells are animating
     return;

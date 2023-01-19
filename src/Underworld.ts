@@ -57,7 +57,7 @@ import { calculateCost, calculateCostForSingleCard } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle, closestLineSegmentIntersection } from './jmath/lineSegment';
 import { expandPolygon, isVec2InsidePolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './jmath/Polygon2';
 import { calculateDistanceOfVec2Array, findPath } from './jmath/Pathfinding';
-import { keyDown, mouseMove } from './graphics/ui/eventListeners';
+import { keyDown, useMousePosition } from './graphics/ui/eventListeners';
 import Jprompt from './graphics/Jprompt';
 import { collideWithLineSegments, ForceMove, forceMovePreventForceThroughWall, isVecIntersectingVecWithCustomRadius, moveWithCollisions } from './jmath/moveWithCollision';
 import { getBestRangedLOSTarget } from './entity/units/actions/rangedAction';
@@ -713,7 +713,7 @@ export default class Underworld {
     this.drawResMarkers();
     this.drawPlayerThoughts();
     updatePlanningView(this);
-    mouseMove(this);
+    useMousePosition(this);
     // Particles
     updateParticlees(deltaTime, this.bloods, this.random, this);
 
