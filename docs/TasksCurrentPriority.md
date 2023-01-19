@@ -2,25 +2,27 @@
 - Desync during ally turn (as seen in brad playthrough)
 - Ask server for latest state after returning from alt-tab
 ## Content
-- Bossmason
+- Bossmason (1/20)
     - Implement aoe damage against enemies chain+hurt?
     - todo: Bossmasons' casts aren't limited when he's out of mana
-- Sand vampire should be more than just a color reskin
-- Endgame Looping
+- Sand vampire should be more than just a color reskin (1/20)
+- Endgame Looping (1/28)
     - (see branch `loop-tint-level`)
 
 ## Balance
-- **important** Improve difficulty scaling with over 4 players
+- **important** Improve difficulty scaling with over 4 players (1/20)
     - Wow used 10man and 25man variations
     - Increase unit quantity for over 4 players?
     - Introduce tougher enemies sooner?
     - Diversity of playstyle (classes?)
 
 ## Performance
-- **important** Prediction slowing down on huge spells
-    - "You may still cast this spell, but it is too powerful to predict" (Get copy review)
-    - I've now finished the prediction only running when necessary so the improvement is it'll only be slow while it's calculating but if you hold the mouse still it speeds back up
-    - Now I have to figure out how to early exit a prediction if a new one starts
+- **important** Prediction slowing down on huge spells (1/19)
+    - Use web workers for predictions
+    - I can call terminate() on a web worker to stop it if I detect that a new prediction has started processing
+    - A prediction web worker must return
+        - prediction units / pickups with health changes
+        - attention markers (in drawHealthBarAboveHead)
 - Testing on worse devises
     - Test on worse processor
     - Test on less RAM
@@ -30,7 +32,7 @@
 - **easy** Double check Electron Security
     - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
     - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
-- Supporting app with Edge DB
+- Supporting app with Edge DB (1/19)
     - Stats in gameover screen
         - Duration
         - Kills
@@ -45,9 +47,9 @@
         - other dynamic "non deploy" notices
 
 ## Clean
-- Ensure center text like "You died" doesn't overlap with other text
+- Ensure center text like "You died" doesn't overlap with other text (1/19)
 
 ## Nice to haves
-- Modding
+- Modding (1/30)
     - Include instructions from Modding.md
 - QualityOfLife.md

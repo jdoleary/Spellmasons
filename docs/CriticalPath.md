@@ -1,9 +1,9 @@
 # Critical Path
 - January 1/15-1/21
-    - Streamer outreach
-        - Search for streamers who did Battle Brothers
     - Finish Multiplayer Supporting Features
 - January 1/22-1/28
+    - Streamer outreach
+        - Search for streamers who did Battle Brothers
     - Validate new Bossmason behavior
     - Update recommended Specs
     - Test on Slow Computer
