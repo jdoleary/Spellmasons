@@ -571,6 +571,7 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
 // via enemy attention markers (showing if they will hurt you)
 // your health and mana bar (the stripes)
 // and enemy health and mana bars
+globalThis.currentPredictionId = 0;
 export async function runPredictions(underworld: Underworld) {
   if (globalThis.view !== View.Game) {
     return;
@@ -581,6 +582,9 @@ export async function runPredictions(underworld: Underworld) {
   }
   if (!underworld) {
     return;
+  }
+  if (globalThis.currentPredictionId !== undefined) {
+    globalThis.currentPredictionId++;
   }
   const startTime = Date.now();
   const mousePos = underworld.getMousePos();
