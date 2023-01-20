@@ -16,7 +16,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.MELEE,
   },
   unitProps: {
-    manaMax: 60,
+    manaMax: 0,
     healthMax: 120,
     damage: 50,
     bloodColor: bloodVampire
