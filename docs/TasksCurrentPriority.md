@@ -1,14 +1,14 @@
 ## Bugs 
 - Desync during ally turn (as seen in brad playthrough)
-- Ask server for latest state after returning from alt-tab
+- Cache targeting from spells before sending it in a SPELL network message to prevent desyncs in multiplayer
 ## Content
 - Bossmason (1/20)
     - Implement aoe damage against enemies chain+hurt?
     - todo: Bossmasons' casts aren't limited when he's out of mana
 - Sand vampire should be more than just a color reskin (1/20)
+    - Could pull your max mana
 - Endgame Looping (1/28)
     - (see branch `loop-tint-level`)
-- Change song on new level? or no
 
 ## Balance
 - **important** Improve difficulty scaling with over 4 players (1/20)

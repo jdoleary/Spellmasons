@@ -1,7 +1,8 @@
 # Critical Path
 - January 1/15-1/21
-    - Finish Bossmason ans sandvampire
+    - Finish Bossmason and sandvampire
     - Finish Multiplayer Supporting Features
+    - Upload Demo and mark as ready for review
 - January 1/22-1/28
     - Streamer outreach
     - Update recommended Specs
