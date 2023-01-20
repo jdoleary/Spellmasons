@@ -31,7 +31,6 @@
     - Does Golems-Menu Playfair display font load
 
 ## Features
-- Add sentry monitoring to node / electron
 - Supporting app with Edge DB (1/19)
     - Stats in gameover screen
         - Duration

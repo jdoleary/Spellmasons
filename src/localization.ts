@@ -34,7 +34,7 @@ function returnTranslation(keyOrArray: Localizable, map: LanguageMapping): strin
             // If something hasn't been localized yet, report it with console.error and return the key so
             // the string isn't totally empty as the key might just be an english string for now
             Sentry.withScope(function (scope) {
-                scope.setLevel(Sentry.Severity.Warning);
+                scope.setLevel('warning');
                 // The exception has the event level set by the scope (info).
                 Sentry.captureException(new Error(`i18n: Language ${map.language} has no value for key ${keyOrArray}`));
             });

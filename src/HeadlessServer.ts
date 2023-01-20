@@ -2,6 +2,7 @@
 // to true to denote that there is no graphics nor audio code
 globalThis.headless = true;
 import * as Sentry from "@sentry/node";
+import { CaptureConsole as CaptureConsoleIntegration } from "@sentry/integrations";
 
 // Importing @sentry/tracing patches the global hub for tracing to work.
 import "@sentry/tracing";
@@ -10,6 +11,13 @@ const release = `spellmasons@${version}`;
 Sentry.init({
     dsn: "https://4162d0e2c0a34b1aa44744ce94b4b21b@o1186256.ingest.sentry.io/6306205",
     release,
+    integrations: [new CaptureConsoleIntegration(
+        {
+            // array of methods that should be captured
+            // defaults to ['log', 'info', 'warn', 'error', 'debug', 'assert']
+            levels: ['error']
+        }
+    )],
     // We recommend adjusting this value in production, or using tracesSampler
     // for finer control
     tracesSampleRate: 1.0,
