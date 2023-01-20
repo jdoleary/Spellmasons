@@ -314,7 +314,9 @@
         "spell_target_similar": "Targets the nearest entity of the same kind as the cast target.❕ Each stack of this spell will target an additional entity.",
         "arrow": "Arrow",
         "mods": "Mods",
-        "return to game": "Return to Game"
+        "return to game": "Return to Game",
+        "mana_vampire_copy": "In addition to damaging you, the mana vampire will permanently remove some of your mana.",
+        "mana vampire": "Mana Vampire"
     },
     {
         "language": "Français",
@@ -631,7 +633,9 @@
         "spell_target_similar": "Cible l'entité la plus proche du même type que la cible coulée. ❕ Chaque pile de ce sort ciblera une entité supplémentaire.",
         "arrow": "Flèche",
         "mods": "Mods",
-        "return to game": "Revenir au jeu"
+        "return to game": "Revenir au jeu",
+        "mana_vampire_copy": "En plus de vous endommager, le vampire de mana supprimera en permanence une partie de votre mana.",
+        "mana vampire": "Mana vampire"
     },
     {
         "language": "italiano",
@@ -948,7 +952,9 @@
         "spell_target_similar": "Bersaglio l'entità più vicina dello stesso tipo del bersaglio del cast. ❕ Ogni stack di questo incantesimo colpirà un'entità aggiuntiva.",
         "arrow": "Freccia",
         "mods": "Mod",
-        "return to game": "Tornare al gioco"
+        "return to game": "Tornare al gioco",
+        "mana_vampire_copy": "Oltre a danneggiarti, il vampiro di mana rimuoverà permanentemente un po 'del tuo mana.",
+        "mana vampire": "Mana Vampire"
     },
     {
         "language": "deutsch",
@@ -1265,7 +1271,9 @@
         "spell_target_similar": "Zieht die nächste Entität der gleichen Art wie das Gussziel. ❕ Jeder Stapel dieses Zaubers richtet sich an eine zusätzliche Entität.",
         "arrow": "Pfeil",
         "mods": "Modifikationen",
-        "return to game": "Zum Spiel zurückkehren"
+        "return to game": "Zum Spiel zurückkehren",
+        "mana_vampire_copy": "Der Mana -Vampir wird nicht nur die Beschädigung des Mana -Vampirs dauerhaft entfernen.",
+        "mana vampire": "Mana Vampir"
     },
     {
         "language": "español",
@@ -1582,7 +1590,9 @@
         "spell_target_similar": "Se dirige a la entidad más cercana del mismo tipo que el objetivo de reparto. Cada pila de este hechizo se dirigirá a una entidad adicional.",
         "arrow": "Flecha",
         "mods": "Modos",
-        "return to game": "Regresar al juego"
+        "return to game": "Regresar al juego",
+        "mana_vampire_copy": "Además de dañarlo, el vampiro de maná eliminará permanentemente parte de su maná.",
+        "mana vampire": "Vampiro de maná"
     },
     {
         "language": "日本",
@@ -1899,7 +1909,9 @@
         "spell_target_similar": "ターゲットキャストターゲットと同じ種類の最も近いエンティティをターゲットにします。",
         "arrow": "矢印",
         "mods": "mods",
-        "return to game": "ゲームに戻る"
+        "return to game": "ゲームに戻る",
+        "mana_vampire_copy": "あなたに損害を与えることに加えて、マナ・ヴァンパイアはあなたのマナの一部を永久に削除します。",
+        "mana vampire": "マナヴァンパイア"
     },
     {
         "language": "Português",
@@ -2216,7 +2228,9 @@
         "spell_target_similar": "Tem como alvo a entidade mais próxima do mesmo tipo do alvo do elenco. ❕ Cada pilha desse feitiço terá como alvo uma entidade adicional.",
         "arrow": "Flecha",
         "mods": "Modificações",
-        "return to game": "Voltar ao jogo"
+        "return to game": "Voltar ao jogo",
+        "mana_vampire_copy": "Além de prejudicá -lo, o vampiro de mana removerá permanentemente parte de sua mana.",
+        "mana vampire": "Mana Vampire"
     },
     {
         "language": "عربى",
@@ -2533,7 +2547,9 @@
         "spell_target_similar": "يستهدف أقرب كيان من نفس النوع مثل الهدف الممثل.",
         "arrow": "سهم",
         "mods": "تعديل",
-        "return to game": "يعود الى اللعبة"
+        "return to game": "يعود الى اللعبة",
+        "mana_vampire_copy": "بالإضافة إلى إتلافك ، سيقوم مصاص الدماء المانا بإزالة بعض مانا بشكل دائم.",
+        "mana vampire": "مصاص الدماء مانا"
     },
     {
         "language": "한국어",
@@ -2850,7 +2866,9 @@
         "spell_target_similar": "캐스트 대상과 동일한 종류의 가장 가까운 엔티티를 대상으로합니다.",
         "arrow": "화살",
         "mods": "모드",
-        "return to game": "게임으로 돌아 가기"
+        "return to game": "게임으로 돌아 가기",
+        "mana_vampire_copy": "마나 뱀파이어는 당신을 손상시키는 것 외에도 마나의 일부를 영구적으로 제거합니다.",
+        "mana vampire": "마나 뱀파이어"
     },
     {
         "language": "русский",
@@ -3167,7 +3185,9 @@
         "spell_target_similar": "Нацеливается на ближайшую сущность того же типа, что и целевой литой.",
         "arrow": "Стрелка",
         "mods": "Моды",
-        "return to game": "Вернуться к игре"
+        "return to game": "Вернуться к игре",
+        "mana_vampire_copy": "В дополнение к повреждению вас, вампир Mana навсегда уберет часть вашей маны.",
+        "mana vampire": "Мана Вампир"
     },
     {
         "language": "中文(简)",
@@ -3484,7 +3504,9 @@
         "spell_target_similar": "目标是与铸件相同的最接近的实体。❕该法术的每个堆栈将针对附加实体。",
         "arrow": "箭",
         "mods": "mods",
-        "return to game": "返回游戏"
+        "return to game": "返回游戏",
+        "mana_vampire_copy": "除了损害您之外，Mana Vampire还将永久消除您的一些法力。",
+        "mana vampire": "法力吸血鬼"
     },
     {
         "language": "中文(繁)",
@@ -3749,7 +3771,7 @@
         "spell_contageous": "立即將該單元的詛咒傳播到附近的其他單位。",
         "spell_dash": "將施法者拉向目標（s）。“ dash”必須施放在單元或拾音器等目標上。",
         "spell_death_wager": "將所有法術的成本重置為默認值，並將最大健康降低🍞％永久減少。",
-        "spell_debilitate": "使目標每當受到傷害時造成🍞％損壞。",
+        "spell_debilitate": "每當遭受損壞時，目標都會造成🍞％損壞。",
         "spell_displace": "將目標傳送到隨機位置。",
         "spell_drown": "交易🍞僅當目標被淹沒時損壞。",
         "spell_fortify": "在下一個回合中保護承載者所有傷害。",
@@ -3801,7 +3823,9 @@
         "spell_target_similar": "目標是與鑄件相同的最接近的實體。❕該法術的每個堆棧將針對附加實體。",
         "arrow": "箭",
         "mods": "mods",
-        "return to game": "返回游戲"
+        "return to game": "返回游戲",
+        "mana_vampire_copy": "除了損害您之外，Mana Vampire還將永久消除您的一些法力。",
+        "mana vampire": "法力吸血鬼"
     },
     {
         "language": "Polskie",
@@ -4118,6 +4142,8 @@
         "spell_target_similar": "Celuje w najbliższy byt tego samego rodzaju, co cel obsady. Każdy stos tego zaklęcia będzie ukierunkowany na dodatkowy byt.",
         "arrow": "Strzałka",
         "mods": "Mody",
-        "return to game": "Wróć do gry"
+        "return to game": "Wróć do gry",
+        "mana_vampire_copy": "Oprócz uszkodzenia cię, wampir Mana na stałe usunie część twojej many.",
+        "mana vampire": "Mana Vampire"
     }
 ]

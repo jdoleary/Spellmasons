@@ -5,8 +5,6 @@
 - Bossmason (1/20)
     - Implement aoe damage against enemies chain+hurt?
     - todo: Bossmasons' casts aren't limited when he's out of mana
-- Sand vampire should be more than just a color reskin (1/20)
-    - Could pull your max mana
 - Endgame Looping (1/28)
     - (see branch `loop-tint-level`)
 
@@ -45,7 +43,6 @@
     - Dynamic "Server Maintenance" notice
         - other dynamic "non deploy" notices
 
-## Clean
 
 ## Nice to haves
 - Modding (1/30)
