@@ -33,7 +33,7 @@ export type IPickup = HasSpace & {
   type: 'pickup';
   name: string;
   description: Localizable;
-  imagePath: string;
+  imagePath?: string;
   image?: Image.IImageAnimated;
   // if this IPickup is a prediction copy, real is a reference to the real pickup that it is a copy of
   real?: IPickup;
@@ -58,7 +58,7 @@ export type IPickup = HasSpace & {
 interface IPickupSource {
   name: string;
   description: Localizable;
-  imagePath: string;
+  imagePath?: string;
   animationSpeed?: number;
   singleUse: boolean;
   playerOnly?: boolean;
@@ -98,7 +98,7 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
     imagePath,
     // Pickups are stored in containerUnits so that they
     // will be automatically z-indexed
-    image: (!containerUnits || prediction) ? undefined : Image.create({ x, y }, imagePath, containerUnits, { animationSpeed, loop: true }),
+    image: (!imagePath || !containerUnits || prediction) ? undefined : Image.create({ x, y }, imagePath, containerUnits, { animationSpeed, loop: true }),
     singleUse,
     playerOnly,
     effect,
@@ -108,13 +108,12 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
   if (self.image) {
     self.image.sprite.scale.x = scale;
     self.image.sprite.scale.y = scale;
-    if (self.image.sprite && name == RED_PORTAL) {
-      Image.cleanup(self.image);
-      // Right now red portal is the only pickup that uses an emitter;
-      // however if that changes in the future this should be refactored so
-      // that there isn't a special case inside of Pickup.create
-      assignEmitter(self, RED_PORTAL_JID);
-    }
+  }
+  if (name == RED_PORTAL) {
+    // Right now red portal is the only pickup that uses an emitter;
+    // however if that changes in the future this should be refactored so
+    // that there isn't a special case inside of Pickup.create
+    assignEmitter(self, RED_PORTAL_JID);
   }
 
   if (turnsLeftToGrab) {
@@ -321,7 +320,7 @@ export const pickups: IPickupSource[] = [
     }
   },
   {
-    imagePath: '',
+    imagePath: undefined,
     animationSpeed: -0.5,
     playerOnly: true,
     singleUse: false,
