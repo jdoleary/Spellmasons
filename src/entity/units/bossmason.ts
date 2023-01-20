@@ -7,13 +7,12 @@ import * as config from '../../config';
 import { makeCorruptionParticles } from '../../graphics/ParticleCollection';
 import purify from '../../cards/purify';
 import sacrifice from '../../cards/sacrifice';
+import slash from '../../cards/slash';
 import { calculateCost } from '../../cards/cardUtils';
 import seedrandom from 'seedrandom';
 import { makeManaTrail } from '../../graphics/Particles';
-import { addPixiSpriteAnimated, containerUnits } from '../../graphics/PixiUtils';
 import { findRandomGroundLocation } from './summoner';
-import { pickups, PICKUP_SPIKES_NAME, RED_PORTAL, removePickup } from '../Pickup';
-import { Vec2 } from '../../jmath/Vec';
+import { pickups, RED_PORTAL, removePickup } from '../Pickup';
 import { skyBeam } from '../../VisualEffects';
 import * as Pickup from '../Pickup';
 import * as math from '../../jmath/math';
@@ -22,6 +21,7 @@ import { BLOOD_GOLEM_ID } from './bloodGolem';
 import { BLOOD_ARCHER_ID } from './blood_archer';
 
 export const bossmasonUnitId = 'Bossmason';
+const NUMBER_OF_ATTACK_TARGETS = 8;
 const bossmasonMana = 200;
 const magicColor = 0x321d73;
 const unit: UnitSource = {
@@ -79,8 +79,39 @@ const unit: UnitSource = {
           }
           return lastPromise;
         };
-        await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
+        await Unit.playComboAnimation(unit, 'playerAttackMedium0', keyMoment, { animationSpeed: 0.2, loop: false });
+
+        // After spawning portals the bossmason can purify or heal
+        const purifyCost = calculateCost([purify.card], {});
+        const sacrificeCost = calculateCost([sacrifice.card], {});
+        // Purify self if cursed
+        if (purifyCost.manaCost <= unit.mana && unit.modifiers && Object.values(unit.modifiers).some(m => m.isCurse)) {
+          const keyMoment = () => underworld.castCards({}, unit, [purify.card.id], unit, false, false, magicColor);
+          await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
+        } else if (sacrificeCost.manaCost <= unit.mana && unit.health < unit.healthMax) {
+          // Consume allies if hurt
+          const closestUnit = Unit.findClosestUnitInSameFaction(unit, underworld);
+          if (closestUnit) {
+            const keyMoment = () => underworld.castCards({}, unit, [sacrifice.card.id], closestUnit, false, false, magicColor);
+            await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
+          }
+        }
       } else {
+        const attackTarget = attackTargets && attackTargets[0];
+        // Attack
+        const slashCost = calculateCost([slash.card, slash.card, slash.card], {});
+        if (slashCost.manaCost <= unit.mana && attackTarget && canAttackTarget) {
+          const keyMoment = () => {
+            let lastPromise = Promise.resolve();
+            for (let target of attackTargets) {
+              lastPromise = underworld.castCards({}, unit, [slash.card.id, slash.card.id, slash.card.id], target, false, false, magicColor)
+                // .then() removes <EffectState> from the return type
+                .then(() => { });
+            }
+            return lastPromise;
+          }
+          await Unit.playComboAnimation(unit, 'playerAttackEpic', keyMoment, { animationSpeed: 0.2, loop: false });
+        }
         // Teleport to a red portal
         // and turn the rest into enemies
         let bossmasonTeleported = false;
@@ -100,40 +131,19 @@ const unit: UnitSource = {
       console.error('Could not find redPortalPickupSource');
     }
 
-    // Purify self if cursed
-    let cost = calculateCost([purify.card], {});
-    if (cost.manaCost <= unit.mana && unit.modifiers && Object.values(unit.modifiers).some(m => m.isCurse)) {
-      const keyMoment = () => underworld.castCards({}, unit, [purify.card.id], unit, false, false, magicColor);
-      await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
-    }
-    // Consume allies if hurt
-    cost = calculateCost([sacrifice.card], {});
-    if (cost.manaCost <= unit.mana && unit.health < unit.healthMax) {
-      const closestUnit = Unit.findClosestUnitInSameFaction(unit, underworld);
-      if (closestUnit) {
-        const keyMoment = () => underworld.castCards({}, unit, [sacrifice.card.id], closestUnit, false, false, magicColor);
-        await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
-      }
-    }
 
-    // const attackTarget = attackTargets && attackTargets[0];
-    // // Attack
-    // // TODO: Check mana cost
-    // if (attackTarget && canAttackTarget) {
-    //   Unit.orient(unit, attackTarget);
-    //   const keyMoment = () => underworld.castCards({}, unit, [slash.slashCardId], attackTarget, false, false, magicColor);
-    //   await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
-    // }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
     // Should be always true, since bossmasons is always AI
     if (unit.unitType == UnitType.AI) {
-      const closestUnit = Unit.findClosestUnitInDifferentFaction(unit, underworld);
-      if (closestUnit) {
-        return [closestUnit];
-      } else {
-        return [];
-      }
+      return Unit.livingUnitsInDifferentFaction(unit, underworld)
+        .filter(u => math.distance(unit, u) <= unit.attackRange)
+        .map(u => ({ unit: u, dist: math.distance(unit, u) }))
+        .sort((a, b) => {
+          return a.dist - b.dist;
+        })
+        .map(x => x.unit)
+        .slice(0, NUMBER_OF_ATTACK_TARGETS);
     }
     return [];
   },
@@ -149,49 +159,6 @@ const unit: UnitSource = {
     damage: 'unitDamage',
   }
 };
-function summonTrap(coords: Vec2, underworld: Underworld) {
-  const trap = pickups.findIndex(p => p.name == PICKUP_SPIKES_NAME);
-  if (trap !== -1) {
-    return new Promise<void>((resolve) => {
-      const animationSprite = addPixiSpriteAnimated('pickups/trapAttack', containerUnits, {
-        loop: false,
-        animationSpeed: -0.15,
-        onComplete: () => {
-          if (animationSprite?.parent) {
-            animationSprite.parent.removeChild(animationSprite);
-          }
-          resolve();
-        }
-      });
-      if (animationSprite) {
-        // Play in reverse so it looks like it's unfolding
-        animationSprite.gotoAndPlay(animationSprite.totalFrames - 1);
-        animationSprite.anchor.set(0.5);
-        animationSprite.x = coords.x;
-        animationSprite.y = coords.y;
-      }
-      const animationSprite2 = addPixiSpriteAnimated('pickups/trapAttackMagic', containerUnits, {
-        loop: false,
-        animationSpeed: -0.15,
-        onComplete: () => {
-          if (animationSprite2?.parent) {
-            animationSprite2.parent.removeChild(animationSprite2);
-          }
-          resolve();
-        }
-      });
-      if (animationSprite2) {
-        // Play in reverse so it looks like it's unfolding
-        animationSprite2.gotoAndPlay(animationSprite2.totalFrames - 1);
-      }
-    }).then(() => {
-      underworld.spawnPickup(trap, coords, false);
-    })
-  } else {
-    console.error('Could not find trap pickup');
-    return Promise.resolve();
-  }
-}
 function summonUnitAtPickup(pickup: Pickup.IPickup, underworld: Underworld) {
   const enemyIsClose = underworld.units.filter(u => u.faction == Faction.ALLY).some(u => math.distance(pickup, u) <= config.PLAYER_BASE_ATTACK_RANGE)
   let sourceUnit = allUnits[BLOOD_ARCHER_ID];

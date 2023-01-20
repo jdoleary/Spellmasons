@@ -2,9 +2,6 @@
 - Desync during ally turn (as seen in brad playthrough)
 - Cache targeting from spells before sending it in a SPELL network message to prevent desyncs in multiplayer
 ## Content
-- Bossmason (1/20)
-    - Implement aoe damage against enemies chain+hurt?
-    - todo: Bossmasons' casts aren't limited when he's out of mana
 - Endgame Looping (1/28)
     - (see branch `loop-tint-level`)
 
