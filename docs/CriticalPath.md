@@ -9,6 +9,7 @@
     - Test on Slow Computer
     - Verify Cloud Saves
 - January 31 (check timezone)
+    - Update translations and verify all translators are in credits
     - Release Game and Demo
         - https://partner.steamgames.com/doc/store/releasing
         - Double check the package content https://partner.steamgames.com/store/packagelanding/574232
