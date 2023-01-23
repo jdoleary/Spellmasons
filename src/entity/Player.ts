@@ -347,7 +347,7 @@ export function syncLobby(underworld: Underworld) {
       } else if (p.endedTurn && underworld.turn_phase == turn_phase.PlayerTurns) {
         status = i18n('Ready for next turn');
       }
-      return { name: p.name || p.clientId, clientConnected: p.clientConnected, status, color: playerColorToCss(p), ready: p.lobbyReady ? i18n('Ready') : i18n('Not Ready') };
+      return { name: p.name || p.clientId, clientId: p.clientId, clientConnected: p.clientConnected, status, color: playerColorToCss(p), ready: p.lobbyReady ? i18n('Ready') : i18n('Not Ready') };
     });
   // Update lobby element
   if (elInGameLobby) {
