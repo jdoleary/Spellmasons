@@ -19,7 +19,11 @@ export function explain(key: string, forceShow?: boolean) {
                     // and rendering into a portal
                     portal.innerHTML = "";
                 }
-                Jprompt({ ...explainData.prompt(), portal: forceShow ? (portal || undefined) : undefined, forceShow });
+                // Slightly delay showing explain prompt so the button doesn't flicker on for a moment before CSS has a chance
+                // to mark cinematic camera as active
+                setTimeout(() => {
+                    Jprompt({ ...explainData.prompt(), portal: forceShow ? (portal || undefined) : undefined, forceShow });
+                }, 500);
                 storage.set(key, ALREADY_EXPLAINED);
             }
         } else {
