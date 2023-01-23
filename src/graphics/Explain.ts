@@ -355,14 +355,12 @@ function getTutorialStorageKey(key: string): string {
 }
 globalThis.resetTutorial = function resetTutorial() {
     for (let key of Object.keys(tutorialChecklist)) {
-        const item = tutorialChecklist[key as keyof TutorialChecklist];
-        item.complete = false;
-        storage.set(getTutorialStorageKey(key), undefined);
+        storage.remove(getTutorialStorageKey(key));
     }
     setTutorialVisiblity(true);
     // Reset all explain prompts when tutorial is reset
     for (let explainKey of explainKeys) {
-        storage.set(explainKey, undefined);
+        storage.remove(explainKey);
     }
     globalThis.enemyEncountered = [];
     storage.remove(storage.ENEMY_ENCOUNTERED_STORAGE_KEY);
