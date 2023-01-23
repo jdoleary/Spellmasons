@@ -661,7 +661,7 @@ export async function runPredictions(underworld: Underworld) {
           }
         })
       }
-      Unit.syncPlayerHealthManaUI(underworld, casterUnit);
+      Unit.syncPlayerHealthManaUI(underworld);
     }
   }
   if (globalThis.runPredictionsPanel) {
