@@ -26,7 +26,7 @@ import pingSprite from '../graphics/Ping';
 import { clearLastNonMenuView, setView, View } from '../views';
 import { autoExplain, explain, EXPLAIN_END_TURN, tutorialCompleteTask } from '../graphics/Explain';
 import { cacheBlood, cameraAutoFollow, runCinematicLevelCamera } from '../graphics/PixiUtils';
-import { Overworld } from '../Overworld';
+import { ensureAllClientsHaveAssociatedPlayers, Overworld } from '../Overworld';
 import { playerCastAnimationColor, playerCastAnimationColorLighter, playerCastAnimationGlow } from '../graphics/ui/colors';
 import { lightenColor } from '../graphics/ui/colorUtil';
 import { choosePerk, tryTriggerPerk } from '../Perk';
@@ -53,6 +53,23 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
     return;
   }
   switch (type) {
+    case MESSAGE_TYPES.JOIN_GAME_AS_PLAYER:
+      const { asPlayerClientId } = payload;
+      const asPlayer = underworld.players.find(p => p.clientId == asPlayerClientId);
+      const oldFromPlayer = underworld.players.find(p => p.clientId == fromClient);
+      if (fromClient && asPlayer) {
+        console.log('JOIN_GAME_AS_PLAYER: Reassigning player', asPlayer.clientId, 'to', fromClient);
+        asPlayer.clientId = fromClient;
+        // From fromClient's old player now that they have inhabited the asPlayer
+        if (oldFromPlayer) {
+          console.log('JOIN_GAME_AS_PLAYER: Removing player', oldFromPlayer)
+          underworld.players = underworld.players.filter(p => p !== oldFromPlayer);
+        }
+
+        const players = underworld.players.map(Player.serialize)
+        underworld.syncPlayers(players);
+      }
+      break;
     case MESSAGE_TYPES.PING:
       pingSprite({ coords: payload as Vec2, color: underworld.players.find(p => p.clientId == d.fromClient)?.color });
       break;
@@ -308,7 +325,16 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       await handleLoadGameState(payload, overworld);
       break;
     case MESSAGE_TYPES.LOAD_GAME_STATE:
+      // Make everyone go back to the lobby
+      for (let p of overworld.underworld?.players || []) {
+        p.lobbyReady = false;
+      }
+
       await handleLoadGameState(payload, overworld);
+      if (globalThis.clientId !== 'solomode_client_id') {
+        setView(View.Menu);
+        globalThis.setMenu?.('MULTIPLAYER_SERVER_CHOOSER');
+      }
       break;
     case MESSAGE_TYPES.ENTER_PORTAL:
       if (fromPlayer) {
@@ -333,6 +359,9 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           const connectedPlayers = underworld.players.filter(p => p.clientConnected);
           if (connectedPlayers.length > 0 && connectedPlayers.every(p => p.lobbyReady)) {
             console.log('Lobby: All players are ready, start game.');
+            // If loading into a game, tryGameOver so that if the game over modal is up, it will
+            // be removed if there are acting players.
+            underworld.tryGameOver();
             setView(View.Game);
             if (globalThis.player && fromPlayer.clientId == globalThis.player.clientId && !globalThis.player.isSpawned) {
               // Retrigger the cinematic camera since the first time
@@ -604,6 +633,9 @@ async function handleLoadGameState(payload: {
   underworld.setTurnPhase(phase);
 
   underworld.syncTurnMessage();
+  if (globalThis.headless) {
+    ensureAllClientsHaveAssociatedPlayers(overworld, overworld.clients);
+  }
 
 }
 async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Underworld) {
@@ -774,11 +806,13 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
   globalThis.load = async (title: string) => {
     const savedGameString = storage.get(globalThis.savePrefix + title);
     if (savedGameString) {
-      console.log('LOAD: connectToSingleplayer in preparation for load');
-      if (globalThis.connectToSingleplayer) {
-        await globalThis.connectToSingleplayer();
-      } else {
-        console.error('Unexpected: Attempting to load but globalThis.connectToSingleplayer is undefined');
+      if (globalThis.player == undefined) {
+        console.log('LOAD: connectToSingleplayer in preparation for load');
+        if (globalThis.connectToSingleplayer) {
+          await globalThis.connectToSingleplayer();
+        } else {
+          console.error('Unexpected: Attempting to load but globalThis.connectToSingleplayer is undefined');
+        }
       }
 
       const { underworld: savedUnderworld, phase, units, players, pickups, doodads } = JSON.parse(savedGameString);

@@ -17,6 +17,7 @@ import { updateGlobalRefToCurrentClientPlayer } from '../entity/Player';
 import Underworld from '../Underworld';
 import { version } from '../../package.json';
 import makeOverworld, { Overworld } from '../Overworld';
+import { MESSAGE_TYPES } from '../types/MessageTypes';
 // Locally hosted, locally accessed
 // const wsUri = 'ws://localhost:8080';
 // Locally hosted, available to LAN (use your own IP)
@@ -181,6 +182,12 @@ export function setupPieAndUnderworld() {
     globalThis.pieLeaveRoom = () => {
       globalThis.exitCurrentGame?.();
       pie.leaveRoom();
+    }
+    globalThis.pieInhabitPlayer = (asPlayerClientId: string) => {
+      pie.sendData({
+        type: MESSAGE_TYPES.JOIN_GAME_AS_PLAYER,
+        asPlayerClientId
+      });
     }
 
     globalThis.joinRoom = room_info => joinRoom(overworld, room_info);

@@ -27,6 +27,8 @@ export enum MESSAGE_TYPES {
   SYNC_PLAYERS,
   // Shows other players what another player is up to
   PLAYER_THINKING,
+  // Allows a client to inhabit a disconnected player character
+  JOIN_GAME_AS_PLAYER,
 
 
 }

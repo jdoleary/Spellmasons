@@ -2,16 +2,18 @@
 # Critical Path
 ## Important Tasks Remaining
 - Integrate i18n translations
-- Run stats
+- Validate Build
     - Update build
 ---
-- Check on Demo Store page
-- Server Browser
 - Multiplayer Save/Load
-- Improve scaling over 4 players
-- LAN Hosting
 - WSPie Private Games
 - Cache Targeting to prevent desyncs on multiplayer
+---
+- Check on Demo Store page Review Status
+- Server Browser
+    - Remove Koa app in HeadlessServer
+- Improve scaling over 4 players
+- LAN Hosting
 
 ## Schedule
 - January 1/22-1/28

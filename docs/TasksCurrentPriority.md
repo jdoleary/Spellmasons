@@ -1,5 +1,13 @@
 ## Monday
-
+- bug: shielded damage doesn't update until you move your mouse after you take damage
+- validate: Ending turn more than once
+    - validate ending turn rapidly at end of level
+- Multiplayer Save/Load
+    - What happens when a singleplayer tries to join a multiplayer save
+    - what happens when multiplayer tries to join a singple player save
+    - prevent loading if game is already started
+- WSPie Private Games
+- Cache Targeting to prevent desyncs on multiplayer
 
 ## Bugs 
 - Desync during ally turn (as seen in brad playthrough)

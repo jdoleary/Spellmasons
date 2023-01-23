@@ -179,7 +179,7 @@ export default class Underworld {
   removeEventListeners: undefined | (() => void);
   bloods: BloodParticle[] = [];
   // Keeps track of if the game has begun the process of restarting a new level after a Game Over
-  isRestarting: boolean = false;
+  isRestarting: NodeJS.Timer | undefined = undefined;
   particleFollowers: {
     displayObject: DisplayObject,
     emitter: Emitter,
@@ -484,7 +484,8 @@ export default class Underworld {
         u.path.points.shift();
       }
       // Only allow movement if the unit has stamina
-      if (u.path && u.path.points[0] && u.stamina > 0 && Unit.isUnitsTurnPhase(u, this)) {
+      const isUnitsTurn = Unit.isUnitsTurnPhase(u, this);
+      if (u.path && u.path.points[0] && u.stamina > 0 && isUnitsTurn) {
         // Move towards target
         const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path.points[0], u.moveSpeed * deltaTime)
         let moveDist = 0;
@@ -546,6 +547,14 @@ export default class Underworld {
         }
         // done processing this unit for this unit's turn
         return false;
+      } else {
+        if (!isUnitsTurn) {
+          // This block is not supposed to execute but can under unusual circumstanses such as after a load
+          // so if we get here and a unit is trying to move but shouldn't, just clear it's stamina so that the unit
+          // will be done processing
+          console.log('Guard against infinite loop, unit tried to move but it was not its turn.  Clearing stamina');
+          u.stamina = 0;
+        }
       }
     } else {
       // Unit is dead, no processing to be done
@@ -1739,8 +1748,9 @@ export default class Underworld {
     // Add stats to modal:
     const elGameOverStats = document.getElementById('game-over-stats');
     const player = globalThis.player;
-    if (elGameOverStats && player) {
-      elGameOverStats.innerHTML = `
+    if (!globalThis.headless) {
+      if (elGameOverStats && player) {
+        elGameOverStats.innerHTML = `
       Got to level ${this.levelIndex + 1}
       
       Survived for ${((Date.now() - player.stats.gameStartTime) / 60000).toFixed(2)} Minutes
@@ -1753,8 +1763,9 @@ ${CardUI.cardListToImages(player.stats.bestSpell.spell)}
       </div>
       `;
 
-    } else {
-      console.error('Cannot render stats, element is missing');
+      } else {
+        console.error('Cannot render stats, element is missing');
+      }
     }
     if (globalThis.headless) {
       if (isOver) {
@@ -1767,8 +1778,7 @@ ${CardUI.cardListToImages(player.stats.bestSpell.spell)}
         if (!this.isRestarting) {
           const millisTillRestart = 10000;
           console.log('-------------------Host app game over', isOver, `restarting in ${Math.floor(millisTillRestart / 1000)} seconds`);
-          this.isRestarting = true;
-          setTimeout(() => {
+          this.isRestarting = setTimeout(() => {
             const newUnderworld = new Underworld(overworld, pie, Math.random().toString());
             // Add players back to underworld
             ensureAllClientsHaveAssociatedPlayers(overworld, overworld.clients)
@@ -1777,6 +1787,11 @@ ${CardUI.cardListToImages(player.stats.bestSpell.spell)}
             // Actually create the level 
             newUnderworld.createLevelSyncronous(newUnderworld.lastLevelCreated);
           }, millisTillRestart);
+        }
+      } else {
+        // If no longer game over, clear restarting timer
+        if (this.isRestarting) {
+          clearTimeout(this.isRestarting);
         }
       }
     }
@@ -3046,6 +3061,8 @@ ${CardUI.cardListToImages(player.stats.bestSpell.spell)}
       unitsPrediction, pickupsPrediction, doodadsPrediction, particleFollowers, ...rest } = this;
     return {
       ...rest,
+      // isRestarting is an id for SetTimeout and cannot be serialized
+      isRestarting: undefined,
       players: this.players.map(Player.serialize),
       units: this.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
       pickups: this.pickups.map(Pickup.serialize),
@@ -3078,6 +3095,8 @@ ${CardUI.cardListToImages(player.stats.bestSpell.spell)}
     const { pie, overworld, players, units, pickups, random, gameLoop, particleFollowers, ...rest } = this;
     const serialized: IUnderworldSerializedForSyncronize = {
       ...rest,
+      // isRestarting is an id for SetTimeout and cannot be serialized
+      isRestarting: undefined,
       // the state of the Random Number Generator
       RNGState: this.random.state() as SeedrandomState,
     }
