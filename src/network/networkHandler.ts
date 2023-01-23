@@ -816,8 +816,9 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       }
 
       const { underworld: savedUnderworld, phase, units, players, pickups, doodads } = JSON.parse(savedGameString);
+      const SOLOMODE_CLIENT_ID = 'solomode_client_id';
       // If connected to a multiplayer server
-      if (globalThis.player && globalThis.player.clientId !== 'solomode_client_id' && overworld.underworld) {
+      if (globalThis.player && globalThis.player.clientId !== SOLOMODE_CLIENT_ID && overworld.underworld) {
         // Cannot load a game if a player is already playing, can only load games if the game has not started yet
         if (overworld.underworld.players.some(p => p.isSpawned)) {
           console.log('Cannot load multiplayer game over a game that is ongoing.')
@@ -827,6 +828,22 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
             forceShow: true
           });
           return;
+        }
+      }
+      if (globalThis.player && globalThis.player.clientId == SOLOMODE_CLIENT_ID) {
+        const firstPlayer = players[0];
+        if (firstPlayer) {
+          // Assume control of the existing single player in the load file
+          firstPlayer.clientId = SOLOMODE_CLIENT_ID;
+        } else {
+          console.error('Attempted to load a game with no players in it.')
+          Jprompt({
+            text: 'Error: Attempted to load a game with no players in it.',
+            yesText: 'Okay',
+            forceShow: true
+          });
+          return;
+
         }
       }
       console.log('LOAD: send LOAD_GAME_STATE');
