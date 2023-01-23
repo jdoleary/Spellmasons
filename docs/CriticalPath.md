@@ -24,6 +24,7 @@
         - Double check the package content https://partner.steamgames.com/store/packagelanding/574232
     - Make Package Discount
     - Offer Soundtrack for purchase (App 2289100)
+        - Make sure soundtrack shows up on main page for purchase
     - Be logged into all socials and be responsive all day
     - Submit to Reviewers
         - Submit to IGN and others
