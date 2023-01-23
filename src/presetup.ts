@@ -21,6 +21,9 @@ globalThis.volumeGame = 0.6;
 globalThis.cinematicCameraEnabled = true;
 globalThis.savePrefix = 'spellmasons-save-';
 globalThis.quicksaveKey = 'quicksave';
+// Never commit this to true.  To make a demo build, you should
+// toggle this to true, make the build and toggle it back off
+globalThis.isDemo = false;
 storage.getSavedData();
 // TODO: Remove from svelte menu, music is now played when level is created.
 // TODO: Ensure music works on electron without being associated with a button press
