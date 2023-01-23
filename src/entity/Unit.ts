@@ -379,12 +379,19 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
     // Initialize unit IF unit contains initialization function
     sourceUnit.init(loadedunit, underworld);
   }
-  // Load in shader uniforms by ONLY setting the uniforms that are saved
-  // it is important that the other objects stay exactly the same
-  // or else the shader won't render
-  for (let [key, uniformObject] of Object.entries(shaderUniforms)) {
-    for (let [keyUniform, value] of Object.entries(uniformObject)) {
-      loadedunit.shaderUniforms[key][keyUniform] = value;
+  // Headless server doesn't need to keep track of shader uniforms
+  if (!globalThis.headless) {
+    // Load in shader uniforms by ONLY setting the uniforms that are saved
+    // it is important that the other objects stay exactly the same
+    // or else the shader won't render
+    for (let [key, uniformObject] of Object.entries(shaderUniforms)) {
+      for (let [keyUniform, value] of Object.entries(uniformObject)) {
+        try {
+          loadedunit.shaderUniforms[key][keyUniform] = value;
+        } catch (e) {
+          console.error('Err in Unit.load for restoring shaderUniforms', key, keyUniform, e);
+        }
+      }
     }
   }
   // Override ref since in prediction it makes a copy of the unit
