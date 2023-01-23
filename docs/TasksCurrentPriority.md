@@ -1,3 +1,7 @@
+## Monday
+- Stats should be per player
+
+
 ## Bugs 
 - Desync during ally turn (as seen in brad playthrough)
 - **important** Cache targeting from spells before sending it in a SPELL network message to prevent desyncs in multiplayer
