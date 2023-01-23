@@ -221,23 +221,22 @@ https://partner.steamgames.com/doc/marketing/event_tools/embed
 
 # Reviewers to submit the game to
 - [ign](https://corp.ign.com/submit-a-game)
-    - Requires DEMOn
+    - Submitted
 - [rock paper shotgun](https://www.rockpapershotgun.com/how-to-pitch-an-article-to-rock-paper-shotgun)
-- [Best Indie Games](https://www.youtube.com/c/ClemmyGames/about)
+- [ClemmyGames](https://www.youtube.com/c/ClemmyGames/about): Sent Email
 - Retromation: Waiting to hear back about multiplayer
 - SplatterCatGaming (name: Matt): waiting to hear back about multiplayer
 - Wanderbots: Waiting to see if Retro writes back first
 - Angory Tom: Messaged via twitter
 - DangerouslyFunny: Wait until he's active again to message
-- NorthernLion: Wait until 1/23
+- NorthernLion: Waiting to hear back 
 - turnbasedtacticsgroup@gmail.com : Send invite through Curator Connect
 - Youtubers who stream Battle Brothers
-    - https://www.youtube.com/@FilthyRobot/about
-    - https://www.youtube.com/@RepublicOfPlay/about
-    - https://www.youtube.com/@CarveaHole/about
-    - https://www.youtube.com/@TheIndomitableSnowman/about
+    - https://www.youtube.com/@FilthyRobot/about: Sent email
+    - https://www.youtube.com/@RepublicOfPlay/about: Darren: Sent Email
+    - https://www.youtube.com/@TheIndomitableSnowman/about: "Snow": Sent Email
+- Rock Paper Shotgun - Rachel Watts
 
-- Note: Use social proof, link Retro's video??
 
 
 ## Reviewer Email Checklist:

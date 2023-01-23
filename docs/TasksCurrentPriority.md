@@ -1,6 +1,6 @@
 ## Bugs 
 - Desync during ally turn (as seen in brad playthrough)
-- Cache targeting from spells before sending it in a SPELL network message to prevent desyncs in multiplayer
+- **important** Cache targeting from spells before sending it in a SPELL network message to prevent desyncs in multiplayer
 ## Content
 - Endgame Looping (1/28)
     - (see branch `loop-tint-level`)
@@ -13,7 +13,10 @@
     - Diversity of playstyle (classes?)
 
 ## Performance
-- **important** Prediction slowing down on huge spells (1/19)
+- More Upgrades
+    - Modify enemies or global stats
+    - Modify cards themselves, just like how cards have the optional add() and remove() functions, they could also have a level up function.
+- Prediction slowing down on huge spells (1/19)
     - Use web workers for predictions
     - I can call terminate() on a web worker to stop it if I detect that a new prediction has started processing
     - A prediction web worker must return
@@ -27,16 +30,23 @@
 
 ## Features
 - Supporting app with Edge DB (1/19)
-    - Stats in gameover screen
+    - Stats in gameover screen (local, not in database)
         - Duration
         - Kills
         - Most effective spell
     - Leaderboards
+        - userId
+        - date
+        - score: json
     - Multiplayer
-        - LAN hosting: Support hosting a server from in the game exe
         - Server Browser
-        - Multiplayer save load with "take over player"
-        - Ws pie room privacy
+            - schema
+                - name
+                - url
+                - uptime
+                - cpu
+                - clients
+                - rooms
     - Dynamic "Server Maintenance" notice
         - other dynamic "non deploy" notices
 
