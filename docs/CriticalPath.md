@@ -2,9 +2,8 @@
 # Critical Path
 ## Important Tasks Remaining
 - Integrate i18n translations
-- Fix depots
 - Run stats
-- Upload Demo
+    - Update build
 ---
 - Server Browser
 - Multiplayer Save/Load
@@ -15,8 +14,6 @@
 
 ## Schedule
 - January 1/22-1/28
-    - Upload Demo and mark as ready for review
-    - Streamer outreach
     - Test on Slow Computer
     - Verify Cloud Saves
 - January 31 (check timezone)

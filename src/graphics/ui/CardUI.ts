@@ -839,3 +839,15 @@ function setTransform(element: HTMLElement, transform: any) {
     'deg)';
   element.style.transform = newTransform;
 }
+
+// Used for game over stats
+export function cardListToImages(cardIds: string[]): string {
+  let html = '';
+  for (let cardId of cardIds) {
+    const card = Cards.allCards[cardId];
+    if (card) {
+      html += `<img src="images/spell/${card.thumbnail}" alt="${card.id}"/>`;
+    }
+  }
+  return html;
+}

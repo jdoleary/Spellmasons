@@ -1917,3 +1917,20 @@ if the inventory is open in which case they can be used to drop spells into */
 }
 
 /* Above: Extra toolbars for cards */
+
+#game-over-stats {
+  white-space: pre;
+}
+
+#game-over-stats img {
+  width: 32px;
+  height: 32px;
+}
+
+#stats-best-spell {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 450px;
+  margin: 8px auto;
+
+}

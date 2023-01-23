@@ -680,6 +680,9 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
     const keyMoment = () => underworld.castCards(caster.cardUsageCounts, caster.unit, payload.cards, payload, false, false, caster.colorMagic, caster);
     const colorMagicMedium = lightenColor(caster.colorMagic, 0.3);
     const colorMagicLight = lightenColor(caster.colorMagic, 0.6);
+
+    const statsUnitDeadBeforeCast = underworld.enemiesKilled;
+
     await Unit.playComboAnimation(caster.unit, animationKey, keyMoment, {
       animationSpeed: 0.2, loop: false, colorReplace: {
         colors: [
@@ -690,6 +693,13 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
         epsilon: 0.2
       }
     });
+
+    // Record best spell stats
+    const statsUnitsKilledFromCast = underworld.enemiesKilled - statsUnitDeadBeforeCast;
+    if (underworld.stats.bestSpell.unitsKilled < statsUnitsKilledFromCast) {
+      underworld.stats.bestSpell.unitsKilled = statsUnitsKilledFromCast;
+      underworld.stats.bestSpell.spell = payload.cards;
+    }
 
     // Optimize: Cache blood after every cast
     cacheBlood();

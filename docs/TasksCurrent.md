@@ -1,9 +1,5 @@
-## Wednesday 1/19 Priorities (copies)
-- **easy** Double check Electron Security
----
 - **important** poisoner should have a cost to cast
     - it does, maybe show in tooltip?
-- Stats stored in underworld?
 ## Brad playtest
 - he moved and sync died issue at the beginning
 - decoy spell copy overflows on small resolution
