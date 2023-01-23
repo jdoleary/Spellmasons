@@ -59,11 +59,11 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       const oldFromPlayer = underworld.players.find(p => p.clientId == fromClient);
       if (fromClient && asPlayer) {
         console.log('JOIN_GAME_AS_PLAYER: Reassigning player', asPlayer.clientId, 'to', fromClient);
+        const oldAsPlayerClientId = asPlayer.clientId;
         asPlayer.clientId = fromClient;
-        // From fromClient's old player now that they have inhabited the asPlayer
+        // Change the clientId of fromClient's old player now that they have inhabited the asPlayer
         if (oldFromPlayer) {
-          console.log('JOIN_GAME_AS_PLAYER: Removing player', oldFromPlayer)
-          underworld.players = underworld.players.filter(p => p !== oldFromPlayer);
+          oldFromPlayer.clientId = oldAsPlayerClientId;
         }
 
         const players = underworld.players.map(Player.serialize)
