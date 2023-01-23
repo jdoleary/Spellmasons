@@ -1164,6 +1164,16 @@ export default class Underworld {
       console.error('Missing caveSize for generating level')
       return;
     }
+    if (levelIndex >= 8 && globalThis.isDemo) {
+      Jprompt({
+        text: 'Thank you for playing the Demo!\nMore spells, enemies, and levels are available in the full version!',
+        yesText: 'Quit'
+      }).then(() => {
+        if (globalThis.exitCurrentGame) {
+          globalThis.exitCurrentGame();
+        }
+      })
+    }
 
     const biome_water: Biome = 'water';
     const biome_lava: Biome = 'lava';

@@ -70,7 +70,7 @@ import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
 import { addCardToHand } from '../entity/Player';
 import Underworld from '../Underworld';
-import { CardCategory, UnitType } from '../types/commonTypes';
+import { CardCategory, CardRarity, probabilityMap, UnitType } from '../types/commonTypes';
 import { HasSpace } from '../entity/Type';
 import { Overworld } from '../Overworld';
 import { allUnits } from '../entity/units';
@@ -219,6 +219,8 @@ export function registerCards(overworld: Overworld) {
 
 }
 function cardToUpgrade(c: ICard, overworld: Overworld): IUpgrade {
+  // Make forbidden cards unavailable in demo
+  const probability = globalThis.isDemo && c.probability == probabilityMap[CardRarity.FORBIDDEN] ? 0 : c.probability;
   return {
     title: c.id,
     type: 'card',
@@ -234,7 +236,7 @@ function cardToUpgrade(c: ICard, overworld: Overworld): IUpgrade {
       }
       addCardToHand(c, player, overworld.underworld);
     },
-    probability: c.probability,
+    probability: probability,
     cost: { healthCost: c.healthCost, manaCost: c.manaCost }
   };
 }

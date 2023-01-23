@@ -274,4 +274,5 @@ declare global {
     // Updates the server connection state in the menu
     var syncConnectedWithPieState: () => void;
     var currentPredictionId: number | undefined;
+    var isDemo: boolean;
 }
