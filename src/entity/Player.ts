@@ -32,6 +32,7 @@ interface Stats {
     unitsKilled: number,
     spell: string[]
   };
+  longestSpell: string[];
   gameStartTime: number;
   totalKills: number;
 }
@@ -118,6 +119,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
     attributePerks: [],
     stats: {
       bestSpell: { unitsKilled: 0, spell: [] },
+      longestSpell: [],
       gameStartTime: Date.now(),
       totalKills: 0
     }

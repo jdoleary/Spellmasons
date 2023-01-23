@@ -728,9 +728,19 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
 
     // Record best spell stats
     const statsUnitsKilledFromCast = underworld.enemiesKilled - statsUnitDeadBeforeCast;
-    if (globalThis.player == caster && globalThis.player.stats.bestSpell.unitsKilled < statsUnitsKilledFromCast) {
-      globalThis.player.stats.bestSpell.unitsKilled = statsUnitsKilledFromCast;
-      globalThis.player.stats.bestSpell.spell = payload.cards;
+    if (globalThis.player == caster) {
+      const { stats } = globalThis.player;
+
+      if (stats.bestSpell.unitsKilled < statsUnitsKilledFromCast) {
+        stats.bestSpell.unitsKilled = statsUnitsKilledFromCast;
+        stats.bestSpell.spell = payload.cards;
+      }
+      if (stats.longestSpell.length < payload.cards.length) {
+        stats.longestSpell = payload.cards;
+      }
+      // Updates the game over modal in the event that this spell caused the game over modal to render
+      // before the stats were updated
+      underworld.updateGameOverModal();
     }
 
     // Optimize: Cache blood after every cast

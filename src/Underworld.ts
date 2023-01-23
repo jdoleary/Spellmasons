@@ -1742,31 +1742,43 @@ export default class Underworld {
     const isConnectedPlayerAlive = this.players.filter(p => p.clientConnected && p.unit.alive).some(p => p.unit.alive)
     return this.players.length !== 0 && !isConnectedPlayerAlive && !isAllyNPCAlive;
   }
-  tryGameOver(): boolean {
-    const isOver = this.isGameOver();
-    document.body.classList.toggle('game-over', isOver);
+  updateGameOverModal() {
     // Add stats to modal:
     const elGameOverStats = document.getElementById('game-over-stats');
     const player = globalThis.player;
     if (!globalThis.headless) {
       if (elGameOverStats && player) {
         elGameOverStats.innerHTML = `
-      Got to level ${this.levelIndex + 1}
+Got to level ${this.levelIndex + 1}
       
-      Survived for ${((Date.now() - player.stats.gameStartTime) / 60000).toFixed(2)} Minutes
+Survived for ${((Date.now() - player.stats.gameStartTime) / 60000).toFixed(2)} Minutes
 
-      Total Kills: ${this.enemiesKilled}
+Total Kills: ${this.enemiesKilled}
 
-      Best Spell killed ${player.stats.bestSpell.unitsKilled} units
-      <div id="stats-best-spell">
+Best Spell killed ${player.stats.bestSpell.unitsKilled} units
+      <div class="stats-spell">
 ${CardUI.cardListToImages(player.stats.bestSpell.spell)}
       </div>
+      ${JSON.stringify(player.stats.bestSpell.spell) !== JSON.stringify(player.stats.longestSpell) ?
+            `
+Longest Spell:
+      <div class="stats-spell">
+${CardUI.cardListToImages(player.stats.longestSpell)}
+      </div>
+        `
+            : ''}
       `;
 
       } else {
         console.error('Cannot render stats, element is missing');
       }
     }
+
+  }
+  tryGameOver(): boolean {
+    const isOver = this.isGameOver();
+    document.body.classList.toggle('game-over', isOver);
+    this.updateGameOverModal();
     if (globalThis.headless) {
       if (isOver) {
         const overworld = this.overworld;
