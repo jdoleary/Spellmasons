@@ -2051,10 +2051,6 @@ ${CardUI.cardListToImages(player.stats.bestSpell.spell)}
       console.error('Cannot end turn, player with clientId:', clientId, 'does not exist');
       return;
     }
-    if (player.endedTurn) {
-      console.log(`Player ${player.name || player.clientId} has already ended their turn and cannot end it again.`)
-      return;
-    }
     if (this.turn_phase != turn_phase.PlayerTurns) {
       // (A player "ending their turn" when it is not their turn
       // can occur when a client disconnects when it is not their turn)
@@ -2063,14 +2059,17 @@ ${CardUI.cardListToImages(player.stats.bestSpell.spell)}
     }
     // Ensure players can only end the turn when it IS their turn
     if (this.turn_phase === turn_phase.PlayerTurns) {
-      player.endedTurn = true;
-      // Trigger onTurnEnd Events
-      await Promise.all(player.unit.onTurnEndEvents.map(
-        async (eventName) => {
-          const fn = Events.onTurnEndSource[eventName];
-          return fn ? await fn(player.unit, this) : false;
-        },
-      ));
+      // Don't trigger onTurnEndEvents more than once
+      if (!player.endedTurn) {
+        player.endedTurn = true;
+        // Trigger onTurnEnd Events
+        await Promise.all(player.unit.onTurnEndEvents.map(
+          async (eventName) => {
+            const fn = Events.onTurnEndSource[eventName];
+            return fn ? await fn(player.unit, this) : false;
+          },
+        ));
+      }
       console.log('PlayerTurn: End player turn', clientId);
       this.syncTurnMessage();
       const wentToNextLevel = this.checkForEndOfLevel();
