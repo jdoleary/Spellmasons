@@ -816,6 +816,19 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       }
 
       const { underworld: savedUnderworld, phase, units, players, pickups, doodads } = JSON.parse(savedGameString);
+      // If connected to a multiplayer server
+      if (globalThis.player && globalThis.player.clientId !== 'solomode_client_id' && overworld.underworld) {
+        // Cannot load a game if a player is already playing, can only load games if the game has not started yet
+        if (overworld.underworld.players.some(p => p.isSpawned)) {
+          console.log('Cannot load multiplayer game over a game that is ongoing.')
+          Jprompt({
+            text: 'You may only load a multiplayer game in a lobby where no players have spawned in yetb.',
+            yesText: 'Okay',
+            forceShow: true
+          });
+          return;
+        }
+      }
       console.log('LOAD: send LOAD_GAME_STATE');
       overworld.pie.sendData({
         type: MESSAGE_TYPES.LOAD_GAME_STATE,
