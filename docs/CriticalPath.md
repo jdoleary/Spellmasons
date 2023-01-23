@@ -5,6 +5,7 @@
 - Run stats
     - Update build
 ---
+- Check on Demo Store page
 - Server Browser
 - Multiplayer Save/Load
 - Improve scaling over 4 players

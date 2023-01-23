@@ -27,6 +27,14 @@ export type IPlayerSerialized = Omit<IPlayer, "unit"> & { unit: { id: number } }
 export interface CardUsage {
   [cardId: string]: number
 }
+interface Stats {
+  bestSpell: {
+    unitsKilled: number,
+    spell: string[]
+  };
+  gameStartTime: number;
+  totalKills: number;
+}
 export interface IPlayer {
   // Multiplayer "gamer handle"
   name: string;
@@ -65,6 +73,7 @@ export interface IPlayer {
   // reroll.
   reroll: number;
   attributePerks: AttributePerk[];
+  stats: Stats;
 }
 export function inPortal(player: IPlayer): boolean {
   return isNaN(player.unit.x) || isNaN(player.unit.y) || player.unit.x === null || player.unit.y === null;
@@ -106,7 +115,12 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
     diedDuringLevel: false,
     lobbyReady: false,
     reroll: 0,
-    attributePerks: []
+    attributePerks: [],
+    stats: {
+      bestSpell: { unitsKilled: 0, spell: [] },
+      gameStartTime: Date.now(),
+      totalKills: 0
+    }
   };
   // Player units get full mana every turn
   player.unit.manaPerTurn = player.unit.manaMax;

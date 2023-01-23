@@ -114,14 +114,6 @@ const cleanupRegistry = globalThis.hasOwnProperty('FinalizationRegistry') ? new 
   console.log('GC: Cleaned up ', heldValue);
 }) : undefined;
 let localUnderworldCount = 0;
-interface Stats {
-  bestSpell: {
-    unitsKilled: number,
-    spell: string[]
-  };
-  gameStartTime: number;
-  totalKills: number;
-}
 export default class Underworld {
   seed: string;
   // A simple number to keep track of which underworld this is
@@ -193,11 +185,6 @@ export default class Underworld {
     emitter: Emitter,
     target: Unit.IUnit
   }[] = []
-  stats: Stats = {
-    bestSpell: { unitsKilled: 0, spell: [] },
-    gameStartTime: Date.now(),
-    totalKills: 0
-  }
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
@@ -1751,17 +1738,18 @@ export default class Underworld {
     document.body.classList.toggle('game-over', isOver);
     // Add stats to modal:
     const elGameOverStats = document.getElementById('game-over-stats');
-    if (elGameOverStats) {
+    const player = globalThis.player;
+    if (elGameOverStats && player) {
       elGameOverStats.innerHTML = `
       Got to level ${this.levelIndex + 1}
       
-      Survived for ${((Date.now() - this.stats.gameStartTime) / 60000).toFixed(2)} Minutes
+      Survived for ${((Date.now() - player.stats.gameStartTime) / 60000).toFixed(2)} Minutes
 
       Total Kills: ${this.enemiesKilled}
 
-      Best Spell killed ${this.stats.bestSpell.unitsKilled} units
+      Best Spell killed ${player.stats.bestSpell.unitsKilled} units
       <div id="stats-best-spell">
-${CardUI.cardListToImages(this.stats.bestSpell.spell)}
+${CardUI.cardListToImages(player.stats.bestSpell.spell)}
       </div>
       `;
 

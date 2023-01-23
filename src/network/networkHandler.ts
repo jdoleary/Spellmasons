@@ -696,9 +696,9 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
 
     // Record best spell stats
     const statsUnitsKilledFromCast = underworld.enemiesKilled - statsUnitDeadBeforeCast;
-    if (underworld.stats.bestSpell.unitsKilled < statsUnitsKilledFromCast) {
-      underworld.stats.bestSpell.unitsKilled = statsUnitsKilledFromCast;
-      underworld.stats.bestSpell.spell = payload.cards;
+    if (globalThis.player == caster && globalThis.player.stats.bestSpell.unitsKilled < statsUnitsKilledFromCast) {
+      globalThis.player.stats.bestSpell.unitsKilled = statsUnitsKilledFromCast;
+      globalThis.player.stats.bestSpell.spell = payload.cards;
     }
 
     // Optimize: Cache blood after every cast

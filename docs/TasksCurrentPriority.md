@@ -1,5 +1,4 @@
 ## Monday
-- Stats should be per player
 
 
 ## Bugs 
