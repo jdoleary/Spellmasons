@@ -115,9 +115,12 @@ function fly(
 export function createVisualLobbingProjectile(
   coords: Vec2,
   target: Vec2,
-  imagePath: string,
+  imagePath?: string,
   options?: PixiSpriteOptions
 ): Promise<void> {
+  if (!imagePath) {
+    return Promise.resolve();
+  }
   const instance = createProjectile(coords, target, imagePath, options);
   // + 1000 is an arbitrary delay to give the original promise ample time to finish without a timeout error
   // being reported
