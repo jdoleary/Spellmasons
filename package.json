@@ -6,7 +6,7 @@
   "scripts": {
     "start": "vite",
     "tsc": "tsc",
-    "build": "tsc && vite build && node makeBuildManifest.js",
+    "build": "tsc && vite build && npm run headless-build-only && node makeBuildManifest.js",
     "test": "tsc && jest",
     "format": "prettier --write \"src/**/*.{ts,js}\"",
     "lint": "prettier --check \"src/**/*.{ts,js}\"",
