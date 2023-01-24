@@ -730,13 +730,16 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
     const statsUnitsKilledFromCast = underworld.enemiesKilled - statsUnitDeadBeforeCast;
     if (globalThis.player == caster) {
       const { stats } = globalThis.player;
-
-      if (stats.bestSpell.unitsKilled < statsUnitsKilledFromCast) {
-        stats.bestSpell.unitsKilled = statsUnitsKilledFromCast;
-        stats.bestSpell.spell = payload.cards;
-      }
-      if (stats.longestSpell.length < payload.cards.length) {
-        stats.longestSpell = payload.cards;
+      if (stats) {
+        if (stats.bestSpell.unitsKilled < statsUnitsKilledFromCast) {
+          stats.bestSpell.unitsKilled = statsUnitsKilledFromCast;
+          stats.bestSpell.spell = payload.cards;
+        }
+        if (stats.longestSpell.length < payload.cards.length) {
+          stats.longestSpell = payload.cards;
+        }
+      } else {
+        console.error('player.stats is undefined');
       }
       // Updates the game over modal in the event that this spell caused the game over modal to render
       // before the stats were updated

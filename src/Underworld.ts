@@ -1747,7 +1747,7 @@ export default class Underworld {
     const elGameOverStats = document.getElementById('game-over-stats');
     const player = globalThis.player;
     if (!globalThis.headless) {
-      if (elGameOverStats && player) {
+      if (elGameOverStats && player && player.stats) {
         elGameOverStats.innerHTML = `
 Got to level ${this.levelIndex + 1}
       
@@ -1770,7 +1770,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       `;
 
       } else {
-        console.error('Cannot render stats, element is missing');
+        console.error('Cannot render stats');
       }
     }
 

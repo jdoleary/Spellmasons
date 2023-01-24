@@ -12,6 +12,7 @@
 - Cache Targeting to prevent desyncs on multiplayer
 - Improve scaling over 4 players
 - Update system requirements size requirement now that headless server has it's own node_modules??
+- Guard against loading gamestate from a previous version that could cause an error
 
 
 ## Remaining Validation
