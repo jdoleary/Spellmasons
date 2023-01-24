@@ -31,6 +31,7 @@ export function create({ pos, source }:
         radius: 64,
         imagePath,
         image: (!containerUnits || prediction) ? undefined : Image.create({ x, y }, imagePath, containerUnits, { animationSpeed: 0, loop: true }),
+        beingPushed: false
     };
 
     underworld.addDoodadToArray(self, prediction);

@@ -103,7 +103,8 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
     playerOnly,
     effect,
     onTurnsLeftDone,
-    flaggedForRemoval: false
+    flaggedForRemoval: false,
+    beingPushed: false
   };
   if (self.image) {
     self.image.sprite.scale.x = scale;

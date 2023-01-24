@@ -183,7 +183,8 @@ export function create(
       animations: sourceUnit.animations,
       sfx: sourceUnit.sfx,
       inLiquid: false,
-      UITargetCircleOffsetY: -10
+      UITargetCircleOffsetY: -10,
+      beingPushed: false
     }, sourceUnitProps);
 
 

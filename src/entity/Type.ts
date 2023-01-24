@@ -7,6 +7,8 @@ export interface HasSpace {
     image?: Image.IImageAnimated;
     // Doesn't let other units push it
     immovable: boolean;
+    // Currently being pushed
+    beingPushed: boolean;
 }
 export function hasSpace(maybe: any): maybe is HasSpace {
     return maybe && typeof maybe.x == 'number' && typeof maybe.y == 'number' && typeof maybe.radius == 'number';
