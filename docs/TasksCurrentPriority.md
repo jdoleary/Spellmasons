@@ -1,13 +1,6 @@
 ## Monday
 - validate: Ending turn more than once
     - validate ending turn rapidly at end of level
-- Multiplayer Save/Load
-    - Saved games should persist to steam cloud
-    - Only host should be able to Load a game
-    - what happens when multiplayer tries to join a singple player save
-        - or when there are more players in the lobby than there are players in the save
-- WSPie Private Games
-- Cache Targeting to prevent desyncs on multiplayer
 
 ## Bugs 
 - head x5 + vortex if portal is out makes the portal smoke on prediction

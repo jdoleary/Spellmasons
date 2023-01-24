@@ -2,18 +2,22 @@
 # Critical Path
 ## Important Tasks Remaining
 - Integrate i18n translations
-- Validate Build
-    - Update build
 ---
-- Multiplayer Save/Load
 - WSPie Private Games
-- Cache Targeting to prevent desyncs on multiplayer
----
-- Check on Demo Store page Review Status
+- LAN Hosting
 - Server Browser
     - Remove Koa app in HeadlessServer
+---
+- Cache Targeting to prevent desyncs on multiplayer
+- Check on Demo Store page Review Status
 - Improve scaling over 4 players
-- LAN Hosting
+
+
+## Remaining Validation
+- Multiplayer save/load
+    - Saved games persist to steam cloud
+    - what happens when multiplayer tries to join a singple player save
+        - or when there are more players in the lobby than there are players in the save
 
 ## Schedule
 - January 1/22-1/28
