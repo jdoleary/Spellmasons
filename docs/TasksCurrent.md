@@ -156,6 +156,7 @@
 - optimize: Ihave duplicate units, pickups, and doodads in save due to serailizeForSaving having them in the underworld and extracting them to the top level too
 
 ## Stretch Content
+- hotseat multiplayer
 - content: Heat seeking skull with particle effects behind it.  You release it and it seeks out the nearest enemy to deal damage
 - AI Enhancement: Solve many enemies overkilling allied unit
 - Daily challenge

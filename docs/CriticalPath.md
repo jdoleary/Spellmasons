@@ -1,16 +1,17 @@
 
 # Critical Path
 ## Important Tasks Remaining
+- TUESDAY
+    - Optimize: short circuit bloat movement if it's taking too long
+    - QA and push new build
+---
+- LAN Hosting UI
+- Server Browser
 - Integrate i18n translations
 ---
-- WSPie Private Games
-- LAN Hosting
-- Server Browser
-    - Remove Koa app in HeadlessServer
----
 - Cache Targeting to prevent desyncs on multiplayer
-- Check on Demo Store page Review Status
 - Improve scaling over 4 players
+- Update system requirements size requirement now that headless server has it's own node_modules??
 
 
 ## Remaining Validation
@@ -18,6 +19,7 @@
     - Saved games persist to steam cloud
     - what happens when multiplayer tries to join a singple player save
         - or when there are more players in the lobby than there are players in the save
+    - If a player joins a game and then leaves without ever being a part of the game you can "join as that player" but the names get mixed up.
 
 ## Schedule
 - January 1/22-1/28
