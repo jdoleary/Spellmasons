@@ -152,7 +152,6 @@ export function setupCardUIEventListeners(overworld: Overworld) {
     for (let i = 0; i < cardContainers.length; i++) {
       const container = cardContainers[i];
       if (container) {
-
         container.addEventListener('dragstart', dragstart);
         container.addEventListener('dragover', ev => {
           ev.preventDefault();
@@ -165,7 +164,26 @@ export function setupCardUIEventListeners(overworld: Overworld) {
       } else {
         console.error('Card container', i, 'does not exist');
       }
+    }
 
+    // This elCardHoldersBorder event listener block serves only to make the
+    // thin spaces between cards on the toolbar a place where you can safely drop
+    // a card without it being deleted (for example if you're trying to move
+    // slots but you misclick and release in the border between)
+    const elCardHoldersBorder = document.getElementById('card-holders-border');
+    if (elCardHoldersBorder) {
+      elCardHoldersBorder.addEventListener('dragover', ev => {
+        ev.preventDefault();
+      });
+      elCardHoldersBorder.addEventListener('drop', ev => {
+        if (overworld.underworld) {
+          // Invoking recalcPositionForCards prevents the dragend event
+          recalcPositionForCards(globalThis.player, overworld.underworld);
+        }
+        ev.preventDefault();
+      });
+    } else {
+      console.error('Unexpected: no card holders border')
     }
   }
 }
