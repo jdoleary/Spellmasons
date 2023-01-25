@@ -557,11 +557,23 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
 
   }
 }
-// predicts what will happen next turn
+globalThis.currentPredictionId = 0;
+// runPredictions predicts what will happen next turn
 // via enemy attention markers (showing if they will hurt you)
 // your health and mana bar (the stripes)
 // and enemy health and mana bars
-globalThis.currentPredictionId = 0;
+// Note: if the player's health or mana or stamina has JUST
+// changed before you invoke this function, you should also call
+// underworld.syncPlayerPredictionUnitOnly() and then this function
+// to update the attribute bars.  syncPlayerPredictionUnitOnly isn't
+// automatically invoked in this function, because sometimes
+// it is critical that the prediction player's attributes
+// are different than the players (for example, when showing
+// "50 Mana Remaining" when running a spell prediction). Syncing
+// the prediction player with the player brings the prediction player's
+// attributes in sync with the players, so for example after the player
+// takes damage is when syncPlayerPredictionunitOnly should be called
+// prior to runPredictions()
 export async function runPredictions(underworld: Underworld) {
   if (globalThis.view !== View.Game) {
     return;

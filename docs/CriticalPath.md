@@ -1,7 +1,6 @@
 
 # Critical Path
 ## Important Tasks Remaining
-- BIG BUG: Mana remaining doesn't show in mana bar anymore
 - bug: phantom arrow did damage but didn't subtract mana
 - TUESDAY
     - Optimize: short circuit bloat movement if it's taking too long
@@ -38,6 +37,8 @@
 - January 1/22-1/28
     - Test on Slow Computer
     - Verify Cloud Saves
+    - MacOS and Linux builds
+        - Change steam listing to say it supports them and cross platform multiplayer
 - January 31 (check timezone)
     - Update translations and verify all translators are in credits
     - Verify hardware specs harddrive space requirement

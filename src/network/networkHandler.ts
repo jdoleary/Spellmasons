@@ -750,6 +750,14 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
     cacheBlood();
 
     globalThis.animatingSpells = false;
+
+    // Now that the previous spell is over, rerun predictions because
+    // the player may have queued up another spell while the previous spell was
+    // executing and they'll need to see the prediction for that next spell
+    // Note: This must be invoked AFTER animatingSpells is set to false or else
+    // it will short-circuit
+    runPredictions(underworld);
+
     // Check for dead players to end their turn,
     // this occurs here because spells may have caused their death
     for (let p of underworld.players) {

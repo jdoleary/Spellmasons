@@ -1,4 +1,5 @@
 import { chooseOneOf, randFloat } from "./jmath/rand";
+import * as Unit from './entity/Unit';
 import Underworld, { showUpgradesClassName } from "./Underworld";
 import floatingText from './graphics/FloatingText';
 import seedrandom from "seedrandom";
@@ -289,6 +290,7 @@ export function tryTriggerPerk(perk: AttributePerk, player: IPlayer, when: WhenU
             // refelcted in the bar
             // (note: this would be auto corrected on the next mouse move anyway)
             underworld.syncPlayerPredictionUnitOnly();
+            Unit.syncPlayerHealthManaUI(underworld);
         }
     }
 }

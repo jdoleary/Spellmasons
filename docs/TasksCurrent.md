@@ -1,5 +1,5 @@
 ## Brad Playtest
-- bug: Your health bar doesn't reflect changes from perks until you move your mouse
+- mana says it's being refunded but isn't for overkill arrows
 - Change volume sound
 - only esc for skipping cutsscene so you don't accidentally choose spell
 - perks aren't lined up / doesn't like perk UX

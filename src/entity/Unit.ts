@@ -731,6 +731,7 @@ export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | u
     // state with the player's predictionUnit so it is properly
     // refelcted in the bar
     // (note: this would be auto corrected on the next mouse move anyway)
+    underworld.syncPlayerPredictionUnitOnly();
     syncPlayerHealthManaUI(underworld);
   }
 
@@ -740,7 +741,6 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
   if (!(globalThis.player && elHealthBar && elManaBar && elStaminaBar && elHealthLabel && elManaLabel && elStaminaBarLabel)) {
     return
   }
-  underworld.syncPlayerPredictionUnitOnly();
   const predictionPlayerUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id);
 
   const unit = globalThis.player.unit;

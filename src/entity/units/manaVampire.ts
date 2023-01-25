@@ -51,6 +51,7 @@ const unit: UnitSource = {
         floatingText({ coords: attackTarget, text: `${Math.floor(mana_proportion_removal_amount * 100)}% maximum mana removed.` });
         if (attackTarget.unitType == UnitType.PLAYER_CONTROLLED) {
           // Update mana bar UI
+          underworld.syncPlayerPredictionUnitOnly();
           Unit.syncPlayerHealthManaUI(underworld);
         }
       }
