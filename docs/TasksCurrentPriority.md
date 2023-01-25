@@ -1,6 +1,5 @@
 
 ## Bugs 
-- bug: **important** White screen if game launches from non C drive?
 - bug: **important** mana cost badge of spells in extra side toolbar doesn't update when mana cost changes
 - **important** Cache targeting from spells before sending it in a SPELL network message to prevent desyncs in multiplayer
 - head x5 + vortex if portal is out makes the portal smoke on prediction
@@ -9,6 +8,7 @@
 - bug: He was able to have the spell continue to cast even after he went through a portal
 - bug: Best spell wasn't accurate
 - copy error: in spells cost more mana explained "spell\'s"
+- target similar / connect line animates farther than it should
 ## Content
 - arrow copy: "Ignores cast range"
 - Endgame Looping (1/28)
@@ -25,6 +25,10 @@
     - Introduce tougher enemies sooner?
     - Diversity of playstyle (classes?)
 - liquid damage doesn't do enough??
+- Extra work needed on mana refunds
+    - bug: phantom arrow did damage but didn't subtract mana
+    - add more spell refunds
+
 
 ## Validate
 - validate: Ending turn more than once
@@ -37,7 +41,6 @@
     - Does Golems-Menu Playfair display font load
 
 ## Features
-- Guard against loading gamestate from a previous version that could cause an error
 - Supporting app with Edge DB (1/19)
     - Stats in gameover screen (local, not in database)
         - Duration

@@ -6,7 +6,6 @@
 - decoy spell copy overflows on small resolution
 - some spells are lowercase in player tooltip
 - if you die to poison "your turn" + "you died" overlap
-- poisoner miniboss bloated killed then resurrected comes back thin
 - poisoner miniboss should do more quantity when poisoning
 - displace desync - cast on wrong guy??
     - he was right next to him
