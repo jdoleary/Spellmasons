@@ -801,6 +801,7 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       return;
     }
     const saveObject = {
+      version: globalThis.SPELLMASONS_PACKAGE_VERSION,
       underworld: underworld.serializeForSaving(),
       phase: underworld.turn_phase,
       pickups: underworld.pickups.map(Pickup.serialize),
@@ -836,7 +837,16 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
         }
       }
 
-      const { underworld: savedUnderworld, phase, units, players, pickups, doodads } = JSON.parse(savedGameString);
+      const { underworld: savedUnderworld, phase, units, players, pickups, doodads, version } = JSON.parse(savedGameString);
+      if (version !== globalThis.SPELLMASONS_PACKAGE_VERSION) {
+        Jprompt({
+          text: `This save file is from a previous version of the game and may not run as expected.
+Save file version: ${version}.
+Current game version: ${globalThis.SPELLMASONS_PACKAGE_VERSION}`,
+          yesText: 'Okay',
+          forceShow: true
+        });
+      }
       const SOLOMODE_CLIENT_ID = 'solomode_client_id';
       // If connected to a multiplayer server
       if (globalThis.player && globalThis.player.clientId !== SOLOMODE_CLIENT_ID && overworld.underworld) {
