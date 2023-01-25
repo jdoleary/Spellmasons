@@ -22,7 +22,7 @@ export function cleanUpPerkList() {
 // if omitWhen is set to true, it won't  the 'when' attribute of the perk
 export function getPerkText(perk: AttributePerk, omitWhen: boolean = false): string {
     return `
-${perk.certainty < 1.0 ? `🎲 ${Math.round(perk.certainty * 100)}% chance to` : ``}
+${perk.certainty < 1.0 ? `🎲 ${Math.round(perk.certainty * 100)}% chance` : ``}
 ${perkAttributeToIcon(perk.attribute)} +${Math.round((perk.amount - 1.0) * 100)}% ${perkAttributeToString(perk.attribute)}
 ${omitWhen ? '' : perkWhenToString(perk.when)}`.trim();
 
@@ -98,22 +98,22 @@ function perkAttributeToIcon(attr: string): string {
 }
 function perkAttributeToString(attr: string): string {
     if (attr == 'manaMax') {
-        return `Mana permanently`;
+        return `Mana Capacity`;
     }
     if (attr == 'healthMax') {
-        return `Health permanently`;
+        return `Health Capacity`;
     }
     if (attr == 'staminaMax') {
-        return `Stamina permanently`;
+        return `Stamina Capacity`;
     }
     if (attr == 'mana') {
-        return `current Mana`;
+        return `single-turn Mana`;
     }
     if (attr == 'health') {
-        return `current Health`;
+        return `single-turn Health`;
     }
     if (attr == 'stamina') {
-        return `current Stamina`;
+        return `single-turn Stamina`;
     }
     if (attr == 'attackRange') {
         return `Cast Range`;

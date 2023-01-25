@@ -814,7 +814,10 @@ export function updateTooltipContent(underworld: Underworld) {
             // Add perk descriptions to player
             playerSpecificInfo += `${i18n('Every level')}\n`;
             for (let perk of everyLevel) {
-              playerSpecificInfo += getPerkText(perk, true).trim() + '\n';
+              let perkString = getPerkText(perk, true).trim() + '\n';
+              // Simplify for tooltip
+              perkString = perkString.split('single-turn ').join('');
+              playerSpecificInfo += perkString;
             }
             playerSpecificInfo += `${i18n('Every turn')}\n`;
             for (let perk of everyTurn) {
@@ -823,8 +826,7 @@ export function updateTooltipContent(underworld: Underworld) {
               // https://stackoverflow.com/a/10805198
               perkString = perkString.replace(/[\n\r]/g, '');
               // Simplify for tooltip
-              perkString = perkString.split('chance to').join('chance');
-              perkString = perkString.split('current ').join('');
+              perkString = perkString.split('single-turn ').join('');
 
               playerSpecificInfo += perkString + '\n';
             }
