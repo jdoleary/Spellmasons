@@ -249,7 +249,7 @@ export function playSFX(path?: string) {
 }
 const demoSoundThrottle = 150;
 const demoSoundWhenChangingVolume = throttle(() => {
-    globalThis.playSFXKey('unitDamage');
+    globalThis.playSFXKey('click');
 }, demoSoundThrottle, { trailing: true })
 
 export function setupAudio() {
