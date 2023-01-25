@@ -1429,64 +1429,64 @@ body.open-inventory #inventory-container {
 
 #card-hand .slot:nth-of-type(1) {
   position: absolute;
-  left: 119px;
-  top: 63px;
+  left: 111px;
+  top: 55px;
   margin: 0;
 }
 
 #card-hand .slot:nth-of-type(2) {
   position: absolute;
-  left: 196px;
-  top: 63px;
+  left: 188px;
+  top: 55px;
   margin: 0;
 }
 
 #card-hand .slot:nth-of-type(3) {
   position: absolute;
-  left: 273px;
-  top: 63px;
+  left: 265px;
+  top: 55px;
   margin: 0;
 }
 
 #card-hand .slot:nth-of-type(4) {
   position: absolute;
-  left: 350px;
-  top: 63px;
+  left: 342px;
+  top: 55px;
   margin: 0;
 }
 
 #card-hand .slot:nth-of-type(5) {
   position: absolute;
-  left: 427px;
-  top: 63px;
+  left: 419px;
+  top: 55px;
   margin: 0;
 }
 
 #card-hand .slot:nth-of-type(6) {
   position: absolute;
-  left: 504px;
-  top: 63px;
+  left: 496px;
+  top: 55px;
   margin: 0;
 }
 
 #card-hand .slot:nth-of-type(7) {
   position: absolute;
-  left: 581px;
-  top: 63px;
+  left: 573px;
+  top: 55px;
   margin: 0;
 }
 
 #card-hand .slot:nth-of-type(8) {
   position: absolute;
-  left: 658px;
-  top: 63px;
+  left: 650px;
+  top: 55px;
   margin: 0;
 }
 
 #card-hand .slot:nth-of-type(9) {
   position: absolute;
-  left: 735px;
-  top: 63px;
+  left: 728px;
+  top: 55px;
   margin: 0;
 }
 
@@ -1498,7 +1498,25 @@ body.open-inventory #inventory-container {
 .empty-slot {
   width: 64px;
   height: 64px;
-  background-image: url('images/spell/toolbar-slot.png')
+}
+
+.slot {
+  /* No margin and some padding makes for a bigger drag/drop zone */
+  padding: 8px;
+  margin: 0;
+}
+
+.floating-card-holder .empty-slot:after {
+  width: 42px;
+  height: 42px;
+}
+
+.empty-slot:after {
+  width: 64px;
+  height: 64px;
+  content: "";
+  display: block;
+  background-image: url('images/spell/toolbar-slot.png');
 }
 
 #inventory-icon {
