@@ -896,7 +896,7 @@ export function livingUnitsInSameFaction(unit: IUnit, underworld: Underworld) {
     (u) => u !== unit && u.faction == unit.faction && u.alive,
   );
 }
-function closestInListOfUnits(
+export function closestInListOfUnits(
   sourceUnit: IUnit,
   units: IUnit[],
 ): IUnit | undefined {

@@ -1,14 +1,14 @@
 
 # Critical Path
 ## Important Tasks Remaining
-- bug: phantom arrow did damage but didn't subtract mana
-- TUESDAY
-    - Optimize: short circuit bloat movement if it's taking too long
-    - QA and push new build
+- Wednesday
+    - bug: toolbar is still moving down on some streamers screens
 ---
 - LAN Hosting UI
 - Server Browser
 - Integrate i18n translations
+    - Optimize: short circuit bloat movement if it's taking too long
+    - QA and push new build
 ---
 - Cache Targeting to prevent desyncs on multiplayer
 - Improve scaling over 4 players
@@ -16,15 +16,14 @@
 - Guard against loading gamestate from a previous version that could cause an error
 ---
 - bug:? White screen if game launches from non C drive?
-- bug: toolbar is still moving down on some streamers screens
 - copy error: in spells cost more mana explained "spell\'s"
 - liquid damage doesn't do enough??
 - add more spell refunds
 - explain that shields and other blessings are cleared when you go through a portal
 - make drown support quantity so it stops notifying refund when it shouldn't
-- priest isn't moving closerb
-    - he's just running away so he's not near any corpses
 
+- Extra work needed on mana refunds
+    - bug: phantom arrow did damage but didn't subtract mana
 
 ## Remaining Validation
 - Multiplayer save/load

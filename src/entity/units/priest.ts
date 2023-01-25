@@ -83,18 +83,13 @@ const unit: UnitSource = {
       didAction = await resurrectUnits(unit, attackTargets.slice(0, numberOfAlliesToRez), underworld);
     }
     if (!didAction) {
-      const closestAlly = Unit.findClosestUnitInSameFaction(unit, underworld);
-      // Move to closest ally
-      if (closestAlly) {
-        const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestAlly, unit.stamina);
+      const closestDeadAlly = Unit.closestInListOfUnits(unit,
+        underworld.units.filter((u) => u !== unit && u.faction == unit.faction && !u.alive)
+      );
+      // Move to closest dead ally
+      if (closestDeadAlly) {
+        const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestDeadAlly, unit.stamina);
         await Unit.moveTowards(unit, moveTo, underworld);
-      } else {
-        // flee from closest enemey
-        const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
-        if (closestEnemy) {
-          const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, -unit.stamina);
-          await Unit.moveTowards(unit, moveTo, underworld);
-        }
       }
     }
   },
