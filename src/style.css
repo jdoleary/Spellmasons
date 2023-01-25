@@ -295,6 +295,9 @@ body.open-inventory .card-inspect {
   /* Prevents toolbar from changing position when a 
   card is hovered on screens with limited vertical space */
   align-self: flex-end;
+  /* Take up full vertical space so that elements inside (like .card-inspect
+  can grow to fill usable space */
+  height: 100vh;
 }
 
 /* This block is very important to make sure input handling doesn't get
@@ -310,6 +313,10 @@ invisibly blocked, change with caution! */
 #card-holders-border {
   /* Keep centered on screen */
   margin: 0 auto;
+  /* Prevent toolbar from growing or shrinking 
+  it should always be the same size regardless of how the
+  rest of it's parents flex children are changing*/
+  flex: 0 0 auto;
 }
 
 #card-holders {
