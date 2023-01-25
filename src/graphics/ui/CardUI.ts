@@ -790,7 +790,7 @@ export function updateCardBadges(underworld: Underworld) {
     const cards = Cards.getCardsFromIds(globalThis.player.cards);
     const badgesById: { [cardId: string]: { mana: HTMLElement[], health: HTMLElement[] } } = {}
     function populateBadgesById(attr: 'mana' | 'health') {
-      Array.from(document.querySelectorAll(`#card-hand .card .card-${attr}-badge, #inventory-content .card .card-${attr}-badge`)).forEach((badge) => {
+      Array.from(document.querySelectorAll(`.card-holder .card .card-${attr}-badge, #inventory-content .card .card-${attr}-badge`)).forEach((badge) => {
         const cardEl = badge.closest('.card') as (HTMLElement | undefined);
         if (cardEl) {
           const cardId = cardEl.dataset.cardId;
