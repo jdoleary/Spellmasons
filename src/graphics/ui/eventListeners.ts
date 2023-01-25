@@ -551,11 +551,6 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
   if (!underworld) {
     return;
   }
-  if (globalThis.skipCinematic) {
-    console.log('Skipping cinematic');
-    globalThis.skipCinematic();
-    return;
-  }
   const mousePos = underworld.getMousePos();
 
   if (isOutOfBounds(mousePos, underworld)) {

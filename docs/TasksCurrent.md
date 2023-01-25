@@ -1,6 +1,5 @@
 ## Brad Playtest
 - mana says it's being refunded but isn't for overkill arrows
-- only esc for skipping cutsscene so you don't accidentally choose spell
 - perks aren't lined up / doesn't like perk UX
     - shrink padding
 - trying to chain off a dead body should choose living units, not picups (if there are no more dead bodies to chain to)
