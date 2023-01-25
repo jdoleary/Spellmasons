@@ -1,5 +1,6 @@
 ## Brad Playtest
 - mana says it's being refunded but isn't for overkill arrows
+- bug: "arrow couldn't find wall to intersect with" happens if you hover yourself
 - Change volume sound
 - only esc for skipping cutsscene so you don't accidentally choose spell
 - perks aren't lined up / doesn't like perk UX
