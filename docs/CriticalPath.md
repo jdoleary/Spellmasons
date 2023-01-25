@@ -10,6 +10,8 @@
 ## Important Tasks Remaining
 - Optimize: short circuit bloat movement if it's taking too long
 
+## Balance
+- Should subsequent targeting spells get more rare after you have one?
 
 ## Remaining Validation
 - Multiplayer save/load
