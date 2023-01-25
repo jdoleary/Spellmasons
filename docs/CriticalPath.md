@@ -1,12 +1,14 @@
 # Critical Path
-## Large Tasts
-- QA and push new build
+## Large Tasks
+- Wednesday
+    - QA and push new build
 ---
-- LAN Hosting UI
-- Server Browser
+- Thursday
+    - LAN Hosting UI
+    - Server Browser
+    - Cache Targeting to prevent desyncs on multiplayer
 - (m) Integrate i18n translations
 - Improve scaling over 4 players
-- Cache Targeting to prevent desyncs on multiplayer
 ## Important Tasks Remaining
 - Optimize: short circuit bloat movement if it's taking too long
 
