@@ -13,6 +13,16 @@
 - Improve scaling over 4 players
 - Update system requirements size requirement now that headless server has it's own node_modules??
 - Guard against loading gamestate from a previous version that could cause an error
+---
+- bug:? White screen if game launches from non C drive?
+- bug: toolbar is still moving down on some streamers screens
+- copy error: in spells cost more mana explained "spell\'s"
+- liquid damage doesn't do enough??
+- add more spell refunds
+- explain that shields and other blessings are cleared when you go through a portal
+- make drown support quantity so it stops notifying refund when it shouldn't
+- priest isn't moving closerb
+    - he's just running away so he's not near any corpses
 
 
 ## Remaining Validation
