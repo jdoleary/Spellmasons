@@ -144,7 +144,7 @@ export function generatePerks(number: number, underworld: Underworld): Attribute
                 amount = 1.05;
                 certainty = 1.0;
             } else if (when == 'immediately') {
-                amount = 1.2;
+                amount = 1.3;
                 certainty = 1.0;
             }
         } else {
