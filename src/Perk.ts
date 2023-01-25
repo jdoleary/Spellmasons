@@ -24,7 +24,7 @@ export function getPerkText(perk: AttributePerk, omitWhen: boolean = false): str
     return `
 ${perk.certainty < 1.0 ? `🎲 ${Math.round(perk.certainty * 100)}% chance to` : ``}
 ${perkAttributeToIcon(perk.attribute)} +${Math.round((perk.amount - 1.0) * 100)}% ${perkAttributeToString(perk.attribute)}
-${omitWhen ? '' : perkWhenToString(perk.when)}`;
+${omitWhen ? '' : perkWhenToString(perk.when)}`.trim();
 
 }
 export function createPerkElement(perk: AttributePerk, player: IPlayer, underworld: Underworld) {

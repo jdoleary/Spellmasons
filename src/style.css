@@ -707,6 +707,8 @@ kbd {
 
 .perk .card-description {
   color: white;
+  /* Give perks more space so they don't word wrap */
+  padding: 0;
 }
 
 .card-description {
