@@ -1,3 +1,19 @@
+## Brad Playtest
+- Change volume sound
+- only esc for skipping cutsscene so you don't accidentally choose spell
+- perks aren't lined up / doesn't like perk UX
+    - shrink padding
+- trying to chain off a dead body should choose living units, not picups (if there are no more dead bodies to chain to)
+- dragging a spell to the gap between spells removes it
+- bug: stacking shield and casting only increments the cost by 1
+- UI: If spells get too long, flex wrap
+- bug: He was able to have the spell continue to cast even after he went through a portal
+- bug: mana remaining isn't showing in UI
+- perk copy: "every level" to "once every level"
+- UX: doesn't like the cinematic
+- arrow copy: Ignores cast range
+- bug: Best spell wasn't right
+---
 - **important** poisoner should have a cost to cast
     - it does, maybe show in tooltip?
 ## Brad playtest
