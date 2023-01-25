@@ -1,10 +1,7 @@
 ## Brad Playtest
+- bug: mana cost badge of spells in extra side toolbar doesn't update when mana cost changes
 - mana says it's being refunded but isn't for overkill arrows
-- bug: stacking shield and casting only increments the cost by 1
-- UI: If spells get too long, flex wrap
 - bug: He was able to have the spell continue to cast even after he went through a portal
-- bug: mana remaining isn't showing in UI
-- perk copy: "every level" to "once every level"
 - UX: doesn't like the cinematic
 - arrow copy: Ignores cast range
 - bug: Best spell wasn't right

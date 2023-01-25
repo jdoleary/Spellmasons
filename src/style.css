@@ -342,6 +342,11 @@ invisibly blocked, change with caution! */
   overflow: hidden;
 }
 
+#selected-cards-container {
+  /* Cap max width to allow for super long spells to wrap */
+  max-width: 100vw;
+}
+
 #selected-cards {
   /* Room so the ui border doesn't overlap with card mana badges;
   the unusual padding is because the mana badges stick out to the upper left so this 
@@ -350,6 +355,8 @@ invisibly blocked, change with caution! */
   /* Selected cards should always have height even when empty so that the inventory doesn't move
   when cards are added to this element */
   min-height: 48px;
+  /* Ensure that super long spells display properly */
+  flex-wrap: wrap;
 }
 
 #card-hand .card img {
