@@ -628,8 +628,9 @@ export default class Underworld {
     // Sync css classes to handle changing the cursor
     if (globalThis.player) {
       document.body?.classList.toggle(CSSClasses.casting, CardUI.areAnyCardsSelected());
-      if (CardUI.areAnyCardsSelected()) {
-        const outOfRange = isOutOfRange(globalThis.player, this.getMousePos(), this)
+      const cardIds = CardUI.getSelectedCardIds();
+      if (cardIds.length) {
+        const outOfRange = isOutOfRange(globalThis.player, this.getMousePos(), this, cardIds);
         document.body?.classList.toggle(CSSClasses.outOfRange, outOfRange);
       } else {
         // If there are no cards selected, ensure the out of range class is removed

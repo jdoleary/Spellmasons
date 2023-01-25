@@ -10,7 +10,6 @@
 - copy error: in spells cost more mana explained "spell\'s"
 - target similar / connect line animates farther than it should
 ## Content
-- arrow copy: "Ignores cast range"
 - Endgame Looping (1/28)
     - (see branch `loop-tint-level`)
 - **important** poisoner should have a cost to cast

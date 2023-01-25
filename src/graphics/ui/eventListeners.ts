@@ -625,23 +625,15 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
           // Then cancel casting:
           return
         }
-        if (isOutOfRange(selfPlayer, mousePos, underworld)) {
-          // Exception, if all of the cards cast are arrow cards, let them cast out of range
-          let allowCastOutOfRange = false;
-          if (cards.every(c => c.id.toLowerCase().includes('arrow'))) {
-            allowCastOutOfRange = true;
-          }
-
-          if (!allowCastOutOfRange) {
-            // If there is no target at end range, just show that they are trying to cast out of range
-            floatingText({
-              coords: target,
-              text: 'Out of Range'
-            });
-            playSFXKey('deny_range');
-            // Cancel Casting
-            return;
-          }
+        if (isOutOfRange(selfPlayer, mousePos, underworld, cardIds)) {
+          // If there is no target at end range, just show that they are trying to cast out of range
+          floatingText({
+            coords: target,
+            text: 'Out of Range'
+          });
+          playSFXKey('deny_range');
+          // Cancel Casting
+          return;
         }
         // Abort casting if there is no unitAtCastLocation
         // unless the first card (like AOE) specifically allows casting

@@ -4,7 +4,14 @@ import * as config from './config';
 import { Vec2 } from './jmath/Vec';
 import Underworld from './Underworld';
 
-export function isOutOfRange(caster: Player.IPlayer, target: Vec2, underworld: Underworld): boolean {
+function isAllowedToCastOutOfRange(cardIds: string[]): boolean {
+    // Exception, if all of the cards cast are arrow cards, let them cast out of range
+    return cardIds.every(id => id.toLowerCase().includes('arrow'));
+}
+export function isOutOfRange(caster: Player.IPlayer, target: Vec2, underworld: Underworld, cardIds?: string[]): boolean {
+    if (cardIds && cardIds.length && isAllowedToCastOutOfRange(cardIds)) {
+        return false;
+    }
     const castDistance = math.distance(caster.unit, target);
     const inRange = castDistance <= caster.unit.attackRange;
     if (inRange) {

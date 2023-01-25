@@ -73,8 +73,9 @@ export function updatePlanningView(underworld: Underworld) {
       // Do not draw out of range information if player is viewing the walkRope so that
       // they can see how far they can move unobstructed
       if (!keyDown.showWalkRope) {
-        if (CardUI.areAnyCardsSelected()) {
-          const outOfRange = isOutOfRange(globalThis.player, mouseTarget, underworld);
+        const cardIds = CardUI.getSelectedCardIds();
+        if (cardIds.length) {
+          const outOfRange = isOutOfRange(globalThis.player, mouseTarget, underworld, cardIds);
           if (outOfRange) {
             // Only show outOfRange information if mouse is over the game canvas, not when it's over UI elements
             if (globalThis.hoverTarget && globalThis.hoverTarget.closest('#PIXI-holder')) {
@@ -611,7 +612,7 @@ export async function runPredictions(underworld: Underworld) {
       }
       const cardIds = CardUI.getSelectedCardIds();
       if (cardIds.length) {
-        const outOfRange = isOutOfRange(globalThis.player, target, underworld);
+        const outOfRange = isOutOfRange(globalThis.player, target, underworld, cardIds);
         await showCastCardsPrediction(underworld, target, casterUnit, cardIds, outOfRange);
       } else {
         // If there are no cards ready to cast, clear unit tints (which symbolize units that are targeted by the active spell)
