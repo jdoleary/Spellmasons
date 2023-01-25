@@ -25,9 +25,9 @@ const spell: Spell = {
     thumbnail: 'spellIconSacrifice.png',
     description: 'spell_sacrifice',
     effect: async (state, card, quantity, underworld, prediction) => {
-      // .filter: only target living units
-      const targets = state.targetedUnits.filter(u => u.alive && u.health > 0);
       const caster = state.casterUnit;
+      // .filter: only target living units of the same faction
+      const targets = state.targetedUnits.filter(u => u.alive && u.health > 0 && u.faction == caster.faction);
       let promises = [];
       let totalHealthStolen = 0;
       for (let unit of targets) {

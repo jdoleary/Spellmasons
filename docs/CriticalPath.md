@@ -4,7 +4,6 @@
 - Game breaking: Stacking a spell and casting will only increment it's mana cost by 1
 - Bug: +80% mana multiplies current by current, not by max, it should be +80% of max, otherwise you can scam your way to rediculously high mana
 - BIG BUG: Mana remaining doesn't show in mana bar anymore
-- bug: Sacrifice worked on enemies, it should only work on allies
 - bug: phantom arrow did damage but didn't subtract mana
 - TUESDAY
     - Optimize: short circuit bloat movement if it's taking too long
