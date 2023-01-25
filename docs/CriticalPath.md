@@ -7,18 +7,13 @@
 - LAN Hosting UI
 - Server Browser
 - Integrate i18n translations
-    - Optimize: short circuit bloat movement if it's taking too long
-    - QA and push new build
+- Optimize: short circuit bloat movement if it's taking too long
+- QA and push new build
 ---
 - Cache Targeting to prevent desyncs on multiplayer
 - Improve scaling over 4 players
-- Update system requirements size requirement now that headless server has it's own node_modules??
-- Guard against loading gamestate from a previous version that could cause an error
+- Update system requirements size requirement now that headless server has it's own node_modules, it might be bigger than I had thought
 ---
-- bug:? White screen if game launches from non C drive?
-- copy error: in spells cost more mana explained "spell\'s"
-- liquid damage doesn't do enough??
-- explain that shields and other blessings are cleared when you go through a portal
 
 - Extra work needed on mana refunds
     - bug: phantom arrow did damage but didn't subtract mana

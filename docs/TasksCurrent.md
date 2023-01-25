@@ -1,13 +1,6 @@
 ## Brad Playtest
-- bug: mana cost badge of spells in extra side toolbar doesn't update when mana cost changes
-- mana says it's being refunded but isn't for overkill arrows
-- bug: He was able to have the spell continue to cast even after he went through a portal
 - UX: doesn't like the cinematic
-- arrow copy: Ignores cast range
-- bug: Best spell wasn't right
 ---
-- **important** poisoner should have a cost to cast
-    - it does, maybe show in tooltip?
 ## Brad playtest
 - he moved and sync died issue at the beginning
 - decoy spell copy overflows on small resolution
@@ -163,6 +156,9 @@
 - optimize: Ihave duplicate units, pickups, and doodads in save due to serailizeForSaving having them in the underworld and extracting them to the top level too
 
 ## Stretch Content
+- More Upgrades
+    - Modify enemies or global stats
+    - Modify cards themselves, just like how cards have the optional add() and remove() functions, they could also have a level up function.
 - hotseat multiplayer
 - content: Heat seeking skull with particle effects behind it.  You release it and it seeks out the nearest enemy to deal damage
 - AI Enhancement: Solve many enemies overkilling allied unit
