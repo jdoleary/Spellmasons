@@ -2854,7 +2854,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           if (casterCardUsage[cardId] === undefined) {
             casterCardUsage[cardId] = 0;
           }
-          casterCardUsage[cardId] += card.expenseScaling;
+          casterCardUsage[cardId] += card.expenseScaling * quantity;
           if (!prediction) {
             CardUI.updateCardBadges(this);
           }

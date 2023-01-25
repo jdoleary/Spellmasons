@@ -1,7 +1,6 @@
 
 # Critical Path
 ## Important Tasks Remaining
-- Game breaking: Stacking a spell and casting will only increment it's mana cost by 1
 - Bug: +80% mana multiplies current by current, not by max, it should be +80% of max, otherwise you can scam your way to rediculously high mana
 - BIG BUG: Mana remaining doesn't show in mana bar anymore
 - bug: phantom arrow did damage but didn't subtract mana
