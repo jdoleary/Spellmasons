@@ -18,7 +18,7 @@ const spell: Spell = {
   card: {
     id: drownCardId,
     category: CardCategory.Damage,
-    supportQuantity: false,
+    supportQuantity: true,
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
@@ -35,7 +35,7 @@ const spell: Spell = {
           // playSFXKey(`fallIntoLiquid-${underworld.lastLevelCreated?.biome}`);
         }
         for (let unit of targets) {
-          Unit.takeDamage(unit, damageDone, state.casterUnit, underworld, prediction, state);
+          Unit.takeDamage(unit, damageDone * quantity, state.casterUnit, underworld, prediction, state);
         }
       }
       // No targets to cast on. Refund mana
