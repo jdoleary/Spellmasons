@@ -292,6 +292,9 @@ body.open-inventory .card-inspect {
   flex-direction: column-reverse;
   align-items: center;
   margin: 0 auto;
+  /* Prevents toolbar from changing position when a 
+  card is hovered on screens with limited vertical space */
+  align-self: flex-end;
 }
 
 /* This block is very important to make sure input handling doesn't get
