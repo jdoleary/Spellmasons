@@ -11,8 +11,6 @@
 ## Content
 - Endgame Looping (1/28)
     - (see branch `loop-tint-level`)
-- **important** poisoner should have a cost to cast
-    - it does, maybe show in tooltip?
 - explain that shields and other blessings are cleared when you go through a portal
     - This could be explained if you self cast after a portal is opened
 

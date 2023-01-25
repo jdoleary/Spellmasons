@@ -70,9 +70,6 @@ const unit: UnitSource = {
     damage: 'priestHurt',
     death: 'priestDeath',
   },
-  extraTooltipInfo: () => {
-    return `Mana cost per cast: ${manaCostToCast}`;
-  },
   action: async (unit: Unit.IUnit, attackTargets, underworld: Underworld) => {
     let didAction = false;
     if (attackTargets.length) {

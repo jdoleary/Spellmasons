@@ -16,7 +16,6 @@ export interface UnitSource {
   action: UnitAction;
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => Unit.IUnit[];
   unitProps: Partial<Unit.IUnit>;
-  extraTooltipInfo?: () => string;
   spawnParams?: SpawnParams;
   animations: Unit.UnitAnimations;
   sfx: Unit.UnitSFX;

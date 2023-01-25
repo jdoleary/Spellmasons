@@ -40,9 +40,6 @@ const unit: UnitSource = {
     damage: 'priestHurt',
     death: 'priestDeath',
   },
-  extraTooltipInfo: () => {
-    return `Mana cost per cast: ${manaCostToCast}`;
-  },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     if (unit.image && unit.image.sprite && unit.image.sprite.filters) {
       unit.image.sprite.filters.push(

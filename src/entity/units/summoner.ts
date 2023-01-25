@@ -45,9 +45,6 @@ const unit: UnitSource = {
     budgetCost: 7,
     unavailableUntilLevelIndex: 6,
   },
-  extraTooltipInfo: () => {
-    return `Mana cost per summon: ${manaCostToCast}`;
-  },
   action: async (unit: Unit.IUnit, attackTargets, underworld: Underworld) => {
     // attackTargets has irregular usage for this unit, see explanation in this file's getUnitAttackTargets()
     await summonerAction(unit, !!attackTargets.length, underworld, { closeUnit: allUnits.golem, farUnit: allUnits.archer }, 3);

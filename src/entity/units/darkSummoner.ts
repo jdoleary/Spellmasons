@@ -39,9 +39,6 @@ const unit: UnitSource = {
     budgetCost: 13,
     unavailableUntilLevelIndex: 9,
   },
-  extraTooltipInfo: () => {
-    return `Mana cost per summon: ${manaCostToCast}`;
-  },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     if (unit.image && unit.image.sprite && unit.image.sprite.filters) {
       unit.image.sprite.filters.push(
