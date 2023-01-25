@@ -1,8 +1,8 @@
 
 # Critical Path
+
 ## Important Tasks Remaining
 - Wednesday
-    - bug: toolbar is still moving down on some streamers screens
 ---
 - LAN Hosting UI
 - Server Browser
@@ -18,12 +18,12 @@
 - bug:? White screen if game launches from non C drive?
 - copy error: in spells cost more mana explained "spell\'s"
 - liquid damage doesn't do enough??
-- add more spell refunds
 - explain that shields and other blessings are cleared when you go through a portal
-- make drown support quantity so it stops notifying refund when it shouldn't
 
 - Extra work needed on mana refunds
     - bug: phantom arrow did damage but didn't subtract mana
+    - add more spell refunds
+- Balance: Chain and other targeting spells should eventually target you if it doesn't have any other targets so that you can't nuke the entire map without any danger to yourself
 
 ## Remaining Validation
 - Multiplayer save/load
