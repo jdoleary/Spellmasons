@@ -20,8 +20,6 @@
     - add more spell refunds
 
 ## Balance
-- trying to chain off a dead body should choose living units, not picups (if there are no more dead bodies to chain to)
-- Balance: Chain and other targeting spells should eventually target you if it doesn't have any other targets so that you can't nuke the entire map without any danger to yourself
 
 ## Remaining Validation
 - Multiplayer save/load

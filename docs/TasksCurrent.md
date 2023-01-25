@@ -112,7 +112,6 @@
 - Don't change music until the biome changes
 - fix slow copy "maxStamina"
 - Server Browser
-- Pushing an enemy into lava (and they die) then casting connect on them won't connect to other living enemies
 - Make magic color and robe color separately customizable
 - verify `UI zoom` restored from settings in electron app (due to 63643c06)
 - Invent new loop biomes by colorizing old biome tiles for looping

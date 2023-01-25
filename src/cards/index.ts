@@ -62,7 +62,6 @@ import devRecordDelay from './devRecordDelay';
 import registerSummoningSickness from '../modifierSummoningSickness';
 import arrow from './arrow';
 import target_arrow from './target_arrow';
-import bolt from './bolt';
 import conserve from './conserve';
 import phantom_arrow from './phantom_arrow';
 

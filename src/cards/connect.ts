@@ -39,19 +39,33 @@ const spell: Spell = {
         const target = targets[i];
         let animationPromise = Promise.resolve();
         if (target) {
-          const typeFilter = Unit.isUnit(target)
-            ? (target.alive
-              // If target is a living unit, only chain to other living units in the same faction
-              ? (x: Unit.IUnit) => x.alive && x.faction == target.faction
-              // If target is a dead unit, only chain to other dead units
-              : (x: any) => !x.alive)
-            : isPickup(target)
-              // If target is a pickup, only chain to other pickups
-              ? isPickup
-              : () => {
-                console.warn('Original target is neither unit nor pickup and is not yet supported in Connect spell');
-                return false;
-              };
+          const prioritySorter = (x: any) => {
+            let value = 0;
+            if (Unit.isUnit(x) && Unit.isUnit(target)) {
+              // If the target is alive, high-weight prioritize finding
+              // other units of the same faction
+              if (target.alive) {
+                if (x.faction == target.faction) {
+                  value += 10;
+                }
+              }
+              // prioritize matching alive state, so dead
+              // will prefer chaining to dead and living
+              // will prefer chaining to living
+              if (x.alive == target.alive) {
+                value += 2;
+              } else {
+                // Prefer for a unit target to chain to another unit
+                // over a pickup even if alive state does not match
+                value += 1;
+              }
+            } else if (!Unit.isUnit(x) && !Unit.isUnit(target)) {
+              // If both target and x are not units, prioritize matches
+              // against either or.
+              value += 1;
+            }
+            return value;
+          }
 
           // Find all units touching the spell origin
           const chained = await getTouchingTargetableEntitiesRecursive(
@@ -62,7 +76,7 @@ const spell: Spell = {
             prediction,
             { limitTargetsLeft },
             0,
-            typeFilter,
+            prioritySorter,
             targets
           );
           // Draw prediction lines so user can see how it chains
@@ -105,7 +119,7 @@ export async function getTouchingTargetableEntitiesRecursive(
   chainState: { limitTargetsLeft: number },
   recurseLevel: number,
   // selects which type of entity to chain to
-  typeFilter: (x: any) => boolean,
+  prioritySorter: (x: any) => number,
   // object references
   ignore: HasSpace[] = [],
 ): Promise<{ chainSource: Vec2, entity: HasSpace }[]> {
@@ -121,8 +135,6 @@ export async function getTouchingTargetableEntitiesRecursive(
   }
   const coords = { x, y }
   let touching = potentialTargets
-    // Orders chaining priority
-    .filter(typeFilter)
     .filter((u) => {
       return (
         ignore.find((i) => i == u) === undefined &&
@@ -133,9 +145,13 @@ export async function getTouchingTargetableEntitiesRecursive(
       );
     })
     // Order by closest to coords
-    .sort((a, b) => math.distance(a, coords) - math.distance(b, coords))
+    // .sort((a, b) => math.distance(a, coords) - math.distance(b, coords))
+    // Orders chaining priority
+    .sort((a, b) => prioritySorter(b) - prioritySorter(a))
     // Only select up to limitTargetsLeft
     .slice(0, chainState.limitTargetsLeft);
+
+  // console.log('debug: touching', touching.map(x => `name:${x.unitSourceId || x.name},alive:${x.alive},faction:${x.faction},score:${prioritySorter(x)}`));
 
   ignore.push(...touching);
 
@@ -156,7 +172,7 @@ export async function getTouchingTargetableEntitiesRecursive(
         if (!prediction) {
           playSFXKey('targetAquired');
         }
-        const newTouching = await getTouchingTargetableEntitiesRecursive(t.x, t.y, potentialTargets, radius, prediction, chainState, recurseLevel + 1, typeFilter, ignore)
+        const newTouching = await getTouchingTargetableEntitiesRecursive(t.x, t.y, potentialTargets, radius, prediction, chainState, recurseLevel + 1, prioritySorter, ignore)
         connected = connected.concat(newTouching);
       }
     }
