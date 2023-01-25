@@ -1,6 +1,5 @@
 ## Brad Playtest
 - mana says it's being refunded but isn't for overkill arrows
-- trying to chain off a dead body should choose living units, not picups (if there are no more dead bodies to chain to)
 - dragging a spell to the gap between spells removes it
 - bug: stacking shield and casting only increments the cost by 1
 - UI: If spells get too long, flex wrap
