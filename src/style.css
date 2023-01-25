@@ -688,6 +688,12 @@ kbd {
   }
 
   .card-description {
+    font-size: 0.9em;
+  }
+}
+
+@media (max-height: 768px) {
+  .card-description {
     font-size: 0.7em;
   }
 }
