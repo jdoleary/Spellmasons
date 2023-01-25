@@ -268,7 +268,15 @@ export function tryTriggerPerk(perk: AttributePerk, player: IPlayer, when: WhenU
             if (perk.attribute == 'manaMax' || perk.attribute == 'healthMax' || perk.attribute == 'staminaMax') {
                 setPlayerAttributeMax(player.unit, perk.attribute, player.unit[perk.attribute] * perk.amount)
             } else {
-                player.unit[perk.attribute] *= perk.amount;
+                let maxAmount = player.unit[perk.attribute];
+                if (perk.attribute == 'mana') {
+                    maxAmount = player.unit['manaMax'];
+                } else if (perk.attribute == 'health') {
+                    maxAmount = player.unit['healthMax'];
+                } else if (perk.attribute == 'stamina') {
+                    maxAmount = player.unit['staminaMax'];
+                }
+                player.unit[perk.attribute] += perk.amount * maxAmount;
                 player.unit[perk.attribute] = Math.ceil(player.unit[perk.attribute]);
             }
             if (player === globalThis.player) {
