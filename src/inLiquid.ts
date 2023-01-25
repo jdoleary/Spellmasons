@@ -10,7 +10,7 @@ function doLiquidEffect(underworld: Underworld, unit: IUnit, prediction: boolean
     }
     switch (underworld.lastLevelCreated.biome) {
         case 'water':
-            takeDamage(unit, 10, undefined, underworld, prediction);
+            takeDamage(unit, 20, undefined, underworld, prediction);
             break;
         case 'lava':
             takeDamage(unit, 30, undefined, underworld, prediction);

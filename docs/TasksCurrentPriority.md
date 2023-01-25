@@ -9,6 +9,7 @@
 - copy error: in spells cost more mana explained "spell\'s"
 - target similar / connect line animates farther than it should
 ## Content
+- More interesting liquid effects for different kinds of liquids
 - Endgame Looping (1/28)
     - (see branch `loop-tint-level`)
 - explain that shields and other blessings are cleared when you go through a portal
