@@ -33,6 +33,9 @@ const spell: Spell = {
       for (let target of targets) {
         const arrowCollisions = findArrowCollisions(state.casterUnit, target, prediction, underworld);
         const arrowShootPath = findArrowPath(state.casterUnit, target, underworld);
+        if (arrowShootPath === undefined) {
+          continue;
+        }
         if (!prediction) {
           // Promise.race ensures arrow promise doesn't take more than X milliseconds so that multiple arrows cast
           // sequentially wont take too long to complete animating.

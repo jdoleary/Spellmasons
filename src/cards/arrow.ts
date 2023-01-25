@@ -6,7 +6,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { createVisualFlyingProjectile } from '../entity/Projectile';
 import { closestLineSegmentIntersectionWithLine, findWherePointIntersectLineSegmentAtRightAngle, LineSegment } from '../jmath/lineSegment';
 import * as config from '../config';
-import { add, Vec2 } from '../jmath/Vec';
+import { add, equal, Vec2 } from '../jmath/Vec';
 import Underworld from '../Underworld';
 import { playDefaultSpellSFX } from './cardUtils';
 
@@ -68,7 +68,11 @@ const spell: Spell = {
 };
 export default spell;
 // Returns the start and end point that an arrow will take until it hits a wall
-export function findArrowPath(casterUnit: Unit.IUnit, target: Vec2, underworld: Underworld): LineSegment {
+export function findArrowPath(casterUnit: Unit.IUnit, target: Vec2, underworld: Underworld): LineSegment | undefined {
+  if (equal(casterUnit, target)) {
+    // Don't allow shooting arrow at self, an arrow needs a direction
+    return undefined;
+  }
   // Find a point that the arrow is shooting towards that is sure to be farther than the farthest wall
   let endPoint = add(casterUnit, math.similarTriangles(target.x - casterUnit.x, target.y - casterUnit.y, math.distance(casterUnit, target), 10000));
   let arrowShootPath = { p1: casterUnit, p2: endPoint };
@@ -88,6 +92,9 @@ export function findArrowPath(casterUnit: Unit.IUnit, target: Vec2, underworld: 
 
 export function findArrowCollisions(casterUnit: Unit.IUnit, target: Vec2, prediction: boolean, underworld: Underworld): Vec2[] {
   const arrowShootPath = findArrowPath(casterUnit, target, underworld);
+  if (arrowShootPath === undefined) {
+    return [];
+  }
   // Get all units between source and target for the arrow to pierce:
   const hitTargets = (prediction ? underworld.unitsPrediction : underworld.units).filter(
     (u) => {
