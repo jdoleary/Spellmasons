@@ -52,12 +52,6 @@ if (globalThis.devAutoPickUpgrades) {
 setupAll();
 
 function setupAll() {
-  // Start monitoring with development overlay
-  setupMonitoring();
-
-  setupAudio();
-
-
   // Initialize Assets
   console.log("Setup: Loading Pixi assets...")
   setupPixi().then(() => {

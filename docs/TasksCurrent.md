@@ -1,5 +1,4 @@
 ## Brad Playtest
-Sound doesn’t persist from last play
 Some save names are getting a letter truncated
 He doesn’t think saving a loading is a good idea
 Overflow health is buggy? It said he had health but he died unexpectedly 

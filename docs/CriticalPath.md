@@ -29,6 +29,8 @@
 - Update Chad's copy
 - Update translations and verify all translators are in credits
 - Verify hardware specs harddrive space requirement
+- Update Demo
+- Update servers
 - Release Game and Demo
     - https://partner.steamgames.com/doc/store/releasing
     - Double check the package content https://partner.steamgames.com/store/packagelanding/574232

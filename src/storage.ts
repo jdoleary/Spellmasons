@@ -50,7 +50,7 @@ export function getSavedData() {
                     globalThis.changeVolumeMusic?.(options.volumeMusic, false)
                 }
                 if (options.volumeGame !== undefined) {
-                    globalThis.changeVolumeGame?.(options.volumeMusic, false)
+                    globalThis.changeVolumeGame?.(options.volumeGame, false)
                 }
             }
             globalThis.playMusicIfNotAlreadyPlaying?.();
