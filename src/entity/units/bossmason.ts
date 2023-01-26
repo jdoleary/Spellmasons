@@ -16,6 +16,7 @@ import { pickups, RED_PORTAL, removePickup } from '../Pickup';
 import { skyBeam } from '../../VisualEffects';
 import * as Pickup from '../Pickup';
 import * as math from '../../jmath/math';
+import * as Vec from '../../jmath/Vec';
 import { summoningSicknessId } from '../../modifierSummoningSickness';
 import { BLOOD_GOLEM_ID } from './bloodGolem';
 import { BLOOD_ARCHER_ID } from './blood_archer';
@@ -86,13 +87,13 @@ const unit: UnitSource = {
         const sacrificeCost = calculateCost([sacrifice.card], {});
         // Purify self if cursed
         if (purifyCost.manaCost <= unit.mana && unit.modifiers && Object.values(unit.modifiers).some(m => m.isCurse)) {
-          const keyMoment = () => underworld.castCards({}, unit, [purify.card.id], unit, false, false, magicColor);
+          const keyMoment = () => underworld.castCards({}, unit, Vec.clone(unit), [purify.card.id], unit, false, false, magicColor);
           await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
         } else if (sacrificeCost.manaCost <= unit.mana && unit.health < unit.healthMax) {
           // Consume allies if hurt
           const closestUnit = Unit.findClosestUnitInSameFaction(unit, underworld);
           if (closestUnit) {
-            const keyMoment = () => underworld.castCards({}, unit, [sacrifice.card.id], closestUnit, false, false, magicColor);
+            const keyMoment = () => underworld.castCards({}, unit, Vec.clone(unit), [sacrifice.card.id], closestUnit, false, false, magicColor);
             await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
           }
         }
@@ -104,7 +105,7 @@ const unit: UnitSource = {
           const keyMoment = () => {
             let lastPromise = Promise.resolve();
             for (let target of attackTargets) {
-              lastPromise = underworld.castCards({}, unit, [slash.card.id, slash.card.id, slash.card.id], target, false, false, magicColor)
+              lastPromise = underworld.castCards({}, unit, Vec.clone(unit), [slash.card.id, slash.card.id, slash.card.id], target, false, false, magicColor)
                 // .then() removes <EffectState> from the return type
                 .then(() => { });
             }

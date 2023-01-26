@@ -2,10 +2,10 @@ import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import * as math from '../../jmath/math';
+import * as Vec from '../../jmath/Vec';
 import { createVisualFlyingProjectile } from '../Projectile';
 import * as resurrect from '../../cards/resurrect';
 import Underworld from '../../Underworld';
-import * as Image from '../../graphics/Image';
 import { summoningSicknessId } from '../../modifierSummoningSickness';
 
 const manaCostToCast = resurrect.default.card.manaCost;
@@ -27,7 +27,7 @@ async function resurrectUnits(self: Unit.IUnit, units: Unit.IUnit[], underworld:
   let promises = [];
   for (let ally of units) {
     promises.push(animatePriestProjectileAndHit(self, ally).then(async () => {
-      const { targetedUnits } = await underworld.castCards({}, self, [resurrect.id], ally, false);
+      const { targetedUnits } = await underworld.castCards({}, self, Vec.clone(self), [resurrect.id], ally, false);
       for (let unit of targetedUnits) {
         // Add summoning sickeness so they can't act after they are summoned
         Unit.addModifier(unit, summoningSicknessId, underworld, false);

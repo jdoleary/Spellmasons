@@ -2696,6 +2696,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   async castCards(
     casterCardUsage: Player.CardUsage,
     casterUnit: Unit.IUnit,
+    casterPositionAtTimeOfCast: Vec2,
     cardIds: string[],
     castLocation: Vec2,
     prediction: boolean,
@@ -2720,7 +2721,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       shouldRefundLastSpell: false,
       casterCardUsage,
       casterUnit,
-      casterPositionAtTimeOfCast: Vec.clone(casterUnit),
+      casterPositionAtTimeOfCast,
       casterPlayer,
       targetedUnits: [],
       targetedPickups: [],

@@ -631,8 +631,8 @@ async function handleLoadGameState(payload: {
 
 }
 async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Underworld) {
-  if (typeof payload.x !== 'number' || typeof payload.y !== 'number') {
-    console.error('Spell is invalid, it must have coordinates');
+  if (typeof payload.x !== 'number' || typeof payload.y !== 'number' || typeof payload.casterPositionAtTimeOfCast.x !== 'number' || typeof payload.casterPositionAtTimeOfCast.y !== 'number') {
+    console.error('Spell is invalid, it must have target and casterPositionAtTimeOfCast', payload);
     return;
   }
   // Clear out player thought (and the line that points to it) once they cast
@@ -701,7 +701,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
     if (caster.colorMagic === null) {
       caster.colorMagic = caster.color || 0xFFFFFF;
     }
-    const keyMoment = () => underworld.castCards(caster.cardUsageCounts, caster.unit, payload.cards, payload, false, false, caster.colorMagic, caster);
+    const keyMoment = () => underworld.castCards(caster.cardUsageCounts, caster.unit, payload.casterPositionAtTimeOfCast, payload.cards, payload, false, false, caster.colorMagic, caster);
     const colorMagicMedium = lightenColor(caster.colorMagic, 0.3);
     const colorMagicLight = lightenColor(caster.colorMagic, 0.6);
 

@@ -3,6 +3,7 @@ import { UnitSubType } from '../../types/commonTypes';
 import { createVisualLobbingProjectile } from '../Projectile';
 import * as Unit from '../Unit';
 import * as math from '../../jmath/math';
+import * as Vec from '../../jmath/Vec';
 import * as poison from '../../cards/poison';
 import { bloodPoisoner } from '../../graphics/ui/colors';
 import * as Image from '../../graphics/Image';
@@ -52,7 +53,7 @@ const unit: UnitSource = {
         ).then(async () => {
           // Add projectile hit animation
           Image.addOneOffAnimation(chosenUnit, 'projectile/poisonerProjectileHit');
-          await underworld.castCards({}, unit, [poison.poisonCardId], chosenUnit, false);
+          await underworld.castCards({}, unit, Vec.clone(unit), [poison.poisonCardId], chosenUnit, false);
         });
 
       });

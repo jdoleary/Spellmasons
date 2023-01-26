@@ -411,6 +411,7 @@ async function showCastCardsPrediction(underworld: Underworld, target: Vec2, cas
       // calculate mana for multiple copies of one spell in one cast
       JSON.parse(JSON.stringify(globalThis.player.cardUsageCounts)),
       casterUnit,
+      Vec.clone(casterUnit),
       cardIds,
       target,
       true,

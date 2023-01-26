@@ -2,6 +2,7 @@ import type { UnitSource } from './index';
 import { UnitSubType, UnitType } from '../../types/commonTypes';
 import * as Unit from '../Unit';
 import * as math from '../../jmath/math';
+import * as Vec from '../../jmath/Vec';
 import Underworld from '../../Underworld';
 import * as slash from '../../cards/slash';
 import * as config from '../../config';
@@ -25,7 +26,7 @@ const playerUnit: UnitSource = {
       // Archers attack or move, not both; so clear their existing path
       unit.path = undefined;
       Unit.orient(unit, attackTarget);
-      const keyMoment = () => underworld.castCards({}, unit, [slash.slashCardId], attackTarget, false, false);
+      const keyMoment = () => underworld.castCards({}, unit, Vec.clone(unit), [slash.slashCardId], attackTarget, false, false);
       await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
     }
     // Movement:
