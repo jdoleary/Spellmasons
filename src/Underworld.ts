@@ -264,9 +264,11 @@ export default class Underworld {
     this.doodadsPrediction = this.doodads.map(Doodad.copyForPredictionDoodad);
   }
   syncronizeRNG(RNGState: SeedrandomState | boolean) {
-    if (elSeed) {
-      elSeed.innerText = `Seed: ${this.seed}`;
-    }
+    // For now, since there's no way for users to control the seed
+    // don't display the seed on the homescreen
+    // if (elSeed) {
+    //   elSeed.innerText = `Seed: ${this.seed}`;
+    // }
     console.log("RNG create with seed:", this.seed, ", state: ", RNGState);
     // state of "true" initializes the RNG with the ability to save it's state,
     // state of a state object, rehydrates the RNG to a particular state

@@ -18,7 +18,6 @@ Killing himself, with no enemies, live, and an ally sent him two levels ahead
 After casting a spell that kills himself and res himself in the same spell, he has been able to go massively negative mana
 “Pick a spell/upgrade”/“choose a place to spawn” isn’t translated
 Perks aren’t translated 
-Remove seed on Home Screen
 - UX: doesn't like the cinematic
 ---
 ## Brad playtest
