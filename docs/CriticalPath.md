@@ -43,7 +43,7 @@
         - Leaderboard validity
         - Achievements
         - Note: Use custom clone and add steam SDK yourself for security reasons
-    - MacOS / Linux Support
+    - [MacOS / Linux Support](https://www.electronjs.org/docs/latest/tutorial/application-distribution#rebranding-with-downloaded-binaries)
         - Change steam listing to say it supports them and cross platform multiplayer
         - Use node.js path object instead of .replace with ///file:
     - Hotseat multiplayer
