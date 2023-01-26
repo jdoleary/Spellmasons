@@ -1,3 +1,8 @@
+## 2023.01.21
+Figuring out cast range exceptions for arrows:
+- arrow + another spell: allow cast out of range but remove click target if out of range for following spell
+- only allow casting out of range if arrow is first spell and if arrow is first spell remove the click target if out of range
+- target arrow + slash + target circle + slash incorrectly allows casting out of range if the target arrow is intercepted the target circle still appears at the cast location
 ## 2023.01.15
 Refactoring moveTowards to support multi point paths
 ## 2023.01.09

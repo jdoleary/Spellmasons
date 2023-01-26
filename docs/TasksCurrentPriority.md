@@ -1,5 +1,6 @@
 
 ## Tasks
+- send caster position along with SPELL message
 - You should be able to click out of range for target arrow
 - Floating spell, slots clip off the side, and the background image isn’t adjusted to the right size
 - Floating spell bar isn’t hidden during cinematic 
