@@ -142,9 +142,15 @@ export function generatePerks(number: number, underworld: Underworld): Attribute
             when = chooseOneOf<WhenUpgrade>(['immediately', 'everyLevel']) || 'immediately';
             if (when == 'everyLevel') {
                 amount = 1.05;
+                if (attribute == 'healthMax') {
+                    amount = 1.10;
+                }
                 certainty = 1.0;
             } else if (when == 'immediately') {
                 amount = 1.3;
+                if (attribute == 'healthMax') {
+                    amount = 1.5;
+                }
                 certainty = 1.0;
             }
         } else {

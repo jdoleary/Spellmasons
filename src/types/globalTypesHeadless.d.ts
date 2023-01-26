@@ -276,4 +276,5 @@ declare global {
     var syncConnectedWithPieState: () => void;
     var currentPredictionId: number | undefined;
     var isDemo: boolean;
+    var testPerks: () => void | undefined;
 }

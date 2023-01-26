@@ -122,3 +122,12 @@ globalThis.fullyExitGame = () => {
   });
 
 }
+
+globalThis.testPerks = () => {
+  //@ts-ignore
+  if (globalThis.player && window.devUnderworld) {
+    globalThis.player.perksLeftToChoose += 5;
+    //@ts-ignore
+    window.devUnderworld.showUpgrades();
+  }
+}
