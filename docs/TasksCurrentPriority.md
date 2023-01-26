@@ -1,4 +1,14 @@
 
+## Tasks
+- You should be able to click out of range for target arrow
+- Floating spell, slots clip off the side, and the background image isn’t adjusted to the right size
+- Floating spell bar isn’t hidden during cinematic 
+- You can save scam perks and card upgrades. Should be random locked
+- Rethink “you cannot move while casting”. Maybe unnecessary friction
+- Activate sidebars on drag
+- Slot numbers are in the wrong location
+- Health upgrades should be more potent since you don't "use" health as much as you do mana, it needs to be bigger to be more valuable
+
 ## Bugs 
 - **important** forecast when ALLY phantom archers will deal you damage
 - cloned player AI is funky, notably with glop enemies

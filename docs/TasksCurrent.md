@@ -1,29 +1,22 @@
 ## Brad Playtest
 Sound doesn’t persist from last play
-You should be able to click out of range for target arrow
 Some save names are getting a letter truncated
-Floating spell, slots clip off the side, and the background image isn’t adjusted to the right size
 He doesn’t think saving a loading is a good idea
-You can save scam perks and card upgrades. Should be random locked
 Overflow health is buggy? It said he had health but he died unexpectedly 
-Rethink “you cannot move while casting”. Maybe unnecessary friction
 After randoming he got 3 spell choices again. 
 “Pick your second spell”
 Text overflow on capture soul and plus radius
 Advice: how do Pokémon cards work. Could represent damage or other info differently
-Activate sidebars on drag
-Slot numbers are in the wrong location
 Disable Ctrl zoom
 Test on 4k or 8k monitor
 Font size at 1024x768 is too small
-Floating spell bar isn’t hidden during cinematic 
 Changing resolution permanently makes text smaller
 Stamina doesn’t restore properly after a load
 Add visual or audio effect when perk procs
 Archer pathing is messed up when there are walls in between
 Perks should show in your spell book 
 Killing himself, with no enemies, live, and an ally sent him two levels ahead
-After casting a spell that kills himself and Rosie himself in the same spell, he has been able to go massively negative mana
+After casting a spell that kills himself and res himself in the same spell, he has been able to go massively negative mana
 Cards are off center. Refill button shouldn’t affect the centering
 “Pick a spell/upgrade”/“choose a place to spawn” isn’t translated
 Perks aren’t translated 

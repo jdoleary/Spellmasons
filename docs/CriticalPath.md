@@ -1,17 +1,15 @@
 # Critical Path
 ## Large Tasks
-- Wednesday
-    - QA and push new build
----
 - Thursday
-    - LAN Hosting UI
-    - Server Browser
+    - Add "positionWhenCastOccurred" instead of "you cannot move while casting"
     - Cache Targeting to prevent desyncs on multiplayer
+    ---
+- LAN Hosting UI
+- Server Browser
 - (m) Integrate i18n translations
 - Improve scaling over 4 players
 ## Important Tasks Remaining
 - Optimize: short circuit bloat movement if it's taking too long
-- Improve publishing, I keep forgetting to run `npm run publish` after `package` and then am wondering why the version isn't updated
 
 ## Balance
 - Should subsequent targeting spells get more rare after you have one?
@@ -29,6 +27,7 @@
 
 ## Day of
 - Check timezone for release
+- Update Chad's copy
 - Update translations and verify all translators are in credits
 - Verify hardware specs harddrive space requirement
 - Release Game and Demo
