@@ -136,6 +136,8 @@ body.view-Game.showUpgrades #upgrade-picker {
   display: flex;
   pointer-events: all;
   max-height: 50vh;
+  /* So that the reroll button wraps to the next row */
+  flex-wrap: wrap;
 }
 
 #upgrade-picker-label {
@@ -1904,6 +1906,9 @@ body.view-Game.showUpgrades #perkList.visible {
   width: 94px;
   height: 95px;
   background-image: url('/ui/iconRerollUp.png');
+  /* The 40% makes the reroll button wide enough that it has to flex-wrap
+  to the next row which ensures the 3 card choices are centered */
+  margin: 8px 40%;
 }
 
 .reroll-btn:hover {

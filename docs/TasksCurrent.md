@@ -16,7 +16,6 @@ Archer pathing is messed up when there are walls in between
 Perks should show in your spell book 
 Killing himself, with no enemies, live, and an ally sent him two levels ahead
 After casting a spell that kills himself and res himself in the same spell, he has been able to go massively negative mana
-Cards are off center. Refill button shouldn’t affect the centering
 “Pick a spell/upgrade”/“choose a place to spawn” isn’t translated
 Perks aren’t translated 
 Remove seed on Home Screen
