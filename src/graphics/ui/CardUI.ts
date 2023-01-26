@@ -51,10 +51,8 @@ const elFloatingCardHolderRight = document.getElementById('floating-card-holder-
 const cardContainers = [elCardHand, elFloatingCardHolderLeft, elFloatingCardHolderRight];
 // Where the selected cards are displayed
 const elSelectedCards = document.getElementById('selected-cards') as HTMLElement;
-// Gap amount must be available programatically (not in css) so it can be
-// taken into account in drag-n-drop
-const gapBetweenCards = 4;
 const dragstart = (ev: any) => {
+  document.body.classList.toggle('dragging-card', true);
   const target = (ev.target as HTMLElement)
   if (target.closest('.card')) {
     dragCard = (target.closest('.card') as HTMLElement)
@@ -93,6 +91,7 @@ function getStartDragCardIndex(): number {
   return startDragCardIndex;
 }
 const drop = (ev: any, overworld: Overworld, startIndex: number) => {
+  document.body.classList.toggle('dragging-card', false);
   const dropElement = ((ev.target as HTMLElement).closest('.slot') as HTMLElement);
   if (!dropElement) {
     console.warn('Tried to drop spell but dropElement was null. This will happen if user drops spell between slots');
@@ -144,8 +143,6 @@ export function setupCardUIEventListeners(overworld: Overworld) {
 
       }
     });
-    elCardHand.style['gap'] = `${gapBetweenCards}px`;
-    elSelectedCards.style['gap'] = `${gapBetweenCards}px`;
 
     elInvContent.addEventListener('dragstart', dragstart);
     addCardInspectHandlers(elInvContent);
@@ -158,6 +155,7 @@ export function setupCardUIEventListeners(overworld: Overworld) {
         });
         container.addEventListener('dragend', ev => {
           deleteCardFromSlot(ev, overworld);
+          document.body.classList.toggle('dragging-card', false);
         });
         container.addEventListener('drop', ev => drop(ev, overworld, (NUMBER_OF_TOOLBAR_SLOTS) * i));
         addCardInspectHandlers(container);

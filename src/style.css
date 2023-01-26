@@ -106,6 +106,7 @@ body.view-Menu #underworld-container {
 so as to not obstruct the cinematic view */
 body.viewingCinematicCamera #tutorial-checklist,
 body.viewingCinematicCamera #in-game-lobby,
+body.viewingCinematicCamera .card-holder,
 body.viewingCinematicCamera #ui-holder,
 body.viewingCinematicCamera .prompt {
   visibility: hidden;
@@ -477,8 +478,8 @@ invisibly blocked, change with caution! */
 .card-badge-holder {
   display: flex;
   position: absolute;
-  top: -8px;
-  left: -8px;
+  top: -4px;
+  left: -4px;
 }
 
 .card.selected .card-badge-holder {
@@ -556,8 +557,8 @@ invisibly blocked, change with caution! */
 }
 
 .card .hotkey-badge-holder {
-  bottom: 0;
-  right: 2px;
+  bottom: 8px;
+  right: 12px;
   left: auto;
   text-shadow: #000 1px 0 1px, #000 -1px 0 1px, #000 0 1px 1px, #000 -0 -1px 1px;
   color: white;
@@ -1516,6 +1517,7 @@ body.open-inventory #inventory-container {
   height: 64px;
   content: "";
   display: block;
+  background-size: contain;
   background-image: url('images/spell/toolbar-slot.png');
 }
 
@@ -1917,13 +1919,13 @@ body.view-Game.showUpgrades #perkList.visible {
 #floating-card-holder-left {
   position: absolute;
   bottom: 0;
-  left: 0;
+  left: 8px;
 }
 
 #floating-card-holder-right {
   position: absolute;
   bottom: 0;
-  right: 0;
+  right: 8px;
 }
 
 /* Ensure slots don't block clicks unless they have a spell in them or 
@@ -1955,7 +1957,7 @@ if the inventory is open in which case they can be used to drop spells into */
   visibility: hidden;
 }
 
-.open-inventory .floating-card-holder .empty-slot {
+body.dragging-card .floating-card-holder .empty-slot {
   visibility: visible;
 }
 
