@@ -11,6 +11,7 @@
 - Improve scaling over 4 players
 ## Important Tasks Remaining
 - Optimize: short circuit bloat movement if it's taking too long
+- Improve publishing, I keep forgetting to run `npm run publish` after `package` and then am wondering why the version isn't updated
 
 ## Balance
 - Should subsequent targeting spells get more rare after you have one?

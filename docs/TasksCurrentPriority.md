@@ -1,5 +1,7 @@
 
 ## Bugs 
+- **important** forecast when ALLY phantom archers will deal you damage
+- cloned player AI is funky, notably with glop enemies
 - **important** Cache targeting from spells before sending it in a SPELL network message to prevent desyncs in multiplayer
 - head x5 + vortex if portal is out makes the portal smoke on prediction
 - Desync during ally turn (as seen in brad playthrough)
