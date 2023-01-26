@@ -1,7 +1,6 @@
 # Critical Path
 ## Large Tasks
 - Thursday
-    - Add "positionWhenCastOccurred" instead of "you cannot move while casting"
     - Cache Targeting to prevent desyncs on multiplayer
     ---
 - LAN Hosting UI

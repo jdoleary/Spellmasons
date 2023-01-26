@@ -360,9 +360,7 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
     }
     if (globalThis.RMBDown) {
       if (underworld.isMyTurn()) {
-        if (globalThis.player.isCasting) {
-          notifyCannotMoveWhileCasting(mouseTarget);
-        } else if (globalThis.player.isSpawned) {
+        if (globalThis.player.isSpawned) {
           // If player is able to move
           if (Unit.canMove(globalThis.player.unit)) {
             // Move towards mouseTarget, but stop pathing where the direct path intersects a wall
@@ -475,9 +473,6 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
 
   }
 }
-const notifyCannotMoveWhileCasting = throttle((coords: Vec2) => {
-  floatingText({ coords, text: 'You cannot move while casting' });
-}, 1000, { trailing: false });
 export function contextmenuHandler(overworld: Overworld, e: MouseEvent) {
   // Prevent opening context menu on right click
   e.preventDefault();

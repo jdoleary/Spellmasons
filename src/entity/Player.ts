@@ -48,9 +48,6 @@ export interface IPlayer {
   clientId: string;
   clientConnected: boolean;
   unit: Unit.IUnit;
-  // Used to prevent the player from moving while casting which can result in prediction
-  // inconsistencies
-  isCasting: boolean;
   isSpawned: boolean;
   // The spells that the player has on their toolbar
   cards: string[];
@@ -104,7 +101,6 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
       undefined,
       underworld
     ),
-    isCasting: false,
     isSpawned: false,
     // *3 for all card containers including floating card containers
     cards: Array(config.NUMBER_OF_TOOLBAR_SLOTS * 3).fill(''),
@@ -201,12 +197,6 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string, colo
 export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld) {
   // Set the player so they can choose their next spawn
   player.isSpawned = false;
-  // This should already be set to false after the spell completes but it is
-  // also set to false here as an extra protection measure just in case
-  if (player.isCasting) {
-    console.error('Unexpected: player.isCasting was set to true during resetPlayerForNextLevel');
-  }
-  player.isCasting = false;
   // Update player position to be NOT NaN or null (which indicates that the player is in portal),
   // instead, the player is now spawning so their position should be a number.
   // This is important because it allows the player to see enemy attentionMarkers when

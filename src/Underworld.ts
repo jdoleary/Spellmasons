@@ -2720,6 +2720,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       shouldRefundLastSpell: false,
       casterCardUsage,
       casterUnit,
+      casterPositionAtTimeOfCast: Vec.clone(casterUnit),
       casterPlayer,
       targetedUnits: [],
       targetedPickups: [],
@@ -2762,15 +2763,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       return effectState;
     }
 
-    // Make caster immobile while casting
-    // This prevents predictions frustrations for example:
-    // if they cast a long spell with a Burst at the end
-    // (burst relies on proximity to deal damage)
-    // and then move, it can change the outcome from
-    // different than what was predicted.  Same with arrow spells
-    if (casterPlayer && !prediction) {
-      casterPlayer.isCasting = true;
-    }
     const castingParticleEmitter = makeRisingParticles(effectState.casterUnit, prediction, hexToString(magicColor || 0xffffff), -1);
 
     // "quantity" is the number of identical cards cast in a row. Rather than casting the card sequentially
@@ -2872,10 +2864,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       containerSpells?.removeChildren();
     }
 
-    // Make caster movable again now that they are done casting
-    if (casterPlayer && !prediction) {
-      casterPlayer.isCasting = false;
-    }
     stopAndDestroyForeverEmitter(castingParticleEmitter);
 
     return effectState;

@@ -251,6 +251,7 @@ export interface EffectState {
   shouldRefundLastSpell: boolean;
   casterCardUsage?: Player.CardUsage;
   casterUnit: Unit.IUnit;
+  casterPositionAtTimeOfCast: Vec2;
   casterPlayer?: Player.IPlayer;
   targetedUnits: Unit.IUnit[];
   targetedPickups: Pickup.IPickup[];

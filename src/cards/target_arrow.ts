@@ -35,7 +35,7 @@ const spell: Spell = {
         if (!target) {
           continue;
         }
-        const arrowUnitCollisions = findArrowCollisions(state.casterUnit, target, prediction, underworld);
+        const arrowUnitCollisions = findArrowCollisions(state.casterPositionAtTimeOfCast, state.casterUnit.id, target, prediction, underworld);
         // This target arrow spell doesn't pierce
         const firstTarget = arrowUnitCollisions[0];
         if (firstTarget) {
@@ -45,7 +45,7 @@ const spell: Spell = {
             }
           } else {
             promises.push(createVisualFlyingProjectile(
-              state.casterUnit,
+              state.casterPositionAtTimeOfCast,
               firstTarget,
               'projectile/arrow_ghost',
             ).then(() => {

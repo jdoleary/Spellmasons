@@ -10,9 +10,9 @@ import { makeBurstParticles } from '../graphics/ParticleCollection';
 
 export const burstCardId = 'Burst';
 const maxDamage = 50;
-function calculateDamage(stack: number, caster: Unit.IUnit, target: Vec2): number {
-  const dist = distance(caster, target)
-  return Math.ceil(lerp(0, maxDamage, 1 - dist / (caster.attackRange + config.COLLISION_MESH_RADIUS * 2)) * stack);
+function calculateDamage(stack: number, casterPositionAtTimeOfCast: Vec2, casterAttackRange: number, target: Vec2): number {
+  const dist = distance(casterPositionAtTimeOfCast, target)
+  return Math.ceil(lerp(0, maxDamage, 1 - dist / (casterAttackRange + config.COLLISION_MESH_RADIUS * 2)) * stack);
 }
 export interface UnitDamage {
   id: number;
@@ -42,14 +42,14 @@ const spell: Spell = {
         if (!prediction) {
           playDefaultSpellSFX(card, prediction);
           for (let unit of targets) {
-            const damage = calculateDamage(quantity, state.casterUnit, unit);
+            const damage = calculateDamage(quantity, state.casterPositionAtTimeOfCast, state.casterUnit.attackRange, unit);
             Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
             // Animate:
             makeBurstParticles(unit, lerp(0.1, 1, damage / maxDamage), prediction, resolve);
           }
         } else {
           for (let unit of targets) {
-            const damage = calculateDamage(quantity, state.casterUnit, unit);
+            const damage = calculateDamage(quantity, state.casterPositionAtTimeOfCast, state.casterUnit.attackRange, unit);
             Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
           }
           resolve();

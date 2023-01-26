@@ -31,8 +31,8 @@ const spell: Spell = {
       let promises = [];
       playDefaultSpellSFX(card, prediction);
       for (let target of targets) {
-        const arrowCollisions = findArrowCollisions(state.casterUnit, target, prediction, underworld);
-        const arrowShootPath = findArrowPath(state.casterUnit, target, underworld);
+        const arrowCollisions = findArrowCollisions(state.casterPositionAtTimeOfCast, state.casterUnit.id, target, prediction, underworld);
+        const arrowShootPath = findArrowPath(state.casterPositionAtTimeOfCast, target, underworld);
         if (arrowShootPath === undefined) {
           continue;
         }
@@ -62,7 +62,7 @@ const spell: Spell = {
         } else {
           for (let u of arrowCollisions) {
             if (Unit.isUnit(u)) {
-              Unit.takeDamage(u, damageDone, state.casterUnit, underworld, prediction, undefined, { thinBloodLine: true });
+              Unit.takeDamage(u, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
             }
           }
         }
