@@ -29,9 +29,10 @@ import { cacheBlood, cameraAutoFollow, runCinematicLevelCamera } from '../graphi
 import { ensureAllClientsHaveAssociatedPlayers, Overworld } from '../Overworld';
 import { playerCastAnimationColor, playerCastAnimationColorLighter, playerCastAnimationGlow } from '../graphics/ui/colors';
 import { lightenColor } from '../graphics/ui/colorUtil';
-import { choosePerk, tryTriggerPerk } from '../Perk';
+import { choosePerk, getUniquePerkSeedString, tryTriggerPerk } from '../Perk';
 import { calculateCost } from '../cards/cardUtils';
 import { runPredictions } from '../graphics/PlanningView';
+import seedrandom from 'seedrandom';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -414,10 +415,11 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           Unit.setLocation(fromPlayer.unit, payload);
           // Trigger 'everyLevel' attributePerks
           // now that the player has spawned in at the new level
+          const perkRandomGenerator = seedrandom(getUniquePerkSeedString(underworld, fromPlayer));
           for (let i = 0; i < fromPlayer.attributePerks.length; i++) {
             const perk = fromPlayer.attributePerks[i];
             if (perk) {
-              tryTriggerPerk(perk, fromPlayer, 'everyLevel', underworld, 700 * i);
+              tryTriggerPerk(perk, fromPlayer, 'everyLevel', perkRandomGenerator, underworld, 700 * i);
             }
           }
           // Detect if player spawns in liquid

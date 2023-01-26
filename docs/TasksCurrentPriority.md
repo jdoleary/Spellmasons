@@ -1,7 +1,7 @@
 
 ## Tasks
 - You should be able to click out of range for target arrow
-- You can save scam perks and card upgrades. Should be random locked
+    - rather than allowing casting out of range, if an arrow is the first card just override the cast location (& visually!) to end of range if it goes out of range
 - Health upgrades should be more potent since you don't "use" health as much as you do mana, it needs to be bigger to be more valuable
 - implement state.casterPositionAtTimeOfCast for all movement spells and targeting spells
 

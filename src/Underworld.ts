@@ -82,7 +82,7 @@ import { makeRisingParticles, makeScrollDissapearParticles, stopAndDestroyForeve
 import { ensureAllClientsHaveAssociatedPlayers, Overworld } from './Overworld';
 import { Emitter } from '@pixi/particle-emitter';
 import { golem_unit_id } from './entity/units/golem';
-import { cleanUpPerkList, createPerkElement, generatePerks, tryTriggerPerk, showPerkList, hidePerkList } from './Perk';
+import { cleanUpPerkList, createPerkElement, generatePerks, tryTriggerPerk, showPerkList, hidePerkList, getUniquePerkSeedString } from './Perk';
 import { bossmasonUnitId } from './entity/units/bossmason';
 import { hexToString } from './graphics/ui/colorUtil';
 
@@ -1997,10 +1997,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         }
       }
       // Trigger attributePerks
+      const perkRandomGenerator = seedrandom(getUniquePerkSeedString(this, player));
       for (let i = 0; i < player.attributePerks.length; i++) {
         const perk = player.attributePerks[i];
         if (perk) {
-          tryTriggerPerk(perk, player, 'everyTurn', this, 700 * i);
+          tryTriggerPerk(perk, player, 'everyTurn', perkRandomGenerator, this, 700 * i);
         }
       }
       // Trigger onTurnStart Events

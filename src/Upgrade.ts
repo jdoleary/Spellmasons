@@ -68,6 +68,12 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
     numberOfUpgrades,
     clonedUpgradeSource.length,
   );
+  // Upgrade random generate should be unique for the underworld seed, each player, the number of rerolls that they have,
+  // the number of cards that they have  This will prevent save scamming the chances and also make sure each time you are presented with
+  // cards it is unique.
+  // Note: Only count non-empty card spaces
+  const rSeed = `${underworld.seed}-${player.clientId}-${player.reroll}-${player.cards.filter(x => !!x).length}`;
+  const random = seedrandom(rSeed);
   for (
     let i = 0;
     // limited by the config.NUMBER_OF_UPGRADES_TO_CHOOSE_FROM or the number of cloned
@@ -75,7 +81,7 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
     i < numberOfCardsToChoose;
     i++
   ) {
-    const upgrade = chooseObjectWithProbability(clonedUpgradeSource, seedrandom());
+    const upgrade = chooseObjectWithProbability(clonedUpgradeSource, random);
     if (upgrade) {
       const index = clonedUpgradeSource.indexOf(upgrade);
       upgrades = upgrades.concat(clonedUpgradeSource.splice(index, 1));

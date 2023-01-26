@@ -190,7 +190,9 @@ export function generatePerks(number: number, underworld: Underworld): Attribute
 }
 export function choosePerk(perk: AttributePerk, player: IPlayer, underworld: Underworld) {
     if (perk.when == 'immediately') {
-        tryTriggerPerk(perk, player, 'immediately', underworld, 0);
+        // Note: random doesn't need to be seeded for 'immediate' perks because they
+        // are guarunteed to proc
+        tryTriggerPerk(perk, player, 'immediately', seedrandom(), underworld, 0);
     } else {
         player.attributePerks.push(perk);
     }
@@ -256,12 +258,14 @@ export interface AttributePerk {
     when: WhenUpgrade;
     // amount is a preportion 0.0 - 1.0
     amount: number;
-
 }
-export function tryTriggerPerk(perk: AttributePerk, player: IPlayer, when: WhenUpgrade, underworld: Underworld, offsetNotifyByMs: number) {
+export function getUniquePerkSeedString(underworld: Underworld, player: IPlayer): string {
+    // Seeded random based on the turn so it's consistent across all clients
+    // based on player client ids so it's unique to each player
+    return `${underworld.seed}-${underworld.levelIndex}-${underworld.turn_number}-${player.clientId}`;
+}
+export function tryTriggerPerk(perk: AttributePerk, player: IPlayer, when: WhenUpgrade, random: seedrandom.PRNG, underworld: Underworld, offsetNotifyByMs: number) {
     if (perk.when == when) {
-        // Seeded random based on the turn so it's consistent across all clients
-        const random = seedrandom(`${underworld.seed}-${underworld.levelIndex}-${underworld.turn_number}-${player.clientId}`);
         const pick = random.quick();
         const doTriggerPerk = pick <= perk.certainty;
         const oldAttributeAmount = player.unit[perk.attribute];
