@@ -1,17 +1,13 @@
 # Critical Path
 ## Large Tasks
-- Thursday
+- Friday
     - Cache Targeting to prevent desyncs on multiplayer
     ---
 - LAN Hosting UI
 - Server Browser
 - (m) Integrate i18n translations
+- Integrate Chad's copy
 - Improve scaling over 4 players
-## Important Tasks Remaining
-- Optimize: short circuit bloat movement if it's taking too long
-
-## Balance
-- Should subsequent targeting spells get more rare after you have one?
 
 ## Remaining Validation
 - Multiplayer save/load
