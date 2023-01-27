@@ -3,8 +3,6 @@
 - Friday
     - Cache Targeting to prevent desyncs on multiplayer
     ---
-- LAN Hosting UI
-- Server Browser
 - (m) Integrate i18n translations
 - Integrate Chad's copy
 - Improve scaling over 4 players

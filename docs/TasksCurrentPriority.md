@@ -30,6 +30,8 @@
     - bug: phantom arrow did damage but didn't subtract mana
     - add more spell refunds
 
+## Final thoughts
+- Remove save / load for singleplayer?
 
 ## Validate
 - validate: Ending turn more than once
