@@ -3185,6 +3185,12 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
   // budget out the quantity
   let units = [];
   let budgetLeft = (adjustedLevelIndex + 1) * Math.max(3, (adjustedLevelIndex + 1) - 3);
+  const connectedClients = underworld.players.filter(p => p.clientConnected);
+  if (connectedClients.length > config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES) {
+    const budgetMultiplier = 1 + (1/config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES) * (connectedClients.length - config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES);
+    console.log('Difficulty: Increase budget by', budgetMultiplier, ' due to the number of players connected');
+    budgetLeft *= budgetMultiplier;
+  }
   console.log('Budget for level index', adjustedLevelIndex, 'is', budgetLeft);
   const totalBudget = budgetLeft;
   if (levelIndex == 11) {

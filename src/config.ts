@@ -67,3 +67,7 @@ export const LIQUID_X_SCROLL_SPEED = 400; // higher is slower
 export const LIQUID_DISPLACEMENT_SPEED = 0.1;
 export const LIQUID_DISPLACEMENT_SCALE = 0.6;
 export const PIXI_TEXT_DROP_SHADOW = { dropShadow: true, dropShadowDistance: 1 };
+
+// Unit difficulty will increase up to X number of players, after that the quantity of 
+// units increases
+export const NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES = 3;

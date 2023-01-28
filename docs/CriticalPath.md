@@ -1,13 +1,11 @@
 # Critical Path
 ## Large Tasks
-- Friday
-    - Cache Targeting to prevent desyncs on multiplayer
-    ---
+- Cache Targeting to prevent desyncs on multiplayer
 - (m) Integrate i18n translations
 - Integrate Chad's copy
-- Improve scaling over 4 players
 
 ## Remaining Validation
+- Validate difficulty scaling: up to 3 players the enemies get tougher, beyond they get more pleantiful
 - Multiplayer save/load
     - Saved games persist to steam cloud
     - what happens when multiplayer tries to join a singple player save
