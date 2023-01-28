@@ -2,7 +2,6 @@
 ## Tasks
 - Remove "How to update the game" as it is inaccurate
 - **important** Cache targeting from spells before sending it in a SPELL network message to prevent desyncs in multiplayer
-- Remove target arrow per brad advice
 - guard steam cloud file creation with try{}catch{}
 
 ## Bugs 

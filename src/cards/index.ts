@@ -198,7 +198,10 @@ export function registerCards(overworld: Overworld) {
   register(sacrifice, overworld);
   register(arrow, overworld);
   register(phantom_arrow, overworld);
-  register(target_arrow, overworld);
+  // TODO: Target arrow isn't ready due to the fact that the convenience UX of being able to fire arrows
+  // past your cast range has targeting complications with Target Arrow and I haven't been able to find
+  // a solution that doesn't introduce bugs or complexity.
+  // register(target_arrow, overworld);
   // TODO: Refactor bolt into soulbind, it didn't work out well as a spell
   // register(bolt, overworld);
   register(conserve, overworld);
