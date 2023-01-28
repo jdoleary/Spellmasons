@@ -1,6 +1,4 @@
 ## Brad Playtest
-Sound doesn’t persist from last play
-Some save names are getting a letter truncated
 He doesn’t think saving a loading is a good idea
 Overflow health is buggy? It said he had health but he died unexpectedly 
 After randoming he got 3 spell choices again. 
@@ -17,10 +15,8 @@ Archer pathing is messed up when there are walls in between
 Perks should show in your spell book 
 Killing himself, with no enemies, live, and an ally sent him two levels ahead
 After casting a spell that kills himself and res himself in the same spell, he has been able to go massively negative mana
-Cards are off center. Refill button shouldn’t affect the centering
 “Pick a spell/upgrade”/“choose a place to spawn” isn’t translated
 Perks aren’t translated 
-Remove seed on Home Screen
 - UX: doesn't like the cinematic
 ---
 ## Brad playtest

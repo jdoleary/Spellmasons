@@ -4,7 +4,6 @@ import { BrowserTracing } from "@sentry/tracing";
 import Stats from 'stats.js';
 
 export function setupMonitoring() {
-
   const release = `spellmasons@${globalThis.SPELLMASONS_PACKAGE_VERSION}`;
   if (!location.href.includes('http://localhost')) {
     console.log('Setup: Monitoring with Sentry', release);

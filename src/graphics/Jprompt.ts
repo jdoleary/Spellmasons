@@ -154,18 +154,6 @@ async function JtextPrompt(prompt: PromptArgs): Promise<string> {
     return new Promise<string>((res) => {
         const noBtn = el.querySelector('.no') as (HTMLElement | undefined);
         const yesBtn = el.querySelector('.yes') as (HTMLElement | undefined);
-        let text = '';
-        if (input) {
-            input.addEventListener('keydown', (e) => {
-                // Prevent game event listeners from firing when using this input box
-                e.stopPropagation();
-                if (e.target) {
-                    text = (e.target as HTMLInputElement).value;
-                }
-                return false;
-            }, true);
-
-        }
         if (noBtn) {
             noBtn.addEventListener('click', (e) => {
                 res('');
@@ -176,7 +164,7 @@ async function JtextPrompt(prompt: PromptArgs): Promise<string> {
         }
         if (yesBtn) {
             yesBtn.addEventListener('click', (e) => {
-                res(text);
+                res((input as HTMLInputElement).value || '');
                 e.preventDefault();
                 e.stopPropagation();
                 return false;

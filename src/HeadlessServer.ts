@@ -57,6 +57,7 @@ function headlessStartGame() {
             return hostAppInst;
         }
     });
+    process.send?.({ running: true });
 }
 
 

@@ -12,18 +12,19 @@ Electron: loadSettings SyntaxError: Unexpected non-whitespace character after JS
     - rather than allowing casting out of range, if an arrow is the first card just override the cast location (& visually!) to end of range if it goes out of range
         - see stash
 - implement state.casterPositionAtTimeOfCast for all movement spells and targeting spells
+- Remove "How to update the game" as it is inaccurate
+- **important** Cache targeting from spells before sending it in a SPELL network message to prevent desyncs in multiplayer
+- Remove target arrow per brad advice
+- guard steam cloud file creation with try{}catch{}
 
 ## Bugs 
-- **important** forecast when ALLY phantom archers will deal you damage
 - cloned player AI is funky, notably with glop enemies
-- **important** Cache targeting from spells before sending it in a SPELL network message to prevent desyncs in multiplayer
 - head x5 + vortex if portal is out makes the portal smoke on prediction
 - Desync during ally turn (as seen in brad playthrough)
 - mana says it's being refunded but isn't for overkill arrows
 - bug: He was able to have the spell continue to cast even after he went through a portal
 - bug: Best spell wasn't accurate
 - copy error: in spells cost more mana explained "spell\'s"
-- target similar / connect line animates farther than it should
 ## Content
 - More interesting liquid effects for different kinds of liquids
 - Endgame Looping (1/28)
@@ -42,6 +43,8 @@ Electron: loadSettings SyntaxError: Unexpected non-whitespace character after JS
     - bug: phantom arrow did damage but didn't subtract mana
     - add more spell refunds
 
+## Final thoughts
+- Remove save / load for singleplayer?
 
 ## Validate
 - validate: Ending turn more than once

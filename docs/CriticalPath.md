@@ -1,17 +1,11 @@
 # Critical Path
 ## Large Tasks
-- Thursday
+- Friday
     - Cache Targeting to prevent desyncs on multiplayer
     ---
-- LAN Hosting UI
-- Server Browser
 - (m) Integrate i18n translations
+- Integrate Chad's copy
 - Improve scaling over 4 players
-## Important Tasks Remaining
-- Optimize: short circuit bloat movement if it's taking too long
-
-## Balance
-- Should subsequent targeting spells get more rare after you have one?
 
 ## Remaining Validation
 - Multiplayer save/load
@@ -27,8 +21,11 @@
 ## Day of
 - Check timezone for release
 - Update Chad's copy
+- Add that cross-platform multiplayer is supported
 - Update translations and verify all translators are in credits
 - Verify hardware specs harddrive space requirement
+- Update Demo
+- Update servers
 - Release Game and Demo
     - https://partner.steamgames.com/doc/store/releasing
     - Double check the package content https://partner.steamgames.com/store/packagelanding/574232

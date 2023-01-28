@@ -1,6 +1,6 @@
 import * as Unit from '../Unit';
 import type { UnitSource } from './index';
-import { UnitSubType } from '../../types/commonTypes';
+import { UnitSubType, UnitType } from '../../types/commonTypes';
 import { createVisualFlyingProjectile, SPEED_PER_MILLI } from '../Projectile';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import * as math from '../../jmath/math';
@@ -64,39 +64,30 @@ const unit: UnitSource = {
     // Archer just checks attackTarget, not canAttackTarget to know if it can attack because getBestRangedLOSTarget() will return undefined
     // if it can't attack any targets
     // Attack
-    if (attackTargets && attackTargets[0]) {
+    const firstTarget = attackTargets && attackTargets[0]
+    if (firstTarget) {
       // Archers attack or move, not both; so clear their existing path
       unit.path = undefined;
-      Unit.orient(unit, attackTargets[0]);
+      Unit.orient(unit, firstTarget);
       await Unit.playComboAnimation(unit, unit.animations.attack, () => {
         let flyingProjectilePromise = Promise.resolve();
-        for (let target of attackTargets) {
-          // Get all units between source and target for the arrow to pierce:
-          underworld.units.filter(
-            (u) => {
-              const pointAtRightAngleToArrowPath = findWherePointIntersectLineSegmentAtRightAngle(u, { p1: unit, p2: target });
-              const willBeStruckByArrow = !pointAtRightAngleToArrowPath ? false : math.distance(u, pointAtRightAngleToArrowPath) <= config.COLLISION_MESH_RADIUS * 2
-              // Note: Filter out target as target will take full damage
-              // Note: Filter out self as the ghost archer's arrow shouldn't damage itself
-              return u.alive && willBeStruckByArrow && u !== target && u !== unit;
-            },
-          ).forEach(pierceTarget => {
-            // Fake the collision by just calculating a delay based on the speed of the projectile
-            const millisecondsUntilCollision = math.distance(unit, pierceTarget) / SPEED_PER_MILLI
-            setTimeout(() => {
-              Unit.takeDamage(pierceTarget, unit.damage / 2, unit, underworld, false, undefined, { thinBloodLine: true });
-            }, millisecondsUntilCollision);
-          });
+        // Get all units between source and target for the arrow to pierce:
+        attackTargets.forEach(pierceTarget => {
+          // Fake the collision by just calculating a delay based on the speed of the projectile
+          const millisecondsUntilCollision = math.distance(unit, pierceTarget) / SPEED_PER_MILLI
+          setTimeout(() => {
+            Unit.takeDamage(pierceTarget, unit.damage / 2, unit, underworld, false, undefined, { thinBloodLine: true });
+          }, millisecondsUntilCollision);
+        });
 
 
-          flyingProjectilePromise = createVisualFlyingProjectile(
-            unit,
-            target,
-            'projectile/arrow_ghost',
-          ).then(() => {
-            Unit.takeDamage(target, unit.damage, unit, underworld, false, undefined, { thinBloodLine: true });
-          });
-        }
+        flyingProjectilePromise = createVisualFlyingProjectile(
+          unit,
+          firstTarget,
+          'projectile/arrow_ghost',
+        ).then(() => {
+          Unit.takeDamage(firstTarget, unit.damage, unit, underworld, false, undefined, { thinBloodLine: true });
+        });
         return flyingProjectilePromise;
       });
     } else {
@@ -105,7 +96,36 @@ const unit: UnitSource = {
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-    return getBestRangedLOSTarget(unit, underworld, false).slice(0, NUMBER_OF_UNITS_GHOST_ARCHER_CAN_ATTACK);
+    const potentialTargets = getBestRangedLOSTarget(unit, underworld, false).slice(0, NUMBER_OF_UNITS_GHOST_ARCHER_CAN_ATTACK);
+    if (potentialTargets && potentialTargets.length) {
+      for (let target of potentialTargets) {
+        // Add the pierce targets to the list of attack targets so they will show attentionMarkers
+        const allTargets = [target, ...getGhostArcherHits(unit, target, underworld)]
+        if (allTargets.some(t => t.unitType == UnitType.PLAYER_CONTROLLED && t.faction == unit.faction)) {
+          // Do not fire an arrow if it will hit an ally player
+          continue;
+        } else {
+          return allTargets;
+        }
+      }
+      return [];
+    } else {
+      return [];
+    }
   }
 };
 export default unit;
+
+// Returns the units that will be hit when ghost archer fires it's piercing arrow
+function getGhostArcherHits(archer: Vec2, target: Vec2, underworld: Underworld): Unit.IUnit[] {
+  return underworld.units.filter(
+    (u) => {
+      const pointAtRightAngleToArrowPath = findWherePointIntersectLineSegmentAtRightAngle(u, { p1: archer, p2: target });
+      const willBeStruckByArrow = !pointAtRightAngleToArrowPath ? false : math.distance(u, pointAtRightAngleToArrowPath) <= config.COLLISION_MESH_RADIUS * 2
+      // Note: Filter out target as target will take full damage
+      // Note: Filter out self as the ghost archer's arrow shouldn't damage itself
+      return u.alive && willBeStruckByArrow && u !== target && u !== archer;
+    },
+  );
+
+}
