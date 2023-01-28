@@ -1,5 +1,13 @@
 
 ## Tasks
+- delete settings file if error occurs:
+```
+Electron: loadSettings SyntaxError: Unexpected non-whitespace character after JSON at position 870
+    at JSON.parse (<anonymous>)
+    at loadSettings (/Users/jordanoleary/git/Golems-Electron-Build/src/storage.js:31:29)
+    at createWindow (/Users/jordanoleary/git/Golems-Electron-Build/src/index.js:129:3)
+    at /Users/jordanoleary/git/Golems-Electron-Build/src/index.js:175:3
+```
 - You should be able to click out of range for target arrow
     - rather than allowing casting out of range, if an arrow is the first card just override the cast location (& visually!) to end of range if it goes out of range
         - see stash
