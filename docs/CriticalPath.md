@@ -3,6 +3,7 @@
 - Cache Targeting to prevent desyncs on multiplayer
 - (m) Integrate i18n translations
 - Integrate Chad's copy
+- Address Cie's balance ideas
 
 ## Remaining Validation
 - Validate difficulty scaling: up to 3 players the enemies get tougher, beyond they get more pleantiful
