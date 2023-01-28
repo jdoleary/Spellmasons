@@ -21,6 +21,7 @@
 ## Day of
 - Check timezone for release
 - Update Chad's copy
+- Add that cross-platform multiplayer is supported
 - Update translations and verify all translators are in credits
 - Verify hardware specs harddrive space requirement
 - Update Demo
