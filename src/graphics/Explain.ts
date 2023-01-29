@@ -70,7 +70,6 @@ export const EXPLAIN_FORGE_ORDER = 'Spell Forge Order';
 export const EXPLAIN_DEATH = 'Surviving Death';
 export const EXPLAIN_MINI_BOSSES = 'Mini Bosses';
 export const EXPLAIN_PING = 'Pinging';
-export const EXPLAIN_UPDATES = 'Update the Game';
 interface ExplainData {
     condition?: () => boolean;
     // Returns args to pass into Jprompt
@@ -78,11 +77,6 @@ interface ExplainData {
 };
 
 const explainMap: { [key: string]: ExplainData } = {
-    [EXPLAIN_UPDATES]: {
-        prompt: () => ({
-            imageSrc: 'images/explain/verifyIntegrity.gif', text: 'Right Click on Spellmasons, then click on "Properties", then "Local Files", then "Verify integrity of game files..." to ensure that you have the latest update.', yesText: 'Okay'
-        })
-    },
     [EXPLAIN_WALK]: {
         prompt: () => ({ imageSrc: 'images/explain/walk.gif', text: 'explain move', yesText: 'Okay' })
     },
