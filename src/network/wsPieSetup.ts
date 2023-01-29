@@ -41,6 +41,10 @@ function connect_to_wsPie_server(wsUri: string | undefined, overworld: Overworld
         console.log("Pie: Successfully connected to PieServer.")
         resolve();
       } else {
+        const elVersionInfoHeadless = document.getElementById('version-info-headless-server')
+        if(elVersionInfoHeadless){
+          elVersionInfoHeadless.innerHTML = '';
+        }
         if (view == View.Game) {
           setView(View.Disconnected);
         }

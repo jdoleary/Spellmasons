@@ -1,7 +1,6 @@
 ## Tasks
 
 - Server browser
-  - Improve CSS for multiplayer
     - Table should include, game version, latency, region
     - Instructions for how to connect
   - List of community servers and server maintenance message should be hosted on
