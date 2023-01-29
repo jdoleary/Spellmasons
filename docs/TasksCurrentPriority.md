@@ -1,8 +1,18 @@
 ## Tasks
 
+- delete settings file if error occurs:
+
+```
+Electron: loadSettings SyntaxError: Unexpected non-whitespace character after JSON at position 870
+    at JSON.parse (<anonymous>)
+    at loadSettings (/Users/jordanoleary/git/Golems-Electron-Build/src/storage.js:31:29)
+    at createWindow (/Users/jordanoleary/git/Golems-Electron-Build/src/index.js:129:3)
+    at /Users/jordanoleary/git/Golems-Electron-Build/src/index.js:175:3
+```
+
 - Server browser
-    - Table should include, game version, latency, region
-    - Instructions for how to connect
+  - Table should include, game version, latency, region
+  - Instructions for how to connect
   - List of community servers and server maintenance message should be hosted on
     website so I don't have to update the server browser app to change these
   - Make Multiplayer video
