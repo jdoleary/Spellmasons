@@ -36,7 +36,7 @@ const spell: Spell = {
         unit.health -= unitHealthStolen;
         const healthTrailPromises = [];
         if (!prediction) {
-          const NUMBER_OF_ANIMATED_TRAILS = unitHealthStolen / 10;
+          const NUMBER_OF_ANIMATED_TRAILS = Math.min(6, unitHealthStolen / 10);
           for (let i = 0; i < quantity * NUMBER_OF_ANIMATED_TRAILS; i++) {
             healthTrailPromises.push(makeManaTrail(unit, caster, underworld, '#ff6767n', '#ff0000').then(() => {
               const healthStolenPerTrail = Math.floor(unitHealthStolen / NUMBER_OF_ANIMATED_TRAILS)
