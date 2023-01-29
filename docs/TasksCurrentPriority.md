@@ -15,13 +15,6 @@ Electron: loadSettings SyntaxError: Unexpected non-whitespace character after JS
   - Instructions for how to connect
   - List of community servers and server maintenance message should be hosted on
     website so I don't have to update the server browser app to change these
-  - Make Multiplayer video
-    - Hosting your own server locally
-    - Hosting a server on the web
-      - Digital Ocean (easy, but costs money)
-      - Hosting it yourself (free, but harder)
-      - Do you want to be a Community Server??
-    - link video on multiplayer page
 - **important** Cache targeting from spells before sending it in a SPELL network
   message to prevent desyncs in multiplayer
 
