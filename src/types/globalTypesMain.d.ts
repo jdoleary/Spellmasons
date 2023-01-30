@@ -216,4 +216,12 @@ declare global {
     var currentPredictionId: number | undefined;
     var isDemo: boolean;
     var testPerks: () => void | undefined;
+  // If preCachedTargetedUnitIds exists,
+  // it prevents non precached units from being targeted
+  // This functions as a way to guaruntee that only the units
+  // shown in the prediction will be affected by the spell, so
+  // if you cast a spell and your networked ally walks into it's
+  // radius after you clicked but while the message is still going
+  // to their client, it won't hit them.
+    var cachedTargetedUnitIds: number[] | undefined;
 }

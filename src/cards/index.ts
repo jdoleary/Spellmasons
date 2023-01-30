@@ -266,6 +266,14 @@ export interface EffectState {
     unitDamage: UnitDamage[],
     radius: number;
   };
+  // If preCachedTargetedUnitIds exists,
+  // it prevents non precached units from being targeted
+  // This functions as a way to guaruntee that only the units
+  // shown in the prediction will be affected by the spell, so
+  // if you cast a spell and your networked ally walks into it's
+  // radius after you clicked but while the message is still going
+  // to their client, it won't hit them.
+  preCachedTargetedUnitIds?: number[];
 }
 export function refundLastSpell(state: EffectState, prediction: boolean, floatingMessage?: string) {
   // Only refund the spell when it's not a prediction so that
@@ -365,6 +373,10 @@ export function addTarget(target: any, effectState: EffectState) {
   }
 }
 export function addUnitTarget(unit: Unit.IUnit, effectState: EffectState) {
+  if (effectState.preCachedTargetedUnitIds && !effectState.preCachedTargetedUnitIds.includes(unit.id)) {
+    console.log('Omit unit', unit.id, ' from targeting because it wasnt precached');
+    return;
+  }
   // Adds a unit to effectState.targetedUnits IF it is not already in unitTargets
   if (effectState.targetedUnits.indexOf(unit) === -1) {
     effectState.targetedUnits.push(unit);

@@ -419,6 +419,8 @@ async function showCastCardsPrediction(underworld: Underworld, target: Vec2, cas
       undefined,
       globalThis.player
     );
+    // Save targets in cache
+    globalThis.cachedTargetedUnitIds = effectState.targetedUnits.map(u => u.id);
     // Clears unit tints in preparation for setting new tints to symbolize which units are targeted by spell
     clearTints(underworld);
     // Show pickups as targeted with tint

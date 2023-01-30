@@ -2,7 +2,6 @@
 
 ## Priorities
 
-- Cache Targeting to prevent desyncs on multiplayer
 - Default magic color is off?
 - disable saving for singleplayer??
 - Finish Localization (Monday)

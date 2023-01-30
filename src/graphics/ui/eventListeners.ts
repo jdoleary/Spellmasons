@@ -662,6 +662,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         overworld.pie.sendData({
           type: MESSAGE_TYPES.SPELL,
           casterPositionAtTimeOfCast: Vec.clone(selfPlayer.unit),
+          cachedTargetedUnitIds: globalThis.cachedTargetedUnitIds,
           x: target.x,
           y: target.y,
           cards: cardIds,

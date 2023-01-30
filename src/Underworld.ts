@@ -2709,6 +2709,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     outOfRange?: boolean,
     magicColor?: number,
     casterPlayer?: Player.IPlayer,
+    preCachedTargetedUnitIds?: number[]
   ): Promise<Cards.EffectState> {
     if (!prediction && casterUnit == (globalThis.player && globalThis.player.unit)) {
       globalThis.castThisTurn = true;
@@ -2734,6 +2735,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         unitDamage: [],
         radius: 0,
       },
+      preCachedTargetedUnitIds
     };
 
     let unitsAtCastLocation = this.getUnitsAt(castLocation, prediction);
@@ -2845,7 +2847,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // Note: it is important that this is done BEFORE a card is actually cast because
           // the card may affect the caster's mana
           effectState.casterUnit.mana -= spellCostTally.manaCost;
-          if(spellCostTally.healthCost !== 0){
+          if (spellCostTally.healthCost !== 0) {
             Unit.takeDamage(effectState.casterUnit, spellCostTally.healthCost, effectState.casterUnit, this, prediction, effectState);
           }
 
@@ -3189,7 +3191,7 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
   let budgetLeft = (adjustedLevelIndex + 1) * Math.max(3, (adjustedLevelIndex + 1) - 3);
   const connectedClients = underworld.players.filter(p => p.clientConnected);
   if (connectedClients.length > config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES) {
-    const budgetMultiplier = 1 + (1/config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES) * (connectedClients.length - config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES);
+    const budgetMultiplier = 1 + (1 / config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES) * (connectedClients.length - config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES);
     console.log('Difficulty: Increase budget by', budgetMultiplier, ' due to the number of players connected');
     budgetLeft *= budgetMultiplier;
   }
