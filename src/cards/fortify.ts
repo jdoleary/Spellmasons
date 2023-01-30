@@ -10,20 +10,21 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
 export const id = 'fortify';
+const DAMGAGE_REDUCTION_PROPORTION = 0.1;
 export const modifierImagePath = 'spell-effects/modifierShield.png';
 const spell: Spell = {
   card: {
     id,
     category: CardCategory.Blessings,
     sfx: 'shield',
-    supportQuantity: false,
-    manaCost: 120,
+    supportQuantity: true,
+    manaCost: 100,
     healthCost: 0,
     expenseScaling: 3,
-    probability: probabilityMap[CardRarity.FORBIDDEN],
+    probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconFortify.png',
     animationPath: 'spell-effects/spellShield',
-    description: 'spell_fortify',
+    description: ['spell_fortify', DAMGAGE_REDUCTION_PROPORTION.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);
@@ -73,11 +74,11 @@ const spell: Spell = {
       if (modifier) {
         // Only block damage, not heals
         if (amount > 0) {
-          let adjustedAmount = 0;
+          const adjustedAmount = Math.round(amount * (1.0-Math.min(1,DAMGAGE_REDUCTION_PROPORTION*(modifier.quantity||1))));
           if (!prediction) {
             floatingText({
               coords: unit,
-              text: 'Fortify prevented damage!',
+              text: 'Fortify reduced damage!',
               style: {
                 fill: 'blue',
                 ...config.PIXI_TEXT_DROP_SHADOW
