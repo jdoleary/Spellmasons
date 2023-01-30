@@ -21,7 +21,7 @@ import { summoningSicknessId } from '../../modifierSummoningSickness';
 import { BLOOD_GOLEM_ID } from './bloodGolem';
 import { BLOOD_ARCHER_ID } from './blood_archer';
 
-export const bossmasonUnitId = 'Bossmason';
+export const bossmasonUnitId = 'Deathmason';
 const NUMBER_OF_ATTACK_TARGETS = 8;
 const bossmasonMana = 200;
 const magicColor = 0x321d73;
