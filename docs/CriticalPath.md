@@ -6,14 +6,13 @@
 - Finish Localization (Monday)
 - Validation (Monday)
 - Final Builds (Monday)
-- Ensure server browser will detect when a server is offline
+- idea: throttle runPredictions on mouse move?
+- idea: less spell choices, more perk choices?
 
 - Extras
   - Answer emails
   - Support Modding
   - Codex
-  - Integrate Chad's localization copy
-  - Address Cie's balance ideas
   - Send Scarlette Seeker a key via Twitter
 
 ## Large Tasks
@@ -23,12 +22,6 @@
     - Something to do with Electron Framework.framework/versions
   - Make package for x64
     - `electron-forge package --arch=x64 --platform=darwin`
-
-- Make the bossmason a more obvious boss (change name to deathmason)
-
-## Balance
-- Make game harder??
-
 
 ## Monday - Validation - Final builds
 
@@ -75,3 +68,5 @@
   - PVP
   - Codex
   - Reach out to `rastabarkan` and `nonotion` for translation support after
+  - Address Cie's balance ideas
+  - Ensure server browser will detect when a server is offline
