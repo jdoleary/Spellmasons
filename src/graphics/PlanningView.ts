@@ -419,8 +419,6 @@ async function showCastCardsPrediction(underworld: Underworld, target: Vec2, cas
       undefined,
       globalThis.player
     );
-    // Save targets in cache
-    globalThis.cachedTargetedUnitIds = effectState.targetedUnits.map(u => u.id);
     // Clears unit tints in preparation for setting new tints to symbolize which units are targeted by spell
     clearTints(underworld);
     // Show pickups as targeted with tint
@@ -582,6 +580,11 @@ export async function runPredictions(underworld: Underworld) {
   if (globalThis.view !== View.Game) {
     return;
   }
+  // TODO: Future enhancement: If runPredictions is allowed to run
+  // while spells are animating you could set up and cast your next spell
+  // visually while the other is still animating.  The issue is that
+  // if you don't return here it won't properly clear animating graphics
+  // objects
   if (globalThis.animatingSpells) {
     // Do not change the hover icons when spells are animating
     return;
@@ -686,8 +689,8 @@ export async function runPredictions(underworld: Underworld) {
 }
 
 // SpellEffectProjection are images to denote some information, such as the spell or action about to be cast/taken when clicked
-export function clearSpellEffectProjection(underworld: Underworld) {
-  if (!globalThis.animatingSpells) {
+export function clearSpellEffectProjection(underworld: Underworld, forceClear?:boolean) {
+  if (!globalThis.animatingSpells || forceClear) {
     if (predictionGraphics) {
       predictionGraphics.clear();
     }

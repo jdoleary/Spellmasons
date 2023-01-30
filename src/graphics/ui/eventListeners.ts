@@ -651,7 +651,6 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
           // Cancel Casting
           return
         }
-        clearSpellEffectProjection(underworld);
         // Clear resMarkers so they don't hang around once the spell is cast
         globalThis.resMarkers = [];
 
@@ -659,17 +658,36 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         if ((overworld.underworld?.players.length || 0) > 1) {
           Player.setSpellmasonsToChannellingAnimation(selfPlayer);
         }
-        overworld.pie.sendData({
-          type: MESSAGE_TYPES.SPELL,
-          casterPositionAtTimeOfCast: Vec.clone(selfPlayer.unit),
-          cachedTargetedUnitIds: globalThis.cachedTargetedUnitIds,
-          x: target.x,
-          y: target.y,
-          cards: cardIds,
+        // Simulate a castCards prediction to obtain a cached copy of the targeted units
+        // to send along with the MESSAGE_TYPES.SPELL message which helps prevent
+        // desync targeting issues between clients.
+        underworld.castCards(
+          // Make a copy of cardUsageCounts for prediction so it can accurately
+          // calculate mana for multiple copies of one spell in one cast
+          JSON.parse(JSON.stringify(selfPlayer.cardUsageCounts)),
+          selfPlayer.unit,
+          Vec.clone(selfPlayer.unit),
+          cardIds,
+          target,
+          true,
+          false,
+          undefined,
+          selfPlayer
+        ).then(effectState => {
+          clearSpellEffectProjection(underworld, true);
+          const cachedTargetedUnitIds = effectState.targetedUnits.map(u => u.id);
+          overworld.pie.sendData({
+            type: MESSAGE_TYPES.SPELL,
+            casterPositionAtTimeOfCast: Vec.clone(selfPlayer.unit),
+            cachedTargetedUnitIds,
+            x: target.x,
+            y: target.y,
+            cards: cardIds,
+          });
+          CardUI.clearSelectedCards(underworld);
+          // Now that the cast has begun, clear the prediction tint so it doesn't color the targeted units anymore
+          clearTints(underworld);
         });
-        CardUI.clearSelectedCards(underworld);
-        // Now that the cast has begun, clear the prediction tint so it doesn't color the targeted units anymore
-        clearTints(underworld);
       } else {
         console.error("Attempting to cast while globalThis.player is undefined");
       }

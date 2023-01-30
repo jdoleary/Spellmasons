@@ -28,7 +28,6 @@ globalThis.quicksaveKey = 'quicksave';
 // Never commit this to true.  To make a demo build, you should
 // toggle this to true, make the build and toggle it back off
 globalThis.isDemo = false;
-globalThis.cachedTargetedUnitIds = [];
 // setupAudio must be invoked before getSavedData so that the saved audio
 // options can persist
 setupAudio();

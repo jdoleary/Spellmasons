@@ -277,5 +277,4 @@ declare global {
     var currentPredictionId: number | undefined;
     var isDemo: boolean;
     var testPerks: () => void | undefined;
-    var cachedTargetedUnitIds: number[] | undefined;
 }
