@@ -2,6 +2,10 @@
 
 ## Priorities
 
+- bug: I was able to end my turn while arrows were still flying
+- bug?: + 3 single turn mana, it's capacity, not single turn
+- balance?: single turn perk stamina can keep stacking to an obsurd degree if
+  you don't use it
 - disable saving for singleplayer??
 - Finish Localization (Monday)
 - Validation (Monday)
