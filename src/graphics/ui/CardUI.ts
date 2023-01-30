@@ -156,6 +156,9 @@ export function setupCardUIEventListeners(overworld: Overworld) {
         container.addEventListener('dragend', ev => {
           deleteCardFromSlot(ev, overworld);
           document.body.classList.toggle('dragging-card', false);
+          // After a card is removed from toolbar, clear it from showing
+          // in the .card-inspect element
+          clearCurrentlyShownCard();
         });
         container.addEventListener('drop', ev => drop(ev, overworld, (NUMBER_OF_TOOLBAR_SLOTS) * i));
         addCardInspectHandlers(container);

@@ -2,7 +2,6 @@
 
 ## Priorities
 
-- bug: when you drag a spell off the toolbar it still shows up in the inspector
 - disable saving for singleplayer??
 - Finish Localization (Monday)
 - Validation (Monday)
