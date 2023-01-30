@@ -73,8 +73,6 @@ const spell: Spell = {
                 }
                 clone.x = validSpawnCoords.x;
                 clone.y = validSpawnCoords.y;
-                // Add the clone as a target
-                addTarget(clone, state);
               }
             }
             if (Pickup.isPickup(target)) {
@@ -83,8 +81,6 @@ const spell: Spell = {
                 const clone = Pickup.load(target, underworld, prediction);
                 if (clone) {
                   Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
-                  // Add the clone as a target
-                  addTarget(clone, state);
                 }
               } else {
                 floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
@@ -97,8 +93,6 @@ const spell: Spell = {
                 if (clone) {
                   target.x = validSpawnCoords.x;
                   target.y = validSpawnCoords.y;
-                  // Add the clone as a target
-                  addTarget(clone, state);
                 }
               } else {
                 floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
