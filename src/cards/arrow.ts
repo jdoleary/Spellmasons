@@ -30,6 +30,7 @@ const spell: Spell = {
     effect: async (state, card, quantity, underworld, prediction) => {
       let targets: Vec2[] = state.targetedUnits;
       targets = targets.length ? targets : [state.castLocation];
+      let targetsHitCount = 0;
       for (let target of targets) {
         const arrowUnitCollisions = findArrowCollisions(state.casterPositionAtTimeOfCast, state.casterUnit.id, target, prediction, underworld);
         // This regular arrow spell doesn't pierce
@@ -48,19 +49,20 @@ const spell: Spell = {
             ).then(() => {
               if (Unit.isUnit(firstTarget)) {
                 Unit.takeDamage(firstTarget, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
-              } else {
-                // TODO: If pickups become damagable, this will have to be adapted to not refund mana when it hits a pickup
-                refundLastSpell(state, prediction, 'No target, mana refunded.')
+                targetsHitCount++;
               }
             })]);
           } else {
             if (Unit.isUnit(firstTarget)) {
               Unit.takeDamage(firstTarget, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
+              targetsHitCount++;
             }
           }
-        } else {
-          refundLastSpell(state, prediction, 'No target, mana refunded.')
         }
+      }
+      if (targetsHitCount == 0) {
+        refundLastSpell(state, prediction, 'No target, mana refunded.')
+
       }
       return state;
     },

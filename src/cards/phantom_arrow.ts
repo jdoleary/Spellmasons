@@ -30,6 +30,7 @@ const spell: Spell = {
       targets = targets.length ? targets : [state.castLocation];
       let promises = [];
       playDefaultSpellSFX(card, prediction);
+      let targetsHitCount = 0;
       for (let target of targets) {
         const arrowCollisions = findArrowCollisions(state.casterPositionAtTimeOfCast, state.casterUnit.id, target, prediction, underworld);
         const arrowShootPath = findArrowPath(state.casterPositionAtTimeOfCast, target, underworld);
@@ -55,17 +56,18 @@ const spell: Spell = {
               }
             }, millisecondsUntilCollision);
           });
-          if (arrowCollisions.filter(x => Unit.isUnit(x)).length == 0) {
-            // TODO: If pickups become damagable, this will have to be adapted to not refund mana when it hits a pickup
-            refundLastSpell(state, prediction, 'No target, mana refunded.')
-          }
+          targetsHitCount += arrowCollisions.filter(x => Unit.isUnit(x)).length;
         } else {
           for (let u of arrowCollisions) {
             if (Unit.isUnit(u)) {
               Unit.takeDamage(u, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
+              targetsHitCount++;
             }
           }
         }
+      }
+      if (targetsHitCount == 0) {
+        refundLastSpell(state, prediction, 'No target, mana refunded.')
       }
       await Promise.all(promises);
       return state;
