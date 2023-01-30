@@ -1,7 +1,8 @@
 import { getLoopableIndex } from "./jmath/Polygon2";
 import * as storage from "./storage";
 import throttle from 'lodash.throttle';
-import { chooseObjectWithProbability, chooseOneOf } from "./jmath/rand";
+import { chooseOneOf } from "./jmath/rand";
+import { lerp } from "./jmath/math";
 
 export const sfx: { [key: string]: string[] } = {
     arrow: ['./sound/sfx/arrow.mp3'],
@@ -190,11 +191,28 @@ export function playMusicIfNotAlreadyPlaying() {
 // because headless server cannot import Audio.ts
 globalThis.playMusicIfNotAlreadyPlaying = playMusicIfNotAlreadyPlaying;
 
-export function playNextSong() {
+let fadeOutSongInterval: NodeJS.Timer;
+export async function playNextSong() {
     console.log('playNextSong', musicInstance);
     // If there is currently a song playing, stop it
     if (musicInstance) {
-        musicInstance.pause();
+        const MILLIS_TO_FADE_OUT_SONG = 1_500;
+        await Promise.race([new Promise(resolve => setTimeout(resolve, MILLIS_TO_FADE_OUT_SONG + 100)), new Promise<void>(resolve => {
+            clearInterval(fadeOutSongInterval);
+            const startVolume = musicInstance.volume;
+            let i = 0;
+            const INTERVAL_MILLIS = 10;
+            fadeOutSongInterval = setInterval(() => {
+                i += INTERVAL_MILLIS;
+                const lerpValue = i / MILLIS_TO_FADE_OUT_SONG
+                musicInstance.volume = lerp(startVolume, 0, lerpValue);
+                if (lerpValue >= 1) {
+                    resolve();
+                }
+
+            }, INTERVAL_MILLIS);
+        })]);
+        clearInterval(fadeOutSongInterval);
         musicInstance.remove();
     }
     // Loops through songs
