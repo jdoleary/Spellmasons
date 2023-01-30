@@ -28,7 +28,8 @@ const spell: Spell = {
       const awayFrom = state.casterUnit;
       playDefaultSpellSFX(card, prediction);
       const targets = getCurrentTargets(state).filter(t => {
-        return distance(state.casterUnit, t) <= shoveRange;
+        // Don't allow for shoving self, only allow shoving if within shoveRange
+        return t !== state.casterUnit && distance(state.casterUnit, t) <= shoveRange;
       });
       if (prediction) {
         drawUICircle(state.casterUnit, shoveRange, colors.targetBlue, 'Shove Range');
