@@ -2,13 +2,6 @@
 
 ## Priorities
 
-- Make video for how to host
-  - Hosting your own server locally
-  - Hosting a server on the web
-    - Digital Ocean (easy, but costs money)
-    - Hosting it yourself (free, but harder)
-    - Do you want to be a Community Server??
-  - link video on multiplayer page
 - Balance game (Sunday)
 
 - Finish Localization (Monday)
@@ -16,6 +9,7 @@
 - Final Builds (Monday)
 
 - Extras
+  - Answer emails
   - Support Modding
   - Codex
 

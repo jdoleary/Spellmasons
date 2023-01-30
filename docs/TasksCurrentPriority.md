@@ -1,5 +1,14 @@
 ## Tasks
 
+- Infinite loop with fortify
+  - update card badges calls
+  - composeOnDamageEvents
+
+- Look into PartyBot for Discord
+
+- stopping a local server is clunky
+
+- server and game versions are out of sync is missing gif
 - delete settings file if error occurs:
 
 ```
