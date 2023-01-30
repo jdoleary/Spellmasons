@@ -2845,7 +2845,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // Note: it is important that this is done BEFORE a card is actually cast because
           // the card may affect the caster's mana
           effectState.casterUnit.mana -= spellCostTally.manaCost;
-          Unit.takeDamage(effectState.casterUnit, spellCostTally.healthCost, effectState.casterUnit, this, prediction, effectState);
+          if(spellCostTally.healthCost !== 0){
+            Unit.takeDamage(effectState.casterUnit, spellCostTally.healthCost, effectState.casterUnit, this, prediction, effectState);
+          }
 
           // Increment card usage; now that the caster is using the card
           if (casterCardUsage[cardId] === undefined) {
