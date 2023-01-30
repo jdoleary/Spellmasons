@@ -126,6 +126,13 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
   }
   switch (keyCodeMapping) {
     case 'Escape':
+      // close admin menu
+      const elAdminMenuHolder = document.getElementById('admin-menu-holder');
+      if(elAdminMenuHolder){
+        elAdminMenuHolder.remove();
+        return;
+      }
+
       const thereWasInventoryOpen = document.body?.classList.contains(CardUI.openInvClass);
       // force close inventory
       CardUI.toggleInventory(undefined, false, underworld);
@@ -711,12 +718,10 @@ function tryShowDevContextMenu(overworld: Overworld, e: MouseEvent, mousePos: Ve
   }
   // Developer tool, shift left click to choose to spawn a unit
   if (adminMode && e.shiftKey) {
+    const menuHolder = document.createElement('div');
+    menuHolder.id ='admin-menu-holder';
     let menu = document.createElement("div") as HTMLElement;
     menu.id = "ctxmenu"
-    menu.style.top = `${Math.max(0, e.pageY - 100)}px`;
-    menu.style.left = `${Math.max(0, e.pageX - 400)}px`;
-    menu.style.zIndex = '2';
-    menu.onmouseleave = () => menu.outerHTML = '';
     menu.innerHTML = `
     <div>
       <p id='global-label'>Global</p>
@@ -748,7 +753,8 @@ function tryShowDevContextMenu(overworld: Overworld, e: MouseEvent, mousePos: Ve
     `;
 
     // Append menu to DOM
-    document.body.appendChild(menu);
+    document.body.appendChild(menuHolder);
+    menuHolder.appendChild(menu);
 
     createContextMenuOptions(menu, overworld);
 
@@ -1311,6 +1317,7 @@ function createContextMenuOptions(menu: HTMLElement, overworld: Overworld) {
       }
       // Close the menu
       menu.remove();
+      document.getElementById('admin-menu-holder')?.remove();
     })
     const container = document.querySelector(domQueryContainer);
     if (container) {
