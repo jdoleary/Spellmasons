@@ -128,7 +128,7 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
     case 'Escape':
       // close admin menu
       const elAdminMenuHolder = document.getElementById('admin-menu-holder');
-      if(elAdminMenuHolder){
+      if (elAdminMenuHolder) {
         elAdminMenuHolder.remove();
         return;
       }
@@ -668,24 +668,32 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         // Simulate a castCards prediction to obtain a cached copy of the targeted units
         // to send along with the MESSAGE_TYPES.SPELL message which helps prevent
         // desync targeting issues between clients.
-        underworld.castCards(
+        underworld.syncPredictionEntities();
+        const casterPositionAtTimeOfCast = Vec.clone(selfPlayer.unit);
+        const casterUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id);
+        if (!casterUnit) {
+          console.error('Player caster unit not found when attempting to cache targeted units before sending off SPELL')
+        }
+        (!casterUnit ? Promise.resolve() : underworld.castCards(
           // Make a copy of cardUsageCounts for prediction so it can accurately
           // calculate mana for multiple copies of one spell in one cast
           JSON.parse(JSON.stringify(selfPlayer.cardUsageCounts)),
-          selfPlayer.unit,
-          Vec.clone(selfPlayer.unit),
+          casterUnit,
+          Vec.clone(casterUnit),
           cardIds,
           target,
           true,
           false,
           undefined,
           selfPlayer
-        ).then(effectState => {
+        )).then(effectState => {
           clearSpellEffectProjection(underworld, true);
-          const cachedTargetedUnitIds = effectState.targetedUnits.map(u => u.id);
+          const cachedTargetedUnitIds = effectState
+            ? effectState.targetedUnits.map(u => u.id)
+            : undefined;
           overworld.pie.sendData({
             type: MESSAGE_TYPES.SPELL,
-            casterPositionAtTimeOfCast: Vec.clone(selfPlayer.unit),
+            casterPositionAtTimeOfCast,
             cachedTargetedUnitIds,
             x: target.x,
             y: target.y,
@@ -719,7 +727,7 @@ function tryShowDevContextMenu(overworld: Overworld, e: MouseEvent, mousePos: Ve
   // Developer tool, shift left click to choose to spawn a unit
   if (adminMode && e.shiftKey) {
     const menuHolder = document.createElement('div');
-    menuHolder.id ='admin-menu-holder';
+    menuHolder.id = 'admin-menu-holder';
     let menu = document.createElement("div") as HTMLElement;
     menu.id = "ctxmenu"
     menu.innerHTML = `
