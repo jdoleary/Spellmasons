@@ -31,6 +31,7 @@ const spell: Spell = {
       let targets: Vec2[] = state.targetedUnits;
       targets = targets.length ? targets : [state.castLocation];
       let targetsHitCount = 0;
+      let attackPromises = [];
       for (let target of targets) {
         const arrowUnitCollisions = findArrowCollisions(state.casterPositionAtTimeOfCast, state.casterUnit.id, target, prediction, underworld);
         // This regular arrow spell doesn't pierce
@@ -42,7 +43,7 @@ const spell: Spell = {
             // sequentially wont take too long to complete animating.
             // Note: I don't forsee any issues with the following spell (say if a spell was chained after arrow) executing
             // early
-            await Promise.race([new Promise(resolve => setTimeout(resolve, 200)), createVisualFlyingProjectile(
+            const projectilePromise = createVisualFlyingProjectile(
               state.casterPositionAtTimeOfCast,
               firstTarget,
               'projectile/arrow',
@@ -51,7 +52,9 @@ const spell: Spell = {
                 Unit.takeDamage(firstTarget, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
                 targetsHitCount++;
               }
-            })]);
+            });
+            attackPromises.push(projectilePromise);
+            await Promise.race([new Promise(resolve => setTimeout(resolve, 200)), projectilePromise]);
           } else {
             if (Unit.isUnit(firstTarget)) {
               Unit.takeDamage(firstTarget, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
@@ -60,10 +63,14 @@ const spell: Spell = {
           }
         }
       }
-      if (targetsHitCount == 0) {
-        refundLastSpell(state, prediction, 'No target, mana refunded.')
-
-      }
+      Promise.all(attackPromises).then(() => {
+        // Since arrows' flight promises are designed to resolve early so that multiple arrows can be shot
+        // in quick succession, we must await the actual flyingProjectile promise to determine if no targets
+        // were hit
+        if (targetsHitCount == 0) {
+          refundLastSpell(state, prediction, 'No target, mana refunded.')
+        }
+      });
       return state;
     },
   }

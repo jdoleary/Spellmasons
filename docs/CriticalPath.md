@@ -2,7 +2,6 @@
 
 ## Priorities
 
-- bug: Arrow is getting mana refunded even when it hits i think because of the delay
 - bug: targeting omittion causes issue if you cast two spells quickly after oneanother
 - bug: when you drag a spell off the toolbar it still shows up in the inspector
 - disable saving for singleplayer??
