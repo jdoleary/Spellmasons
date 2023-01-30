@@ -2,8 +2,9 @@
 
 ## Priorities
 
-- Balance game (Sunday)
-
+- Cache Targeting to prevent desyncs on multiplayer
+- Default magic color is off?
+- disable saving for singleplayer??
 - Finish Localization (Monday)
 - Validation (Monday)
 - Final Builds (Monday)
@@ -21,8 +22,6 @@
   - Make package for x64
     - `electron-forge package --arch=x64 --platform=darwin`
 
-- Cache Targeting to prevent desyncs on multiplayer
-
 - Make the bossmason a more obvious boss (change name to deathmason)
 
 ## Balance
@@ -34,7 +33,6 @@
 
 ## Sunday
 
-- (m) Integrate i18n translations
 - Integrate Chad's copy
 - Address Cie's balance ideas
 - cap on clone issue? Investigate Cie's comment

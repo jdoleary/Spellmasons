@@ -1,3 +1,6 @@
+- if an arrow kills a unit and you don't move your curser and it had an
+  attention marker it will still have an attention marker until you move your
+  cursor
 ## Brad Playtest
 He doesn’t think saving a loading is a good idea
 Overflow health is buggy? It said he had health but he died unexpectedly 
