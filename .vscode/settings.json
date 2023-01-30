@@ -1,5 +1,6 @@
 {
     "files.autoSave": "onFocusChange",
     "editor.minimap.enabled": false,
-    "editor.lineNumbers": "relative"
+    "editor.lineNumbers": "relative",
+    "editor.formatOnSave": true
 }
