@@ -1,6 +1,7 @@
 import { addTarget, getCurrentTargets, Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 import { Vec2, add } from '../jmath/Vec';
+import * as Unit from '../entity/Unit';
 import * as math from '../jmath/math';
 import { isUnit } from '../entity/Unit';
 import { isPickup } from '../entity/Pickup';
@@ -12,18 +13,19 @@ import * as config from '../config';
 import * as colors from '../graphics/ui/colors';
 
 const id = 'Target Kind';
+const NUMBER_OF_TARGETS_PER_STACK = 5;
 const spell: Spell = {
   card: {
     id,
     category: CardCategory.Targeting,
-    supportQuantity: false,
+    supportQuantity: true,
     manaCost: 60,
     healthCost: 0,
-    expenseScaling: 1,
+    expenseScaling: 3,
     probability: probabilityMap[CardRarity.FORBIDDEN],
     thumbnail: 'spellIconTargetKind.png',
     requiresFollowingCard: true,
-    description: 'spell_target_kind',
+    description: ['spell_target_kind', NUMBER_OF_TARGETS_PER_STACK.toString()],
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
       // Note: This loop must NOT be a for..of and it must cache the length because it
@@ -35,6 +37,29 @@ const spell: Spell = {
         const target = targets[i];
         if (!target) {
           continue;
+        }
+        const prioritySorter = (x: any) => {
+          let value = 0;
+          if (Unit.isUnit(x) && Unit.isUnit(target)) {
+            // If the target is alive, high-weight prioritize finding
+            // other units of the same faction
+            if (target.alive) {
+              if (x.faction == target.faction) {
+                value += 10;
+              }
+            }
+            // prioritize matching alive state, so dead
+            // will prefer chaining to dead and living
+            // will prefer chaining to living
+            if (x.alive == target.alive) {
+              value += 2;
+            } else {
+              // Prefer for a unit target to chain to another unit
+              // over a pickup even if alive state does not match
+              value += 1;
+            }
+          }
+          return value;
         }
         const newTargets = underworld.getPotentialTargets(prediction)
           // Filter out current targets
@@ -49,7 +74,9 @@ const spell: Spell = {
             } else if (isDoodad(target)) {
               return isDoodad(t);
             }
-          });
+          })
+          .sort((a, b) => prioritySorter(b) - prioritySorter(a))
+          .slice(0, NUMBER_OF_TARGETS_PER_STACK * quantity);
         if (!prediction) {
           playSFXKey('targeting');
           // Animate lines to new targets
