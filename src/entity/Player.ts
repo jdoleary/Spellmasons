@@ -10,7 +10,7 @@ import { clearTooltipSelection } from '../graphics/PlanningView';
 import defaultPlayerUnit from './units/playerUnit';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
-import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary } from '../graphics/ui/colors';
+import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary, playerNoColor } from '../graphics/ui/colors';
 import Underworld, { turn_phase } from '../Underworld';
 import * as inLiquid from '../inLiquid';
 import * as lastWill from '../cards/lastwill';
@@ -86,7 +86,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
     // should only be handled in one place and tied directly
     // to pie.clients
     clientConnected: false,
-    color: 0xffffff,
+    color: playerNoColor,
     colorMagic: playerCastAnimationColor,
     unit: Unit.create(
       userSource.id,
@@ -148,19 +148,23 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string, colo
   if (typeof color === 'string') {
     color = parseInt(color);
   }
+  if(color === undefined || isNaN(color)){
+    console.log('Prevented setting robe color to invalid value', color);
+    return;
+  }
   // Protect against hex number as string coming in from storage
   if (typeof colorMagic === 'string') {
     colorMagic = parseInt(colorMagic);
   }
   player.color = color;
-  player.colorMagic = colorMagic || color;
+  player.colorMagic = colorMagic || (color == playerNoColor ? playerCastAnimationColor : color);
   // Add player-specific shaders
   // regardless of if the image sprite changes to a new animation or not.
   if (player.unit.image && player.unit.image.sprite.filters) {
 
 
     const colorSecondary = lightenColor(color, 0.3);
-    if (color && colorSecondary) {
+    if (color && colorSecondary && color !== playerNoColor) {
       const robeColorFilter = new MultiColorReplaceFilter(
         [
           [playerCoatPrimary, color],

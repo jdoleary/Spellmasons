@@ -2,16 +2,22 @@
 
 ## Priorities
 
-- Default magic color is off?
+- bug: Arrow is getting mana refunded even when it hits i think because of the delay
+- bug: targeting omittion causes issue if you cast two spells quickly after oneanother
+- bug: when you drag a spell off the toolbar it still shows up in the inspector
 - disable saving for singleplayer??
 - Finish Localization (Monday)
 - Validation (Monday)
 - Final Builds (Monday)
+- Ensure server browser will detect when a server is offline
 
 - Extras
   - Answer emails
   - Support Modding
   - Codex
+  - Integrate Chad's localization copy
+  - Address Cie's balance ideas
+  - Send Scarlette Seeker a key via Twitter
 
 ## Large Tasks
 
@@ -24,17 +30,8 @@
 - Make the bossmason a more obvious boss (change name to deathmason)
 
 ## Balance
-
-- Some enemies could start with nullify to reject the first spell that hits
-  them??
-- Nerf target kind
 - Make game harder??
 
-## Sunday
-
-- Integrate Chad's copy
-- Address Cie's balance ideas
-- cap on clone issue? Investigate Cie's comment
 
 ## Monday - Validation - Final builds
 

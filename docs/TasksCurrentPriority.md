@@ -36,7 +36,6 @@ Electron: loadSettings SyntaxError: Unexpected non-whitespace character after JS
 - bug: He was able to have the spell continue to cast even after he went through
   a portal
 - bug: Best spell wasn't accurate
-- copy error: in spells cost more mana explained "spell\'s"
 
 ## Content
 

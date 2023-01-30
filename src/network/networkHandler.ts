@@ -381,9 +381,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
             nameText.anchor.y = 0.5;
           }
         }
-        if (color !== undefined) {
-          Player.setPlayerRobeColor(fromPlayer, color, colorMagic);
-        }
+        Player.setPlayerRobeColor(fromPlayer, color, colorMagic);
         Player.syncLobby(underworld);
         underworld.tryRestartTurnPhaseLoop();
       } else {
@@ -701,7 +699,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
       });
     }
     if (caster.colorMagic === null) {
-      caster.colorMagic = caster.color || 0xFFFFFF;
+      caster.colorMagic = caster.color !== colors.playerNoColor ? playerCastAnimationColor : caster.color;
     }
     const keyMoment = () => underworld.castCards(caster.cardUsageCounts, caster.unit, payload.casterPositionAtTimeOfCast, payload.cards, payload, false, false, caster.colorMagic, caster, payload.cachedTargetedUnitIds);
     const colorMagicMedium = lightenColor(caster.colorMagic, 0.3);

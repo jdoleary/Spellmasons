@@ -26,6 +26,8 @@ export const playerCoatPrimary = 0x417F81;
 export const playerCoatSecondary = 0x70A5A7;
 export const playerCastAnimationGlow = 0xff5eb3;
 export const playerCastAnimationColor = 0xFFa1d3;
+// A special reserver color to signify that the player has not chosen a color
+export const playerNoColor = 0xFFFFAA;
 export const playerCastAnimationColorMedium = 0xffc8e5;
 export const playerCastAnimationColorLighter = 0xffe4f2;
 export const playerCastAnimationColorLighter2 = 0xf6d9e8;
