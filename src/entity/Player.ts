@@ -148,7 +148,7 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string, colo
   if (typeof color === 'string') {
     color = parseInt(color);
   }
-  if(color === undefined || isNaN(color)){
+  if (color === undefined || isNaN(color)) {
     console.log('Prevented setting robe color to invalid value', color);
     return;
   }
@@ -405,7 +405,8 @@ export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | u
     }
     player.inventory.push(card.id);
     const emptySlotIndex = player.cards.indexOf('');
-    if (emptySlotIndex !== -1) {
+    // Add the spell to the toolbar
+    if (emptySlotIndex !== -1 && emptySlotIndex < 9) {
       player.cards[emptySlotIndex] = card.id;
     }
     CardUI.recalcPositionForCards(player, underworld);

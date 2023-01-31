@@ -2,14 +2,14 @@
 
 ## Tonight
 
-- "+80%" single turn mana is way to powerful especially when it stacks
-  - does it have to do when you spawn on mana bottle?
+- perk issues:
+  - "+80%" single turn mana is way to powerful especially when it stacks
+    - does it have to do when you spawn on mana bottle?
+  - Big: +5% attack range resulted in WAY to much attack range by level 12
 - target kind animates sequentially not concurrently
   - it also targets already targetd units
 - stamina bar doesn't update while spell is casting
 - Deathmason gif is missing
-- UX shouldn't automatically add spells to the sidebar
-- Big: +5% attack range resulted in WAY to much attack range by level 12
 - spells can "come off the bar" unexpectedly
 - shove radius makes you get too close to minibosses
 - multiple suffocates in separate casts doesn't work right
