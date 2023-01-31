@@ -2,6 +2,7 @@
 
 ## Final Tasks Tonight
 
+- smoke test
 - Build mac, pc, demo for both
 - Upload and test on steam
 - Update servers
