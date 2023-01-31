@@ -1,4 +1,4 @@
-import { chooseOneOf, randFloat } from "./jmath/rand";
+import { chooseObjectWithProbability, chooseOneOf, randFloat } from "./jmath/rand";
 import * as Unit from './entity/Unit';
 import Underworld, { showUpgradesClassName } from "./Underworld";
 import floatingText from './graphics/FloatingText';
@@ -136,20 +136,21 @@ export function generatePerks(number: number, underworld: Underworld): Attribute
         let attribute: UpgradableAttribute = 'stamina';//Default, should never be used
 
         // Choose attribute type
-        const choiceAttributeType = chooseOneOf(['maxStat', 'stat']);
+        const seed = seedrandom(getUniquePerkSeedString(underworld, globalThis.player));
+        const choiceAttributeType = chooseObjectWithProbability([{ attr: 'maxStat', probability: 10 }, { attr: 'stat', probability: 3 }], seed)?.attr || 'maxStat';
         if (choiceAttributeType == 'maxStat') {
             attribute = chooseOneOf(['staminaMax', 'healthMax', 'manaMax', 'attackRange']) || 'stamina';
             when = chooseOneOf<WhenUpgrade>(['immediately', 'everyLevel']) || 'immediately';
             if (when == 'everyLevel') {
-                amount = 1.05;
+                amount = 1.03;
                 if (attribute == 'healthMax') {
-                    amount = 1.10;
+                    amount = 1.08;
                 }
                 certainty = 1.0;
             } else if (when == 'immediately') {
-                amount = 1.3;
+                amount = 1.15;
                 if (attribute == 'healthMax') {
-                    amount = 1.5;
+                    amount = 1.4;
                 }
                 certainty = 1.0;
             }
@@ -159,10 +160,10 @@ export function generatePerks(number: number, underworld: Underworld): Attribute
             // upgrade if they were only changed once
             when = chooseOneOf<WhenUpgrade>(['everyLevel', 'everyTurn']) || 'everyLevel';
             if (when == 'everyLevel') {
-                amount = 1.8;
+                amount = 1.3;
                 certainty = 1.0;
             } else if (when == 'everyTurn') {
-                amount = 1.4;
+                amount = 1.2;
                 certainty = preRolledCertainty;
             } else {
                 console.error('Unexpected: Invalid when for regular stat perk');
@@ -266,10 +267,10 @@ export interface AttributePerk {
     // amount is a preportion 0.0 - 1.0
     amount: number;
 }
-export function getUniquePerkSeedString(underworld: Underworld, player: IPlayer): string {
+export function getUniquePerkSeedString(underworld: Underworld, player?: IPlayer): string {
     // Seeded random based on the turn so it's consistent across all clients
     // based on player client ids so it's unique to each player
-    return `${underworld.seed}-${underworld.levelIndex}-${underworld.turn_number}-${player.clientId}`;
+    return `${underworld.seed}-${underworld.levelIndex}-${underworld.turn_number}-${player?.clientId || '0'}`;
 }
 export function tryTriggerPerk(perk: AttributePerk, player: IPlayer, when: WhenUpgrade, random: seedrandom.PRNG, underworld: Underworld, offsetNotifyByMs: number) {
     if (perk.when == when) {
@@ -288,7 +289,7 @@ export function tryTriggerPerk(perk: AttributePerk, player: IPlayer, when: WhenU
                 } else if (perk.attribute == 'stamina') {
                     maxAmount = player.unit['staminaMax'];
                 }
-                player.unit[perk.attribute] += perk.amount * maxAmount;
+                player.unit[perk.attribute] = perk.amount * maxAmount;
                 player.unit[perk.attribute] = Math.ceil(player.unit[perk.attribute]);
             }
             if (player === globalThis.player) {
