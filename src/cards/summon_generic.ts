@@ -1,4 +1,4 @@
-import { addUnitTarget, Spell } from './index';
+import { addUnitTarget, refundLastSpell, Spell } from './index';
 import * as Unit from '../entity/Unit';
 import { CardCategory, Faction, UnitType } from '../types/commonTypes';
 import { allUnits } from '../entity/units';
@@ -91,7 +91,7 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean):
                             const WARNING = "Invalid Summon Location";
                             addWarningAtMouse(WARNING);
                         } else {
-                            floatingText({ coords: summonLocation, text: 'Invalid summon location!', style: { fill: 'red' } });
+                            refundLastSpell(state, prediction, 'Invalid summon location, mana refunded.')
                         }
                         return state;
                     }

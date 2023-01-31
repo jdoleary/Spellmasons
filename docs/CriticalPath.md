@@ -18,7 +18,6 @@
 - "ready" button should show when you're ready
 - spells can "come off the bar" unexpectedly
 - shove radius makes you get too close to minibosses
-- "invalid summon location" for decoy didn't refund mana
 - multiple suffocates in separate casts doesn't work right
 - red portals left over after level turn over
 
