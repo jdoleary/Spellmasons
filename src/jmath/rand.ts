@@ -50,6 +50,10 @@ export function _chooseObjectWithProbability<T extends objectWithProbability>(ro
   return undefined;
 
 }
+export function chooseOneOfSeeded<T>(arr: T[], seedRandomInstance: prng): T | undefined {
+  const index = randInt(seedRandomInstance, 0, arr.length - 1);
+  return arr[index];
+}
 export function chooseOneOf<T>(arr?: T[]): T | undefined {
   if (!arr) {
     return undefined;

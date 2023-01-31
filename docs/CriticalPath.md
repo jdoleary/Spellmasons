@@ -1,5 +1,11 @@
 # Critical Path
 
+## Final Tasks Tonight
+
+- Build mac, pc, demo for both
+- Upload and test on steam
+- Update servers
+
 ## Tonight
 
 - perk issues:
@@ -9,10 +15,11 @@
 - target kind animates sequentially not concurrently
   - it also targets already targetd units
 - stamina bar doesn't update while spell is casting
-- Deathmason gif is missing
 - shove radius makes you get too close to minibosses
 - multiple suffocates in separate casts doesn't work right
 - red portals left over after level turn over
+- perks didn't trigger for him once, i'm wondering if it resetPlayerForNextLevel
+  or something after the perks had triggered, like resetting a stalled game
 
 ---
 

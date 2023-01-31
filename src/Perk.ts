@@ -1,4 +1,4 @@
-import { chooseObjectWithProbability, chooseOneOf, randFloat } from "./jmath/rand";
+import { chooseObjectWithProbability, chooseOneOf, chooseOneOfSeeded, randFloat } from "./jmath/rand";
 import * as Unit from './entity/Unit';
 import Underworld, { showUpgradesClassName } from "./Underworld";
 import floatingText from './graphics/FloatingText';
@@ -136,11 +136,11 @@ export function generatePerks(number: number, underworld: Underworld): Attribute
         let attribute: UpgradableAttribute = 'stamina';//Default, should never be used
 
         // Choose attribute type
-        const seed = seedrandom(getUniquePerkSeedString(underworld, globalThis.player));
+        const seed = seedrandom(getUniquePerkSeedString(underworld, globalThis.player) + `-${i}-${player?.reroll || 0}`);
         const choiceAttributeType = chooseObjectWithProbability([{ attr: 'maxStat', probability: 10 }, { attr: 'stat', probability: 3 }], seed)?.attr || 'maxStat';
         if (choiceAttributeType == 'maxStat') {
-            attribute = chooseOneOf(['staminaMax', 'healthMax', 'manaMax', 'attackRange']) || 'stamina';
-            when = chooseOneOf<WhenUpgrade>(['immediately', 'everyLevel']) || 'immediately';
+            attribute = chooseOneOfSeeded(['staminaMax', 'healthMax', 'manaMax', 'attackRange'], seed) || 'stamina';
+            when = chooseOneOfSeeded<WhenUpgrade>(['immediately', 'everyLevel'], seed) || 'immediately';
             if (when == 'everyLevel') {
                 amount = 1.03;
                 if (attribute == 'healthMax') {
@@ -155,10 +155,10 @@ export function generatePerks(number: number, underworld: Underworld): Attribute
                 certainty = 1.0;
             }
         } else {
-            attribute = chooseOneOf(['stamina', 'health', 'mana']) || 'stamina';
+            attribute = chooseOneOfSeeded(['stamina', 'health', 'mana'], seed) || 'stamina';
             // Regular stats' when should be recurring because regular stats wouldn't do much good as an
             // upgrade if they were only changed once
-            when = chooseOneOf<WhenUpgrade>(['everyLevel', 'everyTurn']) || 'everyLevel';
+            when = chooseOneOfSeeded<WhenUpgrade>(['everyLevel', 'everyTurn'], seed) || 'everyLevel';
             if (when == 'everyLevel') {
                 amount = 1.3;
                 certainty = 1.0;
