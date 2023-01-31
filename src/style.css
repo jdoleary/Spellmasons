@@ -1940,7 +1940,7 @@ if the inventory is open in which case they can be used to drop spells into */
   pointer-events: none;
 }
 
-.open-inventory .floating-card-holder .slot.empty-slot,
+body.dragging-card .floating-card-holder .slot.empty-slot,
 .floating-card-holder .slot {
   pointer-events: all;
 }
