@@ -10,7 +10,6 @@
 - Deathmason gif is missing
 - UX shouldn't automatically add spells to the sidebar
 - Big: +5% attack range resulted in WAY to much attack range by level 12
-- UI: Quit should be on the left, yes should be on the left for prompts too
 - Disable loading multiplayer games until it's fixed
   - it was hard to get in and a portal and an image of one of us sspawned
     outside the map
