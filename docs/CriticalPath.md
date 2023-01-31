@@ -14,6 +14,7 @@
 - Send Scarlette Seeker a key via Twitter
 - verify servers work
 - Answer emails
+- Update fortify copy to say it only lasts one turn
 
 ## Tonight
 
@@ -58,8 +59,6 @@
 - balance?: single turn perk stamina can keep stacking to an obsurd degree if
   you don't use it
 - disable saving for singleplayer??
-- Finish Localization (Monday)
-- Final Builds (Monday)
 - idea: throttle runPredictions on mouse move?
 - idea: less spell choices, more perk choices?
 

@@ -10,7 +10,18 @@ More specifically, everything inside the `Electron Framework.framework` folder
 is an alias to Current so just replace all those aliases with the real thing.
 Okay it's a little more complicated. It looks like it needs the 3 non-framework
 files to remain, so just delete the framework file in the versions folder ("A"
-renamed to "Current") and leave the rest.
+renamed to "Current") and leave the rest. So it looks like:
+
+- Electron Framework.framework
+  - Electron Framework
+  - Helpers
+  - Libraries
+  - Resources
+  - Versions
+    - Current
+      - Helpers
+      - Libraries
+      - Resources
 
 ## 2023.01.21
 
