@@ -5,7 +5,7 @@ import { MESSAGE_TYPES } from '../types/MessageTypes';
 import * as Image from '../graphics/Image';
 import floatingText from '../graphics/FloatingText';
 import { getUpgradeByTitle } from '../Upgrade';
-import Underworld, { IUnderworldSerializedForSyncronize, LevelData, turn_phase } from '../Underworld';
+import Underworld, { elUpgradePickerContent, IUnderworldSerializedForSyncronize, LevelData, showUpgradesClassName, turn_phase } from '../Underworld';
 import * as Player from '../entity/Player';
 import * as Doodad from '../entity/Doodad';
 import * as Unit from '../entity/Unit';
@@ -602,6 +602,12 @@ async function handleLoadGameState(payload: {
       }
     }
   }
+
+  // Clear upgrades UI when loading a new game
+  if (elUpgradePickerContent) {
+    elUpgradePickerContent.innerHTML = '';
+  }
+  document.body?.classList.toggle(showUpgradesClassName, false);
 
   // Load units
   if (units) {

@@ -100,7 +100,7 @@ const smearJitter = [
   { x: 0, y: 3 },
 ]
 const elUpgradePicker = document.getElementById('upgrade-picker') as (HTMLElement | undefined);
-const elUpgradePickerContent = document.getElementById('upgrade-picker-content') as (HTMLElement | undefined);
+export const elUpgradePickerContent = document.getElementById('upgrade-picker-content') as (HTMLElement | undefined);
 const elSeed = document.getElementById('seed') as (HTMLElement | undefined);
 const elUpgradePickerLabel = document.getElementById('upgrade-picker-label') as (HTMLElement | undefined);
 
