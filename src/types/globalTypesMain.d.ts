@@ -135,7 +135,7 @@ declare global {
     // true if this instance is the headless server with no visuals or audio, just the game logic
     var headless: boolean;
     // Move audio functions into global so they can be injected IF audio is supported
-    var playNextSong: undefined | (() => void | undefined);
+    var playNextSong: undefined | (() => Promise<void> | undefined);
     var playSFX: ((path?: string) => void | undefined);
     var playSFXKey: ((key: string) => void | undefined);
     var sfx: { [key: string]: string[] } | undefined;

@@ -195,7 +195,7 @@ declare global {
     var devKillAll: undefined | (() => void);
     var devRemoveAllEnemies: undefined | (() => void);
     // Move audio functions into global so they can be injected IF audio is supported
-    var playNextSong: undefined | (() => void | undefined);
+    var playNextSong: undefined | (() => Promise<void> | undefined);
     var playSFX: ((path?: string) => void | undefined);
     var playSFXKey: ((key: string) => void | undefined);
     var sfx: { [key: string]: string[] } | undefined;
