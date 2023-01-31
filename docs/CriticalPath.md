@@ -10,7 +10,6 @@
   - it also targets already targetd units
 - stamina bar doesn't update while spell is casting
 - Deathmason gif is missing
-- spells can "come off the bar" unexpectedly
 - shove radius makes you get too close to minibosses
 - multiple suffocates in separate casts doesn't work right
 - red portals left over after level turn over

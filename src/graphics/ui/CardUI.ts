@@ -145,6 +145,10 @@ export function setupCardUIEventListeners(overworld: Overworld) {
     });
 
     elInvContent.addEventListener('dragstart', dragstart);
+    elInvContent.addEventListener('dragend', () => {
+      document.body.classList.toggle('dragging-card', false);
+
+    });
     addCardInspectHandlers(elInvContent);
     for (let i = 0; i < cardContainers.length; i++) {
       const container = cardContainers[i];
@@ -154,8 +158,20 @@ export function setupCardUIEventListeners(overworld: Overworld) {
           ev.preventDefault();
         });
         container.addEventListener('dragend', ev => {
-          deleteCardFromSlot(ev, overworld);
           document.body.classList.toggle('dragging-card', false);
+          // Ensure the drag end is outside of all containers:
+          const stillInsideCardContainer = cardContainers.some(c => {
+            const rect = c.getBoundingClientRect();
+            // Inside bounding rect
+            const inside = ev.x > rect.x && ev.x < (rect.x + rect.width)
+              && ev.y > rect.y && ev.y < (rect.y + rect.height);
+            return inside;
+          });
+          if (stillInsideCardContainer) {
+            // Do not delete a card from slot if it was let go inside of a card container
+            return;
+          }
+          deleteCardFromSlot(ev, overworld);
           // After a card is removed from toolbar, clear it from showing
           // in the .card-inspect element
           clearCurrentlyShownCard();

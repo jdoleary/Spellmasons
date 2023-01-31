@@ -329,6 +329,14 @@ invisibly blocked, change with caution! */
   margin: 0 auto;
 }
 
+#card-holders,
+#card-holders-inner,
+#card-hand {
+  /* The elements within are absolutely positioned but these elements need
+  height so it can be detected if a drag is released within them */
+  height: 100%;
+}
+
 #selected-cards,
 #card-holders #card-hand {
   display: flex;
