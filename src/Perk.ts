@@ -142,13 +142,13 @@ export function generatePerks(number: number, underworld: Underworld): Attribute
             attribute = chooseOneOfSeeded(['staminaMax', 'healthMax', 'manaMax', 'attackRange'], seed) || 'stamina';
             when = chooseOneOfSeeded<WhenUpgrade>(['immediately', 'everyLevel'], seed) || 'immediately';
             if (when == 'everyLevel') {
-                amount = 1.03;
+                amount = 1.02;
                 if (attribute == 'healthMax') {
                     amount = 1.08;
                 }
                 certainty = 1.0;
             } else if (when == 'immediately') {
-                amount = 1.15;
+                amount = 1.10;
                 if (attribute == 'healthMax') {
                     amount = 1.4;
                 }
