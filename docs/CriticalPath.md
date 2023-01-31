@@ -1,5 +1,49 @@
 # Critical Path
 
+## Tonight
+
+- decoy + swap didn't work
+- "+80%" single turn mana is way to powerful especially when it stacks
+  - does it have to do when you spawn on mana bottle?
+- target kind animates sequentially not concurrently
+  - it also targets already targetd units
+- stamina bar doesn't update while spell is casting
+- Deathmason gif is missing
+- UX shouldn't automatically add spells to the sidebar
+- Big: +5% attack range resulted in WAY to much attack range by level 12
+- UI: Quit should be on the left, yes should be on the left for prompts too
+- Disable loading multiplayer games until it's fixed
+  - it was hard to get in and a portal and an image of one of us sspawned
+    outside the map
+- Remove active games column
+- "ready" button should show when you're ready
+- spells can "come off the bar" unexpectedly
+- shove radius makes you get too close to minibosses
+- "invalid summon location" for decoy didn't refund mana
+- multiple suffocates in separate casts doesn't work right
+- red portals left over after level turn over
+
+---
+
+- You can cast while a spell is channeling and go negative mana
+- Am I accidentally sending the mac build along with the PC build??
+- mana badges and red "a card must come after" in the queued spells are offset
+  wrong
+- green glop has shades of blue in it
+  - check when Brad downloads actual game if they aren't colored
+- BUG: cast debilitatex2, arrow, bleed, bleed and entered the portal before
+  bleed was done and it waited for a full timeout before moving on and the cast
+  (and particles are sticking around)
+- scrolling on tooltip makes whole game zoom
+- He spawned in and his single-turn perks didn't proc (maybe because he got to
+  negative mana the game before?)
+  - he was queing up a spell while they were procing
+- attention markers remain up after phantom arrow if you don't move your mouse,
+  check git history
+- target kind UI stays up too long for following spells
+- decoy spawned in the nether died but still had a health bar
+- AOE + Clone on a bunch of corpses is causing lag
+
 ## Priorities
 
 - bug: I was able to end my turn while arrows were still flying
