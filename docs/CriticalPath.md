@@ -4,12 +4,16 @@
 
 - smoke test
 - Build mac, pc, demo for both
-- Mac build
-  - Ensure bundle isn't 700mb with extra stuff
+  - rename LICENSE to electron-license
+  - Ensure mac bundle isn't 700mb with extra stuff
 - Upload and test on steam
-- Update servers
-- Answer emails
+- Verify that main build isn't running demo version
 - Send Scarlette Seeker a key via Twitter
+
+## Tomorrow morning
+
+- verify servers work
+- Answer emails
 
 ## Tonight
 
