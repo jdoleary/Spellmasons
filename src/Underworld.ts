@@ -1180,7 +1180,7 @@ export default class Underworld {
       console.error('Missing caveSize for generating level')
       return;
     }
-    if (levelIndex >= 8 && globalThis.isDemo) {
+    if (levelIndex >= 5 && globalThis.isDemo) {
       Jprompt({
         text: 'Thank you for playing the Demo!\nMore spells, enemies, and levels are available in the full version!',
         yesText: 'Quit'
