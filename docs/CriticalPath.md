@@ -8,10 +8,10 @@
   - Ensure mac bundle isn't 700mb with extra stuff
 - Upload and test on steam
 - Verify that main build isn't running demo version
-- Send Scarlette Seeker a key via Twitter
 
 ## Tomorrow morning
 
+- Send Scarlette Seeker a key via Twitter
 - verify servers work
 - Answer emails
 
