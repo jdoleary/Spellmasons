@@ -362,7 +362,7 @@ globalThis.resetTutorial = function resetTutorial() {
     }
     globalThis.enemyEncountered = [];
     storage.remove(storage.ENEMY_ENCOUNTERED_STORAGE_KEY);
-    Jprompt({ text: 'Tutorial has been reset', yesText: 'Okay', forceShow: true });
+    Jprompt({ text: 'Tutorial will reset after the game is restarted.', yesText: 'Okay', forceShow: true });
 }
 // Returns a value that remains the same as the first time this function was invoked for the duration of the play session
 export function isTutorialComplete() {
