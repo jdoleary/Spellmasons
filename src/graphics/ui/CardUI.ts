@@ -164,7 +164,12 @@ export function setupCardUIEventListeners(overworld: Overworld) {
             const rect = c.getBoundingClientRect();
             // Inside bounding rect
             const inside = ev.x > rect.x && ev.x < (rect.x + rect.width)
-              && ev.y > rect.y && ev.y < (rect.y + rect.height);
+              // card-hand has a height of 10 and if it's height were larger it would cover the end turn and inventory
+              // buttons so instead just set the height to 157 here if the height is detected as 10.
+              // Not proud of this fix but I don't have the time to do it properly.  Worth a refactor if i can revisit it.
+              // This 'stillInsideCardContainer' check is non critical anyway, it just prevents the rare
+              // circumstance where a spell disappears when clicking on it rapidly
+              && ev.y > rect.y && ev.y < (rect.y + (rect.height == 10 ? 157 : rect.height));
             return inside;
           });
           if (stillInsideCardContainer) {
