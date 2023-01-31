@@ -7,14 +7,17 @@
   - rename LICENSE to electron-license
   - Ensure mac bundle isn't 700mb with extra stuff
 - Upload and test on steam
+- WHY DID WALRUS SERVER NOT AUTO UPDATE WHEN I PUSHED A NEW IMAGE??
+  - Apps that use docker hub instead of digital ocean registry need manual
+    updating
 - Verify that main build isn't running demo version
 
 ## Tomorrow morning
 
-- Send Scarlette Seeker a key via Twitter
-- verify servers work
-- Answer emails
+- Address curator connect emails
+- make social media posts
 - Update fortify copy to say it only lasts one turn
+- Text Stina about when soundtrack will be released
 
 ## Tonight
 

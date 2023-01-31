@@ -18,3 +18,4 @@ docker push "$PUBLIC_IMAGE_PATH:$PACKAGE_VERSION"
 docker push "$PUBLIC_IMAGE_PATH:latest"
 
 echo "Pushed image to Digital Ocean" 
+echo "Don't Forget to manually update any apps that are using the hub.docker.com image such as the Walrus server"
