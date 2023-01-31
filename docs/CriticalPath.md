@@ -4,8 +4,12 @@
 
 - smoke test
 - Build mac, pc, demo for both
+- Mac build
+  - Ensure bundle isn't 700mb with extra stuff
 - Upload and test on steam
 - Update servers
+- Answer emails
+- Send Scarlette Seeker a key via Twitter
 
 ## Tonight
 
@@ -51,15 +55,14 @@
   you don't use it
 - disable saving for singleplayer??
 - Finish Localization (Monday)
-- Validation (Monday)
 - Final Builds (Monday)
 - idea: throttle runPredictions on mouse move?
 - idea: less spell choices, more perk choices?
 
 - Extras
-  - Answer emails
   - Support Modding
   - Codex
+  - Answer emails
   - Send Scarlette Seeker a key via Twitter
 
 ## Large Tasks
@@ -88,9 +91,6 @@
 
 ## Day of
 
-- Check timezone for release
-- Update Chad's copy
-- Add that cross-platform multiplayer is supported
 - Update translations and verify all translators are in credits
 - Verify hardware specs harddrive space requirement
 - Update Demo
