@@ -1992,18 +1992,20 @@ body.dragging-card .floating-card-holder .empty-slot {
   margin: 8px auto;
 
 }
+
 #admin-menu-holder {
   display: flex;
   justify-content: center;
   align-items: center;
-  width:100vw;
-  height:100vh;
+  width: 100vw;
+  height: 100vh;
   pointer-events: none;
   position: absolute;
-  top:0;
-  left:0;
+  top: 0;
+  left: 0;
 }
+
 #ctxmenu {
-  pointer-events:all;
+  pointer-events: all;
   z-index: 2;
 }
