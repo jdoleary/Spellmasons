@@ -1172,15 +1172,8 @@ export default class Underworld {
     return false;
 
   }
-
-  // Returns undefined if it fails to make valid LevelData
-  generateRandomLevelData(levelIndex: number): LevelData | undefined {
-    console.log('Setup: generateRandomLevel', levelIndex);
-    if (!caveSizes.tutorial || !caveSizes.small || !caveSizes.medium || !caveSizes.extrasmall) {
-      console.error('Missing caveSize for generating level')
-      return;
-    }
-    if (levelIndex >= 5 && globalThis.isDemo) {
+  assertDemoExit(){
+    if (this.levelIndex >= 5 && globalThis.isDemo) {
       Jprompt({
         text: 'Thank you for playing the Demo!\nMore spells, enemies, and levels are available in the full version!',
         yesText: 'Quit'
@@ -1189,6 +1182,16 @@ export default class Underworld {
           globalThis.exitCurrentGame();
         }
       })
+    }
+
+  }
+
+  // Returns undefined if it fails to make valid LevelData
+  generateRandomLevelData(levelIndex: number): LevelData | undefined {
+    console.log('Setup: generateRandomLevel', levelIndex);
+    if (!caveSizes.tutorial || !caveSizes.small || !caveSizes.medium || !caveSizes.extrasmall) {
+      console.error('Missing caveSize for generating level')
+      return;
     }
 
     const biome_water: Biome = 'water';

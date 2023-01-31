@@ -449,9 +449,8 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         console.error('Cannot SPAWN_PLAYER, fromPlayer is undefined.')
       }
       Player.syncLobby(underworld);
-
-
       underworld.tryRestartTurnPhaseLoop();
+      underworld.assertDemoExit();
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
       if (fromPlayer == globalThis.player) {
@@ -634,6 +633,8 @@ async function handleLoadGameState(payload: {
   if (globalThis.headless) {
     ensureAllClientsHaveAssociatedPlayers(overworld, overworld.clients);
   }
+
+  underworld.assertDemoExit();
 
 }
 async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Underworld) {
