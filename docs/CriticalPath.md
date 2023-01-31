@@ -2,7 +2,6 @@
 
 ## Tonight
 
-- decoy + swap didn't work
 - "+80%" single turn mana is way to powerful especially when it stacks
   - does it have to do when you spawn on mana bottle?
 - target kind animates sequentially not concurrently

@@ -111,7 +111,7 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean):
                     if (asMiniboss) {
                         Unit.makeMiniboss(unit);
                     }
-                    addUnitTarget(unit, state);
+                    addUnitTarget(unit, state, true);
 
                     if (!prediction) {
                         // Animate effect of unit spawning from the sky

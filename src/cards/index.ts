@@ -372,8 +372,11 @@ export function addTarget(target: any, effectState: EffectState) {
     console.error('addTarget unsupported for ', target);
   }
 }
-export function addUnitTarget(unit: Unit.IUnit, effectState: EffectState) {
-  if (effectState.preCachedTargetedUnitIds && !effectState.preCachedTargetedUnitIds.includes(unit.id)) {
+
+// forceAdd overrides the preCachedTargetedUnitIds check.  This is used for when a unit is created
+// by the spell such as Summon Decoy (so it's unit id wouldn't have been available to cache)
+export function addUnitTarget(unit: Unit.IUnit, effectState: EffectState, forceAdd?: boolean) {
+  if (!forceAdd && effectState.preCachedTargetedUnitIds && !effectState.preCachedTargetedUnitIds.includes(unit.id)) {
     console.log('Omit unit', unit.id, ' from targeting because it wasnt precached');
     return;
   }
