@@ -2042,6 +2042,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   // Sends a network message to end turn
   async endMyTurn() {
     if (globalThis.player) {
+      if (!globalThis.player.isSpawned) {
+        console.log('You cannot end your turn until you are spawned.');
+        return;
+      }
       // Turns can only be manually ended during the PlayerTurns phase
       if (this.isMyTurn()) {
         // Check globalThis.player.isSpawned to prevent quicksaving an invalid underworld file
