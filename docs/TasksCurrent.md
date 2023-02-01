@@ -10,13 +10,11 @@
   spells. So if you refresh the spells till it's down to just one, quit to the
   main menu, then start a new run your first and only choice will be that same
   spell. Only way to fully refresh is by choosing all 3 spells then quitting
-- clone isn't limited like split is
 - last will + clone allows infinite mana
 - mana refunded but not really (see MacgyverTheDiver's video on discord)
 - unreproduced: dash to scroll in lava didn't hurt player but they still got the
   scroll
 - when you have all spells you stop getting perks?
-- idea: achievement for killing yourself with capture soul
 - Connect is targeting self when there is another enemy available, see Reyna's
   picture in #general
 - clicking on upgrade spawns your player where you click : add a delay

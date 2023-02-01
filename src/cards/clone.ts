@@ -19,7 +19,7 @@ const spell: Spell = {
     manaCost: 80,
     healthCost: 0,
     probability: probabilityMap[CardRarity.FORBIDDEN],
-    expenseScaling: 2,
+    expenseScaling: 4,
     thumbnail: 'spellIconClone.png',
     description: 'spell_clone',
     effect: async (state, card, quantity, underworld, prediction) => {

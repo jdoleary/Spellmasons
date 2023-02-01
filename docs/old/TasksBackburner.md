@@ -1,3 +1,4 @@
+- idea: achievement for killing yourself with capture soul
 - **bug** ally priest miniboss is only rezing one corpse
 - target similar / connect line animates farther than it should
 - (unreproducable) bug: In multiplayer: target similar, damage x3 on 2 draggers
