@@ -5,7 +5,6 @@
 - More requests for hotseat multiplayer
 - **bug** / ux improvement: click on upgrade also resorts in spawn
 - **optimize** limit mana steal orbs
-- map panning (WASD) should be relative to zoom level
 - Change name color
 - **bug** Spells don't refresh between runs if you exit before choosing all your
   spells. So if you refresh the spells till it's down to just one, quit to the

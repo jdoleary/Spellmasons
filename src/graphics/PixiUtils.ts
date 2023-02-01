@@ -484,19 +484,19 @@ export function updateCameraPosition(underworld: Underworld) {
         }
         // Allow camera movement via WSAD
         if (keyDown.cameraUp) {
-          utilProps.camera.y -= config.CAMERA_BASE_SPEED;
+          utilProps.camera.y -= config.CAMERA_BASE_SPEED * 1 / zoom;
           tutorialCompleteTask('camera');
         }
         if (keyDown.cameraDown) {
-          utilProps.camera.y += config.CAMERA_BASE_SPEED;
+          utilProps.camera.y += config.CAMERA_BASE_SPEED * 1 / zoom;
           tutorialCompleteTask('camera');
         }
         if (keyDown.cameraRight) {
-          utilProps.camera.x += config.CAMERA_BASE_SPEED;
+          utilProps.camera.x += config.CAMERA_BASE_SPEED * 1 / zoom;
           tutorialCompleteTask('camera');
         }
         if (keyDown.cameraLeft) {
-          utilProps.camera.x -= config.CAMERA_BASE_SPEED;
+          utilProps.camera.x -= config.CAMERA_BASE_SPEED * 1 / zoom;
           tutorialCompleteTask('camera');
         }
         // Clamp centerTarget so that there isn't a lot of empty space
