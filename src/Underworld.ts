@@ -3208,7 +3208,7 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
   }
   console.log('Budget for level index', adjustedLevelIndex, 'is', budgetLeft);
   const totalBudget = budgetLeft;
-  if (levelIndex == 11) {
+  if (levelIndex == config.LAST_LEVEL_INDEX) {
     budgetLeft -= 20;
     units.push(bossmasonUnitId);
   }

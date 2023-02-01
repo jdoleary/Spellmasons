@@ -201,7 +201,8 @@ export function create(
 
     // Note: This must be invoked after initial setting of stat and statMax (health, mana, stamina, etc) so that it can scale
     // stat relative to maxStat
-    adjustUnitDifficulty(unit, calculateGameDifficulty(underworld));
+    const difficulty = calculateGameDifficulty(underworld);
+    adjustUnitDifficulty(unit, difficulty);
 
     unit.image?.sprite.scale.set(config.NON_HEAVY_UNIT_SCALE);
     setupShaders(unit);
