@@ -1,10 +1,8 @@
-- **easy** add 'self hosting multiplayer' lihnk to menu
 - post on itch.io
 - Plan modding
 - Demo
 - look into Russian Ruble price discrepancy
 - More requests for hotseat multiplayer
-- **bug** ally priest miniboss is only rezing one corpse
 - **bug** / ux improvement: click on upgrade also resorts in spawn
 - **optimize** limit mana steal orbs
 - map panning (WASD) should be relative to zoom level
@@ -36,6 +34,10 @@
 
 - How is it possible that the particle emitters didn't get cleaned up? How did
   castCards not finissh??
+
+## Validation for 1.1.0
+
+- Validate "how to host your own server" button link works
 
 ## Notify people when languages get finalized:
 
