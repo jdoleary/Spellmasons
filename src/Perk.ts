@@ -136,7 +136,7 @@ export function generatePerks(number: number, underworld: Underworld): Attribute
         let attribute: UpgradableAttribute = 'stamina';//Default, should never be used
 
         // Choose attribute type
-        const seed = seedrandom(getUniquePerkSeedString(underworld, globalThis.player) + `-${i}-${player?.reroll || 0}`);
+        const seed = seedrandom(getUniquePerkSeedString(underworld, globalThis.player) + `-${i}-${player?.reroll || 0}-${failedDueToDuplicateCount}`);
         const choiceAttributeType = chooseObjectWithProbability([{ attr: 'maxStat', probability: 10 }, { attr: 'stat', probability: 3 }], seed)?.attr || 'maxStat';
         if (choiceAttributeType == 'maxStat') {
             attribute = chooseOneOfSeeded(['staminaMax', 'healthMax', 'manaMax', 'attackRange'], seed) || 'stamina';
