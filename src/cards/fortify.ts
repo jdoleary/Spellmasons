@@ -24,7 +24,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconFortify.png',
     animationPath: 'spell-effects/spellShield',
-    description: ['spell_fortify', DAMGAGE_REDUCTION_PROPORTION.toString()],
+    description: ['spell_fortify', Math.round(DAMGAGE_REDUCTION_PROPORTION * 100).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);
@@ -74,7 +74,7 @@ const spell: Spell = {
       if (modifier) {
         // Only block damage, not heals
         if (amount > 0) {
-          const adjustedAmount = Math.round(amount * (1.0-Math.min(1,DAMGAGE_REDUCTION_PROPORTION*(modifier.quantity||1))));
+          const adjustedAmount = Math.round(amount * (1.0 - Math.min(1, DAMGAGE_REDUCTION_PROPORTION * (modifier.quantity || 1))));
           if (!prediction) {
             floatingText({
               coords: unit,

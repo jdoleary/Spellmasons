@@ -3,7 +3,6 @@
 - Demo
 - **bug** nullify bug: it doesn't leave after it cancels a spell so if you cast
   it on an enemy you cant kill it
-- **copy** fortify reduces damage by 10% not 0.1%
 - look into Russian Ruble price discrepancy
 - More requests for hotseat multiplayer
 - **bug** Summon particles persisting
@@ -36,8 +35,9 @@
   before placing your character it will do the mob turn and after some skip you
   will die.")
 
-- ## i18n todo:
+- ## i18n / copy:
   - "suffocated!"
+  - fortify: add "for one turn"
 
 ## Notify people when languages get finalized:
 
