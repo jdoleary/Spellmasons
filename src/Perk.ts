@@ -184,7 +184,7 @@ export function generatePerks(number: number, underworld: Underworld): Attribute
             i--;
             failedDueToDuplicateCount++;
             if (failedDueToDuplicateCount > 100) {
-                console.error('Infinite loop protection, could not generate unique perk', JSON.stringify(perks));
+                console.error('Infinite loop protection, could not generate unique perk');
                 return perks;
             }
             continue;
