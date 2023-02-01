@@ -6,7 +6,7 @@ import { drawUICircle } from '../graphics/PlanningView';
 import { forcePush, velocityStartMagnitude } from './push';
 import type Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
-import { createParticleTexture, simpleEmitter } from '../graphics/Particles';
+import { createParticleTexture, logNoTextureWarning, simpleEmitter } from '../graphics/Particles';
 import { Vec2 } from '../jmath/Vec';
 import * as colors from '../graphics/ui/colors';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
@@ -118,14 +118,14 @@ const spell: Spell = {
   }
 };
 function makeBloatExplosionWithParticles(position: Vec2, size: number, prediction: boolean) {
-  if (prediction) {
+  if (prediction || globalThis.headless) {
     // Don't show if just a prediction
-    return
+    return;
   }
   const texture = createParticleTexture();
   if (!texture) {
-    console.error('No texture for makeBloatExplosion')
-    return
+    logNoTextureWarning('makeBloatExplosion');
+    return;
   }
   const config =
     particles.upgradeConfig({

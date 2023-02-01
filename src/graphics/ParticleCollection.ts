@@ -5,14 +5,17 @@ import { easeOutCubic } from '../jmath/Easing';
 import { lerp } from '../jmath/math';
 import { Vec2 } from '../jmath/Vec';
 import * as config from '../config';
-import { containerParticlesUnderUnits, createHardCircleParticleTexture, createParticleTexture, simpleEmitter, wrappedEmitter } from './Particles';
+import { containerParticlesUnderUnits, createHardCircleParticleTexture, createParticleTexture, logNoTextureWarning, simpleEmitter, wrappedEmitter } from './Particles';
 import { bleedInstantKillProportion } from '../cards/bleed';
 import { containerUnits } from './PixiUtils';
 import { IUnit } from '../entity/Unit';
 import Underworld from '../Underworld';
 export function makeBleedParticles(position: Vec2, prediction: boolean, proportion: number, resolver?: () => void) {
-    if (prediction) {
+    if (prediction || globalThis.headless) {
         // Don't show if just a prediction
+        if (resolver) {
+            resolver();
+        }
         return
     }
     // proportion goes from 0.0 to bleedInstantKillProportion;
@@ -27,7 +30,10 @@ export function makeBleedParticles(position: Vec2, prediction: boolean, proporti
     }
     const texture = createParticleTexture();
     if (!texture) {
-        console.error('No texture for particles')
+        logNoTextureWarning('makeBleedParticles');
+        if (resolver) {
+            resolver();
+        }
         return
     }
     const particleConfig =
@@ -89,14 +95,14 @@ export function makeBleedParticles(position: Vec2, prediction: boolean, proporti
 
 }
 export function makeRisingParticles(position: Vec2, prediction: boolean, color: string = '#ffffff', emitterLifetime = 0.7) {
-    if (prediction) {
+    if (prediction || globalThis.headless) {
         // Don't show if just a prediction
-        return
+        return;
     }
     const texture = createParticleTexture();
     if (!texture) {
-        console.error('No texture for particles')
-        return
+        logNoTextureWarning('makeRisingParticles');
+        return;
     }
     const particleConfig =
         particles.upgradeConfig({
@@ -159,22 +165,22 @@ export function makeRisingParticles(position: Vec2, prediction: boolean, color: 
 }
 // Max final scale should be 1
 export function makeBurstParticles(position: Vec2, finalScale: number, prediction: boolean, resolver?: () => void) {
-    if (prediction) {
+    if (prediction || globalThis.headless) {
         // Don't show if just a prediction
         if (resolver) {
             // Resolve immediately
             resolver();
         }
-        return
+        return;
     }
     const texture = createHardCircleParticleTexture();
     if (!texture) {
-        console.error('No texture for makeScrollDissapearParticles')
+        logNoTextureWarning('makeBurstParticles');
         if (resolver) {
             // Resolve immediately
             resolver();
         }
-        return
+        return;
     }
     const rings = 10;
     const millisBetweenRings = 50;
@@ -255,14 +261,14 @@ export function makeBurstParticles(position: Vec2, finalScale: number, predictio
     }
 }
 export function makeScrollDissapearParticles(position: Vec2, prediction: boolean) {
-    if (prediction) {
+    if (prediction || globalThis.headless) {
         // Don't show if just a prediction
-        return
+        return;
     }
     const texture = createParticleTexture();
     if (!texture) {
-        console.error('No texture for makeScrollDissapearParticles')
-        return
+        logNoTextureWarning('makeScrollDissapearParticles');
+        return;
     }
     const particleConfig =
         particles.upgradeConfig({
@@ -322,14 +328,20 @@ export function makeScrollDissapearParticles(position: Vec2, prediction: boolean
     simpleEmitter(position, particleConfig);
 }
 export function makeDarkPriestAttackParticles(position: Vec2, prediction: boolean, resolver?: () => void) {
-    if (prediction) {
+    if (prediction || globalThis.headless) {
         // Don't show if just a prediction
-        return
+        if (resolver) {
+            resolver();
+        }
+        return;
     }
     const texture = createHardCircleParticleTexture();
     if (!texture) {
-        console.error('No texture for particles')
-        return
+        logNoTextureWarning('makeDarkPriestAttackParticles');
+        if (resolver) {
+            resolver();
+        }
+        return;
     }
     const particleConfig =
         particles.upgradeConfig({
@@ -386,13 +398,19 @@ export function makeDarkPriestAttackParticles(position: Vec2, prediction: boolea
 
 // The bossmason's "cape"
 export function makeCorruptionParticles(follow: IUnit, prediction: boolean, underworld: Underworld, resolver?: () => void) {
-    if (prediction) {
+    if (prediction || globalThis.headless) {
         // Don't show if just a prediction
+        if (resolver) {
+            resolver();
+        }
         return
     }
     const texture = createParticleTexture();
     if (!texture) {
-        console.error('No texture for particles')
+        logNoTextureWarning('makeCorruptionParticles');
+        if (resolver) {
+            resolver();
+        }
         return
     }
     const particleConfig =
@@ -470,14 +488,14 @@ export function makeCorruptionParticles(follow: IUnit, prediction: boolean, unde
 
 export const RED_PORTAL_JID = 'redPortal';
 export function makeRedPortal(position: Vec2, prediction: boolean) {
-    if (prediction) {
+    if (prediction || globalThis.headless) {
         // Don't show if just a prediction
-        return
+        return;
     }
     const texture = createParticleTexture();
     if (!texture) {
-        console.error('No texture for particles')
-        return
+        logNoTextureWarning('makeRedPortal');
+        return;
     }
     const particleConfig =
         particles.upgradeConfig({

@@ -232,6 +232,12 @@ export function updateParticlees(delta: number, bloods: BloodParticle[], seedran
 
     }
 }
+export function logNoTextureWarning(where: string) {
+    // Headless never uses textures
+    if (!globalThis.headless) {
+        console.error(`No texture ${where}`);
+    }
+}
 
 export function createParticleTexture() {
     if (!globalThis.pixi) {
@@ -255,12 +261,12 @@ export function createHardCircleParticleTexture() {
 export function moveStreakEmitter(position: Vec2, prediction: boolean) {
     if (prediction) {
         // Don't show if just a prediction
-        return undefined
+        return undefined;
     }
     const texture = createParticleTexture();
     if (!texture) {
-        console.error('No texture for makeBloatExplosion')
-        return
+        logNoTextureWarning('makeBloatExplosion');
+        return;
     }
     const config =
         particles.upgradeConfig({
