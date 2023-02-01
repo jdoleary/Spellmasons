@@ -29,6 +29,7 @@ globalThis.quicksaveKey = 'quicksave';
 // toggle this to true, make the build and toggle it back off
 globalThis.isDemo = false;
 globalThis.emitters = [];
+globalThis.timeLastChoseUpgrade = Date.now();
 // setupAudio must be invoked before getSavedData so that the saved audio
 // options can persist
 setupAudio();

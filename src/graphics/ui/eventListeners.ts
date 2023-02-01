@@ -583,7 +583,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         // Some people are experiencing an issue where they accidentally spawn after
         // choosing an upgrade.  This small 300 milli buffer is meant to protect against
         // that happening.
-        if (timeLastChoseUpgrade && Date.now() - timeLastChoseUpgrade < 300) {
+        if (typeof timeLastChoseUpgrade !== 'undefined' && Date.now() - timeLastChoseUpgrade < 300) {
           console.log('Prevent accidental spawn after choosing upgrade');
           return;
         }
