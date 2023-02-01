@@ -182,7 +182,7 @@ export default class Underworld {
   isRestarting: NodeJS.Timer | undefined = undefined;
   particleFollowers: {
     displayObject: DisplayObject,
-    emitter: Emitter,
+    emitter?: Emitter,
     target: Unit.IUnit
   }[] = []
 
@@ -686,7 +686,7 @@ export default class Underworld {
       // ySortPositionOverride relative to other units but the particles still remain in game space
       // so that when the parent moves, the particles will list behind as you'd expect them to.
       displayObject.ySortPositionOverride = target.y - 1;
-      emitter.updateOwnerPos(target.x, target.y);
+      emitter?.updateOwnerPos(target.x, target.y);
     }
     for (let p of this.pickups) {
       Pickup.sync(p);
@@ -1551,7 +1551,9 @@ export default class Underworld {
   cleanUpLevel() {
     // false ensures that all emitters are cleaned up, not just the
     // turn-scoped emitters
+    this.particleFollowers = [];
     cleanUpEmitters(false);
+
     // Now that it's a new level clear out the level's dodads such as
     // bone dust left behind from destroyed corpses
     containerDoodads?.removeChildren();
