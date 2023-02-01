@@ -3,8 +3,6 @@
 - Demo
 - look into Russian Ruble price discrepancy
 - More requests for hotseat multiplayer
-- **bug** / ux improvement: click on upgrade also resorts in spawn
-- **optimize** limit mana steal orbs
 - idea: Change name color
 - last will + clone allows infinite mana
 - mana refunded but not really (see MacgyverTheDiver's video on discord)
