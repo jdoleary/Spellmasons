@@ -54,6 +54,12 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
     return;
   }
   switch (type) {
+    case MESSAGE_TYPES.PLAYER_THINKING:
+      const thinkingPlayer = underworld.players.find(p => p.clientId === fromClient)
+      if (thinkingPlayer && thinkingPlayer != globalThis.player) {
+        underworld.playerThoughts[thinkingPlayer.clientId] = payload;
+      }
+      break;
     case MESSAGE_TYPES.JOIN_GAME_AS_PLAYER:
       const { asPlayerClientId } = payload;
       const asPlayer = underworld.players.find(p => p.clientId == asPlayerClientId);
@@ -226,12 +232,6 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
   // Get player of the client that sent the message 
   const fromPlayer = underworld.players.find((p) => p.clientId === fromClient);
   switch (type) {
-    case MESSAGE_TYPES.PLAYER_THINKING:
-      const thinkingPlayer = underworld.players.find(p => p.clientId === fromClient)
-      if (thinkingPlayer && thinkingPlayer != globalThis.player) {
-        underworld.playerThoughts[thinkingPlayer.clientId] = payload;
-      }
-      break;
     case MESSAGE_TYPES.CHANGE_CHARACTER:
       const player = underworld.players.find(p => p.clientId === fromClient)
       if (player) {
