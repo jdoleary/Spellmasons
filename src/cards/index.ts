@@ -65,6 +65,8 @@ import target_arrow from './target_arrow';
 import conserve from './conserve';
 import phantom_arrow from './phantom_arrow';
 
+import * as config from '../config';
+
 import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
 import { addCardToHand } from '../entity/Player';
@@ -75,6 +77,7 @@ import { Overworld } from '../Overworld';
 import { allUnits } from '../entity/units';
 import floatingText from '../graphics/FloatingText';
 import { Localizable } from '../localization';
+import { distance } from '../jmath/math';
 export interface Modifiers {
   subsprite?: Subsprite;
   // run special init logic (usually for visuals) when a modifier is added or loaded
@@ -309,7 +312,16 @@ export function defaultTargetsForAllowNonUnitTargetTargetingSpell(targets: Vec2[
     // Returning just the castLocation when only one target (or less) is targeted
     // means that the spell will cast on the castLocation rather than the center of 
     // targets[0], which is some entity's (unit, pickup, doodad) center.
-    return targets.length <= 1 ? [castLocation] : targets;
+    const firstTarget = targets[0];
+    return (
+      // If there are no targets, return the cast location so players can cast a targeting spell anywhere on the ground
+      targets.length == 0
+      ||
+      // If there is only 1 target, return the cast location (e.g. disable snapping) so long as the target isn't moving due to the spell.  If the distance from the target to the cast location
+      // is less than what would be a selectable distance then disable snapping to the target; however, if not, DO SNAP (this allows Push + Targeting Spell to make the targeting spell appear at the final position
+      // that the unit was pushed to) 
+      firstTarget && distance(firstTarget, castLocation) <= ((Unit.isUnit(firstTarget) && firstTarget.isMiniboss) ? config.SELECTABLE_RADIUS * config.UNIT_MINIBOSS_SCALE_MULTIPLIER : config.SELECTABLE_RADIUS)
+    ) ? [castLocation] : targets;
   } else {
     console.error('defaultTargetsForAllowNonUnitTargetTargetingSpell was invoked on a card that it wasn\'t designed for:', card.id);
     return targets;

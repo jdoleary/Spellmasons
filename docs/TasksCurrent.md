@@ -5,7 +5,6 @@
 - More requests for hotseat multiplayer
 - **bug** Summon particles persisting
 - **bug** ally priest miniboss is only rezing one corpse
-- shove + targeting spell doesn't use the right location for the targeting spell
 - **bug** / ux improvement: click on upgrade also resorts in spawn
 - **optimize** limit mana steal orbs
 - map panning (WASD) should be relative to zoom level
