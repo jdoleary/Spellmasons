@@ -965,6 +965,8 @@ export default class Underworld {
   // if an object stops being used.  It does not empty the underworld arrays, by design.
   cleanup() {
     console.log('teardown: Cleaning up underworld');
+    // Clear upgrades
+    document.body?.classList.toggle(showUpgradesClassName, false);
     this.cleanUpLevel();
     cleanUpPerkList();
     // Dereference underworld

@@ -6,10 +6,6 @@
 - **bug** / ux improvement: click on upgrade also resorts in spawn
 - **optimize** limit mana steal orbs
 - Change name color
-- **bug** Spells don't refresh between runs if you exit before choosing all your
-  spells. So if you refresh the spells till it's down to just one, quit to the
-  main menu, then start a new run your first and only choice will be that same
-  spell. Only way to fully refresh is by choosing all 3 spells then quitting
 - last will + clone allows infinite mana
 - mana refunded but not really (see MacgyverTheDiver's video on discord)
 - unreproduced: dash to scroll in lava didn't hurt player but they still got the
@@ -21,6 +17,15 @@
 - left off at "(sorry for my bad english i'm french) if you skip your turn
   before placing your character it will do the mob turn and after some skip you
   will die.")
+- Add Amsterdam server after you fix multiplayer
+- Deleted saves get restored (maybe because of duplicate names?)
+- Experienced the following bugs in multiplayer both local and on the community
+  server: Enemies would sometimes revive if killed, seems to do it consistent if
+  hit with the bleed attack, if you somehow disconnect there is no way to
+  reconnect and the runs has been lost. At last this isn’t a bug, but at the
+  current state focusing hp is too powerful and will make you able to one turn
+  every level (targets spell + manasteal)
+- hotbar rebinding doesn't reflect in the UI
 
 - ## i18n / copy:
   - "suffocated!"
@@ -34,6 +39,16 @@
 ## Validation for 1.1.0
 
 - Validate "how to host your own server" button link works
+
+# Community ideas:
+
+- Reyna: Would really appreciate the capability of viewing the map while picking
+  a spell, maybe just minimizing the selector until I'm sure what will be able
+  to help
+- J'in: Suggestion: when losing a run, return to lobby instead of leaving game
+- WellaWeiss — Today at 3:11 AM Really liking the game as well, can definitely
+  agree with those suggestions, I also wish the we could directly control
+  summons
 
 ## Notify people when languages get finalized:
 

@@ -12,6 +12,7 @@ sounds like when someone dies the game desyncs?
 
 - When I do this, revalidate the snapping of movement + targeting spells in
   a24d1259
+- reduce logging on server for efficiency?
 
 ## 2023.01.31
 
