@@ -13,6 +13,7 @@ sounds like when someone dies the game desyncs?
 - When I do this, revalidate the snapping of movement + targeting spells in
   a24d1259
 - reduce logging on server for efficiency?
+- could be due to things like bleed taking too long. see ae9add33
 
 ## 2023.01.31
 
