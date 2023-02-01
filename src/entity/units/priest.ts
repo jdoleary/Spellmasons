@@ -36,6 +36,9 @@ async function resurrectUnits(self: Unit.IUnit, units: Unit.IUnit[], underworld:
     didResurrect = true;
   }
   await Promise.all(promises);
+  // Ensure priest never goes below 0 mana
+  // This is a bandaid because a miniboss priest will cast multiple times drawing mana from each cast
+  self.mana = Math.max(0, self.mana);
   return didResurrect;
 
 }
