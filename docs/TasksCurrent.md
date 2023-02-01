@@ -1,3 +1,5 @@
+- ** BIG BUG ** if you rejoin a game the ready button is greyed out and you
+  can't click it
 - post on itch.io
 - Plan modding
 - Demo
