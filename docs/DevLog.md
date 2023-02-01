@@ -1,5 +1,17 @@
 ## 2023.01.31
 
+Ways to fix multiplayer desyncs. I could split spells into 3 functions:
+
+- animate(targets[])
+- effect(targets[], extra)
+- calculate() -> {targets[],extra:object}
+
+for prediction I could calculate and effect. for casting I could calculate and
+send and then once it comes back from the server it effect()s and animate()s
+sounds like when someone dies the game desyncs?
+
+## 2023.01.31
+
 Fixed mac build bloat. When I transfer the mac files to pc it doubles in size
 because it's making a full copy of an alias at "Contents/Frameworks/Electron
 Framework.framework/Versions/Current" which just points to the folder `A` in the

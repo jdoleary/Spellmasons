@@ -1,3 +1,50 @@
+- post on itch.io
+- Plan modding
+- Demo
+- **bug** nullify bug: it doesn't leave after it cancels a spell so if you cast
+  it on an enemy you cant kill it
+- **bug** Multiple music tracks play simultaneously
+- **copy** fortify reduces damage by 10% not 0.1%
+- look into Russian Ruble price discrepancy
+- More requests for hotseat multiplayer
+- **bug** Summon particles persisting
+- priests have a damage stat but they shouldn't
+- **bug** ally priest miniboss is only rezing one corpse
+- after rezing ally priest and he casts his mana showed -120 (he rezzed 2 units)
+- shove + targeting spell doesn't use the right location for the targeting spell
+- **bug** / ux improvement: click on upgrade also resorts in spawn
+- **optimize** limit mana steal orbs
+- **bug** ally deathmason shouldn't siphon your health
+- map panning (WASD) should be relative to zoom level
+- Change name color
+- **bug** Spells don't refresh between runs if you exit before choosing all your
+  spells. So if you refresh the spells till it's down to just one, quit to the
+  main menu, then start a new run your first and only choice will be that same
+  spell. Only way to fully refresh is by choosing all 3 spells then quitting
+- clone isn't limited like split is
+- last will + clone allows infinite mana
+- enemies should scale health
+- mana refunded but not really (see MacgyverTheDiver's video on discord)
+- dash to scroll in lava didn't hurt player but they still got the scroll
+- when you have all spells you stop getting perks?
+- **easy** add 'self hosting multiplayer' lihnk to menu
+- achievement for killing yourself with capture soul
+- Connect is targeting self when there is another enemy available, see Reyna's
+  picture in #general
+- clicking on upgrade spawns your player where you click : add a delay
+- "death_wager" shouldn't have underscore in title
+- left off at "(sorry for my bad english i'm french) if you skip your turn
+  before placing your character it will do the mob turn and after some skip you
+  will die.")
+
+- ## i18n todo:
+  - "suffocated!"
+
+## Notify people when languages get finalized:
+
+- Japanese
+  - @Char_841 via twitter
+
 ## outstanding small bugs
 
 - multiplayer bug it was hard to get in and a portal and an image of one of us
