@@ -148,6 +148,7 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
 
   elCardInner.appendChild(desc);
   element.addEventListener('click', (e) => {
+    globalThis.timeLastChoseUpgrade = Date.now();
     // Prevent click from "falling through" upgrade and propagating to vote for overworld level
     e.stopPropagation();
     pie.sendData({

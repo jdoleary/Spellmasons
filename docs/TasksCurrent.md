@@ -5,7 +5,7 @@
 - More requests for hotseat multiplayer
 - **bug** / ux improvement: click on upgrade also resorts in spawn
 - **optimize** limit mana steal orbs
-- Change name color
+- idea: Change name color
 - last will + clone allows infinite mana
 - mana refunded but not really (see MacgyverTheDiver's video on discord)
 - unreproduced: dash to scroll in lava didn't hurt player but they still got the
@@ -13,7 +13,6 @@
 - when you have all spells you stop getting perks?
 - Connect is targeting self when there is another enemy available, see Reyna's
   picture in #general
-- clicking on upgrade spawns your player where you click : add a delay
 - left off at "(sorry for my bad english i'm french) if you skip your turn
   before placing your character it will do the mob turn and after some skip you
   will die.")

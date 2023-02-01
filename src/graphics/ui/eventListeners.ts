@@ -580,6 +580,13 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
       if (globalThis.cinematicCameraTarget !== undefined) {
         console.log('Cannot spawn during cinematic intro')
       } else {
+        // Some people are experiencing an issue where they accidentally spawn after
+        // choosing an upgrade.  This small 300 milli buffer is meant to protect against
+        // that happening.
+        if (timeLastChoseUpgrade && Date.now() - timeLastChoseUpgrade < 300) {
+          console.log('Prevent accidental spawn after choosing upgrade');
+          return;
+        }
         // Spawn player:
         overworld.pie.sendData({
           type: MESSAGE_TYPES.SPAWN_PLAYER,

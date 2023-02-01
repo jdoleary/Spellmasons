@@ -281,4 +281,8 @@ declare global {
     // emitters in a list to allow for clean up
     // if cleanAfterTurn is false it will clean after level
     var emitters: undefined | { emitter: particles.Emitter, cleanAfterTurn: boolean }[];
+    // Help prevents accidental spawn choice when choosing upgrade or perk.
+    // Everything relating to timeLastChoseUpgrade should happen on the client side
+    // NOT after the network message but before the network message is sent
+    var timeLastChoseUpgrade: number | undefined;
 }

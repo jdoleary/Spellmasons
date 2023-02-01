@@ -220,4 +220,5 @@ declare global {
     // emitters in a list to allow for clean up
     // if cleanAfterTurn is false it will clean after level
     var emitters: undefined | { emitter: particles.Emitter, cleanAfterTurn: boolean }[];
+    var timeLastChoseUpgrade: number | undefined;
 }
