@@ -1,8 +1,6 @@
 - post on itch.io
 - Plan modding
 - Demo
-- **bug** nullify bug: it doesn't leave after it cancels a spell so if you cast
-  it on an enemy you cant kill it
 - look into Russian Ruble price discrepancy
 - More requests for hotseat multiplayer
 - **bug** Summon particles persisting

@@ -167,7 +167,9 @@ export function registerCards(overworld: Overworld) {
   register(swap, overworld);
   register(displace, overworld);
   register(debilitate, overworld);
-  register(protection.default, overworld);
+  // Nullify / "protection" is too powerful, remove for now
+  // - **bug** nullify bug: it doesn't leave after it cancels a spell so if you cast it on an enemy you cant kill it
+  // register(protection.default, overworld);
   register(clone, overworld);
   register(mana_burn, overworld);
   register(mana_steal, overworld);
