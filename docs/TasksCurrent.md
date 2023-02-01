@@ -13,15 +13,14 @@
   spell. Only way to fully refresh is by choosing all 3 spells then quitting
 - clone isn't limited like split is
 - last will + clone allows infinite mana
-- enemies should scale health
 - mana refunded but not really (see MacgyverTheDiver's video on discord)
-- dash to scroll in lava didn't hurt player but they still got the scroll
+- unreproduced: dash to scroll in lava didn't hurt player but they still got the
+  scroll
 - when you have all spells you stop getting perks?
-- achievement for killing yourself with capture soul
+- idea: achievement for killing yourself with capture soul
 - Connect is targeting self when there is another enemy available, see Reyna's
   picture in #general
 - clicking on upgrade spawns your player where you click : add a delay
-- "death_wager" shouldn't have underscore in title
 - left off at "(sorry for my bad english i'm french) if you skip your turn
   before placing your character it will do the mob turn and after some skip you
   will die.")

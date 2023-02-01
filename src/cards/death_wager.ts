@@ -2,7 +2,7 @@ import { Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
-const id = 'death_wager';
+const id = 'Death Wager';
 const reduceMaxHealthPreportion = 0.2;
 const spell: Spell = {
   card: {
