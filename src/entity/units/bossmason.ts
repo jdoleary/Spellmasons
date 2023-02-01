@@ -91,7 +91,8 @@ const unit: UnitSource = {
           await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
         } else if (sacrificeCost.manaCost <= unit.mana && unit.health < unit.healthMax) {
           // Consume allies if hurt
-          const closestUnit = Unit.findClosestUnitInSameFaction(unit, underworld);
+          // Note: Do not allow Deathmason to siphon allied player units
+          const closestUnit = Unit.livingUnitsInSameFaction(unit, underworld).filter(u => u.unitType !== UnitType.PLAYER_CONTROLLED && Unit.inRange(unit, u))[0]
           if (closestUnit) {
             const keyMoment = () => underworld.castCards({}, unit, Vec.clone(unit), [sacrifice.card.id], closestUnit, false, false, magicColor);
             await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
@@ -124,7 +125,7 @@ const unit: UnitSource = {
             unit.y = portal.y;
             removePickup(portal, underworld, false);
           } else {
-            summonUnitAtPickup(portal, underworld);
+            summonUnitAtPickup(unit, portal, underworld);
           }
         }
       }
@@ -160,8 +161,8 @@ const unit: UnitSource = {
     damage: 'unitDamage',
   }
 };
-function summonUnitAtPickup(pickup: Pickup.IPickup, underworld: Underworld) {
-  const enemyIsClose = underworld.units.filter(u => u.faction == Faction.ALLY).some(u => math.distance(pickup, u) <= config.PLAYER_BASE_ATTACK_RANGE)
+function summonUnitAtPickup(summoner: Unit.IUnit, pickup: Pickup.IPickup, underworld: Underworld) {
+  const enemyIsClose = underworld.units.filter(u => u.faction != summoner.faction).some(u => math.distance(pickup, u) <= config.PLAYER_BASE_ATTACK_RANGE)
   let sourceUnit = allUnits[BLOOD_ARCHER_ID];
   if (enemyIsClose) {
     sourceUnit = allUnits[BLOOD_GOLEM_ID];
@@ -174,7 +175,7 @@ function summonUnitAtPickup(pickup: Pickup.IPickup, underworld: Underworld) {
       pickup.x,
       pickup.y,
       // A unit always summons units in their own faction
-      Faction.ENEMY,
+      summoner.faction,
       sourceUnit.info.image,
       UnitType.AI,
       sourceUnit.info.subtype,
