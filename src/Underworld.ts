@@ -69,7 +69,7 @@ import { baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLi
 import { Material } from './Conway';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndexPreventWrap } from './jmath/ArrayUtil';
 import { raceTimeout, reportIfTakingTooLong } from './Promise';
-import { containerParticles, containerParticlesUnderUnits, updateParticlees } from './graphics/Particles';
+import { cleanUpEmitters, containerParticles, containerParticlesUnderUnits, updateParticlees } from './graphics/Particles';
 import { elInstructions } from './network/networkHandler';
 import type PieClient from '@websocketpie/client';
 import { makeForcePush } from './cards/push';
@@ -1172,7 +1172,7 @@ export default class Underworld {
     return false;
 
   }
-  assertDemoExit(){
+  assertDemoExit() {
     if (this.levelIndex >= 5 && globalThis.isDemo) {
       Jprompt({
         text: 'Thank you for playing the Demo!\nMore spells, enemies, and levels are available in the full version!',
@@ -1549,6 +1549,9 @@ export default class Underworld {
   }
 
   cleanUpLevel() {
+    // false ensures that all emitters are cleaned up, not just the
+    // turn-scoped emitters
+    cleanUpEmitters(false);
     // Now that it's a new level clear out the level's dodads such as
     // bone dust left behind from destroyed corpses
     containerDoodads?.removeChildren();
@@ -2461,6 +2464,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // not.
           break;
         case turn_phase[turn_phase.NPC_ALLY]:
+          // Now that player's turn is over, clear any emitters that failed to clean up themselves
+          // that are marked as "turn lifetime" 
+          cleanUpEmitters(true);
           // Clear enemy attentionMarkers since it's now their turn
           globalThis.attentionMarkers = [];
           // Only execute turn if there are units to take the turn:

@@ -1,9 +1,9 @@
+- **easy** add 'self hosting multiplayer' lihnk to menu
 - post on itch.io
 - Plan modding
 - Demo
 - look into Russian Ruble price discrepancy
 - More requests for hotseat multiplayer
-- **bug** Summon particles persisting
 - **bug** ally priest miniboss is only rezing one corpse
 - **bug** / ux improvement: click on upgrade also resorts in spawn
 - **optimize** limit mana steal orbs
@@ -19,7 +19,6 @@
 - mana refunded but not really (see MacgyverTheDiver's video on discord)
 - dash to scroll in lava didn't hurt player but they still got the scroll
 - when you have all spells you stop getting perks?
-- **easy** add 'self hosting multiplayer' lihnk to menu
 - achievement for killing yourself with capture soul
 - Connect is targeting self when there is another enemy available, see Reyna's
   picture in #general
@@ -32,6 +31,11 @@
 - ## i18n / copy:
   - "suffocated!"
   - fortify: add "for one turn"
+
+## Unanswered questions:
+
+- How is it possible that the particle emitters didn't get cleaned up? How did
+  castCards not finissh??
 
 ## Notify people when languages get finalized:
 

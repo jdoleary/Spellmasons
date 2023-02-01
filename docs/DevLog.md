@@ -10,6 +10,9 @@ for prediction I could calculate and effect. for casting I could calculate and
 send and then once it comes back from the server it effect()s and animate()s
 sounds like when someone dies the game desyncs?
 
+- When I do this, revalidate the snapping of movement + targeting spells in
+  a24d1259
+
 ## 2023.01.31
 
 Fixed mac build bloat. When I transfer the mac files to pc it doubles in size

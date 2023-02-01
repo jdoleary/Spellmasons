@@ -37,6 +37,9 @@ export function wrappedEmitter(config: particles.EmitterConfigV3, container: Con
     const emitterContainer = new globalThis.pixi.Container();
     container.addChild(emitterContainer);
     const emitter = new particles.Emitter(emitterContainer, config);
+    // This function is so far only used for the bossmasons's cape and so it is
+    // a "level lifetime" emitter
+    globalThis.emitters?.push({ emitter, cleanAfterTurn: false });
     emitter.updateOwnerPos(0, 0);
     emitter.playOnceAndDestroy(() => {
         if (resolver) {
@@ -54,6 +57,7 @@ export function simpleEmitter(position: Vec2, config: particles.EmitterConfigV3,
         return undefined
     }
     const emitter = new particles.Emitter(container || containerParticles, config);
+    globalThis.emitters?.push({ emitter, cleanAfterTurn: true });
     emitter.updateOwnerPos(position.x, position.y);
     emitter.playOnceAndDestroy(() => {
         if (resolver) {
@@ -97,6 +101,7 @@ export function addTrail(position: Vec2, target: Vec2, underworld: Underworld, c
         return Promise.resolve();
     }
     const emitter = new particles.Emitter(containerParticles, config);
+    globalThis.emitters?.push({ emitter, cleanAfterTurn: true });
     emitter.updateOwnerPos(position.x, position.y);
     // 3000 is an arbitrary timeout for now
     return raceTimeout(3000, 'trail', new Promise<void>((resolve) => {
@@ -308,4 +313,24 @@ export function moveStreakEmitter(position: Vec2, prediction: boolean) {
             "spawnType": "point"
         }, [texture]);
     return simpleEmitter(position, config);
+}
+export function cleanUpEmitters(onlyTurnScopedEmitters: boolean) {
+    if (globalThis.emitters) {
+        // Remove cleaned emitters
+        globalThis.emitters = globalThis.emitters.flatMap(({ emitter, cleanAfterTurn }) => {
+            if (onlyTurnScopedEmitters) {
+                if (cleanAfterTurn) {
+                    stopAndDestroyForeverEmitter(emitter);
+                    return [];
+                } else {
+                    return [{ emitter, cleanAfterTurn }]
+                }
+            } else {
+                stopAndDestroyForeverEmitter(emitter);
+                return [];
+
+            }
+        });
+    }
+
 }

@@ -7,8 +7,9 @@ import type PieClient from '@websocketpie/client';
 import type { Vec2 } from '../jmath/Vec';
 import type { View } from '../views';
 import type { IHostApp } from '../network/networkUtil';
-import { Localizable } from '../localization';
-import { PromptArgs } from '../graphics/Jprompt';
+import type { Localizable } from '../localization';
+import type * as particles from '@pixi/particle-emitter'
+import type { PromptArgs } from '../graphics/Jprompt';
 
 declare global {
     var SPELLMASONS_PACKAGE_VERSION: string;
@@ -277,4 +278,7 @@ declare global {
     var currentPredictionId: number | undefined;
     var isDemo: boolean;
     var testPerks: () => void | undefined;
+    // emitters in a list to allow for clean up
+    // if cleanAfterTurn is false it will clean after level
+    var emitters: undefined | { emitter: particles.Emitter, cleanAfterTurn: boolean }[];
 }
