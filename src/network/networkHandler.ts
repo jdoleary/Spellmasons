@@ -793,12 +793,38 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
 
   globalThis.getAllSaveFiles = () => Object.keys(localStorage).filter(x => x.startsWith(globalThis.savePrefix)).map(x => x.substring(globalThis.savePrefix.length));
 
-  globalThis.save = (title: string) => {
+  globalThis.save = async (title: string) => {
+    console.log('jtest save', title, title.split('-').slice(-1)[0]);
     const { underworld } = overworld;
     if (!underworld) {
       console.error('Cannot save game, underworld does not exist');
       return;
     }
+    // Prompt overwrite, don't allow for saving multiple saves with the same name
+    if (getAllSaveFiles) {
+
+      const allSaveFiles = getAllSaveFiles();
+      // A safe file key consists of a prefix, a timestamp and a wordTitle, find and compare the word titles
+      // the timestamp exists to sort them by recency.
+      const isolateWordsInTitle = (title: string) => title.split('-').slice(-1)?.[0] || '';
+      const conflictingSaveTitles = allSaveFiles.filter(otherSaveFileKey => {
+        const titleWords = isolateWordsInTitle(otherSaveFileKey);
+        return titleWords == isolateWordsInTitle(title);
+      });
+      if (conflictingSaveTitles.length) {
+        const doOverwrite = await Jprompt({ text: 'There is a previous save file with this name, are you sure you want to overwrite it?', yesText: 'Yes, Overwrite it', noBtnText: 'Cancel', noBtnKey: 'Escape', forceShow: true })
+        if (doOverwrite) {
+          conflictingSaveTitles.forEach(otherTitle => {
+            storage.remove(globalThis.savePrefix + otherTitle);
+          });
+        } else {
+          console.log('Save cancelled');
+          return;
+        }
+
+      }
+    }
+
     const saveObject = {
       version: globalThis.SPELLMASONS_PACKAGE_VERSION,
       underworld: underworld.serializeForSaving(),
