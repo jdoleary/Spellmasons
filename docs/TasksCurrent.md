@@ -46,6 +46,7 @@
 - WellaWeiss — Today at 3:11 AM Really liking the game as well, can definitely
   agree with those suggestions, I also wish the we could directly control
   summons
+- icecloud12: I think we need more spells that interupts enemies
 
 ## Notify people when languages get finalized:
 
