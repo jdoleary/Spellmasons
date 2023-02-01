@@ -583,10 +583,11 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         // Some people are experiencing an issue where they accidentally spawn after
         // choosing an upgrade.  This small 300 milli buffer is meant to protect against
         // that happening.
-        if (typeof timeLastChoseUpgrade !== 'undefined' && Date.now() - timeLastChoseUpgrade < 300) {
-          console.log('Prevent accidental spawn after choosing upgrade');
-          return;
-        }
+        // Dev: Disabling for now because this feels like a very risk change if it doesn't work right
+        // if (typeof timeLastChoseUpgrade !== 'undefined' && (Date.now() - timeLastChoseUpgrade < 300)) {
+        //   console.log('Prevent accidental spawn after choosing upgrade');
+        //   return;
+        // }
         // Spawn player:
         overworld.pie.sendData({
           type: MESSAGE_TYPES.SPAWN_PLAYER,
