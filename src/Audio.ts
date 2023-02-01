@@ -191,17 +191,32 @@ export function playMusicIfNotAlreadyPlaying() {
 // because headless server cannot import Audio.ts
 globalThis.playMusicIfNotAlreadyPlaying = playMusicIfNotAlreadyPlaying;
 
+let fadeOutSongPromiseResolver: () => void;
 let fadeOutSongInterval: NodeJS.Timer;
 export async function playNextSong() {
     console.log('playNextSong', musicInstance);
+    // Loops through songs
+    const index = getLoopableIndex(songIndex++, music)
+    const nextSong = music[index];
+    if (!nextSong) {
+        console.error('No next song at index', index);
+        return;
+    }
     // If there is currently a song playing, stop it
     if (musicInstance) {
         const MILLIS_TO_FADE_OUT_SONG = 1_500;
         await Promise.race([new Promise(resolve => setTimeout(resolve, MILLIS_TO_FADE_OUT_SONG + 100)), new Promise<void>(resolve => {
-            clearInterval(fadeOutSongInterval);
+            if (fadeOutSongPromiseResolver) {
+                // If another song is fading out, resolve it immediately
+                // so that it finishes removing that song
+                fadeOutSongPromiseResolver();
+            }
+            fadeOutSongPromiseResolver = resolve;
             const startVolume = musicInstance.volume;
             let i = 0;
             const INTERVAL_MILLIS = 10;
+            // Clear previous interval before starting a new interval
+            clearInterval(fadeOutSongInterval);
             fadeOutSongInterval = setInterval(() => {
                 i += INTERVAL_MILLIS;
                 const lerpValue = i / MILLIS_TO_FADE_OUT_SONG
@@ -212,12 +227,18 @@ export async function playNextSong() {
 
             }, INTERVAL_MILLIS);
         })]);
-        clearInterval(fadeOutSongInterval);
-        musicInstance.remove();
+    } else {
+        console.log('Audio: Create music instance for the first time', nextSong);
+        musicInstance = new Audio(nextSong);
     }
-    // Loops through songs
-    const index = getLoopableIndex(songIndex++, music)
-    musicInstance = new Audio(music[index]);
+
+    // Clear any previously running intervals to ensure it won't overwrite the volume
+    // for the new song which should start at set volume
+    clearInterval(fadeOutSongInterval);
+    console.log('Audio: change song to', nextSong);
+    // Reassign the src of the music instance, this ensures we only have
+    // one song playing at a time
+    musicInstance.setAttribute('src', nextSong);
     musicInstance.loop = true;
 
     // task: Master all audio and sfx

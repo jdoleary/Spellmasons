@@ -3,7 +3,6 @@
 - Demo
 - **bug** nullify bug: it doesn't leave after it cancels a spell so if you cast
   it on an enemy you cant kill it
-- **bug** Multiple music tracks play simultaneously
 - **copy** fortify reduces damage by 10% not 0.1%
 - look into Russian Ruble price discrepancy
 - More requests for hotseat multiplayer
