@@ -53,3 +53,22 @@ Also some feedback so far:
 
 
 - there should be balance issues too, but since I don't even know what to expect... For examplewhen I have 20k health Shield +30 is useless. Hordes of archers summoned by enemy are useless too. Well, they give me lot of potions of course... 
+---
+Chris:
+"balance: Remove Nullify spell because it was way too powerful in the endgame (I may rethink a way to reintegrate it later)"
+
+I've got a couple worked out thoughts on fixing its balance. Hopefully you like one of them! I believe each of these solutions addresses the problem with the previous version of Nullify but in a different way.
+
+A) Nullify no longer works on the caster, but functions identically to before with regards to enemies and other allies
+
+B) Nullify is split into 2 component spellcards: 
+Steadfast - a spell that works like Nullify but only with regards to movement/displacement effects like Pull, Push, Displace, Repel, Vortex. 
+Nullify (Stackable) - a spell that only nullifies the next forged damaging component in the same spell it is in. It has to be inside the spell combo to nullify an effect and it only nullifies 1 forged effect (ignoring Targeting components of course). Nullify will only protect against 1 single component in Stacked damages like Rend. 
+So if there were Nullify - Nullify - Target:Circle - Rend - Rend - Rend, The caster would take damage from Rend as if they were only hit by a single Rend. Enemies would take damage from 3 Rends.
+
+C) Nullify works as before, but cannot protect the caster against damage that would (if not protected) be at or above their max HP. 
+I.E Nullify will protect against a single spell's damage to a caster with 60HP if and only if the damage is 59HP or less. If it is 60HP or more, Nullify fails entirely.
+---
+Sander. — Today at 4:59 PM
+Make Dark Summoners a bit less influential, I got to a stage where I had 3 dark summoners (2 of them minibosses) each in a corner of the map, 
+I just spawned in 1 corner and then I was never able to reach the other 2 because I didn't have the correct spells (it was only stage 11) 
