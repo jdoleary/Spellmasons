@@ -39,32 +39,22 @@ const spell: Spell = {
         const target = targets[i];
         let animationPromise = Promise.resolve();
         if (target) {
-          const prioritySorter = (x: any) => {
-            let value = 0;
+          const filterFn = (x: any) => {
             if (Unit.isUnit(x) && Unit.isUnit(target)) {
-              // If the target is alive, high-weight prioritize finding
-              // other units of the same faction
               if (target.alive) {
-                if (x.faction == target.faction) {
-                  value += 10;
-                }
-              }
-              // prioritize matching alive state, so dead
-              // will prefer chaining to dead and living
-              // will prefer chaining to living
-              if (x.alive == target.alive) {
-                value += 2;
+                // Match living units of the same faction
+                return x.faction == target.faction && x.alive;
               } else {
-                // Prefer for a unit target to chain to another unit
-                // over a pickup even if alive state does not match
-                value += 1;
+                // Match any dead unit
+                return !x.alive;
               }
             } else if (!Unit.isUnit(x) && !Unit.isUnit(target)) {
-              // If both target and x are not units, prioritize matches
-              // against either or.
-              value += 1;
+              // Match both non units to each other
+              return true;
+            } else {
+              // Do not match unit and non unit
+              return false;
             }
-            return value;
           }
 
           // Find all units touching the spell origin
@@ -76,7 +66,7 @@ const spell: Spell = {
             prediction,
             { limitTargetsLeft },
             0,
-            prioritySorter,
+            filterFn,
             targets
           );
           // Draw prediction lines so user can see how it chains
@@ -119,7 +109,7 @@ export async function getTouchingTargetableEntitiesRecursive(
   chainState: { limitTargetsLeft: number },
   recurseLevel: number,
   // selects which type of entity to chain to
-  prioritySorter: (x: any) => number,
+  filterFn: (x: any) => boolean,
   // object references
   ignore: HasSpace[] = [],
 ): Promise<{ chainSource: Vec2, entity: HasSpace }[]> {
@@ -144,10 +134,10 @@ export async function getTouchingTargetableEntitiesRecursive(
         u.y >= y - radius
       );
     })
+    // Filter chaining types
+    .filter((x) => filterFn(x))
     // Order by closest to coords
-    // .sort((a, b) => math.distance(a, coords) - math.distance(b, coords))
-    // Orders chaining priority
-    .sort((a, b) => prioritySorter(b) - prioritySorter(a))
+    .sort((a, b) => math.distance(a, coords) - math.distance(b, coords))
     // Only select up to limitTargetsLeft
     .slice(0, chainState.limitTargetsLeft);
 
@@ -172,7 +162,7 @@ export async function getTouchingTargetableEntitiesRecursive(
         if (!prediction) {
           playSFXKey('targetAquired');
         }
-        const newTouching = await getTouchingTargetableEntitiesRecursive(t.x, t.y, potentialTargets, radius, prediction, chainState, recurseLevel + 1, prioritySorter, ignore)
+        const newTouching = await getTouchingTargetableEntitiesRecursive(t.x, t.y, potentialTargets, radius, prediction, chainState, recurseLevel + 1, filterFn, ignore)
         connected = connected.concat(newTouching);
       }
     }
