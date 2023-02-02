@@ -1,3 +1,5 @@
+- stamina resets after i end my turn in multiplaer after a stamina potion
+- allies didn't carry on the battle after i died until i explicitly ended my turn
 - predicting 'sacrifice' over a decoy shows pickup dissapear particles on all pickups in prediction
 - bug: corruption particles appear unexpectedly on level 1 at 0,0
   - okay I think it had something to do with admin deleting a unit and then ending my turn

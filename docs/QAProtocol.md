@@ -6,6 +6,7 @@
 - Test all pickups in singleplayer
 - Test all pickups in multiplayer
 - Test Pickups + movement spells prediction (trap)
+- Test allies carrying on the battle
 
 # Release protocal
 - QA
