@@ -2,7 +2,7 @@ import type * as PIXI from 'pixi.js';
 import * as Image from '../graphics/Image';
 import type * as Player from './Player';
 import { addPixiSprite, addPixiSpriteAnimated, containerUnits, pixiText } from '../graphics/PixiUtils';
-import { IUnit, takeDamage } from './Unit';
+import { syncPlayerHealthManaUI, IUnit, takeDamage } from './Unit';
 import { checkIfNeedToClearTooltip } from '../graphics/PlanningView';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
 import * as config from '../config';
@@ -26,7 +26,8 @@ export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 export const PICKUP_IMAGE_PATH = 'pickups/scroll';
 export const RED_PORTAL = 'Red Portal';
 const RED_PORTAL_DAMAGE = 30;
-type IPickupEffect = ({ unit, player, pickup, prediction }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld, prediction: boolean }) => boolean | undefined;
+type IPickupEffect = ({ unit, player, pickup, prediction }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld, prediction: boolean }) => void;
+type IPickupWillTrigger = ({ unit, player, pickup }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld }) => boolean;
 export function isPickup(maybePickup: any): maybePickup is IPickup {
   return maybePickup && maybePickup.type == 'pickup';
 }
@@ -53,6 +54,8 @@ export type IPickup = HasSpace & {
   // for preventing one use health potions from triggering if the unit
   // already has max health
   effect: IPickupEffect;
+  // Determines if the pickup will trigger for a given unit
+  willTrigger: IPickupWillTrigger;
   emitter?: particles.Emitter;
   flaggedForRemoval: boolean;
 
@@ -67,7 +70,8 @@ interface IPickupSource {
   turnsLeftToGrab?: number;
   scale: number;
   probability: number;
-  effect: IPickupEffect
+  effect: IPickupEffect;
+  willTrigger: IPickupWillTrigger;
 }
 export function copyForPredictionPickup(p: IPickup): IPickup {
   // Remove image and text since prediction pickups won't be rendered
@@ -83,7 +87,7 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
   {
     pos: Vec2, pickupSource: IPickupSource, onTurnsLeftDone?: (self: IPickup) => Promise<void>
   }, underworld: Underworld, prediction: boolean) {
-  const { name, description, imagePath, effect, scale, singleUse, animationSpeed, playerOnly = false, turnsLeftToGrab } = pickupSource;
+  const { name, description, imagePath, effect, willTrigger, scale, singleUse, animationSpeed, playerOnly = false, turnsLeftToGrab } = pickupSource;
   const { x, y } = pos
   if (isNaN(x) || isNaN(y)) {
     console.error('Unexpected: Created pickup at NaN', pickupSource, pos);
@@ -105,6 +109,7 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
     singleUse,
     playerOnly,
     effect,
+    willTrigger,
     onTurnsLeftDone,
     flaggedForRemoval: false,
     beingPushed: false
@@ -244,7 +249,17 @@ export function removePickup(pickup: IPickup, underworld: Underworld, prediction
     fms.forEach(fm => { fm.velocity = { x: 0, y: 0 } });
   }
 }
-export function triggerPickup(pickup: IPickup, unit: IUnit, underworld: Underworld, prediction: boolean) {
+export function triggerPickup(pickup: IPickup, unit: IUnit, player: Player.IPlayer | undefined, underworld: Underworld, prediction: boolean) {
+  const willTrigger = pickup.willTrigger({ unit, player, pickup, underworld });
+  // Only remove pickup if it triggered AND is a singleUse pickup
+  if (pickup.singleUse && willTrigger) {
+    pickup.effect({ unit, player, pickup, underworld, prediction });
+    removePickup(pickup, underworld, prediction);
+    // Now that the players attributes may have changed, sync UI
+    syncPlayerHealthManaUI(underworld);
+  }
+}
+export function tryTriggerPickup(pickup: IPickup, unit: IUnit, underworld: Underworld, prediction: boolean) {
   if (pickup.flaggedForRemoval) {
     // Don't trigger pickup if flagged for removal
     return;
@@ -260,23 +275,24 @@ export function triggerPickup(pickup: IPickup, unit: IUnit, underworld: Underwor
     return;
   }
   if (prediction) {
-    const didTrigger = pickup.effect({ unit, player, pickup, underworld, prediction });
-    // Only remove pickup if it triggered AND is a singleUse pickup
-    if (pickup.singleUse && didTrigger) {
-      removePickup(pickup, underworld, prediction);
-    }
+    triggerPickup(pickup, unit, player, underworld, prediction);
   } else {
     // All pickups triggering must be networked to prevent desyncs resulting 
     // from slight position differences that can result in cascading desyncs due to
     // a pickup triggering on one client or host but not on others.
     // A player always initiates their own pickup triggering, the host initiates all others
     if (player ? player == globalThis.player : globalThis.isHost(underworld.pie)) {
-      underworld.pie.sendData({
-        type: MESSAGE_TYPES.AQUIRE_PICKUP,
-        pickupId: pickup.id,
-        unitId: unit.id,
-        playerClientId: player?.clientId
-      });
+      // Try a prediction effect to see if it will trigger and
+      // only send AQUIRE_PICKUP if it will trigger
+      const willTrigger = pickup.willTrigger({ unit, player, pickup, underworld });
+      if (willTrigger) {
+        underworld.pie.sendData({
+          type: MESSAGE_TYPES.AQUIRE_PICKUP,
+          pickupId: pickup.id,
+          unitId: unit.id,
+          playerClientId: player?.clientId
+        });
+      }
     }
   }
 }
@@ -297,6 +313,9 @@ export const pickups: IPickupSource[] = [
     probability: 70,
     scale: 1,
     description: ['Deals 🍞 to any unit that touches it', spike_damage.toString()],
+    willTrigger: ({ unit, player, pickup, underworld }) => {
+      return !!unit;
+    },
     effect: ({ unit, player, pickup, prediction, underworld }) => {
       if (unit) {
         // Play trap spring animation
@@ -333,9 +352,7 @@ export const pickups: IPickupSource[] = [
 
         }
         takeDamage(unit, spike_damage, unit, underworld, prediction)
-        return true;
       }
-      return false;
     }
   },
   {
@@ -347,6 +364,9 @@ export const pickups: IPickupSource[] = [
     probability: 0,
     scale: 1,
     description: ['red portal description', bossmasonUnitId, RED_PORTAL_DAMAGE.toString()],
+    willTrigger: ({ unit, player, pickup, underworld }) => {
+      return !!player;
+    },
     effect: ({ unit, player, pickup, underworld }) => {
       const otherRedPortals = underworld.pickups.filter(p => p.name == RED_PORTAL && p !== pickup)
       const seed = seedrandom(getUniqueSeedString(underworld, player));
@@ -364,7 +384,6 @@ export const pickups: IPickupSource[] = [
         }
         takeDamage(player.unit, RED_PORTAL_DAMAGE, undefined, underworld, false);
       }
-      return true;
     },
   },
   {
@@ -376,6 +395,9 @@ export const pickups: IPickupSource[] = [
     probability: 0,
     scale: 1,
     description: 'explain portal',
+    willTrigger: ({ unit, player, pickup, underworld }) => {
+      return !!player;
+    },
     effect: ({ unit, player, underworld }) => {
       // Only send the ENTER_PORTAL message from
       // the client of the player that entered the portal
@@ -392,7 +414,6 @@ export const pickups: IPickupSource[] = [
         player.unit.x = NaN;
         player.unit.y = NaN;
       }
-      return true;
     },
   },
   {
@@ -404,12 +425,14 @@ export const pickups: IPickupSource[] = [
     scale: 0.5,
     turnsLeftToGrab: 4,
     playerOnly: true,
+    willTrigger: ({ unit, player, pickup, underworld }) => {
+      return !!player;
+    },
     effect: ({ unit, player, underworld }) => {
       // Give EVERY player an upgrade when any one player picks up a scroll
       underworld.players.forEach(p => givePlayerUpgrade(p, underworld));
       tutorialCompleteTask('pickupScroll');
       playSFXKey('levelUp');
-      return true;
     },
   },
   {
@@ -421,6 +444,9 @@ export const pickups: IPickupSource[] = [
     singleUse: true,
     scale: 1.0,
     playerOnly: true,
+    willTrigger: ({ unit, player, pickup, underworld }) => {
+      return !!player;
+    },
     effect: ({ unit, player, underworld, prediction }) => {
       if (player) {
         player.unit.stamina += player.unit.staminaMax;
@@ -463,9 +489,7 @@ export const pickups: IPickupSource[] = [
         // refelcted in the stamina bar
         // (note: this would be auto corrected on the next mouse move anyway)
         underworld.syncPlayerPredictionUnitOnly();
-        return true;
       }
-      return false;
     },
   },
   {
@@ -477,6 +501,9 @@ export const pickups: IPickupSource[] = [
     singleUse: true,
     scale: 1.0,
     playerOnly: true,
+    willTrigger: ({ unit, player, pickup, underworld }) => {
+      return !!player;
+    },
     effect: ({ unit, player, underworld, prediction }) => {
       if (player) {
         player.unit.mana += manaPotionRestoreAmount;
@@ -520,9 +547,7 @@ export const pickups: IPickupSource[] = [
         // refelcted in the mana bar
         // (note: this would be auto corrected on the next mouse move anyway)
         underworld.syncPlayerPredictionUnitOnly();
-        return true;
       }
-      return false;
     },
   },
   {
@@ -534,11 +559,16 @@ export const pickups: IPickupSource[] = [
     playerOnly: true,
     singleUse: true,
     description: ['health potion description', healthPotionRestoreAmount.toString()],
-    effect: ({ player, underworld, prediction }) => {
+    willTrigger: ({ unit, player, pickup, underworld }) => {
       // Only trigger the health potion if the player will be affected by the health potion
       // Normally that's when they have less than full health, but there's an exception where
       // players that have blood curse will be damaged by healing so it should trigger for them too
-      if (player && (player.unit.health < player.unit.healthMax || hasBloodCurse(player.unit))) {
+      return !!(player && (player.unit.health < player.unit.healthMax || hasBloodCurse(player.unit)));
+    },
+    effect: ({ player, underworld, prediction }) => {
+      // TODO: A lot of the pickup effects don't actually trigger in prediction mode because
+      // player is undefined and there is no prediction version of a player
+      if (player) {
         takeDamage(player.unit, -healthPotionRestoreAmount, undefined, underworld, false);
         // Add spell effect animation
         Image.addOneOffAnimation(player.unit, 'spell-effects/potionPickup', {}, { animationSpeed: 0.3, loop: false });
@@ -553,9 +583,7 @@ export const pickups: IPickupSource[] = [
         // refelcted in the health bar
         // (note: this would be auto corrected on the next mouse move anyway)
         underworld.syncPlayerPredictionUnitOnly();
-        return true;
       }
-      return false;
     },
   },
 ];

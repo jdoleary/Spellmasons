@@ -1727,7 +1727,7 @@ export default class Underworld {
       // nor the radius of the unit.  It is hard coded to 2 COLLISION_MESH_RADIUSES
       // which is currently 64 px (or the average size of a unit);
       if (math.distance(unit, pu) < config.COLLISION_MESH_RADIUS) {
-        Pickup.triggerPickup(pu, unit, this, prediction);
+        Pickup.tryTriggerPickup(pu, unit, this, prediction);
       }
     }
   }

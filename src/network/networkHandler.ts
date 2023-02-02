@@ -85,12 +85,9 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       const player = underworld.players.find(p => p.clientId == playerClientId);
       // note: player is optionally undefined, but pickup and unit are required
       if (pickup && unit) {
-        const didTrigger = pickup.effect({ unit, player, pickup, underworld, prediction: false });
-        // Only remove pickup if it triggered AND is a singleUse pickup
-        if (pickup.singleUse && didTrigger) {
-          removePickup(pickup, underworld, false);
-        }
+        Pickup.triggerPickup(pickup, unit, player, underworld, false);
       } else {
+        console.log('pickups:', underworld.pickups.map(p => `${p.id},${p.name}`), 'pickupId:', pickupId)
         console.error('Attempted to aquire pickup but could not find it in list');
       }
       break;

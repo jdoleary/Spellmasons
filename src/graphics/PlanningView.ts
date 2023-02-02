@@ -689,7 +689,7 @@ export async function runPredictions(underworld: Underworld) {
 }
 
 // SpellEffectProjection are images to denote some information, such as the spell or action about to be cast/taken when clicked
-export function clearSpellEffectProjection(underworld: Underworld, forceClear?:boolean) {
+export function clearSpellEffectProjection(underworld: Underworld, forceClear?: boolean) {
   if (!globalThis.animatingSpells || forceClear) {
     if (predictionGraphics) {
       predictionGraphics.clear();

@@ -1,12 +1,6 @@
 - player unit's position seems to be rounding to whole number on server
 - new networked trigger pickup makes a unit pushed into a trap have the trap
-  trigger immediately instead of when they touch it
-- spawning on a pickup causes a desync of the attribute the pickup changed, it
-  looks like it applies more than once due to the prediction invokation using a
-  real reference to the player
-  - I think I need to separate willTrigger (didTrigger) from trigger
-  - didTrigger wasn't working for prediction because player was undefined so
-    that's why that old but about predictions with pickups wasn't working
+  trigger immediately instead of when they touch it on multiplayer only
 - a bunch of errors:
   `wsPie Error: Cannot send data to room, not currently connected to web socket server`
   when the server disconnects but the player does not
