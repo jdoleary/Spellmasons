@@ -1,25 +1,17 @@
+# for release of v1.2
+- Announce support for Chinese and Japanese
+- Update steam page to show it supports Chinese and Japanes
+- Find who asked about Japanese support and let them know it does
 # For v1.2
+- i18n: chinese target kind translation needs updating
 - bug: when you rejoin a game it plays the enemies turn first instead of resuming at yours
+  - not always reproducable, maybe set all players to not endedTurn when it goes to stalled
 - MOVE PLAYER appears to be processed AFTER spell finishes even if it occurs during
 - perk % increase is way to weak early on and way to strong later on
 - **big** if both players end turn while arrows are flying it causes desync
   - ending turn before cast animation finishes causes desync
 - server hub should handle downed server status
-- **important** don't forget to add Chinese and japanese translations
 - bug: radius+ column +target kind not optimized for concurrent animations
-- stacking targeting spells doesn't work
-  jackyzrule
-  ```
-  before the new patch I could use a multitarget followed up by an AoE target and all the target gained by the multitarget would generate an AoE targeting area around them.
-  Since the new patch the AoE targeting fires from where I started the spell.
-
-  On the contrary, if i target multiple target with an AoE targeting for each of this target a new instance of multitargeting would fire. I'm preatty sure it was working the same before last patch.
-
-  AoE Target (ex "Target Circle" or "Target Cone") 
-  MultiTarget ( ex "Connect" or "Target Kind")
-
-  Different Multitargets effect stack subsequently correctly, and the same goes for different AoE targeting modifier
-  ```
 ---
 - thank and notify icecloud12 for suffocate report
 - shove damage doesn't increase

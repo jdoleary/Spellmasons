@@ -17,6 +17,9 @@ function returnTranslation(keyOrArray: Localizable, map: LanguageMapping): strin
     const [key = '', ...replacers] = typeof keyOrArray === 'object' ? keyOrArray : [keyOrArray];
     let result = map[key.toLowerCase()];
     if (result) {
+        // handle special replacement character for Chinese
+        result = result.replaceAll('BD2023', '🍞');
+        result = result.replaceAll('bd2023', '🍞');
         for (let replacer of replacers) {
             result = result.replace('🍞', replacer);
         }
@@ -81,9 +84,7 @@ function setLanguage(langCode: string, store: boolean) {
     }
 }
 function getSupportedLanguages() {
-    return languageMapping ? languages.map(l => ({ language: l.language, code: l.languagecode }))
-        // filter out language that are having issues with the replacement character 🍞.
-        .filter(l => !['ja', 'zh-CN', 'zh-TW'].includes(l.code)) : [];
+    return languageMapping ? languages.map(l => ({ language: l.language, code: l.languagecode })) : [];
 }
 function getChosenLanguageCode() {
     return chosenLanguageCode;
