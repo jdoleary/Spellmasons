@@ -15,11 +15,12 @@ import { HasSpace } from './Type';
 import { explain, EXPLAIN_INVENTORY, EXPLAIN_OVERFILL, tutorialCompleteTask, updateTutorialChecklist } from '../graphics/Explain';
 import * as CardUI from '../graphics/ui/CardUI';
 import { bossmasonUnitId } from './units/bossmason';
-import { chooseOneOf } from '../jmath/rand';
+import { chooseOneOfSeeded, getUniqueSeedString } from '../jmath/rand';
 import { skyBeam } from '../VisualEffects';
 import { makeRedPortal, RED_PORTAL_JID, stopAndDestroyForeverEmitter } from '../graphics/ParticleCollection';
 import * as particles from '@pixi/particle-emitter'
 import { Localizable } from '../localization';
+import seedrandom from 'seedrandom';
 
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 export const PICKUP_IMAGE_PATH = 'pickups/scroll';
@@ -31,6 +32,7 @@ export function isPickup(maybePickup: any): maybePickup is IPickup {
 }
 export type IPickup = HasSpace & {
   type: 'pickup';
+  id: number;
   name: string;
   description: Localizable;
   imagePath?: string;
@@ -87,6 +89,7 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
     console.error('Unexpected: Created pickup at NaN', pickupSource, pos);
   }
   const self: IPickup = {
+    id: ++underworld.lastPickupId,
     type: 'pickup',
     x,
     y,
@@ -256,10 +259,25 @@ export function triggerPickup(pickup: IPickup, unit: IUnit, underworld: Underwor
     // (and are looking for a spawn my moving their "ghost self" around)
     return;
   }
-  const didTrigger = pickup.effect({ unit, player, pickup, underworld, prediction });
-  // Only remove pickup if it triggered AND is a singleUse pickup
-  if (pickup.singleUse && didTrigger) {
-    removePickup(pickup, underworld, prediction);
+  if (prediction) {
+    const didTrigger = pickup.effect({ unit, player, pickup, underworld, prediction });
+    // Only remove pickup if it triggered AND is a singleUse pickup
+    if (pickup.singleUse && didTrigger) {
+      removePickup(pickup, underworld, prediction);
+    }
+  } else {
+    // All pickups triggering must be networked to prevent desyncs resulting 
+    // from slight position differences that can result in cascading desyncs due to
+    // a pickup triggering on one client or host but not on others.
+    // A player always initiates their own pickup triggering, the host initiates all others
+    if (player ? player == globalThis.player : globalThis.isHost(underworld.pie)) {
+      underworld.pie.sendData({
+        type: MESSAGE_TYPES.AQUIRE_PICKUP,
+        pickupId: pickup.id,
+        unitId: unit.id,
+        playerClientId: player?.clientId
+      });
+    }
   }
 }
 
@@ -331,7 +349,8 @@ export const pickups: IPickupSource[] = [
     description: ['red portal description', bossmasonUnitId, RED_PORTAL_DAMAGE.toString()],
     effect: ({ unit, player, pickup, underworld }) => {
       const otherRedPortals = underworld.pickups.filter(p => p.name == RED_PORTAL && p !== pickup)
-      const randomOtherRedPortal = chooseOneOf(otherRedPortals);
+      const seed = seedrandom(getUniqueSeedString(underworld, player));
+      const randomOtherRedPortal = chooseOneOfSeeded(otherRedPortals, seed);
       if (player) {
         // Remove the pickups before teleporting the unit so they don't trigger
         // the 2nd portal

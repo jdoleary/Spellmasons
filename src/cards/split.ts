@@ -139,6 +139,14 @@ const spell: Spell = {
                   // Change id of the clone so that it doesn't share the same
                   // 'supposed-to-be-unique' id of the original
                   clone.id = ++underworld.lastUnitId;
+                } else {
+                  // Get a unique id for the clone
+                  clone.id = underworld.unitsPrediction.reduce((lastId, unit) => {
+                    if (unit.id > lastId) {
+                      return unit.id;
+                    }
+                    return lastId;
+                  }, 0) + 1;
                 }
                 // If the cloned unit is player controlled, make them be controlled by the AI
                 if (clone.unitType == UnitType.PLAYER_CONTROLLED) {

@@ -80,6 +80,22 @@ const spell: Spell = {
               if (validSpawnCoords) {
                 const clone = Pickup.load(target, underworld, prediction);
                 if (clone) {
+
+                  if (!prediction) {
+                    // Change id of the clone so that it doesn't share the same
+                    // 'supposed-to-be-unique' id of the original
+                    clone.id = ++underworld.lastPickupId;
+                  } else {
+                    // Get a unique id for the clone
+                    clone.id = underworld.pickupsPrediction.reduce((lastId, pickup) => {
+                      if (pickup.id > lastId) {
+                        return pickup.id;
+                      }
+                      return lastId;
+                    }, 0) + 1;
+                  }
+                }
+                if (clone) {
                   Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
                 }
               } else {

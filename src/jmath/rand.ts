@@ -1,4 +1,6 @@
 import type seedrandom from 'seedrandom';
+import { IPlayer } from '../entity/Player';
+import Underworld from '../Underworld';
 
 // from @types/seedrandom
 export interface prng {
@@ -76,4 +78,9 @@ export function chooseObjectWithProbability<T extends objectWithProbability>(
   // Choose random integer within the sum of all the probabilities
   const roll = randInt(seedRandomInstance, 1, maxProbability);
   return _chooseObjectWithProbability(roll, source);
+}
+export function getUniqueSeedString(underworld: Underworld, player?: IPlayer): string {
+  // Seeded random based on the turn so it's consistent across all clients
+  // based on player client ids so it's unique to each player
+  return `${underworld.seed}-${underworld.levelIndex}-${underworld.turn_number}-${player?.clientId || '0'}`;
 }

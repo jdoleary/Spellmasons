@@ -52,7 +52,7 @@ import * as Vec from "./jmath/Vec";
 import Events from './Events';
 import { allUnits } from './entity/units';
 import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, getUIBarProps, isOutOfBounds, updatePlanningView } from './graphics/PlanningView';
-import { chooseObjectWithProbability, prng, randInt, SeedrandomState } from './jmath/rand';
+import { chooseObjectWithProbability, getUniqueSeedString, prng, randInt, SeedrandomState } from './jmath/rand';
 import { calculateCost, calculateCostForSingleCard } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle, closestLineSegmentIntersection } from './jmath/lineSegment';
 import { expandPolygon, isVec2InsidePolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './jmath/Polygon2';
@@ -82,7 +82,7 @@ import { makeRisingParticles, makeScrollDissapearParticles, stopAndDestroyForeve
 import { ensureAllClientsHaveAssociatedPlayers, Overworld } from './Overworld';
 import { Emitter } from '@pixi/particle-emitter';
 import { golem_unit_id } from './entity/units/golem';
-import { cleanUpPerkList, createPerkElement, generatePerks, tryTriggerPerk, showPerkList, hidePerkList, getUniquePerkSeedString } from './Perk';
+import { cleanUpPerkList, createPerkElement, generatePerks, tryTriggerPerk, showPerkList, hidePerkList } from './Perk';
 import { bossmasonUnitId } from './entity/units/bossmason';
 import { hexToString } from './graphics/ui/colorUtil';
 
@@ -130,6 +130,7 @@ export default class Underworld {
   turn_phase: turn_phase = turn_phase.Stalled;
   // An id incrementor to make sure no 2 units share the same id
   lastUnitId: number = -1;
+  lastPickupId: number = -1;
   // A count of which turn it is, this is useful for
   // governing AI actions that occur every few turns
   // instead of every turn.  A "turn" is a full cycle,
@@ -2009,7 +2010,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         }
       }
       // Trigger attributePerks
-      const perkRandomGenerator = seedrandom(getUniquePerkSeedString(this, player));
+      const perkRandomGenerator = seedrandom(getUniqueSeedString(this, player));
       for (let i = 0; i < player.attributePerks.length; i++) {
         const perk = player.attributePerks[i];
         if (perk) {

@@ -1,4 +1,4 @@
-import { chooseObjectWithProbability, chooseOneOf, chooseOneOfSeeded, randFloat } from "./jmath/rand";
+import { chooseObjectWithProbability, chooseOneOf, chooseOneOfSeeded, getUniqueSeedString, randFloat } from "./jmath/rand";
 import * as Unit from './entity/Unit';
 import Underworld, { showUpgradesClassName } from "./Underworld";
 import floatingText from './graphics/FloatingText';
@@ -137,7 +137,7 @@ export function generatePerks(number: number, underworld: Underworld): Attribute
         let attribute: UpgradableAttribute = 'stamina';//Default, should never be used
 
         // Choose attribute type
-        const seed = seedrandom(getUniquePerkSeedString(underworld, globalThis.player) + `-${i}-${player?.reroll || 0}-${failedDueToDuplicateCount}`);
+        const seed = seedrandom(getUniqueSeedString(underworld, globalThis.player) + `-${i}-${player?.reroll || 0}-${failedDueToDuplicateCount}`);
         const choiceAttributeType = chooseObjectWithProbability([{ attr: 'maxStat', probability: 10 }, { attr: 'stat', probability: 3 }], seed)?.attr || 'maxStat';
         if (choiceAttributeType == 'maxStat') {
             attribute = chooseOneOfSeeded(['staminaMax', 'healthMax', 'manaMax', 'attackRange'], seed) || 'stamina';
@@ -267,11 +267,6 @@ export interface AttributePerk {
     when: WhenUpgrade;
     // amount is a preportion 0.0 - 1.0
     amount: number;
-}
-export function getUniquePerkSeedString(underworld: Underworld, player?: IPlayer): string {
-    // Seeded random based on the turn so it's consistent across all clients
-    // based on player client ids so it's unique to each player
-    return `${underworld.seed}-${underworld.levelIndex}-${underworld.turn_number}-${player?.clientId || '0'}`;
 }
 export function tryTriggerPerk(perk: AttributePerk, player: IPlayer, when: WhenUpgrade, random: seedrandom.PRNG, underworld: Underworld, offsetNotifyByMs: number) {
     if (perk.when == when) {

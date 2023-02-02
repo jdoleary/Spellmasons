@@ -29,10 +29,11 @@ import { cacheBlood, cameraAutoFollow, runCinematicLevelCamera } from '../graphi
 import { ensureAllClientsHaveAssociatedPlayers, Overworld } from '../Overworld';
 import { playerCastAnimationColor, playerCastAnimationColorLighter, playerCastAnimationGlow } from '../graphics/ui/colors';
 import { lightenColor } from '../graphics/ui/colorUtil';
-import { choosePerk, getUniquePerkSeedString, tryTriggerPerk } from '../Perk';
+import { choosePerk, tryTriggerPerk } from '../Perk';
 import { calculateCost } from '../cards/cardUtils';
 import { runPredictions } from '../graphics/PlanningView';
 import seedrandom from 'seedrandom';
+import { getUniqueSeedString } from '../jmath/rand';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -75,6 +76,22 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
 
         const players = underworld.players.map(Player.serialize)
         underworld.syncPlayers(players);
+      }
+      break;
+    case MESSAGE_TYPES.AQUIRE_PICKUP:
+      const { pickupId, unitId, playerClientId } = payload;
+      const pickup = underworld.pickups.find(p => p.id == pickupId);
+      const unit = underworld.units.find(u => u.id == unitId);
+      const player = underworld.players.find(p => p.clientId == playerClientId);
+      // note: player is optionally undefined, but pickup and unit are required
+      if (pickup && unit) {
+        const didTrigger = pickup.effect({ unit, player, pickup, underworld, prediction: false });
+        // Only remove pickup if it triggered AND is a singleUse pickup
+        if (pickup.singleUse && didTrigger) {
+          removePickup(pickup, underworld, false);
+        }
+      } else {
+        console.error('Attempted to aquire pickup but could not find it in list');
       }
       break;
     case MESSAGE_TYPES.PING:
@@ -413,7 +430,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           Unit.setLocation(fromPlayer.unit, payload);
           // Trigger 'everyLevel' attributePerks
           // now that the player has spawned in at the new level
-          const perkRandomGenerator = seedrandom(getUniquePerkSeedString(underworld, fromPlayer));
+          const perkRandomGenerator = seedrandom(getUniqueSeedString(underworld, fromPlayer));
           for (let i = 0; i < fromPlayer.attributePerks.length; i++) {
             const perk = fromPlayer.attributePerks[i];
             if (perk) {
@@ -624,6 +641,7 @@ async function handleLoadGameState(payload: {
   // lastUnitId must be synced AFTER all of the units are synced since the synced
   // units are id aware
   underworld.lastUnitId = loadedGameState.lastUnitId;
+  underworld.lastPickupId = loadedGameState.lastPickupId;
   // Set the turn_phase; do not use initializeTurnPhase
   // because that function runs initialization logic that would
   // make the loaded underworld desync from the host's underworld

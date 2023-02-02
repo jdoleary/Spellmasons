@@ -68,15 +68,35 @@ const unit: UnitSource = {
         let numberOfSummons = 8;
         const keyMoment = () => {
           let lastPromise = Promise.resolve();
+          const portalCoords = [];
           for (let i = 0; i < numberOfSummons; i++) {
             const coords = findRandomGroundLocation(underworld, unit, seed);
             if (coords) {
-              lastPromise = makeManaTrail(unit, coords, underworld, '#930e0e', '#ff0000').then(() => {
-                Pickup.create({ pos: coords, pickupSource: redPortalPickupSource }, underworld, false);
-              });
+              portalCoords.push(coords);
             } else {
               console.log("Summoner could not find valid spawn");
             }
+          }
+          for (let coord of portalCoords) {
+            // Prevent red portals from spawning too close to each other which could cause
+            // the player to teleport through more than one
+            if (portalCoords.some(p => {
+              // Don't compare with self
+              if (p == coord) {
+                return false;
+              }
+              const dist = math.distance(p, coord);
+              // + 10 is just extra margin to be sure
+              return dist <= config.COLLISION_MESH_RADIUS + 10;
+            })) {
+              // Don't allow spawning 2 red portals on top of each other
+              continue;
+            }
+            // Spawn the portals
+            lastPromise = makeManaTrail(unit, coord, underworld, '#930e0e', '#ff0000').then(() => {
+              Pickup.create({ pos: coord, pickupSource: redPortalPickupSource }, underworld, false);
+            });
+
           }
           return lastPromise;
         };
