@@ -3,7 +3,7 @@ import * as Unit from '../entity/Unit';
 import { lerp } from '../jmath/math';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX, playSpellSFX } from './cardUtils';
-import { Spell } from './index';
+import { refundLastSpell, Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { makeBleedParticles } from '../graphics/ParticleCollection';
 
@@ -54,6 +54,10 @@ const spell: Spell = {
         // .filter: only target living units
         const targets = state.targetedUnits.filter(u => u.alive)
         let biggestProportion = 0;
+        if (targets.length == 0) {
+          refundLastSpell(state, prediction);
+          resolve();
+        }
         for (let unit of targets) {
           const proportion = calculateDamageProportion(unit);
           if (proportion > biggestProportion) {
