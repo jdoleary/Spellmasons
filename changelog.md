@@ -28,3 +28,4 @@
 - fix: Spell upgrade choices not refreshing between new games
 - fix: "Ready" button not working in lobby if you quit and rejoin game
 - fix: Allow overwriting save files with the same name rather than keeping duplicates
+- fix: Temporarily disable "Contegous" until it's reliablity can be assured under any circumstance

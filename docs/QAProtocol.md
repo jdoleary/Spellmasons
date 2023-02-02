@@ -13,3 +13,6 @@
 - Test in `Testing` build
 - Release at announced time
 - Update servers (Walrus must be updated manually)
+
+## Findings:
+- index.fdcafa98.js:5 Dev warning: poison supportsQuantity; however quantity was not provided to the addModifier function.

@@ -1,3 +1,44 @@
+- after 2 of each curse + contageous: TODO fix contageous
+```
+suffocate.ts:98 Should have suffocate modifier on unit but it is missing
+onTurnStart @ suffocate.ts:98
+(anonymous) @ Underworld.ts:2024
+initializePlayerTurns @ Underworld.ts:2021
+initializeTurnPhase @ Underworld.ts:2469
+handleOnDataMessage @ networkHandler.ts:317
+(anonymous) @ networkHandler.ts:203
+processNextInQueue @ messageQueue.ts:10
+(anonymous) @ messageQueue.ts:15
+Promise.then (async)
+processNextInQueue @ messageQueue.ts:11
+(anonymous) @ messageQueue.ts:15
+Promise.then (async)
+processNextInQueue @ messageQueue.ts:11
+processNextInQueueIfReady @ networkHandler.ts:203
+handleOnDataMessageSyncronously @ networkHandler.ts:195
+onData @ networkHandler.ts:169
+pie.onData @ wsPieSetup.ts:162
+handleMessage @ PieClient.js:327
+sendData @ PieClient.js:473
+broadcastTurnPhase @ Underworld.ts:2380
+tryEndPlayerTurnPhase @ Underworld.ts:1885
+endPlayerTurn @ Underworld.ts:2146
+await in endPlayerTurn (async)
+initializePlayerTurns @ Underworld.ts:2030
+await in initializePlayerTurns (async)
+initializeTurnPhase @ Underworld.ts:2469
+handleOnDataMessage @ networkHandler.ts:317
+(anonymous) @ networkHandler.ts:203
+processNextInQueue @ messageQueue.ts:10
+(anonymous) @ messageQueue.ts:15
+Promise.then (async)
+processNextInQueue @ messageQueue.ts:11
+(anonymous) @ messageQueue.ts:15
+Promise.then (async)
+processNextInQueue @ messageQueue.ts:11
+(anonymous) @ messageQueue.ts:15
+poison.ts:104 Should have poison modifier on unit but it is missing
+```
 - aquire pickup for red portals doesn't work in singleplayer
 - "Waiting" spell book doesn't open when you're waiting on your own spells
 - Make "bleed" copy simpler so people don't have to think about the math

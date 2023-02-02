@@ -160,7 +160,7 @@ export function registerCards(overworld: Overworld) {
   register(add_heal, overworld);
   register(target_circle, overworld);
   register(connect, overworld);
-  register(contagious, overworld);
+  // register(contagious, overworld);
   register(freeze, overworld);
   register(raise_dead, overworld);
   register(shield, overworld);
