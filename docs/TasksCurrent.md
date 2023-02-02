@@ -1,5 +1,3 @@
-- quit a game with ally AI in multiplayer and it got stuck in infinite loop. I went start a new singleplayer game and thats when i noticed it
-  - as i suspected, theres a set phase queued up after the STALLED set phase is done processing
 - predicting 'sacrifice' over a decoy shows pickup dissapear particles on all pickups in prediction
 - bug: corruption particles appear unexpectedly on level 1 at 0,0
   - okay I think it had something to do with admin deleting a unit and then ending my turn

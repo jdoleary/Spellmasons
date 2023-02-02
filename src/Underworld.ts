@@ -2092,6 +2092,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
   }
   async endPlayerTurn(clientId: string) {
+    if (this.turn_phase == turn_phase.Stalled) {
+      // Do not end a players turn while game is Stalled or it will trigger
+      // an exit of the Stalled phase and that should ONLY happen when a player reconnects
+      return;
+    }
     const playerIndex = this.players.findIndex((p) => p.clientId === clientId);
     const player = this.players[playerIndex];
     if (!player) {
@@ -2451,7 +2456,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           if (this.players.every(p => !p.clientConnected)) {
             // This is the only place where the turn_phase can become Stalled, when it is supposed
             // to be player turns but there are no players connected.
-            this.broadcastTurnPhase(turn_phase.Stalled);
+            // Note: the Stalled turn_phase should be set immediately, not broadcast
+            // This is an exception because if the game is stalled, by definition, there
+            // are no players to broadcast to.
+            // Setting it immediately ensures that any following messages in the queue won't reengage
+            // the turn_phase loop, causing an infinite loop
+            this.turn_phase = turn_phase.Stalled;
             console.log('Turn Management: Skipping initializingPlayerTurns, no players connected. Setting turn_phase to "Stalled"');
           } else {
             // Start the players' turn
