@@ -56,7 +56,9 @@ const spell: Spell = {
 };
 export default spell;
 function animateRend(targets: Vec2[], quantity: number, prediction: boolean): Promise<void> {
-  if (!prediction) {
+  if (prediction || globalThis.headless) {
+    return Promise.resolve();
+  } else {
     return raceTimeout(500 + 120 * quantity, 'animateRend',
       new Promise<void>((resolve) => {
         // Resolve immediately if there are no targets
@@ -92,8 +94,6 @@ function animateRend(targets: Vec2[], quantity: number, prediction: boolean): Pr
           }
         }
       }));
-  } else {
-    return Promise.resolve();
   }
 
 }
