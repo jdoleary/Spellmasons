@@ -16,7 +16,7 @@ export function makeBleedParticles(position: Vec2, prediction: boolean, proporti
         if (resolver) {
             resolver();
         }
-        return
+        return;
     }
     // proportion goes from 0.0 to bleedInstantKillProportion;
     // convert to 0.0 to 1.0
