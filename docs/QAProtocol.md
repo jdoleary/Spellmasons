@@ -6,7 +6,7 @@
 - Test Pickups + movement 
 
 # Release protocal
-- QA
+- QA: 12:05am
 - Announce server down time
 - Make build for mac and PC
 - Transfer them to main computer and upload to Steam

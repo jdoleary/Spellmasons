@@ -1,3 +1,5 @@
+- aquire pickup for red portals doesn't work in singleplayer
+- "Waiting" spell book doesn't open when you're waiting on your own spells
 - Make "bleed" copy simpler so people don't have to think about the math
 - player unit's position seems to be rounding to whole number on server
 - new networked trigger pickup makes a unit pushed into a trap have the trap
