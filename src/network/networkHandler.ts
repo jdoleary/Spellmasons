@@ -466,6 +466,15 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       underworld.tryRestartTurnPhaseLoop();
       underworld.assertDemoExit();
       break;
+    case MESSAGE_TYPES.SET_PLAYER_POSITION:
+      // This message is only for the host, it ensures that the player position
+      // of the host matches exactly the player position on the player's client
+      if (isHost(overworld.pie)) {
+        if (fromPlayer && fromPlayer.unit && payload.x !== undefined && payload.y !== undefined) {
+          Unit.setLocation(fromPlayer.unit, payload);
+        }
+      }
+      break;
     case MESSAGE_TYPES.MOVE_PLAYER:
       if (fromPlayer == globalThis.player) {
         // Do not do anything, own player movement is handled locally

@@ -517,6 +517,13 @@ export function mouseUpHandler(overworld: Overworld, e: MouseEvent) {
     globalThis.walkPathGraphics?.clear();
     if (overworld.underworld) {
       globalThis.setRMBDown?.(false, overworld.underworld);
+      if (overworld.underworld && globalThis.player) {
+        // On release, send a final move player to ensure that the player moves to the full destination on the server
+        overworld.underworld.pie.sendData({
+          type: MESSAGE_TYPES.SET_PLAYER_POSITION,
+          ...Vec.clone(globalThis.player.unit),
+        });
+      }
     } else {
       console.log('Did not setRMBDown, underworld does not exist.');
     }
