@@ -1,5 +1,5 @@
 # For v1.2
-- Limit player thought to max number of spells so it doesn't cover too much
+- bug: when you rejoin a game it plays the enemies turn first instead of resuming at yours
 - MOVE PLAYER appears to be processed AFTER spell finishes even if it occurs during
 - perk % increase is way to weak early on and way to strong later on
 - **big** if both players end turn while arrows are flying it causes desync

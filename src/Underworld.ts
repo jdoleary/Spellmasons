@@ -173,7 +173,7 @@ export default class Underworld {
   // can see what another client is planning.
   // The hash is used to prevent sending the same data more than once
   lastThoughtsHash: string = '';
-  playerThoughts: { [clientId: string]: { target: Vec2, cardIds: string[] } } = {};
+  playerThoughts: { [clientId: string]: { target: Vec2, cardIds: string[], ellipsis: boolean } } = {};
   // Keep track of the LevelData from the last level that was created in
   // case it needs to be sent to another client
   lastLevelCreated: LevelData | undefined;
@@ -880,12 +880,13 @@ export default class Underworld {
       containerPlayerThinking?.addChild(globalThis.thinkingPlayerGraphics);
     }
     for (let [thinkerClientId, thought] of Object.entries(this.playerThoughts)) {
-      const { target, cardIds } = thought;
+      const { target, cardIds, ellipsis } = thought;
       const thinkingPlayerIndex = this.players.findIndex(p => p.clientId == thinkerClientId);
       const thinkingPlayer = this.players[thinkingPlayerIndex];
       if (thinkingPlayer && thinkingPlayer.isSpawned) {
         // Leave room for name tag
         const yMargin = 10;
+        const y = thinkingPlayer.unit.y - config.COLLISION_MESH_RADIUS * 2 - yMargin
         let firstCard, lastCard;
         for (let i = 0; i < cardIds.length; i++) {
           const cardId = cardIds[i];
@@ -900,7 +901,6 @@ export default class Underworld {
               sprite.anchor.x = 0.5;
               sprite.anchor.y = 0.5;
               sprite.rotation = 0;
-              const y = thinkingPlayer.unit.y - config.COLLISION_MESH_RADIUS * 2 - yMargin
               const pos = { x, y };
               if (i == 0) {
                 firstCard = { x, y };
@@ -913,6 +913,16 @@ export default class Underworld {
               sprite.scale.set(0.3);
             }
           }
+        }
+        if (ellipsis && globalThis.pixi && lastCard && containerPlayerThinking) {
+          const pixiText = new globalThis.pixi.Text('...');
+          const x = getXLocationOfImageForThoughtBubble(thinkingPlayer.unit.x, cardIds.length, cardIds.length);
+          pixiText.x = x;
+          pixiText.y = y;
+          lastCard = { x, y };
+          pixiText.anchor.x = 0.5;
+          pixiText.anchor.y = 0.5;
+          containerPlayerThinking.addChild(pixiText);
         }
         // Render thought bubble around spell icons
         if (firstCard && lastCard) {
@@ -3046,10 +3056,17 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       if (hash !== this.lastThoughtsHash) {
         this.lastThoughtsHash = hash;
         if (this.pie) {
+          let ellipsis = false;
+          if (cardIds.length >= 7) {
+            // Slice to one less so the epsilon is added on the 7th
+            cardIds = cardIds.slice(0, 6);
+            ellipsis = true;
+          }
           this.pie.sendData({
             type: MESSAGE_TYPES.PLAYER_THINKING,
             target,
-            cardIds
+            cardIds,
+            ellipsis
           });
         }
       }
