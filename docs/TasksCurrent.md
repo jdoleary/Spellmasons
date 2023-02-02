@@ -1,3 +1,11 @@
+- pickup collisions (like red portals aren't fully detected on multiplayer)
+  because when it triggers the player stops moving in the server
+  - Pickups should be broadcast as network message
+- validate split ids being unique
+- going through red portal causes desync to very odd location
+- chain choice can be messed up because a recursive chain could see only a unit
+  of another kind as an option where there are other options available earlier
+  in the recursion
 - post on itch.io
 - Plan modding
 - Demo
