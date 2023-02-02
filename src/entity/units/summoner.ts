@@ -12,7 +12,7 @@ import { summoningSicknessId } from '../../modifierSummoningSickness';
 import seedrandom from 'seedrandom';
 import { makeManaTrail } from '../../graphics/Particles';
 import { clone, Vec2 } from '../../jmath/Vec';
-import { isCoordInLiquid } from '../Obstacle';
+import { isCoordInLiquid, tryFallInOutOfLiquid } from '../Obstacle';
 
 export const SUMMONER_ID = 'summoner';
 const manaCostToCast = 60;
@@ -119,6 +119,8 @@ export async function summonerAction(unit: Unit.IUnit, ableToSummon: boolean, un
               new Promise<void>(resolve => oneOffImage(teleportToLocation, 'units/summonerMagic', containerUnits, resolve)).then(() => {
                 unit.x = teleportToLocation.x;
                 unit.y = teleportToLocation.y;
+                // Check to see if unit interacts with liquid
+                tryFallInOutOfLiquid(unit, underworld, false);
                 resolveTeleport();
               });
             });

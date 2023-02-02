@@ -20,6 +20,7 @@ import * as Vec from '../../jmath/Vec';
 import { summoningSicknessId } from '../../modifierSummoningSickness';
 import { BLOOD_GOLEM_ID } from './bloodGolem';
 import { BLOOD_ARCHER_ID } from './blood_archer';
+import { tryFallInOutOfLiquid } from '../Obstacle';
 
 export const bossmasonUnitId = 'Deathmason';
 const NUMBER_OF_ATTACK_TARGETS = 8;
@@ -143,6 +144,7 @@ const unit: UnitSource = {
             skyBeam(unit);
             unit.x = portal.x;
             unit.y = portal.y;
+            tryFallInOutOfLiquid(unit, underworld, false);
             removePickup(portal, underworld, false);
           } else {
             summonUnitAtPickup(unit, portal, underworld);
