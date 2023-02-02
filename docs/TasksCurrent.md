@@ -2,6 +2,8 @@
   - find where else units are syncronized and do the same
 Attempting to figure out desyncs, i think they're largely related to misaligned unit ids and maybe now pickup ids.
 I saved a sync state and my unit was killed and had a glop attack animation on it but I didn't see that when I saved it
+- "no init with modifier for key freeze" when syncing
+- entities that are flagged for removal get an image restored during a sync
 # for release of v1.2
 - Announce support for Chinese and Japanese
 - Update steam page to show it supports Chinese and Japanes

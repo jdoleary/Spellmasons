@@ -300,6 +300,8 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         lastUnitId: number,
         lastPickupId: number,
       }
+      console.log('jtest units', JSON.stringify(units, null, 2));
+      console.log('jtest pickups', JSON.stringify(pickups, null, 2));
       // Do not set the phase redundantly, this can occur due to tryRestartTurnPhaseLoop
       // being invoked multiple times before the first message is processed.  This is normal.
       if (underworld.turn_phase == phase) {

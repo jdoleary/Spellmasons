@@ -984,6 +984,12 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         overworld.underworld.units.filter(u => u.faction == Faction.ENEMY).forEach(u => {
           Unit.cleanup(u);
         });
+        // Instantly fully remove units that are flagged for removal 
+        // (in the game this happens during initTurnPhase, in order to prevent the units array
+        // from being modified while it is being iterated) however the admin commands
+        // are meant to set up game state, often for saving or exporting the state and so it should
+        // clean up immediately
+        overworld.underworld.units = overworld.underworld.units.filter(u => !u.flaggedForRemoval)
       },
       supportInMultiplayer: true,
       domQueryContainer: '#menu-global'
@@ -998,6 +1004,12 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         for (let pickup of overworld.underworld.pickups) {
           Pickup.removePickup(pickup, overworld.underworld, false);
         }
+        // Instantly fully remove pickups that are flagged for removal 
+        // (in the game this happens during initTurnPhase, in order to prevent the pickup array
+        // from being modified while it is being iterated) however the admin commands
+        // are meant to set up game state, often for saving or exporting the state and so it should
+        // clean up immediately
+        overworld.underworld.pickups = overworld.underworld.pickups.filter(p => !p.flaggedForRemoval)
       },
       supportInMultiplayer: true,
       domQueryContainer: '#menu-global'
