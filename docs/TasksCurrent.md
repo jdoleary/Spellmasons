@@ -1,8 +1,18 @@
+- **important** todo reset lastUnitid after sync
+  - find where else units are syncronized and do the same
+Attempting to figure out desyncs, i think they're largely related to misaligned unit ids and maybe now pickup ids.
+I saved a sync state and my unit was killed and had a glop attack animation on it but I didn't see that when I saved it
 # for release of v1.2
 - Announce support for Chinese and Japanese
 - Update steam page to show it supports Chinese and Japanes
 - Find who asked about Japanese support and let them know it does
 # For v1.2
+- was able to reproduce some weird behavior on multiplayer server by disconnecting one player and reconnecting
+  - it showed game over screen until i reconnected and then it was stuck until i ended both of their turns multiple times
+- I think desyncs are coming from unit id mismatches based on error logs
+- https://sentry.io/organizations/jordan-oleary/issues/3911592323/?project=6306205&query=is%3Aunresolved&referrer=issue-stream
+- Multiplayer players don't get "un-split" on new level
+- **big** entering portal makes character vanish but not go to next level (singleplayer)
 - i18n: chinese target kind translation needs updating
 - bug: when you rejoin a game it plays the enemies turn first instead of resuming at yours
   - not always reproducable, maybe set all players to not endedTurn when it goes to stalled

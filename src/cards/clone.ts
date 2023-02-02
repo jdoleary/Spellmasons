@@ -78,7 +78,7 @@ const spell: Spell = {
             if (Pickup.isPickup(target)) {
               const validSpawnCoords = underworld.findValidSpawn(cloneSourceCoords, 5, 20)
               if (validSpawnCoords) {
-                const clone = Pickup.load(target, underworld, prediction);
+                const clone = Pickup.load(Pickup.serialize(target), underworld, prediction);
                 if (clone) {
 
                   if (!prediction) {

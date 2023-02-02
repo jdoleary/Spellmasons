@@ -289,12 +289,16 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       break;
     case MESSAGE_TYPES.SET_PHASE:
       console.log('sync: SET_PHASE; syncs units and players')
-      const { phase, units, players } = payload as {
+      const { phase, units, players, pickups, lastUnitId, lastPickupId } = payload as {
         phase: turn_phase,
         // Sync data for players
         players?: Player.IPlayerSerialized[],
         // Sync data for units
         units?: Unit.IUnitSerialized[],
+        // Sync data for pickups
+        pickups?: Pickup.IPickupSerialized[],
+        lastUnitId: number,
+        lastPickupId: number,
       }
       // Do not set the phase redundantly, this can occur due to tryRestartTurnPhaseLoop
       // being invoked multiple times before the first message is processed.  This is normal.
@@ -312,6 +316,16 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       if (players) {
         underworld.syncPlayers(players);
       }
+
+      if (pickups) {
+        underworld.syncPickups(pickups);
+      }
+
+      // Syncronize the lastXId so that when a new unit or pickup is created
+      // it will get the same id on both server and client
+      underworld.lastUnitId = lastUnitId;
+      underworld.lastPickupId = lastPickupId;
+
       // Use the internal setTurnPhrase now that the desired phase has been sent
       // via the public setTurnPhase
       await underworld.initializeTurnPhase(phase);

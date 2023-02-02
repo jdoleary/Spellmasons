@@ -212,7 +212,7 @@ export function serialize(p: IPickup): IPickupSerialized {
   return serialized;
 }
 // Reinitialize a pickup from another pickup object, this is used in loading game state after reconnect
-export function load(pickup: IPickup, underworld: Underworld, prediction: boolean): IPickup | undefined {
+export function load(pickup: IPickupSerialized, underworld: Underworld, prediction: boolean): IPickup | undefined {
   // Get the pickup object
   let foundPickup = pickups.find((p) => p.name == pickup.name);
   if (foundPickup) {
@@ -240,7 +240,6 @@ export function removePickup(pickup: IPickup, underworld: Underworld, prediction
   pickup.flaggedForRemoval = true;
   Image.cleanup(pickup.image);
   stopAndDestroyForeverEmitter(pickup.emitter);
-  underworld.removePickupFromArray(pickup, prediction);
   checkIfNeedToClearTooltip();
   // Remove any associated forcePushs
   const fms = (prediction ? underworld.forceMovePrediction : underworld.forceMove).filter(fm => fm.pushedObject == pickup)
@@ -250,7 +249,7 @@ export function removePickup(pickup: IPickup, underworld: Underworld, prediction
   }
 }
 export function triggerPickup(pickup: IPickup, unit: IUnit, player: Player.IPlayer | undefined, underworld: Underworld, prediction: boolean) {
-  const willTrigger = pickup.willTrigger({ unit, player, pickup, underworld });
+  const willTrigger = !pickup.flaggedForRemoval && pickup.willTrigger({ unit, player, pickup, underworld });
   if (willTrigger) {
     pickup.effect({ unit, player, pickup, underworld, prediction });
     // Only remove pickup if it is a singleUse pickup

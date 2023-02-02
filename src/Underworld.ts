@@ -2392,11 +2392,15 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // If host, send sync; if non-host, ignore 
     if (globalThis.isHost(this.pie)) {
       console.log('Broadcast SET_PHASE: ', turn_phase[p]);
+
       this.pie.sendData({
         type: MESSAGE_TYPES.SET_PHASE,
         phase: p,
         units: this.units.map(Unit.serialize),
-        players: this.players.map(Player.serialize)
+        pickups: this.pickups.map(Pickup.serialize),
+        players: this.players.map(Player.serialize),
+        lastUnitId: this.lastUnitId,
+        lastPickupId: this.lastPickupId,
         // TODO sync doodads here
       });
     }
@@ -2458,6 +2462,17 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
     }
     this.units = keepUnits;
+
+    // Clean up invalid pickups
+    const keepPickups: Pickup.IPickup[] = [];
+    for (let p of this.pickups) {
+      if (!p.flaggedForRemoval) {
+        keepPickups.push(p);
+      } else {
+        console.log('jtest remove pickup', p.id, 'flagged for removal');
+      }
+    }
+    this.pickups = keepPickups;
 
     const phase = turn_phase[this.turn_phase];
     if (phase) {
@@ -2719,13 +2734,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     } else {
       this.units.push(unit);
       return unit;
-    }
-  }
-  removePickupFromArray(pickup: Pickup.IPickup, prediction: boolean) {
-    if (prediction && this.pickupsPrediction) {
-      this.pickupsPrediction = this.pickupsPrediction.filter(p => p !== pickup);
-    } else {
-      this.pickups = this.pickups.filter((p) => p !== pickup);
     }
   }
   addPickupToArray(pickup: Pickup.IPickup, prediction: boolean) {
@@ -3011,8 +3019,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     return this.units;
   }
+  unitIsIdentical(unit: Unit.IUnit, serialized: Unit.IUnitSerialized): boolean {
+    return unit.id == serialized.id && unit.unitSourceId == serialized.unitSourceId;
+  }
   syncUnits(units: Unit.IUnitSerialized[]) {
-    console.log('sync: Syncing units', units.map(u => u.id), this.units.map(u => u.id));
+    console.log('sync: Syncing units', units.map(u => u.id), 'current units:', this.units.map(u => u.id));
+
     // Remove excess units if local copy of units has more units than the units it
     // should be syncing with
     if (this.units.length > units.length) {
@@ -3025,18 +3037,37 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
       this.units.splice(units.length);
     }
+    // What couldn't be synced store in an array to create after iterating is finished
+    let serializedUnitsLeftToCreate = [];
+    // Sync what units you can
     for (let i = 0; i < units.length; i++) {
-      const syncUnit = units[i];
+      // console.log('jtest:', i, ' Syncing units', units.map(u => u.id), 'current units:', this.units.map(u => u.id));
+      const serializedUnit = units[i];
       const currentUnit = this.units[i];
-      if (syncUnit) {
+      if (serializedUnit) {
         if (currentUnit) {
-          // Note: Unit.syncronize maintains the player.unit reference
-          Unit.syncronize(syncUnit, currentUnit);
+          // if there is a unit to compare it to, if they are the same, syncronize;
+          // if not, delete and recreate:
+          if (this.unitIsIdentical(currentUnit, serializedUnit)) {
+            // console.log('jtest update unit stats', currentUnit.id, serializedUnit.id);
+            // Note: Unit.syncronize maintains the player.unit reference
+            Unit.syncronize(serializedUnit, currentUnit);
+          } else {
+            // console.log('jtest fully replace unit', currentUnit.id, currentUnit.unitSourceId, ';', serializedUnit.id, serializedUnit.unitSourceId);
+            Unit.cleanup(currentUnit);
+            serializedUnitsLeftToCreate.push(serializedUnit);
+          }
         } else {
-          const newUnit = Unit.create(syncUnit.unitSourceId, syncUnit.x, syncUnit.y, syncUnit.faction, syncUnit.defaultImagePath, syncUnit.unitType, syncUnit.unitSubType, undefined, this);
-          Unit.syncronize(syncUnit, newUnit);
+          // console.log('jtest create new unit', serializedUnit.id);
+          serializedUnitsLeftToCreate.push(serializedUnit);
         }
       }
+    }
+    // Create what's left over
+    for (let serializedUnit of serializedUnitsLeftToCreate) {
+      // console.log('jtest create', serializedUnit.id, serializedUnit.unitSourceId);
+      const newUnit = Unit.load(serializedUnit, this, false);
+      Unit.returnToDefaultSprite(newUnit);
     }
 
   }
@@ -3085,6 +3116,61 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
 
     }
+  }
+  pickupIsIdentical(pickup: Pickup.IPickup, serialized: Pickup.IPickupSerialized): boolean {
+    return pickup.id == serialized.id && pickup.name == serialized.name;
+  }
+  syncPickups(pickups: Pickup.IPickupSerialized[]) {
+    console.log('sync: Syncing pickups', pickups.map(u => u.id), 'current pickups:', this.pickups.map(u => u.id));
+
+    // Remove excess pickups if local copy of pickups has more pickups than the pickups it
+    // should be syncing with
+    if (this.pickups.length > pickups.length) {
+      console.log('sync: Remove excess pickups')
+      for (let i = pickups.length; i < this.pickups.length; i++) {
+        const pickup = this.pickups[i];
+        if (pickup) {
+          Pickup.removePickup(pickup, this, false);
+        }
+      }
+      this.pickups.splice(pickups.length);
+    }
+    // What couldn't be synced store in an array to create after iterating is finished
+    let serializedpickupsLeftToCreate = [];
+    let pickupsToRemove = [];
+    // Sync what pickups you can
+    for (let i = 0; i < pickups.length; i++) {
+      // console.log('jtest:', i, ' Syncing pickups', pickups.map(u => u.id), 'current pickups:', this.pickups.map(u => u.id));
+      const serializedPickup = pickups[i];
+      const currentPickup = this.pickups[i];
+      if (serializedPickup) {
+        if (currentPickup) {
+          // if there is a pickup to compare it to, if they are the same, syncronize;
+          // if not, delete and recreate:
+          if (this.pickupIsIdentical(currentPickup, serializedPickup)) {
+            // console.log('jtest update pickup stats', currentPickup.id, serializedPickup.id);
+            const { x, y, radius, inLiquid, immovable, beingPushed, singleUse, playerOnly, turnsLeftToGrab, flaggedForRemoval } = serializedPickup;
+            Object.assign(currentPickup, { x, y, radius, inLiquid, immovable, beingPushed, singleUse, playerOnly, turnsLeftToGrab, flaggedForRemoval });
+          } else {
+            // console.log('jtest fully replace pickup', currentPickup.id, currentPickup.pickupsourceId, ';', serializedPickup.id, serializedPickup.pickupsourceId);
+            pickupsToRemove.push(currentPickup);
+            serializedpickupsLeftToCreate.push(serializedPickup);
+          }
+        } else {
+          // console.log('jtest create new unit', serializedPickup.id);
+          serializedpickupsLeftToCreate.push(serializedPickup);
+        }
+      }
+    }
+    for (let pickup of pickupsToRemove) {
+      Pickup.removePickup(pickup, this, false);
+    }
+    // Create what's left over
+    for (let serializedPickup of serializedpickupsLeftToCreate) {
+      // console.log('jtest create', serializedPickup.id, serializedPickup.pickupsourceId);
+      Pickup.load(serializedPickup, this, false);
+    }
+
   }
 
   // Create a hash from the gamestate.  Useful for determining if
