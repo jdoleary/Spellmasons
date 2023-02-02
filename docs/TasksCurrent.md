@@ -3,6 +3,7 @@
 - MOVE PLAYER appears to be processed AFTER spell finishes even if it occurs during
 - perk % increase is way to weak early on and way to strong later on
 - **big** if both players end turn while arrows are flying it causes desync
+  - ending turn before cast animation finishes causes desync
 - server hub should handle downed server status
 - **important** don't forget to add Chinese and japanese translations
 - bug: radius+ column +target kind not optimized for concurrent animations
