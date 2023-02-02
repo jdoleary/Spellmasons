@@ -863,8 +863,8 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
         JSON.stringify(saveObject),
       );
     } catch (e) {
-      console.error(e);
       console.log('Failed to save', saveObject);
+      console.error(e);
     }
   };
   globalThis.deleteSave = async (title: string) => {
