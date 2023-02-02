@@ -1,3 +1,30 @@
+# For v1.2
+- Limit player thought to max number of spells so it doesn't cover too much
+- MOVE PLAYER appears to be processed AFTER spell finishes even if it occurs during
+- perk % increase is way to weak early on and way to strong later on
+- **big** if both players end turn while arrows are flying it causes desync
+- server hub should handle downed server status
+- **important** don't forget to add Chinese and japanese translations
+- bug: suffocate is inconsistent even in singleplayer: icecloud12
+  - additional casts of sufficate reset the count
+- make LOTS of arrows even faster
+- bug: radius+ column +target kind not optimized for concurrent animations
+- stacking targeting spells doesn't work
+  jackyzrule
+  ```
+  before the new patch I could use a multitarget followed up by an AoE target and all the target gained by the multitarget would generate an AoE targeting area around them.
+  Since the new patch the AoE targeting fires from where I started the spell.
+
+  On the contrary, if i target multiple target with an AoE targeting for each of this target a new instance of multitargeting would fire. I'm preatty sure it was working the same before last patch.
+
+  AoE Target (ex "Target Circle" or "Target Cone") 
+  MultiTarget ( ex "Connect" or "Target Kind")
+
+  Different Multitargets effect stack subsequently correctly, and the same goes for different AoE targeting modifier
+  ```
+---
+- shove damage doesn't increase
+- bug: blood archer shot after moving
 - stamina resets after i end my turn in multiplaer after a stamina potion
 - allies didn't carry on the battle after i died until i explicitly ended my turn
 - predicting 'sacrifice' over a decoy shows pickup dissapear particles on all pickups in prediction

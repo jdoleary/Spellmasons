@@ -14,6 +14,7 @@
 - Make build for mac and PC
 - Transfer them to main computer and upload to Steam
 - Test in `Testing` build
+
 - Release at announced time
 - Update servers (Walrus must be updated manually)
 - Make post in Steam and ask users to update
