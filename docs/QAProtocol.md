@@ -9,13 +9,14 @@
 - Test allies carrying on the battle
 
 # Release protocal
-- QA
+- QA: 1:44
 - Announce server down time
 - Make build for mac and PC
 - Transfer them to main computer and upload to Steam
 - Test in `Testing` build
 - Release at announced time
 - Update servers (Walrus must be updated manually)
+- Make post in Steam and ask users to update
 
 ## Findings:
 - index.fdcafa98.js:5 Dev warning: poison supportsQuantity; however quantity was not provided to the addModifier function.
