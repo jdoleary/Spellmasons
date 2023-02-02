@@ -793,15 +793,14 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
 
   globalThis.getAllSaveFiles = () => Object.keys(localStorage).filter(x => x.startsWith(globalThis.savePrefix)).map(x => x.substring(globalThis.savePrefix.length));
 
-  globalThis.save = async (title: string) => {
-    console.log('jtest save', title, title.split('-').slice(-1)[0]);
+  globalThis.save = async (title: string, forceOverwrite?: boolean) => {
     const { underworld } = overworld;
     if (!underworld) {
       console.error('Cannot save game, underworld does not exist');
       return;
     }
     // Prompt overwrite, don't allow for saving multiple saves with the same name
-    if (getAllSaveFiles) {
+    if (getAllSaveFiles && !forceOverwrite) {
 
       const allSaveFiles = getAllSaveFiles();
       // A safe file key consists of a prefix, a timestamp and a wordTitle, find and compare the word titles

@@ -103,7 +103,7 @@ declare global {
     var skipTutorial: undefined | (() => Promise<void>);
     var isTutorialComplete: undefined | (() => boolean);
 
-    var save: undefined | ((title: string) => void);
+    var save: undefined | ((title: string, forceOverwrite?: boolean) => void);
     var deleteSave: undefined | ((title: string) => Promise<void>);
     var load: undefined | ((title: string) => void);
     var getAllSaveFiles: undefined | (() => string[]);

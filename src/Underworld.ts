@@ -2056,7 +2056,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // because save support hasn't been added to multiplayer yet
           if (globalThis.player.clientId == 'solomode_client_id') {
             console.info(`Dev: quick saving game as "${globalThis.quicksaveKey}"`);
-            globalThis.save(globalThis.quicksaveKey);
+            // Force overwrite for quicksave, never prompt "are you sure?" when auto saving a quicksave
+            globalThis.save(globalThis.quicksaveKey, true);
           }
         }
         let affirm = true
