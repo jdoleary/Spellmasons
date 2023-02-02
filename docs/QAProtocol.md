@@ -1,0 +1,15 @@
+# QA Protocol
+- Test all spells in multiplayer
+- Test all spells in singleplayer
+- Test liquid
+- Test pickups
+- Test Pickups + movement 
+
+# Release protocal
+- QA
+- Announce server down time
+- Make build for mac and PC
+- Transfer them to main computer and upload to Steam
+- Test in `Testing` build
+- Release at announced time
+- Update servers (Walrus must be updated manually)

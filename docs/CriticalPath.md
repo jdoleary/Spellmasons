@@ -1,4 +1,5 @@
 # Critical Path
+- UPdate store page with how many players possible
 
 ## Final Tasks Tonight
 

@@ -1,3 +1,4 @@
+- Make "bleed" copy simpler so people don't have to think about the math
 - player unit's position seems to be rounding to whole number on server
 - new networked trigger pickup makes a unit pushed into a trap have the trap
   trigger immediately instead of when they touch it on multiplayer only
