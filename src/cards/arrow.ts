@@ -16,7 +16,7 @@ const spell: Spell = {
   card: {
     id: arrowCardId,
     category: CardCategory.Damage,
-    supportQuantity: false,
+    supportQuantity: true,
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
@@ -32,33 +32,39 @@ const spell: Spell = {
       targets = targets.length ? targets : [state.castLocation];
       let targetsHitCount = 0;
       let attackPromises = [];
-      for (let target of targets) {
-        const arrowUnitCollisions = findArrowCollisions(state.casterPositionAtTimeOfCast, state.casterUnit.id, target, prediction, underworld);
-        // This regular arrow spell doesn't pierce
-        const firstTarget = arrowUnitCollisions[0];
-        if (firstTarget) {
-          playDefaultSpellSFX(card, prediction);
-          if (!prediction) {
-            // Promise.race ensures arrow promise doesn't take more than X milliseconds so that multiple arrows cast
-            // sequentially wont take too long to complete animating.
-            // Note: I don't forsee any issues with the following spell (say if a spell was chained after arrow) executing
-            // early
-            const projectilePromise = createVisualFlyingProjectile(
-              state.casterPositionAtTimeOfCast,
-              firstTarget,
-              'projectile/arrow',
-            ).then(() => {
+      let timeoutToNextArrow = 200;
+      for (let i = 0; i < quantity; i++) {
+        for (let target of targets) {
+          const arrowUnitCollisions = findArrowCollisions(state.casterPositionAtTimeOfCast, state.casterUnit.id, target, prediction, underworld);
+          // This regular arrow spell doesn't pierce
+          const firstTarget = arrowUnitCollisions[0];
+          if (firstTarget) {
+            playDefaultSpellSFX(card, prediction);
+            if (!prediction) {
+              // Promise.race ensures arrow promise doesn't take more than X milliseconds so that multiple arrows cast
+              // sequentially wont take too long to complete animating.
+              // Note: I don't forsee any issues with the following spell (say if a spell was chained after arrow) executing
+              // early
+              const projectilePromise = createVisualFlyingProjectile(
+                state.casterPositionAtTimeOfCast,
+                firstTarget,
+                'projectile/arrow',
+              ).then(() => {
+                if (Unit.isUnit(firstTarget)) {
+                  Unit.takeDamage(firstTarget, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
+                  targetsHitCount++;
+                }
+              });
+              attackPromises.push(projectilePromise);
+              const timeout = Math.max(5, timeoutToNextArrow);
+              await Promise.race([new Promise(resolve => setTimeout(resolve, timeout)), projectilePromise]);
+              // Decrease timeout with each subsequent arrow fired to ensure that players don't have to wait too long
+              timeoutToNextArrow -= 5;
+            } else {
               if (Unit.isUnit(firstTarget)) {
                 Unit.takeDamage(firstTarget, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
                 targetsHitCount++;
               }
-            });
-            attackPromises.push(projectilePromise);
-            await Promise.race([new Promise(resolve => setTimeout(resolve, 200)), projectilePromise]);
-          } else {
-            if (Unit.isUnit(firstTarget)) {
-              Unit.takeDamage(firstTarget, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
-              targetsHitCount++;
             }
           }
         }

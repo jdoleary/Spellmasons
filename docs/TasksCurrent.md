@@ -5,9 +5,6 @@
 - **big** if both players end turn while arrows are flying it causes desync
 - server hub should handle downed server status
 - **important** don't forget to add Chinese and japanese translations
-- bug: suffocate is inconsistent even in singleplayer: icecloud12
-  - additional casts of sufficate reset the count
-- make LOTS of arrows even faster
 - bug: radius+ column +target kind not optimized for concurrent animations
 - stacking targeting spells doesn't work
   jackyzrule
@@ -23,6 +20,7 @@
   Different Multitargets effect stack subsequently correctly, and the same goes for different AoE targeting modifier
   ```
 ---
+- thank and notify icecloud12 for suffocate report
 - shove damage doesn't increase
 - bug: blood archer shot after moving
 - stamina resets after i end my turn in multiplaer after a stamina potion
