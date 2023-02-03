@@ -7,9 +7,14 @@
     - mouseMove -> calculateCards().forEach -> cacheSpellInvokation(), showPrediction(realizedCalculation)
     - eventHandler click -> calculateCards().forEach -> cacheSpellInvokation(), pie.send(SPELL, realizedCalculation)
     - onSpell -> calculateCards().forEach -> animate(realizedCalculation), effect2(realizedCalculation)
-- potion desync still occurring
+- potion desync still occurring (maybe fix this in today's update and wait to publish the card refactor)
   - potion mismatches should trigger because that means that one client at least saw it
   - test changing potion ids and make sure they sync
+- mana steal should be able to extend usable mana mid-chain
+```
+Isneverthere#3851
+This is probably a sync issue but a big issue as of now is the first round in multiplayer, and a few others will have it where mobs die but then the game says no it didn't. Consistently does it first round and randomly for others after. Hope you find a solution, love the game.
+```
 ---
 ## Important for later
 - Make turn_phase into a state machine so it can only transition from Stalled to PlayerTurns for example

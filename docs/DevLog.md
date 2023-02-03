@@ -10,6 +10,13 @@ cacheSpellInvokation: (args, underworld, prediction) => {},
 effect2: (calculated, underworld, prediction) => {},
 
 ```
+What I need to cast cards from cached info
+{
+  starting targets or cast location
+  cards list with quantity and when new targets are added
+  casterUnit,
+  cachedCasterPosition
+}
 ---
 Ways to fix multiplayer desyncs. I could split spells into 4 functions:
 
