@@ -1,5 +1,4 @@
 - add a better notification for when servers are going down for updates
-- community hub should show server version
 - pushing a unit through a trap caused a desync on multiplayer but after ending turn it resolved
 - bug: stamina potions dont persist in multiplayer
 - you can't tell that you lost connection from a server if the server dies while you're in lobby
