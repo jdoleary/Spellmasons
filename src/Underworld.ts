@@ -2396,8 +2396,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       this.pie.sendData({
         type: MESSAGE_TYPES.SET_PHASE,
         phase: p,
-        units: this.units.map(Unit.serialize),
-        pickups: this.pickups.map(Pickup.serialize),
+        units: this.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
+        pickups: this.pickups.filter(p => !p.flaggedForRemoval).map(Pickup.serialize),
         players: this.players.map(Player.serialize),
         lastUnitId: this.lastUnitId,
         lastPickupId: this.lastPickupId,
