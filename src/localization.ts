@@ -84,7 +84,9 @@ function setLanguage(langCode: string, store: boolean) {
     }
 }
 function getSupportedLanguages() {
-    return languageMapping ? languages.map(l => ({ language: l.language, code: l.languagecode })) : [];
+    return languageMapping ? languages.map(l => ({ language: l.language, code: l.languagecode }))
+        // filter out language that are having issues with the replacement character 🍞.
+        .filter(l => !['ja'].includes(l.code)) : [];
 }
 function getChosenLanguageCode() {
     return chosenLanguageCode;
