@@ -42,7 +42,7 @@ function connect_to_wsPie_server(wsUri: string | undefined, overworld: Overworld
         resolve();
       } else {
         const elVersionInfoHeadless = document.getElementById('version-info-headless-server')
-        if(elVersionInfoHeadless){
+        if (elVersionInfoHeadless) {
           elVersionInfoHeadless.innerHTML = '';
         }
         if (view == View.Game) {
@@ -131,7 +131,7 @@ function addHandlers(pie: PieClient, overworld: Overworld) {
         const [clientMajor, clientMinor, clientPatch] = globalThis.SPELLMASONS_PACKAGE_VERSION.split('.');
         const [serverMajor, serverMinor, serverPath] = o.hostAppVersion.split('.');
         if (clientMajor !== serverMajor || clientMinor !== serverMinor) {
-          Jprompt({ text: 'Server and Game versions are out of sync.  Update Spellmasons update or else you will encounter gameplay issues.', yesText: "Disconnect", forceShow: true, imageSrc: 'images/explain/verifyIntegrity.gif' }).then(() => {
+          Jprompt({ text: 'Server and Game versions are out of sync.  Please reboot Steam to get the latest Version of Spellmasons', yesText: "Disconnect", forceShow: true }).then(() => {
             pie.disconnect();
             globalThis.syncConnectedWithPieState();
           });
