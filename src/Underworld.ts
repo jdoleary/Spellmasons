@@ -2703,6 +2703,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
   getPickupAt(coords: Vec2, prediction?: boolean): Pickup.IPickup | undefined {
     const sortedByProximityToCoords = (prediction && this.pickupsPrediction ? this.pickupsPrediction : this.pickups)
+      .filter(p => !p.flaggedForRemoval && !isNaN(p.x) && !isNaN(p.y))
       .filter(p => !isNaN(p.x) && !isNaN(p.y) && math.distance(coords, p) <= p.radius).sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
     const closest = sortedByProximityToCoords[0]
     return closest;
@@ -3194,7 +3195,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       isRestarting: undefined,
       players: this.players.map(Player.serialize),
       units: this.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
-      pickups: this.pickups.map(Pickup.serialize),
+      pickups: this.pickups.filter(p => !p.flaggedForRemoval).map(Pickup.serialize),
       doodads: this.doodads.map(Doodad.serialize),
       // the state of the Random Number Generator
       RNGState: this.random.state(),

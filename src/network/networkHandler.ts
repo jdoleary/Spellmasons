@@ -866,7 +866,7 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       version: globalThis.SPELLMASONS_PACKAGE_VERSION,
       underworld: underworld.serializeForSaving(),
       phase: underworld.turn_phase,
-      pickups: underworld.pickups.map(Pickup.serialize),
+      pickups: underworld.pickups.filter(p => !p.flaggedForRemoval).map(Pickup.serialize),
       units: underworld.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
       players: underworld.players.map(Player.serialize),
       doodads: underworld.doodads.map(Doodad.serialize),
