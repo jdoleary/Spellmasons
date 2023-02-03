@@ -1,5 +1,8 @@
 # Critical Path
+## Priorities
 - UPdate store page with how many players possible
+- Modding
+- Hotseat Multiplayer
 
 ## Final Tasks Tonight
 
@@ -12,13 +15,6 @@
   - Apps that use docker hub instead of digital ocean registry need manual
     updating
 - Verify that main build isn't running demo version
-
-## Tomorrow morning
-
-- Address curator connect emails
-- make social media posts
-- Update fortify copy to say it only lasts one turn
-- Text Stina about when soundtrack will be released
 
 ## Tonight
 

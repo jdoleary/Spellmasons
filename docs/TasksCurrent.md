@@ -1,3 +1,8 @@
+# For v1.3
+- Rework spells to use unit ids instead of coordinates which will often miss if there is a desync
+- fix Target Kind targeting yourself, now that it's limited it doesn't make sense to target self
+- Allow for scrolling the game language selection
+---
 - add a better notification for when servers are going down for updates
 - pushing a unit through a trap caused a desync on multiplayer but after ending turn it resolved
 - bug: stamina potions dont persist in multiplayer
@@ -10,10 +15,6 @@ Attempting to figure out desyncs, i think they're largely related to misaligned 
 I saved a sync state and my unit was killed and had a glop attack animation on it but I didn't see that when I saved it
 - "no init with modifier for key freeze" when syncing
 - entities that are flagged for removal get an image restored during a sync
-# for release of v1.2
-- Announce support for Chinese and Japanese
-- Update steam page to show it supports Chinese and Japanes
-- Find who asked about Japanese support and let them know it does
 # For v1.2
 - was able to reproduce some weird behavior on multiplayer server by disconnecting one player and reconnecting
   - it showed game over screen until i reconnected and then it was stuck until i ended both of their turns multiple times
