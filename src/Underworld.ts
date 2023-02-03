@@ -3046,7 +3046,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         if (currentUnit) {
           // if there is a unit to compare it to, if they are the same, syncronize;
           // if not, delete and recreate:
-          if (this.unitIsIdentical(currentUnit, serializedUnit)) {
+          // Ensure currentUnit's image is displaying, if not we have to create a new one
+          if (this.unitIsIdentical(currentUnit, serializedUnit) && currentUnit.image?.sprite.parent !== null) {
             // Note: Unit.syncronize maintains the player.unit reference
             Unit.syncronize(serializedUnit, currentUnit);
           } else {
@@ -3140,7 +3141,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         if (currentPickup) {
           // if there is a pickup to compare it to, if they are the same, syncronize;
           // if not, delete and recreate:
-          if (this.pickupIsIdentical(currentPickup, serializedPickup)) {
+          // Ensure currentPickup's image is displaying, if not we have to create a new one
+          if (this.pickupIsIdentical(currentPickup, serializedPickup) && currentPickup.image?.sprite.parent !== null) {
             const { x, y, radius, inLiquid, immovable, beingPushed, singleUse, playerOnly, turnsLeftToGrab, flaggedForRemoval } = serializedPickup;
             Object.assign(currentPickup, { x, y, radius, inLiquid, immovable, beingPushed, singleUse, playerOnly, turnsLeftToGrab, flaggedForRemoval });
           } else {
