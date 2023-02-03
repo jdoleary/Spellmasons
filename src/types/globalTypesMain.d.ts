@@ -192,6 +192,7 @@ declare global {
     // save files to disk instead of to local storage
     var diskStorage: undefined | {
         set: (key, value) => void;
+        remove: (key) => void;
         getDiskStorage: () => Promise<{ [key: string]: string }>;
     }
     // Exposed to global so that golems-menu can access it

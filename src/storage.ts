@@ -88,6 +88,11 @@ export function remove(key: string) {
         return;
     }
     localStorage.removeItem(key);
+    if (globalThis.isElectron) {
+        if (globalThis.diskStorage) {
+            globalThis.diskStorage.remove(key);
+        }
+    }
 }
 export function set(key: string, value: any) {
     console.log('Setting ', key, 'to', value, 'in local storage');

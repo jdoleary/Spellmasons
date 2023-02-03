@@ -2,6 +2,7 @@
 - Rework spells to use unit ids instead of coordinates which will often miss if there is a desync
 - fix Target Kind targeting yourself, now that it's limited it doesn't make sense to target self
 - Allow for scrolling the game language selection
+- Game saves cannot be deleted, when you restart steam they come back
 ---
 - add a better notification for when servers are going down for updates
 - pushing a unit through a trap caused a desync on multiplayer but after ending turn it resolved
