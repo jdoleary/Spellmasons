@@ -21,4 +21,3 @@
 
 ## Findings:
 - index.fdcafa98.js:5 Dev warning: poison supportsQuantity; however quantity was not provided to the addModifier function.
-- MUST FIX: quit a game with ally AI in multiplayer and it got stuck in infinite loop. I went start a new singleplayer game and thats when i noticed it
