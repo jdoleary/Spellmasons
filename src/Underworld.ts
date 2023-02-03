@@ -1980,6 +1980,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
   }
   async initializePlayerTurns() {
+    // Prevent possible desynce where portals don't spawn when unit dies
+    // so it must spawn here to ensure players can move on
+    this.checkIfShouldSpawnPortal();
     for (let player of this.players) {
       // Reset player.endedTurn
       // --
