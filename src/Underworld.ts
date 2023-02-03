@@ -2468,8 +2468,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     for (let p of this.pickups) {
       if (!p.flaggedForRemoval) {
         keepPickups.push(p);
-      } else {
-        console.log('jtest remove pickup', p.id, 'flagged for removal');
       }
     }
     this.pickups = keepPickups;
@@ -3041,7 +3039,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     let serializedUnitsLeftToCreate = [];
     // Sync what units you can
     for (let i = 0; i < units.length; i++) {
-      // console.log('jtest:', i, ' Syncing units', units.map(u => u.id), 'current units:', this.units.map(u => u.id));
       const serializedUnit = units[i];
       const currentUnit = this.units[i];
       if (serializedUnit) {
@@ -3049,23 +3046,19 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // if there is a unit to compare it to, if they are the same, syncronize;
           // if not, delete and recreate:
           if (this.unitIsIdentical(currentUnit, serializedUnit)) {
-            // console.log('jtest update unit stats', currentUnit.id, serializedUnit.id);
             // Note: Unit.syncronize maintains the player.unit reference
             Unit.syncronize(serializedUnit, currentUnit);
           } else {
-            // console.log('jtest fully replace unit', currentUnit.id, currentUnit.unitSourceId, ';', serializedUnit.id, serializedUnit.unitSourceId);
             Unit.cleanup(currentUnit);
             serializedUnitsLeftToCreate.push(serializedUnit);
           }
         } else {
-          // console.log('jtest create new unit', serializedUnit.id);
           serializedUnitsLeftToCreate.push(serializedUnit);
         }
       }
     }
     // Create what's left over
     for (let serializedUnit of serializedUnitsLeftToCreate) {
-      // console.log('jtest create', serializedUnit.id, serializedUnit.unitSourceId);
       const newUnit = Unit.load(serializedUnit, this, false);
       Unit.returnToDefaultSprite(newUnit);
     }
@@ -3140,7 +3133,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     let pickupsToRemove = [];
     // Sync what pickups you can
     for (let i = 0; i < pickups.length; i++) {
-      // console.log('jtest:', i, ' Syncing pickups', pickups.map(u => u.id), 'current pickups:', this.pickups.map(u => u.id));
       const serializedPickup = pickups[i];
       const currentPickup = this.pickups[i];
       if (serializedPickup) {
@@ -3148,16 +3140,13 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // if there is a pickup to compare it to, if they are the same, syncronize;
           // if not, delete and recreate:
           if (this.pickupIsIdentical(currentPickup, serializedPickup)) {
-            // console.log('jtest update pickup stats', currentPickup.id, serializedPickup.id);
             const { x, y, radius, inLiquid, immovable, beingPushed, singleUse, playerOnly, turnsLeftToGrab, flaggedForRemoval } = serializedPickup;
             Object.assign(currentPickup, { x, y, radius, inLiquid, immovable, beingPushed, singleUse, playerOnly, turnsLeftToGrab, flaggedForRemoval });
           } else {
-            // console.log('jtest fully replace pickup', currentPickup.id, currentPickup.pickupsourceId, ';', serializedPickup.id, serializedPickup.pickupsourceId);
             pickupsToRemove.push(currentPickup);
             serializedpickupsLeftToCreate.push(serializedPickup);
           }
         } else {
-          // console.log('jtest create new unit', serializedPickup.id);
           serializedpickupsLeftToCreate.push(serializedPickup);
         }
       }
@@ -3167,7 +3156,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
     // Create what's left over
     for (let serializedPickup of serializedpickupsLeftToCreate) {
-      // console.log('jtest create', serializedPickup.id, serializedPickup.pickupsourceId);
       Pickup.load(serializedPickup, this, false);
     }
 
