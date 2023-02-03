@@ -1,3 +1,24 @@
+## 2/3/2023 Spellmasons Update v1.2.0
+- fix: Overhaul unit and pickup syncronization issue.  This will address many (but not all) of the syncronization issues people have been experiencing in multiplayer
+- fix: Summoner appearing submerged after he teleports out of liquid
+- fix: Another sync issue with "Bleed" spell causing the server to pause for 10 seconds
+- fix: Connect prioritizing the wrong unit / pickup / corpse connections
+- fix: Multiple targeting spells not combining properly
+    - This is a regression bug intoduced in v1.1.1.  With it fixed, now spells like "target cone + push + target circle" will work as expected
+
+- UX: Limit length of multiplayer thought bubbles so they don't cover too much space if an ally is casting a large spell
+
+- feature: Re-enable Loading saved games in Multiplayer
+    - Note: This feature is still a little clunky if you are rejoining a save where the same players are not present.  It allows you to assume control of a different player character while in the lobby if, for example, you were to load your save game on another computer or with different friends than you saved it with.
+    - I expect Loading multiplayer saved games may not work perfectly, but I put it back in so people can atleast try it.  Please let me know in Discord if you encounter any issues with it
+
+- Quality of Life
+    - Increase speed of high quanity arrows so the spell animation doesn't last too long
+
+- i18n: Add support for 中文(简) zh-CN and 中文(繁) zh-TW.  Thank you Cie from our Discord Community
+
+
+
 ## 2/1/2023 Spellmasons Patch Report v1.1.0
 
 - balance: Remove Nullify spell because it was way too powerful in the endgame (I may rethink a way to reintegrate it later)

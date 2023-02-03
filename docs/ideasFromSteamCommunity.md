@@ -72,3 +72,6 @@ I.E Nullify will protect against a single spell's damage to a caster with 60HP i
 Sander. — Today at 4:59 PM
 Make Dark Summoners a bit less influential, I got to a stage where I had 3 dark summoners (2 of them minibosses) each in a corner of the map, 
 I just spawned in 1 corner and then I was never able to reach the other 2 because I didn't have the correct spells (it was only stage 11) 
+---
+J'in
+I think a possible solution for the summoner issue would be to have them summon X creature but with no mana so they have to build up their mana and cant immediately summon more enemies. It would at least buy the player some time to take care of the crowds before more are spawned in
