@@ -334,76 +334,6 @@ export function defaultTargetsForAllowNonUnitTargetTargetingSpell(targets: Vec2[
 export function getCurrentTargets(state: EffectState): HasSpace[] {
   return [...state.targetedUnits, ...state.targetedPickups, ...state.targetedDoodads];
 }
-export type CachedSpellInfo = {
-  // For target spells
-  newUnitIds?: number[];
-  // For target spells
-  newPickupIds?: number[];
-  extra?: any;
-  // // attribute change
-  // health?: number;
-  // healthMax?: number;
-  // mana?: number;
-  // manaMax?: number;
-  // staminaMax?: number;
-  // // position change
-  // pos?: Vec2;
-}
-export type SpellsCalculation = {
-  card: ICard;
-  quantity: number;
-} & CachedSpellInfo;
-
-export type CalculateCardsReturn = {
-  spells: SpellsCalculation[];
-  // The first unit target of the spell
-  targetedUnit?: Unit.IUnit;
-  // The first pickup target of the spell
-  targetedPickup?: Pickup.IPickup;
-  // What the spell was cast on:
-  castLocation: Vec2;
-}
-// Invoked on all cards in a spell
-export type CalculateCardsFn = {
-  // prediction is for displaying to the user what will happen if they cast
-  (cards: ICard[], underworld: Underworld): CalculateCardsReturn;
-};
-
-// Belongs to each card
-// Right now it seems like cacheSpellInvokation is only useful for targeting cards
-export type CacheSpellFn = {
-  // cacheSpellInvokation needs prediction so it can search for prediction units in the underworld
-  (args: RealizedCalculateArgs, underworld: Underworld, prediction: boolean): CachedSpellInfo;
-};
-export type Effect2Fn = {
-  (args: RealizedCalculateArgs, underworld: Underworld, prediction: boolean, castLocation?: Vec2): void;
-};
-// Calculate args have ids and go over the network,
-// realized cacheSpellInvokation args are populated with the actual units
-export type RealizedCalculateArgs = {
-  card: ICard,
-  casterUnit: Unit.IUnit,
-  casterPositionAtTimeOfCast: Vec2,
-  targetedUnits: Unit.IUnit[],
-  targetedPickups: Pickup.IPickup[],
-  quantity: number,
-  castLocation: Vec2,
-  // aggregator carries extra information that can be passed
-  // between card effects.
-  aggregator: {
-    unitDamage: UnitDamage[],
-    radius: number;
-  },
-  // Extra information for the invocation from
-  // a particular card
-  extra: any;
-}
-export type AnimateSpellFn = {
-  (args: RealizedCalculateArgs, triggerEffectStage: () => void, underworld: Underworld, castLocation?: Vec2): Promise<void>;
-};
-export type ShowPredictionFn = {
-  (args: RealizedCalculateArgs, outOfRange?: boolean): void;
-}
 export type EffectFn = {
   // prediction is for displaying to the user what will happen if they cast
   (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean): Promise<EffectState>;
@@ -457,25 +387,6 @@ export function getCardsFromIds(cardIds: string[]): ICard[] {
   return _getCardsFromIds(cardIds, allCards);
 }
 
-export function addTargetForCalculatedReturn(target: any, returnValue: CachedSpellInfo) {
-  if (Unit.isUnit(target)) {
-    // Adds a unit IF it is not already added 
-    if (returnValue.newUnitIds && returnValue.newUnitIds.indexOf(target.id) === -1) {
-      returnValue.newUnitIds.push(target.id);
-    } else {
-      returnValue.newUnitIds = [target.id];
-    }
-  } else if (Pickup.isPickup(target)) {
-    // Adds a pickup IF it is not already added 
-    if (returnValue.newPickupIds && returnValue.newPickupIds.indexOf(target.id) === -1) {
-      returnValue.newPickupIds.push(target.id);
-    } else {
-      returnValue.newPickupIds = [target.id];
-    }
-  } else {
-    console.error('addTarget unsupported for ', target);
-  }
-}
 export function addTarget(target: any, effectState: EffectState) {
   if (Unit.isUnit(target)) {
     addUnitTarget(target, effectState);
@@ -510,5 +421,127 @@ export function addDoodadTarget(doodad: Doodad.IDoodad, effectState: EffectState
   // Adds a doodad to effectState.targetedDoodads IF it is not already in targetedDoodads
   if (effectState.targetedDoodads.indexOf(doodad) === -1) {
     effectState.targetedDoodads.push(doodad);
+  }
+}
+//////////// //////////// //////////// ////////////
+export type CachedCardInvokeInfo = {
+  // For target spells
+  newUnitIds?: number[];
+  // For target spells
+  newPickupIds?: number[];
+  extra?: any;
+  // // attribute change
+  // health?: number;
+  // healthMax?: number;
+  // mana?: number;
+  // manaMax?: number;
+  // staminaMax?: number;
+  // // position change
+  // pos?: Vec2;
+}
+
+// Belongs to each card
+// Right now it seems like cacheSpellInvokation is only useful for targeting cards
+export type CacheSpellFn = {
+  // cacheSpellInvokation needs prediction so it can search for prediction units in the underworld
+  (args: RealizedCalculateArgs, underworld: Underworld, prediction: boolean): CachedCardInvokeInfo;
+};
+export type Effect2Fn = {
+  (args: RealizedCalculateArgs, underworld: Underworld, prediction: boolean, castLocation?: Vec2): void;
+};
+
+export type CachedSpellSerialized = {
+  cachedCards: { cardId: string, info: CachedCardInvokeInfo }[],
+  casterUnitId: number,
+  casterPositionAtTimeOfCast: Vec2,
+  targetedUnitId: number,
+  targetedPickupId: number,
+  castLocation: Vec2,
+}
+export type CachedSpellRealized = {
+  cachedCards: { card: ICard, info: CachedCardInvokeInfo }[],
+  casterUnit?: Unit.IUnit,
+  casterPositionAtTimeOfCast: Vec2,
+  // The first unit that is the target of the spell
+  targetedUnit?: Unit.IUnit,
+  // The first pickup that is the target of the spell
+  targetedPickup?: Pickup.IPickup,
+  // The first location that is the target of the spell
+  castLocation: Vec2,
+}
+export function convertCachedSpellSerializedToRealized(serialized: CachedSpellSerialized, underworld: Underworld): CachedSpellRealized | undefined {
+  const { cachedCards, casterUnitId, casterPositionAtTimeOfCast, targetedUnitId, targetedPickupId, castLocation } = serialized;
+  const casterUnit = underworld.units.find(u => u.id == casterUnitId);
+
+  return {
+    cachedCards: cachedCards.flatMap(({ cardId, info }) => {
+      const card = allCards[cardId];
+      if (card) {
+        return [{ card, info }];
+      } else {
+        console.error('no card found in allCards with id', cardId);
+        return [];
+      }
+    }),
+    casterUnit,
+    casterPositionAtTimeOfCast,
+    // targetedUnits: underworld.units.reduce<Unit.IUnit[]>((units, unit) => {
+    //   if (targetedUnitIds.includes(unit.id)) {
+    //     units.push(unit);
+    //   }
+    //   return units;
+    // }, []),
+    targetedUnit: underworld.units.find(u => u.id == targetedUnitId),
+    targetedPickup: underworld.pickups.find(u => u.id == targetedPickupId),
+    castLocation,
+
+  }
+
+}
+// Calculate args have ids and go over the network,
+// realized cacheSpellInvokation args are populated with the actual units
+export type RealizedCalculateArgs =
+  // We need the CachedSpellRealized properties here except targetedUnit and targetedPickup which
+  // are only relevant for STARTING off the spell
+  Omit<CachedSpellRealized, "targetedUnit" | "targetedPickup" | "cachedCards"> & {
+    card: ICard,
+    quantity: number,
+    // The unit targets of the spell at the time that a particular card is cast
+    targetedUnits: Unit.IUnit[],
+    // The pickup targets of the spell at the time that a particular card is cast
+    targetedPickups: Pickup.IPickup[],
+    // Extra information for the invocation from
+    // a particular card
+    extra: any;
+    // aggregator carries extra information that can be passed
+    // between card effects.
+    aggregator: {
+      unitDamage: UnitDamage[],
+      radius: number;
+    },
+  };
+export type AnimateSpellFn = {
+  (args: RealizedCalculateArgs, triggerEffectStage: () => void, underworld: Underworld, castLocation?: Vec2): Promise<void>;
+};
+export type ShowPredictionFn = {
+  (args: RealizedCalculateArgs, outOfRange?: boolean): void;
+}
+export function addTargetForCalculatedReturn(target: any, returnValue: CachedCardInvokeInfo) {
+  if (Unit.isUnit(target)) {
+    // Adds a unit IF it is not already added 
+    if (returnValue.newUnitIds && returnValue.newUnitIds.indexOf(target.id) === -1) {
+      returnValue.newUnitIds.push(target.id);
+    } else {
+      returnValue.newUnitIds = [target.id];
+    }
+  } else if (Pickup.isPickup(target)) {
+    // Adds a pickup IF it is not already added 
+    if (returnValue.newPickupIds && returnValue.newPickupIds.indexOf(target.id) === -1) {
+      returnValue.newPickupIds.push(target.id);
+    } else {
+      returnValue.newPickupIds = [target.id];
+    }
+  } else {
+    console.error('addTarget unsupported for ', target);
   }
 }

@@ -2751,13 +2751,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     cardIds: string[],
     castLocation: Vec2,
     prediction: boolean
-  ): {
-    realized: Cards.RealizedCalculateArgs;
-    cachedSpell: Cards.CachedSpellInfo;
-  }[] {
+  ): Cards.CachedSpellRealized {
     // Step 1: Get targets:
-    const returnValue: Cards.CalculateCardsReturn = {
-      spells: [],
+    const returnValue: Cards.CachedSpellRealized = {
+      cachedCards: [],
+      casterUnit,
+      casterPositionAtTimeOfCast,
       targetedUnit: undefined,
       targetedPickup: undefined,
       castLocation
@@ -2785,6 +2784,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
     // Step 2: Assemble CalculateCardsReturn.spells info
     let quantity = 1;
+    const cardsWithQuantity = [];
     for (let index = 0; index < cardIds.length; index++) {
       const cardId = cardIds[index];
       if (cardId === undefined) {
@@ -2804,7 +2804,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             }
           }
         }
-        returnValue.spells.push({
+        cardsWithQuantity.push({
           card,
           quantity
         })
@@ -2814,16 +2814,17 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
 
     // Step 3: Calculate each card, and collect the results in an array
-    const results = [];
-    for (let spell of returnValue.spells) {
+    // This is where it uses the CachedSpellRealized (the start of a spell) and builds it
+    // by applying the calculations of one card at a time
+    for (let cardWithQuantity of cardsWithQuantity) {
       let targetedUnits = returnValue.targetedUnit ? [returnValue.targetedUnit] : [];
       let targetedPickups = returnValue.targetedPickup ? [returnValue.targetedPickup] : [];
-      if (spell.card.cacheSpellInvokation) {
+      if (cardWithQuantity.card.cacheSpellInvokation) {
         let realized: Cards.RealizedCalculateArgs = {
-          card: spell.card,
+          card: cardWithQuantity.card,
           casterUnit,
           casterPositionAtTimeOfCast,
-          quantity: spell.quantity,
+          quantity: cardWithQuantity.quantity,
           targetedUnits,
           targetedPickups,
           castLocation,
@@ -2834,13 +2835,13 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           extra: {},
 
         }
-        results.push({ realized, cachedSpell: spell.card.cacheSpellInvokation(realized, this, prediction) });
+        returnValue.cachedCards.push({ card: cardWithQuantity.card, info: cardWithQuantity.card.cacheSpellInvokation(realized, this, prediction) });
       } else {
-        console.error('No cacheSpellInvokation fn for spell', spell.card.id);
+        console.error('No cacheSpellInvokation fn for spell', cardWithQuantity.card.id);
       }
     }
     // Return the calculated values of the spells for transfer over the network
-    return results;
+    return returnValue;
 
   }
   async castCards(

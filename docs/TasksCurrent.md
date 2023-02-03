@@ -5,8 +5,8 @@
   - validate prevent dead players from casting
   - Implement invoking these new functions:
     - mouseMove -> calculateCards().forEach -> cacheSpellInvokation(), showPrediction(realizedCalculation)
-    - eventHandler click -> calculateCards().forEach -> cacheSpellInvokation(), pie.send(SPELL, realizedCalculation)
-    - onSpell -> calculateCards().forEach -> animate(realizedCalculation), effect2(realizedCalculation)
+    - eventHandler click -> calculateCards().forEach -> cacheSpellInvokation() -> serialize -> pie.send(SPELL, realizedCalculation)
+    - onSpell -> deserialize -> calculateCards().forEach -> animate(realizedCalculation), effect2(realizedCalculation)
 - potion desync still occurring (maybe fix this in today's update and wait to publish the card refactor)
   - potion mismatches should trigger because that means that one client at least saw it
   - test changing potion ids and make sure they sync

@@ -100,7 +100,7 @@ const spell: Spell = {
     cacheSpellInvokation: (args, underworld, prediction) => {
       // Seed is set before targets are looped so that each target goes to a different location but
       // also so that it is consistent and seeded for a given cast
-      const seed = seedrandom(`${underworld.seed}-${underworld.turn_number}-${args.casterUnit.id}`);
+      const seed = seedrandom(`${underworld.seed}-${underworld.turn_number}-${args.casterUnit?.id || 0}`);
       const swapUnits: { [unitId: number]: Vec2 } = {};
       const swapPickups: { [pickupId: number]: Vec2 } = {};
       for (let i = 0; i < args.quantity; i++) {

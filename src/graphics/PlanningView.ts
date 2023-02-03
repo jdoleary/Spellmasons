@@ -406,6 +406,13 @@ async function showCastCardsPrediction(underworld: Underworld, target: Vec2, cas
     // Note: setPredictionGraphicsLineStyle must be called before castCards (because castCards may use it
     // to draw predictions) and after clearSpellEffectProjection, which clears predictionGraphics.
     setPredictionGraphicsLineStyle(outOfRange ? 0xaaaaaa : colors.targetBlue);
+    const cachedSpell = underworld.calculateCards(
+      casterUnit,
+      Vec.clone(casterUnit),
+      cardIds,
+      target,
+      true
+    );
     const effectState = await underworld.castCards(
       // Make a copy of cardUsageCounts for prediction so it can accurately
       // calculate mana for multiple copies of one spell in one cast
