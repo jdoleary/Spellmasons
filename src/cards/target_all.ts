@@ -38,28 +38,22 @@ const spell: Spell = {
         if (!target) {
           continue;
         }
-        const prioritySorter = (x: any) => {
-          let value = 0;
+        const filterFn = (x: any) => {
           if (Unit.isUnit(x) && Unit.isUnit(target)) {
-            // If the target is alive, high-weight prioritize finding
-            // other units of the same faction
             if (target.alive) {
-              if (x.faction == target.faction) {
-                value += 10;
-              }
-            }
-            // prioritize matching alive state, so dead
-            // will prefer chaining to dead and living
-            // will prefer chaining to living
-            if (x.alive == target.alive) {
-              value += 2;
+              // Match living units of the same faction
+              return x.faction == target.faction && x.alive;
             } else {
-              // Prefer for a unit target to chain to another unit
-              // over a pickup even if alive state does not match
-              value += 1;
+              // Match any dead unit
+              return !x.alive;
             }
+          } else if (!Unit.isUnit(x) && !Unit.isUnit(target)) {
+            // Match both non units to each other
+            return true;
+          } else {
+            // Do not match unit and non unit
+            return false;
           }
-          return value;
         }
         const newTargets = underworld.getPotentialTargets(prediction)
           // Filter out current targets
@@ -75,7 +69,7 @@ const spell: Spell = {
               return isDoodad(t);
             }
           })
-          .sort((a, b) => prioritySorter(b) - prioritySorter(a))
+          .filter(filterFn)
           .slice(0, NUMBER_OF_TARGETS_PER_STACK * quantity);
         if (!prediction) {
           playSFXKey('targeting');

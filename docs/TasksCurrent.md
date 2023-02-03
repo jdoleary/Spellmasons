@@ -1,9 +1,14 @@
 # For v1.3
 - Rework spells to use unit ids instead of coordinates which will often miss if there is a desync
-- fix Target Kind targeting yourself, now that it's limited it doesn't make sense to target self
 - Allow for scrolling the game language selection
 - Game saves cannot be deleted, when you restart steam they come back
+- Make turn_phase into a state machine so it can only transition from Stalled to PlayerTurns for example
+- potion desync still occurring
 ---
+- add bug report button to game that saves logs
+- Chad's copy suggestions: https://docs.google.com/spreadsheets/d/1A_tnEzTPxkXGhh3KoLsuTAuIOeIqY5s6D-15SR6LUxI/edit#gid=0
+- Units walking into walls, one user had it happen without movement spells so it must have something to do with spawning
+- archers can "stall" out with pathing on the edges of water
 - add a better notification for when servers are going down for updates
 - pushing a unit through a trap caused a desync on multiplayer but after ending turn it resolved
 - bug: stamina potions dont persist in multiplayer
