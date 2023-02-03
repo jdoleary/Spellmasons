@@ -1,9 +1,13 @@
 ## 2023.01.31
+- todo:
+  - show prediction must recieve prediction units in targetedUnits and targetedPickups so for example after a prediction unit MOVES via a push the next push will start from the moved location
+  - Figure out how to sync animation moments with effect2 partial invocation
+    - maybe rather than doing triggerEffectStage, each invokation of effect2 IS the stage and it recieves quantity (the total), and count (quantity so far)
 ```
-showPrediction: ({ targetedUnits, targetedPickups, quantity, aggregator }, outOfRange?: boolean) => {}
-animate: async ({ targetedUnits, targetedPickups, casterUnit, quantity, aggregator }, triggerEffectStage, underworld) => {}
-calculate: (args, underworld, prediction) => {}
-effect2: (calculated, underworld, prediction) => {}
+showPrediction: ({ targetedUnits, targetedPickups, quantity, aggregator }, outOfRange?: boolean) => {},
+animate: async ({ targetedUnits, targetedPickups, casterUnit, quantity, aggregator }, triggerEffectStage, underworld) => {},
+cacheSpellInvokation: (args, underworld, prediction) => {},
+effect2: (calculated, underworld, prediction) => {},
 
 ```
 ---
@@ -21,14 +25,14 @@ Ways to fix multiplayer desyncs. I could split spells into 4 functions:
   - apply modifier
   - remove modifier
   - apply movement / change position
-- calculate() -> {quantity, targets[],extra:object}
+- cacheSpellInvokation() -> {quantity, targets[],extra:object}
 - `calculateCastCards() -> {spells:{cardId, quantity, newTargets[],attributeChange, }[], castLocation:Vec2}`
 
 How to make animate work in concert with effect so that the unit dies when the first arrow strikes, letting the second pass through??
 **Could effect return stages that animate could trigger?**
 
-Thoughts on calculate():
-The result of calculate is what's send over the network.  It contains EVERYTHING needed to execute the spell
+Thoughts on cacheSpellInvokation():
+The result of cacheSpellInvokation is what's send over the network.  It contains EVERYTHING needed to execute the spell
 in identical fashion on any client.
   - For damaging spells, that means dealing the right amount of damage
     - this applies to other attributes too so there could be an attribute change for changing mana, stamina, health
@@ -42,7 +46,7 @@ in identical fashion on any client.
 - castLocation is still needed for animate for example to animate a circle from the castlocation or to summon a soul unit
 - TODO how to handle refunds / mana
 
-for prediction I could calculate and effect (and animate for those that draw during predictions). for casting I could calculate and
+for prediction I could cacheSpellInvokation and effect (and animate for those that draw during predictions). for casting I could cacheSpellInvokation and
 send and then once it comes back from the server it effect()s and animate()s
 
 - test 1st:
@@ -72,7 +76,7 @@ send and then once it comes back from the server it effect()s and animate()s
 - targeting spells
   - need targets
   - return additional targets
-  - no effect fn, just calculate and animate
+  - no effect fn, just cacheSpellInvokation and animate
 - curses should just need targets
 - blessings should just need targest
 

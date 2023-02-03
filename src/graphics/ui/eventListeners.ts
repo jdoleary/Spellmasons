@@ -706,6 +706,8 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
           const cachedTargetedUnitIds = effectState
             ? effectState.targetedUnits.map(u => u.id)
             : undefined;
+
+          globalThis.castThisTurn = true;
           overworld.pie.sendData({
             type: MESSAGE_TYPES.SPELL,
             casterPositionAtTimeOfCast,

@@ -55,7 +55,7 @@ const spell: Spell = {
       }
       await animate(animateCircles, underworld);
     },
-    calculate: (args, underworld, prediction) => {
+    cacheSpellInvokation: (args, underworld, prediction) => {
       const calculatedReturn = {}
       const adjustedRange = baseRadius * args.quantity + args.aggregator.radius;
       // Note: This loop must NOT be a for..of and it must cache the length because it

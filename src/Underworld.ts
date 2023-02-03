@@ -2745,6 +2745,104 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       this.pickups.push(pickup);
     }
   }
+  calculateCards(
+    casterUnit: Unit.IUnit,
+    casterPositionAtTimeOfCast: Vec2,
+    cardIds: string[],
+    castLocation: Vec2,
+    prediction: boolean
+  ): {
+    realized: Cards.RealizedCalculateArgs;
+    cachedSpell: Cards.CachedSpellInfo;
+  }[] {
+    // Step 1: Get targets:
+    const returnValue: Cards.CalculateCardsReturn = {
+      spells: [],
+      targetedUnit: undefined,
+      targetedPickup: undefined,
+      castLocation
+    }
+    let unitsAtCastLocation = this.getUnitsAt(castLocation, prediction);
+    const firstCardId = cardIds[0];
+    if (firstCardId) {
+      const firstCard = Cards.allCards[firstCardId];
+      // If first card in spell has onlySelectDeadUnits to true,
+      // filter units for dead ones.  This prevents a living unit
+      // standing over a corpse from preventing the caster from
+      // selecting the corpse
+      if (firstCard && firstCard.onlySelectDeadUnits) {
+        unitsAtCastLocation = unitsAtCastLocation.filter(u => !u.alive);
+      }
+    }
+    // Get first unit at cast location
+    const unitAtCastLocation = unitsAtCastLocation[0];
+    if (unitAtCastLocation) {
+      returnValue.targetedUnit = unitAtCastLocation;
+    }
+    const pickupAtCastLocation = this.getPickupAt(castLocation, prediction);
+    if (pickupAtCastLocation) {
+      returnValue.targetedPickup = pickupAtCastLocation;
+    }
+    // Step 2: Assemble CalculateCardsReturn.spells info
+    let quantity = 1;
+    for (let index = 0; index < cardIds.length; index++) {
+      const cardId = cardIds[index];
+      if (cardId === undefined) {
+        console.error('card id is undefined in loop', index, cardIds);
+        continue;
+      }
+      const card = Cards.allCards[cardId];
+      if (card) {
+        // Only increment quantity for sequntial identical cards IF the card
+        // explicitly supports quantity
+        if (card.supportQuantity) {
+          const nextCardId = cardIds[index + 1];
+          if (nextCardId !== undefined) {
+            if (nextCardId === cardId) {
+              quantity++;
+              continue;
+            }
+          }
+        }
+        returnValue.spells.push({
+          card,
+          quantity
+        })
+      }
+      // Reset quantity once a card is cast
+      quantity = 1;
+    }
+
+    // Step 3: Calculate each card, and collect the results in an array
+    const results = [];
+    for (let spell of returnValue.spells) {
+      let targetedUnits = returnValue.targetedUnit ? [returnValue.targetedUnit] : [];
+      let targetedPickups = returnValue.targetedPickup ? [returnValue.targetedPickup] : [];
+      if (spell.card.cacheSpellInvokation) {
+        let realized: Cards.RealizedCalculateArgs = {
+          card: spell.card,
+          casterUnit,
+          casterPositionAtTimeOfCast,
+          quantity: spell.quantity,
+          targetedUnits,
+          targetedPickups,
+          castLocation,
+          aggregator: {
+            unitDamage: [],
+            radius: 0
+          },
+          extra: {},
+
+        }
+        results.push({ realized, cachedSpell: spell.card.cacheSpellInvokation(realized, this, prediction) });
+      } else {
+        console.error('No cacheSpellInvokation fn for spell', spell.card.id);
+      }
+    }
+    // Return the calculated values of the spells for transfer over the network
+    return results;
+
+  }
   async castCards(
     casterCardUsage: Player.CardUsage,
     casterUnit: Unit.IUnit,
@@ -2760,9 +2858,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     casterPlayer?: Player.IPlayer,
     preCachedTargetedUnitIds?: number[]
   ): Promise<Cards.EffectState> {
-    if (!prediction && casterUnit == (globalThis.player && globalThis.player.unit)) {
-      globalThis.castThisTurn = true;
-    }
 
     if (!prediction) {
       tutorialCompleteTask('cast');
@@ -2865,6 +2960,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         // Filter out protected units
         effectState.targetedUnits = effectState.targetedUnits.filter(u => !excludedTargets.includes(u));
 
+        // @ts-ignore: ignore effect possibly being undefined while I'm refactoring
         const cardEffectPromise = card.effect(effectState, card, quantity, this, prediction, outOfRange);
         if (prediction) {
           this.fullySimulateForceMovePredictions();
