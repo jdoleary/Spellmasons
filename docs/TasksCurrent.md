@@ -1,9 +1,12 @@
 # For v1.3
 - Rework spells to use unit ids instead of coordinates which will often miss if there is a desync
-- Allow for scrolling the game language selection
-- Game saves cannot be deleted, when you restart steam they come back
-- Make turn_phase into a state machine so it can only transition from Stalled to PlayerTurns for example
+  - all animate functions should have a built in race timeout where they are invoked
 - potion desync still occurring
+  - potion mismatches should trigger because that means that one client at least saw it
+  - test changing potion ids and make sure they sync
+---
+## Important for later
+- Make turn_phase into a state machine so it can only transition from Stalled to PlayerTurns for example
 ---
 - add bug report button to game that saves logs
 - Chad's copy suggestions: https://docs.google.com/spreadsheets/d/1A_tnEzTPxkXGhh3KoLsuTAuIOeIqY5s6D-15SR6LUxI/edit#gid=0

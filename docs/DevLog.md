@@ -1,19 +1,123 @@
 ## 2023.01.31
+```
+showPrediction: ({ targetedUnits, targetedPickups, quantity, aggregator }, outOfRange?: boolean) => {}
+animate: async ({ targetedUnits, targetedPickups, casterUnit, quantity, aggregator }, triggerEffectStage, underworld) => {}
+calculate: (args, underworld, prediction) => {}
+effect2: (calculated, underworld, prediction) => {}
 
-Ways to fix multiplayer desyncs. I could split spells into 3 functions:
+```
+---
+Ways to fix multiplayer desyncs. I could split spells into 4 functions:
 
-- animate(targets[])
-- effect(targets[], extra)
-- calculate() -> {targets[],extra:object}
+- showPrediction(calculatesReturn)
+  - shows targeting and movement prediction lines
+- animate(targets[], cachedCasterLocation?)
+  - sprite animation
+  - graphics animation
+  - sfx
+  - with delays if necessary
+- effect(quantity, cachedCasterLocation, targets[], extra, prediction)
+  - take damage
+  - apply modifier
+  - remove modifier
+  - apply movement / change position
+- calculate() -> {quantity, targets[],extra:object}
+- `calculateCastCards() -> {spells:{cardId, quantity, newTargets[],attributeChange, }[], castLocation:Vec2}`
 
-for prediction I could calculate and effect. for casting I could calculate and
+How to make animate work in concert with effect so that the unit dies when the first arrow strikes, letting the second pass through??
+**Could effect return stages that animate could trigger?**
+
+Thoughts on calculate():
+The result of calculate is what's send over the network.  It contains EVERYTHING needed to execute the spell
+in identical fashion on any client.
+  - For damaging spells, that means dealing the right amount of damage
+    - this applies to other attributes too so there could be an attribute change for changing mana, stamina, health
+  - for targeting spells, it returns which unit ids or pickup ids get added to the target
+  - for movement spells
+    - final location might be better than `awayFrom` so that it's guarunteed they'll end up in the same location
+  - for curses and blessings
+    - the spell id and quantity
+  - for soul
+    - the spell id and location
+- castLocation is still needed for animate for example to animate a circle from the castlocation or to summon a soul unit
+- TODO how to handle refunds / mana
+
+for prediction I could calculate and effect (and animate for those that draw during predictions). for casting I could calculate and
 send and then once it comes back from the server it effect()s and animate()s
+
+- test 1st:
+  - slash
+  - connect
+  - push
+
+- test 2nd:
+  - arrow
+  - swap
+  - target circle
+  - freeze
+  - shield
+  - decoy
+
+- test 3rd
+  - drown
+    - what if it desyncs and they're not in water
+  - shove (damage)
+
+- damage only need 
+  - a list of targets to targets
+  - cached caster location for arrows and burst
+- movement spells should get end location
+  - or for push start and awayFrom
+  - for swap, end location
+- targeting spells
+  - need targets
+  - return additional targets
+  - no effect fn, just calculate and animate
+- curses should just need targets
+- blessings should just need targest
+
+## Example new spell functions
+calculateOutcome({
+  cards:'target circle' + push + 'chain' + freeze + slash + slash,
+  castLocation: {x:10,y:12},
+  casterLocation: {x:74,y:200}
+})
+```js
+{
+  spells:[
+    {
+      cardId:'target circle',
+      newUnitIds:[0,1,2],
+      newPickupIds:[0,4],
+    },
+    {
+      cardId:'push',
+    },
+    {
+      cardId:'freeze',
+    },
+    {
+      cardId:'slash',
+      quantity: 2
+    }
+  ],
+  // Undefined because this was cast on an initial unit
+  targetedUnitId:undefined,
+  targetedPickupId:undefined,
+  // for animating, not determining the effect (unless for a spell like repel or vortex),
+  // but not for cast location, it doesn't need it because of newUnitIds
+  castLocation:{x:10,y:12}
+}
+```
+Then that result gets passed into `effect2()` on headless and `effect2() and animate()` on clients
+
+---
+---
 sounds like when someone dies the game desyncs?
 
 - When I do this, revalidate the snapping of movement + targeting spells in
   a24d1259
 - reduce logging on server for efficiency?
-- could be due to things like bleed taking too long. see ae9add33
 
 ## 2023.01.31
 

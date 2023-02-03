@@ -259,6 +259,12 @@ export function playSFXKey(key?: string) {
     if (paths) {
         const path = chooseOneOf(paths);
         if (path) {
+            const lastTimeThisPathWasPlayed = lastPlayed[path];
+            if (lastTimeThisPathWasPlayed && Date.now() - lastTimeThisPathWasPlayed <= 100) {
+                console.log('Cancel playing sound', path, 'it was played too recently')
+                return;
+            }
+            lastPlayed[path] = Date.now();
             console.debug('sfx:', path);
             playSFX(path);
         } else {

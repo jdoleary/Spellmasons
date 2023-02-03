@@ -1,4 +1,4 @@
-import { addPickupTarget, addTarget, addUnitTarget, defaultTargetsForAllowNonUnitTargetTargetingSpell, getCurrentTargets, Spell } from './index';
+import { addPickupTarget, addTarget, addTargetForCalculatedReturn, addUnitTarget, defaultTargetsForAllowNonUnitTargetTargetingSpell, getCurrentTargets, Spell } from './index';
 import { drawUICircle } from '../graphics/PlanningView';
 import { CardCategory } from '../types/commonTypes';
 import * as colors from '../graphics/ui/colors';
@@ -25,12 +25,24 @@ const spell: Spell = {
     requiresFollowingCard: true,
     description: 'spell_target_circle',
     allowNonUnitTarget: true,
-    effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
-      const adjustedRange = baseRadius * quantity + state.aggregator.radius;
+    showPrediction: ({ targetedUnits, targetedPickups, quantity, aggregator }, outOfRange?: boolean) => {
+      const adjustedRange = baseRadius * quantity + aggregator.radius;
+      const targets: Vec2[] = [...targetedUnits, ...targetedPickups];
+      for (let target of targets) {
+
+        if (outOfRange) {
+          drawUICircle(target, adjustedRange, colors.outOfRangeGrey);
+        } else {
+          drawUICircle(target, adjustedRange, colors.targetingSpellGreen, 'Target Radius');
+        }
+      }
+
+    },
+    animate: async ({ targetedUnits, targetedPickups, casterUnit, quantity, aggregator }, triggerEffectStage, underworld) => {
+      const adjustedRange = baseRadius * quantity + aggregator.radius;
       // Note: This loop must NOT be a for..of and it must cache the length because it
       // mutates state.targetedUnits as it iterates.  Otherwise it will continue to loop as it grows
-      let targets: Vec2[] = getCurrentTargets(state);
-      targets = defaultTargetsForAllowNonUnitTargetTargetingSpell(targets, state.castLocation, card);
+      let targets: Vec2[] = [...targetedUnits, ...targetedPickups];
       const length = targets.length;
       const animateCircles = [];
       for (let i = 0; i < length; i++) {
@@ -39,14 +51,22 @@ const spell: Spell = {
           continue;
         }
         // Draw visual circle for prediction
-        if (prediction) {
-          if (outOfRange) {
-            drawUICircle(target, adjustedRange, colors.outOfRangeGrey);
-          } else {
-            drawUICircle(target, adjustedRange, colors.targetingSpellGreen, 'Target Radius');
-          }
-        } else {
-          animateCircles.push({ pos: target, radius: adjustedRange });
+        animateCircles.push({ pos: target, radius: adjustedRange });
+      }
+      await animate(animateCircles, underworld);
+    },
+    calculate: (args, underworld, prediction) => {
+      const calculatedReturn = {}
+      const adjustedRange = baseRadius * args.quantity + args.aggregator.radius;
+      // Note: This loop must NOT be a for..of and it must cache the length because it
+      // mutates state.targetedUnits as it iterates.  Otherwise it will continue to loop as it grows
+      let targets: Vec2[] = [...args.targetedUnits, ...args.targetedPickups];
+      targets = defaultTargetsForAllowNonUnitTargetTargetingSpell(targets, args.castLocation, args.card);
+      const length = targets.length;
+      for (let i = 0; i < length; i++) {
+        const target = targets[i];
+        if (!target) {
+          continue;
         }
         const withinRadius = underworld.getEntitiesWithinDistanceOfTarget(
           target,
@@ -54,11 +74,10 @@ const spell: Spell = {
           prediction
         );
         // Add entities to target
-        withinRadius.forEach(e => addTarget(e, state));
+        withinRadius.forEach(e => addTargetForCalculatedReturn(e, calculatedReturn));
       }
-      await animate(animateCircles, underworld);
 
-      return state;
+      return calculatedReturn;
     },
   },
 };

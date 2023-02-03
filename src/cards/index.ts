@@ -334,8 +334,72 @@ export function defaultTargetsForAllowNonUnitTargetTargetingSpell(targets: Vec2[
 export function getCurrentTargets(state: EffectState): HasSpace[] {
   return [...state.targetedUnits, ...state.targetedPickups, ...state.targetedDoodads];
 }
+type CalculateReturn = {
+  // For target spells
+  newUnitIds?: number[];
+  // For target spells
+  newPickupIds?: number[];
+  // // attribute change
+  // health?: number;
+  // healthMax?: number;
+  // mana?: number;
+  // manaMax?: number;
+  // staminaMax?: number;
+  // // position change
+  // pos?: Vec2;
+}
+type SpellsCalculation = {
+  cardId: string;
+  quantity: number;
+} & CalculateReturn;
+type CalculateOutcomeReturn = {
+  spells: SpellsCalculation[];
+  // What the spell was cast on:
+  targetedUnitId: number;
+  // What the spell was cast on:
+  targetedPickupId: number;
+  // What the spell was cast on:
+  castLocation: Vec2;
+}
+// Invoked on all cards in a spell
+export type calculateOutcomeFn = {
+  // prediction is for displaying to the user what will happen if they cast
+  (cards: ICard[], underworld: Underworld): Promise<CalculateOutcomeReturn>;
+};
+
+// Belongs to each card
+// Right now it seems like calculate is only useful for targeting cards
+export type CalculateFn = {
+  // calculate needs prediction so it can search for prediction units in the underworld
+  (args: RealizedCalculateArgs, underworld: Underworld, prediction: boolean): CalculateReturn;
+};
+export type Effect2Fn = {
+  (args: RealizedCalculateArgs, underworld: Underworld, prediction: boolean, castLocation?: Vec2): void;
+};
+// Calculate args have ids and go over the network,
+// realized calculate args are populated with the actual units
+type RealizedCalculateArgs = {
+  card: ICard,
+  casterUnit: Unit.IUnit,
+  targetedUnits: Unit.IUnit[],
+  targetedPickups: Pickup.IPickup[],
+  quantity: number,
+  castLocation: Vec2,
+  // aggregator carries extra information that can be passed
+  // between card effects.
+  aggregator: {
+    unitDamage: UnitDamage[],
+    radius: number;
+  }
+}
+export type AnimateSpellFn = {
+  (args: RealizedCalculateArgs, triggerEffectStage: () => void, underworld: Underworld, castLocation?: Vec2): Promise<void>;
+};
+export type ShowPredictionFn = {
+  (args: RealizedCalculateArgs, outOfRange?: boolean): void;
+}
 export type EffectFn = {
-  // Dry run is for displaying to the user what will happen if they cast
+  // prediction is for displaying to the user what will happen if they cast
   (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean): Promise<EffectState>;
 };
 export interface ICard {
@@ -347,7 +411,19 @@ export interface ICard {
   thumbnail: string;
   // The path for the animation effect when the spell is cast
   animationPath?: string;
-  effect: EffectFn;
+  effect?: EffectFn;
+
+  // These 4 card functions (showPrediction, effect2, calculate, animate) that ensure reliable outcome across multiple clients with potentially desynced state
+  showPrediction?: ShowPredictionFn;
+  // effect2 triggers the effect of the card on a unit or pickup passed in by id (passed by id so there's no chance of desync
+  // due to location)
+  effect2?: Effect2Fn;
+  // Calculate, for now, is used only to return new unit/pickup targets from each targeting spell
+  calculate?: CalculateFn;
+  // Animate handles the sfx and visuals of a spell, only used in non-prediction clients (not headless)
+  animate?: AnimateSpellFn;
+
+
   description: Localizable;
   // requiresFollowingCard is for cards like chain or AOE that need another
   // card to follow them in order to have an effect
@@ -375,6 +451,25 @@ export function getCardsFromIds(cardIds: string[]): ICard[] {
   return _getCardsFromIds(cardIds, allCards);
 }
 
+export function addTargetForCalculatedReturn(target: any, returnValue: CalculateReturn) {
+  if (Unit.isUnit(target)) {
+    // Adds a unit IF it is not already added 
+    if (returnValue.newUnitIds && returnValue.newUnitIds.indexOf(target.id) === -1) {
+      returnValue.newUnitIds.push(target.id);
+    } else {
+      returnValue.newUnitIds = [target.id];
+    }
+  } else if (Pickup.isPickup(target)) {
+    // Adds a pickup IF it is not already added 
+    if (returnValue.newPickupIds && returnValue.newPickupIds.indexOf(target.id) === -1) {
+      returnValue.newPickupIds.push(target.id);
+    } else {
+      returnValue.newPickupIds = [target.id];
+    }
+  } else {
+    console.error('addTarget unsupported for ', target);
+  }
+}
 export function addTarget(target: any, effectState: EffectState) {
   if (Unit.isUnit(target)) {
     addUnitTarget(target, effectState);
