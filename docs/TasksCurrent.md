@@ -1,3 +1,4 @@
+- Improve targeting in SPELL so that if you cast on a unit at a location but the unit is in another location on someone elses screen it will still work.
 - **important** todo reset lastUnitid after sync
   - find where else units are syncronized and do the same
 Attempting to figure out desyncs, i think they're largely related to misaligned unit ids and maybe now pickup ids.
