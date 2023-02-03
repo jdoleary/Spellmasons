@@ -1,3 +1,5 @@
+- pushing a unit through a trap caused a desync on multiplayer but after ending turn it resolved
+- bug: stamina potions dont persist in multiplayer
 - you can't tell that you lost connection from a server if the server dies while you're in lobby
 - synced pickups are missing images
 - Improve targeting in SPELL so that if you cast on a unit at a location but the unit is in another location on someone elses screen it will still work.
