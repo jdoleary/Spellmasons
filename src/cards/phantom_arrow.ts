@@ -49,7 +49,7 @@ const spell: Spell = {
             // sequentially wont take too long to complete animating.
             // Note: I don't forsee any issues with the following spell (say if a spell was chained after arrow) executing
             // early
-            const timeout = Math.max(5, timeoutToNextArrow);
+            const timeout = Math.max(0, timeoutToNextArrow);
             attackPromises.push(projectilePromise);
             arrowCollisions.forEach(pierceTarget => {
               // Fake the collision by just calculating a delay based on the speed of the projectile

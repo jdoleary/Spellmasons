@@ -56,7 +56,7 @@ const spell: Spell = {
                 }
               });
               attackPromises.push(projectilePromise);
-              const timeout = Math.max(5, timeoutToNextArrow);
+              const timeout = Math.max(0, timeoutToNextArrow);
               await Promise.race([new Promise(resolve => setTimeout(resolve, timeout)), projectilePromise]);
               // Decrease timeout with each subsequent arrow fired to ensure that players don't have to wait too long
               timeoutToNextArrow -= 5;
