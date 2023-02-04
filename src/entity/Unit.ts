@@ -118,6 +118,8 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   sfx: UnitSFX;
   modifiers: { [key: string]: Modifier };
 }
+// This does not need to be unique to underworld, it just needs to be unique
+let lastPredictionUnitId = 0;
 export function create(
   unitSourceId: string,
   x: number,
@@ -143,7 +145,7 @@ export function create(
     }
     const unit: IUnit = Object.assign({
       type: 'unit',
-      id: ++underworld.lastUnitId,
+      id: prediction ? ++lastPredictionUnitId : ++underworld.lastUnitId,
       unitSourceId,
       x: spawnPoint.x,
       y: spawnPoint.y,

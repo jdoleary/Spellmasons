@@ -83,9 +83,11 @@ export function copyForPredictionPickup(p: IPickup): IPickup {
 }
 export const TIME_CIRCLE_JID = 'timeCircle';
 
-export function create({ pos, pickupSource, onTurnsLeftDone }:
+// This does not need to be unique to underworld, it just needs to be unique
+let lastPredictionPickupId = 0;
+export function create({ pos, pickupSource }:
   {
-    pos: Vec2, pickupSource: IPickupSource, onTurnsLeftDone?: (self: IPickup) => Promise<void>
+    pos: Vec2, pickupSource: IPickupSource,
   }, underworld: Underworld, prediction: boolean) {
   const { name, description, imagePath, effect, willTrigger, scale, singleUse, animationSpeed, playerOnly = false, turnsLeftToGrab } = pickupSource;
   const { x, y } = pos
@@ -93,7 +95,7 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
     console.error('Unexpected: Created pickup at NaN', pickupSource, pos);
   }
   const self: IPickup = {
-    id: ++underworld.lastPickupId,
+    id: prediction ? ++lastPredictionPickupId : ++underworld.lastPickupId,
     type: 'pickup',
     x,
     y,
