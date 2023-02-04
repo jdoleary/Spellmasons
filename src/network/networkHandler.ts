@@ -78,6 +78,15 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         underworld.syncPlayers(players);
       }
       break;
+    case MESSAGE_TYPES.CREATE_PICKUP:
+      const { id, pos, pickupSourceName } = payload;
+      const pickupSource = Pickup.pickups.find(p => p.name == pickupSourceName);
+      if (pickupSource) {
+        Pickup._create({ pos, pickupSource, idOverride: id }, underworld, false)
+      } else {
+        console.error('Could not create pickup, missing pickup source with name', pickupSourceName);
+      }
+      break;
     case MESSAGE_TYPES.AQUIRE_PICKUP:
       const { pickupId, unitId, playerClientId } = payload;
       const pickup = underworld.pickups.find(p => p.id == pickupId);
@@ -631,7 +640,7 @@ async function handleLoadGameState(payload: {
       }
       const pickup = Pickup.pickups.find(pickupSource => pickupSource.name == p.name);
       if (pickup) {
-        const newPickup = Pickup.create({ pos: { x: p.x, y: p.y }, pickupSource: pickup }, underworld, false);
+        const newPickup = Pickup._create({ pos: { x: p.x, y: p.y }, pickupSource: pickup }, underworld, false);
         if (newPickup) {
           const { image, ...rest } = p;
           // Override pickup properties such as turnsLeftToGrab

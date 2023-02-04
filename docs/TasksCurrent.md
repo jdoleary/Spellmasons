@@ -1,16 +1,14 @@
 # For v1.3
+- bug: Getting a headless timeout: with target column + freeze?
+- target cone + poison, then two arrows but he took out his book and was waiting
 - **reproducable bug** if the server disconnects while players are playing and the server reboots, they reconnect but still have their old gamestate
   - then when they end their turns it will since units and pickups but not the level
 - could summoner or summon spells (decoy) be desyncing unit id??
 - optimize: FPS tanks when hovering over spells when you have a lot for some reason
 - bug: SavesDir not saving in the right place to sync with steam cloud? C:\Program Files (x86)\Steam\steamapps\common\Spellmasons\SavesDir vs steamapps\common\Spellmasons\resources\app\src\SavesDir
-- optimization: don't shoot an arrow if it wont hit a live target (keep in mind it could hit someone behind)
-  - this is really important for many arrows
-  - or I could shoot them all at once instead of sequentially
 - **important** could last pickup id be desyncing due to predictions??
   - yes it is, try last will + slash prediction and then check the lastPickupId
-- [arrow combos can take too long](https://www.youtube.com/watch?v=9GdB0_aH7h4)
-- burst seems be a source of desyncs, it has wildly different calculations for where dropped scrolls go
+- bloat seems be a source of desyncs, it has wildly different calculations for where dropped scrolls go
 - had player 2 load into a game after player one burst a bunch of enemies, the pickups are all scatterend in different locations and there's a random portal for no reason; 
   - all these pickups came from INIT_GAME_STATE that didn't make any sense, even a portal
   - THEY ARE THE PICKUPS FROM THE LAST LEVEL

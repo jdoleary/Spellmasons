@@ -6,7 +6,7 @@ import { syncPlayerHealthManaUI, IUnit, takeDamage } from './Unit';
 import { checkIfNeedToClearTooltip } from '../graphics/PlanningView';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
 import * as config from '../config';
-import { Vec2 } from '../jmath/Vec';
+import { clone, Vec2 } from '../jmath/Vec';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { manaBlue, stamina } from '../graphics/ui/colors';
 import Underworld from '../Underworld';
@@ -46,8 +46,6 @@ export type IPickup = HasSpace & {
   playerOnly: boolean;
   // Pickups optionally have a "time limit" and will disappear after this many turns
   turnsLeftToGrab?: number;
-  // Defines custom behavior when turnsLeftToGrab reaches 0
-  onTurnsLeftDone?: (self: IPickup) => Promise<void>;
   text?: PIXI.Text;
   // effect is ONLY to be called within triggerPickup
   // returns true if the pickup did in fact trigger - this is useful
@@ -83,19 +81,48 @@ export function copyForPredictionPickup(p: IPickup): IPickup {
 }
 export const TIME_CIRCLE_JID = 'timeCircle';
 
-// This does not need to be unique to underworld, it just needs to be unique
-let lastPredictionPickupId = 0;
-export function create({ pos, pickupSource }:
+// Create a pickup via the host.  This ensures that 
+// pickups are consistent across all clients
+export function create(args:
   {
     pos: Vec2, pickupSource: IPickupSource,
-  }, underworld: Underworld, prediction: boolean) {
+  }, underworld: Underworld, prediction: boolean): IPickup | undefined {
+  if (prediction) {
+    return _create(args, underworld, prediction);
+  } else {
+    // Only the host should dictate which pickup is created
+    if (isHost(underworld.pie)) {
+      underworld.pie.sendData({
+        type: MESSAGE_TYPES.CREATE_PICKUP,
+        id: ++underworld.lastPickupId,
+        pos: clone(args.pos),
+        pickupSourceName: args.pickupSource.name
+      });
+    }
+    return undefined;
+  }
+}
+// This does not need to be unique to underworld, it just needs to be unique
+let lastPredictionPickupId = 0;
+// Creates a pickup directly (as opposed to via a network message)
+// Sometimes clients need to call this directly, like if they got
+// pickup info from a sync from the host or loading a pickup
+// or for a prediction pickup
+export function _create({ pos, pickupSource, idOverride }:
+  {
+    pos: Vec2, pickupSource: IPickupSource, idOverride?: number,
+  }, underworld: Underworld, prediction: boolean): IPickup {
   const { name, description, imagePath, effect, willTrigger, scale, singleUse, animationSpeed, playerOnly = false, turnsLeftToGrab } = pickupSource;
   const { x, y } = pos
   if (isNaN(x) || isNaN(y)) {
     console.error('Unexpected: Created pickup at NaN', pickupSource, pos);
   }
   const self: IPickup = {
-    id: prediction ? ++lastPredictionPickupId : ++underworld.lastPickupId,
+    id: idOverride !== undefined
+      ? idOverride
+      : prediction
+        ? ++lastPredictionPickupId
+        : ++underworld.lastPickupId,
     type: 'pickup',
     x,
     y,
@@ -112,7 +139,6 @@ export function create({ pos, pickupSource }:
     playerOnly,
     effect,
     willTrigger,
-    onTurnsLeftDone,
     flaggedForRemoval: false,
     beingPushed: false
   };
@@ -218,10 +244,8 @@ export function load(pickup: IPickupSerialized, underworld: Underworld, predicti
   // Get the pickup object
   let foundPickup = pickups.find((p) => p.name == pickup.name);
   if (foundPickup) {
-    // TODO verify that complex pickup behavior like onTurnsLeftDone still work after load, traps
-    // probably don't work after load because callbacks can't be serialized
     const { image, ...toCopy } = pickup;
-    const newPickup = create({ pos: pickup, pickupSource: foundPickup }, underworld, prediction);
+    const newPickup = _create({ pos: pickup, pickupSource: foundPickup }, underworld, prediction);
     // Note: It is important here to use Object.assign so that the pickup reference is the SAME ref as is created in the
     // create function because the create function passes that ref to the underworld pickups array.
     // So when you mutate the properties, the ref must stay the same.

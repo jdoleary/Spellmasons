@@ -24,6 +24,7 @@ export enum MESSAGE_TYPES {
   // Ping a location on the map
   PING,
   AQUIRE_PICKUP,
+  CREATE_PICKUP,
   CREATE_LEVEL,
   SET_PHASE,
   SYNC_PLAYERS,

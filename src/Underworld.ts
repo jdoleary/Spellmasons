@@ -1658,7 +1658,12 @@ export default class Underworld {
     this.imageOnlyTiles = imageOnlyTiles;
     this.addGroundTileImages(biome);
     for (let p of pickups) {
-      this.spawnPickup(p.index, p.coord);
+      const pickup = Pickup.pickups[p.index];
+      if (pickup) {
+        Pickup._create({ pos: p.coord, pickupSource: pickup }, this, false);
+      } else {
+        console.error('Could not find pickup with index', p.index);
+      }
     }
     for (let e of enemies) {
       this.spawnEnemy(e.id, e.coord, e.isMiniboss);
@@ -1947,10 +1952,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         }
       }
       if (p.turnsLeftToGrab !== undefined && p.turnsLeftToGrab < 0) {
-        // Trigger custom behavior
-        if (p.onTurnsLeftDone) {
-          await p.onTurnsLeftDone(p);
-        }
         if (p.name == Pickup.CARDS_PICKUP_NAME) {
           playSFXKey('scroll_disappear');
           makeScrollDissapearParticles(p, false);
