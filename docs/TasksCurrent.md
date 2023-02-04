@@ -1,3 +1,6 @@
+# For v1.4
+- Make spells always target via IDs after they are sent over the network
+  - including the first spell.  You can test this by making a multiplayer game, moving an enemy to a different location via the console to simulate a desync, then casting on that enemy on the client that is desynced.  The spell should still trigger and select all the same targets, whether it's a simple "slash" or a bunch of targeting spells, it should be releative to the caster
 # For v1.3
 - bug: Getting a headless timeout: with target column + freeze?
 - target cone + poison, then two arrows but he took out his book and was waiting
