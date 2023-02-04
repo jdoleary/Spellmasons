@@ -89,7 +89,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       break;
     case MESSAGE_TYPES.AQUIRE_PICKUP:
       const { pickupId, unitId, playerClientId } = payload;
-      const pickup = underworld.pickups.find(p => p.id == pickupId);
+      const pickup = underworld.pickups.find(p => p.id == pickupId && !p.flaggedForRemoval);
       const unit = underworld.units.find(u => u.id == unitId);
       const player = underworld.players.find(p => p.clientId == playerClientId);
       // note: player is optionally undefined, but pickup and unit are required
@@ -632,6 +632,8 @@ async function handleLoadGameState(payload: {
   for (let p of underworld.pickups) {
     removePickup(p, underworld, false);
   }
+  // Clear pickups array now that they have been removed in preparation for loading pickups
+  underworld.pickups = [];
   if (pickups) {
     for (let p of pickups) {
       // Don't spawn pickups that are flagged to be removed

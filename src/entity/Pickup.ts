@@ -117,6 +117,9 @@ export function _create({ pos, pickupSource, idOverride }:
   if (isNaN(x) || isNaN(y)) {
     console.error('Unexpected: Created pickup at NaN', pickupSource, pos);
   }
+  if (idOverride !== undefined) {
+    underworld.lastPickupId = idOverride;
+  }
   const self: IPickup = {
     id: idOverride !== undefined
       ? idOverride
@@ -245,7 +248,7 @@ export function load(pickup: IPickupSerialized, underworld: Underworld, predicti
   let foundPickup = pickups.find((p) => p.name == pickup.name);
   if (foundPickup) {
     const { image, ...toCopy } = pickup;
-    const newPickup = _create({ pos: pickup, pickupSource: foundPickup }, underworld, prediction);
+    const newPickup = _create({ pos: pickup, pickupSource: foundPickup, idOverride: pickup.id }, underworld, prediction);
     // Note: It is important here to use Object.assign so that the pickup reference is the SAME ref as is created in the
     // create function because the create function passes that ref to the underworld pickups array.
     // So when you mutate the properties, the ref must stay the same.

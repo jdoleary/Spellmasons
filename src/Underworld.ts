@@ -1588,6 +1588,8 @@ export default class Underworld {
     for (let p of this.pickups) {
       Pickup.removePickup(p, this, false);
     }
+    // Clear pickups arrow now that all pickups have been flaggedForDeletion
+    this.pickups = [];
     // Clear all wall images:
     // Note: walls are stored in container Units so they can be sorted z-index
     // along with units
