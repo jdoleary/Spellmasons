@@ -35,8 +35,8 @@ export function hostGiveClientGameState(clientId: string, underworld: Underworld
                     level,
                     underworld: underworld.serializeForSyncronize(),
                     phase: underworld.turn_phase,
-                    pickups: underworld.pickups.map(Pickup.serialize),
-                    units: underworld.units.map(Unit.serialize),
+                    pickups: underworld.pickups.filter(p => !p.flaggedForRemoval).map(Pickup.serialize),
+                    units: underworld.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
                     players: underworld.players.map(Player.serialize),
                     doodads: underworld.doodads.map(Doodad.serialize)
                 }, {

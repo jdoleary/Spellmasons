@@ -625,6 +625,10 @@ async function handleLoadGameState(payload: {
   }
   if (pickups) {
     for (let p of pickups) {
+      // Don't spawn pickups that are flagged to be removed
+      if (p.flaggedForRemoval) {
+        continue;
+      }
       const pickup = Pickup.pickups.find(pickupSource => pickupSource.name == p.name);
       if (pickup) {
         const newPickup = Pickup.create({ pos: { x: p.x, y: p.y }, pickupSource: pickup }, underworld, false);
@@ -649,7 +653,7 @@ async function handleLoadGameState(payload: {
   if (units) {
     // Clean up previous units:
     underworld.units.forEach(u => Unit.cleanup(u));
-    underworld.units = units.map(u => Unit.load(u, underworld, false));
+    underworld.units = units.filter(u => !u.flaggedForRemoval).map(u => Unit.load(u, underworld, false));
   }
   // Note: Players should sync after units are loaded so
   // that the player.unit reference is synced
