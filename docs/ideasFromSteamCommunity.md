@@ -93,3 +93,5 @@ I have enjoyed the core game loop thus far.  The following suggestions are not i
 4.  Lava doesn't kill enemies.....wtf?
 
 5.  More items!  Would be interesting to push a barrel of some flammable liquid towards a group and make it go boom, setting things on fire as they ran away 🙂  If you have ever played the Divinity games you can imagine how clever environment based mechanics can get. 
+---
+- mana steal should be able to extend usable mana mid-chain
