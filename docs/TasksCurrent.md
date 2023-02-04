@@ -1,4 +1,6 @@
 # For v1.3
+- **reproducable bug** if the server disconnects while players are playing and the server reboots, they reconnect but still have their old gamestate
+  - then when they end their turns it will since units and pickups but not the level
 - could summoner or summon spells (decoy) be desyncing unit id??
 - optimize: FPS tanks when hovering over spells when you have a lot for some reason
 - bug: SavesDir not saving in the right place to sync with steam cloud? C:\Program Files (x86)\Steam\steamapps\common\Spellmasons\SavesDir vs steamapps\common\Spellmasons\resources\app\src\SavesDir
