@@ -75,3 +75,23 @@ I just spawned in 1 corner and then I was never able to reach the other 2 becaus
 ---
 J'in
 I think a possible solution for the summoner issue would be to have them summon X creature but with no mana so they have to build up their mana and cant immediately summon more enemies. It would at least buy the player some time to take care of the crowds before more are spawned in
+
+---
+Bardcore
+When performing an elaborate mana steal chain, it will only let me cast spells up to my pre-mana steal amount, not respecting the mana I've gained during the spell chain from mana steal
+which is obviously frustrating, because even with all my extra mana, I cannot recreate this targeting chain to now use my stolen mana
+---
+Blacklotis — Today at 1:58 PM
+I have enjoyed the core game loop thus far.  The following suggestions are not in any particular order and all revolve around my experience playing the game solo.
+
+1.  There is no way to tell in game how well I'm doing (or not).  A breakdown of runs, and the spells chosen that run would do a LOT towards enabling better spell decisions.  A leaderboard could solve this problem nicely if you could select that run and see a breakdown of how it went (Damage per level, number of times each spell was used, number of times each spell chain was used, etc etc.)  To be more complete, a sortable database of all runs.
+
+2.  Enemy movement is about as simple as it can possibly be (and quite boring after about an hour of play).  Enemies know your position at all times and run blindly towards it.  Archers specifically suffer from this as they run towards you.....but then just stand still.  There have been a number of situations where I was able to recover over the course of 4-5 turns in a corner when all but the archers were dead.  This mechanic just feels bad.  More intelligent pathing would radically improve the experience.  A damage balancing pass might be required with this change.
+
+3.  The level design is okay but could be significantly improved.  Adding doors and a sound based aggro system could significantly expand the potential for more complex fights.  Spells like suffocate could have an extra ability that silences the enemy until it dies, preventing them from crying out.
+
+4.  Lava doesn't kill enemies.....wtf?
+
+5.  More items!  Would be interesting to push a barrel of some flammable liquid towards a group and make it go boom, setting things on fire as they ran away 🙂  If you have ever played the Divinity games you can imagine how clever environment based mechanics can get. 
+---
+- mana steal should be able to extend usable mana mid-chain

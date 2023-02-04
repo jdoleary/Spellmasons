@@ -1,10 +1,44 @@
 # For v1.3
 - Rework spells to use unit ids instead of coordinates which will often miss if there is a desync
-- Allow for scrolling the game language selection
-- Game saves cannot be deleted, when you restart steam they come back
-- Make turn_phase into a state machine so it can only transition from Stalled to PlayerTurns for example
-- potion desync still occurring
+  - all animate functions should have a built in race timeout where they are invoked
+  - validate "are you sure" if you end your turn without casting
+  - validate prevent dead players from casting
+  - Implement invoking these new functions:
+    - mouseMove -> calculateCards().forEach -> cacheSpellInvokation(), showPrediction(realizedCalculation)
+    - eventHandler click -> calculateCards().forEach -> cacheSpellInvokation() -> serialize -> pie.send(SPELL, realizedCalculation)
+    - onSpell -> deserialize -> .forEach -> animate(realizedCalculation), effect2(realizedCalculation)
+- When killing the map simultaneously (or very large groups of enemies) it seems that the spell drop is multiplied. Me and a buddy was getting 5-10 spells per stage and had every spell in the game by like the 10th floor. Posted a video in general showing our strategy.
+- scrolls disappearing desyncing
+- potion desync still occurring (maybe fix this in today's update and wait to publish the card refactor)
+  - potion mismatches should trigger because that means that one client at least saw it
+  - test changing potion ids and make sure they sync
+```
+Isneverthere#3851
+This is probably a sync issue but a big issue as of now is the first round in multiplayer, and a few others will have it where mobs die but then the game says no it didn't. Consistently does it first round and randomly for others after. Hope you find a solution, love the game.
+```
 ---
+J'in — Yesterday at 5:17 AM
+A couple observations from my broken run earlier depicted in General:
+
+1) The spell that sacrifices your health to steal mana from enemies has no limit to the amount of mana it can take from enemies, and will take more mana than the enemy has to give if stacked. I was able to achieve over 15k mana by sacrificing all my health with an AoE spam of this spell. Suggestion : this spell needs to be limited to the amount of mana an enemy has to offer.
+
+2) A lengthy spell will continue to cast even after the targeted enemies are dead. It will continue to link to dead enemies that were killed during that same spell resulting in lengthy animation of connections to once alive (now dead) enemies. The same spell continued to cast when entering the next floor, and because I cast blood curse and a ton of heals on all of us, killed my teammates when the spell finally culminated even though we had moved onto the next floor. Suggestion : If a spell contains offensive (or defensive) components, have that spell end if all targets that will be hurt / helped have already died. ( no reason to continue to connect to a mass pile of bodies, or cast fortify on a dead teammate).  Also, have any and all spell effects in progress end when moving to the next floor.
+
+3) When casting an ungodly amount of arrows, the arrows take a very, very long time to shoot. (the developer has already commented on speeding this up) and will continue to shoot after all enemies have died. (this loops back into the last point)
+---
+LoveLess#4376
+Might want to make it more obvious that you have additional spell bars on the left and right. You'll only know they are there if you are looking while dragging spells. Perhaps while you have your spellbook open they are all highlighted? 
+---
+J'in — Today at 7:41 PM
+After killing mass packs of mobs (in which the killing itself ran fine) it would still spawn several scrolls that would then fly to the player on level end, causing the game to seize up a little
+so don't spawn new scrolls if the player has all the available spells
+---
+## Important for later
+- Make turn_phase into a state machine so it can only transition from Stalled to PlayerTurns for example
+---
+- bug: Player clones no longer attacking
+- "I didnt desync until there were dark summoner summoning summoner looool
+Summoners"
 - add bug report button to game that saves logs
 - Chad's copy suggestions: https://docs.google.com/spreadsheets/d/1A_tnEzTPxkXGhh3KoLsuTAuIOeIqY5s6D-15SR6LUxI/edit#gid=0
 - Units walking into walls, one user had it happen without movement spells so it must have something to do with spawning
