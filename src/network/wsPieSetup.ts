@@ -39,6 +39,16 @@ function connect_to_wsPie_server(wsUri: string | undefined, overworld: Overworld
       console.log('onConnectInfo', o);
       if (o.connected) {
         console.log("Pie: Successfully connected to PieServer.")
+        // If connection is restored after unexpected disconnection
+        if (view == View.Disconnected) {
+          if (globalThis.player) {
+            // If you're already in a game, set the view back to the game
+            setView(View.Game);
+          } else {
+            // If you're not in the game, set the view back to the menu
+            setView(View.Menu);
+          }
+        }
         resolve();
       } else {
         const elVersionInfoHeadless = document.getElementById('version-info-headless-server')

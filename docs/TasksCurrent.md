@@ -1,7 +1,6 @@
 # For v1.3
 - burst seems be a source of desyncs, it has wildly different calculations for where dropped scrolls go
 - had player 2 load into a game after player one burst a bunch of enemies, the pickups are all scatterend in different locations and there's a random portal for no reason; 
-  - then i lost connection to server for no apparent reason and **when it reconnected**, it stayed on the lost connection screen
   - all these pickups came from INIT_GAME_STATE that didn't make any sense, even a portal
   - THEY ARE THE PICKUPS FROM THE LAST LEVEL
 - When killing the map simultaneously (or very large groups of enemies) it seems that the spell drop is multiplied. Me and a buddy was getting 5-10 spells per stage and had every spell in the game by like the 10th floor. Posted a video in general showing our strategy.
@@ -13,6 +12,8 @@
 - potion desync still occurring (maybe fix this in today's update and wait to publish the card refactor)
   - potion mismatches should trigger because that means that one client at least saw it
   - test changing potion ids and make sure they sync
+- validate:
+  - if player client disconnects and reconnects mid game it should restore their vision to game view
 ## Delayed
 - Rework spells to use unit ids instead of coordinates which will often miss if there is a desync
   - all animate functions should have a built in race timeout where they are invoked
