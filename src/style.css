@@ -1326,16 +1326,12 @@ body.view-Disconnected #pie-disconnected {
 body.view-Disconnected #websocketpie-connection-status {
   display: block;
   z-index: 3;
-  position: absolute;
-  top: 44%;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  position: relative;
   text-align: center;
 }
 
 body.view-Menu #websocketpie-connection-status {
-  display: block;
+  display: none;
 }
 
 /* Show that camera is being dragged with the mouse */

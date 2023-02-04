@@ -110,7 +110,9 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       // connected to the room and need the first transfer of game state
       // This is why it is okay that updating the game state happens 
       // asynchronously.
-      if (underworld.lastLevelCreated === undefined) {
+      // or in the case of allowForceInitGameState, clients who have reconnected
+      if (underworld.allowForceInitGameState || underworld.lastLevelCreated === undefined) {
+        underworld.allowForceInitGameState = false;
         // If a client loads a full game state, they should be fully synced
         // so clear the onDataQueue to prevent old messages from being processed
         // after the full gamestate sync

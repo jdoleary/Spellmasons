@@ -57,6 +57,11 @@ function connect_to_wsPie_server(wsUri: string | undefined, overworld: Overworld
         }
         if (view == View.Game) {
           setView(View.Disconnected);
+          if (overworld.underworld) {
+            // Allow forcing receiving a new init_game_state since after disconnect
+            // a user will be out of sync with the server
+            overworld.underworld.allowForceInitGameState = true;
+          }
         }
       }
     };

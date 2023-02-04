@@ -177,6 +177,8 @@ export default class Underworld {
   // Keep track of the LevelData from the last level that was created in
   // case it needs to be sent to another client
   lastLevelCreated: LevelData | undefined;
+  // Used to allow INIT_GAME_STATE after a disconnect
+  allowForceInitGameState: boolean = false;
   removeEventListeners: undefined | (() => void);
   bloods: BloodParticle[] = [];
   // Keeps track of if the game has begun the process of restarting a new level after a Game Over
