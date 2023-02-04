@@ -1,4 +1,19 @@
 # For v1.3
+- burst seems be a source of desyncs, it has wildly different calculations for where dropped scrolls go
+- had player 2 load into a game after player one burst a bunch of enemies, the pickups are all scatterend in different locations and there's a random portal for no reason; 
+  - then i lost connection to server for no apparent reason and **when it reconnected**, it stayed on the lost connection screen
+  - all these pickups came from INIT_GAME_STATE that didn't make any sense, even a portal
+  - THEY ARE THE PICKUPS FROM THE LAST LEVEL
+- When killing the map simultaneously (or very large groups of enemies) it seems that the spell drop is multiplied. Me and a buddy was getting 5-10 spells per stage and had every spell in the game by like the 10th floor. Posted a video in general showing our strategy.
+- scrolls disappearing desyncing
+  - so when potions are dropping is not synced
+    - sync cardDropsDropped and enemiesKilled?
+    - **important** I should have Pickup.create trigger a network message from the host and have non hosts skip it
+- possible to desync by casting on another player that's currently moving?
+- potion desync still occurring (maybe fix this in today's update and wait to publish the card refactor)
+  - potion mismatches should trigger because that means that one client at least saw it
+  - test changing potion ids and make sure they sync
+## Delayed
 - Rework spells to use unit ids instead of coordinates which will often miss if there is a desync
   - all animate functions should have a built in race timeout where they are invoked
   - validate "are you sure" if you end your turn without casting
@@ -7,11 +22,6 @@
     - mouseMove -> calculateCards().forEach -> cacheSpellInvokation(), showPrediction(realizedCalculation)
     - eventHandler click -> calculateCards().forEach -> cacheSpellInvokation() -> serialize -> pie.send(SPELL, realizedCalculation)
     - onSpell -> deserialize -> .forEach -> animate(realizedCalculation), effect2(realizedCalculation)
-- When killing the map simultaneously (or very large groups of enemies) it seems that the spell drop is multiplied. Me and a buddy was getting 5-10 spells per stage and had every spell in the game by like the 10th floor. Posted a video in general showing our strategy.
-- scrolls disappearing desyncing
-- potion desync still occurring (maybe fix this in today's update and wait to publish the card refactor)
-  - potion mismatches should trigger because that means that one client at least saw it
-  - test changing potion ids and make sure they sync
 ```
 Isneverthere#3851
 This is probably a sync issue but a big issue as of now is the first round in multiplayer, and a few others will have it where mobs die but then the game says no it didn't. Consistently does it first round and randomly for others after. Hope you find a solution, love the game.
