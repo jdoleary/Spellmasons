@@ -34,6 +34,8 @@ import { calculateCost } from '../cards/cardUtils';
 import { runPredictions } from '../graphics/PlanningView';
 import seedrandom from 'seedrandom';
 import { getUniqueSeedString } from '../jmath/rand';
+import { raceTimeout } from '../Promise';
+import { createVisualLobbingProjectile } from '../entity/Projectile';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -252,7 +254,58 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       const { id, pos, pickupSourceName } = payload;
       const pickupSource = Pickup.pickups.find(p => p.name == pickupSourceName);
       if (pickupSource) {
-        Pickup._create({ pos, pickupSource, idOverride: id }, underworld, false)
+        const pickup = Pickup._create({ pos, pickupSource, idOverride: id }, underworld, false)
+        // If pickup is a portal
+        // make existing scroll pickups fly to player
+        if (pickup.name == Pickup.PICKUP_PORTAL_NAME) {
+          let timeBetweenPickupFly = 100;
+          const getFlyingPickupPromises = underworld.pickups.filter(p => p.name == Pickup.CARDS_PICKUP_NAME).map(pickup => {
+            return raceTimeout(5000, 'spawnPortalFlyScrolls', new Promise<void>((resolve) => {
+              timeBetweenPickupFly += 100;
+              // Make the pickup fly to the player. this gives them some time so it doesn't trigger immediately.
+              setTimeout(() => {
+                if (pickup.image) {
+                  pickup.image.sprite.visible = false;
+                }
+                const flyingPickupPromises = [];
+                for (let p of underworld.players) {
+                  flyingPickupPromises.push(createVisualLobbingProjectile(pickup, p.unit, pickup.imagePath))
+                }
+                Promise.all(flyingPickupPromises)
+                  .then(() => {
+                    underworld.players.forEach(p => Pickup.givePlayerUpgrade(p, underworld));
+                    resolve();
+                  });
+              }, timeBetweenPickupFly);
+              Pickup.removePickup(pickup, underworld, false);
+            }))
+          });
+          await Promise.all(getFlyingPickupPromises);
+        }
+
+        // If there are existing portals and a pickup is spawned make pickups fly to player
+        if (pickup.name == Pickup.CARDS_PICKUP_NAME && underworld.pickups.some(p => p.name == Pickup.PICKUP_PORTAL_NAME)) {
+          await raceTimeout(5000, 'spawnScrollFlyScroll', new Promise<void>((resolve) => {
+            // Make the pickup fly to the player. this gives them some time so it doesn't trigger immediately.
+            setTimeout(() => {
+              if (pickup.image) {
+                pickup.image.sprite.visible = false;
+              }
+              const flyingPickupPromises = [];
+              for (let p of underworld.players) {
+                flyingPickupPromises.push(createVisualLobbingProjectile(pickup, p.unit, pickup.imagePath))
+              }
+              Promise.all(flyingPickupPromises)
+                .then(() => {
+                  underworld.players.forEach(p => Pickup.givePlayerUpgrade(p, underworld));
+                  resolve();
+                });
+            }, 100);
+            Pickup.removePickup(pickup, underworld, false);
+          }));
+        }
+
+
       } else {
         console.error('Could not create pickup, missing pickup source with name', pickupSourceName);
       }

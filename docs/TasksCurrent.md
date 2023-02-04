@@ -1,4 +1,5 @@
 # For v1.4
+- todo refactor duplicated code about flying scroll pickups
 - if you die and allies carry you to the next level the enemies get a turn before you do
 - fix mana steal making mana out of nowhere
 - "10 poison damage" doesn't account for debilitate, it does 20 but says 10

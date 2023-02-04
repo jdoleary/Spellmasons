@@ -2940,30 +2940,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         makeScrollDissapearParticles(p, false);
         Pickup.removePickup(p, this, false);
       });
-      // Make scroll pickups fly to player
-      const getFlyingPickupPromises = this.pickups.filter(p => p.name == Pickup.CARDS_PICKUP_NAME).map(pickup => {
-        return raceTimeout(5000, 'spawnPortalFlyScrolls', new Promise<void>((resolve) => {
-          timeBetweenPickupFly += 100;
-          // Make the pickup fly to the player. this gives them some time so it doesn't trigger immediately.
-          setTimeout(() => {
-            if (pickup.image) {
-              pickup.image.sprite.visible = false;
-            }
-            const flyingPickupPromises = [];
-            for (let p of this.players) {
-              flyingPickupPromises.push(createVisualLobbingProjectile(pickup, p.unit, pickup.imagePath))
-            }
-            Promise.all(flyingPickupPromises)
-              .then(() => {
-                this.players.forEach(p => Pickup.givePlayerUpgrade(p, this));
-                resolve();
-              });
-          }, timeBetweenPickupFly);
-          Pickup.removePickup(pickup, this, false);
-        }))
-      });
-
-      await Promise.all(getFlyingPickupPromises);
       // Spawn portal near each player
       const portalPickup = Pickup.pickups.find(p => p.name == Pickup.PICKUP_PORTAL_NAME);
       if (portalPickup) {
