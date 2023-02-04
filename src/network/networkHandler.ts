@@ -78,15 +78,6 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         underworld.syncPlayers(players);
       }
       break;
-    case MESSAGE_TYPES.CREATE_PICKUP:
-      const { id, pos, pickupSourceName } = payload;
-      const pickupSource = Pickup.pickups.find(p => p.name == pickupSourceName);
-      if (pickupSource) {
-        Pickup._create({ pos, pickupSource, idOverride: id }, underworld, false)
-      } else {
-        console.error('Could not create pickup, missing pickup source with name', pickupSourceName);
-      }
-      break;
     case MESSAGE_TYPES.AQUIRE_PICKUP:
       const { pickupId, unitId, playerClientId } = payload;
       const pickup = underworld.pickups.find(p => p.id == pickupId && !p.flaggedForRemoval);
@@ -257,6 +248,15 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
   // Get player of the client that sent the message 
   const fromPlayer = underworld.players.find((p) => p.clientId === fromClient);
   switch (type) {
+    case MESSAGE_TYPES.CREATE_PICKUP:
+      const { id, pos, pickupSourceName } = payload;
+      const pickupSource = Pickup.pickups.find(p => p.name == pickupSourceName);
+      if (pickupSource) {
+        Pickup._create({ pos, pickupSource, idOverride: id }, underworld, false)
+      } else {
+        console.error('Could not create pickup, missing pickup source with name', pickupSourceName);
+      }
+      break;
     case MESSAGE_TYPES.CHANGE_CHARACTER:
       const player = underworld.players.find(p => p.clientId === fromClient)
       if (player) {
