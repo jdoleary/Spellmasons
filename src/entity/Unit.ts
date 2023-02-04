@@ -657,6 +657,15 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
     explain(EXPLAIN_DEATH);
     playSFXKey('game_over');
   }
+
+  if (unit.unitType == UnitType.PLAYER_CONTROLLED) {
+    const player = underworld.players.find(p => p.unit == unit);
+    if (player) {
+      underworld.endPlayerTurn(player.clientId);
+    } else {
+      console.error('Player unit died but could not find them in players array to end their turn');
+    }
+  }
   // In the event that this unit that just died is the selected unit,
   // this will remove the tooltip:
   checkIfNeedToClearTooltip();

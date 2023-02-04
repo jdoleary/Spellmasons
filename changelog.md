@@ -1,12 +1,13 @@
 ## 2/4/2023 Spellmasons Update v1.3.0
-- Improve: Pickup (portals, potions, etc) synchronization by sending pickup creation over the network and stablizing pickup ids
 
 - Feature: Support auto reconnect attempts when client loses connection to the server
 - Quality of Life: Increase arrow speed when firing an absurd amount of arrows (thank you Omni from Discord!)
 
+- fix: **significant** Pickup (portals, potions, etc) synchronization by sending pickup creation over the network and stablizing pickup ids
 - fix: Target Kind so it wont target you or allies
 - fix: Deleted save files getting restored after reboot
 - fix: Localization screen not showing all language options on some resolutions
+- fix: When a player dies, their turn is now ended automatically since they're dead and can't take their turn
 
 ## 2/3/2023 Spellmasons Update v1.2.0
 - fix: Overhaul unit and pickup syncronization issue.  This will address many (but not all) of the syncronization issues people have been experiencing in multiplayer

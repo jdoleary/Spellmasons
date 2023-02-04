@@ -811,15 +811,6 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
     // Note: This must be invoked AFTER animatingSpells is set to false or else
     // it will short-circuit
     runPredictions(underworld);
-
-    // Check for dead players to end their turn,
-    // this occurs here because spells may have caused their death
-    for (let p of underworld.players) {
-      // If a player's unit is dead, end their turn
-      if (!p.unit.alive) {
-        underworld.endPlayerTurn(p.clientId);
-      }
-    }
   } else {
     console.log('Someone is trying to cast out of turn');
   }

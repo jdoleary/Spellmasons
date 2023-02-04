@@ -1,4 +1,9 @@
 # For v1.4
+- if you die and allies carry you to the next level the enemies get a turn before you do
+- fix mana steal making mana out of nowhere
+- "10 poison damage" doesn't account for debilitate, it does 20 but says 10
+- when mana vamp removes your max mana it shouldn't also remove overflow
+- Update deathmason description to explain his abilities
 - Make spells always target via IDs after they are sent over the network
   - including the first spell.  You can test this by making a multiplayer game, moving an enemy to a different location via the console to simulate a desync, then casting on that enemy on the client that is desynced.  The spell should still trigger and select all the same targets, whether it's a simple "slash" or a bunch of targeting spells, it should be releative to the caster
 # For v1.3
