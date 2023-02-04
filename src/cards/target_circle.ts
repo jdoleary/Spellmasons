@@ -25,7 +25,7 @@ const spell: Spell = {
     requiresFollowingCard: true,
     description: 'spell_target_circle',
     allowNonUnitTarget: true,
-    showPrediction: ({ targetedUnits, targetedPickups, quantity, aggregator }, outOfRange?: boolean) => {
+    showPrediction: ({ targetedUnits, targetedPickups }, { quantity, aggregator }, outOfRange?: boolean) => {
       const adjustedRange = baseRadius * quantity + aggregator.radius;
       const targets: Vec2[] = [...targetedUnits, ...targetedPickups];
       for (let target of targets) {

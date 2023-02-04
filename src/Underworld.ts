@@ -2757,8 +2757,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       cachedCards: [],
       casterUnit,
       casterPositionAtTimeOfCast,
-      targetedUnit: undefined,
-      targetedPickup: undefined,
+      initialTargetedUnit: undefined,
+      targetedUnits: [],
+      initialTargetedPickup: undefined,
+      targetedPickups: [],
       castLocation
     }
     let unitsAtCastLocation = this.getUnitsAt(castLocation, prediction);
@@ -2776,11 +2778,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Get first unit at cast location
     const unitAtCastLocation = unitsAtCastLocation[0];
     if (unitAtCastLocation) {
-      returnValue.targetedUnit = unitAtCastLocation;
+      returnValue.initialTargetedUnit = unitAtCastLocation;
     }
     const pickupAtCastLocation = this.getPickupAt(castLocation, prediction);
     if (pickupAtCastLocation) {
-      returnValue.targetedPickup = pickupAtCastLocation;
+      returnValue.initialTargetedPickup = pickupAtCastLocation;
     }
     // Step 2: Assemble CalculateCardsReturn.spells info
     let quantity = 1;
@@ -2813,28 +2815,26 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       quantity = 1;
     }
 
+    let targetedUnits = returnValue.initialTargetedUnit ? [returnValue.initialTargetedUnit] : [];
+    let targetedPickups = returnValue.initialTargetedPickup ? [returnValue.initialTargetedPickup] : [];
     // Step 3: Calculate each card, and collect the results in an array
     // This is where it uses the CachedSpellRealized (the start of a spell) and builds it
     // by applying the calculations of one card at a time
     for (let cardWithQuantity of cardsWithQuantity) {
-      let targetedUnits = returnValue.targetedUnit ? [returnValue.targetedUnit] : [];
-      let targetedPickups = returnValue.targetedPickup ? [returnValue.targetedPickup] : [];
+      const realized: Cards.RealizedCalculateArgs = {
+        card: cardWithQuantity.card,
+        quantity: cardWithQuantity.quantity,
+        targetedUnits,
+        targetedPickups,
+        aggregator: {
+          unitDamage: [],
+          radius: 0
+        },
+        extra: {},
+      }
+      // LEFT OFF: I have to add targets somewhere here when i iterate the cacheSpellInvokation and mutate the realized object's targets arrays
+      // so new cards can calculate with updated targets
       if (cardWithQuantity.card.cacheSpellInvokation) {
-        let realized: Cards.RealizedCalculateArgs = {
-          card: cardWithQuantity.card,
-          casterUnit,
-          casterPositionAtTimeOfCast,
-          quantity: cardWithQuantity.quantity,
-          targetedUnits,
-          targetedPickups,
-          castLocation,
-          aggregator: {
-            unitDamage: [],
-            radius: 0
-          },
-          extra: {},
-
-        }
         returnValue.cachedCards.push({ card: cardWithQuantity.card, info: cardWithQuantity.card.cacheSpellInvokation(realized, this, prediction) });
       } else {
         console.error('No cacheSpellInvokation fn for spell', cardWithQuantity.card.id);

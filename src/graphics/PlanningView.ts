@@ -413,6 +413,12 @@ async function showCastCardsPrediction(underworld: Underworld, target: Vec2, cas
       target,
       true
     );
+    cachedSpell.cachedCards.forEach(({ card, info }) => {
+      // LEFT OFF 
+      if (card.showPrediction) {
+        card.showPrediction(cachedSpell, info, outOfRange);
+      }
+    })
     const effectState = await underworld.castCards(
       // Make a copy of cardUsageCounts for prediction so it can accurately
       // calculate mana for multiple copies of one spell in one cast
