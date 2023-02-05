@@ -1810,7 +1810,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
   tryGameOver(): boolean {
     const isOver = this.isGameOver();
-    document.body.classList.toggle('game-over', isOver);
+    // Show game over modal after a delay
+    setTimeout(() => {
+      document.body.classList.toggle('game-over', isOver);
+    }, 1000);
     this.updateGameOverModal();
     if (globalThis.headless) {
       if (isOver) {
