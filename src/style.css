@@ -1508,6 +1508,8 @@ body.open-inventory #inventory-container {
 .floating-card-holder .empty-slot:after {
   width: 42px;
   height: 42px;
+  /* Add glow to denote that a card can be dropped here */
+  box-shadow: 0px 0px 11px 4px rgb(0, 194, 242);
 }
 
 .empty-slot:after {
