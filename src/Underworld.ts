@@ -684,13 +684,18 @@ export default class Underworld {
     }
     // Now that units have moved update any particle emitters that are following them:
     for (let { displayObject, emitter, target } of this.particleFollowers) {
-      // @ts-ignore: ySortPositionOverride is a custom property that I've added that was made
-      // to override the display order of this displayObject. It's usage here allows the particles
-      // for this emitter to be in their own container, that container renders them at the
-      // ySortPositionOverride relative to other units but the particles still remain in game space
-      // so that when the parent moves, the particles will list behind as you'd expect them to.
-      displayObject.ySortPositionOverride = target.y - 1;
-      emitter?.updateOwnerPos(target.x, target.y);
+      if (target.alive) {
+
+        // @ts-ignore: ySortPositionOverride is a custom property that I've added that was made
+        // to override the display order of this displayObject. It's usage here allows the particles
+        // for this emitter to be in their own container, that container renders them at the
+        // ySortPositionOverride relative to other units but the particles still remain in game space
+        // so that when the parent moves, the particles will list behind as you'd expect them to.
+        displayObject.ySortPositionOverride = target.y - 1;
+        emitter?.updateOwnerPos(target.x, target.y);
+      } else {
+        stopAndDestroyForeverEmitter(emitter);
+      }
     }
     for (let p of this.pickups) {
       Pickup.sync(p);
