@@ -14,7 +14,6 @@ import { CardCategory, CardRarity, probabilityMap } from '../../types/commonType
 import { MESSAGE_TYPES } from '../../types/MessageTypes';
 import { explain, EXPLAIN_END_TURN } from '../Explain';
 import { Overworld } from '../../Overworld';
-import { conserveSpellId } from '../../cards/conserve';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
@@ -557,17 +556,14 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
 
       }
 
-      // Special exception, allow killing yourself with conserve as you may use it to sacrifice yourself for an ally to survive
-      if (cardId !== conserveSpellId) {
-        if (cost.healthCost > globalThis.player.unit.health) {
-          floatingText({
-            coords: underworld.getMousePos(),
-            text: 'Insufficient Health',
-            style: { fill: colors.errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
-          })
-          deselectLastCard();
+      if (cost.healthCost >= globalThis.player.unit.health) {
+        floatingText({
+          coords: underworld.getMousePos(),
+          text: 'Insufficient Health',
+          style: { fill: colors.errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
+        })
+        deselectLastCard();
 
-        }
       }
     }
   } else {
