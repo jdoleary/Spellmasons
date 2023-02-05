@@ -8,6 +8,7 @@
 - Test Pickups + movement spells prediction (trap)
 - Test allies carrying on the battle
 - have a multiplayer game with 1 player, beat a level, then connect with another player
+- Test tutorial
 
 
 # Release protocal
@@ -16,7 +17,6 @@
 - Make build for mac and PC
 - Transfer them to main computer and upload to Steam
 - Test in `Testing` build
-- Test tutorial
 
 - Release at announced time to normal build
 - Update servers (Walrus must be updated manually since it uses docker hub)

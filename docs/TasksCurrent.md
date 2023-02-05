@@ -1,6 +1,21 @@
 # For v1.4
-- PORTAL DOESN'T SPAWN IN TUTORIAL ANY MORE
-- BIG BUG, if teammate goes through portal without ending their turn, the other player is stuck
+- validate correct position of SavesDir
+-  BUG: Selected Spells are not obtained. During some runs, selected spells are not added to the toolbar, nor the spell book. Once the bug happens, it persists through all runs until the application is restarted. (steam https://steamcommunity.com/app/1618380/discussions/0/3766733548888993966/)
+- Better error message if server hub is down.
+- bug: Target same or kind doesn't target summoned units of same kind (reported on twitter)
+- Deathmason lack of portals thread
+- Split ally players still stay split after going through portal
+- **important** Reroll deleting scrolls bug
+- **rework description** or don't let it kill you; People keep being suprised that concerve kills them
+- Tekyera (discord) rerolling spell makes them just disappear
+  - also "Sparkle" on discord
+- bug: corpses that recieve bloat and are attacked, explode
+- idea: (Lancelot discord): some spells should use stamina
+- Tekyera (discord) arrow indicates that opponent behind other will die but arrow hits front one twice
+- Portal spawns before last enemy is killed on multiplayer with burst
+- bug: killing self after level end with conserve cheat: https://steamcommunity.com/app/1618380/discussions/0/3766733548885838682/
+- **BIG BUG**, if teammate goes through portal without ending their turn, the other player is stuck
+  - if I'm out of stamina
 - Poison stuck at 4 on summoner
 - Deathmason missing picture in summon spell
 - how to better update servers without kicking people off??

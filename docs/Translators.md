@@ -4,3 +4,4 @@
 - Foobarbar32 discord: German
 - 0xFF: Italian
 - coblin: discord; bahasa indonesian
+- Tekyera: discord
