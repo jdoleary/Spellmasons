@@ -474,11 +474,9 @@ export function updateCameraPosition(underworld: Underworld) {
             utilProps.camera = clone(globalThis.cinematicCameraTarget);
           } else {
 
-            if (!inPortal(globalThis.player) && globalThis.player.unit.alive) {
+            if (!inPortal(globalThis.player)) {
               // Follow current client player
               utilProps.camera = clone(globalThis.player.unit);
-            } else {
-              setCameraToMapCenter(underworld);
             }
           }
         }
