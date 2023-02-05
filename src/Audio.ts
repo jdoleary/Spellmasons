@@ -275,7 +275,7 @@ export function playSFX(path?: string) {
     }
     const lastTimeThisPathWasPlayed = lastPlayed[path];
     if (lastTimeThisPathWasPlayed && Date.now() - lastTimeThisPathWasPlayed <= 100) {
-        console.log('Cancel playing sound', path, 'it was played too recently')
+        console.debug('Cancel playing sound', path, 'it was played too recently')
         return;
     }
     lastPlayed[path] = Date.now();
