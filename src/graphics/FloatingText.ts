@@ -3,6 +3,7 @@ import { Vec2 } from '../jmath/Vec';
 import * as config from '../config';
 import { app, containerFloatingText, containerUIFixed, withinCameraBounds } from './PixiUtils';
 import { Localizable } from '../localization';
+import throttle from 'lodash.throttle';
 
 interface FText {
   startPosition: Vec2;
@@ -136,3 +137,7 @@ export function centeredFloatingText(text: Localizable, fill: string | number = 
   });
 
 }
+
+export const warnNoMoreSpellsToChoose = throttle(() => {
+  queueCenteredFloatingText('No more spell upgrades to pick from.');
+}, 2000);

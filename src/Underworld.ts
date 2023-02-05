@@ -45,7 +45,7 @@ import {
   cleanBlood,
   cacheBlood,
 } from './graphics/PixiUtils';
-import floatingText, { elPIXIHolder, queueCenteredFloatingText } from './graphics/FloatingText';
+import floatingText, { elPIXIHolder, queueCenteredFloatingText, warnNoMoreSpellsToChoose } from './graphics/FloatingText';
 import { UnitType, Faction, UnitSubType } from './types/commonTypes';
 import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
@@ -2304,7 +2304,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         if (!upgrades.length) {
           // Player already has all the upgrades
           document.body?.classList.toggle(showUpgradesClassName, false);
-          queueCenteredFloatingText('No more spell upgrades to pick from.');
+          warnNoMoreSpellsToChoose();
         } else {
           const elUpgrades = upgrades.map((upgrade) => Upgrade.createUpgradeElement(upgrade, player, this));
           if (elUpgradePickerContent) {
