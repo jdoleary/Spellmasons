@@ -85,6 +85,7 @@ import { golem_unit_id } from './entity/units/golem';
 import { cleanUpPerkList, createPerkElement, generatePerks, tryTriggerPerk, showPerkList, hidePerkList } from './Perk';
 import { bossmasonUnitId } from './entity/units/bossmason';
 import { hexToString } from './graphics/ui/colorUtil';
+import { doLiquidEffect } from './inLiquid';
 
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
@@ -1899,6 +1900,13 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         }
       }
       CardUI.updateCardBadges(this);
+      // At the end of the player turn, deal damage if still in liquid
+      for (let player of this.players) {
+        if (player.unit.inLiquid && player.unit.alive) {
+          doLiquidEffect(this, player.unit, false);
+          floatingText({ coords: player.unit, text: 'Liquid damage', style: { fill: 'red' } });
+        }
+      }
       // Move onto next phase
       // Note: BroadcastTurnPhase should happen last because it
       // queues up a unitsync, so if changes to the units
@@ -2530,6 +2538,13 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           } else {
             console.log('Turn Management: Skipping executingNPCTurn for Faction.ALLY');
           }
+          // At the end of their turn, deal damage if still in liquid
+          for (let unit of this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ALLY)) {
+            if (unit.inLiquid && unit.alive) {
+              doLiquidEffect(this, unit, false);
+              floatingText({ coords: unit, text: 'Liquid damage', style: { fill: 'red' } });
+            }
+          }
           // Now that allies are done taking their turn, change to NPC Enemy turn phase
           this.broadcastTurnPhase(turn_phase.NPC_ENEMY)
           break;
@@ -2544,6 +2559,13 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             console.log('Turn Management: Skipping executingNPCTurn for Faction.ENEMY');
           }
           await this.endFullTurnCycle();
+          // At the end of their turn, deal damage if still in liquid
+          for (let unit of this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ENEMY)) {
+            if (unit.inLiquid && unit.alive) {
+              doLiquidEffect(this, unit, false);
+              floatingText({ coords: unit, text: 'Liquid damage', style: { fill: 'red' } });
+            }
+          }
           // Loop: go back to the player turn
           this.broadcastTurnPhase(turn_phase.PlayerTurns);
           break;

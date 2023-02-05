@@ -4,7 +4,7 @@ import { explain, EXPLAIN_LIQUID_DAMAGE } from "./graphics/Explain";
 import { addMask, removeMask } from "./graphics/Image";
 import type Underworld from "./Underworld";
 
-function doLiquidEffect(underworld: Underworld, unit: IUnit, prediction: boolean) {
+export function doLiquidEffect(underworld: Underworld, unit: IUnit, prediction: boolean) {
     if (!underworld.lastLevelCreated) {
         return;
     }
