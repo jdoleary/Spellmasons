@@ -1,4 +1,37 @@
 # For v1.4
+- Important changes for next
+  - Change all pushes to pulls with a deterministic end point (this should resolve bloat issues)
+    - Ensure shove still does damage
+  - fix bloat with custom on death message
+  - Change reviews channel to thank you channel and describe my mission
+  - Cache spell results with IDs for targeting and IDs and end location for pulls
+    - network sent spells could look like
+```js
+{
+  firstTargetedUnitId:5,
+  cards:[
+    {
+      card:'TargetCircle',
+      targetedUnitIds:[
+        3,6
+      ]
+    }
+    {
+      card:'slash',
+      quantity:2
+    },
+    {
+      card:'pull'
+      data: [
+        {unitId:5,pullPoint:{x:100,y:200}},
+        {unitId:3,pullPoint:{x:100,y:170}},
+        {unitId:6,pullPoint:{x:180,y:170}}
+      ]
+    }
+  ]
+}
+```
+- bloat seems to be a consistent cause of **desyncs**
 - validate correct position of SavesDir
 -  BUG: Selected Spells are not obtained. During some runs, selected spells are not added to the toolbar, nor the spell book. Once the bug happens, it persists through all runs until the application is restarted. (steam https://steamcommunity.com/app/1618380/discussions/0/3766733548888993966/)
 - Better error message if server hub is down.
