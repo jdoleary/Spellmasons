@@ -95,3 +95,6 @@ I have enjoyed the core game loop thus far.  The following suggestions are not i
 5.  More items!  Would be interesting to push a barrel of some flammable liquid towards a group and make it go boom, setting things on fire as they ran away 🙂  If you have ever played the Divinity games you can imagine how clever environment based mechanics can get. 
 ---
 - mana steal should be able to extend usable mana mid-chain
+---
+Chris:
+Split priests, summoners, and dark summoners should summon weaker units if they are split (currently they are unable to act at all if split)

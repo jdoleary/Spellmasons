@@ -8,6 +8,8 @@
     - network sent spells could look like
   - Pickup.real is lost when cloning
     - could clone be causing pickup desyncs??
+  - make setPhase into state machine
+  - split removes summoners and priests and dark priests abilities to cast due to not enough mana
 ```js
 {
   firstTargetedUnitId:5,
