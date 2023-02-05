@@ -658,7 +658,7 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
     playSFXKey('game_over');
   }
 
-  if (unit.unitType == UnitType.PLAYER_CONTROLLED) {
+  if (unit.unitType == UnitType.PLAYER_CONTROLLED && !prediction) {
     const player = underworld.players.find(p => p.unit == unit);
     if (player) {
       underworld.endPlayerTurn(player.clientId);
