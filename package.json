@@ -10,7 +10,7 @@
     "test": "tsc && jest",
     "format": "prettier --write \"src/**/*.{ts,js}\"",
     "lint": "prettier --check \"src/**/*.{ts,js}\"",
-    "headless-build-only": "tsc --project tsconfig.headless.json --outDir headless-server-build/ && cp package-lock.json headless-server-build/ && cd headless-server-build/ && npm install --only=production",
+    "headless-build-only": "tsc --project tsconfig.headless.json --outDir headless-server-build/ && cp package-lock.json headless-server-build/ && cd headless-server-build/ && npm install --omit=dev",
     "headless-run-server": "node headless-server-build/src/HeadlessServer.js",
     "headless": "npm run headless-build-only && npm run headless-run-server",
     "parseLocalization": "node public/localization/parseLocalizationSource.js"
