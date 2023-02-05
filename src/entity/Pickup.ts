@@ -253,7 +253,9 @@ export function load(pickup: IPickupSerialized, underworld: Underworld, predicti
     // create function because the create function passes that ref to the underworld pickups array.
     // So when you mutate the properties, the ref must stay the same.
     Object.assign(newPickup, toCopy);
-    addText(newPickup);
+    if (!prediction) {
+      addText(newPickup);
+    }
     // @ts-ignore: jid custom property for serialization
     if (newPickup.emitter && newPickup.emitterJID) {
       // @ts-ignore: jid custom property for serialization

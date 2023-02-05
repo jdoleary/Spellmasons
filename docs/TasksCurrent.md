@@ -6,6 +6,8 @@
   - Change reviews channel to thank you channel and describe my mission
   - Cache spell results with IDs for targeting and IDs and end location for pulls
     - network sent spells could look like
+  - Pickup.real is lost when cloning
+    - could clone be causing pickup desyncs??
 ```js
 {
   firstTargetedUnitId:5,
