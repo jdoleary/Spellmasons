@@ -2931,8 +2931,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     return effectState;
   }
   async checkIfShouldSpawnPortal() {
-    if (this.units.filter(u => u.faction == Faction.ENEMY && !u.flaggedForRemoval).every(u => !u.alive)) {
-      let timeBetweenPickupFly = 100;
+    // If all enemy units are dead and at least one player is spawned and connected
+    if (this.units.filter(u => u.faction == Faction.ENEMY && !u.flaggedForRemoval).every(u => !u.alive) && this.players.some(p => p.isSpawned && p.clientConnected)) {
       // Make all potion pickups disappear so as to not compell players to waste time walking around picking them
       // all up
       // Also do not remove portals
@@ -2943,7 +2943,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // Spawn portal near each player
       const portalPickup = Pickup.pickups.find(p => p.name == Pickup.PICKUP_PORTAL_NAME);
       if (portalPickup) {
-        const portalsAlreadySpawned = !!this.pickups.filter(p => !p.flaggedForRemoval).find(p => p.name === Pickup.PICKUP_PORTAL_NAME)
+        const portalsAlreadySpawned = !!this.pickups.filter(p => !p.flaggedForRemoval && !isNaN(p.x) && !isNaN(p.x)).find(p => p.name === Pickup.PICKUP_PORTAL_NAME)
         if (!portalsAlreadySpawned) {
           for (let playerUnit of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
             const portalSpawnLocation = this.findValidSpawn(playerUnit, 4) || playerUnit;

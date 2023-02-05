@@ -1,4 +1,10 @@
 # For v1.4
+- PORTAL DOESN'T SPAWN IN TUTORIAL ANY MORE
+- BIG BUG, if teammate goes through portal without ending their turn, the other player is stuck
+- Poison stuck at 4 on summoner
+- Deathmason missing picture in summon spell
+- how to better update servers without kicking people off??
+- DOT for staying in liquid at the end of a turn
 - todo refactor duplicated code about flying scroll pickups
 - if you die and allies carry you to the next level the enemies get a turn before you do
 - fix mana steal making mana out of nowhere

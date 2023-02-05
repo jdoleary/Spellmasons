@@ -376,7 +376,7 @@ export function enterPortal(player: IPlayer, underworld: Underworld) {
 }
 // Note: this is also used for AI targeting to ensure that AI don't target disabled plaeyrs
 export function ableToAct(player: IPlayer) {
-  const ableToTakeTurn = !inPortal(player) && player.unit.alive && player.clientConnected;
+  const ableToTakeTurn = (!player.isSpawned) || (!inPortal(player) && player.unit.alive && player.clientConnected);
   if (!ableToTakeTurn) {
     console.log(`Player ${player.clientId} unable to take turn.`, '!inPortal:', !inPortal(player), 'alive:', player.unit.alive, 'connected: ', player.clientConnected)
   }
