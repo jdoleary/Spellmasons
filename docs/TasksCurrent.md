@@ -1,9 +1,21 @@
 # For v1.4
-- Investigate scroll that ignores choice
+- **Investigate scroll that ignores choice**
 - Fix perk limit 
-- fix `split` as hard counter to summoner and priest and darkpriest
-- Cache targeting
 ---
+- fix `split` as hard counter to summoner and priest and darkpriest
+- Slow description, "by 20%" not "to 80%"
+- Cache targeting
+- disallow cloning scrolls
+  - cloning scrolls results in pickup text bug
+---
+- Units going through walls might be caused by crowding of other AI (Tekyera)
+  - also maybe split units can be pushed through walls
+- No init modifier for key split
+- Desync info: All players in the lobby see the same desync
+- If you put any area targeting spell (even single) between unit and entity (consumables (potions, scroll), corpse), it will duplicate itself (is that how it should be?) (Tekyera)
+- J'in — Today at 6:40 AM Post room clear, I was able to select myself with target kind and vortex and pull my teammates non existent bodies back out of the portals, then they were just floating health/mana bars and had to re enter the portals
+- Deathmason lack of portals (https://discord.com/channels/1032294536640200766/1071697763743563836/1071697769116471396)
+- Spud Bud — Today at 1:44 PM I noticed that when selecting the player unit, the information card that displays on the right, can sometimes get stuck adjusting it's size  to include/not include the scroll bar if the list of information is at an odd size.  I currently have two rows of cards, three every level perks, and one every turn perk listed and can see it occuring.
 - Update copy of target kind
 - Fix spell pickup pick not keeping bug
 - no longer get perks after you have all the spells

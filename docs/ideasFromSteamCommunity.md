@@ -118,7 +118,19 @@ Omni — Today at 5:39 PM
 -Not sure if this is intended, but once you obtain every spell it appears you no longer gain talent upgrades at the beginning of each stage.
 
 -Sometimes when doing room wide calculations involving multiple movements (such as grouping multiple enemies with bloat and detonating them), the pre-calculations can sometimes be wrong. My assumption is the calculation doesn't always factor in travel time for some of the pulls/vortex, resulting in some enemies that would have died actually surviving because the detonation went off before the mob was pulled in range during its travel. Not a big deal honestly, just food for thought when dealing with multi-target bloat explosions.
-
+ 
 -Mana scaling per stage in general feels almost a little too powerful for talents. While chance based talents feel too unreliable. A cool Idea could be to add cards that give/add weights to various spell schools. Such as maybe "Movement Specialization" gives you a selection of 3 movement spell only. Or maybe some cards interact with spells/combos, such as a talent that gives a little bit of health/stamina/mana back on cast, with higher values based on how long of a combo cast you did. This could yield some nice interactions where you could move, cast, move, cast. Or even maybe a talent like "Deal an additional 10 damage to all targets of a combo for every 30 mana spent in the combo".  Sorry kinda popping off with ideas.
 
 -Multiple stacks of Debilitate are multiplicative. 1 stack is double damage, 2 stack is Quadra damage, 3 stack is Octa damage. Not sure if its intended, but extremely powerful. 
+---
+Omni — Today at 12:24 AM
+Could maybe adjust it so that the targets under blood curse also take damage equal to ~20% x stacks of their maxhp per turn or something to prevent abuse. So after ~5x stacks its an auto kill from full hp. Though one could argue this starts to compete with how Suffocate is designed to play out.
+Jordan - Spellmasons Developer — Today at 11:52 AM
+Well there aren't any enemies that heal at the moment, so wouldn't that still just make you practically invincible so long as you don't accidentally heal yourself?
+Omni — Today at 3:01 PM
+If it does % MaxHP per turn as damage, it puts an effective timer on your life. Yes, you may be near invincible while you have multiple stacks, but without being able to heal and losing % max hp per turn, you will eventually die. 
+
+That's why I think it competes with Suffocate a little bit, which I personally think may need to be balanced more. Its not particularly easy to stall X amount of turns, or rather I think there is a lack of stall supporting spells if that was the intent behind suffocate. Freeze/Slow/Shield/Heal/Fortification/Decoy are the main ones that come to mind. I think most of these are ok, just in later 10+ stages even when I do multiple stacks of suffocate a lot still say like "13 turns" which sounds super obnoxious to try and stall for that many turns. I think adding additional ways to accelerate these would be cool; maybe a unique combo with Drown that further reduces suffocate stacks, or enemies that receive liquid damage further reduce stack counts.
+---
+Lancelot — Today at 12:16 AM
+Mana steal should be a percentage of life cost, we just went in a game and we were like at 160000hp and nothing did resist us.

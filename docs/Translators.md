@@ -5,3 +5,4 @@
 - 0xFF: Italian
 - coblin: discord; bahasa indonesian
 - Tekyera: discord
+- Skornett: French (discord)
