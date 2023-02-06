@@ -877,14 +877,16 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
     if (color !== undefined) {
       storage.set(storage.STORAGE_ID_PLAYER_COLOR_MAGIC, colorMagic);
     }
-    if (name !== undefined) {
-      storage.set(storage.STORAGE_ID_PLAYER_NAME, name || '');
+    let capped_name = name;
+    if (capped_name !== undefined) {
+      capped_name = capped_name.slice(0, 70);
+      storage.set(storage.STORAGE_ID_PLAYER_NAME, capped_name || '');
     }
     overworld.pie.sendData({
       type: MESSAGE_TYPES.PLAYER_CONFIG,
       color,
       colorMagic,
-      name,
+      name: capped_name,
       lobbyReady
     });
   }
