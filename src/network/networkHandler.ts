@@ -97,6 +97,18 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       pingSprite({ coords: payload as Vec2, color: underworld.players.find(p => p.clientId == d.fromClient)?.color });
       break;
     case MESSAGE_TYPES.INIT_GAME_STATE:
+      // This is executed on all clients, even ones that ignore the 
+      // message due to logic below because if one client updates
+      // the seed state, they all must in order to stay in sync
+      // --
+      // Update the seed (this MUST come before syncronizeRNG)
+      if (payload.underworld) {
+        underworld.seed = payload.underworld.seed;
+        // Now sync the seed-based RNG state
+        if (payload.RNGState) {
+          underworld.syncronizeRNG(payload.underworld.RNGState);
+        }
+      }
       // If the underworld is not yet initialized for this client then
       // load the game state
       // INIT_GAME_STATE is only to be handled by clients who just
@@ -747,6 +759,21 @@ async function handleLoadGameState(payload: {
   }
 
   underworld.assertDemoExit();
+
+  // Resyncronize RNG after level has been created
+  // This is because createLevel uses a lot of RNG causing the seed state
+  // to drift and some clients will get INIT_GAME_STATE at a different time
+  // than others, and when INIT_GAME_STATE is received, it drops previous messages
+  // in the queue. This means that some clients may sync their RNG after the level is
+  // created (due to getting a SET_PHASE) and others may not (because SET_PHASE was dropped)
+  // Syncing here ensures everyone starts the level with the same seeded rng.
+  // ---
+  // Update the seed (this MUST come before syncronizeRNG)
+  underworld.seed = loadedGameState.seed;
+  // Now sync the seed-based RNG state
+  if (loadedGameState.RNGState) {
+    underworld.syncronizeRNG(loadedGameState.RNGState);
+  }
 
 }
 async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Underworld) {

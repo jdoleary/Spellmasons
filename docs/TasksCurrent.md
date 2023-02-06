@@ -1,11 +1,4 @@
 # For v1.4
-- **important** Sync underworld seed on SET_PHASE
-- could this.seed be desynced itself since it's only set in the constructor
-  - seed, even though synced is not producing the same result
-    - join multiplayer, compare seeds, run `devUnderworld.test()` see that the result is different
-    - Things like blood drop jitter shouldn't use the Underworld random, it should just be totally random
-    - **important** elimanate using this.random in places that aren't deteministic as it can CAUSE a random state desync
-    - **important** solve random state desync after spawn
 - Investigate scroll that ignores choice
 - Fix perk limit 
 - fix `split` as hard counter to summoner and priest and darkpriest
