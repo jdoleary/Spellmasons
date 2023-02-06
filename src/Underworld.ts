@@ -2193,15 +2193,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // Reset reroll counter now that player has chosen a card
       player.reroll = 0;
       if (player.upgradesLeftToChoose <= 0) {
-        // if current player, manage the visibility of the upgrade screen
-        if (player == globalThis.player) {
-          console.log('Cannot choose another upgrade');
-          // Clear upgrades
-          document.body?.classList.toggle(showUpgradesClassName, false);
-          // There may be perkss left to choose
-          this.showUpgrades();
-          return;
-        }
+        console.error('Player managed to choose an upgrade without being supposed to');
       }
       // Decrement and 
       // Ensure it doesn't go negative
