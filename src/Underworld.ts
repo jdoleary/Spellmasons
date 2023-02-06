@@ -2422,6 +2422,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         players: this.players.map(Player.serialize),
         lastUnitId: this.lastUnitId,
         lastPickupId: this.lastPickupId,
+        // the state of the Random Number Generator
+        RNGState: this.random.state(),
         // TODO sync doodads here
       });
     }

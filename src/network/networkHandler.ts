@@ -33,7 +33,7 @@ import { choosePerk, tryTriggerPerk } from '../Perk';
 import { calculateCost } from '../cards/cardUtils';
 import { runPredictions } from '../graphics/PlanningView';
 import seedrandom from 'seedrandom';
-import { getUniqueSeedString } from '../jmath/rand';
+import { getUniqueSeedString, SeedrandomState } from '../jmath/rand';
 import { raceTimeout } from '../Promise';
 import { createVisualLobbingProjectile } from '../entity/Projectile';
 
@@ -353,7 +353,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       break;
     case MESSAGE_TYPES.SET_PHASE:
       console.log('sync: SET_PHASE; syncs units and players')
-      const { phase, units, players, pickups, lastUnitId, lastPickupId } = payload as {
+      const { phase, units, players, pickups, lastUnitId, lastPickupId, RNGState } = payload as {
         phase: turn_phase,
         // Sync data for players
         players?: Player.IPlayerSerialized[],
@@ -363,6 +363,10 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         pickups?: Pickup.IPickupSerialized[],
         lastUnitId: number,
         lastPickupId: number,
+        RNGState: SeedrandomState,
+      }
+      if (RNGState) {
+        underworld.syncronizeRNG(RNGState);
       }
       // Do not set the phase redundantly, this can occur due to tryRestartTurnPhaseLoop
       // being invoked multiple times before the first message is processed.  This is normal.
