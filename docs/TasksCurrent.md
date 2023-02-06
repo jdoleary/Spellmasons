@@ -1,6 +1,7 @@
 # For v1.4
-- Limit player name size
-- make non-melee units path out of liquid once they are in it so they don't take DOT
+- **important** Sync underworld seed on SET_PHASE
+- Investigate scroll that ignores choice
+- Fix perk limit 
 - fix `split` as hard counter to summoner and priest and darkpriest
 - Cache targeting
 ---

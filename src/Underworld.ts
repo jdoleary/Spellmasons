@@ -1,7 +1,6 @@
 import seedrandom from 'seedrandom';
 import * as config from './config';
 import * as Unit from './entity/Unit';
-import * as Units from './entity/units';
 import * as Doodad from './entity/Doodad';
 import * as Pickup from './entity/Pickup';
 import * as Obstacle from './entity/Obstacle';
@@ -45,7 +44,7 @@ import {
   cleanBlood,
   cacheBlood,
 } from './graphics/PixiUtils';
-import floatingText, { elPIXIHolder, queueCenteredFloatingText, warnNoMoreSpellsToChoose } from './graphics/FloatingText';
+import floatingText, { queueCenteredFloatingText, warnNoMoreSpellsToChoose } from './graphics/FloatingText';
 import { UnitType, Faction, UnitSubType } from './types/commonTypes';
 import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
@@ -53,16 +52,14 @@ import Events from './Events';
 import { allUnits } from './entity/units';
 import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, getUIBarProps, isOutOfBounds, updatePlanningView } from './graphics/PlanningView';
 import { chooseObjectWithProbability, getUniqueSeedString, prng, randInt, SeedrandomState } from './jmath/rand';
-import { calculateCost, calculateCostForSingleCard } from './cards/cardUtils';
+import { calculateCostForSingleCard } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle, closestLineSegmentIntersection } from './jmath/lineSegment';
 import { expandPolygon, isVec2InsidePolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './jmath/Polygon2';
 import { calculateDistanceOfVec2Array, findPath } from './jmath/Pathfinding';
 import { keyDown, useMousePosition } from './graphics/ui/eventListeners';
 import Jprompt from './graphics/Jprompt';
 import { collideWithLineSegments, ForceMove, forceMovePreventForceThroughWall, isVecIntersectingVecWithCustomRadius, moveWithCollisions } from './jmath/moveWithCollision';
-import { getBestRangedLOSTarget } from './entity/units/actions/rangedAction';
-import { hostGiveClientGameState, IHostApp } from './network/networkUtil';
-import { healthAllyGreen, healthHurtRed, healthRed } from './graphics/ui/colors';
+import { IHostApp } from './network/networkUtil';
 import objectHash from 'object-hash';
 import { withinMeleeRange } from './entity/units/actions/meleeAction';
 import { baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLimits, Limits as Limits, makeFinalTileImages, Map, Tile, toObstacle } from './MapOrganicCave';
@@ -73,7 +70,6 @@ import { cleanUpEmitters, containerParticles, containerParticlesUnderUnits, upda
 import { elInstructions } from './network/networkHandler';
 import type PieClient from '@websocketpie/client';
 import { makeForcePush } from './cards/push';
-import { createVisualLobbingProjectile } from './entity/Projectile';
 import { isOutOfRange } from './PlayerUtils';
 import { DisplayObject, TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
@@ -86,6 +82,7 @@ import { cleanUpPerkList, createPerkElement, generatePerks, tryTriggerPerk, show
 import { bossmasonUnitId } from './entity/units/bossmason';
 import { hexToString } from './graphics/ui/colorUtil';
 import { doLiquidEffect } from './inLiquid';
+import { findRandomGroundLocation } from './entity/units/summoner';
 
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
@@ -2622,7 +2619,20 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         if (unitSource) {
           const { targets, canAttack } = cachedTargets[u.id] || { targets: [], canAttack: false };
           // Add unit action to the array of promises to wait for
-          let promise = raceTimeout(5000, `Unit.action; unitSourceId: ${u.unitSourceId}; subType: ${u.unitSubType}`, unitSource.action(u, targets, this, canAttack));
+          let promise = raceTimeout(5000, `Unit.action; unitSourceId: ${u.unitSourceId}; subType: ${u.unitSubType}`, unitSource.action(u, targets, this, canAttack).then(async (actionResult) => {
+            // Ensure ranged units get out of liquid so they don't take DOT
+            // This doesn't apply to melee units since they will automatically move towards you to attack,
+            // whereas without this ranged units would be content to just sit in liquid and die from the DOT
+            if (u.unitSubType !== UnitSubType.MELEE && u.inLiquid) {
+
+              const seed = seedrandom(`${this.seed}-${this.turn_number}-${u.id}`);
+              const coords = findRandomGroundLocation(this, u, seed);
+              if (coords) {
+                await Unit.moveTowards(u, coords, this);
+              }
+            }
+            return actionResult;
+          }));
           actionPromises.push(promise);
         } else {
           console.error(
