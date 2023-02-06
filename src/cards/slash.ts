@@ -48,7 +48,7 @@ const spell: Spell = {
               const spellEffectImage = oneOffImage(unit, animationPath, containerSpells);
               if (spellEffectImage) {
                 // Randomize rotation a bit so that subsequent slashes don't perfectly overlap
-                spellEffectImage.sprite.rotation = randFloat(underworld.random, -Math.PI / 6, Math.PI / 6);
+                spellEffectImage.sprite.rotation = randFloat(-Math.PI / 6, Math.PI / 6);
                 if (q % 2 == 0) {
                   // Flip every other slash animation so that it comes from the other side
                   spellEffectImage.sprite.scale.x = -1;

@@ -869,14 +869,14 @@ export function startBloodParticleSplatter(underworld: Underworld, damageOrigin:
   if (globalThis.headless) {
     return;
   }
-  const bloodAmount = options ? options.numberOfParticles : randInt(underworld.random, 30, 60);
+  const bloodAmount = options ? options.numberOfParticles : randInt(30, 60);
   const angle = getAngleBetweenVec2sYInverted(damageOrigin, target);
   for (let i = 0; i < bloodAmount; i++) {
     const isDamageFromSelf = equal(damageOrigin, target);
     const MAX_ROTATION_OFFSET = options ? options.maxRotationOffset : Math.PI / 4;
     // If the damage origin is the same as target, the spread is a full circle, if not, it's a narrow fan so it can spray in one direction
-    const randRotationOffset = isDamageFromSelf ? randFloat(underworld.random, -Math.PI, Math.PI) : randFloat(underworld.random, -MAX_ROTATION_OFFSET, MAX_ROTATION_OFFSET);
-    const randScale = randInt(underworld.random, 5, 10);
+    const randRotationOffset = isDamageFromSelf ? randFloat(-Math.PI, Math.PI) : randFloat(-MAX_ROTATION_OFFSET, MAX_ROTATION_OFFSET);
+    const randScale = randInt(5, 10);
     // Ensure blood is at unit feet, not center
     const unitImageYOffset = config.COLLISION_MESH_RADIUS / 2;
     // Make spray go farther the closer it is to the centerline

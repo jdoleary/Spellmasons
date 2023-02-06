@@ -105,7 +105,7 @@ export function addTrail(position: Vec2, target: Vec2, underworld: Underworld, c
     emitter.updateOwnerPos(position.x, position.y);
     // 3000 is an arbitrary timeout for now
     return raceTimeout(3000, 'trail', new Promise<void>((resolve) => {
-        const control = Vec.jitter(position, 300, underworld.random);
+        const control = Vec.jitter(position, 300);
         trails.push({ lerp: 0, position, moveFn: createCurveTowardsFunction(position, target, control), emitter, resolver: resolve });
     }));
 }
@@ -209,9 +209,9 @@ export function updateParticlees(delta: number, bloods: BloodParticle[], seedran
         }
         //shrink blood particle:
         blood.scale *= 0.7;
-        var blood_x_mod = randFloat(seedrandom, -10, 10);
-        var blood_y_mod = randFloat(seedrandom, -10, 10);
-        var blood_size_mod = randFloat(seedrandom, 1, blood.scale);
+        var blood_x_mod = randFloat(-10, 10);
+        var blood_y_mod = randFloat(-10, 10);
+        var blood_size_mod = randFloat(1, blood.scale);
         const drawBloodPosition = { x: blood.x + blood_x_mod, y: blood.y + blood_y_mod }
 
         let isInsideLiquid = underworld.isInsideLiquid(drawBloodPosition);

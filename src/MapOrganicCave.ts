@@ -125,9 +125,9 @@ function stampLiquids(materials: Material[], width: number, underworld: Underwor
         if (failedAttempts > 100) {
             return;
         }
-        const stamp = LiquidPools[randInt(underworld.random, 0, LiquidPools.length)];
+        const stamp = LiquidPools[randInt(0, LiquidPools.length, underworld.random)];
         // Start the stamp
-        const chosenIndex = randInt(underworld.random, 0, materials.length);
+        const chosenIndex = randInt(0, materials.length, underworld.random);
         // Ensure that the start point is already a ground material to prevent
         // the liquid from being stamped in an "island" surrounded by walls
         if (materials[chosenIndex] !== Material.GROUND) {
@@ -173,23 +173,23 @@ function makeLevelMaterialsArrayRoomStyle(params: CaveParams, underworld: Underw
         let stampHeight = 1;
         if (i == 0) {
             // First one should be square
-            stampWidth = randInt(underworld.random, 5, 7);
-            stampHeight = randInt(underworld.random, 5, 7);
+            stampWidth = randInt(5, 7, underworld.random);
+            stampHeight = randInt(5, 7, underworld.random);
         } else if (i % 2 == 0) {
             // wide
-            stampWidth = randInt(underworld.random, 6, MAX_STAMP_SIZE);
-            stampHeight = randInt(underworld.random, 1, 3);
+            stampWidth = randInt(6, MAX_STAMP_SIZE, underworld.random);
+            stampHeight = randInt(1, 3, underworld.random);
         } else {
             //tall
-            stampWidth = randInt(underworld.random, 1, 3);
-            stampHeight = randInt(underworld.random, 6, MAX_STAMP_SIZE);
+            stampWidth = randInt(1, 3, underworld.random);
+            stampHeight = randInt(6, MAX_STAMP_SIZE, underworld.random);
         }
         let stamp: Material[] = Array(stampWidth * stampHeight).fill(Material.GROUND);
         let stampPosition: Vec.Vec2 = lastStamp !== undefined
             // Ensure all stamps after the first stamp are touching each other so you get one cohesive map
-            ? { x: randInt(underworld.random, lastStamp.position.x, lastStamp.position.x + lastStamp.width), y: randInt(underworld.random, lastStamp.position.y, lastStamp.position.y + lastStamp.height) }
+            ? { x: randInt(lastStamp.position.x, lastStamp.position.x + lastStamp.width, underworld.random), y: randInt(lastStamp.position.y, lastStamp.position.y + lastStamp.height, underworld.random) }
             // First stamp can be put anywhere
-            : { x: randInt(underworld.random, 0, (width / 2) - 1 - stampWidth), y: randInt(underworld.random, 0, (height / 2) - 1 - stampHeight) };
+            : { x: randInt(0, (width / 2) - 1 - stampWidth, underworld.random), y: randInt(0, (height / 2) - 1 - stampHeight, underworld.random) };
         lastStamp = {
             position: stampPosition,
             width: stampWidth,
@@ -203,7 +203,7 @@ function makeLevelMaterialsArrayRoomStyle(params: CaveParams, underworld: Underw
 function makeLevelMaterialsArrayCaveStyle(params: CaveParams, underworld: Underworld) {
     // Debug: Draw caves
     globalThis.debugCave?.clear();
-    const minDirection = randFloat(underworld.random, Math.PI, Math.PI / 2);
+    const minDirection = randFloat(Math.PI, Math.PI / 2, underworld.random);
     const maxDirection = 0;
     let crawlers = [];
     const NUMBER_OF_CRAWLERS = 4;
@@ -220,7 +220,7 @@ function makeLevelMaterialsArrayCaveStyle(params: CaveParams, underworld: Underw
         const unsignedStartPosition = Vec.round(Vec.random(params.startPointJitter * 0.75, params.startPointJitter, underworld.random))
         const sign = signs[c % signs.length] || { x: 1, y: 1 };
         const cc: CaveCrawler = {
-            direction: randFloat(underworld.random, minDirection, maxDirection),
+            direction: randFloat(minDirection, maxDirection, underworld.random),
             thickness: params.startThickness,
             position: {
                 x: sign.x * unsignedStartPosition.x,
@@ -241,7 +241,7 @@ function makeLevelMaterialsArrayCaveStyle(params: CaveParams, underworld: Underw
 
         // Connect first crawler and last crawler:
         const cc: CaveCrawler = {
-            direction: randFloat(underworld.random, minDirection, maxDirection),
+            direction: randFloat(minDirection, maxDirection, underworld.random),
             thickness: params.startThickness,
             position: firstCrawler.path[firstCrawler.path.length - 1] as Vec.Vec2,
             path: [],
@@ -516,7 +516,7 @@ function crawl(cc: CaveCrawler, endPosition: Vec.Vec2, params: CaveParams, under
 
     // Generate path
     for (let i = 0; i < params.iterations; i++) {
-        const turnRadians = randFloat(underworld.random, -directionRandomAmount, directionRandomAmount);
+        const turnRadians = randFloat(-directionRandomAmount, directionRandomAmount, underworld.random);
         movePointInDirection(cc, turnRadians, params.velocity);
     }
     if (endPosition) {

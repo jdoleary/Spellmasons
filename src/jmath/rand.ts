@@ -23,12 +23,12 @@ export function randBool(seedrandomInstance: prng): boolean {
   const x: number = seedrandomInstance.quick();
   return x < 0.5;
 }
-export function randInt(seedrandomInstance: prng, minInclusive: number, maxInclusive: number) {
-  const x: number = seedrandomInstance.quick();
-  return Math.round(x * (maxInclusive - minInclusive) + minInclusive);
+export function randInt(minInclusive: number, maxInclusive: number, seedrandomInstance?: prng) {
+  return Math.round(randFloat(minInclusive, maxInclusive, seedrandomInstance))
 }
-export function randFloat(seedrandomInstance: prng, minInclusive: number, maxInclusive: number) {
-  const x: number = seedrandomInstance.quick();
+export function randFloat(minInclusive: number, maxInclusive: number, seedrandomInstance?: prng) {
+  // Allow for using unseeded random gen for things that don't require a deterministic result
+  let x = seedrandomInstance ? seedrandomInstance.quick() : Math.random();
   return x * (maxInclusive - minInclusive) + minInclusive;
 }
 
@@ -53,7 +53,7 @@ export function _chooseObjectWithProbability<T extends objectWithProbability>(ro
 
 }
 export function chooseOneOfSeeded<T>(arr: T[], seedRandomInstance: prng): T | undefined {
-  const index = randInt(seedRandomInstance, 0, arr.length - 1);
+  const index = randInt(0, arr.length - 1, seedRandomInstance);
   return arr[index];
 }
 export function chooseOneOf<T>(arr?: T[]): T | undefined {
@@ -76,7 +76,7 @@ export function chooseObjectWithProbability<T extends objectWithProbability>(
     0,
   );
   // Choose random integer within the sum of all the probabilities
-  const roll = randInt(seedRandomInstance, 1, maxProbability);
+  const roll = randInt(1, maxProbability, seedRandomInstance);
   return _chooseObjectWithProbability(roll, source);
 }
 export function getUniqueSeedString(underworld: Underworld, player?: IPlayer): string {

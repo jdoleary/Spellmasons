@@ -443,11 +443,11 @@ export default class Underworld {
             // Multiple blood trails
             graphicsBloodSmear.beginFill(forceMoveInst.pushedObject.bloodColor, 1.0);
             graphicsBloodSmear.lineStyle(0);
-            const bloodDrop = Vec.jitter(endPos, 5, this.random);
+            const bloodDrop = Vec.jitter(endPos, 5);
             // Don't draw if inside liquid
             if (!this.isInsideLiquid(bloodDrop)) {
               // Draw a blood drop
-              graphicsBloodSmear.drawCircle(bloodDrop.x, bloodDrop.y, randInt(this.random, 2, 4));
+              graphicsBloodSmear.drawCircle(bloodDrop.x, bloodDrop.y, randInt(2, 4));
             }
 
             const startWithJitter = Vec.add(startPos, j);
@@ -1305,7 +1305,7 @@ export default class Underworld {
       const choice = chooseObjectWithProbability(Pickup.pickups.map((p, i) => ({ index: i, probability: p.probability })), this.random);
       if (choice) {
         const { index } = choice;
-        const validSpawnCoordsIndex = randInt(this.random, 0, validSpawnCoords.length - 1);
+        const validSpawnCoordsIndex = randInt(0, validSpawnCoords.length - 1, this.random);
         const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
         if (coord) {
           levelData.pickups.push({ index, coord })
@@ -1316,7 +1316,7 @@ export default class Underworld {
     let numberOfMinibossesMade = 0;
     for (let id of unitIds) {
       if (validSpawnCoords.length == 0) { break; }
-      const validSpawnCoordsIndex = randInt(this.random, 0, validSpawnCoords.length - 1);
+      const validSpawnCoordsIndex = randInt(0, validSpawnCoords.length - 1, this.random);
       const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
       const sourceUnit = allUnits[id];
       // Disallow miniboss for a unit spawning on the first levelIndex that they are allowed to spawn
@@ -2389,8 +2389,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     return false;
   }
   getRandomCoordsWithinBounds(bounds: Limits, seed?: prng): Vec2 {
-    const x = randInt(seed || this.random, bounds.xMin || 0, bounds.xMax || 0);
-    const y = randInt(seed || this.random, bounds.yMin || 0, bounds.yMax || 0);
+    const x = randInt(bounds.xMin || 0, bounds.xMax || 0, seed || this.random);
+    const y = randInt(bounds.yMin || 0, bounds.yMax || 0, seed || this.random);
     return { x, y };
   }
   tryRestartTurnPhaseLoop() {
@@ -3367,7 +3367,7 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
       // and never let one unit type have more instances than the levelIndex (this prevents
       // late game levels with a huge budget from having an absurd amount of cheap units)
       const maxNumberOfThisUnit = Math.min(levelIndex, Math.floor(totalBudget * 0.7 / chosenUnitType.budgetCost));
-      const howMany = randInt(underworld.random, 1, maxNumberOfThisUnit);
+      const howMany = randInt(1, maxNumberOfThisUnit, underworld.random);
       for (let i = 0; i < howMany; i++) {
         units.push(chosenUnitType.id);
         budgetLeft -= chosenUnitType.budgetCost;
