@@ -47,7 +47,7 @@ const spell: Spell = {
           // @ts-ignore Find similar units by unitSourceId, find similar pickups by name
           .filter(t => {
             if (isUnit(target)) {
-              return isUnit(t) && t.unitSourceId == target.unitSourceId && t.alive == target.alive;
+              return isUnit(t) && t.unitSourceId == target.unitSourceId && t.alive == target.alive && t.faction == target.faction;
             } else if (isPickup(target)) {
               return isPickup(t) && t.name == target.name;
             } else if (isDoodad(target)) {
