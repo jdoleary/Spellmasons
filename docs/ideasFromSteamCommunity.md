@@ -98,3 +98,27 @@ I have enjoyed the core game loop thus far.  The following suggestions are not i
 ---
 Chris:
 Split priests, summoners, and dark summoners should summon weaker units if they are split (currently they are unable to act at all if split)
+---
+Cocopuffminer3 — Today at 1:03 PM
+Maybe for the later feature updates, you can add a run customizer, room sizes, enemy difficulty, stat modifiers, enemy count, etc
+
+These things could be added as a menu after you press play to give a bit more customization
+---
+Omni — Today at 5:39 PM
+-As I think mentioned before Split hard counters priests and dark summoners too well.
+
+-Using Target Kind/Similar + Connect in alternating fashion is :chefkiss: for targeting the entire map regardless of enemy location. 
+
+-1 use of Vortex tries its best to pull every target to the center point, this in tandem with room wide targeting creates very powerful impact forces to targets on the other side of walls (essentially for 1 single vortex it simulates powers equivalent to multiple push/pull). I love it, but maybe its working too well. 
+
+-Swap is easily the most broken grouping tool when used with multi targeting combos. Its the superior and more consistent version of vortex in my opinion. I love it.
+
+-Potions in general feel very lackluster. They can come in clutch in some early gameplay or for people learning the game for the first time, but by stage 10+ I feel they are nearly negligible. This might feel better in multiplayer, but for solo I didn't find them very necessary. Could be cooler design if potions were on a timer like scrolls, but added a very small amount of permanent mana/health/stamina (maybe 1-2%). Would give more agency to them at all stages of play, though potions generated through Living Will would likely need to not do this or be changed to prevent abuse.
+
+-Not sure if this is intended, but once you obtain every spell it appears you no longer gain talent upgrades at the beginning of each stage.
+
+-Sometimes when doing room wide calculations involving multiple movements (such as grouping multiple enemies with bloat and detonating them), the pre-calculations can sometimes be wrong. My assumption is the calculation doesn't always factor in travel time for some of the pulls/vortex, resulting in some enemies that would have died actually surviving because the detonation went off before the mob was pulled in range during its travel. Not a big deal honestly, just food for thought when dealing with multi-target bloat explosions.
+
+-Mana scaling per stage in general feels almost a little too powerful for talents. While chance based talents feel too unreliable. A cool Idea could be to add cards that give/add weights to various spell schools. Such as maybe "Movement Specialization" gives you a selection of 3 movement spell only. Or maybe some cards interact with spells/combos, such as a talent that gives a little bit of health/stamina/mana back on cast, with higher values based on how long of a combo cast you did. This could yield some nice interactions where you could move, cast, move, cast. Or even maybe a talent like "Deal an additional 10 damage to all targets of a combo for every 30 mana spent in the combo".  Sorry kinda popping off with ideas.
+
+-Multiple stacks of Debilitate are multiplicative. 1 stack is double damage, 2 stack is Quadra damage, 3 stack is Octa damage. Not sure if its intended, but extremely powerful. 

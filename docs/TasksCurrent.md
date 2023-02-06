@@ -1,8 +1,24 @@
 # For v1.4
+- Limit player name size
+- make non-melee units path out of liquid once they are in it so they don't take DOT
+- fix `split` as hard counter to summoner and priest and darkpriest
+- Cache targeting
+---
+- Update copy of target kind
+- Fix spell pickup pick not keeping bug
+- no longer get perks after you have all the spells
+---
+- **important** desync thought: Maybe the server is just missing messages?
+  - or do all players get the same desync??
+  - could the server be sending messages out of order?
+- Displace desync (end location doesn't show up on other players screens until end turn) (Jas-  Discord)
+  - seemed like one client had a different seed because it displaced to a different location
+- Clean up lobbies after a game over - Riinkusu — Discord
 - Important changes for next
   - Change all pushes to pulls with a deterministic end point (this should resolve bloat issues)
     - Ensure shove still does damage
   - fix bloat with custom on death message
+    - seems that it's just the scroll pickups that desync
   - Change reviews channel to thank you channel and describe my mission
   - Cache spell results with IDs for targeting and IDs and end location for pulls
     - network sent spells could look like
