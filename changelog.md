@@ -9,6 +9,7 @@
 - fix: Make Deathmason's particles disappear when he dies
 - fix: Prevent "Conserve" from being able to kill you
 - fix: Issue where under some circumstances players could pick more than one spell upgrade for a single scroll pickup (was known to happen when a whole lot of enemies were killed at once and no enemies remained on the level) 
+- fix: Sync health, mana, and stamina at the start of every turn (this fixes the issue where some changes to health/mana/stamina weren't reflected in the bars until the user moved their mouse)
 
 - UX: Add glow to floating toolbars when dragging a spell to denote that they are available to recieve a spell
 - UI: Prevent "no more spells" message from taking too long to clear out in late game after you clear a large number of enemies

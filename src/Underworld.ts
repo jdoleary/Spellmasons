@@ -2568,6 +2568,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         default:
           break;
       }
+      // Sync player health, mana, stamina bars to ensure that it's up to date
+      // at the start of any turn_phase so there's no suprises
+      this.syncPlayerPredictionUnitOnly();
+      Unit.syncPlayerHealthManaUI(this);
     } else {
       console.error('Invalid turn phase', this.turn_phase)
     }

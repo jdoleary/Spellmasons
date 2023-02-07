@@ -1,3 +1,8 @@
+- bug: I was able to go negative mana and when i cast it worked on the server (I could tell because a living enemy dropped a scroll) and I started channelling a book
+- bug: Poison stayed on dead unit
+- bug: Infinity stamina doesn't work for all players in multiplayer
+- bug: killing last unit makes portals spawn early on multiplayer of screen of character who didn't kill the last unit
+- bug: health bars aren't refreshed on start of turn, you have to move your mouse
 # For v1.4
 - **Investigate scroll that ignores choice**
 - Fix perk limit 
