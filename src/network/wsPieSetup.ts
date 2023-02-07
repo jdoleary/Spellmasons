@@ -10,7 +10,7 @@
 
 import PieClient, { Room } from '@websocketpie/client';
 import { onData } from './networkHandler';
-import { onClientPresenceChanged, typeGuardHostApp } from './networkUtil';
+import { getVersionInequality, onClientPresenceChanged, typeGuardHostApp } from './networkUtil';
 import { setView, View } from '../views';
 import * as storage from '../storage';
 import { updateGlobalRefToCurrentClientPlayer } from '../entity/Player';
@@ -143,12 +143,18 @@ function addHandlers(pie: PieClient, overworld: Overworld) {
       if (o?.hostAppVersion) {
         elVersionInfoHeadless.innerText = `Server v${o.hostAppVersion}`;
         // Log error if client and server versions are minor or major out of sync:
-        const [clientMajor, clientMinor, clientPatch] = globalThis.SPELLMASONS_PACKAGE_VERSION.split('.');
-        const [serverMajor, serverMinor, serverPath] = o.hostAppVersion.split('.');
-        if (clientMajor !== serverMajor || clientMinor !== serverMinor) {
-          const clientIsBehind = `${serverMajor}.${serverMajor}` > `${clientMajor}.${clientMinor};`;
-          const explainUpdateText = clientIsBehind ? 'Please reboot Steam to get the latest Version of Spellmasons' : 'This server is scheduled to update soon to the latest version.';
-          Jprompt({ text: `Server and Game versions are out of sync.  ${explainUpdateText}`, yesText: "Disconnect", forceShow: true }).then(() => {
+        const versionInequality = getVersionInequality(globalThis.SPELLMASONS_PACKAGE_VERSION, o.hostAppVersion);
+        if (versionInequality !== 'equal' && versionInequality !== 'malformed') {
+          const explainUpdateText = versionInequality == 'client behind' ? 'Please reboot Steam to get the latest Version of Spellmasons' : 'This server is scheduled to update soon to the latest version.';
+          Jprompt({
+            text: `Server and Game versions are out of sync.
+<pre>
+Server: ${o.hostAppVersion}
+Client: ${globalThis.SPELLMASONS_PACKAGE_VERSION}
+</pre>
+${explainUpdateText}
+`, yesText: "Disconnect", forceShow: true
+          }).then(() => {
             pie.disconnect();
             globalThis.syncConnectedWithPieState();
           });

@@ -59,3 +59,26 @@ export function typeGuardHostApp(x: PieClient | IHostApp): x is IHostApp {
     // still work
     return x.isHostApp;
 }
+
+export function getVersionInequality(clientVersion?: string, serverVersion?: string): 'equal' | 'client behind' | 'server behind' | 'malformed' {
+    if (clientVersion && serverVersion) {
+        const [clientMajor, clientMinor, _clientPatch] = clientVersion.split('.');
+        const [serverMajor, serverMinor, _serverPath] = serverVersion.split('.');
+        if ((clientMajor !== undefined && clientMinor !== undefined && serverMajor !== undefined && serverMinor !== undefined)) {
+            if ((clientMajor !== serverMajor || clientMinor !== serverMinor)) {
+                if (parseInt(serverMajor) > parseInt(clientMajor)) {
+                    return 'client behind'
+
+                } else if (parseInt(serverMajor) < parseInt(clientMajor)) {
+                    return 'server behind'
+                } else {
+                    return parseInt(serverMinor) > parseInt(clientMinor) ? 'client behind' : 'server behind';
+                }
+            } else {
+                return 'equal'
+            }
+        }
+    }
+    return 'malformed'
+
+}
