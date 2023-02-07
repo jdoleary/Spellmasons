@@ -1,4 +1,5 @@
 # QA Protocol
+- Test tutorial
 - Test all spells in singleplayer: ~24 minutes
 - Test all spells in multiplayer: ~20 minutes
     - and end turn after each to test for desyncs
@@ -8,7 +9,6 @@
 - Test Pickups + movement spells prediction (trap)
 - Test allies carrying on the battle
 - have a multiplayer game with 1 player, beat a level, then connect with another player
-- Test tutorial
 
 
 # Release protocal

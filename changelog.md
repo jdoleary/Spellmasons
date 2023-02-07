@@ -8,6 +8,7 @@
 - fix: Add 70 character limit to player names
 - fix: Make Deathmason's particles disappear when he dies
 - fix: Prevent "Conserve" from being able to kill you
+- fix: Issue where under some circumstances players could pick more than one spell upgrade for a single scroll pickup (was known to happen when a whole lot of enemies were killed at once and no enemies remained on the level) 
 
 - UX: Add glow to floating toolbars when dragging a spell to denote that they are available to recieve a spell
 - UI: Prevent "no more spells" message from taking too long to clear out in late game after you clear a large number of enemies

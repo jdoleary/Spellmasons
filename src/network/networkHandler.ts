@@ -271,7 +271,11 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         // make existing scroll pickups fly to player
         if (pickup.name == Pickup.PICKUP_PORTAL_NAME) {
           let timeBetweenPickupFly = 100;
-          const getFlyingPickupPromises = underworld.pickups.filter(p => p.name == Pickup.CARDS_PICKUP_NAME).map(pickup => {
+          const scrolls = underworld.pickups.filter(p => p.name == Pickup.CARDS_PICKUP_NAME && !p.flaggedForRemoval);
+          for (let scroll of scrolls) {
+            removePickup(scroll, underworld, false);
+          }
+          const getFlyingPickupPromises = scrolls.map(pickup => {
             return raceTimeout(5000, 'spawnPortalFlyScrolls', new Promise<void>((resolve) => {
               timeBetweenPickupFly += 100;
               // Make the pickup fly to the player. this gives them some time so it doesn't trigger immediately.
@@ -289,7 +293,6 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
                     resolve();
                   });
               }, timeBetweenPickupFly);
-              Pickup.removePickup(pickup, underworld, false);
             }))
           });
           await Promise.all(getFlyingPickupPromises);
@@ -297,6 +300,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
 
         // If there are existing portals and a pickup is spawned make pickups fly to player
         if (pickup.name == Pickup.CARDS_PICKUP_NAME && underworld.pickups.some(p => p.name == Pickup.PICKUP_PORTAL_NAME)) {
+          Pickup.removePickup(pickup, underworld, false);
           await raceTimeout(5000, 'spawnScrollFlyScroll', new Promise<void>((resolve) => {
             // Make the pickup fly to the player. this gives them some time so it doesn't trigger immediately.
             setTimeout(() => {
@@ -313,7 +317,6 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
                   resolve();
                 });
             }, 100);
-            Pickup.removePickup(pickup, underworld, false);
           }));
         }
 
