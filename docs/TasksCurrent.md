@@ -1,4 +1,7 @@
 - Player being dead and getting scroll due to end of level said "Player managed to choose an upgrade without being supposed to" but I do want players to choose an upgrade at this time.
+- french target column translation is off
+- arabic `<h1>` doesn't translate right
+- korean "Forging spells' not translating right
 - bug: I was able to go negative mana and when i cast it worked on the server (I could tell because a living enemy dropped a scroll) and I started channelling a book
 - bug: Poison stayed on dead unit
 - bug: Infinity stamina doesn't work for all players in multiplayer
