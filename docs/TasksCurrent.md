@@ -1,3 +1,8 @@
+- fullscreen preference should be saved in settings (https://steamcommunity.com/app/1618380/discussions/0/3766733981704564168/)
+- UX: show how much a summon will cost before using Capture Soul https://steamcommunity.com/app/1618380/discussions/0/3766733981707919283/
+- bug: poisoner miniboss with debilitate got 5.33333 health in tooltip
+- Update out of sync message to explain if server is behind your version
+- bug: Single player, if you end your turn while arrows are still flying enemies can start moving
 - Player being dead and getting scroll due to end of level said "Player managed to choose an upgrade without being supposed to" but I do want players to choose an upgrade at this time.
 - french target column translation is off
 - arabic `<h1>` doesn't translate right
@@ -24,6 +29,7 @@
 ---
 - Units going through walls might be caused by crowding of other AI (Tekyera)
   - also maybe split units can be pushed through walls
+  - maybe has to do with smaller walls (the thin ones)
 - No init modifier for key split
 - Desync info: All players in the lobby see the same desync
 - If you put any area targeting spell (even single) between unit and entity (consumables (potions, scroll), corpse), it will duplicate itself (is that how it should be?) (Tekyera)

@@ -134,3 +134,39 @@ That's why I think it competes with Suffocate a little bit, which I personally t
 ---
 Lancelot — Today at 12:16 AM
 Mana steal should be a percentage of life cost, we just went in a game and we were like at 160000hp and nothing did resist us.
+---
+Sparkle — 02/05/2023 9:30 PM
+I think I need to rethink the suggestion
+So, maybe instead of having different entries for +2% mana capacity +2% cast range and +8% health, it'd look cleaner and easier to gauge what's needed if it looked like:
+
+Perks
+Current
++208% health capacity
++96% mana capacity
++80% cast range
+(not actual numbers, just an example of what the current bonuses applied to that current level. These numbers equal the flat %increase + the perpetual %increase per level)
+
+Every Level
++32% health capacity
++8% mana capacity
++10% cast range
+
+Every turn
+20% chance +20% health
+30% chance +20% mana
+30% chance +20% mana 
+(assuming those 30% chances are rolled separately)
+---
+Omni — Yesterday at 4:49 PM
+I realize now though that bloodcurse stacking could be broken in tandem with purify since it can remove all your curses. Since you could just purify on the turn it "would" kill you otherwise and still feel nearly immortal by using/cleansing bloodcurse in a skillful way
+Omni — Yesterday at 10:05 PM
+-Another potential idea you could do with blood curse is have stacks increase the afflicted persons damage, but still make healing hurt them; as well as make them take increasing amounts of damage per turn (similar to poison). Almost like a bloodlust/berserk where it forces them to kill fast or die trying. So if a vampire tags you, you are put on a timer to kill the rest of the room faster. 
+
+-Another idea that I thought of thinking about interactions with stacks could be a spell that increases/doubles/reduces the curses on a target. Essentially the opposite of purify. Could be a great way to interact and affect Poison/Freeze/Bloat/Debilitate/Split/Bloodcurse/Suffocate
+
+Also sorry for all the ideas, either way the game is a ton of fun and I hope you take care of yourself with all the development and work you put into this! 
+---
+AnGeK — Today at 1:32 PM
+Hey it's just my opinion, and ofc I imagine you're busy bug fixing. But if you got time for content i think. Your main goal should be a End boss for making it a real rogue like. And you could make difficulty level, and as reward we would get a customisation item for our mages our even finishing a whole run would unlock for our account a new spell card. I think that would be a cool way to add spells. And better reward linked to the difficulty.
+I'm just giving you ideas, so you get useful feedback 🙂
+And I know it's important for you the bug fixing but remember everyone's playing the game still if there's glitches because we can create fun time content in multiplayer, so i think it's important to add content maybe even more than little bug fixing to keep the fan base alive.

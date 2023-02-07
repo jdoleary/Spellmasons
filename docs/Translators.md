@@ -3,6 +3,7 @@
 - GliCeroN on Discord (Polish)
 - Foobarbar32 discord: German
 - 0xFF: Italian
-- coblin: discord; bahasa indonesian
-- Tekyera: discord
-- Skornett: French (discord)
+- coblin: discord; bahasa indonesian (TODO)
+- Tekyera: discord (TODO)
+- Skornett: French (discord) (TODO)
+- rastabarkan (Turkish)
