@@ -1,8 +1,14 @@
+- Player being dead and getting scroll due to end of level said "Player managed to choose an upgrade without being supposed to" but I do want players to choose an upgrade at this time.
 - bug: I was able to go negative mana and when i cast it worked on the server (I could tell because a living enemy dropped a scroll) and I started channelling a book
 - bug: Poison stayed on dead unit
 - bug: Infinity stamina doesn't work for all players in multiplayer
 - bug: killing last unit makes portals spawn early on multiplayer of screen of character who didn't kill the last unit
 - bug: health bars aren't refreshed on start of turn, you have to move your mouse
+- bug: Poison floating text doesn't account for debilitate but the damage it does, does
+- bug: sacrifice isn't giving me quite enough health somehow
+- bug: Cloned spellmason doesn't get close enough to attack archers
+- bug: Allies clearing level makes you pick multiple perks and skips multiple levvels
+- ui bug: when a new player joins, enemy health shows as half until you move your mouse
 # For v1.4
 - **Investigate scroll that ignores choice**
 - Fix perk limit 
