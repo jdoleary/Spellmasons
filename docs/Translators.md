@@ -6,4 +6,6 @@
 - coblin: discord; bahasa indonesian (TODO)
 - Tekyera: discord (TODO)
 - Skornett: French (discord) (TODO)
-- rastabarkan (Turkish)
+- Turkish
+    - (Hasan Hüseyin Şahin) or maybe my nickname with my contact link (HasanH - https://hasanh.carrd.co). 
+    - rastabarkan (Turkish)

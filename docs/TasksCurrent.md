@@ -1,7 +1,12 @@
+# For v1.6
+- Spellmasons thoughts: is the server dropping messages? Could the message queue be getting dropped when a client in a different game sends and init game state message. Today: add initial target unit ID and initial target pick up I’d to effect state, add spells cast IDs to end turn and have the server query back to the client for the spell if it hasn’t recorded that it’s executed that spell message id  before executing the end turn
+- Update out of sync message to explain if server is behind your version
+- bug: resuming a saved game resumes on AI turn always
+
+---
 - fullscreen preference should be saved in settings (https://steamcommunity.com/app/1618380/discussions/0/3766733981704564168/)
 - UX: show how much a summon will cost before using Capture Soul https://steamcommunity.com/app/1618380/discussions/0/3766733981707919283/
 - bug: poisoner miniboss with debilitate got 5.33333 health in tooltip
-- Update out of sync message to explain if server is behind your version
 - bug: Single player, if you end your turn while arrows are still flying enemies can start moving
 - Player being dead and getting scroll due to end of level said "Player managed to choose an upgrade without being supposed to" but I do want players to choose an upgrade at this time.
 - french target column translation is off
@@ -14,11 +19,9 @@
 - bug: health bars aren't refreshed on start of turn, you have to move your mouse
 - bug: Poison floating text doesn't account for debilitate but the damage it does, does
 - bug: sacrifice isn't giving me quite enough health somehow
-- bug: Cloned spellmason doesn't get close enough to attack archers
 - bug: Allies clearing level makes you pick multiple perks and skips multiple levvels
 - ui bug: when a new player joins, enemy health shows as half until you move your mouse
 # For v1.4
-- **Investigate scroll that ignores choice**
 - Fix perk limit 
 ---
 - fix `split` as hard counter to summoner and priest and darkpriest
