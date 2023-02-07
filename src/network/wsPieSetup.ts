@@ -146,7 +146,9 @@ function addHandlers(pie: PieClient, overworld: Overworld) {
         const [clientMajor, clientMinor, clientPatch] = globalThis.SPELLMASONS_PACKAGE_VERSION.split('.');
         const [serverMajor, serverMinor, serverPath] = o.hostAppVersion.split('.');
         if (clientMajor !== serverMajor || clientMinor !== serverMinor) {
-          Jprompt({ text: 'Server and Game versions are out of sync.  Please reboot Steam to get the latest Version of Spellmasons', yesText: "Disconnect", forceShow: true }).then(() => {
+          const clientIsBehind = `${serverMajor}.${serverMajor}` > `${clientMajor}.${clientMinor};`;
+          const explainUpdateText = clientIsBehind ? 'Please reboot Steam to get the latest Version of Spellmasons' : 'This server is scheduled to update soon to the latest version.';
+          Jprompt({ text: `Server and Game versions are out of sync.  ${explainUpdateText}`, yesText: "Disconnect", forceShow: true }).then(() => {
             pie.disconnect();
             globalThis.syncConnectedWithPieState();
           });
