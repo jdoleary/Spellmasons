@@ -1,3 +1,26 @@
+## 2/7/2023 Spellmasons Update v1.5.0
+- balance: Units that remain in liquid at the end of their turn will take damage again
+- balance: Make ranged units move out of liquid once it's their turn
+
+- fix: Player sometimes clicking on spell upgrade and not getting it
+- fix: "Target Similar" spell so it matches units of the same faction as the initial target (prevents accidentally targeting allies)
+- fix: Desync issue where clients experienced random number generation drift
+- fix: Add 70 character limit to player names
+- fix: Make Deathmason's particles disappear when he dies
+- fix: Prevent "Conserve" from being able to kill you
+
+- UX: Add glow to floating toolbars when dragging a spell to denote that they are available to recieve a spell
+- UI: Prevent "no more spells" message from taking too long to clear out in late game after you clear a large number of enemies
+- UX: Prevent camera from snapping to the center of the map after player dies
+## 2/5/2023 Spellmasons Update v1.4.0
+
+- fix: Resolve portal not spawning on tutorial level
+- fix: Prevent the camera from snapping to center of the map after player death
+
+- UX: Delay game over modal on death so it does not obscure how the player died
+
+- feature: Any unit (including the player) that remains in liquid at the end of their turn will take damage from that liquid again
+
 ## 2/4/2023 Spellmasons Update v1.3.0
 
 - Feature: Support auto reconnect attempts when client loses connection to the server
