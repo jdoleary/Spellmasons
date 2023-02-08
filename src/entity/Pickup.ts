@@ -287,7 +287,7 @@ export function removePickup(pickup: IPickup, underworld: Underworld, prediction
   }
 }
 export function triggerPickup(pickup: IPickup, unit: IUnit, player: Player.IPlayer | undefined, underworld: Underworld, prediction: boolean) {
-  const willTrigger = !pickup.flaggedForRemoval && pickup.willTrigger({ unit, player, pickup, underworld });
+  const willTrigger = !pickup.flaggedForRemoval && unit.alive && pickup.willTrigger({ unit, player, pickup, underworld });
   if (willTrigger) {
     pickup.effect({ unit, player, pickup, underworld, prediction });
     // Only remove pickup if it is a singleUse pickup

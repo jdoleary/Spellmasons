@@ -3,7 +3,6 @@
 - add initial target unit ID and initial target pick up Idd to effect state
 - add spells cast IDs to end turn and have the server query back to the client for the spell if it hasn’t recorded that it’s executed that spell message id  before executing the end turn
 - remove cachedTargetingIds, maybe the result of the desyncs?
-- bug: Allied corpses can absorb potions (phrieksho — Yesterday at 9:18 PM)
 - prune errors so i don't use up all of sentry limit
 - bug: Units that spawn from deathmasons portals are initially invisible
 ## validate for v1.6
