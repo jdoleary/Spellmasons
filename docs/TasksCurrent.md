@@ -5,6 +5,9 @@
 - remove cachedTargetingIds, maybe the result of the desyncs?
 - bug: Ressurecting a deathmason may cause you to stop being able to move your character and your camera ("A Gamer" - Discord)
   - deathmason doesn't make red portals anymore
+- bug: Create pickup messages from deathmason are getting overridden by set phase
+## validate for v1.6
+- Pickup._create flying promises
 
 
 ---

@@ -170,3 +170,6 @@ AnGeK — Today at 1:32 PM
 Hey it's just my opinion, and ofc I imagine you're busy bug fixing. But if you got time for content i think. Your main goal should be a End boss for making it a real rogue like. And you could make difficulty level, and as reward we would get a customisation item for our mages our even finishing a whole run would unlock for our account a new spell card. I think that would be a cool way to add spells. And better reward linked to the difficulty.
 I'm just giving you ideas, so you get useful feedback 🙂
 And I know it's important for you the bug fixing but remember everyone's playing the game still if there's glitches because we can create fun time content in multiplayer, so i think it's important to add content maybe even more than little bug fixing to keep the fan base alive.
+---
+phrieksho — Today at 10:14 AM
+Gives me an idea: a rare drop of a revive potion. If a player can maneuver it to a dead ally, they come back at half health or something. Just a thought
