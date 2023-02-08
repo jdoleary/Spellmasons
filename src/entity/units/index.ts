@@ -36,7 +36,7 @@ import playerUnit from './playerUnit';
 import golem from './golem';
 import bloodGolem from './bloodGolem';
 import archer from './archer';
-import lobber from './lobber';
+import lobber from './glop';
 import greenGlop from './greenGlop';
 import summoner from './summoner';
 import darkSummoner from './darkSummoner';

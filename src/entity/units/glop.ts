@@ -8,6 +8,7 @@ import { bloodLobber } from '../../graphics/ui/colors';
 import * as config from '../../config';
 import * as Image from '../../graphics/Image';
 
+// "glop" was initially "lobber"
 const unit: UnitSource = {
   id: 'glop',
   info: {
