@@ -3,12 +3,15 @@
 - add initial target unit ID and initial target pick up Idd to effect state
 - add spells cast IDs to end turn and have the server query back to the client for the spell if it hasn’t recorded that it’s executed that spell message id  before executing the end turn
 - remove cachedTargetingIds, maybe the result of the desyncs?
+- bug: Allied corpses can absorb potions (phrieksho — Yesterday at 9:18 PM)
+- prune errors so i don't use up all of sentry limit
 ## validate for v1.6
 - Pickup._create flying promises
+- validate new initialTargetUnitId changes with spells that do not use a unit target, like decoy
 
 
 ---
-- bug: Allied corpses can absorb potions (phrieksho — Yesterday at 9:18 PM)
+- bug: frozen players start their next turn with 0 stamina?
 - bug: I am not taking damage when i spawn in a pool. not sure if others are having the same issue
 - bug: resuming a saved game resumes on AI turn sometimes, haven't reproduced yet
 - fullscreen preference should be saved in settings (https://steamcommunity.com/app/1618380/discussions/0/3766733981704564168/)

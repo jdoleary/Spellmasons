@@ -279,6 +279,12 @@ export interface EffectState {
   // radius after you clicked but while the message is still going
   // to their client, it won't hit them.
   preCachedTargetedUnitIds?: number[];
+  // initialTargetedUnitId and initialTargetedPickupId:
+  // Used to ensure the castCards targets the right starting
+  // target when executed via a network message
+  // Overriddes castLocation if exists.
+  initialTargetedUnitId: number | undefined;
+  initialTargetedPickupId: number | undefined;
 }
 export function refundLastSpell(state: EffectState, prediction: boolean, floatingMessage?: string) {
   // Only refund the spell when it's not a prediction so that

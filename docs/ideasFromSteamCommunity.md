@@ -173,3 +173,6 @@ And I know it's important for you the bug fixing but remember everyone's playing
 ---
 phrieksho — Today at 10:14 AM
 Gives me an idea: a rare drop of a revive potion. If a player can maneuver it to a dead ally, they come back at half health or something. Just a thought
+---
+Matt_97 — Today at 5:46 AM
+This isn't just a balance issue, it's also a performance issue. If the player begins resurrecting summoners and dark summoners, it can easily create a stalemate that can lasts for dozens if not hundreds of turns. All the while the level is flooded with npcs, slowing the game to a crawl. By the end my FPS was dropping close to the single digits whenever the AI took it's turn.

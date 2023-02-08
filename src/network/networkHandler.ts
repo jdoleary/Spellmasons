@@ -313,18 +313,20 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
             await raceTimeout(5000, 'spawnScrollFlyScroll', new Promise<void>((resolve) => {
               // Make the pickup fly to the player. this gives them some time so it doesn't trigger immediately.
               setTimeout(() => {
-                if (pickup.image) {
-                  pickup.image.sprite.visible = false;
+                if (pickup) {
+                  if (pickup.image) {
+                    pickup.image.sprite.visible = false;
+                  }
+                  const flyingPickupPromises = [];
+                  for (let p of underworld.players) {
+                    flyingPickupPromises.push(createVisualLobbingProjectile(pickup, p.unit, pickup.imagePath))
+                  }
+                  Promise.all(flyingPickupPromises)
+                    .then(() => {
+                      underworld.players.forEach(p => Pickup.givePlayerUpgrade(p, underworld));
+                      resolve();
+                    });
                 }
-                const flyingPickupPromises = [];
-                for (let p of underworld.players) {
-                  flyingPickupPromises.push(createVisualLobbingProjectile(pickup, p.unit, pickup.imagePath))
-                }
-                Promise.all(flyingPickupPromises)
-                  .then(() => {
-                    underworld.players.forEach(p => Pickup.givePlayerUpgrade(p, underworld));
-                    resolve();
-                  });
               }, 100);
             }));
           }
@@ -858,7 +860,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
     if (caster.colorMagic === null) {
       caster.colorMagic = caster.color !== colors.playerNoColor ? playerCastAnimationColor : caster.color;
     }
-    const keyMoment = () => underworld.castCards(caster.cardUsageCounts, caster.unit, payload.casterPositionAtTimeOfCast, payload.cards, payload, false, false, caster.colorMagic, caster, payload.cachedTargetedUnitIds);
+    const keyMoment = () => underworld.castCards(caster.cardUsageCounts, caster.unit, payload.casterPositionAtTimeOfCast, payload.cards, payload, false, false, caster.colorMagic, caster, payload.cachedTargetedUnitIds, payload.initialTargetedUnitId, payload.initialTargetedPickupId);
     const colorMagicMedium = lightenColor(caster.colorMagic, 0.3);
     const colorMagicLight = lightenColor(caster.colorMagic, 0.6);
 

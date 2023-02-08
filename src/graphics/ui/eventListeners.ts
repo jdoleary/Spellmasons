@@ -687,37 +687,44 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         const casterPositionAtTimeOfCast = Vec.clone(selfPlayer.unit);
         const casterUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id);
         if (!casterUnit) {
-          console.error('Player caster unit not found when attempting to cache targeted units before sending off SPELL')
-        }
-        (!casterUnit ? Promise.resolve() : underworld.castCards(
-          // Make a copy of cardUsageCounts for prediction so it can accurately
-          // calculate mana for multiple copies of one spell in one cast
-          JSON.parse(JSON.stringify(selfPlayer.cardUsageCounts)),
-          casterUnit,
-          Vec.clone(casterUnit),
-          cardIds,
-          target,
-          true,
-          false,
-          undefined,
-          selfPlayer
-        )).then(effectState => {
-          clearSpellEffectProjection(underworld, true);
-          const cachedTargetedUnitIds = effectState
-            ? effectState.targetedUnits.map(u => u.id)
-            : undefined;
-          overworld.pie.sendData({
-            type: MESSAGE_TYPES.SPELL,
-            casterPositionAtTimeOfCast,
-            cachedTargetedUnitIds,
-            x: target.x,
-            y: target.y,
-            cards: cardIds,
+          console.error('Unexpected: Player caster unit not found when attempting to cache targeted units before sending off SPELL');
+          console.log('Requesting game state from host');
+          underworld.pie.sendData({
+            type: MESSAGE_TYPES.REQUEST_SYNC_GAME_STATE
           });
-          CardUI.clearSelectedCards(underworld);
-          // Now that the cast has begun, clear the prediction tint so it doesn't color the targeted units anymore
-          clearTints(underworld);
-        });
+        } else {
+          underworld.castCards(
+            // Make a copy of cardUsageCounts for prediction so it can accurately
+            // calculate mana for multiple copies of one spell in one cast
+            JSON.parse(JSON.stringify(selfPlayer.cardUsageCounts)),
+            casterUnit,
+            Vec.clone(casterUnit),
+            cardIds,
+            target,
+            true,
+            false,
+            undefined,
+            selfPlayer
+          ).then(effectState => {
+            clearSpellEffectProjection(underworld, true);
+            const cachedTargetedUnitIds = effectState
+              ? effectState.targetedUnits.map(u => u.id)
+              : undefined;
+            overworld.pie.sendData({
+              type: MESSAGE_TYPES.SPELL,
+              casterPositionAtTimeOfCast,
+              cachedTargetedUnitIds,
+              x: target.x,
+              y: target.y,
+              cards: cardIds,
+              initialTargetedUnitId: effectState.initialTargetedUnitId,
+              initialTargetedPickupId: effectState.initialTargetedPickupId,
+            });
+            CardUI.clearSelectedCards(underworld);
+            // Now that the cast has begun, clear the prediction tint so it doesn't color the targeted units anymore
+            clearTints(underworld);
+          });
+        }
       } else {
         console.error("Attempting to cast while globalThis.player is undefined");
       }
