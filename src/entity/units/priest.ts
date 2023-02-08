@@ -27,7 +27,15 @@ async function resurrectUnits(self: Unit.IUnit, units: Unit.IUnit[], underworld:
   let promises = [];
   for (let ally of units) {
     promises.push(animatePriestProjectileAndHit(self, ally).then(async () => {
-      const { targetedUnits } = await underworld.castCards({}, self, Vec.clone(self), [resurrect.id], ally, false);
+      const { targetedUnits } = await underworld.castCards({
+        casterCardUsage: {},
+        casterUnit: self,
+        casterPositionAtTimeOfCast: Vec.clone(self),
+        cardIds: [resurrect.id],
+        castLocation: ally,
+        prediction: false,
+        outOfRange: false,
+      });
       for (let unit of targetedUnits) {
         // Add summoning sickeness so they can't act after they are summoned
         Unit.addModifier(unit, summoningSicknessId, underworld, false);

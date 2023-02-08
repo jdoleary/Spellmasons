@@ -2789,22 +2789,21 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
   }
   async castCards(
-    casterCardUsage: Player.CardUsage,
-    casterUnit: Unit.IUnit,
-    casterPositionAtTimeOfCast: Vec2,
-    cardIds: string[],
-    castLocation: Vec2,
-    prediction: boolean,
-    // True if the cast is out of range, this can be used to draw UI elements differently
-    // (like the color of a radius circle in the "Target Circle" card) to clue the user in to
-    // the fact that the spell is out of range but it's showing them what would happen.
-    outOfRange?: boolean,
-    magicColor?: number,
-    casterPlayer?: Player.IPlayer,
-    preCachedTargetedUnitIds?: number[],
-    initialTargetedUnitId?: number,
-    initialTargetedPickupId?: number,
+    args: CastCardsArgs
   ): Promise<Cards.EffectState> {
+    const {
+      casterCardUsage,
+      casterUnit,
+      casterPositionAtTimeOfCast,
+      cardIds,
+      castLocation,
+      prediction,
+      outOfRange,
+      magicColor,
+      casterPlayer,
+      initialTargetedUnitId,
+      initialTargetedPickupId,
+    } = args;
     if (!prediction && casterUnit == (globalThis.player && globalThis.player.unit)) {
       globalThis.castThisTurn = true;
     }
@@ -2829,7 +2828,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         unitDamage: [],
         radius: 0,
       },
-      // preCachedTargetedUnitIds,
       initialTargetedUnitId,
       initialTargetedPickupId
     };
@@ -3452,4 +3450,22 @@ export interface LevelData {
     coord: Vec2,
     isMiniboss: boolean
   }[];
+}
+
+interface CastCardsArgs {
+  casterCardUsage: Player.CardUsage,
+  casterUnit: Unit.IUnit,
+  casterPositionAtTimeOfCast: Vec2,
+  cardIds: string[],
+  castLocation: Vec2,
+  prediction: boolean,
+  // True if the cast is out of range, this can be used to draw UI elements differently
+  // (like the color of a radius circle in the "Target Circle" card) to clue the user in to
+  // the fact that the spell is out of range but it's showing them what would happen.
+  outOfRange?: boolean,
+  magicColor?: number,
+  casterPlayer?: Player.IPlayer,
+  initialTargetedUnitId?: number,
+  initialTargetedPickupId?: number,
+
 }

@@ -53,7 +53,15 @@ const unit: UnitSource = {
         ).then(async () => {
           // Add projectile hit animation
           Image.addOneOffAnimation(chosenUnit, 'projectile/poisonerProjectileHit');
-          await underworld.castCards({}, unit, Vec.clone(unit), [poison.poisonCardId], chosenUnit, false);
+          await underworld.castCards({
+            casterCardUsage: {},
+            casterUnit: unit,
+            casterPositionAtTimeOfCast: Vec.clone(unit),
+            cardIds: [poison.poisonCardId],
+            castLocation: chosenUnit,
+            prediction: false,
+            outOfRange: false,
+          });
         });
 
       });

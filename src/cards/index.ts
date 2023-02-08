@@ -271,14 +271,6 @@ export interface EffectState {
     unitDamage: UnitDamage[],
     radius: number;
   };
-  // If preCachedTargetedUnitIds exists,
-  // it prevents non precached units from being targeted
-  // This functions as a way to guaruntee that only the units
-  // shown in the prediction will be affected by the spell, so
-  // if you cast a spell and your networked ally walks into it's
-  // radius after you clicked but while the message is still going
-  // to their client, it won't hit them.
-  preCachedTargetedUnitIds?: number[];
   // initialTargetedUnitId and initialTargetedPickupId:
   // Used to ensure the castCards targets the right starting
   // target when executed via a network message
@@ -393,13 +385,7 @@ export function addTarget(target: any, effectState: EffectState) {
   }
 }
 
-// forceAdd overrides the preCachedTargetedUnitIds check.  This is used for when a unit is created
-// by the spell such as Summon Decoy (so it's unit id wouldn't have been available to cache)
-export function addUnitTarget(unit: Unit.IUnit, effectState: EffectState, forceAdd?: boolean) {
-  if (!forceAdd && effectState.preCachedTargetedUnitIds && !effectState.preCachedTargetedUnitIds.includes(unit.id)) {
-    console.log('Omit unit', unit.id, ' from targeting because it wasnt precached');
-    return;
-  }
+export function addUnitTarget(unit: Unit.IUnit, effectState: EffectState) {
   // Adds a unit to effectState.targetedUnits IF it is not already in unitTargets
   if (effectState.targetedUnits.indexOf(unit) === -1) {
     effectState.targetedUnits.push(unit);

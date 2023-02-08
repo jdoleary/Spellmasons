@@ -21,7 +21,7 @@ import { skyBeam } from '../VisualEffects';
 import { tryFallInOutOfLiquid } from '../entity/Obstacle';
 import { IPickupSerialized, removePickup } from '../entity/Pickup';
 import { triggerAdminCommand } from '../graphics/ui/eventListeners';
-import { Vec2 } from '../jmath/Vec';
+import { clone, Vec2 } from '../jmath/Vec';
 import pingSprite from '../graphics/Ping';
 import { clearLastNonMenuView, setView, View } from '../views';
 import { autoExplain, explain, EXPLAIN_END_TURN, tutorialCompleteTask } from '../graphics/Explain';
@@ -860,7 +860,19 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
     if (caster.colorMagic === null) {
       caster.colorMagic = caster.color !== colors.playerNoColor ? playerCastAnimationColor : caster.color;
     }
-    const keyMoment = () => underworld.castCards(caster.cardUsageCounts, caster.unit, payload.casterPositionAtTimeOfCast, payload.cards, payload, false, false, caster.colorMagic, caster, payload.cachedTargetedUnitIds, payload.initialTargetedUnitId, payload.initialTargetedPickupId);
+    const keyMoment = () => underworld.castCards({
+      casterCardUsage: caster.cardUsageCounts,
+      casterUnit: caster.unit,
+      casterPositionAtTimeOfCast: payload.casterPositionAtTimeOfCast,
+      cardIds: payload.cards,
+      castLocation: clone(payload),
+      prediction: false,
+      outOfRange: false,
+      magicColor: caster.colorMagic,
+      casterPlayer: caster,
+      initialTargetedUnitId: payload.initialTargetedUnitId,
+      initialTargetedPickupId: payload.initialTargetedPickupId,
+    });
     const colorMagicMedium = lightenColor(caster.colorMagic, 0.3);
     const colorMagicLight = lightenColor(caster.colorMagic, 0.6);
 

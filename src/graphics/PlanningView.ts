@@ -406,19 +406,19 @@ async function showCastCardsPrediction(underworld: Underworld, target: Vec2, cas
     // Note: setPredictionGraphicsLineStyle must be called before castCards (because castCards may use it
     // to draw predictions) and after clearSpellEffectProjection, which clears predictionGraphics.
     setPredictionGraphicsLineStyle(outOfRange ? 0xaaaaaa : colors.targetBlue);
-    const effectState = await underworld.castCards(
+    const effectState = await underworld.castCards({
       // Make a copy of cardUsageCounts for prediction so it can accurately
       // calculate mana for multiple copies of one spell in one cast
-      JSON.parse(JSON.stringify(globalThis.player.cardUsageCounts)),
+      casterCardUsage: JSON.parse(JSON.stringify(globalThis.player.cardUsageCounts)),
       casterUnit,
-      Vec.clone(casterUnit),
+      casterPositionAtTimeOfCast: Vec.clone(casterUnit),
       cardIds,
-      target,
-      true,
+      castLocation: target,
+      prediction: true,
       outOfRange,
-      undefined,
-      globalThis.player
-    );
+      magicColor: undefined,
+      casterPlayer: globalThis.player,
+    });
     // Clears unit tints in preparation for setting new tints to symbolize which units are targeted by spell
     clearTints(underworld);
     // Show pickups as targeted with tint

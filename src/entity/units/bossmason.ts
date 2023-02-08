@@ -108,14 +108,32 @@ const unit: UnitSource = {
         const sacrificeCost = calculateCost([sacrifice.card], {});
         // Purify self if cursed
         if (purifyCost.manaCost <= unit.mana && unit.modifiers && Object.values(unit.modifiers).some(m => m.isCurse)) {
-          const keyMoment = () => underworld.castCards({}, unit, Vec.clone(unit), [purify.card.id], unit, false, false, magicColor);
+          const keyMoment = () => underworld.castCards({
+            casterCardUsage: {},
+            casterUnit: unit,
+            casterPositionAtTimeOfCast: Vec.clone(unit),
+            cardIds: [purify.card.id],
+            castLocation: unit,
+            prediction: false,
+            outOfRange: false,
+            magicColor
+          });
           await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
         } else if (sacrificeCost.manaCost <= unit.mana && unit.health < unit.healthMax) {
           // Consume allies if hurt
           // Note: Do not allow Deathmason to siphon allied player units
           const closestUnit = Unit.livingUnitsInSameFaction(unit, underworld).filter(u => u.unitType !== UnitType.PLAYER_CONTROLLED && Unit.inRange(unit, u))[0]
           if (closestUnit) {
-            const keyMoment = () => underworld.castCards({}, unit, Vec.clone(unit), [sacrifice.card.id], closestUnit, false, false, magicColor);
+            const keyMoment = () => underworld.castCards({
+              casterCardUsage: {},
+              casterUnit: unit,
+              casterPositionAtTimeOfCast: Vec.clone(unit),
+              cardIds: [sacrifice.card.id],
+              castLocation: closestUnit,
+              prediction: false,
+              outOfRange: false,
+              magicColor
+            });
             await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
           }
         }
@@ -127,7 +145,16 @@ const unit: UnitSource = {
           const keyMoment = () => {
             let lastPromise = Promise.resolve();
             for (let target of attackTargets) {
-              lastPromise = underworld.castCards({}, unit, Vec.clone(unit), [slash.card.id, slash.card.id, slash.card.id], target, false, false, magicColor)
+              lastPromise = underworld.castCards({
+                casterCardUsage: {},
+                casterUnit: unit,
+                casterPositionAtTimeOfCast: Vec.clone(unit),
+                cardIds: [slash.card.id, slash.card.id, slash.card.id],
+                castLocation: target,
+                prediction: false,
+                outOfRange: false,
+                magicColor
+              })
                 // .then() removes <EffectState> from the return type
                 .then(() => { });
             }

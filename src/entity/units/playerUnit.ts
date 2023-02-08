@@ -27,7 +27,15 @@ const playerUnit: UnitSource = {
       // Archers attack or move, not both; so clear their existing path
       unit.path = undefined;
       Unit.orient(unit, attackTarget);
-      const keyMoment = () => underworld.castCards({}, unit, Vec.clone(unit), [slash.slashCardId], attackTarget, false, false);
+      const keyMoment = () => underworld.castCards({
+        casterCardUsage: {},
+        casterUnit: unit,
+        casterPositionAtTimeOfCast: Vec.clone(unit),
+        cardIds: [slash.slashCardId],
+        castLocation: attackTarget,
+        prediction: false,
+        outOfRange: false,
+      });
       await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
     }
     // Movement, AI spellmason follows closest ally player

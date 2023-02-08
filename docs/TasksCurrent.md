@@ -5,6 +5,7 @@
 - remove cachedTargetingIds, maybe the result of the desyncs?
 - bug: Allied corpses can absorb potions (phrieksho — Yesterday at 9:18 PM)
 - prune errors so i don't use up all of sentry limit
+- bug: Units that spawn from deathmasons portals are initially invisible
 ## validate for v1.6
 - Pickup._create flying promises
 - validate new initialTargetUnitId changes with spells that do not use a unit target, like decoy

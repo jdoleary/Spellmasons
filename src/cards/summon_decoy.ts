@@ -53,7 +53,7 @@ const spell: Spell = {
           underworld,
           prediction
         );
-        addUnitTarget(decoyUnit, state, true);
+        addUnitTarget(decoyUnit, state);
 
         if (!prediction) {
           // Animate effect of unit spawning from the sky

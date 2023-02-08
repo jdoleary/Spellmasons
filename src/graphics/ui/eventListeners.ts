@@ -693,19 +693,19 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
             type: MESSAGE_TYPES.REQUEST_SYNC_GAME_STATE
           });
         } else {
-          underworld.castCards(
+          underworld.castCards({
             // Make a copy of cardUsageCounts for prediction so it can accurately
             // calculate mana for multiple copies of one spell in one cast
-            JSON.parse(JSON.stringify(selfPlayer.cardUsageCounts)),
+            casterCardUsage: JSON.parse(JSON.stringify(selfPlayer.cardUsageCounts)),
             casterUnit,
-            Vec.clone(casterUnit),
+            casterPositionAtTimeOfCast: Vec.clone(casterUnit),
             cardIds,
-            target,
-            true,
-            false,
-            undefined,
-            selfPlayer
-          ).then(effectState => {
+            castLocation: target,
+            prediction: true,
+            outOfRange: false,
+            magicColor: undefined,
+            casterPlayer: selfPlayer,
+          }).then(effectState => {
             clearSpellEffectProjection(underworld, true);
             const cachedTargetedUnitIds = effectState
               ? effectState.targetedUnits.map(u => u.id)
