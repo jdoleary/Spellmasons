@@ -3,9 +3,6 @@
 - add initial target unit ID and initial target pick up Idd to effect state
 - add spells cast IDs to end turn and have the server query back to the client for the spell if it hasn’t recorded that it’s executed that spell message id  before executing the end turn
 - remove cachedTargetingIds, maybe the result of the desyncs?
-- bug: Ressurecting a deathmason may cause you to stop being able to move your character and your camera ("A Gamer" - Discord)
-  - deathmason doesn't make red portals anymore
-- bug: Create pickup messages from deathmason are getting overridden by set phase
 ## validate for v1.6
 - Pickup._create flying promises
 
