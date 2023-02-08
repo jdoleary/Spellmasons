@@ -10,6 +10,7 @@ import type { IHostApp } from '../network/networkUtil';
 import type { Localizable } from '../localization';
 import type * as particles from '@pixi/particle-emitter'
 import type { PromptArgs } from '../graphics/Jprompt';
+import { JEmitter } from './commonTypes';
 
 declare global {
     var SPELLMASONS_PACKAGE_VERSION: string;
@@ -281,7 +282,7 @@ declare global {
     var testPerks: () => void | undefined;
     // emitters in a list to allow for clean up
     // if cleanAfterTurn is false it will clean after level
-    var emitters: undefined | { emitter: particles.Emitter, cleanAfterTurn: boolean }[];
+    var emitters: undefined | JEmitter[];
     // Help prevents accidental spawn choice when choosing upgrade or perk.
     // Everything relating to timeLastChoseUpgrade should happen on the client side
     // NOT after the network message but before the network message is sent

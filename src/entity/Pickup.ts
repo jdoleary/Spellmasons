@@ -18,9 +18,9 @@ import { bossmasonUnitId } from './units/deathmason';
 import { chooseOneOfSeeded, getUniqueSeedString } from '../jmath/rand';
 import { skyBeam } from '../VisualEffects';
 import { makeRedPortal, RED_PORTAL_JID, stopAndDestroyForeverEmitter } from '../graphics/ParticleCollection';
-import * as particles from '@pixi/particle-emitter'
 import { Localizable } from '../localization';
 import seedrandom from 'seedrandom';
+import { JEmitter } from '../types/commonTypes';
 
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 export const PICKUP_IMAGE_PATH = 'pickups/scroll';
@@ -54,7 +54,7 @@ export type IPickup = HasSpace & {
   effect: IPickupEffect;
   // Determines if the pickup will trigger for a given unit
   willTrigger: IPickupWillTrigger;
-  emitter?: particles.Emitter;
+  emitter?: JEmitter;
   flaggedForRemoval: boolean;
 
 }
@@ -188,6 +188,10 @@ export function _create({ pos, pickupSource, idOverride }:
 function assignEmitter(pickup: IPickup, emitterId: string) {
   if (emitterId == RED_PORTAL_JID) {
     pickup.emitter = makeRedPortal(pickup, false);
+    if (pickup.emitter) {
+      // Red portals' emitters should not be cleaned up until they are intentionally destroyed
+      pickup.emitter.cleanAfterTurn = false;
+    }
   } else {
     console.error('Attempting to assignEmitter with unkown id:', emitterId);
   }

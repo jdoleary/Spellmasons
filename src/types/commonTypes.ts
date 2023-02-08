@@ -1,3 +1,4 @@
+import type * as particles from '@pixi/particle-emitter'
 export enum UnitType {
   PLAYER_CONTROLLED,
   AI,
@@ -38,3 +39,4 @@ export const probabilityMap: Record<CardRarity, number> = {
   [CardRarity.FORBIDDEN]: 5
 
 }
+export type JEmitter = particles.Emitter & { cleanAfterTurn?: boolean };

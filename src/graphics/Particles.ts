@@ -7,6 +7,7 @@ import { BloodParticle, graphicsBloodSmear, tickParticle } from './PixiUtils';
 import type Underworld from '../Underworld';
 import { Container, ParticleContainer } from 'pixi.js';
 import { stopAndDestroyForeverEmitter } from './ParticleCollection';
+import { JEmitter } from '../types/commonTypes';
 
 export const containerParticles = !globalThis.pixi ? undefined : new globalThis.pixi.ParticleContainer(5000, {
     scale: true,
@@ -39,7 +40,7 @@ export function wrappedEmitter(config: particles.EmitterConfigV3, container: Con
     const emitter = new particles.Emitter(emitterContainer, config);
     // This function is so far only used for the bossmasons's cape and so it is
     // a "level lifetime" emitter
-    globalThis.emitters?.push({ emitter, cleanAfterTurn: false });
+    globalThis.emitters?.push(emitter);
     emitter.updateOwnerPos(0, 0);
     emitter.playOnceAndDestroy(() => {
         if (resolver) {
@@ -56,8 +57,9 @@ export function simpleEmitter(position: Vec2, config: particles.EmitterConfigV3,
     if (!containerParticles) {
         return undefined
     }
-    const emitter = new particles.Emitter(container || containerParticles, config);
-    globalThis.emitters?.push({ emitter, cleanAfterTurn: true });
+    const emitter: JEmitter = new particles.Emitter(container || containerParticles, config);
+    emitter.cleanAfterTurn = true;
+    globalThis.emitters?.push(emitter);
     emitter.updateOwnerPos(position.x, position.y);
     emitter.playOnceAndDestroy(() => {
         if (resolver) {
@@ -100,8 +102,9 @@ export function addTrail(position: Vec2, target: Vec2, underworld: Underworld, c
     if (!containerParticles) {
         return Promise.resolve();
     }
-    const emitter = new particles.Emitter(containerParticles, config);
-    globalThis.emitters?.push({ emitter, cleanAfterTurn: true });
+    const emitter: JEmitter = new particles.Emitter(containerParticles, config);
+    emitter.cleanAfterTurn = true;
+    globalThis.emitters?.push(emitter);
     emitter.updateOwnerPos(position.x, position.y);
     // 3000 is an arbitrary timeout for now
     return raceTimeout(3000, 'trail', new Promise<void>((resolve) => {
@@ -325,13 +328,13 @@ export function moveStreakEmitter(position: Vec2, prediction: boolean) {
 export function cleanUpEmitters(onlyTurnScopedEmitters: boolean) {
     if (globalThis.emitters) {
         // Remove cleaned emitters
-        globalThis.emitters = globalThis.emitters.flatMap(({ emitter, cleanAfterTurn }) => {
+        globalThis.emitters = globalThis.emitters.flatMap((emitter) => {
             if (onlyTurnScopedEmitters) {
-                if (cleanAfterTurn) {
+                if (emitter.cleanAfterTurn) {
                     stopAndDestroyForeverEmitter(emitter);
                     return [];
                 } else {
-                    return [{ emitter, cleanAfterTurn }]
+                    return [emitter]
                 }
             } else {
                 stopAndDestroyForeverEmitter(emitter);

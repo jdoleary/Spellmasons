@@ -7,7 +7,7 @@ import type PieClient from '@websocketpie/client';
 import type { Vec2 } from '../jmath/Vec';
 import type { LevelData } from '../Underworld';
 import type { View } from '../views';
-import type { Faction } from './commonTypes';
+import type { Faction, JEmitter } from './commonTypes';
 import type { IPickup } from '../entity/Pickup';
 import type { IHostApp } from '../network/networkUtil';
 import type { LanguageMapping, Localizable } from '../localization';
@@ -220,6 +220,6 @@ declare global {
     var testPerks: () => void | undefined;
     // emitters in a list to allow for clean up
     // if cleanAfterTurn is false it will clean after level
-    var emitters: undefined | { emitter: particles.Emitter, cleanAfterTurn: boolean }[];
+    var emitters: undefined | JEmitter[];
     var timeLastChoseUpgrade: number | undefined;
 }
