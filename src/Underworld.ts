@@ -681,7 +681,7 @@ export default class Underworld {
     }
     // Now that units have moved update any particle emitters that are following them:
     for (let { displayObject, emitter, target } of this.particleFollowers) {
-      if (target.alive) {
+      if (target.alive && emitter && !emitter.destroyed) {
 
         // @ts-ignore: ySortPositionOverride is a custom property that I've added that was made
         // to override the display order of this displayObject. It's usage here allows the particles

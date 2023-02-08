@@ -1,9 +1,16 @@
 # For v1.6
-- Spellmasons thoughts: is the server dropping messages? Could the message queue be getting dropped when a client in a different game sends and init game state message. Today: add initial target unit ID and initial target pick up I’d to effect state, add spells cast IDs to end turn and have the server query back to the client for the spell if it hasn’t recorded that it’s executed that spell message id  before executing the end turn
-- Update out of sync message to explain if server is behind your version
-- bug: resuming a saved game resumes on AI turn always
+- Spellmasons thoughts: is the server dropping messages? Could the message queue be getting dropped when a client in a different game sends and init game state message.
+- add initial target unit ID and initial target pick up Idd to effect state
+- add spells cast IDs to end turn and have the server query back to the client for the spell if it hasn’t recorded that it’s executed that spell message id  before executing the end turn
+- remove cachedTargetingIds, maybe the result of the desyncs?
+- bug: Ressurecting a deathmason may cause you to stop being able to move your character and your camera ("A Gamer" - Discord)
+  - deathmason doesn't make red portals anymore
+
 
 ---
+- bug: Allied corpses can absorb potions (phrieksho — Yesterday at 9:18 PM)
+- bug: I am not taking damage when i spawn in a pool. not sure if others are having the same issue
+- bug: resuming a saved game resumes on AI turn sometimes, haven't reproduced yet
 - fullscreen preference should be saved in settings (https://steamcommunity.com/app/1618380/discussions/0/3766733981704564168/)
 - UX: show how much a summon will cost before using Capture Soul https://steamcommunity.com/app/1618380/discussions/0/3766733981707919283/
 - bug: poisoner miniboss with debilitate got 5.33333 health in tooltip
