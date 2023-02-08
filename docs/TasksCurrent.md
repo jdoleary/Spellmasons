@@ -1,8 +1,9 @@
 # For v1.6
+- is `Cannot cast, caster does not exist` a source of desyncs?
 - Spellmasons thoughts: is the server dropping messages? Could the message queue be getting dropped when a client in a different game sends and init game state message.
 - add spells cast IDs to end turn and have the server query back to the client for the spell if it hasn’t recorded that it’s executed that spell message id  before executing the end turn
 - prune errors so i don't use up all of sentry limit
-- bug: Units that spawn from deathmasons portals are initially invisible
+- what do I want the behavior to be if a unit reports a pickup but that Id is somehow not found??
 ## validate for v1.6
 - Pickup._create flying promises
 - validate new initialTargetUnitId changes with spells that do not use a unit target, like decoy
@@ -17,18 +18,20 @@
 - bug: poisoner miniboss with debilitate got 5.33333 health in tooltip
 - bug: Single player, if you end your turn while arrows are still flying enemies can start moving
 - Player being dead and getting scroll due to end of level said "Player managed to choose an upgrade without being supposed to" but I do want players to choose an upgrade at this time.
-- french target column translation is off
-- arabic `<h1>` doesn't translate right
-- korean "Forging spells' not translating right
+- Translation issues
+  - french target column translation is off (note French translations are underway by a real translator)
+  - arabic `<h1>` doesn't translate right
+  - korean "Forging spells' not translating right
 - bug: I was able to go negative mana and when i cast it worked on the server (I could tell because a living enemy dropped a scroll) and I started channelling a book
 - bug: Poison stayed on dead unit
 - bug: Infinity stamina doesn't work for all players in multiplayer
 - bug: killing last unit makes portals spawn early on multiplayer of screen of character who didn't kill the last unit
-- bug: health bars aren't refreshed on start of turn, you have to move your mouse
 - bug: Poison floating text doesn't account for debilitate but the damage it does, does
 - bug: sacrifice isn't giving me quite enough health somehow
 - bug: Allies clearing level makes you pick multiple perks and skips multiple levvels
-- ui bug: when a new player joins, enemy health shows as half until you move your mouse
+- Stats bars refreshing bugs:
+  - bug: health bars aren't refreshed on start of turn, you have to move your mouse
+  - ui bug: when a new player joins, enemy health shows as half until you move your mouse
 # For v1.4
 - Fix perk limit 
 ---
