@@ -32,7 +32,7 @@ import * as Obstacle from './Obstacle';
 import { spellmasonUnitId } from './units/playerUnit';
 import { SUMMONER_ID } from './units/summoner';
 import { DARK_SUMMONER_ID } from './units/darkSummoner';
-import { bossmasonUnitId } from './units/bossmason';
+import { bossmasonUnitId } from './units/deathmason';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;

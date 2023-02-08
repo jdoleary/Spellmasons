@@ -45,7 +45,7 @@ import darkPriest from './darkPriest';
 import poisoner from './poisoner';
 import vampire from './vampire';
 import manaVampire from './manaVampire';
-import bossmason from './bossmason';
+import bossmason from './deathmason';
 import decoy from './decoy';
 // TODO: Dragger is causing desync in multiplayer
 // import dragger from './dragger';

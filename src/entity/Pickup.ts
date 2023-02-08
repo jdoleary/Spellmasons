@@ -14,7 +14,7 @@ import { hasBloodCurse } from '../cards/blood_curse';
 import { HasSpace } from './Type';
 import { explain, EXPLAIN_INVENTORY, EXPLAIN_OVERFILL, tutorialCompleteTask, updateTutorialChecklist } from '../graphics/Explain';
 import * as CardUI from '../graphics/ui/CardUI';
-import { bossmasonUnitId } from './units/bossmason';
+import { bossmasonUnitId } from './units/deathmason';
 import { chooseOneOfSeeded, getUniqueSeedString } from '../jmath/rand';
 import { skyBeam } from '../VisualEffects';
 import { makeRedPortal, RED_PORTAL_JID, stopAndDestroyForeverEmitter } from '../graphics/ParticleCollection';
