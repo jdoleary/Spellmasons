@@ -187,7 +187,9 @@ export function updateParticlees(delta: number, bloods: BloodParticle[], seedran
         if (t.lerp <= 1.0) {
             t.position = t.moveFn(t.lerp)
             t.lerp += lerpSpeed;
-            t.emitter.updateOwnerPos(t.position.x, t.position.y);
+            if (!t.emitter.destroyed) {
+                t.emitter.updateOwnerPos(t.position.x, t.position.y);
+            }
         } else {
             stopAndDestroyForeverEmitter(t.emitter);
             // resolve trail as soon as it reaches it's target
