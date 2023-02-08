@@ -92,9 +92,12 @@ export function create(args:
   } else {
     // Only the host should dictate which pickup is created
     if (isHost(underworld.pie)) {
+      // Create the pickup immediately on the host
+      const newPickup = _create(args, underworld, prediction);
+      // Send the create pickup message to clients
       underworld.pie.sendData({
         type: MESSAGE_TYPES.CREATE_PICKUP,
-        id: ++underworld.lastPickupId,
+        id: newPickup.id,
         pos: clone(args.pos),
         pickupSourceName: args.pickupSource.name
       });
@@ -120,12 +123,16 @@ export function _create({ pos, pickupSource, idOverride }:
   if (idOverride !== undefined) {
     underworld.lastPickupId = idOverride;
   }
+  const id = idOverride !== undefined
+    ? idOverride
+    : prediction
+      ? ++lastPredictionPickupId
+      : ++underworld.lastPickupId;
+  if (underworld.pickups.find(p => p.id == id)) {
+    console.error('Creating a pickup with duplicate id');
+  }
   const self: IPickup = {
-    id: idOverride !== undefined
-      ? idOverride
-      : prediction
-        ? ++lastPredictionPickupId
-        : ++underworld.lastPickupId,
+    id,
     type: 'pickup',
     x,
     y,
