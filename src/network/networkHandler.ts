@@ -81,10 +81,20 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       }
       break;
     case MESSAGE_TYPES.AQUIRE_PICKUP:
-      const { pickupId, unitId, playerClientId } = payload;
-      const pickup = underworld.pickups.find(p => p.id == pickupId && !p.flaggedForRemoval);
+      const { pickupId, pickupName, unitId, playerClientId } = payload;
+      let pickup = underworld.pickups.find(p => p.id == pickupId && !p.flaggedForRemoval);
       const unit = underworld.units.find(u => u.id == unitId);
       const player = underworld.players.find(p => p.clientId == playerClientId);
+      if (!pickup) {
+        const pickupSource = Pickup.pickups.find(p => p.name == pickupName);
+        if (pickupSource) {
+          console.log('pickups:', underworld.pickups.map(p => `${p.id},${p.name}`), 'pickupId:', pickupId)
+          console.error('Attempted to aquire pickup but could not find it in list, creating one to aquire');
+          pickup = Pickup.create({ pos: { x: -1000, y: -1000 }, pickupSource }, underworld, false);
+        } else {
+          console.error(`Pickup source not found for name: ${pickupName}`)
+        }
+      }
       // note: player is optionally undefined, but pickup and unit are required
       if (pickup) {
         if (unit) {

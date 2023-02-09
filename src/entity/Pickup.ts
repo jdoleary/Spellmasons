@@ -374,6 +374,7 @@ export function tryTriggerPickup(pickup: IPickup, unit: IUnit, underworld: Under
         underworld.pie.sendData({
           type: MESSAGE_TYPES.AQUIRE_PICKUP,
           pickupId: pickup.id,
+          pickupName: pickup.name,
           unitId: unit.id,
           playerClientId: player?.clientId
         });
