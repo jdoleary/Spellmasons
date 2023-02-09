@@ -2,12 +2,13 @@
 - add spells cast IDs to end turn and have the server query back to the client for the spell if it hasn’t recorded that it’s executed that spell message id  before executing the end turn
 - i18n: "The knowledge in these scrolls"...
 - bug: Displace can clip you into a wall if your location is really close to a wall
+- bug: ally finishes the level for you, you don't get existing scrolls
+- bug: slash + capture soul resulted in desync in multiplayer, the golem was restored to half health from the slash but he still existed
+- bug: Pickup text is weird on scrolls that are restored from desync
 ---
 - is `Cannot cast, caster does not exist` a source of desyncs?
 - Spellmasons thoughts: is the server dropping messages? Could the message queue be getting dropped when a client in a different game sends and init game state message.
 ## validate for v1.6
-- Pickup.create flying promises
-- validate new initialTargetUnitId changes with spells that do not use a unit target, like decoy
 - validate players not getting stuck without having ended their turn
   - try with multiple players
 

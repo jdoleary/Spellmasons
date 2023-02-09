@@ -672,7 +672,7 @@ async function handleLoadGameState(payload: {
       }
       const pickup = Pickup.pickups.find(pickupSource => pickupSource.name == p.name);
       if (pickup) {
-        const newPickup = Pickup.create({ pos: { x: p.x, y: p.y }, pickupSource: pickup }, underworld, false);
+        const newPickup = Pickup.create({ pos: { x: p.x, y: p.y }, pickupSource: pickup, idOverride: p.id }, underworld, false);
         if (newPickup) {
           const { image, ...rest } = p;
           // Override pickup properties such as turnsLeftToGrab
