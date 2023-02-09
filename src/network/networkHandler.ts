@@ -508,7 +508,8 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         Player.syncLobby(underworld);
         underworld.tryRestartTurnPhaseLoop();
       } else {
-        console.error('Cannot PLAYER_CONFIG, no associated player. Players:', underworld.players.map(p => p.clientId));
+        console.log('Players: ', underworld.players.map(p => p.clientId))
+        console.error('Cannot PLAYER_CONFIG, fromPlayer is undefined.');
       }
       break;
     case MESSAGE_TYPES.SPAWN_PLAYER:
