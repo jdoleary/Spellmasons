@@ -9,8 +9,11 @@
 - bug: glop position desync after getting out of water on it's turn
 - UI bug: conserve appears to not work until you move your mouse (or after mana vampire hits you) because the mana bar doesn't refresh after it triggers until you move mouse
 - bug: self cast a bunch of slow then split then went through portal and slow persisted
+  - bug: People still experiencing split not being cleared after going trhough portals
 - position desync in singleplayer after casting purify on myself and moving around
 - fortify doesn't reduce damage with shield
+- bug: deathmason red portals don't get cleaned up if you die
+- balance: debilitate should not stack exponentially
 ---
 - is `Cannot cast, caster does not exist` a source of desyncs?
 - Spellmasons thoughts: is the server dropping messages? Could the message queue be getting dropped when a client in a different game sends and init game state message.

@@ -10,6 +10,7 @@
 - Test allies carrying on the battle
     - both when you kill yourself and when an enemy kills you
 - have a multiplayer game with 1 player, beat a level, then connect with another player
+- Test rerolling spells and perks
 
 
 # Release protocal

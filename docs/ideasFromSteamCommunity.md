@@ -176,3 +176,14 @@ Gives me an idea: a rare drop of a revive potion. If a player can maneuver it to
 ---
 Matt_97 — Today at 5:46 AM
 This isn't just a balance issue, it's also a performance issue. If the player begins resurrecting summoners and dark summoners, it can easily create a stalemate that can lasts for dozens if not hundreds of turns. All the while the level is flooded with npcs, slowing the game to a crawl. By the end my FPS was dropping close to the single digits whenever the AI took it's turn.
+---
+Inspektor — Today at 8:50 AM
+I think nerfing Manasteal would certainly be a step in a right direction and would at least make loop 2-3 way more challenging.
+
+As I see it there are two main ways of fixing the endgame: nerfing/limiting the spells or buffing the enemies. 
+
+You can make it so that you can only use one type of Targeting spell per cast and make the “Multiple targeting spells not combining properly” from pre 1.2.0 the way they actually combine.
+
+ But I think it would be best to start spawning some special variants of enemies, or maybe champion versions of existing ones after first loop. Like, for example, enemies with one-time Nullify shield, or one that can only be targeted directly (immune to Targeting spells), one that gives aura of invincibility to all enemies nearby, one with absurd stats that becomes dormant after taking some amount of damage, or maybe one that has some global on death or on hit effect: damages you / depleads your manapool / silences you. 
+
+Hope you'll find something useful in my  rambling, best of luck with further development!
