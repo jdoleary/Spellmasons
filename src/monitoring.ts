@@ -8,7 +8,7 @@ export function setupMonitoring() {
   if (!location.href.includes('http://localhost')) {
     console.log('Setup: Monitoring with Sentry', release);
     Sentry.init({
-      dsn: "https://4162d0e2c0a34b1aa44744ce94b4b21b@o1186256.ingest.sentry.io/6306205",
+      dsn: "https://3e73188cf44c491da09fb834f36f55f5@o4504650001874944.ingest.sentry.io/4504650002923520",
       release,
       integrations: [new BrowserTracing(), new CaptureConsoleIntegration(
         {
@@ -21,7 +21,7 @@ export function setupMonitoring() {
       // Set tracesSampleRate to 1.0 to capture 100%
       // of transactions for performance monitoring.
       // We recommend adjusting this value in production
-      tracesSampleRate: 0.5,
+      tracesSampleRate: 0.1,
     });
     Sentry.setTag("SpellmasonsRunner", "Browser");
   } else {

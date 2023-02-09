@@ -12,7 +12,7 @@ const release = `spellmasons@${version}`;
 // simultaneously.  Only errors matter until I can scope logs per game
 console.log = () => { };
 Sentry.init({
-    dsn: "https://4162d0e2c0a34b1aa44744ce94b4b21b@o1186256.ingest.sentry.io/6306205",
+    dsn: "https://4cf64a58d4aa4fa4959212aeccd3d6a1@o4504650001874944.ingest.sentry.io/4504650012819456",
     release,
     integrations: [new CaptureConsoleIntegration(
         {
@@ -23,7 +23,7 @@ Sentry.init({
     )],
     // We recommend adjusting this value in production, or using tracesSampler
     // for finer control
-    tracesSampleRate: 1.0,
+    tracesSampleRate: 0.5,
 });
 Sentry.setTag("SpellmasonsRunner", "HeadlessServer");
 
