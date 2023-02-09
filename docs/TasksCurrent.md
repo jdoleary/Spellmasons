@@ -3,7 +3,6 @@
 - i18n: "The knowledge in these scrolls"...
 - bug: Displace can clip you into a wall if your location is really close to a wall
 - bug: ally finishes the level for you, you don't get existing scrolls
-- bug: slash + capture soul resulted in desync in multiplayer, the golem was restored to half health from the slash but he still existed
 - bug: Pickup text is weird on scrolls that are restored from desync
 ---
 - is `Cannot cast, caster does not exist` a source of desyncs?
