@@ -267,79 +267,6 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
   // Get player of the client that sent the message 
   const fromPlayer = underworld.players.find((p) => p.clientId === fromClient);
   switch (type) {
-    case MESSAGE_TYPES.CREATE_PICKUP:
-      const { id, pos, pickupSourceName } = payload;
-      const pickupSource = Pickup.pickups.find(p => p.name == pickupSourceName);
-      if (pickupSource) {
-        let pickup: Pickup.IPickup | undefined;
-        if (isHost(underworld.pie)) {
-          pickup = underworld.pickups.find(p => p.id == id);
-        } else {
-          // Only create the pickup in a CREATE_PICKUP message on a non host because
-          // the host creates the pickup immediately for itself so that 
-          // the pickup will exist for the next SET_PHASE and won't be immediately overwritten
-          pickup = Pickup._create({ pos, pickupSource, idOverride: id }, underworld, false)
-        }
-        if (pickup) {
-          // If pickup is a portal
-          // make existing scroll pickups fly to player
-          if (pickup.name == Pickup.PICKUP_PORTAL_NAME) {
-            let timeBetweenPickupFly = 100;
-            const scrolls = underworld.pickups.filter(p => p.name == Pickup.CARDS_PICKUP_NAME && !p.flaggedForRemoval);
-            for (let scroll of scrolls) {
-              removePickup(scroll, underworld, false);
-            }
-            const getFlyingPickupPromises = scrolls.map(pickup => {
-              return raceTimeout(5000, 'spawnPortalFlyScrolls', new Promise<void>((resolve) => {
-                timeBetweenPickupFly += 100;
-                // Make the pickup fly to the player. this gives them some time so it doesn't trigger immediately.
-                setTimeout(() => {
-                  if (pickup.image) {
-                    pickup.image.sprite.visible = false;
-                  }
-                  const flyingPickupPromises = [];
-                  for (let p of underworld.players) {
-                    flyingPickupPromises.push(createVisualLobbingProjectile(pickup, p.unit, pickup.imagePath))
-                  }
-                  Promise.all(flyingPickupPromises)
-                    .then(() => {
-                      underworld.players.forEach(p => Pickup.givePlayerUpgrade(p, underworld));
-                      resolve();
-                    });
-                }, timeBetweenPickupFly);
-              }))
-            });
-            await Promise.all(getFlyingPickupPromises);
-          }
-
-          // If there are existing portals and a pickup is spawned make pickups fly to player
-          if (pickup.name == Pickup.CARDS_PICKUP_NAME && underworld.pickups.some(p => p.name == Pickup.PICKUP_PORTAL_NAME)) {
-            Pickup.removePickup(pickup, underworld, false);
-            await raceTimeout(5000, 'spawnScrollFlyScroll', new Promise<void>((resolve) => {
-              // Make the pickup fly to the player. this gives them some time so it doesn't trigger immediately.
-              setTimeout(() => {
-                if (pickup) {
-                  if (pickup.image) {
-                    pickup.image.sprite.visible = false;
-                  }
-                  const flyingPickupPromises = [];
-                  for (let p of underworld.players) {
-                    flyingPickupPromises.push(createVisualLobbingProjectile(pickup, p.unit, pickup.imagePath))
-                  }
-                  Promise.all(flyingPickupPromises)
-                    .then(() => {
-                      underworld.players.forEach(p => Pickup.givePlayerUpgrade(p, underworld));
-                      resolve();
-                    });
-                }
-              }, 100);
-            }));
-          }
-        }
-      } else {
-        console.error('Could not create pickup, missing pickup source with name', pickupSourceName);
-      }
-      break;
     case MESSAGE_TYPES.CHANGE_CHARACTER:
       const player = underworld.players.find(p => p.clientId === fromClient)
       if (player) {
@@ -735,7 +662,7 @@ async function handleLoadGameState(payload: {
       }
       const pickup = Pickup.pickups.find(pickupSource => pickupSource.name == p.name);
       if (pickup) {
-        const newPickup = Pickup._create({ pos: { x: p.x, y: p.y }, pickupSource: pickup }, underworld, false);
+        const newPickup = Pickup.create({ pos: { x: p.x, y: p.y }, pickupSource: pickup }, underworld, false);
         if (newPickup) {
           const { image, ...rest } = p;
           // Override pickup properties such as turnsLeftToGrab

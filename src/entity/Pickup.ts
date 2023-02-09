@@ -21,6 +21,8 @@ import { makeRedPortal, RED_PORTAL_JID, stopAndDestroyForeverEmitter } from '../
 import { Localizable } from '../localization';
 import seedrandom from 'seedrandom';
 import { JEmitter } from '../types/commonTypes';
+import { raceTimeout } from '../Promise';
+import { createVisualLobbingProjectile } from './Projectile';
 
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 export const PICKUP_IMAGE_PATH = 'pickups/scroll';
@@ -81,37 +83,13 @@ export function copyForPredictionPickup(p: IPickup): IPickup {
 }
 export const TIME_CIRCLE_JID = 'timeCircle';
 
-// Create a pickup via the host.  This ensures that 
-// pickups are consistent across all clients
-export function create(args:
-  {
-    pos: Vec2, pickupSource: IPickupSource,
-  }, underworld: Underworld, prediction: boolean): IPickup | undefined {
-  if (prediction) {
-    return _create(args, underworld, prediction);
-  } else {
-    // Only the host should dictate which pickup is created
-    if (isHost(underworld.pie)) {
-      // Create the pickup immediately on the host
-      const newPickup = _create(args, underworld, prediction);
-      // Send the create pickup message to clients
-      underworld.pie.sendData({
-        type: MESSAGE_TYPES.CREATE_PICKUP,
-        id: newPickup.id,
-        pos: clone(args.pos),
-        pickupSourceName: args.pickupSource.name
-      });
-    }
-    return undefined;
-  }
-}
 // This does not need to be unique to underworld, it just needs to be unique
 let lastPredictionPickupId = 0;
 // Creates a pickup directly (as opposed to via a network message)
 // Sometimes clients need to call this directly, like if they got
 // pickup info from a sync from the host or loading a pickup
 // or for a prediction pickup
-export function _create({ pos, pickupSource, idOverride }:
+export function create({ pos, pickupSource, idOverride }:
   {
     pos: Vec2, pickupSource: IPickupSource, idOverride?: number,
   }, underworld: Underworld, prediction: boolean): IPickup {
@@ -182,6 +160,62 @@ export function _create({ pos, pickupSource, idOverride }:
   }
 
   underworld.addPickupToArray(self, prediction);
+  // Ensure players get outstanding scroll pickups at the end of the level
+  if (self) {
+    // If pickup is a portal
+    // make existing scroll pickups fly to player
+    if (self.name == PICKUP_PORTAL_NAME) {
+      let timeBetweenPickupFly = 100;
+      const scrolls = underworld.pickups.filter(p => p.name == CARDS_PICKUP_NAME && !p.flaggedForRemoval);
+      for (let scroll of scrolls) {
+        removePickup(scroll, underworld, false);
+      }
+      scrolls.map(pickup => {
+        return raceTimeout(5000, 'spawnPortalFlyScrolls', new Promise<void>((resolve) => {
+          timeBetweenPickupFly += 100;
+          // Make the pickup fly to the player. this gives them some time so it doesn't trigger immediately.
+          setTimeout(() => {
+            if (pickup.image) {
+              pickup.image.sprite.visible = false;
+            }
+            const flyingPickupPromises = [];
+            for (let p of underworld.players) {
+              flyingPickupPromises.push(createVisualLobbingProjectile(pickup, p.unit, pickup.imagePath))
+            }
+            Promise.all(flyingPickupPromises)
+              .then(() => {
+                underworld.players.forEach(p => givePlayerUpgrade(p, underworld));
+                resolve();
+              });
+          }, timeBetweenPickupFly);
+        }))
+      });
+    }
+
+    // If there are existing portals and a pickup is spawned make pickups fly to player
+    if (self.name == CARDS_PICKUP_NAME && underworld.pickups.some(p => p.name == PICKUP_PORTAL_NAME)) {
+      removePickup(self, underworld, false);
+      raceTimeout(5000, 'spawnScrollFlyScroll', new Promise<void>((resolve) => {
+        // Make the pickup fly to the player. this gives them some time so it doesn't trigger immediately.
+        setTimeout(() => {
+          if (self) {
+            if (self.image) {
+              self.image.sprite.visible = false;
+            }
+            const flyingPickupPromises = [];
+            for (let p of underworld.players) {
+              flyingPickupPromises.push(createVisualLobbingProjectile(self, p.unit, self.imagePath))
+            }
+            Promise.all(flyingPickupPromises)
+              .then(() => {
+                underworld.players.forEach(p => givePlayerUpgrade(p, underworld));
+                resolve();
+              });
+          }
+        }, 100);
+      }));
+    }
+  }
 
   return self;
 }
@@ -259,7 +293,7 @@ export function load(pickup: IPickupSerialized, underworld: Underworld, predicti
   let foundPickup = pickups.find((p) => p.name == pickup.name);
   if (foundPickup) {
     const { image, ...toCopy } = pickup;
-    const newPickup = _create({ pos: pickup, pickupSource: foundPickup, idOverride: pickup.id }, underworld, prediction);
+    const newPickup = create({ pos: pickup, pickupSource: foundPickup, idOverride: pickup.id }, underworld, prediction);
     // Note: It is important here to use Object.assign so that the pickup reference is the SAME ref as is created in the
     // create function because the create function passes that ref to the underworld pickups array.
     // So when you mutate the properties, the ref must stay the same.

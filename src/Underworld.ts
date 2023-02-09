@@ -1667,7 +1667,7 @@ export default class Underworld {
     for (let p of pickups) {
       const pickup = Pickup.pickups[p.index];
       if (pickup) {
-        Pickup._create({ pos: p.coord, pickupSource: pickup }, this, false);
+        Pickup.create({ pos: p.coord, pickupSource: pickup }, this, false);
       } else {
         console.error('Could not find pickup with index', p.index);
       }

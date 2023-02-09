@@ -1,12 +1,12 @@
 # For v1.6
-- found a loop where entering portal ends player turn, but the end player turn function can make them enter portal
-- is `Cannot cast, caster does not exist` a source of desyncs?
-- Spellmasons thoughts: is the server dropping messages? Could the message queue be getting dropped when a client in a different game sends and init game state message.
 - add spells cast IDs to end turn and have the server query back to the client for the spell if it hasn’t recorded that it’s executed that spell message id  before executing the end turn
 - what do I want the behavior to be if a unit reports a pickup but that Id is somehow not found??
 - prevent `clone` from cloning scrolls
+---
+- is `Cannot cast, caster does not exist` a source of desyncs?
+- Spellmasons thoughts: is the server dropping messages? Could the message queue be getting dropped when a client in a different game sends and init game state message.
 ## validate for v1.6
-- Pickup._create flying promises
+- Pickup.create flying promises
 - validate new initialTargetUnitId changes with spells that do not use a unit target, like decoy
 - validate players not getting stuck without having ended their turn
   - try with multiple players
