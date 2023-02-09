@@ -4,6 +4,13 @@
 - bug: Displace can clip you into a wall if your location is really close to a wall
 - bug: ally finishes the level for you, you don't get existing scrolls
 - bug: Pickup text is weird on scrolls that are restored from desync
+- if you end your turn while a bloat is still animating, it syncs and then the units keep moving with their velocity, make bloat awaited
+- possible desync when ally npc (ghost archer) killed last enemy npc after triggering AI battle when an enemy killed me
+- bug: glop position desync after getting out of water on it's turn
+- UI bug: conserve appears to not work until you move your mouse (or after mana vampire hits you) because the mana bar doesn't refresh after it triggers until you move mouse
+- bug: self cast a bunch of slow then split then went through portal and slow persisted
+- position desync in singleplayer after casting purify on myself and moving around
+- fortify doesn't reduce damage with shield
 ---
 - is `Cannot cast, caster does not exist` a source of desyncs?
 - Spellmasons thoughts: is the server dropping messages? Could the message queue be getting dropped when a client in a different game sends and init game state message.
