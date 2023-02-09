@@ -1,6 +1,8 @@
 # For v1.6
+- Create new Sentry project
 - add spells cast IDs to end turn and have the server query back to the client for the spell if it hasn’t recorded that it’s executed that spell message id  before executing the end turn
 - i18n: "The knowledge in these scrolls"...
+- bug: Displace can clip you into a wall if your location is really close to a wall
 ---
 - is `Cannot cast, caster does not exist` a source of desyncs?
 - Spellmasons thoughts: is the server dropping messages? Could the message queue be getting dropped when a client in a different game sends and init game state message.
