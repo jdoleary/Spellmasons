@@ -11,6 +11,9 @@ export interface CardCost {
     healthCost: number;
 }
 export function playSpellSFX(sfxKey: string, prediction: boolean) {
+    if (globalThis.headless) {
+        return;
+    }
     // Play the card sound effect:
     if (!prediction && sfxKey) {
         if (globalThis.playSFX && globalThis.sfx) {
@@ -19,6 +22,9 @@ export function playSpellSFX(sfxKey: string, prediction: boolean) {
     }
 }
 export function playDefaultSpellSFX(card: ICard, prediction: boolean) {
+    if (globalThis.headless) {
+        return;
+    }
     // Play the card sound effect:
     if (!prediction && card.sfx) {
         if (globalThis.playSFX && globalThis.sfx) {
@@ -27,6 +33,9 @@ export function playDefaultSpellSFX(card: ICard, prediction: boolean) {
     }
 }
 export async function playDefaultSpellAnimation(card: ICard, targets: Vec2[], prediction: boolean) {
+    if (globalThis.headless) {
+        return Promise.resolve();
+    }
     let promises = [];
     for (let target of targets) {
         // Animate the card for each target
@@ -41,6 +50,9 @@ export async function playDefaultSpellAnimation(card: ICard, targets: Vec2[], pr
     return Promise.all(promises);
 }
 export async function animateSpell(target: Vec2, imagePath: string): Promise<void> {
+    if (globalThis.headless) {
+        return Promise.resolve();
+    }
     if (imagePath.indexOf('.png') !== -1) {
         console.error(`Cannot animate a still image ${imagePath}, this function requires an animation path or else it will not "hide when complete"`);
         return Promise.resolve();
