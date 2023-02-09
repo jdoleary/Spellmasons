@@ -2,8 +2,8 @@
 - is `Cannot cast, caster does not exist` a source of desyncs?
 - Spellmasons thoughts: is the server dropping messages? Could the message queue be getting dropped when a client in a different game sends and init game state message.
 - add spells cast IDs to end turn and have the server query back to the client for the spell if it hasn’t recorded that it’s executed that spell message id  before executing the end turn
-- prune errors so i don't use up all of sentry limit
 - what do I want the behavior to be if a unit reports a pickup but that Id is somehow not found??
+- prevent `clone` from cloning scrolls
 ## validate for v1.6
 - Pickup._create flying promises
 - validate new initialTargetUnitId changes with spells that do not use a unit target, like decoy
@@ -11,7 +11,6 @@
 
 ---
 - bug: frozen players start their next turn with 0 stamina?
-- bug: I am not taking damage when i spawn in a pool. not sure if others are having the same issue
 - bug: resuming a saved game resumes on AI turn sometimes, haven't reproduced yet
 - fullscreen preference should be saved in settings (https://steamcommunity.com/app/1618380/discussions/0/3766733981704564168/)
 - UX: show how much a summon will cost before using Capture Soul https://steamcommunity.com/app/1618380/discussions/0/3766733981707919283/
