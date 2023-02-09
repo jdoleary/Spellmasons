@@ -2155,17 +2155,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
       console.log('PlayerTurn: End player turn', clientId);
       this.syncTurnMessage();
-      const wentToNextLevel = this.checkForEndOfLevel();
-      if (wentToNextLevel) {
-        return;
-      }
-      const gameIsOver = this.tryGameOver();
-      if (gameIsOver) {
-        // Prevent infinite loop since there are no players
-        // alive it would continue to loop endlessly and freeze up
-        // the game if it didn't early return here
-        return;
-      }
 
       // If all enemies are dead and all non portaled players are dead, make non portaled players portal
       // so the game can continue
@@ -2176,7 +2165,18 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           Unit.resurrect(p.unit);
           Player.enterPortal(p, this);
         });
-        this.checkForEndOfLevel();
+      }
+      // Note: This should occur AFTER dead, non-portaled players may have entered the portal
+      // because checkForEndOfLevel considers if all players are portaled.
+      const wentToNextLevel = this.checkForEndOfLevel();
+      if (wentToNextLevel) {
+        return;
+      }
+      const gameIsOver = this.tryGameOver();
+      if (gameIsOver) {
+        // Prevent infinite loop since there are no players
+        // alive it would continue to loop endlessly and freeze up
+        // the game if it didn't early return here
         return;
       }
       const wentToNextPhase = this.tryEndPlayerTurnPhase();

@@ -9,6 +9,7 @@
 - Pickup._create flying promises
 - validate new initialTargetUnitId changes with spells that do not use a unit target, like decoy
 - validate players not getting stuck without having ended their turn
+  - try with multiple players
 
 
 ---

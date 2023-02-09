@@ -371,8 +371,6 @@ export function enterPortal(player: IPlayer, underworld: Underworld) {
   // Clear the selection so that it doesn't persist after portalling (which would show
   // your user's move circle in the upper left hand of the map but without the user there)
   clearTooltipSelection();
-  // Entering the portal ends the player's turn
-  underworld.endPlayerTurn(player.clientId);
 }
 // Note: this is also used for AI targeting to ensure that AI don't target disabled plaeyrs
 export function ableToAct(player: IPlayer) {
