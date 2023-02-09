@@ -1013,6 +1013,19 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
   globalThis.load = async (title: string) => {
     const savedGameString = storage.get(globalThis.savePrefix + title);
     if (savedGameString) {
+      let fileSaveObj = undefined;
+      try {
+        fileSaveObj = JSON.parse(savedGameString);
+      } catch (e) {
+        // Log, not error because some users modify save files
+        console.log(e);
+        Jprompt({
+          text: `The save file appears to be corrupted.`,
+          yesText: 'Okay',
+          forceShow: true
+        });
+        return;
+      }
       if (globalThis.player == undefined) {
         console.log('LOAD: connectToSingleplayer in preparation for load');
         if (globalThis.connectToSingleplayer) {
@@ -1022,7 +1035,7 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
         }
       }
 
-      const { underworld: savedUnderworld, phase, units, players, pickups, doodads, version } = JSON.parse(savedGameString);
+      const { underworld: savedUnderworld, phase, units, players, pickups, doodads, version } = fileSaveObj;
       if (version !== globalThis.SPELLMASONS_PACKAGE_VERSION) {
         Jprompt({
           text: `This save file is from a previous version of the game and may not run as expected.
