@@ -40,7 +40,7 @@ const spell: Spell = {
           const firstTarget = arrowUnitCollisions[0];
           if (firstTarget) {
             playDefaultSpellSFX(card, prediction);
-            if (!prediction) {
+            if (!prediction && !globalThis.headless) {
               // Promise.race ensures arrow promise doesn't take more than X milliseconds so that multiple arrows cast
               // sequentially wont take too long to complete animating.
               // Note: I don't forsee any issues with the following spell (say if a spell was chained after arrow) executing
@@ -69,7 +69,7 @@ const spell: Spell = {
           }
         }
       }
-      Promise.all(attackPromises).then(() => {
+      await Promise.all(attackPromises).then(() => {
         // Since arrows' flight promises are designed to resolve early so that multiple arrows can be shot
         // in quick succession, we must await the actual flyingProjectile promise to determine if no targets
         // were hit

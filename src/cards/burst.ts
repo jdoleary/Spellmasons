@@ -39,7 +39,7 @@ const spell: Spell = {
       await new Promise<void>((resolve) => {
         // .filter: only target living units
         const targets = state.targetedUnits.filter(u => u.alive)
-        if (!prediction) {
+        if (!prediction && !globalThis.headless) {
           playDefaultSpellSFX(card, prediction);
           for (let unit of targets) {
             const damage = calculateDamage(quantity, state.casterPositionAtTimeOfCast, state.casterUnit.attackRange, unit);

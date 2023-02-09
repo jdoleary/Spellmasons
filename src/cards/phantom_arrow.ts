@@ -38,7 +38,7 @@ const spell: Spell = {
           if (arrowShootPath === undefined) {
             continue;
           }
-          if (!prediction) {
+          if (!prediction && !globalThis.headless) {
             playDefaultSpellSFX(card, prediction);
             const projectilePromise = createVisualFlyingProjectile(
               arrowShootPath.p1,
