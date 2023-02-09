@@ -1,3 +1,15 @@
+## 2/9/2023 Spellmasons Update v1.6.0
+- src: Fix desyncs involving spells' initial targets
+- fix: Deathmason crashing after resurrecting, not spawning red portals, etc
+- fix: prevent loading corrupted savefile
+- fix: enter portal crash loop
+- fix: Only living units can aquire pickups
+- AI: Make ally AI spellmason follow you rather than pursuing enemies
+
+- balance: Prevent cloning scrolls
+
+- UX: Improve explanation if server is behind in version
+- UX: Add special message for when servers are down
 ## 2/7/2023 Spellmasons Update v1.5.0
 - balance: Units that remain in liquid at the end of their turn will take damage again
 - balance: Make ranged units move out of liquid once it's their turn
