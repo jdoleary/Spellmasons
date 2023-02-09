@@ -41,7 +41,7 @@ const spell: Spell = {
       // so that any quantity-based animations will play simultaneously on multiple targets
       // but sequentially within themselves (on a single target, e.g. multiple hurts over and over)
       for (let q = 0; q < quantity; q++) {
-        if (!prediction) {
+        if (!prediction && !globalThis.headless) {
           setTimeout(() => {
             playDefaultSpellSFX(card, prediction);
             for (let unit of targets) {
