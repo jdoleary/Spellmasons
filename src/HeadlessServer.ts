@@ -8,9 +8,6 @@ import { CaptureConsole as CaptureConsoleIntegration } from "@sentry/integration
 import "@sentry/tracing";
 import { version } from '../package.json';
 const release = `spellmasons@${version}`;
-// Disable console.log because on a community server the logs aren't helpful since there's multiple games going
-// simultaneously.  Only errors matter until I can scope logs per game
-console.log = () => { };
 Sentry.init({
     dsn: "https://4cf64a58d4aa4fa4959212aeccd3d6a1@o4504650001874944.ingest.sentry.io/4504650012819456",
     release,
