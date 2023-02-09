@@ -1,9 +1,11 @@
 ## 2/9/2023 Spellmasons Update v1.6.0
+- fix: Desync occuring anytime "slash" was followed by a spell that took remaining health into account (such as "Bleed" or "Capture Soul")
 - src: Fix desyncs involving spells' initial targets
 - fix: Deathmason crashing after resurrecting, not spawning red portals, etc
 - fix: prevent loading corrupted savefile
 - fix: enter portal crash loop
 - fix: Only living units can aquire pickups
+- fix: Skipping a level when an NPC ally finishes a level while you're dead
 - AI: Make ally AI spellmason follow you rather than pursuing enemies
 
 - balance: Prevent cloning scrolls
