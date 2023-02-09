@@ -76,6 +76,9 @@ interface IPickupSource {
 export function copyForPredictionPickup(p: IPickup): IPickup {
   // Remove image and text since prediction pickups won't be rendered
   const { image, text, ...rest } = p;
+  if (p.id > lastPredictionPickupId) {
+    lastPredictionPickupId = p.id;
+  }
   return {
     real: p,
     ...rest
@@ -106,7 +109,12 @@ export function create({ pos, pickupSource, idOverride }:
     : prediction
       ? ++lastPredictionPickupId
       : ++underworld.lastPickupId;
-  if (underworld.pickups.find(p => p.id == id)) {
+  if ((prediction ? underworld.pickupsPrediction : underworld.pickups).find(p => p.id == id)) {
+    if (prediction) {
+      console.log('Pickup ids', underworld.pickupsPrediction.map(p => p.id), id, 'incrementor:', lastPredictionPickupId, 'prediction:', prediction);
+    } else {
+      console.log('Pickup ids', underworld.pickups.map(p => p.id), id, 'incrementor:', underworld.lastPickupId, 'prediction:', prediction);
+    }
     console.error('Creating a pickup with duplicate id');
   }
   const self: IPickup = {

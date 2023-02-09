@@ -1,7 +1,6 @@
 # For v1.6
 - add spells cast IDs to end turn and have the server query back to the client for the spell if it hasn’t recorded that it’s executed that spell message id  before executing the end turn
-- what do I want the behavior to be if a unit reports a pickup but that Id is somehow not found??
-- prevent `clone` from cloning scrolls
+- i18n: "The knowledge in these scrolls"...
 ---
 - is `Cannot cast, caster does not exist` a source of desyncs?
 - Spellmasons thoughts: is the server dropping messages? Could the message queue be getting dropped when a client in a different game sends and init game state message.

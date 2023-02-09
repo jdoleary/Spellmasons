@@ -1,10 +1,9 @@
-import { addTarget, getCurrentTargets, Spell } from './index';
+import { getCurrentTargets, refundLastSpell, Spell } from './index';
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
 import * as Doodad from '../entity/Doodad';
-import { CardCategory, UnitSubType, UnitType } from '../types/commonTypes';
-import { jitter, Vec2 } from '../jmath/Vec';
-import * as config from '../config';
+import { CardCategory, UnitType } from '../types/commonTypes';
+import { Vec2 } from '../jmath/Vec';
 import floatingText from '../graphics/FloatingText';
 import { returnToDefaultSprite } from '../entity/Unit';
 import { IImageAnimated } from '../graphics/Image';
@@ -29,6 +28,11 @@ const spell: Spell = {
       let targets: Vec2[] = getCurrentTargets(state);
       targets = targets.length ? targets : [state.castLocation];
       for (let target of targets) {
+        // Disallow cloning scrolls because it ruins the spell aquisition part of the game
+        if (Pickup.isPickup(target) && target.name == Pickup.CARDS_PICKUP_NAME && !prediction) {
+          floatingText({ coords: target, text: 'The knowledge in these scrolls cannot be cloned', style: { fill: 'red' } });
+          continue;
+        }
         clonePairs.push([target, { x: target.x, y: target.y }]);
       }
       let animationPromise = Promise.resolve();
@@ -76,27 +80,18 @@ const spell: Spell = {
               }
             }
             if (Pickup.isPickup(target)) {
+              const targetName = target.name;
               const validSpawnCoords = underworld.findValidSpawn(cloneSourceCoords, 5, 20)
               if (validSpawnCoords) {
-                const clone = Pickup.load(Pickup.serialize(target), underworld, prediction);
-                if (clone) {
-
-                  if (!prediction) {
-                    // Change id of the clone so that it doesn't share the same
-                    // 'supposed-to-be-unique' id of the original
-                    clone.id = ++underworld.lastPickupId;
-                  } else {
-                    // Get a unique id for the clone
-                    clone.id = underworld.pickupsPrediction.reduce((lastId, pickup) => {
-                      if (pickup.id > lastId) {
-                        return pickup.id;
-                      }
-                      return lastId;
-                    }, 0) + 1;
+                let foundPickup = Pickup.pickups.find((p) => p.name == targetName);
+                if (foundPickup) {
+                  const clone = Pickup.create({ pos: target, pickupSource: foundPickup }, underworld, prediction);
+                  if (clone) {
+                    Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
                   }
-                }
-                if (clone) {
-                  Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
+                } else {
+                  console.log('Pickup', target);
+                  console.error('Could not clone pickup because source could not be found');
                 }
               } else {
                 floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
@@ -116,6 +111,9 @@ const spell: Spell = {
             }
           }
         }
+      }
+      if (clonePairs.length == 0) {
+        refundLastSpell(state, prediction, 'No target, mana refunded.')
       }
       return state;
     },
