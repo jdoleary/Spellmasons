@@ -57,6 +57,9 @@ const spell: Spell = {
                 makeManaTrail(target, state.casterUnit, underworld, '#321d73', '#9526cc').then(() => {
                   playDefaultSpellSFX(card, prediction);
                 });
+              } else {
+                console.log('Capture soul upgrade id', newCardId);
+                console.error('Cannot capture soul, upgrade not found')
               }
             }
             Unit.die(target, underworld, prediction);
