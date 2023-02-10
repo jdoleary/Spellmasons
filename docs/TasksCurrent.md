@@ -1,19 +1,29 @@
+# for v1.7
+- Super long spells make the game over modal cover quit button get covered by the spell bar
+- Self kill with sacrifice cause HotThunder to come back to life
+- "heal" saying "Stackable" is confusing (https://discord.com/channels/1032294536640200766/1032294537235812404/1073613840794779741)
+but casting from the hotbar works (queuing spells denied).
+- copy: connect card: allys -> allies
+- Super long stacks of rend takes too long
+## validate v1.7
+- EULA
 # For v1.6
+- Dash then burst doesn't work as expected,
+  - i think movement spells that affect the caster should update the casterInitialPosition in the effectState (which is only meant to protect against walking movement)
+    - but what about arrows
+- Triage tasks for Charles
+---
 - add spells cast IDs to end turn and have the server query back to the client for the spell if it hasn’t recorded that it’s executed that spell message id  before executing the end turn
 - i18n: "The knowledge in these scrolls"...
 - bug: Displace can clip you into a wall if your location is really close to a wall
 - bug: ally finishes the level for you, you don't get existing scrolls
-- bug: Pickup text is weird on scrolls that are restored from desync
-- if you end your turn while a bloat is still animating, it syncs and then the units keep moving with their velocity, make bloat awaited
+- **important** if you end your turn while a bloat is still animating, it syncs and then the units keep moving with their velocity, make bloat's explosion awaited
 - possible desync when ally npc (ghost archer) killed last enemy npc after triggering AI battle when an enemy killed me
 - bug: glop position desync after getting out of water on it's turn
-- UI bug: conserve appears to not work until you move your mouse (or after mana vampire hits you) because the mana bar doesn't refresh after it triggers until you move mouse
 - bug: self cast a bunch of slow then split then went through portal and slow persisted
   - bug: People still experiencing split not being cleared after going trhough portals
 - position desync in singleplayer after casting purify on myself and moving around
-- fortify doesn't reduce damage with shield
 - bug: deathmason red portals don't get cleaned up if you die
-- balance: debilitate should not stack exponentially
 ---
 - is `Cannot cast, caster does not exist` a source of desyncs?
 - Spellmasons thoughts: is the server dropping messages? Could the message queue be getting dropped when a client in a different game sends and init game state message.
@@ -23,12 +33,9 @@
 
 
 ---
-- optimization: shrink data being sent in SET_PHASE, especially for pickups, you don't need much to recreate a pickup
 - bug: frozen players start their next turn with 0 stamina?
 - bug: resuming a saved game resumes on AI turn sometimes, haven't reproduced yet
 - fullscreen preference should be saved in settings (https://steamcommunity.com/app/1618380/discussions/0/3766733981704564168/)
-- UX: show how much a summon will cost before using Capture Soul https://steamcommunity.com/app/1618380/discussions/0/3766733981707919283/
-- bug: poisoner miniboss with debilitate got 5.33333 health in tooltip
 - bug: Single player, if you end your turn while arrows are still flying enemies can start moving
 - Player being dead and getting scroll due to end of level said "Player managed to choose an upgrade without being supposed to" but I do want players to choose an upgrade at this time.
 - Translation issues
@@ -39,20 +46,13 @@
 - bug: Poison stayed on dead unit
 - bug: Infinity stamina doesn't work for all players in multiplayer
 - bug: killing last unit makes portals spawn early on multiplayer of screen of character who didn't kill the last unit
-- bug: Poison floating text doesn't account for debilitate but the damage it does, does
 - bug: sacrifice isn't giving me quite enough health somehow
-- bug: Allies clearing level makes you pick multiple perks and skips multiple levvels
-- Stats bars refreshing bugs:
-  - bug: health bars aren't refreshed on start of turn, you have to move your mouse
-  - ui bug: when a new player joins, enemy health shows as half until you move your mouse
 # For v1.4
 - Fix perk limit 
 ---
 - fix `split` as hard counter to summoner and priest and darkpriest
 - Slow description, "by 20%" not "to 80%"
 - Cache targeting
-- disallow cloning scrolls
-  - cloning scrolls results in pickup text bug
 ---
 - Units going through walls might be caused by crowding of other AI (Tekyera)
   - also maybe split units can be pushed through walls
@@ -113,10 +113,6 @@
 - bloat seems to be a consistent cause of **desyncs**
 - validate correct position of SavesDir
 -  BUG: Selected Spells are not obtained. During some runs, selected spells are not added to the toolbar, nor the spell book. Once the bug happens, it persists through all runs until the application is restarted. (steam https://steamcommunity.com/app/1618380/discussions/0/3766733548888993966/)
-- Better error message if server hub is down.
-- bug: Target same or kind doesn't target summoned units of same kind (reported on twitter)
-- Deathmason lack of portals thread
-- Split ally players still stay split after going through portal
 - **important** Reroll deleting scrolls bug
 - **rework description** or don't let it kill you; People keep being suprised that concerve kills them
 - Tekyera (discord) rerolling spell makes them just disappear
@@ -128,15 +124,9 @@
 - bug: killing self after level end with conserve cheat: https://steamcommunity.com/app/1618380/discussions/0/3766733548885838682/
 - **BIG BUG**, if teammate goes through portal without ending their turn, the other player is stuck
   - if I'm out of stamina
-- Poison stuck at 4 on summoner
 - Deathmason missing picture in summon spell
-- how to better update servers without kicking people off??
-- DOT for staying in liquid at the end of a turn
-- todo refactor duplicated code about flying scroll pickups
 - if you die and allies carry you to the next level the enemies get a turn before you do
 - fix mana steal making mana out of nowhere
-- "10 poison damage" doesn't account for debilitate, it does 20 but says 10
-- when mana vamp removes your max mana it shouldn't also remove overflow
 - Update deathmason description to explain his abilities
 - Make spells always target via IDs after they are sent over the network
   - including the first spell.  You can test this by making a multiplayer game, moving an enemy to a different location via the console to simulate a desync, then casting on that enemy on the client that is desynced.  The spell should still trigger and select all the same targets, whether it's a simple "slash" or a bunch of targeting spells, it should be releative to the caster
@@ -617,7 +607,8 @@ translated
 - AI Enhancement: Solve many enemies overkilling allied unit
 - Daily challenge
 - Idea: way to sacrifice health or mana to your ally
-- Content: Add Copy Soul vs capture soul. Capture soul should let you spawn them
+- Reflect damage (reuse modified Fortify icon)
+- **next** Content: Add Copy Soul vs capture soul. Capture soul should let you spawn them
   for no mana cost but they need to be below 25% health to be captured. Copy
   Soul gives you the summon card.
 - Refactor Bolt to "Soul Bind"
@@ -630,7 +621,6 @@ translated
 - Mind Control: Changes the faction of an enemy
 - **contender** Content: "Orge" enemies that get stronger for every ally of
   theirs that dies
-- **contender** Idea: A spell to sacrifice ally unit immediately
 - **contender** destroy a corpse for mana
 - **contender** grow a barrier
 - **contender** Feature: "Soul bind" - bound units share applied effects (or

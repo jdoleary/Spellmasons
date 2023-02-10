@@ -2,6 +2,11 @@
 ## Priorities
 - UPdate store page with how many players possible
 - Modding
+  - Add a proprietary license to Spellmasons code
+  - Create spellmasons.com/cla
+    - or use a fully open source mod for the spellmasons-mods repo only and allows the code to be used commercially
+  - make registMod function globally accessible
+  - Check package.json for licenses
 - Hotseat Multiplayer
 
 ## Final Tasks Tonight
@@ -66,15 +71,6 @@
   - Support Modding
   - Codex
   - Answer emails
-  - Send Scarlette Seeker a key via Twitter
-
-## Large Tasks
-
-- Mac build
-  - Ensure bundle isn't 700mb with extra stuff
-    - Something to do with Electron Framework.framework/versions
-  - Make package for x64
-    - `electron-forge package --arch=x64 --platform=darwin`
 
 ## Monday - Validation - Final builds
 
