@@ -33,6 +33,7 @@ import { spellmasonUnitId } from './units/playerUnit';
 import { SUMMONER_ID } from './units/summoner';
 import { DARK_SUMMONER_ID } from './units/darkSummoner';
 import { bossmasonUnitId } from './units/deathmason';
+import { MESSAGE_TYPES } from '../types/MessageTypes';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -664,11 +665,15 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
     explain(EXPLAIN_DEATH);
     playSFXKey('game_over');
   }
-
   if (unit.unitType == UnitType.PLAYER_CONTROLLED && !prediction) {
     const player = underworld.players.find(p => p.unit == unit);
-    if (player) {
-      underworld.endPlayerTurn(player.clientId);
+    if (player && player == globalThis.player) {
+      // Send an end turn message rather than just invoking endPlayerTurn
+      // so that it waits to execute until the spell is done casting.
+      // This change was made in response to self kill + resurrect 
+      // triggering the end of your turn before the spell finished
+      // (before the resurrect occurred)
+      underworld.pie.sendData({ type: MESSAGE_TYPES.END_TURN });
     } else {
       console.error('Player unit died but could not find them in players array to end their turn');
     }
