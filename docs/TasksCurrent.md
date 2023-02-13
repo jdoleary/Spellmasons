@@ -4,7 +4,16 @@
   - support different seeded upgrades for hotseat multiplayer
   - test perks for hotseat multiplayer
   - bug: Color is being sent as NaN
-- Discord left off: Does the game run on 1 core? I am suffering from extreme delays later in the game when there's a billion entities on the screen
+  - on level 2 ended turn and it didn't go to player 2, it wen to enemy turn
+  - names aren't showing over heads and colors are weird in lobby
+- bug: Dash and burst doesn't work right
+- bug: dash doesn't tell you if it'll do damage to you from collision??
+```
+Lashawnda Gandara — 02/11/2023 12:04 AM
+yall i just found this out
+if you get single turn extra health, it heals you back to full health when you get it
+its op with mana steal and bloodcurse omg
+```
 - IceCloud discord bug:
 ```
 The spells cos tin the book doesnt get updated unless the spell is on the hotbar
