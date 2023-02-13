@@ -1,10 +1,26 @@
 # for v1.7
+- Hotseat multiplayer
+  - Support loading hotseat multiplayer saved games
+  - support different seeded upgrades for hotseat multiplayer
+  - test perks for hotseat multiplayer
+  - bug: Color is being sent as NaN
+- Discord left off: Does the game run on 1 core? I am suffering from extreme delays later in the game when there's a billion entities on the screen
+- IceCloud discord bug:
+```
+The spells cos tin the book doesnt get updated unless the spell is on the hotbar
+icecloud12 — 02/10/2023 1:54 PM
+so that really cause the confusion
+icecloud12 — 02/10/2023 2:03 PM
+Ah! spells not in hotbar don't decrease their mana at all after a turn even not in use
+```
 - Super long spells make the game over modal cover quit button get covered by the spell bar
 - Self kill with sacrifice cause HotThunder to come back to life
 - "heal" saying "Stackable" is confusing (https://discord.com/channels/1032294536640200766/1032294537235812404/1073613840794779741)
 but casting from the hotbar works (queuing spells denied).
 - copy: connect card: allys -> allies
 - Super long stacks of rend takes too long
+- bug: resurrect after you die with allies makes the game not be turn based anymore? https://steamcommunity.com/app/1618380/discussions/0/3766733548885838682/
+- hotkeys for sidebars (ctrl+ num) https://steamcommunity.com/app/1618380/discussions/0/3766733981708936047/
 ## validate v1.7
 - EULA
 # For v1.6

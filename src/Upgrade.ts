@@ -72,7 +72,8 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
   // the number of cards that they have  This will prevent save scamming the chances and also make sure each time you are presented with
   // cards it is unique.
   // Note: Only count non-empty card spaces
-  const rSeed = `${underworld.seed}-${player.clientId}-${player.reroll}-${player.cards.filter(x => !!x).length}`;
+  const playerUniqueIdentifier = (globalThis.numberOfHotseatPlayers || 1) > 1 ? player.name : player.clientId;
+  const rSeed = `${underworld.seed}-${playerUniqueIdentifier}-${player.reroll}-${player.cards.filter(x => !!x).length}`;
   const random = seedrandom(rSeed);
   for (
     let i = 0;

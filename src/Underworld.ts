@@ -50,7 +50,7 @@ import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
 import Events from './Events';
 import { allUnits } from './entity/units';
-import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, getUIBarProps, isOutOfBounds, updatePlanningView } from './graphics/PlanningView';
+import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, getUIBarProps, isOutOfBounds, runPredictions, updatePlanningView } from './graphics/PlanningView';
 import { chooseObjectWithProbability, getUniqueSeedString, prng, randInt, SeedrandomState } from './jmath/rand';
 import { calculateCostForSingleCard } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle, closestLineSegmentIntersection } from './jmath/lineSegment';
@@ -2187,6 +2187,23 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       console.error("turn_phase must be PlayerTurns to end turn.  Cannot be ", this.turn_phase);
     }
     Player.syncLobby(this);
+    if ((numberOfHotseatPlayers || 0) > 1) {
+      // Change to next player
+      // Shift front player to the back so that first player found for fromPlayer is the next player
+      const shifted = this.players.shift();
+      if (shifted) {
+        this.players.push(shifted);
+      } else {
+        console.error('Hotseat: shifted player is undefined');
+      }
+      globalThis.player = this.players[0];
+      CardUI.recalcPositionForCards(globalThis.player, this);
+      CardUI.syncInventory(undefined, this);
+      runPredictions(this);
+
+      // Turn on auto follow if they are spawned, and off if they are not
+      cameraAutoFollow(!!globalThis.player?.isSpawned);
+    }
   }
   chooseUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
     if (upgrade.type == 'card') {

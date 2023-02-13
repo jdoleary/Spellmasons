@@ -409,6 +409,12 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       }
       break;
     case MESSAGE_TYPES.PLAYER_CONFIG:
+      if ((globalThis.numberOfHotseatPlayers || 0) > 1) {
+        // Hotseat multiplayer has it's own player config management
+        // because it needs to hold configs for multiple players on a single
+        // computer
+        return;
+      }
       const { color, colorMagic, name, lobbyReady } = payload;
       if (fromPlayer) {
         if (lobbyReady !== undefined) {
@@ -462,11 +468,15 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           autoExplain();
           // When player spawns, send their config from storage
           // to the server
-          overworld.pie.sendData({
-            type: MESSAGE_TYPES.PLAYER_CONFIG,
-            color: storage.get(storage.STORAGE_ID_PLAYER_COLOR),
-            name: storage.get(storage.STORAGE_ID_PLAYER_NAME),
-          });
+          if ((globalThis.numberOfHotseatPlayers || 0) > 1) {
+            Player.setPlayerRobeColor(fromPlayer, fromPlayer.color, fromPlayer.colorMagic);
+          } else {
+            overworld.pie.sendData({
+              type: MESSAGE_TYPES.PLAYER_CONFIG,
+              color: storage.get(storage.STORAGE_ID_PLAYER_COLOR),
+              name: storage.get(storage.STORAGE_ID_PLAYER_NAME),
+            });
+          }
         }
         if (!(isNaN(payload.x) && isNaN(payload.y))) {
           fromPlayer.isSpawned = true;

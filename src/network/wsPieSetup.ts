@@ -232,9 +232,10 @@ export function setupPieAndUnderworld() {
 
     }
     globalThis.connectToSingleplayer = connectToSingleplayer;
-    globalThis.startSingleplayer = function startSingleplayer() {
+    globalThis.startSingleplayer = function startSingleplayer(numberOfHotseatPlayers: number) {
       console.log('Start Game: Attempt to start the game')
       new Underworld(overworld, pie, Math.random().toString());
+      globalThis.numberOfHotseatPlayers = numberOfHotseatPlayers;
       return connectToSingleplayer().then(() => {
         // Create first level
         if (overworld.underworld) {

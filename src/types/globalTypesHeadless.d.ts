@@ -149,7 +149,7 @@ declare global {
     // connectToSingleplayer connects pieclient in solomode, it is called when loading a game
     // or from startSingleplayer
     var connectToSingleplayer: undefined | (() => Promise<void>);
-    var startSingleplayer: undefined | (() => Promise<void>);
+    var startSingleplayer: undefined | ((numberOfHotseatPlayers: number) => Promise<void>);
     var startMultiplayer: undefined | ((wsPieUrl: string) => Promise<void>);
     // Used to ensure that the current client's turn doesn't end while they are still walking
     // If they invoke endMyTurn() while they are walking, it will wait until they are done
@@ -286,4 +286,11 @@ declare global {
     // Everything relating to timeLastChoseUpgrade should happen on the client side
     // NOT after the network message but before the network message is sent
     var timeLastChoseUpgrade: number | undefined;
+    // How many players are playing hotseat multiplayer on a single computer
+    var numberOfHotseatPlayers: number | undefined;
+    var hotseatPlayerConfig: {
+        name: string,
+        color: number,
+        colorMagic: number
+    }[] | undefined;
 }

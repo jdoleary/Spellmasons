@@ -76,7 +76,15 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
             // If the client that joined does not have a player yet, make them one immediately
             // since all clients should always have a player associated
             console.log(`Setup: Create a Player instance for ${clientId}`)
-            Player.create(clientId, underworld);
+            for (let i = 0; i < (globalThis.numberOfHotseatPlayers || 1); i++) {
+                const config = globalThis.hotseatPlayerConfig?.[i];
+                const player = Player.create(clientId, underworld);
+                if (config) {
+                    player.name = config.name;
+                    player.color = config.color;
+                    player.colorMagic = config.colorMagic;
+                }
+            }
         }
     }
     // Sync all players' connection statuses with the clients list

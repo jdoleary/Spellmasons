@@ -36,6 +36,7 @@ globalThis.resMarkers = [];
 globalThis.devAutoPickUpgrades = location.href.includes('localhost');
 globalThis.adminMode = location.href.includes('localhost');
 globalThis.zoomTarget = 1.8;
+globalThis.hotseatPlayerConfig = [];
 // If the code in main runs this is NOT a headless instance, main.ts is the entrypoint for
 // the regular game with graphics and audio
 globalThis.headless = false;
