@@ -2205,6 +2205,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       CardUI.recalcPositionForCards(globalThis.player, this);
       CardUI.syncInventory(undefined, this);
       runPredictions(this);
+      // Show upgrades if player has received an upgrade
+      this.showUpgrades();
+
       // Announce new players' turn
       if (globalThis.player && globalThis.player.name) {
         queueCenteredFloatingText(globalThis.player.name);
@@ -2277,6 +2280,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       if (elUpgradePickerLabel) {
         elUpgradePickerLabel.innerHTML = isPerk ? 'Pick an Upgrade' : 'Pick a Spell';
       }
+    }
+    // If playing hotseat multiplayer, prepend the player name so users know which player they
+    // are picking an upgrade for
+    if (elUpgradePickerLabel) {
+      const hotseatPlayerName = globalThis.numberOfHotseatPlayers > 1 ? `${player.name}: ` : '';;
+      elUpgradePickerLabel.innerHTML = hotseatPlayerName + elUpgradePickerLabel?.innerHTML;
     }
     // Now that level is complete, move to the Upgrade view where players can choose upgrades
     // before moving on to the next level
