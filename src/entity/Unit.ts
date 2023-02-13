@@ -673,9 +673,6 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   if (!prediction && unit.originalLife) {
     underworld.reportEnemyKilled(unit);
   }
-  // Note: This must come after reportEnemyKilled because reportEnemyKilled may spawn a
-  // scroll and the scroll must jump to the player if there are no enemies left so they don't miss it
-  underworld.checkIfShouldSpawnPortal();
   // Once a unit dies it is no longer on it's originalLife
   unit.originalLife = false;
 }

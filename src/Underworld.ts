@@ -3025,10 +3025,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
 
     stopAndDestroyForeverEmitter(castingParticleEmitter);
+    this.checkIfShouldSpawnPortal();
 
     return effectState;
   }
-  async checkIfShouldSpawnPortal() {
+  checkIfShouldSpawnPortal() {
     // If all enemy units are dead and at least one player is spawned and connected
     if (this.units.filter(u => u.faction == Faction.ENEMY && !u.flaggedForRemoval).every(u => !u.alive) && this.players.some(p => p.isSpawned && p.clientConnected)) {
       // Make all potion pickups disappear so as to not compell players to waste time walking around picking them
