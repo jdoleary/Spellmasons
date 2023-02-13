@@ -365,20 +365,10 @@ invisibly blocked, change with caution! */
   /* Ensure it doesn't grow too big with huge spells */
   max-height: 200px;
   overflow-y: auto;
+  /* Prevent the flashing x-axis scroll bar when adding spells quickly */
+  overflow-x: hidden;
   /* Don't add padding on the bottom or the right - the padding is only to make room for the mana badge*/
   padding: 10px 0 0 10px;
-}
-
-#selected-cards::-webkit-scrollbar {
-  width: 0.5em;
-  transform: translate(10px, 0);
-  cursor: pointer;
-}
-
-#selected-cards::-webkit-scrollbar-thumb {
-  background-color: #949494;
-  border-radius: 5px;
-  outline: 1px solid #313131;
 }
 
 #card-hand .card img {
@@ -904,13 +894,13 @@ body.showUpgrades #inspector-tooltip {
   overflow: auto;
 }
 
-#inspector-tooltip-inner::-webkit-scrollbar {
+.scrollable::-webkit-scrollbar {
   width: 0.5em;
   transform: translate(10px, 0);
   cursor: pointer;
 }
 
-#inspector-tooltip-inner::-webkit-scrollbar-thumb {
+.scrollable::-webkit-scrollbar-thumb {
   background-color: #949494;
   border-radius: 5px;
   outline: 1px solid #313131;
@@ -1192,6 +1182,8 @@ body.showUpgrades #inspector-tooltip {
   right: 0;
   justify-content: center;
   align-items: center;
+  /* Display above toolbar */
+  z-index: 1;
 }
 
 body.view-Game.game-over #game-over {
@@ -1202,6 +1194,9 @@ body.view-Game.game-over #game-over {
   min-width: 300px;
   color: white;
   gap: 20px;
+  max-height: 100vh;
+  overflow-y: auto;
+
 }
 
 #game-over-modal h1 {

@@ -1,4 +1,5 @@
 # for v1.7
+- bug: don't let portal spawn before spells are done being cast (test with super long slash combo)
 - bug: Dash and burst doesn't work right
 ```
 Lashawnda Gandara — 02/11/2023 12:04 AM

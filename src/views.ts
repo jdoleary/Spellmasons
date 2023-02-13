@@ -120,8 +120,8 @@ function zoom(overworld: Overworld, e: WheelEvent) {
   if (!app) {
     return;
   }
-  if (e.target && (e.target as HTMLElement).closest('#selected-cards')) {
-    console.debug('Abort scrolling due to mouse on selected-cards element')
+  if (e.target && (e.target as HTMLElement).closest('.scrollable')) {
+    console.debug('Abort scrolling due to mouse on scrollable element', e.target);
     return;
   }
   if (e.target && (e.target as HTMLElement).closest('#inventory-container')) {
