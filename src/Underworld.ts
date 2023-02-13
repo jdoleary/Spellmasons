@@ -2163,6 +2163,20 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           },
         ));
       }
+      // Extra guard to protect against unexpected state
+      // where a player is dead but their turn is not ended
+      // Ensure that dead players are set to "turn ended"
+      for (let player of this.players) {
+        const unit = player.unit;
+        // If player is dead,
+        if (unit && !unit.alive) {
+          // and their turn has not been ended yet,
+          // set their endedTurn to true
+          if (!player.endedTurn) {
+            player.endedTurn = true;
+          }
+        }
+      }
       console.log('PlayerTurn: End player turn', clientId);
       this.syncTurnMessage();
 
