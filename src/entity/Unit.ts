@@ -59,7 +59,7 @@ export interface UnitPath {
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
 // rehydrate the JSON into an entity
-export type IUnitSerialized = Omit<IUnit, "resolveDoneMoving" | "image"> & { image?: Image.IImageAnimatedSerialized };
+export type IUnitSerialized = Omit<IUnit, "resolveDoneMoving" | "image" | "animations" | "sfx"> & { image?: Image.IImageAnimatedSerialized };
 export interface UnitAnimations {
   idle: string;
   hit: string;
@@ -330,7 +330,9 @@ export function cleanup(unit: IUnit) {
 // This is the opposite of load
 export function serialize(unit: IUnit): IUnitSerialized {
   // resolveDoneMoving is a callback that cannot be serialized
-  const { resolveDoneMoving, ...rest } = unit
+  // animations and sfx come from the source unit and need not be saved or sent over
+  // the network (it would just be extra data), better to restore from the source unit
+  const { resolveDoneMoving, animations, sfx, ...rest } = unit
   return {
     ...rest,
     // Deep copy modifiers so that serialized units don't share the object
@@ -354,6 +356,10 @@ export function serialize(unit: IUnit): IUnitSerialized {
 // This is the opposite of serialize
 export function load(unit: IUnitSerialized, underworld: Underworld, prediction: boolean): IUnit {
   const { shaderUniforms, ...restUnit } = unit
+  const sourceUnit = allUnits[unit.unitSourceId];
+  if (!sourceUnit) {
+    console.error('Source unit not found for', unit.unitSourceId);
+  }
   // Since resolveDoneMoving is about to be overwritten,
   // call it, just in case there is a pending promise (there shouldn't be)
   // so the promise doesn't hang forever
@@ -361,6 +367,8 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
     ...restUnit,
     shaderUniforms: {},
     resolveDoneMoving: () => { },
+    animations: sourceUnit?.animations || { idle: '', hit: '', walk: '', attack: '', die: '' },
+    sfx: sourceUnit?.sfx || { death: '', damage: '' },
     image: prediction
       ? undefined
       : unit.image
@@ -378,7 +386,6 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
     }
   }
   setupShaders(loadedunit);
-  const sourceUnit = allUnits[loadedunit.unitSourceId];
   if (sourceUnit && sourceUnit.init) {
     // Initialize unit IF unit contains initialization function
     sourceUnit.init(loadedunit, underworld);
