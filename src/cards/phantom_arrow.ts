@@ -76,7 +76,7 @@ const spell: Spell = {
       }
       await Promise.all(attackPromises).then(() => {
         if (targetsHitCount == 0) {
-          refundLastSpell(state, prediction, 'No target, mana refunded.')
+          refundLastSpell(state, prediction, 'no target, mana refunded')
         }
       });
       return state;

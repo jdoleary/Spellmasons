@@ -257,7 +257,7 @@
         "spell_burst": "Deals damage based how close the target is to the caster.❕The closer they are the higher the damage done.❕Maximum damage is 🍞.❕Stackable.",
         "spell_capture_soul": "Captures the soul of the targeted unit, granting you a summon card for that unit.❕Target must be alive and below 🍞 health.❕The more powerful the captured soul is, the more mana it will cost to summon.❕This spell is destroyed in the process.",
         "spell_clone": "Clones each target.  Cloned units maintain their current faction.",
-        "spell_connect": "Link together enemies (and allys) in close proximity to each other.❕Every subsequent instance of \"🍞\" will add up to 🍞 new targets to the spell.❕All connected beings will be affected by the following spells in your cast.",
+        "spell_connect": "Link together enemies (and allies) in close proximity to each other.❕Every subsequent instance of \"🍞\" will add up to 🍞 new targets to the spell.❕All connected beings will be affected by the following spells in your cast.",
         "spell_conserve": "Saves the rest of the targets' current mana for next turn.",
         "spell_contageous": "Immediately spreads this unit's curses to other nearby units.",
         "spell_dash": "Pulls the caster towards the target(s).❕ \"Dash\" must be cast on a target such as a unit or pickup.",
@@ -323,7 +323,15 @@
         "hotseat_description": "Play with multiple players on a single computer, taking turns with the controls. ",
         "start game": "Start Game",
         "add player": "Add player",
-        "remove player": "Remove player"
+        "remove player": "Remove player",
+        "the knowledge in these scrolls cannot be cloned": "The knowledge in these scrolls cannot be cloned",
+        "no target, mana refunded": "No target, mana refunded",
+        "phantom arrow": "Phantom Arrow",
+        "target kind": "Target Kind",
+        "conserve": "Conserve",
+        "death wager": "Death Wager",
+        "attack range": "Attack Range",
+        "support range": "Support Range"
     },
     {
         "language": "Français",
@@ -583,7 +591,7 @@
         "spell_burst": "Inflige des dommages basés sur la proximité de la cible pour le lanceur de sorts. Plus il est proche, plus les dégâts sont élevés. Les dégâts de maximum sont 🍞 🍞 🍞 🍞 🍞 🍞 🍞.",
         "spell_capture_soul": "Capture l'âme de l'unité ciblée, vous accordant une carte d'invocation pour cette unité. ❕target doit être vivant et en dessous de la santé. La santé est puissante, plus l'âme capturée est de mana pour invoquer. Ce sort est détruit Dans le processus.",
         "spell_clone": "Clones chaque cible. Les unités clonées maintiennent leur faction actuelle.",
-        "spell_connect": "Restez ensemble les ennemis (et les alliés) à proximité les uns des autres.",
+        "spell_connect": "Restez ensemble les ennemis (et les alliés) à proximité les uns avec les autres.",
         "spell_conserve": "Économise le reste du mana actuel des cibles pour le prochain tour.",
         "spell_contageous": "Étend immédiatement les malédictions de cet appareil vers d'autres unités voisines.",
         "spell_dash": "Tire le lanceur de lancers vers la ou les cibles .❕ \"Dash\" doit être jeté sur une cible telle qu'une unité ou un ramassage.",
@@ -649,7 +657,15 @@
         "hotseat_description": "Jouez avec plusieurs joueurs sur un seul ordinateur, à tour de rôle avec les commandes.",
         "start game": "Démarrer jeu",
         "add player": "Ajouter le joueur",
-        "remove player": "Enlever le joueur"
+        "remove player": "Enlever le joueur",
+        "the knowledge in these scrolls cannot be cloned": "Les connaissances dans ces rouleaux ne peuvent pas être clonées",
+        "no target, mana refunded": "Aucune cible, mana remboursé",
+        "phantom arrow": "Flèche fantôme",
+        "target kind": "Sélectionner par entité",
+        "conserve": "Conserver",
+        "death wager": "Pari de mort",
+        "attack range": "Gamme d'attaque",
+        "support range": "Gamme de support"
     },
     {
         "language": "italiano",
@@ -975,7 +991,15 @@
         "hotseat_description": "Gioca con più giocatori su un singolo computer, a turno con i controlli.",
         "start game": "Inizia il gioco",
         "add player": "Aggiungi giocatore",
-        "remove player": "Rimuovi il giocatore"
+        "remove player": "Rimuovi il giocatore",
+        "the knowledge in these scrolls cannot be cloned": "La conoscenza in questi rotoli non può essere clonata",
+        "no target, mana refunded": "Nessun obiettivo, mana rimborsato",
+        "phantom arrow": "Freccia fantasma",
+        "target kind": "Seleziona per entità",
+        "conserve": "Conservare",
+        "death wager": "Scommessa di morte",
+        "attack range": "Gamma di attacchi",
+        "support range": "Gamma di supporto"
     },
     {
         "language": "Deutsche",
@@ -1301,7 +1325,15 @@
         "hotseat_description": "Spielen Sie mit mehreren Spielern auf einem einzigen Computer und wechseln Sie sich mit den Steuerelementen ab.",
         "start game": "Spiel beginnen",
         "add player": "Spieler hinzufügen",
-        "remove player": "Spieler entfernen"
+        "remove player": "Spieler entfernen",
+        "the knowledge in these scrolls cannot be cloned": "Das Wissen in diesen Schriftrollen kann nicht geklont werden",
+        "no target, mana refunded": "Kein Ziel, Mana erstattet",
+        "phantom arrow": "Phantompfeil",
+        "target kind": "Nach Entität auswählen",
+        "conserve": "Sparen",
+        "death wager": "Todeswette",
+        "attack range": "Angriffsreichweite",
+        "support range": "Unterstützungsbereich"
     },
     {
         "language": "español",
@@ -1561,7 +1593,7 @@
         "spell_burst": "Se basa en el daño que está cerca del objetivo para el lanzador. Cuanto más cerca estén, cuanto mayor sea el daño.",
         "spell_capture_soul": "Captura el alma de la unidad objetivo, otorgándole una tarjeta de invocación para esa unidad. ❕Target debe estar vivo y debajo de la salud. Mientras más poderoso es el alma capturada, más maná costará invocar. Este hechizo está destruido en el proceso.",
         "spell_clone": "Clones cada objetivo. Las unidades clonadas mantienen su facción actual.",
-        "spell_connect": "Enlace en los enemigos (y allys) muy cerca uno del otro. ❕Un caso posterior de \"🍞\" se sumará a 🍞 nuevos objetivos al hechizo. Todos los seres conectados se verán afectados por los siguientes hechizos en su elenco.",
+        "spell_connect": "Enlace en los enemigos (y los aliados) muy cerca uno del otro. ❕Uy posterior caso de \"🍞\" se sumará a 🍞 nuevos objetivos al hechizo. Todos los seres conectados se verán afectados por los siguientes hechizos en su elenco.",
         "spell_conserve": "Guarda el resto del maná actual de los objetivos para el próximo turno.",
         "spell_contageous": "Inmediatamente se extiende las maldiciones de esta unidad a otras unidades cercanas.",
         "spell_dash": "Tira del lanzador hacia el objetivo (s). \"Dash\" debe ser fundido en un objetivo como una unidad o camioneta.",
@@ -1627,7 +1659,15 @@
         "hotseat_description": "Juega con múltiples jugadores en una sola computadora, tomando turnos con los controles.",
         "start game": "Empezar juego",
         "add player": "Agregar jugador",
-        "remove player": "Eliminar el jugador"
+        "remove player": "Eliminar el jugador",
+        "the knowledge in these scrolls cannot be cloned": "El conocimiento en estos pergaminos no se puede clonar",
+        "no target, mana refunded": "Sin objetivo, maná reembolsado",
+        "phantom arrow": "Flecha fantasma",
+        "target kind": "Seleccionar por entidad",
+        "conserve": "Conservar",
+        "death wager": "Apuesta por la muerte",
+        "attack range": "Rango de ataque",
+        "support range": "Rango de soporte"
     },
     {
         "language": "日本",
@@ -1953,7 +1993,15 @@
         "hotseat_description": "単一のコンピューターで複数のプレイヤーとプレイし、コントロールを交代で交代させます。",
         "start game": "ゲームをスタート",
         "add player": "プレーヤーを追加します",
-        "remove player": "プレーヤーを削除します"
+        "remove player": "プレーヤーを削除します",
+        "the knowledge in these scrolls cannot be cloned": "これらの巻物の知識はクローン化することはできません",
+        "no target, mana refunded": "ターゲットなし、マナは返金されました",
+        "phantom arrow": "ファントム矢印",
+        "target kind": "エンティティごとに選択します",
+        "conserve": "保存します",
+        "death wager": "死の賭け",
+        "attack range": "攻撃範囲",
+        "support range": "種類で選ぶ"
     },
     {
         "language": "Português",
@@ -2213,7 +2261,7 @@
         "spell_burst": "Causar danos com base no quão perto do alvo está do lançador. ❕ Quanto mais próximos, o dano causado.",
         "spell_capture_soul": "Captura a alma da unidade direcionada, concedendo a você um cartão de convocação para essa unidade. ❕Target deve estar vivo e abaixo de 🍞 Saúde. ❕ A mais poderosa a alma capturada é, mais mana custará a convocação. ❕Este feitiço é destruído no processo.",
         "spell_clone": "Clones cada alvo. As unidades clonadas mantêm sua facção atual.",
-        "spell_connect": "Ajuste os inimigos (e allys) nas proximidades entre si.",
+        "spell_connect": "Ajuste os inimigos (e aliados) nas proximidades entre si.",
         "spell_conserve": "Economiza o restante da mana atual dos alvos para o próximo turno.",
         "spell_contageous": "Impernde imediatamente as maldições desta unidade para outras unidades próximas.",
         "spell_dash": "Puxa o lançador para o (s) alvo (s) .❕ \"Dash\" deve ser lançado em um alvo como uma unidade ou coleta.",
@@ -2279,7 +2327,15 @@
         "hotseat_description": "Jogue com vários jogadores em um único computador, revezando -se com os controles.",
         "start game": "Começar o jogo",
         "add player": "Adicione o jogador",
-        "remove player": "Remova o jogador"
+        "remove player": "Remova o jogador",
+        "the knowledge in these scrolls cannot be cloned": "O conhecimento nesses pergaminhos não pode ser clonado",
+        "no target, mana refunded": "Sem alvo, mana reembolsado",
+        "phantom arrow": "Arrow Phantom",
+        "target kind": "Selecione por entidade",
+        "conserve": "Conservar",
+        "death wager": "Aposta de morte",
+        "attack range": "Raio de ataque",
+        "support range": "Intervalo de suporte"
     },
     {
         "language": "عربى",
@@ -2539,7 +2595,7 @@
         "spell_burst": "الصفقات تعتمد على مدى قرب الهدف من العجلات. - كلما زاد عدد الأضرار التي حدثت.",
         "spell_capture_soul": "يلتقط روح الوحدة المستهدفة ، ومنحك بطاقة استدعاء لتلك الوحدة. فى المعالجة.",
         "spell_clone": "استنساخ كل هدف. الوحدات المستنسخة تحافظ على فصيلها الحالي.",
-        "spell_connect": "اربط بين الأعداء (والأليس) على مقربة من بعضهم البعض. سوف يضيف مثال لاحق لـ \"🍞\" إلى 🍞 أهداف جديدة إلى الإملاء. ستتأثر الكائنات المتصلة بالتعويذة التالية في فريقك.",
+        "spell_connect": "اربط بين الأعداء (والحلفاء) على مقربة من بعضهم البعض. سوف يضيف مثال لاحق من \"🍞\" إلى 🍞 أهداف جديدة إلى الإملاء. ستتأثر الكائنات المتصلة بالتعويذة التالية في فريقك.",
         "spell_conserve": "يحفظ بقية المانا الحالية للأهداف للدور التالي.",
         "spell_contageous": "ينتشر على الفور لعنات هذه الوحدة إلى وحدات أخرى قريبة.",
         "spell_dash": "يسحب العجلات نحو الهدف (الهدف). يجب أن يتم إلقاء \"DASH\" على هدف مثل الوحدة أو الالتقاط.",
@@ -2605,7 +2661,15 @@
         "hotseat_description": "العب مع العديد من اللاعبين على جهاز كمبيوتر واحد ، يتناوب مع عناصر التحكم.",
         "start game": "بدء اللعبة",
         "add player": "أضف لاعب",
-        "remove player": "إزالة اللاعب"
+        "remove player": "إزالة اللاعب",
+        "the knowledge in these scrolls cannot be cloned": "لا يمكن استنساخ المعرفة في هذه اللفائف",
+        "no target, mana refunded": "لا هدف ، مانا استرداد",
+        "phantom arrow": "سهم الوهمية",
+        "target kind": "حدد بواسطة الكيان",
+        "conserve": "حفظ",
+        "death wager": "الرهان الموت",
+        "attack range": "نطاق الهجوم",
+        "support range": "نطاق الدعم"
     },
     {
         "language": "한국어",
@@ -2865,7 +2929,7 @@
         "spell_burst": "대상이 캐스터에 얼마나 가까운 지에 따라 손상을 입히는 것은 손상이 더 높을수록 피해가 더 높아집니다.",
         "spell_capture_soul": "대상 단위의 영혼을 포착하여 해당 유닛에 대한 소환 카드를 부여합니다. ❕ 표적은 살아 있어야하며 🍞 건강 이하이어야합니다. 진행중.",
         "spell_clone": "각 대상 클론. 복제 된 유닛은 현재 파벌을 유지합니다.",
-        "spell_connect": "\"🍞\"의 후속 인스턴스는 마법에 새로운 목표를 더할 것입니다. 모든 연결된 존재는 캐스트의 다음 주문의 영향을받을 것입니다.",
+        "spell_connect": "\"🍞\"의 후속 인스턴스는 마법에 새로운 목표를 더할 것입니다. 모든 연결된 존재는 캐스트의 다음 주문에 영향을받을 것입니다.",
         "spell_conserve": "다음 턴을 위해 Targets의 현재 마나의 나머지 부분을 저장합니다.",
         "spell_contageous": "이 유닛의 저주를 즉시 다른 근처의 유닛으로 퍼뜨립니다.",
         "spell_dash": "캐스터를 대상으로 끌어 당깁니다.",
@@ -2931,7 +2995,15 @@
         "hotseat_description": "단일 컴퓨터에서 여러 플레이어와 함께 플레이하여 컨트롤로 교대로 플레이합니다.",
         "start game": "게임을 시작하다",
         "add player": "플레이어를 추가하십시오",
-        "remove player": "플레이어를 제거하십시오"
+        "remove player": "플레이어를 제거하십시오",
+        "the knowledge in these scrolls cannot be cloned": "이 두루마리의 지식은 복제 할 수 없습니다",
+        "no target, mana refunded": "대상이없고 마나는 환불되었습니다",
+        "phantom arrow": "팬텀 화살표",
+        "target kind": "엔티티를 선택하십시오",
+        "conserve": "보존",
+        "death wager": "죽음의 베팅",
+        "attack range": "공격 범위",
+        "support range": "지원 범위"
     },
     {
         "language": "русский",
@@ -3191,7 +3263,7 @@
         "spell_burst": "Ущерб сделкам на основе того, насколько близка цель к заклинателю. Чем ближе они, тем выше ущерб.",
         "spell_capture_soul": "Захватывает душу целевого подразделения, предоставив вам карту Summon для этого подразделения. Заживание должно быть живым и ниже 🍞 Health. Чем более сильнее, запечатленная душа, тем больше маны будут стоить, чтобы вызвать. Это заклинание разрушено в процессе.",
         "spell_clone": "Клоны каждой цели. Клонированные единицы сохраняют свою текущую фракцию.",
-        "spell_connect": "Свяжите вместе врагов (и союзников) в непосредственной близости друг к другу. В последующем случае «🍞» будет добавлено, что новые цели к заклинанию. Все подключенные существа будут влиять на следующие заклинания в вашем актере.",
+        "spell_connect": "Свяжите вместе врагов (и союзников) в непосредственной близости друг к другу. В каждом последующем экземпляре «🍞» будет добавлено 🍞 Новые цели для заклинания. Все подключенные существа будут влиять на следующие заклинания в вашем актере.",
         "spell_conserve": "Сохраняет остальную часть текущей маны целей для следующего хода.",
         "spell_contageous": "Немедленно распространяет проклятия этого устройства другим близлежащим подразделениям.",
         "spell_dash": "Потягивает заклинателя в направлении цели.",
@@ -3257,7 +3329,15 @@
         "hotseat_description": "Играйте с несколькими игроками на одном компьютере, по очереди с управлением.",
         "start game": "Начать игру",
         "add player": "Добавить игрока",
-        "remove player": "Удалить игрока"
+        "remove player": "Удалить игрока",
+        "the knowledge in these scrolls cannot be cloned": "Знание в этих свитках не может быть клонировано",
+        "no target, mana refunded": "Нет цели, мана возвращается",
+        "phantom arrow": "Призрачная стрела",
+        "target kind": "Выберите по сущности",
+        "conserve": "Сохранить",
+        "death wager": "Смертельная ставка",
+        "attack range": "Диапазон атаки",
+        "support range": "Диапазон поддержки"
     },
     {
         "language": "中文(简)",
@@ -3583,7 +3663,15 @@
         "hotseat_description": "在一台计算机上与多个播放器一起玩，轮流使用控件。",
         "start game": "开始游戏",
         "add player": "添加播放器",
-        "remove player": "删除播放器"
+        "remove player": "删除播放器",
+        "the knowledge in these scrolls cannot be cloned": "这些卷轴中的知识无法克隆",
+        "no target, mana refunded": "没有目标，法力退还了",
+        "phantom arrow": "幻影箭头",
+        "target kind": "按实体选择",
+        "conserve": "养护",
+        "death wager": "死亡赌注",
+        "attack range": "攻击范围",
+        "support range": "按品种选择"
     },
     {
         "language": "中文(繁)",
@@ -3909,7 +3997,15 @@
         "hotseat_description": "在一台計算機上與多個播放器一起玩，輪流使用控件。",
         "start game": "開始遊戲",
         "add player": "添加播放器",
-        "remove player": "刪除播放器"
+        "remove player": "刪除播放器",
+        "the knowledge in these scrolls cannot be cloned": "這些捲軸中的知識無法克隆",
+        "no target, mana refunded": "沒有目標，法力退還了",
+        "phantom arrow": "幻影箭頭",
+        "target kind": "按實體選擇",
+        "conserve": "養護",
+        "death wager": "死亡賭注",
+        "attack range": "攻擊範圍",
+        "support range": "按品種選擇"
     },
     {
         "language": "Polskie",
@@ -4169,7 +4265,7 @@
         "spell_burst": "Zadaje obrażenia na podstawie tego, jak blisko jest cel rzucającego. They im bliżej są wyższe wyrządzone obrażenia. ❕ Maximum Obrażenia są 🍞.❕.",
         "spell_capture_soul": "Przechwytuje duszę docelowej jednostki, przyznając kartę przywołania dla tej jednostki. w trakcie.",
         "spell_clone": "Klony każdy cel. Klonowane jednostki utrzymują swoją obecną frakcję.",
-        "spell_connect": "Połącz razem wrogów (i sojuszników) w bliskiej odległości do siebie. - Wszelkie kolejne przypadki „🍞” sumują się do 🍞 Nowe cele do zaklęcia. ❕ wszystkie podłączone istoty będą dotknięte następującymi zaklęciami w obsadzie.",
+        "spell_connect": "Połącz razem wrogów (i sojuszników) w bliskiej odległości do siebie. - każdy kolejny przypadek „🍞” sumuje się do 🍞 Nowe cele do zaklęcia. ❕ wszystkie podłączone istoty będą dotknięte następującymi zaklęciami w obsadzie.",
         "spell_conserve": "Oszczędza resztę obecnej many celów na następną turę.",
         "spell_contageous": "Natychmiast rozkłada przekleństwa tego urządzenia na inne pobliskie jednostki.",
         "spell_dash": "Ciągnie rzucającego w kierunku celu .❕ „Dash” musi być rzucany na cel, taki jak jednostka lub odbiór.",
@@ -4235,7 +4331,15 @@
         "hotseat_description": "Graj z wieloma graczami na jednym komputerze, zmieniając się z elementami sterującymi.",
         "start game": "Rozpocząć grę",
         "add player": "Dodaj gracza",
-        "remove player": "Usuń gracza"
+        "remove player": "Usuń gracza",
+        "the knowledge in these scrolls cannot be cloned": "Nie można sklonować wiedzy w tych zwojach",
+        "no target, mana refunded": "Brak celu, mana zwrócona",
+        "phantom arrow": "Phantom Arrow",
+        "target kind": "Wybierz byt",
+        "conserve": "Chronić",
+        "death wager": "Rozpuszczający się w śmierć",
+        "attack range": "Zasięg ataku",
+        "support range": "Zakres wsparcia"
     },
     {
         "language": "Dutch",
@@ -4495,7 +4599,7 @@
         "spell_burst": "Brengt schade op basis van hoe dicht het doelwit is ten opzichte van de caster. ❕ Hoe dichterbij ze zijn, hoe hoger de schade aangericht. ❕Maximale schade is 🍞.❕stackbaar.",
         "spell_capture_soul": "Legt de ziel van de beoogde eenheid vast en verleent je een summon -kaart voor die eenheid. ❕Target moet levend en onder 🍞 gezondheid. ❕ Hoe krachtiger de gevangen ziel is, hoe meer mana het zal kosten om op te roepen. Deze spreuk wordt vernietigd in het proces.",
         "spell_clone": "Klonen elk doelwit. Gekloonde eenheden behouden hun huidige factie.",
-        "spell_connect": "Lop vijanden (en bondgenoten) in de nabijheid van elkaar. ❕ Elke daaropvolgende exemplaar van \"🍞\" zal opleveren aan 🍞 nieuwe doelen aan de spreuk. ❕Alle verbonden wezens worden beïnvloed door de volgende spreuken in uw cast.",
+        "spell_connect": "Lop vijanden (en bondgenoten) in de nabijheid van elkaar. ❕ Elke daaropvolgende exemplaar van \"🍞\" zal oplopen tot 🍞 nieuwe doelen aan de spreuk. ❕Alle verbonden wezens worden beïnvloed door de volgende spreuken in uw cast.",
         "spell_conserve": "Saveert de rest van de huidige mana van de doelen voor de volgende beurt.",
         "spell_contageous": "Spreidt onmiddellijk de vloeken van deze unit uit naar andere nabijgelegen eenheden.",
         "spell_dash": "Trekt de caster naar de doelstelling (en) .❕ \"Dash\" moet op een doelwit worden gegoten, zoals een eenheid of ophalen.",
@@ -4561,6 +4665,14 @@
         "hotseat_description": "Speel met meerdere spelers op een enkele computer, om de beurt met de bedieningselementen.",
         "start game": "Start het spel",
         "add player": "Voeg speler toe",
-        "remove player": "Verwijder de speler"
+        "remove player": "Verwijder de speler",
+        "the knowledge in these scrolls cannot be cloned": "De kennis in deze rollen kan niet worden gekloond",
+        "no target, mana refunded": "Geen doelwit, mana terugbetaald",
+        "phantom arrow": "Phantom Arrow",
+        "target kind": "Selecteer door entiteit",
+        "conserve": "Behouden",
+        "death wager": "Dodenwedster",
+        "attack range": "Aanvalsbereik",
+        "support range": "Steunbereik"
     }
 ]

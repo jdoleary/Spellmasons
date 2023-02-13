@@ -21,7 +21,6 @@ Ah! spells not in hotbar don't decrease their mana at all after a turn even not 
 - Self kill with sacrifice cause HotThunder to come back to life
 - "heal" saying "Stackable" is confusing (https://discord.com/channels/1032294536640200766/1032294537235812404/1073613840794779741)
 but casting from the hotbar works (queuing spells denied).
-- copy: connect card: allys -> allies
 - bug: resurrect after you die with allies makes the game not be turn based anymore? https://steamcommunity.com/app/1618380/discussions/0/3766733548885838682/
 - hotkeys for sidebars (ctrl+ num) https://steamcommunity.com/app/1618380/discussions/0/3766733981708936047/
 ## validate v1.7
@@ -33,7 +32,6 @@ but casting from the hotbar works (queuing spells denied).
 - Triage tasks for Charles
 ---
 - add spells cast IDs to end turn and have the server query back to the client for the spell if it hasn’t recorded that it’s executed that spell message id  before executing the end turn
-- i18n: "The knowledge in these scrolls"...
 - bug: Displace can clip you into a wall if your location is really close to a wall
 - bug: ally finishes the level for you, you don't get existing scrolls
 - **important** if you end your turn while a bloat is still animating, it syncs and then the units keep moving with their velocity, make bloat's explosion awaited
@@ -233,7 +231,6 @@ I saved a sync state and my unit was killed and had a glop attack animation on i
 - https://sentry.io/organizations/jordan-oleary/issues/3911592323/?project=6306205&query=is%3Aunresolved&referrer=issue-stream
 - Multiplayer players don't get "un-split" on new level
 - **big** entering portal makes character vanish but not go to next level (singleplayer)
-- i18n: chinese target kind translation needs updating
 - bug: when you rejoin a game it plays the enemies turn first instead of resuming at yours
   - not always reproducable, maybe set all players to not endedTurn when it goes to stalled
 - MOVE PLAYER appears to be processed AFTER spell finishes even if it occurs during
@@ -330,9 +327,6 @@ poison.ts:104 Should have poison modifier on unit but it is missing
   every level (targets spell + manasteal)
 - hotbar rebinding doesn't reflect in the UI
 
-- ## i18n / copy:
-  - "suffocated!"
-  - fortify: add "for one turn"
 
 ## Unanswered questions:
 

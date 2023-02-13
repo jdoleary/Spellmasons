@@ -74,7 +74,7 @@ const spell: Spell = {
         // in quick succession, we must await the actual flyingProjectile promise to determine if no targets
         // were hit
         if (targetsHitCount == 0) {
-          refundLastSpell(state, prediction, 'No target, mana refunded.')
+          refundLastSpell(state, prediction, 'no target, mana refunded')
         }
       });
       return state;

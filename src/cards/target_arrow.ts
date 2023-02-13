@@ -67,13 +67,13 @@ const spell: Spell = {
                 }
               } else {
                 // TODO: If pickups become damagable, this will have to be adapted to not refund mana when it hits a pickup
-                refundLastSpell(state, prediction, 'No target, mana refunded.')
+                refundLastSpell(state, prediction, 'no target, mana refunded')
               }
               return;
             }));
           }
         } else {
-          refundLastSpell(state, prediction, 'No target, mana refunded.')
+          refundLastSpell(state, prediction, 'no target, mana refunded')
         }
       }
       await Promise.all(promises).then(() => {

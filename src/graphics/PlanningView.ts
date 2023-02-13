@@ -140,7 +140,7 @@ export function updatePlanningView(underworld: Underworld) {
             globalThis.selectedUnit.y,
             globalThis.selectedUnit.attackRange
           );
-          labelText.text = 'Attack Range';
+          labelText.text = i18n('Attack Range');
           const labelPosition = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.attackRange }, labelText.width / 2);
           labelText.x = labelPosition.x;
           labelText.y = labelPosition.y;
@@ -159,7 +159,7 @@ export function updatePlanningView(underworld: Underworld) {
                 globalThis.selectedUnit.y,
                 globalThis.selectedUnit.attackRange
               );
-              labelText.text = 'Attack Range';
+              labelText.text = i18n('Attack Range');
               const labelPosition = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.attackRange }, labelText.width / 2);
               labelText.x = labelPosition.x;
               labelText.y = labelPosition.y;
@@ -169,7 +169,7 @@ export function updatePlanningView(underworld: Underworld) {
                 globalThis.selectedUnit.y,
                 globalThis.selectedUnit.attackRange
               );
-              labelText.text = 'Support Range';
+              labelText.text = i18n('Support Range');
               const labelPosition = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.attackRange }, labelText.width / 2);
               labelText.x = labelPosition.x;
               labelText.y = labelPosition.y;
@@ -180,7 +180,7 @@ export function updatePlanningView(underworld: Underworld) {
                 globalThis.selectedUnit.staminaMax + globalThis.selectedUnit.attackRange
               );
               globalThis.selectedUnitGraphics.endFill();
-              labelText.text = 'Attack Range';
+              labelText.text = i18n('Attack Range');
               const labelPosition = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.staminaMax + globalThis.selectedUnit.attackRange }, labelText.width / 2);
               labelText.x = labelPosition.x;
               labelText.y = labelPosition.y;

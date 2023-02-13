@@ -113,7 +113,7 @@ const spell: Spell = {
         }
       }
       if (clonePairs.length == 0) {
-        refundLastSpell(state, prediction, 'No target, mana refunded.')
+        refundLastSpell(state, prediction, 'no target, mana refunded')
       }
       return state;
     },
