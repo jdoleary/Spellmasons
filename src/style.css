@@ -353,10 +353,6 @@ invisibly blocked, change with caution! */
 }
 
 #selected-cards {
-  /* Room so the ui border doesn't overlap with card mana badges;
-  the unusual padding is because the mana badges stick out to the upper left so this 
-  custom padding makes them centered in the ui-border */
-  padding: 10px 1px 3px 10px;
   /* Selected cards should always have height even when empty so that the inventory doesn't move
   when cards are added to this element */
   min-height: 48px;
@@ -367,8 +363,9 @@ invisibly blocked, change with caution! */
   overflow-y: auto;
   /* Prevent the flashing x-axis scroll bar when adding spells quickly */
   overflow-x: hidden;
-  /* Don't add padding on the bottom or the right - the padding is only to make room for the mana badge*/
-  padding: 10px 0 0 10px;
+  /* Unusual padding is so that the mana badge has room
+  and there must be enough room for the glow on hover */
+  padding: 22px 12px 12px 22px;
 }
 
 #card-hand .card img {
@@ -1076,6 +1073,12 @@ body.showUpgrades #inspector-tooltip {
   position: relative;
 }
 
+#selected-cards .card.requires-following-card:last-child {
+  /* Leave room for "Requires a following spell to modify" :before element
+  otherwise it will get clipped */
+  width: 290px;
+}
+
 #selected-cards .card.requires-following-card:last-child:before {
   content: "Requires a following spell to modify";
   color: white;
@@ -1083,8 +1086,8 @@ body.showUpgrades #inspector-tooltip {
   border: 4px red dotted;
   border-left: 0;
   position: absolute;
-  left: var(--selected-card-size);
-  top: 0;
+  /* --selected-card-size + padding */
+  left: 40px;
   display: flex;
   justify-content: center;
   flex-direction: column;
