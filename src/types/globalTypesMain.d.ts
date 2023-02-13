@@ -77,6 +77,7 @@ declare global {
     var changeVolume: undefined | ((volume: number, saveSetting: boolean) => void);
     var changeVolumeMusic: undefined | ((volume: number, saveSetting: boolean) => void);
     var changeVolumeGame: undefined | ((volume: number, saveSetting: boolean) => void);
+    var setOption: undefined | ((key: string, value: any) => void);
     var playMusicIfNotAlreadyPlaying: undefined | (() => void);
     var volume: undefined | number;
     var volumeMusic: undefined | number;
@@ -228,4 +229,5 @@ declare global {
         color: number,
         colorMagic: number,
     }[] | undefined;
+    var UIEasyOnTheEyes: boolean | undefined;
 }

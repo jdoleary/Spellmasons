@@ -14,6 +14,12 @@ export const abyss = {
     'water': 0xf7f7e3,
     'ghost': 0x278b77
 }
+export const abyssEasyEyes = {
+    'blood': 0x204749,
+    'lava': 0x4b465c,
+    'water': 0xC9C9B5,
+    'ghost': 0x1B6657
+}
 export const forceMoveColor = 0xffffff;
 export const bloodColorDefault = 0xc70000;
 export const bloodLobber = 0x67c3d7;

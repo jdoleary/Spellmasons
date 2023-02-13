@@ -225,7 +225,11 @@ if (globalThis.pixi && containerUI && app && containerRadiusUI) {
 }
 export function setAbyssColor(biome: Biome) {
   if (app) {
-    app.renderer.backgroundColor = colors.abyss[biome];
+    let color = colors.abyss[biome];
+    if (globalThis.UIEasyOnTheEyes) {
+      color = colors.abyssEasyEyes[biome];
+    }
+    app.renderer.backgroundColor = color;
   }
 
 }

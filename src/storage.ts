@@ -52,6 +52,9 @@ export function getSavedData() {
                 if (options.volumeGame !== undefined) {
                     globalThis.changeVolumeGame?.(options.volumeGame, false)
                 }
+                if (options.UIEasyOnTheEyes !== undefined) {
+                    globalThis.UIEasyOnTheEyes = options.UIEasyOnTheEyes;
+                }
             }
             globalThis.playMusicIfNotAlreadyPlaying?.();
             // Default stored color if player doesn't already have one stored

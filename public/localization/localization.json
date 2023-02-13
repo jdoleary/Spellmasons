@@ -331,7 +331,10 @@
         "conserve": "Conserve",
         "death wager": "Death Wager",
         "attack range": "Attack Range",
-        "support range": "Support Range"
+        "support range": "Support Range",
+        "changes will take effect after the game is restarted.": "Changes will take effect after the game is restarted.",
+        "are you sure you want to quit to main menu?": "Are you sure you want to quit to Main Menu?",
+        "enable less bright background colors": "Enable less bright background colors"
     },
     {
         "language": "Français",
@@ -665,7 +668,10 @@
         "conserve": "Conserver",
         "death wager": "Pari de mort",
         "attack range": "Gamme d'attaque",
-        "support range": "Gamme de support"
+        "support range": "Gamme de support",
+        "changes will take effect after the game is restarted.": "Les changements prendront effet après le redémarrage du jeu.",
+        "are you sure you want to quit to main menu?": "Êtes-vous sûr de vouloir arrêter dans le menu principal?",
+        "enable less bright background colors": "Activer les couleurs d'arrière-plan moins vives"
     },
     {
         "language": "italiano",
@@ -999,7 +1005,10 @@
         "conserve": "Conservare",
         "death wager": "Scommessa di morte",
         "attack range": "Gamma di attacchi",
-        "support range": "Gamma di supporto"
+        "support range": "Gamma di supporto",
+        "changes will take effect after the game is restarted.": "Le modifiche avranno effetto dopo il riavvio del gioco.",
+        "are you sure you want to quit to main menu?": "Sei sicuro di voler smettere al menu principale?",
+        "enable less bright background colors": "Abilita colori di sfondo meno luminosi"
     },
     {
         "language": "Deutsche",
@@ -1333,7 +1342,10 @@
         "conserve": "Sparen",
         "death wager": "Todeswette",
         "attack range": "Angriffsreichweite",
-        "support range": "Unterstützungsbereich"
+        "support range": "Unterstützungsbereich",
+        "changes will take effect after the game is restarted.": "Änderungen werden nach der Neustart des Spiels wirksam.",
+        "are you sure you want to quit to main menu?": "Sind Sie sicher, dass Sie mit dem Hauptmenü aufhören möchten?",
+        "enable less bright background colors": "Aktivieren Sie weniger helle Hintergrundfarben"
     },
     {
         "language": "español",
@@ -1667,7 +1679,10 @@
         "conserve": "Conservar",
         "death wager": "Apuesta por la muerte",
         "attack range": "Rango de ataque",
-        "support range": "Rango de soporte"
+        "support range": "Rango de soporte",
+        "changes will take effect after the game is restarted.": "Los cambios entrarán en vigencia después de reiniciar el juego.",
+        "are you sure you want to quit to main menu?": "¿Estás seguro de que quieres salir del menú principal?",
+        "enable less bright background colors": "Habilitar colores de fondo menos brillantes"
     },
     {
         "language": "日本",
@@ -2001,7 +2016,10 @@
         "conserve": "保存します",
         "death wager": "死の賭け",
         "attack range": "攻撃範囲",
-        "support range": "種類で選ぶ"
+        "support range": "種類で選ぶ",
+        "changes will take effect after the game is restarted.": "ゲームが再起動された後、変更は有効になります。",
+        "are you sure you want to quit to main menu?": "メインメニューをやめたいですか？",
+        "enable less bright background colors": "明るい背景色を有効にします"
     },
     {
         "language": "Português",
@@ -2335,7 +2353,10 @@
         "conserve": "Conservar",
         "death wager": "Aposta de morte",
         "attack range": "Raio de ataque",
-        "support range": "Intervalo de suporte"
+        "support range": "Intervalo de suporte",
+        "changes will take effect after the game is restarted.": "As mudanças entrarão em vigor depois que o jogo for reiniciado.",
+        "are you sure you want to quit to main menu?": "Tem certeza de que deseja sair do menu principal?",
+        "enable less bright background colors": "Ativar cores de fundo menos brilhantes"
     },
     {
         "language": "عربى",
@@ -2669,7 +2690,10 @@
         "conserve": "حفظ",
         "death wager": "الرهان الموت",
         "attack range": "نطاق الهجوم",
-        "support range": "نطاق الدعم"
+        "support range": "نطاق الدعم",
+        "changes will take effect after the game is restarted.": "ستسري التغييرات بعد إعادة تشغيل اللعبة.",
+        "are you sure you want to quit to main menu?": "هل أنت متأكد من أنك تريد الإقلاع عن القائمة الرئيسية؟",
+        "enable less bright background colors": "تمكين ألوان خلفية أقل سطوعًا"
     },
     {
         "language": "한국어",
@@ -3003,7 +3027,10 @@
         "conserve": "보존",
         "death wager": "죽음의 베팅",
         "attack range": "공격 범위",
-        "support range": "지원 범위"
+        "support range": "지원 범위",
+        "changes will take effect after the game is restarted.": "게임이 다시 시작된 후에 변경 사항이 적용됩니다.",
+        "are you sure you want to quit to main menu?": "메인 메뉴로 그만두고 싶습니까?",
+        "enable less bright background colors": "덜 밝은 배경색을 활성화합니다"
     },
     {
         "language": "русский",
@@ -3337,7 +3364,10 @@
         "conserve": "Сохранить",
         "death wager": "Смертельная ставка",
         "attack range": "Диапазон атаки",
-        "support range": "Диапазон поддержки"
+        "support range": "Диапазон поддержки",
+        "changes will take effect after the game is restarted.": "Изменения вступит в силу после перезапуска игры.",
+        "are you sure you want to quit to main menu?": "Вы уверены, что хотите пойти в главное меню?",
+        "enable less bright background colors": "Включить менее яркие цвета фона"
     },
     {
         "language": "中文(简)",
@@ -3671,7 +3701,10 @@
         "conserve": "养护",
         "death wager": "死亡赌注",
         "attack range": "攻击范围",
-        "support range": "按品种选择"
+        "support range": "按品种选择",
+        "changes will take effect after the game is restarted.": "重新启动游戏后，更改将生效。",
+        "are you sure you want to quit to main menu?": "您确定要退出主菜单吗？",
+        "enable less bright background colors": "启用不太明亮的背景颜色"
     },
     {
         "language": "中文(繁)",
@@ -4005,7 +4038,10 @@
         "conserve": "養護",
         "death wager": "死亡賭注",
         "attack range": "攻擊範圍",
-        "support range": "按品種選擇"
+        "support range": "按品種選擇",
+        "changes will take effect after the game is restarted.": "重新啟動遊戲後，更改將生效。",
+        "are you sure you want to quit to main menu?": "您確定要退出主菜單嗎？",
+        "enable less bright background colors": "啟用不太明亮的背景顏色"
     },
     {
         "language": "Polskie",
@@ -4339,7 +4375,10 @@
         "conserve": "Chronić",
         "death wager": "Rozpuszczający się w śmierć",
         "attack range": "Zasięg ataku",
-        "support range": "Zakres wsparcia"
+        "support range": "Zakres wsparcia",
+        "changes will take effect after the game is restarted.": "Zmiany zaczną obowiązywać po ponownym uruchomieniu gry.",
+        "are you sure you want to quit to main menu?": "Czy na pewno chcesz przejść do menu głównego?",
+        "enable less bright background colors": "Włącz mniej jasne kolory tła"
     },
     {
         "language": "Dutch",
@@ -4673,6 +4712,9 @@
         "conserve": "Behouden",
         "death wager": "Dodenwedster",
         "attack range": "Aanvalsbereik",
-        "support range": "Steunbereik"
+        "support range": "Steunbereik",
+        "changes will take effect after the game is restarted.": "Wijzigingen worden van kracht nadat de game opnieuw is gestart.",
+        "are you sure you want to quit to main menu?": "Weet u zeker dat u wilt stoppen met het hoofdmenu?",
+        "enable less bright background colors": "Schakel minder heldere achtergrondkleuren in"
     }
 ]
