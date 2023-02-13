@@ -196,11 +196,10 @@ export function updatePlanningView(underworld: Underworld) {
 
       if (globalThis.player && globalThis.player.isSpawned && !inPortal(globalThis.player)) {
         // Only draw circle if player isn't moving to avoid UI thrashing
+        // Gold circle under player feet
         if (equal(lastSpotCurrentPlayerTurnCircle, globalThis.player.unit)) {
-          if (!globalThis.hidePlayerGoldCircle) {
-            const fill = underworld.isMyTurn() ? 0xffde5e : 0xdddddd;
-            drawCircleUnderTarget(globalThis.player.unit, underworld, 1.0, planningViewGraphics, fill);
-          }
+          const fill = underworld.isMyTurn() ? 0xffde5e : 0xdddddd;
+          drawCircleUnderTarget(globalThis.player.unit, underworld, 1.0, planningViewGraphics, fill);
         }
         lastSpotCurrentPlayerTurnCircle = clone(globalThis.player.unit);
       }

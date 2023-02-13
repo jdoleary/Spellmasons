@@ -212,7 +212,6 @@ declare global {
     var selectedPickup: Pickup.IPickup | undefined;
     // used for hiding the HUD for recording purposes
     var isHUDHidden: boolean | undefined;
-    var hidePlayerGoldCircle: boolean | undefined;
     // Used for UI to determine if which element is currently
     // being hovered by the mouse
     var hoverTarget: HTMLElement | undefined | null;
