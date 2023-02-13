@@ -60,8 +60,8 @@ const spell: Spell = {
             }
           }, animationDelaySum)
           animationDelaySum += delayBetweenAnimations;
-          // Don't let it go below 100 milliseconds
-          delayBetweenAnimations = Math.max(100, delayBetweenAnimations);
+          // Don't let it go below 20 milliseconds
+          delayBetweenAnimations = Math.max(20, delayBetweenAnimations);
           // Juice: Speed up subsequent hits
           delayBetweenAnimations *= 0.80
         } else {
