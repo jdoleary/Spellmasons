@@ -348,6 +348,8 @@ invisibly blocked, change with caution! */
 #selected-cards-container {
   /* Cap max width to allow for super long spells to wrap */
   max-width: 100vw;
+  /* Leave some room on the sides for when spell list is super long */
+  margin: 0 30px;
 }
 
 #selected-cards {
@@ -360,6 +362,23 @@ invisibly blocked, change with caution! */
   min-height: 48px;
   /* Ensure that super long spells display properly */
   flex-wrap: wrap;
+  /* Ensure it doesn't grow too big with huge spells */
+  max-height: 200px;
+  overflow-y: auto;
+  /* Don't add padding on the bottom or the right - the padding is only to make room for the mana badge*/
+  padding: 10px 0 0 10px;
+}
+
+#selected-cards::-webkit-scrollbar {
+  width: 0.5em;
+  transform: translate(10px, 0);
+  cursor: pointer;
+}
+
+#selected-cards::-webkit-scrollbar-thumb {
+  background-color: #949494;
+  border-radius: 5px;
+  outline: 1px solid #313131;
 }
 
 #card-hand .card img {
@@ -484,9 +503,14 @@ invisibly blocked, change with caution! */
   left: -4px;
 }
 
+#inventory-container .card .card-badge-holder {
+  top: -12px;
+  left: -12px;
+}
+
 .card.selected .card-badge-holder {
-  top: -18px;
-  left: -18px;
+  top: -10px;
+  left: -10px;
 }
 
 .card-badge {

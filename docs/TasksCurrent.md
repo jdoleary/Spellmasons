@@ -1,8 +1,5 @@
 # for v1.7
-- Hotseat multiplayer
-  - test perks for hotseat multiplayer
 - bug: Dash and burst doesn't work right
-- bug: dash doesn't tell you if it'll do damage to you from collision??
 ```
 Lashawnda Gandara — 02/11/2023 12:04 AM
 yall i just found this out
@@ -17,7 +14,6 @@ so that really cause the confusion
 icecloud12 — 02/10/2023 2:03 PM
 Ah! spells not in hotbar don't decrease their mana at all after a turn even not in use
 ```
-- Super long spells make the game over modal cover quit button get covered by the spell bar
 - Self kill with sacrifice cause HotThunder to come back to life
 - "heal" saying "Stackable" is confusing (https://discord.com/channels/1032294536640200766/1032294537235812404/1073613840794779741)
 but casting from the hotbar works (queuing spells denied).
