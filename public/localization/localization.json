@@ -319,7 +319,11 @@
         "mana vampire": "Mana Vampire",
         "load saved game": "Load saved game",
         "suffocated!": "Suffocated!",
-        "version": "Version"
+        "version": "Version",
+        "hotseat_description": "Play with multiple players on a single computer, taking turns with the controls. ",
+        "start game": "Start Game",
+        "add player": "Add player",
+        "remove player": "Remove player"
     },
     {
         "language": "Français",
@@ -581,7 +585,7 @@
         "spell_clone": "Clones chaque cible. Les unités clonées maintiennent leur faction actuelle.",
         "spell_connect": "Restez ensemble les ennemis (et les alliés) à proximité les uns des autres.",
         "spell_conserve": "Économise le reste du mana actuel des cibles pour le prochain tour.",
-        "spell_contageous": "Étend immédiatement les malédictions de cette unité vers d'autres unités voisines.",
+        "spell_contageous": "Étend immédiatement les malédictions de cet appareil vers d'autres unités voisines.",
         "spell_dash": "Tire le lanceur de lancers vers la ou les cibles .❕ \"Dash\" doit être jeté sur une cible telle qu'une unité ou un ramassage.",
         "spell_death_wager": "Réinitialisez tous les coûts de sort à leur défaut et réduisez votre santé maximale de 🍞% en permanence.",
         "spell_debilitate": "Rend la ou les cibles de subir des dommages à chaque fois qu'ils reçoivent des dommages. ❕ Empilable.",
@@ -641,7 +645,11 @@
         "mana vampire": "Mana vampire",
         "load saved game": "Chargement du jeu enregistré",
         "suffocated!": "Étouffés!",
-        "version": "Version"
+        "version": "Version",
+        "hotseat_description": "Jouez avec plusieurs joueurs sur un seul ordinateur, à tour de rôle avec les commandes.",
+        "start game": "Démarrer jeu",
+        "add player": "Ajouter le joueur",
+        "remove player": "Enlever le joueur"
     },
     {
         "language": "italiano",
@@ -963,7 +971,11 @@
         "mana vampire": "Mana Vampire",
         "load saved game": "Carica il gioco salvato",
         "suffocated!": "Soffocato!",
-        "version": "Versione"
+        "version": "Versione",
+        "hotseat_description": "Gioca con più giocatori su un singolo computer, a turno con i controlli.",
+        "start game": "Inizia il gioco",
+        "add player": "Aggiungi giocatore",
+        "remove player": "Rimuovi il giocatore"
     },
     {
         "language": "Deutsche",
@@ -1285,7 +1297,11 @@
         "mana vampire": "Mana Vampir",
         "load saved game": "Load Saved Game",
         "suffocated!": "Erstickt!",
-        "version": "Ausführung"
+        "version": "Ausführung",
+        "hotseat_description": "Spielen Sie mit mehreren Spielern auf einem einzigen Computer und wechseln Sie sich mit den Steuerelementen ab.",
+        "start game": "Spiel beginnen",
+        "add player": "Spieler hinzufügen",
+        "remove player": "Spieler entfernen"
     },
     {
         "language": "español",
@@ -1525,7 +1541,7 @@
         "out of bounds": "fuera de los límites",
         "explain blessings": "Llega bendiciones sobre ti mismo o tus aliados para ayudarlos a sobrevivir.",
         "mana potion description": "Restaura 🍞 maná. Puede sobrecargar el maná.",
-        "explain attention markers melee": "Un ícono aparece sobre la cabeza de un atacante cuerpo a cuerpo si estás lo suficientemente cerca como para que te llegue. Si te quedas en su rango, ¡te atacará en su próximo turno!",
+        "explain attention markers melee": "Aparece un ícono sobre la cabeza de un atacante cuerpo a cuerpo si estás lo suficientemente cerca como para que te llegue. Si te quedas en su rango, ¡te atacará en su próximo turno!",
         "explain scroll dissapear": "<h1> Un pergamino ha desaparecido! </h1> Recuerde: los pergaminos desaparecen después de que han pasado varios turnos. Es muy importante recogerlos antes de que sea demasiado tarde para que pueda obtener nuevos hechizos.",
         "explain remove spells": "Haga clic en un hechizo para eliminarlo o presione 🍞 para eliminar el último hechizo en cola.",
         "explain ping": "En los juegos multijugador, puedes hacer ping ubicaciones específicas para ayudar con la comunicación manteniendo presionada 🍞 y moviendo el mouse.",
@@ -1565,7 +1581,7 @@
         "spell_pull": "Tira de los objetivos hacia el lanzador",
         "spell_purify": "Elimina todas las maldiciones del objetivo (s). Una maldición es un modificador dañino que se une a una unidad: Por ejemplo: veneno, hinchazón y congelación son maldiciones.",
         "spell_push": "Empuja a los objetivos lejos del lanzador",
-        "spell_rend": "Da daños basados ​​en el número de pilas consecutivas de \"rend\". Daños totales tratados por cada rend \"consecutiva\": 🍞",
+        "spell_rend": "Da daños basados ​​en el número de pilas consecutivas de \"rend\". Daños totales tratados por cada consecutiva \"Rend: 🍞",
         "spell_repel": "Empuja a los objetivos lejos de la ubicación del reparto.",
         "spell_resurrect": "Resucita una unidad muerta y las convierte en la facción del lanzador.",
         "spell_sacrifice": "Instantáneamente mata a un aliado para ganar su salud actual.",
@@ -1607,7 +1623,11 @@
         "mana vampire": "Vampiro de maná",
         "load saved game": "Cargar juego guardado",
         "suffocated!": "Asfixiado!",
-        "version": "Versión"
+        "version": "Versión",
+        "hotseat_description": "Juega con múltiples jugadores en una sola computadora, tomando turnos con los controles.",
+        "start game": "Empezar juego",
+        "add player": "Agregar jugador",
+        "remove player": "Eliminar el jugador"
     },
     {
         "language": "日本",
@@ -1929,7 +1949,11 @@
         "mana vampire": "マナヴァンパイア",
         "load saved game": "保存されたゲームをロードします",
         "suffocated!": "窒息！",
-        "version": "バージョン"
+        "version": "バージョン",
+        "hotseat_description": "単一のコンピューターで複数のプレイヤーとプレイし、コントロールを交代で交代させます。",
+        "start game": "ゲームをスタート",
+        "add player": "プレーヤーを追加します",
+        "remove player": "プレーヤーを削除します"
     },
     {
         "language": "Português",
@@ -2123,7 +2147,7 @@
         "slow": "lento",
         "play next song": "Tocar a próxima música",
         "player": "Jogador",
-        "press 🍞 to make the view auto follow you": "Pressione 🍞 para fazer a câmera automaticamente seguir você",
+        "press 🍞 to make the view auto follow you": "Pressione 🍞 para fazer a câmera automaticamente segui -lo",
         "restores stamina to 🍞": "Restaura a resistência a 🍞",
         "save": "Salvar",
         "ready for next turn": "Pronto para o próximo turno",
@@ -2251,7 +2275,11 @@
         "mana vampire": "Mana Vampire",
         "load saved game": "Jogo salvo de carga",
         "suffocated!": "Sufocado!",
-        "version": "Versão"
+        "version": "Versão",
+        "hotseat_description": "Jogue com vários jogadores em um único computador, revezando -se com os controles.",
+        "start game": "Começar o jogo",
+        "add player": "Adicione o jogador",
+        "remove player": "Remova o jogador"
     },
     {
         "language": "عربى",
@@ -2500,8 +2528,8 @@
         "explain mana cost": "تكلف التعويذات المزيد من مانا في كل مرة يتم فيها إلقاء. عندما تنهي دورك ، تنخفض تكاليف مانا تعويذات حتى تعود إلى التكلفة الأصلية.",
         "explain walk rope": "امسك 🍞 لترى إلى أي مدى يمكنك الذهاب مع القدرة على التحمل (الخط الأصفر) الذي لديك. تُظهر لك الدائرة الزرقاء ما سيكون عليه نطاق الممثلين إذا انتقلت إلى هذا الموقع.",
         "explain stack": "تصبح العديد من التعويذات أكثر قوة إذا قمت بتكديس متعددة على التوالي. حاول الجمع بين تعويذات مختلفة لمعرفة كيفية تفاعلها.",
-        "explain cast": "كيفية صياغة تعويذات! </h1> انقر فوق تعويذة أو استخدم مفتاح لوحة المفاتيح الخاص به لتناول طابوره. انقر على الهدف لإطلاق العنان لعملية الانتظار.",
-        "explain move": "كيفية التحرك </h1> اضغط على زر الماوس الأيمن للسير نحو المؤشر.",
+        "explain cast": "<H1> كيفية صياغة تعويذات! </h1> انقر فوق تعويذة أو استخدم مفتاح لوحة المفاتيح الخاص به لتناول طابوره. انقر على الهدف لإطلاق العنان لعملية الانتظار.",
+        "explain move": "<h1> كيفية التحرك </h1> اضغط على زر الماوس الأيمن للسير نحو المؤشر.",
         "spell_heal": "يشفي جميع أهداف 🍞.❕ ، لا تلتئم إلى ما وراء أقصى قدر من الصحة.",
         "spell_arrow": "يطلق السهم الذي يتناول الضرر للوحدة الأولى التي تضربها. cannot تمر عبر الجدران.",
         "spell_bleed": "يتناول المزيد من الأضرار بناءً على مقدار الصحة التي يفقدها الهدف. على سبيل المثال: ❕ target مع 🍞 ٪ سوف تموت.",
@@ -2573,7 +2601,11 @@
         "mana vampire": "مصاص الدماء مانا",
         "load saved game": "تحميل اللعبة المحفوظة",
         "suffocated!": "خنق!",
-        "version": "إصدار"
+        "version": "إصدار",
+        "hotseat_description": "العب مع العديد من اللاعبين على جهاز كمبيوتر واحد ، يتناوب مع عناصر التحكم.",
+        "start game": "بدء اللعبة",
+        "add player": "أضف لاعب",
+        "remove player": "إزالة اللاعب"
     },
     {
         "language": "한국어",
@@ -2836,14 +2868,14 @@
         "spell_connect": "\"🍞\"의 후속 인스턴스는 마법에 새로운 목표를 더할 것입니다. 모든 연결된 존재는 캐스트의 다음 주문의 영향을받을 것입니다.",
         "spell_conserve": "다음 턴을 위해 Targets의 현재 마나의 나머지 부분을 저장합니다.",
         "spell_contageous": "이 유닛의 저주를 즉시 다른 근처의 유닛으로 퍼뜨립니다.",
-        "spell_dash": "캐스터를 대상을 향해 당깁니다.",
+        "spell_dash": "캐스터를 대상으로 끌어 당깁니다.",
         "spell_death_wager": "모든 철자 비용을 기본값으로 다시 재설정하고 최대 건강을 영구적으로 🍞% 줄입니다.",
         "spell_debilitate": "대상이 손상을받을 때마다 🍞%의 손상을 입히게합니다.",
         "spell_displace": "타겟을 임의의 위치로 순간 이동하십시오.",
         "spell_drown": "대상이 침수 된 경우에만 거래 is 손상.",
-        "spell_fortify": "한 번의 턴 동안 들어오는 피해를 🍞% 줄입니다",
+        "spell_fortify": "한 턴 동안 들어오는 피해를 🍞% 줄입니다",
         "spell_freeze": "대상을 1 회전으로 얼려서 움직이거나 행동하지 못하게합니다. ❕ \"동결\"은 연속적으로 여러 번 시전하여 효과를 쌓을 수 있습니다.",
-        "spell_last_will": "대상은 죽음에 무작위 물약을 떨어 뜨립니다. st 쌓을 수 없습니다. 참고 : 레벨의 마지막 적이 파견되면 물약이 사라집니다.",
+        "spell_last_will": "대상은 죽음에 임의의 물약을 떨어 뜨립니다. st 쌓을 수 없습니다. ❕ 참고 : 레벨의 마지막 적이 파견되면 물약이 사라집니다.",
         "spell_mana_burn": "마나 화상의 양에 따라 대상의 마나가 손상을 입히는 타겟 마나까지 최대 the를 태우십시오.",
         "spell_mana_steal": "각 목표에서 마나까지 훔치기 위해 자신의 건강을 희생하십시오. 마나가있는 유닛에서만 작동합니다.",
         "spell_phantom_arrow": "🍞 손상을 다루는 화살표를 발사합니다.",
@@ -2895,7 +2927,11 @@
         "mana vampire": "마나 뱀파이어",
         "load saved game": "로드 저장 게임",
         "suffocated!": "질식!",
-        "version": "버전"
+        "version": "버전",
+        "hotseat_description": "단일 컴퓨터에서 여러 플레이어와 함께 플레이하여 컨트롤로 교대로 플레이합니다.",
+        "start game": "게임을 시작하다",
+        "add player": "플레이어를 추가하십시오",
+        "remove player": "플레이어를 제거하십시오"
     },
     {
         "language": "русский",
@@ -3199,7 +3235,7 @@
         "summoner_copy": "Призыватель использует ману, чтобы вызвать врагов. Действительно уходит на вечеринку.",
         "green_glop_copy": "Зеленый Glop может атаковать до 6 врагов. Он лобрует глянец высоко в воздух, чтобы нанести ущерб своим врагам. Он может атаковать своих врагов из -за стен. Вымер и зеленее.",
         "dark_summoner_copy": "Темный призыватель разрушит вас, если вы дадите ему слишком много времени - он вызывает общих призывателей, которые будут вызвать еще больше врагов. Муди, популярный, эмо икона.",
-        "dark_priest_copy": "Темный священник может одновременно атаковать врагов, освобождая гейзеры темной энергии.",
+        "dark_priest_copy": "Темный священник может одновременно атаковать врагов, выпуская гейзеры темной энергии.",
         "poisoner_copy": "Обитель разыграет проклятие яда на своих врагов. Удивительно также хороший повар.",
         "priest_copy": "Священник воскресит мертвых союзников. Странно ненавидит кладбище.",
         "decoy_copy": "Приманка, чтобы отвлечь врагов. Также удерживает ворон.",
@@ -3217,7 +3253,11 @@
         "mana vampire": "Мана Вампир",
         "load saved game": "Нагрузка сохранена игра",
         "suffocated!": "Задухнут!",
-        "version": "Версия"
+        "version": "Версия",
+        "hotseat_description": "Играйте с несколькими игроками на одном компьютере, по очереди с управлением.",
+        "start game": "Начать игру",
+        "add player": "Добавить игрока",
+        "remove player": "Удалить игрока"
     },
     {
         "language": "中文(简)",
@@ -3539,7 +3579,11 @@
         "mana vampire": "法力吸血鬼",
         "load saved game": "负载保存的游戏",
         "suffocated!": "窒息！",
-        "version": "版本"
+        "version": "版本",
+        "hotseat_description": "在一台计算机上与多个播放器一起玩，轮流使用控件。",
+        "start game": "开始游戏",
+        "add player": "添加播放器",
+        "remove player": "删除播放器"
     },
     {
         "language": "中文(繁)",
@@ -3861,7 +3905,11 @@
         "mana vampire": "法力吸血鬼",
         "load saved game": "負載保存的遊戲",
         "suffocated!": "窒息！",
-        "version": "版本"
+        "version": "版本",
+        "hotseat_description": "在一台計算機上與多個播放器一起玩，輪流使用控件。",
+        "start game": "開始遊戲",
+        "add player": "添加播放器",
+        "remove player": "刪除播放器"
     },
     {
         "language": "Polskie",
@@ -4104,7 +4152,7 @@
         "explain attention markers melee": "Ikona pojawia się nad głową atakującego w zwarciu, jeśli jesteś wystarczająco blisko, aby się do ciebie dotarł. Jeśli pozostaniesz w swoim zasięgu, zaatakuje cię w następnej turze!",
         "explain scroll dissapear": "<h1> Zniknął zwój! </h1> Pamiętaj: Zwoje znikają po minięciu wielu zakrętów. Bardzo ważne jest, aby je odebrać, zanim będzie za późno, abyś mógł uzyskać nowe zaklęcia.",
         "explain remove spells": "Kliknij zaklęcie, aby go usunąć lub naciśnij 🍞, aby usunąć ostatnie zaklęcie w kolejce.",
-        "explain ping": "W grach wieloosobowych możesz pingować określone lokalizacje, aby pomóc w komunikacji, powstrzymując 🍞 i przenosząc mysz.",
+        "explain ping": "W grach wieloosobowych możesz pingować określone lokalizacje, aby pomóc w komunikacji, przytrzymując 🍞 i przenosząc mysz.",
         "explain inventory": "Zaklęcia są przechowywane w twoim ekwipunku. Otwórz swój ekwipunek, klikając książkę zaklęć lub naciskając 🍞. Kliknij i przeciągnij zaklęcie na pasek narzędzi, aby było łatwo dostępne. Możesz ustawiać zaklęcia w swoim ekwipunku, aby nie musisz mieć zaklęcia na pasku narzędzi, aby go użyć.",
         "explain camera movement": "Przesuń aparat, klikając i przeciągając przycisk Modnego Myszy lub naciskając 🍞, 🍞, 🍞 lub 🍞. Aby aparat Auto ponownie podążał za graczem, naciśnij 🍞.",
         "explain mana cost": "Zaklęcia kosztują więcej many za każdym razem, gdy są rzucane. Kiedy skończysz swoją kolej, koszty many zaklęć spadają, aż powrócą do pierwotnego kosztu.",
@@ -4164,7 +4212,7 @@
         "ghost_archer_copy": "Strzały Ghost Arrows Pierce, zadaje im 1/2 obrażeń, na drodze do celu. Będzie skierowany do najdalszego wroga, który może zaatakować.",
         "summoner_copy": "Przywołanie używa many do przywołania wrogów. Naprawdę prowadzi imprezę.",
         "green_glop_copy": "Zielony GLOP może atakować do 6 wrogów. Lobbuje Gloop High w powietrze, aby zadać obrażenia swoich wrogów. Może atakować swoich wrogów zza ścian. Zniszczniejszy i bardziej ekologiczny.",
-        "dark_summoner_copy": "Mroczny przywołanie zrujnuje cię, jeśli dasz mu zbyt dużo czasu - przywołuje zwykłych przywoławców, którzy wezmą jeszcze więcej wrogów. Moody, popularny, ikona emo.",
+        "dark_summoner_copy": "Mroczny przywołanie zrujnuje cię, jeśli dasz mu zbyt dużo czasu - przywołuje zwykłych przywoływaczy, którzy wezmą jeszcze więcej wrogów. Moody, popularny, ikona emo.",
         "dark_priest_copy": "Mroczny kapłan może jednocześnie zaatakować do 🍞 wrogów, uwalniając gejzery ciemnej energii.",
         "poisoner_copy": "Truciciel rzuci przekleństwo trucizny na swoich wrogów. Zwykawczo także dobry kucharz.",
         "priest_copy": "Kapłan wskrzesza martwych sojuszników. Dziwnie nienawidzi cmentarzy.",
@@ -4183,7 +4231,11 @@
         "mana vampire": "Mana Vampire",
         "load saved game": "Załaduj zapisaną grę",
         "suffocated!": "Dusione!",
-        "version": "Wersja"
+        "version": "Wersja",
+        "hotseat_description": "Graj z wieloma graczami na jednym komputerze, zmieniając się z elementami sterującymi.",
+        "start game": "Rozpocząć grę",
+        "add player": "Dodaj gracza",
+        "remove player": "Usuń gracza"
     },
     {
         "language": "Dutch",
@@ -4434,7 +4486,7 @@
         "explain stack": "Veel spreuken worden krachtiger als je meerdere op een rij stapelt. Probeer verschillende spreuken te combineren om erachter te komen hoe ze kunnen communiceren.",
         "explain cast": "<H1> hoe spreuken te smeden! </h1> klik op een spreuk of gebruik de sneltoets van het toetsenbord om het in de rij te zetten. Klik met de linkerkant op een doel om de in de wachtrij geplaatste spreuk te ontketenen. <br/> <br/> of als u van gedachten verandert, drukt u op 🍞 om een ​​wachtrij te wissen.",
         "explain move": "<H1> hoe te verplaatsen </h1> houd de rechter muisknop vast om naar je cursor te lopen.",
-        "spell_heal": "Geneest alle doelen voor 🍞.❕ zullen niet verder dan de maximale gezondheid genezen.",
+        "spell_heal": "Geneest alle doelen voor 🍞.❕ zullen niet verder dan maximale gezondheid. ❕Tackable.",
         "spell_arrow": "Vuurt een pijl af die 🍞 schade aanricht aan de eerste eenheid die het toeslaat. ❕annot passeren door muren.",
         "spell_bleed": "Doe meer schade aan op basis van hoeveel gezondheid het doelwit ontbreekt. ❕❕ Bijvoorbeeld: ❕target met 🍞% gezondheid zal sterven. ❕🍞% Gezondheid: 🍞% van de maximale gezondheid als schade ❕target met volledige gezondheid zal geen schade aanrichten.",
         "spell_bloat": "Als een eenheid wordt vervloekt met 🍞, zal deze, wanneer deze sterft, exploderen met 🍞 schade aan alle eenheden binnen de explosiestraal. ❕ Multipelstapels van 🍞 zullen de hoeveelheid schade aangericht wanneer het apparaat explodeert.",
@@ -4450,7 +4502,7 @@
         "spell_death_wager": "Reset alle spellingkosten terug naar hun standaardinstelling en verlagen uw maximale gezondheid per permanent met 🍞%.",
         "spell_debilitate": "Laat de doelwit (s) 🍞% schade aannemen wanneer ze schade krijgen. ❕ Stapelbaar.",
         "spell_displace": "Teleporteer het doelwit naar een willekeurige locatie.",
-        "spell_drown": "Deal 🍞 schade alleen als het doel ondergedompeld is.",
+        "spell_drown": "Desal 🍞 schade alleen als het doel ondergedompeld is.",
         "spell_fortify": "Vermindert inkomende schade met 🍞% voor één beurt",
         "spell_freeze": "Bevriest de doelwit (s) gedurende 1 beurt, waardoor ze niet kunnen bewegen of handelen. ❕ \"Freeze\" kan meerdere keren achter elkaar worden geworpen om het effect te stapelen.",
         "spell_last_will": "Target daalt een willekeurig drankje op de dood. ❕ Niet stapelbaar.❕ Opmerking: drankjes zullen verdwijnen zodra de laatste vijand van het niveau is verzonden.",
@@ -4505,6 +4557,10 @@
         "mana vampire": "Mana Vampire",
         "load saved game": "Laad opgeslagen spel",
         "suffocated!": "Verstikt!",
-        "version": "Versie"
+        "version": "Versie",
+        "hotseat_description": "Speel met meerdere spelers op een enkele computer, om de beurt met de bedieningselementen.",
+        "start game": "Start het spel",
+        "add player": "Voeg speler toe",
+        "remove player": "Verwijder de speler"
     }
 ]
