@@ -2187,7 +2187,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       console.error("turn_phase must be PlayerTurns to end turn.  Cannot be ", this.turn_phase);
     }
     Player.syncLobby(this);
-    if ((numberOfHotseatPlayers || 0) > 1) {
+    if (numberOfHotseatPlayers > 1) {
       // Change to next player
       // Shift front player to the back so that first player found for fromPlayer is the next player
       const shifted = this.players.shift();
@@ -2196,10 +2196,19 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       } else {
         console.error('Hotseat: shifted player is undefined');
       }
-      globalThis.player = this.players[0];
+      if (this.players[0]) {
+
+        globalThis.player = this.players[0];
+      } else {
+        console.error('Hotseat: Tried to change player but player is undefined');
+      }
       CardUI.recalcPositionForCards(globalThis.player, this);
       CardUI.syncInventory(undefined, this);
       runPredictions(this);
+      // Announce new players' turn
+      if (globalThis.player && globalThis.player.name) {
+        queueCenteredFloatingText(globalThis.player.name);
+      }
 
       // Turn on auto follow if they are spawned, and off if they are not
       cameraAutoFollow(!!globalThis.player?.isSpawned);

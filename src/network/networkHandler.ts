@@ -36,6 +36,7 @@ import seedrandom from 'seedrandom';
 import { getUniqueSeedString, SeedrandomState } from '../jmath/rand';
 import { raceTimeout } from '../Promise';
 import { createVisualLobbingProjectile } from '../entity/Projectile';
+import { setPlayerNameUI } from '../PlayerUtils';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -438,20 +439,8 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         }
         if (name !== undefined) {
           fromPlayer.name = name;
-          fromPlayer.unit.name = name;
-          if (globalThis.pixi && fromPlayer.unit.image) {
-            // @ts-ignore jid is a custom identifier to id the text element used for the player name
-            const nameText = fromPlayer.unit.image.sprite.children.find(child => child.jid == config.NAME_TEXT_ID) as PIXI.Text || new globalThis.pixi.Text();
-            // @ts-ignore jid is a custom identifier to id the text element used for the player name
-            nameText.jid = config.NAME_TEXT_ID;
-            fromPlayer.unit.image.sprite.addChild(nameText);
-            nameText.text = fromPlayer.name;
-            nameText.y = -config.COLLISION_MESH_RADIUS - config.NAME_TEXT_Y_OFFSET;
-            nameText.style = { fill: 'white', fontSize: config.NAME_TEXT_DEFAULT_SIZE, fontFamily: 'Forum', ...config.PIXI_TEXT_DROP_SHADOW };
-            nameText.anchor.x = 0.5;
-            nameText.anchor.y = 0.5;
-          }
         }
+        setPlayerNameUI(fromPlayer);
         Player.setPlayerRobeColor(fromPlayer, color, colorMagic);
         Player.syncLobby(underworld);
         underworld.tryRestartTurnPhaseLoop();

@@ -38,3 +38,24 @@ export function isOutOfRange(caster: Player.IPlayer, target: Vec2, underworld: U
 export function getEndOfRange(caster: Player.IPlayer, target: Vec2): Vec2 {
     return math.getCoordsAtDistanceTowardsTarget(caster.unit, target, caster.unit.attackRange);
 }
+
+export function setPlayerNameUI(player: Player.IPlayer) {
+    const { name } = player;
+    if (name !== undefined) {
+        player.name = name;
+        player.unit.name = name;
+        if (globalThis.pixi && player.unit.image) {
+            // @ts-ignore jid is a custom identifier to id the text element used for the player name
+            const nameText = player.unit.image.sprite.children.find(child => child.jid == config.NAME_TEXT_ID) as PIXI.Text || new globalThis.pixi.Text();
+            // @ts-ignore jid is a custom identifier to id the text element used for the player name
+            nameText.jid = config.NAME_TEXT_ID;
+            player.unit.image.sprite.addChild(nameText);
+            nameText.text = player.name;
+            nameText.y = -config.COLLISION_MESH_RADIUS - config.NAME_TEXT_Y_OFFSET;
+            nameText.style = { fill: 'white', fontSize: config.NAME_TEXT_DEFAULT_SIZE, fontFamily: 'Forum', ...config.PIXI_TEXT_DROP_SHADOW };
+            nameText.anchor.x = 0.5;
+            nameText.anchor.y = 0.5;
+        }
+    }
+
+}

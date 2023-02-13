@@ -13,6 +13,7 @@ import { UnitType } from './types/commonTypes';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import { addOverworldEventListeners } from "./views";
 import { calculateGameDifficulty } from "./Difficulty";
+import { setPlayerNameUI } from "./PlayerUtils";
 
 export interface Overworld {
     pie: PieClient | IHostApp;
@@ -83,6 +84,7 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
                     player.name = config.name;
                     player.color = config.color;
                     player.colorMagic = config.colorMagic;
+                    setPlayerNameUI(player);
                 }
             }
         }
