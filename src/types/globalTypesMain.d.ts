@@ -222,7 +222,7 @@ declare global {
     var emitters: undefined | JEmitter[];
     var timeLastChoseUpgrade: number | undefined;
     // How many players are playing hotseat multiplayer on a single computer
-    var numberOfHotseatPlayers: number | undefined;
+    var numberOfHotseatPlayers: number;
     var hotseatPlayerConfig: {
         name: string,
         color: number,

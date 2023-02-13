@@ -76,7 +76,7 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
             // If the client that joined does not have a player yet, make them one immediately
             // since all clients should always have a player associated
             console.log(`Setup: Create a Player instance for ${clientId}`)
-            for (let i = 0; i < (globalThis.numberOfHotseatPlayers || 1); i++) {
+            for (let i = 0; i < globalThis.numberOfHotseatPlayers; i++) {
                 const config = globalThis.hotseatPlayerConfig?.[i];
                 const player = Player.create(clientId, underworld);
                 if (config) {

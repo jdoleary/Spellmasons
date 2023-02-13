@@ -38,6 +38,7 @@ const PORT = process.env.PORT || 8080;
 globalThis.isHost = () => true;
 // Headless does not includee a player of it's own, it's just the host
 globalThis.player = undefined;
+globalThis.numberOfHotseatPlayers = 1;
 
 function headlessStartGame() {
     console.log('Headless Server Started at port ', PORT);
