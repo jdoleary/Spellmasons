@@ -998,7 +998,7 @@ export function drawCircleUnderTarget(mousePos: Vec2, underworld: Underworld, op
     const offsetX = targetUnit ? 0 : 0;
     const offsetY = targetUnit ? targetUnit.UITargetCircleOffsetY : -15;
     const scaleY = targetUnit?.image?.sprite.scale.y || 1;
-    graphics.drawEllipse(target.x + offsetX, target.y + config.COLLISION_MESH_RADIUS * scaleY + offsetY * scaleY, (targetUnit?.image?.sprite.scale.x || 1) * config.COLLISION_MESH_RADIUS / 2, (targetUnit?.image?.sprite.scale.y || 1) * config.COLLISION_MESH_RADIUS / 3);
+    graphics.drawEllipse(target.x + offsetX, target.y + config.COLLISION_MESH_RADIUS * scaleY + offsetY * scaleY, Math.abs(targetUnit?.image?.sprite.scale.x || 1) * config.COLLISION_MESH_RADIUS / 2, (targetUnit?.image?.sprite.scale.y || 1) * config.COLLISION_MESH_RADIUS / 3);
     graphics.endFill();
   }
 }
