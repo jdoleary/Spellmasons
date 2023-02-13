@@ -97,6 +97,7 @@ const smearJitter = [
   { x: 3, y: -3 },
   { x: 0, y: 3 },
 ]
+let gameOverModalTimeout: NodeJS.Timeout;
 const elUpgradePicker = document.getElementById('upgrade-picker') as (HTMLElement | undefined);
 export const elUpgradePickerContent = document.getElementById('upgrade-picker-content') as (HTMLElement | undefined);
 const elSeed = document.getElementById('seed') as (HTMLElement | undefined);
@@ -1812,11 +1813,20 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
   }
   tryGameOver(): boolean {
+    // Clear previous timeout that would toggle game over state
+    if (gameOverModalTimeout !== undefined) {
+      clearTimeout(gameOverModalTimeout);
+    }
     const isOver = this.isGameOver();
-    // Show game over modal after a delay
-    setTimeout(() => {
+    if (!isOver) {
+      // If clearing the game-over modal, clear it immediately
       document.body.classList.toggle('game-over', isOver);
-    }, 1000);
+    } else {
+      // Show game over modal after a delay
+      gameOverModalTimeout = setTimeout(() => {
+        document.body.classList.toggle('game-over', isOver);
+      }, 3000);
+    }
     this.updateGameOverModal();
     if (globalThis.headless) {
       if (isOver) {
@@ -3026,6 +3036,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     stopAndDestroyForeverEmitter(castingParticleEmitter);
     this.checkIfShouldSpawnPortal();
+    this.tryGameOver();
 
     return effectState;
   }
