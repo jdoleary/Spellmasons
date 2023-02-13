@@ -2,12 +2,7 @@
 ## Priorities
 - UPdate store page with how many players possible
 - Modding
-  - Add a proprietary license to Spellmasons code
-  - Create spellmasons.com/cla
-    - or use a fully open source mod for the spellmasons-mods repo only and allows the code to be used commercially
-  - make registMod function globally accessible
-  - Check package.json for licenses
-- Hotseat Multiplayer
+  - Underworld should store list of activated mods which should govern which mods take effect
 
 ## Final Tasks Tonight
 

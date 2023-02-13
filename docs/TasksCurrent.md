@@ -1,4 +1,6 @@
 # for v1.7
+- bug: Admin skip to lava biome doesn't work anymore until you end your turn,
+  does entering a portal not end your turn??
 - bug: don't let portal spawn before spells are done being cast (test with super long slash combo)
 - bug: Dash and burst doesn't work right
 ```
