@@ -934,6 +934,7 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       units: underworld.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
       players: underworld.players.map(Player.serialize),
       doodads: underworld.doodads.map(Doodad.serialize),
+      numberOfHotseatPlayers
     };
     try {
       storage.set(
@@ -976,7 +977,10 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
         }
       }
 
-      const { underworld: savedUnderworld, phase, units, players, pickups, doodads, version } = fileSaveObj;
+      const { underworld: savedUnderworld, phase, units, players, pickups, doodads, version, numberOfHotseatPlayers } = fileSaveObj;
+      if (numberOfHotseatPlayers !== undefined) {
+        globalThis.numberOfHotseatPlayers = numberOfHotseatPlayers;
+      }
       if (version !== globalThis.SPELLMASONS_PACKAGE_VERSION) {
         Jprompt({
           text: `This save file is from a previous version of the game and may not run as expected.

@@ -1,6 +1,5 @@
 # for v1.7
 - Hotseat multiplayer
-  - Support loading hotseat multiplayer saved games
   - test perks for hotseat multiplayer
 - bug: Dash and burst doesn't work right
 - bug: dash doesn't tell you if it'll do damage to you from collision??

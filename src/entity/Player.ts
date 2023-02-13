@@ -17,6 +17,7 @@ import * as lastWill from '../cards/lastwill';
 import { explain, EXPLAIN_BLESSINGS, isTutorialComplete } from '../graphics/Explain';
 import { lightenColor } from '../graphics/ui/colorUtil';
 import { AttributePerk } from '../Perk';
+import { setPlayerNameUI } from '../PlayerUtils';
 
 const elInGameLobby = document.getElementById('in-game-lobby') as (HTMLElement | undefined);
 const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
@@ -308,6 +309,7 @@ export function load(player: IPlayerSerialized, underworld: Underworld) {
   }
   underworld.queueGameLoop();
   setPlayerRobeColor(playerLoaded, playerLoaded.color);
+  setPlayerNameUI(playerLoaded);
   return playerLoaded;
 }
 
