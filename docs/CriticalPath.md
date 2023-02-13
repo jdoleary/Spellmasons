@@ -1,20 +1,9 @@
 # Critical Path
 ## Priorities
-- UPdate store page with how many players possible
+- State machine for turn_phases
 - Modding
   - Underworld should store list of activated mods which should govern which mods take effect
 
-## Final Tasks Tonight
-
-- smoke test
-- Build mac, pc, demo for both
-  - rename LICENSE to electron-license
-  - Ensure mac bundle isn't 700mb with extra stuff
-- Upload and test on steam
-- WHY DID WALRUS SERVER NOT AUTO UPDATE WHEN I PUSHED A NEW IMAGE??
-  - Apps that use docker hub instead of digital ocean registry need manual
-    updating
-- Verify that main build isn't running demo version
 
 ## Tonight
 
@@ -63,25 +52,8 @@
 - idea: less spell choices, more perk choices?
 
 - Extras
-  - Support Modding
   - Codex
-  - Answer emails
 
-## Monday - Validation - Final builds
-
-- Validate difficulty scaling: up to 3 players the enemies get tougher, beyond
-  they get more pleantiful
-- Multiplayer save/load
-  - Saved games persist to steam cloud
-  - what happens when multiplayer tries to join a singple player save
-    - or when there are more players in the lobby than there are players in the
-      save
-  - If a player joins a game and then leaves without ever being a part of the
-    game you can "join as that player" but the names get mixed up.
-- White screen if game launches from non C drive?
-- Test on Slow Computer
-- Verify Cloud Saves
-- Verify multiple games playing on the same server don't cause issues
 
 ## Day of
 
@@ -105,7 +77,6 @@
     - Note: Use custom clone and add steam SDK yourself for security reasons
   - [Linux Support](https://www.electronjs.org/docs/latest/tutorial/application-distribution#rebranding-with-downloaded-binaries)
     - Use node.js path object instead of .replace with ///file:
-  - Hotseat multiplayer
   - PVP
   - Codex
   - Reach out to `rastabarkan` and `nonotion` for translation support after

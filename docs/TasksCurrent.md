@@ -1,7 +1,9 @@
 # for v1.7
+- bug: if a spell kills self and then rez you still die
+  - bug: Game over screen will come up if you kill and res yourself
+    - doing this with an ally npc causes SET_PHASE to re-kill you during sync, since the ending of the turn happens in Unit.die, it happens before the resurrect (before the spell is done casting)
 - bug: Admin skip to lava biome doesn't work anymore until you end your turn,
   does entering a portal not end your turn??
-- bug: don't let portal spawn before spells are done being cast (test with super long slash combo)
 - bug: Dash and burst doesn't work right
 ```
 Lashawnda Gandara — 02/11/2023 12:04 AM
@@ -28,7 +30,6 @@ but casting from the hotbar works (queuing spells denied).
 - Dash then burst doesn't work as expected,
   - i think movement spells that affect the caster should update the casterInitialPosition in the effectState (which is only meant to protect against walking movement)
     - but what about arrows
-- Triage tasks for Charles
 ---
 - add spells cast IDs to end turn and have the server query back to the client for the spell if it hasn’t recorded that it’s executed that spell message id  before executing the end turn
 - bug: Displace can clip you into a wall if your location is really close to a wall
