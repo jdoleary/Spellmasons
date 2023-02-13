@@ -82,5 +82,6 @@ export function chooseObjectWithProbability<T extends objectWithProbability>(
 export function getUniqueSeedString(underworld: Underworld, player?: IPlayer): string {
   // Seeded random based on the turn so it's consistent across all clients
   // based on player client ids so it's unique to each player
-  return `${underworld.seed}-${underworld.levelIndex}-${underworld.turn_number}-${player?.clientId || '0'}`;
+  const playerUniqueIdentifier = !player ? '0' : (globalThis.numberOfHotseatPlayers > 1 ? player.name : player.clientId);
+  return `${underworld.seed}-${underworld.levelIndex}-${underworld.turn_number}-${playerUniqueIdentifier}`;
 }
