@@ -201,6 +201,7 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string, colo
 export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld) {
   // Set the player so they can choose their next spawn
   player.isSpawned = false;
+  player.endedTurn = false;
   // Update player position to be NOT NaN or null (which indicates that the player is in portal),
   // instead, the player is now spawning so their position should be a number.
   // This is important because it allows the player to see enemy attentionMarkers when

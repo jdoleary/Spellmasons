@@ -1,11 +1,7 @@
 # for v1.7
 - Hotseat multiplayer
   - Support loading hotseat multiplayer saved games
-  - support different seeded upgrades for hotseat multiplayer
   - test perks for hotseat multiplayer
-  - bug: Color is being sent as NaN
-  - on level 2 ended turn and it didn't go to player 2, it wen to enemy turn
-  - names aren't showing over heads and colors are weird in lobby
 - bug: Dash and burst doesn't work right
 - bug: dash doesn't tell you if it'll do damage to you from collision??
 ```
