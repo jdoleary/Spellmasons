@@ -22,7 +22,6 @@ Ah! spells not in hotbar don't decrease their mana at all after a turn even not 
 - "heal" saying "Stackable" is confusing (https://discord.com/channels/1032294536640200766/1032294537235812404/1073613840794779741)
 but casting from the hotbar works (queuing spells denied).
 - copy: connect card: allys -> allies
-- Super long stacks of rend takes too long
 - bug: resurrect after you die with allies makes the game not be turn based anymore? https://steamcommunity.com/app/1618380/discussions/0/3766733548885838682/
 - hotkeys for sidebars (ctrl+ num) https://steamcommunity.com/app/1618380/discussions/0/3766733981708936047/
 ## validate v1.7

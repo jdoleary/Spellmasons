@@ -66,6 +66,8 @@ function animateRend(targets: Vec2[], quantity: number, prediction: boolean): Pr
           resolve();
           return
         }
+        // Limit animated quantity to 7 (anything beyond that is absurd from an animation standpoint and takes too long)
+        quantity = Math.min(7, quantity);
         for (let unit of targets) {
           // For rend effect only, make more instances going upward for each quantity
           for (let q = 0; q < quantity; q++) {
