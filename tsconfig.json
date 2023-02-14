@@ -23,6 +23,7 @@
     "src"
   ],
   "exclude": [
-    "src/types/globalTypesHeadless.d.ts"
+    "src/types/globalTypesHeadless.d.ts",
+    "**/*.test.ts"
   ]
 }
