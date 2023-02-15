@@ -6,7 +6,7 @@
   "scripts": {
     "start": "vite",
     "tsc": "tsc",
-    "build_types": "tsc --declaration --emitDeclarationOnly --outDir public/spellmasons-mods/types --noEmit false --removeComments false",
+    "build_types": "tsc --declaration --emitDeclarationOnly --outDir public/spellmasons-mods/types --noEmit false --removeComments false && cp -r public/spellmasons-mods/types/src/. public/spellmasons-mods/types && rm -r public/spellmasons-mods/types/src",
     "build": "npm run build_types && tsc && vite build && npm run headless-build-only && node makeBuildManifest.js",
     "test": "tsc && jest",
     "format": "prettier --write \"src/**/*.{ts,js}\"",
