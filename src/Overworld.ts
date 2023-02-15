@@ -38,9 +38,9 @@ export default function makeOverworld(pie: PieClient | IHostApp): Overworld {
     // can access all the unit ids
     Units.registerUnits();
     Cards.registerCards(overworld);
+    registerAllMods(overworld);
 
     addOverworldEventListeners(overworld);
-    registerAdminContextMenuOptions(overworld);
     // Setup global functions that need access to underworld:
     setupNetworkHandlerGlobalFunctions(overworld);
     setupDevGlobalFunctions(overworld);
@@ -48,8 +48,10 @@ export default function makeOverworld(pie: PieClient | IHostApp): Overworld {
     // Setup UI event listeners
     CardUI.setupCardUIEventListeners(overworld);
 
-    registerAllMods(overworld);
 
+    // register Admin menu AFTER mods so that you can access mod content
+    // in the admin menu
+    registerAdminContextMenuOptions(overworld);
     // When the game is ready to process wsPie messages, begin
     // processing them
     // The game is ready when the following have been loaded
