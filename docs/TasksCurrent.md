@@ -1,4 +1,7 @@
 # for v1.7
+- suggestion: Skier — Yesterday at 11:47 PM I think it would help if when summoners were spawned from dark summoners they didn't have full mana
+- bug: does turn cycle carry on without you with a clone of yourself alive? https://discord.com/channels/1032294536640200766/1074491932220334080/1075048220331352175
+- bug: Coaldust Numbers — Yesterday at 7:15 PM @Jordan - Spellmasons Developer I've noticed bugs in two spell components.  Vortex can no longer be cast without a target (e.g. to pull things toward a point on the ground, like repulse but in reverse).  Additional casts of suffocate also extend (instead of shorten) the wait for the enemy to die.
 - bug: if a spell kills self and then rez you still die
   - bug: Game over screen will come up if you kill and res yourself
     - doing this with an ally npc causes SET_PHASE to re-kill you during sync, since the ending of the turn happens in Unit.die, it happens before the resurrect (before the spell is done casting)

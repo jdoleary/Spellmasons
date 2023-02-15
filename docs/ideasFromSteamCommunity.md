@@ -187,3 +187,6 @@ You can make it so that you can only use one type of Targeting spell per cast an
  But I think it would be best to start spawning some special variants of enemies, or maybe champion versions of existing ones after first loop. Like, for example, enemies with one-time Nullify shield, or one that can only be targeted directly (immune to Targeting spells), one that gives aura of invincibility to all enemies nearby, one with absurd stats that becomes dormant after taking some amount of damage, or maybe one that has some global on death or on hit effect: damages you / depleads your manapool / silences you. 
 
 Hope you'll find something useful in my  rambling, best of luck with further development!
+---
+ThatOneGuy — Today at 10:28 AM
+A way to make it so your spell's automatically fill certain slots could be pretty nice, like you set up a preset before the run then as you unlock said spells, it fills them out on your lists
