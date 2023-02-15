@@ -47,6 +47,8 @@ import * as Subsprites from './Subsprites';
 import * as Underworld from './Underworld';
 import * as VisualEffects from './VisualEffects';
 
+import * as commonTypes from './types/commonTypes';
+
 
 const SpellmasonsAPI = {
     config,
@@ -96,5 +98,7 @@ const SpellmasonsAPI = {
     Subsprites,
     Underworld,
     VisualEffects,
+    // Includes enums which are not just types
+    commonTypes
 }
 export default SpellmasonsAPI;
