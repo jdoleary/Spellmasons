@@ -1,9 +1,8 @@
 // set window defaults, must be called before setupAll()
 import { setupPixi } from './graphics/PixiUtils';
 import { initPlanningView } from './graphics/PlanningView';
-import { setupAudio, playNextSong, playSFX, playSFXKey, sfx } from './Audio';
+import { playNextSong, playSFX, playSFXKey, sfx } from './Audio';
 import cookieConsentPopup from './cookieConsent';
-import { setupMonitoring } from './monitoring';
 import * as storage from './storage';
 import { version } from '../package.json';
 globalThis.SPELLMASONS_PACKAGE_VERSION = version;
@@ -21,6 +20,8 @@ import type PieClient from '@websocketpie/client';
 import { setupPieAndUnderworld } from './network/wsPieSetup';
 import { returnToDefaultSprite } from './entity/Unit';
 import Jprompt from './graphics/Jprompt';
+import SpellmasonsAPI from './api';
+globalThis.SpellmasonsAPI = SpellmasonsAPI;
 
 // Globalize injected Audio functions
 globalThis.playNextSong = playNextSong;
