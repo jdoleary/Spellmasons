@@ -1,4 +1,7 @@
 import type * as particles from '@pixi/particle-emitter'
+import { Spell } from '../cards';
+import { IPickup } from '../entity/Pickup';
+import { UnitSource } from '../entity/units';
 export enum UnitType {
   PLAYER_CONTROLLED,
   AI,
@@ -40,3 +43,15 @@ export const probabilityMap: Record<CardRarity, number> = {
 
 }
 export type JEmitter = particles.Emitter & { cleanAfterTurn?: boolean };
+
+export interface Mod {
+  modName: string;
+  author: string;
+  description: string;
+  screenshot: string;
+  sfx?: { [key: string]: string[] };
+  spritesheet?: string;
+  units?: UnitSource[];
+  pickups?: IPickup[];
+  spells?: Spell[];
+}
