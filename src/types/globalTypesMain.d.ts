@@ -7,7 +7,7 @@ import type PieClient from '@websocketpie/client';
 import type { Vec2 } from '../jmath/Vec';
 import type { LevelData } from '../Underworld';
 import type { View } from '../views';
-import type { Faction, JEmitter } from './commonTypes';
+import type { Faction, JEmitter, Mod } from './commonTypes';
 import type { IPickup } from '../entity/Pickup';
 import type { IHostApp } from '../network/networkUtil';
 import type { LanguageMapping, Localizable } from '../localization';
@@ -233,4 +233,5 @@ declare global {
     // This type is used in public/mods and defined in the globalTypes.d.ts in public/mods
     // since it is not used in this project it need not be typed here
     var SpellmasonsAPI: any;
+    var allMods: Mod[];
 }

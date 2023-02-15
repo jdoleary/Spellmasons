@@ -129,7 +129,7 @@ export function registerEvents(id: string, events: Events) {
 
 }
 
-function register(spell: Spell, overworld: Overworld) {
+export function registerSpell(spell: Spell, overworld: Overworld) {
   const { modifiers, card, events } = spell;
   const { id } = card;
   // Add card to cards pool
@@ -151,73 +151,73 @@ function register(spell: Spell, overworld: Overworld) {
 }
 export function registerCards(overworld: Overworld) {
   if (location && location.href.includes('localhost')) {
-    register(devRecordDelay, overworld);
+    registerSpell(devRecordDelay, overworld);
   }
-  register(slash, overworld);
-  register(rend, overworld);
-  register(bleed, overworld);
-  register(suffocate, overworld);
-  register(add_heal, overworld);
-  register(target_circle, overworld);
-  register(connect, overworld);
+  registerSpell(slash, overworld);
+  registerSpell(rend, overworld);
+  registerSpell(bleed, overworld);
+  registerSpell(suffocate, overworld);
+  registerSpell(add_heal, overworld);
+  registerSpell(target_circle, overworld);
+  registerSpell(connect, overworld);
   // register(contagious, overworld);
-  register(freeze, overworld);
-  register(raise_dead, overworld);
-  register(shield, overworld);
-  register(fortify, overworld);
-  register(poison, overworld);
-  register(purify, overworld);
-  register(swap, overworld);
-  register(displace, overworld);
-  register(debilitate, overworld);
+  registerSpell(freeze, overworld);
+  registerSpell(raise_dead, overworld);
+  registerSpell(shield, overworld);
+  registerSpell(fortify, overworld);
+  registerSpell(poison, overworld);
+  registerSpell(purify, overworld);
+  registerSpell(swap, overworld);
+  registerSpell(displace, overworld);
+  registerSpell(debilitate, overworld);
   // Nullify / "protection" is too powerful, remove for now
   // - **bug** nullify bug: it doesn't leave after it cancels a spell so if you cast it on an enemy you cant kill it
   // register(protection.default, overworld);
-  register(clone, overworld);
-  register(mana_burn, overworld);
-  register(mana_steal, overworld);
-  register(vampire_bite, overworld);
-  register(push, overworld);
-  register(pull, overworld);
-  register(vortex, overworld);
-  register(dash, overworld);
-  register(repel, overworld);
-  register(decoy, overworld);
-  register(explode, overworld);
+  registerSpell(clone, overworld);
+  registerSpell(mana_burn, overworld);
+  registerSpell(mana_steal, overworld);
+  registerSpell(vampire_bite, overworld);
+  registerSpell(push, overworld);
+  registerSpell(pull, overworld);
+  registerSpell(vortex, overworld);
+  registerSpell(dash, overworld);
+  registerSpell(repel, overworld);
+  registerSpell(decoy, overworld);
+  registerSpell(explode, overworld);
   // Temporarily remove corpse_explosion until optimization
   // issues are solved
   // register(corpse_explosion, overworld);
-  register(lastWill, overworld);
-  register(split, overworld);
-  register(drown, overworld);
-  register(target_similar, overworld);
-  register(target_all, overworld);
-  register(target_cone, overworld);
-  register(plus_radius, overworld);
-  register(shove, overworld);
-  register(target_column, overworld);
-  register(burst, overworld);
-  register(slow, overworld);
-  register(death_wager, overworld);
-  register(capture_soul, overworld);
-  register(sacrifice, overworld);
-  register(arrow, overworld);
-  register(phantom_arrow, overworld);
+  registerSpell(lastWill, overworld);
+  registerSpell(split, overworld);
+  registerSpell(drown, overworld);
+  registerSpell(target_similar, overworld);
+  registerSpell(target_all, overworld);
+  registerSpell(target_cone, overworld);
+  registerSpell(plus_radius, overworld);
+  registerSpell(shove, overworld);
+  registerSpell(target_column, overworld);
+  registerSpell(burst, overworld);
+  registerSpell(slow, overworld);
+  registerSpell(death_wager, overworld);
+  registerSpell(capture_soul, overworld);
+  registerSpell(sacrifice, overworld);
+  registerSpell(arrow, overworld);
+  registerSpell(phantom_arrow, overworld);
   // TODO: Target arrow isn't ready due to the fact that the convenience UX of being able to fire arrows
   // past your cast range has targeting complications with Target Arrow and I haven't been able to find
   // a solution that doesn't introduce bugs or complexity.
   // register(target_arrow, overworld);
   // TODO: Refactor bolt into soulbind, it didn't work out well as a spell
   // register(bolt, overworld);
-  register(conserve, overworld);
+  registerSpell(conserve, overworld);
   for (let unitId of Object.keys(allUnits)) {
     const spell = summon_generic(unitId, false);
     if (spell) {
-      register(spell, overworld);
+      registerSpell(spell, overworld);
     }
     const spellMiniboss = summon_generic(unitId, true);
     if (spellMiniboss) {
-      register(spellMiniboss, overworld);
+      registerSpell(spellMiniboss, overworld);
     }
   }
 

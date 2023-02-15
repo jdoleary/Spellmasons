@@ -54,29 +54,29 @@ import ghost_archer from './ghost_archer';
 import Underworld from '../../Underworld';
 import { Localizable } from '../../localization';
 
-function register(unit: UnitSource) {
+export function registerUnit(unit: UnitSource) {
   allUnits[unit.id] = unit;
 }
 export function registerUnits() {
-  register(golem);
-  register(archer);
-  register(lobber);
-  register(priest);
-  register(poisoner);
-  register(vampire);
+  registerUnit(golem);
+  registerUnit(archer);
+  registerUnit(lobber);
+  registerUnit(priest);
+  registerUnit(poisoner);
+  registerUnit(vampire);
   // TODO: Dragger is causing desync in multiplayer
   // register(dragger);
-  register(summoner);
-  register(bloodGolem);
-  register(blood_archer);
-  register(ghost_archer);
-  register(greenGlop);
-  register(manaVampire);
-  register(darkSummoner);
-  register(darkPriest);
-  register(playerUnit);
-  register(bossmason);
-  register(decoy);
+  registerUnit(summoner);
+  registerUnit(bloodGolem);
+  registerUnit(blood_archer);
+  registerUnit(ghost_archer);
+  registerUnit(greenGlop);
+  registerUnit(manaVampire);
+  registerUnit(darkSummoner);
+  registerUnit(darkPriest);
+  registerUnit(playerUnit);
+  registerUnit(bossmason);
+  registerUnit(decoy);
 }
 
 

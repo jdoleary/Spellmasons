@@ -60,7 +60,7 @@ export type IPickup = HasSpace & {
   flaggedForRemoval: boolean;
 
 }
-interface IPickupSource {
+export interface IPickupSource {
   name: string;
   description: Localizable;
   imagePath?: string;

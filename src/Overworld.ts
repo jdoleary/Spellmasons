@@ -14,6 +14,7 @@ import { MESSAGE_TYPES } from './types/MessageTypes';
 import { addOverworldEventListeners } from "./views";
 import { calculateGameDifficulty } from "./Difficulty";
 import { setPlayerNameUI } from "./PlayerUtils";
+import registerAllMods from "./registerMod";
 
 export interface Overworld {
     pie: PieClient | IHostApp;
@@ -46,6 +47,8 @@ export default function makeOverworld(pie: PieClient | IHostApp): Overworld {
 
     // Setup UI event listeners
     CardUI.setupCardUIEventListeners(overworld);
+
+    registerAllMods(overworld);
 
     // When the game is ready to process wsPie messages, begin
     // processing them

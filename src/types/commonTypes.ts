@@ -1,6 +1,6 @@
 import type * as particles from '@pixi/particle-emitter'
 import { Spell } from '../cards';
-import { IPickup } from '../entity/Pickup';
+import { IPickupSource } from '../entity/Pickup';
 import { UnitSource } from '../entity/units';
 export enum UnitType {
   PLAYER_CONTROLLED,
@@ -52,6 +52,6 @@ export interface Mod {
   sfx?: { [key: string]: string[] };
   spritesheet?: string;
   units?: UnitSource[];
-  pickups?: IPickup[];
+  pickups?: IPickupSource[];
   spells?: Spell[];
 }
