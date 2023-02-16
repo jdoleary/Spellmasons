@@ -885,6 +885,10 @@ body.showUpgrades #inspector-tooltip {
   margin: 0;
 }
 
+#inspector-tooltip-img {
+  width: 100%;
+}
+
 #inspector-tooltip-inner {
   /* Allow scrolling for when perklist gets too tall */
   max-height: 70vh;

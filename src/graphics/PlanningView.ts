@@ -852,6 +852,9 @@ export function updateTooltipContent(underworld: Underworld) {
           const imageSrc = Unit.getExplainPathForUnitId(unitSource.id);
           if (!elInspectorTooltipImage.src.endsWith(imageSrc)) {
             elInspectorTooltipImage.src = imageSrc;
+            // on error image is hidden so set it back to block whenever it is changed.
+            // the onError handler prevents the broken image icon from showing
+            elInspectorTooltipImage.style.display = "block";
           }
           const extraText = `
 ${modifiersToText(globalThis.selectedUnit.modifiers)}
