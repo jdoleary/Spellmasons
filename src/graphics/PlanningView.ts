@@ -787,6 +787,9 @@ const elInspectorTooltipContainer = document.getElementById(
 const elInspectorTooltipContent = document.getElementById(
   'inspector-tooltip-content',
 );
+const elInspectorTooltipImage: HTMLImageElement | undefined = document.getElementById(
+  'inspector-tooltip-img',
+) as HTMLImageElement | undefined;
 
 let selectedType: "unit" | "pickup" | "obstacle" | null = null;
 export function updateTooltipContent(underworld: Underworld) {
@@ -794,7 +797,8 @@ export function updateTooltipContent(underworld: Underworld) {
     !(
       elInspectorTooltipContent &&
       elInspectorTooltip &&
-      elInspectorTooltipContainer
+      elInspectorTooltipContainer &&
+      elInspectorTooltipImage
     )
   ) {
     console.error("Tooltip elements failed to initialize")
@@ -845,6 +849,10 @@ export function updateTooltipContent(underworld: Underworld) {
         }
         const unitSource = allUnits[globalThis.selectedUnit.unitSourceId]
         if (unitSource) {
+          const imageSrc = Unit.getExplainPathForUnitId(unitSource.id);
+          if (!elInspectorTooltipImage.src.endsWith(imageSrc)) {
+            elInspectorTooltipImage.src = imageSrc;
+          }
           const extraText = `
 ${modifiersToText(globalThis.selectedUnit.modifiers)}
 ${unitSource.unitProps.manaCostToCast && unitSource.unitProps.manaCostToCast > 0 ? `Mana cost to cast: ${unitSource.unitProps.manaCostToCast}` : ''}
@@ -852,7 +860,6 @@ ${unitSource.unitProps.manaCostToCast && unitSource.unitProps.manaCostToCast > 0
           // NOTE: globalThis.selectedUnit.name is NOT localized on purpose
           // because those are user provided names
           text += `\
-<img width="100%" src="${Unit.getExplainPathForUnitId(unitSource.id)}"/>
 <h1>${globalThis.selectedUnit.name || i18n(unitSource.id)}</h1>
 <hr/>
 <div>${i18n(unitSource.info.description)}</div>
