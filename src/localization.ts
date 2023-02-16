@@ -34,13 +34,7 @@ function returnTranslation(keyOrArray: Localizable, map: LanguageMapping): strin
     } else {
         // Prevent reporting error more than once
         if (!cachedErrorsReported.includes(key)) {
-            // If something hasn't been localized yet, report it with console.error and return the key so
-            // the string isn't totally empty as the key might just be an english string for now
-            Sentry.withScope(function (scope) {
-                scope.setLevel('warning');
-                // The exception has the event level set by the scope (info).
-                Sentry.captureException(new Error(`i18n: Language ${map.language} has no value for key ${keyOrArray}`));
-            });
+            console.warn(`i18n: Language ${map.language} has no value for key ${keyOrArray}`);
             cachedErrorsReported.push(key);
         }
         return key;
