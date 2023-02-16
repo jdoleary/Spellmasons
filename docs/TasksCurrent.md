@@ -1,4 +1,11 @@
 # for v1.7
+- ```Late game optimizations to prevent crashes
+Lashawnda Gandara — Today at 6:50 AM
+so last will is op-
+Image
+that's enough spellmasons for today
+it crashed after i cast the spell
+```
 - suggestion: Skier — Yesterday at 11:47 PM I think it would help if when summoners were spawned from dark summoners they didn't have full mana
 - bug: does turn cycle carry on without you with a clone of yourself alive? https://discord.com/channels/1032294536640200766/1074491932220334080/1075048220331352175
 - bug: Coaldust Numbers — Yesterday at 7:15 PM @Jordan - Spellmasons Developer I've noticed bugs in two spell components.  Vortex can no longer be cast without a target (e.g. to pull things toward a point on the ground, like repulse but in reverse).  Additional casts of suffocate also extend (instead of shorten) the wait for the enemy to die.
