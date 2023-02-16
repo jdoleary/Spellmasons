@@ -83,6 +83,7 @@ import { bossmasonUnitId } from './entity/units/deathmason';
 import { hexToString } from './graphics/ui/colorUtil';
 import { doLiquidEffect } from './inLiquid';
 import { findRandomGroundLocation } from './entity/units/summoner';
+import { isModActive } from './registerMod';
 
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
@@ -186,7 +187,8 @@ export default class Underworld {
     displayObject: DisplayObject,
     emitter?: Emitter,
     target: Unit.IUnit
-  }[] = []
+  }[] = [];
+  activeMods: string[] = [];
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
@@ -1303,7 +1305,11 @@ export default class Underworld {
     const numberOfPickups = isTutorialStartLevel ? 0 : 4;
     for (let i = 0; i < numberOfPickups; i++) {
       if (validSpawnCoords.length == 0) { break; }
-      const choice = chooseObjectWithProbability(Pickup.pickups.map((p, i) => ({ index: i, probability: p.probability })), this.random);
+      const choice = chooseObjectWithProbability(
+        Pickup.pickups
+          .filter(p => isModActive(p, this))
+          .map((p, i) => ({ index: i, probability: p.probability })),
+        this.random);
       if (choice) {
         const { index } = choice;
         const validSpawnCoordsIndex = randInt(0, validSpawnCoords.length - 1, this.random);
@@ -3402,7 +3408,7 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
 
   const numberOfTypesOfEnemies = 2 + Math.floor(adjustedLevelIndex / 2);
   let possibleUnitsToChoose = Object.values(allUnits)
-    .filter(u => u.spawnParams && u.spawnParams.unavailableUntilLevelIndex <= adjustedLevelIndex)
+    .filter(u => u.spawnParams && u.spawnParams.unavailableUntilLevelIndex <= adjustedLevelIndex && isModActive(u, underworld))
     .map(u => ({ id: u.id, probability: u.spawnParams?.probability || 1, budgetCost: u.spawnParams?.budgetCost || 1 }))
   const unitTypes = Array(numberOfTypesOfEnemies).fill(null)
     // flatMap is used to remove any undefineds

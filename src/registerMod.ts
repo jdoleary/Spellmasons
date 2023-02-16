@@ -3,23 +3,35 @@ import { pickups } from "./entity/Pickup";
 import { registerUnit } from "./entity/units";
 import { Overworld } from "./Overworld";
 import { Mod } from "./types/commonTypes";
+import Underworld from "./Underworld";
+type moddedEntity = {
+    modName?: string;
+};
+// Always returns true if a unit doesn't belong to a mod
+// If a unit does belong to a mod, only returns true if the mod is active in the underworld
+export function isModActive(entity: moddedEntity, underworld: Underworld): boolean {
+    return (entity.modName == undefined) || underworld.activeMods.includes(entity.modName);
+}
 
 function registerMod(mod: Mod, overworld: Overworld) {
     // Register Units
     if (mod.units) {
         for (let unit of mod.units) {
+            unit.modName = mod.modName;
             registerUnit(unit);
         }
     }
     // Register Pickups
     if (mod.pickups) {
         for (let pickup of mod.pickups) {
+            pickup.modName = mod.modName;
             pickups.push(pickup);
         }
     }
     // Register Spells
     if (mod.spells) {
         for (let spell of mod.spells) {
+            spell.card.modName = mod.modName;
             registerSpell(spell, overworld);
         }
     }

@@ -62,6 +62,9 @@ export type IPickup = HasSpace & {
 }
 export interface IPickupSource {
   name: string;
+  // If a pickup belongs to a mod, it's modName will be automatically assigned
+  // This is used to dictate wether or not the modded pickup is used
+  modName?: string;
   description: Localizable;
   imagePath?: string;
   animationSpeed?: number;

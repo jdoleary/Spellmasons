@@ -230,6 +230,7 @@ function cardToUpgrade(c: ICard, overworld: Overworld): IUpgrade {
   const probability = globalThis.isDemo && c.probability == probabilityMap[CardRarity.FORBIDDEN] ? 0 : c.probability;
   return {
     title: c.id,
+    modName: c.modName,
     type: 'card',
     cardCategory: c.category,
     description: () => i18n(c.description).trim(),
@@ -338,6 +339,9 @@ export type EffectFn = {
 };
 export interface ICard {
   id: string;
+  // If a spell belongs to a mod, it's modName will be automatically assigned
+  // This is used to dictate wether or not the modded spell is used
+  modName?: string;
   category: CardCategory;
   manaCost: number;
   healthCost: number;

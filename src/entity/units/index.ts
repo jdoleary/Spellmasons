@@ -11,6 +11,9 @@ export type UnitAction = {
 };
 export interface UnitSource {
   id: string;
+  // If a unit belongs to a mod, it's modName will be automatically assigned
+  // This is used to dictate wether or not the modded unit is used
+  modName?: string;
   info: ConstructorInfo;
   init?: (unit: Unit.IUnit, underworld: Underworld) => void;
   action: UnitAction;

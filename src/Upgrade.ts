@@ -10,8 +10,12 @@ import { poisonCardId } from './cards/poison';
 import { bleedCardId } from './cards/bleed';
 import { drownCardId } from './cards/drown';
 import { suffocateCardId } from './cards/suffocate';
+import { isModActive } from './registerMod';
 export interface IUpgrade {
   title: string;
+  // If a upgrade belongs to a mod, it's modName will be automatically assigned
+  // This is used to dictate wether or not the modded upgrade is used
+  modName?: string;
   type: 'card' | 'special';
   cardCategory?: CardCategory;
   description: (player: IPlayer) => string;
@@ -44,6 +48,7 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
     // Now that upgrades are cards too, make sure it doesn't
     // show upgrades that the player already has as cards
     && !player.cards.includes(u.title)
+    && isModActive(u, underworld);
   let filteredUpgradeCardsSource = upgradeCardsSource.filter(filterUpgrades);
   // Every other level, players get to choose from stas upgrades or card upgrades
   // Unless Player already has all of the upgrades, in which case they
