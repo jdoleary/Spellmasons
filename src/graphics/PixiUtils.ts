@@ -621,7 +621,7 @@ export function updateNameText(nameText?: PIXI.Text, zoom?: number) {
 
 }
 // PIXI textures
-let sheet: PIXI.Spritesheet;
+let sheets: PIXI.Spritesheet[] = [];
 export function setupPixi(): Promise<void> {
   // Headless does not use graphics
   if (globalThis.headless) { return Promise.resolve(); }
@@ -689,22 +689,28 @@ function loadTextures(): Promise<void> {
       // loader.onError.add(e => console.error("Pixi loader on error:", e)); // called once per errored file
       // loader.onLoad.add(a => console.log("Pixi loader onLoad", a)); // called once per loaded file
       // loader.onComplete.add(a => console.log("Pixi loader onComplete")); // called once when the queued resources all load.
-      const sheetPath = 'sheet1.json';
-      loader.add(sheetPath);
+      loader.add('sheet1.json');
       loader.onError.add(e => {
         console.error('Pixi loader error', e)
       })
-      loader.load((_loader: any, resources: any) => {
-        resources = resources;
-        const resource = resources[sheetPath]
-        if (resource && resource.spritesheet) {
-          sheet = resource.spritesheet as PIXI.Spritesheet;
-          isReady = true;
+      loader.onComplete.add((loader, resources) => {
+        const sheetPaths = Object.keys(resources).filter(path => path.endsWith('.json'));
+        for (let sheetPath of sheetPaths) {
+          const resource = resources[sheetPath]
+          if (resource && resource.spritesheet && sheets.indexOf(resource.spritesheet) === -1) {
+            console.log('Load: register spritesheet', resource.url);
+            sheets.push(resource.spritesheet as PIXI.Spritesheet);
+            isReady = true;
+          }
+        }
+        if (sheets.length) {
           resolve();
         } else {
           reject();
         }
       });
+      // Start loading textures
+      loader.load();
     } else {
       console.error('globalThis.pixi is undefined')
     }
@@ -732,7 +738,13 @@ export function getPixiTextureAnimated(
       'PIXI is not finished setting up.  Cannot add a sprite yet',
     );
   }
-  return sheet.animations[imagePath];
+  for (let sheet of sheets) {
+    const animation = sheet.animations[imagePath];
+    if (animation) {
+      return animation;
+    }
+  }
+  return undefined;
 }
 export function addPixiSpriteAnimated(
   imagePath: string,
@@ -753,7 +765,14 @@ export function addPixiSpriteAnimated(
     return
   }
   let sprite: JSpriteAnimated;
-  let texture = sheet.animations[imagePath];
+  let texture: PIXI.Texture<PIXI.Resource>[] | undefined;
+  for (let sheet of sheets) {
+    console.log('jtest search for', imagePath, 'in', sheet);
+    texture = sheet.animations[imagePath];
+    if (texture) {
+      break;
+    }
+  }
   if (texture) {
     const animatedSprite = new globalThis.pixi.AnimatedSprite(texture);
     animatedSprite.animationSpeed = options.animationSpeed || config.DEFAULT_ANIMATION_SPEED;
@@ -781,6 +800,7 @@ export function addPixiSpriteAnimated(
     parent.addChild(sprite);
     return sprite;
   } else {
+    // TODO prevent this from causing Loading to freeze with white screen
     throw new Error(
       'Could not find animated texture for ' + imagePath
     );
@@ -802,7 +822,13 @@ export function addPixiTilingSprite(
     // For headless server
     return undefined;
   }
-  let singleTexture = sheet.textures[imagePath];
+  let singleTexture: PIXI.Texture<PIXI.Resource> | undefined;
+  for (let sheet of sheets) {
+    singleTexture = sheet.textures[imagePath];
+    if (singleTexture) {
+      break;
+    }
+  }
   if (!singleTexture) {
     console.error('Could not find texture for', imagePath, 'check the spritesheet to figure out why it is missing.');
     return undefined;
@@ -831,7 +857,13 @@ export function addPixiSprite(
     // For headless server
     return undefined;
   }
-  let singleTexture = sheet.textures[imagePath];
+  let singleTexture: PIXI.Texture<PIXI.Resource> | undefined;
+  for (let sheet of sheets) {
+    singleTexture = sheet.textures[imagePath];
+    if (singleTexture) {
+      break;
+    }
+  }
   if (!singleTexture) {
     console.error('Could not find texture for', imagePath, 'check the spritesheet to figure out why it is missing.');
     return undefined;

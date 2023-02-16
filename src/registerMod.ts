@@ -30,9 +30,12 @@ function registerMod(mod: Mod, overworld: Overworld) {
         if (sfx && mod.sfx) {
             Object.assign(sfx, mod.sfx);
         }
+
         if (globalThis.pixi && mod.spritesheet) {
             const loader = globalThis.pixi.Loader.shared;
             loader.add(mod.spritesheet);
+            // Start loading the textures
+            loader.load();
         }
     }
 
