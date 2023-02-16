@@ -725,7 +725,9 @@ function createCardElement(content: Cards.ICard) {
   elCardBadgeHolder.appendChild(elCardHealthBadge);
   const thumbHolder = document.createElement('div');
   const thumbnail = document.createElement('img');
-  thumbnail.src = 'images/spell/' + content.thumbnail;
+  // The presence of '/' means that it's a different path than default (such as in a mod) and it isn't
+  // nested in images/spell/
+  thumbnail.src = content.thumbnail.indexOf('/') !== -1 ? content.thumbnail : 'images/spell/' + content.thumbnail;
   thumbHolder.appendChild(thumbnail);
   thumbHolder.classList.add('card-thumb');
   elCardInner.appendChild(thumbHolder);
