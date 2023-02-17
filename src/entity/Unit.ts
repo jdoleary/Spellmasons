@@ -1131,8 +1131,6 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
   const { image, resolveDoneMoving, modifiers, ...rest } = u;
   return {
     ...rest,
-    // Prediction units
-    originalLife: false,
     // A copy of the units y scale just for the prediction unit so that it will know
     // how high up to display the attentionMarker
     predictionScale: image?.sprite.scale.y,
