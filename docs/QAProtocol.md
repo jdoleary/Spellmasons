@@ -1,5 +1,6 @@
 # QA Protocol
 - Don't forget to run `npm run build_types` and test mods
+- Test Host Local Server
 - Test tutorial
 - Test all spells in singleplayer: ~24 minutes
 - Test all spells in multiplayer: ~20 minutes
