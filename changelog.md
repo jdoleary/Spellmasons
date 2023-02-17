@@ -1,3 +1,18 @@
+## 2/17/2023 Spellmasons Update v1.7.0
+- feature: Add mod support for Units, Pickups, Spells, Art, Audio
+    - Supports singleplayer, multiplayer, saving/loading games with mods
+- feature: Add Hotseat Multiplayer so players can play together on a single computer
+    - Supports saving/loading games with hotseat multiplayer
+
+- UI: Add scrolling to spell queue box for super long spells do it doesn't cover too much of the screen
+- UI: Ensure "Game Over" button is always visible even in cases where stats are super tall.
+- UX: Increase speed of "Slash" for super long combos
+- UX: Limit how many visual stacks of "Rend" animate to prevent the player from having to wait too long for a super long "Rend" combo
+
+- fix: Prevent player's turn from ending mid cast.  This addresses the desync that occurred when a player would resurrect themself at the end of a spell that killed them.
+- fix: Prevent game over screen from popping up if you resurrect yourself
+- fix: Gold circle under player character's feet not showing up sometimes
+
 ## 2/9/2023 Spellmasons Update v1.6.0
 - fix: Desync occuring anytime "slash" was followed by a spell that took remaining health into account (such as "Bleed" or "Capture Soul")
 - src: Fix desyncs involving spells' initial targets
