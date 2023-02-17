@@ -38,6 +38,7 @@ globalThis.devAutoPickUpgrades = location.href.includes('localhost');
 globalThis.adminMode = location.href.includes('localhost');
 globalThis.zoomTarget = 1.8;
 globalThis.hotseatPlayerConfig = [];
+globalThis.mods = [];
 // Default to 1 for singleplayer
 globalThis.numberOfHotseatPlayers = 1;
 if (globalThis.UIEasyOnTheEyes === undefined) {
@@ -62,6 +63,12 @@ if (globalThis.devAutoPickUpgrades) {
 }
 
 setupAll();
+// Add mods.  Added in javascript instead of in html so that vite doesn't 
+// bundle it.  It must be replacable
+const script = document.createElement('script');
+script.type = 'text/javascript';
+script.src = 'spellmasons-mods/build/SpellmasonsMods.cjs.js';
+document.body.append(script);
 
 function setupAll() {
   // Initialize Assets

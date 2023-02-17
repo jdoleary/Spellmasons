@@ -1,3 +1,6 @@
+- discord bot to manage LFG `I think theres a bot for that Jordan like MEE6 reaction roles`
+- Improve korean translation
+- bug reported: white screen on Mods page
 # for v1.7
 - was able to create a desync with pickups (error and portal sticking around) when moving from one multiplayer game to another
 - health perk is OP https://steamcommunity.com/app/1618380/discussions/0/3766734182339003642/
