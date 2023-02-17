@@ -38,6 +38,8 @@ globalThis.devAutoPickUpgrades = location.href.includes('localhost');
 globalThis.adminMode = location.href.includes('localhost');
 globalThis.zoomTarget = 1.8;
 globalThis.hotseatPlayerConfig = [];
+// Default to 1 for singleplayer
+globalThis.numberOfHotseatPlayers = 1;
 if (globalThis.UIEasyOnTheEyes === undefined) {
   globalThis.UIEasyOnTheEyes = false;
 }
