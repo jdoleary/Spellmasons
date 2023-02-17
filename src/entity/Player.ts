@@ -121,6 +121,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
       totalKills: 0
     }
   };
+  player.unit.originalLife = true;
   // Player units get full mana every turn
   player.unit.manaPerTurn = player.unit.manaMax;
   // Player units shouldn't be pushed around
