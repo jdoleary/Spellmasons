@@ -49,6 +49,7 @@ import * as storage from './storage';
 import * as Subsprites from './Subsprites';
 import * as Underworld from './Underworld';
 import * as cardUtils from './cards/cardUtils';
+import * as cards from './cards/index';
 import { forcePush } from './cards/push';
 
 import * as commonTypes from './types/commonTypes';
@@ -86,6 +87,7 @@ const SpellmasonsAPI = {
     Subsprites,
     Underworld,
     cardUtils,
+    cards,
     // Includes enums which are not just types
     commonTypes,
     forcePush,
