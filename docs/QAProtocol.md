@@ -13,7 +13,6 @@
 - Test rerolling spells and perks
 
 ## v.1.7.0
-- big bug: from mods of multiplayer menu, back goes to menu and shows "resume game" which errors with no game to go back to when it should go back to lobby `Cannot close menu yet, no previous view to change to.`
 - bug after dying and starting a new game, spawning a spell makes it jump to me
 - file not found file:///C:/build/images/spell/spellmasons-mods/undead_blade/spellIconUndeadBlade.png
 - target column yields 2 columns when hovering over a pickup

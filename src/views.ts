@@ -32,7 +32,8 @@ let lastNonMenuView: View | undefined;
 export function clearLastNonMenuView() {
   lastNonMenuView = undefined;
 }
-function closeMenu() {
+// returns false if error occurred
+function closeMenu(): boolean {
   // Change to the last non menu view
   if (lastNonMenuView) {
     setView(lastNonMenuView);
@@ -41,8 +42,10 @@ function closeMenu() {
     if (globalThis.setMenu) {
       globalThis.setMenu('PLAY');
     }
+    return true;
   } else {
     console.log('Cannot close menu yet, no previous view to change to.');
+    return false;
   }
 
 }
