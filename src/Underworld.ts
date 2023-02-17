@@ -45,7 +45,7 @@ import {
   cacheBlood,
 } from './graphics/PixiUtils';
 import floatingText, { queueCenteredFloatingText, warnNoMoreSpellsToChoose } from './graphics/FloatingText';
-import { UnitType, Faction, UnitSubType } from './types/commonTypes';
+import { UnitType, Faction, UnitSubType, isSinglePlayer } from './types/commonTypes';
 import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
 import Events from './Events';
@@ -2102,7 +2102,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         if (globalThis.save && globalThis.player.isSpawned) {
           // For now, only save if in a singleplayer game (as determined by solomode_client_id)
           // because save support hasn't been added to multiplayer yet
-          if (globalThis.player.clientId == 'solomode_client_id') {
+          if (isSinglePlayer(globalThis.player.clientId)) {
             console.info(`Dev: quick saving game as "${globalThis.quicksaveKey}"`);
             // Force overwrite for quicksave, never prompt "are you sure?" when auto saving a quicksave
             globalThis.save(globalThis.quicksaveKey, true);

@@ -18,6 +18,7 @@ import Underworld from '../Underworld';
 import { version } from '../../package.json';
 import makeOverworld, { Overworld } from '../Overworld';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
+import { isSinglePlayer } from '../types/commonTypes';
 // Locally hosted, locally accessed
 // const wsUri = 'ws://localhost:8080';
 // Locally hosted, available to LAN (use your own IP)
@@ -177,7 +178,7 @@ ${explainUpdateText}
     if (globalThis.allowCookies) {
       // Only store clientId if it is from a multiplayer session
       // 'solomode_client_id' comes from pieclient's solo mode
-      if (o.clientId !== 'solomode_client_id') {
+      if (!isSinglePlayer(o.clientId)) {
         localStorage.setItem('pie-clientId', o.clientId);
       }
     }

@@ -37,6 +37,7 @@ import { getUniqueSeedString, SeedrandomState } from '../jmath/rand';
 import { raceTimeout } from '../Promise';
 import { createVisualLobbingProjectile } from '../entity/Projectile';
 import { setPlayerNameUI } from '../PlayerUtils';
+import { isSinglePlayer } from '../types/commonTypes';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -388,7 +389,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       }
 
       await handleLoadGameState(payload, overworld);
-      if (globalThis.clientId !== 'solomode_client_id') {
+      if (!isSinglePlayer(globalThis.clientId)) {
         setView(View.Menu);
         globalThis.setMenu?.('MULTIPLAYER_SERVER_CHOOSER');
       }
@@ -992,7 +993,7 @@ Current game version: ${globalThis.SPELLMASONS_PACKAGE_VERSION}`,
       }
       const SOLOMODE_CLIENT_ID = 'solomode_client_id';
       // If connected to a multiplayer server
-      if (globalThis.player && globalThis.player.clientId !== SOLOMODE_CLIENT_ID && overworld.underworld) {
+      if (globalThis.player && !isSinglePlayer(globalThis.player.clientId) && overworld.underworld) {
         // Cannot load a game if a player is already playing, can only load games if the game has not started yet
         if (overworld.underworld.players.some(p => p.isSpawned)) {
           console.log('Cannot load multiplayer game over a game that is ongoing.')
@@ -1004,7 +1005,7 @@ Current game version: ${globalThis.SPELLMASONS_PACKAGE_VERSION}`,
           return;
         }
       }
-      if (globalThis.player && globalThis.player.clientId == SOLOMODE_CLIENT_ID) {
+      if (globalThis.player && isSinglePlayer(globalThis.player.clientId)) {
         const firstPlayer = players[0];
         if (firstPlayer) {
           // Assume control of the existing single player in the load file
