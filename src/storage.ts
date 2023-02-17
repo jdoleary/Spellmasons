@@ -55,6 +55,10 @@ export function getSavedData() {
                 if (options.UIEasyOnTheEyes !== undefined) {
                     globalThis.UIEasyOnTheEyes = options.UIEasyOnTheEyes;
                 }
+                globalThis.activeMods = [];
+                if (options.activeMods !== undefined) {
+                    globalThis.activeMods = options.activeMods;
+                }
             }
             globalThis.playMusicIfNotAlreadyPlaying?.();
             // Default stored color if player doesn't already have one stored

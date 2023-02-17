@@ -29,8 +29,6 @@ globalThis.playSFX = playSFX;
 globalThis.playSFXKey = playSFXKey;
 globalThis.sfx = sfx;
 
-globalThis.activeMods = [];
-
 globalThis.lobbyPlayerList = [];
 
 globalThis.playerWalkingPromise = Promise.resolve();
