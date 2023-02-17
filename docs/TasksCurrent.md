@@ -1,4 +1,6 @@
 # for v1.7
+- health perk is OP https://steamcommunity.com/app/1618380/discussions/0/3766734182339003642/
+- Mana stealing entire map results in frame lag: https://steamcommunity.com/app/1618380/discussions/0/3766734182331523444/
 - ```Late game optimizations to prevent crashes
 Lashawnda Gandara — Today at 6:50 AM
 so last will is op-
