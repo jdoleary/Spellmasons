@@ -14,7 +14,6 @@
 
 ## v.1.7.0
 - bug after dying and starting a new game, spawning a spell makes it jump to me
-- file not found file:///C:/build/images/spell/spellmasons-mods/undead_blade/spellIconUndeadBlade.png
 - target column yields 2 columns when hovering over a pickup
 - conserve doesn't show that it works until you move your mouse
 - slow seems to not work right on multiplayer when cast on self

@@ -228,13 +228,14 @@ export function registerCards(overworld: Overworld) {
 function cardToUpgrade(c: ICard, overworld: Overworld): IUpgrade {
   // Make forbidden cards unavailable in demo
   const probability = globalThis.isDemo && c.probability == probabilityMap[CardRarity.FORBIDDEN] ? 0 : c.probability;
+  const thumbnail = c.thumbnail.indexOf('/') !== -1 ? c.thumbnail : 'images/spell/' + c.thumbnail;
   return {
     title: c.id,
     modName: c.modName,
     type: 'card',
     cardCategory: c.category,
     description: () => i18n(c.description).trim(),
-    thumbnail: `images/spell/${c.thumbnail}`,
+    thumbnail,
     // TODO: Feature creep: What if you could UPGRADE the effect of a spell!! 0.o
     maxCopies: 1,
     effect: (player) => {
