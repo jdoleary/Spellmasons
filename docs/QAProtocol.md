@@ -11,6 +11,7 @@
     - both when you kill yourself and when an enemy kills you
 - have a multiplayer game with 1 player, beat a level, then connect with another player
 - Test rerolling spells and perks
+- Test hosting local server
 
 ## v.1.7.0
 - bug after dying and starting a new game, spawning a spell makes it jump to me
@@ -18,6 +19,7 @@
 - conserve doesn't show that it works until you move your mouse
 - slow seems to not work right on multiplayer when cast on self
 - clone makes pickups dust appear on prediction when portal is up?
+- BIG BUG: Hotseat multiplayer : `player managed to choose an upgrade without being supposed to` and it doens't let you move on
 
 
 # Release protocal
