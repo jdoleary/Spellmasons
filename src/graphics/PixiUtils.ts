@@ -767,7 +767,6 @@ export function addPixiSpriteAnimated(
   let sprite: JSpriteAnimated;
   let texture: PIXI.Texture<PIXI.Resource>[] | undefined;
   for (let sheet of sheets) {
-    console.log('jtest search for', imagePath, 'in', sheet);
     texture = sheet.animations[imagePath];
     if (texture) {
       break;

@@ -295,4 +295,7 @@ declare global {
         colorMagic: number
     }[] | undefined;
     var UIEasyOnTheEyes: boolean | undefined;
+    // This will always be undefined on headless so as to not pollute multiple independent
+    // games with the same mods.  Only underworld objects will have an activeMods list on headless
+    var activeMods: string[] | undefined;
 }

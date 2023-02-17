@@ -11,6 +11,7 @@ import { Vec2 } from '../jmath/Vec';
 import * as colors from '../graphics/ui/colors';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
+import { makeBloatExplosionWithParticles } from '../graphics/ParticleCollection';
 
 const id = 'Bloat';
 const imageName = 'explode-on-death.png';
@@ -117,70 +118,4 @@ const spell: Spell = {
     }
   }
 };
-function makeBloatExplosionWithParticles(position: Vec2, size: number, prediction: boolean) {
-  if (prediction || globalThis.headless) {
-    // Don't show if just a prediction
-    return;
-  }
-  const texture = createParticleTexture();
-  if (!texture) {
-    logNoTextureWarning('makeBloatExplosion');
-    return;
-  }
-  const config =
-    particles.upgradeConfig({
-      autoUpdate: true,
-      "alpha": {
-        "start": 1,
-        "end": 0
-      },
-      "scale": {
-        "start": 3,
-        "end": 2,
-      },
-      "color": {
-        "start": "#d66437",
-        "end": "#f5e8b6"
-      },
-      "speed": {
-        "start": 900,
-        "end": 50,
-        "minimumSpeedMultiplier": 1
-      },
-      "acceleration": {
-        "x": 0,
-        "y": 0
-      },
-      "maxSpeed": 0,
-      "startRotation": {
-        "min": 0,
-        "max": 360
-      },
-      "noRotation": false,
-      "rotationSpeed": {
-        "min": 0,
-        "max": 300
-      },
-      "lifetime": {
-        "min": 0.3 * size,
-        "max": 0.3 * size
-      },
-      "blendMode": "normal",
-      "frequency": 0.0001,
-      "emitterLifetime": 0.1,
-      "maxParticles": 300,
-      "pos": {
-        "x": 0,
-        "y": 0
-      },
-      "addAtBack": true,
-      "spawnType": "circle",
-      "spawnCircle": {
-        "x": 0,
-        "y": 0,
-        "r": 0
-      }
-    }, [texture]);
-  simpleEmitter(position, config);
-}
 export default spell;

@@ -1,3 +1,4 @@
+import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import * as config from './config';
 import * as Unit from './entity/Unit';
 import * as units from './entity/units';
@@ -47,11 +48,13 @@ import * as Subsprites from './Subsprites';
 import * as Underworld from './Underworld';
 import * as VisualEffects from './VisualEffects';
 import * as cardUtils from './cards/cardUtils';
+import { forcePush } from './cards/push';
 
 import * as commonTypes from './types/commonTypes';
 
 
 const SpellmasonsAPI = {
+    MultiColorReplaceFilter,
     config,
     Unit,
     units,
@@ -101,6 +104,7 @@ const SpellmasonsAPI = {
     VisualEffects,
     cardUtils,
     // Includes enums which are not just types
-    commonTypes
+    commonTypes,
+    forcePush,
 }
 export default SpellmasonsAPI;

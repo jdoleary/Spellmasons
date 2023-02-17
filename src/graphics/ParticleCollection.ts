@@ -3,13 +3,80 @@ import * as particles from '@pixi/particle-emitter'
 import { rgb2hex } from '@pixi/utils';
 import { easeOutCubic } from '../jmath/Easing';
 import { lerp } from '../jmath/math';
-import { Vec2 } from '../jmath/Vec';
+import { clone, Vec2 } from '../jmath/Vec';
 import * as config from '../config';
 import { containerParticlesUnderUnits, createHardCircleParticleTexture, createParticleTexture, logNoTextureWarning, simpleEmitter, wrappedEmitter } from './Particles';
 import { bleedInstantKillProportion } from '../cards/bleed';
 import { containerUnits } from './PixiUtils';
 import { IUnit } from '../entity/Unit';
 import Underworld from '../Underworld';
+export function makeBloatExplosionWithParticles(position: Vec2, size: number, prediction: boolean) {
+    if (prediction || globalThis.headless) {
+        // Don't show if just a prediction
+        return;
+    }
+    const texture = createParticleTexture();
+    if (!texture) {
+        logNoTextureWarning('makeBloatExplosion');
+        return;
+    }
+    position = clone(position);
+    const config =
+        particles.upgradeConfig({
+            autoUpdate: true,
+            "alpha": {
+                "start": 1,
+                "end": 0
+            },
+            "scale": {
+                "start": 3,
+                "end": 2,
+            },
+            "color": {
+                "start": "#d66437",
+                "end": "#f5e8b6"
+            },
+            "speed": {
+                "start": 900,
+                "end": 50,
+                "minimumSpeedMultiplier": 1
+            },
+            "acceleration": {
+                "x": 0,
+                "y": 0
+            },
+            "maxSpeed": 0,
+            "startRotation": {
+                "min": 0,
+                "max": 360
+            },
+            "noRotation": false,
+            "rotationSpeed": {
+                "min": 0,
+                "max": 300
+            },
+            "lifetime": {
+                "min": 0.3 * size,
+                "max": 0.3 * size
+            },
+            "blendMode": "normal",
+            "frequency": 0.0001,
+            "emitterLifetime": 0.1,
+            "maxParticles": 300,
+            "pos": {
+                "x": 0,
+                "y": 0
+            },
+            "addAtBack": true,
+            "spawnType": "circle",
+            "spawnCircle": {
+                "x": 0,
+                "y": 0,
+                "r": 0
+            }
+        }, [texture]);
+    simpleEmitter(position, config);
+}
 export function makeBleedParticles(position: Vec2, prediction: boolean, proportion: number, resolver?: () => void) {
     if (prediction || globalThis.headless) {
         // Don't show if just a prediction
