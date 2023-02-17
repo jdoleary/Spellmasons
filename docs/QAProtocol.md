@@ -1,6 +1,7 @@
 # QA Protocol
-- Don't forget to run `npm run build_types` and test mods
-- Test Host Local Server
+- Run `npm run build_types` to keeps mods types up to date (and push the changes to github)
+    - Test mods
+- Test Host Local Server, Host via Docker
 - Test tutorial
 - Test all spells in singleplayer: ~24 minutes
 - Test all spells in multiplayer: ~20 minutes
@@ -13,9 +14,10 @@
     - both when you kill yourself and when an enemy kills you
 - have a multiplayer game with 1 player, beat a level, then connect with another player
 - Test rerolling spells and perks
-- Test hosting local server
 
-## v.1.7.0
+## Validate v.1.8.0
+- Test Host Local Server, Host via Docker (particularly because of mods)
+## Validate v.1.7.0
 - bug after dying and starting a new game, spawning a spell makes it jump to me
 - target column yields 2 columns when hovering over a pickup
 - conserve doesn't show that it works until you move your mouse
