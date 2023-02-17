@@ -1,8 +1,6 @@
 # Critical Path
 ## Priorities
 - State machine for turn_phases
-- Modding
-  - Underworld should store list of activated mods which should govern which mods take effect
 
 
 ## Tonight

@@ -12,6 +12,15 @@
 - have a multiplayer game with 1 player, beat a level, then connect with another player
 - Test rerolling spells and perks
 
+## v.1.7.0
+- big bug: from mods of multiplayer menu, back goes to menu and shows "resume game" which errors with no game to go back to when it should go back to lobby `Cannot close menu yet, no previous view to change to.`
+- bug after dying and starting a new game, spawning a spell makes it jump to me
+- file not found file:///C:/build/images/spell/spellmasons-mods/undead_blade/spellIconUndeadBlade.png
+- target column yields 2 columns when hovering over a pickup
+- conserve doesn't show that it works until you move your mouse
+- slow seems to not work right on multiplayer when cast on self
+- clone makes pickups dust appear on prediction when portal is up?
+
 
 # Release protocal
 - QA: 1:44
