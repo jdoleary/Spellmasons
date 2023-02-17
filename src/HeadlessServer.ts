@@ -25,6 +25,11 @@ Sentry.init({
 Sentry.setTag("SpellmasonsRunner", "HeadlessServer");
 
 import './Shims';
+// Setup mods
+import SpellmasonsAPI from './api';
+globalThis.SpellmasonsAPI = SpellmasonsAPI;
+import '../../public/spellmasons-mods/build/SpellmasonsMods.cjs.js';
+
 import { IHostApp, onClientPresenceChanged } from './network/networkUtil';
 import { onData } from './network/networkHandler';
 import makeOverworld, { Overworld } from "./Overworld";

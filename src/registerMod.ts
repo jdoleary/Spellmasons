@@ -53,7 +53,7 @@ function registerMod(mod: Mod, overworld: Overworld) {
 
 }
 export default function registerAllMods(overworld: Overworld) {
-    for (let mod of mods) {
+    for (let mod of globalThis.mods) {
         console.log('Mod: ', mod.modName);
         registerMod(mod, overworld);
     }

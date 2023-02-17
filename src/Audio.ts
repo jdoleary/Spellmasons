@@ -172,6 +172,9 @@ const music = [
 
 // Preload all sounds
 Object.values(sfx).forEach(paths => {
+    if (globalThis.headless) {
+        return;
+    }
     for (let path of paths) {
         new Audio(path);
     }
@@ -194,6 +197,9 @@ globalThis.playMusicIfNotAlreadyPlaying = playMusicIfNotAlreadyPlaying;
 let fadeOutSongPromiseResolver: () => void;
 let fadeOutSongInterval: NodeJS.Timer;
 export async function playNextSong() {
+    if (globalThis.headless) {
+        return;
+    }
     console.log('playNextSong', musicInstance);
     // Loops through songs
     const index = getLoopableIndex(songIndex++, music)
@@ -252,6 +258,9 @@ export async function playNextSong() {
 }
 
 export function playSFXKey(key?: string) {
+    if (globalThis.headless) {
+        return;
+    }
     if (!key) {
         return
     }
@@ -270,6 +279,9 @@ export function playSFXKey(key?: string) {
 }
 const lastPlayed: { [key: string]: number } = {};
 export function playSFX(path?: string) {
+    if (globalThis.headless) {
+        return;
+    }
     if (!path) {
         return;
     }

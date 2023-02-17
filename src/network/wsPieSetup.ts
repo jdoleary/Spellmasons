@@ -212,6 +212,17 @@ export function setupPieAndUnderworld() {
     globalThis.connect_to_wsPie_server = wsUri => connect_to_wsPie_server(wsUri, overworld);
     globalThis.isConnected = pie.isConnected.bind(pie);
     globalThis.pieDisconnect = pie.disconnect.bind(pie);
+    globalThis.saveActiveMods = (activeMods: string[]) => {
+      // Persist to storage
+      if (globalThis.setOption) {
+        globalThis.setOption(
+          "activeMods",
+          globalThis.activeMods
+        );
+      }
+      console.log('Pie: setting active mods');
+      pie.sendData({ type: MESSAGE_TYPES.SET_MODS, activeMods });
+    }
     globalThis.pieLeaveRoom = () => {
       globalThis.exitCurrentGame?.();
       pie.leaveRoom();

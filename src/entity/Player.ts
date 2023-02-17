@@ -329,14 +329,6 @@ export function setClientConnected(player: IPlayer, connected: boolean, underwor
 export function syncLobby(underworld: Underworld) {
   const playerColorToCss = (p: IPlayer) => `#${(p.color || 0xffffff).toString(16)}`;
   globalThis.lobbyPlayerList = underworld.players
-    .sort((a, _b) => {
-      // Sort self to the top
-      if (a === globalThis.player) {
-        return -1;
-      } else {
-        return 0;
-      }
-    })
     .map(p => {
       let status = '';
       if (!p.clientConnected) {

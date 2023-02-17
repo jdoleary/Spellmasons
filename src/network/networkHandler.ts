@@ -65,6 +65,12 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         underworld.playerThoughts[thinkingPlayer.clientId] = payload;
       }
       break;
+    case MESSAGE_TYPES.SET_MODS:
+      const { activeMods } = payload;
+      if (activeMods) {
+        underworld.activeMods = activeMods;
+      }
+      break;
     case MESSAGE_TYPES.JOIN_GAME_AS_PLAYER:
       const { asPlayerClientId } = payload;
       const asPlayer = underworld.players.find(p => p.clientId == asPlayerClientId);
@@ -623,6 +629,7 @@ async function handleLoadGameState(payload: {
 }, overworld: Overworld) {
   console.log("Setup: Load game state", payload)
   const { underworld: payloadUnderworld, phase, pickups, units, players, doodads } = payload
+  console.log('Setup: activeMods', payloadUnderworld.activeMods);
   // Sync underworld properties
   const loadedGameState: IUnderworldSerializedForSyncronize = { ...payloadUnderworld };
   const { underworld } = overworld;
@@ -648,6 +655,7 @@ async function handleLoadGameState(payload: {
   underworld.processedMessageCount = loadedGameState.processedMessageCount;
   underworld.cardDropsDropped = loadedGameState.cardDropsDropped;
   underworld.enemiesKilled = loadedGameState.enemiesKilled;
+  underworld.activeMods = loadedGameState.activeMods;
 
   // Sync Level.  Must await createLevel since it uses setTimeout to ensure that
   // the DOM can update with the "loading..." message before locking up the CPU with heavy processing.

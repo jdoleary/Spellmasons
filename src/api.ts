@@ -1,4 +1,3 @@
-import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import * as config from './config';
 import * as Unit from './entity/Unit';
 import * as units from './entity/units';
@@ -20,6 +19,8 @@ import * as rand from './jmath/rand';
 import * as Rect from './jmath/Rect';
 import * as Vec from './jmath/Vec';
 
+
+import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import * as AnimationCombos from './graphics/AnimationCombos';
 import * as FloatingText from './graphics/FloatingText';
 import * as JImage from './graphics/Image';
@@ -34,8 +35,9 @@ import * as colors from './graphics/ui/colors';
 import * as colorUtil from './graphics/ui/colorUtil';
 import * as eventListeners from './graphics/ui/eventListeners';
 import * as keyMapping from './graphics/ui/keyMapping';
-
 import * as JAudio from './Audio';
+import * as VisualEffects from './VisualEffects';
+
 import * as inLiquid from './inLiquid';
 import * as LiquidPools from './LiquidPools';
 import * as modifierSummonerSickness from './modifierSummoningSickness';
@@ -46,7 +48,6 @@ import * as JPromise from './Promise';
 import * as storage from './storage';
 import * as Subsprites from './Subsprites';
 import * as Underworld from './Underworld';
-import * as VisualEffects from './VisualEffects';
 import * as cardUtils from './cards/cardUtils';
 import { forcePush } from './cards/push';
 
@@ -54,7 +55,6 @@ import * as commonTypes from './types/commonTypes';
 
 
 const SpellmasonsAPI = {
-    MultiColorReplaceFilter,
     config,
     Unit,
     units,
@@ -75,6 +75,21 @@ const SpellmasonsAPI = {
     rand,
     Rect,
     Vec,
+    inLiquid,
+    LiquidPools,
+    modifierSummonerSickness,
+    Overworld,
+    Perk,
+    PlayerUtils,
+    JPromise,
+    storage,
+    Subsprites,
+    Underworld,
+    cardUtils,
+    // Includes enums which are not just types
+    commonTypes,
+    forcePush,
+    MultiColorReplaceFilter,
     AnimationCombos,
     FloatingText,
     JImage,
@@ -89,22 +104,8 @@ const SpellmasonsAPI = {
     colorUtil,
     eventListeners,
     keyMapping,
+    VisualEffects,
 
     JAudio,
-    inLiquid,
-    LiquidPools,
-    modifierSummonerSickness,
-    Overworld,
-    Perk,
-    PlayerUtils,
-    JPromise,
-    storage,
-    Subsprites,
-    Underworld,
-    VisualEffects,
-    cardUtils,
-    // Includes enums which are not just types
-    commonTypes,
-    forcePush,
 }
 export default SpellmasonsAPI;

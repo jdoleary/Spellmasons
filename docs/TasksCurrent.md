@@ -1,4 +1,5 @@
 # for v1.7
+- was able to create a desync with pickups (error and portal sticking around) when moving from one multiplayer game to another
 - health perk is OP https://steamcommunity.com/app/1618380/discussions/0/3766734182339003642/
 - Mana stealing entire map results in frame lag: https://steamcommunity.com/app/1618380/discussions/0/3766734182331523444/
 - ```Late game optimizations to prevent crashes

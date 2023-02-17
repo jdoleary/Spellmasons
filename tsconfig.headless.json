@@ -22,7 +22,8 @@
     "verbose": true
   },
   "include": [
-    "src"
+    "src",
+    "public/spellmasons-mods/build/SpellmasonsMods.cjs.js"
   ],
   "exclude": [
     "src/types/globalTypesMain.d.ts",

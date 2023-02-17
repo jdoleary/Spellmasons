@@ -10,7 +10,7 @@ import type { IHostApp } from '../network/networkUtil';
 import type { Localizable } from '../localization';
 import type * as particles from '@pixi/particle-emitter'
 import type { PromptArgs } from '../graphics/Jprompt';
-import { JEmitter } from './commonTypes';
+import { JEmitter, Mod } from './commonTypes';
 
 declare global {
     var SPELLMASONS_PACKAGE_VERSION: string;
@@ -295,7 +295,14 @@ declare global {
         colorMagic: number
     }[] | undefined;
     var UIEasyOnTheEyes: boolean | undefined;
+    // This type is used in public/mods and defined in the globalTypes.d.ts in public/mods
+    // since it is not used in this project it need not be typed here
+    var SpellmasonsAPI: any;
+    var SpellmasonsAPIFrontend: any | undefined;
+    // Note: Initialized in the mods repo
+    var mods: Mod[];
     // This will always be undefined on headless so as to not pollute multiple independent
     // games with the same mods.  Only underworld objects will have an activeMods list on headless
     var activeMods: string[] | undefined;
+    var saveActiveMods: (activeMods: string[]) => void | undefined;
 }
