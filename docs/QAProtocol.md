@@ -19,7 +19,6 @@
 - conserve doesn't show that it works until you move your mouse
 - slow seems to not work right on multiplayer when cast on self
 - clone makes pickups dust appear on prediction when portal is up?
-- BIG BUG: Hotseat multiplayer : `player managed to choose an upgrade without being supposed to` and it doens't let you move on
 
 
 # Release protocal
