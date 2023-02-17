@@ -110,7 +110,12 @@ export function joinRoom(overworld: Overworld, _room_info = {}): Promise<void> {
   // when people are trying to join each other's games
   room_info.name = room_info.name.toLowerCase();
   // Create a new underworld to sync with the payload so that no old state carries over
-  new Underworld(overworld, overworld.pie, Math.random().toString());
+  const underworld = new Underworld(overworld, overworld.pie, Math.random().toString());
+  if (isSinglePlayer(globalThis.clientId)) {
+    // set mods:
+    underworld.activeMods = globalThis.activeMods || [];
+    console.log('Mods: set active mods', underworld.activeMods);
+  }
   return pie.joinRoom(room_info, true).then(() => {
     console.log('Pie: You are now in the room', JSON.stringify(room_info, null, 2));
     // Useful for development to get into the game quickly
@@ -235,7 +240,6 @@ export function setupPieAndUnderworld() {
     globalThis.connectToSingleplayer = connectToSingleplayer;
     globalThis.startSingleplayer = function startSingleplayer(numberOfHotseatPlayers: number) {
       console.log('Start Game: Attempt to start the game')
-      new Underworld(overworld, pie, Math.random().toString());
       globalThis.numberOfHotseatPlayers = numberOfHotseatPlayers;
       return connectToSingleplayer().then(() => {
         // Create first level
