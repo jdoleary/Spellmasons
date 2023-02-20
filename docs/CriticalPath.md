@@ -1,5 +1,11 @@
 # Critical Path
 ## Priorities
+- Re-add Japanese and notify journalists
+- Look for Korean translation
+- Address crashes due to too many units due to summoners
+- Balance Perks
+- Address Desync issues
+- Add French Skornette translation
 - State machine for turn_phases
 
 
@@ -52,20 +58,6 @@
 - Extras
   - Codex
 
-
-## Day of
-
-- Update translations and verify all translators are in credits
-- Verify hardware specs harddrive space requirement
-- Update Demo
-- Update servers
-- Release Game and Demo
-  - https://partner.steamgames.com/doc/store/releasing
-  - Double check the package content
-    https://partner.steamgames.com/store/packagelanding/574232
-- Offer Soundtrack for purchase (App 2289100)
-  - Make sure soundtrack shows up on main page for purchase
-- Be logged into all socials and be responsive all day
 
 - Beyond
   - Use [Steamworks.js](https://github.com/ceifa/steamworks.js)

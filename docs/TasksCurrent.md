@@ -1,6 +1,14 @@
+- Skornette french localization
+- Treycore — Today at 2:27 AM
+Playing Co-Op on the community server and when one of us would die, the game screen would freeze on their end and they wouldn’t even get too see their death animation… Also when they quit the game it spawned a duplicate character into the game for one of the other guys on our team
+Blackjack Barret — Today at 3:26 PM
+Top two spell slots on the right sidebar do not allow spells to be placed in them
+Image
+Blackjack Barret — Today at 4:00 PM
+co-op on community server 1 - Seashell shows desyncs if a spell is cast before all players have picked a starting location. The frequency of desyncs also heavily increased at 6 players. At 5 players it is very playable with some desyncs but at 6 it appears to be very frequent with many spells showing the target of the spell as an enemy but instead the spell would desync and target a fellow player, this was a repeated occurrence and made the game unplayable unless players were out of range of each other. 
 - discord bot to manage LFG `I think theres a bot for that Jordan like MEE6 reaction roles`
 - Improve korean translation
-- bug reported: white screen on Mods page
+- **important** bug reported: white screen on Mods page
 # for v1.7
 - was able to create a desync with pickups (error and portal sticking around) when moving from one multiplayer game to another
 - health perk is OP https://steamcommunity.com/app/1618380/discussions/0/3766734182339003642/
