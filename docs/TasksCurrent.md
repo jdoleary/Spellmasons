@@ -1,7 +1,7 @@
 # Today
-- Fix player thought is sending messages even when no cards are selected!! What a waste
----
 - Skornette french localization
+---
+- killing ally players caused a scroll to drop when they died
 - Treycore — Today at 2:27 AM
 Playing Co-Op on the community server and when one of us would die, the game screen would freeze on their end and they wouldn’t even get too see their death animation… Also when they quit the game it spawned a duplicate character into the game for one of the other guys on our team
 Blackjack Barret — Today at 3:26 PM

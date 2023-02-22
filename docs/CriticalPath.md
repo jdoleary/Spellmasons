@@ -1,4 +1,8 @@
 # Critical Path
+## Thursday's update
+- French, Japanese
+- Optimizations done today
+- Fix overpopulation
 ## Priorities
 - Re-add Japanese and notify journalists
 - Look for Korean translation
