@@ -31,7 +31,8 @@ const unit: UnitSource = {
     attackRange: 550,
     manaCostToCast,
     manaMax: 60,
-    manaPerTurn: 30,
+    mana: 40,
+    manaPerTurn: 20,
     bloodColor: 0x852124
   },
   spawnParams: {

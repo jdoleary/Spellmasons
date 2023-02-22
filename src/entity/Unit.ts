@@ -193,7 +193,9 @@ export function create(
 
     // Since unit stats can be overridden with sourceUnitProps
     // Ensure that the unit starts will full mana and health
-    unit.mana = unit.manaMax;
+    // --
+    // If mana is not defined in sourceUnitProps, default it to max mana
+    unit.mana = sourceUnitProps.mana || unit.manaMax;
     unit.health = unit.healthMax;
     if (unit.manaMax === 0) {
       unit.manaPerTurn = 0;
