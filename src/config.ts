@@ -74,3 +74,4 @@ export const NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES = 3;
 
 // The boss is on this level.  Levels beyond are considered "loop" levels
 export const LAST_LEVEL_INDEX = 11;
+export const NUMBER_OF_UNITS_TO_MERGE = 5;
