@@ -190,3 +190,27 @@ Hope you'll find something useful in my  rambling, best of luck with further dev
 ---
 ThatOneGuy — Today at 10:28 AM
 A way to make it so your spell's automatically fill certain slots could be pretty nice, like you set up a preset before the run then as you unlock said spells, it fills them out on your lists
+---
+Knuckky — Today at 12:21 AM
+as stated in the thread title, as I see that coop increases the health pools of enemies, their health pools are also large when resurrected. this can make them incredible meat shields and I feel it could be a little bit too powerful overall.
+I would suggest that a resurrected enemy has their base health pool as though it was single player perhaps?
+---
+ Shurimoo [has Spellmasons] Feb 17 @ 3:33am
+Suggestions
+Having reached the point where nothing can feasibly kill me and I can kill the entire map on turn 1 with a single spellcast along with getting "no more spells to unlock" messages when I pick up scrolls I think it safe to assume I've pretty much seen all there is (unless there's some enemy that this particular seed isn't spawning? Anyway..). Very enjoyable time! Looking forward to more.
+
+Others have noted but I'll add a voice to it: perks being multipliers on current (meaning they are exponential) is *fun* but perhaps not wise for balance. I do enjoy annihilating the map and the glory of being an ungodly powerful wizard but long-term I think that particular interaction should be removed in favor of a multiplier on some base value (and, now that I've thought of it- maybe different starting kits / stats? High-stamina melee wizard with lower cast range high hp medium mana vs current middle-road wizard with random spells vs high-mana low-stamina wizard who commands a large cast radius etc might be neat much longer-term).
+
+For spells and enemies, I'd like to see things that affect the terrain itself. Let us make walls to block archer fire, and let us tunnel through them to circumvent enemies. As well, I'd like to have enemies capable of burrowing through walls or blinking short distances (more aggressively, rather than what summons do which is just reposition slightly further away from you). Similarly, let us make pools or fill them. Add more effects interacting with pools. Tsunami spell that can only be cast within a range of a fluid and does damage based on type? Freeze spell in area cast over liquid turns it to a solid form that can be walked over (and re-melted with a fire spell that is area-cast?).. maybe you already can freeze it? I didn't try, actually.
+
+Different damage types and resistances would also be nice to see, since having Debilitate apply to all damage leaves less to really mess with (in that enemy hp is a single stat, all your damage is just a #, and debilitate then effectively divides enemy hp by some multiple depending on stacks). This works well, at least for combat, but it also means that all you have to do is find the right balance of debilitates and damage spells for your mana bar and you'll just do max damage to everything in your cast zone. I don't necessarily mind this I just think it would allow for more nuance if enemies had specific elements they were weak/strong against, and it would also open more spell design options since otherwise the only thing that differentiates damage spells ends up being their mana efficiency for the most part.
+
+Oh, and I'd really like to see the dark summoners mana regen be nerfed to like 20/turn instead of 30 (so they cast every 3 turns instead of 2). Also, maybe make them start with 40/60 mana so it takes a turn before they start summoning? These are primarily targetted at the early-game since I think it's easy to get utterly shafted by dark summoners, particularly elite ones. If you don't have displacement or favorable spawn locations on the map for the summoners so you can aoe them all easily it can become a real slog during the mid-early game when you start seeing them.
+
+Right now, I think debilitate might be the most important spell to roll specifically to deal with elites because the mana efficiency on the dmg spells isn't all that good compared to the hp scaling on elites / later enemies. Obviously you reach a point where it's irrelevant but I found my best move was to kill enemies with impact damage +/ bloat (vortexing every enemy I could link into a giant blob so they slam into each other taking impact damage and anything too tanky to die from that dies from all the bloat explosions going off). Tbf, this is based off of one real god-run and 2 or 3 failed runs (aka only 4 runs total).
+
+I will say that the fluids did come in quite handy during the early / mid game before I had enough mana to really do the full combo because the fluid damage meant I could vortex enemies into that instead of just relying on impact damage and also use freeze to force them to sit in it an extra turn etc. Tl;dr the fluid damage is really nice and I appreciate that mechanic, but as mentioned further up I'd like to see more interaction with it. 
+---
+ TheRealTenman [has Spellmasons] Feb 4 @ 3:39am
+    
+Semi related: Any plans on having a pure player choice run? Disable achievements or what ever if so inclined, but let the player see either the deck (or discovered deck with big "?" for cards not yet seen) and choose for themselves the starting loadout. Same thing with leveling frankly, its GG if one doesn't get nothing but mana as far as I've found. 

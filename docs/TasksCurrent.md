@@ -1,3 +1,6 @@
+# Today
+- Fix player thought is sending messages even when no cards are selected!! What a waste
+---
 - Skornette french localization
 - Treycore — Today at 2:27 AM
 Playing Co-Op on the community server and when one of us would die, the game screen would freeze on their end and they wouldn’t even get too see their death animation… Also when they quit the game it spawned a duplicate character into the game for one of the other guys on our team
@@ -9,6 +12,37 @@ co-op on community server 1 - Seashell shows desyncs if a spell is cast before a
 - discord bot to manage LFG `I think theres a bot for that Jordan like MEE6 reaction roles`
 - Improve korean translation
 - **important** bug reported: white screen on Mods page
+```
+ FaeOfTheFlesh [has Spellmasons] Feb 15 @ 4:30pm
+Possible Bug. spells cast from spell book and not placed in a hot bar don't reduce in price
+I was casting spells from the spell book (as my slots were full and hadn't discovered the side bars yet). I noticed any spell I cast from the spell book wouldn't cool down it's mana cost until it was placed into a spell bar slot and allowed to end a turn there.
+
+is this intentional?
+
+The spell book was also not updating the spell price for several spells including decoy and bloat when cast from the spell book and showed their minimum cost not their current cost.
+Showing 1-3 of 3 comments
+Spellmasons  [developer] Feb 16 @ 12:30pm 
+This is odd, I don't encounter this when I cast from the spellbook. Does it happen always or only for specific spell combinations?
+#1
+High Drag Low Speed [has Spellmasons] Feb 16 @ 5:37pm 
+I ran into this yesterday specifically with the Target Similar and Target Kind (I think that's what it is called, targets 5 of the same). Didn't appear with any other spells.
+#2
+FaeOfTheFlesh [has Spellmasons] Feb 16 @ 8:28pm 
+It was happening everytime for me (I've gotten around it by using the additional sidebar spell slots).
+
+```
+```
+ Pazuzu [has Spellmasons] Feb 7 @ 4:47pm
+Bug: blood curse is permanently on, despite no cause for it.
+Possibly caused by cloning myself?
+Showing 1-3 of 3 comments
+Spellmasons  [developer] Feb 8 @ 1:01pm 
+Did you get bitten by a vampire? They will transfer blood curse to you
+#1
+Pazuzu [has Spellmasons] Feb 17 @ 3:04pm 
+I did not
+
+```
 # for v1.7
 - was able to create a desync with pickups (error and portal sticking around) when moving from one multiplayer game to another
 - health perk is OP https://steamcommunity.com/app/1618380/discussions/0/3766734182339003642/
