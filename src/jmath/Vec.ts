@@ -1,6 +1,6 @@
 
 import { clockwiseAngle } from "./Angle";
-import { distance, similarTriangles } from "./math";
+import { distance, similarTriangles, lerp } from "./math";
 import { prng, randInt } from "./rand";
 export interface Vec2 {
     x: number;
@@ -45,6 +45,12 @@ export function subtract(p1: Vec2, p2: Vec2): Vec2 {
     return {
         x: p1.x - p2.x,
         y: p1.y - p2.y
+    }
+}
+export function lerpVec2(p1: Vec2, p2: Vec2, t: number): Vec2 {
+    return {
+        x: lerp(p1.x, p2.x, t),
+        y: lerp(p1.y, p2.y, t),
     }
 }
 // jitter returns a new Vec2 which is the original pos

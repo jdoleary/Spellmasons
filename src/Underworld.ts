@@ -60,7 +60,6 @@ import { keyDown, useMousePosition } from './graphics/ui/eventListeners';
 import Jprompt from './graphics/Jprompt';
 import { collideWithLineSegments, ForceMove, forceMovePreventForceThroughWall, isVecIntersectingVecWithCustomRadius, moveWithCollisions } from './jmath/moveWithCollision';
 import { IHostApp } from './network/networkUtil';
-import objectHash from 'object-hash';
 import { withinMeleeRange } from './entity/units/actions/meleeAction';
 import { baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLimits, Limits as Limits, makeFinalTileImages, Map, Tile, toObstacle } from './MapOrganicCave';
 import { Material } from './Conway';
@@ -70,7 +69,7 @@ import { cleanUpEmitters, containerParticles, containerParticlesUnderUnits, upda
 import { elInstructions } from './network/networkHandler';
 import type PieClient from '@websocketpie/client';
 import { makeForcePush } from './cards/push';
-import { isOutOfRange } from './PlayerUtils';
+import { isOutOfRange, sendPlayerThinkingThrottled } from './PlayerUtils';
 import { DisplayObject, TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
 import { explain, EXPLAIN_MISSED_SCROLL, EXPLAIN_PING, EXPLAIN_SCROLL, isFirstTutorialStepComplete, isTutorialComplete, tutorialCompleteTask, tutorialShowTask } from './graphics/Explain';
@@ -173,7 +172,9 @@ export default class Underworld {
   // can see what another client is planning.
   // The hash is used to prevent sending the same data more than once
   lastThoughtsHash: string = '';
-  playerThoughts: { [clientId: string]: { target: Vec2, cardIds: string[], ellipsis: boolean } } = {};
+  // currentDrawLocation is where the thought is drawn, it approaches the target so it animates smoothly rather than snapping around the screen
+  // since playerThoughts are throttled for efficiency.  lerp is state used to animate the currentDrawLocation's position.
+  playerThoughts: { [clientId: string]: { target: Vec2, currentDrawLocation?: Vec2, lerp: number, cardIds: string[], ellipsis: boolean } } = {};
   // Keep track of the LevelData from the last level that was created in
   // case it needs to be sent to another client
   lastLevelCreated: LevelData | undefined;
@@ -940,18 +941,20 @@ export default class Underworld {
           globalThis.thinkingPlayerGraphics?.drawRoundedRect(firstCard.x - cardSize, firstCard.y - cardSize, lastCard.x - firstCard.x + cardSize * 2, lastCard.y - firstCard.y + cardSize * 2, 2);
           globalThis.thinkingPlayerGraphics?.endFill();
         }
-        if (target && cardIds.length) {
+        thought.currentDrawLocation = Vec.lerpVec2(thought.currentDrawLocation || target, target, thought.lerp++ / 100);
+        const { currentDrawLocation } = thought;
+        if (currentDrawLocation && cardIds.length) {
           // Draw a line to show where they're aiming:
           globalThis.thinkingPlayerGraphics?.lineStyle(3, colors.healthAllyGreen, 1.0);
           // Use this similarTriangles calculation to make the line pretty so it doesn't originate from the exact center of the
           // other player but from the edge instead
-          const startPoint = math.distance(thinkingPlayer.unit, target) <= config.COLLISION_MESH_RADIUS
-            ? target
-            : Vec.subtract(thinkingPlayer.unit, math.similarTriangles(thinkingPlayer.unit.x - target.x, thinkingPlayer.unit.y - target.y, math.distance(thinkingPlayer.unit, target), config.COLLISION_MESH_RADIUS));
+          const startPoint = math.distance(thinkingPlayer.unit, currentDrawLocation) <= config.COLLISION_MESH_RADIUS
+            ? currentDrawLocation
+            : Vec.subtract(thinkingPlayer.unit, math.similarTriangles(thinkingPlayer.unit.x - currentDrawLocation.x, thinkingPlayer.unit.y - currentDrawLocation.y, math.distance(thinkingPlayer.unit, currentDrawLocation), config.COLLISION_MESH_RADIUS));
           globalThis.thinkingPlayerGraphics?.moveTo(startPoint.x, startPoint.y);
-          globalThis.thinkingPlayerGraphics?.lineTo(target.x, target.y);
+          globalThis.thinkingPlayerGraphics?.lineTo(currentDrawLocation.x, currentDrawLocation.y);
           globalThis.thinkingPlayerGraphics?.beginFill(colors.healthAllyGreen);
-          globalThis.thinkingPlayerGraphics?.drawCircle(target.x, target.y, 4);
+          globalThis.thinkingPlayerGraphics?.drawCircle(currentDrawLocation.x, currentDrawLocation.y, 4);
           globalThis.thinkingPlayerGraphics?.endFill();
         }
       }
@@ -3187,35 +3190,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   // Sends what this player is thinking to other clients
   // Optimized to only send if message has changed
   sendPlayerThinking(thoughts: { target?: Vec2, cardIds: string[] }) {
-    // Only send your thoughts on your turn
-    if (this.isMyTurn()) {
-      let { target, cardIds } = thoughts;
-      // Since it takes a hash, best to round target
-      // to whole numbers so floating point changes
-      // don't create a different hash
-      if (target) {
-        target = Vec.round(target);
-      }
-      const hash = objectHash({ target, cardIds });
-      if (hash !== this.lastThoughtsHash) {
-        this.lastThoughtsHash = hash;
-        if (this.pie) {
-          let ellipsis = false;
-          if (cardIds.length >= 7) {
-            // Slice to one less so the epsilon is added on the 7th
-            cardIds = cardIds.slice(0, 6);
-            ellipsis = true;
-          }
-          this.pie.sendData({
-            type: MESSAGE_TYPES.PLAYER_THINKING,
-            target,
-            cardIds,
-            ellipsis
-          });
-        }
-      }
-    }
-
+    sendPlayerThinkingThrottled(thoughts, this);
   }
   syncPlayers(players: Player.IPlayerSerialized[]) {
     console.log('sync: Syncing players', JSON.stringify(players.map(p => p.clientId)));

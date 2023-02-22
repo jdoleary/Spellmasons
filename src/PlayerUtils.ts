@@ -1,8 +1,11 @@
 import * as math from './jmath/math';
+import throttle from 'lodash.throttle';
 import * as Player from './entity/Player';
 import * as config from './config';
-import { Vec2 } from './jmath/Vec';
+import { round, Vec2 } from './jmath/Vec';
 import Underworld from './Underworld';
+import objectHash from 'object-hash';
+import { MESSAGE_TYPES } from './types/MessageTypes';
 
 function isAllowedToCastOutOfRange(cardIds: string[]): boolean {
     // Exception, if all of the cards cast are arrow cards, let them cast out of range
@@ -59,3 +62,42 @@ export function setPlayerNameUI(player: Player.IPlayer) {
     }
 
 }
+export const sendPlayerThinkingThrottled = throttle((thoughts: { target?: Vec2, cardIds: string[] }, underworld: Underworld) => {
+    // Only send your thoughts on your turn
+    if (underworld.isMyTurn()) {
+        let { target, cardIds } = thoughts;
+        // Since it takes a hash, best to round target
+        // to whole numbers so floating point changes
+        // don't create a different hash
+        if (target) {
+            target = round(target);
+        }
+        const hash = objectHash({ target, cardIds });
+        if (hash !== underworld.lastThoughtsHash) {
+            if (underworld.pie) {
+                let ellipsis = false;
+                if (cardIds.length >= 7) {
+                    // Slice to one less so the epsilon is added on the 7th
+                    cardIds = cardIds.slice(0, 6);
+                    ellipsis = true;
+                }
+                const willClearThoughts = cardIds.length == 0 && underworld.lastThoughtsHash !== '';
+                if (cardIds.length || willClearThoughts) {
+                    underworld.pie.sendData({
+                        type: MESSAGE_TYPES.PLAYER_THINKING,
+                        target,
+                        cardIds,
+                        ellipsis
+                    });
+                    underworld.lastThoughtsHash = hash;
+                    if (willClearThoughts) {
+                        // If thoughts were just cleared, also clear the hash so that it doesn't send
+                        // another message to clear thoughts
+                        underworld.lastThoughtsHash = '';
+                    }
+                }
+            }
+        }
+    }
+
+}, 500, { trailing: true });
