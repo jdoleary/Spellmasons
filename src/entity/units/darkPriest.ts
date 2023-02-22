@@ -9,8 +9,9 @@ import { makeDarkPriestAttackParticles } from '../../graphics/ParticleCollection
 
 const manaCostToCast = 60;
 const NUMBER_OF_GEYSERS = 6;
+export const DARK_PRIEST_ID = 'dark priest';
 const unit: UnitSource = {
-  id: 'dark priest',
+  id: DARK_PRIEST_ID,
   info: {
     description: ['dark_priest_copy', NUMBER_OF_GEYSERS.toString()],
     image: 'units/priestIdle',

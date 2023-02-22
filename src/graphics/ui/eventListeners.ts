@@ -1136,6 +1136,22 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       domQueryContainer: '#menu-selected-unit'
     },
     {
+      label: 'Merge',
+      action: ({ selectedUnitid }) => {
+        if (!overworld.underworld) {
+          console.error('Cannot admin merge unit, underworld does not exist');
+          return;
+        }
+        const unit = overworld.underworld.units.find(u => u.id == selectedUnitid);
+        if (unit) {
+          overworld.underworld.merge(unit);
+        }
+
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '#menu-selected-unit'
+    },
+    {
       label: '🏳️ Change Faction',
       action: ({ selectedUnitid }) => {
         if (!overworld.underworld) {

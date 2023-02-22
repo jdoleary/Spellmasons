@@ -65,7 +65,7 @@ import { baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLi
 import { Material } from './Conway';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndexPreventWrap } from './jmath/ArrayUtil';
 import { raceTimeout, reportIfTakingTooLong } from './Promise';
-import { cleanUpEmitters, containerParticles, containerParticlesUnderUnits, updateParticlees } from './graphics/Particles';
+import { cleanUpEmitters, containerParticles, containerParticlesUnderUnits, makeManaTrail, updateParticlees } from './graphics/Particles';
 import { elInstructions } from './network/networkHandler';
 import type PieClient from '@websocketpie/client';
 import { makeForcePush } from './cards/push';
@@ -83,6 +83,12 @@ import { hexToString } from './graphics/ui/colorUtil';
 import { doLiquidEffect } from './inLiquid';
 import { findRandomGroundLocation } from './entity/units/summoner';
 import { isModActive } from './registerMod';
+import { summoningSicknessId } from './modifierSummoningSickness';
+import { ARCHER_ID } from './entity/units/archer';
+import { BLOOD_ARCHER_ID } from './entity/units/blood_archer';
+import { BLOOD_GOLEM_ID } from './entity/units/bloodGolem';
+import { MANA_VAMPIRE_ID } from './entity/units/manaVampire';
+import { DARK_PRIEST_ID } from './entity/units/darkPriest';
 
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
@@ -3254,6 +3260,72 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     for (let serializedPickup of serializedpickupsLeftToCreate) {
       Pickup.load(serializedPickup, this, false);
     }
+
+  }
+  async merge(unit: Unit.IUnit) {
+    // find 5 units of same kind nearby
+    const candidatesForMerge = this.units.filter(u => u.faction == unit.faction && u.unitSourceId == unit.unitSourceId).sort((a, b) => {
+      return math.distance(a, unit) - math.distance(b, unit);
+    });
+    let lastPromise = Promise.resolve();
+    if (candidatesForMerge.length >= 5) {
+      for (let i = 0; i < 5; i++) {
+        const u = candidatesForMerge[i];
+        if (u) {
+          if (!globalThis.headless) {
+            // if (u.image) {
+            //   u.image.sprite.alpha = 0;
+            // }
+            lastPromise = makeManaTrail(u, unit, this, '#930e0e', '#ff0000');
+          }
+        }
+      }
+    }
+    await lastPromise;
+    const mergeMap = {
+      [golem_unit_id]: BLOOD_GOLEM_ID,
+      [ARCHER_ID]: BLOOD_ARCHER_ID,
+      [BLOOD_GOLEM_ID]: MANA_VAMPIRE_ID,
+      [BLOOD_ARCHER_ID]: DARK_PRIEST_ID
+
+    }
+    // @ts-ignore: allow undefined
+    const unitSourceId: string | undefined = mergeMap[unit.unitSourceId];
+    if (unitSourceId) {
+      const sourceUnit = allUnits[unitSourceId];
+      if (sourceUnit) {
+
+        const summonedUnit = Unit.create(
+          sourceUnit.id,
+          // Start the unit at the summoners location
+          unit.x,
+          unit.y,
+          // A unit always summons units in their own faction
+          unit.faction,
+          sourceUnit.info.image,
+          UnitType.AI,
+          sourceUnit.info.subtype,
+          sourceUnit.unitProps,
+          this
+        );
+        // Add summoning sickeness so they can't act after they are summoned
+        Unit.addModifier(summonedUnit, summoningSicknessId, this, false);
+      } else {
+        console.error('Cannot find source unit to merge into');
+      }
+    } else {
+      floatingText({ coords: unit, text: 'This unit is not setup to be merged' });
+    }
+    // Clean up units that got merged
+    for (let i = 0; i < 5; i++) {
+      const u = candidatesForMerge[i];
+      if (u) {
+        Unit.cleanup(u);
+      }
+    }
+    Unit.cleanup(unit);
+    // runPredictions so the merged units' attack badges disappear
+    runPredictions(this);
 
   }
 

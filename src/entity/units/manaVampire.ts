@@ -8,8 +8,9 @@ import { bloodVampire } from '../../graphics/ui/colors';
 import floatingText from '../../graphics/FloatingText';
 
 const mana_proportion_removal_amount = 0.1;
+export const MANA_VAMPIRE_ID = 'Mana Vampire';
 const unit: UnitSource = {
-  id: 'Mana Vampire',
+  id: MANA_VAMPIRE_ID,
   info: {
     description: 'mana_vampire_copy',
     image: 'units/vampireIdle',
