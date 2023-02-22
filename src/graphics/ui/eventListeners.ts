@@ -960,6 +960,19 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       domQueryContainer: '#menu-spawn'
     },
     {
+      label: 'Merge Excess Units',
+      action: () => {
+        if (!overworld.underworld) {
+          console.error('Cannot admin merge unit, underworld does not exist');
+          return;
+        }
+        overworld.underworld.mergeExcessUnits();
+
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '#menu-global'
+    },
+    {
       label: 'Kill all Enemies',
       action: () => {
         if (!overworld.underworld) {
@@ -1129,22 +1142,6 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         const unit = overworld.underworld.units.find(u => u.id == selectedUnitid);
         if (unit) {
           Unit.die(unit, overworld.underworld, false);
-        }
-
-      },
-      supportInMultiplayer: true,
-      domQueryContainer: '#menu-selected-unit'
-    },
-    {
-      label: 'Merge',
-      action: ({ selectedUnitid }) => {
-        if (!overworld.underworld) {
-          console.error('Cannot admin merge unit, underworld does not exist');
-          return;
-        }
-        const unit = overworld.underworld.units.find(u => u.id == selectedUnitid);
-        if (unit) {
-          overworld.underworld.merge(unit);
         }
 
       },

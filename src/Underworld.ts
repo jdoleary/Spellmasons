@@ -3264,45 +3264,75 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
   }
   async mergeExcessUnits() {
-    const LIMIT = 20;
+    // How many max units there can be to a faction before a merge occurs:
+    const FACTION_MAX_UNITS = 20;
     const mergeMapKeys = Object.keys(mergeMap);
     for (let faction of [Faction.ALLY, Faction.ENEMY]) {
       const factionedUnits = this.units.filter(u => u.faction == faction);
-      const factionedUnitsOverLimit = factionedUnits.length - LIMIT;
+      const factionedUnitsOverLimit = factionedUnits.length - FACTION_MAX_UNITS;
       if (factionedUnitsOverLimit > 0) {
         const mergesToDo = factionedUnitsOverLimit / (config.NUMBER_OF_UNITS_TO_MERGE)
-        for (let i = 0; i < mergesToDo; i++) {
-          for (let u of factionedUnits) {
-            if (!u.flaggedForRemoval) {
-              const canMerge = mergeMapKeys.includes(u.unitSourceId);
-              if (canMerge) {
-                await this.merge(u);
-                break;
+        interface MergeCandidate {
+          mainUnit: Unit.IUnit,
+          mergeUnits: Unit.IUnit[],
+        };
+        // Find merge candidates
+        const mergeCandidates: MergeCandidate[] = [];
+        const unitsGroupedByUnitSourceId = factionedUnits.reduce<{ [unitSourceId: string]: Unit.IUnit[] }>((groups, unit) => {
+          if (groups[unit.unitSourceId] === undefined) {
+            groups[unit.unitSourceId] = [];
+          }
+          groups[unit.unitSourceId]?.push(unit);
+          return groups;
+        }, {});
+        for (let [unitSourceId, units] of Object.entries(unitsGroupedByUnitSourceId)) {
+          if (mergeCandidates.length >= mergesToDo) {
+            break;
+          }
+          if (mergeMapKeys.includes(unitSourceId)) {
+            let currentCandidate: MergeCandidate | undefined = undefined;
+            for (let u of units) {
+              if (!currentCandidate) {
+                currentCandidate = {
+                  mainUnit: u,
+                  mergeUnits: []
+                }
+                continue;
+              } else {
+                if (currentCandidate.mergeUnits.length < config.NUMBER_OF_UNITS_TO_MERGE) {
+                  currentCandidate.mergeUnits.push(u);
+                } else {
+                  mergeCandidates.push(currentCandidate);
+                  currentCandidate = {
+                    mainUnit: u,
+                    mergeUnits: []
+                  }
+                }
               }
+
             }
 
           }
         }
+        console.log('tjest merge', mergeCandidates);
+        let mergePromises = [];
+        for (let merge of mergeCandidates) {
+          if (merge.mergeUnits.length == config.NUMBER_OF_UNITS_TO_MERGE) {
+            mergePromises.push(this.merge(merge.mainUnit, merge.mergeUnits));
+          }
 
+        }
+        await Promise.all(mergePromises);
       }
     }
 
   }
   // Returns true if succeeded
-  async merge(unit: Unit.IUnit): Promise<boolean> {
-    // find 5 units of same kind nearby
-    const candidatesForMerge = this.units.filter(u => u.faction == unit.faction && u.unitSourceId == unit.unitSourceId).sort((a, b) => {
-      return math.distance(a, unit) - math.distance(b, unit);
-    });
+  async merge(unit: Unit.IUnit, mergeUnits: Unit.IUnit[]): Promise<boolean> {
     let lastPromise = Promise.resolve();
-    if (candidatesForMerge.length >= config.NUMBER_OF_UNITS_TO_MERGE) {
-      for (let i = 0; i < config.NUMBER_OF_UNITS_TO_MERGE; i++) {
-        const u = candidatesForMerge[i];
-        if (u) {
-          if (!globalThis.headless) {
-            lastPromise = makeManaTrail(u, unit, this, '#930e0e', '#ff0000');
-          }
-        }
+    for (let u of mergeUnits) {
+      if (!globalThis.headless) {
+        lastPromise = makeManaTrail(u, unit, this, '#930e0e', '#ff0000');
       }
     }
     await lastPromise;
@@ -3335,8 +3365,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       return false;
     }
     // Clean up units that got merged
-    for (let i = 0; i < 5; i++) {
-      const u = candidatesForMerge[i];
+    for (let u of mergeUnits) {
       if (u) {
         Unit.cleanup(u);
       }
