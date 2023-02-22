@@ -49,7 +49,7 @@
     "@sentry/integrations": "^7.31.1",
     "@sentry/node": "^7.31.1",
     "@sentry/tracing": "^7.31.1",
-    "@websocketpie/client": "^0.17.0",
+    "@websocketpie/client": "^1.0.0",
     "@websocketpie/server": "^0.13.1",
     "lodash.throttle": "^4.1.1",
     "object-hash": "^3.0.0",
