@@ -90,7 +90,7 @@ const spell: Spell = {
 };
 
 function add(unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) {
-  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
+  getOrInitModifier(unit, id, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
     unit.radius = config.COLLISION_MESH_RADIUS;
     // Immediately set stamina to 0 so they can't move
     unit.stamina = 0;
@@ -109,17 +109,16 @@ function add(unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, qua
     // Prevents units from being pushed out of the way and units
     // act as a blockade
     unit.immovable = true;
-    // If the frozen unit is a player, end their turn when they become frozen
-    if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
-      const player = underworld.players.find(
-        (p) => p.unit === unit,
-      );
-      if (player) {
-        underworld.endPlayerTurn(player.clientId);
-      }
-    }
-
   });
+  // If the frozen unit is a player, end their turn when they become frozen
+  if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
+    const player = underworld.players.find(
+      (p) => p.unit === unit,
+    );
+    if (player) {
+      underworld.endPlayerTurn(player.clientId);
+    }
+  }
 }
 function remove(unit: Unit.IUnit) {
   unit.radius = config.UNIT_BASE_RADIUS
