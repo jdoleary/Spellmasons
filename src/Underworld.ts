@@ -2023,7 +2023,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
   }
   async initializePlayerTurns() {
-    await this.mergeExcessUnits();
     // Prevent possible desynce where portals don't spawn when unit dies
     // so it must spawn here to ensure players can move on
     this.checkIfShouldSpawnPortal();
@@ -3265,9 +3264,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
 
   }
+  // Note: This function is not ready for production yet, I am not sure if it runs reliably on servers so I'm 
+  // not invoking it yet
   async mergeExcessUnits() {
     // How many max units there can be to a faction before a merge occurs:
-    const FACTION_MAX_UNITS = 20;
+    const FACTION_MAX_UNITS = 50;
     const mergeMapKeys = Object.keys(mergeMap);
     for (let faction of [Faction.ALLY, Faction.ENEMY]) {
       const factionedUnits = this.units.filter(u => u.faction == faction);
@@ -3316,7 +3317,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
           }
         }
-        console.log('tjest merge', mergeCandidates);
         let mergePromises = [];
         for (let merge of mergeCandidates) {
           if (merge.mergeUnits.length == config.NUMBER_OF_UNITS_TO_MERGE) {
