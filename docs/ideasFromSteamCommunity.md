@@ -69,10 +69,6 @@ So if there were Nullify - Nullify - Target:Circle - Rend - Rend - Rend, The cas
 C) Nullify works as before, but cannot protect the caster against damage that would (if not protected) be at or above their max HP. 
 I.E Nullify will protect against a single spell's damage to a caster with 60HP if and only if the damage is 59HP or less. If it is 60HP or more, Nullify fails entirely.
 ---
-Sander. — Today at 4:59 PM
-Make Dark Summoners a bit less influential, I got to a stage where I had 3 dark summoners (2 of them minibosses) each in a corner of the map, 
-I just spawned in 1 corner and then I was never able to reach the other 2 because I didn't have the correct spells (it was only stage 11) 
----
 J'in
 I think a possible solution for the summoner issue would be to have them summon X creature but with no mana so they have to build up their mana and cant immediately summon more enemies. It would at least buy the player some time to take care of the crowds before more are spawned in
 
@@ -205,8 +201,6 @@ For spells and enemies, I'd like to see things that affect the terrain itself. L
 
 Different damage types and resistances would also be nice to see, since having Debilitate apply to all damage leaves less to really mess with (in that enemy hp is a single stat, all your damage is just a #, and debilitate then effectively divides enemy hp by some multiple depending on stacks). This works well, at least for combat, but it also means that all you have to do is find the right balance of debilitates and damage spells for your mana bar and you'll just do max damage to everything in your cast zone. I don't necessarily mind this I just think it would allow for more nuance if enemies had specific elements they were weak/strong against, and it would also open more spell design options since otherwise the only thing that differentiates damage spells ends up being their mana efficiency for the most part.
 
-Oh, and I'd really like to see the dark summoners mana regen be nerfed to like 20/turn instead of 30 (so they cast every 3 turns instead of 2). Also, maybe make them start with 40/60 mana so it takes a turn before they start summoning? These are primarily targetted at the early-game since I think it's easy to get utterly shafted by dark summoners, particularly elite ones. If you don't have displacement or favorable spawn locations on the map for the summoners so you can aoe them all easily it can become a real slog during the mid-early game when you start seeing them.
-
 Right now, I think debilitate might be the most important spell to roll specifically to deal with elites because the mana efficiency on the dmg spells isn't all that good compared to the hp scaling on elites / later enemies. Obviously you reach a point where it's irrelevant but I found my best move was to kill enemies with impact damage +/ bloat (vortexing every enemy I could link into a giant blob so they slam into each other taking impact damage and anything too tanky to die from that dies from all the bloat explosions going off). Tbf, this is based off of one real god-run and 2 or 3 failed runs (aka only 4 runs total).
 
 I will say that the fluids did come in quite handy during the early / mid game before I had enough mana to really do the full combo because the fluid damage meant I could vortex enemies into that instead of just relying on impact damage and also use freeze to force them to sit in it an extra turn etc. Tl;dr the fluid damage is really nice and I appreciate that mechanic, but as mentioned further up I'd like to see more interaction with it. 
@@ -214,3 +208,18 @@ I will say that the fluids did come in quite handy during the early / mid game b
  TheRealTenman [has Spellmasons] Feb 4 @ 3:39am
     
 Semi related: Any plans on having a pure player choice run? Disable achievements or what ever if so inclined, but let the player see either the deck (or discovered deck with big "?" for cards not yet seen) and choose for themselves the starting loadout. Same thing with leveling frankly, its GG if one doesn't get nothing but mana as far as I've found. 
+---
+Knuckky — Today at 4:11 AM
+There's a few suggestions 
+Mix in some flat integer perks rather than all % based, the % becomes exponentially powerful quite quickly and though that's fun I think it would be a little more balanced if there were more choices by adding some flat buff ones, for instance, +4 to mana each level, + 5 to health each level, + 10 to stamina each level. +10 mana, + 20 health, + 50 stamina
+you need an enemy that splits on death, like another type of slime, so that strategies that can target a lot of enemies straight away with a nuke can still be threatened
+you need an enemy that can become invulnerable after taking a certain amount of damage, like a one turn death defiance, maybe you could add a spell that purges buffs from a target so that this would be easier to deal with
+Knuckky — Today at 4:18 AM
+possibly reduce the amount of enemies that have mana, it can make mana steal a little bit too powerful if combined with some target similar/connect shenanigans
+possibly add an enemy which makes spell that target it cost more but is relatively weak, to make AOE positioning and connections less braindead
+you could add buffs to certain enemies perhaps only minibosses that cause them to be shielded from the first spell that targets them
+maybe an enemy that can give allies a buff like this
+I just feel that the game is very very fun at the start, and then after a certain point you can start to steamroll anything
+I would like the opportunity to continue carefully planning moves and strategising multiple turns in advance for a little longer before going infinite
+overall you have made a fantastic game and I have introduced 3 friends to it to play with
+I will be investigating the modding side of things but I believe that some of these suggestions should be core features in my opinion

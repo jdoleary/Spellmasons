@@ -1,5 +1,18 @@
 # Today
+- Weavejester: A common issue we have is the first scroll appearing for different creatures. So player A will kill monster 1 and get a scroll, but this won't appear for the others. Player B kills monster 2 and gets a scroll, and this too is invisible to the other players. It sounds as if the randomization seed isn't being correctly propagated, or perhaps the order of the creatures is different.
+- WhiteScythe — Today at 12:09 AM
+It's me again : got a friend to join me and my brother for 3 person multiplayer; the first scroll we picked up gave one of us infinite spell selection. So they got every spell in the game. It was weird. Seashell, if that matters.
+- Fix slash and undead blade STILL don't wait quite long enough for all the take damages to take effect
+- Fix trap so animations don't run on headless
+- run predictions doesn't update when you start your turn
 - Skornette french localization
+---
+Weavejester — Today at 6:33 PM
+Sure! My experience has been that desyncs have gotten significantly worse - I think starting from 1.6.1, but it might have been 1.5.2. Before on a 3 player multiplayer we got through maybe an average of 7 missions before desync. Now it desyncs on the 2nd mission pretty consistently. It might have something to do with casting a spell before everyone has selected a starting location.
+We tried to be careful about casting spells before choosing starting locations, and then we got an issue where all spells targeted a single player, no matter what we were targeting in game. i.e. we'd push a enemy, and the player would be pushed. We'd damage the enemy, and the player would be damaged.
+We've been playing as a 3 person group on the Lion European server.
+That all said, the game itself is really fun, and I definitely appreciate the difficulty of testing multiplayer as a single developer! So please don't take this as a criticism - I know you're probably working your hardest on this 🙂
+I'll definitely come back to this game once multiplayer is viable for us. Given that other people seem to be able to play Spellmasons, while for us its unplayable, could it have something to do with the Lion server? It's the only thing I can think of that we have in common.
 ---
 - killing ally players caused a scroll to drop when they died
 - Treycore — Today at 2:27 AM
