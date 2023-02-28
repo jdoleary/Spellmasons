@@ -4,6 +4,8 @@ import { UnitSubType } from '../../types/commonTypes';
 import Underworld from '../../Underworld';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { summonerAction, summonerGetUnitAttackTargets } from './summoner';
+import { DARK_PRIEST_ID } from './darkPriest';
+import { MANA_VAMPIRE_ID } from './manaVampire';
 
 export const DARK_SUMMONER_ID = 'Dark Summoner';
 const manaCostToCast = 60;
@@ -57,7 +59,7 @@ const unit: UnitSource = {
   },
   action: async (unit: Unit.IUnit, attackTargets, underworld: Underworld) => {
     // attackTargets has irregular usage for this unit, see explanation in this file's getUnitAttackTargets()
-    await summonerAction(unit, !!attackTargets.length, underworld, { closeUnit: allUnits.summoner, farUnit: allUnits.summoner }, 1);
+    await summonerAction(unit, !!attackTargets.length, underworld, { closeUnit: allUnits[MANA_VAMPIRE_ID], farUnit: allUnits[DARK_PRIEST_ID] }, 1);
   },
   getUnitAttackTargets: summonerGetUnitAttackTargets
 };
