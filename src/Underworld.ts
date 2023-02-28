@@ -2098,6 +2098,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
     }
     this.syncTurnMessage();
+    // Update unit health / mana bars, etc
+    await runPredictions(this);
   }
   // Sends a network message to end turn
   async endMyTurn() {
@@ -2224,7 +2226,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         }
         CardUI.recalcPositionForCards(globalThis.player, this);
         CardUI.syncInventory(undefined, this);
-        runPredictions(this);
+        await runPredictions(this);
         // Show upgrades if player has received an upgrade
         this.showUpgrades();
 
@@ -3323,6 +3325,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
         }
         await Promise.all(mergePromises);
+        // runPredictions, now that the units have changed, their attack badges must update
+        await runPredictions(this);
       }
     }
 
@@ -3371,8 +3375,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
     }
     Unit.cleanup(unit);
-    // runPredictions so the merged units' attack badges disappear
-    runPredictions(this);
     return true;
 
   }
