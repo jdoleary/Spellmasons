@@ -132,7 +132,8 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
         overworld.pie.sendData({
             type: MESSAGE_TYPES.SYNC_PLAYERS,
             units: underworld.units.map(Unit.serialize),
-            players: underworld.players.map(Player.serialize)
+            players: underworld.players.map(Player.serialize),
+            lastUnitId: underworld.lastUnitId
             // todo sync doodads here
         });
     }

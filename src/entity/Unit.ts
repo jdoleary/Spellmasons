@@ -378,6 +378,10 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
         ? Image.load(unit.image, containerUnits)
         : Image.create({ x: unit.x, y: unit.y }, unit.defaultImagePath, containerUnits),
   };
+
+  if (loadedunit.id > underworld.lastUnitId) {
+    underworld.lastUnitId = loadedunit.id;
+  }
   for (let key of Object.keys(loadedunit.modifiers)) {
     const modifier = allModifiers[key];
     if (modifier && modifier.init) {

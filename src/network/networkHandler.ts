@@ -317,18 +317,24 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
     case MESSAGE_TYPES.SYNC_PLAYERS:
       {
         console.log('sync: SYNC_PLAYERS; syncs units and players')
-        const { units, players } = payload as {
+        const { units, players, lastUnitId } = payload as {
           // Note: When syncing players, must also sync units
           // because IPlayerSerialized doesn't container a full
           // unit serialized
           units: Unit.IUnitSerialized[],
           // Sync data for players
           players: Player.IPlayerSerialized[],
+          lastUnitId: number
         }
         // Units must be synced before players so that the player's
         // associated unit is available for referencing
         underworld.syncUnits(units);
         underworld.syncPlayers(players);
+        // Protect against old versions that didn't send lastUnitId with
+        // this message
+        if (lastUnitId !== undefined) {
+          underworld.lastUnitId = lastUnitId
+        }
       }
       break;
     case MESSAGE_TYPES.SET_PHASE:
