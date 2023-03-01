@@ -39,6 +39,7 @@ globalThis.adminMode = location.href.includes('localhost');
 globalThis.zoomTarget = 1.8;
 globalThis.hotseatPlayerConfig = [];
 globalThis.mods = [];
+globalThis.awaitingSpawn = false;
 // Default to 1 for singleplayer
 globalThis.numberOfHotseatPlayers = 1;
 if (globalThis.UIEasyOnTheEyes === undefined) {

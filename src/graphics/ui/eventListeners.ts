@@ -343,8 +343,12 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
             globalThis.player.unit.x = NaN;
             globalThis.player.unit.y = NaN;
           } else {
-            globalThis.player.unit.x = spawnPoint.x;
-            globalThis.player.unit.y = spawnPoint.y;
+            // Only move ghost player if not awaitingSpawn (which means they've already chosen)
+            // a spawn point but the message hasn't triggered yet due to another message still processing
+            if (!globalThis.awaitingSpawn) {
+              globalThis.player.unit.x = spawnPoint.x;
+              globalThis.player.unit.y = spawnPoint.y;
+            }
           }
         }
       }
@@ -595,6 +599,14 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         //   console.log('Prevent accidental spawn after choosing upgrade');
         //   return;
         // }
+
+        // Now that they've chosen a spawn, set awaitingSpawn to true so that 
+        // they get immediate feedback that they've chosen a spawn point
+        globalThis.awaitingSpawn = true;
+        if (globalThis.player?.unit) {
+          globalThis.player.unit.x = spawnPoint.x;
+          globalThis.player.unit.y = spawnPoint.y;
+        }
         // Spawn player:
         overworld.pie.sendData({
           type: MESSAGE_TYPES.SPAWN_PLAYER,

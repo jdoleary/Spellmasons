@@ -305,4 +305,9 @@ declare global {
     // games with the same mods.  Only underworld objects will have an activeMods list on headless
     var activeMods: string[] | undefined;
     var saveActiveMods: (activeMods: string[]) => void | undefined;
+    // Makes ghost spawner Player stop moving after click so that clients get immediate feedback
+    // that they've chosen a spawn point event while they have to wait to actually spawn because
+    // another ally is casting
+    // NOT FOR HEADLESS
+    var awaitingSpawn: boolean | undefined;
 }

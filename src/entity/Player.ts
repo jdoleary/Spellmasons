@@ -49,6 +49,7 @@ export interface IPlayer {
   clientId: string;
   clientConnected: boolean;
   unit: Unit.IUnit;
+  awaitingSpawn: boolean,
   isSpawned: boolean;
   // The spells that the player has on their toolbar
   cards: string[];
@@ -102,6 +103,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
       undefined,
       underworld
     ),
+    awaitingSpawn: false,
     isSpawned: false,
     // *3 for all card containers including floating card containers
     cards: Array(config.NUMBER_OF_TOOLBAR_SLOTS * 3).fill(''),
@@ -203,6 +205,9 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string, colo
 export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld) {
   // Set the player so they can choose their next spawn
   player.isSpawned = false;
+  if (player === globalThis.player) {
+    globalThis.awaitingSpawn = false;
+  }
   player.endedTurn = false;
   // Update player position to be NOT NaN or null (which indicates that the player is in portal),
   // instead, the player is now spawning so their position should be a number.

@@ -487,6 +487,9 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         }
         if (!(isNaN(payload.x) && isNaN(payload.y))) {
           fromPlayer.isSpawned = true;
+          if (fromPlayer.clientId == globalThis.clientId) {
+            globalThis.awaitingSpawn = false;
+          }
           if (fromPlayer == globalThis.player) {
             if (elInstructions) {
               elInstructions.innerText = '';

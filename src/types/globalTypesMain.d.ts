@@ -239,4 +239,8 @@ declare global {
     // A list of mod names that will transfer to the underworld when it is created
     var activeMods: string[] | undefined;
     var saveActiveMods: (activeMods: string[]) => void | undefined;
+    // Makes ghost spawner Player stop moving after click so that clients get immediate feedback
+    // that they've chosen a spawn point event while they have to wait to actually spawn because
+    // another ally is casting
+    var awaitingSpawn: boolean | undefined;
 }
