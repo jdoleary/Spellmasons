@@ -1,8 +1,10 @@
 # Critical Path
-## Thursday's update
+## Friday's update
+- Fix desync caused by someone spawning while a spell is being cast
 - French, Japanese
 - Optimizations done today
 - Fix overpopulation
+- Do something about explaining scroll disappear now that level ups are done differently
 ## Priorities
 - Re-add Japanese and notify journalists
 - Look for Korean translation
@@ -31,15 +33,9 @@
 ---
 
 - You can cast while a spell is channeling and go negative mana
-- Am I accidentally sending the mac build along with the PC build??
-- mana badges and red "a card must come after" in the queued spells are offset
-  wrong
-- green glop has shades of blue in it
-  - check when Brad downloads actual game if they aren't colored
 - BUG: cast debilitatex2, arrow, bleed, bleed and entered the portal before
   bleed was done and it waited for a full timeout before moving on and the cast
   (and particles are sticking around)
-- scrolling on tooltip makes whole game zoom
 - He spawned in and his single-turn perks didn't proc (maybe because he got to
   negative mana the game before?)
   - he was queing up a spell while they were procing

@@ -1706,10 +1706,6 @@ export default class Underworld {
       globalThis.playNextSong();
     }
 
-    if (this.levelIndex !== 0) {
-      // If this is not the first level allow players to pick a new perk
-      this.players.forEach(p => p.perksLeftToChoose++);
-    }
     // Reset diedDuringLevel now that we are starting a new level,
     // this must be called AFTER showUpgrades so that the players
     // that died will miss the chance to upgrade perks
@@ -1997,7 +1993,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         if (p.name == Pickup.CARDS_PICKUP_NAME) {
           playSFXKey('scroll_disappear');
           makeScrollDissapearParticles(p, false);
-          explain(EXPLAIN_MISSED_SCROLL);
         }
         // Remove pickup
         Pickup.removePickup(p, this, false);
@@ -2261,16 +2256,14 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     Player.syncLobby(this);
   }
   chooseUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
+    const upgradesLeftToChoose = this.upgradesLeftToChoose(player);
     if (upgrade.type == 'card') {
       // Reset reroll counter now that player has chosen a card
       player.reroll = 0;
-      if (player.upgradesLeftToChoose <= 0) {
+      if (upgradesLeftToChoose <= 0) {
         console.log('Player:', player);
         console.error('Player managed to choose an upgrade without being supposed to');
       }
-      // Decrement and 
-      // Ensure it doesn't go negative
-      player.upgradesLeftToChoose = Math.max(0, player.upgradesLeftToChoose - 1);
     } else if (upgrade.type == 'special') {
       // Any future logic for special cards such as 'reroll' goes here
 
@@ -2292,6 +2285,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
 
   }
+  perksLeftToChoose(player: Player.IPlayer): number {
+    return this.levelIndex - player.attributePerks.length;
+  }
+  upgradesLeftToChoose(player: Player.IPlayer): number {
+    return this.cardDropsDropped + config.STARTING_CARD_COUNT - player.inventory.length;
+  }
 
   showUpgrades() {
     const player = globalThis.player;
@@ -2307,14 +2306,16 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
       return
     }
+    const upgradesLeftToChoose = this.upgradesLeftToChoose(player);
+    const perksLeftToChoose = this.perksLeftToChoose(player);
     // Return immediately if player has no upgrades that left to pick from
-    if (player.upgradesLeftToChoose <= 0 && player.perksLeftToChoose <= 0) {
+    if (upgradesLeftToChoose <= 0 && perksLeftToChoose <= 0) {
       console.log('showUpgrades: Closing upgrade screen, nothing left to pick')
       return;
     }
-    const isPerk = player.upgradesLeftToChoose == 0;
+    const isPerk = upgradesLeftToChoose == 0;
     let minimumProbability = 0;
-    if (player.upgradesLeftToChoose > 0 && player.inventory.length < config.STARTING_CARD_COUNT) {
+    if (upgradesLeftToChoose > 0 && player.inventory.length < config.STARTING_CARD_COUNT) {
       // Limit starting cards to a probability of 10 or more
       minimumProbability = 10;
       if (elUpgradePickerLabel) {

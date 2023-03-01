@@ -200,7 +200,7 @@ export function choosePerk(perk: AttributePerk, player: IPlayer, underworld: Und
     // Reset reroll counter now that player has chosen a perk 
     player.reroll = 0;
     // Ensure the player cannot pick more perks than they have available
-    if (player.perksLeftToChoose <= 0) {
+    if (underworld.perksLeftToChoose(player) <= 0) {
         // if current player, manage the visibility of the upgrade screen
         if (player == globalThis.player) {
             console.log('Cannot choose another perk');
@@ -215,12 +215,8 @@ export function choosePerk(perk: AttributePerk, player: IPlayer, underworld: Und
         // Note: random doesn't need to be seeded for 'immediate' perks because they
         // are guarunteed to proc
         tryTriggerPerk(perk, player, 'immediately', seedrandom(), underworld, 0);
-    } else {
-        player.attributePerks.push(perk);
     }
-    // Decrement and 
-    // Ensure it doesn't go negative
-    player.perksLeftToChoose = Math.max(0, player.perksLeftToChoose - 1);
+    player.attributePerks.push(perk);
     if (player == globalThis.player) {
         // Clear upgrades when current player has picked one
         document.body?.classList.toggle(showUpgradesClassName, false);

@@ -512,7 +512,6 @@ export const pickups: IPickupSource[] = [
     probability: 0,
     singleUse: true,
     scale: 0.5,
-    turnsLeftToGrab: 4,
     playerOnly: true,
     willTrigger: ({ unit, player, pickup, underworld }) => {
       return !!player;
@@ -677,11 +676,9 @@ export const pickups: IPickupSource[] = [
   },
 ];
 export function givePlayerUpgrade(p: Player.IPlayer, underworld: Underworld) {
-  // All players get to pick a new upgrade when one picks up the scroll.
-  p.upgradesLeftToChoose++;
   underworld.showUpgrades();
   if (player && player == globalThis.player) {
-    if (player.inventory.length > config.NUMBER_OF_TOOLBAR_SLOTS) {
+    if (player.inventory.length > config.NUMBER_OF_TOOLBAR_SLOTS - 1) {
       explain(EXPLAIN_INVENTORY);
     }
   }

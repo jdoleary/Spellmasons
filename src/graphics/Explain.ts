@@ -131,12 +131,6 @@ const explainMap: { [key: string]: ExplainData } = {
         })
 
     },
-    [EXPLAIN_MISSED_SCROLL]: {
-        prompt: () => ({
-            imageSrc: 'images/explain/scroll-disappear.gif', text: `explain scroll dissapear`, yesText: 'Bummer'
-        })
-
-    },
     [EXPLAIN_LIQUID_DAMAGE]: {
         prompt: () => ({
             imageSrc: 'images/explain/liquid-damage.gif', text: 'explain liquid damage', yesText: 'Yikes!'
