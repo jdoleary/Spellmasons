@@ -3153,6 +3153,14 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
   syncUnits(units: Unit.IUnitSerialized[]) {
     console.log('sync: Syncing units', units.map(u => u.id), 'current units:', this.units.map(u => u.id));
+    // Report detected duplicate id:
+    this.units.forEach((unit, index) => {
+      if (this.units.findIndex(u => u.id == unit.id) !== index) {
+        console.log('Duplicate unit id in: ', this.units.map(u => `${u.id}:${u.unitSourceId}`))
+        console.log('Syncing to: ', units.map(u => `${u.id}:${u.unitSourceId}`))
+        console.error('Duplicate unit id detected in units array');
+      }
+    });
 
     // Remove excess units if local copy of units has more units than the units it
     // should be syncing with
