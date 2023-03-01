@@ -684,7 +684,7 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   // this will remove the tooltip:
   checkIfNeedToClearTooltip();
 
-  if (!prediction && unit.originalLife) {
+  if (!prediction && unit.originalLife && unit.faction !== globalThis.player?.unit.faction) {
     underworld.reportEnemyKilled(unit);
   }
   // Once a unit dies it is no longer on it's originalLife

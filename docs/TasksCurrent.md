@@ -14,7 +14,6 @@ We've been playing as a 3 person group on the Lion European server.
 That all said, the game itself is really fun, and I definitely appreciate the difficulty of testing multiplayer as a single developer! So please don't take this as a criticism - I know you're probably working your hardest on this 🙂
 I'll definitely come back to this game once multiplayer is viable for us. Given that other people seem to be able to play Spellmasons, while for us its unplayable, could it have something to do with the Lion server? It's the only thing I can think of that we have in common.
 ---
-- killing ally players caused a scroll to drop when they died
 - Treycore — Today at 2:27 AM
 Playing Co-Op on the community server and when one of us would die, the game screen would freeze on their end and they wouldn’t even get too see their death animation… Also when they quit the game it spawned a duplicate character into the game for one of the other guys on our team
 Blackjack Barret — Today at 3:26 PM
