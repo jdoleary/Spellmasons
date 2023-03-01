@@ -1,4 +1,6 @@
 # Critical Path
+- UI Feedback for spawning player while cast is in progress
+- was able to create a desync with pickups (error and portal sticking around) when moving from one multiplayer game to another
 ## Friday's update
 - Fix desync caused by someone spawning while a spell is being cast
 - French, Japanese
