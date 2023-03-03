@@ -1,3 +1,33 @@
+HPStarr — Yesterday at 10:43 PM
+I have to say, the base on this game is one of the best I've ever seen, the spell mechanics are amazing. I'm really excited to see where this game goes in the next couple of months
+anyway, time for some ideas:
+custom map editor: 
+it would be amazing having a custom map editor where people can upload maps to the workshop and make their own campaigns
+bosses: I wouldn't be surprised if you're already planning this, but having bosses more interesting than the current "boss" enemies, maybe special levels every 5-10 levels where you fight one of a few bosses. (although honestly the deathmason already kind of fills this role, anyway more things like them)
+enviroment: 
+having things in the environment that interact with spells would be cool, eg: water that turns poisonous if you cast targeting it, crumbling walls that can be destroyed, bridges across lava that can be broken
+items: having less power coming from just "getting a bigger mana pool" and instead being able to find items with more unique effects would be cool.
+HPStarr — Yesterday at 10:51 PM
+enemies: 
+It would be cool if there were more complex enemies. Ones which buff other enemies, ones where they only move every other turn, ones that change the player's position on attack
+there's already several interesting ones, but there's so much room for more
+spells: more interesting damage spells would be nice. The current damage spells are all >targets one enemy and does x effect
+some spells which target in an aoe, or lightning that chains by base, or maybe a dash spell that damages enemies you move through
+HPStarr — Yesterday at 11:07 PM
+area denial based enemies would be really good for adding variety
+maybe a slime that leaves toxic sludge where it walks or something like that
+there's a lot of different concepts, but this type of thing, or enemies that have on death effects
+would help a lot
+since atm it feels like the best strategy is always just
+>hide behind a wall
+>take out every enemy that can lob over walls
+>push or displace any melee enemies tanky enough to get close
+which on that note makes me think
+some enemies being designed to counter specific strategies would be interesting
+like idk, a metal golem that's really slow but can't be teleported/pushed
+again though, I am super excited to see how this game develops
+I can easily see this being one of my favorite rouge-likes in a few months
+---
  AlbrechtWM [has Spellmasons] 20 hours ago
     
 A few balance feedback items

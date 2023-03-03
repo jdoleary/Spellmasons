@@ -1,3 +1,4 @@
+- Sometimes the first tutorial level will spawn a water pool and if you spawn in it it just takes you to the next level immediately
 - TODO: Optimize replaceAll('BD2023') to consider lowercase so there doesn't have to be 2
 Playtest notes:
 - +75 single turn mana is probably too much
@@ -8,10 +9,9 @@ Playtest notes:
 - Weavejester: A common issue we have is the first scroll appearing for different creatures. So player A will kill monster 1 and get a scroll, but this won't appear for the others. Player B kills monster 2 and gets a scroll, and this too is invisible to the other players. It sounds as if the randomization seed isn't being correctly propagated, or perhaps the order of the creatures is different.
 - WhiteScythe — Today at 12:09 AM
 It's me again : got a friend to join me and my brother for 3 person multiplayer; the first scroll we picked up gave one of us infinite spell selection. So they got every spell in the game. It was weird. Seashell, if that matters.
-- Fix slash and undead blade STILL don't wait quite long enough for all the take damages to take effect
+- **important** Fix slash and undead blade STILL don't wait quite long enough for all the take damages to take effect
 - Fix trap so animations don't run on headless
 - run predictions doesn't update when you start your turn
-- Skornette french localization
 ---
 Weavejester — Today at 6:33 PM
 Sure! My experience has been that desyncs have gotten significantly worse - I think starting from 1.6.1, but it might have been 1.5.2. Before on a 3 player multiplayer we got through maybe an average of 7 missions before desync. Now it desyncs on the 2nd mission pretty consistently. It might have something to do with casting a spell before everyone has selected a starting location.
