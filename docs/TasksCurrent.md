@@ -1,3 +1,4 @@
+- TODO: Optimize replaceAll('BD2023') to consider lowercase so there doesn't have to be 2
 Playtest notes:
 - +75 single turn mana is probably too much
 - +15 health capacity every level is too much
