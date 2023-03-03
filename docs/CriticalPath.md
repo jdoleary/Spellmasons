@@ -1,4 +1,5 @@
 # Critical Path
+- UI: Perks are not translated
 - UI Feedback for spawning player while cast is in progress
 - was able to create a desync with pickups (error and portal sticking around) when moving from one multiplayer game to another
 ## Friday's update

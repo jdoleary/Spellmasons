@@ -1,3 +1,8 @@
+Playtest notes:
+- +75 single turn mana is probably too much
+- +15 health capacity every level is too much
+- TODO: update explain new spells to not include pickup turn limit
+---
 # Today
 - Weavejester: A common issue we have is the first scroll appearing for different creatures. So player A will kill monster 1 and get a scroll, but this won't appear for the others. Player B kills monster 2 and gets a scroll, and this too is invisible to the other players. It sounds as if the randomization seed isn't being correctly propagated, or perhaps the order of the creatures is different.
 - WhiteScythe — Today at 12:09 AM
@@ -23,7 +28,6 @@ Blackjack Barret — Today at 4:00 PM
 co-op on community server 1 - Seashell shows desyncs if a spell is cast before all players have picked a starting location. The frequency of desyncs also heavily increased at 6 players. At 5 players it is very playable with some desyncs but at 6 it appears to be very frequent with many spells showing the target of the spell as an enemy but instead the spell would desync and target a fellow player, this was a repeated occurrence and made the game unplayable unless players were out of range of each other. 
 - discord bot to manage LFG `I think theres a bot for that Jordan like MEE6 reaction roles`
 - Improve korean translation
-- **important** bug reported: white screen on Mods page
 ```
  FaeOfTheFlesh [has Spellmasons] Feb 15 @ 4:30pm
 Possible Bug. spells cast from spell book and not placed in a hot bar don't reduce in price
