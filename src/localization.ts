@@ -8,9 +8,9 @@ Note: HTML that needs to be localized simply needs a data-localize-text attribut
 Now, it will automatically be localized when setLanguage is called.
 */
 export interface LanguageMapping {
-    [key: string]: string
+    [key: string]: string | undefined
 }
-let languageMapping: { [key: string]: string };
+let languageMapping: LanguageMapping;
 let chosenLanguageCode: string;
 const cachedErrorsReported: string[] = [];
 function returnTranslation(keyOrArray: Localizable, map: LanguageMapping): string {
