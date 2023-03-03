@@ -1,28 +1,28 @@
 ## 3/3/2023 Spellmasons Update v1.8.0
-- UX: Give players immediate feedback if they send
-    SPAWN_PLAYER while other messages are still processing
-- fix: desync: Update lastUnitId when loading Player
-- src: Extra desync protection, send lastUnitId along with
-SYNC_PLAYERS message
-    When lastUnitId is out of sync it opens the possibility of a desync
-    where there can be multiple units that share the same ID which can
-    result in different results on different clients if one client has the
-    shared id bug and another client does not.
-- ref: Scrolls to level up system
+- balance: Dark Summoners
+    so they start with 40 mana out of 60 so it takes them
+    one turn before they can cast and make them regen mana slower.
+    Thanks to Sander and Shurimoo for the suggestions
+- balance: Dark Summoner summons
+    Dark Priests and Mana Vampires instead of more summoners
+    to prevent overpopulation from crashing the game
+
+- Translations (i18n): Add Japanese and French and Korean
+
+- refactor: Scrolls to level up system
     Now killing enemies is what dictates how many spells you get.
     This solves for desync issues where pickups determined your spell-gets.
     Also, remove scrolls from disappearing.  Scrolls just trigger the spell-get
     early
+
+- fix: desync: Update lastUnitId when loading Player
+- fix: Extra desync protection, send lastUnitId along with SYNC_PLAYERS message
+    When lastUnitId is out of sync it opens the possibility of a desync
+    where there can be multiple units that share the same ID which can
+    result in different results on different clients if one client has the
+    shared id bug and another client does not.
 - fix: Killing ally player allows scroll to drop
     Scrolls will only drop when killing enemies now
-- ref: Make perks absolute instead of percentages
-- UI: Fix updating unit health and mana bars
-    at the start of player turns and after ending player turns.
-    This is triggered manually so that the player doesn't have to move their
-    mouse to get the updated prediction UI
-- balance: Dark Summoner summons
-    Dark Priests and Mana Vampires instead of more summoners
-    to prevent overpopulation from crashing the game
 - fix: menu: Fix blank mods screen
 - fix: Bug where freezing yourself would result in
     you missing 2 turns instead of one because
@@ -30,10 +30,6 @@ SYNC_PLAYERS message
     your unit which meant when the onEndTurnEvent fn ran,
     there was no freeze modifier to remove and so it didn't get removed
     until the next turn.
-- balance: Nerf Dark Summoners
-    so they start with 40 mana out of 60 so it takes them
-    one turn before they can cast and make them regen mana slower.
-    Thanks to Sander and Shurimoo for the suggestions
 - npm: @websocketpie/client@1.0.0
     Upgrade wsPie client so that it doesn't handle client messages immediately by default.
     Client messages will bounce off the server before being handled to
@@ -42,7 +38,13 @@ SYNC_PLAYERS message
     Prevent messages from sending with no cardIds (unless it's clearing a previous thought)
     Before this change the server was being inundated with messages because
     every client was sending a player_thinking message on every mouse move
-- i18n: Add Japanese and French and Korean
+
+- UX: Give players immediate feedback if they send
+    SPAWN_PLAYER while other messages are still processing
+- UI: Fix updating unit health and mana bars
+    at the start of player turns and after ending player turns.
+    This is triggered manually so that the player doesn't have to move their
+    mouse to get the updated prediction UI
 
 
 ## 2/17/2023 Spellmasons Update v1.7.0

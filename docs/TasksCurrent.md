@@ -1,3 +1,13 @@
+- bug: AI battle can still make you skip a level
+- bug: During AI battle when an archer is being resurrected it will slide across the ground
+- bug: Desync issues:
+  - if you do multiplayer and have one on the other screen you can miss things like player movement, where when player 1 walks into a trap they'll take damage on player 2 screen and the trap will disappear but the player 1 is still where they started on their screen.
+  - stamina potions don't show, and when rejoining stamina potion didn't seem to trigger on server because stamina was back to where it was pre potion
+- bug burst desync where it said it would do less damage than it did in prediction
+- bug: v1.8 pickup desync, a scroll appeared and then disappeared
+- bug: Casting freeze on ally player made their stamina go to 0 but they lost the freeze modifier
+- bug: Sacrifice doesn't show the health gained in prediction
+- I was able to induce a temporary desync when alt-tabbed (one game Fullscreen real exe the other a browser on another windows virtual space), the player that took damage's health was desynced but it corrected after ending turn
 - Sometimes the first tutorial level will spawn a water pool and if you spawn in it it just takes you to the next level immediately
 - TODO: Optimize replaceAll('BD2023') to consider lowercase so there doesn't have to be 2
 Playtest notes:

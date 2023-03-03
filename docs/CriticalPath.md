@@ -1,4 +1,6 @@
 # Critical Path
+- Update Korean language (changes after v1.8)
+- release demo
 - UI: Perks are not translated
 - UI Feedback for spawning player while cast is in progress
 - was able to create a desync with pickups (error and portal sticking around) when moving from one multiplayer game to another
