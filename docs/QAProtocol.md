@@ -17,10 +17,8 @@
 
 ## Validate v.1.8.0
 - Test Host Local Server, Host via Docker (particularly because of mods)
+- Make Korean as a supported language again
 ## Validate v.1.7.0
-- bug after dying and starting a new game, spawning a spell makes it jump to me
-- target column yields 2 columns when hovering over a pickup
-- conserve doesn't show that it works until you move your mouse
 - slow seems to not work right on multiplayer when cast on self
 - clone makes pickups dust appear on prediction when portal is up?
 
