@@ -4,9 +4,9 @@ import { CardCategory, Faction, UnitType } from '../types/commonTypes';
 import { allUnits } from '../entity/units';
 import { skyBeam } from '../VisualEffects';
 import { playDefaultSpellSFX } from './cardUtils';
-import floatingText from '../graphics/FloatingText';
 import { addWarningAtMouse } from '../graphics/PlanningView';
-import { CardRarity, probabilityMap } from '../types/commonTypes';
+import { CardRarity } from '../types/commonTypes';
+import { bossmasonUnitId } from '../entity/units/deathmason';
 
 
 const overrides: { [unitId: string]: { exclude: boolean, properties: { manaCost?: number } } } = {
@@ -63,6 +63,10 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean):
     }
 
     const expenseScaling = 5;
+    let manaCost = (sourceUnit.spawnParams?.budgetCost || 1) * 40 * (asMiniboss ? 2 : 1);
+    if (unitId == bossmasonUnitId) {
+        manaCost = 1200;
+    }
 
     return {
         card: {
@@ -71,7 +75,7 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean):
             sfx: 'summonDecoy',
             supportQuantity: false,
             // Make mana cost dependent on how late they show up in the game
-            manaCost: (sourceUnit.spawnParams?.budgetCost || 1) * 40 * (asMiniboss ? 2 : 1),
+            manaCost,
             healthCost: 0,
             expenseScaling,
             // These cards are not available as upgrades and must be accessed through capture_soul
