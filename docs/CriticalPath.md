@@ -1,4 +1,5 @@
 # Critical Path
+- What if there was an "attrition" feature where after you beat the deathmason the "perks" turn into curses which affect your stats or modify or remove your spells?
 - Update Korean language (changes after v1.8)
 - release demo
 - UI: Perks are not translated
