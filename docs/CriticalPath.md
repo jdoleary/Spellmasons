@@ -1,4 +1,5 @@
 # Critical Path
+- AFter perk refactor make sure summons are still viable (such as death mason's 1200 mana)
 - Current changes make it so you could potentially get stuck with endedTurn set to true if there's a desync?
 - **"WHENEVER I PASS LEVEL ONE IT SKIPS 10 LEVELES"**
 - Check Japanese on the store page after update
