@@ -52,7 +52,11 @@ export const graphicsBloodSmear = !globalThis.pixi ? undefined : new globalThis.
 export const containerBloodParticles = !globalThis.pixi ? undefined : new globalThis.pixi.ParticleContainer();
 
 let tempBloodContainer: PIXI.Container | undefined;
-export function cleanBlood() {
+export function cleanBlood(underworld?: Underworld) {
+  if (underworld) {
+    // Remove current blood objects from continuing to propagate blood
+    underworld.bloods = [];
+  }
   // Remove blood
   graphicsBloodSmear?.clear();
   containerBloodParticles?.removeChildren();

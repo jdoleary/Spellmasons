@@ -1626,8 +1626,7 @@ export default class Underworld {
     containerBoard?.removeChildren();
     containerLiquid?.removeChildren();
     cleanUpLiquidFilter();
-    // Clean up blood
-    cleanBlood();
+    cleanBlood(this);
     this.imageOnlyTiles = [];
 
     // Clear card usage counts, otherwise players will be
