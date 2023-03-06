@@ -1935,7 +1935,13 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // queues up a unitsync, so if changes to the units
       // were to happen AFTER broadcastTurnPhase they would be
       // overwritten when the sync occurred
-      this.broadcastTurnPhase(turn_phase.NPC_ALLY);
+      // ---
+      // If there are ally units move to NPC_ALLY, if not just move to NPC_ENEMY
+      if (this.units.filter(u => u.alive && u.faction == Faction.ALLY && u.unitType == UnitType.AI).length !== 0) {
+        this.broadcastTurnPhase(turn_phase.NPC_ALLY);
+      } else {
+        this.broadcastTurnPhase(turn_phase.NPC_ENEMY);
+      }
       return true;
     }
     return false;
@@ -2626,6 +2632,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           this.broadcastTurnPhase(turn_phase.NPC_ENEMY)
           break;
         case turn_phase[turn_phase.NPC_ENEMY]:
+          // Now that player's turn is over (player turn can go directly to NPC_ENEMY if there are no Allies),
+          // clear any emitters that failed to clean up themselves
+          // that are marked as "turn lifetime" 
+          cleanUpEmitters(true);
           // Clear enemy attentionMarkers since it's now their turn
           globalThis.attentionMarkers = [];
           // Only execute turn if there are units to take the turn:
