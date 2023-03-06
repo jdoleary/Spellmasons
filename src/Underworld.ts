@@ -1717,12 +1717,11 @@ export default class Underworld {
       setTimeout(() => {
         this.createLevelSyncronous(levelData);
         resolve();
-      }, 10)
+      }, 10);
     });
   }
   generateLevelDataSyncronous(levelIndex: number): LevelData {
     console.log('Setup: generateLevelDataSyncronous', levelIndex);
-    this.levelIndex = levelIndex;
     // Generate level
     let level;
     do {
@@ -2231,12 +2230,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         cameraAutoFollow(!!globalThis.player?.isSpawned);
       }
 
-      // Note: This should occur AFTER dead, non-portaled players may have entered the portal
-      // because checkForEndOfLevel considers if all players are portaled.
-      const wentToNextLevel = this.checkForEndOfLevel();
-      if (wentToNextLevel) {
-        return;
-      }
       const gameIsOver = this.tryGameOver();
       if (gameIsOver) {
         // Prevent infinite loop since there are no players
@@ -2440,7 +2433,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       setTimeout(() => {
         // Prepare the next level
         if (globalThis.isHost(this.pie)) {
-          this.generateLevelData(++this.levelIndex);
+          this.generateLevelData(this.levelIndex + 1);
         } else {
           console.log('This instance is not host, host will trigger next level generation.');
         }

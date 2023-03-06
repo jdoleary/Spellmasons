@@ -414,8 +414,6 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
     case MESSAGE_TYPES.ENTER_PORTAL:
       if (fromPlayer) {
         Player.enterPortal(fromPlayer, underworld);
-        // Entering the portal ends the player's turn
-        underworld.endPlayerTurn(fromPlayer.clientId);
       } else {
         console.error('Recieved ENTER_PORTAL message but "caster" is undefined')
       }
