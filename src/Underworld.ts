@@ -1735,7 +1735,7 @@ export default class Underworld {
     return level;
   }
   async generateLevelData(levelIndex: number): Promise<LevelData> {
-    console.log('Setup: generateLevelData', levelIndex);
+    console.log('Setup: generateLevelData');
     return new Promise<LevelData>(resolve => {
       document.body?.classList.toggle('loading', true);
       // setTimeout allows the UI to refresh before locking up the CPU with
@@ -2157,22 +2157,35 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // (A player "ending their turn" when it is not their turn
       // can occur when a client disconnects when it is not their turn)
       console.info('Cannot end the turn of a player when it isn\'t currently their turn')
-      return;
-    }
-    if (player.endedTurn) {
-      console.info('Cannot end turn more than once');
-      return;
+      return
     }
     // Ensure players can only end the turn when it IS their turn
     if (this.turn_phase === turn_phase.PlayerTurns) {
-      player.endedTurn = true;
-      // Trigger onTurnEnd Events
-      await Promise.all(player.unit.onTurnEndEvents.map(
-        async (eventName) => {
-          const fn = Events.onTurnEndSource[eventName];
-          return fn ? await fn(player.unit, this) : false;
-        },
-      ));
+      // Don't trigger onTurnEndEvents more than once
+      if (!player.endedTurn) {
+        player.endedTurn = true;
+        // Trigger onTurnEnd Events
+        await Promise.all(player.unit.onTurnEndEvents.map(
+          async (eventName) => {
+            const fn = Events.onTurnEndSource[eventName];
+            return fn ? await fn(player.unit, this) : false;
+          },
+        ));
+      }
+      // Extra guard to protect against unexpected state
+      // where a player is dead but their turn is not ended
+      // Ensure that dead players are set to "turn ended"
+      for (let player of this.players) {
+        const unit = player.unit;
+        // If player is dead,
+        if (unit && !unit.alive) {
+          // and their turn has not been ended yet,
+          // set their endedTurn to true
+          if (!player.endedTurn) {
+            player.endedTurn = true;
+          }
+        }
+      }
       console.log('PlayerTurn: End player turn', clientId);
       this.syncTurnMessage();
 
