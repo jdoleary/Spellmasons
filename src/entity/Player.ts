@@ -62,9 +62,6 @@ export interface IPlayer {
   // Note: call updateCardManaBadges() any time you modify cardUsageCounts so it will
   // be reflected in the UI
   cardUsageCounts: CardUsage;
-  // diedDuringLevel is used to make players that died miss the chance to get a perk at the beginning
-  // of a new level
-  diedDuringLevel: boolean;
   // note: menu depends on the name of this variable, if you refactor it
   // refactor it in Golem-Menu repo too
   lobbyReady: boolean;
@@ -112,7 +109,6 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
     upgrades: [],
     upgradesLeftToChoose: config.STARTING_CARD_COUNT,
     perksLeftToChoose: 0,
-    diedDuringLevel: false,
     lobbyReady: false,
     reroll: 0,
     attributePerks: [],

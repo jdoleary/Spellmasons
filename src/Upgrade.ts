@@ -33,10 +33,6 @@ export interface IUpgrade {
 // minimumProbability ensures that super rare cards won't be presented too early on
 // onlyStats: means it'll present stats upgrades instead of card upgrades
 export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, minimumProbability: number, underworld: Underworld): IUpgrade[] {
-  // Dead players choose special upgrades
-  if (player.diedDuringLevel) {
-    return [...upgradeSourceWhenDead];
-  }
   let upgrades: IUpgrade[] = [];
   const filterUpgrades = (u: IUpgrade) =>
     (u.maxCopies === undefined
