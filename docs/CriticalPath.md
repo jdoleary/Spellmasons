@@ -1,23 +1,16 @@
 # Critical Path
+- **"WHENEVER I PASS LEVEL ONE IT SKIPS 10 LEVELES"**
+- Check Japanese on the store page after update
 - What if there was an "attrition" feature where after you beat the deathmason the "perks" turn into curses which affect your stats or modify or remove your spells?
 - Update Korean language (changes after v1.8)
 - release demo
 - UI: Perks are not translated
 - UI Feedback for spawning player while cast is in progress
 - was able to create a desync with pickups (error and portal sticking around) when moving from one multiplayer game to another
-## Friday's update
-- Fix desync caused by someone spawning while a spell is being cast
-- French, Japanese
-- Optimizations done today
-- Fix overpopulation
-- Do something about explaining scroll disappear now that level ups are done differently
 ## Priorities
-- Re-add Japanese and notify journalists
-- Look for Korean translation
 - Address crashes due to too many units due to summoners
 - Balance Perks
 - Address Desync issues
-- Add French Skornette translation
 - State machine for turn_phases
 
 
