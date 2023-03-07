@@ -1,3 +1,5 @@
+- Also please nerf debilitate and freeze. As they are, these spells break the game. Its particularly unsatisfying in multiplayer because players can infinitely cycle AOE freezes without breaking a sweat. from Scojbo steam review
+- https://steamcommunity.com/app/1618380/eventcomments/3780245614663287146/ Found a new bug while playing multiplayer, my friend used a bunch of radius spells like splash, target kind, over and over and tried to nuke the map while everything was already dead. While we were waiting for everything to link together he got bored and I told him everything was already dead. He just hopped into the portal and we loaded into the next level. We could still hear the sound of the spell from the last level linking. All of a sudden I get nuked from a random spell while I was waiting for him to spawn. 
 - scojbo — Yesterday at 8:48 PM
 Any world in which we can add an option for increased difficulty?  Solo player gets pretty easy after a couple runs, and multiplayer does not scale well currently (its WAY WAY easier than solo).
 
