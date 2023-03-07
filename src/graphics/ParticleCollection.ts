@@ -462,6 +462,64 @@ export function makeDarkPriestAttackParticles(position: Vec2, prediction: boolea
         }, [texture]);
     simpleEmitter({ x: position.x, y: position.y }, particleConfig, resolver);
 }
+const cursedEmitterConfig = (maxParticles: number) => ({
+    autoUpdate: true,
+    "alpha": {
+        "start": 1,
+        "end": 0
+    },
+    "scale": {
+        "start": 1,
+        "end": 0.2,
+        "minimumScaleMultiplier": 1
+    },
+    "color": {
+        "start": "#321d73",
+        "end": "#9526cc"
+    },
+    "speed": {
+        "start": 20,
+        "end": 0,
+        "minimumSpeedMultiplier": 1
+    },
+    "acceleration": {
+        "x": 0,
+        "y": 0
+    },
+    "maxSpeed": 0,
+    "startRotation": {
+        "min": -90,
+        "max": -90
+    },
+    "noRotation": false,
+    "rotationSpeed": {
+        "min": 0,
+        "max": 0
+    },
+    "lifetime": {
+        "min": 3.5,
+        "max": 4
+    },
+    "blendMode": "normal",
+    // freqency is relative to max particles
+    // so that it emits at a consistent rate
+    // without gaps
+    "frequency": 0.01 * (500 / maxParticles),
+    "emitterLifetime": -1,
+    "maxParticles": maxParticles,
+    "pos": {
+        "x": 0.5,
+        "y": 0.5
+    },
+    "addAtBack": true,
+    "spawnType": "circle",
+    "spawnCircle": {
+        "x": 0,
+        "y": 0,
+        "r": 15
+    }
+
+});
 
 // The bossmason's "cape"
 export function makeCorruptionParticles(follow: IUnit, prediction: boolean, underworld: Underworld, resolver?: () => void) {
@@ -481,61 +539,7 @@ export function makeCorruptionParticles(follow: IUnit, prediction: boolean, unde
         return
     }
     const particleConfig =
-        particles.upgradeConfig({
-            autoUpdate: true,
-            "alpha": {
-                "start": 1,
-                "end": 0
-            },
-            "scale": {
-                "start": 1,
-                "end": 0.2,
-                "minimumScaleMultiplier": 1
-            },
-            "color": {
-                "start": "#321d73",
-                "end": "#9526cc"
-            },
-            "speed": {
-                "start": 20,
-                "end": 0,
-                "minimumSpeedMultiplier": 1
-            },
-            "acceleration": {
-                "x": 0,
-                "y": 0
-            },
-            "maxSpeed": 0,
-            "startRotation": {
-                "min": -90,
-                "max": -90
-            },
-            "noRotation": false,
-            "rotationSpeed": {
-                "min": 0,
-                "max": 0
-            },
-            "lifetime": {
-                "min": 3.5,
-                "max": 4
-            },
-            "blendMode": "normal",
-            "frequency": 0.01,
-            "emitterLifetime": -1,
-            "maxParticles": 500,
-            "pos": {
-                "x": 0.5,
-                "y": 0.5
-            },
-            "addAtBack": true,
-            "spawnType": "circle",
-            "spawnCircle": {
-                "x": 0,
-                "y": 0,
-                "r": 15
-            }
-
-        }, [texture]);
+        particles.upgradeConfig(cursedEmitterConfig(500), [texture]);
     if (containerUnits) {
         const wrapped = wrappedEmitter(particleConfig, containerUnits, resolver);
         if (wrapped) {
@@ -551,6 +555,19 @@ export function makeCorruptionParticles(follow: IUnit, prediction: boolean, unde
     } else {
         return;
     }
+}
+export function makeCursedEmitter(position: Vec2, prediction: boolean) {
+    if (prediction || globalThis.headless) {
+        // Don't show if just a prediction
+        return;
+    }
+    const texture = createParticleTexture();
+    if (!texture) {
+        logNoTextureWarning('cursedEmitter');
+        return;
+    }
+    const particleConfig = particles.upgradeConfig(cursedEmitterConfig(50), [texture]);
+    return simpleEmitter(position, particleConfig, undefined, containerParticlesUnderUnits);
 }
 
 export const RED_PORTAL_JID = 'redPortal';

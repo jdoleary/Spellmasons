@@ -17,7 +17,7 @@ import * as CardUI from '../graphics/ui/CardUI';
 import { bossmasonUnitId } from './units/deathmason';
 import { chooseOneOfSeeded, getUniqueSeedString } from '../jmath/rand';
 import { skyBeam } from '../VisualEffects';
-import { makeRedPortal, RED_PORTAL_JID, stopAndDestroyForeverEmitter } from '../graphics/ParticleCollection';
+import { makeCursedEmitter, makeRedPortal, RED_PORTAL_JID, stopAndDestroyForeverEmitter } from '../graphics/ParticleCollection';
 import { Localizable } from '../localization';
 import seedrandom from 'seedrandom';
 import { JEmitter } from '../types/commonTypes';
@@ -28,6 +28,7 @@ import floatingText from '../graphics/FloatingText';
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 export const PICKUP_IMAGE_PATH = 'pickups/scroll';
 export const RED_PORTAL = 'Red Portal';
+const CURSED_MANA_POTION = 'Cursed Mana Potion';
 const RED_PORTAL_DAMAGE = 30;
 type IPickupEffect = ({ unit, player, pickup, prediction }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld, prediction: boolean }) => void;
 type IPickupInit = ({ pickup, underworld }: { pickup: IPickup, underworld: Underworld }) => void;
@@ -149,10 +150,13 @@ export function create({ pos, pickupSource, idOverride }:
     self.image.sprite.scale.y = scale;
   }
   if (name == RED_PORTAL) {
-    // Right now red portal is the only pickup that uses an emitter;
+    // Right now red portal and cursed mana potion are the only pickup that uses an emitter;
     // however if that changes in the future this should be refactored so
     // that there isn't a special case inside of Pickup.create
     assignEmitter(self, RED_PORTAL_JID);
+  } else if (name == CURSED_MANA_POTION) {
+    assignEmitter(self, CURSED_MANA_POTION);
+
   }
 
   if (turnsLeftToGrab) {
@@ -239,15 +243,17 @@ export function create({ pos, pickupSource, idOverride }:
 function assignEmitter(pickup: IPickup, emitterId: string) {
   if (emitterId == RED_PORTAL_JID) {
     pickup.emitter = makeRedPortal(pickup, false);
-    if (pickup.emitter) {
-      // Red portals' emitters should not be cleaned up until they are intentionally destroyed
-      pickup.emitter.cleanAfterTurn = false;
-    }
+  } else if (emitterId == CURSED_MANA_POTION) {
+    pickup.emitter = makeCursedEmitter(pickup, false);
   } else {
     console.error('Attempting to assignEmitter with unkown id:', emitterId);
   }
+  if (pickup.emitter) {
+    // Pickup emitters should not be cleaned up until they are intentionally destroyed
+    pickup.emitter.cleanAfterTurn = false;
+  }
   // @ts-ignore: jid custom property for serialization
-  pickup.emitterJID = RED_PORTAL_JID;
+  pickup.emitterJID = emitterId;
 }
 function addText(pickup: IPickup) {
   if (pickup.real) {
@@ -648,7 +654,7 @@ export const pickups: IPickupSource[] = [
   {
     imagePath: 'pickups/manaPotion',
     animationSpeed: 0.2,
-    name: 'Cursed Mana Potion',
+    name: CURSED_MANA_POTION,
     description: ['Permanently reduces your maximum mana by 10%'],
     probability: 8,
     singleUse: true,
