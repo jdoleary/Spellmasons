@@ -2306,7 +2306,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       console.log('showUpgrades: Closing upgrade screen, nothing left to pick')
       return;
     }
-    const isPerk = upgradesLeftToChoose == 0;
+    const isPerk = upgradesLeftToChoose <= 0;
     let minimumProbability = 0;
     if (upgradesLeftToChoose > 0 && player.inventory.length < config.STARTING_CARD_COUNT) {
       // Limit starting cards to a probability of 10 or more
