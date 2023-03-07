@@ -1,14 +1,14 @@
 import type * as PIXI from 'pixi.js';
 import * as Image from '../graphics/Image';
 import type * as Player from './Player';
-import { addPixiSprite, addPixiSpriteAnimated, containerUnits, pixiText } from '../graphics/PixiUtils';
-import { syncPlayerHealthManaUI, IUnit, takeDamage } from './Unit';
+import { addPixiSprite, addPixiSpriteAnimated, containerUnits, pixiText, startBloodParticleSplatter } from '../graphics/PixiUtils';
+import { syncPlayerHealthManaUI, IUnit, takeDamage, playAnimation } from './Unit';
 import { checkIfNeedToClearTooltip } from '../graphics/PlanningView';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
 import * as config from '../config';
 import { clone, Vec2 } from '../jmath/Vec';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
-import { manaBlue, stamina } from '../graphics/ui/colors';
+import { manaBlue, manaLostBlue, stamina } from '../graphics/ui/colors';
 import Underworld from '../Underworld';
 import { hasBloodCurse } from '../cards/blood_curse';
 import { HasSpace } from './Type';
@@ -23,12 +23,14 @@ import seedrandom from 'seedrandom';
 import { JEmitter } from '../types/commonTypes';
 import { raceTimeout } from '../Promise';
 import { createVisualLobbingProjectile } from './Projectile';
+import floatingText from '../graphics/FloatingText';
 
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 export const PICKUP_IMAGE_PATH = 'pickups/scroll';
 export const RED_PORTAL = 'Red Portal';
 const RED_PORTAL_DAMAGE = 30;
 type IPickupEffect = ({ unit, player, pickup, prediction }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld, prediction: boolean }) => void;
+type IPickupInit = ({ pickup, underworld }: { pickup: IPickup, underworld: Underworld }) => void;
 type IPickupWillTrigger = ({ unit, player, pickup }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld }) => boolean;
 export function isPickup(maybePickup: any): maybePickup is IPickup {
   return maybePickup && maybePickup.type == 'pickup';
@@ -73,6 +75,7 @@ export interface IPickupSource {
   turnsLeftToGrab?: number;
   scale: number;
   probability: number;
+  init?: IPickupInit;
   effect: IPickupEffect;
   willTrigger: IPickupWillTrigger;
 }
@@ -168,6 +171,9 @@ export function create({ pos, pickupSource, idOverride }:
 
       addText(self);
     }
+  }
+  if (pickupSource.init) {
+    pickupSource.init({ pickup: self, underworld });
   }
 
   underworld.addPickupToArray(self, prediction);
@@ -392,6 +398,7 @@ const spike_damage = 30;
 export const CARDS_PICKUP_NAME = 'Spells';
 export const PICKUP_SPIKES_NAME = 'Trap';
 export const PICKUP_PORTAL_NAME = 'Portal';
+const cursedManaPotionRemovalProportion = 0.1;
 export const pickups: IPickupSource[] = [
   {
     imagePath: 'pickups/trap',
@@ -631,6 +638,63 @@ export const pickups: IPickupSource[] = [
         }
 
         // Now that the player unit's mana has increased,sync the new
+        // mana state with the player's predictionUnit so it is properly
+        // refelcted in the mana bar
+        // (note: this would be auto corrected on the next mouse move anyway)
+        underworld.syncPlayerPredictionUnitOnly();
+      }
+    },
+  },
+  {
+    imagePath: 'pickups/manaPotion',
+    animationSpeed: 0.2,
+    name: 'Cursed Mana Potion',
+    description: ['Permanently reduces your maximum mana by 10%'],
+    probability: 8,
+    singleUse: true,
+    scale: 1.0,
+    playerOnly: true,
+    init: ({ pickup, underworld }) => {
+      if (pickup.image) {
+        pickup.image.sprite.filters = [
+          new MultiColorReplaceFilter(
+            [
+              [0xa7cfff, 0xa69feb],
+              [0x819eff, 0x6458dc],
+              [0x3e6bff, 0x3024ac],
+              [0x184dff, 0x221a7b],
+            ],
+            0.15
+          )
+        ]
+      }
+
+    },
+    willTrigger: ({ unit, player, pickup, underworld }) => {
+      return !!player;
+    },
+    effect: ({ unit, player, underworld, prediction }) => {
+      if (player) {
+        const previousMana = player.unit.manaMax;
+        player.unit.manaMax *= (1.0 - cursedManaPotionRemovalProportion);
+        player.unit.manaMax = Math.floor(player.unit.manaMax);
+        player.unit.mana = Math.min(player.unit.mana, player.unit.manaMax);
+        if (!prediction && !globalThis.headless) {
+          playSFXKey('unitDamage');
+          // Animate
+          if (player.unit.image) {
+            playAnimation(player.unit, player.unit.animations.hit, { loop: false, animationSpeed: 0.2 });
+            // Changing the player's blood color is a quick hack to make the blood particle splatter be blue
+            // like the mana lost
+            const tempBlood = player.unit.bloodColor;
+            player.unit.bloodColor = manaLostBlue;
+            startBloodParticleSplatter(underworld, player.unit, player.unit);
+            player.unit.bloodColor = tempBlood;
+            floatingText({ coords: player.unit, text: `- ${previousMana - player.unit.manaMax} ${i18n('mana')}` });
+          }
+        }
+
+        // Now that the player unit's mana has changed, sync the new
         // mana state with the player's predictionUnit so it is properly
         // refelcted in the mana bar
         // (note: this would be auto corrected on the next mouse move anyway)
