@@ -253,3 +253,13 @@ I just feel that the game is very very fun at the start, and then after a certai
 I would like the opportunity to continue carefully planning moves and strategising multiple turns in advance for a little longer before going infinite
 overall you have made a fantastic game and I have introduced 3 friends to it to play with
 I will be investigating the modding side of things but I believe that some of these suggestions should be core features in my opinion
+---
+scojbo — Yesterday at 9:54 PM
+That's awesome! And I did just leave a 10/10 steam review.
+ Just some food for thought that you've likely considered:
+
+1) AOE freeze in multiplayer is wayyyy OP if multiple people get it cuz they can just trade off freezes and permafreeze.  Perhaps nerf freeze or add a cleansing effect to some minibosses? Or even just make it less likely to get spells that other players already have?
+
+2) For per-level buffs, have you considered adding flat per/level buffs as an option? 2% mana per level is hands down the best option always, followed by 10% mana. If these were uncommon and a common "+5 flat mana / level" buff were added it would make the end game scaling feel a bit less out-of-control, and perhaps the difficulty would also be a tad less frontloaded.
+
+3) Single-round-health and Single-round-endurance are legitimately worthless. consider removing them. Also 20% chance for bonus hp/magic/endurance just feels bad as well.

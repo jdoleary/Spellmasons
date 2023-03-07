@@ -1,4 +1,15 @@
-- bug: AI battle can still make you skip a level
+- scojbo — Yesterday at 8:48 PM
+Any world in which we can add an option for increased difficulty?  Solo player gets pretty easy after a couple runs, and multiplayer does not scale well currently (its WAY WAY easier than solo).
+
+Please dont take this as a complaint. I love the game! Genius concept and I've had a blast playing what content there is!
+- BeePsychotic — Today at 4:41 PM
+I've been taking more damage from enemies than what is stated when you click on them. One example was a ghost archer who was only supposed to do 40 damage and I had 48. It killed me. I noticed this before the current patch, but thought maybe I was just wasn't paying attention to some other damage source.
+- Perks stop working once you have all the scrolls (Jseah on Steam Community)
+
+- " Even further, using Target Kind + Connect + Target Similar to Vortex all the potions on to yourself can lag the game fiercely " 
+  -  Adding Last Will to multi-target kills was a favourite tactic of mine, but this tends to slow the game down; especially when you Last Will-Sacrifice-Resurrect your own army...
+  - (Jseah on Steam Community)
+double-plus when you have dark summoners you killed and resurrected spamming things everywhere that all drop potions when you sacrifice them...
 - bug: During AI battle when an archer is being resurrected it will slide across the ground
 - bug: Desync issues:
   - if you do multiplayer and have one on the other screen you can miss things like player movement, where when player 1 walks into a trap they'll take damage on player 2 screen and the trap will disappear but the player 1 is still where they started on their screen.

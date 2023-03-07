@@ -16,15 +16,9 @@
     - both when you kill yourself and when an enemy kills you
 - have a multiplayer game with 1 player, beat a level, then connect with another player
 - Test rerolling spells and perks
-
-## Validate v.1.8.0
-- Test Host Local Server, Host via Docker (particularly because of mods)
-- Make Korean as a supported language again
 ## Validate v.1.7.0
 - slow seems to not work right on multiplayer when cast on self
 - clone makes pickups dust appear on prediction when portal is up?
-
-
 # Release protocal
 - QA: 1:44
 - Announce server down time
