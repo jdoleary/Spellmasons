@@ -142,18 +142,18 @@ export function generatePerks(number: number, underworld: Underworld): Attribute
         if (choiceAttributeType == 'maxStat') {
             attribute = chooseOneOfSeeded(['staminaMax', 'healthMax', 'manaMax', 'attackRange'], seed) || 'stamina';
             when = chooseOneOfSeeded<WhenUpgrade>(['immediately', 'everyLevel'], seed) || 'immediately';
+            amount = 15;
+            if (attribute == 'healthMax') {
+                amount = 20;
+            } else if (attribute == 'staminaMax') {
+                amount = 30;
+            } else if (attribute == 'attackRange') {
+                amount = 30;
+            }
+            certainty = 1.0;
+            // Perks gotten every level should take 5 rounds to pay for themselves
             if (when == 'everyLevel') {
-                amount = 4;
-                if (attribute == 'healthMax') {
-                    amount = 2;
-                }
-                certainty = 1.0;
-            } else if (when == 'immediately') {
-                amount = 15;
-                if (attribute == 'healthMax') {
-                    amount = 20;
-                }
-                certainty = 1.0;
+                amount = Math.round(amount / 5);
             }
         } else {
             attribute = chooseOneOfSeeded(['stamina', 'health', 'mana'], seed) || 'stamina';
@@ -161,10 +161,10 @@ export function generatePerks(number: number, underworld: Underworld): Attribute
             // upgrade if they were only changed once
             when = chooseOneOfSeeded<WhenUpgrade>(['everyLevel', 'everyTurn'], seed) || 'everyLevel';
             if (when == 'everyLevel') {
-                amount = 75;
+                amount = 40;
                 certainty = 1.0;
             } else if (when == 'everyTurn') {
-                amount = 50;
+                amount = 30;
                 certainty = preRolledCertainty;
             } else {
                 console.error('Unexpected: Invalid when for regular stat perk');
