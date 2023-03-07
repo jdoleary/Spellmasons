@@ -23,7 +23,7 @@ export function cleanUpPerkList() {
 export function getPerkText(perk: AttributePerk, omitWhen: boolean = false): string {
     return `
 ${perk.certainty < 1.0 ? `🎲 ${Math.round(perk.certainty * 100)}% chance` : ``}
-${perkAttributeToIcon(perk.attribute)} +${Math.round((perk.amount - 1.0) * 100)}% ${perkAttributeToString(perk.attribute)}
+${perkAttributeToIcon(perk.attribute)} +${perk.amount} ${perkAttributeToString(perk.attribute)}
 ${omitWhen ? '' : perkWhenToString(perk.when)}`.trim();
 
 }
@@ -143,15 +143,15 @@ export function generatePerks(number: number, underworld: Underworld): Attribute
             attribute = chooseOneOfSeeded(['staminaMax', 'healthMax', 'manaMax', 'attackRange'], seed) || 'stamina';
             when = chooseOneOfSeeded<WhenUpgrade>(['immediately', 'everyLevel'], seed) || 'immediately';
             if (when == 'everyLevel') {
-                amount = 1.02;
+                amount = 4;
                 if (attribute == 'healthMax') {
-                    amount = 1.08;
+                    amount = 2;
                 }
                 certainty = 1.0;
             } else if (when == 'immediately') {
-                amount = 1.10;
+                amount = 15;
                 if (attribute == 'healthMax') {
-                    amount = 1.4;
+                    amount = 20;
                 }
                 certainty = 1.0;
             }
@@ -161,10 +161,10 @@ export function generatePerks(number: number, underworld: Underworld): Attribute
             // upgrade if they were only changed once
             when = chooseOneOfSeeded<WhenUpgrade>(['everyLevel', 'everyTurn'], seed) || 'everyLevel';
             if (when == 'everyLevel') {
-                amount = 1.3;
+                amount = 75;
                 certainty = 1.0;
             } else if (when == 'everyTurn') {
-                amount = 1.2;
+                amount = 50;
                 certainty = preRolledCertainty;
             } else {
                 console.error('Unexpected: Invalid when for regular stat perk');
@@ -271,7 +271,7 @@ export function tryTriggerPerk(perk: AttributePerk, player: IPlayer, when: WhenU
         const oldAttributeAmount = player.unit[perk.attribute];
         if (doTriggerPerk) {
             if (perk.attribute == 'manaMax' || perk.attribute == 'healthMax' || perk.attribute == 'staminaMax') {
-                setPlayerAttributeMax(player.unit, perk.attribute, player.unit[perk.attribute] * perk.amount)
+                setPlayerAttributeMax(player.unit, perk.attribute, player.unit[perk.attribute] + perk.amount)
             } else {
                 let maxAmount = player.unit[perk.attribute];
                 if (perk.attribute == 'mana') {
@@ -281,7 +281,7 @@ export function tryTriggerPerk(perk: AttributePerk, player: IPlayer, when: WhenU
                 } else if (perk.attribute == 'stamina') {
                     maxAmount = player.unit['staminaMax'];
                 }
-                player.unit[perk.attribute] = perk.amount * maxAmount;
+                player.unit[perk.attribute] = perk.amount + maxAmount;
                 player.unit[perk.attribute] = Math.ceil(player.unit[perk.attribute]);
             }
             if (player === globalThis.player) {
