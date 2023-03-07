@@ -1,7 +1,6 @@
 # Critical Path
 - AFter perk refactor make sure summons are still viable (such as death mason's 1200 mana)
 - Current changes make it so you could potentially get stuck with endedTurn set to true if there's a desync?
- Check Japanese on the store page after update
 - What if there was an "attrition" feature where after you beat the deathmason the "perks" turn into curses which affect your stats or modify or remove your spells?
 - Update Korean language (changes after v1.8)
 - release demo
