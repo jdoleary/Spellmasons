@@ -162,7 +162,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         if (payload.curse) {
           const player = underworld.players.find(p => p.clientId == fromClient);
           if (player) {
-            player.spellState[payload.curse] = { disabledUntilLevel: underworld.levelIndex + 2 };
+            player.spellState[payload.curse] = { disabledUntilLevel: underworld.levelIndex + (payload.disableFor || 2) };
             player.cursesChosen++;
             // Reset last level card counts
             for (let spellStateInst of Object.values(player.spellState || {})) {

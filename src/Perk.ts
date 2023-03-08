@@ -7,6 +7,7 @@ import { IPlayer } from "./entity/Player";
 import { MESSAGE_TYPES } from "./types/MessageTypes";
 import { setPlayerAttributeMax } from "./entity/Unit";
 import { allCards, ICard } from "./cards";
+import { LAST_LEVEL_INDEX } from "./config";
 const elPerkList = document.getElementById('perkList');
 const elPerksEveryLevel = document.getElementById('perkEveryLevel');
 const elPerksEveryTurn = document.getElementById('perkEveryTurn');
@@ -53,7 +54,8 @@ export function createCursePerkElement(cardId: string, underworld: Underworld) {
     const desc = document.createElement('div');
     desc.classList.add('card-description');
     const descriptionText = document.createElement('div');
-    descriptionText.innerHTML = `Disable ${content.id} for 2 levels.`;
+    const numberOfLevelsToDisable = 2 + Math.floor((underworld.levelIndex - (1 + LAST_LEVEL_INDEX)) / 2);
+    descriptionText.innerHTML = `Disable ${content.id} for ${numberOfLevelsToDisable} levels.`;
     desc.appendChild(descriptionText);
 
     elCardInner.appendChild(desc);
@@ -64,6 +66,7 @@ export function createCursePerkElement(cardId: string, underworld: Underworld) {
         pie.sendData({
             type: MESSAGE_TYPES.CHOOSE_PERK,
             curse: cardId,
+            disableFor: numberOfLevelsToDisable
         });
     });
     element.addEventListener('mouseenter', (e) => {
