@@ -163,9 +163,16 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
           const player = underworld.players.find(p => p.clientId == fromClient);
           if (player) {
             player.spellState[payload.curse] = { disabledUntilLevel: underworld.levelIndex + 2 };
-            // Update disabled label
-            recalcPositionForCards(player, underworld);
             player.cursesChosen++;
+            // Reset last level card counts
+            for (let spellStateInst of Object.values(player.spellState || {})) {
+              spellStateInst.count = 0;
+            }
+            // If current player
+            if (player == globalThis.player) {
+              // Update disabled label
+              recalcPositionForCards(player, underworld);
+            }
           } else {
             console.error('Could not find player to give curse perk.')
           }
@@ -842,6 +849,17 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
     }
     if (caster.colorMagic === null) {
       caster.colorMagic = caster.color !== colors.playerNoColor ? playerCastAnimationColor : caster.color;
+    }
+    // count cards:
+    if (player?.spellState) {
+      for (let cardId of payload.cards) {
+        let record = player.spellState[cardId];
+        if (!record) {
+          record = { count: 0 };
+          player.spellState[cardId] = record;
+        }
+        record.count++;
+      }
     }
     const keyMoment = () => underworld.castCards({
       casterCardUsage: caster.cardUsageCounts,

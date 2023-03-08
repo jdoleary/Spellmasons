@@ -28,7 +28,7 @@ ${perkAttributeToIcon(perk.attribute)} +${perk.amount} ${perkAttributeToString(p
 ${omitWhen ? '' : perkWhenToString(perk.when)}`.trim();
 
 }
-export function createCursePerkElement(text: string, underworld: Underworld) {
+export function createCursePerkElement(cardId: string, underworld: Underworld) {
     if (globalThis.headless) {
         // There is no DOM in headless mode
         return;
@@ -40,7 +40,7 @@ export function createCursePerkElement(text: string, underworld: Underworld) {
     const elCardInner = document.createElement('div');
     elCardInner.classList.add('card-inner');
     element.appendChild(elCardInner);
-    const content = allCards[text] as ICard;
+    const content = allCards[cardId] as ICard;
     const thumbHolder = document.createElement('div');
     const thumbnail = document.createElement('img');
     // The presence of '/' means that it's a different path than default (such as in a mod) and it isn't
@@ -63,7 +63,7 @@ export function createCursePerkElement(text: string, underworld: Underworld) {
         e.stopPropagation();
         pie.sendData({
             type: MESSAGE_TYPES.CHOOSE_PERK,
-            curse: 'suffocate',
+            curse: cardId,
         });
     });
     element.addEventListener('mouseenter', (e) => {

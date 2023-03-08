@@ -2342,13 +2342,18 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       if (isPerk) {
         const isCursePerk = this.levelIndex > config.LAST_LEVEL_INDEX;
         if (isCursePerk) {
-          // WIP curse implementation
-          const elPerks = ['suffocate'].map(text => createCursePerkElement(text, this));
-          if (elUpgradePickerContent) {
-            elUpgradePickerContent.innerHTML = '';
-            for (let elUpgrade of elPerks) {
-              if (elUpgrade) {
-                elUpgradePickerContent.appendChild(elUpgrade);
+          const mostUsedLastLevelCards = Object.entries(player.spellState || {}).sort((a, b) => b[1].count - a[1].count).slice(0, 3);
+          if (mostUsedLastLevelCards.length == 0) {
+            // Clear upgrades, nothing to pick
+            document.body?.classList.toggle(showUpgradesClassName, false);
+          } else {
+            const elPerks = mostUsedLastLevelCards.slice(0, 3).map(count => createCursePerkElement(count[0], this));
+            if (elUpgradePickerContent) {
+              elUpgradePickerContent.innerHTML = '';
+              for (let elUpgrade of elPerks) {
+                if (elUpgrade) {
+                  elUpgradePickerContent.appendChild(elUpgrade);
+                }
               }
             }
           }
