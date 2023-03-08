@@ -2320,7 +2320,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       if (elUpgradePickerLabel) {
         const isCursePerk = this.levelIndex > config.LAST_LEVEL_INDEX;
         elUpgradePickerLabel.innerHTML = isPerk ?
-          isCursePerk ? 'Pick a Curse' : 'Pick an Upgrade'
+          isCursePerk ? 'Pick a Calamity' : 'Pick an Upgrade'
           : 'Pick a Spell';
       }
     }
