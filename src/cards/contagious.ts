@@ -44,14 +44,14 @@ async function spreadCurses(unit: IUnit, underworld: Underworld, extraRadius: nu
     .filter(x => x?.alive)
     // Filter out self
     .filter(x => x !== unit) as IUnit[];
-  const curseCards: ICard[] = Object.entries(unit.modifiers)
+  const curseCardsData: { card: ICard, quantity: number }[] = Object.entries(unit.modifiers)
     // Only curses are contagious
     // Do not make contagious itself contagious
     .filter(([cardId, modValue]) => modValue.isCurse && cardId !== id)
-    .map(([id, _mod]) => allCards[id])
-    .filter(x => x !== undefined) as ICard[];
+    .map(([id, mod]) => ({ card: allCards[id], quantity: mod.quantity }))
+    .filter(x => x.card !== undefined) as { card: ICard, quantity: number }[];
 
-  for (let card of curseCards) {
+  for (let { card, quantity } of curseCardsData) {
     const promises = [];
     // Filter out units that already have this curse
     for (let touchingUnit of nearByUnits.filter(u => !Object.keys(u.modifiers).includes(card.id))) {
@@ -72,7 +72,7 @@ async function spreadCurses(unit: IUnit, underworld: Underworld, extraRadius: nu
         if (!prediction) {
           playSFXKey('contageousSplat');
         }
-        Unit.addModifier(touchingUnit, card.id, underworld, prediction);
+        Unit.addModifier(touchingUnit, card.id, underworld, prediction, quantity);
       });
     }
     await Promise.all(promises);
