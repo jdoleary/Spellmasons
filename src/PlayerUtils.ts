@@ -6,10 +6,11 @@ import { round, Vec2 } from './jmath/Vec';
 import Underworld from './Underworld';
 import objectHash from 'object-hash';
 import { MESSAGE_TYPES } from './types/MessageTypes';
+import { targetArrowCardId } from './cards/target_arrow';
 
 function isAllowedToCastOutOfRange(cardIds: string[]): boolean {
     // Exception, if all of the cards cast are arrow cards, let them cast out of range
-    return cardIds.every(id => id.toLowerCase().includes('arrow'));
+    return cardIds[0] == targetArrowCardId || cardIds.every(id => id.toLowerCase().includes('arrow'));
 }
 export function isOutOfRange(caster: Player.IPlayer, target: Vec2, underworld: Underworld, cardIds?: string[]): boolean {
     if (cardIds && cardIds.length && isAllowedToCastOutOfRange(cardIds)) {

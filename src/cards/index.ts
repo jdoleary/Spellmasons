@@ -203,10 +203,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(sacrifice, overworld);
   registerSpell(arrow, overworld);
   registerSpell(phantom_arrow, overworld);
-  // TODO: Target arrow isn't ready due to the fact that the convenience UX of being able to fire arrows
-  // past your cast range has targeting complications with Target Arrow and I haven't been able to find
-  // a solution that doesn't introduce bugs or complexity.
-  // register(target_arrow, overworld);
+  registerSpell(target_arrow, overworld);
   // TODO: Refactor bolt into soulbind, it didn't work out well as a spell
   // register(bolt, overworld);
   registerSpell(conserve, overworld);
@@ -361,6 +358,9 @@ export interface ICard {
   // This flag allows casting on the ground and is necessary
   // for spells like AOE, Trap, etc
   allowNonUnitTarget?: boolean;
+  // Prevents the spell from targeting an initial unit or pickup.  Useful for spells
+  // that don't make any use of targets
+  noInitialTarget?: boolean;
   // supportQuantity, if true, makes multiple sequential invokations of a card combine
   // into only 1 invokation with a quantity arg passed to the effect function.
   // If false, it will just invoke card.effect for the number of times that the card

@@ -2928,9 +2928,13 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     // Get initial targets
     let unitsAtCastLocation = this.getUnitsAt(castLocation, prediction);
+    let useInitialTarget = true;
     const firstCardId = effectState.cardIds[0];
     if (firstCardId) {
       const firstCard = Cards.allCards[firstCardId];
+      if (firstCard && firstCard.noInitialTarget) {
+        useInitialTarget = false;
+      }
       // If first card in spell has onlySelectDeadUnits to true,
       // filter units for dead ones.  This prevents a living unit
       // standing over a corpse from preventing the caster from
@@ -2939,34 +2943,38 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         unitsAtCastLocation = unitsAtCastLocation.filter(u => !u.alive);
       }
     }
-    // Get first unit at cast location
-    if (effectState.initialTargetedUnitId !== undefined) {
-      const initialTargetUnit = this.units.find(u => u.id == effectState.initialTargetedUnitId);
-      if (initialTargetUnit) {
-        Cards.addTarget(initialTargetUnit, effectState);
+    // It is the default expected behavior to use an initial target at the cast location,
+    // it is unusual, but possible, to skip this for very specific spells
+    if (useInitialTarget) {
+      // Get first unit at cast location
+      if (effectState.initialTargetedUnitId !== undefined) {
+        const initialTargetUnit = this.units.find(u => u.id == effectState.initialTargetedUnitId);
+        if (initialTargetUnit) {
+          Cards.addTarget(initialTargetUnit, effectState);
+        } else {
+          console.error('effectState.initialTargetedUnitId was defined but the unit was not found');
+        }
       } else {
-        console.error('effectState.initialTargetedUnitId was defined but the unit was not found');
+        const unitAtCastLocation = unitsAtCastLocation[0];
+        if (unitAtCastLocation) {
+          effectState.initialTargetedUnitId = unitAtCastLocation.id;
+          Cards.addTarget(unitAtCastLocation, effectState);
+        }
       }
-    } else {
-      const unitAtCastLocation = unitsAtCastLocation[0];
-      if (unitAtCastLocation) {
-        effectState.initialTargetedUnitId = unitAtCastLocation.id;
-        Cards.addTarget(unitAtCastLocation, effectState);
-      }
-    }
-    // Get first pickup at cast location
-    if (effectState.initialTargetedPickupId !== undefined) {
-      const initialTargetPickup = this.pickups.find(p => p.id == effectState.initialTargetedPickupId);
-      if (initialTargetPickup) {
-        Cards.addTarget(initialTargetPickup, effectState);
+      // Get first pickup at cast location
+      if (effectState.initialTargetedPickupId !== undefined) {
+        const initialTargetPickup = this.pickups.find(p => p.id == effectState.initialTargetedPickupId);
+        if (initialTargetPickup) {
+          Cards.addTarget(initialTargetPickup, effectState);
+        } else {
+          console.error('effectState.initialTargetedPickupId was defined but the unit was not found');
+        }
       } else {
-        console.error('effectState.initialTargetedPickupId was defined but the unit was not found');
-      }
-    } else {
-      const pickupAtCastLocation = this.getPickupAt(castLocation, prediction);
-      if (pickupAtCastLocation) {
-        effectState.initialTargetedPickupId = pickupAtCastLocation.id;
-        Cards.addTarget(pickupAtCastLocation, effectState);
+        const pickupAtCastLocation = this.getPickupAt(castLocation, prediction);
+        if (pickupAtCastLocation) {
+          effectState.initialTargetedPickupId = pickupAtCastLocation.id;
+          Cards.addTarget(pickupAtCastLocation, effectState);
+        }
       }
     }
     // const doodadAtCastLocation = this.getDoodadAt(castLocation, prediction);
