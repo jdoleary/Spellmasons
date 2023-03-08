@@ -70,6 +70,8 @@ export interface IPlayer {
   // reroll.
   reroll: number;
   attributePerks: AttributePerk[];
+  // Stores state that modifies spells
+  spellState: { [spellId: string]: any };
   stats: Stats;
 }
 export function inPortal(player: IPlayer): boolean {
@@ -112,6 +114,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
     lobbyReady: false,
     reroll: 0,
     attributePerks: [],
+    spellState: {},
     stats: {
       bestSpell: { unitsKilled: 0, spell: [] },
       longestSpell: [],
@@ -301,6 +304,11 @@ export function load(player: IPlayerSerialized, underworld: Underworld) {
     ...player,
     unit: reassignedUnit,
   };
+  // Account for pervious serialized versions of the game not having spellState
+  // and make sure it's loaded and not undefined
+  if (!playerLoaded.spellState) {
+    playerLoaded.spellState = {};
+  }
   // Make sure player unit stays hidden if they are in a portal
   if (inPortal(playerLoaded)) {
     playerLoaded.unit.x = NaN;

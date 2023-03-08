@@ -6,9 +6,19 @@ import * as Image from '../graphics/Image';
 import { containerProjectiles, containerSpells } from "../graphics/PixiUtils";
 import { Container } from "pixi.js";
 import { chooseOneOf } from "../jmath/rand";
+import Underworld from "../Underworld";
 export interface CardCost {
     manaCost: number;
     healthCost: number;
+}
+// Positive number means card is still disabled
+export function levelsUntilCardIsEnabled(cardId: string, underworld?: Underworld): number {
+    if (!globalThis.player || !underworld) {
+        return 0;
+    }
+    const cardState = globalThis.player.spellState[cardId] || {};
+    return (cardState.disabledUntilLevel || 0) - underworld.levelIndex
+
 }
 export function playSpellSFX(sfxKey: string, prediction: boolean) {
     if (globalThis.headless) {

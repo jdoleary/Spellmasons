@@ -1700,6 +1700,8 @@ export default class Underworld {
     for (let player of this.players) {
       Player.resetPlayerForNextLevel(player, this);
     }
+    // Update toolbar (since some card's disabledLabel needs updating on every new label)
+    CardUI.recalcPositionForCards(globalThis.player, this);
     // Change song now that level has changed:
     if (globalThis.playNextSong) {
       globalThis.playNextSong();

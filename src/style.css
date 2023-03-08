@@ -2025,3 +2025,30 @@ body.dragging-card .floating-card-holder .empty-slot {
   pointer-events: all;
   z-index: 2;
 }
+
+.card.disabled {
+  filter: grayscale(1);
+}
+
+.card .disabled-label {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  font-size: 64px;
+  color: white;
+  text-align: center;
+  text-shadow: 2px 2px 2px #000;
+  line-height: 64px;
+}
+
+.floating-card-holder .card .disabled-label {
+  font-size: 32px;
+  line-height: 58px;
+}
+
+#card-hand .card .disabled-label {
+  /* keep it centered */
+  margin-top: 8px;
+}
