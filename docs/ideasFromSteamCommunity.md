@@ -186,7 +186,7 @@ Every turn
 Omni — Yesterday at 4:49 PM
 I realize now though that bloodcurse stacking could be broken in tandem with purify since it can remove all your curses. Since you could just purify on the turn it "would" kill you otherwise and still feel nearly immortal by using/cleansing bloodcurse in a skillful way
 Omni — Yesterday at 10:05 PM
--Another potential idea you could do with blood curse is have stacks increase the afflicted persons damage, but still make healing hurt them; as well as make them take increasing amounts of damage per turn (similar to poison). Almost like a bloodlust/berserk where it forces them to kill fast or die trying. So if a vampire tags you, you are put on a timer to kill the rest of the room faster. 
+-**Another potential idea you could do with blood curse is have stacks increase the afflicted persons damage, but still make healing hurt them; as well as make them take increasing amounts of damage per turn (similar to poison). Almost like a bloodlust/berserk where it forces them to kill fast or die trying. So if a vampire tags you, you are put on a timer to kill the rest of the room faster.**
 
 -Another idea that I thought of thinking about interactions with stacks could be a spell that increases/doubles/reduces the curses on a target. Essentially the opposite of purify. Could be a great way to interact and affect Poison/Freeze/Bloat/Debilitate/Split/Bloodcurse/Suffocate
 

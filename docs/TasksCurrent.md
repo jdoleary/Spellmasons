@@ -750,7 +750,7 @@ translated
 - Idea: "oh shit button": double the amount of mana you have this level but it
   reduces by half next level. " Break glass in case of emergency. Deal with the
   devil
-- Idea: Amplify spell: makes "multicast"
+- **Idea: Amplify spell: makes "multicast"**
 - Add `cooldown` to spells rather than expense scaling
   - Add a spell that resets cooldowns
   - Add a curse that increases cooldowns
@@ -778,7 +778,7 @@ translated
 - Card: An attack range minimum but not a maximum so you CAN"T attack if they
   are too close
 - enemy that debuffs blessings
-- "heat seaking" missle unit, explodes on contact
+- **"heat seaking" missle unit, explodes on contact**
 - Card: Mind Control (changes faction temporarily)
 - A spell that saves 40% of your current mana for next turn (added to
   spreadsheet)
