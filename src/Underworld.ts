@@ -2319,9 +2319,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     } else {
       if (elUpgradePickerLabel) {
         const isCursePerk = this.levelIndex > config.LAST_LEVEL_INDEX;
-        elUpgradePickerLabel.innerHTML = isPerk ?
+        elUpgradePickerLabel.innerHTML = i18n(isPerk ?
           isCursePerk ? 'Pick a Calamity' : 'Pick an Upgrade'
-          : 'Pick a Spell';
+          : 'Pick a Spell');
       }
     }
     // If playing hotseat multiplayer, prepend the player name so users know which player they

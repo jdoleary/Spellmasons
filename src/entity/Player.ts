@@ -225,7 +225,7 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
   player.unit.path = undefined;
 
   if (elInstructions && globalThis.player == player) {
-    elInstructions.innerHTML = 'Choose a place to spawn with <img src="mouse-LMB-bg.png" alt="Left Mouse Button"/>'
+    elInstructions.innerHTML = `${i18n('choose spawn instructions')} <img src="mouse-LMB-bg.png" alt="Left Mouse Button"/>`
   }
 
   // Make unit visible only if they are current users player

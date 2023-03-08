@@ -25,7 +25,7 @@ export function cleanUpPerkList() {
 export function getPerkText(perk: AttributePerk, omitWhen: boolean = false): string {
     return `
 ${perk.certainty < 1.0 ? `🎲 ${Math.round(perk.certainty * 100)}% chance` : ``}
-${perkAttributeToIcon(perk.attribute)} +${perk.amount} ${perkAttributeToString(perk.attribute)}
+${perkAttributeToIcon(perk.attribute)} +${perk.amount} ${i18n(perkAttributeToString(perk.attribute))}
 ${omitWhen ? '' : perkWhenToString(perk.when)}`.trim();
 
 }
@@ -55,7 +55,7 @@ export function createCursePerkElement(cardId: string, underworld: Underworld) {
     desc.classList.add('card-description');
     const descriptionText = document.createElement('div');
     const numberOfLevelsToDisable = 2 + Math.floor((underworld.levelIndex - (1 + LAST_LEVEL_INDEX)) / 2);
-    descriptionText.innerHTML = `Disable ${content.id} for ${numberOfLevelsToDisable} levels.`;
+    descriptionText.innerHTML = i18n(['disable spell', content.id, numberOfLevelsToDisable.toString()]);
     desc.appendChild(descriptionText);
 
     elCardInner.appendChild(desc);
@@ -111,9 +111,9 @@ export function createPerkElement(perk: AttributePerk, player: IPlayer, underwor
 
 function perkWhenToString(when: WhenUpgrade): string {
     if (when == 'everyLevel') {
-        return '🗺️ every level';
+        return `🗺️ ${i18n('every level')}`;
     } else if (when == 'everyTurn') {
-        return '🕰️ every turn️';
+        return `🕰️ ${i18n('every turn️')}`;
     } else if (when == 'immediately') {
         return '';
     }
@@ -333,7 +333,7 @@ export function tryTriggerPerk(perk: AttributePerk, player: IPlayer, when: WhenU
             }
             if (player === globalThis.player) {
                 setTimeout(() => {
-                    floatingText({ coords: player.unit, text: `+${Math.round(player.unit[perk.attribute] - oldAttributeAmount)} ${perkAttributeToString(perk.attribute)}` });
+                    floatingText({ coords: player.unit, text: `+${Math.round(player.unit[perk.attribute] - oldAttributeAmount)} ${i18n(perkAttributeToString(perk.attribute))}` });
                 }, offsetNotifyByMs);
             }
             // Now that the player unit's properties have changed, sync the new
