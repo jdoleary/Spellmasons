@@ -73,6 +73,7 @@ export interface IPlayer {
   // Stores state that modifies spells
   spellState: { [spellId: string]: any };
   stats: Stats;
+  cursesChosen: number;
 }
 export function inPortal(player: IPlayer): boolean {
   return isNaN(player.unit.x) || isNaN(player.unit.y) || player.unit.x === null || player.unit.y === null;
@@ -115,6 +116,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
     reroll: 0,
     attributePerks: [],
     spellState: {},
+    cursesChosen: 0,
     stats: {
       bestSpell: { unitsKilled: 0, spell: [] },
       longestSpell: [],
@@ -308,6 +310,11 @@ export function load(player: IPlayerSerialized, underworld: Underworld) {
   // and make sure it's loaded and not undefined
   if (!playerLoaded.spellState) {
     playerLoaded.spellState = {};
+  }
+  // Account for pervious serialized versions of the game not having cursesChosen
+  // and make sure it's loaded and not undefined
+  if (playerLoaded.cursesChosen === undefined) {
+    playerLoaded.cursesChosen = 0;
   }
   // Make sure player unit stays hidden if they are in a portal
   if (inPortal(playerLoaded)) {

@@ -1,5 +1,9 @@
 
 # Critical Path
+## For v1.9
+- bug: If multiple scrolls are on the ground and one is picked up the others wont trigger any new spells because the first one lets you pick them all
+- Update Dark Summoner explain popup
+---
 - AFter perk refactor make sure summons are still viable (such as death mason's 1200 mana)
 - Current changes make it so you could potentially get stuck with endedTurn set to true if there's a desync?
 - What if there was an "attrition" feature where after you beat the deathmason the "perks" turn into curses which affect your stats or modify or remove your spells?

@@ -1835,6 +1835,11 @@ body.auto-camera #camera-recenter-tip {
   position: relative;
 }
 
+.ui-border.cursed {
+  border-image-source: url("/ui/ui_border_cursed.png");
+  background-color: #321111;
+}
+
 .ui-border {
   border: 30px solid;
   border-image-outset: 0;
@@ -2050,5 +2055,10 @@ body.dragging-card .floating-card-holder .empty-slot {
 
 #card-hand .card .disabled-label {
   /* keep it centered */
+  margin-top: 8px;
+}
+
+.cursed .card-description {
+  text-align: center;
   margin-top: 8px;
 }

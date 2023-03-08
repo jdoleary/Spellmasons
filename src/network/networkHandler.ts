@@ -38,6 +38,7 @@ import { raceTimeout } from '../Promise';
 import { createVisualLobbingProjectile } from '../entity/Projectile';
 import { setPlayerNameUI } from '../PlayerUtils';
 import { isSinglePlayer } from '../types/commonTypes';
+import { recalcPositionForCards } from '../graphics/ui/CardUI';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -158,12 +159,28 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
     case MESSAGE_TYPES.CHOOSE_PERK:
       {
         console.log('onData: CHOOSE_PERK', `${fromClient}: ${JSON.stringify(payload?.perk || {})}`);
-        // Get player of the client that sent the message 
-        const fromPlayer = underworld.players.find((p) => p.clientId === fromClient);
-        if (fromPlayer) {
-          choosePerk(payload.perk, fromPlayer, underworld);
+        if (payload.curse) {
+          const player = underworld.players.find(p => p.clientId == fromClient);
+          if (player) {
+            player.spellState[payload.curse] = { disabledUntilLevel: underworld.levelIndex + 2 };
+            // Update disabled label
+            recalcPositionForCards(player, underworld);
+            player.cursesChosen++;
+          } else {
+            console.error('Could not find player to give curse perk.')
+          }
+          // Clear upgrades
+          document.body?.classList.toggle(showUpgradesClassName, false);
+          // There may be upgrades left to choose
+          underworld.showUpgrades();
         } else {
-          console.error('Cannot CHOOSE_PERK, fromPlayer is undefined', fromClient, fromPlayer)
+          // Get player of the client that sent the message 
+          const fromPlayer = underworld.players.find((p) => p.clientId === fromClient);
+          if (fromPlayer) {
+            choosePerk(payload.perk, fromPlayer, underworld);
+          } else {
+            console.error('Cannot CHOOSE_PERK, fromPlayer is undefined', fromClient, fromPlayer)
+          }
         }
       }
       break;

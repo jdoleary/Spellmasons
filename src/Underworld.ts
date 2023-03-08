@@ -77,7 +77,7 @@ import { makeRisingParticles, makeScrollDissapearParticles, stopAndDestroyForeve
 import { ensureAllClientsHaveAssociatedPlayers, Overworld } from './Overworld';
 import { Emitter } from '@pixi/particle-emitter';
 import { golem_unit_id } from './entity/units/golem';
-import { cleanUpPerkList, createPerkElement, generatePerks, tryTriggerPerk, showPerkList, hidePerkList } from './Perk';
+import { cleanUpPerkList, createPerkElement, generatePerks, tryTriggerPerk, showPerkList, hidePerkList, createCursePerkElement } from './Perk';
 import { bossmasonUnitId } from './entity/units/deathmason';
 import { hexToString } from './graphics/ui/colorUtil';
 import { doLiquidEffect } from './inLiquid';
@@ -2281,7 +2281,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
   }
   perksLeftToChoose(player: Player.IPlayer): number {
-    return this.levelIndex - player.attributePerks.length;
+    return this.levelIndex - player.attributePerks.length - player.cursesChosen;
   }
   upgradesLeftToChoose(player: Player.IPlayer): number {
     return this.cardDropsDropped + config.STARTING_CARD_COUNT - player.inventory.length;
@@ -2318,7 +2318,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
     } else {
       if (elUpgradePickerLabel) {
-        elUpgradePickerLabel.innerHTML = isPerk ? 'Pick an Upgrade' : 'Pick a Spell';
+        const isCursePerk = this.levelIndex > config.LAST_LEVEL_INDEX;
+        elUpgradePickerLabel.innerHTML = isPerk ?
+          isCursePerk ? 'Pick a Curse' : 'Pick an Upgrade'
+          : 'Pick a Spell';
       }
     }
     // If playing hotseat multiplayer, prepend the player name so users know which player they
@@ -2337,26 +2340,42 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (player) {
       const numberOfUpgradesToChooseFrom = 3 - player.reroll;
       if (isPerk) {
-        const perks = generatePerks(numberOfUpgradesToChooseFrom, this);
-        // Show the perks that you already have
-        showPerkList(player);
-        const elPerks = perks.map(perk => createPerkElement(perk, player, this));
-        if (elUpgradePickerContent) {
-          elUpgradePickerContent.innerHTML = '';
-          for (let elUpgrade of elPerks) {
-            if (elUpgrade) {
-              elUpgradePickerContent.appendChild(elUpgrade);
-              if (globalThis.devAutoPickUpgrades && elUpgrade == elPerks[0]) {
-                elUpgrade.click();
+        const isCursePerk = this.levelIndex > config.LAST_LEVEL_INDEX;
+        if (isCursePerk) {
+          // WIP curse implementation
+          const elPerks = ['suffocate'].map(text => createCursePerkElement(text, this));
+          if (elUpgradePickerContent) {
+            elUpgradePickerContent.innerHTML = '';
+            for (let elUpgrade of elPerks) {
+              if (elUpgrade) {
+                elUpgradePickerContent.appendChild(elUpgrade);
               }
-            } else {
-              console.warn('showUpgrades: perk is undefined, this block should never be executed in headless mode')
             }
           }
-          // Allow reroll if there is more than 1 upgrade to choose from
-          if (numberOfUpgradesToChooseFrom > 1) {
-            // Reroll perks button
-            this.addRerollButton(player);
+
+        } else {
+
+          const perks = generatePerks(numberOfUpgradesToChooseFrom, this);
+          // Show the perks that you already have
+          showPerkList(player);
+          const elPerks = perks.map(perk => createPerkElement(perk, player, this));
+          if (elUpgradePickerContent) {
+            elUpgradePickerContent.innerHTML = '';
+            for (let elUpgrade of elPerks) {
+              if (elUpgrade) {
+                elUpgradePickerContent.appendChild(elUpgrade);
+                if (globalThis.devAutoPickUpgrades && elUpgrade == elPerks[0]) {
+                  elUpgrade.click();
+                }
+              } else {
+                console.warn('showUpgrades: perk is undefined, this block should never be executed in headless mode')
+              }
+            }
+            // Allow reroll if there is more than 1 upgrade to choose from
+            if (numberOfUpgradesToChooseFrom > 1) {
+              // Reroll perks button
+              this.addRerollButton(player);
+            }
           }
         }
 

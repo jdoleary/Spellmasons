@@ -6,6 +6,7 @@ import seedrandom from "seedrandom";
 import { IPlayer } from "./entity/Player";
 import { MESSAGE_TYPES } from "./types/MessageTypes";
 import { setPlayerAttributeMax } from "./entity/Unit";
+import { allCards, ICard } from "./cards";
 const elPerkList = document.getElementById('perkList');
 const elPerksEveryLevel = document.getElementById('perkEveryLevel');
 const elPerksEveryTurn = document.getElementById('perkEveryTurn');
@@ -26,6 +27,49 @@ ${perk.certainty < 1.0 ? `🎲 ${Math.round(perk.certainty * 100)}% chance` : ``
 ${perkAttributeToIcon(perk.attribute)} +${perk.amount} ${perkAttributeToString(perk.attribute)}
 ${omitWhen ? '' : perkWhenToString(perk.when)}`.trim();
 
+}
+export function createCursePerkElement(text: string, underworld: Underworld) {
+    if (globalThis.headless) {
+        // There is no DOM in headless mode
+        return;
+    }
+    const { pie } = underworld;
+    const element = document.createElement('div');
+    element.classList.add('card', 'upgrade');
+    element.classList.add('perk', 'ui-border', 'cursed');
+    const elCardInner = document.createElement('div');
+    elCardInner.classList.add('card-inner');
+    element.appendChild(elCardInner);
+    const content = allCards[text] as ICard;
+    const thumbHolder = document.createElement('div');
+    const thumbnail = document.createElement('img');
+    // The presence of '/' means that it's a different path than default (such as in a mod) and it isn't
+    // nested in images/spell/
+    thumbnail.src = content.thumbnail.indexOf('/') !== -1 ? content.thumbnail : 'images/spell/' + content.thumbnail;
+    thumbHolder.appendChild(thumbnail);
+    thumbHolder.classList.add('card-thumb');
+    elCardInner.appendChild(thumbHolder);
+
+    const desc = document.createElement('div');
+    desc.classList.add('card-description');
+    const descriptionText = document.createElement('div');
+    descriptionText.innerHTML = `Disable ${content.id} for 2 levels.`;
+    desc.appendChild(descriptionText);
+
+    elCardInner.appendChild(desc);
+    element.addEventListener('click', (e) => {
+        globalThis.timeLastChoseUpgrade = Date.now();
+        // Prevent click from "falling through" upgrade and propagating to vote for overworld level
+        e.stopPropagation();
+        pie.sendData({
+            type: MESSAGE_TYPES.CHOOSE_PERK,
+            curse: 'suffocate',
+        });
+    });
+    element.addEventListener('mouseenter', (e) => {
+        playSFXKey('click');
+    });
+    return element;
 }
 export function createPerkElement(perk: AttributePerk, player: IPlayer, underworld: Underworld) {
     if (globalThis.headless) {
