@@ -1,3 +1,30 @@
+## 2023
+- Journalists
+    - IGN
+    - PC Gamer
+    - Gamespot
+    - Rock Paper Shotgun
+    - Polygon
+    - Eurogamer
+- "A fresh take on custom magic spells"
+- "What can a Spellmason do?"
+https://www.youtube.com/watch?v=X3FPHVBOuks
+- [Use edited gifs in your email](https://icopartners.com/2017/01/guide-easy-pretty-gaming-gifs/)
+    - stay under 5mb
+    - 400-450 px in width
+- Make your message clear in 10 seconds
+- Better to be amazing for a few people, not "okay for many"
+- Think in headlines (brings the journalists money)
+- Perfect email (AIDA - Attention, Interest, Desire - find out more, call to Action)
+    - If you know the journalist you can add a personal message to the beginning
+    - Catchy subject line.
+- Email Hunter is helpful for finding emails
+- Freelancers are easier to pitch to
+- Contacting Streamers
+    - Streamers and youtubers only care about your game, not your story.  Convince them why it's fun to watch.
+    - Must be easy to record
+
+---
 - article: https://howtomarketagame.com/2022/10/17/how-dome-keeper-achieved-a-million-dollar-launch/
 - UTM Link: https://store.steampowered.com/app/1618380/Spellmasons/?utm_source=CUSTOM_TAG
 - Timeline:
