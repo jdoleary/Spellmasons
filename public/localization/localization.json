@@ -349,7 +349,9 @@
         "disable spell": "Disable 🍞 for 🍞 levels",
         "disabled": "disabled",
         "choose spawn instructions": "Choose a place to spawn",
-        "loading": "loading"
+        "loading": "loading",
+        "curse_mana_potion_copy": "Permanently reduces your maximum mana by 🍞",
+        "cursed mana potion": "Cursed Mana Potion"
     },
     {
         "language": "Français",
@@ -701,7 +703,9 @@
         "disable spell": "Desactiver 🍞 pour 🍞 niveaux",
         "disabled": "désactivé",
         "choose spawn instructions": "Choisissez un endroit pour frayer",
-        "loading": "chargement"
+        "loading": "chargement",
+        "curse_mana_potion_copy": "Réduit en permanence votre mana maximum par 🍞",
+        "cursed mana potion": "Potion de mana maudite"
     },
     {
         "language": "italiano",
@@ -1053,7 +1057,9 @@
         "disable spell": "Disattiva 🍞 per 🍞livelli",
         "disabled": "Disabilitato",
         "choose spawn instructions": "Scegli un posto dove spawn",
-        "loading": "caricamento"
+        "loading": "caricamento",
+        "curse_mana_potion_copy": "Riduce permanentemente il tuo mana massimo di 🍞",
+        "cursed mana potion": "Pozione di mana maledetta"
     },
     {
         "language": "Deutsche",
@@ -1405,7 +1411,9 @@
         "disable spell": "Deaktivieren Sie 🍞 für 🍞 Level",
         "disabled": "Behinderte",
         "choose spawn instructions": "Wählen Sie einen Ort zum Laichen",
-        "loading": "Wird geladen"
+        "loading": "Wird geladen",
+        "curse_mana_potion_copy": "Reduziert Ihr maximales Mana dauerhaft um 🍞",
+        "cursed mana potion": "Verfluchter Mana -Trank"
     },
     {
         "language": "español",
@@ -1757,7 +1765,9 @@
         "disable spell": "Deshabilitar 🍞 para 🍞 niveles",
         "disabled": "desactivado",
         "choose spawn instructions": "Elija un lugar para desovar",
-        "loading": "cargando"
+        "loading": "cargando",
+        "curse_mana_potion_copy": "Reduce permanentemente su maná máximo por 🍞",
+        "cursed mana potion": "Poción de maná maldito"
     },
     {
         "language": "日本",
@@ -2107,7 +2117,9 @@
         "disable spell": "次のBD2023レベルでBD2023を無効にする",
         "disabled": "無効",
         "choose spawn instructions": "スポーンする場所を選択してください",
-        "loading": "読み込み"
+        "loading": "読み込み",
+        "curse_mana_potion_copy": "マナ容量を永続的にBD2023減少",
+        "cursed mana potion": "呪われたマナポーション"
     },
     {
         "language": "Português",
@@ -2457,7 +2469,9 @@
         "disable spell": "Desativar 🍞 para 🍞 níveis",
         "disabled": "desabilitado",
         "choose spawn instructions": "Escolha um lugar para gerar",
-        "loading": "carregando"
+        "loading": "carregando",
+        "curse_mana_potion_copy": "Reduz permanentemente sua mana máxima por 🍞",
+        "cursed mana potion": "Poção de mana amaldiçoada"
     },
     {
         "language": "عربى",
@@ -2807,7 +2821,9 @@
         "disable spell": "قم بتعطيل 🍞 لـ 🍞 مستوى",
         "disabled": "عاجز",
         "choose spawn instructions": "اختر مكانًا لتفرخ",
-        "loading": "تحميل"
+        "loading": "تحميل",
+        "curse_mana_potion_copy": "يقلل بشكل دائم من الحد الأقصى لمانا بمقدار 🍞",
+        "cursed mana potion": "لعن مانا جرعة"
     },
     {
         "language": "한국어",
@@ -3154,10 +3170,12 @@
         "health capacity": "최대 건강",
         "stamina capacity": "이동 능력",
         "cast range": "마법의 범위",
-        "disable spell": "🍞 레벨의 경우 🍞를 비활성화합니다",
+        "disable spell": "BD2023  레벨의 경우 BD2023 를 비활성화합니다",
         "disabled": "장애가 있는",
         "choose spawn instructions": "스폰 할 장소를 선택하십시오",
-        "loading": "로딩"
+        "loading": "로딩",
+        "curse_mana_potion_copy": "영구적으로 최대 마나를 BD2023 감소시킵니다.",
+        "cursed mana potion": "저주받은 마나 물약"
     },
     {
         "language": "русский",
@@ -3493,7 +3511,9 @@
         "disable spell": "Отключить 🍞 для 🍞 уровня",
         "disabled": "неполноценный",
         "choose spawn instructions": "Выберите место, чтобы нереститься",
-        "loading": "загрузка"
+        "loading": "загрузка",
+        "curse_mana_potion_copy": "Навсегда уменьшает максимальную ману на 🍞",
+        "cursed mana potion": "Проклятое зелье Мана"
     },
     {
         "language": "中文(简)",
@@ -3829,7 +3849,9 @@
         "disable spell": "在接下来的 BD2023 个关卡中禁用 BD2023",
         "disabled": "禁用",
         "choose spawn instructions": "选择一个要生成的地方",
-        "loading": "加载中"
+        "loading": "加载中",
+        "curse_mana_potion_copy": "永久减少最大法力值 BD2023 。",
+        "cursed mana potion": "被诅咒的法力药水"
     },
     {
         "language": "中文(繁)",
@@ -4165,7 +4187,9 @@
         "disable spell": "在接下來的 BD2023 個關卡中禁用 BD2023",
         "disabled": "禁用",
         "choose spawn instructions": "選擇一個要生成的地方",
-        "loading": "加載中"
+        "loading": "加載中",
+        "curse_mana_potion_copy": "永久減少最大法力值 BD2023 。",
+        "cursed mana potion": "被詛咒的法力藥水"
     },
     {
         "language": "Polskie",
@@ -4225,7 +4249,7 @@
         "curses": "Pomstowanie",
         "blessings": "Błogosławieństwa",
         "soul": "Dusza",
-        "multiplayer": "wieloosobowy",
+        "multiplayer": "Wieloosobowy",
         "settings": "Ustawienia",
         "new run": "Nowy bieg",
         "help": "Pomoc",
@@ -4411,7 +4435,7 @@
         "explain walk rope": "Przytrzymaj 🍞 Aby zobaczyć, jak daleko możesz posunąć się z wytrzymałością (żółtą linią), którą pozostałeś. Blue Circle pokazuje, jaka byłaby Twoja oferta obsady, gdybyś przeniósł się do tego miejsca.",
         "explain cast": "<h1> Jak wykuwać zaklęcia! </h1> Kliknij zaklęcie lub użyj jego klawisza skrótów, aby go w kolejce. Kliknij w lewo cel, aby uwolnić zaklęcie w kolejce. <br/> <br/> lub jeśli zmienisz zdanie, naciśnij 🍞, aby oczyścić zaklęcie w kolejce.",
         "explain move": "<h1> Jak poruszyć </h1> przytrzymaj prawy przycisk myszy, aby iść w kierunku kursora.",
-        "spell_heal": "Heals all targets for 🍞.❕Will not heal beyond maximum health.❕Stackable.",
+        "spell_heal": "Ulecza wszystkie cele 🍞.❕ ❕ ❕ ❕ ❕ ❕ ❕ ❕ ❕ ❕ ❕ ❕ ❕ ❕ ❕ ❕ nie zagoi się poza maksymalnym zdrowiem.",
         "spell_arrow": "Strzela strzałką, która zadaje 🍞 uszkodzenie pierwszej jednostki, którą uderza. ❕cannot przejdź przez ściany.",
         "spell_bleed": "Zadaje większe szkody w oparciu o to, ile zdrowia brakuje cel. ❕❕ Na przykład: ❕Target z 🍞% zdrowie umrze. ❕🍞% Zdrowie: 🍞% Max Health jako uszkodzenia ❕Target z pełnym stanem zdrowia nie wymaga szkód.",
         "spell_bloat": "Jeśli jednostka zostanie przeklęta 🍞, gdy umrze, wybuchnie, obrabiając obrażenia wszystkich jednostek w promieniu wybuchu. ❕ Stacy miękki 🍞 zwiększą ilość uszkodzeń wyrządzonych, gdy jednostka wybuchnie.",
@@ -4501,7 +4525,9 @@
         "disable spell": "Wyłącz 🍞 dla poziomów 🍞",
         "disabled": "wyłączony",
         "choose spawn instructions": "Wybierz miejsce do odrodzenia",
-        "loading": "przetwarzanie"
+        "loading": "przetwarzanie",
+        "curse_mana_potion_copy": "Na stałe zmniejsza maksymalną manę o 🍞",
+        "cursed mana potion": "przeklęty eliksir many"
     },
     {
         "language": "Dutch",
@@ -4758,8 +4784,8 @@
         "spell_clone": "Klonen elk doelwit. Gekloonde eenheden behouden hun huidige factie.",
         "spell_connect": "Lop vijanden (en bondgenoten) in de nabijheid van elkaar. ❕ Elke daaropvolgende exemplaar van \"🍞\" zal bijvoegen aan 🍞 nieuwe doelen voor de spreuk. ❕Alle verbonden wezens worden beïnvloed door de volgende spreuken in uw cast.",
         "spell_conserve": "Saveert de rest van de huidige mana van de doelen voor de volgende beurt.",
-        "spell_dash": "Trekt de caster naar de doelstelling (s) .❕ \"Dash\" moet op een doelwit worden gegoten, zoals een eenheid of ophalen.",
         "spell_contageous": "Spreidt onmiddellijk de vloeken van deze unit uit naar andere nabijgelegen eenheden.",
+        "spell_dash": "Trekt de caster naar de doelstelling (s) .❕ \"Dash\" moet op een doelwit worden gegoten, zoals een eenheid of ophalen.",
         "spell_death_wager": "Reset alle spellingkosten terug naar hun standaard en verlagen uw maximale gezondheid met 🍞% permanent.",
         "spell_displace": "Teleporteer het doelwit naar een willekeurige locatie.",
         "spell_freeze": "Bevriest de doelwit (s) gedurende 1 beurt, waardoor ze niet kunnen bewegen of handelen. ❕ \"Freeze\" kan meerdere keren achter elkaar worden geworpen om het effect te stapelen.",
@@ -4837,6 +4863,8 @@
         "disable spell": "Schakel 🍞 uit voor 🍞 niveaus",
         "disabled": "gehandicapt",
         "choose spawn instructions": "Kies een plek om te spawnen",
-        "loading": "bezig met laden"
+        "loading": "bezig met laden",
+        "curse_mana_potion_copy": "Vermindert permanent uw maximale mana met 🍞",
+        "cursed mana potion": "Vervloekt mana -drankje"
     }
 ]

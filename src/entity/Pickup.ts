@@ -655,7 +655,7 @@ export const pickups: IPickupSource[] = [
     imagePath: 'pickups/manaPotion',
     animationSpeed: 0.2,
     name: CURSED_MANA_POTION,
-    description: ['Permanently reduces your maximum mana by 10%'],
+    description: ['curse_mana_potion_copy', '10%'],
     probability: 8,
     singleUse: true,
     scale: 1.0,
