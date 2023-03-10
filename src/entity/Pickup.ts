@@ -479,10 +479,17 @@ export const pickups: IPickupSource[] = [
         removePickup(pickup, underworld, false);
         if (randomOtherRedPortal) {
           removePickup(randomOtherRedPortal, underworld, false);
-          player.unit.x = randomOtherRedPortal.x;
-          player.unit.y = randomOtherRedPortal.y;
-          skyBeam(pickup);
-          skyBeam(randomOtherRedPortal);
+          // Ensure the teleport point is valid
+          // Note: pickup MUST be removed before checking if the point is valid because
+          // isPointValidSpawn returns false if it's spawning a unit on a point taken up by a pickup
+          // (that isn't flagged for removal)
+          if (underworld.isPointValidSpawn(randomOtherRedPortal, config.COLLISION_MESH_RADIUS)) {
+            player.unit.x = randomOtherRedPortal.x;
+            player.unit.y = randomOtherRedPortal.y;
+            skyBeam(pickup);
+            skyBeam(randomOtherRedPortal);
+          } else {
+          }
         }
         takeDamage(player.unit, RED_PORTAL_DAMAGE, undefined, underworld, false);
       }

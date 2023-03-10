@@ -225,7 +225,7 @@ export default class Underworld {
     if (prediction) {
       return [...this.unitsPrediction, ...this.pickupsPrediction, ...this.doodadsPrediction]
     } else {
-      return [...this.units, ...this.pickups, ...this.doodads];
+      return [...this.units, ...this.pickups.filter(p => !p.flaggedForRemoval), ...this.doodads];
     }
   }
   reportEnemyKilled(enemyKilledPos: Vec2) {
