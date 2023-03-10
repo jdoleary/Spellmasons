@@ -1,3 +1,26 @@
+## 3.10.2023 Spellmasons Update v1.9.1
+
+- content: Restore contaminate
+- content: Re-add Target Arrow
+- content: Adds Cursed Mana Potion
+- content: Last Will yields a higher than usual probability of returning cursed mana
+    potions
+- content: Introduce Calamaty Perks after beating the Deathmason
+
+- balance: Flat rate perks instead of %s
+
+- AI: Improve ally Spellmason AI behavior so it will pursue and attack enemies
+
+- balance: Make freeze and debilitate take longer to return to default mana cost.
+    Thank you Scojbo from Steam for this recommendation
+
+- translations: Implement lanuage translations for perks and add misc missing translations
+
+- fix: Stop dropping scrolls once players have all the spells
+- fix: Protect agains red portals spawning player out of bounds
+    Thank you AlienSmoke from Discord for reporting this bug
+- fix: Burst so that it uses the latest caster position so it will combine properly with movement spells such as dash
+
 ## 3/3/2023 Spellmasons Update v1.8.0
 - balance: Dark Summoners
     so they start with 40 mana out of 60 so it takes them
