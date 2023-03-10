@@ -3,9 +3,6 @@
 - Improve 'Join game as player' ux, it should assume if the names match who you are joining as
 ## For v1.9
 - bug: If multiple scrolls are on the ground and one is picked up the others wont trigger any new spells because the first one lets you pick them all
-- Update Dark Summoner explain popup
-- fix AI for cloned self
-- fix Dash + burst
 ---
 - AFter perk refactor make sure summons are still viable (such as death mason's 1200 mana)
 - Current changes make it so you could potentially get stuck with endedTurn set to true if there's a desync?
