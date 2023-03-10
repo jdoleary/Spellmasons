@@ -42,14 +42,14 @@ const spell: Spell = {
         if (!prediction && !globalThis.headless) {
           playDefaultSpellSFX(card, prediction);
           for (let unit of targets) {
-            const damage = calculateDamage(quantity, state.casterPositionAtTimeOfCast, state.casterUnit.attackRange, unit);
+            const damage = calculateDamage(quantity, state.casterUnit, state.casterUnit.attackRange, unit);
             Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
             // Animate:
             makeBurstParticles(unit, lerp(0.1, 1, damage / maxDamage), prediction, resolve);
           }
         } else {
           for (let unit of targets) {
-            const damage = calculateDamage(quantity, state.casterPositionAtTimeOfCast, state.casterUnit.attackRange, unit);
+            const damage = calculateDamage(quantity, state.casterUnit, state.casterUnit.attackRange, unit);
             Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
           }
           resolve();
