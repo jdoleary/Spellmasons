@@ -16,6 +16,8 @@
     - both when you kill yourself and when an enemy kills you
 - have a multiplayer game with 1 player, beat a level, then connect with another player
 - Test rerolling spells and perks
+## v1.9
+- No more spells to choose from is now missing
 ## Validate v.1.7.0
 - slow seems to not work right on multiplayer when cast on self
 - clone makes pickups dust appear on prediction when portal is up?

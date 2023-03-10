@@ -1,3 +1,5 @@
+- bug: when a spell drops on hotseat multiplayer, on next players turn, they just get to pick the spell
+  - also player one's turn starts before the AI has finished with their turn
 - bug: I cast a golem summon out of the inventory without closing the inventory and it didn't change in visible mana cost
 ## v1.9
 - yewny — Today at 2:36 PM not sure if this is a bug or a design choice but overlays dont work on the game? i noticed the discord overlay (which i use every day) wouldnt open, but the discord overlay is finnicky so i thought it was just acting up again, but then when i tried opening the steam overlay that also didnt work, and it didnt work for my partner either. it would be really convenient for me to be able to use overlays in the game if there wasnt a reason for them to not be working
