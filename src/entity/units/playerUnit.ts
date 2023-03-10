@@ -38,17 +38,13 @@ const playerUnit: UnitSource = {
       });
       await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
     }
-    // Movement, AI spellmason follows closest ally player
-    const closestAllyPlayer = Unit.closestInListOfUnits(unit,
-      underworld.units.filter(
-        (u) => u.faction == unit.faction && u.alive && u.unitType == UnitType.PLAYER_CONTROLLED,
-      ));
-    if (closestAllyPlayer) {
-      floatingText({ coords: Vec.clone(unit), text: "Following you!" });
-      const distanceToMoveTarget = math.distance(unit, closestAllyPlayer);
-      // The following is a hacky way to make them not move too close
-      unit.stamina = Math.min(unit.stamina, distanceToMoveTarget - config.COLLISION_MESH_RADIUS);
-      await Unit.moveTowards(unit, closestAllyPlayer, underworld);
+    // Movement:
+    const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
+    if (closestEnemy) {
+      const distanceToEnemy = math.distance(unit, closestEnemy);
+      // Trick to make the unit only move as far as will put them in range but no closer
+      unit.stamina = Math.min(unit.stamina, distanceToEnemy + config.COLLISION_MESH_RADIUS - unit.attackRange);
+      await Unit.moveTowards(unit, closestEnemy, underworld);
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
