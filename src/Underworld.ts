@@ -223,9 +223,9 @@ export default class Underworld {
   // the current targets of a spell.
   getPotentialTargets(prediction: boolean): HasSpace[] {
     if (prediction) {
-      return [...this.unitsPrediction, ...this.pickupsPrediction, ...this.doodadsPrediction]
+      return [...this.unitsPrediction.filter(u => !u.flaggedForRemoval), ...this.pickupsPrediction.filter(p => !p.flaggedForRemoval), ...this.doodadsPrediction]
     } else {
-      return [...this.units, ...this.pickups.filter(p => !p.flaggedForRemoval), ...this.doodads];
+      return [...this.units.filter(u => !u.flaggedForRemoval), ...this.pickups.filter(p => !p.flaggedForRemoval), ...this.doodads];
     }
   }
   reportEnemyKilled(enemyKilledPos: Vec2) {
@@ -2350,6 +2350,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (!elUpgradePicker || !elUpgradePickerContent) {
       console.error('showUpgrades: elUpgradePicker or elUpgradePickerContent are undefined.');
     }
+    debugger;
     if (player) {
       const numberOfUpgradesToChooseFrom = 3 - player.reroll;
       if (isPerk) {
