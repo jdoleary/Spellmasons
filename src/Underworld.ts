@@ -2288,6 +2288,15 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
 
   showUpgrades() {
+    // Remove additional pickups once upgrades are shown because it will allow players to pick all upgrades on map
+    for (let p of this.pickups) {
+      if (p.name == Pickup.CARDS_PICKUP_NAME) {
+        playSFXKey('scroll_disappear');
+        makeScrollDissapearParticles(p, false);
+        // Remove pickup
+        Pickup.removePickup(p, this, false);
+      }
+    }
     const player = globalThis.player;
     if (document.body?.classList.contains(showUpgradesClassName)) {
       console.log('showUpgrades: showUpgrades was called but it is already visible so this function returns immediately to avoid regenerating upgrades');
