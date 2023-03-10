@@ -241,19 +241,23 @@ export default class Underworld {
       return;
     }
     if (numberOfEnemiesKilledNeededForNextDrop <= this.enemiesKilled) {
-      console.log('Pickup: Drop scroll pickup', this.cardDropsDropped, this.enemiesKilled, numberOfEnemiesKilledNeededForNextDrop)
-      explain(EXPLAIN_SCROLL);
-      this.cardDropsDropped++;
-      const pickupSource = Pickup.pickups.find(p => p.name == Pickup.CARDS_PICKUP_NAME)
-      if (pickupSource) {
-        Pickup.create({ pos: enemyKilledPos, pickupSource }, this, false);
-        tutorialShowTask('pickupScroll');
+      // Stop dropping cards if players have enough scrolls have been dropped to cover all cards that can be picked
+      if (Object.values(Cards.allCards).filter(c => c.probability > 0).length > this.cardDropsDropped) {
+        console.log('Pickup: Drop scroll pickup', this.cardDropsDropped, this.enemiesKilled, numberOfEnemiesKilledNeededForNextDrop)
+        explain(EXPLAIN_SCROLL);
+        this.cardDropsDropped++;
+        const pickupSource = Pickup.pickups.find(p => p.name == Pickup.CARDS_PICKUP_NAME)
+        if (pickupSource) {
+          Pickup.create({ pos: enemyKilledPos, pickupSource }, this, false);
+          tutorialShowTask('pickupScroll');
+        } else {
+          console.error('pickupSource for', Pickup.CARDS_PICKUP_NAME, ' not found');
+          return
+        }
       } else {
-        console.error('pickupSource for', Pickup.CARDS_PICKUP_NAME, ' not found');
-        return
+        console.log('No more cards to drop');
       }
     }
-
   }
   syncPlayerPredictionUnitOnly() {
     if (this.unitsPrediction && globalThis.player !== undefined) {
