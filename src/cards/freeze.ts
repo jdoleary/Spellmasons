@@ -19,7 +19,7 @@ const spell: Spell = {
     supportQuantity: true,
     manaCost: 25,
     healthCost: 0,
-    expenseScaling: 2,
+    expenseScaling: 3,
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconFreeze.png',
     animationPath: 'spell-effects/spellFreeze',

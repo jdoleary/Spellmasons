@@ -18,7 +18,7 @@ const spell: Spell = {
     supportQuantity: true,
     manaCost: 20,
     healthCost: 0,
-    expenseScaling: 1,
+    expenseScaling: 3,
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconDebilitate.png',
     animationPath: 'spell-effects/spellDebilitate',
