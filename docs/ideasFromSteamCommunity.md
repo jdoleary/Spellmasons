@@ -1,3 +1,12 @@
+Bee
+
+To finish off it would not be fair to only give the positives, so here are a few things I think would make the game a little better.
+
+    More enemies or a few more alternate versions
+    The ability to in the future(because i'm sure this isn't easy) to fuse spells. Maybe not infinitely, but like an upgrade of some sort. An example might be fuse freeze and bloat. When the enemy dies it shoots out shards of ice.
+    Please add more elemental spells like fire, water and earth stuff. Push and pull kind of already feel air. Fire could be like a burn effect similar to poison, but different.
+    Friendly units need better logic. They aren't as good as the enemies and do not fight as well. Sometimes they just walk into walls or run away from the fight for some reason. Other units will choose not to fight, mostly the ranged units.
+---
 HPStarr — Yesterday at 10:43 PM
 I have to say, the base on this game is one of the best I've ever seen, the spell mechanics are amazing. I'm really excited to see where this game goes in the next couple of months
 anyway, time for some ideas:

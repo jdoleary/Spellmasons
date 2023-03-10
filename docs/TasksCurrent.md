@@ -1,5 +1,8 @@
+AlienSmoke — Today at 2:38 AM
+Hello, I'm here to report a bug. I am playing a round where we reach Deathmason. I resurrect him as the sane thing to do, during one of his portal sets I trail to a portal and get teleported outside the map taking 120 damage. Trying to off myself to save the time to each round end. To the issue of being out of bounds It wouldn't allow me to use spells. Had to use target similar to kill me to continue.
 ## v1.9
-- Localize cursed mana potion
+- yewny — Today at 2:36 PM not sure if this is a bug or a design choice but overlays dont work on the game? i noticed the discord overlay (which i use every day) wouldnt open, but the discord overlay is finnicky so i thought it was just acting up again, but then when i tried opening the steam overlay that also didnt work, and it didnt work for my partner either. it would be really convenient for me to be able to use overlays in the game if there wasnt a reason for them to not be working
+- BeePsychotic — Today at 11:00 AM Quick one that doesn't happen too often. Every once and awhile I'll be playing a bit fast and just clicking really quick between spells and even when I don't have enough mana it will let me cast. It seems like I got the next spell up too fast for some sort of calculation. I've had some coding projects where this has happened in the past, that's the only thing I could think of. I could see this being exploited. It's hard for me to recreate, but when it comes to high cost stuff it is a balance issue.
 ---
 - todo: pickups check prediction but not headless
 - Also please nerf debilitate and freeze. As they are, these spells break the game. Its particularly unsatisfying in multiplayer because players can infinitely cycle AOE freezes without breaking a sweat. from Scojbo steam review
