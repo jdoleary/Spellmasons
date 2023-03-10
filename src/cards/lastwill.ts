@@ -72,7 +72,18 @@ const spell: Spell = {
       const seed = seedrandom(`${underworld.turn_number} -${unit.id} `);
       for (let i = 0; i < quantity; i++) {
         const coord = underworld.findValidSpawn(unit, 3, 32);
-        const choice = chooseObjectWithProbability(Pickup.pickups.map((p, index) => ({ index, probability: p.name.includes('Potion') ? p.probability : 0 })), seed);
+        const choice = chooseObjectWithProbability(Pickup.pickups.map((p, index) => {
+          if (p.name == Pickup.CURSED_MANA_POTION) {
+            // Higher probability of returning cursed mana potions with last will
+            return {
+              index,
+              probability: 8,
+            }
+          }
+          return {
+            index, probability: p.name.includes('Potion') ? p.probability : 0
+          }
+        }), seed);
         if (choice) {
           const { index } = choice;
           if (coord) {

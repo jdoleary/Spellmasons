@@ -28,7 +28,7 @@ import floatingText from '../graphics/FloatingText';
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 export const PICKUP_IMAGE_PATH = 'pickups/scroll';
 export const RED_PORTAL = 'Red Portal';
-const CURSED_MANA_POTION = 'Cursed Mana Potion';
+export const CURSED_MANA_POTION = 'Cursed Mana Potion';
 const RED_PORTAL_DAMAGE = 30;
 type IPickupEffect = ({ unit, player, pickup, prediction }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld, prediction: boolean }) => void;
 type IPickupInit = ({ pickup, underworld }: { pickup: IPickup, underworld: Underworld }) => void;
@@ -663,7 +663,7 @@ export const pickups: IPickupSource[] = [
     animationSpeed: 0.2,
     name: CURSED_MANA_POTION,
     description: ['curse_mana_potion_copy', '10%'],
-    probability: 8,
+    probability: 1,
     singleUse: true,
     scale: 1.0,
     playerOnly: true,
