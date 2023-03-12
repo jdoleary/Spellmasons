@@ -1,5 +1,6 @@
 
 # Critical Path
+- Post on Epic Games Store and Itch.io
 - Improve 'Join game as player' ux, it should assume if the names match who you are joining as
 ## For v1.9
 - bug: If multiple scrolls are on the ground and one is picked up the others wont trigger any new spells because the first one lets you pick them all

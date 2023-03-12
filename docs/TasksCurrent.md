@@ -1,3 +1,15 @@
+- hexingMagus — Today at 12:14 AM
+When you use the new arrow target spell, following it with one of the shape targeting spells allows you to place the shape anywhere on the map, including through walls unless the arrow would hit a creature, in which case the shape originates there.
+the arrow target also refunds incorrectly, when you cast arrow target and other spells on it and you miss the arrow, it will refund the arrow but none of the other spells. if your subsequent spells still have effects (like with the above bug) then you get back 10 mana for free and the spell cost won't go up.
+- Jacobzeba01 — Today at 2:20 AM
+That's not supposed to be there, enemies and items seem to be appearing outside the map
+
+Also we have noticed the mana potion seems to be giving more then what it used too, causing Aliensmoke to go into +200 extra mana from 1 mana potion.I'm noticing the levels seem to jump from different layouts when loading in until it settles on one, so I feel that may be causing this
+- this is the 4th to 5th time it's done this, calamity seems to be picking phantom arrow only.
+- Skip to ghost biome" admin tool doesn't work anymore?
+- on EU server when chaning levels it lets the AI take an initial turn
+  - **issue with multiple levels generating and making a level desync** on EU server.  Must be a race condition or something
+---
 - bug: when a spell drops on hotseat multiplayer, on next players turn, they just get to pick the spell
   - also player one's turn starts before the AI has finished with their turn
 - bug: I cast a golem summon out of the inventory without closing the inventory and it didn't change in visible mana cost

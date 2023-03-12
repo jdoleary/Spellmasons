@@ -1,3 +1,10 @@
+MuditaMan — Yesterday at 8:15 PM
+It would be cool to have different options to change your run before you start. I have a specific idea in mind for multiplayer: players cannot find spells that others already have.
+
+Could include other things that make the run easier, harder or just different: 1hp only, no perks, spell costs don't go back down until level completion, one free reroll for spell selections, spell type x increased costs, spell type y reduced costs, etc.
+
+The main idea is just to have some modifiers you can choose to change a run. If these are created it should be something you can see if you join someone else's lobby (preferably before you even join).
+---
 Bee
 
 To finish off it would not be fair to only give the positives, so here are a few things I think would make the game a little better.
