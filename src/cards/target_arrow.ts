@@ -5,7 +5,7 @@ import { addTarget, refundLastSpell, Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { createVisualFlyingProjectile } from '../entity/Projectile';
 import * as config from '../config';
-import { Vec2 } from '../jmath/Vec';
+import { clone, Vec2 } from '../jmath/Vec';
 import { findArrowCollisions } from './arrow';
 
 export const targetArrowCardId = 'Target Arrow';
@@ -42,6 +42,10 @@ const spell: Spell = {
         // This target arrow spell doesn't pierce
         const firstTarget = arrowUnitCollisions[0];
         if (firstTarget) {
+          // Reassign castLocation to prevent other spells from using the original click location and instead to use
+          // where the arrow collided.  Without this, "Target Arrow" + "Target Circle" allows for infinite range, even
+          // behind walls.
+          state.castLocation = clone(firstTarget);
           if (prediction) {
             if (Unit.isUnit(firstTarget)) {
               addTarget(firstTarget, state);
@@ -68,15 +72,10 @@ const spell: Spell = {
                     }
                   })
                 }
-              } else {
-                // TODO: If pickups become damagable, this will have to be adapted to not refund mana when it hits a pickup
-                refundLastSpell(state, prediction, 'no target, mana refunded')
               }
               return;
             }));
           }
-        } else {
-          refundLastSpell(state, prediction, 'no target, mana refunded')
         }
       }
       await Promise.all(promises).then(() => {
