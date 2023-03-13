@@ -96,7 +96,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       break;
     case MESSAGE_TYPES.AQUIRE_PICKUP:
       const { pickupId, pickupName, unitId, playerClientId } = payload;
-      let pickup = underworld.pickups.find(p => p.id == pickupId && !p.flaggedForRemoval);
+      let pickup = underworld.pickups.find(p => p.id == pickupId);
       const unit = underworld.units.find(u => u.id == unitId);
       const player = underworld.players.find(p => p.clientId == playerClientId);
       if (!pickup) {
