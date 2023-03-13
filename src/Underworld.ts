@@ -3288,8 +3288,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // if not, delete and recreate:
           // Ensure currentPickup's image is displaying, if not we have to create a new one
           if (this.pickupIsIdentical(currentPickup, serializedPickup) && currentPickup.image?.sprite.parent !== null) {
-            const { x, y, radius, inLiquid, immovable, beingPushed, singleUse, playerOnly, turnsLeftToGrab, flaggedForRemoval } = serializedPickup;
-            Object.assign(currentPickup, { x, y, radius, inLiquid, immovable, beingPushed, singleUse, playerOnly, turnsLeftToGrab, flaggedForRemoval });
+            const { x, y, radius, inLiquid, immovable, beingPushed, playerOnly, turnsLeftToGrab, flaggedForRemoval } = serializedPickup;
+            Object.assign(currentPickup, { x, y, radius, inLiquid, immovable, beingPushed, playerOnly, turnsLeftToGrab, flaggedForRemoval });
           } else {
             pickupsToRemove.push(currentPickup);
             serializedpickupsLeftToCreate.push(serializedPickup);

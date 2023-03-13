@@ -1,5 +1,17 @@
-
 # Critical Path
+## v1.10
+
+- Fix double spend pickup
+  - Still todo: Because AQUIRE_PICKUP is handled via the network it's sending too many invokations of it because it sends them before the network message is received to flag it as removed.
+  - Maybe I should remove the AQUIRE_PICKUP message and handle it locally? or find a way to only send it once per pickup id per level
+- Fix sometimes the map state is desynced, test on EU server
+  - I think this happens because ENTER_PORTAL is called multiple times due to the above mentioned pickup desync issue
+- bug: After being revived by a priest I get "your turn" message while an enemy archer is still shooting their arrow, then I get another "your turn" message when the arrow collides and it's my turn
+- Firecat — Today at 6:09 PM
+just a small thing that pretty fun if you resurrect a priest then die you will get in a death loop of be healed then dead
+  - Because it doesn't give you a turn
+  - Also if you die with the priest alive it goes BACK a level instead of advances somehow
+---
 - Post on Epic Games Store and Itch.io
 - Improve 'Join game as player' ux, it should assume if the names match who you are joining as
 ## For v1.9

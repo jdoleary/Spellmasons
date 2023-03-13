@@ -45,8 +45,6 @@ export type IPickup = HasSpace & {
   image?: Image.IImageAnimated;
   // if this IPickup is a prediction copy, real is a reference to the real pickup that it is a copy of
   real?: IPickup;
-  // Only can be picked up once
-  singleUse: boolean;
   // Only can be picked up by players
   playerOnly: boolean;
   // Pickups optionally have a "time limit" and will disappear after this many turns
@@ -71,7 +69,6 @@ export interface IPickupSource {
   description: Localizable;
   imagePath?: string;
   animationSpeed?: number;
-  singleUse: boolean;
   playerOnly?: boolean;
   turnsLeftToGrab?: number;
   scale: number;
@@ -103,7 +100,7 @@ export function create({ pos, pickupSource, idOverride }:
   {
     pos: Vec2, pickupSource: IPickupSource, idOverride?: number,
   }, underworld: Underworld, prediction: boolean): IPickup {
-  const { name, description, imagePath, effect, willTrigger, scale, singleUse, animationSpeed, playerOnly = false, turnsLeftToGrab } = pickupSource;
+  const { name, description, imagePath, effect, willTrigger, scale, animationSpeed, playerOnly = false, turnsLeftToGrab } = pickupSource;
   const { x, y } = pos
   if (isNaN(x) || isNaN(y)) {
     console.error('Unexpected: Created pickup at NaN', pickupSource, pos);
@@ -138,7 +135,6 @@ export function create({ pos, pickupSource, idOverride }:
     // Pickups are stored in containerUnits so that they
     // will be automatically z-indexed
     image: (!imagePath || !containerUnits || prediction) ? undefined : Image.create({ x, y }, imagePath, containerUnits, { animationSpeed, loop: true }),
-    singleUse,
     playerOnly,
     effect,
     willTrigger,
@@ -351,12 +347,9 @@ export function triggerPickup(pickup: IPickup, unit: IUnit, player: Player.IPlay
   const willTrigger = !pickup.flaggedForRemoval && unit.alive && pickup.willTrigger({ unit, player, pickup, underworld });
   if (willTrigger) {
     pickup.effect({ unit, player, pickup, underworld, prediction });
-    // Only remove pickup if it is a singleUse pickup
-    if (pickup.singleUse && willTrigger) {
-      removePickup(pickup, underworld, prediction);
-      // Now that the players attributes may have changed, sync UI
-      syncPlayerHealthManaUI(underworld);
-    }
+    removePickup(pickup, underworld, prediction);
+    // Now that the players attributes may have changed, sync UI
+    syncPlayerHealthManaUI(underworld);
   }
 }
 export function tryTriggerPickup(pickup: IPickup, unit: IUnit, underworld: Underworld, prediction: boolean) {
@@ -386,6 +379,10 @@ export function tryTriggerPickup(pickup: IPickup, unit: IUnit, underworld: Under
       // only send AQUIRE_PICKUP if it will trigger
       const willTrigger = pickup.willTrigger({ unit, player, pickup, underworld });
       if (willTrigger) {
+        // triggerPickup immediately locally
+        triggerPickup(pickup, unit, player, underworld, prediction);
+        // send AQUIRE_PICKUP network message to make sure the same pickup gets triggered
+        // on any other client that may have missed this collision
         underworld.pie.sendData({
           type: MESSAGE_TYPES.AQUIRE_PICKUP,
           pickupId: pickup.id,
@@ -410,7 +407,6 @@ export const pickups: IPickupSource[] = [
     imagePath: 'pickups/trap',
     animationSpeed: -config.DEFAULT_ANIMATION_SPEED,
     playerOnly: false,
-    singleUse: true,
     name: PICKUP_SPIKES_NAME,
     probability: 70,
     scale: 1,
@@ -461,7 +457,6 @@ export const pickups: IPickupSource[] = [
     imagePath: undefined,
     animationSpeed: -0.5,
     playerOnly: true,
-    singleUse: false,
     name: RED_PORTAL,
     probability: 0,
     scale: 1,
@@ -499,7 +494,6 @@ export const pickups: IPickupSource[] = [
     imagePath: 'portal',
     animationSpeed: -0.5,
     playerOnly: true,
-    singleUse: false,
     name: PICKUP_PORTAL_NAME,
     probability: 0,
     scale: 1,
@@ -530,7 +524,6 @@ export const pickups: IPickupSource[] = [
     name: CARDS_PICKUP_NAME,
     description: 'Pickup a spell scroll to get more spells',
     probability: 0,
-    singleUse: true,
     scale: 0.5,
     playerOnly: true,
     willTrigger: ({ unit, player, pickup, underworld }) => {
@@ -549,7 +542,6 @@ export const pickups: IPickupSource[] = [
     name: 'Stamina Potion',
     description: ['Restores stamina to 🍞', '100%'],
     probability: 40,
-    singleUse: true,
     scale: 1.0,
     playerOnly: true,
     willTrigger: ({ unit, player, pickup, underworld }) => {
@@ -606,7 +598,6 @@ export const pickups: IPickupSource[] = [
     name: 'Mana Potion',
     description: [`mana potion description`, manaPotionRestoreAmount.toString()],
     probability: 80,
-    singleUse: true,
     scale: 1.0,
     playerOnly: true,
     willTrigger: ({ unit, player, pickup, underworld }) => {
@@ -664,7 +655,6 @@ export const pickups: IPickupSource[] = [
     name: CURSED_MANA_POTION,
     description: ['curse_mana_potion_copy', '10%'],
     probability: 1,
-    singleUse: true,
     scale: 1.0,
     playerOnly: true,
     init: ({ pickup, underworld }) => {
@@ -722,7 +712,6 @@ export const pickups: IPickupSource[] = [
     probability: 80,
     scale: 1.0,
     playerOnly: true,
-    singleUse: true,
     description: ['health potion description', healthPotionRestoreAmount.toString()],
     willTrigger: ({ unit, player, pickup, underworld }) => {
       // Only trigger the health potion if the player will be affected by the health potion

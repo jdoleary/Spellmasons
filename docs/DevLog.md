@@ -1,3 +1,8 @@
+## 2023.03.13
+Thoughts on the Pickup Double Spend problem.
+I made AQUIRE_PICKUP a networked message to prevent desyncs but this means that picking up a pickup became asyncronous. I was using flaggedForRemoval to prevent picking up a pickup twice, but now that it's async it is sending multiple AQUIRE_PICKUP messages for the same pickup because the local client hasn't yet triggered pickup for that pickup which would set flaggedForRemoval to true.  This is also making a player trigger ENTER_PORTAL multiple times which is making the multiplayer server generate multiple levels which can result in desync.
+
+One solution is to make all pickups single use and then to triggerPickup locally at the same time as I send the network message so it doesn't send multiple network messages.   Then the network message will only serve as a protection against it not getting picked up locally.
 ## 2023.01.31
 - todo:
   - show prediction must recieve prediction units in targetedUnits and targetedPickups so for example after a prediction unit MOVES via a push the next push will start from the moved location
