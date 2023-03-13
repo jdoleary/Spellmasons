@@ -1,7 +1,7 @@
 # QA Protocol
 - Run `npm run build_types` to keeps mods types up to date (and push the changes to github)
     - Test mods
-- Test Host Local Server, Host via Docker
+- Test Host Local Server, Host via Docker (run `testDockerImage.sh`)
 - Test tutorial
 - Test Hotseat multiplayer basics
 - Test all spells in singleplayer: ~24 minutes
