@@ -1,4 +1,5 @@
 # Critical Path
+- I was able to induce a desync when testing all category spells.  The player's location was visually different than it was in state
 ## v1.10
 
 ---
