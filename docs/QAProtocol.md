@@ -4,7 +4,6 @@
 - Test Host Local Server, Host via Docker (run `testDockerImage.sh`)
 - Test tutorial
 - Test Hotseat multiplayer basics
-- Test all spells in singleplayer: ~24 minutes
 - Test all spells in multiplayer: ~20 minutes
     - and end turn after each to test for desyncs
 - Test all spells in singleplayer: ~24 minutes

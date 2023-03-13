@@ -34,7 +34,7 @@ import { collideWithLineSegments } from '../../jmath/moveWithCollision';
 import { getKeyCodeMapping } from './keyMapping';
 import { inPortal } from '../../entity/Player';
 import * as Doodad from '../../entity/Doodad';
-import { hasTargetAtPosition } from '../../cards';
+import { allCards, hasTargetAtPosition } from '../../cards';
 import { explain, EXPLAIN_END_TURN, tutorialCompleteTask } from '../Explain';
 import { Overworld } from '../../Overworld';
 import { summoningSicknessId } from '../../modifierSummoningSickness';
@@ -1318,6 +1318,41 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       supportInMultiplayer: false,
       domQueryContainer: '#menu-selected-unit'
 
+    },
+    {
+      label: 'Test: Cast all spells',
+      action: ({ selectedUnitid }) => {
+        if (!overworld.underworld) {
+          console.error('Cannot admin kill unit, underworld does not exist');
+          return;
+        }
+        const unit = overworld.underworld.units.find(u => u.id == selectedUnitid);
+
+        if (unit && player) {
+          // Give player enough mana to cast
+          const newMana = 20_000;
+          overworld.pie.sendData({
+            type: MESSAGE_TYPES.ADMIN_CHANGE_STAT,
+            unitId: player.unit.id,
+            stats: {
+              mana: newMana,
+              manaMax: newMana
+            }
+          });
+          overworld.pie.sendData({
+            type: MESSAGE_TYPES.SPELL,
+            casterPositionAtTimeOfCast: Vec.clone(player.unit),
+            x: unit.x,
+            y: unit.y,
+            cards: [...Object.keys(allCards), 'resurrect'],
+            initialTargetedUnitId: [unit.id],
+            initialTargetedPickupId: []
+          });
+        }
+
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '#menu-selected-unit'
     },
     {
       label: '️✖️ Delete',
