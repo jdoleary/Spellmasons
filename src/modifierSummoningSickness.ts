@@ -1,12 +1,21 @@
 import { registerEvents, registerModifiers } from "./cards";
 import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
+import { UnitType } from "./types/commonTypes";
 import Underworld from './Underworld';
 
 export const summoningSicknessId = 'summoningSickness';
 export default function registerSummoningSickness() {
     registerModifiers(summoningSicknessId, {
         add: (unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) => {
+            // Only add summoning sickness to AI
+            // Summoning sickness is only meant to prevent units from attacking 
+            // the player without a pre warning attack badge - but if it gets added
+            // to a player it will skip their turn which we do not want.
+            if (unit.unitType == UnitType.PLAYER_CONTROLLED) {
+                console.log('Prevented adding summoning sickness to player unit')
+                return
+            }
             getOrInitModifier(unit, summoningSicknessId, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
                 // Immediately set stamina to 0 so they can't move
                 unit.stamina = 0;
