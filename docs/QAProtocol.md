@@ -4,17 +4,17 @@
 - Test Host Local Server, Host via Docker (run `testDockerImage.sh`)
 - Test tutorial
 - Test Hotseat multiplayer basics
-- Test all spells in multiplayer: ~20 minutes
-    - and end turn after each to test for desyncs
-- Test all spells in singleplayer: ~24 minutes
 - Test liquid
+- Test rerolling spells and perks
 - Test all pickups in singleplayer
 - Test all pickups in multiplayer
 - Test Pickups + movement spells prediction (trap)
 - Test allies carrying on the battle
     - both when you kill yourself and when an enemy kills you
 - have a multiplayer game with 1 player, beat a level, then connect with another player
-- Test rerolling spells and perks
+- Test all spells in multiplayer: ~20 minutes
+    - and end turn after each to test for desyncs
+- Test all spells in singleplayer: ~24 minutes
 ## v1.9
 - No more spells to choose from is now missing
 ## Validate v.1.7.0

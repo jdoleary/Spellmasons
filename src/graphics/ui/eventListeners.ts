@@ -28,7 +28,7 @@ import Underworld, { showUpgradesClassName } from '../../Underworld';
 import { toLineSegments } from '../../jmath/Polygon2';
 import { closestLineSegmentIntersection } from '../../jmath/lineSegment';
 import { allUnits } from '../../entity/units';
-import { Faction } from '../../types/commonTypes';
+import { CardCategory, Faction } from '../../types/commonTypes';
 import * as Freeze from '../../cards/freeze';
 import { collideWithLineSegments } from '../../jmath/moveWithCollision';
 import { getKeyCodeMapping } from './keyMapping';
@@ -1319,41 +1319,64 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       domQueryContainer: '#menu-selected-unit'
 
     },
-    {
-      label: 'Test: Cast all spells',
-      action: ({ selectedUnitid }) => {
-        if (!overworld.underworld) {
-          console.error('Cannot admin kill unit, underworld does not exist');
-          return;
-        }
-        const unit = overworld.underworld.units.find(u => u.id == selectedUnitid);
+    ...[
+      CardCategory.Mana,
+      CardCategory.Blessings,
+      CardCategory.Curses,
+      CardCategory.Damage,
+      CardCategory.Movement,
+      CardCategory.Targeting,
+      CardCategory.Soul
+    ].map<AdminContextMenuOption>(category => {
+      return {
+        label: `Test: Cast all ${CardCategory[category]} spells`,
+        action: ({ selectedUnitid }) => {
+          if (!overworld.underworld) {
+            console.error(`Cannot admin Cast all ${CardCategory[category]} spells, underworld does not exist`);
+            return;
+          }
 
-        if (unit && player) {
-          // Give player enough mana to cast
-          const newMana = 20_000;
-          overworld.pie.sendData({
-            type: MESSAGE_TYPES.ADMIN_CHANGE_STAT,
-            unitId: player.unit.id,
-            stats: {
-              mana: newMana,
-              manaMax: newMana
+          const unit = overworld.underworld.units.find(u => u.id == selectedUnitid);
+
+          if (unit && player) {
+            // Give player enough mana to cast
+            const newMana = 20_000;
+            overworld.pie.sendData({
+              type: MESSAGE_TYPES.ADMIN_CHANGE_STAT,
+              unitId: player.unit.id,
+              stats: {
+                health: 100,
+                healthMax: 100,
+                mana: newMana,
+                manaMax: newMana
+              }
+            });
+
+            if (player) {
+              const cardIds = Object.values(allCards).filter(c => c.category == category).map(c => c.id);
+              if (category == CardCategory.Targeting) {
+                // Must add an additional card to the targeting spells for them to do anything
+                cardIds.push('resurrect');
+              }
+              floatingText({ coords: player.unit, text: cardIds.join(',') });
+
+              overworld.pie.sendData({
+                type: MESSAGE_TYPES.SPELL,
+                casterPositionAtTimeOfCast: Vec.clone(player.unit),
+                x: unit.x,
+                y: unit.y,
+                cards: cardIds,
+                initialTargetedUnitId: [unit.id],
+                initialTargetedPickupId: []
+              });
             }
-          });
-          overworld.pie.sendData({
-            type: MESSAGE_TYPES.SPELL,
-            casterPositionAtTimeOfCast: Vec.clone(player.unit),
-            x: unit.x,
-            y: unit.y,
-            cards: [...Object.keys(allCards), 'resurrect'],
-            initialTargetedUnitId: [unit.id],
-            initialTargetedPickupId: []
-          });
-        }
+          }
 
-      },
-      supportInMultiplayer: true,
-      domQueryContainer: '#menu-selected-unit'
-    },
+        },
+        supportInMultiplayer: true,
+        domQueryContainer: '#menu-selected-unit'
+      };
+    }),
     {
       label: '️✖️ Delete',
       action: ({ selectedPickupLocation }) => {
