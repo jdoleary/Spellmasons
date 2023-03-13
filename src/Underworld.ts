@@ -196,6 +196,7 @@ export default class Underworld {
     target: Unit.IUnit
   }[] = [];
   activeMods: string[] = [];
+  generatingLevel: boolean = false;
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
@@ -1740,15 +1741,28 @@ export default class Underworld {
     });
     return level;
   }
-  async generateLevelData(levelIndex: number): Promise<LevelData> {
+  async generateLevelData(levelIndex: number): Promise<void> {
     console.log('Setup: generateLevelData');
+    if (this.generatingLevel) {
+      console.warn('Setup: Shortcircuit generateLevelData; another level is already in the process of being generated');
+      return;
+    }
+    this.generatingLevel = true;
     return new Promise<LevelData>(resolve => {
       document.body?.classList.toggle('loading', true);
       // setTimeout allows the UI to refresh before locking up the CPU with
       // heavy level generation code
       setTimeout(() => {
-        resolve(this.generateLevelDataSyncronous(levelIndex));
+        if (this.lastLevelCreated?.levelIndex == levelIndex) {
+          resolve(this.lastLevelCreated);
+          console.warn('Setup: Shortcircuit generateLevelData; returning already generated level data');
+        } else {
+          resolve(this.generateLevelDataSyncronous(levelIndex));
+        }
       }, 10);
+    }).then(() => {
+      this.generatingLevel = false;
+      return;
     })
   }
   checkPickupCollisions(unit: Unit.IUnit, prediction: boolean) {
