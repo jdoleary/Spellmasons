@@ -719,13 +719,9 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
             casterPlayer: selfPlayer,
           }).then(effectState => {
             clearSpellEffectProjection(underworld, true);
-            const cachedTargetedUnitIds = effectState
-              ? effectState.targetedUnits.map(u => u.id)
-              : undefined;
             overworld.pie.sendData({
               type: MESSAGE_TYPES.SPELL,
               casterPositionAtTimeOfCast,
-              cachedTargetedUnitIds,
               x: target.x,
               y: target.y,
               cards: cardIds,
