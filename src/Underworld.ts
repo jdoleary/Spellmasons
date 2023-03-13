@@ -2350,7 +2350,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (!elUpgradePicker || !elUpgradePickerContent) {
       console.error('showUpgrades: elUpgradePicker or elUpgradePickerContent are undefined.');
     }
-    debugger;
     if (player) {
       const numberOfUpgradesToChooseFrom = 3 - player.reroll;
       if (isPerk) {
