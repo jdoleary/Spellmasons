@@ -4,8 +4,6 @@
 ---
 - Post on Epic Games Store and Itch.io
 - Improve 'Join game as player' ux, it should assume if the names match who you are joining as
-## For v1.9
-- bug: If multiple scrolls are on the ground and one is picked up the others wont trigger any new spells because the first one lets you pick them all
 ---
 - AFter perk refactor make sure summons are still viable (such as death mason's 1200 mana)
 - Current changes make it so you could potentially get stuck with endedTurn set to true if there's a desync?
@@ -16,9 +14,6 @@
 - UI Feedback for spawning player while cast is in progress
 - was able to create a desync with pickups (error and portal sticking around) when moving from one multiplayer game to another
 ## Priorities
-- Address crashes due to too many units due to summoners
-- Balance Perks
-- Address Desync issues
 - State machine for turn_phases
 
 
