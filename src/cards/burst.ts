@@ -1,7 +1,7 @@
 import * as Unit from '../entity/Unit';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
-import { Spell } from './index';
+import { refundLastSpell, Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { Vec2 } from '../jmath/Vec';
 import { distance, lerp } from '../jmath/math';
@@ -40,12 +40,18 @@ const spell: Spell = {
         // .filter: only target living units
         const targets = state.targetedUnits.filter(u => u.alive)
         if (!prediction && !globalThis.headless) {
-          playDefaultSpellSFX(card, prediction);
-          for (let unit of targets) {
-            const damage = calculateDamage(quantity, state.casterUnit, state.casterUnit.attackRange, unit);
-            Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
-            // Animate:
-            makeBurstParticles(unit, lerp(0.1, 1, damage / maxDamage), prediction, resolve);
+          if (targets.length) {
+            playDefaultSpellSFX(card, prediction);
+            for (let unit of targets) {
+              const damage = calculateDamage(quantity, state.casterUnit, state.casterUnit.attackRange, unit);
+              Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
+              // Animate:
+              makeBurstParticles(unit, lerp(0.1, 1, damage / maxDamage), prediction, resolve);
+            }
+          } else {
+            // Prevent timeout if burst is cast on no living units
+            refundLastSpell(state, prediction);
+            resolve();
           }
         } else {
           for (let unit of targets) {
