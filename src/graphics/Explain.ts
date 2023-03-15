@@ -1,4 +1,4 @@
-import { slashCardId } from '../cards/slash';
+import { allUnits } from '../entity/units';
 import { elTutorialChecklistInner } from '../HTMLElements';
 import * as storage from '../storage';
 import Jprompt, { PromptArgs } from './Jprompt';
@@ -319,6 +319,11 @@ export function tutorialCompleteTask(key: keyof TutorialChecklist, condition?: (
 globalThis.skipTutorial = async () => {
     const yesSkip = await Jprompt({ text: 'skip tutorial detail', yesText: 'Yes', noBtnText: 'Cancel', noBtnKey: 'Escape', forceShow: true })
     if (yesSkip) {
+        // Set all enemies as encountered:
+        globalThis.enemyEncountered = Object.keys(allUnits);
+        storage.set(storage.ENEMY_ENCOUNTERED_STORAGE_KEY, JSON.stringify(globalThis.enemyEncountered));
+
+        // Complete all tutorial tasks
         for (let task of Object.keys(tutorialChecklist)) {
             tutorialCompleteTask(task as keyof TutorialChecklist);
         }

@@ -5,9 +5,7 @@ me and my friends tried playing together and it was alot of fun working together
 Any time. The wall enemies and repicking all skills happen fairly often, the game reset and wrong level splash has only happened to us twice
 - Jacobzeba01 — Today at 3:04 AM
 Not sure if it was mentioned, but I found a bug in multiplayer where if you collect a potion and end your turn standing where the potion you collected was, you end up collecting the potion again next turn, that is what I have gathered at least, I will see if I can do it again to be sure.
-
 EDIT: seems to have only happened once, maybe a connection issue on my end, I'll keep an eye out 
-- Madgod - Separate, if you select "reset tutorial"  from the menu, then start a game, the  open the menu and select 'disable tutorial' at a later point cause its annoying; every time you start a new round it will still dispay the tutorial information for monsters you 'havent see yet'. Not sure if thats technically a bug or not. Have a video for ref if wanted.
 - see Madgod's videos https://discord.com/channels/1032294536640200766/1084206357072314480/1084979969417027715
 - Sometimes, somehow people get sent back to the beginning of a run. STEAM general.catallion [has Spellmasons] 15 hours ago 
 - STEAM: Moth [has Spellmasons] Mar 11 @ 7:33pm
