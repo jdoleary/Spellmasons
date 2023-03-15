@@ -804,9 +804,13 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
           style: { fill: colors.errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
         })
         console.log('Spell could not be cast, insufficient mana');
-        // Return to prevent player from mana scamming
-        return;
       }
+      // Return to prevent player from mana scamming
+      // Note: this return must come OUTSIDE of the globalThis.player == caster check
+      // which is used only to show an error message for the player who attempted to cast,
+      // the return needs to run on ALL clients including the server so that the player doesn't
+      // cast when they have insufficient mana
+      return;
     }
   }
 
