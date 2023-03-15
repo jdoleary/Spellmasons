@@ -189,7 +189,7 @@ ${explainUpdateText}
     }
   };
   pie.onData = d => onData(d, overworld);
-  pie.onError = ({ message }: { message: any }) => console.error('wsPie Error:', message);
+  pie.onError = ({ message }: { message: any }) => console.warn('wsPie Error:', message);
   pie.onClientPresenceChanged = c => onClientPresenceChanged(c, overworld);
   pie.onLatency = (l) => {
     if (globalThis.latencyPanel) {
