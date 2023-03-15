@@ -149,10 +149,9 @@ export function create({ pos, pickupSource, idOverride }:
     // Right now red portal and cursed mana potion are the only pickup that uses an emitter;
     // however if that changes in the future this should be refactored so
     // that there isn't a special case inside of Pickup.create
-    assignEmitter(self, RED_PORTAL_JID);
+    assignEmitter(self, RED_PORTAL_JID, prediction);
   } else if (name == CURSED_MANA_POTION) {
-    assignEmitter(self, CURSED_MANA_POTION);
-
+    assignEmitter(self, CURSED_MANA_POTION, prediction);
   }
 
   if (turnsLeftToGrab) {
@@ -236,11 +235,15 @@ export function create({ pos, pickupSource, idOverride }:
 
   return self;
 }
-function assignEmitter(pickup: IPickup, emitterId: string) {
+function assignEmitter(pickup: IPickup, emitterId: string, prediction: boolean) {
+  if (prediction || globalThis.headless) {
+    // Don't show if just a prediction
+    return;
+  }
   if (emitterId == RED_PORTAL_JID) {
-    pickup.emitter = makeRedPortal(pickup, false);
+    pickup.emitter = makeRedPortal(pickup, prediction);
   } else if (emitterId == CURSED_MANA_POTION) {
-    pickup.emitter = makeCursedEmitter(pickup, false);
+    pickup.emitter = makeCursedEmitter(pickup, prediction);
   } else {
     console.error('Attempting to assignEmitter with unkown id:', emitterId);
   }
