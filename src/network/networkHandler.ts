@@ -1057,7 +1057,7 @@ Current game version: ${globalThis.SPELLMASONS_PACKAGE_VERSION}`,
         if (overworld.underworld.players.some(p => p.isSpawned)) {
           console.log('Cannot load multiplayer game over a game that is ongoing.')
           Jprompt({
-            text: 'You may only load a multiplayer game in a lobby where no players have spawned in yetb.',
+            text: 'You cannot overwrite an ongoing game with a saved game - if you wish to load a multiplayer game, do so from a new lobby.',
             yesText: 'Okay',
             forceShow: true
           });
