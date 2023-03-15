@@ -4,6 +4,7 @@
 - Test Host Local Server, Host via Docker (run `testDockerImage.sh`)
 - Test tutorial
 - Test Hotseat multiplayer basics
+- Test hosting LAN server from Electron build
 - Test liquid
 - Test rerolling spells and perks
 - Test all pickups in singleplayer

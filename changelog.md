@@ -1,3 +1,13 @@
+## 3.13.2023 Spellmasons Update v1.10.1
+- fix: Target Arrow allowing infinite cast range
+    - Thanks to hexingMagus from Discord for reporting this
+- fix: Potions triggering effect multiple times
+    - Thanks Jacobzeba01 and Madgod from Discord for reporting this
+- fix: Issue where multiple levels would be generated simultaneously resulting in enemies appearing out of bounds
+    - Thanks Jacobzeba01 for reporting this
+- fix: Prevent Ally Priest from adding Summoning Sickness to resurrected player unit which made the player lose their next turn
+    - Thanks Firecat from Discord for reporting this
+- fix: Prevent Burst from timing out if cast on only dead units
 ## 3.10.2023 Spellmasons Update v1.9.1
 
 - content: Restore contaminate

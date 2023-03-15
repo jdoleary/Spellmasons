@@ -1,3 +1,23 @@
+-  general.catallion [has Spellmasons] Mar 12 @ 10:03pm
+really fun, but the co-op has major bugs
+me and my friends tried playing together and it was alot of fun working together to absolutely ruin the enemies, but enemies and drops were de-syncing, not everyone was getting spells when a scroll was picked up, and occasionally the game/server breaks and we get sent to the beginning of the run again. 
+- Madgod — 03/13/2023 11:01 PM
+Any time. The wall enemies and repicking all skills happen fairly often, the game reset and wrong level splash has only happened to us twice
+- Jacobzeba01 — Today at 3:04 AM
+Not sure if it was mentioned, but I found a bug in multiplayer where if you collect a potion and end your turn standing where the potion you collected was, you end up collecting the potion again next turn, that is what I have gathered at least, I will see if I can do it again to be sure.
+
+EDIT: seems to have only happened once, maybe a connection issue on my end, I'll keep an eye out 
+- Madgod — Today at 12:16 AM
+Connect into last will, will sometimes trigger the cursed potion smoke effect on a mob before activating the spell, and that mob will always drop a cursed potion from its last will
+- Madgod - Separate, if you select "reset tutorial"  from the menu, then start a game, the  open the menu and select 'disable tutorial' at a later point cause its annoying; every time you start a new round it will still dispay the tutorial information for monsters you 'havent see yet'. Not sure if thats technically a bug or not. Have a video for ref if wanted.
+- see Madgod's videos https://discord.com/channels/1032294536640200766/1084206357072314480/1084979969417027715
+- Sometimes, somehow people get sent back to the beginning of a run. STEAM general.catallion [has Spellmasons] 15 hours ago 
+- STEAM: Moth [has Spellmasons] Mar 11 @ 7:33pm
+No upgrades in co-op
+Don't know if this is the right place to post it, but my friend and I were playing co-op and after the third of fourth level my friend(he was the host) **just stopped receiving upgrades.** Anyone know anything about it?
+His upgrades: https://i.imgur.com/sQoECQX.png
+My upgrades: https://i.imgur.com/yvyQpJn.png	
+
 - hexingMagus — Today at 12:14 AM
 When you use the new arrow target spell, following it with one of the shape targeting spells allows you to place the shape anywhere on the map, including through walls unless the arrow would hit a creature, in which case the shape originates there.
 the arrow target also refunds incorrectly, when you cast arrow target and other spells on it and you miss the arrow, it will refund the arrow but none of the other spells. if your subsequent spells still have effects (like with the above bug) then you get back 10 mana for free and the spell cost won't go up.

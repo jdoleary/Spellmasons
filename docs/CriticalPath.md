@@ -1,4 +1,10 @@
 # Critical Path
+## Critical bugs:
+- sJacob — Today at 3:25 PM
+im getting some level skipping again not near as bad as last time, ill do some more runs and try to record it this time/ from 1 to 3 to 9
+---
+- Prevent going to the next level until casting is done
+---
 - I was able to induce a desync when testing all category spells.  The player's location was visually different than it was in state
 ## v1.10
 

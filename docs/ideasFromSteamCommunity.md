@@ -1,3 +1,6 @@
+HPStarr — Yesterday at 4:33 PM
+It would be cool having calamities which either buff enemies, or add more of them
+---
 MuditaMan — Yesterday at 8:15 PM
 It would be cool to have different options to change your run before you start. I have a specific idea in mind for multiplayer: players cannot find spells that others already have.
 
