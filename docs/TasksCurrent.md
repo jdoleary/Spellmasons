@@ -1,4 +1,5 @@
 
+- Bug: Blood curse doesn't load in properly.  I cursed a golem and it had 40 health when saved, then I load and it has 20 health
 - i18n: Cannot load multiplayer game over a game that is ongoing
 - Got "Back to Lobby" menu and when I returned and resumed game then I was able to see the save button in multiplayer menu.
 (menu desync)
@@ -23,6 +24,7 @@ No upgrades in co-op
 Don't know if this is the right place to post it, but my friend and I were playing co-op and after the third of fourth level my friend(he was the host) **just stopped receiving upgrades.** Anyone know anything about it?
 His upgrades: https://i.imgur.com/sQoECQX.png
 My upgrades: https://i.imgur.com/yvyQpJn.png	
+NOTE: He's missing PERKS not cards
 
 - Jacobzeba01 — Today at 2:20 AM
 That's not supposed to be there, enemies and items seem to be appearing outside the map
