@@ -58,6 +58,14 @@ function connect_to_wsPie_server(wsUri: string | undefined, overworld: Overworld
         }
         if (view == View.Game) {
           setView(View.Disconnected);
+          // pie IS PieClient because wsPieSetup is only called in the context of the client
+          if (!globalThis.headless) {
+            if (globalThis.save) {
+              const backupSaveName = `backup ${(overworld.pie as PieClient).currentRoomInfo?.name || ''}`
+              globalThis.save(`${Date.now().toString()}-${backupSaveName}`);
+              Jprompt({ text: 'Game auto saved: "' + backupSaveName + '"', yesText: 'Okay', forceShow: true });
+            }
+          }
           if (overworld.underworld) {
             // Allow forcing receiving a new init_game_state since after disconnect
             // a user will be out of sync with the server
