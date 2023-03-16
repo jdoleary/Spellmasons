@@ -1,3 +1,10 @@
+
+- i18n: Cannot load multiplayer game over a game that is ongoing
+- Got "Back to Lobby" menu and when I returned and resumed game then I was able to see the save button in multiplayer menu.
+(menu desync)
+
+- K̸̜̋ä̷͓́r̵̖͌p̴͙̚ḯ̵̖m̶̨̂u̴̫̓s̴̙͋ — Today at 3:50 PM
+The person I was playing with said he would receive number messages showing he lost Mana when we started the lvl which caused him to have only his normal amount plus whatever he gained from stuff like x Mana per map. Whatever caused it was basically acting as if he was already past turn 1 I suppose.
 -  general.catallion [has Spellmasons] Mar 12 @ 10:03pm
 really fun, but the co-op has major bugs
 me and my friends tried playing together and it was alot of fun working together to absolutely ruin the enemies, but enemies and drops were de-syncing, not everyone was getting spells when a scroll was picked up, and occasionally the game/server breaks and we get sent to the beginning of the run again. 
@@ -7,16 +14,16 @@ Any time. The wall enemies and repicking all skills happen fairly often, the gam
 Not sure if it was mentioned, but I found a bug in multiplayer where if you collect a potion and end your turn standing where the potion you collected was, you end up collecting the potion again next turn, that is what I have gathered at least, I will see if I can do it again to be sure.
 EDIT: seems to have only happened once, maybe a connection issue on my end, I'll keep an eye out 
 - see Madgod's videos https://discord.com/channels/1032294536640200766/1084206357072314480/1084979969417027715
+
 - Sometimes, somehow people get sent back to the beginning of a run. STEAM general.catallion [has Spellmasons] 15 hours ago 
+  - This can happen if the server crashes and reboots I think
+
 - STEAM: Moth [has Spellmasons] Mar 11 @ 7:33pm
 No upgrades in co-op
 Don't know if this is the right place to post it, but my friend and I were playing co-op and after the third of fourth level my friend(he was the host) **just stopped receiving upgrades.** Anyone know anything about it?
 His upgrades: https://i.imgur.com/sQoECQX.png
 My upgrades: https://i.imgur.com/yvyQpJn.png	
 
-- hexingMagus — Today at 12:14 AM
-When you use the new arrow target spell, following it with one of the shape targeting spells allows you to place the shape anywhere on the map, including through walls unless the arrow would hit a creature, in which case the shape originates there.
-the arrow target also refunds incorrectly, when you cast arrow target and other spells on it and you miss the arrow, it will refund the arrow but none of the other spells. if your subsequent spells still have effects (like with the above bug) then you get back 10 mana for free and the spell cost won't go up.
 - Jacobzeba01 — Today at 2:20 AM
 That's not supposed to be there, enemies and items seem to be appearing outside the map
 

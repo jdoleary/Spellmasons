@@ -3,6 +3,7 @@
     - Test mods
 - Test Host Local Server, Host via Docker (run `testDockerImage.sh`)
 - Test tutorial
+- Test loading a saved multiplayer game
 - Test Hotseat multiplayer basics
 - Test hosting LAN server from Electron build
 - Test liquid
