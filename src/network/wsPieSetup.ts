@@ -42,13 +42,9 @@ function connect_to_wsPie_server(wsUri: string | undefined, overworld: Overworld
         console.log("Pie: Successfully connected to PieServer.")
         // If connection is restored after unexpected disconnection
         if (view == View.Disconnected) {
-          if (globalThis.player) {
-            // If you're already in a game, set the view back to the game
-            setView(View.Game);
-          } else {
-            // If you're not in the game, set the view back to the menu
-            setView(View.Menu);
-          }
+          // Always return to the menu on a disconnect so that the player can choose to reload the auto save
+          // if the disconnect was due to the server
+          setView(View.Menu);
         }
         resolve();
       } else {
@@ -60,6 +56,12 @@ function connect_to_wsPie_server(wsUri: string | undefined, overworld: Overworld
           setView(View.Disconnected);
           // pie IS PieClient because wsPieSetup is only called in the context of the client
           if (!globalThis.headless) {
+            // Change menu state so that when player reconnects they will be in the lobby
+            // so they can choose to reload the backup save
+            if (globalThis.player) {
+              globalThis.setMenu?.('MULTIPLAYER_SERVER_CHOOSER');
+              globalThis.player.lobbyReady = false;
+            }
             if (globalThis.save) {
               const backupSaveName = `backup ${(overworld.pie as PieClient).currentRoomInfo?.name || ''}`
               globalThis.save(`${Date.now().toString()}-${backupSaveName}`, true);
