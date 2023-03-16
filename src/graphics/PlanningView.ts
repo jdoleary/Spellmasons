@@ -814,9 +814,7 @@ export function updateTooltipContent(underworld: Underworld) {
         if (globalThis.selectedUnit.unitType === UnitType.PLAYER_CONTROLLED) {
           const player = underworld.players.find((p) => p.unit === globalThis.selectedUnit);
           if (player) {
-            playerSpecificInfo =
-              '<h3>Cards</h3>' +
-              player.cards.filter(x => x !== '').join(', ');
+            playerSpecificInfo = '';
 
             playerSpecificInfo += `<br/><h3>${i18n('Perks')}</h3>`;
             const everyLevel = player.attributePerks.filter(p => p.when == 'everyLevel');
@@ -840,6 +838,9 @@ export function updateTooltipContent(underworld: Underworld) {
 
               playerSpecificInfo += perkString + '\n';
             }
+            playerSpecificInfo +=
+              '<h3>Spells</h3>' +
+              player.inventory.filter(x => x !== '').join(', ');
 
           } else {
             console.error('Tooltip: globalThis.selectedUnit is player controlled but does not exist in underworld.players array.');
