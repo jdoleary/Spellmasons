@@ -39,9 +39,9 @@ const unit: UnitSource = {
     damage: 'poisonerHurt',
     death: 'poisonerDeath'
   },
-  action: async (unit: Unit.IUnit, attackTargets, underworld) => {
-    const chosenUnit = attackTargets[0];
-    if (chosenUnit) {
+  action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
+    const chosenUnit = attackTargets && attackTargets[0];
+    if (chosenUnit && canAttackTarget) {
       unit.mana - unit.manaCostToCast;
       // Poisoners attack or move, not both; so clear their existing path
       unit.path = undefined;
@@ -66,20 +66,18 @@ const unit: UnitSource = {
 
       });
     } else {
-      const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
-      if (closestEnemy) {
-        const distanceToEnemy = math.distance(unit, closestEnemy);
+      if (chosenUnit) {
+        const distanceToEnemy = math.distance(unit, chosenUnit);
         // The following is a hacky way to make them not move too close to the enemy
         unit.stamina = Math.min(unit.stamina, distanceToEnemy - config.COLLISION_MESH_RADIUS);
-        await Unit.moveTowards(unit, closestEnemy, underworld);
+        await Unit.moveTowards(unit, chosenUnit, underworld);
       }
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-    const enemies = Unit.livingUnitsInDifferentFaction(unit, underworld);
-    const target = enemies[0];
-    if (target && Unit.inRange(unit, target) && unit.mana >= unit.manaCostToCast) {
-      return [target];
+    const closestUnit = Unit.findClosestUnitInDifferentFaction(unit, underworld);
+    if (closestUnit) {
+      return [closestUnit];
     } else {
       return [];
     }

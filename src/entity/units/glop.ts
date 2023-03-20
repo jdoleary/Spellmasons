@@ -47,7 +47,7 @@ const unit: UnitSource = {
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     const attackTarget = attackTargets && attackTargets[0];
     // Attack
-    if (attackTarget && canAttackTarget && unit.mana >= unit.manaCostToCast) {
+    if (attackTarget && canAttackTarget) {
       unit.mana -= unit.manaCostToCast;
       // Attack or move, not both; so clear their existing path
       unit.path = undefined;
@@ -68,12 +68,13 @@ const unit: UnitSource = {
       });
     } else {
       // Movement:
-      const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
-      if (closestEnemy) {
-        const distanceToEnemy = math.distance(unit, closestEnemy);
+      if (attackTarget) {
+        const distanceToEnemy = math.distance(unit, attackTarget);
         // The following is a hacky way to make them not move too close to the enemy
         unit.stamina = Math.min(unit.stamina, distanceToEnemy - config.COLLISION_MESH_RADIUS);
-        await Unit.moveTowards(unit, closestEnemy, underworld);
+        await Unit.moveTowards(unit, attackTarget, underworld);
+      } else {
+        console.trace('Glop has no target to move towards')
       }
     }
   },

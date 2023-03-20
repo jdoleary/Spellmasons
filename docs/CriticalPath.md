@@ -4,10 +4,6 @@
 found a bug, if you hover your unspawned character over the map (to choose a spot) and its near the effect radius of another players attack, you will take damage before youve even spawned
 i.e if your friend bloats and pull enemies to a spot and they die and explode, and you are hovering over that, youll take the boat damage beforew youve even spawned
 - Remove "_" in mana_steal copy
-- Expresso depresso — Yesterday at 12:10 AM
-It was early game against a naturally spawned poisoner with no debuffs. I put down a decoy and the poisoner walked up to it but wouldn't attack the decoy. The decoy had also not been revived or buffed in any way
-Not sure if this has anything to do with the poisoner being friendly like supd reported my friend and I couldn't test it due to the poisoner being focused on the decoy 
-Attacking the poisoner also had no effect on its behavior 
 - See modgod's recordings
 - calamity choice can get stuck on the same choice even though you haven't used a spell (ever?)
   - maybe it's due to multiplayer
