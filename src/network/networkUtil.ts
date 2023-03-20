@@ -16,6 +16,9 @@ export interface ClientPresenceChangedArgs {
 }
 export function onClientPresenceChanged(o: ClientPresenceChangedArgs, overworld: Overworld) {
     console.log('clientPresenceChanged', o);
+    // clientPresenceChanged message is only ever received if the current client is in a room
+    // The client will also receive one when they first join a room.
+    globalThis.setMenuIsInRoom?.(true);
     // Ensure each client corresponds with a Player instance
     ensureAllClientsHaveAssociatedPlayers(overworld, o.clients);
     if (overworld.underworld) {

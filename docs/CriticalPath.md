@@ -1,4 +1,9 @@
 # Critical Path
+
+# v1.11
+- Hotseat is bugged, only one player can enter the portal https://steamcommunity.com/app/1618380/discussions/0/3819654644922993969/
+
+---
 - using split on yourself also sometimes permanently reduces your mana going forward, it wont reset after the round ends 
 - Madgod — Yesterday at 11:56 PM
 found a bug, if you hover your unspawned character over the map (to choose a spot) and its near the effect radius of another players attack, you will take damage before youve even spawned

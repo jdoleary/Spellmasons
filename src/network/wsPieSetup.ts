@@ -51,6 +51,8 @@ function connect_to_wsPie_server(wsUri: string | undefined, overworld: Overworld
         }
         resolve();
       } else {
+        // On disconnect, set menu `isInRoom` state to false.  It will be set back to true if join succeeds
+        globalThis.setMenuIsInRoom?.(false);
         const elVersionInfoHeadless = document.getElementById('version-info-headless-server')
         if (elVersionInfoHeadless) {
           elVersionInfoHeadless.innerHTML = '';
@@ -118,7 +120,7 @@ function defaultRoomInfo(_room_info = {}): Room {
   return room_info;
 }
 
-export function joinRoom(overworld: Overworld, _room_info = {}): Promise<void> {
+export function joinRoom(overworld: Overworld, _room_info = {}, isHosting = false): Promise<void> {
   if (!overworld.pie) {
     console.error('Could not join room, pie instance is undefined');
     return Promise.reject();
@@ -139,7 +141,7 @@ export function joinRoom(overworld: Overworld, _room_info = {}): Promise<void> {
     underworld.activeMods = globalThis.activeMods || [];
     console.log('Mods: set active mods', underworld.activeMods);
   }
-  return pie.joinRoom(room_info, true).then(() => {
+  return pie.joinRoom(room_info, isHosting).then(() => {
     console.log('Pie: You are now in the room', JSON.stringify(room_info, null, 2));
     // Useful for development to get into the game quickly
     let quickloadName = storage.get('quickload');
@@ -213,7 +215,10 @@ ${explainUpdateText}
     }
   };
   pie.onData = d => onData(d, overworld);
-  pie.onError = ({ message }: { message: any }) => console.warn('wsPie Error:', message);
+  pie.onError = ({ message }: { message: any }) => {
+    console.warn('wsPie Error:', message);
+    Jprompt({ text: 'Error communicating with server.', yesText: 'Okay' });
+  }
   pie.onClientPresenceChanged = c => onClientPresenceChanged(c, overworld);
   pie.onLatency = (l) => {
     if (globalThis.latencyPanel) {
@@ -258,7 +263,7 @@ export function setupPieAndUnderworld() {
       });
     }
 
-    globalThis.joinRoom = room_info => joinRoom(overworld, room_info);
+    globalThis.joinRoom = (room_info, isHosting) => joinRoom(overworld, room_info, isHosting);
     function connectToSingleplayer() {
       document.body?.classList.toggle('loading', true);
       return new Promise<void>((resolve) => {

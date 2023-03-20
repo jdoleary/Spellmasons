@@ -24,7 +24,7 @@ declare global {
     var player: Player.IPlayer | undefined;
     // Globals needed for Golems-menu
     var connect_to_wsPie_server: undefined | ((wsUri?: string) => Promise<void>);
-    var joinRoom: undefined | ((_room_info: any) => (undefined | Promise<unknown>));
+    var joinRoom: undefined | ((_room_info: any, isHosting: boolean) => (undefined | Promise<unknown>));
     var setupPixiPromise: undefined | Promise<void>;
     var pixiPromiseResolver: undefined | (() => void);
     // Svelte menu handles
@@ -249,4 +249,7 @@ declare global {
     // Denotes if the user intended to disconnect from the server or if it was unexpected.
     // Unexpected disconnects should result in a change to View.Disconnected
     var intentionalDisconnect: boolean | undefined;
+    // Defined in Golems-menu repo
+    // Allows Golems repo to modify isInRoom store state of menu
+    var setMenuIsInRoom: undefined | ((inRoom: boolean) => void);
 }
