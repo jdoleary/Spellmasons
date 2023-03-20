@@ -2479,8 +2479,13 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     );
     const areAllLivingPlayersInPortal =
       livingSpawnedPlayers.filter(Player.inPortal).length === livingSpawnedPlayers.length;
+
+    // If any player enters a portal during hotseat multiplayer just go to the next level, don't make all players
+    // enter the portal.  This prevents a LOT of weird conditions that would make the game get stuck in a state it
+    // can't get out of
+    const hotseatOverride = numberOfHotseatPlayers > 1 && livingSpawnedPlayers.some(Player.inPortal);
     // Advance the level if there are living players and they all are in the portal:
-    if (livingSpawnedPlayers.length && areAllLivingPlayersInPortal) {
+    if (hotseatOverride || (livingSpawnedPlayers.length && areAllLivingPlayersInPortal)) {
       console.log('All living, spawned players are inPortal, go to the next level');
       // Invoke initLevel within a timeout so that this function
       // doesn't have to wait for level generation to complete before

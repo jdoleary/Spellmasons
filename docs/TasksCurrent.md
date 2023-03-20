@@ -1,10 +1,8 @@
 
 ## QA 1.11
-- is it saving too many copies on network disconnect?
+- is it saving too many copies of saved game on network disconnect?
 - bug in Hotseat multiplayer where player 1 keeps getting to choose spells every time it's his turn (3 players)
 - bug in hotseat multiplayer, going to menu then back to lobby makes me stuck in lobby because I can't ready up everyone (3 players)
-- bug hotseat - if you spawn after player one's portal it doesn't spawn a portal for you
-- bug hotseatt, should skip players turn if they are portaled
 ---
 - Spud Bud — Today at 1:13 PM
 We did test that a little. He would walk to stand on top of my friend and just stand there if he didn't move, without attacking. If I walked into his attack range, he would attack me on his turn
