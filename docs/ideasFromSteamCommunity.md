@@ -1,3 +1,13 @@
+scojbo — Today at 3:40 PM
+So, I finally got a group of friends to play and I gotta say the game feels great right now. However, it is EASIER than it used to be, because flat scaling mana means you ramp to 80 or 100 mana faster than you previously did.  It means that with a couple of players its ezpz to chokepoint and control the entire map with a few well placed AOE's.
+
+The real difficulty comes after the spell mason when cataclysms happen. But even then it feels a bit off, because the difficulty more stems from your own restrictions than from the enemies themselves. I know someone else suggested some enemy-buff cataclysms which would be great!
+
+My suggestion is to add a couple new categories of enemies to the game.  Perhaps some fragile, immobile towers than would shoot all players from literally anywhere on the map (but very low damage).  Or other towers that drain you for 10% of your mana per turn until destroyed.  This would incentivize more proactive play.
+Or maybe some enemies that gave boosts to other enemies in a zone around them while they are alive? Like movement buffs, or anti-crowd-control buffs?  This would make multiplayer a lot more engaging because players could specialize towards safeguarding the team from specific threats.  Currently, I use the same combo in every room because every enemy handles the same way (pull them into a big group and AOE them all at once).  It would be awesome if specific enemies encouraged different tactics!
+
+Once again, I just want to say I love the game as is, please understand this criticism is not a rebuke. I've bought this game for 5 of my friends cuz its incredible!
+---
 HPStarr — Yesterday at 4:33 PM
 It would be cool having calamities which either buff enemies, or add more of them
 ---

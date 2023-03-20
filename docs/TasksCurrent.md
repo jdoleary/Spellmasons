@@ -1,4 +1,6 @@
 
+- Spud Bud — Today at 1:13 PM
+We did test that a little. He would walk to stand on top of my friend and just stand there if he didn't move, without attacking. If I walked into his attack range, he would attack me on his turn
 - Bug: Blood curse doesn't load in properly.  I cursed a golem and it had 40 health when saved, then I load and it has 20 health
 - i18n: Cannot load multiplayer game over a game that is ongoing
 - Got "Back to Lobby" menu and when I returned and resumed game then I was able to see the save button in multiplayer menu.
