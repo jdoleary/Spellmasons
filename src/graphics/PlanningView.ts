@@ -853,10 +853,10 @@ export function updateTooltipContent(underworld: Underworld) {
           const imageSrc = Unit.getExplainPathForUnitId(unitSource.id);
           if (!elInspectorTooltipImage.src.endsWith(imageSrc)) {
             elInspectorTooltipImage.src = imageSrc;
-            // on error image is hidden so set it back to block whenever it is changed.
-            // the onError handler prevents the broken image icon from showing
-            elInspectorTooltipImage.style.display = "block";
           }
+          // on error image is hidden so set it back to block whenever it is changed.
+          // the onError handler prevents the broken image icon from showing
+          elInspectorTooltipImage.style.display = "block";
           const extraText = `
 ${modifiersToText(globalThis.selectedUnit.modifiers)}
 ${unitSource.unitProps.manaCostToCast && unitSource.unitProps.manaCostToCast > 0 ? `Mana cost to cast: ${unitSource.unitProps.manaCostToCast}` : ''}
@@ -880,6 +880,8 @@ ${playerSpecificInfo}
       break;
     case "pickup":
       if (globalThis.selectedPickup) {
+        // Hide tooltip since pickups don't yet have tooltip images
+        elInspectorTooltipImage.style.display = 'none';
         text += `\
 <h1>${i18n(globalThis.selectedPickup.name)}</h1>
 <hr/>
