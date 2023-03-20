@@ -2241,6 +2241,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         await runPredictions(this);
         // Show upgrades if player has received an upgrade
         this.showUpgrades();
+        this.checkIfShouldSpawnPortal();
 
         // Announce new players' turn
         if (globalThis.player && globalThis.player.name) {
@@ -3141,7 +3142,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         if (!portalsAlreadySpawned) {
           for (let playerUnit of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
             const portalSpawnLocation = this.findValidSpawn(playerUnit, 4) || playerUnit;
-            Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup }, this, false);
+            if (!isOutOfBounds(portalSpawnLocation, this)) {
+              Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup }, this, false);
+            } else {
+              // If a pickup is attempted to be spawned for an unspawned player this if check prevents it from being spawned out of bounds
+              // and the next invokation of checkIfShouldSpawnPortal will spawn it instead.
+            }
             // Give all player units infinite stamina when portal spawns for convenience.
             playerUnit.stamina = Number.POSITIVE_INFINITY;
             // Give all players max health and mana (it will be reset anyway when they are reset for the next level
