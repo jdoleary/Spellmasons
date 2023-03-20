@@ -4,13 +4,6 @@
 found a bug, if you hover your unspawned character over the map (to choose a spot) and its near the effect radius of another players attack, you will take damage before youve even spawned
 i.e if your friend bloats and pull enemies to a spot and they die and explode, and you are hovering over that, youll take the boat damage beforew youve even spawned
 - See modgod's recordings
-- calamity choice can get stuck on the same choice even though you haven't used a spell (ever?)
-  - maybe it's due to multiplayer
-  - Madgod — Today at 12:53 AM
-calamity choice needs to be reworked so that you get a new choice every time, ive had mana_steal for 5 choices in a row and i havent used it once all game
-- cursed mana potion shows blood golem gif
-  - health potion has golem gif
-  - they're just keeping the last gif that was up
 - Separate Joining a Game from Hosting a Game so that server crashes and reconnects can be distinguished from client disconnect and reconnect
   - Client reconnect should go right back to View.Game
   - whereas server disconnect should save the game and go to lobby.

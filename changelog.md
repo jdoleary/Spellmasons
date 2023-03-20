@@ -1,3 +1,5 @@
+- todo: thank Madgod for reporting  calamity miscalculation in multiplayer
+
 ## 3.13.2023 Spellmasons Update v1.10.1
 - fix: Target Arrow allowing infinite cast range
     - Thanks to hexingMagus from Discord for reporting this
