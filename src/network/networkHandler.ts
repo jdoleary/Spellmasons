@@ -955,11 +955,14 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
 
   globalThis.getAllSaveFiles = () => Object.keys(localStorage).filter(x => x.startsWith(globalThis.savePrefix)).map(x => x.substring(globalThis.savePrefix.length));
 
-  globalThis.save = async (title: string, forceOverwrite?: boolean) => {
+  // Returns '' if save is successful,
+  // otherwise returns error message
+  globalThis.save = async (title: string, forceOverwrite?: boolean): Promise<string> => {
     const { underworld } = overworld;
     if (!underworld) {
-      console.error('Cannot save game, underworld does not exist');
-      return;
+      const err = 'Cannot save game, underworld does not exist';
+      console.error(err);
+      return err;
     }
     // Prompt overwrite, don't allow for saving multiple saves with the same name
     if (getAllSaveFiles && !forceOverwrite) {
@@ -980,7 +983,7 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
           });
         } else {
           console.log('Save cancelled');
-          return;
+          return 'Save Cancelled';
         }
 
       }
@@ -1001,9 +1004,12 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
         globalThis.savePrefix + title,
         JSON.stringify(saveObject),
       );
+      // Empty string means "No error, save successful"
+      return '';
     } catch (e) {
       console.log('Failed to save', saveObject);
       console.error(e);
+      return 'Failed to save';
     }
   };
   globalThis.deleteSave = async (title: string) => {
