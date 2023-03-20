@@ -1113,6 +1113,7 @@ Current game version: ${globalThis.SPELLMASONS_PACKAGE_VERSION}`,
     clearLastNonMenuView();
     // Ensure the menu is open
     setView(View.Menu);
+    intentionalDisconnect = true;
     return typeGuardHostApp(overworld.pie) ? Promise.resolve() : overworld.pie.disconnect();
   }
 }

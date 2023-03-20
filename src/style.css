@@ -1357,7 +1357,7 @@ body.view-Disconnected #websocketpie-connection-status {
 }
 
 body.view-Menu #websocketpie-connection-status {
-  display: none;
+  display: block;
 }
 
 /* Show that camera is being dragged with the mouse */

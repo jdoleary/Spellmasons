@@ -97,7 +97,10 @@ declare global {
     var closeMenu: undefined | (() => void);
     // Sets which route of the menu is available; note, the view must also
     // be set to Menu in order to SEE the menu
+    // Set in golem-menu repo
     var setMenu: undefined | ((route: string) => void);
+    // Set in golem-menu repo, returns the current menu route
+    var getMenuRoute: undefined | (() => string);
     // Used to tell the menu if a game is ongoing or not
     var updateInGameMenuStatus: undefined | (() => void);
     // The menu will call this if the user chooses to skip the tutorial
@@ -310,4 +313,7 @@ declare global {
     // another ally is casting
     // NOT FOR HEADLESS
     var awaitingSpawn: boolean | undefined;
+    // Denotes if the user intended to disconnect from the server or if it was unexpected.
+    // Unexpected disconnects should result in a change to View.Disconnected
+    var intentionalDisconnect: boolean | undefined;
 }

@@ -39,6 +39,9 @@ function connect_to_wsPie_server(wsUri: string | undefined, overworld: Overworld
     pie.onConnectInfo = (o) => {
       console.log('onConnectInfo', o);
       if (o.connected) {
+        // Reset intentionalDisconnect because now that we are connected, if it disconnects without intentionalDisconnect being set to true,
+        // it should show the View.Disconnect view.
+        intentionalDisconnect = false;
         console.log("Pie: Successfully connected to PieServer.")
         // If connection is restored after unexpected disconnection
         if (view == View.Disconnected) {
@@ -52,27 +55,37 @@ function connect_to_wsPie_server(wsUri: string | undefined, overworld: Overworld
         if (elVersionInfoHeadless) {
           elVersionInfoHeadless.innerHTML = '';
         }
-        if (view == View.Game) {
+        // !intentionalDisconnect ensures it will only go to the View.Disconnected if it was unexpectedly disconnected
+        if (view == View.Game || (!intentionalDisconnect && globalThis.getMenuRoute && globalThis.getMenuRoute() == 'MULTIPLAYER_SERVER_CHOOSER')) {
           setView(View.Disconnected);
-          // pie IS PieClient because wsPieSetup is only called in the context of the client
-          if (!globalThis.headless) {
-            // Change menu state so that when player reconnects they will be in the lobby
-            // so they can choose to reload the backup save
-            if (globalThis.player) {
-              globalThis.setMenu?.('MULTIPLAYER_SERVER_CHOOSER');
-              globalThis.player.lobbyReady = false;
-            }
-            if (globalThis.save) {
-              const backupSaveName = `backup ${(overworld.pie as PieClient).currentRoomInfo?.name || ''}`
-              globalThis.save(`${Date.now().toString()}-${backupSaveName}`, true);
+        }
+        // `if(globalThis.player.lobbyReady)` ensures it only saves a backup once.  Since this backup save logic is
+        // invoked on every disconnect (including failed reconnects), we only want it to save once for each disconnect
+        // from a live game, and if the player isn't ready either they haven't readied up in the first place or the
+        // backup has already been made because below we set lobbyReady to false after a disconnect.
+        if (globalThis.save && globalThis.player?.lobbyReady) {
+          const backupSaveName = `backup ${(overworld.pie as PieClient).currentRoomInfo?.name || ''}`
+          globalThis.save(`${Date.now().toString()}-${backupSaveName}`, true).then(errMsg => {
+            if (!errMsg) {
               Jprompt({ text: 'Game auto saved: "' + backupSaveName + '"', yesText: 'Okay', forceShow: true });
             }
-          }
-          if (overworld.underworld) {
-            // Allow forcing receiving a new init_game_state since after disconnect
-            // a user will be out of sync with the server
-            overworld.underworld.allowForceInitGameState = true;
-          }
+          });
+        }
+        // pie IS PieClient because wsPieSetup is only called in the context of the client
+        // Change menu state so that when player reconnects they will be in the lobby
+        // so they can choose to reload the backup save
+        if (globalThis.player) {
+          globalThis.setMenu?.('MULTIPLAYER_SERVER_CHOOSER');
+          globalThis.player.lobbyReady = false;
+        }
+        if (overworld.underworld) {
+          // Allow forcing receiving a new init_game_state since after disconnect
+          // a user will be out of sync with the server
+          // --
+          // it is important that this code occurs OUTSIDE of the above `view == View.Game`
+          // check or else players on the lobby screen that disconnect and that already
+          // have an underworld won't receive the new underworld after reconnecting
+          overworld.underworld.allowForceInitGameState = true;
         }
       }
     };
@@ -171,6 +184,7 @@ Client: ${globalThis.SPELLMASONS_PACKAGE_VERSION}
 ${explainUpdateText}
 `, yesText: "Disconnect", forceShow: true
           }).then(() => {
+            intentionalDisconnect = true;
             pie.disconnect();
             globalThis.syncConnectedWithPieState();
           });
