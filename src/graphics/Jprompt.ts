@@ -19,7 +19,24 @@ export default async function Jprompt(prompt: PromptArgs): Promise<boolean> {
         return Promise.resolve(true);
     }
     const el = document.createElement('div')
-    el.classList.add('prompt');
+    const promptClassName = 'prompt';
+    el.classList.add(promptClassName);
+    const textId = JSON.stringify(text);
+    const otherPrompts = document.querySelectorAll(`.${promptClassName}`);
+    if (otherPrompts && otherPrompts.length) {
+        let earlyExit = false;
+        otherPrompts.forEach((el) => {
+            if ((el as HTMLElement).dataset && (el as HTMLElement).dataset.text === textId) {
+                earlyExit = true;
+                return;
+            }
+        });
+        if (earlyExit) {
+            console.trace('Early exit jprompt, another prompt already exists with the same text.');
+            return false;
+        }
+    }
+    el.dataset.text = textId;
     if (forceShow) {
         el.classList.add('forceShow');
     }
