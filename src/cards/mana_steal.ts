@@ -10,7 +10,7 @@ import * as config from '../config';
 import { explain, EXPLAIN_OVERFILL } from '../graphics/Explain';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
-const id = 'mana_steal';
+const id = 'Mana Steal';
 const mana_stolen = 20;
 const health_burn = 30;
 const spell: Spell = {

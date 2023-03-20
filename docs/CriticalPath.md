@@ -3,7 +3,6 @@
 - Madgod — Yesterday at 11:56 PM
 found a bug, if you hover your unspawned character over the map (to choose a spot) and its near the effect radius of another players attack, you will take damage before youve even spawned
 i.e if your friend bloats and pull enemies to a spot and they die and explode, and you are hovering over that, youll take the boat damage beforew youve even spawned
-- Remove "_" in mana_steal copy
 - See modgod's recordings
 - calamity choice can get stuck on the same choice even though you haven't used a spell (ever?)
   - maybe it's due to multiplayer
