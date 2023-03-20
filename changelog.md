@@ -1,4 +1,43 @@
-- todo: thank Madgod for reporting  calamity miscalculation in multiplayer
+## 3.20.2023 Spellmasons Update v1.11.0
+- fix: Prevent "smoke" from cursed potions
+    from emitting during a spell prediction involving Last Will
+    Thank you Madgod for reporting this issue!
+- tutorial: Skipping Tutorial also skips all Unit introductions
+    Thank you Madgod for reporting this issue!
+- copy: Fix typo in multiplayer error message.
+    Thank you Madgod for reporting this!
+- fix: Insufficient Mana spell from actually
+    casting on Server
+- src: Auto save game on wsPie accidental disconnect
+    so players don't lose their progress
+- UI: Move player spells under their perks
+    since the spells list can get rather long
+- fix: calamity miscalculation in multiplayer
+    where the calamity options would be chosen based on which player
+    last cast instead of each individual player
+    Thank you Madgod for reporting this!
+- fix: Poisoner AI
+    Previously, it was trying to move closer to a different
+    unit than it was targeted which resulted in weird behavior where it
+    would sometimes not attack.
+    Standardized Glop AI too, mana check is built-in
+    to canAttack
+    Thanks to Spud Bud and Expresso depresso for reporting this.
+- UI: Fix tooltip showing last selected unit gif
+    even when pickups are selected
+
+- menu: Improve Disconnect handling
+    - Prevent auto save on disconnect from saving more than once
+    - Prevent intentionally quitting to main menu showing View.Disconnect
+    - Fix View.Disconnect doesn't show up if you are in the lobby when the server disconnects
+    - Fix **BIG** If the server disconnects when you are in the lobby and then you ready up the map will be out of sync and you'll see units off map
+    - Ensure that auto rejoin will only join an existing room and not
+    host a new room.  If the server crashes, a new room with brand new state
+    should not be automatically created.  Have the users create a new
+    room so they know they need to load their auto saved game.
+    - Fix menu keeping track of isInRoom state.  Now isInRoom
+    is set to true onClientPresenceChanged and false
+    onConnectInfo's disconnect message
 
 ## 3.13.2023 Spellmasons Update v1.10.1
 - fix: Target Arrow allowing infinite cast range
