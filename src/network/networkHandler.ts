@@ -855,12 +855,12 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
       caster.colorMagic = caster.color !== colors.playerNoColor ? playerCastAnimationColor : caster.color;
     }
     // count cards:
-    if (player?.spellState) {
+    if (caster.spellState) {
       for (let cardId of payload.cards) {
-        let record = player.spellState[cardId];
+        let record = caster.spellState[cardId];
         if (!record) {
           record = { count: 0 };
-          player.spellState[cardId] = record;
+          caster.spellState[cardId] = record;
         }
         record.count++;
       }
