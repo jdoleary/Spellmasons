@@ -217,7 +217,6 @@ ${explainUpdateText}
   pie.onData = d => onData(d, overworld);
   pie.onError = ({ message }: { message: any }) => {
     console.warn('wsPie Error:', message);
-    Jprompt({ text: 'Error communicating with server.', yesText: 'Okay' });
   }
   pie.onClientPresenceChanged = c => onClientPresenceChanged(c, overworld);
   pie.onLatency = (l) => {
