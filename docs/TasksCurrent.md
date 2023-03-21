@@ -1,6 +1,8 @@
 
 ## QA 1.11
+- hotseat bug, if player 2 dies during player 3s turn (via an ai attack which shouldn't be happening during player 3's turn anyway), it will change turns to player 1 and now it's skipping player 3 every turn
 - bug in Hotseat multiplayer where player 1 keeps getting to choose spells every time it's his turn (3 players)
+- bug getting desync when testting all movement spells in multiplayer with golem corpse
 ---
 - Spud Bud — Today at 1:13 PM
 We did test that a little. He would walk to stand on top of my friend and just stand there if he didn't move, without attacking. If I walked into his attack range, he would attack me on his turn

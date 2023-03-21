@@ -1,11 +1,12 @@
 ## 3.20.2023 Spellmasons Update v1.11.0
+Thanks to Madgod, Spud Bud and Expresso depresso from Discord and Expirium from Steam Forums for reporting issues that have been resolved in this update!
+- Language Translations: Add missing translations in multiplayer menu and other miscillaneous places
+- fix: Prevent Hotseat Multiplayer from getting stuck in the Lobby Menu
+- fix: Not enough portals bug in Hotseat Multiplayer, now if one player enters a portal, it will just move on to the next level.
 - fix: Prevent "smoke" from cursed potions
     from emitting during a spell prediction involving Last Will
-    Thank you Madgod for reporting this issue!
 - tutorial: Skipping Tutorial also skips all Unit introductions
-    Thank you Madgod for reporting this issue!
 - copy: Fix typo in multiplayer error message.
-    Thank you Madgod for reporting this!
 - fix: Insufficient Mana spell from actually
     casting on Server
 - src: Auto save game on wsPie accidental disconnect
@@ -15,14 +16,12 @@
 - fix: calamity miscalculation in multiplayer
     where the calamity options would be chosen based on which player
     last cast instead of each individual player
-    Thank you Madgod for reporting this!
 - fix: Poisoner AI
     Previously, it was trying to move closer to a different
     unit than it was targeted which resulted in weird behavior where it
     would sometimes not attack.
     Standardized Glop AI too, mana check is built-in
     to canAttack
-    Thanks to Spud Bud and Expresso depresso for reporting this.
 - UI: Fix tooltip showing last selected unit gif
     even when pickups are selected
 
