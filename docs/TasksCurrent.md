@@ -1,6 +1,5 @@
 
 ## QA 1.11
-- is it saving too many copies of saved game on network disconnect?
 - bug in Hotseat multiplayer where player 1 keeps getting to choose spells every time it's his turn (3 players)
 ---
 - Spud Bud — Today at 1:13 PM
