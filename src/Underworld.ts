@@ -3602,7 +3602,7 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
     console.log('Difficulty: Increase budget by', budgetMultiplier, ' due to the number of players connected');
     budgetLeft *= budgetMultiplier;
   }
-  console.log('Budget for level index', adjustedLevelIndex, 'is', budgetLeft);
+  console.log('Budget for adjusted level index', adjustedLevelIndex, 'is', budgetLeft);
   const totalBudget = budgetLeft;
   if (levelIndex == config.LAST_LEVEL_INDEX) {
     budgetLeft -= 20;
