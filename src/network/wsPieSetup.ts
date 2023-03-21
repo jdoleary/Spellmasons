@@ -69,7 +69,7 @@ function connect_to_wsPie_server(wsUri: string | undefined, overworld: Overworld
           const backupSaveName = `backup ${(overworld.pie as PieClient).currentRoomInfo?.name || ''}`
           globalThis.save(`${Date.now().toString()}-${backupSaveName}`, true).then(errMsg => {
             if (!errMsg) {
-              Jprompt({ text: 'Game auto saved: "' + backupSaveName + '"', yesText: 'Okay', forceShow: true });
+              Jprompt({ text: ['auto save notice', backupSaveName], yesText: 'Okay', forceShow: true });
             }
           });
         }
