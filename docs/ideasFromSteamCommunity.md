@@ -1,3 +1,43 @@
+My friends and I have played a number of games now over several sessions.  This is a thinking man's game, full of planning and people tend to wait until others make their move before they make decisions.  I wouldn't change anything about this, thinking about strategy is part of why this game is so great.
+
+Having said that, I think the ending turn event could be tweaked.  People are still allowed to take actions and move after they've ended their turn.
+And what ends up happening here is that some players don't actually end their turn when they're done and then forget about it.  We do this in case someone else accidently ends their turn too early and remembers they wanted to do something else, so we don't end our turn as a safety precaution.
+
+The player list in the top left corner is small on my 3440x1440 screen (even less noticable tucked in the corner on an ultrawide).  So I'm probably most guilty about not ending my turn.
+
+Anyways, I would like to see the "End Turn" button to act more like a "Ready" button that can be toggled on/off.  That way people aren't as afraid of an abrupt ending after they've ended their turn while in the middle of doing something they forgot to do.  They could just "unready".
+Also, if we could get a subtle sound (not loud or obnoxious) when people ready/unready.  And if we could get flashy/red text to pop up at the top or bottom of the screen that says something like "last player to ready up" or something I think that could really help the game keep moving.
+Finally, if we could see each players' health, stamina, and mana that'd be good too.  If you see everyone's all out of stamina and mana it's clear everyone's done.  I personally wouldn't mind that information in the top left larger in general.  Perhaps if we hover over their names we can see little icons what spells they've learned, that might be pretty nice.
+
+This could save us a lot of time from sitting around assuming a player is still thinking about possible moves. 
+---
+Pandize — Today at 12:05 AM
+So it works! I do enjoy calamity, but it being the only thing and scaling so heavily really make it rough.
+
+You can always have a "curse" for the player, but there should be a natural gain in difficulty as well.
+
+References are always amazing to think about here;
+Risk of Rain 2
+Gunfire Reborn
+Slay the Spire
+HELLCARD
+Inscryption
+
+These games all have "infinite" difficulty. They each do scaling in their own ways. Slay the Spire, HELLCARD, and Inscryption are pretty similar though. They introduce new curses each run you complete, but they reward you with more "cards and xp".
+
+This game isn't roguelite (yet) so doing better and getting further doesn't reward you anything. If there was a reward for getting through calamity x5 or something, then it'd be worth the attempt. (achievments wouldn't be enough for most).
+
+So to make it work in a roguelike scenario for Spellmasons, you'd probably wanna look towards Risk of Rain. They increase enemy count, damage, HP, and start introducing "elite" versions of each enemy. Basically just a recolor with a lil glow/icon for it. From elites that provide invisibility auras, to malachites that spit spike traps as they move around.
+
+They don't introduce all the elites at once, they first give it to the lower enemies, and as time goes on, they add it to the harder enemies. Elites could fit in Spellmasons I think.
+https://discord.com/channels/1032294536640200766/1047178504267112460/1090122780068020304
+Also, may not be a bad idea to introduce the Roguelite genre here and make the new spells "unlockable"
+<3
+HPStarr — Today at 7:57 AM
+I think you could make it so that the calamities are tied to specific enemy types (priests cannot be targeted by target similar/ect) and it would do something similar while feeling a lot better for players
+maybe bundle it in with a hp buff as well
+so you have >x enemy is unaffected by y spell and gains z hp/damage/stamina
+---
 scojbo — Today at 3:40 PM
 So, I finally got a group of friends to play and I gotta say the game feels great right now. However, it is EASIER than it used to be, because flat scaling mana means you ramp to 80 or 100 mana faster than you previously did.  It means that with a couple of players its ezpz to chokepoint and control the entire map with a few well placed AOE's.
 

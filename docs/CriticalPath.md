@@ -1,4 +1,5 @@
 # Critical Path
+- Fix not allowing multiple spell mods due to asset loading: https://discord.com/channels/1032294536640200766/1069963955092606976/1088726491434602506
 
 - If you press "Escape" during View.Disconnect is messes up the flow and even if you connect again successfully you can't get back in because it only shows the quit button
 # v1.11

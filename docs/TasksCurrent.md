@@ -1,4 +1,17 @@
+- cursed potion smoke doesn't go away after picking it up
+- Vivid Empress — 03/25/2023 11:24 PM
+Gaining Blood Curse seems to prevent a new spell from being picked up on the level it was attributed to a caster.
+- Vivid Empress - request for more spell slots
+- Displace may be causing enemies to be able to go through walls
 
+- Pandize: "improve clarity" (colorblind) that makes interactable objects stand out more - colorblind and visibility
+- Look at MrMarblz threads in suggestions
+- When a new player joins later in a game, all of their stat increase choices stay the same among every pick.  They have three choices, and they're the same for every level they're catching up.
+
+It's fantastic players are able to join later though, and not be crippled/behind!
+
+I think joining mid-game is buggy in general.  Another game at the end of the level they joined (I'm hosting) I got to pick a spell, then I was next to my portal and my stamina was still at 0.  MrMarblz
+- Additional hotbars thread
 ## QA 1.11
 - hotseat bug, if player 2 dies during player 3s turn (via an ai attack which shouldn't be happening during player 3's turn anyway), it will change turns to player 1 and now it's skipping player 3 every turn
 - bug in Hotseat multiplayer where player 1 keeps getting to choose spells every time it's his turn (3 players)
