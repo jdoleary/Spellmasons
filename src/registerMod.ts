@@ -14,6 +14,7 @@ export function isModActive(entity: moddedEntity, underworld: Underworld): boole
 }
 
 function registerMod(mod: Mod, overworld: Overworld) {
+    console.log('Register mod', mod.modName);
     // Register Units
     if (mod.units) {
         for (let unit of mod.units) {
@@ -46,8 +47,6 @@ function registerMod(mod: Mod, overworld: Overworld) {
         if (globalThis.pixi && mod.spritesheet) {
             const loader = globalThis.pixi.Loader.shared;
             loader.add(mod.spritesheet);
-            // Start loading the textures
-            loader.load();
         }
     }
 
@@ -56,6 +55,11 @@ export default function registerAllMods(overworld: Overworld) {
     for (let mod of globalThis.mods) {
         console.log('Mod: ', mod.modName);
         registerMod(mod, overworld);
+    }
+    if (globalThis.pixi) {
+        const loader = globalThis.pixi.Loader.shared;
+        // Start loading the textures
+        loader.load();
     }
 
 }
