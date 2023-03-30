@@ -1,5 +1,10 @@
 # Critical Path
 - Displace may be causing enemies to be able to go through walls
+- When a new player joins later in a game, all of their stat increase choices stay the same among every pick.  They have three choices, and they're the same for every level they're catching up.
+
+It's fantastic players are able to join later though, and not be crippled/behind!
+
+I think joining mid-game is buggy in general.  Another game at the end of the level they joined (I'm hosting) I got to pick a spell, then I was next to my portal and my stamina was still at 0.  MrMarblz
 
 # v1.11
 - Hotseat is bugged, only one player can enter the portal https://steamcommunity.com/app/1618380/discussions/0/3819654644922993969/
