@@ -325,6 +325,9 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
     console.error('Cannot run mouseMove, underworld is undefined');
     return;
   }
+  if (e) {
+    globalThis.currentHoverElement = e.target as HTMLElement;
+  }
   const mouseTarget = underworld.getMousePos();
   // Move the spawn "ghost" around so players can see where they will
   // spawn if they click

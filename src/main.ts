@@ -41,6 +41,7 @@ globalThis.zoomTarget = 1.8;
 globalThis.hotseatPlayerConfig = [];
 globalThis.mods = [];
 globalThis.awaitingSpawn = false;
+globalThis.currentHoverElement = null;
 // Default to 1 for singleplayer
 globalThis.numberOfHotseatPlayers = 1;
 if (globalThis.UIEasyOnTheEyes === undefined) {

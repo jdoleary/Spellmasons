@@ -3,8 +3,6 @@
 Also, apparently the game stops giving calamities past calamity 11. o.o
 Or maybe once you run out of spell upgrades? Happened at the same time for me.
 - Fix not allowing multiple spell mods due to asset loading: https://discord.com/channels/1032294536640200766/1069963955092606976/1088726491434602506
-- MrMarblz — 03/27/2023 7:30 PM
-When other players are hovering their mouse over their hotbar/spells, have the spell/targeting line indicator you see of theirs disappear.  We're constantly thinking they're targeting something crazy, lol
 - Displace may be causing enemies to be able to go through walls
 
 # v1.11

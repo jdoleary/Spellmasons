@@ -67,6 +67,12 @@ export const sendPlayerThinkingThrottled = throttle((thoughts: { target?: Vec2, 
     // Only send your thoughts on your turn
     if (underworld.isMyTurn()) {
         let { target, cardIds } = thoughts;
+        if (globalThis.currentHoverElement?.tagName !== 'CANVAS') {
+            // Clear thoughts if player is not hovering over gamespace
+            // so it doesn't send player thought when they are looking at inventory
+            // or toolbar
+            cardIds = [];
+        }
         // Since it takes a hash, best to round target
         // to whole numbers so floating point changes
         // don't create a different hash

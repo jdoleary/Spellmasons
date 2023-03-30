@@ -319,4 +319,6 @@ declare global {
     // Defined in Golems-menu repo
     // Allows Golems repo to modify isInRoom store state of menu
     var setMenuIsInRoom: undefined | ((inRoom: boolean) => void);
+    // Used to stop sending PLAYER_THINKING if player is hovering over non game space
+    var currentHoverElement: undefined | HTMLElement | null;
 }
