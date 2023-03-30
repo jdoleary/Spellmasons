@@ -1,7 +1,4 @@
 # Critical Path
-- Vivid Empress — Today at 5:46 PM
-Also, apparently the game stops giving calamities past calamity 11. o.o
-Or maybe once you run out of spell upgrades? Happened at the same time for me.
 - Displace may be causing enemies to be able to go through walls
 
 # v1.11
