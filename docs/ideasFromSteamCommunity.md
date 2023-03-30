@@ -1,3 +1,10 @@
+Vivid Empress — Yesterday at 6:57 PM
+I understand the point of the calamities are to ensure runs eventually end, but it may be worthwhile to include lesser calamities- ones that sap max hp, mana, range or stamina rather than locking down a crucial spell. Some, myself included, might feel they honestly want to take the game to the point where every inch of the screen is full of bosses and enemies, enjoying their reward of power every now and then.
+
+There is also maybe a reason to alternate 'calamity' levels with levelups, rather than having them be endless calamities from the moment you start getting them. Sometimes someone might be unlucky with a run, and their build stagnates into calamity- making a lack of progression from that point a foregone conclusion.
+
+Each level, for the sake of further chaos to offset the loss of difficulty, could also have its own 'calamity' attached, such as yellow potions exploding when touched or enemy duplication every X turns, or even 'player randomly teleports each round'. Things that, while certainly capable of ending runs, won't necessarily end a run for certain if the player plays carefully enough.
+---
 My friends and I have played a number of games now over several sessions.  This is a thinking man's game, full of planning and people tend to wait until others make their move before they make decisions.  I wouldn't change anything about this, thinking about strategy is part of why this game is so great.
 
 Having said that, I think the ending turn event could be tweaked.  People are still allowed to take actions and move after they've ended their turn.

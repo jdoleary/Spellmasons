@@ -1,8 +1,10 @@
-- cursed potion smoke doesn't go away after picking it up
+- If you press "Escape" during View.Disconnect is messes up the flow and even if you connect again successfully you can't get back in because it only shows the quit button
+- Blood Spartan — Today at 7:47 AM
+Setting the health, mana, or stamina of a selected unit while in admin mode give an uncaught error of prompt() not being supported.
+- takes too long: May have gone a little overboard. It turns out Circle + Connect + Similar + Target Kind + Resurrect + Clone = spell that goes on for five minutes and then makes a big mess. - Vivid Empress
 - Vivid Empress — 03/25/2023 11:24 PM
 Gaining Blood Curse seems to prevent a new spell from being picked up on the level it was attributed to a caster.
 - Vivid Empress - request for more spell slots
-- Displace may be causing enemies to be able to go through walls
 
 - Pandize: "improve clarity" (colorblind) that makes interactable objects stand out more - colorblind and visibility
 - Look at MrMarblz threads in suggestions
