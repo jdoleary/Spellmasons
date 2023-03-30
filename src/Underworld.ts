@@ -2341,16 +2341,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (upgradesLeftToChoose > 0 && player.inventory.length < config.STARTING_CARD_COUNT) {
       // Limit starting cards to a probability of 10 or more
       minimumProbability = 10;
-      if (elUpgradePickerLabel) {
-        elUpgradePickerLabel.innerHTML = `Pick a Spell`;
-      }
-    } else {
-      if (elUpgradePickerLabel) {
-        const isCursePerk = this.levelIndex > config.LAST_LEVEL_INDEX;
-        elUpgradePickerLabel.innerHTML = i18n(isPerk ?
-          isCursePerk ? 'Pick a Calamity' : 'Pick an Upgrade'
-          : 'Pick a Spell');
-      }
+    }
+    if (elUpgradePickerLabel) {
+      const isCursePerk = this.levelIndex > config.LAST_LEVEL_INDEX;
+      elUpgradePickerLabel.innerHTML = i18n(isPerk ?
+        isCursePerk ? 'Pick a Calamity' : 'Pick an Upgrade'
+        : 'Pick a Spell');
     }
     // If playing hotseat multiplayer, prepend the player name so users know which player they
     // are picking an upgrade for
