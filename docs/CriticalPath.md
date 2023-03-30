@@ -2,7 +2,6 @@
 - Vivid Empress — Today at 5:46 PM
 Also, apparently the game stops giving calamities past calamity 11. o.o
 Or maybe once you run out of spell upgrades? Happened at the same time for me.
-- Fix not allowing multiple spell mods due to asset loading: https://discord.com/channels/1032294536640200766/1069963955092606976/1088726491434602506
 - Displace may be causing enemies to be able to go through walls
 
 # v1.11

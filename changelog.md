@@ -1,3 +1,5 @@
+## 3.31.2023 Spellmasons Update v1.11.1
+- Thanks to Blood Spartan in Discord for reporting issue with not being able to import multiple spell mods
 ## 3.20.2023 Spellmasons Update v1.11.0
 Thanks to Madgod, Spud Bud and Expresso depresso from Discord and Expirium from Steam Forums for reporting issues that have been resolved in this update!
 
