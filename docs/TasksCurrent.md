@@ -1,7 +1,4 @@
 - If you press "Escape" during View.Disconnect is messes up the flow and even if you connect again successfully you can't get back in because it only shows the quit button
-- Blood Spartan — Today at 7:47 AM
-Setting the health, mana, or stamina of a selected unit while in admin mode give an uncaught error of prompt() not being supported.
-- takes too long: May have gone a little overboard. It turns out Circle + Connect + Similar + Target Kind + Resurrect + Clone = spell that goes on for five minutes and then makes a big mess. - Vivid Empress
 - Vivid Empress — 03/25/2023 11:24 PM
 Gaining Blood Curse seems to prevent a new spell from being picked up on the level it was attributed to a caster.
 - Vivid Empress - request for more spell slots
@@ -14,8 +11,6 @@ Gaining Blood Curse seems to prevent a new spell from being picked up on the lev
 - bug in Hotseat multiplayer where player 1 keeps getting to choose spells every time it's his turn (3 players)
 - bug getting desync when testting all movement spells in multiplayer with golem corpse
 ---
-- Spud Bud — Today at 1:13 PM
-We did test that a little. He would walk to stand on top of my friend and just stand there if he didn't move, without attacking. If I walked into his attack range, he would attack me on his turn
 - Bug: Blood curse doesn't load in properly.  I cursed a golem and it had 40 health when saved, then I load and it has 20 health
 - i18n: Cannot load multiplayer game over a game that is ongoing
 - Got "Back to Lobby" menu and when I returned and resumed game then I was able to see the save button in multiplayer menu.
@@ -47,8 +42,6 @@ NOTE: He's missing PERKS not cards
 That's not supposed to be there, enemies and items seem to be appearing outside the map
 
 Also we have noticed the mana potion seems to be giving more then what it used too, causing Aliensmoke to go into +200 extra mana from 1 mana potion.I'm noticing the levels seem to jump from different layouts when loading in until it settles on one, so I feel that may be causing this
-- this is the 4th to 5th time it's done this, calamity seems to be picking phantom arrow only.
-- Skip to ghost biome" admin tool doesn't work anymore?
 - on EU server when chaning levels it lets the AI take an initial turn
   - **issue with multiple levels generating and making a level desync** on EU server.  Must be a race condition or something
 ---
@@ -57,7 +50,6 @@ Also we have noticed the mana potion seems to be giving more then what it used t
 - bug: I cast a golem summon out of the inventory without closing the inventory and it didn't change in visible mana cost
 ## v1.9
 - yewny — Today at 2:36 PM not sure if this is a bug or a design choice but overlays dont work on the game? i noticed the discord overlay (which i use every day) wouldnt open, but the discord overlay is finnicky so i thought it was just acting up again, but then when i tried opening the steam overlay that also didnt work, and it didnt work for my partner either. it would be really convenient for me to be able to use overlays in the game if there wasnt a reason for them to not be working
-- BeePsychotic — Today at 11:00 AM Quick one that doesn't happen too often. Every once and awhile I'll be playing a bit fast and just clicking really quick between spells and even when I don't have enough mana it will let me cast. It seems like I got the next spell up too fast for some sort of calculation. I've had some coding projects where this has happened in the past, that's the only thing I could think of. I could see this being exploited. It's hard for me to recreate, but when it comes to high cost stuff it is a balance issue.
 ---
 - todo: pickups check prediction but not headless
 - Also please nerf debilitate and freeze. As they are, these spells break the game. Its particularly unsatisfying in multiplayer because players can infinitely cycle AOE freezes without breaking a sweat. from Scojbo steam review

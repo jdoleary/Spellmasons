@@ -64,14 +64,14 @@ const spell: Spell = {
           addTarget(newTarget, state);
         }
       }
-      await animate(animators);
+      await animateTargetSimilar(animators);
 
       return state;
     },
   },
 };
 
-async function animate(circles: { pos: Vec2, newTargets: Vec2[] }[]) {
+export async function animateTargetSimilar(circles: { pos: Vec2, newTargets: Vec2[] }[]) {
   if (globalThis.headless) {
     // Animations do not occur on headless, so resolve immediately or else it
     // will just waste cycles on the server

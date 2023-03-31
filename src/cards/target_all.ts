@@ -1,16 +1,12 @@
 import { addTarget, getCurrentTargets, Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
-import { Vec2, add } from '../jmath/Vec';
+import { Vec2 } from '../jmath/Vec';
 import * as Unit from '../entity/Unit';
-import * as math from '../jmath/math';
 import { isUnit } from '../entity/Unit';
 import { isPickup } from '../entity/Pickup';
 import { isDoodad } from '../entity/Doodad';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
-import { raceTimeout } from '../Promise';
-import { easeOutCubic } from '../jmath/Easing';
-import * as config from '../config';
-import * as colors from '../graphics/ui/colors';
+import { animateTargetSimilar } from './target_similar';
 
 const id = 'Target Kind';
 const NUMBER_OF_TARGETS_PER_STACK = 5;
@@ -33,7 +29,10 @@ const spell: Spell = {
       let targets: Vec2[] = getCurrentTargets(state);
       targets = targets.length ? targets : [state.castLocation];
       const length = targets.length;
+      const animators = [];
       for (let i = 0; i < length; i++) {
+        // Refresh the targets array so it excludes reselecting a target that was selected by the last iteration
+        targets = getCurrentTargets(state);
         const target = targets[i];
         if (!target) {
           continue;
@@ -73,71 +72,17 @@ const spell: Spell = {
           .slice(0, NUMBER_OF_TARGETS_PER_STACK * quantity);
         if (!prediction) {
           playSFXKey('targeting');
-          // Animate lines to new targets
-          await animate(target, newTargets, [target]);
-          // Animate circles for all now-selected targets
-          await animate(target, [], [target, ...newTargets]);
+          animators.push({ pos: target, newTargets });
         }
         for (let newTarget of newTargets) {
           addTarget(newTarget, state);
         }
       }
+      await animateTargetSimilar(animators);
 
       return state;
     },
   },
 };
 
-async function animate(pos: Vec2, newTargets: Vec2[], oldTargets: Vec2[]) {
-  if (globalThis.headless) {
-    // Animations do not occur on headless, so resolve immediately or else it
-    // will just waste cycles on the server
-    return Promise.resolve();
-  }
-  const iterations = 100;
-  const millisBetweenIterations = 4;
-  // Keep track of which entities have been targeted so far for the sake
-  // of making a new sfx when a new entity gets targeted
-  const entitiesTargeted: Vec2[] = [];
-  // "iterations + 10" gives it a little extra time so it doesn't timeout right when the animation would finish on time
-  return raceTimeout(millisBetweenIterations * (iterations + 10), 'animatedConnect', new Promise<void>(resolve => {
-    for (let i = 0; i < iterations; i++) {
-
-      setTimeout(() => {
-        if (globalThis.predictionGraphics) {
-          globalThis.predictionGraphics.clear();
-          globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0);
-          // between 0 and 1;
-          const proportionComplete = easeOutCubic((i + 1) / iterations);
-          newTargets.forEach(target => {
-
-            globalThis.predictionGraphics?.moveTo(pos.x, pos.y);
-            const dist = math.distance(pos, target)
-            const pointApproachingTarget = add(pos, math.similarTriangles(target.x - pos.x, target.y - pos.y, dist, dist * proportionComplete));
-            globalThis.predictionGraphics?.lineTo(pointApproachingTarget.x, pointApproachingTarget.y);
-            if (proportionComplete >= 1) {
-              globalThis.predictionGraphics?.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
-            }
-          });
-          // Draw completed lines and circles on old targets
-          oldTargets.forEach(target => {
-            if (!entitiesTargeted.includes(target)) {
-              entitiesTargeted.push(target);
-              playSFXKey('targetAquired');
-            }
-            // globalThis.predictionGraphics?.moveTo(pos.x, pos.y);
-            // globalThis.predictionGraphics?.lineTo(target.x, target.y);
-            globalThis.predictionGraphics?.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
-          });
-        }
-        if (i >= iterations - 1) {
-          resolve();
-        }
-
-      }, millisBetweenIterations * i)
-    }
-  })).then(() => {
-    globalThis.predictionGraphics?.clear();
-  });
-}
 export default spell;
