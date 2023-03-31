@@ -12,6 +12,7 @@ import seedrandom from 'seedrandom';
 import * as colors from '../graphics/ui/colors';
 import { prng } from '../jmath/rand';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
+import * as config from '../config';
 
 export function findRandomDisplaceLocation(underworld: Underworld, radius: number, seed: prng): Vec2 | undefined {
   let isValid = false;
@@ -55,7 +56,7 @@ const spell: Spell = {
         const swaps: [HasSpace, Vec2][] = [];
         for (let targetUnit of targets) {
           if (targetUnit) {
-            const displaceLocation = findRandomDisplaceLocation(underworld, targetUnit.radius, seed);
+            const displaceLocation = findRandomDisplaceLocation(underworld, config.COLLISION_MESH_RADIUS, seed);
             swaps.push([targetUnit, displaceLocation || targetUnit]);
           }
         }

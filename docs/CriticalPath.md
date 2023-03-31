@@ -1,5 +1,4 @@
 # Critical Path
-- Displace may be causing enemies to be able to go through walls
 
 # v1.11
 - Hotseat is bugged, only one player can enter the portal https://steamcommunity.com/app/1618380/discussions/0/3819654644922993969/
