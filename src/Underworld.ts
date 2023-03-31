@@ -2366,7 +2366,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       if (isPerk) {
         const isCursePerk = this.levelIndex > config.LAST_LEVEL_INDEX;
         if (isCursePerk) {
-          const mostUsedLastLevelCards = Object.entries(player.spellState || {}).sort((a, b) => b[1].count - a[1].count).slice(0, 3);
+          const mostUsedLastLevelCards = Object.entries(player.spellState || {}).sort((a, b) => b[1].count - a[1].count)
+            // Remove cards that are already affected by calamity
+            .filter(([_spellId, spellState]) => !(spellState.disabledUntilLevel > this.levelIndex))
+            .slice(0, 3);
           if (mostUsedLastLevelCards.length == 0) {
             // Clear upgrades, nothing to pick
             document.body?.classList.toggle(showUpgradesClassName, false);
