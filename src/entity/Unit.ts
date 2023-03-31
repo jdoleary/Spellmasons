@@ -421,6 +421,11 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
       loadedunit.image.sprite.gotoAndStop(loadedunit.image.sprite.totalFrames - 1);
     }
   }
+  // Protect against bug where stamina loads in as null.  Not sure why this is happening but this
+  // with prevent it
+  if (loadedunit.stamina == null) {
+    loadedunit.stamina = loadedunit.staminaMax || config.UNIT_BASE_STAMINA;
+  }
   return loadedunit;
 }
 // Similar but not the same as `load`, syncronize updates (mutates) a unit 
