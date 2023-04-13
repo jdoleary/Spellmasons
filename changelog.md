@@ -1,3 +1,6 @@
+## Spellmasons Update v1.13.0
+- Make open source
+
 ## 3.31.2023 Spellmasons Update v1.12.0
 - Thanks to the following community members for reporting issues or making suggestions included in this update!
     - Blood Spartan

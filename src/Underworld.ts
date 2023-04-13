@@ -2064,6 +2064,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
       // If this current player is NOT able to take their turn...
       if (!Player.ableToAct(player)) {
+        // Prevents bug that caused skipping turns in hotseat multiplayer when a player dies
+        if (numberOfHotseatPlayers > 1 && player !== globalThis.player) {
+          console.log('Hotseat: Skip ending turn for a hotseat player because it is not currently their turn');
+          continue;
+        }
         // Skip them
         this.endPlayerTurn(player.clientId);
         // Do not continue with initialization
@@ -2231,7 +2236,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           console.error('Hotseat: shifted player is undefined');
         }
         if (this.players[0]) {
-
           globalThis.player = this.players[0];
         } else {
           console.error('Hotseat: Tried to change player but player is undefined');

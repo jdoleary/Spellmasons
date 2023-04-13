@@ -1,9 +1,7 @@
 # Critical Path
 ## For 1.13
 - Check "Glop" Translation
-- Make open source
 - Calamities should make enemies stronger, not you weaker
-- Fix hotseat multiplayer stuck after one player death bug
 - Balance:
   - Target Soul Cost
   - Fortify
@@ -80,7 +78,6 @@ Scrolls picked up in the next game don't do anything.  I'm not sure if they star
 - So my brother (the other player) suspects that if any action is taken while you're currently making an attack it gets bugged.  He thinks he ended his turn during that single slash - hence why it doesn't look like it took damage.  He also seems to think that's the same case for using stamina.  If you move while you're still casting a spell the stamina isn't used.  Same goes for casting and mana usage, he says that it may not count the mana cost of spells if you're queuing them up while you're casting. - MrMarblz
 - MrMarblz — Today at 7:22 PM
 If the turn is ending and you're moving a spell at the same time the spell doesn't go away in the previous position and now you have the spell on your hotbar twice.
-- If one player dies in hotseat multiplayer it skips other player's turns
 - ally summoners show attack badge when getting ready to cast
 
 # v1.11
