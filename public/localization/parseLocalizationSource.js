@@ -3,6 +3,7 @@ const path = require('node:path');
 const readline = require('node:readline');
 const languages = [];
 
+// Important: Individual Cells MUST not have newline characters since this file depends on newlines for rows
 async function processLineByLine() {
     const fileStream = fs.createReadStream(path.join(__dirname, 'localizationSource.tsv'));
 
