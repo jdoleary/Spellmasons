@@ -2178,6 +2178,15 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       console.error('Cannot end turn, player with clientId:', clientId, 'does not exist');
       return;
     }
+    // Decrement cooldowns of spells
+    for (let spellState of Object.values(player.spellState)) {
+      if (spellState.cooldown) {
+        spellState.cooldown--;
+        // Update cooldown in UI
+        CardUI.recalcPositionForCards(globalThis.player, this);
+      }
+    }
+
     if (this.turn_phase != turn_phase.PlayerTurns) {
       // (A player "ending their turn" when it is not their turn
       // can occur when a client disconnects when it is not their turn)
@@ -3072,6 +3081,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         effectState.targetedUnits = effectState.targetedUnits.filter(u => !excludedTargets.includes(u));
 
         const cardEffectPromise = card.effect(effectState, card, quantity, this, prediction, outOfRange);
+        if (effectState.casterPlayer && card.cooldown) {
+          Object.assign(effectState.casterPlayer.spellState[card.id] || {}, { cooldown: card.cooldown });
+        }
         if (prediction) {
           this.fullySimulateForceMovePredictions();
         }

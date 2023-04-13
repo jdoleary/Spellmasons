@@ -20,6 +20,14 @@ export function levelsUntilCardIsEnabled(cardId: string, underworld?: Underworld
     return (cardState.disabledUntilLevel || 0) - underworld.levelIndex
 
 }
+export function getCardCooldown(cardId: string, underworld?: Underworld): number {
+    if (!globalThis.player || !underworld) {
+        return 0;
+    }
+    const cardState = globalThis.player.spellState[cardId] || {};
+    return cardState.cooldown;
+
+}
 export function playSpellSFX(sfxKey: string, prediction: boolean) {
     if (globalThis.headless) {
         return;

@@ -3,6 +3,8 @@
 - Check "Glop" Translation
 - Calamities should make enemies stronger, not you weaker
 - Add turn based cooldowns to spell-state
+  - you can get around cooldown by casting quickly, before it has triggered the spell
+  - fix "failed to save" exceeding the quota
 - Fix mod spell icon path
 
 ---

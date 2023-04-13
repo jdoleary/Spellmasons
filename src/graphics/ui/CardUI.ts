@@ -5,7 +5,7 @@ import * as config from '../../config';
 import {
   clearSpellEffectProjection, runPredictions,
 } from '../PlanningView';
-import { calculateCost, calculateCostForSingleCard, levelsUntilCardIsEnabled } from '../../cards/cardUtils';
+import { calculateCost, calculateCostForSingleCard, getCardCooldown, levelsUntilCardIsEnabled } from '../../cards/cardUtils';
 import floatingText from '../FloatingText';
 import { composeOnDamageEvents, copyForPredictionUnit } from '../../entity/Unit';
 import { NUMBER_OF_TOOLBAR_SLOTS } from '../../config';
@@ -471,6 +471,11 @@ function addListenersToCardElement(
       playSFXKey('deny');
       return;
     }
+    if (getCardCooldown(cardId, underworld)) {
+      floatingText({ coords: underworld.getMousePos(), text: i18n(['card cooldown', getCardCooldown(cardId, underworld).toString()]), style: { fill: 'red' } });
+      playSFXKey('deny');
+      return;
+    }
     if (element.classList.contains('selected')) {
       const index = cardsSelected.findIndex((c) => c === cardId);
       if (index !== -1) {
@@ -701,12 +706,19 @@ function createNonCardInventoryElement(thumbnailPath: string, titleText: string)
 function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSize?: boolean) {
   const element = document.createElement('div');
   element.classList.add('card');
-  const levelsDisabled = levelsUntilCardIsEnabled(content.id, underworld)
+  const levelsDisabled = levelsUntilCardIsEnabled(content.id, underworld);
+  const cooldown = getCardCooldown(content.id, underworld);
   if (!fullSize && globalThis.player && underworld && levelsDisabled > 0) {
     element.classList.add('disabled');
     const elDisabledLabel = document.createElement('div');
     elDisabledLabel.classList.add('disabled-label');
     elDisabledLabel.innerHTML = `${levelsDisabled}`;
+    element.appendChild(elDisabledLabel);
+  } else if (cooldown) {
+    element.classList.add('disabled');
+    const elDisabledLabel = document.createElement('div');
+    elDisabledLabel.classList.add('disabled-label');
+    elDisabledLabel.innerHTML = `${cooldown}`;
     element.appendChild(elDisabledLabel);
   }
   element.classList.add(cardRarityAsString(content));
