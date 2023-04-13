@@ -1,40 +1,24 @@
-**Spellmasons is a multiplayer, turn-based spell-weaving game about building powerful spells from small pieces and working together with your fellow wizards to decimate hordes of enemies!**
+![Logo](./store_capsule_header.png)
+Spellmasons is a turn-based, tactical roguelike where you devise spell combinations to overcome an onslaught of relentless enemies. Team up with your friends in online cooperative multiplayer, and delve into the intricacies of magic where clever combinations yield powerfully satisfying results. 
 
-https://www.spellmasons.com
+[You can purchase it here on Steam to support the developer](https://store.steampowered.com/app/1618380/Spellmasons/)
 
-View dependecy graph as svg:
-Run `depcruise --include-only "^src" --output-type dot src > depcruise-out.dot`
-// Copy output to:
-https://dreampuf.github.io/GraphvizOnline
+## Getting Started
+- Install [Nodejs](https://nodejs.org/) on your development machine
+- Clone this repository with git ([learn more about git](https://www.youtube.com/watch?v=HkdAHXoRtos))
+- In your console, run `npm install`, then `npm start`.  Navigate a browser (Chrome recommended) to http://localhost:3000/ and you're good to go!  It will automatically refresh when changes are made to the code.
+- Underworld.ts is the file that contains most of the game state.  Checkout Unit.ts and Player.ts too to get started making changes!
 
-View dependecy graph as table:
-Run `depcruise --include-only "^src" --output-type html src > depcruise-out.html`
+## Development Tips
+- Press F12 to open the console (this works in the Steam version of the game too!)
+- If you set `adminMode = true` in the console,  you can then `Shift + Left Click` during a live game to open the admin menu which allows you to spawn things and change unit stats.
+- You can access the current game state in the console via `devUnderworld`.  To get you started messing around with the game in the console, move your character's position with the following: `devUnderworld.players[0].unit.x += 100`.
 
-## Dev information
+## License
+Please read and respect the [licence](./LICENSE.md).  I am making this software publicly available because I love video games and I love making them and I want to give players and tinkerers the ability to see how I made it and the ability to make changes of their own.  I'd like the game to live beyond the time I spend working on it and so I am giving you the ability to fully edit the game for your own enjoyment!  If you want to use a portion of my work in your own, separate, project.  Please reach out to me for permission.
 
-- Images are stored NOT in the public/ director because they are processed into a sprite sheet and the sprite sheet is added to that directory
-
-How to update the sprite sheet:
-Using TexturePacker, add images, public/spell, and public/upgrades as smart folders and publish.  Make sure both the png and the json are saved.  This is done by choosing Pixijs in the Data Format.
-## Cards, Modifiers and Effects
-
-Cards use a common api to allow for them to compose with each other.
-Some cards add modifiers and modifiers add events. Events are functions that are triggered when certain events occur.
-
-## Notes
-
-Minor versions are incremented for functional non-broken commit states that should be able to run without changes.
-
-## Backup
-Backup repositories are on Gitlab and Keybase.  The primary repository is on Github
-
-
-## Pushing a new version
-To Update the headless servers, start Docker Desktop and run `./deploy.sh`
-- Run alias `publish` as a shortcut to update the master branch (this is not production) but it will update play.spellmasons.com
-- To Fully build and push a new version to production
-    - Run `npm run build` in the `Golems-menu` repo (if menu has changed)
-    - Run `backup` to push to gitlab and keybase
-    - These 2 should always be done together:
-        - UPDATES BACKEND: Run `./deploy.sh` to push new version to the backend servers on Digital Ocean
-        - Go to `Golems-Electron-Build` and follow instructions to push a new package to Steam 
+## Support my work
+The best way you can support my work is to purchase Spellmasons on [Steam](https://store.steampowered.com/app/1618380/Spellmasons/) and review it on Steam!  Also spreading the word to friends helps :)
+## Contact me
+- Twitter: [@nestfall](https://twitter.com/nestfall)
+- Email: spellmasons@gmail.com

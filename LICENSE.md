@@ -16,7 +16,7 @@ For the purposes of this End-User License Agreement:
 
 - __Agreement__ means this End-User License Agreement that forms the entire agreement between You and the Company regarding the use of the Application. 
 
-- __Application__ means the software program provided by the Company downloaded by You to a Device, named Spellmasons
+- __Application__ means the software program and source code provided by the Company downloaded by You to a Device, named Spellmasons
 
 
 - __Company__ (referred to as either "the Company", "We", "Us" or "Our" in this Agreement) refers to Octavia Blue LLC, 2222 W. GRAND RIVER AVE STE A OKEMOS, MI 48864 USA.
