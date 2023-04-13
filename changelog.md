@@ -1,6 +1,9 @@
 ## Spellmasons Update v1.13.0
 - Make open source
-
+- Fix hotseat multiplayer stuck after one player death bug
+- Fixes: 
+    - ObscuredCrow — Today at 1:12 PM
+    Once you hit 0 health from using Death Wager you can no longer cast any spells. 
 ## 3.31.2023 Spellmasons Update v1.12.0
 - Thanks to the following community members for reporting issues or making suggestions included in this update!
     - Blood Spartan

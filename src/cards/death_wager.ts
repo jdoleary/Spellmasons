@@ -1,6 +1,7 @@
 import { Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
+import floatingText from '../graphics/FloatingText';
 
 const id = 'Death Wager';
 const reduceMaxHealthPreportion = 0.2;
@@ -20,6 +21,14 @@ const spell: Spell = {
     effect: async (state, card, quantity, underworld, prediction) => {
       const player = underworld.players.find(p => p.unit == state.casterUnit);
       if (player) {
+        if (state.casterUnit.healthMax <= 1) {
+          {
+            floatingText({
+              coords: state.casterUnit, text: `Cannot cast ${id} with only 1 max health.`
+            });
+            return state;
+          }
+        }
         for (let key of Object.keys(player.cardUsageCounts)) {
           delete player.cardUsageCounts[key];
         }

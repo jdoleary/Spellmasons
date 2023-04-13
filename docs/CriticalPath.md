@@ -8,8 +8,6 @@
 - Fix mod spell icon path
 
 ---
-- Kerrijan — Yesterday at 9:03 PM
-are dark priests not affected by mana vampires? we have a resurrected mana vampire that was hitting the dark priest and it was saying 10% stolen but wasnt actually taking it
 
 - Not really sure about Bleed or Death Wager
 -----------------------------------
@@ -65,8 +63,6 @@ i dont believe this affects things too much and it just spams the living hell ou
 - Prevent players from killing ally players that haven't spawned yet:
   - mrman227 — Today at 3:00 PM
 Another player killed me with Target Cone + Slash before I placed my character down.
-- ObscuredCrow — Today at 1:12 PM
-Once you hit 0 health from using Death Wager you can no longer cast any spells. 
 
 Edit: Death Wager also doesn't calculate spell cost reset when used in a chain. 
 - MrMarblz — Today at 2:14 PM
