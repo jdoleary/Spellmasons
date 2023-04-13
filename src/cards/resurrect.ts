@@ -17,6 +17,7 @@ const spell: Spell = {
     sfx: 'resurrect',
     manaCost: 80,
     healthCost: 0,
+    cooldown: 2,
     expenseScaling: 3,
     probability: probabilityMap[CardRarity.RARE],
     onlySelectDeadUnits: true,

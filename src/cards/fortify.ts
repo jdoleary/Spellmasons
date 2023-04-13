@@ -21,7 +21,7 @@ const spell: Spell = {
     manaCost: 100,
     healthCost: 0,
     expenseScaling: 3,
-    cooldown: 2,
+    cooldown: 3,
     probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconFortify.png',
     animationPath: 'spell-effects/spellShield',

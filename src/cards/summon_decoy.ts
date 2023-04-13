@@ -18,6 +18,7 @@ const spell: Spell = {
     supportQuantity: true,
     manaCost: 60,
     healthCost: 0,
+    cooldown: 2,
     expenseScaling: 3,
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconDecoy.png',
