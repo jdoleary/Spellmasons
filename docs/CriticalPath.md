@@ -1,4 +1,86 @@
 # Critical Path
+## For 1.13
+- Check "Glop" Translation
+- Make open source
+- Fix hotseat multiplayer stuck after one player death bug
+- Balance:
+  - Target Soul Cost
+  - Fortify
+- Fix mod spell icon path
+
+---
+- Kerrijan — Yesterday at 9:03 PM
+are dark priests not affected by mana vampires? we have a resurrected mana vampire that was hitting the dark priest and it was saying 10% stolen but wasnt actually taking it
+
+- Not really sure about Bleed or Death Wager
+-----------------------------------
+
+Tier 0:
+target similar.
+
+Tier 0.5:
+Debilitate
+
+Tier 1:
+Freeze, Vortex, Displace, resurrect, mana steal, target cone, connect, conserve
+
+Tier 2: Plus Radius, repel, push,
+
+Tier 3: Shove, Bleed, Phantom Arrow, Decoy, Clone,  mana Burn, target circle,  Last Will (This might have been tier 1 before the nerf)
+
+Tier 4: Slash, dash, target column
+
+Tier 5: pull, rend, Burst, target kind,
+
+Tier 6: Poison, arrow, split, Death Wager(?)
+
+Tier 7: drown, Swap, 
+
+------------------------------------------------------------------------------------
+Now we enter the tiers of spells that are so bad they're NEVER worth picking.
+
+Tier 8:  Target arrow (only useful on maps you've already won. If long-range was important this would be a good spell) , and Capture Soul.  It's so prohibitively expensive that its a joke.
+
+Tier 9: Shield/Heal/purify.  You just shouldn't be taking damage in this game as it is. Ever. I still suggest that you add some 5-damage Ultra-long range cannon-enemies to make these spells useful.
+The literal ONLY use of these spells is to let you cast mana steal more times.
+
+Tier 10: Slow, suffocate, blood curse.
+
+Tier 11 Sacrifice
+
+The worst spell in the game:
+Fortify. Lol. This spell IS a joke right? 
+- MuditaMan — Yesterday at 5:41 PM
+When you add mana steal to a spell chain it updates the mana and health differences depending on your target(s), however, the additional mana is not usable in following spells in that same spell chain. 
+- Blood Spartan — 04/02/2023 6:43 AM
+Sometimes spells request the thumbnail image in a pathway that isnt where the thumbnail is. This one is a bit weird.
+but when a mod spell "fails" and refunds the spells (i.e. undead blade targeting original life units) or when the player calls up the description of a unit with a modifier from a modded spell it will request the thumbnail image using a different path from when the game requests the spell thumbnail for the icon in the spellbook (tab screen)
+
+the path for the spellbook thumbnail that the game can find is /build/spellmasons-mods/undead_blade/spellIconUndeadBlade.png
+but the path for when this happens is 
+/build/images/spell/spellmasons-mods/undead_blade/spellIconUndeadBlade.png
+
+this seems like the location for where the games original spell icons are located and the modded spells are following that template
+
+i dont believe this affects things too much and it just spams the living hell out of the console with image requests
+- Prevent players from killing ally players that haven't spawned yet:
+  - mrman227 — Today at 3:00 PM
+Another player killed me with Target Cone + Slash before I placed my character down.
+- ObscuredCrow — Today at 1:12 PM
+Once you hit 0 health from using Death Wager you can no longer cast any spells. 
+
+Edit: Death Wager also doesn't calculate spell cost reset when used in a chain. 
+- MrMarblz — Today at 2:14 PM
+When all the players die the game restarts at level one automatically.  When this happens, it seems like you pick as many spells as the level you all were at in the last game.
+So for example, if we die on level 12 in the previous game we pick 12 spells at level 1 on the next game.
+Scrolls picked up in the next game don't do anything.  I'm not sure if they start giving you spells once you've passed the highest level you reached on the previous game.
+
+- https://discord.com/channels/1032294536640200766/1090050489934172220/1091492132189118545
+- So my brother (the other player) suspects that if any action is taken while you're currently making an attack it gets bugged.  He thinks he ended his turn during that single slash - hence why it doesn't look like it took damage.  He also seems to think that's the same case for using stamina.  If you move while you're still casting a spell the stamina isn't used.  Same goes for casting and mana usage, he says that it may not count the mana cost of spells if you're queuing them up while you're casting. - MrMarblz
+- MrMarblz — Today at 7:22 PM
+If the turn is ending and you're moving a spell at the same time the spell doesn't go away in the previous position and now you have the spell on your hotbar twice.
+- If one player dies in hotseat multiplayer it skips other player's turns
+- ally summoners show attack badge when getting ready to cast
 
 # v1.11
 - Hotseat is bugged, only one player can enter the portal https://steamcommunity.com/app/1618380/discussions/0/3819654644922993969/

@@ -1,5 +1,24 @@
-## 3.31.2023 Spellmasons Update v1.11.1
-- Thanks to Blood Spartan in Discord for reporting issue with not being able to import multiple spell mods
+## 3.31.2023 Spellmasons Update v1.12.0
+- Thanks to the following community members for reporting issues or making suggestions included in this update!
+    - Blood Spartan
+    - Vivid Empress
+    - MrMarblz
+
+- Quality of Life: Speed up target_kind
+
+- fix:  Prevent choosing calamities that you've already chosen
+- fix: Protect against unit being loaded in with null stamina
+- fix: Spell displace sometimes pushing enemies into walls
+- fix: Keep perks fresh when user is selecting multiple
+    perks on one level, which can happen if player is joining a game late.
+- fix: Perk labeling
+- Fix: calamities not being given after you run out of spell upgrades
+
+- UX: Don't show player thoughts when hovering over non-game space such as inventory or toolbar.
+- mod: export cards/util to API
+- mod: mod loading bug where only one mod with a spritesheet could be loaded or else it would error out
+    
+
 ## 3.20.2023 Spellmasons Update v1.11.0
 Thanks to Madgod, Spud Bud and Expresso depresso from Discord and Expirium from Steam Forums for reporting issues that have been resolved in this update!
 
