@@ -29,7 +29,7 @@ const magicColor = 0x321d73;
 const unit: UnitSource = {
   id: bossmasonUnitId,
   info: {
-    description: 'A nexus of dark magic! Beware.',
+    description: 'deathmason description',
     image: 'units/playerIdle',
     subtype: UnitSubType.RANGED_RADIUS,
   },
