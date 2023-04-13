@@ -1,8 +1,8 @@
-![Logo](./store_capsule_header.png)
+![Gif of spells in action](./readme_images/combine-spells.gif)
 
 Spellmasons is a turn-based, tactical roguelike where you devise spell combinations to overcome an onslaught of relentless enemies. Team up with your friends in online cooperative multiplayer, and delve into the intricacies of magic where clever combinations yield powerfully satisfying results. 
 
-[![Buy Spellmasons on Steam](./buy_spellmasons_CTA.png)](https://store.steampowered.com/app/1618380/Spellmasons/)
+[![Buy Spellmasons on Steam](./readme_images/buy_spellmasons_CTA.png)](https://store.steampowered.com/app/1618380/Spellmasons/)
 
 ## Getting Started
 - Install [Nodejs](https://nodejs.org/) on your development machine
@@ -23,3 +23,5 @@ The best way you can support my work is to purchase Spellmasons on [Steam](https
 ## Contact me
 - Twitter: [@nestfall](https://twitter.com/nestfall)
 - Email: spellmasons@gmail.com
+
+![Logo](./readme_images/store_capsule_header.png)
