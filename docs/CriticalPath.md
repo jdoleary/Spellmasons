@@ -2,8 +2,8 @@
 ## For 1.13
 - Check "Glop" Translation
 - Calamities should make enemies stronger, not you weaker
+- Add turn based cooldowns to spell-state
 - Balance:
-  - Target Soul Cost
   - Fortify
 - Fix mod spell icon path
 
