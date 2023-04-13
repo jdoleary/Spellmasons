@@ -226,6 +226,13 @@ ${explainUpdateText}
   };
 }
 
+globalThis.addEventListener('keydown', event => {
+  if (event.code == 'F12' && globalThis.electronSettings) {
+    // @ts-ignore
+    globalThis.electronSettings.toggleDevTools();
+  }
+})
+
 export function setupPieAndUnderworld() {
   if (globalThis.headless) {
     console.error('wsPieSetup is only for browser clients and should not be invoked from headless server.')
