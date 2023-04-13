@@ -2,6 +2,7 @@
 ## For 1.13
 - Check "Glop" Translation
 - Make open source
+- Calamities should make enemies stronger, not you weaker
 - Fix hotseat multiplayer stuck after one player death bug
 - Balance:
   - Target Soul Cost
