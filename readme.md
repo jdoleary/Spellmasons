@@ -1,7 +1,8 @@
 ![Logo](./store_capsule_header.png)
+
 Spellmasons is a turn-based, tactical roguelike where you devise spell combinations to overcome an onslaught of relentless enemies. Team up with your friends in online cooperative multiplayer, and delve into the intricacies of magic where clever combinations yield powerfully satisfying results. 
 
-[You can purchase it here on Steam to support the developer](https://store.steampowered.com/app/1618380/Spellmasons/)
+[You can purchase it on Steam to support the developer](https://store.steampowered.com/app/1618380/Spellmasons/)
 
 ## Getting Started
 - Install [Nodejs](https://nodejs.org/) on your development machine
