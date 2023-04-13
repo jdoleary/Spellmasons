@@ -1,6 +1,6 @@
 # End-User License Agreement ("Agreement")
 
-Last updated: February 10, 2023
+Last updated: April 13, 2023
 
 Please read this End-User License Agreement carefully before downloading or using Spellmasons.
 
