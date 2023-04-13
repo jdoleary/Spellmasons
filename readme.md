@@ -1,4 +1,4 @@
-![Gif of spells in action](./readme_images/combine-spells.gif)
+![Gif of spells in action](./readme_images/combine-spells-large.gif)
 
 Spellmasons is a turn-based, tactical roguelike where you devise spell combinations to overcome an onslaught of relentless enemies. Team up with your friends in online cooperative multiplayer, and delve into the intricacies of magic where clever combinations yield powerfully satisfying results. 
 
