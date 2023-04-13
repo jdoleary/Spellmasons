@@ -3,8 +3,6 @@
 - Check "Glop" Translation
 - Calamities should make enemies stronger, not you weaker
 - Add turn based cooldowns to spell-state
-- Balance:
-  - Fortify
 - Fix mod spell icon path
 
 ---

@@ -10,7 +10,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
 export const id = 'fortify';
-const DAMGAGE_REDUCTION_PROPORTION = 0.1;
+const DAMGAGE_REDUCTION_PROPORTION = 0.5;
 export const modifierImagePath = 'spell-effects/modifierShield.png';
 const spell: Spell = {
   card: {
@@ -21,6 +21,7 @@ const spell: Spell = {
     manaCost: 100,
     healthCost: 0,
     expenseScaling: 3,
+    cooldown: 2,
     probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconFortify.png',
     animationPath: 'spell-effects/spellShield',
