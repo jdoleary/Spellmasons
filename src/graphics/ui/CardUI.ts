@@ -550,14 +550,14 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
     manageSelectedCardsParentVisibility();
     updateCardBadges(underworld);
     if (underworld) {
-      // Update prediction now that the spell chain has changed
+      // runPredictions to update the mana and health of predictionPlayer if the spell were to be cast
+      // so that we can check in the next block if there is insufficient health or mana to cast it.
       await runPredictions(underworld);
     }
-    let cost = calculateCost([card], globalThis.player.cardUsageCounts)
 
     const predictionPlayerUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id);
     if (predictionPlayerUnit) {
-      if (cost.manaCost > predictionPlayerUnit.mana) {
+      if (predictionPlayerUnit.mana < 0) {
         floatingText({
           coords: underworld.getMousePos(),
           text: 'Insufficient Mana',
@@ -568,7 +568,7 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
 
       }
 
-      if (cost.healthCost >= predictionPlayerUnit.health) {
+      if (predictionPlayerUnit.health < 0) {
         floatingText({
           coords: underworld.getMousePos(),
           text: 'Insufficient Health',
