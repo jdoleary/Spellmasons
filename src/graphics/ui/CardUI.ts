@@ -499,16 +499,14 @@ function addListenersToCardElement(
     }
   });
 }
-export function deselectLastCard(underworld?: Underworld) {
+export function deselectLastCard(underworld: Underworld) {
   if (globalThis.headless) { return; }
   if (elSelectedCards) {
     const cardGroup = elSelectedCards.children.item(elSelectedCards.children.length - 1) as HTMLElement;
     if (cardGroup) {
       (cardGroup.children.item(0) as HTMLElement).click();
       manageSelectedCardsParentVisibility();
-      if (underworld) {
-        runPredictions(underworld);
-      }
+      runPredictions(underworld);
     } else {
       console.warn(`Cannot deselect last card in selected cards`)
     }
@@ -521,17 +519,13 @@ export function selectCardByIndex(index: number, underworld?: Underworld) {
     const cardGroup = elCardHand.children.item(index) as HTMLElement;
     if (cardGroup && cardGroup.children.item(0)) {
       (cardGroup.children.item(0) as HTMLElement).click();
-      if (underworld) {
-        // Update prediction now that the spell chain has changed
-        runPredictions(underworld);
-      }
     } else {
       console.warn(`Cannot select a card, no card in hand at index ${index}`)
     }
   }
 }
 // Moves a card element to selected-cards div
-function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string, underworld: Underworld) {
+async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string, underworld: Underworld) {
   const card = Cards.allCards[cardId]
   if (!card) {
     console.error('Card with', cardId, 'not found');
@@ -555,6 +549,10 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
     elSelectedCards.appendChild(clone);
     manageSelectedCardsParentVisibility();
     updateCardBadges(underworld);
+    if (underworld) {
+      // Update prediction now that the spell chain has changed
+      await runPredictions(underworld);
+    }
     let cost = calculateCost([card], globalThis.player.cardUsageCounts)
 
     const predictionPlayerUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id);
@@ -566,7 +564,7 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
           style: { fill: colors.errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
         })
         explain(EXPLAIN_END_TURN);
-        deselectLastCard();
+        deselectLastCard(underworld);
 
       }
 
@@ -576,7 +574,7 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
           text: 'Insufficient Health',
           style: { fill: colors.errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
         })
-        deselectLastCard();
+        deselectLastCard(underworld);
 
       }
     } else {
