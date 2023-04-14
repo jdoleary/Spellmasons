@@ -694,6 +694,11 @@ export function getSpellThumbnailPath(path?: string): string {
   if (!path) {
     return '';
   }
+  // spellmasons-mods/ should not have anything appended to the front since
+  // they are included in the mod folder
+  if (path.indexOf('spellmasons-mods/') !== -1) {
+    return path;
+  }
   // The presence of '/' means that it's a different path than default (such as in a mod) and it isn't
   // nested in images/spell/
   return path.indexOf('/') !== -1 ? path : 'images/spell/' + path;
