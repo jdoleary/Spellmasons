@@ -1,6 +1,5 @@
 Validating 1.13
 - Refactor recalcPositionForCards and syncInventory. Needs commenting and they probably overlap responsibilities
-- You can go negative when queuing but then can't click to cast, bad ux
 ---
 - If you press "Escape" during View.Disconnect is messes up the flow and even if you connect again successfully you can't get back in because it only shows the quit button
 - Vivid Empress — 03/25/2023 11:24 PM

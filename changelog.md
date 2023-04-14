@@ -7,6 +7,7 @@
 - Balance: Made capture soul's cards more affordable (Necromancers rejoice!)
 
 - fix: hotseat multiplayer skipping player turns after any player dies 
+- fix: hotseat multiplayer loading and forgetting which spells were in the toolbar
 - fix: Once you hit 0 health from using Death Wager you can no longer cast any spells. Thanks ObsuredCrow
 - fix: errors in Copy
 - fix: issue where game wouldn't change turn phase if a non spanwed player was disconnected from the game in multiplayer
