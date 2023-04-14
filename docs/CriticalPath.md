@@ -5,7 +5,6 @@
 - Add turn based cooldowns to spell-state
   - you can get around cooldown by casting quickly, before it has triggered the spell
   - fix "failed to save" exceeding the quota
-- Fix mod spell icon path
 
 ---
 
@@ -49,17 +48,6 @@ The worst spell in the game:
 Fortify. Lol. This spell IS a joke right? 
 - MuditaMan — Yesterday at 5:41 PM
 When you add mana steal to a spell chain it updates the mana and health differences depending on your target(s), however, the additional mana is not usable in following spells in that same spell chain. 
-- Blood Spartan — 04/02/2023 6:43 AM
-Sometimes spells request the thumbnail image in a pathway that isnt where the thumbnail is. This one is a bit weird.
-but when a mod spell "fails" and refunds the spells (i.e. undead blade targeting original life units) or when the player calls up the description of a unit with a modifier from a modded spell it will request the thumbnail image using a different path from when the game requests the spell thumbnail for the icon in the spellbook (tab screen)
-
-the path for the spellbook thumbnail that the game can find is /build/spellmasons-mods/undead_blade/spellIconUndeadBlade.png
-but the path for when this happens is 
-/build/images/spell/spellmasons-mods/undead_blade/spellIconUndeadBlade.png
-
-this seems like the location for where the games original spell icons are located and the modded spells are following that template
-
-i dont believe this affects things too much and it just spams the living hell out of the console with image requests
 - Prevent players from killing ally players that haven't spawned yet:
   - mrman227 — Today at 3:00 PM
 Another player killed me with Target Cone + Slash before I placed my character down.

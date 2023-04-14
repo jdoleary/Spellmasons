@@ -8,6 +8,7 @@ import { MESSAGE_TYPES } from "./types/MessageTypes";
 import { setPlayerAttributeMax } from "./entity/Unit";
 import { allCards, ICard } from "./cards";
 import { LAST_LEVEL_INDEX } from "./config";
+import { getSpellThumbnailPath } from "./graphics/ui/CardUI";
 const elPerkList = document.getElementById('perkList');
 const elPerksEveryLevel = document.getElementById('perkEveryLevel');
 const elPerksEveryTurn = document.getElementById('perkEveryTurn');
@@ -44,9 +45,7 @@ export function createCursePerkElement(cardId: string, underworld: Underworld) {
     const content = allCards[cardId] as ICard;
     const thumbHolder = document.createElement('div');
     const thumbnail = document.createElement('img');
-    // The presence of '/' means that it's a different path than default (such as in a mod) and it isn't
-    // nested in images/spell/
-    thumbnail.src = content.thumbnail.indexOf('/') !== -1 ? content.thumbnail : 'images/spell/' + content.thumbnail;
+    thumbnail.src = getSpellThumbnailPath(content.thumbnail);
     thumbHolder.appendChild(thumbnail);
     thumbHolder.classList.add('card-thumb');
     elCardInner.appendChild(thumbHolder);

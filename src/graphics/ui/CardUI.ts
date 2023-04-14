@@ -684,6 +684,15 @@ export function getCardRarityColor(content: { probability: number }): string {
       return '#3b322c'
   }
 }
+export function getSpellThumbnailPath(path?: string): string {
+  if (!path) {
+    return '';
+  }
+  // The presence of '/' means that it's a different path than default (such as in a mod) and it isn't
+  // nested in images/spell/
+  return path.indexOf('/') !== -1 ? path : 'images/spell/' + path;
+
+}
 function createNonCardInventoryElement(thumbnailPath: string, titleText: string) {
   if (globalThis.headless) { return; }
   const element = document.createElement('div');
@@ -693,7 +702,7 @@ function createNonCardInventoryElement(thumbnailPath: string, titleText: string)
   element.appendChild(elCardInner);
   const thumbHolder = document.createElement('div');
   const thumbnail = document.createElement('img');
-  thumbnail.src = 'images/spell/' + thumbnailPath;
+  thumbnail.src = getSpellThumbnailPath(thumbnailPath);
   thumbHolder.appendChild(thumbnail);
   thumbHolder.classList.add('card-thumb');
   elCardInner.appendChild(thumbHolder);
@@ -762,9 +771,7 @@ function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSi
 
   const thumbHolder = document.createElement('div');
   const thumbnail = document.createElement('img');
-  // The presence of '/' means that it's a different path than default (such as in a mod) and it isn't
-  // nested in images/spell/
-  thumbnail.src = content.thumbnail.indexOf('/') !== -1 ? content.thumbnail : 'images/spell/' + content.thumbnail;
+  thumbnail.src = getSpellThumbnailPath(content.thumbnail);
   thumbHolder.appendChild(thumbnail);
   thumbHolder.classList.add('card-thumb');
   elCardInner.appendChild(thumbHolder);
@@ -921,7 +928,7 @@ export function cardListToImages(cardIds: string[]): string {
   for (let cardId of cardIds) {
     const card = Cards.allCards[cardId];
     if (card) {
-      html += `<img src="images/spell/${card.thumbnail}" alt="${card.id}"/>`;
+      html += `<img src="${getSpellThumbnailPath(card.thumbnail)}" alt="${card.id}"/>`;
     }
   }
   return html;

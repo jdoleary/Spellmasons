@@ -78,6 +78,7 @@ import { allUnits } from '../entity/units';
 import floatingText from '../graphics/FloatingText';
 import { Localizable } from '../localization';
 import { distance } from '../jmath/math';
+import { getSpellThumbnailPath } from '../graphics/ui/CardUI';
 export interface Modifiers {
   subsprite?: Subsprite;
   // run special init logic (usually for visuals) when a modifier is added or loaded
@@ -225,7 +226,7 @@ export function registerCards(overworld: Overworld) {
 function cardToUpgrade(c: ICard, overworld: Overworld): IUpgrade {
   // Make forbidden cards unavailable in demo
   const probability = globalThis.isDemo && c.probability == probabilityMap[CardRarity.FORBIDDEN] ? 0 : c.probability;
-  const thumbnail = c.thumbnail.indexOf('/') !== -1 ? c.thumbnail : 'images/spell/' + c.thumbnail;
+  const thumbnail = getSpellThumbnailPath(c.thumbnail);
   return {
     title: c.id,
     modName: c.modName,

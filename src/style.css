@@ -2086,3 +2086,8 @@ body.dragging-card .floating-card-holder .empty-slot {
   text-align: center;
   margin-top: 8px;
 }
+
+.modifiers {
+  margin-left: 4px;
+  margin-top: 2px;
+}

@@ -1413,7 +1413,7 @@ function createContextMenuOptions(menu: HTMLElement, overworld: Overworld) {
     let el = document.createElement('li');
     if (Object.keys(allUnits).includes(label)) {
       // Add unit summon image to help identify them
-      el.innerHTML = `<img width="32px" height="32px" src="images/spell/spellIconSummon_${label.split(' ').join('').toLowerCase()}.png"/>&nbsp;${label}`
+      el.innerHTML = `<img width="32px" height="32px" src="${CardUI.getSpellThumbnailPath(`spellIconSummon_${label.split(' ').join('').toLowerCase()}.png`)}"/>&nbsp;${label}`
     } else {
       el.innerHTML = label;
     }
