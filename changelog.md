@@ -1,9 +1,27 @@
 ## Spellmasons Update v1.13.0
-- Make open source
-- Fix hotseat multiplayer stuck after one player death bug
-- Fixes: 
-    - ObscuredCrow — Today at 1:12 PM
-    Once you hit 0 health from using Death Wager you can no longer cast any spells. 
+
+- Spellmasons source code is now public.  Check it out at https://github.com/jdoleary/Spellmasons
+
+- Feature / Balance: Add cooldown to some cards to make players wait a number of turns before casting them again
+- Balance: Make fortify more meaningful
+- Balance: Made capture soul's cards more affordable (Necromancers rejoice!)
+
+- fix: hotseat multiplayer skipping player turns after any player dies 
+- fix: Once you hit 0 health from using Death Wager you can no longer cast any spells. Thanks ObsuredCrow
+- fix: errors in Copy
+- fix: issue where game wouldn't change turn phase if a non spanwed player was disconnected from the game in multiplayer
+- fix: Deathwager allowing player health to go to 0 and preventing them from casting (now it won't let you cast it if you have only 1 health) - Thanks ObscuredCrow
+- fix: "Insufficient Mana" warning to allow for spells that give you mana to affect the chain.  For example, if you mana steal in a chain of spells you are now able to use that new mana in the rest of the chain - Thanks MuditaMan for reporting this issue.
+
+- i18n: fix: newlines messing up localization for some languages
+
+- UI: Add cooldown badge to cards that have a cooldown
+- UI: Fix alignment of modifier icons in tooltip
+
+- Menu: Add "Source Code" link to the Mods menu to take players to the github
+
+- Mod: Expose Events.ts in API - Thanks Blood Spartan
+- Mod: Allow F12 key to open console at any time
 ## 3.31.2023 Spellmasons Update v1.12.0
 - Thanks to the following community members for reporting issues or making suggestions included in this update!
     - Blood Spartan
