@@ -546,6 +546,30 @@ invisibly blocked, change with caution! */
   position: absolute;
 }
 
+.card-cooldown-badge {
+  display: none;
+}
+
+.card-inspect .card-cooldown-badge {
+  display: block;
+  background-image: url('images/time-circle.png');
+  background-size: cover;
+}
+
+.card-inspect .card .disabled-label {
+  top: 25%;
+  display: flex;
+}
+
+/* More descriptive when inside card inspect */
+.disabled-label .long {
+  display: none;
+}
+
+.card-inspect .disabled-label .long {
+  display: block;
+}
+
 .card-health-badge {
   background-color: #d55656;
   border: 2px solid #d55656;

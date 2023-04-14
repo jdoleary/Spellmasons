@@ -720,6 +720,10 @@ function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSi
     elDisabledLabel.classList.add('disabled-label');
     elDisabledLabel.innerHTML = `${cooldown}`;
     element.appendChild(elDisabledLabel);
+    const elDisabledLabelLong = document.createElement('span');
+    elDisabledLabelLong.classList.add('long');
+    elDisabledLabelLong.innerHTML = `&nbsp;Turn Cooldown`;
+    elDisabledLabel.appendChild(elDisabledLabelLong);
   }
   element.classList.add(cardRarityAsString(content));
   element.dataset.cardId = content.id;
@@ -748,6 +752,14 @@ function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSi
   elCardHealthBadge.classList.add('card-health-badge', 'card-badge');
   updateHealthBadge(elCardHealthBadge, content.healthCost, content);
   elCardBadgeHolder.appendChild(elCardHealthBadge);
+  // Cooldown badge
+  if (content.cooldown) {
+    const elCardCooldownBadge = document.createElement('div');
+    elCardCooldownBadge.classList.add('card-cooldown-badge', 'card-badge');
+    elCardCooldownBadge.innerHTML = content.cooldown.toString();
+    elCardBadgeHolder.appendChild(elCardCooldownBadge);
+  }
+
   const thumbHolder = document.createElement('div');
   const thumbnail = document.createElement('img');
   // The presence of '/' means that it's a different path than default (such as in a mod) and it isn't
