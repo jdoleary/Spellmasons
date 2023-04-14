@@ -1,6 +1,6 @@
 # End-User License Agreement ("Agreement")
 
-Last updated: February 10, 2023
+Last updated: April 13, 2023
 
 Please read this End-User License Agreement carefully before downloading or using Spellmasons.
 
@@ -73,7 +73,7 @@ The Company shall not be obligated to indemnify or defend You with respect to an
 
 # Your Suggestions
 
-Any feedback, comments, ideas, improvements or suggestions provided by You to the Company with respect to the Application shall remain the sole and exclusive property of the Company.
+Any feedback, comments, ideas, improvements, pull requests or suggestions provided by You to the Company with respect to the Application shall remain the sole and exclusive property of the Company.
 
 The Company shall be free to use, copy, modify, publish, or redistribute the Suggestions for any purpose and in any way without any credit or any compensation to You.
 
@@ -131,7 +131,7 @@ Some jurisdictions do not allow the exclusion of certain types of warranties or 
 
 # Limitation of Liability
 
-Notwithstanding any damages that You might incur, the entire liability of the Company and any of its suppliers under any provision of this Agreement and your exclusive remedy for all of the foregoing shall be limited to the amount actually paid by You for the Application or through the Application or 100 USD if You haven't purchased anything through the Application.
+Notwithstanding any damages that You might incur, the entire liability of the Company and any of its suppliers under any provision of this Agreement and your exclusive remedy for all of the foregoing shall be limited to the amount actually paid by You for the Application or through the Application.
 
 To the maximum extent permitted by applicable law, in no event shall the Company or its suppliers be liable for any special, incidental, indirect, or consequential damages whatsoever (including, but not limited to, damages for loss of profits, loss of data or other information, for business interruption, for personal injury, loss of privacy arising out of or in any way related to the use of or inability to use the Application, third-party software and/or third-party hardware used with the Application, or otherwise in connection with any provision of this Agreement), even if the Company or any supplier has been advised of the possibility of such damages and even if the remedy fails of its essential purpose.
 
