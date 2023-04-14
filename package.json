@@ -21,7 +21,7 @@
     "url": "git+https://github.com/jdoleary/Golems.git"
   },
   "author": "Jordan O'Leary",
-  "license": "Apache-2.0",
+  "license": "SEE LICENSE IN LICENSE.md",
   "homepage": "https://github.com/jdoleary/Golems#readme",
   "devDependencies": {
     "@babel/preset-env": "^7.12.11",
