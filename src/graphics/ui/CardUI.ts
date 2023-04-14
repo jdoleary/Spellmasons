@@ -532,6 +532,15 @@ export function selectCardByIndex(index: number, underworld?: Underworld) {
 }
 // Moves a card element to selected-cards div
 function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string, underworld: Underworld) {
+  const card = Cards.allCards[cardId]
+  if (!card) {
+    console.error('Card with', cardId, 'not found');
+    return;
+  }
+  if (!globalThis.player) {
+    console.error('Attempted to selectCard with no globalThis.player');
+    return;
+  }
   if (elSelectedCards) {
     const clone = element.cloneNode(true) as HTMLElement;
     // Selected cards are not draggable for rearranging
@@ -540,22 +549,17 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
     clone.querySelector('.card-title')?.remove();
     addListenersToCardElement(player, clone, cardId, underworld);
     clone.classList.add('selected');
-    const card = Cards.allCards[cardId]
-    if (card?.requiresFollowingCard) {
+    if (card.requiresFollowingCard) {
       clone.classList.add('requires-following-card')
     }
     elSelectedCards.appendChild(clone);
     manageSelectedCardsParentVisibility();
     updateCardBadges(underworld);
-    let cost = { manaCost: 0, healthCost: 0 };
-    if (globalThis.player) {
-      // Updates the mana cost
-      const cards = getSelectedCards();
-      cost = calculateCost(cards, globalThis.player.cardUsageCounts)
-    }
+    let cost = calculateCost([card], globalThis.player.cardUsageCounts)
 
-    if (globalThis.player) {
-      if (cost.manaCost > globalThis.player.unit.mana) {
+    const predictionPlayerUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id);
+    if (predictionPlayerUnit) {
+      if (cost.manaCost > predictionPlayerUnit.mana) {
         floatingText({
           coords: underworld.getMousePos(),
           text: 'Insufficient Mana',
@@ -566,7 +570,7 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
 
       }
 
-      if (cost.healthCost >= globalThis.player.unit.health) {
+      if (cost.healthCost >= predictionPlayerUnit.health) {
         floatingText({
           coords: underworld.getMousePos(),
           text: 'Insufficient Health',
@@ -575,6 +579,8 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
         deselectLastCard();
 
       }
+    } else {
+      console.warn('Unexpected: predictionPlayerUnit is undefined');
     }
   } else {
     console.error('elSelectedCards is null');

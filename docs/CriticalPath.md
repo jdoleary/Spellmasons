@@ -46,8 +46,6 @@ Tier 11 Sacrifice
 
 The worst spell in the game:
 Fortify. Lol. This spell IS a joke right? 
-- MuditaMan — Yesterday at 5:41 PM
-When you add mana steal to a spell chain it updates the mana and health differences depending on your target(s), however, the additional mana is not usable in following spells in that same spell chain. 
 - Prevent players from killing ally players that haven't spawned yet:
   - mrman227 — Today at 3:00 PM
 Another player killed me with Target Cone + Slash before I placed my character down.
