@@ -97,6 +97,8 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   // (prediction units are known to not have an image, this shall not change, other parts of the code
   // depends on this expectation)
   predictionScale?: number;
+  // Denotes that this is a prediction copy of a unit
+  isPrediction?: boolean;
   faction: Faction;
   UITargetCircleOffsetY: number;
   defaultImagePath: string;
@@ -634,7 +636,20 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   if (unit.image) {
     changeToDieSprite(unit);
   }
-  unit.mana = 0;
+
+  // Generally a dead units mana should ALWAYS be set to 0 so there aren't floating
+  // mana bars hanging around above corpses, but there is one exception:
+  // The prediction copy of the player unit is used to determine if a player has
+  // enough mana to cast a spell.  This is so that when the effects of the spell
+  // influence how much mana you get you can use that mana in the same spell chain
+  // for example with steal_mana.  However, implementing this created an issue
+  // where you got an "insufficient mana" message when attempting to cast
+  // a spell that would kill you.  This is undesireable, you should be able to
+  // cast a spell that can kill you if you want, so this special check ensures
+  // the prediction copy of a player unit doesn't get their mana set to 0 on death.
+  if (!(unit.unitType == UnitType.PLAYER_CONTROLLED && unit.isPrediction)) {
+    unit.mana = 0;
+  }
   // Ensure that the unit resolvesDoneMoving when they die in the event that 
   // they die while they are moving.  This prevents turn phase from getting stuck
   unit.resolveDoneMoving();
@@ -1142,6 +1157,7 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
   const { image, resolveDoneMoving, modifiers, ...rest } = u;
   return {
     ...rest,
+    isPrediction: true,
     // A copy of the units y scale just for the prediction unit so that it will know
     // how high up to display the attentionMarker
     predictionScale: image?.sprite.scale.y,
