@@ -3081,7 +3081,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         effectState.targetedUnits = effectState.targetedUnits.filter(u => !excludedTargets.includes(u));
 
         const cardEffectPromise = card.effect(effectState, card, quantity, this, prediction, outOfRange);
-        if (effectState.casterPlayer && card.cooldown) {
+        if (!prediction && effectState.casterPlayer && card.cooldown) {
           Object.assign(effectState.casterPlayer.spellState[card.id] || {}, { cooldown: card.cooldown });
         }
         if (prediction) {

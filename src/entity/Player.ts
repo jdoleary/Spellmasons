@@ -228,6 +228,13 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
     elInstructions.innerHTML = `${i18n('choose spawn instructions')} <img src="mouse-LMB-bg.png" alt="Left Mouse Button"/>`
   }
 
+  // Reset cooldowns on spells
+  for (let spellState of Object.values(player.spellState)) {
+    if (spellState.cooldown) {
+      spellState.cooldown = 0;
+    }
+  }
+
   // Make unit visible only if they are current users player
   // so that they can see where to spawn them
   if (globalThis.player == player) {

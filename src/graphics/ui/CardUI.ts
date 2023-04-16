@@ -471,11 +471,6 @@ function addListenersToCardElement(
       playSFXKey('deny');
       return;
     }
-    if (getCardCooldown(cardId, underworld)) {
-      floatingText({ coords: underworld.getMousePos(), text: i18n(['card cooldown', getCardCooldown(cardId, underworld).toString()]), style: { fill: 'red' } });
-      playSFXKey('deny');
-      return;
-    }
     if (element.classList.contains('selected')) {
       const index = cardsSelected.findIndex((c) => c === cardId);
       if (index !== -1) {
@@ -494,6 +489,12 @@ function addListenersToCardElement(
         );
       }
     } else {
+      // Don't let card get added if it's on cooldown
+      if (getCardCooldown(cardId, underworld)) {
+        floatingText({ coords: underworld.getMousePos(), text: i18n(['card cooldown', getCardCooldown(cardId, underworld).toString()]), style: { fill: 'red' } });
+        playSFXKey('deny');
+        return;
+      }
       cardsSelected.push(cardId);
       selectCard(player, element, cardId, underworld);
     }
