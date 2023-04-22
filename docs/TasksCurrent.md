@@ -1,3 +1,4 @@
+- Blood Spartan reports: SuperMe gives spells even for mods that are not enabled
 Validating 1.13
 - Refactor recalcPositionForCards and syncInventory. Needs commenting and they probably overlap responsibilities
 ---

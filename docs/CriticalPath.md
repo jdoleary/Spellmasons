@@ -3,6 +3,23 @@
 - Calamities should make enemies stronger, not you weaker
 - Add turn based cooldowns to spell-state
   - you can get around cooldown by casting quickly, before it has triggered the spell
+- Balance Suffocate (TonyFTW from Discord)
+However, I think it could be modified in ways that would give it a purpose, as i would consider it currently universally outclassed. My initial thoughts go to making this a high mana cost spell that puts any monster on an unstackable x turn clock (maybe 5-10) regardless of health, or a stackable % of hp turns calc(IE 4% stacking cast 5 times would be a 5 turn clock). In this way it might serve a mid game purpose for killing high hp monsters or boss, or a mid late floor clearing mechanism with stall tactics. In the end there’s a million ways to address the design purpose of this spell if desired.
+---
+MrMarblz — Yesterday at 12:15 PM
+Here are a few of the bugs we’ve encountered in multiplayer.  This is strictly from memory about games we’ve played in the past 2-3 weeks.  I have video of our games that I can more closely review if need be.
+•    A player has joined mid-game and didn’t get to choose any spells or upgrades.  When the first level was completed they still weren’t able to pick any.  Rejoining the game didn’t fix it either for that player.
+•    Enemies get de-synced.  This seems to happen a lot more the past few weeks.  Monsters die or get damaged and players are observing different (or no) damage delt, some players see the enemy die and others don’t.  Also, some enemies come back to life to some players but not other players.  When this happens we really have no idea what’s true or see any consistency.  There’s been times where others are able to finish the level, the portals appear and we’re able to go through while another player still sees an enemy and doesn’t have a portal until the enemy only seen by them is finished off.
+•    Archer pathing seems broken in multiplayer, almost like they forget how to avoid walls.
+•    If other players still haven’t spawned in on a level, and their cursor with their ghost is in range of another players spell then that spell damages the player’s ghost.  There’s been plenty of times where someone spawns in dead because of this.
+On another note, there’s a few exploits I’m not sure if you’re aware of…
+•    If you cast Conserve, you can chain other spell components like Heal after Conserve in the same casting action as long as you have enough mana for them.  I think the game waits until after that spell with Conserve is finished before it banks your mana, and it uses the current mana value before that spell with Conserve is cast.  So if I had 100 mana before I cast Conserve + Shield + Heal + Heal then it still banks 100 mana for next round.  It can get pretty out of control with Shields, Heals, and Last Wills if you steal a bunch of mana before you Conserve.
+•    The spell’s description, Last Will, says it doesn’t stack but it appears it actually does.  Between this and the previous exploit you can get a pretty crazy amount of potions if an ally dies. 
+Other comments/suggestions…
+•    We absolutely love the reduction in mana cost summoning after Capture Soul.  We all felt like it was far too expensive, and summoning was not at all worth it compared to resurrect.  Now it’s so much better, and we thank you for that.  Now, can we please capture the souls of Minibosses??  Possibly make their mana cost the same as their normal counterparts before this patch.
+•    We do not like the new cooldowns on freeze and other spells you’ve added and feel like the increase in mana cost for these spells is enough of a deterrent not to spam them all the time.  We feel like it should be one or the other, not both (and we prefer how it was).
+•    Can we get a small subtle “LEVEL X” in the top left corner?  It tells us what level we’re on when the level starts, but it’s hard to remember after spending a long enough time on a level.
+•    The overlay where it tells you to click on the map to spawn really starts to annoy and get in the way after you’ve gotten familiar with the game.  Can we have an option to turn it off?
 
 ---
 
