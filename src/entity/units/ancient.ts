@@ -4,7 +4,6 @@ import { UnitSubType } from '../../types/commonTypes';
 import { createVisualLobbingProjectile } from '../Projectile';
 import * as math from '../../jmath/math';
 import Underworld from '../../Underworld';
-import { bloodLobber } from '../../graphics/ui/colors';
 import * as config from '../../config';
 import * as Image from '../../graphics/Image';
 import { makeAncientParticles } from '../../graphics/ParticleCollection';
@@ -19,9 +18,9 @@ const unit: UnitSource = {
   },
   unitProps: {
     attackRange: 1200,
-    bloodColor: bloodLobber,
+    bloodColor: 0x426061,
     healthMax: 60,
-    damage: 2,
+    damage: 4,
     manaCostToCast: 15,
     staminaMax: 0,
   },
@@ -34,12 +33,12 @@ const unit: UnitSource = {
     idle: 'units/ancient',
     hit: 'units/ancient',
     attack: 'units/ancient',
-    die: 'units/ancient',
+    die: 'units/ancient_dead',
     walk: 'units/ancient',
   },
   sfx: {
-    damage: 'lobberHurt',
-    death: 'lobberDeath'
+    damage: 'ancientHit',
+    death: 'ancientDeath'
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     if (unit.image) {
@@ -57,7 +56,7 @@ const unit: UnitSource = {
       unit.path = undefined;
       Unit.orient(unit, attackTarget);
       makeAncientParticles(unit, false);
-      await makeManaTrail(unit, attackTarget, underworld, '#800000', '#c73e3e').then(() => {
+      await makeManaTrail(unit, attackTarget, underworld, '#5a7879', '#304748').then(() => {
         Unit.takeDamage(attackTarget, unit.damage, attackTarget, underworld, false, undefined);
       });
     }

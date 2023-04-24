@@ -34,8 +34,8 @@ export function makeAncientParticles(position: Vec2, prediction: boolean) {
                 "minimumScaleMultiplier": 1
             },
             "color": {
-                "start": "#c73e3e",
-                "end": "#800000"
+                "start": "#5a7879",
+                "end": "#304748"
             },
             "speed": {
                 "start": 60,
@@ -76,7 +76,7 @@ export function makeAncientParticles(position: Vec2, prediction: boolean) {
                 "r": 20
             }
         }, [texture]);
-    simpleEmitter(position, config);
+    simpleEmitter(position, config, () => { }, containerParticlesUnderUnits);
 }
 export function makeBloatExplosionWithParticles(position: Vec2, size: number, prediction: boolean) {
     if (prediction || globalThis.headless) {

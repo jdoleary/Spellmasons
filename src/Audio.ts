@@ -25,6 +25,8 @@ export const sfx: { [key: string]: string[] } = {
         './sound/sfx/archer-hurt-001.mp3',
         './sound/sfx/archer-hurt-002.mp3',
     ],
+    ancientDeath: ['./sound/sfx/Crumbling Rock Slide_RBDII 06.mp3'],
+    ancientHit: ['./sound/sfx/Hit Rock into Gravel_RBDII 01.mp3'],
     bleedLarge: ['./sound/sfx/BleedHigh.mp3'],
     bleedMedium: ['./sound/sfx/BleedMed.mp3'],
     bleedSmall: ['./sound/sfx/BleedLow.mp3'],
