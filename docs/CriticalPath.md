@@ -1,6 +1,11 @@
 # Critical Path
-## For 1.13
+- Two units moving pushed a third unit through a wall (archers).  See Chase87's photo in Discord
+- Review BloodSpartan's PR
 - Calamities should make enemies stronger, not you weaker
+- Address MrMarblz's bugs below
+- Create "Ancient" enemy
+
+---
 - Add turn based cooldowns to spell-state
   - you can get around cooldown by casting quickly, before it has triggered the spell
 - Balance Suffocate (TonyFTW from Discord)
