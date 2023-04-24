@@ -10,6 +10,74 @@ import { bleedInstantKillProportion } from '../cards/bleed';
 import { containerUnits } from './PixiUtils';
 import { IUnit } from '../entity/Unit';
 import Underworld from '../Underworld';
+export function makeAncientParticles(position: Vec2, prediction: boolean) {
+    if (prediction || globalThis.headless) {
+        // Don't show if just a prediction
+        return;
+    }
+    const texture = createParticleTexture();
+    if (!texture) {
+        logNoTextureWarning('makeAncientParticles');
+        return;
+    }
+    position = clone(position);
+    const config =
+        particles.upgradeConfig({
+            autoUpdate: true,
+            "alpha": {
+                "start": 1,
+                "end": 0.28
+            },
+            "scale": {
+                "start": 1.25,
+                "end": 0.5,
+                "minimumScaleMultiplier": 1
+            },
+            "color": {
+                "start": "#c73e3e",
+                "end": "#800000"
+            },
+            "speed": {
+                "start": 60,
+                "end": 30,
+                "minimumSpeedMultiplier": 1
+            },
+            "acceleration": {
+                "x": 0,
+                "y": 0
+            },
+            "maxSpeed": 0,
+            "startRotation": {
+                "min": 265,
+                "max": 275
+            },
+            "noRotation": false,
+            "rotationSpeed": {
+                "min": 50,
+                "max": 50
+            },
+            "lifetime": {
+                "min": 1,
+                "max": 1
+            },
+            "blendMode": "normal",
+            "frequency": 0.02,
+            "emitterLifetime": 0.8,
+            "maxParticles": 60,
+            "pos": {
+                "x": 0,
+                "y": 0
+            },
+            "addAtBack": false,
+            "spawnType": "circle",
+            "spawnCircle": {
+                "x": 0,
+                "y": 0,
+                "r": 20
+            }
+        }, [texture]);
+    simpleEmitter(position, config);
+}
 export function makeBloatExplosionWithParticles(position: Vec2, size: number, prediction: boolean) {
     if (prediction || globalThis.headless) {
         // Don't show if just a prediction
