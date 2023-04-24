@@ -1,11 +1,7 @@
 import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
-import { createVisualLobbingProjectile } from '../Projectile';
-import * as math from '../../jmath/math';
 import Underworld from '../../Underworld';
-import * as config from '../../config';
-import * as Image from '../../graphics/Image';
 import { makeAncientParticles } from '../../graphics/ParticleCollection';
 import { makeManaTrail } from '../../graphics/Particles';
 
