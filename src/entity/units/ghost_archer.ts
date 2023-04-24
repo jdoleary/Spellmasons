@@ -72,7 +72,9 @@ const unit: UnitSource = {
       await Unit.playComboAnimation(unit, unit.animations.attack, () => {
         let flyingProjectilePromise = Promise.resolve();
         // Get all units between source and target for the arrow to pierce:
-        attackTargets.forEach(pierceTarget => {
+        // .slice(1) selects all but the first target which is the destination which takes full
+        // damage, not piercing damage
+        attackTargets.slice(1).forEach(pierceTarget => {
           // Fake the collision by just calculating a delay based on the speed of the projectile
           const millisecondsUntilCollision = math.distance(unit, pierceTarget) / SPEED_PER_MILLI
           setTimeout(() => {
