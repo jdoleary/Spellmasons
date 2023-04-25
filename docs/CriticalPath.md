@@ -1,9 +1,13 @@
 # Critical Path
-- Two units moving pushed a third unit through a wall (archers).  See Chase87's photo in Discord
+## For v1.14
 - Review BloodSpartan's PR
+- Create "Ancient" enemy
+  - scale down
+  - add i18n copy
+---
+- Two units moving pushed a third unit through a wall (archers).  See Chase87's photo in Discord
 - Calamities should make enemies stronger, not you weaker
 - Address MrMarblz's bugs below
-- Create "Ancient" enemy
 
 ---
 - Add turn based cooldowns to spell-state
