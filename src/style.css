@@ -2091,3 +2091,11 @@ body.dragging-card .floating-card-holder .empty-slot {
   margin-left: 4px;
   margin-top: 2px;
 }
+
+#level-tracker {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  font-size: 40px;
+  text-shadow: #FFF 1px 1px 1px;
+}

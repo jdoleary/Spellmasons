@@ -679,6 +679,11 @@ async function handleLoadGameState(payload: {
     return;
   }
   underworld.levelIndex = loadedGameState.levelIndex;
+  // Update level tracker
+  const elLevelTracker = document.getElementById('level-tracker');
+  if (elLevelTracker) {
+    elLevelTracker.innerHTML = i18n(['Level', underworld.getLevelText()]);
+  }
 
   // Update the seed (this MUST come before syncronizeRNG)
   underworld.seed = loadedGameState.seed;

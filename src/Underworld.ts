@@ -89,6 +89,7 @@ import { BLOOD_ARCHER_ID } from './entity/units/blood_archer';
 import { BLOOD_GOLEM_ID } from './entity/units/bloodGolem';
 import { MANA_VAMPIRE_ID } from './entity/units/manaVampire';
 import { DARK_PRIEST_ID } from './entity/units/darkPriest';
+import { LAST_LEVEL_INDEX } from './config';
 
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
@@ -1667,6 +1668,11 @@ export default class Underworld {
 
     const { levelIndex, biome, limits, liquid, imageOnlyTiles, pickups, enemies, obstacles } = levelData;
     this.levelIndex = levelIndex;
+    // Update level tracker
+    const elLevelTracker = document.getElementById('level-tracker');
+    if (elLevelTracker) {
+      elLevelTracker.innerHTML = i18n(['Level', this.getLevelText()]);
+    }
 
     this.limits = limits;
 
@@ -1698,7 +1704,7 @@ export default class Underworld {
 
     // Show text in center of screen for the new level
     queueCenteredFloatingText(
-      ['Level', (this.levelIndex + 1).toString()],
+      ['Level', this.getLevelText()],
       'white'
     );
     console.log('Setup: resetPlayerForNextLevel; reset all players')
@@ -1716,6 +1722,13 @@ export default class Underworld {
     // be set BEFORE postSetupLevel is invoked because postSetupLevel will send a sync message
     // that will override the clientside data.
     this.postSetupLevel();
+  }
+  getLevelText(): string {
+    if (this.levelIndex > LAST_LEVEL_INDEX) {
+      return `${this.levelIndex - LAST_LEVEL_INDEX}+`;
+    } else {
+      return `${this.levelIndex + 1}`;
+    }
   }
   async createLevel(levelData: LevelData) {
     return new Promise<void>(resolve => {
@@ -1808,7 +1821,7 @@ export default class Underworld {
     if (!globalThis.headless) {
       if (elGameOverStats && player && player.stats) {
         elGameOverStats.innerHTML = `
-Got to level ${this.levelIndex + 1}
+Got to level ${this.getLevelText()}
       
 Survived for ${((Date.now() - player.stats.gameStartTime) / 60000).toFixed(2)} Minutes
 
