@@ -1,7 +1,6 @@
 # Critical Path
 ## For v1.14
 - Review BloodSpartan's PR
-- Create "Ancient" enemy
 ---
 - Two units moving pushed a third unit through a wall (archers).  See Chase87's photo in Discord
 - Calamities should make enemies stronger, not you weaker
@@ -26,7 +25,6 @@ Other comments/suggestions…
 •    We absolutely love the reduction in mana cost summoning after Capture Soul.  We all felt like it was far too expensive, and summoning was not at all worth it compared to resurrect.  Now it’s so much better, and we thank you for that.  Now, can we please capture the souls of Minibosses??  Possibly make their mana cost the same as their normal counterparts before this patch.
 •    We do not like the new cooldowns on freeze and other spells you’ve added and feel like the increase in mana cost for these spells is enough of a deterrent not to spam them all the time.  We feel like it should be one or the other, not both (and we prefer how it was).
 •    Can we get a small subtle “LEVEL X” in the top left corner?  It tells us what level we’re on when the level starts, but it’s hard to remember after spending a long enough time on a level.
-•    The overlay where it tells you to click on the map to spawn really starts to annoy and get in the way after you’ve gotten familiar with the game.  Can we have an option to turn it off?
 
 ---
 

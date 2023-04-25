@@ -225,7 +225,15 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
   player.unit.path = undefined;
 
   if (elInstructions && globalThis.player == player) {
-    elInstructions.innerHTML = `${i18n('choose spawn instructions')} <img src="mouse-LMB-bg.png" alt="Left Mouse Button"/>`
+    elInstructions.innerHTML = `${i18n('choose spawn instructions')}`
+    // Add left-click image for early levels to help players know how to spawn
+    if (underworld.levelIndex < 2) {
+      elInstructions.style.top = "260px";
+      elInstructions.innerHTML += ` <img src="mouse-LMB-bg.png" alt="Left Mouse Button"/>`
+    } else {
+      // Much less obtrusive instructions for later levels
+      elInstructions.style.top = "20px";
+    }
   }
 
   // Reset cooldowns on spells
