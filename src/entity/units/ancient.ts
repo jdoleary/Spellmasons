@@ -38,9 +38,7 @@ const unit: UnitSource = {
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     if (unit.image) {
-      // unit.image.sprite.anchor.y = 0.3;
-      unit.image.sprite.scale.x = 0.5;
-      unit.image.sprite.scale.y = 0.5;
+      unit.image.sprite.anchor.y = 0.2;
     }
   },
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
