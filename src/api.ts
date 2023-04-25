@@ -55,6 +55,7 @@ import * as Events from './Events';
 import { forcePush } from './cards/push';
 
 import * as commonTypes from './types/commonTypes';
+import * as particleEmitter from '@pixi/particle-emitter'
 
 
 const SpellmasonsAPI = {
@@ -90,6 +91,7 @@ const SpellmasonsAPI = {
     MultiColorReplaceFilter,
     Overworld,
     ParticleCollection,
+    particleEmitter,
     Particles,
     Pathfinding,
     Perk,
