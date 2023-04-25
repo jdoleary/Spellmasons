@@ -15,7 +15,7 @@ const unit: UnitSource = {
   unitProps: {
     attackRange: 1200,
     bloodColor: 0x426061,
-    healthMax: 60,
+    healthMax: 30,
     damage: 4,
     manaCostToCast: 15,
     staminaMax: 0,
