@@ -2326,7 +2326,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
   }
   perksLeftToChoose(player: Player.IPlayer): number {
-    return this.levelIndex - player.attributePerks.length - player.cursesChosen;
+    return this.levelIndex - player.attributePerks.length;
+  }
+  cursesLeftToChoose(player: Player.IPlayer): number {
+    return this.levelIndex - config.LAST_LEVEL_INDEX - player.cursesChosen;
   }
   upgradesLeftToChoose(player: Player.IPlayer): number {
     return this.cardDropsDropped + config.STARTING_CARD_COUNT - player.inventory.length;
@@ -2357,19 +2360,20 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
     const upgradesLeftToChoose = this.upgradesLeftToChoose(player);
     const perksLeftToChoose = this.perksLeftToChoose(player);
+    const cursesLeftToChoose = this.cursesLeftToChoose(player);
     // Return immediately if player has no upgrades that left to pick from
-    if (upgradesLeftToChoose <= 0 && perksLeftToChoose <= 0) {
+    if (upgradesLeftToChoose <= 0 && perksLeftToChoose <= 0 && cursesLeftToChoose <= 0) {
       console.log('showUpgrades: Closing upgrade screen, nothing left to pick')
       return;
     }
-    const isPerk = perksLeftToChoose > 0;
+    const isPerk = perksLeftToChoose > 0 || cursesLeftToChoose > 0;
     let minimumProbability = 0;
     if (upgradesLeftToChoose > 0 && player.inventory.length < config.STARTING_CARD_COUNT) {
       // Limit starting cards to a probability of 10 or more
       minimumProbability = 10;
     }
+    const isCursePerk = cursesLeftToChoose > 0;
     if (elUpgradePickerLabel) {
-      const isCursePerk = this.levelIndex > config.LAST_LEVEL_INDEX;
       elUpgradePickerLabel.innerHTML = i18n(isPerk ?
         isCursePerk ? 'Pick a Calamity' : 'Pick an Upgrade'
         : 'Pick a Spell');
@@ -2390,7 +2394,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (player) {
       const numberOfUpgradesToChooseFrom = 3 - player.reroll;
       if (isPerk) {
-        const isCursePerk = this.levelIndex > config.LAST_LEVEL_INDEX;
         if (isCursePerk) {
           const mostUsedLastLevelCards = Object.entries(player.spellState || {}).sort((a, b) => b[1].count - a[1].count)
             // Remove cards that are already affected by calamity
