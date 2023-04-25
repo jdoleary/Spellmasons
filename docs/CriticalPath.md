@@ -1,9 +1,10 @@
 # Critical Path
 ## For v1.14
 - Review BloodSpartan's PR
+- Calamities should make enemies stronger, not you weaker
+- Fix multiplayer desync bugs
 ---
 - Two units moving pushed a third unit through a wall (archers).  See Chase87's photo in Discord
-- Calamities should make enemies stronger, not you weaker
 - Address MrMarblz's bugs below
 
 ---
@@ -22,7 +23,6 @@ On another note, there’s a few exploits I’m not sure if you’re aware of…
 •    If you cast Conserve, you can chain other spell components like Heal after Conserve in the same casting action as long as you have enough mana for them.  I think the game waits until after that spell with Conserve is finished before it banks your mana, and it uses the current mana value before that spell with Conserve is cast.  So if I had 100 mana before I cast Conserve + Shield + Heal + Heal then it still banks 100 mana for next round.  It can get pretty out of control with Shields, Heals, and Last Wills if you steal a bunch of mana before you Conserve.
 •    The spell’s description, Last Will, says it doesn’t stack but it appears it actually does.  Between this and the previous exploit you can get a pretty crazy amount of potions if an ally dies. 
 Other comments/suggestions…
-•    We absolutely love the reduction in mana cost summoning after Capture Soul.  We all felt like it was far too expensive, and summoning was not at all worth it compared to resurrect.  Now it’s so much better, and we thank you for that.  Now, can we please capture the souls of Minibosses??  Possibly make their mana cost the same as their normal counterparts before this patch.
 •    We do not like the new cooldowns on freeze and other spells you’ve added and feel like the increase in mana cost for these spells is enough of a deterrent not to spam them all the time.  We feel like it should be one or the other, not both (and we prefer how it was).
 
 ---

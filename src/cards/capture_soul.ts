@@ -31,7 +31,7 @@ const spell: Spell = {
         for (let target of targets) {
           if (target) {
             if (!prediction) {
-              const newCardId = target.unitSourceId;
+              const newCardId = target.isMiniboss ? `${target.unitSourceId} Miniboss` : target.unitSourceId;
               const upgrade = upgradeCardsSource.find(u => u.title == newCardId)
               if (upgrade) {
                 floatingText({ coords: target, text: 'Soul Captured!' });
