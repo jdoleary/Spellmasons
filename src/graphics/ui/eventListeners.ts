@@ -349,8 +349,10 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
             // Only move ghost player if not awaitingSpawn (which means they've already chosen)
             // a spawn point but the message hasn't triggered yet due to another message still processing
             if (!globalThis.awaitingSpawn) {
-              globalThis.player.unit.x = spawnPoint.x;
-              globalThis.player.unit.y = spawnPoint.y;
+              globalThis.player.unit.x = -1000;
+              globalThis.player.unit.y = -1000;
+              globalThis.player.unit.image.sprite.x = spawnPoint.x;
+              globalThis.player.unit.image.sprite.y = spawnPoint.y;
             }
           }
         }
