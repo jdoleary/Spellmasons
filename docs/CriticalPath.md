@@ -21,7 +21,6 @@ Here are a few of the bugs we’ve encountered in multiplayer.  This is strictly
 •    If other players still haven’t spawned in on a level, and their cursor with their ghost is in range of another players spell then that spell damages the player’s ghost.  There’s been plenty of times where someone spawns in dead because of this.
 On another note, there’s a few exploits I’m not sure if you’re aware of…
 •    If you cast Conserve, you can chain other spell components like Heal after Conserve in the same casting action as long as you have enough mana for them.  I think the game waits until after that spell with Conserve is finished before it banks your mana, and it uses the current mana value before that spell with Conserve is cast.  So if I had 100 mana before I cast Conserve + Shield + Heal + Heal then it still banks 100 mana for next round.  It can get pretty out of control with Shields, Heals, and Last Wills if you steal a bunch of mana before you Conserve.
-•    The spell’s description, Last Will, says it doesn’t stack but it appears it actually does.  Between this and the previous exploit you can get a pretty crazy amount of potions if an ally dies. 
 Other comments/suggestions…
 •    We do not like the new cooldowns on freeze and other spells you’ve added and feel like the increase in mana cost for these spells is enough of a deterrent not to spam them all the time.  We feel like it should be one or the other, not both (and we prefer how it was).
 

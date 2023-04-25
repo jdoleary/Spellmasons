@@ -67,7 +67,8 @@ const spell: Spell = {
   },
   events: {
     onDeath: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
-      const quantity = unit.modifiers[id]?.quantity || 1;
+      // Last Will should not stack for balance reasons
+      const quantity = 1;
       // Unique for the unit and for quantity and same across all clients due to turn_number and unit.id
       const seed = seedrandom(`${underworld.turn_number} -${unit.id} `);
       for (let i = 0; i < quantity; i++) {
