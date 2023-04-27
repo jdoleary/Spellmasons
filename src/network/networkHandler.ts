@@ -180,6 +180,21 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
           document.body?.classList.toggle(showUpgradesClassName, false);
           // There may be upgrades left to choose
           underworld.showUpgrades();
+        } else if (payload.statCalamity) {
+          const player = underworld.players.find(p => p.clientId == fromClient);
+          if (player) {
+            player.cursesChosen++;
+            underworld.statCalamities.push(payload.statCalamity);
+            for (let unit of underworld.units) {
+              Unit.adjustUnitStatsByUnderworldCalamities(unit, underworld);
+            }
+          } else {
+            console.error('Could not find player to give curse perk.')
+          }
+          // Clear upgrades
+          document.body?.classList.toggle(showUpgradesClassName, false);
+          // There may be upgrades left to choose
+          underworld.showUpgrades();
         } else {
           // Get player of the client that sent the message 
           const fromPlayer = underworld.players.find((p) => p.clientId === fromClient);

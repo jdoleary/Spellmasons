@@ -77,7 +77,7 @@ import { makeRisingParticles, makeScrollDissapearParticles, stopAndDestroyForeve
 import { ensureAllClientsHaveAssociatedPlayers, Overworld } from './Overworld';
 import { Emitter } from '@pixi/particle-emitter';
 import { golem_unit_id } from './entity/units/golem';
-import { cleanUpPerkList, createPerkElement, generatePerks, tryTriggerPerk, showPerkList, hidePerkList, createCursePerkElement } from './Perk';
+import { cleanUpPerkList, createPerkElement, generatePerks, tryTriggerPerk, showPerkList, hidePerkList, createCursePerkElement, StatCalamity, generateRandomStatCalamity } from './Perk';
 import { bossmasonUnitId } from './entity/units/deathmason';
 import { hexToString } from './graphics/ui/colorUtil';
 import { doLiquidEffect } from './inLiquid';
@@ -198,6 +198,7 @@ export default class Underworld {
   }[] = [];
   activeMods: string[] = [];
   generatingLevel: boolean = false;
+  statCalamities: StatCalamity[] = [];
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
@@ -2329,7 +2330,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     return this.levelIndex - player.attributePerks.length;
   }
   cursesLeftToChoose(player: Player.IPlayer): number {
-    return this.levelIndex - config.LAST_LEVEL_INDEX - player.cursesChosen;
+    // Dev test
+    return this.levelIndex - player.cursesChosen;
+    // return this.levelIndex - config.LAST_LEVEL_INDEX - player.cursesChosen;
   }
   upgradesLeftToChoose(player: Player.IPlayer): number {
     return this.cardDropsDropped + config.STARTING_CARD_COUNT - player.inventory.length;
@@ -2403,7 +2406,13 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             // Clear upgrades, nothing to pick
             document.body?.classList.toggle(showUpgradesClassName, false);
           } else {
-            const elPerks = mostUsedLastLevelCards.slice(0, 3).map(count => createCursePerkElement(count[0], this));
+            const elPerks = mostUsedLastLevelCards.slice(0, 2).map(count => createCursePerkElement({ cardId: count[0] }, this));
+            for (let i = 0; i < 2; i++) {
+              const statCalamity = generateRandomStatCalamity(this, i);
+              if (statCalamity) {
+                elPerks.push(createCursePerkElement({ statCalamity }, this));
+              }
+            }
             if (elUpgradePickerContent) {
               elUpgradePickerContent.innerHTML = '';
               for (let elUpgrade of elPerks) {

@@ -9,6 +9,8 @@ import { setPlayerAttributeMax } from "./entity/Unit";
 import { allCards, ICard } from "./cards";
 import { LAST_LEVEL_INDEX } from "./config";
 import { getSpellThumbnailPath } from "./graphics/ui/CardUI";
+import { UnitSubType } from "./types/commonTypes";
+import { allUnits } from "./entity/units";
 const elPerkList = document.getElementById('perkList');
 const elPerksEveryLevel = document.getElementById('perkEveryLevel');
 const elPerksEveryTurn = document.getElementById('perkEveryTurn');
@@ -30,7 +32,35 @@ ${perkAttributeToIcon(perk.attribute)} +${perk.amount} ${i18n(perkAttributeToStr
 ${omitWhen ? '' : perkWhenToString(perk.when)}`.trim();
 
 }
-export function createCursePerkElement(cardId: string, underworld: Underworld) {
+
+export interface StatCalamity {
+    unitId: string,
+    stat: string,
+    amount: number
+}
+export function generateRandomStatCalamity(underworld: Underworld, index: number): StatCalamity | undefined {
+    // health, damage, attack range
+    const stats: (keyof Unit.IUnit)[] = ['health', 'damage', 'attackRange'];
+    const seedString = getUniqueSeedString(underworld, globalThis.player) + `-${index}-${player?.cursesChosen || 0}`;
+    const seed = seedrandom(seedString);
+    const stat = chooseOneOfSeeded(stats, seed);
+
+    const unitId = chooseOneOfSeeded(Object.keys(allUnits), seedrandom(`-${index}-${seedString}-unit`));
+    if (unitId && stat) {
+        return {
+            unitId,
+            stat,
+            amount: 1.2
+        }
+    } else {
+        console.warn('Could not generate random stat calamity')
+        return undefined;
+    }
+
+}
+
+// Calamities / Calamity
+export function createCursePerkElement({ cardId, statCalamity }: { cardId?: string, statCalamity?: StatCalamity }, underworld: Underworld) {
     if (globalThis.headless) {
         // There is no DOM in headless mode
         return;
@@ -42,32 +72,53 @@ export function createCursePerkElement(cardId: string, underworld: Underworld) {
     const elCardInner = document.createElement('div');
     elCardInner.classList.add('card-inner');
     element.appendChild(elCardInner);
-    const content = allCards[cardId] as ICard;
-    const thumbHolder = document.createElement('div');
-    const thumbnail = document.createElement('img');
-    thumbnail.src = getSpellThumbnailPath(content.thumbnail);
-    thumbHolder.appendChild(thumbnail);
-    thumbHolder.classList.add('card-thumb');
-    elCardInner.appendChild(thumbHolder);
 
     const desc = document.createElement('div');
     desc.classList.add('card-description');
     const descriptionText = document.createElement('div');
-    const numberOfLevelsToDisable = 2 + Math.floor((underworld.levelIndex - (1 + LAST_LEVEL_INDEX)) / 2);
-    descriptionText.innerHTML = i18n(['disable spell', content.id, numberOfLevelsToDisable.toString()]);
-    desc.appendChild(descriptionText);
+    if (cardId) {
 
-    elCardInner.appendChild(desc);
-    element.addEventListener('click', (e) => {
-        globalThis.timeLastChoseUpgrade = Date.now();
-        // Prevent click from "falling through" upgrade and propagating to vote for overworld level
-        e.stopPropagation();
-        pie.sendData({
-            type: MESSAGE_TYPES.CHOOSE_PERK,
-            curse: cardId,
-            disableFor: numberOfLevelsToDisable
+        const content = allCards[cardId] as ICard;
+        const thumbHolder = document.createElement('div');
+        const thumbnail = document.createElement('img');
+        thumbnail.src = getSpellThumbnailPath(content.thumbnail);
+        thumbHolder.appendChild(thumbnail);
+        thumbHolder.classList.add('card-thumb');
+        elCardInner.appendChild(thumbHolder);
+
+        const numberOfLevelsToDisable = 2 + Math.floor((underworld.levelIndex - (1 + LAST_LEVEL_INDEX)) / 2);
+        descriptionText.innerHTML = i18n(['disable spell', content.id, numberOfLevelsToDisable.toString()]);
+        desc.appendChild(descriptionText);
+
+        element.addEventListener('click', (e) => {
+            globalThis.timeLastChoseUpgrade = Date.now();
+            // Prevent click from "falling through" upgrade and propagating to vote for overworld level
+            e.stopPropagation();
+
+            pie.sendData({
+                type: MESSAGE_TYPES.CHOOSE_PERK,
+                curse: cardId,
+                disableFor: numberOfLevelsToDisable
+            });
         });
-    });
+    } else if (statCalamity) {
+        descriptionText.innerHTML = `${statCalamity.unitId} ${i18n([statCalamity.stat])} + ${statCalamity.amount * 100}%`;
+        desc.appendChild(descriptionText);
+        element.addEventListener('click', (e) => {
+            globalThis.timeLastChoseUpgrade = Date.now();
+            // Prevent click from "falling through" upgrade and propagating to vote for overworld level
+            e.stopPropagation();
+
+            pie.sendData({
+                type: MESSAGE_TYPES.CHOOSE_PERK,
+                statCalamity,
+            });
+        });
+
+    } else {
+        console.error('Invalid calamity')
+    }
+    elCardInner.appendChild(desc);
     element.addEventListener('mouseenter', (e) => {
         playSFXKey('click');
     });

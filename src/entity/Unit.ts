@@ -211,6 +211,8 @@ export function create(
     const difficulty = calculateGameDifficulty(underworld);
     adjustUnitDifficulty(unit, difficulty);
 
+    adjustUnitStatsByUnderworldCalamities(unit, underworld);
+
     unit.image?.sprite.scale.set(config.NON_HEAVY_UNIT_SCALE);
     setupShaders(unit);
     if (sourceUnit.init) {
@@ -230,6 +232,20 @@ export function create(
   } else {
     throw new Error(`Source unit with id ${unitSourceId} does not exist`);
   }
+}
+export function adjustUnitStatsByUnderworldCalamities(unit: IUnit, underworld: Underworld) {
+  for (let statCalamity of underworld.statCalamities) {
+    if (statCalamity.unitId == unit.unitSourceId) {
+      if (statCalamity.stat in unit) {
+        const stat: keyof IUnit = statCalamity.stat as keyof IUnit;
+        if (typeof unit[stat] === 'number') {
+          (unit[stat] as number) *= statCalamity.amount;
+        }
+
+      }
+    }
+  }
+
 }
 
 // sets all the properties that depend on difficulty
