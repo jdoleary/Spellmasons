@@ -2996,7 +2996,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       initialTargetedPickupId
     };
 
-    // Get initial targets
+    // Get initial targets.  If initial targets are already determined (by being passed into this function, use them;
+    // this is so that networked SPELL messages have consistent targets).  otherwise determine the initial target
+    // based on the castLocation and special logic such as noInitialTarget and onlySelectDeadUnits which depend on the
+    // cards being cast
     let unitsAtCastLocation = this.getUnitsAt(castLocation, prediction);
     let useInitialTarget = true;
     const firstCardId = effectState.cardIds[0];
