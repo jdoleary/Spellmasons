@@ -1135,6 +1135,9 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
           console.error('Cannot "Regenerate Level", underworld does not exist');
           return;
         }
+        // Clear lastLevelCreated in order to allow it to regenerate the level without
+        // changing the levelIndex
+        overworld.underworld.lastLevelCreated = undefined;
         overworld.underworld.generateLevelData(overworld.underworld.levelIndex);
       },
       supportInMultiplayer: false,
