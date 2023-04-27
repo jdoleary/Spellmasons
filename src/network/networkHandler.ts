@@ -813,33 +813,6 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
   // Clear out player thought (and the line that points to it) once they cast
   delete underworld.playerThoughts[caster.clientId];
 
-  // Prevent mana scamming
-  // --
-  // Note: There is already a check on click, but this additional check is necessary to
-  // prevent players from queueing up a spell that would go beyond their eventual mana
-  // while a current spell is still in the process of being cast and thus removing
-  // their mana as it is cast
-  if (caster) {
-    const cards = Cards.getCardsFromIds(payload.cards);
-    const cost = calculateCost(cards, caster.cardUsageCounts);
-    if (cost.manaCost > caster.unit.mana) {
-      if (globalThis.player == caster) {
-        floatingText({
-          coords: caster.unit,
-          text: 'Insufficient Mana',
-          style: { fill: colors.errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
-        })
-        console.log('Spell could not be cast, insufficient mana');
-      }
-      // Return to prevent player from mana scamming
-      // Note: this return must come OUTSIDE of the globalThis.player == caster check
-      // which is used only to show an error message for the player who attempted to cast,
-      // the return needs to run on ALL clients including the server so that the player doesn't
-      // cast when they have insufficient mana
-      return;
-    }
-  }
-
   console.log('Handle Spell:', payload?.cards.join(','));
 
   // Only allow casting during the PlayerTurns phase

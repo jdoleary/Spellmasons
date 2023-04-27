@@ -41,6 +41,7 @@ import { summoningSicknessId } from '../../modifierSummoningSickness';
 import { targetArrowCardId } from '../../cards/target_arrow';
 import { distance, similarTriangles } from '../../jmath/math';
 import pingSprite from '../Ping';
+import { errorRed } from './colors';
 
 export const keyDown = {
   showWalkRope: false,
@@ -697,9 +698,8 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         if ((overworld.underworld?.players.length || 0) > 1) {
           Player.setSpellmasonsToChannellingAnimation(selfPlayer);
         }
-        // Simulate a castCards prediction to obtain a cached copy of the targeted units
-        // to send along with the MESSAGE_TYPES.SPELL message which helps prevent
-        // desync targeting issues between clients.
+        // syncPredictionEntities to update the mana and health of predictionPlayer if the spell were to be cast
+        // so that we can check in the next block if there is insufficient health or mana to cast it.
         underworld.syncPredictionEntities();
         const casterPositionAtTimeOfCast = Vec.clone(selfPlayer.unit);
         const casterUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id);
@@ -710,10 +710,9 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
             type: MESSAGE_TYPES.REQUEST_SYNC_GAME_STATE
           });
         } else {
+          // Run a castCards PREDICTION to make sure the player has enough mana to cast this
           underworld.castCards({
-            // Make a copy of cardUsageCounts for prediction so it can accurately
-            // calculate mana for multiple copies of one spell in one cast
-            casterCardUsage: JSON.parse(JSON.stringify(selfPlayer.cardUsageCounts)),
+            casterCardUsage: JSON.parse(JSON.stringify(selfPlayer.cardUsageCounts)), // Make a copy of cardUsageCounts for prediction so it can accurately calculate mana for multiple copies of one spell in one cast
             casterUnit,
             casterPositionAtTimeOfCast: Vec.clone(casterUnit),
             cardIds,
@@ -722,21 +721,35 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
             outOfRange: false,
             magicColor: undefined,
             casterPlayer: selfPlayer,
-          }).then(effectState => {
-            clearSpellEffectProjection(underworld, true);
-            overworld.pie.sendData({
-              type: MESSAGE_TYPES.SPELL,
-              casterPositionAtTimeOfCast,
-              x: target.x,
-              y: target.y,
-              cards: cardIds,
-              initialTargetedUnitId: effectState.initialTargetedUnitId,
-              initialTargetedPickupId: effectState.initialTargetedPickupId,
-            });
-            CardUI.clearSelectedCards(underworld);
-            // Now that the cast has begun, clear the prediction tint so it doesn't color the targeted units anymore
-            clearTints(underworld);
-          });
+
+          }).then((effectState) => {
+            // Ensure that the mana left after casting the prediction spell is not negative.
+            // If it is negative, don't allow the cast because the caster has insufficient mana
+            if ((effectState.casterUnit.mana >= 0)) {
+              clearSpellEffectProjection(underworld, true);
+              overworld.pie.sendData({
+                type: MESSAGE_TYPES.SPELL,
+                casterPositionAtTimeOfCast,
+                x: target.x,
+                y: target.y,
+                cards: cardIds,
+                initialTargetedUnitId: effectState.initialTargetedUnitId,
+                initialTargetedPickupId: effectState.initialTargetedPickupId,
+              });
+              CardUI.clearSelectedCards(underworld);
+              // Now that the cast has begun, clear the prediction tint so it doesn't color the targeted units anymore
+              clearTints(underworld);
+            } else {
+              floatingText({
+                coords: casterUnit,
+                text: 'Insufficient Mana',
+                style: { fill: errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
+              })
+              console.log('Spell could not be cast, insufficient mana');
+
+            }
+
+          })
         }
       } else {
         console.error("Attempting to cast while globalThis.player is undefined");
