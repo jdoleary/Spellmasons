@@ -47,11 +47,12 @@ export function generateRandomStatCalamity(underworld: Underworld, index: number
     const stat = chooseOneOfSeeded(stats, seed);
     const currentLevelUnitSourceIds = [...new Set(underworld.units.map(u => u.unitSourceId).filter(uid => uid !== spellmasonUnitId))];
     const unitId = chooseOneOfSeeded(currentLevelUnitSourceIds, seedrandom(`-${index}-${seedString}-unit`));
+    const growthFactor = underworld.levelIndex - LAST_LEVEL_INDEX;
     if (unitId && stat) {
         return {
             unitId,
             stat,
-            percent: randInt(2, 8, seed) * 10
+            percent: randInt(2 + growthFactor, 5 + growthFactor, seed) * 10
         }
     } else {
         console.warn('Could not generate random stat calamity')
