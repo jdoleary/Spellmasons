@@ -1,3 +1,7 @@
+Crvknight — Today at 11:39 AM
+It's a little jarring to me, but hey to each their own
+It would be cool to have something like a short gamemode and a long gamemode, where the short games have the difficulty spike and the long games have more levels, larger arenas, maybe more enemies? It'd help for mass appeal, that's for sure.
+---
 Vivid Empress — Yesterday at 6:57 PM
 I understand the point of the calamities are to ensure runs eventually end, but it may be worthwhile to include lesser calamities- ones that sap max hp, mana, range or stamina rather than locking down a crucial spell. Some, myself included, might feel they honestly want to take the game to the point where every inch of the screen is full of bosses and enemies, enjoying their reward of power every now and then.
 

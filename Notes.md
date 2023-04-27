@@ -1,5 +1,8 @@
 This is the font used for the logo: https://fonts.adobe.com/fonts/bradley-djr#about-section
 # Notes
+Trying to solve "Test movement spells" causing desync.
+It appears to happen for Dash and each movement spell is triggering 2 movements and the 2nd movement for dash is wrong
+---
 - Sometimes player 2's cards get clobbered via a syncPlayers but is fixed on the next sync players.  I think this only occurs due to devMode choosing upgrades really fast but it might be worth watching carefully
 ---
 Into the breach notes:
