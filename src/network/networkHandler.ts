@@ -185,8 +185,9 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
           if (player) {
             player.cursesChosen++;
             underworld.statCalamities.push(payload.statCalamity);
+            // Apply the newly chosen calamity to current units
             for (let unit of underworld.units) {
-              Unit.adjustUnitStatsByUnderworldCalamities(unit, underworld);
+              Unit.adjustUnitStatsByUnderworldCalamity(unit, payload.statCalamity);
             }
           } else {
             console.error('Could not find player to give curse perk.')

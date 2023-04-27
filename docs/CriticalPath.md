@@ -1,13 +1,7 @@
 # Critical Path
-- JamesGamesA_Lot — Today at 7:05 PM
-Image
-Image
-I cannot kill this room with the mana mana steal allows me to gain
-Mana steal then cast reporting insufficient mana
 ## For v1.14
-- Test target arrow after getInitialTargets refactor
-- Test prevent mana scamming from casting too quickly
-
+- Thank JamesGamesA_Lot in changelog for ccc28405
+- Prevent mana scamming from casting too quickly
 - Review BloodSpartan's PR
 - Calamities should make enemies stronger, not you weaker
   - Exclude spellmason and decoy and non-mod active units

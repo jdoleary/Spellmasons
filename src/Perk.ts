@@ -1,4 +1,4 @@
-import { chooseObjectWithProbability, chooseOneOf, chooseOneOfSeeded, getUniqueSeedString, randFloat } from "./jmath/rand";
+import { chooseObjectWithProbability, chooseOneOf, chooseOneOfSeeded, getUniqueSeedString, randFloat, randInt } from "./jmath/rand";
 import * as Unit from './entity/Unit';
 import Underworld, { showUpgradesClassName } from "./Underworld";
 import floatingText from './graphics/FloatingText';
@@ -37,7 +37,7 @@ ${omitWhen ? '' : perkWhenToString(perk.when)}`.trim();
 export interface StatCalamity {
     unitId: string,
     stat: string,
-    amount: number
+    percent: number
 }
 export function generateRandomStatCalamity(underworld: Underworld, index: number): StatCalamity | undefined {
     // health, damage, attack range
@@ -51,7 +51,7 @@ export function generateRandomStatCalamity(underworld: Underworld, index: number
         return {
             unitId,
             stat,
-            amount: 1.2
+            percent: randInt(2, 8, seed) * 10
         }
     } else {
         console.warn('Could not generate random stat calamity')
@@ -103,7 +103,7 @@ export function createCursePerkElement({ cardId, statCalamity }: { cardId?: stri
             });
         });
     } else if (statCalamity) {
-        descriptionText.innerHTML = `${statCalamity.unitId} ${i18n([statCalamity.stat])} + ${statCalamity.amount * 100}%`;
+        descriptionText.innerHTML = `${statCalamity.unitId} ${i18n([statCalamity.stat])} + ${statCalamity.percent}%`;
         desc.appendChild(descriptionText);
         element.addEventListener('click', (e) => {
             globalThis.timeLastChoseUpgrade = Date.now();

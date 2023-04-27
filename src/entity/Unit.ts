@@ -34,6 +34,7 @@ import { SUMMONER_ID } from './units/summoner';
 import { DARK_SUMMONER_ID } from './units/darkSummoner';
 import { bossmasonUnitId } from './units/deathmason';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
+import { StatCalamity } from '../Perk';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -211,7 +212,11 @@ export function create(
     const difficulty = calculateGameDifficulty(underworld);
     adjustUnitDifficulty(unit, difficulty);
 
-    adjustUnitStatsByUnderworldCalamities(unit, underworld);
+    // Apply underworld statCalamities to units
+    for (let statCalamity of underworld.statCalamities) {
+      adjustUnitStatsByUnderworldCalamity(unit, statCalamity);
+    }
+
 
     unit.image?.sprite.scale.set(config.NON_HEAVY_UNIT_SCALE);
     setupShaders(unit);
@@ -233,19 +238,16 @@ export function create(
     throw new Error(`Source unit with id ${unitSourceId} does not exist`);
   }
 }
-export function adjustUnitStatsByUnderworldCalamities(unit: IUnit, underworld: Underworld) {
-  for (let statCalamity of underworld.statCalamities) {
-    if (statCalamity.unitId == unit.unitSourceId) {
-      if (statCalamity.stat in unit) {
-        const stat: keyof IUnit = statCalamity.stat as keyof IUnit;
-        if (typeof unit[stat] === 'number') {
-          (unit[stat] as number) *= statCalamity.amount;
-        }
-
+export function adjustUnitStatsByUnderworldCalamity(unit: IUnit, statCalamity: StatCalamity) {
+  if (statCalamity.unitId == unit.unitSourceId) {
+    if (statCalamity.stat in unit) {
+      const stat: keyof IUnit = statCalamity.stat as keyof IUnit;
+      if (typeof unit[stat] === 'number') {
+        (unit[stat] as number) = Math.ceil(unit[stat] as number) * (1 + statCalamity.percent / 100);
       }
+
     }
   }
-
 }
 
 // sets all the properties that depend on difficulty
