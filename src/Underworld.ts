@@ -2330,9 +2330,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     return this.levelIndex - player.attributePerks.length;
   }
   cursesLeftToChoose(player: Player.IPlayer): number {
-    // Dev test
-    return this.levelIndex - player.cursesChosen;
-    // return this.levelIndex - config.LAST_LEVEL_INDEX - player.cursesChosen;
+    return this.levelIndex - config.LAST_LEVEL_INDEX - player.cursesChosen;
   }
   upgradesLeftToChoose(player: Player.IPlayer): number {
     return this.cardDropsDropped + config.STARTING_CARD_COUNT - player.inventory.length;
