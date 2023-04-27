@@ -104,7 +104,12 @@ export function createCursePerkElement({ cardId, statCalamity }: { cardId?: stri
             });
         });
     } else if (statCalamity) {
-        descriptionText.innerHTML = `${statCalamity.unitId} ${i18n([statCalamity.stat])} + ${statCalamity.percent}%`;
+        const wordMap: { [key: string]: string } = {
+            'attackRange': 'attack range',
+            'damage': 'damage',
+            'health': 'health capacity'
+        }
+        descriptionText.innerHTML = `${statCalamity.unitId} ${i18n([wordMap[statCalamity.stat] || ''])} + ${statCalamity.percent}%`;
         desc.appendChild(descriptionText);
         element.addEventListener('click', (e) => {
             globalThis.timeLastChoseUpgrade = Date.now();
