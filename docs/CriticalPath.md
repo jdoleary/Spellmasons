@@ -2,6 +2,7 @@
 ## For v1.14
 - Thank JamesGamesA_Lot in changelog for ccc28405
 - Prevent mana scamming from casting too quickly
+- Add `protection` spell as calamity
 - Review BloodSpartan's PR
 - Calamities should make enemies stronger, not you weaker
   - Exclude spellmason and decoy and non-mod active units
