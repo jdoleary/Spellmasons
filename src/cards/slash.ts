@@ -3,7 +3,7 @@ import { containerSpells } from '../graphics/PixiUtils';
 import { randFloat } from '../jmath/rand';
 import { CardCategory } from '../types/commonTypes';
 import { oneOffImage, playDefaultSpellSFX } from './cardUtils';
-import { Spell } from './index';
+import { Spell, refundLastSpell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 export const slashCardId = 'Slash';
@@ -69,6 +69,9 @@ const spell: Spell = {
             Unit.takeDamage(unit, damageDone, state.casterUnit, underworld, prediction, state);
           }
         }
+      }
+      if (targets.length == 0) {
+        refundLastSpell(state, prediction, 'No valid targets. Cost refunded.');
       }
       if (!prediction && !globalThis.headless) {
         await new Promise((resolve) => {

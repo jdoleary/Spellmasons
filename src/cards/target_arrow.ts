@@ -33,6 +33,7 @@ const spell: Spell = {
       targets = targets.length ? targets : [state.castLocation];
       const promises = [];
       const length = targets.length;
+      let addedNewTarget = false;
       for (let i = 0; i < length; i++) {
         const target = targets[i];
         if (!target) {
@@ -48,6 +49,7 @@ const spell: Spell = {
           state.castLocation = clone(firstTarget);
           if (prediction) {
             if (Unit.isUnit(firstTarget)) {
+              addedNewTarget = true;
               addTarget(firstTarget, state);
             }
           } else {
@@ -57,6 +59,7 @@ const spell: Spell = {
               'projectile/arrow_ghost',
             ).then(() => {
               if (Unit.isUnit(firstTarget)) {
+                addedNewTarget = true;
                 addTarget(firstTarget, state);
                 // Animations do not occur on headless
                 if (!globalThis.headless) {
@@ -80,6 +83,9 @@ const spell: Spell = {
       }
       await Promise.all(promises).then(() => {
         globalThis.predictionGraphics?.clear();
+        if (!addedNewTarget) {
+          refundLastSpell(state, prediction, 'No valid targets. Cost refunded.');
+        }
       });
       return state;
     },
