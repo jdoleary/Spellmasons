@@ -243,7 +243,7 @@ export function adjustUnitStatsByUnderworldCalamity(unit: IUnit, statCalamity: S
     if (statCalamity.stat in unit) {
       const stat: keyof IUnit = statCalamity.stat as keyof IUnit;
       if (typeof unit[stat] === 'number') {
-        (unit[stat] as number) = Math.ceil(unit[stat] as number) * (1 + statCalamity.percent / 100);
+        (unit[stat] as number) = Math.round((unit[stat] as number) * (1 + statCalamity.percent / 100));
       }
 
     }
