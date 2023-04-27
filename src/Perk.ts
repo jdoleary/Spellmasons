@@ -11,6 +11,7 @@ import { LAST_LEVEL_INDEX } from "./config";
 import { getSpellThumbnailPath } from "./graphics/ui/CardUI";
 import { UnitSubType } from "./types/commonTypes";
 import { allUnits } from "./entity/units";
+import { spellmasonUnitId } from "./entity/units/playerUnit";
 const elPerkList = document.getElementById('perkList');
 const elPerksEveryLevel = document.getElementById('perkEveryLevel');
 const elPerksEveryTurn = document.getElementById('perkEveryTurn');
@@ -44,8 +45,8 @@ export function generateRandomStatCalamity(underworld: Underworld, index: number
     const seedString = getUniqueSeedString(underworld, globalThis.player) + `-${index}-${player?.cursesChosen || 0}`;
     const seed = seedrandom(seedString);
     const stat = chooseOneOfSeeded(stats, seed);
-
-    const unitId = chooseOneOfSeeded(Object.keys(allUnits), seedrandom(`-${index}-${seedString}-unit`));
+    const currentLevelUnitSourceIds = [...new Set(underworld.units.map(u => u.unitSourceId).filter(uid => uid !== spellmasonUnitId))];
+    const unitId = chooseOneOfSeeded(currentLevelUnitSourceIds, seedrandom(`-${index}-${seedString}-unit`));
     if (unitId && stat) {
         return {
             unitId,
