@@ -1371,8 +1371,8 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
                 x: unit.x,
                 y: unit.y,
                 cards: cardIds,
-                initialTargetedUnitId: [unit.id],
-                initialTargetedPickupId: []
+                initialTargetedUnitId: unit.id,
+                initialTargetedPickupId: undefined
               });
             }
           }

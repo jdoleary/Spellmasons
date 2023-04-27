@@ -3009,7 +3009,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (useInitialTarget) {
       // Get first unit at cast location
       if (effectState.initialTargetedUnitId !== undefined) {
-        const initialTargetUnit = this.units.find(u => u.id == effectState.initialTargetedUnitId);
+        const initialTargetUnit = this.units.find(u => u.id === effectState.initialTargetedUnitId);
         if (initialTargetUnit) {
           Cards.addTarget(initialTargetUnit, effectState);
         } else {
@@ -3024,7 +3024,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
       // Get first pickup at cast location
       if (effectState.initialTargetedPickupId !== undefined) {
-        const initialTargetPickup = this.pickups.find(p => p.id == effectState.initialTargetedPickupId);
+        const initialTargetPickup = this.pickups.find(p => p.id === effectState.initialTargetedPickupId);
         if (initialTargetPickup) {
           Cards.addTarget(initialTargetPickup, effectState);
         } else {
