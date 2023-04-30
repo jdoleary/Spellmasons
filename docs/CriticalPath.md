@@ -1,11 +1,25 @@
 # Critical Path
+- New Spell ideas:
+  - ice wall (empty unit with `immovable` to true and ice image)
+  - Glass axe
+---
+- Bug: I ended my turn which resulted in a game over / restart for the host app but it just froze on my end
+  - this happened after this message: `Player unit died but could not find them in players array to end their turn`
+  - then later:
+```
+onData: MOVE_PLAYER 
+onData 27 : MOVE_PLAYER { type: 1, x: 506.8586951313629, y: 329.24416157481767 }
+canMove: false - unit is not alive
+```
+
 ## For v1.14
 - Thank JamesGamesA_Lot in changelog for ccc28405
 - Prevent mana scamming from casting too quickly
-- Add `protection` spell as calamity
+- Fix: A player has joined mid-game and didn’t get to choose any spells or upgrades.  When the first level was completed they still weren’t able to pick any.  Rejoining the game didn’t fix it either for that player.
+- Calamity
+  - Don't increase damage for units that don't deal damage, like summoners.  Change mana instead
+  - Add `protection` spell as calamity
 - Review BloodSpartan's PR
-- Calamities should make enemies stronger, not you weaker
-  - Exclude spellmason and decoy and non-mod active units
 - Fix multiplayer desync bugs
 ---
 - Two units moving pushed a third unit through a wall (archers).  See Chase87's photo in Discord
