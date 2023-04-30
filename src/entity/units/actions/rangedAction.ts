@@ -35,7 +35,22 @@ export async function rangedLOSMovement(unit: Unit.IUnit, underworld: Underworld
         }, { dist: Number.MAX_SAFE_INTEGER, pos: undefined });
 
         if (moveChoice.pos && !underworld.hasLineOfSight(unit, closestEnemy)) {
-            await Unit.moveTowards(unit, moveChoice.pos, underworld);
+            // TODO: archer movement issue: sometimes moveChoice.pos is through a wall
+            // findPath is just returning one point, it fails to find a path. Oh it's because it's
+            // trying to path to a point on a wall, not in walkable space
+            if (underworld.hasLineOfSight(unit, moveChoice.pos)) {
+                // Generally if an archer doesn't have line of sight on the enemy,
+                // it will use findLOSLocation to check in an arc around the enemy for a point where there
+                // is line of sight.  If the point on that arc is within LOS of the archer, move to that point
+                // if not..
+                await Unit.moveTowards(unit, moveChoice.pos, underworld);
+            } else {
+                // ...then just move towards the enemy.  This prevents weird behavior where
+                // the archer tries to path toward a point ON a wall (which is technically inaccessible),
+                // and the archer will just walk forward awkardly until it hits a wall instead of pathing
+                // towards the enemy
+                await Unit.moveTowards(unit, closestEnemy, underworld);
+            }
         } else {
             // Move closer until in range (or out of stamina)
             const distanceToEnemy = math.distance(unit, closestEnemy);
