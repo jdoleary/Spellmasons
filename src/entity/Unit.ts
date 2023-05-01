@@ -336,6 +336,8 @@ export function cleanup(unit: IUnit) {
   if (unit.resolveDoneMoving) {
     unit.resolveDoneMoving();
   }
+  // Prevent id conflicts with other existing units after cleanup
+  unit.id = -1;
   unit.x = NaN;
   unit.y = NaN;
   unit.flaggedForRemoval = true;

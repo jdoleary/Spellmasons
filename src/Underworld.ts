@@ -3318,6 +3318,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       Unit.returnToDefaultSprite(newUnit);
     }
 
+    // Remove units flagged for removal
+    this.units = this.units.filter(u => !u.flaggedForRemoval);
+
   }
   // Sends what this player is thinking to other clients
   // Optimized to only send if message has changed
