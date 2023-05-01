@@ -189,7 +189,17 @@
             <key type="filename">images/badgeDeath.png</key>
             <key type="filename">images/badgeDeathAlly.png</key>
             <key type="filename">images/badgeMagic.png</key>
+            <key type="filename">images/badgeSummon.png</key>
             <key type="filename">images/badgeSword.png</key>
+            <key type="filename">images/units/ancient_0.png</key>
+            <key type="filename">images/units/ancient_1.png</key>
+            <key type="filename">images/units/ancient_dead_0.png</key>
+            <key type="filename">images/units/ancient_dead_1.png</key>
+            <key type="filename">images/units/ancient_dead_2.png</key>
+            <key type="filename">images/units/ancient_dead_3.png</key>
+            <key type="filename">images/units/ancient_dead_4.png</key>
+            <key type="filename">images/units/ancient_dead_5.png</key>
+            <key type="filename">images/units/ancient_dead_6.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0,0</point_f>
@@ -885,33 +895,94 @@
             <key type="filename">images/units/vampireWalk_6.png</key>
             <key type="filename">images/units/vampireWalk_7.png</key>
             <key type="filename">images/units/vampireWalk_8.png</key>
+            <key type="filename">public/images/spell/spellIconArrow.png</key>
+            <key type="filename">public/images/spell/spellIconArrowGreen.png</key>
+            <key type="filename">public/images/spell/spellIconArrowRed.png</key>
+            <key type="filename">public/images/spell/spellIconBleed.png</key>
             <key type="filename">public/images/spell/spellIconBloat.png</key>
             <key type="filename">public/images/spell/spellIconBloodCurse.png</key>
+            <key type="filename">public/images/spell/spellIconBolt.png</key>
+            <key type="filename">public/images/spell/spellIconBurst.png</key>
+            <key type="filename">public/images/spell/spellIconCaptureSoul.png</key>
             <key type="filename">public/images/spell/spellIconClone.png</key>
             <key type="filename">public/images/spell/spellIconConnect.png</key>
+            <key type="filename">public/images/spell/spellIconConserve.png</key>
             <key type="filename">public/images/spell/spellIconContagious.png</key>
+            <key type="filename">public/images/spell/spellIconCorpseExplosion.png</key>
+            <key type="filename">public/images/spell/spellIconDash.png</key>
+            <key type="filename">public/images/spell/spellIconDeathWager.png</key>
             <key type="filename">public/images/spell/spellIconDebilitate.png</key>
             <key type="filename">public/images/spell/spellIconDecoy.png</key>
             <key type="filename">public/images/spell/spellIconDelay.png</key>
+            <key type="filename">public/images/spell/spellIconDisplace.png</key>
+            <key type="filename">public/images/spell/spellIconDrown.png</key>
             <key type="filename">public/images/spell/spellIconExpanding.png</key>
+            <key type="filename">public/images/spell/spellIconFortify.png</key>
             <key type="filename">public/images/spell/spellIconFreeze.png</key>
             <key type="filename">public/images/spell/spellIconHeal.png</key>
             <key type="filename">public/images/spell/spellIconHurt.png</key>
+            <key type="filename">public/images/spell/spellIconLastWill.png</key>
             <key type="filename">public/images/spell/spellIconManaBurn.png</key>
             <key type="filename">public/images/spell/spellIconManaSteal.png</key>
+            <key type="filename">public/images/spell/spellIconPlusRadius.png</key>
             <key type="filename">public/images/spell/spellIconPoison.png</key>
+            <key type="filename">public/images/spell/spellIconProtection.png</key>
             <key type="filename">public/images/spell/spellIconPull.png</key>
             <key type="filename">public/images/spell/spellIconPurify.png</key>
             <key type="filename">public/images/spell/spellIconPush.png</key>
+            <key type="filename">public/images/spell/spellIconRend.png</key>
+            <key type="filename">public/images/spell/spellIconRepel.png</key>
             <key type="filename">public/images/spell/spellIconResurrect.png</key>
+            <key type="filename">public/images/spell/spellIconSacrifice.png</key>
             <key type="filename">public/images/spell/spellIconShield.png</key>
+            <key type="filename">public/images/spell/spellIconShove.png</key>
+            <key type="filename">public/images/spell/spellIconSlow.png</key>
+            <key type="filename">public/images/spell/spellIconSplit.png</key>
+            <key type="filename">public/images/spell/spellIconSuffocate.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_ancient.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_archer.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_bloodarcher.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_bloodgolem.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_darkpriest.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_darksummoner.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_deathmason.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_decoy.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_dragger.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_ghostarcher.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_glop.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_golem.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_greenglop.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_manavampire.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_poisoner.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_priest.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_spellmason.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_summoner.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_vampire.png</key>
             <key type="filename">public/images/spell/spellIconSwap.png</key>
+            <key type="filename">public/images/spell/spellIconTargetColumn.png</key>
+            <key type="filename">public/images/spell/spellIconTargetCone.png</key>
+            <key type="filename">public/images/spell/spellIconTargetKind.png</key>
+            <key type="filename">public/images/spell/spellIconTargetSimilar.png</key>
+            <key type="filename">public/images/spell/spellIconVortex.png</key>
             <key type="filename">public/images/spell/toolbar-slot.png</key>
             <key type="filename">public/images/spell/unknown.png</key>
-            <key type="filename">public/images/spell/walk.png</key>
-            <key type="filename">public/images/upgrades/plus_max_health.png</key>
+            <key type="filename">public/images/upgrades/health1.png</key>
+            <key type="filename">public/images/upgrades/health2.png</key>
+            <key type="filename">public/images/upgrades/mana1.png</key>
+            <key type="filename">public/images/upgrades/mana2.png</key>
             <key type="filename">public/images/upgrades/resurrect.png</key>
             <key type="filename">public/images/upgrades/todo.png</key>
+            <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconDecay.png</key>
+            <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconDominate.png</key>
+            <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconEnsnare.png</key>
+            <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconFastForward.png</key>
+            <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconFlamestrike.png</key>
+            <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconGrace.png</key>
+            <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconHarvest.png</key>
+            <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconPacify.png</key>
+            <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconRegen.png</key>
+            <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconVengeance.png</key>
+            <key type="filename">../spellmasons-mods/undead_blade/spellIconUndeadBlade.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0,0</point_f>
@@ -983,34 +1054,6 @@
             <key type="filename">images/spell-effects/potionPickup_7.png</key>
             <key type="filename">images/spell-effects/potionPickup_8.png</key>
             <key type="filename">images/spell-effects/potionPickup_9.png</key>
-            <key type="filename">images/units/playerAttackBomb_1.png</key>
-            <key type="filename">images/units/playerAttackBomb_10.png</key>
-            <key type="filename">images/units/playerAttackBomb_11.png</key>
-            <key type="filename">images/units/playerAttackBomb_12.png</key>
-            <key type="filename">images/units/playerAttackBomb_13.png</key>
-            <key type="filename">images/units/playerAttackBomb_14.png</key>
-            <key type="filename">images/units/playerAttackBomb_2.png</key>
-            <key type="filename">images/units/playerAttackBomb_3.png</key>
-            <key type="filename">images/units/playerAttackBomb_4.png</key>
-            <key type="filename">images/units/playerAttackBomb_5.png</key>
-            <key type="filename">images/units/playerAttackBomb_6.png</key>
-            <key type="filename">images/units/playerAttackBomb_7.png</key>
-            <key type="filename">images/units/playerAttackBomb_8.png</key>
-            <key type="filename">images/units/playerAttackBomb_9.png</key>
-            <key type="filename">images/units/playerAttackSingle_1.png</key>
-            <key type="filename">images/units/playerAttackSingle_10.png</key>
-            <key type="filename">images/units/playerAttackSingle_11.png</key>
-            <key type="filename">images/units/playerAttackSingle_12.png</key>
-            <key type="filename">images/units/playerAttackSingle_13.png</key>
-            <key type="filename">images/units/playerAttackSingle_14.png</key>
-            <key type="filename">images/units/playerAttackSingle_2.png</key>
-            <key type="filename">images/units/playerAttackSingle_3.png</key>
-            <key type="filename">images/units/playerAttackSingle_4.png</key>
-            <key type="filename">images/units/playerAttackSingle_5.png</key>
-            <key type="filename">images/units/playerAttackSingle_6.png</key>
-            <key type="filename">images/units/playerAttackSingle_7.png</key>
-            <key type="filename">images/units/playerAttackSingle_8.png</key>
-            <key type="filename">images/units/playerAttackSingle_9.png</key>
             <key type="filename">images/units/playerAttackSmallMagic_1.png</key>
             <key type="filename">images/units/playerAttackSmallMagic_10.png</key>
             <key type="filename">images/units/playerAttackSmallMagic_11.png</key>
@@ -1299,6 +1342,8 @@
             </struct>
             <key type="filename">images/projectile/arrow_1.png</key>
             <key type="filename">images/projectile/arrow_2.png</key>
+            <key type="filename">images/projectile/arrow_ghost_1.png</key>
+            <key type="filename">images/projectile/arrow_ghost_2.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0,0</point_f>
@@ -1330,6 +1375,27 @@
                 <rect>0,0,1,1</rect>
                 <key>scale9Paddings</key>
                 <rect>0,0,1,1</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">images/spell-effects/spellRend_1.png</key>
+            <key type="filename">images/spell-effects/spellRend_2.png</key>
+            <key type="filename">images/spell-effects/spellRend_3.png</key>
+            <key type="filename">images/spell-effects/spellRend_4.png</key>
+            <key type="filename">images/spell-effects/spellRend_5.png</key>
+            <key type="filename">images/spell-effects/spellRend_6.png</key>
+            <key type="filename">images/spell-effects/spellRend_7.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0,0</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>24,3,48,7</rect>
+                <key>scale9Paddings</key>
+                <rect>24,3,48,7</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -1483,12 +1549,67 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">images/units/playerBookIdleMagic_1.png</key>
+            <key type="filename">images/units/playerBookIdleMagic_2.png</key>
+            <key type="filename">images/units/playerBookIdleMagic_3.png</key>
+            <key type="filename">images/units/playerBookIdleMagic_4.png</key>
+            <key type="filename">images/units/playerBookIdleMagic_5.png</key>
+            <key type="filename">images/units/playerBookIdle_1.png</key>
+            <key type="filename">images/units/playerBookIdle_2.png</key>
+            <key type="filename">images/units/playerBookIdle_3.png</key>
+            <key type="filename">images/units/playerBookIdle_4.png</key>
+            <key type="filename">images/units/playerBookIdle_5.png</key>
+            <key type="filename">images/units/playerBookInMagic_1.png</key>
+            <key type="filename">images/units/playerBookInMagic_2.png</key>
+            <key type="filename">images/units/playerBookInMagic_3.png</key>
+            <key type="filename">images/units/playerBookInMagic_4.png</key>
+            <key type="filename">images/units/playerBookInMagic_5.png</key>
+            <key type="filename">images/units/playerBookIn_1.png</key>
+            <key type="filename">images/units/playerBookIn_2.png</key>
+            <key type="filename">images/units/playerBookIn_3.png</key>
+            <key type="filename">images/units/playerBookIn_4.png</key>
+            <key type="filename">images/units/playerBookIn_5.png</key>
+            <key type="filename">images/units/playerBookReturnMagic_1.png</key>
+            <key type="filename">images/units/playerBookReturnMagic_2.png</key>
+            <key type="filename">images/units/playerBookReturnMagic_3.png</key>
+            <key type="filename">images/units/playerBookReturnMagic_4.png</key>
+            <key type="filename">images/units/playerBookReturnMagic_5.png</key>
+            <key type="filename">images/units/playerBookReturn_1.png</key>
+            <key type="filename">images/units/playerBookReturn_2.png</key>
+            <key type="filename">images/units/playerBookReturn_3.png</key>
+            <key type="filename">images/units/playerBookReturn_4.png</key>
+            <key type="filename">images/units/playerBookReturn_5.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0,0</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,18,32,36</rect>
+                <key>scale9Paddings</key>
+                <rect>16,18,32,36</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
         </map>
         <key>fileList</key>
         <array>
             <filename>images</filename>
             <filename>public/images/spell</filename>
             <filename>public/images/upgrades</filename>
+            <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconDecay.png</filename>
+            <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconDominate.png</filename>
+            <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconEnsnare.png</filename>
+            <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconFastForward.png</filename>
+            <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconFlamestrike.png</filename>
+            <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconGrace.png</filename>
+            <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconHarvest.png</filename>
+            <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconPacify.png</filename>
+            <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconRegen.png</filename>
+            <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconVengeance.png</filename>
+            <filename>../spellmasons-mods/undead_blade/spellIconUndeadBlade.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
