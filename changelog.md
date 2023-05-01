@@ -1,4 +1,5 @@
 ## Spellmasons Update v1.14.0 - Wode's Grimoire
+- menu: Fix link to source code in Mods menu
 - fix: desync issue
     where player loses control of themself.
     This was reproducable by having 2 players in a multiplayer came, killing one unit and then
