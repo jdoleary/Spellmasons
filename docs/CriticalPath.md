@@ -11,8 +11,6 @@
   - an enemy that does more damage the more alone it is
   - Mana expensive spell that gets stronger the more you use it (resets every level)
   - Bring traps back
-  - Bring 'dragger' back, make him go after everyone else
-    - thaks to MrMarblz and scojbo
 - bug: validate WhiteSycthe desync report: 2) There appears another desync issue when using a selection spell + dash; I would dash to all targets, but once the turn was ended I would blink back to the initial dash destination.
 
 - Improve enemy crowd targeting for large battles

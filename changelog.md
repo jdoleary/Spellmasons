@@ -1,3 +1,6 @@
+## Spellmasons Update v1.15
+- content: Add new unit: "Gripthulu"
+    - Thanks MrMarblz and scojbo for encouraging me to resolve issues with "enemies that move players"
 ## Spellmasons Update v1.14.0 - Wode's Grimoire
 - content: Add new unit: "Ancient"
 - content: Add new type of Calamity "Stat Calamity" that makes enemies more dangerous
