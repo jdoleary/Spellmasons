@@ -1,7 +1,18 @@
 # Critical Path
-- New Spell ideas:
+- New ideas:
   - ice wall (empty unit with `immovable` to true and ice image)
   - Glass axe
+  - Auras or growing / moving areas on the map that do damage onEndTurn
+  - invincible enemy that does damage that forces you to stay mobile
+  - an enemy that dies when all it's allies are dead
+  - an enemy that does more damage the more alone it is
+  - Mana expensive spell that gets stronger the more you use it (resets every level)
+  - Bring traps back
+  - Bring 'dragger' back, make him go after everyone else
+    - thaks to MrMarblz and scojbo
+
+- Improve enemy crowd targeting for large battles
+- Desync reporter - report health, position changes and use server hub as backend
 ---
 - Bug: I ended my turn which resulted in a game over / restart for the host app but it just froze on my end
   - this happened after this message: `Player unit died but could not find them in players array to end their turn`
@@ -19,8 +30,6 @@ canMove: false - unit is not alive
 - Calamity
   - Don't increase damage for units that don't deal damage, like summoners.  Change mana instead
   - Add `protection` spell as calamity
-- Review BloodSpartan's PR
-- Fix multiplayer desync bugs
 ---
 - Two units moving pushed a third unit through a wall (archers).  See Chase87's photo in Discord
 - Address MrMarblz's bugs below
