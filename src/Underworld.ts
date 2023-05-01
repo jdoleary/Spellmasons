@@ -918,7 +918,12 @@ export default class Underworld {
           const card = Cards.allCards[cardId];
           if (card) {
             const x = getXLocationOfImageForThoughtBubble(thinkingPlayer.unit.x, i, cardIds.length);
-            const sprite = addPixiSprite(card.thumbnail, containerPlayerThinking);
+            let thumbnail = card.thumbnail;
+            if (thumbnail.includes('spellmasons-mods')) {
+              // Fix path to modded thumbnails that exist in the spritesheet
+              thumbnail = thumbnail.split('/').slice(-1)[0] || '';
+            }
+            const sprite = addPixiSprite(thumbnail, containerPlayerThinking);
             if (sprite) {
               sprite.anchor.x = 0.5;
               sprite.anchor.y = 0.5;
