@@ -59,6 +59,7 @@ import slow from './slow';
 import death_wager from './death_wager';
 import sacrifice from './sacrifice';
 import devRecordDelay from './devRecordDelay';
+import devCauseDesync from './devCauseDesync';
 import registerSummoningSickness from '../modifierSummoningSickness';
 import arrow from './arrow';
 import target_arrow from './target_arrow';
@@ -153,6 +154,7 @@ export function registerSpell(spell: Spell, overworld: Overworld) {
 export function registerCards(overworld: Overworld) {
   if (location && location.href.includes('localhost')) {
     registerSpell(devRecordDelay, overworld);
+    registerSpell(devCauseDesync, overworld);
   }
   registerSpell(slash, overworld);
   registerSpell(rend, overworld);
