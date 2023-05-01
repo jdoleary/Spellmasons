@@ -1,4 +1,5 @@
 # Critical Path
+- i18n: for Dragger
 - admin bug: Prevent movement spells from casting devdesync
   - lots of desyncs, cast admin curse (some blew up), then admin target.  Many units changed position.
 - New ideas:

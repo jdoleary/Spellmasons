@@ -2763,7 +2763,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // wont move during the ranged unit turn
       u.stamina = 0;
     }
-    for (let subTypes of [[UnitSubType.RANGED_LOS, UnitSubType.RANGED_RADIUS, UnitSubType.SUPPORT_CLASS], [UnitSubType.MELEE]]) {
+    for (let subTypes of [[UnitSubType.RANGED_LOS, UnitSubType.RANGED_RADIUS, UnitSubType.SUPPORT_CLASS], [UnitSubType.MELEE], [UnitSubType.SPECIAL_LOS]]) {
       const actionPromises: Promise<void>[] = [];
       unitloop: for (let u of this.units.filter(
         (u) => u.unitType === UnitType.AI && u.alive && u.faction == faction && subTypes.includes(u.unitSubType),
@@ -2846,6 +2846,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         } else {
           return false;
         }
+      case UnitSubType.SPECIAL_LOS:
+        return u.alive && this.hasLineOfSight(u, attackTarget) && Unit.inRange(u, attackTarget);
       case UnitSubType.RANGED_LOS:
         return u.alive && this.hasLineOfSight(u, attackTarget) && Unit.inRange(u, attackTarget);
       case UnitSubType.RANGED_RADIUS:

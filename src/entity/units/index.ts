@@ -51,8 +51,7 @@ import manaVampire from './manaVampire';
 import bossmason from './deathmason';
 import decoy from './decoy';
 import ancient from './ancient';
-// TODO: Dragger is causing desync in multiplayer
-// import dragger from './dragger';
+import dragger from './dragger';
 import blood_archer from './blood_archer';
 import ghost_archer from './ghost_archer';
 import Underworld from '../../Underworld';
@@ -69,8 +68,7 @@ export function registerUnits() {
   registerUnit(priest);
   registerUnit(poisoner);
   registerUnit(vampire);
-  // TODO: Dragger is causing desync in multiplayer
-  // register(dragger);
+  registerUnit(dragger);
   registerUnit(summoner);
   registerUnit(bloodGolem);
   registerUnit(blood_archer);

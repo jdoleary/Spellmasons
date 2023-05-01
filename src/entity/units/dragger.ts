@@ -11,12 +11,13 @@ import { containerProjectiles } from '../../graphics/PixiUtils';
 import { getAngleBetweenVec2s, Vec2 } from '../../jmath/Vec';
 
 const manaCostToCast = 15;
+export const dragger_id = 'gripthulu';
 const unit: UnitSource = {
-  id: 'dragger',
+  id: dragger_id,
   info: {
-    description: 'A dragger will pull you into danger if it gets close enough to do so',
+    description: 'A gripthulu will pull you into danger if it gets close enough to do so',
     image: 'units/poisIdle',
-    subtype: UnitSubType.RANGED_LOS,
+    subtype: UnitSubType.SPECIAL_LOS,
   },
   unitProps: {
     attackRange: 420,
@@ -66,9 +67,13 @@ const unit: UnitSource = {
           unit.mana - unit.manaCostToCast;
           // Poisoners attack or move, not both; so clear their existing path
           unit.path = undefined;
-          await Unit.playAnimation(unit, unit.animations.attack);
-          await animateDrag(unit, chosenUnit);
-          await pull(chosenUnit, unit, 1, underworld, false);
+          // await Unit.playAnimation(unit, unit.animations.attack);
+          await Unit.playComboAnimation(unit, unit.animations.attack, () => {
+            return animateDrag(unit, chosenUnit);
+          });
+          const pullPromise = pull(chosenUnit, unit, 1, underworld, false);
+          underworld.triggerGameLoopHeadless();
+          await pullPromise;
         } else {
           // Only move if not in range
           const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, chosenUnit, unit.stamina);
