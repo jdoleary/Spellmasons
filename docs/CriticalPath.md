@@ -15,7 +15,10 @@
 - Improve enemy crowd targeting for large battles
 - Desync reporter - report health, position changes and use server hub as backend
 ---
+- bug: Fix weird prediction push lines in repel and other movement spells
+- bug: prediction casting undead blade on a portal makes where pickups were play disappear particles
 - bug: arrow not killing eenemies as it predicts https://discord.com/channels/1032294536640200766/1069963955092606976/1094617106504491079
+- bug: Joining saved hotseat game doesn't work great, and it plays the enemies turn when you switch players
 - Bug: I ended my turn which resulted in a game over / restart for the host app but it just froze on my end
   - this happened after this message: `Player unit died but could not find them in players array to end their turn`
   - then later:
