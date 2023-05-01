@@ -380,6 +380,10 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       break;
     case MESSAGE_TYPES.SYNC_SOME_STATE:
       {
+        if (globalThis.headless) {
+          // SYNC_SOME_STATE is only ever sent from headless and doesn't need to be run on headless
+          break;
+        }
         console.log('sync: SYNC_SOME_STATE; syncs units and players')
         const { timeOfLastSpellMessage, units, players, pickups, lastUnitId, lastPickupId, RNGState } = payload as {
           // timeOfLastSpellMessage ensures that SYNC_SOME_STATE won't overwrite valid state with old state
