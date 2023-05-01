@@ -317,6 +317,7 @@ function logHandleOnDataMessage(type: MESSAGE_TYPES, payload: any, fromClient: s
   }
 
 }
+let lastSpellMessageTime = 0;
 async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise<any> {
   currentlyProcessingOnDataMessage = d;
   const { payload, fromClient } = d;
@@ -377,6 +378,54 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         }
       }
       break;
+    case MESSAGE_TYPES.SYNC_SOME_STATE:
+      {
+        console.log('sync: SET_PHASE; syncs units and players')
+        const { timeOfLastSpellMessage, units, players, pickups, lastUnitId, lastPickupId, RNGState } = payload as {
+          // timeOfLastSpellMessage ensures that SYNC_SOME_STATE won't overwrite valid state with old state
+          // if someone a second SPELL message is recieved between this message and it's corresponding SPELL message
+          // Messages don't currently have a unique id so I'm storing d.time which should be good enough
+          timeOfLastSpellMessage: number,
+          // Sync data for players
+          players?: Player.IPlayerSerialized[],
+          // Sync data for units
+          units?: Unit.IUnitSerialized[],
+          // Sync data for pickups
+          pickups?: Pickup.IPickupSerialized[],
+          lastUnitId: number,
+          lastPickupId: number,
+          RNGState: SeedrandomState,
+        }
+        if (timeOfLastSpellMessage !== lastSpellMessageTime) {
+          // Do not sync, state has changed since this sync message was sent
+          console.warn('Discarding SYNC_SOME_STATE message, it is no longer valid');
+          break;
+        }
+        if (RNGState) {
+          underworld.syncronizeRNG(RNGState);
+        }
+
+        if (units) {
+          underworld.syncUnits(units);
+        }
+        // Note: Players should sync after units so
+        // that the player.unit reference is synced
+        // with up to date units
+        if (players) {
+          underworld.syncPlayers(players);
+        }
+
+        if (pickups) {
+          underworld.syncPickups(pickups);
+        }
+
+        // Syncronize the lastXId so that when a new unit or pickup is created
+        // it will get the same id on both server and client
+        underworld.lastUnitId = lastUnitId;
+        underworld.lastPickupId = lastPickupId;
+
+        break;
+      }
     case MESSAGE_TYPES.SET_PHASE:
       console.log('sync: SET_PHASE; syncs units and players')
       const { phase, units, players, pickups, lastUnitId, lastPickupId, RNGState } = payload as {
@@ -634,6 +683,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       }
       break;
     case MESSAGE_TYPES.SPELL:
+      lastSpellMessageTime = d.time;
       if (fromPlayer) {
         if (underworld.turn_phase == turn_phase.Stalled) {
           // This check shouldn't have to be here but it protects against the game getting stuck in stalled phase
@@ -644,6 +694,21 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         // Trigger it again in case the result of any spells caused a forceMove to be added to the array
         // such as Bloat's onDeath
         underworld.triggerGameLoopHeadless();
+        // Only send SYNC_SOME_STATE from the headless server
+        if (globalThis.headless) {
+          // Sync state directly after each cast to attempt to reduce snowballing desyncs
+          underworld.pie.sendData({
+            type: MESSAGE_TYPES.SYNC_SOME_STATE,
+            timeOfLastSpellMessage: lastSpellMessageTime,
+            units: underworld.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
+            pickups: underworld.pickups.filter(p => !p.flaggedForRemoval).map(Pickup.serialize),
+            players: underworld.players.map(Player.serialize),
+            lastUnitId: underworld.lastUnitId,
+            lastPickupId: underworld.lastPickupId,
+            // the state of the Random Number Generator
+            RNGState: underworld.random.state(),
+          });
+        }
       } else {
         console.error('Cannot cast, caster does not exist');
       }
