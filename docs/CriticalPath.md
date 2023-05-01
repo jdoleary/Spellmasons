@@ -10,10 +10,12 @@
   - Bring traps back
   - Bring 'dragger' back, make him go after everyone else
     - thaks to MrMarblz and scojbo
+- bug: validate WhiteSycthe desync report: 2) There appears another desync issue when using a selection spell + dash; I would dash to all targets, but once the turn was ended I would blink back to the initial dash destination.
 
 - Improve enemy crowd targeting for large battles
 - Desync reporter - report health, position changes and use server hub as backend
 ---
+- bug: arrow not killing eenemies as it predicts https://discord.com/channels/1032294536640200766/1069963955092606976/1094617106504491079
 - Bug: I ended my turn which resulted in a game over / restart for the host app but it just froze on my end
   - this happened after this message: `Player unit died but could not find them in players array to end their turn`
   - then later:

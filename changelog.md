@@ -1,3 +1,62 @@
+## Spellmasons Update v1.14.0 - Wode's Grimoire
+- fix: desync issue
+    where player loses control of themself.
+    This was reproducable by having 2 players in a multiplayer came, killing one unit and then
+    casting Harvest on them.  Then the underworld's units array would be
+    filled with a bunch of units that weren't cleaned up and some were
+    the player units that still shared the same id, but these 2 changes (changing the
+    id's of cleaned up units) and removing cleaned up units right
+    after a sync resolves this issue.
+- fix: Support player thought spell icons from mods
+    Modded icons still have to be manually added to the sprite sheet.
+- fix: Add SYNC_SOME_STATE
+    after every SPELL to attempt to remedy desync snowballing
+    that sometimes occurred on the same player turn when
+    multiple spells are cast by having the server only send a
+    SYNC_SOME_STATE message after every SPELL message
+- fix: Archer movement bug
+    Thanks to scojbo and others (not recorded) for mentioning this issue
+- i18n: Translate stat calamities
+- balance: Stat Calamities become more dangerous
+    over time
+- src: Improve statCalamity percentages
+- fix: statCalamities not applying double whenever a 2nd or beyond
+    is chosen.  When a new statCalamity is chosen, only apply that one an
+    extra time to already existing units
+- UI: Add attack range to tooltip
+    Add words ("mana", "health") to tooltip
+- src: Choose available statCalamities based on
+    which units are in the current level so that the next level has
+    increased difficulty due to calamity.
+-src: Add mana refunds for slash
+    and target_arrow without targets
+- fix: Admin "Regenerate Level" command
+- fix: spell mana cost calculations
+    To allow for mana from manasteal to be used in the same spell.
+    This uses what mana is left from the prediction player
+    to see if they have enough mana to cast in the first place
+    Thanks TonyFTW and JamesGamesA_Lot
+- fix: Desync caused by sending initialTargetedUnitId
+    or initialTargetedPickupId as array.  They should be numbers.
+    Also; somehow in javascript `3 == [3]`
+- balance: Continue to allow perks after looping
+    Thanks S4m for criticism that led to this balance
+- fix: Prevent unspawed players from being targeted by ally magic.
+    This only impacts multiplayer.  Thanks mrman227 and others to reported this issue
+- balance: Prevent Last Will from stacking like the card says it doesn't.
+    Thanks to MrMarblz for pointing this out
+- fix: Allow Capture Soul for minibosses
+    Thanks MrMarblz for pointing this out
+- UI: Add visible level count UI when inventory is open to the top right corner.
+    Thanks MrMarblz for this suggestion!
+    Note: Levels past the Deathmason are now displayed with a trailing "+"
+    to denote that it's a loop level
+- UI: Make "Spawn instructions" less obtrusive after level 3. Thanks Mr. Marblz for this suggestion
+- api: Add pixi particle emitter
+- fix: Ghost Archer doing 20 more damage than predicted. Thanks Jackson for pointing out this bug!
+- content: Add new unit: Ancient
+
+
 ## Spellmasons Update v1.13.0
 
 - Spellmasons source code is now public.  Check it out at https://github.com/jdoleary/Spellmasons
