@@ -380,7 +380,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       break;
     case MESSAGE_TYPES.SYNC_SOME_STATE:
       {
-        console.log('sync: SET_PHASE; syncs units and players')
+        console.log('sync: SYNC_SOME_STATE; syncs units and players')
         const { timeOfLastSpellMessage, units, players, pickups, lastUnitId, lastPickupId, RNGState } = payload as {
           // timeOfLastSpellMessage ensures that SYNC_SOME_STATE won't overwrite valid state with old state
           // if someone a second SPELL message is recieved between this message and it's corresponding SPELL message
