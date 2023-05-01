@@ -892,7 +892,18 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
   const manaRatio3 = (Math.max(0, unit.mana - unit.manaMax * 2)) / unit.manaMax;
   elManaBar3.style["width"] = `${100 * Math.min(manaRatio3, 1)}%`;
   if (predictionPlayerUnit && predictionPlayerUnit.mana !== unit.mana) {
-    elManaLabel.innerHTML = `${predictionPlayerUnit.mana} ${i18n('Remaining')}`;
+    if (predictionPlayerUnit.mana < 0) {
+      // If a player queues up a spell while another spell is casting,
+      // it may not block them from adding a spell beyond the mana that they have
+      // because the mana is actively changing from the currently casting spell,
+      // so rather than showing negative mana, show "Insufficient Mana"
+      // (Note, it will still prevent them from casting this spell on click, it's just
+      // that it won't prevent them from queing a spell)
+      elManaLabel.innerHTML = i18n('Insufficient Mana');
+    } else {
+      elManaLabel.innerHTML = `${predictionPlayerUnit.mana} ${i18n('Remaining')}`;
+
+    }
   } else {
     elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax}`;
   }

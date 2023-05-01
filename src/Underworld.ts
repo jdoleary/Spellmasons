@@ -3140,6 +3140,15 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // Note: it is important that this is done BEFORE a card is actually cast because
           // the card may affect the caster's mana
           effectState.casterUnit.mana -= spellCostTally.manaCost;
+
+          // Bandaid: Prevent mana from going negative to hide that mana scamming is possible
+          // This is a temporary solution, recent changes that made it possible to use mana gained
+          // from manasteal also broke the mana scamming prevention. so hiding that it's possible will
+          // have to do for now
+          if (!prediction) {
+            effectState.casterUnit.mana = Math.max(0, effectState.casterUnit.mana);
+          }
+
           if (spellCostTally.healthCost !== 0) {
             Unit.takeDamage(effectState.casterUnit, spellCostTally.healthCost, effectState.casterUnit, this, prediction, effectState);
           }
