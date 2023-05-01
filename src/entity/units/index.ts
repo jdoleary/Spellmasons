@@ -51,7 +51,7 @@ import manaVampire from './manaVampire';
 import bossmason from './deathmason';
 import decoy from './decoy';
 import ancient from './ancient';
-import dragger from './dragger';
+import gripthulu from './gripthulu';
 import blood_archer from './blood_archer';
 import ghost_archer from './ghost_archer';
 import Underworld from '../../Underworld';
@@ -68,7 +68,7 @@ export function registerUnits() {
   registerUnit(priest);
   registerUnit(poisoner);
   registerUnit(vampire);
-  registerUnit(dragger);
+  registerUnit(gripthulu);
   registerUnit(summoner);
   registerUnit(bloodGolem);
   registerUnit(blood_archer);

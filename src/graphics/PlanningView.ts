@@ -22,7 +22,7 @@ import { keyDown } from './ui/eventListeners';
 import { inPortal } from '../entity/Player';
 import { getPerkText } from '../Perk';
 import { View } from '../views';
-import { dragger_id } from '../entity/units/dragger';
+import { gripthulu_id } from '../entity/units/gripthulu';
 
 const TEXT_OUT_OF_RANGE = 'Out of Range';
 // Graphics for rendering above board and walls but beneath units and doodads,

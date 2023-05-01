@@ -4,16 +4,16 @@ import { UnitSubType } from '../../types/commonTypes';
 import * as Unit from '../Unit';
 import * as math from '../../jmath/math';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
-import { bloodDragger } from '../../graphics/ui/colors';
+import { bloodGripthulu } from '../../graphics/ui/colors';
 import type Underworld from '../../Underworld';
 import { pull } from '../../cards/pull';
 import { containerProjectiles } from '../../graphics/PixiUtils';
 import { getAngleBetweenVec2s, Vec2 } from '../../jmath/Vec';
 
 const manaCostToCast = 15;
-export const dragger_id = 'gripthulu';
+export const gripthulu_id = 'gripthulu';
 const unit: UnitSource = {
-  id: dragger_id,
+  id: gripthulu_id,
   info: {
     description: 'A gripthulu will pull you into danger if it gets close enough to do so',
     image: 'units/poisIdle',
@@ -21,7 +21,7 @@ const unit: UnitSource = {
   },
   unitProps: {
     attackRange: 420,
-    bloodColor: bloodDragger,
+    bloodColor: bloodGripthulu,
     manaCostToCast
   },
   spawnParams: {
@@ -108,7 +108,7 @@ export async function animateDrag(start: Vec2, end: Vec2) {
     points.push(new globalThis.pixi.Point(0, 0));
   }
 
-  const strip = new globalThis.pixi.SimpleRope(globalThis.pixi.Texture.from('draggerMagic.png'), points);
+  const strip = new globalThis.pixi.SimpleRope(globalThis.pixi.Texture.from('gripthuluMagic.png'), points);
 
   strip.x = start.x;
   strip.y = start.y;
