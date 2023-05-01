@@ -1,4 +1,6 @@
 # Critical Path
+- admin bug: Prevent movement spells from casting devdesync
+  - lots of desyncs, cast admin curse (some blew up), then admin target.  Many units changed position.
 - New ideas:
   - ice wall (empty unit with `immovable` to true and ice image)
   - Glass axe
