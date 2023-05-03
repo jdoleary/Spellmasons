@@ -13,9 +13,6 @@
 - Split ally players still stay split after going through portal when the portal is supposed to clear modifiers
 - when mana vamp removes your max mana it shouldn't also remove overflow mana
 - fortify doesn't reduce damage when shield is applied
-- put a visual limit on animation of absurdly high rend stacks (https://discord.com/channels/1032294536640200766/1072755895911587963/1072755898688217128)
-    - no spell should take that long
-- UI: Limit queued spells box growth for chains over 50, it should just obscure the earlier ones and show the late ones
 
 
 https://docs.google.com/spreadsheets/d/1q8psSC162NBjcVUzBNM4Ci5XQlv3KDphSnMAIBHvGTk

@@ -1,3 +1,4 @@
+- MrMarblz suggests that Ancients should attack multiple targets in multiplayer
 Crvknight — Today at 11:39 AM
 It's a little jarring to me, but hey to each their own
 It would be cool to have something like a short gamemode and a long gamemode, where the short games have the difficulty spike and the long games have more levels, larger arenas, maybe more enemies? It'd help for mass appeal, that's for sure.

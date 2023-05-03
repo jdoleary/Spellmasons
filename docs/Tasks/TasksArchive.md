@@ -1,25 +1,19 @@
 # Critical Path
+  question: did you decrease the amount of enemies?
+it feels right in solo play but in 3-player we are often getting 6 5 monsters in a single room even midgame. Thats... uh... not enough monsters 
+Jordan - Spellmasons Developer — Today at 10:42 PM
+No, I didn’t. It might be a budgeting issue. Which 5 monsters were they? I might just have to adjust their budget value
+scojbo — Today at 10:51 PM
+cant remember for sure... maybe 2 ancients and 3 blood vampires? but the overall budget could certainly stand to increase more in multiplayer anyways.
+Was really hoping for some rooms late-game with a horde of ancients but most I ever saw in one room was 4 (even in 3player round 18)
+- enhancement: MrMarblz — Today at 7:04 PM
+Also, while playing on my laptop w/ integrated graphics the screen scrolling and zooming in/out is very slow
 - i18n: for Dragger
 - admin bug: Prevent movement spells from casting devdesync
   - lots of desyncs, cast admin curse (some blew up), then admin target.  Many units changed position.
-- New ideas:
-  - ice wall (empty unit with `immovable` to true and ice image)
-  - Glass axe
-  - Auras or growing / moving areas on the map that do damage onEndTurn
-  - invincible enemy that does damage that forces you to stay mobile
-  - an enemy that dies when all it's allies are dead
-  - an enemy that does more damage the more alone it is
-  - Mana expensive spell that gets stronger the more you use it (resets every level)
-  - Bring traps back
 - bug: validate WhiteSycthe desync report: 2) There appears another desync issue when using a selection spell + dash; I would dash to all targets, but once the turn was ended I would blink back to the initial dash destination.
 
-- Improve enemy crowd targeting for large battles
-- Desync reporter - report health, position changes and use server hub as backend
 ---
-- bug: Fix weird prediction push lines in repel and other movement spells
-- bug: prediction casting undead blade on a portal makes where pickups were play disappear particles
-- bug: arrow not killing eenemies as it predicts https://discord.com/channels/1032294536640200766/1069963955092606976/1094617106504491079
-- bug: Joining saved hotseat game doesn't work great, and it plays the enemies turn when you switch players
 - Bug: I ended my turn which resulted in a game over / restart for the host app but it just froze on my end
   - this happened after this message: `Player unit died but could not find them in players array to end their turn`
   - then later:
@@ -30,7 +24,6 @@ canMove: false - unit is not alive
 ```
 
 ## For v1.14
-- Thank JamesGamesA_Lot in changelog for ccc28405
 - Prevent mana scamming from casting too quickly
 - Fix: A player has joined mid-game and didn’t get to choose any spells or upgrades.  When the first level was completed they still weren’t able to pick any.  Rejoining the game didn’t fix it either for that player.
 - Calamity
@@ -113,9 +106,6 @@ If the turn is ending and you're moving a spell at the same time the spell doesn
 - ally summoners show attack badge when getting ready to cast
 
 # v1.11
-- Hotseat is bugged, only one player can enter the portal https://steamcommunity.com/app/1618380/discussions/0/3819654644922993969/
-
----
 - using split on yourself also sometimes permanently reduces your mana going forward, it wont reset after the round ends 
 - Madgod — Yesterday at 11:56 PM
 found a bug, if you hover your unspawned character over the map (to choose a spot) and its near the effect radius of another players attack, you will take damage before youve even spawned
@@ -155,12 +145,6 @@ im getting some level skipping again not near as bad as last time, ill do some m
   - "+80%" single turn mana is way to powerful especially when it stacks
     - does it have to do when you spawn on mana bottle?
   - Big: +5% attack range resulted in WAY to much attack range by level 12
-- target kind animates sequentially not concurrently
-  - it also targets already targetd units
-- stamina bar doesn't update while spell is casting
-- shove radius makes you get too close to minibosses
-- multiple suffocates in separate casts doesn't work right
-- red portals left over after level turn over
 - perks didn't trigger for him once, i'm wondering if it resetPlayerForNextLevel
   or something after the perks had triggered, like resetting a stalled game
 

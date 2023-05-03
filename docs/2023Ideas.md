@@ -1,1 +1,0 @@
-- Glass Knife: A spell that gets weaker every time you use it
