@@ -199,6 +199,7 @@ export default class Underworld {
   activeMods: string[] = [];
   generatingLevel: boolean = false;
   statCalamities: StatCalamity[] = [];
+  simulatingMovePredictions: boolean = false;
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
@@ -295,6 +296,11 @@ export default class Underworld {
   }
   // Simulate the forceMove until it's complete
   fullySimulateForceMovePredictions() {
+    if (this.simulatingMovePredictions) {
+      console.debug('Already simulating move predictions');
+      return;
+    }
+    this.simulatingMovePredictions = true;
     const prediction = true;
     const PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD = 300;
     let loopCount = 0;
@@ -334,6 +340,7 @@ export default class Underworld {
     if (loopCount >= PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD) {
       console.error('forceMove simulation hit PREVENT_INFINITE threshold');
     }
+    this.simulatingMovePredictions = false;
   }
   // Returns true when forceMove is complete
   runForceMove(forceMoveInst: ForceMove, prediction: boolean): boolean {
@@ -3539,6 +3546,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       ...rest,
       // isRestarting is an id for SetTimeout and cannot be serialized
       isRestarting: undefined,
+      // simulatingMovePredictions should never be serialized, it is only for a running instance to keep track of if the simulateRunForceMovePredictions is running
+      simulatingMovePredictions: false,
       players: this.players.map(Player.serialize),
       units: this.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
       pickups: this.pickups.filter(p => !p.flaggedForRemoval).map(Pickup.serialize),
@@ -3573,6 +3582,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       ...rest,
       // isRestarting is an id for SetTimeout and cannot be serialized
       isRestarting: undefined,
+      // simulatingMovePredictions should never be serialized, it is only for a running instance to keep track of if the simulateRunForceMovePredictions is running
+      simulatingMovePredictions: false,
       // the state of the Random Number Generator
       RNGState: this.random.state() as SeedrandomState,
     }

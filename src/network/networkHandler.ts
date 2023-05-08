@@ -716,6 +716,8 @@ async function handleLoadGameState(payload: {
   underworld.enemiesKilled = loadedGameState.enemiesKilled;
   underworld.activeMods = loadedGameState.activeMods;
   underworld.statCalamities = loadedGameState.statCalamities || [];
+  // simulatingMovePredictions should never be serialized, it is only for a running instance to keep track of if the simulateRunForceMovePredictions is running
+  underworld.simulatingMovePredictions = false;
 
   // Sync Level.  Must await createLevel since it uses setTimeout to ensure that
   // the DOM can update with the "loading..." message before locking up the CPU with heavy processing.
