@@ -1,3 +1,5 @@
+- KillerSundae
+    - Spellmason clones could use different spells than just slash
 - MrMarblz suggests that Ancients should attack multiple targets in multiplayer
 Crvknight — Today at 11:39 AM
 It's a little jarring to me, but hey to each their own
