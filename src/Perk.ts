@@ -41,22 +41,32 @@ export interface StatCalamity {
 }
 export function generateRandomStatCalamity(underworld: Underworld, index: number): StatCalamity | undefined {
     // health, damage, attack range
-    const stats: (keyof Unit.IUnit)[] = ['health', 'damage', 'attackRange'];
     const seedString = getUniqueSeedString(underworld, globalThis.player) + `-${index}-${player?.cursesChosen || 0}`;
     const seed = seedrandom(seedString);
-    const stat = chooseOneOfSeeded(stats, seed);
     const currentLevelUnitSourceIds = [...new Set(underworld.units.map(u => u.unitSourceId).filter(uid => uid !== spellmasonUnitId))];
-    const unitId = chooseOneOfSeeded(currentLevelUnitSourceIds, seedrandom(`-${index}-${seedString}-unit`));
+    const unitId: string | undefined = chooseOneOfSeeded(currentLevelUnitSourceIds, seedrandom(`-${index}-${seedString}-unit`));
     const growthFactor = underworld.levelIndex - LAST_LEVEL_INDEX;
-    if (unitId && stat) {
-        return {
-            unitId,
-            stat,
-            percent: randInt(2 + growthFactor, 5 + growthFactor, seed) * 10
+    const unitSource = allUnits[unitId || ''];
+    if (unitSource) {
+        const stats: (keyof Unit.IUnit)[] = ['healthMax', 'attackRange', 'staminaMax'];
+        if (unitSource.unitProps.damage) {
+            stats.push('damage');
+        }
+        const stat = chooseOneOfSeeded(stats, seed);
+        if (unitId && stat) {
+            return {
+                unitId,
+                stat,
+                percent: randInt(2 + growthFactor, 5 + growthFactor, seed) * 10
+            }
+        } else {
+            console.warn('Could not generate random stat calamity')
+            return undefined;
         }
     } else {
         console.warn('Could not generate random stat calamity')
         return undefined;
+
     }
 
 }
@@ -107,7 +117,8 @@ export function createCursePerkElement({ cardId, statCalamity }: { cardId?: stri
         const wordMap: { [key: string]: string } = {
             'attackRange': 'attack range',
             'damage': 'damage',
-            'health': 'health capacity'
+            'healthMax': 'health capacity',
+            'staminaMax': 'stamina capacity'
         }
         descriptionText.innerHTML = `${statCalamity.unitId} ${i18n([wordMap[statCalamity.stat] || ''])} + ${statCalamity.percent}%`;
         desc.appendChild(descriptionText);
