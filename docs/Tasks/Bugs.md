@@ -1,4 +1,9 @@
 ## Bugs
+- scojbo — Yesterday at 4:55 PM
+currently if u suffocate a target with 1 round remaining, it bumps them back to 2.
+- TonyFTW — Yesterday at 11:00 PM
+This screenshot is captured after 2 fortify spells cast on self. It appears that after 2 fortify spells, I can cast infinite health spells. I am betting the spell grants 2 instances of +50% dmg resistance (100% resistance) instead half damage times 2 aka 25% dmg. Perhaps this is intentional, which I guess makes the spell much more useful late game. 
+- Investigate MuditaMan reporting weird invisible range when stacking target cone
 - (v1.15) Balance Ancient budget, attack targets, etc
 - TonyFTW — Yesterday at 4:15 PM
 Howdy, I think I stumbled into an exploit. You can use **capture soul post level end** so long as there are units on the ground, IE units you control through resurrection. I was able to take resurrected units, move them around and bring them to below the hp threshold and capture 5 types. I had to "end the turn" maybe 4 times to set it all up. This was all after the level ended and it was waiting for me to walk through the portal.
