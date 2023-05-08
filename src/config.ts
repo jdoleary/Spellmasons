@@ -70,7 +70,7 @@ export const PIXI_TEXT_DROP_SHADOW = { dropShadow: true, dropShadowDistance: 1 }
 
 // Unit difficulty will increase up to X number of players, after that the quantity of 
 // units increases
-export const NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES = 3;
+export const NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES = 2;
 
 // The boss is on this level.  Levels beyond are considered "loop" levels
 export const LAST_LEVEL_INDEX = 11;
