@@ -24,7 +24,12 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
       }
     }
   });
+  const lastTurnsLeftToLive = modifier.turnsLeftToLive;
   modifier.turnsLeftToLive = 1 + Math.ceil(unit.health / 20 / modifier.quantity)
+  // Ensure that casting Suffocate doesn't ever increase the turns left
+  if (lastTurnsLeftToLive) {
+    modifier.turnsLeftToLive = Math.min(modifier.turnsLeftToLive, lastTurnsLeftToLive);
+  }
   if (!prediction) {
     // Temporarily use floating text until spell animation is finished
     floatingText({ coords: unit, text: suffocateCardId });
