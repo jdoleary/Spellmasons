@@ -11,8 +11,6 @@ tried doing the reverse, the +40 works normally if you take it after the +4 capa
 +40 single turn perks break if you take permanent increase perks of the same resource afterwards (health/mana/stamina)
 +40 single turn perks do not stack (having two of one resource only grants +40 total) could use a "does not stack" if you don't want to change this. 
 
-- TonyFTW — Yesterday at 11:00 PM
-This screenshot is captured after 2 fortify spells cast on self. It appears that after 2 fortify spells, I can cast infinite health spells. I am betting the spell grants 2 instances of +50% dmg resistance (100% resistance) instead half damage times 2 aka 25% dmg. Perhaps this is intentional, which I guess makes the spell much more useful late game. 
 - Investigate MuditaMan reporting weird invisible range when stacking target cone
 - (v1.15) Balance Ancient budget, attack targets, etc
 - TonyFTW — Yesterday at 4:15 PM

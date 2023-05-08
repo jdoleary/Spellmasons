@@ -75,7 +75,12 @@ const spell: Spell = {
       if (modifier) {
         // Only block damage, not heals
         if (amount > 0) {
-          const adjustedAmount = Math.round(amount * (1.0 - Math.min(1, DAMGAGE_REDUCTION_PROPORTION * (modifier.quantity || 1))));
+          let reduceProportion = DAMGAGE_REDUCTION_PROPORTION;
+          // Fortify stacks as 50%, 75%, 87.5%, etc...
+          for (let i = 1; i < (modifier.quantity || 1); i++) {
+            reduceProportion = reduceProportion + (1 - reduceProportion) * DAMGAGE_REDUCTION_PROPORTION;
+          }
+          const adjustedAmount = Math.round(amount * (1.0 - Math.min(1, reduceProportion)));
           if (!prediction) {
             floatingText({
               coords: unit,
