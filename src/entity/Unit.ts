@@ -1317,3 +1317,34 @@ export async function demoAnimations(unit: IUnit) {
   returnToDefaultSprite(unit);
 
 }
+export function resetUnitStats(unit: IUnit, underworld: Underworld) {
+  if (!unit.alive) {
+    resurrect(unit);
+  }
+
+  if (unit.image) {
+    // Remove liquid mask which may be attached if the player died in liquid
+    inLiquid.remove(unit);
+  }
+
+  // Remove all modifiers between levels
+  // This prevents players from scamming shields at the end of a level
+  // on infinite mana
+  Object.keys(unit.modifiers).forEach(modifierKey => {
+    const modifier = unit.modifiers[modifierKey];
+    if (modifier) {
+      if (!modifier.persistBetweenLevels) {
+        removeModifier(unit, modifierKey, underworld);
+      }
+    }
+  });
+
+  // Reset mana and health - otherwise players are incentivized to bum around after killing all enemies
+  // to get their mana back to full
+  unit.mana = unit.manaMax;
+  unit.health = unit.healthMax;
+  unit.stamina = unit.staminaMax;
+
+  returnToDefaultSprite(unit);
+
+}

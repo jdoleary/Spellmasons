@@ -508,6 +508,8 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       break;
     case MESSAGE_TYPES.SPAWN_PLAYER:
       if (fromPlayer) {
+        // Ensure a newly spawned player unit has fresh stats
+        Unit.resetUnitStats(fromPlayer.unit, underworld);
         // If the spawned player is the current client's player
         if (fromPlayer == globalThis.player) {
           tutorialCompleteTask('spawn');

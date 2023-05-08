@@ -248,34 +248,8 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
   if (globalThis.player == player) {
     Image.show(player.unit.image);
   }
-  if (!player.unit.alive) {
-    Unit.resurrect(player.unit);
-  }
 
-  if (player.unit.image) {
-    // Remove liquid mask which may be attached if the player died in liquid
-    inLiquid.remove(player.unit);
-  }
-
-  // Remove all modifiers between levels
-  // This prevents players from scamming shields at the end of a level
-  // on infinite mana
-  Object.keys(player.unit.modifiers).forEach(modifierKey => {
-    const modifier = player.unit.modifiers[modifierKey];
-    if (modifier) {
-      if (!modifier.persistBetweenLevels) {
-        Unit.removeModifier(player.unit, modifierKey, underworld);
-      }
-    }
-  });
-
-  // Reset mana and health - otherwise players are incentivized to bum around after killing all enemies
-  // to get their mana back to full
-  player.unit.mana = player.unit.manaMax;
-  player.unit.health = player.unit.healthMax;
-  player.unit.stamina = player.unit.staminaMax;
-
-  Unit.returnToDefaultSprite(player.unit);
+  Unit.resetUnitStats(player.unit, underworld);
 
   // Manage game over state so that if this is a restart
   // and the game over window is currently up, it will dismiss it

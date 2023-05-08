@@ -385,6 +385,11 @@ export function getCardsFromIds(cardIds: string[]): ICard[] {
 
 export function addTarget(target: any, effectState: EffectState) {
   if (Unit.isUnit(target)) {
+    if (globalThis.player && globalThis.player.unit == target && !globalThis.player.isSpawned) {
+      // Do not allow targeting self when self isn't spawned
+      // (Note, this only needs to run locally because the positional change when choosing a spawn isn't networked)
+      return;
+    }
     addUnitTarget(target, effectState);
   } else if (Pickup.isPickup(target)) {
     addPickupTarget(target, effectState);
