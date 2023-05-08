@@ -3189,8 +3189,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
 
     stopAndDestroyForeverEmitter(castingParticleEmitter);
-    this.checkIfShouldSpawnPortal();
-    this.tryGameOver();
+    if (!prediction) {
+      this.checkIfShouldSpawnPortal();
+      this.tryGameOver();
+    }
 
     return effectState;
   }
