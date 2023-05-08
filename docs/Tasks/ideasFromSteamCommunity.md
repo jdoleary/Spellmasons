@@ -1,3 +1,7 @@
+- The Joe — Today at 1:38 PM
+I think that one thing that this game is missing a little bit of is that rogue-like randomness that comes with artifacts. Think slay the spire, monster train, binding of Isaac, etc.
+- The Joe — Today at 4:22 PM
+Or perhaps a curse that will let you use health as mana if the mana cost goes over. Though the health cost should be at a multiplied cost to reduce how OP that would be. 
 - KillerSundae
     - Spellmason clones could use different spells than just slash
 - MrMarblz suggests that Ancients should attack multiple targets in multiplayer
