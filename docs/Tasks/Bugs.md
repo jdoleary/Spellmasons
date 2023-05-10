@@ -1,8 +1,4 @@
 ## Bugs
-- (v1.15) The Joe — Today at 1:31 PM
-As convenient as this is to be able to skip it is still technically a bug.
-
-In multiplayer you can skip cooldowns by clicking on the end turn button more than once while you're teammates are not on ready to end turn.
 - MuditaMan
 I got two +4 capacity perks, it looks like the single turn +40 amount is being overwritten by the total of the my every level +4 capacity amount
 Image

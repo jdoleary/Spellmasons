@@ -1929,6 +1929,16 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
     if (doEndPlayerTurnPhase) {
       console.log('Underworld: TurnPhase: End player turn phase');
+      for (let player of this.players) {
+        // Decrement cooldowns of spells
+        for (let spellState of Object.values(player.spellState)) {
+          if (spellState.cooldown) {
+            spellState.cooldown--;
+            // Update cooldown in UI
+            CardUI.recalcPositionForCards(globalThis.player, this);
+          }
+        }
+      }
       // Safety, force die any units that are out of bounds (this should never happen)
       // Note: Player Controlled units are out of bounds when they are inPortal so that they don't collide,
       // this filters out PLAYER_CONTROLLED so that they don't get die()'d when they are inPortal
@@ -2203,14 +2213,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (!player) {
       console.error('Cannot end turn, player with clientId:', clientId, 'does not exist');
       return;
-    }
-    // Decrement cooldowns of spells
-    for (let spellState of Object.values(player.spellState)) {
-      if (spellState.cooldown) {
-        spellState.cooldown--;
-        // Update cooldown in UI
-        CardUI.recalcPositionForCards(globalThis.player, this);
-      }
     }
 
     if (this.turn_phase != turn_phase.PlayerTurns) {
