@@ -91,31 +91,35 @@ const spell: Spell = {
     onDeath: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
       const quantity = unit.modifiers[id]?.quantity || 1;
       const adjustedRadius = baseRadius + (unit.modifiers[id]?.radius || 0);
-      if (prediction) {
-        drawUICircle(unit, adjustedRadius, colors.healthRed, 'Explosion Radius');
-      } else {
-        playSFXKey('bloatExplosion');
-      }
-      makeBloatExplosionWithParticles(unit, adjustedRadius / baseRadius, prediction);
-      underworld.getUnitsWithinDistanceOfTarget(
-        unit,
-        adjustedRadius,
-        prediction
-      ).forEach(u => {
-        // Deal damage to units
-        takeDamage(u, damage * quantity, u, underworld, prediction);
-        // Push units away from exploding unit
-        forcePush(u, unit, velocityStartMagnitude, underworld, prediction);
-      });
-      underworld.getPickupsWithinDistanceOfTarget(
-        unit,
-        adjustedRadius,
-        prediction
-      ).forEach(p => {
-        // Push pickups away
-        forcePush(p, unit, velocityStartMagnitude, underworld, prediction);
-      })
+      explode(unit, adjustedRadius, damage * quantity, prediction, underworld);
     }
   }
 };
+export function explode(location: Vec2, radius: number, damage: number, prediction: boolean, underworld: Underworld) {
+  if (prediction) {
+    drawUICircle(location, radius, colors.healthRed, 'Explosion Radius');
+  } else {
+    playSFXKey('bloatExplosion');
+  }
+  makeBloatExplosionWithParticles(location, radius / baseRadius, prediction);
+  underworld.getUnitsWithinDistanceOfTarget(
+    location,
+    radius,
+    prediction
+  ).forEach(u => {
+    // Deal damage to units
+    takeDamage(u, damage, u, underworld, prediction);
+    // Push units away from exploding location
+    forcePush(u, location, velocityStartMagnitude, underworld, prediction);
+  });
+  underworld.getPickupsWithinDistanceOfTarget(
+    location,
+    radius,
+    prediction
+  ).forEach(p => {
+    // Push pickups away
+    forcePush(p, location, velocityStartMagnitude, underworld, prediction);
+  })
+}
+
 export default spell;

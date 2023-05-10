@@ -62,9 +62,11 @@ import devRecordDelay from './devRecordDelay';
 import devCauseDesync from './devCauseDesync';
 import registerSummoningSickness from '../modifierSummoningSickness';
 import arrow from './arrow';
+import explosive_arrow from './explosive_arrow';
 import target_arrow from './target_arrow';
 import conserve from './conserve';
 import phantom_arrow from './phantom_arrow';
+// import trap from './trap';
 
 import * as config from '../config';
 
@@ -205,11 +207,13 @@ export function registerCards(overworld: Overworld) {
   registerSpell(capture_soul, overworld);
   registerSpell(sacrifice, overworld);
   registerSpell(arrow, overworld);
+  registerSpell(explosive_arrow, overworld);
   registerSpell(phantom_arrow, overworld);
   registerSpell(target_arrow, overworld);
   // TODO: Refactor bolt into soulbind, it didn't work out well as a spell
   // register(bolt, overworld);
   registerSpell(conserve, overworld);
+  // registerSpell(trap, overworld);
   for (let unitId of Object.keys(allUnits)) {
     const spell = summon_generic(unitId, false);
     if (spell) {
