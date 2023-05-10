@@ -248,6 +248,10 @@ export function setupPieAndUnderworld() {
     globalThis.isConnected = pie.isConnected.bind(pie);
     globalThis.pieDisconnect = pie.disconnect.bind(pie);
     globalThis.saveActiveMods = (activeMods: string[]) => {
+      // Ensure activeMods is never undefined
+      if (!activeMods) {
+        activeMods = [];
+      }
       // Persist to storage
       if (globalThis.setOption) {
         globalThis.setOption(

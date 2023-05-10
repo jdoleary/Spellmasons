@@ -56,7 +56,7 @@ export function getSavedData() {
                     globalThis.UIEasyOnTheEyes = options.UIEasyOnTheEyes;
                 }
                 globalThis.activeMods = [];
-                if (options.activeMods !== undefined) {
+                if (!!options.activeMods) {
                     globalThis.activeMods = options.activeMods;
                 }
             }
