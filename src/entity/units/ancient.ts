@@ -1,10 +1,12 @@
 import * as Unit from '../Unit';
 import type { UnitSource } from './index';
+import * as math from '../../jmath/math';
 import { UnitSubType } from '../../types/commonTypes';
 import Underworld from '../../Underworld';
 import { makeAncientParticles } from '../../graphics/ParticleCollection';
 import { makeManaTrail } from '../../graphics/Particles';
 
+const numberOfTargets = 3;
 const unit: UnitSource = {
   id: 'ancient',
   info: {
@@ -42,26 +44,34 @@ const unit: UnitSource = {
     }
   },
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
-    const attackTarget = attackTargets && attackTargets[0];
     // Attack
-    if (attackTarget && canAttackTarget) {
-      unit.mana -= unit.manaCostToCast;
-      // Attack or move, not both; so clear their existing path
-      unit.path = undefined;
-      Unit.orient(unit, attackTarget);
-      makeAncientParticles(unit, false);
-      await makeManaTrail(unit, attackTarget, underworld, '#5a7879', '#304748').then(() => {
-        Unit.takeDamage(attackTarget, unit.damage, attackTarget, underworld, false, undefined);
-      });
+    if (attackTargets && attackTargets.length && canAttackTarget) {
+      let promises = [];
+      for (let i = 0; i < numberOfTargets; i++) {
+        const attackTarget = attackTargets[i];
+        if (attackTarget) {
+          unit.mana -= unit.manaCostToCast;
+          // Attack or move, not both; so clear their existing path
+          unit.path = undefined;
+          Unit.orient(unit, attackTarget);
+          makeAncientParticles(unit, false);
+          promises.push(makeManaTrail(unit, attackTarget, underworld, '#5a7879', '#304748').then(() => {
+            Unit.takeDamage(attackTarget, unit.damage, attackTarget, underworld, false, undefined);
+          }));
+        }
+      }
+      await Promise.all(promises);
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-    const closestUnit = Unit.findClosestUnitInDifferentFaction(unit, underworld);
-    if (closestUnit) {
-      return [closestUnit];
-    } else {
-      return [];
-    }
+    return Unit.livingUnitsInDifferentFaction(unit, underworld)
+      .filter(u => math.distance(unit, u) <= unit.attackRange)
+      .map(u => ({ unit: u, dist: math.distance(unit, u) }))
+      .sort((a, b) => {
+        return a.dist - b.dist;
+      })
+      .map(x => x.unit)
+      .slice(0, numberOfTargets);
   }
 };
 

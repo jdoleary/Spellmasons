@@ -11,7 +11,6 @@ tried doing the reverse, the +40 works normally if you take it after the +4 capa
 +40 single turn perks break if you take permanent increase perks of the same resource afterwards (health/mana/stamina)
 +40 single turn perks do not stack (having two of one resource only grants +40 total) could use a "does not stack" if you don't want to change this. 
 
-- (v1.15) Balance Ancient budget, attack targets, etc
 - TonyFTW — Yesterday at 4:15 PM
 Howdy, I think I stumbled into an exploit. You can use **capture soul post level end** so long as there are units on the ground, IE units you control through resurrection. I was able to take resurrected units, move them around and bring them to below the hp threshold and capture 5 types. I had to "end the turn" maybe 4 times to set it all up. This was all after the level ended and it was waiting for me to walk through the portal.
 
