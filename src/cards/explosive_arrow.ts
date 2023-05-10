@@ -10,14 +10,16 @@ import { findArrowCollisions } from './arrow';
 
 export const explosiveArrowCardId = 'Explosive Arrow';
 const damageDone = 10;
+const explodeRange = 140;
+const explodeDamage = 40;
 const spell: Spell = {
   card: {
     id: explosiveArrowCardId,
     category: CardCategory.Damage,
     supportQuantity: true,
-    manaCost: 10,
+    manaCost: 60,
     healthCost: 0,
-    expenseScaling: 1,
+    expenseScaling: 2,
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconExplosiveArrow.png',
     // so that you can fire the arrow at targets out of range
@@ -51,7 +53,7 @@ const spell: Spell = {
                 if (Unit.isUnit(firstTarget)) {
                   Unit.takeDamage(firstTarget, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
                   targetsHitCount++;
-                  explode(firstTarget, 140, 40, prediction, underworld);
+                  explode(firstTarget, explodeRange, explodeDamage, prediction, underworld);
                 }
               });
               attackPromises.push(projectilePromise);
@@ -63,7 +65,7 @@ const spell: Spell = {
               if (Unit.isUnit(firstTarget)) {
                 Unit.takeDamage(firstTarget, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
                 targetsHitCount++;
-                explode(firstTarget, 140, 40, prediction, underworld);
+                explode(firstTarget, explodeRange, explodeDamage, prediction, underworld);
               }
             }
           }
