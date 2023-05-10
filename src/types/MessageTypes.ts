@@ -27,6 +27,7 @@ export enum MESSAGE_TYPES {
   CREATE_LEVEL,
   SET_PHASE,
   SYNC_PLAYERS,
+  SYNC_SOME_STATE,
   // Shows other players what another player is up to
   PLAYER_THINKING,
   // Allows a client to inhabit a disconnected player character

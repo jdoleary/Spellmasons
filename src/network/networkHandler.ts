@@ -37,7 +37,7 @@ import { getUniqueSeedString, SeedrandomState } from '../jmath/rand';
 import { raceTimeout } from '../Promise';
 import { createVisualLobbingProjectile } from '../entity/Projectile';
 import { setPlayerNameUI } from '../PlayerUtils';
-import { isSinglePlayer } from '../types/commonTypes';
+import { isSinglePlayer, UnitType } from '../types/commonTypes';
 import { recalcPositionForCards } from '../graphics/ui/CardUI';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -378,6 +378,52 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         }
       }
       break;
+    case MESSAGE_TYPES.SYNC_SOME_STATE:
+      {
+        if (globalThis.headless) {
+          // SYNC_SOME_STATE is only ever sent from headless and doesn't need to be run on headless
+          break;
+        }
+        console.log('sync: SYNC_SOME_STATE; syncs non-player units')
+        const { timeOfLastSpellMessage, units, pickups, lastUnitId, lastPickupId, RNGState } = payload as {
+          // timeOfLastSpellMessage ensures that SYNC_SOME_STATE won't overwrite valid state with old state
+          // if someone a second SPELL message is recieved between this message and it's corresponding SPELL message
+          // Messages don't currently have a unique id so I'm storing d.time which should be good enough
+          timeOfLastSpellMessage: number,
+          // Sync data for units
+          units?: Unit.IUnitSerialized[],
+          // Sync data for pickups
+          pickups?: Pickup.IPickupSerialized[],
+          lastUnitId: number,
+          lastPickupId: number,
+          RNGState: SeedrandomState,
+        }
+        if (timeOfLastSpellMessage !== lastSpellMessageTime) {
+          // Do not sync, state has changed since this sync message was sent
+          console.warn('Discarding SYNC_SOME_STATE message, it is no longer valid');
+          break;
+        }
+        if (RNGState) {
+          underworld.syncronizeRNG(RNGState);
+        }
+
+        if (units) {
+          // Sync all non-player units.  If it syncs player units it will overwrite player movements
+          // that occurred during the cast
+          underworld.syncUnits(units.filter(u => u.unitType !== UnitType.PLAYER_CONTROLLED));
+        }
+
+        if (pickups) {
+          underworld.syncPickups(pickups);
+        }
+
+        // Syncronize the lastXId so that when a new unit or pickup is created
+        // it will get the same id on both server and client
+        underworld.lastUnitId = lastUnitId;
+        underworld.lastPickupId = lastPickupId;
+
+        break;
+      }
     case MESSAGE_TYPES.SET_PHASE:
       console.log('sync: SET_PHASE; syncs units and players')
       const { phase, units, players, pickups, lastUnitId, lastPickupId, RNGState } = payload as {
@@ -649,6 +695,20 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         // Trigger it again in case the result of any spells caused a forceMove to be added to the array
         // such as Bloat's onDeath
         underworld.triggerGameLoopHeadless();
+        // Only send SYNC_SOME_STATE from the headless server
+        if (globalThis.headless) {
+          // Sync state directly after each cast to attempt to reduce snowballing desyncs
+          underworld.pie.sendData({
+            type: MESSAGE_TYPES.SYNC_SOME_STATE,
+            timeOfLastSpellMessage: lastSpellMessageTime,
+            units: underworld.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
+            pickups: underworld.pickups.filter(p => !p.flaggedForRemoval).map(Pickup.serialize),
+            lastUnitId: underworld.lastUnitId,
+            lastPickupId: underworld.lastPickupId,
+            // the state of the Random Number Generator
+            RNGState: underworld.random.state(),
+          });
+        }
       } else {
         console.error('Cannot cast, caster does not exist');
       }
