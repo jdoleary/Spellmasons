@@ -400,7 +400,7 @@ export function tryTriggerPickup(pickup: IPickup, unit: IUnit, underworld: Under
 
 const manaPotionRestoreAmount = 40;
 const healthPotionRestoreAmount = 50;
-const spike_damage = 30;
+export const spike_damage = 30;
 export const CARDS_PICKUP_NAME = 'Spells';
 export const PICKUP_SPIKES_NAME = 'Trap';
 export const PICKUP_PORTAL_NAME = 'Portal';
