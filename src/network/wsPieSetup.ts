@@ -284,13 +284,13 @@ export function setupPieAndUnderworld() {
 
     }
     globalThis.connectToSingleplayer = connectToSingleplayer;
-    globalThis.startSingleplayer = function startSingleplayer(numberOfHotseatPlayers: number) {
+    globalThis.startSingleplayer = function startSingleplayer(numberOfHotseatPlayers: number, gameMode?: string) {
       console.log('Start Game: Attempt to start the game')
       globalThis.numberOfHotseatPlayers = numberOfHotseatPlayers;
       return connectToSingleplayer().then(() => {
         // Create first level
         if (overworld.underworld) {
-          overworld.underworld.lastLevelCreated = overworld.underworld.generateLevelDataSyncronous(0);
+          overworld.underworld.lastLevelCreated = overworld.underworld.generateLevelDataSyncronous(0, gameMode);
         } else {
           console.error('Overworld does not have underworld, cannot setup first level');
         }

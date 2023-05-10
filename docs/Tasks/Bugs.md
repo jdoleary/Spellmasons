@@ -1,4 +1,5 @@
 ## Bugs
+- (v1.15) Steam forums, mods button is bugged
 - MuditaMan
 I got two +4 capacity perks, it looks like the single turn +40 amount is being overwritten by the total of the my every level +4 capacity amount
 Image

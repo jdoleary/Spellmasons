@@ -122,6 +122,7 @@ const cleanupRegistry = globalThis.hasOwnProperty('FinalizationRegistry') ? new 
 let localUnderworldCount = 0;
 export default class Underworld {
   seed: string;
+  gameMode?: string;
   // A simple number to keep track of which underworld this is
   // Used for development to help ensure that all references to the underworld are current
   localUnderworldNumber: number;
@@ -1743,7 +1744,9 @@ export default class Underworld {
       return `${this.levelIndex + 1}`;
     }
   }
-  async createLevel(levelData: LevelData) {
+  async createLevel(levelData: LevelData, gameMode?: string) {
+    console.log('jtest set gamemode', gameMode)
+    this.gameMode = gameMode;
     return new Promise<void>(resolve => {
       document.body?.classList.toggle('loading', true);
       // Add timeout so that loading can update dom
@@ -1753,7 +1756,7 @@ export default class Underworld {
       }, 10);
     });
   }
-  generateLevelDataSyncronous(levelIndex: number): LevelData {
+  generateLevelDataSyncronous(levelIndex: number, gameMode?: string): LevelData {
     console.log('Setup: generateLevelDataSyncronous', levelIndex);
     // Generate level
     let level;
@@ -1763,7 +1766,8 @@ export default class Underworld {
     } while (level === undefined);
     this.pie.sendData({
       type: MESSAGE_TYPES.CREATE_LEVEL,
-      level
+      level,
+      gameMode
     });
     return level;
   }
@@ -1783,7 +1787,7 @@ export default class Underworld {
           resolve(this.lastLevelCreated);
           console.warn('Setup: Shortcircuit generateLevelData; returning already generated level data');
         } else {
-          resolve(this.generateLevelDataSyncronous(levelIndex));
+          resolve(this.generateLevelDataSyncronous(levelIndex, this.gameMode));
         }
       }, 10);
     }).then(() => {
@@ -1892,7 +1896,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             // Add players back to underworld
             ensureAllClientsHaveAssociatedPlayers(overworld, overworld.clients)
             // Generate the level data
-            newUnderworld.lastLevelCreated = newUnderworld.generateLevelDataSyncronous(0);
+            newUnderworld.lastLevelCreated = newUnderworld.generateLevelDataSyncronous(0, this.gameMode);
             // Actually create the level 
             newUnderworld.createLevelSyncronous(newUnderworld.lastLevelCreated);
           }, millisTillRestart);

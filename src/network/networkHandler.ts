@@ -426,12 +426,13 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       await underworld.initializeTurnPhase(phase);
       break;
     case MESSAGE_TYPES.CREATE_LEVEL:
-      const { level } = payload as {
-        level: LevelData
+      const { level, gameMode } = payload as {
+        level: LevelData,
+        gameMode?: string
       }
       console.log('sync: CREATE_LEVEL: Syncing / Creating level');
       if (underworld) {
-        await underworld.createLevel(level);
+        await underworld.createLevel(level, gameMode);
       } else {
         console.error('Cannot sync level, no underworld exists')
       }
@@ -711,6 +712,7 @@ async function handleLoadGameState(payload: {
   if (loadedGameState.RNGState) {
     underworld.syncronizeRNG(loadedGameState.RNGState);
   }
+  underworld.gameMode = loadedGameState.gameMode;
   underworld.turn_phase = loadedGameState.turn_phase;
   underworld.turn_number = loadedGameState.turn_number;
   underworld.processedMessageCount = loadedGameState.processedMessageCount;
@@ -726,7 +728,7 @@ async function handleLoadGameState(payload: {
   // This is important so that createLevel runs BEFORE loading units and syncing Players
   // Note: createLevel syncronizes a bunch of underworld properties; for example it invokes cache_walls.
   // Check it carefully before manually syncronizing properties
-  await underworld.createLevel(level);
+  await underworld.createLevel(level, underworld.gameMode);
 
   // Since level data has pickups stored in it and since those pickups' locations
   // for existance may have changed between when the level was created and when
