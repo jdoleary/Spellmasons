@@ -5,7 +5,7 @@ export function calculateGameDifficulty(underworld: Underworld) {
     const loopDifficultyModifier = 0.2 * Math.max(0, (underworld.levelIndex - config.LAST_LEVEL_INDEX));
     let difficulty = Math.min(config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES, underworld.players.filter(p => p.clientConnected).length) + loopDifficultyModifier;
     if (underworld.gameMode == 'challenge') {
-        difficulty *= 2;
+        difficulty *= 1.5;
     }
     return difficulty;
 }

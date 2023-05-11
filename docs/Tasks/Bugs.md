@@ -1,4 +1,5 @@
 ## Bugs
+- When shooting just an arrow it shouldn't center on an enemy because it prevents a perfect directed pierce
 - MuditaMan
 I got two +4 capacity perks, it looks like the single turn +40 amount is being overwritten by the total of the my every level +4 capacity amount
 Image
