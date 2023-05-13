@@ -20,7 +20,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.SPECIAL_LOS,
   },
   unitProps: {
-    attackRange: 420,
+    attackRange: 500,
     bloodColor: bloodGripthulu,
     manaCostToCast
   },
