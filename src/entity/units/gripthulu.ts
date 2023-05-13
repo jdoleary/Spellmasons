@@ -15,7 +15,7 @@ export const gripthulu_id = 'gripthulu';
 const unit: UnitSource = {
   id: gripthulu_id,
   info: {
-    description: 'A gripthulu will pull you into danger if it gets close enough to do so',
+    description: 'gripthulu copy',
     image: 'units/poisIdle',
     subtype: UnitSubType.SPECIAL_LOS,
   },

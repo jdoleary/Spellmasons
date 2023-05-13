@@ -26,7 +26,7 @@ const spell: Spell = {
     allowNonUnitTarget: true,
     animationPath: '',
     sfx: 'arrow',
-    description: ['spell_arrow', damageDone.toString()],
+    description: ['spell_arrow_explosive', damageDone.toString(), explodeDamage.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       let targets: Vec2[] = state.targetedUnits;
       targets = targets.length ? targets : [state.castLocation];
