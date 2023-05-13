@@ -1,6 +1,40 @@
 ## Spellmasons Update v1.15
-- content: Add new unit: "Gripthulu"
-    - Thanks MrMarblz and scojbo for encouraging me to resolve issues with "enemies that move players"
+content: Add new unit: "Gripthulu"
+    Thanks MrMarblz and scojbo for encouraging me to resolve issues with "enemies that move players"
+content: Add spell: Explosive Arrow
+
+balance: Ancient can attack 3 targets simultaneously
+balance: Adjust unit spawn budget for multiplayer
+    so that there will start to be more enemies in games of 3 players and beyond
+balance: Make Ancient cheaper in level spawn budget
+balance: Fortify so it stacks 50%, 75%, 87.5%...
+    Thanks TonyFTW
+
+src: Add SYNC_SOME_STATE to resolve desyncs
+    between spells cast during player turns
+src: Add "Challenge" Game Mode to singleplayer
+
+fix: Ensure activeMods is never undefined
+    which was causing a blank page in the mods menu
+fix: Spell cooldown decrementing in multiplayer
+     right after you end turn which allowed casting it again.
+     Thanks The Joe for this bug report
+fix: Target Cone odd targeting when stacking
+    Thanks MuditaMan
+fix: (spell) Prevent suffocate from ever
+    increasing turns left to live.
+    Thank you scojbo
+fix: Scroll disappear particles showing
+    when hovering prediction spell  (undead  blade) over portal.
+    Don't check if should spawn portal (or check game over) for prediction cast
+fix: Priests getting damage boost from Calamities
+    Also add stamina as calamity to boost enemies
+    Thanks TonyFTW
+fix: Able to kill unspawned allies with targeting spells.
+fix: "F" to see range when spawning
+    Thanks to MrMarblz for pointing this out
+fix: Aberrant UI line when simulating force move
+    into liquid.
 ## Spellmasons Update v1.14.0 - Wode's Grimoire
 - content: Add new unit: "Ancient"
 - content: Add new type of Calamity "Stat Calamity" that makes enemies more dangerous
