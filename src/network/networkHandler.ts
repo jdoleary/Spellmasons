@@ -410,7 +410,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         if (units) {
           // Sync all non-player units.  If it syncs player units it will overwrite player movements
           // that occurred during the cast
-          underworld.syncUnits(units.filter(u => u.unitType !== UnitType.PLAYER_CONTROLLED));
+          underworld.syncUnits(units, true);
         }
 
         if (pickups) {

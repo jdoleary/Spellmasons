@@ -3283,7 +3283,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   unitIsIdentical(unit: Unit.IUnit, serialized: Unit.IUnitSerialized): boolean {
     return unit.id == serialized.id && unit.unitSourceId == serialized.unitSourceId;
   }
-  syncUnits(units: Unit.IUnitSerialized[]) {
+  syncUnits(units: Unit.IUnitSerialized[], excludePlayerUnits: boolean = false) {
     console.log('sync: Syncing units', units.map(u => u.id), 'current units:', this.units.map(u => u.id));
     // Report detected duplicate id:
     this.units.forEach((unit, index) => {
@@ -3313,6 +3313,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       const serializedUnit = units[i];
       const currentUnit = this.units[i];
       if (serializedUnit) {
+        if (excludePlayerUnits && serializedUnit.unitType == UnitType.PLAYER_CONTROLLED) {
+          continue;
+        }
         if (currentUnit) {
           // if there is a unit to compare it to, if they are the same, syncronize;
           // if not, delete and recreate:
