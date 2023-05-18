@@ -692,9 +692,9 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           underworld.tryRestartTurnPhaseLoop();
         }
         await handleSpell(fromPlayer, payload, underworld);
-        // Trigger it again in case the result of any spells caused a forceMove to be added to the array
+        // Await forcemoves in case the result of any spells caused a forceMove to be added to the array
         // such as Bloat's onDeath
-        underworld.triggerGameLoopHeadless();
+        await underworld.awaitForceMoves();
         // Only send SYNC_SOME_STATE from the headless server
         if (globalThis.headless) {
           // Sync state directly after each cast to attempt to reduce snowballing desyncs

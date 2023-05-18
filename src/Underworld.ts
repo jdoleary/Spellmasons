@@ -175,6 +175,7 @@ export default class Underworld {
   // like a push or pull or explosion.
   forceMove: ForceMove[] = [];
   forceMovePrediction: ForceMove[] = [];
+  forceMovePromise: Promise<void> | undefined;
   // A hash of the last thing this client was thinking
   // Used with MESSAGE_TYPES.PLAYER_THINKING so other clients 
   // can see what another client is planning.
@@ -445,6 +446,13 @@ export default class Underworld {
   // Returns true if there is more processing yet to be done on the next
   // gameloop
   gameLoopForceMove = () => {
+    let forceMoveResolver: undefined | ((value: void | PromiseLike<void>) => void);
+    if (!this.forceMovePromise) {
+      this.forceMovePromise = new Promise(res => {
+        forceMoveResolver = res;
+      })
+
+    }
     // Optimization cache blood whenever the blood smear particles get over a certain number
     // to prevent slowdown
     const amountOfBloodGeometryPoints = graphicsBloodSmear?.geometry.points.length || 0;
@@ -499,7 +507,11 @@ export default class Underworld {
         }
       }
     }
-    return !!this.forceMove.length;
+    const finishedForceMoves = !!this.forceMove.length;
+    if (finishedForceMoves && forceMoveResolver) {
+      forceMoveResolver();
+    }
+    return finishedForceMoves;
   }
   // returns true if there is more processing yet to be done on the next game loop
   gameLoopUnit = (u: Unit.IUnit, aliveNPCs: Unit.IUnit[], deltaTime: number): boolean => {
@@ -590,6 +602,16 @@ export default class Underworld {
     }
     // more processing yet to be done
     return true;
+  }
+  awaitForceMoves = async () => {
+    // Ensure server isn't stuck waiting for forceMoves
+    this.triggerGameLoopHeadless();
+    if (this.forceMove.length == 0) {
+      // No force moves to await
+      return;
+    } else if (this.forceMovePromise) {
+      await raceTimeout(2000, 'awaitForceMove', this.forceMovePromise);
+    }
   }
   // See GameLoops.md for more details
   triggerGameLoopHeadless = () => {
@@ -1745,7 +1767,6 @@ export default class Underworld {
     }
   }
   async createLevel(levelData: LevelData, gameMode?: string) {
-    console.log('jtest set gamemode', gameMode)
     this.gameMode = gameMode;
     return new Promise<void>(resolve => {
       document.body?.classList.toggle('loading', true);
