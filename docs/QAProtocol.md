@@ -1,7 +1,4 @@
 # QA Protocol
-- 1.15
-    - Verify Wode's Grimoire update
----
 - Run `npm run build_types` to keeps mods types up to date (and push the changes to github)
     - Test mods
 - Test Host Local Server, Host via Docker (run `testDockerImage.sh`)

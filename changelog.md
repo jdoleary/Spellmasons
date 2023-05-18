@@ -12,7 +12,6 @@ balance: Fortify so it stacks 50%, 75%, 87.5%...
 
 src: Add SYNC_SOME_STATE to resolve desyncs
     between spells cast during player turns
-src: Add "Challenge" Game Mode to singleplayer
 
 fix: Ensure activeMods is never undefined
     which was causing a blank page in the mods menu

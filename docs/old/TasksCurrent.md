@@ -1,3 +1,5 @@
+- TASK: SYNC_SOME_STATE triggers before all movements are done on the client
+  - If you end turn while movement is still animating the server will reset positions
 - Blood Spartan reports: SuperMe gives spells even for mods that are not enabled
 Validating 1.13
 - Refactor recalcPositionForCards and syncInventory. Needs commenting and they probably overlap responsibilities
