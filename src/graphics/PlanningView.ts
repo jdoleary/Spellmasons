@@ -896,9 +896,9 @@ ${i18n(globalThis.selectedPickup.description)}
 
   elInspectorTooltipContent.innerHTML = text;
   if (text == '') {
-    elInspectorTooltipContainer.style.visibility = "hidden";
+    elInspectorTooltipContainer.style.display = "none";
   } else {
-    elInspectorTooltipContainer.style.visibility = "visible";
+    elInspectorTooltipContainer.style.display = "block";
 
   }
 }
