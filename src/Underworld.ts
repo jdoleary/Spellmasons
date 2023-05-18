@@ -3284,6 +3284,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     return unit.id == serialized.id && unit.unitSourceId == serialized.unitSourceId;
   }
   syncUnits(units: Unit.IUnitSerialized[], excludePlayerUnits: boolean = false) {
+    // Remove units flagged for removal before syncing
+    this.units = this.units.filter(u => !u.flaggedForRemoval);
+
     console.log('sync: Syncing units', units.map(u => u.id), 'current units:', this.units.map(u => u.id));
     // Report detected duplicate id:
     this.units.forEach((unit, index) => {
@@ -3364,6 +3367,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     return pickup.id == serialized.id && pickup.name == serialized.name;
   }
   syncPickups(pickups: Pickup.IPickupSerialized[]) {
+    // Remove pickups flagged for removal before syncing
+    this.pickups = this.pickups.filter(p => !p.flaggedForRemoval);
     console.log('sync: Syncing pickups', pickups.map(u => u.id), 'current pickups:', this.pickups.map(u => u.id));
 
     // Remove excess pickups if local copy of pickups has more pickups than the pickups it
