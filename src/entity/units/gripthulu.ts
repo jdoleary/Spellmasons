@@ -88,7 +88,8 @@ const unit: UnitSource = {
         u.faction !== unit.faction &&
         u.alive
     );
-    return livingEnemyUnits;
+    // Gripthulu can only target one enemy
+    return livingEnemyUnits.slice(0, 1);
   }
 };
 const forwardSpeed = 0.2;
