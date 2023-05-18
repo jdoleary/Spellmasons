@@ -17,11 +17,6 @@
 - Test all spells in multiplayer: ~20 minutes
     - and end turn after each to test for desyncs
 - Test all spells in singleplayer: ~24 minutes
-## v1.9
-- No more spells to choose from is now missing
-## Validate v.1.7.0
-- slow seems to not work right on multiplayer when cast on self
-- clone makes pickups dust appear on prediction when portal is up?
 # Release protocal
 - QA: 1:44
 - Announce server down time
