@@ -1,3 +1,4 @@
+- Zegian - huge list of spell ideas: https://steamcommunity.com/app/1618380/discussions/0/3824163953446119116/
 - The Joe — Today at 1:38 PM
 I think that one thing that this game is missing a little bit of is that rogue-like randomness that comes with artifacts. Think slay the spire, monster train, binding of Isaac, etc.
 - The Joe — Today at 4:22 PM
