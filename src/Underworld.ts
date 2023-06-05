@@ -2033,7 +2033,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       await Promise.all(unit.onTurnEndEvents.map(
         async (eventName) => {
           const fn = Events.onTurnEndSource[eventName];
-          return fn ? await fn(unit, this) : false;
+          return fn ? await fn(unit, this, false) : false;
         },
       ));
     }
@@ -2255,7 +2255,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         await Promise.all(player.unit.onTurnEndEvents.map(
           async (eventName) => {
             const fn = Events.onTurnEndSource[eventName];
-            return fn ? await fn(player.unit, this) : false;
+            return fn ? await fn(player.unit, this, false) : false;
           },
         ));
       }

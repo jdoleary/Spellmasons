@@ -31,7 +31,7 @@ export type onTurnStart = {
   (unit: IUnit, prediction: boolean, underworld: Underworld): Promise<boolean>;
 };
 const onTurnStartSource: { [name: string]: onTurnStart } = {};
-export type onTurnEnd = { (unit: IUnit, underworld: Underworld): Promise<void>; }
+export type onTurnEnd = { (unit: IUnit, underworld: Underworld, prediction: boolean): Promise<void>; }
 const onTurnEndSource: { [name: string]: onTurnEnd } = {};
 
 export default {
