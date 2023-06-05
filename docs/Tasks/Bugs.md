@@ -1,4 +1,5 @@
 ## Bugs
+- Dashing to a mana potion triggers it twice
 - Hotseat multiplayer still switches to dead players (see stash)
 - Dead hotseat player doesn't get their turn ended
 - When shooting just an arrow it shouldn't center on an enemy because it prevents a perfect directed pierce
