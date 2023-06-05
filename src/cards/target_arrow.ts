@@ -33,6 +33,7 @@ const spell: Spell = {
       targets = targets.length ? targets : [state.castLocation];
       const promises = [];
       const length = targets.length;
+      const originalCastLocation = clone(state.castLocation);
       let addedNewTarget = false;
       for (let i = 0; i < length; i++) {
         const target = targets[i];
@@ -84,6 +85,7 @@ const spell: Spell = {
       await Promise.all(promises).then(() => {
         globalThis.predictionGraphics?.clear();
         if (!addedNewTarget) {
+          state.castLocation = originalCastLocation;
           refundLastSpell(state, prediction, 'No valid targets. Cost refunded.');
         }
       });
