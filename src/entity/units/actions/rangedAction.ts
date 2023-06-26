@@ -16,7 +16,10 @@ export function getBestRangedLOSTarget(unit: Unit.IUnit, underworld: Underworld,
     const sortedByDistanceAttackableEnemies = attackableEnemies.sort((a, b) => {
         return closest ? a.distance - b.distance : b.distance - a.distance;
     });
-    return sortedByDistanceAttackableEnemies.map(e => e.enemy);
+    // console.log('jtest', sortedByDistanceAttackableEnemies.map(e => e.enemy).map(u => `${u.id};${u.predictedNextTurnDamage}`));
+    return sortedByDistanceAttackableEnemies.map(e => e.enemy)
+        // Smart Target: Try to attack units that aren't already going to take fatal damage from other ally npc
+        .filter(u => u.predictedNextTurnDamage < u.health);
 }
 
 export async function rangedLOSMovement(unit: Unit.IUnit, underworld: Underworld) {

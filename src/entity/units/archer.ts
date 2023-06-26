@@ -66,7 +66,10 @@ const unit: UnitSource = {
     const targets = getBestRangedLOSTarget(unit, underworld);
     if (targets) {
       // Normal archers can only attack one target;
-      return targets.slice(0, 1);
+      return targets.slice(0, 1).map(u => {
+        return u;
+      });
+
     } else {
       return [];
     }

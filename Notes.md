@@ -1,3 +1,6 @@
+---
+Link spells together to create unique, clever outcomes!  Spellmasons is a turn-based, tactical roguelike where you can play solo or team up with your friends in online multiplayer and delve into the intricacies of magic where cunning combinations yield powerfully satisfying results.
+---
 This is the font used for the logo: https://fonts.adobe.com/fonts/bradley-djr#about-section
 # Notes
 Trying to solve "Test movement spells" causing desync.

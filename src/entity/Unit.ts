@@ -121,6 +121,8 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   animations: UnitAnimations;
   sfx: UnitSFX;
   modifiers: { [key: string]: Modifier };
+  // Used for more intelligent AI battles so many unit don't overkill a single unit and leave a bunch of others untouched
+  predictedNextTurnDamage: number;
 }
 // This does not need to be unique to underworld, it just needs to be unique
 let lastPredictionUnitId = 0;
@@ -190,7 +192,8 @@ export function create(
       sfx: sourceUnit.sfx,
       inLiquid: false,
       UITargetCircleOffsetY: -10,
-      beingPushed: false
+      beingPushed: false,
+      predictedNextTurnDamage: 0
     }, sourceUnitProps);
 
 
@@ -997,7 +1000,10 @@ export function findClosestUnitInDifferentFaction(
   unit: IUnit,
   underworld: Underworld
 ): IUnit | undefined {
-  return closestInListOfUnits(unit, livingUnitsInDifferentFaction(unit, underworld));
+  return closestInListOfUnits(unit, livingUnitsInDifferentFaction(unit, underworld)
+    // Smart Target: Try to attack units that aren't already going to take fatal damage from other ally npc
+    .filter(u => u.predictedNextTurnDamage < u.health)
+  );
 }
 export function findClosestUnitInSameFaction(unit: IUnit, underworld: Underworld): IUnit | undefined {
   return closestInListOfUnits(unit, livingUnitsInSameFaction(unit, underworld));

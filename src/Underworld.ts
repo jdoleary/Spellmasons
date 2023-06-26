@@ -2777,10 +2777,26 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       console.error('Invalid turn phase', this.turn_phase)
     }
   }
+  // Smart Targeting, fn 1
+  clearPredictedNextTurnDamage() {
+    // Clear all units' predictedNextTurnDamage now that is is the next turn
+    for (let u of this.units) {
+      u.predictedNextTurnDamage = 0;
+    }
+  }
+  // Smart Targeting, fn 2
+  incrementTargetsNextTurnDamage(targets: Unit.IUnit[], damage: number, canAttack: boolean) {
+    if (canAttack) {
+      for (let target of targets) {
+        target.predictedNextTurnDamage += damage;
+      }
+    }
+  }
 
   async executeNPCTurn(faction: Faction) {
     console.log('game: executeNPCTurn', Faction[faction]);
     const cachedTargets: { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } = {};
+    this.clearPredictedNextTurnDamage();
     for (let u of this.units.filter(
       (u) => u.unitType === UnitType.AI && u.alive && u.faction == faction
     )) {
@@ -2791,7 +2807,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         // will have stamina to make the canUnitAttackTarget evaluation
         u.stamina = u.staminaMax;
         const targets = unitSource.getUnitAttackTargets(u, this);
-        cachedTargets[u.id] = { targets, canAttack: this.canUnitAttackTarget(u, targets && targets[0]) };
+        const canAttack = this.canUnitAttackTarget(u, targets && targets[0])
+        cachedTargets[u.id] = { targets, canAttack };
+        this.incrementTargetsNextTurnDamage(targets, u.damage, canAttack);
       }
       // Set all units' stamina to 0 before their turn is initialized so that any melee units that have remaining stamina
       // wont move during the ranged unit turn
