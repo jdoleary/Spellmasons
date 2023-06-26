@@ -631,6 +631,8 @@ export async function runPredictions(underworld: Underworld) {
       // Displays markers above units heads if they will attack the current client's unit
       // next turn
       globalThis.attentionMarkers = [];
+      // Clear predicted next turn damage so that attack targets can be intelligently calculated
+      underworld.clearPredictedNextTurnDamage();
       for (let u of underworld.unitsPrediction) {
         const skipTurn = await Unit.runTurnStartEvents(u, true, underworld);
         if (skipTurn) {
@@ -655,10 +657,10 @@ export async function runPredictions(underworld: Underworld) {
                   // Only bother determining if the unit can attack the target 
                   // if the target is the current player, because that's the only
                   // player this function has to warn with an attention marker
-                  if (target === globalThis.player.unit) {
-                    if (underworld.canUnitAttackTarget(u, target)) {
-                      globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u), scale: u.predictionScale || 1 });
-                    }
+                  const canAttack = underworld.canUnitAttackTarget(u, target);
+                  underworld.incrementTargetsNextTurnDamage(targets, u.damage, canAttack);
+                  if (target === globalThis.player.unit && canAttack) {
+                    globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u), scale: u.predictionScale || 1 });
                   }
                 }
               }
