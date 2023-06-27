@@ -108,15 +108,8 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
     }
     // Since the player's array length has changed, recalculate all
     // unit strengths.  This must happen BEFORE clients are given the gamestate
-    const newDifficulty = calculateGameDifficulty(underworld);
-    underworld.units.forEach(unit => {
-        // Adjust npc unit strength when the number of players changes
-        // Do NOT adjust player unit strength
-        if (unit.unitType !== UnitType.PLAYER_CONTROLLED) {
-            Unit.adjustUnitDifficulty(unit, newDifficulty);
-        }
-    });
-    console.log('The number of players has changed, adjusting game difficulty to ', newDifficulty, ' for ', underworld.players.filter(p => p.clientConnected).length, ' connected players.');
+    console.log('The number of players has changed');
+    recalculateGameDifficulty(underworld);
 
     // Send game state after units' strength has been recalculated
     for (let clientId of clientsToSendGameState) {
@@ -146,3 +139,15 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
 //         new Underworld(test, test.pie, Math.random().toString());
 //     }
 // }
+export function recalculateGameDifficulty(underworld: Underworld) {
+    const newDifficulty = calculateGameDifficulty(underworld);
+    underworld.units.forEach(unit => {
+        // Adjust npc unit strength when the number of players changes
+        // Do NOT adjust player unit strength
+        if (unit.unitType !== UnitType.PLAYER_CONTROLLED) {
+            Unit.adjustUnitDifficulty(unit, newDifficulty);
+        }
+    });
+    console.log('adjusting game difficulty to ', newDifficulty, ' for ', underworld.players.filter(p => p.clientConnected).length, ' connected players.');
+
+}

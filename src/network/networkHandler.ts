@@ -26,7 +26,7 @@ import pingSprite from '../graphics/Ping';
 import { clearLastNonMenuView, setView, View } from '../views';
 import { autoExplain, explain, EXPLAIN_END_TURN, tutorialCompleteTask } from '../graphics/Explain';
 import { cacheBlood, cameraAutoFollow, runCinematicLevelCamera } from '../graphics/PixiUtils';
-import { ensureAllClientsHaveAssociatedPlayers, Overworld } from '../Overworld';
+import { ensureAllClientsHaveAssociatedPlayers, Overworld, recalculateGameDifficulty } from '../Overworld';
 import { playerCastAnimationColor, playerCastAnimationColorLighter, playerCastAnimationGlow } from '../graphics/ui/colors';
 import { lightenColor } from '../graphics/ui/colorUtil';
 import { choosePerk, tryTriggerPerk } from '../Perk';
@@ -70,6 +70,17 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         // When a new thought comes in, reset the lerp value so the currentDrawLocation will smoothly animate to the new target
         underworld.playerThoughts[thinkingPlayer.clientId] = { ...payload, currentDrawLocation, lerp: 0 };
       }
+      break;
+    case MESSAGE_TYPES.SET_GAME_MODE:
+      const { gameMode } = payload;
+      underworld.gameMode = gameMode;
+      recalculateGameDifficulty(underworld);
+      // Since svelte can't keep track of state outside of itself,
+      // any time the view switches back to the Menu it should force rerender
+      if (globalThis.refreshMenu) {
+        globalThis.refreshMenu();
+      }
+      console.log('gamemode set to: "', gameMode, '"');
       break;
     case MESSAGE_TYPES.SET_MODS:
       const { activeMods } = payload;

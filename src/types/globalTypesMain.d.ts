@@ -150,6 +150,7 @@ declare global {
     var isConnected: () => boolean;
     // Disconnects pie from server
     var pieDisconnect: () => Promise<void>;
+    var setDifficulty: undefined | ((gameMode: 'normal' | 'hard' | 'impossible') => void);
     var pieLeaveRoom: undefined | (() => void);
     var pieInhabitPlayer: undefined | ((asPlayerClientId: string) => void);
     // the currently selected unit, useful as a devTool, click on a unit and they will be available in the console

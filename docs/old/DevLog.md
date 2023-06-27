@@ -1,3 +1,12 @@
+## 2023.06.27
+Thinking about future changes based on player feedback.  The big ones are
+- Lag at the end game
+- Ambiguous / unsatisfying end (1 shot everything)
+- Missing classes
+
+I'm thinking about resolving them all.  For end game, instead of infinite levels, I'm thinking of changing it to an infinite single level (which means your cooldowns won't reset) where the enemies keep getting stronger until you inevitably die.  Could have a cool voice over "you've gone too far in the relm of magic!"
+
+For the classes thinking of adding some modifications that affect spells in new ways (change mana to health, more summons, etc)
 ## 2023.03.13
 Thoughts on the Pickup Double Spend problem.
 I made AQUIRE_PICKUP a networked message to prevent desyncs but this means that picking up a pickup became asyncronous. I was using flaggedForRemoval to prevent picking up a pickup twice, but now that it's async it is sending multiple AQUIRE_PICKUP messages for the same pickup because the local client hasn't yet triggered pickup for that pickup which would set flaggedForRemoval to true.  This is also making a player trigger ENTER_PORTAL multiple times which is making the multiplayer server generate multiple levels which can result in desync.
