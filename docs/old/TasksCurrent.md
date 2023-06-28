@@ -1,3 +1,9 @@
+- bug: pickups are still desyncing in multiplayer, last will, traps ,etc
+- bug: Red portals are sticking around
+- Denerf summon spells
+- bug: Capture soul soul flies to all players
+- if ally is moving while you're casting, it messes up stamina
+----
 - TASK: SYNC_SOME_STATE triggers before all movements are done on the client
   - If you end turn while movement is still animating the server will reset positions
 - Blood Spartan reports: SuperMe gives spells even for mods that are not enabled
