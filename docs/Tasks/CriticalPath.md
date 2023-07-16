@@ -5,3 +5,5 @@
 - Improve enemy crowd targeting for large battles
 - (v1.15) Challenge game mode for multiplayer
 - (v1.16) Update German translation from shared doc
+- Denerf summon spell cost
+- Smart targeting
