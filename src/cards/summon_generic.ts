@@ -1,6 +1,6 @@
 import { addUnitTarget, refundLastSpell, Spell } from './index';
 import * as Unit from '../entity/Unit';
-import { CardCategory, Faction, UnitType } from '../types/commonTypes';
+import { CardCategory, Faction, probabilityMap, UnitType } from '../types/commonTypes';
 import { allUnits } from '../entity/units';
 import { skyBeam } from '../VisualEffects';
 import { playDefaultSpellSFX } from './cardUtils';
@@ -62,8 +62,8 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean):
         rarity = CardRarity.FORBIDDEN;
     }
 
-    const expenseScaling = 5;
-    let manaCost = Math.max(1, Math.round(Math.log2((sourceUnit.spawnParams?.budgetCost || 1)))) * 40 * (asMiniboss ? 2 : 1);
+    const expenseScaling = 2;
+    let manaCost = Math.max(1, Math.round(2 * Math.log2((sourceUnit.spawnParams?.budgetCost || 1)))) * 40 * (asMiniboss ? 2 : 1);
     if (unitId == bossmasonUnitId) {
         manaCost = 750;
     }
@@ -78,9 +78,9 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean):
             manaCost,
             healthCost: 0,
             expenseScaling,
-            cooldown: 2,
+            cooldown: 0,
             // These cards are not available as upgrades and must be accessed through capture_soul
-            probability: 0,
+            probability: probabilityMap[CardRarity.RARE],
             thumbnail: `spellIconSummon_${unitId.split(' ').join('').toLowerCase()}.png`,
             description: [`spell_summon_generic`, unitId, expenseScaling.toString()],
             allowNonUnitTarget: true,
