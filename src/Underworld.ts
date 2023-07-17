@@ -90,6 +90,7 @@ import { BLOOD_GOLEM_ID } from './entity/units/bloodGolem';
 import { MANA_VAMPIRE_ID } from './entity/units/manaVampire';
 import { DARK_PRIEST_ID } from './entity/units/darkPriest';
 import { LAST_LEVEL_INDEX } from './config';
+import { unavailableUntilLevelIndexDifficultyModifier } from './Difficulty';
 
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
@@ -1377,8 +1378,9 @@ export default class Underworld {
       const validSpawnCoordsIndex = randInt(0, validSpawnCoords.length - 1, this.random);
       const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
       const sourceUnit = allUnits[id];
+      const { unitMinLevelIndexSubtractor } = unavailableUntilLevelIndexDifficultyModifier(this);
       // Disallow miniboss for a unit spawning on the first levelIndex that they are allowed to spawn
-      const minibossAllowed = (sourceUnit?.spawnParams?.unavailableUntilLevelIndex || 0) < levelIndex;
+      const minibossAllowed = ((sourceUnit?.spawnParams?.unavailableUntilLevelIndex || 0) - unitMinLevelIndexSubtractor) < levelIndex;
       if (coord) {
         const isMiniboss = !minibossAllowed ? false : numberOfMinibossesAllowed > numberOfMinibossesMade;
         if (isMiniboss) {
@@ -3702,8 +3704,9 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
   const adjustedLevelIndex = Math.max(0, levelIndex);
 
   const numberOfTypesOfEnemies = 2 + Math.floor(adjustedLevelIndex / 2);
+  const { unitMinLevelIndexSubtractor, budgetMultiplier } = unavailableUntilLevelIndexDifficultyModifier(underworld);
   let possibleUnitsToChoose = Object.values(allUnits)
-    .filter(u => u.spawnParams && u.spawnParams.unavailableUntilLevelIndex <= adjustedLevelIndex && isModActive(u, underworld))
+    .filter(u => u.spawnParams && (u.spawnParams.unavailableUntilLevelIndex - unitMinLevelIndexSubtractor) <= adjustedLevelIndex && isModActive(u, underworld))
     .map(u => ({ id: u.id, probability: u.spawnParams?.probability || 1, budgetCost: u.spawnParams?.budgetCost || 1 }))
   const unitTypes = Array(numberOfTypesOfEnemies).fill(null)
     // flatMap is used to remove any undefineds
@@ -3721,7 +3724,7 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
   // Now that we've determined which unit types will be in the level we have to
   // budget out the quantity
   let units = [];
-  let budgetLeft = (adjustedLevelIndex + 1) * Math.max(3, (adjustedLevelIndex + 1) - 3);
+  let budgetLeft = ((adjustedLevelIndex + 1) * Math.max(3, (adjustedLevelIndex + 1) - 3)) * budgetMultiplier;
   const connectedClients = underworld.players.filter(p => p.clientConnected);
   if (connectedClients.length > config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES) {
     const budgetMultiplier = 1 + (1 / config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES) * (connectedClients.length - config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES);
@@ -3738,6 +3741,10 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
   // 1. Start with the most expensive unit and random a number between 1 and 50% budget / unit budget cost
   // 2. Keep iterating with other units
   while (budgetLeft > 0) {
+    if (unitTypes.length == 0) {
+      console.error('No Unit types to pick from')
+      break;
+    }
     for (let chosenUnitType of unitTypes
       // Sort by most expensive first
       .sort((a, b) => b.budgetCost - a.budgetCost)) {
