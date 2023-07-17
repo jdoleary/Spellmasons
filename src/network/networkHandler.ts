@@ -75,6 +75,11 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       const { gameMode } = payload;
       underworld.gameMode = gameMode;
       recalculateGameDifficulty(underworld);
+      // Clear lastLevelCreated in order to allow it to regenerate the level without
+      // changing the levelIndex
+      underworld.lastLevelCreated = undefined;
+      underworld.generateLevelData(underworld.levelIndex);
+
       // Since svelte can't keep track of state outside of itself,
       // any time the view switches back to the Menu it should force rerender
       if (globalThis.refreshMenu) {
