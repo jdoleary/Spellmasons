@@ -24,7 +24,7 @@ const unit: UnitSource = {
   },
   spawnParams: {
     probability: 30,
-    budgetCost: 3,
+    budgetCost: 1,
     unavailableUntilLevelIndex: 4,
   },
   animations: {
