@@ -1001,9 +1001,16 @@ export function findClosestUnitInDifferentFaction(
   underworld: Underworld
 ): IUnit | undefined {
   return closestInListOfUnits(unit, livingUnitsInDifferentFaction(unit, underworld)
-    // Smart Target: Try to attack units that aren't already going to take fatal damage from other ally npc
-    .filter(u => u.predictedNextTurnDamage < u.health)
+    .filter(filterSmartTarget)
   );
+}
+// To be used in a filterFunction
+export function filterSmartTarget(u: IUnit) {
+  // Smart Target: Try to attack units that aren't already going to take fatal damage from other ally npc
+  // Exception, always allow overkilling a player unit for many reasons:
+  // The player unit may be shielded or absorb damage in some way that predictNextTurnDamage doesn't catch
+  // also filtering player units out may interfere with prediction attack badges
+  return u.unitType == UnitType.PLAYER_CONTROLLED || u.predictedNextTurnDamage < u.health;
 }
 export function findClosestUnitInSameFaction(unit: IUnit, underworld: Underworld): IUnit | undefined {
   return closestInListOfUnits(unit, livingUnitsInSameFaction(unit, underworld));
