@@ -20,6 +20,7 @@ const mapping = {
     cameraDown: ['KeyS'],
     cameraLeft: ['KeyA'],
     cameraRight: ['KeyD'],
+    touchPadMoveCharacter: ['KeyG'],
 }
 globalThis.controlMap = mapping;
 export default mapping;

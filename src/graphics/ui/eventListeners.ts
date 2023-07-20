@@ -242,6 +242,15 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
     case 'spell0':
       CardUI.selectCardByIndex(9, overworld.underworld);
       break;
+    case 'touchPadMoveCharacter':
+      // This key makes it easier for players who are using a touchpad to move
+      // per: https://steamcommunity.com/app/1618380/discussions/0/3810656323972884104/
+      if (overworld.underworld) {
+        globalThis.setRMBDown?.(true, overworld.underworld);
+      } else {
+        console.warn('Cannot move character, no underworld');
+      }
+      break;
     default:
       console.log('Input: code', keyCodeMapping, 'not handled');
   }
@@ -274,6 +283,14 @@ function handleInputUp(keyCodeMapping: string | undefined, overworld: Overworld)
       break;
     case 'cameraRight':
       keyDown.cameraRight = false;
+      break;
+    case 'touchPadMoveCharacter':
+      if (overworld.underworld) {
+        // Simulate lifting the right mouse button
+        mouseUpHandler(overworld, { button: 2, preventDefault: () => { } });
+      } else {
+        console.warn('Cannot move character, no underworld');
+      }
       break;
   }
 }
@@ -514,7 +531,7 @@ export function mouseDownHandler(overworld: Overworld, e: MouseEvent) {
   }
 }
 globalThis.mouseButtonToKeyCode = (button: number) => `Mouse ${button}`;
-export function mouseUpHandler(overworld: Overworld, e: MouseEvent) {
+export function mouseUpHandler(overworld: Overworld, e: Pick<MouseEvent, "button" | "preventDefault">) {
   // Turn MMBDown off for any click to protect against it getting stuck
   // as flagged "down"
   globalThis.setMMBDown?.(false);
