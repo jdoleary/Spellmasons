@@ -9,7 +9,7 @@ import floatingText from '../graphics/FloatingText';
 import { makeManaTrail } from '../graphics/Particles';
 import { playDefaultSpellSFX } from './cardUtils';
 
-const id = 'Capture Soul';
+export const id = 'Capture Soul';
 const healthThreshold = 31;
 const spell: Spell = {
   card: {

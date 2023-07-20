@@ -1,4 +1,5 @@
 # Critical Path
+- Add UI for mageType
 - Smart targeting
     - TODO: Test for prediction interference
 - (v1.16) Desync reporter - report health, position changes and use server hub as backend

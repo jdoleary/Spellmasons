@@ -774,6 +774,29 @@ export default class Underworld {
       return A - B
     });
 
+    // Special: Handle timemason:
+    const timemasons = this.players.filter(p => p.mageType == Player.MageType.Timemason);
+    if (this.turn_phase == turn_phase.PlayerTurns && timemasons.length) {
+      timemasons.forEach(timemason => {
+        //@ts-ignore Special logic for timemason, does not need to be persisted
+        if (!timemason.timetracker) {
+          //@ts-ignore Special logic for timemason, does not need to be persisted
+          timemason.timetracker = deltaTime;
+        } else {
+          //@ts-ignore Special logic for timemason, does not need to be persisted
+          timemason.timetracker += deltaTime;
+        }
+        const time_to_dmg_ms = 2000;
+        //@ts-ignore Special logic for timemason, does not need to be persisted
+        if (timemason.timetracker > time_to_dmg_ms) {
+          //@ts-ignore Special logic for timemason, does not need to be persisted
+          timemason.timetracker -= time_to_dmg_ms;
+          Unit.takeDamage(timemason.unit, 1, undefined, this, false);
+          floatingText({ coords: timemason.unit, text: '-1 hp' });
+        }
+      })
+    }
+
     updateCameraPosition(this);
     this.drawEnemyAttentionMarkers();
     this.drawResMarkers();
@@ -3193,7 +3216,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             healthCost: 0
           };
           for (let i = 0; i < quantity; i++) {
-            const singleCardCost = calculateCostForSingleCard(card, (casterCardUsage[card.id] || 0) + i);
+            const singleCardCost = calculateCostForSingleCard(card, (casterCardUsage[card.id] || 0) + i, casterPlayer);
             spellCostTally.manaCost += singleCardCost.manaCost;
             spellCostTally.healthCost += singleCardCost.healthCost;
           }

@@ -1,9 +1,10 @@
 import type { ICard } from ".";
-import type { CardUsage } from "../entity/Player";
+import { MageType, type CardUsage, type IPlayer } from "../entity/Player";
 import { Vec2 } from "../jmath/Vec";
 import { raceTimeout } from "../Promise";
 import * as Image from '../graphics/Image';
 import { containerProjectiles, containerSpells } from "../graphics/PixiUtils";
+import * as captureSoul from '../cards/capture_soul';
 import { Container } from "pixi.js";
 import { chooseOneOf } from "../jmath/rand";
 import Underworld from "../Underworld";
@@ -118,7 +119,7 @@ export function oneOffImage(coords: Vec2, imagePath: string, parent: Container |
         return image;
     }
 }
-export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number = 0): CardCost {
+export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number = 0, caster?: IPlayer): CardCost {
     let cardCost = { manaCost: 0, healthCost: 0 }
     cardCost.manaCost += card.manaCost;
     cardCost.healthCost += card.healthCost;
@@ -135,9 +136,21 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
     // cost should be a whole number for the sake of the player experience
     cardCost.manaCost = Math.floor(cardCost.manaCost);
     cardCost.healthCost = Math.floor(cardCost.healthCost);
+
+    // Handle unique changes due to player mageType
+    if (caster) {
+        if (caster.mageType == MageType.Bloodmason) {
+            cardCost.healthCost = Math.ceil(cardCost.manaCost / 10);
+            cardCost.manaCost = 0;
+        } else if (caster.mageType == MageType.Necromancer && card.id == captureSoul.id) {
+            cardCost.healthCost = Math.floor(0.9 * caster.unit.healthMax);
+            cardCost.manaCost = 0;
+        }
+    }
+
     return cardCost
 }
-export function calculateCost(cards: ICard[], casterCardUsage: CardUsage): CardCost {
+export function calculateCost(cards: ICard[], casterCardUsage: CardUsage, caster?: IPlayer): CardCost {
     let cost: CardCost = { manaCost: 0, healthCost: 0 };
     // Tallys how many times a card has been used as the cards array is iterated
     // this is necessary so that if you cast 3 consecutive spells of the same id
@@ -147,7 +160,7 @@ export function calculateCost(cards: ICard[], casterCardUsage: CardUsage): CardC
         if (!thisCalculationUsage[card.id]) {
             thisCalculationUsage[card.id] = 0;
         }
-        const singleCardCost = calculateCostForSingleCard(card, (casterCardUsage[card.id] || 0) + (thisCalculationUsage[card.id] || 0));
+        const singleCardCost = calculateCostForSingleCard(card, (casterCardUsage[card.id] || 0) + (thisCalculationUsage[card.id] || 0), caster);
         cost.manaCost += singleCardCost.manaCost;
         cost.healthCost += singleCardCost.healthCost;
         thisCalculationUsage[card.id] += 1;

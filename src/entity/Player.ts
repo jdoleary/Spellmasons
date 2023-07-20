@@ -14,6 +14,7 @@ import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary, playe
 import Underworld, { turn_phase } from '../Underworld';
 import * as inLiquid from '../inLiquid';
 import * as lastWill from '../cards/lastwill';
+import * as captureSoul from '../cards/capture_soul';
 import { explain, EXPLAIN_BLESSINGS, isTutorialComplete } from '../graphics/Explain';
 import { lightenColor } from '../graphics/ui/colorUtil';
 import { AttributePerk } from '../Perk';
@@ -37,9 +38,16 @@ interface Stats {
   gameStartTime: number;
   totalKills: number;
 }
+export enum MageType {
+  Spellmason,
+  Timemason,
+  Bloodmason,
+  Necromancer
+}
 export interface IPlayer {
   // Multiplayer "gamer handle"
   name: string;
+  mageType?: MageType;
   // color of robe
   color: number;
   // color of the player's magic
@@ -78,10 +86,30 @@ export interface IPlayer {
 export function inPortal(player: IPlayer): boolean {
   return isNaN(player.unit.x) || isNaN(player.unit.y) || player.unit.x === null || player.unit.y === null;
 }
+export function changeMageType(type: MageType, player: IPlayer, underworld: Underworld) {
+  player.mageType = type;
+  console.log('Player mageType changed to', MageType[type]);
+  switch (type) {
+    case MageType.Necromancer:
+      const upgrade = Upgrade.getUpgradeByTitle(captureSoul.id);
+      if (upgrade) {
+        underworld.chooseUpgrade(player, upgrade);
+      } else {
+        console.error(
+          'Cannot CHOOSE_UPGRADE, upgrade does not exist',
+          upgrade,
+        );
+      }
+
+      break;
+  }
+
+}
 export function create(clientId: string, underworld: Underworld): IPlayer {
   const userSource = defaultPlayerUnit;
   const player: IPlayer = {
     name: '',
+    mageType: MageType.Spellmason,
     endedTurn: false,
     clientId,
     // init players as not connected.  clientConnected status
