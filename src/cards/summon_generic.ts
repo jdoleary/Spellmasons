@@ -80,7 +80,7 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean):
             expenseScaling,
             cooldown: 0,
             // These cards are not available as upgrades and must be accessed through capture_soul
-            probability: probabilityMap[CardRarity.RARE],
+            probability: 0,
             thumbnail: `spellIconSummon_${unitId.split(' ').join('').toLowerCase()}.png`,
             description: [`spell_summon_generic`, unitId, expenseScaling.toString()],
             allowNonUnitTarget: true,
