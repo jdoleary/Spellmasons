@@ -1,6 +1,7 @@
 # Critical Path
 - Desync reporter - report health, position changes and use server hub as backend
 - Fix pickup desync in multiplayer
+- Show what mod spells come from
 
 
 # Smaller Important Tasks

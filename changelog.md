@@ -1,3 +1,42 @@
+## Spellmasons Update v1.17
+- balance: Make summons cheaper
+- balance: Keep Capture Soul after use
+    Capture Soul no loonger disappears from your spells when used. Summon
+    spells cannot be chosen and must be gotten via Capture Soul (this is
+    to keep them from being too frequent since there's so many of them).
+- Add German translation from Feilz.
+- accessibility: Touchpad move keypress support
+    https://steamcommunity.com/app/1618380/discussions/0/3810656323972884104/
+- balance: Make ancients cost less
+     since they do such little damage
+- balance: Difficulty changes how early units can spawn
+    and unit spawn budget
+- balance: Denerf summon spells
+- ref: Smart Targeting
+    Improve AI targeting so that AI battles are more realistic.
+    AI units will not all focus on the closest enemy and overkill them
+    making AI battles take forever.
+    
+    One hiccup.  Now archer "line to target" when selectedUnit
+    doesn't quite work right.  Still have to think of possible solutions.
+    See PlanningView.ts ln 129
+
+## Spellmasons Update v1.16
+Rene's Gimmicks adds 5 new spells:
+
+    Burning Rage
+    Caltrops
+    Sadism
+    Summon Trap
+    Vampire Bite
+
+
+Thank you @Edeusz from Discord for your awesome mod!
+
+This update also adds
+- Difficulty options in multiplayer
+- A fix for Target Arrow allowing summoning out of bounds (Thanks @Monarch for reporting this)
+- Fix Fast Forward from Wode's Grimoire for some advanced spell combinations
 ## Spellmasons Update v1.15
 content: Add new unit: "Gripthulu"
     Thanks MrMarblz and scojbo for encouraging me to resolve issues with "enemies that move players"
