@@ -2394,7 +2394,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     return this.levelIndex - config.LAST_LEVEL_INDEX - player.cursesChosen;
   }
   upgradesLeftToChoose(player: Player.IPlayer): number {
-    return this.cardDropsDropped + config.STARTING_CARD_COUNT - player.inventory.length;
+    // .filter out freeSpells because they shouldn't count against upgrades available since they are given to you
+    return this.cardDropsDropped + config.STARTING_CARD_COUNT - player.inventory.filter(spellId => (globalThis.freeSpells || []).indexOf(spellId) == -1).length;
   }
 
   showUpgrades() {

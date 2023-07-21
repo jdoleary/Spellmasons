@@ -67,10 +67,15 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean):
     if (unitId == bossmasonUnitId) {
         manaCost = 750;
     }
+    const id = unitId + (asMiniboss ? ' Miniboss' : '')
+    if (!globalThis.freeSpells) {
+        globalThis.freeSpells = [];
+    }
+    globalThis.freeSpells.push(id);
 
     return {
         card: {
-            id: unitId + (asMiniboss ? ' Miniboss' : ''),
+            id,
             category: CardCategory.Soul,
             sfx: 'summonDecoy',
             supportQuantity: false,
