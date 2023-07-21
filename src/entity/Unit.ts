@@ -196,9 +196,6 @@ export function create(
       predictedNextTurnDamage: 0
     }, sourceUnitProps);
 
-    if (unit.isMiniboss) {
-      makeMiniboss(unit);
-    }
 
     // Since unit stats can be overridden with sourceUnitProps
     // Ensure that the unit starts will full mana and health
@@ -225,6 +222,13 @@ export function create(
 
 
     unit.image?.sprite.scale.set(config.NON_HEAVY_UNIT_SCALE);
+
+    // Note, making miniboss must come AFTER setting the scale and difficulty
+    // Note, this is the idempotent way to create a miniboss, pass isMiniboss:true to to the sourceUnitProps override
+    // argument so that the unit is made a miniboss BEFORE tryFallInOutOfLiquid is called
+    if (unit.isMiniboss) {
+      makeMiniboss(unit);
+    }
     setupShaders(unit);
     if (sourceUnit.init) {
       // Initialize unit IF unit contains initialization function
