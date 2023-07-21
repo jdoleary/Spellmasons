@@ -2,7 +2,15 @@
 - Add UI for mageType
 - Smart targeting
     - TODO: Test for prediction interference
+    - Test something weird happened with the poisoner where an archer was poisoned but wasn't going to die and the glop ignored it and attacked me even tho the ally archer was closer
+    - Casting enemies shouldn't be as expensive as it is
 - (v1.16) Desync reporter - report health, position changes and use server hub as backend
 - (v1.16) Update German translation from shared doc
 - Fix pickup desync in multiplayer
 - i18n: Add translation for touchpad move character
+- fix: Choosing necromancer class always makes next spell fizzle because now you have too many
+    - Same issue will happen with summon spells when you get them
+- necromancer abilities (buffing non-player units)
+- spell: Teleport arrow
+- Validation 7/21
+    - Spawned gripthulu miniboss in blood pool and it died but kept all it's health

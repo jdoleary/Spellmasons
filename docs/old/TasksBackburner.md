@@ -1,3 +1,4 @@
+- **bug** melee units will try to target a unit in liquid even tho they can't reach them and will not choose to attack others if the inliquid unit is closer
 - idea: achievement for killing yourself with capture soul
 - **bug** ally priest miniboss is only rezing one corpse
 - target similar / connect line animates farther than it should
