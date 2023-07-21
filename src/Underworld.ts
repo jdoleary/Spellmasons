@@ -1191,13 +1191,10 @@ export default class Underworld {
       sourceUnit.info.image,
       UnitType.AI,
       sourceUnit.info.subtype,
-      sourceUnit.unitProps,
+      { ...sourceUnit.unitProps, isMiniboss },
       this
     );
     unit.originalLife = true;
-    if (isMiniboss) {
-      Unit.makeMiniboss(unit);
-    }
 
   }
   testLevelData(): LevelData {

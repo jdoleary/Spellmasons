@@ -109,13 +109,11 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean):
                         sourceUnit.info.image,
                         UnitType.AI,
                         sourceUnit.info.subtype,
-                        sourceUnit.unitProps,
+                        { ...sourceUnit.unitProps, isMiniboss: asMiniboss },
                         underworld,
                         prediction
                     );
-                    if (asMiniboss) {
-                        Unit.makeMiniboss(unit);
-                    }
+
                     addUnitTarget(unit, state);
 
                     if (!prediction) {

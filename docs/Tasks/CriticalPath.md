@@ -13,4 +13,3 @@
 - necromancer abilities (buffing non-player units)
 - spell: Teleport arrow
 - Validation 7/21
-    - Spawned gripthulu miniboss in blood pool and it died but kept all it's health

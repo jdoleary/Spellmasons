@@ -196,6 +196,9 @@ export function create(
       predictedNextTurnDamage: 0
     }, sourceUnitProps);
 
+    if (unit.isMiniboss) {
+      makeMiniboss(unit);
+    }
 
     // Since unit stats can be overridden with sourceUnitProps
     // Ensure that the unit starts will full mana and health
