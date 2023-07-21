@@ -1127,9 +1127,12 @@ export default class Underworld {
     const expandMagnitude = config.COLLISION_MESH_RADIUS * 0.5;
 
     // liquid bounds block movement only under certain circumstances
-    this.liquidPolygons = mergePolygon2s(obstacles.filter(o => o.material == Material.LIQUID).map(o => o.bounds));
+    this.liquidPolygons = mergePolygon2s(obstacles.filter(o => o.material == Material.LIQUID).map(o => o.bounds))
+      // Move bounds up because center of units is not where they stand, and the bounds
+      // should be realtive to a unit's feet
+      .map(p => p.map(vec2 => ({ x: vec2.x, y: vec2.y - expandMagnitude / 2 })));
     const expandedLiquidPolygons = this.liquidPolygons//.map(p => p.map(Vec.clone))
-      .map(p => expandPolygon(p, -expandMagnitude))
+      .map(p => expandPolygon(p, -expandMagnitude));
     this.liquidBounds = expandedLiquidPolygons
       .map(toLineSegments).flat();
     // TODO: Optimize:
@@ -1142,9 +1145,6 @@ export default class Underworld {
     this.pathingPolygons = mergePolygon2s([...getWallPolygons().map(p => expandPolygon(p, config.COLLISION_MESH_RADIUS * 0.4))
       .map(p => p.map(vec2 => ({ x: vec2.x, y: vec2.y - 10 })))
       , ...expandedLiquidPolygons
-        // Move bounds up because center of units is not where they stand, and the bounds
-        // should be realtive to a unit's feet
-        .map(p => p.map(vec2 => ({ x: vec2.x, y: vec2.y - expandMagnitude / 2 })))
         .map(p => expandPolygon(p, expandMagnitude))])
       // remove polygons that border empty tiles (the outermost poly) so that if player tries to path to an out of bounds location
       // it will still be able to find the nearest point on a wall.  If it wasn't removed, attempting to path to an out of bounds
