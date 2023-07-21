@@ -63,7 +63,7 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean):
     }
 
     const expenseScaling = 2;
-    let manaCost = Math.max(1, Math.round(2 * Math.log2((sourceUnit.spawnParams?.budgetCost || 1)))) * 40 * (asMiniboss ? 2 : 1);
+    let manaCost = Math.max(1, Math.round(2 * Math.log2((sourceUnit.spawnParams?.budgetCost || 1)))) * 30 * (asMiniboss ? 2 : 1);
     if (unitId == bossmasonUnitId) {
         manaCost = 750;
     }
