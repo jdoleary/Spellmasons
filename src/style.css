@@ -664,6 +664,21 @@ kbd {
   height: 64px;
 }
 
+.card-mod-name {
+  display: none;
+  justify-content: center;
+  text-align: center;
+}
+
+#upgrade-picker-content .card-mod-name,
+.card-inspect .card-mod-name {
+  display: flex;
+}
+
+.card-mod-name img {
+  margin-right: 4px;
+}
+
 .card-rarity {
   display: none;
   text-align: center;

@@ -790,6 +790,22 @@ function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSi
   title.classList.add('card-title');
   title.innerHTML = i18n(content.id.split('_').join(' '));
   elCardInner.appendChild(title);
+  if (content.modName) {
+    const modHolder = document.createElement('div');
+    modHolder.classList.add('card-mod-name');
+    const modNameText = document.createElement('div');
+    modNameText.style.color = 'black';
+    const mod = globalThis.mods.find(m => m.modName == content.modName)
+    if (mod) {
+      const modIcon = document.createElement('img');
+      modIcon.src = mod.screenshot;
+      modIcon.width = 16;
+      modHolder.appendChild(modIcon);
+    }
+    modNameText.innerHTML = content.modName;
+    modHolder.appendChild(modNameText);
+    elCardInner.appendChild(modHolder);
+  }
   const rarityText = document.createElement('div');
   rarityText.classList.add('card-rarity')
   rarityText.style.color = getCardRarityColor(content);
