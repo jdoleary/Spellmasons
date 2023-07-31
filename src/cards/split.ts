@@ -199,14 +199,17 @@ const spell: Spell = {
   },
   events: {
     onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
-      // Special case: Remove the 'split' modifier on death
-      // This is because without this, when a unit dies, the automatic
-      // removing of modifiers would cause split's custom remove function to be invoked
-      // which restores the unit's original size and stats.  However, split's stat changes
-      // should become perminant after death.  This prevents resurrecting a split unit from
-      // restoring the units original size and stats which is unexpected behavior and therefore
-      // undesireable.
-      delete unit.modifiers[id];
+      // Note: Split should NOT be permanent for PLAYER_CONTROLLED UNITS
+      if (unit.unitType !== UnitType.PLAYER_CONTROLLED) {
+        // Special case: Remove the 'split' modifier on death
+        // This is because without this, when a unit dies, the automatic
+        // removing of modifiers would cause split's custom remove function to be invoked
+        // which restores the unit's original size and stats.  However, split's stat changes
+        // should become perminant after death.  This prevents resurrecting a split unit from
+        // restoring the units original size and stats which is unexpected behavior and therefore
+        // undesireable.
+        delete unit.modifiers[id];
+      }
     }
   }
 };
