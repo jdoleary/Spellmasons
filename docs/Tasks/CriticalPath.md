@@ -1,11 +1,9 @@
 # Critical Path
 - Desync reporter - report health, position changes and use server hub as backend
 - Fix pickup desync in multiplayer
-- Show what mod spells come from
 - Scobjo: balance mana steal
     - https://discord.com/channels/1032294536640200766/1032294537235812404/1132360848824877189
 - Look into "Level Variety" recommendations in Discord
-- bug: Krowbar: you can rejoin a game you've lost by changing the difficulty level
 
 
 # Smaller Important Tasks

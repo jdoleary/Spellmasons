@@ -73,19 +73,23 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       break;
     case MESSAGE_TYPES.SET_GAME_MODE:
       const { gameMode } = payload;
-      underworld.gameMode = gameMode;
-      recalculateGameDifficulty(underworld);
-      // Clear lastLevelCreated in order to allow it to regenerate the level without
-      // changing the levelIndex
-      underworld.lastLevelCreated = undefined;
-      underworld.generateLevelData(underworld.levelIndex);
+      if (underworld.levelIndex <= 1) {
+        underworld.gameMode = gameMode;
+        recalculateGameDifficulty(underworld);
+        // Clear lastLevelCreated in order to allow it to regenerate the level without
+        // changing the levelIndex
+        underworld.lastLevelCreated = undefined;
+        underworld.generateLevelData(underworld.levelIndex);
 
-      // Since svelte can't keep track of state outside of itself,
-      // any time the view switches back to the Menu it should force rerender
-      if (globalThis.refreshMenu) {
-        globalThis.refreshMenu();
+        // Since svelte can't keep track of state outside of itself,
+        // any time the view switches back to the Menu it should force rerender
+        if (globalThis.refreshMenu) {
+          globalThis.refreshMenu();
+        }
+        console.log('gamemode set to: "', gameMode, '"');
+      } else {
+        Jprompt({ text: 'Cannot change difficulty for an ongoing game', yesText: 'Okay', forceShow: true });
       }
-      console.log('gamemode set to: "', gameMode, '"');
       break;
     case MESSAGE_TYPES.SET_MODS:
       const { activeMods } = payload;
