@@ -12,9 +12,7 @@
     - stamina perks not good enough?
     - "Challenge maps" specifically designed to show off specific strategies
     - perk cast range should be in %
-    - Regen copy "over" instead of "every"
     - Improve drown damage
-    - Regen stacks increase if you keep casting even after the turns run out 101010,202020,303030
     - not obvious that deathmason can purify
     - "harvest" makes false positive prediction skulls
     - items that increase changes of obtaining certain spells
