@@ -12,7 +12,6 @@
     - stamina perks not good enough?
     - "Challenge maps" specifically designed to show off specific strategies
     - perk cast range should be in %
-    - Decoy balance: much more health
     - Regen copy "over" instead of "every"
     - Improve drown damage
     - Regen stacks increase if you keep casting even after the turns run out 101010,202020,303030

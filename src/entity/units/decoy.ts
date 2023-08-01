@@ -27,7 +27,7 @@ const unit: UnitSource = {
     staminaMax: 0,
     attackRange: 0,
     manaMax: 0,
-    healthMax: 20,
+    healthMax: 70,
     // This is critical to a decoy, it prevents it from being pushed due to unit crowding
     immovable: true,
     radius: config.COLLISION_MESH_RADIUS,
