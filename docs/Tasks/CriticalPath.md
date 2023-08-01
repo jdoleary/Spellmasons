@@ -4,6 +4,22 @@
 - Scobjo: balance mana steal
     - https://discord.com/channels/1032294536640200766/1032294537235812404/1132360848824877189
 - Look into "Level Variety" recommendations in Discord
+- Russell Feedback
+    - Distinguish between low/med/high perks in UI
+    - Bug: Traps don't appear until after first spell and they're always huge traps
+    - Regen heals you when you press end turn
+    - Priest miniboss lost miniboss status on death
+    - stamina perks not good enough?
+    - "Challenge maps" specifically designed to show off specific strategies
+    - perk cast range should be in %
+    - Decoy balance: much more health
+    - Regen copy "over" instead of "every"
+    - Improve drown damage
+    - Regen stacks increase if you keep casting even after the turns run out 101010,202020,303030
+    - not obvious that deathmason can purify
+    - "harvest" makes false positive prediction skulls
+    - items that increase changes of obtaining certain spells
+    - Spell idea: Target for next spell that is cast (includes allies)
 
 
 # Smaller Important Tasks

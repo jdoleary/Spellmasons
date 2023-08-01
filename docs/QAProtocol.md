@@ -1,3 +1,5 @@
+## v1.18
+- Test changing difficulty past level 1
 # QA Protocol
 - Run `npm run build_types` to keeps mods types up to date (and push the changes to github)
     - Test mods
