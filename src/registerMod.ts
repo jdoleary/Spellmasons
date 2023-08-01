@@ -13,8 +13,18 @@ export function isModActive(entity: moddedEntity, underworld: Underworld): boole
     return (entity.modName == undefined) || underworld.activeMods.includes(entity.modName);
 }
 
+// registeredMods should be unique to each PROCESS (not overworld), so that a headless server does not
+// register a mod multiple times.  Note: Activating a mod is recorded in the underworld object, but the
+// process itself should always have all mods registered to make them possible to use and should never
+// register a mod twice
+const registeredMods: { [modName: string]: Mod } = {};
 function registerMod(mod: Mod, overworld: Overworld) {
+    if (registeredMods[mod.modName]) {
+        console.log('Mod already registered, early return so as to not double register.', mod.modName);
+        return;
+    }
     console.log('Register mod', mod.modName);
+    registeredMods[mod.modName] = mod;
     // Register Units
     if (mod.units) {
         for (let unit of mod.units) {

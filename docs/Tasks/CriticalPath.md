@@ -6,7 +6,7 @@
 - Look into "Level Variety" recommendations in Discord
 - Russell Feedback
     - Distinguish between low/med/high perks in UI
-    - Bug: Traps don't appear until after first spell and they're always huge traps
+    - Bug: Traps don't appear until after first spell
     - Regen heals you when you press end turn
     - Priest miniboss lost miniboss status on death
     - stamina perks not good enough?
