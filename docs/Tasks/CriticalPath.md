@@ -13,8 +13,11 @@
     - perk cast range should be in %
     - Improve drown damage
     - "harvest" makes false positive prediction skulls
-    - items that increase changes of obtaining certain spells
-    - Spell idea: Target for next spell that is cast (includes allies)
+- Feature idea: what if you can build your own "classes" that increase chances of finding things and have special buffs so you can develop unique playstyles?
+    - Or what if you could "tap in" another wizard for a hard situation?
+- Totem enemies that give off auras
+- Risk/reward rolling mechanic that shows the roll ("give up 5 health for potentially 20 mana")
+- bug: enemies will die before touching a pickup on multiplayer because on the server they die/move all the way immediately and on the client they don't
 
 
 # Smaller Important Tasks
@@ -25,6 +28,8 @@
 - Ideas:
     - necromancer abilities (buffing non-player units)
     - spell: Teleport arrow
+    - items that increase changes of obtaining certain spells
+    - Spell idea: Target for next spell that is cast (includes allies)
 - Validation 7/21
     - fix: Choosing necromancer class always makes next spell fizzle because now you have too many
         - This should be fixed if you choose the necromancer class before you start - to be validated
