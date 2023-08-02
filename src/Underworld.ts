@@ -1753,7 +1753,7 @@ export default class Underworld {
       if (pickup) {
         Pickup.create({ pos: p.coord, pickupSource: pickup }, this, false);
       } else {
-        console.error('Could not find pickup with index', p.index);
+        console.error('Could not find pickup source with index', p.index);
       }
     }
     for (let e of enemies) {
