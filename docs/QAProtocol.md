@@ -1,5 +1,23 @@
 ## v1.18
 - Test changing difficulty past level 1
+- Run `npm run build_types` to keeps mods types up to date (and push the changes to github)
+    - Test mods
+- Test Host Local Server, Host via Docker (run `testDockerImage.sh`)
+- Test tutorial
+- Test loading a saved multiplayer game
+- Test Hotseat multiplayer basics
+- Test hosting LAN server from Electron build
+- Test liquid
+- Test rerolling spells and perks
+- Test all pickups in singleplayer
+- Test all pickups in multiplayer
+- Test Pickups + movement spells prediction (trap)
+- Test allies carrying on the battle
+    - both when you kill yourself and when an enemy kills you
+- have a multiplayer game with 1 player, beat a level, then connect with another player
+- Test all spells in multiplayer: ~20 minutes
+    - and end turn after each to test for desyncs
+- Test all spells in singleplayer: ~24 minutes
 # QA Protocol
 - Run `npm run build_types` to keeps mods types up to date (and push the changes to github)
     - Test mods
