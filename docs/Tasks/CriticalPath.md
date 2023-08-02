@@ -6,17 +6,15 @@
 - Look into "Level Variety" recommendations in Discord
 - Russell Feedback
     - Distinguish between low/med/high perks in UI
-    - Bug: Traps don't appear until after first spell
     - Priest miniboss lost miniboss status on death
     - stamina perks not good enough?
     - "Challenge maps" specifically designed to show off specific strategies
-    - perk cast range should be in %
     - Improve drown damage
     - "harvest" makes false positive prediction skulls
 - Feature idea: what if you can build your own "classes" that increase chances of finding things and have special buffs so you can develop unique playstyles?
     - Or what if you could "tap in" another wizard for a hard situation?
-- Totem enemies that give off auras
-- Risk/reward rolling mechanic that shows the roll ("give up 5 health for potentially 20 mana")
+- Idea: Totem enemies that give off auras
+- Idea: Risk/reward rolling mechanic that shows the roll ("give up 5 health for potentially 20 mana")
 - bug: enemies will die before touching a pickup on multiplayer because on the server they die/move all the way immediately and on the client they don't
 
 

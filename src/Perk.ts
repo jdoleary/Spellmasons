@@ -29,9 +29,22 @@ export function cleanUpPerkList() {
 export function getPerkText(perk: AttributePerk, omitWhen: boolean = false): string {
     return `
 ${perk.certainty < 1.0 ? `🎲 ${Math.round(perk.certainty * 100)}% chance` : ``}
-${perkAttributeToIcon(perk.attribute)} +${perk.amount} ${i18n(perkAttributeToString(perk.attribute))}
+${perkAttributeToIcon(perk.attribute)} +${perkAmountToText(perk.amount, perk.attribute)} ${i18n(perkAttributeToString(perk.attribute))}
 ${omitWhen ? '' : perkWhenToString(perk.when)}`.trim();
 
+}
+
+function perkAmountToText(amount: number, attribute: string): string {
+    const unit = globalThis.player?.unit;
+    if (unit) {
+        if (attribute == 'attackRange') {
+            // Show attack range as percentage since a whole number
+            // means nothing to users for attack range
+            return `${100 * amount / unit.attackRange}%`;
+        }
+
+    }
+    return `${amount}`
 }
 
 export interface StatCalamity {
