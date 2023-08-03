@@ -1,22 +1,22 @@
 ## Spellmasons Update v1.18
+- balance: Prevent deathmason from purifying self
+- balance: change decoy health from 20 to 70
 
-- copy: Display Cast Range perk as %
+- UI: Display Cast Range perk as %
     Thanks Krowbar for this suggestion!
+- menu: Show mod contents in description
+- UI: Add mod name to cards
 
 - fix: Make lastWill immediate so it doesn't
     cause desync on multiplayer
-- balance: Prevent deathmason from purifying self
 - fix: mods registering multiple times
     which messed up probabilities (especially with pickups)
-- menu: Show mod contents in description
-- balance: change decoy health from 20 to 70
 - fix: Prevent allowing rejoin to failed game
     by changing difficulty.
     Thanks Krowbar for finding this bug!
 - fix: Prevent Split players from being permanently
     split when they die
     Thanks to sJacob for pointing this bug out!
-- UI: Add mod name to cards
 
 ## 2/17/2023 Spellmasons Update v1.7.0
 - feature: Add mod support for Units, Pickups, Spells, Art, Audio
