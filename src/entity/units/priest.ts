@@ -91,12 +91,12 @@ const unit: UnitSource = {
       didAction = await resurrectUnits(unit, attackTargets.slice(0, numberOfAlliesToRez), underworld);
     }
     if (!didAction) {
-      const closestDeadAlly = Unit.closestInListOfUnits(unit,
-        underworld.units.filter((u) => u !== unit && u.faction == unit.faction && !u.alive)
+      const closestDead = Unit.closestInListOfUnits(unit,
+        underworld.units.filter((u) => u !== unit && !u.alive)
       );
       // Move to closest dead ally
-      if (closestDeadAlly) {
-        const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestDeadAlly, unit.stamina);
+      if (closestDead) {
+        const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestDead, unit.stamina);
         await Unit.moveTowards(unit, moveTo, underworld);
       }
     }
@@ -105,14 +105,13 @@ const unit: UnitSource = {
     if (unit.mana < manaCostToCast) {
       return [];
     }
-    const resurrectableAllies = underworld.units.filter(u =>
-      u.faction == unit.faction
-      && !u.alive
+    const resurrectable = underworld.units.filter(u =>
+      !u.alive
       && Unit.inRange(unit, u)
       // Do not allow priest to rez each other.
       // That would be super annoying for players
       && u.unitSourceId !== unit.unitSourceId);
-    return resurrectableAllies;
+    return resurrectable;
   }
 };
 
