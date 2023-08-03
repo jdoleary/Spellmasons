@@ -1,3 +1,4 @@
+- Split doesn't work on yourself if you don't have 2x mana of split (Reported by Chase87)
 - Russell Feedback
     - Distinguish between low/med/high perks in UI
     - Priest miniboss lost miniboss status on death
@@ -6,7 +7,6 @@
     - Improve drown damage
     - "harvest" makes false positive prediction skulls
 - idea: achievement for killing yourself with capture soul
-- **bug** ally priest miniboss is only rezing one corpse
 - target similar / connect line animates farther than it should
 - (unreproducable) bug: In multiplayer: target similar, damage x3 on 2 draggers
   made their position go to null null

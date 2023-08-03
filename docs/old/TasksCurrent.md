@@ -1,3 +1,4 @@
+- bug: Sometimes you pickup a scroll and nothing happens
 
 ---
 - bug: Red portals are sticking around
