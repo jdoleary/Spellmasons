@@ -1,6 +1,6 @@
 import { addTarget, getCurrentTargets, Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
-import { Vec2, add } from '../jmath/Vec';
+import { Vec2, add, subtract } from '../jmath/Vec';
 import * as math from '../jmath/math';
 import { isUnit } from '../entity/Unit';
 import { isPickup } from '../entity/Pickup';
@@ -100,24 +100,14 @@ export async function animateTargetSimilar(circles: { pos: Vec2, newTargets: Vec
 
               globalThis.predictionGraphics?.moveTo(pos.x, pos.y);
               const dist = math.distance(pos, target)
-              const pointApproachingTarget = add(pos, math.similarTriangles(target.x - pos.x, target.y - pos.y, dist, dist * proportionComplete));
+              const edgeOfCircle = add(target, math.similarTriangles(pos.x - target.x, pos.y - target.y, dist, config.COLLISION_MESH_RADIUS));
+              const pointApproachingTarget = add(pos, math.similarTriangles(edgeOfCircle.x - pos.x, edgeOfCircle.y - pos.y, dist, dist * Math.min(1, proportionComplete)));
               globalThis.predictionGraphics?.lineTo(pointApproachingTarget.x, pointApproachingTarget.y);
               if (proportionComplete >= 1) {
                 globalThis.predictionGraphics?.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
                 playSFXKey('targetAquired');
               }
             });
-            // // Draw completed lines and circles on old targets
-            // oldTargets.forEach(target => {
-            //   if (!entitiesTargeted.includes(target)) {
-            //     entitiesTargeted.push(target);
-            //     let sfxNumber = Math.floor(i / (iterations / 4));
-            //     playSFXKey(`targetAquired`);
-            //   }
-            //   // globalThis.predictionGraphics?.moveTo(pos.x, pos.y);
-            //   // globalThis.predictionGraphics?.lineTo(target.x, target.y);
-            //   globalThis.predictionGraphics?.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
-            // });
           }
         }
         if (i >= iterations - 1) {

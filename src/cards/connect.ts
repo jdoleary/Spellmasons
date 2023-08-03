@@ -196,7 +196,8 @@ async function animate(pos: Vec2, newTargets: Vec2[]) {
 
             globalThis.predictionGraphics?.moveTo(pos.x, pos.y);
             const dist = distance(pos, target)
-            const pointApproachingTarget = add(pos, similarTriangles(target.x - pos.x, target.y - pos.y, dist, dist * proportionComplete));
+            const edgeOfCircle = add(target, math.similarTriangles(pos.x - target.x, pos.y - target.y, dist, config.COLLISION_MESH_RADIUS));
+            const pointApproachingTarget = add(pos, math.similarTriangles(edgeOfCircle.x - pos.x, edgeOfCircle.y - pos.y, dist, dist * Math.min(1, proportionComplete)));
             globalThis.predictionGraphics?.lineTo(pointApproachingTarget.x, pointApproachingTarget.y);
             if (proportionComplete >= 1) {
               globalThis.predictionGraphics?.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);

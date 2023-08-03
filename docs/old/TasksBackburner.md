@@ -7,7 +7,6 @@
     - Improve drown damage
     - "harvest" makes false positive prediction skulls
 - idea: achievement for killing yourself with capture soul
-- target similar / connect line animates farther than it should
 - (unreproducable) bug: In multiplayer: target similar, damage x3 on 2 draggers
   made their position go to null null
 - everyTurn perks shouldn't proc after portal has spawned
