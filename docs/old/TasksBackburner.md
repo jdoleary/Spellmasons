@@ -1,4 +1,10 @@
-- **bug** melee units will try to target a unit in liquid even tho they can't reach them and will not choose to attack others if the inliquid unit is closer
+- Russell Feedback
+    - Distinguish between low/med/high perks in UI
+    - Priest miniboss lost miniboss status on death
+    - stamina perks not good enough?
+    - "Challenge maps" specifically designed to show off specific strategies
+    - Improve drown damage
+    - "harvest" makes false positive prediction skulls
 - idea: achievement for killing yourself with capture soul
 - **bug** ally priest miniboss is only rezing one corpse
 - target similar / connect line animates farther than it should
