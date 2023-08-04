@@ -8,12 +8,14 @@ PACKAGE_VERSION=$(cat package.json \
   | awk -F: '{ print $2 }' \
   | sed 's/[ ",]//g')
 
-IMAGE_PATH=registry.digitalocean.com/jdoleary-containers/smms
-PUBLIC_IMAGE_PATH=jordanoleary/spellmasons-server
+SEASHELL_IMAGE_PATH=registry.digitalocean.com/jdoleary-containers/smms
 echo "Package Version:$PACKAGE_VERSION"
-docker build . -t "$IMAGE_PATH:latest" -t "$IMAGE_PATH:$PACKAGE_VERSION" -t "$PUBLIC_IMAGE_PATH:latest" -t "$PUBLIC_IMAGE_PATH:$PACKAGE_VERSION"
-docker push "$IMAGE_PATH:latest"
-docker push "$IMAGE_PATH:$PACKAGE_VERSION"
+docker build . -t "$SEASHELL_IMAGE_PATH:latest" -t "$SEASHELL_IMAGE_PATH:$PACKAGE_VERSION"
+docker push "$SEASHELL_IMAGE_PATH:latest"
+docker push "$SEASHELL_IMAGE_PATH:$PACKAGE_VERSION"
+
+PUBLIC_IMAGE_PATH=jordanoleary/spellmasons-server
+docker build . -t "$PUBLIC_IMAGE_PATH:latest" -t "$PUBLIC_IMAGE_PATH:$PACKAGE_VERSION"
 docker push "$PUBLIC_IMAGE_PATH:$PACKAGE_VERSION"
 docker push "$PUBLIC_IMAGE_PATH:latest"
 
