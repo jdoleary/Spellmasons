@@ -1,12 +1,14 @@
 # Critical Path
 - Next Feature Update (v1.9)
-    - Auras
+    - Fix scrolls
     - Classes
     - Better End-Game
+    - Is there a way to make existing spells synergize more??
 - Renewed Marketing Efforts
     - Post in Wholesomeverse
     - Bug Bounty?
     - Blender environment tracking to show a scene from the game in real life
+- Auras
 
 # Chosen Tasks
 - Desync reporter - report health, position changes and use server hub as backend

@@ -2,7 +2,6 @@
 
 ---
 - bug: Red portals are sticking around
-- bug: Capture soul soul flies to all players
 - if ally is moving while you're casting, it messes up stamina
 ----
 - TASK: SYNC_SOME_STATE triggers before all movements are done on the client
