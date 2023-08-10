@@ -1,7 +1,7 @@
 # Critical Path
 - Next Feature Update (v1.9)
     - Fix scrolls
-    - Classes
+    - Classes menu
     - Better End-Game
     - Is there a way to make existing spells synergize more??
 - Renewed Marketing Efforts
@@ -9,6 +9,10 @@
     - Bug Bounty?
     - Blender environment tracking to show a scene from the game in real life
 - Auras
+- PickaPecka spell idea: Targets units that you pass through when moving (would work well with movement spells)
+- Scojbo: You could always give specific classes immediate access to a spell (like archer: arrow) and then have that spell ALWAYS cost 10.  All the sudden arrow is a decent spell, and the archer has a unique play pattern that revolves around repeated casts of a unique spell.
+- Make a non-turn based gamemode where the "end turn" button becomes a "pause" button where you can still cast
+
 
 # Chosen Tasks
 - Desync reporter - report health, position changes and use server hub as backend
