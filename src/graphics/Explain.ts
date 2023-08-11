@@ -211,7 +211,6 @@ export interface TutorialChecklist {
     castMultipleInOneTurn: TutorialChecklistItem;
     camera: TutorialChecklistItem;
     recenterCamera: TutorialChecklistItem;
-    pickupScroll: TutorialChecklistItem;
 }
 const tutorialChecklist: TutorialChecklist = {
     spawn: {
@@ -263,13 +262,6 @@ const tutorialChecklist: TutorialChecklist = {
         nextVisibleTasks: [],
         showExplainPopup: [],
     },
-    pickupScroll: {
-        visible: false,
-        complete: false,
-        text: "Pickup a spell scroll to get more spells",
-        nextVisibleTasks: [],
-        showExplainPopup: [],
-    }
 }
 
 export function updateTutorialChecklist() {

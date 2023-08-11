@@ -522,23 +522,22 @@ export const pickups: IPickupSource[] = [
       }
     },
   },
-  {
-    imagePath: PICKUP_IMAGE_PATH,
-    name: CARDS_PICKUP_NAME,
-    description: 'Pickup a spell scroll to get more spells',
-    probability: 0,
-    scale: 0.5,
-    playerOnly: true,
-    willTrigger: ({ unit, player, pickup, underworld }) => {
-      return !!player;
-    },
-    effect: ({ unit, player, underworld }) => {
-      // Give EVERY player an upgrade when any one player picks up a scroll
-      underworld.players.forEach(p => givePlayerUpgrade(p, underworld));
-      tutorialCompleteTask('pickupScroll');
-      playSFXKey('levelUp');
-    },
-  },
+  // {
+  //   imagePath: PICKUP_IMAGE_PATH,
+  //   name: CARDS_PICKUP_NAME,
+  //   description: 'Pickup a spell scroll to get more spells',
+  //   probability: 0,
+  //   scale: 0.5,
+  //   playerOnly: true,
+  //   willTrigger: ({ unit, player, pickup, underworld }) => {
+  //     return !!player;
+  //   },
+  //   effect: ({ unit, player, underworld }) => {
+  //     // Give EVERY player an upgrade when any one player picks up a scroll
+  //     underworld.players.forEach(p => givePlayerUpgrade(p, underworld));
+  //     playSFXKey('levelUp');
+  //   },
+  // },
   {
     imagePath: 'pickups/staminaPotion',
     animationSpeed: 0.2,

@@ -235,32 +235,40 @@ export default class Underworld {
       return [...this.units.filter(u => !u.flaggedForRemoval), ...this.pickups.filter(p => !p.flaggedForRemoval), ...this.doodads];
     }
   }
-  reportEnemyKilled(enemyKilledPos: Vec2) {
-    this.enemiesKilled++;
+  getNumberOfEnemyKillsNeededForNextLevelUp(): number {
     // Check if should drop cards
     let numberOfEnemiesKilledNeededForNextDrop = 0;
     const startNumberOfEnemiesNeededToDrop = 2;
     for (let i = startNumberOfEnemiesNeededToDrop; i < 1 + this.cardDropsDropped + startNumberOfEnemiesNeededToDrop; i++) {
       numberOfEnemiesKilledNeededForNextDrop += i;
     }
+    return numberOfEnemiesKilledNeededForNextDrop;
+
+  }
+  reportEnemyKilled(enemyKilledPos: Vec2) {
+    this.enemiesKilled++;
     if (document.body?.classList.contains('HUD-hidden')) {
       console.log('HUD-hidden: Skipping dropping scroll pickup')
       return;
     }
+    const numberOfEnemiesKilledNeededForNextDrop = this.getNumberOfEnemyKillsNeededForNextLevelUp();
     if (numberOfEnemiesKilledNeededForNextDrop <= this.enemiesKilled) {
       // Stop dropping cards if players have enough scrolls have been dropped to cover all cards that can be picked
       if (Object.values(Cards.allCards).filter(c => c.probability > 0).length > this.cardDropsDropped) {
         console.log('Pickup: Drop scroll pickup', this.cardDropsDropped, this.enemiesKilled, numberOfEnemiesKilledNeededForNextDrop)
         explain(EXPLAIN_SCROLL);
         this.cardDropsDropped++;
-        const pickupSource = Pickup.pickups.find(p => p.name == Pickup.CARDS_PICKUP_NAME)
-        if (pickupSource) {
-          Pickup.create({ pos: enemyKilledPos, pickupSource }, this, false);
-          tutorialShowTask('pickupScroll');
-        } else {
-          console.error('pickupSource for', Pickup.CARDS_PICKUP_NAME, ' not found');
-          return
-        }
+        // Give EVERY player an upgrade when any one player picks up a scroll
+        this.players.forEach(p => Pickup.givePlayerUpgrade(p, this));
+        playSFXKey('levelUp');
+        // const pickupSource = Pickup.pickups.find(p => p.name == Pickup.CARDS_PICKUP_NAME)
+        // if (pickupSource) {
+        //   Pickup.create({ pos: enemyKilledPos, pickupSource }, this, false);
+        //   tutorialShowTask('pickupScroll');
+        // } else {
+        //   console.error('pickupSource for', Pickup.CARDS_PICKUP_NAME, ' not found');
+        //   return
+        // }
       } else {
         console.log('No more cards to drop');
       }
