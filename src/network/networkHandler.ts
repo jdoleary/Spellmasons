@@ -238,7 +238,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         } else {
           console.error(
             'Cannot CHOOSE_UPGRADE, upgrade does not exist',
-            upgrade,
+            payload.upgrade.title,
           );
         }
       } else {

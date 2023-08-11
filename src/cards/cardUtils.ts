@@ -8,6 +8,7 @@ import * as captureSoul from '../cards/capture_soul';
 import { Container } from "pixi.js";
 import { chooseOneOf } from "../jmath/rand";
 import Underworld from "../Underworld";
+import { arrowCardId } from "./arrow";
 export interface CardCost {
     manaCost: number;
     healthCost: number;
@@ -145,6 +146,9 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
         } else if (caster.mageType == MageType.Necromancer && card.id == captureSoul.id) {
             cardCost.healthCost = Math.floor(0.9 * caster.unit.healthMax);
             cardCost.manaCost = 0;
+        } else if (caster.mageType == MageType.Archer && card.id == arrowCardId) {
+            // Fix mana cost for archer MageType
+            cardCost.manaCost = 7;
         }
     }
 

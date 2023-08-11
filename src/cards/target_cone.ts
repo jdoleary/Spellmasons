@@ -12,7 +12,7 @@ import { easeOutCubic } from '../jmath/Easing';
 import * as config from '../config';
 import { HasSpace } from '../entity/Type';
 
-const id = 'Target Cone';
+export const id = 'Target Cone';
 const range = 240;
 const coneAngle = Math.PI / 4
 const spell: Spell = {

@@ -12,13 +12,14 @@ import { MESSAGE_TYPES } from '../types/MessageTypes';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary, playerNoColor } from '../graphics/ui/colors';
 import Underworld, { turn_phase } from '../Underworld';
-import * as inLiquid from '../inLiquid';
+import * as target_cone from '../cards/target_cone';
 import * as lastWill from '../cards/lastwill';
 import * as captureSoul from '../cards/capture_soul';
 import { explain, EXPLAIN_BLESSINGS, isTutorialComplete } from '../graphics/Explain';
 import { lightenColor } from '../graphics/ui/colorUtil';
 import { AttributePerk } from '../Perk';
 import { setPlayerNameUI } from '../PlayerUtils';
+import { arrowCardId } from '../cards/arrow';
 
 const elInGameLobby = document.getElementById('in-game-lobby') as (HTMLElement | undefined);
 const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
@@ -42,7 +43,8 @@ export enum MageType {
   Spellmason,
   Timemason,
   Bloodmason,
-  Necromancer
+  Necromancer,
+  Archer
 }
 export interface IPlayer {
   // Multiplayer "gamer handle"
@@ -90,17 +92,33 @@ export function changeMageType(type: MageType, player: IPlayer, underworld: Unde
   player.mageType = type;
   console.log('Player mageType changed to', MageType[type]);
   switch (type) {
-    case MageType.Necromancer:
-      const upgrade = Upgrade.getUpgradeByTitle(captureSoul.id);
-      if (upgrade) {
-        underworld.chooseUpgrade(player, upgrade);
-      } else {
-        console.error(
-          'Cannot CHOOSE_UPGRADE, upgrade does not exist',
-          upgrade,
-        );
+    case MageType.Archer:
+      {
+        const upgrade = Upgrade.getUpgradeByTitle(arrowCardId);
+        if (upgrade) {
+          underworld.chooseUpgrade(player, upgrade);
+        } else {
+          console.error('Could not find arrow upgrade for', type);
+        }
       }
-
+      {
+        const upgrade = Upgrade.getUpgradeByTitle(target_cone.id);
+        if (upgrade) {
+          underworld.chooseUpgrade(player, upgrade);
+        } else {
+          console.error('Could not find target cone upgrade for', type);
+        }
+      }
+      break;
+    case MageType.Necromancer:
+      {
+        const upgrade = Upgrade.getUpgradeByTitle(captureSoul.id);
+        if (upgrade) {
+          underworld.chooseUpgrade(player, upgrade);
+        } else {
+          console.error('Could not find upgrade for', type);
+        }
+      }
       break;
   }
 
