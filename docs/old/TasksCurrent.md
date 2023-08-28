@@ -1,4 +1,5 @@
 - bug: Sometimes you pickup a scroll and nothing happens
+- TODO: Does bossmason death handling work if bossmason is mind controlled or just faction changes??
 - i18n: "Choose Class", "Choose a starting class"
 
 ---

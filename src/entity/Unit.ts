@@ -30,11 +30,14 @@ import { ARCHER_ID } from './units/archer';
 import { BLOOD_ARCHER_ID } from './units/blood_archer';
 import * as Obstacle from './Obstacle';
 import { spellmasonUnitId } from './units/playerUnit';
-import { SUMMONER_ID } from './units/summoner';
+import { findRandomGroundLocation, SUMMONER_ID } from './units/summoner';
 import { DARK_SUMMONER_ID } from './units/darkSummoner';
 import { bossmasonUnitId } from './units/deathmason';
+import deathmason from './units/deathmason';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
 import { StatCalamity } from '../Perk';
+import { skyBeam } from '../VisualEffects';
+import seedrandom from 'seedrandom';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -743,6 +746,43 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   }
   // Once a unit dies it is no longer on it's originalLife
   unit.originalLife = false;
+  // If there is only 1 bossmason, when it dies, spawn 3 more:
+  if (underworld.units.filter(u => u.unitSourceId == bossmasonUnitId).length == 1) {
+    if (unit.unitSourceId == bossmasonUnitId) {
+      (prediction
+        ? underworld.unitsPrediction
+        : underworld.units).filter(u => u.unitType == UnitType.AI).forEach(u => die(u, underworld, prediction));
+      if (!prediction) {
+        let retryAttempts = 0;
+        for (let i = 0; (i < 3 && retryAttempts < 10); i++) {
+          const seed = seedrandom(`${underworld.seed}-${underworld.turn_number}-${unit.id}`);
+          const coords = findRandomGroundLocation(underworld, unit, seed);
+          if (!coords) {
+            retryAttempts++;
+            i--;
+            continue;
+          } else {
+            retryAttempts = 0;
+          }
+          // Animate effect of unit spawning from the sky
+          const newBossmason = create(
+            bossmasonUnitId,
+            coords.x,
+            coords.y,
+            Faction.ENEMY,
+            deathmason.info.image,
+            UnitType.AI,
+            deathmason.info.subtype,
+            deathmason.unitProps,
+            underworld,
+            prediction
+          );
+          skyBeam(newBossmason);
+        }
+      }
+
+    }
+  }
 }
 export function composeOnDamageEvents(unit: IUnit, damage: number, underworld: Underworld, prediction: boolean): number {
   // Compose onDamageEvents
