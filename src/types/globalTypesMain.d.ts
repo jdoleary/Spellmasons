@@ -258,4 +258,6 @@ declare global {
     // A list of spells that don't take up an upgrade count because they are obtained by other
     // means than by pickup up scrolls
     var freeSpells: string[];
+    var mageTypes: Array<Player.MageType>;
+    var changeMageType: undefined | ((mageType: Player.MageType, player: Player.IPlayer, underworld: Underworld) => void);
 }

@@ -140,15 +140,15 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
 
     // Handle unique changes due to player mageType
     if (caster) {
-        if (caster.mageType == MageType.Bloodmason) {
+        if (caster.mageType == 'Bloodmason') {
             cardCost.healthCost = Math.ceil(cardCost.manaCost / 10);
             cardCost.manaCost = 0;
-        } else if (caster.mageType == MageType.Necromancer && card.id == captureSoul.id) {
+        } else if (caster.mageType == 'Necromancer' && card.id == captureSoul.id) {
             cardCost.healthCost = Math.floor(0.9 * caster.unit.healthMax);
             cardCost.manaCost = 0;
-        } else if (caster.mageType == MageType.Archer && card.id == arrowCardId) {
+        } else if (caster.mageType == 'Archer' && card.id == arrowCardId) {
             // Fix mana cost for archer MageType
-            cardCost.manaCost = 7;
+            cardCost.manaCost = 10;
         }
     }
 

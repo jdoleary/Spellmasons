@@ -783,24 +783,27 @@ export default class Underworld {
     });
 
     // Special: Handle timemason:
-    const timemasons = this.players.filter(p => p.mageType == Player.MageType.Timemason);
+    const timemasons = this.players.filter(p => p.mageType == 'Timemason');
     if (this.turn_phase == turn_phase.PlayerTurns && timemasons.length) {
       timemasons.forEach(timemason => {
-        //@ts-ignore Special logic for timemason, does not need to be persisted
-        if (!timemason.timetracker) {
+        if (timemason.unit.alive) {
+
           //@ts-ignore Special logic for timemason, does not need to be persisted
-          timemason.timetracker = deltaTime;
-        } else {
+          if (!timemason.timetracker) {
+            //@ts-ignore Special logic for timemason, does not need to be persisted
+            timemason.timetracker = deltaTime;
+          } else {
+            //@ts-ignore Special logic for timemason, does not need to be persisted
+            timemason.timetracker += deltaTime;
+          }
+          const time_to_dmg_ms = 2000;
           //@ts-ignore Special logic for timemason, does not need to be persisted
-          timemason.timetracker += deltaTime;
-        }
-        const time_to_dmg_ms = 2000;
-        //@ts-ignore Special logic for timemason, does not need to be persisted
-        if (timemason.timetracker > time_to_dmg_ms) {
-          //@ts-ignore Special logic for timemason, does not need to be persisted
-          timemason.timetracker -= time_to_dmg_ms;
-          Unit.takeDamage(timemason.unit, 1, undefined, this, false);
-          floatingText({ coords: timemason.unit, text: '-1 hp' });
+          if (timemason.timetracker > time_to_dmg_ms) {
+            //@ts-ignore Special logic for timemason, does not need to be persisted
+            timemason.timetracker -= time_to_dmg_ms;
+            Unit.takeDamage(timemason.unit, 1, undefined, this, false);
+            floatingText({ coords: timemason.unit, text: '-1 hp' });
+          }
         }
       })
     }

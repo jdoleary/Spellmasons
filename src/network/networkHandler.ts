@@ -540,7 +540,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         // computer
         return;
       }
-      const { color, colorMagic, name, lobbyReady } = payload;
+      const { color, colorMagic, name, lobbyReady, mageType } = payload;
       if (fromPlayer) {
         if (lobbyReady !== undefined) {
           fromPlayer.lobbyReady = lobbyReady;
@@ -566,6 +566,9 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         }
         setPlayerNameUI(fromPlayer);
         Player.setPlayerRobeColor(fromPlayer, color, colorMagic);
+        if (mageType) {
+          Player.changeMageType(mageType, fromPlayer, underworld);
+        }
         Player.syncLobby(underworld);
         underworld.tryRestartTurnPhaseLoop();
       } else {
@@ -590,6 +593,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
               type: MESSAGE_TYPES.PLAYER_CONFIG,
               color: storage.get(storage.STORAGE_ID_PLAYER_COLOR),
               name: storage.get(storage.STORAGE_ID_PLAYER_NAME),
+              mageType: storage.get(storage.STORAGE_ID_PLAYER_MAGE_TYPE),
             });
           }
         }

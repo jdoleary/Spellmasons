@@ -1,3 +1,5 @@
+- ↜௹ąŋdąɾą↝ — Yesterday at 8:59 PM
+I have a feeling timemason is gonna be a curse related class, wherein curses like decay or poison is going to deal more damage in less time, or like cast two ticks of damage in one round instead of two.
 - Zegian - huge list of spell ideas: https://steamcommunity.com/app/1618380/discussions/0/3824163953446119116/
 - The Joe — Today at 1:38 PM
 I think that one thing that this game is missing a little bit of is that rogue-like randomness that comes with artifacts. Think slay the spire, monster train, binding of Isaac, etc.

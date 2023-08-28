@@ -1,4 +1,5 @@
 - bug: Sometimes you pickup a scroll and nothing happens
+- i18n: "Choose Class", "Choose a starting class"
 
 ---
 - bug: Red portals are sticking around

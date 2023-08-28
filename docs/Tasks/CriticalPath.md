@@ -1,9 +1,10 @@
 # Critical Path
-- Next Feature Update (v1.9)
+- Next Feature Update (v1.19)
     - Fix scrolls
     - Classes menu
     - Better End-Game
     - Is there a way to make existing spells synergize more??
+        - Special Class-specific upgrades such as "make arrow cheaper" for archer
 - Renewed Marketing Efforts
     - Post in Wholesomeverse
     - Bug Bounty?

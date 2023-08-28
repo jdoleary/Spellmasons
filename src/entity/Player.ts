@@ -1,4 +1,5 @@
 import { PLAYER_BASE_HEALTH } from '../config';
+import * as storage from '../storage';
 import * as Unit from './Unit';
 import * as Image from '../graphics/Image';
 import * as Upgrade from '../Upgrade';
@@ -39,13 +40,16 @@ interface Stats {
   gameStartTime: number;
   totalKills: number;
 }
-export enum MageType {
-  Spellmason,
-  Timemason,
-  Bloodmason,
-  Necromancer,
-  Archer
-}
+export type MageType = 'Spellmason' | 'Timemason' | 'Bloodmason' | 'Necromancer' | 'Archer';
+// This array allows the UI to select a mageType, mageTypes not in this array
+// will not appear in the UI
+globalThis.mageTypes = [
+  'Spellmason',
+  'Timemason',
+  'Bloodmason',
+  'Necromancer',
+  'Archer'
+];
 export interface IPlayer {
   // Multiplayer "gamer handle"
   name: string;
@@ -88,38 +92,44 @@ export interface IPlayer {
 export function inPortal(player: IPlayer): boolean {
   return isNaN(player.unit.x) || isNaN(player.unit.y) || player.unit.x === null || player.unit.y === null;
 }
-export function changeMageType(type: MageType, player: IPlayer, underworld: Underworld) {
-  player.mageType = type;
-  console.log('Player mageType changed to', MageType[type]);
-  switch (type) {
-    case MageType.Archer:
-      {
-        const upgrade = Upgrade.getUpgradeByTitle(arrowCardId);
-        if (upgrade) {
-          underworld.chooseUpgrade(player, upgrade);
-        } else {
-          console.error('Could not find arrow upgrade for', type);
+globalThis.changeMageType = changeMageType;
+export function changeMageType(type: MageType, player?: IPlayer, underworld?: Underworld) {
+  if (!player || !underworld) {
+    console.log('Player default mageType set to', type);
+    storage.set(storage.STORAGE_ID_PLAYER_MAGE_TYPE, type);
+  } else {
+    console.log('Player mageType changed to', type);
+    player.mageType = type;
+    switch (type) {
+      case 'Archer':
+        {
+          const upgrade = Upgrade.getUpgradeByTitle(arrowCardId);
+          if (upgrade) {
+            underworld.chooseUpgrade(player, upgrade);
+          } else {
+            console.error('Could not find arrow upgrade for', type);
+          }
         }
-      }
-      {
-        const upgrade = Upgrade.getUpgradeByTitle(target_cone.id);
-        if (upgrade) {
-          underworld.chooseUpgrade(player, upgrade);
-        } else {
-          console.error('Could not find target cone upgrade for', type);
+        {
+          const upgrade = Upgrade.getUpgradeByTitle(target_cone.id);
+          if (upgrade) {
+            underworld.chooseUpgrade(player, upgrade);
+          } else {
+            console.error('Could not find target cone upgrade for', type);
+          }
         }
-      }
-      break;
-    case MageType.Necromancer:
-      {
-        const upgrade = Upgrade.getUpgradeByTitle(captureSoul.id);
-        if (upgrade) {
-          underworld.chooseUpgrade(player, upgrade);
-        } else {
-          console.error('Could not find upgrade for', type);
+        break;
+      case 'Necromancer':
+        {
+          const upgrade = Upgrade.getUpgradeByTitle(captureSoul.id);
+          if (upgrade) {
+            underworld.chooseUpgrade(player, upgrade);
+          } else {
+            console.error('Could not find upgrade for', type);
+          }
         }
-      }
-      break;
+        break;
+    }
   }
 
 }
@@ -127,7 +137,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
   const userSource = defaultPlayerUnit;
   const player: IPlayer = {
     name: '',
-    mageType: MageType.Spellmason,
+    mageType: 'Spellmason',
     endedTurn: false,
     clientId,
     // init players as not connected.  clientConnected status
