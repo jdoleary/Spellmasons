@@ -235,15 +235,18 @@ export default class Underworld {
       return [...this.units.filter(u => !u.flaggedForRemoval), ...this.pickups.filter(p => !p.flaggedForRemoval), ...this.doodads];
     }
   }
-  getNumberOfEnemyKillsNeededForNextLevelUp(): number {
+  calculateKillsNeededForLevel(level: number): number {
     // Check if should drop cards
     let numberOfEnemiesKilledNeededForNextDrop = 0;
     const startNumberOfEnemiesNeededToDrop = 2;
-    for (let i = startNumberOfEnemiesNeededToDrop; i < 1 + this.cardDropsDropped + startNumberOfEnemiesNeededToDrop; i++) {
+    for (let i = startNumberOfEnemiesNeededToDrop; i < level + startNumberOfEnemiesNeededToDrop; i++) {
       numberOfEnemiesKilledNeededForNextDrop += i;
     }
     return numberOfEnemiesKilledNeededForNextDrop;
 
+  }
+  getNumberOfEnemyKillsNeededForNextLevelUp(): number {
+    return this.calculateKillsNeededForLevel(this.cardDropsDropped + 1);
   }
   reportEnemyKilled(enemyKilledPos: Vec2) {
     this.enemiesKilled++;

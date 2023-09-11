@@ -818,7 +818,12 @@ export function updateTooltipContent(underworld: Underworld) {
           const player = underworld.players.find((p) => p.unit === globalThis.selectedUnit);
           if (player) {
             playerSpecificInfo = '';
-            playerSpecificInfo += `<br/>${i18n('Kills until level up')}: ${underworld.getNumberOfEnemyKillsNeededForNextLevelUp() - underworld.enemiesKilled}</h3>`;
+            playerSpecificInfo += `<br/>${i18n('Level')} ${underworld.cardDropsDropped}</div>`;
+            const lastLevelKills = underworld.calculateKillsNeededForLevel(underworld.cardDropsDropped);
+            const nextLevelKills = underworld.getNumberOfEnemyKillsNeededForNextLevelUp();
+            const expDenominator = nextLevelKills - lastLevelKills;
+            const expNumerator = underworld.enemiesKilled - lastLevelKills;
+            playerSpecificInfo += `<br/>${i18n('Experience')} ${expNumerator}/${expDenominator}<div><progress id="experience-bar" max="${expDenominator}" value="${expNumerator}"></progress></div>`;
 
             playerSpecificInfo += `<br/><h3>${i18n('Perks')}</h3>`;
             const everyLevel = player.attributePerks.filter(p => p.when == 'everyLevel');
