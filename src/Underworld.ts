@@ -263,7 +263,6 @@ export default class Underworld {
         this.cardDropsDropped++;
         // Give EVERY player an upgrade when any one player picks up a scroll
         this.players.forEach(p => Pickup.givePlayerUpgrade(p, this));
-        playSFXKey('levelUp');
         // const pickupSource = Pickup.pickups.find(p => p.name == Pickup.CARDS_PICKUP_NAME)
         // if (pickupSource) {
         //   Pickup.create({ pos: enemyKilledPos, pickupSource }, this, false);
@@ -2450,9 +2449,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
     const isCursePerk = cursesLeftToChoose > 0;
     if (elUpgradePickerLabel) {
+      const pickingClass = globalThis.player ? Upgrade.isPickingClass(globalThis.player) : false;
       elUpgradePickerLabel.innerHTML = i18n(isPerk ?
         isCursePerk ? 'Pick a Calamity' : 'Pick an Upgrade'
-        : 'Pick a Spell');
+        : pickingClass ? 'Pick a Class' : 'Pick a Spell');
     }
     // If playing hotseat multiplayer, prepend the player name so users know which player they
     // are picking an upgrade for

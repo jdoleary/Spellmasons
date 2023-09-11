@@ -29,6 +29,10 @@ export interface IUpgrade {
   probability: number;
   cost: CardCost;
 }
+export function isPickingClass(player: IPlayer): boolean {
+  // undefined mageType means they haven't picked yet
+  return (player.upgrades.length == 3 && player.mageType == undefined);
+}
 // Chooses a random card based on the card's probabilities
 // minimumProbability ensures that super rare cards won't be presented too early on
 // onlyStats: means it'll present stats upgrades instead of card upgrades
@@ -60,6 +64,9 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
       .filter(filterUpgrades)
       // Ensure they pick from only damage cards
       .filter(c => (![bleedCardId, drownCardId].includes(c.title) && c.cardCategory == CardCategory.Damage) || [poisonCardId, suffocateCardId].includes(c.title));
+  }
+  if (isPickingClass(player)) {
+    return upgradeMageClassSource;
   }
 
   // Clone upgrades for later mutation
@@ -164,7 +171,7 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
   return element;
 }
 export function getUpgradeByTitle(title: string): IUpgrade | undefined {
-  const all_upgrades = [...upgradeCardsSource, ...upgradeSourceWhenDead];
+  const all_upgrades = [...upgradeCardsSource, ...upgradeSourceWhenDead, ...upgradeMageClassSource];
   return all_upgrades.find((u) => u.title === title);
 }
 export const upgradeSourceWhenDead: IUpgrade[] = [
@@ -183,3 +190,81 @@ export const upgradeSourceWhenDead: IUpgrade[] = [
 
 export const upgradeCardsSource: IUpgrade[] = []
 
+export const upgradeMageClassSource: IUpgrade[] = [
+  {
+    title: 'Spellmason',
+    type: 'special',
+    description: () => 'A regular Spellmaon',
+    thumbnail: '',
+    effect: (player, underworld) => {
+      if (changeMageType) {
+        changeMageType('Spellmason', player, underworld);
+      } else {
+        console.error('Cannot change mage type, changeMageType() is undefined.');
+      }
+    },
+    probability: 1,
+    cost: { healthCost: 0, manaCost: 0 },
+  },
+  {
+    title: 'Timemason',
+    type: 'special',
+    description: () => 'Think quickly! The Timemason takes damage every 2 seconds!',
+    thumbnail: '',
+    effect: (player, underworld) => {
+      if (changeMageType) {
+        changeMageType('Timemason', player, underworld);
+      } else {
+        console.error('Cannot change mage type, changeMageType() is undefined.');
+      }
+    },
+    probability: 1,
+    cost: { healthCost: 0, manaCost: 0 },
+  },
+  {
+    title: 'Bloodmason',
+    type: 'special',
+    description: () => 'The Bloodmason\'s spells cost health instead of mana!',
+    thumbnail: '',
+    effect: (player, underworld) => {
+      if (changeMageType) {
+        changeMageType('Bloodmason', player, underworld);
+      } else {
+        console.error('Cannot change mage type, changeMageType() is undefined.');
+      }
+    },
+    probability: 1,
+    cost: { healthCost: 0, manaCost: 0 },
+  },
+  {
+    title: 'Necromancer',
+    type: 'special',
+    description: () => 'Let your minions do the fighting! Get "Capture Soul" immediately, but it always costs 90% of your health to cast.',
+    thumbnail: '',
+    effect: (player, underworld) => {
+      if (changeMageType) {
+        changeMageType('Necromancer', player, underworld);
+      } else {
+        console.error('Cannot change mage type, changeMageType() is undefined.');
+      }
+    },
+    probability: 1,
+    cost: { healthCost: 0, manaCost: 0 },
+  },
+  {
+    title: 'Archer',
+    type: 'special',
+    description: () => 'Get "Arrow" immediately and it remains the same manacost no matter how much you cast it!',
+    thumbnail: 'images/upgrades/class-archer.png',
+    effect: (player, underworld) => {
+      if (changeMageType) {
+        changeMageType('Archer', player, underworld);
+      } else {
+        console.error('Cannot change mage type, changeMageType() is undefined.');
+      }
+    },
+    probability: 1,
+    cost: { healthCost: 0, manaCost: 0 },
+  },
+
+]

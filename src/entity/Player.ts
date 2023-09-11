@@ -106,16 +106,9 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
           const upgrade = Upgrade.getUpgradeByTitle(arrowCardId);
           if (upgrade) {
             underworld.chooseUpgrade(player, upgrade);
+            globalThis.freeSpells.push(arrowCardId);
           } else {
             console.error('Could not find arrow upgrade for', type);
-          }
-        }
-        {
-          const upgrade = Upgrade.getUpgradeByTitle(target_cone.id);
-          if (upgrade) {
-            underworld.chooseUpgrade(player, upgrade);
-          } else {
-            console.error('Could not find target cone upgrade for', type);
           }
         }
         break;
@@ -124,6 +117,7 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
           const upgrade = Upgrade.getUpgradeByTitle(captureSoul.id);
           if (upgrade) {
             underworld.chooseUpgrade(player, upgrade);
+            globalThis.freeSpells.push(captureSoul.id);
           } else {
             console.error('Could not find upgrade for', type);
           }
@@ -137,7 +131,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
   const userSource = defaultPlayerUnit;
   const player: IPlayer = {
     name: '',
-    mageType: 'Spellmason',
+    mageType: undefined,
     endedTurn: false,
     clientId,
     // init players as not connected.  clientConnected status

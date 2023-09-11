@@ -235,6 +235,10 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         const upgrade = getUpgradeByTitle(payload.upgrade.title);
         if (upgrade) {
           underworld.chooseUpgrade(fromPlayer, upgrade);
+          skyBeam(fromPlayer.unit);
+          if (fromPlayer === globalThis.player) {
+            playSFXKey('levelUp');
+          }
         } else {
           console.error(
             'Cannot CHOOSE_UPGRADE, upgrade does not exist',
