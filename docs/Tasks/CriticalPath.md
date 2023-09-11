@@ -1,9 +1,13 @@
 # Critical Path
 - Next Feature Update (v1.19)
+    - Upgrade server to Bun
     - Fix scrolls
-    - Better End-Game
+        - Make level up progress bar
+    - Mage Classes
+        - Better UI
     - Is there a way to make existing spells synergize more??
-        - Special Class-specific upgrades such as "make arrow cheaper" for archer
+        - Special Class-specific upgrades such as "make arrow cheaper" for archer (rather than current perks)
+        - Increase base damage
 - Renewed Marketing Efforts
     - Post in Wholesomeverse
     - Bug Bounty?
