@@ -1,17 +1,21 @@
 # Critical Path
 - Next Feature Update (v1.19)
-    - Upgrade server to Bun
     - Mage Classes
         - Better UI
+        - Images for upgrade
+        - Balancing
     - i18n
         - Translate new perf option for particles in menu
         - change 'Kills until level up' to 'Experience'
         - "Level"
         - "Pick a Class"
+    - bug: Bloodmason upgrades still show mana instead of health
 
-- Is there a way to make existing spells synergize more??
-    - Special Class-specific upgrades such as "make arrow cheaper" for archer (rather than current perks)
-    - Increase base damage
+- v1.20
+    - Upgrade server to Bun
+    - Is there a way to make existing spells synergize more??
+        - Special Class-specific upgrades such as "make arrow cheaper" for archer (rather than current perks)
+        - Increase base damage
 - Renewed Marketing Efforts
     - Post in Wholesomeverse
     - Bug Bounty?
