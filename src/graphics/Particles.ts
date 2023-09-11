@@ -30,11 +30,24 @@ export const containerParticlesUnderUnits = !globalThis.pixi ? undefined : new g
 // For optimization, I'd rather just a parent container specifically for them be sorted.
 export function wrappedEmitter(config: particles.EmitterConfigV3, container: Container, resolver?: () => void) {
     if (!container) {
+        if (resolver) {
+            resolver();
+        }
         return undefined;
     }
     if (!globalThis.pixi) {
+        if (resolver) {
+            resolver();
+        }
         return undefined;
     }
+    if (globalThis.emitters && globalThis.limitParticleEmitters !== undefined && globalThis.limitParticleEmitters !== -1 && globalThis.emitters?.length >= globalThis.limitParticleEmitters) {
+        if (resolver) {
+            resolver();
+        }
+        return undefined;
+    }
+
     const emitterContainer = new globalThis.pixi.Container();
     container.addChild(emitterContainer);
     const emitter = new particles.Emitter(emitterContainer, config);
@@ -55,7 +68,16 @@ export function wrappedEmitter(config: particles.EmitterConfigV3, container: Con
 }
 export function simpleEmitter(position: Vec2, config: particles.EmitterConfigV3, resolver?: () => void, container?: ParticleContainer) {
     if (!containerParticles) {
+        if (resolver) {
+            resolver();
+        }
         return undefined
+    }
+    if (globalThis.emitters && globalThis.limitParticleEmitters !== undefined && globalThis.limitParticleEmitters !== -1 && globalThis.emitters?.length >= globalThis.limitParticleEmitters) {
+        if (resolver) {
+            resolver();
+        }
+        return undefined;
     }
     const emitter: JEmitter = new particles.Emitter(container || containerParticles, config);
     emitter.cleanAfterTurn = true;
@@ -100,6 +122,9 @@ function createCurveTowardsFunction(start: Vec2, end: Vec2, control: Vec2): (t: 
 const trails: Trail[] = [];
 export function addTrail(position: Vec2, target: Vec2, underworld: Underworld, config: particles.EmitterConfigV3): Promise<void> {
     if (!containerParticles) {
+        return Promise.resolve();
+    }
+    if (globalThis.emitters && globalThis.limitParticleEmitters !== undefined && globalThis.limitParticleEmitters !== -1 && globalThis.emitters?.length >= globalThis.limitParticleEmitters) {
         return Promise.resolve();
     }
     const emitter: JEmitter = new particles.Emitter(containerParticles, config);

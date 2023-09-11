@@ -233,6 +233,7 @@ declare global {
         color: number,
         colorMagic: number,
     }[] | undefined;
+    var limitParticleEmitters: number | undefined;
     var UIEasyOnTheEyes: boolean | undefined;
     // This type is used in public/mods and defined in the globalTypes.d.ts in public/mods
     // since it is not used in this project it need not be typed here

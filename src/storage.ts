@@ -56,6 +56,9 @@ export function getSavedData() {
                 if (options.UIEasyOnTheEyes !== undefined) {
                     globalThis.UIEasyOnTheEyes = options.UIEasyOnTheEyes;
                 }
+                if (options.limitParticleEmitters !== undefined) {
+                    globalThis.limitParticleEmitters = options.limitParticleEmitters;
+                }
                 globalThis.activeMods = [];
                 if (!!options.activeMods) {
                     globalThis.activeMods = options.activeMods;
