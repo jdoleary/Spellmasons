@@ -40,7 +40,7 @@ interface Stats {
   gameStartTime: number;
   totalKills: number;
 }
-export type MageType = 'Spellmason' | 'Timemason' | 'Bloodmason' | 'Necromancer' | 'Archer' | 'Sniper' | 'Cleric';
+export type MageType = 'Spellmason' | 'Timemason' | 'Bloodmason' | 'Necromancer' | 'Archer' | 'Sniper' | 'Cleric' | 'Gambler';
 // This array allows the UI to select a mageType, mageTypes not in this array
 // will not appear in the UI
 globalThis.mageTypes = [
@@ -50,7 +50,8 @@ globalThis.mageTypes = [
   'Necromancer',
   'Archer',
   'Sniper',
-  'Cleric'
+  'Cleric',
+  'Gambler'
 ];
 export interface IPlayer {
   // Multiplayer "gamer handle"

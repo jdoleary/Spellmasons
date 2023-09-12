@@ -2468,7 +2468,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       console.error('showUpgrades: elUpgradePicker or elUpgradePickerContent are undefined.');
     }
     if (player) {
-      const numberOfUpgradesToChooseFrom = 3 - player.reroll;
+      let numberOfUpgradesToChooseFrom = 3 - player.reroll;
+      if (player.mageType == 'Gambler') {
+        numberOfUpgradesToChooseFrom += 1;
+      }
       if (isPerk) {
         if (isCursePerk) {
           const mostUsedLastLevelCards = Object.entries(player.spellState || {}).sort((a, b) => b[1].count - a[1].count)

@@ -280,5 +280,16 @@ export const upgradeMageClassSource: IUpgrade[] = [
     probability: 1,
     cost: { healthCost: 0, manaCost: 0 },
   },
+  {
+    title: 'Gambler',
+    type: 'mageType',
+    description: () => 'Gets an extra choice when choosing Spells',
+    thumbnail: 'images/upgrades/class-choice.png',
+    effect: (player, underworld) => {
+      changeMageType('Gambler', player, underworld);
+    },
+    probability: 1,
+    cost: { healthCost: 0, manaCost: 0 },
+  },
 
 ]
