@@ -2516,7 +2516,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
               'attackRange': 'Cast Range',
               'manaMax': 'Mana',
               'healthMax': 'Health',
-              'staminaMax': 'Stamina'
+              'staminaMax': 'Stamina',
+              'Good Looks': 'Good Looks'
             }
             const statValueModifier = (stat: string, value: number | undefined) => {
               if (value === undefined) {
@@ -2530,7 +2531,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
               return value;
             }
             const elStatUpgradeRow = (stat: string) => `<tr class="stat-row">
-            <td><h1>${wordMap[stat] || ''}: ${statValueModifier(stat, player.unit[stat as keyof Unit.IUnit] as number)}</h1></td>
+            <td><h1>${wordMap[stat] || ''}${stat === 'Good Looks' ? '' : ':'} ${statValueModifier(stat, player.unit[stat as keyof Unit.IUnit] as number)}</h1></td>
             <td data-stat="${stat}" class="plus-btn-container"></td>
 </tr>`;
             elUpgradePickerContent.innerHTML = `
@@ -2539,7 +2540,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   <table>
             <thead><tr><th></th><th></th></tr></thead>
     <tbody>
-  ${['healthMax', 'manaMax', 'staminaMax', 'attackRange'].map(elStatUpgradeRow).join('')}
+  ${['healthMax', 'manaMax', 'staminaMax', 'attackRange', 'Good Looks'].map(elStatUpgradeRow).join('')}
     </tbody>
   </table>
   </div>
@@ -2560,30 +2561,36 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
               }
               elPlusBtn.addEventListener('click', () => {
-                playSFXKey('levelUp');
                 player.statPointsUnspent--;
-                const statBumpAmount: { [key: string]: number } = {
-                  'attackRange': 24,
-                  'manaMax': 10,
-                  'healthMax': 10,
-                  'staminaMax': 16
-                }
-                if (stat && player.unit[stat as keyof Unit.IUnit]) {
-                  const statBump = statBumpAmount[stat] || 10;
-                  // @ts-ignore
-                  player.unit[stat as keyof Unit.IUnit] += statBump;
-                  // @ts-ignore
-                  if (stat.endsWith('Max') && player.unit[stat.replace('Max', '')]) {
-                    // @ts-ignore
-                    player.unit[stat.replace('Max', '')] += statBump;
+                if (stat == 'Good Looks') {
+                  // Deals 10% damage to all AI units
+                  this.units.filter(u => u.unitType == UnitType.AI).forEach(u => Unit.takeDamage(u, u.healthMax * 0.1, undefined, this, false));
+                } else {
 
+                  playSFXKey('levelUp');
+                  const statBumpAmount: { [key: string]: number } = {
+                    'attackRange': 24,
+                    'manaMax': 10,
+                    'healthMax': 10,
+                    'staminaMax': 16
                   }
-                  // Now that the player unit's properties have changed, sync the new
-                  // state with the player's predictionUnit so it is properly
-                  // refelcted in the bar
-                  // (note: this would be auto corrected on the next mouse move anyway)
-                  this.syncPlayerPredictionUnitOnly();
-                  Unit.syncPlayerHealthManaUI(this);
+                  if (stat && player.unit[stat as keyof Unit.IUnit]) {
+                    const statBump = statBumpAmount[stat] || 10;
+                    // @ts-ignore
+                    player.unit[stat as keyof Unit.IUnit] += statBump;
+                    // @ts-ignore
+                    if (stat.endsWith('Max') && player.unit[stat.replace('Max', '')]) {
+                      // @ts-ignore
+                      player.unit[stat.replace('Max', '')] += statBump;
+
+                    }
+                    // Now that the player unit's properties have changed, sync the new
+                    // state with the player's predictionUnit so it is properly
+                    // refelcted in the bar
+                    // (note: this would be auto corrected on the next mouse move anyway)
+                    this.syncPlayerPredictionUnitOnly();
+                    Unit.syncPlayerHealthManaUI(this);
+                  }
                 }
                 // Clear special showWalkRope for attackRange hover
                 keyDown.showWalkRope = false;

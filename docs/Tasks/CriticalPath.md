@@ -1,6 +1,6 @@
 # Critical Path
 - Next Feature Update (v1.19)
-    - Bug: Stat points unspent are showing after the deathmason is killed on load
+    - Send pointsSpend choice over network so "Good Looks" is networked
     - Mage Classes
         - Balancing
     - i18n
