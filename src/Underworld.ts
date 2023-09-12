@@ -1717,6 +1717,13 @@ export default class Underworld {
     document.body?.classList.toggle('loading', false);
     runCinematicLevelCamera(this).then(() => {
       console.log('Cinematic Cam: Finished');
+      // Give players stat points to spend:
+      // starting on level 2 (levelIndex 1)
+      if (this.levelIndex > 0) {
+        for (let p of this.players) {
+          p.statPointsUnspent += 3;
+        }
+      }
       // Set the first turn phase
       this.broadcastTurnPhase(turn_phase.PlayerTurns);
       cameraAutoFollow(false);
@@ -2401,7 +2408,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
   }
   perksLeftToChoose(player: Player.IPlayer): number {
-    return this.levelIndex - player.attributePerks.length;
+    return player.statPointsUnspent;
   }
   cursesLeftToChoose(player: Player.IPlayer): number {
     return this.levelIndex - config.LAST_LEVEL_INDEX - player.cursesChosen;
@@ -2452,7 +2459,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (elUpgradePickerLabel) {
       const pickingClass = globalThis.player ? Upgrade.isPickingClass(globalThis.player) : false;
       elUpgradePickerLabel.innerHTML = i18n(isPerk ?
-        isCursePerk ? 'Pick a Calamity' : 'Pick an Upgrade'
+        isCursePerk ? 'Pick a Calamity' : `Spend ${perksLeftToChoose} Points`
         : pickingClass ? 'Pick a Class' : 'Pick a Spell');
     }
     // If playing hotseat multiplayer, prepend the player name so users know which player they
@@ -2502,27 +2509,88 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
         } else {
 
-          const perks = generatePerks(numberOfUpgradesToChooseFrom, this);
           // Show the perks that you already have
           showPerkList(player);
-          const elPerks = perks.map(perk => createPerkElement(perk, player, this));
           if (elUpgradePickerContent) {
-            elUpgradePickerContent.innerHTML = '';
-            for (let elUpgrade of elPerks) {
-              if (elUpgrade) {
-                elUpgradePickerContent.appendChild(elUpgrade);
-                if (globalThis.devAutoPickUpgrades && elUpgrade == elPerks[0]) {
-                  elUpgrade.click();
-                }
-              } else {
-                console.warn('showUpgrades: perk is undefined, this block should never be executed in headless mode')
+            const wordMap: { [key: string]: string } = {
+              'attackRange': 'Cast Range',
+              'manaMax': 'Mana',
+              'healthMax': 'Health',
+              'staminaMax': 'Stamina'
+            }
+            const statValueModifier = (stat: string, value: number | undefined) => {
+              if (value === undefined) {
+                console.error('Undefined stat value', stat);
+                return '';
               }
+              if (stat == 'attackRange') {
+                // Display default attackRange as "100"
+                return 100 * value / config.PLAYER_BASE_ATTACK_RANGE;
+              }
+              return value;
             }
-            // Allow reroll if there is more than 1 upgrade to choose from
-            if (numberOfUpgradesToChooseFrom > 1) {
-              // Reroll perks button
-              this.addRerollButton(player);
-            }
+            const elStatUpgradeRow = (stat: string) => `<tr class="stat-row">
+            <td><h1>${wordMap[stat] || ''}: ${statValueModifier(stat, player.unit[stat as keyof Unit.IUnit] as number)}</h1></td>
+            <td data-stat="${stat}" class="plus-btn-container"></td>
+</tr>`;
+            elUpgradePickerContent.innerHTML = `
+<div class="card upgrade perk ui-border pick-stats">
+  <div class="card-inner flex">
+  <table>
+            <thead><tr><th></th><th></th></tr></thead>
+    <tbody>
+  ${['healthMax', 'manaMax', 'staminaMax', 'attackRange'].map(elStatUpgradeRow).join('')}
+    </tbody>
+  </table>
+  </div>
+</div>
+            `;
+            elUpgradePickerContent.querySelectorAll('.stat-row .plus-btn-container').forEach(el => {
+              const elPlusBtn = document.createElement('div');
+              elPlusBtn.classList.add('plus-btn');
+              elPlusBtn.style.color = 'white';
+              const stat = (el as HTMLElement).dataset.stat;
+              if (stat && stat == 'attackRange') {
+                elPlusBtn.addEventListener('mouseenter', () => {
+                  keyDown.showWalkRope = true;
+                });
+                elPlusBtn.addEventListener('mouseleave', () => {
+                  keyDown.showWalkRope = false;
+                });
+
+              }
+              elPlusBtn.addEventListener('click', () => {
+                playSFXKey('levelUp');
+                player.statPointsUnspent--;
+                const statBumpAmount: { [key: string]: number } = {
+                  'attackRange': 24,
+                  'manaMax': 10,
+                  'healthMax': 10,
+                  'staminaMax': 16
+                }
+                if (stat && player.unit[stat as keyof Unit.IUnit]) {
+                  // @ts-ignore
+                  player.unit[stat as keyof Unit.IUnit] += statBumpAmount[stat] || 10;
+                  Unit.resetUnitStats(player.unit, this);
+                  // Now that the player unit's properties have changed, sync the new
+                  // state with the player's predictionUnit so it is properly
+                  // refelcted in the bar
+                  // (note: this would be auto corrected on the next mouse move anyway)
+                  this.syncPlayerPredictionUnitOnly();
+                  Unit.syncPlayerHealthManaUI(this);
+                }
+                // Clear special showWalkRope for attackRange hover
+                keyDown.showWalkRope = false;
+                // Clear upgrades
+                document.body?.classList.toggle(showUpgradesClassName, false);
+                this.showUpgrades();
+              });
+              elPlusBtn.addEventListener('mouseenter', (e) => {
+                playSFXKey('click');
+              });
+              el.appendChild(elPlusBtn);
+
+            })
           }
         }
 

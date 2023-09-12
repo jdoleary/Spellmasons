@@ -91,6 +91,7 @@ export interface IPlayer {
   spellState: { [spellId: string]: any };
   stats: Stats;
   cursesChosen: number;
+  statPointsUnspent: number;
 }
 export function inPortal(player: IPlayer): boolean {
   return isNaN(player.unit.x) || isNaN(player.unit.y) || player.unit.x === null || player.unit.y === null;
@@ -179,7 +180,8 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
       longestSpell: [],
       gameStartTime: Date.now(),
       totalKills: 0
-    }
+    },
+    statPointsUnspent: 0,
   };
   player.unit.originalLife = true;
   // Player units get full mana every turn
@@ -349,6 +351,8 @@ export function load(player: IPlayerSerialized, underworld: Underworld) {
     return;
   }
   const playerLoaded: IPlayer = {
+    // @ts-ignore: Allow overwrite by spread for backwards compatibility
+    statPointsUnspent: 0,
     ...player,
     unit: reassignedUnit,
   };

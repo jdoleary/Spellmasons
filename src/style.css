@@ -1974,6 +1974,27 @@ body.view-Game.showUpgrades #perkList.visible {
   display: flex;
 }
 
+.stat-row h1 {
+  line-height: 64px;
+}
+
+.plus-btn {
+  width: 94px;
+  height: 95px;
+  background-image: url('/ui/iconPlusUp.png');
+  width: 64px;
+  height: 64px;
+  background-size: contain;
+}
+
+.plus-btn:hover {
+  filter: drop-shadow(0 0 0.4rem rgb(255, 255, 255));
+}
+
+.plus-btn:active {
+  background-image: url('/ui/iconPlusDown.png');
+}
+
 .reroll-btn {
   width: 94px;
   height: 95px;
@@ -2117,4 +2138,8 @@ body.dragging-card .floating-card-holder .empty-slot {
   top: 10px;
   font-size: 40px;
   text-shadow: #FFF 1px 1px 1px;
+}
+
+.pick-stats {
+  color: white;
 }
