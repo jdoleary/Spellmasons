@@ -32,7 +32,7 @@ export interface IUpgrade {
 }
 export function isPickingClass(player: IPlayer): boolean {
   // undefined mageType means they haven't picked yet
-  return (player.upgrades.length == 3 && player.mageType == undefined);
+  return (player.upgrades.length == 5 && player.mageType == undefined);
 }
 // Chooses a random card based on the card's probabilities
 // minimumProbability ensures that super rare cards won't be presented too early on
