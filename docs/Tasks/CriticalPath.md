@@ -1,5 +1,6 @@
 # Critical Path
 - Next Feature Update (v1.19)
+    - Bug: Stat points unspent are showing after the deathmason is killed on load
     - Mage Classes
         - Balancing
     - i18n
@@ -7,6 +8,8 @@
         - change 'Kills until level up' to 'Experience'
         - "Level"
         - "Pick a Class"
+        - Deathmason dialogue
+        - Spend perksLeftToChoose points
 
 - v1.20
     - Upgrade server to Bun
