@@ -2569,9 +2569,15 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
                   'staminaMax': 16
                 }
                 if (stat && player.unit[stat as keyof Unit.IUnit]) {
+                  const statBump = statBumpAmount[stat] || 10;
                   // @ts-ignore
-                  player.unit[stat as keyof Unit.IUnit] += statBumpAmount[stat] || 10;
-                  Unit.resetUnitStats(player.unit, this);
+                  player.unit[stat as keyof Unit.IUnit] += statBump;
+                  // @ts-ignore
+                  if (stat.endsWith('Max') && player.unit[stat.replace('Max', '')]) {
+                    // @ts-ignore
+                    player.unit[stat.replace('Max', '')] += statBump;
+
+                  }
                   // Now that the player unit's properties have changed, sync the new
                   // state with the player's predictionUnit so it is properly
                   // refelcted in the bar
