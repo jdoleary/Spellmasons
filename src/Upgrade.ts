@@ -1,9 +1,9 @@
 import seedrandom from 'seedrandom';
-import type { CardCost } from './cards/cardUtils';
+import { calculateCostForSingleCard, type CardCost } from './cards/cardUtils';
 import { cardRarityAsString, getCardRarityColor } from './graphics/ui/CardUI';
 import { chooseObjectWithProbability } from './jmath/rand';
 import { MESSAGE_TYPES } from './types/MessageTypes';
-import { IPlayer } from './entity/Player';
+import { IPlayer, changeMageType } from './entity/Player';
 import Underworld from './Underworld';
 import { CardCategory, CardRarity, probabilityMap } from './types/commonTypes';
 import { poisonCardId } from './cards/poison';
@@ -11,6 +11,7 @@ import { bleedCardId } from './cards/bleed';
 import { drownCardId } from './cards/drown';
 import { suffocateCardId } from './cards/suffocate';
 import { isModActive } from './registerMod';
+import { allCards, getCardsFromIds } from './cards';
 export interface IUpgrade {
   title: string;
   // If a upgrade belongs to a mod, it's modName will be automatically assigned
@@ -118,6 +119,13 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
   const elCardBadgeHolder = document.createElement('div');
   elCardBadgeHolder.classList.add('card-badge-holder');
   element.appendChild(elCardBadgeHolder);
+
+  // Override cost due to mageType
+  const card = allCards[upgrade.title];
+  if (card) {
+    upgrade.cost = calculateCostForSingleCard(card, 0, player);
+  }
+
   if (upgrade.cost.manaCost) {
     const elCardManaBadge = document.createElement('div');
     elCardManaBadge.classList.add('card-mana-badge', 'card-badge');

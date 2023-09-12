@@ -9,7 +9,6 @@
         - change 'Kills until level up' to 'Experience'
         - "Level"
         - "Pick a Class"
-    - bug: Bloodmason upgrades still show mana instead of health
 
 - v1.20
     - Upgrade server to Bun
