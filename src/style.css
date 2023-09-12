@@ -149,6 +149,10 @@ body.view-Game.showUpgrades #upgrade-picker {
   text-shadow: 2px 2px 2px #000;
 }
 
+#upgrade-picker .card.tiny {
+  height: 400px;
+}
+
 #upgrade-picker .card,
 .card-inspect .card {
   width: unset;

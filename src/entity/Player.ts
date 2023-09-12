@@ -40,7 +40,7 @@ interface Stats {
   gameStartTime: number;
   totalKills: number;
 }
-export type MageType = 'Spellmason' | 'Timemason' | 'Bloodmason' | 'Necromancer' | 'Archer';
+export type MageType = 'Spellmason' | 'Timemason' | 'Bloodmason' | 'Necromancer' | 'Archer' | 'Sniper' | 'Cleric';
 // This array allows the UI to select a mageType, mageTypes not in this array
 // will not appear in the UI
 globalThis.mageTypes = [
@@ -48,7 +48,9 @@ globalThis.mageTypes = [
   'Timemason',
   'Bloodmason',
   'Necromancer',
-  'Archer'
+  'Archer',
+  'Sniper',
+  'Cleric'
 ];
 export interface IPlayer {
   // Multiplayer "gamer handle"
@@ -92,11 +94,9 @@ export interface IPlayer {
 export function inPortal(player: IPlayer): boolean {
   return isNaN(player.unit.x) || isNaN(player.unit.y) || player.unit.x === null || player.unit.y === null;
 }
-globalThis.changeMageType = changeMageType;
 export function changeMageType(type: MageType, player?: IPlayer, underworld?: Underworld) {
   if (!player || !underworld) {
-    console.log('Player default mageType set to', type);
-    storage.set(storage.STORAGE_ID_PLAYER_MAGE_TYPE, type);
+    console.error('Cannot set mage type', player, underworld);
   } else {
     console.log('Player mageType changed to', type);
     player.mageType = type;
@@ -121,6 +121,12 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
           } else {
             console.error('Could not find upgrade for', type);
           }
+        }
+        break;
+      case 'Sniper':
+        {
+          player.unit.attackRange = 2 * player.unit.attackRange;
+          player.unit.staminaMax = Math.floor(player.unit.staminaMax / 2);
         }
         break;
     }

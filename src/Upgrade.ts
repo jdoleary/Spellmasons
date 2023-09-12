@@ -17,7 +17,7 @@ export interface IUpgrade {
   // If a upgrade belongs to a mod, it's modName will be automatically assigned
   // This is used to dictate wether or not the modded upgrade is used
   modName?: string;
-  type: 'card' | 'special';
+  type: 'card' | 'special' | 'mageType';
   cardCategory?: CardCategory;
   description: (player: IPlayer) => string;
   thumbnail: string;
@@ -108,6 +108,10 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
   }
   const { pie } = underworld;
   const element = document.createElement('div');
+  // mageType upgrades are smaller so more can fit on screen
+  if (upgrade.type == 'mageType') {
+    element.classList.add('tiny');
+  }
   element.classList.add('card', 'upgrade');
   element.classList.add(cardRarityAsString(upgrade));
   element.dataset.upgrade = upgrade.title;
@@ -201,75 +205,77 @@ export const upgradeCardsSource: IUpgrade[] = []
 export const upgradeMageClassSource: IUpgrade[] = [
   {
     title: 'Spellmason',
-    type: 'special',
+    type: 'mageType',
     description: () => 'A regular Spellmaon',
-    thumbnail: '',
+    thumbnail: 'images/upgrades/class-choice.png',
     effect: (player, underworld) => {
-      if (changeMageType) {
-        changeMageType('Spellmason', player, underworld);
-      } else {
-        console.error('Cannot change mage type, changeMageType() is undefined.');
-      }
+      changeMageType('Spellmason', player, underworld);
     },
     probability: 1,
     cost: { healthCost: 0, manaCost: 0 },
   },
   {
     title: 'Timemason',
-    type: 'special',
+    type: 'mageType',
     description: () => 'Think quickly! The Timemason takes damage every 2 seconds!',
-    thumbnail: '',
+    thumbnail: 'images/upgrades/class-choice.png',
     effect: (player, underworld) => {
-      if (changeMageType) {
-        changeMageType('Timemason', player, underworld);
-      } else {
-        console.error('Cannot change mage type, changeMageType() is undefined.');
-      }
+      changeMageType('Timemason', player, underworld);
     },
     probability: 1,
     cost: { healthCost: 0, manaCost: 0 },
   },
   {
     title: 'Bloodmason',
-    type: 'special',
+    type: 'mageType',
     description: () => 'The Bloodmason\'s spells cost health instead of mana!',
-    thumbnail: '',
+    thumbnail: 'images/upgrades/class-choice.png',
     effect: (player, underworld) => {
-      if (changeMageType) {
-        changeMageType('Bloodmason', player, underworld);
-      } else {
-        console.error('Cannot change mage type, changeMageType() is undefined.');
-      }
+      changeMageType('Bloodmason', player, underworld);
     },
     probability: 1,
     cost: { healthCost: 0, manaCost: 0 },
   },
   {
     title: 'Necromancer',
-    type: 'special',
+    type: 'mageType',
     description: () => 'Let your minions do the fighting! Get "Capture Soul" immediately, but it always costs 90% of your health to cast.',
-    thumbnail: '',
+    thumbnail: 'images/upgrades/class-choice.png',
     effect: (player, underworld) => {
-      if (changeMageType) {
-        changeMageType('Necromancer', player, underworld);
-      } else {
-        console.error('Cannot change mage type, changeMageType() is undefined.');
-      }
+      changeMageType('Necromancer', player, underworld);
     },
     probability: 1,
     cost: { healthCost: 0, manaCost: 0 },
   },
   {
     title: 'Archer',
-    type: 'special',
+    type: 'mageType',
     description: () => 'Get "Arrow" immediately and it remains the same manacost no matter how much you cast it!',
-    thumbnail: 'images/upgrades/class-archer.png',
+    thumbnail: 'images/upgrades/class-choice.png',
     effect: (player, underworld) => {
-      if (changeMageType) {
-        changeMageType('Archer', player, underworld);
-      } else {
-        console.error('Cannot change mage type, changeMageType() is undefined.');
-      }
+      changeMageType('Archer', player, underworld);
+    },
+    probability: 1,
+    cost: { healthCost: 0, manaCost: 0 },
+  },
+  {
+    title: 'Sniper',
+    type: 'mageType',
+    description: () => 'Double your cast range, half your stamina.',
+    thumbnail: 'images/upgrades/class-choice.png',
+    effect: (player, underworld) => {
+      changeMageType('Sniper', player, underworld);
+    },
+    probability: 1,
+    cost: { healthCost: 0, manaCost: 0 },
+  },
+  {
+    title: 'Cleric',
+    type: 'mageType',
+    description: () => 'A Blessings are half as expensive to cast.',
+    thumbnail: 'images/upgrades/class-choice.png',
+    effect: (player, underworld) => {
+      changeMageType('Cleric', player, underworld);
     },
     probability: 1,
     cost: { healthCost: 0, manaCost: 0 },

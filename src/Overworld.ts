@@ -86,12 +86,6 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
             for (let i = 0; i < globalThis.numberOfHotseatPlayers; i++) {
                 const config = globalThis.hotseatPlayerConfig?.[i];
                 const player = Player.create(clientId, underworld);
-                if (clientId == globalThis.clientId) {
-                    const mageType = storage.get(storage.STORAGE_ID_PLAYER_MAGE_TYPE) as Player.MageType;
-                    if (mageType) {
-                        Player.changeMageType(mageType, player, underworld);
-                    }
-                }
                 if (config) {
                     player.name = config.name;
                     player.color = config.color;

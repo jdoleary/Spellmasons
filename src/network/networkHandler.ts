@@ -597,7 +597,6 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
               type: MESSAGE_TYPES.PLAYER_CONFIG,
               color: storage.get(storage.STORAGE_ID_PLAYER_COLOR),
               name: storage.get(storage.STORAGE_ID_PLAYER_NAME),
-              mageType: storage.get(storage.STORAGE_ID_PLAYER_MAGE_TYPE),
             });
           }
         }

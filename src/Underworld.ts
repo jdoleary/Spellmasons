@@ -2386,7 +2386,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     // Special upgrades don't get added to the upgrade list because they just
     // execute some functionality on the client side
-    if (upgrade.type !== 'special') {
+    if (upgrade.type !== 'special' && upgrade.type !== 'mageType') {
       player.upgrades.push(upgrade);
     }
     if (player == globalThis.player) {
@@ -2547,7 +2547,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             }
           }
           // Allow reroll if there is more than 1 upgrade to choose from
-          if (numberOfUpgradesToChooseFrom > 1) {
+          if (numberOfUpgradesToChooseFrom > 1 && (!upgrades[0] || upgrades[0].type !== 'mageType')) {
             this.addRerollButton(player);
           }
         }
