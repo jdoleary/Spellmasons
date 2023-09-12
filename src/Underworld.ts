@@ -2563,8 +2563,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
               elPlusBtn.addEventListener('click', () => {
                 player.statPointsUnspent--;
                 if (stat == 'Good Looks') {
+                  const damageMultiplier = 0.1 / this.players.length;
                   // Deals 10% damage to all AI units
-                  this.units.filter(u => u.unitType == UnitType.AI).forEach(u => Unit.takeDamage(u, u.healthMax * 0.1, undefined, this, false));
+                  this.units.filter(u => u.unitType == UnitType.AI).forEach(u => Unit.takeDamage(u, u.healthMax * damageMultiplier, undefined, this, false));
                 } else {
 
                   playSFXKey('levelUp');

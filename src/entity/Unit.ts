@@ -837,6 +837,8 @@ export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | u
   unit.health -= amount;
   // Prevent health from going over maximum or under 0
   unit.health = Math.max(0, Math.min(unit.health, unit.healthMax));
+  // Ensure health is a whole number
+  unit.health = Math.floor(unit.health);
   // If the unit is actually taking damage (not taking 0 damage or being healed - (negative damage))
   if (!prediction) {
     if (amount > 0) {
