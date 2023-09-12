@@ -91,6 +91,7 @@ import { MANA_VAMPIRE_ID } from './entity/units/manaVampire';
 import { DARK_PRIEST_ID } from './entity/units/darkPriest';
 import { LAST_LEVEL_INDEX } from './config';
 import { unavailableUntilLevelIndexDifficultyModifier } from './Difficulty';
+import { View } from './views';
 
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
@@ -785,7 +786,7 @@ export default class Underworld {
 
     // Special: Handle timemason:
     const timemasons = this.players.filter(p => p.mageType == 'Timemason');
-    if (this.turn_phase == turn_phase.PlayerTurns && timemasons.length) {
+    if (this.turn_phase == turn_phase.PlayerTurns && timemasons.length && globalThis.view == View.Game) {
       timemasons.forEach(timemason => {
         if (timemason.unit.alive) {
 
