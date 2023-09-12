@@ -207,7 +207,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
     title: 'Spellmason',
     type: 'mageType',
     description: () => 'A regular Spellmaon',
-    thumbnail: 'images/upgrades/class-choice.png',
+    thumbnail: 'images/upgrades/class-spellmason.png',
     effect: (player, underworld) => {
       changeMageType('Spellmason', player, underworld);
     },
@@ -218,7 +218,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
     title: 'Timemason',
     type: 'mageType',
     description: () => 'Think quickly! The Timemason takes damage every 2 seconds!',
-    thumbnail: 'images/upgrades/class-choice.png',
+    thumbnail: 'images/upgrades/class-timemason.png',
     effect: (player, underworld) => {
       changeMageType('Timemason', player, underworld);
     },
@@ -229,7 +229,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
     title: 'Bloodmason',
     type: 'mageType',
     description: () => 'The Bloodmason\'s spells cost health instead of mana!',
-    thumbnail: 'images/upgrades/class-choice.png',
+    thumbnail: 'images/upgrades/class-bloodmason.png',
     effect: (player, underworld) => {
       changeMageType('Bloodmason', player, underworld);
     },
@@ -240,7 +240,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
     title: 'Necromancer',
     type: 'mageType',
     description: () => 'Let your minions do the fighting! Get "Capture Soul" immediately, but it always costs 90% of your health to cast.',
-    thumbnail: 'images/upgrades/class-choice.png',
+    thumbnail: 'images/upgrades/class-necromancer.png',
     effect: (player, underworld) => {
       changeMageType('Necromancer', player, underworld);
     },
@@ -251,7 +251,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
     title: 'Archer',
     type: 'mageType',
     description: () => 'Get "Arrow" immediately and it remains the same manacost no matter how much you cast it!',
-    thumbnail: 'images/upgrades/class-choice.png',
+    thumbnail: 'images/upgrades/class-archer.png',
     effect: (player, underworld) => {
       changeMageType('Archer', player, underworld);
     },
@@ -262,7 +262,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
     title: 'Sniper',
     type: 'mageType',
     description: () => 'Double your cast range, half your stamina.',
-    thumbnail: 'images/upgrades/class-choice.png',
+    thumbnail: 'images/upgrades/class-sniper.png',
     effect: (player, underworld) => {
       changeMageType('Sniper', player, underworld);
     },
@@ -273,7 +273,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
     title: 'Cleric',
     type: 'mageType',
     description: () => 'A Blessings are half as expensive to cast.',
-    thumbnail: 'images/upgrades/class-choice.png',
+    thumbnail: 'images/upgrades/class-cleric.png',
     effect: (player, underworld) => {
       changeMageType('Cleric', player, underworld);
     },
@@ -284,7 +284,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
     title: 'Gambler',
     type: 'mageType',
     description: () => 'Gets an extra choice when choosing Spells',
-    thumbnail: 'images/upgrades/class-choice.png',
+    thumbnail: 'images/upgrades/class-gambler.png',
     effect: (player, underworld) => {
       changeMageType('Gambler', player, underworld);
     },

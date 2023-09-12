@@ -1,8 +1,6 @@
 # Critical Path
 - Next Feature Update (v1.19)
     - Mage Classes
-        - Better UI
-        - Images for upgrade
         - Balancing
     - i18n
         - Translate new perf option for particles in menu
