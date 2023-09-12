@@ -12,6 +12,7 @@ interface FText {
   vy: number;
   alpha: number;
   valpha: number;
+  aalpha: number;
   pixiText: PIXI.Text;
   keepWithinCameraBounds: boolean;
 }
@@ -21,13 +22,19 @@ interface FloatingTextInsructions {
   container?: PIXI.Container;
   style?: Partial<PIXI.ITextStyle>;
   keepWithinCameraBounds?: boolean;
+  // Must be a negative number, determines how quickly the
+  // floating text disappears
+  valpha?: number;
+  aalpha?: number;
 }
 export default function floatingText({
   coords,
   text,
   container = containerFloatingText,
   style = { fill: 'white' },
-  keepWithinCameraBounds = true
+  keepWithinCameraBounds = true,
+  valpha = -0.2,
+  aalpha = 0.003,
 }: FloatingTextInsructions): Promise<void> {
   if (!(globalThis.pixi && app && container)) {
     return Promise.resolve();
@@ -50,7 +57,8 @@ export default function floatingText({
     pixiText,
     vy: 1,
     alpha: 1,
-    valpha: -0.2,
+    valpha,
+    aalpha,
     keepWithinCameraBounds,
   };
   container.addChild(pixiText);
@@ -63,7 +71,7 @@ function floatAway(instance: FText, resolve: (value: void) => void) {
     instance.dy -= instance.vy;
     instance.vy = instance.vy * 0.97;
     instance.alpha -= Math.max(instance.valpha, 0);
-    instance.valpha += 0.003;
+    instance.valpha += instance.aalpha;
     if (instance.keepWithinCameraBounds) {
       const adjustedPosition = withinCameraBounds(instance.startPosition, instance.pixiText.width / 2);
       instance.pixiText.y = adjustedPosition.y + instance.dy;

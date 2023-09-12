@@ -777,7 +777,13 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
             underworld,
             prediction
           );
+          const givenName = ['Ted', 'Joe', 'Phil'][i] || '';
+          const dialogue = ['Nooooooo!', 'My brother!', 'How dare you!'][i];
+          newBossmason.name = `Deathmason\'s Brother ${givenName}`;
           skyBeam(newBossmason);
+          if (dialogue) {
+            floatingText({ coords: newBossmason, text: dialogue, valpha: 0.005, aalpha: 0 })
+          }
         }
       }
 
