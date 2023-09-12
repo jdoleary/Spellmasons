@@ -825,28 +825,28 @@ export function updateTooltipContent(underworld: Underworld) {
             const expNumerator = underworld.enemiesKilled - lastLevelKills;
             playerSpecificInfo += `<br/>${i18n('Experience')} ${expNumerator}/${expDenominator}<div><progress id="experience-bar" max="${expDenominator}" value="${expNumerator}"></progress></div>`;
 
-            playerSpecificInfo += `<br/><h3>${i18n('Perks')}</h3>`;
-            const everyLevel = player.attributePerks.filter(p => p.when == 'everyLevel');
-            const everyTurn = player.attributePerks.filter(p => p.when == 'everyTurn');
-            // Add perk descriptions to player
-            playerSpecificInfo += `${i18n('Every level')}\n`;
-            for (let perk of everyLevel) {
-              let perkString = getPerkText(perk, true).trim() + '\n';
-              // Simplify for tooltip
-              perkString = perkString.split('single-turn ').join('');
-              playerSpecificInfo += perkString;
-            }
-            playerSpecificInfo += `${i18n('Every turn')}\n`;
-            for (let perk of everyTurn) {
-              let perkString = getPerkText(perk, true).trim();
-              // Remove newline between chance and attribute when displayed in the tooltip so it displays on one line
-              // https://stackoverflow.com/a/10805198
-              perkString = perkString.replace(/[\n\r]/g, '');
-              // Simplify for tooltip
-              perkString = perkString.split('single-turn ').join('');
+            // playerSpecificInfo += `<br/><h3>${i18n('Perks')}</h3>`;
+            // const everyLevel = player.attributePerks.filter(p => p.when == 'everyLevel');
+            // const everyTurn = player.attributePerks.filter(p => p.when == 'everyTurn');
+            // // Add perk descriptions to player
+            // playerSpecificInfo += `${i18n('Every level')}\n`;
+            // for (let perk of everyLevel) {
+            //   let perkString = getPerkText(perk, true).trim() + '\n';
+            //   // Simplify for tooltip
+            //   perkString = perkString.split('single-turn ').join('');
+            //   playerSpecificInfo += perkString;
+            // }
+            // playerSpecificInfo += `${i18n('Every turn')}\n`;
+            // for (let perk of everyTurn) {
+            //   let perkString = getPerkText(perk, true).trim();
+            //   // Remove newline between chance and attribute when displayed in the tooltip so it displays on one line
+            //   // https://stackoverflow.com/a/10805198
+            //   perkString = perkString.replace(/[\n\r]/g, '');
+            //   // Simplify for tooltip
+            //   perkString = perkString.split('single-turn ').join('');
 
-              playerSpecificInfo += perkString + '\n';
-            }
+            //   playerSpecificInfo += perkString + '\n';
+            // }
             playerSpecificInfo +=
               '<h3>Spells</h3>' +
               player.inventory.filter(x => x !== '').join(', ');
