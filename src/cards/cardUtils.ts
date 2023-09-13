@@ -144,6 +144,7 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
         if (caster.mageType == 'Bloodmason') {
             if (card.category == CardCategory.Blessings) {
                 cardCost.healthCost = caster.unit.health;
+                cardCost.manaCost = 0;
             } else {
                 cardCost.healthCost = Math.ceil(cardCost.manaCost / 10);
                 cardCost.manaCost = 0;

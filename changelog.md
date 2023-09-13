@@ -15,6 +15,7 @@ art: Fix target similar and connect lines
     animating father than they should
 fix: Priest should resurrect ANY dead unit into their faction
     not just corpses of allies
+UI: Add victory stats to class selections
 
 ## Spellmasons Update v1.18
 - balance: Prevent deathmason from purifying self
