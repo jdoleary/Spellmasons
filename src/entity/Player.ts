@@ -101,6 +101,10 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
   if (!player || !underworld) {
     console.error('Cannot set mage type', player, underworld);
   } else {
+    if (player == globalThis.player) {
+      // Turn off adminPickMageType
+      globalThis.adminPickMageType = false;
+    }
     console.log(`Player ${player.name} mageType changed to`, type);
     player.mageType = type;
     switch (type) {

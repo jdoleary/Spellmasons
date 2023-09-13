@@ -1161,6 +1161,20 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       domQueryContainer: '#menu-global'
     },
     {
+      label: 'Pick Class',
+      action: () => {
+        if (!overworld.underworld) {
+          console.error('Cannot "Admin pick class", underworld does not exist');
+          return;
+        }
+        globalThis.devAutoPickUpgrades = false;
+        globalThis.adminPickMageType = true;
+        overworld.underworld.adminShowMageTypeSelect();
+      },
+      supportInMultiplayer: false,
+      domQueryContainer: '#menu-global'
+    },
+    {
       label: '✖️ Delete',
       action: ({ selectedUnitid }) => {
         if (!overworld.underworld) {

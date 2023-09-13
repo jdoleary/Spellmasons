@@ -260,4 +260,5 @@ declare global {
     // means than by pickup up scrolls
     var freeSpells: string[];
     var mageTypes: Array<Player.MageType>;
+    var adminPickMageType: boolean | undefined;
 }
