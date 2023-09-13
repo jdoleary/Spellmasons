@@ -41,7 +41,7 @@ interface Stats {
   gameStartTime: number;
   totalKills: number;
 }
-export type MageType = 'Spellmason' | 'Timemason' | 'Bloodmason' | 'Necromancer' | 'Archer' | 'Sniper' | 'Cleric' | 'Gambler';
+export type MageType = 'Spellmason' | 'Timemason' | 'Bloodmason' | 'Necromancer' | 'Archer' | 'Far Gazer' | 'Cleric' | 'Gambler';
 // This array allows the UI to select a mageType, mageTypes not in this array
 // will not appear in the UI
 globalThis.mageTypes = [
@@ -50,7 +50,7 @@ globalThis.mageTypes = [
   'Bloodmason',
   'Necromancer',
   'Archer',
-  'Sniper',
+  'Far Gazer',
   'Cleric',
   'Gambler'
 ];
@@ -143,7 +143,7 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
           }
         }
         break;
-      case 'Sniper':
+      case 'Far Gazer':
         {
           player.unit.attackRange = 2 * player.unit.attackRange;
           player.unit.staminaMax = Math.floor(player.unit.staminaMax / 2);
