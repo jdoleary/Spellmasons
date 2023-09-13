@@ -2430,10 +2430,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         playSFXKey('levelUp');
       }
       const statBumpAmount: { [key: string]: number } = {
-        'attackRange': 24,
-        'manaMax': 10,
-        'healthMax': 10,
-        'staminaMax': 16
+        'attackRange': 8,
+        'manaMax': 5,
+        'healthMax': 8,
+        'staminaMax': 10
       }
       if (stat && player.unit[stat as keyof Unit.IUnit]) {
         const statBump = statBumpAmount[stat] || 10;
