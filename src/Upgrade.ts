@@ -228,7 +228,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
   {
     title: 'Bloodmason',
     type: 'mageType',
-    description: () => 'The Bloodmason\'s spells cost health instead of mana!',
+    description: () => 'Spells cost health instead of mana\nBlessings cost 100% health to cast',
     thumbnail: 'images/upgrades/class-bloodmason.png',
     effect: (player, underworld) => {
       changeMageType('Bloodmason', player, underworld);
@@ -239,7 +239,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
   {
     title: 'Necromancer',
     type: 'mageType',
-    description: () => 'Let your minions do the fighting! Get "Capture Soul" immediately, but it always costs 90% of your health to cast.',
+    description: () => '+ "Capture Soul"\n"Capture Soul" costs 90% of your max health per cast',
     thumbnail: 'images/upgrades/class-necromancer.png',
     effect: (player, underworld) => {
       changeMageType('Necromancer', player, underworld);
@@ -250,7 +250,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
   {
     title: 'Archer',
     type: 'mageType',
-    description: () => 'Get "Arrow" immediately and it remains the same manacost no matter how much you cast it!',
+    description: () => '+ "Arrow"\n"Arrow" mana cost does not increase as it is cast',
     thumbnail: 'images/upgrades/class-archer.png',
     effect: (player, underworld) => {
       changeMageType('Archer', player, underworld);
@@ -261,7 +261,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
   {
     title: 'Sniper',
     type: 'mageType',
-    description: () => 'Double your cast range, half your stamina.',
+    description: () => 'Double cast range\nHalf stamina',
     thumbnail: 'images/upgrades/class-sniper.png',
     effect: (player, underworld) => {
       changeMageType('Sniper', player, underworld);
@@ -272,7 +272,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
   {
     title: 'Cleric',
     type: 'mageType',
-    description: () => 'Get "Heal" spell.  Blessings are half as expensive to cast.',
+    description: () => '+ "Heal"\nBlessings are half as expensive to cast',
     thumbnail: 'images/upgrades/class-cleric.png',
     effect: (player, underworld) => {
       changeMageType('Cleric', player, underworld);
