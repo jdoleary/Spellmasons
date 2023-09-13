@@ -1,3 +1,21 @@
+## Spellmasons Update v1.19
+content: Add Mage Classes
+fix: Bug where ancients
+    spend mana per target instead of per cast
+    which caused their mana to go negative at times.
+    Thanks @Expresso Depresso for finding this bug!
+content: Revise per level upgrades to be stats points rather than perks
+content: Add 2nd stage of Deathmason battle
+UI: Make level up progress bar in tooltip
+src: Add perf option to disable emitters
+    Thanks to @XzeroAir on Discord
+ref: Change to lvl up instead of scroll pickups
+fix: Undesirable smoke on pickups
+art: Fix target similar and connect lines
+    animating father than they should
+fix: Priest should resurrect ANY dead unit into their faction
+    not just corpses of allies
+
 ## Spellmasons Update v1.18
 - balance: Prevent deathmason from purifying self
 - balance: change decoy health from 20 to 70

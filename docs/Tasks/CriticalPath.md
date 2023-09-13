@@ -1,6 +1,5 @@
 # Critical Path
 - Next Feature Update (v1.19)
-    - Send pointsSpend choice over network so "Good Looks" is networked
     - Mage Classes
         - Balancing
     - i18n
