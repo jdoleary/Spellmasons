@@ -272,7 +272,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
   {
     title: 'Cleric',
     type: 'mageType',
-    description: () => 'A Blessings are half as expensive to cast.',
+    description: () => 'Get "Heal" spell.  Blessings are half as expensive to cast.',
     thumbnail: 'images/upgrades/class-cleric.png',
     effect: (player, underworld) => {
       changeMageType('Cleric', player, underworld);

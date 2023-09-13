@@ -21,6 +21,7 @@ import { lightenColor } from '../graphics/ui/colorUtil';
 import { AttributePerk } from '../Perk';
 import { setPlayerNameUI } from '../PlayerUtils';
 import { arrowCardId } from '../cards/arrow';
+import { heal_id } from '../cards/add_heal';
 
 const elInGameLobby = document.getElementById('in-game-lobby') as (HTMLElement | undefined);
 const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
@@ -123,6 +124,19 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
             underworld.chooseUpgrade(player, upgrade);
             if (player == globalThis.player) {
               globalThis.freeSpells.push(captureSoul.id);
+            }
+          } else {
+            console.error('Could not find upgrade for', type);
+          }
+        }
+        break;
+      case 'Cleric':
+        {
+          const upgrade = Upgrade.getUpgradeByTitle(heal_id);
+          if (upgrade) {
+            underworld.chooseUpgrade(player, upgrade);
+            if (player == globalThis.player) {
+              globalThis.freeSpells.push(heal_id);
             }
           } else {
             console.error('Could not find upgrade for', type);

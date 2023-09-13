@@ -6,12 +6,12 @@ import { playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
-const id = 'heal';
+export const heal_id = 'heal';
 const healAmount = 30;
 
 const spell: Spell = {
   card: {
-    id,
+    id: heal_id,
     category: CardCategory.Blessings,
     sfx: 'heal',
     supportQuantity: true,
