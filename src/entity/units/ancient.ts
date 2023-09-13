@@ -45,12 +45,12 @@ const unit: UnitSource = {
   },
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     // Attack
-    if (attackTargets && attackTargets.length && canAttackTarget) {
+    if (attackTargets && attackTargets.length && canAttackTarget && unit.mana >= unit.manaCostToCast) {
       let promises = [];
+      unit.mana -= unit.manaCostToCast;
       for (let i = 0; i < numberOfTargets; i++) {
         const attackTarget = attackTargets[i];
         if (attackTarget) {
-          unit.mana -= unit.manaCostToCast;
           // Attack or move, not both; so clear their existing path
           unit.path = undefined;
           Unit.orient(unit, attackTarget);
