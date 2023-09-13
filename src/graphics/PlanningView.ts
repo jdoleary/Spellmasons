@@ -818,6 +818,9 @@ export function updateTooltipContent(underworld: Underworld) {
           const player = underworld.players.find((p) => p.unit === globalThis.selectedUnit);
           if (player) {
             playerSpecificInfo = '';
+            if (player.mageType) {
+              playerSpecificInfo += `<br/>${player.mageType}</div>`;
+            }
             playerSpecificInfo += `<br/>${i18n('Level')} ${underworld.cardDropsDropped}</div>`;
             const lastLevelKills = underworld.calculateKillsNeededForLevel(underworld.cardDropsDropped);
             const nextLevelKills = underworld.getNumberOfEnemyKillsNeededForNextLevelUp();

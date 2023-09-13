@@ -100,7 +100,7 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
   if (!player || !underworld) {
     console.error('Cannot set mage type', player, underworld);
   } else {
-    console.log('Player mageType changed to', type);
+    console.log(`Player ${player.name} mageType changed to`, type);
     player.mageType = type;
     switch (type) {
       case 'Archer':
@@ -108,7 +108,9 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
           const upgrade = Upgrade.getUpgradeByTitle(arrowCardId);
           if (upgrade) {
             underworld.chooseUpgrade(player, upgrade);
-            globalThis.freeSpells.push(arrowCardId);
+            if (player == globalThis.player) {
+              globalThis.freeSpells.push(arrowCardId);
+            }
           } else {
             console.error('Could not find arrow upgrade for', type);
           }
@@ -119,7 +121,9 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
           const upgrade = Upgrade.getUpgradeByTitle(captureSoul.id);
           if (upgrade) {
             underworld.chooseUpgrade(player, upgrade);
-            globalThis.freeSpells.push(captureSoul.id);
+            if (player == globalThis.player) {
+              globalThis.freeSpells.push(captureSoul.id);
+            }
           } else {
             console.error('Could not find upgrade for', type);
           }

@@ -33,5 +33,6 @@ export enum MESSAGE_TYPES {
   // Allows a client to inhabit a disconnected player character
   JOIN_GAME_AS_PLAYER,
   SET_MODS,
-  SET_GAME_MODE
+  SET_GAME_MODE,
+  SPEND_STAT_POINT,
 }

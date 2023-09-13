@@ -142,6 +142,22 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         console.error('Attempted to aquire pickup but could not find it in list');
       }
       break;
+    case MESSAGE_TYPES.SPEND_STAT_POINT:
+      {
+        const { stat } = payload;
+        if (stat) {
+          const fromPlayer = underworld.players.find(p => p.clientId === fromClient)
+          if (fromPlayer) {
+            underworld.spendStatPoint(stat, fromPlayer);
+          } else {
+            console.error('SPEND_STAT_POINT, missing fromPlayer', fromClient);
+          }
+        } else {
+          console.error('Missing stat in payload', payload);
+        }
+
+        break;
+      }
     case MESSAGE_TYPES.PING:
       pingSprite({ coords: payload as Vec2, color: underworld.players.find(p => p.clientId == d.fromClient)?.color });
       break;
@@ -544,7 +560,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         // computer
         return;
       }
-      const { color, colorMagic, name, lobbyReady, mageType } = payload;
+      const { color, colorMagic, name, lobbyReady } = payload;
       if (fromPlayer) {
         if (lobbyReady !== undefined) {
           fromPlayer.lobbyReady = lobbyReady;
@@ -570,9 +586,6 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         }
         setPlayerNameUI(fromPlayer);
         Player.setPlayerRobeColor(fromPlayer, color, colorMagic);
-        if (mageType) {
-          Player.changeMageType(mageType, fromPlayer, underworld);
-        }
         Player.syncLobby(underworld);
         underworld.tryRestartTurnPhaseLoop();
       } else {

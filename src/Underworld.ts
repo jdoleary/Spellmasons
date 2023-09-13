@@ -2417,6 +2417,53 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // .filter out freeSpells because they shouldn't count against upgrades available since they are given to you
     return this.cardDropsDropped + config.STARTING_CARD_COUNT - player.inventory.filter(spellId => (globalThis.freeSpells || []).indexOf(spellId) == -1).length;
   }
+  spendStatPoint(stat: string, player: Player.IPlayer) {
+    const isCurrentPlayer = player == globalThis.player;
+    player.statPointsUnspent--;
+    if (stat == 'Good Looks') {
+      const damageMultiplier = 0.1 / this.players.length;
+      // Deals 10% damage to all AI units
+      this.units.filter(u => u.unitType == UnitType.AI).forEach(u => Unit.takeDamage(u, u.healthMax * damageMultiplier, undefined, this, false));
+    } else {
+
+      if (isCurrentPlayer) {
+        playSFXKey('levelUp');
+      }
+      const statBumpAmount: { [key: string]: number } = {
+        'attackRange': 24,
+        'manaMax': 10,
+        'healthMax': 10,
+        'staminaMax': 16
+      }
+      if (stat && player.unit[stat as keyof Unit.IUnit]) {
+        const statBump = statBumpAmount[stat] || 10;
+        // @ts-ignore
+        player.unit[stat as keyof Unit.IUnit] += statBump;
+        // @ts-ignore
+        if (stat.endsWith('Max') && player.unit[stat.replace('Max', '')]) {
+          // @ts-ignore
+          player.unit[stat.replace('Max', '')] += statBump;
+
+        }
+        if (isCurrentPlayer) {
+          // Now that the player unit's properties have changed, sync the new
+          // state with the player's predictionUnit so it is properly
+          // refelcted in the bar
+          // (note: this would be auto corrected on the next mouse move anyway)
+          this.syncPlayerPredictionUnitOnly();
+          Unit.syncPlayerHealthManaUI(this);
+        }
+      }
+    }
+    if (isCurrentPlayer) {
+      // Clear special showWalkRope for attackRange hover
+      keyDown.showWalkRope = false;
+      // Clear upgrades
+      document.body?.classList.toggle(showUpgradesClassName, false);
+      this.showUpgrades();
+    }
+
+  }
 
   showUpgrades() {
     // Remove additional pickups once upgrades are shown because it will allow players to pick all upgrades on map
@@ -2521,7 +2568,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             }
             const statValueModifier = (stat: string, value: number | undefined) => {
               if (value === undefined) {
-                console.error('Undefined stat value', stat);
+                // Good looks is an effect on the game and not a value on the Unit object
+                if (stat !== 'Good Looks') {
+                  console.error('Undefined stat value', stat);
+                }
                 return '';
               }
               if (stat == 'attackRange') {
@@ -2561,43 +2611,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
               }
               elPlusBtn.addEventListener('click', () => {
-                player.statPointsUnspent--;
-                if (stat == 'Good Looks') {
-                  const damageMultiplier = 0.1 / this.players.length;
-                  // Deals 10% damage to all AI units
-                  this.units.filter(u => u.unitType == UnitType.AI).forEach(u => Unit.takeDamage(u, u.healthMax * damageMultiplier, undefined, this, false));
-                } else {
-
-                  playSFXKey('levelUp');
-                  const statBumpAmount: { [key: string]: number } = {
-                    'attackRange': 24,
-                    'manaMax': 10,
-                    'healthMax': 10,
-                    'staminaMax': 16
-                  }
-                  if (stat && player.unit[stat as keyof Unit.IUnit]) {
-                    const statBump = statBumpAmount[stat] || 10;
-                    // @ts-ignore
-                    player.unit[stat as keyof Unit.IUnit] += statBump;
-                    // @ts-ignore
-                    if (stat.endsWith('Max') && player.unit[stat.replace('Max', '')]) {
-                      // @ts-ignore
-                      player.unit[stat.replace('Max', '')] += statBump;
-
-                    }
-                    // Now that the player unit's properties have changed, sync the new
-                    // state with the player's predictionUnit so it is properly
-                    // refelcted in the bar
-                    // (note: this would be auto corrected on the next mouse move anyway)
-                    this.syncPlayerPredictionUnitOnly();
-                    Unit.syncPlayerHealthManaUI(this);
-                  }
-                }
-                // Clear special showWalkRope for attackRange hover
-                keyDown.showWalkRope = false;
-                // Clear upgrades
-                document.body?.classList.toggle(showUpgradesClassName, false);
-                this.showUpgrades();
+                this.pie.sendData({
+                  type: MESSAGE_TYPES.SPEND_STAT_POINT,
+                  stat
+                })
               });
               elPlusBtn.addEventListener('mouseenter', (e) => {
                 playSFXKey('click');
