@@ -222,7 +222,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
   {
     title: 'Spellmason',
     type: 'mageType',
-    description: () => 'A regular Spellmaon',
+    description: () => 'Get an additional Stat point to upgrade every level',
     thumbnail: 'images/upgrades/class-spellmason.png',
     effect: (player, underworld) => {
       changeMageType('Spellmason', player, underworld);

@@ -1722,7 +1722,7 @@ export default class Underworld {
       // starting on level 2 (levelIndex 1)
       if (this.levelIndex > 0) {
         for (let p of this.players) {
-          p.statPointsUnspent += 3;
+          p.statPointsUnspent += p.mageType === 'Spellmason' ? 4 : 3;
         }
       }
       // Set the first turn phase
