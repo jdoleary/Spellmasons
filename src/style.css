@@ -2143,3 +2143,18 @@ body.dragging-card .floating-card-holder .empty-slot {
 .pick-stats {
   color: white;
 }
+
+.mageType-wins {
+  font-size: 24px;
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  background-color: #e7d1a6;
+  margin: 0 auto;
+  left: 50%;
+  transform: translate(-50%, +25%);
+  border-radius: 5px;
+  border: 4px solid #602c60;
+  padding: 4px;
+
+}

@@ -1,4 +1,5 @@
 import { areCookiesAllowed } from "./cookieConsent";
+import { MageType } from "./entity/Player";
 import { robeColors } from "./graphics/ui/colors";
 import { fullyUpdateControls } from "./graphics/ui/keyMapping";
 export const STORAGE_OPTIONS = 'OPTIONS';
@@ -151,7 +152,12 @@ export function get(key: string): string | null {
         console.log(`Could not retrieve "${key}" from storage, without cookie consent`);
         return null;
     }
-
+}
+export function getStoredMageTypeWinsKey(mageType: MageType): string {
+    return `${mageType || ''}-wins`;
+}
+export function getStoredMageTypeFarthestLevelKey(mageType: MageType): string {
+    return `${mageType || ''}-level`;
 }
 
 globalThis.setCinematicCameraEnabled = (enabled: boolean, saveSetting: boolean = true) => {

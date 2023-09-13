@@ -1,9 +1,10 @@
 import seedrandom from 'seedrandom';
+import * as storage from "./storage";
 import { calculateCostForSingleCard, type CardCost } from './cards/cardUtils';
 import { cardRarityAsString, getCardRarityColor } from './graphics/ui/CardUI';
 import { chooseObjectWithProbability } from './jmath/rand';
 import { MESSAGE_TYPES } from './types/MessageTypes';
-import { IPlayer, changeMageType } from './entity/Player';
+import { IPlayer, MageType, changeMageType } from './entity/Player';
 import Underworld from './Underworld';
 import { CardCategory, CardRarity, probabilityMap } from './types/commonTypes';
 import { poisonCardId } from './cards/poison';
@@ -167,6 +168,20 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
   descriptionText.innerHTML = upgrade.description(player).trimStart();
   desc.appendChild(descriptionText);
 
+  if (upgrade.type == 'mageType') {
+    const mageTypeWinsKey = storage.getStoredMageTypeWinsKey(upgrade.title as MageType);
+    const currentMageTypeWins = parseInt(storageGet(mageTypeWinsKey) || '0');
+    const mageTypeFarthestLevel = storage.getStoredMageTypeFarthestLevelKey(upgrade.title as MageType);
+    const currentMageTypeFarthestLevel = storageGet(mageTypeFarthestLevel) || '0';
+    // winsEl.innerHTML = `👑${currentMageTypeWins}`;
+    if (currentMageTypeWins > 0 || currentMageTypeFarthestLevel !== '0') {
+      const winsEl = document.createElement('div');
+      winsEl.classList.add('mageType-wins');
+      winsEl.innerHTML = `${currentMageTypeWins > 0 ? `🏆${currentMageTypeWins} ` : ''}${currentMageTypeFarthestLevel !== '0' ? `🗺️${currentMageTypeFarthestLevel}` : ''}`;
+      element.appendChild(winsEl);
+    }
+  }
+
   elCardInner.appendChild(desc);
   element.addEventListener('click', (e) => {
     globalThis.timeLastChoseUpgrade = Date.now();
@@ -259,12 +274,12 @@ export const upgradeMageClassSource: IUpgrade[] = [
     cost: { healthCost: 0, manaCost: 0 },
   },
   {
-    title: 'Sniper',
+    title: 'Far Gazer',
     type: 'mageType',
     description: () => 'Double cast range\nHalf stamina',
     thumbnail: 'images/upgrades/class-sniper.png',
     effect: (player, underworld) => {
-      changeMageType('Sniper', player, underworld);
+      changeMageType('Far Gazer', player, underworld);
     },
     probability: 1,
     cost: { healthCost: 0, manaCost: 0 },

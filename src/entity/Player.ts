@@ -448,6 +448,11 @@ export function syncLobby(underworld: Underworld) {
 }
 export function enterPortal(player: IPlayer, underworld: Underworld) {
   console.log(`Player ${player.clientId}/${player.name} entered portal.`)
+
+  // Record Progress
+  const mageTypeFarthestLevel = storage.getStoredMageTypeFarthestLevelKey(player.mageType || 'Spellmason');
+  storageSet(mageTypeFarthestLevel, underworld.getLevelText());
+
   Image.hide(player.unit.image);
   // Make sure to resolve the moving promise once they enter the portal or else 
   // the client queue will get stuck

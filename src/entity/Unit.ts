@@ -1,4 +1,5 @@
 import type * as PIXI from 'pixi.js';
+import * as storage from "../storage";
 import * as config from '../config';
 import * as Image from '../graphics/Image';
 import * as math from '../jmath/math';
@@ -749,6 +750,9 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   // If there is only 1 bossmason, when it dies, spawn 3 more:
   if (underworld.units.filter(u => u.unitSourceId == bossmasonUnitId).length == 1) {
     if (unit.unitSourceId == bossmasonUnitId) {
+      const mageTypeWinsKey = storage.getStoredMageTypeWinsKey(player?.mageType || 'Spellmason');
+      const currentMageTypeWins = parseInt(storageGet(mageTypeWinsKey) || '0');
+      storageSet(mageTypeWinsKey, (currentMageTypeWins + 1).toString());
       (prediction
         ? underworld.unitsPrediction
         : underworld.units).filter(u => u.unitType == UnitType.AI).forEach(u => die(u, underworld, prediction));
