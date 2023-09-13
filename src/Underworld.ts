@@ -803,8 +803,9 @@ export default class Underworld {
           if (timemason.timetracker > time_to_dmg_ms) {
             //@ts-ignore Special logic for timemason, does not need to be persisted
             timemason.timetracker -= time_to_dmg_ms;
+            timemason.unit.mana += 1;
             Unit.takeDamage(timemason.unit, config.TIMEMASON_DAMAGE_AMOUNT, undefined, this, false);
-            floatingText({ coords: timemason.unit, text: '-1 hp' });
+            floatingText({ coords: timemason.unit, text: '-1 hp +1 mana' });
           }
         }
       })

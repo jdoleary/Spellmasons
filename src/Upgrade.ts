@@ -233,7 +233,8 @@ export const upgradeMageClassSource: IUpgrade[] = [
   {
     title: 'Timemason',
     type: 'mageType',
-    description: () => `Take ${config.TIMEMASON_DAMAGE_AMOUNT} damage every 2 seconds`,
+    description: () => `Take ${config.TIMEMASON_DAMAGE_AMOUNT} damage every 2 seconds
+Gain 1 mana every 2 seconds`,
     thumbnail: 'images/upgrades/class-timemason.png',
     effect: (player, underworld) => {
       changeMageType('Timemason', player, underworld);
