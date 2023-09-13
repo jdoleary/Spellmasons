@@ -1,4 +1,5 @@
 import seedrandom from 'seedrandom';
+import * as config from './config';
 import * as storage from "./storage";
 import { calculateCostForSingleCard, type CardCost } from './cards/cardUtils';
 import { cardRarityAsString, getCardRarityColor } from './graphics/ui/CardUI';
@@ -33,7 +34,7 @@ export interface IUpgrade {
 }
 export function isPickingClass(player: IPlayer): boolean {
   // undefined mageType means they haven't picked yet
-  return (player.upgrades.length >= 5 && player.mageType == undefined);
+  return (player.upgrades.length >= 0 && player.mageType == undefined);
 }
 // Chooses a random card based on the card's probabilities
 // minimumProbability ensures that super rare cards won't be presented too early on
@@ -232,7 +233,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
   {
     title: 'Timemason',
     type: 'mageType',
-    description: () => 'Think quickly! The Timemason takes damage every 2 seconds!',
+    description: () => `Take ${config.TIMEMASON_DAMAGE_AMOUNT} damage every 2 seconds`,
     thumbnail: 'images/upgrades/class-timemason.png',
     effect: (player, underworld) => {
       changeMageType('Timemason', player, underworld);
@@ -254,7 +255,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
   {
     title: 'Necromancer',
     type: 'mageType',
-    description: () => '+ "Capture Soul"\n"Capture Soul" costs 90% of your max health per cast',
+    description: () => 'Gain "Capture Soul"\n"Capture Soul" costs 90% of your max health per cast',
     thumbnail: 'images/upgrades/class-necromancer.png',
     effect: (player, underworld) => {
       changeMageType('Necromancer', player, underworld);
@@ -265,7 +266,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
   {
     title: 'Archer',
     type: 'mageType',
-    description: () => '+ "Arrow"\n"Arrow" mana cost does not increase as it is cast',
+    description: () => 'Gain "Arrow"\n"Arrow" mana cost does not increase as it is cast',
     thumbnail: 'images/upgrades/class-archer.png',
     effect: (player, underworld) => {
       changeMageType('Archer', player, underworld);
@@ -287,7 +288,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
   {
     title: 'Cleric',
     type: 'mageType',
-    description: () => '+ "Heal"\nBlessings are half as expensive to cast',
+    description: () => 'Gain "Heal"\nBlessings are half as expensive to cast',
     thumbnail: 'images/upgrades/class-cleric.png',
     effect: (player, underworld) => {
       changeMageType('Cleric', player, underworld);
@@ -298,7 +299,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
   {
     title: 'Gambler',
     type: 'mageType',
-    description: () => 'Gets an extra choice when choosing Spells',
+    description: () => 'Get an extra choice when choosing Spells',
     thumbnail: 'images/upgrades/class-gambler.png',
     effect: (player, underworld) => {
       changeMageType('Gambler', player, underworld);
