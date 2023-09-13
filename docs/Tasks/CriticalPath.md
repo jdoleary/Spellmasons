@@ -2,6 +2,7 @@
 - Next Feature Update (v1.19)
     - Mage Classes
         - Balancing
+            - Either Bloodmason spells are too cheap or stats points for health is too powerful
     - i18n
         - Translate new perf option for particles in menu
         - change 'Kills until level up' to 'Experience'
