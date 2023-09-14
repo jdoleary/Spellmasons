@@ -5,6 +5,7 @@ import { raceTimeout } from "../Promise";
 import * as Image from '../graphics/Image';
 import { containerProjectiles, containerSpells } from "../graphics/PixiUtils";
 import * as captureSoul from '../cards/capture_soul';
+import * as lastWill from '../cards/lastwill';
 import { Container } from "pixi.js";
 import { chooseOneOf } from "../jmath/rand";
 import Underworld from "../Underworld";
@@ -142,11 +143,16 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
     // Handle unique changes due to player mageType
     if (caster) {
         if (caster.mageType == 'Bloodmason') {
-            if (card.category == CardCategory.Blessings) {
+            if (card.id === lastWill.id) {
+                // Just for fun, allow Bloodmason to still cast lastWill at a cost of 50%
+                // of their health.  it's a gamble!
+                cardCost.healthCost = Math.max(1, Math.floor(caster.unit.health / 2));
+                cardCost.manaCost = 0;
+            } else if (card.category == CardCategory.Blessings) {
                 cardCost.healthCost = caster.unit.health;
                 cardCost.manaCost = 0;
             } else {
-                cardCost.healthCost = Math.ceil(cardCost.manaCost / 10);
+                cardCost.healthCost = Math.ceil(cardCost.manaCost / 5);
                 cardCost.manaCost = 0;
             }
         } else if (caster.mageType == 'Necromancer' && card.id == captureSoul.id) {
