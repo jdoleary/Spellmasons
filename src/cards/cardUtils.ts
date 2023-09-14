@@ -154,9 +154,9 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
             cardCost.manaCost = 0;
         } else if (caster.mageType == 'Cleric' && card.category == CardCategory.Blessings) {
             cardCost.manaCost = Math.floor(cardCost.manaCost / 2);
-        } else if (caster.mageType == 'Archer' && card.id == arrowCardId) {
-            // Fix mana cost for archer MageType
-            cardCost.manaCost = 10;
+        } else if (caster.mageType == 'Archer' && card.id.toLowerCase().includes('arrow')) {
+            // Freeze mana cost for archer MageType
+            cardCost.manaCost = card.manaCost;
         }
     }
 
