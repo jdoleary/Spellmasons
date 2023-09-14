@@ -72,7 +72,7 @@ import { makeForcePush } from './cards/push';
 import { isOutOfRange, sendPlayerThinkingThrottled } from './PlayerUtils';
 import { DisplayObject, TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
-import { explain, EXPLAIN_MISSED_SCROLL, EXPLAIN_PING, EXPLAIN_SCROLL, isFirstTutorialStepComplete, isTutorialComplete, tutorialCompleteTask, tutorialShowTask } from './graphics/Explain';
+import { explain, EXPLAIN_PING, isFirstTutorialStepComplete, isTutorialComplete, tutorialCompleteTask, tutorialShowTask } from './graphics/Explain';
 import { makeRisingParticles, makeScrollDissapearParticles, stopAndDestroyForeverEmitter } from './graphics/ParticleCollection';
 import { ensureAllClientsHaveAssociatedPlayers, Overworld } from './Overworld';
 import { Emitter } from '@pixi/particle-emitter';
