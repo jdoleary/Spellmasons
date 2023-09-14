@@ -2491,6 +2491,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
 
   showUpgrades() {
+    if (globalThis.animatingSpells) {
+      // Do not show upgrades while spells are still animating or else you'll miss out on the coolness
+      return;
+    }
     // Remove additional pickups once upgrades are shown because it will allow players to pick all upgrades on map
     for (let p of this.pickups) {
       if (!p.flaggedForRemoval && p.name == Pickup.CARDS_PICKUP_NAME) {

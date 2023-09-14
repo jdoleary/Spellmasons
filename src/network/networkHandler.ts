@@ -1030,6 +1030,9 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
     cacheBlood();
 
     globalThis.animatingSpells = false;
+    // Show upgrades because the player might have leveled up mid-cast
+    // and now that the cast is done they can select their upgrade
+    underworld.showUpgrades();
 
     // Now that the previous spell is over, rerun predictions because
     // the player may have queued up another spell while the previous spell was
