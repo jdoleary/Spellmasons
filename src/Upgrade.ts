@@ -173,12 +173,12 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
     const mageTypeWinsKey = storage.getStoredMageTypeWinsKey(upgrade.title as MageType);
     const currentMageTypeWins = parseInt(storageGet(mageTypeWinsKey) || '0');
     const mageTypeFarthestLevel = storage.getStoredMageTypeFarthestLevelKey(upgrade.title as MageType);
-    const currentMageTypeFarthestLevel = storageGet(mageTypeFarthestLevel) || '0';
+    const currentMageTypeFarthestLevel = underworld._getLevelText(parseInt(storageGet(mageTypeFarthestLevel) || '0'));
     // winsEl.innerHTML = `👑${currentMageTypeWins}`;
-    if (currentMageTypeWins > 0 || currentMageTypeFarthestLevel !== '0') {
+    if (currentMageTypeWins > 0 || currentMageTypeFarthestLevel !== '1') {
       const winsEl = document.createElement('div');
       winsEl.classList.add('mageType-wins');
-      winsEl.innerHTML = `${currentMageTypeWins > 0 ? `🏆${currentMageTypeWins} ` : ''}${currentMageTypeFarthestLevel !== '0' ? `🗺️${currentMageTypeFarthestLevel}` : ''}`;
+      winsEl.innerHTML = `${currentMageTypeWins > 0 ? `🏆${currentMageTypeWins} ` : ''}${currentMageTypeFarthestLevel !== '1' ? `🗺️${currentMageTypeFarthestLevel}` : ''}`;
       element.appendChild(winsEl);
     }
   }

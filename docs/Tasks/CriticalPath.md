@@ -1,6 +1,5 @@
 # Critical Path
 - Next Feature Update (v1.19)
-    - Only overwrite "class farthest level" stat if it's greater than the previous
     - Mage Classes
         - Balancing
             - Either Bloodmason spells are too cheap or stats points for health is too powerful

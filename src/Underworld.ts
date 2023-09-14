@@ -1802,12 +1802,15 @@ export default class Underworld {
     // that will override the clientside data.
     this.postSetupLevel();
   }
-  getLevelText(): string {
-    if (this.levelIndex > LAST_LEVEL_INDEX) {
-      return `${this.levelIndex - LAST_LEVEL_INDEX}+`;
+  _getLevelText(levelIndex: number): string {
+    if (levelIndex > LAST_LEVEL_INDEX) {
+      return `${levelIndex - LAST_LEVEL_INDEX}+`;
     } else {
-      return `${this.levelIndex + 1}`;
+      return `${levelIndex + 1}`;
     }
+  }
+  getLevelText(): string {
+    return this._getLevelText(this.levelIndex);
   }
   async createLevel(levelData: LevelData, gameMode?: string) {
     this.gameMode = gameMode;

@@ -455,7 +455,12 @@ export function enterPortal(player: IPlayer, underworld: Underworld) {
 
   // Record Progress
   const mageTypeFarthestLevel = storage.getStoredMageTypeFarthestLevelKey(player.mageType || 'Spellmason');
-  storageSet(mageTypeFarthestLevel, underworld.getLevelText());
+  const highScore = storageGet(mageTypeFarthestLevel) || '0'
+  if (parseInt(highScore) < underworld.levelIndex) {
+    console.log('New farthest level record!', mageTypeFarthestLevel, '->', underworld.levelIndex);
+    storageSet(mageTypeFarthestLevel, underworld.levelIndex.toString());
+  }
+
 
   Image.hide(player.unit.image);
   // Make sure to resolve the moving promise once they enter the portal or else 
