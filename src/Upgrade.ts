@@ -222,7 +222,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
   {
     title: 'Spellmason',
     type: 'mageType',
-    description: () => 'Get an additional Stat point to upgrade every level',
+    description: () => i18n('class_spellmason'),
     thumbnail: 'images/upgrades/class-spellmason.png',
     effect: (player, underworld) => {
       changeMageType('Spellmason', player, underworld);
@@ -233,8 +233,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
   {
     title: 'Timemason',
     type: 'mageType',
-    description: () => `Take ${config.TIMEMASON_DAMAGE_AMOUNT} damage every 2 seconds
-Gain 1 mana every 2 seconds`,
+    description: () => i18n('class_timemason'),
     thumbnail: 'images/upgrades/class-timemason.png',
     effect: (player, underworld) => {
       changeMageType('Timemason', player, underworld);
@@ -245,7 +244,7 @@ Gain 1 mana every 2 seconds`,
   {
     title: 'Bloodmason',
     type: 'mageType',
-    description: () => 'Spells cost health instead of mana\nBlessings cost 100% health to cast',
+    description: () => i18n('class_bloodmason'),
     thumbnail: 'images/upgrades/class-bloodmason.png',
     effect: (player, underworld) => {
       changeMageType('Bloodmason', player, underworld);
@@ -254,9 +253,9 @@ Gain 1 mana every 2 seconds`,
     cost: { healthCost: 0, manaCost: 0 },
   },
   {
-    title: 'Necromancer',
+    title: i18n('Necromancer'),
     type: 'mageType',
-    description: () => 'Gain "Capture Soul"\n"Capture Soul" costs 90% of your max health per cast',
+    description: () => i18n('class_necromancer'),
     thumbnail: 'images/upgrades/class-necromancer.png',
     effect: (player, underworld) => {
       changeMageType('Necromancer', player, underworld);
@@ -265,9 +264,9 @@ Gain 1 mana every 2 seconds`,
     cost: { healthCost: 0, manaCost: 0 },
   },
   {
-    title: 'Archer',
+    title: i18n('Archer'),
     type: 'mageType',
-    description: () => 'Gain "Arrow"\n"Arrow" mana cost does not increase as it is cast',
+    description: () => i18n('class_archer'),
     thumbnail: 'images/upgrades/class-archer.png',
     effect: (player, underworld) => {
       changeMageType('Archer', player, underworld);
@@ -278,7 +277,7 @@ Gain 1 mana every 2 seconds`,
   {
     title: 'Far Gazer',
     type: 'mageType',
-    description: () => 'Double cast range\nHalf stamina',
+    description: () => i18n('class_far_gazer'),
     thumbnail: 'images/upgrades/class-sniper.png',
     effect: (player, underworld) => {
       changeMageType('Far Gazer', player, underworld);
@@ -287,9 +286,9 @@ Gain 1 mana every 2 seconds`,
     cost: { healthCost: 0, manaCost: 0 },
   },
   {
-    title: 'Cleric',
+    title: i18n('Cleric'),
     type: 'mageType',
-    description: () => 'Gain "Heal"\nBlessings are half as expensive to cast',
+    description: () => i18n('class_cleric'),
     thumbnail: 'images/upgrades/class-cleric.png',
     effect: (player, underworld) => {
       changeMageType('Cleric', player, underworld);
@@ -298,9 +297,9 @@ Gain 1 mana every 2 seconds`,
     cost: { healthCost: 0, manaCost: 0 },
   },
   {
-    title: 'Gambler',
+    title: i18n('Gambler'),
     type: 'mageType',
-    description: () => 'Get an extra choice when choosing Spells',
+    description: () => i18n('class_gambler'),
     thumbnail: 'images/upgrades/class-gambler.png',
     effect: (player, underworld) => {
       changeMageType('Gambler', player, underworld);

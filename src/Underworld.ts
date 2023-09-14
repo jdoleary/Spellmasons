@@ -2531,7 +2531,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (elUpgradePickerLabel) {
       const pickingClass = globalThis.player ? Upgrade.isPickingClass(globalThis.player) : false;
       elUpgradePickerLabel.innerHTML = i18n(isPerk ?
-        isCursePerk ? 'Pick a Calamity' : `Spend ${perksLeftToChoose} Points`
+        isCursePerk ? 'Pick a Calamity' : i18n(['Spend Points', perksLeftToChoose.toString()])
         : pickingClass ? 'Pick a Class' : 'Pick a Spell');
     }
     // If playing hotseat multiplayer, prepend the player name so users know which player they

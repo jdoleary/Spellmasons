@@ -3,13 +3,6 @@
     - Mage Classes
         - Balancing
             - Either Bloodmason spells are too cheap or stats points for health is too powerful
-    - i18n
-        - Translate new perf option for particles in menu
-        - change 'Kills until level up' to 'Experience'
-        - "Level"
-        - "Pick a Class"
-        - Deathmason dialogue
-        - Spend perksLeftToChoose points
 
 - v1.20
     - Upgrade server to Bun
