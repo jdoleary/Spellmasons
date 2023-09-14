@@ -259,8 +259,7 @@ export default class Underworld {
     if (numberOfEnemiesKilledNeededForNextDrop <= this.enemiesKilled) {
       // Stop dropping cards if players have enough scrolls have been dropped to cover all cards that can be picked
       if (Object.values(Cards.allCards).filter(c => c.probability > 0).length > this.cardDropsDropped) {
-        console.log('Pickup: Drop scroll pickup', this.cardDropsDropped, this.enemiesKilled, numberOfEnemiesKilledNeededForNextDrop)
-        explain(EXPLAIN_SCROLL);
+        console.log('Give players new card');
         this.cardDropsDropped++;
         // Give EVERY player an upgrade when any one player picks up a scroll
         this.players.forEach(p => Pickup.givePlayerUpgrade(p, this));

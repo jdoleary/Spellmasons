@@ -61,8 +61,6 @@ export const EXPLAIN_ATTENTION_MARKER_MELEE = 'Melee Agro';
 export const EXPLAIN_ATTENTION_MARKER_RANGED = 'Ranged Agro';
 export const EXPLAIN_CAMERA = 'Camera Movement';
 export const EXPLAIN_INVENTORY = 'Inventory';
-export const EXPLAIN_SCROLL = 'Getting New Spells';
-export const EXPLAIN_MISSED_SCROLL = 'Missing Scroll Pickups';
 export const EXPLAIN_LIQUID_DAMAGE = 'Liquid Damage';
 export const EXPLAIN_BLESSINGS = 'Blessings';
 export const EXPLAIN_REMOVE_SPELLS = 'Remove Spells';
@@ -122,12 +120,6 @@ const explainMap: { [key: string]: ExplainData } = {
     [EXPLAIN_INVENTORY]: {
         prompt: () => ({
             imageSrc: 'images/explain/inventory.gif', text: ['explain inventory', keyToHumanReadable(keyMapping.openInventory)], yesText: "I'm so organized!"
-        })
-
-    },
-    [EXPLAIN_SCROLL]: {
-        prompt: () => ({
-            imageSrc: 'images/explain/scroll.gif', text: 'explain scrolls', yesText: 'Okay'
         })
 
     },
