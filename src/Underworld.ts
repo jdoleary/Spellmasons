@@ -3895,7 +3895,8 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
   // Now that we've determined which unit types will be in the level we have to
   // budget out the quantity
   let units = [];
-  let budgetLeft = ((adjustedLevelIndex + 1) * Math.max(5, (adjustedLevelIndex + 1) - 3)) * budgetMultiplier;
+  const baseDifficultyModifier = 4;
+  let budgetLeft = ((adjustedLevelIndex + 1) * Math.max(baseDifficultyModifier, (adjustedLevelIndex + 1) - 3)) * budgetMultiplier;
   const connectedClients = underworld.players.filter(p => p.clientConnected);
   if (connectedClients.length > config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES) {
     const budgetMultiplier = 1 + (1 / config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES) * (connectedClients.length - config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES);
@@ -3904,12 +3905,16 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
   }
   // Hard-coded tutorial budget so the first time playing isn't too hard
   if (!isTutorialComplete() && connectedClients.length == 1) {
+    console.log('Adjust budget for tutorial');
     if (adjustedLevelIndex == 0) {
       budgetLeft = 2;
     } else if (adjustedLevelIndex == 1) {
       budgetLeft = 3;
     } else if (adjustedLevelIndex == 2) {
       budgetLeft = 4;
+    } else {
+      budgetLeft = Math.ceil(budgetLeft / 2);
+      console.log('jtest tutorial budget', budgetLeft)
     }
   }
   console.log('Budget for adjusted level index', adjustedLevelIndex, 'is', budgetLeft);
