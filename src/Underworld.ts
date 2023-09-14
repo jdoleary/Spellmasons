@@ -239,7 +239,7 @@ export default class Underworld {
   calculateKillsNeededForLevel(level: number): number {
     // Check if should drop cards
     let numberOfEnemiesKilledNeededForNextDrop = 0;
-    const startNumberOfEnemiesNeededToDrop = 2;
+    const startNumberOfEnemiesNeededToDrop = 1;
     for (let i = startNumberOfEnemiesNeededToDrop; i < level + startNumberOfEnemiesNeededToDrop; i++) {
       numberOfEnemiesKilledNeededForNextDrop += i;
     }
