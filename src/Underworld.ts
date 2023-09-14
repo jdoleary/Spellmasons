@@ -1723,6 +1723,12 @@ export default class Underworld {
         for (let p of this.players) {
           p.statPointsUnspent += p.mageType === 'Spellmason' ? 4 : 3;
         }
+        // For first play session don't show stat upgrades too early, it's information overload
+        if (isFirstEverPlaySession && this.levelIndex <= 2) {
+          for (let p of this.players) {
+            p.statPointsUnspent = 0;
+          }
+        }
       }
       // Set the first turn phase
       this.broadcastTurnPhase(turn_phase.PlayerTurns);
@@ -3895,6 +3901,16 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
     const budgetMultiplier = 1 + (1 / config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES) * (connectedClients.length - config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES);
     console.log('Difficulty: Increase budget by', budgetMultiplier, ' due to the number of players connected');
     budgetLeft *= budgetMultiplier;
+  }
+  // Hard-coded tutorial budget so the first time playing isn't too hard
+  if (!isTutorialComplete() && connectedClients.length == 1) {
+    if (adjustedLevelIndex == 0) {
+      budgetLeft = 2;
+    } else if (adjustedLevelIndex == 1) {
+      budgetLeft = 3;
+    } else if (adjustedLevelIndex == 2) {
+      budgetLeft = 4;
+    }
   }
   console.log('Budget for adjusted level index', adjustedLevelIndex, 'is', budgetLeft);
   const totalBudget = budgetLeft;
