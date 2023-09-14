@@ -1,21 +1,25 @@
 ## Spellmasons Update v1.19
+balance: Increase difficulty of early levels
+balance: Make Ancients cost more in the level budget for spawning
 content: Add Mage Classes
+content: Revise per level upgrades to be stats points rather than perks
+content: Add 2nd stage of Deathmason battle
+src: Add perf option to disable emitters
+    Thanks to @XzeroAir on Discord
+ref: Change to lvl up / experience system instead of scroll pickups
+
+art: Fix target similar and connect lines
+    animating father than they should
+UI: Make level up progress bar in tooltip
+UI: Add victory stats to class selections
+
 fix: Bug where ancients
     spend mana per target instead of per cast
     which caused their mana to go negative at times.
     Thanks @Expresso Depresso for finding this bug!
-content: Revise per level upgrades to be stats points rather than perks
-content: Add 2nd stage of Deathmason battle
-UI: Make level up progress bar in tooltip
-src: Add perf option to disable emitters
-    Thanks to @XzeroAir on Discord
-ref: Change to lvl up instead of scroll pickups
 fix: Undesirable smoke on pickups
-art: Fix target similar and connect lines
-    animating father than they should
 fix: Priest should resurrect ANY dead unit into their faction
     not just corpses of allies
-UI: Add victory stats to class selections
 
 ## Spellmasons Update v1.18
 - balance: Prevent deathmason from purifying self
