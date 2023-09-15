@@ -2,6 +2,7 @@ import type * as particles from '@pixi/particle-emitter'
 import { Spell } from '../cards';
 import { IPickupSource } from '../entity/Pickup';
 import { UnitSource } from '../entity/units';
+export type GameMode = 'tutorial' | 'hard' | 'impossible'
 export enum UnitType {
   PLAYER_CONTROLLED,
   AI,

@@ -1,6 +1,5 @@
 import Underworld from "./Underworld";
 import * as config from './config';
-
 export function calculateGameDifficulty(underworld: Underworld) {
     const loopDifficultyModifier = 0.2 * Math.max(0, (underworld.levelIndex - config.LAST_LEVEL_INDEX));
     let difficulty = underworld.players.filter(p => p.clientConnected).length + loopDifficultyModifier;
@@ -16,7 +15,12 @@ export function unavailableUntilLevelIndexDifficultyModifier(underworld: Underwo
     budgetMultiplier: number,
     unitMinLevelIndexSubtractor: number
 } {
-    if (underworld.gameMode == 'hard') {
+    if (underworld.gameMode == 'tutorial') {
+        return {
+            budgetMultiplier: 0.8,
+            unitMinLevelIndexSubtractor: 0
+        }
+    } else if (underworld.gameMode == 'hard') {
         return {
             budgetMultiplier: 1.5,
             unitMinLevelIndexSubtractor: 2

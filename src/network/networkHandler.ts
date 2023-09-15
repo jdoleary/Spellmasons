@@ -37,7 +37,7 @@ import { getUniqueSeedString, SeedrandomState } from '../jmath/rand';
 import { raceTimeout } from '../Promise';
 import { createVisualLobbingProjectile } from '../entity/Projectile';
 import { setPlayerNameUI } from '../PlayerUtils';
-import { isSinglePlayer, UnitType } from '../types/commonTypes';
+import { GameMode, isSinglePlayer, UnitType } from '../types/commonTypes';
 import { recalcPositionForCards } from '../graphics/ui/CardUI';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -514,7 +514,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
     case MESSAGE_TYPES.CREATE_LEVEL:
       const { level, gameMode } = payload as {
         level: LevelData,
-        gameMode?: string
+        gameMode?: GameMode
       }
       console.log('sync: CREATE_LEVEL: Syncing / Creating level');
       if (underworld) {

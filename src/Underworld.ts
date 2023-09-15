@@ -45,7 +45,7 @@ import {
   cacheBlood,
 } from './graphics/PixiUtils';
 import floatingText, { queueCenteredFloatingText, warnNoMoreSpellsToChoose } from './graphics/FloatingText';
-import { UnitType, Faction, UnitSubType, isSinglePlayer } from './types/commonTypes';
+import { UnitType, Faction, UnitSubType, isSinglePlayer, GameMode } from './types/commonTypes';
 import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
 import Events from './Events';
@@ -124,7 +124,7 @@ const cleanupRegistry = globalThis.hasOwnProperty('FinalizationRegistry') ? new 
 let localUnderworldCount = 0;
 export default class Underworld {
   seed: string;
-  gameMode?: string;
+  gameMode?: GameMode;
   // A simple number to keep track of which underworld this is
   // Used for development to help ensure that all references to the underworld are current
   localUnderworldNumber: number;
@@ -1322,6 +1322,10 @@ export default class Underworld {
     const isTutorialRun = !isTutorialComplete();
     if (levelIndex == 0) {
       isFirstEverPlaySession = !isFirstTutorialStepComplete();
+      if (isFirstEverPlaySession) {
+        console.log('Set gamemode to "tutorial" so that the first playthrough is easier');
+        this.gameMode = 'tutorial';
+      }
     }
     const isTutorialStartLevel = isFirstEverPlaySession && levelIndex == 0;
     let caveParams = caveSizes.medium;
@@ -1817,8 +1821,10 @@ export default class Underworld {
   getLevelText(): string {
     return this._getLevelText(this.levelIndex);
   }
-  async createLevel(levelData: LevelData, gameMode?: string) {
-    this.gameMode = gameMode;
+  async createLevel(levelData: LevelData, gameMode?: GameMode) {
+    if (gameMode !== undefined) {
+      this.gameMode = gameMode;
+    }
     return new Promise<void>(resolve => {
       document.body?.classList.toggle('loading', true);
       // Add timeout so that loading can update dom
@@ -1828,8 +1834,8 @@ export default class Underworld {
       }, 10);
     });
   }
-  generateLevelDataSyncronous(levelIndex: number, gameMode?: string): LevelData {
-    console.log('Setup: generateLevelDataSyncronous', levelIndex);
+  generateLevelDataSyncronous(levelIndex: number, gameMode?: GameMode): LevelData {
+    console.log('Setup: generateLevelDataSyncronous', levelIndex, gameMode);
     // Generate level
     let level;
     do {
@@ -3875,7 +3881,7 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
   const adjustedLevelIndex = Math.max(0, levelIndex);
 
   const numberOfTypesOfEnemies = 2 + Math.floor(adjustedLevelIndex / 2);
-  const { unitMinLevelIndexSubtractor, budgetMultiplier } = unavailableUntilLevelIndexDifficultyModifier(underworld);
+  const { unitMinLevelIndexSubtractor, budgetMultiplier: difficultyBudgetMultiplier } = unavailableUntilLevelIndexDifficultyModifier(underworld);
   let possibleUnitsToChoose = Object.values(allUnits)
     .filter(u => u.spawnParams && (u.spawnParams.unavailableUntilLevelIndex - unitMinLevelIndexSubtractor) <= adjustedLevelIndex && isModActive(u, underworld))
     .map(u => ({ id: u.id, probability: u.spawnParams?.probability || 1, budgetCost: u.spawnParams?.budgetCost || 1 }))
@@ -3895,29 +3901,21 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
   // Now that we've determined which unit types will be in the level we have to
   // budget out the quantity
   let units = [];
-  const baseDifficultyModifier = 4;
-  let budgetLeft = ((adjustedLevelIndex + 1) * Math.max(baseDifficultyModifier, (adjustedLevelIndex + 1) - 3)) * budgetMultiplier;
+  const baseDifficultyMultiplier = 3;
+  const startAcceleratingDifficultyAtLevelIndex = 6;
+  const difficultyMultiplier = adjustedLevelIndex >= startAcceleratingDifficultyAtLevelIndex
+    ? baseDifficultyMultiplier + adjustedLevelIndex + 1 - startAcceleratingDifficultyAtLevelIndex
+    : baseDifficultyMultiplier;
+  let budgetLeft = (adjustedLevelIndex + 1) * difficultyMultiplier + 2;
   const connectedClients = underworld.players.filter(p => p.clientConnected);
   if (connectedClients.length > config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES) {
     const budgetMultiplier = 1 + (1 / config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES) * (connectedClients.length - config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES);
     console.log('Difficulty: Increase budget by', budgetMultiplier, ' due to the number of players connected');
     budgetLeft *= budgetMultiplier;
   }
-  // Hard-coded tutorial budget so the first time playing isn't too hard
-  if (!isTutorialComplete() && connectedClients.length == 1) {
-    console.log('Adjust budget for tutorial');
-    if (adjustedLevelIndex == 0) {
-      budgetLeft = 2;
-    } else if (adjustedLevelIndex == 1) {
-      budgetLeft = 3;
-    } else if (adjustedLevelIndex == 2) {
-      budgetLeft = 4;
-    } else {
-      budgetLeft = Math.ceil(budgetLeft / 2);
-      console.log('jtest tutorial budget', budgetLeft)
-    }
-  }
-  console.log('Budget for adjusted level index', adjustedLevelIndex, 'is', budgetLeft);
+  console.log('Difficulty: Increase budget by', difficultyBudgetMultiplier, ' due to difficulty', underworld.gameMode);
+  budgetLeft *= difficultyBudgetMultiplier;
+  console.log('Budget for level index', adjustedLevelIndex, 'is', budgetLeft);
   const totalBudget = budgetLeft;
   if (levelIndex == config.LAST_LEVEL_INDEX) {
     budgetLeft -= 20;
