@@ -1,9 +1,4 @@
 # QA Protocol
-## v1.19.0
-- Test choosing mageTypes
-    - test with multiplayer
-    - test changing halfway through a game
-- Test spell choosing for mageTypes like "Archer" and "Necromancer"
 ## Regular
 - Run `npm run build_types` to keeps mods types up to date (and push the changes to github)
     - Test mods
