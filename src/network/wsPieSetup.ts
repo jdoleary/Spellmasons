@@ -18,7 +18,7 @@ import Underworld from '../Underworld';
 import { version } from '../../package.json';
 import makeOverworld, { Overworld } from '../Overworld';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
-import { isSinglePlayer } from '../types/commonTypes';
+import { GameMode, isSinglePlayer } from '../types/commonTypes';
 // Locally hosted, locally accessed
 // const wsUri = 'ws://localhost:8080';
 // Locally hosted, available to LAN (use your own IP)
@@ -289,7 +289,7 @@ export function setupPieAndUnderworld() {
 
     }
     globalThis.connectToSingleplayer = connectToSingleplayer;
-    globalThis.startSingleplayer = function startSingleplayer(numberOfHotseatPlayers: number, gameMode?: string) {
+    globalThis.startSingleplayer = function startSingleplayer(numberOfHotseatPlayers: number, gameMode?: GameMode) {
       console.log('Start Game: Attempt to start the game')
       globalThis.numberOfHotseatPlayers = numberOfHotseatPlayers;
       return connectToSingleplayer().then(() => {
