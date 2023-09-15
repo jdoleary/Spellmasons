@@ -3902,7 +3902,7 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
   // budget out the quantity
   let units = [];
   const baseDifficultyMultiplier = 3;
-  const startAcceleratingDifficultyAtLevelIndex = 6;
+  const startAcceleratingDifficultyAtLevelIndex = 5;
   const difficultyMultiplier = adjustedLevelIndex >= startAcceleratingDifficultyAtLevelIndex
     ? baseDifficultyMultiplier + adjustedLevelIndex + 1 - startAcceleratingDifficultyAtLevelIndex
     : baseDifficultyMultiplier;
@@ -3915,6 +3915,7 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
   }
   console.log('Difficulty: Increase budget by', difficultyBudgetMultiplier, ' due to difficulty', underworld.gameMode);
   budgetLeft *= difficultyBudgetMultiplier;
+  budgetLeft = Math.floor(budgetLeft);
   console.log('Budget for level index', adjustedLevelIndex, 'is', budgetLeft);
   const totalBudget = budgetLeft;
   if (levelIndex == config.LAST_LEVEL_INDEX) {
