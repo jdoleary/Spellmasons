@@ -2610,7 +2610,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
               }
               if (stat == 'attackRange') {
                 // Display default attackRange as "100"
-                return 100 * value / config.PLAYER_BASE_ATTACK_RANGE;
+                return Math.floor(100 * value / config.PLAYER_BASE_ATTACK_RANGE);
               }
               return value;
             }
