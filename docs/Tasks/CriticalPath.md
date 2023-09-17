@@ -1,4 +1,21 @@
 # Critical Path
+- v1.20
+    - Bloodmason needs balancing desprately
+    - Expresso Depresso — 09/15/2023 9:42 PM
+so I uh didnt die in my mp game when a blood golem mini boss hit me I took a tiny bit of damage but I shouldve been hit with 80 damage and I only had 42 health
+the golem had 3 bloat on him
+As far as im aware this game doesnt have feel no pain dice rolls right? lol
+    - Expresso Depresso — 09/15/2023 11:01 PM
+also small visual bug so not a really big deal but if you use bloat on a friendly summoned unit then kill it it comes back at full heath but then dies instantly upon next action. (example: casting a spell or ending turn)
+    - Expresso Depresso — 09/15/2023 11:47 PM
+sorry for breaking your game so much. However when I dashed through a red portal from a Deathmason it said I died on my end instead of taking 30 damage, so efectivley my turn was skipped. When the turn ended I was attacked by the Deathmason and died again. My friend I was playing with said that I was very much alive on his end until the Deathmason obliterated me. 
+again these were all bugs discovered in multiplayer so I dont know if that has anything to do with it
+    - Antonio! — Today at 9:31 AM
+    also, the second phase death masons killed eachother for health once
+a few bugs have been bothering me in the new update.     1      when a creature dies, its hitbox stays there for a moment, getting in the way of arrow spells. I dont know if thats a bug, but the pre-turn analysis does not take it into account.    2     When you kill the deathmason, its copies have the first turn. I'm not completely sure this is a bug, but because it also kills all creatures on the map, including summons, you cant even have any bodies protecting you from instant death, so if it is on purpose, I dont think its the best way to have the boss.    3      When quicksaving, it seems that you get extra stat level ups. I don't actually know how it happens but I think it happens both when you complete a level and when you spawn into the next. I also got 6 stat points instead of three onve and I dont know why.     4       when combining target arrow with target circle, if the arrow misses, it will still cast target circle where you clicked and refund you the mana it took to cast target arrow, basically giving you infinite cast range
+I don't have any screenshots but I figured these arent that hard to test so i guess ill take some if you want
+i couldnt replicate the six stat points
+    - XzeroAir UI scaling of 1.1 makes class mage type cards get clipped on the bottom
 - Next Feature Update (v1.19)
     - Mage Classes
         - Balancing

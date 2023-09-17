@@ -1,12 +1,15 @@
 ## Spellmasons Update v1.19
 balance: Increase difficulty of early levels
 balance: Make Ancients cost more in the level budget for spawning
+balance: Increased damage of poison spell from 10 to 15 damage per turn
+
 content: Add Mage Classes
 content: Revise per level upgrades to be stats points rather than perks
 content: Add 2nd stage of Deathmason battle
-src: Add perf option to disable emitters
+content: Change to lvl up / experience system instead of scroll pickups
+
+performance: Add perf option to disable emitters
     Thanks to @XzeroAir on Discord
-ref: Change to lvl up / experience system instead of scroll pickups
 
 art: Fix target similar and connect lines
     animating father than they should
