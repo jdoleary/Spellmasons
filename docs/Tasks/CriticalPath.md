@@ -1,5 +1,28 @@
 # Critical Path
 - v1.20
+    - Antonio!'s feedback taht Capture Soul's summon spells are too expensive to be worth it and resurrect is just plain better.
+        Expresso Depresso — Yesterday at 7:23 PM
+eeeh its one of those where you shouldn't be able to out perform more than 2 summoners. For example as an exclusively co op player even if its just two people you can keep up with about 4 summoners if you have 2 150 cost summons Like blood archer and golem. If you have clone you WILL out pace those four summoners. My buddy and I love summoner armies but if summoners were made noticeably better it would be the second strongest build right behind current blood mage. I'm honestly quite happy with how the current summoner plays and if you get lucky and you get capture soul before you pick a class then the far gazer is amazing. The only change I could really say would be to make summoner a better class to pick with out making it broken would be like a 25-30% discount for summoning things 
+
+    - Daddy.Gar — Today at 2:19 AM
+Uh you can infintely use the clone spell as a blood mason to the point i think i may have crashed the east coast community server...
+    - Expresso Depresso — Yesterday at 9:16 PM
+sooooooo after the bloodmason run we  got so much xp that when we hit new run we got every spell again. I dobut this will be a bug again but I figured I would throw this in here just in case
+    - Antonio! — 09/17/2023 9:38 PM
+I was mistaken about the death masons having the first turn, but i still think they should either spawn far away from the player or not use their slash attack for a few turns
+also are the second phase death masons supposed to die after one or two turns because I think they are just taking eachothers health.
+also during the calamities, when increasing max health, the creatures whos max health was increased dont increase in health they have, keeping their old health stat just increasing their max health
+    - "good looks" upgrade is hidden on some resolutions (1080)
+    - Game stuck after all 3 players portaling: https://www.twitch.tv/videos/1928091427 01:26:43
+    - Use bun for websocketpie
+    - Bloodmason + Bloodcurse is WAY TO POWERFUL
+    - Entropy Weaveress — Today at 3:40 PM
+I did not look at the second number.
+But by upgrading just my hp I got to unfair hp numbers and could clear every level almost in one turn.
+    - Bloodmason is still too powerful just by casting alone
+    - Stat upgrades don't show after looping
+    - Phrieksho: Vengance + Timemason is bugged out
+        - Make sfx of timemason taking damage softer
     - Bloodmason needs balancing desprately
     - Expresso Depresso — 09/15/2023 9:42 PM
 so I uh didnt die in my mp game when a blood golem mini boss hit me I took a tiny bit of damage but I shouldve been hit with 80 damage and I only had 42 health

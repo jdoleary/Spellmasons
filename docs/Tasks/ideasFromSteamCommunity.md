@@ -1,3 +1,12 @@
+- A jumping attack that works like chain but it's just an attack
+- Expresso Depresso — Yesterday at 7:31 PM
+Although I like the fact that  you can currently do some crazy stuff if your creative I think some more just ranged attacks could be cool. I dont think they should be like arrow with infinite range but slightly increased ranged  line of sight attacks.
+-Fire ball                                                                              A classic I can think of would be fire ball. Maybe like explosive arrow but with a limited range and maybe applies a status effect like burn for a touch of tick damage on top of it 
+Expresso Depresso — Yesterday at 7:38 PM
+An alternative for the range if a long range would be more preferable, might be just effecting how accurate it is. Something like it could veer or have a cone it will be cast in rather than just flying in a straight line. A great example of this is in Xcom. A mod I use lets you bring a rocket launcher, however the further you try to shoot it the more inaccurate it becomes.
+-Lightning Strike or Bolt                                       Another one I could think of could be like a bolt or strike of lightning. for the bolt something similar to the accuracy mechanic I was talking about. But for lightning strike just in your casting range would be fine, but maybe give it a chance to jump targets for like 25-50% of the damage to give again a more AoE based spell. 
+- PickaPecka — 09/12/2023 12:00 AM
+This is a devious one: Fog of War status effect, like limit your visibility.
 - ↜௹ąŋdąɾą↝ — Yesterday at 8:59 PM
 I have a feeling timemason is gonna be a curse related class, wherein curses like decay or poison is going to deal more damage in less time, or like cast two ticks of damage in one round instead of two.
 - Zegian - huge list of spell ideas: https://steamcommunity.com/app/1618380/discussions/0/3824163953446119116/
