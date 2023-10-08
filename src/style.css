@@ -550,6 +550,15 @@ invisibly blocked, change with caution! */
   position: absolute;
 }
 
+#upgrade-picker .card-badge.modified-by-usage:before,
+.card-inspect .card-badge.modified-by-usage:before {
+  width: 44px;
+  height: 44px;
+  line-height: 44px;
+  border-radius: 44px;
+  font-size: 24px;
+}
+
 .card-cooldown-badge {
   display: none;
 }
