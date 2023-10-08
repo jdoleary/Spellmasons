@@ -78,7 +78,7 @@ import { ensureAllClientsHaveAssociatedPlayers, Overworld } from './Overworld';
 import { Emitter } from '@pixi/particle-emitter';
 import { golem_unit_id } from './entity/units/golem';
 import { cleanUpPerkList, createPerkElement, generatePerks, tryTriggerPerk, showPerkList, hidePerkList, createCursePerkElement, StatCalamity, generateRandomStatCalamity } from './Perk';
-import { bossmasonUnitId } from './entity/units/deathmason';
+import { bossmasonUnitId, summonUnitAtPickup } from './entity/units/deathmason';
 import { hexToString } from './graphics/ui/colorUtil';
 import { doLiquidEffect } from './inLiquid';
 import { findRandomGroundLocation } from './entity/units/summoner';
@@ -92,6 +92,7 @@ import { DARK_PRIEST_ID } from './entity/units/darkPriest';
 import { LAST_LEVEL_INDEX } from './config';
 import { unavailableUntilLevelIndexDifficultyModifier } from './Difficulty';
 import { View } from './views';
+import { skyBeam } from './VisualEffects';
 
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
@@ -2903,6 +2904,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           cleanUpEmitters(true);
           // Clear enemy attentionMarkers since it's now their turn
           globalThis.attentionMarkers = [];
+          await this.redPortalBehavior(Faction.ALLY);
           // Only execute turn if there are units to take the turn:
           if (this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ALLY && u.alive).length) {
             // Run AI unit actions
@@ -2927,6 +2929,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           cleanUpEmitters(true);
           // Clear enemy attentionMarkers since it's now their turn
           globalThis.attentionMarkers = [];
+          await this.redPortalBehavior(Faction.ENEMY);
           // Only execute turn if there are units to take the turn:
           if (this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ENEMY && u.alive).length) {
             // Run AI unit actions
@@ -2970,6 +2973,33 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         target.predictedNextTurnDamage += damage;
       }
     }
+  }
+  async redPortalBehavior(faction: Faction) {
+    const portalName = faction == Faction.ENEMY ? Pickup.RED_PORTAL : Pickup.BLUE_PORTAL;
+    const deathmasons = this.units.filter(u => u.unitSourceId == bossmasonUnitId && u.faction == faction)
+    for (let deathmason of deathmasons) {
+      const seed = seedrandom(deathmason.id.toString());
+      const deathmasonPortals = this.pickups.filter(p => p.name == portalName && !p.flaggedForRemoval);
+      const deathmasonPortalTeleportIndex = randInt(0, deathmasonPortals.length, seed);
+      const portal = deathmasonPortals[deathmasonPortalTeleportIndex];
+      if (!portal) {
+        continue;
+      }
+      skyBeam(deathmason);
+      deathmason.x = portal.x;
+      deathmason.y = portal.y;
+      Obstacle.tryFallInOutOfLiquid(deathmason, this, false);
+      Pickup.removePickup(portal, this, false);
+    }
+    const deathmasonPortals = this.pickups.filter(p => p.name == portalName && !p.flaggedForRemoval);
+    for (let i = 0; i < deathmasonPortals.length; i++) {
+      const portal = deathmasonPortals[i];
+      if (!portal || portal.flaggedForRemoval) {
+        continue;
+      }
+      summonUnitAtPickup(faction, portal, this);
+    }
+
   }
 
   async executeNPCTurn(faction: Faction) {

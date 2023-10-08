@@ -61,10 +61,11 @@ const unit: UnitSource = {
 
     const seed = seedrandom(`${underworld.seed}-${underworld.turn_number}-${unit.id}`);
 
-    const redPortals = underworld.pickups.filter(p => p.name == RED_PORTAL);
-    const redPortalPickupSource = pickups.find(p => p.name == RED_PORTAL);
-    if (redPortalPickupSource) {
-      if (redPortals.length == 0) {
+    const portalName = unit.faction == Faction.ENEMY ? RED_PORTAL : Pickup.BLUE_PORTAL;
+    const deathmasonPortals = underworld.pickups.filter(p => p.name == portalName);
+    const deathmasonPortalPickupSource = pickups.find(p => p.name == portalName);
+    if (deathmasonPortalPickupSource) {
+      if (deathmasonPortals.length == 0) {
         // Spawn new red portals
         let numberOfSummons = 8;
         const keyMoment = () => {
@@ -94,8 +95,8 @@ const unit: UnitSource = {
               continue;
             }
             // Spawn the portals
-            lastPromise = makeManaTrail(unit, coord, underworld, '#930e0e', '#ff0000').then(() => {
-              Pickup.create({ pos: coord, pickupSource: redPortalPickupSource }, underworld, false);
+            lastPromise = makeManaTrail(unit, coord, underworld, unit.faction == Faction.ENEMY ? '#930e0e' : '#0e0e93', '#ff0000').then(() => {
+              Pickup.create({ pos: coord, pickupSource: deathmasonPortalPickupSource }, underworld, false);
             });
 
           }
@@ -108,7 +109,7 @@ const unit: UnitSource = {
         if (sacrificeCost.manaCost <= unit.mana && unit.health < unit.healthMax) {
           // Consume allies if hurt
           // Note: Do not allow Deathmason to siphon allied player units
-          const closestUnit = Unit.livingUnitsInSameFaction(unit, underworld).filter(u => u.unitType !== UnitType.PLAYER_CONTROLLED && Unit.inRange(unit, u))[0]
+          const closestUnit = Unit.livingUnitsInSameFaction(unit, underworld).filter(u => u.unitType !== UnitType.PLAYER_CONTROLLED && u.unitSourceId !== bossmasonUnitId && Unit.inRange(unit, u))[0]
           if (closestUnit) {
             const keyMoment = () => underworld.castCards({
               casterCardUsage: {},
@@ -148,21 +149,6 @@ const unit: UnitSource = {
           }
           await Unit.playComboAnimation(unit, 'playerAttackEpic', keyMoment, { animationSpeed: 0.2, loop: false });
         }
-        // Teleport to a red portal
-        // and turn the rest into enemies
-        let bossmasonTeleported = false;
-        for (let portal of redPortals) {
-          if (!bossmasonTeleported) {
-            bossmasonTeleported = true;
-            skyBeam(unit);
-            unit.x = portal.x;
-            unit.y = portal.y;
-            tryFallInOutOfLiquid(unit, underworld, false);
-            removePickup(portal, underworld, false);
-          } else {
-            summonUnitAtPickup(unit, portal, underworld);
-          }
-        }
       }
     } else {
       console.error('Could not find redPortalPickupSource');
@@ -196,8 +182,8 @@ const unit: UnitSource = {
     damage: 'unitDamage',
   }
 };
-function summonUnitAtPickup(summoner: Unit.IUnit, pickup: Pickup.IPickup, underworld: Underworld) {
-  const enemyIsClose = underworld.units.filter(u => u.faction != summoner.faction).some(u => math.distance(pickup, u) <= config.PLAYER_BASE_ATTACK_RANGE)
+export function summonUnitAtPickup(faction: Faction, pickup: Pickup.IPickup, underworld: Underworld) {
+  const enemyIsClose = underworld.units.filter(u => u.faction != faction).some(u => math.distance(pickup, u) <= config.PLAYER_BASE_ATTACK_RANGE)
   let sourceUnit = allUnits[BLOOD_ARCHER_ID];
   if (enemyIsClose) {
     sourceUnit = allUnits[BLOOD_GOLEM_ID];
@@ -210,7 +196,7 @@ function summonUnitAtPickup(summoner: Unit.IUnit, pickup: Pickup.IPickup, underw
       pickup.x,
       pickup.y,
       // A unit always summons units in their own faction
-      summoner.faction,
+      faction,
       sourceUnit.info.image,
       UnitType.AI,
       sourceUnit.info.subtype,

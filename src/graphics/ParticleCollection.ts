@@ -639,7 +639,8 @@ export function makeCursedEmitter(position: Vec2, prediction: boolean) {
 }
 
 export const RED_PORTAL_JID = 'redPortal';
-export function makeRedPortal(position: Vec2, prediction: boolean) {
+export const BLUE_PORTAL_JID = 'bluePortal';
+export function makeDeathmasonPortal(position: Vec2, prediction: boolean, colorStart: string, colorEnd: string) {
     if (prediction || globalThis.headless) {
         // Don't show if just a prediction
         return;
@@ -662,8 +663,8 @@ export function makeRedPortal(position: Vec2, prediction: boolean) {
                 "minimumScaleMultiplier": 1
             },
             "color": {
-                "start": "#520606",
-                "end": "#e03636"
+                "start": colorStart,
+                "end": colorEnd
             },
             "speed": {
                 "start": 20,

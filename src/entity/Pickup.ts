@@ -17,7 +17,7 @@ import * as CardUI from '../graphics/ui/CardUI';
 import { bossmasonUnitId } from './units/deathmason';
 import { chooseOneOfSeeded, getUniqueSeedString } from '../jmath/rand';
 import { skyBeam } from '../VisualEffects';
-import { makeCursedEmitter, makeRedPortal, RED_PORTAL_JID, stopAndDestroyForeverEmitter } from '../graphics/ParticleCollection';
+import { BLUE_PORTAL_JID, makeCursedEmitter, makeDeathmasonPortal, RED_PORTAL_JID, stopAndDestroyForeverEmitter } from '../graphics/ParticleCollection';
 import { Localizable } from '../localization';
 import seedrandom from 'seedrandom';
 import { JEmitter } from '../types/commonTypes';
@@ -28,6 +28,7 @@ import floatingText from '../graphics/FloatingText';
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 export const PICKUP_IMAGE_PATH = 'pickups/scroll';
 export const RED_PORTAL = 'Red Portal';
+export const BLUE_PORTAL = 'Blue Portal';
 export const CURSED_MANA_POTION = 'Cursed Mana Potion';
 const RED_PORTAL_DAMAGE = 30;
 type IPickupEffect = ({ unit, player, pickup, prediction }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld, prediction: boolean }) => void;
@@ -150,6 +151,11 @@ export function create({ pos, pickupSource, idOverride }:
     // however if that changes in the future this should be refactored so
     // that there isn't a special case inside of Pickup.create
     assignEmitter(self, RED_PORTAL_JID, prediction);
+  } else if (name == BLUE_PORTAL) {
+    // Right now red portal and cursed mana potion are the only pickup that uses an emitter;
+    // however if that changes in the future this should be refactored so
+    // that there isn't a special case inside of Pickup.create
+    assignEmitter(self, BLUE_PORTAL_JID, prediction);
   } else if (name == CURSED_MANA_POTION) {
     assignEmitter(self, CURSED_MANA_POTION, prediction);
   }
@@ -241,7 +247,9 @@ function assignEmitter(pickup: IPickup, emitterId: string, prediction: boolean) 
     return;
   }
   if (emitterId == RED_PORTAL_JID) {
-    pickup.emitter = makeRedPortal(pickup, prediction);
+    pickup.emitter = makeDeathmasonPortal(pickup, prediction, '#520606', '#e03636');
+  } else if (emitterId == BLUE_PORTAL_JID) {
+    pickup.emitter = makeDeathmasonPortal(pickup, prediction, '#06069E', '#3636FF');
   } else if (emitterId == CURSED_MANA_POTION) {
     pickup.emitter = makeCursedEmitter(pickup, prediction);
   } else {
@@ -490,6 +498,43 @@ export const pickups: IPickupSource[] = [
           }
         }
         takeDamage(player.unit, RED_PORTAL_DAMAGE, undefined, underworld, false);
+      }
+    },
+  },
+  {
+    imagePath: undefined,
+    animationSpeed: -0.5,
+    playerOnly: true,
+    name: BLUE_PORTAL,
+    probability: 0,
+    scale: 1,
+    description: ['red portal description', bossmasonUnitId, (-RED_PORTAL_DAMAGE).toString()],
+    willTrigger: ({ unit, player, pickup, underworld }) => {
+      return !!player;
+    },
+    effect: ({ unit, player, pickup, underworld }) => {
+      const otherRedPortals = underworld.pickups.filter(p => p.name == BLUE_PORTAL && p !== pickup)
+      const seed = seedrandom(getUniqueSeedString(underworld, player));
+      const randomOtherBluePortal = chooseOneOfSeeded(otherRedPortals, seed);
+      if (player) {
+        // Remove the pickups before teleporting the unit so they don't trigger
+        // the 2nd portal
+        removePickup(pickup, underworld, false);
+        if (randomOtherBluePortal) {
+          removePickup(randomOtherBluePortal, underworld, false);
+          // Ensure the teleport point is valid
+          // Note: pickup MUST be removed before checking if the point is valid because
+          // isPointValidSpawn returns false if it's spawning a unit on a point taken up by a pickup
+          // (that isn't flagged for removal)
+          if (underworld.isPointValidSpawn(randomOtherBluePortal, config.COLLISION_MESH_RADIUS)) {
+            player.unit.x = randomOtherBluePortal.x;
+            player.unit.y = randomOtherBluePortal.y;
+            skyBeam(pickup);
+            skyBeam(randomOtherBluePortal);
+          } else {
+          }
+        }
+        takeDamage(player.unit, -RED_PORTAL_DAMAGE, undefined, underworld, false);
       }
     },
   },
