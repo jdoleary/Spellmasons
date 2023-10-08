@@ -1,3 +1,7 @@
+- MagicGoat — 10/06/2023 9:41 PM
+It might also be cool to make necromancer focus around forbidden spells or to have a class built around them
+- PickaPecka — 09/30/2023 7:13 PM
+fog of war mode lmao 😢
 - A jumping attack that works like chain but it's just an attack
 - Expresso Depresso — Yesterday at 7:31 PM
 Although I like the fact that  you can currently do some crazy stuff if your creative I think some more just ranged attacks could be cool. I dont think they should be like arrow with infinite range but slightly increased ranged  line of sight attacks.

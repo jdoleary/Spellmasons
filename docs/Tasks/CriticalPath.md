@@ -1,5 +1,21 @@
 # Critical Path
+
 - v1.20
+    - Bug: Manasteal is free when you're bloodmason
+    - Deathmasons can health sap each other
+    - UIzoom can be set to negative.  Cap it as 0.1
+    - Feature: Some enemies should have targeting shields that resist targeting
+    - Antonio! — Today at 9:31 AM
+    also, the second phase death masons killed eachother for health once
+    - MeBeDerp — 09/25/2023 9:04 PM
+Apologies if this is intended behavior, but I noticed that if you Clone yourself (or your teammates) and their clone(s) get afflicted with Blood Curse, you will take Blood Curse damage from healing, won't have double HP, and won't be marked with the Blood Curse passive on your information screen.
+    - See flowkrad's feedback about necromancer https://discord.com/channels/1032294536640200766/1154122344948846653/1154122348631441459
+    - Check fortify mixed with bloodmason
+        - Or ally heals
+    - Ian — 09/19/2023 11:17 PM
+Hey there. Not sure if this is intentional but I was playing with my friend and a priest res'd me. I have full controll and just killed the priest the moment I got resurrected.
+Image
+we reached the next level and it looks like I spawn as a bad guy
     - Antonio!'s feedback taht Capture Soul's summon spells are too expensive to be worth it and resurrect is just plain better.
         Expresso Depresso — Yesterday at 7:23 PM
 eeeh its one of those where you shouldn't be able to out perform more than 2 summoners. For example as an exclusively co op player even if its just two people you can keep up with about 4 summoners if you have 2 150 cost summons Like blood archer and golem. If you have clone you WILL out pace those four summoners. My buddy and I love summoner armies but if summoners were made noticeably better it would be the second strongest build right behind current blood mage. I'm honestly quite happy with how the current summoner plays and if you get lucky and you get capture soul before you pick a class then the far gazer is amazing. The only change I could really say would be to make summoner a better class to pick with out making it broken would be like a 25-30% discount for summoning things 
@@ -33,8 +49,6 @@ also small visual bug so not a really big deal but if you use bloat on a friendl
     - Expresso Depresso — 09/15/2023 11:47 PM
 sorry for breaking your game so much. However when I dashed through a red portal from a Deathmason it said I died on my end instead of taking 30 damage, so efectivley my turn was skipped. When the turn ended I was attacked by the Deathmason and died again. My friend I was playing with said that I was very much alive on his end until the Deathmason obliterated me. 
 again these were all bugs discovered in multiplayer so I dont know if that has anything to do with it
-    - Antonio! — Today at 9:31 AM
-    also, the second phase death masons killed eachother for health once
 a few bugs have been bothering me in the new update.     1      when a creature dies, its hitbox stays there for a moment, getting in the way of arrow spells. I dont know if thats a bug, but the pre-turn analysis does not take it into account.    2     When you kill the deathmason, its copies have the first turn. I'm not completely sure this is a bug, but because it also kills all creatures on the map, including summons, you cant even have any bodies protecting you from instant death, so if it is on purpose, I dont think its the best way to have the boss.    3      When quicksaving, it seems that you get extra stat level ups. I don't actually know how it happens but I think it happens both when you complete a level and when you spawn into the next. I also got 6 stat points instead of three onve and I dont know why.     4       when combining target arrow with target circle, if the arrow misses, it will still cast target circle where you clicked and refund you the mana it took to cast target arrow, basically giving you infinite cast range
 I don't have any screenshots but I figured these arent that hard to test so i guess ill take some if you want
 i couldnt replicate the six stat points
