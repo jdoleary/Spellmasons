@@ -11,6 +11,7 @@ import { chooseOneOf } from "../jmath/rand";
 import Underworld from "../Underworld";
 import { arrowCardId } from "./arrow";
 import { CardCategory } from "../types/commonTypes";
+import { allUnits } from "../entity/units";
 export interface CardCost {
     manaCost: number;
     healthCost: number;
@@ -155,9 +156,14 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
                 cardCost.healthCost = Math.ceil(cardCost.manaCost / 5);
                 cardCost.manaCost = 0;
             }
-        } else if (caster.mageType == 'Necromancer' && card.id == captureSoul.id) {
-            cardCost.healthCost = Math.floor(0.9 * caster.unit.healthMax);
-            cardCost.manaCost = 0;
+        } else if (caster.mageType == 'Necromancer') {
+            if (card.id == captureSoul.id) {
+                cardCost.healthCost = Math.floor(0.9 * caster.unit.healthMax);
+                cardCost.manaCost = 0;
+            } else if (Object.keys(allUnits).includes(card.id.replace(' Miniboss', ''))) {
+                // Make summon spells 50% off
+                cardCost.manaCost = Math.floor(cardCost.manaCost / 2);
+            }
         } else if (caster.mageType == 'Cleric' && card.category == CardCategory.Blessings) {
             cardCost.manaCost = Math.floor(cardCost.manaCost / 2);
         } else if (caster.mageType == 'Archer' && card.id.toLowerCase().includes('arrow')) {

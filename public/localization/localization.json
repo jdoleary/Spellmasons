@@ -386,7 +386,7 @@
         "class_spellmason": "Get an extra stat upgrade point every level",
         "class_timemason": "Lose 🍞 health every 2 seconds❕Gain 1 mana every 2 seconds.",
         "class_bloodmason": "Your spells cost health instead of mana❕Blessgins cost 100% of your health to cast",
-        "class_necromancer": "Gain \"Capture Soul\", but it is more expensive",
+        "class_necromancer": "Gain \"Capture Soul\", but it is more expensive.❕Unit summon spells are cheaper.",
         "class_archer": "Gain \"Arrow\"❕Arrow spells remain the same cost when cast.",
         "class_far_gazer": "Double cast range❕Half stamina",
         "class_cleric": "Gain \"Heal\"❕Blessings are half as expensive to cast",
