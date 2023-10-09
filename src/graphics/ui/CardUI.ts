@@ -14,6 +14,7 @@ import { CardCategory, CardRarity, probabilityMap } from '../../types/commonType
 import { MESSAGE_TYPES } from '../../types/MessageTypes';
 import { explain, EXPLAIN_END_TURN } from '../Explain';
 import { Overworld } from '../../Overworld';
+import { resetNotifiedImmune } from '../../cards/immune';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
@@ -527,7 +528,8 @@ export function selectCardByIndex(index: number, underworld?: Underworld) {
 }
 // Moves a card element to selected-cards div
 async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string, underworld: Underworld) {
-  const card = Cards.allCards[cardId]
+  resetNotifiedImmune();
+  const card = Cards.allCards[cardId];
   if (!card) {
     console.error('Card with', cardId, 'not found');
     return;

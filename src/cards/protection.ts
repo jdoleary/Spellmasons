@@ -13,6 +13,7 @@ function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, qu
   getOrInitModifier(unit, id, { isCurse: false, quantity, persistBetweenLevels: false }, () => { });
 }
 export const notifyProtected = throttle((coords: Vec2, prediction: boolean) => {
+  // TODO: i18n: Translate
   floatingText({ coords, text: prediction ? `spell will be nullified` : `Spell nullified` });
 }, 1000, { trailing: false });
 const spell: Spell = {

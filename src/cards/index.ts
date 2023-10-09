@@ -66,6 +66,9 @@ import explosive_arrow from './explosive_arrow';
 import target_arrow from './target_arrow';
 import conserve from './conserve';
 import phantom_arrow from './phantom_arrow';
+// Not used as a card, for making half of looped enemies immune
+// on first turn
+import registerImmune, * as immune from './immune';
 // import trap from './trap';
 
 import * as config from '../config';
@@ -227,6 +230,7 @@ export function registerCards(overworld: Overworld) {
 
   // Register floating modifier (non-card);
   registerSummoningSickness();
+  registerImmune();
 
 }
 function cardToUpgrade(c: ICard, overworld: Overworld): IUpgrade {
@@ -407,6 +411,11 @@ export function addTarget(target: any, effectState: EffectState) {
 export function addUnitTarget(unit: Unit.IUnit, effectState: EffectState) {
   // Adds a unit to effectState.targetedUnits IF it is not already in unitTargets
   if (effectState.targetedUnits.indexOf(unit) === -1) {
+    // Immune units cannot be targeted
+    if (unit.modifiers[immune.id]) {
+      immune.notifyImmune(unit, false);
+      return
+    }
     effectState.targetedUnits.push(unit);
   }
 }

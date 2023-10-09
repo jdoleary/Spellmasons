@@ -17,6 +17,7 @@ import * as protection from './cards/protection';
 import * as resurrect from './cards/resurrect';
 import * as shield from './cards/shield';
 import * as fortify from './cards/fortify';
+import * as immune from './cards/immune';
 import * as CSSClasses from './CSSClasses';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { MESSAGE_TYPES } from './types/MessageTypes';
@@ -725,7 +726,7 @@ export default class Underworld {
         Unit.syncImage(u)
         drawHealthBarAboveHead(i, this, zoom);
         // Animate shield modifier sprites
-        if ((u.modifiers[shield.id] || u.modifiers[fortify.id]) && u.image) {
+        if ((u.modifiers[shield.id] || u.modifiers[fortify.id] || u.modifiers[immune.id]) && u.image) {
           // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
           // which is used for identifying the sprite or animation that is currently active
           const modifierSprite = u.image.sprite.children.find(c => c.imagePath == shield.modifierImagePath)
@@ -1789,6 +1790,13 @@ export default class Underworld {
     }
     for (let e of enemies) {
       this.spawnEnemy(e.id, e.coord, e.isMiniboss);
+    }
+    // Make half of enemies protected for loop levels
+    if (levelData.levelIndex >= config.LAST_LEVEL_INDEX) {
+      const currentEnemies = this.units.filter(u => u.faction == Faction.ENEMY);
+      for (let e of currentEnemies.slice(Math.floor(currentEnemies.length / 2))) {
+        immune.add(e, this, false);
+      }
     }
 
     // Show text in center of screen for the new level
@@ -2945,6 +2953,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
               floatingText({ coords: unit, text: 'Liquid damage', style: { fill: 'red' } });
             }
           }
+          // Remove all Immune modifiers (they only last through one enemy turn)
+          this.units.forEach(u => {
+            Unit.removeModifier(u, immune.id, this);
+          });
+
           // Loop: go back to the player turn
           this.broadcastTurnPhase(turn_phase.PlayerTurns);
           break;
