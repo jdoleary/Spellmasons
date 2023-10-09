@@ -3,14 +3,12 @@
 - v1.20
     - Fix bloodmason:
         - Some mana spells cost nothing and therefore are OP like manasteal
+        - Check fortify mixed with bloodmason
+            - Or ally heals
+        - Bug: Manasteal is free when you're bloodmason
     - Balance: Update targeting spells so they target allies to prevent late-game one-shot-beat-level combos
-    - Bug: Manasteal is free when you're bloodmason
     - Feature: Some enemies should have targeting shields that resist targeting
-    - MeBeDerp — 09/25/2023 9:04 PM
-Apologies if this is intended behavior, but I noticed that if you Clone yourself (or your teammates) and their clone(s) get afflicted with Blood Curse, you will take Blood Curse damage from healing, won't have double HP, and won't be marked with the Blood Curse passive on your information screen.
     - See flowkrad's feedback about necromancer https://discord.com/channels/1032294536640200766/1154122344948846653/1154122348631441459
-    - Check fortify mixed with bloodmason
-        - Or ally heals
     - Daddy.Gar — Today at 2:19 AM
 Uh you can infintely use the clone spell as a blood mason to the point i think i may have crashed the east coast community server...
     - Expresso Depresso — Yesterday at 9:16 PM

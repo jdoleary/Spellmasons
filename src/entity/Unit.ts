@@ -371,9 +371,15 @@ export function serialize(unit: IUnit): IUnitSerialized {
   // resolveDoneMoving is a callback that cannot be serialized
   // animations and sfx come from the source unit and need not be saved or sent over
   // the network (it would just be extra data), better to restore from the source unit
-  const { resolveDoneMoving, animations, sfx, ...rest } = unit
+  const { resolveDoneMoving, animations, sfx, onDamageEvents, onDeathEvents, onAgroEvents, onTurnStartEvents, onTurnEndEvents, ...rest } = unit
   return {
     ...rest,
+    // Deep copy array so that serialized units don't share the object
+    onDamageEvents: [...onDamageEvents],
+    onDeathEvents: [...onDeathEvents],
+    onAgroEvents: [...onAgroEvents],
+    onTurnStartEvents: [...onTurnStartEvents],
+    onTurnEndEvents: [...onTurnEndEvents],
     // Deep copy modifiers so that serialized units don't share the object
     modifiers: unit.modifiers ? JSON.parse(JSON.stringify(unit.modifiers)) : undefined,
     // Deep copy path so that the serialized object doesn't share the path object
