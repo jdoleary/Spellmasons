@@ -1792,7 +1792,7 @@ export default class Underworld {
       this.spawnEnemy(e.id, e.coord, e.isMiniboss);
     }
     // Make half of enemies protected for loop levels
-    if (levelData.levelIndex >= config.LAST_LEVEL_INDEX) {
+    if (levelData.levelIndex > config.LAST_LEVEL_INDEX) {
       const currentEnemies = this.units.filter(u => u.faction == Faction.ENEMY);
       for (let e of currentEnemies.slice(Math.floor(currentEnemies.length / 2))) {
         immune.add(e, this, false);
