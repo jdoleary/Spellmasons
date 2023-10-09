@@ -1,21 +1,14 @@
 # Critical Path
 
 - v1.20
+    - Balance: Update targeting spells so they target allies to prevent late-game one-shot-beat-level combos
     - Bug: Manasteal is free when you're bloodmason
-    - Deathmasons can health sap each other
-    - UIzoom can be set to negative.  Cap it as 0.1
     - Feature: Some enemies should have targeting shields that resist targeting
-    - Antonio! — Today at 9:31 AM
-    also, the second phase death masons killed eachother for health once
     - MeBeDerp — 09/25/2023 9:04 PM
 Apologies if this is intended behavior, but I noticed that if you Clone yourself (or your teammates) and their clone(s) get afflicted with Blood Curse, you will take Blood Curse damage from healing, won't have double HP, and won't be marked with the Blood Curse passive on your information screen.
     - See flowkrad's feedback about necromancer https://discord.com/channels/1032294536640200766/1154122344948846653/1154122348631441459
     - Check fortify mixed with bloodmason
         - Or ally heals
-    - Ian — 09/19/2023 11:17 PM
-Hey there. Not sure if this is intentional but I was playing with my friend and a priest res'd me. I have full controll and just killed the priest the moment I got resurrected.
-Image
-we reached the next level and it looks like I spawn as a bad guy
     - Antonio!'s feedback taht Capture Soul's summon spells are too expensive to be worth it and resurrect is just plain better.
         Expresso Depresso — Yesterday at 7:23 PM
 eeeh its one of those where you shouldn't be able to out perform more than 2 summoners. For example as an exclusively co op player even if its just two people you can keep up with about 4 summoners if you have 2 150 cost summons Like blood archer and golem. If you have clone you WILL out pace those four summoners. My buddy and I love summoner armies but if summoners were made noticeably better it would be the second strongest build right behind current blood mage. I'm honestly quite happy with how the current summoner plays and if you get lucky and you get capture soul before you pick a class then the far gazer is amazing. The only change I could really say would be to make summoner a better class to pick with out making it broken would be like a 25-30% discount for summoning things 

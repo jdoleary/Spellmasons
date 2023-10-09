@@ -1,3 +1,5 @@
+## Spellmasons Update v1.20
+fix: Prevent Deathmasons from health-sapping each other.   Thanks Antonio!
 ## Spellmasons Update v1.19
 balance: Increase difficulty of early levels
 balance: Make Ancients cost more in the level budget for spawning
