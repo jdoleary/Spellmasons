@@ -258,6 +258,15 @@ export function adjustUnitStatsByUnderworldCalamity(unit: IUnit, statCalamity: S
       const stat: keyof IUnit = statCalamity.stat as keyof IUnit;
       if (typeof unit[stat] === 'number') {
         (unit[stat] as number) = Math.round((unit[stat] as number) * (1 + statCalamity.percent / 100));
+        if (stat.includes('Max')) {
+          const currentStat = stat.replace('Max', '') as keyof IUnit;
+          if (currentStat in unit && unit[currentStat] && unit[stat] && typeof unit[stat] === 'number') {
+            // Ensure if healthMax or staminaMax increases that it also increases the current value
+            // @ts-ignore
+            unit[currentStat] = unit[stat];
+          }
+
+        }
       }
 
     }

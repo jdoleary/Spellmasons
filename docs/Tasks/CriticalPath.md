@@ -4,8 +4,6 @@
     - i18n
         - Spell will be nullified
         - Target Radius
-    - Antonio! — 09/17/2023 9:38 PM
-also during the calamities, when increasing max health, the creatures whos max health was increased dont increase in health they have, keeping their old health stat just increasing their max health
     - Fix bloodmason:
         - Some mana spells cost nothing and therefore are OP like manasteal
         - Check fortify mixed with bloodmason
