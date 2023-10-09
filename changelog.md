@@ -1,5 +1,53 @@
 ## Spellmasons Update v1.20
-fix: Prevent Deathmasons from health-sapping each other.   Thanks Antonio!
+feature: On loop levels, half of the enemies are
+immune for 1 turn.
+This is to address the one-spell-clear-level builds
+and improve difficulty in later levels
+
+balance: make Necromancer class summon spells 30% cheaper
+Thanks Antonio! and Expresso Depresso and others for feedback
+
+src: Ally deathmasons now summon
+blue portals which heal you if you walk through them instead of
+hurt you like red portals do.  (If you do not walk
+through them,  they still spawn allies)
+
+fix: Prevent Deathmasons from health-sapping each other.
+Thanks Antonio! for reporting this!
+
+fix: Calamities not increasing health and stamina stat of enemies
+Thanks Antonio! for reporting this!
+
+fix: findRandomGroundLocation
+for summoner to make better guesses at potential
+spawn locations within summoner attack range.
+This fix prevents the issue where some of deathmasons brothers weren't
+spawning because it was considering the entire level
+
+fix: Cloned player blood cursed
+also secretly blood cursed player without reporting in UI.
+Thanks MeBeDerp for reporting this!
+
+balance: Temporarily remove bloodmason class
+until he can be properly balanced.
+
+UX: turn off player damage sfx for timemason
+so it's not annoying
+
+UI: Add TIMEMASON_DAMAGE_AMOUNT to timemason card
+
+fix: Enemy priest resurrecting Player
+and changing player's faction.
+Thanks Ian for reporting!
+
+css: Fix size of mana badge
+modified by usage when large in card-inspect
+
+fix: deathmasons teleporting to the same portal
+causing them to overlap
+
+fix: Limit uiZoom lower bound to 0.1
+Thanks Hagbard from Discord for reporting the issue
 ## Spellmasons Update v1.19
 balance: Increase difficulty of early levels
 balance: Make Ancients cost more in the level budget for spawning
