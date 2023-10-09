@@ -105,13 +105,15 @@ const unit: UnitSource = {
     if (unit.mana < manaCostToCast) {
       return [];
     }
-    return resurrectableUnits(unit, underworld);
+    return resurrectableUnits(unit, underworld).filter(u => {
+      return Unit.inRange(unit, u)
+
+    });
   }
 };
 export function resurrectableUnits(resurrector: Unit.IUnit, underworld: Underworld): Unit.IUnit[] {
   return underworld.units.filter(u =>
     !u.alive
-    && Unit.inRange(resurrector, u)
     // Do not allow priest to rez player characters
     // of a different faction (this would cause)
     // the player to change faction
