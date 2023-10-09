@@ -1,6 +1,6 @@
 import * as Unit from '../Unit';
 import type { UnitSource } from './index';
-import { UnitSubType } from '../../types/commonTypes';
+import { UnitSubType, UnitType } from '../../types/commonTypes';
 import * as math from '../../jmath/math';
 import * as Vec from '../../jmath/Vec';
 import { createVisualFlyingProjectile } from '../Projectile';
@@ -91,12 +91,12 @@ const unit: UnitSource = {
       didAction = await resurrectUnits(unit, attackTargets.slice(0, numberOfAlliesToRez), underworld);
     }
     if (!didAction) {
-      const closestDead = Unit.closestInListOfUnits(unit,
-        underworld.units.filter((u) => u !== unit && !u.alive)
+      const closestDeadResurrectable = Unit.closestInListOfUnits(unit,
+        resurrectableUnits(unit, underworld)
       );
       // Move to closest dead ally
-      if (closestDead) {
-        const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestDead, unit.stamina);
+      if (closestDeadResurrectable) {
+        const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestDeadResurrectable, unit.stamina);
         await Unit.moveTowards(unit, moveTo, underworld);
       }
     }
@@ -105,14 +105,21 @@ const unit: UnitSource = {
     if (unit.mana < manaCostToCast) {
       return [];
     }
-    const resurrectable = underworld.units.filter(u =>
-      !u.alive
-      && Unit.inRange(unit, u)
-      // Do not allow priest to rez each other.
-      // That would be super annoying for players
-      && u.unitSourceId !== unit.unitSourceId);
-    return resurrectable;
+    return resurrectableUnits(unit, underworld);
   }
 };
+export function resurrectableUnits(resurrector: Unit.IUnit, underworld: Underworld): Unit.IUnit[] {
+  return underworld.units.filter(u =>
+    !u.alive
+    && Unit.inRange(resurrector, u)
+    // Do not allow priest to rez player characters
+    // of a different faction (this would cause)
+    // the player to change faction
+    && (u.unitType !== UnitType.PLAYER_CONTROLLED || u.faction == resurrector.faction)
+    // Do not allow priest to rez each other.
+    // That would be super annoying for players
+    && u.unitSourceId !== resurrector.unitSourceId);
+
+}
 
 export default unit;
