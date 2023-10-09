@@ -9,10 +9,6 @@ Apologies if this is intended behavior, but I noticed that if you Clone yourself
     - See flowkrad's feedback about necromancer https://discord.com/channels/1032294536640200766/1154122344948846653/1154122348631441459
     - Check fortify mixed with bloodmason
         - Or ally heals
-    - Antonio!'s feedback taht Capture Soul's summon spells are too expensive to be worth it and resurrect is just plain better.
-        Expresso Depresso — Yesterday at 7:23 PM
-eeeh its one of those where you shouldn't be able to out perform more than 2 summoners. For example as an exclusively co op player even if its just two people you can keep up with about 4 summoners if you have 2 150 cost summons Like blood archer and golem. If you have clone you WILL out pace those four summoners. My buddy and I love summoner armies but if summoners were made noticeably better it would be the second strongest build right behind current blood mage. I'm honestly quite happy with how the current summoner plays and if you get lucky and you get capture soul before you pick a class then the far gazer is amazing. The only change I could really say would be to make summoner a better class to pick with out making it broken would be like a 25-30% discount for summoning things 
-
     - Daddy.Gar — Today at 2:19 AM
 Uh you can infintely use the clone spell as a blood mason to the point i think i may have crashed the east coast community server...
     - Expresso Depresso — Yesterday at 9:16 PM

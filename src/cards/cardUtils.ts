@@ -161,8 +161,8 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
                 cardCost.healthCost = Math.floor(0.9 * caster.unit.healthMax);
                 cardCost.manaCost = 0;
             } else if (Object.keys(allUnits).includes(card.id.replace(' Miniboss', ''))) {
-                // Make summon spells 50% off
-                cardCost.manaCost = Math.floor(cardCost.manaCost / 2);
+                // Make summon spells discounted
+                cardCost.manaCost = Math.floor(cardCost.manaCost * 0.7);
             }
         } else if (caster.mageType == 'Cleric' && card.category == CardCategory.Blessings) {
             cardCost.manaCost = Math.floor(cardCost.manaCost / 2);
