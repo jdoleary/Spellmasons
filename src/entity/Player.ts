@@ -108,6 +108,13 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
     console.log(`Player ${player.name} mageType changed to`, type);
     player.mageType = type;
     switch (type) {
+      case 'Timemason':
+        {
+          // Turn off damage sfx for timemason so as to not annoy the player
+          // with repetative damage sfx due to timemason's damage over time
+          player.unit.sfx.damage = '';
+        }
+        break;
       case 'Archer':
         {
           const upgrade = Upgrade.getUpgradeByTitle(arrowCardId);

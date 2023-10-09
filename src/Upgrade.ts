@@ -233,7 +233,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
   {
     title: 'Timemason',
     type: 'mageType',
-    description: () => i18n('class_timemason'),
+    description: () => i18n(['class_timemason', config.TIMEMASON_DAMAGE_AMOUNT.toString()]),
     thumbnail: 'images/upgrades/class-timemason.png',
     effect: (player, underworld) => {
       changeMageType('Timemason', player, underworld);

@@ -1,6 +1,8 @@
 # Critical Path
 
 - v1.20
+    - Fix bloodmason:
+        - Some mana spells cost nothing and therefore are OP like manasteal
     - Balance: Update targeting spells so they target allies to prevent late-game one-shot-beat-level combos
     - Bug: Manasteal is free when you're bloodmason
     - Feature: Some enemies should have targeting shields that resist targeting
@@ -27,7 +29,6 @@ But by upgrading just my hp I got to unfair hp numbers and could clear every lev
     - Bloodmason is still too powerful just by casting alone
     - Stat upgrades don't show after looping
     - Phrieksho: Vengance + Timemason is bugged out
-        - Make sfx of timemason taking damage softer
     - Bloodmason needs balancing desprately
     - Expresso Depresso — 09/15/2023 9:42 PM
 so I uh didnt die in my mp game when a blood golem mini boss hit me I took a tiny bit of damage but I shouldve been hit with 80 damage and I only had 42 health
