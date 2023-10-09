@@ -11,7 +11,7 @@ import { PLAYER_BASE_ATTACK_RANGE } from '../../config';
 import { summoningSicknessId } from '../../modifierSummoningSickness';
 import seedrandom from 'seedrandom';
 import { makeManaTrail } from '../../graphics/Particles';
-import { clone, Vec2 } from '../../jmath/Vec';
+import { clone, jitter, Vec2 } from '../../jmath/Vec';
 import { isCoordInLiquid, tryFallInOutOfLiquid } from '../Obstacle';
 
 export const SUMMONER_ID = 'summoner';
@@ -157,7 +157,8 @@ export function findRandomGroundLocation(underworld: Underworld, summoner: Unit.
       console.warn('Could not find random ground location');
       return undefined;
     }
-    randomCoord = underworld.getRandomCoordsWithinBounds(underworld.limits, seed);
+    // Pick a random coord that is most likely within the unit's attack range
+    randomCoord = jitter(summoner, summoner.attackRange, seed);
 
     // Omit location that intersects with unit
     for (let u of underworld.units) {
