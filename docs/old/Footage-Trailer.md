@@ -1,3 +1,15 @@
+## https://youtu.be/fFSNJ_Hsfx0?si=AYlEfKerJbcjT9f0
+- Trailers need: good art and good music
+- call to action at end
+- SHOW genre within first 5-10 seconds
+- Important: show how is it unique
+    - https://youtu.be/fFSNJ_Hsfx0?si=RMZxgmAuAO3yIav1&t=610
+    - "What is the FOOD?"
+    - Eyetrace https://youtu.be/fFSNJ_Hsfx0?si=vKO3E3stiTkVmdWy&t=1200
+    - How is this game different?
+    - Why is that interesting?
+    - How does it challenge me?
+    - What is the scope?
 # Requirements:
 - Trailer
     - https://partner.steamgames.com/doc/store/trailer
