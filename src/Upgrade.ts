@@ -241,17 +241,17 @@ export const upgradeMageClassSource: IUpgrade[] = [
     probability: 1,
     cost: { healthCost: 0, manaCost: 0 },
   },
-  {
-    title: 'Bloodmason',
-    type: 'mageType',
-    description: () => i18n('class_bloodmason'),
-    thumbnail: 'images/upgrades/class-bloodmason.png',
-    effect: (player, underworld) => {
-      changeMageType('Bloodmason', player, underworld);
-    },
-    probability: 1,
-    cost: { healthCost: 0, manaCost: 0 },
-  },
+  // {
+  //   title: 'Bloodmason',
+  //   type: 'mageType',
+  //   description: () => i18n('class_bloodmason'),
+  //   thumbnail: 'images/upgrades/class-bloodmason.png',
+  //   effect: (player, underworld) => {
+  //     changeMageType('Bloodmason', player, underworld);
+  //   },
+  //   probability: 1,
+  //   cost: { healthCost: 0, manaCost: 0 },
+  // },
   {
     title: i18n('Necromancer'),
     type: 'mageType',
