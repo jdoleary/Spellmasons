@@ -1392,8 +1392,7 @@ export default class Underworld {
       unitIds = [golem_unit_id];
 
     }
-    // TODO numberOfPickups should scale with level size
-    const numberOfPickups = isTutorialStartLevel ? 0 : 4;
+    const numberOfPickups = isTutorialStartLevel ? 0 : 4 + levelIndex;
     for (let i = 0; i < numberOfPickups; i++) {
       if (validSpawnCoords.length == 0) { break; }
       const choice = chooseObjectWithProbability(
