@@ -1,3 +1,35 @@
+- Skillo — Today at 7:37 AM
+explosive, poison, freeze, barrels
+explodes when damaged, causing AoE damage and applying its related effect on enemies within its radius. 
+
+teleport trap (or portal)
+there is always at least two in each level, when something steps on them, takes said character or item to one of the other portals. naturally, connected enemies moving through portals should remain connected. This could allow very exciting plays. 
+
+towers 
+watchtower (arrow, phys dmg), arcane tower (burns mana), freezing tower (lowers stamina)
+stationary enemies that won't attack through walls but have a decent chunk of hp. instantly destroyed by movement spells like pull, push or teleport. This gives you a flexible counterplay tool that isn't just bonking enemies harder, and makes sense too. 
+
+pits
+like the pools we already have in the game, but falling there is an instant death. A new map which is mostly surrounded by said pits would also be fun
+
+spike trap
+causes damage and applies a small DoT on enemies. could possibly cripple them, restraining movement for one turn. 
+
+dark ritual 
+a 3x3 or 2x2 zone is marked with a pentagram as the ritual site. Enemies killing within this zone or corpses dragged to it will be sacrificed, instantly removing said corpse and causing some outcome. it could perhaps summon an allied creature to fight for you, provide permanent stat boosts or reward you will a unique spell. sacrificing minibosses would offer an even better bonus. 
+
+healing waters
+looks like your average pool already in game but heals instead of causing damage. Another version that provides mana when touched would also be interesting. 
+
+Cursed fields
+Enemies within this area are upgraded to their stronger variants (regular archers become blood/ghost types, golems become blood golems, priests become dark priests). The effect wears off if that unit moves outside the area
+- enigmaticbacon — Yesterday at 8:01 PM
+Paperweight? Units affected by paperweight are displaced further by push/pull effects (and thus more likely to take blunt damage from walls)
+enigmaticbacon — Yesterday at 8:10 PM
+Heavyweight? Units affected by it will deal damage to other units they get push or pulled through (trample-type effect)
+Both are flexible in that paperweight also allows you to push yourself further, and heavyweight can be used on yourself to trample foes bowling style
+enigmaticbacon — Yesterday at 9:45 PM
+Contagion- When this unit comes into contact with another unit, that unit will be targeted for your next spell. Gives a different kinda targeting ability
 - MagicGoat — 10/06/2023 9:41 PM
 It might also be cool to make necromancer focus around forbidden spells or to have a class built around them
 - PickaPecka — 09/30/2023 7:13 PM

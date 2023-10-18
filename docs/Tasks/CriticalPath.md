@@ -1,4 +1,26 @@
 # Critical Path
+- Salazar — Today at 6:42 AM
+Can confirm...Though if you load back in, the game pretty much always gives you free points to spend without levelup...Also another fun glitch is if the game is stuck in the level up screen you can spamclick upgrades and have more than three points worth of updates.
+- enigmaticbacon — Yesterday at 7:40 PM
+When loading a game in which you have a mini-boss on your team, its stats are reverted to the non-miniboss version, which can lead to awkward fractional HP. 
+Example: I have a miniboss mana vampire on my team with 10/720 HP, save the game, then load the game, it will still be called a miniboss mana vampire, and have the same size, but it'll have 3.33333333/240HP
+- Thanks Pandize for general feedeback
+- If you stand against a wall and use target arrow + target circle you have infinite cast range
+- If your summons kill the deathmason then the brothers get to take their turn immediately.
+- Add Clutter (Pandize from discord)
+- Lemdoran — Yesterday at 6:53 AM
+Not 100% sure it is an actual bug but as it seem strange;
+When you have a spell in your book (not in your quickbar), it always show the base cost, not the "streak increased cost". Meaning, especialy as a summoner, i frequently have to swap from book to quickbar to see the real actual cost of my spells / minions 😮
+- https://steamcommunity.com/app/1618380/discussions/0/6993585599485171773/
+- Immunity should only prevent damage, not all targeting
+- STEAM: flowkrad [has Spellmasons] Sep 20 @ 6:27am 
+    
+had the same bug happen. playing solo a resurrected a few of those guys that reduce max mana on hit and they hit a few times (did not reduce max mana to zero) i killed the deathmason and without giving any turns to respond it spawned multiple of them and killed me (no warning indicator i was going to get hit either)
+
+- Mattmellow
+The spell costs aren't going back down to their original cost if I can't see them (casting from the spellbook while the spells aren't in the hotbar or side areas). You can see this in a new run if you take all of the spells out of view and only cast from the spellbook, on your next turn the spell cost will not decrease. Is this intentional?
+
+I love the game, you're doing great!❤️
 
 - v1.20
     - i18n
@@ -12,7 +34,6 @@
         - Daddy.Gar — Today at 2:19 AM
         - Bloodmason + Bloodcurse is WAY TO POWERFUL
     - UI scaling issues:
-        - "good looks" upgrade is hidden on some resolutions (1080)
         - XzeroAir UI scaling of 1.1 makes class mage type cards get clipped on the bottom
             Uh you can infintely use the clone spell as a blood mason to the point i think i may have crashed the east coast community server...
     - Late game balance
