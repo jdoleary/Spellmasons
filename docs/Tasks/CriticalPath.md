@@ -1,4 +1,12 @@
 # Critical Path
+- Features for 1.21
+    - Skillo: explosive, poison, freeze, barrels
+    - Skillo: Blue portals as pickups (come in pairs) (teleport trap)
+    - Skillo: Towers
+    - Auras
+    - enigmaticbacon: Paperweight, heavyweight
+    - fog of war
+
 - idea: (Pandize?) Spell upgrades
 
 - enigmaticbacon — Yesterday at 7:40 PM
@@ -10,9 +18,6 @@ Example: I have a miniboss mana vampire on my team with 10/720 HP, save the game
 had the same bug happen. playing solo a resurrected a few of those guys that reduce max mana on hit and they hit a few times (did not reduce max mana to zero) 
 
 - v1.20
-    - i18n
-        - Spell will be nullified
-        - Target Radius
     - Fix bloodmason:
         - Some mana spells cost nothing and therefore are OP like manasteal
         - Check fortify mixed with bloodmason
@@ -23,8 +28,6 @@ had the same bug happen. playing solo a resurrected a few of those guys that red
     - UI scaling issues:
         - XzeroAir UI scaling of 1.1 makes class mage type cards get clipped on the bottom
             Uh you can infintely use the clone spell as a blood mason to the point i think i may have crashed the east coast community server...
-    - Late game balance
-        - Feature: Some enemies should have targeting shields that resist targeting
     - See flowkrad's feedback about necromancer https://discord.com/channels/1032294536640200766/1154122344948846653/1154122348631441459
     - Game stuck after all 3 players portaling: https://www.twitch.tv/videos/1928091427 01:26:43
     - Use bun for websocketpie

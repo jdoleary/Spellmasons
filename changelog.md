@@ -1,3 +1,9 @@
+## Spellmasons Update v1.21
+Thanks to Pandize for general feedback!
+
+fix: UI: Ensure spell costs are up to date in the inventory
+    Thanks Mattmellow and Lemdoran for reporting this
+
 ## Spellmasons Update v1.20
 feature: On loop levels, half of the enemies are
 immune for 1 turn.
