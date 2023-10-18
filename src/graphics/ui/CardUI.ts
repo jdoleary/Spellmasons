@@ -423,6 +423,8 @@ export function toggleInventory(toolbarIndex: number | undefined, forceState: bo
     // Create inventory
     playSFXKey('inventory_open');
     syncInventory(toolbarIndex, underworld);
+    // Update spellcosts in the inventory
+    updateCardBadges(underworld);
   } else {
     // If inventory just closed, play sfx
     if (inventoryWasOpen) {
@@ -880,7 +882,7 @@ export function updateCardBadges(underworld: Underworld) {
       }
     }
     // Update cards in hand and inventory
-    const cards = Cards.getCardsFromIds(globalThis.player.cards);
+    const cards = Cards.getCardsFromIds(globalThis.player.inventory);
     const badgesById: { [cardId: string]: { mana: HTMLElement[], health: HTMLElement[] } } = {}
     function populateBadgesById(attr: 'mana' | 'health') {
       Array.from(document.querySelectorAll(`.card-holder .card .card-${attr}-badge, #inventory-content .card .card-${attr}-badge`)).forEach((badge) => {

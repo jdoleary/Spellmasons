@@ -16,11 +16,6 @@ When you have a spell in your book (not in your quickbar), it always show the ba
     
 had the same bug happen. playing solo a resurrected a few of those guys that reduce max mana on hit and they hit a few times (did not reduce max mana to zero) 
 
-- Mattmellow
-The spell costs aren't going back down to their original cost if I can't see them (casting from the spellbook while the spells aren't in the hotbar or side areas). You can see this in a new run if you take all of the spells out of view and only cast from the spellbook, on your next turn the spell cost will not decrease. Is this intentional?
-
-I love the game, you're doing great!❤️
-
 - v1.20
     - i18n
         - Spell will be nullified
