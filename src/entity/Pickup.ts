@@ -419,7 +419,7 @@ export const pickups: IPickupSource[] = [
     animationSpeed: -config.DEFAULT_ANIMATION_SPEED,
     playerOnly: false,
     name: PICKUP_SPIKES_NAME,
-    probability: 70,
+    probability: 40,
     scale: 1,
     description: ['Deals 🍞 to any unit that touches it', spike_damage.toString()],
     willTrigger: ({ unit, player, pickup, underworld }) => {
