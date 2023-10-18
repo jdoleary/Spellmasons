@@ -6,9 +6,10 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { createVisualFlyingProjectile } from '../entity/Projectile';
 import { closestLineSegmentIntersectionWithLine, findWherePointIntersectLineSegmentAtRightAngle, LineSegment } from '../jmath/lineSegment';
 import * as config from '../config';
-import { add, equal, Vec2 } from '../jmath/Vec';
+import { add, equal, invert, Vec2 } from '../jmath/Vec';
 import Underworld from '../Underworld';
 import { playDefaultSpellSFX } from './cardUtils';
+import { moveAlongVector, normalizedVector } from '../jmath/moveWithCollision';
 
 export const arrowCardId = 'Arrow';
 const damageDone = 10;
@@ -93,8 +94,19 @@ export function findArrowPath(casterPositionAtTimeOfCast: Vec2, target: Vec2, un
   let arrowShootPath = { p1: casterPositionAtTimeOfCast, p2: endPoint };
   // revise end point to stop where it hits the first wall
   const LOSResult = closestLineSegmentIntersectionWithLine(arrowShootPath, underworld.walls);
-  const intersection = LOSResult ? LOSResult.intersection : undefined;
+  let intersection = LOSResult ? LOSResult.intersection : undefined;
   if (intersection) {
+    // If arrow intersects with wall
+    // modify intersection so that it lands in game space and not out of bounds.
+    // This ensures target_arrow can't spawn units out of bounds:
+    // It should have no meaninful effect on other arrows
+    if (LOSResult?.lineSegment) {
+      const wallVector = normalizedVector(LOSResult.lineSegment.p2, LOSResult.lineSegment.p1);
+      if (wallVector.vector) {
+        intersection = moveAlongVector(intersection, invert(wallVector.vector), config.COLLISION_MESH_RADIUS / 2);
+      }
+    }
+
     endPoint = intersection;
     // revise arrow shoot path now that endpoint has changed
     return { p1: casterPositionAtTimeOfCast, p2: endPoint };

@@ -85,7 +85,6 @@ const spell: Spell = {
       await Promise.all(promises).then(() => {
         globalThis.predictionGraphics?.clear();
         if (!addedNewTarget) {
-          state.castLocation = originalCastLocation;
           refundLastSpell(state, prediction, 'No valid targets. Cost refunded.');
         }
       });
