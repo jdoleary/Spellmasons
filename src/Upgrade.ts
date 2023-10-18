@@ -51,6 +51,10 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
     // Now that upgrades are cards too, make sure it doesn't
     // show upgrades that the player already has as cards
     && !player.cards.includes(u.title)
+    // Upgrade is NOT included in list of rerollOmit
+    // this prevents a reroll from presenting an upgrade
+    // that was in the last selection
+    && !(globalThis.rerollOmit || []).some(omittedTitle => omittedTitle == u.title)
     && isModActive(u, underworld);
   let filteredUpgradeCardsSource = upgradeCardsSource.filter(filterUpgrades);
   // Every other level, players get to choose from stas upgrades or card upgrades
@@ -101,6 +105,7 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
       console.log('No upgrades to choose from', clonedUpgradeSource);
     }
   }
+  globalThis.rerollOmit = upgrades.map(u => u.title);
   return upgrades;
 }
 export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underworld: Underworld) {

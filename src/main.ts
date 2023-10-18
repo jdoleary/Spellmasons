@@ -28,6 +28,8 @@ globalThis.playNextSong = playNextSong;
 globalThis.playSFX = playSFX;
 globalThis.playSFXKey = playSFXKey;
 globalThis.sfx = sfx;
+// A list of upgrades to omit for the next reroll
+globalThis.rerollOmit = [];
 
 globalThis.lobbyPlayerList = [];
 

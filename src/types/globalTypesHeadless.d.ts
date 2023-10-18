@@ -328,4 +328,6 @@ declare global {
     var freeSpells: string[];
     var mageTypes: Array<Player.MageType>;
     var adminPickMageType: boolean | undefined;
+    // A list of upgrades to omit for the next reroll
+    var rerollOmit: string[] | undefined;
 }
