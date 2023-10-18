@@ -1409,6 +1409,22 @@ export default class Underworld {
         }
       }
     }
+    // Teleport Trap!  Spawn at least 2 blue portals in each level that can be used to teleport
+    if (levelIndex >= 5) {
+      const bluePortalPickupIndex = Pickup.pickups.findIndex(p => p.name == Pickup.BLUE_PORTAL);
+      if (bluePortalPickupIndex) {
+        if (validSpawnCoords.length >= 2) {
+          const numberOfBluePortals = levelIndex < 8 ? 2 : 2 + Math.floor((levelIndex - 8) / 2) * 2
+          for (let bluePortal = 0; bluePortal < numberOfBluePortals; bluePortal++) {
+            const validSpawnCoordsIndex = randInt(0, validSpawnCoords.length - 1, this.random);
+            const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
+            if (coord) {
+              levelData.pickups.push({ index: bluePortalPickupIndex, coord })
+            }
+          }
+        }
+      }
+    }
     const numberOfMinibossesAllowed = Math.ceil(Math.max(0, (levelIndex - 4) / 4));
     let numberOfMinibossesMade = 0;
     for (let id of unitIds) {
