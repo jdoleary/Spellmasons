@@ -6,7 +6,6 @@ When loading a game in which you have a mini-boss on your team, its stats are re
 Example: I have a miniboss mana vampire on my team with 10/720 HP, save the game, then load the game, it will still be called a miniboss mana vampire, and have the same size, but it'll have 3.33333333/240HP
 - Thanks Pandize for general feedeback
 - If you stand against a wall and use target arrow + target circle you have infinite cast range
-- If your summons kill the deathmason then the brothers get to take their turn immediately.
 - Add Clutter (Pandize from discord)
 - Lemdoran — Yesterday at 6:53 AM
 Not 100% sure it is an actual bug but as it seem strange;
@@ -15,7 +14,7 @@ When you have a spell in your book (not in your quickbar), it always show the ba
 - Immunity should only prevent damage, not all targeting
 - STEAM: flowkrad [has Spellmasons] Sep 20 @ 6:27am 
     
-had the same bug happen. playing solo a resurrected a few of those guys that reduce max mana on hit and they hit a few times (did not reduce max mana to zero) i killed the deathmason and without giving any turns to respond it spawned multiple of them and killed me (no warning indicator i was going to get hit either)
+had the same bug happen. playing solo a resurrected a few of those guys that reduce max mana on hit and they hit a few times (did not reduce max mana to zero) 
 
 - Mattmellow
 The spell costs aren't going back down to their original cost if I can't see them (casting from the spellbook while the spells aren't in the hotbar or side areas). You can see this in a new run if you take all of the spells out of view and only cast from the spellbook, on your next turn the spell cost will not decrease. Is this intentional?

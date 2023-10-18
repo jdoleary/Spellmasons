@@ -39,6 +39,7 @@ import { MESSAGE_TYPES } from '../types/MessageTypes';
 import { StatCalamity } from '../Perk';
 import { skyBeam } from '../VisualEffects';
 import seedrandom from 'seedrandom';
+import { summoningSicknessId } from '../modifierSummoningSickness';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -803,6 +804,12 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
             'deathmason dialogue 3',
           ][i];
           newBossmason.name = `${givenName}`;
+          // If deathmasons are spawned during the NPC_ALLY turn
+          // meaning an ally killed the first deathmason, give them
+          // summoning sickness so they can't attack right after spawning
+          if (underworld.turn_phase == turn_phase.NPC_ALLY) {
+            addModifier(newBossmason, summoningSicknessId, underworld, false);
+          }
           skyBeam(newBossmason);
           if (dialogue) {
             floatingText({ coords: newBossmason, text: dialogue, valpha: 0.005, aalpha: 0 })
