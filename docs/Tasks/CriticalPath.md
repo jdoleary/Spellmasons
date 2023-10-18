@@ -1,6 +1,4 @@
 # Critical Path
-- Salazar — Today at 6:42 AM
-Can confirm...Though if you load back in, the game pretty much always gives you free points to spend without levelup...Also another fun glitch is if the game is stuck in the level up screen you can spamclick upgrades and have more than three points worth of updates.
 - enigmaticbacon — Yesterday at 7:40 PM
 When loading a game in which you have a mini-boss on your team, its stats are reverted to the non-miniboss version, which can lead to awkward fractional HP. 
 Example: I have a miniboss mana vampire on my team with 10/720 HP, save the game, then load the game, it will still be called a miniboss mana vampire, and have the same size, but it'll have 3.33333333/240HP

@@ -1723,19 +1723,6 @@ export default class Underworld {
     document.body?.classList.toggle('loading', false);
     runCinematicLevelCamera(this).then(() => {
       console.log('Cinematic Cam: Finished');
-      // Give players stat points to spend:
-      // starting on level 2 (levelIndex 1)
-      if (this.levelIndex > 0) {
-        for (let p of this.players) {
-          p.statPointsUnspent += p.mageType === 'Spellmason' ? 4 : 3;
-        }
-        // For first play session don't show stat upgrades too early, it's information overload
-        if (isFirstEverPlaySession && this.levelIndex <= 2) {
-          for (let p of this.players) {
-            p.statPointsUnspent = 0;
-          }
-        }
-      }
       // Set the first turn phase
       this.broadcastTurnPhase(turn_phase.PlayerTurns);
       cameraAutoFollow(false);
@@ -2443,6 +2430,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
   spendStatPoint(stat: string, player: Player.IPlayer) {
     const isCurrentPlayer = player == globalThis.player;
+    // Do not allow overspend
+    if (player.statPointsUnspent <= 0) {
+      return;
+    }
     player.statPointsUnspent--;
     if (stat == 'Good Looks') {
       const damageMultiplier = 0.1 / this.players.length;

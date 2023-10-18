@@ -16,7 +16,7 @@ import Underworld, { turn_phase } from '../Underworld';
 import * as target_cone from '../cards/target_cone';
 import * as lastWill from '../cards/lastwill';
 import * as captureSoul from '../cards/capture_soul';
-import { explain, EXPLAIN_BLESSINGS, isTutorialComplete } from '../graphics/Explain';
+import { explain, EXPLAIN_BLESSINGS, isFirstTutorialStepComplete, isTutorialComplete } from '../graphics/Explain';
 import { lightenColor } from '../graphics/ui/colorUtil';
 import { AttributePerk } from '../Perk';
 import { setPlayerNameUI } from '../PlayerUtils';
@@ -466,6 +466,16 @@ export function enterPortal(player: IPlayer, underworld: Underworld) {
   if (parseInt(highScore) < underworld.levelIndex) {
     console.log('New farthest level record!', mageTypeFarthestLevel, '->', underworld.levelIndex);
     storageSet(mageTypeFarthestLevel, underworld.levelIndex.toString());
+  }
+  // Give players stat points to spend:
+  // starting on level 2 (levelIndex 1)
+  if (underworld.levelIndex > 0) {
+    player.statPointsUnspent += player.mageType === 'Spellmason' ? 4 : 3;
+    const isFirstEverPlaySession = !isFirstTutorialStepComplete();
+    // For first play session don't show stat upgrades too early, it's information overload
+    if (isFirstEverPlaySession && underworld.levelIndex <= 2) {
+      player.statPointsUnspent = 0;
+    }
   }
 
 
