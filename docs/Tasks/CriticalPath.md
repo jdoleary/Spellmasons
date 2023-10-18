@@ -1,7 +1,6 @@
 # Critical Path
 - Features for 1.21
     - Skillo: explosive, poison, freeze, barrels
-    - Skillo: Blue portals as pickups (come in pairs) (teleport trap)
     - Skillo: Towers
     - Auras
     - enigmaticbacon: Paperweight, heavyweight
