@@ -5,7 +5,12 @@
     - Skillo: Towers
     - Auras
     - enigmaticbacon: Paperweight, heavyweight
-    - fog of war
+    - fog of war (on branch fogOfWar)
+
+- Mattmellow — Today at 1:38 PM
+bestiary of all encountered enemies to access in game, 
+and all spells (credit enigmaticbaco)
+
 
 - idea: (Pandize?) Spell upgrades
 
