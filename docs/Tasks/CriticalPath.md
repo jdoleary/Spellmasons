@@ -1,17 +1,12 @@
 # Critical Path
+- idea: (Pandize?) Spell upgrades
+
 - enigmaticbacon — Yesterday at 7:40 PM
 When loading a game in which you have a mini-boss on your team, its stats are reverted to the non-miniboss version, which can lead to awkward fractional HP. 
 Example: I have a miniboss mana vampire on my team with 10/720 HP, save the game, then load the game, it will still be called a miniboss mana vampire, and have the same size, but it'll have 3.33333333/240HP
-- Thanks Pandize for general feedeback
-- If you stand against a wall and use target arrow + target circle you have infinite cast range
 - Add Clutter (Pandize from discord)
-- Lemdoran — Yesterday at 6:53 AM
-Not 100% sure it is an actual bug but as it seem strange;
-When you have a spell in your book (not in your quickbar), it always show the base cost, not the "streak increased cost". Meaning, especialy as a summoner, i frequently have to swap from book to quickbar to see the real actual cost of my spells / minions 😮
 - https://steamcommunity.com/app/1618380/discussions/0/6993585599485171773/
-- Immunity should only prevent damage, not all targeting
 - STEAM: flowkrad [has Spellmasons] Sep 20 @ 6:27am 
-    
 had the same bug happen. playing solo a resurrected a few of those guys that reduce max mana on hit and they hit a few times (did not reduce max mana to zero) 
 
 - v1.20

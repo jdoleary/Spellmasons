@@ -14,6 +14,7 @@ import makeAllRedShader from '../graphics/shaders/selected';
 import { addLerpable } from '../lerpList';
 import { allUnits } from './units';
 import { allCards, allModifiers, EffectState } from '../cards';
+import * as immune from '../cards/immune';
 import { checkIfNeedToClearTooltip, clearSpellEffectProjection } from '../graphics/PlanningView';
 import floatingText, { queueCenteredFloatingText } from '../graphics/FloatingText';
 import Underworld, { turn_phase } from '../Underworld';
@@ -321,6 +322,11 @@ export function addModifier(unit: IUnit, key: string, underworld: Underworld, pr
   // Call custom modifier's add function
   const modifier = allModifiers[key];
   if (modifier) {
+    // Immune units cannot recieve modifier
+    if (unit.modifiers[immune.id]) {
+      immune.notifyImmune(unit, false);
+      return;
+    }
     if (modifier.add) {
       if (allCards[key]?.supportQuantity && quantity == undefined) {
         console.error('Dev warning:', key, 'supportsQuantity; however quantity was not provided to the addModifier function.');
@@ -837,6 +843,11 @@ export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | u
   if (!unit.alive) {
     // Do not deal damage to dead unitsn
     return;
+  }
+  // Immune units cannot be damaged
+  if (unit.modifiers[immune.id]) {
+    immune.notifyImmune(unit, false);
+    return
   }
   amount = composeOnDamageEvents(unit, amount, underworld, prediction);
   if (amount == 0) {

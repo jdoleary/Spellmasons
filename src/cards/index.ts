@@ -111,7 +111,6 @@ export interface Spell {
   events?: Events;
 }
 export function registerModifiers(id: string, modifiers: Modifiers) {
-
   allModifiers[id] = modifiers;
 }
 export function registerEvents(id: string, events: Events) {
@@ -411,11 +410,6 @@ export function addTarget(target: any, effectState: EffectState) {
 export function addUnitTarget(unit: Unit.IUnit, effectState: EffectState) {
   // Adds a unit to effectState.targetedUnits IF it is not already in unitTargets
   if (effectState.targetedUnits.indexOf(unit) === -1) {
-    // Immune units cannot be targeted
-    if (unit.modifiers[immune.id]) {
-      immune.notifyImmune(unit, false);
-      return
-    }
     effectState.targetedUnits.push(unit);
   }
 }
