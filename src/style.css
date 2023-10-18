@@ -135,7 +135,7 @@ body.view-Game.showUpgrades #upgrade-picker {
   align-items: center;
   display: flex;
   pointer-events: all;
-  max-height: 50vh;
+  max-height: 100vh;
   /* So that the reroll button wraps to the next row */
   flex-wrap: wrap;
 }
