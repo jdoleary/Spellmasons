@@ -1,5 +1,6 @@
 # Critical Path
 - Features for 1.21
+    - i18n: 'Error: You may only save during your turn.';
     - Loading backups in multiplayer sometimes skips player turn and goes to enemy turn.
     - Still encountering desyncs
     - Kess — Today at 10:59 AM

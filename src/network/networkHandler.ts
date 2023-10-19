@@ -1084,6 +1084,11 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       console.error(err);
       return err;
     }
+    if (underworld.turn_phase != turn_phase.PlayerTurns) {
+      const err = 'Error: You may only save during your turn.';
+      console.error(err);
+      return err;
+    }
     // Prompt overwrite, don't allow for saving multiple saves with the same name
     if (getAllSaveFiles && !forceOverwrite) {
 
