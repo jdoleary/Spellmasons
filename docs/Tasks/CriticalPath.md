@@ -1,10 +1,15 @@
 # Critical Path
 - Features for 1.21
+    - Integrate Iwashi kan ツ's Portugues translation
     - Skillo: explosive, poison, freeze, barrels
     - Skillo: Towers
     - Auras
     - enigmaticbacon: Paperweight, heavyweight
     - fog of war (on branch fogOfWar)
+    
+-Skillo — Today at 6:06 PM
+with the starting draws, it seems like it will force attack skills on the third selection, even if you already have one (you pick 3 spells) 
+speaking of which that would be a welcome thing to tweak, say you already have one damaging spell, it shouldn't force you into getting another, but rather unlocking the entire pool
 
 - Mattmellow — Today at 1:38 PM
 bestiary of all encountered enemies to access in game, 
