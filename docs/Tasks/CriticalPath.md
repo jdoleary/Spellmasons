@@ -1,7 +1,6 @@
 # Critical Path
 - Features for 1.21
     - i18n: 'Error: You may only save during your turn.';
-    - Loading backups in multiplayer sometimes skips player turn and goes to enemy turn.
     - Still encountering desyncs
     - Kess — Today at 10:59 AM
 I can also confirm that on community servers, a couple times in the middle of the player turn monsters that were just killed would revive at full health, without any revive spells and just popped back to life 😅. The instance I remember best was one person casted a spell that killed a golem and a miniboss golem, then walked as far as they could, then clicked the end turn button (though the other two of us were still planning things so turn wasn't over), and -pop- the miniboss and golem were back at full health. Also freezing the newly reborn enemies did not show the frozen vfx but did list it in their status effects

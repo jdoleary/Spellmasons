@@ -105,6 +105,7 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
         Player.setClientConnected(player, isConnected, underworld);
         if (!wasConnected && isConnected) {
             clientsToSendGameState.push(player.clientId);
+            player.endedTurn = false;
         }
     }
     // Since the player's array length has changed, recalculate all
