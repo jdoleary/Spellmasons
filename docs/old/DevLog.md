@@ -1,3 +1,12 @@
+## 2023.10.19
+Trying to solve loaded games sometimes skipping the player turn.
+
+One:
+Started a game with two players and shot one arrow and saved.  No one ended their turn, when I loaded back in (one player at a time),
+the second player started with their turn ended so when the first player quit it moved on.  This may be because the game was loaded before player two rejoined
+
+Two: You can miss your turn if the game is saved when one player has ended their turn, the other has not, the game is saved and then loaded while the player who ended their turn is the only one in the lobby
+
 ## 2023.06.27
 Thinking about future changes based on player feedback.  The big ones are
 - Lag at the end game
