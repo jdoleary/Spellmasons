@@ -876,6 +876,11 @@ async function handleLoadGameState(payload: {
   if (players) {
     underworld.syncPlayers(players);
   }
+  // After a load always start all players with endedTurn == false so that
+  // it doesn't skip the player turn if players rejoin out of order
+  for (let p of underworld.players) {
+    p.endedTurn = false;
+  }
   underworld.doodads = doodads.map(d => Doodad.load(d, underworld, false)).flatMap(x => x !== undefined ? [x] : []);
   // lastUnitId must be synced AFTER all of the units are synced since the synced
   // units are id aware
