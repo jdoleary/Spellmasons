@@ -10,6 +10,7 @@ import { registerEvents } from '../../cards';
 import { createParticleTexture, logNoTextureWarning, simpleEmitter } from '../../graphics/Particles';
 import { Vec2 } from '../../jmath/Vec';
 import { drawUICircle } from '../../graphics/PlanningView';
+import { animateSpell } from '../../cards/cardUtils';
 
 export const urn_poison_id = 'urn_poison'
 const baseRadius = 140;
@@ -77,6 +78,9 @@ function explode(location: Vec2, radius: number, damage: number, prediction: boo
         radius,
         prediction
     ).filter(u => u.alive).forEach(u => {
+        if (!prediction) {
+            animateSpell(u, 'spell-effects/spellPoison');
+        }
         Unit.addModifier(u, poison.poisonCardId, underworld, prediction, 1);
     });
 }
