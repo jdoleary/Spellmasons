@@ -47,7 +47,7 @@ export default async function Jprompt(prompt: PromptArgs): Promise<boolean> {
 <div class="ui-border">
 <div class="prompt-inner ${!imageSrc ? 'thin' : ''}">
     <div class="prompt-content">
-        ${imageSrc ? `<img src="${imageSrc}"/>` : ''}
+        ${imageSrc ? `<img src="${imageSrc}" onerror="this.style.display='none';"/>` : ''}
         <div class="text">
             ${globalThis.i18n(text)}
         </div>
