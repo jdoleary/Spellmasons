@@ -7,6 +7,7 @@ import { registerEvents } from '../../cards';
 import { baseRadius, explode } from '../../cards/bloat';
 
 export const urn_explosive_id = 'urn_explosive'
+const damage = 80;
 const unit: UnitSource = {
     id: urn_explosive_id,
     info: {
@@ -19,7 +20,7 @@ const unit: UnitSource = {
         attackRange: baseRadius,
         manaMax: 0,
         healthMax: 1,
-        damage: 0,
+        damage,
     },
     spawnParams: {
         probability: 0,
@@ -35,7 +36,7 @@ const unit: UnitSource = {
     },
     sfx: {
         damage: '',
-        death: 'bloatExplosion'
+        death: ''
     },
     init: (unit: Unit.IUnit, underworld: Underworld) => {
         unit.onDeathEvents.push('urnexplosiveExplode');
@@ -47,11 +48,10 @@ const unit: UnitSource = {
     }
 };
 export const urnexplosiveExplode = 'urnexplosiveExplode';
-const damage = 80;
 export function registerUrnexplosiveExplode() {
     registerEvents(urnexplosiveExplode, {
         onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
-            explode(unit, unit.attackRange, damage, prediction, underworld);
+            explode(unit, unit.attackRange, unit.damage, prediction, underworld);
             // Remove corpse
             // Note: This must be called after all other explode logic or else it will affect the position
             // of the explosion
