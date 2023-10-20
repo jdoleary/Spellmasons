@@ -1,6 +1,6 @@
 # Critical Path
 - Features for 1.21
-    - Bug: Urns with a probability of 0 can still spawn
+    - TODO make description and tooltip images for urns
     - UX bug: When an Ice urn ends the player turn the ice doesn't stay on them so it's not obvious how they got their turn ended
     - enigmaticbacon — Today at 2:56 PM
     On community servers in multi-player, if I've died, and my partner gets a kill that levels us up, I'll get a spell select screen that doesn't allow me to reroll and when I make a choice, it won't be added to my spellbook. Then, when we reach the next level, I'll get the same spell choices again and this time it works. It's disorienting
