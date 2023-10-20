@@ -77,6 +77,8 @@ const spell: Spell = {
                 }
                 clone.x = validSpawnCoords.x;
                 clone.y = validSpawnCoords.y;
+                // Clones don't provide experience when killed
+                clone.originalLife = false;
               }
             }
             if (Pickup.isPickup(target)) {

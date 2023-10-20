@@ -155,6 +155,8 @@ const spell: Spell = {
                 }
                 clone.x = validSpawnCoords.x;
                 clone.y = validSpawnCoords.y;
+                // Clones don't provide experience when killed
+                clone.originalLife = false;
                 // Add the clone as a target
                 addTarget(clone, state);
 

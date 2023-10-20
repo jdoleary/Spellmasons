@@ -1,8 +1,6 @@
 # Critical Path
 - Features for 1.21
     - enigmaticbacon — Today at 2:56 PM
-    I dont know if this a bug or intentional, but when a split/cloned monster is killed, you still get exp. This makes it pretty easy to go near infinite on exp.
-    - enigmaticbacon — Today at 2:56 PM
     On community servers in multi-player, if I've died, and my partner gets a kill that levels us up, I'll get a spell select screen that doesn't allow me to reroll and when I make a choice, it won't be added to my spellbook. Then, when we reach the next level, I'll get the same spell choices again and this time it works. It's disorienting
     - i18n: 'Error: You may only save during your turn.';
     - Still encountering desyncs
