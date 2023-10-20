@@ -6,7 +6,7 @@ import type Underworld from '../../Underworld';
 import { registerEvents } from '../../cards';
 import { baseRadius, explode } from '../../cards/bloat';
 
-export const urn_explosive_id = 'urn_explosive'
+export const urn_explosive_id = 'Explosive Urn'
 const damage = 80;
 const unit: UnitSource = {
     id: urn_explosive_id,

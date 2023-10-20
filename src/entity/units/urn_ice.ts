@@ -11,7 +11,7 @@ import { createParticleTexture, logNoTextureWarning, simpleEmitter } from '../..
 import { Vec2 } from '../../jmath/Vec';
 import { drawUICircle } from '../../graphics/PlanningView';
 
-export const urn_ice_id = 'urn_ice'
+export const urn_ice_id = 'Ice Urn'
 const baseRadius = 140;
 const unit: UnitSource = {
     id: urn_ice_id,

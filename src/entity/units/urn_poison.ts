@@ -12,7 +12,7 @@ import { Vec2 } from '../../jmath/Vec';
 import { drawUICircle } from '../../graphics/PlanningView';
 import { animateSpell } from '../../cards/cardUtils';
 
-export const urn_poison_id = 'urn_poison'
+export const urn_poison_id = 'Toxic Urn'
 const baseRadius = 140;
 const unitSource: UnitSource = {
     id: urn_poison_id,
