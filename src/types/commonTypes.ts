@@ -12,7 +12,8 @@ export enum UnitSubType {
   RANGED_LOS,
   RANGED_RADIUS,
   SUPPORT_CLASS,
-  SPECIAL_LOS
+  SPECIAL_LOS,
+  DOODAD
 }
 
 export enum Faction {

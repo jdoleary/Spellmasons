@@ -16,7 +16,7 @@ import { makeBloatExplosionWithParticles } from '../graphics/ParticleCollection'
 const id = 'Bloat';
 const imageName = 'explode-on-death.png';
 const damage = 40;
-const baseRadius = 140;
+export const baseRadius = 140;
 function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra?: any) {
   const modifier = getOrInitModifier(unit, id, {
     isCurse: true, quantity, persistBetweenLevels: false,

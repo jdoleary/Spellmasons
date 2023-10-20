@@ -1,5 +1,7 @@
 # Critical Path
 - Features for 1.21
+    - Bug: Urns with a probability of 0 can still spawn
+    - UX bug: When an Ice urn ends the player turn the ice doesn't stay on them so it's not obvious how they got their turn ended
     - enigmaticbacon — Today at 2:56 PM
     On community servers in multi-player, if I've died, and my partner gets a kill that levels us up, I'll get a spell select screen that doesn't allow me to reroll and when I make a choice, it won't be added to my spellbook. Then, when we reach the next level, I'll get the same spell choices again and this time it works. It's disorienting
     - i18n: 'Error: You may only save during your turn.';
@@ -9,9 +11,14 @@ I can also confirm that on community servers, a couple times in the middle of th
 
 - New wanted features
     - Skillo: explosive, poison, freeze, barrels
+        - Must be targetable and damagable by spells
+        - Must be hitabble by flying arrows
+        - Must not be targeted by NPCs
     - Skillo: Towers
     - Auras
     - enigmaticbacon: Paperweight, heavyweight
+        - Add mass to units
+            - Some units automatically have more mass than others like bosses
     - fog of war (on branch fogOfWar)
 
 - Mattmellow — Today at 1:38 PM

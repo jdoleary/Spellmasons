@@ -1,5 +1,5 @@
 import { Spell } from './index';
-import { CardCategory } from '../types/commonTypes';
+import { CardCategory, UnitSubType } from '../types/commonTypes';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 const id = 'Plus Radius';
@@ -20,6 +20,9 @@ const spell: Spell = {
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
       const adjustedRadius = radiusIncreaseAmount * quantity;
       state.aggregator.radius += adjustedRadius;
+      state.targetedUnits.filter(u => u.unitSubType === UnitSubType.DOODAD).forEach(doodad => {
+        doodad.attackRange += adjustedRadius;
+      })
       return state;
     },
   },

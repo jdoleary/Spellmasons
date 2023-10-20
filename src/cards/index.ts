@@ -85,6 +85,9 @@ import floatingText from '../graphics/FloatingText';
 import { Localizable } from '../localization';
 import { distance } from '../jmath/math';
 import { getSpellThumbnailPath } from '../graphics/ui/CardUI';
+import { registerUrnIceExplode } from '../entity/units/urn_ice';
+import { registerUrnpoisonExplode } from '../entity/units/urn_poison';
+import { registerUrnexplosiveExplode } from '../entity/units/urn_explosive';
 export interface Modifiers {
   subsprite?: Subsprite;
   // run special init logic (usually for visuals) when a modifier is added or loaded
@@ -229,6 +232,9 @@ export function registerCards(overworld: Overworld) {
 
   // Register floating modifier (non-card);
   registerSummoningSickness();
+  registerUrnIceExplode();
+  registerUrnpoisonExplode();
+  registerUrnexplosiveExplode();
   registerImmune();
 
 }

@@ -54,6 +54,9 @@ import ancient from './ancient';
 import gripthulu from './gripthulu';
 import blood_archer from './blood_archer';
 import ghost_archer from './ghost_archer';
+import urn_ice from './urn_ice';
+import urn_poison from './urn_poison';
+import urn_explosive from './urn_explosive';
 import Underworld from '../../Underworld';
 import { Localizable } from '../../localization';
 
@@ -80,6 +83,9 @@ export function registerUnits() {
   registerUnit(playerUnit);
   registerUnit(bossmason);
   registerUnit(decoy);
+  registerUnit(urn_ice);
+  registerUnit(urn_poison);
+  registerUnit(urn_explosive);
 }
 
 

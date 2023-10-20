@@ -866,11 +866,14 @@ export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | u
     if (amount > 0) {
       playSFXKey(unit.sfx.damage);
       playAnimation(unit, unit.animations.hit, { loop: false, animationSpeed: 0.2 });
-      if (damageFromVec2) {
-        if (options?.thinBloodLine) {
-          startBloodParticleSplatter(underworld, damageFromVec2, unit, { maxRotationOffset: Math.PI / 16, numberOfParticles: 30 });
-        } else {
-          startBloodParticleSplatter(underworld, damageFromVec2, unit);
+      // All units bleed except Doodads
+      if (unit.unitSubType !== UnitSubType.DOODAD) {
+        if (damageFromVec2) {
+          if (options?.thinBloodLine) {
+            startBloodParticleSplatter(underworld, damageFromVec2, unit, { maxRotationOffset: Math.PI / 16, numberOfParticles: 30 });
+          } else {
+            startBloodParticleSplatter(underworld, damageFromVec2, unit);
+          }
         }
       }
     }

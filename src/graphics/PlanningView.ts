@@ -473,6 +473,10 @@ async function showCastCardsPrediction(underworld: Underworld, target: Vec2, cas
 export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld, zoom: number) {
   const u = underworld.units[unitIndex];
   if (u) {
+    if (u.unitSubType === UnitSubType.DOODAD) {
+      // Don't draw healthbars for Doodads
+      return;
+    }
     const predictionUnit = !underworld.unitsPrediction ? undefined : underworld.unitsPrediction[unitIndex];
     // Draw unit overlay graphics
     //--
