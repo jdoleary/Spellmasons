@@ -52,7 +52,7 @@ import * as Vec from "./jmath/Vec";
 import Events from './Events';
 import { allUnits } from './entity/units';
 import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, getUIBarProps, isOutOfBounds, runPredictions, updatePlanningView } from './graphics/PlanningView';
-import { chooseObjectWithProbability, getUniqueSeedString, prng, randInt, SeedrandomState } from './jmath/rand';
+import { chooseObjectWithProbability, chooseOneOfSeeded, getUniqueSeedString, prng, randInt, SeedrandomState } from './jmath/rand';
 import { calculateCostForSingleCard } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle, closestLineSegmentIntersection } from './jmath/lineSegment';
 import { expandPolygon, isVec2InsidePolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './jmath/Polygon2';
@@ -94,6 +94,9 @@ import { LAST_LEVEL_INDEX } from './config';
 import { unavailableUntilLevelIndexDifficultyModifier } from './Difficulty';
 import { View } from './views';
 import { skyBeam } from './VisualEffects';
+import { urn_explosive_id } from './entity/units/urn_explosive';
+import { urn_ice_id } from './entity/units/urn_ice';
+import { urn_poison_id } from './entity/units/urn_poison';
 
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
@@ -1421,6 +1424,18 @@ export default class Underworld {
             if (coord) {
               levelData.pickups.push({ index: bluePortalPickupIndex, coord })
             }
+          }
+        }
+      }
+    }
+    if (levelIndex > 2) {
+      const doSpawnUrns = chooseOneOfSeeded([false, true], this.random);
+      if (doSpawnUrns) {
+        const numberOfUrns = randInt(2, 6, this.random);
+        const typeOfUrn = chooseOneOfSeeded([urn_explosive_id, urn_ice_id, urn_poison_id], this.random);
+        if (typeOfUrn) {
+          for (let i = 0; i < numberOfUrns; i++) {
+            unitIds.push(typeOfUrn);
           }
         }
       }
@@ -3932,7 +3947,7 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
   const numberOfTypesOfEnemies = 2 + Math.floor(adjustedLevelIndex / 2);
   const { unitMinLevelIndexSubtractor, budgetMultiplier: difficultyBudgetMultiplier } = unavailableUntilLevelIndexDifficultyModifier(underworld);
   let possibleUnitsToChoose = Object.values(allUnits)
-    .filter(u => u.spawnParams && (u.spawnParams.unavailableUntilLevelIndex - unitMinLevelIndexSubtractor) <= adjustedLevelIndex && isModActive(u, underworld))
+    .filter(u => u.spawnParams && (u.spawnParams.unavailableUntilLevelIndex - unitMinLevelIndexSubtractor) <= adjustedLevelIndex && u.spawnParams.probability > 0 && isModActive(u, underworld))
     .map(u => ({ id: u.id, probability: u.spawnParams?.probability || 1, budgetCost: u.spawnParams?.budgetCost || 1 }))
   const unitTypes = Array(numberOfTypesOfEnemies).fill(null)
     // flatMap is used to remove any undefineds
