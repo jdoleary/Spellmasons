@@ -869,10 +869,16 @@ export function updateTooltipContent(underworld: Underworld) {
           const imageSrc = Unit.getExplainPathForUnitId(unitSource.id);
           if (!elInspectorTooltipImage.src.endsWith(imageSrc)) {
             elInspectorTooltipImage.src = imageSrc;
+            elInspectorTooltipImage.onerror = e => {
+              elInspectorTooltipImage.style.display = 'none';
+              elInspectorTooltipImage.dataset.errorSrc = imageSrc;
+            }
           }
-          // on error image is hidden so set it back to block whenever it is changed.
-          // the onError handler prevents the broken image icon from showing
-          elInspectorTooltipImage.style.display = "block";
+          if (imageSrc !== elInspectorTooltipImage.dataset.errorSrc) {
+            // on error image is hidden so set it back to block whenever it is changed.
+            // the onError handler prevents the broken image icon from showing
+            elInspectorTooltipImage.style.display = "block";
+          }
           const extraText = `
 ${modifiersToText(globalThis.selectedUnit.modifiers)}
 ${unitSource.unitProps.manaCostToCast && unitSource.unitProps.manaCostToCast > 0 ? `${i18n('mana cost to cast')}: ${unitSource.unitProps.manaCostToCast}` : ''}
