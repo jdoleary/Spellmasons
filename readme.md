@@ -16,7 +16,7 @@ Spellmasons is a turn-based, tactical roguelike where you devise spell combinati
 - You can access the current game state in the console via `devUnderworld`.  To get you started messing around with the game in the console, move your character's position with the following: `devUnderworld.players[0].unit.x += 100`.
 
 ## License
-Please read and respect the [licence](./LICENSE.md).  I am making this software publicly available because I love video games and I love making them and I want to give players and tinkerers the ability to see how I made it and the ability to make changes of their own.  I'd like the game to live beyond the time I spend working on it and so I am giving you the ability to fully edit the game for your own enjoyment!  If you want to use a portion of my work in your own, separate, project.  Please reach out to me for permission.
+Please read and respect the [licence](./LICENSE.md).  I am making this software publicly available because I love video games and I love making them and I want to give players and tinkerers the ability to see how I made it and the ability to make changes of their own.  I'd like the game to live beyond the time I spend working on it and so I am giving you the ability to fully edit the game for your own enjoyment!  If you want to use a portion of my work in your own separate project, please reach out to me for permission.
 
 ## Support my work
 The best way you can support my work is to purchase Spellmasons on [Steam](https://store.steampowered.com/app/1618380/Spellmasons/) and review it on Steam!  Also spreading the word to friends helps :)
