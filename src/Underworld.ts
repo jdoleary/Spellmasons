@@ -1810,7 +1810,8 @@ export default class Underworld {
     }
     // Make half of enemies protected for loop levels
     if (levelData.levelIndex > config.LAST_LEVEL_INDEX) {
-      const currentEnemies = this.units.filter(u => u.faction == Faction.ENEMY);
+      // Only target enemies, exclude doodads
+      const currentEnemies = this.units.filter(u => u.faction == Faction.ENEMY && u.unitSubType !== UnitSubType.DOODAD);
       for (let e of currentEnemies.slice(Math.floor(currentEnemies.length / 2))) {
         immune.add(e, this, false);
       }
