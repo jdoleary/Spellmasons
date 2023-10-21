@@ -2690,6 +2690,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
                 playSFXKey('click');
               });
               el.appendChild(elPlusBtn);
+              if (globalThis.devAutoPickUpgrades) {
+                elPlusBtn.click();
+              }
 
             })
           }
