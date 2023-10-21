@@ -878,9 +878,17 @@ export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | u
       }
     }
   }
+  // if healing
+  if (amount < 0) {
+    // Ensure it doesn't heal over max health
+    const maxHealingAllowed = Math.max(0, unit.healthMax - unit.health);
+    if (amount > maxHealingAllowed) {
+      amount = maxHealingAllowed;
+    }
+  }
   unit.health -= amount;
-  // Prevent health from going over maximum or under 0
-  unit.health = Math.max(0, Math.min(unit.health, unit.healthMax));
+  // Prevent health from going under 0
+  unit.health = Math.max(0, unit.health);
   // Ensure health is a whole number
   unit.health = Math.floor(unit.health);
   // If the unit is actually taking damage (not taking 0 damage or being healed - (negative damage))

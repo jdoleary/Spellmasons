@@ -1,7 +1,5 @@
 # Critical Path
 - Features for 1.21
-    - enigmaticbacon — Today at 11:37 AM
-When over max HP, any damage taken will reduce HP to equal to or less than Max. Meaning if I have 200/40 HP and use mana steal (or any spell that costs health), I’ll be brought down to 40HP or below regardless of the spell’s health cost
     - UX bug: When an Ice urn ends the player turn the ice doesn't stay on them so it's not obvious how they got their turn ended
     - enigmaticbacon — Today at 2:56 PM
     On community servers in multi-player, if I've died, and my partner gets a kill that levels us up, I'll get a spell select screen that doesn't allow me to reroll and when I make a choice, it won't be added to my spellbook. Then, when we reach the next level, I'll get the same spell choices again and this time it works. It's disorienting
@@ -11,10 +9,6 @@ When over max HP, any damage taken will reduce HP to equal to or less than Max. 
 I can also confirm that on community servers, a couple times in the middle of the player turn monsters that were just killed would revive at full health, without any revive spells and just popped back to life 😅. The instance I remember best was one person casted a spell that killed a golem and a miniboss golem, then walked as far as they could, then clicked the end turn button (though the other two of us were still planning things so turn wasn't over), and -pop- the miniboss and golem were back at full health. Also freezing the newly reborn enemies did not show the frozen vfx but did list it in their status effects
 
 - New wanted features
-    - Skillo: explosive, poison, freeze, barrels
-        - Must be targetable and damagable by spells
-        - Must be hitabble by flying arrows
-        - Must not be targeted by NPCs
     - Skillo: Towers
     - Auras
     - enigmaticbacon: Paperweight, heavyweight
