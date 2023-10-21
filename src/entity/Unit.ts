@@ -769,15 +769,15 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   }
   // Once a unit dies it is no longer on it's originalLife
   unit.originalLife = false;
-  // If there is only 1 bossmason, when it dies, spawn 3 more:
-  if (underworld.units.filter(u => u.unitSourceId == bossmasonUnitId).length == 1) {
+  // For the bossmason level, if there is only 1 bossmason, when it dies, spawn 3 more:
+  if (underworld.levelIndex === config.LAST_LEVEL_INDEX && underworld.units.filter(u => u.unitSourceId == bossmasonUnitId).length == 1) {
     if (unit.unitSourceId == bossmasonUnitId) {
       const mageTypeWinsKey = storage.getStoredMageTypeWinsKey(player?.mageType || 'Spellmason');
       const currentMageTypeWins = parseInt(storageGet(mageTypeWinsKey) || '0');
       storageSet(mageTypeWinsKey, (currentMageTypeWins + 1).toString());
       (prediction
         ? underworld.unitsPrediction
-        : underworld.units).filter(u => u.unitType == UnitType.AI).forEach(u => die(u, underworld, prediction));
+        : underworld.units).filter(u => u.unitType == UnitType.AI && u.unitSubType !== UnitSubType.DOODAD).forEach(u => die(u, underworld, prediction));
       if (!prediction) {
         let retryAttempts = 0;
         for (let i = 0; (i < 3 && retryAttempts < 10); i++) {
