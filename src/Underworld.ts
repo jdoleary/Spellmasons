@@ -3413,9 +3413,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         effectState.targetedUnits = effectState.targetedUnits.filter(u => !excludedTargets.includes(u));
 
         const cardEffectPromise = card.effect(effectState, card, quantity, this, prediction, outOfRange);
-        if (!prediction && effectState.casterPlayer && card.cooldown) {
-          Object.assign(effectState.casterPlayer.spellState[card.id] || {}, { cooldown: card.cooldown });
-        }
         if (prediction) {
           this.fullySimulateForceMovePredictions();
         }
@@ -3431,6 +3428,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         }
 
         if (!effectState.shouldRefundLastSpell) {
+          // Add cooldown
+          if (!prediction && effectState.casterPlayer && card.cooldown) {
+            Object.assign(effectState.casterPlayer.spellState[card.id] || {}, { cooldown: card.cooldown });
+          }
           // Compute spell mana/health cost and add card usage count
           // This happens after the spell is cast so that fizzle spells can be refunded
           const spellCostTally = {

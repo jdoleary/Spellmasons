@@ -1,8 +1,5 @@
 # Critical Path
 - Features for 1.21
-    - Kekis — Today at 1:54 PM
-Spell costs are refunded if they miss, for instance, if you shoot an arrow at nowhere. However, if you use Target Arrow > Freeze, and you shoot at the ground missing, the only the cost of one spell gets refunded instead of both, and Freeze gets on cooldown!
-I posted here since I don't know whether or not this is intended or a bug
     - enigmaticbacon — Today at 11:37 AM
 When over max HP, any damage taken will reduce HP to equal to or less than Max. Meaning if I have 200/40 HP and use mana steal (or any spell that costs health), I’ll be brought down to 40HP or below regardless of the spell’s health cost
     - UX bug: When an Ice urn ends the player turn the ice doesn't stay on them so it's not obvious how they got their turn ended

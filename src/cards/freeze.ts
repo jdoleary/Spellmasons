@@ -1,7 +1,7 @@
 import * as Unit from '../entity/Unit';
 import * as Image from '../graphics/Image';
 import * as Pickup from '../entity/Pickup';
-import { Spell } from './index';
+import { Spell, refundLastSpell } from './index';
 import { CardCategory, UnitType } from '../types/commonTypes';
 import * as config from '../config'
 import type Underworld from '../Underworld';
@@ -44,6 +44,8 @@ const spell: Spell = {
             Pickup.sync(pickup);
           }
         }
+      } else {
+        refundLastSpell(state, prediction);
       }
       return state;
     },
