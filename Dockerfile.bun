@@ -1,0 +1,18 @@
+FROM oven/bun:latest 
+
+ENV NODE_ENV=production
+ENV USING_BUN=yes
+
+WORKDIR /app
+
+COPY ./package*.json /app/
+
+RUN bun install --frozen-lockfile
+
+COPY ./headless-server-build/ /app/headless-server-build/
+
+ENV PORT=8080
+
+EXPOSE $PORT 
+
+ENTRYPOINT [ "bun", "run", "headless-run-server"]

@@ -8,6 +8,9 @@ PACKAGE_VERSION=$(cat package.json \
   | awk -F: '{ print $2 }' \
   | sed 's/[ ",]//g')
 
+# Build Dockerfile.bun for experimental transition from @websocketpie/server to @websocketpie/server-bun
+docker build -f Dockerfile.bun . -t "spellmasons-bun:latest" -t "spellmasons-bun:$PACKAGE_VERSION"
+
 SEASHELL_IMAGE_PATH=registry.digitalocean.com/jdoleary-containers/smms
 echo "Package Version:$PACKAGE_VERSION"
 docker build . -t "$SEASHELL_IMAGE_PATH:latest" -t "$SEASHELL_IMAGE_PATH:$PACKAGE_VERSION"

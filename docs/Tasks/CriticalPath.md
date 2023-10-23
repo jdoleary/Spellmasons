@@ -1,10 +1,27 @@
 # Critical Path
+- Bun.sh refactor
+    - had a spell chosen and then disappear on level 3
+    - no skill choice presented on level up to level 4, maybe it's because they already had too many spells from previous bug
+    - got ` Creating a pickup with duplicate id`, just ran over a pickup, it triggered but came back
+- FIND OUT HOW TO ENABLE STEAM REMOTE PLAY BEFORE EVENT
+    - https://steamcommunity.com/app/1618380/discussions/0/3872591600381876700/
+-  timemason needs a change
+waiting for timemason's ability to work, especially as the game goes on, is a huge time-sink and gets very boring. I get that part of it is a time-crunch challage, but is there any way we could make it so you can volunteer to speed it up or something?
+
+otherwise love the challenge. 
+-  Forest Dweller Yamu [has Spellmasons] Oct 19 @ 2:51am
+    
+Reconnecting in Multiplayer is Super Broken
+I've played multiple matches online with friends where trying to reconnect with everyone either A: Doen't work and makes us restart from the beginning by just killing all players or B: Some players just start picking levels again and have no progress up to that floor anymore.
+
+I really like this game and its fun with buddies, but having the match just break everytime on floor 7-9 just ruins it. 
 - Add tools to requesting order of server's last few messages for testing desync on prod
 - Experimentally enable Bun server
 - Optimize late game lag
     - Find the bottleneck, use web workers?
         - Circlex3 + bloat + slash
             - I could cache the onDeaths to all happen at the same time to optimize the takeDamage>die>onDeath>explode hello
+        - cone chain similar chair similar manasteal clone*5
         - Circlex3 + vortex
             - fullySimulateForceMovePredictions takes a while
     - https://github.com/GoogleChromeLabs/comlink

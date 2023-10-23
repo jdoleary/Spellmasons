@@ -34,7 +34,8 @@ import { IHostApp, onClientPresenceChanged } from './network/networkUtil';
 import { onData } from './network/networkHandler';
 import makeOverworld, { Overworld } from "./Overworld";
 import Underworld from "./Underworld";
-const pie = require('@websocketpie/server');
+const isUsingBun = process.env.USING_BUN === 'yes';
+const pie = isUsingBun ? require('@websocketpie/server-bun') : require('@websocketpie/server');
 globalThis.SPELLMASONS_PACKAGE_VERSION = version;
 // Init underworld so that when clients join they can use it as the canonical
 // record of gamestate
