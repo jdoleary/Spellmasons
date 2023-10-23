@@ -114,13 +114,18 @@ export function create({ pos, pickupSource, idOverride }:
     : prediction
       ? ++lastPredictionPickupId
       : ++underworld.lastPickupId;
-  if ((prediction ? underworld.pickupsPrediction : underworld.pickups).find(p => p.id == id)) {
+  const duplicatePickup = (prediction ? underworld.pickupsPrediction : underworld.pickups).find(p => p.id == id)
+  if (duplicatePickup) {
     if (prediction) {
       console.log('Pickup ids', underworld.pickupsPrediction.map(p => p.id), id, 'incrementor:', lastPredictionPickupId, 'prediction:', prediction);
     } else {
       console.log('Pickup ids', underworld.pickups.map(p => p.id), id, 'incrementor:', underworld.lastPickupId, 'prediction:', prediction);
     }
-    console.error('Creating a pickup with duplicate id');
+    console.error('Aborting: creating a pickup with duplicate id');
+    if (duplicatePickup.name != name) {
+      console.error('Duplicate pickup is over a different name', duplicatePickup.name, name);
+    }
+    return duplicatePickup;
   }
   const self: IPickup = {
     id,

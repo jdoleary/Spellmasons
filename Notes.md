@@ -1,3 +1,6 @@
+- Bun.sh refactor
+    - had a spell chosen and then disappear on level 3
+    - no skill choice presented on level up to level 4, maybe it's because they already had too many spells from previous bug
 ---
 Link spells together to create unique, clever outcomes!  Spellmasons is a turn-based, tactical roguelike where you can play solo or team up with your friends in online multiplayer and delve into the intricacies of magic where cunning combinations yield powerfully satisfying results.
 ---

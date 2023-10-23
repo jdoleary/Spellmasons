@@ -1,8 +1,4 @@
 # Critical Path
-- Bun.sh refactor
-    - had a spell chosen and then disappear on level 3
-    - no skill choice presented on level up to level 4, maybe it's because they already had too many spells from previous bug
-    - got ` Creating a pickup with duplicate id`, just ran over a pickup, it triggered but came back
 - FIND OUT HOW TO ENABLE STEAM REMOTE PLAY BEFORE EVENT
     - https://steamcommunity.com/app/1618380/discussions/0/3872591600381876700/
 -  timemason needs a change
