@@ -1375,6 +1375,7 @@ const subTypeAttentionMarkerMapping = {
   [UnitSubType.RANGED_RADIUS]: 'badgeMagic.png',
   [UnitSubType.SUPPORT_CLASS]: 'badgeMagic.png',
   [UnitSubType.SPECIAL_LOS]: 'badgeMagic.png',
+  [UnitSubType.DOODAD]: 'badgeMagic.png',
 
 }
 export function subTypeToAttentionMarkerImage(unit: IUnit): string {
