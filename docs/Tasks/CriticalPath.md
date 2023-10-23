@@ -1,4 +1,21 @@
 # Critical Path
+- Add tools to requesting order of server's last few messages for testing desync on prod
+- Experimentally enable Bun server
+- Optimize late game lag
+    - Find the bottleneck, use web workers?
+        - Circlex3 + bloat + slash
+            - I could cache the onDeaths to all happen at the same time to optimize the takeDamage>die>onDeath>explode hello
+        - Circlex3 + vortex
+            - fullySimulateForceMovePredictions takes a while
+    - https://github.com/GoogleChromeLabs/comlink
+    - Archy — Today at 4:13 PM
+```
+I mean I encountered issues with performance while I was playing with summons, resurrect and clone spells. Combining them with cone or circle and increasing body count lags the game. Cause when when you clone your friendlies you accidentally clone dead bodies around them and it becomes worse when you trying to add more "cannon fodder" to it. 
+
+Another issue is when you try to preview long spell chain attack with bloat or other explosive spell and when the preview tries to show result of the attack it also lags significantly.
+
+P.S.  I have Ryzen 7 3700 and rtx4070, but as I see it's cpu intensive. Because my friend with weaker cpu starts lagging in mp much earlier. 
+```
 - Features for 1.21
     - UX bug: When an Ice urn ends the player turn the ice doesn't stay on them so it's not obvious how they got their turn ended
     - enigmaticbacon — Today at 2:56 PM
