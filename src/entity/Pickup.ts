@@ -24,6 +24,7 @@ import { JEmitter } from '../types/commonTypes';
 import { raceTimeout } from '../Promise';
 import { createVisualLobbingProjectile } from './Projectile';
 import floatingText from '../graphics/FloatingText';
+import { containerParticles } from '../graphics/Particles';
 
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 export const PICKUP_IMAGE_PATH = 'pickups/scroll';
@@ -155,14 +156,14 @@ export function create({ pos, pickupSource, idOverride }:
     // Right now red portal and cursed mana potion are the only pickup that uses an emitter;
     // however if that changes in the future this should be refactored so
     // that there isn't a special case inside of Pickup.create
-    assignEmitter(self, RED_PORTAL_JID, prediction);
+    assignEmitter(self, RED_PORTAL_JID, prediction, underworld);
   } else if (name == BLUE_PORTAL) {
     // Right now red portal and cursed mana potion are the only pickup that uses an emitter;
     // however if that changes in the future this should be refactored so
     // that there isn't a special case inside of Pickup.create
-    assignEmitter(self, BLUE_PORTAL_JID, prediction);
+    assignEmitter(self, BLUE_PORTAL_JID, prediction, underworld);
   } else if (name == CURSED_MANA_POTION) {
-    assignEmitter(self, CURSED_MANA_POTION, prediction);
+    assignEmitter(self, CURSED_MANA_POTION, prediction, underworld);
   }
 
   if (turnsLeftToGrab) {
@@ -246,7 +247,7 @@ export function create({ pos, pickupSource, idOverride }:
 
   return self;
 }
-function assignEmitter(pickup: IPickup, emitterId: string, prediction: boolean) {
+function assignEmitter(pickup: IPickup, emitterId: string, prediction: boolean, underworld: Underworld) {
   if (prediction || globalThis.headless) {
     // Don't show if just a prediction
     return;
@@ -263,6 +264,13 @@ function assignEmitter(pickup: IPickup, emitterId: string, prediction: boolean) 
   if (pickup.emitter) {
     // Pickup emitters should not be cleaned up until they are intentionally destroyed
     pickup.emitter.cleanAfterTurn = false;
+    if (containerParticles) {
+      underworld.particleFollowers.push({
+        displayObject: containerParticles,
+        emitter: pickup.emitter,
+        target: pickup
+      });
+    }
   }
   // @ts-ignore: jid custom property for serialization
   pickup.emitterJID = emitterId;
