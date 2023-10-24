@@ -522,7 +522,7 @@ export const pickups: IPickupSource[] = [
     name: BLUE_PORTAL,
     probability: 0,
     scale: 1,
-    description: ['red portal description', bossmasonUnitId, (-RED_PORTAL_DAMAGE).toString()],
+    description: ['blue portal description', (RED_PORTAL_DAMAGE).toString()],
     willTrigger: ({ unit, player, pickup, underworld }) => {
       return !!player;
     },
