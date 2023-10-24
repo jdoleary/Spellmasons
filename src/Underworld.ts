@@ -4020,6 +4020,12 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
         units.push(chosenUnitType.id);
         budgetLeft -= chosenUnitType.budgetCost;
       }
+      if (howMany <= 0) {
+        // Prevent infinite loop
+        budgetLeft--;
+        continue;
+
+      }
     }
   }
   return units;
