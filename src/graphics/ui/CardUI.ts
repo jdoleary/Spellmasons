@@ -45,9 +45,9 @@ function resetInventoryContent() {
 }
 const elInvButton = document.getElementById('inventory-icon') as HTMLElement;
 // Where the non-selected cards are displayed
-const elCardHand = document.getElementById('card-hand') as HTMLElement;
-const elFloatingCardHolderLeft = document.getElementById('floating-card-holder-left') as HTMLElement;
-const elFloatingCardHolderRight = document.getElementById('floating-card-holder-right') as HTMLElement;
+export const elCardHand = document.getElementById('card-hand') as HTMLElement;
+export const elFloatingCardHolderLeft = document.getElementById('floating-card-holder-left') as HTMLElement;
+export const elFloatingCardHolderRight = document.getElementById('floating-card-holder-right') as HTMLElement;
 const cardContainers = [elCardHand, elFloatingCardHolderLeft, elFloatingCardHolderRight];
 // Where the selected cards are displayed
 const elSelectedCards = document.getElementById('selected-cards') as HTMLElement;
@@ -517,10 +517,10 @@ export function deselectLastCard(underworld: Underworld) {
   }
 
 }
-export function selectCardByIndex(index: number, underworld?: Underworld) {
+export function selectCardByIndex(index: number, cardHolder: HTMLElement) {
   if (globalThis.headless) { return; }
-  if (elCardHand) {
-    const cardGroup = elCardHand.children.item(index) as HTMLElement;
+  if (cardHolder) {
+    const cardGroup = cardHolder.children.item(index) as HTMLElement;
     if (cardGroup && cardGroup.children.item(0)) {
       (cardGroup.children.item(0) as HTMLElement).click();
     } else {

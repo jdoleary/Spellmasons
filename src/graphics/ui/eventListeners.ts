@@ -115,7 +115,7 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
   if (shouldReturnImmediately) {
     return;
   }
-  handleInputDown(getKeyCodeMapping(event.code), overworld);
+  handleInputDown(getKeyCodeMapping(event.code, event), overworld);
 }
 function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworld) {
   if (keyCodeMapping === undefined) {
@@ -213,34 +213,85 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
       underworld.endMyTurn();
       break;
     case 'spell1':
-      CardUI.selectCardByIndex(0, overworld.underworld);
+      CardUI.selectCardByIndex(0, CardUI.elCardHand);
       break;
     case 'spell2':
-      CardUI.selectCardByIndex(1, overworld.underworld);
+      CardUI.selectCardByIndex(1, CardUI.elCardHand);
       break;
     case 'spell3':
-      CardUI.selectCardByIndex(2, overworld.underworld);
+      CardUI.selectCardByIndex(2, CardUI.elCardHand);
       break;
     case 'spell4':
-      CardUI.selectCardByIndex(3, overworld.underworld);
+      CardUI.selectCardByIndex(3, CardUI.elCardHand);
       break;
     case 'spell5':
-      CardUI.selectCardByIndex(4, overworld.underworld);
+      CardUI.selectCardByIndex(4, CardUI.elCardHand);
       break;
     case 'spell6':
-      CardUI.selectCardByIndex(5, overworld.underworld);
+      CardUI.selectCardByIndex(5, CardUI.elCardHand);
       break;
     case 'spell7':
-      CardUI.selectCardByIndex(6, overworld.underworld);
+      CardUI.selectCardByIndex(6, CardUI.elCardHand);
       break;
     case 'spell8':
-      CardUI.selectCardByIndex(7, overworld.underworld);
+      CardUI.selectCardByIndex(7, CardUI.elCardHand);
       break;
     case 'spell9':
-      CardUI.selectCardByIndex(8, overworld.underworld);
+      CardUI.selectCardByIndex(8, CardUI.elCardHand);
       break;
-    case 'spell0':
-      CardUI.selectCardByIndex(9, overworld.underworld);
+    case 'spellLeft1':
+      CardUI.selectCardByIndex(0, CardUI.elFloatingCardHolderLeft);
+      break;
+    case 'spellLeft2':
+      CardUI.selectCardByIndex(1, CardUI.elFloatingCardHolderLeft);
+      break;
+    case 'spellLeft3':
+      CardUI.selectCardByIndex(2, CardUI.elFloatingCardHolderLeft);
+      break;
+    case 'spellLeft4':
+      CardUI.selectCardByIndex(3, CardUI.elFloatingCardHolderLeft);
+      break;
+    case 'spellLeft5':
+      CardUI.selectCardByIndex(4, CardUI.elFloatingCardHolderLeft);
+      break;
+    case 'spellLeft6':
+      CardUI.selectCardByIndex(5, CardUI.elFloatingCardHolderLeft);
+      break;
+    case 'spellLeft7':
+      CardUI.selectCardByIndex(6, CardUI.elFloatingCardHolderLeft);
+      break;
+    case 'spellLeft8':
+      CardUI.selectCardByIndex(7, CardUI.elFloatingCardHolderLeft);
+      break;
+    case 'spellLeft9':
+      CardUI.selectCardByIndex(8, CardUI.elFloatingCardHolderLeft);
+      break;
+    case 'spellRight1':
+      CardUI.selectCardByIndex(0, CardUI.elFloatingCardHolderRight);
+      break;
+    case 'spellRight2':
+      CardUI.selectCardByIndex(1, CardUI.elFloatingCardHolderRight);
+      break;
+    case 'spellRight3':
+      CardUI.selectCardByIndex(2, CardUI.elFloatingCardHolderRight);
+      break;
+    case 'spellRight4':
+      CardUI.selectCardByIndex(3, CardUI.elFloatingCardHolderRight);
+      break;
+    case 'spellRight5':
+      CardUI.selectCardByIndex(4, CardUI.elFloatingCardHolderRight);
+      break;
+    case 'spellRight6':
+      CardUI.selectCardByIndex(5, CardUI.elFloatingCardHolderRight);
+      break;
+    case 'spellRight7':
+      CardUI.selectCardByIndex(6, CardUI.elFloatingCardHolderRight);
+      break;
+    case 'spellRight8':
+      CardUI.selectCardByIndex(7, CardUI.elFloatingCardHolderRight);
+      break;
+    case 'spellRight9':
+      CardUI.selectCardByIndex(8, CardUI.elFloatingCardHolderRight);
       break;
     case 'touchPadMoveCharacter':
       // This key makes it easier for players who are using a touchpad to move
@@ -261,7 +312,7 @@ export function keyupListener(overworld: Overworld, event: KeyboardEvent) {
   if (globalThis.view !== View.Game) {
     return;
   }
-  handleInputUp(getKeyCodeMapping(event.code), overworld);
+  handleInputUp(getKeyCodeMapping(event.code, event), overworld);
 }
 function handleInputUp(keyCodeMapping: string | undefined, overworld: Overworld) {
   if (keyCodeMapping === undefined) {
