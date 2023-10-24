@@ -11,7 +11,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
 export const poisonCardId = 'poison';
-const baseDamage = 15;
+const baseDamage = 18;
 function init(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
   if (spell.modifiers?.subsprite) {
     // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
