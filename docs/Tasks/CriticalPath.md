@@ -1,5 +1,6 @@
 # Critical Path
-- i18n: 'Error: You may only save during your turn.';
+- Respond to Ghnoyeurghe music
+---
 - Optimize late game lag
     - Find the bottleneck, use web workers?
         - Circlex3 + bloat + slash

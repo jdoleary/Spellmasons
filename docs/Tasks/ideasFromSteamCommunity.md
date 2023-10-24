@@ -1,3 +1,17 @@
+Skillo — Today at 10:15 AM
+i don't remember if its already the case, but showing negative values as you add more spells beyond your current mana cap would also be very informative
+Jordan - Spellmasons Creator — Today at 10:16 AM
+This is a tricky problem from a user experience stand point.  The first priority is to make sure users can't spend below 0 which was initially happening if they queued up a new spell during a cast of an old one where they had more mana then they would have in the moment.
+So current the only way to queue more than you can cast is if you're mana changes while you're queueing but usually it will block you from adding more than you can cast to prevent frustration.
+It's a tough balancing act
+Skillo — Today at 10:17 AM
+makes sense
+person tries to queue long spells all the time without having mana yet, gets annoyed 
+Yeah i can see that
+perhaps something you can toggle
+actually going out of your way to do it, like advanced casting options or something
+---
+
 - Skillo — Today at 7:37 AM
 explosive, poison, freeze, barrels
 explodes when damaged, causing AoE damage and applying its related effect on enemies within its radius. 
