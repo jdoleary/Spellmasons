@@ -1,9 +1,15 @@
 ## Spellmasons Update v1.21
 Thanks to Pandize for general feedback!
 
+fix: random function favoring certain choices over others
+
 feature: Teleport Trap!  After level 5, at least 2 blue portals will spawn
 that will allow players to teleport around the map.  They are one-use only
 Thanks Skillo
+
+fix: killing a clone of a deathmason from incrementing your "games won" stat
+
+balance: Increase poison base damage
 
 fix: UI: Ensure spell costs are up to date in the inventory
     Thanks Mattmellow and Lemdoran for reporting this

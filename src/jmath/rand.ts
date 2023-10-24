@@ -24,7 +24,7 @@ export function randBool(seedrandomInstance: prng): boolean {
   return x < 0.5;
 }
 export function randInt(minInclusive: number, maxInclusive: number, seedrandomInstance?: prng) {
-  return Math.round(randFloat(minInclusive, maxInclusive, seedrandomInstance))
+  return Math.floor(randFloat(minInclusive, maxInclusive + 1, seedrandomInstance))
 }
 export function randFloat(minInclusive: number, maxInclusive: number, seedrandomInstance?: prng) {
   // Allow for using unseeded random gen for things that don't require a deterministic result
