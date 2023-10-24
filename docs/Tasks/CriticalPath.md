@@ -1,18 +1,5 @@
 # Critical Path
-- FIND OUT HOW TO ENABLE STEAM REMOTE PLAY BEFORE EVENT
-    - https://steamcommunity.com/app/1618380/discussions/0/3872591600381876700/
--  timemason needs a change
-waiting for timemason's ability to work, especially as the game goes on, is a huge time-sink and gets very boring. I get that part of it is a time-crunch challage, but is there any way we could make it so you can volunteer to speed it up or something?
-
-otherwise love the challenge. 
--  Forest Dweller Yamu [has Spellmasons] Oct 19 @ 2:51am
-    
-Reconnecting in Multiplayer is Super Broken
-I've played multiple matches online with friends where trying to reconnect with everyone either A: Doen't work and makes us restart from the beginning by just killing all players or B: Some players just start picking levels again and have no progress up to that floor anymore.
-
-I really like this game and its fun with buddies, but having the match just break everytime on floor 7-9 just ruins it. 
-- Add tools to requesting order of server's last few messages for testing desync on prod
-- Experimentally enable Bun server
+- i18n: 'Error: You may only save during your turn.';
 - Optimize late game lag
     - Find the bottleneck, use web workers?
         - Circlex3 + bloat + slash
@@ -33,10 +20,23 @@ P.S.  I have Ryzen 7 3700 and rtx4070, but as I see it's cpu intensive. Because 
     - UX bug: When an Ice urn ends the player turn the ice doesn't stay on them so it's not obvious how they got their turn ended
     - enigmaticbacon — Today at 2:56 PM
     On community servers in multi-player, if I've died, and my partner gets a kill that levels us up, I'll get a spell select screen that doesn't allow me to reroll and when I make a choice, it won't be added to my spellbook. Then, when we reach the next level, I'll get the same spell choices again and this time it works. It's disorienting
-    - i18n: 'Error: You may only save during your turn.';
     - Still encountering desyncs
     - Kess — Today at 10:59 AM
 I can also confirm that on community servers, a couple times in the middle of the player turn monsters that were just killed would revive at full health, without any revive spells and just popped back to life 😅. The instance I remember best was one person casted a spell that killed a golem and a miniboss golem, then walked as far as they could, then clicked the end turn button (though the other two of us were still planning things so turn wasn't over), and -pop- the miniboss and golem were back at full health. Also freezing the newly reborn enemies did not show the frozen vfx but did list it in their status effects
+---
+- FIND OUT HOW TO ENABLE STEAM REMOTE PLAY BEFORE EVENT
+    - https://steamcommunity.com/app/1618380/discussions/0/3872591600381876700/
+-  timemason needs a change
+waiting for timemason's ability to work, especially as the game goes on, is a huge time-sink and gets very boring. I get that part of it is a time-crunch challage, but is there any way we could make it so you can volunteer to speed it up or something?
+
+otherwise love the challenge. 
+-  Forest Dweller Yamu [has Spellmasons] Oct 19 @ 2:51am
+    
+Reconnecting in Multiplayer is Super Broken
+I've played multiple matches online with friends where trying to reconnect with everyone either A: Doen't work and makes us restart from the beginning by just killing all players or B: Some players just start picking levels again and have no progress up to that floor anymore.
+
+I really like this game and its fun with buddies, but having the match just break everytime on floor 7-9 just ruins it. 
+- Add tools to requesting order of server's last few messages for testing desync on prod
 
 - New wanted features
     - Skillo: Towers
