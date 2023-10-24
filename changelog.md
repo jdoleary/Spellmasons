@@ -1,12 +1,114 @@
 ## Spellmasons Update v1.21
 Thanks to Pandize for general feedback!
+
 feature: Teleport Trap!  After level 5, at least 2 blue portals will spawn
 that will allow players to teleport around the map.  They are one-use only
-
 Thanks Skillo
 
 fix: UI: Ensure spell costs are up to date in the inventory
     Thanks Mattmellow and Lemdoran for reporting this
+
+UI: Allow modifier keys (ctrl, shift, alt) in hotkeys
+    Assign hotkeys to side bars
+    Thanks Lemdoran and Skillo
+
+fix: Ensure Pickup's emitters follow them
+    if they move (like pushing a portal)
+
+fix: Attempt to fix duplicate pickup
+    issue on multiplayer
+    where a recently triggered pickup
+    is recreated.
+
+src: Optional support for server-bun
+
+fix: if over max hp, ensure healthcost spells
+    don't snap hp to max.
+    It is unusual to go over max hp but sacrifice does it.
+    Thanks enigmaticbacon
+
+fix: If spellcost is refunded cooldowns are too
+    
+    Refund freeze if no targets
+    Thanks Kekis!
+
+fix: Prevent deathmason death from killing all AI
+    unless it is the original deathmason.  Any summoned deathmason
+    should not kill ai.
+    Thanks H4D3S for reporting
+
+UI: Hide broken images in Jprompt
+fix: hiding broken tooltip images
+
+src: Make urns spawn in some levels
+    Prevent 0 probability units from spawning in getEnemiesForAltitude2
+    
+    Note: Urns are spawned separately from the unit budget
+
+UI: make explosive urn damage visible on tooltip
+feature: Add urns
+
+fix: Clones and split units don't provide experience
+    when killed
+    Thanks enigmaticbacon for reporting this
+
+i18n: Update Portugues Translation
+    
+    Thanks to Iwashi kan ツ
+
+fix: Players that rejoin should have endedTurn set to false
+    
+    so they don't miss their turn when another player ends
+    their turn.
+    Thanks Kess from Discord!
+
+fix: Ensure saves can only be made during
+    the player turn so it doesn't save a corrupted game state
+
+fix: After load, set all player.endedTurn to false
+    so that loading a game wont skip the player turn
+    if players rejoin the game in an order where the first
+    person to join/load had ended their turn during the save
+
+fix: Rerolling sometimes presents the same spell
+    you just saw
+    
+    Thanks Lemdoran
+
+feature: Spawn blue portals after level 5
+    for player movement
+
+fix: valid spawn logic for blue and red portals
+    it was denying valid spawn for portals that were close to walls that
+    should've been valid
+
+balance: Reduce probability of trap pickup
+balance: Increase number of pickups along with level size
+
+balance: Immune units CAN be targeted
+    but cannot be damaged or recieve modifiers
+    (like curses)
+
+fix: target_arrow granting infinite range if
+    cast standing right up against a wall
+    Thanks Stench and others from Discord for reporting this issue
+
+fix: Extra stat points hack
+    where you get extra lvl up stat points whenever
+    you load the game
+    Thanks Salazar for reporting this!
+
+fix: UI: Ensure spell costs are up to date in the inventory
+    Thanks Mattmellow and others for reporting this
+
+fix: Prevent Deathmason brothers
+    from attacking immediately after spawning if the original deathmason
+    is slain by an ally npc.
+    Thanks flowkrad from Steam and others for reporting this
+
+fix: Ensure mage classes are visible on 1080p
+    screen
+    Thanks Coaldust Numbers and others for reporting this issue
 
 ## Spellmasons Update v1.20
 feature: On loop levels, half of the enemies are
