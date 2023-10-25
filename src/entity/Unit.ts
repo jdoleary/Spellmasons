@@ -883,7 +883,7 @@ export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | u
     // Ensure it doesn't heal over max health
     const maxHealingAllowed = Math.max(0, unit.healthMax - unit.health);
     if (Math.abs(amount) > maxHealingAllowed) {
-      amount = maxHealingAllowed;
+      amount = -maxHealingAllowed;
     }
   }
   unit.health -= amount;
