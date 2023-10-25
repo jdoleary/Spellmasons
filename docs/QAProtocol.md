@@ -3,7 +3,6 @@
 - Run `npm run build_types` to keeps mods types up to date (and push the changes to github)
     - Test mods
 - Test Host Local Server, Host via Docker (run `testDockerImage.sh`)
-- Test tutorial
 - Test loading a saved multiplayer game
 - Test Hotseat multiplayer basics
 - Test hosting LAN server from Electron build
@@ -18,6 +17,8 @@
 - Test all spells in multiplayer: ~20 minutes
     - and end turn after each to test for desyncs
 - Test all spells in singleplayer: ~24 minutes
+- Test tutorial ALWAYS on electron build
+
 # Release protocal
 - QA: 1:44
 - Announce server down time

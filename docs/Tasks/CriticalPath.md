@@ -1,5 +1,10 @@
 # Critical Path
-- Respond to Ghnoyeurghe music
+- bug: Heal now allows overheal
+- Salazar — Yesterday at 7:51 PM
+I have seen someone mention corpses beginning to lag the game and i would also like a restriction on corpses...Or anything to restrain the impact on performance...Bc it might have been so bad it closed down the server i hosted and this time fucked the savefile with my friend being suddenly back to lvl 1 and all new spells...I tried to solve it by loading a prior save but he just keeps respawning at level 1 with none of his prior spells and him being able to choose a spawning point in the middle of the death mason level...With the added bonus of me being dead this time for some reason.
+Its kinda a bug report so it goes here ig.
+Ghnoyeurghe — Today at 12:04 PM
+Actually my friends and I had a near identical issue last night, level 12 we had a crash and the two of them when I loaded the save were only able to spawn in as level 1 wizards
 ---
 - Optimize late game lag
     - Find the bottleneck, use web workers?

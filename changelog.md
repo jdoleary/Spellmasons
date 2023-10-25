@@ -1,4 +1,4 @@
-## Spellmasons Update v1.21
+## Spellmasons Update v1.21.2
 Thanks to Pandize for general feedback!
 
 feature: Teleport Trap!  After level 5, at least 2 blue portals will spawn

@@ -1,3 +1,11 @@
+See Roguelite elements ideas thread: https://discord.com/channels/1032294536640200766/1069630737919266936/1166465931627733022
+---
+Kekis — Yesterday at 10:34 PM
+Not sure as upgrading the player's spells exactly, I was thinking more of, for instance, a certain relic that makes six of your spells costs either be doubled or halved. Or maybe another that increases your cast range but each time you end your turn without any enemies inside your cast range you get damaged.
+Lemdoran — Yesterday at 11:49 PM
+oh yep you were right we had a relatively close idea lol.
+haven't though about regen relic but it's a good idea. A mod did give a regen life spell but that can be really cool to have even a "small" +5 / 10 hp per turn natively. Especially on early lvls and if you play mana steal / summoner class.
+---
 Skillo — Today at 10:15 AM
 i don't remember if its already the case, but showing negative values as you add more spells beyond your current mana cap would also be very informative
 Jordan - Spellmasons Creator — Today at 10:16 AM
