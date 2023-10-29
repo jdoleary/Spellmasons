@@ -56,7 +56,7 @@ export function generateRandomStatCalamity(underworld: Underworld, index: number
     // health, damage, attack range
     const seedString = getUniqueSeedString(underworld, globalThis.player) + `-${index}-${player?.cursesChosen || 0}`;
     const seed = seedrandom(seedString);
-    const currentLevelUnitSourceIds = [...new Set(underworld.units.map(u => u.unitSourceId).filter(uid => uid !== spellmasonUnitId))];
+    const currentLevelUnitSourceIds = [...new Set(underworld.units.filter(u => u.unitSubType !== UnitSubType.DOODAD).map(u => u.unitSourceId).filter(uid => uid !== spellmasonUnitId))];
     const unitId: string | undefined = chooseOneOfSeeded(currentLevelUnitSourceIds, seedrandom(`-${index}-${seedString}-unit`));
     const growthFactor = underworld.levelIndex - LAST_LEVEL_INDEX;
     const unitSource = allUnits[unitId || ''];
