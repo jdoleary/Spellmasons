@@ -1,6 +1,7 @@
 import { addUnitTarget, refundLastSpell, Spell } from './index';
+import * as config from '../config';
 import * as Unit from '../entity/Unit';
-import { CardCategory, Faction, probabilityMap, UnitType } from '../types/commonTypes';
+import { CardCategory, Faction, UnitSubType, UnitType } from '../types/commonTypes';
 import { allUnits } from '../entity/units';
 import { skyBeam } from '../VisualEffects';
 import { playDefaultSpellSFX } from './cardUtils';
@@ -72,6 +73,12 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean):
         globalThis.freeSpells = [];
     }
     globalThis.freeSpells.push(id);
+    const unitSource = allUnits[unitId];
+    const unitStats = !unitSource ? '' : `${!!unitSource.unitProps.damage ? `
+🗡️ ${unitSource.unitProps.damage} ${i18n(['damage'])}` : ''}${!!unitSource.unitProps.attackRange ? `
+🎯 ${unitSource.unitProps.attackRange} ${i18n(['attack range'])}` : ''}
+❤️ ${unitSource.unitProps.healthMax || config.UNIT_BASE_HEALTH} ${i18n(['health capacity'])}
+${unitSource.unitProps.manaMax !== undefined && unitSource.unitProps.manaMax > 0 ? `🔵 ${unitSource.unitProps.manaMax} + ${unitSource.unitProps.manaPerTurn} ${i18n('Mana')} ${i18n('per turn')}` : ''}`;
 
     return {
         card: {
@@ -87,7 +94,7 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean):
             // These cards are not available as upgrades and must be accessed through capture_soul
             probability: 0,
             thumbnail: `spellIconSummon_${unitId.split(' ').join('').toLowerCase()}.png`,
-            description: [`spell_summon_generic`, unitId, expenseScaling.toString()],
+            description: i18n([`spell_summon_generic`, unitId, expenseScaling.toString()]) + '\n' + unitStats,
             allowNonUnitTarget: true,
             effect: async (state, card, quantity, underworld, prediction) => {
                 const sourceUnit = allUnits[unitId];
