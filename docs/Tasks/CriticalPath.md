@@ -1,5 +1,14 @@
 # Critical Path
-- bug: Heal now allows overheal
+- [ ] Fix hotseat multiplayer only showing lvl up screen for one player
+    - BUG: Genthru — Yesterday at 8:43 PM In multiplayer (hotseat) only one of us is getting the level up screen and it's the one who goes through the portal. Played before the update yesterday and didn't have this issue
+- [ ] BUG: friendlies target urns
+- [ ] Fix antiperks selecting urns
+    - PandaPhilly — Today at 10:51 AM During the +levels (I think they're called that?) There are options for the urns to have increased hp, attack range, DMG, etc I'm pretty sure that's not intentional, as it feels like a free round, since they don't... Attack lol
+- [ ] Stats on Summon cards
+    - Lemdoran — Today at 6:56 AM Hi 🙂 It's sorta a qol more than ingame feature, but i'll like to have the actual stats of my summons before i have to sumon them.  In a perfect world i'll just remember, but i frequently mix their dmg values, meaning i just undershot enemies.  Also, for newcomers, it can be a good idea to change the summon spells to sth like this; Can also be a good idea to add his specifities (for example for green blob, "attack 6 enemies per turn" Mattmellow — Today at 11:45 AM I mentioned something similar but in the form of a bestiary, this looks so much better lol
+- [ ] Fix: prevent ally npcs spawning from Blue Portals that are supposed to be used for teleporting
+- [ ] Measure new bun.sh server
+
 - Salazar — Yesterday at 7:51 PM
 I have seen someone mention corpses beginning to lag the game and i would also like a restriction on corpses...Or anything to restrain the impact on performance...Bc it might have been so bad it closed down the server i hosted and this time fucked the savefile with my friend being suddenly back to lvl 1 and all new spells...I tried to solve it by loading a prior save but he just keeps respawning at level 1 with none of his prior spells and him being able to choose a spawning point in the middle of the death mason level...With the added bonus of me being dead this time for some reason.
 Its kinda a bug report so it goes here ig.
