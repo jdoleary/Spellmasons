@@ -1,8 +1,12 @@
 # Critical Path
 - [ ] Rejoining doesn't resend password
     - ManMan
+- [ ] Genthru — Today at 4:47 PM
+I ran into a bug while hotseating with 3 people. When one of us would die, one of the other two wouldn't generate mana for either the rest of the floor or a few turns. Not sure what caused this since it didn't happen everytime just randomly
 - i18n Korean translations missing for a bunch of cards, summon cards and urns
 - [ ] Summon card stats don't change based on difficulty
+- [ ] try bun server
+    - fix 'pong' fn
 
 - Salazar — Yesterday at 7:51 PM
 I have seen someone mention corpses beginning to lag the game and i would also like a restriction on corpses...Or anything to restrain the impact on performance...Bc it might have been so bad it closed down the server i hosted and this time fucked the savefile with my friend being suddenly back to lvl 1 and all new spells...I tried to solve it by loading a prior save but he just keeps respawning at level 1 with none of his prior spells and him being able to choose a spawning point in the middle of the death mason level...With the added bonus of me being dead this time for some reason.
