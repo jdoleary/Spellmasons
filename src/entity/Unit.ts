@@ -1079,13 +1079,13 @@ export function canMove(unit: IUnit): boolean {
 }
 export function livingUnitsInDifferentFaction(unit: IUnit, underworld: Underworld) {
   return underworld.units.filter(
-    (u) => u.faction !== unit.faction && u.alive,
+    (u) => u.faction !== unit.faction && u.alive && u.unitSubType !== UnitSubType.DOODAD,
   );
 }
 export function livingUnitsInSameFaction(unit: IUnit, underworld: Underworld) {
   // u !== unit excludes self from returning as the closest unit
   return underworld.units.filter(
-    (u) => u !== unit && u.faction == unit.faction && u.alive,
+    (u) => u !== unit && u.faction == unit.faction && u.alive && u.unitSubType !== UnitSubType.DOODAD,
   );
 }
 export function closestInListOfUnits(

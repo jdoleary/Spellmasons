@@ -3,7 +3,6 @@
     - ManMan
 - [ ] Fix hotseat multiplayer only showing lvl up screen for only one player
     - BUG: Genthru — Yesterday at 8:43 PM In multiplayer (hotseat) only one of us is getting the level up screen and it's the one who goes through the portal. Played before the update yesterday and didn't have this issue
-- [ ] BUG: friendlies target urns
 - [ ] Fix antiperks selecting urns
     - PandaPhilly — Today at 10:51 AM During the +levels (I think they're called that?) There are options for the urns to have increased hp, attack range, DMG, etc I'm pretty sure that's not intentional, as it feels like a free round, since they don't... Attack lol
 - [ ] Measure new bun.sh server
