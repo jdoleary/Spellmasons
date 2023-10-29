@@ -1,8 +1,6 @@
 # Critical Path
 - [ ] Rejoining doesn't resend password
     - ManMan
-- [ ] Fix hotseat multiplayer only showing lvl up screen for only one player
-    - BUG: Genthru — Yesterday at 8:43 PM In multiplayer (hotseat) only one of us is getting the level up screen and it's the one who goes through the portal. Played before the update yesterday and didn't have this issue
 - i18n Korean translations missing for a bunch of cards, summon cards and urns
 - [ ] Summon card stats don't change based on difficulty
 
