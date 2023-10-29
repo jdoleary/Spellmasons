@@ -1,5 +1,7 @@
 # Critical Path
-- [ ] Fix hotseat multiplayer only showing lvl up screen for one player
+- [ ] Rejoining doesn't resend password
+    - ManMan
+- [ ] Fix hotseat multiplayer only showing lvl up screen for only one player
     - BUG: Genthru — Yesterday at 8:43 PM In multiplayer (hotseat) only one of us is getting the level up screen and it's the one who goes through the portal. Played before the update yesterday and didn't have this issue
 - [ ] BUG: friendlies target urns
 - [ ] Fix antiperks selecting urns
@@ -39,7 +41,7 @@ P.S.  I have Ryzen 7 3700 and rtx4070, but as I see it's cpu intensive. Because 
     - Kess — Today at 10:59 AM
 I can also confirm that on community servers, a couple times in the middle of the player turn monsters that were just killed would revive at full health, without any revive spells and just popped back to life 😅. The instance I remember best was one person casted a spell that killed a golem and a miniboss golem, then walked as far as they could, then clicked the end turn button (though the other two of us were still planning things so turn wasn't over), and -pop- the miniboss and golem were back at full health. Also freezing the newly reborn enemies did not show the frozen vfx but did list it in their status effects
 ---
-- FIND OUT HOW TO ENABLE STEAM REMOTE PLAY BEFORE EVENT
+- FIND OUT HOW TO ENABLE STEAM REMOTE PLAY BEFORE EVENT (FEB 12)
     - https://steamcommunity.com/app/1618380/discussions/0/3872591600381876700/
 -  timemason needs a change
 waiting for timemason's ability to work, especially as the game goes on, is a huge time-sink and gets very boring. I get that part of it is a time-crunch challage, but is there any way we could make it so you can volunteer to speed it up or something?
