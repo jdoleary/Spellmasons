@@ -3014,6 +3014,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
     }
   }
+  // Spawn units out of portals
   async redPortalBehavior(faction: Faction) {
     const portalName = faction == Faction.ENEMY ? Pickup.RED_PORTAL : Pickup.BLUE_PORTAL;
     const deathmasons = this.units.filter(u => u.unitSourceId == bossmasonUnitId && u.faction == faction)
@@ -3031,7 +3032,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       Obstacle.tryFallInOutOfLiquid(deathmason, this, false);
       Pickup.removePickup(portal, this, false);
     }
-    const deathmasonPortals = this.pickups.filter(p => p.name == portalName && !p.flaggedForRemoval);
+    const deathmasonPortals = this.pickups.filter(p => p.name == portalName && !p.flaggedForRemoval &&
+      // @ts-ignore special property of portals to distinguish them from portals that just teleport
+      p.doesSpawn);
     for (let i = 0; i < deathmasonPortals.length; i++) {
       const portal = deathmasonPortals[i];
       if (!portal || portal.flaggedForRemoval) {

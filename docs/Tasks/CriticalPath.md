@@ -8,7 +8,6 @@
     - PandaPhilly — Today at 10:51 AM During the +levels (I think they're called that?) There are options for the urns to have increased hp, attack range, DMG, etc I'm pretty sure that's not intentional, as it feels like a free round, since they don't... Attack lol
 - [ ] Stats on Summon cards
     - Lemdoran — Today at 6:56 AM Hi 🙂 It's sorta a qol more than ingame feature, but i'll like to have the actual stats of my summons before i have to sumon them.  In a perfect world i'll just remember, but i frequently mix their dmg values, meaning i just undershot enemies.  Also, for newcomers, it can be a good idea to change the summon spells to sth like this; Can also be a good idea to add his specifities (for example for green blob, "attack 6 enemies per turn" Mattmellow — Today at 11:45 AM I mentioned something similar but in the form of a bestiary, this looks so much better lol
-- [ ] Fix: prevent ally npcs spawning from Blue Portals that are supposed to be used for teleporting
 - [ ] Measure new bun.sh server
 
 - Salazar — Yesterday at 7:51 PM
