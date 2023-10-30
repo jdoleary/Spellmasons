@@ -405,21 +405,8 @@ from https://stackoverflow.com/a/48999882/4418836
 
 ## 2022.09.10
 
-Was finally able to get npm link working with vite
-viahttps://dev.to/hontas/using-vite-with-linked-dependencies-37n7
-
-```
-rm -rf node_modules/.vite
-npm link PACKAGE
-
-// in vite config
-export default {
-  // ...
-  optimizeDeps: {
-    exclude: ['PACKAGE']
-  }
-}
-```
+Instead of using npm link with pieclient, just copy it into node_modules.  I've tried for hours and just cannot get vite to work with npm link
+and use `--force`
 
 ## 2022.08.02
 

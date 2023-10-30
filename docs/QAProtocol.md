@@ -18,6 +18,7 @@
     - and end turn after each to test for desyncs
 - Test all spells in singleplayer: ~24 minutes
 - Test tutorial ALWAYS on electron build
+- Test saving if you modify underworld with new elements added to the level that need to be serialized
 
 # Release protocal
 - QA: 1:44

@@ -1,6 +1,5 @@
 # Critical Path
 - v1.22
-    - [ ] See if doodads are causing save failure do to not serializing correctly
     - Figure out how to package wspie/client so it works with multiple tsconfigs like other npm packages do
     - [ ] Rejoining doesn't resend password
         - ManMan
