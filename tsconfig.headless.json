@@ -4,6 +4,7 @@
     "importsNotUsedAsValues": "remove",
     "lib": [
       "ESNext",
+      "DOM"
     ],
     "target": "es6",
     "module": "CommonJS",
