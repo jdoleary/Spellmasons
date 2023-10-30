@@ -1,6 +1,8 @@
 if (globalThis.isElectron) {
     console.log('globalThis.isElectron == true; RUNNING AS DESKTOP APP')
 }
+import { version } from '../package.json';
+globalThis.SPELLMASONS_PACKAGE_VERSION = version;
 import { setupMonitoring } from './monitoring';
 // Setup monitoring as soon as possible
 setupMonitoring();

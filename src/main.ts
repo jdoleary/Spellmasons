@@ -4,12 +4,9 @@ import { initPlanningView } from './graphics/PlanningView';
 import { playNextSong, playSFX, playSFXKey, sfx } from './Audio';
 import cookieConsentPopup from './cookieConsent';
 import * as storage from './storage';
-import { version } from '../package.json';
-globalThis.SPELLMASONS_PACKAGE_VERSION = version;
 import './style.css';
 import './svelte-bundle.css';
 cookieConsentPopup(false);
-console.log('At build time version will be 0.170.0, package.json version is ', version);
 
 // This import is critical so that the svelte menu has access to
 // the pie globals
