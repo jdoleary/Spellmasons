@@ -213,7 +213,7 @@ export const upgradeSourceWhenDead: IUpgrade[] = [
     type: 'special',
     description: () => 'Resurrects you so the adventure can continue!',
     // TODO needs new icon
-    thumbnail: 'images/upgrades/resurrect.png',
+    thumbnail: 'images/spell/resurrect.png',
     // Resurrection happens automatically at the start of each level
     effect: () => { },
     probability: 30,

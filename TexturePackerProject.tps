@@ -253,8 +253,15 @@
             <key type="filename">images/doodads/ghost_tree_1.png</key>
             <key type="filename">images/doodads/tree_0.png</key>
             <key type="filename">images/doodads/tree_1.png</key>
+            <key type="filename">images/doodads/urn.png</key>
             <key type="filename">images/doodads/urn_0.png</key>
             <key type="filename">images/doodads/urn_1.png</key>
+            <key type="filename">images/doodads/urn_explosive_0.png</key>
+            <key type="filename">images/doodads/urn_explosive_1.png</key>
+            <key type="filename">images/doodads/urn_ice_0.png</key>
+            <key type="filename">images/doodads/urn_ice_1.png</key>
+            <key type="filename">images/doodads/urn_poison_0.png</key>
+            <key type="filename">images/doodads/urn_poison_1.png</key>
             <key type="filename">images/half-circle.png</key>
             <key type="filename">images/liquid-mask_10.png</key>
             <key type="filename">images/liquid-mask_11.png</key>
@@ -656,8 +663,8 @@
             <key type="filename">images/tiles/water/wallN.png</key>
             <key type="filename">images/tiles/whiteTile.png</key>
             <key type="filename">images/time-crystal.png</key>
+            <key type="filename">images/units/decoy_0.png</key>
             <key type="filename">images/units/decoy_1.png</key>
-            <key type="filename">images/units/decoy_2.png</key>
             <key type="filename">images/units/decoy_Death_0.png</key>
             <key type="filename">images/units/decoy_Death_1.png</key>
             <key type="filename">images/units/gruntAttack_1.png</key>
@@ -895,6 +902,7 @@
             <key type="filename">images/units/vampireWalk_6.png</key>
             <key type="filename">images/units/vampireWalk_7.png</key>
             <key type="filename">images/units/vampireWalk_8.png</key>
+            <key type="filename">public/images/spell/resurrect.png</key>
             <key type="filename">public/images/spell/spellIconArrow.png</key>
             <key type="filename">public/images/spell/spellIconArrowGreen.png</key>
             <key type="filename">public/images/spell/spellIconArrowRed.png</key>
@@ -917,6 +925,7 @@
             <key type="filename">public/images/spell/spellIconDisplace.png</key>
             <key type="filename">public/images/spell/spellIconDrown.png</key>
             <key type="filename">public/images/spell/spellIconExpanding.png</key>
+            <key type="filename">public/images/spell/spellIconExplosiveArrow.png</key>
             <key type="filename">public/images/spell/spellIconFortify.png</key>
             <key type="filename">public/images/spell/spellIconFreeze.png</key>
             <key type="filename">public/images/spell/spellIconHeal.png</key>
@@ -948,15 +957,19 @@
             <key type="filename">public/images/spell/spellIconSummon_deathmason.png</key>
             <key type="filename">public/images/spell/spellIconSummon_decoy.png</key>
             <key type="filename">public/images/spell/spellIconSummon_dragger.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_explosiveurn.png</key>
             <key type="filename">public/images/spell/spellIconSummon_ghostarcher.png</key>
             <key type="filename">public/images/spell/spellIconSummon_glop.png</key>
             <key type="filename">public/images/spell/spellIconSummon_golem.png</key>
             <key type="filename">public/images/spell/spellIconSummon_greenglop.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_gripthulu.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_iceurn.png</key>
             <key type="filename">public/images/spell/spellIconSummon_manavampire.png</key>
             <key type="filename">public/images/spell/spellIconSummon_poisoner.png</key>
             <key type="filename">public/images/spell/spellIconSummon_priest.png</key>
             <key type="filename">public/images/spell/spellIconSummon_spellmason.png</key>
             <key type="filename">public/images/spell/spellIconSummon_summoner.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_toxicurn.png</key>
             <key type="filename">public/images/spell/spellIconSummon_vampire.png</key>
             <key type="filename">public/images/spell/spellIconSwap.png</key>
             <key type="filename">public/images/spell/spellIconTargetColumn.png</key>
@@ -966,12 +979,6 @@
             <key type="filename">public/images/spell/spellIconVortex.png</key>
             <key type="filename">public/images/spell/toolbar-slot.png</key>
             <key type="filename">public/images/spell/unknown.png</key>
-            <key type="filename">public/images/upgrades/health1.png</key>
-            <key type="filename">public/images/upgrades/health2.png</key>
-            <key type="filename">public/images/upgrades/mana1.png</key>
-            <key type="filename">public/images/upgrades/mana2.png</key>
-            <key type="filename">public/images/upgrades/resurrect.png</key>
-            <key type="filename">public/images/upgrades/todo.png</key>
             <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconDecay.png</key>
             <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconDominate.png</key>
             <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconEnsnare.png</key>
@@ -1598,7 +1605,6 @@
         <array>
             <filename>images</filename>
             <filename>public/images/spell</filename>
-            <filename>public/images/upgrades</filename>
             <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconDecay.png</filename>
             <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconDominate.png</filename>
             <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconEnsnare.png</filename>
