@@ -15,12 +15,8 @@ const overrides: { [unitId: string]: { exclude: boolean, properties: { manaCost?
         exclude: true,
         properties: {}
     },
-    'Bossmason': {
-        exclude: true,
-        properties: {}
-    },
     'Spellmason': {
-        exclude: true,
+        exclude: false,
         properties: {}
     },
     'glop': {
