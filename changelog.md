@@ -1,3 +1,6 @@
+## Spellmasons Update v1.22.0
+- Autorejoining doesn't work if the game has a password
+    - Thanks Manman
 ## Spellmasons Update v1.21.2
 Thanks to Pandize for general feedback!
 

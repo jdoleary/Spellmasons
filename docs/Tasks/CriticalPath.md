@@ -1,8 +1,5 @@
 # Critical Path
 - v1.22
-    - Figure out how to package wspie/client so it works with multiple tsconfigs like other npm packages do
-    - [ ] Rejoining doesn't resend password
-        - ManMan
     - [ ] Genthru — Today at 4:47 PM
     I ran into a bug while hotseating with 3 people. When one of us would die, one of the other two wouldn't generate mana for either the rest of the floor or a few turns. Not sure what caused this since it didn't happen everytime just randomly
     - i18n Korean translations missing for a bunch of cards, summon cards and urns
