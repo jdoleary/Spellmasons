@@ -618,7 +618,7 @@ export function makeCorruptionParticles(follow: IUnit, prediction: boolean, unde
                 target: follow
             })
         } else {
-            console.error('Failed to create corruption particle emitter');
+            console.warn('Failed to create corruption particle emitter');
         }
     } else {
         return;
