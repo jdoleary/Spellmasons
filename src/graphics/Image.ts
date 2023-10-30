@@ -127,6 +127,9 @@ export function changeSprite(image: IImageAnimated | undefined, imagePath: strin
     // since a unit may take damage more quickly than the hit animation can finish.
     if (image.sprite.imagePath.indexOf('Hit') === -1) {
       // Return undefined because sprite is unchanged
+      if (resolver) {
+        resolver();
+      }
       return undefined
     }
   }
@@ -171,6 +174,9 @@ export function changeSprite(image: IImageAnimated | undefined, imagePath: strin
     return image.sprite;
   } else {
     console.error('Could not change sprite to', imagePath);
+    if (resolver) {
+      resolver();
+    }
     return undefined
   }
 }
