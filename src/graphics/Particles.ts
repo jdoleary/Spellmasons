@@ -241,7 +241,7 @@ export function updateParticlees(delta: number, bloods: BloodParticle[], seedran
         blood.scale *= 0.7;
         var blood_x_mod = randFloat(-10, 10);
         var blood_y_mod = randFloat(-10, 10);
-        var blood_size_mod = randFloat(1, blood.scale);
+        var blood_size_mod = blood.scale < 1 ? randFloat(blood.scale, 1) : randFloat(1, blood.scale);
         const drawBloodPosition = { x: blood.x + blood_x_mod, y: blood.y + blood_y_mod }
 
         let isInsideLiquid = underworld.isInsideLiquid(drawBloodPosition);

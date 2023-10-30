@@ -25,13 +25,13 @@ export function randBool(seedrandomInstance: prng): boolean {
 }
 export function randInt(minInclusive: number, maxInclusive: number, seedrandomInstance?: prng) {
   if (maxInclusive < minInclusive) {
-    console.warn('randInd maxInclusive < minInclusive');
+    console.warn('randInt maxInclusive < minInclusive');
   }
   return Math.floor(randFloat(minInclusive, maxInclusive + 1, seedrandomInstance))
 }
 export function randFloat(minInclusive: number, maxInclusive: number, seedrandomInstance?: prng) {
   if (maxInclusive < minInclusive) {
-    console.warn('randInd maxInclusive < minInclusive');
+    console.warn('randFloat maxInclusive < minInclusive');
   }
   // Allow for using unseeded random gen for things that don't require a deterministic result
   let x = seedrandomInstance ? seedrandomInstance.quick() : Math.random();
