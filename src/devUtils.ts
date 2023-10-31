@@ -103,3 +103,29 @@ export function setupDevGlobalFunctions(overworld: Overworld) {
     }
 
 }
+
+
+const eventDebugLogs: { [label: string]: [number, number][] } = {};
+// Helpful perf util to log how many times it is invoked with a given label, per second
+export function measureInvokationsPerSecond(label: string) {
+    let eventDebugLog = eventDebugLogs[label];
+    if (!eventDebugLog) {
+        eventDebugLog = [];
+        eventDebugLogs[label] = eventDebugLog;
+    }
+
+    const now = Date.now();
+    const key = now - now % 1000;
+    let record = eventDebugLog.find(([k, value]) => k == key);
+    if (!record) {
+        record = [key, 0];
+        eventDebugLog.unshift(record);
+        // Log every time the second changes
+        if (eventDebugLog.length > 1) {
+            console.log('Invokations per second', label, eventDebugLog.pop());
+        }
+    }
+    // Count the number of invokations / second
+    record[1]++;
+
+}
