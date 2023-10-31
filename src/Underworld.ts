@@ -2375,33 +2375,40 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
       // If player hotseat multiplayer
       if (numberOfHotseatPlayers > 1) {
-        // Change to next player
-        // Shift front player to the back so that first player found for fromPlayer is the next player
-        const shifted = this.players.shift();
-        if (shifted) {
-          this.players.push(shifted);
-        } else {
-          console.error('Hotseat: shifted player is undefined');
-        }
-        if (this.players[0]) {
-          globalThis.player = this.players[0];
-        } else {
-          console.error('Hotseat: Tried to change player but player is undefined');
-        }
-        CardUI.recalcPositionForCards(globalThis.player, this);
-        CardUI.syncInventory(undefined, this);
-        await runPredictions(this);
-        // Show upgrades if player has received an upgrade
-        this.showUpgrades();
-        this.checkIfShouldSpawnPortal();
+        // This is wrapped in setTimeout because shifting players for hotseat
+        // shouldn't occur syncronously because it may shift the player array
+        // while the player array is being iterated causing a bug.
+        // Instead, this will wait until the current execution has resolved and then
+        // change the player array
+        setTimeout(async () => {
+          // Change to next player
+          // Shift front player to the back so that first player found for fromPlayer is the next player
+          const shifted = this.players.shift();
+          if (shifted) {
+            this.players.push(shifted);
+          } else {
+            console.error('Hotseat: shifted player is undefined');
+          }
+          if (this.players[0]) {
+            globalThis.player = this.players[0];
+          } else {
+            console.error('Hotseat: Tried to change player but player is undefined');
+          }
+          CardUI.recalcPositionForCards(globalThis.player, this);
+          CardUI.syncInventory(undefined, this);
+          await runPredictions(this);
+          // Show upgrades if player has received an upgrade
+          this.showUpgrades();
+          this.checkIfShouldSpawnPortal();
 
-        // Announce new players' turn
-        if (globalThis.player && globalThis.player.name) {
-          queueCenteredFloatingText(globalThis.player.name);
-        }
+          // Announce new players' turn
+          if (globalThis.player && globalThis.player.name) {
+            queueCenteredFloatingText(globalThis.player.name);
+          }
 
-        // Turn on auto follow if they are spawned, and off if they are not
-        cameraAutoFollow(!!globalThis.player?.isSpawned);
+          // Turn on auto follow if they are spawned, and off if they are not
+          cameraAutoFollow(!!globalThis.player?.isSpawned);
+        }, 0)
       }
 
       const gameIsOver = this.tryGameOver();
@@ -2926,7 +2933,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             // Lastly, initialize the player turns.
             // Note, it is possible that calling this will immediately end
             // the player phase (if there are no players to take turns)
-            this.initializePlayerTurns();
+            await this.initializePlayerTurns();
           }
           // Note: The player turn occurs asyncronously because it depends on player input so the call to
           // `broadcastTurnPhase(turn_phase.NPC_ALLY)` happens inside tryEndPlayerTurnPhase(); whereas the other blocks in
