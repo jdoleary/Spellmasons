@@ -64,7 +64,7 @@ export default function makeOverworld(pie: PieClient | IHostApp): Overworld {
     // - underworld
 
     // Check for duplicate upgrades on dev
-    if (location.href.includes('localhost')) {
+    if (location && location.href.includes('localhost')) {
         const all_upgrades = [...upgradeCardsSource, ...upgradeSourceWhenDead, ...upgradeMageClassSource];
         for (let upgrade of all_upgrades) {
             if (all_upgrades.filter(u => u.title == upgrade.title).length > 1) {
