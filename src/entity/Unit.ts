@@ -12,7 +12,7 @@ import * as CardUI from '../graphics/ui/CardUI';
 import Events from '../Events';
 import makeAllRedShader from '../graphics/shaders/selected';
 import { addLerpable } from '../lerpList';
-import { allUnits } from './units';
+import { allUnits, UnitSource } from './units';
 import { allCards, allModifiers, EffectState } from '../cards';
 import * as immune from '../cards/immune';
 import { checkIfNeedToClearTooltip, clearSpellEffectProjection } from '../graphics/PlanningView';
@@ -274,11 +274,17 @@ export function adjustUnitStatsByUnderworldCalamity(unit: IUnit, statCalamity: S
     }
   }
 }
-type DifficultyAdjustedUnitStats = Pick<IUnit, 'healthMax' | 'manaMax' | 'attackRange'>;
-export function adjustUnitPropsDueToDifficulty(stats: DifficultyAdjustedUnitStats, difficulty: number): DifficultyAdjustedUnitStats {
-  const returnStats: DifficultyAdjustedUnitStats = { ...stats };
-  returnStats.healthMax = Math.round((stats.healthMax !== undefined ? stats.healthMax : config.UNIT_BASE_HEALTH) * difficulty);
-  returnStats.manaMax = Math.round(stats.manaMax !== undefined ? stats.manaMax : config.UNIT_BASE_MANA);
+interface DifficultyAdjustedUnitStats {
+  healthMax: number;
+  manaMax: number;
+}
+export function adjustUnitPropsDueToDifficulty(source: Partial<UnitSource>, difficulty: number): DifficultyAdjustedUnitStats {
+  const returnStats: DifficultyAdjustedUnitStats = {
+    healthMax: source.unitProps && source.unitProps.healthMax ? source.unitProps.healthMax : config.UNIT_BASE_HEALTH,
+    manaMax: source.unitProps && source.unitProps.manaMax ? source.unitProps.manaMax : 0,
+  };
+  returnStats.healthMax = Math.round(returnStats.healthMax * difficulty);
+  returnStats.manaMax = Math.round(returnStats.manaMax);
   return returnStats;
 }
 
@@ -291,7 +297,7 @@ export function adjustUnitDifficulty(unit: IUnit, difficulty: number) {
   }
   const source = allUnits[unit.unitSourceId];
   if (source) {
-    const { healthMax, manaMax } = adjustUnitPropsDueToDifficulty(unit, difficulty);
+    const { healthMax, manaMax } = adjustUnitPropsDueToDifficulty(source, difficulty);
     // Damage should remain unaffected by difficulty
     unit.damage = Math.round(source.unitProps.damage !== undefined ? source.unitProps.damage : config.UNIT_BASE_DAMAGE);
     const oldHealthRatio = (unit.health / unit.healthMax) || 0;

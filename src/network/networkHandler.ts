@@ -817,8 +817,6 @@ async function handleLoadGameState(payload: {
     underworld.syncronizeRNG(loadedGameState.RNGState);
   }
   underworld.gameMode = loadedGameState.gameMode;
-  // Must be called when difficulty (gameMode) changes to update summon spell stats
-  Cards.refreshSummonCardDescriptions(underworld);
   underworld.turn_phase = loadedGameState.turn_phase;
   underworld.turn_number = loadedGameState.turn_number;
   underworld.processedMessageCount = loadedGameState.processedMessageCount;
@@ -918,6 +916,10 @@ async function handleLoadGameState(payload: {
   if (loadedGameState.RNGState) {
     underworld.syncronizeRNG(loadedGameState.RNGState);
   }
+
+  // Must be called when difficulty (gameMode) changes to update summon spell stats
+  // Must be called AFTER players array is synced
+  Cards.refreshSummonCardDescriptions(underworld);
 
   if (globalThis.player) {
     // Ensures that when loading a hotseat multiplayer saved game,

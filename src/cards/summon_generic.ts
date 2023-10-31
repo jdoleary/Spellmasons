@@ -78,7 +78,7 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean, 
     let healthMax = unitSource?.unitProps.healthMax || config.UNIT_BASE_HEALTH;
     let manaMax = unitSource?.unitProps.manaMax || 0;
     if (difficulty && unitSource) {
-        const adjustedUnitProps = Unit.adjustUnitPropsDueToDifficulty(Object.assign({ healthMax: unitSource.unitProps.healthMax || config.UNIT_BASE_HEALTH, manaMax: unitSource.unitProps.manaMax || 0 }), difficulty);
+        const adjustedUnitProps = Unit.adjustUnitPropsDueToDifficulty(unitSource, difficulty);
         healthMax = adjustedUnitProps.healthMax;
         manaMax = adjustedUnitProps.manaMax;
     }
