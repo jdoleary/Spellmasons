@@ -1,6 +1,46 @@
 ## Spellmasons Update v1.22.0
-- Autorejoining doesn't work if the game has a password
-    - Thanks Manman
+src: Add unit stats to summon cards
+    Thanks Lemdoran
+fix: Auto-rejoining doesn't work if the game has a password
+    Thanks Manman
+chore: Use server-bun on us-west
+fix: Summon card descriptions update
+    when difficulty or language changes
+fix: Urns don't take poison damage
+    Add Doodads to action loop so that their
+    onTurnStart triggers which is used by poison
+    and other modifiers
+fix: urns' additional onDeath events (such as bloat)
+    not working because the unit was cleaned up before
+    it triggered
+fix: Skipping player turn on load
+    when you load into a saved game and choose
+    "join game as player"
+perf: Wrap movemouse runPredictions in
+    requestIdleCallback to greatly enhance perf
+fix: Hotseat players not getting mana back
+    after one player died
+    Thanks Genthru
+fix: could not choose Spellmasons mageType
+    due to duplicate upgrade name.
+    Add check to log error if there are multiple upgrades with
+    the same name
+fix: rand: handle gracefully when min > max
+fix: Decoy raceTimeouting on hit
+    because it would early return if image didn't change
+    without resolving
+fix: blood_size_mod using randFloat wrong
+    log: Fix warn when randFloat and randInt have arguments
+    switched
+fix: Not being able to capture soul ally spellmason
+fix: Hotseat players not getting stat upgrades
+fix: prevent calamities from affecting Urns
+    Thansk PandaPhilly for reporting
+fix: Prevent friendly npcs from attacking
+    urns (doodads).
+    Thanks MattMellow
+fix: prevent ally npcs spawning from Blue Portals
+    that are supposed to be used for teleporting
 ## Spellmasons Update v1.21.2
 Thanks to Pandize for general feedback!
 
