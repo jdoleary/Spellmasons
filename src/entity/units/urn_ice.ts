@@ -57,10 +57,13 @@ export function registerUrnIceExplode() {
     registerEvents(urnIceExplode, {
         onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
             explode(unit, unit.attackRange, 0, prediction, underworld);
-            // Remove corpse
-            // Note: This must be called after all other explode logic or else it will affect the position
-            // of the explosion
-            Unit.cleanup(unit);
+            // Delay clean up so it doesn't interfere with other onDeath events such as bloat
+            setTimeout(() => {
+                // Remove corpse
+                // Note: This must be called after all other explode logic or else it will affect the position
+                // of the explosion
+                Unit.cleanup(unit);
+            }, 0);
         }
     });
 }
