@@ -16,6 +16,7 @@ import { addOverworldEventListeners } from "./views";
 import { calculateGameDifficulty } from "./Difficulty";
 import { setPlayerNameUI } from "./PlayerUtils";
 import registerAllMods from "./registerMod";
+import { upgradeCardsSource, upgradeMageClassSource, upgradeSourceWhenDead } from "./Upgrade";
 
 export interface Overworld {
     pie: PieClient | IHostApp;
@@ -61,6 +62,17 @@ export default function makeOverworld(pie: PieClient | IHostApp): Overworld {
     // - pixiAssets 
     // - content (register cards and untis)
     // - underworld
+
+    // Check for duplicate upgrades on dev
+    if (location.href.includes('localhost')) {
+        const all_upgrades = [...upgradeCardsSource, ...upgradeSourceWhenDead, ...upgradeMageClassSource];
+        for (let upgrade of all_upgrades) {
+            if (all_upgrades.filter(u => u.title == upgrade.title).length > 1) {
+                console.error(`Multiple upgrades with the same title "${upgrade.title}"`);
+            }
+        }
+    }
+
 
     return overworld;
 }

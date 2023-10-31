@@ -8,6 +8,7 @@ import { playDefaultSpellSFX } from './cardUtils';
 import { addWarningAtMouse } from '../graphics/PlanningView';
 import { CardRarity } from '../types/commonTypes';
 import { bossmasonUnitId } from '../entity/units/deathmason';
+import { spellmasonUnitId } from '../entity/units/playerUnit';
 
 
 const overrides: { [unitId: string]: { exclude: boolean, properties: { manaCost?: number } } } = {
@@ -64,7 +65,11 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean):
     if (unitId == bossmasonUnitId) {
         manaCost = 750;
     }
-    const id = unitId + (asMiniboss ? ' Miniboss' : '')
+    let id = unitId + (asMiniboss ? ' Miniboss' : '');
+    // Special case, must change name of upgrade for 'Spellmason' or else it conflicts with the mageType Spellmason upgrade
+    if (unitId === spellmasonUnitId) {
+        id = `${i18n('Summon')} ${spellmasonUnitId}`;
+    }
     if (!globalThis.freeSpells) {
         globalThis.freeSpells = [];
     }

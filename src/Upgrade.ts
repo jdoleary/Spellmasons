@@ -205,6 +205,9 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
 }
 export function getUpgradeByTitle(title: string): IUpgrade | undefined {
   const all_upgrades = [...upgradeCardsSource, ...upgradeSourceWhenDead, ...upgradeMageClassSource];
+  if (all_upgrades.filter(u => u.title == title).length > 1) {
+    console.error('Multiple upgrades with the same title', title);
+  }
   return all_upgrades.find((u) => u.title === title);
 }
 export const upgradeSourceWhenDead: IUpgrade[] = [
