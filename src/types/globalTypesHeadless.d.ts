@@ -228,6 +228,7 @@ declare global {
     var i18n: (key: Localizable) => string;
     var setLanguage: (langCode: string, doStore: boolean) => void;
     var refreshMenu: undefined | (() => void);
+    var refreshSummonCardDescriptions: undefined | ((underworld: Underworld) => void);
     var getSupportedLanguages: () => { language: string, code: string }[];
     var getChosenLanguageCode: () => string;
     // Tutorial

@@ -1,4 +1,3 @@
-import * as Sentry from "@sentry/browser";
 import languages from '../public/localization/localization.json';
 import * as storage from './storage';
 
@@ -75,6 +74,13 @@ function setLanguage(langCode: string, store: boolean) {
     // Force the menu to rerender now that the language has changed
     if (globalThis.refreshMenu) {
         globalThis.refreshMenu();
+    }
+    // @ts-ignore: devUnderworld is not supposed to be used for gamelogic but this is just for a description
+    // so i'll take the shortcut here
+    if (globalThis.refreshSummonCardDescriptions && globalThis.devUnderworld) {
+        // @ts-ignore: devUnderworld is not supposed to be used for gamelogic but this is just for a description
+        // so i'll take the shortcut here
+        globalThis.refreshSummonCardDescriptions(globalThis.devUnderworld);
     }
 }
 function getSupportedLanguages() {

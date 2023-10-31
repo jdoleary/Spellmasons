@@ -1853,6 +1853,8 @@ export default class Underworld {
   async createLevel(levelData: LevelData, gameMode?: GameMode) {
     if (gameMode !== undefined) {
       this.gameMode = gameMode;
+      // Must be called when difficulty (gameMode) changes to update summon spell stats
+      Cards.refreshSummonCardDescriptions(this);
     }
     return new Promise<void>(resolve => {
       document.body?.classList.toggle('loading', true);

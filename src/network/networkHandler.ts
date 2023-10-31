@@ -75,6 +75,8 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       const { gameMode } = payload;
       if (underworld.levelIndex <= 1) {
         underworld.gameMode = gameMode;
+        // Must be called when difficulty (gameMode) changes to update summon spell stats
+        Cards.refreshSummonCardDescriptions(underworld);
         recalculateGameDifficulty(underworld);
         // Clear lastLevelCreated in order to allow it to regenerate the level without
         // changing the levelIndex
@@ -815,6 +817,8 @@ async function handleLoadGameState(payload: {
     underworld.syncronizeRNG(loadedGameState.RNGState);
   }
   underworld.gameMode = loadedGameState.gameMode;
+  // Must be called when difficulty (gameMode) changes to update summon spell stats
+  Cards.refreshSummonCardDescriptions(underworld);
   underworld.turn_phase = loadedGameState.turn_phase;
   underworld.turn_number = loadedGameState.turn_number;
   underworld.processedMessageCount = loadedGameState.processedMessageCount;

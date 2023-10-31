@@ -36,7 +36,7 @@ const overrides: { [unitId: string]: { exclude: boolean, properties: { manaCost?
         }
     }
 }
-export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean): Spell | undefined {
+export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean, difficulty?: number): Spell | undefined {
     const override = overrides[unitId];
     const sourceUnit = allUnits[unitId];
     if (!sourceUnit) {
@@ -75,11 +75,18 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean):
     }
     globalThis.freeSpells.push(id);
     const unitSource = allUnits[unitId];
+    let healthMax = unitSource?.unitProps.healthMax || config.UNIT_BASE_HEALTH;
+    let manaMax = unitSource?.unitProps.manaMax || 0;
+    if (difficulty && unitSource) {
+        const adjustedUnitProps = Unit.adjustUnitPropsDueToDifficulty(Object.assign({ healthMax: unitSource.unitProps.healthMax || config.UNIT_BASE_HEALTH, manaMax: unitSource.unitProps.manaMax || 0 }), difficulty);
+        healthMax = adjustedUnitProps.healthMax;
+        manaMax = adjustedUnitProps.manaMax;
+    }
     const unitStats = !unitSource ? '' : `${!!unitSource.unitProps.damage ? `
 🗡️ ${unitSource.unitProps.damage} ${i18n(['damage'])}` : ''}${!!unitSource.unitProps.attackRange ? `
 🎯 ${unitSource.unitProps.attackRange} ${i18n(['attack range'])}` : ''}
-❤️ ${unitSource.unitProps.healthMax || config.UNIT_BASE_HEALTH} ${i18n(['health capacity'])}
-${unitSource.unitProps.manaMax !== undefined && unitSource.unitProps.manaMax > 0 ? `🔵 ${unitSource.unitProps.manaMax} + ${unitSource.unitProps.manaPerTurn} ${i18n('Mana')} ${i18n('per turn')}` : ''}`;
+❤️ ${healthMax} ${i18n(['health capacity'])}
+${manaMax ? `🔵 ${manaMax} + ${unitSource.unitProps.manaPerTurn} ${i18n('Mana')} ${i18n('per turn')}` : ''}`;
 
     return {
         card: {

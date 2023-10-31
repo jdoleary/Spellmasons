@@ -274,6 +274,13 @@ export function adjustUnitStatsByUnderworldCalamity(unit: IUnit, statCalamity: S
     }
   }
 }
+type DifficultyAdjustedUnitStats = Pick<IUnit, 'healthMax' | 'manaMax' | 'attackRange'>;
+export function adjustUnitPropsDueToDifficulty(stats: DifficultyAdjustedUnitStats, difficulty: number): DifficultyAdjustedUnitStats {
+  const returnStats: DifficultyAdjustedUnitStats = { ...stats };
+  returnStats.healthMax = Math.round((stats.healthMax !== undefined ? stats.healthMax : config.UNIT_BASE_HEALTH) * difficulty);
+  returnStats.manaMax = Math.round(stats.manaMax !== undefined ? stats.manaMax : config.UNIT_BASE_MANA);
+  return returnStats;
+}
 
 // sets all the properties that depend on difficulty
 export function adjustUnitDifficulty(unit: IUnit, difficulty: number) {
@@ -284,9 +291,9 @@ export function adjustUnitDifficulty(unit: IUnit, difficulty: number) {
   }
   const source = allUnits[unit.unitSourceId];
   if (source) {
+    const { healthMax, manaMax } = adjustUnitPropsDueToDifficulty(unit, difficulty);
     // Damage should remain unaffected by difficulty
     unit.damage = Math.round(source.unitProps.damage !== undefined ? source.unitProps.damage : config.UNIT_BASE_DAMAGE);
-    const healthMax = Math.round((source.unitProps.healthMax !== undefined ? source.unitProps.healthMax : config.UNIT_BASE_HEALTH) * difficulty);
     const oldHealthRatio = (unit.health / unit.healthMax) || 0;
     unit.healthMax = healthMax;
     // Maintain the ratio of health when adjusting difficulty so that an adjustment in difficulty doesn't renew units to max heatlh
@@ -295,7 +302,6 @@ export function adjustUnitDifficulty(unit: IUnit, difficulty: number) {
       unit.health = healthMax;
       console.error('Unit.health is NaN');
     }
-    const manaMax = Math.round(source.unitProps.manaMax !== undefined ? source.unitProps.manaMax : config.UNIT_BASE_MANA);
     // Maintain the ratio of mana when adjusting difficulty so that an adjustment in difficulty doesn't renew units to max mana
     const oldManaRatio = (unit.mana / unit.manaMax) || 0;
     unit.manaMax = manaMax;

@@ -88,6 +88,7 @@ import { getSpellThumbnailPath } from '../graphics/ui/CardUI';
 import { registerUrnIceExplode } from '../entity/units/urn_ice';
 import { registerUrnpoisonExplode } from '../entity/units/urn_poison';
 import { registerUrnexplosiveExplode } from '../entity/units/urn_explosive';
+import { calculateGameDifficulty } from '../Difficulty';
 export interface Modifiers {
   subsprite?: Subsprite;
   // run special init logic (usually for visuals) when a modifier is added or loaded
@@ -236,8 +237,38 @@ export function registerCards(overworld: Overworld) {
   registerUrnpoisonExplode();
   registerUrnexplosiveExplode();
   registerImmune();
+}
+
+// This is necessary because unit stats change with difficulty.
+// Also since the stats are dynamic, I process the localization when the spell is registered
+// for summon cards specifically unlike other cards, so their description must be refreshed if the language changes
+export function refreshSummonCardDescriptions(underworld: Underworld) {
+  const difficulty = calculateGameDifficulty(underworld);
+  for (let unitId of Object.keys(allUnits)) {
+    const spell = summon_generic(unitId, false, difficulty);
+    if (spell) {
+      const { card } = spell;
+      const { id } = card;
+      const allCardsCardOb = allCards[id];
+      if (allCardsCardOb) {
+        allCardsCardOb.description = card.description;
+      }
+    }
+    const spellMiniboss = summon_generic(unitId, true, difficulty);
+    if (spellMiniboss) {
+      const { card } = spellMiniboss;
+      const { id } = card;
+      const allCardsCardOb = allCards[id];
+      if (allCardsCardOb) {
+        allCardsCardOb.description = card.description;
+      }
+    }
+  }
 
 }
+// made global to prevent import loop in localize.ts
+globalThis.refreshSummonCardDescriptions = refreshSummonCardDescriptions;
+
 function cardToUpgrade(c: ICard, overworld: Overworld): IUpgrade {
   // Make forbidden cards unavailable in demo
   const probability = globalThis.isDemo && c.probability == probabilityMap[CardRarity.FORBIDDEN] ? 0 : c.probability;
