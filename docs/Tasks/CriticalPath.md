@@ -1,5 +1,9 @@
 # Critical Path
-- v1.22
+- v1.23
+    - TonyFTW and Skillo - resurrected units should decay
+        - Mattmellow - purify could cancel the decay
+    - Chase — Yesterday at 2:46 PM I realize how much more work it'd be, but perhaps stack casting could give them incrementally more damage and hp? Kinda like a "hoard bonus".
+    - Skillo — Yesterday at 10:28 AM honestly compared to ressurrect and how deadly damaging spells are, i would say that even applying a debuff on enemies which will capture their soul if they die, would be balanced. (so no hp threshold and better for multi targeting)
 ---
 
 - Salazar — Yesterday at 7:51 PM
