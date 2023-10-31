@@ -105,6 +105,8 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         console.log('JOIN_GAME_AS_PLAYER: Reassigning player', asPlayer.clientId, 'to', fromClient);
         const oldAsPlayerClientId = asPlayer.clientId;
         asPlayer.clientId = fromClient;
+        // Ensure their turn doesn't get skipped
+        asPlayer.endedTurn = false;
         // Change the clientId of fromClient's old player now that they have inhabited the asPlayer
         if (oldFromPlayer) {
           oldFromPlayer.clientId = oldAsPlayerClientId;
