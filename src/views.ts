@@ -143,6 +143,7 @@ function zoom(overworld: Overworld, e: WheelEvent) {
   globalThis.zoomTarget = newScale;
 }
 
+let runPredictionsIdleCallbackId: number;
 
 export function addOverworldEventListeners(overworld: Overworld) {
   if (globalThis.headless) { return; }
@@ -213,7 +214,24 @@ export function addOverworldEventListeners(overworld: Overworld) {
         listener: (e: MouseEvent) => {
           if (overworld.underworld) {
             useMousePosition(overworld.underworld, e);
-            runPredictions(overworld.underworld);
+
+            // Perf: Wrap runPredictions inside of requestIdleCallback
+            // so that it won't trigger until the UI is unblocked
+            // This greatly improves performance when runPredictions is
+            // expensive because it is attempted to be called on every mouse
+            // move.
+            // This can be tested by loading in a map with a large amount of 
+            // a large variety of units, without requestIdleCallback, even
+            // the cam cinematic lags terribly.
+            if (runPredictionsIdleCallbackId !== undefined) {
+              cancelIdleCallback(runPredictionsIdleCallbackId);
+            }
+            runPredictionsIdleCallbackId = requestIdleCallback(() => {
+              if (!overworld.underworld) {
+                return;
+              }
+              runPredictions(overworld.underworld);
+            })
           }
         }
       },
