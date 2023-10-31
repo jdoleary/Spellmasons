@@ -14,7 +14,7 @@ import { animateSpell } from '../../cards/cardUtils';
 
 export const urn_poison_id = 'Toxic Urn'
 const baseRadius = 140;
-const unitSource: UnitSource = {
+const urnPoisonSource: UnitSource = {
     id: urn_poison_id,
     info: {
         description: 'urn poison description',
@@ -151,4 +151,4 @@ function makepoisonParticleExplosion(position: Vec2, size: number, prediction: b
     simpleEmitter(position, config);
 }
 
-export default unitSource;
+export default urnPoisonSource;
