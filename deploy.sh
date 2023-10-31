@@ -11,14 +11,15 @@ PACKAGE_VERSION=$(cat package.json \
 # Build Dockerfile.bun for experimental transition from @websocketpie/server to @websocketpie/server-bun
 # docker build -f Dockerfile.bun . -t "spellmasons-bun:latest" -t "spellmasons-bun:$PACKAGE_VERSION"
 
-SEASHELL_IMAGE_PATH=registry.digitalocean.com/jdoleary-containers/smms
-echo "Package Version:$PACKAGE_VERSION"
-docker build . -t "$SEASHELL_IMAGE_PATH:latest" -t "$SEASHELL_IMAGE_PATH:$PACKAGE_VERSION"
-docker push "$SEASHELL_IMAGE_PATH:latest"
-docker push "$SEASHELL_IMAGE_PATH:$PACKAGE_VERSION"
+# SEASHELL_IMAGE_PATH=registry.digitalocean.com/jdoleary-containers/smms
+# echo "Package Version:$PACKAGE_VERSION"
+# docker build . -t "$SEASHELL_IMAGE_PATH:latest" -t "$SEASHELL_IMAGE_PATH:$PACKAGE_VERSION"
+# docker push "$SEASHELL_IMAGE_PATH:latest"
+# docker push "$SEASHELL_IMAGE_PATH:$PACKAGE_VERSION"
 
 PUBLIC_IMAGE_PATH=jordanoleary/spellmasons-server
-docker build . -t "$PUBLIC_IMAGE_PATH:latest" -t "$PUBLIC_IMAGE_PATH:$PACKAGE_VERSION"
+# Now using @websocketpie/server-bun
+docker build . -f Dockerfile.bun -t "$PUBLIC_IMAGE_PATH:latest" -t "$PUBLIC_IMAGE_PATH:$PACKAGE_VERSION"
 docker push "$PUBLIC_IMAGE_PATH:$PACKAGE_VERSION"
 docker push "$PUBLIC_IMAGE_PATH:latest"
 
