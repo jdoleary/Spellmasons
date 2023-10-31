@@ -1,3 +1,4 @@
+- Changing language mid game doesn't change language for summonspells, game must be restarted
 - Split doesn't work on yourself if you don't have 2x mana of split (Reported by Chase87)
 - Russell Feedback
     - Distinguish between low/med/high perks in UI

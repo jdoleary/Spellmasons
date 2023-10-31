@@ -1,8 +1,6 @@
 # Critical Path
 - v1.22
-    - i18n Korean translations missing for a bunch of cards, summon cards and urns
-    - [ ] Summon card stats don't change based on difficulty
-    - [ ] Perf improvements
+    - [ ] Summon card stats don't change based on difficulty or language
 ---
 - [ ] try bun server
     - fix 'pong' fn
@@ -21,6 +19,9 @@ Actually my friends and I had a near identical issue last night, level 12 we had
         - Circlex3 + vortex
             - fullySimulateForceMovePredictions takes a while
     - https://github.com/GoogleChromeLabs/comlink
+    - archer hasLineOfSight needs perf improvement on runpredictions
+    - fullySimulateForceMovePredictions takes a while
+        - but maybe I'm also calling runPredictions too often on mouse move with spell
     - Archy — Today at 4:13 PM
 ```
 I mean I encountered issues with performance while I was playing with summons, resurrect and clone spells. Combining them with cone or circle and increasing body count lags the game. Cause when when you clone your friendlies you accidentally clone dead bodies around them and it becomes worse when you trying to add more "cannon fodder" to it. 
