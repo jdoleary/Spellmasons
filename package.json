@@ -51,7 +51,7 @@
     "@sentry/tracing": "^7.31.1",
     "@websocketpie/client": "^1.1.1",
     "@websocketpie/server": "^0.13.1",
-    "@websocketpie/server-bun": "^1.0.2",
+    "@websocketpie/server-bun": "^1.0.4",
     "lodash.throttle": "^4.1.1",
     "object-hash": "^3.0.0",
     "pixi.js": "^6.4.2",
