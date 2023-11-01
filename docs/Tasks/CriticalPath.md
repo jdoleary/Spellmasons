@@ -1,6 +1,5 @@
 # Critical Path
 - Make logger datatable for server hub
-- Thought bubbles don't work for mods
 - v1.23
     - TonyFTW and Skillo - resurrected units should decay
         - Mattmellow - purify could cancel the decay

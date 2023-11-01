@@ -3,6 +3,7 @@ Improvment: New experimental improved server running on US-West and Europe serve
 chore: Improved logging for debugging
 src: Add unit stats to summon cards
     Thanks Lemdoran
+fix: Spells from Rene's Gimmicks not showing up in multiplayer thought bubbles
 fix: Auto-rejoining doesn't work if the game has a password
     Thanks Manman
 chore: Use server-bun on us-west
