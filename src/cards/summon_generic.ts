@@ -65,11 +65,7 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean, 
     if (unitId == bossmasonUnitId) {
         manaCost = 750;
     }
-    let id = unitId + (asMiniboss ? ' Miniboss' : '');
-    // Special case, must change name of upgrade for 'Spellmason' or else it conflicts with the mageType Spellmason upgrade
-    if (unitId === spellmasonUnitId) {
-        id = `${i18n('Summon')} ${spellmasonUnitId}` + (asMiniboss ? ' Miniboss' : '');
-    }
+    const id = unitId + (asMiniboss ? ' Miniboss' : '');
     if (!globalThis.freeSpells) {
         globalThis.freeSpells = [];
     }

@@ -228,7 +228,9 @@ export const upgradeCardsSource: IUpgrade[] = []
 
 export const upgradeMageClassSource: IUpgrade[] = [
   {
-    title: 'Spellmason',
+    // This upgrade has leading and trailing spaces so it doesn't conflict with the upgrade
+    // for summoning a spellmason
+    title: ' Spellmason ',
     type: 'mageType',
     description: () => i18n('class_spellmason'),
     thumbnail: 'images/upgrades/class-spellmason.png',
