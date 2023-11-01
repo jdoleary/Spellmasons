@@ -281,7 +281,7 @@ interface DifficultyAdjustedUnitStats {
 export function adjustUnitPropsDueToDifficulty(source: Partial<UnitSource>, difficulty: number): DifficultyAdjustedUnitStats {
   const returnStats: DifficultyAdjustedUnitStats = {
     healthMax: source.unitProps && source.unitProps.healthMax ? source.unitProps.healthMax : config.UNIT_BASE_HEALTH,
-    manaMax: source.unitProps && source.unitProps.manaMax ? source.unitProps.manaMax : 0,
+    manaMax: source.unitProps && source.unitProps.manaMax ? source.unitProps.manaMax : config.UNIT_BASE_MANA,
   };
   returnStats.healthMax = Math.round(returnStats.healthMax * difficulty);
   returnStats.manaMax = Math.round(returnStats.manaMax);
