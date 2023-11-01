@@ -20,17 +20,12 @@ export function enableRemoteLogging() {
     // };
 }
 function sendLogToServerHub(args: any[], l: LogLevel) {
-    const d = new Date();
     const log: Log = {
         m: args.join(' '),
         v: globalThis.SPELLMASONS_PACKAGE_VERSION,
         r: globalThis.headless ? RUNNER.SERVER : RUNNER.BROWSER,
         l,
-        d: {
-            y: d.getFullYear(),
-            m: d.getMonth(),
-            d: d.getDate()
-        },
+        d: new Date().getTime(),
         e: ENV.UNKNOWN
     }
     fetch("https://server-hub-d2b2v.ondigitalocean.app/log", {
@@ -54,11 +49,6 @@ enum RUNNER {
     BROWSER,
     SERVER
 }
-interface Date {
-    y: number;
-    m: number;
-    d: number;
-}
 
 enum ENV {
     DEV,
@@ -77,7 +67,7 @@ export interface Log {
     // level
     l: LogLevel;
     // date
-    d: Date;
+    d: number;
     // environment
     e: ENV;
 }
