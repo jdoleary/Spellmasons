@@ -10,5 +10,5 @@ PACKAGE_VERSION=$(cat package.json \
 
 IMAGE_PATH=spellmasons-server
 echo "Package Version:$PACKAGE_VERSION"
-docker build . -t "$IMAGE_PATH:latest" -t "$IMAGE_PATH:$PACKAGE_VERSION"
+docker build . -f Dockerfile.bun -t "$IMAGE_PATH:latest" -t "$IMAGE_PATH:$PACKAGE_VERSION"
 docker run -d -p 8080:8080 $IMAGE_PATH
