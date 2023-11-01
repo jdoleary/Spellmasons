@@ -5,7 +5,6 @@
 - Test Host Local Server, Host via Docker (run `testDockerImage.sh`)
 - Test loading a saved multiplayer game
 - Test Hotseat multiplayer basics
-- Test hosting LAN server from Electron build
 - Test liquid
 - Test rerolling spells and perks
 - Test all pickups in singleplayer
@@ -19,6 +18,7 @@
 - Test all spells in singleplayer: ~24 minutes
 - Test tutorial ALWAYS on electron build
 - Test saving if you modify underworld with new elements added to the level that need to be serialized
+- Test hosting LAN server from Electron build
 
 # Release protocal
 - QA: 1:44
