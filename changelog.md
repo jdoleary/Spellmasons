@@ -1,4 +1,6 @@
 ## Spellmasons Update v1.22.0
+Improvment: New experimental improved server running on US-West and Europe servers
+chore: Improved logging for debugging
 src: Add unit stats to summon cards
     Thanks Lemdoran
 fix: Auto-rejoining doesn't work if the game has a password

@@ -13,6 +13,7 @@
 - Test allies carrying on the battle
     - both when you kill yourself and when an enemy kills you
 - have a multiplayer game with 1 player, beat a level, then connect with another player
+
 - Test all spells in multiplayer: ~20 minutes
     - and end turn after each to test for desyncs
 - Test all spells in singleplayer: ~24 minutes
