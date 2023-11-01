@@ -1,6 +1,4 @@
 import * as Sentry from "@sentry/browser";
-import { CaptureConsole as CaptureConsoleIntegration } from "@sentry/integrations";
-import { BrowserTracing } from "@sentry/tracing";
 import Stats from 'stats.js';
 
 export function setupMonitoring() {
@@ -10,14 +8,6 @@ export function setupMonitoring() {
     Sentry.init({
       dsn: "https://3e73188cf44c491da09fb834f36f55f5@o4504650001874944.ingest.sentry.io/4504650002923520",
       release,
-      integrations: [new BrowserTracing(), new CaptureConsoleIntegration(
-        {
-          // array of methods that should be captured
-          // defaults to ['log', 'info', 'warn', 'error', 'debug', 'assert']
-          levels: ['error']
-        }
-      )],
-
       // Set tracesSampleRate to 1.0 to capture 100%
       // of transactions for performance monitoring.
       // We recommend adjusting this value in production

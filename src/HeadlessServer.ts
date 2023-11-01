@@ -2,25 +2,15 @@
 // to true to denote that there is no graphics nor audio code
 globalThis.headless = true;
 import * as Sentry from "@sentry/node";
-import { CaptureConsole as CaptureConsoleIntegration } from "@sentry/integrations";
 
-// Importing @sentry/tracing patches the global hub for tracing to work.
-import "@sentry/tracing";
 import { version } from '../package.json';
 const release = `spellmasons@${version}`;
 Sentry.init({
     dsn: "https://4cf64a58d4aa4fa4959212aeccd3d6a1@o4504650001874944.ingest.sentry.io/4504650012819456",
     release,
-    integrations: [new CaptureConsoleIntegration(
-        {
-            // array of methods that should be captured
-            // defaults to ['log', 'info', 'warn', 'error', 'debug', 'assert']
-            levels: ['error']
-        }
-    )],
     // We recommend adjusting this value in production, or using tracesSampler
     // for finer control
-    tracesSampleRate: 0.2,
+    tracesSampleRate: 0.1,
 });
 Sentry.setTag("SpellmasonsRunner", "HeadlessServer");
 
