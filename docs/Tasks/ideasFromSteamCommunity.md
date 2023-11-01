@@ -1,3 +1,9 @@
+
+    Skillo — Today at 7:16 AM
+maybe there could be a conditional unlock for a pool of exceptionally powerful spells you can unlock during a run, instead of full random, all or nothing rng. 
+
+Say you gather 4 forbidden spell fragments and that lets you craft one, which is out of 4 really powerful ones (target kind and ressurrect come to mind)
+---
 See Roguelite elements ideas thread: https://discord.com/channels/1032294536640200766/1069630737919266936/1166465931627733022
 ---
 Kekis — Yesterday at 10:34 PM
