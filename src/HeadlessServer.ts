@@ -2,8 +2,10 @@
 // to true to denote that there is no graphics nor audio code
 globalThis.headless = true;
 import * as Sentry from "@sentry/node";
-
+import { enableRemoteLogging } from "./RemoteLogging";
 import { version } from '../package.json';
+globalThis.SPELLMASONS_PACKAGE_VERSION = version;
+enableRemoteLogging();
 const release = `spellmasons@${version}`;
 Sentry.init({
     dsn: "https://4cf64a58d4aa4fa4959212aeccd3d6a1@o4504650001874944.ingest.sentry.io/4504650012819456",
@@ -26,7 +28,6 @@ import makeOverworld, { Overworld } from "./Overworld";
 import Underworld from "./Underworld";
 const isUsingBun = process.env.USING_BUN === 'yes';
 const pie = isUsingBun ? require('@websocketpie/server-bun') : require('@websocketpie/server');
-globalThis.SPELLMASONS_PACKAGE_VERSION = version;
 // Init underworld so that when clients join they can use it as the canonical
 // record of gamestate
 const PORT = process.env.PORT || 8080;
