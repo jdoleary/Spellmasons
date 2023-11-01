@@ -1,5 +1,4 @@
 # Critical Path
-- Prevent oversending huge count of the same log 
 - Make logger datatable for server hub
 - Thought bubbles don't work for mods
 - v1.23

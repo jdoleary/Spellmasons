@@ -19,27 +19,43 @@ export function enableRemoteLogging() {
     //     originalConsoleWarn.apply(console, arguments);
     // };
 }
+
+// recentLogs holds logs for an amount of time to prevent oversending
+// the same logs that may occur, for example, if mousemove causes an error
+let recentLogs: { m: string, d: number }[] = [];
 function sendLogToServerHub(args: any[], l: LogLevel) {
     const log: Log = {
         m: args.join(' '),
         v: globalThis.SPELLMASONS_PACKAGE_VERSION,
         r: globalThis.headless ? RUNNER.SERVER : RUNNER.BROWSER,
         l,
-        d: new Date().getTime(),
+        d: Date.now(),
         e: ENV.UNKNOWN
     }
-    fetch("https://server-hub-d2b2v.ondigitalocean.app/log", {
-        method: "POST",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(log)
-    }).catch(_ => {
-        originalConsoleError('Remote Logging failed');
-    });
+    const now = Date.now();
+    // Only hold logs for 10 seconds
+    recentLogs = recentLogs.filter(entry => {
+        const ago = now - entry.d;
+        return ago < 10_000;
+    })
+    if (recentLogs.find(entry => entry.m == log.m)) {
+        // Omitts FLOODing logs
+    } else {
+        fetch("https://server-hub-d2b2v.ondigitalocean.app/log", {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(log)
+        }).catch(_ => {
+            originalConsoleError('Remote Logging failed');
+        });
+    }
+    recentLogs.push({ m: log.m, d: log.d });
 
 }
 
 // START: interfaces and enums copied from spellmasons-server-hub/app/logs.ts
 enum LogLevel {
+    DEBUG,
     TRACE,
     LOG,
     WARN,
