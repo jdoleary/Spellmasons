@@ -68,6 +68,11 @@ const spell: Spell = {
   },
   events: {
     onTurnStart: async (unit: Unit.IUnit) => {
+      const modifier = unit.modifiers[id];
+      if (modifier && modifier.quantity <= 0) {
+        // do not skip turn
+        return false;
+      }
       // Ensure that the unit cannot move when frozen
       // (even when players' turns are ended they can still act so long
       // as it is underworld.turn_phase === turn_phase.PlayerTurns, this is because all players act simultaneously
@@ -84,7 +89,19 @@ const spell: Spell = {
       if (modifier) {
         modifier.quantity--;
         if (modifier.quantity <= 0) {
-          Unit.removeModifier(unit, id, underworld);
+          // Special handling:
+          // If players freeze themself it will skip their turn
+          // which makes the freeze image get removed immediately
+          // which is a bad UX because it's unclear why their turn ended
+          // so if it's a player that gets frozen, delay 2 seconds before
+          // removing the ice image
+          if (unit.unitType == UnitType.PLAYER_CONTROLLED) {
+            setTimeout(() => {
+              Unit.removeModifier(unit, id, underworld);
+            }, 1000)
+          } else {
+            Unit.removeModifier(unit, id, underworld);
+          }
         }
       }
     },
