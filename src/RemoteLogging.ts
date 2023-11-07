@@ -2,6 +2,10 @@
 const originalConsoleError = console.error;
 // const originalConsoleWarn = console.warn;
 export function enableRemoteLogging() {
+    if (location.href.includes('localhost')) {
+        console.warn('Remote Logging is disabled for localhsot development')
+        return;
+    }
 
     console.error = function () {
         sendLogToServerHub(Array.from(arguments), LogLevel.ERROR);
