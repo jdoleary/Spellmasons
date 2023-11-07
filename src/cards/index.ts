@@ -149,7 +149,9 @@ export function registerSpell(spell: Spell, overworld: Overworld) {
     registerModifiers(id, spell.modifiers);
   }
   // Add card as upgrade:
-  upgradeCardsSource.push(cardToUpgrade(card, overworld));
+  if (!upgradeCardsSource.find(u => u.title == card.id)) {
+    upgradeCardsSource.push(cardToUpgrade(card, overworld));
+  }
   // Add subsprites
   if (modifiers && modifiers.subsprite) {
     Subsprites[modifiers.subsprite.imageName] = modifiers.subsprite;
