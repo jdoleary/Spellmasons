@@ -1,7 +1,30 @@
 # Critical Path
+- Update Seashell to server-bun
+    - Europe crashed with high cpu, monitor for longer before changing seashell over to new server
+- Fix freeze
+- Verify minibosses still occur
+- multiple summons should make bigger, stronger units
+    - check loading
+- log viewer
+- Feature: Upgradable Spells
+- Soul Decay (for resurrected units)
+- Beastiary / Spell book in menu
+- Challenges (premade)
+- Privacy Policy
+- Add "Count" functionality to remote logger
+-  Advertise in other countries
+- More perf improvements
+- Make spell predictions run on generator so you can watch it in real time
+---
+- bug: urn stuck around and didn't have it's image removed after being killed
+- Lemming Jesus — Today at 3:01 PM
+    - Cards (and only cards) are affected by the UI Scale of windows
 - Make logger datatable for server hub
+- Feature: Longer spells are cheaper by a bit (to incentivize combining)
 - v1.23
-    - TonyFTW and Skillo - resurrected units should decay
+    - s: bug: If an ice urn ends your turn it doesn't show it
+    - s: Multiple summons in the same spot shouldn't stack
+    - m: TonyFTW and Skillo - resurrected units should decay
         - Mattmellow - purify could cancel the decay
     - Chase — Yesterday at 2:46 PM I realize how much more work it'd be, but perhaps stack casting could give them incrementally more damage and hp? Kinda like a "hoard bonus".
     - Skillo — Yesterday at 10:28 AM honestly compared to ressurrect and how deadly damaging spells are, i would say that even applying a debuff on enemies which will capture their soul if they die, would be balanced. (so no hp threshold and better for multi targeting)

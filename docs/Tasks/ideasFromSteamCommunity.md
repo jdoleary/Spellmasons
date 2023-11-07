@@ -1,5 +1,8 @@
+- Skillo — Today at 11:01 AM
+Not in any way related to the current game, but i was thinking how fun it would be to have a puzzle game with the elements from spellmasons. Kinda like this other indie game, "into the breach"
 
-    Skillo — Today at 7:16 AM
+Handcrafted stages where you are given a specific character, turn amount, enemy placement and stats, and have to kill all enemies or reach a safe area. The main point is to find out how to make use of the tools provided in that level in order to complete the objective, which often is tailored to one or a few solutions only. And ofc having a way of setting up your own levels and playing public ones made by other users, similar to mario maker
+- Skillo — Today at 7:16 AM
 maybe there could be a conditional unlock for a pool of exceptionally powerful spells you can unlock during a run, instead of full random, all or nothing rng. 
 
 Say you gather 4 forbidden spell fragments and that lets you craft one, which is out of 4 really powerful ones (target kind and ressurrect come to mind)
