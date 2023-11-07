@@ -44,8 +44,11 @@ const urnPoisonSource: UnitSource = {
         damage: '',
         death: ''
     },
+    // Warning: init must be idempotent
     init: (unit: Unit.IUnit, underworld: Underworld) => {
-        unit.onDeathEvents.push('urnpoisonExplode');
+        if (!unit.onDamageEvents.includes(urnpoisonExplode)) {
+            unit.onDeathEvents.push(urnpoisonExplode);
+        }
     },
     action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     },
@@ -58,13 +61,8 @@ export function registerUrnpoisonExplode() {
     registerEvents(urnpoisonExplode, {
         onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
             explode(unit, unit.attackRange, 0, prediction, underworld);
-            // Delay clean up so it doesn't interfere with other onDeath events such as bloat
-            setTimeout(() => {
-                // Remove corpse
-                // Note: This must be called after all other explode logic or else it will affect the position
-                // of the explosion
-                Unit.cleanup(unit);
-            }, 0);
+            // Remove corpse
+            Unit.cleanup(unit, true);
         }
     });
 }

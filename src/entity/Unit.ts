@@ -373,15 +373,21 @@ export function removeModifier(unit: IUnit, key: string, underworld: Underworld)
 
 }
 
-export function cleanup(unit: IUnit) {
+export function cleanup(unit: IUnit, maintainPosition?: boolean) {
   // Resolve done moving on cleanup to ensure that there are no forever-blocking promises
   if (unit.resolveDoneMoving) {
     unit.resolveDoneMoving();
   }
   // Prevent id conflicts with other existing units after cleanup
   unit.id = -1;
-  unit.x = NaN;
-  unit.y = NaN;
+  // Sometimes you will want to clean up a unit without NaN'ing it's position
+  // because it's position may still be used in synchronous events such as
+  // an urn exploding (being cleaned up), but there are still other onDeath
+  // events that need it's position to function
+  if (!maintainPosition) {
+    unit.x = NaN;
+    unit.y = NaN;
+  }
   unit.flaggedForRemoval = true;
   Image.cleanup(unit.image);
   // Setting the entire image to undefined is important

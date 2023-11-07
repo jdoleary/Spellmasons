@@ -38,8 +38,11 @@ const unit: UnitSource = {
         damage: '',
         death: ''
     },
+    // Warning: init must be idempotent
     init: (unit: Unit.IUnit, underworld: Underworld) => {
-        unit.onDeathEvents.push('urnexplosiveExplode');
+        if (!unit.onDamageEvents.includes(urnexplosiveExplode)) {
+            unit.onDeathEvents.push(urnexplosiveExplode);
+        }
     },
     action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     },
@@ -52,13 +55,8 @@ export function registerUrnexplosiveExplode() {
     registerEvents(urnexplosiveExplode, {
         onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
             explode(unit, unit.attackRange, unit.damage, prediction, underworld);
-            // Delay clean up so it doesn't interfere with other onDeath events such as bloat
-            setTimeout(() => {
-                // Remove corpse
-                // Note: This must be called after all other explode logic or else it will affect the position
-                // of the explosion
-                Unit.cleanup(unit);
-            }, 0);
+            // Remove corpse
+            Unit.cleanup(unit, true);
         }
     });
 }
