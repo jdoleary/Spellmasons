@@ -18,8 +18,7 @@ const spell: Spell = {
     supportQuantity: true,
     manaCost: 60,
     healthCost: 0,
-    cooldown: 2,
-    expenseScaling: 3,
+    expenseScaling: 2,
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconDecoy.png',
     description: 'spell_summon_decoy',
@@ -42,7 +41,7 @@ const spell: Spell = {
           return state;
         }
         playDefaultSpellSFX(card, prediction);
-        const decoyUnit = Unit.create(
+        const unit = Unit.create(
           sourceUnit.id,
           summonLocation.x,
           summonLocation.y,
@@ -50,19 +49,25 @@ const spell: Spell = {
           sourceUnit.info.image,
           UnitType.AI,
           sourceUnit.info.subtype,
-          sourceUnit.unitProps,
+          {
+            ...sourceUnit.unitProps,
+            strength: quantity
+          },
           underworld,
           prediction
         );
-        addUnitTarget(decoyUnit, state);
+        addUnitTarget(unit, state);
 
         if (!prediction) {
           // Animate effect of unit spawning from the sky
-          skyBeam(decoyUnit);
+          skyBeam(unit);
+        }
+        if (unit.image) {
+          const quantityScaleModifier = 1 + 0.3 * (quantity - 1);
+          unit.image.sprite.scale.x = unit.image.sprite.scale.x * quantityScaleModifier;
+          unit.image.sprite.scale.y = unit.image.sprite.scale.y * quantityScaleModifier;
         }
 
-        decoyUnit.healthMax *= quantity;
-        decoyUnit.health = decoyUnit.healthMax;
       } else {
         console.error(`Source unit ${unitId} is missing`);
       }

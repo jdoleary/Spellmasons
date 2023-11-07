@@ -24,6 +24,7 @@ const unit: UnitSource = {
     death: 'decoyDeath',
   },
   unitProps: {
+    damage: 0,
     staminaMax: 0,
     attackRange: 0,
     manaMax: 0,
