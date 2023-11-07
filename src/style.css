@@ -149,10 +149,6 @@ body.view-Game.showUpgrades #upgrade-picker {
   text-shadow: 2px 2px 2px #000;
 }
 
-#upgrade-picker .card.tiny {
-  height: 400px;
-}
-
 #upgrade-picker .card,
 .card-inspect .card {
   width: unset;
@@ -160,6 +156,71 @@ body.view-Game.showUpgrades #upgrade-picker {
   max-height: 100%;
   margin: 8px;
   aspect-ratio: 462/744;
+}
+
+@media (min-width: 300px) {
+
+  #upgrade-picker .card,
+  .card-inspect .card {
+    height: 300px;
+  }
+
+  #upgrade-picker .card.tiny,
+  .card-inspect .card.tiny {
+    height: 240px;
+  }
+}
+
+@media (min-width: 800px) {
+
+  #upgrade-picker .card,
+  .card-inspect .card {
+    height: 400px;
+  }
+
+  #upgrade-picker .card.tiny,
+  .card-inspect .card.tiny {
+    height: 320px;
+  }
+}
+
+@media (min-width: 1280px) {
+
+  #upgrade-picker .card,
+  .card-inspect .card {
+    height: 500px;
+  }
+
+  #upgrade-picker .card.tiny,
+  .card-inspect .card.tiny {
+    height: 400px;
+  }
+}
+
+@media (min-width: 1440px) {
+
+  #upgrade-picker .card,
+  .card-inspect .card {
+    height: 600px;
+  }
+
+  #upgrade-picker .card.tiny,
+  .card-inspect .card.tiny {
+    height: 480px;
+  }
+}
+
+@media (min-width: 1920px) {
+
+  #upgrade-picker .card,
+  .card-inspect .card {
+    height: 700px;
+  }
+
+  #upgrade-picker .card.tiny,
+  .card-inspect .card.tiny {
+    height: 560px;
+  }
 }
 
 
@@ -2157,13 +2218,14 @@ body.dragging-card .floating-card-holder .empty-slot {
   font-size: 24px;
   text-align: center;
   position: absolute;
-  bottom: 0;
+  top: 100%;
   background-color: #e7d1a6;
   margin: 0 auto;
   left: 50%;
-  transform: translate(-50%, +25%);
+  transform: translate(-50%, -50%);
   border-radius: 5px;
   border: 4px solid #602c60;
   padding: 4px;
+  white-space: nowrap;
 
 }

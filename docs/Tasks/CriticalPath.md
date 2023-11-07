@@ -1,6 +1,4 @@
 # Critical Path
-- Update Seashell to server-bun
-    - Europe crashed with high cpu, monitor for longer before changing seashell over to new server
 - log viewer
 - Feature: Upgradable Spells
 - Soul Decay (for resurrected units)
@@ -11,8 +9,9 @@
 -  Advertise in other countries
 - More perf improvements
 - Make spell predictions run on generator so you can watch it in real time
+- Update Seashell to server-bun
+    - Europe crashed with high cpu, monitor for longer before changing seashell over to new server
 ---
-- bug: urn stuck around and didn't have it's image removed after being killed
 - Lemming Jesus — Today at 3:01 PM
     - Cards (and only cards) are affected by the UI Scale of windows
 - Make logger datatable for server hub
