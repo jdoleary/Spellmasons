@@ -51,6 +51,7 @@ export const keyDown = {
   cameraRight: false
 }
 
+let runPredictionsIdleCallbackId: number;
 globalThis.addEventListener('keydown', nonUnderworldKeydownListener);
 function nonUnderworldKeydownListener(event: KeyboardEvent) {
   // Only handle hotkeys when NOT viewing the Game
@@ -451,9 +452,16 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
             // and won't path in an unexpected direction to attempt to get to the final destination.
             const intersection = closestLineSegmentIntersection({ p1: globalThis.player.unit, p2: mouseTarget }, underworld.walls) || mouseTarget;
             Unit._moveTowards(globalThis.player.unit, intersection, underworld);
+
             // Trigger mouse move so that predictions will run when the position of your own player changes since
             // this could change prediction results
-            runPredictions(underworld);
+            if (runPredictionsIdleCallbackId !== undefined) {
+              cancelIdleCallback(runPredictionsIdleCallbackId);
+            }
+            runPredictionsIdleCallbackId = requestIdleCallback(() => {
+              runPredictions(underworld);
+            })
+
             // Send current player movements to server
             sendMovePlayer(underworld);
             tutorialCompleteTask('moved', () => !!globalThis.player && globalThis.player.unit.stamina <= globalThis.player.unit.staminaMax * 0.7);
