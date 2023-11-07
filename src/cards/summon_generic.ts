@@ -89,7 +89,7 @@ ${manaMax ? `🔵 ${manaMax} + ${unitSource.unitProps.manaPerTurn} ${i18n('Mana'
             id,
             category: CardCategory.Soul,
             sfx: 'summonDecoy',
-            supportQuantity: false,
+            supportQuantity: true,
             // Make mana cost dependent on how late they show up in the game
             manaCost,
             healthCost: 0,
@@ -125,10 +125,19 @@ ${manaMax ? `🔵 ${manaMax} + ${unitSource.unitProps.manaPerTurn} ${i18n('Mana'
                         sourceUnit.info.image,
                         UnitType.AI,
                         sourceUnit.info.subtype,
-                        { ...sourceUnit.unitProps, isMiniboss: asMiniboss },
+                        {
+                            ...sourceUnit.unitProps,
+                            isMiniboss: asMiniboss,
+                            strength: quantity,
+                        },
                         underworld,
                         prediction
                     );
+                    if (unit.image) {
+                        const quantityScaleModifier = 1 + 0.3 * (quantity - 1);
+                        unit.image.sprite.scale.x = unit.image.sprite.scale.x * quantityScaleModifier;
+                        unit.image.sprite.scale.y = unit.image.sprite.scale.y * quantityScaleModifier;
+                    }
 
                     addUnitTarget(unit, state);
 

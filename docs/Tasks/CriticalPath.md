@@ -1,10 +1,6 @@
 # Critical Path
 - Update Seashell to server-bun
     - Europe crashed with high cpu, monitor for longer before changing seashell over to new server
-- Fix freeze
-- Verify minibosses still occur
-- multiple summons should make bigger, stronger units
-    - check loading
 - log viewer
 - Feature: Upgradable Spells
 - Soul Decay (for resurrected units)

@@ -88,6 +88,8 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   // across the network
   id: number;
   unitSourceId: string;
+  // strength is a multiplier that affects base level stats
+  strength: number;
   // true if the unit was spawned at the beginning of the level and not
   // resurrected or cloned.  This prevents EXP scamming.
   originalLife: boolean;
@@ -174,8 +176,8 @@ export function create(
       image: prediction ? undefined : Image.create({ x, y }, defaultImagePath, containerUnits),
       defaultImagePath,
       shaderUniforms: {},
-      // damage is set elsewhere in adjustUnitStrength
       damage: 0,
+      strength: 1,
       // default blood color
       bloodColor: bloodColorDefault,
       health,
@@ -297,9 +299,13 @@ export function adjustUnitDifficulty(unit: IUnit, difficulty: number) {
   }
   const source = allUnits[unit.unitSourceId];
   if (source) {
-    const { healthMax, manaMax } = adjustUnitPropsDueToDifficulty(source, difficulty);
+    let { healthMax, manaMax } = adjustUnitPropsDueToDifficulty(source, difficulty);
+    const quantityStatModifier = 1 + 0.8 * ((unit.strength || 1) - 1);
+    healthMax *= quantityStatModifier;
+    manaMax *= quantityStatModifier;
     // Damage should remain unaffected by difficulty
     unit.damage = Math.round(source.unitProps.damage !== undefined ? source.unitProps.damage : config.UNIT_BASE_DAMAGE);
+    unit.damage *= quantityStatModifier;
     const oldHealthRatio = (unit.health / unit.healthMax) || 0;
     unit.healthMax = healthMax;
     // Maintain the ratio of health when adjusting difficulty so that an adjustment in difficulty doesn't renew units to max heatlh
@@ -443,6 +449,8 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
   // call it, just in case there is a pending promise (there shouldn't be)
   // so the promise doesn't hang forever
   let loadedunit: IUnit = {
+    // Load defaults for new props that old save files might not have
+    ...{ strength: 1 },
     ...restUnit,
     shaderUniforms: {},
     resolveDoneMoving: () => { },
