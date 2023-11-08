@@ -123,6 +123,8 @@ export function oneOffImage(coords: Vec2, imagePath: string, parent: Container |
         return image;
     }
 }
+// @ts-ignore: for menu
+globalThis.calculateCostForSingleCard = calculateCostForSingleCard
 export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number = 0, caster?: IPlayer): CardCost {
     let cardCost = { manaCost: 0, healthCost: 0 }
     cardCost.manaCost += card.manaCost;

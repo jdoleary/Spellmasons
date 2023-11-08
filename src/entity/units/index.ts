@@ -90,3 +90,5 @@ export function registerUnits() {
 
 
 export const allUnits: { [id: string]: UnitSource } = {};
+// @ts-ignore: This is for the menu and does not need to be in the global type
+globalThis.allUnits = allUnits;

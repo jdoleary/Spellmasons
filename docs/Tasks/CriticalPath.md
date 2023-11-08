@@ -1,4 +1,8 @@
 # Critical Path
+- css card-inspect cards are now too small in inventory thanks to the css changes for upgrades
+- i18n
+    - Codex
+    - i18n: "Legal"
 - Features
     - Feature: Upgradable Spells
     - Soul Decay (for resurrected units)
@@ -7,7 +11,6 @@
 - Add "Count" functionality to remote logger
 - Advertise in other countries
 - Add Achievements
-- i18n: "Legal"
 - Update Seashell to server-bun
     - Europe crashed with high cpu, monitor for longer before changing seashell over to new server
 ---

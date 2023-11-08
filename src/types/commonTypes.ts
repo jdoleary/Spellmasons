@@ -30,6 +30,8 @@ export enum CardCategory {
   Blessings,
   Soul
 }
+// @ts-ignore: for menu
+globalThis.CardCategory = CardCategory;
 export enum CardRarity {
   COMMON = 'COMMON',
   SPECIAL = 'SPECIAL',

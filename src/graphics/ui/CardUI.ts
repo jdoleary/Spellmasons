@@ -639,6 +639,8 @@ function manageSelectedCardsParentVisibility() {
   }
 
 }
+// @ts-ignore for menu
+globalThis.cardRarityAsString = cardRarityAsString;
 export function cardRarityAsString(content: { probability: number }): string {
   return CardRarity[cardProbabilityToRarity(content)] || '';
 }
@@ -656,6 +658,8 @@ function cardProbabilityToRarity(content: { probability: number }): CardRarity {
   }
   return CardRarity.COMMON;
 }
+// @ts-ignore for menu
+globalThis.getCardRarityColor = getCardRarityColor;
 export function getCardRarityColor(content: { probability: number }): string {
   const rarity = cardProbabilityToRarity(content);
   /*
@@ -823,6 +827,8 @@ function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSi
   elCardInner.appendChild(desc);
   return element;
 }
+// @ts-ignore for menu
+globalThis.updateManaBadge = updateManaBadge;
 function updateManaBadge(elBadge: Element | null, manaCost: number, card: Cards.ICard) {
   if (elBadge) {
     // Hide badge if no cost
@@ -837,6 +843,8 @@ function updateManaBadge(elBadge: Element | null, manaCost: number, card: Cards.
     console.warn("Err UI: Found card, but could not find associated mana badge element to update mana cost");
   }
 }
+// @ts-ignore for menu
+globalThis.updateHealthBadge = updateHealthBadge
 function updateHealthBadge(elBadge: Element | null, healthCost: number, card: Cards.ICard) {
   if (elBadge) {
     // Hide badge if no cost

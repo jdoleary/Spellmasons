@@ -423,6 +423,8 @@ export interface ICard {
 }
 
 export const allCards: { [cardId: string]: ICard } = {};
+// @ts-ignore: This is for the menu and does not need to be in the global type
+globalThis.allCards = allCards;
 export const allModifiers: { [id: string]: Modifiers } = {};
 
 export function getCardsFromIds(cardIds: string[]): ICard[] {
