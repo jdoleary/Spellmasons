@@ -1,14 +1,13 @@
 # Critical Path
-- log viewer
-- Feature: Upgradable Spells
-- Soul Decay (for resurrected units)
-- Beastiary / Spell book in menu
-- Challenges (premade)
-- Privacy Policy
+- Features
+    - Feature: Upgradable Spells
+    - Soul Decay (for resurrected units)
+    - Beastiary / Spell book in menu
+    - Challenges (premade)
 - Add "Count" functionality to remote logger
--  Advertise in other countries
-- More perf improvements
-- Make spell predictions run on generator so you can watch it in real time
+- Advertise in other countries
+- Add Achievements
+- i18n: "Legal"
 - Update Seashell to server-bun
     - Europe crashed with high cpu, monitor for longer before changing seashell over to new server
 ---
