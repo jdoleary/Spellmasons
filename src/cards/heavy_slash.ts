@@ -32,7 +32,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconHeavySlash.png',
     animationPath,
-    sfx: 'hurt',
+    sfx: 'hurt2',
     description: ['spell_slash', damageDone.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       let animationDelaySum = 0;

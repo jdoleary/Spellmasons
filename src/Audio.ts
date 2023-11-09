@@ -52,6 +52,8 @@ export const sfx: { [key: string]: string[] } = {
     golemDeath: ['./sound/sfx/golem-death.mp3'],
     heal: ['./sound/sfx/heal.mp3'],
     hurt: ['./sound/sfx/hurt.mp3'],
+    hurt2: ['./sound/sfx/hurt2.mp3'],
+    hurt3: ['./sound/sfx/hurt3.mp3'],
     inventory_close: ['./sound/sfx/inventory_close.mp3'],
     inventory_open: ['./sound/sfx/inventory_open.mp3'],
     levelUp: ['./sound/sfx/LvlUp.mp3'],
