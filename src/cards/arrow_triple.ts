@@ -18,10 +18,10 @@ const spell: Spell = {
     id: arrowTripleCardId,
     category: CardCategory.Damage,
     supportQuantity: true,
-    manaCost: 10,
+    manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.COMMON],
+    probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconArrowTriple.png',
     // so that you can fire the arrow at targets out of range
     allowNonUnitTarget: true,

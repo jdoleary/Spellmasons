@@ -26,7 +26,7 @@ const spell: Spell = {
     manaCost: 35,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.FORBIDDEN],
+    probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconArrowFork.png',
     // so that you can fire the arrow at targets out of range
     allowNonUnitTarget: true,
