@@ -31,7 +31,7 @@ const spell: Spell = {
     effect: arrowEffect(1)
   }
 };
-export function arrowEffect(multiShotCount: number, onCollide?: (state: EffectState, firstTarget: Unit.IUnit, underworld: Underworld, prediction: boolean) => Promise<EffectState>) {
+export function arrowEffect(multiShotCount: number, onCollide?: (state: EffectState, firstTarget: Unit.IUnit, underworld: Underworld, prediction: boolean) => Promise<EffectState>, skipClearCache?: boolean) {
   return async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean) => {
 
     let targets: Vec2[] = state.targetedUnits;
@@ -42,13 +42,15 @@ export function arrowEffect(multiShotCount: number, onCollide?: (state: EffectSt
     let timeoutToNextArrow = 200;
     if (!prediction) {
       underworld.clearPredictedNextTurnDamage();
-      for (let u of underworld.units) {
-        // @ts-ignore: `currentHealth` is a temporary property on units
-        // Keep the health that they had before arrows are fired
-        // so that arrows can determine if they should go past
-        // a unit that will die before it gets there due to
-        // another in-flight arrow
-        u.currentHealth = u.health;
+      if (!skipClearCache) {
+        for (let u of underworld.units) {
+          // @ts-ignore: `cachedArrowHealth` is a temporary property on units
+          // Keep the health that they had before arrows are fired
+          // so that arrows can determine if they should go past
+          // a unit that will die before it gets there due to
+          // another in-flight arrow
+          u.cachedArrowHealth = u.health;
+        }
       }
     }
     for (let i = 0; i < quantity; i++) {
@@ -60,7 +62,7 @@ export function arrowEffect(multiShotCount: number, onCollide?: (state: EffectSt
           let casterPositionAtTimeOfCast = state.casterPositionAtTimeOfCast;
           let castLocation = target;
           if (arrowNumber > 0) {
-            const diff = subtract(casterPositionAtTimeOfCast, getEndpointOfMagnitudeAlongVector(casterPositionAtTimeOfCast, (arrowNumber == 2 ? -1 : 1) * Math.PI / 2 + getAngleBetweenVec2s(state.casterPositionAtTimeOfCast, state.castLocation), 20));
+            const diff = subtract(casterPositionAtTimeOfCast, getEndpointOfMagnitudeAlongVector(casterPositionAtTimeOfCast, (arrowNumber % 2 == 0 ? -1 : 1) * Math.PI / 2 + getAngleBetweenVec2s(state.casterPositionAtTimeOfCast, state.castLocation), arrowNumber > 2 ? 40 : 20));
             casterPositionAtTimeOfCast = subtract(casterPositionAtTimeOfCast, diff);
             castLocation = subtract(castLocation, diff);
           }
@@ -121,8 +123,8 @@ export function arrowEffect(multiShotCount: number, onCollide?: (state: EffectSt
         }
       });
       for (let u of underworld.units) {
-        // @ts-ignore: `currentHealth` is a temporary property on units
-        delete u.currentHealth;
+        // @ts-ignore: `cachedArrowHealth` is a temporary property on units
+        delete u.cachedArrowHealth;
       }
     }
     return state;
@@ -178,8 +180,8 @@ export function findArrowCollisions(casterPositionAtTimeOfCast: Vec2, casterId: 
       if (u.id == casterId) {
         return false;
       }
-      // @ts-ignore: `currentHealth` is a temporary property on units
-      if (u.predictedNextTurnDamage >= u.currentHealth) {
+      // @ts-ignore: `cachedArrowHealth` is a temporary property on units
+      if (u.predictedNextTurnDamage >= u.cachedArrowHealth) {
         return false;
       }
       const pointAtRightAngleToArrowPath = findWherePointIntersectLineSegmentAtRightAngle(u, arrowShootPath);
