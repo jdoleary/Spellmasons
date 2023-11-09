@@ -1,5 +1,9 @@
 # Critical Path
+- v1.23
+    - Chase — Yesterday at 2:46 PM I realize how much more work it'd be, but perhaps stack casting could give them incrementally more damage and hp? Kinda like a "hoard bonus".
+    - Skillo — Yesterday at 10:28 AM honestly compared to ressurrect and how deadly damaging spells are, i would say that even applying a debuff on enemies which will capture their soul if they die, would be balanced. (so no hp threshold and better for multi targeting)
 - bug: Arrows sometimes fizzle on dying units especially if they are cast quickly because the unit dies after the previous arrow was fired
+    - shatter arrow is still vulnerable to this but the others are fixed
 - bug: arrow multi causes race timeout
     - you should be able to shoot past your target with arrow multi
 - bug: once onError occurs in codex unit the image goes away forever
@@ -7,23 +11,15 @@
     - "Replaces Spells:"
     - "Codex"
     - "Legal"
-- Add "Count" functionality to remote logger
-- Improve logger
-    - Earliest Version
-    - Latest Version
-    - Archive records from frontend
-    - Filter data with console, use pills
-- Advertise in other countries
-- Add Achievements
 - Update Seashell to server-bun
     - Europe crashed with high cpu, monitor for longer before changing seashell over to new server
+---
 - v1.24
     - Challenges (premade)
+    - Add Achievements
+    - Advertise in other countries
 ---
 - Feature: Longer spells are cheaper by a bit (to incentivize combining)
-- v1.23
-    - Chase — Yesterday at 2:46 PM I realize how much more work it'd be, but perhaps stack casting could give them incrementally more damage and hp? Kinda like a "hoard bonus".
-    - Skillo — Yesterday at 10:28 AM honestly compared to ressurrect and how deadly damaging spells are, i would say that even applying a debuff on enemies which will capture their soul if they die, would be balanced. (so no hp threshold and better for multi targeting)
 ---
 
 - Salazar — Yesterday at 7:51 PM

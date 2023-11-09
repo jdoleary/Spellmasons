@@ -1,12 +1,12 @@
 import * as Unit from '../entity/Unit';
 import { CardCategory } from '../types/commonTypes';
-import { refundLastSpell, Spell } from './index';
+import { EffectFn, EffectState, ICard, refundLastSpell, Spell } from './index';
 import * as math from '../jmath/math';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { createVisualFlyingProjectile } from '../entity/Projectile';
 import { closestLineSegmentIntersectionWithLine, findWherePointIntersectLineSegmentAtRightAngle, LineSegment } from '../jmath/lineSegment';
 import * as config from '../config';
-import { add, equal, invert, Vec2 } from '../jmath/Vec';
+import { add, equal, getAngleBetweenVec2s, getEndpointOfMagnitudeAlongVector, invert, subtract, Vec2 } from '../jmath/Vec';
 import Underworld from '../Underworld';
 import { playDefaultSpellSFX } from './cardUtils';
 import { moveAlongVector, normalizedVector } from '../jmath/moveWithCollision';
@@ -28,48 +28,89 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'arrow',
     description: ['spell_arrow', damageDone.toString()],
-    effect: async (state, card, quantity, underworld, prediction) => {
-      let targets: Vec2[] = state.targetedUnits;
-      targets = targets.length ? targets : [state.castLocation];
-      let targetsHitCount = 0;
-      let attackPromises = [];
-      let timeoutToNextArrow = 200;
-      for (let i = 0; i < quantity; i++) {
-        for (let target of targets) {
-          const arrowUnitCollisions = findArrowCollisions(state.casterPositionAtTimeOfCast, state.casterUnit.id, target, prediction, underworld);
+    effect: arrowEffect(1)
+  }
+};
+export function arrowEffect(multiShotCount: number, onCollide?: (state: EffectState, firstTarget: Unit.IUnit, underworld: Underworld, prediction: boolean) => Promise<EffectState>) {
+  return async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean) => {
+
+    let targets: Vec2[] = state.targetedUnits;
+    const path = findArrowPath(state.casterPositionAtTimeOfCast, state.castLocation, underworld)
+    targets = targets.length ? targets : [path ? path.p2 : state.castLocation];
+    let targetsHitCount = 0;
+    let attackPromises = [];
+    let timeoutToNextArrow = 200;
+    if (!prediction) {
+      underworld.clearPredictedNextTurnDamage();
+      for (let u of underworld.units) {
+        // @ts-ignore: `currentHealth` is a temporary property on units
+        // Keep the health that they had before arrows are fired
+        // so that arrows can determine if they should go past
+        // a unit that will die before it gets there due to
+        // another in-flight arrow
+        u.currentHealth = u.health;
+      }
+    }
+    for (let i = 0; i < quantity; i++) {
+      for (let target of targets) {
+        let projectilePromise: Promise<EffectState> = Promise.resolve(state);
+        for (let arrowNumber = 0; arrowNumber < multiShotCount; arrowNumber++) {
+
+          // START: Shoot multiple arrows at offset
+          let casterPositionAtTimeOfCast = state.casterPositionAtTimeOfCast;
+          let castLocation = target;
+          if (arrowNumber > 0) {
+            const diff = subtract(casterPositionAtTimeOfCast, getEndpointOfMagnitudeAlongVector(casterPositionAtTimeOfCast, (arrowNumber == 2 ? -1 : 1) * Math.PI / 2 + getAngleBetweenVec2s(state.casterPositionAtTimeOfCast, state.castLocation), 20));
+            casterPositionAtTimeOfCast = subtract(casterPositionAtTimeOfCast, diff);
+            castLocation = subtract(castLocation, diff);
+          }
+          // END: Shoot multiple arrows at offset
+
+          // const arrowUnitCollisions = findArrowCollisions(state.casterPositionAtTimeOfCast, state.casterUnit.id, target, prediction, underworld);
+          const arrowUnitCollisions = findArrowCollisions(casterPositionAtTimeOfCast, state.casterUnit.id, castLocation, prediction, underworld);
           // This regular arrow spell doesn't pierce
           const firstTarget = arrowUnitCollisions[0];
           if (firstTarget) {
             playDefaultSpellSFX(card, prediction);
             if (!prediction && !globalThis.headless) {
+              if (Unit.isUnit(firstTarget)) {
+                underworld.incrementTargetsNextTurnDamage([firstTarget], damageDone, true);
+              }
               // Promise.race ensures arrow promise doesn't take more than X milliseconds so that multiple arrows cast
               // sequentially wont take too long to complete animating.
               // Note: I don't forsee any issues with the following spell (say if a spell was chained after arrow) executing
               // early
-              const projectilePromise = createVisualFlyingProjectile(
-                state.casterPositionAtTimeOfCast,
-                state.castLocation,
+              projectilePromise = createVisualFlyingProjectile(
+                casterPositionAtTimeOfCast,
+                castLocation,
                 'projectile/arrow',
                 firstTarget
               ).then(() => {
                 if (Unit.isUnit(firstTarget)) {
                   Unit.takeDamage(firstTarget, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
                   targetsHitCount++;
+                  if (onCollide) {
+                    return onCollide(state, firstTarget, underworld, prediction);
+                  }
                 }
+                return Promise.resolve(state);
               });
               attackPromises.push(projectilePromise);
-              const timeout = Math.max(0, timeoutToNextArrow);
-              await Promise.race([new Promise(resolve => setTimeout(resolve, timeout)), projectilePromise]);
-              // Decrease timeout with each subsequent arrow fired to ensure that players don't have to wait too long
-              timeoutToNextArrow -= 5;
             } else {
               if (Unit.isUnit(firstTarget)) {
                 Unit.takeDamage(firstTarget, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
                 targetsHitCount++;
+                if (onCollide) {
+                  onCollide(state, firstTarget, underworld, prediction);
+                }
               }
             }
           }
         }
+        const timeout = Math.max(0, timeoutToNextArrow);
+        await Promise.race([new Promise(resolve => setTimeout(resolve, timeout)), projectilePromise]);
+        // Decrease timeout with each subsequent arrow fired to ensure that players don't have to wait too long
+        timeoutToNextArrow -= 5;
       }
       await Promise.all(attackPromises).then(() => {
         // Since arrows' flight promises are designed to resolve early so that multiple arrows can be shot
@@ -79,10 +120,14 @@ const spell: Spell = {
           refundLastSpell(state, prediction, 'no target, mana refunded')
         }
       });
-      return state;
-    },
+      for (let u of underworld.units) {
+        // @ts-ignore: `currentHealth` is a temporary property on units
+        delete u.currentHealth;
+      }
+    }
+    return state;
   }
-};
+}
 export default spell;
 // Returns the start and end point that an arrow will take until it hits a wall
 export function findArrowPath(casterPositionAtTimeOfCast: Vec2, target: Vec2, underworld: Underworld): LineSegment | undefined {
@@ -131,6 +176,10 @@ export function findArrowCollisions(casterPositionAtTimeOfCast: Vec2, casterId: 
       }
       // Note: Filter out self as the arrow shouldn't damage caster
       if (u.id == casterId) {
+        return false;
+      }
+      // @ts-ignore: `currentHealth` is a temporary property on units
+      if (u.predictedNextTurnDamage >= u.currentHealth) {
         return false;
       }
       const pointAtRightAngleToArrowPath = findWherePointIntersectLineSegmentAtRightAngle(u, arrowShootPath);
