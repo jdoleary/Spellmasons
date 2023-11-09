@@ -1,4 +1,5 @@
 # Critical Path
+- bug: once onError occurs in codex unit the image goes away forever
 - i18n
     - "Replaces Spells:"
     - "Codex"
@@ -12,13 +13,8 @@
 - Update Seashell to server-bun
     - Europe crashed with high cpu, monitor for longer before changing seashell over to new server
 ---
-- Lemming Jesus — Today at 3:01 PM
-    - Cards (and only cards) are affected by the UI Scale of windows
-- Make logger datatable for server hub
 - Feature: Longer spells are cheaper by a bit (to incentivize combining)
 - v1.23
-    - s: bug: If an ice urn ends your turn it doesn't show it
-    - s: Multiple summons in the same spot shouldn't stack
     - m: TonyFTW and Skillo - resurrected units should decay
         - Mattmellow - purify could cancel the decay
     - Chase — Yesterday at 2:46 PM I realize how much more work it'd be, but perhaps stack casting could give them incrementally more damage and hp? Kinda like a "hoard bonus".
