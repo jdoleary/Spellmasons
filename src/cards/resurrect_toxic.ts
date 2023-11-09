@@ -5,23 +5,22 @@ import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { makeRisingParticles } from '../graphics/ParticleCollection';
-import { resurrect_weak_id } from './resurrect_weak';
+import { suffocateCardId, updateTooltip } from './suffocate';
 
-export const resurrect_id = 'resurrect';
-export const thumbnail = 'spellIconResurrect2.png';
+export const resurrect_toxic_id = 'Toxic Resurrect';
+export const thumbnail = 'spellIconResurrect3.png';
 // Brings stats back to this amount on res
 const resStatAmount = 1.0;
 const spell: Spell = {
   card: {
-    id: resurrect_id,
-    replaces: [resurrect_weak_id],
+    id: resurrect_toxic_id,
     category: CardCategory.Soul,
     sfx: 'resurrect',
-    manaCost: 160,
+    manaCost: 90,
     healthCost: 0,
     cooldown: 2,
     expenseScaling: 3,
-    probability: probabilityMap[CardRarity.FORBIDDEN],
+    probability: probabilityMap[CardRarity.RARE],
     onlySelectDeadUnits: true,
     thumbnail,
     description: 'spell_resurrect',
@@ -34,12 +33,22 @@ const spell: Spell = {
           let colorOverlayFilter: ColorOverlayFilter;
           if (unit.image && unit.image.sprite.filters) {
             // Overlay with white
-            colorOverlayFilter = new ColorOverlayFilter(0x96cdf1, 1.0);
+            colorOverlayFilter = new ColorOverlayFilter(0xa1f196, 1.0);
+            // blue rez 0x96cdf1
             // @ts-ignore Something is wrong with PIXI's filter types
             unit.image.sprite.filters.push(colorOverlayFilter)
           }
           playDefaultSpellSFX(card, prediction);
           Unit.resurrect(unit);
+
+          // TOXIC add suffocate 
+          Unit.addModifier(unit, suffocateCardId, underworld, prediction, 1);
+          const modifier = unit.modifiers[suffocateCardId];
+          if (modifier) {
+            modifier.turnsLeftToLive = 3;
+            updateTooltip(unit);
+          }
+
           resurrectedUnitCount++;
           makeRisingParticles(unit, prediction);
           unit.health = unit.healthMax * resStatAmount;

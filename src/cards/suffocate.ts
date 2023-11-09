@@ -36,7 +36,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     updateTooltip(unit);
   }
 }
-function updateTooltip(unit: Unit.IUnit) {
+export function updateTooltip(unit: Unit.IUnit) {
   if (unit.modifiers[suffocateCardId]) {
     // Set tooltip:
     unit.modifiers[suffocateCardId].tooltip = `${unit.modifiers[suffocateCardId].turnsLeftToLive} turns until suffocation`

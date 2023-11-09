@@ -74,6 +74,7 @@ export function setupDevGlobalFunctions(overworld: Overworld) {
     }
     globalThis.superMe = (underworld: Underworld, player?: IPlayer) => {
         if (player) {
+            globalThis.isSuperMe = true;
             player.unit.health = 10000;
             player.unit.healthMax = 10000;
             player.unit.mana = 10000;

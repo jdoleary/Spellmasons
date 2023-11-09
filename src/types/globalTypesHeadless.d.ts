@@ -171,6 +171,8 @@ declare global {
     var enemyEncountered: undefined | string[];
     // Make me superhuman (used for dev)
     var superMe: undefined | ((underworld: Underworld, player?: Player.IPlayer) => void);
+    // set to true once superMe is used
+    var isSuperMe: undefined | boolean;
     // Shows icons above the heads of enemies who will damage you next turn
     // scale is the scale of the unit.  Larger units need their marker positioned higher
     var attentionMarkers: undefined | { imagePath: string, pos: Vec2, scale: number }[];

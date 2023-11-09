@@ -4,9 +4,12 @@
     - "Replaces Spells:"
     - "Codex"
     - "Legal"
-- Features
-    - Soul Decay (for resurrected units)
 - Add "Count" functionality to remote logger
+- Improve logger
+    - Earliest Version
+    - Latest Version
+    - Archive records from frontend
+    - Filter data with console, use pills
 - Advertise in other countries
 - Add Achievements
 - Update Seashell to server-bun

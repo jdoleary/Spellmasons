@@ -352,7 +352,12 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
     // how many new cards the player gets to pick in the next upgrade relative to progress in the underworld,
     // so removing them would give the player extra, undesired upgrades.
     const cards = Cards.getCardsFromIds(globalThis.player.inventory);
-    const replacedCards = cards.flatMap(card => card.replaces || []);
+    let replacedCards = cards.flatMap(card => card.replaces || []);
+    if (adminMode && isSuperMe) {
+      // Don't replace any cards given by superMe because superMe
+      // is made to allow an admin to test out all cards
+      replacedCards = [];
+    }
 
     const invCards = globalThis.player.inventory
       // .filter: Hide replaced cards in inventory

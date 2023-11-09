@@ -5,23 +5,22 @@ import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { makeRisingParticles } from '../graphics/ParticleCollection';
-import { resurrect_weak_id } from './resurrect_weak';
 
-export const resurrect_id = 'resurrect';
-export const thumbnail = 'spellIconResurrect2.png';
+export const resurrect_weak_id = 'Weak Resurrect';
+export const thumbnail = 'spellIconResurrect.png';
+// resStatAmount set due to WEAK resurrect
 // Brings stats back to this amount on res
-const resStatAmount = 1.0;
+const resStatAmount = 0.1;
 const spell: Spell = {
   card: {
-    id: resurrect_id,
-    replaces: [resurrect_weak_id],
+    id: resurrect_weak_id,
     category: CardCategory.Soul,
     sfx: 'resurrect',
-    manaCost: 160,
+    manaCost: 70,
     healthCost: 0,
-    cooldown: 2,
+    cooldown: 1,
     expenseScaling: 3,
-    probability: probabilityMap[CardRarity.FORBIDDEN],
+    probability: probabilityMap[CardRarity.RARE],
     onlySelectDeadUnits: true,
     thumbnail,
     description: 'spell_resurrect',
@@ -34,12 +33,15 @@ const spell: Spell = {
           let colorOverlayFilter: ColorOverlayFilter;
           if (unit.image && unit.image.sprite.filters) {
             // Overlay with white
-            colorOverlayFilter = new ColorOverlayFilter(0x96cdf1, 1.0);
+            colorOverlayFilter = new ColorOverlayFilter(0xf1eb96, 1.0);
+            // blue rez 0x96cdf1
+            // green rez 0xa1f196
             // @ts-ignore Something is wrong with PIXI's filter types
             unit.image.sprite.filters.push(colorOverlayFilter)
           }
           playDefaultSpellSFX(card, prediction);
           Unit.resurrect(unit);
+
           resurrectedUnitCount++;
           makeRisingParticles(unit, prediction);
           unit.health = unit.healthMax * resStatAmount;
