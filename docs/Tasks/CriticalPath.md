@@ -1,5 +1,7 @@
 # Critical Path
 - bug: Arrows sometimes fizzle on dying units especially if they are cast quickly because the unit dies after the previous arrow was fired
+- bug: arrow multi causes race timeout
+    - you should be able to shoot past your target with arrow multi
 - bug: once onError occurs in codex unit the image goes away forever
 - i18n
     - "Replaces Spells:"

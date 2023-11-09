@@ -6,26 +6,25 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { createVisualFlyingProjectile } from '../entity/Projectile';
 import { closestLineSegmentIntersectionWithLine, findWherePointIntersectLineSegmentAtRightAngle, LineSegment } from '../jmath/lineSegment';
 import * as config from '../config';
-import { add, equal, invert, Vec2 } from '../jmath/Vec';
+import { add, equal, getAngleBetweenVec2s, getEndpointOfMagnitudeAlongVector, invert, subtract, Vec2 } from '../jmath/Vec';
 import Underworld from '../Underworld';
 import { playDefaultSpellSFX } from './cardUtils';
 import { moveAlongVector, normalizedVector } from '../jmath/moveWithCollision';
-import { arrowCardId } from './arrow';
-import { arrow2CardId } from './arrow2';
+import { arrowTripleCardId } from './arrow_triple';
 
-export const arrow3CardId = 'Arrow3';
-const damageDone = 30;
+export const arrowMultiCardId = 'Multi Arrow';
+const damageDone = 10;
 const spell: Spell = {
   card: {
-    id: arrow3CardId,
-    replaces: [arrow2CardId],
+    id: arrowMultiCardId,
+    replaces: [arrowTripleCardId],
     category: CardCategory.Damage,
     supportQuantity: true,
-    manaCost: 22,
+    manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.UNCOMMON],
-    thumbnail: 'spellIconArrow3.png',
+    probability: probabilityMap[CardRarity.COMMON],
+    thumbnail: 'spellIconArrowMulti.png',
     // so that you can fire the arrow at targets out of range
     allowNonUnitTarget: true,
     animationPath: '',
@@ -37,41 +36,54 @@ const spell: Spell = {
       let targetsHitCount = 0;
       let attackPromises = [];
       let timeoutToNextArrow = 200;
+      const multi = 5;
       for (let i = 0; i < quantity; i++) {
         for (let target of targets) {
-          const arrowUnitCollisions = findArrowCollisions(state.casterPositionAtTimeOfCast, state.casterUnit.id, target, prediction, underworld);
-          // This regular arrow spell doesn't pierce
-          const firstTarget = arrowUnitCollisions[0];
-          if (firstTarget) {
-            playDefaultSpellSFX(card, prediction);
-            if (!prediction && !globalThis.headless) {
-              // Promise.race ensures arrow promise doesn't take more than X milliseconds so that multiple arrows cast
-              // sequentially wont take too long to complete animating.
-              // Note: I don't forsee any issues with the following spell (say if a spell was chained after arrow) executing
-              // early
-              const projectilePromise = createVisualFlyingProjectile(
-                state.casterPositionAtTimeOfCast,
-                state.castLocation,
-                'projectile/arrow',
-                firstTarget
-              ).then(() => {
+          let projectilePromise = Promise.resolve();
+          for (let num = 0; num < multi; num++) {
+            // START: Shoot multiple arrows at offset
+            let casterPositionAtTimeOfCast = state.casterPositionAtTimeOfCast;
+            let castLocation = target;
+            if (num > 0) {
+              const diff = subtract(casterPositionAtTimeOfCast, getEndpointOfMagnitudeAlongVector(casterPositionAtTimeOfCast, (num % 2 == 0 ? -1 : 1) * Math.PI / 2 + getAngleBetweenVec2s(state.casterPositionAtTimeOfCast, state.castLocation), num > 2 ? 40 : 20));
+              casterPositionAtTimeOfCast = subtract(casterPositionAtTimeOfCast, diff);
+              castLocation = subtract(castLocation, diff);
+            }
+            // END: Shoot multiple arrows at offset
+            const arrowUnitCollisions = findArrowCollisions(casterPositionAtTimeOfCast, state.casterUnit.id, castLocation, prediction, underworld);
+            // This regular arrow spell doesn't pierce
+            const firstTarget = arrowUnitCollisions[0];
+            if (firstTarget) {
+              playDefaultSpellSFX(card, prediction);
+              if (!prediction && !globalThis.headless) {
+                // Promise.race ensures arrow promise doesn't take more than X milliseconds so that multiple arrows cast
+                // sequentially wont take too long to complete animating.
+                // Note: I don't forsee any issues with the following spell (say if a spell was chained after arrow) executing
+                // early
+                projectilePromise = createVisualFlyingProjectile(
+                  casterPositionAtTimeOfCast,
+                  castLocation,
+                  'projectile/arrow',
+                  firstTarget
+                ).then(() => {
+                  if (Unit.isUnit(firstTarget)) {
+                    Unit.takeDamage(firstTarget, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
+                    targetsHitCount++;
+                  }
+                });
+                attackPromises.push(projectilePromise);
+              } else {
                 if (Unit.isUnit(firstTarget)) {
                   Unit.takeDamage(firstTarget, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
                   targetsHitCount++;
                 }
-              });
-              attackPromises.push(projectilePromise);
-              const timeout = Math.max(0, timeoutToNextArrow);
-              await Promise.race([new Promise(resolve => setTimeout(resolve, timeout)), projectilePromise]);
-              // Decrease timeout with each subsequent arrow fired to ensure that players don't have to wait too long
-              timeoutToNextArrow -= 5;
-            } else {
-              if (Unit.isUnit(firstTarget)) {
-                Unit.takeDamage(firstTarget, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
-                targetsHitCount++;
               }
             }
           }
+          const timeout = Math.max(0, timeoutToNextArrow);
+          await Promise.race([new Promise(resolve => setTimeout(resolve, timeout)), projectilePromise]);
+          // Decrease timeout with each subsequent arrow fired to ensure that players don't have to wait too long
+          timeoutToNextArrow -= 5;
         }
       }
       await Promise.all(attackPromises).then(() => {

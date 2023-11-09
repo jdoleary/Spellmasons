@@ -13,13 +13,14 @@ import { moveAlongVector, normalizedVector } from '../jmath/moveWithCollision';
 import { arrow3CardId } from './arrow3';
 import regularArrow from './arrow';
 import { raceTimeout } from '../Promise';
+import { arrowTripleCardId } from './arrow_triple';
 
-export const arrowForkCardId = 'Arrow Fork';
+export const arrowForkCardId = 'Shatter Arrow';
 const damageDone = 30;
 const spell: Spell = {
   card: {
     id: arrowForkCardId,
-    replaces: [arrow3CardId],
+    replaces: [arrowTripleCardId],
     category: CardCategory.Damage,
     supportQuantity: true,
     manaCost: 35,
