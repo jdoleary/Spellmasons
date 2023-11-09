@@ -160,65 +160,55 @@ body.view-Game.showUpgrades #upgrade-picker {
 
 @media (min-width: 300px) {
 
-  #upgrade-picker .card,
-  .card-inspect .card {
+  #upgrade-picker .card {
     height: 300px;
   }
 
-  #upgrade-picker .card.tiny,
-  .card-inspect .card.tiny {
+  #upgrade-picker .card.tiny {
     height: 240px;
   }
 }
 
 @media (min-width: 800px) {
 
-  #upgrade-picker .card,
-  .card-inspect .card {
+  #upgrade-picker .card {
     height: 400px;
   }
 
-  #upgrade-picker .card.tiny,
-  .card-inspect .card.tiny {
+  #upgrade-picker .card.tiny {
     height: 320px;
   }
 }
 
 @media (min-width: 1280px) {
 
-  #upgrade-picker .card,
-  .card-inspect .card {
+  #upgrade-picker .card {
     height: 500px;
   }
 
-  #upgrade-picker .card.tiny,
-  .card-inspect .card.tiny {
+  #upgrade-picker .card.tiny {
     height: 400px;
   }
 }
 
 @media (min-width: 1440px) {
 
-  #upgrade-picker .card,
-  .card-inspect .card {
+  #upgrade-picker .card {
     height: 600px;
   }
 
-  #upgrade-picker .card.tiny,
-  .card-inspect .card.tiny {
+  #upgrade-picker .card.tiny {
     height: 480px;
   }
 }
 
 @media (min-width: 1920px) {
 
-  #upgrade-picker .card,
-  .card-inspect .card {
+  #upgrade-picker .card {
     height: 700px;
   }
 
-  #upgrade-picker .card.tiny,
-  .card-inspect .card.tiny {
+  #upgrade-picker .card.tiny {
     height: 560px;
   }
 }
