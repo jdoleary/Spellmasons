@@ -347,20 +347,31 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
     // clear contents
     resetInventoryContent();
 
-    const invCards = globalThis.player.inventory.map(c => Cards.allCards[c]).sort((a, b) => {
-      if (!a || !b) {
-        return 0;
-      } else {
-        // Sort cards by probability
-        const probabilityDifference = b.probability - a.probability;
-        // If probability is identical, sort by mana cost
-        if (probabilityDifference == 0) {
-          return a.manaCost - b.manaCost;
+    // Get list of cards that have been replaced by more advanced cards to hide them in inventory
+    // The reason they are not removed entirely is because the number of cards in the inventory determines
+    // how many new cards the player gets to pick in the next upgrade relative to progress in the underworld,
+    // so removing them would give the player extra, undesired upgrades.
+    const cards = Cards.getCardsFromIds(globalThis.player.inventory);
+    const replacedCards = cards.flatMap(card => card.replaces || []);
+
+    const invCards = globalThis.player.inventory
+      // .filter: Hide replaced cards in inventory
+      .filter(cardId => !replacedCards.includes(cardId))
+      .map(c => Cards.allCards[c])
+      .sort((a, b) => {
+        if (!a || !b) {
+          return 0;
         } else {
-          return probabilityDifference;
+          // Sort cards by probability
+          const probabilityDifference = b.probability - a.probability;
+          // If probability is identical, sort by mana cost
+          if (probabilityDifference == 0) {
+            return a.manaCost - b.manaCost;
+          } else {
+            return probabilityDifference;
+          }
         }
-      }
-    });
+      });
     for (let card of invCards) {
       if (card) {
         const inventoryCardId = card.id;
@@ -822,7 +833,7 @@ function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSi
   const desc = document.createElement('div');
   desc.classList.add('card-description');
   if (content.description) {
-    desc.innerHTML = i18n(content.description).trimStart();
+    desc.innerHTML = (content.replaces ? `${i18n('Replaces spells:')} ${content.replaces.join(', ')}\n` : '') + i18n(content.description).trimStart();
   }
   elCardInner.appendChild(desc);
   return element;

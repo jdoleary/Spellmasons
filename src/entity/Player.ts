@@ -539,11 +539,31 @@ export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | u
         explain(EXPLAIN_BLESSINGS);
       }
     }
+    let didReplace = false;
+    // If card replaces old cards
+    if (card.replaces) {
+      // Replace all replaced cards with new card
+      for (let removeCardId of card.replaces) {
+        player.cards = player.cards.map(cid => {
+          if (!cid) {
+            return cid;
+          }
+          if (cid == removeCardId) {
+            didReplace = true;
+            return card.id
+          } else {
+            return cid;
+          }
+        })
+      }
+    }
     player.inventory.push(card.id);
-    const emptySlotIndex = player.cards.indexOf('');
-    // Add the spell to the toolbar
-    if (emptySlotIndex !== -1 && emptySlotIndex < 9) {
-      player.cards[emptySlotIndex] = card.id;
+    if (!didReplace) {
+      const emptySlotIndex = player.cards.indexOf('');
+      // Add the spell to the toolbar
+      if (emptySlotIndex !== -1 && emptySlotIndex < 9) {
+        player.cards[emptySlotIndex] = card.id;
+      }
     }
     CardUI.recalcPositionForCards(player, underworld);
   }

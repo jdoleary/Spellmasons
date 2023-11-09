@@ -2,7 +2,7 @@ import seedrandom from 'seedrandom';
 import * as config from './config';
 import * as storage from "./storage";
 import { calculateCostForSingleCard, type CardCost } from './cards/cardUtils';
-import { cardRarityAsString, getCardRarityColor } from './graphics/ui/CardUI';
+import { cardRarityAsString, getCardRarityColor, getSpellThumbnailPath } from './graphics/ui/CardUI';
 import { chooseObjectWithProbability } from './jmath/rand';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import { IPlayer, MageType, changeMageType } from './entity/Player';
@@ -16,6 +16,8 @@ import { isModActive } from './registerMod';
 import { allCards, getCardsFromIds } from './cards';
 export interface IUpgrade {
   title: string;
+  // Replaces previous upgrades.  They are required for this upgrade to present itself
+  replaces?: string[];
   // If a upgrade belongs to a mod, it's modName will be automatically assigned
   // This is used to dictate wether or not the modded upgrade is used
   modName?: string;
@@ -48,6 +50,7 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
       : // Filter out  upgrades that the player can't have more of
       player.upgrades.filter((pu) => pu.title === u.title).length <
       u.maxCopies)
+    && (u.replaces ? u.replaces.every(title => player.upgrades.find(u => u.title == title)) : true)
     // Now that upgrades are cards too, make sure it doesn't
     // show upgrades that the player already has as cards
     && !player.cards.includes(u.title)
@@ -171,7 +174,29 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
   const desc = document.createElement('div');
   desc.classList.add('card-description');
   const descriptionText = document.createElement('div');
-  descriptionText.innerHTML = upgrade.description(player).trimStart();
+  if (upgrade.replaces) {
+    const replacesEl = document.createElement('div');
+    const label = document.createElement('span');
+    label.innerText = i18n('Replaces Spells:');
+    replacesEl.appendChild(label);
+    for (let r of upgrade.replaces) {
+      const replaceCard = allCards[r];
+      if (replaceCard) {
+        const thumbnail = document.createElement('img');
+        thumbnail.src = getSpellThumbnailPath(replaceCard.thumbnail);
+        thumbnail.style.width = '16px';
+        thumbnail.style.padding = '0 4px';
+        replacesEl.appendChild(thumbnail);
+        const label = document.createElement('span');
+        label.innerText = r;
+        replacesEl.appendChild(label);
+      }
+    }
+    descriptionText.appendChild(replacesEl)
+  }
+  const label = document.createElement('span');
+  label.innerText = upgrade.description(player).trimStart();
+  descriptionText.appendChild(label);
   desc.appendChild(descriptionText);
 
   if (upgrade.type == 'mageType') {

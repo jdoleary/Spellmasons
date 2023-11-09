@@ -1,12 +1,10 @@
 # Critical Path
-- css card-inspect cards are now too small in inventory thanks to the css changes for upgrades
 - i18n
-    - Codex
-    - i18n: "Legal"
+    - "Replaces Spells:"
+    - "Codex"
+    - "Legal"
 - Features
-    - Feature: Upgradable Spells
     - Soul Decay (for resurrected units)
-    - Beastiary / Spell book in menu
     - Challenges (premade)
 - Add "Count" functionality to remote logger
 - Advertise in other countries

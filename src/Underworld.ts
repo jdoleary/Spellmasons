@@ -2441,7 +2441,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
     } else if (upgrade.type == 'special') {
       // Any future logic for special cards such as 'reroll' goes here
-
     }
     upgrade.effect(player, this);
 
