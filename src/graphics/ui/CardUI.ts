@@ -833,10 +833,41 @@ function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSi
   const desc = document.createElement('div');
   desc.classList.add('card-description');
   if (content.description) {
-    desc.innerHTML = (content.replaces ? `${i18n('Replaces spells:')} ${content.replaces.join(', ')}\n` : '') + i18n(content.description).trimStart();
+    const labelHolder = document.createElement('div');
+    if (content.replaces) {
+      const replacesEl = getReplacesCardText(content.replaces);
+      labelHolder.appendChild(replacesEl)
+    }
+    const label = document.createElement('span');
+    label.innerText = i18n(content.description).trimStart();
+    labelHolder.appendChild(label);
+    desc.appendChild(labelHolder);
   }
   elCardInner.appendChild(desc);
   return element;
+}
+// @ts-ignore: For the menu
+globalThis.getReplacesCardText = getReplacesCardText;
+export function getReplacesCardText(replaces: string[]) {
+  const replacesEl = document.createElement('div');
+  const label = document.createElement('span');
+  label.innerText = i18n('Replaces Spells:');
+  replacesEl.appendChild(label);
+  for (let r of replaces) {
+    const replaceCard = Cards.allCards[r];
+    if (replaceCard) {
+      const thumbnail = document.createElement('img');
+      thumbnail.src = getSpellThumbnailPath(replaceCard.thumbnail);
+      console.log('jtest 2', thumbnail.src);
+      thumbnail.style.width = '16px';
+      thumbnail.style.padding = '0 4px';
+      replacesEl.appendChild(thumbnail);
+      const label = document.createElement('span');
+      label.innerText = r;
+      replacesEl.appendChild(label);
+    }
+  }
+  return replacesEl;
 }
 // @ts-ignore for menu
 globalThis.updateManaBadge = updateManaBadge;

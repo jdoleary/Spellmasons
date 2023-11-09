@@ -2,7 +2,7 @@ import seedrandom from 'seedrandom';
 import * as config from './config';
 import * as storage from "./storage";
 import { calculateCostForSingleCard, type CardCost } from './cards/cardUtils';
-import { cardRarityAsString, getCardRarityColor, getSpellThumbnailPath } from './graphics/ui/CardUI';
+import { cardRarityAsString, getCardRarityColor, getReplacesCardText, getSpellThumbnailPath } from './graphics/ui/CardUI';
 import { chooseObjectWithProbability } from './jmath/rand';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import { IPlayer, MageType, changeMageType } from './entity/Player';
@@ -175,23 +175,7 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
   desc.classList.add('card-description');
   const descriptionText = document.createElement('div');
   if (upgrade.replaces) {
-    const replacesEl = document.createElement('div');
-    const label = document.createElement('span');
-    label.innerText = i18n('Replaces Spells:');
-    replacesEl.appendChild(label);
-    for (let r of upgrade.replaces) {
-      const replaceCard = allCards[r];
-      if (replaceCard) {
-        const thumbnail = document.createElement('img');
-        thumbnail.src = getSpellThumbnailPath(replaceCard.thumbnail);
-        thumbnail.style.width = '16px';
-        thumbnail.style.padding = '0 4px';
-        replacesEl.appendChild(thumbnail);
-        const label = document.createElement('span');
-        label.innerText = r;
-        replacesEl.appendChild(label);
-      }
-    }
+    const replacesEl = getReplacesCardText(upgrade.replaces);
     descriptionText.appendChild(replacesEl)
   }
   const label = document.createElement('span');
