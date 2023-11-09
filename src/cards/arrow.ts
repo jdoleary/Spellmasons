@@ -48,8 +48,9 @@ const spell: Spell = {
               // early
               const projectilePromise = createVisualFlyingProjectile(
                 state.casterPositionAtTimeOfCast,
-                firstTarget,
+                state.castLocation,
                 'projectile/arrow',
+                firstTarget
               ).then(() => {
                 if (Unit.isUnit(firstTarget)) {
                   Unit.takeDamage(firstTarget, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });

@@ -15,13 +15,22 @@ interface Projectile {
   startTime: number;
   endTime: number;
   target: Vec2;
+  // intercept allows arrows to "hit" a target
+  // and disappear
+  // before they arrive at the target they were aimed
+  // at.  This allows arrows to hit a unit anywhere (not 
+  // redirecting to the target's center position in order
+  // to hit them)
+  interceptEndTarget?: Vec2;
+  interceptEndTime?: number;
   sprite: PIXI.Sprite | undefined;
 }
 function createProjectile(
   coords: Vec2,
   target: Vec2,
   imagePath: string,
-  options?: PixiSpriteOptions
+  options?: PixiSpriteOptions,
+  interceptEndTarget?: Vec2
 ): Projectile {
   const sprite = addPixiSpriteAnimated(imagePath, containerProjectiles, Object.assign({ animationSpeed: 0.25, loop: true }, options || {}));
   if (sprite) {
@@ -44,21 +53,23 @@ function createProjectile(
     endTime: 0,
     target,
     sprite,
+    interceptEndTarget,
   };
 
 }
-export const SPEED_PER_MILLI = 0.9;
+export const SPEED_PER_MILLI = 0.8;
 export function createVisualFlyingProjectile(
   coords: Vec2,
   target: Vec2,
   imagePath: string,
+  interceptEndTarget?: Vec2
 ): Promise<void> {
   // Use this similarTriangles calculation to make the projectile animation pretty so it doesn't originate from the exact center of the
   // source but at the edge instead
   const startPoint = math.distance(coords, target) <= config.COLLISION_MESH_RADIUS
     ? coords
     : Vec.subtract(coords, math.similarTriangles(coords.x - target.x, coords.y - target.y, math.distance(coords, target), config.COLLISION_MESH_RADIUS));
-  const instance = createProjectile(startPoint, target, imagePath);
+  const instance = createProjectile(startPoint, target, imagePath, undefined, interceptEndTarget);
   const time_in_flight =
     distance(instance, instance.target) /
     SPEED_PER_MILLI;
@@ -82,6 +93,11 @@ function fly(
   // This block is invoked when the first time fly() is invoked for this instance
   if (shouldInitialize) {
     instance.startTime = time;
+    if (instance.interceptEndTarget) {
+      instance.interceptEndTime = time +
+        distance(instance, instance.interceptEndTarget) /
+        SPEED_PER_MILLI;
+    }
     const time_in_flight =
       distance(instance, instance.target) /
       SPEED_PER_MILLI;
@@ -102,7 +118,7 @@ function fly(
   instance.x = lerp(instance.startX, instance.target.x, t);
   instance.y = lerp(instance.startY, instance.target.y, t);
   // Once it's fully done animating
-  if (time >= instance.endTime) {
+  if (time >= (instance.interceptEndTime ? instance.interceptEndTime : instance.endTime)) {
     // Clean up the element
     if (instance.sprite && instance.sprite.parent) {
       instance.sprite.parent.removeChild(instance.sprite);

@@ -1,30 +1,32 @@
 import * as Unit from '../entity/Unit';
 import { CardCategory } from '../types/commonTypes';
-import { refundLastSpell, Spell } from './index';
+import { EffectState, refundLastSpell, Spell } from './index';
 import * as math from '../jmath/math';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { createVisualFlyingProjectile } from '../entity/Projectile';
 import { closestLineSegmentIntersectionWithLine, findWherePointIntersectLineSegmentAtRightAngle, LineSegment } from '../jmath/lineSegment';
 import * as config from '../config';
-import { add, equal, invert, Vec2 } from '../jmath/Vec';
+import { add, equal, getAngleBetweenVec2s, getEndpointOfMagnitudeAlongVector, invert, Vec2 } from '../jmath/Vec';
 import Underworld from '../Underworld';
 import { playDefaultSpellSFX } from './cardUtils';
 import { moveAlongVector, normalizedVector } from '../jmath/moveWithCollision';
-import { arrowCardId } from './arrow';
+import { arrow3CardId } from './arrow3';
+import regularArrow from './arrow';
+import { raceTimeout } from '../Promise';
 
-export const arrow3CardId = 'Arrow3';
+export const arrowForkCardId = 'Arrow Fork';
 const damageDone = 30;
 const spell: Spell = {
   card: {
-    id: arrow3CardId,
-    replaces: [arrowCardId],
+    id: arrowForkCardId,
+    replaces: [arrow3CardId],
     category: CardCategory.Damage,
     supportQuantity: true,
-    manaCost: 22,
+    manaCost: 35,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.UNCOMMON],
-    thumbnail: 'spellIconArrow3.png',
+    probability: probabilityMap[CardRarity.FORBIDDEN],
+    thumbnail: 'spellIconArrowFork.png',
     // so that you can fire the arrow at targets out of range
     allowNonUnitTarget: true,
     animationPath: '',
@@ -52,12 +54,14 @@ const spell: Spell = {
                 state.casterPositionAtTimeOfCast,
                 state.castLocation,
                 'projectile/arrow',
-                firstTarget
+                firstTarget,
               ).then(() => {
                 if (Unit.isUnit(firstTarget)) {
                   Unit.takeDamage(firstTarget, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
                   targetsHitCount++;
+                  return fireForkedArrows(state, firstTarget, underworld, prediction);
                 }
+                return Promise.resolve(state);
               });
               attackPromises.push(projectilePromise);
               const timeout = Math.max(0, timeoutToNextArrow);
@@ -68,6 +72,7 @@ const spell: Spell = {
               if (Unit.isUnit(firstTarget)) {
                 Unit.takeDamage(firstTarget, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
                 targetsHitCount++;
+                await fireForkedArrows(state, firstTarget, underworld, prediction);
               }
             }
           }
@@ -85,6 +90,22 @@ const spell: Spell = {
     },
   }
 };
+async function fireForkedArrows(state: EffectState, firstTarget: Unit.IUnit, underworld: Underworld, prediction: boolean) {
+  return raceTimeout(5_000, 'fireForkedArrows', new Promise((resolve) => {
+    let promises = [];
+    // Now fork into regular arrows that fire in directions
+    for (let newAngle of [Math.PI / 12, -Math.PI / 12, 2 * Math.PI / 12, -2 * Math.PI / 12, 3 * Math.PI / 12, -3 * Math.PI / 12]) {
+      const angle = getAngleBetweenVec2s(state.casterUnit, firstTarget) + newAngle;
+      const castLocation = getEndpointOfMagnitudeAlongVector(firstTarget, angle, 10_000);
+      // Override casterUnit as firstTarget so forked arrows don't hit the target that they are forking off of
+      promises.push(regularArrow.card.effect({ ...state, casterPositionAtTimeOfCast: firstTarget, targetedUnits: [], casterUnit: firstTarget, castLocation }, regularArrow.card, 1, underworld, prediction, false));
+    }
+    Promise.all(promises).then(() => {
+      resolve(state);
+    });
+  }));
+
+}
 export default spell;
 // Returns the start and end point that an arrow will take until it hits a wall
 export function findArrowPath(casterPositionAtTimeOfCast: Vec2, target: Vec2, underworld: Underworld): LineSegment | undefined {

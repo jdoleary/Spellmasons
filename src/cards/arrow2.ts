@@ -24,7 +24,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.SPECIAL],
-    thumbnail: 'spellIconArrow.png',
+    thumbnail: 'spellIconArrow2.png',
     // so that you can fire the arrow at targets out of range
     allowNonUnitTarget: true,
     animationPath: '',
@@ -50,8 +50,9 @@ const spell: Spell = {
               // early
               const projectilePromise = createVisualFlyingProjectile(
                 state.casterPositionAtTimeOfCast,
-                firstTarget,
+                state.castLocation,
                 'projectile/arrow',
+                firstTarget
               ).then(() => {
                 if (Unit.isUnit(firstTarget)) {
                   Unit.takeDamage(firstTarget, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });

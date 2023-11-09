@@ -863,7 +863,6 @@ export function getReplacesCardText(replaces: string[]) {
     if (replaceCard) {
       const thumbnail = document.createElement('img');
       thumbnail.src = getSpellThumbnailPath(replaceCard.thumbnail);
-      console.log('jtest 2', thumbnail.src);
       thumbnail.style.width = '16px';
       thumbnail.style.padding = '0 4px';
       replacesEl.appendChild(thumbnail);
