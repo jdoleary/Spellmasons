@@ -64,6 +64,8 @@ import devRecordDelay from './devRecordDelay';
 import devCauseDesync from './devCauseDesync';
 import registerSummoningSickness from '../modifierSummoningSickness';
 import arrow from './arrow';
+import arrow2 from './arrow2';
+import arrow3 from './arrow3';
 import explosive_arrow from './explosive_arrow';
 import target_arrow from './target_arrow';
 import conserve from './conserve';
@@ -219,6 +221,8 @@ export function registerCards(overworld: Overworld) {
   registerSpell(capture_soul, overworld);
   registerSpell(sacrifice, overworld);
   registerSpell(arrow, overworld);
+  registerSpell(arrow2, overworld);
+  registerSpell(arrow3, overworld);
   registerSpell(explosive_arrow, overworld);
   registerSpell(phantom_arrow, overworld);
   registerSpell(target_arrow, overworld);

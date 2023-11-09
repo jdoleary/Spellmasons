@@ -28,7 +28,7 @@ const spell: Spell = {
     manaCost: 34,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.COMMON],
+    probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconMegaSlash.png',
     animationPath,
     sfx: 'hurt3',

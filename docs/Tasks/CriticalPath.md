@@ -6,12 +6,13 @@
     - "Legal"
 - Features
     - Soul Decay (for resurrected units)
-    - Challenges (premade)
 - Add "Count" functionality to remote logger
 - Advertise in other countries
 - Add Achievements
 - Update Seashell to server-bun
     - Europe crashed with high cpu, monitor for longer before changing seashell over to new server
+- v1.24
+    - Challenges (premade)
 ---
 - Feature: Longer spells are cheaper by a bit (to incentivize combining)
 - v1.23
