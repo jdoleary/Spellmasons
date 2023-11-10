@@ -37,7 +37,7 @@ async function fireForkedArrows(state: EffectState, firstTarget: Unit.IUnit, und
       const angle = getAngleBetweenVec2s(state.casterUnit, firstTarget) + newAngle;
       const castLocation = getEndpointOfMagnitudeAlongVector(firstTarget, angle, 10_000);
       // Override casterUnit as firstTarget so forked arrows don't hit the target that they are forking off of
-      promises.push(regularArrow.card.effect({ ...state, casterPositionAtTimeOfCast: firstTarget, targetedUnits: [], casterUnit: firstTarget, castLocation }, regularArrow.card, 1, underworld, prediction, false));
+      promises.push(arrowEffect(1, undefined, true)({ ...state, casterPositionAtTimeOfCast: firstTarget, targetedUnits: [], casterUnit: firstTarget, castLocation }, regularArrow.card, 1, underworld, prediction, false));
     }
     Promise.all(promises).then(() => {
       resolve(state);

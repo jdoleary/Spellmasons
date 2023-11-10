@@ -10,6 +10,7 @@ import { add, equal, getAngleBetweenVec2s, getEndpointOfMagnitudeAlongVector, in
 import Underworld from '../Underworld';
 import { playDefaultSpellSFX } from './cardUtils';
 import { moveAlongVector, normalizedVector } from '../jmath/moveWithCollision';
+import floatingText from '../graphics/FloatingText';
 
 export const arrowCardId = 'Arrow';
 const damageDone = 10;
@@ -41,8 +42,8 @@ export function arrowEffect(multiShotCount: number, onCollide?: (state: EffectSt
     let attackPromises = [];
     let timeoutToNextArrow = 200;
     if (!prediction) {
-      underworld.clearPredictedNextTurnDamage();
       if (!skipClearCache) {
+        underworld.clearPredictedNextTurnDamage();
         for (let u of underworld.units) {
           // @ts-ignore: `cachedArrowHealth` is a temporary property on units
           // Keep the health that they had before arrows are fired
@@ -96,6 +97,8 @@ export function arrowEffect(multiShotCount: number, onCollide?: (state: EffectSt
                   }
                 }
                 return Promise.resolve(state);
+              }).then((state) => {
+                return state
               });
               attackPromises.push(projectilePromise);
             } else {
@@ -122,9 +125,11 @@ export function arrowEffect(multiShotCount: number, onCollide?: (state: EffectSt
           refundLastSpell(state, prediction, 'no target, mana refunded')
         }
       });
-      for (let u of underworld.units) {
-        // @ts-ignore: `cachedArrowHealth` is a temporary property on units
-        delete u.cachedArrowHealth;
+      if (!skipClearCache) {
+        for (let u of underworld.units) {
+          // @ts-ignore: `cachedArrowHealth` is a temporary property on units
+          delete u.cachedArrowHealth;
+        }
       }
     }
     return state;
