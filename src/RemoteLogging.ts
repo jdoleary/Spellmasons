@@ -2,8 +2,8 @@
 const originalConsoleError = console.error;
 // const originalConsoleWarn = console.warn;
 export function enableRemoteLogging() {
-    if (location.href.includes('localhost')) {
-        console.warn('Remote Logging is disabled for localhsot development')
+    if (!globalThis.headless && location.href.includes('localhost')) {
+        console.warn('Remote Logging is disabled for localhost development')
         return;
     }
 
