@@ -116,14 +116,6 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
     // There is no DOM in headless mode
     return;
   }
-  // Discover spell
-  console.log('Discovered spell', upgrade.title);
-  if (globalThis.spellsDiscovered && !globalThis.spellsDiscovered.includes(upgrade.title)) {
-    globalThis.spellsDiscovered.push(upgrade.title);
-    storage.set(storage.SPELLS_DISCOVERED_STORAGE_KEY, JSON.stringify(globalThis.spellsDiscovered));
-  }
-
-
   const { pie } = underworld;
   const element = document.createElement('div');
   // mageType upgrades are smaller so more can fit on screen

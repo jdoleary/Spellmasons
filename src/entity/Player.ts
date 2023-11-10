@@ -526,6 +526,16 @@ export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | u
     console.warn("Attempted to add cards to a non-existant player's hand")
     return
   }
+  // Discover spell
+  if (player == globalThis.player) {
+    console.log('Discovered spell', card.id);
+    if (globalThis.spellsDiscovered && !globalThis.spellsDiscovered.includes(card.id)) {
+      globalThis.spellsDiscovered.push(card.id);
+      storage.set(storage.SPELLS_DISCOVERED_STORAGE_KEY, JSON.stringify(globalThis.spellsDiscovered));
+    }
+  }
+
+
   // Players may not have more than 1 of a particular card, because now, cards are
   // not removed when cast
   if (!player.inventory.includes(card.id)) {
