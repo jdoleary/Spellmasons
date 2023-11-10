@@ -528,8 +528,8 @@ export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | u
   }
   // Discover spell
   if (player == globalThis.player) {
-    console.log('Discovered spell', card.id);
     if (globalThis.spellsDiscovered && !globalThis.spellsDiscovered.includes(card.id)) {
+      console.log('Discovered spell', card.id);
       globalThis.spellsDiscovered.push(card.id);
       storage.set(storage.SPELLS_DISCOVERED_STORAGE_KEY, JSON.stringify(globalThis.spellsDiscovered));
     }
