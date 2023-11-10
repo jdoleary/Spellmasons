@@ -104,6 +104,8 @@ declare global {
     // A list of enemy ids that have been encountered by this client
     // Used to introduce new enemies
     var enemyEncountered: undefined | string[];
+    // A array for the codex of spells that have been seen
+    var spellsDiscovered: undefined | string[];
     // Make me superhuman (used for dev)
     var superMe: undefined | ((underworld: Underworld, player?: Player.IPlayer) => void);
     // set to true once superMe is used

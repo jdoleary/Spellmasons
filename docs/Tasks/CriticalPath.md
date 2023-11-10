@@ -3,15 +3,11 @@
     - latency is being misreported as 700
     - Chase — Yesterday at 2:46 PM I realize how much more work it'd be, but perhaps stack casting could give them incrementally more damage and hp? Kinda like a "hoard bonus".
     - Skillo — Yesterday at 10:28 AM honestly compared to ressurrect and how deadly damaging spells are, i would say that even applying a debuff on enemies which will capture their soul if they die, would be balanced. (so no hp threshold and better for multi targeting)
-- bug: Arrows sometimes fizzle on dying units especially if they are cast quickly because the unit dies after the previous arrow was fired
-    - shatter arrow is still vulnerable to this but the others are fixed
-- bug: arrow multi causes race timeout
-    - you should be able to shoot past your target with arrow multi
-- bug: once onError occurs in codex unit the image goes away forever
 - i18n
     - "Replaces Spells:"
     - "Codex"
     - "Legal"
+    - All new spells
 - Update Seashell to server-bun
     - Europe crashed with high cpu, monitor for longer before changing seashell over to new server
 ---

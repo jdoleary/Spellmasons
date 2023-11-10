@@ -10,8 +10,10 @@ export const STORAGE_ID_PLAYER_NAME = 'player-name';
 export const STORAGE_ID_UI_ZOOM = 'uiZoom';
 export const STORAGE_CONTROLS_KEY = 'controls';
 export const ENEMY_ENCOUNTERED_STORAGE_KEY = 'enemyEncountered';
+export const SPELLS_DISCOVERED_STORAGE_KEY = 'spellsDiscovered';
 globalThis.STORAGE_ID_UI_ZOOM = STORAGE_ID_UI_ZOOM;
 globalThis.enemyEncountered = [];
+globalThis.spellsDiscovered = [];
 
 export function getSavedData() {
     if (globalThis.headless) {
@@ -90,6 +92,9 @@ export function getSavedData() {
             // Update enemy encountered:
             globalThis.enemyEncountered = JSON.parse(get(ENEMY_ENCOUNTERED_STORAGE_KEY) || '[]');
             console.log('Setup: initializing enemyEncountered as', globalThis.enemyEncountered);
+            // Update spells discovered:
+            globalThis.spellsDiscovered = JSON.parse(get(SPELLS_DISCOVERED_STORAGE_KEY) || '[]');
+            console.log('Setup: initializing spellsDiscovered as', globalThis.spellsDiscovered);
         });
 }
 
