@@ -1,5 +1,42 @@
 ## Spellmasons Update v1.23.0
-- Thanks Chase for recommending stacking summon spells to make the unit more powerful
+css: Prevent tooltip from hiding right spellbar
+    Thanks LeoninoMalino from the Steam Community
+fix: Fix arrow prediction
+content: Tweak arrow upgrade spell cost and rarity
+content: Add arrow spells
+content: Add heal upgrades
+    Support arrows hitting targets not in their center
+    Add Arrow upgrades
+content: Add "Resurrect" Variations
+    Thanks TonyFTW, Skillo and Mattmellow
+menu: Add Codex
+menu: Add legal
+perf: When moving with spell queued,
+    only call runPredictions when idle to
+    prevent lag while moving with spell queued
+UI: Fix size of cards on smaller screens
+    Thanks Lemming Jesus
+balance: Make summon decoy scale in strength when
+    stacked like summon_generic.
+    Remove cooldown now that AI targeting is improved and wont
+    target about-to-be-dead units
+src: Stacked summons make bigger, stronger units
+    Add 'strength' property back to units so that when units
+    have modified strength, such as when stacking a summon spell,
+    their maxstats will remain the same no matter how many times
+    the difficulty is recalculated
+Thanks Chase from Discord for this idea
+fix: urns that had too many onDeathEvents
+    due to their init function not being idempotent.
+    Fix urn cleanup cornercase where the urn image would be
+     left behind (and red) due to the image being restored in a sync.
+     By changing Image.cleanup to allow maintaining the position x,y
+     so that the other onDeath events such as bloat can still use it but
+     the image is still cleaned up
+fix: Freeze UX when player is frozen
+    especially by urn so that it shows the the player
+    is frozen even when it skips their turn
+
 ## Spellmasons Update v1.22.0
 Improvment: New experimental improved server running on US-West and Europe servers
 chore: Improved logging for debugging
