@@ -20,6 +20,7 @@
 - Test tutorial ALWAYS on electron build
 - Test saving if you modify underworld with new elements added to the level that need to be serialized
 - Test hosting LAN server from Electron build
+- Merge master branch to keep it up to date
 
 # Release protocal
 - QA: 1:44
