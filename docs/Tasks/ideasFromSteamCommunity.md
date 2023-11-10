@@ -1,3 +1,4 @@
+- Skillo — Yesterday at 10:28 AM honestly compared to ressurrect and how deadly damaging spells are, i would say that even applying a debuff on enemies which will capture their soul if they die, would be balanced. (so no hp threshold and better for multi targeting)
 - Skillo — Today at 11:01 AM
 Not in any way related to the current game, but i was thinking how fun it would be to have a puzzle game with the elements from spellmasons. Kinda like this other indie game, "into the breach"
 

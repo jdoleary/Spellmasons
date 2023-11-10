@@ -1,3 +1,5 @@
+## Spellmasons Update v1.23.0
+- Thanks Chase for recommending stacking summon spells to make the unit more powerful
 ## Spellmasons Update v1.22.0
 Improvment: New experimental improved server running on US-West and Europe servers
 chore: Improved logging for debugging
