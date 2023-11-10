@@ -1,6 +1,6 @@
 import type { OnDataArgs } from '@websocketpie/client';
-import type * as PIXI from 'pixi.js';
 
+import stringify from 'fast-safe-stringify';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
 import * as Image from '../graphics/Image';
 import floatingText from '../graphics/FloatingText';
@@ -30,14 +30,11 @@ import { ensureAllClientsHaveAssociatedPlayers, Overworld, recalculateGameDiffic
 import { playerCastAnimationColor, playerCastAnimationColorLighter, playerCastAnimationGlow } from '../graphics/ui/colors';
 import { lightenColor } from '../graphics/ui/colorUtil';
 import { choosePerk, tryTriggerPerk } from '../Perk';
-import { calculateCost } from '../cards/cardUtils';
 import { runPredictions } from '../graphics/PlanningView';
 import seedrandom from 'seedrandom';
 import { getUniqueSeedString, SeedrandomState } from '../jmath/rand';
-import { raceTimeout } from '../Promise';
-import { createVisualLobbingProjectile } from '../entity/Projectile';
 import { setPlayerNameUI } from '../PlayerUtils';
-import { GameMode, isSinglePlayer, UnitType } from '../types/commonTypes';
+import { GameMode, isSinglePlayer } from '../types/commonTypes';
 import { recalcPositionForCards } from '../graphics/ui/CardUI';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -1140,8 +1137,11 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       // Empty string means "No error, save successful"
       return '';
     } catch (e) {
-      console.log('Failed to save', saveObject);
-      console.error(e);
+      try {
+        console.error('Failed to save', stringify(saveObject));
+      } catch (e2) {
+        console.error(e2);
+      }
       return 'Failed to save';
     }
   };
