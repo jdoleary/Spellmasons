@@ -2084,6 +2084,8 @@ body.view-Game.showUpgrades #perkList.visible {
   position: absolute;
   bottom: 0;
   right: 8px;
+  /* Display overtop of the tooltip if the tooltip intersects it's space */
+  z-index: 1;
 }
 
 /* Ensure slots don't block clicks unless they have a spell in them or 
