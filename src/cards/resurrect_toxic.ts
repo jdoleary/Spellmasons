@@ -11,6 +11,7 @@ export const resurrect_toxic_id = 'Toxic Resurrect';
 export const thumbnail = 'spellIconResurrect3.png';
 // Brings stats back to this amount on res
 const resStatAmount = 1.0;
+const turnsLeftToLive = 3;
 const spell: Spell = {
   card: {
     id: resurrect_toxic_id,
@@ -23,7 +24,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.RARE],
     onlySelectDeadUnits: true,
     thumbnail,
-    description: 'spell_resurrect',
+    description: ['spell_resurrect_toxic', turnsLeftToLive.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       const animationPromises = [];
       const targets = state.targetedUnits;
@@ -45,7 +46,7 @@ const spell: Spell = {
           Unit.addModifier(unit, suffocateCardId, underworld, prediction, 1);
           const modifier = unit.modifiers[suffocateCardId];
           if (modifier) {
-            modifier.turnsLeftToLive = 3;
+            modifier.turnsLeftToLive = turnsLeftToLive;
             updateTooltip(unit);
           }
 

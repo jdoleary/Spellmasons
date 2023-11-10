@@ -25,7 +25,7 @@ const spell: Spell = {
     allowNonUnitTarget: true,
     animationPath: '',
     sfx: 'arrow',
-    description: ['spell_arrow', damageDone.toString()],
+    description: ['spell_arrow_fork', damageDone.toString()],
     effect: arrowEffect(1, fireForkedArrows)
   }
 };

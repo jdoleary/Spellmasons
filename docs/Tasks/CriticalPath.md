@@ -2,13 +2,9 @@
 - v1.23
     - latency is being misreported as 700
     - bug: explosive urn comes back visually in multiplayer after being destroyed
+        - Unable to reproduct on current build
     - Feature: "Report a Bug" Auto post to google form
     - Steam integration with achievements
-- i18n
-    - "Replaces Spells:"
-    - "Codex"
-    - "Legal"
-    - All new spells
 - Update Seashell to server-bun
     - Europe crashed with high cpu, monitor for longer before changing seashell over to new server
 ---

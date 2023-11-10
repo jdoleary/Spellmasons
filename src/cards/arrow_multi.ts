@@ -6,6 +6,7 @@ import { arrowEffect } from './arrow';
 
 export const arrowMultiCardId = 'Multi Arrow';
 const damageDone = 10;
+const arrowCount = 5;
 const spell: Spell = {
   card: {
     id: arrowMultiCardId,
@@ -21,8 +22,8 @@ const spell: Spell = {
     allowNonUnitTarget: true,
     animationPath: '',
     sfx: 'arrow',
-    description: ['spell_arrow', damageDone.toString()],
-    effect: arrowEffect(5)
+    description: ['spell_arrow_many', arrowCount.toString(), damageDone.toString()],
+    effect: arrowEffect(arrowCount)
   }
 };
 export default spell;

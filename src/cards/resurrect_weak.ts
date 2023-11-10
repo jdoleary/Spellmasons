@@ -23,7 +23,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.RARE],
     onlySelectDeadUnits: true,
     thumbnail,
-    description: 'spell_resurrect',
+    description: ['spell_resurrect_weak', (resStatAmount * 100).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       const animationPromises = [];
       const targets = state.targetedUnits;

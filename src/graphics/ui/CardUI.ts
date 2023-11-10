@@ -856,7 +856,7 @@ globalThis.getReplacesCardText = getReplacesCardText;
 export function getReplacesCardText(replaces: string[]) {
   const replacesEl = document.createElement('div');
   const label = document.createElement('span');
-  label.innerText = i18n('Replaces Spells:');
+  label.innerText = i18n('Upgrades');
   replacesEl.appendChild(label);
   for (let r of replaces) {
     const replaceCard = Cards.allCards[r];
