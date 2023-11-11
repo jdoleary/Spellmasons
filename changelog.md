@@ -18,7 +18,7 @@ UI: Fix size of cards on smaller screens
     Thanks Lemming Jesus
 balance: Make summon decoy scale in strength when
     stacked like summon_generic.
-    Remove cooldown now that AI targeting is improved and wont
+balance: Remove cooldown for Summon Decoy now that AI targeting is improved and wont
     target about-to-be-dead units
 src: Stacked summons make bigger, stronger units
     Add 'strength' property back to units so that when units

@@ -1,6 +1,11 @@
 # Critical Path
+- Arrows don't speed up anymore
+- Fix order of spells in codex and inventory
 - Update Seashell to server-bun
     - Europe crashed with high cpu, monitor for longer before changing seashell over to new server
+- Gumby — Today at 3:05 PM
+It doesn't seem to be related to the spells cast, it seems to be more relating to the number of enemies on the screen (the later matches have more enemies). On my PC i click end turn and the end turn button greys out, on my friend's PC he clicks end turn and the end turn button greys out for him, but the AI just doesn't start their turn....... oh and on my screen it looks like my friend hasnt ended their turn, and on my friend's pc it looks like i haven't ended my turn, there is some sync issue with the end turn fucntionality in multiplayer. myabe just start a 60 second timer once any of the players have hit their end turn button or even a last resort 10 minute timer per turn. At least that way there'd be some way of saving the matches when this happens. Or add an auto-save function at the end of every turn, so should this happen we can just quit out, load the last auto-save and come back in again. 
+
 ---
 - v1.24
     - bug: explosive urn comes back visually in multiplayer after being destroyed

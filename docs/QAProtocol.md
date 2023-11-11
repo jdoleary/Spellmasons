@@ -21,6 +21,8 @@
 - Test saving if you modify underworld with new elements added to the level that need to be serialized
 - Test hosting LAN server from Electron build
 - Merge master branch to keep it up to date
+### 1.23
+- card size on smaller screens
 
 # Release protocal
 - QA: 1:44
