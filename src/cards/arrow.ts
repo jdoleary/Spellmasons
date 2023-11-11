@@ -1,6 +1,6 @@
 import * as Unit from '../entity/Unit';
 import { CardCategory } from '../types/commonTypes';
-import { EffectFn, EffectState, ICard, refundLastSpell, Spell } from './index';
+import { EffectState, ICard, refundLastSpell, Spell } from './index';
 import * as math from '../jmath/math';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { createVisualFlyingProjectile } from '../entity/Projectile';
@@ -10,10 +10,9 @@ import { add, equal, getAngleBetweenVec2s, getEndpointOfMagnitudeAlongVector, in
 import Underworld from '../Underworld';
 import { playDefaultSpellSFX } from './cardUtils';
 import { moveAlongVector, normalizedVector } from '../jmath/moveWithCollision';
-import floatingText from '../graphics/FloatingText';
 
 export const arrowCardId = 'Arrow';
-const damageDone = 10;
+const damage = 10;
 const spell: Spell = {
   card: {
     id: arrowCardId,
@@ -28,11 +27,11 @@ const spell: Spell = {
     allowNonUnitTarget: true,
     animationPath: '',
     sfx: 'arrow',
-    description: ['spell_arrow', damageDone.toString()],
-    effect: arrowEffect(1)
+    description: ['spell_arrow', damage.toString()],
+    effect: arrowEffect(1, damage)
   }
 };
-export function arrowEffect(multiShotCount: number, onCollide?: (state: EffectState, firstTarget: Unit.IUnit, underworld: Underworld, prediction: boolean) => Promise<EffectState>, skipClearCache?: boolean) {
+export function arrowEffect(multiShotCount: number, damageDone: number, onCollide?: (state: EffectState, firstTarget: Unit.IUnit, underworld: Underworld, prediction: boolean) => Promise<EffectState>, skipClearCache?: boolean) {
   return async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean) => {
 
     let targets: Vec2[] = state.targetedUnits;
@@ -113,6 +112,10 @@ export function arrowEffect(multiShotCount: number, onCollide?: (state: EffectSt
           }
         }
         const timeout = Math.max(0, timeoutToNextArrow);
+        if (!prediction) {
+
+          console.log('jtest timeout', timeout)
+        }
         await Promise.race([new Promise(resolve => setTimeout(resolve, timeout)), projectilePromise]);
         // Decrease timeout with each subsequent arrow fired to ensure that players don't have to wait too long
         timeoutToNextArrow -= 5;
