@@ -115,8 +115,8 @@ function fly(
   }
   const t =
     (time - instance.startTime) / (instance.endTime - instance.startTime);
-  instance.x = lerp(instance.startX, instance.target.x, t);
-  instance.y = lerp(instance.startY, instance.target.y, t);
+  instance.x = lerp(instance.startX, instance.target.x, t, true);
+  instance.y = lerp(instance.startY, instance.target.y, t, true);
   // Once it's fully done animating
   if (time >= (instance.interceptEndTime ? instance.interceptEndTime : instance.endTime)) {
     // Clean up the element

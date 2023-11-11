@@ -2,8 +2,8 @@ import { matrixToReadable } from '../LiquidPools';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex } from './ArrayUtil';
 import { Vec2 } from './Vec';
 // https://webdva.github.io/how-i-implemented-client-side-linear-interpolation/
-export function lerp(start: number, end: number, time: number) {
-  if (time >= 1) {
+export function lerp(start: number, end: number, time: number, goBeyondEnd?: boolean) {
+  if (!goBeyondEnd && time >= 1) {
     return end;
   }
   if (time <= 0) {
