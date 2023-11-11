@@ -111,28 +111,26 @@ export function arrowEffect(multiShotCount: number, damageDone: number, onCollid
             }
           }
         }
-        const timeout = Math.max(0, timeoutToNextArrow);
-        if (!prediction) {
-
-          console.log('jtest timeout', timeout)
+        if (!prediction && !globalThis.headless) {
+          const timeout = Math.max(0, timeoutToNextArrow);
+          await Promise.race([new Promise(resolve => setTimeout(resolve, timeout)), projectilePromise]);
+          // Decrease timeout with each subsequent arrow fired to ensure that players don't have to wait too long
+          timeoutToNextArrow -= 5;
         }
-        await Promise.race([new Promise(resolve => setTimeout(resolve, timeout)), projectilePromise]);
-        // Decrease timeout with each subsequent arrow fired to ensure that players don't have to wait too long
-        timeoutToNextArrow -= 5;
       }
-      await Promise.all(attackPromises).then(() => {
-        // Since arrows' flight promises are designed to resolve early so that multiple arrows can be shot
-        // in quick succession, we must await the actual flyingProjectile promise to determine if no targets
-        // were hit
-        if (targetsHitCount == 0) {
-          refundLastSpell(state, prediction, 'no target, mana refunded')
-        }
-      });
-      if (!skipClearCache) {
-        for (let u of underworld.units) {
-          // @ts-ignore: `cachedArrowHealth` is a temporary property on units
-          delete u.cachedArrowHealth;
-        }
+    }
+    await Promise.all(attackPromises).then(() => {
+      // Since arrows' flight promises are designed to resolve early so that multiple arrows can be shot
+      // in quick succession, we must await the actual flyingProjectile promise to determine if no targets
+      // were hit
+      if (targetsHitCount == 0) {
+        refundLastSpell(state, prediction, 'no target, mana refunded')
+      }
+    });
+    if (!skipClearCache) {
+      for (let u of underworld.units) {
+        // @ts-ignore: `cachedArrowHealth` is a temporary property on units
+        delete u.cachedArrowHealth;
       }
     }
     return state;
