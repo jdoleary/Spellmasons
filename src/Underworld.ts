@@ -3866,13 +3866,15 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   // are removed
   serializeForSaving(): IUnderworldSerialized {
     const { pie, overworld, random, players, units, pickups, walls, pathingPolygons, liquidSprites,
-      unitsPrediction, pickupsPrediction, doodadsPrediction, particleFollowers, ...rest } = this;
+      unitsPrediction, pickupsPrediction, doodadsPrediction, particleFollowers, forceMove, ...rest } = this;
     return {
       ...rest,
       // isRestarting is an id for SetTimeout and cannot be serialized
       isRestarting: undefined,
       // simulatingMovePredictions should never be serialized, it is only for a running instance to keep track of if the simulateRunForceMovePredictions is running
       simulatingMovePredictions: false,
+      // forceMove should never be serialized
+      forceMove: [],
       players: this.players.map(Player.serialize),
       units: this.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
       pickups: this.pickups.filter(p => !p.flaggedForRemoval).map(Pickup.serialize),

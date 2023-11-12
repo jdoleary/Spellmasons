@@ -1119,6 +1119,9 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       }
     }
 
+    if (underworld.forceMove.length) {
+      console.error('Attempting to save before resolving all forceMoves');
+    }
     const saveObject = {
       version: globalThis.SPELLMASONS_PACKAGE_VERSION,
       underworld: underworld.serializeForSaving(),
