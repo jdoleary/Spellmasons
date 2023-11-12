@@ -2221,3 +2221,7 @@ body.dragging-card .floating-card-holder .empty-slot {
   white-space: nowrap;
 
 }
+
+.card.perk.pick-stats {
+  min-height: 660px;
+}
