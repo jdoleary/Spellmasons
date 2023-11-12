@@ -60,7 +60,7 @@ import { calculateDistanceOfVec2Array, findPath } from './jmath/Pathfinding';
 import { keyDown, useMousePosition } from './graphics/ui/eventListeners';
 import Jprompt from './graphics/Jprompt';
 import { collideWithLineSegments, ForceMove, forceMovePreventForceThroughWall, isVecIntersectingVecWithCustomRadius, moveWithCollisions } from './jmath/moveWithCollision';
-import { IHostApp } from './network/networkUtil';
+import { IHostApp, hostGiveClientGameState } from './network/networkUtil';
 import { withinMeleeRange } from './entity/units/actions/meleeAction';
 import { baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLimits, Limits as Limits, makeFinalTileImages, Map, Tile, toObstacle } from './MapOrganicCave';
 import { Material } from './Conway';
@@ -1986,6 +1986,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // Show game over modal after a delay
       gameOverModalTimeout = setTimeout(() => {
         document.body.classList.toggle('game-over', isOver);
+        // allowForceInitGameState so that when the game restarts it will get the full
+        // newly created underworld
+        this.allowForceInitGameState = true;
       }, 3000);
     }
     this.updateGameOverModal();
@@ -2008,6 +2011,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             newUnderworld.lastLevelCreated = newUnderworld.generateLevelDataSyncronous(0, this.gameMode);
             // Actually create the level 
             newUnderworld.createLevelSyncronous(newUnderworld.lastLevelCreated);
+            this.overworld.clients.forEach(clientId => {
+              hostGiveClientGameState(clientId, newUnderworld, newUnderworld.lastLevelCreated, MESSAGE_TYPES.INIT_GAME_STATE);
+            });
           }, millisTillRestart);
         }
       } else {

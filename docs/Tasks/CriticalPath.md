@@ -1,6 +1,9 @@
 # Critical Path
-- Arrows don't speed up anymore
-- Fix order of spells in codex and inventory
+- Bug: Stamina bar number moves while moving but the bar itself doesn't
+- BUG: When multiplayer restarts it doesn't recreate the underworld fully and you get to pick a bunch of upgrades
+    - 2 players, one dies, one leaves, after a certain amount of time it will restart for the dead one
+- Strangely getting "mana refunded" on shatter arrow
+- Admin commands don't go to multiplayer anymore
 - Update Seashell to server-bun
     - Europe crashed with high cpu, monitor for longer before changing seashell over to new server
 - Gumby — Today at 3:05 PM
@@ -8,6 +11,7 @@ It doesn't seem to be related to the spells cast, it seems to be more relating t
 
 ---
 - v1.24
+    - Fix order of spells in codex and inventory
     - bug: explosive urn comes back visually in multiplayer after being destroyed
         - Unable to reproduct on current build
     - Steam integration with achievements

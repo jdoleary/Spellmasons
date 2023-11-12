@@ -458,7 +458,13 @@ export function syncLobby(underworld: Underworld) {
   }
 }
 export function enterPortal(player: IPlayer, underworld: Underworld) {
-  console.log(`Player ${player.clientId}/${player.name} entered portal.`)
+  console.log(`Player ${player.clientId}/${player.name} entered portal.`);
+  // In the event that it was "game over" because the player died, but ally npcs clear the
+  // level, the player will enter the portal, in which case allowForceInitGameState
+  // should be disabled so that it ignored INIT_GAME_STATE messages again
+  // (During a regular gameover this is set to true so that when the game restarts
+  // the client can recieve the new underworld state)
+  underworld.allowForceInitGameState = false;
 
   // Record Progress
   const mageTypeFarthestLevel = storage.getStoredMageTypeFarthestLevelKey(player.mageType || 'Spellmason');
