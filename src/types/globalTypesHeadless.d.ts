@@ -335,5 +335,5 @@ declare global {
     var adminPickMageType: boolean | undefined;
     // A list of upgrades to omit for the next reroll
     var rerollOmit: string[] | undefined;
-    var saveASAP: undefined;
+    var saveASAP: undefined | string;
 }
