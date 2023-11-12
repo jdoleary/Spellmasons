@@ -2274,6 +2274,25 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     this.syncTurnMessage();
     // Update unit health / mana bars, etc
     await runPredictions(this);
+
+    // Quicksave at the beginning of player's turn
+    // Check globalThis.player.isSpawned to prevent quicksaving an invalid underworld file
+    if (globalThis.save && globalThis.player && globalThis.player.isSpawned) {
+      // For now, only save if in a singleplayer game (as determined by solomode_client_id)
+      // because save support hasn't been added to multiplayer yet
+      if (isSinglePlayer(globalThis.player.clientId)) {
+        console.info(`Dev: quick saving game as "${globalThis.quicksaveKey}"`);
+        // Force overwrite for quicksave, never prompt "are you sure?" when auto saving a quicksave
+        globalThis.save(globalThis.quicksaveKey, true);
+      }
+    }
+
+    // If there was an attempted save during the enemy turn, save now
+    // that the player's turn has started
+    if (globalThis.saveASAP && globalThis.save) {
+      globalThis.save(globalThis.saveASAP);
+    }
+
   }
   // Sends a network message to end turn
   async endMyTurn() {
@@ -2284,16 +2303,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
       // Turns can only be manually ended during the PlayerTurns phase
       if (this.isMyTurn()) {
-        // Check globalThis.player.isSpawned to prevent quicksaving an invalid underworld file
-        if (globalThis.save && globalThis.player.isSpawned) {
-          // For now, only save if in a singleplayer game (as determined by solomode_client_id)
-          // because save support hasn't been added to multiplayer yet
-          if (isSinglePlayer(globalThis.player.clientId)) {
-            console.info(`Dev: quick saving game as "${globalThis.quicksaveKey}"`);
-            // Force overwrite for quicksave, never prompt "are you sure?" when auto saving a quicksave
-            globalThis.save(globalThis.quicksaveKey, true);
-          }
-        }
         let affirm = true
         // Interrupt endTurn with a cancellable prompt IF
         // player hasn't already ended their turn (note if they already HAVE ended their turn, just allow the END_TURN message to go through; this
