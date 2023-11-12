@@ -1,4 +1,7 @@
 # Critical Path
+- Idea: monster that grows stronger over time
+- Bug: in multiplayer if you die and an ally npc kills enemies and you choose your class you get to choose your class again the next level
+
 - Bug: Stamina bar number moves while moving but the bar itself doesn't
 - Strangely getting "mana refunded" on shatter arrow
 - Admin commands don't go to multiplayer anymore
