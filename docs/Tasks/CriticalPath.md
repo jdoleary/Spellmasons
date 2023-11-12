@@ -1,7 +1,5 @@
 # Critical Path
 - Bug: Stamina bar number moves while moving but the bar itself doesn't
-- BUG: When multiplayer restarts it doesn't recreate the underworld fully and you get to pick a bunch of upgrades
-    - 2 players, one dies, one leaves, after a certain amount of time it will restart for the dead one
 - Strangely getting "mana refunded" on shatter arrow
 - Admin commands don't go to multiplayer anymore
 - Update Seashell to server-bun
