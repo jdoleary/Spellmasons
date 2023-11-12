@@ -1087,6 +1087,7 @@ export default class Underworld {
     this.overworld.underworld = undefined;
     globalThis.attentionMarkers = [];
     globalThis.resMarkers = [];
+    globalThis.numberOfHotseatPlayers = 1;
 
     // Remove game-over popup
     document.body.classList.toggle('game-over', false);

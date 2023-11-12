@@ -1,5 +1,5 @@
 # Critical Path
-- Bug: Upgrade cards don't work right in hotseat
+- bug: menu-UI; I still get "unable to connect" doesn't clear even after you connect in multiplayer
 - Idea: monster that grows stronger over time
 - Bug: in multiplayer if you die and an ally npc kills enemies and you choose your class you get to choose your class again the next level
 
