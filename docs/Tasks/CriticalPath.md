@@ -1,4 +1,7 @@
 # Critical Path
+- can I still do F12 on electron??
+- bug: if you save while a spell is casting it gives you your mana back
+    - unreproduced
 - bug: menu-UI; I still get "unable to connect" doesn't clear even after you connect in multiplayer
 - Idea: monster that grows stronger over time
 - Bug: in multiplayer if you die and an ally npc kills enemies and you choose your class you get to choose your class again the next level

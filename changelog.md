@@ -36,6 +36,12 @@ fix: urns that had too many onDeathEvents
 fix: Freeze UX when player is frozen
     especially by urn so that it shows the the player
     is frozen even when it skips their turn
+fix: Game failing to save if you save while a spell is being cast
+fix: Improve saving so if you try to save during the enemy turn, it will wait until the start of your turn to save the game
+fix: Bug where you're unable to join a multiplayer game after dying in hotseat multiplayer
+fix: multiplayer menu bug where
+    when the game restarts, it reset player.isReady so it was
+    showing the wrong menu on esc
 
 ## Spellmasons Update v1.22.0
 Improvment: New experimental improved server running on US-West and Europe servers
