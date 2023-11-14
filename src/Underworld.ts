@@ -462,7 +462,6 @@ export default class Underworld {
   // Returns true if there is more processing yet to be done on the next
   // gameloop
   gameLoopForceMove = () => {
-    let forceMoveResolver: undefined | ((value: void | PromiseLike<void>) => void);
     if (!this.forceMovePromise) {
       this.forceMovePromise = new Promise(res => {
         forceMoveResolver = res;
@@ -522,9 +521,11 @@ export default class Underworld {
         }
       }
     }
-    const finishedForceMoves = !!this.forceMove.length;
+    const finishedForceMoves = this.forceMove.length == 0;
     if (finishedForceMoves && forceMoveResolver) {
       forceMoveResolver();
+      // Clear the resolver now that it has been used
+      forceMoveResolver = undefined;
     }
     return finishedForceMoves;
   }
@@ -626,6 +627,8 @@ export default class Underworld {
       return;
     } else if (this.forceMovePromise) {
       await raceTimeout(2000, 'awaitForceMove', this.forceMovePromise);
+      // Now that the promise has resolved, clear it so that it can await the next
+      this.forceMovePromise = undefined;
     }
   }
   // See GameLoops.md for more details
@@ -1088,6 +1091,7 @@ export default class Underworld {
     globalThis.attentionMarkers = [];
     globalThis.resMarkers = [];
     globalThis.numberOfHotseatPlayers = 1;
+    forceMoveResolver = undefined;
 
     // Remove game-over popup
     document.body.classList.toggle('game-over', false);
@@ -4138,3 +4142,4 @@ const mergeMap = {
   [BLOOD_ARCHER_ID]: DARK_PRIEST_ID
 
 }
+let forceMoveResolver: undefined | ((value: void | PromiseLike<void>) => void);
