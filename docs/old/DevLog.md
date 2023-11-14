@@ -1,3 +1,10 @@
+## 2023.11.14
+Trying to fix awaitForceMoves
+
+Requirements:
+If there are existing forceMoves and awaitForceMoves is called then it should resolve when those forceMoves have completed
+If there are no forceMoves, it should resolve immediately
+
 ## 2023.10.19
 Trying to solve loaded games sometimes skipping the player turn.
 

@@ -1,7 +1,7 @@
 # Critical Path
+- On multiplayer I had slash and heavy slash and slash came back into my hand but not my inventory after a sync
+    - it was "target cone" and "heavy slash" and now it's "cone", "slash", "heavy slash", "slow"
 - can I still do F12 on electron??
-- Racetimeout awaitForceMove always occurs when bloat moves another unit (or the player?)
-- missing prediction lines on firefox
 - LeoninoMalino [has Spellmasons] 21 hours ago
 Stamina bar
 Don't know if its intended, but the stamina bar does not deplete until you stop moving. The number does, but the bar itself doesn't. 
