@@ -223,15 +223,15 @@ export function addOverworldEventListeners(overworld: Overworld) {
             // This can be tested by loading in a map with a large amount of 
             // a large variety of units, without requestIdleCallback, even
             // the cam cinematic lags terribly.
-            if (runPredictionsIdleCallbackId !== undefined) {
-              cancelIdleCallback(runPredictionsIdleCallbackId);
-            }
-            runPredictionsIdleCallbackId = requestIdleCallback(() => {
-              if (!overworld.underworld) {
-                return;
-              }
-              runPredictions(overworld.underworld);
-            })
+            // if (runPredictionsIdleCallbackId !== undefined) {
+            //   cancelIdleCallback(runPredictionsIdleCallbackId);
+            // }
+            // runPredictionsIdleCallbackId = requestIdleCallback(() => {
+            //   if (!overworld.underworld) {
+            //     return;
+            //   }
+            runPredictions(overworld.underworld);
+            // })
           }
         }
       },
