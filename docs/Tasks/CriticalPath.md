@@ -1,5 +1,26 @@
 # Critical Path
 - can I still do F12 on electron??
+- Racetimeout awaitForceMove always occurs when bloat moves another unit (or the player?)
+- missing prediction lines on firefox
+- LeoninoMalino [has Spellmasons] 21 hours ago
+Stamina bar
+Don't know if its intended, but the stamina bar does not deplete until you stop moving. The number does, but the bar itself doesn't. 
+- Address headless server infinite loop
+- When one of the servers had an infinite loop the serverhub doesn't get room information from any of them
+---
+
+-  Dragon352 [has Spellmasons] 8 hours ago
+pathing bug
+If you start a summon-swarm against a enemy on the opposite side of a U-path or similar, as far as I can tell its inevitable that some of the units will start to walk through the wall.
+might be tied to priest summoning some units since they are always there when I see this, but might be coincidence.
+
+pretty sure its unintended for units to no-clip to reach a target. 
+- Go over TonyFTW's comments more closely: https://discord.com/channels/1032294536640200766/1166111911260205107/1173994432912171059
+- Matt_97 — Today at 4:14 AM
+In the newest version, most summons that cost more than 150 mana never return to their original mana cost. They permanently remain at the higher mana cost.
+- some levels start with no enemies
+- can I still do F12 on electron??
+    - Still can't and it makes the esc key stop working
 - bug: if you save while a spell is casting it gives you your mana back
     - unreproduced
 - bug: menu-UI; I still get "unable to connect" doesn't clear even after you connect in multiplayer
