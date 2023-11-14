@@ -326,7 +326,7 @@ export function processNextInQueueIfReady(overworld: Overworld) {
   // If game is ready to process messages, begin processing
   // (if not, they will remain in the queue until the game is ready)
   messageQueue.processNextInQueue(onDataQueueContainer, d => handleOnDataMessage(d, overworld).catch(e => {
-    console.error('Handled: error in handleOnDataMessage:', e);
+    console.error('Handled: error in handleOnDataMessage:', e.message, e.stack);
   }));
 }
 function logHandleOnDataMessage(type: MESSAGE_TYPES, payload: any, fromClient: string, underworld: Underworld) {
