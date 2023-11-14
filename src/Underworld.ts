@@ -462,12 +462,18 @@ export default class Underworld {
   // Returns true if there is more processing yet to be done on the next
   // gameloop
   gameLoopForceMove = () => {
-    let forceMoveResolver: undefined | ((value: void | PromiseLike<void>) => void);
+    // No need to process if there are no instances to process
+    if (!this.forceMove.length) {
+      return false;
+    }
     if (!this.forceMovePromise) {
+      // If there is no forceMovePromise, create a new one,
+      // it will resolve when the current forceMove instances
+      // have finished; so anything that needs to await the
+      // forceMove instances can raceTimeout this.forceMovePromise
       this.forceMovePromise = new Promise(res => {
         forceMoveResolver = res;
-      })
-
+      });
     }
     // Optimization cache blood whenever the blood smear particles get over a certain number
     // to prevent slowdown
@@ -522,11 +528,21 @@ export default class Underworld {
         }
       }
     }
-    const finishedForceMoves = !!this.forceMove.length;
-    if (finishedForceMoves && forceMoveResolver) {
-      forceMoveResolver();
+    const finishedForceMoves = this.forceMove.length == 0;
+    if (finishedForceMoves) {
+      // Force moves have finished, resolve the promise and clear it
+      // so that new forceMoves can have a new promise that other parts
+      // of the code can await
+      if (forceMoveResolver) {
+        forceMoveResolver();
+      } else {
+        console.error('Unexpected: Finished forceMoves but forceMoveResolver is undefined');
+      }
+      // Clear the promise and resolver now that it has resolved
+      forceMoveResolver = undefined;
+      this.forceMovePromise = undefined;
     }
-    return finishedForceMoves;
+    return !finishedForceMoves;
   }
   // returns true if there is more processing yet to be done on the next game loop
   gameLoopUnit = (u: Unit.IUnit, aliveNPCs: Unit.IUnit[], deltaTime: number): boolean => {
@@ -626,6 +642,8 @@ export default class Underworld {
       return;
     } else if (this.forceMovePromise) {
       await raceTimeout(2000, 'awaitForceMove', this.forceMovePromise);
+      // Now that the promise has resolved, clear it so that it can await the next
+      this.forceMovePromise = undefined;
     }
   }
   // See GameLoops.md for more details
@@ -1088,6 +1106,7 @@ export default class Underworld {
     globalThis.attentionMarkers = [];
     globalThis.resMarkers = [];
     globalThis.numberOfHotseatPlayers = 1;
+    forceMoveResolver = undefined;
 
     // Remove game-over popup
     document.body.classList.toggle('game-over', false);
@@ -2274,6 +2293,25 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     this.syncTurnMessage();
     // Update unit health / mana bars, etc
     await runPredictions(this);
+
+    // Quicksave at the beginning of player's turn
+    // Check globalThis.player.isSpawned to prevent quicksaving an invalid underworld file
+    if (globalThis.save && globalThis.player && globalThis.player.isSpawned) {
+      // For now, only save if in a singleplayer game (as determined by solomode_client_id)
+      // because save support hasn't been added to multiplayer yet
+      if (isSinglePlayer(globalThis.player.clientId)) {
+        console.info(`Dev: quick saving game as "${globalThis.quicksaveKey}"`);
+        // Force overwrite for quicksave, never prompt "are you sure?" when auto saving a quicksave
+        globalThis.save(globalThis.quicksaveKey, true);
+      }
+    }
+
+    // If there was an attempted save during the enemy turn, save now
+    // that the player's turn has started
+    if (globalThis.saveASAP && globalThis.save) {
+      globalThis.save(globalThis.saveASAP);
+    }
+
   }
   // Sends a network message to end turn
   async endMyTurn() {
@@ -2284,16 +2322,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
       // Turns can only be manually ended during the PlayerTurns phase
       if (this.isMyTurn()) {
-        // Check globalThis.player.isSpawned to prevent quicksaving an invalid underworld file
-        if (globalThis.save && globalThis.player.isSpawned) {
-          // For now, only save if in a singleplayer game (as determined by solomode_client_id)
-          // because save support hasn't been added to multiplayer yet
-          if (isSinglePlayer(globalThis.player.clientId)) {
-            console.info(`Dev: quick saving game as "${globalThis.quicksaveKey}"`);
-            // Force overwrite for quicksave, never prompt "are you sure?" when auto saving a quicksave
-            globalThis.save(globalThis.quicksaveKey, true);
-          }
-        }
         let affirm = true
         // Interrupt endTurn with a cancellable prompt IF
         // player hasn't already ended their turn (note if they already HAVE ended their turn, just allow the END_TURN message to go through; this
@@ -3866,13 +3894,15 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   // are removed
   serializeForSaving(): IUnderworldSerialized {
     const { pie, overworld, random, players, units, pickups, walls, pathingPolygons, liquidSprites,
-      unitsPrediction, pickupsPrediction, doodadsPrediction, particleFollowers, ...rest } = this;
+      unitsPrediction, pickupsPrediction, doodadsPrediction, particleFollowers, forceMove, ...rest } = this;
     return {
       ...rest,
       // isRestarting is an id for SetTimeout and cannot be serialized
       isRestarting: undefined,
       // simulatingMovePredictions should never be serialized, it is only for a running instance to keep track of if the simulateRunForceMovePredictions is running
       simulatingMovePredictions: false,
+      // forceMove should never be serialized
+      forceMove: [],
       players: this.players.map(Player.serialize),
       units: this.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
       pickups: this.pickups.filter(p => !p.flaggedForRemoval).map(Pickup.serialize),
@@ -4127,3 +4157,4 @@ const mergeMap = {
   [BLOOD_ARCHER_ID]: DARK_PRIEST_ID
 
 }
+let forceMoveResolver: undefined | ((value: void | PromiseLike<void>) => void);

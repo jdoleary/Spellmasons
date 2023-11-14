@@ -455,12 +455,12 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
 
             // Trigger mouse move so that predictions will run when the position of your own player changes since
             // this could change prediction results
-            if (runPredictionsIdleCallbackId !== undefined) {
-              cancelIdleCallback(runPredictionsIdleCallbackId);
-            }
-            runPredictionsIdleCallbackId = requestIdleCallback(() => {
-              runPredictions(underworld);
-            })
+            // if (runPredictionsIdleCallbackId !== undefined) {
+            //   cancelIdleCallback(runPredictionsIdleCallbackId);
+            // }
+            // runPredictionsIdleCallbackId = requestIdleCallback(() => {
+            runPredictions(underworld);
+            // })
 
             // Send current player movements to server
             sendMovePlayer(underworld);

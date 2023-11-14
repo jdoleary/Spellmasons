@@ -60,6 +60,8 @@ export type IPickup = HasSpace & {
   // Determines if the pickup will trigger for a given unit
   willTrigger: IPickupWillTrigger;
   emitter?: JEmitter;
+  // Identifier for serailized emitter
+  emitterJID?: string;
   flaggedForRemoval: boolean;
 
 }
@@ -344,10 +346,8 @@ export function load(pickup: IPickupSerialized, underworld: Underworld, predicti
     if (!prediction) {
       addText(newPickup);
     }
-    // @ts-ignore: jid custom property for serialization
     if (newPickup.emitter && newPickup.emitterJID) {
-      // @ts-ignore: jid custom property for serialization
-      assignEmitter(newPickup, newPickup.emitterJID);
+      assignEmitter(newPickup, newPickup.emitterJID, prediction, underworld);
     }
     return newPickup;
   } else {

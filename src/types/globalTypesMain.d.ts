@@ -268,4 +268,6 @@ declare global {
     var adminPickMageType: boolean | undefined;
     // A list of upgrades to omit for the next reroll
     var rerollOmit: string[] | undefined;
+    // Will save the game as soon as possible with the name stored in this string
+    var saveASAP: string | undefined;
 }

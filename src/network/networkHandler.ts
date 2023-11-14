@@ -326,7 +326,7 @@ export function processNextInQueueIfReady(overworld: Overworld) {
   // If game is ready to process messages, begin processing
   // (if not, they will remain in the queue until the game is ready)
   messageQueue.processNextInQueue(onDataQueueContainer, d => handleOnDataMessage(d, overworld).catch(e => {
-    console.error('Handled: error in handleOnDataMessage:', e);
+    console.error('Handled: error in handleOnDataMessage:', e.message, e.stack);
   }));
 }
 function logHandleOnDataMessage(type: MESSAGE_TYPES, payload: any, fromClient: string, underworld: Underworld) {
@@ -1089,11 +1089,13 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       console.error(err);
       return err;
     }
+    // Wait till existing forceMoves are complete to save
+    await underworld.awaitForceMoves()
     if (underworld.turn_phase != turn_phase.PlayerTurns) {
-      const err = 'Error: You may only save during your turn.';
-      console.error(err);
-      return err;
+      globalThis.saveASAP = title;
+      return 'Game will be saved at the start of your next turn.';
     }
+
     // Prompt overwrite, don't allow for saving multiple saves with the same name
     if (getAllSaveFiles && !forceOverwrite) {
 
@@ -1119,6 +1121,9 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       }
     }
 
+    if (underworld.forceMove.length) {
+      console.error('Attempting to save before resolving all forceMoves');
+    }
     const saveObject = {
       version: globalThis.SPELLMASONS_PACKAGE_VERSION,
       underworld: underworld.serializeForSaving(),
@@ -1134,14 +1139,12 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
         globalThis.savePrefix + title,
         JSON.stringify(saveObject),
       );
+      // Successful save should clear saveASAP
+      globalThis.saveASAP = undefined;
       // Empty string means "No error, save successful"
       return '';
     } catch (e) {
-      try {
-        console.error('Failed to save', stringify(saveObject));
-      } catch (e2) {
-        console.error(e2);
-      }
+      console.error(e);
       return 'Failed to save';
     }
   };
