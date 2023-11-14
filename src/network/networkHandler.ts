@@ -1090,7 +1090,7 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       return err;
     }
     // Wait till existing forceMoves are complete to save
-    await underworld.awaitForceMoves
+    await underworld.awaitForceMoves()
     if (underworld.turn_phase != turn_phase.PlayerTurns) {
       globalThis.saveASAP = title;
       return 'Game will be saved at the start of your next turn.';
