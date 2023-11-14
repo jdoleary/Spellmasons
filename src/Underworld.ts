@@ -462,11 +462,18 @@ export default class Underworld {
   // Returns true if there is more processing yet to be done on the next
   // gameloop
   gameLoopForceMove = () => {
+    // No need to process if there are no instances to process
+    if (!this.forceMove.length) {
+      return false;
+    }
     if (!this.forceMovePromise) {
+      // If there is no forceMovePromise, create a new one,
+      // it will resolve when the current forceMove instances
+      // have finished; so anything that needs to await the
+      // forceMove instances can raceTimeout this.forceMovePromise
       this.forceMovePromise = new Promise(res => {
         forceMoveResolver = res;
-      })
-
+      });
     }
     // Optimization cache blood whenever the blood smear particles get over a certain number
     // to prevent slowdown
@@ -522,12 +529,20 @@ export default class Underworld {
       }
     }
     const finishedForceMoves = this.forceMove.length == 0;
-    if (finishedForceMoves && forceMoveResolver) {
-      forceMoveResolver();
-      // Clear the resolver now that it has been used
+    if (finishedForceMoves) {
+      // Force moves have finished, resolve the promise and clear it
+      // so that new forceMoves can have a new promise that other parts
+      // of the code can await
+      if (forceMoveResolver) {
+        forceMoveResolver();
+      } else {
+        console.error('Unexpected: Finished forceMoves but forceMoveResolver is undefined');
+      }
+      // Clear the promise and resolver now that it has resolved
       forceMoveResolver = undefined;
+      this.forceMovePromise = undefined;
     }
-    return finishedForceMoves;
+    return !finishedForceMoves;
   }
   // returns true if there is more processing yet to be done on the next game loop
   gameLoopUnit = (u: Unit.IUnit, aliveNPCs: Unit.IUnit[], deltaTime: number): boolean => {
