@@ -2104,7 +2104,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // Decrement card usage counts,
       // This makes spells less expensive
       for (let p of this.players) {
-        for (let cardId of p.cards) {
+        for (let cardId of p.inventory) {
           // Decrement, cap at 0
           const cardUsage = p.cardUsageCounts[cardId];
           if (cardUsage !== undefined) {

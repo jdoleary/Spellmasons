@@ -4,8 +4,6 @@
 - DigitalVaporeon / Zed9876: Squid enemy that lives in liquid
 
 for example: an enemy that has a tough outer shell. Direct damage is reduced, but blunt force damage is a crit (i.e. pushing into a wall) and perhaps this enemy is slow, and is thus more susceptible to drowning
-- BUG: top priority, summon spells in the inventory don't reduce in cost unless you put them in the hotbar.
-    - Credit: Matt_97
 - Idea: enemy that only takes damage while in liquid
     - DigitalVaporeon
 - Add a new kind of resource (that isn't mana) that certain powerful spells use (such as targeting spells and resurrect)
