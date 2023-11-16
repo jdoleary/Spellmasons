@@ -657,7 +657,7 @@ export default class Underworld {
       while (moreProcessingToBeDone) {
         loopCount++;
         moreProcessingToBeDone = this._gameLoopHeadless();
-        if (loopCount >= 1000 && loopCount % 500 == 0) {
+        if (loopCount >= 1000 && loopCount % 2000 == 0) {
           console.error('Headless gameloop unexpectedly large loop count:', loopCount);
         }
         if (loopCount > 10000) {
