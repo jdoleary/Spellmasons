@@ -553,7 +553,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       break;
     case MESSAGE_TYPES.PLAYER_CARDS:
       if (fromPlayer) {
-        fromPlayer.cards = payload.cards;
+        fromPlayer.cardsInToolbar = payload.cards;
       } else {
         console.error('No fromPlayer to set card order on')
       }

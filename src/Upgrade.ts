@@ -53,7 +53,7 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
     && (u.replaces ? u.replaces.every(title => player.upgrades.find(u => u.title == title)) : true)
     // Now that upgrades are cards too, make sure it doesn't
     // show upgrades that the player already has as cards
-    && !player.cards.includes(u.title)
+    && !player.inventory.includes(u.title)
     // Upgrade is NOT included in list of rerollOmit
     // this prevents a reroll from presenting an upgrade
     // that was in the last selection
@@ -91,7 +91,7 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
   // cards it is unique.
   // Note: Only count non-empty card spaces
   const playerUniqueIdentifier = globalThis.numberOfHotseatPlayers > 1 ? player.name : player.clientId;
-  const rSeed = `${underworld.seed}-${playerUniqueIdentifier}-${player.reroll}-${player.cards.filter(x => !!x).length}`;
+  const rSeed = `${underworld.seed}-${playerUniqueIdentifier}-${player.reroll}-${player.cardsInToolbar.filter(x => !!x).length}`;
   const random = seedrandom(rSeed);
   for (
     let i = 0;
