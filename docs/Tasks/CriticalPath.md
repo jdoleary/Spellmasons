@@ -1,4 +1,36 @@
 # Critical Path
+## 1.24
+- Zed: essentially what i'm saying is scaling the health of enemies doesn't really solve the issue, providing enemies/arenas that have unique mechanics or resistances will.
+- DigitalVaporeon / Zed9876: Squid enemy that lives in liquid
+
+for example: an enemy that has a tough outer shell. Direct damage is reduced, but blunt force damage is a crit (i.e. pushing into a wall) and perhaps this enemy is slow, and is thus more susceptible to drowning
+- BUG: top priority, summon spells in the inventory don't reduce in cost unless you put them in the hotbar.
+    - Credit: Matt_97
+- Idea: enemy that only takes damage while in liquid
+    - DigitalVaporeon
+- Add a new kind of resource (that isn't mana) that certain powerful spells use (such as targeting spells and resurrect)
+- "onData queue stuck on message" - improve logs
+- Soul Muncher
+    - Timemason: More max mana but it drains over time (rewards you to act quickly)
+    - Fix: Connect targets Urns
+- some levels start with no enemies
+- Idea: monster that grows stronger over time
+- fix pickup created with duplicate id
+---
+- Outreach: try a non gmail email address
+    - Look into line tracking
+    - Try instagram
+    - Look into indieboost?
+    - NorthernLion outreach recommendations
+        - Include the game key
+            - don't do "interest checks" just send the key
+        - Be brief
+        - Explain your game's value
+            - why is it entertaining to watch
+- Check bug reports in discord for missed messages
+- BUG: Red portals are now invisible
+- Matt_97 — Today at 4:14 AM
+In the newest version, most summons that cost more than 150 mana never return to their original mana cost. They permanently remain at the higher mana cost.
 - On multiplayer I had slash and heavy slash and slash came back into my hand but not my inventory after a sync
     - it was "target cone" and "heavy slash" and now it's "cone", "slash", "heavy slash", "slow"
 - can I still do F12 on electron??
@@ -16,15 +48,11 @@ might be tied to priest summoning some units since they are always there when I 
 
 pretty sure its unintended for units to no-clip to reach a target. 
 - Go over TonyFTW's comments more closely: https://discord.com/channels/1032294536640200766/1166111911260205107/1173994432912171059
-- Matt_97 — Today at 4:14 AM
-In the newest version, most summons that cost more than 150 mana never return to their original mana cost. They permanently remain at the higher mana cost.
-- some levels start with no enemies
 - can I still do F12 on electron??
     - Still can't and it makes the esc key stop working
 - bug: if you save while a spell is casting it gives you your mana back
     - unreproduced
 - bug: menu-UI; I still get "unable to connect" doesn't clear even after you connect in multiplayer
-- Idea: monster that grows stronger over time
 - Bug: in multiplayer if you die and an ally npc kills enemies and you choose your class you get to choose your class again the next level
 
 - Bug: Stamina bar number moves while moving but the bar itself doesn't
