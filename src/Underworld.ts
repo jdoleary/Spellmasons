@@ -1955,7 +1955,9 @@ export default class Underworld {
     const playerFactions = this.players.map(p => p.unit.faction);
     // Game is over once ALL units on player factions are dead (this includes player units)
     // so long as there are some players in the game.
-    const isAllyNPCAlive = this.units.filter(u => u.unitType == UnitType.AI && playerFactions.includes(u.faction)).some(u => u.alive);
+    // Note: Must exclude doodads and npcs with 0 stamina because neither will be able to fight to complete the level
+    // on the player's behalf
+    const isAllyNPCAlive = this.units.filter(u => u.unitType == UnitType.AI && playerFactions.includes(u.faction) && u.unitSubType !== UnitSubType.DOODAD).some(u => u.alive && u.stamina > 0);
     // Note: unspawned players still own an "alive" unit
     const isConnectedPlayerAlive = this.players.filter(p => p.clientConnected && p.unit.alive).some(p => p.unit.alive)
     return this.players.length !== 0 && !isConnectedPlayerAlive && !isAllyNPCAlive;
