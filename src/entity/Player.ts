@@ -70,7 +70,7 @@ export interface IPlayer {
   awaitingSpawn: boolean,
   isSpawned: boolean;
   // The spells that the player has on their toolbar
-  cards: string[];
+  cardsInToolbar: string[];
   // The spells that the player has in their inventory
   inventory: string[];
   // The spells and perks that a player has chosen
@@ -193,7 +193,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
     awaitingSpawn: false,
     isSpawned: false,
     // *3 for all card containers including floating card containers
-    cards: Array(config.NUMBER_OF_TOOLBAR_SLOTS * 3).fill(''),
+    cardsInToolbar: Array(config.NUMBER_OF_TOOLBAR_SLOTS * 3).fill(''),
     inventory: [],
     cardUsageCounts: {},
     upgrades: [],
@@ -560,7 +560,7 @@ export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | u
     if (card.replaces) {
       // Replace all replaced cards with new card
       for (let removeCardId of card.replaces) {
-        player.cards = player.cards.map(cid => {
+        player.cardsInToolbar = player.cardsInToolbar.map(cid => {
           if (!cid) {
             return cid;
           }
@@ -575,10 +575,10 @@ export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | u
     }
     player.inventory.push(card.id);
     if (!didReplace) {
-      const emptySlotIndex = player.cards.indexOf('');
+      const emptySlotIndex = player.cardsInToolbar.indexOf('');
       // Add the spell to the toolbar
       if (emptySlotIndex !== -1 && emptySlotIndex < 9) {
-        player.cards[emptySlotIndex] = card.id;
+        player.cardsInToolbar[emptySlotIndex] = card.id;
       }
     }
     CardUI.recalcPositionForCards(player, underworld);
@@ -629,7 +629,7 @@ export function setSpellmasonsToChannellingAnimation(player: IPlayer) {
 }
 // This function fully deletes the cards from the player's hand
 export function removeCardsFromHand(player: IPlayer, cards: string[], underworld: Underworld) {
-  player.cards = player.cards.filter(c => !cards.includes(c));
+  player.cardsInToolbar = player.cardsInToolbar.filter(c => !cards.includes(c));
   // Remove any selected cards with a name in the cards array of this function
   for (let card of cards) {
     document.querySelectorAll(`#selected-cards .card[data-card-id="${card}"]`).forEach(el => {

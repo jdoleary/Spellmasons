@@ -309,8 +309,7 @@ function handleOnDataMessageSyncronously(d: OnDataArgs, overworld: Overworld) {
     const cachedQueue = JSON.stringify(onDataQueueContainer.queue.slice(0, arbitraryQueueStuckLimit));
     setTimeout(() => {
       if (cachedQueue == JSON.stringify(onDataQueueContainer.queue.slice(0, arbitraryQueueStuckLimit))) {
-        console.log("onData queue: growing unusually large", MESSAGE_TYPES[currentlyProcessingOnDataMessage.payload.type], JSON.stringify(currentlyProcessingOnDataMessage), '\nPayload Types:', onDataQueueContainer.queue.map(x => MESSAGE_TYPES[x.payload.type]));
-        console.error("onData queue stuck on message");
+        console.error("onData queue: growing unusually large", MESSAGE_TYPES[currentlyProcessingOnDataMessage.payload.type], JSON.stringify(currentlyProcessingOnDataMessage), '\nPayload Types:', onDataQueueContainer.queue.map(x => MESSAGE_TYPES[x.payload.type]));
       } else {
         console.log('onData queue: Thought there might be a stuck queue but it resolved itself', cachedQueue, JSON.stringify(onDataQueueContainer.queue.slice(0, arbitraryQueueStuckLimit)));
       }
@@ -326,7 +325,11 @@ export function processNextInQueueIfReady(overworld: Overworld) {
   // If game is ready to process messages, begin processing
   // (if not, they will remain in the queue until the game is ready)
   messageQueue.processNextInQueue(onDataQueueContainer, d => handleOnDataMessage(d, overworld).catch(e => {
-    console.error('Handled: error in handleOnDataMessage:', e.message, e.stack);
+    if (e) {
+      console.error('Handled: error in handleOnDataMessage:', e.message, e.stack);
+    } else {
+      console.error('Handled: undefined error in handleOnDataMessage');
+    }
   }));
 }
 function logHandleOnDataMessage(type: MESSAGE_TYPES, payload: any, fromClient: string, underworld: Underworld) {
@@ -549,7 +552,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       break;
     case MESSAGE_TYPES.PLAYER_CARDS:
       if (fromPlayer) {
-        fromPlayer.cards = payload.cards;
+        fromPlayer.cardsInToolbar = payload.cards;
       } else {
         console.error('No fromPlayer to set card order on')
       }

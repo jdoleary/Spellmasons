@@ -66,7 +66,7 @@ const deleteCardFromSlot = (ev: any, overworld: Overworld) => {
   if (startDragCardIndex !== -1) {
     if (globalThis.player) {
       console.log('UI: delete card from slot', startDragCardIndex);
-      globalThis.player.cards[startDragCardIndex] = '';
+      globalThis.player.cardsInToolbar[startDragCardIndex] = '';
       if (overworld.underworld) {
         recalcPositionForCards(globalThis.player, overworld.underworld);
         syncInventory(undefined, overworld.underworld);
@@ -104,17 +104,17 @@ const drop = (ev: any, overworld: Overworld, startIndex: number) => {
     if (startDragCardIndex !== -1) {
       // Then the drag card is already in the toolbar and this is a swap between
       // two cards on the toolbar
-      const swapCard = globalThis.player.cards[dropIndex] || "";
-      globalThis.player.cards[dropIndex] = cardId;
-      globalThis.player.cards[startDragCardIndex] = swapCard;
+      const swapCard = globalThis.player.cardsInToolbar[dropIndex] || "";
+      globalThis.player.cardsInToolbar[dropIndex] = cardId;
+      globalThis.player.cardsInToolbar[startDragCardIndex] = swapCard;
     } else {
       // else a card is being dragged in from inventory
-      globalThis.player.cards[dropIndex] = cardId;
+      globalThis.player.cardsInToolbar[dropIndex] = cardId;
     }
     // Send new card order to server 
     overworld.pie.sendData({
       type: MESSAGE_TYPES.PLAYER_CARDS,
-      cards: globalThis.player.cards,
+      cards: globalThis.player.cardsInToolbar,
     });
     if (overworld.underworld) {
       recalcPositionForCards(globalThis.player, overworld.underworld);
@@ -285,7 +285,7 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined, under
   // Reconcile the elements with the player's hand
   // *3: for extra toolbar slots
   for (let slotIndex = 0; slotIndex < NUMBER_OF_TOOLBAR_SLOTS * 3; slotIndex++) {
-    const cardId = player.cards[slotIndex];
+    const cardId = player.cardsInToolbar[slotIndex];
     const container = cardContainers[Math.floor(slotIndex / NUMBER_OF_TOOLBAR_SLOTS)];
     if (container) {
 
@@ -385,7 +385,7 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
         if (slotModifyingIndex !== undefined) {
           elCard.addEventListener('click', (e) => {
             if (globalThis.player) {
-              globalThis.player.cards[slotModifyingIndex] = inventoryCardId;
+              globalThis.player.cardsInToolbar[slotModifyingIndex] = inventoryCardId;
               recalcPositionForCards(globalThis.player, underworld)
               // Close inventory
               toggleInventory(undefined, false, underworld);
@@ -398,7 +398,7 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
         // When the user clicks on a card
         addListenersToCardElement(globalThis.player, elCard, card.id, underworld);
         // Show that card is already on toolbar
-        if (globalThis.player.cards.includes(inventoryCardId)) {
+        if (globalThis.player.cardsInToolbar.includes(inventoryCardId)) {
           elCard.classList.add('inToolbar');
         }
         const elCategory = elInvContent.querySelector(`.category[data-category="${CardCategory[card.category]}"]`)
@@ -420,7 +420,7 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
         elInvContent.appendChild(elClearSlotModifiyingIndex);
         elClearSlotModifiyingIndex.addEventListener('click', () => {
           if (globalThis.player && slotModifyingIndex !== undefined) {
-            globalThis.player.cards[slotModifyingIndex] = '';
+            globalThis.player.cardsInToolbar[slotModifyingIndex] = '';
             recalcPositionForCards(globalThis.player, underworld);
             toggleInventory(undefined, false, underworld);
           }
