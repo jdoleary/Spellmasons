@@ -1,3 +1,9 @@
+## Spellmasons Update v1.23.4
+fix: Spell predictions not working or being unreliable
+
+fix: Server incorrectly calculating movements from movement spells
+or explosions
+
 ## Spellmasons Update v1.23.0
 content: Tweak arrow upgrade spell cost and rarity
 content: Add arrow spells
