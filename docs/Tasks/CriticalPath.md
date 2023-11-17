@@ -1,4 +1,5 @@
 # Critical Path
+- bug: if a blast pushes you through a portal and also levels you up it will show you the upgrade screen while the cinematic is playing and if you reroll during the cinematic the upgrades just go away
 ## 1.24
 - Zed: essentially what i'm saying is scaling the health of enemies doesn't really solve the issue, providing enemies/arenas that have unique mechanics or resistances will.
 - DigitalVaporeon / Zed9876: Squid enemy that lives in liquid

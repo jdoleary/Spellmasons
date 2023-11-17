@@ -4,8 +4,14 @@ an urn and then died
 
 fix: Cards in your inventory not decrementing in cost
 when your turn ended
-
 Thanks Matt_97 for help debugging this
+
+fix: Resurrect Weak sometimes leaving enemy health and mana
+at non-whole numbers
+
+fix: Upgrade random number generator when you get multiple
+upgrades on one level from showing the same upgrades
+
 ## Spellmasons Update v1.23.4
 fix: Spell predictions not working or being unreliable
 
