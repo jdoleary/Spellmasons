@@ -91,7 +91,7 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
   // cards it is unique.
   // Note: Only count non-empty card spaces
   const playerUniqueIdentifier = globalThis.numberOfHotseatPlayers > 1 ? player.name : player.clientId;
-  const rSeed = `${underworld.seed}-${playerUniqueIdentifier}-${player.reroll}-${player.cardsInToolbar.filter(x => !!x).length}`;
+  const rSeed = `${underworld.seed}-${playerUniqueIdentifier}-${player.reroll}-${player.inventory.filter(x => !!x).length}`;
   const random = seedrandom(rSeed);
   for (
     let i = 0;
