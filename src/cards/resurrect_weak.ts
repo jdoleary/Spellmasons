@@ -44,8 +44,8 @@ const spell: Spell = {
 
           resurrectedUnitCount++;
           makeRisingParticles(unit, prediction);
-          unit.health = unit.healthMax * resStatAmount;
-          unit.mana = unit.manaMax * resStatAmount;
+          unit.health = Math.round(unit.healthMax * resStatAmount);
+          unit.mana = Math.round(unit.manaMax * resStatAmount);
           Unit.changeFaction(unit, state.casterUnit.faction);
           // Resurrect animation is the die animation played backwards
           animationPromises.push(Unit.playAnimation(unit, unit.animations.die, { loop: false, animationSpeed: -0.2 }));
