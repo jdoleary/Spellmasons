@@ -1,3 +1,11 @@
+## Spellmasons Update v1.23.5
+fix: Infinite server loop that occurred after you summoned
+an urn and then died
+
+fix: Cards in your inventory not decrementing in cost
+when your turn ended
+
+Thanks Matt_97 for help debugging this
 ## Spellmasons Update v1.23.4
 fix: Spell predictions not working or being unreliable
 
