@@ -2405,7 +2405,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
       // If all enemies are dead, make dead, non portaled players portal
       // so the game can continue
-      const allEnemiesAreDead = this.units.filter(u => u.faction == Faction.ENEMY).every(u => !u.alive);
+      const allEnemiesAreDead = this.units.filter(u => u.faction == Faction.ENEMY && u.unitSubType !== UnitSubType.DOODAD).every(u => !u.alive);
       const deadNonPortaledPlayers = this.players.filter(p => !Player.inPortal(p) && !p.unit.alive);
       if (allEnemiesAreDead) {
         console.log('Make dead, non-portaled players enter portal');
