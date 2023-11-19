@@ -793,6 +793,10 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   if (!prediction && unit.originalLife && unit.faction !== globalThis.player?.unit.faction) {
     underworld.reportEnemyKilled(unit);
   }
+  if (unit.originalLife && unit.faction == Faction.ENEMY) {
+    // Reset kill switch since the allies are making progress
+    underworld.allyNPCAttemptWinKillSwitch = 0;
+  }
   // Once a unit dies it is no longer on it's originalLife
   unit.originalLife = false;
   // For the bossmason level, if there is only 1 bossmason, when it dies, spawn 3 more:

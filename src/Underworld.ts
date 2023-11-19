@@ -209,6 +209,12 @@ export default class Underworld {
   generatingLevel: boolean = false;
   statCalamities: StatCalamity[] = [];
   simulatingMovePredictions: boolean = false;
+  // This counter is a kill switch to ensure that the game doesn't get into a state
+  // where it's ally npcs fighting enemy npcs and neither is able to progress
+  // (for any reason, maybe everyone got slowed to the point where everyone's max
+  // stamina is 0) which would result in the server binding up in infinite loops of 
+  // AI turns.
+  allyNPCAttemptWinKillSwitch: number = 0;
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
@@ -1770,6 +1776,9 @@ export default class Underworld {
     for (let p of this.players) {
       p.cardUsageCounts = {};
     }
+
+    // Reset kill switch
+    this.allyNPCAttemptWinKillSwitch = 0;
   }
   postSetupLevel() {
     document.body?.classList.toggle('loading', false);
@@ -1957,9 +1966,13 @@ export default class Underworld {
     // so long as there are some players in the game.
     // Note: Must exclude doodads because neither will be able to fight to complete the level
     // on the player's behalf
-    const isAllyNPCAlive = this.units.filter(u => u.unitType == UnitType.AI && playerFactions.includes(u.faction) && u.unitSubType !== UnitSubType.DOODAD).some(u => u.alive);
+    const useKillSwitch = this.allyNPCAttemptWinKillSwitch > 50;
+    const isAllyNPCAlive = !useKillSwitch && this.units.filter(u => u.unitType == UnitType.AI && playerFactions.includes(u.faction) && u.unitSubType !== UnitSubType.DOODAD).some(u => u.alive);
     // Note: unspawned players still own an "alive" unit
     const isConnectedPlayerAlive = this.players.filter(p => p.clientConnected && p.unit.alive).some(p => p.unit.alive)
+    if (useKillSwitch) {
+      console.error('WARN: Used Ally NPC win attempt kill switch to cause game over.  The ally npcs did not make any progress after a set number of turns.  This prevents an infinite loop.');
+    }
     return this.players.length !== 0 && !isConnectedPlayerAlive && !isAllyNPCAlive;
   }
   updateGameOverModal() {
@@ -2990,6 +3003,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           const t0 = performance.now()
           // Only execute turn if there are units to take the turn:
           if (this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ALLY && u.alive).length) {
+            // Count the number of ally turns
+            this.allyNPCAttemptWinKillSwitch++;
             // Run AI unit actions
             await this.executeNPCTurn(Faction.ALLY);
           } else {
