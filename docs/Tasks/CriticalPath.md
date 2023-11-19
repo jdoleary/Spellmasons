@@ -1,4 +1,12 @@
 # Critical Path
+- Skillo — Yesterday at 3:48 PM
+Theres some strange thing with early enemy placements it seems
+i just had one where first level had no enemies, as soon as i deployed the portal showed up
+and then level 2 had whooping 5 enemies
+which is kinda problematic since early levels are very cramped and you have little options, don't recall seeing that many lol
+- Idea: Target Injured Enemies spell
+- Bug: you can't cast a spell that will kill you and then resurrect yourself anymore
+- In multiplayer if you spawn in someone else's portal it goes away and you have to end your turn twice for it to come back
 - bug: if a blast pushes you through a portal and also levels you up it will show you the upgrade screen while the cinematic is playing and if you reroll during the cinematic the upgrades just go away
 ## 1.24
 - Zed: essentially what i'm saying is scaling the health of enemies doesn't really solve the issue, providing enemies/arenas that have unique mechanics or resistances will.

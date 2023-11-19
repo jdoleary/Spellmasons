@@ -1,3 +1,5 @@
+- RyanP 
+    - Stealth should be an option, all enemies always know where you are
 - Coaldust Numbers — Yesterday at 2:53 PM
 I would like to be able to shove bottles, barrels, and enemies through portals.  I believe shoving other players through already works, but if not, add that too please.  I would also like to have a spell component that can create connected pairs of portals that last a few turns.
 - Skillo — Yesterday at 10:28 AM honestly compared to ressurrect and how deadly damaging spells are, i would say that even applying a debuff on enemies which will capture their soul if they die, would be balanced. (so no hp threshold and better for multi targeting)

@@ -22,8 +22,6 @@
 - Test hosting LAN server from Electron build
 - Test that F12 works in electron build
 - Merge master branch to keep it up to date
-### 1.23
-- card size on smaller screens
 
 # Release protocal
 - QA: 1:44
