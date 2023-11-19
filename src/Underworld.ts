@@ -3000,7 +3000,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // Clear enemy attentionMarkers since it's now their turn
           globalThis.attentionMarkers = [];
           await this.redPortalBehavior(Faction.ALLY);
-          const t0 = performance.now()
           // Only execute turn if there are units to take the turn:
           if (this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ALLY && u.alive).length) {
             // Count the number of ally turns
@@ -3010,8 +3009,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           } else {
             console.log('Turn Management: Skipping executingNPCTurn for Faction.ALLY');
           }
-          const t1 = performance.now();
-          console.log('jtest', t1 - t0)
           // At the end of their turn, deal damage if still in liquid
           for (let unit of this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ALLY)) {
             if (unit.inLiquid && unit.alive) {

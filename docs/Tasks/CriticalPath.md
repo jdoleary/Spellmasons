@@ -1,4 +1,5 @@
 # Critical Path
+- LeoninoMalino: Mage type selection ui is cropped on some screens (steam community)
 - Idea: Target Injured Enemies spell
 - Bug: you can't cast a spell that will kill you and then resurrect yourself anymore
 - In multiplayer if you spawn in someone else's portal it goes away and you have to end your turn twice for it to come back
