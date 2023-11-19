@@ -4029,10 +4029,10 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
   const unitTypes = Array(numberOfTypesOfEnemies).fill(null)
     // flatMap is used to remove any undefineds
     .flatMap(() => {
-      const chosenUnitType = chooseObjectWithProbability(possibleUnitsToChoose, underworld.random)
+      const chosenUnitType = chooseObjectWithProbability(possibleUnitsToChoose, underworld.random);
       // Remove chosen Unit type from pick source
       if (chosenUnitType) {
-        possibleUnitsToChoose = possibleUnitsToChoose.filter(u => u.id !== chosenUnitType.id)
+        possibleUnitsToChoose = possibleUnitsToChoose.filter(u => u.id !== chosenUnitType.id);
         return [chosenUnitType]
       }
       return [];
@@ -4084,7 +4084,7 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
       // mostly an expensive unit)
       // and never let one unit type have more instances than the levelIndex (this prevents
       // late game levels with a huge budget from having an absurd amount of cheap units)
-      const maxNumberOfThisUnit = Math.min(levelIndex, Math.floor(totalBudget * 0.7 / chosenUnitType.budgetCost));
+      const maxNumberOfThisUnit = Math.min(Math.max(levelIndex, 1), Math.floor(totalBudget * 0.7 / chosenUnitType.budgetCost));
       const howMany = randInt(1, maxNumberOfThisUnit, underworld.random);
       for (let i = 0; i < howMany; i++) {
         units.push(chosenUnitType.id);

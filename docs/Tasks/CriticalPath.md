@@ -1,9 +1,4 @@
 # Critical Path
-- Skillo — Yesterday at 3:48 PM
-Theres some strange thing with early enemy placements it seems
-i just had one where first level had no enemies, as soon as i deployed the portal showed up
-and then level 2 had whooping 5 enemies
-which is kinda problematic since early levels are very cramped and you have little options, don't recall seeing that many lol
 - Idea: Target Injured Enemies spell
 - Bug: you can't cast a spell that will kill you and then resurrect yourself anymore
 - In multiplayer if you spawn in someone else's portal it goes away and you have to end your turn twice for it to come back
