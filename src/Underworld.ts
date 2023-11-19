@@ -1955,9 +1955,9 @@ export default class Underworld {
     const playerFactions = this.players.map(p => p.unit.faction);
     // Game is over once ALL units on player factions are dead (this includes player units)
     // so long as there are some players in the game.
-    // Note: Must exclude doodads and npcs with 0 stamina because neither will be able to fight to complete the level
+    // Note: Must exclude doodads because neither will be able to fight to complete the level
     // on the player's behalf
-    const isAllyNPCAlive = this.units.filter(u => u.unitType == UnitType.AI && playerFactions.includes(u.faction) && u.unitSubType !== UnitSubType.DOODAD).some(u => u.alive && u.stamina > 0);
+    const isAllyNPCAlive = this.units.filter(u => u.unitType == UnitType.AI && playerFactions.includes(u.faction) && u.unitSubType !== UnitSubType.DOODAD).some(u => u.alive);
     // Note: unspawned players still own an "alive" unit
     const isConnectedPlayerAlive = this.players.filter(p => p.clientConnected && p.unit.alive).some(p => p.unit.alive)
     return this.players.length !== 0 && !isConnectedPlayerAlive && !isAllyNPCAlive;
@@ -2987,6 +2987,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // Clear enemy attentionMarkers since it's now their turn
           globalThis.attentionMarkers = [];
           await this.redPortalBehavior(Faction.ALLY);
+          const t0 = performance.now()
           // Only execute turn if there are units to take the turn:
           if (this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ALLY && u.alive).length) {
             // Run AI unit actions
@@ -2994,6 +2995,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           } else {
             console.log('Turn Management: Skipping executingNPCTurn for Faction.ALLY');
           }
+          const t1 = performance.now();
+          console.log('jtest', t1 - t0)
           // At the end of their turn, deal damage if still in liquid
           for (let unit of this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ALLY)) {
             if (unit.inLiquid && unit.alive) {
