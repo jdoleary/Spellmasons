@@ -21,7 +21,8 @@ Sets a trap that does ${Pickup.spike_damage} damage.
             if (pickupSource) {
                 const pickupInst = Pickup.create({
                     pos: state.castLocation,
-                    pickupSource
+                    pickupSource,
+                    logSource: 'trap.ts'
                 }, underworld, prediction);
 
             }

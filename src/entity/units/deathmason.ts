@@ -96,7 +96,7 @@ const unit: UnitSource = {
             }
             // Spawn the portals
             lastPromise = makeManaTrail(unit, coord, underworld, unit.faction == Faction.ENEMY ? '#930e0e' : '#0e0e93', '#ff0000').then(() => {
-              const portal = Pickup.create({ pos: coord, pickupSource: deathmasonPortalPickupSource }, underworld, false);
+              const portal = Pickup.create({ pos: coord, pickupSource: deathmasonPortalPickupSource,logSource:'deathmason' }, underworld, false);
               // @ts-ignore, this flag is necessary to distinguish portals that will spawn units from those that just teleport you
               // It is not a part of the IPickup interface and therefore needs ts-ignore
               portal.doesSpawn = true;
