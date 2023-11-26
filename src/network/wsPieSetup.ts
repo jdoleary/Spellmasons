@@ -66,6 +66,7 @@ function connect_to_wsPie_server(wsUri: string | undefined, overworld: Overworld
         // from a live game, and if the player isn't ready either they haven't readied up in the first place or the
         // backup has already been made because below we set lobbyReady to false after a disconnect.
         if (globalThis.save && globalThis.player?.lobbyReady) {
+          console.error('Client disconnected unintentionally')
           const backupSaveName = `backup ${(overworld.pie as PieClient).currentRoomInfo?.name || ''}`
           globalThis.save(`${Date.now().toString()}-${backupSaveName}`, true).then(errMsg => {
             if (!errMsg) {
