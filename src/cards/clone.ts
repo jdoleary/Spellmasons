@@ -87,7 +87,7 @@ const spell: Spell = {
               if (validSpawnCoords) {
                 let foundPickup = Pickup.pickups.find((p) => p.name == targetName);
                 if (foundPickup) {
-                  const clone = Pickup.create({ pos: target, pickupSource: foundPickup }, underworld, prediction);
+                  const clone = Pickup.create({ pos: target, pickupSource: foundPickup, logSource: 'Clone'}, underworld, prediction);
                   if (clone) {
                     Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
                   }

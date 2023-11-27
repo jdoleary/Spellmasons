@@ -1209,7 +1209,7 @@ export default class Underworld {
   spawnPickup(index: number, coords: Vec2, prediction?: boolean) {
     const pickup = Pickup.pickups[index];
     if (pickup) {
-      Pickup.create({ pos: coords, pickupSource: pickup }, this, !!prediction);
+      Pickup.create({ pos: coords, pickupSource: pickup, logSource:'spawnPickup' }, this, !!prediction);
     } else {
       console.error('Could not find pickup with index', index);
     }
@@ -1831,7 +1831,7 @@ export default class Underworld {
     for (let p of pickups) {
       const pickup = Pickup.pickups[p.index];
       if (pickup) {
-        Pickup.create({ pos: p.coord, pickupSource: pickup }, this, false);
+        Pickup.create({ pos: p.coord, pickupSource: pickup, logSource:'createLevelSyncronous' }, this, false);
       } else {
         console.error('Could not find pickup source with index', p.index);
       }
@@ -3574,7 +3574,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           for (let playerUnit of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
             const portalSpawnLocation = this.findValidSpawn(playerUnit, 4) || playerUnit;
             if (!isOutOfBounds(portalSpawnLocation, this)) {
-              Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup }, this, false);
+              Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup, logSource:'Portal' }, this, false);
             } else {
               // If a pickup is attempted to be spawned for an unspawned player this if check prevents it from being spawned out of bounds
               // and the next invokation of checkIfShouldSpawnPortal will spawn it instead.

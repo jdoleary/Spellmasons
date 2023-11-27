@@ -986,7 +986,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
           return;
         }
         if (pos) {
-          Pickup.create({ pos, pickupSource: p }, overworld.underworld, false);
+          Pickup.create({ pos, pickupSource: p, logSource:'admin' }, overworld.underworld, false);
         }
       },
       supportInMultiplayer: true,

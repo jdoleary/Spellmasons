@@ -100,9 +100,9 @@ let lastPredictionPickupId = 0;
 // Sometimes clients need to call this directly, like if they got
 // pickup info from a sync from the host or loading a pickup
 // or for a prediction pickup
-export function create({ pos, pickupSource, idOverride }:
+export function create({ pos, pickupSource, idOverride, logSource }:
   {
-    pos: Vec2, pickupSource: IPickupSource, idOverride?: number,
+    pos: Vec2, pickupSource: IPickupSource, idOverride?: number, logSource?:string,
   }, underworld: Underworld, prediction: boolean): IPickup {
   const { name, description, imagePath, effect, willTrigger, scale, animationSpeed, playerOnly = false, turnsLeftToGrab } = pickupSource;
   const { x, y } = pos
@@ -124,7 +124,8 @@ export function create({ pos, pickupSource, idOverride }:
     } else {
       console.log('Pickup ids', underworld.pickups.map(p => p.id), id, 'incrementor:', underworld.lastPickupId, 'prediction:', prediction);
     }
-    console.error('Aborting: creating a pickup with duplicate id');
+    console.error('Aborting: creating a pickup with duplicate id.');
+    console.error(`Aborting: creating a pickup with duplicate id. source: ${logSource} idOverride: ${!!idOverride} prediction: ${prediction}`);
     if (duplicatePickup.name != name) {
       console.error('Duplicate pickup is over a different name', duplicatePickup.name, name);
     }
@@ -337,7 +338,12 @@ export function load(pickup: IPickupSerialized, underworld: Underworld, predicti
   // Get the pickup object
   let foundPickup = pickups.find((p) => p.name == pickup.name);
   if (foundPickup) {
-    const { image, ...toCopy } = pickup;
+    const { image, flaggedForRemoval, ...toCopy } = pickup;
+    if(flaggedForRemoval){
+      // Do not create a pickup that has been removed
+      console.error('Attempted to Load a pickup that is flaggedForRemoval');
+      return undefined;
+    }
     const newPickup = create({ pos: pickup, pickupSource: foundPickup, idOverride: pickup.id }, underworld, prediction);
     // Note: It is important here to use Object.assign so that the pickup reference is the SAME ref as is created in the
     // create function because the create function passes that ref to the underworld pickups array.

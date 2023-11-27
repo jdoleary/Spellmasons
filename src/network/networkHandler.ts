@@ -125,7 +125,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         if (pickupSource) {
           console.log('pickups:', underworld.pickups.map(p => `${p.id},${p.name}`), 'pickupId:', pickupId)
           console.error('Attempted to aquire pickup but could not find it in list, creating one to aquire');
-          pickup = Pickup.create({ pos: { x: -1000, y: -1000 }, pickupSource }, underworld, false);
+          pickup = Pickup.create({ pos: { x: -1000, y: -1000 }, pickupSource, logSource:'Aquire_Pickup force create' }, underworld, false);
         } else {
           console.error(`Pickup source not found for name: ${pickupName}`)
         }
@@ -858,7 +858,7 @@ async function handleLoadGameState(payload: {
       }
       const pickup = Pickup.pickups.find(pickupSource => pickupSource.name == p.name);
       if (pickup) {
-        const newPickup = Pickup.create({ pos: { x: p.x, y: p.y }, pickupSource: pickup, idOverride: p.id }, underworld, false);
+        const newPickup = Pickup.create({ pos: { x: p.x, y: p.y }, pickupSource: pickup, idOverride: p.id, logSource: 'handleLoadGameState' }, underworld, false);
         if (newPickup) {
           const { image, ...rest } = p;
           // Override pickup properties such as turnsLeftToGrab
