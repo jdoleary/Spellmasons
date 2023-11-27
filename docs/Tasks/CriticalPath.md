@@ -1,23 +1,35 @@
 # Critical Path
-- LeoninoMalino: Mage type selection ui is cropped on some screens (steam community)
-- Idea: Target Injured Enemies spell
-- Bug: you can't cast a spell that will kill you and then resurrect yourself anymore
-- In multiplayer if you spawn in someone else's portal it goes away and you have to end your turn twice for it to come back
-- bug: if a blast pushes you through a portal and also levels you up it will show you the upgrade screen while the cinematic is playing and if you reroll during the cinematic the upgrades just go away
+## Priority
+- idea: to fix pickup lag in multiplayer, maybe just put a delay on them? or in the message it should say who's going to pick it up so await with a timeout for them to collide?
+- fix logged issues
+    - Aborting: creating a pickup with duplicate id
+    - Player managed to choose an upgrade without being supposed to
+        - Fix summoner capture soul spell not coming back after load?
+- Ghnoyeurghe — Today at 12:04 PM
+    Actually my friends and I had a near identical issue last night, level 12 we had a crash and the two of them when I loaded the save were only able to spawn in as level 1 wizards
+    - Improve rejoining with same name
+- BUG: SOME portals are now invisible (red and blue) (is this due to particle limiting?)
+- Gumby — Today at 3:05 PM
+It doesn't seem to be related to the spells cast, it seems to be more relating to the number of enemies on the screen (the later matches have more enemies). On my PC i click end turn and the end turn button greys out, on my friend's PC he clicks end turn and the end turn button greys out for him, but the AI just doesn't start their turn....... oh and on my screen it looks like my friend hasnt ended their turn, and on my friend's pc it looks like i haven't ended my turn, there is some sync issue with the end turn fucntionality in multiplayer. myabe just start a 60 second timer once any of the players have hit their end turn button or even a last resort 10 minute timer per turn. At least that way there'd be some way of saving the matches when this happens. Or add an auto-save function at the end of every turn, so should this happen we can just quit out, load the last auto-save and come back in again. 
+- Write Callum back
+
+---
+- Follow up with Bebo about art
+- zezeus — Yesterday at 8:38 PM
+Hello, 
+
+Sorry I attempted to record my bug but my recording software leaves up the spellbook for the entirety of the recording
+anyways, more accurately after testing a couple times. Deathmasons just cause major "lag" actions can take multiple minutes to resolve, this is without pressing end turn. This happens every time deathmasons are in my game. Funny enough pressing ESC or alt-tabbing causes the actions to resolve quickly.
+so desync was not the correct term for my single-player issue
+
 ## 1.24
 - Zed: essentially what i'm saying is scaling the health of enemies doesn't really solve the issue, providing enemies/arenas that have unique mechanics or resistances will.
-- DigitalVaporeon / Zed9876: Squid enemy that lives in liquid
 
 for example: an enemy that has a tough outer shell. Direct damage is reduced, but blunt force damage is a crit (i.e. pushing into a wall) and perhaps this enemy is slow, and is thus more susceptible to drowning
-- Idea: enemy that only takes damage while in liquid
-    - DigitalVaporeon
-- Add a new kind of resource (that isn't mana) that certain powerful spells use (such as targeting spells and resurrect)
 - "onData queue stuck on message" - improve logs
 - Soul Muncher
     - Timemason: More max mana but it drains over time (rewards you to act quickly)
     - Fix: Connect targets Urns
-- some levels start with no enemies
-- Idea: monster that grows stronger over time
 - fix pickup created with duplicate id
 ---
 - Outreach: try a non gmail email address
@@ -31,44 +43,22 @@ for example: an enemy that has a tough outer shell. Direct damage is reduced, bu
         - Explain your game's value
             - why is it entertaining to watch
 - Check bug reports in discord for missed messages
-- BUG: Red portals are now invisible
-- Matt_97 — Today at 4:14 AM
-In the newest version, most summons that cost more than 150 mana never return to their original mana cost. They permanently remain at the higher mana cost.
-- On multiplayer I had slash and heavy slash and slash came back into my hand but not my inventory after a sync
-    - it was "target cone" and "heavy slash" and now it's "cone", "slash", "heavy slash", "slow"
 - can I still do F12 on electron??
 - LeoninoMalino [has Spellmasons] 21 hours ago
 Stamina bar
-Don't know if its intended, but the stamina bar does not deplete until you stop moving. The number does, but the bar itself doesn't. 
-- Address headless server infinite loop
 - When one of the servers had an infinite loop the serverhub doesn't get room information from any of them
 ---
 
--  Dragon352 [has Spellmasons] 8 hours ago
-pathing bug
-If you start a summon-swarm against a enemy on the opposite side of a U-path or similar, as far as I can tell its inevitable that some of the units will start to walk through the wall.
-might be tied to priest summoning some units since they are always there when I see this, but might be coincidence.
 
-pretty sure its unintended for units to no-clip to reach a target. 
 - Go over TonyFTW's comments more closely: https://discord.com/channels/1032294536640200766/1166111911260205107/1173994432912171059
-- can I still do F12 on electron??
-    - Still can't and it makes the esc key stop working
 - bug: if you save while a spell is casting it gives you your mana back
     - unreproduced
-- bug: menu-UI; I still get "unable to connect" doesn't clear even after you connect in multiplayer
 - Bug: in multiplayer if you die and an ally npc kills enemies and you choose your class you get to choose your class again the next level
 
-- Bug: Stamina bar number moves while moving but the bar itself doesn't
-- Strangely getting "mana refunded" on shatter arrow
 - Admin commands don't go to multiplayer anymore
-- Update Seashell to server-bun
-    - Europe crashed with high cpu, monitor for longer before changing seashell over to new server
-- Gumby — Today at 3:05 PM
-It doesn't seem to be related to the spells cast, it seems to be more relating to the number of enemies on the screen (the later matches have more enemies). On my PC i click end turn and the end turn button greys out, on my friend's PC he clicks end turn and the end turn button greys out for him, but the AI just doesn't start their turn....... oh and on my screen it looks like my friend hasnt ended their turn, and on my friend's pc it looks like i haven't ended my turn, there is some sync issue with the end turn fucntionality in multiplayer. myabe just start a 60 second timer once any of the players have hit their end turn button or even a last resort 10 minute timer per turn. At least that way there'd be some way of saving the matches when this happens. Or add an auto-save function at the end of every turn, so should this happen we can just quit out, load the last auto-save and come back in again. 
 
 ---
 - v1.24
-    - Fix order of spells in codex and inventory
     - bug: explosive urn comes back visually in multiplayer after being destroyed
         - Unable to reproduct on current build
     - Steam integration with achievements
@@ -84,8 +74,6 @@ It doesn't seem to be related to the spells cast, it seems to be more relating t
 - Salazar — Yesterday at 7:51 PM
 I have seen someone mention corpses beginning to lag the game and i would also like a restriction on corpses...Or anything to restrain the impact on performance...Bc it might have been so bad it closed down the server i hosted and this time fucked the savefile with my friend being suddenly back to lvl 1 and all new spells...I tried to solve it by loading a prior save but he just keeps respawning at level 1 with none of his prior spells and him being able to choose a spawning point in the middle of the death mason level...With the added bonus of me being dead this time for some reason.
 Its kinda a bug report so it goes here ig.
-Ghnoyeurghe — Today at 12:04 PM
-Actually my friends and I had a near identical issue last night, level 12 we had a crash and the two of them when I loaded the save were only able to spawn in as level 1 wizards
 ---
 - Optimize late game lag
     - Find the bottleneck, use web workers?
@@ -122,25 +110,13 @@ waiting for timemason's ability to work, especially as the game goes on, is a hu
 otherwise love the challenge. 
 -  Forest Dweller Yamu [has Spellmasons] Oct 19 @ 2:51am
     
-Reconnecting in Multiplayer is Super Broken
-I've played multiple matches online with friends where trying to reconnect with everyone either A: Doen't work and makes us restart from the beginning by just killing all players or B: Some players just start picking levels again and have no progress up to that floor anymore.
-
-I really like this game and its fun with buddies, but having the match just break everytime on floor 7-9 just ruins it. 
-- Add tools to requesting order of server's last few messages for testing desync on prod
 
 - New wanted features
-    - Skillo: Towers
-    - Auras
-    - enigmaticbacon: Paperweight, heavyweight
-        - Add mass to units
-            - Some units automatically have more mass than others like bosses
-    - fog of war (on branch fogOfWar)
 
 - Mattmellow — Today at 1:38 PM
 bestiary of all encountered enemies to access in game, 
 and all spells (credit enigmaticbaco)
 
-- idea: (Pandize?) Spell upgrades
 
 - enigmaticbacon — Yesterday at 7:40 PM
 When loading a game in which you have a mini-boss on your team, its stats are reverted to the non-miniboss version, which can lead to awkward fractional HP. 
@@ -182,23 +158,15 @@ I don't have any screenshots but I figured these arent that hard to test so i gu
 i couldnt replicate the six stat points
 
 - v1.20
-    - Upgrade server to Bun
-    - Is there a way to make existing spells synergize more??
-        - Special Class-specific upgrades such as "make arrow cheaper" for archer (rather than current perks)
-        - Increase base damage
 - Renewed Marketing Efforts
     - Post in Wholesomeverse
     - Bug Bounty?
     - Blender environment tracking to show a scene from the game in real life
-- Auras
 - PickaPecka spell idea: Targets units that you pass through when moving (would work well with movement spells)
 
 
 # Chosen Tasks
 - Desync reporter - report health, position changes and use server hub as backend
-- Fix pickup desync in multiplayer
-- Scobjo: balance mana steal
-    - https://discord.com/channels/1032294536640200766/1032294537235812404/1132360848824877189
 - Look into "Level Variety" recommendations in Discord
 - bug: enemies will die before touching a pickup on multiplayer because on the server they die/move all the way immediately and on the client they don't
 
