@@ -45,7 +45,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
   if (!NO_LOG_LIST.includes(d.payload.type)) {
     // Don't clog up server logs with payloads, leave that for the client which can handle them better
     try {
-      console.log("onData:", MESSAGE_TYPES[d.payload.type], globalThis.headless ? '' : JSON.stringify(d))
+      console.log("Recieved onData:", MESSAGE_TYPES[d.payload.type], globalThis.headless ? '' : JSON.stringify(d))
     } catch (e) {
       console.warn('Prevent error due to Stringify:', e);
     }
@@ -337,7 +337,7 @@ function logHandleOnDataMessage(type: MESSAGE_TYPES, payload: any, fromClient: s
     if (!NO_LOG_LIST.includes(type)) {
       // Count processed messages (but only those that aren't in the NO_LOG_LIST)
       underworld.processedMessageCount++;
-      let payloadForLogging = payload;
+      let payloadForLogging = '';
       // For headless, log only portions of some payloads so as to not swamp the logs with
       // unnecessary info
       if (globalThis.headless) {
@@ -351,10 +351,16 @@ function logHandleOnDataMessage(type: MESSAGE_TYPES, payload: any, fromClient: s
           case MESSAGE_TYPES.CREATE_LEVEL:
             payloadForLogging = `levelIndex: ${payload?.level?.levelIndex}; enemies: ${payload?.level?.enemies.length}`;
             break;
+          default:
+            // To prevent heavy server logs, default payloadForLogging for server is empty
+            payloadForLogging = '';
+            break;
         }
+      } else {
+        payloadForLogging = payload;
       }
       // Don't clog up server logs with payloads, leave that for the client which can handle them better
-      console.log("onData", underworld.processedMessageCount, ":", MESSAGE_TYPES[type], payloadForLogging)
+      console.log("Handle onData", underworld.processedMessageCount, ":", MESSAGE_TYPES[type], payloadForLogging)
     }
   } catch (e) {
     console.error('Error in logging', e);
