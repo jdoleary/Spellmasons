@@ -1,5 +1,60 @@
 # Critical Path
 
+- Reduce headless logging volume: long multiplayer pause happens after the end
+  of NPC turn before start of player turn SYNC_SOME_STATE is dumping WAY too
+  many logs onto server @Rainbowluck, meme_man
+- Ensure if one game infinite loops that it doesn't crash the other games on the
+  server
+  - Add better logs to the server infinite loop warning
+- Ensure end turn fires even if player is already marked as ended turn so it
+  doesn't get stuck
+- Turn off background throttling
+  - Ensure it receives messages even when alt tabbed
+- logViewer should count by version
+- Keep stats on all server disconnect issues
+- Puparas offering help with Russian translation
+- Feature: Skillo — Today at 11:32 AM very promissing [11:33 AM] instead of
+  trivializing mana (by getting more avenues for casts, since the game is all
+  about doing sick spell chains), integrate mana scaling naturally during your
+  run and then the other stuff as your actual choices [11:35 AM] speaking of
+  which, one way of making stamina scaling more interesting is by adding a class
+  that scales with it. "damaging spells deal extra damage based on how much you
+  moved in this turn" something like building momentum
+
+Skillo — Today at 11:41 AM exactly! Imagine doing target arrow + dash + slash
+and doing massive damage cause you crossed the map with it
+
+- fix: UI: Decoy health isn't listed in card like other summons
+
+- Enemy whose damage ramps over time (ancient) Scojbo
+- Vinnick Talberot:
+
+  I also wanted to say that with the introduction of the urns, in several runs
+  I've had I have had very few mobs to fight in contrast to the urns, and so
+  when I kill them all I don't make much progress to new cards. So I've gone two
+  maps at a time in some cases with nothing new, which then gets met with this
+  mass of monsters on the following map and I can't do anything because I
+  haven't increased my pool of options. @Jordan - Spellmasons Creator
+
+Rainbowluck:
+
+    Also boss summon ? cost like twice the cost and there is not stat boost or anything ?
+
+RainbowLuck — Yesterday at 4:45 PM when u capture soul to set up a game and u
+got kick out and you come back with no soul is realy frustrating '-'
+
+    timothycombs12 — Yesterday at 8:40 PM
+    found a glitch. target arrow + slash + capture soul targeting an ancient. it will refund the spell and not take hp from the player, but it will not give a spawnable ancient. i dont know if the last part is on purpose
+
+Ian / Chase / Pompa — Yesterday at 9:32 PM Is it a bug if my lovely golem is
+dealing .00000000000001 more damage than expected or just amusing? :3
+
+Summon feedback
+https://discord.com/channels/1032294536640200766/1069630737919266936/1177596327392186419
+
+- Skillo — Today at 9:29 AM Forgot to mention here that for some reason teleport
+  portals aren't visible for me :p Sometimes i'll just wander around and be
+  randomly teleported somewhere else Singleplayer
 - server crash: RainbowLuck — Today at 7:25 AM after i did a AOE circle 3
   clone/regeneration in the screen you see above , after that nothing work
   anymore and the server crash
