@@ -77,7 +77,7 @@ export default function makeOverworld(pie: PieClient | IHostApp): Overworld {
     return overworld;
 }
 // Returns an array of newly created players
-export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clients: string[]) {
+export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clients: string[], defaultLobbyReady?: boolean) {
     if (!overworld) {
         console.error('Cannot sync clients, no overworld');
         return;
@@ -98,6 +98,7 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
             for (let i = 0; i < globalThis.numberOfHotseatPlayers; i++) {
                 const config = globalThis.hotseatPlayerConfig?.[i];
                 const player = Player.create(clientId, underworld);
+                player.lobbyReady = !!defaultLobbyReady;
                 if (config) {
                     player.name = config.name;
                     player.color = config.color;

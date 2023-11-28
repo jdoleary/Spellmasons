@@ -2041,9 +2041,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           this.isRestarting = setTimeout(() => {
             const newUnderworld = new Underworld(overworld, pie, Math.random().toString());
             // Add players back to underworld
-            ensureAllClientsHaveAssociatedPlayers(overworld, overworld.clients);
-            // Since they are still in the game, set them to lobbyReady
-            newUnderworld.players.filter(p => p.clientConnected).forEach(p => { p.lobbyReady = true; });
+            // defaultLobbyReady: Since they are still in the game, set them to lobbyReady
+            ensureAllClientsHaveAssociatedPlayers(overworld, overworld.clients, true);
             // Generate the level data
             newUnderworld.lastLevelCreated = newUnderworld.generateLevelDataSyncronous(0, this.gameMode);
             // Actually create the level 
