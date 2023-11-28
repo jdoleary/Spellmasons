@@ -8,7 +8,6 @@
 - Ghnoyeurghe — Today at 12:04 PM
     Actually my friends and I had a near identical issue last night, level 12 we had a crash and the two of them when I loaded the save were only able to spawn in as level 1 wizards
     - Improve rejoining with same name
-- BUG: SOME portals are now invisible (red and blue) (is this due to particle limiting?)
 - Gumby — Today at 3:05 PM
 It doesn't seem to be related to the spells cast, it seems to be more relating to the number of enemies on the screen (the later matches have more enemies). On my PC i click end turn and the end turn button greys out, on my friend's PC he clicks end turn and the end turn button greys out for him, but the AI just doesn't start their turn....... oh and on my screen it looks like my friend hasnt ended their turn, and on my friend's pc it looks like i haven't ended my turn, there is some sync issue with the end turn fucntionality in multiplayer. myabe just start a 60 second timer once any of the players have hit their end turn button or even a last resort 10 minute timer per turn. At least that way there'd be some way of saving the matches when this happens. Or add an auto-save function at the end of every turn, so should this happen we can just quit out, load the last auto-save and come back in again. 
 - Write Callum back

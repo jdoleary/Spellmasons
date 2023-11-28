@@ -102,7 +102,7 @@ let lastPredictionPickupId = 0;
 // or for a prediction pickup
 export function create({ pos, pickupSource, idOverride, logSource }:
   {
-    pos: Vec2, pickupSource: IPickupSource, idOverride?: number, logSource?:string,
+    pos: Vec2, pickupSource: IPickupSource, idOverride?: number, logSource?: string,
   }, underworld: Underworld, prediction: boolean): IPickup {
   const { name, description, imagePath, effect, willTrigger, scale, animationSpeed, playerOnly = false, turnsLeftToGrab } = pickupSource;
   const { x, y } = pos
@@ -257,8 +257,24 @@ function assignEmitter(pickup: IPickup, emitterId: string, prediction: boolean, 
   }
   if (emitterId == RED_PORTAL_JID) {
     pickup.emitter = makeDeathmasonPortal(pickup, prediction, '#520606', '#e03636');
+    if (pickup.image) {
+      if (pickup.emitter) {
+        Image.cleanup(pickup.image);
+      } else {
+        // Use tinted portal image as backup in case emitters are limited
+        pickup.image.sprite.tint = 0xe43636;
+      }
+    }
   } else if (emitterId == BLUE_PORTAL_JID) {
     pickup.emitter = makeDeathmasonPortal(pickup, prediction, '#1a276e', '#5252fa');
+    if (pickup.image) {
+      if (pickup.emitter) {
+        Image.cleanup(pickup.image);
+      } else {
+        // Use tinted portal image as backup in case emitters are limited
+        pickup.image.sprite.tint = 0x5252fa;
+      }
+    }
   } else if (emitterId == CURSED_MANA_POTION) {
     pickup.emitter = makeCursedEmitter(pickup, prediction);
   } else {
@@ -339,7 +355,7 @@ export function load(pickup: IPickupSerialized, underworld: Underworld, predicti
   let foundPickup = pickups.find((p) => p.name == pickup.name);
   if (foundPickup) {
     const { image, flaggedForRemoval, ...toCopy } = pickup;
-    if(flaggedForRemoval){
+    if (flaggedForRemoval) {
       // Do not create a pickup that has been removed
       console.error('Attempted to Load a pickup that is flaggedForRemoval');
       return undefined;
@@ -484,7 +500,7 @@ export const pickups: IPickupSource[] = [
     }
   },
   {
-    imagePath: undefined,
+    imagePath: 'portal',
     animationSpeed: -0.5,
     playerOnly: true,
     name: RED_PORTAL,
@@ -522,7 +538,7 @@ export const pickups: IPickupSource[] = [
     },
   },
   {
-    imagePath: undefined,
+    imagePath: 'portal',
     animationSpeed: -0.5,
     playerOnly: true,
     name: BLUE_PORTAL,

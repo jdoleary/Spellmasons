@@ -386,7 +386,7 @@ export function clearTints(underworld: Underworld) {
   });
   underworld.pickups.forEach(pickup => {
     if (pickup.image) {
-      pickup.image.sprite.tint = 0xFFFFFF;
+      pickup.image.sprite.tint = pickup.image.sprite.tint || 0xFFFFFF;
     }
   });
   underworld.doodads.forEach(doodad => {
