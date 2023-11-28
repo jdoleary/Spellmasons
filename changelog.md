@@ -1,3 +1,7 @@
+## 1.24.0
+- Fix network messages being missed when game is alt-tabbed
+
+
 ## Spellmasons Update v1.23.8
 Some of you may have noticed that servers have been unavailable here and there or have crashed.  I just found the a second cause of the server crash problem (first cause was resolved on 11/17), I will put out a patch tomorrow morning.  I also added an extra check to make sure that this kind of crash is impossible.
 So server reliability will improve!
