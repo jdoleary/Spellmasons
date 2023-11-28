@@ -1,4 +1,7 @@
 ## Bugs
+- WildBerryBlast — Today at 3:05 PM
+Weird bug to report when using the dash feature into a blue portal it would teleport me to the other portal then back to the first portal both portals would still be on the screen but unable to go through either of them it was in a multi-player game if that helps
+- Note: flying projectile race timeouts happened on alttab on dev
 - bug: Best Spell on game over screen is bugged
 - Bug: you can't cast a spell that will kill you and then resurrect yourself anymore
 - In multiplayer if you spawn in someone else's portal it goes away and you have to end your turn twice for it to come back
