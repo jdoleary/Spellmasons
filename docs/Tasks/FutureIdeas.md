@@ -22,6 +22,9 @@
     if you want to snipe one gotta isolate them
     Or invulnerable when grouped??
 - Target Injured Enemies spell
+- A way to share mana or send to friends @meme_man
+- RainbowLuck — Today at 1:11 PM
+Imagine u connect 10 corps or dead ennemy/summon  you summon a "bone golem" for exemple lvl 10 if you have 5 dead body it's a bone golem lvl 5 etc
 
 ## Modifier
 - enigmaticbacon: Paperweight, heavyweight
