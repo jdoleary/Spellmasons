@@ -3025,7 +3025,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           cleanUpEmitters(true);
           // Clear enemy attentionMarkers since it's now their turn
           globalThis.attentionMarkers = [];
-          await this.redPortalBehavior(Faction.ALLY);
+          this.redPortalBehavior(Faction.ALLY);
           // Only execute turn if there are units to take the turn:
           if (this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ALLY && u.alive).length) {
             // Count the number of ally turns
@@ -3052,7 +3052,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           cleanUpEmitters(true);
           // Clear enemy attentionMarkers since it's now their turn
           globalThis.attentionMarkers = [];
-          await this.redPortalBehavior(Faction.ENEMY);
+          this.redPortalBehavior(Faction.ENEMY);
           // Only execute turn if there are units to take the turn:
           if (this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ENEMY && u.alive).length) {
             // Run AI unit actions
@@ -3103,7 +3103,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
   }
   // Spawn units out of portals
-  async redPortalBehavior(faction: Faction) {
+  redPortalBehavior(faction: Faction) {
     const portalName = faction == Faction.ENEMY ? Pickup.RED_PORTAL : Pickup.BLUE_PORTAL;
     const deathmasons = this.units.filter(u => u.unitSourceId == bossmasonUnitId && u.faction == faction)
     for (let deathmason of deathmasons) {
