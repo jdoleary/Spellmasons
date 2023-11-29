@@ -215,6 +215,7 @@ export default class Underworld {
   // stamina is 0) which would result in the server binding up in infinite loops of 
   // AI turns.
   allyNPCAttemptWinKillSwitch: number = 0;
+  aquirePickupQueue: { pickupId: number, unitId: number, timeout: number, flaggedForRemoval: boolean }[] = [];
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
@@ -850,6 +851,28 @@ export default class Underworld {
     // Particles
     updateParticlees(deltaTime, this.bloods, this.random, this);
 
+    // Trigger any timed out pickups in queue
+    this.aquirePickupQueue = this.aquirePickupQueue.filter(p => !p.flaggedForRemoval);
+    const now = Date.now();
+    for (let queuedPickup of this.aquirePickupQueue) {
+      if (queuedPickup.timeout <= now) {
+        const pickup = this.pickups.find(p => p.id == queuedPickup.pickupId);
+        const unit = this.units.find(u => u.id == queuedPickup.unitId);
+        if (pickup) {
+          if (unit) {
+            const player = this.players.find(p => p.unit == unit);
+            queuedPickup.flaggedForRemoval = true;
+            Pickup.triggerPickup(pickup, unit, player, this, false);
+            console.error('Queued pickup timed out and was force triggered');
+          } else {
+            console.error('Attempted to aquire queued pickup via timeout but unit is undefined');
+          }
+        } else {
+          console.error('Attempted to aquire queued pickup via timeout but pickup is undefined');
+        }
+      }
+    }
+
     this.queueGameLoop();
   }
   // setPath finds a path to the target
@@ -1209,7 +1232,7 @@ export default class Underworld {
   spawnPickup(index: number, coords: Vec2, prediction?: boolean) {
     const pickup = Pickup.pickups[index];
     if (pickup) {
-      Pickup.create({ pos: coords, pickupSource: pickup }, this, !!prediction);
+      Pickup.create({ pos: coords, pickupSource: pickup, logSource: 'spawnPickup' }, this, !!prediction);
     } else {
       console.error('Could not find pickup with index', index);
     }
@@ -1831,7 +1854,7 @@ export default class Underworld {
     for (let p of pickups) {
       const pickup = Pickup.pickups[p.index];
       if (pickup) {
-        Pickup.create({ pos: p.coord, pickupSource: pickup }, this, false);
+        Pickup.create({ pos: p.coord, pickupSource: pickup, logSource: 'createLevelSyncronous' }, this, false);
       } else {
         console.error('Could not find pickup source with index', p.index);
       }
@@ -2041,9 +2064,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           this.isRestarting = setTimeout(() => {
             const newUnderworld = new Underworld(overworld, pie, Math.random().toString());
             // Add players back to underworld
-            ensureAllClientsHaveAssociatedPlayers(overworld, overworld.clients);
-            // Since they are still in the game, set them to lobbyReady
-            newUnderworld.players.filter(p => p.clientConnected).forEach(p => { p.lobbyReady = true; });
+            // defaultLobbyReady: Since they are still in the game, set them to lobbyReady
+            ensureAllClientsHaveAssociatedPlayers(overworld, overworld.clients, true);
             // Generate the level data
             newUnderworld.lastLevelCreated = newUnderworld.generateLevelDataSyncronous(0, this.gameMode);
             // Actually create the level 
@@ -3000,7 +3022,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // Clear enemy attentionMarkers since it's now their turn
           globalThis.attentionMarkers = [];
           await this.redPortalBehavior(Faction.ALLY);
-          const t0 = performance.now()
           // Only execute turn if there are units to take the turn:
           if (this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ALLY && u.alive).length) {
             // Count the number of ally turns
@@ -3010,8 +3031,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           } else {
             console.log('Turn Management: Skipping executingNPCTurn for Faction.ALLY');
           }
-          const t1 = performance.now();
-          console.log('jtest', t1 - t0)
           // At the end of their turn, deal damage if still in liquid
           for (let unit of this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ALLY)) {
             if (unit.inLiquid && unit.alive) {
@@ -3577,7 +3596,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           for (let playerUnit of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
             const portalSpawnLocation = this.findValidSpawn(playerUnit, 4) || playerUnit;
             if (!isOutOfBounds(portalSpawnLocation, this)) {
-              Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup }, this, false);
+              Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup, logSource: 'Portal' }, this, false);
             } else {
               // If a pickup is attempted to be spawned for an unspawned player this if check prevents it from being spawned out of bounds
               // and the next invokation of checkIfShouldSpawnPortal will spawn it instead.
@@ -3726,7 +3745,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   syncPickups(pickups: Pickup.IPickupSerialized[]) {
     // Remove pickups flagged for removal before syncing
     this.pickups = this.pickups.filter(p => !p.flaggedForRemoval);
-    console.log('sync: Syncing pickups', pickups.map(u => u.id), 'current pickups:', this.pickups.map(u => u.id));
+    console.log('sync: Syncing pickups', pickups.map(u => `${u.id}:${u.flaggedForRemoval}`), 'current pickups:', this.pickups.map(u => `${u.id}:${u.flaggedForRemoval}`));
 
     // Remove excess pickups if local copy of pickups has more pickups than the pickups it
     // should be syncing with
@@ -3767,6 +3786,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     for (let pickup of pickupsToRemove) {
       Pickup.removePickup(pickup, this, false);
     }
+    // Remove pickups flagged for removal before creating new ones so you don't have id collisions
+    this.pickups = this.pickups.filter(p => !p.flaggedForRemoval);
     // Create what's left over
     for (let serializedPickup of serializedpickupsLeftToCreate) {
       Pickup.load(serializedPickup, this, false);
@@ -3893,7 +3914,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   // hash() {
   //   const state = this.serializeForHash();
   //   const hashResult = hash(state);
-  //   console.log(`hash-${hashResult}:`, JSON.stringify(state));
+  //   console.log(`hash - ${ hashResult }: `, JSON.stringify(state));
   //   return hashResult
   // }
   // Returns a modified copy of gamestate that is used when generating a hash
@@ -3993,7 +4014,7 @@ export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, Underworl
 //       }
 //       return sums;
 //     }, {})
-//     console.log(`level ${i}`, sums);
+//     console.log(`level ${ i }`, sums);
 //   }
 //   console.log('New:')
 //   for (let i = 0; i < 10; i++) {
@@ -4006,7 +4027,7 @@ export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, Underworl
 //       }
 //       return sums;
 //     }, {})
-//     console.log(`level ${i}`, sums);
+//     console.log(`level ${ i }`, sums);
 //   }
 // }
 
