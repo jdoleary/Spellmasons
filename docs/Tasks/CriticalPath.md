@@ -1,11 +1,13 @@
 # Critical Path
 ## Priority
+- FIND DESYNCS that occur when you encounter Deathmason in singleplayer
+- Just remove lobby ready entirely so that it's impossible to  be trapped in lobby
 - Delay card pick until start of turn so it doesn't ruin spells
-- fix: After a wipe and restart the play is in the game but not "lobbyReady" and so no one else can join and they can't continue in their own game
-- fix: Getting spells extra  on multiplayer game restart after lose
-- IS THE ON DATA QUEUE CONTAINER AWAITING MESSAGES IN EVERY ROOM??? ARE ROOMS BLOCKING EACH OTHER??
-- Improve rejoining with same name
+
 ---
+
+- fix: Getting spells extra on multiplayer game restart after lose
+    - Cannot reproduce
 - idea: to fix pickup lag in multiplayer, maybe just put a delay on them? or in the message it should say who's going to pick it up so await with a timeout for them to collide?
 - fix logged issues
     - Aborting: creating a pickup with duplicate id

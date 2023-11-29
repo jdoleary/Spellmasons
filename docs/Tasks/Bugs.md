@@ -1,4 +1,12 @@
 ## Bugs
+
+- Joined saved multiplayer game that i didn't exist in.  Changed name so that it would assume control of another player
+    - 2nd player quit
+        - first bug: enemies took their turn
+    - 2nd player rejoined
+        - second bug: 2nd player now can't get past lobby
+        - and first player go to choose another spawn with old player being left behind
+
 - Clone can put units out of bounds
 - Note: flying projectile race timeouts happened on alttab on dev
 - bug: Best Spell on game over screen is bugged
