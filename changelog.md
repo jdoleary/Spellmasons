@@ -1,7 +1,12 @@
 ## 1.24.0
 - Fix network messages being missed when game is alt-tabbed
 - Completely redid pickup code to resolve desyncs when colliding with pickups especially when using movement spells
+    - Handles if client triggers pickup but server does not
+    - Ensure if server triggers pickup that it doesn't trigger on client until the correct time
     - Thanks WildBerryBlast
+- fix: joining saved games so that you automatically assume control over your old saved player character
+- fix: resurrect weak so that you can cast it on yourself
+
 
 
 ## Spellmasons Update v1.23.8
