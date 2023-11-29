@@ -3786,6 +3786,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     for (let pickup of pickupsToRemove) {
       Pickup.removePickup(pickup, this, false);
     }
+    // Remove pickups flagged for removal before creating new ones so you don't have id collisions
+    this.pickups = this.pickups.filter(p => !p.flaggedForRemoval);
     // Create what's left over
     for (let serializedPickup of serializedpickupsLeftToCreate) {
       Pickup.load(serializedPickup, this, false);
