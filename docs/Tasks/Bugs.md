@@ -32,3 +32,4 @@ It happens to me all the time, but it's really inconsistent. Sometimes I get fou
 I can't tell whether this is intended or not
     - WildBerryBlast — Yesterday at 6:47 PM
 question and possible bug when me and my friend die and restart a game it seems that sometimes we'll start with the regular 3 spells and sometimes we'll start with a very high number of spells and the ability to start with a class
+- Loaded multiplayer game if player is in water it loses the water shader on load
