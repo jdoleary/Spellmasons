@@ -115,7 +115,12 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         underworld.syncPlayers(players);
       }
       break;
-    case MESSAGE_TYPES.AQUIRE_PICKUP:
+    case MESSAGE_TYPES.QUEUE_PICKUP_TRIGGER:
+      // QUEUE_PICKUP_TRIGGER is only for clients, the headless server triggers pickups
+      // as soon as they are touched and is the source of truth on what pickups are touched
+      if (globalThis.headless) {
+        return;
+      }
       const { pickupId, pickupName, unitId, playerClientId } = payload;
       let pickup = underworld.pickups.find(p => p.id == pickupId);
       const unit = underworld.units.find(u => u.id == unitId);
@@ -125,7 +130,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         if (pickupSource) {
           console.log('pickups:', underworld.pickups.map(p => `${p.id},${p.name}`), 'pickupId:', pickupId)
           console.error('Attempted to aquire pickup but could not find it in list, creating one to aquire');
-          pickup = Pickup.create({ pos: { x: -1000, y: -1000 }, pickupSource, logSource:'Aquire_Pickup force create' }, underworld, false);
+          pickup = Pickup.create({ pos: { x: -1000, y: -1000 }, pickupSource, logSource: 'QUEUE_PICKUP_TRIGGER force create' }, underworld, false);
         } else {
           console.error(`Pickup source not found for name: ${pickupName}`)
         }
@@ -133,7 +138,10 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       // note: player is optionally undefined, but pickup and unit are required
       if (pickup) {
         if (unit) {
-          Pickup.triggerPickup(pickup, unit, player, underworld, false);
+          // Place it in the queue, server sees that unit has touched pickup but animations are still happening locally
+          // and the unit hasn't collided with the pickup yet, placing it in the queue will allow the unit to pickup
+          // the pickup once it touches
+          underworld.aquirePickupQueue.push({ pickupId: pickup.id, unitId: unit.id, timeout: Date.now() + 3000, flaggedForRemoval: false });
         } else {
           console.log('units:', underworld.units.map(u => u.id), 'UnitId:', unitId);
           console.error('Attempted to aquire pickup but could not find unit');

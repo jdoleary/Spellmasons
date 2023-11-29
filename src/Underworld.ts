@@ -215,6 +215,7 @@ export default class Underworld {
   // stamina is 0) which would result in the server binding up in infinite loops of 
   // AI turns.
   allyNPCAttemptWinKillSwitch: number = 0;
+  aquirePickupQueue: { pickupId: number, unitId: number, timeout: number, flaggedForRemoval: boolean }[] = [];
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
@@ -849,6 +850,28 @@ export default class Underworld {
     useMousePosition(this);
     // Particles
     updateParticlees(deltaTime, this.bloods, this.random, this);
+
+    // Trigger any timed out pickups in queue
+    this.aquirePickupQueue = this.aquirePickupQueue.filter(p => !p.flaggedForRemoval);
+    const now = Date.now();
+    for (let queuedPickup of this.aquirePickupQueue) {
+      if (queuedPickup.timeout <= now) {
+        const pickup = this.pickups.find(p => p.id == queuedPickup.pickupId);
+        const unit = this.units.find(u => u.id == queuedPickup.unitId);
+        if (pickup) {
+          if (unit) {
+            const player = this.players.find(p => p.unit == unit);
+            queuedPickup.flaggedForRemoval = true;
+            Pickup.triggerPickup(pickup, unit, player, this, false);
+            console.error('Queued pickup timed out and was force triggered');
+          } else {
+            console.error('Attempted to aquire queued pickup via timeout but unit is undefined');
+          }
+        } else {
+          console.error('Attempted to aquire queued pickup via timeout but pickup is undefined');
+        }
+      }
+    }
 
     this.queueGameLoop();
   }

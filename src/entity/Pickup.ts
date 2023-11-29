@@ -403,6 +403,10 @@ export function tryTriggerPickup(pickup: IPickup, unit: IUnit, underworld: Under
     // Don't trigger pickup if flagged for removal
     return;
   }
+  if (!unit.alive) {
+    // Only living units can trigger pickups
+    return;
+  }
   const player = underworld.players.find((p) => p.unit === unit);
   if (pickup.playerOnly && !player) {
     // If pickup is playerOnly, do not trigger if a player is not the one triggering it
@@ -419,23 +423,34 @@ export function tryTriggerPickup(pickup: IPickup, unit: IUnit, underworld: Under
     // All pickups triggering must be networked to prevent desyncs resulting 
     // from slight position differences that can result in cascading desyncs due to
     // a pickup triggering on one client or host but not on others.
-    // A player always initiates their own pickup triggering, the host initiates all others
-    if (player ? player == globalThis.player : globalThis.isHost(underworld.pie)) {
+    // Server initiates all pickups
+    if (globalThis.isHost(underworld.pie)) {
       // Try a prediction effect to see if it will trigger and
-      // only send AQUIRE_PICKUP if it will trigger
+      // only send QUEUE_PICKUP_TRIGGER if it will trigger
       const willTrigger = pickup.willTrigger({ unit, player, pickup, underworld });
       if (willTrigger) {
-        // triggerPickup immediately locally
         triggerPickup(pickup, unit, player, underworld, prediction);
-        // send AQUIRE_PICKUP network message to make sure the same pickup gets triggered
+        // send QUEUE_PICKUP_TRIGGER network message to make sure the same pickup gets triggered
         // on any other client that may have missed this collision
         underworld.pie.sendData({
-          type: MESSAGE_TYPES.AQUIRE_PICKUP,
+          type: MESSAGE_TYPES.QUEUE_PICKUP_TRIGGER,
           pickupId: pickup.id,
           pickupName: pickup.name,
           unitId: unit.id,
           playerClientId: player?.clientId
         });
+      }
+    } else {
+      // Trigger if in queue
+      const pickupInQueue = underworld.aquirePickupQueue.find(x => x.pickupId == pickup.id && x.unitId == unit.id);
+      if (pickupInQueue) {
+        pickupInQueue.flaggedForRemoval = true;
+        triggerPickup(pickup, unit, player, underworld, prediction);
+      } else {
+        console.error('TODO: Unit touched pickup before headless has')
+        // Unit has touched pickup before headless has, so place it in the queue
+        // underworld.expectPickupTriggerQueue.push({ pickupId: pickup.id, unitId: unit.id, timeout: Date.now() + 1000 });
+
       }
     }
   }

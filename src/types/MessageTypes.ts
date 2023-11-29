@@ -23,7 +23,7 @@ export enum MESSAGE_TYPES {
   REQUEST_SYNC_GAME_STATE,
   // Ping a location on the map
   PING,
-  AQUIRE_PICKUP,
+  QUEUE_PICKUP_TRIGGER,
   CREATE_LEVEL,
   SET_PHASE,
   SYNC_PLAYERS,
