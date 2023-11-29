@@ -447,9 +447,15 @@ export function tryTriggerPickup(pickup: IPickup, unit: IUnit, underworld: Under
         pickupInQueue.flaggedForRemoval = true;
         triggerPickup(pickup, unit, player, underworld, prediction);
       } else {
-        console.error('TODO: Unit touched pickup before headless has')
-        // Unit has touched pickup before headless has, so place it in the queue
-        // underworld.expectPickupTriggerQueue.push({ pickupId: pickup.id, unitId: unit.id, timeout: Date.now() + 1000 });
+        // Edge case: Unit has touched pickup before headless has, so force trigger it
+        console.error(`Unit touched pickup before headless has: ${pickup.name}`)
+        underworld.pie.sendData({
+          type: MESSAGE_TYPES.FORCE_TRIGGER_PICKUP,
+          pickupId: pickup.id,
+          pickupName: pickup.name,
+          unitId: unit.id,
+          playerClientId: player?.clientId
+        });
 
       }
     }

@@ -115,6 +115,17 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         underworld.syncPlayers(players);
       }
       break;
+    case MESSAGE_TYPES.FORCE_TRIGGER_PICKUP:
+      {
+        const { pickupId, pickupName, unitId, playerClientId } = payload;
+        let pickup = underworld.pickups.find(p => p.id == pickupId);
+        const unit = underworld.units.find(u => u.id == unitId);
+        const player = underworld.players.find(p => p.clientId == playerClientId);
+        if (pickup && unit) {
+          Pickup.triggerPickup(pickup, unit, player, underworld, false);
+        }
+      }
+      break;
     case MESSAGE_TYPES.QUEUE_PICKUP_TRIGGER:
       // QUEUE_PICKUP_TRIGGER is only for clients, the headless server triggers pickups
       // as soon as they are touched and is the source of truth on what pickups are touched
