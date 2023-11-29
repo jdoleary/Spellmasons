@@ -447,15 +447,20 @@ export function tryTriggerPickup(pickup: IPickup, unit: IUnit, underworld: Under
         pickupInQueue.flaggedForRemoval = true;
         triggerPickup(pickup, unit, player, underworld, prediction);
       } else {
-        // Edge case: Unit has touched pickup before headless has, so force trigger it
-        console.error(`Unit touched pickup before headless has: ${pickup.name}`)
-        underworld.pie.sendData({
-          type: MESSAGE_TYPES.FORCE_TRIGGER_PICKUP,
-          pickupId: pickup.id,
-          pickupName: pickup.name,
-          unitId: unit.id,
-          playerClientId: player?.clientId
-        });
+        const willTrigger = !pickup.flaggedForRemoval && unit.alive && pickup.willTrigger({ unit, player, pickup, underworld });
+        // Do not send FORCE_TRIGGER_PICKUP if the pickup won't trigger, for example, health potions
+        // don't trigger if you are full health
+        if (willTrigger) {
+          // Edge case: Unit has touched pickup before headless has, so force trigger it
+          console.error(`Unit touched pickup before headless has: ${pickup.name}`)
+          underworld.pie.sendData({
+            type: MESSAGE_TYPES.FORCE_TRIGGER_PICKUP,
+            pickupId: pickup.id,
+            pickupName: pickup.name,
+            unitId: unit.id,
+            playerClientId: player?.clientId
+          });
+        }
 
       }
     }

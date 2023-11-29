@@ -106,8 +106,14 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         let pickup = underworld.pickups.find(p => p.id == pickupId);
         const unit = underworld.units.find(u => u.id == unitId);
         const player = underworld.players.find(p => p.clientId == playerClientId);
-        if (pickup && unit) {
-          Pickup.triggerPickup(pickup, unit, player, underworld, false);
+        if (pickup) {
+          if (unit) {
+            Pickup.triggerPickup(pickup, unit, player, underworld, false);
+          } else {
+            console.error('Force trigger pickup failed, unit is undefined');
+          }
+        } else {
+          console.error('Force trigger pickup failed, pickup is undefined');
         }
       }
       break;
