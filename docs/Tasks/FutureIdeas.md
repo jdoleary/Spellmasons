@@ -33,3 +33,4 @@ Imagine u connect 10 corps or dead ennemy/summon  you summon a "bone golem" for 
 
 ## Pickup
 - potion effects happen over a couple of turns, but are stronger @Skillo
+- Pickup that thrusts you in a direction (may interefere with attack calculations with enemies)
