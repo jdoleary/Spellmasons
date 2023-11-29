@@ -1,5 +1,7 @@
 ## 1.24.0
 - Fix network messages being missed when game is alt-tabbed
+- Completely redid pickup code to resolve desyncs when colliding with pickups especially when using movement spells
+    - Thanks WildBerryBlast
 
 
 ## Spellmasons Update v1.23.8
