@@ -45,7 +45,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
   if (!NO_LOG_LIST.includes(d.payload.type)) {
     // Don't clog up server logs with payloads, leave that for the client which can handle them better
     try {
-      console.log("onData:", MESSAGE_TYPES[d.payload.type], globalThis.headless ? '' : JSON.stringify(d))
+      console.log("Recieved onData:", MESSAGE_TYPES[d.payload.type], globalThis.headless ? '' : JSON.stringify(d))
     } catch (e) {
       console.warn('Prevent error due to Stringify:', e);
     }
@@ -98,24 +98,25 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       break;
     case MESSAGE_TYPES.JOIN_GAME_AS_PLAYER:
       const { asPlayerClientId } = payload;
-      const asPlayer = underworld.players.find(p => p.clientId == asPlayerClientId);
-      const oldFromPlayer = underworld.players.find(p => p.clientId == fromClient);
-      if (fromClient && asPlayer) {
-        console.log('JOIN_GAME_AS_PLAYER: Reassigning player', asPlayer.clientId, 'to', fromClient);
-        const oldAsPlayerClientId = asPlayer.clientId;
-        asPlayer.clientId = fromClient;
-        // Ensure their turn doesn't get skipped
-        asPlayer.endedTurn = false;
-        // Change the clientId of fromClient's old player now that they have inhabited the asPlayer
-        if (oldFromPlayer) {
-          oldFromPlayer.clientId = oldAsPlayerClientId;
+      joinGameAsPlayer(asPlayerClientId, overworld, fromClient);
+      break;
+    case MESSAGE_TYPES.FORCE_TRIGGER_PICKUP:
+      {
+        const { pickupId, pickupName, unitId, playerClientId } = payload;
+        let pickup = underworld.pickups.find(p => p.id == pickupId);
+        const unit = underworld.units.find(u => u.id == unitId);
+        const player = underworld.players.find(p => p.clientId == playerClientId);
+        if (pickup && unit) {
+          Pickup.triggerPickup(pickup, unit, player, underworld, false);
         }
-
-        const players = underworld.players.map(Player.serialize)
-        underworld.syncPlayers(players);
       }
       break;
-    case MESSAGE_TYPES.AQUIRE_PICKUP:
+    case MESSAGE_TYPES.QUEUE_PICKUP_TRIGGER:
+      // QUEUE_PICKUP_TRIGGER is only for clients, the headless server triggers pickups
+      // as soon as they are touched and is the source of truth on what pickups are touched
+      if (globalThis.headless) {
+        return;
+      }
       const { pickupId, pickupName, unitId, playerClientId } = payload;
       let pickup = underworld.pickups.find(p => p.id == pickupId);
       const unit = underworld.units.find(u => u.id == unitId);
@@ -125,7 +126,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         if (pickupSource) {
           console.log('pickups:', underworld.pickups.map(p => `${p.id},${p.name}`), 'pickupId:', pickupId)
           console.error('Attempted to aquire pickup but could not find it in list, creating one to aquire');
-          pickup = Pickup.create({ pos: { x: -1000, y: -1000 }, pickupSource }, underworld, false);
+          pickup = Pickup.create({ pos: { x: -1000, y: -1000 }, pickupSource, logSource: 'QUEUE_PICKUP_TRIGGER force create' }, underworld, false);
         } else {
           console.error(`Pickup source not found for name: ${pickupName}`)
         }
@@ -133,7 +134,10 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       // note: player is optionally undefined, but pickup and unit are required
       if (pickup) {
         if (unit) {
-          Pickup.triggerPickup(pickup, unit, player, underworld, false);
+          // Place it in the queue, server sees that unit has touched pickup but animations are still happening locally
+          // and the unit hasn't collided with the pickup yet, placing it in the queue will allow the unit to pickup
+          // the pickup once it touches
+          underworld.aquirePickupQueue.push({ pickupId: pickup.id, unitId: unit.id, timeout: Date.now() + 3000, flaggedForRemoval: false });
         } else {
           console.log('units:', underworld.units.map(u => u.id), 'UnitId:', unitId);
           console.error('Attempted to aquire pickup but could not find unit');
@@ -296,6 +300,44 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       break;
   }
 }
+function joinGameAsPlayer(asPlayerClientId: string, overworld: Overworld, fromClient: string) {
+  const underworld = overworld.underworld;
+  if (underworld) {
+    const asPlayer = underworld.players.find(p => p.clientId == asPlayerClientId);
+    const oldFromPlayer = underworld.players.find(p => p.clientId == fromClient);
+    if (fromClient && asPlayer) {
+      if (asPlayer.clientConnected) {
+        console.error('Cannot join as player that is controlled by another client')
+        return;
+      }
+      console.log('JOIN_GAME_AS_PLAYER: Reassigning player', asPlayer.clientId, 'to', fromClient);
+      const oldAsPlayerClientId = asPlayer.clientId;
+      asPlayer.clientId = fromClient;
+      // Ensure their turn doesn't get skipped
+      asPlayer.endedTurn = false;
+      // Change the clientId of fromClient's old player now that they have inhabited the asPlayer
+      if (oldFromPlayer) {
+        oldFromPlayer.clientId = oldAsPlayerClientId;
+        // force update clientConnected due to client switching players
+        const isConnected = overworld.clients.includes(oldFromPlayer.clientId);
+        oldFromPlayer.clientConnected = isConnected;
+        // Delete old player if just created
+        if (!oldFromPlayer.clientConnected && oldFromPlayer.inventory.length == 0) {
+          underworld.players = underworld.players.filter(p => p !== oldFromPlayer);
+        } else {
+          console.error('Unexpected, joinGameAsPlayer could not delete oldPlayer')
+        }
+      } else {
+        console.error('Unexpected, joinGameAsPlayer: oldFromPlayer does not exist')
+      }
+
+
+      const players = underworld.players.map(Player.serialize)
+      underworld.syncPlayers(players);
+    }
+  }
+
+}
 let onDataQueueContainer = messageQueue.makeContainer<OnDataArgs>();
 // Waits until a message is done before it will continue to process more messages that come through
 // This ensures that players can't move in the middle of when spell effects are occurring for example.
@@ -337,7 +379,7 @@ function logHandleOnDataMessage(type: MESSAGE_TYPES, payload: any, fromClient: s
     if (!NO_LOG_LIST.includes(type)) {
       // Count processed messages (but only those that aren't in the NO_LOG_LIST)
       underworld.processedMessageCount++;
-      let payloadForLogging = payload;
+      let payloadForLogging = '';
       // For headless, log only portions of some payloads so as to not swamp the logs with
       // unnecessary info
       if (globalThis.headless) {
@@ -351,10 +393,16 @@ function logHandleOnDataMessage(type: MESSAGE_TYPES, payload: any, fromClient: s
           case MESSAGE_TYPES.CREATE_LEVEL:
             payloadForLogging = `levelIndex: ${payload?.level?.levelIndex}; enemies: ${payload?.level?.enemies.length}`;
             break;
+          default:
+            // To prevent heavy server logs, default payloadForLogging for server is empty
+            payloadForLogging = '';
+            break;
         }
+      } else {
+        payloadForLogging = payload;
       }
       // Don't clog up server logs with payloads, leave that for the client which can handle them better
-      console.log("onData", underworld.processedMessageCount, ":", MESSAGE_TYPES[type], payloadForLogging)
+      console.log("Handle onData", underworld.processedMessageCount, ":", MESSAGE_TYPES[type], payloadForLogging)
     }
   } catch (e) {
     console.error('Error in logging', e);
@@ -591,6 +639,13 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         setPlayerNameUI(fromPlayer);
         Player.setPlayerRobeColor(fromPlayer, color, colorMagic);
         Player.syncLobby(underworld);
+        // Improve joining games so that if there is an uncontrolled player with the same name, this client
+        // takes over that player.  This allows clients to join saved games and reassume control of
+        // a player with their same name automatically even if their cliendID has changed
+        const takeControlOfPlayer = underworld.players.find(p => !p.clientConnected && p.name == name);
+        if (takeControlOfPlayer) {
+          joinGameAsPlayer(takeControlOfPlayer.clientId, overworld, fromClient);
+        }
         underworld.tryRestartTurnPhaseLoop();
       } else {
         console.log('Players: ', underworld.players.map(p => p.clientId))
@@ -852,7 +907,7 @@ async function handleLoadGameState(payload: {
       }
       const pickup = Pickup.pickups.find(pickupSource => pickupSource.name == p.name);
       if (pickup) {
-        const newPickup = Pickup.create({ pos: { x: p.x, y: p.y }, pickupSource: pickup, idOverride: p.id }, underworld, false);
+        const newPickup = Pickup.create({ pos: { x: p.x, y: p.y }, pickupSource: pickup, idOverride: p.id, logSource: 'handleLoadGameState' }, underworld, false);
         if (newPickup) {
           const { image, ...rest } = p;
           // Override pickup properties such as turnsLeftToGrab

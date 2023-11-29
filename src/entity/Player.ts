@@ -385,6 +385,12 @@ export function load(player: IPlayerSerialized, underworld: Underworld) {
     ...player,
     unit: reassignedUnit,
   };
+  // Backwards compatibility after property name change
+  // @ts-ignore cards was renamed to cardsInToolbar, this is for backwards compatibility
+  if (player.cards) {
+    // @ts-ignore cards was renamed to cardsInToolbar, this is for backwards compatibility
+    playerLoaded.cardsInToolbar = player.cards;
+  }
   // Account for pervious serialized versions of the game not having spellState
   // and make sure it's loaded and not undefined
   if (!playerLoaded.spellState) {

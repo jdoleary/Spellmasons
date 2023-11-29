@@ -1,20 +1,34 @@
 ## Bugs
-- Dashing to a mana potion triggers it twice
-- Hotseat multiplayer still switches to dead players (see stash)
-- Dead hotseat player doesn't get their turn ended
-- When shooting just an arrow it shouldn't center on an enemy because it prevents a perfect directed pierce
-- MuditaMan
-I got two +4 capacity perks, it looks like the single turn +40 amount is being overwritten by the total of the my every level +4 capacity amount
-Image
-MuditaMan — 05/06/2023 6:06 PM
-tried doing the reverse, the +40 works normally if you take it after the +4 capacity perks. So in short...
-+40 single turn perks break if you take permanent increase perks of the same resource afterwards (health/mana/stamina)
-+40 single turn perks do not stack (having two of one resource only grants +40 total) could use a "does not stack" if you don't want to change this. 
+- Clone can put units out of bounds
+- Note: flying projectile race timeouts happened on alttab on dev
+- bug: Best Spell on game over screen is bugged
+- In multiplayer if you spawn in someone else's portal it goes away and you have to end your turn twice for it to come back
+- bug: if a blast pushes you through a portal and also levels you up it will show you the upgrade screen while the cinematic is playing and if you reroll during the cinematic the upgrades just go away
+- UI: LeoninoMalino: Mage type selection ui is cropped on some screens (steam community)
+-  Dragon352 [has Spellmasons] 8 hours ago
+    pathing bug
+    If you start a summon-swarm against a enemy on the opposite side of a U-path or similar, as far as I can tell its inevitable that some of the units will start to walk through the wall.
+    might be tied to priest summoning some units since they are always there when I see this, but might be coincidence.
+- bug: menu-UI; I still get "unable to connect" doesn't clear even after you connect in multiplayer
+- bug: Enemies that will die next turn due to curses like poison shouldn't show that they will attack you next turn with attack badge
+- UI: Fix order of spells in codex and inventory
+- zezeus — Today at 12:14 PM
+Hello, 
 
-- TonyFTW — Yesterday at 4:15 PM
-Howdy, I think I stumbled into an exploit. You can use **capture soul post level end** so long as there are units on the ground, IE units you control through resurrection. I was able to take resurrected units, move them around and bring them to below the hp threshold and capture 5 types. I had to "end the turn" maybe 4 times to set it all up. This was all after the level ended and it was waiting for me to walk through the portal.
+Sorry I attempted to record my bug but my recording software leaves up the spellbook for the entirety of the recording
+anyways, more accurately after testing a couple times. Deathmasons just cause major "lag" actions can take multiple minutes to resolve, this is without pressing end turn. This happens every time deathmasons are in my game. Funny enough pressing ESC or alt-tabbing causes the actions to resolve quickly.n
+so desync was not the correct term for my single-player issue
+The actions of the player (my actions) take a long time to resolve. 
 
+The deathmasons work fine. 
 
----
-- bug: arrow not killing eenemies as it predicts https://discord.com/channels/1032294536640200766/1069963955092606976/1094617106504491079
-- bug: Joining saved hotseat game doesn't work great, and it plays the enemies turn when you switch players
+I only experience the bug on the level with the deathmasons
+- TheyCallMeWitch — Yesterday at 7:07 PM
+After a wipe and restart, is it intended that players start with more than three spells?
+meme_man — Yesterday at 11:58 PM
+Happened to me once
+TheyCallMeWitch — Today at 12:31 AM
+It happens to me all the time, but it's really inconsistent. Sometimes I get four spells, once I got 20
+I can't tell whether this is intended or not
+    - WildBerryBlast — Yesterday at 6:47 PM
+question and possible bug when me and my friend die and restart a game it seems that sometimes we'll start with the regular 3 spells and sometimes we'll start with a very high number of spells and the ability to start with a class

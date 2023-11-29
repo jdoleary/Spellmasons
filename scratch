@@ -1,34 +1,438 @@
-const difficulties = [];
-for(let i = 0; i < 12; i++){
-  const adjustedLevelIndex = i;
-  const baseDifficultyMultiplier = 3;
-  const startAcceleratingDifficultyAtLevelIndex = 6;
-  const difficultyMultiplier = adjustedLevelIndex >= startAcceleratingDifficultyAtLevelIndex
-    ? baseDifficultyMultiplier + adjustedLevelIndex + 1-startAcceleratingDifficultyAtLevelIndex
-    : baseDifficultyMultiplier;
-  let budgetLeft = (adjustedLevelIndex + 1) * difficultyMultiplier + 2;
-  difficulties.push([i, difficultyMultiplier, budgetLeft]);
-}
-console.log('difficulties');
-console.table(difficulties);
-// export function create(args:
-//   {
-//     pos: Vec2, pickupSource: IPickupSource
-//   }, underworld: Underworld, prediction: boolean) {
-//   if (prediction) {
-//     _create(args, underworld, prediction);
-//   } else {
-//     // if(host){}
-//     const { pos, pickupSource } = args;
-//     // Create through network message to prevent desyncs
-//     underworld.pie.sendData({
-//       type: MESSAGE_TYPES.CREATE_PICKUP,
-//       id: ++underworld.lastPickupId,
-//       pos,
-//       playerClientId: player?.clientId
-//     });
-//   }
-// }
-  // Hard-coded tutorial budget so the first time playing isn't too hard
-  // if (!isTutorialComplete() && connectedClients.length == 1) {
-  // }
+[jordanoleary-spellmasons-server] [2023-11-26 08:56:40] ]
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51] @websocketpie/server-bun: Client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd sent a message
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51] @websocketpie/server-bun: Echoing message to client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd room
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51] onData: MOVE_PLAYER 
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51] onData 2184 : MOVE_PLAYER {
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51]   type: 1,
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51]   x: 1148.2853998117807,
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51]   y: 1536.2869001597728
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51] }
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51] Headless server executed gameloop in  2.77  millis with 1  loops.
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51] @websocketpie/server-bun: Client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd sent a message
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51] @websocketpie/server-bun: Echoing message to client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd room
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51] onData: MOVE_PLAYER 
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51] onData 2185 : MOVE_PLAYER {
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51]   type: 1,
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51]   x: 1116.9009602821855,
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51]   y: 1538.7930008446215
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51] }
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51] Headless server executed gameloop in  27.63  millis with 16  loops.
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51] @websocketpie/server-bun: Client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd sent a message
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51] @websocketpie/server-bun: Echoing message to client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd room
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51] onData: MOVE_PLAYER 
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51] onData 2186 : MOVE_PLAYER {
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51]   type: 1,
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51]   x: 1089.9488501942583,
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51]   y: 1540.760050826646
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51] }
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51] Headless server executed gameloop in  13.80  millis with 14  loops.
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51] @websocketpie/server-bun: Client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd sent a message
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51] @websocketpie/server-bun: Echoing message to client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd room
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51] onData: MOVE_PLAYER 
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51] onData 2187 : MOVE_PLAYER {
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51]   type: 1,
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51]   x: 1063.022449054716,
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51]   y: 1542.6490636595095
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51] }
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:51] Headless server executed gameloop in  18.09  millis with 14  loops.
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52] @websocketpie/server-bun: Client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd sent a message
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52] @websocketpie/server-bun: Echoing message to client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd room
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52] onData: MOVE_PLAYER 
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52] onData 2188 : MOVE_PLAYER {
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52]   type: 1,
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52]   x: 1047.2198861970319,
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52]   y: 1543.7337196133597
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52] }
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52] Headless server executed gameloop in  15.87  millis with 9  loops.
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52] @websocketpie/server-bun: Client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd sent a message
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52] @websocketpie/server-bun: Echoing message to client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd room
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52] onData: MOVE_PLAYER 
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52] onData 2189 : MOVE_PLAYER {
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52]   type: 1,
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52]   x: 1020.3262227507023,
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52]   y: 1544.4399618140949
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52] }
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52] Headless server executed gameloop in  15.45  millis with 14  loops.
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52] @websocketpie/server-bun: Client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd sent a message
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52] @websocketpie/server-bun: Echoing message to client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd room
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52] onData: MOVE_PLAYER 
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52] onData 2190 : MOVE_PLAYER {
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52]   type: 1,
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52]   x: 993.5,
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52]   y: 1545
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52] }
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52] Headless server executed gameloop in  23.39  millis with 13  loops.
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52] @websocketpie/server-bun: Client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd sent a message
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52] @websocketpie/server-bun: Echoing message to client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd room
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52] onData: SET_PLAYER_POSITION 
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52] onData 2191 : SET_PLAYER_POSITION {
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52]   type: 2,
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52]   x: 955.2639499999397,
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52]   y: 1545
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:52] }
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:53] @websocketpie/server-bun: Client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd sent a message
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:53] @websocketpie/server-bun: Echoing message to client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd room
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:53] onData: SET_PLAYER_POSITION 
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:53] onData 2192 : SET_PLAYER_POSITION {
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:53]   type: 2,
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:53]   x: 955.2639499999397,
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:53]   y: 1545
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:53] }
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:54] @websocketpie/server-bun: Client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd sent a message
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:54] @websocketpie/server-bun: Echoing message to client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd room
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:54] onData: SET_PLAYER_POSITION 
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:54] onData 2193 : SET_PLAYER_POSITION {
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:54]   type: 2,
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:54]   x: 955.2639499999397,
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:54]   y: 1545
+[jordanoleary-spellmasons-server] [2023-11-26 08:57:54] }
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:05] @websocketpie/server-bun: Client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd sent a message
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:05] @websocketpie/server-bun: Echoing message to client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd room
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:05] onData: SET_PLAYER_POSITION 
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:05] onData 2194 : SET_PLAYER_POSITION {
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:05]   type: 2,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:05]   x: 955.2639499999397,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:05]   y: 1545
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:05] }
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:06] @websocketpie/server-bun: Client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd sent a message
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:06] @websocketpie/server-bun: Echoing message to client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd room
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:06] onData: SET_PLAYER_POSITION 
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:06] onData 2195 : SET_PLAYER_POSITION {
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:06]   type: 2,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:06]   x: 955.2639499999397,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:06]   y: 1545
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:06] }
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20] @websocketpie/server-bun: Client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd sent a message
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20] @websocketpie/server-bun: Echoing message to client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd room
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20] onData: END_TURN 
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20] onData 2196 : END_TURN {
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   type: 11
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20] }
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20] PlayerTurn: End player turn 5b986bcb-3890-4df4-a8e4-bdac23fc89bd
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20] syncTurnMessage: phase: PlayerTurns
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20] Underworld: TurnPhase: End player turn phase
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20] Broadcast SET_PHASE:  NPC_ALLY
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20] onData: SET_PHASE 
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20] onData 2197 : SET_PHASE phase: NPC_ALLY
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20] sync: SET_PHASE; syncs units and players
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20] RNG create with seed: 0.7738363196950009 , state:  {
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   i: 176,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   j: 248,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   S: [ 182, 188, 3, 48, 250, 214, 172, 249, 156, 11, 212, 217, 45, 235, 204, 17, 244, 39, 130, 72, 58,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]     98, 14, 52, 228, 149, 142, 225, 4, 251, 78, 221, 61, 171, 2, 209, 153, 86, 128, 5, 160, 67, 69, 77,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]     81, 180, 226, 187, 97, 76, 191, 21, 56, 38, 83, 167, 59, 194, 53, 177, 189, 238, 85, 145, 146, 144,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]     137, 7, 70, 101, 126, 222, 201, 9, 41, 42, 44, 35, 66, 218, 73, 36, 50, 186, 113, 175, 200, 219, 114,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]     162, 40, 176, 16, 205, 239, 31, 190, 141, 110, 55, 152, 179, 158, 0, 27, 208, 32, 71, 22, 1, 139, 254,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]     47, 252, 62, 23, 37, 169, 91, 229, 107, 106, 34, 203, 197, 247, 178, 230, 185, 132, 164, 60, 88, 29,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]     255, 184, 79, 80, 220, 24, 234, 63, 173, 119, 148, 49, 202, 183, 233, 143, 236, 198, 224, 102, 46,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]     165, 133, 124, 193, 196, 15, 134, 12, 150, 25, 20, 227, 57, 18, 103, 174, 215, 195, 64, 122, 96, 245,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]     109, 125, 13, 206, 232, 147, 68, 108, 159, 51, 136, 168, 240, 89, 243, 54, 154, 87, 75, 43, 123, 231,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]     90, 163, 253, 181, 241, 237, 151, 95, 19, 74, 10, 213, 166, 131, 105, 112, 8, 210, 242, 199, 117,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]     157, 129, 127, 115, 121, 99, 30, 84, 33, 26, 82, 192, 155, 161, 135, 116, 65, 94, 104, 118, 248, 111,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]     93, 246, 120, 223, 138, 100, 28, 6, 92, 140, 207, 211, 216, 170 ]
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20] }
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20] sync: Syncing units [ 0, 1, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 179,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 339,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398, 399,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 419,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   420, 421, 422, 423, 424, 425, 426, 427, 428, 429, 430, 431, 432, 433, 434, 435, 436, 437, 438, 439,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   440, 441, 442, 443, 444, 445, 446, 447, 448, 449, 450, 451, 452, 453, 454, 455, 456, 457, 458, 459,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478, 479,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   540, 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   560, 561, 562, 563, 564, 565, 566, 567, 568, 569, 570, 571, 572, 573, 574, 575, 576, 577, 578, 579,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   580, 581, 582, 583, 584, 585, 586, 587, 588, 589, 590, 591, 592, 593, 594, 595, 596, 597, 598, 599,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 616, 617, 618, 619,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   620, 621, 622, 623, 624, 625, 626, 627, 628, 629, 630, 631, 632, 633, 634, 635, 636, 637, 638, 639,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   640, 641, 642, 643, 644, 645, 646, 647, 648, 649, 650, 651, 652, 653, 654, 655, 656, 657, 658, 659,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   660, 661, 662, 663, 664, 665, 666, 667, 668, 669, 670, 671, 672, 673, 674, 675, 676, 677, 678, 679,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   680, 681, 682, 683, 684, 685, 686, 687, 688, 689, 690, 691, 692, 693, 694, 695, 696, 697, 698, 699,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   700, 701, 702, 703, 704, 705, 706, 707, 708, 709, 710, 711, 712, 713, 714, 715, 716, 717, 718, 719,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   720, 721, 722, 723, 724, 725, 726, 727, 728, 729, 730, 731, 732, 733, 734, 735, 736, 737, 738, 739,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   740, 741, 742, 743, 744, 745, 746, 747, 748, 749, 750, 751, 752, 753, 754, 755, 756, 757, 758, 759,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   760, 761, 762, 763, 764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775, 776, 777, 778, 779,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   780, 781, 782, 783, 784, 785, 786, 787, 788, 789, 790, 791, 792, 793, 794, 795, 796, 797, 798, 799,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   800, 801, 802, 803, 804, 805, 806, 807, 808, 809, 810, 811, 812, 813, 814, 815, 816, 817, 818, 819,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   820, 821, 822, 823, 824, 825, 826, 827, 828, 829, 830, 831, 832, 833, 834, 835, 836, 837, 838, 839,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   840, 841, 842, 843, 844, 845, 846, 847, 848, 849, 850, 851, 852, 853, 854, 855, 856, 857, 858, 859,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   860, 861, 862, 863, 864, 865, 866, 867, 868, 869, 870, 871, 872, 873, 874, 875, 876, 877, 878, 879,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   880, 881, 882, 883, 884 ] current units: [ 0, 1, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   170, 171, 172, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   296, 297, 298, 299, 300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   376, 377, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   396, 397, 398, 399, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426, 427, 428, 429, 430, 431, 432, 433, 434, 435,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 446, 447, 448, 449, 450, 451, 452, 453, 454, 455,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   456, 457, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   476, 477, 478, 479, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   496, 497, 498, 499, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   536, 537, 538, 539, 540, 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553, 554, 555,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   556, 557, 558, 559, 560, 561, 562, 563, 564, 565, 566, 567, 568, 569, 570, 571, 572, 573, 574, 575,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   576, 577, 578, 579, 580, 581, 582, 583, 584, 585, 586, 587, 588, 589, 590, 591, 592, 593, 594, 595,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   596, 597, 598, 599, 600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614, 615,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   616, 617, 618, 619, 620, 621, 622, 623, 624, 625, 626, 627, 628, 629, 630, 631, 632, 633, 634, 635,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   636, 637, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 648, 649, 650, 651, 652, 653, 654, 655,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   656, 657, 658, 659, 660, 661, 662, 663, 664, 665, 666, 667, 668, 669, 670, 671, 672, 673, 674, 675,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   676, 677, 678, 679, 680, 681, 682, 683, 684, 685, 686, 687, 688, 689, 690, 691, 692, 693, 694, 695,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   696, 697, 698, 699, 700, 701, 702, 703, 704, 705, 706, 707, 708, 709, 710, 711, 712, 713, 714, 715,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   716, 717, 718, 719, 720, 721, 722, 723, 724, 725, 726, 727, 728, 729, 730, 731, 732, 733, 734, 735,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   736, 737, 738, 739, 740, 741, 742, 743, 744, 745, 746, 747, 748, 749, 750, 751, 752, 753, 754, 755,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   756, 757, 758, 759, 760, 761, 762, 763, 764, 765, 766, 767, 768, 769, 770, 771, 772, 773, 774, 775,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   776, 777, 778, 779, 780, 781, 782, 783, 784, 785, 786, 787, 788, 789, 790, 791, 792, 793, 794, 795,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   796, 797, 798, 799, 800, 801, 802, 803, 804, 805, 806, 807, 808, 809, 810, 811, 812, 813, 814, 815,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   816, 817, 818, 819, 820, 821, 822, 823, 824, 825, 826, 827, 828, 829, 830, 831, 832, 833, 834, 835,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   836, 837, 838, 839, 840, 841, 842, 843, 844, 845, 846, 847, 848, 849, 850, 851, 852, 853, 854, 855,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   856, 857, 858, 859, 860, 861, 862, 863, 864, 865, 866, 867, 868, 869, 870, 871, 872, 873, 874, 875,
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   876, 877, 878, 879, 880, 881, 882, 883, 884 ]
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20] sync: Syncing players ["5b986bcb-3890-4df4-a8e4-bdac23fc89bd","8032d929-983f-472b-987b-18de35a14d3b"]
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20] sync: Syncing pickups [ 169, 171, 172, 174, 176, 177, 178, 179, 183, 184, 186 ] current pickups: [
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20]   169, 171, 172, 174, 176, 177, 178, 179, 183, 184, 186
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20] ]
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20] initializeTurnPhase( NPC_ALLY )
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20] setTurnPhase( NPC_ALLY )
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20] syncTurnMessage: phase: NPC_ALLY
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20] game: executeNPCTurn ALLY
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20] Headless server executed gameloop in  1.26  millis with 1  loops.
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:20] Headless server executed gameloop in  1.18  millis with 1  loops.
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:27] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:33] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:40] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:46] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:52] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:52] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 08:58:59] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 08:59:06] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 08:59:12] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 08:59:19] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 08:59:26] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 08:59:26] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 08:59:32] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 08:59:39] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 08:59:45] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 08:59:52] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 08:59:58] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 08:59:58] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 09:00:05] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 09:00:12] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 09:00:18] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 09:00:25] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 09:00:32] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 09:00:32] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 09:00:58] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 09:01:24] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 09:01:50] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 09:02:16] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 09:02:41] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 09:02:41] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 09:03:07] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 09:03:33] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 09:03:58] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 09:04:24] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 09:04:49] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 09:04:49] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 09:05:15] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 09:05:41] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 09:06:06] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 09:06:32] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 09:06:57] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 09:06:57] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 09:07:22] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 09:07:47] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 09:08:13] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 09:08:38] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 09:09:03] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 09:09:03] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 09:09:56] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 09:10:49] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 09:11:41] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 09:12:32] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 09:13:24] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 09:13:24] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 09:14:15] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 09:15:05] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 09:15:57] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 09:16:48] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 09:17:39] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 09:17:39] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 09:18:30] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 09:19:21] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 09:20:12] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 09:21:03] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 09:21:55] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 09:21:55] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 09:22:50] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 09:23:42] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 09:24:33] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 09:25:24] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 09:26:15] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 09:26:15] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 09:27:24] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 09:28:32] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 09:29:39] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 09:30:48] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 09:31:57] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 09:31:57] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 09:33:05] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 09:34:14] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 09:35:21] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 09:36:30] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 09:37:37] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 09:37:38] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 09:38:46] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 09:39:55] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 09:41:04] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 09:42:12] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 09:43:21] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 09:43:21] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 09:44:29] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 09:45:37] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 09:46:44] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 09:47:51] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 09:49:03] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 09:49:03] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 09:50:13] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 09:51:20] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 09:52:28] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 09:53:36] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 09:54:43] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 09:54:43] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 09:56:19] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 09:57:52] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 09:59:27] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 10:01:02] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 10:02:37] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 10:02:37] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 10:04:11] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 10:05:46] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 10:07:21] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 10:08:56] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 10:10:31] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 10:10:31] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 10:12:06] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 10:13:41] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 10:15:18] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 10:16:54] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 10:18:28] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 10:18:28] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 10:20:01] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 10:21:35] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 10:23:10] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 10:24:44] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 10:26:19] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 10:26:19] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 10:26:19] Could not find random ground location
+[jordanoleary-spellmasons-server] [2023-11-26 10:28:00] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 10:29:41] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 10:31:22] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 10:33:03] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 10:34:44] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 10:34:44] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 10:36:25] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 10:38:12] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 10:39:56] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 10:41:40] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 10:43:25] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 10:43:25] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 10:45:06] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 10:46:48] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 10:48:30] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 10:50:12] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 10:51:54] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 10:51:54] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 10:53:35] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 10:55:16] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 10:56:56] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 10:58:38] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 11:00:17] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 11:00:17] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 11:01:57] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 11:03:38] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 11:05:19] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 11:06:59] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 11:08:39] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 11:08:39] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 11:10:21] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 11:12:03] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 11:13:43] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 11:15:23] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 11:17:04] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 11:17:04] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 11:18:58] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 11:20:53] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 11:22:45] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 11:24:38] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 11:26:31] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 11:26:31] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 11:28:22] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 11:30:15] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 11:32:10] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 11:34:03] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 11:35:55] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 11:35:55] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 11:37:53] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 11:39:48] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 11:41:40] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 11:43:35] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 11:45:27] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 11:45:27] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 11:47:19] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 11:49:13] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 11:51:05] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 11:52:57] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 11:54:49] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 11:54:49] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 11:57:18] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 11:59:44] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 12:02:15] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 12:04:44] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 12:07:11] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 12:07:11] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 12:09:37] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 12:12:05] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 12:14:33] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 12:17:03] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 12:19:30] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 12:19:30] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 12:21:56] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 12:24:22] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 12:26:47] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 12:29:19] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 12:31:47] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 12:31:47] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 12:31:47] Could not find random ground location
+[jordanoleary-spellmasons-server] [2023-11-26 12:34:20] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 12:36:51] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 12:39:22] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 12:41:54] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 12:44:24] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 12:44:24] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 12:46:54] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 12:49:23] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 12:51:54] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 12:54:26] Headless gameloop unexpectedly large loop count: 8000
+[jordanoleary-spellmasons-server] [2023-11-26 12:57:00] Headless gameloop unexpectedly large loop count: 10000
+[jordanoleary-spellmasons-server] [2023-11-26 12:57:00] Force return from headless gameloop to prevent infinite loop
+[jordanoleary-spellmasons-server] [2023-11-26 12:59:31] Headless gameloop unexpectedly large loop count: 2000
+[jordanoleary-spellmasons-server] [2023-11-26 13:02:01] Headless gameloop unexpectedly large loop count: 4000
+[jordanoleary-spellmasons-server] [2023-11-26 13:04:32] Headless gameloop unexpectedly large loop count: 6000
+[jordanoleary-spellmasons-server] [2023-11-26 13:07:04] Headless gameloop unexpectedly large loop count: 8000
