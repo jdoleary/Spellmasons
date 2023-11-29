@@ -866,9 +866,13 @@ export default class Underworld {
             console.error('Queued pickup timed out and was force triggered');
           } else {
             console.error('Attempted to aquire queued pickup via timeout but unit is undefined');
+            // Prevent error from triggering more than once
+            queuedPickup.flaggedForRemoval = true;
           }
         } else {
           console.error('Attempted to aquire queued pickup via timeout but pickup is undefined');
+          // Prevent error from triggering more than once
+          queuedPickup.flaggedForRemoval = true;
         }
       }
     }

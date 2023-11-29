@@ -423,7 +423,7 @@ export function tryTriggerPickup(pickup: IPickup, unit: IUnit, underworld: Under
     // All pickups triggering must be networked to prevent desyncs resulting 
     // from slight position differences that can result in cascading desyncs due to
     // a pickup triggering on one client or host but not on others.
-    // Server initiates all pickups
+    // Server (or singleplayer as host) initiates all pickups
     if (globalThis.isHost(underworld.pie)) {
       // Try a prediction effect to see if it will trigger and
       // only send QUEUE_PICKUP_TRIGGER if it will trigger

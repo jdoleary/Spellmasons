@@ -120,7 +120,8 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
     case MESSAGE_TYPES.QUEUE_PICKUP_TRIGGER:
       // QUEUE_PICKUP_TRIGGER is only for clients, the headless server triggers pickups
       // as soon as they are touched and is the source of truth on what pickups are touched
-      if (globalThis.headless) {
+      // Also this should be ignored by single player host
+      if (globalThis.isHost(underworld.pie)) {
         return;
       }
       const { pickupId, pickupName, unitId, playerClientId } = payload;
