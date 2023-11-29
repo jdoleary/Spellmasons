@@ -24,7 +24,7 @@ The deathmasons work fine.
 
 I only experience the bug on the level with the deathmasons
 - TheyCallMeWitch — Yesterday at 7:07 PM
-After a wipe and restart, is it intended that players start with more than three spells?
+**After a wipe and restart, is it intended that players start with more than three spells?**
 meme_man — Yesterday at 11:58 PM
 Happened to me once
 TheyCallMeWitch — Today at 12:31 AM
