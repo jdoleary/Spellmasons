@@ -3115,6 +3115,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         continue;
       }
       skyBeam(deathmason);
+      skyBeam(portal);
       deathmason.x = portal.x;
       deathmason.y = portal.y;
       Obstacle.tryFallInOutOfLiquid(deathmason, this, false);

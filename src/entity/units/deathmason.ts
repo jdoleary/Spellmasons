@@ -96,7 +96,7 @@ const unit: UnitSource = {
             }
             // Spawn the portals
             lastPromise = makeManaTrail(unit, coord, underworld, unit.faction == Faction.ENEMY ? '#930e0e' : '#0e0e93', '#ff0000').then(() => {
-              const portal = Pickup.create({ pos: coord, pickupSource: deathmasonPortalPickupSource,logSource:'deathmason' }, underworld, false);
+              const portal = Pickup.create({ pos: coord, pickupSource: deathmasonPortalPickupSource, logSource: 'deathmason' }, underworld, false);
               // @ts-ignore, this flag is necessary to distinguish portals that will spawn units from those that just teleport you
               // It is not a part of the IPickup interface and therefore needs ts-ignore
               portal.doesSpawn = true;
@@ -126,31 +126,32 @@ const unit: UnitSource = {
             });
             await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
           }
-        }
-      } else {
-        const attackTarget = attackTargets && attackTargets[0];
-        // Attack
-        const slashCost = calculateCost([slash.card, slash.card, slash.card], {});
-        if (slashCost.manaCost <= unit.mana && attackTarget && canAttackTarget) {
-          const keyMoment = () => {
-            let lastPromise = Promise.resolve();
-            for (let target of attackTargets) {
-              lastPromise = underworld.castCards({
-                casterCardUsage: {},
-                casterUnit: unit,
-                casterPositionAtTimeOfCast: Vec.clone(unit),
-                cardIds: [slash.card.id, slash.card.id, slash.card.id],
-                castLocation: target,
-                prediction: false,
-                outOfRange: false,
-                magicColor
-              })
-                // .then() removes <EffectState> from the return type
-                .then(() => { });
+        } else {
+
+          const attackTarget = attackTargets && attackTargets[0];
+          // Attack
+          const slashCost = calculateCost([slash.card, slash.card, slash.card], {});
+          if (slashCost.manaCost <= unit.mana && attackTarget && canAttackTarget) {
+            const keyMoment = () => {
+              let lastPromise = Promise.resolve();
+              for (let target of attackTargets) {
+                lastPromise = underworld.castCards({
+                  casterCardUsage: {},
+                  casterUnit: unit,
+                  casterPositionAtTimeOfCast: Vec.clone(unit),
+                  cardIds: [slash.card.id, slash.card.id, slash.card.id],
+                  castLocation: target,
+                  prediction: false,
+                  outOfRange: false,
+                  magicColor
+                })
+                  // .then() removes <EffectState> from the return type
+                  .then(() => { });
+              }
+              return lastPromise;
             }
-            return lastPromise;
+            await Unit.playComboAnimation(unit, 'playerAttackEpic', keyMoment, { animationSpeed: 0.2, loop: false });
           }
-          await Unit.playComboAnimation(unit, 'playerAttackEpic', keyMoment, { animationSpeed: 0.2, loop: false });
         }
       }
     } else {
