@@ -1,5 +1,6 @@
 # Critical Path
 ## Priority
+- Delay card pick until start of turn so it doesn't ruin spells
 - fix: After a wipe and restart the play is in the game but not "lobbyReady" and so no one else can join and they can't continue in their own game
 - fix: Getting spells extra  on multiplayer game restart after lose
 - IS THE ON DATA QUEUE CONTAINER AWAITING MESSAGES IN EVERY ROOM??? ARE ROOMS BLOCKING EACH OTHER??

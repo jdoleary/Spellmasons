@@ -1,6 +1,8 @@
 ## Bugs
+- Clone can put units out of bounds
 - WildBerryBlast — Today at 3:05 PM
 Weird bug to report when using the dash feature into a blue portal it would teleport me to the other portal then back to the first portal both portals would still be on the screen but unable to go through either of them it was in a multi-player game if that helps
+    - **movement spells and pickups don't mix well on multiplayer** dashing into a mana potion triggers it twice
 - Note: flying projectile race timeouts happened on alttab on dev
 - bug: Best Spell on game over screen is bugged
 - Bug: you can't cast a spell that will kill you and then resurrect yourself anymore
@@ -18,7 +20,7 @@ Weird bug to report when using the dash feature into a blue portal it would tele
 Hello, 
 
 Sorry I attempted to record my bug but my recording software leaves up the spellbook for the entirety of the recording
-anyways, more accurately after testing a couple times. Deathmasons just cause major "lag" actions can take multiple minutes to resolve, this is without pressing end turn. This happens every time deathmasons are in my game. Funny enough pressing ESC or alt-tabbing causes the actions to resolve quickly.
+anyways, more accurately after testing a couple times. Deathmasons just cause major "lag" actions can take multiple minutes to resolve, this is without pressing end turn. This happens every time deathmasons are in my game. Funny enough pressing ESC or alt-tabbing causes the actions to resolve quickly.n
 so desync was not the correct term for my single-player issue
 The actions of the player (my actions) take a long time to resolve. 
 
