@@ -255,6 +255,10 @@ function assignEmitter(pickup: IPickup, emitterId: string, prediction: boolean, 
     // Don't show if just a prediction
     return;
   }
+  // If there's a previous emitter, remove it because it is about to be replaced
+  if (pickup.emitter) {
+    stopAndDestroyForeverEmitter(pickup.emitter);
+  }
   if (emitterId == RED_PORTAL_JID) {
     pickup.emitter = makeDeathmasonPortal(pickup, prediction, '#520606', '#e03636');
     if (pickup.image) {
@@ -354,7 +358,9 @@ export function load(pickup: IPickupSerialized, underworld: Underworld, predicti
   // Get the pickup object
   let foundPickup = pickups.find((p) => p.name == pickup.name);
   if (foundPickup) {
-    const { image, flaggedForRemoval, ...toCopy } = pickup;
+    // Note, emitter but be desctructured here or else it will clobber
+    // newPickups emitter during Object.assign without removing it
+    const { image, flaggedForRemoval, emitter, ...toCopy } = pickup;
     if (flaggedForRemoval) {
       // Do not create a pickup that has been removed
       console.error('Attempted to Load a pickup that is flaggedForRemoval');
