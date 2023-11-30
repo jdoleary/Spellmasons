@@ -1,4 +1,8 @@
 ## 1.24.0
+- balance: Deathmason
+    - Deathmason now actually uses mana and can be prevented from spawning portals if he has insufficient mana
+    - Deathmason no longer casts slash
+- Fix red portals not disappearing
 - Fix network messages being missed when game is alt-tabbed
 - Completely redid pickup code to resolve desyncs when colliding with pickups especially when using movement spells
     - Handles if client triggers pickup but server does not
