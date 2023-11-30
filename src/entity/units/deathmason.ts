@@ -26,19 +26,20 @@ export const bossmasonUnitId = 'Deathmason';
 const NUMBER_OF_ATTACK_TARGETS = 8;
 const bossmasonMana = 200;
 const magicColor = 0x321d73;
+const portalCastCost = 150;
 const unit: UnitSource = {
   id: bossmasonUnitId,
   info: {
     description: 'deathmason description',
     image: 'units/playerIdle',
-    subtype: UnitSubType.RANGED_RADIUS,
+    subtype: UnitSubType.SUPPORT_CLASS,
   },
   unitProps: {
     damage: 0,
     attackRange: config.PLAYER_BASE_ATTACK_RANGE * 3,
     healthMax: 600,
     manaMax: bossmasonMana,
-    manaPerTurn: bossmasonMana
+    manaPerTurn: 100
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     if (unit.image) {
@@ -66,7 +67,8 @@ const unit: UnitSource = {
     const deathmasonPortals = underworld.pickups.filter(p => p.name == portalName);
     const deathmasonPortalPickupSource = pickups.find(p => p.name == portalName);
     if (deathmasonPortalPickupSource) {
-      if (deathmasonPortals.length == 0) {
+      if (deathmasonPortals.length == 0 && unit.mana >= portalCastCost) {
+        unit.mana -= portalCastCost;
         // Spawn new red portals
         let numberOfSummons = 8;
         const keyMoment = () => {
@@ -111,6 +113,7 @@ const unit: UnitSource = {
         // After spawning portals the bossmason can heal
         const sacrificeCost = calculateCost([sacrifice.card], {});
         if (sacrificeCost.manaCost <= unit.mana && unit.health < unit.healthMax) {
+          unit.mana -= sacrificeCost.manaCost;
           // Consume allies if hurt
           // Note: Do not allow Deathmason to siphon allied player units
           const closestUnit = Unit.livingUnitsInSameFaction(unit, underworld).filter(u => u.unitType !== UnitType.PLAYER_CONTROLLED && u.unitSourceId !== bossmasonUnitId && Unit.inRange(unit, u))[0]
@@ -139,14 +142,9 @@ const unit: UnitSource = {
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
     // Should be always true, since bossmasons is always AI
     if (unit.unitType == UnitType.AI) {
-      return Unit.livingUnitsInDifferentFaction(unit, underworld)
-        .filter(u => math.distance(unit, u) <= unit.attackRange)
-        .map(u => ({ unit: u, dist: math.distance(unit, u) }))
-        .sort((a, b) => {
-          return a.dist - b.dist;
-        })
-        .map(x => x.unit)
-        .slice(0, NUMBER_OF_ATTACK_TARGETS);
+      const portalName = unit.faction == Faction.ENEMY ? RED_PORTAL : Pickup.BLUE_PORTAL;
+      const deathmasonPortals = underworld.pickups.filter(p => p.name == portalName);
+      return unit.mana >= portalCastCost && deathmasonPortals.length == 0 ? [unit] : [];
     }
     return [];
   },
