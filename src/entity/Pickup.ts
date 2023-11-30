@@ -451,8 +451,9 @@ export function tryTriggerPickup(pickup: IPickup, unit: IUnit, underworld: Under
         // Do not send FORCE_TRIGGER_PICKUP if the pickup won't trigger, for example, health potions
         // don't trigger if you are full health
         if (willTrigger) {
-          // Edge case: Unit has touched pickup before headless has, so force trigger it
-          console.error(`Unit touched pickup before headless has: ${pickup.name}`)
+          // Unit has touched pickup before headless has, so force trigger it
+          // This happens when unit is walking as opposed to being pushed
+          console.log(`Unit touched pickup before headless has: ${pickup.name}`)
           underworld.pie.sendData({
             type: MESSAGE_TYPES.FORCE_TRIGGER_PICKUP,
             pickupId: pickup.id,
