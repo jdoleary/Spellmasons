@@ -6,6 +6,8 @@
     - Thanks WildBerryBlast
 - fix: joining saved games so that you automatically assume control over your old saved player character
 - fix: resurrect weak so that you can cast it on yourself
+- fix: After a wipe and restart the play is in the game but not "lobbyReady" and so no one else can join and they can't continue in their own game
+- Improve rejoining with same name
 
 
 

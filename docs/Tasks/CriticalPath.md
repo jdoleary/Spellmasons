@@ -1,8 +1,9 @@
 # Critical Path
 ## Priority
-- FIND DESYNCS that occur when you encounter Deathmason in singleplayer
 - Just remove lobby ready entirely so that it's impossible to  be trapped in lobby
 - Delay card pick until start of turn so it doesn't ruin spells
+    - Change end turn btn to a level up button
+- FIND DESYNCS that occur when you encounter Deathmason in singleplayer
 
 ---
 
