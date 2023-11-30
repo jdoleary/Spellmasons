@@ -1,5 +1,6 @@
 # Critical Path
 ## Priority
+- Fix: "Failed to save" when there are too many saves"
 - WhiteScythe — Today at 7:26 PM
 Been encountering an issue in multiplayer, seashell or walrus, where if the primary player is AFK for more than a minute it kicks the other player back out and makes a backup.
 - Just remove lobby ready entirely so that it's impossible to  be trapped in lobby
