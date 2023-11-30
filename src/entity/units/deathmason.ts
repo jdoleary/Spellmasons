@@ -34,6 +34,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
+    damage: 0,
     attackRange: config.PLAYER_BASE_ATTACK_RANGE * 3,
     healthMax: 600,
     manaMax: bossmasonMana,
@@ -126,32 +127,7 @@ const unit: UnitSource = {
             });
             await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
           }
-        } else {
 
-          const attackTarget = attackTargets && attackTargets[0];
-          // Attack
-          const slashCost = calculateCost([slash.card, slash.card, slash.card], {});
-          if (slashCost.manaCost <= unit.mana && attackTarget && canAttackTarget) {
-            const keyMoment = () => {
-              let lastPromise = Promise.resolve();
-              for (let target of attackTargets) {
-                lastPromise = underworld.castCards({
-                  casterCardUsage: {},
-                  casterUnit: unit,
-                  casterPositionAtTimeOfCast: Vec.clone(unit),
-                  cardIds: [slash.card.id, slash.card.id, slash.card.id],
-                  castLocation: target,
-                  prediction: false,
-                  outOfRange: false,
-                  magicColor
-                })
-                  // .then() removes <EffectState> from the return type
-                  .then(() => { });
-              }
-              return lastPromise;
-            }
-            await Unit.playComboAnimation(unit, 'playerAttackEpic', keyMoment, { animationSpeed: 0.2, loop: false });
-          }
         }
       }
     } else {
