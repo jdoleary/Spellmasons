@@ -1,4 +1,10 @@
 ## Bugs
+- I spawned a deathmason on level 1 and I'm getting these errors:
+    -    Guard against infinite loop, unit tried to move but it was not its turn.  Clearing stamina
+    - Cannot remove subsprite spell-effects/modifierShield.png subsprite is missing from sprite.children
+    - on the unfocused browser (edge), it's not clearing the red portals after they're used
+- Stamina is incorrect for selectedUnit of other player
+    - after they walked into a stamina potion
 
 - Joined saved multiplayer game that i didn't exist in.  Changed name so that it would assume control of another player
     - 2nd player quit

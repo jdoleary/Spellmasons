@@ -10,6 +10,73 @@
 - Improve rejoining with same name
 
 
+balance: Revise Deathmason behavior
+    so he can't teleport via a red portal and then attack
+    in the same turn (from the new unwarned location)
+
+ref: join game as player
+    Joining a game with the same
+    name as a disconnected player who has a different clientId will now
+    automatically switch that player to the other one.
+    This drastically improves the experience of joining saved games
+    where you're trying to assume control of your saved player
+    but your clientId has changed.
+
+fix: Resurrect weak
+    unable to rez self
+    due to it decreasing your mana
+
+ref: Pickup
+    Handle edgecase where player touches pickup on client before server has.
+    Usually server processes the touched pickup first because it triggers
+    all it's movement loops immediately; however, it's possible due to a desync
+    or maybe due to large latency while a player is moving that the player
+    passess through the pickup on the client before it does on the server.
+    In that case, if the server adds to the aquirePickupQueue after the
+    client unit has already passed through then it won't trigger on the client
+    (it will timeout), so this edge case has the client trigger the pickup for
+    everyone. (so there's no desync).
+
+fix: Pickup id collisions during sync
+    where removed pickups were still in the array and then new loaded
+    pickups could have id collisions.
+    This would happen if the arrays of pickups (ids only) looked like
+    [1,2,3] and [0,1,2,3]; so none of the pickups matched, it would remove them
+    all and then try to load but they were just marked as flagged for
+    removal so then it would fail to load them.
+
+ref: Pickups
+    Headless server is the source of truth for pickup collisions.
+    However, this is complex because headless server processes forceMoves
+    instantly, we don't want pickups to trigger on the client side before
+    the animations have completed.  Therefore, when headless sends the
+    QUEUE_PICKUP_TRIGGER message, the clients store the pickup info
+    in a queue.  And once, on the client, the unit collides with the pickup,
+    if the pickup information is in the queue, it THEN triggers the pickup.
+
+fix: lobbyReady state after game restarts
+    due to wipe.
+    To reproduce old issue, start a multiplayer game with one player,
+    they die and the game resets after 10 seconds, then join with another
+    player and they're stuck in the lobby.
+    This is because the previous lobbyReady code was getting clobbered
+    by the SYNC_PLAYERS queued message that came from ensureAllClients...
+
+fix: occasional invisible portals
+    Thanks Skillo
+
+optim: Reduce server logging
+    Server logging whole payload was causing huge server
+    slowdown for endgame where every spell
+    sends SYNC_SOME_STATE which prints the whole game state.
+    log: Also improve logging labels for onData logs
+
+fix: do not recreate pickups that are flagged
+    for removal.
+
+log: Add logging to pickup error for better investigation
+
+
 
 ## Spellmasons Update v1.23.8
 Some of you may have noticed that servers have been unavailable here and there or have crashed.  I just found the a second cause of the server crash problem (first cause was resolved on 11/17), I will put out a patch tomorrow morning.  I also added an extra check to make sure that this kind of crash is impossible.
