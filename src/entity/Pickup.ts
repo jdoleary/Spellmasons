@@ -266,7 +266,10 @@ function assignEmitter(pickup: IPickup, emitterId: string, prediction: boolean, 
         Image.cleanup(pickup.image);
       } else {
         // Use tinted portal image as backup in case emitters are limited
-        pickup.image.sprite.tint = 0xe43636;
+        // @ts-ignore: Special property to keep the tint of portals
+        pickup.image.sprite.keepTint = 0xe43636;
+        // @ts-ignore: Special property to keep the tint of portals
+        pickup.image.sprite.tint = pickup.image.sprite.keepTint;
       }
     }
   } else if (emitterId == BLUE_PORTAL_JID) {
@@ -276,7 +279,10 @@ function assignEmitter(pickup: IPickup, emitterId: string, prediction: boolean, 
         Image.cleanup(pickup.image);
       } else {
         // Use tinted portal image as backup in case emitters are limited
-        pickup.image.sprite.tint = 0x5252fa;
+        // @ts-ignore: Special property to keep the tint of portals
+        pickup.image.sprite.keepTint = 0x5252fa;
+        // @ts-ignore: Special property to keep the tint of portals
+        pickup.image.sprite.tint = pickup.image.sprite.keepTint;
       }
     }
   } else if (emitterId == CURSED_MANA_POTION) {

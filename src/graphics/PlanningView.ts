@@ -386,7 +386,9 @@ export function clearTints(underworld: Underworld) {
   });
   underworld.pickups.forEach(pickup => {
     if (pickup.image) {
-      pickup.image.sprite.tint = pickup.image.sprite.tint || 0xFFFFFF;
+      // @ts-ignore: Special property to keep the tint of portals
+      // it may be undefined, in which case we revert to no tint
+      pickup.image.sprite.tint = pickup.image.sprite.keepTint || 0xFFFFFF;
     }
   });
   underworld.doodads.forEach(doodad => {
