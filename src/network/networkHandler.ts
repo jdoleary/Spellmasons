@@ -132,7 +132,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         const pickupSource = Pickup.pickups.find(p => p.name == pickupName);
         if (pickupSource) {
           console.log('pickups:', underworld.pickups.map(p => `${p.id},${p.name}`), 'pickupId:', pickupId)
-          console.error('Attempted to aquire pickup but could not find it in list, creating one to aquire');
+          console.error('Attempted to aquire pickup but could not find it in list, creating one to aquire', pickupName);
           pickup = Pickup.create({ pos: { x: -1000, y: -1000 }, pickupSource, logSource: 'QUEUE_PICKUP_TRIGGER force create' }, underworld, false);
         } else {
           console.error(`Pickup source not found for name: ${pickupName}`)
