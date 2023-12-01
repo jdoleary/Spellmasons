@@ -3584,7 +3584,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
 	"sourceSize": {"w":64,"h":64}
 },
-"spelliconFlamestrike.png":
+"spelliconFlameStrike.png":
 {
 	"frame": {"x":1708,"y":148,"w":64,"h":64},
 	"rotated": false,

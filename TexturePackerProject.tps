@@ -902,10 +902,16 @@
             <key type="filename">images/units/vampireWalk_6.png</key>
             <key type="filename">images/units/vampireWalk_7.png</key>
             <key type="filename">images/units/vampireWalk_8.png</key>
+            <key type="filename">public/images/spell/blank.png</key>
             <key type="filename">public/images/spell/resurrect.png</key>
             <key type="filename">public/images/spell/spellIconArrow.png</key>
+            <key type="filename">public/images/spell/spellIconArrow2.png</key>
+            <key type="filename">public/images/spell/spellIconArrow3.png</key>
+            <key type="filename">public/images/spell/spellIconArrowFork.png</key>
             <key type="filename">public/images/spell/spellIconArrowGreen.png</key>
+            <key type="filename">public/images/spell/spellIconArrowMulti.png</key>
             <key type="filename">public/images/spell/spellIconArrowRed.png</key>
+            <key type="filename">public/images/spell/spellIconArrowTriple.png</key>
             <key type="filename">public/images/spell/spellIconBleed.png</key>
             <key type="filename">public/images/spell/spellIconBloat.png</key>
             <key type="filename">public/images/spell/spellIconBloodCurse.png</key>
@@ -929,12 +935,18 @@
             <key type="filename">public/images/spell/spellIconFortify.png</key>
             <key type="filename">public/images/spell/spellIconFreeze.png</key>
             <key type="filename">public/images/spell/spellIconHeal.png</key>
+            <key type="filename">public/images/spell/spellIconHeal2.png</key>
+            <key type="filename">public/images/spell/spellIconHeal3.png</key>
+            <key type="filename">public/images/spell/spellIconHeavySlash.png</key>
             <key type="filename">public/images/spell/spellIconHurt.png</key>
             <key type="filename">public/images/spell/spellIconLastWill.png</key>
+            <key type="filename">public/images/spell/spellIconLastWill2.png</key>
             <key type="filename">public/images/spell/spellIconManaBurn.png</key>
             <key type="filename">public/images/spell/spellIconManaSteal.png</key>
+            <key type="filename">public/images/spell/spellIconMegaSlash.png</key>
             <key type="filename">public/images/spell/spellIconPlusRadius.png</key>
             <key type="filename">public/images/spell/spellIconPoison.png</key>
+            <key type="filename">public/images/spell/spellIconPoison2.png</key>
             <key type="filename">public/images/spell/spellIconProtection.png</key>
             <key type="filename">public/images/spell/spellIconPull.png</key>
             <key type="filename">public/images/spell/spellIconPurify.png</key>
@@ -942,12 +954,15 @@
             <key type="filename">public/images/spell/spellIconRend.png</key>
             <key type="filename">public/images/spell/spellIconRepel.png</key>
             <key type="filename">public/images/spell/spellIconResurrect.png</key>
+            <key type="filename">public/images/spell/spellIconResurrect2.png</key>
+            <key type="filename">public/images/spell/spellIconResurrect3.png</key>
             <key type="filename">public/images/spell/spellIconSacrifice.png</key>
             <key type="filename">public/images/spell/spellIconShield.png</key>
             <key type="filename">public/images/spell/spellIconShove.png</key>
             <key type="filename">public/images/spell/spellIconSlow.png</key>
             <key type="filename">public/images/spell/spellIconSplit.png</key>
             <key type="filename">public/images/spell/spellIconSuffocate.png</key>
+            <key type="filename">public/images/spell/spellIconSuffocate2.png</key>
             <key type="filename">public/images/spell/spellIconSummon_ancient.png</key>
             <key type="filename">public/images/spell/spellIconSummon_archer.png</key>
             <key type="filename">public/images/spell/spellIconSummon_bloodarcher.png</key>
@@ -961,6 +976,7 @@
             <key type="filename">public/images/spell/spellIconSummon_ghostarcher.png</key>
             <key type="filename">public/images/spell/spellIconSummon_glop.png</key>
             <key type="filename">public/images/spell/spellIconSummon_golem.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_golemcrew.png</key>
             <key type="filename">public/images/spell/spellIconSummon_greenglop.png</key>
             <key type="filename">public/images/spell/spellIconSummon_gripthulu.png</key>
             <key type="filename">public/images/spell/spellIconSummon_iceurn.png</key>
@@ -983,7 +999,7 @@
             <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconDominate.png</key>
             <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconEnsnare.png</key>
             <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconFastForward.png</key>
-            <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconFlamestrike.png</key>
+            <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconFlameStrike.png</key>
             <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconGrace.png</key>
             <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconHarvest.png</key>
             <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconPacify.png</key>
@@ -1609,7 +1625,7 @@
             <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconDominate.png</filename>
             <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconEnsnare.png</filename>
             <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconFastForward.png</filename>
-            <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconFlamestrike.png</filename>
+            <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconFlameStrike.png</filename>
             <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconGrace.png</filename>
             <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconHarvest.png</filename>
             <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconPacify.png</filename>
