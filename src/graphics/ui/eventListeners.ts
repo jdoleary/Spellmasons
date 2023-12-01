@@ -211,7 +211,7 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
       }
       break;
     case 'endTurn':
-      underworld.endMyTurn();
+      underworld.endMyTurnButtonHandler();
       break;
     case 'spell1':
       CardUI.selectCardByIndex(0, CardUI.elCardHand);
@@ -348,7 +348,11 @@ function handleInputUp(keyCodeMapping: string | undefined, overworld: Overworld)
 }
 
 export function endTurnBtnListener(overworld: Overworld, e: MouseEvent) {
-  overworld.underworld?.endMyTurn();
+  if (overworld.underworld) {
+    overworld.underworld.endMyTurnButtonHandler();
+  } else {
+    console.error('Undexpected: Cannot end turn, no underworld');
+  }
   e.preventDefault();
   e.stopPropagation();
   return false;

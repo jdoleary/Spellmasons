@@ -889,8 +889,35 @@ body.your-turn #end-turn-btn:hover {
   background-image: url('/ui/iconButtonBlankUp.png');
 }
 
+#end-turn-btn.upgrade {
+  background-image: url('/ui/iconUpgradeUp.png');
+  animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 5px, 0 0 10px rgb(244, 231, 144, 0.5), 0 0 15px rgba(244, 231, 144, 0.5);
+  }
+
+  50% {
+    box-shadow: 0 0 20px rgb(255, 231, 144, 1), 0 0 30px rgba(244, 231, 144, 1), 0 0 40px rgba(244, 231, 144, 1);
+  }
+
+}
+
 #end-turn-btn:active {
   background-image: url('/ui/iconButtonBlankDown.png');
+}
+
+#end-turn-btn.upgrade:active {
+  background-image: url('/ui/iconUpgradeDown.png');
+}
+
+#end-turn-btn.upgrade #end-turn-btn-inner {
+  /* Hide end turn text when it is the upgrade button */
+  display: none;
 }
 
 #end-turn-btn {

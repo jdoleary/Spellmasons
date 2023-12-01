@@ -97,6 +97,7 @@ import { skyBeam } from './VisualEffects';
 import { urn_explosive_id } from './entity/units/urn_explosive';
 import { urn_ice_id } from './entity/units/urn_ice';
 import { urn_poison_id } from './entity/units/urn_poison';
+import { elEndTurnBtn } from './HTMLElements';
 
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
@@ -2362,8 +2363,27 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
   }
   // Sends a network message to end turn
-  async endMyTurn() {
+  async endMyTurnButtonHandler() {
     if (globalThis.player) {
+      // If End turn button is level up button
+      if (elEndTurnBtn.classList.contains('upgrade')) {
+        const upgradesLeftToChoose = this.upgradesLeftToChoose(globalThis.player)
+        if (upgradesLeftToChoose > 0) {
+          this.showUpgrades();
+          elEndTurnBtn.classList.toggle('upgrade', false);
+          // Do not end turn, just show upgrades
+          return;
+        } else {
+          console.error('Unexpected: Cannot choose upgrades, upgrades left to choose:', upgradesLeftToChoose);
+        }
+        // Prevent ending turn when attempting to upgrade
+        console.error('Unexpected: Attempted to show upgrades but cannot');
+        // Catch, since we unexpectedly can't upgrade, remove upgrade button
+        elEndTurnBtn.classList.toggle('upgrade', false)
+        // Do not end turn
+        return;
+      }
+
       if (!globalThis.player.isSpawned) {
         console.log('You cannot end your turn until you are spawned.');
         return;
@@ -2484,8 +2504,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           CardUI.recalcPositionForCards(globalThis.player, this);
           CardUI.syncInventory(undefined, this);
           await runPredictions(this);
-          // Show upgrades if player has received an upgrade
-          this.showUpgrades();
           this.checkIfShouldSpawnPortal();
 
           // Announce new players' turn
@@ -2628,10 +2646,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
 
   showUpgrades() {
-    if (globalThis.animatingSpells) {
-      // Do not show upgrades while spells are still animating or else you'll miss out on the coolness
-      return;
-    }
     // Remove additional pickups once upgrades are shown because it will allow players to pick all upgrades on map
     for (let p of this.pickups) {
       if (!p.flaggedForRemoval && p.name == Pickup.CARDS_PICKUP_NAME) {

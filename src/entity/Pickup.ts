@@ -25,6 +25,7 @@ import { raceTimeout } from '../Promise';
 import { createVisualLobbingProjectile } from './Projectile';
 import floatingText from '../graphics/FloatingText';
 import { containerParticles } from '../graphics/Particles';
+import { elEndTurnBtn } from '../HTMLElements';
 
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 export const PICKUP_IMAGE_PATH = 'pickups/scroll';
@@ -863,7 +864,8 @@ export const pickups: IPickupSource[] = [
   },
 ];
 export function givePlayerUpgrade(p: Player.IPlayer, underworld: Underworld) {
-  underworld.showUpgrades();
+  elEndTurnBtn.classList.toggle('upgrade', true);
+  skyBeam(p.unit);
   if (player && player == globalThis.player) {
     if (player.inventory.length > config.NUMBER_OF_TOOLBAR_SLOTS - 1) {
       explain(EXPLAIN_INVENTORY);

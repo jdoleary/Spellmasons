@@ -397,8 +397,6 @@ export function runCinematicLevelCamera(underworld: Underworld): Promise<void> {
     globalThis.cinematicCameraTarget = undefined;
     cameraAutoFollow(false);
     console.log('Cinematic Cam: done')
-    // Note: Upgrades must come AFTER resetPlayerForNextLevel, see commit for explanation
-    underworld.showUpgrades();
   });
 
 }

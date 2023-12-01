@@ -10,7 +10,6 @@
 - WhiteScythe — Today at 7:26 PM
 Been encountering an issue in multiplayer, seashell or walrus, where if the primary player is AFK for more than a minute it kicks the other player back out and makes a backup.
 - Just remove lobby ready entirely so that it's impossible to  be trapped in lobby
-- Delay card pick until start of turn so it doesn't ruin spells
     - Change end turn btn to a level up button
 - FIND DESYNCS that occur when you encounter Deathmason in singleplayer
 
