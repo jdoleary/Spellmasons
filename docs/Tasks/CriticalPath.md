@@ -1,10 +1,7 @@
 # Critical Path
 ## Priority
 - Fix summon cards disappearing
-- Fix dash movement desync
-  - it seems to only move to the first on server
-- Fix other strategy balance:
-  - Balance Summons cost
+- Fix other strategy balance
 - Fix: "Failed to save" when there are too many saves"
 - 
 - WhiteScythe — Today at 7:26 PM
@@ -64,8 +61,6 @@ for example: an enemy that has a tough outer shell. Direct damage is reduced, bu
 
 Skillo — Today at 11:41 AM exactly! Imagine doing target arrow + dash + slash
 and doing massive damage cause you crossed the map with it
-
-- fix: UI: Decoy health isn't listed in card like other summons
 
 - Enemy whose damage ramps over time (ancient) Scojbo
 - Vinnick Talberot:

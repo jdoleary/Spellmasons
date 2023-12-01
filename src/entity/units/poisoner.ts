@@ -10,8 +10,9 @@ import * as Image from '../../graphics/Image';
 import Underworld from '../../Underworld';
 import * as config from '../../config';
 
+export const POISONER_ID = 'poisoner';
 const unit: UnitSource = {
-  id: 'poisoner',
+  id: POISONER_ID,
   info: {
     description: 'poisoner_copy',
     image: 'units/poisIdle',

@@ -7,8 +7,9 @@ import { makeAncientParticles } from '../../graphics/ParticleCollection';
 import { makeManaTrail } from '../../graphics/Particles';
 
 const numberOfTargets = 3;
+export const ANCIENT_UNIT_ID = 'ancient';
 const unit: UnitSource = {
-  id: 'ancient',
+  id: ANCIENT_UNIT_ID,
   info: {
     description: 'ancient description',
     image: 'units/ancient',

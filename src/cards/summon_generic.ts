@@ -9,6 +9,21 @@ import { addWarningAtMouse } from '../graphics/PlanningView';
 import { CardRarity } from '../types/commonTypes';
 import { bossmasonUnitId } from '../entity/units/deathmason';
 import { spellmasonUnitId } from '../entity/units/playerUnit';
+import { golem_unit_id } from '../entity/units/golem';
+import { ARCHER_ID } from '../entity/units/archer';
+import { ANCIENT_UNIT_ID } from '../entity/units/ancient';
+import { GLOP_UNIT_ID } from '../entity/units/glop';
+import { gripthulu_id } from '../entity/units/gripthulu';
+import { BLOOD_GOLEM_ID } from '../entity/units/bloodGolem';
+import { POISONER_ID } from '../entity/units/poisoner';
+import { VAMPIRE_ID } from '../entity/units/vampire';
+import { BLOOD_ARCHER_ID } from '../entity/units/blood_archer';
+import { PRIEST_ID } from '../entity/units/priest';
+import { SUMMONER_ID } from '../entity/units/summoner';
+import { GHOST_ARCHER_ID } from '../entity/units/ghost_archer';
+import { MANA_VAMPIRE_ID } from '../entity/units/manaVampire';
+import { DARK_SUMMONER_ID } from '../entity/units/darkSummoner';
+import { DARK_PRIEST_ID } from '../entity/units/darkPriest';
 
 
 const overrides: { [unitId: string]: { exclude: boolean, properties: { manaCost?: number } } } = {
@@ -16,25 +31,74 @@ const overrides: { [unitId: string]: { exclude: boolean, properties: { manaCost?
         exclude: true,
         properties: {}
     },
+    [golem_unit_id]: {
+        exclude: false,
+        properties: { manaCost: 60 }
+    },
+    [ARCHER_ID]: {
+        exclude: false,
+        properties: { manaCost: 60 }
+    },
+    [ANCIENT_UNIT_ID]: {
+        exclude: false,
+        properties: { manaCost: 50 }
+    },
+    [GLOP_UNIT_ID]: {
+        exclude: false,
+        properties: { manaCost: 80 }
+    },
+    [gripthulu_id]: {
+        exclude: false,
+        properties: { manaCost: 80 }
+    },
+    [BLOOD_GOLEM_ID]: {
+        exclude: false,
+        properties: { manaCost: 100 }
+    },
+    [POISONER_ID]: {
+        exclude: false,
+        properties: { manaCost: 100 }
+    },
+    [VAMPIRE_ID]: {
+        exclude: false,
+        properties: { manaCost: 150 }
+    },
+    [BLOOD_ARCHER_ID]: {
+        exclude: false,
+        properties: { manaCost: 130 }
+    },
+    [PRIEST_ID]: {
+        exclude: false,
+        properties: { manaCost: 130 }
+    },
+    [SUMMONER_ID]: {
+        exclude: false,
+        properties: { manaCost: 150 }
+    },
+    [GHOST_ARCHER_ID]: {
+        exclude: false,
+        properties: { manaCost: 180 }
+    },
+    [MANA_VAMPIRE_ID]: {
+        exclude: false,
+        properties: { manaCost: 180 }
+    },
+    [DARK_SUMMONER_ID]: {
+        exclude: false,
+        properties: { manaCost: 210 }
+    },
+    [DARK_PRIEST_ID]: {
+        exclude: false,
+        properties: { manaCost: 210 }
+    },
+    [bossmasonUnitId]: {
+        exclude: false,
+        properties: { manaCost: 400 }
+    },
     'Spellmason': {
         exclude: false,
         properties: {}
     },
-    'glop': {
-        exclude: false,
-        properties: {
-        }
-    },
-    'vampire': {
-        exclude: false,
-        properties: {
-        }
-    },
-    'summoner': {
-        exclude: false,
-        properties: {
-        }
-    }
 }
 export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean, difficulty?: number): Spell | undefined {
     const override = overrides[unitId];
@@ -61,10 +125,7 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean, 
     }
 
     const expenseScaling = 2;
-    let manaCost = Math.max(1, Math.round(2 * Math.log2((sourceUnit.spawnParams?.budgetCost || 1)))) * 30 * (asMiniboss ? 2 : 1);
-    if (unitId == bossmasonUnitId) {
-        manaCost = 750;
-    }
+    const manaCost = override?.properties.manaCost ? (override.properties.manaCost * (asMiniboss ? 1.5 : 1)) : Math.max(1, Math.round(2 * Math.log2((sourceUnit.spawnParams?.budgetCost || 1)))) * 30 * (asMiniboss ? 2 : 1);
     const id = unitId + (asMiniboss ? ' Miniboss' : '');
     if (!globalThis.freeSpells) {
         globalThis.freeSpells = [];

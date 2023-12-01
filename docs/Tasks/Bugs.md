@@ -1,4 +1,6 @@
 ## Bugs
+- fix: UI: Decoy health isn't listed in card like other summons
+    - also fix: miniboss tooltips don't have correct health and mana listed
 - Investigate console.error('Unable to end turn because caster is undefined') occurances
     - also: 'Cannot SPAWN_PLAYER, fromPlayer is undefined.'
     - also: console.error('Critical Error, caster unit not found');

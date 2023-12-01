@@ -9,8 +9,9 @@ import floatingText from '../../graphics/FloatingText';
 import * as config from '../../config';
 import * as colors from '../../graphics/ui/colors';
 
+export const VAMPIRE_ID = 'vampire';
 const unit: UnitSource = {
-  id: 'vampire',
+  id: VAMPIRE_ID,
   info: {
     description: 'vampire_copy',
     image: 'units/vampireIdle',

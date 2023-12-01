@@ -50,8 +50,9 @@ async function resurrectUnits(self: Unit.IUnit, units: Unit.IUnit[], underworld:
   return didResurrect;
 
 }
+export const PRIEST_ID = 'priest';
 const unit: UnitSource = {
-  id: 'priest',
+  id: PRIEST_ID,
   info: {
     description: 'priest_copy',
     image: 'units/priestIdle',

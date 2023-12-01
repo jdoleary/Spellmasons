@@ -9,8 +9,9 @@ import * as config from '../../config';
 import * as Image from '../../graphics/Image';
 
 // "glop" was initially "lobber"
+export const GLOP_UNIT_ID = 'glop';
 const unit: UnitSource = {
-  id: 'glop',
+  id: GLOP_UNIT_ID,
   info: {
     description: 'glop description',
     image: 'units/lobberIdle',
