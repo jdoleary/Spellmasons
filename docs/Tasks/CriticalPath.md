@@ -1,5 +1,9 @@
 # Critical Path
 ## Priority
+- WHlTE RlDER — Today at 2:58 PM
+Waited to report this until I could reproduce it a couple times.
+Adding the push spell during any sort of long combo completely locks the game up.  Having push near the start of the combo isn't a problem, but having it near the mid point or later kills the run.
+  - This has to do with harvest + push
 - Fix: "Failed to save" when there are too many saves"
 - WhiteScythe — Today at 7:26 PM
 Been encountering an issue in multiplayer, seashell or walrus, where if the primary player is AFK for more than a minute it kicks the other player back out and makes a backup.

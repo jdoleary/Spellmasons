@@ -1,4 +1,6 @@
 # Ideas
+- Make Deathmason spawn in after you spawn so you can't one-shot it? @meme_man
+    - or maybe have soulcruxes?
 - ice wall (empty unit with `immovable` to true and ice image)
 - Glass axe
 - Auras or growing / moving areas on the map that do damage onEndTurn
