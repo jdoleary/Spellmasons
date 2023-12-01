@@ -107,7 +107,7 @@ export function create({ pos, pickupSource, idOverride, logSource }:
   const { name, description, imagePath, effect, willTrigger, scale, animationSpeed, playerOnly = false, turnsLeftToGrab } = pickupSource;
   const { x, y } = pos
   if (isNaN(x) || isNaN(y)) {
-    console.error('Unexpected: Created pickup at NaN', pickupSource, pos);
+    console.error('Unexpected: Created pickup at NaN', pickupSource.name);
   }
   if (idOverride !== undefined) {
     underworld.lastPickupId = idOverride;

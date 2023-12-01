@@ -1222,7 +1222,7 @@ export function moveTowardsMulti(unit: IUnit, points: Vec2[], underworld: Underw
   // to resolve is within a reasonable range
   const timeoutMs = 300 + unit.stamina / unit.moveSpeed;
 
-  return raceTimeout(timeoutMs, `moveTowards; unit.id: ${unit.id}`, new Promise<void>((resolve) => {
+  return raceTimeout(timeoutMs, `moveTowards; ${unit.unitSourceId}`, new Promise<void>((resolve) => {
     // Set new resolve done moving
     unit.resolveDoneMoving = resolve;
   })).then(() => {
