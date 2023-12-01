@@ -373,6 +373,11 @@ export default class Underworld {
     if (timedOut) {
       return true;
     }
+    if (isNaN(pushedObject.x) || isNaN(pushedObject.y)) {
+      // Object has been cleaned up or has invalid coordinates so pushing cannot continue
+      // and is "complete"
+      return true;
+    }
     if (Vec.magnitude(velocity) <= 0.1) {
       // It's close enough, return true to signify complete 
       return true;
