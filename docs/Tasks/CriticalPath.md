@@ -1,5 +1,8 @@
 # Critical Path
 ## Priority
+- Fix summon cards disappearing
+- Fix dash movement desync
+  - it seems to only move to the first on server
 - Fix other strategy balance:
   - Balance Summons cost
 - Fix: "Failed to save" when there are too many saves"
@@ -23,7 +26,6 @@ Been encountering an issue in multiplayer, seashell or walrus, where if the prim
     - Cannot reproduce
 - idea: to fix pickup lag in multiplayer, maybe just put a delay on them? or in the message it should say who's going to pick it up so await with a timeout for them to collide?
 - fix logged issues
-    - Aborting: creating a pickup with duplicate id
     - Player managed to choose an upgrade without being supposed to
         - Fix summoner capture soul spell not coming back after load?
 - Ghnoyeurghe — Today at 12:04 PM
@@ -50,9 +52,6 @@ for example: an enemy that has a tough outer shell. Direct damage is reduced, bu
     - Timemason: More max mana but it drains over time (rewards you to act quickly)
     - Fix: Connect targets Urns
 
-- Reduce headless logging volume: long multiplayer pause happens after the end
-  of NPC turn before start of player turn SYNC_SOME_STATE is dumping WAY too
-  many logs onto server @Rainbowluck, meme_man
 - Ensure if one game infinite loops that it doesn't crash the other games on the
   server
   - Add better logs to the server infinite loop warning
@@ -60,7 +59,6 @@ for example: an enemy that has a tough outer shell. Direct damage is reduced, bu
   doesn't get stuck
 - Turn off background throttling
   - Ensure it receives messages even when alt tabbed
-- logViewer should count by version
 - Keep stats on all server disconnect issues
 - Puparas offering help with Russian translation
 - Feature: Skillo — Today at 11:32 AM very promissing [11:33 AM] instead of

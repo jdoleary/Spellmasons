@@ -1,4 +1,7 @@
 ## Bugs
+- Investigate console.error('Unable to end turn because caster is undefined') occurances
+    - also: 'Cannot SPAWN_PLAYER, fromPlayer is undefined.'
+    - also: console.error('Critical Error, caster unit not found');
 - TheyCallMeWitch — Today at 9:00 PM
 Multiplayer--Friend (host) got to choose class spec at level two, I had to wait until level three. 
     - Friend also got level up stat points at level four, where I did not get any. I was dead at the time, so it might have impacted that
