@@ -4,7 +4,6 @@ import * as CardUI from './CardUI';
 import * as Unit from '../../entity/Unit';
 import * as Pickup from '../../entity/Pickup';
 import * as Player from '../../entity/Player';
-import * as storage from '../../storage';
 import floatingText from '../FloatingText';
 import {
   clearSpellEffectProjection,
@@ -38,9 +37,6 @@ import { allCards, hasTargetAtPosition } from '../../cards';
 import { explain, EXPLAIN_END_TURN, tutorialCompleteTask } from '../Explain';
 import { Overworld } from '../../Overworld';
 import { summoningSicknessId } from '../../modifierSummoningSickness';
-import { targetArrowCardId } from '../../cards/target_arrow';
-import { distance, similarTriangles } from '../../jmath/math';
-import pingSprite from '../Ping';
 import { errorRed } from './colors';
 
 export const keyDown = {
@@ -990,7 +986,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
           return;
         }
         if (pos) {
-          Pickup.create({ pos, pickupSource: p, logSource:'admin' }, overworld.underworld, false);
+          Pickup.create({ pos, pickupSource: p, logSource: 'admin' }, overworld.underworld, false);
         }
       },
       supportInMultiplayer: true,
