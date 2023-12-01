@@ -995,11 +995,16 @@
             <key type="filename">public/images/spell/spellIconVortex.png</key>
             <key type="filename">public/images/spell/toolbar-slot.png</key>
             <key type="filename">public/images/spell/unknown.png</key>
+            <key type="filename">public/spellmasons-mods/Renes_gimmicks/graphics/icons/Burninig_rage.png</key>
+            <key type="filename">public/spellmasons-mods/Renes_gimmicks/graphics/icons/Caltrops.png</key>
+            <key type="filename">public/spellmasons-mods/Renes_gimmicks/graphics/icons/Sadism.png</key>
+            <key type="filename">public/spellmasons-mods/Renes_gimmicks/graphics/icons/SummonTrap.png</key>
+            <key type="filename">public/spellmasons-mods/Renes_gimmicks/graphics/icons/VampireBite.png</key>
+            <key type="filename">public/spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconFlameStrike.png</key>
             <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconDecay.png</key>
             <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconDominate.png</key>
             <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconEnsnare.png</key>
             <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconFastForward.png</key>
-            <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconFlameStrike.png</key>
             <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconGrace.png</key>
             <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconHarvest.png</key>
             <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconPacify.png</key>
@@ -1625,13 +1630,18 @@
             <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconDominate.png</filename>
             <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconEnsnare.png</filename>
             <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconFastForward.png</filename>
-            <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconFlameStrike.png</filename>
             <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconGrace.png</filename>
             <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconHarvest.png</filename>
             <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconPacify.png</filename>
             <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconRegen.png</filename>
             <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconVengeance.png</filename>
             <filename>../spellmasons-mods/undead_blade/spellIconUndeadBlade.png</filename>
+            <filename>public/spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconFlameStrike.png</filename>
+            <filename>public/spellmasons-mods/Renes_gimmicks/graphics/icons/Burninig_rage.png</filename>
+            <filename>public/spellmasons-mods/Renes_gimmicks/graphics/icons/Caltrops.png</filename>
+            <filename>public/spellmasons-mods/Renes_gimmicks/graphics/icons/Sadism.png</filename>
+            <filename>public/spellmasons-mods/Renes_gimmicks/graphics/icons/SummonTrap.png</filename>
+            <filename>public/spellmasons-mods/Renes_gimmicks/graphics/icons/VampireBite.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
