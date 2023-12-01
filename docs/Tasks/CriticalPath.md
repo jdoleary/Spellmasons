@@ -6,12 +6,6 @@
 - Fix other strategy balance:
   - Balance Summons cost
 - Fix: "Failed to save" when there are too many saves"
-- TheyCallMeWitch — Today at 10:42 PM
-Super odd bug, I'll try and be specific.
-
-I am a Farseer. I spawn in next to blue portal and use Cone--Pull--Drownx3 on a group of baddies. I step into blue portal and get sent far away. I use Dash to zoom the full extent of my enhanced sight to leap to my friend. We pass turn.
-
-Before the enemy turn ends, I somehow teleport to the middle of the screen and immediately have all my hitpoints removed. When our next turn comes around, I am dead.
 - 
 - WhiteScythe — Today at 7:26 PM
 Been encountering an issue in multiplayer, seashell or walrus, where if the primary player is AFK for more than a minute it kicks the other player back out and makes a backup.

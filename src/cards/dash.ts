@@ -19,13 +19,12 @@ const spell: Spell = {
     description: 'spell_dash',
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = getCurrentTargets(state);
-      for (let entity of targets) {
-        playDefaultSpellSFX(card, prediction);
-        await pull(state.casterUnit, entity, quantity, underworld, prediction);
+      playDefaultSpellSFX(card, prediction);
+      if (targets[0]) {
+        pull(state.casterUnit, targets[0], quantity, underworld, prediction);
       }
       return state;
     },
   },
 };
-const velocity_falloff = 0.93;
 export default spell;
