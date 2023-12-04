@@ -11,8 +11,8 @@ import { makeBurstParticles } from '../graphics/ParticleCollection';
 export const burstCardId = 'Burst';
 const maxDamage = 50;
 function calculateDamage(stack: number, casterPositionAtTimeOfCast: Vec2, casterAttackRange: number, target: Vec2): number {
-  const dist = distance(casterPositionAtTimeOfCast, target)
-  return Math.ceil(lerp(0, maxDamage, 1 - dist / (casterAttackRange + config.COLLISION_MESH_RADIUS * 2)) * stack);
+    const dist = distance(casterPositionAtTimeOfCast, target)
+    return Math.ceil(lerp(maxDamage, 0, (dist - config.COLLISION_MESH_RADIUS) / casterAttackRange) * stack);
 }
 export interface UnitDamage {
   id: number;
