@@ -31,6 +31,10 @@ globalThis.remoteLog = (...args: any[]) => {
 // the same logs that may occur, for example, if mousemove causes an error
 let recentLogs: { m: string, d: number }[] = [];
 function sendLogToServerHub(args: any[], l: LogLevel) {
+    if (location.href.includes('localhost')) {
+        console.debug('on localhost: do not log remotely')
+        return;
+    }
     const log: Log = {
         m: args.join(' '),
         v: globalThis.SPELLMASONS_PACKAGE_VERSION,
