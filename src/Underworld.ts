@@ -3773,27 +3773,20 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     this.pickups = this.pickups.filter(p => !p.flaggedForRemoval);
     console.log('sync: Syncing pickups', pickups.map(u => `${u.id}:${u.flaggedForRemoval}`), 'current pickups:', this.pickups.map(u => `${u.id}:${u.flaggedForRemoval}`));
 
-    // Remove excess pickups if local copy of pickups has more pickups than the pickups it
-    // should be syncing with
-    if (this.pickups.length > pickups.length) {
-      console.log('sync: Remove excess pickups')
-      for (let i = pickups.length; i < this.pickups.length; i++) {
-        const pickup = this.pickups[i];
-        if (pickup) {
-          Pickup.removePickup(pickup, this, false);
-        }
-      }
-      this.pickups.splice(pickups.length);
-    }
     // What couldn't be synced store in an array to create after iterating is finished
     let serializedpickupsLeftToCreate = [];
     let pickupsToRemove = [];
-    // Sync what pickups you can
+    // Sync pickups by id. This is critical that pickups are synced this way unlike how units are synced
+    // because of underworld.aquirePickupQueue, sometimes pickups will be aquired after a timeout which means
+    // the ids of the pickups must stick around and should not be removed just because they're not in the serialized
+    // pickups array (so long as they are also in the aquirePickupQueue array).
     for (let i = 0; i < pickups.length; i++) {
       const serializedPickup = pickups[i];
-      const currentPickup = this.pickups[i];
       if (serializedPickup) {
+        const currentPickup = this.pickups.find(p => p.id == serializedPickup.id);
         if (currentPickup) {
+          // @ts-ignore: `synced`: Temporary variable that keeps track of which pickups were synced
+          currentPickup.synced = true;
           // if there is a pickup to compare it to, if they are the same, syncronize;
           // if not, delete and recreate:
           // Ensure currentPickup's image is displaying, if not we have to create a new one
@@ -3809,12 +3802,24 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         }
       }
     }
+    // Remove extra pickups on client, not found in the serialized pickups array
+    // @ts-ignore: `synced`: Temporary variable that keeps track of which pickups were synced
+    for (let pickup of this.pickups.filter(p => !p.synced)) {
+      // Exclude pickups that are about to be aquired via the queue
+      if (!this.aquirePickupQueue.find(p => p.pickupId == pickup.id)) {
+        Pickup.removePickup(pickup, this, false);
+      }
+    }
+    this.pickups.forEach(p => {
+      // @ts-ignore: Clear temporary variable that keeps track of which pickups were synced
+      delete p.synced;
+    });
     for (let pickup of pickupsToRemove) {
       Pickup.removePickup(pickup, this, false);
     }
     // Remove pickups flagged for removal before creating new ones so you don't have id collisions
     this.pickups = this.pickups.filter(p => !p.flaggedForRemoval);
-    // Create what's left over
+    // Create pickups that are in the serialized pickup array but not in the client's this.pickups
     for (let serializedPickup of serializedpickupsLeftToCreate) {
       Pickup.load(serializedPickup, this, false);
     }

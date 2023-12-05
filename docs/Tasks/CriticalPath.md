@@ -1,9 +1,7 @@
 # Critical Path
 
 ## Priority
-- Go over SoulMuncher's feedback in bug reports
-  - Put SoulMuncher in credits
-- Allow logViewer to take batches so I can get stats on which spells are used most often
+- Put SoulMuncher in credits
 - How are clients running old code?
 - Fix summon cards disappearing
 - Fix other strategy balance
@@ -11,6 +9,7 @@
 - 
 - WhiteScythe — Today at 7:26 PM
 Been encountering an issue in multiplayer, seashell or walrus, where if the primary player is AFK for more than a minute it kicks the other player back out and makes a backup.
+  - SoulMuncher: Reported that this happens when choosing spawn
 - Just remove lobby ready entirely so that it's impossible to  be trapped in lobby
     - Change end turn btn to a level up button
 - FIND DESYNCS that occur when you encounter Deathmason in singleplayer
