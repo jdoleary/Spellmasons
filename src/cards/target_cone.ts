@@ -13,7 +13,7 @@ import * as config from '../config';
 import { HasSpace } from '../entity/Type';
 
 export const id = 'Target Cone';
-const range = 240;
+const range = 200;
 const coneAngle = Math.PI / 4
 const spell: Spell = {
   card: {
