@@ -270,4 +270,5 @@ declare global {
     var rerollOmit: string[] | undefined;
     // Will save the game as soon as possible with the name stored in this string
     var saveASAP: string | undefined;
+    var remoteLog: undefined | ((...args: any[]) => void);
 }

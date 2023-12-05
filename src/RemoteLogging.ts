@@ -23,6 +23,9 @@ export function enableRemoteLogging() {
     //     originalConsoleWarn.apply(console, arguments);
     // };
 }
+globalThis.remoteLog = (...args: any[]) => {
+    sendLogToServerHub(args, LogLevel.LOG);
+}
 
 // recentLogs holds logs for an amount of time to prevent oversending
 // the same logs that may occur, for example, if mousemove causes an error
