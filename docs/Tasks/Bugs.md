@@ -1,6 +1,12 @@
 ## Bugs
+- check decoy health in multiplayer vs singleplayer
+- TheyCallMeWitch — 12/01/2023 8:15 PM
+Swapping with Blue Portals then forces you to enter the portal
+Resurrecting a player (at least with Toxic Res) does not consider that player's Ready status for determining the round's end
+- TheyCallMeWitch — 12/01/2023 7:40 PM
+Sometimes, for no apparent reason, only one purple portal will appear, leaving one player stranded at level's end
 - fix: UI: Decoy health isn't listed in card like other summons
-    - also fix: miniboss tooltips don't have correct health and mana listed
+    - also fix: miniboss summon tooltips don't have correct health and mana listed
 - Investigate console.error('Unable to end turn because caster is undefined') occurances
     - also: 'Cannot SPAWN_PLAYER, fromPlayer is undefined.'
     - also: console.error('Critical Error, caster unit not found');
@@ -22,7 +28,7 @@ Multiplayer--Friend (host) got to choose class spec at level two, I had to wait 
         - and first player go to choose another spawn with old player being left behind
 
 - Clone can put units out of bounds
-- Note: flying projectile race timeouts happened on alttab on dev
+    - unable to reproduce
 - bug: Best Spell on game over screen is bugged
 - In multiplayer if you spawn in someone else's portal it goes away and you have to end your turn twice for it to come back
 - bug: if a blast pushes you through a portal and also levels you up it will show you the upgrade screen while the cinematic is playing and if you reroll during the cinematic the upgrades just go away

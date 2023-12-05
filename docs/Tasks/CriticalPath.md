@@ -1,5 +1,10 @@
 # Critical Path
+
 ## Priority
+- Go over SoulMuncher's feedback in bug reports
+  - Put SoulMuncher in credits
+- Allow logViewer to take batches so I can get stats on which spells are used most often
+- How are clients running old code?
 - Fix summon cards disappearing
 - Fix other strategy balance
 - Fix: "Failed to save" when there are too many saves"
