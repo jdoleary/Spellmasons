@@ -14,7 +14,7 @@ import * as config from '../config';
 import { HasSpace } from '../entity/Type';
 
 const id = 'Target Column';
-const range = 200;
+const range = 250;
 const baseWidth = 20;
 const spell: Spell = {
   card: {
@@ -30,8 +30,8 @@ const spell: Spell = {
     description: 'spell_target_column',
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
-      const depth = range + state.aggregator.radius;
-      const width = baseWidth * quantity;
+      const depth = (range + state.aggregator.radius) * (0.5 + 0.5 * quantity);
+      const width = (baseWidth + state.aggregator.radius) * (0.5 + 0.5 * quantity);
       // Note: This loop must NOT be a for..of and it must cache the length because it
       // mutates state.targetedUnits as it iterates.  Otherwise it will continue to loop as it grows
       let targets: Vec2[] = getCurrentTargets(state);
