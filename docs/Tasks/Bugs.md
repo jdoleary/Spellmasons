@@ -50,4 +50,3 @@ question and possible bug when me and my friend die and restart a game it seems 
 
 ## SoulMuncher
 - Decoy may be affected by co-op/unit difficulty scaling
-- Impossible to deal maximum (50) damage with Burst due to no lower distance threshold
