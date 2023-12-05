@@ -2366,7 +2366,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   async endMyTurnButtonHandler() {
     if (globalThis.player) {
       // If End turn button is level up button
-      if (elEndTurnBtn.classList.contains('upgrade')) {
+      if (elEndTurnBtn && elEndTurnBtn.classList.contains('upgrade')) {
         const upgradesLeftToChoose = this.upgradesLeftToChoose(globalThis.player)
         if (upgradesLeftToChoose > 0) {
           this.showUpgrades();
