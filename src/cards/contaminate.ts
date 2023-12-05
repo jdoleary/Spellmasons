@@ -46,7 +46,7 @@ async function spreadCurses(casterPlayer: any, unit: IUnit, underworld: Underwor
     .filter(x => x !== unit) as IUnit[];
   const curseCardsData: { card: ICard, quantity: number }[] = Object.entries(unit.modifiers)
     // Only curses are contagious
-    // Do not make spread contaminate itself
+    // Do not spread contaminate itself
     .filter(([cardId, modValue]) => modValue.isCurse && cardId !== contaminate_id)
     .map(([id, mod]) => ({ card: allCards[id], quantity: mod.quantity }))
     .filter(x => x.card !== undefined) as { card: ICard, quantity: number }[];
