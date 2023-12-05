@@ -24,7 +24,7 @@ import heal_greater from './heal_greater';
 import heal_mass from './heal_mass';
 import target_circle from './target_circle';
 import connect from './connect';
-import contagious from './contagious';
+import contaminate from './contaminate';
 import freeze from './freeze';
 import resurrect from './resurrect';
 import resurrect_weak from './resurrect_weak';
@@ -188,7 +188,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(heal_mass, overworld);
   registerSpell(target_circle, overworld);
   registerSpell(connect, overworld);
-  registerSpell(contagious, overworld);
+  registerSpell(contaminate, overworld);
   registerSpell(freeze, overworld);
   registerSpell(resurrect, overworld);
   registerSpell(resurrect_weak, overworld);

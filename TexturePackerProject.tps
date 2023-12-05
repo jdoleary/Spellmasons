@@ -921,7 +921,7 @@
             <key type="filename">public/images/spell/spellIconClone.png</key>
             <key type="filename">public/images/spell/spellIconConnect.png</key>
             <key type="filename">public/images/spell/spellIconConserve.png</key>
-            <key type="filename">public/images/spell/spellIconContagious.png</key>
+            <key type="filename">public/images/spell/spellIconContaminate.png</key>
             <key type="filename">public/images/spell/spellIconCorpseExplosion.png</key>
             <key type="filename">public/images/spell/spellIconDash.png</key>
             <key type="filename">public/images/spell/spellIconDeathWager.png</key>

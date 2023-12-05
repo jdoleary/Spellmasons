@@ -11,22 +11,22 @@ import { CardCategory } from '../types/commonTypes';
 import { drawUICircle } from '../graphics/PlanningView';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
-const id = 'contaminate';
+export const contaminate_id = 'contaminate';
 
 const spell: Spell = {
   card: {
-    id,
+    id: contaminate_id,
     category: CardCategory.Curses,
     manaCost: 50,
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.RARE],
-    thumbnail: 'spellIconContagious.png',
-    description: 'spell_contageous',
+    thumbnail: 'spellIconContaminate.png',
+    description: 'spell_contaminate',
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       for (let unit of state.targetedUnits.filter(u => u.alive)) {
-        await spreadCurses(unit, underworld, state.aggregator.radius, prediction);
+        await spreadCurses(state.casterPlayer, unit, underworld, state.aggregator.radius, prediction);
       }
       return state;
     },
@@ -34,8 +34,8 @@ const spell: Spell = {
 };
 export default spell;
 
-async function spreadCurses(unit: IUnit, underworld: Underworld, extraRadius: number, prediction: boolean) {
-  const range = COLLISION_MESH_RADIUS * 4 + extraRadius;
+async function spreadCurses(casterPlayer: any, unit: IUnit, underworld: Underworld, extraRadius: number, prediction: boolean) {
+  const range = (COLLISION_MESH_RADIUS * 4 + extraRadius) * (casterPlayer?.mageType == 'Witch' ? 1.5 : 1);
   drawUICircle(unit, range, colors.targetingSpellGreen, 'Contagion Radius');
   const nearByUnits = underworld.getUnitsWithinDistanceOfTarget(unit, range, prediction)
     // Filter out undefineds
@@ -46,8 +46,8 @@ async function spreadCurses(unit: IUnit, underworld: Underworld, extraRadius: nu
     .filter(x => x !== unit) as IUnit[];
   const curseCardsData: { card: ICard, quantity: number }[] = Object.entries(unit.modifiers)
     // Only curses are contagious
-    // Do not make contagious itself contagious
-    .filter(([cardId, modValue]) => modValue.isCurse && cardId !== id)
+    // Do not make spread contaminate itself
+    .filter(([cardId, modValue]) => modValue.isCurse && cardId !== contaminate_id)
     .map(([id, mod]) => ({ card: allCards[id], quantity: mod.quantity }))
     .filter(x => x.card !== undefined) as { card: ICard, quantity: number }[];
 
