@@ -10,6 +10,7 @@ import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import { drawUICircle } from '../graphics/PlanningView';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
+import { IPlayer } from '../entity/Player';
 
 export const contaminate_id = 'contaminate';
 
@@ -34,7 +35,7 @@ const spell: Spell = {
 };
 export default spell;
 
-async function spreadCurses(casterPlayer: any, unit: IUnit, underworld: Underworld, extraRadius: number, prediction: boolean) {
+async function spreadCurses(casterPlayer: IPlayer | undefined, unit: IUnit, underworld: Underworld, extraRadius: number, prediction: boolean) {
   const range = (COLLISION_MESH_RADIUS * 4 + extraRadius) * (casterPlayer?.mageType == 'Witch' ? 1.5 : 1);
   drawUICircle(unit, range, colors.targetingSpellGreen, 'Contagion Radius');
   const nearByUnits = underworld.getUnitsWithinDistanceOfTarget(unit, range, prediction)
