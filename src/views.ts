@@ -155,7 +155,7 @@ export function addOverworldEventListeners(overworld: Overworld) {
   ) as HTMLButtonElement;
 
   const listeners: {
-    target: HTMLElement | undefined | typeof globalThis;
+    target: HTMLElement | typeof globalThis;
     event: string;
     listener: any;
   }[] = [
@@ -267,21 +267,13 @@ export function addOverworldEventListeners(overworld: Overworld) {
   // Make 'closeMenu' available to the svelte menu
   globalThis.closeMenu = () => closeMenu();
   for (let { target, event, listener } of listeners) {
-    if (target === undefined) {
-      console.error('Undefined listener target for event', event);
-    } else {
-      target.addEventListener(event, listener);
-    }
+    target.addEventListener(event, listener);
   }
 
   return function removeOverworldEventListeners() {
     if (globalThis.headless) { return; }
     for (let { target, event, listener } of listeners) {
-      if (target === undefined) {
-        console.error('Undefined listener target for event', event);
-      } else {
-        target.removeEventListener(event, listener);
-      }
+      target.removeEventListener(event, listener);
     }
 
   }

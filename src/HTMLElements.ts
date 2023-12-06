@@ -1,4 +1,4 @@
-export const elEndTurnBtn: HTMLButtonElement | undefined = document.getElementById(
+export const elEndTurnBtn: HTMLButtonElement = document.getElementById(
     'end-turn-btn'
 ) as HTMLButtonElement;
 
