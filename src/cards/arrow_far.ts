@@ -11,7 +11,7 @@ import { closestLineSegmentIntersectionWithLine, LineSegment } from '../jmath/li
 import { findArrowCollisions } from './arrow';
 import { createVisualFlyingProjectile } from '../entity/Projectile';
 
-export const arrowFarCardId = 'Arrow Far';
+export const arrowFarCardId = 'Long Arrow';
 const maxDamage = 50;
 const maxDamageRange = 600;
 function calculateDamage(casterPositionAtTimeOfCast: Vec2, target: Vec2): number {
