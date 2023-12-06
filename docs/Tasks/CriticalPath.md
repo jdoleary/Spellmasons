@@ -2,8 +2,9 @@
 
 ## Priority
 - Put SoulMuncher in credits
-- How are clients running old code?
+- How are clients running old code? I saw a log that had the current version but was logging a message from an old version
 - Fix summon cards disappearing
+  - have not yet reproduced
 - Fix other strategy balance
 - Fix: "Failed to save" when there are too many saves"
 - 
