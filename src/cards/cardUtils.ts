@@ -168,6 +168,8 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
             }
         } else if (caster.mageType == 'Cleric' && card.category == CardCategory.Blessings) {
             cardCost.manaCost = Math.floor(cardCost.manaCost / 2);
+        } else if (caster.mageType == 'Witch' && card.category == CardCategory.Curses) {
+            cardCost.manaCost = Math.floor(cardCost.manaCost * 0.8);
         } else if (caster.mageType == 'Archer' && card.id.toLowerCase().includes('arrow')) {
             // Freeze mana cost for archer MageType
             cardCost.manaCost = card.manaCost;

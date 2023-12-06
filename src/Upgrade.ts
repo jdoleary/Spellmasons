@@ -322,6 +322,17 @@ export const upgradeMageClassSource: IUpgrade[] = [
     cost: { healthCost: 0, manaCost: 0 },
   },
   {
+    title: i18n('Witch'),
+    type: 'mageType',
+    description: () => i18n('class_witch'),
+    thumbnail: 'images/upgrades/class-witch.png',
+    effect: (player, underworld) => {
+      changeMageType('Witch', player, underworld);
+    },
+    probability: 1,
+    cost: { healthCost: 0, manaCost: 0 },
+  },
+  {
     title: i18n('Gambler'),
     type: 'mageType',
     description: () => i18n('class_gambler'),

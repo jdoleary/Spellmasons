@@ -22,6 +22,7 @@ import { AttributePerk } from '../Perk';
 import { setPlayerNameUI } from '../PlayerUtils';
 import { arrowCardId } from '../cards/arrow';
 import { heal_id } from '../cards/add_heal';
+import { contaminate_id } from '../cards/contaminate';
 
 const elInGameLobby = document.getElementById('in-game-lobby') as (HTMLElement | undefined);
 const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
@@ -41,7 +42,7 @@ interface Stats {
   gameStartTime: number;
   totalKills: number;
 }
-export type MageType = 'Spellmason' | 'Timemason' | 'Bloodmason' | 'Necromancer' | 'Archer' | 'Far Gazer' | 'Cleric' | 'Gambler';
+export type MageType = 'Spellmason' | 'Timemason' | 'Bloodmason' | 'Necromancer' | 'Archer' | 'Far Gazer' | 'Cleric' | 'Witch' | 'Gambler';
 // This array allows the UI to select a mageType, mageTypes not in this array
 // will not appear in the UI
 globalThis.mageTypes = [
@@ -52,6 +53,7 @@ globalThis.mageTypes = [
   'Archer',
   'Far Gazer',
   'Cleric',
+  'Witch',
   'Gambler'
 ];
 export interface IPlayer {
@@ -154,6 +156,18 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
           }
         }
         break;
+      case 'Witch':
+        {
+          const upgrade = Upgrade.getUpgradeByTitle(contaminate_id);
+          if (upgrade) {
+            underworld.chooseUpgrade(player, upgrade);
+            if (player == globalThis.player) {
+              globalThis.freeSpells.push(contaminate_id);
+            }
+          } else {
+            console.error('Could not find upgrade for', type);
+          }
+        }
       case 'Far Gazer':
         {
           player.unit.attackRange = 2 * player.unit.attackRange;
