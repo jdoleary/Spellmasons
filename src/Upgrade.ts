@@ -319,7 +319,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
     title: i18n('Witch'),
     type: 'mageType',
     description: () => i18n('class_witch'),
-    thumbnail: 'images/upgrades/class-necromancer.png', //TODO - Witch image
+    thumbnail: 'images/upgrades/class-witch.png',
     effect: (player, underworld) => {
       changeMageType('Witch', player, underworld);
     },
