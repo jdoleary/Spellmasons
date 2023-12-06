@@ -32,7 +32,6 @@ const spell: Spell = {
       const targets = state.targetedUnits.filter(u => u.alive);
       let promises = [];
       for (let unit of targets) {
-        unit.mana += amount;
         const manaTrailPromises = [];
         if (!prediction) {
           for (let i = 0; i < quantity; i++) {
@@ -42,6 +41,10 @@ const spell: Spell = {
         promises.push((prediction ? Promise.resolve() : Promise.all(manaTrailPromises)));
       }
       await Promise.all(promises).then(() => {
+        const finalManaSent = Math.ceil(amount * quantity / targets.length);
+        for (let unit of targets) {
+          unit.mana += finalManaSent;
+        }
         if (!prediction) {
           playDefaultSpellSFX(card, prediction);
           // Animate
@@ -76,8 +79,6 @@ const spell: Spell = {
               }
             }
 
-            const finalManaSent = amount * quantity;
-            unit.mana += finalManaSent;
             floatingText({
               coords: unit,
               text: `+ ${finalManaSent} Mana`,
