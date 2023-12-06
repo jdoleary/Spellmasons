@@ -416,6 +416,13 @@ export function isCameraAutoFollowing(): boolean {
 const elCameraRecenterTip = document.getElementById('camera-recenter-tip');
 export function cameraAutoFollow(active: boolean) {
   utilProps.doCameraAutoFollow = active;
+  // Any action that causes the camera to stop auto following such as MMB drag or WASD
+  // should stop the cinematic if it's playing
+  if (!active) {
+    if (globalThis.skipCinematic) {
+      globalThis.skipCinematic();
+    }
+  }
   document.body?.classList.toggle('auto-camera', active);
 }
 
