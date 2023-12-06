@@ -241,6 +241,16 @@ export function setupPieAndUnderworld() {
   } else {
     console.log('Client: Initialize PieClient');
     const pie = new PieClient();
+    setInterval(() => {
+      if (pie.isConnected() && pie.currentRoomInfo) {
+        // Keep connection alive.  Bun's websocket server has a 2 minute timeout
+        // https://github.com/jdoleary/Spellmasons/issues/22
+        console.debug('Send empty message to keep connection from idle timeouting');
+        pie.sendData({
+          type: MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT,
+        });
+      }
+    }, 60_000);
     // useStats must be true for latency information to come through
     pie.useStats = true;
     console.log('Client: Initialize Underworld');
