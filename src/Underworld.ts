@@ -1512,7 +1512,7 @@ export default class Underworld {
       const sourceUnit = allUnits[id];
       const { unitMinLevelIndexSubtractor } = unavailableUntilLevelIndexDifficultyModifier(this);
       // Disallow miniboss for a unit spawning on the first levelIndex that they are allowed to spawn
-      const minibossAllowed = ((sourceUnit?.spawnParams?.unavailableUntilLevelIndex || 0) - unitMinLevelIndexSubtractor) < levelIndex;
+      const minibossAllowed = !sourceUnit?.spawnParams?.excludeMiniboss && ((sourceUnit?.spawnParams?.unavailableUntilLevelIndex || 0) - unitMinLevelIndexSubtractor) < levelIndex;
       if (coord) {
         const isMiniboss = !minibossAllowed ? false : numberOfMinibossesAllowed > numberOfMinibossesMade;
         if (isMiniboss) {

@@ -249,9 +249,12 @@ export function registerCards(overworld: Overworld) {
     if (spell) {
       registerSpell(spell, overworld);
     }
-    const spellMiniboss = summon_generic(unitId, true);
-    if (spellMiniboss) {
-      registerSpell(spellMiniboss, overworld);
+
+    if (!allUnits[unitId]?.spawnParams?.excludeMiniboss) {
+      const spellMiniboss = summon_generic(unitId, true);
+      if (spellMiniboss) {
+        registerSpell(spellMiniboss, overworld);
+      }
     }
   }
 

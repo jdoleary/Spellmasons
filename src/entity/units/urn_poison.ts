@@ -32,6 +32,7 @@ const urnPoisonSource: UnitSource = {
         probability: 0,
         budgetCost: 0,
         unavailableUntilLevelIndex: 0,
+        excludeMiniboss: true,
     },
     animations: {
         idle: 'doodads/urn_poison',
