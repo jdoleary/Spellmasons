@@ -4,7 +4,12 @@
 // Shims:
 const fakeElement = {
     style: {},
-    addEventListener: () => { }
+    addEventListener: () => { },
+    classList: {
+        add: () => { },
+        toggle: () => { },
+        contains: () => { }
+    },
 };
 global.document = {
     getElementById: () => fakeElement,

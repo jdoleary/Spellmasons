@@ -262,10 +262,6 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       if (fromPlayer) {
         const upgrade = getUpgradeByTitle(payload.upgrade.title);
         if (upgrade) {
-          if (fromPlayer == globalThis.player && globalThis.remoteLog) {
-            // Collect statistics on upgrade choice
-            globalThis.remoteLog(`Upgrade ${upgrade.type}: ${upgrade.title}`);
-          }
           underworld.chooseUpgrade(fromPlayer, upgrade);
           if (fromPlayer === globalThis.player) {
             playSFXKey('levelUp');

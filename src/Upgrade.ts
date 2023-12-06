@@ -202,6 +202,12 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
     globalThis.timeLastChoseUpgrade = Date.now();
     // Prevent click from "falling through" upgrade and propagating to vote for overworld level
     e.stopPropagation();
+    if (globalThis.remoteLog && player.reroll == 0) {
+      // Collect statistics on first-choice upgrades
+      // This is to ensure that the upgrade was chosen because it's desired,
+      // not as a last resort
+      globalThis.remoteLog(`Upgrade ${upgrade.type}: ${upgrade.title}`);
+    }
     pie.sendData({
       type: MESSAGE_TYPES.CHOOSE_UPGRADE,
       upgrade,

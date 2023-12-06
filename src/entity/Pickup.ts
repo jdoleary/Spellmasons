@@ -864,9 +864,7 @@ export const pickups: IPickupSource[] = [
   },
 ];
 export function givePlayerUpgrade(p: Player.IPlayer, underworld: Underworld) {
-  if (elEndTurnBtn) {
-    elEndTurnBtn.classList.toggle('upgrade', true);
-  }
+  elEndTurnBtn.classList.toggle('upgrade', true);
   skyBeam(p.unit);
   if (player && player == globalThis.player) {
     if (player.inventory.length > config.NUMBER_OF_TOOLBAR_SLOTS - 1) {

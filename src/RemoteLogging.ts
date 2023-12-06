@@ -32,7 +32,7 @@ globalThis.remoteLog = (...args: any[]) => {
 let recentLogs: { m: string, d: number }[] = [];
 function sendLogToServerHub(args: any[], l: LogLevel) {
     if (!globalThis.headless && location && location.href.includes('localhost')) {
-        console.debug('on localhost: do not log remotely')
+        console.debug('on localhost: do not log remotely', args.join(' '));
         return;
     }
     const log: Log = {

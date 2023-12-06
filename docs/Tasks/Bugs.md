@@ -1,4 +1,6 @@
 ## Bugs
+- Capture soul shouldn't change in health cost because that isn't explained
+- investigate: `reportIfTakingTooLong Arrow 2;false`
 - check decoy health in multiplayer vs singleplayer
 - TheyCallMeWitch — 12/01/2023 8:15 PM
 Swapping with Blue Portals then forces you to enter the portal

@@ -35,7 +35,7 @@ const spell: Spell = {
               const upgrade = upgradeCardsSource.find(u => u.title == newCardId)
               if (upgrade) {
                 floatingText({ coords: target, text: 'Soul Captured!' });
-                // TODO Persist to server?
+                // Note: all summon_generic spells are already added to globalThis.freeSpells
                 upgrade.effect(player, underworld);
                 player.upgrades.push(upgrade);
                 // Recalc cards so the card changes show up
