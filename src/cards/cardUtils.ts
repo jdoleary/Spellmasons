@@ -160,7 +160,7 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
             }
         } else if (caster.mageType == 'Necromancer') {
             if (card.id == captureSoul.id) {
-                cardCost.healthCost = Math.floor(0.9 * caster.unit.healthMax);
+                cardCost.healthCost = 38;
                 cardCost.manaCost = 0;
             } else if (Object.keys(allUnits).includes(card.id.replace(' Miniboss', ''))) {
                 // Make summon spells discounted
