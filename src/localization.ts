@@ -54,6 +54,10 @@ function setLanguage(langCode: string, store: boolean) {
     if (newLanguage) {
         languageMapping = newLanguage;
         chosenLanguageCode = langCode;
+        if (remoteLog) {
+            // Record statistics of language use
+            remoteLog(`Language: ${langCode}`);
+        }
         if (store) {
             storage.set(storage.STORAGE_LANGUAGE_CODE_KEY, langCode);
         }

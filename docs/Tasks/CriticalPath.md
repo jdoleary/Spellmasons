@@ -2,15 +2,8 @@
 
 ## Priority
 - How are clients running old code? I saw a log that had the current version but was logging a message from an old version
-- Fix summon cards disappearing
-  - have not yet reproduced
 - Fix other strategy balance
 - Fix: "Failed to save" when there are too many saves"
-- 
-- WhiteScythe — Today at 7:26 PM
-Been encountering an issue in multiplayer, seashell or walrus, where if the primary player is AFK for more than a minute it kicks the other player back out and makes a backup.
-  - SoulMuncher: Reported that this happens when choosing spawn
-- Just remove lobby ready entirely so that it's impossible to  be trapped in lobby
 - FIND DESYNCS that occur when you encounter Deathmason in singleplayer
 
 ---
@@ -40,18 +33,11 @@ so desync was not the correct term for my single-player issue
 
 for example: an enemy that has a tough outer shell. Direct damage is reduced, but blunt force damage is a crit (i.e. pushing into a wall) and perhaps this enemy is slow, and is thus more susceptible to drowning
 - "onData queue stuck on message" - improve logs
-- Soul Muncher
-    - Timemason: More max mana but it drains over time (rewards you to act quickly)
-    - Fix: Connect targets Urns
-
 - Ensure if one game infinite loops that it doesn't crash the other games on the
   server
   - Add better logs to the server infinite loop warning
 - Ensure end turn fires even if player is already marked as ended turn so it
   doesn't get stuck
-- Turn off background throttling
-  - Ensure it receives messages even when alt tabbed
-- Keep stats on all server disconnect issues
 - Puparas offering help with Russian translation
 - Feature: Skillo — Today at 11:32 AM very promissing [11:33 AM] instead of
   trivializing mana (by getting more avenues for casts, since the game is all
@@ -74,15 +60,7 @@ and doing massive damage cause you crossed the map with it
   mass of monsters on the following map and I can't do anything because I
   haven't increased my pool of options. @Jordan - Spellmasons Creator
 
-Rainbowluck:
 
-    Also boss summon ? cost like twice the cost and there is not stat boost or anything ?
-
-RainbowLuck — Yesterday at 4:45 PM when u capture soul to set up a game and u
-got kick out and you come back with no soul is realy frustrating '-'
-
-    timothycombs12 — Yesterday at 8:40 PM
-    found a glitch. target arrow + slash + capture soul targeting an ancient. it will refund the spell and not take hp from the player, but it will not give a spawnable ancient. i dont know if the last part is on purpose
 
 Ian / Chase / Pompa — Yesterday at 9:32 PM Is it a bug if my lovely golem is
 dealing .00000000000001 more damage than expected or just amusing? :3

@@ -720,8 +720,8 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         // This check protects against potential bugs where the upgrade screen still hasn't come up
         // by the time the player spawns
         if (fromPlayer == globalThis.player && (underworld.upgradesLeftToChoose(globalThis.player) > 0 || underworld.perksLeftToChoose(globalThis.player) > 0)) {
-          // This can happen if they die and then the ally npc finished the level for them and the unit killed by the ally npc drops a scroll
-          console.error('Unexpected: player had unspent upgrade points when they spawned.');
+          // This can happen if they die and then the ally npc finished the level for them and the unit killed by the ally npc triggers a level up
+          // or the first time that they spawn
           underworld.showUpgrades();
         }
 
