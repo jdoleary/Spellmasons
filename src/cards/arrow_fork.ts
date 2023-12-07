@@ -13,7 +13,7 @@ const damageDone = 30;
 const spell: Spell = {
   card: {
     id: arrowForkCardId,
-    replaces: [arrowTripleCardId],
+    requires: [arrowTripleCardId],
     category: CardCategory.Damage,
     supportQuantity: true,
     manaCost: 35,

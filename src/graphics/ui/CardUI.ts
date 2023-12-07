@@ -746,8 +746,13 @@ function createNonCardInventoryElement(thumbnailPath: string, titleText: string)
   elCardInner.appendChild(title);
   return element;
 }
+// @ts-ignore For menu only
+globalThis.createCardElement = createCardElement;
 function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSize?: boolean) {
   const element = document.createElement('div');
+  if (!content) {
+    return element;
+  }
   element.classList.add('card');
   const levelsDisabled = levelsUntilCardIsEnabled(content.id, underworld);
   const cooldown = getCardCooldown(content.id, underworld);
@@ -839,8 +844,8 @@ function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSi
   desc.classList.add('card-description');
   if (content.description) {
     const labelHolder = document.createElement('div');
-    if (content.replaces) {
-      const replacesEl = getReplacesCardText(content.replaces);
+    if (content.replaces || content.requires) {
+      const replacesEl = getReplacesCardText(content.replaces || [], content.requires || []);
       labelHolder.appendChild(replacesEl)
     }
     const label = document.createElement('span');
@@ -853,22 +858,45 @@ function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSi
 }
 // @ts-ignore: For the menu
 globalThis.getReplacesCardText = getReplacesCardText;
-export function getReplacesCardText(replaces: string[]) {
+export function getReplacesCardText(replaces: string[], requires?: string[]) {
   const replacesEl = document.createElement('div');
-  const label = document.createElement('span');
-  label.innerText = i18n('Upgrades');
-  replacesEl.appendChild(label);
-  for (let r of replaces) {
-    const replaceCard = Cards.allCards[r];
-    if (replaceCard) {
-      const thumbnail = document.createElement('img');
-      thumbnail.src = getSpellThumbnailPath(replaceCard.thumbnail);
-      thumbnail.style.width = '16px';
-      thumbnail.style.padding = '0 4px';
-      replacesEl.appendChild(thumbnail);
-      const label = document.createElement('span');
-      label.innerText = r;
-      replacesEl.appendChild(label);
+  if (replaces && replaces.length) {
+    const label = document.createElement('span');
+    label.innerText = i18n('Upgrades');
+    replacesEl.appendChild(label);
+    for (let r of replaces) {
+      const replaceCard = Cards.allCards[r];
+      if (replaceCard) {
+        const thumbnail = document.createElement('img');
+        thumbnail.src = getSpellThumbnailPath(replaceCard.thumbnail);
+        thumbnail.style.width = '16px';
+        thumbnail.style.padding = '0 4px';
+        replacesEl.appendChild(thumbnail);
+        const label = document.createElement('span');
+        label.innerText = r;
+        replacesEl.appendChild(label);
+      }
+    }
+  }
+  if (requires && requires.length) {
+    if (replaces && replaces.length) {
+      replacesEl.appendChild(document.createElement('br'));
+    }
+    const labelRequires = document.createElement('span');
+    labelRequires.innerText = i18n('Requires');
+    replacesEl.appendChild(labelRequires);
+    for (let r of (requires || []).filter(x => !replaces.includes(x))) {
+      const replaceCard = Cards.allCards[r];
+      if (replaceCard) {
+        const thumbnail = document.createElement('img');
+        thumbnail.src = getSpellThumbnailPath(replaceCard.thumbnail);
+        thumbnail.style.width = '16px';
+        thumbnail.style.padding = '0 4px';
+        replacesEl.appendChild(thumbnail);
+        const label = document.createElement('span');
+        label.innerText = r;
+        replacesEl.appendChild(label);
+      }
     }
   }
   return replacesEl;

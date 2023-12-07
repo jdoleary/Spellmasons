@@ -2,6 +2,7 @@ import { CardCategory } from '../types/commonTypes';
 import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { arrowEffect } from './arrow';
+import { arrow2CardId } from './arrow2';
 
 export const arrowTripleCardId = 'Triple Arrow';
 const damageDone = 10;
@@ -9,6 +10,7 @@ const arrowCount = 3;
 const spell: Spell = {
   card: {
     id: arrowTripleCardId,
+    requires: [arrow2CardId],
     category: CardCategory.Damage,
     supportQuantity: true,
     manaCost: 20,

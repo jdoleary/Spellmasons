@@ -18,6 +18,8 @@ export interface IUpgrade {
   title: string;
   // Replaces previous upgrades.  They are required for this upgrade to present itself
   replaces?: string[];
+  // Requires previous upgrades.  They are required for this upgrade to present itself
+  requires?: string[];
   // If a upgrade belongs to a mod, it's modName will be automatically assigned
   // This is used to dictate wether or not the modded upgrade is used
   modName?: string;
@@ -50,7 +52,7 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
       : // Filter out  upgrades that the player can't have more of
       player.upgrades.filter((pu) => pu.title === u.title).length <
       u.maxCopies)
-    && (u.replaces ? u.replaces.every(title => player.upgrades.find(u => u.title == title)) : true)
+    && (u.requires ? u.requires.every(title => player.upgrades.find(u => u.title == title)) : true)
     // Now that upgrades are cards too, make sure it doesn't
     // show upgrades that the player already has as cards
     && !player.inventory.includes(u.title)
@@ -174,8 +176,8 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
   const desc = document.createElement('div');
   desc.classList.add('card-description');
   const descriptionText = document.createElement('div');
-  if (upgrade.replaces) {
-    const replacesEl = getReplacesCardText(upgrade.replaces);
+  if (upgrade.replaces || upgrade.requires) {
+    const replacesEl = getReplacesCardText(upgrade.requires || [], upgrade.replaces || []);
     descriptionText.appendChild(replacesEl)
   }
   const label = document.createElement('span');

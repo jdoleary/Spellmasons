@@ -307,12 +307,13 @@ function cardToUpgrade(c: ICard, overworld: Overworld): IUpgrade {
   return {
     title: c.id,
     replaces: c.replaces,
+    // All `replaces` are also required for the upgrade to show up
+    requires: [...c.replaces || [], ...c.requires || []],
     modName: c.modName,
     type: 'card',
     cardCategory: c.category,
     description: () => i18n(c.description).trim(),
     thumbnail,
-    // TODO: Feature creep: What if you could UPGRADE the effect of a spell!! 0.o
     maxCopies: 1,
     effect: (player) => {
       if (!overworld.underworld) {
@@ -418,6 +419,9 @@ export interface ICard {
   id: string;
   // array of other card ids that this card replaces when you pick it
   replaces?: string[];
+  // array of other card ids that the player needs to have in order to be offered
+  // this card as an upgrade.  Similar to `replaces`
+  requires?: string[];
   // If a spell belongs to a mod, it's modName will be automatically assigned
   // This is used to dictate wether or not the modded spell is used
   modName?: string;

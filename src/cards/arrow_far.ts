@@ -8,6 +8,7 @@ import { Vec2 } from '../jmath/Vec';
 import { findArrowCollisions, findArrowPath } from './arrow';
 import { createVisualFlyingProjectile } from '../entity/Projectile';
 import floatingText from '../graphics/FloatingText';
+import { arrow2CardId } from './arrow2';
 
 export const arrowFarCardId = 'Long Arrow';
 const maxDamage = 50;
@@ -21,6 +22,7 @@ function calculateDamage(casterPositionAtTimeOfCast: Vec2, target: Vec2): number
 const spell: Spell = {
   card: {
     id: arrowFarCardId,
+    requires: [arrow2CardId],
     category: CardCategory.Damage,
     supportQuantity: true,
     manaCost: 20,
