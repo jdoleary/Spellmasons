@@ -74,6 +74,7 @@ import arrow3 from './arrow3';
 import arrowFork from './arrow_fork';
 import arrowTriple from './arrow_triple';
 import arrowMulti from './arrow_multi';
+import arrowFar from './arrow_far';
 import explosive_arrow from './explosive_arrow';
 import target_arrow from './target_arrow';
 import conserve from './conserve';
@@ -239,6 +240,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(arrowFork, overworld);
   registerSpell(arrowTriple, overworld);
   registerSpell(arrowMulti, overworld);
+  registerSpell(arrowFar, overworld);
   registerSpell(explosive_arrow, overworld);
   registerSpell(phantom_arrow, overworld);
   registerSpell(target_arrow, overworld);
