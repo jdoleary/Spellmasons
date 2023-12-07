@@ -168,6 +168,7 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
             console.error('Could not find upgrade for', type);
           }
         }
+        break;
       case 'Far Gazer':
         {
           player.unit.attackRange = 2 * player.unit.attackRange;
