@@ -41,7 +41,7 @@ const spell: Spell = {
         promises.push((prediction ? Promise.resolve() : Promise.all(manaTrailPromises)));
       }
       await Promise.all(promises).then(() => {
-        const finalManaSent = Math.ceil(amount * quantity / targets.length);
+        const finalManaSent = Math.floor(amount * quantity / targets.length);
         for (let unit of targets) {
           unit.mana += finalManaSent;
         }
