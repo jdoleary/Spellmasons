@@ -22,6 +22,7 @@ import suffocate from './suffocate';
 import heal from './add_heal';
 import heal_greater from './heal_greater';
 import heal_mass from './heal_mass';
+import send_mana from './send_mana';
 import target_circle from './target_circle';
 import connect from './connect';
 import contaminate from './contaminate';
@@ -186,6 +187,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(heal, overworld);
   registerSpell(heal_greater, overworld);
   registerSpell(heal_mass, overworld);
+  registerSpell(send_mana, overworld);
   registerSpell(target_circle, overworld);
   registerSpell(connect, overworld);
   registerSpell(contaminate, overworld);
