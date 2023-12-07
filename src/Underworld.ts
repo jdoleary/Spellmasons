@@ -829,45 +829,25 @@ export default class Underworld {
       timemasons.forEach(timemason => {
         if (timemason.isSpawned && timemason.unit.alive && timemason.unit.mana > 0) {
 
+          let drainPerSecond = timemason.unit.manaMax * config.TIMEMASON_PERCENT_DRAIN / 100;
           //@ts-ignore Special logic for timemason, does not need to be persisted
-          if (!timemason.timetracker) {
+          if (!timemason.manaToDrain) {
             //@ts-ignore Special logic for timemason, does not need to be persisted
-            timemason.timetracker = deltaTime;
-          } else {
-            //@ts-ignore Special logic for timemason, does not need to be persisted
-            timemason.timetracker += deltaTime;
+            timemason.manaToDrain = deltaTime / 1000 * drainPerSecond;
           }
-
-          const time_to_drain_ms = 1000;
-          //@ts-ignore Special logic for timemason, does not need to be persisted
-          if (timemason.timetracker > time_to_drain_ms) {
+          else {
             //@ts-ignore Special logic for timemason, does not need to be persisted
-            timemason.timetracker -= time_to_drain_ms;
-
-            let manaToDrain = timemason.unit.manaMax * config.TIMEMASON_PERCENT_DRAIN / 100;
+            timemason.manaToDrain += deltaTime / 1000 * drainPerSecond;
 
             //@ts-ignore Special logic for timemason, does not need to be persisted
-            if (!timemason.decimalMana) {
+            if (timemason.manaToDrain >= 1) {
               //@ts-ignore Special logic for timemason, does not need to be persisted
-              timemason.decimalMana = manaToDrain % 1;
-              manaToDrain = Math.floor(manaToDrain);
+              timemason.manaToDrain -= 1;
+              timemason.unit.mana -= 1;
+              this.syncPlayerPredictionUnitOnly();
+              Unit.syncPlayerHealthManaUI(this);
+              //floatingText({ coords: timemason.unit, text: '-1 mana' });
             }
-            else {
-              //@ts-ignore Special logic for timemason, does not need to be persisted
-              timemason.decimalMana += manaToDrain % 1;
-              manaToDrain = Math.floor(manaToDrain);
-              //@ts-ignore Special logic for timemason, does not need to be persisted
-              if (timemason.decimalMana >= 1) {
-                //@ts-ignore Special logic for timemason, does not need to be persisted
-                timemason.decimalMana -= 1;
-                manaToDrain += 1;
-              }
-            }
-
-            timemason.unit.mana = Math.max(0, timemason.unit.mana - manaToDrain);
-            floatingText({ coords: timemason.unit, text: '-' + manaToDrain + ' mana' });
-            this.syncPlayerPredictionUnitOnly();
-            Unit.syncPlayerHealthManaUI(this);
           }
         }
       })
