@@ -2588,12 +2588,23 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       if (isCurrentPlayer) {
         playSFXKey('levelUp');
       }
+
       const statBumpAmount: { [key: string]: number } = {
         'attackRange': 8,
         'manaMax': 5,
         'healthMax': 8,
         'staminaMax': 10
       }
+
+      switch (player.mageType) {
+        case 'Far Gazer':
+          {
+            statBumpAmount.attackRange *= 2;
+            statBumpAmount.staminaMax = Math.floor(statBumpAmount.staminaMax as number / 2);
+          }
+          break;
+      }
+
       if (stat && player.unit[stat as keyof Unit.IUnit]) {
         const statBump = statBumpAmount[stat] || 10;
         // @ts-ignore
