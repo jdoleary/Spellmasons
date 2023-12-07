@@ -434,7 +434,8 @@
         "spell_arrow_far": "Deals damage based on how far the target is from the caster.  The farther targets take more damage. The maximum damage is 🍞.",
         "long arrow": "Long Arrow",
         "too many save files": "Too many save files. Delete old saves in the load menu to save more.",
-        "failed to save": "Failed to save."
+        "failed to save": "Failed to save.",
+        "send mana": "Send Mana"
     },
     {
         "language": "Français",
@@ -871,7 +872,8 @@
         "spell_arrow_far": "Inflige des dégâts en fonction de la distance entre la cible et le lanceur. Les cibles les plus éloignées subissent plus de dégâts. Les dégâts maximum sont de 🍞.",
         "long arrow": "Flèche longue",
         "too many save files": "Trop de fichiers de sauvegarde. Supprimez les anciennes sauvegardes dans le menu de chargement pour en enregistrer davantage.",
-        "failed to save": "Échec de la sauvegarde du jeu."
+        "failed to save": "Échec de la sauvegarde du jeu.",
+        "send mana": "Donner du mana"
     },
     {
         "language": "italiano",
@@ -1308,7 +1310,8 @@
         "spell_arrow_far": "Infligge danni in base alla distanza del bersaglio dall'incantatore. I bersagli più lontani subiscono più danni. Il danno massimo è 🍞.",
         "long arrow": "Freccia lunga",
         "too many save files": "Troppi file di salvataggio. Elimina i vecchi salvataggi nel menu di caricamento per salvarne di più.",
-        "failed to save": "Impossibile salvare il gioco."
+        "failed to save": "Impossibile salvare il gioco.",
+        "send mana": "Dai mana"
     },
     {
         "language": "Deutsche",
@@ -1745,7 +1748,8 @@
         "spell_arrow_far": "Verursacht Schaden basierend auf der Entfernung des Ziels vom Zaubernden. Je weiter entfernte Ziele erleiden, desto mehr Schaden erleiden. Der maximale Schaden beträgt 🍞.",
         "long arrow": "Langer Pfeil",
         "too many save files": "Zu viele Sicherungsdateien. Löschen Sie alte Speicherungen im Lademenü, um mehr zu speichern.",
-        "failed to save": "Das Spiel könnte nicht gespeichert werden."
+        "failed to save": "Das Spiel könnte nicht gespeichert werden.",
+        "send mana": "Gib Mana"
     },
     {
         "language": "español",
@@ -2182,7 +2186,8 @@
         "spell_arrow_far": "Inflige daño según la distancia que esté el objetivo del lanzador. Los objetivos más lejanos reciben más daño. El daño máximo es 🍞.",
         "long arrow": "Flecha Larga",
         "too many save files": "Demasiados archivos guardados. Elimine los guardados antiguos en el menú de carga para guardar más.",
-        "failed to save": "No se pudo guardar el juego."
+        "failed to save": "No se pudo guardar el juego.",
+        "send mana": "Dar mana"
     },
     {
         "language": "日本",
@@ -2619,7 +2624,8 @@
         "spell_arrow_far": "ターゲットと術者からの距離に応じてダメージを与えます。ターゲットが遠いほど、より多くのダメージを受けます。最大ダメージは🍞です。",
         "long arrow": "ロングアロー",
         "too many save files": "保存ファイルが多すぎます。さらに保存するには、ロード メニューで古い保存を削除します。",
-        "failed to save": "ゲームを保存できませんでした。"
+        "failed to save": "ゲームを保存できませんでした。",
+        "send mana": "マナを与える"
     },
     {
         "language": "Português",
@@ -3056,7 +3062,8 @@
         "spell_arrow_far": "Causa dano com base na distância entre o alvo e o lançador. Os alvos mais distantes sofrem mais danos. O dano máximo é 🍞.",
         "long arrow": "Seta Longa",
         "too many save files": "Muitos arquivos salvos. Exclua os salvamentos antigos no menu de carregamento para economizar mais.",
-        "failed to save": ""
+        "failed to save": "",
+        "send mana": "Dê mana"
     },
     {
         "language": "عربى",
@@ -3493,7 +3500,8 @@
         "spell_arrow_far": "يتسبب في الضرر بناءً على مدى بعد الهدف عن الملقي. الأهداف الأبعد تأخذ المزيد من الضرر. الحد الأقصى للضرر هو 🍞.",
         "long arrow": "السهم الطويل",
         "too many save files": "عدد كبير جدًا من الملفات المحفوظة. احذف عمليات الحفظ القديمة في قائمة التحميل لحفظ المزيد.",
-        "failed to save": "لا يمكن حفظ اللعبة."
+        "failed to save": "لا يمكن حفظ اللعبة.",
+        "send mana": "أعط مانا"
     },
     {
         "language": "한국어",
@@ -3930,7 +3938,8 @@
         "spell_arrow_far": "대상과 시전자의 거리에 따라 피해를 입힙니다. 멀리 있는 대상일수록 더 많은 피해를 입습니다. 최대 피해량은 🍞입니다.",
         "long arrow": "긴 화살표",
         "too many save files": "저장 파일이 너무 많습니다. 더 많은 것을 저장하려면 로드 메뉴에서 이전 저장을 삭제하세요.",
-        "failed to save": "게임을 저장하지 못했습니다."
+        "failed to save": "게임을 저장하지 못했습니다.",
+        "send mana": "마나를 준다"
     },
     {
         "language": "русский",
@@ -4367,7 +4376,8 @@
         "spell_arrow_far": "Наносит урон в зависимости от того, насколько далеко цель находится от заклинателя. Более дальние цели получают больше урона. Максимальный урон 🍞.",
         "long arrow": "Длинная стрела",
         "too many save files": "Слишком много файлов сохранения. Удалите старые сохранения в меню «Загрузить», чтобы сохранить больше.",
-        "failed to save": "Не удалось сохранить игру."
+        "failed to save": "Не удалось сохранить игру.",
+        "send mana": "Дать ману"
     },
     {
         "language": "中文(简)",
@@ -4804,7 +4814,8 @@
         "spell_arrow_far": "根据目标与施法者的距离造成伤害。越远的目标受到的伤害就越大。最大伤害为🍞。",
         "long arrow": "长箭",
         "too many save files": "保存文件太多。删除加载菜单中的旧保存以保存更多内容。",
-        "failed to save": "游戏无法保存。"
+        "failed to save": "游戏无法保存。",
+        "send mana": "给予法力"
     },
     {
         "language": "中文(繁)",
@@ -5241,7 +5252,8 @@
         "spell_arrow_far": "根據目標與施法者的距離造成傷害。越遠的目標受到的傷害就越大。最大傷害為🍞。",
         "long arrow": "長箭",
         "too many save files": "保存文件太多。刪除載入選單中的舊儲存以保存更多內容。",
-        "failed to save": "遊戲無法保存。"
+        "failed to save": "遊戲無法保存。",
+        "send mana": "給予法力"
     },
     {
         "language": "Polskie",
@@ -5678,7 +5690,8 @@
         "spell_arrow_far": "Zadaje obrażenia w zależności od odległości celu od rzucającego. Dalsze cele otrzymują większe obrażenia. Maksymalne obrażenia to 🍞.",
         "long arrow": "Długa strzała",
         "too many save files": "Zbyt wiele plików zapisu. Usuń stare zapisy w menu ładowania, aby zapisać więcej.",
-        "failed to save": "Nie udało się zapisać gry."
+        "failed to save": "Nie udało się zapisać gry.",
+        "send mana": "Daj manę"
     },
     {
         "language": "Dutch",
@@ -6115,6 +6128,7 @@
         "spell_arrow_far": "Deals damage based on how far the target is from the caster. The more distant targets take more damage. The maximum damage is 🍞.",
         "long arrow": "Lange pijl",
         "too many save files": "Te veel opslagbestanden. Verwijder oude opgeslagen bestanden in het laadmenu om meer op te slaan.",
-        "failed to save": "Het spel kon niet worden opgeslagen."
+        "failed to save": "Het spel kon niet worden opgeslagen.",
+        "send mana": "Geef mana"
     }
 ]
