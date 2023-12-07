@@ -25,9 +25,9 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.COMMON],
-    thumbnail: 'spellIconPurify.png', //TODO - Mana Icon
+    thumbnail: 'spellIconSendMana.png',
     animationPath: 'spell-effects/potionPickup',
-    description: ['spell_send_mana', amount.toString()], //TODO - Mana descr
+    description: ['spell_send_mana', amount.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = state.targetedUnits.filter(u => u.alive);
       let promises = [];
