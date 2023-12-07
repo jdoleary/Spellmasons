@@ -217,6 +217,9 @@ export default class Underworld {
   // AI turns.
   allyNPCAttemptWinKillSwitch: number = 0;
   aquirePickupQueue: { pickupId: number, unitId: number, timeout: number, flaggedForRemoval: boolean }[] = [];
+  // for speed running
+  startTime: number | undefined;
+  winTime: number | undefined;
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
@@ -226,6 +229,7 @@ export default class Underworld {
     this.overworld = overworld;
     this.overworld.underworld = this;
     this.localUnderworldNumber = ++localUnderworldCount;
+    this.startTime = Date.now();
     if (typeof window !== 'undefined') {
       // @ts-ignore: window.devUnderworld is NOT typed in globalThis intentionally
       // so that it will not be used elsewhere, but it is assigned here
@@ -2020,13 +2024,14 @@ export default class Underworld {
 Got to level ${this.getLevelText()}
       
 Survived for ${((Date.now() - player.stats.gameStartTime) / 60000).toFixed(2)} Minutes
+${this.winTime && this.startTime ? `Beat deathmasons in ${((this.winTime - this.startTime) / 60000).toFixed(2)} Minutes` : ''}
 
 Total Kills: ${this.enemiesKilled}
 
-Best Spell killed ${player.stats.bestSpell.unitsKilled} units
+${player.stats.bestSpell.unitsKilled > 0 ? `Best Spell killed ${player.stats.bestSpell.unitsKilled} units
       <div class="stats-spell">
 ${CardUI.cardListToImages(player.stats.bestSpell.spell)}
-      </div>
+      </div>`: ''}
       ${JSON.stringify(player.stats.bestSpell.spell) !== JSON.stringify(player.stats.longestSpell) ?
             `
 Longest Spell:
@@ -2900,6 +2905,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       setTimeout(() => {
         // Prepare the next level
         if (globalThis.isHost(this.pie)) {
+          // When you beat the last level, record the winTime for speedrunning
+          if (this.levelIndex == config.LAST_LEVEL_INDEX) {
+            this.winTime = Date.now();
+          }
           this.generateLevelData(this.levelIndex + 1);
         } else {
           console.log('This instance is not host, host will trigger next level generation.');
