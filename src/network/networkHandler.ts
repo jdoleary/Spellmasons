@@ -1207,8 +1207,12 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       // Empty string means "No error, save successful"
       return '';
     } catch (e) {
-      console.error(e);
-      return 'Failed to save';
+      // @ts-ignore
+      if (e.message && e.message.includes('exceeded the quota')) {
+        return i18n('failed to save') + '\n' + i18n('too many save files');
+      }
+      console.error('Failed to save', e);
+      return i18n('failed to save');
     }
   };
   globalThis.deleteSave = async (title: string) => {
