@@ -2597,12 +2597,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
 
       switch (player.mageType) {
-        case 'Far Gazer': {
-          statBumpAmount.attackRange *= 2;
-          statBumpAmount.staminaMax = Math.floor(statBumpAmount.staminaMax as number / 2);
-          break;
-        }
-        default:
+        case 'Far Gazer':
+          {
+            statBumpAmount.attackRange *= 2;
+            statBumpAmount.staminaMax = Math.floor(statBumpAmount.staminaMax as number / 2);
+          }
           break;
       }
 
