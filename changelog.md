@@ -1,3 +1,35 @@
+## 1.25.0
+Staff update!
+Soul Muncher has joined the team as a developer and is doing awesome work!
+
+feature: Some card upgrades now "require" other cards in order to appear as upgrades but will not remove them when chosen.
+feature: New Spell: Long Arrow
+feature: New Spell: Send Mana
+    Thanks @meme_man for the suggestion!
+feature: New class: Witch!
+
+balance: Necromancer's Capture Soul now costs a static 38 hp instead of 90% health so you can upgrade your health to make it less dangerous to use.
+balance: Target Column now increases in length when stacked making it a viable targeting spell.
+balance: The mana cost of summon spells has been completely rebalanced, making many of the summon spells much more viable than they were before
+
+big fix: Prevent clients from timeing out from servers due to idleness.  This has been a big issue in multiplayer games where lots of folks were getting disconnected.  Big thanks to @WhiteScythe , @Gumby and others for reporting this
+fix: Manual camera controls that skip the camera cinematic at the start of each level now allow you use to choose your spawn immediately rather than waiting the same amount of time that it would take for the cinematic to finish.
+    Thanks @Skillo for uploading a video that showed this issue
+fix: Resolved issue where dashing to a pickup caused it to just disappear on multiplayer
+fix: Burst now deals the max damage when you are close enough to touch another unit rather than having to be right on top of them
+fix: Dash spell desync where dashing to multiple targets would cause a desync.  Now dash only dashes to the first target if multiple targets are selected.
+    Thanks @TheyCallMeWitch for reporting
+fix: Harvest + Push causing a crash
+    Thanks @White Rider for reporting
+
+improvement: Explains why saves may fail due to lack of space
+enhancement: Add speed run time to game over screen
+    Thanks @WildBerryBeast and @Skillo
+improvement: New spells are now chosen via a level up button (shown where the "End Turn" button usually is), so that leveling up doesn't cover the screen just as your cool spell is finishing.
+
+stats: Gather stats for language use
+stats: Gather stats for upgrade choices so I can determine which spells are so unpopular that they need reworking.  Your vote counts!
+
 ## 1.24.0
 - balance: Deathmason
     - Deathmason now actually uses mana and can be prevented from spawning portals if he has insufficient mana
