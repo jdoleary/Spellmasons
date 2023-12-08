@@ -1,3 +1,6 @@
+## 1.26.0
+- Balanced Target Similar and Target Kind
+    Thanks Meme_Man
 ## 1.25.0
 Staff update!
 Soul Muncher has joined the team as a developer and is doing awesome work!
