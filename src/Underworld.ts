@@ -831,24 +831,29 @@ export default class Underworld {
     const timemasons = this.players.filter(p => p.mageType == 'Timemason');
     if (this.turn_phase == turn_phase.PlayerTurns && timemasons.length && globalThis.view == View.Game) {
       timemasons.forEach(timemason => {
-        if (timemason.unit.alive) {
+        if (timemason.isSpawned && timemason.unit.alive && timemason.unit.mana > 0) {
+
+          let drainPerSecond = timemason.unit.manaMax * config.TIMEMASON_PERCENT_DRAIN / 100;
 
           //@ts-ignore Special logic for timemason, does not need to be persisted
-          if (!timemason.timetracker) {
+          if (!timemason.manaToDrain) {
             //@ts-ignore Special logic for timemason, does not need to be persisted
-            timemason.timetracker = deltaTime;
-          } else {
-            //@ts-ignore Special logic for timemason, does not need to be persisted
-            timemason.timetracker += deltaTime;
+            timemason.manaToDrain = deltaTime / 1000 * drainPerSecond;
           }
-          const time_to_dmg_ms = 2000;
-          //@ts-ignore Special logic for timemason, does not need to be persisted
-          if (timemason.timetracker > time_to_dmg_ms) {
+          else {
             //@ts-ignore Special logic for timemason, does not need to be persisted
-            timemason.timetracker -= time_to_dmg_ms;
-            timemason.unit.mana += 1;
-            Unit.takeDamage(timemason.unit, config.TIMEMASON_DAMAGE_AMOUNT, undefined, this, false);
-            floatingText({ coords: timemason.unit, text: '-1 hp +1 mana' });
+            timemason.manaToDrain += deltaTime / 1000 * drainPerSecond;
+
+            //@ts-ignore Special logic for timemason, does not need to be persisted
+            if (timemason.manaToDrain >= 1) {
+              //@ts-ignore Special logic for timemason, does not need to be persisted
+              timemason.unit.mana -= Math.floor(timemason.manaToDrain);;
+              //@ts-ignore Special logic for timemason, does not need to be persisted
+              timemason.manaToDrain -= Math.floor(timemason.manaToDrain);;
+              this.syncPlayerPredictionUnitOnly();
+              Unit.syncPlayerHealthManaUI(this);
+              //floatingText({ coords: timemason.unit, text: '-1 mana' });
+            }
           }
         }
       })
@@ -2612,11 +2617,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
 
       switch (player.mageType) {
+        case 'Timemason':
+          statBumpAmount.manaMax *= 2;
+          break;
         case 'Far Gazer':
-          {
-            statBumpAmount.attackRange *= 2;
-            statBumpAmount.staminaMax = Math.floor(statBumpAmount.staminaMax as number / 2);
-          }
+          statBumpAmount.attackRange *= 2;
+          statBumpAmount.staminaMax = Math.floor(statBumpAmount.staminaMax as number / 2);
           break;
       }
 

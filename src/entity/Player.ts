@@ -112,9 +112,10 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
     switch (type) {
       case 'Timemason':
         {
-          // Turn off damage sfx for timemason so as to not annoy the player
-          // with repetative damage sfx due to timemason's damage over time
-          player.unit.sfx.damage = '';
+          player.unit.manaMax *= 2;
+          player.unit.mana *= 2;
+          underworld.syncPlayerPredictionUnitOnly();
+          Unit.syncPlayerHealthManaUI(underworld);
         }
         break;
       case 'Archer':
@@ -171,7 +172,7 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
         break;
       case 'Far Gazer':
         {
-          player.unit.attackRange = 2 * player.unit.attackRange;
+          player.unit.attackRange *= 2;
           player.unit.staminaMax = Math.floor(player.unit.staminaMax / 2);
         }
         break;
