@@ -830,6 +830,7 @@ export default class Underworld {
         if (timemason.isSpawned && timemason.unit.alive && timemason.unit.mana > 0) {
 
           let drainPerSecond = timemason.unit.manaMax * config.TIMEMASON_PERCENT_DRAIN / 100;
+
           //@ts-ignore Special logic for timemason, does not need to be persisted
           if (!timemason.manaToDrain) {
             //@ts-ignore Special logic for timemason, does not need to be persisted
@@ -842,8 +843,9 @@ export default class Underworld {
             //@ts-ignore Special logic for timemason, does not need to be persisted
             if (timemason.manaToDrain >= 1) {
               //@ts-ignore Special logic for timemason, does not need to be persisted
-              timemason.manaToDrain -= 1;
-              timemason.unit.mana -= 1;
+              timemason.unit.mana -= Math.floor(timemason.manaToDrain);;
+              //@ts-ignore Special logic for timemason, does not need to be persisted
+              timemason.manaToDrain -= Math.floor(timemason.manaToDrain);;
               this.syncPlayerPredictionUnitOnly();
               Unit.syncPlayerHealthManaUI(this);
               //floatingText({ coords: timemason.unit, text: '-1 mana' });
