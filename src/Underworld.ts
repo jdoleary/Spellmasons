@@ -3574,7 +3574,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             healthCost: 0
           };
           for (let i = 0; i < quantity; i++) {
-            const timesUsedSoFar = card.expenseScaling == 0 ? 0 : (casterCardUsage[card.id] || 0) + i;
+            const timesUsedSoFar = (casterCardUsage[card.id] || 0) + (quantity > 1 ? i * card.expenseScaling : i);
             const singleCardCost = calculateCostForSingleCard(card, timesUsedSoFar, casterPlayer);
             spellCostTally.manaCost += singleCardCost.manaCost;
             spellCostTally.healthCost += singleCardCost.healthCost;
