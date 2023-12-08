@@ -24,17 +24,7 @@
 - Merge master branch to keep it up to date
 - Test loading an old save file for backwards compatibility
 ---
-- Test contaminate
-- test witch
-- test long arrow
-- test send mana
-- target column
-- summon spells
 - test idle timeout
-- burst close
-- dash desync to pickup
-- harvest + push
-- speed run time
 
 # Release protocal
 - QA: 1:44

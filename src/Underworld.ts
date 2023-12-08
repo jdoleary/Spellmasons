@@ -2515,6 +2515,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           CardUI.syncInventory(undefined, this);
           await runPredictions(this);
           this.checkIfShouldSpawnPortal();
+          // For hotseat, whenever a player ends their turn, check if the current player
+          // has upgrades to choose and if so, show the upgrade button
+          if (globalThis.player && this.upgradesLeftToChoose(globalThis.player)) {
+            elEndTurnBtn.classList.toggle('upgrade', true);
+          }
 
           // Announce new players' turn
           if (globalThis.player && globalThis.player.name) {
@@ -2694,7 +2699,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     const cursesLeftToChoose = this.cursesLeftToChoose(player);
     // Return immediately if player has no upgrades that left to pick from
     if (upgradesLeftToChoose <= 0 && perksLeftToChoose <= 0 && cursesLeftToChoose <= 0) {
-      console.log('showUpgrades: Closing upgrade screen, nothing left to pick')
+      console.log('showUpgrades: Closing upgrade screen, nothing left to pick');
+      // Hide the upgrade button since there are no upgrades left to pick
+      elEndTurnBtn.classList.toggle('upgrade', false);
       return;
     }
     const isPerk = perksLeftToChoose > 0 || cursesLeftToChoose > 0;
