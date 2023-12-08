@@ -1,4 +1,11 @@
 # Ideas
+- vex — Today at 2:15 AM
+a way to make enemies that feel intelligent is to make mobs that work really well together as a group
+it's much easier than making a single enemy who is on-par with the spellmason and achieves similar difficulty/challenge levels
+also mobs that do not move as close as possible to the player but do other things, like the ancient rocks that stay back and harass, are a great concept
+summoners are another good example of this
+even though these types of enemies are not particularly intelligent they ramp up the challenge and increase the fun of problem solving by diversifying the threats the player has to face 
+combined with these, a spellcaster that does a 1-2 spell combo will feel impactful, no need to make a complex archmage to rival the player
 - Make Deathmason spawn in after you spawn so you can't one-shot it? @meme_man
     - or maybe have soulcruxes?
 - ice wall (empty unit with `immovable` to true and ice image)
