@@ -7,13 +7,15 @@ import { isPickup } from '../entity/Pickup';
 import { isDoodad } from '../entity/Doodad';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { animateTargetSimilar } from './target_similar';
+import { targetSimilar2Id } from './target_similar_2';
 
 const id = 'Target Kind';
-const NUMBER_OF_TARGETS_PER_STACK = 5;
+const NUMBER_OF_TARGETS_PER_STACK = 3;
 const spell: Spell = {
   card: {
     id,
     category: CardCategory.Targeting,
+    requires: [targetSimilar2Id],
     supportQuantity: true,
     manaCost: 60,
     healthCost: 0,

@@ -23,6 +23,10 @@
 - Test that F12 works in electron build
 - Merge master branch to keep it up to date
 - Test loading an old save file for backwards compatibility
+---
+- qa new connect
+    - Make sure it's impossible to get stuck in infinite loop
+    - check that it runs on multiplayer
 
 # Release protocal
 - QA: 1:44

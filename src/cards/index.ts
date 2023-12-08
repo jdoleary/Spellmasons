@@ -56,6 +56,7 @@ import lastWill from './lastwill';
 import split from './split';
 import drown from './drown';
 import target_similar from './target_similar';
+import target_similar_2 from './target_similar_2';
 import target_all from './target_all';
 import target_cone from './target_cone';
 import plus_radius from './plus_radius';
@@ -224,6 +225,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(split, overworld);
   registerSpell(drown, overworld);
   registerSpell(target_similar, overworld);
+  registerSpell(target_similar_2, overworld);
   registerSpell(target_all, overworld);
   registerSpell(target_cone, overworld);
   registerSpell(plus_radius, overworld);

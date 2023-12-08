@@ -1,4 +1,4 @@
-import { addTarget, getCurrentTargets, Spell } from './index';
+import { addTarget, EffectState, getCurrentTargets, ICard, Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 import { Vec2, add, subtract } from '../jmath/Vec';
 import * as math from '../jmath/math';
@@ -11,65 +11,70 @@ import { easeOutCubic } from '../jmath/Easing';
 import * as config from '../config';
 import * as colors from '../graphics/ui/colors';
 import { HasSpace } from '../entity/Type';
+import Underworld from '../Underworld';
 
-const id = 'Target Similar';
+export const targetSimilarId = 'Target Similar';
 const spell: Spell = {
   card: {
-    id,
+    id: targetSimilarId,
     category: CardCategory.Targeting,
     supportQuantity: true,
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.UNCOMMON],
+    probability: probabilityMap[CardRarity.FORBIDDEN],
     thumbnail: 'spellIconTargetSimilar.png',
     requiresFollowingCard: true,
     description: 'spell_target_similar',
     allowNonUnitTarget: true,
-    effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
-      // Note: This loop must NOT be a for..of and it must cache the length because it
-      // mutates state.targetedUnits as it iterates.  Otherwise it will continue to loop as it grows
-      let targets: Vec2[] = getCurrentTargets(state);
-      targets = targets.length ? targets : [state.castLocation];
-      const length = targets.length;
-      const animators = [];
-      for (let i = 0; i < length; i++) {
-        // Refresh the targets array so it excludes reselecting a target that was selected by the last iteration
-        targets = getCurrentTargets(state);
-        const target = targets[i];
-        if (!target) {
-          continue;
-        }
-        const potentialTargets = underworld.getPotentialTargets(prediction)
-          // Filter out current targets
-          .filter(t => !targets.includes(t))
-          // Filter out dissimilar types
-          // @ts-ignore Find similar units by unitSourceId, find similar pickups by name
-          .filter(t => {
-            if (isUnit(target)) {
-              return isUnit(t) && t.unitSourceId == target.unitSourceId && t.alive == target.alive && t.faction == target.faction;
-            } else if (isPickup(target)) {
-              return isPickup(t) && t.name == target.name;
-            } else if (isDoodad(target)) {
-              return isDoodad(t) && t.name == target.name;
-            }
-          })
-          .sort((a, b) => math.distance(a, target) - math.distance(b, target));
-        const newTargets = potentialTargets.slice(0, quantity);
-        if (!prediction) {
-          playSFXKey('targeting');
-          animators.push({ pos: target, newTargets });
-        }
-        for (let newTarget of newTargets) {
-          addTarget(newTarget, state);
-        }
-      }
-      await animateTargetSimilar(animators);
-
-      return state;
-    },
-  },
+    effect: targetSimilarEffect(1),
+  }
 };
+export function targetSimilarEffect(numberOfTargets: number) {
+  return async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean) => {
+    // Note: This loop must NOT be a for..of and it must cache the length because it
+    // mutates state.targetedUnits as it iterates.  Otherwise it will continue to loop as it grows
+    let targets: Vec2[] = getCurrentTargets(state);
+    targets = targets.length ? targets : [state.castLocation];
+    const length = targets.length;
+    const animators = [];
+    for (let i = 0; i < length; i++) {
+      // Refresh the targets array so it excludes reselecting a target that was selected by the last iteration
+      targets = getCurrentTargets(state);
+      const target = targets[i];
+      if (!target) {
+        continue;
+      }
+      const potentialTargets = underworld.getPotentialTargets(prediction)
+        // Filter out current targets
+        .filter(t => !targets.includes(t))
+        // Filter out dissimilar types
+        // @ts-ignore Find similar units by unitSourceId, find similar pickups by name
+        .filter(t => {
+          if (isUnit(target)) {
+            return isUnit(t) && t.unitSourceId == target.unitSourceId && t.alive == target.alive && t.faction == target.faction;
+          } else if (isPickup(target)) {
+            return isPickup(t) && t.name == target.name;
+          } else if (isDoodad(target)) {
+            return isDoodad(t) && t.name == target.name;
+          }
+        })
+        .sort((a, b) => math.distance(a, target) - math.distance(b, target));
+      const newTargets = potentialTargets.slice(0, numberOfTargets * quantity);
+      if (!prediction) {
+        playSFXKey('targeting');
+        animators.push({ pos: target, newTargets });
+      }
+      for (let newTarget of newTargets) {
+        addTarget(newTarget, state);
+      }
+    }
+    await animateTargetSimilar(animators);
+
+    return state;
+  }
+
+}
 
 export async function animateTargetSimilar(circles: { pos: Vec2, newTargets: Vec2[] }[]) {
   if (globalThis.headless) {
