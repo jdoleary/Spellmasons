@@ -135,7 +135,7 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
     // --
     // timesUsedSoFar is the number of times a card has (or will be if were calculating mana cost for a future cast)
     // been used. It makes cards more expensive to use over and over
-    const multiplier = Math.log2(card.expenseScaling * timesUsedSoFar + 2);
+    const multiplier = Math.log2(timesUsedSoFar + 2);
     cardCost.manaCost *= multiplier;
     cardCost.healthCost *= multiplier;
 
