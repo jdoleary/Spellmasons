@@ -748,7 +748,7 @@ function createNonCardInventoryElement(thumbnailPath: string, titleText: string)
 }
 // @ts-ignore For menu only
 globalThis.createCardElement = createCardElement;
-function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSize?: boolean) {
+function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSize?: boolean, hideAsUnknown?: boolean) {
   const element = document.createElement('div');
   if (!content) {
     return element;
@@ -811,13 +811,13 @@ function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSi
 
   const thumbHolder = document.createElement('div');
   const thumbnail = document.createElement('img');
-  thumbnail.src = getSpellThumbnailPath(content.thumbnail);
+  thumbnail.src = getSpellThumbnailPath(hideAsUnknown ? 'unknown.png' : content.thumbnail);
   thumbHolder.appendChild(thumbnail);
   thumbHolder.classList.add('card-thumb');
   elCardInner.appendChild(thumbHolder);
   const title = document.createElement('div');
   title.classList.add('card-title');
-  title.innerHTML = i18n(content.id.split('_').join(' '));
+  title.innerHTML = i18n(hideAsUnknown ? 'Unknown' : content.id.split('_').join(' '));
   elCardInner.appendChild(title);
   if (content.modName) {
     const modHolder = document.createElement('div');
@@ -849,7 +849,7 @@ function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSi
       labelHolder.appendChild(replacesEl)
     }
     const label = document.createElement('span');
-    label.innerText = i18n(content.description).trimStart();
+    label.innerText = hideAsUnknown ? '' : i18n(content.description).trimStart();
     labelHolder.appendChild(label);
     desc.appendChild(labelHolder);
   }
