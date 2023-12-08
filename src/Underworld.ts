@@ -1885,14 +1885,6 @@ export default class Underworld {
     for (let e of enemies) {
       this.spawnEnemy(e.id, e.coord, e.isMiniboss);
     }
-    // Make half of enemies protected for loop levels
-    if (levelData.levelIndex > config.LAST_LEVEL_INDEX) {
-      // Only target enemies, exclude doodads
-      const currentEnemies = this.units.filter(u => u.faction == Faction.ENEMY && u.unitSubType !== UnitSubType.DOODAD);
-      for (let e of currentEnemies.slice(Math.floor(currentEnemies.length / 2))) {
-        immune.add(e, this, false);
-      }
-    }
 
     // Show text in center of screen for the new level
     queueCenteredFloatingText(
