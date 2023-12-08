@@ -98,6 +98,7 @@ import { urn_explosive_id } from './entity/units/urn_explosive';
 import { urn_ice_id } from './entity/units/urn_ice';
 import { urn_poison_id } from './entity/units/urn_poison';
 import { elEndTurnBtn } from './HTMLElements';
+import { corpseDecayId } from './modifierCorpseDecay';
 
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
@@ -3650,6 +3651,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       if (loopIndex > this.wave) {
         this.wave++;
         queueCenteredFloatingText(`Wave ${this.wave + 1} of ${loopIndex + 1}`);
+        // Add corpse decay to all dead NPCs
+        this.units.filter(u => u.unitType == UnitType.AI && !u.alive).forEach(u => {
+          Unit.addModifier(u, corpseDecayId, this, false);
+        });
         const unitIds = getEnemiesForAltitude2(this, this.levelIndex);
         const numberOfMinibossesAllowed = Math.ceil(Math.max(0, (this.levelIndex - 4) / 4));
         let numberOfMinibossesMade = 0;
