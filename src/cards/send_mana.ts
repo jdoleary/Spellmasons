@@ -29,7 +29,7 @@ const spell: Spell = {
     animationPath: 'spell-effects/potionPickup',
     description: ['spell_send_mana', amount.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
-      const targets = state.targetedUnits.filter(u => u.alive && u.manaMax > 0);
+      const targets = state.targetedUnits.filter(u => u.alive);
       let promises = [];
       for (let unit of targets) {
         const manaTrailPromises = [];
