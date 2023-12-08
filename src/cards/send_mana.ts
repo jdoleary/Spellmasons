@@ -34,9 +34,7 @@ const spell: Spell = {
       for (let unit of targets) {
         const manaTrailPromises = [];
         if (!prediction) {
-          for (let i = 0; i < quantity; i++) {
-            manaTrailPromises.push(makeManaTrail(state.casterUnit, unit, underworld, '#e4f9ff', '#3fcbff'));
-          }
+          manaTrailPromises.push(makeManaTrail(state.casterUnit, unit, underworld, '#e4f9ff', '#3fcbff'));
         }
         promises.push((prediction ? Promise.resolve() : Promise.all(manaTrailPromises)));
       }
