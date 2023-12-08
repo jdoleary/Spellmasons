@@ -140,6 +140,7 @@ export default class Underworld {
   pie: PieClient | IHostApp;
   // The index of the level the players are on
   levelIndex: number = -1;
+  wave: number = 0;
   // for serializing random: prng
   RNGState?: SeedrandomState;
   turn_phase: turn_phase = turn_phase.Stalled;
@@ -1908,6 +1909,9 @@ export default class Underworld {
       globalThis.playNextSong();
     }
 
+    // Reset wave count
+    this.wave = 0;
+
     // NOTE: Any data that needs to be synced from host to clients from this function MUST
     // be set BEFORE postSetupLevel is invoked because postSetupLevel will send a sync message
     // that will override the clientside data.
@@ -3642,6 +3646,56 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   checkIfShouldSpawnPortal() {
     // If all enemy units are dead and at least one player is spawned and connected
     if (this.units.filter(u => u.faction == Faction.ENEMY && !u.flaggedForRemoval && u.unitSubType !== UnitSubType.DOODAD).every(u => !u.alive) && this.players.some(p => p.isSpawned && p.clientConnected)) {
+      const loopIndex = Math.max(0, (this.levelIndex - config.LAST_LEVEL_INDEX));
+      if (loopIndex > this.wave) {
+        this.wave++;
+        queueCenteredFloatingText(`Wave ${this.wave + 1} of ${loopIndex + 1}`);
+        const unitIds = getEnemiesForAltitude2(this, this.levelIndex);
+        const numberOfMinibossesAllowed = Math.ceil(Math.max(0, (this.levelIndex - 4) / 4));
+        let numberOfMinibossesMade = 0;
+        // Trick for finding valid spawnable tiles
+        const validSpawnCoords = this.lastLevelCreated?.imageOnlyTiles.filter(x => x.image.endsWith('all_ground.png')) || [];
+
+        // Copied from generateRandomLevelData
+        for (let id of unitIds) {
+          if (validSpawnCoords.length == 0) { break; }
+          const validSpawnCoordsIndex = randInt(0, validSpawnCoords.length - 1, this.random);
+          const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
+          const sourceUnit = allUnits[id];
+          const { unitMinLevelIndexSubtractor } = unavailableUntilLevelIndexDifficultyModifier(this);
+          // Disallow miniboss for a unit spawning on the first levelIndex that they are allowed to spawn
+          const minibossAllowed = !sourceUnit?.spawnParams?.excludeMiniboss && ((sourceUnit?.spawnParams?.unavailableUntilLevelIndex || 0) - unitMinLevelIndexSubtractor) < this.levelIndex;
+          if (coord) {
+            const isMiniboss = !minibossAllowed ? false : numberOfMinibossesAllowed > numberOfMinibossesMade;
+            if (isMiniboss) {
+              numberOfMinibossesMade++;
+            }
+            const sourceUnit = allUnits[id];
+            if (sourceUnit) {
+              Unit.create(
+                sourceUnit.id,
+                // Start the unit at the summoners location
+                coord.x,
+                coord.y,
+                // A unit always summons units in their own faction
+                Faction.ENEMY,
+                sourceUnit.info.image,
+                UnitType.AI,
+                sourceUnit.info.subtype,
+                sourceUnit.unitProps,
+                this
+              );
+              skyBeam(coord);
+            } else {
+              console.error('Cannot create unit, missing source unit for', id)
+            }
+          }
+        }
+        // end Copied from generateRandomLevelData
+
+
+        return;
+      }
       // Make all potion pickups disappear so as to not compell players to waste time walking around picking them
       // all up
       // Also do not remove portals
