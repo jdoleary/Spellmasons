@@ -435,7 +435,8 @@
         "long arrow": "Long Arrow",
         "too many save files": "Too many save files. Delete old saves in the load menu to save more.",
         "failed to save": "Failed to save.",
-        "send mana": "Send Mana"
+        "send mana": "Send Mana",
+        "requires": "Requires"
     },
     {
         "language": "Français",
@@ -873,7 +874,8 @@
         "long arrow": "Flèche longue",
         "too many save files": "Trop de fichiers de sauvegarde. Supprimez les anciennes sauvegardes dans le menu de chargement pour en enregistrer davantage.",
         "failed to save": "Échec de la sauvegarde du jeu.",
-        "send mana": "Donner du mana"
+        "send mana": "Donner du mana",
+        "requires": "Prérequis"
     },
     {
         "language": "italiano",
@@ -1311,7 +1313,8 @@
         "long arrow": "Freccia lunga",
         "too many save files": "Troppi file di salvataggio. Elimina i vecchi salvataggi nel menu di caricamento per salvarne di più.",
         "failed to save": "Impossibile salvare il gioco.",
-        "send mana": "Dai mana"
+        "send mana": "Dai mana",
+        "requires": "Prerequisito"
     },
     {
         "language": "Deutsche",
@@ -1749,7 +1752,8 @@
         "long arrow": "Langer Pfeil",
         "too many save files": "Zu viele Sicherungsdateien. Löschen Sie alte Speicherungen im Lademenü, um mehr zu speichern.",
         "failed to save": "Das Spiel könnte nicht gespeichert werden.",
-        "send mana": "Gib Mana"
+        "send mana": "Gib Mana",
+        "requires": "Voraussetzung"
     },
     {
         "language": "español",
@@ -2187,7 +2191,8 @@
         "long arrow": "Flecha Larga",
         "too many save files": "Demasiados archivos guardados. Elimine los guardados antiguos en el menú de carga para guardar más.",
         "failed to save": "No se pudo guardar el juego.",
-        "send mana": "Dar mana"
+        "send mana": "Dar mana",
+        "requires": "Requisito previo"
     },
     {
         "language": "日本",
@@ -2625,7 +2630,8 @@
         "long arrow": "ロングアロー",
         "too many save files": "保存ファイルが多すぎます。さらに保存するには、ロード メニューで古い保存を削除します。",
         "failed to save": "ゲームを保存できませんでした。",
-        "send mana": "マナを与える"
+        "send mana": "マナを与える",
+        "requires": "事前に必要"
     },
     {
         "language": "Português",
@@ -3063,7 +3069,8 @@
         "long arrow": "Seta Longa",
         "too many save files": "Muitos arquivos salvos. Exclua os salvamentos antigos no menu de carregamento para economizar mais.",
         "failed to save": "",
-        "send mana": "Dê mana"
+        "send mana": "Dê mana",
+        "requires": "Pré-requisito"
     },
     {
         "language": "عربى",
@@ -3501,7 +3508,8 @@
         "long arrow": "السهم الطويل",
         "too many save files": "عدد كبير جدًا من الملفات المحفوظة. احذف عمليات الحفظ القديمة في قائمة التحميل لحفظ المزيد.",
         "failed to save": "لا يمكن حفظ اللعبة.",
-        "send mana": "أعط مانا"
+        "send mana": "أعط مانا",
+        "requires": "شرط مسبق"
     },
     {
         "language": "한국어",
@@ -3939,7 +3947,8 @@
         "long arrow": "긴 화살표",
         "too many save files": "저장 파일이 너무 많습니다. 더 많은 것을 저장하려면 로드 메뉴에서 이전 저장을 삭제하세요.",
         "failed to save": "게임을 저장하지 못했습니다.",
-        "send mana": "마나를 준다"
+        "send mana": "마나를 준다",
+        "requires": "전제 조건"
     },
     {
         "language": "русский",
@@ -4377,7 +4386,8 @@
         "long arrow": "Длинная стрела",
         "too many save files": "Слишком много файлов сохранения. Удалите старые сохранения в меню «Загрузить», чтобы сохранить больше.",
         "failed to save": "Не удалось сохранить игру.",
-        "send mana": "Дать ману"
+        "send mana": "Дать ману",
+        "requires": "Предварительное условие"
     },
     {
         "language": "中文(简)",
@@ -4815,7 +4825,8 @@
         "long arrow": "长箭",
         "too many save files": "保存文件太多。删除加载菜单中的旧保存以保存更多内容。",
         "failed to save": "游戏无法保存。",
-        "send mana": "给予法力"
+        "send mana": "给予法力",
+        "requires": "条件"
     },
     {
         "language": "中文(繁)",
@@ -5253,7 +5264,8 @@
         "long arrow": "長箭",
         "too many save files": "保存文件太多。刪除載入選單中的舊儲存以保存更多內容。",
         "failed to save": "遊戲無法保存。",
-        "send mana": "給予法力"
+        "send mana": "給予法力",
+        "requires": "必須的"
     },
     {
         "language": "Polskie",
@@ -5691,7 +5703,8 @@
         "long arrow": "Długa strzała",
         "too many save files": "Zbyt wiele plików zapisu. Usuń stare zapisy w menu ładowania, aby zapisać więcej.",
         "failed to save": "Nie udało się zapisać gry.",
-        "send mana": "Daj manę"
+        "send mana": "Daj manę",
+        "requires": "Warunek wstępny"
     },
     {
         "language": "Dutch",
@@ -6129,6 +6142,7 @@
         "long arrow": "Lange pijl",
         "too many save files": "Te veel opslagbestanden. Verwijder oude opgeslagen bestanden in het laadmenu om meer op te slaan.",
         "failed to save": "Het spel kon niet worden opgeslagen.",
-        "send mana": "Geef mana"
+        "send mana": "Geef mana",
+        "requires": "Voorwaarde"
     }
 ]
