@@ -1924,6 +1924,11 @@ export default class Underworld {
       // Must be called when difficulty (gameMode) changes to update summon spell stats
       Cards.refreshSummonCardDescriptions(this);
     }
+    // When you get to the first plus level after beating the last level,
+    // record the winTime for speedrunning
+    if (levelData.levelIndex == config.LAST_LEVEL_INDEX + 1) {
+      this.winTime = Date.now();
+    }
     return new Promise<void>(resolve => {
       document.body?.classList.toggle('loading', true);
       // Add timeout so that loading can update dom
@@ -2905,10 +2910,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       setTimeout(() => {
         // Prepare the next level
         if (globalThis.isHost(this.pie)) {
-          // When you beat the last level, record the winTime for speedrunning
-          if (this.levelIndex == config.LAST_LEVEL_INDEX) {
-            this.winTime = Date.now();
-          }
           this.generateLevelData(this.levelIndex + 1);
         } else {
           console.log('This instance is not host, host will trigger next level generation.');
