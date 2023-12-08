@@ -7,6 +7,7 @@ import { Vec2 } from '../jmath/Vec';
 import { playDefaultSpellSFX } from './cardUtils';
 import { explode } from './bloat';
 import { findArrowCollisions } from './arrow';
+import { arrow3CardId } from './arrow3';
 
 export const explosiveArrowCardId = 'Explosive Arrow';
 const damageDone = 10;
@@ -15,6 +16,7 @@ const explodeDamage = 40;
 const spell: Spell = {
   card: {
     id: explosiveArrowCardId,
+    requires: [arrow3CardId],
     category: CardCategory.Damage,
     supportQuantity: true,
     manaCost: 60,
