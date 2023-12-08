@@ -11,6 +11,7 @@ feature: New class: Witch!
 balance: Necromancer's Capture Soul now costs a static 38 hp instead of 90% health so you can upgrade your health to make it less dangerous to use.
 balance: Target Column now increases in length when stacked making it a viable targeting spell.
 balance: The mana cost of summon spells has been completely rebalanced, making many of the summon spells much more viable than they were before
+balance: Timemason has been reworked so that you get double mana and lose mana over time rather than gaining mana over time and losing health.  This increases pressure and challenge rather than encouraging stalling and waiting.
 
 big fix: Prevent clients from timeing out from servers due to idleness.  This has been a big issue in multiplayer games where lots of folks were getting disconnected.  Big thanks to @WhiteScythe , @Gumby and others for reporting this
 fix: Manual camera controls that skip the camera cinematic at the start of each level now allow you use to choose your spawn immediately rather than waiting the same amount of time that it would take for the cinematic to finish.

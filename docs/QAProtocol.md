@@ -23,8 +23,6 @@
 - Test that F12 works in electron build
 - Merge master branch to keep it up to date
 - Test loading an old save file for backwards compatibility
----
-- test idle timeout
 
 # Release protocal
 - QA: 1:44
