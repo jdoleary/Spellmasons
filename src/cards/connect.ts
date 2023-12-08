@@ -11,6 +11,7 @@ import { similarTriangles, distance } from '../jmath/math';
 import { easeOutCubic } from '../jmath/Easing';
 import { isPickup } from '../entity/Pickup';
 import { HasSpace } from '../entity/Type';
+import filter from '../graphics/shaders/unusued';
 
 const id = 'Connect';
 const numberOfTargetsPerQuantity = 2;
@@ -43,7 +44,7 @@ const spell: Spell = {
             if (Unit.isUnit(x) && Unit.isUnit(target)) {
               if (target.alive) {
                 // Match living units of the same faction
-                return x.faction == target.faction && x.alive;
+                return x.faction == target.faction && x.alive; //TODO - Should doodads be on the "enemy" faction, or is there a neutral faction?
               } else {
                 // Match any dead unit
                 return !x.alive;
@@ -58,16 +59,14 @@ const spell: Spell = {
           }
 
           // Find all units touching the spell origin
-          const chained = await getTouchingTargetableEntitiesRecursive(
-            target.x,
-            target.y,
-            potentialTargets,
+          const chained = await getConnectingEntities(
+            target,
             baseRadius + state.aggregator.radius,
-            prediction,
-            { limitTargetsLeft },
-            0,
+            limitTargetsLeft,
+            targets,
+            potentialTargets,
             filterFn,
-            targets
+            prediction
           );
           // Draw prediction lines so user can see how it chains
           if (prediction) {
@@ -98,75 +97,80 @@ const spell: Spell = {
     },
   },
 };
-export async function getTouchingTargetableEntitiesRecursive(
-  x: number,
-  y: number,
-  potentialTargets: HasSpace[],
+
+export async function getConnectingEntities(
+  source: HasSpace,
   radius: number,
+  chainsLeft: number,
+  targets: HasSpace[] = [],
+  potentialTargets: HasSpace[],
+  filterFn: (x: any) => boolean, //selects which type of entities this can chain to
   prediction: boolean,
-  // The number of targets left that it is able to add to the targets list
-  // It is an object instead of just a number so it will be passed by reference
-  chainState: { limitTargetsLeft: number },
-  recurseLevel: number,
-  // selects which type of entity to chain to
-  filterFn: (x: any) => boolean,
-  // object references
-  ignore: HasSpace[] = [],
-): Promise<{ chainSource: Vec2, entity: HasSpace }[]> {
-  if (chainState.limitTargetsLeft <= 0) {
-    return [];
+): Promise<{ chainSource: HasSpace, entity: HasSpace }[]> {
+
+  potentialTargets = potentialTargets
+    .filter(x => filterFn(x))
+    .filter(t => !targets.includes(t));
+
+  let connected: { chainSource: HasSpace, entity: HasSpace }[] = [];
+  if (chainsLeft > 0) {
+    connected = await getNextConnectingEntities(source, radius, chainsLeft, potentialTargets, prediction)
   }
-  // Draw visual circle for prediction
-  // - config.COLLISION_MESH_RADIUS / 2 accounts for the fact that the game logic
-  // will only connect entities if their CENTER POINT falls within the radius; however,
-  // to the players eyes if any part of them is touching the circle it should connect
+  return connected;
+}
+
+export async function getNextConnectingEntities(
+  source: HasSpace,
+  radius: number,
+  chainsLeft: number,
+  potentialTargets: HasSpace[],
+  prediction: boolean,
+): Promise<{ chainSource: HasSpace, entity: HasSpace }[]> {
+
+  potentialTargets = potentialTargets.filter(x => x != source);
+  const x = source.x;
+  const y = source.y;
+  const coords = { x, y }
+
   if (prediction) {
     drawPredictionCircleFill({ x, y }, radius - config.COLLISION_MESH_RADIUS / 2);
   }
-  const coords = { x, y }
-  let touching = potentialTargets
-    .filter((u) => {
-      return (
-        ignore.find((i) => i == u) === undefined &&
-        u.x <= x + radius &&
-        u.x >= x - radius &&
-        u.y <= y + radius &&
-        u.y >= y - radius
-      );
-    })
-    // Filter chaining types
-    .filter((x) => filterFn(x))
-    // Order by closest to coords
-    .sort((a, b) => math.distance(a, coords) - math.distance(b, coords))
-    // Only select up to limitTargetsLeft
-    .slice(0, chainState.limitTargetsLeft);
 
-  // console.log('debug: touching', touching.map(x => `name:${x.unitSourceId || x.name},alive:${x.alive},faction:${x.faction},score:${prioritySorter(x)}`));
+  let connected: { chainSource: HasSpace, entity: HasSpace }[] = [];
+  do {
+    let closestDist = radius;
+    let closestTarget: HasSpace | undefined = undefined;
 
-  ignore.push(...touching);
-
-  let connected: { chainSource: Vec2, entity: HasSpace }[] = [];
-  if (chainState.limitTargetsLeft > 0) {
-    // Important: Using a regular for loop and cache the length instead of a for..of loop because 
-    // the array being looped is modified in the interior of the loop and we only want it
-    // to loop the original array contents, not the contents that are added inside of the loop
-    const length = touching.length
-    for (let i = 0; i < length; i++) {
-      const t = touching[i];
-      if (t) {
-        if (chainState.limitTargetsLeft <= 0) {
-          break;
-        }
-        connected.push({ chainSource: coords, entity: t });
-        chainState.limitTargetsLeft--;
-        if (!prediction) {
-          playSFXKey('targetAquired');
-        }
-        const newTouching = await getTouchingTargetableEntitiesRecursive(t.x, t.y, potentialTargets, radius, prediction, chainState, recurseLevel + 1, filterFn, ignore)
-        connected = connected.concat(newTouching);
+    for (let t of potentialTargets) {
+      const dist = math.distance(t, coords);
+      if (dist < closestDist) {
+        closestDist = dist;
+        closestTarget = t;
       }
     }
-  }
+
+    if (closestTarget) {
+      connected.push({ chainSource: source, entity: closestTarget });
+      chainsLeft--;
+      if (chainsLeft > 0) {
+        const next = await getNextConnectingEntities(closestTarget, radius, chainsLeft, potentialTargets, prediction)
+        chainsLeft -= next.length;
+        connected = connected.concat(next);
+        potentialTargets = potentialTargets.filter(x => {
+          for (let c of connected) {
+            if (x == c.entity) return false; //filter out targets in the connected tree
+          }
+          return true; //include all targets not in the connected tree
+        });
+      }
+    }
+    else //No targets to chain to, no reason to looping anymore
+    {
+      break;
+    }
+
+  } while (chainsLeft > 0)
+
   return connected;
 }
 
