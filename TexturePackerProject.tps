@@ -909,6 +909,7 @@
             <key type="filename">public/images/spell/spellIconArrow3.png</key>
             <key type="filename">public/images/spell/spellIconArrowFork.png</key>
             <key type="filename">public/images/spell/spellIconArrowGreen.png</key>
+            <key type="filename">public/images/spell/spellIconArrowLong.png</key>
             <key type="filename">public/images/spell/spellIconArrowMulti.png</key>
             <key type="filename">public/images/spell/spellIconArrowRed.png</key>
             <key type="filename">public/images/spell/spellIconArrowTriple.png</key>
@@ -957,6 +958,7 @@
             <key type="filename">public/images/spell/spellIconResurrect2.png</key>
             <key type="filename">public/images/spell/spellIconResurrect3.png</key>
             <key type="filename">public/images/spell/spellIconSacrifice.png</key>
+            <key type="filename">public/images/spell/spellIconSendMana.png</key>
             <key type="filename">public/images/spell/spellIconShield.png</key>
             <key type="filename">public/images/spell/spellIconShove.png</key>
             <key type="filename">public/images/spell/spellIconSlow.png</key>
@@ -1386,6 +1388,22 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">images/projectile/arrow_long_1.png</key>
+            <key type="filename">images/projectile/arrow_long_2.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0,0</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>12,1,24,1</rect>
+                <key>scale9Paddings</key>
+                <rect>12,1,24,1</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">images/spell-effects/modifierPoisonDrip_10.png</key>
             <key type="filename">images/spell-effects/modifierPoisonDrip_5.png</key>
             <key type="filename">images/spell-effects/modifierPoisonDrip_6.png</key>
@@ -1642,6 +1660,67 @@
             <filename>public/spellmasons-mods/Renes_gimmicks/graphics/icons/Sadism.png</filename>
             <filename>public/spellmasons-mods/Renes_gimmicks/graphics/icons/SummonTrap.png</filename>
             <filename>public/spellmasons-mods/Renes_gimmicks/graphics/icons/VampireBite.png</filename>
+            <filename>images/projectile/arrow_1.png</filename>
+            <filename>images/projectile/arrow_2.png</filename>
+            <filename>images/projectile/arrow_ghost_1.png</filename>
+            <filename>images/projectile/arrow_ghost_2.png</filename>
+            <filename>images/projectile/arrow_long_1.png</filename>
+            <filename>images/projectile/arrow_long_2.png</filename>
+            <filename>images/projectile/lobberProjectileHit_1.png</filename>
+            <filename>images/projectile/lobberProjectileHit_10.png</filename>
+            <filename>images/projectile/lobberProjectileHit_2.png</filename>
+            <filename>images/projectile/lobberProjectileHit_3.png</filename>
+            <filename>images/projectile/lobberProjectileHit_4.png</filename>
+            <filename>images/projectile/lobberProjectileHit_5.png</filename>
+            <filename>images/projectile/lobberProjectileHit_6.png</filename>
+            <filename>images/projectile/lobberProjectileHit_7.png</filename>
+            <filename>images/projectile/lobberProjectileHit_8.png</filename>
+            <filename>images/projectile/lobberProjectileHit_9.png</filename>
+            <filename>images/projectile/lobberProjectile_1.png</filename>
+            <filename>images/projectile/lobberProjectile_2.png</filename>
+            <filename>images/projectile/lobberProjectile_3.png</filename>
+            <filename>images/projectile/lobberProjectile_4.png</filename>
+            <filename>images/projectile/lobberProjectile_5.png</filename>
+            <filename>images/projectile/lobberProjectile_6.png</filename>
+            <filename>images/projectile/lobberProjectile_7.png</filename>
+            <filename>images/projectile/poisonerProjectileHit_1.png</filename>
+            <filename>images/projectile/poisonerProjectileHit_10.png</filename>
+            <filename>images/projectile/poisonerProjectileHit_2.png</filename>
+            <filename>images/projectile/poisonerProjectileHit_3.png</filename>
+            <filename>images/projectile/poisonerProjectileHit_4.png</filename>
+            <filename>images/projectile/poisonerProjectileHit_5.png</filename>
+            <filename>images/projectile/poisonerProjectileHit_6.png</filename>
+            <filename>images/projectile/poisonerProjectileHit_7.png</filename>
+            <filename>images/projectile/poisonerProjectileHit_8.png</filename>
+            <filename>images/projectile/poisonerProjectileHit_9.png</filename>
+            <filename>images/projectile/poisonerProjectile_1.png</filename>
+            <filename>images/projectile/poisonerProjectile_2.png</filename>
+            <filename>images/projectile/poisonerProjectile_3.png</filename>
+            <filename>images/projectile/poisonerProjectile_4.png</filename>
+            <filename>images/projectile/poisonerProjectile_5.png</filename>
+            <filename>images/projectile/poisonerProjectile_6.png</filename>
+            <filename>images/projectile/poisonerProjectile_7.png</filename>
+            <filename>images/projectile/poisonerProjectile_8.png</filename>
+            <filename>images/projectile/priestProjectileCenter_1.png</filename>
+            <filename>images/projectile/priestProjectileCenter_2.png</filename>
+            <filename>images/projectile/priestProjectileCenter_3.png</filename>
+            <filename>images/projectile/priestProjectileCenter_4.png</filename>
+            <filename>images/projectile/priestProjectileHit_1.png</filename>
+            <filename>images/projectile/priestProjectileHit_10.png</filename>
+            <filename>images/projectile/priestProjectileHit_11.png</filename>
+            <filename>images/projectile/priestProjectileHit_12.png</filename>
+            <filename>images/projectile/priestProjectileHit_2.png</filename>
+            <filename>images/projectile/priestProjectileHit_3.png</filename>
+            <filename>images/projectile/priestProjectileHit_4.png</filename>
+            <filename>images/projectile/priestProjectileHit_5.png</filename>
+            <filename>images/projectile/priestProjectileHit_6.png</filename>
+            <filename>images/projectile/priestProjectileHit_7.png</filename>
+            <filename>images/projectile/priestProjectileHit_8.png</filename>
+            <filename>images/projectile/priestProjectileHit_9.png</filename>
+            <filename>images/projectile/priestProjectileTop_1.png</filename>
+            <filename>images/projectile/priestProjectileTop_2.png</filename>
+            <filename>images/projectile/priestProjectileTop_3.png</filename>
+            <filename>images/projectile/priestProjectileTop_4.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
