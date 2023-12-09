@@ -9,6 +9,8 @@ export const elChatinput = <HTMLInputElement>(
   document.getElementById('chatinput')
 );
 export const elChatinner = document.getElementById('messages');
+var chatTimeout: NodeJS.Timeout;
+var NotificationTime = 5000;
 
 // send message when enter is pressed TODO: send message packet so players in the server can receive the message
 export function sendChatHandler(overworld: Overworld, e: KeyboardEvent) {
@@ -51,6 +53,21 @@ export function ReceiveMessage(
   if (elChatinner) {
     elChatinner.innerHTML += `<div class="message-speaker" style="color: ${chattercolor};">${chatter}:
     <span class="text" style="color: white;">${message}</span></div> <br>`;
+    document.body.classList.toggle('showChat', true); // display chat if it was hidden
+    if (chatTimeout) {
+      clearTimeout(chatTimeout);
+      chatTimeout = setTimeout(() => {
+        if (document.activeElement !== elChatinput) {
+          document.body.classList.toggle('showChat', false)
+        }
+      }, NotificationTime)
+    } else {
+      chatTimeout = setTimeout(() => {
+        if (document.activeElement !== elChatinput) {
+          document.body.classList.toggle('showChat', false)
+        }
+      }, NotificationTime)
+    }
   }
 }
 

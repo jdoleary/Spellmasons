@@ -1999,6 +1999,8 @@ body.auto-camera #camera-recenter-tip {
 
 .showChat #chatbox {
   display: block;
+  opacity: 1;
+  height: auto;
 }
 
 
@@ -2031,7 +2033,11 @@ body.auto-camera #camera-recenter-tip {
 }
 
 #chatbox {
-  display: none;
+  /* hacky but we keep it displayed as a heightless block so that the transition works display: block; */
+  transition: opacity 1s ease-in;
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
   user-select: none;
   z-index: 1;
   position: absolute;
