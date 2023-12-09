@@ -31,19 +31,27 @@ const spell: Spell = {
       // the latest one, no need to use Promise.all
       let animationPromise = Promise.resolve();
       // .filter: only target living units
-      for (let unit of (prediction ? underworld.unitsPrediction : underworld.units).filter(u => u.alive && u.faction == state.casterUnit.faction)) {
+      for (let unit of (prediction
+        ? underworld.unitsPrediction
+        : underworld.units
+      ).filter((u) => u.alive && u.faction == state.casterUnit.faction)) {
         const damage = -healAmount * quantity;
         if (!prediction && quantity > 1) {
           for (let unit of state.targetedUnits) {
             floatingText({
               coords: unit,
-              text: `+${Math.abs(damage)} Health`
+              text: `+${Math.abs(damage)} Health`,
             });
           }
         }
         playDefaultSpellSFX(card, prediction);
         Unit.takeDamage(unit, damage, undefined, underworld, prediction, state);
-        animationPromise = Image.addOneOffAnimation(unit, 'spell-effects/potionPickup', {}, { loop: false, animationSpeed: 0.3 });
+        animationPromise = Image.addOneOffAnimation(
+          unit,
+          'spell-effects/potionPickup',
+          {},
+          { loop: false, animationSpeed: 0.3 },
+        );
       }
       await animationPromise;
       return state;

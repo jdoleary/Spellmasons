@@ -9,7 +9,10 @@ import Underworld from '../../Underworld';
 import { summoningSicknessId } from '../../modifierSummoningSickness';
 
 const manaCostToCast = resurrect.default.card.manaCost;
-async function animatePriestProjectileAndHit(self: Unit.IUnit, target: Unit.IUnit) {
+async function animatePriestProjectileAndHit(
+  self: Unit.IUnit,
+  target: Unit.IUnit,
+) {
   // TODO does this cause an issue on headless?
   await createVisualFlyingProjectile(
     self,
@@ -17,7 +20,11 @@ async function animatePriestProjectileAndHit(self: Unit.IUnit, target: Unit.IUni
     'projectile/priestProjectileCenter',
   );
 }
-async function resurrectUnits(self: Unit.IUnit, units: Unit.IUnit[], underworld: Underworld): Promise<boolean> {
+async function resurrectUnits(
+  self: Unit.IUnit,
+  units: Unit.IUnit[],
+  underworld: Underworld,
+): Promise<boolean> {
   if (units.length == 0) {
     return false;
   }
@@ -26,21 +33,23 @@ async function resurrectUnits(self: Unit.IUnit, units: Unit.IUnit[], underworld:
   await Unit.playAnimation(self, unit.animations.attack);
   let promises = [];
   for (let ally of units) {
-    promises.push(animatePriestProjectileAndHit(self, ally).then(async () => {
-      const { targetedUnits } = await underworld.castCards({
-        casterCardUsage: {},
-        casterUnit: self,
-        casterPositionAtTimeOfCast: Vec.clone(self),
-        cardIds: [resurrect.resurrect_id],
-        castLocation: ally,
-        prediction: false,
-        outOfRange: false,
-      });
-      for (let unit of targetedUnits) {
-        // Add summoning sickeness so they can't act after they are summoned
-        Unit.addModifier(unit, summoningSicknessId, underworld, false);
-      }
-    }));
+    promises.push(
+      animatePriestProjectileAndHit(self, ally).then(async () => {
+        const { targetedUnits } = await underworld.castCards({
+          casterCardUsage: {},
+          casterUnit: self,
+          casterPositionAtTimeOfCast: Vec.clone(self),
+          cardIds: [resurrect.resurrect_id],
+          castLocation: ally,
+          prediction: false,
+          outOfRange: false,
+        });
+        for (let unit of targetedUnits) {
+          // Add summoning sickeness so they can't act after they are summoned
+          Unit.addModifier(unit, summoningSicknessId, underworld, false);
+        }
+      }),
+    );
     didResurrect = true;
   }
   await Promise.all(promises);
@@ -48,7 +57,6 @@ async function resurrectUnits(self: Unit.IUnit, units: Unit.IUnit[], underworld:
   // This is a bandaid because a miniboss priest will cast multiple times drawing mana from each cast
   self.mana = Math.max(0, self.mana);
   return didResurrect;
-
 }
 export const PRIEST_ID = 'priest';
 const unit: UnitSource = {
@@ -64,7 +72,7 @@ const unit: UnitSource = {
     damage: 0,
     manaCostToCast,
     manaMax: manaCostToCast,
-    manaPerTurn: manaCostToCast / 2
+    manaPerTurn: manaCostToCast / 2,
   },
   spawnParams: {
     probability: 20,
@@ -89,15 +97,24 @@ const unit: UnitSource = {
       unit.path = undefined;
       // Resurrect dead ally
       const numberOfAlliesToRez = unit.isMiniboss ? 3 : 1;
-      didAction = await resurrectUnits(unit, attackTargets.slice(0, numberOfAlliesToRez), underworld);
+      didAction = await resurrectUnits(
+        unit,
+        attackTargets.slice(0, numberOfAlliesToRez),
+        underworld,
+      );
     }
     if (!didAction) {
-      const closestDeadResurrectable = Unit.closestInListOfUnits(unit,
-        resurrectableUnits(unit, underworld)
+      const closestDeadResurrectable = Unit.closestInListOfUnits(
+        unit,
+        resurrectableUnits(unit, underworld),
       );
       // Move to closest dead ally
       if (closestDeadResurrectable) {
-        const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestDeadResurrectable, unit.stamina);
+        const moveTo = math.getCoordsAtDistanceTowardsTarget(
+          unit,
+          closestDeadResurrectable,
+          unit.stamina,
+        );
         await Unit.moveTowards(unit, moveTo, underworld);
       }
     }
@@ -106,23 +123,27 @@ const unit: UnitSource = {
     if (unit.mana < manaCostToCast) {
       return [];
     }
-    return resurrectableUnits(unit, underworld).filter(u => {
-      return Unit.inRange(unit, u)
-
+    return resurrectableUnits(unit, underworld).filter((u) => {
+      return Unit.inRange(unit, u);
     });
-  }
+  },
 };
-export function resurrectableUnits(resurrector: Unit.IUnit, underworld: Underworld): Unit.IUnit[] {
-  return underworld.units.filter(u =>
-    !u.alive
-    // Do not allow priest to rez player characters
-    // of a different faction (this would cause)
-    // the player to change faction
-    && (u.unitType !== UnitType.PLAYER_CONTROLLED || u.faction == resurrector.faction)
-    // Do not allow priest to rez each other.
-    // That would be super annoying for players
-    && u.unitSourceId !== resurrector.unitSourceId);
-
+export function resurrectableUnits(
+  resurrector: Unit.IUnit,
+  underworld: Underworld,
+): Unit.IUnit[] {
+  return underworld.units.filter(
+    (u) =>
+      !u.alive &&
+      // Do not allow priest to rez player characters
+      // of a different faction (this would cause)
+      // the player to change faction
+      (u.unitType !== UnitType.PLAYER_CONTROLLED ||
+        u.faction == resurrector.faction) &&
+      // Do not allow priest to rez each other.
+      // That would be super annoying for players
+      u.unitSourceId !== resurrector.unitSourceId,
+  );
 }
 
 export default unit;

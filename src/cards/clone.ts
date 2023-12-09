@@ -29,8 +29,16 @@ const spell: Spell = {
       targets = targets.length ? targets : [state.castLocation];
       for (let target of targets) {
         // Disallow cloning scrolls because it ruins the spell aquisition part of the game
-        if (Pickup.isPickup(target) && target.name == Pickup.CARDS_PICKUP_NAME && !prediction) {
-          floatingText({ coords: target, text: 'The knowledge in these scrolls cannot be cloned', style: { fill: 'red' } });
+        if (
+          Pickup.isPickup(target) &&
+          target.name == Pickup.CARDS_PICKUP_NAME &&
+          !prediction
+        ) {
+          floatingText({
+            coords: target,
+            text: 'The knowledge in these scrolls cannot be cloned',
+            style: { fill: 'red' },
+          });
           continue;
         }
         clonePairs.push([target, { x: target.x, y: target.y }]);
@@ -54,21 +62,30 @@ const spell: Spell = {
           // If there is are clone coordinates to clone into
           if (cloneSourceCoords) {
             if (Unit.isUnit(target)) {
-              const validSpawnCoords = underworld.findValidSpawn(cloneSourceCoords, 5, 10);
+              const validSpawnCoords = underworld.findValidSpawn(
+                cloneSourceCoords,
+                5,
+                10,
+              );
               if (validSpawnCoords) {
-                const clone = Unit.load(Unit.serialize(target), underworld, prediction);
+                const clone = Unit.load(
+                  Unit.serialize(target),
+                  underworld,
+                  prediction,
+                );
                 if (!prediction) {
                   // Change id of the clone so that it doesn't share the same
                   // 'supposed-to-be-unique' id of the original
                   clone.id = ++underworld.lastUnitId;
                 } else {
                   // Get a unique id for the clone
-                  clone.id = underworld.unitsPrediction.reduce((lastId, unit) => {
-                    if (unit.id > lastId) {
-                      return unit.id;
-                    }
-                    return lastId;
-                  }, 0) + 1;
+                  clone.id =
+                    underworld.unitsPrediction.reduce((lastId, unit) => {
+                      if (unit.id > lastId) {
+                        return unit.id;
+                      }
+                      return lastId;
+                    }, 0) + 1;
                 }
                 // If the cloned unit is player controlled, make them be controlled by the AI
                 if (clone.unitType == UnitType.PLAYER_CONTROLLED) {
@@ -83,39 +100,73 @@ const spell: Spell = {
             }
             if (Pickup.isPickup(target)) {
               const targetName = target.name;
-              const validSpawnCoords = underworld.findValidSpawn(cloneSourceCoords, 5, 20)
+              const validSpawnCoords = underworld.findValidSpawn(
+                cloneSourceCoords,
+                5,
+                20,
+              );
               if (validSpawnCoords) {
-                let foundPickup = Pickup.pickups.find((p) => p.name == targetName);
+                let foundPickup = Pickup.pickups.find(
+                  (p) => p.name == targetName,
+                );
                 if (foundPickup) {
-                  const clone = Pickup.create({ pos: target, pickupSource: foundPickup, logSource: 'Clone'}, underworld, prediction);
+                  const clone = Pickup.create(
+                    {
+                      pos: target,
+                      pickupSource: foundPickup,
+                      logSource: 'Clone',
+                    },
+                    underworld,
+                    prediction,
+                  );
                   if (clone) {
-                    Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
+                    Pickup.setPosition(
+                      clone,
+                      validSpawnCoords.x,
+                      validSpawnCoords.y,
+                    );
                   }
                 } else {
                   console.log('Pickup', target);
-                  console.error('Could not clone pickup because source could not be found');
+                  console.error(
+                    'Could not clone pickup because source could not be found',
+                  );
                 }
               } else {
-                floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
+                floatingText({
+                  coords: cloneSourceCoords,
+                  text: 'No space to clone into!',
+                });
               }
             }
             if (Doodad.isDoodad(target)) {
-              const validSpawnCoords = underworld.findValidSpawn(cloneSourceCoords, 5, 20)
+              const validSpawnCoords = underworld.findValidSpawn(
+                cloneSourceCoords,
+                5,
+                20,
+              );
               if (validSpawnCoords) {
-                const clone = Doodad.load(Doodad.serialize(target), underworld, prediction);
+                const clone = Doodad.load(
+                  Doodad.serialize(target),
+                  underworld,
+                  prediction,
+                );
                 if (clone) {
                   target.x = validSpawnCoords.x;
                   target.y = validSpawnCoords.y;
                 }
               } else {
-                floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
+                floatingText({
+                  coords: cloneSourceCoords,
+                  text: 'No space to clone into!',
+                });
               }
             }
           }
         }
       }
       if (clonePairs.length == 0) {
-        refundLastSpell(state, prediction, 'no target, mana refunded')
+        refundLastSpell(state, prediction, 'no target, mana refunded');
       }
       return state;
     },
@@ -130,22 +181,24 @@ export async function animateMitosis(image?: IImageAnimated) {
   const startScaleX = image.sprite.scale.x || 1.0;
   const startScaleY = image.sprite.scale.y || 1.0;
   // "iterations + 10" gives it a little extra time so it doesn't timeout right when the animation would finish on time
-  return raceTimeout(millisBetweenIterations * (iterations + 10), 'animatedMitosis', new Promise<void>(resolve => {
-    for (let i = 0; i < iterations; i++) {
-
-      setTimeout(() => {
-        // Stretch
-        if (image) {
-          image.sprite.scale.x *= 1.01;
-          image.sprite.scale.y -= 0.001;
-          if (i >= iterations - 1) {
-            resolve();
+  return raceTimeout(
+    millisBetweenIterations * (iterations + 10),
+    'animatedMitosis',
+    new Promise<void>((resolve) => {
+      for (let i = 0; i < iterations; i++) {
+        setTimeout(() => {
+          // Stretch
+          if (image) {
+            image.sprite.scale.x *= 1.01;
+            image.sprite.scale.y -= 0.001;
+            if (i >= iterations - 1) {
+              resolve();
+            }
           }
-
-        }
-      }, millisBetweenIterations * i)
-    }
-  })).then(() => {
+        }, millisBetweenIterations * i);
+      }
+    }),
+  ).then(() => {
     // Restore scale
     image.sprite.scale.x = startScaleX;
     image.sprite.scale.y = startScaleY;

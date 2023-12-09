@@ -40,7 +40,13 @@ const spell: Spell = {
         if (!target) {
           continue;
         }
-        const arrowUnitCollisions = findArrowCollisions(state.casterPositionAtTimeOfCast, state.casterUnit.id, target, prediction, underworld);
+        const arrowUnitCollisions = findArrowCollisions(
+          state.casterPositionAtTimeOfCast,
+          state.casterUnit.id,
+          target,
+          prediction,
+          underworld,
+        );
         // This target arrow spell doesn't pierce
         const firstTarget = arrowUnitCollisions[0];
         if (firstTarget) {
@@ -54,42 +60,56 @@ const spell: Spell = {
               addTarget(firstTarget, state);
             }
           } else {
-            promises.push(createVisualFlyingProjectile(
-              state.casterPositionAtTimeOfCast,
-              firstTarget,
-              'projectile/arrow_ghost',
-            ).then(() => {
-              if (Unit.isUnit(firstTarget)) {
-                addedNewTarget = true;
-                addTarget(firstTarget, state);
-                // Animations do not occur on headless
-                if (!globalThis.headless) {
-                  return new Promise<void>((resolve) => {
-                    if (globalThis.predictionGraphics) {
-                      globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0)
-                      playSFXKey('targetAquired');
-                      globalThis.predictionGraphics.drawCircle(firstTarget.x, firstTarget.y, config.COLLISION_MESH_RADIUS);
-                      // Show the targeting circle for a moment
-                      setTimeout(resolve, 300);
-                    } else {
-                      resolve();
-                    }
-                  })
+            promises.push(
+              createVisualFlyingProjectile(
+                state.casterPositionAtTimeOfCast,
+                firstTarget,
+                'projectile/arrow_ghost',
+              ).then(() => {
+                if (Unit.isUnit(firstTarget)) {
+                  addedNewTarget = true;
+                  addTarget(firstTarget, state);
+                  // Animations do not occur on headless
+                  if (!globalThis.headless) {
+                    return new Promise<void>((resolve) => {
+                      if (globalThis.predictionGraphics) {
+                        globalThis.predictionGraphics.lineStyle(
+                          2,
+                          colors.targetingSpellGreen,
+                          1.0,
+                        );
+                        playSFXKey('targetAquired');
+                        globalThis.predictionGraphics.drawCircle(
+                          firstTarget.x,
+                          firstTarget.y,
+                          config.COLLISION_MESH_RADIUS,
+                        );
+                        // Show the targeting circle for a moment
+                        setTimeout(resolve, 300);
+                      } else {
+                        resolve();
+                      }
+                    });
+                  }
                 }
-              }
-              return;
-            }));
+                return;
+              }),
+            );
           }
         }
       }
       await Promise.all(promises).then(() => {
         globalThis.predictionGraphics?.clear();
         if (!addedNewTarget) {
-          refundLastSpell(state, prediction, 'No valid targets. Cost refunded.');
+          refundLastSpell(
+            state,
+            prediction,
+            'No valid targets. Cost refunded.',
+          );
         }
       });
       return state;
     },
-  }
+  },
 };
 export default spell;

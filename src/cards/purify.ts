@@ -21,12 +21,12 @@ const spell: Spell = {
     description: 'spell_purify',
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
-      const targets = state.targetedUnits.filter(u => u.alive);
+      const targets = state.targetedUnits.filter((u) => u.alive);
       if (targets.length) {
         playDefaultSpellSFX(card, prediction);
         await playDefaultSpellAnimation(card, targets, prediction);
         for (let unit of targets) {
-          apply(unit, underworld)
+          apply(unit, underworld);
         }
       }
       return state;
@@ -34,9 +34,7 @@ const spell: Spell = {
   },
 };
 export function apply(unit: Unit.IUnit, underworld: Underworld) {
-  for (let [modifier, modifierProperties] of Object.entries(
-    unit.modifiers,
-  )) {
+  for (let [modifier, modifierProperties] of Object.entries(unit.modifiers)) {
     if (modifierProperties.isCurse) {
       Unit.removeModifier(unit, modifier, underworld);
     }

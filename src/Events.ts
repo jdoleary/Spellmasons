@@ -4,7 +4,13 @@ import Underworld from './Underworld';
 
 export type onDamage = {
   // Returns a possibly modified damage
-  (unit: IUnit, amount: number, underworld: Underworld, prediction: boolean, damageDealer?: IUnit): number;
+  (
+    unit: IUnit,
+    amount: number,
+    underworld: Underworld,
+    prediction: boolean,
+    damageDealer?: IUnit,
+  ): number;
 };
 
 const onDamageSource: { [name: string]: onDamage } = {};
@@ -31,7 +37,9 @@ export type onTurnStart = {
   (unit: IUnit, prediction: boolean, underworld: Underworld): Promise<boolean>;
 };
 const onTurnStartSource: { [name: string]: onTurnStart } = {};
-export type onTurnEnd = { (unit: IUnit, underworld: Underworld, prediction: boolean): Promise<void>; }
+export type onTurnEnd = {
+  (unit: IUnit, underworld: Underworld, prediction: boolean): Promise<void>;
+};
 const onTurnEndSource: { [name: string]: onTurnEnd } = {};
 
 export default {
@@ -40,5 +48,5 @@ export default {
   onDeathSource,
   onMoveSource,
   onTurnStartSource,
-  onTurnEndSource
+  onTurnEndSource,
 };

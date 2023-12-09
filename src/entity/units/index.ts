@@ -7,7 +7,12 @@ interface ConstructorInfo {
   subtype: UnitSubType;
 }
 export type UnitAction = {
-  (self: Unit.IUnit, attackTargets: Unit.IUnit[], underworld: Underworld, canAttackTarget: boolean): Promise<void>;
+  (
+    self: Unit.IUnit,
+    attackTargets: Unit.IUnit[],
+    underworld: Underworld,
+    canAttackTarget: boolean,
+  ): Promise<void>;
 };
 export interface UnitSource {
   id: string;
@@ -17,7 +22,10 @@ export interface UnitSource {
   info: ConstructorInfo;
   init?: (unit: Unit.IUnit, underworld: Underworld) => void;
   action: UnitAction;
-  getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => Unit.IUnit[];
+  getUnitAttackTargets: (
+    unit: Unit.IUnit,
+    underworld: Underworld,
+  ) => Unit.IUnit[];
   unitProps: Partial<Unit.IUnit>;
   spawnParams?: SpawnParams;
   animations: Unit.UnitAnimations;
@@ -88,7 +96,6 @@ export function registerUnits() {
   registerUnit(urn_poison);
   registerUnit(urn_explosive);
 }
-
 
 export const allUnits: { [id: string]: UnitSource } = {};
 // @ts-ignore: This is for the menu and does not need to be in the global type

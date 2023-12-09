@@ -1,16 +1,22 @@
-import { registerSpell } from "./cards";
-import { pickups } from "./entity/Pickup";
-import { registerUnit } from "./entity/units";
-import { Overworld } from "./Overworld";
-import { Mod } from "./types/commonTypes";
-import Underworld from "./Underworld";
+import { registerSpell } from './cards';
+import { pickups } from './entity/Pickup';
+import { registerUnit } from './entity/units';
+import { Overworld } from './Overworld';
+import { Mod } from './types/commonTypes';
+import Underworld from './Underworld';
 type moddedEntity = {
-    modName?: string;
+  modName?: string;
 };
 // Always returns true if a unit doesn't belong to a mod
 // If a unit does belong to a mod, only returns true if the mod is active in the underworld
-export function isModActive(entity: moddedEntity, underworld: Underworld): boolean {
-    return (entity.modName == undefined) || underworld.activeMods.includes(entity.modName);
+export function isModActive(
+  entity: moddedEntity,
+  underworld: Underworld,
+): boolean {
+  return (
+    entity.modName == undefined ||
+    underworld.activeMods.includes(entity.modName)
+  );
 }
 
 // registeredMods should be unique to each PROCESS (not overworld), so that a headless server does not
@@ -19,57 +25,57 @@ export function isModActive(entity: moddedEntity, underworld: Underworld): boole
 // register a mod twice
 const registeredMods: { [modName: string]: Mod } = {};
 function registerMod(mod: Mod, overworld: Overworld) {
-    if (registeredMods[mod.modName]) {
-        console.log('Mod already registered, early return so as to not double register.', mod.modName);
-        return;
+  if (registeredMods[mod.modName]) {
+    console.log(
+      'Mod already registered, early return so as to not double register.',
+      mod.modName,
+    );
+    return;
+  }
+  console.log('Register mod', mod.modName);
+  registeredMods[mod.modName] = mod;
+  // Register Units
+  if (mod.units) {
+    for (let unit of mod.units) {
+      unit.modName = mod.modName;
+      registerUnit(unit);
     }
-    console.log('Register mod', mod.modName);
-    registeredMods[mod.modName] = mod;
-    // Register Units
-    if (mod.units) {
-        for (let unit of mod.units) {
-            unit.modName = mod.modName;
-            registerUnit(unit);
-        }
+  }
+  // Register Pickups
+  if (mod.pickups) {
+    for (let pickup of mod.pickups) {
+      pickup.modName = mod.modName;
+      pickups.push(pickup);
     }
-    // Register Pickups
-    if (mod.pickups) {
-        for (let pickup of mod.pickups) {
-            pickup.modName = mod.modName;
-            pickups.push(pickup);
-        }
+  }
+  // Register Spells
+  if (mod.spells) {
+    for (let spell of mod.spells) {
+      spell.card.modName = mod.modName;
+      registerSpell(spell, overworld);
     }
-    // Register Spells
-    if (mod.spells) {
-        for (let spell of mod.spells) {
-            spell.card.modName = mod.modName;
-            registerSpell(spell, overworld);
-        }
+  }
+
+  if (!globalThis.headless) {
+    // Register sfx
+    if (sfx && mod.sfx) {
+      Object.assign(sfx, mod.sfx);
     }
 
-    if (!globalThis.headless) {
-
-        // Register sfx
-        if (sfx && mod.sfx) {
-            Object.assign(sfx, mod.sfx);
-        }
-
-        if (globalThis.pixi && mod.spritesheet) {
-            const loader = globalThis.pixi.Loader.shared;
-            loader.add(mod.spritesheet);
-        }
+    if (globalThis.pixi && mod.spritesheet) {
+      const loader = globalThis.pixi.Loader.shared;
+      loader.add(mod.spritesheet);
     }
-
+  }
 }
 export default function registerAllMods(overworld: Overworld) {
-    for (let mod of globalThis.mods) {
-        console.log('Mod: ', mod.modName);
-        registerMod(mod, overworld);
-    }
-    if (globalThis.pixi) {
-        const loader = globalThis.pixi.Loader.shared;
-        // Start loading the textures
-        loader.load();
-    }
-
+  for (let mod of globalThis.mods) {
+    console.log('Mod: ', mod.modName);
+    registerMod(mod, overworld);
+  }
+  if (globalThis.pixi) {
+    const loader = globalThis.pixi.Loader.shared;
+    // Start loading the textures
+    loader.load();
+  }
 }

@@ -1,4 +1,9 @@
-import { addTarget, defaultTargetsForAllowNonUnitTargetTargetingSpell, getCurrentTargets, Spell } from './index';
+import {
+  addTarget,
+  defaultTargetsForAllowNonUnitTargetTargetingSpell,
+  getCurrentTargets,
+  Spell,
+} from './index';
 import { drawUICircle } from '../graphics/PlanningView';
 import { CardCategory } from '../types/commonTypes';
 import * as colors from '../graphics/ui/colors';
@@ -25,12 +30,23 @@ const spell: Spell = {
     requiresFollowingCard: true,
     description: 'spell_target_circle',
     allowNonUnitTarget: true,
-    effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
+    effect: async (
+      state,
+      card,
+      quantity,
+      underworld,
+      prediction,
+      outOfRange,
+    ) => {
       const adjustedRange = baseRadius * quantity + state.aggregator.radius;
       // Note: This loop must NOT be a for..of and it must cache the length because it
       // mutates state.targetedUnits as it iterates.  Otherwise it will continue to loop as it grows
       let targets: Vec2[] = getCurrentTargets(state);
-      targets = defaultTargetsForAllowNonUnitTargetTargetingSpell(targets, state.castLocation, card);
+      targets = defaultTargetsForAllowNonUnitTargetTargetingSpell(
+        targets,
+        state.castLocation,
+        card,
+      );
       const length = targets.length;
       const animateCircles = [];
       for (let i = 0; i < length; i++) {
@@ -43,7 +59,12 @@ const spell: Spell = {
           if (outOfRange) {
             drawUICircle(target, adjustedRange, colors.outOfRangeGrey);
           } else {
-            drawUICircle(target, adjustedRange, colors.targetingSpellGreen, 'Target Radius');
+            drawUICircle(
+              target,
+              adjustedRange,
+              colors.targetingSpellGreen,
+              'Target Radius',
+            );
           }
         } else {
           animateCircles.push({ pos: target, radius: adjustedRange });
@@ -51,10 +72,10 @@ const spell: Spell = {
         const withinRadius = underworld.getEntitiesWithinDistanceOfTarget(
           target,
           adjustedRange,
-          prediction
+          prediction,
         );
         // Add entities to target
-        withinRadius.forEach(e => addTarget(e, state));
+        withinRadius.forEach((e) => addTarget(e, state));
       }
       await animate(animateCircles, underworld);
 
@@ -62,7 +83,10 @@ const spell: Spell = {
     },
   },
 };
-async function animate(circles: { pos: Vec2, radius: number }[], underworld: Underworld) {
+async function animate(
+  circles: { pos: Vec2; radius: number }[],
+  underworld: Underworld,
+) {
   if (globalThis.headless) {
     // Animations do not occur on headless, so resolve immediately or else it
     // will just waste cycles on the server
@@ -79,42 +103,60 @@ async function animate(circles: { pos: Vec2, radius: number }[], underworld: Und
   const entitiesTargeted: HasSpace[] = [];
   playSFXKey('targeting');
   // "iterations + 10" gives it a little extra time so it doesn't timeout right when the animation would finish on time
-  return raceTimeout(millisBetweenIterations * (iterations + 10), 'animatedExpand', new Promise<void>(resolve => {
-    for (let i = 0; i < iterations; i++) {
-
-      setTimeout(() => {
-        if (globalThis.predictionGraphics) {
-          globalThis.predictionGraphics.clear();
-          globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0)
-          globalThis.predictionGraphics.beginFill(colors.targetingSpellGreen, 0.2);
-          for (let circle of circles) {
-            const { pos, radius } = circle;
-
-            const animatedRadius = radius * easeOutCubic((i + 1) / iterations)
-            globalThis.predictionGraphics.drawCircle(pos.x, pos.y, animatedRadius);
-            globalThis.predictionGraphics.endFill();
-            // Draw circles around new targets
-            const withinRadius = underworld.getEntitiesWithinDistanceOfTarget(
-              pos,
-              animatedRadius,
-              false
+  return raceTimeout(
+    millisBetweenIterations * (iterations + 10),
+    'animatedExpand',
+    new Promise<void>((resolve) => {
+      for (let i = 0; i < iterations; i++) {
+        setTimeout(() => {
+          if (globalThis.predictionGraphics) {
+            globalThis.predictionGraphics.clear();
+            globalThis.predictionGraphics.lineStyle(
+              2,
+              colors.targetingSpellGreen,
+              1.0,
             );
-            withinRadius.forEach(v => {
-              if (!entitiesTargeted.includes(v)) {
-                entitiesTargeted.push(v);
-                playSFXKey('targetAquired');
-              }
-              globalThis.predictionGraphics?.drawCircle(v.x, v.y, config.COLLISION_MESH_RADIUS);
-            })
-          }
-        }
-        if (i >= iterations - 1) {
-          resolve();
-        }
+            globalThis.predictionGraphics.beginFill(
+              colors.targetingSpellGreen,
+              0.2,
+            );
+            for (let circle of circles) {
+              const { pos, radius } = circle;
 
-      }, millisBetweenIterations * i)
-    }
-  })).then(() => {
+              const animatedRadius =
+                radius * easeOutCubic((i + 1) / iterations);
+              globalThis.predictionGraphics.drawCircle(
+                pos.x,
+                pos.y,
+                animatedRadius,
+              );
+              globalThis.predictionGraphics.endFill();
+              // Draw circles around new targets
+              const withinRadius = underworld.getEntitiesWithinDistanceOfTarget(
+                pos,
+                animatedRadius,
+                false,
+              );
+              withinRadius.forEach((v) => {
+                if (!entitiesTargeted.includes(v)) {
+                  entitiesTargeted.push(v);
+                  playSFXKey('targetAquired');
+                }
+                globalThis.predictionGraphics?.drawCircle(
+                  v.x,
+                  v.y,
+                  config.COLLISION_MESH_RADIUS,
+                );
+              });
+            }
+          }
+          if (i >= iterations - 1) {
+            resolve();
+          }
+        }, millisBetweenIterations * i);
+      }
+    }),
+  ).then(() => {
     globalThis.predictionGraphics?.clear();
   });
 }

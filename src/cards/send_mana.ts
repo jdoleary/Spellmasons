@@ -29,17 +29,27 @@ const spell: Spell = {
     animationPath: 'spell-effects/potionPickup',
     description: ['spell_send_mana', amount.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
-      const targets = state.targetedUnits.filter(u => u.alive);
+      const targets = state.targetedUnits.filter((u) => u.alive);
       let promises = [];
       for (let unit of targets) {
         const manaTrailPromises = [];
         if (!prediction) {
-          manaTrailPromises.push(makeManaTrail(state.casterUnit, unit, underworld, '#e4f9ff', '#3fcbff'));
+          manaTrailPromises.push(
+            makeManaTrail(
+              state.casterUnit,
+              unit,
+              underworld,
+              '#e4f9ff',
+              '#3fcbff',
+            ),
+          );
         }
-        promises.push((prediction ? Promise.resolve() : Promise.all(manaTrailPromises)));
+        promises.push(
+          prediction ? Promise.resolve() : Promise.all(manaTrailPromises),
+        );
       }
       await Promise.all(promises).then(() => {
-        const finalManaSent = Math.floor(amount * quantity / targets.length);
+        const finalManaSent = Math.floor((amount * quantity) / targets.length);
         for (let unit of targets) {
           unit.mana += finalManaSent;
         }
@@ -52,27 +62,25 @@ const spell: Spell = {
               // and add a filter; however, addOneOffAnimation is the higher level and more common for adding a simple
               // "one off" animated sprite.  Use it instead of addPixiSpriteAnimated unless you need more direct control like
               // we do here
-              const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', unit.image.sprite, {
-                loop: false,
-                onComplete: () => {
-                  if (animationSprite?.parent) {
-                    animationSprite.parent.removeChild(animationSprite);
-                  }
-                }
-              });
+              const animationSprite = addPixiSpriteAnimated(
+                'spell-effects/potionPickup',
+                unit.image.sprite,
+                {
+                  loop: false,
+                  onComplete: () => {
+                    if (animationSprite?.parent) {
+                      animationSprite.parent.removeChild(animationSprite);
+                    }
+                  },
+                },
+              );
               if (animationSprite) {
-
                 if (!animationSprite.filters) {
                   animationSprite.filters = [];
                 }
                 // Change the health color to blue
                 animationSprite.filters.push(
-                  new MultiColorReplaceFilter(
-                    [
-                      [0xff0000, manaBlue],
-                    ],
-                    0.1
-                  )
+                  new MultiColorReplaceFilter([[0xff0000, manaBlue]], 0.1),
                 );
               }
             }
@@ -80,7 +88,7 @@ const spell: Spell = {
             floatingText({
               coords: unit,
               text: `+ ${finalManaSent} Mana`,
-              style: { fill: 'blue', ...config.PIXI_TEXT_DROP_SHADOW }
+              style: { fill: 'blue', ...config.PIXI_TEXT_DROP_SHADOW },
             });
           }
           explain(EXPLAIN_OVERFILL);

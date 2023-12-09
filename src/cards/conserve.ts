@@ -25,10 +25,16 @@ const spell: Spell = {
     description: 'spell_conserve',
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units with mana
-      const targets = state.targetedUnits.filter(u => u.alive && u.mana > 0);
+      const targets = state.targetedUnits.filter((u) => u.alive && u.mana > 0);
       if (targets.length) {
         for (let unit of targets) {
-          Unit.addModifier(unit, conserveSpellId, underworld, prediction, unit.mana);
+          Unit.addModifier(
+            unit,
+            conserveSpellId,
+            underworld,
+            prediction,
+            unit.mana,
+          );
           unit.mana = 0;
           makeRisingParticles(unit, prediction, hexToString(manaBlue));
         }
@@ -54,7 +60,11 @@ const spell: Spell = {
     },
   },
   events: {
-    onTurnStart: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
+    onTurnStart: async (
+      unit: Unit.IUnit,
+      prediction: boolean,
+      underworld: Underworld,
+    ) => {
       const modifier = unit.modifiers[conserveSpellId];
       if (modifier) {
         setTimeout(() => {
@@ -66,15 +76,24 @@ const spell: Spell = {
       return false;
     },
   },
-
 };
 
-function add(unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) {
-  getOrInitModifier(unit, conserveSpellId, { isCurse: false, quantity, persistBetweenLevels: false }, () => {
-    if (!unit.onTurnStartEvents.includes(conserveSpellId)) {
-      unit.onTurnStartEvents.push(conserveSpellId);
-    }
-  });
+function add(
+  unit: Unit.IUnit,
+  underworld: Underworld,
+  _prediction: boolean,
+  quantity: number = 1,
+) {
+  getOrInitModifier(
+    unit,
+    conserveSpellId,
+    { isCurse: false, quantity, persistBetweenLevels: false },
+    () => {
+      if (!unit.onTurnStartEvents.includes(conserveSpellId)) {
+        unit.onTurnStartEvents.push(conserveSpellId);
+      }
+    },
+  );
 }
 
 export default spell;

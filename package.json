@@ -11,7 +11,7 @@
     "test": "tsc && jest",
     "format": "prettier --write \"src/**/*.{ts,js}\"",
     "lint": "prettier --check \"src/**/*.{ts,js}\"",
-    "headless-build-only": "tsc --project tsconfig.headless.json --outDir headless-server-build/ && cp package-lock.json headless-server-build/ && cp public/spellmasons-mods/build/SpellmasonsMods.cjs.js headless-server-build/src/SpellmasonsMods.cjs.js && cd headless-server-build/ && npm install --omit=dev",
+    "headless-build-only": "tsc --project tsconfig.headless.json --outDir headless-server-build/ && copy package-lock.json headless-server-build/ && copy public/spellmasons-mods/build/SpellmasonsMods.cjs.js headless-server-build/src/SpellmasonsMods.cjs.js && cd headless-server-build/ && npm install --omit=dev",
     "headless-run-server": "node headless-server-build/src/HeadlessServer.js",
     "headless": "npm run headless-build-only && npm run headless-run-server",
     "parseLocalization": "node public/localization/parseLocalizationSource.js"

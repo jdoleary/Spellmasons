@@ -17,12 +17,21 @@ const spell: Spell = {
     requiresFollowingCard: true,
     description: 'spell_plus_radius',
     allowNonUnitTarget: true,
-    effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
+    effect: async (
+      state,
+      card,
+      quantity,
+      underworld,
+      prediction,
+      outOfRange,
+    ) => {
       const adjustedRadius = radiusIncreaseAmount * quantity;
       state.aggregator.radius += adjustedRadius;
-      state.targetedUnits.filter(u => u.unitSubType === UnitSubType.DOODAD).forEach(doodad => {
-        doodad.attackRange += adjustedRadius;
-      })
+      state.targetedUnits
+        .filter((u) => u.unitSubType === UnitSubType.DOODAD)
+        .forEach((doodad) => {
+          doodad.attackRange += adjustedRadius;
+        });
       return state;
     },
   },

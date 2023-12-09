@@ -28,7 +28,11 @@ const spell: Spell = {
     allowNonUnitTarget: true,
     animationPath: '',
     sfx: 'arrow',
-    description: ['spell_arrow_explosive', damageDone.toString(), explodeDamage.toString()],
+    description: [
+      'spell_arrow_explosive',
+      damageDone.toString(),
+      explodeDamage.toString(),
+    ],
     effect: async (state, card, quantity, underworld, prediction) => {
       let targets: Vec2[] = state.targetedUnits;
       targets = targets.length ? targets : [state.castLocation];
@@ -37,7 +41,13 @@ const spell: Spell = {
       let timeoutToNextArrow = 200;
       for (let i = 0; i < quantity; i++) {
         for (let target of targets) {
-          const arrowUnitCollisions = findArrowCollisions(state.casterPositionAtTimeOfCast, state.casterUnit.id, target, prediction, underworld);
+          const arrowUnitCollisions = findArrowCollisions(
+            state.casterPositionAtTimeOfCast,
+            state.casterUnit.id,
+            target,
+            prediction,
+            underworld,
+          );
           // This regular arrow spell doesn't pierce
           const firstTarget = arrowUnitCollisions[0];
           if (firstTarget) {
@@ -53,21 +63,52 @@ const spell: Spell = {
                 'projectile/arrow',
               ).then(() => {
                 if (Unit.isUnit(firstTarget)) {
-                  Unit.takeDamage(firstTarget, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
+                  Unit.takeDamage(
+                    firstTarget,
+                    damageDone,
+                    state.casterPositionAtTimeOfCast,
+                    underworld,
+                    prediction,
+                    undefined,
+                    { thinBloodLine: true },
+                  );
                   targetsHitCount++;
-                  explode(firstTarget, explodeRange, explodeDamage, prediction, underworld);
+                  explode(
+                    firstTarget,
+                    explodeRange,
+                    explodeDamage,
+                    prediction,
+                    underworld,
+                  );
                 }
               });
               attackPromises.push(projectilePromise);
               const timeout = Math.max(0, timeoutToNextArrow);
-              await Promise.race([new Promise(resolve => setTimeout(resolve, timeout)), projectilePromise]);
+              await Promise.race([
+                new Promise((resolve) => setTimeout(resolve, timeout)),
+                projectilePromise,
+              ]);
               // Decrease timeout with each subsequent arrow fired to ensure that players don't have to wait too long
               timeoutToNextArrow -= 5;
             } else {
               if (Unit.isUnit(firstTarget)) {
-                Unit.takeDamage(firstTarget, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
+                Unit.takeDamage(
+                  firstTarget,
+                  damageDone,
+                  state.casterPositionAtTimeOfCast,
+                  underworld,
+                  prediction,
+                  undefined,
+                  { thinBloodLine: true },
+                );
                 targetsHitCount++;
-                explode(firstTarget, explodeRange, explodeDamage, prediction, underworld);
+                explode(
+                  firstTarget,
+                  explodeRange,
+                  explodeDamage,
+                  prediction,
+                  underworld,
+                );
               }
             }
           }
@@ -78,11 +119,11 @@ const spell: Spell = {
         // in quick succession, we must await the actual flyingProjectile promise to determine if no targets
         // were hit
         if (targetsHitCount == 0) {
-          refundLastSpell(state, prediction, 'no target, mana refunded')
+          refundLastSpell(state, prediction, 'no target, mana refunded');
         }
       });
       return state;
     },
-  }
+  },
 };
 export default spell;

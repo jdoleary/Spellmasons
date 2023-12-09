@@ -1,7 +1,12 @@
 import type * as PIXI from 'pixi.js';
 import { Vec2 } from '../jmath/Vec';
 import * as config from '../config';
-import { app, containerFloatingText, containerUIFixed, withinCameraBounds } from './PixiUtils';
+import {
+  app,
+  containerFloatingText,
+  containerUIFixed,
+  withinCameraBounds,
+} from './PixiUtils';
 import { Localizable } from '../localization';
 import throttle from 'lodash.throttle';
 
@@ -40,7 +45,10 @@ export default function floatingText({
     return Promise.resolve();
   }
   // Ensure style has drop shadow, but allow it to be overridden
-  style = Object.assign({ ...config.PIXI_TEXT_DROP_SHADOW, fontFamily: 'Forum' }, style);
+  style = Object.assign(
+    { ...config.PIXI_TEXT_DROP_SHADOW, fontFamily: 'Forum' },
+    style,
+  );
   const pixiText = new globalThis.pixi.Text(i18n(text), style);
   pixiText.x = coords.x;
   pixiText.y = coords.y;
@@ -64,7 +72,7 @@ export default function floatingText({
   container.addChild(pixiText);
   return new Promise<void>((resolve) => {
     requestAnimationFrame(() => floatAway(instance, resolve));
-  })
+  });
 }
 function floatAway(instance: FText, resolve: (value: void) => void) {
   if (instance.alpha > 0) {
@@ -73,7 +81,10 @@ function floatAway(instance: FText, resolve: (value: void) => void) {
     instance.alpha -= Math.max(instance.valpha, 0);
     instance.valpha += instance.aalpha;
     if (instance.keepWithinCameraBounds) {
-      const adjustedPosition = withinCameraBounds(instance.startPosition, instance.pixiText.width / 2);
+      const adjustedPosition = withinCameraBounds(
+        instance.startPosition,
+        instance.pixiText.width / 2,
+      );
       instance.pixiText.y = adjustedPosition.y + instance.dy;
       instance.pixiText.x = adjustedPosition.x;
     } else {
@@ -103,47 +114,58 @@ function floatAway(instance: FText, resolve: (value: void) => void) {
     }
   }
 }
-export const elPIXIHolder = document.getElementById('PIXI-holder') as HTMLElement;
+export const elPIXIHolder = document.getElementById(
+  'PIXI-holder',
+) as HTMLElement;
 
 let centeredTextAnimating = false;
-let centeredTextQueue: { text: Localizable, fill: string | number }[] = [];
-export function queueCenteredFloatingText(text: Localizable, fill: string | number = 'white') {
+let centeredTextQueue: { text: Localizable; fill: string | number }[] = [];
+export function queueCenteredFloatingText(
+  text: Localizable,
+  fill: string | number = 'white',
+) {
   if (!centeredTextAnimating) {
     centeredFloatingText(text, fill);
   } else {
     centeredTextQueue.push({ text, fill });
   }
 }
-export function centeredFloatingText(text: Localizable, fill: string | number = 'white') {
-  if (globalThis.headless) { return; }
+export function centeredFloatingText(
+  text: Localizable,
+  fill: string | number = 'white',
+) {
+  if (globalThis.headless) {
+    return;
+  }
   centeredTextAnimating = true;
   floatingText({
     coords: {
       x: elPIXIHolder.clientWidth / 2,
-      y: elPIXIHolder.clientHeight / 2
+      y: elPIXIHolder.clientHeight / 2,
     },
     text,
     container: containerUIFixed,
     style: {
       fill,
       fontSize: '120px',
-      ...config.PIXI_TEXT_DROP_SHADOW
+      ...config.PIXI_TEXT_DROP_SHADOW,
     },
     // centered text is FIXED to the center, so it shouldn't be adjusted based on the camera
     // position or else it will leave the center under certain camera positions
-    keepWithinCameraBounds: false
-  }).then(() => {
-    if (centeredTextQueue.length) {
-      const nextInQueue = centeredTextQueue.shift();
-      if (nextInQueue) {
-        const { text, fill } = nextInQueue
-        return centeredFloatingText(text, fill)
+    keepWithinCameraBounds: false,
+  })
+    .then(() => {
+      if (centeredTextQueue.length) {
+        const nextInQueue = centeredTextQueue.shift();
+        if (nextInQueue) {
+          const { text, fill } = nextInQueue;
+          return centeredFloatingText(text, fill);
+        }
       }
-    }
-  }).then(() => {
-    centeredTextAnimating = false;
-  });
-
+    })
+    .then(() => {
+      centeredTextAnimating = false;
+    });
 }
 
 export const warnNoMoreSpellsToChoose = throttle(() => {

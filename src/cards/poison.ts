@@ -16,32 +16,43 @@ function init(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
   if (spell.modifiers?.subsprite) {
     // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
     // which is used for identifying the sprite or animation that is currently active
-    const poisonSubsprite = unit.image?.sprite.children.find(c => c.imagePath == spell.modifiers?.subsprite?.imageName)
+    const poisonSubsprite = unit.image?.sprite.children.find(
+      (c) => c.imagePath == spell.modifiers?.subsprite?.imageName,
+    );
     if (poisonSubsprite) {
       const animatedSprite = poisonSubsprite as PIXI.AnimatedSprite;
       animatedSprite.onFrameChange = (currentFrame) => {
         if (currentFrame == 5) {
           animatedSprite.anchor.x = (3 + Math.random() * (6 - 3)) / 10;
         }
-      }
+      };
     }
   }
 }
-function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
-  const modifier = getOrInitModifier(unit, poisonCardId, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
-    // Add event
-    if (!unit.onTurnStartEvents.includes(poisonCardId)) {
-      unit.onTurnStartEvents.push(poisonCardId);
-    }
-    // Add subsprite image
-    if (!prediction) {
-      if (spell.modifiers?.subsprite) {
-        Image.addSubSprite(unit.image, spell.modifiers.subsprite.imageName);
-        init(unit, underworld, prediction);
+function add(
+  unit: Unit.IUnit,
+  underworld: Underworld,
+  prediction: boolean,
+  quantity: number = 1,
+) {
+  const modifier = getOrInitModifier(
+    unit,
+    poisonCardId,
+    { isCurse: true, quantity, persistBetweenLevels: false },
+    () => {
+      // Add event
+      if (!unit.onTurnStartEvents.includes(poisonCardId)) {
+        unit.onTurnStartEvents.push(poisonCardId);
       }
-    }
-
-  });
+      // Add subsprite image
+      if (!prediction) {
+        if (spell.modifiers?.subsprite) {
+          Image.addSubSprite(unit.image, spell.modifiers.subsprite.imageName);
+          init(unit, underworld, prediction);
+        }
+      }
+    },
+  );
 }
 
 const spell: Spell = {
@@ -59,11 +70,20 @@ const spell: Spell = {
     description: ['spell_poison', baseDamage.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
-      const targets = state.targetedUnits.filter(u => u.alive);
+      const targets = state.targetedUnits.filter((u) => u.alive);
       if (targets.length) {
-        await Promise.all([playDefaultSpellAnimation(card, targets, prediction), playDefaultSpellSFX(card, prediction)]);
+        await Promise.all([
+          playDefaultSpellAnimation(card, targets, prediction),
+          playDefaultSpellSFX(card, prediction),
+        ]);
         for (let unit of targets) {
-          Unit.addModifier(unit, poisonCardId, underworld, prediction, quantity);
+          Unit.addModifier(
+            unit,
+            poisonCardId,
+            underworld,
+            prediction,
+            quantity,
+          );
         }
       }
       return state;
@@ -84,10 +104,13 @@ const spell: Spell = {
         y: 1.0,
       },
     },
-
   },
   events: {
-    onTurnStart: async (unit: IUnit, prediction: boolean, underworld: Underworld) => {
+    onTurnStart: async (
+      unit: IUnit,
+      prediction: boolean,
+      underworld: Underworld,
+    ) => {
       // TODO: There was a bug here where somehow modifiers['poison'] was undefined after i did chain, vulx10, poisonx10
       const modifier = unit.modifiers[poisonCardId];
       // Don't take damage on prediction because it is confusing for people to see the prediction damage that poison will do,
@@ -97,11 +120,14 @@ const spell: Spell = {
           const damage = (modifier.quantity || 1) * baseDamage;
           takeDamage(unit, damage, unit, underworld, prediction, undefined);
           floatingText({
-            coords: unit, text: `${damage} poison damage`,
+            coords: unit,
+            text: `${damage} poison damage`,
             style: { fill: '#44b944' },
           });
         } else {
-          console.error(`Should have ${poisonCardId} modifier on unit but it is missing`);
+          console.error(
+            `Should have ${poisonCardId} modifier on unit but it is missing`,
+          );
         }
       }
       return false;

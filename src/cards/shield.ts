@@ -28,11 +28,16 @@ const spell: Spell = {
     description: ['spell_shield', damageBlocked.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
-      const targets = state.targetedUnits.filter(u => u.alive);
+      const targets = state.targetedUnits.filter((u) => u.alive);
       if (targets.length) {
         let animationPromise = Promise.resolve();
         for (let unit of targets) {
-          animationPromise = Image.addOneOffAnimation(unit, 'projectile/priestProjectileHit', {}, { loop: false });
+          animationPromise = Image.addOneOffAnimation(
+            unit,
+            'projectile/priestProjectileHit',
+            {},
+            { loop: false },
+          );
         }
         playDefaultSpellSFX(card, prediction);
         // We only need to wait for one of these promises, since they all take the same amount of time to complete
@@ -75,7 +80,7 @@ const spell: Spell = {
               text: 'Shielded from damage!',
               style: {
                 fill: 'blue',
-                ...config.PIXI_TEXT_DROP_SHADOW
+                ...config.PIXI_TEXT_DROP_SHADOW,
               },
             });
           }
@@ -96,26 +101,38 @@ const spell: Spell = {
       }
     },
   },
-
 };
 function updateTooltip(unit: Unit.IUnit) {
   if (unit.modifiers[id]) {
     // Set tooltip:
-    unit.modifiers[id].tooltip = `${unit.modifiers[id].damage_block} damage block`
+    unit.modifiers[
+      id
+    ].tooltip = `${unit.modifiers[id].damage_block} damage block`;
   }
 }
 
-function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
-  const modifier = getOrInitModifier(unit, id, { isCurse: false, quantity, persistBetweenLevels: false }, () => {
-    // Add event
-    unit.onDamageEvents.push(id);
-    // Add subsprite image
-    Image.addSubSprite(unit.image, modifierImagePath);
-  });
+function add(
+  unit: Unit.IUnit,
+  _underworld: Underworld,
+  _prediction: boolean,
+  quantity: number = 1,
+) {
+  const modifier = getOrInitModifier(
+    unit,
+    id,
+    { isCurse: false, quantity, persistBetweenLevels: false },
+    () => {
+      // Add event
+      unit.onDamageEvents.push(id);
+      // Add subsprite image
+      Image.addSubSprite(unit.image, modifierImagePath);
+    },
+  );
   // Increment the number of damage_block on this modifier
   // Note: This is only adding the quantity of this invokation, NOT any preexisting
   // modifier.quantity that may have existed from previous invokations of this spell
-  modifier.damage_block = (modifier.damage_block || 0) + damageBlocked * quantity;
+  modifier.damage_block =
+    (modifier.damage_block || 0) + damageBlocked * quantity;
   updateTooltip(unit);
 }
 export default spell;

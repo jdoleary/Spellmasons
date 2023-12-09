@@ -1,42 +1,43 @@
-
 // @ts-nocheck
 
 // Shims:
 const fakeElement = {
-    style: {},
-    addEventListener: () => { },
-    classList: {
-        add: () => { },
-        toggle: () => { },
-        contains: () => { }
-    },
+  style: {},
+  addEventListener: () => {},
+  classList: {
+    add: () => {},
+    toggle: () => {},
+    contains: () => {},
+  },
 };
 global.document = {
-    getElementById: () => fakeElement,
-    createElement: () => fakeElement,
-    querySelector: () => fakeElement,
-    querySelectorAll: () => [],
-    body: {
-        classList: {
-            add: () => { },
-            toggle: () => { },
-            contains: () => { }
-        },
-    }
+  getElementById: () => fakeElement,
+  createElement: () => fakeElement,
+  querySelector: () => fakeElement,
+  querySelectorAll: () => [],
+  body: {
+    classList: {
+      add: () => {},
+      toggle: () => {},
+      contains: () => {},
+    },
+  },
 };
-globalThis.addEventListener = function () { };
+globalThis.addEventListener = function () {};
 
 global.cancelAnimationFrame = (id) => {
-    clearTimeout(id);
-}
+  clearTimeout(id);
+};
 global.requestAnimationFrame = (callback) => {
-    console.trace('Headless requestAnimationFrame shouldnt be called');
-    console.error('Headless invoked requestionAnimationFrame.  How to fix: Prevent it from calling requestAnimationFrame and instead optimize like was done with fly() and lob()')
-    return callback(Date.now());
-}
+  console.trace('Headless requestAnimationFrame shouldnt be called');
+  console.error(
+    'Headless invoked requestionAnimationFrame.  How to fix: Prevent it from calling requestAnimationFrame and instead optimize like was done with fly() and lob()',
+  );
+  return callback(Date.now());
+};
 // Headless server plays no audio
-global.playSFX = (_string) => { };
-global.playSFXKey = (_string) => { };
+global.playSFX = (_string) => {};
+global.playSFXKey = (_string) => {};
 global.walkPathGraphics = undefined;
 global.debugGraphics = undefined;
 global.devDebugGraphics = undefined;
@@ -51,8 +52,8 @@ global.cinematicCameraEnabled = false;
 // No translations should be done on the server, just return the original text.
 global.i18n = (text) => text;
 global.localStorage = {
-    removeItem: () => { },
-    getItem: () => 'headless server does not use localStorage',
-    setItem: () => { },
-}
-export { };
+  removeItem: () => {},
+  getItem: () => 'headless server does not use localStorage',
+  setItem: () => {},
+};
+export {};

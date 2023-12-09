@@ -1,8 +1,19 @@
 import type * as PIXI from 'pixi.js';
 import * as Image from '../graphics/Image';
 import type * as Player from './Player';
-import { addPixiSprite, addPixiSpriteAnimated, containerUnits, pixiText, startBloodParticleSplatter } from '../graphics/PixiUtils';
-import { syncPlayerHealthManaUI, IUnit, takeDamage, playAnimation } from './Unit';
+import {
+  addPixiSprite,
+  addPixiSpriteAnimated,
+  containerUnits,
+  pixiText,
+  startBloodParticleSplatter,
+} from '../graphics/PixiUtils';
+import {
+  syncPlayerHealthManaUI,
+  IUnit,
+  takeDamage,
+  playAnimation,
+} from './Unit';
 import { checkIfNeedToClearTooltip } from '../graphics/PlanningView';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
 import * as config from '../config';
@@ -12,12 +23,24 @@ import { manaBlue, manaLostBlue, stamina } from '../graphics/ui/colors';
 import Underworld from '../Underworld';
 import { hasBloodCurse } from '../cards/blood_curse';
 import { HasSpace } from './Type';
-import { explain, EXPLAIN_INVENTORY, EXPLAIN_OVERFILL, tutorialCompleteTask, updateTutorialChecklist } from '../graphics/Explain';
+import {
+  explain,
+  EXPLAIN_INVENTORY,
+  EXPLAIN_OVERFILL,
+  tutorialCompleteTask,
+  updateTutorialChecklist,
+} from '../graphics/Explain';
 import * as CardUI from '../graphics/ui/CardUI';
 import { bossmasonUnitId } from './units/deathmason';
 import { chooseOneOfSeeded, getUniqueSeedString } from '../jmath/rand';
 import { skyBeam } from '../VisualEffects';
-import { BLUE_PORTAL_JID, makeCursedEmitter, makeDeathmasonPortal, RED_PORTAL_JID, stopAndDestroyForeverEmitter } from '../graphics/ParticleCollection';
+import {
+  BLUE_PORTAL_JID,
+  makeCursedEmitter,
+  makeDeathmasonPortal,
+  RED_PORTAL_JID,
+  stopAndDestroyForeverEmitter,
+} from '../graphics/ParticleCollection';
 import { Localizable } from '../localization';
 import seedrandom from 'seedrandom';
 import { JEmitter } from '../types/commonTypes';
@@ -33,9 +56,35 @@ export const RED_PORTAL = 'Red Portal';
 export const BLUE_PORTAL = 'Blue Portal';
 export const CURSED_MANA_POTION = 'Cursed Mana Potion';
 const RED_PORTAL_DAMAGE = 30;
-type IPickupEffect = ({ unit, player, pickup, prediction }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld, prediction: boolean }) => void;
-type IPickupInit = ({ pickup, underworld }: { pickup: IPickup, underworld: Underworld }) => void;
-type IPickupWillTrigger = ({ unit, player, pickup }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld }) => boolean;
+type IPickupEffect = ({
+  unit,
+  player,
+  pickup,
+  prediction,
+}: {
+  unit?: IUnit;
+  player?: Player.IPlayer;
+  pickup: IPickup;
+  underworld: Underworld;
+  prediction: boolean;
+}) => void;
+type IPickupInit = ({
+  pickup,
+  underworld,
+}: {
+  pickup: IPickup;
+  underworld: Underworld;
+}) => void;
+type IPickupWillTrigger = ({
+  unit,
+  player,
+  pickup,
+}: {
+  unit?: IUnit;
+  player?: Player.IPlayer;
+  pickup: IPickup;
+  underworld: Underworld;
+}) => boolean;
 export function isPickup(maybePickup: any): maybePickup is IPickup {
   return maybePickup && maybePickup.type == 'pickup';
 }
@@ -64,8 +113,7 @@ export type IPickup = HasSpace & {
   // Identifier for serailized emitter
   emitterJID?: string;
   flaggedForRemoval: boolean;
-
-}
+};
 export interface IPickupSource {
   name: string;
   // If a pickup belongs to a mod, it's modName will be automatically assigned
@@ -90,8 +138,8 @@ export function copyForPredictionPickup(p: IPickup): IPickup {
   }
   return {
     real: p,
-    ...rest
-  }
+    ...rest,
+  };
 }
 export const TIME_CIRCLE_JID = 'timeCircle';
 
@@ -101,34 +149,80 @@ let lastPredictionPickupId = 0;
 // Sometimes clients need to call this directly, like if they got
 // pickup info from a sync from the host or loading a pickup
 // or for a prediction pickup
-export function create({ pos, pickupSource, idOverride, logSource }:
+export function create(
   {
-    pos: Vec2, pickupSource: IPickupSource, idOverride?: number, logSource?: string,
-  }, underworld: Underworld, prediction: boolean): IPickup {
-  const { name, description, imagePath, effect, willTrigger, scale, animationSpeed, playerOnly = false, turnsLeftToGrab } = pickupSource;
-  const { x, y } = pos
+    pos,
+    pickupSource,
+    idOverride,
+    logSource,
+  }: {
+    pos: Vec2;
+    pickupSource: IPickupSource;
+    idOverride?: number;
+    logSource?: string;
+  },
+  underworld: Underworld,
+  prediction: boolean,
+): IPickup {
+  const {
+    name,
+    description,
+    imagePath,
+    effect,
+    willTrigger,
+    scale,
+    animationSpeed,
+    playerOnly = false,
+    turnsLeftToGrab,
+  } = pickupSource;
+  const { x, y } = pos;
   if (isNaN(x) || isNaN(y)) {
     console.error('Unexpected: Created pickup at NaN', pickupSource.name);
   }
   if (idOverride !== undefined) {
     underworld.lastPickupId = idOverride;
   }
-  const id = idOverride !== undefined
-    ? idOverride
-    : prediction
+  const id =
+    idOverride !== undefined
+      ? idOverride
+      : prediction
       ? ++lastPredictionPickupId
       : ++underworld.lastPickupId;
-  const duplicatePickup = (prediction ? underworld.pickupsPrediction : underworld.pickups).find(p => p.id == id)
+  const duplicatePickup = (
+    prediction ? underworld.pickupsPrediction : underworld.pickups
+  ).find((p) => p.id == id);
   if (duplicatePickup) {
     if (prediction) {
-      console.log('Pickup ids', underworld.pickupsPrediction.map(p => p.id), id, 'incrementor:', lastPredictionPickupId, 'prediction:', prediction);
+      console.log(
+        'Pickup ids',
+        underworld.pickupsPrediction.map((p) => p.id),
+        id,
+        'incrementor:',
+        lastPredictionPickupId,
+        'prediction:',
+        prediction,
+      );
     } else {
-      console.log('Pickup ids', underworld.pickups.map(p => p.id), id, 'incrementor:', underworld.lastPickupId, 'prediction:', prediction);
+      console.log(
+        'Pickup ids',
+        underworld.pickups.map((p) => p.id),
+        id,
+        'incrementor:',
+        underworld.lastPickupId,
+        'prediction:',
+        prediction,
+      );
     }
     console.error('Aborting: creating a pickup with duplicate id.');
-    console.error(`Aborting: creating a pickup with duplicate id. source: ${logSource} idOverride: ${!!idOverride} prediction: ${prediction}`);
+    console.error(
+      `Aborting: creating a pickup with duplicate id. source: ${logSource} idOverride: ${!!idOverride} prediction: ${prediction}`,
+    );
     if (duplicatePickup.name != name) {
-      console.error('Duplicate pickup is over a different name', duplicatePickup.name, name);
+      console.error(
+        'Duplicate pickup is over a different name',
+        duplicatePickup.name,
+        name,
+      );
     }
     return duplicatePickup;
   }
@@ -145,12 +239,18 @@ export function create({ pos, pickupSource, idOverride, logSource }:
     imagePath,
     // Pickups are stored in containerUnits so that they
     // will be automatically z-indexed
-    image: (!imagePath || !containerUnits || prediction) ? undefined : Image.create({ x, y }, imagePath, containerUnits, { animationSpeed, loop: true }),
+    image:
+      !imagePath || !containerUnits || prediction
+        ? undefined
+        : Image.create({ x, y }, imagePath, containerUnits, {
+            animationSpeed,
+            loop: true,
+          }),
     playerOnly,
     effect,
     willTrigger,
     flaggedForRemoval: false,
-    beingPushed: false
+    beingPushed: false,
   };
   if (self.image) {
     self.image.sprite.scale.x = scale;
@@ -198,60 +298,88 @@ export function create({ pos, pickupSource, idOverride, logSource }:
     // make existing scroll pickups fly to player
     if (self.name == PICKUP_PORTAL_NAME) {
       let timeBetweenPickupFly = 100;
-      const scrolls = underworld.pickups.filter(p => p.name == CARDS_PICKUP_NAME && !p.flaggedForRemoval);
+      const scrolls = underworld.pickups.filter(
+        (p) => p.name == CARDS_PICKUP_NAME && !p.flaggedForRemoval,
+      );
       for (let scroll of scrolls) {
         removePickup(scroll, underworld, false);
       }
-      scrolls.map(pickup => {
-        return raceTimeout(5000, 'spawnPortalFlyScrolls', new Promise<void>((resolve) => {
-          timeBetweenPickupFly += 100;
-          // Make the pickup fly to the player. this gives them some time so it doesn't trigger immediately.
-          setTimeout(() => {
-            if (pickup.image) {
-              pickup.image.sprite.visible = false;
-            }
-            const flyingPickupPromises = [];
-            for (let p of underworld.players) {
-              flyingPickupPromises.push(createVisualLobbingProjectile(pickup, p.unit, pickup.imagePath))
-            }
-            Promise.all(flyingPickupPromises)
-              .then(() => {
-                underworld.players.forEach(p => givePlayerUpgrade(p, underworld));
+      scrolls.map((pickup) => {
+        return raceTimeout(
+          5000,
+          'spawnPortalFlyScrolls',
+          new Promise<void>((resolve) => {
+            timeBetweenPickupFly += 100;
+            // Make the pickup fly to the player. this gives them some time so it doesn't trigger immediately.
+            setTimeout(() => {
+              if (pickup.image) {
+                pickup.image.sprite.visible = false;
+              }
+              const flyingPickupPromises = [];
+              for (let p of underworld.players) {
+                flyingPickupPromises.push(
+                  createVisualLobbingProjectile(
+                    pickup,
+                    p.unit,
+                    pickup.imagePath,
+                  ),
+                );
+              }
+              Promise.all(flyingPickupPromises).then(() => {
+                underworld.players.forEach((p) =>
+                  givePlayerUpgrade(p, underworld),
+                );
                 resolve();
               });
-          }, timeBetweenPickupFly);
-        }))
+            }, timeBetweenPickupFly);
+          }),
+        );
       });
     }
 
     // If there are existing portals and a pickup is spawned make pickups fly to player
-    if (self.name == CARDS_PICKUP_NAME && underworld.pickups.some(p => p.name == PICKUP_PORTAL_NAME)) {
+    if (
+      self.name == CARDS_PICKUP_NAME &&
+      underworld.pickups.some((p) => p.name == PICKUP_PORTAL_NAME)
+    ) {
       removePickup(self, underworld, false);
-      raceTimeout(5000, 'spawnScrollFlyScroll', new Promise<void>((resolve) => {
-        // Make the pickup fly to the player. this gives them some time so it doesn't trigger immediately.
-        setTimeout(() => {
-          if (self) {
-            if (self.image) {
-              self.image.sprite.visible = false;
-            }
-            const flyingPickupPromises = [];
-            for (let p of underworld.players) {
-              flyingPickupPromises.push(createVisualLobbingProjectile(self, p.unit, self.imagePath))
-            }
-            Promise.all(flyingPickupPromises)
-              .then(() => {
-                underworld.players.forEach(p => givePlayerUpgrade(p, underworld));
+      raceTimeout(
+        5000,
+        'spawnScrollFlyScroll',
+        new Promise<void>((resolve) => {
+          // Make the pickup fly to the player. this gives them some time so it doesn't trigger immediately.
+          setTimeout(() => {
+            if (self) {
+              if (self.image) {
+                self.image.sprite.visible = false;
+              }
+              const flyingPickupPromises = [];
+              for (let p of underworld.players) {
+                flyingPickupPromises.push(
+                  createVisualLobbingProjectile(self, p.unit, self.imagePath),
+                );
+              }
+              Promise.all(flyingPickupPromises).then(() => {
+                underworld.players.forEach((p) =>
+                  givePlayerUpgrade(p, underworld),
+                );
                 resolve();
               });
-          }
-        }, 100);
-      }));
+            }
+          }, 100);
+        }),
+      );
     }
   }
 
   return self;
 }
-function assignEmitter(pickup: IPickup, emitterId: string, prediction: boolean, underworld: Underworld) {
+function assignEmitter(
+  pickup: IPickup,
+  emitterId: string,
+  prediction: boolean,
+  underworld: Underworld,
+) {
   if (prediction || globalThis.headless) {
     // Don't show if just a prediction
     return;
@@ -261,7 +389,12 @@ function assignEmitter(pickup: IPickup, emitterId: string, prediction: boolean, 
     stopAndDestroyForeverEmitter(pickup.emitter);
   }
   if (emitterId == RED_PORTAL_JID) {
-    pickup.emitter = makeDeathmasonPortal(pickup, prediction, '#520606', '#e03636');
+    pickup.emitter = makeDeathmasonPortal(
+      pickup,
+      prediction,
+      '#520606',
+      '#e03636',
+    );
     if (pickup.image) {
       if (pickup.emitter) {
         Image.cleanup(pickup.image);
@@ -274,7 +407,12 @@ function assignEmitter(pickup: IPickup, emitterId: string, prediction: boolean, 
       }
     }
   } else if (emitterId == BLUE_PORTAL_JID) {
-    pickup.emitter = makeDeathmasonPortal(pickup, prediction, '#1a276e', '#5252fa');
+    pickup.emitter = makeDeathmasonPortal(
+      pickup,
+      prediction,
+      '#1a276e',
+      '#5252fa',
+    );
     if (pickup.image) {
       if (pickup.emitter) {
         Image.cleanup(pickup.image);
@@ -298,7 +436,7 @@ function assignEmitter(pickup: IPickup, emitterId: string, prediction: boolean, 
       underworld.particleFollowers.push({
         displayObject: containerParticles,
         emitter: pickup.emitter,
-        target: pickup
+        target: pickup,
       });
     }
   }
@@ -312,7 +450,11 @@ function addText(pickup: IPickup) {
     return;
   }
   // Value of text is set in sync()
-  pickup.text = pixiText('', { fill: 'white', align: 'center', ...config.PIXI_TEXT_DROP_SHADOW });
+  pickup.text = pixiText('', {
+    fill: 'white',
+    align: 'center',
+    ...config.PIXI_TEXT_DROP_SHADOW,
+  });
   sync(pickup);
   if (pickup.text) {
     pickup.text.anchor.x = 0;
@@ -323,10 +465,9 @@ function addText(pickup: IPickup) {
     if (pickup.image) {
       pickup.image.sprite.addChild(pickup.text);
     } else {
-      console.error('Cannot add text to pickup, image is missing')
+      console.error('Cannot add text to pickup, image is missing');
     }
   }
-
 }
 
 export function sync(pickup: IPickup) {
@@ -343,9 +484,12 @@ export function setPosition(pickup: IPickup, x: number, y: number) {
   pickup.y = y;
   Image.setPosition(pickup.image, { x, y });
 }
-export type IPickupSerialized = Omit<IPickup, "image" | "effect" | "text" | "real" | "emitter"> & {
-  image?: Image.IImageAnimatedSerialized,
-  emitter?: string
+export type IPickupSerialized = Omit<
+  IPickup,
+  'image' | 'effect' | 'text' | 'real' | 'emitter'
+> & {
+  image?: Image.IImageAnimatedSerialized;
+  emitter?: string;
 };
 export function serialize(p: IPickup): IPickupSerialized {
   // effect is a callback and cannot be serialized
@@ -356,12 +500,16 @@ export function serialize(p: IPickup): IPickupSerialized {
     ...rest,
     image: p.image ? Image.serialize(p.image) : undefined,
     // @ts-ignore: jid custom property for serialization
-    emitter: emitter?.jid
+    emitter: emitter?.jid,
   };
   return serialized;
 }
 // Reinitialize a pickup from another pickup object, this is used in loading game state after reconnect
-export function load(pickup: IPickupSerialized, underworld: Underworld, prediction: boolean): IPickup | undefined {
+export function load(
+  pickup: IPickupSerialized,
+  underworld: Underworld,
+  prediction: boolean,
+): IPickup | undefined {
   // Get the pickup object
   let foundPickup = pickups.find((p) => p.name == pickup.name);
   if (foundPickup) {
@@ -373,7 +521,11 @@ export function load(pickup: IPickupSerialized, underworld: Underworld, predicti
       console.error('Attempted to Load a pickup that is flaggedForRemoval');
       return undefined;
     }
-    const newPickup = create({ pos: pickup, pickupSource: foundPickup, idOverride: pickup.id }, underworld, prediction);
+    const newPickup = create(
+      { pos: pickup, pickupSource: foundPickup, idOverride: pickup.id },
+      underworld,
+      prediction,
+    );
     // Note: It is important here to use Object.assign so that the pickup reference is the SAME ref as is created in the
     // create function because the create function passes that ref to the underworld pickups array.
     // So when you mutate the properties, the ref must stay the same.
@@ -390,20 +542,37 @@ export function load(pickup: IPickupSerialized, underworld: Underworld, predicti
     return undefined;
   }
 }
-export function removePickup(pickup: IPickup, underworld: Underworld, prediction: boolean) {
+export function removePickup(
+  pickup: IPickup,
+  underworld: Underworld,
+  prediction: boolean,
+) {
   pickup.flaggedForRemoval = true;
   Image.cleanup(pickup.image);
   stopAndDestroyForeverEmitter(pickup.emitter);
   checkIfNeedToClearTooltip();
   // Remove any associated forcePushs
-  const fms = (prediction ? underworld.forceMovePrediction : underworld.forceMove).filter(fm => fm.pushedObject == pickup)
+  const fms = (
+    prediction ? underworld.forceMovePrediction : underworld.forceMove
+  ).filter((fm) => fm.pushedObject == pickup);
   if (fms.length) {
     // set the associated forceMove to velocity of 0 so it will be removed at the next invocation of runForceMove
-    fms.forEach(fm => { fm.velocity = { x: 0, y: 0 } });
+    fms.forEach((fm) => {
+      fm.velocity = { x: 0, y: 0 };
+    });
   }
 }
-export function triggerPickup(pickup: IPickup, unit: IUnit, player: Player.IPlayer | undefined, underworld: Underworld, prediction: boolean) {
-  const willTrigger = !pickup.flaggedForRemoval && unit.alive && pickup.willTrigger({ unit, player, pickup, underworld });
+export function triggerPickup(
+  pickup: IPickup,
+  unit: IUnit,
+  player: Player.IPlayer | undefined,
+  underworld: Underworld,
+  prediction: boolean,
+) {
+  const willTrigger =
+    !pickup.flaggedForRemoval &&
+    unit.alive &&
+    pickup.willTrigger({ unit, player, pickup, underworld });
   if (willTrigger) {
     pickup.effect({ unit, player, pickup, underworld, prediction });
     removePickup(pickup, underworld, prediction);
@@ -411,7 +580,12 @@ export function triggerPickup(pickup: IPickup, unit: IUnit, player: Player.IPlay
     syncPlayerHealthManaUI(underworld);
   }
 }
-export function tryTriggerPickup(pickup: IPickup, unit: IUnit, underworld: Underworld, prediction: boolean) {
+export function tryTriggerPickup(
+  pickup: IPickup,
+  unit: IUnit,
+  underworld: Underworld,
+  prediction: boolean,
+) {
   if (pickup.flaggedForRemoval) {
     // Don't trigger pickup if flagged for removal
     return;
@@ -433,14 +607,19 @@ export function tryTriggerPickup(pickup: IPickup, unit: IUnit, underworld: Under
   if (prediction) {
     triggerPickup(pickup, unit, player, underworld, prediction);
   } else {
-    // All pickups triggering must be networked to prevent desyncs resulting 
+    // All pickups triggering must be networked to prevent desyncs resulting
     // from slight position differences that can result in cascading desyncs due to
     // a pickup triggering on one client or host but not on others.
     // Server (or singleplayer as host) initiates all pickups
     if (globalThis.isHost(underworld.pie)) {
       // Try a prediction effect to see if it will trigger and
       // only send QUEUE_PICKUP_TRIGGER if it will trigger
-      const willTrigger = pickup.willTrigger({ unit, player, pickup, underworld });
+      const willTrigger = pickup.willTrigger({
+        unit,
+        player,
+        pickup,
+        underworld,
+      });
       if (willTrigger) {
         triggerPickup(pickup, unit, player, underworld, prediction);
         // send QUEUE_PICKUP_TRIGGER network message to make sure the same pickup gets triggered
@@ -450,32 +629,38 @@ export function tryTriggerPickup(pickup: IPickup, unit: IUnit, underworld: Under
           pickupId: pickup.id,
           pickupName: pickup.name,
           unitId: unit.id,
-          playerClientId: player?.clientId
+          playerClientId: player?.clientId,
         });
       }
     } else {
       // Trigger if in queue
-      const pickupInQueue = underworld.aquirePickupQueue.find(x => x.pickupId == pickup.id && x.unitId == unit.id);
+      const pickupInQueue = underworld.aquirePickupQueue.find(
+        (x) => x.pickupId == pickup.id && x.unitId == unit.id,
+      );
       if (pickupInQueue) {
         pickupInQueue.flaggedForRemoval = true;
         triggerPickup(pickup, unit, player, underworld, prediction);
       } else {
-        const willTrigger = !pickup.flaggedForRemoval && unit.alive && pickup.willTrigger({ unit, player, pickup, underworld });
+        const willTrigger =
+          !pickup.flaggedForRemoval &&
+          unit.alive &&
+          pickup.willTrigger({ unit, player, pickup, underworld });
         // Do not send FORCE_TRIGGER_PICKUP if the pickup won't trigger, for example, health potions
         // don't trigger if you are full health
         if (willTrigger) {
           // Unit has touched pickup before headless has, so force trigger it
           // This happens when unit is walking as opposed to being pushed
-          console.log(`Unit touched pickup before headless has: ${pickup.name}`)
+          console.log(
+            `Unit touched pickup before headless has: ${pickup.name}`,
+          );
           underworld.pie.sendData({
             type: MESSAGE_TYPES.FORCE_TRIGGER_PICKUP,
             pickupId: pickup.id,
             pickupName: pickup.name,
             unitId: unit.id,
-            playerClientId: player?.clientId
+            playerClientId: player?.clientId,
           });
         }
-
       }
     }
   }
@@ -496,7 +681,10 @@ export const pickups: IPickupSource[] = [
     name: PICKUP_SPIKES_NAME,
     probability: 40,
     scale: 1,
-    description: ['Deals 🍞 to any unit that touches it', spike_damage.toString()],
+    description: [
+      'Deals 🍞 to any unit that touches it',
+      spike_damage.toString(),
+    ],
     willTrigger: ({ unit, player, pickup, underworld }) => {
       return !!unit;
     },
@@ -504,40 +692,46 @@ export const pickups: IPickupSource[] = [
       if (unit) {
         // Play trap spring animation
         if (!prediction) {
-          const animationSprite = addPixiSpriteAnimated('pickups/trapAttack', containerUnits, {
-            loop: false,
-            animationSpeed: 0.2,
-            onComplete: () => {
-              if (animationSprite?.parent) {
-                animationSprite.parent.removeChild(animationSprite);
-              }
-            }
-          });
+          const animationSprite = addPixiSpriteAnimated(
+            'pickups/trapAttack',
+            containerUnits,
+            {
+              loop: false,
+              animationSpeed: 0.2,
+              onComplete: () => {
+                if (animationSprite?.parent) {
+                  animationSprite.parent.removeChild(animationSprite);
+                }
+              },
+            },
+          );
           if (animationSprite) {
-
             animationSprite.anchor.set(0.5);
             animationSprite.x = pickup.x;
             animationSprite.y = pickup.y;
           }
-          const animationSprite2 = addPixiSpriteAnimated('pickups/trapAttackMagic', containerUnits, {
-            loop: false,
-            animationSpeed: 0.2,
-            onComplete: () => {
-              if (animationSprite2?.parent) {
-                animationSprite2.parent.removeChild(animationSprite2);
-              }
-            }
-          });
+          const animationSprite2 = addPixiSpriteAnimated(
+            'pickups/trapAttackMagic',
+            containerUnits,
+            {
+              loop: false,
+              animationSpeed: 0.2,
+              onComplete: () => {
+                if (animationSprite2?.parent) {
+                  animationSprite2.parent.removeChild(animationSprite2);
+                }
+              },
+            },
+          );
           if (animationSprite2) {
             animationSprite2.anchor.set(0.5);
             animationSprite2.x = pickup.x;
             animationSprite2.y = pickup.y;
           }
-
         }
-        takeDamage(unit, spike_damage, unit, underworld, prediction)
+        takeDamage(unit, spike_damage, unit, underworld, prediction);
       }
-    }
+    },
   },
   {
     imagePath: 'portal',
@@ -546,12 +740,18 @@ export const pickups: IPickupSource[] = [
     name: RED_PORTAL,
     probability: 0,
     scale: 1,
-    description: ['red portal description', bossmasonUnitId, RED_PORTAL_DAMAGE.toString()],
+    description: [
+      'red portal description',
+      bossmasonUnitId,
+      RED_PORTAL_DAMAGE.toString(),
+    ],
     willTrigger: ({ unit, player, pickup, underworld }) => {
       return !!player;
     },
     effect: ({ unit, player, pickup, underworld }) => {
-      const otherRedPortals = underworld.pickups.filter(p => !p.flaggedForRemoval && p.name == RED_PORTAL && p !== pickup)
+      const otherRedPortals = underworld.pickups.filter(
+        (p) => !p.flaggedForRemoval && p.name == RED_PORTAL && p !== pickup,
+      );
       const seed = seedrandom(getUniqueSeedString(underworld, player));
       const randomOtherRedPortal = chooseOneOfSeeded(otherRedPortals, seed);
       if (player) {
@@ -564,7 +764,12 @@ export const pickups: IPickupSource[] = [
           // Note: pickup MUST be removed before checking if the point is valid because
           // isPointValidSpawn returns false if it's spawning a unit on a point taken up by a pickup
           // (that isn't flagged for removal)
-          if (underworld.isPointValidSpawn(randomOtherRedPortal, config.COLLISION_MESH_RADIUS / 2)) {
+          if (
+            underworld.isPointValidSpawn(
+              randomOtherRedPortal,
+              config.COLLISION_MESH_RADIUS / 2,
+            )
+          ) {
             player.unit.x = randomOtherRedPortal.x;
             player.unit.y = randomOtherRedPortal.y;
             playSFXKey('swap');
@@ -573,7 +778,13 @@ export const pickups: IPickupSource[] = [
           } else {
           }
         }
-        takeDamage(player.unit, RED_PORTAL_DAMAGE, undefined, underworld, false);
+        takeDamage(
+          player.unit,
+          RED_PORTAL_DAMAGE,
+          undefined,
+          underworld,
+          false,
+        );
       }
     },
   },
@@ -584,12 +795,14 @@ export const pickups: IPickupSource[] = [
     name: BLUE_PORTAL,
     probability: 0,
     scale: 1,
-    description: ['blue portal description', (RED_PORTAL_DAMAGE).toString()],
+    description: ['blue portal description', RED_PORTAL_DAMAGE.toString()],
     willTrigger: ({ unit, player, pickup, underworld }) => {
       return !!player;
     },
     effect: ({ unit, player, pickup, underworld }) => {
-      const otherBluePortals = underworld.pickups.filter(p => !p.flaggedForRemoval && p.name == BLUE_PORTAL && p !== pickup)
+      const otherBluePortals = underworld.pickups.filter(
+        (p) => !p.flaggedForRemoval && p.name == BLUE_PORTAL && p !== pickup,
+      );
       const seed = seedrandom(getUniqueSeedString(underworld, player));
       const randomOtherBluePortal = chooseOneOfSeeded(otherBluePortals, seed);
       if (player) {
@@ -602,14 +815,25 @@ export const pickups: IPickupSource[] = [
           // Note: pickup MUST be removed before checking if the point is valid because
           // isPointValidSpawn returns false if it's spawning a unit on a point taken up by a pickup
           // (that isn't flagged for removal)
-          if (underworld.isPointValidSpawn(randomOtherBluePortal, config.COLLISION_MESH_RADIUS / 2)) {
+          if (
+            underworld.isPointValidSpawn(
+              randomOtherBluePortal,
+              config.COLLISION_MESH_RADIUS / 2,
+            )
+          ) {
             player.unit.x = randomOtherBluePortal.x;
             player.unit.y = randomOtherBluePortal.y;
             skyBeam(pickup);
             skyBeam(randomOtherBluePortal);
           }
         }
-        takeDamage(player.unit, -RED_PORTAL_DAMAGE, undefined, underworld, false);
+        takeDamage(
+          player.unit,
+          -RED_PORTAL_DAMAGE,
+          undefined,
+          underworld,
+          false,
+        );
       }
     },
   },
@@ -629,7 +853,7 @@ export const pickups: IPickupSource[] = [
       // the client of the player that entered the portal
       if (player && player == globalThis.player) {
         underworld.pie.sendData({
-          type: MESSAGE_TYPES.ENTER_PORTAL
+          type: MESSAGE_TYPES.ENTER_PORTAL,
         });
         CardUI.clearSelectedCards(underworld);
         tutorialCompleteTask('portal');
@@ -681,27 +905,26 @@ export const pickups: IPickupSource[] = [
           // and add a filter; however, addOneOffAnimation is the higher level and more common for adding a simple
           // "one off" animated sprite.  Use it instead of addPixiSpriteAnimated unless you need more direct control like
           // we do here
-          const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', player.unit.image.sprite, {
-            loop: false,
-            animationSpeed: 0.3,
-            onComplete: () => {
-              if (animationSprite && animationSprite.parent) {
-                animationSprite.parent.removeChild(animationSprite);
-              }
-            }
-          });
+          const animationSprite = addPixiSpriteAnimated(
+            'spell-effects/potionPickup',
+            player.unit.image.sprite,
+            {
+              loop: false,
+              animationSpeed: 0.3,
+              onComplete: () => {
+                if (animationSprite && animationSprite.parent) {
+                  animationSprite.parent.removeChild(animationSprite);
+                }
+              },
+            },
+          );
           if (animationSprite) {
             if (!animationSprite.filters) {
               animationSprite.filters = [];
             }
-            // Change the health color to yellow 
+            // Change the health color to yellow
             animationSprite.filters.push(
-              new MultiColorReplaceFilter(
-                [
-                  [0xff0000, stamina],
-                ],
-                0.15
-              )
+              new MultiColorReplaceFilter([[0xff0000, stamina]], 0.15),
             );
           }
         }
@@ -718,7 +941,10 @@ export const pickups: IPickupSource[] = [
     imagePath: 'pickups/manaPotion',
     animationSpeed: 0.2,
     name: 'Mana Potion',
-    description: [`mana potion description`, manaPotionRestoreAmount.toString()],
+    description: [
+      `mana potion description`,
+      manaPotionRestoreAmount.toString(),
+    ],
     probability: 80,
     scale: 1.0,
     playerOnly: true,
@@ -738,27 +964,26 @@ export const pickups: IPickupSource[] = [
           // and add a filter; however, addOneOffAnimation is the higher level and more common for adding a simple
           // "one off" animated sprite.  Use it instead of addPixiSpriteAnimated unless you need more direct control like
           // we do here
-          const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', player.unit.image.sprite, {
-            loop: false,
-            animationSpeed: 0.3,
-            onComplete: () => {
-              if (animationSprite && animationSprite.parent) {
-                animationSprite.parent.removeChild(animationSprite);
-              }
-            }
-          });
+          const animationSprite = addPixiSpriteAnimated(
+            'spell-effects/potionPickup',
+            player.unit.image.sprite,
+            {
+              loop: false,
+              animationSpeed: 0.3,
+              onComplete: () => {
+                if (animationSprite && animationSprite.parent) {
+                  animationSprite.parent.removeChild(animationSprite);
+                }
+              },
+            },
+          );
           if (animationSprite) {
             if (!animationSprite.filters) {
               animationSprite.filters = [];
             }
             // Change the health color to blue
             animationSprite.filters.push(
-              new MultiColorReplaceFilter(
-                [
-                  [0xff0000, manaBlue],
-                ],
-                0.15
-              )
+              new MultiColorReplaceFilter([[0xff0000, manaBlue]], 0.15),
             );
           }
         }
@@ -789,11 +1014,10 @@ export const pickups: IPickupSource[] = [
               [0x3e6bff, 0x3024ac],
               [0x184dff, 0x221a7b],
             ],
-            0.15
-          )
-        ]
+            0.15,
+          ),
+        ];
       }
-
     },
     willTrigger: ({ unit, player, pickup, underworld }) => {
       return !!player;
@@ -801,21 +1025,27 @@ export const pickups: IPickupSource[] = [
     effect: ({ unit, player, underworld, prediction }) => {
       if (player) {
         const previousMana = player.unit.manaMax;
-        player.unit.manaMax *= (1.0 - cursedManaPotionRemovalProportion);
+        player.unit.manaMax *= 1.0 - cursedManaPotionRemovalProportion;
         player.unit.manaMax = Math.floor(player.unit.manaMax);
         player.unit.mana = Math.min(player.unit.mana, player.unit.manaMax);
         if (!prediction && !globalThis.headless) {
           playSFXKey('unitDamage');
           // Animate
           if (player.unit.image) {
-            playAnimation(player.unit, player.unit.animations.hit, { loop: false, animationSpeed: 0.2 });
+            playAnimation(player.unit, player.unit.animations.hit, {
+              loop: false,
+              animationSpeed: 0.2,
+            });
             // Changing the player's blood color is a quick hack to make the blood particle splatter be blue
             // like the mana lost
             const tempBlood = player.unit.bloodColor;
             player.unit.bloodColor = manaLostBlue;
             startBloodParticleSplatter(underworld, player.unit, player.unit);
             player.unit.bloodColor = tempBlood;
-            floatingText({ coords: player.unit, text: `- ${previousMana - player.unit.manaMax} ${i18n('mana')}` });
+            floatingText({
+              coords: player.unit,
+              text: `- ${previousMana - player.unit.manaMax} ${i18n('mana')}`,
+            });
           }
         }
 
@@ -834,26 +1064,47 @@ export const pickups: IPickupSource[] = [
     probability: 80,
     scale: 1.0,
     playerOnly: true,
-    description: ['health potion description', healthPotionRestoreAmount.toString()],
+    description: [
+      'health potion description',
+      healthPotionRestoreAmount.toString(),
+    ],
     willTrigger: ({ unit, player, pickup, underworld }) => {
       // Only trigger the health potion if the player will be affected by the health potion
       // Normally that's when they have less than full health, but there's an exception where
       // players that have blood curse will be damaged by healing so it should trigger for them too
-      return !!(player && (player.unit.health < player.unit.healthMax || hasBloodCurse(player.unit)));
+      return !!(
+        player &&
+        (player.unit.health < player.unit.healthMax ||
+          hasBloodCurse(player.unit))
+      );
     },
     effect: ({ player, underworld, prediction }) => {
       // TODO: A lot of the pickup effects don't actually trigger in prediction mode because
       // player is undefined and there is no prediction version of a player
       if (player) {
-        takeDamage(player.unit, -healthPotionRestoreAmount, undefined, underworld, false);
+        takeDamage(
+          player.unit,
+          -healthPotionRestoreAmount,
+          undefined,
+          underworld,
+          false,
+        );
         // Add spell effect animation
-        Image.addOneOffAnimation(player.unit, 'spell-effects/potionPickup', {}, { animationSpeed: 0.3, loop: false });
+        Image.addOneOffAnimation(
+          player.unit,
+          'spell-effects/potionPickup',
+          {},
+          { animationSpeed: 0.3, loop: false },
+        );
         if (!prediction) {
           playSFXKey('potionPickupHealth');
         }
 
         // Cap health at max
-        player.unit.health = Math.min(player.unit.health, player.unit.healthMax);
+        player.unit.health = Math.min(
+          player.unit.health,
+          player.unit.healthMax,
+        );
         // Now that the player unit's mana has increased,sync the new
         // mana state with the player's predictionUnit so it is properly
         // refelcted in the health bar

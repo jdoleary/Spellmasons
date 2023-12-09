@@ -11,7 +11,6 @@ export interface UnitDamage {
   y: number;
   health: number;
   damageTaken: number;
-
 }
 const damageDone = 40;
 const spell: Spell = {
@@ -28,19 +27,30 @@ const spell: Spell = {
     description: ['spell_drown', damageDone.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units that are submerged
-      const targets = state.targetedUnits.filter(u => u.alive && u.inLiquid);
+      const targets = state.targetedUnits.filter((u) => u.alive && u.inLiquid);
       if (targets.length) {
         if (!prediction) {
           playDefaultSpellSFX(card, prediction);
           // playSFXKey(`fallIntoLiquid-${underworld.lastLevelCreated?.biome}`);
         }
         for (let unit of targets) {
-          Unit.takeDamage(unit, damageDone * quantity, state.casterUnit, underworld, prediction, state);
+          Unit.takeDamage(
+            unit,
+            damageDone * quantity,
+            state.casterUnit,
+            underworld,
+            prediction,
+            state,
+          );
         }
       }
       // No targets to cast on. Refund mana
       if (targets.length == 0) {
-        refundLastSpell(state, prediction, 'No targets are submerged\nMana Refunded')
+        refundLastSpell(
+          state,
+          prediction,
+          'No targets are submerged\nMana Refunded',
+        );
       }
       return state;
     },

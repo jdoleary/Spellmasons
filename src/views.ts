@@ -17,6 +17,7 @@ import {
   onWindowBlur,
   mouseOverHandler,
 } from './graphics/ui/eventListeners';
+import { sendChatHandler } from './graphics/ui/Chat';
 import { elEndTurnBtn } from './HTMLElements';
 import { Overworld } from './Overworld';
 
@@ -25,9 +26,11 @@ export enum View {
   Menu,
   Setup,
   Game,
-  Disconnected
+  Disconnected,
 }
-const elUpgradePicker = document.getElementById('upgrade-picker') as HTMLElement;
+const elUpgradePicker = document.getElementById(
+  'upgrade-picker',
+) as HTMLElement;
 let lastNonMenuView: View | undefined;
 export function clearLastNonMenuView() {
   lastNonMenuView = undefined;
@@ -47,7 +50,6 @@ function closeMenu(): boolean {
     console.log('Cannot close menu yet, no previous view to change to.');
     return false;
   }
-
 }
 export function toggleMenu() {
   const elMenu = document.getElementById('menu') as HTMLElement;
@@ -60,21 +62,26 @@ export function toggleMenu() {
       closeMenu();
     }
   } else {
-    console.warn('elMenu is falsey, this should not be so')
+    console.warn('elMenu is falsey, this should not be so');
   }
-
 }
 // The "View" is what the client is looking at
 // No gamelogic should be executed inside setView
 // including setup.
 export function setView(v: View) {
-  if (globalThis.headless) { return; }
+  if (globalThis.headless) {
+    return;
+  }
   console.log('setView(', View[v], ')');
   if (globalThis.view == v) {
     // Prevent setting a view more than once if the view hasn't changed
     // Since some of these views, (such as upgrade) have
     // initialization logic
-    console.log('Short circuit: View has already been set to ', View[v], 'so setView has exited without doing anything.');
+    console.log(
+      'Short circuit: View has already been set to ',
+      View[v],
+      'so setView has exited without doing anything.',
+    );
     return;
   }
   for (let view of Object.keys(View)) {
@@ -110,7 +117,9 @@ export function setView(v: View) {
       // Intentionally left blank - this view is handled in css
       break;
     default:
-      console.error(`Cannot set view to "${View[v]}" view is not handled in switch statement.`);
+      console.error(
+        `Cannot set view to "${View[v]}" view is not handled in switch statement.`,
+      );
       break;
   }
 }
@@ -124,18 +133,21 @@ function zoom(overworld: Overworld, e: WheelEvent) {
     return;
   }
   if (e.target && (e.target as HTMLElement).closest('.scrollable')) {
-    console.debug('Abort scrolling due to mouse on scrollable element', e.target);
+    console.debug(
+      'Abort scrolling due to mouse on scrollable element',
+      e.target,
+    );
     return;
   }
   if (e.target && (e.target as HTMLElement).closest('#inventory-container')) {
-    console.debug('Abort scrolling due to mouse on inventory-container')
+    console.debug('Abort scrolling due to mouse on inventory-container');
     return;
   }
   // TODO: This value could be customizable in the menu later:
   const scrollSensitivity = 200;
   const scrollFactor = Math.abs(e.deltaY / scrollSensitivity);
   const zoomIn = e.deltaY < 0;
-  const zoomDelta = (zoomIn ? 1 + 1 * scrollFactor : 1 - 0.5 * scrollFactor);
+  const zoomDelta = zoomIn ? 1 + 1 * scrollFactor : 1 - 0.5 * scrollFactor;
   let newScale = app.stage.scale.x * zoomDelta;
   // Limit zoom out and in to sensible limits
   newScale = Math.min(Math.max(0.3, newScale), 16);
@@ -146,124 +158,134 @@ function zoom(overworld: Overworld, e: WheelEvent) {
 let runPredictionsIdleCallbackId: number;
 
 export function addOverworldEventListeners(overworld: Overworld) {
-  if (globalThis.headless) { return; }
+  if (globalThis.headless) {
+    return;
+  }
   const elQuitButton: HTMLButtonElement = document.getElementById(
     'quit',
   ) as HTMLButtonElement;
   const elDisconnectButton: HTMLButtonElement = document.getElementById(
     'disconnect-btn',
   ) as HTMLButtonElement;
+  const elChatinput: HTMLInputElement = document.getElementById(
+    'chatinput',
+  ) as HTMLInputElement;
 
   const listeners: {
     target: HTMLElement | typeof globalThis;
     event: string;
     listener: any;
   }[] = [
-      {
-        target: globalThis,
-        event: 'keydown',
-        listener: keydownListener.bind(undefined, overworld)
-      },
-      {
-        target: globalThis,
-        event: 'keyup',
-        listener: keyupListener.bind(undefined, overworld)
-      },
-      {
-        target: document.body,
-        event: 'contextmenu',
-        listener: contextmenuHandler.bind(undefined, overworld)
-      },
-      {
-        target: elPIXIHolder,
-        event: 'click',
-        listener: clickHandler.bind(undefined, overworld)
-      },
-      {
-        target: document.body,
-        event: 'mousedown',
-        listener: mouseDownHandler.bind(undefined, overworld)
-      },
-      {
-        target: globalThis,
-        event: 'mouseup',
-        listener: mouseUpHandler.bind(undefined, overworld)
-      },
-      {
-        target: document.body,
-        event: 'mouseover',
-        listener: mouseOverHandler.bind(undefined, overworld)
-      },
-      {
-        target: globalThis,
-        event: 'blur',
-        listener: onWindowBlur.bind(undefined, overworld)
-      },
-      {
-        target: document.body,
-        event: 'wheel',
-        listener: zoom.bind(undefined, overworld)
-      },
-      {
-        target: document.body,
-        event: 'mousemove',
-        // mousemove receives the underworld instead of the overworld so that it can be
-        // invoked from within the underworld without the underworld having to have a circular
-        // reference to the overworld.  It needs to be invoked from within the underworld so
-        // that it can update visuals that usually only update when the mousemoves.
-        listener: (e: MouseEvent) => {
-          if (overworld.underworld) {
-            useMousePosition(overworld.underworld, e);
+    {
+      target: globalThis,
+      event: 'keydown',
+      listener: keydownListener.bind(undefined, overworld),
+    },
+    {
+      target: globalThis,
+      event: 'keyup',
+      listener: keyupListener.bind(undefined, overworld),
+    },
+    {
+      target: document.body,
+      event: 'contextmenu',
+      listener: contextmenuHandler.bind(undefined, overworld),
+    },
+    {
+      target: elPIXIHolder,
+      event: 'click',
+      listener: clickHandler.bind(undefined, overworld),
+    },
+    {
+      target: document.body,
+      event: 'mousedown',
+      listener: mouseDownHandler.bind(undefined, overworld),
+    },
+    {
+      target: globalThis,
+      event: 'mouseup',
+      listener: mouseUpHandler.bind(undefined, overworld),
+    },
+    {
+      target: document.body,
+      event: 'mouseover',
+      listener: mouseOverHandler.bind(undefined, overworld),
+    },
+    {
+      target: globalThis,
+      event: 'blur',
+      listener: onWindowBlur.bind(undefined, overworld),
+    },
+    {
+      target: document.body,
+      event: 'wheel',
+      listener: zoom.bind(undefined, overworld),
+    },
+    {
+      target: document.body,
+      event: 'mousemove',
+      // mousemove receives the underworld instead of the overworld so that it can be
+      // invoked from within the underworld without the underworld having to have a circular
+      // reference to the overworld.  It needs to be invoked from within the underworld so
+      // that it can update visuals that usually only update when the mousemoves.
+      listener: (e: MouseEvent) => {
+        if (overworld.underworld) {
+          useMousePosition(overworld.underworld, e);
 
-            // Perf: Wrap runPredictions inside of requestIdleCallback
-            // so that it won't trigger until the UI is unblocked
-            // This greatly improves performance when runPredictions is
-            // expensive because it is attempted to be called on every mouse
-            // move.
-            // This can be tested by loading in a map with a large amount of 
-            // a large variety of units, without requestIdleCallback, even
-            // the cam cinematic lags terribly.
-            // if (runPredictionsIdleCallbackId !== undefined) {
-            //   cancelIdleCallback(runPredictionsIdleCallbackId);
-            // }
-            // runPredictionsIdleCallbackId = requestIdleCallback(() => {
-            //   if (!overworld.underworld) {
-            //     return;
-            //   }
-            runPredictions(overworld.underworld);
-            // })
-          }
+          // Perf: Wrap runPredictions inside of requestIdleCallback
+          // so that it won't trigger until the UI is unblocked
+          // This greatly improves performance when runPredictions is
+          // expensive because it is attempted to be called on every mouse
+          // move.
+          // This can be tested by loading in a map with a large amount of
+          // a large variety of units, without requestIdleCallback, even
+          // the cam cinematic lags terribly.
+          // if (runPredictionsIdleCallbackId !== undefined) {
+          //   cancelIdleCallback(runPredictionsIdleCallbackId);
+          // }
+          // runPredictionsIdleCallbackId = requestIdleCallback(() => {
+          //   if (!overworld.underworld) {
+          //     return;
+          //   }
+          runPredictions(overworld.underworld);
+          // })
         }
       },
-      {
-        target: elEndTurnBtn,
-        event: 'click',
-        listener: endTurnBtnListener.bind(undefined, overworld)
-      },
-      {
-        target: elQuitButton,
-        event: 'click',
-        listener: () => {
-          if (globalThis.exitCurrentGame) {
-            globalThis.exitCurrentGame();
-          } else {
-            console.error('Unexpected: globalThis.exitCurrentGame is undefined.');
-          }
+    },
+    {
+      target: elEndTurnBtn,
+      event: 'click',
+      listener: endTurnBtnListener.bind(undefined, overworld),
+    },
+    {
+      target: elQuitButton,
+      event: 'click',
+      listener: () => {
+        if (globalThis.exitCurrentGame) {
+          globalThis.exitCurrentGame();
+        } else {
+          console.error('Unexpected: globalThis.exitCurrentGame is undefined.');
         }
       },
-      {
-        target: elDisconnectButton,
-        event: 'click',
-        listener: () => {
-          if (globalThis.exitCurrentGame) {
-            // This will also disconnect from wsPie causing it to stop trying to reconnect.
-            globalThis.exitCurrentGame();
-          } else {
-            console.error('Unexpected: globalThis.exitCurrentGame is undefined.');
-          }
+    },
+    {
+      target: elDisconnectButton,
+      event: 'click',
+      listener: () => {
+        if (globalThis.exitCurrentGame) {
+          // This will also disconnect from wsPie causing it to stop trying to reconnect.
+          globalThis.exitCurrentGame();
+        } else {
+          console.error('Unexpected: globalThis.exitCurrentGame is undefined.');
         }
       },
-    ];
+    },
+    {
+      target: elChatinput,
+      event: 'keypress',
+      listener: sendChatHandler.bind(undefined, overworld),
+    },
+  ];
   // Make 'closeMenu' available to the svelte menu
   globalThis.closeMenu = () => closeMenu();
   for (let { target, event, listener } of listeners) {
@@ -271,10 +293,11 @@ export function addOverworldEventListeners(overworld: Overworld) {
   }
 
   return function removeOverworldEventListeners() {
-    if (globalThis.headless) { return; }
+    if (globalThis.headless) {
+      return;
+    }
     for (let { target, event, listener } of listeners) {
       target.removeEventListener(event, listener);
     }
-
-  }
+  };
 }

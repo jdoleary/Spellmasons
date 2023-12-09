@@ -22,13 +22,17 @@ const spell: Spell = {
     description: ['spell_mana_burn', mana_burnt.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
-      const targets = state.targetedUnits.filter(u => u.alive && u.mana > 0);
+      const targets = state.targetedUnits.filter((u) => u.alive && u.mana > 0);
       // We only need to await one animation promise since they all trigger simultaneously
       let animationPromise = Promise.resolve();
       // Play the animation and sfx
       for (let unit of targets) {
         playDefaultSpellSFX(card, prediction);
-        animationPromise = Image.addOneOffAnimation(unit, 'spell-effects/spellManaBurn', { keyFrame: 6 });
+        animationPromise = Image.addOneOffAnimation(
+          unit,
+          'spell-effects/spellManaBurn',
+          { keyFrame: 6 },
+        );
       }
       await animationPromise;
       // Take damage and remove mana AFTER the animation and sfx has finished

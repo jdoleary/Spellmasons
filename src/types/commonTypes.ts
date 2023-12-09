@@ -1,8 +1,8 @@
-import type * as particles from '@pixi/particle-emitter'
+import type * as particles from '@pixi/particle-emitter';
 import { Spell } from '../cards';
 import { IPickupSource } from '../entity/Pickup';
 import { UnitSource } from '../entity/units';
-export type GameMode = 'tutorial' | 'hard' | 'impossible'
+export type GameMode = 'tutorial' | 'hard' | 'impossible';
 export enum UnitType {
   PLAYER_CONTROLLED,
   AI,
@@ -13,7 +13,7 @@ export enum UnitSubType {
   RANGED_RADIUS,
   SUPPORT_CLASS,
   SPECIAL_LOS,
-  DOODAD
+  DOODAD,
 }
 
 export enum Faction {
@@ -28,7 +28,7 @@ export enum CardCategory {
   Mana,
   Curses,
   Blessings,
-  Soul
+  Soul,
 }
 // @ts-ignore: for menu
 globalThis.CardCategory = CardCategory;
@@ -37,16 +37,15 @@ export enum CardRarity {
   SPECIAL = 'SPECIAL',
   UNCOMMON = 'UNCOMMON',
   RARE = 'RARE',
-  FORBIDDEN = 'FORBIDDEN'
+  FORBIDDEN = 'FORBIDDEN',
 }
 export const probabilityMap: Record<CardRarity, number> = {
   [CardRarity.COMMON]: 80,
   [CardRarity.SPECIAL]: 50,
   [CardRarity.UNCOMMON]: 30,
   [CardRarity.RARE]: 10,
-  [CardRarity.FORBIDDEN]: 5
-
-}
+  [CardRarity.FORBIDDEN]: 5,
+};
 export type JEmitter = particles.Emitter & { cleanAfterTurn?: boolean };
 
 export interface Mod {

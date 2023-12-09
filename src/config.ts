@@ -15,7 +15,7 @@ export const COLLISION_MESH_RADIUS = 32;
 export const UNIT_SIZE_RADIUS = 50 / 2;
 // Caution: Changing this may make scroll pickups that spawn in liquid
 // due to units falling in liquid unobtainable without movement spells.
-// SELECTABLE_RADIUS determines the radius of both pickups and 
+// SELECTABLE_RADIUS determines the radius of both pickups and
 // the radius within which a mouse will create a target for a spell
 // from a unit
 export const SELECTABLE_RADIUS = 36;
@@ -60,15 +60,18 @@ export const CAST_RANGE_COYOTE_MARGIN = 25;
 // Used to identify the PIXI.Text element on Player units the show their name
 export const NAME_TEXT_ID = 'nameText';
 export const NAME_TEXT_DEFAULT_SIZE = 20;
-export const NAME_TEXT_Y_OFFSET = 20
+export const NAME_TEXT_Y_OFFSET = 20;
 
 // Liquid animation settings
 export const LIQUID_X_SCROLL_SPEED = 400; // higher is slower
 export const LIQUID_DISPLACEMENT_SPEED = 0.1;
 export const LIQUID_DISPLACEMENT_SCALE = 0.6;
-export const PIXI_TEXT_DROP_SHADOW = { dropShadow: true, dropShadowDistance: 1 };
+export const PIXI_TEXT_DROP_SHADOW = {
+  dropShadow: true,
+  dropShadowDistance: 1,
+};
 
-// Unit difficulty will increase up to X number of players, after that the quantity of 
+// Unit difficulty will increase up to X number of players, after that the quantity of
 // units increases
 export const NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES = 2;
 

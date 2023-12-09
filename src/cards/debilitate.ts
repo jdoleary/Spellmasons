@@ -25,7 +25,7 @@ const spell: Spell = {
     description: ['spell_debilitate', (proportion * 100).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
-      const targets = state.targetedUnits.filter(u => u.alive);
+      const targets = state.targetedUnits.filter((u) => u.alive);
       if (targets.length) {
         playDefaultSpellSFX(card, prediction);
         await playDefaultSpellAnimation(card, targets, prediction);
@@ -53,9 +53,19 @@ const spell: Spell = {
   },
 };
 
-function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
-  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
-    unit.onDamageEvents.push(id);
-  });
+function add(
+  unit: Unit.IUnit,
+  _underworld: Underworld,
+  _prediction: boolean,
+  quantity: number = 1,
+) {
+  const modifier = getOrInitModifier(
+    unit,
+    id,
+    { isCurse: true, quantity, persistBetweenLevels: false },
+    () => {
+      unit.onDamageEvents.push(id);
+    },
+  );
 }
 export default spell;

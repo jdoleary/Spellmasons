@@ -22,8 +22,12 @@ const spell: Spell = {
     allowNonUnitTarget: true,
     animationPath: '',
     sfx: 'arrow',
-    description: ['spell_arrow_many', arrowCount.toString(), damageDone.toString()],
-    effect: arrowEffect(arrowCount, damageDone)
-  }
+    description: [
+      'spell_arrow_many',
+      arrowCount.toString(),
+      damageDone.toString(),
+    ],
+    effect: arrowEffect(arrowCount, damageDone),
+  },
 };
 export default spell;

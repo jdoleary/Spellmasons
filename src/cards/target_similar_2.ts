@@ -19,6 +19,6 @@ const spell: Spell = {
     description: 'spell_target_similar',
     allowNonUnitTarget: true,
     effect: targetSimilarEffect(2),
-  }
+  },
 };
 export default spell;

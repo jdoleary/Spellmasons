@@ -27,7 +27,9 @@ const spell: Spell = {
     effect: async (state, card, quantity, underworld, prediction) => {
       const caster = state.casterUnit;
       // .filter: only target living units of the same faction
-      const targets = state.targetedUnits.filter(u => u.alive && u.health > 0 && u.faction == caster.faction);
+      const targets = state.targetedUnits.filter(
+        (u) => u.alive && u.health > 0 && u.faction == caster.faction,
+      );
       let promises = [];
       let totalHealthStolen = 0;
       for (let unit of targets) {
@@ -38,40 +40,54 @@ const spell: Spell = {
         if (!prediction) {
           const NUMBER_OF_ANIMATED_TRAILS = Math.min(6, unitHealthStolen / 10);
           for (let i = 0; i < quantity * NUMBER_OF_ANIMATED_TRAILS; i++) {
-            healthTrailPromises.push(makeManaTrail(unit, caster, underworld, '#ff6767n', '#ff0000').then(() => {
-              const healthStolenPerTrail = Math.floor(unitHealthStolen / NUMBER_OF_ANIMATED_TRAILS)
-              state.casterUnit.health += healthStolenPerTrail;
-              if (!prediction) {
-                playDefaultSpellSFX(card, prediction);
-                // Animate
-                if (state.casterUnit.image) {
-                  // Note: This uses the lower-level addPixiSpriteAnimated directly so that it can get a reference to the sprite
-                  // and add a filter; however, addOneOffAnimation is the higher level and more common for adding a simple
-                  // "one off" animated sprite.  Use it instead of addPixiSpriteAnimated unless you need more direct control like
-                  // we do here
-                  const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', state.casterUnit.image.sprite, {
-                    loop: false,
-                    onComplete: () => {
-                      if (animationSprite?.parent) {
-                        animationSprite.parent.removeChild(animationSprite);
+            healthTrailPromises.push(
+              makeManaTrail(
+                unit,
+                caster,
+                underworld,
+                '#ff6767n',
+                '#ff0000',
+              ).then(() => {
+                const healthStolenPerTrail = Math.floor(
+                  unitHealthStolen / NUMBER_OF_ANIMATED_TRAILS,
+                );
+                state.casterUnit.health += healthStolenPerTrail;
+                if (!prediction) {
+                  playDefaultSpellSFX(card, prediction);
+                  // Animate
+                  if (state.casterUnit.image) {
+                    // Note: This uses the lower-level addPixiSpriteAnimated directly so that it can get a reference to the sprite
+                    // and add a filter; however, addOneOffAnimation is the higher level and more common for adding a simple
+                    // "one off" animated sprite.  Use it instead of addPixiSpriteAnimated unless you need more direct control like
+                    // we do here
+                    const animationSprite = addPixiSpriteAnimated(
+                      'spell-effects/potionPickup',
+                      state.casterUnit.image.sprite,
+                      {
+                        loop: false,
+                        onComplete: () => {
+                          if (animationSprite?.parent) {
+                            animationSprite.parent.removeChild(animationSprite);
+                          }
+                        },
+                      },
+                    );
+                    if (animationSprite) {
+                      if (!animationSprite.filters) {
+                        animationSprite.filters = [];
                       }
                     }
-                  });
-                  if (animationSprite) {
-
-                    if (!animationSprite.filters) {
-                      animationSprite.filters = [];
-                    }
                   }
+                  explain(EXPLAIN_OVERFILL);
                 }
-                explain(EXPLAIN_OVERFILL);
-              }
-            })
+              }),
             );
           }
         }
         die(unit, underworld, prediction);
-        promises.push((prediction ? Promise.resolve() : Promise.all(healthTrailPromises)));
+        promises.push(
+          prediction ? Promise.resolve() : Promise.all(healthTrailPromises),
+        );
       }
       await Promise.all(promises);
       playDefaultSpellSFX(card, prediction);
@@ -80,11 +96,15 @@ const spell: Spell = {
           floatingText({
             coords: caster,
             text: `+ ${totalHealthStolen} Health`,
-            style: { fill: 'red', ...config.PIXI_TEXT_DROP_SHADOW }
+            style: { fill: 'red', ...config.PIXI_TEXT_DROP_SHADOW },
           });
         }
       } else {
-        refundLastSpell(state, prediction, 'No targets have health to steal\nMana cost refunded')
+        refundLastSpell(
+          state,
+          prediction,
+          'No targets have health to steal\nMana cost refunded',
+        );
       }
       return state;
     },

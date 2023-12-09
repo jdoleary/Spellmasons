@@ -23,6 +23,6 @@ const spell: Spell = {
     sfx: 'arrow',
     description: ['spell_arrow', damageDone.toString()],
     effect: arrowEffect(1, damageDone),
-  }
+  },
 };
 export default spell;

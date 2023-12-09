@@ -3,7 +3,7 @@ import * as Image from '../graphics/Image';
 import * as Pickup from '../entity/Pickup';
 import { Spell, refundLastSpell } from './index';
 import { CardCategory, UnitType } from '../types/commonTypes';
-import * as config from '../config'
+import * as config from '../config';
 import type Underworld from '../Underworld';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
@@ -27,13 +27,19 @@ const spell: Spell = {
     description: 'spell_freeze',
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
-      const targets = state.targetedUnits.filter(u => u.alive);
+      const targets = state.targetedUnits.filter((u) => u.alive);
       if (targets.length) {
         let spellAnimationPromise = Promise.resolve();
-        targets.forEach(t => {
-          spellAnimationPromise = Image.addOneOffAnimation(t, 'spell-effects/spellFreeze');
-        })
-        await Promise.all([spellAnimationPromise, playDefaultSpellSFX(card, prediction)]);
+        targets.forEach((t) => {
+          spellAnimationPromise = Image.addOneOffAnimation(
+            t,
+            'spell-effects/spellFreeze',
+          );
+        });
+        await Promise.all([
+          spellAnimationPromise,
+          playDefaultSpellSFX(card, prediction),
+        ]);
         for (let unit of targets) {
           Unit.addModifier(unit, id, underworld, prediction, quantity);
         }
@@ -98,7 +104,7 @@ const spell: Spell = {
           if (unit.unitType == UnitType.PLAYER_CONTROLLED) {
             setTimeout(() => {
               Unit.removeModifier(unit, id, underworld);
-            }, 1000)
+            }, 1000);
           } else {
             Unit.removeModifier(unit, id, underworld);
           }
@@ -106,42 +112,49 @@ const spell: Spell = {
       }
     },
   },
-
 };
 
-function add(unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) {
-  getOrInitModifier(unit, id, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
-    unit.radius = config.COLLISION_MESH_RADIUS;
-    // Immediately set stamina to 0 so they can't move
-    unit.stamina = 0;
-    // Add event
-    if (!unit.onTurnStartEvents.includes(id)) {
-      unit.onTurnStartEvents.push(id);
-    }
-    if (!unit.onTurnEndEvents.includes(id)) {
-      unit.onTurnEndEvents.push(id);
-    }
+function add(
+  unit: Unit.IUnit,
+  underworld: Underworld,
+  _prediction: boolean,
+  quantity: number = 1,
+) {
+  getOrInitModifier(
+    unit,
+    id,
+    { isCurse: true, quantity, persistBetweenLevels: false },
+    () => {
+      unit.radius = config.COLLISION_MESH_RADIUS;
+      // Immediately set stamina to 0 so they can't move
+      unit.stamina = 0;
+      // Add event
+      if (!unit.onTurnStartEvents.includes(id)) {
+        unit.onTurnStartEvents.push(id);
+      }
+      if (!unit.onTurnEndEvents.includes(id)) {
+        unit.onTurnEndEvents.push(id);
+      }
 
-    // Add subsprite image
-    Image.addSubSprite(unit.image, imageName);
-    // Stop the animation
-    unit.image?.sprite.stop();
-    // Prevents units from being pushed out of the way and units
-    // act as a blockade
-    unit.immovable = true;
-  });
+      // Add subsprite image
+      Image.addSubSprite(unit.image, imageName);
+      // Stop the animation
+      unit.image?.sprite.stop();
+      // Prevents units from being pushed out of the way and units
+      // act as a blockade
+      unit.immovable = true;
+    },
+  );
   // If the frozen unit is a player, end their turn when they become frozen
   if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
-    const player = underworld.players.find(
-      (p) => p.unit === unit,
-    );
+    const player = underworld.players.find((p) => p.unit === unit);
     if (player) {
       underworld.endPlayerTurn(player.clientId);
     }
   }
 }
 function remove(unit: Unit.IUnit) {
-  unit.radius = config.UNIT_BASE_RADIUS
+  unit.radius = config.UNIT_BASE_RADIUS;
   // Unit can be pushed around again as other units try to move past them
   unit.immovable = false;
   // Resume the animation

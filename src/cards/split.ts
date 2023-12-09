@@ -10,25 +10,38 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 const id = 'split';
 const splitLimit = 3;
-function changeStatWithCap(unit: Unit.IUnit, statKey: 'health' | 'healthMax' | 'mana' | 'manaMax' | 'stamina' | 'staminaMax' | 'moveSpeed' | 'damage', multiplier: number) {
+function changeStatWithCap(
+  unit: Unit.IUnit,
+  statKey:
+    | 'health'
+    | 'healthMax'
+    | 'mana'
+    | 'manaMax'
+    | 'stamina'
+    | 'staminaMax'
+    | 'moveSpeed'
+    | 'damage',
+  multiplier: number,
+) {
   if (unit[statKey] && typeof unit[statKey] === 'number') {
-
     // Do not let stats go below 1
     // Ensure stats are a whole number
     const newValue = Math.max(1, Math.floor(unit[statKey] * multiplier));
     unit[statKey] = newValue;
   }
-
 }
 const addMultiplier = 0.5;
 const scaleMultiplier = 0.75;
 function remove(unit: Unit.IUnit, underworld: Underworld) {
   if (!unit.modifiers[id]) {
-    console.error(`Missing modifier object for ${id}; cannot remove.  This should never happen`);
+    console.error(
+      `Missing modifier object for ${id}; cannot remove.  This should never happen`,
+    );
     return;
   }
   // Safely restore unit's original properties
-  const { scaleX, scaleY, healthMax, manaMax, staminaMax, damage, moveSpeed } = unit.modifiers[id].originalStats;
+  const { scaleX, scaleY, healthMax, manaMax, staminaMax, damage, moveSpeed } =
+    unit.modifiers[id].originalStats;
   if (unit.image) {
     unit.image.sprite.scale.x = scaleX;
     unit.image.sprite.scale.y = scaleY;
@@ -58,26 +71,36 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
   unit.damage = damage;
   unit.moveSpeed = moveSpeed;
 }
-function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
+function add(
+  unit: Unit.IUnit,
+  underworld: Underworld,
+  prediction: boolean,
+  quantity: number = 1,
+) {
   const { healthMax, manaMax, staminaMax, damage, moveSpeed } = unit;
-  const modifier = getOrInitModifier(unit, id, {
-    isCurse: true,
-    quantity,
-    persistBetweenLevels: false,
-    originalStats: {
-      scaleX: unit.image && unit.image.sprite.scale.x || 1,
-      scaleY: unit.image && unit.image.sprite.scale.y || 1,
-      healthMax,
-      manaMax,
-      staminaMax,
-      damage,
-      moveSpeed
-    }
-  }, () => {
-    if (!unit.onDeathEvents.includes(id)) {
-      unit.onDeathEvents.push(id);
-    }
-  });
+  const modifier = getOrInitModifier(
+    unit,
+    id,
+    {
+      isCurse: true,
+      quantity,
+      persistBetweenLevels: false,
+      originalStats: {
+        scaleX: (unit.image && unit.image.sprite.scale.x) || 1,
+        scaleY: (unit.image && unit.image.sprite.scale.y) || 1,
+        healthMax,
+        manaMax,
+        staminaMax,
+        damage,
+        moveSpeed,
+      },
+    },
+    () => {
+      if (!unit.onDeathEvents.includes(id)) {
+        unit.onDeathEvents.push(id);
+      }
+    },
+  );
   if (modifier.quantity && modifier.quantity >= splitLimit) {
     return;
   }
@@ -132,21 +155,30 @@ const spell: Spell = {
           // If there is are clone coordinates to clone into
           if (cloneSourceCoords) {
             if (Unit.isUnit(target)) {
-              const validSpawnCoords = underworld.findValidSpawn(cloneSourceCoords, 5, 10);
+              const validSpawnCoords = underworld.findValidSpawn(
+                cloneSourceCoords,
+                5,
+                10,
+              );
               if (validSpawnCoords) {
-                const clone = Unit.load(Unit.serialize(target), underworld, prediction);
+                const clone = Unit.load(
+                  Unit.serialize(target),
+                  underworld,
+                  prediction,
+                );
                 if (!prediction) {
                   // Change id of the clone so that it doesn't share the same
                   // 'supposed-to-be-unique' id of the original
                   clone.id = ++underworld.lastUnitId;
                 } else {
                   // Get a unique id for the clone
-                  clone.id = underworld.unitsPrediction.reduce((lastId, unit) => {
-                    if (unit.id > lastId) {
-                      return unit.id;
-                    }
-                    return lastId;
-                  }, 0) + 1;
+                  clone.id =
+                    underworld.unitsPrediction.reduce((lastId, unit) => {
+                      if (unit.id > lastId) {
+                        return unit.id;
+                      }
+                      return lastId;
+                    }, 0) + 1;
                 }
                 // If the cloned unit is player controlled, make them be controlled by the AI
                 if (clone.unitType == UnitType.PLAYER_CONTROLLED) {
@@ -197,10 +229,14 @@ const spell: Spell = {
   },
   modifiers: {
     add,
-    remove
+    remove,
   },
   events: {
-    onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
+    onDeath: async (
+      unit: Unit.IUnit,
+      underworld: Underworld,
+      prediction: boolean,
+    ) => {
       // Note: Split should NOT be permanent for PLAYER_CONTROLLED UNITS
       if (unit.unitType !== UnitType.PLAYER_CONTROLLED) {
         // Special case: Remove the 'split' modifier on death
@@ -212,7 +248,7 @@ const spell: Spell = {
         // undesireable.
         delete unit.modifiers[id];
       }
-    }
-  }
+    },
+  },
 };
 export default spell;

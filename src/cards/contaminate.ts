@@ -1,4 +1,3 @@
-
 import type { IUnit } from '../entity/Unit';
 import { allCards, ICard, Spell } from './index';
 import { COLLISION_MESH_RADIUS } from '../config';
@@ -26,8 +25,14 @@ const spell: Spell = {
     description: 'spell_contaminate',
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
-      for (let unit of state.targetedUnits.filter(u => u.alive)) {
-        await spreadCurses(state.casterPlayer, unit, underworld, state.aggregator.radius, prediction);
+      for (let unit of state.targetedUnits.filter((u) => u.alive)) {
+        await spreadCurses(
+          state.casterPlayer,
+          unit,
+          underworld,
+          state.aggregator.radius,
+          prediction,
+        );
       }
       return state;
     },
@@ -35,27 +40,42 @@ const spell: Spell = {
 };
 export default spell;
 
-async function spreadCurses(casterPlayer: IPlayer | undefined, unit: IUnit, underworld: Underworld, extraRadius: number, prediction: boolean) {
-  const range = (COLLISION_MESH_RADIUS * 4 + extraRadius) * (casterPlayer?.mageType == 'Witch' ? 1.5 : 1);
+async function spreadCurses(
+  casterPlayer: IPlayer | undefined,
+  unit: IUnit,
+  underworld: Underworld,
+  extraRadius: number,
+  prediction: boolean,
+) {
+  const range =
+    (COLLISION_MESH_RADIUS * 4 + extraRadius) *
+    (casterPlayer?.mageType == 'Witch' ? 1.5 : 1);
   drawUICircle(unit, range, colors.targetingSpellGreen, 'Contagion Radius');
-  const nearByUnits = underworld.getUnitsWithinDistanceOfTarget(unit, range, prediction)
+  const nearByUnits = underworld
+    .getUnitsWithinDistanceOfTarget(unit, range, prediction)
     // Filter out undefineds
-    .filter(x => x !== undefined)
+    .filter((x) => x !== undefined)
     // Do not spread to dead units
-    .filter(x => x?.alive)
+    .filter((x) => x?.alive)
     // Filter out self
-    .filter(x => x !== unit) as IUnit[];
-  const curseCardsData: { card: ICard, quantity: number }[] = Object.entries(unit.modifiers)
+    .filter((x) => x !== unit) as IUnit[];
+  const curseCardsData: { card: ICard; quantity: number }[] = Object.entries(
+    unit.modifiers,
+  )
     // Only curses are contagious
     // Do not spread contaminate itself
-    .filter(([cardId, modValue]) => modValue.isCurse && cardId !== contaminate_id)
+    .filter(
+      ([cardId, modValue]) => modValue.isCurse && cardId !== contaminate_id,
+    )
     .map(([id, mod]) => ({ card: allCards[id], quantity: mod.quantity }))
-    .filter(x => x.card !== undefined) as { card: ICard, quantity: number }[];
+    .filter((x) => x.card !== undefined) as { card: ICard; quantity: number }[];
 
   for (let { card, quantity } of curseCardsData) {
     const promises = [];
     // Filter out units that already have this curse
-    for (let touchingUnit of nearByUnits.filter(u => !Object.keys(u.modifiers).includes(card.id))) {
+    for (let touchingUnit of nearByUnits.filter(
+      (u) => !Object.keys(u.modifiers).includes(card.id),
+    )) {
       let animationPromise = Promise.resolve();
       if (!prediction) {
         // Visually show the contageon
@@ -73,11 +93,15 @@ async function spreadCurses(casterPlayer: IPlayer | undefined, unit: IUnit, unde
         if (!prediction) {
           playSFXKey('contageousSplat');
         }
-        Unit.addModifier(touchingUnit, card.id, underworld, prediction, quantity);
+        Unit.addModifier(
+          touchingUnit,
+          card.id,
+          underworld,
+          prediction,
+          quantity,
+        );
       });
     }
     await Promise.all(promises);
-
   }
-
 }

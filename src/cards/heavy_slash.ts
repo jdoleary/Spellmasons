@@ -16,7 +16,6 @@ export interface UnitDamage {
   y: number;
   health: number;
   damageTaken: number;
-
 }
 const animationPath = 'spell-effects/spellHurtCuts';
 const delayBetweenAnimationsStart = 400;
@@ -37,7 +36,7 @@ const spell: Spell = {
     effect: async (state, card, quantity, underworld, prediction) => {
       let animationDelaySum = 0;
       // .filter: only target living units
-      const targets = state.targetedUnits.filter(u => u.alive)
+      const targets = state.targetedUnits.filter((u) => u.alive);
       animationDelaySum = 0;
       let delayBetweenAnimations = delayBetweenAnimationsStart;
       // Note: quantity loop should always be INSIDE of the targetedUnits loop
@@ -48,10 +47,17 @@ const spell: Spell = {
           setTimeout(() => {
             playDefaultSpellSFX(card, prediction);
             for (let unit of targets) {
-              const spellEffectImage = oneOffImage(unit, animationPath, containerSpells);
+              const spellEffectImage = oneOffImage(
+                unit,
+                animationPath,
+                containerSpells,
+              );
               if (spellEffectImage) {
                 // Randomize rotation a bit so that subsequent slashes don't perfectly overlap
-                spellEffectImage.sprite.rotation = randFloat(-Math.PI / 6, Math.PI / 6);
+                spellEffectImage.sprite.rotation = randFloat(
+                  -Math.PI / 6,
+                  Math.PI / 6,
+                );
                 if (q % 2 == 0) {
                   // Flip every other slash animation so that it comes from the other side
                   spellEffectImage.sprite.scale.x = -1;
@@ -61,18 +67,32 @@ const spell: Spell = {
                 spellEffectImage.sprite.scale.y *= 2;
               }
               setTimeout(() => {
-                Unit.takeDamage(unit, damageDone, state.casterUnit, underworld, prediction, state);
-              }, 100)
+                Unit.takeDamage(
+                  unit,
+                  damageDone,
+                  state.casterUnit,
+                  underworld,
+                  prediction,
+                  state,
+                );
+              }, 100);
             }
-          }, animationDelaySum)
+          }, animationDelaySum);
           animationDelaySum += delayBetweenAnimations;
           // Don't let it go below 20 milliseconds
           delayBetweenAnimations = Math.max(20, delayBetweenAnimations);
           // Juice: Speed up subsequent hits
-          delayBetweenAnimations *= 0.80
+          delayBetweenAnimations *= 0.8;
         } else {
           for (let unit of targets) {
-            Unit.takeDamage(unit, damageDone, state.casterUnit, underworld, prediction, state);
+            Unit.takeDamage(
+              unit,
+              damageDone,
+              state.casterUnit,
+              underworld,
+              prediction,
+              state,
+            );
           }
         }
       }
@@ -82,7 +102,7 @@ const spell: Spell = {
       if (!prediction && !globalThis.headless) {
         await new Promise((resolve) => {
           setTimeout(resolve, animationDelaySum);
-        })
+        });
       }
       return state;
     },

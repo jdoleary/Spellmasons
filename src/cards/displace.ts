@@ -14,7 +14,11 @@ import { prng } from '../jmath/rand';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import * as config from '../config';
 
-export function findRandomDisplaceLocation(underworld: Underworld, radius: number, seed: prng): Vec2 | undefined {
+export function findRandomDisplaceLocation(
+  underworld: Underworld,
+  radius: number,
+  seed: prng,
+): Vec2 | undefined {
   let isValid = false;
   let randomCoord;
   const infiniteLoopLimit = 100;
@@ -25,11 +29,13 @@ export function findRandomDisplaceLocation(underworld: Underworld, radius: numbe
       console.warn('Could not find random displace location');
       return undefined;
     }
-    randomCoord = underworld.getRandomCoordsWithinBounds(underworld.limits, seed);
+    randomCoord = underworld.getRandomCoordsWithinBounds(
+      underworld.limits,
+      seed,
+    );
     isValid = underworld.isPointValidSpawn(randomCoord, radius);
   } while (!isValid);
-  return randomCoord
-
+  return randomCoord;
 }
 const id = 'displace';
 const spell: Spell = {
@@ -50,13 +56,19 @@ const spell: Spell = {
 
       // Seed is set before targets are looped so that each target goes to a different location but
       // also so that it is consistent and seeded for a given cast
-      const seed = seedrandom(`${underworld.turn_number}-${state.casterUnit.id}`);
+      const seed = seedrandom(
+        `${underworld.turn_number}-${state.casterUnit.id}`,
+      );
       for (let i = 0; i < quantity; i++) {
         // Loop through all targets and batch swap locations
         const swaps: [HasSpace, Vec2][] = [];
         for (let targetUnit of targets) {
           if (targetUnit) {
-            const displaceLocation = findRandomDisplaceLocation(underworld, config.COLLISION_MESH_RADIUS, seed);
+            const displaceLocation = findRandomDisplaceLocation(
+              underworld,
+              config.COLLISION_MESH_RADIUS,
+              seed,
+            );
             swaps.push([targetUnit, displaceLocation || targetUnit]);
           }
         }
@@ -69,13 +81,25 @@ const spell: Spell = {
 
           // Show prediction lines before the move actually occurs
           if (prediction && globalThis.predictionGraphics) {
-            globalThis.predictionGraphics.lineStyle(4, colors.forceMoveColor, 1.0);
+            globalThis.predictionGraphics.lineStyle(
+              4,
+              colors.forceMoveColor,
+              1.0,
+            );
             globalThis.predictionGraphics.moveTo(entity.x, entity.y);
             globalThis.predictionGraphics.lineTo(newLocation.x, newLocation.y);
             // Draw circle at the end so the line path isn't a trail of rectangles with sharp edges
-            globalThis.predictionGraphics.lineStyle(1, colors.forceMoveColor, 1.0);
+            globalThis.predictionGraphics.lineStyle(
+              1,
+              colors.forceMoveColor,
+              1.0,
+            );
             globalThis.predictionGraphics.beginFill(colors.forceMoveColor);
-            globalThis.predictionGraphics.drawCircle(newLocation.x, newLocation.y, 3);
+            globalThis.predictionGraphics.drawCircle(
+              newLocation.x,
+              newLocation.y,
+              3,
+            );
             globalThis.predictionGraphics.endFill();
           }
           if (Unit.isUnit(entity)) {

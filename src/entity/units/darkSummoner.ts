@@ -25,7 +25,7 @@ const unit: UnitSource = {
   },
   sfx: {
     damage: 'summonerHurt',
-    death: 'summonerDeath'
+    death: 'summonerDeath',
   },
   unitProps: {
     healthMax: 180,
@@ -35,7 +35,7 @@ const unit: UnitSource = {
     manaMax: 60,
     mana: 40,
     manaPerTurn: 20,
-    bloodColor: 0x852124
+    bloodColor: 0x852124,
   },
   spawnParams: {
     probability: 20,
@@ -52,15 +52,24 @@ const unit: UnitSource = {
             [0xff00e4, 0x852124], //eyes
             [0x90768e, 0xaeaeae], // arm shade
           ],
-          0.1
-        )
+          0.1,
+        ),
       );
     }
   },
   action: async (unit: Unit.IUnit, attackTargets, underworld: Underworld) => {
     // attackTargets has irregular usage for this unit, see explanation in this file's getUnitAttackTargets()
-    await summonerAction(unit, !!attackTargets.length, underworld, { closeUnit: allUnits[MANA_VAMPIRE_ID], farUnit: allUnits[DARK_PRIEST_ID] }, 1);
+    await summonerAction(
+      unit,
+      !!attackTargets.length,
+      underworld,
+      {
+        closeUnit: allUnits[MANA_VAMPIRE_ID],
+        farUnit: allUnits[DARK_PRIEST_ID],
+      },
+      1,
+    );
   },
-  getUnitAttackTargets: summonerGetUnitAttackTargets
+  getUnitAttackTargets: summonerGetUnitAttackTargets,
 };
 export default unit;
