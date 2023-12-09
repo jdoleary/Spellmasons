@@ -33,7 +33,6 @@ export function sendChatHandler(overworld: Overworld, e: KeyboardEvent) {
       // send chat to multiplayer
       overworld.pie.sendData({
         type: MESSAGE_TYPES.CHAT_SENT,
-        chatname,
         message,
         chattercolor,
       });
@@ -47,11 +46,10 @@ export function sendChatHandler(overworld: Overworld, e: KeyboardEvent) {
 export function ReceiveMessage(
   chatter: String,
   message: String,
-  chattercolor: number,
+  chattercolor: String,
 ) {
-  var chatHex = hexToString(lightenColor(chattercolor, 0.3));
   if (elChatinner) {
-    elChatinner.innerHTML += `<div class="message-speaker" style="color: ${chatHex};">${chatter}:
+    elChatinner.innerHTML += `<div class="message-speaker" style="color: ${chattercolor};">${chatter}:
     <span class="text" style="color: white;">${message}</span></div> <br>`;
   }
 }
