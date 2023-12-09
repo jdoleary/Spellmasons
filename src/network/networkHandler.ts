@@ -59,10 +59,10 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
   }
   switch (type) {
     case MESSAGE_TYPES.CHAT_SENT:
-      const { message, chattercolor } = payload;
+      const { message } = payload;
       const chatter = underworld.players.find((p) => p.clientId === fromClient);
-      if (chatter && chatter != globalThis.player) {
-        Chat.ReceiveMessage(chatter.name, message, chattercolor);
+      if (chatter) {
+        Chat.ReceiveMessage(chatter, message);
       }
       break;
     case MESSAGE_TYPES.PLAYER_THINKING:

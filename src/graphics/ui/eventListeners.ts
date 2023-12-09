@@ -126,192 +126,190 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
   if (document.activeElement === Chat.elChatinput) {
     return;
   }
-  else {
-    document.body.classList.toggle('showChat', false);
-    switch (keyCodeMapping) {
-      case 'Escape':
-        // close admin menu
-        const elAdminMenuHolder = document.getElementById('admin-menu-holder');
-        if (elAdminMenuHolder) {
-          elAdminMenuHolder.remove();
-          return;
-        }
+  document.body.classList.toggle('showChat', false);
+  switch (keyCodeMapping) {
+    case 'Escape':
+      // close admin menu
+      const elAdminMenuHolder = document.getElementById('admin-menu-holder');
+      if (elAdminMenuHolder) {
+        elAdminMenuHolder.remove();
+        return;
+      }
 
-        const thereWasInventoryOpen = document.body?.classList.contains(CardUI.openInvClass);
-        // force close inventory
-        CardUI.toggleInventory(undefined, false, underworld);
-        if (thereWasInventoryOpen) {
-          // If inventory was open, don't clear selected cards
-          return;
-        }
-        // Only allow clearing tooltip if the player is already spawned,
-        // if they are still spawning, the Escape key should toggle the menu
-        // rather than clearing a potential tooltip
-        const thereWasTooltipActive = globalThis.player?.isSpawned ? clearTooltipSelection() : false;
-        const thereWereCardsSelected = CardUI.areAnyCardsSelected();
-        CardUI.clearSelectedCards(underworld);
-        // Rerun predictions after selected cards are cleared because the spell changed
-        if (underworld) {
-          runPredictions(underworld);
-        }
-        if (!thereWasTooltipActive && !thereWereCardsSelected && !thereWasInventoryOpen) {
-          // Otherwise finally toggle menu
-          toggleMenu();
-        }
-        break;
-      case 'openChat':
-        document.body.classList.toggle('showChat', true);
-        Chat.focusChat();
-        break;
-      case 'openInventory':
-        CardUI.toggleInventory(undefined, undefined, underworld);
-        break;
-      case 'dequeueSpell':
-        CardUI.deselectLastCard(underworld);
-        break;
-      case 'showWalkRope':
-        keyDown.showWalkRope = true;
-        // When the walkRope turns on clear the spell effect projection
-        // so the user can focus on the information that the walk rope is 
-        // communicating
-        clearSpellEffectProjection(underworld);
-        break;
-      // Camera movement
-      case 'cameraUp':
-        keyDown.cameraUp = true;
-        cameraAutoFollow(false);
-        break;
-      case 'cameraLeft':
-        keyDown.cameraLeft = true;
-        cameraAutoFollow(false);
-        break;
-      case 'cameraDown':
-        keyDown.cameraDown = true;
-        cameraAutoFollow(false);
-        break;
-      case 'cameraRight':
-        keyDown.cameraRight = true;
-        cameraAutoFollow(false);
-        break;
-      case 'ping':
+      const thereWasInventoryOpen = document.body?.classList.contains(CardUI.openInvClass);
+      // force close inventory
+      CardUI.toggleInventory(undefined, false, underworld);
+      if (thereWasInventoryOpen) {
+        // If inventory was open, don't clear selected cards
+        return;
+      }
+      // Only allow clearing tooltip if the player is already spawned,
+      // if they are still spawning, the Escape key should toggle the menu
+      // rather than clearing a potential tooltip
+      const thereWasTooltipActive = globalThis.player?.isSpawned ? clearTooltipSelection() : false;
+      const thereWereCardsSelected = CardUI.areAnyCardsSelected();
+      CardUI.clearSelectedCards(underworld);
+      // Rerun predictions after selected cards are cleared because the spell changed
+      if (underworld) {
+        runPredictions(underworld);
+      }
+      if (!thereWasTooltipActive && !thereWereCardsSelected && !thereWasInventoryOpen) {
+        // Otherwise finally toggle menu
+        toggleMenu();
+      }
+      break;
+    case 'openChat':
+      document.body.classList.toggle('showChat', true);
+      Chat.focusChat(event);
+      break;
+    case 'openInventory':
+      CardUI.toggleInventory(undefined, undefined, underworld);
+      break;
+    case 'dequeueSpell':
+      CardUI.deselectLastCard(underworld);
+      break;
+    case 'showWalkRope':
+      keyDown.showWalkRope = true;
+      // When the walkRope turns on clear the spell effect projection
+      // so the user can focus on the information that the walk rope is 
+      // communicating
+      clearSpellEffectProjection(underworld);
+      break;
+    // Camera movement
+    case 'cameraUp':
+      keyDown.cameraUp = true;
+      cameraAutoFollow(false);
+      break;
+    case 'cameraLeft':
+      keyDown.cameraLeft = true;
+      cameraAutoFollow(false);
+      break;
+    case 'cameraDown':
+      keyDown.cameraDown = true;
+      cameraAutoFollow(false);
+      break;
+    case 'cameraRight':
+      keyDown.cameraRight = true;
+      cameraAutoFollow(false);
+      break;
+    case 'ping':
+      const mouseTarget = underworld.getMousePos();
+      overworld.pie.sendData({
+        type: MESSAGE_TYPES.PING,
+        x: mouseTarget.x,
+        y: mouseTarget.y
+      });
+      break;
+    case 'recenterCamera':
+      if (globalThis.player?.isSpawned) {
+
+        // Make camera follow player unit 
+        cameraAutoFollow(true);
+        tutorialCompleteTask('recenterCamera');
+      } else {
         const mouseTarget = underworld.getMousePos();
-        overworld.pie.sendData({
-          type: MESSAGE_TYPES.PING,
-          x: mouseTarget.x,
-          y: mouseTarget.y
-        });
-        break;
-      case 'recenterCamera':
-        if (globalThis.player?.isSpawned) {
-
-          // Make camera follow player unit 
-          cameraAutoFollow(true);
-          tutorialCompleteTask('recenterCamera');
-        } else {
-          const mouseTarget = underworld.getMousePos();
-          floatingText({
-            coords: mouseTarget,
-            text: 'You must spawn first'
-          })
-          playSFXKey('deny');
-        }
-        break;
-      case 'endTurn':
-        underworld.endMyTurnButtonHandler();
-        break;
-      case 'spell1':
-        CardUI.selectCardByIndex(0, CardUI.elCardHand);
-        break;
-      case 'spell2':
-        CardUI.selectCardByIndex(1, CardUI.elCardHand);
-        break;
-      case 'spell3':
-        CardUI.selectCardByIndex(2, CardUI.elCardHand);
-        break;
-      case 'spell4':
-        CardUI.selectCardByIndex(3, CardUI.elCardHand);
-        break;
-      case 'spell5':
-        CardUI.selectCardByIndex(4, CardUI.elCardHand);
-        break;
-      case 'spell6':
-        CardUI.selectCardByIndex(5, CardUI.elCardHand);
-        break;
-      case 'spell7':
-        CardUI.selectCardByIndex(6, CardUI.elCardHand);
-        break;
-      case 'spell8':
-        CardUI.selectCardByIndex(7, CardUI.elCardHand);
-        break;
-      case 'spell9':
-        CardUI.selectCardByIndex(8, CardUI.elCardHand);
-        break;
-      case 'spellLeft1':
-        CardUI.selectCardByIndex(0, CardUI.elFloatingCardHolderLeft);
-        break;
-      case 'spellLeft2':
-        CardUI.selectCardByIndex(1, CardUI.elFloatingCardHolderLeft);
-        break;
-      case 'spellLeft3':
-        CardUI.selectCardByIndex(2, CardUI.elFloatingCardHolderLeft);
-        break;
-      case 'spellLeft4':
-        CardUI.selectCardByIndex(3, CardUI.elFloatingCardHolderLeft);
-        break;
-      case 'spellLeft5':
-        CardUI.selectCardByIndex(4, CardUI.elFloatingCardHolderLeft);
-        break;
-      case 'spellLeft6':
-        CardUI.selectCardByIndex(5, CardUI.elFloatingCardHolderLeft);
-        break;
-      case 'spellLeft7':
-        CardUI.selectCardByIndex(6, CardUI.elFloatingCardHolderLeft);
-        break;
-      case 'spellLeft8':
-        CardUI.selectCardByIndex(7, CardUI.elFloatingCardHolderLeft);
-        break;
-      case 'spellLeft9':
-        CardUI.selectCardByIndex(8, CardUI.elFloatingCardHolderLeft);
-        break;
-      case 'spellRight1':
-        CardUI.selectCardByIndex(0, CardUI.elFloatingCardHolderRight);
-        break;
-      case 'spellRight2':
-        CardUI.selectCardByIndex(1, CardUI.elFloatingCardHolderRight);
-        break;
-      case 'spellRight3':
-        CardUI.selectCardByIndex(2, CardUI.elFloatingCardHolderRight);
-        break;
-      case 'spellRight4':
-        CardUI.selectCardByIndex(3, CardUI.elFloatingCardHolderRight);
-        break;
-      case 'spellRight5':
-        CardUI.selectCardByIndex(4, CardUI.elFloatingCardHolderRight);
-        break;
-      case 'spellRight6':
-        CardUI.selectCardByIndex(5, CardUI.elFloatingCardHolderRight);
-        break;
-      case 'spellRight7':
-        CardUI.selectCardByIndex(6, CardUI.elFloatingCardHolderRight);
-        break;
-      case 'spellRight8':
-        CardUI.selectCardByIndex(7, CardUI.elFloatingCardHolderRight);
-        break;
-      case 'spellRight9':
-        CardUI.selectCardByIndex(8, CardUI.elFloatingCardHolderRight);
-        break;
-      case 'touchPadMoveCharacter':
-        // This key makes it easier for players who are using a touchpad to move
-        // per: https://steamcommunity.com/app/1618380/discussions/0/3810656323972884104/
-        if (overworld.underworld) {
-          globalThis.setRMBDown?.(true, overworld.underworld);
-        } else {
-          console.warn('Cannot move character, no underworld');
-        }
-        break;
-      default:
-        console.log('Input: code', keyCodeMapping, 'not handled');
-    }
+        floatingText({
+          coords: mouseTarget,
+          text: 'You must spawn first'
+        })
+        playSFXKey('deny');
+      }
+      break;
+    case 'endTurn':
+      underworld.endMyTurnButtonHandler();
+      break;
+    case 'spell1':
+      CardUI.selectCardByIndex(0, CardUI.elCardHand);
+      break;
+    case 'spell2':
+      CardUI.selectCardByIndex(1, CardUI.elCardHand);
+      break;
+    case 'spell3':
+      CardUI.selectCardByIndex(2, CardUI.elCardHand);
+      break;
+    case 'spell4':
+      CardUI.selectCardByIndex(3, CardUI.elCardHand);
+      break;
+    case 'spell5':
+      CardUI.selectCardByIndex(4, CardUI.elCardHand);
+      break;
+    case 'spell6':
+      CardUI.selectCardByIndex(5, CardUI.elCardHand);
+      break;
+    case 'spell7':
+      CardUI.selectCardByIndex(6, CardUI.elCardHand);
+      break;
+    case 'spell8':
+      CardUI.selectCardByIndex(7, CardUI.elCardHand);
+      break;
+    case 'spell9':
+      CardUI.selectCardByIndex(8, CardUI.elCardHand);
+      break;
+    case 'spellLeft1':
+      CardUI.selectCardByIndex(0, CardUI.elFloatingCardHolderLeft);
+      break;
+    case 'spellLeft2':
+      CardUI.selectCardByIndex(1, CardUI.elFloatingCardHolderLeft);
+      break;
+    case 'spellLeft3':
+      CardUI.selectCardByIndex(2, CardUI.elFloatingCardHolderLeft);
+      break;
+    case 'spellLeft4':
+      CardUI.selectCardByIndex(3, CardUI.elFloatingCardHolderLeft);
+      break;
+    case 'spellLeft5':
+      CardUI.selectCardByIndex(4, CardUI.elFloatingCardHolderLeft);
+      break;
+    case 'spellLeft6':
+      CardUI.selectCardByIndex(5, CardUI.elFloatingCardHolderLeft);
+      break;
+    case 'spellLeft7':
+      CardUI.selectCardByIndex(6, CardUI.elFloatingCardHolderLeft);
+      break;
+    case 'spellLeft8':
+      CardUI.selectCardByIndex(7, CardUI.elFloatingCardHolderLeft);
+      break;
+    case 'spellLeft9':
+      CardUI.selectCardByIndex(8, CardUI.elFloatingCardHolderLeft);
+      break;
+    case 'spellRight1':
+      CardUI.selectCardByIndex(0, CardUI.elFloatingCardHolderRight);
+      break;
+    case 'spellRight2':
+      CardUI.selectCardByIndex(1, CardUI.elFloatingCardHolderRight);
+      break;
+    case 'spellRight3':
+      CardUI.selectCardByIndex(2, CardUI.elFloatingCardHolderRight);
+      break;
+    case 'spellRight4':
+      CardUI.selectCardByIndex(3, CardUI.elFloatingCardHolderRight);
+      break;
+    case 'spellRight5':
+      CardUI.selectCardByIndex(4, CardUI.elFloatingCardHolderRight);
+      break;
+    case 'spellRight6':
+      CardUI.selectCardByIndex(5, CardUI.elFloatingCardHolderRight);
+      break;
+    case 'spellRight7':
+      CardUI.selectCardByIndex(6, CardUI.elFloatingCardHolderRight);
+      break;
+    case 'spellRight8':
+      CardUI.selectCardByIndex(7, CardUI.elFloatingCardHolderRight);
+      break;
+    case 'spellRight9':
+      CardUI.selectCardByIndex(8, CardUI.elFloatingCardHolderRight);
+      break;
+    case 'touchPadMoveCharacter':
+      // This key makes it easier for players who are using a touchpad to move
+      // per: https://steamcommunity.com/app/1618380/discussions/0/3810656323972884104/
+      if (overworld.underworld) {
+        globalThis.setRMBDown?.(true, overworld.underworld);
+      } else {
+        console.warn('Cannot move character, no underworld');
+      }
+      break;
+    default:
+      console.log('Input: code', keyCodeMapping, 'not handled');
   }
 }
 
@@ -658,6 +656,8 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
     return;
   }
   const mousePos = underworld.getMousePos();
+  //hide chat if its active
+  document.body.classList.toggle('showChat', false);
 
   if (isOutOfBounds(mousePos, underworld)) {
     // Disallow click out of bounds
