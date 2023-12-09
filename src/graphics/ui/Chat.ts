@@ -18,7 +18,7 @@ export function sendChatHandler(overworld: Overworld, e: KeyboardEvent) {
       var chatname = 'Unknown'; // name of chatter
       var chattercolor = hexToString(playerNoColor);
       var message; // input
-      var timestamp; // TODO: Include time?
+      // var timestamp;  TODO: Include time?
       if (globalThis.player?.name) {
         chatname = globalThis.player.name;
         chattercolor = globalThis.player?.color

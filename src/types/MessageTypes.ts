@@ -37,6 +37,6 @@ export enum MESSAGE_TYPES {
   SPEND_STAT_POINT,
   FORCE_TRIGGER_PICKUP,
   PREVENT_IDLE_TIMEOUT,
-  CHAT_TYPING,
+  // Could add typing indicator in future
   CHAT_SENT,
 }
