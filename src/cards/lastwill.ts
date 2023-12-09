@@ -12,23 +12,13 @@ import { getOrInitModifier } from './util';
 
 export const id = 'Last Will';
 const imageName = 'unknown.png';
-function add(
-  unit: IUnit,
-  underworld: Underworld,
-  prediction: boolean,
-  quantity: number,
-) {
-  const modifier = getOrInitModifier(
-    unit,
-    id,
-    { isCurse: false, quantity, persistBetweenLevels: false },
-    () => {
-      // Add event
-      if (!unit.onDeathEvents.includes(id)) {
-        unit.onDeathEvents.push(id);
-      }
-    },
-  );
+function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number) {
+  const modifier = getOrInitModifier(unit, id, { isCurse: false, quantity, persistBetweenLevels: false }, () => {
+    // Add event
+    if (!unit.onDeathEvents.includes(id)) {
+      unit.onDeathEvents.push(id);
+    }
+  });
 }
 function remove(unit: IUnit, underworld: Underworld) {
   if (unit.image) {
@@ -50,7 +40,7 @@ const spell: Spell = {
     description: 'spell_last_will',
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
-      for (let unit of state.targetedUnits.filter((u) => u.alive)) {
+      for (let unit of state.targetedUnits.filter(u => u.alive)) {
         Unit.addModifier(unit, id, underworld, prediction, quantity);
         if (!prediction) {
           floatingText({ coords: unit, text: `Added ${id}` });
@@ -76,33 +66,25 @@ const spell: Spell = {
     },
   },
   events: {
-    onDeath: async (
-      unit: IUnit,
-      underworld: Underworld,
-      prediction: boolean,
-    ) => {
+    onDeath: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
       // Last Will should not stack for balance reasons
       const quantity = 1;
       // Unique for the unit and for quantity and same across all clients due to turn_number and unit.id
       const seed = seedrandom(`${underworld.turn_number} -${unit.id} `);
       for (let i = 0; i < quantity; i++) {
         const coord = underworld.findValidSpawn(unit, 3, 32);
-        const choice = chooseObjectWithProbability(
-          Pickup.pickups.map((p, index) => {
-            if (p.name == Pickup.CURSED_MANA_POTION) {
-              // Higher probability of returning cursed mana potions with last will
-              return {
-                index,
-                probability: 8,
-              };
-            }
+        const choice = chooseObjectWithProbability(Pickup.pickups.map((p, index) => {
+          if (p.name == Pickup.CURSED_MANA_POTION) {
+            // Higher probability of returning cursed mana potions with last will
             return {
               index,
-              probability: p.name.includes('Potion') ? p.probability : 0,
-            };
-          }),
-          seed,
-        );
+              probability: 8,
+            }
+          }
+          return {
+            index, probability: p.name.includes('Potion') ? p.probability : 0
+          }
+        }), seed);
         if (choice) {
           const { index } = choice;
           if (coord) {
@@ -120,9 +102,11 @@ const spell: Spell = {
           }
         } else {
           console.warn(`Could not choose valid pickup for ${id}`);
+
         }
       }
-    },
-  },
+
+    }
+  }
 };
 export default spell;

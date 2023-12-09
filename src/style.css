@@ -2003,7 +2003,6 @@ body.auto-camera #camera-recenter-tip {
   height: auto;
 }
 
-
 #chatbox-inner {
   min-width: 300px;
   max-width: 300px;
@@ -2018,18 +2017,6 @@ body.auto-camera #camera-recenter-tip {
   position: sticky;
   bottom: 0;
   padding-right: 2px;
-  background-color: lightgray;
-  border: 10px solid;
-  border-image-outset: 0;
-  border-image-repeat: repeat stretch;
-  border-image-slice: 15;
-  border-image-source: url(/ui/ui_border.png);
-  border-image-width: 1;
-  background-clip: padding-box;
-}
-
-#chatinput:focus {
-  outline: none
 }
 
 #chatbox {
@@ -2045,7 +2032,6 @@ body.auto-camera #camera-recenter-tip {
   top: 8px;
   color: white;
 }
-
 
 #chatbox h3 {
   margin: 0;

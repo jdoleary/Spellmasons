@@ -25,22 +25,14 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconFortify.png',
     animationPath: 'spell-effects/spellShield',
-    description: [
-      'spell_fortify',
-      Math.round(DAMGAGE_REDUCTION_PROPORTION * 100).toString(),
-    ],
+    description: ['spell_fortify', Math.round(DAMGAGE_REDUCTION_PROPORTION * 100).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
-      const targets = state.targetedUnits.filter((u) => u.alive);
+      const targets = state.targetedUnits.filter(u => u.alive);
       if (targets.length) {
         let animationPromise = Promise.resolve();
         for (let unit of targets) {
-          animationPromise = Image.addOneOffAnimation(
-            unit,
-            'projectile/priestProjectileHit',
-            {},
-            { loop: false },
-          );
+          animationPromise = Image.addOneOffAnimation(unit, 'projectile/priestProjectileHit', {}, { loop: false });
         }
         playDefaultSpellSFX(card, prediction);
         // We only need to wait for one of these promises, since they all take the same amount of time to complete
@@ -86,20 +78,16 @@ const spell: Spell = {
           let reduceProportion = DAMGAGE_REDUCTION_PROPORTION;
           // Fortify stacks as 50%, 75%, 87.5%, etc...
           for (let i = 1; i < (modifier.quantity || 1); i++) {
-            reduceProportion =
-              reduceProportion +
-              (1 - reduceProportion) * DAMGAGE_REDUCTION_PROPORTION;
+            reduceProportion = reduceProportion + (1 - reduceProportion) * DAMGAGE_REDUCTION_PROPORTION;
           }
-          const adjustedAmount = Math.round(
-            amount * (1.0 - Math.min(1, reduceProportion)),
-          );
+          const adjustedAmount = Math.round(amount * (1.0 - Math.min(1, reduceProportion)));
           if (!prediction) {
             floatingText({
               coords: unit,
               text: 'Fortify reduced damage!',
               style: {
                 fill: 'blue',
-                ...config.PIXI_TEXT_DROP_SHADOW,
+                ...config.PIXI_TEXT_DROP_SHADOW
               },
             });
           }
@@ -113,32 +101,20 @@ const spell: Spell = {
       }
     },
   },
+
 };
 
-function add(
-  unit: Unit.IUnit,
-  _underworld: Underworld,
-  _prediction: boolean,
-  quantity: number = 1,
-) {
-  const modifier = getOrInitModifier(
-    unit,
-    id,
-    { isCurse: false, quantity, persistBetweenLevels: false },
-    () => {
-      // Add event
-      unit.onDamageEvents.push(id);
-      unit.onTurnStartEvents.push(id);
-      // Add subsprite image
-      const animatedFortifySprite = Image.addSubSprite(
-        unit.image,
-        modifierImagePath,
-      );
-      if (animatedFortifySprite) {
-        // Make it blue just so it looks distinct from shield
-        animatedFortifySprite.tint = 0x0000ff;
-      }
-    },
-  );
+function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
+  const modifier = getOrInitModifier(unit, id, { isCurse: false, quantity, persistBetweenLevels: false }, () => {
+    // Add event
+    unit.onDamageEvents.push(id);
+    unit.onTurnStartEvents.push(id);
+    // Add subsprite image
+    const animatedFortifySprite = Image.addSubSprite(unit.image, modifierImagePath);
+    if (animatedFortifySprite) {
+      // Make it blue just so it looks distinct from shield
+      animatedFortifySprite.tint = 0x0000ff;
+    }
+  });
 }
 export default spell;

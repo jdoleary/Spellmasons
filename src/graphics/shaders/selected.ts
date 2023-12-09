@@ -20,14 +20,14 @@ void main(void)
     vTextureCoord = aTextureCoord;
 }`;
 export default function () {
-  if (!globalThis.pixi) {
-    return undefined;
-  }
-  const uniforms = {
-    alpha: 0.0,
-  };
-  return {
-    filter: new globalThis.pixi.Filter(vShader, fShader, uniforms),
-    uniforms,
-  };
+    if (!globalThis.pixi) {
+        return undefined
+    }
+    const uniforms = {
+        alpha: 0.0
+    };
+    return {
+        filter: new globalThis.pixi.Filter(vShader, fShader, uniforms),
+        uniforms
+    };
 }

@@ -1,13 +1,11 @@
 import * as Player from '../../entity/Player';
+import { Overworld } from '../../Overworld';
 import { hexToString, lightenColor } from './colorUtil';
 import { playerNoColor } from './colors';
 import { MESSAGE_TYPES } from '../../types/MessageTypes';
-import { Overworld } from '../../Overworld';
 
 export const elChatbox = document.getElementById('chatbox');
-export const elChatinput = <HTMLInputElement>(
-  document.getElementById('chatinput')
-);
+export const elChatinput = <HTMLInputElement>document.getElementById('chatinput');
 export const elChatinner = document.getElementById('messages');
 var chatTimeout: NodeJS.Timeout;
 var NotificationTime = 5000;
@@ -71,8 +69,8 @@ export function ReceiveMessage(
   }
 }
 
-export function focusChat(event: Event | undefined) {
-  event?.preventDefault();
+export function focusChat() {
+  elChatinput?.classList.toggle('disabled', true) // disable it so the first keypress doesn't go into chat
   elChatinput?.focus();
-  elChatinput.value = ''; // clear chat before sending message
+  elChatinput?.classList.toggle('disabled', false) // enable it again
 }

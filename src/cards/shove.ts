@@ -10,7 +10,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 export const id = 'shove';
 export const velocityStartMagnitude = 50;
-const shoveRange = config.COLLISION_MESH_RADIUS * 2;
+const shoveRange = config.COLLISION_MESH_RADIUS * 2
 const spell: Spell = {
   card: {
     id,
@@ -27,34 +27,19 @@ const spell: Spell = {
       let promises = [];
       const awayFrom = state.casterUnit;
       playDefaultSpellSFX(card, prediction);
-      const targets = getCurrentTargets(state).filter((t) => {
+      const targets = getCurrentTargets(state).filter(t => {
         // Don't allow for shoving self, only allow shoving if within shoveRange
-        return (
-          t !== state.casterUnit && distance(state.casterUnit, t) <= shoveRange
-        );
+        return t !== state.casterUnit && distance(state.casterUnit, t) <= shoveRange;
       });
       if (prediction) {
-        drawUICircle(
-          state.casterUnit,
-          shoveRange,
-          colors.targetBlue,
-          'Shove Range',
-        );
+        drawUICircle(state.casterUnit, shoveRange, colors.targetBlue, 'Shove Range');
       }
       for (let entity of targets) {
-        promises.push(
-          forcePush(
-            entity,
-            awayFrom,
-            velocityStartMagnitude * quantity,
-            underworld,
-            prediction,
-          ),
-        );
+        promises.push(forcePush(entity, awayFrom, velocityStartMagnitude * quantity, underworld, prediction));
       }
       // No targets to cast on. Refund mana
       if (targets.length == 0) {
-        refundLastSpell(state, prediction, 'No Targets close enough to shove');
+        refundLastSpell(state, prediction, 'No Targets close enough to shove')
       }
       await Promise.all(promises);
       return state;

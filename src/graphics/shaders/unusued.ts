@@ -12,6 +12,7 @@
 //     // Make a little transparent just to show that the shader is working
 //     gl_FragColor = vec4(color.rgb * 0.5, color.w);
 
+
 // }`;
 const fragment = `
 varying vec2 vTextureCoord;
@@ -114,17 +115,17 @@ void main(void)
 // }
 // `;
 const filter = function () {
-  if (!globalThis.pixi) {
-    return undefined;
-  }
-  const uniforms = {
-    time: 0.0,
-  };
-  return {
-    filter: new globalThis.pixi.Filter(vertex, fragment, uniforms),
-    uniforms,
-  };
-};
+    if (!globalThis.pixi) {
+        return undefined
+    }
+    const uniforms = {
+        time: 0.0
+    };
+    return {
+        filter: new globalThis.pixi.Filter(vertex, fragment, uniforms),
+        uniforms
+    };
+}
 export default filter;
 // import { Filter } from '@pixi/core';
 // import { Matrix, Point } from '@pixi/math';

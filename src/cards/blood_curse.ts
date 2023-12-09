@@ -11,7 +11,7 @@ import { getOrInitModifier } from './util';
 
 export const id = 'Blood Curse';
 export function hasBloodCurse(unit: IUnit): boolean {
-  return Object.keys(unit.modifiers).some((m) => m === id);
+  return Object.keys(unit.modifiers).some(m => m === id)
 }
 const healthMultiplier = 2;
 function add(unit: IUnit, underworld: Underworld) {
@@ -24,26 +24,23 @@ function add(unit: IUnit, underworld: Underworld) {
     return;
   }
 
-  const modifier = getOrInitModifier(
-    unit,
-    id,
-    { isCurse: true, quantity: 1, persistBetweenLevels: false },
-    () => {
-      // Add event
-      unit.onDamageEvents.push(id);
+  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity: 1, persistBetweenLevels: false }, () => {
+    // Add event
+    unit.onDamageEvents.push(id);
 
-      unit.healthMax *= healthMultiplier;
-      unit.health *= healthMultiplier;
+    unit.healthMax *= healthMultiplier;
+    unit.health *= healthMultiplier;
 
-      // If unit belongs to player
-      const player = underworld.players.find((p) => p.unit == unit);
-      if (player) {
-        addCardToHand(allCards[id], player, underworld);
-      }
-    },
-  );
+    // If unit belongs to player
+    const player = underworld.players.find(p => p.unit == unit)
+    if (player) {
+      addCardToHand(allCards[id], player, underworld);
+    }
+  });
+
 }
 function remove(unit: IUnit, underworld: Underworld) {
+
   unit.health /= healthMultiplier;
   unit.health = Math.round(unit.health);
   unit.healthMax /= healthMultiplier;
@@ -63,7 +60,7 @@ const spell: Spell = {
     description: ['spell_blood_curse'],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
-      for (let unit of state.targetedUnits.filter((u) => u.alive)) {
+      for (let unit of state.targetedUnits.filter(u => u.alive)) {
         Unit.addModifier(unit, id, underworld, prediction);
       }
       return state;
@@ -73,16 +70,10 @@ const spell: Spell = {
     add,
     remove,
     // init is noop; not needed to restore bloodcurse
-    init: () => {},
+    init: () => { },
   },
   events: {
-    onDamage: (
-      unit: IUnit,
-      amount: number,
-      _underworld: Underworld,
-      prediction: boolean,
-      damageDealer?: IUnit,
-    ) => {
+    onDamage: (unit: IUnit, amount: number, _underworld: Underworld, prediction: boolean, damageDealer?: IUnit) => {
       // Takes healing as damage
       if (amount < 0) {
         if (!prediction) {

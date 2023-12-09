@@ -18,7 +18,8 @@ const spell: Spell = {
     Moves the first targeted unit on the client ONLY causing a desync between the server and the client
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
-      if (prediction && globalThis.headless) {
+      if (prediction &&
+        globalThis.headless) {
         return state;
       } else {
         if (state.targetedUnits[0]) {

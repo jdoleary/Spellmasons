@@ -13,7 +13,7 @@ export enum MESSAGE_TYPES {
   CHOOSE_PERK,
   END_TURN,
   // INIT_GAME_STATE is very similar to LOAD_GAME_STATE, in fact, they run identical code
-  // paths.
+  // paths. 
   // LOAD_GAME_STATE is used synchronously for an already initialized game that needs to
   // load to a new state, while INIT_GAME_STATE is processed immediately
   INIT_GAME_STATE,

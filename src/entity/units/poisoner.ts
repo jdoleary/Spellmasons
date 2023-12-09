@@ -22,7 +22,7 @@ const unit: UnitSource = {
     attackRange: 350,
     bloodColor: bloodPoisoner,
     healthMax: 60,
-    manaCostToCast: 15,
+    manaCostToCast: 15
   },
   spawnParams: {
     probability: 15,
@@ -38,14 +38,9 @@ const unit: UnitSource = {
   },
   sfx: {
     damage: 'poisonerHurt',
-    death: 'poisonerDeath',
+    death: 'poisonerDeath'
   },
-  action: async (
-    unit: Unit.IUnit,
-    attackTargets: Unit.IUnit[] | undefined,
-    underworld: Underworld,
-    canAttackTarget: boolean,
-  ) => {
+  action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     const chosenUnit = attackTargets && attackTargets[0];
     if (chosenUnit && canAttackTarget) {
       unit.mana - unit.manaCostToCast;
@@ -58,10 +53,7 @@ const unit: UnitSource = {
           'projectile/poisonerProjectile',
         ).then(async () => {
           // Add projectile hit animation
-          Image.addOneOffAnimation(
-            chosenUnit,
-            'projectile/poisonerProjectileHit',
-          );
+          Image.addOneOffAnimation(chosenUnit, 'projectile/poisonerProjectileHit');
           await underworld.castCards({
             casterCardUsage: {},
             casterUnit: unit,
@@ -72,29 +64,24 @@ const unit: UnitSource = {
             outOfRange: false,
           });
         });
+
       });
     } else {
       if (chosenUnit) {
         const distanceToEnemy = math.distance(unit, chosenUnit);
         // The following is a hacky way to make them not move too close to the enemy
-        unit.stamina = Math.min(
-          unit.stamina,
-          distanceToEnemy - config.COLLISION_MESH_RADIUS,
-        );
+        unit.stamina = Math.min(unit.stamina, distanceToEnemy - config.COLLISION_MESH_RADIUS);
         await Unit.moveTowards(unit, chosenUnit, underworld);
       }
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-    const closestUnit = Unit.findClosestUnitInDifferentFaction(
-      unit,
-      underworld,
-    );
+    const closestUnit = Unit.findClosestUnitInDifferentFaction(unit, underworld);
     if (closestUnit) {
       return [closestUnit];
     } else {
       return [];
     }
-  },
+  }
 };
 export default unit;

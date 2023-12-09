@@ -5,13 +5,7 @@ import { MESSAGE_TYPES } from '../types/MessageTypes';
 import * as Image from '../graphics/Image';
 import floatingText from '../graphics/FloatingText';
 import { getUpgradeByTitle } from '../Upgrade';
-import Underworld, {
-  elUpgradePickerContent,
-  IUnderworldSerializedForSyncronize,
-  LevelData,
-  showUpgradesClassName,
-  turn_phase,
-} from '../Underworld';
+import Underworld, { elUpgradePickerContent, IUnderworldSerializedForSyncronize, LevelData, showUpgradesClassName, turn_phase } from '../Underworld';
 import * as Player from '../entity/Player';
 import * as Doodad from '../entity/Doodad';
 import * as Unit from '../entity/Unit';
@@ -20,8 +14,8 @@ import * as messageQueue from '../messageQueue';
 import * as storage from '../storage';
 import * as config from '../config';
 import * as Cards from '../cards';
-import * as colors from '../graphics/ui/colors';
 import * as Chat from '../graphics/ui/Chat';
+import * as colors from '../graphics/ui/colors';
 import { allUnits } from '../entity/units';
 import { hostGiveClientGameState, typeGuardHostApp } from './networkUtil';
 import { skyBeam } from '../VisualEffects';
@@ -31,27 +25,10 @@ import { triggerAdminCommand } from '../graphics/ui/eventListeners';
 import { clone, Vec2 } from '../jmath/Vec';
 import pingSprite from '../graphics/Ping';
 import { clearLastNonMenuView, setView, View } from '../views';
-import {
-  autoExplain,
-  explain,
-  EXPLAIN_END_TURN,
-  tutorialCompleteTask,
-} from '../graphics/Explain';
-import {
-  cacheBlood,
-  cameraAutoFollow,
-  runCinematicLevelCamera,
-} from '../graphics/PixiUtils';
-import {
-  ensureAllClientsHaveAssociatedPlayers,
-  Overworld,
-  recalculateGameDifficulty,
-} from '../Overworld';
-import {
-  playerCastAnimationColor,
-  playerCastAnimationColorLighter,
-  playerCastAnimationGlow,
-} from '../graphics/ui/colors';
+import { autoExplain, explain, EXPLAIN_END_TURN, tutorialCompleteTask } from '../graphics/Explain';
+import { cacheBlood, cameraAutoFollow, runCinematicLevelCamera } from '../graphics/PixiUtils';
+import { ensureAllClientsHaveAssociatedPlayers, Overworld, recalculateGameDifficulty } from '../Overworld';
+import { playerCastAnimationColor, playerCastAnimationColorLighter, playerCastAnimationGlow } from '../graphics/ui/colors';
 import { lightenColor } from '../graphics/ui/colorUtil';
 import { choosePerk, tryTriggerPerk } from '../Perk';
 import { runPredictions } from '../graphics/PlanningView';
@@ -60,33 +37,16 @@ import { getUniqueSeedString, SeedrandomState } from '../jmath/rand';
 import { setPlayerNameUI } from '../PlayerUtils';
 import { GameMode, isSinglePlayer } from '../types/commonTypes';
 import { recalcPositionForCards } from '../graphics/ui/CardUI';
-import { ReceiveMessage } from '../graphics/ui/Chat';
 
-export const NO_LOG_LIST = [
-  MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT,
-  MESSAGE_TYPES.PING,
-  MESSAGE_TYPES.PLAYER_THINKING,
-  MESSAGE_TYPES.CHAT_SENT,
-];
-export const HANDLE_IMMEDIATELY = [
-  MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT,
-  MESSAGE_TYPES.PING,
-  MESSAGE_TYPES.PLAYER_THINKING,
-  MESSAGE_TYPES.CHAT_SENT,
-];
-export const elInstructions = document.getElementById('instructions') as
-  | HTMLElement
-  | undefined;
+export const NO_LOG_LIST = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
+export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
+export const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
 export function onData(d: OnDataArgs, overworld: Overworld) {
   const { payload, fromClient } = d;
   if (!NO_LOG_LIST.includes(d.payload.type)) {
     // Don't clog up server logs with payloads, leave that for the client which can handle them better
     try {
-      console.log(
-        'Recieved onData:',
-        MESSAGE_TYPES[d.payload.type],
-        globalThis.headless ? '' : JSON.stringify(d),
-      );
+      console.log("Recieved onData:", MESSAGE_TYPES[d.payload.type], globalThis.headless ? '' : JSON.stringify(d))
     } catch (e) {
       console.warn('Prevent error due to Stringify:', e);
     }
@@ -106,23 +66,14 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       }
       break;
     case MESSAGE_TYPES.PLAYER_THINKING:
-      const thinkingPlayer = underworld.players.find(
-        (p) => p.clientId === fromClient,
-      );
+      const thinkingPlayer = underworld.players.find(p => p.clientId === fromClient)
       if (thinkingPlayer && thinkingPlayer != globalThis.player) {
         const thought = underworld.playerThoughts[thinkingPlayer.clientId];
         // Default the currentDrawLocation to target if it doesn't already exist
         // Clear currentDrawLocation if thought contains no cardIds
-        const currentDrawLocation =
-          thought && thought.cardIds.length == 0
-            ? undefined
-            : thought?.currentDrawLocation || payload.target;
+        const currentDrawLocation = thought && thought.cardIds.length == 0 ? undefined : thought?.currentDrawLocation || payload.target
         // When a new thought comes in, reset the lerp value so the currentDrawLocation will smoothly animate to the new target
-        underworld.playerThoughts[thinkingPlayer.clientId] = {
-          ...payload,
-          currentDrawLocation,
-          lerp: 0,
-        };
+        underworld.playerThoughts[thinkingPlayer.clientId] = { ...payload, currentDrawLocation, lerp: 0 };
       }
       break;
     case MESSAGE_TYPES.SET_GAME_MODE:
@@ -144,11 +95,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         }
         console.log('gamemode set to: "', gameMode, '"');
       } else {
-        Jprompt({
-          text: 'Cannot change difficulty for an ongoing game',
-          yesText: 'Okay',
-          forceShow: true,
-        });
+        Jprompt({ text: 'Cannot change difficulty for an ongoing game', yesText: 'Okay', forceShow: true });
       }
       break;
     case MESSAGE_TYPES.SET_MODS:
@@ -164,11 +111,9 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
     case MESSAGE_TYPES.FORCE_TRIGGER_PICKUP:
       {
         const { pickupId, pickupName, unitId, playerClientId } = payload;
-        let pickup = underworld.pickups.find((p) => p.id == pickupId);
-        const unit = underworld.units.find((u) => u.id == unitId);
-        const player = underworld.players.find(
-          (p) => p.clientId == playerClientId,
-        );
+        let pickup = underworld.pickups.find(p => p.id == pickupId);
+        const unit = underworld.units.find(u => u.id == unitId);
+        const player = underworld.players.find(p => p.clientId == playerClientId);
         if (pickup) {
           if (unit) {
             Pickup.triggerPickup(pickup, unit, player, underworld, false);
@@ -188,35 +133,17 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         return;
       }
       const { pickupId, pickupName, unitId, playerClientId } = payload;
-      let pickup = underworld.pickups.find((p) => p.id == pickupId);
-      const unit = underworld.units.find((u) => u.id == unitId);
-      const player = underworld.players.find(
-        (p) => p.clientId == playerClientId,
-      );
+      let pickup = underworld.pickups.find(p => p.id == pickupId);
+      const unit = underworld.units.find(u => u.id == unitId);
+      const player = underworld.players.find(p => p.clientId == playerClientId);
       if (!pickup) {
-        const pickupSource = Pickup.pickups.find((p) => p.name == pickupName);
+        const pickupSource = Pickup.pickups.find(p => p.name == pickupName);
         if (pickupSource) {
-          console.log(
-            'pickups:',
-            underworld.pickups.map((p) => `${p.id},${p.name}`),
-            'pickupId:',
-            pickupId,
-          );
-          console.error(
-            'Attempted to aquire pickup but could not find it in list, creating one to aquire',
-            pickupName,
-          );
-          pickup = Pickup.create(
-            {
-              pos: { x: -1000, y: -1000 },
-              pickupSource,
-              logSource: 'QUEUE_PICKUP_TRIGGER force create',
-            },
-            underworld,
-            false,
-          );
+          console.log('pickups:', underworld.pickups.map(p => `${p.id},${p.name}`), 'pickupId:', pickupId)
+          console.error('Attempted to aquire pickup but could not find it in list, creating one to aquire', pickupName);
+          pickup = Pickup.create({ pos: { x: -1000, y: -1000 }, pickupSource, logSource: 'QUEUE_PICKUP_TRIGGER force create' }, underworld, false);
         } else {
-          console.error(`Pickup source not found for name: ${pickupName}`);
+          console.error(`Pickup source not found for name: ${pickupName}`)
         }
       }
       // note: player is optionally undefined, but pickup and unit are required
@@ -225,59 +152,37 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
           // Place it in the queue, server sees that unit has touched pickup but animations are still happening locally
           // and the unit hasn't collided with the pickup yet, placing it in the queue will allow the unit to pickup
           // the pickup once it touches
-          underworld.aquirePickupQueue.push({
-            pickupId: pickup.id,
-            unitId: unit.id,
-            timeout: Date.now() + 3000,
-            flaggedForRemoval: false,
-          });
+          underworld.aquirePickupQueue.push({ pickupId: pickup.id, unitId: unit.id, timeout: Date.now() + 3000, flaggedForRemoval: false });
         } else {
-          console.log(
-            'units:',
-            underworld.units.map((u) => u.id),
-            'UnitId:',
-            unitId,
-          );
+          console.log('units:', underworld.units.map(u => u.id), 'UnitId:', unitId);
           console.error('Attempted to aquire pickup but could not find unit');
         }
       } else {
-        console.log(
-          'pickups:',
-          underworld.pickups.map((p) => `${p.id},${p.name}`),
-          'pickupId:',
-          pickupId,
-        );
-        console.error(
-          'Attempted to aquire pickup but could not find it in list',
-        );
+        console.log('pickups:', underworld.pickups.map(p => `${p.id},${p.name}`), 'pickupId:', pickupId)
+        console.error('Attempted to aquire pickup but could not find it in list');
       }
       break;
-    case MESSAGE_TYPES.SPEND_STAT_POINT: {
-      const { stat } = payload;
-      if (stat) {
-        const fromPlayer = underworld.players.find(
-          (p) => p.clientId === fromClient,
-        );
-        if (fromPlayer) {
-          underworld.spendStatPoint(stat, fromPlayer);
+    case MESSAGE_TYPES.SPEND_STAT_POINT:
+      {
+        const { stat } = payload;
+        if (stat) {
+          const fromPlayer = underworld.players.find(p => p.clientId === fromClient)
+          if (fromPlayer) {
+            underworld.spendStatPoint(stat, fromPlayer);
+          } else {
+            console.error('SPEND_STAT_POINT, missing fromPlayer', fromClient);
+          }
         } else {
-          console.error('SPEND_STAT_POINT, missing fromPlayer', fromClient);
+          console.error('Missing stat in payload', payload);
         }
-      } else {
-        console.error('Missing stat in payload', payload);
-      }
 
-      break;
-    }
+        break;
+      }
     case MESSAGE_TYPES.PING:
-      pingSprite({
-        coords: payload as Vec2,
-        color: underworld.players.find((p) => p.clientId == d.fromClient)
-          ?.color,
-      });
+      pingSprite({ coords: payload as Vec2, color: underworld.players.find(p => p.clientId == d.fromClient)?.color });
       break;
     case MESSAGE_TYPES.INIT_GAME_STATE:
-      // This is executed on all clients, even ones that ignore the
+      // This is executed on all clients, even ones that ignore the 
       // message due to logic below because if one client updates
       // the seed state, they all must in order to stay in sync
       // --
@@ -293,13 +198,10 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       // load the game state
       // INIT_GAME_STATE is only to be handled by clients who just
       // connected to the room and need the first transfer of game state
-      // This is why it is okay that updating the game state happens
+      // This is why it is okay that updating the game state happens 
       // asynchronously.
       // or in the case of allowForceInitGameState, clients who have reconnected
-      if (
-        underworld.allowForceInitGameState ||
-        underworld.lastLevelCreated === undefined
-      ) {
+      if (underworld.allowForceInitGameState || underworld.lastLevelCreated === undefined) {
         underworld.allowForceInitGameState = false;
         // If a client loads a full game state, they should be fully synced
         // so clear the onDataQueue to prevent old messages from being processed
@@ -307,26 +209,16 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         onDataQueueContainer.queue = [d];
         processNextInQueueIfReady(overworld);
       } else {
-        console.log(
-          'Ignoring INIT_GAME_STATE because underworld has already been initialized.',
-        );
+        console.log('Ignoring INIT_GAME_STATE because underworld has already been initialized.');
       }
       break;
     case MESSAGE_TYPES.CHOOSE_PERK:
       {
-        console.log(
-          'onData: CHOOSE_PERK',
-          `${fromClient}: ${JSON.stringify(payload?.perk || {})}`,
-        );
+        console.log('onData: CHOOSE_PERK', `${fromClient}: ${JSON.stringify(payload?.perk || {})}`);
         if (payload.curse) {
-          const player = underworld.players.find(
-            (p) => p.clientId == fromClient,
-          );
+          const player = underworld.players.find(p => p.clientId == fromClient);
           if (player) {
-            player.spellState[payload.curse] = {
-              disabledUntilLevel:
-                underworld.levelIndex + (payload.disableFor || 2),
-            };
+            player.spellState[payload.curse] = { disabledUntilLevel: underworld.levelIndex + (payload.disableFor || 2) };
             player.cursesChosen++;
             // Reset last level card counts
             for (let spellStateInst of Object.values(player.spellState || {})) {
@@ -338,59 +230,43 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
               recalcPositionForCards(player, underworld);
             }
           } else {
-            console.error('Could not find player to give curse perk.');
+            console.error('Could not find player to give curse perk.')
           }
           // Clear upgrades
           document.body?.classList.toggle(showUpgradesClassName, false);
           // There may be upgrades left to choose
           underworld.showUpgrades();
         } else if (payload.statCalamity) {
-          const player = underworld.players.find(
-            (p) => p.clientId == fromClient,
-          );
+          const player = underworld.players.find(p => p.clientId == fromClient);
           if (player) {
             player.cursesChosen++;
             underworld.statCalamities.push(payload.statCalamity);
             // Apply the newly chosen calamity to current units
             for (let unit of underworld.units) {
-              Unit.adjustUnitStatsByUnderworldCalamity(
-                unit,
-                payload.statCalamity,
-              );
+              Unit.adjustUnitStatsByUnderworldCalamity(unit, payload.statCalamity);
             }
           } else {
-            console.error('Could not find player to give curse perk.');
+            console.error('Could not find player to give curse perk.')
           }
           // Clear upgrades
           document.body?.classList.toggle(showUpgradesClassName, false);
           // There may be upgrades left to choose
           underworld.showUpgrades();
         } else {
-          // Get player of the client that sent the message
-          const fromPlayer = underworld.players.find(
-            (p) => p.clientId === fromClient,
-          );
+          // Get player of the client that sent the message 
+          const fromPlayer = underworld.players.find((p) => p.clientId === fromClient);
           if (fromPlayer) {
             choosePerk(payload.perk, fromPlayer, underworld);
           } else {
-            console.error(
-              'Cannot CHOOSE_PERK, fromPlayer is undefined',
-              fromClient,
-              fromPlayer,
-            );
+            console.error('Cannot CHOOSE_PERK, fromPlayer is undefined', fromClient, fromPlayer)
           }
         }
       }
       break;
     case MESSAGE_TYPES.CHOOSE_UPGRADE:
-      console.log(
-        'onData: CHOOSE_UPGRADE',
-        `${fromClient}: ${payload?.upgrade?.title}`,
-      );
-      // Get player of the client that sent the message
-      const fromPlayer = underworld.players.find(
-        (p) => p.clientId === fromClient,
-      );
+      console.log('onData: CHOOSE_UPGRADE', `${fromClient}: ${payload?.upgrade?.title}`);
+      // Get player of the client that sent the message 
+      const fromPlayer = underworld.players.find((p) => p.clientId === fromClient);
       if (fromPlayer) {
         const upgrade = getUpgradeByTitle(payload.upgrade.title);
         if (upgrade) {
@@ -405,18 +281,14 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
           );
         }
       } else {
-        console.error(
-          'Cannot CHOOSE_UPGRADE, fromPlayer is undefined',
-          fromClient,
-          fromPlayer,
-        );
+        console.error('Cannot CHOOSE_UPGRADE, fromPlayer is undefined', fromClient, fromPlayer)
       }
       break;
     case MESSAGE_TYPES.LOAD_GAME_STATE:
       // If a client loads a full game state, they should be fully synced
       // so clear the onDataQueue to prevent old messages from being processed
       onDataQueueContainer.queue = [d];
-      // The LOAD_GAME_STATE message is tricky, it is an
+      // The LOAD_GAME_STATE message is tricky, it is an 
       // exception to the normal pattern used
       // with the queue, but it should still be processed sequentially to prevent
       // weird race conditions.
@@ -432,9 +304,9 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       // MESSAGE_TYPES in HANDLE_IMMEDIATELY are not to be queued and can be processed
       // as soon as they are received.
       if (Object.values(HANDLE_IMMEDIATELY).includes(d.payload.type)) {
-        handleOnDataMessage(d, overworld).catch((e) => {
+        handleOnDataMessage(d, overworld).catch(e => {
           console.error('handled: Error in immediate handleOnDataMessage:', e);
-        });
+        })
       } else {
         // All other messages should be handled one at a time to prevent desync
         handleOnDataMessageSyncronously(d, overworld);
@@ -442,32 +314,17 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       break;
   }
 }
-function joinGameAsPlayer(
-  asPlayerClientId: string,
-  overworld: Overworld,
-  fromClient: string,
-) {
+function joinGameAsPlayer(asPlayerClientId: string, overworld: Overworld, fromClient: string) {
   const underworld = overworld.underworld;
   if (underworld) {
-    const asPlayer = underworld.players.find(
-      (p) => p.clientId == asPlayerClientId,
-    );
-    const oldFromPlayer = underworld.players.find(
-      (p) => p.clientId == fromClient,
-    );
+    const asPlayer = underworld.players.find(p => p.clientId == asPlayerClientId);
+    const oldFromPlayer = underworld.players.find(p => p.clientId == fromClient);
     if (fromClient && asPlayer) {
       if (asPlayer.clientConnected) {
-        console.error(
-          'Cannot join as player that is controlled by another client',
-        );
+        console.error('Cannot join as player that is controlled by another client')
         return;
       }
-      console.log(
-        'JOIN_GAME_AS_PLAYER: Reassigning player',
-        asPlayer.clientId,
-        'to',
-        fromClient,
-      );
+      console.log('JOIN_GAME_AS_PLAYER: Reassigning player', asPlayer.clientId, 'to', fromClient);
       const oldAsPlayerClientId = asPlayer.clientId;
       asPlayer.clientId = fromClient;
       // Ensure their turn doesn't get skipped
@@ -479,28 +336,21 @@ function joinGameAsPlayer(
         const isConnected = overworld.clients.includes(oldFromPlayer.clientId);
         oldFromPlayer.clientConnected = isConnected;
         // Delete old player if just created
-        if (
-          !oldFromPlayer.clientConnected &&
-          oldFromPlayer.inventory.length == 0
-        ) {
-          underworld.players = underworld.players.filter(
-            (p) => p !== oldFromPlayer,
-          );
+        if (!oldFromPlayer.clientConnected && oldFromPlayer.inventory.length == 0) {
+          underworld.players = underworld.players.filter(p => p !== oldFromPlayer);
         } else {
-          console.error(
-            'Unexpected, joinGameAsPlayer could not delete oldPlayer',
-          );
+          console.error('Unexpected, joinGameAsPlayer could not delete oldPlayer')
         }
       } else {
-        console.error(
-          'Unexpected, joinGameAsPlayer: oldFromPlayer does not exist',
-        );
+        console.error('Unexpected, joinGameAsPlayer: oldFromPlayer does not exist')
       }
 
-      const players = underworld.players.map(Player.serialize);
+
+      const players = underworld.players.map(Player.serialize)
       underworld.syncPlayers(players);
     }
   }
+
 }
 let onDataQueueContainer = messageQueue.makeContainer<OnDataArgs>();
 // Waits until a message is done before it will continue to process more messages that come through
@@ -512,31 +362,12 @@ function handleOnDataMessageSyncronously(d: OnDataArgs, overworld: Overworld) {
   // because it's unusual for the queue to get this large
   const arbitraryQueueStuckLimit = 10;
   if (onDataQueueContainer.queue.length > arbitraryQueueStuckLimit) {
-    const cachedQueue = JSON.stringify(
-      onDataQueueContainer.queue.slice(0, arbitraryQueueStuckLimit),
-    );
+    const cachedQueue = JSON.stringify(onDataQueueContainer.queue.slice(0, arbitraryQueueStuckLimit));
     setTimeout(() => {
-      if (
-        cachedQueue ==
-        JSON.stringify(
-          onDataQueueContainer.queue.slice(0, arbitraryQueueStuckLimit),
-        )
-      ) {
-        console.error(
-          'onData queue: growing unusually large',
-          MESSAGE_TYPES[currentlyProcessingOnDataMessage.payload.type],
-          JSON.stringify(currentlyProcessingOnDataMessage),
-          '\nPayload Types:',
-          onDataQueueContainer.queue.map((x) => MESSAGE_TYPES[x.payload.type]),
-        );
+      if (cachedQueue == JSON.stringify(onDataQueueContainer.queue.slice(0, arbitraryQueueStuckLimit))) {
+        console.error("onData queue: growing unusually large", MESSAGE_TYPES[currentlyProcessingOnDataMessage.payload.type], JSON.stringify(currentlyProcessingOnDataMessage), '\nPayload Types:', onDataQueueContainer.queue.map(x => MESSAGE_TYPES[x.payload.type]));
       } else {
-        console.log(
-          'onData queue: Thought there might be a stuck queue but it resolved itself',
-          cachedQueue,
-          JSON.stringify(
-            onDataQueueContainer.queue.slice(0, arbitraryQueueStuckLimit),
-          ),
-        );
+        console.log('onData queue: Thought there might be a stuck queue but it resolved itself', cachedQueue, JSON.stringify(onDataQueueContainer.queue.slice(0, arbitraryQueueStuckLimit)));
       }
     }, 5000);
   }
@@ -549,26 +380,15 @@ let currentlyProcessingOnDataMessage: any = null;
 export function processNextInQueueIfReady(overworld: Overworld) {
   // If game is ready to process messages, begin processing
   // (if not, they will remain in the queue until the game is ready)
-  messageQueue.processNextInQueue(onDataQueueContainer, (d) =>
-    handleOnDataMessage(d, overworld).catch((e) => {
-      if (e) {
-        console.error(
-          'Handled: error in handleOnDataMessage:',
-          e.message,
-          e.stack,
-        );
-      } else {
-        console.error('Handled: undefined error in handleOnDataMessage');
-      }
-    }),
-  );
+  messageQueue.processNextInQueue(onDataQueueContainer, d => handleOnDataMessage(d, overworld).catch(e => {
+    if (e) {
+      console.error('Handled: error in handleOnDataMessage:', e.message, e.stack);
+    } else {
+      console.error('Handled: undefined error in handleOnDataMessage');
+    }
+  }));
 }
-function logHandleOnDataMessage(
-  type: MESSAGE_TYPES,
-  payload: any,
-  fromClient: string,
-  underworld: Underworld,
-) {
+function logHandleOnDataMessage(type: MESSAGE_TYPES, payload: any, fromClient: string, underworld: Underworld) {
   try {
     if (!NO_LOG_LIST.includes(type)) {
       // Count processed messages (but only those that aren't in the NO_LOG_LIST)
@@ -579,7 +399,7 @@ function logHandleOnDataMessage(
       if (globalThis.headless) {
         switch (type) {
           case MESSAGE_TYPES.SET_PHASE:
-            payloadForLogging = `phase: ${turn_phase[payload.phase]}`;
+            payloadForLogging = `phase: ${turn_phase[payload.phase]}`
             break;
           case MESSAGE_TYPES.SYNC_PLAYERS:
             payloadForLogging = `units: ${payload?.units.length}; players: ${payload?.players.length}`;
@@ -596,23 +416,15 @@ function logHandleOnDataMessage(
         payloadForLogging = payload;
       }
       // Don't clog up server logs with payloads, leave that for the client which can handle them better
-      console.log(
-        'Handle onData',
-        underworld.processedMessageCount,
-        ':',
-        MESSAGE_TYPES[type],
-        payloadForLogging,
-      );
+      console.log("Handle onData", underworld.processedMessageCount, ":", MESSAGE_TYPES[type], payloadForLogging)
     }
   } catch (e) {
     console.error('Error in logging', e);
   }
+
 }
 let lastSpellMessageTime = 0;
-async function handleOnDataMessage(
-  d: OnDataArgs,
-  overworld: Overworld,
-): Promise<any> {
+async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise<any> {
   currentlyProcessingOnDataMessage = d;
   const { payload, fromClient } = d;
   const type: MESSAGE_TYPES = payload.type;
@@ -622,17 +434,15 @@ async function handleOnDataMessage(
     return;
   }
   logHandleOnDataMessage(type, payload, fromClient, underworld);
-  // Get player of the client that sent the message
+  // Get player of the client that sent the message 
   const fromPlayer = underworld.players.find((p) => p.clientId === fromClient);
   switch (type) {
     case MESSAGE_TYPES.CHANGE_CHARACTER:
-      const player = underworld.players.find((p) => p.clientId === fromClient);
+      const player = underworld.players.find(p => p.clientId === fromClient)
       if (player) {
         const userSource = allUnits[payload.unitId];
         if (!userSource) {
-          console.error(
-            'User unit source file not registered, cannot create player',
-          );
+          console.error('User unit source file not registered, cannot create player');
           return undefined;
         }
         player.unit.unitSourceId = payload.unitId;
@@ -640,37 +450,29 @@ async function handleOnDataMessage(
         player.unit.defaultImagePath = userSource.info.image;
         Unit.returnToDefaultSprite(player.unit);
       } else {
-        console.error(
-          'Cannot change character, player not found with id',
-          fromClient,
-        );
+        console.error('Cannot change character, player not found with id', fromClient);
         // TODO: This should request a unit and player sync
       }
       break;
     case MESSAGE_TYPES.REQUEST_SYNC_GAME_STATE:
-      // If host, send sync; if non-host, ignore
+      // If host, send sync; if non-host, ignore 
       if (globalThis.isHost(overworld.pie)) {
-        console.log('Host: Sending game state for REQUEST_SYNC_GAME_STATE');
-        hostGiveClientGameState(
-          fromClient,
-          underworld,
-          underworld.lastLevelCreated,
-          MESSAGE_TYPES.LOAD_GAME_STATE,
-        );
+        console.log('Host: Sending game state for REQUEST_SYNC_GAME_STATE')
+        hostGiveClientGameState(fromClient, underworld, underworld.lastLevelCreated, MESSAGE_TYPES.LOAD_GAME_STATE);
       }
       break;
     case MESSAGE_TYPES.SYNC_PLAYERS:
       {
-        console.log('sync: SYNC_PLAYERS; syncs units and players');
+        console.log('sync: SYNC_PLAYERS; syncs units and players')
         const { units, players, lastUnitId } = payload as {
           // Note: When syncing players, must also sync units
           // because IPlayerSerialized doesn't container a full
           // unit serialized
-          units: Unit.IUnitSerialized[];
+          units: Unit.IUnitSerialized[],
           // Sync data for players
-          players: Player.IPlayerSerialized[];
-          lastUnitId: number;
-        };
+          players: Player.IPlayerSerialized[],
+          lastUnitId: number
+        }
         // Units must be synced before players so that the player's
         // associated unit is available for referencing
         underworld.syncUnits(units);
@@ -678,95 +480,77 @@ async function handleOnDataMessage(
         // Protect against old versions that didn't send lastUnitId with
         // this message
         if (lastUnitId !== undefined) {
-          underworld.lastUnitId = lastUnitId;
+          underworld.lastUnitId = lastUnitId
         }
       }
       break;
-    case MESSAGE_TYPES.SYNC_SOME_STATE: {
-      if (globalThis.headless) {
-        // SYNC_SOME_STATE is only ever sent from headless and doesn't need to be run on headless
+    case MESSAGE_TYPES.SYNC_SOME_STATE:
+      {
+        if (globalThis.headless) {
+          // SYNC_SOME_STATE is only ever sent from headless and doesn't need to be run on headless
+          break;
+        }
+        console.log('sync: SYNC_SOME_STATE; syncs non-player units')
+        const { timeOfLastSpellMessage, units, pickups, lastUnitId, lastPickupId, RNGState } = payload as {
+          // timeOfLastSpellMessage ensures that SYNC_SOME_STATE won't overwrite valid state with old state
+          // if someone a second SPELL message is recieved between this message and it's corresponding SPELL message
+          // Messages don't currently have a unique id so I'm storing d.time which should be good enough
+          timeOfLastSpellMessage: number,
+          // Sync data for units
+          units?: Unit.IUnitSerialized[],
+          // Sync data for pickups
+          pickups?: Pickup.IPickupSerialized[],
+          lastUnitId: number,
+          lastPickupId: number,
+          RNGState: SeedrandomState,
+        }
+        if (timeOfLastSpellMessage !== lastSpellMessageTime) {
+          // Do not sync, state has changed since this sync message was sent
+          console.warn('Discarding SYNC_SOME_STATE message, it is no longer valid');
+          break;
+        }
+        if (RNGState) {
+          underworld.syncronizeRNG(RNGState);
+        }
+
+        if (units) {
+          // Sync all non-player units.  If it syncs player units it will overwrite player movements
+          // that occurred during the cast
+          underworld.syncUnits(units, true);
+        }
+
+        if (pickups) {
+          underworld.syncPickups(pickups);
+        }
+
+        // Syncronize the lastXId so that when a new unit or pickup is created
+        // it will get the same id on both server and client
+        underworld.lastUnitId = lastUnitId;
+        underworld.lastPickupId = lastPickupId;
+
         break;
       }
-      console.log('sync: SYNC_SOME_STATE; syncs non-player units');
-      const {
-        timeOfLastSpellMessage,
-        units,
-        pickups,
-        lastUnitId,
-        lastPickupId,
-        RNGState,
-      } = payload as {
-        // timeOfLastSpellMessage ensures that SYNC_SOME_STATE won't overwrite valid state with old state
-        // if someone a second SPELL message is recieved between this message and it's corresponding SPELL message
-        // Messages don't currently have a unique id so I'm storing d.time which should be good enough
-        timeOfLastSpellMessage: number;
-        // Sync data for units
-        units?: Unit.IUnitSerialized[];
-        // Sync data for pickups
-        pickups?: Pickup.IPickupSerialized[];
-        lastUnitId: number;
-        lastPickupId: number;
-        RNGState: SeedrandomState;
-      };
-      if (timeOfLastSpellMessage !== lastSpellMessageTime) {
-        // Do not sync, state has changed since this sync message was sent
-        console.warn(
-          'Discarding SYNC_SOME_STATE message, it is no longer valid',
-        );
-        break;
-      }
-      if (RNGState) {
-        underworld.syncronizeRNG(RNGState);
-      }
-
-      if (units) {
-        // Sync all non-player units.  If it syncs player units it will overwrite player movements
-        // that occurred during the cast
-        underworld.syncUnits(units, true);
-      }
-
-      if (pickups) {
-        underworld.syncPickups(pickups);
-      }
-
-      // Syncronize the lastXId so that when a new unit or pickup is created
-      // it will get the same id on both server and client
-      underworld.lastUnitId = lastUnitId;
-      underworld.lastPickupId = lastPickupId;
-
-      break;
-    }
     case MESSAGE_TYPES.SET_PHASE:
-      console.log('sync: SET_PHASE; syncs units and players');
-      const {
-        phase,
-        units,
-        players,
-        pickups,
-        lastUnitId,
-        lastPickupId,
-        RNGState,
-      } = payload as {
-        phase: turn_phase;
+      console.log('sync: SET_PHASE; syncs units and players')
+      const { phase, units, players, pickups, lastUnitId, lastPickupId, RNGState } = payload as {
+        phase: turn_phase,
         // Sync data for players
-        players?: Player.IPlayerSerialized[];
+        players?: Player.IPlayerSerialized[],
         // Sync data for units
-        units?: Unit.IUnitSerialized[];
+        units?: Unit.IUnitSerialized[],
         // Sync data for pickups
-        pickups?: Pickup.IPickupSerialized[];
-        lastUnitId: number;
-        lastPickupId: number;
-        RNGState: SeedrandomState;
-      };
+        pickups?: Pickup.IPickupSerialized[],
+        lastUnitId: number,
+        lastPickupId: number,
+        RNGState: SeedrandomState,
+      }
       if (RNGState) {
         underworld.syncronizeRNG(RNGState);
       }
       // Do not set the phase redundantly, this can occur due to tryRestartTurnPhaseLoop
       // being invoked multiple times before the first message is processed.  This is normal.
       if (underworld.turn_phase == phase) {
-        console.debug(
-          `Phase is already set to ${turn_phase[phase]}; Aborting SET_PHASE.`,
-        );
+        console.debug(`Phase is already set to ${turn_phase[phase]}; Aborting SET_PHASE.`);
         return;
       }
 
@@ -795,14 +579,14 @@ async function handleOnDataMessage(
       break;
     case MESSAGE_TYPES.CREATE_LEVEL:
       const { level, gameMode } = payload as {
-        level: LevelData;
-        gameMode?: GameMode;
-      };
+        level: LevelData,
+        gameMode?: GameMode
+      }
       console.log('sync: CREATE_LEVEL: Syncing / Creating level');
       if (underworld) {
         await underworld.createLevel(level, gameMode);
       } else {
-        console.error('Cannot sync level, no underworld exists');
+        console.error('Cannot sync level, no underworld exists')
       }
 
       break;
@@ -825,16 +609,14 @@ async function handleOnDataMessage(
       if (fromPlayer) {
         Player.enterPortal(fromPlayer, underworld);
       } else {
-        console.error(
-          'Recieved ENTER_PORTAL message but "caster" is undefined',
-        );
+        console.error('Recieved ENTER_PORTAL message but "caster" is undefined')
       }
       break;
     case MESSAGE_TYPES.PLAYER_CARDS:
       if (fromPlayer) {
         fromPlayer.cardsInToolbar = payload.cards;
       } else {
-        console.error('No fromPlayer to set card order on');
+        console.error('No fromPlayer to set card order on')
       }
       break;
     case MESSAGE_TYPES.PLAYER_CONFIG:
@@ -849,23 +631,14 @@ async function handleOnDataMessage(
         if (lobbyReady !== undefined) {
           fromPlayer.lobbyReady = lobbyReady;
           // If all connected players are also ready, start the game:
-          const connectedPlayers = underworld.players.filter(
-            (p) => p.clientConnected,
-          );
-          if (
-            connectedPlayers.length > 0 &&
-            connectedPlayers.every((p) => p.lobbyReady)
-          ) {
+          const connectedPlayers = underworld.players.filter(p => p.clientConnected);
+          if (connectedPlayers.length > 0 && connectedPlayers.every(p => p.lobbyReady)) {
             console.log('Lobby: All players are ready, start game.');
             // If loading into a game, tryGameOver so that if the game over modal is up, it will
             // be removed if there are acting players.
             underworld.tryGameOver();
             setView(View.Game);
-            if (
-              globalThis.player &&
-              fromPlayer.clientId == globalThis.player.clientId &&
-              !globalThis.player.isSpawned
-            ) {
+            if (globalThis.player && fromPlayer.clientId == globalThis.player.clientId && !globalThis.player.isSpawned) {
               // Retrigger the cinematic camera since the first time
               // a user joins a game from the lobby, postLevelSetup will
               // already have completed before they enter View.Game, so now
@@ -883,18 +656,13 @@ async function handleOnDataMessage(
         // Improve joining games so that if there is an uncontrolled player with the same name, this client
         // takes over that player.  This allows clients to join saved games and reassume control of
         // a player with their same name automatically even if their cliendID has changed
-        const takeControlOfPlayer = underworld.players.find(
-          (p) => !p.clientConnected && p.name == name,
-        );
+        const takeControlOfPlayer = underworld.players.find(p => !p.clientConnected && p.name == name);
         if (takeControlOfPlayer) {
           joinGameAsPlayer(takeControlOfPlayer.clientId, overworld, fromClient);
         }
         underworld.tryRestartTurnPhaseLoop();
       } else {
-        console.log(
-          'Players: ',
-          underworld.players.map((p) => p.clientId),
-        );
+        console.log('Players: ', underworld.players.map(p => p.clientId))
         console.error('Cannot PLAYER_CONFIG, fromPlayer is undefined.');
       }
       break;
@@ -909,11 +677,7 @@ async function handleOnDataMessage(
           // When player spawns, send their config from storage
           // to the server
           if (globalThis.numberOfHotseatPlayers > 1) {
-            Player.setPlayerRobeColor(
-              fromPlayer,
-              fromPlayer.color,
-              fromPlayer.colorMagic,
-            );
+            Player.setPlayerRobeColor(fromPlayer, fromPlayer.color, fromPlayer.colorMagic);
           } else {
             overworld.pie.sendData({
               type: MESSAGE_TYPES.PLAYER_CONFIG,
@@ -936,20 +700,11 @@ async function handleOnDataMessage(
           Unit.setLocation(fromPlayer.unit, payload);
           // Trigger 'everyLevel' attributePerks
           // now that the player has spawned in at the new level
-          const perkRandomGenerator = seedrandom(
-            getUniqueSeedString(underworld, fromPlayer),
-          );
+          const perkRandomGenerator = seedrandom(getUniqueSeedString(underworld, fromPlayer));
           for (let i = 0; i < fromPlayer.attributePerks.length; i++) {
             const perk = fromPlayer.attributePerks[i];
             if (perk) {
-              tryTriggerPerk(
-                perk,
-                fromPlayer,
-                'everyLevel',
-                perkRandomGenerator,
-                underworld,
-                700 * i,
-              );
+              tryTriggerPerk(perk, fromPlayer, 'everyLevel', perkRandomGenerator, underworld, 700 * i);
             }
           }
           // Detect if player spawns in liquid
@@ -968,21 +723,18 @@ async function handleOnDataMessage(
           // enemies left
           underworld.checkIfShouldSpawnPortal();
         } else {
-          console.error('Cannot spawn player at NaN');
+          console.error('Cannot spawn player at NaN')
         }
         // This check protects against potential bugs where the upgrade screen still hasn't come up
         // by the time the player spawns
-        if (
-          fromPlayer == globalThis.player &&
-          (underworld.upgradesLeftToChoose(globalThis.player) > 0 ||
-            underworld.perksLeftToChoose(globalThis.player) > 0)
-        ) {
+        if (fromPlayer == globalThis.player && (underworld.upgradesLeftToChoose(globalThis.player) > 0 || underworld.perksLeftToChoose(globalThis.player) > 0)) {
           // This can happen if they die and then the ally npc finished the level for them and the unit killed by the ally npc triggers a level up
           // or the first time that they spawn
           underworld.showUpgrades();
         }
+
       } else {
-        console.error('Cannot SPAWN_PLAYER, fromPlayer is undefined.');
+        console.error('Cannot SPAWN_PLAYER, fromPlayer is undefined.')
       }
       Player.syncLobby(underworld);
       underworld.tryRestartTurnPhaseLoop();
@@ -992,12 +744,7 @@ async function handleOnDataMessage(
       // This message is only for the host, it ensures that the player position
       // of the host matches exactly the player position on the player's client
       if (isHost(overworld.pie)) {
-        if (
-          fromPlayer &&
-          fromPlayer.unit &&
-          payload.x !== undefined &&
-          payload.y !== undefined
-        ) {
+        if (fromPlayer && fromPlayer.unit && payload.x !== undefined && payload.y !== undefined) {
           Unit.setLocation(fromPlayer.unit, payload);
         }
       }
@@ -1010,9 +757,7 @@ async function handleOnDataMessage(
       }
       if (underworld.turn_phase == turn_phase.Stalled) {
         // This check shouldn't have to be here but it protects against the game getting stuck in stalled phase
-        console.error(
-          'Game was in Stalled turn_phase when a player sent MESSAGE_TYPES.MOVE_PLAYER.',
-        );
+        console.error('Game was in Stalled turn_phase when a player sent MESSAGE_TYPES.MOVE_PLAYER.');
         underworld.tryRestartTurnPhaseLoop();
       }
       if (fromPlayer) {
@@ -1025,19 +770,12 @@ async function handleOnDataMessage(
           // the local copies of other player's stay in sync with the server and aren't prematurely stopped due
           // to a stamina limitation
           fromPlayer.unit.stamina = 100;
-          const moveTowardsPromise = Unit.moveTowards(
-            fromPlayer.unit,
-            payload,
-            underworld,
-          ).then(() => {
-            if (
-              fromPlayer.unit.path?.points.length &&
-              fromPlayer.unit.stamina == 0
-            ) {
+          const moveTowardsPromise = Unit.moveTowards(fromPlayer.unit, payload, underworld).then(() => {
+            if (fromPlayer.unit.path?.points.length && fromPlayer.unit.stamina == 0) {
               // If they do not reach their destination, notify that they are out of stamina
               floatingText({
                 coords: fromPlayer.unit,
-                text: 'Out of Stamina!',
+                text: 'Out of Stamina!'
               });
               explain(EXPLAIN_END_TURN);
               playSFXKey('deny_stamina');
@@ -1063,9 +801,7 @@ async function handleOnDataMessage(
       if (fromPlayer) {
         if (underworld.turn_phase == turn_phase.Stalled) {
           // This check shouldn't have to be here but it protects against the game getting stuck in stalled phase
-          console.error(
-            'Game was in Stalled turn_phase when a player sent MESSAGE_TYPES.SPELL.',
-          );
+          console.error('Game was in Stalled turn_phase when a player sent MESSAGE_TYPES.SPELL.');
           underworld.tryRestartTurnPhaseLoop();
         }
         await handleSpell(fromPlayer, payload, underworld);
@@ -1078,12 +814,8 @@ async function handleOnDataMessage(
           underworld.pie.sendData({
             type: MESSAGE_TYPES.SYNC_SOME_STATE,
             timeOfLastSpellMessage: lastSpellMessageTime,
-            units: underworld.units
-              .filter((u) => !u.flaggedForRemoval)
-              .map(Unit.serialize),
-            pickups: underworld.pickups
-              .filter((p) => !p.flaggedForRemoval)
-              .map(Pickup.serialize),
+            units: underworld.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
+            pickups: underworld.pickups.filter(p => !p.flaggedForRemoval).map(Pickup.serialize),
             lastUnitId: underworld.lastUnitId,
             lastPickupId: underworld.lastPickupId,
             // the state of the Random Number Generator
@@ -1103,44 +835,33 @@ async function handleOnDataMessage(
       break;
     case MESSAGE_TYPES.ADMIN_COMMAND:
       const { label } = payload;
-      triggerAdminCommand(label, fromClient, payload);
+      triggerAdminCommand(label, fromClient, payload)
       break;
     case MESSAGE_TYPES.ADMIN_CHANGE_STAT:
       const { unitId, stats } = payload;
-      const unit = underworld.units.find((u) => u.id == unitId);
+      const unit = underworld.units.find(u => u.id == unitId);
       if (unit) {
         Object.assign(unit, stats);
       } else {
-        console.error('ADMIN_CHANGE_STAT failed', payload);
+        console.error('ADMIN_CHANGE_STAT failed', payload)
       }
       break;
+
   }
 }
-async function handleLoadGameState(
-  payload: {
-    underworld: IUnderworldSerializedForSyncronize;
-    phase: turn_phase;
-    pickups: IPickupSerialized[];
-    units: Unit.IUnitSerialized[];
-    players: Player.IPlayerSerialized[];
-    doodads: Doodad.IDoodadSerialized[];
-  },
-  overworld: Overworld,
-) {
-  console.log('Setup: Load game state', payload);
-  const {
-    underworld: payloadUnderworld,
-    phase,
-    pickups,
-    units,
-    players,
-    doodads,
-  } = payload;
+async function handleLoadGameState(payload: {
+  underworld: IUnderworldSerializedForSyncronize,
+  phase: turn_phase,
+  pickups: IPickupSerialized[],
+  units: Unit.IUnitSerialized[],
+  players: Player.IPlayerSerialized[],
+  doodads: Doodad.IDoodadSerialized[]
+}, overworld: Overworld) {
+  console.log("Setup: Load game state", payload)
+  const { underworld: payloadUnderworld, phase, pickups, units, players, doodads } = payload
   console.log('Setup: activeMods', payloadUnderworld.activeMods);
   // Sync underworld properties
-  const loadedGameState: IUnderworldSerializedForSyncronize = {
-    ...payloadUnderworld,
-  };
+  const loadedGameState: IUnderworldSerializedForSyncronize = { ...payloadUnderworld };
   const { underworld } = overworld;
   if (!underworld) {
     return console.error('Cannot handleLoadGameState, underworld is undefined');
@@ -1175,8 +896,7 @@ async function handleLoadGameState(
   // simulatingMovePredictions should never be serialized, it is only for a running instance to keep track of if the simulateRunForceMovePredictions is running
   underworld.simulatingMovePredictions = false;
   // backwards compatible for save state that didn't have this:
-  underworld.allyNPCAttemptWinKillSwitch =
-    loadedGameState.allyNPCAttemptWinKillSwitch || 0;
+  underworld.allyNPCAttemptWinKillSwitch = loadedGameState.allyNPCAttemptWinKillSwitch || 0;
 
   // Sync Level.  Must await createLevel since it uses setTimeout to ensure that
   // the DOM can update with the "loading..." message before locking up the CPU with heavy processing.
@@ -1199,30 +919,16 @@ async function handleLoadGameState(
       if (p.flaggedForRemoval) {
         continue;
       }
-      const pickup = Pickup.pickups.find(
-        (pickupSource) => pickupSource.name == p.name,
-      );
+      const pickup = Pickup.pickups.find(pickupSource => pickupSource.name == p.name);
       if (pickup) {
-        const newPickup = Pickup.create(
-          {
-            pos: { x: p.x, y: p.y },
-            pickupSource: pickup,
-            idOverride: p.id,
-            logSource: 'handleLoadGameState',
-          },
-          underworld,
-          false,
-        );
+        const newPickup = Pickup.create({ pos: { x: p.x, y: p.y }, pickupSource: pickup, idOverride: p.id, logSource: 'handleLoadGameState' }, underworld, false);
         if (newPickup) {
           const { image, ...rest } = p;
           // Override pickup properties such as turnsLeftToGrab
           Object.assign(newPickup, rest);
         }
       } else {
-        console.error(
-          'Could not spawn pickup, pickup source missing for imagePath',
-          p.imagePath,
-        );
+        console.error('Could not spawn pickup, pickup source missing for imagePath', p.imagePath);
       }
     }
   }
@@ -1236,10 +942,8 @@ async function handleLoadGameState(
   // Load units
   if (units) {
     // Clean up previous units:
-    underworld.units.forEach((u) => Unit.cleanup(u));
-    underworld.units = units
-      .filter((u) => !u.flaggedForRemoval)
-      .map((u) => Unit.load(u, underworld, false));
+    underworld.units.forEach(u => Unit.cleanup(u));
+    underworld.units = units.filter(u => !u.flaggedForRemoval).map(u => Unit.load(u, underworld, false));
   }
   // Note: Players should sync after units are loaded so
   // that the player.unit reference is synced
@@ -1252,9 +956,7 @@ async function handleLoadGameState(
   for (let p of underworld.players) {
     p.endedTurn = false;
   }
-  underworld.doodads = doodads
-    .map((d) => Doodad.load(d, underworld, false))
-    .flatMap((x) => (x !== undefined ? [x] : []));
+  underworld.doodads = doodads.map(d => Doodad.load(d, underworld, false)).flatMap(x => x !== undefined ? [x] : []);
   // lastUnitId must be synced AFTER all of the units are synced since the synced
   // units are id aware
   underworld.lastUnitId = loadedGameState.lastUnitId;
@@ -1295,22 +997,11 @@ async function handleLoadGameState(
     // that the inventory is filled with the spells it had when saved
     recalcPositionForCards(globalThis.player, underworld);
   }
+
 }
-async function handleSpell(
-  caster: Player.IPlayer,
-  payload: any,
-  underworld: Underworld,
-) {
-  if (
-    typeof payload.x !== 'number' ||
-    typeof payload.y !== 'number' ||
-    typeof payload.casterPositionAtTimeOfCast.x !== 'number' ||
-    typeof payload.casterPositionAtTimeOfCast.y !== 'number'
-  ) {
-    console.error(
-      'Spell is invalid, it must have target and casterPositionAtTimeOfCast',
-      payload,
-    );
+async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Underworld) {
+  if (typeof payload.x !== 'number' || typeof payload.y !== 'number' || typeof payload.casterPositionAtTimeOfCast.x !== 'number' || typeof payload.casterPositionAtTimeOfCast.y !== 'number') {
+    console.error('Spell is invalid, it must have target and casterPositionAtTimeOfCast', payload);
     return;
   }
   // Clear out player thought (and the line that points to it) once they cast
@@ -1327,11 +1018,7 @@ async function handleSpell(
     } else if (payload.cards.length < 6) {
       animationKey = 'playerAttackMedium0';
     }
-    if (
-      ['units/playerBookIn', 'units/playerBookIdle'].includes(
-        caster.unit.image?.sprite.imagePath || '',
-      )
-    ) {
+    if (['units/playerBookIn', 'units/playerBookIdle'].includes(caster.unit.image?.sprite.imagePath || '')) {
       await new Promise<void>((resolve) => {
         if (caster.unit.image) {
           Image.changeSprite(
@@ -1343,30 +1030,22 @@ async function handleSpell(
               loop: false,
               // Play the book close animation a little faster than usual so
               // the player can get on with casting
-              animationSpeed: 0.2,
-            },
+              animationSpeed: 0.2
+            }
           );
-          Image.addOneOffAnimation(
-            caster.unit,
-            'units/playerBookReturnMagic',
-            { doRemoveWhenPrimaryAnimationChanges: true },
-            {
-              loop: false,
-              // Play the book close animation a little faster than usual so
-              // the player can get on with casting
-              animationSpeed: 0.2,
-            },
-          );
+          Image.addOneOffAnimation(caster.unit, 'units/playerBookReturnMagic', { doRemoveWhenPrimaryAnimationChanges: true }, {
+            loop: false,
+            // Play the book close animation a little faster than usual so
+            // the player can get on with casting
+            animationSpeed: 0.2
+          });
         } else {
           resolve();
         }
       });
     }
     if (caster.colorMagic === null) {
-      caster.colorMagic =
-        caster.color !== colors.playerNoColor
-          ? playerCastAnimationColor
-          : caster.color;
+      caster.colorMagic = caster.color !== colors.playerNoColor ? playerCastAnimationColor : caster.color;
     }
     // count cards:
     if (caster.spellState) {
@@ -1379,44 +1058,40 @@ async function handleSpell(
         record.count++;
       }
     }
-    const keyMoment = () =>
-      underworld.castCards({
-        casterCardUsage: caster.cardUsageCounts,
-        casterUnit: caster.unit,
-        casterPositionAtTimeOfCast: payload.casterPositionAtTimeOfCast,
-        cardIds: payload.cards,
-        castLocation: clone(payload),
-        prediction: false,
-        outOfRange: false,
-        magicColor: caster.colorMagic,
-        casterPlayer: caster,
-        initialTargetedUnitId: payload.initialTargetedUnitId,
-        initialTargetedPickupId: payload.initialTargetedPickupId,
-      });
+    const keyMoment = () => underworld.castCards({
+      casterCardUsage: caster.cardUsageCounts,
+      casterUnit: caster.unit,
+      casterPositionAtTimeOfCast: payload.casterPositionAtTimeOfCast,
+      cardIds: payload.cards,
+      castLocation: clone(payload),
+      prediction: false,
+      outOfRange: false,
+      magicColor: caster.colorMagic,
+      casterPlayer: caster,
+      initialTargetedUnitId: payload.initialTargetedUnitId,
+      initialTargetedPickupId: payload.initialTargetedPickupId,
+    });
     const colorMagicMedium = lightenColor(caster.colorMagic, 0.3);
     const colorMagicLight = lightenColor(caster.colorMagic, 0.6);
 
     const statsUnitDeadBeforeCast = underworld.enemiesKilled;
 
     await Unit.playComboAnimation(caster.unit, animationKey, keyMoment, {
-      animationSpeed: 0.2,
-      loop: false,
-      colorReplace: {
+      animationSpeed: 0.2, loop: false, colorReplace: {
         colors: [
           [playerCastAnimationGlow, caster.colorMagic],
           [playerCastAnimationColor, colorMagicMedium],
           [playerCastAnimationColorLighter, colorMagicLight],
         ],
-        epsilon: 0.2,
-      },
+        epsilon: 0.2
+      }
     });
 
     // Sync cards to reflect "cooldown" label on cards in inventory
     recalcPositionForCards(globalThis.player, underworld);
 
     // Record best spell stats
-    const statsUnitsKilledFromCast =
-      underworld.enemiesKilled - statsUnitDeadBeforeCast;
+    const statsUnitsKilledFromCast = underworld.enemiesKilled - statsUnitDeadBeforeCast;
     if (globalThis.player == caster) {
       const { stats } = globalThis.player;
       if (stats) {
@@ -1452,17 +1127,7 @@ async function handleSpell(
 }
 
 export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
-  globalThis.configPlayer = ({
-    color,
-    colorMagic,
-    name,
-    lobbyReady,
-  }: {
-    color?: number;
-    colorMagic?: number;
-    name?: string;
-    lobbyReady?: boolean;
-  }) => {
+  globalThis.configPlayer = ({ color, colorMagic, name, lobbyReady }: { color?: number, colorMagic?: number, name?: string, lobbyReady?: boolean }) => {
     if (color !== undefined) {
       storage.set(storage.STORAGE_ID_PLAYER_COLOR, color);
     }
@@ -1479,21 +1144,16 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       color,
       colorMagic,
       name: capped_name,
-      lobbyReady,
+      lobbyReady
     });
-  };
+  }
 
-  globalThis.getAllSaveFiles = () =>
-    Object.keys(localStorage)
-      .filter((x) => x.startsWith(globalThis.savePrefix))
-      .map((x) => x.substring(globalThis.savePrefix.length));
+
+  globalThis.getAllSaveFiles = () => Object.keys(localStorage).filter(x => x.startsWith(globalThis.savePrefix)).map(x => x.substring(globalThis.savePrefix.length));
 
   // Returns '' if save is successful,
   // otherwise returns error message
-  globalThis.save = async (
-    title: string,
-    forceOverwrite?: boolean,
-  ): Promise<string> => {
+  globalThis.save = async (title: string, forceOverwrite?: boolean): Promise<string> => {
     const { underworld } = overworld;
     if (!underworld) {
       const err = 'Cannot save game, underworld does not exist';
@@ -1501,7 +1161,7 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       return err;
     }
     // Wait till existing forceMoves are complete to save
-    await underworld.awaitForceMoves();
+    await underworld.awaitForceMoves()
     if (underworld.turn_phase != turn_phase.PlayerTurns) {
       globalThis.saveASAP = title;
       return 'Game will be saved at the start of your next turn.';
@@ -1509,31 +1169,26 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
 
     // Prompt overwrite, don't allow for saving multiple saves with the same name
     if (getAllSaveFiles && !forceOverwrite) {
+
       const allSaveFiles = getAllSaveFiles();
       // A safe file key consists of a prefix, a timestamp and a wordTitle, find and compare the word titles
       // the timestamp exists to sort them by recency.
-      const isolateWordsInTitle = (title: string) =>
-        title.split('-').slice(-1)?.[0] || '';
-      const conflictingSaveTitles = allSaveFiles.filter((otherSaveFileKey) => {
+      const isolateWordsInTitle = (title: string) => title.split('-').slice(-1)?.[0] || '';
+      const conflictingSaveTitles = allSaveFiles.filter(otherSaveFileKey => {
         const titleWords = isolateWordsInTitle(otherSaveFileKey);
         return titleWords == isolateWordsInTitle(title);
       });
       if (conflictingSaveTitles.length) {
-        const doOverwrite = await Jprompt({
-          text: 'There is a previous save file with this name, are you sure you want to overwrite it?',
-          yesText: 'Yes, Overwrite it',
-          noBtnText: 'Cancel',
-          noBtnKey: 'Escape',
-          forceShow: true,
-        });
+        const doOverwrite = await Jprompt({ text: 'There is a previous save file with this name, are you sure you want to overwrite it?', yesText: 'Yes, Overwrite it', noBtnText: 'Cancel', noBtnKey: 'Escape', forceShow: true })
         if (doOverwrite) {
-          conflictingSaveTitles.forEach((otherTitle) => {
+          conflictingSaveTitles.forEach(otherTitle => {
             storage.remove(globalThis.savePrefix + otherTitle);
           });
         } else {
           console.log('Save cancelled');
           return 'Save Cancelled';
         }
+
       }
     }
 
@@ -1544,18 +1199,17 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       version: globalThis.SPELLMASONS_PACKAGE_VERSION,
       underworld: underworld.serializeForSaving(),
       phase: underworld.turn_phase,
-      pickups: underworld.pickups
-        .filter((p) => !p.flaggedForRemoval)
-        .map(Pickup.serialize),
-      units: underworld.units
-        .filter((u) => !u.flaggedForRemoval)
-        .map(Unit.serialize),
+      pickups: underworld.pickups.filter(p => !p.flaggedForRemoval).map(Pickup.serialize),
+      units: underworld.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
       players: underworld.players.map(Player.serialize),
       doodads: underworld.doodads.map(Doodad.serialize),
-      numberOfHotseatPlayers,
+      numberOfHotseatPlayers
     };
     try {
-      storage.set(globalThis.savePrefix + title, JSON.stringify(saveObject));
+      storage.set(
+        globalThis.savePrefix + title,
+        JSON.stringify(saveObject),
+      );
       // Successful save should clear saveASAP
       globalThis.saveASAP = undefined;
       // Empty string means "No error, save successful"
@@ -1570,17 +1224,11 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
     }
   };
   globalThis.deleteSave = async (title: string) => {
-    const doDelete = await Jprompt({
-      text: 'Are you sure you want to delete this save file?',
-      yesText: 'Yes',
-      noBtnText: 'No',
-      noBtnKey: 'Escape',
-      forceShow: true,
-    });
+    const doDelete = await Jprompt({ text: 'Are you sure you want to delete this save file?', yesText: 'Yes', noBtnText: 'No', noBtnKey: 'Escape', forceShow: true })
     if (doDelete) {
       storage.remove(globalThis.savePrefix + title);
     }
-  };
+  }
   globalThis.load = async (title: string) => {
     const savedGameString = storage.get(globalThis.savePrefix + title);
     if (savedGameString) {
@@ -1593,7 +1241,7 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
         Jprompt({
           text: `The save file appears to be corrupted.`,
           yesText: 'Okay',
-          forceShow: true,
+          forceShow: true
         });
         return;
       }
@@ -1602,22 +1250,11 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
         if (globalThis.connectToSingleplayer) {
           await globalThis.connectToSingleplayer();
         } else {
-          console.error(
-            'Unexpected: Attempting to load but globalThis.connectToSingleplayer is undefined',
-          );
+          console.error('Unexpected: Attempting to load but globalThis.connectToSingleplayer is undefined');
         }
       }
 
-      const {
-        underworld: savedUnderworld,
-        phase,
-        units,
-        players,
-        pickups,
-        doodads,
-        version,
-        numberOfHotseatPlayers,
-      } = fileSaveObj;
+      const { underworld: savedUnderworld, phase, units, players, pickups, doodads, version, numberOfHotseatPlayers } = fileSaveObj;
       if (numberOfHotseatPlayers !== undefined) {
         globalThis.numberOfHotseatPlayers = numberOfHotseatPlayers;
       }
@@ -1627,25 +1264,19 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
 Save file version: ${version}.
 Current game version: ${globalThis.SPELLMASONS_PACKAGE_VERSION}`,
           yesText: 'Okay',
-          forceShow: true,
+          forceShow: true
         });
       }
       const SOLOMODE_CLIENT_ID = 'solomode_client_id';
       // If connected to a multiplayer server
-      if (
-        globalThis.player &&
-        !isSinglePlayer(globalThis.player.clientId) &&
-        overworld.underworld
-      ) {
+      if (globalThis.player && !isSinglePlayer(globalThis.player.clientId) && overworld.underworld) {
         // Cannot load a game if a player is already playing, can only load games if the game has not started yet
-        if (overworld.underworld.players.some((p) => p.isSpawned)) {
-          console.log(
-            'Cannot load multiplayer game over a game that is ongoing.',
-          );
+        if (overworld.underworld.players.some(p => p.isSpawned)) {
+          console.log('Cannot load multiplayer game over a game that is ongoing.')
           Jprompt({
             text: 'You cannot overwrite an ongoing game with a saved game - if you wish to load a multiplayer game, do so from a new lobby.',
             yesText: 'Okay',
-            forceShow: true,
+            forceShow: true
           });
           return;
         }
@@ -1656,13 +1287,14 @@ Current game version: ${globalThis.SPELLMASONS_PACKAGE_VERSION}`,
           // Assume control of the existing single player in the load file
           firstPlayer.clientId = SOLOMODE_CLIENT_ID;
         } else {
-          console.error('Attempted to load a game with no players in it.');
+          console.error('Attempted to load a game with no players in it.')
           Jprompt({
             text: 'Error: Attempted to load a game with no players in it.',
             yesText: 'Okay',
-            forceShow: true,
+            forceShow: true
           });
           return;
+
         }
       }
       console.log('LOAD: send LOAD_GAME_STATE');
@@ -1673,9 +1305,10 @@ Current game version: ${globalThis.SPELLMASONS_PACKAGE_VERSION}`,
         doodads,
         phase,
         units,
-        players,
+        players
       });
       setView(View.Game);
+
     } else {
       console.error('no save game found with title', title);
     }
@@ -1692,8 +1325,6 @@ Current game version: ${globalThis.SPELLMASONS_PACKAGE_VERSION}`,
     // Ensure the menu is open
     setView(View.Menu);
     intentionalDisconnect = true;
-    return typeGuardHostApp(overworld.pie)
-      ? Promise.resolve()
-      : overworld.pie.disconnect();
-  };
+    return typeGuardHostApp(overworld.pie) ? Promise.resolve() : overworld.pie.disconnect();
+  }
 }

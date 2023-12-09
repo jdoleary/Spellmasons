@@ -29,18 +29,14 @@ const spell: Spell = {
       if (sourceUnit) {
         const summonLocation = {
           x: state.castLocation.x,
-          y: state.castLocation.y,
-        };
+          y: state.castLocation.y
+        }
         if (underworld.isCoordOnWallTile(summonLocation)) {
           if (prediction) {
-            const WARNING = 'Invalid Summon Location';
+            const WARNING = "Invalid Summon Location";
             addWarningAtMouse(WARNING);
           } else {
-            refundLastSpell(
-              state,
-              prediction,
-              'Invalid summon location, mana refunded.',
-            );
+            refundLastSpell(state, prediction, 'Invalid summon location, mana refunded.')
           }
           return state;
         }
@@ -55,10 +51,10 @@ const spell: Spell = {
           sourceUnit.info.subtype,
           {
             ...sourceUnit.unitProps,
-            strength: quantity,
+            strength: quantity
           },
           underworld,
-          prediction,
+          prediction
         );
         addUnitTarget(unit, state);
 
@@ -68,11 +64,10 @@ const spell: Spell = {
         }
         if (unit.image) {
           const quantityScaleModifier = 1 + 0.3 * (quantity - 1);
-          unit.image.sprite.scale.x =
-            unit.image.sprite.scale.x * quantityScaleModifier;
-          unit.image.sprite.scale.y =
-            unit.image.sprite.scale.y * quantityScaleModifier;
+          unit.image.sprite.scale.x = unit.image.sprite.scale.x * quantityScaleModifier;
+          unit.image.sprite.scale.y = unit.image.sprite.scale.y * quantityScaleModifier;
         }
+
       } else {
         console.error(`Source unit ${unitId} is missing`);
       }

@@ -19,13 +19,7 @@ import {
 } from '../PlanningView';
 import { toggleMenu, View } from '../../views';
 import * as config from '../../config';
-import {
-  cleanBlood,
-  cameraAutoFollow,
-  getCamera,
-  moveCamera,
-  toggleHUD,
-} from '../PixiUtils';
+import { cleanBlood, cameraAutoFollow, getCamera, moveCamera, toggleHUD } from '../PixiUtils';
 import { isOutOfRange } from '../../PlayerUtils';
 import { vec2ToOneDimentionIndexPreventWrap } from '../../jmath/ArrayUtil';
 import * as Vec from '../../jmath/Vec';
@@ -51,8 +45,8 @@ export const keyDown = {
   cameraUp: false,
   cameraLeft: false,
   cameraDown: false,
-  cameraRight: false,
-};
+  cameraRight: false
+}
 
 let runPredictionsIdleCallbackId: number;
 globalThis.addEventListener('keydown', nonUnderworldKeydownListener);
@@ -76,18 +70,14 @@ function nonUnderworldKeydownListener(event: KeyboardEvent) {
 function handleJPromptHotkeys(event: KeyboardEvent) {
   // Possibly handle hotkey for Jprompt:
   // note: :last-child targets the top most prompt if there are more than one
-  const promptYesBtn = document.querySelector(
-    `.prompt:last-child .yes[data-key="${event.code}"]`,
-  ) as HTMLElement;
+  const promptYesBtn = document.querySelector(`.prompt:last-child .yes[data-key="${event.code}"]`) as HTMLElement;
   if (promptYesBtn) {
     promptYesBtn.click();
     // Return immediately, prompt hotkey overrides other hotkeys
     return true;
   }
   // note: :last-child targets the top most prompt if there are more than one
-  const promptNoBtn = document.querySelector(
-    `.prompt:last-child .no[data-key="${event.code}"]`,
-  ) as HTMLElement;
+  const promptNoBtn = document.querySelector(`.prompt:last-child .no[data-key="${event.code}"]`) as HTMLElement;
   if (promptNoBtn) {
     // Event was handled
     promptNoBtn.click();
@@ -96,6 +86,7 @@ function handleJPromptHotkeys(event: KeyboardEvent) {
   }
   // Don't cause caller to return
   return false;
+
 }
 export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
   // Only handle hotkeys when viewing the Game
@@ -107,7 +98,7 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
   }
   const { underworld } = overworld;
   if (!underworld) {
-    return;
+    return
   }
 
   // Allow skipping the cinematic with escape
@@ -124,10 +115,7 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
   }
   handleInputDown(getKeyCodeMapping(event.code, event), overworld);
 }
-function handleInputDown(
-  keyCodeMapping: string | undefined,
-  overworld: Overworld,
-) {
+function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworld) {
   if (keyCodeMapping === undefined) {
     return;
   }
@@ -137,7 +125,8 @@ function handleInputDown(
   }
   if (document.activeElement === Chat.elChatinput) {
     return;
-  } else {
+  }
+  else {
     document.body.classList.toggle('showChat', false);
     switch (keyCodeMapping) {
       case 'Escape':
@@ -148,9 +137,7 @@ function handleInputDown(
           return;
         }
 
-        const thereWasInventoryOpen = document.body?.classList.contains(
-          CardUI.openInvClass,
-        );
+        const thereWasInventoryOpen = document.body?.classList.contains(CardUI.openInvClass);
         // force close inventory
         CardUI.toggleInventory(undefined, false, underworld);
         if (thereWasInventoryOpen) {
@@ -160,27 +147,21 @@ function handleInputDown(
         // Only allow clearing tooltip if the player is already spawned,
         // if they are still spawning, the Escape key should toggle the menu
         // rather than clearing a potential tooltip
-        const thereWasTooltipActive = globalThis.player?.isSpawned
-          ? clearTooltipSelection()
-          : false;
+        const thereWasTooltipActive = globalThis.player?.isSpawned ? clearTooltipSelection() : false;
         const thereWereCardsSelected = CardUI.areAnyCardsSelected();
         CardUI.clearSelectedCards(underworld);
         // Rerun predictions after selected cards are cleared because the spell changed
         if (underworld) {
           runPredictions(underworld);
         }
-        if (
-          !thereWasTooltipActive &&
-          !thereWereCardsSelected &&
-          !thereWasInventoryOpen
-        ) {
+        if (!thereWasTooltipActive && !thereWereCardsSelected && !thereWasInventoryOpen) {
           // Otherwise finally toggle menu
           toggleMenu();
         }
         break;
       case 'openChat':
         document.body.classList.toggle('showChat', true);
-        Chat.focusChat(event);
+        Chat.focusChat();
         break;
       case 'openInventory':
         CardUI.toggleInventory(undefined, undefined, underworld);
@@ -191,7 +172,7 @@ function handleInputDown(
       case 'showWalkRope':
         keyDown.showWalkRope = true;
         // When the walkRope turns on clear the spell effect projection
-        // so the user can focus on the information that the walk rope is
+        // so the user can focus on the information that the walk rope is 
         // communicating
         clearSpellEffectProjection(underworld);
         break;
@@ -217,20 +198,21 @@ function handleInputDown(
         overworld.pie.sendData({
           type: MESSAGE_TYPES.PING,
           x: mouseTarget.x,
-          y: mouseTarget.y,
+          y: mouseTarget.y
         });
         break;
       case 'recenterCamera':
         if (globalThis.player?.isSpawned) {
-          // Make camera follow player unit
+
+          // Make camera follow player unit 
           cameraAutoFollow(true);
           tutorialCompleteTask('recenterCamera');
         } else {
           const mouseTarget = underworld.getMousePos();
           floatingText({
             coords: mouseTarget,
-            text: 'You must spawn first',
-          });
+            text: 'You must spawn first'
+          })
           playSFXKey('deny');
         }
         break;
@@ -340,10 +322,7 @@ export function keyupListener(overworld: Overworld, event: KeyboardEvent) {
   }
   handleInputUp(getKeyCodeMapping(event.code, event), overworld);
 }
-function handleInputUp(
-  keyCodeMapping: string | undefined,
-  overworld: Overworld,
-) {
+function handleInputUp(keyCodeMapping: string | undefined, overworld: Overworld) {
   if (keyCodeMapping === undefined) {
     return;
   }
@@ -367,7 +346,7 @@ function handleInputUp(
     case 'touchPadMoveCharacter':
       if (overworld.underworld) {
         // Simulate lifting the right mouse button
-        mouseUpHandler(overworld, { button: 2, preventDefault: () => {} });
+        mouseUpHandler(overworld, { button: 2, preventDefault: () => { } });
       } else {
         console.warn('Cannot move character, no underworld');
       }
@@ -385,45 +364,38 @@ export function endTurnBtnListener(overworld: Overworld, e: MouseEvent) {
   e.stopPropagation();
   return false;
 }
-const sendMovePlayer = throttle(
-  (underworld: Underworld) => {
-    if (globalThis.player) {
-      if (globalThis.player.isSpawned && !inPortal(globalThis.player)) {
-        // This should never happen
-        if (isNaN(globalThis.player.unit.stamina)) {
-          // but if it does, report error and set stamina back to a valid number
-          console.error('Stamina is NaN!');
-          globalThis.player.unit.stamina = 0;
-        }
-        underworld.pie.sendData({
-          type: MESSAGE_TYPES.MOVE_PLAYER,
-          ...Vec.clone(globalThis.player.unit),
-        });
-      } else {
-        console.log(
-          'Cancelling MOVE_PLAYER message because player is not spawned.',
-        );
+const sendMovePlayer = throttle((underworld: Underworld) => {
+  if (globalThis.player) {
+    if (globalThis.player.isSpawned && !inPortal(globalThis.player)) {
+      // This should never happen
+      if (isNaN(globalThis.player.unit.stamina)) {
+        // but if it does, report error and set stamina back to a valid number
+        console.error('Stamina is NaN!');
+        globalThis.player.unit.stamina = 0;
       }
-    } else {
-      console.error('Cannot send MOVE_PLAYER, globalThis.player is undefined');
-    }
-  },
-  200,
-  { trailing: true },
-);
-const notifyYouMustWaitForYourTurn = throttle(
-  (target: Vec2) => {
-    // Only notify if they are spawned in
-    if (globalThis.player?.isSpawned) {
-      floatingText({
-        coords: target,
-        text: 'You must wait for your turn\nto move',
+      underworld.pie.sendData({
+        type: MESSAGE_TYPES.MOVE_PLAYER,
+        ...Vec.clone(globalThis.player.unit),
       });
+    } else {
+      console.log('Cancelling MOVE_PLAYER message because player is not spawned.');
+
     }
-  },
-  400,
-  { trailing: true },
-);
+  } else {
+    console.error('Cannot send MOVE_PLAYER, globalThis.player is undefined')
+  }
+
+}, 200, { trailing: true });
+const notifyYouMustWaitForYourTurn = throttle((target: Vec2) => {
+  // Only notify if they are spawned in
+  if (globalThis.player?.isSpawned) {
+    floatingText({
+      coords: target,
+      text: 'You must wait for your turn\nto move',
+    });
+  }
+}, 400, { trailing: true });
+
 
 export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
   // Only handle clicks when viewing the Game
@@ -447,17 +419,11 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
       globalThis.player.unit.y = NaN;
     } else {
       if (!document.body?.classList.contains(showUpgradesClassName)) {
-        const spawnPoint = {
-          ...mouseTarget,
-          radius: config.COLLISION_MESH_RADIUS,
-        };
+        const spawnPoint = { ...mouseTarget, radius: config.COLLISION_MESH_RADIUS }
         collideWithLineSegments(spawnPoint, underworld.walls, underworld);
         if (globalThis.player.unit.image) {
           globalThis.player.unit.image.sprite.alpha = 0.5;
-          if (
-            underworld.isCoordOnWallTile(spawnPoint) ||
-            isOutOfBounds(spawnPoint, underworld)
-          ) {
+          if (underworld.isCoordOnWallTile(spawnPoint) || isOutOfBounds(spawnPoint, underworld)) {
             globalThis.player.unit.x = NaN;
             globalThis.player.unit.y = NaN;
           } else {
@@ -495,11 +461,7 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
             // Move towards mouseTarget, but stop pathing where the direct path intersects a wall
             // This ensures that the player will always move in the direction of the mouse
             // and won't path in an unexpected direction to attempt to get to the final destination.
-            const intersection =
-              closestLineSegmentIntersection(
-                { p1: globalThis.player.unit, p2: mouseTarget },
-                underworld.walls,
-              ) || mouseTarget;
+            const intersection = closestLineSegmentIntersection({ p1: globalThis.player.unit, p2: mouseTarget }, underworld.walls) || mouseTarget;
             Unit._moveTowards(globalThis.player.unit, intersection, underworld);
 
             // Trigger mouse move so that predictions will run when the position of your own player changes since
@@ -513,16 +475,12 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
 
             // Send current player movements to server
             sendMovePlayer(underworld);
-            tutorialCompleteTask(
-              'moved',
-              () =>
-                !!globalThis.player &&
-                globalThis.player.unit.stamina <=
-                  globalThis.player.unit.staminaMax * 0.7,
-            );
+            tutorialCompleteTask('moved', () => !!globalThis.player && globalThis.player.unit.stamina <= globalThis.player.unit.staminaMax * 0.7);
+
           } else {
             if (!globalThis.notifiedOutOfStamina) {
               if (globalThis.player.unit.stamina <= 0) {
+
                 floatingText({
                   coords: mouseTarget,
                   text: 'Out of stamina',
@@ -548,16 +506,12 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
   // havent changed since last call.
 
   // Show faint circle on clickable entities on hover:
-  drawCircleUnderTarget(
-    mouseTarget,
-    underworld,
-    1.0,
-    globalThis.planningViewGraphics,
-  );
+  drawCircleUnderTarget(mouseTarget, underworld, 1.0, globalThis.planningViewGraphics);
   // Show tooltip on hover when player is spawning because they can't click without
   // spawning themselves in and they still need a way to inspect units
   updateTooltipSelectionWhileSpawning(mouseTarget, underworld);
   // TODO show tooltip info on hover when spawning
+
 
   // Test pathing
   if (globalThis.showDebug && globalThis.player) {
@@ -567,10 +521,7 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
     const path = globalThis.player.unit.path;
     if (path && path.points[0]) {
       globalThis.debugGraphics?.lineStyle(4, 0x00ff00, 1.0);
-      globalThis.debugGraphics?.moveTo(
-        globalThis.player.unit.x,
-        globalThis.player.unit.y,
-      );
+      globalThis.debugGraphics?.moveTo(globalThis.player.unit.x, globalThis.player.unit.y);
       for (let point of path.points) {
         globalThis.debugGraphics?.lineTo(point.x, point.y);
       }
@@ -578,43 +529,18 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
     const mouseTarget = underworld.getMousePos();
     const cellX = Math.round(mouseTarget.x / config.OBSTACLE_SIZE);
     const cellY = Math.round(mouseTarget.y / config.OBSTACLE_SIZE);
-    const originalTile =
-      underworld.lastLevelCreated?.imageOnlyTiles[
-        vec2ToOneDimentionIndexPreventWrap(
-          { x: cellX, y: cellY },
-          underworld.lastLevelCreated?.width,
-        )
-      ];
+    const originalTile = underworld.lastLevelCreated?.imageOnlyTiles[vec2ToOneDimentionIndexPreventWrap({ x: cellX, y: cellY }, underworld.lastLevelCreated?.width)];
     const originalTileImage = originalTile ? originalTile.image : '';
-    (
-      document.getElementById('debug-info') as HTMLElement
-    ).innerText = `x:${Math.round(mouseTarget.x)}, y:${Math.round(
-      mouseTarget.y,
-    )}
+    (document.getElementById('debug-info') as HTMLElement).innerText = `x:${Math.round(mouseTarget.x)}, y:${Math.round(mouseTarget.y)}
     cellX: ${cellX}, cellY: ${cellY}
     tile: ${originalTileImage}`;
     // Debug draw cell that mouse is hovered over
     globalThis.debugGraphics?.lineStyle(3, 0xff0000, 1);
-    globalThis.debugGraphics?.moveTo(
-      cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2,
-      cellY * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2,
-    );
-    globalThis.debugGraphics?.lineTo(
-      cellX * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2,
-      cellY * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2,
-    );
-    globalThis.debugGraphics?.lineTo(
-      cellX * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2,
-      cellY * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2,
-    );
-    globalThis.debugGraphics?.lineTo(
-      cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2,
-      cellY * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2,
-    );
-    globalThis.debugGraphics?.lineTo(
-      cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2,
-      cellY * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2,
-    );
+    globalThis.debugGraphics?.moveTo(cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2);
+    globalThis.debugGraphics?.lineTo(cellX * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2);
+    globalThis.debugGraphics?.lineTo(cellX * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2);
+    globalThis.debugGraphics?.lineTo(cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2);
+    globalThis.debugGraphics?.lineTo(cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2);
     // Draw the pathing walls
     for (let lineSegment of underworld.pathingLineSegments) {
       // color: pink
@@ -623,9 +549,7 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
       globalThis.debugGraphics?.lineTo(lineSegment.p2.x, lineSegment.p2.y);
     }
     // Draw liquid polygons
-    for (let lineSegment of underworld.liquidPolygons
-      .map(toLineSegments)
-      .flat()) {
+    for (let lineSegment of underworld.liquidPolygons.map(toLineSegments).flat()) {
       // color: baby blue
       globalThis.debugGraphics?.lineStyle(4, 0x34b7eb, 1.0);
       globalThis.debugGraphics?.moveTo(lineSegment.p1.x, lineSegment.p1.y);
@@ -637,7 +561,7 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
       globalThis.debugGraphics?.moveTo(bound.p1.x, bound.p1.y);
       globalThis.debugGraphics?.lineTo(bound.p2.x, bound.p2.y);
     }
-    // Draw walls that prevent line of sight
+    // Draw walls that prevent line of sight 
     for (let wall of underworld.walls) {
       globalThis.debugGraphics?.lineStyle(2, 0x00ff00, 1.0);
       globalThis.debugGraphics?.moveTo(wall.p1.x, wall.p1.y);
@@ -650,6 +574,7 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
     // globalThis.debugGraphics?.lineTo(underworld.limits.xMax, underworld.limits.yMax);
     // globalThis.debugGraphics?.lineTo(underworld.limits.xMin, underworld.limits.yMax);
     // globalThis.debugGraphics?.lineTo(underworld.limits.xMin, underworld.limits.yMin);
+
   }
 }
 export function contextmenuHandler(overworld: Overworld, e: MouseEvent) {
@@ -674,17 +599,11 @@ export function mouseDownHandler(overworld: Overworld, e: MouseEvent) {
       console.log('Did not setRMBDown, underworld does not exist.');
     }
   } else {
-    handleInputDown(
-      getKeyCodeMapping(globalThis.mouseButtonToKeyCode(e.button)),
-      overworld,
-    );
+    handleInputDown(getKeyCodeMapping(globalThis.mouseButtonToKeyCode(e.button)), overworld);
   }
 }
 globalThis.mouseButtonToKeyCode = (button: number) => `Mouse ${button}`;
-export function mouseUpHandler(
-  overworld: Overworld,
-  e: Pick<MouseEvent, 'button' | 'preventDefault'>,
-) {
+export function mouseUpHandler(overworld: Overworld, e: Pick<MouseEvent, "button" | "preventDefault">) {
   // Turn MMBDown off for any click to protect against it getting stuck
   // as flagged "down"
   globalThis.setMMBDown?.(false);
@@ -707,10 +626,7 @@ export function mouseUpHandler(
     }
     e.preventDefault();
   } else {
-    handleInputUp(
-      getKeyCodeMapping(globalThis.mouseButtonToKeyCode(e.button)),
-      overworld,
-    );
+    handleInputUp(getKeyCodeMapping(globalThis.mouseButtonToKeyCode(e.button)), overworld);
   }
 }
 
@@ -727,9 +643,9 @@ export function onWindowBlur(_overworld: Overworld) {
   // if they were to release it when this document wasn't focused
   globalThis.setMMBDown?.(false);
   // Revert all keydown flags so they don't get stuck
-  (Object.keys(keyDown) as Array<keyof typeof keyDown>).forEach((key) => {
+  (Object.keys(keyDown) as Array<keyof typeof keyDown>).forEach(key => {
     keyDown[key] = false;
-  });
+  })
 }
 // Handle clicks on the game board
 export function clickHandler(overworld: Overworld, e: MouseEvent) {
@@ -742,35 +658,31 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
     return;
   }
   const mousePos = underworld.getMousePos();
-  //hide chat if its active
-  document.body.classList.toggle('showChat', false);
+
   if (isOutOfBounds(mousePos, underworld)) {
     // Disallow click out of bounds
     floatingText({
       coords: mousePos,
-      text: 'Out of bounds',
-    });
+      text: 'Out of bounds'
+    })
     playSFXKey('deny');
     return;
   }
   // Get current client's player
   const selfPlayer = globalThis.player;
-  if (
-    selfPlayer &&
-    !selfPlayer.isSpawned &&
-    !document.body?.classList.contains(showUpgradesClassName)
-  ) {
-    const spawnPoint = { ...mousePos, radius: config.COLLISION_MESH_RADIUS };
+  if (selfPlayer && !selfPlayer.isSpawned &&
+    !document.body?.classList.contains(showUpgradesClassName)) {
+    const spawnPoint = { ...mousePos, radius: config.COLLISION_MESH_RADIUS }
     collideWithLineSegments(spawnPoint, underworld.walls, underworld);
     if (underworld.isCoordOnWallTile(spawnPoint)) {
       floatingText({
         coords: mousePos,
-        text: 'Invalid Spawn Location',
+        text: 'Invalid Spawn Location'
       });
       playSFXKey('deny');
     } else {
       if (globalThis.cinematicCameraTarget !== undefined) {
-        console.log('Cannot spawn during cinematic intro');
+        console.log('Cannot spawn during cinematic intro')
       } else {
         // Some people are experiencing an issue where they accidentally spawn after
         // choosing an upgrade.  This small 300 milli buffer is meant to protect against
@@ -781,7 +693,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         //   return;
         // }
 
-        // Now that they've chosen a spawn, set awaitingSpawn to true so that
+        // Now that they've chosen a spawn, set awaitingSpawn to true so that 
         // they get immediate feedback that they've chosen a spawn point
         globalThis.awaitingSpawn = true;
         if (globalThis.player?.unit) {
@@ -810,6 +722,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         const cardIds = CardUI.getSelectedCardIds();
         const cards = CardUI.getSelectedCards();
 
+
         // Ensure that last card doesn't require a following card
         // If it does, warn the player that their card order won't do what
         // they are expecting it to do
@@ -818,12 +731,10 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
           floatingText({
             coords: target,
             text: ['🍞 only modifies spells on its right', lastCard.id],
-            style: { fill: 'red', ...config.PIXI_TEXT_DROP_SHADOW },
+            style: { fill: 'red', ...config.PIXI_TEXT_DROP_SHADOW }
           });
           const elHints = document.querySelectorAll('.requires-following-card');
-          const elHint = elHints.length
-            ? elHints[elHints.length - 1]
-            : undefined;
+          const elHint = elHints.length ? elHints[elHints.length - 1] : undefined;
           // Remove then add 'blink' class to the "hint" outline so that
           // it will restart the animation to grab the user's attention.
           if (elHint) {
@@ -831,15 +742,16 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
             setTimeout(() => {
               elHint.classList.add('blink');
             }, 10);
+
           }
           // Then cancel casting:
-          return;
+          return
         }
         if (isOutOfRange(selfPlayer, mousePos, underworld, cardIds)) {
           // If there is no target at end range, just show that they are trying to cast out of range
           floatingText({
             coords: target,
-            text: 'Out of Range',
+            text: 'Out of Range'
           });
           playSFXKey('deny_range');
           // Cancel Casting
@@ -849,29 +761,22 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         // unless the first card (like AOE) specifically allows casting
         // on non unit targets
         const hasTarget = hasTargetAtPosition(target, underworld);
-        if (
-          !hasTarget &&
-          cards.length &&
-          cards[0] &&
-          !cards[0].allowNonUnitTarget
-        ) {
+        if ((!hasTarget) && cards.length && cards[0] && !cards[0].allowNonUnitTarget) {
           floatingText({
             coords: target,
-            text: 'No Target!',
+            text: 'No Target!'
           });
           playSFXKey('deny_target');
           // Cancel Casting
           return;
         }
 
+
         if (selfPlayer.unit.modifiers[Freeze.id]) {
-          floatingText({
-            coords: selfPlayer.unit,
-            text: 'Cannot Cast. Frozen.',
-          });
+          floatingText({ coords: selfPlayer.unit, text: 'Cannot Cast. Frozen.' })
           playSFXKey('deny');
           // Cancel Casting
-          return;
+          return
         }
         // Clear resMarkers so they don't hang around once the spell is cast
         globalThis.resMarkers = [];
@@ -884,68 +789,57 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         // so that we can check in the next block if there is insufficient health or mana to cast it.
         underworld.syncPredictionEntities();
         const casterPositionAtTimeOfCast = Vec.clone(selfPlayer.unit);
-        const casterUnit = underworld.unitsPrediction.find(
-          (u) => u.id == globalThis.player?.unit.id,
-        );
+        const casterUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id);
         if (!casterUnit) {
-          console.error(
-            'Unexpected: Player caster unit not found when attempting to cache targeted units before sending off SPELL',
-          );
+          console.error('Unexpected: Player caster unit not found when attempting to cache targeted units before sending off SPELL');
           console.log('Requesting game state from host');
           underworld.pie.sendData({
-            type: MESSAGE_TYPES.REQUEST_SYNC_GAME_STATE,
+            type: MESSAGE_TYPES.REQUEST_SYNC_GAME_STATE
           });
         } else {
           // Run a castCards PREDICTION to make sure the player has enough mana to cast this
-          underworld
-            .castCards({
-              casterCardUsage: JSON.parse(
-                JSON.stringify(selfPlayer.cardUsageCounts),
-              ), // Make a copy of cardUsageCounts for prediction so it can accurately calculate mana for multiple copies of one spell in one cast
-              casterUnit,
-              casterPositionAtTimeOfCast: Vec.clone(casterUnit),
-              cardIds,
-              castLocation: target,
-              prediction: true,
-              outOfRange: false,
-              magicColor: undefined,
-              casterPlayer: selfPlayer,
-            })
-            .then((effectState) => {
-              // Ensure that the mana left after casting the prediction spell is not negative.
-              // If it is negative, don't allow the cast because the caster has insufficient mana
-              if (effectState.casterUnit.mana >= 0) {
-                clearSpellEffectProjection(underworld, true);
-                overworld.pie.sendData({
-                  type: MESSAGE_TYPES.SPELL,
-                  casterPositionAtTimeOfCast,
-                  x: target.x,
-                  y: target.y,
-                  cards: cardIds,
-                  initialTargetedUnitId: effectState.initialTargetedUnitId,
-                  initialTargetedPickupId: effectState.initialTargetedPickupId,
-                });
-                CardUI.clearSelectedCards(underworld);
-                // Now that the cast has begun, clear the prediction tint so it doesn't color the targeted units anymore
-                clearTints(underworld);
-              } else {
-                floatingText({
-                  coords: casterUnit,
-                  text: 'Insufficient Mana',
-                  style: {
-                    fill: errorRed,
-                    fontSize: '50px',
-                    ...config.PIXI_TEXT_DROP_SHADOW,
-                  },
-                });
-                console.log('Spell could not be cast, insufficient mana');
-              }
-            });
+          underworld.castCards({
+            casterCardUsage: JSON.parse(JSON.stringify(selfPlayer.cardUsageCounts)), // Make a copy of cardUsageCounts for prediction so it can accurately calculate mana for multiple copies of one spell in one cast
+            casterUnit,
+            casterPositionAtTimeOfCast: Vec.clone(casterUnit),
+            cardIds,
+            castLocation: target,
+            prediction: true,
+            outOfRange: false,
+            magicColor: undefined,
+            casterPlayer: selfPlayer,
+
+          }).then((effectState) => {
+            // Ensure that the mana left after casting the prediction spell is not negative.
+            // If it is negative, don't allow the cast because the caster has insufficient mana
+            if ((effectState.casterUnit.mana >= 0)) {
+              clearSpellEffectProjection(underworld, true);
+              overworld.pie.sendData({
+                type: MESSAGE_TYPES.SPELL,
+                casterPositionAtTimeOfCast,
+                x: target.x,
+                y: target.y,
+                cards: cardIds,
+                initialTargetedUnitId: effectState.initialTargetedUnitId,
+                initialTargetedPickupId: effectState.initialTargetedPickupId,
+              });
+              CardUI.clearSelectedCards(underworld);
+              // Now that the cast has begun, clear the prediction tint so it doesn't color the targeted units anymore
+              clearTints(underworld);
+            } else {
+              floatingText({
+                coords: casterUnit,
+                text: 'Insufficient Mana',
+                style: { fill: errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
+              })
+              console.log('Spell could not be cast, insufficient mana');
+
+            }
+
+          })
         }
       } else {
-        console.error(
-          'Attempting to cast while globalThis.player is undefined',
-        );
+        console.error("Attempting to cast while globalThis.player is undefined");
       }
     } else {
       if (selfPlayer?.isSpawned) {
@@ -961,11 +855,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
   }
   tryShowDevContextMenu(overworld, e, mousePos);
 }
-function tryShowDevContextMenu(
-  overworld: Overworld,
-  e: MouseEvent,
-  mousePos: Vec2,
-) {
+function tryShowDevContextMenu(overworld: Overworld, e: MouseEvent, mousePos: Vec2) {
   if (globalThis.headless) {
     return;
   }
@@ -973,8 +863,8 @@ function tryShowDevContextMenu(
   if (adminMode && e.shiftKey) {
     const menuHolder = document.createElement('div');
     menuHolder.id = 'admin-menu-holder';
-    let menu = document.createElement('div') as HTMLElement;
-    menu.id = 'ctxmenu';
+    let menu = document.createElement("div") as HTMLElement;
+    menu.id = "ctxmenu"
     menu.innerHTML = `
     <div>
       <p id='global-label'>Global</p>
@@ -1023,11 +913,7 @@ function tryShowDevContextMenu(
   }
 }
 const adminCommands: { [label: string]: AdminContextMenuOption } = {};
-export function triggerAdminCommand(
-  label: string,
-  clientId: string,
-  payload: any,
-) {
+export function triggerAdminCommand(label: string, clientId: string, payload: any) {
   const { action } = adminCommands[label] || {};
   if (action) {
     action({ clientId, ...payload });
@@ -1049,16 +935,13 @@ interface AdminContextMenuOption {
   domQueryContainer: string;
 }
 export function registerAdminContextMenuOptions(overworld: Overworld) {
+
   const options: AdminContextMenuOption[] = [
     {
       label: '🦸‍♂️ Super Me',
       action: ({ clientId }: { clientId?: string }) => {
         if (superMe && overworld.underworld) {
-          superMe(
-            overworld.underworld,
-            overworld.underworld.players.find((p) => p.clientId == clientId) ||
-              globalThis.player,
-          );
+          superMe(overworld.underworld, overworld.underworld.players.find(p => p.clientId == clientId) || globalThis.player);
         }
       },
       supportInMultiplayer: true,
@@ -1072,9 +955,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
           console.error('Cannot teleport, underworld does not exist');
           return;
         }
-        const player = overworld.underworld.players.find(
-          (p) => p.clientId == clientId,
-        );
+        const player = overworld.underworld.players.find(p => p.clientId == clientId);
         if (player && pos) {
           player.unit.x = pos.x;
           player.unit.y = pos.y;
@@ -1108,7 +989,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       supportInMultiplayer: false,
       domQueryContainer: '#menu-self',
     },
-    ...Pickup.pickups.map<AdminContextMenuOption>((p) => ({
+    ...Pickup.pickups.map<AdminContextMenuOption>(p => ({
       label: p.name,
       action: ({ pos }) => {
         if (!overworld.underworld) {
@@ -1116,17 +997,13 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
           return;
         }
         if (pos) {
-          Pickup.create(
-            { pos, pickupSource: p, logSource: 'admin' },
-            overworld.underworld,
-            false,
-          );
+          Pickup.create({ pos, pickupSource: p, logSource: 'admin' }, overworld.underworld, false);
         }
       },
       supportInMultiplayer: true,
-      domQueryContainer: '#menu-spawn-pickup',
+      domQueryContainer: '#menu-spawn-pickup'
     })),
-    ...Doodad.doodads.map<AdminContextMenuOption>((d) => ({
+    ...Doodad.doodads.map<AdminContextMenuOption>(d => ({
       label: d.name,
       action: ({ pos }) => {
         if (!overworld.underworld) {
@@ -1138,9 +1015,9 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         }
       },
       supportInMultiplayer: true,
-      domQueryContainer: '#menu-spawn-doodad',
+      domQueryContainer: '#menu-spawn-doodad'
     })),
-    ...Object.values(allUnits).map<AdminContextMenuOption>((u) => ({
+    ...Object.values(allUnits).map<AdminContextMenuOption>(u => ({
       label: u.id,
       action: ({ pos }) => {
         if (pos) {
@@ -1151,8 +1028,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
           overworld.underworld.spawnEnemy(u.id, pos, false);
           // Orient newly spawned units towards the player
           if (globalThis.player) {
-            const justSpawnedUnit =
-              overworld.underworld.units[overworld.underworld.units.length - 1];
+            const justSpawnedUnit = overworld.underworld.units[overworld.underworld.units.length - 1];
             if (justSpawnedUnit) {
               Unit.orient(justSpawnedUnit, globalThis.player.unit);
             }
@@ -1160,7 +1036,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         }
       },
       supportInMultiplayer: true,
-      domQueryContainer: '#menu-spawn',
+      domQueryContainer: '#menu-spawn'
     })),
     {
       label: '🦹‍♂️🦹‍♂️🦹‍♂️ Spawn many enemies',
@@ -1173,7 +1049,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         }
       },
       supportInMultiplayer: true,
-      domQueryContainer: '#menu-spawn',
+      domQueryContainer: '#menu-spawn'
     },
     {
       label: '🦹‍♂️🧛‍♂️🧝‍♂️ Spawn All Enemies',
@@ -1187,15 +1063,14 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
                 overworld.underworld.spawnEnemy(unitId, spawn, false);
               }
             } else {
-              console.log(
-                'Could not find valid spawn for Admin command Spawn All Enemies',
-              );
+              console.log('Could not find valid spawn for Admin command Spawn All Enemies')
             }
+
           });
         }
       },
       supportInMultiplayer: true,
-      domQueryContainer: '#menu-spawn',
+      domQueryContainer: '#menu-spawn'
     },
     {
       label: 'Merge Excess Units',
@@ -1205,9 +1080,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
           return;
         }
         overworld.underworld.mergeExcessUnits();
+
       },
       supportInMultiplayer: true,
-      domQueryContainer: '#menu-global',
+      domQueryContainer: '#menu-global'
     },
     {
       label: 'Kill all Enemies',
@@ -1219,22 +1095,18 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         // Remove without blood, remember clean up will just
         // flag them for deletion, they will be removed from the array
         // at the start of the next turn.
-        for (let unit of overworld.underworld.units.filter(
-          (u) => u.faction == Faction.ENEMY,
-        )) {
+        for (let unit of overworld.underworld.units.filter(u => u.faction == Faction.ENEMY)) {
           Unit.die(unit, overworld.underworld, false);
         }
       },
       supportInMultiplayer: true,
-      domQueryContainer: '#menu-global',
+      domQueryContainer: '#menu-global'
     },
     {
       label: 'Delete all Enemies',
       action: () => {
         if (!overworld.underworld) {
-          console.error(
-            'Cannot "Delete all Enemies", underworld does not exist',
-          );
+          console.error('Cannot "Delete all Enemies", underworld does not exist');
           return;
         }
         // Remove without blood, remember clean up will just
@@ -1242,46 +1114,38 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         // at the start of the next turn.
         // Note: This may prevent portal from spawning since they are just removed
         // but do not die
-        overworld.underworld.units
-          .filter((u) => u.faction == Faction.ENEMY)
-          .forEach((u) => {
-            Unit.cleanup(u);
-          });
-        // Instantly fully remove units that are flagged for removal
+        overworld.underworld.units.filter(u => u.faction == Faction.ENEMY).forEach(u => {
+          Unit.cleanup(u);
+        });
+        // Instantly fully remove units that are flagged for removal 
         // (in the game this happens during initTurnPhase, in order to prevent the units array
         // from being modified while it is being iterated) however the admin commands
         // are meant to set up game state, often for saving or exporting the state and so it should
         // clean up immediately
-        overworld.underworld.units = overworld.underworld.units.filter(
-          (u) => !u.flaggedForRemoval,
-        );
+        overworld.underworld.units = overworld.underworld.units.filter(u => !u.flaggedForRemoval)
       },
       supportInMultiplayer: true,
-      domQueryContainer: '#menu-global',
+      domQueryContainer: '#menu-global'
     },
     {
       label: 'Delete all Pickups',
       action: () => {
         if (!overworld.underworld) {
-          console.error(
-            'Cannot "Delete all Pickups", underworld does not exist',
-          );
+          console.error('Cannot "Delete all Pickups", underworld does not exist');
           return;
         }
         for (let pickup of overworld.underworld.pickups) {
           Pickup.removePickup(pickup, overworld.underworld, false);
         }
-        // Instantly fully remove pickups that are flagged for removal
+        // Instantly fully remove pickups that are flagged for removal 
         // (in the game this happens during initTurnPhase, in order to prevent the pickup array
         // from being modified while it is being iterated) however the admin commands
         // are meant to set up game state, often for saving or exporting the state and so it should
         // clean up immediately
-        overworld.underworld.pickups = overworld.underworld.pickups.filter(
-          (p) => !p.flaggedForRemoval,
-        );
+        overworld.underworld.pickups = overworld.underworld.pickups.filter(p => !p.flaggedForRemoval)
       },
       supportInMultiplayer: true,
-      domQueryContainer: '#menu-global',
+      domQueryContainer: '#menu-global'
     },
     {
       label: '🩸 Clean up Blood',
@@ -1289,16 +1153,14 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         cleanBlood();
       },
       supportInMultiplayer: false,
-      domQueryContainer: '#menu-global',
+      domQueryContainer: '#menu-global'
     },
     {
       label: 'Skip to Water Biome',
       action: () => {
         if (globalThis.player) {
           if (!overworld.underworld) {
-            console.error(
-              'Cannot "Skip to Water Biome", underworld does not exist',
-            );
+            console.error('Cannot "Skip to Water Biome", underworld does not exist');
             return;
           }
           overworld.underworld.levelIndex = 0;
@@ -1306,16 +1168,14 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         }
       },
       supportInMultiplayer: false,
-      domQueryContainer: '#menu-global',
+      domQueryContainer: '#menu-global'
     },
     {
       label: 'Skip to Lava Biome',
       action: () => {
         if (globalThis.player) {
           if (!overworld.underworld) {
-            console.error(
-              'Cannot "Skip to Lava Biome", underworld does not exist',
-            );
+            console.error('Cannot "Skip to Lava Biome", underworld does not exist');
             return;
           }
           overworld.underworld.levelIndex = 3;
@@ -1323,16 +1183,14 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         }
       },
       supportInMultiplayer: false,
-      domQueryContainer: '#menu-global',
+      domQueryContainer: '#menu-global'
     },
     {
       label: 'Skip to Blood Biome',
       action: () => {
         if (globalThis.player) {
           if (!overworld.underworld) {
-            console.error(
-              'Cannot "Skip to Blood Biome", underworld does not exist',
-            );
+            console.error('Cannot "Skip to Blood Biome", underworld does not exist');
             return;
           }
           overworld.underworld.levelIndex = 6;
@@ -1340,16 +1198,14 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         }
       },
       supportInMultiplayer: false,
-      domQueryContainer: '#menu-global',
+      domQueryContainer: '#menu-global'
     },
     {
       label: 'Skip to Ghost Biome',
       action: () => {
         if (globalThis.player) {
           if (!overworld.underworld) {
-            console.error(
-              'Cannot "Skip to Ghost Biome", underworld does not exist',
-            );
+            console.error('Cannot "Skip to Ghost Biome", underworld does not exist');
             return;
           }
           overworld.underworld.levelIndex = 9;
@@ -1357,7 +1213,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         }
       },
       supportInMultiplayer: false,
-      domQueryContainer: '#menu-global',
+      domQueryContainer: '#menu-global'
     },
     {
       label: 'Regenerate Level',
@@ -1372,7 +1228,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         overworld.underworld.generateLevelData(overworld.underworld.levelIndex);
       },
       supportInMultiplayer: false,
-      domQueryContainer: '#menu-global',
+      domQueryContainer: '#menu-global'
     },
     {
       label: 'Pick Class',
@@ -1386,7 +1242,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         overworld.underworld.adminShowMageTypeSelect();
       },
       supportInMultiplayer: false,
-      domQueryContainer: '#menu-global',
+      domQueryContainer: '#menu-global'
     },
     {
       label: '✖️ Delete',
@@ -1398,15 +1254,13 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         // Remove without blood, remember clean up will just
         // flag them for deletion, they will be removed from the array
         // at the start of the next turn.
-        const unit = overworld.underworld.units.find(
-          (u) => u.id == selectedUnitid,
-        );
+        const unit = overworld.underworld.units.find(u => u.id == selectedUnitid);
         if (unit) {
           Unit.cleanup(unit);
         }
       },
       supportInMultiplayer: true,
-      domQueryContainer: '#menu-selected-unit',
+      domQueryContainer: '#menu-selected-unit'
     },
     {
       label: '🔪 Die',
@@ -1415,28 +1269,23 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
           console.error('Cannot admin kill unit, underworld does not exist');
           return;
         }
-        const unit = overworld.underworld.units.find(
-          (u) => u.id == selectedUnitid,
-        );
+        const unit = overworld.underworld.units.find(u => u.id == selectedUnitid);
         if (unit) {
           Unit.die(unit, overworld.underworld, false);
         }
+
       },
       supportInMultiplayer: true,
-      domQueryContainer: '#menu-selected-unit',
+      domQueryContainer: '#menu-selected-unit'
     },
     {
       label: '🏳️ Change Faction',
       action: ({ selectedUnitid }) => {
         if (!overworld.underworld) {
-          console.error(
-            'Cannot admin change unit faction, underworld does not exist',
-          );
+          console.error('Cannot admin change unit faction, underworld does not exist');
           return;
         }
-        const unit = overworld.underworld.units.find(
-          (u) => u.id == selectedUnitid,
-        );
+        const unit = overworld.underworld.units.find(u => u.id == selectedUnitid);
         if (unit) {
           if (unit.faction == Faction.ALLY) {
             unit.faction = Faction.ENEMY;
@@ -1446,7 +1295,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         }
       },
       supportInMultiplayer: true,
-      domQueryContainer: '#menu-selected-unit',
+      domQueryContainer: '#menu-selected-unit'
     },
     {
       label: 'Play All Animations',
@@ -1456,31 +1305,27 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         }
       },
       supportInMultiplayer: false,
-      domQueryContainer: '#menu-selected-unit',
+      domQueryContainer: '#menu-selected-unit'
     },
     {
       label: '❤️ Set Health',
       action: () => {
         if (!overworld.underworld) {
-          console.error(
-            'Cannot admin set unit health, underworld does not exist',
-          );
+          console.error('Cannot admin set unit health, underworld does not exist');
           return;
         }
-        const health = prompt('Choose a new max health');
+        const health = prompt('Choose a new max health')
         const parsedHealth = parseInt(health || '');
         if (!isNaN(parsedHealth) && globalThis.selectedUnit) {
-          const unit = overworld.underworld.units.find(
-            (u) => u.id == globalThis.selectedUnit?.id,
-          );
+          const unit = overworld.underworld.units.find(u => u.id == globalThis.selectedUnit?.id);
           if (unit) {
             overworld.pie.sendData({
               type: MESSAGE_TYPES.ADMIN_CHANGE_STAT,
               unitId: unit.id,
               stats: {
                 healthMax: parsedHealth,
-                health: parsedHealth,
-              },
+                health: parsedHealth
+              }
             });
           }
         }
@@ -1489,23 +1334,19 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       // message instead of ADMIN_COMMAND.  `supportInMultiplayer` is set to false so it doesn't
       // trigger an ADMIN_COMMAND message automatically
       supportInMultiplayer: false,
-      domQueryContainer: '#menu-selected-unit',
+      domQueryContainer: '#menu-selected-unit'
     },
     {
       label: '🔵 Set Mana',
       action: () => {
         if (!overworld.underworld) {
-          console.error(
-            'Cannot admin set unit mana, underworld does not exist',
-          );
+          console.error('Cannot admin set unit mana, underworld does not exist');
           return;
         }
-        const mana = prompt('Choose a new max mana');
+        const mana = prompt('Choose a new max mana')
         const parsedMana = parseInt(mana || '');
         if (!isNaN(parsedMana)) {
-          const unit = overworld.underworld.units.find(
-            (u) => u.id == globalThis.selectedUnit?.id,
-          );
+          const unit = overworld.underworld.units.find(u => u.id == globalThis.selectedUnit?.id);
           if (unit) {
             overworld.pie.sendData({
               type: MESSAGE_TYPES.ADMIN_CHANGE_STAT,
@@ -1514,7 +1355,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
                 manaMax: parsedMana,
                 mana: parsedMana,
                 manaPerTurn: parsedMana,
-              },
+              }
             });
           }
         }
@@ -1523,31 +1364,28 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       // message instead of ADMIN_COMMAND.  `supportInMultiplayer` is set to false so it doesn't
       // trigger an ADMIN_COMMAND message automatically
       supportInMultiplayer: false,
-      domQueryContainer: '#menu-selected-unit',
+      domQueryContainer: '#menu-selected-unit'
+
     },
     {
       label: '👟 Set Stamina',
       action: () => {
         if (!overworld.underworld) {
-          console.error(
-            'Cannot admin set unit stamina, underworld does not exist',
-          );
+          console.error('Cannot admin set unit stamina, underworld does not exist');
           return;
         }
-        const stamina = prompt('Choose a new max stamina');
+        const stamina = prompt('Choose a new max stamina')
         const parsedStamina = parseInt(stamina || '');
         if (!isNaN(parsedStamina)) {
-          const unit = overworld.underworld.units.find(
-            (u) => u.id == globalThis.selectedUnit?.id,
-          );
+          const unit = overworld.underworld.units.find(u => u.id == globalThis.selectedUnit?.id);
           if (unit) {
             overworld.pie.sendData({
               type: MESSAGE_TYPES.ADMIN_CHANGE_STAT,
               unitId: unit.id,
               stats: {
                 staminaMax: parsedStamina,
-                stamina: parsedStamina,
-              },
+                stamina: parsedStamina
+              }
             });
           }
         }
@@ -1556,50 +1394,41 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       // message instead of ADMIN_COMMAND.  `supportInMultiplayer` is set to false so it doesn't
       // trigger an ADMIN_COMMAND message automatically
       supportInMultiplayer: false,
-      domQueryContainer: '#menu-selected-unit',
+      domQueryContainer: '#menu-selected-unit'
+
     },
     {
       label: '👹 Make Miniboss',
       action: () => {
         if (!overworld.underworld) {
-          console.error(
-            'Cannot admin make unit miniboss, underworld does not exist',
-          );
+          console.error('Cannot admin make unit miniboss, underworld does not exist');
           return;
         }
-        const unit = overworld.underworld.units.find(
-          (u) => u.id == globalThis.selectedUnit?.id,
-        );
+        const unit = overworld.underworld.units.find(u => u.id == globalThis.selectedUnit?.id);
         if (unit) {
           Unit.makeMiniboss(unit);
         }
       },
       supportInMultiplayer: true,
-      domQueryContainer: '#menu-selected-unit',
+      domQueryContainer: '#menu-selected-unit'
+
     },
     {
       label: 'Skip next turn action',
       action: () => {
         if (!overworld.underworld) {
-          console.error(
-            'Admin: Cannot apply summoning sickness, underworld does not exist',
-          );
+          console.error('Admin: Cannot apply summoning sickness, underworld does not exist');
           return;
         }
-        const unit = overworld.underworld.units.find(
-          (u) => u.id == globalThis.selectedUnit?.id,
-        );
+        const unit = overworld.underworld.units.find(u => u.id == globalThis.selectedUnit?.id);
         if (unit) {
-          Unit.addModifier(
-            unit,
-            summoningSicknessId,
-            overworld.underworld,
-            false,
-          );
+          Unit.addModifier(unit, summoningSicknessId, overworld.underworld, false);
         }
       },
       supportInMultiplayer: true,
-      domQueryContainer: '#menu-selected-unit',
+      domQueryContainer: '#menu-selected-unit'
+
+
     },
     {
       label: 'Orient image towards player',
@@ -1609,7 +1438,8 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         }
       },
       supportInMultiplayer: false,
-      domQueryContainer: '#menu-selected-unit',
+      domQueryContainer: '#menu-selected-unit'
+
     },
     ...[
       CardCategory.Mana,
@@ -1618,21 +1448,17 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       CardCategory.Damage,
       CardCategory.Movement,
       CardCategory.Targeting,
-      CardCategory.Soul,
-    ].map<AdminContextMenuOption>((category) => {
+      CardCategory.Soul
+    ].map<AdminContextMenuOption>(category => {
       return {
         label: `Test: Cast all ${CardCategory[category]} spells`,
         action: ({ selectedUnitid }) => {
           if (!overworld.underworld) {
-            console.error(
-              `Cannot admin Cast all ${CardCategory[category]} spells, underworld does not exist`,
-            );
+            console.error(`Cannot admin Cast all ${CardCategory[category]} spells, underworld does not exist`);
             return;
           }
 
-          const unit = overworld.underworld.units.find(
-            (u) => u.id == selectedUnitid,
-          );
+          const unit = overworld.underworld.units.find(u => u.id == selectedUnitid);
 
           if (unit && player) {
             // Give player enough mana to cast
@@ -1644,14 +1470,12 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
                 health: 100,
                 healthMax: 100,
                 mana: newMana,
-                manaMax: newMana,
-              },
+                manaMax: newMana
+              }
             });
 
             if (player) {
-              const cardIds = Object.values(allCards)
-                .filter((c) => c.category == category)
-                .map((c) => c.id);
+              const cardIds = Object.values(allCards).filter(c => c.category == category).map(c => c.id);
               if (category == CardCategory.Targeting) {
                 // Must add an additional card to the targeting spells for them to do anything
                 cardIds.push('resurrect');
@@ -1665,38 +1489,33 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
                 y: unit.y,
                 cards: cardIds,
                 initialTargetedUnitId: unit.id,
-                initialTargetedPickupId: undefined,
+                initialTargetedPickupId: undefined
               });
             }
           }
+
         },
         supportInMultiplayer: true,
-        domQueryContainer: '#menu-selected-unit',
+        domQueryContainer: '#menu-selected-unit'
       };
     }),
     {
       label: '️✖️ Delete',
       action: ({ selectedPickupLocation }) => {
         if (!overworld.underworld) {
-          console.error(
-            'Cannot admin delete pickup, underworld does not exist',
-          );
+          console.error('Cannot admin delete pickup, underworld does not exist');
           return;
         }
         if (selectedPickupLocation) {
-          const pickup = overworld.underworld.pickups.find(
-            (p) =>
-              p.x == selectedPickupLocation.x &&
-              p.y == selectedPickupLocation.y,
-          );
+          const pickup = overworld.underworld.pickups.find(p => p.x == selectedPickupLocation.x && p.y == selectedPickupLocation.y);
           if (pickup) {
             Pickup.removePickup(pickup, overworld.underworld, false);
           }
         }
       },
       supportInMultiplayer: true,
-      domQueryContainer: '#menu-selected-pickup',
-    },
+      domQueryContainer: '#menu-selected-pickup'
+    }
   ];
   for (let op of options) {
     // Register with admin commands:
@@ -1705,24 +1524,15 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
 }
 function createContextMenuOptions(menu: HTMLElement, overworld: Overworld) {
   if (!overworld.underworld) {
-    console.error(
-      'Cannot create context menu options, underworld does not exist',
-    );
+    console.error('Cannot create context menu options, underworld does not exist');
     return;
   }
-  for (let {
-    label,
-    action,
-    domQueryContainer,
-    supportInMultiplayer,
-  } of Object.values(adminCommands)) {
+  for (let { label, action, domQueryContainer, supportInMultiplayer } of Object.values(adminCommands)) {
     // Make DOM button to trigger command
     let el = document.createElement('li');
     if (Object.keys(allUnits).includes(label)) {
       // Add unit summon image to help identify them
-      el.innerHTML = `<img width="32px" height="32px" src="${CardUI.getSpellThumbnailPath(
-        `spellIconSummon_${label.split(' ').join('').toLowerCase()}.png`,
-      )}"/>&nbsp;${label}`;
+      el.innerHTML = `<img width="32px" height="32px" src="${CardUI.getSpellThumbnailPath(`spellIconSummon_${label.split(' ').join('').toLowerCase()}.png`)}"/>&nbsp;${label}`
     } else {
       el.innerHTML = label;
     }
@@ -1735,8 +1545,7 @@ function createContextMenuOptions(menu: HTMLElement, overworld: Overworld) {
           label,
           pos,
           selectedUnitid: globalThis.selectedUnit && globalThis.selectedUnit.id,
-          selectedPickupLocation:
-            globalThis.selectedPickup && Vec.clone(globalThis.selectedPickup),
+          selectedPickupLocation: globalThis.selectedPickup && Vec.clone(globalThis.selectedPickup)
         });
       } else {
         // Warn when non supportInMultiplayer admin commands are executed to let the admin know
@@ -1744,11 +1553,7 @@ function createContextMenuOptions(menu: HTMLElement, overworld: Overworld) {
         if (!globalThis.isHost(overworld.pie)) {
           const errMsg = 'This admin command is not broadcast to multiplayer';
           if (globalThis.player) {
-            floatingText({
-              coords: globalThis.player.unit,
-              style: { fill: 'red' },
-              text: errMsg,
-            });
+            floatingText({ coords: globalThis.player.unit, style: { fill: 'red' }, text: errMsg })
           }
         }
         action({ clientId: globalThis.clientId || '', pos });
@@ -1756,12 +1561,13 @@ function createContextMenuOptions(menu: HTMLElement, overworld: Overworld) {
       // Close the menu
       menu.remove();
       document.getElementById('admin-menu-holder')?.remove();
-    });
+    })
     const container = document.querySelector(domQueryContainer);
     if (container) {
       container.appendChild(el);
     } else {
-      console.error('Could not find DOM element by query:', domQueryContainer);
+      console.error('Could not find DOM element by query:', domQueryContainer)
     }
   }
+
 }

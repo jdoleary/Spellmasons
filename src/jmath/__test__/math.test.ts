@@ -1,39 +1,57 @@
 import {
   similarTriangles,
-  getCoordsAtDistanceTowardsTarget,
-  honeycombGenerator,
-  rotateMatrix,
+  getCoordsAtDistanceTowardsTarget, honeycombGenerator, rotateMatrix
 } from '../math';
 
 describe('math', () => {
   describe('rotateMatrix', () => {
     it('should rotate the array clockwise once; wide to long', () => {
-      const matrix = [0, 1, 2, 3, 4, 5];
+      const matrix = [
+        0, 1, 2,
+        3, 4, 5,
+      ]
       const actual = rotateMatrix(matrix, 3);
       const expected = {
-        contents: [3, 0, 4, 1, 5, 2],
-        width: 2,
+        contents: [
+          3, 0,
+          4, 1,
+          5, 2
+        ], width: 2
       };
       expect(actual).toEqual(expected);
     });
     it('should rotate the array clockwise once; long to wide', () => {
-      const matrix = [0, 1, 2, 3, 4, 5];
+      const matrix = [
+        0, 1,
+        2, 3,
+        4, 5
+      ]
       const actual = rotateMatrix(matrix, 2);
       const expected = {
-        contents: [4, 2, 0, 5, 3, 1],
-        width: 3,
+        contents: [
+          4, 2, 0,
+          5, 3, 1
+        ], width: 3
       };
       expect(actual).toEqual(expected);
     });
     it('should rotate the array clockwise once; given a 3x3', () => {
-      const matrix = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+      const matrix = [
+        0, 1, 2,
+        3, 4, 5,
+        6, 7, 8
+      ]
       const actual = rotateMatrix(matrix, 3);
       const expected = {
-        contents: [6, 3, 0, 7, 4, 1, 8, 5, 2],
-        width: 3,
+        contents: [
+          6, 3, 0,
+          7, 4, 1,
+          8, 5, 2
+        ], width: 3
       };
       expect(actual).toEqual(expected);
     });
+
   });
   describe('honeycombGenerator', () => {
     it('Returns coordinates for a honeycomb or circles', () => {
@@ -95,42 +113,28 @@ describe('math', () => {
       ];
       expect(actual).toEqual(expected);
     });
+
   });
 
   describe('similarTriangles', () => {
     it('should find the x,y value of the point "d" distance along the known triangle hypotenuse D', () => {
       const knownTriangle = { X: 10, Y: 20, D: 100 };
       const desiredDistance = 10;
-      const actual = similarTriangles(
-        knownTriangle.X,
-        knownTriangle.Y,
-        knownTriangle.D,
-        desiredDistance,
-      );
+      const actual = similarTriangles(knownTriangle.X, knownTriangle.Y, knownTriangle.D, desiredDistance);
       const expected = { x: 1, y: 2 };
       expect(actual).toEqual(expected);
     });
     it('should return 0,0 if d (the desired distance) is 0 because the desired distance is 0 so the expected x and y should be at origin', () => {
       const knownTriangle = { X: 10, Y: 20, D: 100 };
       const desiredDistance = 0;
-      const actual = similarTriangles(
-        knownTriangle.X,
-        knownTriangle.Y,
-        knownTriangle.D,
-        desiredDistance,
-      );
+      const actual = similarTriangles(knownTriangle.X, knownTriangle.Y, knownTriangle.D, desiredDistance);
       const expected = { x: 0, y: 0 };
       expect(actual).toEqual(expected);
     });
     it('should return 0,0 if D is 0 (to prevent div by 0)', () => {
       const knownTriangle = { X: 10, Y: 20, D: 0 };
       const desiredDistance = 10;
-      const actual = similarTriangles(
-        knownTriangle.X,
-        knownTriangle.Y,
-        knownTriangle.D,
-        desiredDistance,
-      );
+      const actual = similarTriangles(knownTriangle.X, knownTriangle.Y, knownTriangle.D, desiredDistance);
       const expected = { x: 0, y: 0 };
       expect(actual).toEqual(expected);
     });
@@ -162,11 +166,7 @@ describe('math', () => {
       const start = { x: 3.1253245123, y: 4.4239879812 };
       const target = { x: 10, y: 10 };
       const travelDist = 5000;
-      const actual = getCoordsAtDistanceTowardsTarget(
-        start,
-        target,
-        travelDist,
-      );
+      const actual = getCoordsAtDistanceTowardsTarget(start, target, travelDist);
       const expected = target;
       expect(actual).toEqual(expected);
     });

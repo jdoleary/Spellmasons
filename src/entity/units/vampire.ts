@@ -21,7 +21,7 @@ const unit: UnitSource = {
     manaMax: 0,
     healthMax: 70,
     damage: 50,
-    bloodColor: 0x293a1b,
+    bloodColor: 0x293a1b
   },
   spawnParams: {
     probability: 15,
@@ -37,7 +37,7 @@ const unit: UnitSource = {
   },
   sfx: {
     damage: 'vampireHurt',
-    death: 'vampireDeath',
+    death: 'vampireDeath'
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     Unit.addModifier(unit, blood_curse.id, underworld, false);
@@ -55,60 +55,35 @@ const unit: UnitSource = {
             [0x2280cf, 0x96683c], // foot
             [0x1969bd, 0x7c5631], // foot outline
           ],
-          0.1,
-        ),
+          0.1
+        )
       );
     }
   },
-  action: async (
-    unit: Unit.IUnit,
-    attackTargets: Unit.IUnit[] | undefined,
-    underworld: Underworld,
-    canAttackTarget: boolean,
-  ) => {
-    await meleeAction(
-      unit,
-      attackTargets,
-      underworld,
-      canAttackTarget,
-      async (attackTarget: Unit.IUnit) => {
-        playSFXKey('vampireAttack');
-        await Unit.playAnimation(unit, unit.animations.attack);
-        // prediction is false because unit.action doesn't yet ever occur during a prediction
-        if (globalThis.player && attackTarget == globalThis.player.unit) {
-          floatingText({
-            coords: attackTarget,
-            text: blood_curse.id,
-            style: {
-              fill: colors.healthRed,
-              fontSize: '50px',
-              ...config.PIXI_TEXT_DROP_SHADOW,
-            },
-          });
-        }
-        Unit.addModifier(attackTarget, blood_curse.id, underworld, false);
-        Unit.takeDamage(
-          attackTarget,
-          unit.damage,
-          unit,
-          underworld,
-          false,
-          undefined,
-        );
-      },
-    );
+  action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
+    await meleeAction(unit, attackTargets, underworld, canAttackTarget, async (attackTarget: Unit.IUnit) => {
+      playSFXKey('vampireAttack');
+      await Unit.playAnimation(unit, unit.animations.attack);
+      // prediction is false because unit.action doesn't yet ever occur during a prediction
+      if (globalThis.player && attackTarget == globalThis.player.unit) {
+        floatingText({
+          coords: attackTarget,
+          text: blood_curse.id,
+          style: { fill: colors.healthRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
+        })
+      }
+      Unit.addModifier(attackTarget, blood_curse.id, underworld, false);
+      Unit.takeDamage(attackTarget, unit.damage, unit, underworld, false, undefined);
+    })
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-    const closestUnit = Unit.findClosestUnitInDifferentFaction(
-      unit,
-      underworld,
-    );
+    const closestUnit = Unit.findClosestUnitInDifferentFaction(unit, underworld);
     if (closestUnit) {
       return [closestUnit];
     } else {
       return [];
     }
-  },
+  }
 };
 
 export default unit;

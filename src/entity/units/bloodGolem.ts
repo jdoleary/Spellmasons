@@ -1,7 +1,7 @@
 import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import { meleeAction } from './actions/meleeAction';
-import * as config from '../../config';
+import * as config from '../../config'
 import * as Unit from '../Unit';
 import type Underworld from '../../Underworld';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
@@ -20,7 +20,7 @@ const unit: UnitSource = {
     manaMax: 0,
     healthMax: 60,
     damage: 40,
-    bloodColor: 0x8a2e2e,
+    bloodColor: 0x8a2e2e
   },
   spawnParams: {
     probability: 100,
@@ -37,7 +37,7 @@ const unit: UnitSource = {
   sfx: {
     // Golem shares hurt sfx with archer intentionally
     damage: 'archerHurt',
-    death: 'golemDeath',
+    death: 'golemDeath'
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     if (unit.image && unit.image.sprite && unit.image.sprite.filters) {
@@ -51,47 +51,26 @@ const unit: UnitSource = {
             [0x838d9f, 0x802230], //loin cloth
             [0x583131, 0x1c324b], // mouth opening
           ],
-          0.05,
-        ),
+          0.05
+        )
       );
     }
   },
-  action: async (
-    unit: Unit.IUnit,
-    attackTargets: Unit.IUnit[] | undefined,
-    underworld: Underworld,
-    canAttackTarget: boolean,
-  ) => {
-    await meleeAction(
-      unit,
-      attackTargets,
-      underworld,
-      canAttackTarget,
-      async (attackTarget: Unit.IUnit) => {
-        await Unit.playComboAnimation(unit, unit.animations.attack, async () =>
-          Unit.takeDamage(
-            attackTarget,
-            unit.damage,
-            unit,
-            underworld,
-            false,
-            undefined,
-          ),
-        );
-      },
-    );
+  action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
+    await meleeAction(unit, attackTargets, underworld, canAttackTarget, async (attackTarget: Unit.IUnit) => {
+      await Unit.playComboAnimation(unit, unit.animations.attack, async () =>
+        Unit.takeDamage(attackTarget, unit.damage, unit, underworld, false, undefined)
+      );
+    })
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-    const closestUnit = Unit.findClosestUnitInDifferentFaction(
-      unit,
-      underworld,
-    );
+    const closestUnit = Unit.findClosestUnitInDifferentFaction(unit, underworld);
     if (closestUnit) {
       return [closestUnit];
     } else {
       return [];
     }
-  },
+  }
 };
 
 export default unit;

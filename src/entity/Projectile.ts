@@ -1,9 +1,5 @@
 import type * as PIXI from 'pixi.js';
-import {
-  addPixiSpriteAnimated,
-  containerProjectiles,
-  PixiSpriteOptions,
-} from '../graphics/PixiUtils';
+import { addPixiSpriteAnimated, containerProjectiles, PixiSpriteOptions } from '../graphics/PixiUtils';
 import { lerp, distance } from '../jmath/math';
 import type { Vec2 } from '../jmath/Vec';
 import * as Vec from '../jmath/Vec';
@@ -22,7 +18,7 @@ interface Projectile {
   // intercept allows arrows to "hit" a target
   // and disappear
   // before they arrive at the target they were aimed
-  // at.  This allows arrows to hit a unit anywhere (not
+  // at.  This allows arrows to hit a unit anywhere (not 
   // redirecting to the target's center position in order
   // to hit them)
   interceptEndTarget?: Vec2;
@@ -34,14 +30,11 @@ function createProjectile(
   target: Vec2,
   imagePath: string,
   options?: PixiSpriteOptions,
-  interceptEndTarget?: Vec2,
+  interceptEndTarget?: Vec2
 ): Projectile {
-  const sprite = addPixiSpriteAnimated(
-    imagePath,
-    containerProjectiles,
-    Object.assign({ animationSpeed: 0.25, loop: true }, options || {}),
-  );
+  const sprite = addPixiSpriteAnimated(imagePath, containerProjectiles, Object.assign({ animationSpeed: 0.25, loop: true }, options || {}));
   if (sprite) {
+
     sprite.anchor.x = 0.5;
     sprite.anchor.y = 0.5;
 
@@ -62,49 +55,33 @@ function createProjectile(
     sprite,
     interceptEndTarget,
   };
+
 }
 export const SPEED_PER_MILLI = 0.8;
 export function createVisualFlyingProjectile(
   coords: Vec2,
   target: Vec2,
   imagePath: string,
-  interceptEndTarget?: Vec2,
+  interceptEndTarget?: Vec2
 ): Promise<void> {
   // Use this similarTriangles calculation to make the projectile animation pretty so it doesn't originate from the exact center of the
   // source but at the edge instead
-  const startPoint =
-    math.distance(coords, target) <= config.COLLISION_MESH_RADIUS
-      ? coords
-      : Vec.subtract(
-          coords,
-          math.similarTriangles(
-            coords.x - target.x,
-            coords.y - target.y,
-            math.distance(coords, target),
-            config.COLLISION_MESH_RADIUS,
-          ),
-        );
-  const instance = createProjectile(
-    startPoint,
-    target,
-    imagePath,
-    undefined,
-    interceptEndTarget,
-  );
-  const time_in_flight = distance(instance, instance.target) / SPEED_PER_MILLI;
+  const startPoint = math.distance(coords, target) <= config.COLLISION_MESH_RADIUS
+    ? coords
+    : Vec.subtract(coords, math.similarTriangles(coords.x - target.x, coords.y - target.y, math.distance(coords, target), config.COLLISION_MESH_RADIUS));
+  const instance = createProjectile(startPoint, target, imagePath, undefined, interceptEndTarget);
+  const time_in_flight =
+    distance(instance, instance.target) /
+    SPEED_PER_MILLI;
   // + 1000 is an arbitrary delay to give the original promise ample time to finish without a timeout error
   // being reported
-  return raceTimeout(
-    time_in_flight + 1000,
-    'createVisualFlyingProjectile',
-    new Promise((resolve) => {
-      if (globalThis.headless) {
-        fly(instance, 0, resolve);
-      } else {
-        requestAnimationFrame((time) => fly(instance, time, resolve));
-      }
-    }),
-  );
+  return raceTimeout(time_in_flight + 1000, 'createVisualFlyingProjectile', new Promise((resolve) => {
+    if (globalThis.headless) {
+      fly(instance, 0, resolve);
+    } else {
+      requestAnimationFrame((time) => fly(instance, time, resolve));
+    }
+  }));
 }
 
 function fly(
@@ -117,15 +94,17 @@ function fly(
   if (shouldInitialize) {
     instance.startTime = time;
     if (instance.interceptEndTarget) {
-      instance.interceptEndTime =
-        time +
-        distance(instance, instance.interceptEndTarget) / SPEED_PER_MILLI;
+      instance.interceptEndTime = time +
+        distance(instance, instance.interceptEndTarget) /
+        SPEED_PER_MILLI;
     }
     const time_in_flight =
-      distance(instance, instance.target) / SPEED_PER_MILLI;
+      distance(instance, instance.target) /
+      SPEED_PER_MILLI;
     instance.endTime = time + time_in_flight;
   }
   if (instance.sprite) {
+
     instance.sprite.x = instance.x;
     instance.sprite.y = instance.y;
   }
@@ -139,10 +118,7 @@ function fly(
   instance.x = lerp(instance.startX, instance.target.x, t, true);
   instance.y = lerp(instance.startY, instance.target.y, t, true);
   // Once it's fully done animating
-  if (
-    time >=
-    (instance.interceptEndTime ? instance.interceptEndTime : instance.endTime)
-  ) {
+  if (time >= (instance.interceptEndTime ? instance.interceptEndTime : instance.endTime)) {
     // Clean up the element
     if (instance.sprite && instance.sprite.parent) {
       instance.sprite.parent.removeChild(instance.sprite);
@@ -156,7 +132,7 @@ export function createVisualLobbingProjectile(
   coords: Vec2,
   target: Vec2,
   imagePath?: string,
-  options?: PixiSpriteOptions,
+  options?: PixiSpriteOptions
 ): Promise<void> {
   if (!imagePath) {
     return Promise.resolve();
@@ -164,17 +140,13 @@ export function createVisualLobbingProjectile(
   const instance = createProjectile(coords, target, imagePath, options);
   // + 1000 is an arbitrary delay to give the original promise ample time to finish without a timeout error
   // being reported
-  return raceTimeout(
-    config.LOB_PROJECTILE_SPEED + 1000,
-    'createVisualLobbingProjectile',
-    new Promise((resolve) => {
-      if (globalThis.headless) {
-        lob(instance, 0, resolve);
-      } else {
-        requestAnimationFrame((time) => lob(instance, time, resolve));
-      }
-    }),
-  );
+  return raceTimeout(config.LOB_PROJECTILE_SPEED + 1000, 'createVisualLobbingProjectile', new Promise((resolve) => {
+    if (globalThis.headless) {
+      lob(instance, 0, resolve);
+    } else {
+      requestAnimationFrame((time) => lob(instance, time, resolve));
+    }
+  }));
 }
 // Arbitrary lobHeight (negative so it lobs the projectile UP)
 const lobHeight = -100;

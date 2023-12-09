@@ -1,11 +1,11 @@
 import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import { meleeAction } from './actions/meleeAction';
-import * as config from '../../config';
+import * as config from '../../config'
 import * as Unit from '../Unit';
 import type Underworld from '../../Underworld';
 
-export const golem_unit_id = 'golem';
+export const golem_unit_id = 'golem'
 const unit: UnitSource = {
   id: golem_unit_id,
   info: {
@@ -35,44 +35,23 @@ const unit: UnitSource = {
   sfx: {
     // Golem shares hurt sfx with archer intentionally
     damage: 'archerHurt',
-    death: 'golemDeath',
+    death: 'golemDeath'
   },
-  action: async (
-    unit: Unit.IUnit,
-    attackTargets: Unit.IUnit[] | undefined,
-    underworld: Underworld,
-    canAttackTarget: boolean,
-  ) => {
-    await meleeAction(
-      unit,
-      attackTargets,
-      underworld,
-      canAttackTarget,
-      async (attackTarget: Unit.IUnit) => {
-        await Unit.playComboAnimation(unit, unit.animations.attack, async () =>
-          Unit.takeDamage(
-            attackTarget,
-            unit.damage,
-            unit,
-            underworld,
-            false,
-            undefined,
-          ),
-        );
-      },
-    );
+  action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
+    await meleeAction(unit, attackTargets, underworld, canAttackTarget, async (attackTarget: Unit.IUnit) => {
+      await Unit.playComboAnimation(unit, unit.animations.attack, async () =>
+        Unit.takeDamage(attackTarget, unit.damage, unit, underworld, false, undefined)
+      );
+    })
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-    const closestUnit = Unit.findClosestUnitInDifferentFaction(
-      unit,
-      underworld,
-    );
+    const closestUnit = Unit.findClosestUnitInDifferentFaction(unit, underworld);
     if (closestUnit) {
       return [closestUnit];
     } else {
       return [];
     }
-  },
+  }
 };
 
 export default unit;

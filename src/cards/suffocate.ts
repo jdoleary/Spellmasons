@@ -11,38 +11,24 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
 export const suffocateCardId = 'suffocate';
-function add(
-  unit: Unit.IUnit,
-  underworld: Underworld,
-  prediction: boolean,
-  quantity: number = 1,
-) {
-  const modifier = getOrInitModifier(
-    unit,
-    suffocateCardId,
-    { isCurse: true, quantity, persistBetweenLevels: false },
-    () => {
-      // Add event
-      if (!unit.onTurnStartEvents.includes(suffocateCardId)) {
-        unit.onTurnStartEvents.push(suffocateCardId);
+function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
+  const modifier = getOrInitModifier(unit, suffocateCardId, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
+    // Add event
+    if (!unit.onTurnStartEvents.includes(suffocateCardId)) {
+      unit.onTurnStartEvents.push(suffocateCardId);
+    }
+    // Add subsprite image
+    if (!prediction) {
+      if (spell.modifiers?.subsprite) {
+        Image.addSubSprite(unit.image, spell.modifiers.subsprite.imageName);
       }
-      // Add subsprite image
-      if (!prediction) {
-        if (spell.modifiers?.subsprite) {
-          Image.addSubSprite(unit.image, spell.modifiers.subsprite.imageName);
-        }
-      }
-    },
-  );
+    }
+  });
   const lastTurnsLeftToLive = modifier.turnsLeftToLive;
-  modifier.turnsLeftToLive =
-    1 + Math.ceil(unit.health / 20 / modifier.quantity);
+  modifier.turnsLeftToLive = 1 + Math.ceil(unit.health / 20 / modifier.quantity)
   // Ensure that casting Suffocate doesn't ever increase the turns left
   if (lastTurnsLeftToLive) {
-    modifier.turnsLeftToLive = Math.min(
-      modifier.turnsLeftToLive,
-      lastTurnsLeftToLive,
-    );
+    modifier.turnsLeftToLive = Math.min(modifier.turnsLeftToLive, lastTurnsLeftToLive);
   }
   if (!prediction) {
     // Temporarily use floating text until spell animation is finished
@@ -53,9 +39,7 @@ function add(
 export function updateTooltip(unit: Unit.IUnit) {
   if (unit.modifiers[suffocateCardId]) {
     // Set tooltip:
-    unit.modifiers[
-      suffocateCardId
-    ].tooltip = `${unit.modifiers[suffocateCardId].turnsLeftToLive} turns until suffocation`;
+    unit.modifiers[suffocateCardId].tooltip = `${unit.modifiers[suffocateCardId].turnsLeftToLive} turns until suffocation`
   }
 }
 
@@ -74,20 +58,11 @@ const spell: Spell = {
     description: 'spell_suffocate',
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
-      const targets = state.targetedUnits.filter((u) => u.alive);
+      const targets = state.targetedUnits.filter(u => u.alive);
       if (targets.length) {
-        await Promise.all([
-          playDefaultSpellAnimation(card, targets, prediction),
-          playDefaultSpellSFX(card, prediction),
-        ]);
+        await Promise.all([playDefaultSpellAnimation(card, targets, prediction), playDefaultSpellSFX(card, prediction)]);
         for (let unit of targets) {
-          Unit.addModifier(
-            unit,
-            suffocateCardId,
-            underworld,
-            prediction,
-            quantity,
-          );
+          Unit.addModifier(unit, suffocateCardId, underworld, prediction, quantity);
         }
       }
       return state;
@@ -110,11 +85,7 @@ const spell: Spell = {
     // },
   },
   events: {
-    onTurnStart: async (
-      unit: IUnit,
-      prediction: boolean,
-      underworld: Underworld,
-    ) => {
+    onTurnStart: async (unit: IUnit, prediction: boolean, underworld: Underworld) => {
       const modifier = unit.modifiers[suffocateCardId];
       if (!prediction) {
         if (modifier) {
@@ -124,15 +95,12 @@ const spell: Spell = {
           if (modifier.turnsLeftToLive <= 0) {
             Unit.die(unit, underworld, prediction);
             floatingText({
-              coords: unit,
-              text: `Suffocated!`,
+              coords: unit, text: `Suffocated!`,
               style: { fill: colors.healthRed },
             });
           }
         } else {
-          console.error(
-            `Should have ${suffocateCardId} modifier on unit but it is missing`,
-          );
+          console.error(`Should have ${suffocateCardId} modifier on unit but it is missing`);
         }
       }
       return false;

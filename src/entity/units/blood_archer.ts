@@ -6,10 +6,7 @@ import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import * as math from '../../jmath/math';
 import { Vec2 } from '../../jmath/Vec';
 import Underworld from '../../Underworld';
-import {
-  getBestRangedLOSTarget,
-  rangedLOSMovement,
-} from './actions/rangedAction';
+import { getBestRangedLOSTarget, rangedLOSMovement } from './actions/rangedAction';
 
 const NUMBER_OF_UNITS_BLOOD_ARCHER_CAN_ATTACK = 3;
 const NUMBER_OF_UNITS_MINIBOSS_BLOOD_ARCHER_CAN_ATTACK = 6;
@@ -17,11 +14,7 @@ export const BLOOD_ARCHER_ID = 'Blood Archer';
 const unit: UnitSource = {
   id: BLOOD_ARCHER_ID,
   info: {
-    description: [
-      'blood_archer_copy',
-      NUMBER_OF_UNITS_BLOOD_ARCHER_CAN_ATTACK.toString(),
-      NUMBER_OF_UNITS_MINIBOSS_BLOOD_ARCHER_CAN_ATTACK.toString(),
-    ],
+    description: ['blood_archer_copy', NUMBER_OF_UNITS_BLOOD_ARCHER_CAN_ATTACK.toString(), NUMBER_OF_UNITS_MINIBOSS_BLOOD_ARCHER_CAN_ATTACK.toString()],
     image: 'units/archerIdle',
     subtype: UnitSubType.RANGED_LOS,
   },
@@ -30,7 +23,7 @@ const unit: UnitSource = {
     manaMax: 0,
     damage: 40,
     healthMax: 80,
-    bloodColor: 0x324860,
+    bloodColor: 0x324860
   },
   spawnParams: {
     probability: 50,
@@ -57,19 +50,14 @@ const unit: UnitSource = {
             [0x7c5353, 0x53667c], //skinMedium
             [0x603232, 0x324860], //skinDark
             [0x838d9f, 0x802230], //loin cloth
-            [0x3fc7c2, 0xc73f53], // feathers
+            [0x3fc7c2, 0xc73f53], // feathers 
           ],
-          0.05,
-        ),
+          0.05
+        )
       );
     }
   },
-  action: async (
-    unit: Unit.IUnit,
-    attackTargets: Unit.IUnit[] | undefined,
-    underworld: Underworld,
-    _canAttackTarget: boolean,
-  ) => {
+  action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, _canAttackTarget: boolean) => {
     // Archer just checks attackTarget, not canAttackTarget to know if it can attack because getBestRangedLOSTarget() will return undefined
     // if it can't attack any targets
     // Attack
@@ -85,15 +73,7 @@ const unit: UnitSource = {
             target,
             'projectile/arrow',
           ).then(() => {
-            Unit.takeDamage(
-              target,
-              unit.damage,
-              unit,
-              underworld,
-              false,
-              undefined,
-              { thinBloodLine: true },
-            );
+            Unit.takeDamage(target, unit.damage, unit, underworld, false, undefined, { thinBloodLine: true });
           });
         }
         return flyingProjectilePromise;
@@ -104,12 +84,7 @@ const unit: UnitSource = {
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-    return getBestRangedLOSTarget(unit, underworld).slice(
-      0,
-      unit.isMiniboss
-        ? NUMBER_OF_UNITS_MINIBOSS_BLOOD_ARCHER_CAN_ATTACK
-        : NUMBER_OF_UNITS_BLOOD_ARCHER_CAN_ATTACK,
-    );
-  },
+    return getBestRangedLOSTarget(unit, underworld).slice(0, unit.isMiniboss ? NUMBER_OF_UNITS_MINIBOSS_BLOOD_ARCHER_CAN_ATTACK : NUMBER_OF_UNITS_BLOOD_ARCHER_CAN_ATTACK);
+  }
 };
 export default unit;

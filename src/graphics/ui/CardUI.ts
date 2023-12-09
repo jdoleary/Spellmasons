@@ -2,34 +2,22 @@ import type * as Player from '../../entity/Player';
 import * as colors from './colors';
 import * as Cards from '../../cards';
 import * as config from '../../config';
-import { clearSpellEffectProjection, runPredictions } from '../PlanningView';
 import {
-  calculateCost,
-  calculateCostForSingleCard,
-  getCardCooldown,
-  levelsUntilCardIsEnabled,
-} from '../../cards/cardUtils';
+  clearSpellEffectProjection, runPredictions,
+} from '../PlanningView';
+import { calculateCost, calculateCostForSingleCard, getCardCooldown, levelsUntilCardIsEnabled } from '../../cards/cardUtils';
 import floatingText from '../FloatingText';
-import {
-  composeOnDamageEvents,
-  copyForPredictionUnit,
-} from '../../entity/Unit';
+import { composeOnDamageEvents, copyForPredictionUnit } from '../../entity/Unit';
 import { NUMBER_OF_TOOLBAR_SLOTS } from '../../config';
 import Underworld from '../../Underworld';
-import {
-  CardCategory,
-  CardRarity,
-  probabilityMap,
-} from '../../types/commonTypes';
+import { CardCategory, CardRarity, probabilityMap } from '../../types/commonTypes';
 import { MESSAGE_TYPES } from '../../types/MessageTypes';
 import { explain, EXPLAIN_END_TURN } from '../Explain';
 import { Overworld } from '../../Overworld';
 import { resetNotifiedImmune } from '../../cards/immune';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
-const elInvContent = document.getElementById(
-  'inventory-content',
-) as HTMLElement;
+const elInvContent = document.getElementById('inventory-content') as HTMLElement;
 resetInventoryContent();
 function resetInventoryContent() {
   if (globalThis.headless) {
@@ -51,36 +39,28 @@ function resetInventoryContent() {
       el.classList.add('category');
       el.dataset.category = category.toString();
       elInvContent.appendChild(el);
-    });
+    })
   }
+
 }
 const elInvButton = document.getElementById('inventory-icon') as HTMLElement;
 // Where the non-selected cards are displayed
 export const elCardHand = document.getElementById('card-hand') as HTMLElement;
-export const elFloatingCardHolderLeft = document.getElementById(
-  'floating-card-holder-left',
-) as HTMLElement;
-export const elFloatingCardHolderRight = document.getElementById(
-  'floating-card-holder-right',
-) as HTMLElement;
-const cardContainers = [
-  elCardHand,
-  elFloatingCardHolderLeft,
-  elFloatingCardHolderRight,
-];
+export const elFloatingCardHolderLeft = document.getElementById('floating-card-holder-left') as HTMLElement;
+export const elFloatingCardHolderRight = document.getElementById('floating-card-holder-right') as HTMLElement;
+const cardContainers = [elCardHand, elFloatingCardHolderLeft, elFloatingCardHolderRight];
 // Where the selected cards are displayed
-const elSelectedCards = document.getElementById(
-  'selected-cards',
-) as HTMLElement;
+const elSelectedCards = document.getElementById('selected-cards') as HTMLElement;
 const dragstart = (ev: any) => {
   document.body.classList.toggle('dragging-card', true);
-  const target = ev.target as HTMLElement;
+  const target = (ev.target as HTMLElement)
   if (target.closest('.card')) {
-    dragCard = target.closest('.card') as HTMLElement;
+    dragCard = (target.closest('.card') as HTMLElement)
   } else {
     ev.preventDefault();
   }
-};
+
+}
 const deleteCardFromSlot = (ev: any, overworld: Overworld) => {
   const startDragCardIndex = getStartDragCardIndex();
   if (startDragCardIndex !== -1) {
@@ -96,20 +76,14 @@ const deleteCardFromSlot = (ev: any, overworld: Overworld) => {
       ev.preventDefault();
     }
   }
-};
+
+}
 function getStartDragCardIndex(): number {
   if (!dragCard) {
     return -1;
   }
-  let startDragCardIndex =
-    dragCard.parentNode &&
-    (dragCard.closest('#card-hand') ||
-      dragCard.closest('.floating-card-holder'))
-      ? Array.from(dragCard.parentNode.children).indexOf(dragCard)
-      : -1;
-  const containerIndexOffset = cardContainers.indexOf(
-    dragCard.parentNode as HTMLElement,
-  );
+  let startDragCardIndex = dragCard.parentNode && (dragCard.closest('#card-hand') || dragCard.closest('.floating-card-holder')) ? Array.from(dragCard.parentNode.children).indexOf(dragCard) : -1;
+  const containerIndexOffset = cardContainers.indexOf(dragCard.parentNode as HTMLElement);
   // Change startDragCardIndex based on which card container it originated from
   if (containerIndexOffset !== -1) {
     startDragCardIndex += NUMBER_OF_TOOLBAR_SLOTS * containerIndexOffset;
@@ -118,39 +92,26 @@ function getStartDragCardIndex(): number {
 }
 const drop = (ev: any, overworld: Overworld, startIndex: number) => {
   document.body.classList.toggle('dragging-card', false);
-  const dropElement = (ev.target as HTMLElement).closest(
-    '.slot',
-  ) as HTMLElement;
+  const dropElement = ((ev.target as HTMLElement).closest('.slot') as HTMLElement);
   if (!dropElement) {
-    console.warn(
-      'Tried to drop spell but dropElement was null. This will happen if user drops spell between slots',
-    );
+    console.warn('Tried to drop spell but dropElement was null. This will happen if user drops spell between slots');
     return;
   }
-  const dropIndex =
-    startIndex +
-    (dropElement.parentNode
-      ? Array.from(dropElement.parentNode.children).indexOf(dropElement)
-      : -1);
-  const cardId = dragCard && dragCard.dataset.cardId;
-  if (
-    globalThis.player &&
-    dropIndex !== -1 &&
-    dragCard &&
-    cardId !== undefined
-  ) {
+  const dropIndex = startIndex + (dropElement.parentNode ? Array.from(dropElement.parentNode.children).indexOf(dropElement) : -1);
+  const cardId = dragCard && dragCard.dataset.cardId
+  if (globalThis.player && dropIndex !== -1 && dragCard && cardId !== undefined) {
     const startDragCardIndex = getStartDragCardIndex();
     if (startDragCardIndex !== -1) {
       // Then the drag card is already in the toolbar and this is a swap between
       // two cards on the toolbar
-      const swapCard = globalThis.player.cardsInToolbar[dropIndex] || '';
+      const swapCard = globalThis.player.cardsInToolbar[dropIndex] || "";
       globalThis.player.cardsInToolbar[dropIndex] = cardId;
       globalThis.player.cardsInToolbar[startDragCardIndex] = swapCard;
     } else {
       // else a card is being dragged in from inventory
       globalThis.player.cardsInToolbar[dropIndex] = cardId;
     }
-    // Send new card order to server
+    // Send new card order to server 
     overworld.pie.sendData({
       type: MESSAGE_TYPES.PLAYER_CARDS,
       cards: globalThis.player.cardsInToolbar,
@@ -162,17 +123,14 @@ const drop = (ev: any, overworld: Overworld, startIndex: number) => {
       console.error('Cannot drop card on toolbar, underworld is undefined.');
     }
   } else {
-    console.error(
-      'Something went wrong dragndropping card',
-      dropIndex,
-      dragCard,
-    );
+    console.error('Something went wrong dragndropping card', dropIndex, dragCard);
   }
   ev.preventDefault();
-};
+}
 // Displays a full card with info on inspect-mode + hover of card
 const elCardInspects = document.querySelectorAll('.card-inspect');
 export function setupCardUIEventListeners(overworld: Overworld) {
+
   if (!globalThis.headless) {
     elInvButton?.addEventListener('click', (e) => {
       // Prevent a click on the inventory button from triggering other click listeners
@@ -182,37 +140,36 @@ export function setupCardUIEventListeners(overworld: Overworld) {
         toggleInventory(undefined, undefined, overworld.underworld);
       } else {
         console.error('Cannot toggleInventory, underworld is undefined');
+
       }
     });
 
     elInvContent.addEventListener('dragstart', dragstart);
     elInvContent.addEventListener('dragend', () => {
       document.body.classList.toggle('dragging-card', false);
+
     });
     addCardInspectHandlers(elInvContent, overworld);
     for (let i = 0; i < cardContainers.length; i++) {
       const container = cardContainers[i];
       if (container) {
         container.addEventListener('dragstart', dragstart);
-        container.addEventListener('dragover', (ev) => {
+        container.addEventListener('dragover', ev => {
           ev.preventDefault();
         });
-        container.addEventListener('dragend', (ev) => {
+        container.addEventListener('dragend', ev => {
           document.body.classList.toggle('dragging-card', false);
           // Ensure the drag end is outside of all containers:
-          const stillInsideCardContainer = cardContainers.some((c) => {
+          const stillInsideCardContainer = cardContainers.some(c => {
             const rect = c.getBoundingClientRect();
             // Inside bounding rect
-            const inside =
-              ev.x > rect.x &&
-              ev.x < rect.x + rect.width &&
+            const inside = ev.x > rect.x && ev.x < (rect.x + rect.width)
               // card-hand has a height of 10 and if it's height were larger it would cover the end turn and inventory
               // buttons so instead just set the height to 157 here if the height is detected as 10.
               // Not proud of this fix but I don't have the time to do it properly.  Worth a refactor if i can revisit it.
               // This 'stillInsideCardContainer' check is non critical anyway, it just prevents the rare
               // circumstance where a spell disappears when clicking on it rapidly
-              ev.y > rect.y &&
-              ev.y < rect.y + (rect.height == 10 ? 157 : rect.height);
+              && ev.y > rect.y && ev.y < (rect.y + (rect.height == 10 ? 157 : rect.height));
             return inside;
           });
           if (stillInsideCardContainer) {
@@ -224,9 +181,7 @@ export function setupCardUIEventListeners(overworld: Overworld) {
           // in the .card-inspect element
           clearCurrentlyShownCard();
         });
-        container.addEventListener('drop', (ev) =>
-          drop(ev, overworld, NUMBER_OF_TOOLBAR_SLOTS * i),
-        );
+        container.addEventListener('drop', ev => drop(ev, overworld, (NUMBER_OF_TOOLBAR_SLOTS) * i));
         addCardInspectHandlers(container, overworld);
       } else {
         console.error('Card container', i, 'does not exist');
@@ -239,10 +194,10 @@ export function setupCardUIEventListeners(overworld: Overworld) {
     // slots but you misclick and release in the border between)
     const elCardHoldersBorder = document.getElementById('card-holders-border');
     if (elCardHoldersBorder) {
-      elCardHoldersBorder.addEventListener('dragover', (ev) => {
+      elCardHoldersBorder.addEventListener('dragover', ev => {
         ev.preventDefault();
       });
-      elCardHoldersBorder.addEventListener('drop', (ev) => {
+      elCardHoldersBorder.addEventListener('drop', ev => {
         if (overworld.underworld) {
           // Invoking recalcPositionForCards prevents the dragend event
           recalcPositionForCards(globalThis.player, overworld.underworld);
@@ -250,14 +205,11 @@ export function setupCardUIEventListeners(overworld: Overworld) {
         ev.preventDefault();
       });
     } else {
-      console.error('Unexpected: no card holders border');
+      console.error('Unexpected: no card holders border')
     }
   }
 }
-function addCardInspectHandlers(
-  cardContainerElement: HTMLElement,
-  overworld: Overworld,
-) {
+function addCardInspectHandlers(cardContainerElement: HTMLElement, overworld: Overworld) {
   if (cardContainerElement) {
     // Show full card on hover
     cardContainerElement.addEventListener('mousemove', (e) => {
@@ -279,21 +231,15 @@ function addCardInspectHandlers(
       clearCurrentlyShownCard();
     });
   } else {
-    console.error(
-      'Card container element is undefined, cannot add card inspect handlers.',
-    );
+    console.error('Card container element is undefined, cannot add card inspect handlers.')
   }
 }
 export function clearCurrentlyShownCard() {
-  if (globalThis.headless) {
-    return;
-  }
+  if (globalThis.headless) { return; }
   // Clear cardInspect when the mouse leaves elCardHolders so that the large card
   // doesn't stay in the center of the screen
   if (elCardInspects.length) {
-    elCardInspects.forEach((el) => {
-      el.innerHTML = '';
-    });
+    elCardInspects.forEach(el => { el.innerHTML = ''; });
   }
   currentlyShownCardId = '';
 }
@@ -303,7 +249,7 @@ function showFullCard(card: Cards.ICard, underworld?: Underworld) {
   if (card.id != currentlyShownCardId) {
     currentlyShownCardId = card.id;
     if (elCardInspects.length) {
-      elCardInspects.forEach((el) => {
+      elCardInspects.forEach(el => {
         // Clear previous
         el.innerHTML = '';
         el.appendChild(createCardElement(card, underworld, true));
@@ -315,15 +261,10 @@ function showFullCard(card: Cards.ICard, underworld?: Underworld) {
 }
 let cardsSelected: string[] = [];
 
-export function recalcPositionForCards(
-  player: Player.IPlayer | undefined,
-  underworld: Underworld,
-) {
-  if (globalThis.headless) {
-    return;
-  }
+export function recalcPositionForCards(player: Player.IPlayer | undefined, underworld: Underworld) {
+  if (globalThis.headless) { return; }
   if (!globalThis.player) {
-    return;
+    return
   }
   if (!player) {
     return;
@@ -343,16 +284,13 @@ export function recalcPositionForCards(
 
   // Reconcile the elements with the player's hand
   // *3: for extra toolbar slots
-  for (
-    let slotIndex = 0;
-    slotIndex < NUMBER_OF_TOOLBAR_SLOTS * 3;
-    slotIndex++
-  ) {
+  for (let slotIndex = 0; slotIndex < NUMBER_OF_TOOLBAR_SLOTS * 3; slotIndex++) {
     const cardId = player.cardsInToolbar[slotIndex];
-    const container =
-      cardContainers[Math.floor(slotIndex / NUMBER_OF_TOOLBAR_SLOTS)];
+    const container = cardContainers[Math.floor(slotIndex / NUMBER_OF_TOOLBAR_SLOTS)];
     if (container) {
+
       if (cardId) {
+
         // Create UI element for card
         const card = Cards.allCards[cardId];
         // Note: Some upgrades don't have corresponding cards (such as resurrect)
@@ -364,6 +302,7 @@ export function recalcPositionForCards(
           addListenersToCardElement(player, element, cardId, underworld);
           addToolbarListener(element, slotIndex, underworld);
           container.appendChild(element);
+
         } else {
           console.log(`No corresponding source card exists for "${cardId}"`);
         }
@@ -387,6 +326,7 @@ export function recalcPositionForCards(
   }
   // Rebuild all the card elements within #selected-cards
   for (let cardId of cardsSelected) {
+
     // Create UI element for card
     const card = Cards.allCards[cardId];
     // Note: Some upgrades don't have corresponding cards (such as resurrect)
@@ -401,13 +341,8 @@ export function recalcPositionForCards(
   updateCardBadges(underworld);
 }
 export const openInvClass = 'open-inventory';
-export function syncInventory(
-  slotModifyingIndex: number | undefined,
-  underworld: Underworld,
-) {
-  if (globalThis.headless) {
-    return;
-  }
+export function syncInventory(slotModifyingIndex: number | undefined, underworld: Underworld) {
+  if (globalThis.headless) { return; }
   if (globalThis.player) {
     // clear contents
     resetInventoryContent();
@@ -417,7 +352,7 @@ export function syncInventory(
     // how many new cards the player gets to pick in the next upgrade relative to progress in the underworld,
     // so removing them would give the player extra, undesired upgrades.
     const cards = Cards.getCardsFromIds(globalThis.player.inventory);
-    let replacedCards = cards.flatMap((card) => card.replaces || []);
+    let replacedCards = cards.flatMap(card => card.replaces || []);
     if (adminMode && isSuperMe) {
       // Don't replace any cards given by superMe because superMe
       // is made to allow an admin to test out all cards
@@ -426,8 +361,8 @@ export function syncInventory(
 
     const invCards = globalThis.player.inventory
       // .filter: Hide replaced cards in inventory
-      .filter((cardId) => !replacedCards.includes(cardId))
-      .map((c) => Cards.allCards[c])
+      .filter(cardId => !replacedCards.includes(cardId))
+      .map(c => Cards.allCards[c])
       .sort((a, b) => {
         if (!a || !b) {
           return 0;
@@ -450,31 +385,23 @@ export function syncInventory(
         if (slotModifyingIndex !== undefined) {
           elCard.addEventListener('click', (e) => {
             if (globalThis.player) {
-              globalThis.player.cardsInToolbar[slotModifyingIndex] =
-                inventoryCardId;
-              recalcPositionForCards(globalThis.player, underworld);
+              globalThis.player.cardsInToolbar[slotModifyingIndex] = inventoryCardId;
+              recalcPositionForCards(globalThis.player, underworld)
               // Close inventory
               toggleInventory(undefined, false, underworld);
               e.preventDefault();
               e.stopPropagation();
               e.stopImmediatePropagation();
             }
-          });
+          })
         }
         // When the user clicks on a card
-        addListenersToCardElement(
-          globalThis.player,
-          elCard,
-          card.id,
-          underworld,
-        );
+        addListenersToCardElement(globalThis.player, elCard, card.id, underworld);
         // Show that card is already on toolbar
         if (globalThis.player.cardsInToolbar.includes(inventoryCardId)) {
           elCard.classList.add('inToolbar');
         }
-        const elCategory = elInvContent.querySelector(
-          `.category[data-category="${CardCategory[card.category]}"]`,
-        );
+        const elCategory = elInvContent.querySelector(`.category[data-category="${CardCategory[card.category]}"]`)
         if (elCategory) {
           elCategory.appendChild(elCard);
         } else {
@@ -483,20 +410,12 @@ export function syncInventory(
       }
     }
     // Make category labels visible if player has at least one card in that category
-    invCards
-      .map((c) => (c ? CardCategory[c.category] : ''))
-      .map((category) =>
-        elInvContent.querySelector(
-          `.category-label[data-category="${category}"]`,
-        ),
-      )
-      .forEach((el) => el?.classList.add('visible'));
+    invCards.map(c => c ? CardCategory[c.category] : '')
+      .map(category => elInvContent.querySelector(`.category-label[data-category="${category}"]`))
+      .forEach(el => el?.classList.add('visible'))
     // Add an inventory element to clear the currently selected toolbar item
     if (slotModifyingIndex !== undefined) {
-      const elClearSlotModifiyingIndex = createNonCardInventoryElement(
-        'toolbar-slot.png',
-        'Empty',
-      );
+      const elClearSlotModifiyingIndex = createNonCardInventoryElement('toolbar-slot.png', 'Empty');
       if (elClearSlotModifiyingIndex) {
         elInvContent.appendChild(elClearSlotModifiyingIndex);
         elClearSlotModifiyingIndex.addEventListener('click', () => {
@@ -505,21 +424,15 @@ export function syncInventory(
             recalcPositionForCards(globalThis.player, underworld);
             toggleInventory(undefined, false, underworld);
           }
-        });
+        })
       }
     }
   } else {
     console.error('Cannot sync inventory, globalThis.player is undefined');
   }
 }
-export function toggleInventory(
-  toolbarIndex: number | undefined,
-  forceState: boolean | undefined,
-  underworld: Underworld,
-) {
-  if (globalThis.headless) {
-    return;
-  }
+export function toggleInventory(toolbarIndex: number | undefined, forceState: boolean | undefined, underworld: Underworld) {
+  if (globalThis.headless) { return; }
   const inventoryWasOpen = document.body?.classList.contains(openInvClass);
   document.body?.classList.toggle(openInvClass, forceState);
   if (globalThis.player && document.body?.classList.contains(openInvClass)) {
@@ -534,41 +447,38 @@ export function toggleInventory(
       playSFXKey('inventory_close');
     }
     // When inventory closes, remove active toolbar element class
-    document
-      .querySelectorAll('.active-toolbar-element')
-      .forEach((e) => e.classList.remove(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME));
+    document.querySelectorAll('.active-toolbar-element').forEach(e => e.classList.remove(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME))
   }
 }
-const ACTIVE_TOOLBAR_ELEMENT_CLASSNAME = 'active-toolbar-element';
+const ACTIVE_TOOLBAR_ELEMENT_CLASSNAME = 'active-toolbar-element'
 function addToolbarListener(
   element: HTMLElement,
   toolbarIndex: number,
-  underworld: Underworld,
+  underworld: Underworld
 ) {
   element.addEventListener('contextmenu', (e) => {
     if (element.classList.contains(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME)) {
       // just close the inventory
       toggleInventory(undefined, false, underworld);
     } else {
-      document
-        .querySelectorAll(`.${ACTIVE_TOOLBAR_ELEMENT_CLASSNAME}`)
-        .forEach((el) => {
-          el.classList.remove(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME);
-        });
+      document.querySelectorAll(`.${ACTIVE_TOOLBAR_ELEMENT_CLASSNAME}`).forEach(el => {
+        el.classList.remove(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME);
+      })
       // Otherwise open the inventory with the right-clicked element selected
-      element.classList.add(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME);
+      element.classList.add(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME)
       toggleInventory(toolbarIndex, true, underworld);
     }
     e.preventDefault();
     e.stopPropagation();
   });
+
 }
 let dragCard: HTMLElement | undefined;
 function addListenersToCardElement(
   player: Player.IPlayer,
   element: HTMLElement,
   cardId: string,
-  underworld: Underworld,
+  underworld: Underworld
 ) {
   if (globalThis.headless) {
     return;
@@ -576,11 +486,7 @@ function addListenersToCardElement(
   element.addEventListener('click', (e) => {
     e.stopPropagation();
     if (levelsUntilCardIsEnabled(cardId, underworld) > 0) {
-      floatingText({
-        coords: underworld.getMousePos(),
-        text: i18n('Disabled'),
-        style: { fill: 'red' },
-      });
+      floatingText({ coords: underworld.getMousePos(), text: i18n('Disabled'), style: { fill: 'red' } });
       playSFXKey('deny');
       return;
     }
@@ -604,14 +510,7 @@ function addListenersToCardElement(
     } else {
       // Don't let card get added if it's on cooldown
       if (getCardCooldown(cardId, underworld)) {
-        floatingText({
-          coords: underworld.getMousePos(),
-          text: i18n([
-            'card cooldown',
-            getCardCooldown(cardId, underworld).toString(),
-          ]),
-          style: { fill: 'red' },
-        });
+        floatingText({ coords: underworld.getMousePos(), text: i18n(['card cooldown', getCardCooldown(cardId, underworld).toString()]), style: { fill: 'red' } });
         playSFXKey('deny');
         return;
       }
@@ -621,42 +520,32 @@ function addListenersToCardElement(
   });
 }
 export function deselectLastCard(underworld: Underworld) {
-  if (globalThis.headless) {
-    return;
-  }
+  if (globalThis.headless) { return; }
   if (elSelectedCards) {
-    const cardGroup = elSelectedCards.children.item(
-      elSelectedCards.children.length - 1,
-    ) as HTMLElement;
+    const cardGroup = elSelectedCards.children.item(elSelectedCards.children.length - 1) as HTMLElement;
     if (cardGroup) {
       (cardGroup.children.item(0) as HTMLElement).click();
       manageSelectedCardsParentVisibility();
       runPredictions(underworld);
     } else {
-      console.warn(`Cannot deselect last card in selected cards`);
+      console.warn(`Cannot deselect last card in selected cards`)
     }
   }
+
 }
 export function selectCardByIndex(index: number, cardHolder: HTMLElement) {
-  if (globalThis.headless) {
-    return;
-  }
+  if (globalThis.headless) { return; }
   if (cardHolder) {
     const cardGroup = cardHolder.children.item(index) as HTMLElement;
     if (cardGroup && cardGroup.children.item(0)) {
       (cardGroup.children.item(0) as HTMLElement).click();
     } else {
-      console.warn(`Cannot select a card, no card in hand at index ${index}`);
+      console.warn(`Cannot select a card, no card in hand at index ${index}`)
     }
   }
 }
 // Moves a card element to selected-cards div
-async function selectCard(
-  player: Player.IPlayer,
-  element: HTMLElement,
-  cardId: string,
-  underworld: Underworld,
-) {
+async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string, underworld: Underworld) {
   resetNotifiedImmune();
   const card = Cards.allCards[cardId];
   if (!card) {
@@ -676,7 +565,7 @@ async function selectCard(
     addListenersToCardElement(player, clone, cardId, underworld);
     clone.classList.add('selected');
     if (card.requiresFollowingCard) {
-      clone.classList.add('requires-following-card');
+      clone.classList.add('requires-following-card')
     }
     elSelectedCards.appendChild(clone);
     manageSelectedCardsParentVisibility();
@@ -687,35 +576,27 @@ async function selectCard(
       await runPredictions(underworld);
     }
 
-    const predictionPlayerUnit = underworld.unitsPrediction.find(
-      (u) => u.id == globalThis.player?.unit.id,
-    );
+    const predictionPlayerUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id);
     if (predictionPlayerUnit) {
       if (predictionPlayerUnit.mana < 0) {
         floatingText({
           coords: underworld.getMousePos(),
           text: 'Insufficient Mana',
-          style: {
-            fill: colors.errorRed,
-            fontSize: '50px',
-            ...config.PIXI_TEXT_DROP_SHADOW,
-          },
-        });
+          style: { fill: colors.errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
+        })
         explain(EXPLAIN_END_TURN);
         deselectLastCard(underworld);
+
       }
 
       if (predictionPlayerUnit.health < 0) {
         floatingText({
           coords: underworld.getMousePos(),
           text: 'Insufficient Health',
-          style: {
-            fill: colors.errorRed,
-            fontSize: '50px',
-            ...config.PIXI_TEXT_DROP_SHADOW,
-          },
-        });
+          style: { fill: colors.errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
+        })
         deselectLastCard(underworld);
+
       }
     } else {
       console.warn('Unexpected: predictionPlayerUnit is undefined');
@@ -725,37 +606,30 @@ async function selectCard(
   }
 }
 export function areAnyCardsSelected() {
-  if (globalThis.headless) {
-    return false;
-  }
+  if (globalThis.headless) { return false; }
   return !!getSelectedCardIds().length;
 }
 
+
 export function getSelectedCardIds(): string[] {
-  if (globalThis.headless) {
-    return [];
-  }
+  if (globalThis.headless) { return []; }
   if (elSelectedCards && elSelectedCards.classList.contains('hide')) {
     return [];
   }
-  return Array.from(
-    document.querySelectorAll('#selected-cards .card.selected'),
-  ).map((el) => (el instanceof HTMLElement ? el.dataset.cardId || '' : ''));
+  return Array.from(document.querySelectorAll('#selected-cards .card.selected')).map((el) =>
+    el instanceof HTMLElement ? el.dataset.cardId || '' : '',
+  );
 }
 export function getSelectedCards(): Cards.ICard[] {
-  if (globalThis.headless) {
-    return [];
-  }
+  if (globalThis.headless) { return []; }
   const cardIds = getSelectedCardIds();
   return Cards.getCardsFromIds(cardIds);
 }
 
 export function clearSelectedCards(underworld: Underworld) {
-  if (globalThis.headless) {
-    return;
-  }
+  if (globalThis.headless) { return; }
   // Deselect all selected cards
-  cardsSelected = [];
+  cardsSelected = []
   document.querySelectorAll('.card.selected').forEach((el) => {
     if (el instanceof HTMLElement) {
       el.remove();
@@ -779,6 +653,7 @@ function manageSelectedCardsParentVisibility() {
   } else {
     console.error('Unexpected: elSelectedCards has no parent');
   }
+
 }
 // @ts-ignore for menu
 globalThis.cardRarityAsString = cardRarityAsString;
@@ -791,7 +666,7 @@ function cardProbabilityToRarity(content: { probability: number }): CardRarity {
   } else if (content.probability <= probabilityMap[CardRarity.RARE]) {
     return CardRarity.RARE;
   } else if (content.probability <= probabilityMap[CardRarity.UNCOMMON]) {
-    return CardRarity.UNCOMMON;
+    return CardRarity.UNCOMMON
   } else if (content.probability <= probabilityMap[CardRarity.SPECIAL]) {
     return CardRarity.SPECIAL;
   } else if (content.probability <= probabilityMap[CardRarity.COMMON]) {
@@ -835,7 +710,7 @@ export function getCardRarityColor(content: { probability: number }): string {
     case CardRarity.SPECIAL:
       return '#19381F';
     case CardRarity.COMMON:
-      return '#3b322c';
+      return '#3b322c'
   }
 }
 export function getSpellThumbnailPath(path?: string): string {
@@ -850,14 +725,10 @@ export function getSpellThumbnailPath(path?: string): string {
   // The presence of '/' means that it's a different path than default (such as in a mod) and it isn't
   // nested in images/spell/
   return path.indexOf('/') !== -1 ? path : 'images/spell/' + path;
+
 }
-function createNonCardInventoryElement(
-  thumbnailPath: string,
-  titleText: string,
-) {
-  if (globalThis.headless) {
-    return;
-  }
+function createNonCardInventoryElement(thumbnailPath: string, titleText: string) {
+  if (globalThis.headless) { return; }
   const element = document.createElement('div');
   element.classList.add('card');
   const elCardInner = document.createElement('div');
@@ -877,12 +748,7 @@ function createNonCardInventoryElement(
 }
 // @ts-ignore For menu only
 globalThis.createCardElement = createCardElement;
-function createCardElement(
-  content: Cards.ICard,
-  underworld?: Underworld,
-  fullSize?: boolean,
-  hideAsUnknown?: boolean,
-) {
+function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSize?: boolean, hideAsUnknown?: boolean) {
   const element = document.createElement('div');
   if (!content) {
     return element;
@@ -945,24 +811,20 @@ function createCardElement(
 
   const thumbHolder = document.createElement('div');
   const thumbnail = document.createElement('img');
-  thumbnail.src = getSpellThumbnailPath(
-    hideAsUnknown ? 'unknown.png' : content.thumbnail,
-  );
+  thumbnail.src = getSpellThumbnailPath(hideAsUnknown ? 'unknown.png' : content.thumbnail);
   thumbHolder.appendChild(thumbnail);
   thumbHolder.classList.add('card-thumb');
   elCardInner.appendChild(thumbHolder);
   const title = document.createElement('div');
   title.classList.add('card-title');
-  title.innerHTML = i18n(
-    hideAsUnknown ? 'Unknown' : content.id.split('_').join(' '),
-  );
+  title.innerHTML = i18n(hideAsUnknown ? 'Unknown' : content.id.split('_').join(' '));
   elCardInner.appendChild(title);
   if (content.modName) {
     const modHolder = document.createElement('div');
     modHolder.classList.add('card-mod-name');
     const modNameText = document.createElement('div');
     modNameText.style.color = 'black';
-    const mod = globalThis.mods.find((m) => m.modName == content.modName);
+    const mod = globalThis.mods.find(m => m.modName == content.modName)
     if (mod) {
       const modIcon = document.createElement('img');
       modIcon.src = mod.screenshot;
@@ -974,7 +836,7 @@ function createCardElement(
     elCardInner.appendChild(modHolder);
   }
   const rarityText = document.createElement('div');
-  rarityText.classList.add('card-rarity');
+  rarityText.classList.add('card-rarity')
   rarityText.style.color = getCardRarityColor(content);
   rarityText.innerHTML = cardRarityAsString(content).toLocaleLowerCase();
   elCardInner.appendChild(rarityText);
@@ -983,16 +845,11 @@ function createCardElement(
   if (content.description) {
     const labelHolder = document.createElement('div');
     if (content.replaces || content.requires) {
-      const replacesEl = getReplacesCardText(
-        content.replaces || [],
-        content.requires || [],
-      );
-      labelHolder.appendChild(replacesEl);
+      const replacesEl = getReplacesCardText(content.replaces || [], content.requires || []);
+      labelHolder.appendChild(replacesEl)
     }
     const label = document.createElement('span');
-    label.innerText = hideAsUnknown
-      ? ''
-      : i18n(content.description).trimStart();
+    label.innerText = hideAsUnknown ? '' : i18n(content.description).trimStart();
     labelHolder.appendChild(label);
     desc.appendChild(labelHolder);
   }
@@ -1028,7 +885,7 @@ export function getReplacesCardText(replaces: string[], requires?: string[]) {
     const labelRequires = document.createElement('span');
     labelRequires.innerText = i18n('Requires');
     replacesEl.appendChild(labelRequires);
-    for (let r of (requires || []).filter((x) => !replaces.includes(x))) {
+    for (let r of (requires || []).filter(x => !replaces.includes(x))) {
       const replaceCard = Cards.allCards[r];
       if (replaceCard) {
         const thumbnail = document.createElement('img');
@@ -1046,145 +903,94 @@ export function getReplacesCardText(replaces: string[], requires?: string[]) {
 }
 // @ts-ignore for menu
 globalThis.updateManaBadge = updateManaBadge;
-function updateManaBadge(
-  elBadge: Element | null,
-  manaCost: number,
-  card: Cards.ICard,
-) {
+function updateManaBadge(elBadge: Element | null, manaCost: number, card: Cards.ICard) {
   if (elBadge) {
     // Hide badge if no cost
     elBadge.classList.toggle('hidden', manaCost === 0);
     elBadge.innerHTML = manaCost.toString();
     if (manaCost !== card.manaCost) {
-      elBadge.classList.add('modified-by-usage');
+      elBadge.classList.add('modified-by-usage')
     } else {
-      elBadge.classList.remove('modified-by-usage');
+      elBadge.classList.remove('modified-by-usage')
     }
   } else {
-    console.warn(
-      'Err UI: Found card, but could not find associated mana badge element to update mana cost',
-    );
+    console.warn("Err UI: Found card, but could not find associated mana badge element to update mana cost");
   }
 }
 // @ts-ignore for menu
-globalThis.updateHealthBadge = updateHealthBadge;
-function updateHealthBadge(
-  elBadge: Element | null,
-  healthCost: number,
-  card: Cards.ICard,
-) {
+globalThis.updateHealthBadge = updateHealthBadge
+function updateHealthBadge(elBadge: Element | null, healthCost: number, card: Cards.ICard) {
   if (elBadge) {
     // Hide badge if no cost
     elBadge.classList.toggle('hidden', healthCost === 0);
     elBadge.innerHTML = healthCost.toString();
     if (healthCost !== card.healthCost) {
-      elBadge.classList.add('modified-by-usage');
+      elBadge.classList.add('modified-by-usage')
     } else {
-      elBadge.classList.remove('modified-by-usage');
+      elBadge.classList.remove('modified-by-usage')
     }
   } else {
-    console.warn(
-      'Err UI: Found card, but could not find associated health badge element to update mana cost',
-    );
+    console.warn("Err UI: Found card, but could not find associated health badge element to update mana cost");
   }
 }
 // Updates the UI mana badge for cards in hand.  To be invoked whenever a player's
 // cardUsageCounts object is modified in order to sync the UI
 export function updateCardBadges(underworld: Underworld) {
-  if (globalThis.headless) {
-    return;
-  }
+  if (globalThis.headless) { return; }
   if (globalThis.player) {
     // Using a prediction unit here so that composeOnDamageEvents
     // used to determine the modified health cost of
     // spells that cost health will not affect the real player unit
-    const predictionPlayerUnit = copyForPredictionUnit(
-      globalThis.player.unit,
-      underworld,
-    );
+    const predictionPlayerUnit = copyForPredictionUnit(globalThis.player.unit, underworld);
     // Update selected cards
     const selectedCards = getSelectedCards();
     for (let i = 0; i < selectedCards.length; i++) {
       const card = selectedCards[i];
       if (card) {
-        const sliceOfCardsOfSameIdUntilCurrent = selectedCards
-          .slice(0, i)
-          .filter((c) => c.id == card.id);
-        const cost = calculateCostForSingleCard(
-          card,
-          (globalThis.player.cardUsageCounts[card.id] || 0) +
-            sliceOfCardsOfSameIdUntilCurrent.length * card.expenseScaling,
-          globalThis.player,
-        );
-        const elBadges = document.querySelectorAll(
-          `#selected-cards .card[data-card-id="${card.id}"] .card-mana-badge`,
-        );
-        const elBadge =
-          Array.from(elBadges)[sliceOfCardsOfSameIdUntilCurrent.length];
+        const sliceOfCardsOfSameIdUntilCurrent = selectedCards.slice(0, i).filter(c => c.id == card.id);
+        const cost = calculateCostForSingleCard(card, (globalThis.player.cardUsageCounts[card.id] || 0) + sliceOfCardsOfSameIdUntilCurrent.length * card.expenseScaling, globalThis.player);
+        const elBadges = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-mana-badge`);
+        const elBadge = Array.from(elBadges)[sliceOfCardsOfSameIdUntilCurrent.length];
         if (elBadge) {
           updateManaBadge(elBadge, cost.manaCost, card);
         }
-        const elBadgesH = document.querySelectorAll(
-          `#selected-cards .card[data-card-id="${card.id}"] .card-health-badge`,
-        );
-        const elBadgeH =
-          Array.from(elBadgesH)[sliceOfCardsOfSameIdUntilCurrent.length];
+        const elBadgesH = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-health-badge`);
+        const elBadgeH = Array.from(elBadgesH)[sliceOfCardsOfSameIdUntilCurrent.length];
         if (elBadgeH) {
           // onDamageEvents alter the healthCost of cards that cost health to cast
           // such as 'bite', 'vulnerable', or 'shield'
-          updateHealthBadge(
-            elBadgeH,
-            composeOnDamageEvents(
-              predictionPlayerUnit,
-              cost.healthCost,
-              underworld,
-              true,
-            ),
-            card,
-          );
+          updateHealthBadge(elBadgeH, composeOnDamageEvents(predictionPlayerUnit, cost.healthCost, underworld, true), card);
         }
       }
     }
     // Update cards in hand and inventory
     const cards = Cards.getCardsFromIds(globalThis.player.inventory);
-    const badgesById: {
-      [cardId: string]: { mana: HTMLElement[]; health: HTMLElement[] };
-    } = {};
+    const badgesById: { [cardId: string]: { mana: HTMLElement[], health: HTMLElement[] } } = {}
     function populateBadgesById(attr: 'mana' | 'health') {
-      Array.from(
-        document.querySelectorAll(
-          `.card-holder .card .card-${attr}-badge, #inventory-content .card .card-${attr}-badge`,
-        ),
-      ).forEach((badge) => {
-        const cardEl = badge.closest('.card') as HTMLElement | undefined;
+      Array.from(document.querySelectorAll(`.card-holder .card .card-${attr}-badge, #inventory-content .card .card-${attr}-badge`)).forEach((badge) => {
+        const cardEl = badge.closest('.card') as (HTMLElement | undefined);
         if (cardEl) {
           const cardId = cardEl.dataset.cardId;
           if (cardId !== undefined) {
-            let badgeRecord = badgesById[cardId];
+            let badgeRecord = badgesById[cardId]
             if (!badgeRecord) {
               badgeRecord = {
                 mana: [],
-                health: [],
-              };
+                health: []
+              }
               badgesById[cardId] = badgeRecord;
             }
             badgeRecord[attr].push(badge as HTMLElement);
           }
+
         }
       });
     }
     populateBadgesById('mana');
     populateBadgesById('health');
     for (let card of cards) {
-      const selectedCardElementsOfSameId = selectedCards.filter(
-        (c) => c.id == card.id,
-      );
-      const cost = calculateCostForSingleCard(
-        card,
-        (globalThis.player.cardUsageCounts[card.id] || 0) +
-          selectedCardElementsOfSameId.length * card.expenseScaling,
-        globalThis.player,
-      );
+      const selectedCardElementsOfSameId = selectedCards.filter(c => c.id == card.id);
+      const cost = calculateCostForSingleCard(card, (globalThis.player.cardUsageCounts[card.id] || 0) + selectedCardElementsOfSameId.length * card.expenseScaling, globalThis.player);
       const badgeRecord = badgesById[card.id];
       if (badgeRecord) {
         for (let elBadge of badgeRecord.mana) {
@@ -1193,16 +999,7 @@ export function updateCardBadges(underworld: Underworld) {
         // onDamageEvents alter the healthCost of cards that cost health to cast
         // such as 'bite', 'vulnerable', or 'shield'
         for (let elBadgeHealth of badgeRecord.health) {
-          updateHealthBadge(
-            elBadgeHealth,
-            composeOnDamageEvents(
-              predictionPlayerUnit,
-              cost.healthCost,
-              underworld,
-              true,
-            ),
-            card,
-          );
+          updateHealthBadge(elBadgeHealth, composeOnDamageEvents(predictionPlayerUnit, cost.healthCost, underworld, true), card);
         }
       }
     }
@@ -1215,15 +1012,14 @@ export function updateCardBadges(underworld: Underworld) {
         const key = x == 9 ? 0 : x + 1;
         const card = elCardHand.children.item(x) as HTMLElement;
         if (card) {
-          const elHotkeyBadge = card.querySelector(
-            '.hotkey-badge',
-          ) as HTMLElement;
+          const elHotkeyBadge = card.querySelector('.hotkey-badge') as HTMLElement;
           if (elHotkeyBadge) {
             elHotkeyBadge.innerHTML = `${key}`;
           }
         }
       }
     }
+
   }
 }
 
@@ -1245,9 +1041,7 @@ export function cardListToImages(cardIds: string[]): string {
   for (let cardId of cardIds) {
     const card = Cards.allCards[cardId];
     if (card) {
-      html += `<img src="${getSpellThumbnailPath(card.thumbnail)}" alt="${
-        card.id
-      }"/>`;
+      html += `<img src="${getSpellThumbnailPath(card.thumbnail)}" alt="${card.id}"/>`;
     }
   }
   return html;

@@ -24,15 +24,7 @@ const spell: Spell = {
       playDefaultSpellSFX(card, prediction);
       const targets = getCurrentTargets(state);
       for (let entity of targets) {
-        promises.push(
-          forcePush(
-            entity,
-            awayFrom,
-            velocityStartMagnitude * quantity,
-            underworld,
-            prediction,
-          ),
-        );
+        promises.push(forcePush(entity, awayFrom, velocityStartMagnitude * quantity, underworld, prediction));
       }
       await Promise.all(promises);
       return state;

@@ -25,14 +25,7 @@ const spell: Spell = {
     requiresFollowingCard: true,
     description: ['spell_target_kind', NUMBER_OF_TARGETS_PER_STACK.toString()],
     allowNonUnitTarget: true,
-    effect: async (
-      state,
-      card,
-      quantity,
-      underworld,
-      prediction,
-      outOfRange,
-    ) => {
+    effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
       // Note: This loop must NOT be a for..of and it must cache the length because it
       // mutates state.targetedUnits as it iterates.  Otherwise it will continue to loop as it grows
       let targets: Vec2[] = getCurrentTargets(state);
@@ -62,14 +55,13 @@ const spell: Spell = {
             // Do not match unit and non unit
             return false;
           }
-        };
-        const newTargets = underworld
-          .getPotentialTargets(prediction)
+        }
+        const newTargets = underworld.getPotentialTargets(prediction)
           // Filter out current targets
-          .filter((t) => !targets.includes(t))
+          .filter(t => !targets.includes(t))
           // Filter out dissimilar types
           // @ts-ignore Find similar units by unitSourceId, find similar pickups by name
-          .filter((t) => {
+          .filter(t => {
             if (isUnit(target)) {
               return isUnit(t) && t.alive == target.alive;
             } else if (isPickup(target)) {

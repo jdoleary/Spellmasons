@@ -22,7 +22,7 @@ const unit: UnitSource = {
     bloodColor: bloodLobber,
     healthMax: 60,
     damage: 20,
-    manaCostToCast: 15,
+    manaCostToCast: 15
   },
   spawnParams: {
     probability: 40,
@@ -38,19 +38,14 @@ const unit: UnitSource = {
   },
   sfx: {
     damage: 'lobberHurt',
-    death: 'lobberDeath',
+    death: 'lobberDeath'
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     if (unit.image) {
       unit.image.sprite.anchor.y = 0.3;
     }
   },
-  action: async (
-    unit: Unit.IUnit,
-    attackTargets: Unit.IUnit[] | undefined,
-    underworld: Underworld,
-    canAttackTarget: boolean,
-  ) => {
+  action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     const attackTarget = attackTargets && attackTargets[0];
     // Attack
     if (attackTarget && canAttackTarget) {
@@ -65,48 +60,33 @@ const unit: UnitSource = {
           'projectile/lobberProjectile',
         ).then(() => {
           if (attackTarget) {
-            Unit.takeDamage(
-              attackTarget,
-              unit.damage,
-              attackTarget,
-              underworld,
-              false,
-              undefined,
-            );
+            Unit.takeDamage(attackTarget, unit.damage, attackTarget, underworld, false, undefined);
             // Add projectile hit animation
-            Image.addOneOffAnimation(
-              attackTarget,
-              'projectile/lobberProjectileHit',
-            );
+            Image.addOneOffAnimation(attackTarget, 'projectile/lobberProjectileHit');
           }
         });
+
       });
     } else {
       // Movement:
       if (attackTarget) {
         const distanceToEnemy = math.distance(unit, attackTarget);
         // The following is a hacky way to make them not move too close to the enemy
-        unit.stamina = Math.min(
-          unit.stamina,
-          distanceToEnemy - config.COLLISION_MESH_RADIUS,
-        );
+        unit.stamina = Math.min(unit.stamina, distanceToEnemy - config.COLLISION_MESH_RADIUS);
         await Unit.moveTowards(unit, attackTarget, underworld);
       } else {
-        console.trace('Glop has no target to move towards');
+        console.trace('Glop has no target to move towards')
       }
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-    const closestUnit = Unit.findClosestUnitInDifferentFaction(
-      unit,
-      underworld,
-    );
+    const closestUnit = Unit.findClosestUnitInDifferentFaction(unit, underworld);
     if (closestUnit) {
       return [closestUnit];
     } else {
       return [];
     }
-  },
+  }
 };
 
 export default unit;

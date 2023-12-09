@@ -1,12 +1,7 @@
 import type * as PIXI from 'pixi.js';
 import { GlowFilter } from '@pixi/filter-glow';
 import type { Vec2 } from '../jmath/Vec';
-import {
-  addPixiSprite,
-  app,
-  containerFloatingText,
-  withinCameraBounds,
-} from './PixiUtils';
+import { addPixiSprite, app, containerFloatingText, withinCameraBounds } from './PixiUtils';
 
 interface DisappearingSprite {
   x: number;
@@ -18,7 +13,8 @@ interface DisappearingSprite {
 }
 interface DisappearingSpriteInsructions {
   coords: Vec2;
-  color?: number;
+  color?
+  : number;
   container?: PIXI.Container;
   style?: Partial<PIXI.ITextStyle>;
   keepWithinCameraBounds?: boolean;
@@ -27,7 +23,7 @@ export default function pingSprite({
   coords,
   color = 0xfff,
   container = containerFloatingText,
-  keepWithinCameraBounds = true,
+  keepWithinCameraBounds = true
 }: DisappearingSpriteInsructions) {
   if (!(globalThis.pixi && app && container)) {
     return Promise.resolve();
@@ -44,12 +40,7 @@ export default function pingSprite({
     pixiSprite.scale.y = 1 / app.stage.scale.y;
     // Add glow:
     pixiSprite.filters = [
-      new GlowFilter({
-        distance: 15,
-        outerStrength: 4,
-        innerStrength: 0,
-        color,
-      }),
+      new GlowFilter({ distance: 15, outerStrength: 4, innerStrength: 0, color })
     ];
     const instance = {
       x: pixiSprite.x,
@@ -62,15 +53,12 @@ export default function pingSprite({
     container.addChild(pixiSprite);
     return new Promise<void>((resolve) => {
       requestAnimationFrame(() => disappear(instance, resolve));
-    });
+    })
   } else {
     return Promise.reject();
   }
 }
-function disappear(
-  instance: DisappearingSprite,
-  resolve: (value: void) => void,
-) {
+function disappear(instance: DisappearingSprite, resolve: (value: void) => void) {
   if (instance.alpha > 0) {
     instance.alpha -= Math.max(instance.valpha, 0);
     instance.valpha += 0.004;

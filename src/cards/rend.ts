@@ -22,6 +22,7 @@ export interface UnitDamage {
   y: number;
   health: number;
   damageTaken: number;
+
 }
 const spellRendAnimationHeight = 10;
 const animationPath = 'spell-effects/spellRend';
@@ -37,57 +38,33 @@ const spell: Spell = {
     thumbnail: 'spellIconRend.png',
     animationPath,
     sfx: 'rend',
-    description: [
-      'spell_rend',
-      `${calculateRendDamage(1)}, ${calculateRendDamage(
-        2,
-      )}, ${calculateRendDamage(3)}, ${calculateRendDamage(
-        4,
-      )}, ${calculateRendDamage(5)}, ${calculateRendDamage(
-        6,
-      )}, ${calculateRendDamage(7)}, ${calculateRendDamage(
-        8,
-      )}, ${calculateRendDamage(9)}, ${calculateRendDamage(10)}`,
-    ],
+    description: ['spell_rend', `${calculateRendDamage(1)}, ${calculateRendDamage(2)}, ${calculateRendDamage(3)}, ${calculateRendDamage(4)}, ${calculateRendDamage(5)}, ${calculateRendDamage(6)}, ${calculateRendDamage(7)}, ${calculateRendDamage(8)}, ${calculateRendDamage(9)}, ${calculateRendDamage(10)}`],
     effect: async (state, card, quantity, underworld, prediction) => {
       const damage = calculateRendDamage(quantity);
       // .filter: only target living units
-      const targets = state.targetedUnits.filter((u) => u.alive);
+      const targets = state.targetedUnits.filter(u => u.alive)
       if (!prediction) {
         playDefaultSpellSFX(card, prediction);
       }
       await animateRend(targets, quantity, prediction);
       for (let unit of targets) {
-        Unit.takeDamage(
-          unit,
-          damage,
-          state.casterUnit,
-          underworld,
-          prediction,
-          state,
-        );
+        Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
       }
       return state;
     },
   },
 };
 export default spell;
-function animateRend(
-  targets: Vec2[],
-  quantity: number,
-  prediction: boolean,
-): Promise<void> {
+function animateRend(targets: Vec2[], quantity: number, prediction: boolean): Promise<void> {
   if (prediction || globalThis.headless) {
     return Promise.resolve();
   } else {
-    return raceTimeout(
-      500 + 120 * quantity,
-      'animateRend',
+    return raceTimeout(500 + 120 * quantity, 'animateRend',
       new Promise<void>((resolve) => {
         // Resolve immediately if there are no targets
         if (targets.length == 0) {
           resolve();
-          return;
+          return
         }
         // Limit animated quantity to 7 (anything beyond that is absurd from an animation standpoint and takes too long)
         quantity = Math.min(7, quantity);
@@ -97,26 +74,20 @@ function animateRend(
             const isLastAnimatedInstance = q == quantity - 1;
             setTimeout(() => {
               const image = Image.create(
-                {
-                  x: unit.x,
-                  y:
-                    unit.y -
-                    ((quantity - 1) * spellRendAnimationHeight) / 2 +
-                    q * spellRendAnimationHeight,
-                },
+                { x: unit.x, y: unit.y - ((quantity - 1) * spellRendAnimationHeight / 2) + q * spellRendAnimationHeight },
                 animationPath,
                 containerSpells,
                 {
                   loop: false,
                   animationSpeed: 0.2,
                   onComplete: () => {
-                    Image.hide(image);
+                    Image.hide(image)
                     Image.cleanup(image);
                     if (isLastAnimatedInstance) {
-                      resolve();
+                      resolve()
                     }
-                  },
-                },
+                  }
+                }
               );
               if (image && isLastAnimatedInstance) {
                 image.resolver = resolve;
@@ -124,7 +95,7 @@ function animateRend(
             }, 100 * q);
           }
         }
-      }),
-    );
+      }));
   }
+
 }

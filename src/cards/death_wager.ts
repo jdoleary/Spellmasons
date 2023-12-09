@@ -17,18 +17,14 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.FORBIDDEN],
     allowNonUnitTarget: true,
     thumbnail: 'spellIconDeathWager.png',
-    description: [
-      'spell_death_wager',
-      Math.round(reduceMaxHealthPreportion * 100).toString(),
-    ],
+    description: ['spell_death_wager', Math.round(reduceMaxHealthPreportion * 100).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
-      const player = underworld.players.find((p) => p.unit == state.casterUnit);
+      const player = underworld.players.find(p => p.unit == state.casterUnit);
       if (player) {
         if (state.casterUnit.healthMax <= 1) {
           {
             floatingText({
-              coords: state.casterUnit,
-              text: `Cannot cast ${id} with only 1 max health.`,
+              coords: state.casterUnit, text: `Cannot cast ${id} with only 1 max health.`
             });
             return state;
           }
@@ -38,10 +34,7 @@ const spell: Spell = {
         }
         state.casterUnit.healthMax *= 1.0 - reduceMaxHealthPreportion;
         state.casterUnit.healthMax = Math.floor(state.casterUnit.healthMax);
-        state.casterUnit.health = Math.min(
-          state.casterUnit.healthMax,
-          state.casterUnit.health,
-        );
+        state.casterUnit.health = Math.min(state.casterUnit.healthMax, state.casterUnit.health);
       }
       return state;
     },

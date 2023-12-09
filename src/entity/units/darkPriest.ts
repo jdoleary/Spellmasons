@@ -23,7 +23,7 @@ const unit: UnitSource = {
     damage: 40,
     manaCostToCast,
     manaMax: manaCostToCast * 2,
-    manaPerTurn: 30,
+    manaPerTurn: 30
   },
   spawnParams: {
     probability: 20,
@@ -52,8 +52,8 @@ const unit: UnitSource = {
             [0xe5e8b6, 0x6a4d7d], // face
             [0x808344, 0x3a2b45], // dark
           ],
-          0.1,
-        ),
+          0.1
+        )
       );
     }
   },
@@ -72,23 +72,16 @@ const unit: UnitSource = {
         for (let i = 0; i < attackTargets.length; i++) {
           const attackTarget = attackTargets[i];
           if (attackTarget) {
-            geyserPromises.push(
-              new Promise<void>((resolve) => {
-                // Space them out in time
+
+            geyserPromises.push(new Promise<void>((resolve) => {
+              // Space them out in time
+              setTimeout(() => {
+                makeDarkPriestAttackParticles(attackTarget, false, resolve);
                 setTimeout(() => {
-                  makeDarkPriestAttackParticles(attackTarget, false, resolve);
-                  setTimeout(() => {
-                    Unit.takeDamage(
-                      attackTarget,
-                      unit.damage,
-                      attackTarget,
-                      underworld,
-                      false,
-                    );
-                  }, math.distance(unit, attackTarget));
-                }, 100 * i);
-              }),
-            );
+                  Unit.takeDamage(attackTarget, unit.damage, attackTarget, underworld, false);
+                }, math.distance(unit, attackTarget));
+              }, 100 * i);
+            }));
           }
         }
         await Promise.all(geyserPromises);
@@ -96,31 +89,26 @@ const unit: UnitSource = {
     }
     if (!didAction) {
       // Move to closest enemy
-      const closestEnemy = Unit.findClosestUnitInDifferentFaction(
-        unit,
-        underworld,
-      );
+      const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
       if (closestEnemy) {
         const distanceToEnemy = math.distance(unit, closestEnemy);
         // The following is a hacky way to make them not move too close to the enemy
-        unit.stamina = Math.min(
-          unit.stamina,
-          distanceToEnemy - config.COLLISION_MESH_RADIUS,
-        );
+        unit.stamina = Math.min(unit.stamina, distanceToEnemy - config.COLLISION_MESH_RADIUS);
         await Unit.moveTowards(unit, closestEnemy, underworld);
       }
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
     return Unit.livingUnitsInDifferentFaction(unit, underworld)
-      .filter((u) => math.distance(unit, u) <= unit.attackRange)
-      .map((u) => ({ unit: u, dist: math.distance(unit, u) }))
+      .filter(u => math.distance(unit, u) <= unit.attackRange)
+      .map(u => ({ unit: u, dist: math.distance(unit, u) }))
       .sort((a, b) => {
         return a.dist - b.dist;
       })
-      .map((x) => x.unit)
+      .map(x => x.unit)
       .slice(0, NUMBER_OF_GEYSERS);
-  },
+  }
 };
+
 
 export default unit;

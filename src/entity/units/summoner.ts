@@ -32,13 +32,13 @@ const unit: UnitSource = {
   },
   sfx: {
     damage: 'summonerHurt',
-    death: 'summonerDeath',
+    death: 'summonerDeath'
   },
   unitProps: {
     healthMax: 120,
     damage: 0,
     attackRange: 550,
-    manaCostToCast,
+    manaCostToCast
   },
   spawnParams: {
     probability: 20,
@@ -47,26 +47,11 @@ const unit: UnitSource = {
   },
   action: async (unit: Unit.IUnit, attackTargets, underworld: Underworld) => {
     // attackTargets has irregular usage for this unit, see explanation in this file's getUnitAttackTargets()
-    await summonerAction(
-      unit,
-      !!attackTargets.length,
-      underworld,
-      { closeUnit: allUnits.golem, farUnit: allUnits.archer },
-      3,
-    );
+    await summonerAction(unit, !!attackTargets.length, underworld, { closeUnit: allUnits.golem, farUnit: allUnits.archer }, 3);
   },
-  getUnitAttackTargets: summonerGetUnitAttackTargets,
+  getUnitAttackTargets: summonerGetUnitAttackTargets
 };
-export async function summonerAction(
-  unit: Unit.IUnit,
-  ableToSummon: boolean,
-  underworld: Underworld,
-  {
-    closeUnit,
-    farUnit,
-  }: { closeUnit: UnitSource | undefined; farUnit: UnitSource | undefined },
-  baseNumberOfSummons: number,
-) {
+export async function summonerAction(unit: Unit.IUnit, ableToSummon: boolean, underworld: Underworld, { closeUnit, farUnit }: { closeUnit: UnitSource | undefined, farUnit: UnitSource | undefined }, baseNumberOfSummons: number) {
   // Summon unit
   if (ableToSummon) {
     // Summoners attack or move, not both; so clear their existing path
@@ -75,27 +60,17 @@ export async function summonerAction(
     await Unit.playComboAnimation(unit, unit.animations.attack, async () => {
       let numberOfSummons = baseNumberOfSummons * (unit.isMiniboss ? 2 : 1);
       let lastPromise = Promise.resolve();
-      const seed = seedrandom(
-        `${underworld.seed}-${underworld.turn_number}-${unit.id}`,
-      );
+      const seed = seedrandom(`${underworld.seed}-${underworld.turn_number}-${unit.id}`);
       for (let i = 0; i < numberOfSummons; i++) {
         const coords = findRandomGroundLocation(underworld, unit, seed);
         if (coords) {
-          const enemyIsClose = underworld.units
-            .filter((u) => u.faction !== unit.faction)
-            .some((u) => math.distance(coords, u) <= PLAYER_BASE_ATTACK_RANGE);
+          const enemyIsClose = underworld.units.filter(u => u.faction !== unit.faction).some(u => math.distance(coords, u) <= PLAYER_BASE_ATTACK_RANGE)
           let sourceUnit = farUnit;
           if (enemyIsClose) {
             sourceUnit = closeUnit;
           }
 
-          lastPromise = makeManaTrail(
-            unit,
-            coords,
-            underworld,
-            '#930e0e',
-            '#ff0000',
-          ).then(() => {
+          lastPromise = makeManaTrail(unit, coords, underworld, '#930e0e', '#ff0000').then(() => {
             if (sourceUnit) {
               const summonedUnit = Unit.create(
                 sourceUnit.id,
@@ -108,78 +83,40 @@ export async function summonerAction(
                 UnitType.AI,
                 sourceUnit.info.subtype,
                 sourceUnit.unitProps,
-                underworld,
+                underworld
               );
               // Add summoning sickeness so they can't act after they are summoned
-              Unit.addModifier(
-                summonedUnit,
-                summoningSicknessId,
-                underworld,
-                false,
-              );
-              const summonPromise = new Promise<void>((resolve) =>
-                oneOffImage(
-                  coords,
-                  'units/summonerMagic',
-                  containerUnits,
-                  resolve,
-                ),
-              ).then(() => {
+              Unit.addModifier(summonedUnit, summoningSicknessId, underworld, false);
+              const summonPromise = new Promise<void>(resolve => oneOffImage(coords, 'units/summonerMagic', containerUnits, resolve)).then(() => {
                 Unit.moveTowards(summonedUnit, unit, underworld);
               });
               return summonPromise;
             } else {
-              console.error(
-                "summoner could not find unit source to summon from. Has the unit's id changed?",
-              );
+              console.error('summoner could not find unit source to summon from. Has the unit\'s id changed?');
             }
             return Promise.resolve();
           });
         } else {
-          console.log('Summoner could not find valid spawn');
+          console.log("Summoner could not find valid spawn");
         }
       }
       await lastPromise;
     });
   } else {
-    const enemyIsClose = underworld.units
-      .filter(
-        (u) =>
-          u.unitType == UnitType.PLAYER_CONTROLLED &&
-          u.faction !== unit.faction,
-      )
-      .some((u) => math.distance(unit, u) <= PLAYER_BASE_ATTACK_RANGE);
+
+    const enemyIsClose = underworld.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.faction !== unit.faction).some(u => math.distance(unit, u) <= PLAYER_BASE_ATTACK_RANGE)
     if (enemyIsClose) {
       // Teleport away
       const seed = seedrandom(`${underworld.turn_number}-${unit.id}`);
       const teleportFromLocation = clone(unit);
-      const teleportToLocation = findRandomGroundLocation(
-        underworld,
-        unit,
-        seed,
-      );
+      const teleportToLocation = findRandomGroundLocation(underworld, unit, seed);
       if (teleportToLocation) {
-        await new Promise<void>((resolveTeleport) => {
-          new Promise<void>((resolve) =>
-            oneOffImage(unit, 'units/summonerMagic', containerUnits, resolve),
-          ).then(() => {
+        await new Promise<void>(resolveTeleport => {
+          new Promise<void>(resolve => oneOffImage(unit, 'units/summonerMagic', containerUnits, resolve)).then(() => {
             unit.x = -1000;
             unit.y = -1000;
-            makeManaTrail(
-              teleportFromLocation,
-              teleportToLocation,
-              underworld,
-              '#774772',
-              '#5b3357',
-            ).then(() => {
-              new Promise<void>((resolve) =>
-                oneOffImage(
-                  teleportToLocation,
-                  'units/summonerMagic',
-                  containerUnits,
-                  resolve,
-                ),
-              ).then(() => {
+            makeManaTrail(teleportFromLocation, teleportToLocation, underworld, '#774772', '#5b3357').then(() => {
+              new Promise<void>(resolve => oneOffImage(teleportToLocation, 'units/summonerMagic', containerUnits, resolve)).then(() => {
                 unit.x = teleportToLocation.x;
                 unit.y = teleportToLocation.y;
                 // Check to see if unit interacts with liquid
@@ -190,13 +127,11 @@ export async function summonerAction(
           });
         });
       }
+
     }
   }
 }
-export function summonerGetUnitAttackTargets(
-  unit: Unit.IUnit,
-  underworld: Underworld,
-) {
+export function summonerGetUnitAttackTargets(unit: Unit.IUnit, underworld: Underworld) {
   // getUnitAttackTargets will show an attention marker if a non empty array is returned
   // and I want to show an attention marker if the summoner is going to summon but since he doesn't
   // technically have "attack targets" we'll just return an array containing himself
@@ -210,16 +145,13 @@ export function summonerGetUnitAttackTargets(
 }
 // Similar to findRandomDisplaceLocation except it omits liquid locations and locations near other units
 // and other pickups
-export function findRandomGroundLocation(
-  underworld: Underworld,
-  summoner: Unit.IUnit,
-  seed: prng,
-): Vec2 | undefined {
+export function findRandomGroundLocation(underworld: Underworld, summoner: Unit.IUnit, seed: prng): Vec2 | undefined {
   let isValid = false;
   let randomCoord;
   const infiniteLoopLimit = 100;
   let i = 0;
-  whileloop: do {
+  whileloop:
+  do {
     i++;
     if (i >= infiniteLoopLimit) {
       console.warn('Could not find random ground location');
@@ -251,13 +183,13 @@ export function findRandomGroundLocation(
       }
     }
     // Only summon with the summoner's attack range
-    isValid =
-      math.distance(summoner, randomCoord) <= summoner.attackRange &&
+    isValid = math.distance(summoner, randomCoord) <= summoner.attackRange
       // Make sure the summon point is valid
-      underworld.isPointValidSpawn(randomCoord, config.COLLISION_MESH_RADIUS) &&
+      && underworld.isPointValidSpawn(randomCoord, config.COLLISION_MESH_RADIUS)
       // Make sure the summon point isn't in water
-      !isCoordInLiquid(randomCoord, underworld);
+      && !isCoordInLiquid(randomCoord, underworld);
   } while (!isValid);
-  return randomCoord;
+  return randomCoord
+
 }
 export default unit;

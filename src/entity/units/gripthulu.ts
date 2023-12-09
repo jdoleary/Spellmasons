@@ -22,7 +22,7 @@ const unit: UnitSource = {
   unitProps: {
     attackRange: 500,
     bloodColor: bloodGripthulu,
-    manaCostToCast,
+    manaCostToCast
   },
   spawnParams: {
     probability: 20,
@@ -38,7 +38,7 @@ const unit: UnitSource = {
   },
   sfx: {
     damage: 'poisonerHurt',
-    death: 'poisonerDeath',
+    death: 'poisonerDeath'
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     if (unit.image && unit.image.sprite && unit.image.sprite.filters) {
@@ -52,10 +52,10 @@ const unit: UnitSource = {
             [0x74b675, 0x7faaba], // dark arm
             [0x93cf92, 0x90c7cf], //head
             [0x8fce8e, 0x79b1b9], //head darker slightly
-            [0x374937, 0x374849], //pants
+            [0x374937, 0x374849],//pants
           ],
-          0.05,
-        ),
+          0.05
+        )
       );
     }
   },
@@ -63,10 +63,7 @@ const unit: UnitSource = {
     if (attackTargets.length) {
       const chosenUnit = attackTargets[0];
       if (chosenUnit) {
-        if (
-          Unit.inRange(unit, chosenUnit) &&
-          unit.mana >= unit.manaCostToCast
-        ) {
+        if (Unit.inRange(unit, chosenUnit) && unit.mana >= unit.manaCostToCast) {
           unit.mana - unit.manaCostToCast;
           // Poisoners attack or move, not both; so clear their existing path
           unit.path = undefined;
@@ -79,11 +76,7 @@ const unit: UnitSource = {
           await pullPromise;
         } else {
           // Only move if not in range
-          const moveTo = math.getCoordsAtDistanceTowardsTarget(
-            unit,
-            chosenUnit,
-            unit.stamina,
-          );
+          const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, chosenUnit, unit.stamina);
           await Unit.moveTowards(unit, moveTo, underworld);
         }
       }
@@ -91,11 +84,13 @@ const unit: UnitSource = {
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
     const livingEnemyUnits = underworld.units.filter(
-      (u) => u.faction !== unit.faction && u.alive,
+      (u) =>
+        u.faction !== unit.faction &&
+        u.alive
     );
     // Gripthulu can only target one enemy
     return livingEnemyUnits.slice(0, 1);
-  },
+  }
 };
 const forwardSpeed = 0.2;
 const backwardSpeed = 0.5;
@@ -114,10 +109,7 @@ export async function animateDrag(start: Vec2, end: Vec2) {
     points.push(new globalThis.pixi.Point(0, 0));
   }
 
-  const strip = new globalThis.pixi.SimpleRope(
-    globalThis.pixi.Texture.from('gripthuluMagic.png'),
-    points,
-  );
+  const strip = new globalThis.pixi.SimpleRope(globalThis.pixi.Texture.from('gripthuluMagic.png'), points);
 
   strip.x = start.x;
   strip.y = start.y;
@@ -147,7 +139,7 @@ export async function animateDrag(start: Vec2, end: Vec2) {
       for (let i = 0; i < points.length; i++) {
         const point = points[i];
         if (point) {
-          point.y = (Math.sin(i * 0.5 + count) * waveHeight * i) / 8;
+          point.y = Math.sin((i * 0.5) + count) * waveHeight * i / 8;
           point.x = i * animatedLength;
           // Pull target back with last point
           // if (retracting) {
@@ -163,6 +155,7 @@ export async function animateDrag(start: Vec2, end: Vec2) {
       if (retracting && count <= 0) {
         // clean up
         containerProjectiles?.removeChild(strip);
+
       } else {
         // keep animating
         requestAnimationFrame(animate);

@@ -1,13 +1,8 @@
 import type * as PIXI from 'pixi.js';
 
-import {
-  addPixiSprite,
-  addPixiSpriteAnimated,
-  getPixiTextureAnimated,
-  PixiSpriteOptions,
-} from './PixiUtils';
+import { addPixiSprite, addPixiSpriteAnimated, getPixiTextureAnimated, PixiSpriteOptions } from './PixiUtils';
 import Subsprites from '../Subsprites';
-import type { Vec2 } from '../jmath/Vec';
+import type { Vec2 } from "../jmath/Vec";
 import * as config from '../config';
 import { raceTimeout } from '../Promise';
 import { add, LIQUID_MASK } from '../inLiquid';
@@ -23,25 +18,22 @@ export function hasImage(maybe: any): maybe is HasImage {
 // rehydrate the JSON into an entity
 export type IImageAnimatedSerialized = {
   sprite: {
-    x: number;
-    y: number;
-    scale: { x: number; y: number };
-    imagePath: string;
+    x: number,
+    y: number,
+    scale: { x: number, y: number },
+    imagePath: string,
     // if the animation should loop
-    loop: boolean;
+    loop: boolean,
     // A list of sprite imagePaths (jordan identifier for subsprites)
-    children: string[];
-  };
-  mask?: string;
+    children: string[],
+  },
+  mask?: string,
 };
 // 'imagePath' is a property that I've added to sprite to identify which
 // animation is playing currently
 // 'doRemoveWhenPrimaryAnimationChanges' is a custom property that I'm adding to denote if a sprite is a oneOff sprite
 // meaning, it should get removed if the primary sprite changes
-export type JSpriteAnimated = PIXI.AnimatedSprite & {
-  imagePath: string;
-  doRemoveWhenPrimaryAnimationChanges: boolean;
-};
+export type JSpriteAnimated = PIXI.AnimatedSprite & { imagePath: string, doRemoveWhenPrimaryAnimationChanges: boolean };
 export interface IImageAnimated {
   // Not to be serialized
   sprite: JSpriteAnimated;
@@ -49,22 +41,18 @@ export interface IImageAnimated {
   // such as the underworld waiting for a spell animation before moving on
   resolver: undefined | (() => void);
   // Sprite that acts as a mask
-  mask?: string;
+  mask?: string,
 }
 export function create(
   coords: Vec2,
   spritesheetId: string,
   parent: PIXI.Container | undefined,
-  pixiSpriteOptions?: PixiSpriteOptions,
+  pixiSpriteOptions?: PixiSpriteOptions
 ): IImageAnimated | undefined {
   if (!parent) {
     return undefined;
   }
-  const sprite = addPixiSpriteAnimated(
-    spritesheetId,
-    parent,
-    pixiSpriteOptions,
-  );
+  const sprite = addPixiSpriteAnimated(spritesheetId, parent, pixiSpriteOptions);
   if (!sprite) {
     return undefined;
   }
@@ -74,7 +62,7 @@ export function create(
 
   const image: IImageAnimated = {
     sprite,
-    resolver: undefined,
+    resolver: undefined
   };
   setPosition(image, coords);
   return image;
@@ -104,26 +92,17 @@ export function cleanup(image?: IImageAnimated) {
 }
 // changeSprite changes the still image or animation of a sprite
 // Note: if playing a temporary animation, opt for Unit.playAnimation
-// because it has built in protections for returning to the correct
+// because it has built in protections for returning to the correct  
 // default sprite
 // Returns sprite IF sprite has changed
 // Note: Sprite management is complicated, many invokations await an animation completing to
 // do something else, so this function is very careful to ensure that the previous animation's
 // promise is resolved (if there is one) before switching the animation.  This is why 'resolver'
-// is a required field, it should be explicitly set to noop if there is no promise meant to be waiting
+// is a required field, it should be explicitly set to noop if there is no promise meant to be waiting 
 // for the animation to finish.
-export function changeSprite(
-  image: IImageAnimated | undefined,
-  imagePath: string,
-  container: PIXI.Container | undefined,
-  resolver: undefined | (() => void),
-  options?: PixiSpriteOptions,
-): JSpriteAnimated | undefined {
+export function changeSprite(image: IImageAnimated | undefined, imagePath: string, container: PIXI.Container | undefined, resolver: undefined | (() => void), options?: PixiSpriteOptions): JSpriteAnimated | undefined {
   if (!image) {
-    console.warn(
-      'Cannot changeSprite, no image object to change to',
-      imagePath,
-    );
+    console.warn('Cannot changeSprite, no image object to change to', imagePath)
     return;
   }
   if (!container) {
@@ -137,13 +116,13 @@ export function changeSprite(
   if (image.resolver) {
     image.resolver();
   }
-  // Set resolver so that even if the image changes, the game wont deadlock, waiting for a
+  // Set resolver so that even if the image changes, the game wont deadlock, waiting for a 
   // never-to-be-completed animation.  Defaults to noop if not provided
   image.resolver = resolver;
 
   if (image.sprite.imagePath == imagePath && image.sprite.parent == container) {
     // Do not change if imagePath would be unchanged and
-    // container would be unchanged
+    // container would be unchanged 
     // Exception: Only cancel the change if it is NOT a Hit animation, allow it to be interrupted and replaced with another hit animation
     // since a unit may take damage more quickly than the hit animation can finish.
     if (image.sprite.imagePath.indexOf('Hit') === -1) {
@@ -151,7 +130,7 @@ export function changeSprite(
       if (resolver) {
         resolver();
       }
-      return undefined;
+      return undefined
     }
   }
   const tex = getPixiTextureAnimated(imagePath);
@@ -198,13 +177,13 @@ export function changeSprite(
     if (resolver) {
       resolver();
     }
-    return undefined;
+    return undefined
   }
 }
 const ALLOW_NO_SERIALIZE_CHILDREN_JIDS = [
   // NAME_TEXT need not be serialized
-  config.NAME_TEXT_ID,
-];
+  config.NAME_TEXT_ID
+]
 // Converts an Image entity into a serialized form
 // that can be saved as JSON and rehydrated later into
 // a full Image entity.
@@ -223,7 +202,7 @@ export function serialize(image: IImageAnimated): IImageAnimatedSerialized {
     return c.imagePath
   })
     // remove nulls
-    .flatMap((x) => (x !== null && x !== undefined ? [x] : []));
+    .flatMap(x => x !== null && x !== undefined ? [x] : []);
   return {
     sprite: {
       x: image.sprite.x,
@@ -232,16 +211,14 @@ export function serialize(image: IImageAnimated): IImageAnimatedSerialized {
       imagePath: getAnimationPathFromSprite(image.sprite),
       loop: image.sprite.loop,
       children,
+
     },
   };
 }
 // Reinitialize an Image from IImageAnimatedSerialized JSON
 // this is useful when loading game state after reconnect
 // This is the opposite of serialize
-export function load(
-  image: IImageAnimatedSerialized | undefined,
-  parent: PIXI.Container | undefined,
-): IImageAnimated | undefined {
+export function load(image: IImageAnimatedSerialized | undefined, parent: PIXI.Container | undefined): IImageAnimated | undefined {
   if (!image) {
     return undefined;
   }
@@ -253,16 +230,12 @@ export function load(
   const { scale, imagePath } = copy.sprite;
   if (!imagePath) {
     // Missing image path
-    console.error('Cannot load image, missing image path');
+    console.error('Cannot load image, missing image path')
     return;
   }
   // Recreate the sprite using the create function so it initializes it properly
-  const newImage = create(copy.sprite, imagePath, parent, {
-    loop: image.sprite.loop,
-  });
-  if (!newImage) {
-    return undefined;
-  }
+  const newImage = create(copy.sprite, imagePath, parent, { loop: image.sprite.loop });
+  if (!newImage) { return undefined; }
   newImage.sprite.scale.set(scale.x, scale.y);
   // Restore subsprites (the actual sprites)
   restoreSubsprites(newImage, copy.sprite.children);
@@ -271,22 +244,18 @@ export function load(
 }
 export function getAnimationPathFromSprite(sprite: PIXI.Sprite): string {
   const textureCacheIds = sprite._texture.textureCacheIds;
-  const imagePath = textureCacheIds[0]
-    ? textureCacheIds[0].replace(/_\d+.png/g, '')
-    : '';
+  const imagePath = textureCacheIds[0] ? textureCacheIds[0].replace(/_\d+.png/g, "") : '';
   return imagePath;
+
 }
 export function getSubspriteImagePaths(image: IImageAnimated): string[] {
   // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
-  return image.sprite.children.filter((c) => c !== undefined).map((c) => c.imagePath);
+  return image.sprite.children.filter(c => c !== undefined).map(c => c.imagePath);
 }
 // syncronize updates an existing originalImage to match the properties of imageSerialized
 // mutates originalImage
 // TODO test for memory leaks
-export function syncronize(
-  imageSerialized: IImageAnimatedSerialized,
-  originalImage?: IImageAnimated,
-): IImageAnimated | undefined {
+export function syncronize(imageSerialized: IImageAnimatedSerialized, originalImage?: IImageAnimated): IImageAnimated | undefined {
   if (!originalImage) {
     return undefined;
   }
@@ -294,17 +263,12 @@ export function syncronize(
   const { x, y, scale } = imageSerialized.sprite;
   originalImage.sprite.x = x;
   originalImage.sprite.y = y;
-  originalImage.sprite.scale.x = scale.x;
+  originalImage.sprite.scale.x = scale.x
   originalImage.sprite.scale.y = scale.y;
-  if (
-    imageSerialized.sprite.children != getSubspriteImagePaths(originalImage)
-  ) {
+  if (imageSerialized.sprite.children != getSubspriteImagePaths(originalImage)) {
     restoreSubsprites(originalImage, imageSerialized.sprite.children);
   }
-  if (
-    imageSerialized.sprite.imagePath ===
-    getAnimationPathFromSprite(originalImage.sprite)
-  ) {
+  if (imageSerialized.sprite.imagePath === getAnimationPathFromSprite(originalImage.sprite)) {
     return originalImage;
   } else {
     // if the textures do not match, then the sprite is majorly out of sync and it's
@@ -321,11 +285,9 @@ export function syncronize(
     // cleanup(originalImage);
     return originalImage;
   }
+
 }
-export function restoreSubsprites(
-  image: IImageAnimated | undefined,
-  subspriteImageNames: string[],
-) {
+export function restoreSubsprites(image: IImageAnimated | undefined, subspriteImageNames: string[]) {
   if (!image) {
     return;
   }
@@ -354,18 +316,14 @@ export function removeMask(image: IImageAnimated) {
     image.sprite.mask = null;
     image.mask = undefined;
   }
+
 }
 export function addMask(image: IImageAnimated, path: string) {
   if (image.mask !== path) {
     // remove old mask:
     removeMask(image);
-    const mask = addPixiSpriteAnimated(path, image.sprite, {
-      animationSpeed: 0.08,
-      loop: true,
-    });
-    if (!mask) {
-      return;
-    }
+    const mask = addPixiSpriteAnimated(path, image.sprite, { animationSpeed: 0.08, loop: true });
+    if (!mask) { return; }
     mask.anchor.set(0.5);
     image.sprite.mask = mask;
     image.mask = path;
@@ -379,10 +337,7 @@ export function setPosition(image: IImageAnimated | undefined, pos: Vec2) {
   image.sprite.y = pos.y;
 }
 const EXCLUDE_WARN_MISSING_SUBSPRITE = ['playerAttack', LIQUID_MASK];
-export function addSubSprite(
-  image: IImageAnimated | undefined,
-  imageName: string,
-): PIXI.AnimatedSprite | PIXI.Sprite | undefined {
+export function addSubSprite(image: IImageAnimated | undefined, imageName: string): PIXI.AnimatedSprite | PIXI.Sprite | undefined {
   if (!image) {
     return;
   }
@@ -393,9 +348,7 @@ export function addSubSprite(
       const sprite = subSpriteData.imageName.includes('.png')
         ? addPixiSprite(subSpriteData.imageName, image.sprite)
         : addPixiSpriteAnimated(subSpriteData.imageName, image.sprite);
-      if (!sprite) {
-        return;
-      }
+      if (!sprite) { return; }
       sprite.alpha = subSpriteData.alpha;
       sprite.anchor.set(subSpriteData.anchor.x, subSpriteData.anchor.y);
       sprite.scale.set(subSpriteData.scale.x, subSpriteData.scale.y);
@@ -406,12 +359,8 @@ export function addSubSprite(
       // of your player characters image and try to add it as a subsprite but report it missing.
       // This is okay and can be ignored because it's not a subsprite.  This "if" check prevents
       // the false error reporting.
-      if (
-        !EXCLUDE_WARN_MISSING_SUBSPRITE.some((exclude) =>
-          imageName.includes(exclude),
-        )
-      ) {
-        console.error('Missing subsprite data for imageName', imageName);
+      if (!EXCLUDE_WARN_MISSING_SUBSPRITE.some(exclude => imageName.includes(exclude))) {
+        console.error("Missing subsprite data for imageName", imageName)
       }
       // Special handling for restoring liquid mask since it isn't a regular subsprite
       if (imageName == LIQUID_MASK) {
@@ -421,24 +370,17 @@ export function addSubSprite(
   }
   return;
 }
-export function removeSubSprite(
-  image: IImageAnimated | undefined,
-  imagePath: string,
-) {
+export function removeSubSprite(image: IImageAnimated | undefined, imagePath: string) {
   if (!image) {
     return;
   }
   // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
-  const subSprite = image.sprite.children.find((c) => c.imagePath == imagePath);
+  const subSprite = image.sprite.children.find(c => c.imagePath == imagePath)
   if (subSprite) {
     // Remove PIXI.Sprite instance
     subSprite.parent.removeChild(subSprite);
   } else {
-    console.log(
-      'Cannot remove subsprite',
-      imagePath,
-      'subsprite is missing from sprite.children',
-    );
+    console.log('Cannot remove subsprite', imagePath, 'subsprite is missing from sprite.children');
   }
 }
 export function show(image?: IImageAnimated) {
@@ -460,60 +402,44 @@ interface OneOffOptions {
 // A one off animation is an animation that is attached to an entity but operates independently of the entity's primary animation and will
 // not be affected by changes to the entity's primary animation.  This useful for example for playing a healing animation over top of a entity,
 // and the healing animation will continue regardless of wether the entity's primary animations changes or not
-export function addOneOffAnimation(
-  imageHaver: any,
-  spritePath: string,
-  oneOffOptions?: OneOffOptions,
-  options?: PixiSpriteOptions,
-): Promise<void> {
+export function addOneOffAnimation(imageHaver: any, spritePath: string, oneOffOptions?: OneOffOptions, options?: PixiSpriteOptions): Promise<void> {
   // Play animation and then remove it
   // ---
   // This timeout value is arbitrary, meant to prevent and report an await hang
   // if somehow resolve is never called
-  return raceTimeout(
-    6000,
-    `addOneOffAnimation: ${spritePath}`,
-    new Promise<void>((resolve) => {
-      if (!hasImage(imageHaver)) {
-        return resolve();
-      }
-      const finishOnFrame = oneOffOptions?.keyFrame;
-      const onFrameChange =
-        finishOnFrame === undefined
-          ? undefined
-          : (currentFrame: number) => {
-            if (currentFrame >= finishOnFrame) {
-              resolve();
-            }
-          };
-      const animationSprite = addPixiSpriteAnimated(
-        spritePath,
-        imageHaver.image.sprite,
-        {
-          loop: false,
-          ...options,
-          onFrameChange,
-          onComplete: () => {
-            if (imageHaver.image && animationSprite) {
-              imageHaver.image.sprite.removeChild(animationSprite);
-            }
-            resolve();
-          },
-        },
-      );
-      if (animationSprite) {
-        animationSprite.doRemoveWhenPrimaryAnimationChanges =
-          oneOffOptions?.doRemoveWhenPrimaryAnimationChanges || false;
-        animationSprite.anchor.set(0.5);
-      }
-      // Resolve if set to loop, since this sprite loops it will never finish animating
-      // (well, until it is removed), in which case the promise shouldn't wait for it.
-      // It might be misunderstood that this will resolve when the animating sprite is removed
-      // but I have no use-case for that at the moment and it would be a bit complicated to implement
-      // that so for now I will just resolve immediately if set to loop.
-      if (options?.loop) {
+  return raceTimeout(6000, `addOneOffAnimation: ${spritePath}`, new Promise<void>((resolve) => {
+    if (!hasImage(imageHaver)) {
+      return resolve();
+    }
+    const finishOnFrame = oneOffOptions?.keyFrame;
+    const onFrameChange = (finishOnFrame === undefined) ? undefined : (currentFrame: number) => {
+      if (currentFrame >= finishOnFrame) {
         resolve();
       }
-    }),
-  );
+
+    }
+    const animationSprite = addPixiSpriteAnimated(spritePath, imageHaver.image.sprite, {
+      loop: false,
+      ...options,
+      onFrameChange,
+      onComplete: () => {
+        if (imageHaver.image && animationSprite) {
+          imageHaver.image.sprite.removeChild(animationSprite);
+        }
+        resolve();
+      }
+    });
+    if (animationSprite) {
+      animationSprite.doRemoveWhenPrimaryAnimationChanges = oneOffOptions?.doRemoveWhenPrimaryAnimationChanges || false;
+      animationSprite.anchor.set(0.5);
+    }
+    // Resolve if set to loop, since this sprite loops it will never finish animating
+    // (well, until it is removed), in which case the promise shouldn't wait for it.
+    // It might be misunderstood that this will resolve when the animating sprite is removed
+    // but I have no use-case for that at the moment and it would be a bit complicated to implement
+    // that so for now I will just resolve immediately if set to loop.
+    if (options?.loop) {
+      resolve();
+    }
+  }));
 }

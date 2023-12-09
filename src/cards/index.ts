@@ -91,12 +91,7 @@ import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
 import { addCardToHand } from '../entity/Player';
 import Underworld from '../Underworld';
-import {
-  CardCategory,
-  CardRarity,
-  probabilityMap,
-  UnitType,
-} from '../types/commonTypes';
+import { CardCategory, CardRarity, probabilityMap, UnitType } from '../types/commonTypes';
 import { HasSpace } from '../entity/Type';
 import { Overworld } from '../Overworld';
 import { allUnits } from '../entity/units';
@@ -114,18 +109,8 @@ export interface Modifiers {
   // run special init logic (usually for visuals) when a modifier is added or loaded
   // see 'poison' for example
   // init is inteded to be called within add.
-  init?: (
-    unit: Unit.IUnit,
-    underworld: Underworld,
-    prediction: boolean,
-  ) => void;
-  add?: (
-    unit: Unit.IUnit,
-    underworld: Underworld,
-    prediction: boolean,
-    quantity: number,
-    extra?: object,
-  ) => void;
+  init?: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => void;
+  add?: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra?: object) => void;
   remove?: (unit: Unit.IUnit, underworld: Underworld) => void;
 }
 interface Events {
@@ -135,6 +120,7 @@ interface Events {
   onAgro?: onAgro;
   onTurnStart?: onTurnStart;
   onTurnEnd?: onTurnEnd;
+
 }
 export interface Spell {
   card: ICard;
@@ -165,6 +151,7 @@ export function registerEvents(id: string, events: Events) {
   if (events.onTurnEnd) {
     Events.onTurnEndSource[id] = events.onTurnEnd;
   }
+
 }
 
 export function registerSpell(spell: Spell, overworld: Overworld) {
@@ -177,7 +164,7 @@ export function registerSpell(spell: Spell, overworld: Overworld) {
     registerModifiers(id, spell.modifiers);
   }
   // Add card as upgrade:
-  if (!upgradeCardsSource.find((u) => u.title == card.id)) {
+  if (!upgradeCardsSource.find(u => u.title == card.id)) {
     upgradeCardsSource.push(cardToUpgrade(card, overworld));
   }
   // Add subsprites
@@ -312,22 +299,20 @@ export function refreshSummonCardDescriptions(underworld: Underworld) {
       }
     }
   }
+
 }
 // made global to prevent import loop in localize.ts
 globalThis.refreshSummonCardDescriptions = refreshSummonCardDescriptions;
 
 function cardToUpgrade(c: ICard, overworld: Overworld): IUpgrade {
   // Make forbidden cards unavailable in demo
-  const probability =
-    globalThis.isDemo && c.probability == probabilityMap[CardRarity.FORBIDDEN]
-      ? 0
-      : c.probability;
+  const probability = globalThis.isDemo && c.probability == probabilityMap[CardRarity.FORBIDDEN] ? 0 : c.probability;
   const thumbnail = getSpellThumbnailPath(c.thumbnail);
   return {
     title: c.id,
     replaces: c.replaces,
     // All `replaces` are also required for the upgrade to show up
-    requires: [...(c.replaces || []), ...(c.requires || [])],
+    requires: [...c.replaces || [], ...c.requires || []],
     modName: c.modName,
     type: 'card',
     cardCategory: c.category,
@@ -342,7 +327,7 @@ function cardToUpgrade(c: ICard, overworld: Overworld): IUpgrade {
       addCardToHand(c, player, overworld.underworld);
     },
     probability: probability,
-    cost: { healthCost: c.healthCost, manaCost: c.manaCost },
+    cost: { healthCost: c.healthCost, manaCost: c.manaCost }
   };
 }
 
@@ -366,7 +351,7 @@ export interface EffectState {
   // aggregator carries extra information that can be passed
   // between card effects.
   aggregator: {
-    unitDamage: UnitDamage[];
+    unitDamage: UnitDamage[],
     radius: number;
   };
   // initialTargetedUnitId and initialTargetedPickupId:
@@ -376,11 +361,7 @@ export interface EffectState {
   initialTargetedUnitId: number | undefined;
   initialTargetedPickupId: number | undefined;
 }
-export function refundLastSpell(
-  state: EffectState,
-  prediction: boolean,
-  floatingMessage?: string,
-) {
+export function refundLastSpell(state: EffectState, prediction: boolean, floatingMessage?: string) {
   // Only refund the spell when it's not a prediction so that
   // it will show the mana cost in the UI of "remaining mana" even if
   // they are not currently hovering a valid target.
@@ -395,75 +376,48 @@ export function refundLastSpell(
       floatingText({ coords: state.casterUnit, text: floatingMessage });
     }
   }
+
 }
-export function hasTargetAtPosition(
-  position: Vec2,
-  underworld: Underworld,
-): boolean {
+export function hasTargetAtPosition(position: Vec2, underworld: Underworld): boolean {
   const unitAtCastLocation = underworld.getUnitAt(position);
   const pickupAtCastLocation = underworld.getPickupAt(position);
   const doodadAtCastLocation = underworld.getDoodadAt(position);
-  return (
-    !!unitAtCastLocation || !!pickupAtCastLocation || !!doodadAtCastLocation
-  );
+  return !!unitAtCastLocation || !!pickupAtCastLocation || !!doodadAtCastLocation;
 }
-export function defaultTargetsForAllowNonUnitTargetTargetingSpell(
-  targets: Vec2[],
-  castLocation: Vec2,
-  card: ICard,
-): Vec2[] {
+export function defaultTargetsForAllowNonUnitTargetTargetingSpell(targets: Vec2[], castLocation: Vec2, card: ICard): Vec2[] {
   if (card.allowNonUnitTarget && card.category === CardCategory.Targeting) {
     // Defaulting targets for a allowNonUnitTarget Targeting spell is handled specially:
     // For most (other) spells, you want the spell to snap to the target for convenience,
     // but for targeting spells you're often trying to pick a specific spot to target as many
     // as possible, therefore we do not want any snaping.
     // Returning just the castLocation when only one target (or less) is targeted
-    // means that the spell will cast on the castLocation rather than the center of
+    // means that the spell will cast on the castLocation rather than the center of 
     // targets[0], which is some entity's (unit, pickup, doodad) center.
     const firstTarget = targets[0];
     return (
       // If there are no targets, return the cast location so players can cast a targeting spell anywhere on the ground
-      targets.length == 0 ||
-        // If there is only 1 target, return the cast location (e.g. disable snapping) so long as the target isn't moving due to the spell.  If the distance from the target to the cast location
-        // is less than what would be a selectable distance then disable snapping to the target; however, if not, DO SNAP (this allows Push + Targeting Spell to make the targeting spell appear at the final position
-        // that the unit was pushed to)
-        (firstTarget &&
-          targets.length == 1 &&
-          distance(firstTarget, castLocation) <=
-            (Unit.isUnit(firstTarget) && firstTarget.isMiniboss
-              ? config.SELECTABLE_RADIUS * config.UNIT_MINIBOSS_SCALE_MULTIPLIER
-              : config.SELECTABLE_RADIUS))
-        ? [castLocation]
-        : targets
-    );
+      targets.length == 0
+      ||
+      // If there is only 1 target, return the cast location (e.g. disable snapping) so long as the target isn't moving due to the spell.  If the distance from the target to the cast location
+      // is less than what would be a selectable distance then disable snapping to the target; however, if not, DO SNAP (this allows Push + Targeting Spell to make the targeting spell appear at the final position
+      // that the unit was pushed to) 
+      firstTarget && targets.length == 1 && distance(firstTarget, castLocation) <= ((Unit.isUnit(firstTarget) && firstTarget.isMiniboss) ? config.SELECTABLE_RADIUS * config.UNIT_MINIBOSS_SCALE_MULTIPLIER : config.SELECTABLE_RADIUS)
+    ) ? [castLocation] : targets;
   } else {
-    console.error(
-      "defaultTargetsForAllowNonUnitTargetTargetingSpell was invoked on a card that it wasn't designed for:",
-      card.id,
-    );
+    console.error('defaultTargetsForAllowNonUnitTargetTargetingSpell was invoked on a card that it wasn\'t designed for:', card.id);
     return targets;
   }
+
 }
 // Returns all current targets of an effect / spell
 // See underworld.getPotentialTargets for the function that returns all targetable
 // entities
 export function getCurrentTargets(state: EffectState): HasSpace[] {
-  return [
-    ...state.targetedUnits,
-    ...state.targetedPickups,
-    ...state.targetedDoodads,
-  ];
+  return [...state.targetedUnits, ...state.targetedPickups, ...state.targetedDoodads];
 }
 export type EffectFn = {
   // Dry run is for displaying to the user what will happen if they cast
-  (
-    state: EffectState,
-    card: ICard,
-    quantity: number,
-    underworld: Underworld,
-    prediction: boolean,
-    outOfRange?: boolean,
-  ): Promise<EffectState>;
+  (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean): Promise<EffectState>;
 };
 export interface ICard {
   id: string;
@@ -519,11 +473,7 @@ export function getCardsFromIds(cardIds: string[]): ICard[] {
 
 export function addTarget(target: any, effectState: EffectState) {
   if (Unit.isUnit(target)) {
-    if (
-      globalThis.player &&
-      globalThis.player.unit == target &&
-      !globalThis.player.isSpawned
-    ) {
+    if (globalThis.player && globalThis.player.unit == target && !globalThis.player.isSpawned) {
       // Do not allow targeting self when self isn't spawned
       // (Note, this only needs to run locally because the positional change when choosing a spawn isn't networked)
       return;
@@ -544,19 +494,13 @@ export function addUnitTarget(unit: Unit.IUnit, effectState: EffectState) {
     effectState.targetedUnits.push(unit);
   }
 }
-export function addPickupTarget(
-  pickup: Pickup.IPickup,
-  effectState: EffectState,
-) {
+export function addPickupTarget(pickup: Pickup.IPickup, effectState: EffectState) {
   // Adds a pickup to effectState.targetedPickups IF it is not already in targetedPickups
   if (effectState.targetedPickups.indexOf(pickup) === -1) {
     effectState.targetedPickups.push(pickup);
   }
 }
-export function addDoodadTarget(
-  doodad: Doodad.IDoodad,
-  effectState: EffectState,
-) {
+export function addDoodadTarget(doodad: Doodad.IDoodad, effectState: EffectState) {
   // Adds a doodad to effectState.targetedDoodads IF it is not already in targetedDoodads
   if (effectState.targetedDoodads.indexOf(doodad) === -1) {
     effectState.targetedDoodads.push(doodad);

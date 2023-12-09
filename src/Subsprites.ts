@@ -23,8 +23,8 @@ const Subsprites: ISubsprites = {
     },
     scale: {
       x: 1,
-      y: 1,
-    },
+      y: 1
+    }
   },
   'disconnected.png': {
     imageName: 'disconnected.png',

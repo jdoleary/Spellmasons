@@ -35,7 +35,7 @@ globalThis.playerWalkingPromise = Promise.resolve();
 globalThis.attentionMarkers = [];
 globalThis.resMarkers = [];
 globalThis.isSuperMe = false;
-globalThis.devAutoPickUpgrades = false; //location.href.includes('localhost');
+globalThis.devAutoPickUpgrades = false;//location.href.includes('localhost');
 globalThis.adminMode = location.href.includes('localhost');
 globalThis.zoomTarget = 1.8;
 globalThis.hotseatPlayerConfig = [];
@@ -48,7 +48,7 @@ if (globalThis.UIEasyOnTheEyes === undefined) {
   globalThis.UIEasyOnTheEyes = false;
 }
 globalThis.setOption = (key: string, value: any) => {
-  console.debug('Setting option', key, 'to', value);
+  console.debug('Setting option', key, 'to', value)
   storage.assign(storage.STORAGE_OPTIONS, { [key]: value });
 };
 
@@ -60,15 +60,13 @@ globalThis.isHost = (pie: PieClient | IHostApp) => {
   // and this file is the entry point to the non-headless client so it will never be the
   // hostApp
   return typeGuardHostApp(pie) ? true : pie.soloMode;
-};
+}
 if (globalThis.devAutoPickUpgrades) {
-  console.log(
-    'ADMIN: devAutoPickUpgrades = true! Character and upgrades will be picked automatically.',
-  );
+  console.log('ADMIN: devAutoPickUpgrades = true! Character and upgrades will be picked automatically.');
 }
 
 setupAll();
-// Add mods.  Added in javascript instead of in html so that vite doesn't
+// Add mods.  Added in javascript instead of in html so that vite doesn't 
 // bundle it.  It must be replacable
 const script = document.createElement('script');
 script.type = 'text/javascript';
@@ -77,32 +75,29 @@ document.body.append(script);
 
 function setupAll() {
   // Initialize Assets
-  console.log('Setup: Loading Pixi assets...');
-  setupPixi()
-    .then(() => {
-      console.log('Setup: Done loading Pixi assets.');
-      initPlanningView();
-      setupPieAndUnderworld();
-    })
-    .catch((e) => {
-      console.error('Setup: Failed to setup pixi', e);
-    });
+  console.log("Setup: Loading Pixi assets...")
+  setupPixi().then(() => {
+    console.log("Setup: Done loading Pixi assets.")
+    initPlanningView();
+    setupPieAndUnderworld();
+  }).catch(e => {
+    console.error('Setup: Failed to setup pixi', e);
+  });
 
   const elMenu = document.getElementById('menu-app');
   if (elMenu) {
     // Reveal the menu now that the global variables needed by svelte are set.
     elMenu.classList.add('ready');
+
   } else {
     // This should never happen
     console.error('Cannot find "menu" element in DOM');
   }
 
   // Set UI version info
-  const elVersionInfo = document.getElementById('version-info');
+  const elVersionInfo = document.getElementById('version-info')
   if (elVersionInfo && globalThis.SPELLMASONS_PACKAGE_VERSION) {
-    elVersionInfo.innerText = `Spellmasons v${
-      globalThis.SPELLMASONS_PACKAGE_VERSION
-    }${globalThis.isDemo ? ' - Demo' : ''}`;
+    elVersionInfo.innerText = `Spellmasons v${globalThis.SPELLMASONS_PACKAGE_VERSION}${globalThis.isDemo ? ' - Demo' : ''}`;
   }
 }
 
@@ -110,7 +105,7 @@ globalThis.setMMBDown = (isDown: boolean) => {
   // This is the ONLY place that MMBDown should be mutated.
   globalThis.MMBDown = isDown;
   document.body?.classList.toggle('draggingCamera', globalThis.MMBDown);
-};
+}
 globalThis.setRMBDown = (isDown: boolean, underworld: Underworld) => {
   // This is the ONLY place that RMBDown should be mutated.
   globalThis.RMBDown = isDown;
@@ -119,37 +114,30 @@ globalThis.setRMBDown = (isDown: boolean, underworld: Underworld) => {
     if (globalThis.player) {
       returnToDefaultSprite(globalThis.player.unit);
     } else {
-      console.error('Cannot send MOVE_PLAYER, globalThis.player is undefined');
+      console.error('Cannot send MOVE_PLAYER, globalThis.player is undefined')
     }
   }
-  // Reset notifiedOutOfStamina so that when RMB is pressed again, if the
+  // Reset notifiedOutOfStamina so that when RMB is pressed again, if the 
   // player is out of stamina it will notify them
   globalThis.notifiedOutOfStamina = false;
-};
+}
 
 globalThis.showDebug = false;
 // Prevent accidental back button only when not developing locally
 // During development, lots of refreshing happens so it's annoying when it
 // asks "are you sure?" every time
 if (!location.href.includes('localhost') && !globalThis.isElectron) {
-  globalThis.onbeforeunload = function () {
-    return 'Are you sure you want to quit?';
-  };
+  globalThis.onbeforeunload = function () { return "Are you sure you want to quit?"; };
 }
 
 globalThis.fullyExitGame = () => {
-  Jprompt({
-    text: 'Are you sure you wish to exit to Desktop?',
-    noBtnText: 'Cancel',
-    noBtnKey: 'Escape',
-    yesText: 'Quit',
-    forceShow: true,
-  }).then((doQuit) => {
+  Jprompt({ text: 'Are you sure you wish to exit to Desktop?', noBtnText: 'Cancel', noBtnKey: 'Escape', yesText: 'Quit', forceShow: true }).then(doQuit => {
     if (doQuit) {
       window.close();
     }
   });
-};
+
+}
 
 globalThis.testPerks = () => {
   //@ts-ignore
@@ -159,4 +147,4 @@ globalThis.testPerks = () => {
     //@ts-ignore
     window.devUnderworld.showUpgrades();
   }
-};
+}

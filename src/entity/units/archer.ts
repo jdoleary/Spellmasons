@@ -5,10 +5,7 @@ import { createVisualFlyingProjectile } from '../Projectile';
 import * as math from '../../jmath/math';
 import { add, Vec2 } from '../../jmath/Vec';
 import Underworld from '../../Underworld';
-import {
-  getBestRangedLOSTarget,
-  rangedLOSMovement,
-} from './actions/rangedAction';
+import { getBestRangedLOSTarget, rangedLOSMovement } from './actions/rangedAction';
 import * as config from '../../config';
 
 export const ARCHER_ID = 'archer';
@@ -41,12 +38,7 @@ const unit: UnitSource = {
     damage: 'archerHurt',
     death: 'archerDeath',
   },
-  action: async (
-    unit: Unit.IUnit,
-    attackTargets: Unit.IUnit[] | undefined,
-    underworld: Underworld,
-    _canAttackTarget: boolean,
-  ) => {
+  action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, _canAttackTarget: boolean) => {
     // Archer just checks attackTarget, not canAttackTarget to know if it can attack because getBestRangedLOSTarget() will return undefined
     // if it can't attack any targets
     const attackTarget = attackTargets && attackTargets[0];
@@ -61,16 +53,9 @@ const unit: UnitSource = {
           attackTarget,
           'projectile/arrow',
         ).then(() => {
-          Unit.takeDamage(
-            attackTarget,
-            unit.damage,
-            unit,
-            underworld,
-            false,
-            undefined,
-            { thinBloodLine: true },
-          );
-        });
+          Unit.takeDamage(attackTarget, unit.damage, unit, underworld, false, undefined, { thinBloodLine: true });
+        })
+
       });
     } else {
       // If it gets to this block it means it is either out of range or cannot see enemy
@@ -81,12 +66,13 @@ const unit: UnitSource = {
     const targets = getBestRangedLOSTarget(unit, underworld);
     if (targets) {
       // Normal archers can only attack one target;
-      return targets.slice(0, 1).map((u) => {
+      return targets.slice(0, 1).map(u => {
         return u;
       });
+
     } else {
       return [];
     }
-  },
+  }
 };
 export default unit;

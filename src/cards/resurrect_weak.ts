@@ -37,7 +37,7 @@ const spell: Spell = {
             // blue rez 0x96cdf1
             // green rez 0xa1f196
             // @ts-ignore Something is wrong with PIXI's filter types
-            unit.image.sprite.filters.push(colorOverlayFilter);
+            unit.image.sprite.filters.push(colorOverlayFilter)
           }
           playDefaultSpellSFX(card, prediction);
           Unit.resurrect(unit);
@@ -45,18 +45,10 @@ const spell: Spell = {
           resurrectedUnitCount++;
           makeRisingParticles(unit, prediction);
           unit.health = Math.round(unit.healthMax * resStatAmount);
-          unit.mana = Math.max(
-            unit.mana,
-            Math.round(unit.manaMax * resStatAmount),
-          );
+          unit.mana = Math.max(unit.mana, Math.round(unit.manaMax * resStatAmount));
           Unit.changeFaction(unit, state.casterUnit.faction);
           // Resurrect animation is the die animation played backwards
-          animationPromises.push(
-            Unit.playAnimation(unit, unit.animations.die, {
-              loop: false,
-              animationSpeed: -0.2,
-            }),
-          );
+          animationPromises.push(Unit.playAnimation(unit, unit.animations.die, { loop: false, animationSpeed: -0.2 }));
           if (unit.image) {
             unit.image.sprite.gotoAndPlay(unit.image.sprite.totalFrames - 1);
           }
@@ -64,11 +56,7 @@ const spell: Spell = {
       }
       await Promise.all(animationPromises);
       if (resurrectedUnitCount <= 0) {
-        refundLastSpell(
-          state,
-          prediction,
-          'None of the targets are dead\nRefunded mana',
-        );
+        refundLastSpell(state, prediction, 'None of the targets are dead\nRefunded mana');
       }
       for (let unit of targets) {
         if (!unit) {
@@ -79,6 +67,7 @@ const spell: Spell = {
           // @ts-ignore This filter does have a __proto__ property
           unit.image.sprite.filters = unit.image.sprite.filters.filter(f => f.__proto__ !== ColorOverlayFilter.prototype)
         }
+
       }
       return state;
     },

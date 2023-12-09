@@ -1,13 +1,8 @@
 import seedrandom from 'seedrandom';
 import * as config from './config';
-import * as storage from './storage';
+import * as storage from "./storage";
 import { calculateCostForSingleCard, type CardCost } from './cards/cardUtils';
-import {
-  cardRarityAsString,
-  getCardRarityColor,
-  getReplacesCardText,
-  getSpellThumbnailPath,
-} from './graphics/ui/CardUI';
+import { cardRarityAsString, getCardRarityColor, getReplacesCardText, getSpellThumbnailPath } from './graphics/ui/CardUI';
 import { chooseObjectWithProbability } from './jmath/rand';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import { IPlayer, MageType, changeMageType } from './entity/Player';
@@ -43,50 +38,36 @@ export interface IUpgrade {
 }
 export function isPickingClass(player: IPlayer): boolean {
   // undefined mageType means they haven't picked yet
-  return (
-    (player.upgrades.length >= 5 && player.mageType == undefined) ||
-    !!globalThis.adminPickMageType
-  );
+  return (player.upgrades.length >= 5 && player.mageType == undefined || !!globalThis.adminPickMageType);
 }
 // Chooses a random card based on the card's probabilities
 // minimumProbability ensures that super rare cards won't be presented too early on
 // onlyStats: means it'll present stats upgrades instead of card upgrades
-export function generateUpgrades(
-  player: IPlayer,
-  numberOfUpgrades: number,
-  minimumProbability: number,
-  underworld: Underworld,
-): IUpgrade[] {
+export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, minimumProbability: number, underworld: Underworld): IUpgrade[] {
   let upgrades: IUpgrade[] = [];
   const filterUpgrades = (u: IUpgrade) =>
     (u.maxCopies === undefined
       ? // Always include upgrades that don't have a specified maxCopies
-        true
+      true
       : // Filter out  upgrades that the player can't have more of
-        player.upgrades.filter((pu) => pu.title === u.title).length <
-        u.maxCopies) &&
-    (u.requires
-      ? u.requires.every((title) =>
-          player.upgrades.find((u) => u.title == title),
-        )
-      : true) &&
+      player.upgrades.filter((pu) => pu.title === u.title).length <
+      u.maxCopies)
+    && (u.requires ? u.requires.every(title => player.upgrades.find(u => u.title == title)) : true)
     // Now that upgrades are cards too, make sure it doesn't
     // show upgrades that the player already has as cards
-    !player.inventory.includes(u.title) &&
+    && !player.inventory.includes(u.title)
     // Upgrade is NOT included in list of rerollOmit
     // this prevents a reroll from presenting an upgrade
     // that was in the last selection
-    !(globalThis.rerollOmit || []).some(
-      (omittedTitle) => omittedTitle == u.title,
-    ) &&
-    isModActive(u, underworld);
+    && !(globalThis.rerollOmit || []).some(omittedTitle => omittedTitle == u.title)
+    && isModActive(u, underworld);
   let filteredUpgradeCardsSource = upgradeCardsSource.filter(filterUpgrades);
   // Every other level, players get to choose from stas upgrades or card upgrades
   // Unless Player already has all of the upgrades, in which case they
   // only have stat upgrades to choose from
   let upgradeList = filteredUpgradeCardsSource;
   // Limit the rarity of cards that are possible to attain
-  upgradeList = upgradeList.filter((u) => u.probability >= minimumProbability);
+  upgradeList = upgradeList.filter(u => u.probability >= minimumProbability);
 
   // For third pick, override upgradeList with damage spells
   if (player.upgrades.length == 2) {
@@ -94,12 +75,7 @@ export function generateUpgrades(
       // Prevent picking the same upgrade twice
       .filter(filterUpgrades)
       // Ensure they pick from only damage cards
-      .filter(
-        (c) =>
-          (![bleedCardId, drownCardId].includes(c.title) &&
-            c.cardCategory == CardCategory.Damage) ||
-          [poisonCardId, suffocateCardId].includes(c.title),
-      );
+      .filter(c => (![bleedCardId, drownCardId].includes(c.title) && c.cardCategory == CardCategory.Damage) || [poisonCardId, suffocateCardId].includes(c.title));
   }
   if (isPickingClass(player)) {
     return upgradeMageClassSource;
@@ -116,11 +92,8 @@ export function generateUpgrades(
   // the number of cards that they have  This will prevent save scamming the chances and also make sure each time you are presented with
   // cards it is unique.
   // Note: Only count non-empty card spaces
-  const playerUniqueIdentifier =
-    globalThis.numberOfHotseatPlayers > 1 ? player.name : player.clientId;
-  const rSeed = `${underworld.seed}-${playerUniqueIdentifier}-${
-    player.reroll
-  }-${player.inventory.filter((x) => !!x).length}`;
+  const playerUniqueIdentifier = globalThis.numberOfHotseatPlayers > 1 ? player.name : player.clientId;
+  const rSeed = `${underworld.seed}-${playerUniqueIdentifier}-${player.reroll}-${player.inventory.filter(x => !!x).length}`;
   const random = seedrandom(rSeed);
   for (
     let i = 0;
@@ -137,14 +110,10 @@ export function generateUpgrades(
       console.log('No upgrades to choose from', clonedUpgradeSource);
     }
   }
-  globalThis.rerollOmit = upgrades.map((u) => u.title);
+  globalThis.rerollOmit = upgrades.map(u => u.title);
   return upgrades;
 }
-export function createUpgradeElement(
-  upgrade: IUpgrade,
-  player: IPlayer,
-  underworld: Underworld,
-) {
+export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underworld: Underworld) {
   if (globalThis.headless) {
     // There is no DOM in headless mode
     return;
@@ -198,7 +167,7 @@ export function createUpgradeElement(
   elCardInner.appendChild(title);
   if (upgrade.type === 'card') {
     const rarityText = document.createElement('div');
-    rarityText.classList.add('card-rarity');
+    rarityText.classList.add('card-rarity')
     rarityText.style.color = getCardRarityColor(upgrade);
     rarityText.innerHTML = cardRarityAsString(upgrade).toLocaleLowerCase();
     elCardInner.appendChild(rarityText);
@@ -208,11 +177,8 @@ export function createUpgradeElement(
   desc.classList.add('card-description');
   const descriptionText = document.createElement('div');
   if (upgrade.replaces || upgrade.requires) {
-    const replacesEl = getReplacesCardText(
-      upgrade.requires || [],
-      upgrade.replaces || [],
-    );
-    descriptionText.appendChild(replacesEl);
+    const replacesEl = getReplacesCardText(upgrade.requires || [], upgrade.replaces || []);
+    descriptionText.appendChild(replacesEl)
   }
   const label = document.createElement('span');
   label.innerText = upgrade.description(player).trimStart();
@@ -220,27 +186,15 @@ export function createUpgradeElement(
   desc.appendChild(descriptionText);
 
   if (upgrade.type == 'mageType') {
-    const mageTypeWinsKey = storage.getStoredMageTypeWinsKey(
-      upgrade.title as MageType,
-    );
+    const mageTypeWinsKey = storage.getStoredMageTypeWinsKey(upgrade.title as MageType);
     const currentMageTypeWins = parseInt(storageGet(mageTypeWinsKey) || '0');
-    const mageTypeFarthestLevel = storage.getStoredMageTypeFarthestLevelKey(
-      upgrade.title as MageType,
-    );
-    const currentMageTypeFarthestLevel = underworld._getLevelText(
-      parseInt(storageGet(mageTypeFarthestLevel) || '0'),
-    );
+    const mageTypeFarthestLevel = storage.getStoredMageTypeFarthestLevelKey(upgrade.title as MageType);
+    const currentMageTypeFarthestLevel = underworld._getLevelText(parseInt(storageGet(mageTypeFarthestLevel) || '0'));
     // winsEl.innerHTML = `👑${currentMageTypeWins}`;
     if (currentMageTypeWins > 0 || currentMageTypeFarthestLevel !== '1') {
       const winsEl = document.createElement('div');
       winsEl.classList.add('mageType-wins');
-      winsEl.innerHTML = `${
-        currentMageTypeWins > 0 ? `🏆${currentMageTypeWins} ` : ''
-      }${
-        currentMageTypeFarthestLevel !== '1'
-          ? `🗺️${currentMageTypeFarthestLevel}`
-          : ''
-      }`;
+      winsEl.innerHTML = `${currentMageTypeWins > 0 ? `🏆${currentMageTypeWins} ` : ''}${currentMageTypeFarthestLevel !== '1' ? `🗺️${currentMageTypeFarthestLevel}` : ''}`;
       element.appendChild(winsEl);
     }
   }
@@ -267,12 +221,8 @@ export function createUpgradeElement(
   return element;
 }
 export function getUpgradeByTitle(title: string): IUpgrade | undefined {
-  const all_upgrades = [
-    ...upgradeCardsSource,
-    ...upgradeSourceWhenDead,
-    ...upgradeMageClassSource,
-  ];
-  if (all_upgrades.filter((u) => u.title == title).length > 1) {
+  const all_upgrades = [...upgradeCardsSource, ...upgradeSourceWhenDead, ...upgradeMageClassSource];
+  if (all_upgrades.filter(u => u.title == title).length > 1) {
     console.error('Multiple upgrades with the same title', title);
   }
   return all_upgrades.find((u) => u.title === title);
@@ -285,13 +235,13 @@ export const upgradeSourceWhenDead: IUpgrade[] = [
     // TODO needs new icon
     thumbnail: 'images/spell/resurrect.png',
     // Resurrection happens automatically at the start of each level
-    effect: () => {},
+    effect: () => { },
     probability: 30,
     cost: { healthCost: 0, manaCost: 0 },
   },
 ];
 
-export const upgradeCardsSource: IUpgrade[] = [];
+export const upgradeCardsSource: IUpgrade[] = []
 
 export const upgradeMageClassSource: IUpgrade[] = [
   {
@@ -310,8 +260,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
   {
     title: 'Timemason',
     type: 'mageType',
-    description: () =>
-      i18n(['class_timemason', `${config.TIMEMASON_PERCENT_DRAIN}%`]),
+    description: () => i18n(['class_timemason', `${config.TIMEMASON_PERCENT_DRAIN}%`]),
     thumbnail: 'images/upgrades/class-timemason.png',
     effect: (player, underworld) => {
       changeMageType('Timemason', player, underworld);
@@ -396,4 +345,5 @@ export const upgradeMageClassSource: IUpgrade[] = [
     probability: 1,
     cost: { healthCost: 0, manaCost: 0 },
   },
-];
+
+]

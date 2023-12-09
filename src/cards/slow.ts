@@ -11,12 +11,10 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
 export const id = 'slow';
-const changeProportion = 0.8;
+const changeProportion = 0.80;
 function remove(unit: Unit.IUnit, underworld: Underworld) {
   if (!unit.modifiers[id]) {
-    console.error(
-      `Missing modifier object for ${id}; cannot remove.  This should never happen`,
-    );
+    console.error(`Missing modifier object for ${id}; cannot remove.  This should never happen`);
     return;
   }
   // Safely restore unit's original properties
@@ -31,27 +29,17 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
 
   unit.moveSpeed = moveSpeed;
 }
-function add(
-  unit: Unit.IUnit,
-  underworld: Underworld,
-  prediction: boolean,
-  quantity: number = 1,
-) {
+function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
   const { staminaMax, moveSpeed } = unit;
-  const modifier = getOrInitModifier(
-    unit,
-    id,
-    {
-      isCurse: true,
-      quantity,
-      persistBetweenLevels: false,
-      originalStats: {
-        staminaMax,
-        moveSpeed,
-      },
-    },
-    () => {},
-  );
+  const modifier = getOrInitModifier(unit, id, {
+    isCurse: true,
+    quantity,
+    persistBetweenLevels: false,
+    originalStats: {
+      staminaMax,
+      moveSpeed
+    }
+  }, () => { });
   const quantityModifiedChangeProportion = Math.pow(changeProportion, quantity);
   unit.moveSpeed *= quantityModifiedChangeProportion;
   unit.staminaMax *= quantityModifiedChangeProportion;
@@ -73,12 +61,9 @@ const spell: Spell = {
     description: ['spell_slow', Math.floor(changeProportion * 100).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
-      const targets = state.targetedUnits.filter((u) => u.alive);
+      const targets = state.targetedUnits.filter(u => u.alive);
       if (targets.length) {
-        await Promise.all([
-          playDefaultSpellAnimation(card, targets, prediction),
-          playDefaultSpellSFX(card, prediction),
-        ]);
+        await Promise.all([playDefaultSpellAnimation(card, targets, prediction), playDefaultSpellSFX(card, prediction)]);
         for (let unit of targets) {
           Unit.addModifier(unit, id, underworld, prediction, quantity);
           if (!prediction) {
@@ -104,7 +89,9 @@ const spell: Spell = {
     //     y: 1.0,
     //   },
     // },
+
   },
-  events: {},
+  events: {
+  },
 };
 export default spell;

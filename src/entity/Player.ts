@@ -11,22 +11,12 @@ import { clearTooltipSelection } from '../graphics/PlanningView';
 import defaultPlayerUnit from './units/playerUnit';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
-import {
-  playerCastAnimationColor,
-  playerCoatPrimary,
-  playerCoatSecondary,
-  playerNoColor,
-} from '../graphics/ui/colors';
+import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary, playerNoColor } from '../graphics/ui/colors';
 import Underworld, { turn_phase } from '../Underworld';
 import * as target_cone from '../cards/target_cone';
 import * as lastWill from '../cards/lastwill';
 import * as captureSoul from '../cards/capture_soul';
-import {
-  explain,
-  EXPLAIN_BLESSINGS,
-  isFirstTutorialStepComplete,
-  isTutorialComplete,
-} from '../graphics/Explain';
+import { explain, EXPLAIN_BLESSINGS, isFirstTutorialStepComplete, isTutorialComplete } from '../graphics/Explain';
 import { lightenColor } from '../graphics/ui/colorUtil';
 import { AttributePerk } from '../Perk';
 import { setPlayerNameUI } from '../PlayerUtils';
@@ -34,40 +24,25 @@ import { arrowCardId } from '../cards/arrow';
 import { heal_id } from '../cards/add_heal';
 import { contaminate_id } from '../cards/contaminate';
 
-const elInGameLobby = document.getElementById('in-game-lobby') as
-  | HTMLElement
-  | undefined;
-const elInstructions = document.getElementById('instructions') as
-  | HTMLElement
-  | undefined;
+const elInGameLobby = document.getElementById('in-game-lobby') as (HTMLElement | undefined);
+const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
 // rehydrate the JSON into an entity
-export type IPlayerSerialized = Omit<IPlayer, 'unit'> & {
-  unit: { id: number };
-};
+export type IPlayerSerialized = Omit<IPlayer, "unit"> & { unit: { id: number } };
 export interface CardUsage {
-  [cardId: string]: number;
+  [cardId: string]: number
 }
 interface Stats {
   bestSpell: {
-    unitsKilled: number;
-    spell: string[];
+    unitsKilled: number,
+    spell: string[]
   };
   longestSpell: string[];
   gameStartTime: number;
   totalKills: number;
 }
-export type MageType =
-  | 'Spellmason'
-  | 'Timemason'
-  | 'Bloodmason'
-  | 'Necromancer'
-  | 'Archer'
-  | 'Far Gazer'
-  | 'Cleric'
-  | 'Witch'
-  | 'Gambler';
+export type MageType = 'Spellmason' | 'Timemason' | 'Bloodmason' | 'Necromancer' | 'Archer' | 'Far Gazer' | 'Cleric' | 'Witch' | 'Gambler';
 // This array allows the UI to select a mageType, mageTypes not in this array
 // will not appear in the UI
 globalThis.mageTypes = [
@@ -79,7 +54,7 @@ globalThis.mageTypes = [
   'Far Gazer',
   'Cleric',
   'Witch',
-  'Gambler',
+  'Gambler'
 ];
 export interface IPlayer {
   // Multiplayer "gamer handle"
@@ -94,7 +69,7 @@ export interface IPlayer {
   clientId: string;
   clientConnected: boolean;
   unit: Unit.IUnit;
-  awaitingSpawn: boolean;
+  awaitingSpawn: boolean,
   isSpawned: boolean;
   // The spells that the player has on their toolbar
   cardsInToolbar: string[];
@@ -122,18 +97,9 @@ export interface IPlayer {
   statPointsUnspent: number;
 }
 export function inPortal(player: IPlayer): boolean {
-  return (
-    isNaN(player.unit.x) ||
-    isNaN(player.unit.y) ||
-    player.unit.x === null ||
-    player.unit.y === null
-  );
+  return isNaN(player.unit.x) || isNaN(player.unit.y) || player.unit.x === null || player.unit.y === null;
 }
-export function changeMageType(
-  type: MageType,
-  player?: IPlayer,
-  underworld?: Underworld,
-) {
+export function changeMageType(type: MageType, player?: IPlayer, underworld?: Underworld) {
   if (!player || !underworld) {
     console.error('Cannot set mage type', player, underworld);
   } else {
@@ -212,6 +178,7 @@ export function changeMageType(
         break;
     }
   }
+
 }
 export function create(clientId: string, underworld: Underworld): IPlayer {
   const userSource = defaultPlayerUnit;
@@ -237,7 +204,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
       UnitType.PLAYER_CONTROLLED,
       userSource.info.subtype,
       undefined,
-      underworld,
+      underworld
     ),
     awaitingSpawn: false,
     isSpawned: false,
@@ -257,7 +224,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
       bestSpell: { unitsKilled: 0, spell: [] },
       longestSpell: [],
       gameStartTime: Date.now(),
-      totalKills: 0,
+      totalKills: 0
     },
     statPointsUnspent: 0,
   };
@@ -285,11 +252,7 @@ const ROBE_COLOR_FILTER_ID = 'robeColorFilter';
 // more than once on a player object.  As of this writing it is only called on new player objects
 // Proceed with caution.
 // color: a color in hex such as 0xff0000
-export function setPlayerRobeColor(
-  player: IPlayer,
-  color: number | string,
-  colorMagic?: number | string,
-) {
+export function setPlayerRobeColor(player: IPlayer, color: number | string, colorMagic?: number | string) {
   // Protect against hex number as string coming in from storage
   if (typeof color === 'string') {
     color = parseInt(color);
@@ -303,19 +266,20 @@ export function setPlayerRobeColor(
     colorMagic = parseInt(colorMagic);
   }
   player.color = color;
-  player.colorMagic =
-    colorMagic || (color == playerNoColor ? playerCastAnimationColor : color);
+  player.colorMagic = colorMagic || (color == playerNoColor ? playerCastAnimationColor : color);
   // Add player-specific shaders
   // regardless of if the image sprite changes to a new animation or not.
   if (player.unit.image && player.unit.image.sprite.filters) {
+
+
     const colorSecondary = lightenColor(color, 0.3);
     if (color && colorSecondary && color !== playerNoColor) {
       const robeColorFilter = new MultiColorReplaceFilter(
         [
           [playerCoatPrimary, color],
           [playerCoatSecondary, colorSecondary],
-          // Note: Most of the real color replace for the player's magic is done in
-          // pixiUtils within addSpriteAnimated so that it only replaces the colors of
+          // Note: Most of the real color replace for the player's magic is done in 
+          // pixiUtils within addSpriteAnimated so that it only replaces the colors of 
           // the magic.  When the replace was done here on the whole player sprite, the
           // transparency of the magic caused color replace problems. However, there is
           // some solid pink in the idle and walk animations which gets replaced right here
@@ -323,7 +287,7 @@ export function setPlayerRobeColor(
           // locations.
           [playerCastAnimationColor, player.colorMagic],
         ],
-        0.1,
+        0.1
       );
       // @ts-ignore: jid is a custom identifier to differentiate this filter
       robeColorFilter.jid = ROBE_COLOR_FILTER_ID;
@@ -343,10 +307,7 @@ export function setPlayerRobeColor(
     }
   }
 }
-export function resetPlayerForNextLevel(
-  player: IPlayer,
-  underworld: Underworld,
-) {
+export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld) {
   // Set the player so they can choose their next spawn
   player.isSpawned = false;
   if (player === globalThis.player) {
@@ -368,14 +329,14 @@ export function resetPlayerForNextLevel(
   player.unit.path = undefined;
 
   if (elInstructions && globalThis.player == player) {
-    elInstructions.innerHTML = `${i18n('choose spawn instructions')}`;
+    elInstructions.innerHTML = `${i18n('choose spawn instructions')}`
     // Add left-click image for early levels to help players know how to spawn
     if (underworld.levelIndex < 2) {
-      elInstructions.style.top = '260px';
-      elInstructions.innerHTML += ` <img src="mouse-LMB-bg.png" alt="Left Mouse Button"/>`;
+      elInstructions.style.top = "260px";
+      elInstructions.innerHTML += ` <img src="mouse-LMB-bg.png" alt="Left Mouse Button"/>`
     } else {
       // Much less obtrusive instructions for later levels
-      elInstructions.style.top = '20px';
+      elInstructions.style.top = "20px";
     }
   }
 
@@ -399,10 +360,7 @@ export function resetPlayerForNextLevel(
   underworld.tryGameOver();
 }
 // Keep a global reference to the current client's player
-export function updateGlobalRefToCurrentClientPlayer(
-  player: IPlayer,
-  underworld: Underworld,
-) {
+export function updateGlobalRefToCurrentClientPlayer(player: IPlayer, underworld: Underworld) {
   if (globalThis.clientId === player.clientId) {
     if (numberOfHotseatPlayers > 1) {
       // globalThis.player should always correspond with the first player in the players array since the hotseat
@@ -415,28 +373,25 @@ export function updateGlobalRefToCurrentClientPlayer(
 }
 // Converts a player entity into a serialized form
 // that can be saved as JSON and rehydrated later into
-// a full player entity
+// a full player entity 
 // This is the opposite of load
 export function serialize(player: IPlayer): IPlayerSerialized {
   const { unit, ...rest } = player;
   return {
     ...rest,
     unit: { id: unit.id },
-  };
+  }
 }
 // load rehydrates a player entity from IPlayerSerialized
 export function load(player: IPlayerSerialized, underworld: Underworld) {
-  const reassignedUnit = underworld.units.find((u) => u.id == player.unit.id);
+  const reassignedUnit = underworld.units.find(u => u.id == player.unit.id);
   if (!reassignedUnit) {
     if (!isHost(underworld.pie)) {
-      console.error(
-        'Failed to load player because cannot find associated unit with ID',
-        player.unit.id,
-      );
-      console.log('Requesting game state from host');
+      console.error('Failed to load player because cannot find associated unit with ID', player.unit.id);
+      console.log('Requesting game state from host')
       underworld.pie.sendData({
-        type: MESSAGE_TYPES.REQUEST_SYNC_GAME_STATE,
-      });
+        type: MESSAGE_TYPES.REQUEST_SYNC_GAME_STATE
+      })
     }
     return;
   }
@@ -472,11 +427,7 @@ export function load(player: IPlayerSerialized, underworld: Underworld) {
   CardUI.recalcPositionForCards(playerLoaded, underworld);
   underworld.players.push(playerLoaded);
   if (underworld.overworld) {
-    setClientConnected(
-      playerLoaded,
-      underworld.overworld.clients.includes(player.clientId),
-      underworld,
-    );
+    setClientConnected(playerLoaded, underworld.overworld.clients.includes(player.clientId), underworld);
   } else {
     console.error('cannot set client connected, no overworld');
   }
@@ -487,11 +438,7 @@ export function load(player: IPlayerSerialized, underworld: Underworld) {
 }
 
 // Sets boolean and substring denoting if the player has a @websocketpie/client client associated with it
-export function setClientConnected(
-  player: IPlayer,
-  connected: boolean,
-  underworld: Underworld,
-) {
+export function setClientConnected(player: IPlayer, connected: boolean, underworld: Underworld) {
   player.clientConnected = connected;
   if (connected) {
     Image.removeSubSprite(player.unit.image, 'disconnected.png');
@@ -504,28 +451,21 @@ export function setClientConnected(
   syncLobby(underworld);
 }
 export function syncLobby(underworld: Underworld) {
-  const playerColorToCss = (p: IPlayer) =>
-    `#${(p.color || 0xffffff).toString(16)}`;
-  globalThis.lobbyPlayerList = underworld.players.map((p) => {
-    let status = '';
-    if (!p.clientConnected) {
-      status = i18n('Disconnected');
-    } else if (!p.isSpawned) {
-      status = i18n('Picking Start Point');
-    } else if (!p.unit.alive) {
-      status = i18n('Dead');
-    } else if (p.endedTurn && underworld.turn_phase == turn_phase.PlayerTurns) {
-      status = i18n('Ready for next turn');
-    }
-    return {
-      name: p.name || p.clientId,
-      clientId: p.clientId,
-      clientConnected: p.clientConnected,
-      status,
-      color: playerColorToCss(p),
-      ready: p.lobbyReady ? i18n('Ready') : i18n('Not Ready'),
-    };
-  });
+  const playerColorToCss = (p: IPlayer) => `#${(p.color || 0xffffff).toString(16)}`;
+  globalThis.lobbyPlayerList = underworld.players
+    .map(p => {
+      let status = '';
+      if (!p.clientConnected) {
+        status = i18n('Disconnected');
+      } else if (!p.isSpawned) {
+        status = i18n('Picking Start Point');
+      } else if (!p.unit.alive) {
+        status = i18n('Dead');
+      } else if (p.endedTurn && underworld.turn_phase == turn_phase.PlayerTurns) {
+        status = i18n('Ready for next turn');
+      }
+      return { name: p.name || p.clientId, clientId: p.clientId, clientConnected: p.clientConnected, status, color: playerColorToCss(p), ready: p.lobbyReady ? i18n('Ready') : i18n('Not Ready') };
+    });
   // Update lobby element
   if (elInGameLobby) {
     if (underworld.players.length == 1) {
@@ -534,12 +474,9 @@ export function syncLobby(underworld: Underworld) {
       return;
     }
     // filter: Don't show disconnected players in in-game lobby.
-    elInGameLobby.innerHTML = globalThis.lobbyPlayerList
-      .filter((p) => p.clientConnected)
-      .map((p) => {
-        return `<div class="ui-border"><div class="player"><span class="player-name"><span style="color:${p.color}">⬤&nbsp;</span>${p.name}</span><span>${p.status}</span></div></div>`;
-      })
-      .join('');
+    elInGameLobby.innerHTML = globalThis.lobbyPlayerList.filter(p => p.clientConnected).map(p => {
+      return `<div class="ui-border"><div class="player"><span class="player-name"><span style="color:${p.color}">⬤&nbsp;</span>${p.name}</span><span>${p.status}</span></div></div>`
+    }).join('');
   }
 }
 export function enterPortal(player: IPlayer, underworld: Underworld) {
@@ -552,17 +489,10 @@ export function enterPortal(player: IPlayer, underworld: Underworld) {
   underworld.allowForceInitGameState = false;
 
   // Record Progress
-  const mageTypeFarthestLevel = storage.getStoredMageTypeFarthestLevelKey(
-    player.mageType || 'Spellmason',
-  );
-  const highScore = storageGet(mageTypeFarthestLevel) || '0';
+  const mageTypeFarthestLevel = storage.getStoredMageTypeFarthestLevelKey(player.mageType || 'Spellmason');
+  const highScore = storageGet(mageTypeFarthestLevel) || '0'
   if (parseInt(highScore) < underworld.levelIndex) {
-    console.log(
-      'New farthest level record!',
-      mageTypeFarthestLevel,
-      '->',
-      underworld.levelIndex,
-    );
+    console.log('New farthest level record!', mageTypeFarthestLevel, '->', underworld.levelIndex);
     storageSet(mageTypeFarthestLevel, underworld.levelIndex.toString());
   }
   // Give players stat points to spend:
@@ -585,8 +515,9 @@ export function enterPortal(player: IPlayer, underworld: Underworld) {
     }
   }
 
+
   Image.hide(player.unit.image);
-  // Make sure to resolve the moving promise once they enter the portal or else
+  // Make sure to resolve the moving promise once they enter the portal or else 
   // the client queue will get stuck
   player.unit.resolveDoneMoving();
   // Move "portaled" unit out of the way to prevent collisions and chaining while portaled
@@ -607,50 +538,31 @@ export function ableToAct(player: IPlayer) {
   // So long as a player is clientConnected, they can act if:
   // - They haven't spawned yet
   // - or if they are alive and not in the portal
-  const ableToTakeTurn =
-    player.clientConnected &&
-    (!player.isSpawned || (!inPortal(player) && player.unit.alive));
+  const ableToTakeTurn = player.clientConnected && (!player.isSpawned || (!inPortal(player) && player.unit.alive));
   if (!ableToTakeTurn) {
-    console.log(
-      `Player ${player.clientId} unable to take turn.`,
-      '!inPortal:',
-      !inPortal(player),
-      'alive:',
-      player.unit.alive,
-      'connected: ',
-      player.clientConnected,
-    );
+    console.log(`Player ${player.clientId} unable to take turn.`, '!inPortal:', !inPortal(player), 'alive:', player.unit.alive, 'connected: ', player.clientConnected)
   }
   return ableToTakeTurn;
 }
 
-export function addCardToHand(
-  card: Cards.ICard | undefined,
-  player: IPlayer | undefined,
-  underworld: Underworld,
-) {
+export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | undefined, underworld: Underworld) {
   if (!card) {
     console.error('Attempting to add undefined card to hand');
-    return;
+    return
   }
   if (!player) {
-    console.warn("Attempted to add cards to a non-existant player's hand");
-    return;
+    console.warn("Attempted to add cards to a non-existant player's hand")
+    return
   }
   // Discover spell
   if (player == globalThis.player) {
-    if (
-      globalThis.spellsDiscovered &&
-      !globalThis.spellsDiscovered.includes(card.id)
-    ) {
+    if (globalThis.spellsDiscovered && !globalThis.spellsDiscovered.includes(card.id)) {
       console.log('Discovered spell', card.id);
       globalThis.spellsDiscovered.push(card.id);
-      storage.set(
-        storage.SPELLS_DISCOVERED_STORAGE_KEY,
-        JSON.stringify(globalThis.spellsDiscovered),
-      );
+      storage.set(storage.SPELLS_DISCOVERED_STORAGE_KEY, JSON.stringify(globalThis.spellsDiscovered));
     }
   }
+
 
   // Players may not have more than 1 of a particular card, because now, cards are
   // not removed when cast
@@ -670,17 +582,17 @@ export function addCardToHand(
     if (card.replaces) {
       // Replace all replaced cards with new card
       for (let removeCardId of card.replaces) {
-        player.cardsInToolbar = player.cardsInToolbar.map((cid) => {
+        player.cardsInToolbar = player.cardsInToolbar.map(cid => {
           if (!cid) {
             return cid;
           }
           if (cid == removeCardId) {
             didReplace = true;
-            return card.id;
+            return card.id
           } else {
             return cid;
           }
-        });
+        })
       }
     }
     player.inventory.push(card.id);
@@ -707,64 +619,45 @@ export function setSpellmasonsToChannellingAnimation(player: IPlayer) {
           loop: false,
           // Play the book open animation a little faster than usual so
           // the player can get on with idling
-          animationSpeed: 0.2,
-        },
+          animationSpeed: 0.2
+        }
       );
-      Image.addOneOffAnimation(
-        player.unit,
-        'units/playerBookInMagic',
-        { doRemoveWhenPrimaryAnimationChanges: true },
-        {
-          loop: false,
-          // Play the book open animation a little faster than usual so
-          // the player can get on with idling
-          animationSpeed: 0.2,
-        },
-      );
+      Image.addOneOffAnimation(player.unit, 'units/playerBookInMagic', { doRemoveWhenPrimaryAnimationChanges: true }, {
+        loop: false,
+        // Play the book open animation a little faster than usual so
+        // the player can get on with idling
+        animationSpeed: 0.2
+      });
     } else {
       resolve();
     }
   }).then(() => {
     // Only change to playerBookIdle if the animation finished and was still the "book in" animation
-    if (
-      player.unit.image &&
-      player.unit.image.sprite.imagePath == bookInAnimationPath
-    ) {
+    if (player.unit.image && player.unit.image.sprite.imagePath == bookInAnimationPath) {
       Image.changeSprite(
         player.unit.image,
         'units/playerBookIdle',
         player.unit.image.sprite.parent,
         undefined,
         {
-          loop: true,
-        },
+          loop: true
+        }
       );
-      Image.addOneOffAnimation(
-        player.unit,
-        'units/playerBookIdleMagic',
-        { doRemoveWhenPrimaryAnimationChanges: true },
-        { loop: true },
-      );
+      Image.addOneOffAnimation(player.unit, 'units/playerBookIdleMagic', { doRemoveWhenPrimaryAnimationChanges: true }, { loop: true });
     }
+
   });
+
 }
 // This function fully deletes the cards from the player's hand
-export function removeCardsFromHand(
-  player: IPlayer,
-  cards: string[],
-  underworld: Underworld,
-) {
-  player.cardsInToolbar = player.cardsInToolbar.filter(
-    (c) => !cards.includes(c),
-  );
+export function removeCardsFromHand(player: IPlayer, cards: string[], underworld: Underworld) {
+  player.cardsInToolbar = player.cardsInToolbar.filter(c => !cards.includes(c));
   // Remove any selected cards with a name in the cards array of this function
   for (let card of cards) {
-    document
-      .querySelectorAll(`#selected-cards .card[data-card-id="${card}"]`)
-      .forEach((el) => {
-        // clicking a selected card, deselects it
-        (el as HTMLElement).click();
-      });
+    document.querySelectorAll(`#selected-cards .card[data-card-id="${card}"]`).forEach(el => {
+      // clicking a selected card, deselects it
+      (el as HTMLElement).click();
+    });
   }
   CardUI.recalcPositionForCards(player, underworld);
 }

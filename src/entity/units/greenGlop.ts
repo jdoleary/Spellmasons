@@ -25,7 +25,7 @@ const unit: UnitSource = {
     bloodColor: 0x63c572,
     healthMax: 80,
     damage: 40,
-    manaCostToCast: 15,
+    manaCostToCast: 15
   },
   spawnParams: {
     probability: 40,
@@ -41,7 +41,7 @@ const unit: UnitSource = {
   },
   sfx: {
     damage: 'lobberHurt',
-    death: 'lobberDeath',
+    death: 'lobberDeath'
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     if (unit.image) {
@@ -49,16 +49,14 @@ const unit: UnitSource = {
     }
     if (unit.image && unit.image.sprite && unit.image.sprite.filters) {
       unit.image.sprite.filters.push(
-        new MultiColorReplaceFilter(greenGlopColorReplaceColors, 0.05),
+        new MultiColorReplaceFilter(
+          greenGlopColorReplaceColors,
+          0.05
+        )
       );
     }
   },
-  action: async (
-    unit: Unit.IUnit,
-    attackTargets: Unit.IUnit[] | undefined,
-    underworld: Underworld,
-    canAttackTarget: boolean,
-  ) => {
+  action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     // Attack
     if (attackTargets && canAttackTarget && unit.mana >= unit.manaCostToCast) {
       unit.mana -= unit.manaCostToCast;
@@ -79,35 +77,21 @@ const unit: UnitSource = {
                   {
                     loop: true,
                     colorReplace: {
-                      colors: greenGlopColorReplaceColors,
-                      epsilon: 0.2,
-                    },
-                  },
+                      colors: greenGlopColorReplaceColors, epsilon: 0.2
+                    }
+                  }
                 ).then(() => {
                   if (attackTarget) {
-                    Unit.takeDamage(
-                      attackTarget,
-                      unit.damage,
-                      attackTarget,
-                      underworld,
-                      false,
-                      undefined,
-                    );
+                    Unit.takeDamage(attackTarget, unit.damage, attackTarget, underworld, false, undefined);
                     // Add projectile hit animation
-                    Image.addOneOffAnimation(
-                      attackTarget,
-                      'projectile/lobberProjectileHit',
-                      undefined,
-                      {
-                        loop: false,
-                        colorReplace: {
-                          colors: greenGlopColorReplaceColors,
-                          epsilon: 0.2,
-                        },
-                      },
-                    );
+                    Image.addOneOffAnimation(attackTarget, 'projectile/lobberProjectileHit', undefined, {
+                      loop: false,
+                      colorReplace: {
+                        colors: greenGlopColorReplaceColors, epsilon: 0.2
+                      }
+                    });
                   }
-                  resolve();
+                  resolve()
                 });
               }, 100 * i);
             });
@@ -117,31 +101,25 @@ const unit: UnitSource = {
       });
     } else {
       // Movement:
-      const closestEnemy = Unit.findClosestUnitInDifferentFaction(
-        unit,
-        underworld,
-      );
+      const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
       if (closestEnemy) {
         const distanceToEnemy = math.distance(unit, closestEnemy);
         // The following is a hacky way to make them not move too close to the enemy
-        unit.stamina = Math.min(
-          unit.stamina,
-          distanceToEnemy - config.COLLISION_MESH_RADIUS,
-        );
+        unit.stamina = Math.min(unit.stamina, distanceToEnemy - config.COLLISION_MESH_RADIUS);
         await Unit.moveTowards(unit, closestEnemy, underworld);
       }
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
     return Unit.livingUnitsInDifferentFaction(unit, underworld)
-      .filter((u) => math.distance(unit, u) <= unit.attackRange)
-      .map((u) => ({ unit: u, dist: math.distance(unit, u) }))
+      .filter(u => math.distance(unit, u) <= unit.attackRange)
+      .map(u => ({ unit: u, dist: math.distance(unit, u) }))
       .sort((a, b) => {
         return a.dist - b.dist;
       })
-      .map((x) => x.unit)
+      .map(x => x.unit)
       .slice(0, numberOfTargets);
-  },
+  }
 };
 
 export default unit;

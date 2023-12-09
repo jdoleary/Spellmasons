@@ -7,103 +7,91 @@ Note: HTML that needs to be localized simply needs a data-localize-text attribut
 Now, it will automatically be localized when setLanguage is called.
 */
 export interface LanguageMapping {
-  [key: string]: string | undefined;
+    [key: string]: string | undefined
 }
 let languageMapping: LanguageMapping;
 let chosenLanguageCode: string;
 const cachedErrorsReported: string[] = [];
-function returnTranslation(
-  keyOrArray: Localizable,
-  map: LanguageMapping,
-): string {
-  const [key = '', ...replacers] =
-    typeof keyOrArray === 'object' ? keyOrArray : [keyOrArray];
-  let result = map[key.toLowerCase()];
-  if (result) {
-    // handle special replacement character for Chinese
-    result = result.replaceAll('BD2023', '🍞');
-    result = result.replaceAll('bd2023', '🍞');
-    for (let replacer of replacers) {
-      result = result.replace('🍞', replacer);
+function returnTranslation(keyOrArray: Localizable, map: LanguageMapping): string {
+    const [key = '', ...replacers] = typeof keyOrArray === 'object' ? keyOrArray : [keyOrArray];
+    let result = map[key.toLowerCase()];
+    if (result) {
+        // handle special replacement character for Chinese
+        result = result.replaceAll('BD2023', '🍞');
+        result = result.replaceAll('bd2023', '🍞');
+        for (let replacer of replacers) {
+            result = result.replace('🍞', replacer);
+        }
+        result = result.replaceAll('❕', '\n');
+        // Replace any left over replacers with empty
+        result = result.replaceAll('🍞', '');
+        if (result == 'Loading...') {
+            console.error(`i18n: Key ${key} returned "Loading..." for language ${map.language}`);
+            return key;
+        }
+        return result;
+    } else {
+        // Prevent reporting error more than once
+        if (!cachedErrorsReported.includes(key)) {
+            console.warn(`i18n: Language ${map.language} has no value for key ${keyOrArray}`);
+            cachedErrorsReported.push(key);
+        }
+        return key;
     }
-    result = result.replaceAll('❕', '\n');
-    // Replace any left over replacers with empty
-    result = result.replaceAll('🍞', '');
-    if (result == 'Loading...') {
-      console.error(
-        `i18n: Key ${key} returned "Loading..." for language ${map.language}`,
-      );
-      return key;
-    }
-    return result;
-  } else {
-    // Prevent reporting error more than once
-    if (!cachedErrorsReported.includes(key)) {
-      console.warn(
-        `i18n: Language ${map.language} has no value for key ${keyOrArray}`,
-      );
-      cachedErrorsReported.push(key);
-    }
-    return key;
-  }
 }
 // If keyOrArray is an array the first element is the key and the following elements
 // replace each instance of '🍞' in a printf fashion
 function i18n(keyOrArray: Localizable): string {
-  if (languageMapping) {
-    return returnTranslation(keyOrArray, languageMapping);
-  } else {
-    console.error('i18n: languageObject has not been set.');
-  }
-  return typeof keyOrArray === 'object' ? keyOrArray[0] || '' : keyOrArray;
+    if (languageMapping) {
+        return returnTranslation(keyOrArray, languageMapping);
+    } else {
+        console.error('i18n: languageObject has not been set.');
+    }
+    return typeof keyOrArray === 'object' ? (keyOrArray[0] || '') : keyOrArray;
 }
 function setLanguage(langCode: string, store: boolean) {
-  const newLanguage = languages.find((l) => l.languagecode == langCode);
-  if (newLanguage) {
-    languageMapping = newLanguage;
-    chosenLanguageCode = langCode;
-    if (remoteLog) {
-      // Record statistics of language use
-      remoteLog(`Language: ${langCode}`);
-    }
-    if (store) {
-      storage.set(storage.STORAGE_LANGUAGE_CODE_KEY, langCode);
-    }
-    // Automatically translate elements with the data-localize-text attribute
-    for (let el of Array.from<HTMLElement>(
-      document.querySelectorAll('[data-localize-text]'),
-    )) {
-      if (el) {
-        const text = el.dataset.localizeText;
-        if (text) {
-          el.innerHTML = i18n(text);
+    const newLanguage = languages.find(l => l.languagecode == langCode);
+    if (newLanguage) {
+        languageMapping = newLanguage;
+        chosenLanguageCode = langCode;
+        if (remoteLog) {
+            // Record statistics of language use
+            remoteLog(`Language: ${langCode}`);
         }
-      }
-    }
+        if (store) {
+            storage.set(storage.STORAGE_LANGUAGE_CODE_KEY, langCode);
+        }
+        // Automatically translate elements with the data-localize-text attribute
+        for (let el of Array.from<HTMLElement>(document.querySelectorAll('[data-localize-text]'))) {
+            if (el) {
+                const text = el.dataset.localizeText;
+                if (text) {
+                    el.innerHTML = i18n(text);
+                }
+            }
+        }
 
-    console.log('i18n: Set language to', newLanguage.language);
-  } else {
-    console.error('i18n: Could not find language with code', langCode);
-  }
-  // Force the menu to rerender now that the language has changed
-  if (globalThis.refreshMenu) {
-    globalThis.refreshMenu();
-  }
-  // @ts-ignore: devUnderworld is not supposed to be used for gamelogic but this is just for a description
-  // so i'll take the shortcut here
-  if (globalThis.refreshSummonCardDescriptions && globalThis.devUnderworld) {
+        console.log('i18n: Set language to', newLanguage.language);
+    } else {
+        console.error('i18n: Could not find language with code', langCode)
+    }
+    // Force the menu to rerender now that the language has changed
+    if (globalThis.refreshMenu) {
+        globalThis.refreshMenu();
+    }
     // @ts-ignore: devUnderworld is not supposed to be used for gamelogic but this is just for a description
     // so i'll take the shortcut here
-    globalThis.refreshSummonCardDescriptions(globalThis.devUnderworld);
-  }
+    if (globalThis.refreshSummonCardDescriptions && globalThis.devUnderworld) {
+        // @ts-ignore: devUnderworld is not supposed to be used for gamelogic but this is just for a description
+        // so i'll take the shortcut here
+        globalThis.refreshSummonCardDescriptions(globalThis.devUnderworld);
+    }
 }
 function getSupportedLanguages() {
-  return languageMapping
-    ? languages.map((l) => ({ language: l.language, code: l.languagecode }))
-    : [];
+    return languageMapping ? languages.map(l => ({ language: l.language, code: l.languagecode })) : [];
 }
 function getChosenLanguageCode() {
-  return chosenLanguageCode;
+    return chosenLanguageCode;
 }
 // Default to english
 setLanguage('en', false);
