@@ -105,6 +105,7 @@ body.view-Menu #underworld-container {
 /* Hide UI elements while cinematic camera has control of the view
 so as to not obstruct the cinematic view */
 body.viewingCinematicCamera #tutorial-checklist,
+body.viewingCinematicCamera #chatbox,
 body.viewingCinematicCamera #in-game-lobby,
 body.viewingCinematicCamera .card-holder,
 body.viewingCinematicCamera #ui-holder,
@@ -1996,8 +1997,48 @@ body.auto-camera #camera-recenter-tip {
   display: block;
 }
 
-/* Override hide tutorial checklist if not in view-Game */
-body:not(.view-Game) #tutorial-checklist {
+.showChat #chatbox {
+  display: block;
+}
+
+#chatbox-inner {
+  min-width: 300px;
+  max-width: 300px;
+  max-height: 250px;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  overflow-x: hidden;
+}
+
+#chatinput {
+  position: sticky;
+  bottom: 0;
+  padding-right: 2px;
+}
+
+#chatbox {
+  display: none;
+  user-select: none;
+  z-index: 1;
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  color: white;
+}
+
+#chatbox h3 {
+  margin: 0;
+  text-transform: capitalize;
+}
+
+#chatbox details {
+  pointer-events: all;
+}
+
+/* Override hide tutorial checklist and chatbox if not in view-Game */
+body:not(.view-Game) #tutorial-checklist,
+body:not(.view-Game) #chatbox {
   display: none;
 }
 
