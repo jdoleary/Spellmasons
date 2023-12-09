@@ -212,7 +212,7 @@ export function create(
         radius: config.UNIT_BASE_RADIUS,
         path: undefined,
         moveSpeed: config.UNIT_MOVE_SPEED,
-        resolveDoneMoving: () => {},
+        resolveDoneMoving: () => { },
         stamina: 0,
         staminaMax,
         attackRange: 10 + config.COLLISION_MESH_RADIUS * 2,
@@ -553,7 +553,7 @@ export function load(
     ...{ strength: 1 },
     ...restUnit,
     shaderUniforms: {},
-    resolveDoneMoving: () => {},
+    resolveDoneMoving: () => { },
     animations: sourceUnit?.animations || {
       idle: '',
       hit: '',
@@ -565,8 +565,8 @@ export function load(
     image: prediction
       ? undefined
       : unit.image
-      ? Image.load(unit.image, containerUnits)
-      : Image.create(
+        ? Image.load(unit.image, containerUnits)
+        : Image.create(
           { x: unit.x, y: unit.y },
           unit.defaultImagePath,
           containerUnits,
@@ -762,12 +762,12 @@ export function playComboAnimation(
         finishOnFrame === undefined || keyMoment === undefined
           ? undefined
           : (currentFrame: number) => {
-              if (currentFrame >= finishOnFrame && !keyMomentTriggered) {
-                // This is when the keyMoment is INTENTED to be triggered: at a specified "finishOnFrame" of the
-                // animation
-                tryTriggerKeyMoment();
-              }
-            };
+            if (currentFrame >= finishOnFrame && !keyMomentTriggered) {
+              // This is when the keyMoment is INTENTED to be triggered: at a specified "finishOnFrame" of the
+              // animation
+              tryTriggerKeyMoment();
+            }
+          };
       // Play sound effect
       if (combo.SFX && globalThis.playSFXKey) {
         const key = combo.SFX[Math.floor(Math.random() * combo.SFX.length)];
@@ -964,7 +964,7 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   if (
     underworld.levelIndex === config.LAST_LEVEL_INDEX &&
     underworld.units.filter((u) => u.unitSourceId == bossmasonUnitId).length ==
-      1
+    1
   ) {
     if (unit.unitSourceId == bossmasonUnitId) {
       const mageTypeWinsKey = storage.getStoredMageTypeWinsKey(
@@ -1226,35 +1226,28 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
     }
     if (losingHealth) {
       // Visualize health loss
-      elHealthCost.style['left'] = `${
-        (100 * predictionPlayerUnit.health) / unit.healthMax
-      }%`;
-      elHealthCost.style['width'] = `${
-        (100 * (unit.health - predictionPlayerUnit.health)) / unit.healthMax
-      }%`;
+      elHealthCost.style['left'] = `${(100 * predictionPlayerUnit.health) / unit.healthMax
+        }%`;
+      elHealthCost.style['width'] = `${(100 * (unit.health - predictionPlayerUnit.health)) / unit.healthMax
+        }%`;
     } else {
       // Visualize health gain
       elHealthCost.style['left'] = `${(100 * unit.health) / unit.healthMax}%`;
-      elHealthCost.style['width'] = `${
-        (100 * (predictionPlayerUnit.health - unit.health)) / unit.healthMax
-      }%`;
+      elHealthCost.style['width'] = `${(100 * (predictionPlayerUnit.health - unit.health)) / unit.healthMax
+        }%`;
     }
     if (shieldLost) {
       // Visualize shield loss
-      elHealthCostSheild.style['left'] = `${
-        (100 * predictionPlayerShield) / unit.healthMax
-      }%`;
-      elHealthCostSheild.style['width'] = `${
-        (100 * (shieldAmount - predictionPlayerShield)) / unit.healthMax
-      }%`;
+      elHealthCostSheild.style['left'] = `${(100 * predictionPlayerShield) / unit.healthMax
+        }%`;
+      elHealthCostSheild.style['width'] = `${(100 * (shieldAmount - predictionPlayerShield)) / unit.healthMax
+        }%`;
     } else {
       // Visualize shield gain
-      elHealthCostSheild.style['left'] = `${
-        (100 * shieldAmount) / unit.healthMax
-      }%`;
-      elHealthCostSheild.style['width'] = `${
-        (100 * (predictionPlayerShield - shieldAmount)) / unit.healthMax
-      }%`;
+      elHealthCostSheild.style['left'] = `${(100 * shieldAmount) / unit.healthMax
+        }%`;
+      elHealthCostSheild.style['width'] = `${(100 * (predictionPlayerShield - shieldAmount)) / unit.healthMax
+        }%`;
     }
   }
 
@@ -1286,16 +1279,13 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
   // Set the 3 mana cost bars that show how much mana will be removed if the spell is cast
   if (predictionPlayerUnit) {
     // Show cost bar from current mana location minus whatever it's value is
-    elManaCost.style['left'] = `${
-      (100 * predictionPlayerUnit.mana) / unit.manaMax
-    }%`;
-    elManaCost.style['width'] = `${
-      100 * Math.min((unit.mana - predictionPlayerUnit.mana) / unit.manaMax, 1)
-    }%`;
+    elManaCost.style['left'] = `${(100 * predictionPlayerUnit.mana) / unit.manaMax
+      }%`;
+    elManaCost.style['width'] = `${100 * Math.min((unit.mana - predictionPlayerUnit.mana) / unit.manaMax, 1)
+      }%`;
 
-    elManaCost2.style['left'] = `${
-      (100 * (predictionPlayerUnit.mana - unit.manaMax)) / unit.manaMax
-    }%`;
+    elManaCost2.style['left'] = `${(100 * (predictionPlayerUnit.mana - unit.manaMax)) / unit.manaMax
+      }%`;
     let cost2Left =
       (100 * (predictionPlayerUnit.mana - unit.manaMax)) / unit.manaMax;
     if (cost2Left < 0) {
@@ -1420,9 +1410,7 @@ export function orient(unit: IUnit, faceTarget: Vec2) {
     }
     // Update the orientation of the possible player's nametext so that it doesn't display backwards
     // @ts-ignore jid is a custom identifier to id the text element used for the player name
-    const nameText = unit.image.sprite.children.find(
-      (c) => c.jid == config.NAME_TEXT_ID,
-    ) as undefined | PIXI.Text;
+    const nameText = unit.image.sprite.children.find(c => c.jid == config.NAME_TEXT_ID) as undefined | PIXI.Text;
     updateNameText(nameText, undefined);
   }
 }
@@ -1640,7 +1628,7 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
     // Deep copy modifiers so it doesn't mutate the unit's actual modifiers object
     modifiers: JSON.parse(JSON.stringify(modifiers)),
     shaderUniforms: {},
-    resolveDoneMoving: () => {},
+    resolveDoneMoving: () => { },
   };
 }
 

@@ -89,11 +89,9 @@ export function cleanup(image?: IImageAnimated) {
       // Manually destroy Pixi Text
       // https://www.html5gamedevs.com/topic/31749-how-to-cleaning-up-all-pixi-sprites-and-textures/?do=findComment&comment=182386
       // @ts-ignore jid is a custom identifier to id the text element used for the player name
-      image.sprite.children
-        .filter((c) => c.jid == config.NAME_TEXT_ID)
-        .forEach((pixiText) => {
-          pixiText.destroy(true);
-        });
+      image.sprite.children.filter(c => c.jid == config.NAME_TEXT_ID).forEach(pixiText => {
+        pixiText.destroy(true);
+      })
       // Remove subsprites
       image.sprite.removeChildren();
       if (image.sprite.parent) {
@@ -214,24 +212,16 @@ const ALLOW_NO_SERIALIZE_CHILDREN_JIDS = [
 // callbacks and complicated objects such as PIXI.Sprites
 // are removed
 export function serialize(image: IImageAnimated): IImageAnimatedSerialized {
-  const children = image.sprite.children
-    .map((c) => {
-      // Warn if unexpected child is unserializable because it's missing an imagePath
-      // @ts-ignore: imagePath is a property that I added to identify currently playing animation or sprite.
-      if (
-        !c.imagePath &&
-        !ALLOW_NO_SERIALIZE_CHILDREN_JIDS.some((x) => x == c.jid)
-      ) {
-        // @ts-ignore: jid is a custom identifier property that I added
-        console.warn(
-          c.jid,
-          c,
-          'does not have an imagePath and thus cannot be serialized.',
-        );
-      }
-      // @ts-ignore: imagePath is a property that I added to identify currently playing animation or sprite.
-      return c.imagePath;
-    })
+  const children = image.sprite.children.map(c => {
+    // Warn if unexpected child is unserializable because it's missing an imagePath
+    // @ts-ignore: imagePath is a property that I added to identify currently playing animation or sprite.
+    if (!c.imagePath && !ALLOW_NO_SERIALIZE_CHILDREN_JIDS.some(x => x == c.jid)) {
+      // @ts-ignore: jid is a custom identifier property that I added
+      console.warn(c.jid, c, 'does not have an imagePath and thus cannot be serialized.');
+    }
+    // @ts-ignore: imagePath is a property that I added to identify currently playing animation or sprite.
+    return c.imagePath
+  })
     // remove nulls
     .flatMap((x) => (x !== null && x !== undefined ? [x] : []));
   return {
@@ -288,9 +278,7 @@ export function getAnimationPathFromSprite(sprite: PIXI.Sprite): string {
 }
 export function getSubspriteImagePaths(image: IImageAnimated): string[] {
   // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
-  return image.sprite.children
-    .filter((c) => c !== undefined)
-    .map((c) => c.imagePath);
+  return image.sprite.children.filter((c) => c !== undefined).map((c) => c.imagePath);
 }
 // syncronize updates an existing originalImage to match the properties of imageSerialized
 // mutates originalImage
@@ -494,10 +482,10 @@ export function addOneOffAnimation(
         finishOnFrame === undefined
           ? undefined
           : (currentFrame: number) => {
-              if (currentFrame >= finishOnFrame) {
-                resolve();
-              }
-            };
+            if (currentFrame >= finishOnFrame) {
+              resolve();
+            }
+          };
       const animationSprite = addPixiSpriteAnimated(
         spritePath,
         imageHaver.image.sprite,

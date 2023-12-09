@@ -24,9 +24,8 @@ export function init(
   // Add subsprite image
   // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
   // which is used for identifying the sprite or animation that is currently active
-  const animatedSprite =
-    unit.image?.sprite.children.find((c) => c.imagePath == imageName) ||
-    Image.addSubSprite(unit.image, imageName);
+  const animatedSprite = unit.image?.sprite.children.find(c => c.imagePath == imageName)
+    || Image.addSubSprite(unit.image, imageName);
   if (animatedSprite) {
     // Make it red
     (animatedSprite as Sprite).tint = 0xff0000;

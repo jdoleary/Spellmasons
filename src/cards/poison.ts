@@ -16,9 +16,7 @@ function init(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
   if (spell.modifiers?.subsprite) {
     // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
     // which is used for identifying the sprite or animation that is currently active
-    const poisonSubsprite = unit.image?.sprite.children.find(
-      (c) => c.imagePath == spell.modifiers?.subsprite?.imageName,
-    );
+    const poisonSubsprite = unit.image?.sprite.children.find(c => c.imagePath == spell.modifiers?.subsprite?.imageName)
     if (poisonSubsprite) {
       const animatedSprite = poisonSubsprite as PIXI.AnimatedSprite;
       animatedSprite.onFrameChange = (currentFrame) => {

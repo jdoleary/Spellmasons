@@ -329,19 +329,13 @@ export function setPlayerRobeColor(
       robeColorFilter.jid = ROBE_COLOR_FILTER_ID;
       // Remove previous robeColorFilters
       // @ts-ignore: jid is a custom identifier to differentiate this filter
-      player.unit.image.sprite.filters =
-        player.unit.image.sprite.filters.filter(
-          (f) => f.jid != ROBE_COLOR_FILTER_ID,
-        );
+      player.unit.image.sprite.filters = player.unit.image.sprite.filters.filter(f => f.jid != ROBE_COLOR_FILTER_ID);
       // Add new robe color filter
       player.unit.image.sprite.filters.push(robeColorFilter);
     } else {
       // Remove robeColorFilters
       // @ts-ignore: jid is a custom identifier to differentiate this filter
-      player.unit.image.sprite.filters =
-        player.unit.image.sprite.filters.filter(
-          (f) => f.jid != ROBE_COLOR_FILTER_ID,
-        );
+      player.unit.image.sprite.filters = player.unit.image.sprite.filters.filter(f => f.jid != ROBE_COLOR_FILTER_ID);
     }
   } else {
     if (!globalThis.headless) {

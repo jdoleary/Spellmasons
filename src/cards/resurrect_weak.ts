@@ -77,9 +77,7 @@ const spell: Spell = {
         // Remove color overlay now that the unit is done being resurrected
         if (unit.image && unit.image.sprite.filters) {
           // @ts-ignore This filter does have a __proto__ property
-          unit.image.sprite.filters = unit.image.sprite.filters.filter(
-            (f) => f.__proto__ !== ColorOverlayFilter.prototype,
-          );
+          unit.image.sprite.filters = unit.image.sprite.filters.filter(f => f.__proto__ !== ColorOverlayFilter.prototype)
         }
       }
       return state;

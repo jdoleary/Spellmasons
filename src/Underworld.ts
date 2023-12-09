@@ -217,8 +217,8 @@ let lastTime = 0;
 let requestAnimationFrameGameLoopId: number;
 const cleanupRegistry = globalThis.hasOwnProperty('FinalizationRegistry')
   ? new FinalizationRegistry((heldValue) => {
-      console.log('GC: Cleaned up ', heldValue);
-    })
+    console.log('GC: Cleaned up ', heldValue);
+  })
   : undefined;
 let localUnderworldCount = 0;
 export default class Underworld {
@@ -625,7 +625,7 @@ export default class Underworld {
             pushedObject: other,
             awayFrom: forceMoveInst.pushedObject,
             velocityStartMagnitude: halfDist,
-            resolve: () => {},
+            resolve: () => { },
             canCreateSecondOrderPushes,
           },
           this,
@@ -1040,9 +1040,7 @@ export default class Underworld {
         ) {
           // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
           // which is used for identifying the sprite or animation that is currently active
-          const modifierSprite = u.image.sprite.children.find(
-            (c) => c.imagePath == shield.modifierImagePath,
-          );
+          const modifierSprite = u.image.sprite.children.find(c => c.imagePath == shield.modifierImagePath)
           if (modifierSprite) {
             modifierSprite.rotation += 0.01;
             modifierSprite.x = Math.sin(timestamp / 1000) * 3;
@@ -1084,8 +1082,7 @@ export default class Underworld {
       // specifically to be used in this context - sorting containerUnits - so that
       // a display object may have a sort position that is different than it's actual
       // y position
-      const ay =
-        a.ySortPositionOverride !== undefined ? a.ySortPositionOverride : a.y;
+      const ay = a.ySortPositionOverride !== undefined ? a.ySortPositionOverride : a.y;
       // Protect against a DisplayObject with NaN from disrupting the entire sort
       const A = ay + aExtraHeight + config.UNIT_SIZE_RADIUS * a.scale.y;
       if (isNaN(A)) {
@@ -1095,10 +1092,9 @@ export default class Underworld {
       // specifically to be used in this context - sorting containerUnits - so that
       // a display object may have a sort position that is different than it's actual
       // y position
-      const by =
-        b.ySortPositionOverride !== undefined ? b.ySortPositionOverride : b.y;
+      const by = b.ySortPositionOverride !== undefined ? b.ySortPositionOverride : b.y;
       // Protect against a DisplayObject with NaN from disrupting the entire sort
-      const B = by + bExtraHeight + config.UNIT_SIZE_RADIUS * b.scale.y;
+      const B = (by + bExtraHeight + config.UNIT_SIZE_RADIUS * b.scale.y);
       if (isNaN(B)) {
         return 1;
       }
@@ -1460,17 +1456,17 @@ export default class Underworld {
           // other player but from the edge instead
           const startPoint =
             math.distance(thinkingPlayer.unit, currentDrawLocation) <=
-            config.COLLISION_MESH_RADIUS
+              config.COLLISION_MESH_RADIUS
               ? currentDrawLocation
               : Vec.subtract(
-                  thinkingPlayer.unit,
-                  math.similarTriangles(
-                    thinkingPlayer.unit.x - currentDrawLocation.x,
-                    thinkingPlayer.unit.y - currentDrawLocation.y,
-                    math.distance(thinkingPlayer.unit, currentDrawLocation),
-                    config.COLLISION_MESH_RADIUS,
-                  ),
-                );
+                thinkingPlayer.unit,
+                math.similarTriangles(
+                  thinkingPlayer.unit.x - currentDrawLocation.x,
+                  thinkingPlayer.unit.y - currentDrawLocation.y,
+                  math.distance(thinkingPlayer.unit, currentDrawLocation),
+                  config.COLLISION_MESH_RADIUS,
+                ),
+              );
           globalThis.thinkingPlayerGraphics?.moveTo(startPoint.x, startPoint.y);
           globalThis.thinkingPlayerGraphics?.lineTo(
             currentDrawLocation.x,
@@ -1781,7 +1777,7 @@ export default class Underworld {
     const loopedLevelIndex =
       levelIndex >= startLoopingLevelIndex
         ? // Once the game starts looping, change biome every level
-          levelIndex % biomes.length
+        levelIndex % biomes.length
         : Math.floor(levelIndex / nextBiomeEveryXLevels) % biomes.length;
     const nextBiome = biomes[loopedLevelIndex];
     if (nextBiome) {
@@ -1960,8 +1956,8 @@ export default class Underworld {
       const minibossAllowed =
         !sourceUnit?.spawnParams?.excludeMiniboss &&
         (sourceUnit?.spawnParams?.unavailableUntilLevelIndex || 0) -
-          unitMinLevelIndexSubtractor <
-          levelIndex;
+        unitMinLevelIndexSubtractor <
+        levelIndex;
       if (coord) {
         const isMiniboss = !minibossAllowed
           ? false
@@ -2518,10 +2514,10 @@ export default class Underworld {
     const cellY = Math.round(coord.y / config.OBSTACLE_SIZE);
     const originalTile =
       this.lastLevelCreated?.imageOnlyTiles[
-        vec2ToOneDimentionIndexPreventWrap(
-          { x: cellX, y: cellY },
-          this.lastLevelCreated?.width,
-        )
+      vec2ToOneDimentionIndexPreventWrap(
+        { x: cellX, y: cellY },
+        this.lastLevelCreated?.width,
+      )
       ];
     return (
       !!originalTile &&
@@ -2582,35 +2578,32 @@ Got to level ${this.getLevelText()}
 Survived for ${((Date.now() - player.stats.gameStartTime) / 60000).toFixed(
           2,
         )} Minutes
-${
-  this.winTime && this.startTime
-    ? `Beat deathmasons in ${((this.winTime - this.startTime) / 60000).toFixed(
-        2,
-      )} Minutes`
-    : ''
-}
+${this.winTime && this.startTime
+            ? `Beat deathmasons in ${((this.winTime - this.startTime) / 60000).toFixed(
+              2,
+            )} Minutes`
+            : ''
+          }
 
 Total Kills: ${this.enemiesKilled}
 
-${
-  player.stats.bestSpell.unitsKilled > 0
-    ? `Best Spell killed ${player.stats.bestSpell.unitsKilled} units
+${player.stats.bestSpell.unitsKilled > 0
+            ? `Best Spell killed ${player.stats.bestSpell.unitsKilled} units
       <div class="stats-spell">
 ${CardUI.cardListToImages(player.stats.bestSpell.spell)}
       </div>`
-    : ''
-}
-      ${
-        JSON.stringify(player.stats.bestSpell.spell) !==
-        JSON.stringify(player.stats.longestSpell)
-          ? `
+            : ''
+          }
+      ${JSON.stringify(player.stats.bestSpell.spell) !==
+            JSON.stringify(player.stats.longestSpell)
+            ? `
 Longest Spell:
       <div class="stats-spell">
 ${CardUI.cardListToImages(player.stats.longestSpell)}
       </div>
         `
-          : ''
-      }
+            : ''
+          }
       `;
       } else {
         console.error('Cannot render stats');
@@ -2742,13 +2735,13 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             // TODO ensure that this works on headless
             const originalTile =
               this.lastLevelCreated.imageOnlyTiles[
-                vec2ToOneDimentionIndexPreventWrap(
-                  {
-                    x: Math.round(u.x / config.OBSTACLE_SIZE),
-                    y: Math.round(u.y / config.OBSTACLE_SIZE),
-                  },
-                  this.lastLevelCreated.width,
-                )
+              vec2ToOneDimentionIndexPreventWrap(
+                {
+                  x: Math.round(u.x / config.OBSTACLE_SIZE),
+                  y: Math.round(u.y / config.OBSTACLE_SIZE),
+                },
+                this.lastLevelCreated.width,
+              )
               ];
             if (!originalTile || originalTile.image == '') {
               console.error(
@@ -2834,9 +2827,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         }
         if (p.turnsLeftToGrab == 1) {
           // @ts-ignore: jid is a custom identifier to differentiate this child sprite
-          const timeCircleSprite = p.image?.sprite.children.find(
-            (c) => c.jid == Pickup.TIME_CIRCLE_JID,
-          );
+          const timeCircleSprite = p.image?.sprite.children.find((c) => c.jid == Pickup.TIME_CIRCLE_JID);
           if (timeCircleSprite) {
             const timeCircleColorFilter = new MultiColorReplaceFilter(
               [
@@ -3418,8 +3409,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             ? 'Pick a Calamity'
             : i18n(['Spend Points', perksLeftToChoose.toString()])
           : pickingClass
-          ? 'Pick a Class'
-          : 'Pick a Spell',
+            ? 'Pick a Class'
+            : 'Pick a Spell',
       );
     }
     // If playing hotseat multiplayer, prepend the player name so users know which player they
@@ -3509,12 +3500,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
               return value;
             };
             const elStatUpgradeRow = (stat: string) => `<tr class="stat-row">
-            <td><h1>${wordMap[stat] || ''}${
-              stat === 'Good Looks' ? '' : ':'
-            } ${statValueModifier(
-              stat,
-              player.unit[stat as keyof Unit.IUnit] as number,
-            )}</h1></td>
+            <td><h1>${wordMap[stat] || ''}${stat === 'Good Looks' ? '' : ':'
+              } ${statValueModifier(
+                stat,
+                player.unit[stat as keyof Unit.IUnit] as number,
+              )}</h1></td>
             <td data-stat="${stat}" class="plus-btn-container"></td>
 </tr>`;
             elUpgradePickerContent.innerHTML = `
@@ -3524,8 +3514,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             <thead><tr><th></th><th></th></tr></thead>
     <tbody>
   ${['healthMax', 'manaMax', 'staminaMax', 'attackRange', 'Good Looks']
-    .map(elStatUpgradeRow)
-    .join('')}
+                .map(elStatUpgradeRow)
+                .join('')}
     </tbody>
   </table>
   </div>
@@ -4611,8 +4601,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           const minibossAllowed =
             !sourceUnit?.spawnParams?.excludeMiniboss &&
             (sourceUnit?.spawnParams?.unavailableUntilLevelIndex || 0) -
-              unitMinLevelIndexSubtractor <
-              this.levelIndex;
+            unitMinLevelIndexSubtractor <
+            this.levelIndex;
           if (coord) {
             const isMiniboss = !minibossAllowed
               ? false
@@ -5266,8 +5256,8 @@ function getEnemiesForAltitude2(
       (u) =>
         u.spawnParams &&
         u.spawnParams.unavailableUntilLevelIndex -
-          unitMinLevelIndexSubtractor <=
-          adjustedLevelIndex &&
+        unitMinLevelIndexSubtractor <=
+        adjustedLevelIndex &&
         u.spawnParams.probability > 0 &&
         isModActive(u, underworld),
     )
@@ -5303,9 +5293,9 @@ function getEnemiesForAltitude2(
   const difficultyMultiplier =
     adjustedLevelIndex >= startAcceleratingDifficultyAtLevelIndex
       ? baseDifficultyMultiplier +
-        adjustedLevelIndex +
-        1 -
-        startAcceleratingDifficultyAtLevelIndex
+      adjustedLevelIndex +
+      1 -
+      startAcceleratingDifficultyAtLevelIndex
       : baseDifficultyMultiplier;
   let budgetLeft = (adjustedLevelIndex + 1) * difficultyMultiplier + 2;
   const connectedClients = underworld.players.filter((p) => p.clientConnected);
@@ -5315,8 +5305,8 @@ function getEnemiesForAltitude2(
     const budgetMultiplier =
       1 +
       (1 / config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES) *
-        (connectedClients.length -
-          config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES);
+      (connectedClients.length -
+        config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES);
     console.log(
       'Difficulty: Increase budget by',
       budgetMultiplier,

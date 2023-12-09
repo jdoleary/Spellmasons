@@ -586,7 +586,7 @@ export function updateCameraPosition(underworld: Underworld) {
   const zoom = !app
     ? 0
     : app.stage.scale.x +
-      ((globalThis.zoomTarget || 1) - app.stage.scale.x) / 8;
+    ((globalThis.zoomTarget || 1) - app.stage.scale.x) / 8;
 
   app.stage.scale.x = zoom;
   app.stage.scale.y = zoom;
@@ -685,9 +685,7 @@ export function updateCameraPosition(underworld: Underworld) {
   underworld.players.forEach((p) => {
     if (p.unit.image) {
       // @ts-ignore jid is a custom identifier to id the text element used for the player name
-      const nameText = p.unit.image.sprite.children.find(
-        (c) => c.jid === config.NAME_TEXT_ID,
-      ) as undefined | PIXI.Text;
+      const nameText = p.unit.image.sprite.children.find(c => c.jid === config.NAME_TEXT_ID) as undefined | PIXI.Text
       updateNameText(nameText, zoom);
     }
   });

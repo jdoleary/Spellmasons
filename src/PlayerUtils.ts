@@ -34,7 +34,7 @@ export function isOutOfRange(
     if (
       unitAtCastLocation &&
       math.distance(caster.unit, unitAtCastLocation) <=
-        caster.unit.attackRange + config.COLLISION_MESH_RADIUS
+      caster.unit.attackRange + config.COLLISION_MESH_RADIUS
     ) {
       return false;
     }
@@ -42,7 +42,7 @@ export function isOutOfRange(
     if (
       pickupAtCastLocation &&
       math.distance(caster.unit, pickupAtCastLocation) <=
-        caster.unit.attackRange + config.COLLISION_MESH_RADIUS
+      caster.unit.attackRange + config.COLLISION_MESH_RADIUS
     ) {
       return false;
     }
@@ -50,7 +50,7 @@ export function isOutOfRange(
     if (
       doodadAtCastLocation &&
       math.distance(caster.unit, doodadAtCastLocation) <=
-        caster.unit.attackRange + config.COLLISION_MESH_RADIUS
+      caster.unit.attackRange + config.COLLISION_MESH_RADIUS
     ) {
       return false;
     }
@@ -74,10 +74,7 @@ export function setPlayerNameUI(player: Player.IPlayer) {
     player.unit.name = name;
     if (globalThis.pixi && player.unit.image) {
       // @ts-ignore jid is a custom identifier to id the text element used for the player name
-      const nameText =
-        (player.unit.image.sprite.children.find(
-          (child) => child.jid == config.NAME_TEXT_ID,
-        ) as PIXI.Text) || new globalThis.pixi.Text();
+      const nameText = player.unit.image.sprite.children.find(child => child.jid == config.NAME_TEXT_ID) as PIXI.Text || new globalThis.pixi.Text();
       // @ts-ignore jid is a custom identifier to id the text element used for the player name
       nameText.jid = config.NAME_TEXT_ID;
       player.unit.image.sprite.addChild(nameText);
