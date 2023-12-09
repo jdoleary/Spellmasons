@@ -14,7 +14,7 @@ export function hasBloodCurse(unit: IUnit): boolean {
   return Object.keys(unit.modifiers).some(m => m === id)
 }
 const healthMultiplier = 2;
-function add(unit: IUnit, underworld: Underworld) {
+function add(unit: IUnit, underworld: Underworld, prediction: boolean) {
   // Note: Curse can stack multiple times but doesn't keep any state
   // so it doesn't need a first time setup like freeze does
 
@@ -30,14 +30,11 @@ function add(unit: IUnit, underworld: Underworld) {
 
     unit.healthMax *= healthMultiplier;
     unit.health *= healthMultiplier;
-
-    // If unit belongs to player
-    const player = underworld.players.find(p => p.unit == unit)
-    if (player) {
-      addCardToHand(allCards[id], player, underworld);
-    }
   });
 
+  if (!prediction) {
+    updateTooltip(unit);
+  }
 }
 function remove(unit: IUnit, underworld: Underworld) {
 
@@ -45,6 +42,14 @@ function remove(unit: IUnit, underworld: Underworld) {
   unit.health = Math.round(unit.health);
   unit.healthMax /= healthMultiplier;
   unit.healthMax = Math.round(unit.healthMax);
+}
+
+
+export function updateTooltip(unit: Unit.IUnit) {
+  if (unit.modifiers[id]) {
+    // Set tooltip:
+    unit.modifiers[id].tooltip = `Blood Curse`;
+  }
 }
 
 const imageName = 'spellIconBloodCurse.png';
