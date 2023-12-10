@@ -43,7 +43,8 @@ const spell: Spell = {
           playDefaultSpellSFX(card, prediction);
           Unit.resurrect(unit);
 
-          // TOXIC add impending doom 
+          //Impending doom is added to kill units after a specified number of turns.
+          //This is the distinguishing characteristic of Toxic Resurrect, it is weaker than resurrect because it doesn't last.
           Unit.addModifier(unit, impendingDoomId, underworld, prediction, turnsLeftToLive * quantity);
 
           resurrectedUnitCount++;
