@@ -30,7 +30,7 @@ export const UNIT_BASE_HEALTH = 40;
 export const UNIT_BASE_MANA = 60;
 export const UNIT_BASE_STAMINA = 300;
 // For game difficulty, I'm making the attack range less than the unit base stamina
-export const PLAYER_BASE_ATTACK_RANGE = 240; //previously 240 | UNIT_BASE_STAMINA * 0.8
+export const PLAYER_BASE_ATTACK_RANGE = UNIT_BASE_STAMINA * 0.8;
 // For game difficulty, player stamina less than the unit stamina so they can't run away without upgrading it
 export const PLAYER_BASE_STAMINA = 200; //previously 210 | UNIT_BASE_STAMINA * 0.7
 export const UNIT_BASE_DAMAGE = 30;
