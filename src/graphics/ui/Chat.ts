@@ -6,7 +6,8 @@ import { MESSAGE_TYPES } from '../../types/MessageTypes';
 
 export const elChatbox = document.getElementById('chatbox');
 export const elChatinput = <HTMLInputElement>document.getElementById('chatinput');
-export const elChatinner = document.getElementById('messages');
+export const elChatInner = document.getElementById('chatbox-inner');
+export const elChatMessages = document.getElementById('messages');
 var chatTimeout: NodeJS.Timeout;
 var NotificationTime = 5000; // time in seconds the chat stays open after a message is sent
 
@@ -28,14 +29,39 @@ export function sendChatHandler(overworld: Overworld, e: KeyboardEvent) {
   }
 }
 
-export function ReceiveMessage(chatter: Player.IPlayer, message: String) {
+// sanitize from https://stackoverflow.com/a/48226843/4418836
+// and https://stackoverflow.com/a/12034334/4418836
+function sanitize(string: string) {
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+    '/': '&#x2F;',
+    '`': '&#x60;',
+    '=': '&#x3D;'
+  };
+  const reg = /[&<>"'/]/ig;
+  // @ts-ignore
+  return string.replace(reg, (match) => (map[match]));
+}
+export function ReceiveMessage(chatter: Player.IPlayer, message: string) {
+  message = sanitize(message);
   var chatname = chatter.name ? chatter.name : "Unknown" // name of chatter
+  chatname = sanitize(chatname);
   var chattercolor = chatter.color ? hexToString(lightenColor(chatter.color, 0.3)) : hexToString(playerNoColor);
   // var timestamp;  TODO: Include time?
-  if (elChatinner) {
-    elChatinner.innerHTML += `<div class="message-speaker" style="color: ${chattercolor};">${chatname}:
-    <span class="text" style="color: white;">${message}</span></div> <br>`;
+  if (elChatMessages) {
+    elChatMessages.innerHTML += `<div class="message-speaker" style="color: ${chattercolor};">${chatname}:
+    <span class="text" style="color: white;">`+ message + `</span></div> <br>`;
     document.body.classList.toggle('showChat', true); // display chat if it was hidden
+    // Scroll to the latest message
+    setTimeout(() => {
+      if (elChatInner) {
+        elChatInner.scrollTop = elChatInner.scrollHeight;
+      }
+    }, 0);
     if (chatTimeout) {
       clearTimeout(chatTimeout);
     }
