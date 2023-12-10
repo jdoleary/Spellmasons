@@ -2587,7 +2587,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
   upgradesLeftToChoose(player: Player.IPlayer): number {
     // .filter out freeSpells because they shouldn't count against upgrades available since they are given to you
-    return this.cardDropsDropped + config.STARTING_CARD_COUNT - player.inventory.filter(spellId => (globalThis.freeSpells || []).indexOf(spellId) == -1).length;
+    return this.cardDropsDropped + config.STARTING_CARD_COUNT - player.inventory.filter(spellId => (player.freeSpells || []).indexOf(spellId) == -1).length;
   }
   spendStatPoint(stat: string, player: Player.IPlayer) {
     const isCurrentPlayer = player == globalThis.player;

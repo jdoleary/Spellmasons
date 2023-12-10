@@ -127,10 +127,10 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean, 
     const expenseScaling = 2;
     const manaCost = override?.properties.manaCost ? (override.properties.manaCost * (asMiniboss ? 1.5 : 1)) : Math.max(1, Math.round(2 * Math.log2((sourceUnit.spawnParams?.budgetCost || 1)))) * 30 * (asMiniboss ? 2 : 1);
     const id = unitId + (asMiniboss ? ' Miniboss' : '');
-    if (!globalThis.freeSpells) {
-        globalThis.freeSpells = [];
+    if (globalThis.player && !globalThis.player?.freeSpells) {
+        globalThis.player.freeSpells = [];
     }
-    globalThis.freeSpells.push(id);
+    globalThis.player?.freeSpells.push(id);
     const unitSource = allUnits[unitId];
     let healthMax = unitSource?.unitProps.healthMax || config.UNIT_BASE_HEALTH;
     let manaMax = unitSource?.unitProps.manaMax || 0;
@@ -143,7 +143,7 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean, 
 🗡️ ${unitSource.unitProps.damage} ${i18n(['damage'])}` : ''}${!!unitSource.unitProps.attackRange ? `
 🎯 ${unitSource.unitProps.attackRange} ${i18n(['attack range'])}` : ''}
 ❤️ ${healthMax} ${i18n(['health capacity'])}
-${manaMax ? `🔵 ${manaMax} + ${unitSource.unitProps.manaPerTurn} ${i18n('Mana')} ${i18n('per turn')}` : ''}`;
+    ${manaMax ? `🔵 ${manaMax} + ${unitSource.unitProps.manaPerTurn} ${i18n('Mana')} ${i18n('per turn')}` : ''}`;
 
     return {
         card: {
