@@ -104,10 +104,8 @@ const spell: Spell = {
           }
         }
       }
-      return false;
     },
   },
-
 };
 
 function add(unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) {
