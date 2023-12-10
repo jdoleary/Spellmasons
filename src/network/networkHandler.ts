@@ -14,6 +14,7 @@ import * as messageQueue from '../messageQueue';
 import * as storage from '../storage';
 import * as config from '../config';
 import * as Cards from '../cards';
+import * as Chat from '../graphics/ui/Chat';
 import * as colors from '../graphics/ui/colors';
 import { allUnits } from '../entity/units';
 import { hostGiveClientGameState, typeGuardHostApp } from './networkUtil';
@@ -57,6 +58,13 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
     return;
   }
   switch (type) {
+    case MESSAGE_TYPES.CHAT_SENT:
+      const { message } = payload;
+      const chatter = underworld.players.find((p) => p.clientId === fromClient);
+      if (chatter) {
+        Chat.ReceiveMessage(chatter, message);
+      }
+      break;
     case MESSAGE_TYPES.PLAYER_THINKING:
       const thinkingPlayer = underworld.players.find(p => p.clientId === fromClient)
       if (thinkingPlayer && thinkingPlayer != globalThis.player) {

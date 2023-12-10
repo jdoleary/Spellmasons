@@ -17,6 +17,7 @@ import {
   onWindowBlur,
   mouseOverHandler,
 } from './graphics/ui/eventListeners';
+import { sendChatHandler } from './graphics/ui/Chat';
 import { elEndTurnBtn } from './HTMLElements';
 import { Overworld } from './Overworld';
 
@@ -153,6 +154,9 @@ export function addOverworldEventListeners(overworld: Overworld) {
   const elDisconnectButton: HTMLButtonElement = document.getElementById(
     'disconnect-btn',
   ) as HTMLButtonElement;
+  const elChatinput: HTMLInputElement = document.getElementById(
+    'chatinput',
+  ) as HTMLInputElement;
 
   const listeners: {
     target: HTMLElement | typeof globalThis;
@@ -262,6 +266,11 @@ export function addOverworldEventListeners(overworld: Overworld) {
             console.error('Unexpected: globalThis.exitCurrentGame is undefined.');
           }
         }
+      },
+      {
+        target: elChatinput,
+        event: 'keypress',
+        listener: sendChatHandler.bind(undefined, overworld),
       },
     ];
   // Make 'closeMenu' available to the svelte menu

@@ -4,6 +4,7 @@ import * as CardUI from './CardUI';
 import * as Unit from '../../entity/Unit';
 import * as Pickup from '../../entity/Pickup';
 import * as Player from '../../entity/Player';
+import * as Chat from './Chat';
 import floatingText from '../FloatingText';
 import {
   clearSpellEffectProjection,
@@ -122,6 +123,10 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
   if (!underworld) {
     return;
   }
+  if (document.activeElement === Chat.elChatinput) {
+    return;
+  }
+  document.body.classList.toggle('showChat', false);
   switch (keyCodeMapping) {
     case 'Escape':
       // close admin menu
@@ -152,6 +157,10 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
         // Otherwise finally toggle menu
         toggleMenu();
       }
+      break;
+    case 'openChat':
+      document.body.classList.toggle('showChat', true);
+      Chat.focusChat(event);
       break;
     case 'openInventory':
       CardUI.toggleInventory(undefined, undefined, underworld);
@@ -647,6 +656,8 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
     return;
   }
   const mousePos = underworld.getMousePos();
+  //hide chat if its active
+  document.body.classList.toggle('showChat', false);
 
   if (isOutOfBounds(mousePos, underworld)) {
     // Disallow click out of bounds

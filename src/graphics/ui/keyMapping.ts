@@ -38,6 +38,7 @@ const mapping = {
     cameraLeft: ['KeyA'],
     cameraRight: ['KeyD'],
     touchPadMoveCharacter: ['KeyG'],
+    openChat: ['KeyT'],
 }
 globalThis.controlMap = mapping;
 export default mapping;
