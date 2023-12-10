@@ -83,7 +83,7 @@ const spell: Spell = {
       // Skip turn
       return true;
     },
-    onTurnEnd: async (unit: Unit.IUnit, underworld: Underworld) => {
+    onTurnEnd: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
       // Decrement how many turns left the unit is frozen
       const modifier = unit.modifiers[id];
       if (modifier) {
@@ -106,7 +106,6 @@ const spell: Spell = {
       }
     },
   },
-
 };
 
 function add(unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) {

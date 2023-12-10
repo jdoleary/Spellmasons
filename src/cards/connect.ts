@@ -15,12 +15,12 @@ import filter from '../graphics/shaders/unusued';
 
 const id = 'Connect';
 const numberOfTargetsPerQuantity = 2;
-const baseRadius = config.PLAYER_BASE_ATTACK_RANGE - 10;
+const baseRadius = 250;
 const spell: Spell = {
   card: {
     id,
     category: CardCategory.Targeting,
-    manaCost: 20,
+    manaCost: 25,
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.COMMON],

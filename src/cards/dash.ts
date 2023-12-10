@@ -21,7 +21,7 @@ const spell: Spell = {
       const targets = getCurrentTargets(state);
       playDefaultSpellSFX(card, prediction);
       if (targets[0]) {
-        pull(state.casterUnit, targets[0], quantity, underworld, prediction);
+        await pull(state.casterUnit, targets[0], quantity, underworld, prediction);
       }
       return state;
     },

@@ -29,8 +29,11 @@ const spell: Spell = {
     description: 'spell_target_cone',
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
-      const adjustedRange = range + state.aggregator.radius;
-      const adjustedAngle = coneAngle * quantity;
+      // Range increases linearly with each quantity
+      const adjustedRange = (range + state.aggregator.radius) * (0.75 + 0.25 * quantity);
+      // Angle doubles up to 4 casts, capping at 360 degrees: 45 > 90 > 180 > full circle
+      const adjustedAngle = coneAngle * Math.pow(2, Math.min(quantity, 4)) / 2;
+
       // Note: This loop must NOT be a for..of and it must cache the length because it
       // mutates state.targetedUnits as it iterates.  Otherwise it will continue to loop as it grows
       let targets: Vec2[] = getCurrentTargets(state);
@@ -71,8 +74,11 @@ function withinCone(origin: Vec2, coneStartPoint: Vec2, radius: number, startAng
   // and within angle:
   const targetAngle = getAngleBetweenVec2s(coneStartPoint, target);
   const distanceToConeStart = distance(target, coneStartPoint);
+
+  //TODO - Investigate isAngleBetweenAngles
+  //temp fix for cone inversion: if angle is whole circle, just check distance.
   return distanceToConeStart <= radius
-    && isAngleBetweenAngles(targetAngle, startAngle, endAngle);
+    && (isAngleBetweenAngles(targetAngle, startAngle, endAngle) || Math.abs(endAngle - startAngle) >= 2 * Math.PI);
 
 }
 

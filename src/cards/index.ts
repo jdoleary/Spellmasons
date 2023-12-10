@@ -18,7 +18,6 @@ import heavySlash from './heavy_slash';
 import megaSlash from './mega_slash';
 import rend from './rend';
 import bleed from './bleed';
-import suffocate from './suffocate';
 import heal from './add_heal';
 import heal_greater from './heal_greater';
 import heal_mass from './heal_mass';
@@ -36,6 +35,7 @@ import swap from './swap';
 import displace from './displace';
 import purify from './purify';
 import poison from './poison';
+import suffocate from './suffocate';
 import debilitate from './debilitate';
 import * as protection from './protection';
 import clone from './clone';
@@ -68,6 +68,7 @@ import death_wager from './death_wager';
 import sacrifice from './sacrifice';
 import devRecordDelay from './devRecordDelay';
 import devCauseDesync from './devCauseDesync';
+import registerImpendingDoom from '../modifierImpendingDoom';
 import registerSummoningSickness from '../modifierSummoningSickness';
 import arrow from './arrow';
 import arrow2 from './arrow2';
@@ -104,6 +105,7 @@ import { registerUrnpoisonExplode } from '../entity/units/urn_poison';
 import { registerUrnexplosiveExplode } from '../entity/units/urn_explosive';
 import { calculateGameDifficulty } from '../Difficulty';
 import registerCorpseDecay from '../modifierCorpseDecay';
+
 export interface Modifiers {
   subsprite?: Subsprite;
   // run special init logic (usually for visuals) when a modifier is added or loaded
@@ -186,7 +188,6 @@ export function registerCards(overworld: Overworld) {
   registerSpell(megaSlash, overworld);
   registerSpell(rend, overworld);
   registerSpell(bleed, overworld);
-  registerSpell(suffocate, overworld);
   registerSpell(heal, overworld);
   registerSpell(heal_greater, overworld);
   registerSpell(heal_mass, overworld);
@@ -201,6 +202,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(shield, overworld);
   registerSpell(fortify, overworld);
   registerSpell(poison, overworld);
+  registerSpell(suffocate, overworld);
   registerSpell(purify, overworld);
   registerSpell(swap, overworld);
   registerSpell(displace, overworld);
@@ -267,6 +269,7 @@ export function registerCards(overworld: Overworld) {
 
   // Register floating modifier (non-card);
   registerSummoningSickness();
+  registerImpendingDoom();
   registerCorpseDecay();
   registerUrnIceExplode();
   registerUrnpoisonExplode();

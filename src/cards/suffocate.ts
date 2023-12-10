@@ -9,13 +9,14 @@ import floatingText from '../graphics/FloatingText';
 import * as colors from '../graphics/ui/colors';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
+import { buildMatchMemberExpression } from '@babel/types';
 
 export const suffocateCardId = 'suffocate';
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
   const modifier = getOrInitModifier(unit, suffocateCardId, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
     // Add event
-    if (!unit.onTurnStartEvents.includes(suffocateCardId)) {
-      unit.onTurnStartEvents.push(suffocateCardId);
+    if (!unit.onTurnEndEvents.includes(suffocateCardId)) {
+      unit.onTurnEndEvents.push(suffocateCardId);
     }
     // Add subsprite image
     if (!prediction) {
@@ -24,13 +25,19 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
       }
     }
   });
-  const lastTurnsLeftToLive = modifier.turnsLeftToLive;
-  modifier.turnsLeftToLive = 1 + Math.ceil(unit.health / 20 / modifier.quantity)
-  // Ensure that casting Suffocate doesn't ever increase the turns left
-  if (lastTurnsLeftToLive) {
-    modifier.turnsLeftToLive = Math.min(modifier.turnsLeftToLive, lastTurnsLeftToLive);
+
+  modifier.buildup = Math.floor(10 * Math.pow(2, (modifier.quantity - 1) / 2));
+
+  if (modifier.buildup >= unit.health) {
+    Unit.die(unit, underworld, prediction);
+    if (!prediction) {
+      floatingText({
+        coords: unit, text: `Suffocated!`,
+        style: { fill: colors.healthRed },
+      });
+    }
   }
-  if (!prediction) {
+  else if (!prediction) {
     // Temporarily use floating text until spell animation is finished
     floatingText({ coords: unit, text: suffocateCardId });
     updateTooltip(unit);
@@ -39,7 +46,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
 export function updateTooltip(unit: Unit.IUnit) {
   if (unit.modifiers[suffocateCardId]) {
     // Set tooltip:
-    unit.modifiers[suffocateCardId].tooltip = `${unit.modifiers[suffocateCardId].turnsLeftToLive} turns until suffocation`
+    unit.modifiers[suffocateCardId].tooltip = `Suffocate ${unit.modifiers[suffocateCardId].quantity} | ${unit.modifiers[suffocateCardId].buildup} damage`
   }
 }
 
@@ -85,20 +92,11 @@ const spell: Spell = {
     // },
   },
   events: {
-    onTurnStart: async (unit: IUnit, prediction: boolean, underworld: Underworld) => {
+    onTurnEnd: async (unit: IUnit, prediction: boolean, underworld: Underworld) => {
       const modifier = unit.modifiers[suffocateCardId];
       if (!prediction) {
         if (modifier) {
-          // Decrement the turns left to live
-          modifier.turnsLeftToLive -= 1;
-          updateTooltip(unit);
-          if (modifier.turnsLeftToLive <= 0) {
-            Unit.die(unit, underworld, prediction);
-            floatingText({
-              coords: unit, text: `Suffocated!`,
-              style: { fill: colors.healthRed },
-            });
-          }
+          Unit.addModifier(unit, suffocateCardId, underworld, prediction, 1)
         } else {
           console.error(`Should have ${suffocateCardId} modifier on unit but it is missing`);
         }

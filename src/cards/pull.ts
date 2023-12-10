@@ -10,11 +10,11 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { distance, similarTriangles } from '../jmath/math';
 import { forcePush } from './push';
 
-export const id = 'pull';
+export const pullId = 'pull';
 export const velocityStartMagnitude = 10;
 const spell: Spell = {
   card: {
-    id,
+    id: pullId,
     category: CardCategory.Movement,
     supportQuantity: true,
     sfx: 'pull',

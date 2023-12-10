@@ -42,7 +42,7 @@ export default function registerSummoningSickness() {
             // Skip turn
             return true;
         },
-        onTurnEnd: async (unit: Unit.IUnit, underworld: Underworld) => {
+        onTurnEnd: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
             Unit.removeModifier(unit, summoningSicknessId, underworld);
         }
     });

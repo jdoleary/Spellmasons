@@ -11,7 +11,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
 export const poisonCardId = 'poison';
-const baseDamage = 18;
+const baseDamage = 20;
 function init(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
   if (spell.modifiers?.subsprite) {
     // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
@@ -30,8 +30,8 @@ function init(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
   const modifier = getOrInitModifier(unit, poisonCardId, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
     // Add event
-    if (!unit.onTurnStartEvents.includes(poisonCardId)) {
-      unit.onTurnStartEvents.push(poisonCardId);
+    if (!unit.onTurnEndEvents.includes(poisonCardId)) {
+      unit.onTurnEndEvents.push(poisonCardId);
     }
     // Add subsprite image
     if (!prediction) {
@@ -42,6 +42,16 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     }
 
   });
+
+  if (!prediction) {
+    updateTooltip(unit);
+  }
+}
+export function updateTooltip(unit: Unit.IUnit) {
+  if (unit.modifiers[poisonCardId]) {
+    // Set tooltip:
+    unit.modifiers[poisonCardId].tooltip = `Poison ${unit.modifiers[poisonCardId].quantity} | ${baseDamage * unit.modifiers[poisonCardId].quantity} damage`
+  }
 }
 
 const spell: Spell = {
@@ -87,7 +97,7 @@ const spell: Spell = {
 
   },
   events: {
-    onTurnStart: async (unit: IUnit, prediction: boolean, underworld: Underworld) => {
+    onTurnEnd: async (unit: IUnit, prediction: boolean, underworld: Underworld) => {
       // TODO: There was a bug here where somehow modifiers['poison'] was undefined after i did chain, vulx10, poisonx10
       const modifier = unit.modifiers[poisonCardId];
       // Don't take damage on prediction because it is confusing for people to see the prediction damage that poison will do,

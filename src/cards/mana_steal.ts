@@ -11,7 +11,7 @@ import { explain, EXPLAIN_OVERFILL } from '../graphics/Explain';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 const id = 'Mana Steal';
-const mana_stolen = 20;
+const base_mana_stolen = 20;
 const health_burn = 30;
 const spell: Spell = {
   card: {
@@ -24,7 +24,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.SPECIAL],
     thumbnail: 'spellIconManaSteal.png',
-    description: ['spell_mana_steal', mana_stolen.toString()],
+    description: ['spell_mana_steal', base_mana_stolen.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive && u.mana > 0);
@@ -32,7 +32,7 @@ const spell: Spell = {
       let promises = [];
       let totalManaStolen = 0;
       for (let unit of targets) {
-        const unitManaStolen = Math.min(unit.mana, mana_stolen * quantity);
+        const unitManaStolen = Math.min(unit.mana, base_mana_stolen * quantity);
         totalManaStolen += unitManaStolen;
         unit.mana -= unitManaStolen;
         const manaTrailPromises = [];
