@@ -54,7 +54,7 @@ async function spreadCurses(casterPlayer: IPlayer | undefined, unit: IUnit, unde
 
   for (let { card, quantity } of curseCardsData) {
     const promises = [];
-    // Filter out units that already have this curse
+    // Add and overwrite lower quantity curses for all nearby units
     for (let touchingUnit of nearByUnits) {
       const existingQuantity = touchingUnit.modifiers[card.id]?.quantity as number;
       if (existingQuantity == undefined || existingQuantity < quantity) {
