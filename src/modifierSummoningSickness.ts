@@ -44,7 +44,6 @@ export default function registerSummoningSickness() {
         },
         onTurnEnd: async (unit: Unit.IUnit, prediction: Boolean, underworld: Underworld) => {
             Unit.removeModifier(unit, summoningSicknessId, underworld);
-            return false;
         }
     });
 }

@@ -34,7 +34,7 @@ const onTurnStartSource: { [name: string]: onTurnStart } = {};
 
 export type onTurnEnd = {
   // Return boolean skips the turn if true
-  (unit: IUnit, prediction: boolean, underworld: Underworld): Promise<boolean>;
+  (unit: IUnit, prediction: boolean, underworld: Underworld): Promise<void>;
 };
 const onTurnEndSource: { [name: string]: onTurnEnd } = {};
 

@@ -45,7 +45,6 @@ export default function registerSummoningSickness() {
           console.error(`Should have ${impendingDoomId} modifier on unit but it is missing`);
         }
       }
-      return false;
     },
   });
 }
