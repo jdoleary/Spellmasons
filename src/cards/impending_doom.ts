@@ -9,14 +9,13 @@ import floatingText from '../graphics/FloatingText';
 import * as colors from '../graphics/ui/colors';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
-import { buildMatchMemberExpression } from '@babel/types';
 
-export const suffocateCardId = 'suffocate';
+export const impendingDoomCardId = 'impending doom';
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
-  const modifier = getOrInitModifier(unit, suffocateCardId, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
+  const modifier = getOrInitModifier(unit, impendingDoomCardId, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
     // Add event
-    if (!unit.onTurnEndEvents.includes(suffocateCardId)) {
-      unit.onTurnEndEvents.push(suffocateCardId);
+    if (!unit.onTurnEndEvents.includes(impendingDoomCardId)) {
+      unit.onTurnEndEvents.push(impendingDoomCardId);
     }
     // Add subsprite image
     if (!prediction) {
@@ -26,40 +25,30 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     }
   });
 
-  modifier.buildup = Math.floor(10 * Math.pow(2, (modifier.quantity - 1) / 2));
-
-  if (modifier.buildup >= unit.health) {
-    Unit.die(unit, underworld, prediction);
-    if (!prediction) {
-      floatingText({
-        coords: unit, text: `Suffocated!`,
-        style: { fill: colors.healthRed },
-      });
-    }
-  }
-  else if (!prediction) {
+  if (!prediction) {
     // Temporarily use floating text until spell animation is finished
-    floatingText({ coords: unit, text: suffocateCardId });
+    floatingText({ coords: unit, text: impendingDoomCardId });
     updateTooltip(unit);
   }
 }
 export function updateTooltip(unit: Unit.IUnit) {
-  if (unit.modifiers[suffocateCardId]) {
+  if (unit.modifiers[impendingDoomCardId]) {
     // Set tooltip:
-    unit.modifiers[suffocateCardId].tooltip = `Suffocate ${unit.modifiers[suffocateCardId].quantity} | ${unit.modifiers[suffocateCardId].buildup} damage`
+    unit.modifiers[impendingDoomCardId].tooltip = `Impending doom ${unit.modifiers[impendingDoomCardId].quantity}...`
   }
 }
 
+//Dev spell for toxic res: Unit dies in specified number of turns
 const spell: Spell = {
   card: {
-    id: suffocateCardId,
+    id: impendingDoomCardId,
     category: CardCategory.Curses,
     sfx: 'suffocate',
     supportQuantity: true,
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.UNCOMMON],
+    probability: 0,
     thumbnail: 'spellIconSuffocate.png',
     // animationPath: 'spell-effects/TODO',
     description: 'spell_suffocate',
@@ -69,7 +58,7 @@ const spell: Spell = {
       if (targets.length) {
         await Promise.all([playDefaultSpellAnimation(card, targets, prediction), playDefaultSpellSFX(card, prediction)]);
         for (let unit of targets) {
-          Unit.addModifier(unit, suffocateCardId, underworld, prediction, quantity);
+          Unit.addModifier(unit, impendingDoomCardId, underworld, prediction, quantity);
         }
       }
       return state;
@@ -93,12 +82,21 @@ const spell: Spell = {
   },
   events: {
     onTurnEnd: async (unit: IUnit, prediction: boolean, underworld: Underworld) => {
-      const modifier = unit.modifiers[suffocateCardId];
+      const modifier = unit.modifiers[impendingDoomCardId];
       if (!prediction) {
         if (modifier) {
-          Unit.addModifier(unit, suffocateCardId, underworld, prediction, 1)
+          // Decrement the turns left to live
+          modifier.quantity -= 1;
+          updateTooltip(unit);
+          if (modifier.quantity <= 0) {
+            Unit.die(unit, underworld, prediction);
+            floatingText({
+              coords: unit, text: `Blehg!`,
+              style: { fill: colors.healthRed },
+            });
+          }
         } else {
-          console.error(`Should have ${suffocateCardId} modifier on unit but it is missing`);
+          console.error(`Should have ${impendingDoomCardId} modifier on unit but it is missing`);
         }
       }
       return false;

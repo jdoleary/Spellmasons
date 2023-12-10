@@ -5,7 +5,7 @@ import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { makeRisingParticles } from '../graphics/ParticleCollection';
-import { suffocateCardId, updateTooltip } from './suffocate';
+import { impendingDoomCardId, updateTooltip } from './impending_doom';
 
 export const resurrect_toxic_id = 'Toxic Resurrect';
 export const thumbnail = 'spellIconResurrect3.png';
@@ -17,6 +17,7 @@ const spell: Spell = {
     id: resurrect_toxic_id,
     category: CardCategory.Soul,
     sfx: 'resurrect',
+    supportQuantity: true,
     manaCost: 90,
     healthCost: 0,
     cooldown: 2,
@@ -42,13 +43,8 @@ const spell: Spell = {
           playDefaultSpellSFX(card, prediction);
           Unit.resurrect(unit);
 
-          // TOXIC add suffocate 
-          Unit.addModifier(unit, suffocateCardId, underworld, prediction, 1);
-          const modifier = unit.modifiers[suffocateCardId];
-          if (modifier) {
-            modifier.turnsLeftToLive = turnsLeftToLive;
-            updateTooltip(unit);
-          }
+          // TOXIC add impending doom 
+          Unit.addModifier(unit, impendingDoomCardId, underworld, prediction, turnsLeftToLive * quantity);
 
           resurrectedUnitCount++;
           makeRisingParticles(unit, prediction);
