@@ -10,7 +10,7 @@ const spell: Spell = {
     replaces: [targetSimilarId],
     category: CardCategory.Targeting,
     supportQuantity: true,
-    manaCost: 20,
+    manaCost: 25,
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.FORBIDDEN],
