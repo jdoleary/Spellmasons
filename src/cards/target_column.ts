@@ -30,7 +30,6 @@ const spell: Spell = {
     description: 'spell_target_column',
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
-      console.log(state.aggregator.radius);
       const depth = (range + state.aggregator.radius) * (0.5 + 0.5 * quantity);
       const width = baseWidth * Math.pow(2, Math.min(quantity, 4)) / 2;
       // Note: This loop must NOT be a for..of and it must cache the length because it

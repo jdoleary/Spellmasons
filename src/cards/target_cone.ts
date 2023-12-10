@@ -29,7 +29,6 @@ const spell: Spell = {
     description: 'spell_target_cone',
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
-      console.log(state.aggregator.radius);
       const adjustedRange = (range + state.aggregator.radius) * (0.75 + 0.25 * quantity);
       const adjustedAngle = coneAngle * Math.pow(2, Math.min(quantity, 4)) / 2;
       // Note: This loop must NOT be a for..of and it must cache the length because it
