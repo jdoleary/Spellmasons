@@ -11,6 +11,7 @@ import { CardCategory } from '../types/commonTypes';
 import { drawUICircle } from '../graphics/PlanningView';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { IPlayer } from '../entity/Player';
+import { impendingDoomCardId } from './impending_doom';
 
 export const contaminate_id = 'contaminate';
 
@@ -48,14 +49,23 @@ async function spreadCurses(casterPlayer: IPlayer | undefined, unit: IUnit, unde
   const curseCardsData: { card: ICard, quantity: number }[] = Object.entries(unit.modifiers)
     // Only curses are contagious
     // Do not spread contaminate itself
-    .filter(([cardId, modValue]) => modValue.isCurse && cardId !== contaminate_id)
+    .filter(([cardId, modValue]) => modValue.isCurse && cardId !== contaminate_id && cardId !== impendingDoomCardId)
     .map(([id, mod]) => ({ card: allCards[id], quantity: mod.quantity }))
     .filter(x => x.card !== undefined) as { card: ICard, quantity: number }[];
 
   for (let { card, quantity } of curseCardsData) {
     const promises = [];
     // Filter out units that already have this curse
-    for (let touchingUnit of nearByUnits.filter(u => !Object.keys(u.modifiers).includes(card.id))) {
+    for (let touchingUnit of nearByUnits) {
+      const existingQuantity = touchingUnit.modifiers[card.id]?.quantity as number;
+      if (existingQuantity == undefined || existingQuantity < quantity) {
+        const quantityToAdd = quantity - (existingQuantity != undefined ? existingQuantity : 0);
+        Unit.addModifier(touchingUnit, card.id, underworld, prediction, quantityToAdd);
+      }
+      else {
+        continue;
+      }
+
       let animationPromise = Promise.resolve();
       if (!prediction) {
         // Visually show the contageon
@@ -73,7 +83,6 @@ async function spreadCurses(casterPlayer: IPlayer | undefined, unit: IUnit, unde
         if (!prediction) {
           playSFXKey('contageousSplat');
         }
-        Unit.addModifier(touchingUnit, card.id, underworld, prediction, quantity);
       });
     }
     await Promise.all(promises);
