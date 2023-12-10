@@ -105,7 +105,7 @@ import { registerUrnpoisonExplode } from '../entity/units/urn_poison';
 import { registerUrnexplosiveExplode } from '../entity/units/urn_explosive';
 import { calculateGameDifficulty } from '../Difficulty';
 import registerCorpseDecay from '../modifierCorpseDecay';
-import { over } from 'lodash';
+
 export interface Modifiers {
   subsprite?: Subsprite;
   // run special init logic (usually for visuals) when a modifier is added or loaded

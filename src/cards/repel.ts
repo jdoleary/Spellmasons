@@ -13,7 +13,7 @@ const spell: Spell = {
     category: CardCategory.Movement,
     supportQuantity: true,
     sfx: 'push',
-    manaCost: 20,
+    manaCost: 15,
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],

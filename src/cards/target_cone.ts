@@ -29,8 +29,11 @@ const spell: Spell = {
     description: 'spell_target_cone',
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
+      // Range increases linearly with each quantity
       const adjustedRange = (range + state.aggregator.radius) * (0.75 + 0.25 * quantity);
+      // Angle doubles up to 4 casts, capping at 360 degrees: 45 > 90 > 180 > full circle
       const adjustedAngle = coneAngle * Math.pow(2, Math.min(quantity, 4)) / 2;
+
       // Note: This loop must NOT be a for..of and it must cache the length because it
       // mutates state.targetedUnits as it iterates.  Otherwise it will continue to loop as it grows
       let targets: Vec2[] = getCurrentTargets(state);
