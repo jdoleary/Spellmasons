@@ -11,8 +11,7 @@ import { explain, EXPLAIN_OVERFILL } from '../graphics/Explain';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 const id = 'Mana Steal';
-const base_mana_stolen = 30; //steals 30 mana from one target
-const max_mana_stolen_mult = 4; //can steal up to 120 mana per quantity
+const base_mana_stolen = 20;
 const health_burn = 30;
 const spell: Spell = {
   card: {
@@ -22,7 +21,7 @@ const spell: Spell = {
     supportQuantity: true,
     manaCost: 0,
     healthCost: health_burn,
-    expenseScaling: 2,
+    expenseScaling: 1,
     probability: probabilityMap[CardRarity.SPECIAL],
     thumbnail: 'spellIconManaSteal.png',
     description: ['spell_mana_steal', base_mana_stolen.toString()],
@@ -33,7 +32,7 @@ const spell: Spell = {
       let promises = [];
       let totalManaStolen = 0;
       for (let unit of targets) {
-        const unitManaStolen = Math.min(unit.mana, Math.floor(base_mana_stolen * quantity / (((targets.length - 1) / max_mana_stolen_mult) + 1)));
+        const unitManaStolen = Math.min(unit.mana, base_mana_stolen * quantity);
         totalManaStolen += unitManaStolen;
         unit.mana -= unitManaStolen;
         const manaTrailPromises = [];
