@@ -36,7 +36,6 @@ import displace from './displace';
 import purify from './purify';
 import poison from './poison';
 import suffocate from './suffocate';
-import impendingDoom from './impending_doom';
 import debilitate from './debilitate';
 import * as protection from './protection';
 import clone from './clone';
@@ -69,6 +68,7 @@ import death_wager from './death_wager';
 import sacrifice from './sacrifice';
 import devRecordDelay from './devRecordDelay';
 import devCauseDesync from './devCauseDesync';
+import registerImpendingDoom from '../modifierImpendingDoom';
 import registerSummoningSickness from '../modifierSummoningSickness';
 import arrow from './arrow';
 import arrow2 from './arrow2';
@@ -203,7 +203,6 @@ export function registerCards(overworld: Overworld) {
   registerSpell(fortify, overworld);
   registerSpell(poison, overworld);
   registerSpell(suffocate, overworld);
-  registerSpell(impendingDoom, overworld);
   registerSpell(purify, overworld);
   registerSpell(swap, overworld);
   registerSpell(displace, overworld);
@@ -270,6 +269,7 @@ export function registerCards(overworld: Overworld) {
 
   // Register floating modifier (non-card);
   registerSummoningSickness();
+  registerImpendingDoom();
   registerCorpseDecay();
   registerUrnIceExplode();
   registerUrnpoisonExplode();

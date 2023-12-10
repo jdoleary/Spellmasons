@@ -18,13 +18,11 @@ const spell: Spell = {
     thumbnail: 'spellIconDash.png',
     description: 'spell_dash',
     effect: async (state, card, quantity, underworld, prediction) => {
-      let promises = [];
       const targets = getCurrentTargets(state);
       playDefaultSpellSFX(card, prediction);
       if (targets[0]) {
-        promises.push(pull(state.casterUnit, targets[0], quantity, underworld, prediction));
+        await pull(state.casterUnit, targets[0], quantity, underworld, prediction);
       }
-      await Promise.all(promises);
       return state;
     },
   },

@@ -11,7 +11,6 @@ import { CardCategory } from '../types/commonTypes';
 import { drawUICircle } from '../graphics/PlanningView';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { IPlayer } from '../entity/Player';
-import { impendingDoomCardId } from './impending_doom';
 
 export const contaminate_id = 'contaminate';
 
@@ -49,7 +48,7 @@ async function spreadCurses(casterPlayer: IPlayer | undefined, unit: IUnit, unde
   const curseCardsData: { card: ICard, quantity: number }[] = Object.entries(unit.modifiers)
     // Only curses are contagious
     // Do not spread contaminate itself
-    .filter(([cardId, modValue]) => modValue.isCurse && cardId !== contaminate_id && cardId !== impendingDoomCardId)
+    .filter(([cardId, modValue]) => modValue.isCurse && cardId !== contaminate_id)
     .map(([id, mod]) => ({ card: allCards[id], quantity: mod.quantity }))
     .filter(x => x.card !== undefined) as { card: ICard, quantity: number }[];
 

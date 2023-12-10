@@ -5,7 +5,7 @@ import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { makeRisingParticles } from '../graphics/ParticleCollection';
-import { impendingDoomCardId, updateTooltip } from './impending_doom';
+import { impendingDoomId } from '../modifierImpendingDoom';
 
 export const resurrect_toxic_id = 'Toxic Resurrect';
 export const thumbnail = 'spellIconResurrect3.png';
@@ -44,7 +44,7 @@ const spell: Spell = {
           Unit.resurrect(unit);
 
           // TOXIC add impending doom 
-          Unit.addModifier(unit, impendingDoomCardId, underworld, prediction, turnsLeftToLive * quantity);
+          Unit.addModifier(unit, impendingDoomId, underworld, prediction, turnsLeftToLive * quantity);
 
           resurrectedUnitCount++;
           makeRisingParticles(unit, prediction);
