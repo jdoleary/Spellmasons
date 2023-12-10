@@ -75,7 +75,8 @@ export interface IPlayer {
   cardsInToolbar: string[];
   // The spells that the player has in their inventory
   inventory: string[];
-  // The spells that don't count towards upgrades selected
+  // A list of spells that don't take up an upgrade count because they are obtained by other
+  // means than by pickup up scrolls
   freeSpells: string[];
   // The spells and perks that a player has chosen
   upgrades: Upgrade.IUpgrade[];
