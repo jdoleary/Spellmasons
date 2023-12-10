@@ -10,11 +10,11 @@ import { playDefaultSpellSFX } from './cardUtils';
 import { HasSpace } from '../entity/Type';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
-export const id = 'push';
+export const pushId = 'push';
 export const velocityStartMagnitude = 10;
 const spell: Spell = {
   card: {
-    id,
+    id: pushId,
     category: CardCategory.Movement,
     supportQuantity: true,
     sfx: 'push',

@@ -1,7 +1,7 @@
 import { getCurrentTargets, Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
-import { forcePush } from './push';
+import { forcePush, pushId } from './push';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 export const id = 'repel';
@@ -9,10 +9,11 @@ export const velocityStartMagnitude = 10;
 const spell: Spell = {
   card: {
     id,
+    requires: [pushId],
     category: CardCategory.Movement,
     supportQuantity: true,
     sfx: 'push',
-    manaCost: 10,
+    manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],

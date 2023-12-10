@@ -1,17 +1,18 @@
 import { getCurrentTargets, Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
-import { pull } from './pull';
+import { pull, pullId } from './pull';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 export const id = 'vortex';
 const spell: Spell = {
   card: {
     id,
+    requires: [pullId],
     category: CardCategory.Movement,
     supportQuantity: true,
     sfx: 'pull',
-    manaCost: 10,
+    manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
