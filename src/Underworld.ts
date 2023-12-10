@@ -2607,10 +2607,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
 
       const statBumpAmount: { [key: string]: number } = {
-        'attackRange': 8,
+        'attackRange': 20, //previously 8
         'manaMax': 5,
-        'healthMax': 8,
-        'staminaMax': 10
+        'healthMax': 20, //previously 8
+        'staminaMax': 20 //previously 10
       }
 
       switch (player.mageType) {
