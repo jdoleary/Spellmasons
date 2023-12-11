@@ -1,3 +1,5 @@
+
+- TypeError: Cannot read properties of undefined (reading 'toggle') at Object.givePlayerUpgrade (C:\git\Golems\headless-server-build\src\entity\Pickup.js:833:43) at C:\git\Golems\headless-server-build\src\Underworld.js:982:50 at Array.forEach (<anonymous>) at Underworld.reportEnemyKilled (C:\git\Golems\headless-server-build\src\Underworld.js:982:30) at die (C:\git\Golems\headless-server-build\src\entity\Unit.js:710:20) at Object.takeDamage (C:\git\Golems\headless-server-build\src\entity\Unit.js:844:9) at C:\git\Golems\headless-server-build\src\cards\explosive_arrow.js:96:38 at Generator.next (<anonymous>) at C:\git\Golems\headless-server-build\src\cards\explosive_arr
 [jordanoleary-spellmasons-server] [2023-11-26 08:56:40] ]
 [jordanoleary-spellmasons-server] [2023-11-26 08:57:51] @websocketpie/server-bun: Client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd sent a message
 [jordanoleary-spellmasons-server] [2023-11-26 08:57:51] @websocketpie/server-bun: Echoing message to client 5b986bcb-3890-4df4-a8e4-bdac23fc89bd room
