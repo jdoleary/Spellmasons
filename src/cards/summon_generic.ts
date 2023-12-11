@@ -143,7 +143,7 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean, 
 🗡️ ${unitSource.unitProps.damage} ${i18n(['damage'])}` : ''}${!!unitSource.unitProps.attackRange ? `
 🎯 ${unitSource.unitProps.attackRange} ${i18n(['attack range'])}` : ''}
 ❤️ ${healthMax} ${i18n(['health capacity'])}
-    ${manaMax ? `🔵 ${manaMax} + ${unitSource.unitProps.manaPerTurn} ${i18n('Mana')} ${i18n('per turn')}` : ''}`;
+${manaMax ? `🔵 ${manaMax} + ${unitSource.unitProps.manaPerTurn} ${i18n('Mana')} ${i18n('per turn')}` : ''}`;
 
     return {
         card: {
