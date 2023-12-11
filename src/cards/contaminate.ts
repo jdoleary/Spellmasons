@@ -11,6 +11,8 @@ import { CardCategory } from '../types/commonTypes';
 import { drawUICircle } from '../graphics/PlanningView';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { IPlayer } from '../entity/Player';
+import { Modifier } from './util';
+import { summoningSicknessId } from '../modifierSummoningSickness';
 
 export const contaminate_id = 'contaminate';
 
@@ -28,7 +30,7 @@ const spell: Spell = {
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       for (let unit of state.targetedUnits.filter(u => u.alive)) {
-        await contaminate(state.casterPlayer, unit, underworld, state.aggregator.radius, prediction, quantity);
+        contaminate(state.casterPlayer, unit, underworld, state.aggregator.radius, prediction, quantity);
       }
       return state;
     },
@@ -36,21 +38,38 @@ const spell: Spell = {
 };
 export default spell;
 
+interface CurseData {
+  modId: string,
+  modifier: Modifier
+}
+
 // separate function to handle synchronous recursion and animation - avoids long wait times
 async function contaminate(casterPlayer: IPlayer | undefined, unit: IUnit, underworld: Underworld, extraRadius: number, prediction: boolean, quantity: number) {
   const range = (COLLISION_MESH_RADIUS * 4 + extraRadius) * (casterPlayer?.mageType == 'Witch' ? 1.5 : 1);
 
-  // the units to spread contaminate from, initally just unit, then only the latest additions to the chain
+  // the units to spread contaminate from
+  // initally just this unit, then only the latest additions to the chain
   let nextUnits: IUnit[] = [];
   let ignore: IUnit[] = []
   nextUnits.push(unit);
   ignore.push(unit);
 
-  let recursion = 1;
-  while (recursion <= quantity) {
+  const modifiersToExclude = [summoningSicknessId]
+  const curses: CurseData[] = Object.entries(unit.modifiers)
+    .map(([id, mod]) => ({ modId: id, modifier: mod }))
+    .filter(x => x.modifier.isCurse)
+    .filter(x => !modifiersToExclude.includes(x.modId));
+
+  // consider what order curses are spread in
+  // i.e. bloat or suffocate first?
+  //curses.sort((a, b) => a.modId.localeCompare(b.modId))
+
+  // multicasting allows Contaminate to chain off of nearby enemies
+  let recursions = 0;
+  while (recursions < quantity) {
     const promises = [];
     for (let nextUnit of nextUnits) {
-      promises.push(spreadCurses(nextUnit, range, underworld, prediction, ignore));
+      promises.push(spreadCurses(nextUnit, ignore, curses, range, underworld, prediction));
     }
     nextUnits = [];
     let affectedUnitsArrays = await Promise.all(promises);
@@ -60,11 +79,11 @@ async function contaminate(casterPlayer: IPlayer | undefined, unit: IUnit, under
       nextUnits = nextUnits.concat(affectedUnits.filter(u => !nextUnits.includes(u)));
       ignore = ignore.concat(affectedUnits.filter(u => !ignore.includes(u)));
     }
-    recursion += 1;
+    recursions += 1;
   }
 }
 
-async function spreadCurses(unit: IUnit, range: number, underworld: Underworld, prediction: boolean, ignore: IUnit[]): Promise<IUnit[]> {
+async function spreadCurses(unit: IUnit, ignore: IUnit[], curses: CurseData[], range: number, underworld: Underworld, prediction: boolean): Promise<IUnit[]> {
   drawUICircle(unit, range, colors.targetingSpellGreen, 'Contagion Radius');
 
   const nearbyUnits = underworld.getUnitsWithinDistanceOfTarget(unit, range, prediction)
@@ -77,28 +96,10 @@ async function spreadCurses(unit: IUnit, range: number, underworld: Underworld, 
     // Filter out other ignored units
     .filter(x => !ignore.includes(x)) as IUnit[];
 
-  const curseCardsData: { card: ICard, quantity: number }[] = Object.entries(unit.modifiers)
-    // Only curses are contagious
-    // Do not spread contaminate itself
-    .filter(([cardId, modValue]) => modValue.isCurse && cardId !== contaminate_id)
-    .map(([id, mod]) => ({ card: allCards[id], quantity: mod.quantity }))
-    .filter(x => x.card !== undefined) as { card: ICard, quantity: number }[];
-
-  //temporary fix for curses being to same unit spread in different order
-  curseCardsData.sort((a, b) => a.card.id.localeCompare(b.card.id))
-  //consider what order curses are spread in
-  //i.e. suffocate before bloat
-
-  for (let { card, quantity } of curseCardsData) {
+  for (let curse of curses) {
     const promises = [];
     // Add and overwrite lower quantity curses for all nearby units
     for (let touchingUnit of nearbyUnits) {
-      const existingQuantity = touchingUnit.modifiers[card.id]?.quantity as number;
-      if (existingQuantity == undefined || existingQuantity < quantity) {
-        const quantityToAdd = quantity - (existingQuantity != undefined ? existingQuantity : 0);
-        Unit.addModifier(touchingUnit, card.id, underworld, prediction, quantityToAdd);
-      }
-
       let animationPromise = Promise.resolve();
       if (!prediction) {
         // Visually show the contageon
@@ -106,15 +107,21 @@ async function spreadCurses(unit: IUnit, range: number, underworld: Underworld, 
           unit,
           touchingUnit,
           'projectile/poisonerProjectile',
-        ).then(() => {
-          floatingText({ coords: touchingUnit, text: card.id });
-        });
+        )
         promises.push(animationPromise);
       }
       // Spread the curse after the animation promise completes
       animationPromise.then(() => {
         if (!prediction) {
+          floatingText({ coords: touchingUnit, text: curse.modId });
           playSFXKey('contageousSplat');
+        }
+        if (touchingUnit.alive) {
+          const existingQuantity = touchingUnit.modifiers[curse.modId]?.quantity as number;
+          if (existingQuantity == undefined || existingQuantity < curse.modifier.quantity) {
+            const quantityToAdd = curse.modifier.quantity - (existingQuantity != undefined ? existingQuantity : 0);
+            Unit.addModifier(touchingUnit, curse.modId, underworld, prediction, quantityToAdd);
+          }
         }
       });
     }
