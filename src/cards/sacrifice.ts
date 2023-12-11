@@ -9,7 +9,7 @@ import { playDefaultSpellSFX } from './cardUtils';
 import * as config from '../config';
 import { explain, EXPLAIN_OVERFILL } from '../graphics/Explain';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
-import { die, takeDamage } from '../entity/Unit';
+import { die } from '../entity/Unit';
 
 const damage = config.UNIT_BASE_HEALTH; //40 at time of writing
 export const consumeAllyCardId = 'Sacrifice';
@@ -33,8 +33,10 @@ const spell: Spell = {
       let totalHealthStolen = 0;
       for (let unit of targets) {
         const unitHealthStolen = Math.min(unit.health, damage * quantity);
+        // This instead of takeDamage() -> ignores shield, not modified by damage mitigation/prevention, doesn't trigger onDamage event
+        unit.health -= unitHealthStolen;
         totalHealthStolen += unitHealthStolen;
-        takeDamage(unit, unitHealthStolen, undefined, underworld, prediction);
+        if (unit.health <= 0) die(unit, underworld, prediction);
         const healthTrailPromises = [];
         if (!prediction) {
           const NUMBER_OF_ANIMATED_TRAILS = Math.min(6, unitHealthStolen / 10);
