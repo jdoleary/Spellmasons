@@ -75,6 +75,9 @@ export interface IPlayer {
   cardsInToolbar: string[];
   // The spells that the player has in their inventory
   inventory: string[];
+  // A list of spells that don't take up an upgrade count because they are obtained by other
+  // means than by pickup up scrolls
+  freeSpells: string[];
   // The spells and perks that a player has chosen
   upgrades: Upgrade.IUpgrade[];
   upgradesLeftToChoose: number;
@@ -122,10 +125,7 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
         {
           const upgrade = Upgrade.getUpgradeByTitle(arrowCardId);
           if (upgrade) {
-            underworld.chooseUpgrade(player, upgrade);
-            if (player == globalThis.player) {
-              globalThis.freeSpells.push(arrowCardId);
-            }
+            underworld.getFreeUpgrade(player, upgrade);
           } else {
             console.error('Could not find arrow upgrade for', type);
           }
@@ -135,10 +135,7 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
         {
           const upgrade = Upgrade.getUpgradeByTitle(captureSoul.id);
           if (upgrade) {
-            underworld.chooseUpgrade(player, upgrade);
-            if (player == globalThis.player) {
-              globalThis.freeSpells.push(captureSoul.id);
-            }
+            underworld.getFreeUpgrade(player, upgrade);
           } else {
             console.error('Could not find upgrade for', type);
           }
@@ -148,10 +145,7 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
         {
           const upgrade = Upgrade.getUpgradeByTitle(heal_id);
           if (upgrade) {
-            underworld.chooseUpgrade(player, upgrade);
-            if (player == globalThis.player) {
-              globalThis.freeSpells.push(heal_id);
-            }
+            underworld.getFreeUpgrade(player, upgrade);
           } else {
             console.error('Could not find upgrade for', type);
           }
@@ -161,10 +155,7 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
         {
           const upgrade = Upgrade.getUpgradeByTitle(contaminate_id);
           if (upgrade) {
-            underworld.chooseUpgrade(player, upgrade);
-            if (player == globalThis.player) {
-              globalThis.freeSpells.push(contaminate_id);
-            }
+            underworld.getFreeUpgrade(player, upgrade);
           } else {
             console.error('Could not find upgrade for', type);
           }
@@ -211,6 +202,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
     // *3 for all card containers including floating card containers
     cardsInToolbar: Array(config.NUMBER_OF_TOOLBAR_SLOTS * 3).fill(''),
     inventory: [],
+    freeSpells: [],
     cardUsageCounts: {},
     upgrades: [],
     upgradesLeftToChoose: config.STARTING_CARD_COUNT,

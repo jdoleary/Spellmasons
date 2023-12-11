@@ -2549,6 +2549,13 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
     Player.syncLobby(this);
   }
+  getFreeUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
+    player.freeSpells.push(upgrade.title);
+    upgrade.effect(player, this);
+    player.upgrades.push(upgrade);
+    // Recalc cards so the card changes show up
+    CardUI.recalcPositionForCards(player, this);
+  }
   chooseUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
     const upgradesLeftToChoose = this.upgradesLeftToChoose(player);
     if (upgrade.type == 'card') {
@@ -2587,7 +2594,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
   upgradesLeftToChoose(player: Player.IPlayer): number {
     // .filter out freeSpells because they shouldn't count against upgrades available since they are given to you
-    return this.cardDropsDropped + config.STARTING_CARD_COUNT - player.inventory.filter(spellId => (globalThis.freeSpells || []).indexOf(spellId) == -1).length;
+    return this.cardDropsDropped + config.STARTING_CARD_COUNT - player.inventory.filter(spellId => (player.freeSpells || []).indexOf(spellId) == -1).length;
   }
   spendStatPoint(stat: string, player: Player.IPlayer) {
     const isCurrentPlayer = player == globalThis.player;

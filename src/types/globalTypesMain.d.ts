@@ -261,9 +261,6 @@ declare global {
     var setMenuIsInRoom: undefined | ((inRoom: boolean) => void);
     // Used to stop sending PLAYER_THINKING if player is hovering over non game space
     var currentHoverElement: undefined | HTMLElement | null;
-    // A list of spells that don't take up an upgrade count because they are obtained by other
-    // means than by pickup up scrolls
-    var freeSpells: string[];
     var mageTypes: Array<Player.MageType>;
     var adminPickMageType: boolean | undefined;
     // A list of upgrades to omit for the next reroll
