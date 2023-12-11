@@ -125,10 +125,7 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
         {
           const upgrade = Upgrade.getUpgradeByTitle(arrowCardId);
           if (upgrade) {
-            underworld.chooseUpgrade(player, upgrade);
-            if (player == globalThis.player) {
-              player.freeSpells.push(arrowCardId);
-            }
+            underworld.getFreeUpgrade(player, upgrade);
           } else {
             console.error('Could not find arrow upgrade for', type);
           }
@@ -138,10 +135,7 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
         {
           const upgrade = Upgrade.getUpgradeByTitle(captureSoul.id);
           if (upgrade) {
-            underworld.chooseUpgrade(player, upgrade);
-            if (player == globalThis.player) {
-              player.freeSpells.push(captureSoul.id);
-            }
+            underworld.getFreeUpgrade(player, upgrade);
           } else {
             console.error('Could not find upgrade for', type);
           }
@@ -151,10 +145,7 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
         {
           const upgrade = Upgrade.getUpgradeByTitle(heal_id);
           if (upgrade) {
-            underworld.chooseUpgrade(player, upgrade);
-            if (player == globalThis.player) {
-              player.freeSpells.push(heal_id);
-            }
+            underworld.getFreeUpgrade(player, upgrade);
           } else {
             console.error('Could not find upgrade for', type);
           }
@@ -164,10 +155,7 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
         {
           const upgrade = Upgrade.getUpgradeByTitle(contaminate_id);
           if (upgrade) {
-            underworld.chooseUpgrade(player, upgrade);
-            if (player == globalThis.player) {
-              player.freeSpells.push(contaminate_id);
-            }
+            underworld.getFreeUpgrade(player, upgrade);
           } else {
             console.error('Could not find upgrade for', type);
           }

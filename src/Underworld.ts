@@ -2549,6 +2549,13 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
     Player.syncLobby(this);
   }
+  getFreeUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
+    player.freeSpells.push(upgrade.title);
+    upgrade.effect(player, this);
+    player.upgrades.push(upgrade);
+    // Recalc cards so the card changes show up
+    CardUI.recalcPositionForCards(player, this);
+  }
   chooseUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
     const upgradesLeftToChoose = this.upgradesLeftToChoose(player);
     if (upgrade.type == 'card') {

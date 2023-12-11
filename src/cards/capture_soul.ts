@@ -35,11 +35,7 @@ const spell: Spell = {
               const upgrade = upgradeCardsSource.find(u => u.title == newCardId)
               if (upgrade) {
                 floatingText({ coords: target, text: 'Soul Captured!' });
-                player.freeSpells.push(newCardId);
-                upgrade.effect(player, underworld);
-                player.upgrades.push(upgrade);
-                // Recalc cards so the card changes show up
-                recalcPositionForCards(player, underworld);
+                underworld.getFreeUpgrade(player, upgrade);
                 makeManaTrail(target, state.casterUnit, underworld, '#321d73', '#9526cc').then(() => {
                   playDefaultSpellSFX(card, prediction);
                 });
