@@ -26,6 +26,8 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     }
   });
 
+  // One suffocate stack is added per cast and per turn passed
+  // Buildup doubles every 2 stacks until > hp, then unit dies
   modifier.buildup = Math.floor(10 * Math.pow(2, (modifier.quantity - 1) / 2));
 
   if (modifier.buildup >= unit.health) {
