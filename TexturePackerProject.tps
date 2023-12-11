@@ -60,7 +60,7 @@
         <key>jxrCompressionLevel</key>
         <uint>0</uint>
         <key>ditherType</key>
-        <enum type="SettingsBase::DitherType">PngQuantLow</enum>
+        <enum type="SettingsBase::DitherType">NearestNeighbour</enum>
         <key>backgroundColor</key>
         <uint>0</uint>
         <key>libGdx</key>
@@ -86,7 +86,7 @@
         <key>atfFormats</key>
         <string></string>
         <key>textureFormat</key>
-        <enum type="SettingsBase::TextureFormat">png8</enum>
+        <enum type="SettingsBase::TextureFormat">png</enum>
         <key>borderPadding</key>
         <uint>0</uint>
         <key>maxTextureSize</key>
@@ -263,6 +263,7 @@
             <key type="filename">images/doodads/urn_poison_0.png</key>
             <key type="filename">images/doodads/urn_poison_1.png</key>
             <key type="filename">images/half-circle.png</key>
+            <key type="filename">images/liquid-mask_1.png</key>
             <key type="filename">images/liquid-mask_10.png</key>
             <key type="filename">images/liquid-mask_11.png</key>
             <key type="filename">images/liquid-mask_12.png</key>
@@ -271,6 +272,10 @@
             <key type="filename">images/liquid-mask_15.png</key>
             <key type="filename">images/liquid-mask_16.png</key>
             <key type="filename">images/liquid-mask_17.png</key>
+            <key type="filename">images/liquid-mask_2.png</key>
+            <key type="filename">images/liquid-mask_3.png</key>
+            <key type="filename">images/liquid-mask_4.png</key>
+            <key type="filename">images/liquid-mask_5.png</key>
             <key type="filename">images/liquid-mask_6.png</key>
             <key type="filename">images/liquid-mask_7.png</key>
             <key type="filename">images/liquid-mask_8.png</key>
@@ -521,7 +526,6 @@
             <key type="filename">images/spell-effects/spellShield_7.png</key>
             <key type="filename">images/spell-effects/spellShield_8.png</key>
             <key type="filename">images/spell-effects/spellShield_9.png</key>
-            <key type="filename">images/tiles/all_liquid.png</key>
             <key type="filename">images/tiles/blood/all_ground.png</key>
             <key type="filename">images/tiles/blood/all_ground_dirt_1.png</key>
             <key type="filename">images/tiles/blood/all_ground_dirt_2.png</key>
@@ -582,7 +586,6 @@
             <key type="filename">images/tiles/ghost/wall.png</key>
             <key type="filename">images/tiles/ghost/wallN.png</key>
             <key type="filename">images/tiles/ghost/wall_alone.png</key>
-            <key type="filename">images/tiles/ground.png</key>
             <key type="filename">images/tiles/lava/all_ground.png</key>
             <key type="filename">images/tiles/lava/all_ground_flower_1.png</key>
             <key type="filename">images/tiles/lava/all_ground_flower_2.png</key>
@@ -617,7 +620,6 @@
             <key type="filename">images/tiles/lava/liquidWGroundE.png</key>
             <key type="filename">images/tiles/lava/wall.png</key>
             <key type="filename">images/tiles/lava/wallN.png</key>
-            <key type="filename">images/tiles/semiWall.png</key>
             <key type="filename">images/tiles/water/all_ground.png</key>
             <key type="filename">images/tiles/water/all_ground_brick_1.png</key>
             <key type="filename">images/tiles/water/all_ground_brick_2.png</key>
@@ -661,53 +663,11 @@
             <key type="filename">images/tiles/water/liquidWGroundE.png</key>
             <key type="filename">images/tiles/water/wall.png</key>
             <key type="filename">images/tiles/water/wallN.png</key>
-            <key type="filename">images/tiles/whiteTile.png</key>
             <key type="filename">images/time-crystal.png</key>
             <key type="filename">images/units/decoy_0.png</key>
             <key type="filename">images/units/decoy_1.png</key>
             <key type="filename">images/units/decoy_Death_0.png</key>
             <key type="filename">images/units/decoy_Death_1.png</key>
-            <key type="filename">images/units/gruntAttack_1.png</key>
-            <key type="filename">images/units/gruntAttack_2.png</key>
-            <key type="filename">images/units/gruntAttack_3.png</key>
-            <key type="filename">images/units/gruntAttack_4.png</key>
-            <key type="filename">images/units/gruntAttack_5.png</key>
-            <key type="filename">images/units/gruntAttack_6.png</key>
-            <key type="filename">images/units/gruntAttack_7.png</key>
-            <key type="filename">images/units/gruntAttack_8.png</key>
-            <key type="filename">images/units/gruntAttack_9.png</key>
-            <key type="filename">images/units/gruntDeath_1.png</key>
-            <key type="filename">images/units/gruntDeath_10.png</key>
-            <key type="filename">images/units/gruntDeath_11.png</key>
-            <key type="filename">images/units/gruntDeath_12.png</key>
-            <key type="filename">images/units/gruntDeath_13.png</key>
-            <key type="filename">images/units/gruntDeath_14.png</key>
-            <key type="filename">images/units/gruntDeath_2.png</key>
-            <key type="filename">images/units/gruntDeath_3.png</key>
-            <key type="filename">images/units/gruntDeath_4.png</key>
-            <key type="filename">images/units/gruntDeath_5.png</key>
-            <key type="filename">images/units/gruntDeath_6.png</key>
-            <key type="filename">images/units/gruntDeath_7.png</key>
-            <key type="filename">images/units/gruntDeath_8.png</key>
-            <key type="filename">images/units/gruntDeath_9.png</key>
-            <key type="filename">images/units/gruntHit_1.png</key>
-            <key type="filename">images/units/gruntHit_2.png</key>
-            <key type="filename">images/units/gruntHit_3.png</key>
-            <key type="filename">images/units/gruntHit_4.png</key>
-            <key type="filename">images/units/gruntHit_5.png</key>
-            <key type="filename">images/units/gruntIdle_1.png</key>
-            <key type="filename">images/units/gruntIdle_2.png</key>
-            <key type="filename">images/units/gruntIdle_3.png</key>
-            <key type="filename">images/units/gruntIdle_4.png</key>
-            <key type="filename">images/units/gruntIdle_5.png</key>
-            <key type="filename">images/units/gruntWalk_1.png</key>
-            <key type="filename">images/units/gruntWalk_2.png</key>
-            <key type="filename">images/units/gruntWalk_3.png</key>
-            <key type="filename">images/units/gruntWalk_4.png</key>
-            <key type="filename">images/units/gruntWalk_5.png</key>
-            <key type="filename">images/units/gruntWalk_6.png</key>
-            <key type="filename">images/units/gruntWalk_7.png</key>
-            <key type="filename">images/units/gruntWalk_8.png</key>
             <key type="filename">images/units/lobberAttack_1.png</key>
             <key type="filename">images/units/lobberAttack_2.png</key>
             <key type="filename">images/units/lobberAttack_3.png</key>
@@ -757,49 +717,6 @@
             <key type="filename">images/units/lobberWalk_7.png</key>
             <key type="filename">images/units/lobberWalk_8.png</key>
             <key type="filename">images/units/lobberWalk_9.png</key>
-            <key type="filename">images/units/poisAttack_1.png</key>
-            <key type="filename">images/units/poisAttack_10.png</key>
-            <key type="filename">images/units/poisAttack_11.png</key>
-            <key type="filename">images/units/poisAttack_2.png</key>
-            <key type="filename">images/units/poisAttack_3.png</key>
-            <key type="filename">images/units/poisAttack_4.png</key>
-            <key type="filename">images/units/poisAttack_5.png</key>
-            <key type="filename">images/units/poisAttack_6.png</key>
-            <key type="filename">images/units/poisAttack_7.png</key>
-            <key type="filename">images/units/poisAttack_8.png</key>
-            <key type="filename">images/units/poisAttack_9.png</key>
-            <key type="filename">images/units/poisDeath_1.png</key>
-            <key type="filename">images/units/poisDeath_10.png</key>
-            <key type="filename">images/units/poisDeath_11.png</key>
-            <key type="filename">images/units/poisDeath_12.png</key>
-            <key type="filename">images/units/poisDeath_2.png</key>
-            <key type="filename">images/units/poisDeath_3.png</key>
-            <key type="filename">images/units/poisDeath_4.png</key>
-            <key type="filename">images/units/poisDeath_5.png</key>
-            <key type="filename">images/units/poisDeath_6.png</key>
-            <key type="filename">images/units/poisDeath_7.png</key>
-            <key type="filename">images/units/poisDeath_8.png</key>
-            <key type="filename">images/units/poisDeath_9.png</key>
-            <key type="filename">images/units/poisHit_1.png</key>
-            <key type="filename">images/units/poisHit_2.png</key>
-            <key type="filename">images/units/poisHit_3.png</key>
-            <key type="filename">images/units/poisHit_4.png</key>
-            <key type="filename">images/units/poisHit_5.png</key>
-            <key type="filename">images/units/poisHit_6.png</key>
-            <key type="filename">images/units/poisIdle_1.png</key>
-            <key type="filename">images/units/poisIdle_2.png</key>
-            <key type="filename">images/units/poisIdle_3.png</key>
-            <key type="filename">images/units/poisIdle_4.png</key>
-            <key type="filename">images/units/poisIdle_5.png</key>
-            <key type="filename">images/units/poisIdle_6.png</key>
-            <key type="filename">images/units/poisIdle_7.png</key>
-            <key type="filename">images/units/poisWalk_1.png</key>
-            <key type="filename">images/units/poisWalk_2.png</key>
-            <key type="filename">images/units/poisWalk_3.png</key>
-            <key type="filename">images/units/poisWalk_4.png</key>
-            <key type="filename">images/units/poisWalk_5.png</key>
-            <key type="filename">images/units/poisWalk_6.png</key>
-            <key type="filename">images/units/poisWalk_7.png</key>
             <key type="filename">images/units/summonerAttack_1.png</key>
             <key type="filename">images/units/summonerAttack_10.png</key>
             <key type="filename">images/units/summonerAttack_11.png</key>
@@ -858,50 +775,6 @@
             <key type="filename">images/units/summonerWalk_6.png</key>
             <key type="filename">images/units/summonerWalk_7.png</key>
             <key type="filename">images/units/summonerWalk_8.png</key>
-            <key type="filename">images/units/vampireAttack_1.png</key>
-            <key type="filename">images/units/vampireAttack_10.png</key>
-            <key type="filename">images/units/vampireAttack_2.png</key>
-            <key type="filename">images/units/vampireAttack_3.png</key>
-            <key type="filename">images/units/vampireAttack_4.png</key>
-            <key type="filename">images/units/vampireAttack_5.png</key>
-            <key type="filename">images/units/vampireAttack_6.png</key>
-            <key type="filename">images/units/vampireAttack_7.png</key>
-            <key type="filename">images/units/vampireAttack_8.png</key>
-            <key type="filename">images/units/vampireAttack_9.png</key>
-            <key type="filename">images/units/vampireDeath_1.png</key>
-            <key type="filename">images/units/vampireDeath_10.png</key>
-            <key type="filename">images/units/vampireDeath_11.png</key>
-            <key type="filename">images/units/vampireDeath_12.png</key>
-            <key type="filename">images/units/vampireDeath_13.png</key>
-            <key type="filename">images/units/vampireDeath_2.png</key>
-            <key type="filename">images/units/vampireDeath_3.png</key>
-            <key type="filename">images/units/vampireDeath_4.png</key>
-            <key type="filename">images/units/vampireDeath_5.png</key>
-            <key type="filename">images/units/vampireDeath_6.png</key>
-            <key type="filename">images/units/vampireDeath_7.png</key>
-            <key type="filename">images/units/vampireDeath_8.png</key>
-            <key type="filename">images/units/vampireDeath_9.png</key>
-            <key type="filename">images/units/vampireHit_1.png</key>
-            <key type="filename">images/units/vampireHit_2.png</key>
-            <key type="filename">images/units/vampireHit_3.png</key>
-            <key type="filename">images/units/vampireHit_4.png</key>
-            <key type="filename">images/units/vampireHit_5.png</key>
-            <key type="filename">images/units/vampireHit_6.png</key>
-            <key type="filename">images/units/vampireHit_7.png</key>
-            <key type="filename">images/units/vampireHit_8.png</key>
-            <key type="filename">images/units/vampireIdle_1.png</key>
-            <key type="filename">images/units/vampireIdle_2.png</key>
-            <key type="filename">images/units/vampireIdle_3.png</key>
-            <key type="filename">images/units/vampireIdle_4.png</key>
-            <key type="filename">images/units/vampireIdle_5.png</key>
-            <key type="filename">images/units/vampireWalk_1.png</key>
-            <key type="filename">images/units/vampireWalk_2.png</key>
-            <key type="filename">images/units/vampireWalk_3.png</key>
-            <key type="filename">images/units/vampireWalk_4.png</key>
-            <key type="filename">images/units/vampireWalk_5.png</key>
-            <key type="filename">images/units/vampireWalk_6.png</key>
-            <key type="filename">images/units/vampireWalk_7.png</key>
-            <key type="filename">images/units/vampireWalk_8.png</key>
             <key type="filename">public/images/spell/blank.png</key>
             <key type="filename">public/images/spell/resurrect.png</key>
             <key type="filename">public/images/spell/spellIconArrow.png</key>
@@ -994,25 +867,10 @@
             <key type="filename">public/images/spell/spellIconTargetCone.png</key>
             <key type="filename">public/images/spell/spellIconTargetKind.png</key>
             <key type="filename">public/images/spell/spellIconTargetSimilar.png</key>
+            <key type="filename">public/images/spell/spellIconTargetSimilar2.png</key>
             <key type="filename">public/images/spell/spellIconVortex.png</key>
             <key type="filename">public/images/spell/toolbar-slot.png</key>
             <key type="filename">public/images/spell/unknown.png</key>
-            <key type="filename">public/spellmasons-mods/Renes_gimmicks/graphics/icons/Burninig_rage.png</key>
-            <key type="filename">public/spellmasons-mods/Renes_gimmicks/graphics/icons/Caltrops.png</key>
-            <key type="filename">public/spellmasons-mods/Renes_gimmicks/graphics/icons/Sadism.png</key>
-            <key type="filename">public/spellmasons-mods/Renes_gimmicks/graphics/icons/SummonTrap.png</key>
-            <key type="filename">public/spellmasons-mods/Renes_gimmicks/graphics/icons/VampireBite.png</key>
-            <key type="filename">public/spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconFlameStrike.png</key>
-            <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconDecay.png</key>
-            <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconDominate.png</key>
-            <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconEnsnare.png</key>
-            <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconFastForward.png</key>
-            <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconGrace.png</key>
-            <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconHarvest.png</key>
-            <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconPacify.png</key>
-            <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconRegen.png</key>
-            <key type="filename">../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconVengeance.png</key>
-            <key type="filename">../spellmasons-mods/undead_blade/spellIconUndeadBlade.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0,0</point_f>
@@ -1039,250 +897,6 @@
                 <rect>16,0,32,1</rect>
                 <key>scale9Paddings</key>
                 <rect>16,0,32,1</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">images/liquid-mask_1.png</key>
-            <key type="filename">images/liquid-mask_2.png</key>
-            <key type="filename">images/liquid-mask_3.png</key>
-            <key type="filename">images/liquid-mask_4.png</key>
-            <key type="filename">images/liquid-mask_5.png</key>
-            <key type="filename">images/projectile/priestProjectileCenter_1.png</key>
-            <key type="filename">images/projectile/priestProjectileCenter_2.png</key>
-            <key type="filename">images/projectile/priestProjectileCenter_3.png</key>
-            <key type="filename">images/projectile/priestProjectileCenter_4.png</key>
-            <key type="filename">images/projectile/priestProjectileHit_1.png</key>
-            <key type="filename">images/projectile/priestProjectileHit_10.png</key>
-            <key type="filename">images/projectile/priestProjectileHit_11.png</key>
-            <key type="filename">images/projectile/priestProjectileHit_12.png</key>
-            <key type="filename">images/projectile/priestProjectileHit_2.png</key>
-            <key type="filename">images/projectile/priestProjectileHit_3.png</key>
-            <key type="filename">images/projectile/priestProjectileHit_4.png</key>
-            <key type="filename">images/projectile/priestProjectileHit_5.png</key>
-            <key type="filename">images/projectile/priestProjectileHit_6.png</key>
-            <key type="filename">images/projectile/priestProjectileHit_7.png</key>
-            <key type="filename">images/projectile/priestProjectileHit_8.png</key>
-            <key type="filename">images/projectile/priestProjectileHit_9.png</key>
-            <key type="filename">images/projectile/priestProjectileTop_1.png</key>
-            <key type="filename">images/projectile/priestProjectileTop_2.png</key>
-            <key type="filename">images/projectile/priestProjectileTop_3.png</key>
-            <key type="filename">images/projectile/priestProjectileTop_4.png</key>
-            <key type="filename">images/spell-effects/potionPickup_1.png</key>
-            <key type="filename">images/spell-effects/potionPickup_10.png</key>
-            <key type="filename">images/spell-effects/potionPickup_11.png</key>
-            <key type="filename">images/spell-effects/potionPickup_12.png</key>
-            <key type="filename">images/spell-effects/potionPickup_13.png</key>
-            <key type="filename">images/spell-effects/potionPickup_14.png</key>
-            <key type="filename">images/spell-effects/potionPickup_15.png</key>
-            <key type="filename">images/spell-effects/potionPickup_16.png</key>
-            <key type="filename">images/spell-effects/potionPickup_17.png</key>
-            <key type="filename">images/spell-effects/potionPickup_2.png</key>
-            <key type="filename">images/spell-effects/potionPickup_3.png</key>
-            <key type="filename">images/spell-effects/potionPickup_4.png</key>
-            <key type="filename">images/spell-effects/potionPickup_5.png</key>
-            <key type="filename">images/spell-effects/potionPickup_6.png</key>
-            <key type="filename">images/spell-effects/potionPickup_7.png</key>
-            <key type="filename">images/spell-effects/potionPickup_8.png</key>
-            <key type="filename">images/spell-effects/potionPickup_9.png</key>
-            <key type="filename">images/units/playerAttackSmallMagic_1.png</key>
-            <key type="filename">images/units/playerAttackSmallMagic_10.png</key>
-            <key type="filename">images/units/playerAttackSmallMagic_11.png</key>
-            <key type="filename">images/units/playerAttackSmallMagic_12.png</key>
-            <key type="filename">images/units/playerAttackSmallMagic_13.png</key>
-            <key type="filename">images/units/playerAttackSmallMagic_14.png</key>
-            <key type="filename">images/units/playerAttackSmallMagic_15.png</key>
-            <key type="filename">images/units/playerAttackSmallMagic_16.png</key>
-            <key type="filename">images/units/playerAttackSmallMagic_2.png</key>
-            <key type="filename">images/units/playerAttackSmallMagic_3.png</key>
-            <key type="filename">images/units/playerAttackSmallMagic_4.png</key>
-            <key type="filename">images/units/playerAttackSmallMagic_5.png</key>
-            <key type="filename">images/units/playerAttackSmallMagic_6.png</key>
-            <key type="filename">images/units/playerAttackSmallMagic_7.png</key>
-            <key type="filename">images/units/playerAttackSmallMagic_8.png</key>
-            <key type="filename">images/units/playerAttackSmallMagic_9.png</key>
-            <key type="filename">images/units/playerAttackSmall_1.png</key>
-            <key type="filename">images/units/playerAttackSmall_10.png</key>
-            <key type="filename">images/units/playerAttackSmall_11.png</key>
-            <key type="filename">images/units/playerAttackSmall_12.png</key>
-            <key type="filename">images/units/playerAttackSmall_13.png</key>
-            <key type="filename">images/units/playerAttackSmall_14.png</key>
-            <key type="filename">images/units/playerAttackSmall_15.png</key>
-            <key type="filename">images/units/playerAttackSmall_16.png</key>
-            <key type="filename">images/units/playerAttackSmall_2.png</key>
-            <key type="filename">images/units/playerAttackSmall_3.png</key>
-            <key type="filename">images/units/playerAttackSmall_4.png</key>
-            <key type="filename">images/units/playerAttackSmall_5.png</key>
-            <key type="filename">images/units/playerAttackSmall_6.png</key>
-            <key type="filename">images/units/playerAttackSmall_7.png</key>
-            <key type="filename">images/units/playerAttackSmall_8.png</key>
-            <key type="filename">images/units/playerAttackSmall_9.png</key>
-            <key type="filename">images/units/playerAttackZap_1.png</key>
-            <key type="filename">images/units/playerAttackZap_10.png</key>
-            <key type="filename">images/units/playerAttackZap_11.png</key>
-            <key type="filename">images/units/playerAttackZap_12.png</key>
-            <key type="filename">images/units/playerAttackZap_13.png</key>
-            <key type="filename">images/units/playerAttackZap_14.png</key>
-            <key type="filename">images/units/playerAttackZap_2.png</key>
-            <key type="filename">images/units/playerAttackZap_3.png</key>
-            <key type="filename">images/units/playerAttackZap_4.png</key>
-            <key type="filename">images/units/playerAttackZap_5.png</key>
-            <key type="filename">images/units/playerAttackZap_6.png</key>
-            <key type="filename">images/units/playerAttackZap_7.png</key>
-            <key type="filename">images/units/playerAttackZap_8.png</key>
-            <key type="filename">images/units/playerAttackZap_9.png</key>
-            <key type="filename">images/units/playerAttack_1.png</key>
-            <key type="filename">images/units/playerAttack_10.png</key>
-            <key type="filename">images/units/playerAttack_11.png</key>
-            <key type="filename">images/units/playerAttack_12.png</key>
-            <key type="filename">images/units/playerAttack_13.png</key>
-            <key type="filename">images/units/playerAttack_14.png</key>
-            <key type="filename">images/units/playerAttack_2.png</key>
-            <key type="filename">images/units/playerAttack_3.png</key>
-            <key type="filename">images/units/playerAttack_4.png</key>
-            <key type="filename">images/units/playerAttack_5.png</key>
-            <key type="filename">images/units/playerAttack_6.png</key>
-            <key type="filename">images/units/playerAttack_7.png</key>
-            <key type="filename">images/units/playerAttack_8.png</key>
-            <key type="filename">images/units/playerAttack_9.png</key>
-            <key type="filename">images/units/playerDeath_1.png</key>
-            <key type="filename">images/units/playerDeath_10.png</key>
-            <key type="filename">images/units/playerDeath_11.png</key>
-            <key type="filename">images/units/playerDeath_12.png</key>
-            <key type="filename">images/units/playerDeath_13.png</key>
-            <key type="filename">images/units/playerDeath_14.png</key>
-            <key type="filename">images/units/playerDeath_15.png</key>
-            <key type="filename">images/units/playerDeath_16.png</key>
-            <key type="filename">images/units/playerDeath_17.png</key>
-            <key type="filename">images/units/playerDeath_18.png</key>
-            <key type="filename">images/units/playerDeath_19.png</key>
-            <key type="filename">images/units/playerDeath_2.png</key>
-            <key type="filename">images/units/playerDeath_20.png</key>
-            <key type="filename">images/units/playerDeath_21.png</key>
-            <key type="filename">images/units/playerDeath_22.png</key>
-            <key type="filename">images/units/playerDeath_3.png</key>
-            <key type="filename">images/units/playerDeath_4.png</key>
-            <key type="filename">images/units/playerDeath_5.png</key>
-            <key type="filename">images/units/playerDeath_6.png</key>
-            <key type="filename">images/units/playerDeath_7.png</key>
-            <key type="filename">images/units/playerDeath_8.png</key>
-            <key type="filename">images/units/playerDeath_9.png</key>
-            <key type="filename">images/units/playerHit_1.png</key>
-            <key type="filename">images/units/playerHit_2.png</key>
-            <key type="filename">images/units/playerHit_3.png</key>
-            <key type="filename">images/units/playerHit_4.png</key>
-            <key type="filename">images/units/playerHit_5.png</key>
-            <key type="filename">images/units/playerHit_6.png</key>
-            <key type="filename">images/units/playerIdle_1.png</key>
-            <key type="filename">images/units/playerIdle_2.png</key>
-            <key type="filename">images/units/playerIdle_3.png</key>
-            <key type="filename">images/units/playerIdle_4.png</key>
-            <key type="filename">images/units/playerIdle_5.png</key>
-            <key type="filename">images/units/playerWalk_1.png</key>
-            <key type="filename">images/units/playerWalk_2.png</key>
-            <key type="filename">images/units/playerWalk_3.png</key>
-            <key type="filename">images/units/playerWalk_4.png</key>
-            <key type="filename">images/units/playerWalk_5.png</key>
-            <key type="filename">images/units/playerWalk_6.png</key>
-            <key type="filename">images/units/playerWalk_7.png</key>
-            <key type="filename">images/units/playerWalk_8.png</key>
-            <key type="filename">images/units/playerWalk_9.png</key>
-            <key type="filename">images/units/priestAttack_1.png</key>
-            <key type="filename">images/units/priestAttack_10.png</key>
-            <key type="filename">images/units/priestAttack_11.png</key>
-            <key type="filename">images/units/priestAttack_12.png</key>
-            <key type="filename">images/units/priestAttack_13.png</key>
-            <key type="filename">images/units/priestAttack_2.png</key>
-            <key type="filename">images/units/priestAttack_3.png</key>
-            <key type="filename">images/units/priestAttack_4.png</key>
-            <key type="filename">images/units/priestAttack_5.png</key>
-            <key type="filename">images/units/priestAttack_6.png</key>
-            <key type="filename">images/units/priestAttack_7.png</key>
-            <key type="filename">images/units/priestAttack_8.png</key>
-            <key type="filename">images/units/priestAttack_9.png</key>
-            <key type="filename">images/units/priestAttackt_1.png</key>
-            <key type="filename">images/units/priestAttackt_10.png</key>
-            <key type="filename">images/units/priestAttackt_11.png</key>
-            <key type="filename">images/units/priestAttackt_12.png</key>
-            <key type="filename">images/units/priestAttackt_13.png</key>
-            <key type="filename">images/units/priestAttackt_2.png</key>
-            <key type="filename">images/units/priestAttackt_3.png</key>
-            <key type="filename">images/units/priestAttackt_4.png</key>
-            <key type="filename">images/units/priestAttackt_5.png</key>
-            <key type="filename">images/units/priestAttackt_6.png</key>
-            <key type="filename">images/units/priestAttackt_7.png</key>
-            <key type="filename">images/units/priestAttackt_8.png</key>
-            <key type="filename">images/units/priestAttackt_9.png</key>
-            <key type="filename">images/units/priestDeath_1.png</key>
-            <key type="filename">images/units/priestDeath_10.png</key>
-            <key type="filename">images/units/priestDeath_11.png</key>
-            <key type="filename">images/units/priestDeath_12.png</key>
-            <key type="filename">images/units/priestDeath_13.png</key>
-            <key type="filename">images/units/priestDeath_14.png</key>
-            <key type="filename">images/units/priestDeath_15.png</key>
-            <key type="filename">images/units/priestDeath_16.png</key>
-            <key type="filename">images/units/priestDeath_17.png</key>
-            <key type="filename">images/units/priestDeath_18.png</key>
-            <key type="filename">images/units/priestDeath_19.png</key>
-            <key type="filename">images/units/priestDeath_2.png</key>
-            <key type="filename">images/units/priestDeath_20.png</key>
-            <key type="filename">images/units/priestDeath_21.png</key>
-            <key type="filename">images/units/priestDeath_22.png</key>
-            <key type="filename">images/units/priestDeath_23.png</key>
-            <key type="filename">images/units/priestDeath_3.png</key>
-            <key type="filename">images/units/priestDeath_4.png</key>
-            <key type="filename">images/units/priestDeath_5.png</key>
-            <key type="filename">images/units/priestDeath_6.png</key>
-            <key type="filename">images/units/priestDeath_7.png</key>
-            <key type="filename">images/units/priestDeath_8.png</key>
-            <key type="filename">images/units/priestDeath_9.png</key>
-            <key type="filename">images/units/priestHit_1.png</key>
-            <key type="filename">images/units/priestHit_2.png</key>
-            <key type="filename">images/units/priestHit_3.png</key>
-            <key type="filename">images/units/priestHit_4.png</key>
-            <key type="filename">images/units/priestIdle_1.png</key>
-            <key type="filename">images/units/priestIdle_10.png</key>
-            <key type="filename">images/units/priestIdle_11.png</key>
-            <key type="filename">images/units/priestIdle_12.png</key>
-            <key type="filename">images/units/priestIdle_13.png</key>
-            <key type="filename">images/units/priestIdle_14.png</key>
-            <key type="filename">images/units/priestIdle_15.png</key>
-            <key type="filename">images/units/priestIdle_16.png</key>
-            <key type="filename">images/units/priestIdle_17.png</key>
-            <key type="filename">images/units/priestIdle_18.png</key>
-            <key type="filename">images/units/priestIdle_19.png</key>
-            <key type="filename">images/units/priestIdle_2.png</key>
-            <key type="filename">images/units/priestIdle_20.png</key>
-            <key type="filename">images/units/priestIdle_21.png</key>
-            <key type="filename">images/units/priestIdle_22.png</key>
-            <key type="filename">images/units/priestIdle_23.png</key>
-            <key type="filename">images/units/priestIdle_24.png</key>
-            <key type="filename">images/units/priestIdle_25.png</key>
-            <key type="filename">images/units/priestIdle_26.png</key>
-            <key type="filename">images/units/priestIdle_3.png</key>
-            <key type="filename">images/units/priestIdle_4.png</key>
-            <key type="filename">images/units/priestIdle_5.png</key>
-            <key type="filename">images/units/priestIdle_6.png</key>
-            <key type="filename">images/units/priestIdle_7.png</key>
-            <key type="filename">images/units/priestIdle_8.png</key>
-            <key type="filename">images/units/priestIdle_9.png</key>
-            <key type="filename">images/units/priestWalk_1.png</key>
-            <key type="filename">images/units/priestWalk_2.png</key>
-            <key type="filename">images/units/priestWalk_3.png</key>
-            <key type="filename">images/units/priestWalk_4.png</key>
-            <key type="filename">images/units/priestWalk_5.png</key>
-            <key type="filename">images/units/priestWalk_6.png</key>
-            <key type="filename">images/units/priestWalk_7.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0,0</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>32,32,64,64</rect>
-                <key>scale9Paddings</key>
-                <rect>32,32,64,64</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -1404,6 +1018,223 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">images/projectile/priestProjectileCenter_1.png</key>
+            <key type="filename">images/projectile/priestProjectileCenter_2.png</key>
+            <key type="filename">images/projectile/priestProjectileCenter_3.png</key>
+            <key type="filename">images/projectile/priestProjectileCenter_4.png</key>
+            <key type="filename">images/projectile/priestProjectileHit_1.png</key>
+            <key type="filename">images/projectile/priestProjectileHit_10.png</key>
+            <key type="filename">images/projectile/priestProjectileHit_11.png</key>
+            <key type="filename">images/projectile/priestProjectileHit_12.png</key>
+            <key type="filename">images/projectile/priestProjectileHit_2.png</key>
+            <key type="filename">images/projectile/priestProjectileHit_3.png</key>
+            <key type="filename">images/projectile/priestProjectileHit_4.png</key>
+            <key type="filename">images/projectile/priestProjectileHit_5.png</key>
+            <key type="filename">images/projectile/priestProjectileHit_6.png</key>
+            <key type="filename">images/projectile/priestProjectileHit_7.png</key>
+            <key type="filename">images/projectile/priestProjectileHit_8.png</key>
+            <key type="filename">images/projectile/priestProjectileHit_9.png</key>
+            <key type="filename">images/projectile/priestProjectileTop_1.png</key>
+            <key type="filename">images/projectile/priestProjectileTop_2.png</key>
+            <key type="filename">images/projectile/priestProjectileTop_3.png</key>
+            <key type="filename">images/projectile/priestProjectileTop_4.png</key>
+            <key type="filename">images/spell-effects/potionPickup_1.png</key>
+            <key type="filename">images/spell-effects/potionPickup_10.png</key>
+            <key type="filename">images/spell-effects/potionPickup_11.png</key>
+            <key type="filename">images/spell-effects/potionPickup_12.png</key>
+            <key type="filename">images/spell-effects/potionPickup_13.png</key>
+            <key type="filename">images/spell-effects/potionPickup_14.png</key>
+            <key type="filename">images/spell-effects/potionPickup_15.png</key>
+            <key type="filename">images/spell-effects/potionPickup_16.png</key>
+            <key type="filename">images/spell-effects/potionPickup_17.png</key>
+            <key type="filename">images/spell-effects/potionPickup_2.png</key>
+            <key type="filename">images/spell-effects/potionPickup_3.png</key>
+            <key type="filename">images/spell-effects/potionPickup_4.png</key>
+            <key type="filename">images/spell-effects/potionPickup_5.png</key>
+            <key type="filename">images/spell-effects/potionPickup_6.png</key>
+            <key type="filename">images/spell-effects/potionPickup_7.png</key>
+            <key type="filename">images/spell-effects/potionPickup_8.png</key>
+            <key type="filename">images/spell-effects/potionPickup_9.png</key>
+            <key type="filename">images/units/playerAttackSmallMagic_1.png</key>
+            <key type="filename">images/units/playerAttackSmallMagic_10.png</key>
+            <key type="filename">images/units/playerAttackSmallMagic_11.png</key>
+            <key type="filename">images/units/playerAttackSmallMagic_12.png</key>
+            <key type="filename">images/units/playerAttackSmallMagic_13.png</key>
+            <key type="filename">images/units/playerAttackSmallMagic_14.png</key>
+            <key type="filename">images/units/playerAttackSmallMagic_15.png</key>
+            <key type="filename">images/units/playerAttackSmallMagic_16.png</key>
+            <key type="filename">images/units/playerAttackSmallMagic_2.png</key>
+            <key type="filename">images/units/playerAttackSmallMagic_3.png</key>
+            <key type="filename">images/units/playerAttackSmallMagic_4.png</key>
+            <key type="filename">images/units/playerAttackSmallMagic_5.png</key>
+            <key type="filename">images/units/playerAttackSmallMagic_6.png</key>
+            <key type="filename">images/units/playerAttackSmallMagic_7.png</key>
+            <key type="filename">images/units/playerAttackSmallMagic_8.png</key>
+            <key type="filename">images/units/playerAttackSmallMagic_9.png</key>
+            <key type="filename">images/units/playerAttackSmall_1.png</key>
+            <key type="filename">images/units/playerAttackSmall_10.png</key>
+            <key type="filename">images/units/playerAttackSmall_11.png</key>
+            <key type="filename">images/units/playerAttackSmall_12.png</key>
+            <key type="filename">images/units/playerAttackSmall_13.png</key>
+            <key type="filename">images/units/playerAttackSmall_14.png</key>
+            <key type="filename">images/units/playerAttackSmall_15.png</key>
+            <key type="filename">images/units/playerAttackSmall_16.png</key>
+            <key type="filename">images/units/playerAttackSmall_2.png</key>
+            <key type="filename">images/units/playerAttackSmall_3.png</key>
+            <key type="filename">images/units/playerAttackSmall_4.png</key>
+            <key type="filename">images/units/playerAttackSmall_5.png</key>
+            <key type="filename">images/units/playerAttackSmall_6.png</key>
+            <key type="filename">images/units/playerAttackSmall_7.png</key>
+            <key type="filename">images/units/playerAttackSmall_8.png</key>
+            <key type="filename">images/units/playerAttackSmall_9.png</key>
+            <key type="filename">images/units/playerAttackZap_1.png</key>
+            <key type="filename">images/units/playerAttackZap_10.png</key>
+            <key type="filename">images/units/playerAttackZap_11.png</key>
+            <key type="filename">images/units/playerAttackZap_12.png</key>
+            <key type="filename">images/units/playerAttackZap_13.png</key>
+            <key type="filename">images/units/playerAttackZap_14.png</key>
+            <key type="filename">images/units/playerAttackZap_2.png</key>
+            <key type="filename">images/units/playerAttackZap_3.png</key>
+            <key type="filename">images/units/playerAttackZap_4.png</key>
+            <key type="filename">images/units/playerAttackZap_5.png</key>
+            <key type="filename">images/units/playerAttackZap_6.png</key>
+            <key type="filename">images/units/playerAttackZap_7.png</key>
+            <key type="filename">images/units/playerAttackZap_8.png</key>
+            <key type="filename">images/units/playerAttackZap_9.png</key>
+            <key type="filename">images/units/playerAttack_1.png</key>
+            <key type="filename">images/units/playerAttack_10.png</key>
+            <key type="filename">images/units/playerAttack_11.png</key>
+            <key type="filename">images/units/playerAttack_12.png</key>
+            <key type="filename">images/units/playerAttack_13.png</key>
+            <key type="filename">images/units/playerAttack_14.png</key>
+            <key type="filename">images/units/playerAttack_2.png</key>
+            <key type="filename">images/units/playerAttack_3.png</key>
+            <key type="filename">images/units/playerAttack_4.png</key>
+            <key type="filename">images/units/playerAttack_5.png</key>
+            <key type="filename">images/units/playerAttack_6.png</key>
+            <key type="filename">images/units/playerAttack_7.png</key>
+            <key type="filename">images/units/playerAttack_8.png</key>
+            <key type="filename">images/units/playerAttack_9.png</key>
+            <key type="filename">images/units/playerHit_1.png</key>
+            <key type="filename">images/units/playerHit_2.png</key>
+            <key type="filename">images/units/playerHit_3.png</key>
+            <key type="filename">images/units/playerHit_4.png</key>
+            <key type="filename">images/units/playerHit_5.png</key>
+            <key type="filename">images/units/playerHit_6.png</key>
+            <key type="filename">images/units/playerIdle_1.png</key>
+            <key type="filename">images/units/playerIdle_2.png</key>
+            <key type="filename">images/units/playerIdle_3.png</key>
+            <key type="filename">images/units/playerIdle_4.png</key>
+            <key type="filename">images/units/playerIdle_5.png</key>
+            <key type="filename">images/units/playerWalk_1.png</key>
+            <key type="filename">images/units/playerWalk_2.png</key>
+            <key type="filename">images/units/playerWalk_3.png</key>
+            <key type="filename">images/units/playerWalk_4.png</key>
+            <key type="filename">images/units/playerWalk_5.png</key>
+            <key type="filename">images/units/playerWalk_6.png</key>
+            <key type="filename">images/units/playerWalk_7.png</key>
+            <key type="filename">images/units/playerWalk_8.png</key>
+            <key type="filename">images/units/playerWalk_9.png</key>
+            <key type="filename">images/units/priestAttack_1.png</key>
+            <key type="filename">images/units/priestAttack_10.png</key>
+            <key type="filename">images/units/priestAttack_11.png</key>
+            <key type="filename">images/units/priestAttack_12.png</key>
+            <key type="filename">images/units/priestAttack_13.png</key>
+            <key type="filename">images/units/priestAttack_2.png</key>
+            <key type="filename">images/units/priestAttack_3.png</key>
+            <key type="filename">images/units/priestAttack_4.png</key>
+            <key type="filename">images/units/priestAttack_5.png</key>
+            <key type="filename">images/units/priestAttack_6.png</key>
+            <key type="filename">images/units/priestAttack_7.png</key>
+            <key type="filename">images/units/priestAttack_8.png</key>
+            <key type="filename">images/units/priestAttack_9.png</key>
+            <key type="filename">images/units/priestAttackt_1.png</key>
+            <key type="filename">images/units/priestAttackt_10.png</key>
+            <key type="filename">images/units/priestAttackt_11.png</key>
+            <key type="filename">images/units/priestAttackt_12.png</key>
+            <key type="filename">images/units/priestAttackt_13.png</key>
+            <key type="filename">images/units/priestAttackt_2.png</key>
+            <key type="filename">images/units/priestAttackt_3.png</key>
+            <key type="filename">images/units/priestAttackt_4.png</key>
+            <key type="filename">images/units/priestAttackt_5.png</key>
+            <key type="filename">images/units/priestAttackt_6.png</key>
+            <key type="filename">images/units/priestAttackt_7.png</key>
+            <key type="filename">images/units/priestAttackt_8.png</key>
+            <key type="filename">images/units/priestAttackt_9.png</key>
+            <key type="filename">images/units/priestDeath_1.png</key>
+            <key type="filename">images/units/priestDeath_10.png</key>
+            <key type="filename">images/units/priestDeath_11.png</key>
+            <key type="filename">images/units/priestDeath_12.png</key>
+            <key type="filename">images/units/priestDeath_13.png</key>
+            <key type="filename">images/units/priestDeath_14.png</key>
+            <key type="filename">images/units/priestDeath_15.png</key>
+            <key type="filename">images/units/priestDeath_16.png</key>
+            <key type="filename">images/units/priestDeath_17.png</key>
+            <key type="filename">images/units/priestDeath_18.png</key>
+            <key type="filename">images/units/priestDeath_19.png</key>
+            <key type="filename">images/units/priestDeath_2.png</key>
+            <key type="filename">images/units/priestDeath_20.png</key>
+            <key type="filename">images/units/priestDeath_21.png</key>
+            <key type="filename">images/units/priestDeath_22.png</key>
+            <key type="filename">images/units/priestDeath_23.png</key>
+            <key type="filename">images/units/priestDeath_3.png</key>
+            <key type="filename">images/units/priestDeath_4.png</key>
+            <key type="filename">images/units/priestDeath_5.png</key>
+            <key type="filename">images/units/priestDeath_6.png</key>
+            <key type="filename">images/units/priestDeath_7.png</key>
+            <key type="filename">images/units/priestDeath_8.png</key>
+            <key type="filename">images/units/priestDeath_9.png</key>
+            <key type="filename">images/units/priestHit_1.png</key>
+            <key type="filename">images/units/priestHit_2.png</key>
+            <key type="filename">images/units/priestHit_3.png</key>
+            <key type="filename">images/units/priestHit_4.png</key>
+            <key type="filename">images/units/priestIdle_1.png</key>
+            <key type="filename">images/units/priestIdle_10.png</key>
+            <key type="filename">images/units/priestIdle_11.png</key>
+            <key type="filename">images/units/priestIdle_12.png</key>
+            <key type="filename">images/units/priestIdle_13.png</key>
+            <key type="filename">images/units/priestIdle_14.png</key>
+            <key type="filename">images/units/priestIdle_15.png</key>
+            <key type="filename">images/units/priestIdle_16.png</key>
+            <key type="filename">images/units/priestIdle_17.png</key>
+            <key type="filename">images/units/priestIdle_18.png</key>
+            <key type="filename">images/units/priestIdle_19.png</key>
+            <key type="filename">images/units/priestIdle_2.png</key>
+            <key type="filename">images/units/priestIdle_20.png</key>
+            <key type="filename">images/units/priestIdle_21.png</key>
+            <key type="filename">images/units/priestIdle_22.png</key>
+            <key type="filename">images/units/priestIdle_23.png</key>
+            <key type="filename">images/units/priestIdle_24.png</key>
+            <key type="filename">images/units/priestIdle_25.png</key>
+            <key type="filename">images/units/priestIdle_26.png</key>
+            <key type="filename">images/units/priestIdle_3.png</key>
+            <key type="filename">images/units/priestIdle_4.png</key>
+            <key type="filename">images/units/priestIdle_5.png</key>
+            <key type="filename">images/units/priestIdle_6.png</key>
+            <key type="filename">images/units/priestIdle_7.png</key>
+            <key type="filename">images/units/priestIdle_8.png</key>
+            <key type="filename">images/units/priestIdle_9.png</key>
+            <key type="filename">images/units/priestWalk_1.png</key>
+            <key type="filename">images/units/priestWalk_2.png</key>
+            <key type="filename">images/units/priestWalk_3.png</key>
+            <key type="filename">images/units/priestWalk_4.png</key>
+            <key type="filename">images/units/priestWalk_5.png</key>
+            <key type="filename">images/units/priestWalk_6.png</key>
+            <key type="filename">images/units/priestWalk_7.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0,0</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>32,32,64,64</rect>
+                <key>scale9Paddings</key>
+                <rect>32,32,64,64</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">images/spell-effects/modifierPoisonDrip_10.png</key>
             <key type="filename">images/spell-effects/modifierPoisonDrip_5.png</key>
             <key type="filename">images/spell-effects/modifierPoisonDrip_6.png</key>
@@ -1501,6 +1332,134 @@
             <key type="filename">images/units/archerWalk_6.png</key>
             <key type="filename">images/units/archerWalk_7.png</key>
             <key type="filename">images/units/archerWalk_8.png</key>
+            <key type="filename">images/units/gruntAttack_1.png</key>
+            <key type="filename">images/units/gruntAttack_2.png</key>
+            <key type="filename">images/units/gruntAttack_3.png</key>
+            <key type="filename">images/units/gruntAttack_4.png</key>
+            <key type="filename">images/units/gruntAttack_5.png</key>
+            <key type="filename">images/units/gruntAttack_6.png</key>
+            <key type="filename">images/units/gruntAttack_7.png</key>
+            <key type="filename">images/units/gruntAttack_8.png</key>
+            <key type="filename">images/units/gruntAttack_9.png</key>
+            <key type="filename">images/units/gruntDeath_1.png</key>
+            <key type="filename">images/units/gruntDeath_10.png</key>
+            <key type="filename">images/units/gruntDeath_11.png</key>
+            <key type="filename">images/units/gruntDeath_12.png</key>
+            <key type="filename">images/units/gruntDeath_13.png</key>
+            <key type="filename">images/units/gruntDeath_14.png</key>
+            <key type="filename">images/units/gruntDeath_2.png</key>
+            <key type="filename">images/units/gruntDeath_3.png</key>
+            <key type="filename">images/units/gruntDeath_4.png</key>
+            <key type="filename">images/units/gruntDeath_5.png</key>
+            <key type="filename">images/units/gruntDeath_6.png</key>
+            <key type="filename">images/units/gruntDeath_7.png</key>
+            <key type="filename">images/units/gruntDeath_8.png</key>
+            <key type="filename">images/units/gruntDeath_9.png</key>
+            <key type="filename">images/units/gruntHit_1.png</key>
+            <key type="filename">images/units/gruntHit_2.png</key>
+            <key type="filename">images/units/gruntHit_3.png</key>
+            <key type="filename">images/units/gruntHit_4.png</key>
+            <key type="filename">images/units/gruntHit_5.png</key>
+            <key type="filename">images/units/gruntIdle_1.png</key>
+            <key type="filename">images/units/gruntIdle_2.png</key>
+            <key type="filename">images/units/gruntIdle_3.png</key>
+            <key type="filename">images/units/gruntIdle_4.png</key>
+            <key type="filename">images/units/gruntIdle_5.png</key>
+            <key type="filename">images/units/gruntWalk_1.png</key>
+            <key type="filename">images/units/gruntWalk_2.png</key>
+            <key type="filename">images/units/gruntWalk_3.png</key>
+            <key type="filename">images/units/gruntWalk_4.png</key>
+            <key type="filename">images/units/gruntWalk_5.png</key>
+            <key type="filename">images/units/gruntWalk_6.png</key>
+            <key type="filename">images/units/gruntWalk_7.png</key>
+            <key type="filename">images/units/gruntWalk_8.png</key>
+            <key type="filename">images/units/poisAttack_1.png</key>
+            <key type="filename">images/units/poisAttack_10.png</key>
+            <key type="filename">images/units/poisAttack_11.png</key>
+            <key type="filename">images/units/poisAttack_2.png</key>
+            <key type="filename">images/units/poisAttack_3.png</key>
+            <key type="filename">images/units/poisAttack_4.png</key>
+            <key type="filename">images/units/poisAttack_5.png</key>
+            <key type="filename">images/units/poisAttack_6.png</key>
+            <key type="filename">images/units/poisAttack_7.png</key>
+            <key type="filename">images/units/poisAttack_8.png</key>
+            <key type="filename">images/units/poisAttack_9.png</key>
+            <key type="filename">images/units/poisDeath_1.png</key>
+            <key type="filename">images/units/poisDeath_10.png</key>
+            <key type="filename">images/units/poisDeath_11.png</key>
+            <key type="filename">images/units/poisDeath_12.png</key>
+            <key type="filename">images/units/poisDeath_2.png</key>
+            <key type="filename">images/units/poisDeath_3.png</key>
+            <key type="filename">images/units/poisDeath_4.png</key>
+            <key type="filename">images/units/poisDeath_5.png</key>
+            <key type="filename">images/units/poisDeath_6.png</key>
+            <key type="filename">images/units/poisDeath_7.png</key>
+            <key type="filename">images/units/poisDeath_8.png</key>
+            <key type="filename">images/units/poisDeath_9.png</key>
+            <key type="filename">images/units/poisHit_1.png</key>
+            <key type="filename">images/units/poisHit_2.png</key>
+            <key type="filename">images/units/poisHit_3.png</key>
+            <key type="filename">images/units/poisHit_4.png</key>
+            <key type="filename">images/units/poisHit_5.png</key>
+            <key type="filename">images/units/poisHit_6.png</key>
+            <key type="filename">images/units/poisIdle_1.png</key>
+            <key type="filename">images/units/poisIdle_2.png</key>
+            <key type="filename">images/units/poisIdle_3.png</key>
+            <key type="filename">images/units/poisIdle_4.png</key>
+            <key type="filename">images/units/poisIdle_5.png</key>
+            <key type="filename">images/units/poisIdle_6.png</key>
+            <key type="filename">images/units/poisIdle_7.png</key>
+            <key type="filename">images/units/poisWalk_1.png</key>
+            <key type="filename">images/units/poisWalk_2.png</key>
+            <key type="filename">images/units/poisWalk_3.png</key>
+            <key type="filename">images/units/poisWalk_4.png</key>
+            <key type="filename">images/units/poisWalk_5.png</key>
+            <key type="filename">images/units/poisWalk_6.png</key>
+            <key type="filename">images/units/poisWalk_7.png</key>
+            <key type="filename">images/units/vampireAttack_1.png</key>
+            <key type="filename">images/units/vampireAttack_10.png</key>
+            <key type="filename">images/units/vampireAttack_2.png</key>
+            <key type="filename">images/units/vampireAttack_3.png</key>
+            <key type="filename">images/units/vampireAttack_4.png</key>
+            <key type="filename">images/units/vampireAttack_5.png</key>
+            <key type="filename">images/units/vampireAttack_6.png</key>
+            <key type="filename">images/units/vampireAttack_7.png</key>
+            <key type="filename">images/units/vampireAttack_8.png</key>
+            <key type="filename">images/units/vampireAttack_9.png</key>
+            <key type="filename">images/units/vampireDeath_1.png</key>
+            <key type="filename">images/units/vampireDeath_10.png</key>
+            <key type="filename">images/units/vampireDeath_11.png</key>
+            <key type="filename">images/units/vampireDeath_12.png</key>
+            <key type="filename">images/units/vampireDeath_13.png</key>
+            <key type="filename">images/units/vampireDeath_2.png</key>
+            <key type="filename">images/units/vampireDeath_3.png</key>
+            <key type="filename">images/units/vampireDeath_4.png</key>
+            <key type="filename">images/units/vampireDeath_5.png</key>
+            <key type="filename">images/units/vampireDeath_6.png</key>
+            <key type="filename">images/units/vampireDeath_7.png</key>
+            <key type="filename">images/units/vampireDeath_8.png</key>
+            <key type="filename">images/units/vampireDeath_9.png</key>
+            <key type="filename">images/units/vampireHit_1.png</key>
+            <key type="filename">images/units/vampireHit_2.png</key>
+            <key type="filename">images/units/vampireHit_3.png</key>
+            <key type="filename">images/units/vampireHit_4.png</key>
+            <key type="filename">images/units/vampireHit_5.png</key>
+            <key type="filename">images/units/vampireHit_6.png</key>
+            <key type="filename">images/units/vampireHit_7.png</key>
+            <key type="filename">images/units/vampireHit_8.png</key>
+            <key type="filename">images/units/vampireIdle_1.png</key>
+            <key type="filename">images/units/vampireIdle_2.png</key>
+            <key type="filename">images/units/vampireIdle_3.png</key>
+            <key type="filename">images/units/vampireIdle_4.png</key>
+            <key type="filename">images/units/vampireIdle_5.png</key>
+            <key type="filename">images/units/vampireWalk_1.png</key>
+            <key type="filename">images/units/vampireWalk_2.png</key>
+            <key type="filename">images/units/vampireWalk_3.png</key>
+            <key type="filename">images/units/vampireWalk_4.png</key>
+            <key type="filename">images/units/vampireWalk_5.png</key>
+            <key type="filename">images/units/vampireWalk_6.png</key>
+            <key type="filename">images/units/vampireWalk_7.png</key>
+            <key type="filename">images/units/vampireWalk_8.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0,0</point_f>
@@ -1639,88 +1598,47 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">images/units/playerDeath_1.png</key>
+            <key type="filename">images/units/playerDeath_10.png</key>
+            <key type="filename">images/units/playerDeath_11.png</key>
+            <key type="filename">images/units/playerDeath_12.png</key>
+            <key type="filename">images/units/playerDeath_13.png</key>
+            <key type="filename">images/units/playerDeath_14.png</key>
+            <key type="filename">images/units/playerDeath_15.png</key>
+            <key type="filename">images/units/playerDeath_16.png</key>
+            <key type="filename">images/units/playerDeath_17.png</key>
+            <key type="filename">images/units/playerDeath_18.png</key>
+            <key type="filename">images/units/playerDeath_19.png</key>
+            <key type="filename">images/units/playerDeath_2.png</key>
+            <key type="filename">images/units/playerDeath_20.png</key>
+            <key type="filename">images/units/playerDeath_21.png</key>
+            <key type="filename">images/units/playerDeath_22.png</key>
+            <key type="filename">images/units/playerDeath_3.png</key>
+            <key type="filename">images/units/playerDeath_4.png</key>
+            <key type="filename">images/units/playerDeath_5.png</key>
+            <key type="filename">images/units/playerDeath_6.png</key>
+            <key type="filename">images/units/playerDeath_7.png</key>
+            <key type="filename">images/units/playerDeath_8.png</key>
+            <key type="filename">images/units/playerDeath_9.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0,0</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>33,32,65,64</rect>
+                <key>scale9Paddings</key>
+                <rect>33,32,65,64</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
         </map>
         <key>fileList</key>
         <array>
             <filename>images</filename>
             <filename>public/images/spell</filename>
-            <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconDecay.png</filename>
-            <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconDominate.png</filename>
-            <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconEnsnare.png</filename>
-            <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconFastForward.png</filename>
-            <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconGrace.png</filename>
-            <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconHarvest.png</filename>
-            <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconPacify.png</filename>
-            <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconRegen.png</filename>
-            <filename>../spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconVengeance.png</filename>
-            <filename>../spellmasons-mods/undead_blade/spellIconUndeadBlade.png</filename>
-            <filename>public/spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconFlameStrike.png</filename>
-            <filename>public/spellmasons-mods/Renes_gimmicks/graphics/icons/Burninig_rage.png</filename>
-            <filename>public/spellmasons-mods/Renes_gimmicks/graphics/icons/Caltrops.png</filename>
-            <filename>public/spellmasons-mods/Renes_gimmicks/graphics/icons/Sadism.png</filename>
-            <filename>public/spellmasons-mods/Renes_gimmicks/graphics/icons/SummonTrap.png</filename>
-            <filename>public/spellmasons-mods/Renes_gimmicks/graphics/icons/VampireBite.png</filename>
-            <filename>images/projectile/arrow_1.png</filename>
-            <filename>images/projectile/arrow_2.png</filename>
-            <filename>images/projectile/arrow_ghost_1.png</filename>
-            <filename>images/projectile/arrow_ghost_2.png</filename>
-            <filename>images/projectile/arrow_long_1.png</filename>
-            <filename>images/projectile/arrow_long_2.png</filename>
-            <filename>images/projectile/lobberProjectileHit_1.png</filename>
-            <filename>images/projectile/lobberProjectileHit_10.png</filename>
-            <filename>images/projectile/lobberProjectileHit_2.png</filename>
-            <filename>images/projectile/lobberProjectileHit_3.png</filename>
-            <filename>images/projectile/lobberProjectileHit_4.png</filename>
-            <filename>images/projectile/lobberProjectileHit_5.png</filename>
-            <filename>images/projectile/lobberProjectileHit_6.png</filename>
-            <filename>images/projectile/lobberProjectileHit_7.png</filename>
-            <filename>images/projectile/lobberProjectileHit_8.png</filename>
-            <filename>images/projectile/lobberProjectileHit_9.png</filename>
-            <filename>images/projectile/lobberProjectile_1.png</filename>
-            <filename>images/projectile/lobberProjectile_2.png</filename>
-            <filename>images/projectile/lobberProjectile_3.png</filename>
-            <filename>images/projectile/lobberProjectile_4.png</filename>
-            <filename>images/projectile/lobberProjectile_5.png</filename>
-            <filename>images/projectile/lobberProjectile_6.png</filename>
-            <filename>images/projectile/lobberProjectile_7.png</filename>
-            <filename>images/projectile/poisonerProjectileHit_1.png</filename>
-            <filename>images/projectile/poisonerProjectileHit_10.png</filename>
-            <filename>images/projectile/poisonerProjectileHit_2.png</filename>
-            <filename>images/projectile/poisonerProjectileHit_3.png</filename>
-            <filename>images/projectile/poisonerProjectileHit_4.png</filename>
-            <filename>images/projectile/poisonerProjectileHit_5.png</filename>
-            <filename>images/projectile/poisonerProjectileHit_6.png</filename>
-            <filename>images/projectile/poisonerProjectileHit_7.png</filename>
-            <filename>images/projectile/poisonerProjectileHit_8.png</filename>
-            <filename>images/projectile/poisonerProjectileHit_9.png</filename>
-            <filename>images/projectile/poisonerProjectile_1.png</filename>
-            <filename>images/projectile/poisonerProjectile_2.png</filename>
-            <filename>images/projectile/poisonerProjectile_3.png</filename>
-            <filename>images/projectile/poisonerProjectile_4.png</filename>
-            <filename>images/projectile/poisonerProjectile_5.png</filename>
-            <filename>images/projectile/poisonerProjectile_6.png</filename>
-            <filename>images/projectile/poisonerProjectile_7.png</filename>
-            <filename>images/projectile/poisonerProjectile_8.png</filename>
-            <filename>images/projectile/priestProjectileCenter_1.png</filename>
-            <filename>images/projectile/priestProjectileCenter_2.png</filename>
-            <filename>images/projectile/priestProjectileCenter_3.png</filename>
-            <filename>images/projectile/priestProjectileCenter_4.png</filename>
-            <filename>images/projectile/priestProjectileHit_1.png</filename>
-            <filename>images/projectile/priestProjectileHit_10.png</filename>
-            <filename>images/projectile/priestProjectileHit_11.png</filename>
-            <filename>images/projectile/priestProjectileHit_12.png</filename>
-            <filename>images/projectile/priestProjectileHit_2.png</filename>
-            <filename>images/projectile/priestProjectileHit_3.png</filename>
-            <filename>images/projectile/priestProjectileHit_4.png</filename>
-            <filename>images/projectile/priestProjectileHit_5.png</filename>
-            <filename>images/projectile/priestProjectileHit_6.png</filename>
-            <filename>images/projectile/priestProjectileHit_7.png</filename>
-            <filename>images/projectile/priestProjectileHit_8.png</filename>
-            <filename>images/projectile/priestProjectileHit_9.png</filename>
-            <filename>images/projectile/priestProjectileTop_1.png</filename>
-            <filename>images/projectile/priestProjectileTop_2.png</filename>
-            <filename>images/projectile/priestProjectileTop_3.png</filename>
-            <filename>images/projectile/priestProjectileTop_4.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
