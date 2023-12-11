@@ -127,10 +127,6 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean, 
     const expenseScaling = 2;
     const manaCost = override?.properties.manaCost ? (override.properties.manaCost * (asMiniboss ? 1.5 : 1)) : Math.max(1, Math.round(2 * Math.log2((sourceUnit.spawnParams?.budgetCost || 1)))) * 30 * (asMiniboss ? 2 : 1);
     const id = unitId + (asMiniboss ? ' Miniboss' : '');
-    if (globalThis.player && !globalThis.player?.freeSpells) {
-        globalThis.player.freeSpells = [];
-    }
-    globalThis.player?.freeSpells.push(id);
     const unitSource = allUnits[unitId];
     let healthMax = unitSource?.unitProps.healthMax || config.UNIT_BASE_HEALTH;
     let manaMax = unitSource?.unitProps.manaMax || 0;
