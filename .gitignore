@@ -10,9 +10,4 @@ depcruise-out.dot
 depcruise-out.html
 update/
 .vs/
-spellmasons-mods/
-!spellmasons-mods/build
-!spellmasons-mods/Renes_gimmicks
-!spellmasons-mods/Wodes_Grimoire
-!spellmasons-mods/undead_blade
-!spellmasons-mods/explosive_archer
+public/spellmasons-mods/types
