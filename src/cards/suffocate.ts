@@ -101,7 +101,6 @@ const spell: Spell = {
           console.error(`Should have ${suffocateCardId} modifier on unit but it is missing`);
         }
       }
-      return false;
     },
   },
 };

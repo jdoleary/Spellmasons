@@ -26,7 +26,7 @@ export default function registerCorpseDecay() {
         }
     });
     registerEvents(corpseDecayId, {
-        onTurnEnd: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
+        onTurnEnd: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
             const modifier = unit.modifiers[corpseDecayId];
             if (!prediction) {
                 if (modifier) {
