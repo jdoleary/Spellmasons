@@ -232,6 +232,8 @@ export default class Underworld {
     this.overworld.underworld = this;
     this.localUnderworldNumber = ++localUnderworldCount;
     this.startTime = Date.now();
+    // Clear inventory html from previous game
+    CardUI.syncInventory(undefined, this);
     if (typeof window !== 'undefined') {
       // @ts-ignore: window.devUnderworld is NOT typed in globalThis intentionally
       // so that it will not be used elsewhere, but it is assigned here
@@ -3855,8 +3857,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       if (elInstructions) {
         elInstructions.innerText = '';
       }
-
     }
+    // Sync inventory now that players have loaded
+    CardUI.syncInventory(undefined, this);
+    // Update toolbar
+    CardUI.recalcPositionForCards(globalThis.player, this);
   }
   pickupIsIdentical(pickup: Pickup.IPickup, serialized: Pickup.IPickupSerialized): boolean {
     return pickup.id == serialized.id && pickup.name == serialized.name;
