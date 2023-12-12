@@ -762,8 +762,8 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   // Remove all modifiers
   // Note: This must come AFTER onDeathEvents or else it will remove the modifier
   // that added the onDeathEvent and the onDeathEvent won't trigger
-  for (let [modifier, _modifierProperties] of Object.entries(unit.modifiers)) {
-    if (!_modifierProperties.keepOnDeath) {
+  for (let [modifier, modifierProperties] of Object.entries(unit.modifiers)) {
+    if (!modifierProperties.keepOnDeath) {
       removeModifier(unit, modifier, underworld);
     }
   }
