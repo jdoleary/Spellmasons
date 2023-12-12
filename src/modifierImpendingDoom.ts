@@ -10,7 +10,7 @@ export const impendingDoomId = 'impendingDoom';
 export default function registerImpendingDoom() {
   registerModifiers(impendingDoomId, {
     add: (unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) => {
-      getOrInitModifier(unit, impendingDoomId, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
+      getOrInitModifier(unit, impendingDoomId, { isCurse: true, quantity }, () => {
         if (!unit.onTurnEndEvents.includes(impendingDoomId)) {
           unit.onTurnEndEvents.push(impendingDoomId);
         }

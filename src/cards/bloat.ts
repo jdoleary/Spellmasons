@@ -19,7 +19,7 @@ const damage = 40;
 export const baseRadius = 140;
 function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra?: any) {
   const modifier = getOrInitModifier(unit, id, {
-    isCurse: true, quantity, persistBetweenLevels: false,
+    isCurse: true, quantity,
     originalStats: {
       scaleX: unit.image && unit.image.sprite.scale.x || 1,
       scaleY: unit.image && unit.image.sprite.scale.y || 1,

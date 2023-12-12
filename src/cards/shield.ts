@@ -106,7 +106,7 @@ function updateTooltip(unit: Unit.IUnit) {
 }
 
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
-  const modifier = getOrInitModifier(unit, id, { isCurse: false, quantity, persistBetweenLevels: false }, () => {
+  const modifier = getOrInitModifier(unit, id, { isCurse: false, quantity }, () => {
     // Add event
     unit.onDamageEvents.push(id);
     // Add subsprite image

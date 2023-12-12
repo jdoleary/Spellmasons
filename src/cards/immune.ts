@@ -28,7 +28,7 @@ export function init(unit: Unit.IUnit, underworld: Underworld, prediction: boole
   }
 }
 export function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
-  getOrInitModifier(unit, id, { isCurse: false, quantity, persistBetweenLevels: false }, () => {
+  getOrInitModifier(unit, id, { isCurse: false, quantity }, () => {
     init(unit, underworld, prediction)
   });
 }

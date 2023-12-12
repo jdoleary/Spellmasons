@@ -13,7 +13,7 @@ import { getOrInitModifier } from './util';
 export const id = 'Last Will';
 const imageName = 'unknown.png';
 function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number) {
-  const modifier = getOrInitModifier(unit, id, { isCurse: false, quantity, persistBetweenLevels: false }, () => {
+  const modifier = getOrInitModifier(unit, id, { isCurse: false, quantity }, () => {
     // Add event
     if (!unit.onDeathEvents.includes(id)) {
       unit.onDeathEvents.push(id);

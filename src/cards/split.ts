@@ -64,7 +64,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
   const modifier = getOrInitModifier(unit, id, {
     isCurse: true,
     quantity,
-    persistBetweenLevels: false,
+    keepOnDeath: true,
     originalStats: {
       scaleX: unit.image && unit.image.sprite.scale.x || 1,
       scaleY: unit.image && unit.image.sprite.scale.y || 1,
@@ -74,11 +74,8 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
       damage,
       moveSpeed
     }
-  }, () => {
-    if (!unit.onDeathEvents.includes(id)) {
-      unit.onDeathEvents.push(id);
-    }
-  });
+  }, () => { }); //no first time setup
+
 
   // modifier.quantity is after the new quantity has been added (due to getOrInitModifier)
   // math to find previous quantity and calc how many times I need to split
@@ -216,21 +213,6 @@ const spell: Spell = {
   modifiers: {
     add,
     remove
-  },
-  events: {
-    onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
-      // Note: Split should NOT be permanent for PLAYER_CONTROLLED UNITS
-      if (unit.unitType !== UnitType.PLAYER_CONTROLLED) {
-        // Special case: Remove the 'split' modifier on death
-        // This is because without this, when a unit dies, the automatic
-        // removing of modifiers would cause split's custom remove function to be invoked
-        // which restores the unit's original size and stats.  However, split's stat changes
-        // should become perminant after death.  This prevents resurrecting a split unit from
-        // restoring the units original size and stats which is unexpected behavior and therefore
-        // undesireable.
-        delete unit.modifiers[id];
-      }
-    }
   }
 };
 export default spell;

@@ -41,6 +41,10 @@ const unit: UnitSource = {
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     Unit.addModifier(unit, blood_curse.id, underworld, false);
+    //vampire has innate blood curse property, and keeps it on death 
+    if (unit.modifiers[blood_curse.id]) {
+      unit.modifiers[blood_curse.id].keepOnDeath = true;
+    }
     if (unit.image && unit.image.sprite && unit.image.sprite.filters) {
       unit.image.sprite.filters.push(
         new MultiColorReplaceFilter(

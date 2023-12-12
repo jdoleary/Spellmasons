@@ -70,7 +70,7 @@ const spell: Spell = {
 };
 
 function add(unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) {
-  getOrInitModifier(unit, conserveSpellId, { isCurse: false, quantity, persistBetweenLevels: false }, () => {
+  getOrInitModifier(unit, conserveSpellId, { isCurse: false, quantity }, () => {
     if (!unit.onTurnStartEvents.includes(conserveSpellId)) {
       unit.onTurnStartEvents.push(conserveSpellId);
     }
