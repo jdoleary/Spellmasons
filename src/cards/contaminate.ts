@@ -29,9 +29,11 @@ const spell: Spell = {
     description: 'spell_contaminate',
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
+      let promises = [];
       for (let unit of state.targetedUnits.filter(u => u.alive)) {
-        contaminate(state.casterPlayer, unit, underworld, state.aggregator.radius, prediction, quantity);
+        promises.push(contaminate(state.casterPlayer, unit, underworld, state.aggregator.radius, prediction, quantity));
       }
+      await Promise.all(promises);
       return state;
     },
   },
