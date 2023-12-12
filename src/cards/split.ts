@@ -79,10 +79,14 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
       unit.onDeathEvents.push(id);
     }
   });
-  for (let i = 0; i < quantity; i++) {
-    if (modifier.quantity && modifier.quantity > splitLimit) {
-      return;
-    }
+
+  // modifier.quantity is after the new quantity has been added (due to getOrInitModifier)
+  // math to find previous quantity and calc how many times I need to split
+  const lastQuant = modifier.quantity - quantity;
+  const timesToSplit = Math.min(splitLimit - lastQuant, quantity);
+  modifier.quantity = Math.min(modifier.quantity, splitLimit);
+
+  for (let i = 0; i < timesToSplit; i++) {
     if (unit.image) {
       unit.image.sprite.scale.x *= scaleMultiplier;
       unit.image.sprite.scale.y *= scaleMultiplier;
