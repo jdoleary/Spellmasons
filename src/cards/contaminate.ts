@@ -56,14 +56,18 @@ async function contaminate(casterPlayer: IPlayer | undefined, unit: IUnit, under
   nextUnits.push(unit);
   ignore.push(unit);
 
+  // we should only spread the initially targeted unit's  curses
   const modifiersToExclude = [summoningSicknessId]
   const curses: CurseData[] = Object.entries(unit.modifiers)
     .map(([id, mod]) => ({ modId: id, modifier: mod }))
     .filter(x => x.modifier.isCurse)
     .filter(x => !modifiersToExclude.includes(x.modId));
 
+  // currently spreads curses in the order they appear on the initially targeted unit.
   // consider what order curses are spread in
   // i.e. bloat or suffocate first?
+
+  // sort to change spread order
   //curses.sort((a, b) => a.modId.localeCompare(b.modId))
 
   // multicasting allows Contaminate to chain off of nearby enemies
