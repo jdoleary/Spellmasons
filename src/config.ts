@@ -7,7 +7,7 @@
 export const RIGHT_CLICK_DOUBLE_MS_THRESHOLD = 500;
 export const RIGHT_CLICK_DOUBLE_DISTANCE_THRESHOLD = 30;
 
-export const PLAYER_BASE_HEALTH = 40;
+export const PLAYER_BASE_HEALTH = 60; //previously 40
 export const UNIT_MOVE_SPEED = 0.15;
 export const COLLISION_MESH_RADIUS = 32;
 // Though the size of the images for units are generally 64x64, the unit doesn't take up the full height
@@ -30,7 +30,7 @@ export const UNIT_BASE_HEALTH = 40;
 export const UNIT_BASE_MANA = 60;
 export const UNIT_BASE_STAMINA = 300;
 // For game difficulty, I'm making the attack range less than the unit base stamina
-export const PLAYER_BASE_ATTACK_RANGE = UNIT_BASE_STAMINA * 0.8;
+export const PLAYER_BASE_ATTACK_RANGE = 200; // previously 240 | UNIT_BASE_STAMINA * 0.8
 // For game difficulty, player stamina less than the unit stamina so they can't run away without upgrading it
 export const PLAYER_BASE_STAMINA = 200; //previously 210 | UNIT_BASE_STAMINA * 0.7
 export const UNIT_BASE_DAMAGE = 30;

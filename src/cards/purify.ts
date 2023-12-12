@@ -34,9 +34,8 @@ const spell: Spell = {
   },
 };
 export function apply(unit: Unit.IUnit, underworld: Underworld) {
-  for (let [modifier, modifierProperties] of Object.entries(
-    unit.modifiers,
-  )) {
+
+  for (let [modifier, modifierProperties] of Object.entries(unit.modifiers)) {
     if (modifierProperties.isCurse) {
       Unit.removeModifier(unit, modifier, underworld);
     }
