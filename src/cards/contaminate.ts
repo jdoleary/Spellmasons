@@ -86,7 +86,10 @@ async function contaminate(casterPlayer: IPlayer | undefined, unit: IUnit, under
 }
 
 async function spreadCurses(unit: IUnit, ignore: IUnit[], curses: CurseData[], range: number, underworld: Underworld, prediction: boolean): Promise<IUnit[]> {
-  drawUICircle(unit, range, colors.targetingSpellGreen, 'Contagion Radius');
+
+  if (prediction) {
+    drawUICircle(unit, range, colors.healthRed, 'Contagion Radius');
+  }
 
   const nearbyUnits = underworld.getUnitsWithinDistanceOfTarget(unit, range, prediction)
     // Filter out undefineds
