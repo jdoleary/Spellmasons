@@ -7,7 +7,7 @@ import floatingText from './graphics/FloatingText';
 import * as colors from './graphics/ui/colors';
 
 export const impendingDoomId = 'impendingDoom';
-export default function registerSummoningSickness() {
+export default function registerImpendingDoom() {
   registerModifiers(impendingDoomId, {
     add: (unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, impendingDoomId, { isCurse: true, quantity }, () => {

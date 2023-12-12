@@ -44,7 +44,7 @@ const spell: Spell = {
 
           resurrectedUnitCount++;
           makeRisingParticles(unit, prediction);
-          unit.health = Math.round(unit.healthMax * resStatAmount);
+          unit.health = Math.max(1, Math.round(unit.healthMax * resStatAmount));
           unit.mana = Math.max(unit.mana, Math.round(unit.manaMax * resStatAmount));
           Unit.changeFaction(unit, state.casterUnit.faction);
           // Resurrect animation is the die animation played backwards

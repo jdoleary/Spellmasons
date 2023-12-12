@@ -1,13 +1,14 @@
-import { addTarget, getCurrentTargets, Spell } from './index';
+import { addTarget, getCurrentTargets, refundLastSpell, Spell } from './index';
 import * as Unit from '../entity/Unit';
 import { CardCategory, UnitSubType, UnitType } from '../types/commonTypes';
 import { Vec2 } from '../jmath/Vec';
 import { returnToDefaultSprite } from '../entity/Unit';
 import Underworld from '../Underworld';
 import { animateMitosis } from './clone';
-
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
+import { isPickup } from '../entity/Pickup';
+
 const id = 'split';
 const splitLimit = 3;
 function changeStatWithCap(unit: Unit.IUnit, statKey: 'health' | 'healthMax' | 'mana' | 'manaMax' | 'stamina' | 'staminaMax' | 'moveSpeed' | 'damage', multiplier: number) {
@@ -75,21 +76,27 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     }
   }, () => { }); //no first time setup
 
-  if (modifier.quantity && modifier.quantity >= splitLimit) {
-    return;
+
+  // modifier.quantity is after the new quantity has been added (due to getOrInitModifier)
+  // math to find previous quantity and calc how many times I need to split
+  const lastQuant = modifier.quantity - quantity;
+  const timesToSplit = Math.min(splitLimit - lastQuant, quantity);
+  modifier.quantity = Math.min(modifier.quantity, splitLimit);
+
+  for (let i = 0; i < timesToSplit; i++) {
+    if (unit.image) {
+      unit.image.sprite.scale.x *= scaleMultiplier;
+      unit.image.sprite.scale.y *= scaleMultiplier;
+    }
+    changeStatWithCap(unit, 'health', addMultiplier);
+    changeStatWithCap(unit, 'healthMax', addMultiplier);
+    changeStatWithCap(unit, 'mana', addMultiplier);
+    changeStatWithCap(unit, 'manaMax', addMultiplier);
+    changeStatWithCap(unit, 'stamina', addMultiplier);
+    changeStatWithCap(unit, 'staminaMax', addMultiplier);
+    changeStatWithCap(unit, 'damage', addMultiplier);
+    unit.moveSpeed *= addMultiplier;
   }
-  if (unit.image) {
-    unit.image.sprite.scale.x *= scaleMultiplier;
-    unit.image.sprite.scale.y *= scaleMultiplier;
-  }
-  changeStatWithCap(unit, 'health', addMultiplier);
-  changeStatWithCap(unit, 'healthMax', addMultiplier);
-  changeStatWithCap(unit, 'mana', addMultiplier);
-  changeStatWithCap(unit, 'manaMax', addMultiplier);
-  changeStatWithCap(unit, 'stamina', addMultiplier);
-  changeStatWithCap(unit, 'staminaMax', addMultiplier);
-  changeStatWithCap(unit, 'damage', addMultiplier);
-  unit.moveSpeed *= addMultiplier;
 }
 const spell: Spell = {
   card: {
@@ -107,6 +114,17 @@ const spell: Spell = {
       const clonePairs: Vec2[][] = [];
       let targets: Vec2[] = getCurrentTargets(state);
       targets = targets.length ? targets : [state.castLocation];
+      targets = targets
+        // filter out targets that have reached the split limit
+        .filter(x => !(Unit.isUnit(x) && x.modifiers[id] && x.modifiers[id].quantity >= splitLimit))
+        // filter out pickups (not implemented)
+        .filter(x => !(isPickup(x)));
+
+      if (targets.length == 0) {
+        refundLastSpell(state, prediction, 'No target, mana refunded')
+        return state;
+      }
+
       for (let target of targets) {
         clonePairs.push([target, { x: target.x, y: target.y }]);
       }

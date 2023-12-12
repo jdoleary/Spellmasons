@@ -23,7 +23,7 @@ const spell: Spell = {
     supportQuantity: true,
     manaCost: amount,
     healthCost: 0,
-    expenseScaling: 0,
+    expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconSendMana.png',
     animationPath: 'spell-effects/potionPickup',
