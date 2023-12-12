@@ -763,7 +763,9 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   // Note: This must come AFTER onDeathEvents or else it will remove the modifier
   // that added the onDeathEvent and the onDeathEvent won't trigger
   for (let [modifier, _modifierProperties] of Object.entries(unit.modifiers)) {
-    removeModifier(unit, modifier, underworld);
+    if (!_modifierProperties.keepOnDeath) {
+      removeModifier(unit, modifier, underworld);
+    }
   }
 
   if (globalThis.player && globalThis.player.unit == unit) {
@@ -1484,7 +1486,7 @@ export function resetUnitStats(unit: IUnit, underworld: Underworld) {
   Object.keys(unit.modifiers).forEach(modifierKey => {
     const modifier = unit.modifiers[modifierKey];
     if (modifier) {
-      if (!modifier.persistBetweenLevels) {
+      if (!modifier.keepBetweenLevels) {
         removeModifier(unit, modifierKey, underworld);
       }
     }

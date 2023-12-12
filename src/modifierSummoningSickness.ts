@@ -16,7 +16,7 @@ export default function registerSummoningSickness() {
                 console.log('Prevented adding summoning sickness to player unit')
                 return
             }
-            getOrInitModifier(unit, summoningSicknessId, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
+            getOrInitModifier(unit, summoningSicknessId, { isCurse: true, quantity }, () => {
                 // Immediately set stamina to 0 so they can't move
                 unit.stamina = 0;
                 // Add event

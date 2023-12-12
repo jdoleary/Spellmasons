@@ -109,7 +109,7 @@ const spell: Spell = {
 };
 
 function add(unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) {
-  getOrInitModifier(unit, id, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
+  getOrInitModifier(unit, id, { isCurse: true, quantity }, () => {
     unit.radius = config.COLLISION_MESH_RADIUS;
     // Immediately set stamina to 0 so they can't move
     unit.stamina = 0;

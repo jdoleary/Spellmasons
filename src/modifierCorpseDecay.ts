@@ -10,7 +10,7 @@ export const corpseDecayId = 'Corpse Decay';
 export default function registerCorpseDecay() {
     registerModifiers(corpseDecayId, {
         add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
-            const modifier = getOrInitModifier(unit, corpseDecayId, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
+            const modifier = getOrInitModifier(unit, corpseDecayId, { isCurse: true, quantity }, () => {
                 // Add event
                 if (!unit.onTurnEndEvents.includes(corpseDecayId)) {
                     unit.onTurnEndEvents.push(corpseDecayId);

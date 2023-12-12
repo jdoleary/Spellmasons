@@ -24,7 +24,7 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean) {
     return;
   }
 
-  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity: 1, persistBetweenLevels: false }, () => {
+  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity: 1 }, () => {
     // Add event
     unit.onDamageEvents.push(id);
 

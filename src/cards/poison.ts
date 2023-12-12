@@ -28,7 +28,7 @@ function init(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
   }
 }
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
-  const modifier = getOrInitModifier(unit, poisonCardId, { isCurse: true, quantity, persistBetweenLevels: false }, () => {
+  const modifier = getOrInitModifier(unit, poisonCardId, { isCurse: true, quantity }, () => {
     // Add event
     if (!unit.onTurnEndEvents.includes(poisonCardId)) {
       unit.onTurnEndEvents.push(poisonCardId);

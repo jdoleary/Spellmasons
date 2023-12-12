@@ -10,7 +10,7 @@ import { getOrInitModifier } from './util';
 
 export const id = 'Nullify';
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
-  getOrInitModifier(unit, id, { isCurse: false, quantity, persistBetweenLevels: false }, () => { });
+  getOrInitModifier(unit, id, { isCurse: false, quantity }, () => { });
 }
 export const notifyProtected = throttle((coords: Vec2, prediction: boolean) => {
   // TODO: i18n: Translate
