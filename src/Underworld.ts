@@ -575,7 +575,7 @@ export default class Underworld {
         // moving when it reaches the target which may be less than 1.0 and 1.0 away.
         u.path.points.shift();
       }
-      // Only allow movement if the unit has stamina
+      // Only allow movement if the unit has stamina and it is their turn
       const isUnitsTurn = Unit.isUnitsTurnPhase(u, this);
       if (u.path && u.path.points[0] && u.stamina > 0 && isUnitsTurn) {
         // Move towards target
@@ -641,10 +641,6 @@ export default class Underworld {
         return false;
       } else {
         if (!isUnitsTurn) {
-          // This block is not supposed to execute but can under unusual circumstanses such as after a load
-          // so if we get here and a unit is trying to move but shouldn't, just clear it's stamina so that the unit
-          // will be done processing
-          console.log('Guard against infinite loop, unit tried to move but it was not its turn.  Clearing stamina');
           u.stamina = 0;
         }
       }
