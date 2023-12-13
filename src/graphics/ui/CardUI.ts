@@ -358,7 +358,7 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
       // is made to allow an admin to test out all cards
       replacedCards = [];
     }
-
+    const allCardsIdsInOrder = globalThis.allCards ? Object.keys(globalThis.allCards) : undefined;
     const invCards = globalThis.player.inventory
       // .filter: Hide replaced cards in inventory
       .filter(cardId => !replacedCards.includes(cardId))
@@ -367,13 +367,22 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
         if (!a || !b) {
           return 0;
         } else {
-          // Sort cards by probability
-          const probabilityDifference = b.probability - a.probability;
-          // If probability is identical, sort by mana cost
-          if (probabilityDifference == 0) {
-            return a.manaCost - b.manaCost;
+          if (allCardsIdsInOrder) {
+            // Sort cards by the order that they are added to allCards
+            // This is so that like cards show up near each other, like all arrow spells
+            // are colocated
+            return allCardsIdsInOrder.indexOf(a.id) - allCardsIdsInOrder.indexOf(b.id);
           } else {
-            return probabilityDifference;
+            // This is backup, allCardIdsInOrder should definitely exist
+
+            // Sort cards by probability
+            const probabilityDifference = b.probability - a.probability;
+            // If probability is identical, sort by mana cost
+            if (probabilityDifference == 0) {
+              return a.manaCost - b.manaCost;
+            } else {
+              return probabilityDifference;
+            }
           }
         }
       });
