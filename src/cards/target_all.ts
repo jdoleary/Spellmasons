@@ -4,7 +4,6 @@ import { Vec2 } from '../jmath/Vec';
 import * as Unit from '../entity/Unit';
 import { isUnit } from '../entity/Unit';
 import { isPickup } from '../entity/Pickup';
-import { isDoodad } from '../entity/Doodad';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { animateTargetSimilar } from './target_similar';
 import { targetSimilar2Id } from './target_similar_2';
@@ -66,8 +65,6 @@ const spell: Spell = {
               return isUnit(t) && t.alive == target.alive;
             } else if (isPickup(target)) {
               return isPickup(t);
-            } else if (isDoodad(target)) {
-              return isDoodad(t);
             }
           })
           .filter(filterFn)

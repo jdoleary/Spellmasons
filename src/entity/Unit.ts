@@ -873,7 +873,7 @@ export function composeOnDamageEvents(unit: IUnit, damage: number, underworld: U
 // damageFromVec2 is the location that the damage came from and is used for blood splatter
 export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | undefined, underworld: Underworld, prediction: boolean, state?: EffectState, options?: { thinBloodLine: boolean }) {
   if (!unit.alive) {
-    // Do not deal damage to dead unitsn
+    // Do not deal damage to dead units
     return;
   }
   // Immune units cannot be damaged

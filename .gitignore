@@ -10,4 +10,5 @@ depcruise-out.dot
 depcruise-out.html
 update/
 .vs/
+.vscode/
 public/spellmasons-mods/types

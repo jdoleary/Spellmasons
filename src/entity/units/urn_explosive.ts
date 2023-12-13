@@ -1,12 +1,17 @@
 
 import type { UnitSource } from './index';
+import * as colors from '../../graphics/ui/colors';
 import { UnitSubType } from '../../types/commonTypes';
 import * as Unit from '../Unit';
 import type Underworld from '../../Underworld';
 import { registerEvents } from '../../cards';
-import { baseRadius, explode } from '../../cards/bloat';
+import { Vec2 } from '../../jmath/Vec';
+import { drawUICircle } from '../../graphics/PlanningView';
+import { makeParticleExplosion } from '../../graphics/ParticleCollection';
+import { forcePush, velocityStartMagnitude } from '../../cards/push';
 
 export const urn_explosive_id = 'Explosive Urn'
+const baseRadius = 140;
 const damage = 80;
 const unit: UnitSource = {
     id: urn_explosive_id,
@@ -57,9 +62,38 @@ export function registerUrnexplosiveExplode() {
         onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
             explode(unit, unit.attackRange, unit.damage, prediction, underworld);
             // Remove corpse
-            Unit.cleanup(unit, true);
+            if (!prediction) {
+                Unit.cleanup(unit, false);
+            }
         }
     });
+}
+
+function explode(location: Vec2, radius: number, damage: number, prediction: boolean, underworld: Underworld) {
+    if (prediction) {
+        drawUICircle(location, radius, colors.healthRed, 'Explosion Radius');
+    } else {
+        playSFXKey('bloatExplosion');
+    }
+    makeParticleExplosion(location, radius / baseRadius, prediction, "#d66437", "#f5e8b6");
+    underworld.getUnitsWithinDistanceOfTarget(
+        location,
+        radius,
+        prediction
+    ).forEach(u => {
+        // Deal damage to units
+        Unit.takeDamage(u, damage, u, underworld, prediction);
+        // Push units away from exploding location
+        forcePush(u, location, velocityStartMagnitude, underworld, prediction);
+    });
+    underworld.getPickupsWithinDistanceOfTarget(
+        location,
+        radius,
+        prediction
+    ).forEach(p => {
+        // Push pickups away
+        forcePush(p, location, velocityStartMagnitude, underworld, prediction);
+    })
 }
 
 export default unit;

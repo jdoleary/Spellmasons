@@ -192,18 +192,6 @@ const spell: Spell = {
             //     floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
             //   }
             // }
-            // if (Doodad.isDoodad(target)) {
-            //   const validSpawnCoords = underworld.findValidSpawn(cloneSourceCoords, 5, 20)
-            //   if (validSpawnCoords) {
-            //     const clone = Doodad.load(Doodad.serialize(target), underworld, prediction);
-            //     if (clone) {
-            //       target.x = validSpawnCoords.x;
-            //       target.y = validSpawnCoords.y;
-            //     }
-            //   } else {
-            //     floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
-            //   }
-            // }
           }
         }
       }

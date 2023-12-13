@@ -391,11 +391,6 @@ export function clearTints(underworld: Underworld) {
       pickup.image.sprite.tint = pickup.image.sprite.keepTint || 0xFFFFFF;
     }
   });
-  underworld.doodads.forEach(doodad => {
-    if (doodad.image) {
-      doodad.image.sprite.tint = 0xFFFFFF;
-    }
-  });
 }
 
 // Returns true if castCards has effect
@@ -433,19 +428,6 @@ async function showCastCardsPrediction(underworld: Underworld, target: Vec2, cas
           realPickup.image.sprite.tint = 0xaaaaaa;
         } else {
           realPickup.image.sprite.tint = 0xff5555;
-        }
-      }
-    }
-    // Show doodads as targeted with tint
-    for (let targetedDoodad of effectState.targetedDoodads) {
-      // Convert prediction doodad's associated real doodad
-      const realDoodad = targetedDoodad.real || targetedDoodad;
-      // don't change tint if HUD is hidden
-      if (realDoodad && realDoodad.image && !globalThis.isHUDHidden) {
-        if (outOfRange) {
-          realDoodad.image.sprite.tint = 0xaaaaaa;
-        } else {
-          realDoodad.image.sprite.tint = 0xff5555;
         }
       }
     }

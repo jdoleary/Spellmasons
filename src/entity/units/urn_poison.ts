@@ -1,16 +1,15 @@
 
 import type { UnitSource } from './index';
-import * as particles from '@pixi/particle-emitter'
 import * as colors from '../../graphics/ui/colors';
 import * as poison from '../../cards/poison';
 import { UnitSubType } from '../../types/commonTypes';
 import * as Unit from '../Unit';
 import type Underworld from '../../Underworld';
 import { registerEvents } from '../../cards';
-import { createParticleTexture, logNoTextureWarning, simpleEmitter } from '../../graphics/Particles';
 import { Vec2 } from '../../jmath/Vec';
 import { drawUICircle } from '../../graphics/PlanningView';
 import { animateSpell } from '../../cards/cardUtils';
+import { makeParticleExplosion } from '../../graphics/ParticleCollection';
 
 export const urn_poison_id = 'Toxic Urn'
 const baseRadius = 140;
@@ -63,7 +62,9 @@ export function registerUrnpoisonExplode() {
         onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
             explode(unit, unit.attackRange, 0, prediction, underworld);
             // Remove corpse
-            Unit.cleanup(unit, true);
+            if (!prediction) {
+                Unit.cleanup(unit, false);
+            }
         }
     });
 }
@@ -74,7 +75,7 @@ function explode(location: Vec2, radius: number, damage: number, prediction: boo
         playSFXKey('bloatExplosion');
         playSFXKey('poison');
     }
-    makepoisonParticleExplosion(location, radius / baseRadius, prediction);
+    makeParticleExplosion(location, radius / baseRadius, prediction, "#164a15", "#6bff77");
     underworld.getUnitsWithinDistanceOfTarget(
         location,
         radius,
@@ -85,72 +86,6 @@ function explode(location: Vec2, radius: number, damage: number, prediction: boo
         }
         Unit.addModifier(u, poison.poisonCardId, underworld, prediction, 1);
     });
-}
-function makepoisonParticleExplosion(position: Vec2, size: number, prediction: boolean) {
-    if (prediction || globalThis.headless) {
-        // Don't show if just a prediction
-        return;
-    }
-    const texture = createParticleTexture();
-    if (!texture) {
-        logNoTextureWarning('makepoisonParticleExplosion');
-        return;
-    }
-    const config =
-        particles.upgradeConfig({
-            autoUpdate: true,
-            "alpha": {
-                "start": 1,
-                "end": 0
-            },
-            "scale": {
-                "start": 3,
-                "end": 2,
-            },
-            "color": {
-                "start": "#164a15",
-                "end": "#6bff77"
-            },
-            "speed": {
-                "start": 300,
-                "end": 50,
-                "minimumSpeedMultiplier": 1
-            },
-            "acceleration": {
-                "x": 0,
-                "y": 0
-            },
-            "maxSpeed": 0,
-            "startRotation": {
-                "min": 0,
-                "max": 360
-            },
-            "noRotation": false,
-            "rotationSpeed": {
-                "min": 0,
-                "max": 300
-            },
-            "lifetime": {
-                "min": 0.8 * size,
-                "max": 0.8 * size
-            },
-            "blendMode": "normal",
-            "frequency": 0.0001,
-            "emitterLifetime": 0.1,
-            "maxParticles": 2000,
-            "pos": {
-                "x": 0,
-                "y": 0
-            },
-            "addAtBack": true,
-            "spawnType": "circle",
-            "spawnCircle": {
-                "x": 0,
-                "y": 0,
-                "r": 0
-            }
-        }, [texture]);
-    simpleEmitter(position, config);
 }
 
 export default urnPoisonSource;
