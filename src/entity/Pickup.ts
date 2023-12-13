@@ -196,7 +196,7 @@ export function create({ pos, pickupSource, idOverride, logSource }:
   if (self) {
     // If pickup is a portal
     // make existing scroll pickups fly to player
-    if (self.name == PICKUP_PORTAL_NAME) {
+    if (self.name == PORTAL_PURPLE_NAME) {
       let timeBetweenPickupFly = 100;
       const scrolls = underworld.pickups.filter(p => p.name == CARDS_PICKUP_NAME && !p.flaggedForRemoval);
       for (let scroll of scrolls) {
@@ -225,7 +225,7 @@ export function create({ pos, pickupSource, idOverride, logSource }:
     }
 
     // If there are existing portals and a pickup is spawned make pickups fly to player
-    if (self.name == CARDS_PICKUP_NAME && underworld.pickups.some(p => p.name == PICKUP_PORTAL_NAME)) {
+    if (self.name == CARDS_PICKUP_NAME && underworld.pickups.some(p => p.name == PORTAL_PURPLE_NAME)) {
       removePickup(self, underworld, false);
       raceTimeout(5000, 'spawnScrollFlyScroll', new Promise<void>((resolve) => {
         // Make the pickup fly to the player. this gives them some time so it doesn't trigger immediately.
@@ -406,7 +406,16 @@ export function triggerPickup(pickup: IPickup, unit: IUnit, player: Player.IPlay
   const willTrigger = !pickup.flaggedForRemoval && unit.alive && pickup.willTrigger({ unit, player, pickup, underworld });
   if (willTrigger) {
     pickup.effect({ unit, player, pickup, underworld, prediction });
-    removePickup(pickup, underworld, prediction);
+    // Removal all pickups when they are "picked up", unless it is
+    // the Purple Portal.  This is because in multiplayer, it's possible
+    // for a player to trigger multiple portals at once, leaving the other
+    // player stranded.  This ensures that portals are not removed when
+    // used but all other pickups should be.  If, in the future, there's
+    // another pickup that shouldn't be removed when used, this behavior
+    // should be refactored into a property on IPickup
+    if (pickup.name !== PORTAL_PURPLE_NAME) {
+      removePickup(pickup, underworld, prediction);
+    }
     // Now that the players attributes may have changed, sync UI
     syncPlayerHealthManaUI(underworld);
   }
@@ -486,7 +495,7 @@ const healthPotionRestoreAmount = 50;
 export const spike_damage = 30;
 export const CARDS_PICKUP_NAME = 'Spells';
 export const PICKUP_SPIKES_NAME = 'Trap';
-export const PICKUP_PORTAL_NAME = 'Portal';
+export const PORTAL_PURPLE_NAME = 'Portal';
 const cursedManaPotionRemovalProportion = 0.1;
 export const pickups: IPickupSource[] = [
   {
@@ -617,7 +626,7 @@ export const pickups: IPickupSource[] = [
     imagePath: 'portal',
     animationSpeed: -0.5,
     playerOnly: true,
-    name: PICKUP_PORTAL_NAME,
+    name: PORTAL_PURPLE_NAME,
     probability: 0,
     scale: 1,
     description: 'explain portal',
