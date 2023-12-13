@@ -21,7 +21,7 @@ const spell: Spell = {
     category: CardCategory.Mana,
     sfx: 'potionPickupMana',
     supportQuantity: true,
-    manaCost: amount,
+    manaCost: 30,
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
