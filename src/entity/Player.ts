@@ -533,7 +533,7 @@ export function ableToAct(player: IPlayer) {
   // - or if they are alive and not in the portal
   const ableToTakeTurn = player.clientConnected && (!player.isSpawned || (!inPortal(player) && player.unit.alive));
   if (!ableToTakeTurn) {
-    console.log(`Player ${player.clientId} unable to take turn.`, '!inPortal:', !inPortal(player), 'alive:', player.unit.alive, 'connected: ', player.clientConnected)
+    console.log(`Player ${player.clientId}:${player.name} unable to take turn.`, '!inPortal:', !inPortal(player), 'alive:', player.unit.alive, 'connected: ', player.clientConnected)
   }
   return ableToTakeTurn;
 }
