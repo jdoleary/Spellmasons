@@ -503,7 +503,6 @@ export default class Underworld {
         startPos.y += unitImageYOffset;
         const done = this.runForceMove(forceMoveInst, false);
         const endPos = { x: forceMoveInst.pushedObject.x, y: forceMoveInst.pushedObject.y + unitImageYOffset };
-        // TODO - Fix urn blood smear
         if (graphicsBloodSmear && Unit.isUnit(forceMoveInst.pushedObject) && forceMoveInst.pushedObject.health !== undefined && forceMoveInst.pushedObject.health <= 0) {
           const size = 3;
           for (let j of smearJitter) {
@@ -2934,7 +2933,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         lastPickupId: this.lastPickupId,
         // the state of the Random Number Generator
         RNGState: this.random.state(),
-        // TODO sync doodads here
       });
     }
   }

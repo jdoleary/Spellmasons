@@ -850,9 +850,6 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
       playSFXKey('deny');
     }
   } else {
-
-    const mouseTarget = underworld.getMousePos();
-    drawCircleUnderTarget(mouseTarget, underworld, 1.0, globalThis.planningViewGraphics);
     updateTooltipSelection(mousePos, underworld);
   }
   tryShowDevContextMenu(overworld, e, mousePos);

@@ -347,7 +347,7 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
         //background
         let healthBarFill = getFillRect(u, 0, healthBarMax, 0, healthBarMax, zoom);
         globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
-        globalThis.unitOverlayGraphics.beginFill(0x111111, 0.4);
+        globalThis.unitOverlayGraphics.beginFill(0x111111, 0.8);
         globalThis.unitOverlayGraphics.drawRect(
           healthBarFill.x,
           // Stack the health bar above the mana bar
@@ -410,7 +410,7 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
         if (u.manaMax > 0) {
           //background for mana using units
           globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
-          globalThis.unitOverlayGraphics.beginFill(0x111111, 0.4);
+          globalThis.unitOverlayGraphics.beginFill(0x111111, 0.8);
           globalThis.unitOverlayGraphics.drawRect(
             manaBarProps.x,
             manaBarProps.y,
@@ -484,7 +484,6 @@ export function drawUnitMarker(imagePath: string, pos: Vec2, extraScale: number 
   const markerHeightHalf = 16 * markerScale;
   const markerMarginAboveHealthBar = 10;
 
-  // TODO - move marker higher if the unit is a miniboss
   // Offset marker just above the head of the unit, where pos = unit positon
   const markerPosition = withinCameraBounds({
     x: pos.x, y: pos.y
@@ -537,6 +536,7 @@ export async function runPredictions(underworld: Underworld) {
   const mousePos = underworld.getMousePos();
   // Clear the spelleffectprojection in preparation for showing the current ones
   clearSpellEffectProjection(underworld);
+
   // only show hover target when it's the correct turn phase
   if (underworld.turn_phase == turn_phase.PlayerTurns) {
 
@@ -555,8 +555,9 @@ export async function runPredictions(underworld: Underworld) {
         return;
       }
       const cardIds = CardUI.getSelectedCardIds();
+      let outOfRange = false;
       if (cardIds.length) {
-        const outOfRange = isOutOfRange(globalThis.player, target, underworld, cardIds);
+        outOfRange = isOutOfRange(globalThis.player, target, underworld, cardIds);
         await showCastCardsPrediction(underworld, target, casterUnit, cardIds, outOfRange);
       } else {
         // If there are no cards ready to cast, clear unit tints (which symbolize units that are targeted by the active spell)
@@ -564,6 +565,31 @@ export async function runPredictions(underworld: Underworld) {
       }
       // Send this client's intentions to the other clients so they can see what they're thinking
       underworld.sendPlayerThinking({ target, cardIds })
+
+      // draw spell predictions
+      // Modify and draw all of the stored predictions
+      // If out of range, set color to grey
+      if (predictionGraphics && !globalThis.isHUDHidden) {
+        for (let { points, color, text } of predictionPolys) {
+          const colorOverride = outOfRange ? colors.outOfRangeGrey : color;
+          drawUIPoly(predictionGraphics, points, colorOverride, text);
+        }
+        for (let { target, color, radius, startArc, endArc, text } of predictionCones) {
+          const colorOverride = outOfRange ? colors.outOfRangeGrey : color;
+          drawUICone(predictionGraphics, target, radius, startArc, endArc, colorOverride);
+        }
+        for (let { target, color, radius, text } of predictionCircles) {
+          const colorOverride = outOfRange ? colors.outOfRangeGrey : color;
+          console.log(outOfRange, colorOverride)
+          drawUICircle(predictionGraphics, target, radius, colorOverride, text);
+        }
+      }
+      if (globalThis.radiusGraphics) {
+        for (let { target, color, radius, text } of predictionCirclesFill) {
+          //const colorOverride = currentlyWarningOutOfRange ? colors.outOfRangeGrey : color;
+          drawUICircleFill(globalThis.radiusGraphics, target, radius, color, text);
+        }
+      }
 
       // Run onTurnStartEvents on unitsPrediction:
       // Displays markers above units heads if they will attack the current client's unit
@@ -609,6 +635,7 @@ export async function runPredictions(underworld: Underworld) {
           }
         }
       }
+
       // Show if unit will be resurrected
       globalThis.resMarkers = [];
       if (cardIds.includes('resurrect')) {
@@ -625,31 +652,6 @@ export async function runPredictions(underworld: Underworld) {
   }
   if (globalThis.runPredictionsPanel) {
     globalThis.runPredictionsPanel.update(Date.now() - startTime, 300);
-  }
-
-  const currentlyWarningOutOfRange = warnings.has(TEXT_OUT_OF_RANGE);
-  // draw predictions
-  // Modify and draw all of the stored predictions
-  // If out of range, set color to grey
-  if (predictionGraphics && !globalThis.isHUDHidden) {
-    for (let { points, color, text } of predictionPolys) {
-      const colorOverride = currentlyWarningOutOfRange ? colors.outOfRangeGrey : color;
-      drawUIPoly(predictionGraphics, points, colorOverride, text);
-    }
-    for (let { target, color, radius, startArc, endArc, text } of predictionCones) {
-      const colorOverride = currentlyWarningOutOfRange ? colors.outOfRangeGrey : color;
-      drawUICone(predictionGraphics, target, radius, startArc, endArc, colorOverride);
-    }
-    for (let { target, color, radius, text } of predictionCircles) {
-      const colorOverride = currentlyWarningOutOfRange ? colors.outOfRangeGrey : color;
-      drawUICircle(predictionGraphics, target, radius, colorOverride, text);
-    }
-  }
-  if (globalThis.radiusGraphics) {
-    for (let { target, color, radius, text } of predictionCirclesFill) {
-      //const colorOverride = currentlyWarningOutOfRange ? colors.outOfRangeGrey : color;
-      drawUICircleFill(globalThis.radiusGraphics, target, radius, color, text);
-    }
   }
 }
 

@@ -1452,25 +1452,23 @@ export function findLOSLocation(unit: IUnit, target: Vec2, underworld: Underworl
 
 
 // handles drawing attack range, bloat radius, and similar graphics each frame while a unit is selected
-export async function drawSelectedGraphics(unit: IUnit, prediction: boolean = false, underworld: Underworld): Promise<void> {
+export function drawSelectedGraphics(unit: IUnit, prediction: boolean = false, underworld: Underworld) {
 
-  if (!prediction) {
-    for (let drawEvent of unit.onDrawSelectedEvents) {
-      if (drawEvent) {
-        const fn = Events.onDrawSelectedSource[drawEvent];
-        if (fn) {
-          await fn(unit, prediction, underworld);
-        } else {
-          console.error('No function associated with onDrawSelected event', drawEvent);
-        }
+  if (globalThis.headless || prediction || !globalThis.selectedUnitGraphics) return;
+
+  for (let drawEvent of unit.onDrawSelectedEvents) {
+    if (drawEvent) {
+      const fn = Events.onDrawSelectedSource[drawEvent];
+      if (fn) {
+        fn(unit, prediction, underworld);
+      } else {
+        console.error('No function associated with onDrawSelected event', drawEvent);
       }
     }
   }
 
-  if (!globalThis.selectedUnitGraphics) {
-    console.error("selectedUnitGraphics is undefined")
-    return;
-  }
+  // TODO - Ideally the logic below would be defined in each Unit's ts file individually
+  // Instead of using if/else and unit subtypes
 
   // If unit is an archer, draw LOS attack line
   // instead of attack range for them
