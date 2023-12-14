@@ -424,7 +424,7 @@ export function serialize(unit: IUnit): IUnitSerialized {
     onAgroEvents: [...onAgroEvents],
     onTurnStartEvents: [...onTurnStartEvents],
     onTurnEndEvents: [...onTurnEndEvents],
-    onDrawSelectedEvents: [...(onDrawSelectedEvents || [])],
+    onDrawSelectedEvents: [...onDrawSelectedEvents],
     // Deep copy modifiers so that serialized units don't share the object
     modifiers: unit.modifiers ? JSON.parse(JSON.stringify(unit.modifiers)) : undefined,
     // Deep copy path so that the serialized object doesn't share the path object
@@ -456,6 +456,7 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
   let loadedunit: IUnit = {
     // Load defaults for new props that old save files might not have
     ...{ strength: 1 },
+    ...{ onDrawSelectedEvents: [] },
     ...restUnit,
     shaderUniforms: {},
     resolveDoneMoving: () => { },
@@ -1363,7 +1364,7 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
     onAgroEvents: [...rest.onAgroEvents],
     onTurnStartEvents: [...rest.onTurnStartEvents],
     onTurnEndEvents: [...rest.onTurnEndEvents],
-    onDrawSelectedEvents: [...(rest.onDrawSelectedEvents || [])],
+    onDrawSelectedEvents: [...rest.onDrawSelectedEvents],
     // Deep copy modifiers so it doesn't mutate the unit's actual modifiers object
     modifiers: JSON.parse(JSON.stringify(modifiers)),
     shaderUniforms: {},
