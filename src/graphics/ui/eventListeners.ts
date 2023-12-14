@@ -356,7 +356,7 @@ export function endTurnBtnListener(overworld: Overworld, e: MouseEvent) {
   if (overworld.underworld) {
     overworld.underworld.endMyTurnButtonHandler();
   } else {
-    console.error('Undexpected: Cannot end turn, no underworld');
+    console.error('Unexpected: Cannot end turn, no underworld');
   }
   e.preventDefault();
   e.stopPropagation();

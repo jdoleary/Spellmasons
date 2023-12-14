@@ -222,6 +222,7 @@ export default class Underworld {
   // for speed running
   startTime: number | undefined;
   winTime: number | undefined;
+  hotseatCurrentPlayerIndex: number = 0;
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
@@ -1890,6 +1891,16 @@ export default class Underworld {
       'white'
     );
     console.log('Setup: resetPlayerForNextLevel; reset all players')
+    if (numberOfHotseatPlayers > 1) {
+      // Reset current hotseat player to player 1
+      this.hotseatCurrentPlayerIndex = 0;
+      const currentPlayer = this.players[this.hotseatCurrentPlayerIndex];
+      if (currentPlayer) {
+        Player.updateGlobalRefToCurrentClientPlayer(currentPlayer, this);
+      } else {
+        console.error('Unexpected, no hotseat current player')
+      }
+    }
     for (let player of this.players) {
       Player.resetPlayerForNextLevel(player, this);
     }
@@ -2370,6 +2381,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (globalThis.saveASAP && globalThis.save) {
       globalThis.save(globalThis.saveASAP);
     }
+    // Hotseat: Previous player turn ended on last player in queue, switch back to first player
+    if (globalThis.player?.isSpawned) {
+      this.changeToNextHotseatPlayer();
+    }
+
 
   }
   // Sends a network message to end turn
@@ -2408,8 +2424,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         // and stamina is still max
         // and player has not cast yet
         if (!globalThis.player.endedTurn && globalThis.player.unit.stamina == globalThis.player.unit.staminaMax && !globalThis.castThisTurn) {
-          // Don't prompt "are you sure" for end turn when recording
-          if (!globalThis.isHUDHidden && !document.body?.classList.contains('hide-card-holders')) {
+          // Don't prompt "are you sure" for end turn when recording or local development
+          if (!location.href.includes('localhost') && !globalThis.isHUDHidden && !document.body?.classList.contains('hide-card-holders')) {
             affirm = await Jprompt({ text: 'Are you sure you want to end your turn without moving or casting?', noBtnText: 'Cancel', noBtnKey: 'Escape', yesText: 'End Turn', yesKey: 'Space', yesKeyText: 'Spacebar' });
           }
         }
@@ -2436,7 +2452,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // an exit of the Stalled phase and that should ONLY happen when a player reconnects
       return;
     }
-    const playerIndex = this.players.findIndex((p) => p.clientId === clientId);
+    const playerIndex = numberOfHotseatPlayers > 1 ? this.hotseatCurrentPlayerIndex : this.players.findIndex((p) => p.clientId === clientId);
     const player = this.players[playerIndex];
     if (!player) {
       console.error('Cannot end turn, player with clientId:', clientId, 'does not exist');
@@ -2490,46 +2506,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           Player.enterPortal(p, this);
         });
       }
-      // If player hotseat multiplayer
-      if (numberOfHotseatPlayers > 1) {
-        // This is wrapped in setTimeout because shifting players for hotseat
-        // shouldn't occur syncronously because it may shift the player array
-        // while the player array is being iterated causing a bug.
-        // Instead, this will wait until the current execution has resolved and then
-        // change the player array
-        setTimeout(async () => {
-          // Change to next player
-          // Shift front player to the back so that first player found for fromPlayer is the next player
-          const shifted = this.players.shift();
-          if (shifted) {
-            this.players.push(shifted);
-          } else {
-            console.error('Hotseat: shifted player is undefined');
-          }
-          if (this.players[0]) {
-            globalThis.player = this.players[0];
-          } else {
-            console.error('Hotseat: Tried to change player but player is undefined');
-          }
-          CardUI.recalcPositionForCards(globalThis.player, this);
-          CardUI.syncInventory(undefined, this);
-          await runPredictions(this);
-          this.checkIfShouldSpawnPortal();
-          // For hotseat, whenever a player ends their turn, check if the current player
-          // has upgrades to choose and if so, show the upgrade button
-          if (globalThis.player && this.upgradesLeftToChoose(globalThis.player)) {
-            elEndTurnBtn.classList.toggle('upgrade', true);
-          }
-
-          // Announce new players' turn
-          if (globalThis.player && globalThis.player.name) {
-            queueCenteredFloatingText(globalThis.player.name);
-          }
-
-          // Turn on auto follow if they are spawned, and off if they are not
-          cameraAutoFollow(!!globalThis.player?.isSpawned);
-        }, 0)
-      }
 
       const gameIsOver = this.tryGameOver();
       if (gameIsOver) {
@@ -2542,10 +2518,46 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       if (wentToNextPhase) {
         return;
       }
+      await this.changeToNextHotseatPlayer();
     } else {
       console.error("turn_phase must be PlayerTurns to end turn.  Cannot be ", this.turn_phase);
     }
     Player.syncLobby(this);
+  }
+  async changeToNextHotseatPlayer() {
+    // If player hotseat multiplayer, change players
+    if (numberOfHotseatPlayers > 1) {
+      // Change to next hotseat player
+      this.hotseatCurrentPlayerIndex = (this.hotseatCurrentPlayerIndex + 1) % this.players.length;
+      const currentPlayer = this.players[this.hotseatCurrentPlayerIndex];
+      if (currentPlayer) {
+        Player.updateGlobalRefToCurrentClientPlayer(currentPlayer, this);
+      } else {
+        console.error('Unexpected, no hotseat current player')
+      }
+      if (globalThis.player && !Player.ableToAct(globalThis.player)) {
+        this.endPlayerTurn(globalThis.player.clientId);
+        return;
+      }
+      CardUI.recalcPositionForCards(globalThis.player, this);
+      CardUI.syncInventory(undefined, this);
+      await runPredictions(this);
+      this.checkIfShouldSpawnPortal();
+      // For hotseat, whenever a player ends their turn, check if the current player
+      // has upgrades to choose and if so, show the upgrade button
+      if (globalThis.player && this.upgradesLeftToChoose(globalThis.player)) {
+        elEndTurnBtn.classList.toggle('upgrade', true);
+      }
+
+      // Announce new players' turn
+      if (globalThis.player && globalThis.player.name) {
+        queueCenteredFloatingText(globalThis.player.name);
+      }
+
+      // Turn on auto follow if they are spawned, and off if they are not
+      cameraAutoFollow(!!globalThis.player?.isSpawned);
+    }
+
   }
   getFreeUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
     player.freeSpells.push(upgrade.title);
@@ -3846,8 +3858,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   syncPlayers(players: Player.IPlayerSerialized[]) {
     console.log('sync: Syncing players', JSON.stringify(players.map(p => p.clientId)));
     // Clear previous players array
-    this.players = [];
-    players.map(p => Player.load(p, this));
+    const previousPlayersLength = this.players.length;
+    players.forEach((p, i) => Player.load(p, i, this));
+    if (this.players.length < previousPlayersLength) {
+      console.error('Unexpected, syncPlayers: loaded players array is smaller');
+      this.players.splice(previousPlayersLength);
+    }
     if (globalThis.player?.isSpawned) {
       // If player is already spawned, clear spawn instructions
       if (elInstructions) {

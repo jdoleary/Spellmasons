@@ -355,9 +355,10 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
 export function updateGlobalRefToCurrentClientPlayer(player: IPlayer, underworld: Underworld) {
   if (globalThis.clientId === player.clientId) {
     if (numberOfHotseatPlayers > 1) {
-      // globalThis.player should always correspond with the first player in the players array since the hotseat
-      // is managed by changing the order of the array
-      globalThis.player = underworld.players[0];
+      globalThis.player = underworld.players[underworld.hotseatCurrentPlayerIndex];
+      if (!globalThis.player) {
+        console.error('Unexpected: Hotseat player is undefined');
+      }
     } else {
       globalThis.player = player;
     }
@@ -375,7 +376,7 @@ export function serialize(player: IPlayer): IPlayerSerialized {
   }
 }
 // load rehydrates a player entity from IPlayerSerialized
-export function load(player: IPlayerSerialized, underworld: Underworld) {
+export function load(player: IPlayerSerialized, index: number, underworld: Underworld) {
   const reassignedUnit = underworld.units.find(u => u.id == player.unit.id);
   if (!reassignedUnit) {
     if (!isHost(underworld.pie)) {
@@ -415,9 +416,10 @@ export function load(player: IPlayerSerialized, underworld: Underworld) {
     playerLoaded.unit.y = NaN;
     Image.hide(playerLoaded.unit.image);
   }
-  updateGlobalRefToCurrentClientPlayer(playerLoaded, underworld);
+  // Overwrite player
+  underworld.players[index] = playerLoaded;
   CardUI.recalcPositionForCards(playerLoaded, underworld);
-  underworld.players.push(playerLoaded);
+  updateGlobalRefToCurrentClientPlayer(playerLoaded, underworld);
   if (underworld.overworld) {
     setClientConnected(playerLoaded, underworld.overworld.clients.includes(player.clientId), underworld);
   } else {
@@ -532,7 +534,7 @@ export function ableToAct(player: IPlayer) {
   // - or if they are alive and not in the portal
   const ableToTakeTurn = player.clientConnected && (!player.isSpawned || (!inPortal(player) && player.unit.alive));
   if (!ableToTakeTurn) {
-    console.log(`Player ${player.clientId} unable to take turn.`, '!inPortal:', !inPortal(player), 'alive:', player.unit.alive, 'connected: ', player.clientConnected)
+    console.log(`Player ${player.clientId}:${player.name} unable to take turn.`, '!inPortal:', !inPortal(player), 'alive:', player.unit.alive, 'connected: ', player.clientConnected)
   }
   return ableToTakeTurn;
 }
