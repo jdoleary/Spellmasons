@@ -357,7 +357,7 @@ export function updateGlobalRefToCurrentClientPlayer(player: IPlayer, underworld
     if (numberOfHotseatPlayers > 1) {
       globalThis.player = underworld.players[underworld.hotseatCurrentPlayerIndex];
       if (!globalThis.player) {
-        console.error('Undexpected: Hotseat player is undefined');
+        console.error('Unexpected: Hotseat player is undefined');
       }
     } else {
       globalThis.player = player;

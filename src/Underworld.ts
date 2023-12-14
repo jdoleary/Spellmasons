@@ -1891,6 +1891,16 @@ export default class Underworld {
       'white'
     );
     console.log('Setup: resetPlayerForNextLevel; reset all players')
+    if (numberOfHotseatPlayers > 1) {
+      // Reset current hotseat player to player 1
+      this.hotseatCurrentPlayerIndex = 0;
+      const currentPlayer = this.players[this.hotseatCurrentPlayerIndex];
+      if (currentPlayer) {
+        Player.updateGlobalRefToCurrentClientPlayer(currentPlayer, this);
+      } else {
+        console.error('Unexpected, no hotseat current player')
+      }
+    }
     for (let player of this.players) {
       Player.resetPlayerForNextLevel(player, this);
     }
@@ -2372,10 +2382,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       globalThis.save(globalThis.saveASAP);
     }
     // Hotseat: Previous player turn ended on last player in queue, switch back to first player
-    // if (globalThis.numberOfHotseatPlayers > 1 && globalThis.player?.isSpawned) {
-    //   console.log('jtest switch to first player', this.players.map(p => `${p.name}:${p.endedTurn}`))
-    //   this.endPlayerTurn(globalThis.player.clientId);
-    // }
+    if (globalThis.player?.isSpawned) {
+      this.changeToNextHotseatPlayer();
+    }
 
 
   }
@@ -2497,29 +2506,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           Player.enterPortal(p, this);
         });
       }
-      // If player hotseat multiplayer, change players
-      if (numberOfHotseatPlayers > 1) {
-        // Change to next hotseat player
-        this.hotseatCurrentPlayerIndex = (this.hotseatCurrentPlayerIndex + 1) % this.players.length;
-        this.players.forEach(p => Player.updateGlobalRefToCurrentClientPlayer(p, this));
-        CardUI.recalcPositionForCards(globalThis.player, this);
-        CardUI.syncInventory(undefined, this);
-        await runPredictions(this);
-        this.checkIfShouldSpawnPortal();
-        // For hotseat, whenever a player ends their turn, check if the current player
-        // has upgrades to choose and if so, show the upgrade button
-        if (globalThis.player && this.upgradesLeftToChoose(globalThis.player)) {
-          elEndTurnBtn.classList.toggle('upgrade', true);
-        }
-
-        // Announce new players' turn
-        if (globalThis.player && globalThis.player.name) {
-          queueCenteredFloatingText(globalThis.player.name);
-        }
-
-        // Turn on auto follow if they are spawned, and off if they are not
-        cameraAutoFollow(!!globalThis.player?.isSpawned);
-      }
 
       const gameIsOver = this.tryGameOver();
       if (gameIsOver) {
@@ -2532,10 +2518,46 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       if (wentToNextPhase) {
         return;
       }
+      await this.changeToNextHotseatPlayer();
     } else {
       console.error("turn_phase must be PlayerTurns to end turn.  Cannot be ", this.turn_phase);
     }
     Player.syncLobby(this);
+  }
+  async changeToNextHotseatPlayer() {
+    // If player hotseat multiplayer, change players
+    if (numberOfHotseatPlayers > 1) {
+      // Change to next hotseat player
+      this.hotseatCurrentPlayerIndex = (this.hotseatCurrentPlayerIndex + 1) % this.players.length;
+      const currentPlayer = this.players[this.hotseatCurrentPlayerIndex];
+      if (currentPlayer) {
+        Player.updateGlobalRefToCurrentClientPlayer(currentPlayer, this);
+      } else {
+        console.error('Unexpected, no hotseat current player')
+      }
+      if (globalThis.player && !Player.ableToAct(globalThis.player)) {
+        this.endPlayerTurn(globalThis.player.clientId);
+        return;
+      }
+      CardUI.recalcPositionForCards(globalThis.player, this);
+      CardUI.syncInventory(undefined, this);
+      await runPredictions(this);
+      this.checkIfShouldSpawnPortal();
+      // For hotseat, whenever a player ends their turn, check if the current player
+      // has upgrades to choose and if so, show the upgrade button
+      if (globalThis.player && this.upgradesLeftToChoose(globalThis.player)) {
+        elEndTurnBtn.classList.toggle('upgrade', true);
+      }
+
+      // Announce new players' turn
+      if (globalThis.player && globalThis.player.name) {
+        queueCenteredFloatingText(globalThis.player.name);
+      }
+
+      // Turn on auto follow if they are spawned, and off if they are not
+      cameraAutoFollow(!!globalThis.player?.isSpawned);
+    }
+
   }
   getFreeUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
     player.freeSpells.push(upgrade.title);
