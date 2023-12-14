@@ -744,7 +744,8 @@ export function drawUICirclePrediction(target: Vec2, radius: number, color: numb
   // Note: The actual drawing now happens inside of runPredictions
   // clone target so it's not a reference, it should draw what the value was when it was passed into this function
   predictionCircles.push({ target: Vec.clone(target), radius, color, text });
-} export function drawUICircleFillPrediction(target: Vec2, radius: number, color: number, text?: string) {
+}
+export function drawUICircleFillPrediction(target: Vec2, radius: number, color: number, text?: string) {
   // Note: The actual drawing now happens inside of runPredictions
   // clone target so it's not a reference, it should draw what the value was when it was passed into this function
   predictionCirclesFill.push({ target: Vec.clone(target), radius, color, text });
