@@ -376,7 +376,7 @@ export function serialize(player: IPlayer): IPlayerSerialized {
   }
 }
 // load rehydrates a player entity from IPlayerSerialized
-export function load(player: IPlayerSerialized, underworld: Underworld) {
+export function load(player: IPlayerSerialized, index: number, underworld: Underworld) {
   const reassignedUnit = underworld.units.find(u => u.id == player.unit.id);
   if (!reassignedUnit) {
     if (!isHost(underworld.pie)) {
@@ -416,7 +416,8 @@ export function load(player: IPlayerSerialized, underworld: Underworld) {
     playerLoaded.unit.y = NaN;
     Image.hide(playerLoaded.unit.image);
   }
-  underworld.players.push(playerLoaded);
+  // Overwrite player
+  underworld.players[index] = playerLoaded;
   CardUI.recalcPositionForCards(playerLoaded, underworld);
   updateGlobalRefToCurrentClientPlayer(playerLoaded, underworld);
   if (underworld.overworld) {

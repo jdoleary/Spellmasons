@@ -3858,8 +3858,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   syncPlayers(players: Player.IPlayerSerialized[]) {
     console.log('sync: Syncing players', JSON.stringify(players.map(p => p.clientId)));
     // Clear previous players array
-    this.players = [];
-    players.map(p => Player.load(p, this));
+    const previousPlayersLength = this.players.length;
+    players.forEach((p, i) => Player.load(p, i, this));
+    if (this.players.length < previousPlayersLength) {
+      console.error('Unexpected, syncPlayers: loaded players array is smaller');
+      this.players.splice(previousPlayersLength);
+    }
     if (globalThis.player?.isSpawned) {
       // If player is already spawned, clear spawn instructions
       if (elInstructions) {
