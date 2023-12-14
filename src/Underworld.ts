@@ -222,6 +222,7 @@ export default class Underworld {
   // for speed running
   startTime: number | undefined;
   winTime: number | undefined;
+  hotseatCurrentPlayerIndex: number = 0;
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
@@ -2370,6 +2371,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (globalThis.saveASAP && globalThis.save) {
       globalThis.save(globalThis.saveASAP);
     }
+    // Hotseat: Previous player turn ended on last player in queue, switch back to first player
+    // if (globalThis.numberOfHotseatPlayers > 1 && globalThis.player?.isSpawned) {
+    //   console.log('jtest switch to first player', this.players.map(p => `${p.name}:${p.endedTurn}`))
+    //   this.endPlayerTurn(globalThis.player.clientId);
+    // }
+
 
   }
   // Sends a network message to end turn
@@ -2436,7 +2443,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // an exit of the Stalled phase and that should ONLY happen when a player reconnects
       return;
     }
-    const playerIndex = this.players.findIndex((p) => p.clientId === clientId);
+    const playerIndex = numberOfHotseatPlayers > 1 ? this.hotseatCurrentPlayerIndex : this.players.findIndex((p) => p.clientId === clientId);
     const player = this.players[playerIndex];
     if (!player) {
       console.error('Cannot end turn, player with clientId:', clientId, 'does not exist');
@@ -2490,45 +2497,28 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           Player.enterPortal(p, this);
         });
       }
-      // If player hotseat multiplayer
+      // If player hotseat multiplayer, change players
       if (numberOfHotseatPlayers > 1) {
-        // This is wrapped in setTimeout because shifting players for hotseat
-        // shouldn't occur syncronously because it may shift the player array
-        // while the player array is being iterated causing a bug.
-        // Instead, this will wait until the current execution has resolved and then
-        // change the player array
-        setTimeout(async () => {
-          // Change to next player
-          // Shift front player to the back so that first player found for fromPlayer is the next player
-          const shifted = this.players.shift();
-          if (shifted) {
-            this.players.push(shifted);
-          } else {
-            console.error('Hotseat: shifted player is undefined');
-          }
-          if (this.players[0]) {
-            globalThis.player = this.players[0];
-          } else {
-            console.error('Hotseat: Tried to change player but player is undefined');
-          }
-          CardUI.recalcPositionForCards(globalThis.player, this);
-          CardUI.syncInventory(undefined, this);
-          await runPredictions(this);
-          this.checkIfShouldSpawnPortal();
-          // For hotseat, whenever a player ends their turn, check if the current player
-          // has upgrades to choose and if so, show the upgrade button
-          if (globalThis.player && this.upgradesLeftToChoose(globalThis.player)) {
-            elEndTurnBtn.classList.toggle('upgrade', true);
-          }
+        // Change to next hotseat player
+        this.hotseatCurrentPlayerIndex = (this.hotseatCurrentPlayerIndex + 1) % this.players.length;
+        this.players.forEach(p => Player.updateGlobalRefToCurrentClientPlayer(p, this));
+        CardUI.recalcPositionForCards(globalThis.player, this);
+        CardUI.syncInventory(undefined, this);
+        await runPredictions(this);
+        this.checkIfShouldSpawnPortal();
+        // For hotseat, whenever a player ends their turn, check if the current player
+        // has upgrades to choose and if so, show the upgrade button
+        if (globalThis.player && this.upgradesLeftToChoose(globalThis.player)) {
+          elEndTurnBtn.classList.toggle('upgrade', true);
+        }
 
-          // Announce new players' turn
-          if (globalThis.player && globalThis.player.name) {
-            queueCenteredFloatingText(globalThis.player.name);
-          }
+        // Announce new players' turn
+        if (globalThis.player && globalThis.player.name) {
+          queueCenteredFloatingText(globalThis.player.name);
+        }
 
-          // Turn on auto follow if they are spawned, and off if they are not
-          cameraAutoFollow(!!globalThis.player?.isSpawned);
-        }, 0)
+        // Turn on auto follow if they are spawned, and off if they are not
+        cameraAutoFollow(!!globalThis.player?.isSpawned);
       }
 
       const gameIsOver = this.tryGameOver();

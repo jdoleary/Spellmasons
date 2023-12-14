@@ -57,16 +57,18 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
     console.error('Cannot process onData, underworld does not exist');
     return;
   }
+  const fromPlayer = globalThis.numberOfHotseatPlayers > 1 ? underworld.players[underworld.hotseatCurrentPlayerIndex] : underworld.players.find(p => p.clientId == fromClient);
+  if (!fromPlayer) {
+    console.error('onData failed, fromPlayer is undefined', d.type);
+    return;
+  }
   switch (type) {
     case MESSAGE_TYPES.CHAT_SENT:
       const { message } = payload;
-      const chatter = underworld.players.find((p) => p.clientId === fromClient);
-      if (chatter) {
-        Chat.ReceiveMessage(chatter, message);
-      }
+      Chat.ReceiveMessage(fromPlayer, message);
       break;
     case MESSAGE_TYPES.PLAYER_THINKING:
-      const thinkingPlayer = underworld.players.find(p => p.clientId === fromClient)
+      const thinkingPlayer = fromPlayer;
       if (thinkingPlayer && thinkingPlayer != globalThis.player) {
         const thought = underworld.playerThoughts[thinkingPlayer.clientId];
         // Default the currentDrawLocation to target if it doesn't already exist
@@ -113,10 +115,9 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         const { pickupId, pickupName, unitId, playerClientId } = payload;
         let pickup = underworld.pickups.find(p => p.id == pickupId);
         const unit = underworld.units.find(u => u.id == unitId);
-        const player = underworld.players.find(p => p.clientId == playerClientId);
         if (pickup) {
           if (unit) {
-            Pickup.triggerPickup(pickup, unit, player, underworld, false);
+            Pickup.triggerPickup(pickup, unit, fromPlayer, underworld, false);
           } else {
             console.error('Force trigger pickup failed, unit is undefined');
           }
@@ -135,7 +136,6 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       const { pickupId, pickupName, unitId, playerClientId } = payload;
       let pickup = underworld.pickups.find(p => p.id == pickupId);
       const unit = underworld.units.find(u => u.id == unitId);
-      const player = underworld.players.find(p => p.clientId == playerClientId);
       if (!pickup) {
         const pickupSource = Pickup.pickups.find(p => p.name == pickupName);
         if (pickupSource) {
@@ -166,7 +166,6 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       {
         const { stat } = payload;
         if (stat) {
-          const fromPlayer = underworld.players.find(p => p.clientId === fromClient)
           if (fromPlayer) {
             underworld.spendStatPoint(stat, fromPlayer);
           } else {
@@ -179,7 +178,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         break;
       }
     case MESSAGE_TYPES.PING:
-      pingSprite({ coords: payload as Vec2, color: underworld.players.find(p => p.clientId == d.fromClient)?.color });
+      pingSprite({ coords: payload as Vec2, color: fromPlayer.color });
       break;
     case MESSAGE_TYPES.INIT_GAME_STATE:
       // This is executed on all clients, even ones that ignore the 
@@ -216,7 +215,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       {
         console.log('onData: CHOOSE_PERK', `${fromClient}: ${JSON.stringify(payload?.perk || {})}`);
         if (payload.curse) {
-          const player = underworld.players.find(p => p.clientId == fromClient);
+          const player = fromPlayer;
           if (player) {
             player.spellState[payload.curse] = { disabledUntilLevel: underworld.levelIndex + (payload.disableFor || 2) };
             player.cursesChosen++;
@@ -237,7 +236,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
           // There may be upgrades left to choose
           underworld.showUpgrades();
         } else if (payload.statCalamity) {
-          const player = underworld.players.find(p => p.clientId == fromClient);
+          const player = fromPlayer;
           if (player) {
             player.cursesChosen++;
             underworld.statCalamities.push(payload.statCalamity);
@@ -253,8 +252,6 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
           // There may be upgrades left to choose
           underworld.showUpgrades();
         } else {
-          // Get player of the client that sent the message 
-          const fromPlayer = underworld.players.find((p) => p.clientId === fromClient);
           if (fromPlayer) {
             choosePerk(payload.perk, fromPlayer, underworld);
           } else {
@@ -265,8 +262,6 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       break;
     case MESSAGE_TYPES.CHOOSE_UPGRADE:
       console.log('onData: CHOOSE_UPGRADE', `${fromClient}: ${payload?.upgrade?.title}`);
-      // Get player of the client that sent the message 
-      const fromPlayer = underworld.players.find((p) => p.clientId === fromClient);
       if (fromPlayer) {
         const upgrade = getUpgradeByTitle(payload.upgrade.title);
         if (upgrade) {
@@ -435,20 +430,19 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
   }
   logHandleOnDataMessage(type, payload, fromClient, underworld);
   // Get player of the client that sent the message 
-  const fromPlayer = underworld.players.find((p) => p.clientId === fromClient);
+  const fromPlayer = globalThis.numberOfHotseatPlayers > 1 ? underworld.players[underworld.hotseatCurrentPlayerIndex] : underworld.players.find(p => p.clientId == fromClient);
   switch (type) {
     case MESSAGE_TYPES.CHANGE_CHARACTER:
-      const player = underworld.players.find(p => p.clientId === fromClient)
-      if (player) {
+      if (fromPlayer) {
         const userSource = allUnits[payload.unitId];
         if (!userSource) {
           console.error('User unit source file not registered, cannot create player');
           return undefined;
         }
-        player.unit.unitSourceId = payload.unitId;
+        fromPlayer.unit.unitSourceId = payload.unitId;
         // Update the player image
-        player.unit.defaultImagePath = userSource.info.image;
-        Unit.returnToDefaultSprite(player.unit);
+        fromPlayer.unit.defaultImagePath = userSource.info.image;
+        Unit.returnToDefaultSprite(fromPlayer.unit);
       } else {
         console.error('Cannot change character, player not found with id', fromClient);
         // TODO: This should request a unit and player sync

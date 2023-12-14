@@ -355,9 +355,10 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
 export function updateGlobalRefToCurrentClientPlayer(player: IPlayer, underworld: Underworld) {
   if (globalThis.clientId === player.clientId) {
     if (numberOfHotseatPlayers > 1) {
-      // globalThis.player should always correspond with the first player in the players array since the hotseat
-      // is managed by changing the order of the array
-      globalThis.player = underworld.players[0];
+      globalThis.player = underworld.players[underworld.hotseatCurrentPlayerIndex];
+      if (!globalThis.player) {
+        console.error('Undexpected: Hotseat player is undefined');
+      }
     } else {
       globalThis.player = player;
     }

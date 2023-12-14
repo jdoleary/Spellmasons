@@ -90,7 +90,7 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
     overworld.clients = clients;
     // Ensure all clients have players
     for (let clientId of overworld.clients) {
-        const player = underworld.players.find(p => p.clientId == clientId);
+        const player = globalThis.numberOfHotseatPlayers > 1 ? underworld.players[underworld.hotseatCurrentPlayerIndex] : underworld.players.find(p => p.clientId == clientId);
         if (!player) {
             // If the client that joined does not have a player yet, make them one immediately
             // since all clients should always have a player associated
