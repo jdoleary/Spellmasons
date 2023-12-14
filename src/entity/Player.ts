@@ -415,9 +415,9 @@ export function load(player: IPlayerSerialized, underworld: Underworld) {
     playerLoaded.unit.y = NaN;
     Image.hide(playerLoaded.unit.image);
   }
-  updateGlobalRefToCurrentClientPlayer(playerLoaded, underworld);
-  CardUI.recalcPositionForCards(playerLoaded, underworld);
   underworld.players.push(playerLoaded);
+  CardUI.recalcPositionForCards(playerLoaded, underworld);
+  updateGlobalRefToCurrentClientPlayer(playerLoaded, underworld);
   if (underworld.overworld) {
     setClientConnected(playerLoaded, underworld.overworld.clients.includes(player.clientId), underworld);
   } else {
