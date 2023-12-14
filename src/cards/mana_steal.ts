@@ -9,6 +9,7 @@ import { playDefaultSpellSFX } from './cardUtils';
 import * as config from '../config';
 import { explain, EXPLAIN_OVERFILL } from '../graphics/Explain';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
+import { manaBurnCardId } from './mana_burn';
 
 const id = 'Mana Steal';
 const base_mana_stolen = 20;
@@ -18,11 +19,12 @@ const spell: Spell = {
     id,
     category: CardCategory.Mana,
     sfx: 'manaSteal',
+    requires: [manaBurnCardId],
     supportQuantity: true,
     manaCost: 0,
     healthCost: health_burn,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.SPECIAL],
+    probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconManaSteal.png',
     description: ['spell_mana_steal', base_mana_stolen.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
