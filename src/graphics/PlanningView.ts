@@ -335,94 +335,145 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
     // Draw unit overlay graphics
     //--
     // Prevent drawing unit overlay graphics when a unit is in the portal
-    if (u.x !== null && u.y !== null && !globalThis.isHUDHidden) {
-      // Draw health bar
-      const healthBarColor = u.faction == Faction.ALLY ? colors.healthAllyGreen : colors.healthRed;
-      const healthBarHurtColor = u.faction == Faction.ALLY ? 0x235730 : colors.healthHurtRed;
-      const healthBarHealColor = u.faction == Faction.ALLY ? 0x23ff30 : 0xff2828;
-      globalThis.unitOverlayGraphics?.lineStyle(0, 0x000000, 1.0);
-      globalThis.unitOverlayGraphics?.beginFill(healthBarColor, 1.0);
-      const healthBarProps = getUIBarProps(u.x, u.y, u.health, u.healthMax, zoom, u);
-      globalThis.unitOverlayGraphics?.drawRect(
-        healthBarProps.x,
-        // Stack the health bar above the mana bar
-        healthBarProps.y - config.UNIT_UI_BAR_HEIGHT / zoom,
-        healthBarProps.width,
-        healthBarProps.height
-      );
+    if (u.x !== null && u.y !== null && u.alive && !globalThis.isHUDHidden) {
 
-      // Only show health bar predictions on PlayerTurns, while players are able
-      // to cast, otherwise it will show out of sync when NPCs do damage
-      if (underworld.turn_phase == turn_phase.PlayerTurns && globalThis.unitOverlayGraphics) {
-        // Show how much damage they'll take on their health bar
+      // Draw base health bar
+      if (globalThis.unitOverlayGraphics) {
+        const healthBarColor = u.faction == Faction.ALLY ? colors.healthAllyGreen : colors.healthRed;
+        const healthBarHurtColor = u.faction == Faction.ALLY ? colors.healthAllyDarkGreen : colors.healthDarkRed;
+        const healthBarHealColor = u.faction == Faction.ALLY ? colors.healthAllyBrightGreen : colors.healthBrightRed;
 
-        if (predictionUnit) {
-          const healthAfterPrediction = predictionUnit.health;
-          if (healthAfterPrediction < u.health) {
-            globalThis.unitOverlayGraphics.beginFill(healthBarHurtColor, 1.0);
-          }
-          else {
-            globalThis.unitOverlayGraphics.beginFill(healthBarHealColor, 1.0);
-          }
-          // const healthBarHurtWidth = Math.max(0, config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax);
-          const healthBarHurtProps = getUIBarProps(u.x, u.y, u.health - healthAfterPrediction, u.healthMax, zoom, u);
-          globalThis.unitOverlayGraphics.drawRect(
-            // Show the healthBarHurtBar on the right side of the health  bar
-            healthBarHurtProps.x + config.UNIT_UI_BAR_WIDTH / zoom * healthAfterPrediction / u.healthMax,
-            // Stack the health bar above the mana bar
-            healthBarHurtProps.y - config.UNIT_UI_BAR_HEIGHT / zoom,
-            healthBarHurtProps.width,
-            healthBarHurtProps.height);
-          // Draw red death circle if a unit is currently alive, but wont be after cast
-          if (u.alive && !predictionUnit.alive) {
-            if (globalThis.player && u.faction === globalThis.player.unit.faction) {
-              drawUnitMarker('badgeDeathAlly.png', u, 2)
+        const healthBarMax = u.healthMax || 1;
+        //background
+        let healthBarFill = getFillRect(u, 0, healthBarMax, 0, healthBarMax, zoom);
+        globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
+        globalThis.unitOverlayGraphics.beginFill(0x111111, 0.4);
+        globalThis.unitOverlayGraphics.drawRect(
+          healthBarFill.x,
+          // Stack the health bar above the mana bar
+          healthBarFill.y - config.UNIT_UI_BAR_HEIGHT / zoom,
+          healthBarFill.width,
+          healthBarFill.height
+        );
+        //current health
+        healthBarFill = getFillRect(u, 0, healthBarMax, 0, u.health, zoom);
+        globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
+        globalThis.unitOverlayGraphics.beginFill(healthBarColor, 1.0);
+        globalThis.unitOverlayGraphics.drawRect(
+          healthBarFill.x,
+          // Stack the health bar above the mana bar
+          healthBarFill.y - config.UNIT_UI_BAR_HEIGHT / zoom,
+          healthBarFill.width,
+          healthBarFill.height
+        );
+
+        // Only show health bar predictions on PlayerTurns, while players are able
+        // to cast, otherwise it will show out of sync when NPCs do damage
+        if (underworld.turn_phase == turn_phase.PlayerTurns && globalThis.unitOverlayGraphics) {
+          // Show how the health bar changes
+          if (predictionUnit) {
+            const healthAfterPrediction = predictionUnit.health;
+            if (healthAfterPrediction < u.health) {
+              globalThis.unitOverlayGraphics.beginFill(healthBarHurtColor, 1.0);
             }
             else {
-              drawUnitMarker('badgeDeath.png', u, 1.5)
+              globalThis.unitOverlayGraphics.beginFill(healthBarHealColor, 1.0);
+            }
+
+            healthBarFill = getFillRect(u, 0, healthBarMax, u.health, healthAfterPrediction, zoom);
+            globalThis.unitOverlayGraphics.drawRect(
+              healthBarFill.x,
+              // Stack the health bar above the mana bar
+              healthBarFill.y - config.UNIT_UI_BAR_HEIGHT / zoom,
+              healthBarFill.width,
+              healthBarFill.height);
+
+            // Display a death marker if a unit is currently alive, but wont be after cast
+            if (u.alive && !predictionUnit.alive) {
+              if (globalThis.player && u.faction === globalThis.player.unit.faction) {
+                drawUnitMarker('badgeDeathAlly.png', u, 2)
+              }
+              else {
+                drawUnitMarker('badgeDeath.png', u, 1.5)
+              }
             }
           }
         }
       }
-      // Draw mana bar
-      if (u.manaMax != 0 && globalThis.unitOverlayGraphics) {
+
+      // Draw base mana bar
+      if (globalThis.unitOverlayGraphics) {
+
+        const manaBarMax = u.manaMax || 1;
+
+        let manaBarProps = getFillRect(u, 0, manaBarMax, 0, manaBarMax, zoom);
+        if (u.manaMax > 0) {
+          //background for mana using units
+          globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
+          globalThis.unitOverlayGraphics.beginFill(0x111111, 0.4);
+          globalThis.unitOverlayGraphics.drawRect(
+            manaBarProps.x,
+            manaBarProps.y,
+            manaBarProps.width,
+            manaBarProps.height
+          );
+        }
+
+        //current mana
+        manaBarProps = getFillRect(u, 0, manaBarMax, 0, u.mana, zoom);
         globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
         globalThis.unitOverlayGraphics.beginFill(colors.manaBlue, 1.0);
-        const manaBarProps = getUIBarProps(u.x, u.y, u.mana, u.manaMax, zoom, u);
         globalThis.unitOverlayGraphics.drawRect(
           manaBarProps.x,
           manaBarProps.y,
           manaBarProps.width,
-          manaBarProps.height);
-        // Draw the mana that goes missing after a spell (useful for mana_burn)
+          manaBarProps.height
+        );
+
+        // Show mana bar prediction
         if (predictionUnit) {
-          globalThis.unitOverlayGraphics.beginFill(colors.manaLostBlue, 1.0);
-          // Math.max prevents the manabar from going negative
-          const manaAfterSpell = Math.max(0, predictionUnit.mana);
-          const manaBarHurtProps = getUIBarProps(u.x, u.y, u.mana - manaAfterSpell, u.manaMax, zoom, u);
-          // Only render hurt mana bar if it dips below mana max
-          // (it can remain above mana max if mana is overfilled)
-          if (manaAfterSpell < u.manaMax) {
-            const hurtX = manaBarHurtProps.x + config.UNIT_UI_BAR_WIDTH / zoom * manaAfterSpell / u.manaMax;
-            globalThis.unitOverlayGraphics.drawRect(
-              // Show the manaBarHurtBar on the right side of the mana  bar
-              hurtX,
-              manaBarHurtProps.y,
-              // Special width calculation required to prevent overfillmana
-              // from rendering wrongly 
-              manaBarProps.width - (hurtX - manaBarProps.x),
-              manaBarHurtProps.height);
+          const manaAfterPrediction = predictionUnit.mana;
+          if (manaAfterPrediction < u.mana) {
+            globalThis.unitOverlayGraphics.beginFill(colors.manaDarkBlue, 1.0);
           }
-          // if (manaAfterSpell > u.mana) {
-          //   globalThis.unitOverlayGraphics?.beginFill(manaBarHealColor, 1.0);
-          // }
+          else {
+            globalThis.unitOverlayGraphics.beginFill(colors.manaBrightBlue, 1.0);
+          }
+
+          let fillRect = getFillRect(u, 0, manaBarMax, u.mana, manaAfterPrediction, zoom);
+          globalThis.unitOverlayGraphics.drawRect(
+            fillRect.x,
+            fillRect.y,
+            fillRect.width,
+            fillRect.height);
         }
+        globalThis.unitOverlayGraphics.endFill();
       }
-      globalThis.unitOverlayGraphics?.endFill();
     }
 
   }
 }
+
+export function getFillRect(unit: Unit.IUnit, min: number, max: number, value1: number, value2: number, zoom: number): { x: number, y: number, width: number, height: number } {
+  const start01 = Math.max(0, Math.min(value1 / (min + max), 1))
+  const end01 = Math.max(0, Math.min(value2 / (min + max), 1))
+
+  const widthAdjusted = config.UNIT_UI_BAR_WIDTH / zoom;
+  const fillWidth = widthAdjusted * Math.abs(end01 - start01);
+  const height = config.UNIT_UI_BAR_HEIGHT / zoom;
+
+  return {
+    x: unit.x - widthAdjusted / 2 + Math.min(start01, end01) * widthAdjusted,
+    // - height so that bar stays in the same position relative to the unit
+    // regardless of zoom
+    // - config.HEALTH_BAR_UI_Y_POS so that it renders above their head instead of
+    // on their center point
+    y: unit.y - config.HEALTH_BAR_UI_Y_POS * (unit.image?.sprite.scale.y || 1) - height,
+    width: fillWidth,
+    height,
+  }
+}
+
 export function drawUnitMarker(imagePath: string, pos: Vec2, extraScale: number = 1) {
   const zoom = getCamera().zoom;
   // 1/zoom keeps the attention marker the same size regardless of the level of zoom
@@ -957,25 +1008,6 @@ export function drawCircleUnderTarget(mousePos: Vec2, underworld: Underworld, op
     const scaleY = targetUnit?.image?.sprite.scale.y || 1;
     graphics.drawEllipse(target.x + offsetX, target.y + config.COLLISION_MESH_RADIUS * scaleY + offsetY * scaleY, Math.abs(targetUnit?.image?.sprite.scale.x || 1) * config.COLLISION_MESH_RADIUS / 2, (targetUnit?.image?.sprite.scale.y || 1) * config.COLLISION_MESH_RADIUS / 3);
     graphics.endFill();
-  }
-}
-
-
-// Used to return properties for drawRect for drawing
-// unit health and mana bars
-export function getUIBarProps(x: number, y: number, numerator: number, denominator: number, zoom: number, unit: Unit.IUnit): { x: number, y: number, width: number, height: number } {
-  const barWidthAccountForZoom = config.UNIT_UI_BAR_WIDTH / zoom;
-  const barWidth = Math.max(0, barWidthAccountForZoom * Math.min(1, numerator / denominator));
-  const height = config.UNIT_UI_BAR_HEIGHT / zoom;
-  return {
-    x: x - barWidthAccountForZoom / 2,
-    // - height so that bar stays in the same position relative to the unit
-    // regardless of zoom
-    // - config.HEALTH_BAR_UI_Y_POS so that it renders above their head instead of
-    // on their center point
-    y: y - config.HEALTH_BAR_UI_Y_POS * (unit.image?.sprite.scale.y || 1) - height,
-    width: barWidth,
-    height
   }
 }
 

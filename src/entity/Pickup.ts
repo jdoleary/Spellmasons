@@ -8,7 +8,7 @@ import { MESSAGE_TYPES } from '../types/MessageTypes';
 import * as config from '../config';
 import { clone, Vec2 } from '../jmath/Vec';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
-import { manaBlue, manaLostBlue, stamina } from '../graphics/ui/colors';
+import { manaBlue, manaDarkBlue, stamina } from '../graphics/ui/colors';
 import Underworld from '../Underworld';
 import { hasBloodCurse } from '../cards/blood_curse';
 import { HasSpace } from './Type';
@@ -821,7 +821,7 @@ export const pickups: IPickupSource[] = [
             // Changing the player's blood color is a quick hack to make the blood particle splatter be blue
             // like the mana lost
             const tempBlood = player.unit.bloodColor;
-            player.unit.bloodColor = manaLostBlue;
+            player.unit.bloodColor = manaDarkBlue;
             startBloodParticleSplatter(underworld, player.unit, player.unit);
             player.unit.bloodColor = tempBlood;
             floatingText({ coords: player.unit, text: `- ${previousMana - player.unit.manaMax} ${i18n('mana')}` });

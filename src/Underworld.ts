@@ -50,7 +50,7 @@ import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
 import Events from './Events';
 import { allUnits } from './entity/units';
-import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, drawUnitMarker, getUIBarProps, isOutOfBounds, runPredictions, updatePlanningView } from './graphics/PlanningView';
+import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, drawUnitMarker, isOutOfBounds, runPredictions, updatePlanningView } from './graphics/PlanningView';
 import { chooseObjectWithProbability, chooseOneOfSeeded, getUniqueSeedString, prng, randInt, SeedrandomState } from './jmath/rand';
 import { calculateCostForSingleCard } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle, closestLineSegmentIntersection } from './jmath/lineSegment';
