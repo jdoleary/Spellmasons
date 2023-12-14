@@ -130,7 +130,7 @@ export async function getNextConnectingEntities(
   potentialTargets = potentialTargets.filter(x => x != source);
 
   if (prediction) {
-    drawUICircleFillPrediction(source, radius - config.COLLISION_MESH_RADIUS / 2, colors.trueWhite, "Connect Area");
+    drawUICircleFillPrediction(source, radius - config.COLLISION_MESH_RADIUS / 2, colors.trueWhite, i18n("Connect Area"));
   }
 
   let connected: { chainSource: HasSpace, entity: HasSpace }[] = [];
