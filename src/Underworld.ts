@@ -2408,8 +2408,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         // and stamina is still max
         // and player has not cast yet
         if (!globalThis.player.endedTurn && globalThis.player.unit.stamina == globalThis.player.unit.staminaMax && !globalThis.castThisTurn) {
-          // Don't prompt "are you sure" for end turn when recording
-          if (!globalThis.isHUDHidden && !document.body?.classList.contains('hide-card-holders')) {
+          // Don't prompt "are you sure" for end turn when recording or local development
+          if (!location.href.includes('localhost') && !globalThis.isHUDHidden && !document.body?.classList.contains('hide-card-holders')) {
             affirm = await Jprompt({ text: 'Are you sure you want to end your turn without moving or casting?', noBtnText: 'Cancel', noBtnKey: 'Escape', yesText: 'End Turn', yesKey: 'Space', yesKeyText: 'Spacebar' });
           }
         }
