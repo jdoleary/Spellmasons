@@ -1,3 +1,10 @@
+//
+export const trueWhite = 0xffffff;
+export const trueBlack = 0x000000;
+export const trueRed = 0xff0000;
+export const trueGreen = 0x00ff00;
+export const trueBlue = 0x0000ff;
+//
 export const targetBlue = 0x00a5df;
 export const stamina = 0xd5b356;
 export const healthHurtRed = 0x632828;

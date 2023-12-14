@@ -50,7 +50,7 @@ import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
 import Events from './Events';
 import { allUnits } from './entity/units';
-import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, getUIBarProps, isOutOfBounds, runPredictions, updatePlanningView } from './graphics/PlanningView';
+import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, drawUnitMarker, getUIBarProps, isOutOfBounds, runPredictions, updatePlanningView } from './graphics/PlanningView';
 import { chooseObjectWithProbability, chooseOneOfSeeded, getUniqueSeedString, prng, randInt, SeedrandomState } from './jmath/rand';
 import { calculateCostForSingleCard } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle, closestLineSegmentIntersection } from './jmath/lineSegment';
@@ -65,7 +65,7 @@ import { baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLi
 import { Material } from './Conway';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndexPreventWrap } from './jmath/ArrayUtil';
 import { raceTimeout, reportIfTakingTooLong } from './Promise';
-import { cleanUpEmitters, containerParticles, containerParticlesUnderUnits, makeManaTrail, updateParticlees } from './graphics/Particles';
+import { cleanUpEmitters, containerParticles, containerParticlesUnderUnits, makeManaTrail, updateParticles } from './graphics/Particles';
 import { elInstructions } from './network/networkHandler';
 import type PieClient from '@websocketpie/client';
 import { makeForcePush } from './cards/push';
@@ -850,7 +850,7 @@ export default class Underworld {
     updatePlanningView(this);
     useMousePosition(this);
     // Particles
-    updateParticlees(deltaTime, this.bloods, this.random, this);
+    updateParticles(deltaTime, this.bloods, this.random, this);
 
     // Trigger any timed out pickups in queue
     this.aquirePickupQueue = this.aquirePickupQueue.filter(p => !p.flaggedForRemoval);
@@ -973,8 +973,7 @@ export default class Underworld {
       return;
     }
     for (let marker of globalThis.resMarkers) {
-      const { zoom } = getCamera();
-      ImmediateMode.draw(resurrect.thumbnail, marker, 1 / zoom);
+      drawUnitMarker(resurrect.thumbnail, marker);
     }
 
   }
@@ -988,29 +987,10 @@ export default class Underworld {
       // Don't draw attention markers if the hud is hidden
       return;
     }
-    const { zoom } = getCamera();
     // Note: this block must come after updating the camera position
-    // 1/zoom keeps the attention marker the same size regardless of the level of zoom
-    // Math.sin... makes the attention marker swell and shink so it grabs the player's attention so they
-    // know that they're in danger
-    // + 1 makes it go from 0 to 2 instead of -1 to 1
-    // / 8 limits the size
-    const markerScale = (1 / zoom) + (Math.sin(Date.now() / 500) + 1) / 8
-
     for (let marker of globalThis.attentionMarkers) {
-      const markerHeightHalf = 16 * markerScale;
-      const markerMarginAboveHealthBar = 10;
-      // Offset exclamation mark just above the head of the unit
-      const exclamationMarkPosition = withinCameraBounds({
-        x: marker.pos.x, y: marker.pos.y
-          - config.HEALTH_BAR_UI_Y_POS * marker.scale
-          - config.UNIT_UI_BAR_HEIGHT / zoom
-          - markerHeightHalf
-          - markerMarginAboveHealthBar / zoom
-      });
-
       // Draw Attention Icon to show the enemy will hurt you next turn
-      ImmediateMode.draw(marker.imagePath, exclamationMarkPosition, markerScale);
+      drawUnitMarker(marker.imagePath, marker.pos, marker.scale);
     }
   }
   drawPlayerThoughts() {

@@ -6,7 +6,7 @@ import * as Unit from '../Unit';
 import type Underworld from '../../Underworld';
 import { registerEvents } from '../../cards';
 import { Vec2 } from '../../jmath/Vec';
-import { drawUICircle } from '../../graphics/PlanningView';
+import { drawUICirclePrediction } from '../../graphics/PlanningView';
 import { makeParticleExplosion } from '../../graphics/ParticleCollection';
 import { forcePush, velocityStartMagnitude } from '../../cards/push';
 
@@ -71,7 +71,7 @@ export function registerUrnexplosiveExplode() {
 
 function explode(location: Vec2, radius: number, damage: number, prediction: boolean, underworld: Underworld) {
     if (prediction) {
-        drawUICircle(location, radius, colors.healthRed, 'Explosion Radius');
+        drawUICirclePrediction(location, radius, colors.healthRed, 'Explosion Radius');
     } else {
         playSFXKey('bloatExplosion');
     }

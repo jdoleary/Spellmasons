@@ -9,6 +9,7 @@ import Events, {
   onAgro,
   onTurnStart,
   onTurnEnd,
+  onDrawSelected,
 } from '../Events';
 import Subsprites, { Subsprite } from '../Subsprites';
 // Register spells:
@@ -121,7 +122,7 @@ interface Events {
   onAgro?: onAgro;
   onTurnStart?: onTurnStart;
   onTurnEnd?: onTurnEnd;
-
+  onDrawSelected?: onDrawSelected;
 }
 export interface Spell {
   card: ICard;
@@ -152,7 +153,9 @@ export function registerEvents(id: string, events: Events) {
   if (events.onTurnEnd) {
     Events.onTurnEndSource[id] = events.onTurnEnd;
   }
-
+  if (events.onDrawSelected) {
+    Events.onDrawSelectedSource[id] = events.onDrawSelected;
+  }
 }
 
 export function registerSpell(spell: Spell, overworld: Overworld) {

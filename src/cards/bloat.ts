@@ -2,7 +2,7 @@ import * as particles from '@pixi/particle-emitter'
 import { IUnit, takeDamage } from '../entity/Unit';
 import * as Unit from '../entity/Unit';
 import { Spell } from './index';
-import { drawUICircle } from '../graphics/PlanningView';
+import { drawUICircle, drawUICirclePrediction } from '../graphics/PlanningView';
 import { forcePush, velocityStartMagnitude } from './push';
 import type Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
@@ -28,6 +28,10 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity:
     // Add event
     if (!unit.onDeathEvents.includes(id)) {
       unit.onDeathEvents.push(id);
+    }
+    // Add event
+    if (!unit.onDrawSelectedEvents.includes(id)) {
+      unit.onDrawSelectedEvents.push(id);
     }
     // Add subsprite image
     if (unit.image) {
@@ -92,12 +96,18 @@ const spell: Spell = {
       const quantity = unit.modifiers[id]?.quantity || 1;
       const adjustedRadius = baseRadius + (unit.modifiers[id]?.radius || 0);
       explode(unit, adjustedRadius, damage * quantity, prediction, underworld);
+    },
+    onDrawSelected: async (unit: IUnit, prediction: boolean, underworld: Underworld) => {
+      if (globalThis.selectedUnitGraphics) {
+        const adjustedRadius = baseRadius + (unit.modifiers[id]?.radius || 0);
+        drawUICircle(globalThis.selectedUnitGraphics, unit, adjustedRadius, colors.healthRed, 'Explosion Radius');
+      }
     }
   }
 };
 export function explode(location: Vec2, radius: number, damage: number, prediction: boolean, underworld: Underworld) {
   if (prediction) {
-    drawUICircle(location, radius, colors.healthRed, 'Explosion Radius');
+    drawUICirclePrediction(location, radius, colors.healthRed, 'Explosion Radius');
   } else {
     playSFXKey('bloatExplosion');
   }

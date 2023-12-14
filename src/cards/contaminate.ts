@@ -8,7 +8,7 @@ import * as Unit from '../entity/Unit';
 import * as colors from '../graphics/ui/colors';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
-import { drawUICircle } from '../graphics/PlanningView';
+import { drawUICirclePrediction } from '../graphics/PlanningView';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { IPlayer } from '../entity/Player';
 import { Modifier } from './util';
@@ -92,7 +92,7 @@ async function contaminate(casterPlayer: IPlayer | undefined, unit: IUnit, under
 async function spreadCurses(unit: IUnit, ignore: IUnit[], curses: CurseData[], range: number, underworld: Underworld, prediction: boolean): Promise<IUnit[]> {
 
   if (prediction) {
-    drawUICircle(unit, range, colors.healthRed, 'Contagion Radius');
+    drawUICirclePrediction(unit, range, colors.healthRed, 'Contagion Radius');
   }
 
   const nearbyUnits = underworld.getUnitsWithinDistanceOfTarget(unit, range, prediction)
