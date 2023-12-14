@@ -104,9 +104,9 @@ export function updatePlanningView(underworld: Underworld) {
 
       // Draw selected unit stuff
       if (selectedType == "unit" && globalThis.selectedUnit) {
+        // Draw circle to show that unit is selected
+        drawCircleUnderTarget(globalThis.selectedUnit, underworld, 1.0, planningViewGraphics);
         if (globalThis.selectedUnit.alive) {
-          // Draw circle to show that unit is selected
-          drawCircleUnderTarget(globalThis.selectedUnit, underworld, 1.0, planningViewGraphics);
           // Draws the unit's graphics, and the graphics of any relevant modifiers
           // I.E. attack range and bloat radius
           Unit.drawSelectedGraphics(globalThis.selectedUnit, false, underworld);
@@ -968,25 +968,23 @@ export function updateTooltipSelectionWhileSpawning(mousePos: Vec2, underworld: 
 }
 export function updateTooltipSelection(mousePos: Vec2, underworld: Underworld) {
 
-  // Find unit:
-  const unit = underworld.getUnitAt(mousePos);
-  if (unit) {
-    globalThis.selectedUnit = unit;
-    selectedType = "unit";
-    return
-  } else {
-    globalThis.selectedUnit = undefined;
-  }
+  const targetUnit = underworld.getUnitAt(mousePos)
   const pickup = underworld.getPickupAt(mousePos);
-  if (pickup) {
+
+  if (targetUnit) {
+    globalThis.selectedUnit = targetUnit;
+    selectedType = "unit";
+    return;
+  }
+  else if (pickup) {
     globalThis.selectedPickup = pickup;
     selectedType = "pickup";
-    return
-  } else {
-    globalThis.selectedPickup = undefined;
+    return;
   }
-  // If nothing was found to select, null-out selectedType
-  // deselect
+
+  // If nothing was found to select, null-out selectedType and deselect
+  globalThis.selectedUnit = undefined;
+  globalThis.selectedPickup = undefined;
   selectedType = null;
 }
 
