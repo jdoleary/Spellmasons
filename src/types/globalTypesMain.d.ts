@@ -268,4 +268,6 @@ declare global {
     // Will save the game as soon as possible with the name stored in this string
     var saveASAP: string | undefined;
     var remoteLog: undefined | ((...args: any[]) => void);
+    // Used for the menu and inventory
+    var allCards: { [cardId: string]: ICard } | undefined;
 }

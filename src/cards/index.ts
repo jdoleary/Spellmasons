@@ -182,62 +182,14 @@ export function registerCards(overworld: Overworld) {
     registerSpell(devRecordDelay, overworld);
     registerSpell(devCauseDesync, overworld);
   }
+  // Damage Spells
   registerSpell(slash, overworld);
   registerSpell(heavySlash, overworld);
   registerSpell(megaSlash, overworld);
   registerSpell(rend, overworld);
   registerSpell(bleed, overworld);
-  registerSpell(heal, overworld);
-  registerSpell(heal_greater, overworld);
-  registerSpell(heal_mass, overworld);
-  registerSpell(send_mana, overworld);
-  registerSpell(target_circle, overworld);
-  registerSpell(connect, overworld);
-  registerSpell(contaminate, overworld);
-  registerSpell(freeze, overworld);
-  registerSpell(resurrect, overworld);
-  registerSpell(resurrect_weak, overworld);
-  registerSpell(resurrect_toxic, overworld);
-  registerSpell(shield, overworld);
-  registerSpell(fortify, overworld);
-  registerSpell(poison, overworld);
-  registerSpell(suffocate, overworld);
-  registerSpell(purify, overworld);
-  registerSpell(swap, overworld);
-  registerSpell(displace, overworld);
-  registerSpell(debilitate, overworld);
-  // Nullify / "protection" is too powerful, remove for now
-  // - **bug** nullify bug: it doesn't leave after it cancels a spell so if you cast it on an enemy you cant kill it
-  // register(protection.default, overworld);
-  registerSpell(clone, overworld);
-  registerSpell(mana_burn, overworld);
-  registerSpell(mana_steal, overworld);
-  registerSpell(vampire_bite, overworld);
-  registerSpell(push, overworld);
-  registerSpell(pull, overworld);
-  registerSpell(vortex, overworld);
-  registerSpell(dash, overworld);
-  registerSpell(repel, overworld);
-  registerSpell(decoy, overworld);
-  registerSpell(explode, overworld);
-  // Temporarily remove corpse_explosion until optimization
-  // issues are solved
-  // register(corpse_explosion, overworld);
-  registerSpell(lastWill, overworld);
-  registerSpell(split, overworld);
   registerSpell(drown, overworld);
-  registerSpell(target_similar, overworld);
-  registerSpell(target_similar_2, overworld);
-  registerSpell(target_all, overworld);
-  registerSpell(target_cone, overworld);
-  registerSpell(plus_radius, overworld);
-  registerSpell(shove, overworld);
-  registerSpell(target_column, overworld);
   registerSpell(burst, overworld);
-  registerSpell(slow, overworld);
-  registerSpell(death_wager, overworld);
-  registerSpell(capture_soul, overworld);
-  registerSpell(sacrifice, overworld);
   registerSpell(arrow, overworld);
   registerSpell(arrow2, overworld);
   registerSpell(arrow3, overworld);
@@ -247,10 +199,70 @@ export function registerCards(overworld: Overworld) {
   registerSpell(arrowFar, overworld);
   registerSpell(explosive_arrow, overworld);
   registerSpell(phantom_arrow, overworld);
+
+  // Blessings
+  registerSpell(heal, overworld);
+  registerSpell(heal_greater, overworld);
+  registerSpell(heal_mass, overworld);
+  registerSpell(send_mana, overworld);
+  registerSpell(shield, overworld);
+  registerSpell(fortify, overworld);
+  registerSpell(lastWill, overworld);
+
+  // Curses
+  registerSpell(poison, overworld);
+  registerSpell(suffocate, overworld);
+  registerSpell(freeze, overworld);
+  registerSpell(purify, overworld);
+  registerSpell(debilitate, overworld);
+  registerSpell(explode, overworld);
+  registerSpell(slow, overworld);
+  registerSpell(vampire_bite, overworld);
+  registerSpell(split, overworld);
+  registerSpell(contaminate, overworld);
+
+  // Mana
+  registerSpell(mana_burn, overworld);
+  registerSpell(mana_steal, overworld);
+  registerSpell(conserve, overworld);
+  registerSpell(death_wager, overworld);
+
+  // Soul
+  registerSpell(resurrect_weak, overworld);
+  registerSpell(resurrect_toxic, overworld);
+  registerSpell(resurrect, overworld);
+  registerSpell(clone, overworld);
+  registerSpell(sacrifice, overworld);
+  registerSpell(capture_soul, overworld);
+  registerSpell(decoy, overworld);
+
+  // Nullify / "protection" is too powerful, remove for now
+  // - **bug** nullify bug: it doesn't leave after it cancels a spell so if you cast it on an enemy you cant kill it
+  // register(protection.default, overworld);
+
+  // Movement
+  registerSpell(dash, overworld);
+  registerSpell(push, overworld);
+  registerSpell(repel, overworld);
+  registerSpell(pull, overworld);
+  registerSpell(vortex, overworld);
+  registerSpell(swap, overworld);
+  registerSpell(displace, overworld);
+  registerSpell(shove, overworld);
+
+
+  // Targeting Spells
+  registerSpell(target_cone, overworld);
+  registerSpell(target_column, overworld);
   registerSpell(target_arrow, overworld);
+  registerSpell(target_circle, overworld);
+  registerSpell(connect, overworld);
+  registerSpell(plus_radius, overworld);
+  registerSpell(target_similar, overworld);
+  registerSpell(target_similar_2, overworld);
+  registerSpell(target_all, overworld);
   // TODO: Refactor bolt into soulbind, it didn't work out well as a spell
   // register(bolt, overworld);
-  registerSpell(conserve, overworld);
   // registerSpell(trap, overworld);
   for (let unitId of Object.keys(allUnits)) {
     const spell = summon_generic(unitId, false);
@@ -463,7 +475,6 @@ export interface ICard {
 }
 
 export const allCards: { [cardId: string]: ICard } = {};
-// @ts-ignore: This is for the menu and does not need to be in the global type
 globalThis.allCards = allCards;
 export const allModifiers: { [id: string]: Modifiers } = {};
 

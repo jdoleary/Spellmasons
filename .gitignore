@@ -1,6 +1,6 @@
 .env
 .snowpack
-build
+/build
 node_modules
 gimp
 testQueue.js

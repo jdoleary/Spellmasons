@@ -2,11 +2,10 @@ import type { UnitSource } from './index';
 import { UnitSubType, UnitType } from '../../types/commonTypes';
 import * as Unit from '../Unit';
 import * as math from '../../jmath/math';
-import * as Vec from '../../jmath/Vec';
 import Underworld from '../../Underworld';
-import * as slash from '../../cards/slash';
 import * as config from '../../config';
-import floatingText from '../../graphics/FloatingText';
+import { oneOffImage } from '../../cards/cardUtils';
+import { containerSpells } from '../../graphics/PixiUtils';
 
 export const spellmasonUnitId = 'Spellmason';
 const playerUnit: UnitSource = {
@@ -27,15 +26,11 @@ const playerUnit: UnitSource = {
       // Archers attack or move, not both; so clear their existing path
       unit.path = undefined;
       Unit.orient(unit, attackTarget);
-      const keyMoment = () => underworld.castCards({
-        casterCardUsage: {},
-        casterUnit: unit,
-        casterPositionAtTimeOfCast: Vec.clone(unit),
-        cardIds: [slash.slashCardId],
-        castLocation: attackTarget,
-        prediction: false,
-        outOfRange: false,
-      });
+      const keyMoment = async () => {
+        playSFXKey('hurt');
+        oneOffImage(attackTarget, 'spell-effects/spellHurtCuts', containerSpells);
+        Unit.takeDamage(attackTarget, unit.damage, unit, underworld, false);
+      }
       await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
     }
     // Movement:

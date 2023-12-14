@@ -41,7 +41,7 @@ globalThis.numberOfHotseatPlayers = 1;
 function headlessStartGame() {
     console.log('Headless Server Started at port ', PORT);
     pie.startServer({
-        port: PORT, allowStats: true, makeHostAppInstance: () => {
+        port: PORT, allowStats: true, roomCleanupDelay: 0, makeHostAppInstance: () => {
             const hostAppInst = new HostApp();
             console.log('Start Game: Attempt to start the game')
             console.log('Host: Start game / Initialize Underworld');

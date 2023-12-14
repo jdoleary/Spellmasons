@@ -15,7 +15,7 @@ const spell: Spell = {
     id: heal_mass_id,
     // Mass heal doesn't require a target
     allowNonUnitTarget: true,
-    replaces: [heal_greater_id],
+    requires: [heal_greater_id],
     category: CardCategory.Blessings,
     sfx: 'heal',
     supportQuantity: true,

@@ -11,6 +11,7 @@ import type { Localizable } from '../localization';
 import type * as particles from '@pixi/particle-emitter'
 import type { PromptArgs } from '../graphics/Jprompt';
 import { JEmitter, Mod } from './commonTypes';
+import { ICard } from '../cards';
 
 declare global {
     var SPELLMASONS_PACKAGE_VERSION: string;
@@ -334,4 +335,6 @@ declare global {
     var rerollOmit: string[] | undefined;
     var saveASAP: undefined | string;
     var remoteLog: undefined | ((...args: any[]) => void);
+    // Used for the menu and inventory
+    var allCards: { [cardId: string]: ICard } | undefined;
 }

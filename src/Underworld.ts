@@ -567,7 +567,7 @@ export default class Underworld {
         // moving when it reaches the target which may be less than 1.0 and 1.0 away.
         u.path.points.shift();
       }
-      // Only allow movement if the unit has stamina
+      // Only allow movement if the unit has stamina and it is their turn
       const isUnitsTurn = Unit.isUnitsTurnPhase(u, this);
       if (u.path && u.path.points[0] && u.stamina > 0 && isUnitsTurn) {
         // Move towards target
@@ -633,10 +633,6 @@ export default class Underworld {
         return false;
       } else {
         if (!isUnitsTurn) {
-          // This block is not supposed to execute but can under unusual circumstanses such as after a load
-          // so if we get here and a unit is trying to move but shouldn't, just clear it's stamina so that the unit
-          // will be done processing
-          console.log('Guard against infinite loop, unit tried to move but it was not its turn.  Clearing stamina');
           u.stamina = 0;
         }
       }
@@ -3666,14 +3662,14 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // Make all potion pickups disappear so as to not compell players to waste time walking around picking them
       // all up
       // Also do not remove portals
-      this.pickups.filter(p => p.name !== Pickup.CARDS_PICKUP_NAME && p.name !== Pickup.PICKUP_PORTAL_NAME).forEach(p => {
+      this.pickups.filter(p => p.name !== Pickup.CARDS_PICKUP_NAME && p.name !== Pickup.PORTAL_PURPLE_NAME).forEach(p => {
         makeScrollDissapearParticles(p, false);
         Pickup.removePickup(p, this, false);
       });
       // Spawn portal near each player
-      const portalPickup = Pickup.pickups.find(p => p.name == Pickup.PICKUP_PORTAL_NAME);
+      const portalPickup = Pickup.pickups.find(p => p.name == Pickup.PORTAL_PURPLE_NAME);
       if (portalPickup) {
-        const portalsAlreadySpawned = !!this.pickups.filter(p => !p.flaggedForRemoval && !isNaN(p.x) && !isNaN(p.x)).find(p => p.name === Pickup.PICKUP_PORTAL_NAME)
+        const portalsAlreadySpawned = !!this.pickups.filter(p => !p.flaggedForRemoval && !isNaN(p.x) && !isNaN(p.x)).find(p => p.name === Pickup.PORTAL_PURPLE_NAME)
         if (!portalsAlreadySpawned) {
           for (let playerUnit of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
             const portalSpawnLocation = this.findValidSpawn(playerUnit, 4) || playerUnit;
