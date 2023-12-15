@@ -41,7 +41,6 @@ const spell: Spell = {
       for (let i = 0; i < targets.length; i++) {
         const unit = targets[i];
         if (unit) {
-          console.log(unit.mana);
           const unitManaStolen = Math.min(unit.mana, Math.ceil(remainingManaToSteal / (targets.length - i)));
           remainingManaToSteal -= unitManaStolen;
           unit.mana -= unitManaStolen;
