@@ -11,10 +11,10 @@ import { playDefaultSpellSFX } from './cardUtils';
 import { HasSpace } from '../entity/Type';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
-const id = 'swap';
+export const swap_id = 'swap';
 const spell: Spell = {
   card: {
-    id,
+    id: swap_id,
     category: CardCategory.Movement,
     sfx: 'swap',
     manaCost: 15,
