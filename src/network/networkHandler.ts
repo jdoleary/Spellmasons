@@ -56,11 +56,9 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
     console.error('Cannot process onData, underworld does not exist');
     return;
   }
+  // Note: If the message is from the server there will not be a fromPlayer
   const fromPlayer = globalThis.numberOfHotseatPlayers > 1 ? underworld.players[underworld.hotseatCurrentPlayerIndex] : underworld.players.find(p => p.clientId == fromClient);
-  if (!fromPlayer) {
-    console.error('onData failed, fromPlayer is undefined', d.type);
-    return;
-  }
+
   switch (type) {
     case MESSAGE_TYPES.CHAT_SENT:
       const { message } = payload;
@@ -177,7 +175,9 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         break;
       }
     case MESSAGE_TYPES.PING:
-      pingSprite({ coords: payload as Vec2, color: fromPlayer.color });
+      if (fromPlayer) {
+        pingSprite({ coords: payload as Vec2, color: fromPlayer.color });
+      }
       break;
     case MESSAGE_TYPES.INIT_GAME_STATE:
       // This is executed on all clients, even ones that ignore the 
