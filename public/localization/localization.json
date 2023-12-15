@@ -249,6 +249,7 @@
         "explain cast": "<h1>How to Forge Spells!</h1>Click on a spell or use its keyboard hotkey to queue it up. Left click on a target to unleash the queued spell.<br/><br/>Or if you change your mind, press 🍞 to clear a queued spell.",
         "explain move": "<h1>How to Move</h1>Hold right mouse button to walk towards your cursor.",
         "spell_heal": "Heals all targets for 🍞.❕Will not heal beyond maximum health.❕Stackable.",
+        "spell_regenerate": "Regenerate 30 hit points for 🍞.❕ turns Stacks increase duration. ",
         "spell_arrow": "Fires an arrow that deals 🍞 damage to the first unit that it strikes.❕Cannot pass through walls.",
         "spell_bleed": "Deals more damage based on how much health the target is missing.❕❕ For example:❕Target with 🍞% health will die.❕🍞% health: 🍞% of max health as damage❕Target with full health will take no damage.❕",
         "spell_bloat": "When a unit cursed with 🍞 dies, it will explode dealing 🍞 damage to all units within the explosion radius.❕Multiple stacks of 🍞 will increase the amount of damage done when the unit explodes.",

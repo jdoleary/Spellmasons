@@ -35,6 +35,8 @@ export interface IUpgrade {
   // The probability of getting this as an upgrade
   probability: number;
   cost: CardCost;
+  mageTypes?: MageType[];
+  // Array of MageTypes eligible for upgrade
 }
 export function isPickingClass(player: IPlayer): boolean {
   // undefined mageType means they haven't picked yet
@@ -59,6 +61,8 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
     // Upgrade is NOT included in list of rerollOmit
     // this prevents a reroll from presenting an upgrade
     // that was in the last selection
+    && (!u.mageTypes?.length || (player.mageType && u.mageTypes.includes(player.mageType)))
+    // Magetypes match, or the spell doesn't have any specific magetypes
     && !(globalThis.rerollOmit || []).some(omittedTitle => omittedTitle == u.title)
     && isModActive(u, underworld);
   let filteredUpgradeCardsSource = upgradeCardsSource.filter(filterUpgrades);
@@ -68,7 +72,6 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
   let upgradeList = filteredUpgradeCardsSource;
   // Limit the rarity of cards that are possible to attain
   upgradeList = upgradeList.filter(u => u.probability >= minimumProbability);
-
   // For third pick, override upgradeList with damage spells
   if (player.upgrades.length == 2) {
     upgradeList = upgradeCardsSource
@@ -80,7 +83,16 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
   if (isPickingClass(player)) {
     return upgradeMageClassSource;
   }
-
+  // if player has a class, include a class specific spell if it exists for first pick after selecting a class
+  if (player.mageType && player.upgrades.length == 6) {
+    var mageTypeSpells = upgradeCardsSource;
+    mageTypeSpells.filter(filterUpgrades)
+      .filter(c => c.mageTypes?.includes(player.mageType as MageType))
+    if (mageTypeSpells.length) {
+      if (mageTypeSpells[0]) mageTypeSpells[0].probability = 100; // max probability of the first spell found in array
+      upgradeList = mageTypeSpells;
+    }
+  }
   // Clone upgrades for later mutation
   const clonedUpgradeSource = [...upgradeList];
   // Choose from upgrades

@@ -447,6 +447,7 @@ export interface ICard {
   category: CardCategory;
   manaCost: number;
   healthCost: number;
+  mageTypes?: Player.MageType[];
   probability: number;
   thumbnail: string;
   // The path for the animation effect when the spell is cast
