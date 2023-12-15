@@ -18,6 +18,7 @@ import * as shield from './cards/shield';
 import * as fortify from './cards/fortify';
 import * as immune from './cards/immune';
 import * as CSSClasses from './CSSClasses';
+import * as log from './log';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import {
@@ -3734,7 +3735,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Remove units flagged for removal before syncing
     this.units = this.units.filter(u => !u.flaggedForRemoval);
 
-    console.log('sync: Syncing units', units.map(u => u.id), 'current units:', this.units.map(u => u.id));
+    log.client('sync: Syncing units', units.map(u => u.id), 'current units:', this.units.map(u => u.id));
     // Report detected duplicate id:
     this.units.forEach((unit, index) => {
       if (this.units.findIndex(u => u.id == unit.id) !== index) {
@@ -3823,7 +3824,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   syncPickups(pickups: Pickup.IPickupSerialized[]) {
     // Remove pickups flagged for removal before syncing
     this.pickups = this.pickups.filter(p => !p.flaggedForRemoval);
-    console.log('sync: Syncing pickups', pickups.map(u => `${u.id}:${u.flaggedForRemoval}`), 'current pickups:', this.pickups.map(u => `${u.id}:${u.flaggedForRemoval}`));
+    log.client('sync: Syncing pickups', pickups.map(u => `${u.id}:${u.flaggedForRemoval}`), 'current pickups:', this.pickups.map(u => `${u.id}:${u.flaggedForRemoval}`));
 
     // What couldn't be synced store in an array to create after iterating is finished
     let serializedpickupsLeftToCreate = [];
