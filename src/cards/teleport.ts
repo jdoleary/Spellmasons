@@ -33,7 +33,6 @@ const spell: Spell = {
       if (targets.length == 0) {
         targets = [state.castLocation];
       }
-      console.log('jtest', targets)
       for (let target of targets) {
         if (!prediction) {
           // Animate effect of unit spawning from the sky
