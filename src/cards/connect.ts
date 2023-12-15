@@ -23,7 +23,7 @@ const spell: Spell = {
     manaCost: 25,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.COMMON],
+    probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconConnect.png',
     supportQuantity: true,
     requiresFollowingCard: true,

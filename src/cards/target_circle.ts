@@ -20,7 +20,7 @@ const spell: Spell = {
     manaCost: 30,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.UNCOMMON],
+    probability: probabilityMap[CardRarity.SPECIAL],
     thumbnail: 'spellIconExpanding.png',
     requiresFollowingCard: true,
     description: 'spell_target_circle',

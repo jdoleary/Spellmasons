@@ -5,12 +5,12 @@ import * as Image from '../graphics/Image';
 import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
-const id = 'mana_burn';
+export const manaBurnCardId = 'mana_burn';
 const mana_burnt = 30;
 const health_burn_ratio = 1;
 const spell: Spell = {
   card: {
-    id,
+    id: manaBurnCardId,
     category: CardCategory.Mana,
     sfx: 'manaBurn',
     manaCost: 20,
