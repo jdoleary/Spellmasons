@@ -241,6 +241,7 @@ export function setupPieAndUnderworld() {
   } else {
     console.log('Client: Initialize PieClient');
     const pie = new PieClient();
+    globalThis.pie = pie;
     setInterval(() => {
       if (pie.isConnected() && pie.currentRoomInfo) {
         // Keep connection alive.  Bun's websocket server has a 2 minute timeout

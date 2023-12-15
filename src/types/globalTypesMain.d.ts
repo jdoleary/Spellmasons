@@ -270,4 +270,6 @@ declare global {
     var remoteLog: undefined | ((...args: any[]) => void);
     // Used for the menu and inventory
     var allCards: { [cardId: string]: ICard } | undefined;
+    // For menu
+    var pie: PieClient | undefined;
 }
