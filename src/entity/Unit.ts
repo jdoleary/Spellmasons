@@ -42,6 +42,7 @@ import { StatCalamity } from '../Perk';
 import { skyBeam } from '../VisualEffects';
 import seedrandom from 'seedrandom';
 import { summoningSicknessId } from '../modifierSummoningSickness';
+import * as log from '../log';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -1182,7 +1183,7 @@ export function orient(unit: IUnit, faceTarget: Vec2) {
 // movement since they hold RMB to move, the target may be constantly changing
 export function _moveTowards(unit: IUnit, target: Vec2, underworld: Underworld) {
   if (!canMove(unit)) {
-    console.log('cannot move')
+    log.client('cannot move');
     return
   }
   if (unit.image) {
@@ -1206,7 +1207,7 @@ export function moveTowardsMulti(unit: IUnit, points: Vec2[], underworld: Underw
     return Promise.resolve();
   }
   if (!canMove(unit)) {
-    console.log('cannot move')
+    log.client('cannot move');
     return Promise.resolve();
   }
   const [firstPoint, ...followingPoints] = points;

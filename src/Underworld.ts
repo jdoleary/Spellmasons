@@ -18,6 +18,7 @@ import * as shield from './cards/shield';
 import * as fortify from './cards/fortify';
 import * as immune from './cards/immune';
 import * as CSSClasses from './CSSClasses';
+import * as log from './log';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import {
@@ -45,7 +46,7 @@ import {
   cacheBlood,
 } from './graphics/PixiUtils';
 import floatingText, { queueCenteredFloatingText, warnNoMoreSpellsToChoose } from './graphics/FloatingText';
-import { UnitType, Faction, UnitSubType, isSinglePlayer, GameMode } from './types/commonTypes';
+import { UnitType, Faction, UnitSubType, GameMode } from './types/commonTypes';
 import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
 import Events from './Events';
@@ -98,6 +99,7 @@ import { urn_ice_id } from './entity/units/urn_ice';
 import { urn_poison_id } from './entity/units/urn_poison';
 import { elEndTurnBtn } from './HTMLElements';
 import { corpseDecayId } from './modifierCorpseDecay';
+import { isSinglePlayer } from './network/wsPieSetup';
 
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
@@ -2331,7 +2333,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (globalThis.save && globalThis.player && globalThis.player.isSpawned) {
       // For now, only save if in a singleplayer game (as determined by solomode_client_id)
       // because save support hasn't been added to multiplayer yet
-      if (isSinglePlayer(globalThis.player.clientId)) {
+      if (isSinglePlayer()) {
         console.info(`Dev: quick saving game as "${globalThis.quicksaveKey}"`);
         // Force overwrite for quicksave, never prompt "are you sure?" when auto saving a quicksave
         globalThis.save(globalThis.quicksaveKey, true);
@@ -3734,7 +3736,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Remove units flagged for removal before syncing
     this.units = this.units.filter(u => !u.flaggedForRemoval);
 
-    console.log('sync: Syncing units', units.map(u => u.id), 'current units:', this.units.map(u => u.id));
+    log.client('sync: Syncing units', units.map(u => u.id), 'current units:', this.units.map(u => u.id));
     // Report detected duplicate id:
     this.units.forEach((unit, index) => {
       if (this.units.findIndex(u => u.id == unit.id) !== index) {
@@ -3823,7 +3825,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   syncPickups(pickups: Pickup.IPickupSerialized[]) {
     // Remove pickups flagged for removal before syncing
     this.pickups = this.pickups.filter(p => !p.flaggedForRemoval);
-    console.log('sync: Syncing pickups', pickups.map(u => `${u.id}:${u.flaggedForRemoval}`), 'current pickups:', this.pickups.map(u => `${u.id}:${u.flaggedForRemoval}`));
+    log.client('sync: Syncing pickups', pickups.map(u => `${u.id}:${u.flaggedForRemoval}`), 'current pickups:', this.pickups.map(u => `${u.id}:${u.flaggedForRemoval}`));
 
     // What couldn't be synced store in an array to create after iterating is finished
     let serializedpickupsLeftToCreate = [];

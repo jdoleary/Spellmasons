@@ -580,7 +580,6 @@ export async function runPredictions(underworld: Underworld) {
         }
         for (let { target, color, radius, text } of predictionCircles) {
           const colorOverride = outOfRange ? colors.outOfRangeGrey : color;
-          console.log(outOfRange, colorOverride)
           drawUICircle(predictionGraphics, target, radius, colorOverride, text);
         }
       }

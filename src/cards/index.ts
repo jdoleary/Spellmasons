@@ -32,6 +32,7 @@ import resurrect_toxic from './resurrect_toxic';
 import shield from './shield';
 import fortify from './fortify';
 import swap from './swap';
+import teleport from './teleport';
 import displace from './displace';
 import purify from './purify';
 import poison from './poison';
@@ -249,9 +250,10 @@ export function registerCards(overworld: Overworld) {
   registerSpell(repel, overworld);
   registerSpell(pull, overworld);
   registerSpell(vortex, overworld);
-  registerSpell(swap, overworld);
-  registerSpell(displace, overworld);
   registerSpell(shove, overworld);
+  registerSpell(displace, overworld);
+  registerSpell(swap, overworld);
+  registerSpell(teleport, overworld);
 
 
   // Targeting Spells

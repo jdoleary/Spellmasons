@@ -34,8 +34,9 @@ import { runPredictions } from '../graphics/PlanningView';
 import seedrandom from 'seedrandom';
 import { getUniqueSeedString, SeedrandomState } from '../jmath/rand';
 import { setPlayerNameUI } from '../PlayerUtils';
-import { GameMode, isSinglePlayer } from '../types/commonTypes';
+import { GameMode } from '../types/commonTypes';
 import { recalcPositionForCards } from '../graphics/ui/CardUI';
+import { isSinglePlayer } from './wsPieSetup';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -593,7 +594,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       }
 
       await handleLoadGameState(payload, overworld);
-      if (!isSinglePlayer(globalThis.clientId)) {
+      if (!isSinglePlayer()) {
         setView(View.Menu);
         globalThis.setMenu?.('MULTIPLAYER_SERVER_CHOOSER');
       }
@@ -1259,7 +1260,7 @@ Current game version: ${globalThis.SPELLMASONS_PACKAGE_VERSION}`,
       }
       const SOLOMODE_CLIENT_ID = 'solomode_client_id';
       // If connected to a multiplayer server
-      if (globalThis.player && !isSinglePlayer(globalThis.player.clientId) && overworld.underworld) {
+      if (globalThis.player && !isSinglePlayer() && overworld.underworld) {
         // Cannot load a game if a player is already playing, can only load games if the game has not started yet
         if (overworld.underworld.players.some(p => p.isSpawned)) {
           console.log('Cannot load multiplayer game over a game that is ongoing.')
@@ -1271,7 +1272,7 @@ Current game version: ${globalThis.SPELLMASONS_PACKAGE_VERSION}`,
           return;
         }
       }
-      if (globalThis.player && isSinglePlayer(globalThis.player.clientId)) {
+      if (globalThis.player && isSinglePlayer()) {
         const firstPlayer = players[0];
         if (firstPlayer) {
           // Assume control of the existing single player in the load file
