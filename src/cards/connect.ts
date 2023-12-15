@@ -1,4 +1,4 @@
-import { drawPredictionCircleFill, drawPredictionLine } from '../graphics/PlanningView';
+import { drawPredictionLine, drawUICircleFillPrediction } from '../graphics/PlanningView';
 import { addTarget, addUnitTarget, getCurrentTargets, Spell } from './index';
 import * as Unit from '../entity/Unit';
 import * as colors from '../graphics/ui/colors';
@@ -44,7 +44,7 @@ const spell: Spell = {
             if (Unit.isUnit(x) && Unit.isUnit(target)) {
               if (target.alive) {
                 // Match living units of the same faction
-                return x.faction == target.faction && x.alive; //TODO - Should doodads be on the "enemy" faction, or is there a neutral faction?
+                return x.faction == target.faction && x.alive; //TODO - Neutral faction?
               } else {
                 // Match any dead unit
                 return !x.alive;
@@ -128,12 +128,9 @@ export async function getNextConnectingEntities(
 ): Promise<{ chainSource: HasSpace, entity: HasSpace }[]> {
 
   potentialTargets = potentialTargets.filter(x => x != source);
-  const x = source.x;
-  const y = source.y;
-  const coords = { x, y }
 
   if (prediction) {
-    drawPredictionCircleFill({ x, y }, radius - config.COLLISION_MESH_RADIUS / 2);
+    drawUICircleFillPrediction(source, radius - config.COLLISION_MESH_RADIUS / 2, colors.trueWhite, i18n("Connect Area"));
   }
 
   let connected: { chainSource: HasSpace, entity: HasSpace }[] = [];
@@ -142,7 +139,7 @@ export async function getNextConnectingEntities(
     let closestTarget: HasSpace | undefined = undefined;
 
     for (let t of potentialTargets) {
-      const dist = math.distance(t, coords);
+      const dist = math.distance(t, source);
       if (dist < closestDist) {
         closestDist = dist;
         closestTarget = t;

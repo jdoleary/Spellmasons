@@ -1,5 +1,5 @@
 import { addTarget, defaultTargetsForAllowNonUnitTargetTargetingSpell, getCurrentTargets, Spell } from './index';
-import { drawUICone, rawDrawUICone } from '../graphics/PlanningView';
+import { drawUIConePrediction, drawUICone } from '../graphics/PlanningView';
 import { CardCategory } from '../types/commonTypes';
 import * as colors from '../graphics/ui/colors';
 import { getAngleBetweenVec2s, Vec2 } from '../jmath/Vec';
@@ -51,7 +51,7 @@ const spell: Spell = {
         // Draw visual circle for prediction
         if (prediction) {
           const color = outOfRange ? colors.outOfRangeGrey : colors.targetingSpellGreen
-          drawUICone(target, adjustedRange, startAngle, endAngle, color);
+          drawUIConePrediction(target, adjustedRange, startAngle, endAngle, color);
         } else {
           animatedCones.push({ origin: state.casterUnit, coneStartPoint: target, radius: adjustedRange, startAngle, endAngle });
         }
@@ -112,7 +112,7 @@ async function animate(cones: { origin: Vec2, coneStartPoint: Vec2, radius: numb
 
             const animatedRadius = radius * easeOutCubic((i + 1) / iterations);
 
-            rawDrawUICone(coneStartPoint, animatedRadius, startAngle, endAngle, colors.targetingSpellGreen, globalThis.predictionGraphics);
+            drawUICone(globalThis.predictionGraphics, coneStartPoint, animatedRadius, startAngle, endAngle, colors.targetingSpellGreen);
             globalThis.predictionGraphics.endFill();
             // Draw circles around new targets
             const withinRadiusAndAngle = underworld.getPotentialTargets(

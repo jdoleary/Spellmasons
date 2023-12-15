@@ -4,7 +4,7 @@ import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import * as config from '../config';
 import { forcePush } from './push';
-import { drawUICircle } from '../graphics/PlanningView';
+import { drawUICirclePrediction } from '../graphics/PlanningView';
 import * as colors from '../graphics/ui/colors';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
@@ -32,7 +32,7 @@ const spell: Spell = {
         return t !== state.casterUnit && distance(state.casterUnit, t) <= shoveRange;
       });
       if (prediction) {
-        drawUICircle(state.casterUnit, shoveRange, colors.targetBlue, 'Shove Range');
+        drawUICirclePrediction(state.casterUnit, shoveRange, colors.targetBlue, 'Shove Range');
       }
       for (let entity of targets) {
         promises.push(forcePush(entity, awayFrom, velocityStartMagnitude * quantity, underworld, prediction));

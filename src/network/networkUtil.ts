@@ -3,7 +3,6 @@ import { MESSAGE_TYPES } from '../types/MessageTypes';
 import * as Player from '../entity/Player';
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
-import * as Doodad from '../entity/Doodad';
 import Underworld from '../Underworld';
 import type PieClient from '@websocketpie/client';
 import { ensureAllClientsHaveAssociatedPlayers, Overworld } from '../Overworld';
@@ -40,8 +39,7 @@ export function hostGiveClientGameState(clientId: string, underworld: Underworld
                     phase: underworld.turn_phase,
                     pickups: underworld.pickups.filter(p => !p.flaggedForRemoval).map(Pickup.serialize),
                     units: underworld.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
-                    players: underworld.players.map(Player.serialize),
-                    doodads: underworld.doodads.map(Doodad.serialize)
+                    players: underworld.players.map(Player.serialize)
                 }, {
                     subType: "Whisper",
                     whisperClientIds: [clientId],

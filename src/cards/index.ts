@@ -1,7 +1,6 @@
 import type * as Player from '../entity/Player';
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
-import * as Doodad from '../entity/Doodad';
 import type { Vec2 } from '../jmath/Vec';
 import Events, {
   onDamage,
@@ -10,6 +9,7 @@ import Events, {
   onAgro,
   onTurnStart,
   onTurnEnd,
+  onDrawSelected,
 } from '../Events';
 import Subsprites, { Subsprite } from '../Subsprites';
 // Register spells:
@@ -92,7 +92,7 @@ import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
 import { addCardToHand } from '../entity/Player';
 import Underworld from '../Underworld';
-import { CardCategory, CardRarity, probabilityMap, UnitType } from '../types/commonTypes';
+import { CardCategory, CardRarity, probabilityMap, UnitSubType, UnitType } from '../types/commonTypes';
 import { HasSpace } from '../entity/Type';
 import { Overworld } from '../Overworld';
 import { allUnits } from '../entity/units';
@@ -122,7 +122,7 @@ interface Events {
   onAgro?: onAgro;
   onTurnStart?: onTurnStart;
   onTurnEnd?: onTurnEnd;
-
+  onDrawSelected?: onDrawSelected;
 }
 export interface Spell {
   card: ICard;
@@ -153,7 +153,9 @@ export function registerEvents(id: string, events: Events) {
   if (events.onTurnEnd) {
     Events.onTurnEndSource[id] = events.onTurnEnd;
   }
-
+  if (events.onDrawSelected) {
+    Events.onDrawSelectedSource[id] = events.onDrawSelected;
+  }
 }
 
 export function registerSpell(spell: Spell, overworld: Overworld) {
@@ -361,7 +363,6 @@ export interface EffectState {
   casterPlayer?: Player.IPlayer;
   targetedUnits: Unit.IUnit[];
   targetedPickups: Pickup.IPickup[];
-  targetedDoodads: Doodad.IDoodad[];
   castLocation: Vec2;
   // aggregator carries extra information that can be passed
   // between card effects.
@@ -396,8 +397,7 @@ export function refundLastSpell(state: EffectState, prediction: boolean, floatin
 export function hasTargetAtPosition(position: Vec2, underworld: Underworld): boolean {
   const unitAtCastLocation = underworld.getUnitAt(position);
   const pickupAtCastLocation = underworld.getPickupAt(position);
-  const doodadAtCastLocation = underworld.getDoodadAt(position);
-  return !!unitAtCastLocation || !!pickupAtCastLocation || !!doodadAtCastLocation;
+  return !!unitAtCastLocation || !!pickupAtCastLocation;
 }
 export function defaultTargetsForAllowNonUnitTargetTargetingSpell(targets: Vec2[], castLocation: Vec2, card: ICard): Vec2[] {
   if (card.allowNonUnitTarget && card.category === CardCategory.Targeting) {
@@ -428,7 +428,7 @@ export function defaultTargetsForAllowNonUnitTargetTargetingSpell(targets: Vec2[
 // See underworld.getPotentialTargets for the function that returns all targetable
 // entities
 export function getCurrentTargets(state: EffectState): HasSpace[] {
-  return [...state.targetedUnits, ...state.targetedPickups, ...state.targetedDoodads];
+  return [...state.targetedUnits, ...state.targetedPickups];
 }
 export type EffectFn = {
   // Dry run is for displaying to the user what will happen if they cast
@@ -495,8 +495,6 @@ export function addTarget(target: any, effectState: EffectState) {
     addUnitTarget(target, effectState);
   } else if (Pickup.isPickup(target)) {
     addPickupTarget(target, effectState);
-  } else if (Doodad.isDoodad(target)) {
-    addDoodadTarget(target, effectState);
   } else {
     console.error('addTarget unsupported for ', target);
   }
@@ -512,11 +510,5 @@ export function addPickupTarget(pickup: Pickup.IPickup, effectState: EffectState
   // Adds a pickup to effectState.targetedPickups IF it is not already in targetedPickups
   if (effectState.targetedPickups.indexOf(pickup) === -1) {
     effectState.targetedPickups.push(pickup);
-  }
-}
-export function addDoodadTarget(doodad: Doodad.IDoodad, effectState: EffectState) {
-  // Adds a doodad to effectState.targetedDoodads IF it is not already in targetedDoodads
-  if (effectState.targetedDoodads.indexOf(doodad) === -1) {
-    effectState.targetedDoodads.push(doodad);
   }
 }

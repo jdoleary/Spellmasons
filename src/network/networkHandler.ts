@@ -7,7 +7,6 @@ import floatingText from '../graphics/FloatingText';
 import { getUpgradeByTitle } from '../Upgrade';
 import Underworld, { elUpgradePickerContent, IUnderworldSerializedForSyncronize, LevelData, showUpgradesClassName, turn_phase } from '../Underworld';
 import * as Player from '../entity/Player';
-import * as Doodad from '../entity/Doodad';
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
 import * as messageQueue from '../messageQueue';
@@ -848,11 +847,10 @@ async function handleLoadGameState(payload: {
   phase: turn_phase,
   pickups: IPickupSerialized[],
   units: Unit.IUnitSerialized[],
-  players: Player.IPlayerSerialized[],
-  doodads: Doodad.IDoodadSerialized[]
+  players: Player.IPlayerSerialized[]
 }, overworld: Overworld) {
   console.log("Setup: Load game state", payload)
-  const { underworld: payloadUnderworld, phase, pickups, units, players, doodads } = payload
+  const { underworld: payloadUnderworld, phase, pickups, units, players } = payload
   console.log('Setup: activeMods', payloadUnderworld.activeMods);
   // Sync underworld properties
   const loadedGameState: IUnderworldSerializedForSyncronize = { ...payloadUnderworld };
@@ -950,7 +948,6 @@ async function handleLoadGameState(payload: {
   for (let p of underworld.players) {
     p.endedTurn = false;
   }
-  underworld.doodads = doodads.map(d => Doodad.load(d, underworld, false)).flatMap(x => x !== undefined ? [x] : []);
   // lastUnitId must be synced AFTER all of the units are synced since the synced
   // units are id aware
   underworld.lastUnitId = loadedGameState.lastUnitId;
@@ -1196,7 +1193,6 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       pickups: underworld.pickups.filter(p => !p.flaggedForRemoval).map(Pickup.serialize),
       units: underworld.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
       players: underworld.players.map(Player.serialize),
-      doodads: underworld.doodads.map(Doodad.serialize),
       numberOfHotseatPlayers
     };
     try {
@@ -1248,7 +1244,7 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
         }
       }
 
-      const { underworld: savedUnderworld, phase, units, players, pickups, doodads, version, numberOfHotseatPlayers } = fileSaveObj;
+      const { underworld: savedUnderworld, phase, units, players, pickups, version, numberOfHotseatPlayers } = fileSaveObj;
       if (numberOfHotseatPlayers !== undefined) {
         globalThis.numberOfHotseatPlayers = numberOfHotseatPlayers;
       }
@@ -1296,7 +1292,6 @@ Current game version: ${globalThis.SPELLMASONS_PACKAGE_VERSION}`,
         type: MESSAGE_TYPES.LOAD_GAME_STATE,
         underworld: savedUnderworld,
         pickups,
-        doodads,
         phase,
         units,
         players

@@ -1,6 +1,6 @@
 import type * as PIXI from 'pixi.js';
 import { addTarget, defaultTargetsForAllowNonUnitTargetTargetingSpell, getCurrentTargets, Spell } from './index';
-import { drawUIPoly } from '../graphics/PlanningView';
+import { drawUIPolyPrediction } from '../graphics/PlanningView';
 import { CardCategory } from '../types/commonTypes';
 import * as colors from '../graphics/ui/colors';
 import { invert, Vec2 } from '../jmath/Vec';
@@ -51,7 +51,7 @@ const spell: Spell = {
         // Draw visual circle for prediction
         if (prediction) {
           const color = outOfRange ? colors.outOfRangeGrey : colors.targetingSpellGreen
-          drawUIPoly(targetingColumn, color);
+          drawUIPolyPrediction(targetingColumn, color);
         } else {
           animateColumns.push({ castLocation: target, vector, width, depth });
         }

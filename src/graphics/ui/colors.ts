@@ -1,10 +1,21 @@
+//
+export const trueWhite = 0xffffff;
+export const trueBlack = 0x000000;
+export const trueRed = 0xff0000;
+export const trueGreen = 0x00ff00;
+export const trueBlue = 0x0000ff;
+//
 export const targetBlue = 0x00a5df;
 export const stamina = 0xd5b356;
-export const healthHurtRed = 0x632828;
-export const healthRed = 0xd55656;
-export const manaLostBlue = 0x282863;
-export const manaBlue = 0x5656d5;
+export const healthAllyBrightGreen = 0x23ff30;
 export const healthAllyGreen = 0x40a058;
+export const healthAllyDarkGreen = 0x235730;
+export const healthBrightRed = 0xff4d4d;
+export const healthRed = 0xd55656;
+export const healthDarkRed = 0x632828;
+export const manaBrightBlue = 0x6699ff;
+export const manaBlue = 0x5656d5;
+export const manaDarkBlue = 0x282863;
 export const targetingSpellGreen = 0x57ed61;
 export const outOfRangeGrey = 0xaaaaaa;
 export const errorRed = 0xF93943;

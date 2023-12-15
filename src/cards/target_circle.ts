@@ -1,5 +1,5 @@
 import { addTarget, defaultTargetsForAllowNonUnitTargetTargetingSpell, getCurrentTargets, Spell } from './index';
-import { drawUICircle } from '../graphics/PlanningView';
+import { drawUICirclePrediction } from '../graphics/PlanningView';
 import { CardCategory } from '../types/commonTypes';
 import * as colors from '../graphics/ui/colors';
 import { raceTimeout } from '../Promise';
@@ -41,9 +41,9 @@ const spell: Spell = {
         // Draw visual circle for prediction
         if (prediction) {
           if (outOfRange) {
-            drawUICircle(target, adjustedRange, colors.outOfRangeGrey);
+            drawUICirclePrediction(target, adjustedRange, colors.outOfRangeGrey);
           } else {
-            drawUICircle(target, adjustedRange, colors.targetingSpellGreen, 'Target Radius');
+            drawUICirclePrediction(target, adjustedRange, colors.targetingSpellGreen, 'Target Radius');
           }
         } else {
           animateCircles.push({ pos: target, radius: adjustedRange });
