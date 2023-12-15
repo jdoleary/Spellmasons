@@ -60,6 +60,3 @@ export interface Mod {
   pickups?: IPickupSource[];
   spells?: Spell[];
 }
-export function isSinglePlayer(clientId: string | undefined): boolean {
-  return clientId === 'solomode_client_id';
-}

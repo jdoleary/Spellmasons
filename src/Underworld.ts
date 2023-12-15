@@ -46,7 +46,7 @@ import {
   cacheBlood,
 } from './graphics/PixiUtils';
 import floatingText, { queueCenteredFloatingText, warnNoMoreSpellsToChoose } from './graphics/FloatingText';
-import { UnitType, Faction, UnitSubType, isSinglePlayer, GameMode } from './types/commonTypes';
+import { UnitType, Faction, UnitSubType, GameMode } from './types/commonTypes';
 import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
 import Events from './Events';
@@ -99,6 +99,7 @@ import { urn_ice_id } from './entity/units/urn_ice';
 import { urn_poison_id } from './entity/units/urn_poison';
 import { elEndTurnBtn } from './HTMLElements';
 import { corpseDecayId } from './modifierCorpseDecay';
+import { isSinglePlayer } from './network/wsPieSetup';
 
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
@@ -2332,7 +2333,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (globalThis.save && globalThis.player && globalThis.player.isSpawned) {
       // For now, only save if in a singleplayer game (as determined by solomode_client_id)
       // because save support hasn't been added to multiplayer yet
-      if (isSinglePlayer(globalThis.player.clientId)) {
+      if (isSinglePlayer()) {
         console.info(`Dev: quick saving game as "${globalThis.quicksaveKey}"`);
         // Force overwrite for quicksave, never prompt "are you sure?" when auto saving a quicksave
         globalThis.save(globalThis.quicksaveKey, true);

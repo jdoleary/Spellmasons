@@ -18,7 +18,7 @@ import Underworld from '../Underworld';
 import { version } from '../../package.json';
 import makeOverworld, { Overworld } from '../Overworld';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
-import { GameMode, isSinglePlayer } from '../types/commonTypes';
+import { GameMode } from '../types/commonTypes';
 // Locally hosted, locally accessed
 // const wsUri = 'ws://localhost:8080';
 // Locally hosted, available to LAN (use your own IP)
@@ -137,7 +137,7 @@ export function joinRoom(overworld: Overworld, _room_info = {}, isHosting = fals
   room_info.name = room_info.name.toLowerCase();
   // Create a new underworld to sync with the payload so that no old state carries over
   const underworld = new Underworld(overworld, overworld.pie, Math.random().toString());
-  if (isSinglePlayer(globalThis.clientId)) {
+  if (isSinglePlayer()) {
     // set mods:
     underworld.activeMods = globalThis.activeMods || [];
     console.log('Mods: set active mods', underworld.activeMods);
@@ -314,4 +314,7 @@ export function setupPieAndUnderworld() {
     globalThis.setMenu?.('PLAY');
     setView(View.Menu);
   }
+}
+export function isSinglePlayer(): boolean {
+  return !!globalThis.pie?.soloMode;
 }
