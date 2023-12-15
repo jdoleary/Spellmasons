@@ -2574,6 +2574,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (player.statPointsUnspent <= 0) {
       return;
     }
+    if (remoteLog) {
+      remoteLog(`Stat Point: ${stat}`);
+    }
     player.statPointsUnspent--;
     if (stat == 'Good Looks') {
       const damageMultiplier = 0.1 / this.players.length;
