@@ -1,3 +1,4 @@
+import * as storage from './storage';
 export function areCookiesAllowed() {
     return localStorage.getItem('cookieConsent') === 'allowed';
 }
@@ -42,6 +43,9 @@ export default function cookieConsentPopup(forcePopup: boolean) {
 }
 function allow() {
     globalThis.allowCookies = true;
+    if (globalThis.pie) {
+        storage.set(storage.STORAGE_PIE_CLIENTID_KEY, globalThis.pie.clientId);
+    }
     document.getElementById('cookie-consent')?.remove();
     localStorage.setItem('cookieConsent', 'allowed');
 }

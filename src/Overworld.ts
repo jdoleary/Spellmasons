@@ -142,7 +142,6 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
             units: underworld.units.map(Unit.serialize),
             players: underworld.players.map(Player.serialize),
             lastUnitId: underworld.lastUnitId
-            // todo sync doodads here
         });
     }
 

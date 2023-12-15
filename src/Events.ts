@@ -37,11 +37,17 @@ export type onTurnEnd = {
 };
 const onTurnEndSource: { [name: string]: onTurnEnd } = {};
 
+export type onDrawSelected = {
+  (unit: IUnit, prediction: boolean, underworld: Underworld): Promise<void>;
+};
+const onDrawSelectedSource: { [name: string]: onDrawSelected } = {};
+
 export default {
   onAgroSource,
   onDamageSource,
   onDeathSource,
   onMoveSource,
   onTurnStartSource,
-  onTurnEndSource
+  onTurnEndSource,
+  onDrawSelectedSource
 };

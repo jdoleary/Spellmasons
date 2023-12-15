@@ -1,7 +1,6 @@
 import { getCurrentTargets, refundLastSpell, Spell } from './index';
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
-import * as Doodad from '../entity/Doodad';
 import { CardCategory, UnitType } from '../types/commonTypes';
 import { Vec2 } from '../jmath/Vec';
 import floatingText from '../graphics/FloatingText';
@@ -87,25 +86,13 @@ const spell: Spell = {
               if (validSpawnCoords) {
                 let foundPickup = Pickup.pickups.find((p) => p.name == targetName);
                 if (foundPickup) {
-                  const clone = Pickup.create({ pos: target, pickupSource: foundPickup, logSource: 'Clone'}, underworld, prediction);
+                  const clone = Pickup.create({ pos: target, pickupSource: foundPickup, logSource: 'Clone' }, underworld, prediction);
                   if (clone) {
                     Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
                   }
                 } else {
                   console.log('Pickup', target);
                   console.error('Could not clone pickup because source could not be found');
-                }
-              } else {
-                floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
-              }
-            }
-            if (Doodad.isDoodad(target)) {
-              const validSpawnCoords = underworld.findValidSpawn(cloneSourceCoords, 5, 20)
-              if (validSpawnCoords) {
-                const clone = Doodad.load(Doodad.serialize(target), underworld, prediction);
-                if (clone) {
-                  target.x = validSpawnCoords.x;
-                  target.y = validSpawnCoords.y;
                 }
               } else {
                 floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });

@@ -4,7 +4,6 @@ import { Vec2, add, subtract } from '../jmath/Vec';
 import * as math from '../jmath/math';
 import { isUnit } from '../entity/Unit';
 import { isPickup } from '../entity/Pickup';
-import { isDoodad } from '../entity/Doodad';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { raceTimeout } from '../Promise';
 import { easeOutCubic } from '../jmath/Easing';
@@ -55,8 +54,6 @@ export function targetSimilarEffect(numberOfTargets: number) {
             return isUnit(t) && t.unitSourceId == target.unitSourceId && t.alive == target.alive && t.faction == target.faction;
           } else if (isPickup(target)) {
             return isPickup(t) && t.name == target.name;
-          } else if (isDoodad(target)) {
-            return isDoodad(t) && t.name == target.name;
           }
         })
         .sort((a, b) => math.distance(a, target) - math.distance(b, target));

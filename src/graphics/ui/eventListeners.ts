@@ -33,7 +33,6 @@ import * as Freeze from '../../cards/freeze';
 import { collideWithLineSegments } from '../../jmath/moveWithCollision';
 import { getKeyCodeMapping } from './keyMapping';
 import { inPortal } from '../../entity/Player';
-import * as Doodad from '../../entity/Doodad';
 import { allCards, hasTargetAtPosition } from '../../cards';
 import { explain, EXPLAIN_END_TURN, tutorialCompleteTask } from '../Explain';
 import { Overworld } from '../../Overworld';
@@ -1002,20 +1001,6 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       },
       supportInMultiplayer: true,
       domQueryContainer: '#menu-spawn-pickup'
-    })),
-    ...Doodad.doodads.map<AdminContextMenuOption>(d => ({
-      label: d.name,
-      action: ({ pos }) => {
-        if (!overworld.underworld) {
-          console.error('Cannot spawn doodad, underworld does not exist');
-          return;
-        }
-        if (pos) {
-          Doodad.create({ pos, source: d }, overworld.underworld, false);
-        }
-      },
-      supportInMultiplayer: true,
-      domQueryContainer: '#menu-spawn-doodad'
     })),
     ...Object.values(allUnits).map<AdminContextMenuOption>(u => ({
       label: u.id,

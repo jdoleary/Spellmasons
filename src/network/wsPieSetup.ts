@@ -35,7 +35,7 @@ function connect_to_wsPie_server(wsUri: string | undefined, overworld: Overworld
   }
   addHandlers(pie, overworld);
   return new Promise<void>((resolve, reject) => {
-    const storedClientId = localStorage.getItem('pie-clientId');
+    const storedClientId = storage.get(storage.STORAGE_PIE_CLIENTID_KEY);
     pie.onConnectInfo = (o) => {
       console.log('onConnectInfo', o);
       if (o.connected) {
@@ -207,13 +207,6 @@ ${explainUpdateText}
         updateGlobalRefToCurrentClientPlayer(selfPlayer, overworld.underworld);
       }
     }
-    if (globalThis.allowCookies) {
-      // Only store clientId if it is from a multiplayer session
-      // 'solomode_client_id' comes from pieclient's solo mode
-      if (!isSinglePlayer(o.clientId)) {
-        localStorage.setItem('pie-clientId', o.clientId);
-      }
-    }
   };
   pie.onData = d => onData(d, overworld);
   pie.onError = ({ message }: { message: any }) => {
@@ -241,6 +234,10 @@ export function setupPieAndUnderworld() {
   } else {
     console.log('Client: Initialize PieClient');
     const pie = new PieClient();
+    if (pie.clientId) {
+      storage.set(storage.STORAGE_PIE_CLIENTID_KEY, pie.clientId);
+    }
+    globalThis.pie = pie;
     setInterval(() => {
       if (pie.isConnected() && pie.currentRoomInfo) {
         // Keep connection alive.  Bun's websocket server has a 2 minute timeout

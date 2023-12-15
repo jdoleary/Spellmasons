@@ -1,7 +1,6 @@
 import seedrandom from 'seedrandom';
 import * as config from './config';
 import * as Unit from './entity/Unit';
-import * as Doodad from './entity/Doodad';
 import * as Pickup from './entity/Pickup';
 import * as Obstacle from './entity/Obstacle';
 import * as Player from './entity/Player';
@@ -51,7 +50,7 @@ import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
 import Events from './Events';
 import { allUnits } from './entity/units';
-import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, getUIBarProps, isOutOfBounds, runPredictions, updatePlanningView } from './graphics/PlanningView';
+import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, drawUnitMarker, isOutOfBounds, runPredictions, updatePlanningView } from './graphics/PlanningView';
 import { chooseObjectWithProbability, chooseOneOfSeeded, getUniqueSeedString, prng, randInt, SeedrandomState } from './jmath/rand';
 import { calculateCostForSingleCard } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle, closestLineSegmentIntersection } from './jmath/lineSegment';
@@ -66,7 +65,7 @@ import { baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLi
 import { Material } from './Conway';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndexPreventWrap } from './jmath/ArrayUtil';
 import { raceTimeout, reportIfTakingTooLong } from './Promise';
-import { cleanUpEmitters, containerParticles, containerParticlesUnderUnits, makeManaTrail, updateParticlees } from './graphics/Particles';
+import { cleanUpEmitters, containerParticles, containerParticlesUnderUnits, makeManaTrail, updateParticles } from './graphics/Particles';
 import { elInstructions } from './network/networkHandler';
 import type PieClient from '@websocketpie/client';
 import { makeForcePush } from './cards/push';
@@ -160,8 +159,6 @@ export default class Underworld {
   unitsPrediction: Unit.IUnit[] = [];
   pickups: Pickup.IPickup[] = [];
   pickupsPrediction: Pickup.IPickup[] = [];
-  doodads: Doodad.IDoodad[] = [];
-  doodadsPrediction: Doodad.IDoodad[] = [];
   imageOnlyTiles: Tile[] = [];
   liquidSprites: TilingSprite[] = [];
   // line segments that prevent sight and movement
@@ -253,9 +250,9 @@ export default class Underworld {
   // the current targets of a spell.
   getPotentialTargets(prediction: boolean): HasSpace[] {
     if (prediction) {
-      return [...this.unitsPrediction.filter(u => !u.flaggedForRemoval), ...this.pickupsPrediction.filter(p => !p.flaggedForRemoval), ...this.doodadsPrediction]
+      return [...this.unitsPrediction.filter(u => !u.flaggedForRemoval), ...this.pickupsPrediction.filter(p => !p.flaggedForRemoval)]
     } else {
-      return [...this.units.filter(u => !u.flaggedForRemoval), ...this.pickups.filter(p => !p.flaggedForRemoval), ...this.doodads];
+      return [...this.units.filter(u => !u.flaggedForRemoval), ...this.pickups.filter(p => !p.flaggedForRemoval)];
     }
   }
   calculateKillsNeededForLevel(level: number): number {
@@ -315,7 +312,6 @@ export default class Underworld {
     if (globalThis.headless) { return; }
     this.unitsPrediction = this.units.map(u => Unit.copyForPredictionUnit(u, this));
     this.pickupsPrediction = this.pickups.map(Pickup.copyForPredictionPickup);
-    this.doodadsPrediction = this.doodads.map(Doodad.copyForPredictionDoodad);
   }
   syncronizeRNG(RNGState: SeedrandomState | boolean) {
     // For now, since there's no way for users to control the seed
@@ -433,11 +429,6 @@ export default class Underworld {
           continue;
         }
         forceMoveInst.alreadyCollided.push(other);
-        if (Doodad.isDoodad(pushedObject)) {
-          if (pushedObject.name == Doodad.DOODAD_ROCK_NAME) {
-            Unit.takeDamage(other, 2, pushedObject, this, prediction);
-          }
-        }
         // If they collide transfer force:
         // () => {}: No resolver needed for second order force pushes
         // All pushable objects have the same mass so when a collision happens they'll split the distance
@@ -595,7 +586,7 @@ export default class Underworld {
           // AI collide with each other and walls
           const originalPosition = Vec.clone(u);
           // Only move other NPCs out of the way, never move player units
-          moveWithCollisions(u, stepTowardsTarget, [...aliveNPCs, ...this.doodads], this);
+          moveWithCollisions(u, stepTowardsTarget, [...aliveNPCs], this);
           moveDist = math.distance(originalPosition, u);
           // Prevent moving into negative stamina.  This occurs rarely when
           // the stamina is a fraction but above 0 and the moveDist is greater than the stamina.
@@ -748,14 +739,6 @@ export default class Underworld {
     // Run all forces in this.forceMove
     this.gameLoopForceMove();
 
-    for (let doodad of this.doodads) {
-      // Keep image in sync with position
-      if (doodad.image) {
-        doodad.image.sprite.x = doodad.x;
-        doodad.image.sprite.y = doodad.y;
-      }
-    }
-
     for (let i = 0; i < this.units.length; i++) {
       const u = this.units[i];
       if (u) {
@@ -867,7 +850,7 @@ export default class Underworld {
     updatePlanningView(this);
     useMousePosition(this);
     // Particles
-    updateParticlees(deltaTime, this.bloods, this.random, this);
+    updateParticles(deltaTime, this.bloods, this.random, this);
 
     // Trigger any timed out pickups in queue
     this.aquirePickupQueue = this.aquirePickupQueue.filter(p => !p.flaggedForRemoval);
@@ -990,8 +973,7 @@ export default class Underworld {
       return;
     }
     for (let marker of globalThis.resMarkers) {
-      const { zoom } = getCamera();
-      ImmediateMode.draw(resurrect.thumbnail, marker, 1 / zoom);
+      drawUnitMarker(resurrect.thumbnail, marker);
     }
 
   }
@@ -1005,29 +987,10 @@ export default class Underworld {
       // Don't draw attention markers if the hud is hidden
       return;
     }
-    const { zoom } = getCamera();
     // Note: this block must come after updating the camera position
-    // 1/zoom keeps the attention marker the same size regardless of the level of zoom
-    // Math.sin... makes the attention marker swell and shink so it grabs the player's attention so they
-    // know that they're in danger
-    // + 1 makes it go from 0 to 2 instead of -1 to 1
-    // / 8 limits the size
-    const markerScale = (1 / zoom) + (Math.sin(Date.now() / 500) + 1) / 8
-
     for (let marker of globalThis.attentionMarkers) {
-      const markerHeightHalf = 16 * markerScale;
-      const markerMarginAboveHealthBar = 10;
-      // Offset exclamation mark just above the head of the unit
-      const exclamationMarkPosition = withinCameraBounds({
-        x: marker.pos.x, y: marker.pos.y
-          - config.HEALTH_BAR_UI_Y_POS * marker.scale
-          - config.UNIT_UI_BAR_HEIGHT / zoom
-          - markerHeightHalf
-          - markerMarginAboveHealthBar / zoom
-      });
-
       // Draw Attention Icon to show the enemy will hurt you next turn
-      ImmediateMode.draw(marker.imagePath, exclamationMarkPosition, markerScale);
+      drawUnitMarker(marker.imagePath, marker.pos, marker.scale);
     }
   }
   drawPlayerThoughts() {
@@ -1461,12 +1424,11 @@ export default class Underworld {
     // End Block: Adjust difficulty via level index for tutorial runs so that it's not as hard
 
     // Spawn units at the start of the level
-    let unitIds = getEnemiesForAltitude2(this, levelIndexForEnemySpawn);
+    let unitIds = getEnemiesForAltitude(this, levelIndexForEnemySpawn);
     if (isTutorialStartLevel) {
       unitIds = [];
     } else if (levelIndexForEnemySpawn < 0) {
       unitIds = [golem_unit_id];
-
     }
     const numberOfPickups = isTutorialStartLevel ? 0 : 4 + levelIndex;
     for (let i = 0; i < numberOfPickups; i++) {
@@ -2392,7 +2354,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   async endMyTurnButtonHandler() {
     if (globalThis.player) {
       // If End turn button is level up button
-      if (elEndTurnBtn.classList.contains('upgrade')) {
+      if (elEndTurnBtn.classList.contains('upgrade') || document.body?.classList.contains(showUpgradesClassName)) {
         const upgradesLeftToChoose = this.upgradesLeftToChoose(globalThis.player)
         if (upgradesLeftToChoose > 0) {
           this.showUpgrades();
@@ -2611,6 +2573,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Do not allow overspend
     if (player.statPointsUnspent <= 0) {
       return;
+    }
+    if (remoteLog) {
+      remoteLog(`Stat Point: ${stat}`);
     }
     player.statPointsUnspent--;
     if (stat == 'Good Looks') {
@@ -2983,7 +2948,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         lastPickupId: this.lastPickupId,
         // the state of the Random Number Generator
         RNGState: this.random.state(),
-        // TODO sync doodads here
       });
     }
   }
@@ -3385,23 +3349,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     const closest = sortedByProximityToCoords[0]
     return closest;
   }
-  getDoodadAt(coords: Vec2, prediction?: boolean): Doodad.IDoodad | undefined {
-    const sortedByProximityToCoords = (prediction && this.doodadsPrediction ? this.doodadsPrediction : this.doodads)
-      // Filter for only valid doodads
-      .filter(d => !isNaN(d.x) && !isNaN(d.y))
-      // Filter for units within SELECTABLE_RADIUS of coordinates
-      .filter(d => math.distance(d, coords) <= config.SELECTABLE_RADIUS)
-      // Order by closest to coords
-      .sort((a, b) => math.distance(a, coords) - math.distance(b, coords))
-    return sortedByProximityToCoords[0];
-  }
-  addDoodadToArray(doodad: Doodad.IDoodad, prediction: boolean) {
-    if (prediction && this.doodadsPrediction) {
-      this.doodadsPrediction.push(Doodad.copyForPredictionDoodad(doodad))
-    } else {
-      this.doodads.push(doodad);
-    }
-  }
   addUnitToArray(unit: Unit.IUnit, prediction: boolean): Unit.IUnit {
     if (prediction && this.unitsPrediction) {
       const predictionCopy = Unit.copyForPredictionUnit(unit, this)
@@ -3453,7 +3400,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       casterPlayer,
       targetedUnits: [],
       targetedPickups: [],
-      targetedDoodads: [],
       castLocation,
       aggregator: {
         unitDamage: [],
@@ -3517,11 +3463,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         }
       }
     }
-    // const doodadAtCastLocation = this.getDoodadAt(castLocation, prediction);
-    // if (doodadAtCastLocation) {
-    //   Cards.addTarget(doodadAtCastLocation, effectState);
-    // }
-    // End Get Initial Targets
+
 
     if (!effectState.casterUnit.alive) {
       // Prevent dead players from casting
@@ -3664,7 +3606,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         this.units.filter(u => u.unitType == UnitType.AI && !u.alive).forEach(u => {
           Unit.addModifier(u, corpseDecayId, this, false);
         });
-        const unitIds = getEnemiesForAltitude2(this, this.levelIndex);
+        const unitIds = getEnemiesForAltitude(this, this.levelIndex);
         const numberOfMinibossesAllowed = Math.ceil(Math.max(0, (this.levelIndex - 4) / 4));
         let numberOfMinibossesMade = 0;
         // Trick for finding valid spawnable tiles
@@ -4076,7 +4018,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   // are removed
   serializeForSaving(): IUnderworldSerialized {
     const { pie, overworld, random, players, units, pickups, walls, pathingPolygons, liquidSprites,
-      unitsPrediction, pickupsPrediction, doodadsPrediction, particleFollowers, forceMove, ...rest } = this;
+      unitsPrediction, pickupsPrediction, particleFollowers, forceMove, ...rest } = this;
     return {
       ...rest,
       // isRestarting is an id for SetTimeout and cannot be serialized
@@ -4088,7 +4030,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       players: this.players.map(Player.serialize),
       units: this.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
       pickups: this.pickups.filter(p => !p.flaggedForRemoval).map(Pickup.serialize),
-      doodads: this.doodads.map(Doodad.serialize),
       // the state of the Random Number Generator
       RNGState: this.random.state(),
     };
@@ -4136,7 +4077,6 @@ type IUnderworldSerialized = Omit<typeof Underworld, "pie" | "overworld" | "prot
     players: Player.IPlayerSerialized[],
     units: Unit.IUnitSerialized[],
     pickups: Pickup.IPickupSerialized[],
-    doodads: Doodad.IDoodadSerialized[]
   };
 type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
 type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underworld>, null | undefined>;
@@ -4172,7 +4112,7 @@ export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, Underworl
 //   }
 // }
 
-function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): string[] {
+function getEnemiesForAltitude(underworld: Underworld, levelIndex: number): string[] {
   // Feel: Each level should feel "themed"
   // Requirements
   // - Any level, including starting levels, should have variety
@@ -4261,21 +4201,6 @@ function getEnemiesForAltitude2(underworld: Underworld, levelIndex: number): str
     }
   }
   return units;
-}
-
-// Idea: Higher probability of tougher units at certain levels
-function getEnemiesForAltitude(underworld: Underworld, levelIndex: number): string[] {
-  const numberOfUnits = 3 + levelIndex;
-  const possibleUnitsToChoose = Object.values(allUnits)
-    .filter(u => u.spawnParams && u.spawnParams.unavailableUntilLevelIndex <= levelIndex)
-    .map(u => ({ id: u.id, probability: u.spawnParams ? u.spawnParams.probability : 0 }))
-  const unitIds = Array(numberOfUnits).fill(null)
-    // flatMap is used to remove any undefineds
-    .flatMap(() => {
-      const chosenUnit = chooseObjectWithProbability(possibleUnitsToChoose, underworld.random)
-      return chosenUnit ? [chosenUnit.id] : []
-    })
-  return unitIds;
 }
 
 // Explicit list of biome types

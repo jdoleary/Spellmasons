@@ -5,6 +5,7 @@ import * as Image from '../graphics/Image';
 import * as math from '../jmath/math';
 import { distance } from '../jmath/math';
 import { addPixiSpriteAnimated, containerDoodads, containerUnits, PixiSpriteOptions, startBloodParticleSplatter, updateNameText } from '../graphics/PixiUtils';
+import * as colors from '../graphics/ui/colors';
 import { UnitSubType, UnitType, Faction } from '../types/commonTypes';
 import type { Vec2 } from '../jmath/Vec';
 import * as Vec from '../jmath/Vec';
@@ -15,7 +16,7 @@ import { addLerpable } from '../lerpList';
 import { allUnits, UnitSource } from './units';
 import { allCards, allModifiers, EffectState } from '../cards';
 import * as immune from '../cards/immune';
-import { checkIfNeedToClearTooltip, clearSpellEffectProjection } from '../graphics/PlanningView';
+import { checkIfNeedToClearTooltip, clearSpellEffectProjection, drawUICircle } from '../graphics/PlanningView';
 import floatingText, { queueCenteredFloatingText } from '../graphics/FloatingText';
 import Underworld, { turn_phase } from '../Underworld';
 import combos from '../graphics/AnimationCombos';
@@ -126,6 +127,7 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   onAgroEvents: string[];
   onTurnStartEvents: string[];
   onTurnEndEvents: string[];
+  onDrawSelectedEvents: string[];
   animations: UnitAnimations;
   sfx: UnitSFX;
   modifiers: { [key: string]: Modifier };
@@ -195,6 +197,7 @@ export function create(
       onAgroEvents: [],
       onTurnStartEvents: [],
       onTurnEndEvents: [],
+      onDrawSelectedEvents: [],
       modifiers: {},
       animations: sourceUnit.animations,
       sfx: sourceUnit.sfx,
@@ -375,6 +378,7 @@ export function removeModifier(unit: IUnit, key: string, underworld: Underworld)
   unit.onAgroEvents = unit.onAgroEvents.filter((e) => e !== key);
   unit.onTurnStartEvents = unit.onTurnStartEvents.filter((e) => e !== key);
   unit.onTurnEndEvents = unit.onTurnEndEvents.filter((e) => e !== key);
+  unit.onDrawSelectedEvents = unit.onTurnEndEvents.filter((e) => e !== key);
   delete unit.modifiers[key];
 
 }
@@ -411,7 +415,7 @@ export function serialize(unit: IUnit): IUnitSerialized {
   // resolveDoneMoving is a callback that cannot be serialized
   // animations and sfx come from the source unit and need not be saved or sent over
   // the network (it would just be extra data), better to restore from the source unit
-  const { resolveDoneMoving, animations, sfx, onDamageEvents, onDeathEvents, onAgroEvents, onTurnStartEvents, onTurnEndEvents, ...rest } = unit
+  const { resolveDoneMoving, animations, sfx, onDamageEvents, onDeathEvents, onAgroEvents, onTurnStartEvents, onTurnEndEvents, onDrawSelectedEvents, ...rest } = unit
   return {
     ...rest,
     // Deep copy array so that serialized units don't share the object
@@ -420,6 +424,7 @@ export function serialize(unit: IUnit): IUnitSerialized {
     onAgroEvents: [...onAgroEvents],
     onTurnStartEvents: [...onTurnStartEvents],
     onTurnEndEvents: [...onTurnEndEvents],
+    onDrawSelectedEvents: [...onDrawSelectedEvents],
     // Deep copy modifiers so that serialized units don't share the object
     modifiers: unit.modifiers ? JSON.parse(JSON.stringify(unit.modifiers)) : undefined,
     // Deep copy path so that the serialized object doesn't share the path object
@@ -451,6 +456,7 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
   let loadedunit: IUnit = {
     // Load defaults for new props that old save files might not have
     ...{ strength: 1 },
+    ...{ onDrawSelectedEvents: [] },
     ...restUnit,
     shaderUniforms: {},
     resolveDoneMoving: () => { },
@@ -873,7 +879,7 @@ export function composeOnDamageEvents(unit: IUnit, damage: number, underworld: U
 // damageFromVec2 is the location that the damage came from and is used for blood splatter
 export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | undefined, underworld: Underworld, prediction: boolean, state?: EffectState, options?: { thinBloodLine: boolean }) {
   if (!unit.alive) {
-    // Do not deal damage to dead unitsn
+    // Do not deal damage to dead units
     return;
   }
   // Immune units cannot be damaged
@@ -1358,6 +1364,7 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
     onAgroEvents: [...rest.onAgroEvents],
     onTurnStartEvents: [...rest.onTurnStartEvents],
     onTurnEndEvents: [...rest.onTurnEndEvents],
+    onDrawSelectedEvents: [...rest.onDrawSelectedEvents],
     // Deep copy modifiers so it doesn't mutate the unit's actual modifiers object
     modifiers: JSON.parse(JSON.stringify(modifiers)),
     shaderUniforms: {},
@@ -1442,6 +1449,89 @@ export function findLOSLocation(unit: IUnit, target: Vec2, underworld: Underworl
   }
   return LOSLocations;
 
+}
+
+
+// handles drawing attack range, bloat radius, and similar graphics each frame while a unit is selected
+export function drawSelectedGraphics(unit: IUnit, prediction: boolean = false, underworld: Underworld) {
+
+  if (globalThis.headless || prediction || !globalThis.selectedUnitGraphics) return;
+
+  for (let drawEvent of unit.onDrawSelectedEvents) {
+    if (drawEvent) {
+      const fn = Events.onDrawSelectedSource[drawEvent];
+      if (fn) {
+        fn(unit, prediction, underworld);
+      } else {
+        console.error('No function associated with onDrawSelected event', drawEvent);
+      }
+    }
+  }
+
+  // TODO - Ideally the logic below would be defined in each Unit's ts file individually
+  // Instead of using if/else and unit subtypes
+
+  // If unit is an archer, draw LOS attack line
+  // instead of attack range for them
+  if (unit.unitSubType == UnitSubType.RANGED_LOS || unit.unitSubType == UnitSubType.SPECIAL_LOS) {
+    const unitSource = allUnits[unit.unitSourceId];
+    let archerTargets: IUnit[] = [];
+
+    if (unitSource) {
+      archerTargets = unitSource.getUnitAttackTargets(unit, underworld);
+    } else {
+      console.error('Cannot find unitSource for ', unit.unitSourceId);
+    }
+    // If they don't have a target they can actually attack
+    // draw a line to the closest enemy that they would target if
+    // they had LOS
+    let canAttack = true;
+    if (!archerTargets.length) {
+      const nextTarget = findClosestUnitInDifferentFaction(unit, underworld)
+      if (nextTarget) {
+        archerTargets.push(nextTarget);
+      }
+      // If getBestRangedLOSTarget returns undefined, the archer doesn't have a valid attack target
+      canAttack = false;
+    }
+
+    if (archerTargets.length) {
+      for (let target of archerTargets) {
+        const attackLine = { p1: unit, p2: target };
+        globalThis.selectedUnitGraphics.moveTo(attackLine.p1.x, attackLine.p1.y);
+
+        // If the los unit can attack you, use red, if not, use grey
+        const color = canAttack ? colors.healthRed : colors.outOfRangeGrey;
+
+        // Draw los line
+        globalThis.selectedUnitGraphics.lineStyle(3, color, 0.7);
+        globalThis.selectedUnitGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
+        globalThis.selectedUnitGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
+
+        // Draw outer attack range circle
+        drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, color, i18n('Attack Range'));
+      }
+    }
+  } else {
+    if (unit.attackRange > 0) {
+      const rangeCircleColor = false
+        ? colors.outOfRangeGrey
+        : unit.faction == Faction.ALLY
+          ? colors.attackRangeAlly
+          : colors.attackRangeEnemy;
+      globalThis.selectedUnitGraphics.lineStyle(2, rangeCircleColor, 1.0);
+
+      if (unit.unitSubType === UnitSubType.RANGED_RADIUS) {
+        drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
+      } else if (unit.unitSubType === UnitSubType.SUPPORT_CLASS) {
+        drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Support Range'));
+      } else if (unit.unitSubType === UnitSubType.MELEE) {
+        drawUICircle(globalThis.selectedUnitGraphics, unit, unit.staminaMax + unit.attackRange, rangeCircleColor, i18n('Attack Range'));
+      } else if (unit.unitSubType === UnitSubType.DOODAD) {
+        drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Explosion Radius'));
+      }
+    }
+  }
 }
 
 export async function demoAnimations(unit: IUnit) {

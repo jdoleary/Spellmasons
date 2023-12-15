@@ -2,7 +2,7 @@ import * as particles from '@pixi/particle-emitter'
 import { takeDamage } from '../entity/Unit';
 import * as Unit from '../entity/Unit';
 import { Spell } from './index';
-import { drawUICircle } from '../graphics/PlanningView';
+import { drawUICirclePrediction } from '../graphics/PlanningView';
 import { forcePush, velocityStartMagnitude } from './push';
 import { CardCategory } from '../types/commonTypes';
 import { createParticleTexture, logNoTextureWarning, simpleEmitter } from '../graphics/Particles';
@@ -34,7 +34,7 @@ const spell: Spell = {
 
         const adjustedRadius = baseRadius + (unit.modifiers[id]?.radius || 0);
         if (prediction) {
-          drawUICircle(unit, adjustedRadius, colors.healthRed, 'Explosion Radius');
+          drawUICirclePrediction(unit, adjustedRadius, colors.healthRed, 'Explosion Radius');
         } else {
           playSFXKey('bloatExplosion');
         }

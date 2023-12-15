@@ -43,31 +43,33 @@ export function initPlanningView() {
     globalThis.predictionGraphics = predictionGraphics;
     containerUI.addChild(predictionGraphics);
     if (labelText) {
+      labelText.style.fontSize = 100;
       labelText.anchor.x = 0.5;
-      labelText.anchor.y = 0;
+      labelText.anchor.y = 0.5;
+      labelText.scale.x = 0.3;
+      labelText.scale.y = 0.3;
       containerUI.addChild(labelText);
     }
     if (mouseLabelText) {
+      mouseLabelText.style.fontSize = 100;
       mouseLabelText.anchor.x = 0.5;
-      mouseLabelText.anchor.y = 0;
+      mouseLabelText.anchor.y = 0.5;
+      mouseLabelText.scale.x = 0.3;
+      mouseLabelText.scale.y = 0.3;
       containerUI.addChild(mouseLabelText);
     }
   }
 }
 let lastSpotCurrentPlayerTurnCircle: Vec2 = { x: 0, y: 0 };
 export function updatePlanningView(underworld: Underworld) {
-  if (planningViewGraphics && globalThis.unitOverlayGraphics && labelText && globalThis.selectedUnitGraphics) {
-    const mouseTarget = underworld.getMousePos();
+  if (planningViewGraphics && globalThis.selectedUnitGraphics && globalThis.unitOverlayGraphics && labelText) {
+
     planningViewGraphics.clear();
     globalThis.selectedUnitGraphics.clear();
-    if (labelText) {
-      labelText.text = '';
-      labelText.style.fill = biomeTextColor(underworld.lastLevelCreated?.biome)
-    }
-    if (globalThis.selectedPickup) {
-      // Draw circle to show that pickup is selected
-      drawCircleUnderTarget(globalThis.selectedPickup, underworld, 1.0, planningViewGraphics);
-    }
+    //unitOverlayGraphics is handled by underworld: it uses it before updatePlanningView() is called to draw hp/mp bars
+    labelText.style.fill = biomeTextColor(underworld.lastLevelCreated?.biome)
+
+    const mouseTarget = underworld.getMousePos();
     // If the player has a spell ready and the mouse is beyond their max cast range
     // show the players cast range so they user knows that they are out of range
     if (globalThis.player) {
@@ -88,113 +90,40 @@ export function updatePlanningView(underworld: Underworld) {
         }
       }
     }
+
+    // These arrays are leftover from an old version
+    // might be better to replace with a boolean, tracking whether or not prediction UI is active
     const currentlyWarningOutOfRange = warnings.has(TEXT_OUT_OF_RANGE);
-    // Draw UI for the globalThis.selectedUnit
-    if (globalThis.selectedUnit) {
-      if (
-        globalThis.selectedUnit.alive
-      ) {
+    if (predictionPolys.length || predictionCones.length || predictionCircles.length || predictionCirclesFill.length || currentlyWarningOutOfRange) {
+      // Only draw selected unit graphics if there is no prediction UI or out-of-range warning
+      // prediction graphics are drawn in runPrediction()
+    }
+    else {
+      // Clear label if there are no predictions
+      labelText.text = '';
+
+      // Draw selected unit stuff
+      if (selectedType == "unit" && globalThis.selectedUnit) {
         // Draw circle to show that unit is selected
         drawCircleUnderTarget(globalThis.selectedUnit, underworld, 1.0, planningViewGraphics);
-        // If globalThis.selectedUnit is an archer, draw LOS attack line
-        //  instead of attack range for them
-        if (globalThis.selectedUnit.unitSubType == UnitSubType.RANGED_LOS || globalThis.selectedUnit.unitSubType == UnitSubType.SPECIAL_LOS) {
-          const unitSource = allUnits[globalThis.selectedUnit.unitSourceId];
-          let archerTargets: Unit.IUnit[] = [];
-          if (unitSource) {
-            archerTargets = unitSource.getUnitAttackTargets(globalThis.selectedUnit, underworld);
-          } else {
-            console.error('Cannot find unitSource for ', globalThis.selectedUnit.unitSourceId);
-          }
-          // If they don't have a target they can actually attack
-          // draw a line to the closest enemy that they would target if
-          // they had LOS
-          let canAttack = true;
-          if (!archerTargets.length) {
-            const nextTarget = Unit.findClosestUnitInDifferentFaction(globalThis.selectedUnit, underworld)
-            if (nextTarget) {
-              archerTargets.push(nextTarget);
-            }
-            // If getBestRangedLOSTarget returns undefined, the archer doesn't have a valid attack target
-            canAttack = false;
-          }
-          if (archerTargets.length) {
-            for (let target of archerTargets) {
-              const attackLine = { p1: globalThis.selectedUnit, p2: target };
-              globalThis.selectedUnitGraphics.moveTo(attackLine.p1.x, attackLine.p1.y);
-              if (canAttack) {
-                const color = colors.healthRed;
-                // Draw a red line, showing that you are in danger
-                globalThis.selectedUnitGraphics.lineStyle(3, color, 0.7);
-                globalThis.selectedUnitGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
-                globalThis.selectedUnitGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
-              } else {
-                // Draw a grey line  showing that the target is blocked
-                globalThis.selectedUnitGraphics.lineStyle(3, colors.outOfRangeGrey, 0.7);
-                globalThis.selectedUnitGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
-                globalThis.selectedUnitGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
-              }
-            }
-          }
-          globalThis.selectedUnitGraphics.drawCircle(
-            globalThis.selectedUnit.x,
-            globalThis.selectedUnit.y,
-            globalThis.selectedUnit.attackRange
-          );
-          labelText.text = i18n('Attack Range');
-          const labelPosition = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.attackRange }, labelText.width / 2);
-          labelText.x = labelPosition.x;
-          labelText.y = labelPosition.y;
-        } else {
-
-          if (globalThis.selectedUnit.attackRange > 0) {
-            const rangeCircleColor = currentlyWarningOutOfRange
-              ? colors.outOfRangeGrey
-              : globalThis.selectedUnit.faction == Faction.ALLY
-                ? colors.attackRangeAlly
-                : colors.attackRangeEnemy;
-            globalThis.selectedUnitGraphics.lineStyle(2, rangeCircleColor, 1.0);
-            if (globalThis.selectedUnit.unitSubType === UnitSubType.RANGED_RADIUS) {
-              globalThis.selectedUnitGraphics.drawCircle(
-                globalThis.selectedUnit.x,
-                globalThis.selectedUnit.y,
-                globalThis.selectedUnit.attackRange
-              );
-              labelText.text = i18n('Attack Range');
-              const labelPosition = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.attackRange }, labelText.width / 2);
-              labelText.x = labelPosition.x;
-              labelText.y = labelPosition.y;
-            } else if (globalThis.selectedUnit.unitSubType === UnitSubType.SUPPORT_CLASS) {
-              globalThis.selectedUnitGraphics.drawCircle(
-                globalThis.selectedUnit.x,
-                globalThis.selectedUnit.y,
-                globalThis.selectedUnit.attackRange
-              );
-              labelText.text = i18n('Support Range');
-              const labelPosition = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.attackRange }, labelText.width / 2);
-              labelText.x = labelPosition.x;
-              labelText.y = labelPosition.y;
-            } else if (globalThis.selectedUnit.unitSubType === UnitSubType.MELEE) {
-              globalThis.selectedUnitGraphics.drawCircle(
-                globalThis.selectedUnit.x,
-                globalThis.selectedUnit.y,
-                globalThis.selectedUnit.staminaMax + globalThis.selectedUnit.attackRange
-              );
-              globalThis.selectedUnitGraphics.endFill();
-              labelText.text = i18n('Attack Range');
-              const labelPosition = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.staminaMax + globalThis.selectedUnit.attackRange }, labelText.width / 2);
-              labelText.x = labelPosition.x;
-              labelText.y = labelPosition.y;
-            }
-          }
+        if (globalThis.selectedUnit.alive) {
+          // Draws the unit's graphics, and the graphics of any relevant modifiers
+          // I.E. attack range and bloat radius
+          Unit.drawSelectedGraphics(globalThis.selectedUnit, false, underworld);
         }
       }
+
+      // Draw selected pickup stuff
+      if (selectedType == "pickup" && globalThis.selectedPickup) {
+        // Draw circle to show that pickup is selected
+        drawCircleUnderTarget(globalThis.selectedPickup, underworld, 1.0, planningViewGraphics);
+      }
     }
+
     // Draw a circle under the feet of the player whos current turn it is
     if (underworld) {
       // Update tooltip for whatever is being hovered
       updateTooltipContent(underworld);
-
       if (globalThis.player && globalThis.player.isSpawned && !inPortal(globalThis.player)) {
         // Only draw circle if player isn't moving to avoid UI thrashing
         // Gold circle under player feet
@@ -205,62 +134,15 @@ export function updatePlanningView(underworld: Underworld) {
         lastSpotCurrentPlayerTurnCircle = clone(globalThis.player.unit);
       }
     }
-    if (uiPolys.length || uiCones.length || uiCircles.length || currentlyWarningOutOfRange) {
 
-      // Override other graphics (like selected unit) when out of range info is showing
-      labelText.text = '';
-      globalThis.selectedUnitGraphics.clear();
-    }
-    // Draw prediction circles
-    if (unitOverlayGraphics && !globalThis.isHUDHidden) {
-      for (let { points, color, text } of uiPolys) {
-        // Draw color stored in prediction unless the UI is currently warning that the user
-        // is aiming out of range, then override the color with grey
-        const colorOverride = currentlyWarningOutOfRange ? colors.outOfRangeGrey : color;
-        unitOverlayGraphics.lineStyle(2, colorOverride, 1.0)
-        unitOverlayGraphics.endFill();
-        unitOverlayGraphics.drawPolygon(points as PIXI.Point[]);
-      }
-      for (let { target, color, radius, startArc, endArc, text } of uiCones) {
-        // Draw color stored in prediction unless the UI is currently warning that the user
-        // is aiming out of range, then override the color with grey
-        const colorOverride = currentlyWarningOutOfRange ? colors.outOfRangeGrey : color;
-        rawDrawUICone(target, radius, startArc, endArc, colorOverride, unitOverlayGraphics);
-      }
-      for (let { target, color, radius, text } of uiCircles) {
-        // Draw color stored in predictionCircles unless the UI is currently warning that the user
-        // is aiming out of range, then override the color with grey
-        const colorOverride = currentlyWarningOutOfRange ? colors.outOfRangeGrey : color;
-        unitOverlayGraphics.lineStyle(2, colorOverride, 1.0)
-        unitOverlayGraphics.endFill();
-        unitOverlayGraphics.drawCircle(target.x, target.y, radius);
-        if (text && labelText) {
-          // Deprioritize text by making it grey if the UI is currently
-          // warning that the player is aiming out of range so that the out of
-          // range warning is more noticable than this text
-          if (currentlyWarningOutOfRange) {
-            labelText.style.fill = colors.outOfRangeGrey;
-          }
-          labelText.text = text;
-          const labelPosition = withinCameraBounds({ x: target.x, y: target.y + radius }, labelText.width / 2);
-          labelText.x = labelPosition.x;
-          labelText.y = labelPosition.y;
-        }
-      }
-
-    }
     // Draw warnings
     if (mouseLabelText && globalThis.player) {
       const text = Array.from(warnings).map(i18n).join('\n');
       mouseLabelText.text = text;
       mouseLabelText.style.fill = colors.errorRed;
-      // Make text crisper
-      mouseLabelText.style.fontSize = 64;
-      mouseLabelText.scale.x = 0.5;
-      mouseLabelText.scale.y = 0.5;
 
       mouseLabelText.style.align = 'center';
-      const labelPosition = withinCameraBounds({ x: mouseTarget.x, y: mouseTarget.y - mouseLabelText.height * 2 }, mouseLabelText.width / 2);
+      const labelPosition = withinCameraBounds({ x: mouseTarget.x, y: mouseTarget.y - mouseLabelText.height / 2 - 20 }, mouseLabelText.width / 2, mouseLabelText.height / 2);
       mouseLabelText.x = labelPosition.x;
       mouseLabelText.y = labelPosition.y;
       if (currentlyWarningOutOfRange) {
@@ -270,7 +152,6 @@ export function updatePlanningView(underworld: Underworld) {
           globalThis.player.unit.y,
           globalThis.player.unit.attackRange
         );
-
       }
     }
   }
@@ -363,18 +244,7 @@ export function drawWalkRope(target: Vec2, underworld: Underworld) {
 function drawCastRangeCircle(point: Vec2, range: number, graphics?: Graphics, text: string = 'Cast Range') {
   if (graphics) {
     // Draw what cast range would be if unit moved to this point:
-    graphics.lineStyle(3, colors.attackRangeAlly, 1.0);
-    graphics.drawCircle(
-      point.x,
-      point.y,
-      range
-    );
-    if (labelText) {
-      labelText.text = text;
-      const labelPosition = withinCameraBounds({ x: point.x, y: point.y + range }, labelText.width / 2);
-      labelText.x = labelPosition.x;
-      labelText.y = labelPosition.y;
-    }
+    drawUICircle(graphics, point, range, colors.attackRangeAlly, text);
   }
 }
 export function clearTints(underworld: Underworld) {
@@ -389,11 +259,6 @@ export function clearTints(underworld: Underworld) {
       // @ts-ignore: Special property to keep the tint of portals
       // it may be undefined, in which case we revert to no tint
       pickup.image.sprite.tint = pickup.image.sprite.keepTint || 0xFFFFFF;
-    }
-  });
-  underworld.doodads.forEach(doodad => {
-    if (doodad.image) {
-      doodad.image.sprite.tint = 0xFFFFFF;
     }
   });
 }
@@ -436,19 +301,6 @@ async function showCastCardsPrediction(underworld: Underworld, target: Vec2, cas
         }
       }
     }
-    // Show doodads as targeted with tint
-    for (let targetedDoodad of effectState.targetedDoodads) {
-      // Convert prediction doodad's associated real doodad
-      const realDoodad = targetedDoodad.real || targetedDoodad;
-      // don't change tint if HUD is hidden
-      if (realDoodad && realDoodad.image && !globalThis.isHUDHidden) {
-        if (outOfRange) {
-          realDoodad.image.sprite.tint = 0xaaaaaa;
-        } else {
-          realDoodad.image.sprite.tint = 0xff5555;
-        }
-      }
-    }
     // Show units as targeted with tint
     for (let targetedUnit of effectState.targetedUnits) {
       // Convert prediction unit's associated real unit
@@ -483,88 +335,167 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
     // Draw unit overlay graphics
     //--
     // Prevent drawing unit overlay graphics when a unit is in the portal
-    if (u.x !== null && u.y !== null && !globalThis.isHUDHidden) {
-      // Draw health bar
-      const healthBarColor = u.faction == Faction.ALLY ? colors.healthAllyGreen : colors.healthRed;
-      const healthBarHurtColor = u.faction == Faction.ALLY ? 0x235730 : colors.healthHurtRed;
-      const healthBarHealColor = u.faction == Faction.ALLY ? 0x23ff30 : 0xff2828;
-      globalThis.unitOverlayGraphics?.lineStyle(0, 0x000000, 1.0);
-      globalThis.unitOverlayGraphics?.beginFill(healthBarColor, 1.0);
-      const healthBarProps = getUIBarProps(u.x, u.y, u.health, u.healthMax, zoom, u);
-      globalThis.unitOverlayGraphics?.drawRect(
-        healthBarProps.x,
-        // Stack the health bar above the mana bar
-        healthBarProps.y - config.UNIT_UI_BAR_HEIGHT / zoom,
-        healthBarProps.width,
-        healthBarProps.height
-      );
+    if (u.x !== null && u.y !== null && u.alive && !globalThis.isHUDHidden) {
 
-      // Only show health bar predictions on PlayerTurns, while players are able
-      // to cast, otherwise it will show out of sync when NPCs do damage
-      if (underworld.turn_phase == turn_phase.PlayerTurns && globalThis.unitOverlayGraphics) {
-        // Show how much damage they'll take on their health bar
-        globalThis.unitOverlayGraphics.beginFill(healthBarHurtColor, 1.0);
-        if (predictionUnit) {
-          const healthAfterHurt = predictionUnit.health;
-          if (healthAfterHurt > u.health) {
-            globalThis.unitOverlayGraphics.beginFill(healthBarHealColor, 1.0);
-          }
-          // const healthBarHurtWidth = Math.max(0, config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax);
-          const healthBarHurtProps = getUIBarProps(u.x, u.y, u.health - healthAfterHurt, u.healthMax, zoom, u);
-          globalThis.unitOverlayGraphics.drawRect(
-            // Show the healthBarHurtBar on the right side of the health  bar
-            healthBarHurtProps.x + config.UNIT_UI_BAR_WIDTH / zoom * healthAfterHurt / u.healthMax,
-            // Stack the health bar above the mana bar
-            healthBarHurtProps.y - config.UNIT_UI_BAR_HEIGHT / zoom,
-            healthBarHurtProps.width,
-            healthBarHurtProps.height);
-          // Draw red death circle if a unit is currently alive, but wont be after cast
-          if (u.alive && !predictionUnit.alive) {
-            const skullPosition = withinCameraBounds({ x: u.x, y: u.y - config.COLLISION_MESH_RADIUS * 2 + 8 });
-            const imagePath = globalThis.player && u.faction === globalThis.player.unit.faction ? 'badgeDeathAlly.png' : 'badgeDeath.png';
-            ImmediateMode.draw(imagePath, skullPosition, (1 / zoom) + (Math.sin(Date.now() / 500) + 1) / 3);
+      // Draw base health bar
+      if (globalThis.unitOverlayGraphics) {
+        const healthBarColor = u.faction == Faction.ALLY ? colors.healthAllyGreen : colors.healthRed;
+        const healthBarHurtColor = u.faction == Faction.ALLY ? colors.healthAllyDarkGreen : colors.healthDarkRed;
+        const healthBarHealColor = u.faction == Faction.ALLY ? colors.healthAllyBrightGreen : colors.healthBrightRed;
+
+        const healthBarMax = u.healthMax || 1;
+        //background
+        let healthBarFill = getFillRect(u, 0, healthBarMax, 0, healthBarMax, zoom);
+        globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
+        globalThis.unitOverlayGraphics.beginFill(0x111111, 0.8);
+        globalThis.unitOverlayGraphics.drawRect(
+          healthBarFill.x,
+          // Stack the health bar above the mana bar
+          healthBarFill.y - config.UNIT_UI_BAR_HEIGHT / zoom,
+          healthBarFill.width,
+          healthBarFill.height
+        );
+        //current health
+        healthBarFill = getFillRect(u, 0, healthBarMax, 0, u.health, zoom);
+        globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
+        globalThis.unitOverlayGraphics.beginFill(healthBarColor, 1.0);
+        globalThis.unitOverlayGraphics.drawRect(
+          healthBarFill.x,
+          // Stack the health bar above the mana bar
+          healthBarFill.y - config.UNIT_UI_BAR_HEIGHT / zoom,
+          healthBarFill.width,
+          healthBarFill.height
+        );
+
+        // Only show health bar predictions on PlayerTurns, while players are able
+        // to cast, otherwise it will show out of sync when NPCs do damage
+        if (underworld.turn_phase == turn_phase.PlayerTurns && globalThis.unitOverlayGraphics) {
+          // Show how the health bar changes
+          if (predictionUnit) {
+            const healthAfterPrediction = predictionUnit.health;
+            if (healthAfterPrediction < u.health) {
+              globalThis.unitOverlayGraphics.beginFill(healthBarHurtColor, 1.0);
+            }
+            else {
+              globalThis.unitOverlayGraphics.beginFill(healthBarHealColor, 1.0);
+            }
+
+            healthBarFill = getFillRect(u, 0, healthBarMax, u.health, healthAfterPrediction, zoom);
+            globalThis.unitOverlayGraphics.drawRect(
+              healthBarFill.x,
+              // Stack the health bar above the mana bar
+              healthBarFill.y - config.UNIT_UI_BAR_HEIGHT / zoom,
+              healthBarFill.width,
+              healthBarFill.height);
+
+            // Display a death marker if a unit is currently alive, but wont be after cast
+            if (u.alive && !predictionUnit.alive) {
+              if (globalThis.player && u.faction === globalThis.player.unit.faction) {
+                drawUnitMarker('badgeDeathAlly.png', u, 2)
+              }
+              else {
+                drawUnitMarker('badgeDeath.png', u, 1.5)
+              }
+            }
           }
         }
       }
-      // Draw mana bar
-      if (u.manaMax != 0 && globalThis.unitOverlayGraphics) {
+
+      // Draw base mana bar
+      if (globalThis.unitOverlayGraphics) {
+
+        const manaBarMax = u.manaMax || 1;
+
+        let manaBarProps = getFillRect(u, 0, manaBarMax, 0, manaBarMax, zoom);
+        if (u.manaMax > 0) {
+          //background for mana using units
+          globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
+          globalThis.unitOverlayGraphics.beginFill(0x111111, 0.8);
+          globalThis.unitOverlayGraphics.drawRect(
+            manaBarProps.x,
+            manaBarProps.y,
+            manaBarProps.width,
+            manaBarProps.height
+          );
+        }
+
+        //current mana
+        manaBarProps = getFillRect(u, 0, manaBarMax, 0, u.mana, zoom);
         globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
         globalThis.unitOverlayGraphics.beginFill(colors.manaBlue, 1.0);
-        const manaBarProps = getUIBarProps(u.x, u.y, u.mana, u.manaMax, zoom, u);
         globalThis.unitOverlayGraphics.drawRect(
           manaBarProps.x,
           manaBarProps.y,
           manaBarProps.width,
-          manaBarProps.height);
-        // Draw the mana that goes missing after a spell (useful for mana_burn)
+          manaBarProps.height
+        );
+
+        // Show mana bar prediction
         if (predictionUnit) {
-          globalThis.unitOverlayGraphics.beginFill(colors.manaLostBlue, 1.0);
-          // Math.max prevents the manabar from going negative
-          const manaAfterSpell = Math.max(0, predictionUnit.mana);
-          const manaBarHurtProps = getUIBarProps(u.x, u.y, u.mana - manaAfterSpell, u.manaMax, zoom, u);
-          // Only render hurt mana bar if it dips below mana max
-          // (it can remain above mana max if mana is overfilled)
-          if (manaAfterSpell < u.manaMax) {
-            const hurtX = manaBarHurtProps.x + config.UNIT_UI_BAR_WIDTH / zoom * manaAfterSpell / u.manaMax;
-            globalThis.unitOverlayGraphics.drawRect(
-              // Show the manaBarHurtBar on the right side of the mana  bar
-              hurtX,
-              manaBarHurtProps.y,
-              // Special width calculation required to prevent overfillmana
-              // from rendering wrongly 
-              manaBarProps.width - (hurtX - manaBarProps.x),
-              manaBarHurtProps.height);
+          const manaAfterPrediction = predictionUnit.mana;
+          if (manaAfterPrediction < u.mana) {
+            globalThis.unitOverlayGraphics.beginFill(colors.manaDarkBlue, 1.0);
           }
-          // if (manaAfterSpell > u.mana) {
-          //   globalThis.unitOverlayGraphics?.beginFill(manaBarHealColor, 1.0);
-          // }
+          else {
+            globalThis.unitOverlayGraphics.beginFill(colors.manaBrightBlue, 1.0);
+          }
+
+          let fillRect = getFillRect(u, 0, manaBarMax, u.mana, manaAfterPrediction, zoom);
+          globalThis.unitOverlayGraphics.drawRect(
+            fillRect.x,
+            fillRect.y,
+            fillRect.width,
+            fillRect.height);
         }
+        globalThis.unitOverlayGraphics.endFill();
       }
-      globalThis.unitOverlayGraphics?.endFill();
     }
 
   }
 }
+
+export function getFillRect(unit: Unit.IUnit, min: number, max: number, value1: number, value2: number, zoom: number): { x: number, y: number, width: number, height: number } {
+  const start01 = Math.max(0, Math.min(value1 / (min + max), 1))
+  const end01 = Math.max(0, Math.min(value2 / (min + max), 1))
+
+  const widthAdjusted = config.UNIT_UI_BAR_WIDTH / zoom;
+  const fillWidth = widthAdjusted * Math.abs(end01 - start01);
+  const height = config.UNIT_UI_BAR_HEIGHT / zoom;
+
+  return {
+    x: unit.x - widthAdjusted / 2 + Math.min(start01, end01) * widthAdjusted,
+    // - height so that bar stays in the same position relative to the unit
+    // regardless of zoom
+    // - config.HEALTH_BAR_UI_Y_POS so that it renders above their head instead of
+    // on their center point
+    y: unit.y - config.HEALTH_BAR_UI_Y_POS * (unit.image?.sprite.scale.y || 1) - height,
+    width: fillWidth,
+    height,
+  }
+}
+
+export function drawUnitMarker(imagePath: string, pos: Vec2, extraScale: number = 1) {
+  const zoom = getCamera().zoom;
+  // 1/zoom keeps the attention marker the same size regardless of the level of zoom
+  // Math.sin makes the attention marker swell and shink so it grabs the player's attention
+  // + 1 makes it go from 0 to 2 instead of -1 to 1
+  // / 8 limits the change in size
+  const markerScale = ((1 / zoom) + (Math.sin(Date.now() / 500) + 1) / 8) * extraScale;
+  const markerHeightHalf = 16 * markerScale;
+  const markerMarginAboveHealthBar = 10;
+
+  // Offset marker just above the head of the unit, where pos = unit positon
+  const markerPosition = withinCameraBounds({
+    x: pos.x, y: pos.y
+      - config.HEALTH_BAR_UI_Y_POS * extraScale
+      - config.UNIT_UI_BAR_HEIGHT / zoom
+      - markerHeightHalf
+      - markerMarginAboveHealthBar / zoom
+  }, markerHeightHalf, markerHeightHalf);
+
+  ImmediateMode.draw(imagePath, markerPosition, markerScale);
+}
+
 globalThis.currentPredictionId = 0;
 // runPredictions predicts what will happen next turn
 // via enemy attention markers (showing if they will hurt you)
@@ -605,6 +536,7 @@ export async function runPredictions(underworld: Underworld) {
   const mousePos = underworld.getMousePos();
   // Clear the spelleffectprojection in preparation for showing the current ones
   clearSpellEffectProjection(underworld);
+
   // only show hover target when it's the correct turn phase
   if (underworld.turn_phase == turn_phase.PlayerTurns) {
 
@@ -623,8 +555,9 @@ export async function runPredictions(underworld: Underworld) {
         return;
       }
       const cardIds = CardUI.getSelectedCardIds();
+      let outOfRange = false;
       if (cardIds.length) {
-        const outOfRange = isOutOfRange(globalThis.player, target, underworld, cardIds);
+        outOfRange = isOutOfRange(globalThis.player, target, underworld, cardIds);
         await showCastCardsPrediction(underworld, target, casterUnit, cardIds, outOfRange);
       } else {
         // If there are no cards ready to cast, clear unit tints (which symbolize units that are targeted by the active spell)
@@ -632,6 +565,31 @@ export async function runPredictions(underworld: Underworld) {
       }
       // Send this client's intentions to the other clients so they can see what they're thinking
       underworld.sendPlayerThinking({ target, cardIds })
+
+      // draw spell predictions
+      // Modify and draw all of the stored predictions
+      // If out of range, set color to grey
+      if (predictionGraphics && !globalThis.isHUDHidden) {
+        for (let { points, color, text } of predictionPolys) {
+          const colorOverride = outOfRange ? colors.outOfRangeGrey : color;
+          drawUIPoly(predictionGraphics, points, colorOverride, text);
+        }
+        for (let { target, color, radius, startArc, endArc, text } of predictionCones) {
+          const colorOverride = outOfRange ? colors.outOfRangeGrey : color;
+          drawUICone(predictionGraphics, target, radius, startArc, endArc, colorOverride);
+        }
+        for (let { target, color, radius, text } of predictionCircles) {
+          const colorOverride = outOfRange ? colors.outOfRangeGrey : color;
+          console.log(outOfRange, colorOverride)
+          drawUICircle(predictionGraphics, target, radius, colorOverride, text);
+        }
+      }
+      if (globalThis.radiusGraphics) {
+        for (let { target, color, radius, text } of predictionCirclesFill) {
+          //const colorOverride = currentlyWarningOutOfRange ? colors.outOfRangeGrey : color;
+          drawUICircleFill(globalThis.radiusGraphics, target, radius, color, text);
+        }
+      }
 
       // Run onTurnStartEvents on unitsPrediction:
       // Displays markers above units heads if they will attack the current client's unit
@@ -677,6 +635,7 @@ export async function runPredictions(underworld: Underworld) {
           }
         }
       }
+
       // Show if unit will be resurrected
       globalThis.resMarkers = [];
       if (cardIds.includes('resurrect')) {
@@ -708,10 +667,12 @@ export function clearSpellEffectProjection(underworld: Underworld, forceClear?: 
     if (containerSpells) {
       containerSpells.removeChildren();
     }
+
     clearWarnings();
-    uiCircles = [];
-    uiCones = [];
-    uiPolys = [];
+    predictionPolys = [];
+    predictionCones = [];
+    predictionCircles = [];
+    predictionCirclesFill = [];
   }
 }
 
@@ -722,22 +683,17 @@ export function drawPredictionLine(start: Vec2, end: Vec2) {
     predictionGraphics.lineTo(end.x, end.y);
   }
 }
-let uiCones: { target: Vec2, radius: number, startArc: number, endArc: number, color: number, text?: string }[] = [];
-let uiCircles: { target: Vec2, radius: number, color: number, text?: string }[] = [];
-let uiPolys: { points: Vec2[], color: number, text?: string }[] = [];
-export function drawUIPoly(points: Vec2[], color: number, text?: string) {
-  // clone target so it's not a reference, it should draw what the value was when it was passed into this function
-  uiPolys.push({ points: points.map(Vec.clone), color, text });
-  // Note: The actual drawing now happens inside of updatePlanningView so it can account for other UI
-  // circles and text that might need to take precedence.
+
+let predictionPolys: { points: Vec2[], color: number, text?: string }[] = [];
+let predictionCones: { target: Vec2, radius: number, startArc: number, endArc: number, color: number, text?: string }[] = [];
+let predictionCircles: { target: Vec2, radius: number, color: number, text?: string }[] = [];
+let predictionCirclesFill: { target: Vec2, radius: number, color: number, text?: string }[] = [];
+export function drawUIPoly(graphics: PIXI.Graphics, points: Vec2[], color: number, text?: string) {
+  graphics.lineStyle(2, color, 1.0)
+  graphics.endFill();
+  graphics.drawPolygon(points as PIXI.Point[]);
 }
-export function drawUICone(target: Vec2, radius: number, startArc: number, endArc: number, color: number, text?: string) {
-  // clone target so it's not a reference, it should draw what the value was when it was passed into this function
-  uiCones.push({ target: Vec.clone(target), radius, startArc, endArc, color, text });
-  // Note: The actual drawing now happens inside of updatePlanningView so it can account for other UI
-  // circles and text that might need to take precedence.
-}
-export function rawDrawUICone(target: Vec2, radius: number, startArc: number, endArc: number, color: number, graphics: PIXI.Graphics) {
+export function drawUICone(graphics: PIXI.Graphics, target: Vec2, radius: number, startArc: number, endArc: number, color: number) {
   graphics.lineStyle(2, color, 1.0)
   graphics.endFill();
   // Note: endAngle corresponds to startArc and startAngle corresponds to endArc because
@@ -750,36 +706,54 @@ export function rawDrawUICone(target: Vec2, radius: number, startArc: number, en
   const endArcPoint = math.getPosAtAngleAndDistance(target, endArc, radius);
   graphics.lineTo(endArcPoint.x, endArcPoint.y);
 }
-export function drawUICircle(target: Vec2, radius: number, color: number, text?: string) {
-  // clone target so it's not a reference, it should draw what the value was when it was passed into this function
-  uiCircles.push({ target: Vec.clone(target), radius, color, text });
-  // Note: The actual drawing now happens inside of updatePlanningView so it can account for other UI
-  // circles and text that might need to take precedence.
+export function drawUICircle(graphics: PIXI.Graphics, target: Vec2, radius: number, color: number, text?: string) {
+  graphics.lineStyle(2, color, 1.0)
+  graphics.endFill();
+  graphics.drawCircle(target.x, target.y, radius);
+  if (text && labelText) {
+    //labelText.style.fill = color;
+    labelText.text = text;
+    const labelPosition = withinCameraBounds({ x: target.x, y: target.y + radius + labelText.height / 2 }, labelText.width / 2, labelText.height / 2);
+    labelText.x = labelPosition.x;
+    labelText.y = labelPosition.y;
+  }
+} export function drawUICircleFill(graphics: PIXI.Graphics, target: Vec2, radius: number, color: number, text?: string) {
+  graphics.lineStyle(1, 0x000000, 0.0);
+  graphics.beginFill(color, 1.0);
+  graphics.drawCircle(target.x, target.y, radius);
+  graphics.endFill();
+  if (text && labelText) {
+    //labelText.style.fill = color;
+    labelText.text = text;
+    const labelPosition = withinCameraBounds({ x: target.x, y: target.y + radius + labelText.height / 2 }, labelText.width / 2, labelText.height / 2);
+    labelText.x = labelPosition.x;
+    labelText.y = labelPosition.y;
+  }
 }
+export function drawUIPolyPrediction(points: Vec2[], color: number, text?: string) {
+  // Note: The actual drawing now happens inside of runPredictions
+  // clone target so it's not a reference, it should draw what the value was when it was passed into this function
+  predictionPolys.push({ points: points.map(Vec.clone), color, text });
+}
+export function drawUIConePrediction(target: Vec2, radius: number, startArc: number, endArc: number, color: number, text?: string) {
+  // Note: The actual drawing now happens inside of runPredictions
+  // clone target so it's not a reference, it should draw what the value was when it was passed into this function
+  predictionCones.push({ target: Vec.clone(target), radius, startArc, endArc, color, text });
+}
+export function drawUICirclePrediction(target: Vec2, radius: number, color: number, text?: string) {
+  // Note: The actual drawing now happens inside of runPredictions
+  // clone target so it's not a reference, it should draw what the value was when it was passed into this function
+  predictionCircles.push({ target: Vec.clone(target), radius, color, text });
+}
+export function drawUICircleFillPrediction(target: Vec2, radius: number, color: number, text?: string) {
+  // Note: The actual drawing now happens inside of runPredictions
+  // clone target so it's not a reference, it should draw what the value was when it was passed into this function
+  predictionCirclesFill.push({ target: Vec.clone(target), radius, color, text });
+}
+
 export function setPredictionGraphicsLineStyle(color: number) {
   if (predictionGraphics) {
     predictionGraphics.lineStyle(3, color, 1.0)
-  }
-}
-export function drawPredictionCircleFill(target: Vec2, radius: number, text: string = 'Connect Area') {
-  if (globalThis.isHUDHidden) {
-    return;
-  }
-  if (globalThis.radiusGraphics) {
-    globalThis.radiusGraphics.lineStyle(1, 0x000000, 0.0);
-    globalThis.radiusGraphics.beginFill(0xFFFFFF, 1.0);
-    globalThis.radiusGraphics.drawCircle(target.x, target.y, radius);
-    globalThis.radiusGraphics.endFill();
-    if (labelText) {
-      // Exception: Don't override label text if text is
-      // currently telling the user that they are aiming out of range
-      if (labelText.text !== i18n(TEXT_OUT_OF_RANGE)) {
-        labelText.text = i18n(text);
-        const labelPosition = withinCameraBounds({ x: target.x, y: target.y + radius }, labelText.width / 2);
-        labelText.x = labelPosition.x;
-        labelText.y = labelPosition.y;
-      }
-    }
   }
 }
 
@@ -997,25 +971,23 @@ export function updateTooltipSelectionWhileSpawning(mousePos: Vec2, underworld: 
 }
 export function updateTooltipSelection(mousePos: Vec2, underworld: Underworld) {
 
-  // Find unit:
-  const unit = underworld.getUnitAt(mousePos);
-  if (unit) {
-    globalThis.selectedUnit = unit;
-    selectedType = "unit";
-    return
-  } else {
-    globalThis.selectedUnit = undefined;
-  }
+  const targetUnit = underworld.getUnitAt(mousePos)
   const pickup = underworld.getPickupAt(mousePos);
-  if (pickup) {
+
+  if (targetUnit) {
+    globalThis.selectedUnit = targetUnit;
+    selectedType = "unit";
+    return;
+  }
+  else if (pickup) {
     globalThis.selectedPickup = pickup;
     selectedType = "pickup";
-    return
-  } else {
-    globalThis.selectedPickup = undefined;
+    return;
   }
-  // If nothing was found to select, null-out selectedType
-  // deselect
+
+  // If nothing was found to select, null-out selectedType and deselect
+  globalThis.selectedUnit = undefined;
+  globalThis.selectedPickup = undefined;
   selectedType = null;
 }
 
@@ -1037,25 +1009,6 @@ export function drawCircleUnderTarget(mousePos: Vec2, underworld: Underworld, op
     const scaleY = targetUnit?.image?.sprite.scale.y || 1;
     graphics.drawEllipse(target.x + offsetX, target.y + config.COLLISION_MESH_RADIUS * scaleY + offsetY * scaleY, Math.abs(targetUnit?.image?.sprite.scale.x || 1) * config.COLLISION_MESH_RADIUS / 2, (targetUnit?.image?.sprite.scale.y || 1) * config.COLLISION_MESH_RADIUS / 3);
     graphics.endFill();
-  }
-}
-
-
-// Used to return properties for drawRect for drawing
-// unit health and mana bars
-export function getUIBarProps(x: number, y: number, numerator: number, denominator: number, zoom: number, unit: Unit.IUnit): { x: number, y: number, width: number, height: number } {
-  const barWidthAccountForZoom = config.UNIT_UI_BAR_WIDTH / zoom;
-  const barWidth = Math.max(0, barWidthAccountForZoom * Math.min(1, numerator / denominator));
-  const height = config.UNIT_UI_BAR_HEIGHT / zoom;
-  return {
-    x: x - barWidthAccountForZoom / 2,
-    // - height so that bar stays in the same position relative to the unit
-    // regardless of zoom
-    // - config.HEALTH_BAR_UI_Y_POS so that it renders above their head instead of
-    // on their center point
-    y: y - config.HEALTH_BAR_UI_Y_POS * (unit.image?.sprite.scale.y || 1) - height,
-    width: barWidth,
-    height
   }
 }
 

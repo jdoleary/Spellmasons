@@ -255,45 +255,49 @@ function UIElementToInGameSpace(el: HTMLElement, pixiHolderRect: Rect, camX: num
 // Vec2 that is within the bounds of the camera so that it will 
 // surely be seen by a user even if they have panned away.
 // Used for attention markers and pings
-export function withinCameraBounds(position: Vec2, marginHoriz?: number): Vec2 {
+// Works best if the object has anchor (0.5, 0.5)
+export function withinCameraBounds(position: Vec2, marginHorizontal: number = 5, marginVertical: number = 5): Vec2 {
   // Headless does not use graphics
   if (globalThis.headless) { return { x: 0, y: 0 }; }
   if (!(utilProps.elCardHoldersBorder && utilProps.elPIXIHolder)) {
     // If headless, the return of this function is irrelevant
     return { x: 0, y: 0 }
   }
-  const pixiHolderRect = utilProps.elPIXIHolder.getBoundingClientRect();
+
   const { x: camX, y: camY, zoom } = getCamera();
-  // Determine bounds
-  const margin = (marginHoriz !== undefined ? marginHoriz : 30) / zoom;
-  const marginTop = 45 / zoom;
-  const marginBottom = 45 / zoom;
-  const left = margin + camX / zoom;
-  const right = globalThis.innerWidth / zoom - margin + camX / zoom;
-  const top = marginTop + camY / zoom;
-  const bottom = utilProps.elPIXIHolder.clientHeight / zoom - marginBottom + camY / zoom;
+
+  // Margins cannot be more than half of the screen
+  marginHorizontal = Math.min(marginHorizontal, (globalThis.innerWidth / 2) / zoom);
+  marginVertical = Math.min(marginVertical, (globalThis.innerHeight / 2) / zoom);
+
+  // margins as world coordinates relative to window size, cam position, and zoom
+  const left = marginHorizontal + (camX / zoom);
+  const right = globalThis.innerWidth / zoom - marginHorizontal + (camX / zoom);
+  const top = marginVertical + (camY / zoom);
+  const bottom = globalThis.innerHeight / zoom - marginVertical + (camY / zoom);
 
   // Debug draw camera limit
-  // globalThis.unitOverlayGraphics.lineStyle(4, 0xcb00f5, 1.0);
-  // globalThis.unitOverlayGraphics.moveTo(left, top);
-  // globalThis.unitOverlayGraphics.lineTo(right, top);
-  // globalThis.unitOverlayGraphics.lineTo(right, bottom);
-  // globalThis.unitOverlayGraphics.lineTo(left, bottom);
-  // globalThis.unitOverlayGraphics.lineTo(left, top);
+  // if (globalThis.unitOverlayGraphics) {
+  //   globalThis.unitOverlayGraphics.lineStyle(4, 0xcb00f5, 1.0);
+  //   globalThis.unitOverlayGraphics.moveTo(left, top);
+  //   globalThis.unitOverlayGraphics.lineTo(right, top);
+  //   globalThis.unitOverlayGraphics.lineTo(right, bottom);
+  //   globalThis.unitOverlayGraphics.lineTo(left, bottom);
+  //   globalThis.unitOverlayGraphics.lineTo(left, top);
+  // }
 
   // Keep inside bounds of camera
   const withinBoundsPos: Vec2 = {
     x: Math.min(Math.max(left, position.x), right),
     y: Math.min(Math.max(top, position.y), bottom)
   }
-  // globalThis.unitOverlayGraphics.drawCircle(camX / zoom, camY / zoom, 4);
-  // globalThis.unitOverlayGraphics.drawCircle(cardHandRight, cardHandTop, 8);
 
+  const pixiHolderRect = utilProps.elPIXIHolder.getBoundingClientRect();
   // Don't let the attention marker get obscured by the UI element
   const cardHoldersBorderBox = UIElementToInGameSpace(utilProps.elCardHoldersBorder, pixiHolderRect, camX, camY, zoom);
   // Move the position if it is obscured by the card-holder
-  if (isWithinRect({ x: withinBoundsPos.x - margin, y: withinBoundsPos.y }, cardHoldersBorderBox) || isWithinRect({ x: withinBoundsPos.x + margin, y: withinBoundsPos.y }, cardHoldersBorderBox)) {
-    withinBoundsPos.y = cardHoldersBorderBox.top - marginTop;
+  if (isWithinRect({ x: withinBoundsPos.x - marginHorizontal, y: withinBoundsPos.y }, cardHoldersBorderBox) || isWithinRect({ x: withinBoundsPos.x + marginHorizontal, y: withinBoundsPos.y }, cardHoldersBorderBox)) {
+    withinBoundsPos.y = cardHoldersBorderBox.top - marginVertical;
   }
   return withinBoundsPos;
 }

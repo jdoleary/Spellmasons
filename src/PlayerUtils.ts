@@ -30,10 +30,6 @@ export function isOutOfRange(caster: Player.IPlayer, target: Vec2, underworld: U
         if (pickupAtCastLocation && math.distance(caster.unit, pickupAtCastLocation) <= caster.unit.attackRange + config.COLLISION_MESH_RADIUS) {
             return false;
         }
-        const doodadAtCastLocation = underworld.getDoodadAt(target, false);
-        if (doodadAtCastLocation && math.distance(caster.unit, doodadAtCastLocation) <= caster.unit.attackRange + config.COLLISION_MESH_RADIUS) {
-            return false;
-        }
         // Finally, the target is out of range
         return true;
     }

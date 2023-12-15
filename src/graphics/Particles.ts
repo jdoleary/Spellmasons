@@ -207,7 +207,7 @@ export function makeManaTrail(start: Vec2, target: Vec2, underworld: Underworld,
 }
 
 
-export function updateParticlees(delta: number, bloods: BloodParticle[], seedrandom: prng, underworld: Underworld) {
+export function updateParticles(delta: number, bloods: BloodParticle[], seedrandom: prng, underworld: Underworld) {
 
     // Emitters:
     const lerpSpeed = 0.02;

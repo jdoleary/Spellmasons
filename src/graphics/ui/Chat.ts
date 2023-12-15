@@ -46,7 +46,11 @@ function sanitize(string: string) {
   // @ts-ignore
   return string.replace(reg, (match) => (map[match]));
 }
-export function ReceiveMessage(chatter: Player.IPlayer, message: string) {
+export function ReceiveMessage(chatter: Player.IPlayer | undefined, message: string) {
+  if (!chatter) {
+    console.error('Unexpected, recieved chat message from undefined player');
+    return;
+  }
   message = sanitize(message);
   var chatname = chatter.name ? chatter.name : "Unknown" // name of chatter
   chatname = sanitize(chatname);

@@ -78,6 +78,74 @@ export function makeAncientParticles(position: Vec2, prediction: boolean) {
         }, [texture]);
     simpleEmitter(position, config, () => { }, containerParticlesUnderUnits);
 }
+
+export function makeParticleExplosion(position: Vec2, size: number, prediction: boolean, colorStart: string, colorEnd: string) {
+    if (prediction || globalThis.headless) {
+        // Don't show if just a prediction
+        return;
+    }
+    const texture = createParticleTexture();
+    if (!texture) {
+        logNoTextureWarning('makeParticleExplosion');
+        return;
+    }
+    const config =
+        particles.upgradeConfig({
+            autoUpdate: true,
+            "alpha": {
+                "start": 1,
+                "end": 0
+            },
+            "scale": {
+                "start": 3,
+                "end": 2,
+            },
+            "color": {
+                "start": colorStart,
+                "end": colorEnd
+            },
+            "speed": {
+                "start": 500,
+                "end": 50,
+                "minimumSpeedMultiplier": 1
+            },
+            "acceleration": {
+                "x": 0,
+                "y": 0
+            },
+            "maxSpeed": 0,
+            "startRotation": {
+                "min": 0,
+                "max": 360
+            },
+            "noRotation": false,
+            "rotationSpeed": {
+                "min": 0,
+                "max": 300
+            },
+            "lifetime": {
+                "min": 0.5 * size,
+                "max": 0.5 * size
+            },
+            "blendMode": "normal",
+            "frequency": 0.0001,
+            "emitterLifetime": 0.1,
+            "maxParticles": 300,
+            "pos": {
+                "x": 0,
+                "y": 0
+            },
+            "addAtBack": true,
+            "spawnType": "circle",
+            "spawnCircle": {
+                "x": 0,
+                "y": 0,
+                "r": 0
+            }
+        }, [texture]);
+    simpleEmitter(position, config);
+}
+
 export function makeBloatExplosionWithParticles(position: Vec2, size: number, prediction: boolean) {
     if (prediction || globalThis.headless) {
         // Don't show if just a prediction
