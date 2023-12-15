@@ -23,6 +23,7 @@ import { setPlayerNameUI } from '../PlayerUtils';
 import { arrowCardId } from '../cards/arrow';
 import { heal_id } from '../cards/add_heal';
 import { contaminate_id } from '../cards/contaminate';
+import { slashCardId } from '../cards/slash';
 
 const elInGameLobby = document.getElementById('in-game-lobby') as (HTMLElement | undefined);
 const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
@@ -42,7 +43,7 @@ interface Stats {
   gameStartTime: number;
   totalKills: number;
 }
-export type MageType = 'Spellmason' | 'Timemason' | 'Bloodmason' | 'Necromancer' | 'Archer' | 'Far Gazer' | 'Cleric' | 'Witch' | 'Gambler';
+export type MageType = 'Spellmason' | 'Timemason' | 'Bloodmason' | 'Necromancer' | 'Swordmason' | 'Archer' | 'Far Gazer' | 'Cleric' | 'Witch' | 'Gambler';
 // This array allows the UI to select a mageType, mageTypes not in this array
 // will not appear in the UI
 globalThis.mageTypes = [
@@ -50,6 +51,7 @@ globalThis.mageTypes = [
   'Timemason',
   'Bloodmason',
   'Necromancer',
+  'Swordmason',
   'Archer',
   'Far Gazer',
   'Cleric',
@@ -119,6 +121,17 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
           player.unit.mana *= 2;
           underworld.syncPlayerPredictionUnitOnly();
           Unit.syncPlayerHealthManaUI(underworld);
+        }
+        break;
+      case 'Swordmason':
+        {
+          player.unit.staminaMax *= 2;
+          const upgrade = Upgrade.getUpgradeByTitle(slashCardId);
+          if (upgrade) {
+            underworld.getFreeUpgrade(player, upgrade);
+          } else {
+            console.error('Could not find arrow upgrade for', type);
+          }
         }
         break;
       case 'Archer':

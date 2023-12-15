@@ -811,7 +811,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
           }).then((effectState) => {
             // Ensure that the mana left after casting the prediction spell is not negative.
             // If it is negative, don't allow the cast because the caster has insufficient mana
-            if ((effectState.casterUnit.mana >= 0)) {
+            if (effectState.casterUnit.mana >= 0 && effectState.casterUnit.stamina >= 0) {
               clearSpellEffectProjection(underworld, true);
               overworld.pie.sendData({
                 type: MESSAGE_TYPES.SPELL,

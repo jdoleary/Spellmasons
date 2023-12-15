@@ -13,8 +13,9 @@ import { arrowCardId } from "./arrow";
 import { CardCategory } from "../types/commonTypes";
 import { allUnits } from "../entity/units";
 export interface CardCost {
-    manaCost: number;
     healthCost: number;
+    staminaCost: number;
+    manaCost: number;
 }
 // Positive number means card is still disabled
 export function levelsUntilCardIsEnabled(cardId: string, underworld?: Underworld): number {
@@ -126,9 +127,10 @@ export function oneOffImage(coords: Vec2, imagePath: string, parent: Container |
 // @ts-ignore: for menu
 globalThis.calculateCostForSingleCard = calculateCostForSingleCard
 export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number = 0, caster?: IPlayer): CardCost {
-    let cardCost = { manaCost: 0, healthCost: 0 }
-    cardCost.manaCost += card.manaCost;
+    let cardCost = { healthCost: 0, staminaCost: 0, manaCost: 0, }
     cardCost.healthCost += card.healthCost;
+    cardCost.staminaCost += card.staminaCost;
+    cardCost.manaCost += card.manaCost;
     // || 0 protects against multiplying by undefined
     // + 2 because log2(2) == 1 so 2 should be the starting number for the first time a user casts; so if 
     // the usage count is 1 (the caster has already used it once), we get log2(3) which is 1.58
@@ -136,12 +138,14 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
     // timesUsedSoFar is the number of times a card has (or will be if were calculating mana cost for a future cast)
     // been used. It makes cards more expensive to use over and over
     const multiplier = Math.log2(timesUsedSoFar + 2);
-    cardCost.manaCost *= multiplier;
     cardCost.healthCost *= multiplier;
+    cardCost.staminaCost *= multiplier;
+    cardCost.manaCost *= multiplier;
 
     // cost should be a whole number for the sake of the player experience
-    cardCost.manaCost = Math.floor(cardCost.manaCost);
     cardCost.healthCost = Math.floor(cardCost.healthCost);
+    cardCost.staminaCost = Math.floor(cardCost.staminaCost);
+    cardCost.manaCost = Math.floor(cardCost.manaCost);
 
     // Handle unique changes due to player mageType
     if (caster) {
@@ -170,6 +174,9 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
             cardCost.manaCost = Math.floor(cardCost.manaCost / 2);
         } else if (caster.mageType == 'Witch' && card.category == CardCategory.Curses) {
             cardCost.manaCost = Math.floor(cardCost.manaCost * 0.8);
+        } else if (caster.mageType == 'Swordmason' && card.id.toLowerCase().includes('slash')) {
+            cardCost.manaCost = 0;
+            cardCost.staminaCost = card.manaCost * 5;
         } else if (caster.mageType == 'Archer' && card.id.toLowerCase().includes('arrow')) {
             // Freeze mana cost for archer MageType
             cardCost.manaCost = card.manaCost;
@@ -179,7 +186,7 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
     return cardCost
 }
 export function calculateCost(cards: ICard[], casterCardUsage: CardUsage, caster?: IPlayer): CardCost {
-    let cost: CardCost = { manaCost: 0, healthCost: 0 };
+    let cost: CardCost = { healthCost: 0, staminaCost: 0, manaCost: 0 };
     // Tallys how many times a card has been used as the cards array is iterated
     // this is necessary so that if you cast 3 consecutive spells of the same id
     // in one cast, each subsequent one will become more expensive
@@ -189,13 +196,15 @@ export function calculateCost(cards: ICard[], casterCardUsage: CardUsage, caster
             thisCalculationUsage[card.id] = 0;
         }
         const singleCardCost = calculateCostForSingleCard(card, (casterCardUsage[card.id] || 0) + (thisCalculationUsage[card.id] || 0), caster);
-        cost.manaCost += singleCardCost.manaCost;
         cost.healthCost += singleCardCost.healthCost;
+        cost.staminaCost += singleCardCost.staminaCost
+        cost.manaCost += singleCardCost.manaCost;
         thisCalculationUsage[card.id] += 1;
     }
     // cost should be a whole number for the sake of the player experience
-    cost.manaCost = Math.floor(cost.manaCost);
     cost.healthCost = Math.floor(cost.healthCost);
+    cost.staminaCost = Math.floor(cost.staminaCost);
+    cost.manaCost = Math.floor(cost.manaCost);
     return cost;
 }
 export function _getCardsFromIds(cardIds: string[], cards: { [cardId: string]: ICard }): ICard[] {

@@ -346,7 +346,7 @@ function cardToUpgrade(c: ICard, overworld: Overworld): IUpgrade {
       addCardToHand(c, player, overworld.underworld);
     },
     probability: probability,
-    cost: { healthCost: c.healthCost, manaCost: c.manaCost }
+    cost: { healthCost: c.healthCost, staminaCost: c.staminaCost, manaCost: c.manaCost }
   };
 }
 
@@ -447,8 +447,9 @@ export interface ICard {
   // This is used to dictate wether or not the modded spell is used
   modName?: string;
   category: CardCategory;
-  manaCost: number;
   healthCost: number;
+  staminaCost: number;
+  manaCost: number;
   probability: number;
   thumbnail: string;
   // The path for the animation effect when the spell is cast

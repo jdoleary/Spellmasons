@@ -154,6 +154,12 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
     elCardHealthBadge.innerHTML = upgrade.cost.healthCost.toString();
     elCardBadgeHolder.appendChild(elCardHealthBadge);
   }
+  if (upgrade.cost.staminaCost) {
+    const elCardStaminaBadge = document.createElement('div');
+    elCardStaminaBadge.classList.add('card-stamina-badge', 'card-badge');
+    elCardStaminaBadge.innerHTML = upgrade.cost.staminaCost.toString();
+    elCardBadgeHolder.appendChild(elCardStaminaBadge);
+  }
 
   const thumbHolder = document.createElement('div');
   const thumbnail = document.createElement('img');
@@ -237,7 +243,7 @@ export const upgradeSourceWhenDead: IUpgrade[] = [
     // Resurrection happens automatically at the start of each level
     effect: () => { },
     probability: 30,
-    cost: { healthCost: 0, manaCost: 0 },
+    cost: { healthCost: 0, staminaCost: 0, manaCost: 0 },
   },
 ];
 
@@ -255,7 +261,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
       changeMageType('Spellmason', player, underworld);
     },
     probability: 1,
-    cost: { healthCost: 0, manaCost: 0 },
+    cost: { healthCost: 0, staminaCost: 0, manaCost: 0 },
   },
   {
     title: 'Timemason',
@@ -266,7 +272,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
       changeMageType('Timemason', player, underworld);
     },
     probability: 1,
-    cost: { healthCost: 0, manaCost: 0 },
+    cost: { healthCost: 0, staminaCost: 0, manaCost: 0 },
   },
   // {
   //   title: 'Bloodmason',
@@ -288,7 +294,18 @@ export const upgradeMageClassSource: IUpgrade[] = [
       changeMageType('Necromancer', player, underworld);
     },
     probability: 1,
-    cost: { healthCost: 0, manaCost: 0 },
+    cost: { healthCost: 0, staminaCost: 0, manaCost: 0 },
+  },
+  {
+    title: i18n('Swordmason'),
+    type: 'mageType',
+    description: () => i18n('class_swordmason'),
+    thumbnail: 'images/upgrades/class-archer.png',
+    effect: (player, underworld) => {
+      changeMageType('Swordmason', player, underworld);
+    },
+    probability: 1,
+    cost: { healthCost: 0, staminaCost: 0, manaCost: 0 },
   },
   {
     title: i18n('Archer'),
@@ -299,7 +316,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
       changeMageType('Archer', player, underworld);
     },
     probability: 1,
-    cost: { healthCost: 0, manaCost: 0 },
+    cost: { healthCost: 0, staminaCost: 0, manaCost: 0 },
   },
   {
     title: 'Far Gazer',
@@ -310,7 +327,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
       changeMageType('Far Gazer', player, underworld);
     },
     probability: 1,
-    cost: { healthCost: 0, manaCost: 0 },
+    cost: { healthCost: 0, staminaCost: 0, manaCost: 0 },
   },
   {
     title: i18n('Cleric'),
@@ -321,7 +338,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
       changeMageType('Cleric', player, underworld);
     },
     probability: 1,
-    cost: { healthCost: 0, manaCost: 0 },
+    cost: { healthCost: 0, staminaCost: 0, manaCost: 0 },
   },
   {
     title: i18n('Witch'),
@@ -332,7 +349,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
       changeMageType('Witch', player, underworld);
     },
     probability: 1,
-    cost: { healthCost: 0, manaCost: 0 },
+    cost: { healthCost: 0, staminaCost: 0, manaCost: 0 },
   },
   {
     title: i18n('Gambler'),
@@ -343,7 +360,7 @@ export const upgradeMageClassSource: IUpgrade[] = [
       changeMageType('Gambler', player, underworld);
     },
     probability: 1,
-    cost: { healthCost: 0, manaCost: 0 },
+    cost: { healthCost: 0, staminaCost: 0, manaCost: 0 },
   },
 
 ]

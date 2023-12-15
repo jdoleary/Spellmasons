@@ -2600,6 +2600,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         case 'Timemason':
           statBumpAmount.manaMax *= 2;
           break;
+        case 'Swordmason':
+          statBumpAmount.staminaMax *= 2;
+          break;
         case 'Far Gazer':
           statBumpAmount.attackRange *= 2;
           statBumpAmount.staminaMax = Math.floor(statBumpAmount.staminaMax as number / 2);
@@ -3542,19 +3545,23 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // This happens after the spell is cast so that fizzle spells can be refunded
           const spellCostTally = {
             manaCost: 0,
-            healthCost: 0
+            healthCost: 0,
+            staminaCost: 0
           };
           for (let i = 0; i < quantity; i++) {
             const timesUsedSoFar = (casterCardUsage[card.id] || 0) + (quantity > 1 ? i * card.expenseScaling : i);
             const singleCardCost = calculateCostForSingleCard(card, timesUsedSoFar, casterPlayer);
             spellCostTally.manaCost += singleCardCost.manaCost;
             spellCostTally.healthCost += singleCardCost.healthCost;
+            spellCostTally.staminaCost += singleCardCost.staminaCost;
           }
           // Apply mana and health cost to caster
           // Note: it is important that this is done BEFORE a card is actually cast because
           // the card may affect the caster's mana
           effectState.casterUnit.mana -= spellCostTally.manaCost;
+          effectState.casterUnit.stamina -= spellCostTally.staminaCost;
 
+          // TODO -
           // Bandaid: Prevent mana from going negative to hide that mana scamming is possible
           // This is a temporary solution, recent changes that made it possible to use mana gained
           // from manasteal also broke the mana scamming prevention. so hiding that it's possible will

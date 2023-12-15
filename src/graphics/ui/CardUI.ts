@@ -801,15 +801,22 @@ function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSi
   const elCardBadgeHolder = document.createElement('div');
   elCardBadgeHolder.classList.add('card-badge-holder');
   element.appendChild(elCardBadgeHolder);
+  const cost = calculateCostForSingleCard(content, 0, globalThis.player);
+  // Mana
   const elCardManaBadge = document.createElement('div');
   elCardManaBadge.classList.add('card-mana-badge', 'card-badge');
-  const cost = calculateCostForSingleCard(content, 0, globalThis.player);
   updateManaBadge(elCardManaBadge, cost.manaCost, content);
   elCardBadgeHolder.appendChild(elCardManaBadge);
+  // Health
   const elCardHealthBadge = document.createElement('div');
   elCardHealthBadge.classList.add('card-health-badge', 'card-badge');
   updateHealthBadge(elCardHealthBadge, cost.healthCost, content);
   elCardBadgeHolder.appendChild(elCardHealthBadge);
+  // Stamina
+  const elCardStaminaBadge = document.createElement('div');
+  elCardStaminaBadge.classList.add('card-stamina-badge', 'card-badge');
+  updateStaminaBadge(elCardStaminaBadge, cost.staminaCost, content);
+  elCardBadgeHolder.appendChild(elCardStaminaBadge);
   // Cooldown badge
   if (content.cooldown) {
     const elCardCooldownBadge = document.createElement('div');
@@ -942,6 +949,22 @@ function updateHealthBadge(elBadge: Element | null, healthCost: number, card: Ca
     console.warn("Err UI: Found card, but could not find associated health badge element to update mana cost");
   }
 }
+// @ts-ignore for menu
+globalThis.updateStaminaBadge = updateStaminaBadge;
+function updateStaminaBadge(elBadge: Element | null, staminaCost: number, card: Cards.ICard) {
+  if (elBadge) {
+    // Hide badge if no cost
+    elBadge.classList.toggle('hidden', staminaCost === 0);
+    elBadge.innerHTML = staminaCost.toString();
+    if (staminaCost !== card.staminaCost) {
+      elBadge.classList.add('modified-by-usage')
+    } else {
+      elBadge.classList.remove('modified-by-usage')
+    }
+  } else {
+    console.warn("Err UI: Found card, but could not find associated mana badge element to update mana cost");
+  }
+}
 // Updates the UI mana badge for cards in hand.  To be invoked whenever a player's
 // cardUsageCounts object is modified in order to sync the UI
 export function updateCardBadges(underworld: Underworld) {
@@ -970,12 +993,17 @@ export function updateCardBadges(underworld: Underworld) {
           // such as 'bite', 'vulnerable', or 'shield'
           updateHealthBadge(elBadgeH, composeOnDamageEvents(predictionPlayerUnit, cost.healthCost, underworld, true), card);
         }
+        const elBadgesS = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-stamina-badge`);
+        const elBadgeS = Array.from(elBadgesS)[sliceOfCardsOfSameIdUntilCurrent.length];
+        if (elBadgeS) {
+          updateStaminaBadge(elBadgeS, cost.staminaCost, card);
+        }
       }
     }
     // Update cards in hand and inventory
     const cards = Cards.getCardsFromIds(globalThis.player.inventory);
-    const badgesById: { [cardId: string]: { mana: HTMLElement[], health: HTMLElement[] } } = {}
-    function populateBadgesById(attr: 'mana' | 'health') {
+    const badgesById: { [cardId: string]: { health: HTMLElement[], stamina: HTMLElement[], mana: HTMLElement[] } } = {}
+    function populateBadgesById(attr: 'health' | 'stamina' | 'mana') {
       Array.from(document.querySelectorAll(`.card-holder .card .card-${attr}-badge, #inventory-content .card .card-${attr}-badge`)).forEach((badge) => {
         const cardEl = badge.closest('.card') as (HTMLElement | undefined);
         if (cardEl) {
@@ -984,8 +1012,9 @@ export function updateCardBadges(underworld: Underworld) {
             let badgeRecord = badgesById[cardId]
             if (!badgeRecord) {
               badgeRecord = {
+                health: [],
+                stamina: [],
                 mana: [],
-                health: []
               }
               badgesById[cardId] = badgeRecord;
             }
@@ -995,8 +1024,9 @@ export function updateCardBadges(underworld: Underworld) {
         }
       });
     }
-    populateBadgesById('mana');
     populateBadgesById('health');
+    populateBadgesById('stamina');
+    populateBadgesById('mana');
     for (let card of cards) {
       const selectedCardElementsOfSameId = selectedCards.filter(c => c.id == card.id);
       const cost = calculateCostForSingleCard(card, (globalThis.player.cardUsageCounts[card.id] || 0) + selectedCardElementsOfSameId.length * card.expenseScaling, globalThis.player);
@@ -1009,6 +1039,9 @@ export function updateCardBadges(underworld: Underworld) {
         // such as 'bite', 'vulnerable', or 'shield'
         for (let elBadgeHealth of badgeRecord.health) {
           updateHealthBadge(elBadgeHealth, composeOnDamageEvents(predictionPlayerUnit, cost.healthCost, underworld, true), card);
+        }
+        for (let elBadge of badgeRecord.stamina) {
+          updateStaminaBadge(elBadge, cost.staminaCost, card);
         }
       }
     }
