@@ -112,7 +112,7 @@ declare global {
     var isSuperMe: undefined | boolean;
     // Shows icons above the heads of enemies who will damage you next turn
     // scale is the scale of the unit.  Larger units need their marker positioned higher
-    var attentionMarkers: undefined | { imagePath: string, pos: Vec2, scale: number }[];
+    var attentionMarkers: undefined | { imagePath: string, pos: Vec2, unitSpriteScaleY: number, markerScale: number = 1 }[];
     // Shows icon for units that will be successfully resurrected
     var resMarkers: undefined | Vec2[];
     // True if client player has casted this turn;

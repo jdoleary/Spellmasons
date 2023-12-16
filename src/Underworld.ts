@@ -992,7 +992,7 @@ export default class Underworld {
     // Note: this block must come after updating the camera position
     for (let marker of globalThis.attentionMarkers) {
       // Draw Attention Icon to show the enemy will hurt you next turn
-      drawUnitMarker(marker.imagePath, marker.pos, marker.scale);
+      drawUnitMarker(marker.imagePath, marker.pos, marker.unitSpriteScaleY, marker.markerScale);
     }
   }
   drawPlayerThoughts() {
