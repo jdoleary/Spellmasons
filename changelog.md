@@ -1,6 +1,57 @@
 ## 1.26.0
-- Balanced Target Similar and Target Kind
+- feature: Waves added in Plus levels, each subsequent Plus level gets one extra wave before the Portals appear
+    This should make end game much more challenging.
+    Also: Units in the Plus levels get "Corpse Decay" so their corpses don't stick around long
+- feature: Added In-game chat (accessible via the "t" key)
+    - Thanks Couls for this awesome feature!
+- content: Add "Teleport" spell
     Thanks Meme_Man
+
+- balance: Target Similar and Target Kind
+    Thanks Meme_Man
+- balance: Significant Mana Steal rebalance
+- balance: Heal Alllies now requires Heal Greater instead of fully replacing it when upgraded.
+- balance: Send Mana: Cost is now increased to 30 and it scales in cost when used like other spells.
+- balance: Improve Contaminate, stacks now cause the curses to continue to spread
+    also contaminate now overwrites lower level curses with higher level curses when it spreads, instead of ignoring already inflicted units.
+- balance: Significantly rebalanced Stat gain amounts: health, stamina and cast range are now greater per point spent.
+- balance: Casting Blood Curse on an ally Spellmason no longer grants them the Blood Curse spell
+- balance: Buff suffocate and poison
+    - Also they now proc at the end of a unit's turn instead of the beginning
+- balance: Repel and vortex now require push and pull (respectively)
+    - Repel and vortex mana cost increased slightly
+- balance: Target cone now increases it's arc much more when stacked.
+- balance: Target column now extends farther when stacked
+- balance: In Plus levels, units no longer get "Immune"
+- balance: Target Similar, Target Kind
+- balance: Reworked Connect spell algorithm for better targeting
+
+- improvement: Rejoining existing games should be much more reliable
+The clients have been improved to use the same clientID between reboots.  This means that if you rejoin a game after a disconnect (or a saved game - after version 1.26.0) it should automatically give you back control of your original character instead of making a new one.
+
+- fix: Prevent ending your turn while you're picking upgrades
+- fix: Multiple issues on Hotseat Multiplayer with major refactor
+- fix: Cloned or Summoned Spellmason now correctly deals the damage listed in their tooltip
+    Also stacking a summoned spellmason increases it's damage output
+    Thanks Meme_man
+- fix: Purple portals stick around after a player enters one.  This resolves the occasional issue where one player would trigger both portals in multiplayer and the other player would have to end their turn to recreate a new purple portal so they could proceed
+- fix: The back button on the Load menu going to a multiplayer lobby menu even if you were in singleplayer.
+- fix: Spell smuggling between new games
+    Thanks WildBerryBlast
+- fix: Vampires keep blood curse on death
+- fix: Split hack allowing infinite splits
+- fix: Incorrect damage dealth when combining Dash then Burst
+
+- visual: HP and MP bars now have a dark, partially transparent background and healing / gained mana is displayed in a spell prediction in addition to damage / spent mana.
+- visual: Spells in inventory are more sensibly grouped together
+- visual: Urn explosion radius now shows when selected
+- visual: Fixed urns losing red tint if damaged/killed
+- visual: Fixed issue where sometimes blood golem, blood archer, dark priest, etc didn't get properly tinted and appeared to be vanilla units
+- visual: Add Spell details to Unknown cards in the codex so you can see if they require other cards to get them or if they belong to a mod.
+
+- a11y: Darken background colors even more when the option is enabled
+- a11y: Added dedicated accessibility menu.  If you need additional accessibility options, please let me know!
+
 ## 1.25.0
 Staff update!
 Soul Muncher has joined the team as a developer and is doing awesome work!
