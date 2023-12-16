@@ -43,6 +43,7 @@ import { skyBeam } from '../VisualEffects';
 import seedrandom from 'seedrandom';
 import { summoningSicknessId } from '../modifierSummoningSickness';
 import * as log from '../log';
+import { suffocateCardId, updateSuffocate } from '../cards/suffocate';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -944,6 +945,10 @@ export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | u
   // If taking damage (not healing) and health is 0 or less...
   if (amount > 0 && unit.health <= 0) {
     die(unit, underworld, prediction);
+  }
+
+  if (unit.modifiers[suffocateCardId]) {
+    updateSuffocate(unit, underworld, prediction);
   }
 
   if (unit.id == globalThis.player?.unit.id && !prediction) {
