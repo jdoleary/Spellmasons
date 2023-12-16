@@ -21,6 +21,7 @@ import bleed from './bleed';
 import heal from './add_heal';
 import heal_greater from './heal_greater';
 import heal_mass from './heal_mass';
+import regenerate from './regenerate';
 import send_mana from './send_mana';
 import target_circle from './target_circle';
 import connect from './connect';
@@ -207,6 +208,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(heal, overworld);
   registerSpell(heal_greater, overworld);
   registerSpell(heal_mass, overworld);
+  registerSpell(regenerate, overworld)
   registerSpell(send_mana, overworld);
   registerSpell(shield, overworld);
   registerSpell(fortify, overworld);
@@ -333,6 +335,7 @@ function cardToUpgrade(c: ICard, overworld: Overworld): IUpgrade {
     modName: c.modName,
     type: 'card',
     cardCategory: c.category,
+    mageTypes: c.mageTypes,
     description: () => i18n(c.description).trim(),
     thumbnail,
     maxCopies: 1,

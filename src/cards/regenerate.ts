@@ -1,6 +1,7 @@
 import * as Unit from '../entity/Unit';
 import * as Image from '../graphics/Image';
 import * as Pickup from '../entity/Pickup';
+import floatingText from '../graphics/FloatingText';
 import { Spell, refundLastSpell } from './index';
 import { CardCategory, UnitType } from '../types/commonTypes';
 import * as config from '../config'
@@ -12,6 +13,7 @@ import { getOrInitModifier } from './util';
 export const id = 'regenerate';
 const imageName = 'spellIconHeal.png';
 var regenLen = 1;
+const healAmount = 30;
 const spell: Spell = {
     card: {
         id,
@@ -48,18 +50,6 @@ const spell: Spell = {
     },
     modifiers: {
         add,
-        subsprite: {
-            imageName,
-            alpha: 1.0,
-            anchor: {
-                x: 0.5,
-                y: 0.5,
-            },
-            scale: {
-                x: 1,
-                y: 1,
-            },
-        },
     },
     events: {
         onTurnEnd: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
@@ -67,23 +57,28 @@ const spell: Spell = {
             const modifier = unit.modifiers[id];
             if (modifier) {
                 if (modifier.quantity > 0) {
-                    Unit.takeDamage(unit, 30, undefined, underworld, prediction);
+                    Unit.takeDamage(unit, -healAmount, undefined, underworld, prediction);
+                    Image.addOneOffAnimation(unit, 'spell-effects/potionPickup', {}, { loop: false, animationSpeed: 0.3 });
+                    floatingText({
+                        coords: unit,
+                        text: `+${healAmount} Health`
+                    });
                 }
                 modifier.quantity--;
+                if (modifier.quantity <= 0) {
+                    Unit.removeModifier(unit, id, underworld);
+                }
             }
         },
     },
 };
 
 function add(unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) {
-    getOrInitModifier(unit, id, { isCurse: true, quantity }, () => {
+    getOrInitModifier(unit, id, { isCurse: false, quantity }, () => {
         // Add event
         if (!unit.onTurnEndEvents.includes(id)) {
             unit.onTurnEndEvents.push(id);
         }
-
-        // Add subsprite image
-        Image.addSubSprite(unit.image, imageName);
     });
 }
 

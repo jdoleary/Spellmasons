@@ -83,16 +83,6 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
   if (isPickingClass(player)) {
     return upgradeMageClassSource;
   }
-  // if player has a class, include a class specific spell if it exists for first pick after selecting a class
-  if (player.mageType && player.upgrades.length == 6) {
-    var mageTypeSpells = upgradeCardsSource;
-    mageTypeSpells.filter(filterUpgrades)
-      .filter(c => c.mageTypes?.includes(player.mageType as MageType))
-    if (mageTypeSpells.length) {
-      if (mageTypeSpells[0]) mageTypeSpells[0].probability = 100; // max probability of the first spell found in array
-      upgradeList = mageTypeSpells;
-    }
-  }
   // Clone upgrades for later mutation
   const clonedUpgradeSource = [...upgradeList];
   // Choose from upgrades
@@ -100,6 +90,20 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
     numberOfUpgrades,
     clonedUpgradeSource.length,
   );
+  let GuaranteedSlot = [] as IUpgrade[];
+  // sometimes you want to guarantee a certain type of spell, guaranteed slot is a list of spells that'll appear in the third slot(for example, class spells)
+
+  // if player has a class, include a class specific spell if it exists for third pick
+  if (player.mageType) {
+    var mageTypeSpells = upgradeCardsSource
+      .filter(filterUpgrades)
+      .filter(c => c.mageTypes && c.mageTypes.length > 0 && c.mageTypes.includes(player.mageType as MageType))
+    if (mageTypeSpells.length) {
+      GuaranteedSlot = mageTypeSpells;
+    }
+    console.log("Magetype spell list:");
+    console.log(mageTypeSpells);
+  }
   // Upgrade random generate should be unique for the underworld seed, each player, the number of rerolls that they have,
   // the number of cards that they have  This will prevent save scamming the chances and also make sure each time you are presented with
   // cards it is unique.
@@ -114,12 +118,22 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
     i < numberOfCardsToChoose;
     i++
   ) {
-    const upgrade = chooseObjectWithProbability(clonedUpgradeSource, random);
-    if (upgrade) {
-      const index = clonedUpgradeSource.indexOf(upgrade);
-      upgrades = upgrades.concat(clonedUpgradeSource.splice(index, 1));
+    if (i == numberOfCardsToChoose - 1 && GuaranteedSlot.length != 0) {
+      console.log("Guaranteed Slot:");
+      console.log(GuaranteedSlot);
+      const classSpell = chooseObjectWithProbability(GuaranteedSlot, random);
+      if (classSpell) {
+        const index = GuaranteedSlot.indexOf(classSpell);
+        upgrades = upgrades.concat(GuaranteedSlot.splice(index, 1));
+      }
     } else {
-      console.log('No upgrades to choose from', clonedUpgradeSource);
+      const upgrade = chooseObjectWithProbability(clonedUpgradeSource, random);
+      if (upgrade) {
+        const index = clonedUpgradeSource.indexOf(upgrade);
+        upgrades = upgrades.concat(clonedUpgradeSource.splice(index, 1));
+      } else {
+        console.log('No upgrades to choose from', clonedUpgradeSource);
+      }
     }
   }
   globalThis.rerollOmit = upgrades.map(u => u.title);
