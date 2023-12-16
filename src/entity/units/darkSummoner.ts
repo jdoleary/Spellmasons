@@ -28,14 +28,14 @@ const unit: UnitSource = {
     death: 'summonerDeath'
   },
   unitProps: {
-    healthMax: 180,
     damage: 0,
     attackRange: 550,
-    manaCostToCast,
-    manaMax: 60,
-    mana: 40,
-    manaPerTurn: 20,
-    bloodColor: 0x852124
+    healthMax: 180,
+    mana: 60,
+    manaMax: 120,
+    manaPerTurn: 15,
+    manaCostToCast: 120,
+    bloodColor: 0x852124,
   },
   spawnParams: {
     probability: 20,

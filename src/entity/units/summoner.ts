@@ -15,7 +15,6 @@ import { clone, jitter, Vec2 } from '../../jmath/Vec';
 import { isCoordInLiquid, tryFallInOutOfLiquid } from '../Obstacle';
 
 export const SUMMONER_ID = 'summoner';
-const manaCostToCast = 60;
 const unit: UnitSource = {
   id: SUMMONER_ID,
   info: {
@@ -35,10 +34,13 @@ const unit: UnitSource = {
     death: 'summonerDeath'
   },
   unitProps: {
-    healthMax: 120,
     damage: 0,
     attackRange: 550,
-    manaCostToCast
+    healthMax: 120,
+    mana: 60,
+    manaMax: 90,
+    manaPerTurn: 15,
+    manaCostToCast: 90,
   },
   spawnParams: {
     probability: 20,
