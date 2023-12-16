@@ -19,7 +19,10 @@ const unit: UnitSource = {
   unitProps: {
     damage: 50,
     healthMax: 120,
-    manaMax: 0,
+    mana: 60,
+    manaMax: 60,
+    manaPerTurn: 0,
+    manaCostToCast: 0,
     bloodColor: bloodVampire,
   },
   spawnParams: {
