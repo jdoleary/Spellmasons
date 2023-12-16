@@ -25,14 +25,14 @@ const unit: UnitSource = {
   },
   unitProps: {
     damage: 0,
-    staminaMax: 0,
     attackRange: 0,
-    manaMax: 0,
     healthMax: 70,
+    staminaMax: 0,
+    manaMax: 0,
     // This is critical to a decoy, it prevents it from being pushed due to unit crowding
     immovable: true,
     radius: config.COLLISION_MESH_RADIUS,
-    bloodColor: bloodDecoy
+    bloodColor: bloodDecoy,
   },
   action: async (_self: Unit.IUnit, _attackTargets: Unit.IUnit[], _underworld: Underworld, _canAttackTarget: boolean) => { },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => { return []; }

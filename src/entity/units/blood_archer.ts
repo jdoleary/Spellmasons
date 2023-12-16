@@ -19,11 +19,11 @@ const unit: UnitSource = {
     subtype: UnitSubType.RANGED_LOS,
   },
   unitProps: {
-    attackRange: 600,
-    manaMax: 0,
     damage: 40,
+    attackRange: 600,
     healthMax: 80,
-    bloodColor: 0x324860
+    manaMax: 0,
+    bloodColor: 0x324860,
   },
   spawnParams: {
     probability: 50,

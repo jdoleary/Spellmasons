@@ -17,10 +17,10 @@ const unit: UnitSource = {
     subtype: UnitSubType.MELEE,
   },
   unitProps: {
-    manaMax: 0,
-    healthMax: 120,
     damage: 50,
-    bloodColor: bloodVampire
+    healthMax: 120,
+    manaMax: 0,
+    bloodColor: bloodVampire,
   },
   spawnParams: {
     probability: 15,
