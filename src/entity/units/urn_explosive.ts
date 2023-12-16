@@ -23,8 +23,8 @@ const unit: UnitSource = {
     unitProps: {
         damage,
         attackRange: baseRadius,
-        healthMax: 1,
         staminaMax: 0,
+        healthMax: 1,
         manaMax: 0,
     },
     spawnParams: {

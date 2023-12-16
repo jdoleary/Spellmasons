@@ -16,9 +16,8 @@ const unit: UnitSource = {
   },
   unitProps: {
     damage: 40,
-    attackRange: config.COLLISION_MESH_RADIUS * 2,
-    healthMax: 60,
     staminaMax: config.UNIT_BASE_STAMINA * 1.2,
+    healthMax: 60,
     manaMax: 0,
     bloodColor: 0x8a2e2e,
   },

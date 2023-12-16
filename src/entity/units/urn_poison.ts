@@ -23,8 +23,8 @@ const urnPoisonSource: UnitSource = {
     unitProps: {
         damage: 0,
         attackRange: baseRadius,
-        healthMax: 1,
         staminaMax: 0,
+        healthMax: 1,
         manaMax: 0,
     },
     spawnParams: {

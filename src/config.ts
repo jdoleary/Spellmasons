@@ -19,6 +19,7 @@ export const UNIT_SIZE_RADIUS = 50 / 2;
 // the radius within which a mouse will create a target for a spell
 // from a unit
 export const SELECTABLE_RADIUS = 36;
+export const OBSTACLE_SIZE = COLLISION_MESH_RADIUS * 2;
 
 export const HEALTH_BAR_UI_Y_POS = 30;
 export const UNIT_UI_BAR_HEIGHT = 5;
@@ -26,17 +27,18 @@ export const UNIT_UI_BAR_WIDTH = 34;
 
 export const LOB_PROJECTILE_SPEED = 600; // in millis
 export const UNIT_SIZE = COLLISION_MESH_RADIUS * 2;
+export const UNIT_BASE_DAMAGE = 30;
+// Primarily for melee Units
+export const UNIT_BASE_RANGE = 10 + COLLISION_MESH_RADIUS * 2;
+export const UNIT_BASE_STAMINA = 300;
 export const UNIT_BASE_HEALTH = 40;
 export const UNIT_BASE_MANA = 60;
-export const UNIT_BASE_STAMINA = 300;
 // For game difficulty, I'm making the attack range less than the unit base stamina
 export const PLAYER_BASE_ATTACK_RANGE = 200; // previously 240 | UNIT_BASE_STAMINA * 0.8
 // For game difficulty, player stamina less than the unit stamina so they can't run away without upgrading it
 export const PLAYER_BASE_STAMINA = 200; //previously 210 | UNIT_BASE_STAMINA * 0.7
-export const UNIT_BASE_DAMAGE = 30;
 export const NON_HEAVY_UNIT_SCALE = 1.0;
 export const STARTING_CARD_COUNT = 3;
-export const OBSTACLE_SIZE = COLLISION_MESH_RADIUS * 2;
 export const MAX_PLAYERS = 8;
 export const NUMBER_OF_TOOLBAR_SLOTS = 9;
 export const NUMBER_OF_EXTRA_TOOLBAR_SLOTS = 9;
@@ -44,9 +46,6 @@ export const UNIT_MINIBOSS_SCALE_MULTIPLIER = 1.7;
 export const UNIT_MINIBOSS_DAMAGE_MULTIPLIER = 2;
 export const UNIT_MINIBOSS_HEALTH_MULTIPLIER = 3;
 export const UNIT_MINIBOSS_MANA_MULTIPLIER = 2;
-
-// Mana
-export const MANA_GET_PER_TURN = 10;
 
 // Collision radiuses
 // Make the UNIT_BASE_RADIUS a little smaller than the actual size of the image
@@ -76,4 +75,6 @@ export const NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES = 2;
 // The boss is on this level.  Levels beyond are considered "loop" levels
 export const LAST_LEVEL_INDEX = 11;
 export const NUMBER_OF_UNITS_TO_MERGE = 5;
-export const TIMEMASON_PERCENT_DRAIN = 1; //the percentage of mana to drain every second
+
+// The percentage of mana Timemason drains every second
+export const TIMEMASON_PERCENT_DRAIN = 1;

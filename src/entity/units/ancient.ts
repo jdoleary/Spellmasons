@@ -18,8 +18,8 @@ const unit: UnitSource = {
   unitProps: {
     damage: 3,
     attackRange: 1200,
-    healthMax: 30,
     staminaMax: 0,
+    healthMax: 30,
     mana: 30,
     manaMax: 30,
     manaPerTurn: 5,
