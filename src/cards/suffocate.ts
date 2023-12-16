@@ -42,6 +42,16 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
   }
 }
 
+export function getSuffocateBuildup(unit: Unit.IUnit): number {
+  const modifier = unit.modifiers[suffocateCardId];
+  if (!modifier) {
+    console.warn("Checking for suffocate buildup when the Unit does not have suffocate");
+    return 0;
+  }
+
+  return modifier.buildup;
+}
+
 // Will kill the unit if buildup > current health, else will update the tooltip
 // returns true if the unit is killed
 export function updateSuffocate(unit: Unit.IUnit, underworld: Underworld, prediction: boolean): boolean {

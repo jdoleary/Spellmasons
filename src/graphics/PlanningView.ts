@@ -23,6 +23,7 @@ import { inPortal } from '../entity/Player';
 import { getPerkText } from '../Perk';
 import { View } from '../views';
 import { gripthulu_id } from '../entity/units/gripthulu';
+import { getSuffocateBuildup, suffocateCardId } from '../cards/suffocate';
 
 const TEXT_OUT_OF_RANGE = 'Out of Range';
 // Graphics for rendering above board and walls but beneath units and doodads,
@@ -351,7 +352,7 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
         globalThis.unitOverlayGraphics.drawRect(
           healthBarFill.x,
           // Stack the health bar above the mana bar
-          healthBarFill.y - config.UNIT_UI_BAR_HEIGHT / zoom,
+          healthBarFill.y - healthBarFill.height,
           healthBarFill.width,
           healthBarFill.height
         );
@@ -362,7 +363,7 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
         globalThis.unitOverlayGraphics.drawRect(
           healthBarFill.x,
           // Stack the health bar above the mana bar
-          healthBarFill.y - config.UNIT_UI_BAR_HEIGHT / zoom,
+          healthBarFill.y - healthBarFill.height,
           healthBarFill.width,
           healthBarFill.height
         );
@@ -384,7 +385,7 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
             globalThis.unitOverlayGraphics.drawRect(
               healthBarFill.x,
               // Stack the health bar above the mana bar
-              healthBarFill.y - config.UNIT_UI_BAR_HEIGHT / zoom,
+              healthBarFill.y - healthBarFill.height,
               healthBarFill.width,
               healthBarFill.height);
 
@@ -398,6 +399,22 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
               }
             }
           }
+        }
+
+        // draw suffocate bar over hp
+        if (predictionUnit?.modifiers[suffocateCardId]) {
+          const buildup = getSuffocateBuildup(predictionUnit);
+
+          healthBarFill = getFillRect(u, 0, healthBarMax, 0, buildup, zoom);
+          globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
+          globalThis.unitOverlayGraphics.beginFill(0x440088, 1);
+          globalThis.unitOverlayGraphics.drawRect(
+            healthBarFill.x,
+            // Stack the health bar over hp
+            healthBarFill.y - healthBarFill.height,
+            healthBarFill.width,
+            healthBarFill.height
+          );
         }
       }
 
