@@ -379,7 +379,7 @@ export function removeModifier(unit: IUnit, key: string, underworld: Underworld)
   unit.onAgroEvents = unit.onAgroEvents.filter((e) => e !== key);
   unit.onTurnStartEvents = unit.onTurnStartEvents.filter((e) => e !== key);
   unit.onTurnEndEvents = unit.onTurnEndEvents.filter((e) => e !== key);
-  unit.onDrawSelectedEvents = unit.onTurnEndEvents.filter((e) => e !== key);
+  unit.onDrawSelectedEvents = unit.onDrawSelectedEvents.filter((e) => e !== key);
   delete unit.modifiers[key];
 
 }
