@@ -1369,9 +1369,7 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
   return {
     ...rest,
     isPrediction: true,
-    // A copy of the units y scale just for the prediction unit so that it will know
-    // how high up to display the attentionMarker
-    predictionScale: image?.sprite.scale.y,
+    image: image,
     // prediction units INTENTIONALLY share a reference to the original
     // unit's path so that we can get the efficiency gains of
     // cached paths per unit.  If we made a deep copy instead, the
