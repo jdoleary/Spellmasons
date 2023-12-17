@@ -397,8 +397,9 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
 
   if (isClientPlayerSourceOfTruth) {
     // Current client's player is the source of truth for their player object
-    // and the below properties should NOT be overwritten by the server's state of 
-    // their player.
+    // and the below properties should remain the value that they are on this
+    // clients globalPlayer object instead of being overwritten by the server's
+    // player object.
     // This is because the client can make local changes that occur immediately which
     // might be wrongfully overwritten by a server SYNC_PLAYERS such as getting
     // a summon spell or rerolling.
