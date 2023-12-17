@@ -65,11 +65,14 @@ const deleteCardFromSlot = (ev: any, overworld: Overworld) => {
   const startDragCardIndex = getStartDragCardIndex();
   if (startDragCardIndex !== -1) {
     if (globalThis.player) {
-      console.log('UI: delete card from slot', startDragCardIndex);
       globalThis.player.cardsInToolbar[startDragCardIndex] = '';
       if (overworld.underworld) {
         recalcPositionForCards(globalThis.player, overworld.underworld);
         syncInventory(undefined, overworld.underworld);
+        overworld.pie.sendData({
+          type: MESSAGE_TYPES.PLAYER_CARDS,
+          cards: globalThis.player.cardsInToolbar,
+        });
       } else {
         console.error('Cannot drop card on toolbar, underworld is undefined.');
       }
