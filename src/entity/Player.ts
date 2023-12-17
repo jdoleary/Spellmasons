@@ -376,7 +376,7 @@ export function serialize(player: IPlayer): IPlayerSerialized {
   }
 }
 // load rehydrates a player entity from IPlayerSerialized
-export function load(player: IPlayerSerialized, index: number, underworld: Underworld) {
+export function load(player: IPlayerSerialized, index: number, underworld: Underworld, isClientPlayerSourceOfTruth: boolean) {
   const reassignedUnit = underworld.units.find(u => u.id == player.unit.id);
   if (!reassignedUnit) {
     if (!isHost(underworld.pie)) {
@@ -394,6 +394,27 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
     ...player,
     unit: reassignedUnit,
   };
+
+  if (isClientPlayerSourceOfTruth) {
+    // Current client's player is the source of truth for their player object
+    // and the below properties should remain the value that they are on this
+    // clients globalPlayer object instead of being overwritten by the server's
+    // player object.
+    // This is because the client can make local changes that occur immediately which
+    // might be wrongfully overwritten by a server SYNC_PLAYERS such as getting
+    // a summon spell or rerolling.
+    if (globalThis.player && playerLoaded.clientId == globalThis.player.clientId) {
+      playerLoaded.cardsInToolbar = globalThis.player.cardsInToolbar;
+      playerLoaded.inventory = globalThis.player.inventory;
+      playerLoaded.freeSpells = globalThis.player.freeSpells;
+      playerLoaded.upgrades = globalThis.player.upgrades;
+      playerLoaded.upgradesLeftToChoose = globalThis.player.upgradesLeftToChoose;
+      playerLoaded.perksLeftToChoose = globalThis.player.perksLeftToChoose;
+      playerLoaded.reroll = globalThis.player.reroll;
+      playerLoaded.attributePerks = globalThis.player.attributePerks;
+      playerLoaded.statPointsUnspent = globalThis.player.statPointsUnspent;
+    }
+  }
   // Backwards compatibility after property name change
   // @ts-ignore cards was renamed to cardsInToolbar, this is for backwards compatibility
   if (player.cards) {
@@ -488,6 +509,16 @@ export function enterPortal(player: IPlayer, underworld: Underworld) {
   if (parseInt(highScore) < underworld.levelIndex) {
     console.log('New farthest level record!', mageTypeFarthestLevel, '->', underworld.levelIndex);
     storageSet(mageTypeFarthestLevel, underworld.levelIndex.toString());
+  }
+
+  if (player == globalThis.player) {
+    // At the end of each level ensure the server has an up-to-date state
+    // of the current client's player object.
+    // The client is the source of truth for it's own player object
+    underworld.pie.sendData({
+      type: MESSAGE_TYPES.CLIENT_SEND_PLAYER_TO_SERVER,
+      player: serialize(player)
+    });
   }
 
 
