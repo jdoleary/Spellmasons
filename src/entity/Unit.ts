@@ -311,13 +311,13 @@ export function adjustUnitDifficulty(unit: IUnit, difficulty: number) {
     unit.damage = Math.round(unit.damage * quantityStatModifier);
 
     if (unit.image) {
-      // this final scale of the unit will always be less than the
-      const maxMultiplier = config.UNIT_MINIBOSS_SCALE_MULTIPLIER;
+      // this final scale of the unit will always be less than the max multiplier
+      const maxMultiplier = 4;
       // ensures scale = 1 at strength = 1
       const strAdj = unit.strength - 1;
       // calculate scale multiplier with diminishing formula
       // 11 is an arbitrary number that controls the speed at which the scale approaches the max
-      const quantityScaleModifier = 1 + (maxMultiplier - 1) * (strAdj / (strAdj + 11));
+      const quantityScaleModifier = 1 + (maxMultiplier - 1) * (strAdj / (strAdj + 6));
       unit.image.sprite.scale.x *= quantityScaleModifier;
       unit.image.sprite.scale.y *= quantityScaleModifier;
     }
