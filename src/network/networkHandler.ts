@@ -5,7 +5,7 @@ import { MESSAGE_TYPES } from '../types/MessageTypes';
 import * as Image from '../graphics/Image';
 import floatingText from '../graphics/FloatingText';
 import { getUpgradeByTitle } from '../Upgrade';
-import Underworld, { elUpgradePickerContent, IUnderworldSerializedForSyncronize, LevelData, showUpgradesClassName, turn_phase } from '../Underworld';
+import Underworld, { elUpgradePickerContent, IUnderworldSerialized, IUnderworldSerializedForSyncronize, LevelData, showUpgradesClassName, turn_phase } from '../Underworld';
 import * as Player from '../entity/Player';
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
@@ -1187,7 +1187,7 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
     if (underworld.forceMove.length) {
       console.error('Attempting to save before resolving all forceMoves');
     }
-    const saveObject = {
+    const saveObject: SaveFile = {
       version: globalThis.SPELLMASONS_PACKAGE_VERSION,
       underworld: underworld.serializeForSaving(),
       phase: underworld.turn_phase,
@@ -1245,7 +1245,7 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
         }
       }
 
-      const { underworld: savedUnderworld, phase, units, players, pickups, version, numberOfHotseatPlayers } = fileSaveObj;
+      const { underworld: savedUnderworld, phase, units, players, pickups, version, numberOfHotseatPlayers } = fileSaveObj as SaveFile;
       if (numberOfHotseatPlayers !== undefined) {
         globalThis.numberOfHotseatPlayers = numberOfHotseatPlayers;
       }
@@ -1258,7 +1258,6 @@ Current game version: ${globalThis.SPELLMASONS_PACKAGE_VERSION}`,
           forceShow: true
         });
       }
-      const SOLOMODE_CLIENT_ID = 'solomode_client_id';
       // If connected to a multiplayer server
       if (globalThis.player && !isSinglePlayer() && overworld.underworld) {
         // Cannot load a game if a player is already playing, can only load games if the game has not started yet
@@ -1273,10 +1272,19 @@ Current game version: ${globalThis.SPELLMASONS_PACKAGE_VERSION}`,
         }
       }
       if (globalThis.player && isSinglePlayer()) {
+        if (!globalThis.clientId) {
+          console.error('Attempted to load a game with no globalThis.clientId')
+          Jprompt({
+            text: 'Error: Failed to load game, try restarting.',
+            yesText: 'Okay',
+            forceShow: true
+          });
+          return;
+        }
         const firstPlayer = players[0];
         if (firstPlayer) {
           // Assume control of the existing single player in the load file
-          firstPlayer.clientId = SOLOMODE_CLIENT_ID;
+          firstPlayer.clientId = globalThis.clientId;
         } else {
           console.error('Attempted to load a game with no players in it.')
           Jprompt({
@@ -1317,4 +1325,13 @@ Current game version: ${globalThis.SPELLMASONS_PACKAGE_VERSION}`,
     intentionalDisconnect = true;
     return typeGuardHostApp(overworld.pie) ? Promise.resolve() : overworld.pie.disconnect();
   }
+}
+export interface SaveFile {
+  version: string;
+  underworld: IUnderworldSerialized;
+  phase: turn_phase.PlayerTurns;
+  pickups: Pickup.IPickupSerialized[];
+  units: Unit.IUnitSerialized[];
+  players: Player.IPlayerSerialized[];
+  numberOfHotseatPlayers: number;
 }

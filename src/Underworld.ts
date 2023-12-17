@@ -2340,7 +2340,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Quicksave at the beginning of player's turn
     // Check globalThis.player.isSpawned to prevent quicksaving an invalid underworld file
     if (globalThis.save && globalThis.player && globalThis.player.isSpawned) {
-      // For now, only save if in a singleplayer game (as determined by solomode_client_id)
+      // For now, only save if in a singleplayer game
       // because save support hasn't been added to multiplayer yet
       if (isSinglePlayer()) {
         console.info(`Dev: quick saving game as "${globalThis.quicksaveKey}"`);
@@ -4080,7 +4080,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
 }
 
-type IUnderworldSerialized = Omit<typeof Underworld, "pie" | "overworld" | "prototype" | "players" | "units"
+export type IUnderworldSerialized = Omit<typeof Underworld, "pie" | "overworld" | "prototype" | "players" | "units"
   | "unitsPrediction" | "pickups" | "pickupsPrediction" | "doodads" | "doodadsPrediction" | "random" | "turnInterval" | "liquidSprites"
   | "particleFollowers"
   // walls and pathingPolygons are omitted because they are derived from obstacles when cacheWalls() in invoked
