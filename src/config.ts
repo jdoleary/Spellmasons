@@ -21,8 +21,8 @@ export const UNIT_SIZE_RADIUS = 50 / 2;
 export const SELECTABLE_RADIUS = 36;
 
 export const HEALTH_BAR_UI_Y_POS = 30;
-export const UNIT_UI_BAR_HEIGHT = 5;
-export const UNIT_UI_BAR_WIDTH = 34;
+export const UNIT_UI_BAR_HEIGHT = 6;
+export const UNIT_UI_BAR_WIDTH = 36;
 
 export const LOB_PROJECTILE_SPEED = 600; // in millis
 export const UNIT_SIZE = COLLISION_MESH_RADIUS * 2;

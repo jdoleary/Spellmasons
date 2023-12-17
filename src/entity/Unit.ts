@@ -43,6 +43,7 @@ import { skyBeam } from '../VisualEffects';
 import seedrandom from 'seedrandom';
 import { summoningSicknessId } from '../modifierSummoningSickness';
 import * as log from '../log';
+import { suffocateCardId, updateSuffocate } from '../cards/suffocate';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -102,14 +103,10 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   attackRange: number;
   name?: string;
   isMiniboss: boolean;
-  // A copy of the units current scale for the prediction copy
-  // prediction copies do not have an image property, so this property is saved here
-  // so that it may be accessed without making prediction units have a partial Image property
-  // (prediction units are known to not have an image, this shall not change, other parts of the code
-  // depends on this expectation)
-  predictionScale?: number;
   // Denotes that this is a prediction copy of a unit
   isPrediction?: boolean;
+  // For attention markers
+  predictionScale?: number;
   faction: Faction;
   UITargetCircleOffsetY: number;
   defaultImagePath: string;
@@ -222,6 +219,9 @@ export function create(
       unit.stamina = 0;
     }
 
+    // Set sprite scale before difficulty, due to strength scaling the sprite
+    unit.image?.sprite.scale.set(config.NON_HEAVY_UNIT_SCALE);
+
     // Note: This must be invoked after initial setting of stat and statMax (health, mana, stamina, etc) so that it can scale
     // stat relative to maxStat
     const difficulty = calculateGameDifficulty(underworld);
@@ -231,9 +231,6 @@ export function create(
     for (let statCalamity of underworld.statCalamities) {
       adjustUnitStatsByUnderworldCalamity(unit, statCalamity);
     }
-
-
-    unit.image?.sprite.scale.set(config.NON_HEAVY_UNIT_SCALE);
 
     // Note, making miniboss must come AFTER setting the scale and difficulty
     // Note, this is the idempotent way to create a miniboss, pass isMiniboss:true to to the sourceUnitProps override
@@ -304,24 +301,40 @@ export function adjustUnitDifficulty(unit: IUnit, difficulty: number) {
   const source = allUnits[unit.unitSourceId];
   if (source) {
     let { healthMax, manaMax } = adjustUnitPropsDueToDifficulty(source, difficulty);
-    const quantityStatModifier = 1 + 0.8 * ((unit.strength || 1) - 1);
-    healthMax *= quantityStatModifier;
-    manaMax *= quantityStatModifier;
     // Damage should remain unaffected by difficulty
     unit.damage = Math.round(source.unitProps.damage !== undefined ? source.unitProps.damage : config.UNIT_BASE_DAMAGE);
-    unit.damage *= quantityStatModifier;
+
+    // Strength scaling
+    const quantityStatModifier = 1 + 0.8 * ((unit.strength || 1) - 1);
+    healthMax = Math.round(healthMax * quantityStatModifier);
+    manaMax = Math.round(manaMax * quantityStatModifier);
+    unit.damage = Math.round(unit.damage * quantityStatModifier);
+
+    if (unit.image) {
+      // this final scale of the unit will always be less than the max multiplier
+      const maxMultiplier = 4;
+      // ensures scale = 1 at strength = 1
+      const strAdj = unit.strength - 1;
+      // calculate scale multiplier with diminishing formula
+      // 11 is an arbitrary number that controls the speed at which the scale approaches the max
+      const quantityScaleModifier = 1 + (maxMultiplier - 1) * (strAdj / (strAdj + 6));
+      unit.image.sprite.scale.x *= quantityScaleModifier;
+      unit.image.sprite.scale.y *= quantityScaleModifier;
+    }
+
+    // Maintain Health/Mana Ratios
     const oldHealthRatio = (unit.health / unit.healthMax) || 0;
     unit.healthMax = healthMax;
-    // Maintain the ratio of health when adjusting difficulty so that an adjustment in difficulty doesn't renew units to max heatlh
-    unit.health = healthMax * oldHealthRatio;
+    unit.health = Math.floor(healthMax * oldHealthRatio);
+    const oldManaRatio = (unit.mana / unit.manaMax) || 0;
+    unit.manaMax = manaMax;
+    unit.mana = Math.floor(manaMax * oldManaRatio);
+
+    // Check for NaN (Can probably remove)
     if (isNaN(unit.health)) {
       unit.health = healthMax;
       console.error('Unit.health is NaN');
     }
-    // Maintain the ratio of mana when adjusting difficulty so that an adjustment in difficulty doesn't renew units to max mana
-    const oldManaRatio = (unit.mana / unit.manaMax) || 0;
-    unit.manaMax = manaMax;
-    unit.mana = manaMax * oldManaRatio;
     if (isNaN(unit.mana)) {
       unit.mana = manaMax;
       console.error('Unit.mana is NaN');
@@ -379,7 +392,7 @@ export function removeModifier(unit: IUnit, key: string, underworld: Underworld)
   unit.onAgroEvents = unit.onAgroEvents.filter((e) => e !== key);
   unit.onTurnStartEvents = unit.onTurnStartEvents.filter((e) => e !== key);
   unit.onTurnEndEvents = unit.onTurnEndEvents.filter((e) => e !== key);
-  unit.onDrawSelectedEvents = unit.onTurnEndEvents.filter((e) => e !== key);
+  unit.onDrawSelectedEvents = unit.onDrawSelectedEvents.filter((e) => e !== key);
   delete unit.modifiers[key];
 
 }
@@ -946,6 +959,10 @@ export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | u
     die(unit, underworld, prediction);
   }
 
+  if (unit.modifiers[suffocateCardId]) {
+    updateSuffocate(unit, underworld, prediction);
+  }
+
   if (unit.id == globalThis.player?.unit.id && !prediction) {
     // Now that the player unit's properties have changed, sync the new
     // state with the player's predictionUnit so it is properly
@@ -1319,8 +1336,8 @@ export function makeMiniboss(unit: IUnit) {
   explain(EXPLAIN_MINI_BOSSES);
   unit.name = `${unit.unitSourceId} MiniBoss`;
   if (unit.image) {
-    unit.image.sprite.scale.x = config.UNIT_MINIBOSS_SCALE_MULTIPLIER;
-    unit.image.sprite.scale.y = config.UNIT_MINIBOSS_SCALE_MULTIPLIER;
+    unit.image.sprite.scale.x *= config.UNIT_MINIBOSS_SCALE_MULTIPLIER;
+    unit.image.sprite.scale.y *= config.UNIT_MINIBOSS_SCALE_MULTIPLIER;
   }
   unit.radius *= config.UNIT_MINIBOSS_SCALE_MULTIPLIER;
   unit.healthMax *= config.UNIT_MINIBOSS_HEALTH_MULTIPLIER;
@@ -1348,8 +1365,11 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
   return {
     ...rest,
     isPrediction: true,
-    // A copy of the units y scale just for the prediction unit so that it will know
-    // how high up to display the attentionMarker
+    // A copy of the units current scale for the prediction copy
+    // prediction copies do not have an image property, so this property is saved here
+    // so that it may be accessed without making prediction units have a partial Image property
+    // (prediction units are known to not have an image, this shall not change, other parts of the code
+    // depends on this expectation)
     predictionScale: image?.sprite.scale.y,
     // prediction units INTENTIONALLY share a reference to the original
     // unit's path so that we can get the efficiency gains of

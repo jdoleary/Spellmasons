@@ -23,6 +23,7 @@ import { inPortal } from '../entity/Player';
 import { getPerkText } from '../Perk';
 import { View } from '../views';
 import { gripthulu_id } from '../entity/units/gripthulu';
+import { getSuffocateBuildup, suffocateCardId } from '../cards/suffocate';
 
 const TEXT_OUT_OF_RANGE = 'Out of Range';
 // Graphics for rendering above board and walls but beneath units and doodads,
@@ -351,7 +352,7 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
         globalThis.unitOverlayGraphics.drawRect(
           healthBarFill.x,
           // Stack the health bar above the mana bar
-          healthBarFill.y - config.UNIT_UI_BAR_HEIGHT / zoom,
+          healthBarFill.y - healthBarFill.height,
           healthBarFill.width,
           healthBarFill.height
         );
@@ -362,7 +363,7 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
         globalThis.unitOverlayGraphics.drawRect(
           healthBarFill.x,
           // Stack the health bar above the mana bar
-          healthBarFill.y - config.UNIT_UI_BAR_HEIGHT / zoom,
+          healthBarFill.y - healthBarFill.height,
           healthBarFill.width,
           healthBarFill.height
         );
@@ -384,20 +385,36 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
             globalThis.unitOverlayGraphics.drawRect(
               healthBarFill.x,
               // Stack the health bar above the mana bar
-              healthBarFill.y - config.UNIT_UI_BAR_HEIGHT / zoom,
+              healthBarFill.y - healthBarFill.height,
               healthBarFill.width,
               healthBarFill.height);
 
             // Display a death marker if a unit is currently alive, but wont be after cast
             if (u.alive && !predictionUnit.alive) {
               if (globalThis.player && u.faction === globalThis.player.unit.faction) {
-                drawUnitMarker('badgeDeathAlly.png', u, 2)
+                drawUnitMarker('badgeDeathAlly.png', u, u.image?.sprite.scale.y, 2)
               }
               else {
-                drawUnitMarker('badgeDeath.png', u, 1.5)
+                drawUnitMarker('badgeDeath.png', u, u.image?.sprite.scale.y, 1.5)
               }
             }
           }
+        }
+
+        // draw suffocate bar over hp
+        if (predictionUnit?.modifiers[suffocateCardId]) {
+          const buildup = getSuffocateBuildup(predictionUnit);
+
+          healthBarFill = getFillRect(u, 0, healthBarMax, 0, buildup, zoom);
+          globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
+          globalThis.unitOverlayGraphics.beginFill(0x440088, 1);
+          globalThis.unitOverlayGraphics.drawRect(
+            healthBarFill.x,
+            // Stack the health bar over hp
+            healthBarFill.y - healthBarFill.height,
+            healthBarFill.width,
+            healthBarFill.height
+          );
         }
       }
 
@@ -474,20 +491,20 @@ export function getFillRect(unit: Unit.IUnit, min: number, max: number, value1: 
   }
 }
 
-export function drawUnitMarker(imagePath: string, pos: Vec2, extraScale: number = 1) {
+export function drawUnitMarker(imagePath: string, pos: Vec2, unitYScale: number = 1, extraMarkerScale: number = 1) {
   const zoom = getCamera().zoom;
   // 1/zoom keeps the attention marker the same size regardless of the level of zoom
   // Math.sin makes the attention marker swell and shink so it grabs the player's attention
   // + 1 makes it go from 0 to 2 instead of -1 to 1
   // / 8 limits the change in size
-  const markerScale = ((1 / zoom) + (Math.sin(Date.now() / 500) + 1) / 8) * extraScale;
+  const markerScale = ((1 / zoom) + (Math.sin(Date.now() / 500) + 1) / 8) * extraMarkerScale;
   const markerHeightHalf = 16 * markerScale;
   const markerMarginAboveHealthBar = 10;
 
   // Offset marker just above the head of the unit, where pos = unit positon
   const markerPosition = withinCameraBounds({
     x: pos.x, y: pos.y
-      - config.HEALTH_BAR_UI_Y_POS * extraScale
+      - config.HEALTH_BAR_UI_Y_POS * unitYScale
       - config.UNIT_UI_BAR_HEIGHT / zoom
       - markerHeightHalf
       - markerMarginAboveHealthBar / zoom
@@ -608,7 +625,9 @@ export async function runPredictions(underworld: Underworld) {
             if (unitSource) {
               const targets = unitSource.getUnitAttackTargets(u, underworld);
               if (targets.length) {
-                globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u), scale: u.predictionScale || 1 });
+                // use u.predictionScale here since we are dealing with prediction units
+                // prediction units don't have images, and thus sprite.scale.y
+                globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u), unitSpriteScaleY: u.predictionScale || 1, markerScale: 1 });
               }
             }
           } else {
@@ -623,7 +642,9 @@ export async function runPredictions(underworld: Underworld) {
                   const canAttack = underworld.canUnitAttackTarget(u, target);
                   underworld.incrementTargetsNextTurnDamage(targets, u.damage, canAttack);
                   if (target === globalThis.player.unit && canAttack) {
-                    globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u), scale: u.predictionScale || 1 });
+                    // use u.predictionScale here since we are dealing with prediction units
+                    // prediction units don't have images, and thus sprite.scale.y
+                    globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u), unitSpriteScaleY: u.predictionScale || 1, markerScale: 1 });
                   }
                 }
               }
