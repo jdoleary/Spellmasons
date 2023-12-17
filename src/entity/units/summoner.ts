@@ -39,7 +39,7 @@ const unit: UnitSource = {
     healthMax: 120,
     mana: 60,
     manaMax: 90,
-    manaPerTurn: 15,
+    manaPerTurn: 20,
     manaCostToCast: 90,
   },
   spawnParams: {

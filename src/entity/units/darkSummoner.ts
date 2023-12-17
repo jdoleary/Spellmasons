@@ -33,7 +33,7 @@ const unit: UnitSource = {
     healthMax: 180,
     mana: 60,
     manaMax: 120,
-    manaPerTurn: 15,
+    manaPerTurn: 20,
     manaCostToCast: 120,
     bloodColor: 0x852124,
   },
