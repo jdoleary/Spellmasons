@@ -371,7 +371,7 @@ function joinGameAsPlayer(asPlayerClientId: string, overworld: Overworld, fromCl
 
 
       const players = underworld.players.map(Player.serialize)
-      // Overwrite client's own player object because the client is switching players
+      // isClientPlayerSourceOfTruth: false; Overwrite client's own player object because the client is switching players
       underworld.syncPlayers(players, false);
     }
   }
@@ -975,12 +975,12 @@ async function handleLoadGameState(payload: {
     underworld.units = units.filter(u => !u.flaggedForRemoval).map(u => Unit.load(u, underworld, false));
   }
   // Note: Players should sync after units are loaded so
+  // that the player.unit reference is synced
+  // with up to date units
+  if (players) {
     // isClientPlayerSourceOfTruth: false; loading a new game means the player should be 
     // fully overwritten
     underworld.syncPlayers(players, false);
-  // with up to date units
-  if (players) {
-    underworld.syncPlayers(players);
   }
   // After a load always start all players with endedTurn == false so that
   // it doesn't skip the player turn if players rejoin out of order
