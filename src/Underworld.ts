@@ -1868,6 +1868,15 @@ export default class Underworld {
     for (let player of this.players) {
       Player.resetPlayerForNextLevel(player, this);
     }
+
+    // Give players stat points to spend:
+    // For first play session don't show stat upgrades too early, it's information overload
+    const isFirstEverPlaySession = !isFirstTutorialStepComplete();
+    if (isFirstEverPlaySession ? this.levelIndex > 1 : this.levelIndex > 0) {
+      for (let p of this.players) {
+        p.statPointsUnspent += p.mageType === 'Spellmason' ? 4 : 3;
+      }
+    }
     // Update toolbar (since some card's disabledLabel needs updating on every new label)
     CardUI.recalcPositionForCards(globalThis.player, this);
     // Change song now that level has changed:
