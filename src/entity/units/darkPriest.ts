@@ -52,7 +52,7 @@ const unit: UnitSource = {
             [0xe5e8b6, 0x6a4d7d], // face
             [0x808344, 0x3a2b45], // dark
           ],
-          0.1
+          0.11
         )
       );
     }
