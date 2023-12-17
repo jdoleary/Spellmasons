@@ -60,7 +60,6 @@ export function arrowEffect(multiShotCount: number, damageDone: number, onCollid
     let arrowIndex = 0;
     for (let i = 0; i < quantity; i++) {
       for (let target of targets) {
-        let projectilePromise: Promise<EffectState> = Promise.resolve(state);
         for (let arrowNumber = 0; arrowNumber < multiShotCount; arrowNumber++) {
 
           // START: Shoot multiple arrows at offset
@@ -76,13 +75,34 @@ export function arrowEffect(multiShotCount: number, damageDone: number, onCollid
           if (!prediction && !globalThis.headless) {
             // We already know collisions, run those with visuals
             const arrowUnitCollisions = predictedArrowCollisions[arrowIndex];
-
+            if (arrowUnitCollisions == undefined) {
+              console.error("No predictions for arrow: ", arrowIndex)
+              continue;
+            }
             playDefaultSpellSFX(card, prediction);
-            const projectilePromise = createVisualFlyingProjectile(
-              casterPositionAtTimeOfCast,
-              castLocation,
-              'projectile/arrow',
-            )
+
+            // If we hit our pierce limit, stop the arrow at the final collision
+            // Otherwise let the arrow fly until it hits a wall
+            if (arrowUnitCollisions.length == pierce) {
+              // Last unit arrow collides with
+              const finalTarget = underworld.units.find(u => u.id == arrowUnitCollisions[arrowUnitCollisions.length - 1]);
+              if (finalTarget) {
+                createVisualFlyingProjectile(
+                  casterPositionAtTimeOfCast,
+                  castLocation,
+                  'projectile/arrow',
+                  finalTarget
+                )
+              }
+            }
+            else {
+              createVisualFlyingProjectile(
+                casterPositionAtTimeOfCast,
+                castLocation,
+                'projectile/arrow',
+              )
+            }
+
 
             if (arrowUnitCollisions) {
               for (let unitId of arrowUnitCollisions) {
@@ -92,18 +112,23 @@ export function arrowEffect(multiShotCount: number, damageDone: number, onCollid
                   console.error("Could not find unit for arrow collison. Something changed from the prediction")
                   continue;
                 }
-                // Fake the collision by just calculating a delay based on the speed of the projectile
-                const millisecondsUntilCollision = math.distance(casterPositionAtTimeOfCast, unit) / SPEED_PER_MILLI;
-                setTimeout(() => {
-                  Unit.takeDamage(unit, damageDone, casterPositionAtTimeOfCast, underworld, false, undefined, { thinBloodLine: true });
-                  targetsHitCount++;
-                }, millisecondsUntilCollision);
+                // Fake the arrow collision by calculating a delay based on the speed of the projectile
+                const millisecondsUntilCollision = (math.distance(casterPositionAtTimeOfCast, unit) - config.COLLISION_MESH_RADIUS) / SPEED_PER_MILLI;
+
+                const damagePromise = new Promise<void>((resolve, reject) => {
+                  setTimeout(() => {
+                    Unit.takeDamage(unit, damageDone, casterPositionAtTimeOfCast, underworld, false, undefined, { thinBloodLine: true });
+                    targetsHitCount++;
+                    resolve();
+                  }, millisecondsUntilCollision);
+                })
+
+                attackPromises.push(damagePromise);
               }
             }
             else {
               // Projectile won't hit any targets, need to refund mana
             }
-            attackPromises.push(projectilePromise);
           }
           else {
             // get and store collisions
@@ -130,8 +155,9 @@ export function arrowEffect(multiShotCount: number, damageDone: number, onCollid
           }
           arrowIndex += 1;
           if (!prediction && !globalThis.headless) {
-            const timeout = Math.max(0, timeoutToNextArrow);
-            // TODO - This should race projectile promise once it's fixed
+            const timeout = Math.max(1, timeoutToNextArrow);
+
+            // Wait some time to fire the next arrow
             await new Promise(resolve => setTimeout(resolve, timeout));
             // Decrease timeout with each subsequent arrow fired to ensure that players don't have to wait too long
             timeoutToNextArrow -= 5;
