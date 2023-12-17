@@ -3,7 +3,7 @@ import { CardCategory } from '../types/commonTypes';
 import { EffectState, ICard, refundLastSpell, Spell } from './index';
 import * as math from '../jmath/math';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
-import { createVisualFlyingProjectile } from '../entity/Projectile';
+import { createVisualFlyingProjectile, SPEED_PER_MILLI } from '../entity/Projectile';
 import { closestLineSegmentIntersectionWithLine, findWherePointIntersectLineSegmentAtRightAngle, LineSegment } from '../jmath/lineSegment';
 import * as config from '../config';
 import { add, equal, getAngleBetweenVec2s, getEndpointOfMagnitudeAlongVector, invert, subtract, Vec2 } from '../jmath/Vec';
@@ -31,6 +31,9 @@ const spell: Spell = {
     effect: arrowEffect(1, damage)
   }
 };
+
+
+let predictedArrowCollisions: number[][];
 export function arrowEffect(multiShotCount: number, damageDone: number, onCollide?: (state: EffectState, firstTarget: Unit.IUnit, underworld: Underworld, prediction: boolean) => Promise<EffectState>, skipClearCache?: boolean) {
   return async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean) => {
 
@@ -40,19 +43,21 @@ export function arrowEffect(multiShotCount: number, damageDone: number, onCollid
     let targetsHitCount = 0;
     let attackPromises = [];
     let timeoutToNextArrow = 200;
-    if (!prediction) {
-      if (!skipClearCache) {
-        underworld.clearPredictedNextTurnDamage();
-        for (let u of underworld.units) {
-          // @ts-ignore: `cachedArrowHealth` is a temporary property on units
-          // Keep the health that they had before arrows are fired
-          // so that arrows can determine if they should go past
-          // a unit that will die before it gets there due to
-          // another in-flight arrow
-          u.cachedArrowHealth = u.health;
-        }
-      }
+
+    // TODO - Implement Phantom Arrow
+    // normal arrow doesn't pierce, hit only one target
+    const pierce = 1;
+
+    if (!predictedArrowCollisions) {
+      // initialize predicted arrow collisions
+      predictedArrowCollisions = [];
     }
+    else if (prediction) {
+      // Clear predicted collisions before adding new ones
+      predictedArrowCollisions.length = 0;
+    }
+
+    let arrowIndex = 0;
     for (let i = 0; i < quantity; i++) {
       for (let target of targets) {
         let projectilePromise: Promise<EffectState> = Promise.resolve(state);
@@ -68,54 +73,69 @@ export function arrowEffect(multiShotCount: number, damageDone: number, onCollid
           }
           // END: Shoot multiple arrows at offset
 
-          // const arrowUnitCollisions = findArrowCollisions(state.casterPositionAtTimeOfCast, state.casterUnit.id, target, prediction, underworld);
-          const arrowUnitCollisions = findArrowCollisions(casterPositionAtTimeOfCast, state.casterUnit.id, castLocation, prediction, underworld);
-          // This regular arrow spell doesn't pierce
-          const firstTarget = arrowUnitCollisions[0];
-          if (firstTarget) {
+          if (!prediction && !globalThis.headless) {
+            // We already know collisions, run those with visuals
+            const arrowUnitCollisions = predictedArrowCollisions[arrowIndex];
+
             playDefaultSpellSFX(card, prediction);
-            if (!prediction && !globalThis.headless) {
-              if (Unit.isUnit(firstTarget)) {
-                underworld.incrementTargetsNextTurnDamage([firstTarget], damageDone, true);
-              }
-              // Promise.race ensures arrow promise doesn't take more than X milliseconds so that multiple arrows cast
-              // sequentially wont take too long to complete animating.
-              // Note: I don't forsee any issues with the following spell (say if a spell was chained after arrow) executing
-              // early
-              projectilePromise = createVisualFlyingProjectile(
-                casterPositionAtTimeOfCast,
-                castLocation,
-                'projectile/arrow',
-                firstTarget
-              ).then(() => {
-                if (Unit.isUnit(firstTarget)) {
-                  Unit.takeDamage(firstTarget, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
+            const projectilePromise = createVisualFlyingProjectile(
+              casterPositionAtTimeOfCast,
+              castLocation,
+              'projectile/arrow',
+            )
+
+            if (arrowUnitCollisions) {
+              for (let unitId of arrowUnitCollisions) {
+                const unit = underworld.units.find(u => u.id == unitId);
+
+                if (!unit) {
+                  console.error("Could not find unit for arrow collison. Something changed from the prediction")
+                  continue;
+                }
+                // Fake the collision by just calculating a delay based on the speed of the projectile
+                const millisecondsUntilCollision = math.distance(casterPositionAtTimeOfCast, unit) / SPEED_PER_MILLI;
+                setTimeout(() => {
+                  Unit.takeDamage(unit, damageDone, casterPositionAtTimeOfCast, underworld, false, undefined, { thinBloodLine: true });
                   targetsHitCount++;
-                  if (onCollide) {
-                    return onCollide(state, firstTarget, underworld, prediction);
-                  }
-                }
-                return Promise.resolve(state);
-              }).then((state) => {
-                return state
-              });
-              attackPromises.push(projectilePromise);
-            } else {
-              if (Unit.isUnit(firstTarget)) {
-                Unit.takeDamage(firstTarget, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
-                targetsHitCount++;
-                if (onCollide) {
-                  onCollide(state, firstTarget, underworld, prediction);
-                }
+                }, millisecondsUntilCollision);
               }
             }
+            else {
+              // Projectile won't hit any targets, need to refund mana
+            }
+            attackPromises.push(projectilePromise);
           }
-        }
-        if (!prediction && !globalThis.headless) {
-          const timeout = Math.max(0, timeoutToNextArrow);
-          await Promise.race([new Promise(resolve => setTimeout(resolve, timeout)), projectilePromise]);
-          // Decrease timeout with each subsequent arrow fired to ensure that players don't have to wait too long
-          timeoutToNextArrow -= 5;
+          else {
+            // get and store collisions
+
+            // new array for this arrowIndex
+            predictedArrowCollisions.push([]);
+            let arrowUnitCollisions = findArrowCollisions(casterPositionAtTimeOfCast, state.casterUnit.id, castLocation, prediction, underworld);
+
+            arrowUnitCollisions = arrowUnitCollisions
+              .filter(u => Unit.isUnit(u))
+              .slice(0, pierce);
+
+            for (let c = 0; c < arrowUnitCollisions.length; c++) {
+              const unit = arrowUnitCollisions[c] as Unit.IUnit;
+              Unit.takeDamage(unit, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
+              targetsHitCount++;
+              if (onCollide) {
+                onCollide(state, unit, underworld, prediction);
+              }
+
+              // push all collisions to this arrow index's array
+              predictedArrowCollisions[arrowIndex]?.push(unit.id);
+            }
+          }
+          arrowIndex += 1;
+          if (!prediction && !globalThis.headless) {
+            const timeout = Math.max(0, timeoutToNextArrow);
+            // TODO - This should race projectile promise once it's fixed
+            await new Promise(resolve => setTimeout(resolve, timeout));
+            // Decrease timeout with each subsequent arrow fired to ensure that players don't have to wait too long
+            timeoutToNextArrow -= 5;
+          }
         }
       }
     }
@@ -127,12 +147,6 @@ export function arrowEffect(multiShotCount: number, damageDone: number, onCollid
         refundLastSpell(state, prediction, 'no target, mana refunded')
       }
     });
-    if (!skipClearCache) {
-      for (let u of underworld.units) {
-        // @ts-ignore: `cachedArrowHealth` is a temporary property on units
-        delete u.cachedArrowHealth;
-      }
-    }
     return state;
   }
 }
