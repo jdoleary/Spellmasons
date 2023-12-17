@@ -234,7 +234,12 @@ export function setupPieAndUnderworld() {
   } else {
     console.log('Client: Initialize PieClient');
     const pie = new PieClient();
-    if (pie.clientId) {
+    // Every time PieClient is instantiated it will create a clientId, overwrite this
+    // with the stored clientId if there is one
+    const previouslyStoredClientId = storage.get(storage.STORAGE_PIE_CLIENTID_KEY);
+    if (previouslyStoredClientId) {
+      pie.clientId = previouslyStoredClientId;
+    } else if (pie.clientId) {
       storage.set(storage.STORAGE_PIE_CLIENTID_KEY, pie.clientId);
     }
     globalThis.pie = pie;
