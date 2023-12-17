@@ -625,7 +625,9 @@ export async function runPredictions(underworld: Underworld) {
             if (unitSource) {
               const targets = unitSource.getUnitAttackTargets(u, underworld);
               if (targets.length) {
-                globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u), unitSpriteScaleY: u.image?.sprite.scale.y || 1, markerScale: 1 });
+                // use u.predictionScale here since we are dealing with prediction units
+                // prediction units don't have images, and thus sprite.scale.y
+                globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u), unitSpriteScaleY: u.predictionScale || 1, markerScale: 1 });
               }
             }
           } else {
@@ -640,7 +642,9 @@ export async function runPredictions(underworld: Underworld) {
                   const canAttack = underworld.canUnitAttackTarget(u, target);
                   underworld.incrementTargetsNextTurnDamage(targets, u.damage, canAttack);
                   if (target === globalThis.player.unit && canAttack) {
-                    globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u), unitSpriteScaleY: u.image?.sprite.scale.y || 1, markerScale: 1 });
+                    // use u.predictionScale here since we are dealing with prediction units
+                    // prediction units don't have images, and thus sprite.scale.y
+                    globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u), unitSpriteScaleY: u.predictionScale || 1, markerScale: 1 });
                   }
                 }
               }

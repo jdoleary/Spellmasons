@@ -105,6 +105,8 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   isMiniboss: boolean;
   // Denotes that this is a prediction copy of a unit
   isPrediction?: boolean;
+  // For attention markers
+  predictionScale?: number;
   faction: Faction;
   UITargetCircleOffsetY: number;
   defaultImagePath: string;
@@ -1363,6 +1365,12 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
   return {
     ...rest,
     isPrediction: true,
+    // A copy of the units current scale for the prediction copy
+    // prediction copies do not have an image property, so this property is saved here
+    // so that it may be accessed without making prediction units have a partial Image property
+    // (prediction units are known to not have an image, this shall not change, other parts of the code
+    // depends on this expectation)
+    predictionScale: image?.sprite.scale.y,
     // prediction units INTENTIONALLY share a reference to the original
     // unit's path so that we can get the efficiency gains of
     // cached paths per unit.  If we made a deep copy instead, the
