@@ -11,7 +11,7 @@ import { isPickup } from '../entity/Pickup';
 
 const id = 'split';
 const splitLimit = 3;
-function changeStatWithCap(unit: Unit.IUnit, statKey: 'health' | 'healthMax' | 'mana' | 'manaMax' | 'stamina' | 'staminaMax' | 'moveSpeed' | 'damage', multiplier: number) {
+function changeStatWithCap(unit: Unit.IUnit, statKey: 'health' | 'healthMax' | 'mana' | 'manaMax' | 'manaPerTurn' | 'stamina' | 'staminaMax' | 'moveSpeed' | 'damage', multiplier: number) {
   if (unit[statKey] && typeof unit[statKey] === 'number') {
 
     // Do not let stats go below 1
@@ -91,7 +91,8 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     changeStatWithCap(unit, 'health', addMultiplier);
     changeStatWithCap(unit, 'healthMax', addMultiplier);
     changeStatWithCap(unit, 'mana', addMultiplier);
-    changeStatWithCap(unit, 'manaMax', addMultiplier);
+    //changeStatWithCap(unit, 'manaMax', addMultiplier);
+    changeStatWithCap(unit, 'manaPerTurn', addMultiplier);
     changeStatWithCap(unit, 'stamina', addMultiplier);
     changeStatWithCap(unit, 'staminaMax', addMultiplier);
     changeStatWithCap(unit, 'damage', addMultiplier);
