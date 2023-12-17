@@ -25,8 +25,10 @@
 - Test loading an old save file for backwards compatibility
 ---
 - qa new connect
-    - Make sure it's impossible to get stuck in infinite loop
-    - check that it runs on multiplayer
+- Make sure it's impossible to get stuck in infinite loop
+- check that it runs on multiplayer
+
+TODO: i18n for Accessibility menu
 
 # Release protocal
 - QA: 1:44

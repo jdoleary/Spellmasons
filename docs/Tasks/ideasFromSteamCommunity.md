@@ -34,12 +34,6 @@ perhaps something you can toggle
 actually going out of your way to do it, like advanced casting options or something
 ---
 
-- Skillo — Today at 7:37 AM
-explosive, poison, freeze, barrels
-explodes when damaged, causing AoE damage and applying its related effect on enemies within its radius. 
-
-teleport trap (or portal)
-there is always at least two in each level, when something steps on them, takes said character or item to one of the other portals. naturally, connected enemies moving through portals should remain connected. This could allow very exciting plays. 
 
 towers 
 watchtower (arrow, phys dmg), arcane tower (burns mana), freezing tower (lowers stamina)
@@ -210,7 +204,6 @@ However the following 3 from what ive seen could use some attention.
 
 2) Contaminate seems very steep at 50 mana for spreading debuffs, considering the wealth of 20 point targetting spells. I would consider lowering it's cost
 
-3) Targetting Column. Its to narrow and short at 20 mana compared to Cone, Connect, Circle, and other targetting spells at the same mana cost. Either reduce its cost to 15 or increase it's width and/or preferably length (cone is both wider and longer than column for example)
 
 That's it. Noticed some UI/refresh bugs I might also report if they haven't been brought up yet.
 
