@@ -2,18 +2,22 @@ import { CardCategory } from '../types/commonTypes';
 import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { arrowTripleCardId } from './arrow_triple';
-import { arrowEffect } from './arrow';
+import { ArrowProps, arrowEffect } from './arrow';
 
 export const arrowMultiCardId = 'Multi Arrow';
-const damageDone = 10;
-const arrowCount = 5;
+const arrowProps: ArrowProps = {
+  damage: 10,
+  pierce: 1,
+  arrowCount: 5,
+}
+
 const spell: Spell = {
   card: {
     id: arrowMultiCardId,
     replaces: [arrowTripleCardId],
     category: CardCategory.Damage,
     supportQuantity: true,
-    manaCost: 35,
+    manaCost: 25,
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.RARE],
@@ -22,8 +26,8 @@ const spell: Spell = {
     allowNonUnitTarget: true,
     animationPath: '',
     sfx: 'arrow',
-    description: ['spell_arrow_many', arrowCount.toString(), damageDone.toString()],
-    effect: arrowEffect(arrowCount, damageDone)
+    description: ['spell_arrow_many', arrowProps.arrowCount.toString(), arrowProps.damage.toString()],
+    effect: arrowEffect(arrowProps)
   }
 };
 export default spell;

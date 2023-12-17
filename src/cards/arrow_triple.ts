@@ -1,12 +1,16 @@
 import { CardCategory } from '../types/commonTypes';
 import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
-import { arrowEffect } from './arrow';
+import { ArrowProps, arrowEffect } from './arrow';
 import { arrow2CardId } from './arrow2';
 
 export const arrowTripleCardId = 'Triple Arrow';
-const damageDone = 10;
-const arrowCount = 3;
+const arrowProps: ArrowProps = {
+  damage: 10,
+  pierce: 1,
+  arrowCount: 3,
+}
+
 const spell: Spell = {
   card: {
     id: arrowTripleCardId,
@@ -22,8 +26,8 @@ const spell: Spell = {
     allowNonUnitTarget: true,
     animationPath: '',
     sfx: 'arrow',
-    description: ['spell_arrow_many', arrowCount.toString(), damageDone.toString()],
-    effect: arrowEffect(arrowCount, damageDone)
+    description: ['spell_arrow_many', arrowProps.arrowCount.toString(), arrowProps.damage.toString()],
+    effect: arrowEffect(arrowProps)
   }
 };
 export default spell;

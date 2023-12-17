@@ -12,7 +12,11 @@ import { playDefaultSpellSFX } from './cardUtils';
 import { moveAlongVector, normalizedVector } from '../jmath/moveWithCollision';
 
 export const arrowCardId = 'Arrow';
-const damage = 10;
+const arrowProps: ArrowProps = {
+  damage: 10,
+  pierce: 1,
+  arrowCount: 1,
+}
 const spell: Spell = {
   card: {
     id: arrowCardId,
@@ -27,15 +31,21 @@ const spell: Spell = {
     allowNonUnitTarget: true,
     animationPath: '',
     sfx: 'arrow',
-    description: ['spell_arrow', damage.toString()],
-    effect: arrowEffect(1, damage)
+    description: ['spell_arrow', arrowProps.damage.toString()],
+    effect: arrowEffect(arrowProps)
   }
 };
 
+export interface ArrowProps {
+  damage: number;
+  pierce: number; // 1 = 1 target hit
+  arrowCount: number; // 1 = 1 arrow shot
+  onCollide?: (state: EffectState, unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => Promise<EffectState>;
+}
 
 let predictedArrowCollisions: number[][];
-export function arrowEffect(multiShotCount: number, damageDone: number, onCollide?: (state: EffectState, firstTarget: Unit.IUnit, underworld: Underworld, prediction: boolean) => Promise<EffectState>, skipClearCache?: boolean) {
-  return async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean) => {
+export function arrowEffect(arrowProps: ArrowProps) {
+  return async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean) => {
 
     let targets: Vec2[] = state.targetedUnits;
     const path = findArrowPath(state.casterPositionAtTimeOfCast, state.castLocation, underworld)
@@ -43,10 +53,6 @@ export function arrowEffect(multiShotCount: number, damageDone: number, onCollid
     let targetsHitCount = 0;
     let attackPromises = [];
     let timeoutToNextArrow = 200;
-
-    // TODO - Implement Phantom Arrow
-    // normal arrow doesn't pierce, hit only one target
-    const pierce = 1;
 
     if (!predictedArrowCollisions) {
       // initialize predicted arrow collisions
@@ -60,7 +66,7 @@ export function arrowEffect(multiShotCount: number, damageDone: number, onCollid
     let arrowIndex = 0;
     for (let i = 0; i < quantity; i++) {
       for (let target of targets) {
-        for (let arrowNumber = 0; arrowNumber < multiShotCount; arrowNumber++) {
+        for (let arrowNumber = 0; arrowNumber < arrowProps.arrowCount; arrowNumber++) {
 
           // START: Shoot multiple arrows at offset
           let casterPositionAtTimeOfCast = state.casterPositionAtTimeOfCast;
@@ -83,7 +89,7 @@ export function arrowEffect(multiShotCount: number, damageDone: number, onCollid
 
             // If we hit our pierce limit, stop the arrow at the final collision
             // Otherwise let the arrow fly until it hits a wall
-            if (arrowUnitCollisions.length == pierce) {
+            if (arrowUnitCollisions.length == arrowProps.pierce) {
               // Last unit arrow collides with
               const finalTarget = underworld.units.find(u => u.id == arrowUnitCollisions[arrowUnitCollisions.length - 1]);
               if (finalTarget) {
@@ -117,8 +123,11 @@ export function arrowEffect(multiShotCount: number, damageDone: number, onCollid
 
                 const damagePromise = new Promise<void>((resolve, reject) => {
                   setTimeout(() => {
-                    Unit.takeDamage(unit, damageDone, casterPositionAtTimeOfCast, underworld, false, undefined, { thinBloodLine: true });
+                    Unit.takeDamage(unit, arrowProps.damage, casterPositionAtTimeOfCast, underworld, false, undefined, { thinBloodLine: true });
                     targetsHitCount++;
+                    if (arrowProps.onCollide) {
+                      arrowProps.onCollide(state, unit, underworld, prediction);
+                    }
                     resolve();
                   }, millisecondsUntilCollision);
                 })
@@ -139,14 +148,14 @@ export function arrowEffect(multiShotCount: number, damageDone: number, onCollid
 
             arrowUnitCollisions = arrowUnitCollisions
               .filter(u => Unit.isUnit(u))
-              .slice(0, pierce);
+              .slice(0, arrowProps.pierce);
 
             for (let c = 0; c < arrowUnitCollisions.length; c++) {
               const unit = arrowUnitCollisions[c] as Unit.IUnit;
-              Unit.takeDamage(unit, damageDone, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
+              Unit.takeDamage(unit, arrowProps.damage, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
               targetsHitCount++;
-              if (onCollide) {
-                onCollide(state, unit, underworld, prediction);
+              if (arrowProps.onCollide) {
+                arrowProps.onCollide(state, unit, underworld, prediction);
               }
 
               // push all collisions to this arrow index's array
