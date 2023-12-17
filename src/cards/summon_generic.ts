@@ -190,11 +190,6 @@ ${manaMax ? `🔵 ${manaMax} + ${unitSource.unitProps.manaPerTurn} ${i18n('Mana'
                         underworld,
                         prediction
                     );
-                    if (unit.image) {
-                        const quantityScaleModifier = 1 + 0.3 * (quantity - 1);
-                        unit.image.sprite.scale.x = unit.image.sprite.scale.x * quantityScaleModifier;
-                        unit.image.sprite.scale.y = unit.image.sprite.scale.y * quantityScaleModifier;
-                    }
 
                     addUnitTarget(unit, state);
 
