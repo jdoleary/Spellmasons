@@ -113,9 +113,15 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         const { pickupId, pickupName, unitId, playerClientId } = payload;
         let pickup = underworld.pickups.find(p => p.id == pickupId);
         const unit = underworld.units.find(u => u.id == unitId);
+        // Important: This is NOT fromPlayer, this is the optional player that collided
+        // with the pickup
+        const player = underworld.players.find(p => p.clientId == playerClientId);
         if (pickup) {
+          if (pickup.name !== pickupName) {
+            console.error("FORCE_TRIGGER_PICKUP: pickup name is desynced", pickup.name, pickupName);
+          }
           if (unit) {
-            Pickup.triggerPickup(pickup, unit, fromPlayer, underworld, false);
+            Pickup.triggerPickup(pickup, unit, player, underworld, false);
           } else {
             console.error('Force trigger pickup failed, unit is undefined');
           }

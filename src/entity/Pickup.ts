@@ -475,14 +475,17 @@ export function tryTriggerPickup(pickup: IPickup, unit: IUnit, underworld: Under
         if (willTrigger) {
           // Unit has touched pickup before headless has, so force trigger it
           // This happens when unit is walking as opposed to being pushed
-          console.log(`Unit touched pickup before headless has: ${pickup.name}`)
-          underworld.pie.sendData({
-            type: MESSAGE_TYPES.FORCE_TRIGGER_PICKUP,
-            pickupId: pickup.id,
-            pickupName: pickup.name,
-            unitId: unit.id,
-            playerClientId: player?.clientId
-          });
+          console.log(`Unit touched pickup before headless has: ${pickup.name}, ${unit.id}, ${player?.name}`)
+          // Only send a FORCE_TRIGGER_PICKUP message if the unit is the client's own player unit or a non player unit
+          if (!player || player && globalThis.player == player) {
+            underworld.pie.sendData({
+              type: MESSAGE_TYPES.FORCE_TRIGGER_PICKUP,
+              pickupId: pickup.id,
+              pickupName: pickup.name,
+              unitId: unit.id,
+              playerClientId: player?.clientId
+            });
+          }
         }
 
       }
