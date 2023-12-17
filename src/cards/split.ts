@@ -8,6 +8,7 @@ import { animateMitosis } from './clone';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 import { isPickup } from '../entity/Pickup';
+import { suffocateCardId, updateSuffocate } from './suffocate';
 
 const id = 'split';
 const splitLimit = 3;
@@ -96,6 +97,10 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     changeStatWithCap(unit, 'staminaMax', addMultiplier);
     changeStatWithCap(unit, 'damage', addMultiplier);
     unit.moveSpeed *= addMultiplier;
+  }
+
+  if (unit.modifiers[suffocateCardId]) {
+    updateSuffocate(unit, underworld, prediction);
   }
 }
 const spell: Spell = {

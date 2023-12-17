@@ -8,6 +8,7 @@ import { CardCategory } from '../types/commonTypes';
 import floatingText from '../graphics/FloatingText';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
+import { suffocateCardId, updateSuffocate } from './suffocate';
 
 export const id = 'Blood Curse';
 export function hasBloodCurse(unit: IUnit): boolean {
@@ -35,9 +36,13 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean) {
   if (!prediction) {
     updateTooltip(unit);
   }
-}
-function remove(unit: IUnit, underworld: Underworld) {
 
+  if (unit.modifiers[suffocateCardId]) {
+    updateSuffocate(unit, underworld, prediction);
+  }
+}
+
+function remove(unit: IUnit, underworld: Underworld) {
   unit.health /= healthMultiplier;
   unit.health = Math.round(unit.health);
   unit.healthMax /= healthMultiplier;
