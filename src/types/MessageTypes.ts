@@ -39,4 +39,5 @@ export enum MESSAGE_TYPES {
   PREVENT_IDLE_TIMEOUT,
   // Could add typing indicator in future
   CHAT_SENT,
+  CLIENT_SEND_PLAYER_TO_SERVER,
 }

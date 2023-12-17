@@ -76,6 +76,35 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         underworld.playerThoughts[thinkingPlayer.clientId] = { ...payload, currentDrawLocation, lerp: 0 };
       }
       break;
+    case MESSAGE_TYPES.CLIENT_SEND_PLAYER_TO_SERVER:
+      // This message is only ever handled by the host.  It is for the client
+      // to send it's Player state to the host because the client is the source of truth for the player object
+      if (isHost(overworld.pie) && overworld.underworld) {
+        const { player } = payload;
+        const foundPlayerIndex = overworld.underworld.players.findIndex(p => p.clientId == player.clientId);
+        if (foundPlayerIndex !== undefined) {
+          // Report Differences to evaluate where client server player desyncs are ocurring
+          const currentPlayer = overworld.underworld.players[foundPlayerIndex];
+          if (currentPlayer) {
+            const currentPlayerSerialized = Player.serialize(currentPlayer);
+            for (let key of new Set([...Object.keys(currentPlayerSerialized), ...Object.keys(player)])) {
+              // @ts-ignore: No index signature with a parameter of type 'string' was found on type 'IPlayerSerialized'.
+              // This is fine because we're just checking inequality to report desyncs
+              if (JSON.stringify(currentPlayerSerialized[key]) != JSON.stringify(player[key])) {
+                // @ts-ignore: No index signature with a parameter of type 'string' was found on type 'IPlayerSerialized'.
+                // This is fine because we're just checking inequality to report desyncs
+                console.error(`CLIENT_SEND_PLAYER_TO_SERVER property desync: property:${key}, host:${currentPlayerSerialized[key]}, client:${player[key]}`);
+              }
+            }
+          }
+          // End Report Differences to evaluate where client server player desyncs are ocurring
+
+
+          // Host loads player data from client to syncronize the state
+          Player.load(player, foundPlayerIndex, overworld.underworld, false);
+        }
+      }
+      break;
     case MESSAGE_TYPES.SET_GAME_MODE:
       const { gameMode } = payload;
       if (underworld.levelIndex <= 1) {
@@ -348,7 +377,8 @@ function joinGameAsPlayer(asPlayerClientId: string, overworld: Overworld, fromCl
 
 
       const players = underworld.players.map(Player.serialize)
-      underworld.syncPlayers(players);
+      // isClientPlayerSourceOfTruth: false; Overwrite client's own player object because the client is switching players
+      underworld.syncPlayers(players, false);
     }
   }
 
@@ -476,7 +506,10 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         // Units must be synced before players so that the player's
         // associated unit is available for referencing
         underworld.syncUnits(units);
-        underworld.syncPlayers(players);
+        // isClientPlayerSourceOfTruth: true; for regular syncs the client's own player object
+        // is the source of truth so that the server's async player sync call doesn't overwrite
+        // something that happened syncronously on the client
+        underworld.syncPlayers(players, true);
         // Protect against old versions that didn't send lastUnitId with
         // this message
         if (lastUnitId !== undefined) {
@@ -561,7 +594,10 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       // that the player.unit reference is synced
       // with up to date units
       if (players) {
-        underworld.syncPlayers(players);
+        // isClientPlayerSourceOfTruth: true; for regular syncs the client's own player object
+        // is the source of truth so that the server's async player sync call doesn't overwrite
+        // something that happened syncronously on the client
+        underworld.syncPlayers(players, true);
       }
 
       if (pickups) {
@@ -948,7 +984,9 @@ async function handleLoadGameState(payload: {
   // that the player.unit reference is synced
   // with up to date units
   if (players) {
-    underworld.syncPlayers(players);
+    // isClientPlayerSourceOfTruth: false; loading a new game means the player should be 
+    // fully overwritten
+    underworld.syncPlayers(players, false);
   }
   // After a load always start all players with endedTurn == false so that
   // it doesn't skip the player turn if players rejoin out of order
