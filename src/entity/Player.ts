@@ -489,25 +489,6 @@ export function enterPortal(player: IPlayer, underworld: Underworld) {
     console.log('New farthest level record!', mageTypeFarthestLevel, '->', underworld.levelIndex);
     storageSet(mageTypeFarthestLevel, underworld.levelIndex.toString());
   }
-  // Give players stat points to spend:
-  // starting on level 2 (levelIndex 1)
-  if (underworld.levelIndex > 0) {
-    if (numberOfHotseatPlayers > 1) {
-      // If hotseat, give all players stat points since it only takes one hotseat player
-      // to enter a portal to go to the next level
-      for (let p of underworld.players) {
-        p.statPointsUnspent += p.mageType === 'Spellmason' ? 4 : 3;
-      }
-    } else {
-      // Give player stat points
-      player.statPointsUnspent += player.mageType === 'Spellmason' ? 4 : 3;
-    }
-    const isFirstEverPlaySession = !isFirstTutorialStepComplete();
-    // For first play session don't show stat upgrades too early, it's information overload
-    if (isFirstEverPlaySession && underworld.levelIndex <= 2) {
-      player.statPointsUnspent = 0;
-    }
-  }
 
 
   Image.hide(player.unit.image);
