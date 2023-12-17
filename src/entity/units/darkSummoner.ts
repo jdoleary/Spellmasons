@@ -30,10 +30,10 @@ const unit: UnitSource = {
   unitProps: {
     damage: 0,
     attackRange: 550,
-    healthMax: 180,
-    mana: 80,
+    healthMax: 120,
+    mana: 90,
     manaMax: 120,
-    manaPerTurn: 20,
+    manaPerTurn: 30,
     manaCostToCast: 120,
     bloodColor: 0x852124,
   },
@@ -59,7 +59,7 @@ const unit: UnitSource = {
   },
   action: async (unit: Unit.IUnit, attackTargets, underworld: Underworld) => {
     // attackTargets has irregular usage for this unit, see explanation in this file's getUnitAttackTargets()
-    await summonerAction(unit, !!attackTargets.length, underworld, { closeUnit: allUnits[MANA_VAMPIRE_ID], farUnit: allUnits[DARK_PRIEST_ID] }, 1);
+    await summonerAction(unit, !!attackTargets.length, underworld, { closeUnit: allUnits[MANA_VAMPIRE_ID], farUnit: allUnits[DARK_PRIEST_ID] }, 3);
   },
   getUnitAttackTargets: summonerGetUnitAttackTargets
 };

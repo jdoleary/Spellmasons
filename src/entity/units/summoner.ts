@@ -36,10 +36,10 @@ const unit: UnitSource = {
   unitProps: {
     damage: 0,
     attackRange: 550,
-    healthMax: 120,
-    mana: 80,
+    healthMax: 80,
+    mana: 60,
     manaMax: 90,
-    manaPerTurn: 20,
+    manaPerTurn: 30,
     manaCostToCast: 90,
   },
   spawnParams: {
@@ -49,7 +49,7 @@ const unit: UnitSource = {
   },
   action: async (unit: Unit.IUnit, attackTargets, underworld: Underworld) => {
     // attackTargets has irregular usage for this unit, see explanation in this file's getUnitAttackTargets()
-    await summonerAction(unit, !!attackTargets.length, underworld, { closeUnit: allUnits.golem, farUnit: allUnits.archer }, 3);
+    await summonerAction(unit, !!attackTargets.length, underworld, { closeUnit: allUnits.golem, farUnit: allUnits.archer }, 4);
   },
   getUnitAttackTargets: summonerGetUnitAttackTargets
 };
