@@ -43,7 +43,15 @@ export interface ArrowProps {
   onCollide?: (state: EffectState, unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => Promise<EffectState>;
 }
 
+// Arrow.ts contains an array of arrows (indexed as arrow index)
+// - For handling arrow count, quantity, and separate arrow effects
+// Arrows contain an array of collisions (stored as unit ID)
+// - For handling pierce
+// All arrow collisions are done in prediction mode and stored in this [][]
+let currentState: EffectState;
+let nextArrowIndex: number;
 let predictedArrowCollisions: number[][];
+
 export function arrowEffect(arrowProps: ArrowProps) {
   return async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean) => {
 
@@ -58,12 +66,21 @@ export function arrowEffect(arrowProps: ArrowProps) {
       // initialize predicted arrow collisions
       predictedArrowCollisions = [];
     }
-    else if (prediction) {
-      // Clear predicted collisions before adding new ones
-      predictedArrowCollisions.length = 0;
+
+    // If this is a new spell cast
+    if (currentState != state) {
+      currentState = state;
+      nextArrowIndex = 0;
+      if (prediction) {
+        // Clear predicted collisions before adding new ones
+        predictedArrowCollisions.length = 0;
+      }
+    }
+    else {
+      // Continue from last arrow index
     }
 
-    let arrowIndex = 0;
+    let arrowIndex = nextArrowIndex;
     for (let i = 0; i < quantity; i++) {
       for (let target of targets) {
         for (let arrowNumber = 0; arrowNumber < arrowProps.arrowCount; arrowNumber++) {
@@ -182,6 +199,8 @@ export function arrowEffect(arrowProps: ArrowProps) {
         refundLastSpell(state, prediction, 'no target, mana refunded')
       }
     });
+
+    nextArrowIndex = arrowIndex;
     return state;
   }
 }
