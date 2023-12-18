@@ -170,7 +170,7 @@ export function create(
       resolveDoneMoving: () => { },
       stamina: 0,
       staminaMax,
-      attackRange: 10 + config.COLLISION_MESH_RADIUS * 2,
+      attackRange: config.UNIT_BASE_RANGE,
       isMiniboss: false,
       faction,
       image: prediction ? undefined : Image.create({ x, y }, defaultImagePath, containerUnits),
@@ -185,7 +185,7 @@ export function create(
       mana,
       manaMax: mana,
       manaCostToCast: 0,
-      manaPerTurn: config.MANA_GET_PER_TURN,
+      manaPerTurn: 0,
       alive: true,
       immovable: false,
       unitType,
@@ -1340,9 +1340,13 @@ export function makeMiniboss(unit: IUnit) {
     unit.image.sprite.scale.y *= config.UNIT_MINIBOSS_SCALE_MULTIPLIER;
   }
   unit.radius *= config.UNIT_MINIBOSS_SCALE_MULTIPLIER;
-  unit.healthMax *= config.UNIT_MINIBOSS_HEALTH_MULTIPLIER;
-  unit.health = unit.healthMax;
   unit.damage *= config.UNIT_MINIBOSS_DAMAGE_MULTIPLIER;
+  unit.healthMax *= config.UNIT_MINIBOSS_HEALTH_MULTIPLIER;
+  unit.health *= config.UNIT_MINIBOSS_HEALTH_MULTIPLIER;
+  unit.manaMax *= config.UNIT_MINIBOSS_MANA_MULTIPLIER;
+  unit.mana *= config.UNIT_MINIBOSS_MANA_MULTIPLIER;
+  unit.manaPerTurn *= config.UNIT_MINIBOSS_MANA_MULTIPLIER;
+  unit.manaCostToCast *= config.UNIT_MINIBOSS_MANA_MULTIPLIER;
 }
 // Makes a copy of the unit's data suitable for 
 // a predictionUnit

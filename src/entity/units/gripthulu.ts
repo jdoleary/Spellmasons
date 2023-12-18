@@ -10,7 +10,6 @@ import { pull } from '../../cards/pull';
 import { containerProjectiles } from '../../graphics/PixiUtils';
 import { getAngleBetweenVec2s, Vec2 } from '../../jmath/Vec';
 
-const manaCostToCast = 15;
 export const gripthulu_id = 'gripthulu';
 const unit: UnitSource = {
   id: gripthulu_id,
@@ -21,8 +20,11 @@ const unit: UnitSource = {
   },
   unitProps: {
     attackRange: 500,
+    mana: 30,
+    manaMax: 30,
+    manaPerTurn: 10,
+    manaCostToCast: 20,
     bloodColor: bloodGripthulu,
-    manaCostToCast
   },
   spawnParams: {
     probability: 20,

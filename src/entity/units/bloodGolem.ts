@@ -15,12 +15,11 @@ const unit: UnitSource = {
     subtype: UnitSubType.MELEE,
   },
   unitProps: {
-    staminaMax: config.UNIT_BASE_STAMINA * 1.2,
-    attackRange: config.COLLISION_MESH_RADIUS * 2,
-    manaMax: 0,
-    healthMax: 60,
     damage: 40,
-    bloodColor: 0x8a2e2e
+    staminaMax: config.UNIT_BASE_STAMINA * 1.2,
+    healthMax: 60,
+    manaMax: 0,
+    bloodColor: 0x8a2e2e,
   },
   spawnParams: {
     probability: 100,

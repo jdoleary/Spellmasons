@@ -21,11 +21,11 @@ const unit: UnitSource = {
         subtype: UnitSubType.DOODAD,
     },
     unitProps: {
-        staminaMax: 0,
-        attackRange: baseRadius,
-        manaMax: 0,
-        healthMax: 1,
         damage,
+        attackRange: baseRadius,
+        staminaMax: 0,
+        healthMax: 1,
+        manaMax: 0,
     },
     spawnParams: {
         probability: 0,

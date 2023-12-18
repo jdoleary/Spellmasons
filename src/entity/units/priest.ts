@@ -8,7 +8,6 @@ import * as resurrect from '../../cards/resurrect';
 import Underworld from '../../Underworld';
 import { summoningSicknessId } from '../../modifierSummoningSickness';
 
-const manaCostToCast = resurrect.default.card.manaCost;
 async function animatePriestProjectileAndHit(self: Unit.IUnit, target: Unit.IUnit) {
   // TODO does this cause an issue on headless?
   await createVisualFlyingProjectile(
@@ -59,12 +58,13 @@ const unit: UnitSource = {
     subtype: UnitSubType.SUPPORT_CLASS,
   },
   unitProps: {
+    damage: 0,
     attackRange: 500,
     healthMax: 20,
-    damage: 0,
-    manaCostToCast,
-    manaMax: manaCostToCast,
-    manaPerTurn: manaCostToCast / 2
+    mana: 90,
+    manaMax: 90,
+    manaPerTurn: 45,
+    manaCostToCast: 90,
   },
   spawnParams: {
     probability: 20,
@@ -103,7 +103,7 @@ const unit: UnitSource = {
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-    if (unit.mana < manaCostToCast) {
+    if (unit.mana < unit.manaCostToCast) {
       return [];
     }
     return resurrectableUnits(unit, underworld).filter(u => {

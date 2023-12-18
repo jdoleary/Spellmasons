@@ -39,7 +39,7 @@ const unit: UnitSource = {
     attackRange: config.PLAYER_BASE_ATTACK_RANGE * 3,
     healthMax: 600,
     manaMax: bossmasonMana,
-    manaPerTurn: 100
+    manaPerTurn: 100,
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     if (unit.image) {

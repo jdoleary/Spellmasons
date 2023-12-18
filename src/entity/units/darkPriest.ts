@@ -18,12 +18,13 @@ const unit: UnitSource = {
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
+    damage: 40,
     attackRange: 264,
     healthMax: 60,
-    damage: 40,
-    manaCostToCast,
-    manaMax: manaCostToCast * 2,
-    manaPerTurn: 30
+    mana: 90,
+    manaMax: 90,
+    manaPerTurn: 30,
+    manaCostToCast: 60,
   },
   spawnParams: {
     probability: 20,

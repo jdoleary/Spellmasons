@@ -20,9 +20,12 @@ const unit: UnitSource = {
   },
   unitProps: {
     attackRange: 350,
-    bloodColor: bloodPoisoner,
     healthMax: 60,
-    manaCostToCast: 15
+    mana: 60,
+    manaMax: 60,
+    manaPerTurn: 15,
+    manaCostToCast: 30,
+    bloodColor: bloodPoisoner,
   },
   spawnParams: {
     probability: 15,
