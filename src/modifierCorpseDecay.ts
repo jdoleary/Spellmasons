@@ -37,7 +37,7 @@ export default function registerCorpseDecay() {
                     if (!unit.alive) {
                         if (modifier.turnsLeftToLive <= 0) {
                             floatingText({
-                                coords: clone(unit), text: `Corpse Decayed!`,
+                                coords: clone(unit), text: `corpse decayed`,
                                 style: { fill: colors.healthRed },
                             });
                             Unit.cleanup(unit, false);
@@ -56,6 +56,6 @@ export default function registerCorpseDecay() {
 export function updateTooltip(unit: Unit.IUnit) {
     if (unit.modifiers[corpseDecayId]) {
         // Set tooltip:
-        unit.modifiers[corpseDecayId].tooltip = `${unit.modifiers[corpseDecayId].turnsLeftToLive} turns until decay`;
+        unit.modifiers[corpseDecayId].tooltip = i18n(['turns until decay', unit.modifiers[corpseDecayId].turnsLeftToLive]);
     }
 }

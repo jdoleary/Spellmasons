@@ -22,7 +22,7 @@ export default function registerImpendingDoom() {
   function updateTooltip(unit: Unit.IUnit) {
     if (unit.modifiers[impendingDoomId]) {
       // Set tooltip:
-      unit.modifiers[impendingDoomId].tooltip = `Impending doom ${unit.modifiers[impendingDoomId].quantity}...`
+      unit.modifiers[impendingDoomId].tooltip = `${i18n('impending doom')} ${unit.modifiers[impendingDoomId].quantity}...`
     }
   }
 

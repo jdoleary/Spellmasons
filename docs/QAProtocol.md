@@ -27,8 +27,9 @@
 - qa new connect
 - Make sure it's impossible to get stuck in infinite loop
 - check that it runs on multiplayer
+- test: do rooms get cleaned up immediately (1.26)
 
-TODO: i18n for Accessibility menu
+TODO: Disable chatbox in singleplayer
 
 # Release protocal
 - QA: 1:44

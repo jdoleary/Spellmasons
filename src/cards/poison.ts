@@ -50,7 +50,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
 export function updateTooltip(unit: Unit.IUnit) {
   if (unit.modifiers[poisonCardId]) {
     // Set tooltip:
-    unit.modifiers[poisonCardId].tooltip = `Poison ${unit.modifiers[poisonCardId].quantity} | ${baseDamage * unit.modifiers[poisonCardId].quantity} damage`
+    unit.modifiers[poisonCardId].tooltip = `${unit.modifiers[poisonCardId].quantity} ${i18n('Poison')} ${i18n('Stack')} | ${baseDamage * unit.modifiers[poisonCardId].quantity} ${i18n('damage')}`
   }
 }
 

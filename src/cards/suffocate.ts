@@ -84,7 +84,7 @@ export function updateTooltip(unit: Unit.IUnit) {
     const turnsUntilSuffocation = Math.ceil(2 * Math.log2(unit.health / 10) + 1) - modifier.quantity;
 
     // Set tooltip:
-    modifier.tooltip = `${turnsUntilSuffocation} Turns until suffocation`
+    modifier.tooltip = i18n(['turns until suffocation', turnsUntilSuffocation.toString()]);
   }
 }
 
