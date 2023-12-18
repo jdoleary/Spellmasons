@@ -4,7 +4,7 @@ import { EffectState, Spell } from './index';
 import { CardCategory, CardRarity, probabilityMap } from '../types/commonTypes';
 import * as math from '../jmath/math';
 import { Vec2 } from '../jmath/Vec';
-import { arrowEffect, ArrowProps } from './arrow';
+import { makeArrowEffect, ArrowProps } from './arrow';
 import { arrow2CardId } from './arrow2';
 
 export const arrowFarCardId = 'Long Arrow';
@@ -34,7 +34,7 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'arrow',
     description: ['spell_arrow_far', maxDamage.toString()],
-    effect: arrowEffect(arrowProps)
+    effect: makeArrowEffect(arrowProps)
   }
 };
 

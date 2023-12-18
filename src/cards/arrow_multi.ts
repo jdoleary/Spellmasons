@@ -2,7 +2,7 @@ import { CardCategory } from '../types/commonTypes';
 import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { arrowTripleCardId } from './arrow_triple';
-import { ArrowProps, arrowEffect } from './arrow';
+import { ArrowProps, makeArrowEffect } from './arrow';
 
 export const arrowMultiCardId = 'Multi Arrow';
 const arrowProps: ArrowProps = {
@@ -27,7 +27,7 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'arrow',
     description: ['spell_arrow_many', arrowProps.arrowCount.toString(), arrowProps.damage.toString()],
-    effect: arrowEffect(arrowProps)
+    effect: makeArrowEffect(arrowProps)
   }
 };
 export default spell;

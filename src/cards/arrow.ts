@@ -32,7 +32,7 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'arrow',
     description: ['spell_arrow', arrowProps.damage.toString()],
-    effect: arrowEffect(arrowProps)
+    effect: makeArrowEffect(arrowProps)
   }
 };
 
@@ -50,159 +50,169 @@ export interface ArrowProps {
 // All arrow collisions are done in prediction mode and stored in this [][]
 let currentState: EffectState;
 let nextArrowIndex: number;
-let predictedArrowCollisions: number[][];
 
-export function arrowEffect(arrowProps: ArrowProps) {
-  return async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean) => {
-
-    let targets: Vec2[] = state.targetedUnits;
-    const path = findArrowPath(state.casterPositionAtTimeOfCast, state.castLocation, underworld)
-    targets = targets.length ? targets : [path ? path.p2 : state.castLocation];
-    let targetsHitCount = 0;
-    let attackPromises = [];
-    let timeoutToNextArrow = 200;
-
-    if (!predictedArrowCollisions) {
-      // initialize predicted arrow collisions
-      predictedArrowCollisions = [];
+export function makeArrowEffect(arrowProps: ArrowProps) {
+  return async (effectState: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean) => {
+    if (prediction) {
+      const { state } = await runArrowEffect(effectState, card, quantity, underworld, prediction);
+      return state;
     }
+    // For a non prediction cast, generate the arrow collisions from a prediction invokation once...
+    const { predictedArrowCollisions } = await runArrowEffect(effectState, card, quantity, underworld, true);
+    // ... and then pass that arrow into the real invokation so that it's damage perfectly matches the predictions
+    const { state } = await runArrowEffect(effectState, card, quantity, underworld, true, predictedArrowCollisions);
+    return state;
+  }
+}
+async function runArrowEffect(state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, predictedArrowCollisions?: number[][]) {
+  let targets: Vec2[] = state.targetedUnits;
+  const path = findArrowPath(state.casterPositionAtTimeOfCast, state.castLocation, underworld)
+  targets = targets.length ? targets : [path ? path.p2 : state.castLocation];
+  let targetsHitCount = 0;
+  let attackPromises = [];
+  let timeoutToNextArrow = 200;
 
-    // If this is a new spell cast
-    if (currentState != state) {
-      currentState = state;
-      nextArrowIndex = 0;
-      if (prediction) {
-        // Clear predicted collisions before adding new ones
-        predictedArrowCollisions.length = 0;
-      }
+  if (!predictedArrowCollisions) {
+    // initialize predicted arrow collisions
+    predictedArrowCollisions = [];
+  }
+
+  // If this is a new spell cast
+  if (currentState != state) {
+    currentState = state;
+    nextArrowIndex = 0;
+    if (prediction) {
+      // Clear predicted collisions before adding new ones
+      predictedArrowCollisions.length = 0;
     }
-    else {
-      // Continue from last arrow index
-    }
+  }
+  else {
+    // Continue from last arrow index
+  }
 
-    let arrowIndex = nextArrowIndex;
-    for (let i = 0; i < quantity; i++) {
-      for (let target of targets) {
-        for (let arrowNumber = 0; arrowNumber < arrowProps.arrowCount; arrowNumber++) {
+  let arrowIndex = nextArrowIndex;
+  for (let i = 0; i < quantity; i++) {
+    for (let target of targets) {
+      for (let arrowNumber = 0; arrowNumber < arrowProps.arrowCount; arrowNumber++) {
 
-          // START: Shoot multiple arrows at offset
-          let casterPositionAtTimeOfCast = state.casterPositionAtTimeOfCast;
-          let castLocation = target;
-          if (arrowNumber > 0) {
-            const diff = subtract(casterPositionAtTimeOfCast, getEndpointOfMagnitudeAlongVector(casterPositionAtTimeOfCast, (arrowNumber % 2 == 0 ? -1 : 1) * Math.PI / 2 + getAngleBetweenVec2s(state.casterPositionAtTimeOfCast, state.castLocation), arrowNumber > 2 ? 40 : 20));
-            casterPositionAtTimeOfCast = subtract(casterPositionAtTimeOfCast, diff);
-            castLocation = subtract(castLocation, diff);
+        // START: Shoot multiple arrows at offset
+        let casterPositionAtTimeOfCast = state.casterPositionAtTimeOfCast;
+        let castLocation = target;
+        if (arrowNumber > 0) {
+          const diff = subtract(casterPositionAtTimeOfCast, getEndpointOfMagnitudeAlongVector(casterPositionAtTimeOfCast, (arrowNumber % 2 == 0 ? -1 : 1) * Math.PI / 2 + getAngleBetweenVec2s(state.casterPositionAtTimeOfCast, state.castLocation), arrowNumber > 2 ? 40 : 20));
+          casterPositionAtTimeOfCast = subtract(casterPositionAtTimeOfCast, diff);
+          castLocation = subtract(castLocation, diff);
+        }
+        // END: Shoot multiple arrows at offset
+
+        if (!prediction && !globalThis.headless) {
+          // We already know collisions, run those with visuals
+          const arrowUnitCollisions = predictedArrowCollisions[arrowIndex];
+          if (arrowUnitCollisions == undefined) {
+            console.error("No predictions for arrow: ", arrowIndex)
+            continue;
           }
-          // END: Shoot multiple arrows at offset
+          playDefaultSpellSFX(card, prediction);
 
-          if (!prediction && !globalThis.headless) {
-            // We already know collisions, run those with visuals
-            const arrowUnitCollisions = predictedArrowCollisions[arrowIndex];
-            if (arrowUnitCollisions == undefined) {
-              console.error("No predictions for arrow: ", arrowIndex)
-              continue;
-            }
-            playDefaultSpellSFX(card, prediction);
-
-            // If we hit our pierce limit, stop the arrow at the final collision
-            // Otherwise let the arrow fly until it hits a wall
-            if (arrowUnitCollisions.length == arrowProps.pierce) {
-              // Last unit arrow collides with
-              const finalTarget = underworld.units.find(u => u.id == arrowUnitCollisions[arrowUnitCollisions.length - 1]);
-              if (finalTarget) {
-                createVisualFlyingProjectile(
-                  casterPositionAtTimeOfCast,
-                  castLocation,
-                  'projectile/arrow',
-                  finalTarget
-                )
-              }
-            }
-            else {
+          // If we hit our pierce limit, stop the arrow at the final collision
+          // Otherwise let the arrow fly until it hits a wall
+          if (arrowUnitCollisions.length == arrowProps.pierce) {
+            // Last unit arrow collides with
+            const finalTarget = underworld.units.find(u => u.id == arrowUnitCollisions[arrowUnitCollisions.length - 1]);
+            if (finalTarget) {
               createVisualFlyingProjectile(
                 casterPositionAtTimeOfCast,
                 castLocation,
                 'projectile/arrow',
+                finalTarget
               )
-            }
-
-
-            if (arrowUnitCollisions) {
-              for (let unitId of arrowUnitCollisions) {
-                const unit = underworld.units.find(u => u.id == unitId);
-
-                if (!unit) {
-                  console.error("Could not find unit for arrow collison. Something changed from the prediction")
-                  continue;
-                }
-                // Fake the arrow collision by calculating a delay based on the speed of the projectile
-                const millisecondsUntilCollision = (math.distance(casterPositionAtTimeOfCast, unit) - config.COLLISION_MESH_RADIUS) / SPEED_PER_MILLI;
-
-                const damagePromise = new Promise<void>((resolve, reject) => {
-                  setTimeout(() => {
-                    Unit.takeDamage(unit, arrowProps.damage, casterPositionAtTimeOfCast, underworld, false, undefined, { thinBloodLine: true });
-                    targetsHitCount++;
-                    if (arrowProps.onCollide) {
-                      arrowProps.onCollide(state, unit, underworld, prediction);
-                    }
-                    resolve();
-                  }, millisecondsUntilCollision);
-                })
-
-                attackPromises.push(damagePromise);
-              }
-            }
-            else {
-              // Projectile won't hit any targets, need to refund mana
             }
           }
           else {
-            // get and store collisions
+            createVisualFlyingProjectile(
+              casterPositionAtTimeOfCast,
+              castLocation,
+              'projectile/arrow',
+            )
+          }
 
-            // new array for this arrowIndex
-            predictedArrowCollisions.push([]);
-            let arrowUnitCollisions = findArrowCollisions(casterPositionAtTimeOfCast, state.casterUnit.id, castLocation, prediction, underworld);
 
-            arrowUnitCollisions = arrowUnitCollisions
-              .filter(u => Unit.isUnit(u))
-              .slice(0, arrowProps.pierce);
+          if (arrowUnitCollisions) {
+            for (let unitId of arrowUnitCollisions) {
+              const unit = underworld.units.find(u => u.id == unitId);
 
-            for (let c = 0; c < arrowUnitCollisions.length; c++) {
-              const unit = arrowUnitCollisions[c] as Unit.IUnit;
-              Unit.takeDamage(unit, arrowProps.damage, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
-              targetsHitCount++;
-              if (arrowProps.onCollide) {
-                arrowProps.onCollide(state, unit, underworld, prediction);
+              if (!unit) {
+                console.error("Could not find unit for arrow collison. Something changed from the prediction")
+                continue;
               }
+              // Fake the arrow collision by calculating a delay based on the speed of the projectile
+              const millisecondsUntilCollision = (math.distance(casterPositionAtTimeOfCast, unit) - config.COLLISION_MESH_RADIUS) / SPEED_PER_MILLI;
 
-              // push all collisions to this arrow index's array
-              predictedArrowCollisions[arrowIndex]?.push(unit.id);
+              const damagePromise = new Promise<void>((resolve, reject) => {
+                setTimeout(() => {
+                  Unit.takeDamage(unit, arrowProps.damage, casterPositionAtTimeOfCast, underworld, false, undefined, { thinBloodLine: true });
+                  targetsHitCount++;
+                  if (arrowProps.onCollide) {
+                    arrowProps.onCollide(state, unit, underworld, prediction);
+                  }
+                  resolve();
+                }, millisecondsUntilCollision);
+              })
+
+              attackPromises.push(damagePromise);
             }
           }
-          arrowIndex += 1;
-          if (!prediction && !globalThis.headless) {
-            const timeout = Math.max(1, timeoutToNextArrow);
-
-            // Wait some time to fire the next arrow
-            await new Promise(resolve => setTimeout(resolve, timeout));
-            // Decrease timeout with each subsequent arrow fired to ensure that players don't have to wait too long
-            timeoutToNextArrow -= 5;
+          else {
+            // Projectile won't hit any targets, need to refund mana
           }
+        }
+        else {
+          // get and store collisions
+
+          // new array for this arrowIndex
+          predictedArrowCollisions.push([]);
+          let arrowUnitCollisions = findArrowCollisions(casterPositionAtTimeOfCast, state.casterUnit.id, castLocation, prediction, underworld);
+
+          arrowUnitCollisions = arrowUnitCollisions
+            .filter(u => Unit.isUnit(u))
+            .slice(0, arrowProps.pierce);
+
+          for (let c = 0; c < arrowUnitCollisions.length; c++) {
+            const unit = arrowUnitCollisions[c] as Unit.IUnit;
+            Unit.takeDamage(unit, arrowProps.damage, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
+            targetsHitCount++;
+            if (arrowProps.onCollide) {
+              arrowProps.onCollide(state, unit, underworld, prediction);
+            }
+
+            // push all collisions to this arrow index's array
+            predictedArrowCollisions[arrowIndex]?.push(unit.id);
+          }
+        }
+        arrowIndex += 1;
+        if (!prediction && !globalThis.headless) {
+          const timeout = Math.max(1, timeoutToNextArrow);
+
+          // Wait some time to fire the next arrow
+          await new Promise(resolve => setTimeout(resolve, timeout));
+          // Decrease timeout with each subsequent arrow fired to ensure that players don't have to wait too long
+          timeoutToNextArrow -= 5;
         }
       }
     }
-    await Promise.all(attackPromises).then(() => {
-      // Since arrows' flight promises are designed to resolve early so that multiple arrows can be shot
-      // in quick succession, we must await the actual flyingProjectile promise to determine if no targets
-      // were hit
-      if (targetsHitCount == 0) {
-        refundLastSpell(state, prediction, 'no target, mana refunded')
-      }
-    });
-
-    nextArrowIndex = arrowIndex;
-    return state;
   }
+  await Promise.all(attackPromises).then(() => {
+    // Since arrows' flight promises are designed to resolve early so that multiple arrows can be shot
+    // in quick succession, we must await the actual flyingProjectile promise to determine if no targets
+    // were hit
+    if (targetsHitCount == 0) {
+      refundLastSpell(state, prediction, 'no target, mana refunded')
+    }
+  });
+
+  nextArrowIndex = arrowIndex;
+  return { state, predictedArrowCollisions };
+
 }
 export default spell;
 // Returns the start and end point that an arrow will take until it hits a wall
