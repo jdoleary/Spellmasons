@@ -2778,10 +2778,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
                 }
                 return '';
               }
-              if (stat == 'attackRange') {
-                // Display default attackRange as "100"
-                return Math.floor(100 * value / config.PLAYER_BASE_ATTACK_RANGE);
-              }
               return value;
             }
             const elStatUpgradeRow = (stat: string) => `<tr class="stat-row">
@@ -4199,7 +4195,6 @@ function getEnemiesForAltitude(underworld: Underworld, levelIndex: number): stri
       // Never let one unit type have too many instances (max at 8 or levelindex + 2)
       let maxNumberOfThisUnit = Math.min(Math.min(adjustedLevelIndex + 2, 8), Math.floor(maxBudgetPerType / chosenUnitType.budgetCost));
       maxNumberOfThisUnit -= units.filter(u => u == chosenUnitType.id).length;
-      console.log(budgetLeft, maxNumberOfThisUnit, chosenUnitType);
       if (maxNumberOfThisUnit > 0) {
         // If I'm a special unit, first one free!
         // Encourages a stronger "theme", prevents low enemy count levels
@@ -4234,7 +4229,7 @@ function getEnemiesForAltitude(underworld: Underworld, levelIndex: number): stri
   }
 
   // Backup: Too many units! Merge them
-  // while (units.length > 30) {
+  // while (units.length > 24) {
   //   console.log("Budget: Upgraded existing unit");
   //   //find X golem/archer/glop and remove them, then add upgraded version
   // }
