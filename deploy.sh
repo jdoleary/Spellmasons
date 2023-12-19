@@ -10,18 +10,23 @@ PACKAGE_VERSION=$(cat package.json \
 
 # Build Dockerfile.bun for experimental transition from @websocketpie/server to @websocketpie/server-bun
 # docker build -f Dockerfile.bun . -t "spellmasons-bun:latest" -t "spellmasons-bun:$PACKAGE_VERSION"
-
-SEASHELL_IMAGE_PATH=registry.digitalocean.com/jdoleary-containers/smms
+BETA_IMAGE_PATH=registry.digitalocean.com/jdoleary-containers/spellmasons-test
 echo "Package Version:$PACKAGE_VERSION"
-docker build . -f Dockerfile.bun -t "$SEASHELL_IMAGE_PATH:latest" -t "$SEASHELL_IMAGE_PATH:$PACKAGE_VERSION"
-docker push "$SEASHELL_IMAGE_PATH:latest"
-docker push "$SEASHELL_IMAGE_PATH:$PACKAGE_VERSION"
+docker build . -f Dockerfile.bun -t "$BETA_IMAGE_PATH:latest" -t "$BETA_IMAGE_PATH:$PACKAGE_VERSION"
+docker push "$BETA_IMAGE_PATH:latest"
+docker push "$BETA_IMAGE_PATH:$PACKAGE_VERSION"
 
-PUBLIC_IMAGE_PATH=jordanoleary/spellmasons-server
-# Now using @websocketpie/server-bun
-docker build . -f Dockerfile.bun -t "$PUBLIC_IMAGE_PATH:latest" -t "$PUBLIC_IMAGE_PATH:$PACKAGE_VERSION"
-docker push "$PUBLIC_IMAGE_PATH:$PACKAGE_VERSION"
-docker push "$PUBLIC_IMAGE_PATH:latest"
+# SEASHELL_IMAGE_PATH=registry.digitalocean.com/jdoleary-containers/smms
+# echo "Package Version:$PACKAGE_VERSION"
+# docker build . -f Dockerfile.bun -t "$SEASHELL_IMAGE_PATH:latest" -t "$SEASHELL_IMAGE_PATH:$PACKAGE_VERSION"
+# docker push "$SEASHELL_IMAGE_PATH:latest"
+# docker push "$SEASHELL_IMAGE_PATH:$PACKAGE_VERSION"
+
+# PUBLIC_IMAGE_PATH=jordanoleary/spellmasons-server
+# # Now using @websocketpie/server-bun
+# docker build . -f Dockerfile.bun -t "$PUBLIC_IMAGE_PATH:latest" -t "$PUBLIC_IMAGE_PATH:$PACKAGE_VERSION"
+# docker push "$PUBLIC_IMAGE_PATH:$PACKAGE_VERSION"
+# docker push "$PUBLIC_IMAGE_PATH:latest"
 
 echo "Pushed image to Digital Ocean" 
 echo "Don't Forget to manually update any apps that are using the hub.docker.com image such as the Walrus server"
