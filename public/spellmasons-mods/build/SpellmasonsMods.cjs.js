@@ -651,7 +651,7 @@ const spell$a = {
             makeFlameStrikeWithParticles(unit2, prediction, resolve);
           } else {
             if (prediction) {
-              drawUICircle(unit2, adjustedRadius, 13981270);
+              drawUICircle(globalThis.predictionGraphics, unit2, adjustedRadius, 13981270);
             }
             explosionTargets.forEach((t) => {
               const damage = t == unit2 ? quantityAdjustedDamageMain : quantityAdjustedDamageSplash;
