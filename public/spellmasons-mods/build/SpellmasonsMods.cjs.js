@@ -420,7 +420,7 @@ const spell$c = {
     remove: remove$3
   },
   events: {
-    onTurnEnd: async (unit2, underworld) => {
+    onTurnEnd: async (unit2, prediction, underworld) => {
       const modifier = unit2.modifiers[cardId$c];
       if (modifier) {
         modifier.quantity--;
@@ -523,7 +523,7 @@ async function procEvents(unit2, prediction, underworld) {
     if (eventName) {
       const fne = Events.default.onTurnEndSource[eventName];
       if (fne) {
-        await fne(unit2, underworld, prediction);
+        await fne(unit2, prediction, underworld);
       }
     }
   }
@@ -877,7 +877,7 @@ const spell$7 = {
     remove: remove$2
   },
   events: {
-    onTurnEnd: async (unit2, underworld, prediction) => {
+    onTurnEnd: async (unit2, prediction, underworld) => {
       const modifier = unit2.modifiers[cardId$7];
       if (modifier) {
         const healing = healingAmount(modifier.regenCounter);
@@ -983,7 +983,7 @@ const spell$6 = {
     remove: remove$1
   },
   events: {
-    onTurnEnd: async (unit2, underworld) => {
+    onTurnEnd: async (unit2, prediction, underworld) => {
       const modifier = unit2.modifiers[cardId$6];
       if (modifier) {
         modifier.quantity--;
@@ -1482,8 +1482,8 @@ const spell = {
       triggerDistanceDamage(unit2, underworld, prediction);
       return false;
     },
-    onTurnEnd: async (unit2, underworld) => {
-      triggerDistanceDamage(unit2, underworld);
+    onTurnEnd: async (unit2, prediction, underworld) => {
+      triggerDistanceDamage(unit2, underworld, prediction);
     }
   }
 };
