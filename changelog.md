@@ -25,9 +25,12 @@
 - balance: In Plus levels, units no longer get "Immune"
 - balance: Target Similar, Target Kind
 - balance: Reworked Connect spell algorithm for better targeting
+- balance: Enemy Mana Adjustments
 
 - improvement: Rejoining existing games should be much more reliable
 The clients have been improved to use the same clientID between reboots.  This means that if you rejoin a game after a disconnect (or a saved game - after version 1.26.0) it should automatically give you back control of your original character instead of making a new one.
+- i18n: Russian translation
+    Thanks sevagog and tatapstar!
 
 - fix: Prevent ending your turn while you're picking upgrades
 - fix: Multiple issues on Hotseat Multiplayer with major refactor
@@ -41,7 +44,16 @@ The clients have been improved to use the same clientID between reboots.  This m
 - fix: Vampires keep blood curse on death
 - fix: Split hack allowing infinite splits
 - fix: Incorrect damage dealth when combining Dash then Burst
+- fix: darkPriest sometimes displaying with wrong colors
+- fix: bugs where client's local player state would get overwritten by server
+    I believe this will resolve the issue where summon spells would sometimes disappear
+- fix: Ensure clientId remains consistent, even in singleplayer
+- fix: Persist removing cards from toolbar
+- fix: desync in slash
+    Where slash would return before all damage
+    was done being dished out.
 
+- visual: Added suffocate display to health bar
 - visual: HP and MP bars now have a dark, partially transparent background and healing / gained mana is displayed in a spell prediction in addition to damage / spent mana.
 - visual: Spells in inventory are more sensibly grouped together
 - visual: Urn explosion radius now shows when selected
