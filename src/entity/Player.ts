@@ -410,7 +410,7 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
       // giving them a shared inventory and toolbar which is not desireable.
       // Besides, there won't be any sync errors on hotseat anyway since hotseat isn't
       // networked
-      console.trace('Ignore isClientPlayerSourceOfTruth on hotseat multiplayer');
+      console.debug('Ignore isClientPlayerSourceOfTruth on hotseat multiplayer');
     } else {
       if (globalThis.player && playerLoaded.clientId == globalThis.player.clientId) {
         playerLoaded.cardsInToolbar = globalThis.player.cardsInToolbar;
