@@ -6,7 +6,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { forcePush, velocityStartMagnitude } from './push';
 import * as math from '../jmath/math';
 import { Vec2 } from '../jmath/Vec';
-import { makeArrowEffect, ArrowProps, findArrowCollisions } from './arrow';
+import { arrowEffect, ArrowProps, findArrowCollisions } from './arrow';
 import { arrow3CardId } from './arrow3';
 import Underworld from '../Underworld';
 import { drawUICirclePrediction } from '../graphics/PlanningView';
@@ -39,7 +39,7 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'arrow',
     description: ['spell_arrow_explosive', arrowProps.damage.toString(), explodeDamage.toString()],
-    effect: makeArrowEffect(arrowProps)
+    effect: arrowEffect(arrowProps)
   }
 };
 

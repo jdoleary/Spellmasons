@@ -10,6 +10,7 @@ import { add, equal, getAngleBetweenVec2s, getEndpointOfMagnitudeAlongVector, in
 import Underworld from '../Underworld';
 import { playDefaultSpellSFX } from './cardUtils';
 import { moveAlongVector, normalizedVector } from '../jmath/moveWithCollision';
+import { runPredictions } from '../graphics/PlanningView';
 
 export const arrowCardId = 'Arrow';
 const arrowProps: ArrowProps = {
@@ -32,7 +33,7 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'arrow',
     description: ['spell_arrow', arrowProps.damage.toString()],
-    effect: makeArrowEffect(arrowProps)
+    effect: arrowEffect(arrowProps)
   }
 };
 
@@ -48,23 +49,27 @@ export interface ArrowProps {
 // Arrows contain an array of collisions (stored as unit ID)
 // - For handling pierce
 // All arrow collisions are done in prediction mode and stored in this [][]
-let currentState: EffectState;
-let nextArrowIndex: number;
 
-export function makeArrowEffect(arrowProps: ArrowProps) {
+export function arrowEffect(arrowProps: ArrowProps) {
   return async (effectState: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean) => {
     if (prediction) {
-      const { state } = await runArrowEffect(effectState, card, quantity, underworld, prediction);
+      const { state } = await runArrowEffect(arrowProps, effectState, card, quantity, underworld, prediction);
       return state;
     }
-    // For a non prediction cast, generate the arrow collisions from a prediction invokation once...
-    const { predictedArrowCollisions } = await runArrowEffect(effectState, card, quantity, underworld, true);
-    // ... and then pass that arrow into the real invokation so that it's damage perfectly matches the predictions
-    const { state } = await runArrowEffect(effectState, card, quantity, underworld, true, predictedArrowCollisions);
-    return state;
+    else {
+      underworld.syncPredictionEntities();
+      // For a non prediction cast, generate the arrow collisions from a prediction invokation once...
+      const { predictedArrowCollisions } = await runArrowEffect(arrowProps, effectState, card, quantity, underworld, true);
+
+
+      // ... and then pass that arrow into the real invokation so that it's damage perfectly matches the predictions
+      const { state } = await runArrowEffect(arrowProps, effectState, card, quantity, underworld, false, predictedArrowCollisions);
+      return state;
+    }
   }
 }
-async function runArrowEffect(state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, predictedArrowCollisions?: number[][]) {
+
+async function runArrowEffect(arrowProps: ArrowProps, state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, predictedArrowCollisions?: number[][]) {
   let targets: Vec2[] = state.targetedUnits;
   const path = findArrowPath(state.casterPositionAtTimeOfCast, state.castLocation, underworld)
   targets = targets.length ? targets : [path ? path.p2 : state.castLocation];
@@ -77,20 +82,12 @@ async function runArrowEffect(state: EffectState, card: ICard, quantity: number,
     predictedArrowCollisions = [];
   }
 
-  // If this is a new spell cast
-  if (currentState != state) {
-    currentState = state;
-    nextArrowIndex = 0;
-    if (prediction) {
-      // Clear predicted collisions before adding new ones
-      predictedArrowCollisions.length = 0;
-    }
-  }
-  else {
-    // Continue from last arrow index
+  if (prediction) {
+    // Clear predicted collisions before adding new ones
+    predictedArrowCollisions.length = 0;
   }
 
-  let arrowIndex = nextArrowIndex;
+  let arrowIndex = 0;
   for (let i = 0; i < quantity; i++) {
     for (let target of targets) {
       for (let arrowNumber = 0; arrowNumber < arrowProps.arrowCount; arrowNumber++) {
@@ -179,8 +176,8 @@ async function runArrowEffect(state: EffectState, card: ICard, quantity: number,
 
           for (let c = 0; c < arrowUnitCollisions.length; c++) {
             const unit = arrowUnitCollisions[c] as Unit.IUnit;
-            Unit.takeDamage(unit, arrowProps.damage, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
             targetsHitCount++;
+            Unit.takeDamage(unit, arrowProps.damage, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
             if (arrowProps.onCollide) {
               arrowProps.onCollide(state, unit, underworld, prediction);
             }
@@ -209,11 +206,9 @@ async function runArrowEffect(state: EffectState, card: ICard, quantity: number,
       refundLastSpell(state, prediction, 'no target, mana refunded')
     }
   });
-
-  nextArrowIndex = arrowIndex;
   return { state, predictedArrowCollisions };
-
 }
+
 export default spell;
 // Returns the start and end point that an arrow will take until it hits a wall
 export function findArrowPath(casterPositionAtTimeOfCast: Vec2, target: Vec2, underworld: Underworld): LineSegment | undefined {

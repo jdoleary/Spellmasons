@@ -4,7 +4,7 @@ import { EffectState, Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getAngleBetweenVec2s, getEndpointOfMagnitudeAlongVector } from '../jmath/Vec';
 import Underworld from '../Underworld';
-import regularArrow, { ArrowProps, makeArrowEffect } from './arrow';
+import regularArrow, { ArrowProps, arrowEffect } from './arrow';
 import { raceTimeout } from '../Promise';
 import { arrowTripleCardId } from './arrow_triple';
 
@@ -37,7 +37,7 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'arrow',
     description: ['spell_arrow_fork', arrowProps.damage.toString()],
-    effect: makeArrowEffect(arrowProps)
+    effect: arrowEffect(arrowProps)
   }
 };
 
@@ -49,7 +49,7 @@ async function fireForkedArrows(state: EffectState, unit: Unit.IUnit, underworld
       const angle = getAngleBetweenVec2s(state.casterUnit, unit) + newAngle;
       const castLocation = getEndpointOfMagnitudeAlongVector(unit, angle, 10_000);
       // Override casterUnit as firstTarget so forked arrows don't hit the target that they are forking off of
-      promises.push(makeArrowEffect(forkedArrowProps)({ ...state, casterPositionAtTimeOfCast: unit, targetedUnits: [], casterUnit: unit, castLocation }, regularArrow.card, 1, underworld, prediction));
+      promises.push(arrowEffect(forkedArrowProps)({ ...state, casterPositionAtTimeOfCast: unit, targetedUnits: [], casterUnit: unit, castLocation }, regularArrow.card, 1, underworld, prediction));
     }
     Promise.all(promises).then(() => {
       resolve(state);

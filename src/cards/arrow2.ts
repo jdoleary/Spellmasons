@@ -1,7 +1,7 @@
 import { CardCategory } from '../types/commonTypes';
 import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
-import { ArrowProps, arrowCardId, makeArrowEffect } from './arrow';
+import { ArrowProps, arrowCardId, arrowEffect } from './arrow';
 
 export const arrow2CardId = 'Arrow 2';
 const arrowProps: ArrowProps = {
@@ -25,7 +25,7 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'arrow',
     description: ['spell_arrow', arrowProps.damage.toString()],
-    effect: makeArrowEffect(arrowProps)
+    effect: arrowEffect(arrowProps)
   }
 };
 export default spell;

@@ -4,7 +4,7 @@ import { refundLastSpell, Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import * as math from '../jmath/math';
 import { Vec2 } from '../jmath/Vec';
-import { makeArrowEffect, ArrowProps } from './arrow';
+import { arrowEffect, ArrowProps } from './arrow';
 
 export const phantomArrowCardId = 'Phantom Arrow';
 const arrowProps: ArrowProps = {
@@ -28,7 +28,7 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'phantomArrow',
     description: ['spell_phantom_arrow', arrowProps.damage.toString()],
-    effect: makeArrowEffect(arrowProps)
+    effect: arrowEffect(arrowProps)
   }
 };
 export default spell;
