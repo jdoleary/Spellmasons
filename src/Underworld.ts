@@ -2535,7 +2535,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   getFreeUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
     player.freeSpells.push(upgrade.title);
     upgrade.effect(player, this);
-    player.upgrades.push(upgrade);
+    player.upgrades.push(upgrade.title);
     // Recalc cards so the card changes show up
     CardUI.recalcPositionForCards(player, this);
   }
@@ -2557,7 +2557,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Special upgrades don't get added to the upgrade list because they just
     // execute some functionality on the client side
     if (upgrade.type !== 'special' && upgrade.type !== 'mageType') {
-      player.upgrades.push(upgrade);
+      player.upgrades.push(upgrade.title);
     }
     if (player == globalThis.player) {
       document.body?.querySelector(`.card[data-upgrade="${upgrade.title}"]`)?.classList.toggle('chosen', true);

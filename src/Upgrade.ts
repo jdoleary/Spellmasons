@@ -50,9 +50,9 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
       ? // Always include upgrades that don't have a specified maxCopies
       true
       : // Filter out  upgrades that the player can't have more of
-      player.upgrades.filter((pu) => pu.title === u.title).length <
+      player.upgrades.filter((pu) => pu === u.title).length <
       u.maxCopies)
-    && (u.requires ? u.requires.every(title => player.upgrades.find(u => u.title == title)) : true)
+    && (u.requires ? u.requires.every(title => player.upgrades.find(u => u == title)) : true)
     // Now that upgrades are cards too, make sure it doesn't
     // show upgrades that the player already has as cards
     && !player.inventory.includes(u.title)

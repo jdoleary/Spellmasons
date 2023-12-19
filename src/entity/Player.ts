@@ -78,8 +78,8 @@ export interface IPlayer {
   // A list of spells that don't take up an upgrade count because they are obtained by other
   // means than by pickup up scrolls
   freeSpells: string[];
-  // The spells and perks that a player has chosen
-  upgrades: Upgrade.IUpgrade[];
+  // The titles of the spells and perks upgrades that a player has chosen
+  upgrades: string[];
   upgradesLeftToChoose: number;
   perksLeftToChoose: number;
   // Note: call updateCardManaBadges() any time you modify cardUsageCounts so it will
@@ -388,6 +388,10 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
     }
     return;
   }
+  // @ts-ignore: Backwards compatibility.  Player.upgrades array has been changed to a list
+  // of upgrade titles because the whole upgrade need not be stored, only the title is used.
+  // This line converts old save file data to the new list of just titles.
+  player.upgrades = player.upgrades.map(u => typeof u === 'object' ? u.title : u);
   const playerLoaded: IPlayer = {
     // @ts-ignore: Allow overwrite by spread for backwards compatibility
     statPointsUnspent: 0,
