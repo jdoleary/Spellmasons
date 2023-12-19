@@ -172,7 +172,7 @@ export function arrowEffect(arrowProps: ArrowProps) {
               Unit.takeDamage(unit, arrowProps.damage, state.casterPositionAtTimeOfCast, underworld, prediction, undefined, { thinBloodLine: true });
               targetsHitCount++;
               if (arrowProps.onCollide) {
-                arrowProps.onCollide(state, unit, underworld, prediction);
+                await Promise.resolve(arrowProps.onCollide(state, unit, underworld, prediction));
               }
 
               // push all collisions to this arrow index's array
