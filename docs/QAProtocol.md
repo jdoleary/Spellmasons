@@ -25,6 +25,7 @@
 - Merge master branch to keep it up to date
 - Test loading an old save file for backwards compatibility
 ---
+- test mods in multiplayer due to new onTurnEnd invokations
 - qa new connect
 - Make sure it's impossible to get stuck in infinite loop
 - check that it runs on multiplayer
