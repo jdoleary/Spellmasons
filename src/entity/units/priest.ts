@@ -60,11 +60,11 @@ const unit: UnitSource = {
   unitProps: {
     damage: 0,
     attackRange: 500,
-    healthMax: 20,
+    healthMax: 40,
     mana: 90,
     manaMax: 90,
-    manaPerTurn: 45,
-    manaCostToCast: 90,
+    manaPerTurn: 30,
+    manaCostToCast: 60,
   },
   spawnParams: {
     probability: 20,

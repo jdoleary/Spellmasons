@@ -877,7 +877,7 @@ export function updateTooltipContent(underworld: Underworld) {
           }
           const extraText = `
 ${modifiersToText(globalThis.selectedUnit.modifiers)}
-${unitSource.unitProps.manaCostToCast && unitSource.unitProps.manaCostToCast > 0 ? `${i18n('mana cost to cast')}: ${unitSource.unitProps.manaCostToCast}` : ''}
+${globalThis.selectedUnit.manaCostToCast && globalThis.selectedUnit.manaCostToCast > 0 ? `${i18n('mana cost to cast')}: ${globalThis.selectedUnit.manaCostToCast}` : ''}
           `.trim();
           // NOTE: globalThis.selectedUnit.name is NOT localized on purpose
           // because those are user provided names

@@ -75,7 +75,7 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
       // Prevent picking the same upgrade twice
       .filter(filterUpgrades)
       // Ensure they pick from only damage cards
-      .filter(c => (![bleedCardId, drownCardId].includes(c.title) && c.cardCategory == CardCategory.Damage) || [poisonCardId, suffocateCardId].includes(c.title));
+      .filter(c => (![bleedCardId, drownCardId].includes(c.title) && c.cardCategory == CardCategory.Damage) || [poisonCardId].includes(c.title));
   }
   if (isPickingClass(player)) {
     return upgradeMageClassSource;
