@@ -18,7 +18,7 @@ const unit: UnitSource = {
   },
   unitProps: {
     damage: 50,
-    healthMax: 120,
+    healthMax: 60,
     mana: 60,
     manaMax: 60,
     manaPerTurn: 0,
@@ -26,9 +26,9 @@ const unit: UnitSource = {
     bloodColor: bloodVampire,
   },
   spawnParams: {
-    probability: 15,
+    probability: 20,
     budgetCost: 8,
-    unavailableUntilLevelIndex: 7,
+    unavailableUntilLevelIndex: 6,
   },
   animations: {
     idle: 'units/vampireIdle',
@@ -42,6 +42,11 @@ const unit: UnitSource = {
     death: 'vampireDeath'
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
+    Unit.addModifier(unit, blood_curse.id, underworld, false);
+    // vampires have innate blood curse property, and keep it on death 
+    if (unit.modifiers[blood_curse.id]) {
+      unit.modifiers[blood_curse.id].keepOnDeath = true;
+    }
   },
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     await meleeAction(unit, attackTargets, underworld, canAttackTarget, async (attackTarget: Unit.IUnit) => {

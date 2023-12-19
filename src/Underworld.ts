@@ -4155,12 +4155,13 @@ function getEnemiesForAltitude(underworld: Underworld, levelIndex: number): stri
   // Now that we've determined which unit types will be in the level we have to
   // budget out the quantity
   let units = [];
-  const baseDifficultyMultiplier = 3;
-  const startAcceleratingDifficultyAtLevelIndex = 5;
-  const difficultyMultiplier = adjustedLevelIndex >= startAcceleratingDifficultyAtLevelIndex
-    ? baseDifficultyMultiplier + adjustedLevelIndex + 1 - startAcceleratingDifficultyAtLevelIndex
-    : baseDifficultyMultiplier;
-  let budgetLeft = (adjustedLevelIndex + 1) * difficultyMultiplier + 2;
+  // const baseDifficultyMultiplier = 3;
+  // const startAcceleratingDifficultyAtLevelIndex = 5;
+  // const difficultyMultiplier = adjustedLevelIndex >= startAcceleratingDifficultyAtLevelIndex
+  //   ? baseDifficultyMultiplier + adjustedLevelIndex + 1 - startAcceleratingDifficultyAtLevelIndex
+  //   : baseDifficultyMultiplier;
+  // this curve has a slightly easier stage 1-2 and a harder midgame, but is very similar overall
+  let budgetLeft = 3 + Math.pow((adjustedLevelIndex + 1), 1.9);
   const connectedClients = underworld.players.filter(p => p.clientConnected);
   if (connectedClients.length > config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES) {
     const budgetMultiplier = 1 + (1 / config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES) * (connectedClients.length - config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES);

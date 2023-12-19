@@ -28,7 +28,7 @@ const unit: UnitSource = {
     bloodColor: bloodPoisoner,
   },
   spawnParams: {
-    probability: 15,
+    probability: 20,
     budgetCost: 5,
     unavailableUntilLevelIndex: 3,
   },

@@ -14,9 +14,9 @@ const unit: UnitSource = {
     subtype: UnitSubType.MELEE,
   },
   unitProps: {
-    damage: 30,
-    staminaMax: config.UNIT_BASE_STAMINA,
-    healthMax: 20,
+    damage: 20,
+    staminaMax: config.PLAYER_BASE_ATTACK_RANGE,
+    healthMax: 40,
     manaMax: 0,
   },
   spawnParams: {

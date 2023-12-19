@@ -29,7 +29,7 @@ const unit: UnitSource = {
   spawnParams: {
     probability: 20,
     budgetCost: 10,
-    unavailableUntilLevelIndex: 8,
+    unavailableUntilLevelIndex: 6,
   },
   animations: {
     idle: 'units/priestIdle',

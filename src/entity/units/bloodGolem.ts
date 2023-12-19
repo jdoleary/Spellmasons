@@ -16,15 +16,15 @@ const unit: UnitSource = {
   },
   unitProps: {
     damage: 40,
-    staminaMax: config.UNIT_BASE_STAMINA * 1.2,
-    healthMax: 60,
+    staminaMax: config.UNIT_BASE_STAMINA,
+    healthMax: 80,
     manaMax: 0,
     bloodColor: 0x8a2e2e,
   },
   spawnParams: {
     probability: 100,
     budgetCost: 4,
-    unavailableUntilLevelIndex: 4,
+    unavailableUntilLevelIndex: 3,
   },
   animations: {
     idle: 'units/gruntIdle',

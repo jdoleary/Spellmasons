@@ -30,7 +30,7 @@ const unit: UnitSource = {
   spawnParams: {
     probability: 40,
     budgetCost: 4,
-    unavailableUntilLevelIndex: 2,
+    unavailableUntilLevelIndex: 1,
   },
   animations: {
     idle: 'units/lobberIdle',

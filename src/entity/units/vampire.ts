@@ -24,9 +24,9 @@ const unit: UnitSource = {
     bloodColor: 0x293a1b,
   },
   spawnParams: {
-    probability: 15,
+    probability: 20,
     budgetCost: 5,
-    unavailableUntilLevelIndex: 5,
+    unavailableUntilLevelIndex: 3,
   },
   animations: {
     idle: 'units/vampireIdle',
@@ -41,7 +41,7 @@ const unit: UnitSource = {
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     Unit.addModifier(unit, blood_curse.id, underworld, false);
-    //vampire has innate blood curse property, and keeps it on death 
+    // vampires have innate blood curse property, and keep it on death 
     if (unit.modifiers[blood_curse.id]) {
       unit.modifiers[blood_curse.id].keepOnDeath = true;
     }

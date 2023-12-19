@@ -59,7 +59,7 @@ const unit: UnitSource = {
   },
   action: async (unit: Unit.IUnit, attackTargets, underworld: Underworld) => {
     // attackTargets has irregular usage for this unit, see explanation in this file's getUnitAttackTargets()
-    await summonerAction(unit, !!attackTargets.length, underworld, { closeUnit: allUnits[MANA_VAMPIRE_ID], farUnit: allUnits[DARK_PRIEST_ID] }, 3);
+    await summonerAction(unit, !!attackTargets.length, underworld, { closeUnit: allUnits[MANA_VAMPIRE_ID], farUnit: allUnits[DARK_PRIEST_ID] }, 2);
   },
   getUnitAttackTargets: summonerGetUnitAttackTargets
 };

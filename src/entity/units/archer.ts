@@ -17,9 +17,9 @@ const unit: UnitSource = {
     subtype: UnitSubType.RANGED_LOS,
   },
   unitProps: {
-    damage: 10,
-    attackRange: 500,
-    healthMax: 40,
+    damage: 20,
+    attackRange: 400,
+    healthMax: 20,
     manaMax: 0,
   },
   spawnParams: {

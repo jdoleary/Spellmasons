@@ -21,7 +21,7 @@ const unit: UnitSource = {
   unitProps: {
     damage: 40,
     attackRange: 600,
-    healthMax: 80,
+    healthMax: 60,
     manaMax: 0,
     bloodColor: 0x324860,
   },
