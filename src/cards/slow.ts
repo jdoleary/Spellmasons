@@ -11,7 +11,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
 export const id = 'slow';
-const changeProportion = 0.80;
+const changeProportion = 0.75;
 function remove(unit: Unit.IUnit, underworld: Underworld) {
   if (!unit.modifiers[id]) {
     console.error(`Missing modifier object for ${id}; cannot remove.  This should never happen`);
@@ -54,7 +54,7 @@ const spell: Spell = {
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.UNCOMMON],
+    probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconSlow.png',
     animationPath: '',
     description: ['spell_slow', Math.floor(changeProportion * 100).toString()],

@@ -8,7 +8,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { heal_greater_id } from './heal_greater';
 
 export const heal_mass_id = 'Mass Heal';
-const healAmount = 10;
+const healAmount = 40;
 
 const spell: Spell = {
   card: {
@@ -19,7 +19,7 @@ const spell: Spell = {
     category: CardCategory.Blessings,
     sfx: 'heal',
     supportQuantity: true,
-    manaCost: 25,
+    manaCost: 40,
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.FORBIDDEN],

@@ -22,7 +22,7 @@ const spell: Spell = {
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.SPECIAL],
+    probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconDrown.png',
     sfx: 'drown',
     description: ['spell_drown', damageDone.toString()],

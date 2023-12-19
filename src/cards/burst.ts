@@ -11,8 +11,8 @@ import { makeBurstParticles } from '../graphics/ParticleCollection';
 export const burstCardId = 'Burst';
 const maxDamage = 50;
 function calculateDamage(stack: number, casterPositionAtTimeOfCast: Vec2, casterAttackRange: number, target: Vec2): number {
-    const dist = distance(casterPositionAtTimeOfCast, target)
-    return Math.ceil(lerp(maxDamage, 0, (dist - config.COLLISION_MESH_RADIUS) / casterAttackRange) * stack);
+  const dist = distance(casterPositionAtTimeOfCast, target)
+  return Math.ceil(lerp(maxDamage, 0, (dist - config.COLLISION_MESH_RADIUS) / casterAttackRange) * stack);
 }
 export interface UnitDamage {
   id: number;
@@ -30,7 +30,7 @@ const spell: Spell = {
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.RARE],
+    probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconBurst.png',
     animationPath: '',
     sfx: 'burst',

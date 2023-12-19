@@ -12,7 +12,7 @@ const spell: Spell = {
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.UNCOMMON],
+    probability: probabilityMap[CardRarity.SPECIAL],
     thumbnail: 'spellIconPlusRadius.png',
     requiresFollowingCard: true,
     description: 'spell_plus_radius',

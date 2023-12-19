@@ -21,7 +21,7 @@ const spell: Spell = {
     healthCost: 0,
     cooldown: 2,
     expenseScaling: 3,
-    probability: probabilityMap[CardRarity.COMMON],
+    probability: probabilityMap[CardRarity.SPECIAL],
     thumbnail: 'spellIconFreeze.png',
     animationPath: 'spell-effects/spellFreeze',
     description: 'spell_freeze',

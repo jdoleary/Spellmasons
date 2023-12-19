@@ -16,7 +16,7 @@ const spell: Spell = {
     id: resurrect_weak_id,
     category: CardCategory.Soul,
     sfx: 'resurrect',
-    manaCost: 70,
+    manaCost: 60,
     healthCost: 0,
     cooldown: 1,
     expenseScaling: 3,

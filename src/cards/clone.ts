@@ -14,10 +14,10 @@ const spell: Spell = {
   card: {
     id,
     category: CardCategory.Soul,
-    manaCost: 80,
+    manaCost: 120,
     healthCost: 0,
     probability: probabilityMap[CardRarity.FORBIDDEN],
-    expenseScaling: 4,
+    expenseScaling: 2,
     thumbnail: 'spellIconClone.png',
     description: 'spell_clone',
     effect: async (state, card, quantity, underworld, prediction) => {

@@ -15,7 +15,7 @@ const spell: Spell = {
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.UNCOMMON],
+    probability: probabilityMap[CardRarity.SPECIAL],
     thumbnail: 'spellIconPurify.png',
     animationPath: 'spell-effects/spellPurify',
     description: 'spell_purify',

@@ -63,7 +63,7 @@ const spell: Spell = {
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.UNCOMMON],
+    probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconPoison.png',
     animationPath: 'spell-effects/spellPoison',
     description: ['spell_poison', baseDamage.toString()],

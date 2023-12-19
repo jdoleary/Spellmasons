@@ -21,7 +21,7 @@ const spell: Spell = {
     id: contaminate_id,
     category: CardCategory.Curses,
     supportQuantity: true,
-    manaCost: 50,
+    manaCost: 40,
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.RARE],

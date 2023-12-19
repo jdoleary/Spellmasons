@@ -64,7 +64,7 @@ const spell: Spell = {
     manaCost: 15,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.COMMON],
+    probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconBloat.png',
     description: ['spell_bloat', id, damage.toString(), id],
     effect: async (state, card, quantity, underworld, prediction) => {

@@ -35,7 +35,7 @@ const spell: Spell = {
     manaCost: 15,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.COMMON],
+    probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconLastWill.png',
     description: 'spell_last_will',
     effect: async (state, card, quantity, underworld, prediction) => {

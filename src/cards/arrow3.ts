@@ -5,14 +5,14 @@ import { arrowEffect } from './arrow';
 import { arrow2CardId } from './arrow2';
 
 export const arrow3CardId = 'Arrow3';
-const damageDone = 30;
+const damageDone = 40;
 const spell: Spell = {
   card: {
     id: arrow3CardId,
     replaces: [arrow2CardId],
     category: CardCategory.Damage,
     supportQuantity: true,
-    manaCost: 22,
+    manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],

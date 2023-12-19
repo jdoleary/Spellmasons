@@ -20,7 +20,7 @@ const spell: Spell = {
     supportQuantity: true,
     manaCost: 90,
     healthCost: 0,
-    cooldown: 2,
+    cooldown: 1,
     expenseScaling: 3,
     probability: probabilityMap[CardRarity.RARE],
     onlySelectDeadUnits: true,

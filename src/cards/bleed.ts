@@ -36,7 +36,7 @@ const spell: Spell = {
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.RARE],
+    probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconBleed.png',
     // no animation path, animation is done with particles
     animationPath: '',
