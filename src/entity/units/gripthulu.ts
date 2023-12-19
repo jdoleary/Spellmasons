@@ -27,7 +27,7 @@ const unit: UnitSource = {
     bloodColor: bloodGripthulu,
   },
   spawnParams: {
-    probability: 20,
+    probability: 0,
     budgetCost: 4,
     unavailableUntilLevelIndex: 7,
   },
