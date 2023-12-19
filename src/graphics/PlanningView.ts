@@ -423,9 +423,9 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
 
         const manaBarMax = u.manaMax || 1;
 
+        //background for mana using units
         let manaBarProps = getFillRect(u, 0, manaBarMax, 0, manaBarMax, zoom);
         if (u.manaMax > 0) {
-          //background for mana using units
           globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
           globalThis.unitOverlayGraphics.beginFill(0x111111, 0.8);
           globalThis.unitOverlayGraphics.drawRect(
@@ -435,7 +435,6 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
             manaBarProps.height
           );
         }
-
         //current mana
         manaBarProps = getFillRect(u, 0, manaBarMax, 0, u.mana, zoom);
         globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
@@ -447,27 +446,28 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
           manaBarProps.height
         );
 
-        // Show mana bar prediction
-        if (predictionUnit) {
-          const manaAfterPrediction = predictionUnit.mana;
-          if (manaAfterPrediction < u.mana) {
-            globalThis.unitOverlayGraphics.beginFill(colors.manaDarkBlue, 1.0);
-          }
-          else {
-            globalThis.unitOverlayGraphics.beginFill(colors.manaBrightBlue, 1.0);
-          }
+        if (underworld.turn_phase == turn_phase.PlayerTurns && globalThis.unitOverlayGraphics) {
+          // Show mana bar prediction
+          if (predictionUnit) {
+            const manaAfterPrediction = predictionUnit.mana;
+            if (manaAfterPrediction < u.mana) {
+              globalThis.unitOverlayGraphics.beginFill(colors.manaDarkBlue, 1.0);
+            }
+            else {
+              globalThis.unitOverlayGraphics.beginFill(colors.manaBrightBlue, 1.0);
+            }
 
-          let fillRect = getFillRect(u, 0, manaBarMax, u.mana, manaAfterPrediction, zoom);
-          globalThis.unitOverlayGraphics.drawRect(
-            fillRect.x,
-            fillRect.y,
-            fillRect.width,
-            fillRect.height);
+            let fillRect = getFillRect(u, 0, manaBarMax, u.mana, manaAfterPrediction, zoom);
+            globalThis.unitOverlayGraphics.drawRect(
+              fillRect.x,
+              fillRect.y,
+              fillRect.width,
+              fillRect.height);
+          }
+          globalThis.unitOverlayGraphics.endFill();
         }
-        globalThis.unitOverlayGraphics.endFill();
       }
     }
-
   }
 }
 
@@ -877,7 +877,7 @@ export function updateTooltipContent(underworld: Underworld) {
           }
           const extraText = `
 ${modifiersToText(globalThis.selectedUnit.modifiers)}
-${unitSource.unitProps.manaCostToCast && unitSource.unitProps.manaCostToCast > 0 ? `${i18n('mana cost to cast')}: ${unitSource.unitProps.manaCostToCast}` : ''}
+${globalThis.selectedUnit.manaCostToCast && globalThis.selectedUnit.manaCostToCast > 0 ? `${i18n('mana cost to cast')}: ${globalThis.selectedUnit.manaCostToCast}` : ''}
           `.trim();
           // NOTE: globalThis.selectedUnit.name is NOT localized on purpose
           // because those are user provided names

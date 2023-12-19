@@ -37,10 +37,10 @@ const unit: UnitSource = {
     damage: 0,
     attackRange: 550,
     healthMax: 120,
-    mana: 60,
-    manaMax: 90,
+    mana: 90,
+    manaMax: 120,
     manaPerTurn: 30,
-    manaCostToCast: 90,
+    manaCostToCast: 120,
   },
   spawnParams: {
     probability: 20,

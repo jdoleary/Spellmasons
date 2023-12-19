@@ -21,8 +21,9 @@ async function resurrectUnits(self: Unit.IUnit, units: Unit.IUnit[], underworld:
     return false;
   }
   playSFXKey('priestAttack');
-  let didResurrect = false;
   await Unit.playAnimation(self, unit.animations.attack);
+  let manaBeforeCast = self.mana;
+  let didResurrect = false;
   let promises = [];
   for (let ally of units) {
     promises.push(animatePriestProjectileAndHit(self, ally).then(async () => {
@@ -43,9 +44,9 @@ async function resurrectUnits(self: Unit.IUnit, units: Unit.IUnit[], underworld:
     didResurrect = true;
   }
   await Promise.all(promises);
-  // Ensure priest never goes below 0 mana
-  // This is a bandaid because a miniboss priest will cast multiple times drawing mana from each cast
-  self.mana = Math.max(0, self.mana);
+
+  // Fixes an issue where cast card resurrect would cause incorrect mana cost
+  self.mana = manaBeforeCast - self.manaCostToCast;
   return didResurrect;
 
 }
@@ -60,11 +61,11 @@ const unit: UnitSource = {
   unitProps: {
     damage: 0,
     attackRange: 500,
-    healthMax: 20,
+    healthMax: 40,
     mana: 90,
     manaMax: 90,
-    manaPerTurn: 45,
-    manaCostToCast: 90,
+    manaPerTurn: 30,
+    manaCostToCast: 60,
   },
   spawnParams: {
     probability: 20,

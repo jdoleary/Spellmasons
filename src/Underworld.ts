@@ -2778,10 +2778,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
                 }
                 return '';
               }
-              if (stat == 'attackRange') {
-                // Display default attackRange as "100"
-                return Math.floor(100 * value / config.PLAYER_BASE_ATTACK_RANGE);
-              }
               return value;
             }
             const elStatUpgradeRow = (stat: string) => `<tr class="stat-row">
