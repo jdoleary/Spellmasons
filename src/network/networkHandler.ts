@@ -79,7 +79,8 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
     case MESSAGE_TYPES.CLIENT_SEND_PLAYER_TO_SERVER:
       // This message is only ever handled by the host.  It is for the client
       // to send it's Player state to the host because the client is the source of truth for the player object
-      if (isHost(overworld.pie) && overworld.underworld) {
+      // Do NOT process this message for hotseat or else it will may overwrite a player https://github.com/jdoleary/Spellmasons/issues/198
+      if (isHost(overworld.pie) && overworld.underworld && globalThis.numberOfHotseatPlayers == 1) {
         const { player } = payload;
         const foundPlayerIndex = overworld.underworld.players.findIndex(p => p.clientId == player.clientId);
         if (foundPlayerIndex !== undefined) {

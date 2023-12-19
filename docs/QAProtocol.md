@@ -5,6 +5,7 @@
 - Test Host Local Server, Host via Docker (run `testDockerImage.sh`)
 - Test loading a saved multiplayer game
 - Test Hotseat multiplayer basics
+    - Test one player dying and next player carrying on to next level and make sure they both spawn
 - Test liquid
 - Test rerolling spells and perks
 - Test all pickups in singleplayer
