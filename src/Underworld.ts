@@ -4134,7 +4134,7 @@ function getEnemiesForAltitude(underworld: Underworld, levelIndex: number): stri
   // Prevent negative values which can happen during tutorial
   const adjustedLevelIndex = Math.max(0, levelIndex);
 
-  const numberOfTypesOfEnemies = 2 + Math.floor(adjustedLevelIndex / 2);
+  const numberOfTypesOfEnemies = Math.min(2 + Math.floor(adjustedLevelIndex / 2), 6);
   const { unitMinLevelIndexSubtractor, budgetMultiplier: difficultyBudgetMultiplier } = unavailableUntilLevelIndexDifficultyModifier(underworld);
   let possibleUnitsToChoose = Object.values(allUnits)
     .filter(u => u.spawnParams && (u.spawnParams.unavailableUntilLevelIndex - unitMinLevelIndexSubtractor) <= adjustedLevelIndex && u.spawnParams.probability > 0 && isModActive(u, underworld))
@@ -4152,66 +4152,93 @@ function getEnemiesForAltitude(underworld: Underworld, levelIndex: number): stri
     })
     // Sort by most expensive first
     .sort((a, b) => b.budgetCost - a.budgetCost);
+
+  console.log('Chose unit types ', unitTypes, " for level index ", levelIndex);
   // Now that we've determined which unit types will be in the level we have to
   // budget out the quantity
   let units = [];
-  // const baseDifficultyMultiplier = 3;
-  // const startAcceleratingDifficultyAtLevelIndex = 5;
-  // const difficultyMultiplier = adjustedLevelIndex >= startAcceleratingDifficultyAtLevelIndex
-  //   ? baseDifficultyMultiplier + adjustedLevelIndex + 1 - startAcceleratingDifficultyAtLevelIndex
-  //   : baseDifficultyMultiplier;
   // this curve has a slightly easier stage 1-2 and a harder midgame, but is very similar overall
-  let budgetLeft = 3 + Math.pow((adjustedLevelIndex + 1), 1.9);
+  let budgetLeft = 5 + 2 * Math.pow((adjustedLevelIndex + 1), 2);
   const connectedClients = underworld.players.filter(p => p.clientConnected);
   if (connectedClients.length > config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES) {
     const budgetMultiplier = 1 + (1 / config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES) * (connectedClients.length - config.NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES);
-    console.log('Difficulty: Increase budget by', budgetMultiplier, ' due to the number of players connected');
+    console.log('Difficulty: Multiply budget by', budgetMultiplier, ' due to the number of players connected');
     budgetLeft *= budgetMultiplier;
   }
-  console.log('Difficulty: Increase budget by', difficultyBudgetMultiplier, ' due to difficulty', underworld.gameMode);
+  console.log('Difficulty: Multiply budget by', difficultyBudgetMultiplier, ' due to difficulty', underworld.gameMode);
   budgetLeft *= difficultyBudgetMultiplier;
   budgetLeft = Math.floor(budgetLeft);
+
   console.log('Budget for level index', adjustedLevelIndex, 'is', budgetLeft);
-  const totalBudget = budgetLeft;
   if (levelIndex == config.LAST_LEVEL_INDEX) {
     budgetLeft -= 20;
     units.push(bossmasonUnitId);
   }
+
+
+  const totalBudget = budgetLeft;
+  // Max budget for one unit type, based on how many unit types how many types are chosen
+  // 1 type = 100%, 2=75%, 3=60%, 4=50%, 5=42%, 6=37.5%
+  const maxBudgetPerType = budgetLeft * (3 / ((Math.min(unitTypes.length, 8) + 2)));
+
   // How we choose:
-  // 1. Start with the most expensive unit and random a number between 1 and 50% budget / unit budget cost
+  // 1. Start with the most expensive unit and random a number between 1 and max spawnable amount
   // 2. Keep iterating with other units
   while (budgetLeft > 0) {
     if (unitTypes.length == 0) {
       console.error('No Unit types to pick from')
       break;
     }
-    for (let chosenUnitType of unitTypes
-      // Sort by most expensive first
-      .sort((a, b) => b.budgetCost - a.budgetCost)) {
+    let budgetSpent = 0;
+    for (let chosenUnitType of unitTypes) {
       // Prevent overspend
       if (chosenUnitType.budgetCost > budgetLeft) {
-        // Prevent infinite loop
-        budgetLeft--;
         continue;
       }
-      // Never let one unit type take up more than 70% of the budget (this prevents a level from being
-      // mostly an expensive unit)
-      // and never let one unit type have more instances than the levelIndex (this prevents
-      // late game levels with a huge budget from having an absurd amount of cheap units)
-      const maxNumberOfThisUnit = Math.min(Math.max(levelIndex, 1), Math.floor(totalBudget * 0.7 / chosenUnitType.budgetCost));
-      const howMany = randInt(1, maxNumberOfThisUnit, underworld.random);
-      for (let i = 0; i < howMany; i++) {
-        units.push(chosenUnitType.id);
-        budgetLeft -= chosenUnitType.budgetCost;
-      }
-      if (howMany <= 0) {
-        // Prevent infinite loop
-        budgetLeft--;
-        continue;
 
+      // Never let one unit type have too many instances (max at 8 or levelindex + 2)
+      let maxNumberOfThisUnit = Math.min(Math.min(adjustedLevelIndex + 2, 8), Math.floor(maxBudgetPerType / chosenUnitType.budgetCost));
+      maxNumberOfThisUnit -= units.filter(u => u == chosenUnitType.id).length;
+      console.log(budgetLeft, maxNumberOfThisUnit, chosenUnitType);
+      if (maxNumberOfThisUnit > 0) {
+        // If I'm a special unit, first one free!
+        // Encourages a stronger "theme", prevents low enemy count levels
+        if (chosenUnitType.budgetCost > 10 && !units.includes(chosenUnitType.id)) {
+          units.push(chosenUnitType.id);
+        }
+        const howMany = randInt(1, maxNumberOfThisUnit, underworld.random);
+        for (let i = 0; i < howMany; i++) {
+          units.push(chosenUnitType.id);
+          budgetLeft -= chosenUnitType.budgetCost;
+          budgetSpent += chosenUnitType.budgetCost;
+        }
       }
     }
+    if (budgetSpent == 0) {
+      // Couldn't spawn anything, break out of infinite loop
+      console.log("Couldn't spawn anything with remaining budget:", budgetLeft);
+      break;
+    }
   }
+
+  // Backup: Add filler units if we only end up spawning a couple powerful ones
+  while ((levelIndex >= 3 && units.length < 8) || units.length < totalBudget / 10 && units.length < 16) {
+    if (randInt(1, 2) == 1) {
+      console.log("Budget: Added filler golem");
+      units.push(BLOOD_GOLEM_ID);
+    }
+    else {
+      console.log("Budget: Added filler archer");
+      units.push(BLOOD_ARCHER_ID);
+    }
+  }
+
+  // Backup: Too many units! Merge them
+  // while (units.length > 30) {
+  //   console.log("Budget: Upgraded existing unit");
+  //   //find X golem/archer/glop and remove them, then add upgraded version
+  // }
+
   return units;
 }
 

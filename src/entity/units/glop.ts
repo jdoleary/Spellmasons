@@ -28,8 +28,8 @@ const unit: UnitSource = {
     bloodColor: bloodLobber,
   },
   spawnParams: {
-    probability: 40,
-    budgetCost: 4,
+    probability: 20,
+    budgetCost: 8,
     unavailableUntilLevelIndex: 1,
   },
   animations: {

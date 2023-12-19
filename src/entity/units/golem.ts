@@ -20,8 +20,8 @@ const unit: UnitSource = {
     manaMax: 0,
   },
   spawnParams: {
-    probability: 100,
-    budgetCost: 1,
+    probability: 10,
+    budgetCost: 2,
     unavailableUntilLevelIndex: 0,
   },
   animations: {

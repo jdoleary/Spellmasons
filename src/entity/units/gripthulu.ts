@@ -19,7 +19,9 @@ const unit: UnitSource = {
     subtype: UnitSubType.SPECIAL_LOS,
   },
   unitProps: {
+    damage: 40,
     attackRange: 500,
+    healthMax: 60,
     mana: 30,
     manaMax: 30,
     manaPerTurn: 10,
@@ -28,7 +30,7 @@ const unit: UnitSource = {
   },
   spawnParams: {
     probability: 20,
-    budgetCost: 4,
+    budgetCost: 12,
     unavailableUntilLevelIndex: 6,
   },
   animations: {

@@ -43,8 +43,8 @@ const unit: UnitSource = {
     manaCostToCast: 120,
   },
   spawnParams: {
-    probability: 20,
-    budgetCost: 7,
+    probability: 30,
+    budgetCost: 25,
     unavailableUntilLevelIndex: 6,
   },
   action: async (unit: Unit.IUnit, attackTargets, underworld: Underworld) => {

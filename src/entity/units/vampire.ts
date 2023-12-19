@@ -18,14 +18,14 @@ const unit: UnitSource = {
     subtype: UnitSubType.MELEE,
   },
   unitProps: {
-    damage: 50,
-    healthMax: 70,
+    damage: 60,
+    healthMax: 100,
     manaMax: 0,
     bloodColor: 0x293a1b,
   },
   spawnParams: {
     probability: 20,
-    budgetCost: 5,
+    budgetCost: 15,
     unavailableUntilLevelIndex: 3,
   },
   animations: {

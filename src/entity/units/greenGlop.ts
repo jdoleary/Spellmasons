@@ -31,8 +31,8 @@ const unit: UnitSource = {
     bloodColor: 0x63c572,
   },
   spawnParams: {
-    probability: 40,
-    budgetCost: 9,
+    probability: 60,
+    budgetCost: 15,
     unavailableUntilLevelIndex: 6,
   },
   animations: {

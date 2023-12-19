@@ -19,6 +19,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
+    damage: 20,
     attackRange: 350,
     healthMax: 60,
     mana: 60,
@@ -28,8 +29,8 @@ const unit: UnitSource = {
     bloodColor: bloodPoisoner,
   },
   spawnParams: {
-    probability: 20,
-    budgetCost: 5,
+    probability: 40,
+    budgetCost: 15,
     unavailableUntilLevelIndex: 3,
   },
   animations: {

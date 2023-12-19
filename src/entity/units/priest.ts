@@ -67,8 +67,8 @@ const unit: UnitSource = {
     manaCostToCast: 60,
   },
   spawnParams: {
-    probability: 20,
-    budgetCost: 9,
+    probability: 30,
+    budgetCost: 15,
     unavailableUntilLevelIndex: 3,
   },
   animations: {

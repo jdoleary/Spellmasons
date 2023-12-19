@@ -19,16 +19,16 @@ const unit: UnitSource = {
   },
   unitProps: {
     damage: 40,
-    attackRange: 264,
-    healthMax: 60,
+    attackRange: 300,
+    healthMax: 80,
     mana: 90,
     manaMax: 90,
     manaPerTurn: 30,
     manaCostToCast: 60,
   },
   spawnParams: {
-    probability: 20,
-    budgetCost: 10,
+    probability: 40,
+    budgetCost: 15,
     unavailableUntilLevelIndex: 6,
   },
   animations: {

@@ -17,8 +17,8 @@ const unit: UnitSource = {
     subtype: UnitSubType.MELEE,
   },
   unitProps: {
-    damage: 50,
-    healthMax: 60,
+    damage: 60,
+    healthMax: 80,
     mana: 60,
     manaMax: 60,
     manaPerTurn: 0,
@@ -27,7 +27,7 @@ const unit: UnitSource = {
   },
   spawnParams: {
     probability: 20,
-    budgetCost: 8,
+    budgetCost: 15,
     unavailableUntilLevelIndex: 6,
   },
   animations: {

@@ -16,7 +16,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
-    damage: 5,
+    damage: 10,
     attackRange: 1200,
     staminaMax: 0,
     healthMax: 30,
@@ -28,7 +28,7 @@ const unit: UnitSource = {
   },
   spawnParams: {
     probability: 30,
-    budgetCost: 2,
+    budgetCost: 6,
     unavailableUntilLevelIndex: 3,
   },
   animations: {

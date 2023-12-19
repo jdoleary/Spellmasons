@@ -38,8 +38,8 @@ const unit: UnitSource = {
     bloodColor: 0x852124,
   },
   spawnParams: {
-    probability: 20,
-    budgetCost: 13,
+    probability: 30,
+    budgetCost: 30,
     unavailableUntilLevelIndex: 9,
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
