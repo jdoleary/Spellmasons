@@ -19,6 +19,7 @@ import { version } from '../../package.json';
 import makeOverworld, { Overworld } from '../Overworld';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
 import { GameMode } from '../types/commonTypes';
+import { elEndTurnBtn } from '../HTMLElements';
 // Locally hosted, locally accessed
 // const wsUri = 'ws://localhost:8080';
 // Locally hosted, available to LAN (use your own IP)
@@ -290,6 +291,12 @@ export function setupPieAndUnderworld() {
     globalThis.joinRoom = (room_info, isHosting) => joinRoom(overworld, room_info, isHosting);
     function connectToSingleplayer() {
       document.body?.classList.toggle('loading', true);
+      // If we just left multiplayer, make sure we change end turn button back to normal
+      const elEndTurnSpan = elEndTurnBtn.querySelector('[data-localize-text]') as HTMLElement;
+      if (elEndTurnSpan.dataset.localizeText != "End Turn") {
+        elEndTurnSpan.dataset.localizeText = "End Turn"
+        elEndTurnSpan.innerText = i18n(elEndTurnSpan.dataset.localizeText);
+      }
       return new Promise<void>((resolve) => {
         // setTimeout allows the UI to refresh before locking up the CPU with
         // heavy level generation code
