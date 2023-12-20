@@ -719,7 +719,7 @@ const spell$9 = {
         updateTooltip$2(unit2);
         if (modifier.graceCountdown <= 0) {
           let healing = calculateGraceHealing(modifier.graceQuantity);
-          Unit$8.takeDamage(unit2, healing, void 0, underworld, false);
+          Unit$8.takeDamage(unit2, healing, void 0, underworld, prediction);
           if (!prediction) {
             FloatingText$4.default({
               coords: unit2,
