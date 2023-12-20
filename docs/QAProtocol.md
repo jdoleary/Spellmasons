@@ -19,19 +19,14 @@
     - and end turn after each to test for desyncs
 - Test all spells in singleplayer: ~24 minutes
 - Test saving if you modify underworld with new elements added to the level that need to be serialized
-- Test hosting LAN server from Electron build
 - Test loading an old save file for backwards compatibility
+- Test hosting LAN server from Electron build
 - Merge master branch to keep it up to date
 - Test tutorial ALWAYS on electron build
 - Test that F12 works in electron build
 ---
-- test mods in multiplayer due to new onTurnEnd invokations
-- qa new connect
-- Make sure it's impossible to get stuck in infinite loop
-- check that it runs on multiplayer
 - test: do rooms get cleaned up immediately (1.26)
 
-TODO: Disable chatbox in singleplayer
 
 # Release protocal
 - QA: 1:44
