@@ -38,6 +38,7 @@ import { explain, EXPLAIN_END_TURN, tutorialCompleteTask } from '../Explain';
 import { Overworld } from '../../Overworld';
 import { summoningSicknessId } from '../../modifierSummoningSickness';
 import { errorRed } from './colors';
+import { isSinglePlayer } from '../../network/wsPieSetup';
 
 export const keyDown = {
   showWalkRope: false,
@@ -158,8 +159,10 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
       }
       break;
     case 'openChat':
-      document.body.classList.toggle('showChat', true);
-      Chat.focusChat(event);
+      if (!isSinglePlayer()) {
+        document.body.classList.toggle('showChat', true);
+        Chat.focusChat(event);
+      }
       break;
     case 'openInventory':
       CardUI.toggleInventory(undefined, undefined, underworld);
