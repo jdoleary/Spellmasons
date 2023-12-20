@@ -18,12 +18,12 @@
 - Test all spells in multiplayer: ~20 minutes
     - and end turn after each to test for desyncs
 - Test all spells in singleplayer: ~24 minutes
-- Test tutorial ALWAYS on electron build
 - Test saving if you modify underworld with new elements added to the level that need to be serialized
 - Test hosting LAN server from Electron build
-- Test that F12 works in electron build
-- Merge master branch to keep it up to date
 - Test loading an old save file for backwards compatibility
+- Merge master branch to keep it up to date
+- Test tutorial ALWAYS on electron build
+- Test that F12 works in electron build
 ---
 - test mods in multiplayer due to new onTurnEnd invokations
 - qa new connect
