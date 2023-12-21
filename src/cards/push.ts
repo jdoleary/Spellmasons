@@ -56,7 +56,7 @@ export function makeForcePush(args: forcePushArgs, underworld: Underworld, predi
   if (prediction) {
     underworld.forceMovePrediction.push(forceMoveInst);
   } else {
-    underworld.forceMove.push(forceMoveInst);
+    underworld.addForceMove(forceMoveInst);
   }
   return forceMoveInst;
 

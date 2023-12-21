@@ -53,7 +53,8 @@ export async function pull(pushedObject: HasSpace, towards: Vec2, quantity: numb
     if (prediction) {
       underworld.forceMovePrediction.push(forceMoveInst);
     } else {
-      underworld.forceMove.push(forceMoveInst);
+
+      underworld.addForceMove(forceMoveInst);
     }
   })).then(() => {
     if (forceMoveInst) {

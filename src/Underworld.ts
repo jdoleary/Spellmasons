@@ -182,6 +182,8 @@ export default class Underworld {
   // to each game lobby:
   // A list of units and pickups and an endPosition that they are moved to via a "force",
   // like a push or pull or explosion.
+  // Important note: This array MUST NOT be pushed to directly, use underworld.addForceMove
+  // instead
   forceMove: ForceMove[] = [];
   forceMovePrediction: ForceMove[] = [];
   forceMovePromise: Promise<void> | undefined;
@@ -474,13 +476,11 @@ export default class Underworld {
     // Invoke gameLoopUnits again next loop
     requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop);
   }
-  // Returns true if there is more processing yet to be done on the next
-  // gameloop
-  gameLoopForceMove = () => {
-    // No need to process if there are no instances to process
-    if (!this.forceMove.length) {
-      return false;
-    }
+  // This is the ONLY way forceMove array can be added to because it creates a forceMovePromise
+  // if it doesn't already exist so that other places in the codebase can await forceMoves.
+  // Never push to this.forceMove anywhere but here.
+  addForceMove(forceMoveInst: ForceMove) {
+    this.forceMove.push(forceMoveInst);
     if (!this.forceMovePromise) {
       // If there is no forceMovePromise, create a new one,
       // it will resolve when the current forceMove instances
@@ -489,6 +489,15 @@ export default class Underworld {
       this.forceMovePromise = new Promise(res => {
         forceMoveResolver = res;
       });
+    }
+
+  }
+  // Returns true if there is more processing yet to be done on the next
+  // gameloop
+  gameLoopForceMove = () => {
+    // No need to process if there are no instances to process
+    if (!this.forceMove.length) {
+      return false;
     }
     // Optimization cache blood whenever the blood smear particles get over a certain number
     // to prevent slowdown
