@@ -1,5 +1,5 @@
 import * as Unit from '../entity/Unit';
-import { Spell } from './index';
+import { Spell, refundLastSpell } from './index';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
@@ -20,14 +20,16 @@ const spell: Spell = {
     animationPath: 'spell-effects/spellPurify',
     description: 'spell_purify',
     effect: async (state, card, quantity, underworld, prediction) => {
-      // .filter: only target living units
-      const targets = state.targetedUnits.filter(u => u.alive);
+      const targets = state.targetedUnits;
       if (targets.length) {
         playDefaultSpellSFX(card, prediction);
         await playDefaultSpellAnimation(card, targets, prediction);
         for (let unit of targets) {
           apply(unit, underworld)
         }
+      }
+      else {
+        refundLastSpell(state, prediction, 'No valid targets. Cost refunded.')
       }
       return state;
     },

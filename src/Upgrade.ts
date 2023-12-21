@@ -177,7 +177,7 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
   desc.classList.add('card-description');
   const descriptionText = document.createElement('div');
   if (upgrade.replaces || upgrade.requires) {
-    const replacesEl = getReplacesCardText(upgrade.requires || [], upgrade.replaces || []);
+    const replacesEl = getReplacesCardText(upgrade.replaces || [], upgrade.requires || []);
     descriptionText.appendChild(replacesEl)
   }
   const label = document.createElement('span');

@@ -3284,7 +3284,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       case UnitSubType.RANGED_LOS:
         return u.alive && this.hasLineOfSight(u, attackTarget) && Unit.inRange(u, attackTarget);
       case UnitSubType.RANGED_RADIUS:
-        return u.alive && Unit.inRange(u, attackTarget) && u.mana > u.manaCostToCast;
+        return u.alive && Unit.inRange(u, attackTarget) && u.mana >= u.manaCostToCast;
       case UnitSubType.SUPPORT_CLASS:
         // Support classes (such as priests and summoners) dont attack targets
         return false;
