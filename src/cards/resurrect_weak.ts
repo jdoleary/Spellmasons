@@ -45,7 +45,9 @@ const spell: Spell = {
           resurrectedUnitCount++;
           makeRisingParticles(unit, prediction);
           unit.health = Math.max(1, Math.round(unit.healthMax * resStatAmount));
-          unit.mana = Math.max(unit.mana, Math.round(unit.manaMax * resStatAmount));
+          // Resurrect weak gives full mana, otherwise resurrected mana users are useless
+          // https://github.com/jdoleary/Spellmasons/issues/102
+          unit.mana = Math.max(unit.mana, Math.round(unit.manaMax));
           Unit.changeFaction(unit, state.casterUnit.faction);
           // Resurrect animation is the die animation played backwards
           animationPromises.push(Unit.playAnimation(unit, unit.animations.die, { loop: false, animationSpeed: -0.2 }));
