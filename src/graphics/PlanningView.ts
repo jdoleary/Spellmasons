@@ -24,6 +24,7 @@ import { getPerkText } from '../Perk';
 import { View } from '../views';
 import { gripthulu_id } from '../entity/units/gripthulu';
 import { getSuffocateBuildup, suffocateCardId } from '../cards/suffocate';
+import * as Cards from '../cards';
 
 const TEXT_OUT_OF_RANGE = 'Out of Range';
 // Graphics for rendering above board and walls but beneath units and doodads,
@@ -817,6 +818,11 @@ export function updateTooltipContent(underworld: Underworld) {
         if (globalThis.selectedUnit.unitType === UnitType.PLAYER_CONTROLLED) {
           const player = underworld.players.find((p) => p.unit === globalThis.selectedUnit);
           if (player) {
+            const replacedCards = Cards.getCardsFromIds(player.inventory).flatMap(card => card.replaces || []);
+            const inventory = player.inventory
+              // .filter: Hide replaced cards in inventory
+              .filter(cardId => !replacedCards.includes(cardId));
+
             playerSpecificInfo = '';
             if (player.mageType) {
               playerSpecificInfo += `<br/>${player.mageType}</div>`;
@@ -852,7 +858,7 @@ export function updateTooltipContent(underworld: Underworld) {
             // }
             playerSpecificInfo +=
               '<h3>Spells</h3>' +
-              player.inventory.filter(x => x !== '').join(', ');
+              inventory.filter(x => x !== '').join(', ');
 
           } else {
             console.error('Tooltip: globalThis.selectedUnit is player controlled but does not exist in underworld.players array.');
