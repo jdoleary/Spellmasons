@@ -39,8 +39,11 @@ export default function makeOverworld(pie: PieClient | IHostApp): Overworld {
     // Note: Units must be registered before cards so that summon_generic
     // can access all the unit ids
     Units.registerUnits();
-    Cards.registerCards(overworld);
+    // Note: Register mods before cards so that if any mods add a unit,
+    // that unit will be available in allCards (which is used by summon_generic to create a summon
+    // card for that monster)
     registerAllMods(overworld);
+    Cards.registerCards(overworld);
 
     addOverworldEventListeners(overworld);
     // Setup global functions that need access to underworld:
