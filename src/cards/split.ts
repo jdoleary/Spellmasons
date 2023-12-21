@@ -30,7 +30,7 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
     return;
   }
   // Safely restore unit's original properties
-  const { scaleX, scaleY, healthMax, manaMax, staminaMax, damage, moveSpeed } = unit.modifiers[id].originalStats;
+  const { scaleX, scaleY, healthMax, manaMax, manaPerTurn, staminaMax, damage, moveSpeed } = unit.modifiers[id].originalStats;
   if (unit.image) {
     unit.image.sprite.scale.x = scaleX;
     unit.image.sprite.scale.y = scaleY;
@@ -49,6 +49,7 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
   unit.manaMax = manaMax;
   // Prevent unexpected overflow
   unit.mana = Math.min(manaMax, unit.mana);
+  unit.manaPerTurn = manaPerTurn;
 
   const staminaChange = staminaMax / unit.staminaMax;
   unit.stamina *= staminaChange;
@@ -61,7 +62,7 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
   unit.moveSpeed = moveSpeed;
 }
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
-  const { healthMax, manaMax, staminaMax, damage, moveSpeed } = unit;
+  const { healthMax, manaMax, manaPerTurn, staminaMax, damage, moveSpeed } = unit;
   const modifier = getOrInitModifier(unit, id, {
     isCurse: true,
     quantity,
@@ -71,6 +72,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
       scaleY: unit.image && unit.image.sprite.scale.y || 1,
       healthMax,
       manaMax,
+      manaPerTurn,
       staminaMax,
       damage,
       moveSpeed
