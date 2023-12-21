@@ -969,9 +969,7 @@ export function updateCardBadges(underworld: Underworld) {
         const elBadgesH = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-health-badge`);
         const elBadgeH = Array.from(elBadgesH)[sliceOfCardsOfSameIdUntilCurrent.length];
         if (elBadgeH) {
-          // onDamageEvents alter the healthCost of cards that cost health to cast
-          // such as 'bite', 'vulnerable', or 'shield'
-          updateHealthBadge(elBadgeH, composeOnDamageEvents(predictionPlayerUnit, cost.healthCost, underworld, true), card);
+          updateHealthBadge(elBadgeH, cost.healthCost, card);
         }
       }
     }
@@ -1008,10 +1006,8 @@ export function updateCardBadges(underworld: Underworld) {
         for (let elBadge of badgeRecord.mana) {
           updateManaBadge(elBadge, cost.manaCost, card);
         }
-        // onDamageEvents alter the healthCost of cards that cost health to cast
-        // such as 'bite', 'vulnerable', or 'shield'
         for (let elBadgeHealth of badgeRecord.health) {
-          updateHealthBadge(elBadgeHealth, composeOnDamageEvents(predictionPlayerUnit, cost.healthCost, underworld, true), card);
+          updateHealthBadge(elBadgeHealth, cost.healthCost, card);
         }
       }
     }
