@@ -126,7 +126,7 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean, 
 
   const expenseScaling = 2;
   const manaCost = override?.properties.manaCost ? (override.properties.manaCost * (asMiniboss ? 1.5 : 1)) : Math.max(1, Math.round(2 * Math.log2((sourceUnit.spawnParams?.budgetCost || 1)))) * 30 * (asMiniboss ? 1.5 : 1);
-  const id = unitId + (asMiniboss ? ' Miniboss' : '');
+  const id = Unit.unitSourceIdToName(unitId, asMiniboss);
   const unitSource = allUnits[unitId];
   let unitStats = '';
 

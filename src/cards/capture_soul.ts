@@ -31,7 +31,7 @@ const spell: Spell = {
         for (let target of targets) {
           if (target) {
             if (!prediction) {
-              const newCardId = target.isMiniboss ? `${target.unitSourceId} Miniboss` : target.unitSourceId;
+              const newCardId = Unit.unitSourceIdToName(target.unitSourceId, target.isMiniboss);
               const upgrade = upgradeCardsSource.find(u => u.title == newCardId)
               if (upgrade) {
                 floatingText({ coords: target, text: 'Soul Captured!' });
@@ -40,8 +40,7 @@ const spell: Spell = {
                   playDefaultSpellSFX(card, prediction);
                 });
               } else {
-                console.log('Capture soul upgrade id', newCardId);
-                console.error('Cannot capture soul, upgrade not found')
+                console.error('Cannot capture soul, upgrade not found with title:', newCardId)
               }
             }
             Unit.die(target, underworld, prediction);

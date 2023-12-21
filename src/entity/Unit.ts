@@ -1334,7 +1334,7 @@ export function makeMiniboss(unit: IUnit) {
   }
   unit.isMiniboss = true;
   explain(EXPLAIN_MINI_BOSSES);
-  unit.name = `${unit.unitSourceId} MiniBoss`;
+  unit.name = unitSourceIdToName(unit.unitSourceId, true);
   if (unit.image) {
     unit.image.sprite.scale.x *= config.UNIT_MINIBOSS_SCALE_MULTIPLIER;
     unit.image.sprite.scale.y *= config.UNIT_MINIBOSS_SCALE_MULTIPLIER;
@@ -1614,5 +1614,10 @@ export function resetUnitStats(unit: IUnit, underworld: Underworld) {
   unit.stamina = unit.staminaMax;
 
   returnToDefaultSprite(unit);
+
+}
+
+export function unitSourceIdToName(unitSourceId: string, asMiniboss: boolean): string {
+  return unitSourceId + (asMiniboss ? ' Miniboss' : '');
 
 }
