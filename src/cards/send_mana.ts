@@ -12,7 +12,7 @@ import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import * as config from '../config';
 import { explain, EXPLAIN_OVERFILL } from '../graphics/Explain';
 
-export const id = 'send_mana';
+export const id = 'Send Mana';
 const amount = 20;
 
 const spell: Spell = {
