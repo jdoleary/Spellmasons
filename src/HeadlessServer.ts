@@ -31,6 +31,8 @@ const pie = isUsingBun ? require('@websocketpie/server-bun') : require('@websock
 // Init underworld so that when clients join they can use it as the canonical
 // record of gamestate
 const PORT = process.env.PORT || 8080;
+// Turn off wsPie logs
+process.env.quiet = 'yes';
 // hostApp (headless server) is always the host
 globalThis.isHost = () => true;
 // Headless does not includee a player of it's own, it's just the host
