@@ -39,6 +39,7 @@ import { Overworld } from '../../Overworld';
 import { summoningSicknessId } from '../../modifierSummoningSickness';
 import { errorRed } from './colors';
 import { isSinglePlayer } from '../../network/wsPieSetup';
+import { elAdminPowerBar, elAdminPowerBarInput, elAdminPowerBarOptions } from '../../HTMLElements';
 
 export const keyDown = {
   showWalkRope: false,
@@ -113,6 +114,38 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
   if (shouldReturnImmediately) {
     return;
   }
+  if (elAdminPowerBarInput && elAdminPowerBarOptions && document.activeElement == elAdminPowerBarInput) {
+    // Set timeout so it gets the last character in the input value
+    setTimeout(() => {
+
+      const possibleOptions = Object.values(adminCommands || []).filter(x => x.label.toLowerCase().includes(elAdminPowerBarInput ? elAdminPowerBarInput.value.toLowerCase() : ''));
+
+      if (elAdminPowerBarOptions) {
+        elAdminPowerBarOptions.innerHTML = possibleOptions.map((x, i) => i == 0 ? `<div><b>${x.label}</b></div>` : `<div>${x.label}</div>`).join('\n');
+      }
+      if (event.code == 'Enter') {
+        const option = possibleOptions[0];
+        if (option && overworld.underworld) {
+          const pos = overworld.underworld.getMousePos();
+          triggerAdminOption(option, overworld, pos);
+          // Clear value now that command is executed
+          if (elAdminPowerBarInput) {
+            elAdminPowerBarInput.value = '';
+          }
+          // Close powerbar
+          if (elAdminPowerBar) {
+            elAdminPowerBar.classList.toggle('visible', false);
+          }
+        }
+
+      }
+
+    }, 0);
+    return;
+  }
+  if (document.activeElement === Chat.elChatinput || document.activeElement == elAdminPowerBarInput) {
+    return;
+  }
   handleInputDown(getKeyCodeMapping(event.code, event), overworld);
 }
 function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworld) {
@@ -123,17 +156,28 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
   if (!underworld) {
     return;
   }
-  if (document.activeElement === Chat.elChatinput) {
-    return;
-  }
   document.body.classList.toggle('showChat', false);
   switch (keyCodeMapping) {
+    case 'adminPowerBar':
+      if (globalThis.adminMode && elAdminPowerBarInput && elAdminPowerBar) {
+        elAdminPowerBar.classList.toggle('visible', true);
+        elAdminPowerBarInput.focus();
+
+      } else {
+        if (overworld.underworld) {
+          floatingText({ coords: overworld.underworld.getMousePos(), text: 'Admin mode not active' });
+        }
+      }
+      break;
     case 'Escape':
       // close admin menu
       const elAdminMenuHolder = document.getElementById('admin-menu-holder');
       if (elAdminMenuHolder) {
         elAdminMenuHolder.remove();
         return;
+      }
+      if (elAdminPowerBar) {
+        elAdminPowerBar.classList.toggle('visible', false);
       }
 
       const thereWasInventoryOpen = document.body?.classList.contains(CardUI.openInvClass);
@@ -914,7 +958,7 @@ function tryShowDevContextMenu(overworld: Overworld, e: MouseEvent, mousePos: Ve
     }
   }
 }
-const adminCommands: { [label: string]: AdminContextMenuOption } = {};
+export const adminCommands: { [label: string]: AdminContextMenuOption } = {};
 export function triggerAdminCommand(label: string, clientId: string, payload: any) {
   const { action } = adminCommands[label] || {};
   if (action) {
@@ -1510,12 +1554,36 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     adminCommands[op.label] = op;
   }
 }
+export function triggerAdminOption(option: AdminContextMenuOption, overworld: Overworld, pos?: Vec2) {
+  const { label, action, domQueryContainer, supportInMultiplayer } = option;
+  if (supportInMultiplayer) {
+    overworld.pie.sendData({
+      type: MESSAGE_TYPES.ADMIN_COMMAND,
+      label,
+      pos,
+      selectedUnitid: globalThis.selectedUnit && globalThis.selectedUnit.id,
+      selectedPickupLocation: globalThis.selectedPickup && Vec.clone(globalThis.selectedPickup)
+    });
+  } else {
+    // Warn when non supportInMultiplayer admin commands are executed to let the admin know
+    // that the command wont persist to the server.
+    if (!globalThis.isHost(overworld.pie)) {
+      const errMsg = 'This admin command is not broadcast to multiplayer';
+      if (globalThis.player) {
+        floatingText({ coords: globalThis.player.unit, style: { fill: 'red' }, text: errMsg })
+      }
+    }
+    action({ clientId: globalThis.clientId || '', pos });
+  }
+
+}
 function createContextMenuOptions(menu: HTMLElement, overworld: Overworld) {
   if (!overworld.underworld) {
     console.error('Cannot create context menu options, underworld does not exist');
     return;
   }
-  for (let { label, action, domQueryContainer, supportInMultiplayer } of Object.values(adminCommands)) {
+  for (let option of Object.values(adminCommands)) {
+    const { label, domQueryContainer } = option;
     // Make DOM button to trigger command
     let el = document.createElement('li');
     if (Object.keys(allUnits).includes(label)) {
@@ -1527,25 +1595,7 @@ function createContextMenuOptions(menu: HTMLElement, overworld: Overworld) {
     // cache mouse position when context menu is created
     const pos = overworld.underworld.getMousePos();
     el.addEventListener('click', () => {
-      if (supportInMultiplayer) {
-        overworld.pie.sendData({
-          type: MESSAGE_TYPES.ADMIN_COMMAND,
-          label,
-          pos,
-          selectedUnitid: globalThis.selectedUnit && globalThis.selectedUnit.id,
-          selectedPickupLocation: globalThis.selectedPickup && Vec.clone(globalThis.selectedPickup)
-        });
-      } else {
-        // Warn when non supportInMultiplayer admin commands are executed to let the admin know
-        // that the command wont persist to the server.
-        if (!globalThis.isHost(overworld.pie)) {
-          const errMsg = 'This admin command is not broadcast to multiplayer';
-          if (globalThis.player) {
-            floatingText({ coords: globalThis.player.unit, style: { fill: 'red' }, text: errMsg })
-          }
-        }
-        action({ clientId: globalThis.clientId || '', pos });
-      }
+      triggerAdminOption(option, overworld, pos)
       // Close the menu
       menu.remove();
       document.getElementById('admin-menu-holder')?.remove();

@@ -2305,3 +2305,31 @@ body.dragging-card .floating-card-holder .empty-slot {
 .card.perk.pick-stats {
   min-height: 660px;
 }
+
+#admin-power-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 45%;
+  display: none;
+}
+
+#admin-power-bar.visible {
+  display: block;
+}
+
+#admin-power-bar-options {
+  padding: 16px;
+  margin: 0 auto;
+  display: block;
+  background: rgba(255, 255, 255, 0.6);
+  width: 400px;
+
+}
+
+#admin-power-bar-input {
+  display: block;
+  margin: 0 auto;
+  font-size: 2em;
+  width: 400px;
+}

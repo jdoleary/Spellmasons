@@ -39,6 +39,7 @@ const mapping = {
     cameraRight: ['KeyD'],
     touchPadMoveCharacter: ['KeyG'],
     openChat: ['KeyT'],
+    adminPowerBar: ['ctrlKey+Space']
 }
 globalThis.controlMap = mapping;
 export default mapping;
