@@ -10,7 +10,7 @@ import { Vec2 } from '../jmath/Vec';
 import * as colors from '../graphics/ui/colors';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
-const id = 'Corpse Explosion';
+const id = 'Bone Shrapnel';
 const damage = 30;
 const baseRadius = 140;
 
@@ -38,7 +38,7 @@ const spell: Spell = {
         } else {
           playSFXKey('bloatExplosion');
         }
-        makeBloatExplosionWithParticles(unit, adjustedRadius / baseRadius, prediction);
+        makeShrapnelParticles(unit, adjustedRadius / baseRadius, prediction);
         underworld.getUnitsWithinDistanceOfTarget(
           unit,
           adjustedRadius,
@@ -46,22 +46,12 @@ const spell: Spell = {
         ).forEach(u => {
           // Deal damage to units
           takeDamage(u, damage * quantity, u, underworld, prediction);
-          // Push units away from exploding unit
-          forcePush(u, unit, velocityStartMagnitude, underworld, prediction);
-        });
-        underworld.getPickupsWithinDistanceOfTarget(
-          unit,
-          adjustedRadius,
-          prediction
-        ).forEach(p => {
-          // Push pickups away
-          forcePush(p, unit, velocityStartMagnitude, underworld, prediction);
         });
 
         // Remove corpse
         // Note: This must be called after all other explode logic or else it will affect the position
         // of the explosion
-        Unit.cleanup(unit);
+        Unit.cleanup(unit, true);
       });
       return state;
     },
@@ -71,7 +61,7 @@ const spell: Spell = {
   events: {
   }
 };
-function makeBloatExplosionWithParticles(position: Vec2, size: number, prediction: boolean) {
+function makeShrapnelParticles(position: Vec2, size: number, prediction: boolean) {
   if (prediction || globalThis.headless) {
     // Don't show if just a prediction
     return;
@@ -86,19 +76,20 @@ function makeBloatExplosionWithParticles(position: Vec2, size: number, predictio
       autoUpdate: true,
       "alpha": {
         "start": 1,
-        "end": 0
+        "end": 0.5
       },
       "scale": {
-        "start": 3,
-        "end": 2,
+        "start": 0.5,
+        "end": 0.5,
+        "minimumScaleMultiplier": 1
       },
       "color": {
-        "start": "#d66437",
-        "end": "#f5e8b6"
+        "start": "#707070",
+        "end": "#c2c2c2"
       },
       "speed": {
-        "start": 900,
-        "end": 50,
+        "start": 600,
+        "end": 600,
         "minimumSpeedMultiplier": 1
       },
       "acceleration": {
@@ -112,28 +103,23 @@ function makeBloatExplosionWithParticles(position: Vec2, size: number, predictio
       },
       "noRotation": false,
       "rotationSpeed": {
-        "min": 0,
-        "max": 300
+        "min": 50,
+        "max": 50
       },
       "lifetime": {
-        "min": 0.3 * size,
-        "max": 0.3 * size
+        "min": 0.2 * size,
+        "max": 0.2 * size
       },
       "blendMode": "normal",
-      "frequency": 0.0001,
+      "frequency": 0.001,
       "emitterLifetime": 0.1,
-      "maxParticles": 2000,
+      "maxParticles": 50,
       "pos": {
         "x": 0,
         "y": 0
       },
       "addAtBack": true,
-      "spawnType": "circle",
-      "spawnCircle": {
-        "x": 0,
-        "y": 0,
-        "r": 0
-      }
+      "spawnType": "point"
     }, [texture]);
   simpleEmitter(position, config);
 }
