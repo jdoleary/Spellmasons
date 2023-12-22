@@ -115,28 +115,43 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
     return;
   }
   if (elAdminPowerBarInput && elAdminPowerBarOptions && document.activeElement == elAdminPowerBarInput) {
+    if (event.code == 'ArrowDown') {
+      globalThis.adminPowerBarIndex++;
+    } else if (event.code == 'ArrowUp') {
+      globalThis.adminPowerBarIndex--;
+    }
+
     // Set timeout so it gets the last character in the input value
     setTimeout(() => {
 
       const possibleOptions = Object.values(adminCommands || []).filter(x => x.label.toLowerCase().includes(elAdminPowerBarInput ? elAdminPowerBarInput.value.toLowerCase() : ''));
+      globalThis.adminPowerBarIndex = Math.max(0, Math.min(globalThis.adminPowerBarIndex, possibleOptions.length - 1))
 
       if (elAdminPowerBarOptions) {
-        elAdminPowerBarOptions.innerHTML = possibleOptions.map((x, i) => i == 0 ? `<div><b>${x.label}</b></div>` : `<div>${x.label}</div>`).join('\n');
+        elAdminPowerBarOptions.innerHTML = possibleOptions.map((x, i) => i == (globalThis.adminPowerBarIndex || 0) ? `<div class="selected-admin-action">${x.label}</div>` : `<div>${x.label}</div>`).join('\n');
+      }
+      function closePowerBar() {
+        globalThis.adminPowerBarIndex = 0;
+        // Clear value now that command is executed
+        if (elAdminPowerBarInput) {
+          elAdminPowerBarInput.value = '';
+        }
+        // Close powerbar
+        if (elAdminPowerBar) {
+          elAdminPowerBar.classList.toggle('visible', false);
+        }
+
       }
       if (event.code == 'Enter') {
-        const option = possibleOptions[0];
+        const option = possibleOptions[globalThis.adminPowerBarIndex || 0];
         if (option && overworld.underworld) {
           const pos = overworld.underworld.getMousePos();
           triggerAdminOption(option, overworld, pos);
-          // Clear value now that command is executed
-          if (elAdminPowerBarInput) {
-            elAdminPowerBarInput.value = '';
-          }
-          // Close powerbar
-          if (elAdminPowerBar) {
-            elAdminPowerBar.classList.toggle('visible', false);
-          }
+          closePowerBar();
         }
+
+      } else if (event.code == 'Escape') {
+        closePowerBar();
 
       }
 
@@ -162,6 +177,7 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
       if (globalThis.adminMode && elAdminPowerBarInput && elAdminPowerBar) {
         elAdminPowerBar.classList.toggle('visible', true);
         elAdminPowerBarInput.focus();
+        globalThis.adminPowerBarIndex = 0;
 
       } else {
         if (overworld.underworld) {

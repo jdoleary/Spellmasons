@@ -2333,3 +2333,7 @@ body.dragging-card .floating-card-holder .empty-slot {
   font-size: 2em;
   width: 400px;
 }
+
+.selected-admin-action {
+  border: 1px solid black;
+}

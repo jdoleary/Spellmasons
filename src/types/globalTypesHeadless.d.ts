@@ -339,4 +339,5 @@ declare global {
     var allCards: { [cardId: string]: ICard } | undefined;
     // For menu
     var pie: PieClient | undefined;
+    var adminPowerBarIndex: number;
 }
