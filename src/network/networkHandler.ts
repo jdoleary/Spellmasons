@@ -684,9 +684,11 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
               runCinematicLevelCamera(underworld);
             }
             // Change end turn button from End Turn to Ready in multiplayer
-            const elEndTurnSpan = elEndTurnBtn.querySelector('[data-localize-text]') as HTMLElement;
-            elEndTurnSpan.dataset.localizeText = "ready"
-            elEndTurnSpan.innerText = i18n(elEndTurnSpan.dataset.localizeText);
+            if (elEndTurnBtn) {
+              const elEndTurnSpan = elEndTurnBtn.querySelector('[data-localize-text]') as HTMLElement;
+              elEndTurnSpan.dataset.localizeText = "ready"
+              elEndTurnSpan.innerText = i18n(elEndTurnSpan.dataset.localizeText);
+            }
           }
         }
         if (name !== undefined) {

@@ -292,10 +292,12 @@ export function setupPieAndUnderworld() {
     function connectToSingleplayer() {
       document.body?.classList.toggle('loading', true);
       // If we just left multiplayer, make sure we change end turn button back to normal
-      const elEndTurnSpan = elEndTurnBtn.querySelector('[data-localize-text]') as HTMLElement;
-      if (elEndTurnSpan.dataset.localizeText != "End Turn") {
-        elEndTurnSpan.dataset.localizeText = "End Turn"
-        elEndTurnSpan.innerText = i18n(elEndTurnSpan.dataset.localizeText);
+      if (elEndTurnBtn) {
+        const elEndTurnSpan = elEndTurnBtn.querySelector('[data-localize-text]') as HTMLElement;
+        if (elEndTurnSpan.dataset.localizeText != "End Turn") {
+          elEndTurnSpan.dataset.localizeText = "End Turn"
+          elEndTurnSpan.innerText = i18n(elEndTurnSpan.dataset.localizeText);
+        }
       }
       return new Promise<void>((resolve) => {
         // setTimeout allows the UI to refresh before locking up the CPU with
