@@ -1,3 +1,19 @@
+## 1.27.0
+- Added: Bone Shrapnel
+    - Destroy corpses to damage nearby enemies
+    - Thanks Ry for inspiration
+
+## 1.26.5 Hotfix
+- big fix: Resolve multiplayer issue where force movements such as explosions (bloat, urns) caused positional desync.
+- balance: Resurrect Weak brings resurrected units to full mana so that it isn't useless when used on casters
+- fix: Allow Explosive Archer (from mod) to have soul captured
+
+- Big thanks to Couls for doing the code for the following UI changes:
+    - UI: "End Turn" button becomes a "Ready" button in Multiplayer
+    - UI: Add damage to description of Sacrifice Card
+    - UI: Prevent chatbox from opening in singleplayer
+
+
 ## 1.26.0
 - feature: Waves added in Plus levels, each subsequent Plus level gets one extra wave before the Portals appear
     This should make end game much more challenging.
