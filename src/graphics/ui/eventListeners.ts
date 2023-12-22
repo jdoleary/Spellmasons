@@ -994,6 +994,30 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       domQueryContainer: '#menu-self',
     },
     {
+      label: '️Level Up',
+      action: ({ clientId }: { clientId?: string }) => {
+        if (superMe && overworld.underworld) {
+          const numberOfEnemiesKilledNeededForNextDrop = overworld.underworld.getNumberOfEnemyKillsNeededForNextLevelUp();
+          for (let i = 0; i < numberOfEnemiesKilledNeededForNextDrop; i++) {
+            overworld.underworld.reportEnemyKilled({ x: 0, y: 0 });
+          }
+        }
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '',
+    },
+    ...Object.values(allCards).map(x => ({
+      label: `Give card: ${x.id}`,
+      action: () => {
+        if (overworld.underworld) {
+          Player.addCardToHand(x, player, overworld.underworld);
+        }
+      },
+      supportInMultiplayer: false,
+      domQueryContainer: '',
+
+    })),
+    {
       label: '☄️ Teleport Here',
       action: (props) => {
         const { clientId, pos } = props;
@@ -1188,6 +1212,20 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       domQueryContainer: '#menu-global'
     },
     {
+      label: 'Skip to Next Level',
+      action: () => {
+        if (globalThis.player) {
+          if (!overworld.underworld) {
+            console.error('Cannot "Skip to Next level", underworld does not exist');
+            return;
+          }
+          Player.enterPortal(globalThis.player, overworld.underworld);
+        }
+      },
+      supportInMultiplayer: false,
+      domQueryContainer: '#menu-global'
+    },
+    {
       label: 'Skip to Water Biome',
       action: () => {
         if (globalThis.player) {
@@ -1241,6 +1279,21 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
             return;
           }
           overworld.underworld.levelIndex = 9;
+          Player.enterPortal(globalThis.player, overworld.underworld);
+        }
+      },
+      supportInMultiplayer: false,
+      domQueryContainer: '#menu-global'
+    },
+    {
+      label: 'Skip to Deathmason',
+      action: () => {
+        if (globalThis.player) {
+          if (!overworld.underworld) {
+            console.error('Cannot "Skip to Deathmason level", underworld does not exist');
+            return;
+          }
+          overworld.underworld.levelIndex = config.LAST_LEVEL_INDEX;
           Player.enterPortal(globalThis.player, overworld.underworld);
         }
       },
@@ -1600,11 +1653,14 @@ function createContextMenuOptions(menu: HTMLElement, overworld: Overworld) {
       menu.remove();
       document.getElementById('admin-menu-holder')?.remove();
     })
-    const container = document.querySelector(domQueryContainer);
-    if (container) {
-      container.appendChild(el);
-    } else {
-      console.error('Could not find DOM element by query:', domQueryContainer)
+    // domQueryContainer is optional for admin commands only accessible via the power bar
+    if (domQueryContainer) {
+      const container = document.querySelector(domQueryContainer);
+      if (container) {
+        container.appendChild(el);
+      } else {
+        console.error('Could not find DOM element by query:', domQueryContainer)
+      }
     }
   }
 
