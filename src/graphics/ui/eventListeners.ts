@@ -115,46 +115,45 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
     return;
   }
   if (elAdminPowerBarInput && elAdminPowerBarOptions && document.activeElement == elAdminPowerBarInput) {
-    if (event.code == 'ArrowDown') {
+    if (event.code == 'ArrowDown' || event.code == 'Tab') {
+      event.preventDefault();
+      globalThis.adminPowerBarSelection = '';
       globalThis.adminPowerBarIndex++;
     } else if (event.code == 'ArrowUp') {
+      event.preventDefault();
+      globalThis.adminPowerBarSelection = '';
       globalThis.adminPowerBarIndex--;
+    } else if (event.code != 'Enter') {
+      // reset admin bar selection if user is giving any other input (typing)
+      globalThis.adminPowerBarSelection = '';
+      globalThis.adminPowerBarIndex = 0;
     }
 
     // Set timeout so it gets the last character in the input value
     setTimeout(() => {
+      const options = updatePowerBar();
 
-      const possibleOptions = Object.values(adminCommands || []).filter(x => x.label.toLowerCase().includes(elAdminPowerBarInput ? elAdminPowerBarInput.value.toLowerCase() : ''));
-      globalThis.adminPowerBarIndex = Math.max(0, Math.min(globalThis.adminPowerBarIndex, possibleOptions.length - 1))
-
-      if (elAdminPowerBarOptions) {
-        elAdminPowerBarOptions.innerHTML = possibleOptions.map((x, i) => i == (globalThis.adminPowerBarIndex || 0) ? `<div class="selected-admin-action">${x.label}</div>` : `<div>${x.label}</div>`).join('\n');
-      }
-      function closePowerBar() {
-        globalThis.adminPowerBarIndex = 0;
-        // Clear value now that command is executed
-        if (elAdminPowerBarInput) {
-          elAdminPowerBarInput.value = '';
-        }
-        // Close powerbar
-        if (elAdminPowerBar) {
-          elAdminPowerBar.classList.toggle('visible', false);
-        }
-
-      }
       if (event.code == 'Enter') {
-        const option = possibleOptions[globalThis.adminPowerBarIndex || 0];
+        const option = options[globalThis.adminPowerBarIndex || 0];
         if (option && overworld.underworld) {
           const pos = overworld.underworld.getMousePos();
           triggerAdminOption(option, overworld, pos);
           closePowerBar();
         }
-
       } else if (event.code == 'Escape') {
         closePowerBar();
-
       }
 
+      function closePowerBar() {
+        // Save last power when we close the bar, so we can easily use it again
+        globalThis.adminPowerBarSelection = options[globalThis.adminPowerBarIndex]?.label || '';
+        // Remove text, so we can quickly search for a different power if needed
+        if (elAdminPowerBarInput) elAdminPowerBarInput.value = '';
+        // Close powerbar
+        if (elAdminPowerBar) {
+          elAdminPowerBar.classList.toggle('visible', false);
+        }
+      }
     }, 0);
     return;
   }
@@ -177,8 +176,8 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
       if (globalThis.adminMode && elAdminPowerBarInput && elAdminPowerBar) {
         elAdminPowerBar.classList.toggle('visible', true);
         elAdminPowerBarInput.focus();
-        globalThis.adminPowerBarIndex = 0;
-
+        if (!globalThis.adminPowerBarIndex) globalThis.adminPowerBarIndex = 0;
+        updatePowerBar();
       } else {
         if (overworld.underworld) {
           floatingText({ coords: overworld.underworld.getMousePos(), text: 'Admin mode not active' });
@@ -1013,7 +1012,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       label: '️Level Up',
       action: ({ clientId }: { clientId?: string }) => {
         if (superMe && overworld.underworld) {
-          const numberOfEnemiesKilledNeededForNextDrop = overworld.underworld.getNumberOfEnemyKillsNeededForNextLevelUp();
+          const numberOfEnemiesKilledNeededForNextDrop = overworld.underworld.getNumberOfEnemyKillsNeededForNextLevelUp() - overworld.underworld.enemiesKilled;
           for (let i = 0; i < numberOfEnemiesKilledNeededForNextDrop; i++) {
             overworld.underworld.reportEnemyKilled({ x: 0, y: 0 });
           }
@@ -1680,4 +1679,19 @@ function createContextMenuOptions(menu: HTMLElement, overworld: Overworld) {
     }
   }
 
+}
+function updatePowerBar(): AdminContextMenuOption[] {
+  const options = Object.values(adminCommands).filter(x => elAdminPowerBarInput ? x.label.toLowerCase().includes(elAdminPowerBarInput.value.toLowerCase()) : true);
+  globalThis.adminPowerBarIndex = Math.max(0, Math.min(globalThis.adminPowerBarIndex, options.length - 1))
+
+  // Overide index if I have a previous selection
+  if (globalThis.adminPowerBarSelection) {
+    const index = options.findIndex(x => x.label == globalThis.adminPowerBarSelection);
+    globalThis.adminPowerBarIndex = Math.max(0, index);
+  }
+
+  if (elAdminPowerBarOptions) {
+    elAdminPowerBarOptions.innerHTML = options.map((x, i) => i == globalThis.adminPowerBarIndex ? `<div class="selected-admin-action">${x.label}</div>` : `<div>${x.label}</div>`).join('\n');
+  }
+  return options;
 }
