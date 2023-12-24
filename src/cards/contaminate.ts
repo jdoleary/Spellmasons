@@ -13,6 +13,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { IPlayer } from '../entity/Player';
 import { Modifier } from './util';
 import { summoningSicknessId } from '../modifierSummoningSickness';
+import { corpseDecayId } from '../modifierCorpseDecay';
 
 export const contaminate_id = 'contaminate';
 
@@ -57,7 +58,7 @@ async function contaminate(casterPlayer: IPlayer | undefined, unit: IUnit, under
   ignore.push(unit);
 
   // we should only spread the initially targeted unit's  curses
-  const modifiersToExclude = [summoningSicknessId]
+  const modifiersToExclude = [summoningSicknessId, corpseDecayId]
   const curses: CurseData[] = Object.entries(unit.modifiers)
     .map(([id, mod]) => ({ modId: id, modifier: mod }))
     .filter(x => x.modifier.isCurse)
