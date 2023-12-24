@@ -100,6 +100,7 @@ import { urn_poison_id } from './entity/units/urn_poison';
 import { elEndTurnBtn } from './HTMLElements';
 import { corpseDecayId } from './modifierCorpseDecay';
 import { isSinglePlayer } from './network/wsPieSetup';
+import { ForceMoveProjectile } from './entity/Projectile';
 
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
@@ -186,6 +187,8 @@ export default class Underworld {
   // instead
   forceMove: ForceMove[] = [];
   forceMovePrediction: ForceMove[] = [];
+  forceMoveProjectile: ForceMoveProjectile[] = [];
+  forceMoveProjectilePrediction: ForceMoveProjectile[] = [];
   forceMovePromise: Promise<void> | undefined;
   // A hash of the last thing this client was thinking
   // Used with MESSAGE_TYPES.PLAYER_THINKING so other clients 
@@ -329,6 +332,50 @@ export default class Underworld {
     this.random = seedrandom(this.seed, { state: RNGState })
     return this.random;
   }
+  // Returns true when forceMove is complete
+  runForceMoveProjectile(forceMoveInst: ForceMoveProjectile, prediction: boolean, deltaTime: number): boolean {
+    const { pushedObject, velocity, timedOut } = forceMoveInst;
+    const { endPoint, startPoint } = pushedObject;
+    if (timedOut) {
+      console.log('jtest timed out')
+      return true;
+    }
+    if (isNaN(pushedObject.x) || isNaN(pushedObject.y)) {
+      // Object has been cleaned up or has invalid coordinates so pushing cannot continue
+      // and is "complete"
+      console.log('jtest is nan')
+      return true;
+    }
+    const distToEndPoint = math.distance(startPoint, endPoint);
+    const distToStartPoint = math.distance(pushedObject, startPoint);
+    if (distToStartPoint >= distToEndPoint) {
+      // return true to signify complete 
+      console.log('jtest reached end point')
+      return true;
+    }
+    // Move it according to it's velocity
+    const newPosition = Vec.add(pushedObject, Vec.multiply(deltaTime, velocity));
+    pushedObject.x = newPosition.x;
+    pushedObject.y = newPosition.y;
+    // Update image
+    if (pushedObject.sprite) {
+      pushedObject.sprite.x = pushedObject.x;
+      pushedObject.sprite.y = pushedObject.y;
+    }
+    const aliveUnits = ((prediction && this.unitsPrediction) ? this.unitsPrediction : this.units).filter(u => u.alive);
+    for (let unit of aliveUnits) {
+      // The units' regular radius is for "crowding". It is much smaller than their actual size and it is used
+      // to ensure they can crowd together but not overlap perfect, so here we use a custom radius to detect
+      // forcePush collisions.
+      if (isVecIntersectingVecWithCustomRadius(pushedObject, unit, config.COLLISION_MESH_RADIUS)) {
+        // TODO call collision function
+        console.log('jtest collided with', unit)
+        // TODO add ignore unit id array
+
+      }
+    }
+    return false;
+  }
   // Simulate the forceMove until it's complete
   fullySimulateForceMovePredictions() {
     if (this.simulatingMovePredictions) {
@@ -342,8 +389,18 @@ export default class Underworld {
     if (globalThis.predictionGraphics) {
       globalThis.predictionGraphics.beginFill(colors.forceMoveColor);
     }
-    while (this.forceMovePrediction.length > 0 && loopCount < PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD) {
+    while ((this.forceMovePrediction.length > 0 || this.forceMoveProjectilePrediction.length > 0) && loopCount < PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD) {
       loopCount++;
+      for (let i = this.forceMoveProjectilePrediction.length - 1; i >= 0; i--) {
+        const forceMoveInst = this.forceMoveProjectilePrediction[i];
+        if (forceMoveInst) {
+          const done = this.runForceMoveProjectile(forceMoveInst, prediction, 1);
+          if (done) {
+            forceMoveInst.resolve();
+            this.forceMoveProjectilePrediction.splice(i, 1);
+          }
+        }
+      }
       for (let i = this.forceMovePrediction.length - 1; i >= 0; i--) {
         const forceMoveInst = this.forceMovePrediction[i];
         if (forceMoveInst) {
@@ -476,6 +533,22 @@ export default class Underworld {
     // Invoke gameLoopUnits again next loop
     requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop);
   }
+  // This is the ONLY way forceMoveProjectile array can be added to because it creates a forceMovePromise
+  // if it doesn't already exist so that other places in the codebase can await forceMoves.
+  // Never push to this.forceMoveProjectile anywhere but here.
+  addForceMoveProjectile(forceMoveInst: ForceMoveProjectile) {
+    this.forceMoveProjectile.push(forceMoveInst);
+    if (!this.forceMovePromise) {
+      // If there is no forceMovePromise, create a new one,
+      // it will resolve when the current forceMove instances
+      // have finished; so anything that needs to await the
+      // forceMove instances can raceTimeout this.forceMovePromise
+      this.forceMovePromise = new Promise(res => {
+        forceMoveResolver = res;
+      });
+    }
+
+  }
   // This is the ONLY way forceMove array can be added to because it creates a forceMovePromise
   // if it doesn't already exist so that other places in the codebase can await forceMoves.
   // Never push to this.forceMove anywhere but here.
@@ -494,9 +567,9 @@ export default class Underworld {
   }
   // Returns true if there is more processing yet to be done on the next
   // gameloop
-  gameLoopForceMove = () => {
+  gameLoopForceMove = (deltaTime: number) => {
     // No need to process if there are no instances to process
-    if (!this.forceMove.length) {
+    if (!this.forceMove.length && !this.forceMoveProjectile.length) {
       return false;
     }
     // Optimization cache blood whenever the blood smear particles get over a certain number
@@ -506,6 +579,20 @@ export default class Underworld {
       cacheBlood();
     }
 
+    for (let i = this.forceMoveProjectile.length - 1; i >= 0; i--) {
+      const forceMoveInst = this.forceMoveProjectile[i];
+      if (forceMoveInst) {
+        const done = this.runForceMoveProjectile(forceMoveInst, false, deltaTime);
+        // Remove it from forceMove array once the distance has been covers
+        // This works even if collisions prevent the unit from moving since
+        // distance is modified even if the unit doesn't move each loop
+        if (done) {
+          console.log('jtest resolved in gameloopforcemove')
+          forceMoveInst.resolve();
+          this.forceMoveProjectile.splice(i, 1);
+        }
+      }
+    }
     for (let i = this.forceMove.length - 1; i >= 0; i--) {
       const forceMoveInst = this.forceMove[i];
       if (forceMoveInst) {
@@ -513,6 +600,7 @@ export default class Underworld {
         const unitImageYOffset = config.COLLISION_MESH_RADIUS / 2;
         const startPos = Vec.clone(forceMoveInst.pushedObject);
         startPos.y += unitImageYOffset;
+        // TODO: use deltaTime
         const done = this.runForceMove(forceMoveInst, false);
         const endPos = { x: forceMoveInst.pushedObject.x, y: forceMoveInst.pushedObject.y + unitImageYOffset };
         if (graphicsBloodSmear && Unit.isUnit(forceMoveInst.pushedObject) && forceMoveInst.pushedObject.health !== undefined && forceMoveInst.pushedObject.health <= 0) {
@@ -552,7 +640,7 @@ export default class Underworld {
         }
       }
     }
-    const finishedForceMoves = this.forceMove.length == 0;
+    const finishedForceMoves = this.forceMove.length == 0 && this.forceMoveProjectile.length == 0;
     if (finishedForceMoves) {
       // Force moves have finished, resolve the promise and clear it
       // so that new forceMoves can have a new promise that other parts
@@ -748,7 +836,7 @@ export default class Underworld {
 
     const aliveNPCs = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
     // Run all forces in this.forceMove
-    this.gameLoopForceMove();
+    this.gameLoopForceMove(deltaTime);
 
     for (let i = 0; i < this.units.length; i++) {
       const u = this.units[i];
