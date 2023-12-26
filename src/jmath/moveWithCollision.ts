@@ -5,17 +5,63 @@ import * as config from '../config';
 import * as math from './math';
 import Underworld from '../Underworld';
 import { HasSpace } from '../entity/Type';
+export enum ForceMoveType {
+    PROJECTILE,
+    UNIT_OR_PICKUP
+}
 export interface ForceMove {
+    type: ForceMoveType;
     pushedObject: HasSpace;
-    canCreateSecondOrderPushes: boolean;
     velocity: Vec2;
-    velocity_falloff: number;
     timedOut?: boolean;
+}
+export type ForceMoveUnitOrPickup = ForceMove & {
+    type: ForceMoveType.UNIT_OR_PICKUP;
+    canCreateSecondOrderPushes: boolean;
+    velocity_falloff: number;
     // A list of other HasSpace entities that it has already collided with
     alreadyCollided: HasSpace[];
     resolve: () => void;
 }
+export function isForceMoveUnitOrPickup(x: ForceMove): x is ForceMoveUnitOrPickup {
+    return x.type == ForceMoveType.UNIT_OR_PICKUP;
+}
+export type ForceMoveProjectile = ForceMove & {
+    type: ForceMoveType.PROJECTILE;
+    startPoint: Vec2;
+    endPoint: Vec2;
+    doesPierce: boolean;
+    ignoreUnitId: number;
+    collideFnKey: string;
+}
+export function isForceMoveProjectile(x: ForceMove): x is ForceMoveProjectile {
+    return x.type == ForceMoveType.PROJECTILE;
+}
 
+interface ForceMoveProjectileArgs {
+    pushedObject: HasSpace;
+    startPoint: Vec2;
+    endPoint: Vec2;
+    doesPierce: boolean;
+    ignoreUnitId: number;
+    collideFnKey: string;
+}
+export function makeForceMoveProjectile(args: ForceMoveProjectileArgs, underworld: Underworld, prediction: boolean): ForceMove {
+    const { pushedObject, startPoint, endPoint, doesPierce, ignoreUnitId, collideFnKey } = args;
+    const velocity = similarTriangles(pushedObject.x - endPoint.x, pushedObject.y - endPoint.y, distance(pushedObject, endPoint), 10);
+    pushedObject.beingPushed = true;
+    // Experiment: canCreateSecondOrderPushes now is ALWAYS disabled.
+    // I've had feedback that it's suprising - which is bad for a tactical game
+    // also I suspect it has significant performance costs for levels with many enemies
+    const forceMoveInst: ForceMoveProjectile = { type: ForceMoveType.PROJECTILE, collideFnKey, ignoreUnitId, doesPierce, pushedObject, startPoint, endPoint, velocity };
+    if (prediction) {
+        underworld.forceMovePrediction.push(forceMoveInst);
+    } else {
+        underworld.addForceMove(forceMoveInst);
+    }
+    return forceMoveInst;
+
+}
 // Circle is used exclusively for force move objects
 export type Circle = {
     radius: number;

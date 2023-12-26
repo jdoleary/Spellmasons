@@ -1,7 +1,7 @@
 import { Vec2, equal } from '../jmath/Vec';
 import { getCurrentTargets, Spell } from './index';
 import { distance, similarTriangles } from '../jmath/math';
-import type { Circle, ForceMove } from '../jmath/moveWithCollision';
+import { Circle, ForceMove, ForceMoveType, ForceMoveUnitOrPickup } from '../jmath/moveWithCollision';
 import { forceMoveColor } from '../graphics/ui/colors';
 import { raceTimeout } from '../Promise';
 import Underworld from '../Underworld';
@@ -52,7 +52,7 @@ export function makeForcePush(args: forcePushArgs, underworld: Underworld, predi
   // Experiment: canCreateSecondOrderPushes now is ALWAYS disabled.
   // I've had feedback that it's suprising - which is bad for a tactical game
   // also I suspect it has significant performance costs for levels with many enemies
-  const forceMoveInst: ForceMove = { pushedObject, alreadyCollided: [], canCreateSecondOrderPushes: false, velocity, velocity_falloff, resolve }
+  const forceMoveInst: ForceMoveUnitOrPickup = { type: ForceMoveType.UNIT_OR_PICKUP, pushedObject, alreadyCollided: [], canCreateSecondOrderPushes: false, velocity, velocity_falloff, resolve }
   if (prediction) {
     underworld.forceMovePrediction.push(forceMoveInst);
   } else {
