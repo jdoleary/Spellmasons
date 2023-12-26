@@ -59,7 +59,7 @@ import { expandPolygon, isVec2InsidePolygon, mergePolygon2s, Polygon2, Polygon2L
 import { calculateDistanceOfVec2Array, findPath } from './jmath/Pathfinding';
 import { keyDown, useMousePosition } from './graphics/ui/eventListeners';
 import Jprompt from './graphics/Jprompt';
-import { collideWithLineSegments, ForceMove, forceMovePreventForceThroughWall, isVecIntersectingVecWithCustomRadius, moveWithCollisions } from './jmath/moveWithCollision';
+import { collideWithLineSegments, ForceMove, forceMovePreventForceThroughWall, ForceMoveType, isForceMoveProjectile, isForceMoveUnitOrPickup, isVecIntersectingVecWithCustomRadius, moveWithCollisions } from './jmath/moveWithCollision';
 import { IHostApp, hostGiveClientGameState } from './network/networkUtil';
 import { withinMeleeRange } from './entity/units/actions/meleeAction';
 import { baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLimits, Limits as Limits, makeFinalTileImages, Map, Tile, toObstacle } from './MapOrganicCave';
@@ -363,7 +363,9 @@ export default class Underworld {
             if (globalThis.predictionGraphics && !globalThis.isHUDHidden) {
               globalThis.predictionGraphics.drawCircle(forceMoveInst.pushedObject.x, forceMoveInst.pushedObject.y, 3);
             }
-            forceMoveInst.resolve();
+            if (isForceMoveUnitOrPickup(forceMoveInst)) {
+              forceMoveInst.resolve();
+            }
             this.forceMovePrediction.splice(i, 1);
           }
         }
@@ -379,7 +381,7 @@ export default class Underworld {
   }
   // Returns true when forceMove is complete
   runForceMove(forceMoveInst: ForceMove, prediction: boolean): boolean {
-    const { pushedObject, velocity, velocity_falloff, timedOut } = forceMoveInst;
+    const { pushedObject, velocity, timedOut } = forceMoveInst;
     if (timedOut) {
       return true;
     }
@@ -393,74 +395,94 @@ export default class Underworld {
       return true;
     }
     const aliveUnits = ((prediction && this.unitsPrediction) ? this.unitsPrediction : this.units).filter(u => u.alive);
-    const handled = forceMovePreventForceThroughWall(forceMoveInst, this);
-    if (handled) {
-      // If striking the wall hard enough to pass through it, deal damage if the
-      // pushed object is a unit and stop velocity:
-      if (Unit.isUnit(pushedObject)) {
-        const magnitude = Vec.magnitude(velocity);
-        const damage = Math.ceil(Math.log(magnitude)) * 10;
-        Unit.takeDamage(pushedObject, damage, Vec.add(pushedObject, { x: velocity.x, y: velocity.y }), this, prediction);
-        if (!prediction) {
-          floatingText({ coords: pushedObject, text: `${damage} Impact damage!` });
+    if (isForceMoveUnitOrPickup(forceMoveInst)) {
+      const { velocity_falloff } = forceMoveInst;
+      const handled = forceMovePreventForceThroughWall(forceMoveInst, this);
+      if (handled) {
+        // If striking the wall hard enough to pass through it, deal damage if the
+        // pushed object is a unit and stop velocity:
+        if (Unit.isUnit(pushedObject)) {
+          const magnitude = Vec.magnitude(velocity);
+          const damage = Math.ceil(Math.log(magnitude)) * 10;
+          Unit.takeDamage(pushedObject, damage, Vec.add(pushedObject, { x: velocity.x, y: velocity.y }), this, prediction);
+          if (!prediction) {
+            floatingText({ coords: pushedObject, text: `${damage} Impact damage!` });
+          }
+        }
+        velocity.x = 0;
+        velocity.y = 0;
+      } else {
+        // If forceMove wasn't going to drive the pushedObject through a wall,
+        // move it according to it's velocity
+        // Note: This is the normal case, "handled" occurs
+        // under special circumstances when the object is moving so fast
+        // that it would pass through solid walls
+        const newPosition = Vec.add(pushedObject, velocity);
+        pushedObject.x = newPosition.x;
+        pushedObject.y = newPosition.y;
+      }
+      for (let other of aliveUnits) {
+        if (other == forceMoveInst.pushedObject) {
+          // Don't collide with self
+          continue;
+        }
+        // The units' regular radius is for "crowding". It is much smaller than their actual size and it is used
+        // to ensure they can crowd together but not overlap perfect, so here we use a custom radius to detect
+        // forcePush collisions.
+        // Only allow instances that are flagged as able to create second order pushes create new pushes on collision or else you risk infinite
+        // recursion
+        if (forceMoveInst.canCreateSecondOrderPushes && isVecIntersectingVecWithCustomRadius(pushedObject, other, config.COLLISION_MESH_RADIUS)) {
+          // Don't collide with the same object more than once
+          if (forceMoveInst.alreadyCollided.includes(other)) {
+            continue;
+          }
+          forceMoveInst.alreadyCollided.push(other);
+          // If they collide transfer force:
+          // () => {}: No resolver needed for second order force pushes
+          // All pushable objects have the same mass so when a collision happens they'll split the distance
+          const fullDist = Vec.magnitude(forceMoveInst.velocity);
+          const halfDist = fullDist / 2;
+          // This is a second order push and second order pushes CANNOT create more pushes or else you risk infinite recursion in prediction mode
+          const canCreateSecondOrderPushes = false;
+          makeForcePush({ pushedObject: other, awayFrom: forceMoveInst.pushedObject, velocityStartMagnitude: halfDist, resolve: () => { }, canCreateSecondOrderPushes }, this, prediction);
+          // Reduce own velocity by half due to the transfer of force:
+          forceMoveInst.velocity = Vec.multiply(0.5, forceMoveInst.velocity);
+
         }
       }
-      velocity.x = 0;
-      velocity.y = 0;
-    } else {
-      // If forceMove wasn't going to drive the pushedObject through a wall,
-      // move it according to it's velocity
-      // Note: This is the normal case, "handled" occurs
-      // under special circumstances when the object is moving so fast
-      // that it would pass through solid walls
+      collideWithLineSegments(pushedObject, this.walls, this);
+      forceMoveInst.velocity = Vec.multiply(velocity_falloff, velocity);
+      if (Unit.isUnit(forceMoveInst.pushedObject)) {
+        // If the pushed object is a unit, check if it collides with any pickups
+        // as it is pushed
+        this.checkPickupCollisions(forceMoveInst.pushedObject, prediction);
+      } else if (Pickup.isPickup(forceMoveInst.pushedObject)) {
+        // If the pushed object is a pickup, check if it collides with any units
+        // as it is pushed
+        ((prediction && this.unitsPrediction) ? this.unitsPrediction : this.units).forEach(u => {
+          this.checkPickupCollisions(u, prediction);
+        })
+      }
+      // Check to see if unit has falled out of lava via a forcemove
+      Obstacle.tryFallInOutOfLiquid(forceMoveInst.pushedObject, this, prediction);
+    } else if (isForceMoveProjectile(forceMoveInst)) {
       const newPosition = Vec.add(pushedObject, velocity);
       pushedObject.x = newPosition.x;
       pushedObject.y = newPosition.y;
-    }
-    for (let other of aliveUnits) {
-      if (other == forceMoveInst.pushedObject) {
-        // Don't collide with self
-        continue;
+      if (pushedObject.image) {
+        pushedObject.image.sprite.x = pushedObject.x;
+        pushedObject.image.sprite.y = pushedObject.y;
       }
-      // The units' regular radius is for "crowding". It is much smaller than their actual size and it is used
-      // to ensure they can crowd together but not overlap perfect, so here we use a custom radius to detect
-      // forcePush collisions.
-      // Only allow instances that are flagged as able to create second order pushes create new pushes on collision or else you risk infinite
-      // recursion
-      if (forceMoveInst.canCreateSecondOrderPushes && isVecIntersectingVecWithCustomRadius(pushedObject, other, config.COLLISION_MESH_RADIUS)) {
-        // Don't collide with the same object more than once
-        if (forceMoveInst.alreadyCollided.includes(other)) {
+      for (let other of aliveUnits) {
+        if (other.id == forceMoveInst.ignoreUnitId) {
           continue;
         }
-        forceMoveInst.alreadyCollided.push(other);
-        // If they collide transfer force:
-        // () => {}: No resolver needed for second order force pushes
-        // All pushable objects have the same mass so when a collision happens they'll split the distance
-        const fullDist = Vec.magnitude(forceMoveInst.velocity);
-        const halfDist = fullDist / 2;
-        // This is a second order push and second order pushes CANNOT create more pushes or else you risk infinite recursion in prediction mode
-        const canCreateSecondOrderPushes = false;
-        makeForcePush({ pushedObject: other, awayFrom: forceMoveInst.pushedObject, velocityStartMagnitude: halfDist, resolve: () => { }, canCreateSecondOrderPushes }, this, prediction);
-        // Reduce own velocity by half due to the transfer of force:
-        forceMoveInst.velocity = Vec.multiply(0.5, forceMoveInst.velocity);
-
+        if (isVecIntersectingVecWithCustomRadius(pushedObject, other, config.COLLISION_MESH_RADIUS)) {
+          // TODO collide
+          console.log('jtest projectile collide', other);
+        }
       }
     }
-    collideWithLineSegments(pushedObject, this.walls, this);
-    forceMoveInst.velocity = Vec.multiply(velocity_falloff, velocity);
-    if (Unit.isUnit(forceMoveInst.pushedObject)) {
-      // If the pushed object is a unit, check if it collides with any pickups
-      // as it is pushed
-      this.checkPickupCollisions(forceMoveInst.pushedObject, prediction);
-    } else if (Pickup.isPickup(forceMoveInst.pushedObject)) {
-      // If the pushed object is a pickup, check if it collides with any units
-      // as it is pushed
-      ((prediction && this.unitsPrediction) ? this.unitsPrediction : this.units).forEach(u => {
-        this.checkPickupCollisions(u, prediction);
-      })
-    }
-    // Check to see if unit has falled out of lava via a forcemove
-    Obstacle.tryFallInOutOfLiquid(forceMoveInst.pushedObject, this, prediction);
     return false;
 
   }
@@ -547,7 +569,9 @@ export default class Underworld {
         // This works even if collisions prevent the unit from moving since
         // distance is modified even if the unit doesn't move each loop
         if (done) {
-          forceMoveInst.resolve();
+          if (isForceMoveUnitOrPickup(forceMoveInst)) {
+            forceMoveInst.resolve();
+          }
           this.forceMove.splice(i, 1);
         }
       }
