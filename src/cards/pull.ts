@@ -11,7 +11,7 @@ import { distance, similarTriangles } from '../jmath/math';
 import { forcePush } from './push';
 
 export const pullId = 'pull';
-export const velocityStartMagnitude = 10;
+export const velocityStartMagnitude = 0.625;
 const spell: Spell = {
   card: {
     id: pullId,
