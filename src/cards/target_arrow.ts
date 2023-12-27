@@ -21,6 +21,7 @@ const spell: Spell = {
     thumbnail: 'spellIconArrowGreen.png',
     // so that you can fire the arrow at targets out of range
     allowNonUnitTarget: true,
+    ignoreRange: true,
     // This ensures that "target scamming" doesn't work with target arrow
     // due to it being able to fire out of range
     noInitialTarget: true,

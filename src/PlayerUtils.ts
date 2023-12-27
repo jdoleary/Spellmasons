@@ -1,6 +1,7 @@
 import * as math from './jmath/math';
 import throttle from 'lodash.throttle';
 import * as Player from './entity/Player';
+import * as Cards from './cards';
 import * as config from './config';
 import { round, Vec2 } from './jmath/Vec';
 import Underworld from './Underworld';
@@ -10,7 +11,7 @@ import { targetArrowCardId } from './cards/target_arrow';
 
 function isAllowedToCastOutOfRange(cardIds: string[]): boolean {
     // Exception, if all of the cards cast are arrow cards, let them cast out of range
-    return cardIds[0] == targetArrowCardId || cardIds.every(id => id.toLowerCase().includes('arrow'));
+    return cardIds[0] == targetArrowCardId || cardIds.every(id => Cards.allCards[id]?.ignoreRange);
 }
 export function isOutOfRange(caster: Player.IPlayer, target: Vec2, underworld: Underworld, cardIds?: string[]): boolean {
     if (cardIds && cardIds.length && isAllowedToCastOutOfRange(cardIds)) {
