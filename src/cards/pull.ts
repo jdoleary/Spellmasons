@@ -1,6 +1,6 @@
 import { multiply, add, Vec2 } from '../jmath/Vec';
 import { getCurrentTargets, Spell } from './index';
-import type { Circle, ForceMove } from '../jmath/moveWithCollision';
+import { Circle, ForceMove, ForceMoveType, ForceMoveUnitOrPickup } from '../jmath/moveWithCollision';
 import { raceTimeout } from '../Promise';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
@@ -44,12 +44,12 @@ export async function pull(pushedObject: HasSpace, towards: Vec2, quantity: numb
   // Set the velocity so it's just enough to pull the unit into you
   let velocity = multiply(1 - velocity_falloff, { x: towards.x - pushedObject.x, y: towards.y - pushedObject.y });
   velocity = multiply(quantity, velocity);
-  let forceMoveInst: ForceMove;
+  let forceMoveInst: ForceMoveUnitOrPickup;
   return await raceTimeout(2000, 'Pull', new Promise<void>((resolve) => {
     // Experiment: canCreateSecondOrderPushes now is ALWAYS disabled.
     // I've had feedback that it's suprising - which is bad for a tactical game
     // also I suspect it has significant performance costs for levels with many enemies
-    forceMoveInst = { canCreateSecondOrderPushes: false, alreadyCollided: [], pushedObject, velocity, velocity_falloff, resolve }
+    forceMoveInst = { type: ForceMoveType.UNIT_OR_PICKUP, canCreateSecondOrderPushes: false, alreadyCollided: [], pushedObject, velocity, velocity_falloff, resolve }
     if (prediction) {
       underworld.forceMovePrediction.push(forceMoveInst);
     } else {
