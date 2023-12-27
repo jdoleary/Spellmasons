@@ -2374,7 +2374,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   async endMyTurnButtonHandler() {
     if (globalThis.player) {
       // If End turn button is level up button
-      if (elEndTurnBtn.classList.contains('upgrade') || document.body?.classList.contains(showUpgradesClassName)) {
+      if (elEndTurnBtn && (elEndTurnBtn.classList.contains('upgrade') || document.body?.classList.contains(showUpgradesClassName))) {
         const upgradesLeftToChoose = this.upgradesLeftToChoose(globalThis.player)
         if (upgradesLeftToChoose > 0) {
           this.showUpgrades();
@@ -2528,7 +2528,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // For hotseat, whenever a player ends their turn, check if the current player
       // has upgrades to choose and if so, show the upgrade button
       if (globalThis.player && this.upgradesLeftToChoose(globalThis.player)) {
-        elEndTurnBtn.classList.toggle('upgrade', true);
+        elEndTurnBtn?.classList.toggle('upgrade', true);
       }
 
       // Announce new players' turn
@@ -2706,7 +2706,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (upgradesLeftToChoose <= 0 && perksLeftToChoose <= 0 && cursesLeftToChoose <= 0) {
       console.log('showUpgrades: Closing upgrade screen, nothing left to pick');
       // Hide the upgrade button since there are no upgrades left to pick
-      elEndTurnBtn.classList.toggle('upgrade', false);
+      elEndTurnBtn?.classList.toggle('upgrade', false);
       return;
     }
     const isPerk = perksLeftToChoose > 0 || cursesLeftToChoose > 0;
