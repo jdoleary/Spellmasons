@@ -32,6 +32,13 @@ const spell: Spell = {
     sfx: 'arrow',
     description: ['spell_arrow', damage.toString()],
     effect: arrowEffect(1, damage)
+  },
+  events: {
+    onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
+      if (unit) {
+        Unit.takeDamage(unit, damage, projectile.startPoint, underworld, prediction, undefined, { thinBloodLine: true });
+      }
+    }
   }
 };
 export function arrowEffect(multiShotCount: number, damageDone: number, onCollide?: (state: EffectState, firstTarget: Unit.IUnit, underworld: Underworld, prediction: boolean) => Promise<EffectState>, skipClearCache?: boolean) {
@@ -91,7 +98,7 @@ export function arrowEffect(multiShotCount: number, damageDone: number, onCollid
             endPoint: endPoint,
             doesPierce: false, // TODO support pierce
             ignoreUnitId: state.casterUnit.id,
-            collideFnKey: 'todo'
+            collideFnKey: arrowCardId,// TODO support for other arrows
           }, underworld, prediction);
 
           //
@@ -172,10 +179,4 @@ export function findArrowCollisions(casterPositionAtTimeOfCast: Vec2, casterId: 
   });
   // Return the endPoint so the arrow will fly and hit a wall even if it doesn't hit a unit
   return hitTargets.length ? hitTargets : [arrowShootPath.p2];
-}
-if (globalThis.projectileCollisionCallbacks) {
-
-  globalThis.projectileCollisionCallbacks[arrowCardId] = ({ unit, underworld, prediction }) => {
-
-  }
 }
