@@ -19,6 +19,7 @@ const spell: Spell = {
     thumbnail: 'spellIconArrow3.png',
     // so that you can fire the arrow at targets out of range
     allowNonUnitTarget: true,
+    ignoreRange: true,
     animationPath: '',
     sfx: 'arrow',
     description: ['spell_arrow', damageDone.toString()],

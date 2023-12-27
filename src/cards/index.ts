@@ -477,6 +477,8 @@ export interface ICard {
   supportQuantity?: boolean;
   // used to assist with targeting for spells that only affect dead units
   onlySelectDeadUnits?: boolean;
+  // if true, character range will be ignored for this spell
+  ignoreRange?: boolean;
   sfx?: string;
 }
 
