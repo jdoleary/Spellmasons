@@ -65,7 +65,6 @@ export function arrowEffect(multiShotCount: number, damageDone: number, onCollid
     }
     for (let i = 0; i < quantity; i++) {
       for (let target of targets) {
-        let projectilePromise: Promise<EffectState> = Promise.resolve(state);
         for (let arrowNumber = 0; arrowNumber < multiShotCount; arrowNumber++) {
 
           // START: Shoot multiple arrows at offset
@@ -77,11 +76,15 @@ export function arrowEffect(multiShotCount: number, damageDone: number, onCollid
             castLocation = subtract(castLocation, diff);
           }
           // END: Shoot multiple arrows at offset
-          let endPoint = add(casterPositionAtTimeOfCast, math.similarTriangles(target.x - casterPositionAtTimeOfCast.x, target.y - casterPositionAtTimeOfCast.y, math.distance(casterPositionAtTimeOfCast, target), 10000));
-          const image = Image.create(casterPositionAtTimeOfCast, 'projectile/arrow', containerProjectiles)
-          if (image) {
+          const arrowPath = findArrowPath(casterPositionAtTimeOfCast, target, underworld);
+          const endPoint = arrowPath ? arrowPath.p2 : target;
+          let image: Image.IImageAnimated | undefined;
+          if (!prediction) {
+            image = Image.create(casterPositionAtTimeOfCast, 'projectile/arrow', containerProjectiles)
+            if (image) {
 
-            image.sprite.rotation = Math.atan2(endPoint.y - casterPositionAtTimeOfCast.y, endPoint.x - casterPositionAtTimeOfCast.x);
+              image.sprite.rotation = Math.atan2(endPoint.y - casterPositionAtTimeOfCast.y, endPoint.x - casterPositionAtTimeOfCast.x);
+            }
           }
           const pushedObject: HasSpace = {
             x: casterPositionAtTimeOfCast.x,
@@ -96,15 +99,14 @@ export function arrowEffect(multiShotCount: number, damageDone: number, onCollid
             pushedObject,
             startPoint: casterPositionAtTimeOfCast,
             endPoint: endPoint,
-            doesPierce: false, // TODO support pierce
+            doesPierce: false,
             ignoreUnitId: state.casterUnit.id,
             collideFnKey: arrowCardId,// TODO support for other arrows
           }, underworld, prediction);
 
-          //
           if (!prediction && !globalThis.headless) {
             const timeout = Math.max(0, timeoutToNextArrow);
-            await Promise.race([new Promise(resolve => setTimeout(resolve, timeout)), projectilePromise]);
+            await new Promise(resolve => setTimeout(resolve, timeout));
             // Decrease timeout with each subsequent arrow fired to ensure that players don't have to wait too long
             timeoutToNextArrow -= 5;
           }

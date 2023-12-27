@@ -337,7 +337,7 @@ export default class Underworld {
     }
     this.simulatingMovePredictions = true;
     const prediction = true;
-    const PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD = 300;
+    const PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD = 500;
     let loopCount = 0;
     if (globalThis.predictionGraphics) {
       globalThis.predictionGraphics.beginFill(colors.forceMoveColor);
@@ -469,6 +469,10 @@ export default class Underworld {
       const newPosition = Vec.add(pushedObject, velocity);
       pushedObject.x = newPosition.x;
       pushedObject.y = newPosition.y;
+      if (math.distance(forceMoveInst.pushedObject, forceMoveInst.startPoint) >= math.distance(forceMoveInst.endPoint, forceMoveInst.startPoint)) {
+        // Projectile is done if it reaches or goes beyond its end point
+        return true;
+      }
       if (pushedObject.image) {
         pushedObject.image.sprite.x = pushedObject.x;
         pushedObject.image.sprite.y = pushedObject.y;
@@ -484,6 +488,10 @@ export default class Underworld {
               collideFn({ unit: other, underworld: this, prediction, projectile: forceMoveInst });
             } else {
               console.error('No projectile collide fn for', forceMoveInst.collideFnKey);
+            }
+            if (!forceMoveInst.doesPierce) {
+              // If projectile does not pierce, remove it once it collides
+              return true;
             }
           }
         }
@@ -577,6 +585,8 @@ export default class Underworld {
         if (done) {
           if (isForceMoveUnitOrPickup(forceMoveInst)) {
             forceMoveInst.resolve();
+          } else if (isForceMoveProjectile(forceMoveInst)) {
+            Image.cleanup(forceMoveInst.pushedObject.image);
           }
           this.forceMove.splice(i, 1);
         }
