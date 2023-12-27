@@ -1,4 +1,4 @@
-import { getCurrentTargets, refundLastSpell, Spell } from './index';
+import { addTarget, getCurrentTargets, refundLastSpell, Spell } from './index';
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
 import { CardCategory, UnitType } from '../types/commonTypes';
@@ -78,6 +78,8 @@ const spell: Spell = {
                 clone.y = validSpawnCoords.y;
                 // Clones don't provide experience when killed
                 clone.originalLife = false;
+                // Add clones to target list
+                addTarget(clone, state);
               }
             }
             if (Pickup.isPickup(target)) {
