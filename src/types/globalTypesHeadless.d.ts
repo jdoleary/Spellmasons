@@ -341,8 +341,4 @@ declare global {
   var pie: PieClient | undefined;
   var adminPowerBarIndex: number;
   var adminPowerBarSelection: string;
-  var projectileCollisionCallbacks: {
-    [id: string]:
-    ({ unit, pickup, underworld, prediction }: { unit: Unit.IUnit, pickup: Pickup.IPickup, underworld: Underworld, prediction: boolean }) => void;
-  } | undefined;
 }

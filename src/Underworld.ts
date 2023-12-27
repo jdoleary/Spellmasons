@@ -478,8 +478,14 @@ export default class Underworld {
           continue;
         }
         if (isVecIntersectingVecWithCustomRadius(pushedObject, other, config.COLLISION_MESH_RADIUS)) {
-          // TODO collide
-          console.log('jtest projectile collide', other);
+          if (Events.onProjectileCollisionSource) {
+            const collideFn = Events.onProjectileCollisionSource[forceMoveInst.collideFnKey];
+            if (collideFn) {
+              collideFn({ unit: other, underworld: this, prediction, projectile: forceMoveInst });
+            } else {
+              console.error('No projectile collide fn for', forceMoveInst.collideFnKey);
+            }
+          }
         }
       }
     }
