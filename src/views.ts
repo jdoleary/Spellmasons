@@ -18,7 +18,6 @@ import {
   mouseOverHandler,
 } from './graphics/ui/eventListeners';
 import { sendChatHandler } from './graphics/ui/Chat';
-import { elEndTurnBtn } from './HTMLElements';
 import { Overworld } from './Overworld';
 
 // A view is not shared between players in the same game, a player could choose any view at any time
@@ -148,6 +147,9 @@ let runPredictionsIdleCallbackId: number;
 
 export function addOverworldEventListeners(overworld: Overworld) {
   if (globalThis.headless) { return; }
+  const elEndTurnButton: HTMLButtonElement = document.getElementById(
+    'end-turn-btn',
+  ) as HTMLButtonElement;
   const elQuitButton: HTMLButtonElement = document.getElementById(
     'quit',
   ) as HTMLButtonElement;
@@ -240,7 +242,7 @@ export function addOverworldEventListeners(overworld: Overworld) {
         }
       },
       {
-        target: elEndTurnBtn,
+        target: elEndTurnButton,
         event: 'click',
         listener: endTurnBtnListener.bind(undefined, overworld)
       },
