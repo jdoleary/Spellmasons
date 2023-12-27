@@ -6,7 +6,10 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { createVisualFlyingProjectile } from '../entity/Projectile';
 import * as config from '../config';
 import { clone, Vec2 } from '../jmath/Vec';
-import { findArrowCollisions } from './arrow';
+import { findWherePointIntersectLineSegmentAtRightAngle } from '../jmath/lineSegment';
+import { findArrowPath } from './arrow';
+import Underworld from '../Underworld';
+import { distance } from '../jmath/math';
 
 export const targetArrowCardId = 'Target Arrow';
 const spell: Spell = {
@@ -93,3 +96,31 @@ const spell: Spell = {
   }
 };
 export default spell;
+
+
+export function findArrowCollisions(casterPositionAtTimeOfCast: Vec2, casterId: number, target: Vec2, prediction: boolean, underworld: Underworld): Vec2[] {
+  const arrowShootPath = findArrowPath(casterPositionAtTimeOfCast, target, underworld);
+  if (arrowShootPath === undefined) {
+    return [];
+  }
+  // Get all units between source and target for the arrow to pierce:
+  const hitTargets = (prediction ? underworld.unitsPrediction : underworld.units).filter(
+    (u) => {
+      if (!u.alive) {
+        return false;
+      }
+      // Note: Filter out self as the arrow shouldn't damage caster
+      if (u.id == casterId) {
+        return false;
+      }
+      const pointAtRightAngleToArrowPath = findWherePointIntersectLineSegmentAtRightAngle(u, arrowShootPath);
+      // TODO: Validate: Will this hit miniboss since their radius is larger?
+      const willBeStruckByArrow = !pointAtRightAngleToArrowPath ? false : distance(u, pointAtRightAngleToArrowPath) <= config.COLLISION_MESH_RADIUS
+      return willBeStruckByArrow;
+    },
+  ).sort((a, b) => {
+    return distance(a, arrowShootPath.p1) - distance(b, arrowShootPath.p1);
+  })
+  // Return the endPoint so the arrow will fly and hit a wall even if it doesn't hit a unit
+  return hitTargets.length ? hitTargets : [arrowShootPath.p2];
+}

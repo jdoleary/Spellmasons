@@ -3,6 +3,7 @@ import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { arrowTripleCardId } from './arrow_triple';
 import { arrowEffect } from './arrow';
+import { takeDamage } from '../entity/Unit';
 
 export const arrowMultiCardId = 'Multi Arrow';
 const damageDone = 10;
@@ -23,7 +24,14 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'arrow',
     description: ['spell_arrow_many', arrowCount.toString(), damageDone.toString()],
-    effect: arrowEffect(arrowCount, damageDone)
+    effect: arrowEffect(arrowCount)
+  },
+  events: {
+    onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
+      if (unit) {
+        takeDamage(unit, damageDone, projectile.startPoint, underworld, prediction, undefined, { thinBloodLine: true });
+      }
+    }
   }
 };
 export default spell;
