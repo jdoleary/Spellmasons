@@ -1,6 +1,6 @@
-export const elEndTurnBtn: HTMLButtonElement = document.getElementById(
+export const elEndTurnBtn: HTMLButtonElement | undefined = document.getElementById(
   'end-turn-btn'
-) as HTMLButtonElement;
+) as HTMLButtonElement | undefined;
 
 export const elTutorialChecklistInner: HTMLButtonElement = document.getElementById(
   'tutorial-checklist-inner'
