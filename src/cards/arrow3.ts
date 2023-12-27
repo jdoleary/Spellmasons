@@ -3,6 +3,7 @@ import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { arrowEffect } from './arrow';
 import { arrow2CardId } from './arrow2';
+import { takeDamage } from '../entity/Unit';
 
 export const arrow3CardId = 'Arrow3';
 const damageDone = 30;
@@ -23,7 +24,14 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'arrow',
     description: ['spell_arrow', damageDone.toString()],
-    effect: arrowEffect(1, damageDone),
+    effect: arrowEffect(1),
+  },
+  events: {
+    onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
+      if (unit) {
+        takeDamage(unit, damageDone, projectile.startPoint, underworld, prediction, undefined, { thinBloodLine: true });
+      }
+    }
   }
 };
 export default spell;

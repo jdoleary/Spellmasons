@@ -32,7 +32,7 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'arrow',
     description: ['spell_arrow', damage.toString()],
-    effect: arrowEffect(1, damage)
+    effect: arrowEffect(1)
   },
   events: {
     onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
@@ -42,28 +42,14 @@ const spell: Spell = {
     }
   }
 };
-export function arrowEffect(multiShotCount: number, damageDone: number, onCollide?: (state: EffectState, firstTarget: Unit.IUnit, underworld: Underworld, prediction: boolean) => Promise<EffectState>, skipClearCache?: boolean) {
+export function arrowEffect(multiShotCount: number) {
   return async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean) => {
 
     let targets: Vec2[] = state.targetedUnits;
     const path = findArrowPath(state.casterPositionAtTimeOfCast, state.castLocation, underworld)
     targets = targets.length ? targets : [path ? path.p2 : state.castLocation];
     let targetsHitCount = 0;
-    let attackPromises = [];
     let timeoutToNextArrow = 200;
-    if (!prediction) {
-      if (!skipClearCache) {
-        underworld.clearPredictedNextTurnDamage();
-        for (let u of underworld.units) {
-          // @ts-ignore: `cachedArrowHealth` is a temporary property on units
-          // Keep the health that they had before arrows are fired
-          // so that arrows can determine if they should go past
-          // a unit that will die before it gets there due to
-          // another in-flight arrow
-          u.cachedArrowHealth = u.health;
-        }
-      }
-    }
     for (let i = 0; i < quantity; i++) {
       for (let target of targets) {
         for (let arrowNumber = 0; arrowNumber < multiShotCount; arrowNumber++) {
@@ -77,8 +63,7 @@ export function arrowEffect(multiShotCount: number, damageDone: number, onCollid
             castLocation = subtract(castLocation, diff);
           }
           // END: Shoot multiple arrows at offset
-          const arrowPath = findArrowPath(casterPositionAtTimeOfCast, target, underworld);
-          const endPoint = arrowPath ? arrowPath.p2 : target;
+          const endPoint = target;
           let image: Image.IImageAnimated | undefined;
           if (!prediction) {
             image = Image.create(casterPositionAtTimeOfCast, 'projectile/arrow', containerProjectiles)
@@ -150,36 +135,4 @@ export function findArrowPath(casterPositionAtTimeOfCast: Vec2, target: Vec2, un
     console.error('Unexpected: arrow couldnt find wall to intersect with');
     return { p1: casterPositionAtTimeOfCast, p2: target };
   }
-
-}
-
-export function findArrowCollisions(casterPositionAtTimeOfCast: Vec2, casterId: number, target: Vec2, prediction: boolean, underworld: Underworld): Vec2[] {
-  const arrowShootPath = findArrowPath(casterPositionAtTimeOfCast, target, underworld);
-  if (arrowShootPath === undefined) {
-    return [];
-  }
-  // Get all units between source and target for the arrow to pierce:
-  const hitTargets = (prediction ? underworld.unitsPrediction : underworld.units).filter(
-    (u) => {
-      if (!u.alive) {
-        return false;
-      }
-      // Note: Filter out self as the arrow shouldn't damage caster
-      if (u.id == casterId) {
-        return false;
-      }
-      // @ts-ignore: `cachedArrowHealth` is a temporary property on units
-      if (u.predictedNextTurnDamage >= u.cachedArrowHealth) {
-        return false;
-      }
-      const pointAtRightAngleToArrowPath = findWherePointIntersectLineSegmentAtRightAngle(u, arrowShootPath);
-      // TODO: Validate: Will this hit miniboss since their radius is larger?
-      const willBeStruckByArrow = !pointAtRightAngleToArrowPath ? false : math.distance(u, pointAtRightAngleToArrowPath) <= config.COLLISION_MESH_RADIUS
-      return willBeStruckByArrow;
-    },
-  ).sort((a, b) => {
-    return math.distance(a, arrowShootPath.p1) - math.distance(b, arrowShootPath.p1);
-  });
-  // Return the endPoint so the arrow will fly and hit a wall even if it doesn't hit a unit
-  return hitTargets.length ? hitTargets : [arrowShootPath.p2];
 }
