@@ -42,12 +42,15 @@ const spell: Spell = {
     }
   }
 };
-export function arrowEffect(multiShotCount: number) {
+export function arrowEffect(multiShotCount: number, doesPierce: boolean = false) {
   return async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean) => {
 
     let targets: Vec2[] = state.targetedUnits;
     const path = findArrowPath(state.casterPositionAtTimeOfCast, state.castLocation, underworld)
-    targets = targets.length ? targets : [path ? path.p2 : state.castLocation];
+    targets = targets.length ? targets.map(t => {
+      const path = findArrowPath(state.casterPositionAtTimeOfCast, t, underworld);
+      return path ? path.p2 : state.castLocation;
+    }) : [path ? path.p2 : state.castLocation];
     let targetsHitCount = 0;
     let timeoutToNextArrow = 200;
     for (let i = 0; i < quantity; i++) {
@@ -85,7 +88,7 @@ export function arrowEffect(multiShotCount: number) {
             pushedObject,
             startPoint: casterPositionAtTimeOfCast,
             endPoint: endPoint,
-            doesPierce: false,
+            doesPierce,
             ignoreUnitId: state.casterUnit.id,
             collideFnKey: arrowCardId,// TODO support for other arrows
           }, underworld, prediction);

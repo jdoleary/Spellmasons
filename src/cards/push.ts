@@ -11,7 +11,7 @@ import { HasSpace } from '../entity/Type';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 export const pushId = 'push';
-export const velocityStartMagnitude = 10;
+export const velocityStartMagnitude = 0.625;
 const spell: Spell = {
   card: {
     id: pushId,

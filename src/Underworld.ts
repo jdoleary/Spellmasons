@@ -348,7 +348,7 @@ export default class Underworld {
         const forceMoveInst = this.forceMovePrediction[i];
         if (forceMoveInst) {
           const startPos = Vec.clone(forceMoveInst.pushedObject);
-          const done = this.runForceMove(forceMoveInst, prediction);
+          const done = this.runForceMove(forceMoveInst, 16, prediction);
           // Draw prediction lines
           if (globalThis.predictionGraphics && !globalThis.isHUDHidden) {
             globalThis.predictionGraphics.lineStyle(4, colors.forceMoveColor, 1.0);
@@ -380,7 +380,7 @@ export default class Underworld {
     this.simulatingMovePredictions = false;
   }
   // Returns true when forceMove is complete
-  runForceMove(forceMoveInst: ForceMove, prediction: boolean): boolean {
+  runForceMove(forceMoveInst: ForceMove, deltaTime: number, prediction: boolean): boolean {
     const { pushedObject, velocity, timedOut } = forceMoveInst;
     if (timedOut) {
       return true;
@@ -390,20 +390,24 @@ export default class Underworld {
       // and is "complete"
       return true;
     }
-    if (Vec.magnitude(velocity) <= 0.1) {
+    const trueVelocity = Vec.multiply(deltaTime, velocity);
+    const trueMagnitude = Vec.magnitude(trueVelocity);
+    if (trueMagnitude <= 0.1) {
       // It's close enough, return true to signify complete 
       return true;
     }
     const aliveUnits = ((prediction && this.unitsPrediction) ? this.unitsPrediction : this.units).filter(u => u.alive);
     if (isForceMoveUnitOrPickup(forceMoveInst)) {
       const { velocity_falloff } = forceMoveInst;
-      const handled = forceMovePreventForceThroughWall(forceMoveInst, this);
+      const handled = forceMovePreventForceThroughWall(forceMoveInst, this, trueVelocity);
       if (handled) {
         // If striking the wall hard enough to pass through it, deal damage if the
         // pushed object is a unit and stop velocity:
         if (Unit.isUnit(pushedObject)) {
-          const magnitude = Vec.magnitude(velocity);
-          const damage = Math.ceil(Math.log(magnitude)) * 10;
+
+          // TODO Improve impact damage so you don't have to go as far
+          console.log('jtest impact', Math.log(trueMagnitude), trueMagnitude);
+          const damage = Math.ceil(Math.log(trueMagnitude)) * 10;
           Unit.takeDamage(pushedObject, damage, Vec.add(pushedObject, { x: velocity.x, y: velocity.y }), this, prediction);
           if (!prediction) {
             floatingText({ coords: pushedObject, text: `${damage} Impact damage!` });
@@ -417,7 +421,7 @@ export default class Underworld {
         // Note: This is the normal case, "handled" occurs
         // under special circumstances when the object is moving so fast
         // that it would pass through solid walls
-        const newPosition = Vec.add(pushedObject, velocity);
+        const newPosition = Vec.add(pushedObject, trueVelocity);
         pushedObject.x = newPosition.x;
         pushedObject.y = newPosition.y;
       }
@@ -530,7 +534,7 @@ export default class Underworld {
   }
   // Returns true if there is more processing yet to be done on the next
   // gameloop
-  gameLoopForceMove = () => {
+  gameLoopForceMove = (deltaTime: number) => {
     // No need to process if there are no instances to process
     if (!this.forceMove.length) {
       return false;
@@ -549,7 +553,7 @@ export default class Underworld {
         const unitImageYOffset = config.COLLISION_MESH_RADIUS / 2;
         const startPos = Vec.clone(forceMoveInst.pushedObject);
         startPos.y += unitImageYOffset;
-        const done = this.runForceMove(forceMoveInst, false);
+        const done = this.runForceMove(forceMoveInst, deltaTime, false);
         const endPos = { x: forceMoveInst.pushedObject.x, y: forceMoveInst.pushedObject.y + unitImageYOffset };
         if (graphicsBloodSmear && Unit.isUnit(forceMoveInst.pushedObject) && forceMoveInst.pushedObject.health !== undefined && forceMoveInst.pushedObject.health <= 0) {
           const size = 3;
@@ -734,7 +738,7 @@ export default class Underworld {
   // Returns true if there is more processing to be done
   // See GameLoops.md for more details
   _gameLoopHeadless = (): boolean => {
-    const stillProcessingForceMoves = this.gameLoopForceMove();
+    const stillProcessingForceMoves = this.gameLoopForceMove(16);
     let stillProcessingUnits = 0;
     const aliveNPCs = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
     for (let u of this.units) {
@@ -788,7 +792,7 @@ export default class Underworld {
 
     const aliveNPCs = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
     // Run all forces in this.forceMove
-    this.gameLoopForceMove();
+    this.gameLoopForceMove(deltaTime);
 
     for (let i = 0; i < this.units.length; i++) {
       const u = this.units[i];
