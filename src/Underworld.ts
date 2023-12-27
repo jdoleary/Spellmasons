@@ -101,6 +101,7 @@ import { elEndTurnBtn } from './HTMLElements';
 import { corpseDecayId } from './modifierCorpseDecay';
 import { isSinglePlayer } from './network/wsPieSetup';
 
+const loopCountLimit = 10000;
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
   // This may happen if all players disconnect
@@ -720,11 +721,8 @@ export default class Underworld {
       let loopCount = 0;
       while (moreProcessingToBeDone) {
         loopCount++;
-        moreProcessingToBeDone = this._gameLoopHeadless();
-        if (loopCount >= 1000 && loopCount % 2000 == 0) {
-          console.error('Headless gameloop unexpectedly large loop count:', loopCount);
-        }
-        if (loopCount > 10000) {
+        moreProcessingToBeDone = this._gameLoopHeadless(loopCount);
+        if (loopCount > loopCountLimit) {
           // TODO: this number is arbitrary, test later levels and make sure this is high enough
           // so that it doesn't early exit
           console.error('Force return from headless gameloop to prevent infinite loop');
@@ -737,14 +735,20 @@ export default class Underworld {
   // Only to be invoked by triggerGameLoopHeadless
   // Returns true if there is more processing to be done
   // See GameLoops.md for more details
-  _gameLoopHeadless = (): boolean => {
+  _gameLoopHeadless = (loopCount: number): boolean => {
     const stillProcessingForceMoves = this.gameLoopForceMove(16);
+    if (loopCount > loopCountLimit && stillProcessingForceMoves) {
+      console.error('_gameLoopHeadless hit limit; stillProcessingForceMoves');
+    }
     let stillProcessingUnits = 0;
     const aliveNPCs = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
     for (let u of this.units) {
       const unitStillProcessing = this.gameLoopUnit(u, aliveNPCs, 16);
       if (unitStillProcessing) {
         stillProcessingUnits++;
+        if (loopCount > loopCountLimit) {
+          console.error('_gameLoopHeadless hit limit; stillProcessingUnits', u.unitSourceId);
+        }
       }
     }
     return stillProcessingForceMoves || stillProcessingUnits > 0;
