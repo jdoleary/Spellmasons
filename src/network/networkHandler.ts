@@ -1,6 +1,5 @@
 import type { OnDataArgs } from '@websocketpie/client';
 
-import stringify from 'fast-safe-stringify';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
 import * as Image from '../graphics/Image';
 import floatingText from '../graphics/FloatingText';
