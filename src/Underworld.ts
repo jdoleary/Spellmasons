@@ -2373,25 +2373,23 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   // Sends a network message to end turn
   async endMyTurnButtonHandler() {
     if (globalThis.player) {
-      if (elEndTurnBtn) {
-        // If End turn button is level up button
-        if (elEndTurnBtn.classList.contains('upgrade') || document.body?.classList.contains(showUpgradesClassName)) {
-          const upgradesLeftToChoose = this.upgradesLeftToChoose(globalThis.player)
-          if (upgradesLeftToChoose > 0) {
-            this.showUpgrades();
-            elEndTurnBtn.classList.toggle('upgrade', false);
-            // Do not end turn, just show upgrades
-            return;
-          } else {
-            console.error('Unexpected: Cannot choose upgrades, upgrades left to choose:', upgradesLeftToChoose);
-          }
-          // Prevent ending turn when attempting to upgrade
-          console.error('Unexpected: Attempted to show upgrades but cannot');
-          // Catch, since we unexpectedly can't upgrade, remove upgrade button
-          elEndTurnBtn.classList.toggle('upgrade', false)
-          // Do not end turn
+      // If End turn button is level up button
+      if (elEndTurnBtn && (elEndTurnBtn.classList.contains('upgrade') || document.body?.classList.contains(showUpgradesClassName))) {
+        const upgradesLeftToChoose = this.upgradesLeftToChoose(globalThis.player)
+        if (upgradesLeftToChoose > 0) {
+          this.showUpgrades();
+          elEndTurnBtn.classList.toggle('upgrade', false);
+          // Do not end turn, just show upgrades
           return;
+        } else {
+          console.error('Unexpected: Cannot choose upgrades, upgrades left to choose:', upgradesLeftToChoose);
         }
+        // Prevent ending turn when attempting to upgrade
+        console.error('Unexpected: Attempted to show upgrades but cannot');
+        // Catch, since we unexpectedly can't upgrade, remove upgrade button
+        elEndTurnBtn.classList.toggle('upgrade', false)
+        // Do not end turn
+        return;
       }
 
       if (!globalThis.player.isSpawned) {
