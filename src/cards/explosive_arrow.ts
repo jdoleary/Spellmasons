@@ -1,12 +1,9 @@
 import * as Unit from '../entity/Unit';
 import { CardCategory } from '../types/commonTypes';
-import { refundLastSpell, Spell } from './index';
+import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
-import { createVisualFlyingProjectile } from '../entity/Projectile';
-import { Vec2 } from '../jmath/Vec';
-import { playDefaultSpellSFX } from './cardUtils';
 import { explode } from './bloat';
-import { arrowEffect, findArrowCollisions } from './arrow';
+import { arrowEffect } from './arrow';
 import { arrow3CardId } from './arrow3';
 
 export const explosiveArrowCardId = 'Explosive Arrow';

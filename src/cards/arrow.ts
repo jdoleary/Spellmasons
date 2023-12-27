@@ -36,6 +36,7 @@ const spell: Spell = {
   },
   events: {
     onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
+      console.log('jtest arrow collide')
       if (unit) {
         Unit.takeDamage(unit, damage, projectile.startPoint, underworld, prediction, undefined, { thinBloodLine: true });
       }
@@ -52,7 +53,7 @@ export function arrowEffect(multiShotCount: number, doesPierce: boolean = false)
       return path ? path.p2 : state.castLocation;
     }) : [path ? path.p2 : state.castLocation];
     let targetsHitCount = 0;
-    let timeoutToNextArrow = 200;
+    let timeoutToNextArrow = 1200;
     for (let i = 0; i < quantity; i++) {
       for (let target of targets) {
         for (let arrowNumber = 0; arrowNumber < multiShotCount; arrowNumber++) {
@@ -93,9 +94,14 @@ export function arrowEffect(multiShotCount: number, doesPierce: boolean = false)
             collideFnKey: arrowCardId,// TODO support for other arrows
           }, underworld, prediction);
 
-          if (!prediction && !globalThis.headless) {
+          if (!prediction) {
             const timeout = Math.max(0, timeoutToNextArrow);
+            const start = Date.now();
+            console.log('jtest start timeout', start)
+            // LEFT OFF: Build system to make setTimeouts run in prediction and headless all at once
+            // but still respect the deltaTime of gameloop
             await new Promise(resolve => setTimeout(resolve, timeout));
+            console.log('jtest   end timeout', Date.now() - start)
             // Decrease timeout with each subsequent arrow fired to ensure that players don't have to wait too long
             timeoutToNextArrow -= 5;
           }

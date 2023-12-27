@@ -225,6 +225,7 @@ export default class Underworld {
   startTime: number | undefined;
   winTime: number | undefined;
   hotseatCurrentPlayerIndex: number = 0;
+  headlessTimeouts: { time: number, callback: () => void }[] = [];
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
