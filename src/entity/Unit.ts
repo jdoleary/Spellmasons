@@ -132,8 +132,6 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   // Used for more intelligent AI battles so many unit don't overkill a single unit and leave a bunch of others untouched
   predictedNextTurnDamage: number;
 }
-// This does not need to be unique to underworld, it just needs to be unique
-let lastPredictionUnitId = 0;
 export function create(
   unitSourceId: string,
   x: number,
@@ -159,7 +157,7 @@ export function create(
     }
     const unit: IUnit = Object.assign({
       type: 'unit',
-      id: prediction ? ++lastPredictionUnitId : ++underworld.lastUnitId,
+      id: ++underworld.lastUnitId,
       unitSourceId,
       x: spawnPoint.x,
       y: spawnPoint.y,
