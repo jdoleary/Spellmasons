@@ -100,6 +100,7 @@ import { urn_poison_id } from './entity/units/urn_poison';
 import { elEndTurnBtn } from './HTMLElements';
 import { corpseDecayId } from './modifierCorpseDecay';
 import { isSinglePlayer } from './network/wsPieSetup';
+import { PRIEST_ID } from './entity/units/priest';
 
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
@@ -3203,6 +3204,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         const canAttack = this.canUnitAttackTarget(u, targets && targets[0])
         cachedTargets[u.id] = { targets, canAttack };
         this.incrementTargetsNextTurnDamage(targets, u.damage, canAttack);
+        if (unitSource.id == PRIEST_ID) {
+          // Signal to other priests that this one is targeted for resurrection
+          // so multiple priests don't try to ressurect the same target
+          this.incrementTargetsNextTurnDamage(targets, -u.healthMax, true);
+        }
       }
       // Set all units' stamina to 0 before their turn is initialized so that any melee units that have remaining stamina
       // wont move during the ranged unit turn
