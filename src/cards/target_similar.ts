@@ -35,13 +35,11 @@ export function targetSimilarEffect(numberOfTargets: number) {
     // mutates state.targetedUnits as it iterates.  Otherwise it will continue to loop as it grows
     let targets: Vec2[] = getCurrentTargets(state);
     targets = targets.length ? targets : [state.castLocation];
-    const length = targets.length;
+    const initialTargets = targets;
     const animators = [];
-    const newTargets: HasSpace[] = [];
-    for (let i = 0; i < length; i++) {
-      // Refresh the targets array so it excludes reselecting a target that was selected by the last iteration
+    for (let i = 0; i < initialTargets.length; i++) {
       targets = getCurrentTargets(state);
-      const target = targets[i];
+      const target = initialTargets[i];
       if (!target) {
         continue;
       }
@@ -60,16 +58,14 @@ export function targetSimilarEffect(numberOfTargets: number) {
         })
         .sort((a, b) => math.distance(a, target) - math.distance(b, target));
 
-      const tempNewTargets = potentialTargets.slice(0, numberOfTargets * quantity)
-      tempNewTargets.forEach(t => newTargets.push(t));
+      const newTargets = potentialTargets.slice(0, numberOfTargets * quantity);
       if (!prediction) {
         playSFXKey('targeting');
-        animators.push({ pos: target, newTargets: tempNewTargets });
+        animators.push({ pos: target, newTargets: newTargets });
       }
-    }
-
-    for (let newTarget of newTargets) {
-      addTarget(newTarget, state);
+      for (let newTarget of newTargets) {
+        addTarget(newTarget, state);
+      }
     }
 
     await animateTargetSimilar(animators);

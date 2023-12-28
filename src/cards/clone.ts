@@ -92,6 +92,8 @@ const spell: Spell = {
                   if (clone) {
                     Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
                   }
+                  // Add clones to target list
+                  addTarget(clone, state);
                 } else {
                   console.log('Pickup', target);
                   console.error('Could not clone pickup because source could not be found');

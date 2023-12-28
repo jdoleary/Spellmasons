@@ -196,6 +196,8 @@ const spell: Spell = {
             //     if (clone) {
             //       Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
             //     }
+            //     // Add the clone as a target
+            //     addTarget(clone, state);
             //   } else {
             //     floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
             //   }
