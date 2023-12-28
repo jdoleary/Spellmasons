@@ -37,6 +37,7 @@ export function targetSimilarEffect(numberOfTargets: number) {
     targets = targets.length ? targets : [state.castLocation];
     const length = targets.length;
     const animators = [];
+    const newTargets: HasSpace[] = [];
     for (let i = 0; i < length; i++) {
       // Refresh the targets array so it excludes reselecting a target that was selected by the last iteration
       targets = getCurrentTargets(state);
@@ -57,14 +58,18 @@ export function targetSimilarEffect(numberOfTargets: number) {
           }
         })
         .sort((a, b) => math.distance(a, target) - math.distance(b, target));
-      const newTargets = potentialTargets.slice(0, numberOfTargets * quantity);
+      const tempNewTargets = potentialTargets.slice(0, numberOfTargets * quantity)
+      tempNewTargets.forEach(t => newTargets.push(t));
       if (!prediction) {
         playSFXKey('targeting');
-        animators.push({ pos: target, newTargets });
+        animators.push({ pos: target, newTargets: tempNewTargets });
       }
-      for (let newTarget of newTargets) {
-        addTarget(newTarget, state);
-      }
+
+    }
+    // Note: New targets must be added AFTER the loop or else it will use the newly added
+    // targets in the loop for this cast of target similar
+    for (let newTarget of newTargets) {
+      addTarget(newTarget, state);
     }
     await animateTargetSimilar(animators);
 

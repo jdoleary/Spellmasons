@@ -7,6 +7,7 @@ import { isPickup } from '../entity/Pickup';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { animateTargetSimilar } from './target_similar';
 import { targetSimilar2Id } from './target_similar_2';
+import { HasSpace } from '../entity/Type';
 
 const id = 'Target Kind';
 const NUMBER_OF_TARGETS_PER_STACK = 3;
@@ -31,6 +32,7 @@ const spell: Spell = {
       targets = targets.length ? targets : [state.castLocation];
       const length = targets.length;
       const animators = [];
+      const newTargets: HasSpace[] = [];
       for (let i = 0; i < length; i++) {
         // Refresh the targets array so it excludes reselecting a target that was selected by the last iteration
         targets = getCurrentTargets(state);
@@ -55,7 +57,7 @@ const spell: Spell = {
             return false;
           }
         }
-        const newTargets = underworld.getPotentialTargets(prediction)
+        const tempNewTargets = underworld.getPotentialTargets(prediction)
           // Filter out current targets
           .filter(t => !targets.includes(t))
           // Filter out dissimilar types
@@ -69,13 +71,14 @@ const spell: Spell = {
           })
           .filter(filterFn)
           .slice(0, NUMBER_OF_TARGETS_PER_STACK * quantity);
+        tempNewTargets.forEach(t => newTargets.push(t));
         if (!prediction) {
           playSFXKey('targeting');
-          animators.push({ pos: target, newTargets });
+          animators.push({ pos: target, newTargets: tempNewTargets });
         }
-        for (let newTarget of newTargets) {
-          addTarget(newTarget, state);
-        }
+      }
+      for (let newTarget of newTargets) {
+        addTarget(newTarget, state);
       }
       await animateTargetSimilar(animators);
 
