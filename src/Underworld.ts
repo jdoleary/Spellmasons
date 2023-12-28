@@ -827,7 +827,10 @@ export default class Underworld {
     if (this.turn_phase == turn_phase.PlayerTurns && timemasons.length && globalThis.view == View.Game) {
       timemasons.forEach(timemason => {
         if (timemason.isSpawned && timemason.unit.alive && timemason.unit.mana > 0) {
-
+          if (numberOfHotseatPlayers > 1 && timemason !== globalThis.player) {
+            // Do not run timemason timer on hotseat multiplayer unless it is the timemasons turn
+            return;
+          }
           let drainPerSecond = timemason.unit.manaMax * config.TIMEMASON_PERCENT_DRAIN / 100;
 
           //@ts-ignore Special logic for timemason, does not need to be persisted
