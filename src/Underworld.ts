@@ -2459,7 +2459,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       return
     }
     // Don't play turn sfx when recording or for auto-ended dead players
-    if ((!globalThis.isHUDHidden && !document.body?.classList.contains('hide-card-holders')) && (player.unit.alive || !player.unit.alive && player.endedTurn)) {
+    if ((!globalThis.isHUDHidden && !document.body?.classList.contains('hide-card-holders')) && (player.unit.alive || (!player.unit.alive && player.endedTurn))) {
       playSFXKey('endTurn');
     }
     // Ensure players can only end the turn when it IS their turn
