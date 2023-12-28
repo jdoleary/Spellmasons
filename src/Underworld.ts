@@ -701,16 +701,20 @@ export default class Underworld {
     // more processing yet to be done
     return true;
   }
-  awaitForceMoves = async () => {
-    // Ensure server isn't stuck waiting for forceMoves
-    this.triggerGameLoopHeadless();
-    if (this.forceMove.length == 0) {
-      // No force moves to await
-      return;
-    } else if (this.forceMovePromise) {
-      await raceTimeout(2000, 'awaitForceMove', this.forceMovePromise);
-      // Now that the promise has resolved, clear it so that it can await the next
-      this.forceMovePromise = undefined;
+  awaitForceMoves = async (prediction: boolean = false) => {
+    if (prediction) {
+      this.fullySimulateForceMovePredictions();
+    } else {
+      // Ensure server isn't stuck waiting for forceMoves
+      this.triggerGameLoopHeadless();
+      if (this.forceMove.length == 0) {
+        // No force moves to await
+        return;
+      } else if (this.forceMovePromise) {
+        await raceTimeout(2000, 'awaitForceMove', this.forceMovePromise);
+        // Now that the promise has resolved, clear it so that it can await the next
+        this.forceMovePromise = undefined;
+      }
     }
   }
   // See GameLoops.md for more details
@@ -3584,12 +3588,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         effectState.targetedUnits = effectState.targetedUnits.filter(u => !excludedTargets.includes(u));
 
         const cardEffectPromise = card.effect(effectState, card, quantity, this, prediction, outOfRange);
-        if (prediction) {
-          this.fullySimulateForceMovePredictions();
-        }
-        if (globalThis.headless) {
-          this.triggerGameLoopHeadless();
-        }
+        await this.awaitForceMoves(prediction);
 
         // Await the cast
         try {
