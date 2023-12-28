@@ -306,7 +306,7 @@ async function showCastCardsPrediction(underworld: Underworld, target: Vec2, cas
     // Show units as targeted with tint
     for (let targetedUnit of effectState.targetedUnits) {
       // Convert prediction unit's associated real unit
-      const realUnit = underworld.units.find(u => u.id == targetedUnit.id);
+      const realUnit = targetedUnit.real || targetedUnit;
       // don't change tint if HUD is hidden
       if (realUnit && realUnit.image && !globalThis.isHUDHidden) {
         if (outOfRange) {
