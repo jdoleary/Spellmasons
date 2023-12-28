@@ -3388,9 +3388,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
   addUnitToArray(unit: Unit.IUnit, prediction: boolean): Unit.IUnit {
     if (prediction && this.unitsPrediction) {
-      const predictionCopy = Unit.copyForPredictionUnit(unit, this)
-      this.unitsPrediction.push(predictionCopy);
-      return predictionCopy;
+      this.unitsPrediction.push(unit);
+      return unit;
     } else {
       this.units.push(unit);
       return unit;

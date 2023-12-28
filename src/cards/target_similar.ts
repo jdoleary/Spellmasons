@@ -49,17 +49,6 @@ export function targetSimilarEffect(numberOfTargets: number) {
       const potentialTargets = underworld.getPotentialTargets(prediction)
         // Filter out current targets
         .filter(t => !targets.includes(t))
-        // Filter out current targets (workaround for prediction discrepancy)
-        // This workaround is needed because if a unit is created during prediction,
-        // a copy of it is made, causing targets.includes return incorrectly.
-        .filter(t => {
-          if (isUnit(t) && targets.find(u => isUnit(u) && t.id == u.id)) {
-            return false;
-          } else if (isPickup(t) && targets.find(p => isPickup(p) && t.id == p.id)) {
-            return false
-          }
-          return true;
-        })
         // Filter out dissimilar types
         // @ts-ignore Find similar units by unitSourceId, find similar pickups by name
         .filter(t => {
@@ -77,10 +66,10 @@ export function targetSimilarEffect(numberOfTargets: number) {
         playSFXKey('targeting');
         animators.push({ pos: target, newTargets: tempNewTargets });
       }
+    }
 
-      for (let newTarget of newTargets) {
-        addTarget(newTarget, state);
-      }
+    for (let newTarget of newTargets) {
+      addTarget(newTarget, state);
     }
 
     await animateTargetSimilar(animators);
