@@ -91,6 +91,8 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   // across the network
   id: number;
   unitSourceId: string;
+  // if this IUnit is a prediction copy, real is a reference to the real unit that it is a copy of
+  real?: IUnit;
   // strength is a multiplier that affects base level stats
   strength: number;
   // true if the unit was spawned at the beginning of the level and not
@@ -134,6 +136,7 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
 }
 // This does not need to be unique to underworld, it just needs to be unique
 let lastPredictionUnitId = 0;
+
 export function create(
   unitSourceId: string,
   x: number,
@@ -1368,6 +1371,7 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
   const { image, resolveDoneMoving, modifiers, ...rest } = u;
   return {
     ...rest,
+    real: u,
     isPrediction: true,
     // A copy of the units current scale for the prediction copy
     // prediction copies do not have an image property, so this property is saved here
