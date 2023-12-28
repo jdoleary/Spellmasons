@@ -3397,7 +3397,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
   addPickupToArray(pickup: Pickup.IPickup, prediction: boolean) {
     if (prediction && this.pickupsPrediction) {
-      this.pickupsPrediction.push(Pickup.copyForPredictionPickup(pickup))
+      this.pickupsPrediction.push(pickup)
     } else {
       this.pickups.push(pickup);
     }
