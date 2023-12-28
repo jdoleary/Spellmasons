@@ -2139,8 +2139,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // Safety, force die any units that are out of bounds (this should never happen)
       // Note: Player Controlled units are out of bounds when they are inPortal so that they don't collide,
       // this filters out PLAYER_CONTROLLED so that they don't get die()'d when they are inPortal
-      for (let u of this.units.filter(u => u.alive && u.unitType !== UnitType.PLAYER_CONTROLLED)) {
+      for (let u of this.units.filter(u => u.alive)) {
         if (this.lastLevelCreated) {
+
           // Don't kill out of bound units if they are already flagged for removal
           // (Note: flaggedForRemoval units are set to NaN,NaN;  thus they are out of bounds, but 
           // they will be cleaned up so they shouldn't be killed here as this check is just to ensure
@@ -2149,8 +2150,19 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             // TODO ensure that this works on headless
             const originalTile = this.lastLevelCreated.imageOnlyTiles[vec2ToOneDimentionIndexPreventWrap({ x: Math.round(u.x / config.OBSTACLE_SIZE), y: Math.round(u.y / config.OBSTACLE_SIZE) }, this.lastLevelCreated.width)];
             if (!originalTile || originalTile.image == '') {
-              console.error('Unit was force killed because they ended up out of bounds', u.unitSubType)
-              Unit.die(u, this, false);
+
+              if (u.unitType == UnitType.PLAYER_CONTROLLED) {
+                const player = this.players.find(p => p.unit == u);
+                if (player && !Player.inPortal(player)) {
+                  console.error('Player was reset because they ended up out of bounds');
+                  Player.resetPlayerForNextLevel(player, this);
+                } else {
+                  console.error("Unexpected: Tried to reset out of bounds player but player unit matched no player object.");
+                }
+              } else {
+                console.error('Unit was force killed because they ended up out of bounds', u.unitSubType)
+                Unit.die(u, this, false);
+              }
             }
           }
         }
