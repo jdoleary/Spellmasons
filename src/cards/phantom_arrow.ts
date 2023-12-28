@@ -22,7 +22,7 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'phantomArrow',
     description: ['spell_phantom_arrow', damageDone.toString()],
-    effect: arrowEffect(1, true)
+    effect: arrowEffect(1, phantomArrowCardId, true)
   },
   events: {
     onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {

@@ -32,7 +32,7 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'arrow',
     description: ['spell_arrow', damage.toString()],
-    effect: arrowEffect(1)
+    effect: arrowEffect(1, arrowCardId)
   },
   events: {
     onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
@@ -42,7 +42,7 @@ const spell: Spell = {
     }
   }
 };
-export function arrowEffect(multiShotCount: number, doesPierce: boolean = false) {
+export function arrowEffect(multiShotCount: number, collideFnKey: string, doesPierce: boolean = false) {
   return async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean) => {
     let targets: Vec2[] = state.targetedUnits;
     const path = findArrowPath(state.casterPositionAtTimeOfCast, state.castLocation, underworld)
@@ -88,7 +88,7 @@ export function arrowEffect(multiShotCount: number, doesPierce: boolean = false)
             endPoint: endPoint,
             doesPierce,
             ignoreUnitId: state.casterUnit.id,
-            collideFnKey: arrowCardId,// TODO support for other arrows
+            collideFnKey
           }, underworld, prediction);
 
           if (!prediction) {

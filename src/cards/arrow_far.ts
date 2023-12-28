@@ -32,7 +32,7 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'arrow',
     description: ['spell_arrow_far', maxDamage.toString()],
-    effect: arrowEffect(1),
+    effect: arrowEffect(1, arrowFarCardId),
   },
   events: {
     onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {

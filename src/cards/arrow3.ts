@@ -24,7 +24,7 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'arrow',
     description: ['spell_arrow', damageDone.toString()],
-    effect: arrowEffect(1),
+    effect: arrowEffect(1, arrow3CardId),
   },
   events: {
     onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {

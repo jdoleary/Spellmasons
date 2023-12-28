@@ -4,7 +4,7 @@ import { EffectState, Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getAngleBetweenVec2s, getEndpointOfMagnitudeAlongVector } from '../jmath/Vec';
 import Underworld from '../Underworld';
-import regularArrow, { arrowEffect } from './arrow';
+import regularArrow, { arrowCardId, arrowEffect } from './arrow';
 import { raceTimeout } from '../Promise';
 import { arrowTripleCardId } from './arrow_triple';
 
@@ -27,7 +27,7 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'arrow',
     description: ['spell_arrow_fork', damageDone.toString()],
-    effect: arrowEffect(1)
+    effect: arrowEffect(1, arrowForkCardId)
   },
   events: {
     onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
@@ -37,7 +37,7 @@ const spell: Spell = {
         for (let newAngle of [Math.PI / 12, -Math.PI / 12, 2 * Math.PI / 12, -2 * Math.PI / 12, 3 * Math.PI / 12, -3 * Math.PI / 12]) {
           const angle = getAngleBetweenVec2s(projectile.startPoint, unit) + newAngle;
           const castLocation = getEndpointOfMagnitudeAlongVector(unit, angle, 10_000);
-          arrowEffect(1)({ cardIds: [regularArrow.card.id], shouldRefundLastSpell: false, casterPositionAtTimeOfCast: unit, targetedUnits: [], targetedPickups: [], casterUnit: unit, castLocation, aggregator: { unitDamage: [], radius: 0 }, initialTargetedPickupId: undefined, initialTargetedUnitId: undefined }, regularArrow.card, 1, underworld, prediction, false);
+          arrowEffect(1, arrowCardId)({ cardIds: [regularArrow.card.id], shouldRefundLastSpell: false, casterPositionAtTimeOfCast: unit, targetedUnits: [], targetedPickups: [], casterUnit: unit, castLocation, aggregator: { unitDamage: [], radius: 0 }, initialTargetedPickupId: undefined, initialTargetedUnitId: undefined }, regularArrow.card, 1, underworld, prediction, false);
         }
       }
     }

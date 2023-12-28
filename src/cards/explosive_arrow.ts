@@ -27,12 +27,13 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'arrow',
     description: ['spell_arrow_explosive', damageDone.toString(), explodeDamage.toString()],
-    effect: arrowEffect(1)
+    effect: arrowEffect(1, explosiveArrowCardId)
   },
   events: {
     onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
       if (unit) {
         Unit.takeDamage(unit, damageDone, projectile.startPoint, underworld, prediction, undefined, { thinBloodLine: true });
+        console.log('jtest explode')
         explode(unit, explodeRange, explodeDamage, prediction, underworld);
       }
     }
