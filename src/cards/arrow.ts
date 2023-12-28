@@ -87,7 +87,7 @@ export function arrowEffect(multiShotCount: number, collideFnKey: string, doesPi
             startPoint: casterPositionAtTimeOfCast,
             endPoint: endPoint,
             doesPierce,
-            ignoreUnitId: state.casterUnit.id,
+            ignoreUnitIds: [state.casterUnit.id],
             collideFnKey
           }, underworld, prediction);
 

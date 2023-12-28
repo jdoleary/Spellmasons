@@ -482,11 +482,14 @@ export default class Underworld {
         pushedObject.image.sprite.y = pushedObject.y;
       }
       for (let other of aliveUnits) {
-        if (other.id == forceMoveInst.ignoreUnitId) {
+        if (forceMoveInst.ignoreUnitIds.includes(other.id)) {
           continue;
         }
         if (isVecIntersectingVecWithCustomRadius(pushedObject, other, config.COLLISION_MESH_RADIUS)) {
           if (Events.onProjectileCollisionSource) {
+            if (forceMoveInst.doesPierce) {
+              forceMoveInst.ignoreUnitIds.push(other.id);
+            }
             const collideFn = Events.onProjectileCollisionSource[forceMoveInst.collideFnKey];
             if (collideFn) {
               collideFn({ unit: other, underworld: this, prediction, projectile: forceMoveInst });
