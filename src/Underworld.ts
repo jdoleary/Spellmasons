@@ -2431,10 +2431,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // Clear your selected spells when ending your turn.  This is a user preference inspried by a playtest
           CardUI.clearSelectedCards(this);
           console.log('endMyTurn: send END_TURN message');
-          // Don't play turn sfx when recording
-          if (!globalThis.isHUDHidden && !document.body?.classList.contains('hide-card-holders')) {
-            playSFXKey('endTurn');
-          }
           // When a user ends their turn, clear tints and spell effect projections
           // so they they don't cover the screen while AI take their turn
           clearSpellEffectProjection(this);
@@ -2456,12 +2452,15 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       console.error('Cannot end turn, player with clientId:', clientId, 'does not exist');
       return;
     }
-
     if (this.turn_phase != turn_phase.PlayerTurns) {
       // (A player "ending their turn" when it is not their turn
       // can occur when a client disconnects when it is not their turn)
       console.info('Cannot end the turn of a player when it isn\'t currently their turn')
       return
+    }
+    // Don't play turn sfx when recording or for auto-ended dead players
+    if ((!globalThis.isHUDHidden && !document.body?.classList.contains('hide-card-holders')) && (player.unit.alive || (!player.unit.alive && player.endedTurn))) {
+      playSFXKey('endTurn');
     }
     // Ensure players can only end the turn when it IS their turn
     if (this.turn_phase === turn_phase.PlayerTurns) {
