@@ -40,9 +40,10 @@ const spell: Spell = {
   },
 };
 const velocity_falloff = 0.91;
+const EXPECTED_MILLIS_PER_GAMELOOP = 16;
 export async function pull(pushedObject: HasSpace, towards: Vec2, quantity: number, underworld: Underworld, prediction: boolean): Promise<void> {
   // Set the velocity so it's just enough to pull the unit into you
-  let velocity = multiply(1 - velocity_falloff, { x: towards.x - pushedObject.x, y: towards.y - pushedObject.y });
+  let velocity = multiply((1 - velocity_falloff) / EXPECTED_MILLIS_PER_GAMELOOP, { x: towards.x - pushedObject.x, y: towards.y - pushedObject.y });
   velocity = multiply(quantity, velocity);
   let forceMoveInst: ForceMoveUnitOrPickup;
   return await raceTimeout(2000, 'Pull', new Promise<void>((resolve) => {
