@@ -9,7 +9,7 @@ import * as colors from '../graphics/ui/colors';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 export const id = 'shove';
-export const velocityStartMagnitude = 50;
+export const velocityStartMagnitude = 1.8;
 const shoveRange = config.COLLISION_MESH_RADIUS * 2
 const spell: Spell = {
   card: {
