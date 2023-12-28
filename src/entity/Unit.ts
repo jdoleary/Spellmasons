@@ -1,4 +1,5 @@
 import type * as PIXI from 'pixi.js';
+import { OutlineFilter } from '@pixi/filter-outline';
 import * as storage from "../storage";
 import * as config from '../config';
 import * as Image from '../graphics/Image';
@@ -247,6 +248,12 @@ export function create(
     // Ensure all change factions logic applies when a unit is first created
     changeFaction(unit, faction);
 
+    if (unit.faction == Faction.ENEMY && unit.image) {
+      if (!unit.image.sprite.filters) {
+        unit.image.sprite.filters = [];
+      }
+      unit.image.sprite.filters.push(new OutlineFilter(1, 0x00000, 0.1));
+    }
 
     underworld.addUnitToArray(unit, prediction || false);
     // Check to see if unit interacts with liquid
