@@ -407,9 +407,7 @@ export default class Underworld {
         // pushed object is a unit and stop velocity:
         if (Unit.isUnit(pushedObject)) {
 
-          // TODO Improve impact damage so you don't have to go as far
-          console.log('jtest impact', Math.log(trueMagnitude), trueMagnitude);
-          const damage = Math.ceil(Math.log(trueMagnitude)) * 10;
+          const damage = Math.ceil(trueMagnitude);
           Unit.takeDamage(pushedObject, damage, Vec.add(pushedObject, { x: velocity.x, y: velocity.y }), this, prediction);
           if (!prediction) {
             floatingText({ coords: pushedObject, text: `${damage} Impact damage!` });
