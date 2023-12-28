@@ -46,9 +46,6 @@ export function targetSimilarEffect(numberOfTargets: number) {
         continue;
       }
 
-      // prediction calls copyForPredictionUnit, so the potential target is actually copy?
-      // a copy is a new object, so targets.includes return incorrectly during predictions?
-
       const potentialTargets = underworld.getPotentialTargets(prediction)
         // Filter out current targets
         .filter(t => !targets.includes(t))
@@ -56,18 +53,12 @@ export function targetSimilarEffect(numberOfTargets: number) {
         // This workaround is needed because if a unit is created during prediction,
         // a copy of it is made, causing targets.includes return incorrectly.
         .filter(t => {
-          if (isUnit(t)) {
-            if (targets.find(u => isUnit(u) && t.id == u.id)) {
-              return false;
-            }
-            return true;
-          } else if (isPickup(t)) {
-            if (targets.find(p => isPickup(p) && t.id == p.id)) {
-              return false;
-            }
-            return true;
+          if (isUnit(t) && targets.find(u => isUnit(u) && t.id == u.id)) {
+            return false;
+          } else if (isPickup(t) && targets.find(p => isPickup(p) && t.id == p.id)) {
+            return false
           }
-          return false;
+          return true;
         })
         // Filter out dissimilar types
         // @ts-ignore Find similar units by unitSourceId, find similar pickups by name
