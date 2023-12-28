@@ -50,8 +50,7 @@ export function arrowEffect(multiShotCount: number, doesPierce: boolean = false)
       const path = findArrowPath(state.casterPositionAtTimeOfCast, t, underworld);
       return path ? path.p2 : state.castLocation;
     }) : [path ? path.p2 : state.castLocation];
-    let targetsHitCount = 0;
-    let timeoutToNextArrow = 1200;
+    let timeoutToNextArrow = 200;
     for (let i = 0; i < quantity; i++) {
       for (let target of targets) {
         for (let arrowNumber = 0; arrowNumber < multiShotCount; arrowNumber++) {
