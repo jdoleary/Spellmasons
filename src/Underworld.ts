@@ -3801,6 +3801,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
     for (let sendToServer of actions.skippedRemoval) {
       // TODO send to server
+      console.error('TODO: player unit is missing on server, client should send player unit to server')
     }
 
     // Remove units that were just cleaned up
