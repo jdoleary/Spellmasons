@@ -13,5 +13,10 @@ export function lightenColor(color: number, lightenCoefficient: number) {
     return parseInt(`0x${r_secondary.toString(16)}${g_secondary.toString(16)}${b_secondary.toString(16)}`, 16);
 }
 export function hexToString(hex: number) {
-    return `#${hex.toString(16)}`;
+    let unPadded = hex.toString(16);
+    const length = unPadded.length
+    for (let i = 0; i < 6 - length; i++) {
+        unPadded = '0' + unPadded;
+    }
+    return `#${unPadded}`;
 }
