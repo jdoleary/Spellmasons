@@ -10,7 +10,7 @@ import type { IHostApp } from '../network/networkUtil';
 import type { Localizable } from '../localization';
 import type * as particles from '@pixi/particle-emitter'
 import type { PromptArgs } from '../graphics/Jprompt';
-import { JEmitter, Mod } from './commonTypes';
+import { Faction, JEmitter, Mod } from './commonTypes';
 import { ICard } from '../cards';
 
 declare global {
@@ -341,4 +341,16 @@ declare global {
   var pie: PieClient | undefined;
   var adminPowerBarIndex: number;
   var adminPowerBarSelection: string;
+  var accessibilityOutline: {
+    [Faction.ALLY]: {
+      regular: { thickness: number, color: number },
+      targeted: { thickness: number, color: number },
+      outOfRange: { thickness: number, color: number }
+    },
+    [Faction.ENEMY]: {
+      regular: { thickness: number, color: number },
+      targeted: { thickness: number, color: number },
+      outOfRange: { thickness: number, color: number }
+    },
+  } | undefined;
 }

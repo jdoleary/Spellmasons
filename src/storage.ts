@@ -12,6 +12,7 @@ export const STORAGE_CONTROLS_KEY = 'controls';
 export const ENEMY_ENCOUNTERED_STORAGE_KEY = 'enemyEncountered';
 export const SPELLS_DISCOVERED_STORAGE_KEY = 'spellsDiscovered';
 export const STORAGE_PIE_CLIENTID_KEY = 'clientId';
+const ACCESSIBILITY_OUTLINE_STORAGE_KEY = 'accessibilityOutline';
 globalThis.STORAGE_ID_UI_ZOOM = STORAGE_ID_UI_ZOOM;
 globalThis.enemyEncountered = [];
 globalThis.spellsDiscovered = [];
@@ -65,6 +66,15 @@ export function getSavedData() {
                 globalThis.activeMods = [];
                 if (!!options.activeMods) {
                     globalThis.activeMods = options.activeMods;
+                }
+            }
+            const storedAccessibilityOutline = get(ACCESSIBILITY_OUTLINE_STORAGE_KEY);
+            console.log('Setup: Initializing outline settings', storedAccessibilityOutline);
+            if (storedAccessibilityOutline !== null) {
+                try {
+                    globalThis.accessibilityOutline = JSON.parse(storedAccessibilityOutline);
+                } catch (e) {
+                    console.error('Failled to parse stored accessibility outline options', storedAccessibilityOutline)
                 }
             }
             globalThis.playMusicIfNotAlreadyPlaying?.();

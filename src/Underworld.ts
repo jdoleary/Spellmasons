@@ -4052,6 +4052,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
     return serialized;
   }
+  updateAccessibilityOutlines() {
+    this.units.forEach(u => Unit.updateAccessibilityOutline(u, false));
+  }
 }
 
 export type IUnderworldSerialized = Omit<typeof Underworld, "pie" | "overworld" | "prototype" | "players" | "units"

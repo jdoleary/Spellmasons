@@ -1,4 +1,5 @@
 import type * as PIXI from 'pixi.js';
+import { OutlineFilter } from '@pixi/filter-outline';
 import * as storage from "../storage";
 import * as config from '../config';
 import * as Image from '../graphics/Image';
@@ -250,7 +251,6 @@ export function create(
     // Ensure all change factions logic applies when a unit is first created
     changeFaction(unit, faction);
 
-
     underworld.addUnitToArray(unit, prediction || false);
     // Check to see if unit interacts with liquid
     Obstacle.tryFallInOutOfLiquid(unit, underworld, prediction || false);
@@ -258,6 +258,34 @@ export function create(
     return unit;
   } else {
     throw new Error(`Source unit with id ${unitSourceId} does not exist`);
+  }
+}
+export function updateAccessibilityOutline(unit: IUnit, targeted: boolean, outOfRange?: boolean) {
+  if (!unit.image || !globalThis.accessibilityOutline) {
+    return;
+  }
+
+  if (!unit.image.sprite.filters) {
+    unit.image.sprite.filters = [];
+  }
+  const outlineSettings = globalThis.accessibilityOutline[unit.faction][outOfRange ? 'outOfRange' : targeted ? 'targeted' : 'regular'];
+  let outlineFilter: OutlineFilter | undefined;
+  // @ts-ignore __proto__ is not typed
+  outlineFilter = unit.image.sprite.filters.find(f => f.__proto__ == OutlineFilter.prototype)
+  if (outlineFilter) {
+    if (outlineSettings.thickness) {
+      outlineFilter.thickness = outlineSettings.thickness;
+      outlineFilter.color = outlineSettings.color;
+    } else {
+      // If thickness is 0, remove the filter:
+      unit.image.sprite.filters = unit.image.sprite.filters.filter(x => x !== outlineFilter);
+    }
+  } else {
+    // Only add the filter if thickness is not 0
+    if (outlineSettings.thickness) {
+      outlineFilter = new OutlineFilter(outlineSettings.thickness, outlineSettings.color, 0.1);
+      unit.image.sprite.filters.push(outlineFilter);
+    }
   }
 }
 export function adjustUnitStatsByUnderworldCalamity(unit: IUnit, statCalamity: StatCalamity) {
