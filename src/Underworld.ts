@@ -3785,7 +3785,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
 
     // Get sync actions:
-    const actions = getSyncActions(this.units, units, this.findIdenticalUnit, (u) => u.unitType == UnitType.PLAYER_CONTROLLED)
+    const actions = getSyncActions(this.units, units, this.findIdenticalUnit.bind(this), (u) => u.unitType == UnitType.PLAYER_CONTROLLED)
     for (let [current, serialized] of actions.sync) {
       // Note: Unit.syncronize maintains the player.unit reference
       Unit.syncronize(serialized, current);
