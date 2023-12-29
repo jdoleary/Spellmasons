@@ -10,8 +10,8 @@ interface testSyncObject {
     type: string;
     value: number;
 }
-function findMatchIndex(current: testSyncObject, potentialMatches: testSyncObject[]): number {
-    return potentialMatches.findIndex(x => x.id == current.id);
+function findMatch(current: testSyncObject, potentialMatches: testSyncObject[]): testSyncObject | undefined {
+    return potentialMatches.find(x => x.id == current.id);
 }
 function sync(current: testSyncObject, from: testSyncObject) {
     current.type = from.type;
@@ -39,7 +39,7 @@ describe('Syncronization', () => {
         const from = [
             makeTestSyncObject(unitCurrent.id, 'unit', 11),
         ];
-        const actual = getSyncActions(current, from, findMatchIndex, ignoreSync);
+        const actual = getSyncActions(current, from, findMatch, ignoreSync);
         expect(actual.remove).toEqual([]);
     });
     it('should sync the state of identity matched units', () => {
@@ -52,7 +52,7 @@ describe('Syncronization', () => {
         const from = [
             makeTestSyncObject(unitCurrent.id, 'unit', 11),
         ];
-        const actual = getSyncActions(current, from, findMatchIndex, ignoreSync);
+        const actual = getSyncActions(current, from, findMatch, ignoreSync);
         expect(actual.sync).toEqual([[unitCurrent, from[0]]]);
     });
     it('should remove current units not in the serialized array', () => {
@@ -67,7 +67,7 @@ describe('Syncronization', () => {
             player,
             fromUnit,
         ];
-        const actual = getSyncActions(current, from, findMatchIndex, ignoreSync);
+        const actual = getSyncActions(current, from, findMatch, ignoreSync);
         expect(actual.remove).toEqual([unitCurrent]);
     });
     it('should create missing units', () => {
@@ -82,7 +82,7 @@ describe('Syncronization', () => {
             player,
             fromUnit,
         ];
-        const actual = getSyncActions(current, from, findMatchIndex, ignoreSync);
+        const actual = getSyncActions(current, from, findMatch, ignoreSync);
         expect(actual.create).toEqual([fromUnit]);
     });
 });

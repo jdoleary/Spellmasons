@@ -7,44 +7,47 @@
 // Remove current units not in the serialized units array (so long as they are not player units)
 // Create missing units from the serialized array (careful not to overwrite ids of existing units)
 
-interface syncFunctionReturn<T> {
+interface syncFunctionReturn<T, U> {
     // Which objects should be synced,
     // first is from `current`
     // last is from `syncFrom`
-    sync: [T, T][];
+    sync: [T, U][];
     //  current to remove
     remove: T[];
-    //  Current objects to send to the server
-    syncToServer: T[];
+    // Objects in the client's state that shouldn't be
+    // cleaned up but should be sent to the server.
+    // This is used, for example, when the server somehow
+    // doesn't have a reference to the player unit
+    // and we don't want to delete the player unit on the client
+    skippedRemoval: T[];
     // Objects of syncFrom to create new
-    create: T[];
+    create: U[];
 
 }
 // Identity match determines if the units are the same entity (and then it's okay to sync from syncFrom to current for that entity)
-export function getSyncActions<T>(
+export function getSyncActions<T, U>(
     current: T[],
-    syncFrom: T[],
-    findMatchIndex: (a: T, potentialMatches: T[]) => number,
-    ignoreSync: (a: T) => boolean): syncFunctionReturn<T> {
-    const ret: syncFunctionReturn<T> = {
+    syncFrom: U[],
+    findMatch: (a: T, potentialMatches: U[]) => U | undefined,
+    doNotRemove: (a: T) => boolean): syncFunctionReturn<T, U> {
+    const ret: syncFunctionReturn<T, U> = {
         sync: [],
         remove: [],
-        syncToServer: [],
+        skippedRemoval: [],
         create: []
     }
-    const matches: T[] = []
+    const matches: U[] = []
     for (let e of current) {
-        const matchIndex = findMatchIndex(e, syncFrom);
-        const match = syncFrom[matchIndex]
+        const match = findMatch(e, syncFrom);
         if (match) {
             // Keep track of what synced so we can create the extras in syncFrom as new
             matches.push(match);
             ret.sync.push([e, match]);
         } else {
-            if (!ignoreSync(e)) {
-                ret.remove.push(e);
+            if (doNotRemove(e)) {
+                ret.skippedRemoval.push(e);
             } else {
-                ret.syncToServer.push(e);
+                ret.remove.push(e);
             }
         }
     }

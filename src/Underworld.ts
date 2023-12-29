@@ -101,6 +101,7 @@ import { elEndTurnBtn } from './HTMLElements';
 import { corpseDecayId } from './modifierCorpseDecay';
 import { isSinglePlayer } from './network/wsPieSetup';
 import { PRIEST_ID } from './entity/units/priest';
+import { getSyncActions } from './Syncronization';
 
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
@@ -3764,6 +3765,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     return this.units;
   }
+  findIdenticalUnit(current: Unit.IUnit, potentialMatches: Unit.IUnitSerialized[]): Unit.IUnitSerialized | undefined {
+    return potentialMatches.find(p => this.unitIsIdentical(current, p));
+  }
   unitIsIdentical(unit: Unit.IUnit, serialized: Unit.IUnitSerialized): boolean {
     return unit.id == serialized.id && unit.unitSourceId == serialized.unitSourceId;
   }
@@ -3777,55 +3781,29 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       if (this.units.findIndex(u => u.id == unit.id) !== index) {
         console.log('Duplicate unit id in: ', this.units.map(u => `${u.id}:${u.unitSourceId}`))
         console.log('Syncing to: ', units.map(u => `${u.id}:${u.unitSourceId}`))
-        console.error('Duplicate unit id detected in units array');
+        console.error('Duplicate unit id detected in units array', unit.unitSourceId);
       }
     });
 
-    // Remove excess units if local copy of units has more units than the units it
-    // should be syncing with
-    if (this.units.length > units.length) {
-      console.log('sync: Remove excess units')
-      for (let i = units.length; i < this.units.length; i++) {
-        const unit = this.units[i];
-        if (unit) {
-          Unit.cleanup(unit);
-        }
-      }
-      this.units.splice(units.length);
+
+    // Get sync actions:
+    const actions = getSyncActions(this.units, units, this.findIdenticalUnit, (u) => u.unitType == UnitType.PLAYER_CONTROLLED)
+    for (let [current, serialized] of actions.sync) {
+      // Note: Unit.syncronize maintains the player.unit reference
+      Unit.syncronize(serialized, current);
     }
-    // What couldn't be synced store in an array to create after iterating is finished
-    let serializedUnitsLeftToCreate = [];
-    // Sync what units you can
-    for (let i = 0; i < units.length; i++) {
-      const serializedUnit = units[i];
-      const currentUnit = this.units[i];
-      if (serializedUnit) {
-        if (excludePlayerUnits && serializedUnit.unitType == UnitType.PLAYER_CONTROLLED) {
-          continue;
-        }
-        if (currentUnit) {
-          // if there is a unit to compare it to, if they are the same, syncronize;
-          // if not, delete and recreate:
-          // Ensure currentUnit's image is displaying, if not we have to create a new one
-          if (this.unitIsIdentical(currentUnit, serializedUnit) && currentUnit.image?.sprite.parent !== null) {
-            // Note: Unit.syncronize maintains the player.unit reference
-            Unit.syncronize(serializedUnit, currentUnit);
-          } else {
-            Unit.cleanup(currentUnit);
-            serializedUnitsLeftToCreate.push(serializedUnit);
-          }
-        } else {
-          serializedUnitsLeftToCreate.push(serializedUnit);
-        }
-      }
+    for (let remove of actions.remove) {
+      Unit.cleanup(remove);
     }
-    // Create what's left over
-    for (let serializedUnit of serializedUnitsLeftToCreate) {
+    for (let serializedUnit of actions.create) {
       const newUnit = Unit.load(serializedUnit, this, false);
       Unit.returnToDefaultSprite(newUnit);
     }
+    for (let sendToServer of actions.skippedRemoval) {
+      // TODO send to server
+    }
 
-    // Remove units flagged for removal
+    // Remove units that were just cleaned up
     this.units = this.units.filter(u => !u.flaggedForRemoval);
 
   }
@@ -3862,57 +3840,28 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     this.pickups = this.pickups.filter(p => !p.flaggedForRemoval);
     log.client('sync: Syncing pickups', pickups.map(u => `${u.id}:${u.flaggedForRemoval}`), 'current pickups:', this.pickups.map(u => `${u.id}:${u.flaggedForRemoval}`));
 
-    // What couldn't be synced store in an array to create after iterating is finished
-    let serializedpickupsLeftToCreate = [];
-    let pickupsToRemove = [];
     // Sync pickups by id. This is critical that pickups are synced this way unlike how units are synced
     // because of underworld.aquirePickupQueue, sometimes pickups will be aquired after a timeout which means
     // the ids of the pickups must stick around and should not be removed just because they're not in the serialized
     // pickups array (so long as they are also in the aquirePickupQueue array).
-    for (let i = 0; i < pickups.length; i++) {
-      const serializedPickup = pickups[i];
-      if (serializedPickup) {
-        const currentPickup = this.pickups.find(p => p.id == serializedPickup.id);
-        if (currentPickup) {
-          // @ts-ignore: `synced`: Temporary variable that keeps track of which pickups were synced
-          currentPickup.synced = true;
-          // if there is a pickup to compare it to, if they are the same, syncronize;
-          // if not, delete and recreate:
-          // Ensure currentPickup's image is displaying, if not we have to create a new one
-          if (this.pickupIsIdentical(currentPickup, serializedPickup) && currentPickup.image?.sprite.parent !== null) {
-            const { x, y, radius, inLiquid, immovable, beingPushed, playerOnly, turnsLeftToGrab, flaggedForRemoval } = serializedPickup;
-            Object.assign(currentPickup, { x, y, radius, inLiquid, immovable, beingPushed, playerOnly, turnsLeftToGrab, flaggedForRemoval });
-          } else {
-            pickupsToRemove.push(currentPickup);
-            serializedpickupsLeftToCreate.push(serializedPickup);
-          }
-        } else {
-          serializedpickupsLeftToCreate.push(serializedPickup);
-        }
-      }
-    }
-    // Remove extra pickups on client, not found in the serialized pickups array
-    // @ts-ignore: `synced`: Temporary variable that keeps track of which pickups were synced
-    for (let pickup of this.pickups.filter(p => !p.synced)) {
+    // Get sync actions:
+    const actions = getSyncActions(this.pickups, pickups,
+      (p, matches) => matches.find(m => this.pickupIsIdentical(p, m)),
       // Exclude pickups that are about to be aquired via the queue
-      if (!this.aquirePickupQueue.find(p => p.pickupId == pickup.id)) {
-        Pickup.removePickup(pickup, this, false);
-      }
+      (p) => !!this.aquirePickupQueue.find(ap => ap.pickupId == p.id));
+    for (let [current, serialized] of actions.sync) {
+      const { x, y, radius, inLiquid, immovable, beingPushed, playerOnly, turnsLeftToGrab, flaggedForRemoval } = serialized;
+      Object.assign(current, { x, y, radius, inLiquid, immovable, beingPushed, playerOnly, turnsLeftToGrab, flaggedForRemoval });
     }
-    this.pickups.forEach(p => {
-      // @ts-ignore: Clear temporary variable that keeps track of which pickups were synced
-      delete p.synced;
-    });
-    for (let pickup of pickupsToRemove) {
-      Pickup.removePickup(pickup, this, false);
+    for (let remove of actions.remove) {
+      Pickup.removePickup(remove, this, false);
     }
     // Remove pickups flagged for removal before creating new ones so you don't have id collisions
     this.pickups = this.pickups.filter(p => !p.flaggedForRemoval);
-    // Create pickups that are in the serialized pickup array but not in the client's this.pickups
-    for (let serializedPickup of serializedpickupsLeftToCreate) {
+    // Create pickups that are missing
+    for (let serializedPickup of actions.create) {
       Pickup.load(serializedPickup, this, false);
     }
-
   }
   // Note: This function is not ready for production yet, I am not sure if it runs reliably on servers so I'm 
   // not invoking it yet
