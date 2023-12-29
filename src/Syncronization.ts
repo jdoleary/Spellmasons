@@ -1,5 +1,3 @@
-import * as Unit from "./entity/Unit"
-import { UnitType } from "./types/commonTypes";
 
 // syncUnits should:
 // NOT remove any existing player's units (even if there are discrepancies)
@@ -9,35 +7,33 @@ import { UnitType } from "./types/commonTypes";
 // Remove current units not in the serialized units array (so long as they are not player units)
 // Create missing units from the serialized array (careful not to overwrite ids of existing units)
 
-// TODO: INPROGRESS (replace `any`s) maybe use a subtype so it's testable without constructing a whole underworld
-interface syncFunctionReturn {
+interface syncFunctionReturn<T> {
     // Which objects should be synced,
     // first is from `current`
     // last is from `syncFrom`
-    sync: [any, any][];
+    sync: [T, T][];
     //  current to remove
-    remove: any[];
+    remove: T[];
     //  Current objects to send to the server
-    syncToServer: any[];
+    syncToServer: T[];
     // Objects of syncFrom to create new
-    create: any[];
+    create: T[];
 
 }
 // Identity match determines if the units are the same entity (and then it's okay to sync from syncFrom to current for that entity)
-export function getSyncActions(
-    current: any[],
-    syncFrom: any[],
-    findMatchIndex: (a: any, potentialMatches: any[]) => number,
-    ignoreSync: (a: any) => boolean): syncFunctionReturn {
-    const ret: syncFunctionReturn = {
+export function getSyncActions<T>(
+    current: T[],
+    syncFrom: T[],
+    findMatchIndex: (a: T, potentialMatches: T[]) => number,
+    ignoreSync: (a: T) => boolean): syncFunctionReturn<T> {
+    const ret: syncFunctionReturn<T> = {
         sync: [],
         remove: [],
         syncToServer: [],
         create: []
     }
-    const matches: any[] = []
-    for (let i = 0; i < current.length; i++) {
-        const e = current[i];
+    const matches: T[] = []
+    for (let e of current) {
         const matchIndex = findMatchIndex(e, syncFrom);
         const match = syncFrom[matchIndex]
         if (match) {
