@@ -267,13 +267,19 @@ export function updateAccessibilityOutline(unit: IUnit, targeted: boolean, outOf
   }
   const outlineSettings = globalThis.accessibilityOutline[unit.faction][outOfRange ? 'outOfRange' : targeted ? 'targeted' : 'regular'];
   let outlineFilter: OutlineFilter | undefined;
-  if (outlineSettings.thickness) {
-    // @ts-ignore __proto__ is not typed
-    outlineFilter = unit.image.sprite.filters.find(f => f.__proto__ == OutlineFilter.prototype)
-    if (outlineFilter) {
+  // @ts-ignore __proto__ is not typed
+  outlineFilter = unit.image.sprite.filters.find(f => f.__proto__ == OutlineFilter.prototype)
+  if (outlineFilter) {
+    if (outlineSettings.thickness) {
       outlineFilter.thickness = outlineSettings.thickness;
       outlineFilter.color = outlineSettings.color;
     } else {
+      // If thickness is 0, remove the filter:
+      unit.image.sprite.filters = unit.image.sprite.filters.filter(x => x !== outlineFilter);
+    }
+  } else {
+    // Only add the filter if thickness is not 0
+    if (outlineSettings.thickness) {
       outlineFilter = new OutlineFilter(outlineSettings.thickness, outlineSettings.color, 0.1);
       unit.image.sprite.filters.push(outlineFilter);
     }
