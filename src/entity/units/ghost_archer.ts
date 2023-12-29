@@ -120,13 +120,15 @@ export default unit;
 
 // Returns the units that will be hit when ghost archer fires it's piercing arrow
 function getGhostArcherHits(archer: Vec2, target: Vec2, underworld: Underworld): Unit.IUnit[] {
+  const arrowCollisionWidth = 25;
   return underworld.units.filter(
     (u) => {
       const pointAtRightAngleToArrowPath = findWherePointIntersectLineSegmentAtRightAngle(u, { p1: archer, p2: target });
-      const willBeStruckByArrow = !pointAtRightAngleToArrowPath ? false : math.distance(u, pointAtRightAngleToArrowPath) <= config.COLLISION_MESH_RADIUS * 2
-      // Note: Filter out target as target will take full damage
-      // Note: Filter out self as the ghost archer's arrow shouldn't damage itself
-      return u.alive && willBeStruckByArrow && u !== target && u !== archer;
+      const willBeStruckByArrow = !pointAtRightAngleToArrowPath ? false : math.distance(u, pointAtRightAngleToArrowPath) <= arrowCollisionWidth
+      if (pointAtRightAngleToArrowPath)
+        // Note: Filter out target as target will take full damage
+        // Note: Filter out self as the ghost archer's arrow shouldn't damage itself
+        return u.alive && willBeStruckByArrow && u !== target && u !== archer;
     },
   );
 
