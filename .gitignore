@@ -12,3 +12,4 @@ update/
 .vs/
 .vscode/
 public/spellmasons-mods/types
+.DS_Store

@@ -1159,7 +1159,7 @@ export default class Underworld {
       Pickup.removePickup(x, this, false);
     }
     this.players = [];
-    this.units.forEach(u => Unit.cleanup(u));
+    this.units.forEach(u => Unit.cleanup(u, false, true));
     globalThis.selectedPickup = undefined;
     globalThis.selectedUnit = undefined;
 

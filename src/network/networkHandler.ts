@@ -984,7 +984,7 @@ async function handleLoadGameState(payload: {
   // Load units
   if (units) {
     // Clean up previous units:
-    underworld.units.forEach(u => Unit.cleanup(u));
+    underworld.units.forEach(u => Unit.cleanup(u, false, true));
     underworld.units = units.filter(u => !u.flaggedForRemoval).map(u => Unit.load(u, underworld, false));
   }
   // Note: Players should sync after units are loaded so
