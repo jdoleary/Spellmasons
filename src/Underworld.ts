@@ -455,7 +455,7 @@ export default class Underworld {
         }
       }
       collideWithLineSegments(pushedObject, this.walls, this);
-      forceMoveInst.velocity = Vec.multiply(velocity_falloff, velocity);
+      forceMoveInst.velocity = Vec.multiply(Math.pow(velocity_falloff, deltaTime), velocity);
       if (Unit.isUnit(forceMoveInst.pushedObject)) {
         // If the pushed object is a unit, check if it collides with any pickups
         // as it is pushed

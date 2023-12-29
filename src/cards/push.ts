@@ -47,7 +47,7 @@ interface forcePushArgs {
 export function makeForcePush(args: forcePushArgs, underworld: Underworld, prediction: boolean): ForceMove {
   const { pushedObject, awayFrom, resolve, velocityStartMagnitude, canCreateSecondOrderPushes } = args;
   const velocity = similarTriangles(pushedObject.x - awayFrom.x, pushedObject.y - awayFrom.y, distance(pushedObject, awayFrom), velocityStartMagnitude);
-  const velocity_falloff = 0.93;
+  const velocity_falloff = 0.9956;
   pushedObject.beingPushed = true;
   // Experiment: canCreateSecondOrderPushes now is ALWAYS disabled.
   // I've had feedback that it's suprising - which is bad for a tactical game
