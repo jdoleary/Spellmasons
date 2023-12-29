@@ -30,19 +30,59 @@ function makeTestSyncObject(id: number, type: string, value: number): testSyncOb
 
 describe('Syncronization', () => {
     it('should NOT remove any existing player units', () => {
+        const player = makeTestSyncObject(0, 'player', 1);
+        const unitCurrent = makeTestSyncObject(1, 'unit', 10);
         const current = [
-            makeTestSyncObject(0, 'player', 1),
-            makeTestSyncObject(1, 'unit', 10),
+            unitCurrent,
+            player,
         ];
         const from = [
-            makeTestSyncObject(1, 'unit', 11),
+            makeTestSyncObject(unitCurrent.id, 'unit', 11),
         ];
         const actual = getSyncActions(current, from, findMatchIndex, ignoreSync);
-        expect(actual).toEqual({
-            sync: [[current[1], from[0]]],
-            remove: [],
-            syncToServer: [current[0]],
-            create: []
-        });
+        expect(actual.remove).toEqual([]);
+    });
+    it('should sync the state of identity matched units', () => {
+        const player = makeTestSyncObject(0, 'player', 1);
+        const unitCurrent = makeTestSyncObject(1, 'unit', 10);
+        const current = [
+            unitCurrent,
+            player,
+        ];
+        const from = [
+            makeTestSyncObject(unitCurrent.id, 'unit', 11),
+        ];
+        const actual = getSyncActions(current, from, findMatchIndex, ignoreSync);
+        expect(actual.sync).toEqual([[unitCurrent, from[0]]]);
+    });
+    it('should remove current units not in the serialized array', () => {
+        const player = makeTestSyncObject(0, 'player', 1);
+        const unitCurrent = makeTestSyncObject(1, 'unit', 10);
+        const fromUnit = makeTestSyncObject(2, 'unit', 11);
+        const current = [
+            unitCurrent,
+            player,
+        ];
+        const from = [
+            player,
+            fromUnit,
+        ];
+        const actual = getSyncActions(current, from, findMatchIndex, ignoreSync);
+        expect(actual.remove).toEqual([unitCurrent]);
+    });
+    it('should create missing units', () => {
+        const player = makeTestSyncObject(0, 'player', 1);
+        const unitCurrent = makeTestSyncObject(1, 'unit', 10);
+        const fromUnit = makeTestSyncObject(2, 'unit', 11);
+        const current = [
+            unitCurrent,
+            player,
+        ];
+        const from = [
+            player,
+            fromUnit,
+        ];
+        const actual = getSyncActions(current, from, findMatchIndex, ignoreSync);
+        expect(actual.create).toEqual([fromUnit]);
     });
 });
