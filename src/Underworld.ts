@@ -237,7 +237,7 @@ export default class Underworld {
     this.localUnderworldNumber = ++localUnderworldCount;
     this.startTime = Date.now();
     // Clear inventory html from previous game
-    CardUI.syncInventory(undefined, this);
+    CardUI.resetInventoryContent();
     if (typeof window !== 'undefined') {
       // @ts-ignore: window.devUnderworld is NOT typed in globalThis intentionally
       // so that it will not be used elsewhere, but it is assigned here

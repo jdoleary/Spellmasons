@@ -19,7 +19,7 @@ import { resetNotifiedImmune } from '../../cards/immune';
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
 resetInventoryContent();
-function resetInventoryContent() {
+export function resetInventoryContent() {
   if (globalThis.headless) {
     return;
   }
