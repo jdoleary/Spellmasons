@@ -403,7 +403,11 @@ export function cleanup(unit: IUnit, maintainPosition?: boolean, forceCleanPlaye
     unit.resolveDoneMoving();
   }
   if (unit.unitType == UnitType.PLAYER_CONTROLLED && !forceCleanPlayerUnit) {
-    console.log('Protection: Do not clean up player unit');
+    console.log('Protection: Do not clean up player unit, instead move to portal');
+    // Instead of cleaning up the player unit, move it into the portal
+    // represented by (NaN, NaN)
+    unit.x = NaN;
+    unit.y = NaN
     return;
   }
   // Sometimes you will want to clean up a unit without NaN'ing it's position
