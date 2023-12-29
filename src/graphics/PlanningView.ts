@@ -254,6 +254,7 @@ export function clearTints(underworld: Underworld) {
   underworld.units.forEach(unit => {
     if (unit.image) {
       unit.image.sprite.tint = 0xFFFFFF;
+      Unit.updateAccessibilityOutline(unit, false);
     }
   });
   underworld.pickups.forEach(pickup => {
@@ -309,6 +310,7 @@ async function showCastCardsPrediction(underworld: Underworld, target: Vec2, cas
       const realUnit = underworld.units.find(u => u.id == targetedUnit.id);
       // don't change tint if HUD is hidden
       if (realUnit && realUnit.image && !globalThis.isHUDHidden) {
+        Unit.updateAccessibilityOutline(realUnit, true, outOfRange);
         if (outOfRange) {
           realUnit.image.sprite.tint = 0xaaaaaa;
         } else {

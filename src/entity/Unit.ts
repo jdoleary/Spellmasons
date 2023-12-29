@@ -248,13 +248,6 @@ export function create(
     // Ensure all change factions logic applies when a unit is first created
     changeFaction(unit, faction);
 
-    if (unit.faction == Faction.ENEMY && unit.image) {
-      if (!unit.image.sprite.filters) {
-        unit.image.sprite.filters = [];
-      }
-      unit.image.sprite.filters.push(new OutlineFilter(1, 0x00000, 0.1));
-    }
-
     underworld.addUnitToArray(unit, prediction || false);
     // Check to see if unit interacts with liquid
     Obstacle.tryFallInOutOfLiquid(unit, underworld, prediction || false);
@@ -262,6 +255,28 @@ export function create(
     return unit;
   } else {
     throw new Error(`Source unit with id ${unitSourceId} does not exist`);
+  }
+}
+export function updateAccessibilityOutline(unit: IUnit, targeted: boolean, outOfRange?: boolean) {
+  if (!unit.image || !globalThis.accessibilityOutline) {
+    return;
+  }
+
+  if (!unit.image.sprite.filters) {
+    unit.image.sprite.filters = [];
+  }
+  const outlineSettings = globalThis.accessibilityOutline[unit.faction][outOfRange ? 'outOfRange' : targeted ? 'targeted' : 'regular'];
+  let outlineFilter: OutlineFilter | undefined;
+  if (outlineSettings.thickness) {
+    // @ts-ignore __proto__ is not typed
+    outlineFilter = unit.image.sprite.filters.find(f => f.__proto__ == OutlineFilter.prototype)
+    if (outlineFilter) {
+      outlineFilter.thickness = outlineSettings.thickness;
+      outlineFilter.color = outlineSettings.color;
+    } else {
+      outlineFilter = new OutlineFilter(outlineSettings.thickness, outlineSettings.color, 0.1);
+      unit.image.sprite.filters.push(outlineFilter);
+    }
   }
 }
 export function adjustUnitStatsByUnderworldCalamity(unit: IUnit, statCalamity: StatCalamity) {

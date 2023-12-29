@@ -274,4 +274,16 @@ declare global {
   var pie: PieClient | undefined;
   var adminPowerBarIndex: number;
   var adminPowerBarSelection: string;
+  var accessibilityOutline: {
+    [Faction.ALLY]: {
+      regular: { thickness: number, color: number },
+      targeted: { thickness: number, color: number },
+      outOfRange: { thickness: number, color: number }
+    },
+    [Faction.ENEMY]: {
+      regular: { thickness: number, color: number },
+      targeted: { thickness: number, color: number },
+      outOfRange: { thickness: number, color: number }
+    },
+  } | undefined;
 }

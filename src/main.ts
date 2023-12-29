@@ -18,6 +18,7 @@ import { setupPieAndUnderworld } from './network/wsPieSetup';
 import { returnToDefaultSprite } from './entity/Unit';
 import Jprompt from './graphics/Jprompt';
 import SpellmasonsAPI from './api';
+import { Faction } from './types/commonTypes';
 globalThis.SpellmasonsAPI = SpellmasonsAPI;
 
 // Globalize injected Audio functions
@@ -25,6 +26,21 @@ globalThis.playNextSong = playNextSong;
 globalThis.playSFX = playSFX;
 globalThis.playSFXKey = playSFXKey;
 globalThis.sfx = sfx;
+
+
+// Defaults for colorblind accessibility
+globalThis.accessibilityOutline = {
+  [Faction.ENEMY]: {
+    targeted: { color: 0xff0000, thickness: 2 },
+    outOfRange: { color: 0xaaaaaa, thickness: 2 },
+    regular: { color: 0x000000, thickness: 2 }
+  },
+  [Faction.ALLY]: {
+    targeted: { color: 0x0000ff, thickness: 1 },
+    outOfRange: { color: 0xaaaaaa, thickness: 1 },
+    regular: { color: 0x000000, thickness: 1 }
+  },
+}
 // A list of upgrades to omit for the next reroll
 globalThis.rerollOmit = [];
 
