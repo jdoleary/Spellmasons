@@ -70,27 +70,32 @@ const unit: UnitSource = {
       unit.path = undefined;
       Unit.orient(unit, firstTarget);
       await Unit.playComboAnimation(unit, unit.animations.attack, () => {
-        let flyingProjectilePromise = Promise.resolve();
+        let flyingProjectilePromises = [];
         // Get all units between source and target for the arrow to pierce:
         // .slice(1) selects all but the first target which is the destination which takes full
         // damage, not piercing damage
+
         attackTargets.slice(1).forEach(pierceTarget => {
           // Fake the collision by just calculating a delay based on the speed of the projectile
           const millisecondsUntilCollision = math.distance(unit, pierceTarget) / SPEED_PER_MILLI
-          setTimeout(() => {
-            Unit.takeDamage(pierceTarget, unit.damage / 2, unit, underworld, false, undefined, { thinBloodLine: true });
-          }, millisecondsUntilCollision);
+          flyingProjectilePromises.push(new Promise<void>((resolve) => {
+
+            setTimeout(() => {
+              Unit.takeDamage(pierceTarget, unit.damage / 2, unit, underworld, false, undefined, { thinBloodLine: true });
+              resolve();
+            }, millisecondsUntilCollision);
+          }));
         });
 
 
-        flyingProjectilePromise = createVisualFlyingProjectile(
+        flyingProjectilePromises.push(createVisualFlyingProjectile(
           unit,
           firstTarget,
           'projectile/arrow_ghost',
         ).then(() => {
           Unit.takeDamage(firstTarget, unit.damage, unit, underworld, false, undefined, { thinBloodLine: true });
-        });
-        return flyingProjectilePromise;
+        }));
+        return Promise.all(flyingProjectilePromises);
       });
     } else {
       // If it gets to this block it means it is either out of range or cannot see enemy

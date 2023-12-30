@@ -77,11 +77,9 @@ const unit: UnitSource = {
             geyserPromises.push(new Promise<void>((resolve) => {
               // Space them out in time
               setTimeout(() => {
+                Unit.takeDamage(attackTarget, unit.damage, attackTarget, underworld, false);
                 makeDarkPriestAttackParticles(attackTarget, false, resolve);
-                setTimeout(() => {
-                  Unit.takeDamage(attackTarget, unit.damage, attackTarget, underworld, false);
-                }, math.distance(unit, attackTarget));
-              }, 100 * i);
+              }, math.distance(unit, attackTarget));
             }));
           }
         }
