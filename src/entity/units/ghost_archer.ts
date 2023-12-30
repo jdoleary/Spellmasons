@@ -125,10 +125,9 @@ function getGhostArcherHits(archer: Vec2, target: Vec2, underworld: Underworld):
     (u) => {
       const pointAtRightAngleToArrowPath = findWherePointIntersectLineSegmentAtRightAngle(u, { p1: archer, p2: target });
       const willBeStruckByArrow = !pointAtRightAngleToArrowPath ? false : math.distance(u, pointAtRightAngleToArrowPath) <= arrowCollisionWidth
-      if (pointAtRightAngleToArrowPath)
-        // Note: Filter out target as target will take full damage
-        // Note: Filter out self as the ghost archer's arrow shouldn't damage itself
-        return u.alive && willBeStruckByArrow && u !== target && u !== archer;
+      // Note: Filter out target as target will take full damage
+      // Note: Filter out self as the ghost archer's arrow shouldn't damage itself
+      return u.alive && willBeStruckByArrow && u !== target && u !== archer;
     },
   );
 
