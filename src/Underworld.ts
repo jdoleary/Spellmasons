@@ -689,7 +689,10 @@ export default class Underworld {
           return
         }
       }
-      console.log('Headless server executed gameloop in ', (performance.now() - headlessGameLoopPerfStart).toFixed(2), ' millis with', loopCount, ' loops.');
+
+      if (loopCount > 500) {
+        console.log('Headless server executed gameloop in ', (performance.now() - headlessGameLoopPerfStart).toFixed(2), ' millis with', loopCount, ' loops.');
+      }
     }
   }
   // Only to be invoked by triggerGameLoopHeadless
@@ -3231,6 +3234,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       unitloop: for (let u of this.units.filter(
         (u) => u.unitType === UnitType.AI && u.alive && u.faction == faction && subTypes.includes(u.unitSubType),
       )) {
+        // Units should have their previous path cleared so that their .action can set their path if 
+        // they should move this turn.
+        // Note: This resolves a headless server desync where units go through a complete gameloop before their
+        // .action sets moveTowards, so if they had an existing path, they move on the server but not on the client
+        u.path = undefined;
+
         // Set unit stamina to max so that they may move now that it is their turn
         u.stamina = u.staminaMax;
         // Trigger onTurnStart Events

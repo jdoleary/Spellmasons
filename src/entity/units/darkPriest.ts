@@ -63,8 +63,6 @@ const unit: UnitSource = {
     // If they have enough mana
     if (unit.mana >= manaCostToCast) {
       if (attackTargets.length) {
-        // Attack or move, not both; so clear their existing path
-        unit.path = undefined;
         let geyserPromises = [];
         await Unit.playAnimation(unit, unit.animations.attack);
         // Remove mana once the cast occurs

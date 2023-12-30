@@ -10,6 +10,7 @@ const fakeElement = {
         toggle: () => { },
         contains: () => { }
     },
+    querySelector: () => fakeElement,
 };
 global.document = {
     getElementById: () => fakeElement,

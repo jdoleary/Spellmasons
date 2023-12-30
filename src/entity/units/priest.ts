@@ -86,8 +86,6 @@ const unit: UnitSource = {
   action: async (unit: Unit.IUnit, attackTargets, underworld: Underworld) => {
     let didAction = false;
     if (attackTargets.length) {
-      // Priests attack or move, not both; so clear their existing path
-      unit.path = undefined;
       // Resurrect dead ally
       didAction = await resurrectUnits(unit, attackTargets, underworld);
     }

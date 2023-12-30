@@ -67,8 +67,6 @@ const unit: UnitSource = {
       if (chosenUnit) {
         if (Unit.inRange(unit, chosenUnit) && unit.mana >= unit.manaCostToCast) {
           unit.mana - unit.manaCostToCast;
-          // Poisoners attack or move, not both; so clear their existing path
-          unit.path = undefined;
           // await Unit.playAnimation(unit, unit.animations.attack);
           await Unit.playComboAnimation(unit, unit.animations.attack, () => {
             return animateDrag(unit, chosenUnit);

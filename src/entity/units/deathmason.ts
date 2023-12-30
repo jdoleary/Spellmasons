@@ -58,8 +58,6 @@ const unit: UnitSource = {
   },
   // This is how a user unit would act if controlled by AI (this can happen if you clone yourself)
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
-    // Attack or move, not both; so clear their existing path
-    unit.path = undefined;
 
     const seed = seedrandom(`${underworld.seed}-${underworld.turn_number}-${unit.id}`);
 

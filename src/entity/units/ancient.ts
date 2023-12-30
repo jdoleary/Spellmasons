@@ -55,8 +55,6 @@ const unit: UnitSource = {
       for (let i = 0; i < numberOfTargets; i++) {
         const attackTarget = attackTargets[i];
         if (attackTarget) {
-          // Attack or move, not both; so clear their existing path
-          unit.path = undefined;
           Unit.orient(unit, attackTarget);
           makeAncientParticles(unit, false);
           promises.push(makeManaTrail(unit, attackTarget, underworld, '#5a7879', '#304748').then(() => {

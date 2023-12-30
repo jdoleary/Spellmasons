@@ -23,8 +23,6 @@ const playerUnit: UnitSource = {
     const attackTarget = attackTargets && attackTargets[0];
     // Attack
     if (attackTarget && canAttackTarget) {
-      // Archers attack or move, not both; so clear their existing path
-      unit.path = undefined;
       Unit.orient(unit, attackTarget);
       const keyMoment = async () => {
         playSFXKey('hurt');
