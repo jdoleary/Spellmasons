@@ -38,7 +38,7 @@ import { recalcPositionForCards } from '../graphics/ui/CardUI';
 import { isSinglePlayer } from './wsPieSetup';
 import { elEndTurnBtn } from '../HTMLElements';
 
-export const NO_LOG_LIST = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
+export const NO_LOG_LIST = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 export const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
 export function onData(d: OnDataArgs, overworld: Overworld) {
@@ -683,7 +683,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
               runCinematicLevelCamera(underworld);
             }
             // Change end turn button from End Turn to Ready in multiplayer
-            if (elEndTurnBtn) {
+            if (elEndTurnBtn && !globalThis.headless) {
               const elEndTurnSpan = elEndTurnBtn.querySelector('[data-localize-text]') as HTMLElement;
               elEndTurnSpan.dataset.localizeText = "ready"
               elEndTurnSpan.innerText = i18n(elEndTurnSpan.dataset.localizeText);
