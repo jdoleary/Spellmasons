@@ -56,8 +56,6 @@ const unit: UnitSource = {
 export async function summonerAction(unit: Unit.IUnit, ableToSummon: boolean, underworld: Underworld, { closeUnit, farUnit }: { closeUnit: UnitSource | undefined, farUnit: UnitSource | undefined }, baseNumberOfSummons: number) {
   // Summon unit
   if (ableToSummon) {
-    // Summoners attack or move, not both; so clear their existing path
-    unit.path = undefined;
     unit.mana -= unit.manaCostToCast;
     await Unit.playComboAnimation(unit, unit.animations.attack, async () => {
       let numberOfSummons = baseNumberOfSummons * (unit.isMiniboss ? 2 : 1);

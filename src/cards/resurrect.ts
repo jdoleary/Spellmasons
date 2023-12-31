@@ -30,7 +30,7 @@ const spell: Spell = {
       const targets = state.targetedUnits;
       let resurrectedUnitCount = 0;
       for (let unit of targets) {
-        if (unit && !unit.alive) {
+        if (unit && !unit.alive && !unit.flaggedForRemoval) {
           let colorOverlayFilter: ColorOverlayFilter;
           if (unit.image && unit.image.sprite.filters) {
             // Overlay with white

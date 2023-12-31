@@ -66,31 +66,34 @@ const unit: UnitSource = {
     // Attack
     const firstTarget = attackTargets && attackTargets[0]
     if (firstTarget) {
-      // Archers attack or move, not both; so clear their existing path
-      unit.path = undefined;
       Unit.orient(unit, firstTarget);
       await Unit.playComboAnimation(unit, unit.animations.attack, () => {
-        let flyingProjectilePromise = Promise.resolve();
+        let flyingProjectilePromises = [];
         // Get all units between source and target for the arrow to pierce:
         // .slice(1) selects all but the first target which is the destination which takes full
         // damage, not piercing damage
+
         attackTargets.slice(1).forEach(pierceTarget => {
           // Fake the collision by just calculating a delay based on the speed of the projectile
           const millisecondsUntilCollision = math.distance(unit, pierceTarget) / SPEED_PER_MILLI
-          setTimeout(() => {
-            Unit.takeDamage(pierceTarget, unit.damage / 2, unit, underworld, false, undefined, { thinBloodLine: true });
-          }, millisecondsUntilCollision);
+          flyingProjectilePromises.push(new Promise<void>((resolve) => {
+
+            setTimeout(() => {
+              Unit.takeDamage(pierceTarget, unit.damage / 2, unit, underworld, false, undefined, { thinBloodLine: true });
+              resolve();
+            }, millisecondsUntilCollision);
+          }));
         });
 
 
-        flyingProjectilePromise = createVisualFlyingProjectile(
+        flyingProjectilePromises.push(createVisualFlyingProjectile(
           unit,
           firstTarget,
           'projectile/arrow_ghost',
         ).then(() => {
           Unit.takeDamage(firstTarget, unit.damage, unit, underworld, false, undefined, { thinBloodLine: true });
-        });
-        return flyingProjectilePromise;
+        }));
+        return Promise.all(flyingProjectilePromises);
       });
     } else {
       // If it gets to this block it means it is either out of range or cannot see enemy
@@ -120,10 +123,11 @@ export default unit;
 
 // Returns the units that will be hit when ghost archer fires it's piercing arrow
 function getGhostArcherHits(archer: Vec2, target: Vec2, underworld: Underworld): Unit.IUnit[] {
+  const arrowCollisionWidth = 25;
   return underworld.units.filter(
     (u) => {
       const pointAtRightAngleToArrowPath = findWherePointIntersectLineSegmentAtRightAngle(u, { p1: archer, p2: target });
-      const willBeStruckByArrow = !pointAtRightAngleToArrowPath ? false : math.distance(u, pointAtRightAngleToArrowPath) <= config.COLLISION_MESH_RADIUS * 2
+      const willBeStruckByArrow = !pointAtRightAngleToArrowPath ? false : math.distance(u, pointAtRightAngleToArrowPath) <= arrowCollisionWidth
       // Note: Filter out target as target will take full damage
       // Note: Filter out self as the ghost archer's arrow shouldn't damage itself
       return u.alive && willBeStruckByArrow && u !== target && u !== archer;

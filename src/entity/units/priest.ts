@@ -86,11 +86,8 @@ const unit: UnitSource = {
   action: async (unit: Unit.IUnit, attackTargets, underworld: Underworld) => {
     let didAction = false;
     if (attackTargets.length) {
-      // Priests attack or move, not both; so clear their existing path
-      unit.path = undefined;
       // Resurrect dead ally
-      const numberOfAlliesToRez = unit.isMiniboss ? 3 : 1;
-      didAction = await resurrectUnits(unit, attackTargets.slice(0, numberOfAlliesToRez), underworld);
+      didAction = await resurrectUnits(unit, attackTargets, underworld);
     }
     if (!didAction) {
       const closestDeadResurrectable = Unit.closestInListOfUnits(unit,
@@ -107,10 +104,10 @@ const unit: UnitSource = {
     if (unit.mana < unit.manaCostToCast) {
       return [];
     }
+    const numberOfAlliesToRez = unit.isMiniboss ? 3 : 1;
     return resurrectableUnits(unit, underworld).filter(u => {
       return Unit.inRange(unit, u)
-
-    });
+    }).slice(0, numberOfAlliesToRez);
   }
 };
 export function resurrectableUnits(resurrector: Unit.IUnit, underworld: Underworld): Unit.IUnit[] {
@@ -120,6 +117,9 @@ export function resurrectableUnits(resurrector: Unit.IUnit, underworld: Underwor
     // of a different faction (this would cause)
     // the player to change faction
     && (u.unitType !== UnitType.PLAYER_CONTROLLED || u.faction == resurrector.faction)
+    // < 0 for predictedNextTurnDamage is a special signal to mean that another priest
+    // is already targeting it for resurrect
+    && u.predictedNextTurnDamage >= 0
     // Do not allow priest to rez each other.
     // That would be super annoying for players
     && u.unitSourceId !== resurrector.unitSourceId);

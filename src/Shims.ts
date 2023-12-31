@@ -11,6 +11,7 @@ const fakeElement = {
         contains: () => { }
     },
     querySelector: () => fakeElement,
+    dataset: {}
 };
 global.document = {
     getElementById: () => fakeElement,

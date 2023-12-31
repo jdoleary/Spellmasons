@@ -1,4 +1,5 @@
 import type * as PIXI from 'pixi.js';
+import { OutlineFilter } from '@pixi/filter-outline';
 import * as storage from "../storage";
 import * as config from '../config';
 import * as Image from '../graphics/Image';
@@ -91,6 +92,8 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   // across the network
   id: number;
   unitSourceId: string;
+  // if this IUnit is a prediction copy, real is a reference to the real unit that it is a copy of
+  real?: IUnit;
   // strength is a multiplier that affects base level stats
   strength: number;
   // true if the unit was spawned at the beginning of the level and not
@@ -134,6 +137,7 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
 }
 // This does not need to be unique to underworld, it just needs to be unique
 let lastPredictionUnitId = 0;
+
 export function create(
   unitSourceId: string,
   x: number,
@@ -247,7 +251,6 @@ export function create(
     // Ensure all change factions logic applies when a unit is first created
     changeFaction(unit, faction);
 
-
     underworld.addUnitToArray(unit, prediction || false);
     // Check to see if unit interacts with liquid
     Obstacle.tryFallInOutOfLiquid(unit, underworld, prediction || false);
@@ -255,6 +258,34 @@ export function create(
     return unit;
   } else {
     throw new Error(`Source unit with id ${unitSourceId} does not exist`);
+  }
+}
+export function updateAccessibilityOutline(unit: IUnit, targeted: boolean, outOfRange?: boolean) {
+  if (!unit.image || !globalThis.accessibilityOutline) {
+    return;
+  }
+
+  if (!unit.image.sprite.filters) {
+    unit.image.sprite.filters = [];
+  }
+  const outlineSettings = globalThis.accessibilityOutline[unit.faction][outOfRange ? 'outOfRange' : targeted ? 'targeted' : 'regular'];
+  let outlineFilter: OutlineFilter | undefined;
+  // @ts-ignore __proto__ is not typed
+  outlineFilter = unit.image.sprite.filters.find(f => f.__proto__ == OutlineFilter.prototype)
+  if (outlineFilter) {
+    if (outlineSettings.thickness) {
+      outlineFilter.thickness = outlineSettings.thickness;
+      outlineFilter.color = outlineSettings.color;
+    } else {
+      // If thickness is 0, remove the filter:
+      unit.image.sprite.filters = unit.image.sprite.filters.filter(x => x !== outlineFilter);
+    }
+  } else {
+    // Only add the filter if thickness is not 0
+    if (outlineSettings.thickness) {
+      outlineFilter = new OutlineFilter(outlineSettings.thickness, outlineSettings.color, 0.1);
+      unit.image.sprite.filters.push(outlineFilter);
+    }
   }
 }
 export function adjustUnitStatsByUnderworldCalamity(unit: IUnit, statCalamity: StatCalamity) {
@@ -397,13 +428,19 @@ export function removeModifier(unit: IUnit, key: string, underworld: Underworld)
 
 }
 
-export function cleanup(unit: IUnit, maintainPosition?: boolean) {
+export function cleanup(unit: IUnit, maintainPosition?: boolean, forceCleanPlayerUnit?: boolean) {
   // Resolve done moving on cleanup to ensure that there are no forever-blocking promises
   if (unit.resolveDoneMoving) {
     unit.resolveDoneMoving();
   }
-  // Prevent id conflicts with other existing units after cleanup
-  unit.id = -1;
+  if (unit.unitType == UnitType.PLAYER_CONTROLLED && !forceCleanPlayerUnit) {
+    console.log('Protection: Do not clean up player unit, instead move to portal');
+    // Instead of cleaning up the player unit, move it into the portal
+    // represented by (NaN, NaN)
+    unit.x = NaN;
+    unit.y = NaN
+    return;
+  }
   // Sometimes you will want to clean up a unit without NaN'ing it's position
   // because it's position may still be used in synchronous events such as
   // an urn exploding (being cleaned up), but there are still other onDeath
@@ -1368,6 +1405,7 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
   const { image, resolveDoneMoving, modifiers, ...rest } = u;
   return {
     ...rest,
+    real: u,
     isPrediction: true,
     // A copy of the units current scale for the prediction copy
     // prediction copies do not have an image property, so this property is saved here

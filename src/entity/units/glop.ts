@@ -53,8 +53,6 @@ const unit: UnitSource = {
     // Attack
     if (attackTarget && canAttackTarget) {
       unit.mana -= unit.manaCostToCast;
-      // Attack or move, not both; so clear their existing path
-      unit.path = undefined;
       Unit.orient(unit, attackTarget);
       await Unit.playComboAnimation(unit, unit.animations.attack, () => {
         return createVisualLobbingProjectile(
@@ -78,7 +76,7 @@ const unit: UnitSource = {
         unit.stamina = Math.min(unit.stamina, distanceToEnemy - config.COLLISION_MESH_RADIUS);
         await Unit.moveTowards(unit, attackTarget, underworld);
       } else {
-        console.trace('Glop has no target to move towards')
+        console.log('Glop has no target to move towards')
       }
     }
   },

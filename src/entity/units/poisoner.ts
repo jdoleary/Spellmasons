@@ -47,8 +47,6 @@ const unit: UnitSource = {
     const chosenUnit = attackTargets && attackTargets[0];
     if (chosenUnit && canAttackTarget) {
       unit.mana - unit.manaCostToCast;
-      // Poisoners attack or move, not both; so clear their existing path
-      unit.path = undefined;
       await Unit.playComboAnimation(unit, unit.animations.attack, async () => {
         await createVisualLobbingProjectile(
           unit,

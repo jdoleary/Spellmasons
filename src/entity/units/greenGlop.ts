@@ -63,8 +63,6 @@ const unit: UnitSource = {
     // Attack
     if (attackTargets && canAttackTarget && unit.mana >= unit.manaCostToCast) {
       unit.mana -= unit.manaCostToCast;
-      // Attack or move, not both; so clear their existing path
-      unit.path = undefined;
       await Unit.playComboAnimation(unit, unit.animations.attack, () => {
         let lastPromise = Promise.resolve();
         for (let i = 0; i < numberOfTargets; i++) {

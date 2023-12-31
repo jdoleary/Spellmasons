@@ -100,6 +100,8 @@ import { urn_poison_id } from './entity/units/urn_poison';
 import { elEndTurnBtn } from './HTMLElements';
 import { corpseDecayId } from './modifierCorpseDecay';
 import { isSinglePlayer } from './network/wsPieSetup';
+import { PRIEST_ID } from './entity/units/priest';
+import { getSyncActions } from './Syncronization';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -237,7 +239,7 @@ export default class Underworld {
     this.localUnderworldNumber = ++localUnderworldCount;
     this.startTime = Date.now();
     // Clear inventory html from previous game
-    CardUI.syncInventory(undefined, this);
+    CardUI.resetInventoryContent();
     if (typeof window !== 'undefined') {
       // @ts-ignore: window.devUnderworld is NOT typed in globalThis intentionally
       // so that it will not be used elsewhere, but it is assigned here
@@ -735,7 +737,10 @@ export default class Underworld {
           return
         }
       }
-      console.log('Headless server executed gameloop in ', (performance.now() - headlessGameLoopPerfStart).toFixed(2), ' millis with', loopCount, ' loops.');
+
+      if (loopCount > 500) {
+        console.log('Headless server executed gameloop in ', (performance.now() - headlessGameLoopPerfStart).toFixed(2), ' millis with', loopCount, ' loops.');
+      }
     }
   }
   // Only to be invoked by triggerGameLoopHeadless
@@ -881,7 +886,10 @@ export default class Underworld {
     if (this.turn_phase == turn_phase.PlayerTurns && timemasons.length && globalThis.view == View.Game) {
       timemasons.forEach(timemason => {
         if (timemason.isSpawned && timemason.unit.alive && timemason.unit.mana > 0) {
-
+          if (numberOfHotseatPlayers > 1 && timemason !== globalThis.player) {
+            // Do not run timemason timer on hotseat multiplayer unless it is the timemasons turn
+            return;
+          }
           let drainPerSecond = timemason.unit.manaMax * config.TIMEMASON_PERCENT_DRAIN / 100;
 
           //@ts-ignore Special logic for timemason, does not need to be persisted
@@ -1209,7 +1217,7 @@ export default class Underworld {
       Pickup.removePickup(x, this, false);
     }
     this.players = [];
-    this.units.forEach(u => Unit.cleanup(u));
+    this.units.forEach(u => Unit.cleanup(u, false, true));
     globalThis.selectedPickup = undefined;
     globalThis.selectedUnit = undefined;
 
@@ -2189,8 +2197,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // Safety, force die any units that are out of bounds (this should never happen)
       // Note: Player Controlled units are out of bounds when they are inPortal so that they don't collide,
       // this filters out PLAYER_CONTROLLED so that they don't get die()'d when they are inPortal
-      for (let u of this.units.filter(u => u.alive && u.unitType !== UnitType.PLAYER_CONTROLLED)) {
+      for (let u of this.units.filter(u => u.alive)) {
         if (this.lastLevelCreated) {
+
           // Don't kill out of bound units if they are already flagged for removal
           // (Note: flaggedForRemoval units are set to NaN,NaN;  thus they are out of bounds, but 
           // they will be cleaned up so they shouldn't be killed here as this check is just to ensure
@@ -2199,8 +2208,19 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             // TODO ensure that this works on headless
             const originalTile = this.lastLevelCreated.imageOnlyTiles[vec2ToOneDimentionIndexPreventWrap({ x: Math.round(u.x / config.OBSTACLE_SIZE), y: Math.round(u.y / config.OBSTACLE_SIZE) }, this.lastLevelCreated.width)];
             if (!originalTile || originalTile.image == '') {
-              console.error('Unit was force killed because they ended up out of bounds', u.unitSubType)
-              Unit.die(u, this, false);
+
+              if (u.unitType == UnitType.PLAYER_CONTROLLED) {
+                const player = this.players.find(p => p.unit == u);
+                if (player && !Player.inPortal(player)) {
+                  console.error('Player was reset because they ended up out of bounds');
+                  Player.resetPlayerForNextLevel(player, this);
+                } else {
+                  console.error("Unexpected: Tried to reset out of bounds player but player unit matched no player object.");
+                }
+              } else {
+                console.error('Unit was force killed because they ended up out of bounds', u.unitSubType)
+                Unit.die(u, this, false);
+              }
             }
           }
         }
@@ -2469,10 +2489,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // Clear your selected spells when ending your turn.  This is a user preference inspried by a playtest
           CardUI.clearSelectedCards(this);
           console.log('endMyTurn: send END_TURN message');
-          // Don't play turn sfx when recording
-          if (!globalThis.isHUDHidden && !document.body?.classList.contains('hide-card-holders')) {
-            playSFXKey('endTurn');
-          }
           // When a user ends their turn, clear tints and spell effect projections
           // so they they don't cover the screen while AI take their turn
           clearSpellEffectProjection(this);
@@ -2494,12 +2510,15 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       console.error('Cannot end turn, player with clientId:', clientId, 'does not exist');
       return;
     }
-
     if (this.turn_phase != turn_phase.PlayerTurns) {
       // (A player "ending their turn" when it is not their turn
       // can occur when a client disconnects when it is not their turn)
       console.info('Cannot end the turn of a player when it isn\'t currently their turn')
       return
+    }
+    // Don't play turn sfx when recording or for auto-ended dead players
+    if ((!globalThis.isHUDHidden && !document.body?.classList.contains('hide-card-holders')) && (player.unit.alive || (!player.unit.alive && player.endedTurn))) {
+      playSFXKey('endTurn');
     }
     // Ensure players can only end the turn when it IS their turn
     if (this.turn_phase === turn_phase.PlayerTurns) {
@@ -3254,6 +3273,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         const canAttack = this.canUnitAttackTarget(u, targets && targets[0])
         cachedTargets[u.id] = { targets, canAttack };
         this.incrementTargetsNextTurnDamage(targets, u.damage, canAttack);
+        if (unitSource.id == PRIEST_ID) {
+          // Signal to other priests that this one is targeted for resurrection
+          // so multiple priests don't try to ressurect the same target
+          this.incrementTargetsNextTurnDamage(targets, -u.healthMax, true);
+        }
       }
       // Set all units' stamina to 0 before their turn is initialized so that any melee units that have remaining stamina
       // wont move during the ranged unit turn
@@ -3264,6 +3288,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       unitloop: for (let u of this.units.filter(
         (u) => u.unitType === UnitType.AI && u.alive && u.faction == faction && subTypes.includes(u.unitSubType),
       )) {
+        // Units should have their previous path cleared so that their .action can set their path if 
+        // they should move this turn.
+        // Note: This resolves a headless server desync where units go through a complete gameloop before their
+        // .action sets moveTowards, so if they had an existing path, they move on the server but not on the client
+        u.path = undefined;
+
         // Set unit stamina to max so that they may move now that it is their turn
         u.stamina = u.staminaMax;
         // Trigger onTurnStart Events
@@ -3421,9 +3451,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
   addUnitToArray(unit: Unit.IUnit, prediction: boolean): Unit.IUnit {
     if (prediction && this.unitsPrediction) {
-      const predictionCopy = Unit.copyForPredictionUnit(unit, this)
-      this.unitsPrediction.push(predictionCopy);
-      return predictionCopy;
+      this.unitsPrediction.push(unit);
+      return unit;
     } else {
       this.units.push(unit);
       return unit;
@@ -3431,7 +3460,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
   addPickupToArray(pickup: Pickup.IPickup, prediction: boolean) {
     if (prediction && this.pickupsPrediction) {
-      this.pickupsPrediction.push(Pickup.copyForPredictionPickup(pickup))
+      this.pickupsPrediction.push(pickup)
     } else {
       this.pickups.push(pickup);
     }
@@ -3792,6 +3821,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     return this.units;
   }
+  findIdenticalUnit(current: Unit.IUnit, potentialMatches: Unit.IUnitSerialized[]): Unit.IUnitSerialized | undefined {
+    return potentialMatches.find(p => this.unitIsIdentical(current, p));
+  }
   unitIsIdentical(unit: Unit.IUnit, serialized: Unit.IUnitSerialized): boolean {
     return unit.id == serialized.id && unit.unitSourceId == serialized.unitSourceId;
   }
@@ -3805,55 +3837,30 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       if (this.units.findIndex(u => u.id == unit.id) !== index) {
         console.log('Duplicate unit id in: ', this.units.map(u => `${u.id}:${u.unitSourceId}`))
         console.log('Syncing to: ', units.map(u => `${u.id}:${u.unitSourceId}`))
-        console.error('Duplicate unit id detected in units array');
+        console.error('Duplicate unit id detected in units array', unit.unitSourceId);
       }
     });
 
-    // Remove excess units if local copy of units has more units than the units it
-    // should be syncing with
-    if (this.units.length > units.length) {
-      console.log('sync: Remove excess units')
-      for (let i = units.length; i < this.units.length; i++) {
-        const unit = this.units[i];
-        if (unit) {
-          Unit.cleanup(unit);
-        }
-      }
-      this.units.splice(units.length);
+
+    // Get sync actions:
+    const actions = getSyncActions(this.units, units, this.findIdenticalUnit.bind(this), (u) => u.unitType == UnitType.PLAYER_CONTROLLED)
+    for (let [current, serialized] of actions.sync) {
+      // Note: Unit.syncronize maintains the player.unit reference
+      Unit.syncronize(serialized, current);
     }
-    // What couldn't be synced store in an array to create after iterating is finished
-    let serializedUnitsLeftToCreate = [];
-    // Sync what units you can
-    for (let i = 0; i < units.length; i++) {
-      const serializedUnit = units[i];
-      const currentUnit = this.units[i];
-      if (serializedUnit) {
-        if (excludePlayerUnits && serializedUnit.unitType == UnitType.PLAYER_CONTROLLED) {
-          continue;
-        }
-        if (currentUnit) {
-          // if there is a unit to compare it to, if they are the same, syncronize;
-          // if not, delete and recreate:
-          // Ensure currentUnit's image is displaying, if not we have to create a new one
-          if (this.unitIsIdentical(currentUnit, serializedUnit) && currentUnit.image?.sprite.parent !== null) {
-            // Note: Unit.syncronize maintains the player.unit reference
-            Unit.syncronize(serializedUnit, currentUnit);
-          } else {
-            Unit.cleanup(currentUnit);
-            serializedUnitsLeftToCreate.push(serializedUnit);
-          }
-        } else {
-          serializedUnitsLeftToCreate.push(serializedUnit);
-        }
-      }
+    for (let remove of actions.remove) {
+      Unit.cleanup(remove);
     }
-    // Create what's left over
-    for (let serializedUnit of serializedUnitsLeftToCreate) {
+    for (let serializedUnit of actions.create) {
       const newUnit = Unit.load(serializedUnit, this, false);
       Unit.returnToDefaultSprite(newUnit);
     }
+    for (let sendToServer of actions.skippedRemoval) {
+      // TODO send to server
+      console.error('TODO: player unit is missing on server, client should send player unit to server')
+    }
 
-    // Remove units flagged for removal
+    // Remove units that were just cleaned up
     this.units = this.units.filter(u => !u.flaggedForRemoval);
 
   }
@@ -3890,57 +3897,28 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     this.pickups = this.pickups.filter(p => !p.flaggedForRemoval);
     log.client('sync: Syncing pickups', pickups.map(u => `${u.id}:${u.flaggedForRemoval}`), 'current pickups:', this.pickups.map(u => `${u.id}:${u.flaggedForRemoval}`));
 
-    // What couldn't be synced store in an array to create after iterating is finished
-    let serializedpickupsLeftToCreate = [];
-    let pickupsToRemove = [];
     // Sync pickups by id. This is critical that pickups are synced this way unlike how units are synced
     // because of underworld.aquirePickupQueue, sometimes pickups will be aquired after a timeout which means
     // the ids of the pickups must stick around and should not be removed just because they're not in the serialized
     // pickups array (so long as they are also in the aquirePickupQueue array).
-    for (let i = 0; i < pickups.length; i++) {
-      const serializedPickup = pickups[i];
-      if (serializedPickup) {
-        const currentPickup = this.pickups.find(p => p.id == serializedPickup.id);
-        if (currentPickup) {
-          // @ts-ignore: `synced`: Temporary variable that keeps track of which pickups were synced
-          currentPickup.synced = true;
-          // if there is a pickup to compare it to, if they are the same, syncronize;
-          // if not, delete and recreate:
-          // Ensure currentPickup's image is displaying, if not we have to create a new one
-          if (this.pickupIsIdentical(currentPickup, serializedPickup) && currentPickup.image?.sprite.parent !== null) {
-            const { x, y, radius, inLiquid, immovable, beingPushed, playerOnly, turnsLeftToGrab, flaggedForRemoval } = serializedPickup;
-            Object.assign(currentPickup, { x, y, radius, inLiquid, immovable, beingPushed, playerOnly, turnsLeftToGrab, flaggedForRemoval });
-          } else {
-            pickupsToRemove.push(currentPickup);
-            serializedpickupsLeftToCreate.push(serializedPickup);
-          }
-        } else {
-          serializedpickupsLeftToCreate.push(serializedPickup);
-        }
-      }
-    }
-    // Remove extra pickups on client, not found in the serialized pickups array
-    // @ts-ignore: `synced`: Temporary variable that keeps track of which pickups were synced
-    for (let pickup of this.pickups.filter(p => !p.synced)) {
+    // Get sync actions:
+    const actions = getSyncActions(this.pickups, pickups,
+      (p, matches) => matches.find(m => this.pickupIsIdentical(p, m)),
       // Exclude pickups that are about to be aquired via the queue
-      if (!this.aquirePickupQueue.find(p => p.pickupId == pickup.id)) {
-        Pickup.removePickup(pickup, this, false);
-      }
+      (p) => !!this.aquirePickupQueue.find(ap => ap.pickupId == p.id));
+    for (let [current, serialized] of actions.sync) {
+      const { x, y, radius, inLiquid, immovable, beingPushed, playerOnly, turnsLeftToGrab, flaggedForRemoval } = serialized;
+      Object.assign(current, { x, y, radius, inLiquid, immovable, beingPushed, playerOnly, turnsLeftToGrab, flaggedForRemoval });
     }
-    this.pickups.forEach(p => {
-      // @ts-ignore: Clear temporary variable that keeps track of which pickups were synced
-      delete p.synced;
-    });
-    for (let pickup of pickupsToRemove) {
-      Pickup.removePickup(pickup, this, false);
+    for (let remove of actions.remove) {
+      Pickup.removePickup(remove, this, false);
     }
     // Remove pickups flagged for removal before creating new ones so you don't have id collisions
     this.pickups = this.pickups.filter(p => !p.flaggedForRemoval);
-    // Create pickups that are in the serialized pickup array but not in the client's this.pickups
-    for (let serializedPickup of serializedpickupsLeftToCreate) {
+    // Create pickups that are missing
+    for (let serializedPickup of actions.create) {
       Pickup.load(serializedPickup, this, false);
     }
-
   }
   // Note: This function is not ready for production yet, I am not sure if it runs reliably on servers so I'm 
   // not invoking it yet
@@ -4131,6 +4109,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       RNGState: this.random.state() as SeedrandomState,
     }
     return serialized;
+  }
+  updateAccessibilityOutlines() {
+    this.units.forEach(u => Unit.updateAccessibilityOutline(u, false));
   }
 }
 

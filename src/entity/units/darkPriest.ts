@@ -63,8 +63,6 @@ const unit: UnitSource = {
     // If they have enough mana
     if (unit.mana >= manaCostToCast) {
       if (attackTargets.length) {
-        // Attack or move, not both; so clear their existing path
-        unit.path = undefined;
         let geyserPromises = [];
         await Unit.playAnimation(unit, unit.animations.attack);
         // Remove mana once the cast occurs
@@ -77,11 +75,9 @@ const unit: UnitSource = {
             geyserPromises.push(new Promise<void>((resolve) => {
               // Space them out in time
               setTimeout(() => {
+                Unit.takeDamage(attackTarget, unit.damage, attackTarget, underworld, false);
                 makeDarkPriestAttackParticles(attackTarget, false, resolve);
-                setTimeout(() => {
-                  Unit.takeDamage(attackTarget, unit.damage, attackTarget, underworld, false);
-                }, math.distance(unit, attackTarget));
-              }, 100 * i);
+              }, math.distance(unit, attackTarget));
             }));
           }
         }

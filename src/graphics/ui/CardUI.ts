@@ -19,7 +19,7 @@ import { resetNotifiedImmune } from '../../cards/immune';
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
 resetInventoryContent();
-function resetInventoryContent() {
+export function resetInventoryContent() {
   if (globalThis.headless) {
     return;
   }
@@ -906,7 +906,7 @@ export function getReplacesCardText(replaces: string[], requires?: string[]) {
         thumbnail.style.padding = '0 4px';
         replacesEl.appendChild(thumbnail);
         const label = document.createElement('span');
-        label.innerText = r;
+        label.innerText = globalThis.i18n(r);
         replacesEl.appendChild(label);
       }
     }

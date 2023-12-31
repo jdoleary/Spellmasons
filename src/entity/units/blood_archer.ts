@@ -62,8 +62,6 @@ const unit: UnitSource = {
     // if it can't attack any targets
     // Attack
     if (attackTargets && attackTargets[0]) {
-      // Archers attack or move, not both; so clear their existing path
-      unit.path = undefined;
       Unit.orient(unit, attackTargets[0]);
       await Unit.playComboAnimation(unit, unit.animations.attack, () => {
         let flyingProjectilePromise = Promise.resolve();
