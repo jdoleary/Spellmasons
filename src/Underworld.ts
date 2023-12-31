@@ -59,7 +59,7 @@ import { expandPolygon, isVec2InsidePolygon, mergePolygon2s, Polygon2, Polygon2L
 import { calculateDistanceOfVec2Array, findPath } from './jmath/Pathfinding';
 import { keyDown, useMousePosition } from './graphics/ui/eventListeners';
 import Jprompt from './graphics/Jprompt';
-import { collideWithLineSegments, ForceMove, forceMovePreventForceThroughWall, isVecIntersectingVecWithCustomRadius, moveWithCollisions } from './jmath/moveWithCollision';
+import { collideWithLineSegments, ForceMove, forceMovePreventForceThroughWall, ForceMoveType, isForceMoveProjectile, isForceMoveUnitOrPickup, isVecIntersectingVecWithCustomRadius, moveWithCollisions } from './jmath/moveWithCollision';
 import { IHostApp, hostGiveClientGameState } from './network/networkUtil';
 import { withinMeleeRange } from './entity/units/actions/meleeAction';
 import { baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLimits, Limits as Limits, makeFinalTileImages, Map, Tile, toObstacle } from './MapOrganicCave';
@@ -103,6 +103,7 @@ import { isSinglePlayer } from './network/wsPieSetup';
 import { PRIEST_ID } from './entity/units/priest';
 import { getSyncActions } from './Syncronization';
 
+const loopCountLimit = 10000;
 export enum turn_phase {
   // turn_phase is Stalled when no one can act
   // This may happen if all players disconnect
@@ -226,6 +227,7 @@ export default class Underworld {
   startTime: number | undefined;
   winTime: number | undefined;
   hotseatCurrentPlayerIndex: number = 0;
+  headlessTimeouts: { time: number, callback: () => void }[] = [];
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
@@ -339,7 +341,7 @@ export default class Underworld {
     }
     this.simulatingMovePredictions = true;
     const prediction = true;
-    const PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD = 300;
+    const PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD = 500;
     let loopCount = 0;
     if (globalThis.predictionGraphics) {
       globalThis.predictionGraphics.beginFill(colors.forceMoveColor);
@@ -350,7 +352,7 @@ export default class Underworld {
         const forceMoveInst = this.forceMovePrediction[i];
         if (forceMoveInst) {
           const startPos = Vec.clone(forceMoveInst.pushedObject);
-          const done = this.runForceMove(forceMoveInst, prediction);
+          const done = this.runForceMove(forceMoveInst, 16, prediction);
           // Draw prediction lines
           if (globalThis.predictionGraphics && !globalThis.isHUDHidden) {
             globalThis.predictionGraphics.lineStyle(4, colors.forceMoveColor, 1.0);
@@ -365,7 +367,9 @@ export default class Underworld {
             if (globalThis.predictionGraphics && !globalThis.isHUDHidden) {
               globalThis.predictionGraphics.drawCircle(forceMoveInst.pushedObject.x, forceMoveInst.pushedObject.y, 3);
             }
-            forceMoveInst.resolve();
+            if (isForceMoveUnitOrPickup(forceMoveInst)) {
+              forceMoveInst.resolve();
+            }
             this.forceMovePrediction.splice(i, 1);
           }
         }
@@ -380,8 +384,8 @@ export default class Underworld {
     this.simulatingMovePredictions = false;
   }
   // Returns true when forceMove is complete
-  runForceMove(forceMoveInst: ForceMove, prediction: boolean): boolean {
-    const { pushedObject, velocity, velocity_falloff, timedOut } = forceMoveInst;
+  runForceMove(forceMoveInst: ForceMove, deltaTime: number, prediction: boolean): boolean {
+    const { pushedObject, velocity, timedOut } = forceMoveInst;
     if (timedOut) {
       return true;
     }
@@ -390,79 +394,118 @@ export default class Underworld {
       // and is "complete"
       return true;
     }
-    if (Vec.magnitude(velocity) <= 0.1) {
+    const trueVelocity = Vec.multiply(deltaTime, velocity);
+    const trueMagnitude = Vec.magnitude(trueVelocity);
+    if (trueMagnitude <= 0.1) {
       // It's close enough, return true to signify complete 
       return true;
     }
     const aliveUnits = ((prediction && this.unitsPrediction) ? this.unitsPrediction : this.units).filter(u => u.alive);
-    const handled = forceMovePreventForceThroughWall(forceMoveInst, this);
-    if (handled) {
-      // If striking the wall hard enough to pass through it, deal damage if the
-      // pushed object is a unit and stop velocity:
-      if (Unit.isUnit(pushedObject)) {
-        const magnitude = Vec.magnitude(velocity);
-        const damage = Math.ceil(Math.log(magnitude)) * 10;
-        Unit.takeDamage(pushedObject, damage, Vec.add(pushedObject, { x: velocity.x, y: velocity.y }), this, prediction);
-        if (!prediction) {
-          floatingText({ coords: pushedObject, text: `${damage} Impact damage!` });
+    if (isForceMoveUnitOrPickup(forceMoveInst)) {
+      const { velocity_falloff } = forceMoveInst;
+      const handled = forceMovePreventForceThroughWall(forceMoveInst, this, trueVelocity);
+      if (handled) {
+        // If striking the wall hard enough to pass through it, deal damage if the
+        // pushed object is a unit and stop velocity:
+        if (Unit.isUnit(pushedObject)) {
+
+          const damage = Math.ceil(trueMagnitude);
+          Unit.takeDamage(pushedObject, damage, Vec.add(pushedObject, { x: velocity.x, y: velocity.y }), this, prediction);
+          if (!prediction) {
+            floatingText({ coords: pushedObject, text: `${damage} Impact damage!` });
+          }
+        }
+        velocity.x = 0;
+        velocity.y = 0;
+      } else {
+        // If forceMove wasn't going to drive the pushedObject through a wall,
+        // move it according to it's velocity
+        // Note: This is the normal case, "handled" occurs
+        // under special circumstances when the object is moving so fast
+        // that it would pass through solid walls
+        const newPosition = Vec.add(pushedObject, trueVelocity);
+        pushedObject.x = newPosition.x;
+        pushedObject.y = newPosition.y;
+      }
+      for (let other of aliveUnits) {
+        if (other == forceMoveInst.pushedObject) {
+          // Don't collide with self
+          continue;
+        }
+        // The units' regular radius is for "crowding". It is much smaller than their actual size and it is used
+        // to ensure they can crowd together but not overlap perfect, so here we use a custom radius to detect
+        // forcePush collisions.
+        // Only allow instances that are flagged as able to create second order pushes create new pushes on collision or else you risk infinite
+        // recursion
+        if (forceMoveInst.canCreateSecondOrderPushes && isVecIntersectingVecWithCustomRadius(pushedObject, other, config.COLLISION_MESH_RADIUS)) {
+          // Don't collide with the same object more than once
+          if (forceMoveInst.alreadyCollided.includes(other)) {
+            continue;
+          }
+          forceMoveInst.alreadyCollided.push(other);
+          // If they collide transfer force:
+          // () => {}: No resolver needed for second order force pushes
+          // All pushable objects have the same mass so when a collision happens they'll split the distance
+          const fullDist = Vec.magnitude(forceMoveInst.velocity);
+          const halfDist = fullDist / 2;
+          // This is a second order push and second order pushes CANNOT create more pushes or else you risk infinite recursion in prediction mode
+          const canCreateSecondOrderPushes = false;
+          makeForcePush({ pushedObject: other, awayFrom: forceMoveInst.pushedObject, velocityStartMagnitude: halfDist, resolve: () => { }, canCreateSecondOrderPushes }, this, prediction);
+          // Reduce own velocity by half due to the transfer of force:
+          forceMoveInst.velocity = Vec.multiply(0.5, forceMoveInst.velocity);
+
         }
       }
-      velocity.x = 0;
-      velocity.y = 0;
-    } else {
-      // If forceMove wasn't going to drive the pushedObject through a wall,
-      // move it according to it's velocity
-      // Note: This is the normal case, "handled" occurs
-      // under special circumstances when the object is moving so fast
-      // that it would pass through solid walls
+      collideWithLineSegments(pushedObject, this.walls, this);
+      forceMoveInst.velocity = Vec.multiply(Math.pow(velocity_falloff, deltaTime), velocity);
+      if (Unit.isUnit(forceMoveInst.pushedObject)) {
+        // If the pushed object is a unit, check if it collides with any pickups
+        // as it is pushed
+        this.checkPickupCollisions(forceMoveInst.pushedObject, prediction);
+      } else if (Pickup.isPickup(forceMoveInst.pushedObject)) {
+        // If the pushed object is a pickup, check if it collides with any units
+        // as it is pushed
+        ((prediction && this.unitsPrediction) ? this.unitsPrediction : this.units).forEach(u => {
+          this.checkPickupCollisions(u, prediction);
+        })
+      }
+      // Check to see if unit has falled out of lava via a forcemove
+      Obstacle.tryFallInOutOfLiquid(forceMoveInst.pushedObject, this, prediction);
+    } else if (isForceMoveProjectile(forceMoveInst)) {
       const newPosition = Vec.add(pushedObject, velocity);
       pushedObject.x = newPosition.x;
       pushedObject.y = newPosition.y;
-    }
-    for (let other of aliveUnits) {
-      if (other == forceMoveInst.pushedObject) {
-        // Don't collide with self
-        continue;
+      if (math.distance(forceMoveInst.pushedObject, forceMoveInst.startPoint) >= math.distance(forceMoveInst.endPoint, forceMoveInst.startPoint)) {
+        // Projectile is done if it reaches or goes beyond its end point
+        return true;
       }
-      // The units' regular radius is for "crowding". It is much smaller than their actual size and it is used
-      // to ensure they can crowd together but not overlap perfect, so here we use a custom radius to detect
-      // forcePush collisions.
-      // Only allow instances that are flagged as able to create second order pushes create new pushes on collision or else you risk infinite
-      // recursion
-      if (forceMoveInst.canCreateSecondOrderPushes && isVecIntersectingVecWithCustomRadius(pushedObject, other, config.COLLISION_MESH_RADIUS)) {
-        // Don't collide with the same object more than once
-        if (forceMoveInst.alreadyCollided.includes(other)) {
+      if (pushedObject.image) {
+        pushedObject.image.sprite.x = pushedObject.x;
+        pushedObject.image.sprite.y = pushedObject.y;
+      }
+      for (let other of aliveUnits) {
+        if (forceMoveInst.ignoreUnitIds.includes(other.id)) {
           continue;
         }
-        forceMoveInst.alreadyCollided.push(other);
-        // If they collide transfer force:
-        // () => {}: No resolver needed for second order force pushes
-        // All pushable objects have the same mass so when a collision happens they'll split the distance
-        const fullDist = Vec.magnitude(forceMoveInst.velocity);
-        const halfDist = fullDist / 2;
-        // This is a second order push and second order pushes CANNOT create more pushes or else you risk infinite recursion in prediction mode
-        const canCreateSecondOrderPushes = false;
-        makeForcePush({ pushedObject: other, awayFrom: forceMoveInst.pushedObject, velocityStartMagnitude: halfDist, resolve: () => { }, canCreateSecondOrderPushes }, this, prediction);
-        // Reduce own velocity by half due to the transfer of force:
-        forceMoveInst.velocity = Vec.multiply(0.5, forceMoveInst.velocity);
-
+        if (isVecIntersectingVecWithCustomRadius(pushedObject, other, config.COLLISION_MESH_RADIUS)) {
+          if (Events.onProjectileCollisionSource) {
+            if (forceMoveInst.doesPierce) {
+              forceMoveInst.ignoreUnitIds.push(other.id);
+            }
+            const collideFn = Events.onProjectileCollisionSource[forceMoveInst.collideFnKey];
+            if (collideFn) {
+              collideFn({ unit: other, underworld: this, prediction, projectile: forceMoveInst });
+            } else {
+              console.error('No projectile collide fn for', forceMoveInst.collideFnKey);
+            }
+            if (!forceMoveInst.doesPierce) {
+              // If projectile does not pierce, remove it once it collides
+              return true;
+            }
+          }
+        }
       }
     }
-    collideWithLineSegments(pushedObject, this.walls, this);
-    forceMoveInst.velocity = Vec.multiply(velocity_falloff, velocity);
-    if (Unit.isUnit(forceMoveInst.pushedObject)) {
-      // If the pushed object is a unit, check if it collides with any pickups
-      // as it is pushed
-      this.checkPickupCollisions(forceMoveInst.pushedObject, prediction);
-    } else if (Pickup.isPickup(forceMoveInst.pushedObject)) {
-      // If the pushed object is a pickup, check if it collides with any units
-      // as it is pushed
-      ((prediction && this.unitsPrediction) ? this.unitsPrediction : this.units).forEach(u => {
-        this.checkPickupCollisions(u, prediction);
-      })
-    }
-    // Check to see if unit has falled out of lava via a forcemove
-    Obstacle.tryFallInOutOfLiquid(forceMoveInst.pushedObject, this, prediction);
     return false;
 
   }
@@ -496,7 +539,7 @@ export default class Underworld {
   }
   // Returns true if there is more processing yet to be done on the next
   // gameloop
-  gameLoopForceMove = () => {
+  gameLoopForceMove = (deltaTime: number) => {
     // No need to process if there are no instances to process
     if (!this.forceMove.length) {
       return false;
@@ -515,7 +558,7 @@ export default class Underworld {
         const unitImageYOffset = config.COLLISION_MESH_RADIUS / 2;
         const startPos = Vec.clone(forceMoveInst.pushedObject);
         startPos.y += unitImageYOffset;
-        const done = this.runForceMove(forceMoveInst, false);
+        const done = this.runForceMove(forceMoveInst, deltaTime, false);
         const endPos = { x: forceMoveInst.pushedObject.x, y: forceMoveInst.pushedObject.y + unitImageYOffset };
         if (graphicsBloodSmear && Unit.isUnit(forceMoveInst.pushedObject) && forceMoveInst.pushedObject.health !== undefined && forceMoveInst.pushedObject.health <= 0) {
           const size = 3;
@@ -549,7 +592,11 @@ export default class Underworld {
         // This works even if collisions prevent the unit from moving since
         // distance is modified even if the unit doesn't move each loop
         if (done) {
-          forceMoveInst.resolve();
+          if (isForceMoveUnitOrPickup(forceMoveInst)) {
+            forceMoveInst.resolve();
+          } else if (isForceMoveProjectile(forceMoveInst)) {
+            Image.cleanup(forceMoveInst.pushedObject.image);
+          }
           this.forceMove.splice(i, 1);
         }
       }
@@ -656,16 +703,20 @@ export default class Underworld {
     // more processing yet to be done
     return true;
   }
-  awaitForceMoves = async () => {
-    // Ensure server isn't stuck waiting for forceMoves
-    this.triggerGameLoopHeadless();
-    if (this.forceMove.length == 0) {
-      // No force moves to await
-      return;
-    } else if (this.forceMovePromise) {
-      await raceTimeout(2000, 'awaitForceMove', this.forceMovePromise);
-      // Now that the promise has resolved, clear it so that it can await the next
-      this.forceMovePromise = undefined;
+  awaitForceMoves = async (prediction: boolean = false) => {
+    if (prediction) {
+      this.fullySimulateForceMovePredictions();
+    } else {
+      // Ensure server isn't stuck waiting for forceMoves
+      this.triggerGameLoopHeadless();
+      if (this.forceMove.length == 0) {
+        // No force moves to await
+        return;
+      } else if (this.forceMovePromise) {
+        await raceTimeout(2000, 'awaitForceMove', this.forceMovePromise);
+        // Now that the promise has resolved, clear it so that it can await the next
+        this.forceMovePromise = undefined;
+      }
     }
   }
   // See GameLoops.md for more details
@@ -678,11 +729,8 @@ export default class Underworld {
       let loopCount = 0;
       while (moreProcessingToBeDone) {
         loopCount++;
-        moreProcessingToBeDone = this._gameLoopHeadless();
-        if (loopCount >= 1000 && loopCount % 2000 == 0) {
-          console.error('Headless gameloop unexpectedly large loop count:', loopCount);
-        }
-        if (loopCount > 10000) {
+        moreProcessingToBeDone = this._gameLoopHeadless(loopCount);
+        if (loopCount > loopCountLimit) {
           // TODO: this number is arbitrary, test later levels and make sure this is high enough
           // so that it doesn't early exit
           console.error('Force return from headless gameloop to prevent infinite loop');
@@ -698,14 +746,20 @@ export default class Underworld {
   // Only to be invoked by triggerGameLoopHeadless
   // Returns true if there is more processing to be done
   // See GameLoops.md for more details
-  _gameLoopHeadless = (): boolean => {
-    const stillProcessingForceMoves = this.gameLoopForceMove();
+  _gameLoopHeadless = (loopCount: number): boolean => {
+    const stillProcessingForceMoves = this.gameLoopForceMove(16);
+    if (loopCount > loopCountLimit && stillProcessingForceMoves) {
+      console.error('_gameLoopHeadless hit limit; stillProcessingForceMoves');
+    }
     let stillProcessingUnits = 0;
     const aliveNPCs = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
     for (let u of this.units) {
       const unitStillProcessing = this.gameLoopUnit(u, aliveNPCs, 16);
       if (unitStillProcessing) {
         stillProcessingUnits++;
+        if (loopCount > loopCountLimit) {
+          console.error('_gameLoopHeadless hit limit; stillProcessingUnits', u.unitSourceId);
+        }
       }
     }
     return stillProcessingForceMoves || stillProcessingUnits > 0;
@@ -753,7 +807,7 @@ export default class Underworld {
 
     const aliveNPCs = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
     // Run all forces in this.forceMove
-    this.gameLoopForceMove();
+    this.gameLoopForceMove(deltaTime);
 
     for (let i = 0; i < this.units.length; i++) {
       const u = this.units[i];
@@ -3563,12 +3617,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         effectState.targetedUnits = effectState.targetedUnits.filter(u => !excludedTargets.includes(u));
 
         const cardEffectPromise = card.effect(effectState, card, quantity, this, prediction, outOfRange);
-        if (prediction) {
-          this.fullySimulateForceMovePredictions();
-        }
-        if (globalThis.headless) {
-          this.triggerGameLoopHeadless();
-        }
+        await this.awaitForceMoves(prediction);
 
         // Await the cast
         try {

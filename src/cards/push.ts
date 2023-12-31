@@ -1,7 +1,7 @@
 import { Vec2, equal } from '../jmath/Vec';
 import { getCurrentTargets, Spell } from './index';
 import { distance, similarTriangles } from '../jmath/math';
-import type { Circle, ForceMove } from '../jmath/moveWithCollision';
+import { Circle, ForceMove, ForceMoveType, ForceMoveUnitOrPickup } from '../jmath/moveWithCollision';
 import { forceMoveColor } from '../graphics/ui/colors';
 import { raceTimeout } from '../Promise';
 import Underworld from '../Underworld';
@@ -11,7 +11,7 @@ import { HasSpace } from '../entity/Type';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 export const pushId = 'push';
-export const velocityStartMagnitude = 10;
+export const velocityStartMagnitude = 0.625;
 const spell: Spell = {
   card: {
     id: pushId,
@@ -47,12 +47,12 @@ interface forcePushArgs {
 export function makeForcePush(args: forcePushArgs, underworld: Underworld, prediction: boolean): ForceMove {
   const { pushedObject, awayFrom, resolve, velocityStartMagnitude, canCreateSecondOrderPushes } = args;
   const velocity = similarTriangles(pushedObject.x - awayFrom.x, pushedObject.y - awayFrom.y, distance(pushedObject, awayFrom), velocityStartMagnitude);
-  const velocity_falloff = 0.93;
+  const velocity_falloff = 0.9956;
   pushedObject.beingPushed = true;
   // Experiment: canCreateSecondOrderPushes now is ALWAYS disabled.
   // I've had feedback that it's suprising - which is bad for a tactical game
   // also I suspect it has significant performance costs for levels with many enemies
-  const forceMoveInst: ForceMove = { pushedObject, alreadyCollided: [], canCreateSecondOrderPushes: false, velocity, velocity_falloff, resolve }
+  const forceMoveInst: ForceMoveUnitOrPickup = { type: ForceMoveType.UNIT_OR_PICKUP, pushedObject, alreadyCollided: [], canCreateSecondOrderPushes: false, velocity, velocity_falloff, resolve }
   if (prediction) {
     underworld.forceMovePrediction.push(forceMoveInst);
   } else {

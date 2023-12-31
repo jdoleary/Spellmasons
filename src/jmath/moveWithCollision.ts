@@ -5,17 +5,66 @@ import * as config from '../config';
 import * as math from './math';
 import Underworld from '../Underworld';
 import { HasSpace } from '../entity/Type';
+import { IUnit } from '../entity/Unit';
+import { IPickup } from '../entity/Pickup';
+export enum ForceMoveType {
+    PROJECTILE,
+    UNIT_OR_PICKUP
+}
 export interface ForceMove {
+    type: ForceMoveType;
     pushedObject: HasSpace;
-    canCreateSecondOrderPushes: boolean;
     velocity: Vec2;
-    velocity_falloff: number;
     timedOut?: boolean;
+}
+export type ForceMoveUnitOrPickup = ForceMove & {
+    type: ForceMoveType.UNIT_OR_PICKUP;
+    canCreateSecondOrderPushes: boolean;
+    velocity_falloff: number;
     // A list of other HasSpace entities that it has already collided with
     alreadyCollided: HasSpace[];
     resolve: () => void;
 }
+export function isForceMoveUnitOrPickup(x: ForceMove): x is ForceMoveUnitOrPickup {
+    return x.type == ForceMoveType.UNIT_OR_PICKUP;
+}
+export type ForceMoveProjectile = ForceMove & {
+    type: ForceMoveType.PROJECTILE;
+    startPoint: Vec2;
+    endPoint: Vec2;
+    doesPierce: boolean;
+    ignoreUnitIds: number[];
+    collideFnKey: string;
+}
+export function isForceMoveProjectile(x: ForceMove): x is ForceMoveProjectile {
+    return x.type == ForceMoveType.PROJECTILE;
+}
 
+interface ForceMoveProjectileArgs {
+    pushedObject: HasSpace;
+    startPoint: Vec2;
+    endPoint: Vec2;
+    doesPierce: boolean;
+    ignoreUnitIds: number[];
+    collideFnKey: string;
+}
+const START_VELOCITY = 10;
+export function makeForceMoveProjectile(args: ForceMoveProjectileArgs, underworld: Underworld, prediction: boolean): ForceMove {
+    const { pushedObject, startPoint, endPoint, doesPierce, ignoreUnitIds, collideFnKey } = args;
+    const velocity = similarTriangles(endPoint.x - pushedObject.x, endPoint.y - pushedObject.y, distance(pushedObject, endPoint), START_VELOCITY);
+    pushedObject.beingPushed = true;
+    // Experiment: canCreateSecondOrderPushes now is ALWAYS disabled.
+    // I've had feedback that it's suprising - which is bad for a tactical game
+    // also I suspect it has significant performance costs for levels with many enemies
+    const forceMoveInst: ForceMoveProjectile = { type: ForceMoveType.PROJECTILE, collideFnKey, ignoreUnitIds, doesPierce, pushedObject, startPoint, endPoint, velocity };
+    if (prediction) {
+        underworld.forceMovePrediction.push(forceMoveInst);
+    } else {
+        underworld.addForceMove(forceMoveInst);
+    }
+    return forceMoveInst;
+
+}
 // Circle is used exclusively for force move objects
 export type Circle = {
     radius: number;
@@ -82,11 +131,11 @@ export function collideWithLineSegments(circle: Circle, lineSegments: LineSegmen
 // Handle super fast moving objects.  If an object is moving fast enough it *would* pass through
 // solid walls, this function prevents that and stops the unit where it would collide with the wall if it were 
 // moving slower
-export function forceMovePreventForceThroughWall(forceMoveInst: ForceMove, underworld: Underworld): boolean {
-    const { pushedObject, velocity } = forceMoveInst;
-    if (magnitude(velocity) >= pushedObject.radius) {
+export function forceMovePreventForceThroughWall(forceMoveInst: ForceMove, underworld: Underworld, trueVelocity: Vec2): boolean {
+    const { pushedObject } = forceMoveInst;
+    if (magnitude(trueVelocity) >= pushedObject.radius) {
         for (let wall of underworld.walls) {
-            const intersection = lineSegmentIntersection({ p1: pushedObject, p2: add(pushedObject, velocity) }, wall);
+            const intersection = lineSegmentIntersection({ p1: pushedObject, p2: add(pushedObject, trueVelocity) }, wall);
             if (intersection) {
                 const newPos = math.getCoordsAtDistanceTowardsTarget(intersection, pushedObject, pushedObject.radius)
                 pushedObject.x = newPos.x;

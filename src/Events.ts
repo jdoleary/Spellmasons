@@ -1,6 +1,8 @@
 import type { Vec2 } from './jmath/Vec';
 import type { IUnit } from './entity/Unit';
 import Underworld from './Underworld';
+import { IPickup } from './entity/Pickup';
+import { ForceMoveProjectile } from './jmath/moveWithCollision';
 
 export type onDamage = {
   // Returns a possibly modified damage
@@ -42,6 +44,9 @@ export type onDrawSelected = {
 };
 const onDrawSelectedSource: { [name: string]: onDrawSelected } = {};
 
+export type onProjectileCollision = ({ unit, pickup, underworld, prediction }: { unit?: IUnit, pickup?: IPickup, projectile: ForceMoveProjectile, underworld: Underworld, prediction: boolean }) => void;
+const onProjectileCollisionSource: { [name: string]: onProjectileCollision } = {};
+
 export default {
   onAgroSource,
   onDamageSource,
@@ -49,5 +54,6 @@ export default {
   onMoveSource,
   onTurnStartSource,
   onTurnEndSource,
-  onDrawSelectedSource
+  onDrawSelectedSource,
+  onProjectileCollisionSource
 };
