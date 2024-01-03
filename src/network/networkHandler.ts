@@ -37,6 +37,7 @@ import { GameMode } from '../types/commonTypes';
 import { recalcPositionForCards } from '../graphics/ui/CardUI';
 import { isSinglePlayer } from './wsPieSetup';
 import { elEndTurnBtn } from '../HTMLElements';
+import { sendEventToServerHub } from '../RemoteLogging';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -47,6 +48,21 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
     // Don't clog up server logs with payloads, leave that for the client which can handle them better
     try {
       console.log("Recieved onData:", MESSAGE_TYPES[d.payload.type], globalThis.headless ? '' : JSON.stringify(d))
+      if (overworld.underworld) {
+        try {
+          const startTime = payload.type == MESSAGE_TYPES.INIT_GAME_STATE ? Date.now() : undefined;
+          sendEventToServerHub({
+            seed: overworld.underworld.seed, gameName: 'default', startTime, serverRegion: process.env.serverRegion || undefined,
+            events: [{
+              time: Date.now(),
+              message: JSON.stringify({ _type: MESSAGE_TYPES[payload.type], ...payload })
+            }]
+          })
+        } catch (e) {
+          console.error('Could not send event to server', e);
+        }
+      }
+
     } catch (e) {
       console.warn('Prevent error due to Stringify:', e);
     }
