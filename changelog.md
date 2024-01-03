@@ -1,7 +1,202 @@
 ## 1.27.0
-- Added: Bone Shrapnel
+
+fix:  Refactor Force move projectile (#303)
+    * src: Add Event.onProjectileCollision
+    
+    * src: Projectile:
+    - Support pierce
+    - Clean up image when done
+    - Fix firing multiple arrows in sequence
+    - Clean up projectile on collision
+    
+    * ref: Rework arrow spells to use forceMoveProjectile
+    
+    * src: Add gameloop delta time to forceMoves
+    
+    * log: Report loop count limit
+    
+    * fix: Headless not having element.querySelector
+    
+    * fix: Pull typing after refactor
+    
+    * clean: Remove unused import
+    
+    * wip: Build system for using setTimeout in headless and prediction
+    
+    * fix: pull distance due to  forceMove refactor
+    
+    * balance: ForceMove impact damage scales a lot
+    stronger than it used to
+    
+    * log: Remove dev logs
+    
+    * fix: Restore timeoutToNextArrow
+    
+    which was changed for testing purposes
+    
+    * fix: ArrowEffect takes the card id
+    
+    so it triggers the right projectile collision function
+    
+    * fix: pierce hitting the same unit multiple times
+    
+    * fix: arrow not being awaited
+    
+    * fix: shove magnitude after forceMove refactor
+    
+    * fix: velocity falloff should take deltaTime into account
+    
+    so that regardless of the deltaTime passed into
+    runForceMove and the number of times it's called, it will
+    have consistent results between clients
+
+fix: Significant movement desync
+    
+    Where if units started their turn already with a path, on headless,
+    as soon as they got stamina they'd start and complete their movement,
+    all before unit.action was invoked.  This is different than on
+    client because the server executes the gameLoop all at once.
+    The solution is to always clear the unit's path at the start
+    of their turn so that they don't start moving unless unit.moveTowards
+    is invoked inside their .action function.
+    
+    log: reduce logging noise for server
+    
+    Related #291
+
+fix: Dark priest and ghost archer action desync
+    
+    Closes #291
+
+menu: fix codex UI issues
+    
+    Closes #311
+
+menu: Disable multiplayer game name
+    and password fields
+    once the client has joined the room
+    since changing them won't have any effect
+    
+    Closes #297
+
+balance: Reduce with of collision radius for
+    ghost arrow
+    It was far too wide
+
+fix: Clear inventory
+    in new underworld without calling syncInventory which requries a globalThis.player
+    Fixes #305
+
+npm: @websocketpie/client@1.1.3
+    Fix clientId being set to '' on roomLeave
+    Fixes #292
+
+Colorblind support (#314)
+    Ref: #293
+    
+    * src: Customizable color and thickness outlines
+    
+    * fix: Handle removing outline if thickness is 0
+    
+    * fix: hexToString to properly
+    convert smaller numbers like
+    0x0000ff
+    which was turning into '#ff'
+    instead of '#0000ff'
+    
+    * menu: Add outline accessibility controls
+    
+    * src: Persist accessibility outline to disk
+
+Fixed Target Similar (#307)
+    * Fixed Target Similar
+    * Removed workaround and prediction copy
+    * Updated pickups to match unit behavior
+    * Initial Targets [] for multi-initial targets
+    Fixed target similar adding the same target multiple times
+    Fixed clone not adding pickups to target list
+    * fix: Restore use of lastPredictionUnitId
+    predictionUnitIds should be incremented differently from
+    unit ids.
+    This is because prediction loops can run different amounts on
+    different clients, but all clients should call create for real units
+    the same number of times, keeping the unit ids in parity.
+    
+    fix: planningView graphics shouldn't use the prediction unit id to
+    find the corresponding real unit id, so I added `real` as a reference
+    to the original just like pickups.
+    
+
+End Turn Sfx plays when an ally ends their turn as well (#309)
+
+Resurrect requires a valid corpse (#308)
+    Res requires a valid corpse
+    Fixed an issue where you could resurrect a unit after using bone shrapnel on them, which could lock the game in the case of a player character
+
+src: Reset out of bounds players
+        This should never happen but to prevent
+        the game from getting stuck,
+        if a player gets out of bounds, reset them.
+        Closes #277
+
+fix: Multiple priests targetting the same corpse
+    Fixes #247
+
+fix: Prevent target similar from
+    mutating targets array while iterating targets array which resulted
+    in undesired extra targeting because the targets array is refreshed inside of
+    every loop.
+    
+    Fixed #299
+
+fix: Timemason on Hotseat
+    loses mana when other player is active
+    
+    Fixes #302
+
+feature: Clones added to target list (#298)
+
+refactor: Added ignoreRange flag to ICard (#296)
+    * Set to true for arrow spells
+    * Updated check in isAllowedToCastOutOfRange to use ignoreRange
+
+Contaminate Exclude Corpse Decay (#287)
+    * Contaminate exclude corpse decay
+    * Corpse Decay can't affect players/living
+
+
+Polished Power Bar (#279)
+    * Polished Power Bar
+    
+    - Fixed an issue that caused level up to give too much xp
+    - Fixed an issue that caused options to not get updated when opening the power bar, and caused an admin command different than what was selected to run
+    - Your previous selection will stay even after closing the bar, letting you quickly run the command several times (good for level up, regenerate level, spawning enemies, etc.)
+    - Tab will now increment the selected index
+    - Selected index will now reset when you start typing (since the selected command will likely change anyway)
+    
+    * Update globalTypesHeadless.d.ts
+
+Send Mana Id (i18n) (#278)
+    
+    Update send_mana.ts
+
+admin: Add arrow keys to navigate power bar
+admin: Add "Give Card", "Level up"
+    and new level skip admin commands
+admin: Add powerbar
+    Accessible via Ctrl + Space
+    TODO: Test event listeners, ensure this doesn't interfere with any other inputs
+
+fix: Undefined element on server error
+log: Silence wsPie logs
+
+npm: Update wsPieServer for enhanced statistics
+
+src: Add spell: Bone Shrapnel
     - Destroy corpses to damage nearby enemies
-    - Thanks Ry for inspiration
+    - Thanks Ry for inspiration 
+    TODO: I18n
+
 
 ## 1.26.5 Hotfix
 - big fix: Resolve multiplayer issue where force movements such as explosions (bloat, urns) caused positional desync.
