@@ -26,7 +26,32 @@ export function enableRemoteLogging() {
 globalThis.remoteLog = (...args: any[]) => {
     sendLogToServerHub(args, LogLevel.LOG);
 }
+// Copied from spellmasons-server-hub
+interface EventGroupMessage {
+    seed: string; // Required to identify EventGroup
+    gameName: string; // Required to identify EventGroup
+    startTime?: number;
+    serverRegion?: string;
+    events: Event[];
+}
+// Copied from spellmasons-server-hub
+interface Event {
+    time: number;
+    message: string;
+}
+export function sendEventToServerHub(eventG: EventGroupMessage) {
+    if (globalThis.headless) {
+        fetch("http://localhost:8080/event", {
+            // fetch("https://server-hub-d2b2v.ondigitalocean.app/event", {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(eventG)
+        }).catch(_ => {
+            originalConsoleError('Remote Event Logging failed');
+        });
+    }
 
+}
 // recentLogs holds logs for an amount of time to prevent oversending
 // the same logs that may occur, for example, if mousemove causes an error
 let recentLogs: { m: string, d: number }[] = [];
