@@ -28,7 +28,7 @@ import Underworld, { showUpgradesClassName } from '../../Underworld';
 import { toLineSegments } from '../../jmath/Polygon2';
 import { closestLineSegmentIntersection } from '../../jmath/lineSegment';
 import { allUnits } from '../../entity/units';
-import { CardCategory, Faction } from '../../types/commonTypes';
+import { CardCategory, Faction, UnitType } from '../../types/commonTypes';
 import * as Freeze from '../../cards/freeze';
 import { collideWithLineSegments } from '../../jmath/moveWithCollision';
 import { getKeyCodeMapping } from './keyMapping';
@@ -1568,6 +1568,113 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       supportInMultiplayer: false,
       domQueryContainer: '#menu-selected-unit'
 
+    },
+    {
+      label: 'Test: Induce server desync - selected unit',
+      action: (props) => {
+        const selectedUnit = overworld.underworld?.units.find(u => u.id == props.selectedUnitid)
+        if (selectedUnit) {
+          if (globalThis.headless) {
+            selectedUnit.x += 100;
+            selectedUnit.health = 1;
+          } else {
+            floatingText({ coords: selectedUnit, text: 'on server: unit.x += 100, unit.health = 1' })
+          }
+        } else {
+          centeredFloatingText('You must select a unit first', 'red');
+        }
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: ''
+
+    },
+    {
+      label: 'Test: Induce client desync - selected unit',
+      action: (props) => {
+        const selectedUnit = overworld.underworld?.units.find(u => u.id == props.selectedUnitid)
+        if (selectedUnit) {
+          if (!globalThis.headless) {
+            selectedUnit.x -= 100;
+            selectedUnit.health = 2
+          }
+        } else {
+          centeredFloatingText('You must select a unit first', 'red');
+        }
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: ''
+    },
+    {
+      label: 'Test: Induce server desync - new unit',
+      action: (props) => {
+        if (globalThis.headless) {
+          const sourceUnit = allUnits.golem;
+          const summonLocation = {
+            x: 100,
+            y: 100
+          }
+          if (sourceUnit) {
+            if (overworld.underworld) {
+              Unit.create(
+                sourceUnit.id,
+                summonLocation.x,
+                summonLocation.y,
+                Faction.ALLY,
+                sourceUnit.info.image,
+                UnitType.AI,
+                sourceUnit.info.subtype,
+                {
+                  ...sourceUnit.unitProps,
+                  isMiniboss: false,
+                  strength: 1,
+                },
+                overworld.underworld,
+                false
+              );
+            } else {
+              centeredFloatingText(`Unit created at ${summonLocation.x},${summonLocation.y} on server`, 'blue');
+            }
+          }
+        }
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: ''
+
+    },
+    {
+      label: 'Test: Induce client desync - new unit',
+      action: (props) => {
+        if (!globalThis.headless) {
+          const sourceUnit = allUnits.golem;
+          const summonLocation = {
+            x: 100,
+            y: 100
+          }
+          if (sourceUnit) {
+            if (overworld.underworld) {
+              Unit.create(
+                sourceUnit.id,
+                summonLocation.x,
+                summonLocation.y,
+                Faction.ALLY,
+                sourceUnit.info.image,
+                UnitType.AI,
+                sourceUnit.info.subtype,
+                {
+                  ...sourceUnit.unitProps,
+                  isMiniboss: false,
+                  strength: 1,
+                },
+                overworld.underworld,
+                false
+              );
+              centeredFloatingText(`Unit created at ${summonLocation.x},${summonLocation.y} only on client and not on server`, 'blue');
+            }
+          }
+        }
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: ''
     },
     ...[
       CardCategory.Mana,
