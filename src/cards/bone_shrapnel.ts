@@ -26,12 +26,9 @@ const spell: Spell = {
     thumbnail: 'spellIconCorpseExplosion.png',
     description: `When cast on a corpse, the corpse will explode damaging units around it by ${damage}. Stackable to increase explosion damage.`,
     effect: async (state, card, quantity, underworld, prediction) => {
-      state.targetedUnits.forEach(unit => {
-        if (unit.alive) {
-          // Only explode corpses.
-          return;
-        }
-
+      // Only explode corpses at time of cast
+      const targetedUnits = state.targetedUnits.filter(u => !u.alive);
+      targetedUnits.forEach(unit => {
         const adjustedRadius = baseRadius + (unit.modifiers[boneShrapnelCardId]?.radius || 0);
         if (prediction) {
           drawUICirclePrediction(unit, adjustedRadius, colors.healthRed, 'Explosion Radius');
