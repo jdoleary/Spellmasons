@@ -2557,7 +2557,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       if (allEnemiesAreDead) {
         console.log('Make dead, non-portaled players enter portal');
         deadNonPortaledPlayers.forEach(p => {
-          Unit.resurrect(p.unit);
+          Unit.resurrect(p.unit, this);
           Player.enterPortal(p, this);
         });
       }
