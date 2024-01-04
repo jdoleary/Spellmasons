@@ -48,7 +48,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
     // Don't clog up server logs with payloads, leave that for the client which can handle them better
     try {
       console.log("Recieved onData:", MESSAGE_TYPES[d.payload.type], globalThis.headless ? '' : JSON.stringify(d))
-      if (overworld.underworld) {
+      if (overworld.underworld && globalThis.headless) {
         try {
           const startTime = payload.type == MESSAGE_TYPES.INIT_GAME_STATE ? Date.now() : undefined;
           sendEventToServerHub({
@@ -57,7 +57,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
               time: Date.now(),
               message: JSON.stringify({ _type: MESSAGE_TYPES[payload.type], ...payload })
             }]
-          })
+          });
         } catch (e) {
           console.error('Could not send event to server', e);
         }
