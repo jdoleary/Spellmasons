@@ -4,9 +4,13 @@ import { HasSpace } from "../entity/Type";
 import { Vec2, multiply, normalized, subtract } from "../jmath/Vec";
 import { ForceMoveType, ForceMoveUnitOrPickup } from "../jmath/moveWithCollision";
 
-export const defaultPushDistance = 50; // In game units
-const velocity_falloff = 0.9950;
+// TODO - Force moves need to be handled differently
+// such that they are consistent at different framerates and velocity falloffs
+
+export const defaultPushDistance = 140; // In game units
+const velocity_falloff = 0.992;
 const EXPECTED_MILLIS_PER_GAMELOOP = 0.15;
+
 export async function forcePushDelta(pushedObject: HasSpace, deltaMovement: Vec2, underworld: Underworld, prediction: boolean): Promise<void> {
   // Calculate velocity needed to move object
   let velocity = movementToVelocity(deltaMovement);
@@ -31,14 +35,14 @@ export async function forcePushDelta(pushedObject: HasSpace, deltaMovement: Vec2
 // Shorthand Function
 export async function forcePushTowards(pushedObject: HasSpace, towards: Vec2, distance: number, underworld: Underworld, prediction: boolean): Promise<void> {
   // Pushes the object to another by a certain distance
-  const dir = subtract(pushedObject, towards);
+  const dir = subtract(towards, pushedObject);
   return forcePushDelta(pushedObject, multiply(distance, normalized(dir)), underworld, prediction);
 }
 
 // Shorthand Function
 export async function forcePushAwayFrom(pushedObject: HasSpace, awayFrom: Vec2, distance: number, underworld: Underworld, prediction: boolean): Promise<void> {
   // Pushes the object away from another by a certain distance
-  const dir = subtract(awayFrom, pushedObject);
+  const dir = subtract(pushedObject, awayFrom);
   return forcePushDelta(pushedObject, multiply(distance, normalized(dir)), underworld, prediction);
 }
 
@@ -46,11 +50,13 @@ export async function forcePushAwayFrom(pushedObject: HasSpace, awayFrom: Vec2, 
 export async function forcePushToDestination(pushedObject: HasSpace, destination: Vec2, distanceMultiplier: number, underworld: Underworld, prediction: boolean): Promise<void> {
   // The movement is the difference between the object and its destination
   // Multiply by magnitude where 0.5 moves it halfway to destination and 2 moves it twice as far
-  const delta = subtract(pushedObject, destination);
+  const delta = subtract(destination, pushedObject);
   return forcePushDelta(pushedObject, multiply(distanceMultiplier, delta), underworld, prediction);
 }
 
 // Find starting velocity based on the direction and distance we want to move
 function movementToVelocity(deltaMovement: Vec2): Vec2 {
-  return multiply((1 - velocity_falloff) / EXPECTED_MILLIS_PER_GAMELOOP, deltaMovement)
+  let mult = (1 - velocity_falloff) / EXPECTED_MILLIS_PER_GAMELOOP;
+  mult /= 7; //correction for in game units
+  return multiply(mult, deltaMovement);
 }

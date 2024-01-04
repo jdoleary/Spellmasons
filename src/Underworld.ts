@@ -69,7 +69,6 @@ import { raceTimeout, reportIfTakingTooLong } from './Promise';
 import { cleanUpEmitters, containerParticles, containerParticlesUnderUnits, makeManaTrail, updateParticles } from './graphics/Particles';
 import { elInstructions } from './network/networkHandler';
 import type PieClient from '@websocketpie/client';
-import { makeForcePush } from './cards/push';
 import { isOutOfRange, sendPlayerThinkingThrottled } from './PlayerUtils';
 import { DisplayObject, TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
@@ -102,6 +101,7 @@ import { corpseDecayId } from './modifierCorpseDecay';
 import { isSinglePlayer } from './network/wsPieSetup';
 import { PRIEST_ID } from './entity/units/priest';
 import { getSyncActions } from './Syncronization';
+import { forcePushAwayFrom } from './effects/force_move';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -450,7 +450,8 @@ export default class Underworld {
           const halfDist = fullDist / 2;
           // This is a second order push and second order pushes CANNOT create more pushes or else you risk infinite recursion in prediction mode
           const canCreateSecondOrderPushes = false;
-          makeForcePush({ pushedObject: other, awayFrom: forceMoveInst.pushedObject, velocityStartMagnitude: halfDist, resolve: () => { }, canCreateSecondOrderPushes }, this, prediction);
+          console.warn("Second order pushes may not work. Needs testing")
+          forcePushAwayFrom(other, forceMoveInst.pushedObject, halfDist, this, prediction);
           // Reduce own velocity by half due to the transfer of force:
           forceMoveInst.velocity = Vec.multiply(0.5, forceMoveInst.velocity);
 
