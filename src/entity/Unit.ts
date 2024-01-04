@@ -338,7 +338,6 @@ export function adjustUnitDifficulty(unit: IUnit, difficulty: number) {
     // Strength scaling
     const quantityStatModifier = 1 + 0.8 * ((unit.strength || 1) - 1);
     healthMax = Math.round(healthMax * quantityStatModifier);
-    manaMax = Math.round(manaMax * quantityStatModifier);
     unit.damage = Math.round(unit.damage * quantityStatModifier);
 
     if (unit.image) {
