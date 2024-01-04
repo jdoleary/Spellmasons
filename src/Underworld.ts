@@ -524,18 +524,23 @@ export default class Underworld {
   // This is the ONLY way forceMove array can be added to because it creates a forceMovePromise
   // if it doesn't already exist so that other places in the codebase can await forceMoves.
   // Never push to this.forceMove anywhere but here.
-  addForceMove(forceMoveInst: ForceMove) {
-    this.forceMove.push(forceMoveInst);
-    if (!this.forceMovePromise) {
-      // If there is no forceMovePromise, create a new one,
-      // it will resolve when the current forceMove instances
-      // have finished; so anything that needs to await the
-      // forceMove instances can raceTimeout this.forceMovePromise
-      this.forceMovePromise = new Promise(res => {
-        forceMoveResolver = res;
-      });
+  addForceMove(forceMoveInst: ForceMove, prediction: boolean) {
+    // TODO: Further parity with promises?
+    if (prediction) {
+      this.forceMovePrediction.push(forceMoveInst);
     }
-
+    else {
+      this.forceMove.push(forceMoveInst);
+      if (!this.forceMovePromise) {
+        // If there is no forceMovePromise, create a new one,
+        // it will resolve when the current forceMove instances
+        // have finished; so anything that needs to await the
+        // forceMove instances can raceTimeout this.forceMovePromise
+        this.forceMovePromise = new Promise(res => {
+          forceMoveResolver = res;
+        });
+      }
+    }
   }
   // Returns true if there is more processing yet to be done on the next
   // gameloop

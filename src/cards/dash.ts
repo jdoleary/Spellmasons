@@ -1,8 +1,8 @@
 import { getCurrentTargets, Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
-import { pull } from './pull';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
+import { forcePushToDestination } from '../effects/force_move';
 
 export const id = 'Dash';
 const spell: Spell = {
@@ -21,7 +21,7 @@ const spell: Spell = {
       const targets = getCurrentTargets(state);
       playDefaultSpellSFX(card, prediction);
       if (targets[0]) {
-        await pull(state.casterUnit, targets[0], quantity, underworld, prediction);
+        await forcePushToDestination(state.casterUnit, targets[0], quantity, underworld, prediction);
       }
       return state;
     },

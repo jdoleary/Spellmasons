@@ -1,8 +1,9 @@
 import { getCurrentTargets, Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
-import { pull, pullId } from './pull';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
+import { pullId } from './pull';
+import { forcePushToDestination } from '../effects/force_move';
 
 export const id = 'vortex';
 const spell: Spell = {
@@ -23,7 +24,7 @@ const spell: Spell = {
       playDefaultSpellSFX(card, prediction);
       const targets = getCurrentTargets(state);
       for (let entity of targets) {
-        promises.push(pull(entity, state.castLocation, quantity, underworld, prediction));
+        promises.push(forcePushToDestination(entity, state.castLocation, quantity, underworld, prediction));
       }
       await Promise.all(promises);
       return state;

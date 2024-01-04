@@ -1,11 +1,11 @@
 import { getCurrentTargets, Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
-import { forcePush, pushId } from './push';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
+import { pushId } from './push';
+import { defaultPushDistance, forcePushAwayFrom } from '../effects/force_move';
 
 export const id = 'repel';
-export const velocityStartMagnitude = 10;
 const spell: Spell = {
   card: {
     id,
@@ -21,11 +21,10 @@ const spell: Spell = {
     description: 'spell_repel',
     effect: async (state, card, quantity, underworld, prediction) => {
       let promises = [];
-      const awayFrom = state.castLocation;
       playDefaultSpellSFX(card, prediction);
       const targets = getCurrentTargets(state);
       for (let entity of targets) {
-        promises.push(forcePush(entity, awayFrom, velocityStartMagnitude * quantity, underworld, prediction));
+        promises.push(forcePushAwayFrom(entity, state.castLocation, defaultPushDistance * quantity, underworld, prediction));
       }
       await Promise.all(promises);
       return state;
