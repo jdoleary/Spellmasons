@@ -3289,11 +3289,16 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // wont move during the ranged unit turn
       u.stamina = 0;
     }
+
     for (let subTypes of [[UnitSubType.RANGED_LOS, UnitSubType.RANGED_RADIUS, UnitSubType.SUPPORT_CLASS], [UnitSubType.MELEE], [UnitSubType.SPECIAL_LOS], [UnitSubType.DOODAD]]) {
       const actionPromises: Promise<void>[] = [];
-      unitloop: for (let u of this.units.filter(
+      const readyToTakeTurnUnits = this.units.filter(
         (u) => u.unitType === UnitType.AI && u.alive && u.faction == faction && subTypes.includes(u.unitSubType),
-      )) {
+      );
+
+      const skipTurnUnits = await this.runTurnStartEvents(readyToTakeTurnUnits, false)
+
+      unitloop: for (let u of readyToTakeTurnUnits) {
         // Units should have their previous path cleared so that their .action can set their path if 
         // they should move this turn.
         // Note: This resolves a headless server desync where units go through a complete gameloop before their
@@ -3302,9 +3307,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
         // Set unit stamina to max so that they may move now that it is their turn
         u.stamina = u.staminaMax;
-        // Trigger onTurnStart Events
-        const abortTurn = await Unit.runTurnStartEvents(u, false, this);
-        if (abortTurn) {
+        if (skipTurnUnits.includes(u)) {
           continue unitloop;
         }
         // If unit is now dead (due to turnStartEvents)
@@ -3694,6 +3697,16 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
 
     return effectState;
+  }
+  // Returns array of unit's whose turns should be skipped
+  async runTurnStartEvents(units: Unit.IUnit[], prediction: boolean): Promise<Unit.IUnit[]> {
+    const turnStartEventPromises = units.map(u => Unit.runTurnStartEvents(u, prediction, this).then(skipTurn => skipTurn ? [u] : []))
+    if (prediction) {
+      await this.fullySimulateForceMovePredictions();
+    }
+    const skipTurnUnits = (await Promise.all(turnStartEventPromises)).flatMap(x => x);
+    return skipTurnUnits;
+
   }
   checkIfShouldSpawnPortal() {
     // If all enemy units are dead and at least one player is spawned and connected

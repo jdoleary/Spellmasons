@@ -616,9 +616,10 @@ export async function runPredictions(underworld: Underworld) {
       globalThis.attentionMarkers = [];
       // Clear predicted next turn damage so that attack targets can be intelligently calculated
       underworld.clearPredictedNextTurnDamage();
+      const skipTurnUnits = await underworld.runTurnStartEvents(underworld.unitsPrediction, true);
+
       for (let u of underworld.unitsPrediction) {
-        const skipTurn = await Unit.runTurnStartEvents(u, true, underworld);
-        if (skipTurn) {
+        if (skipTurnUnits.includes(u)) {
           continue;
         }
         // Only check for threats if the threat is alive and AI controlled
