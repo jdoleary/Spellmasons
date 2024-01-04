@@ -43,9 +43,9 @@ export function getCoordsAtDistanceTowardsTarget(start: Vec2, target: Vec2, trav
 }
 
 export function distance(coords1: Vec2, coords2: Vec2): number {
-  return Math.sqrt(
-    Math.pow(coords2.x - coords1.x, 2) + Math.pow(coords2.y - coords1.y, 2),
-  );
+  const dx = coords1.x - coords2.x;
+  const dy = coords1.y - coords2.y;
+  return Math.sqrt(dx * dx + dy * dy);
 }
 
 // Returns a point distance away from origin in the direction of the angle radians

@@ -6,9 +6,9 @@ import * as math from '../../jmath/math';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { bloodGripthulu } from '../../graphics/ui/colors';
 import type Underworld from '../../Underworld';
-import { pull } from '../../cards/pull';
 import { containerProjectiles } from '../../graphics/PixiUtils';
 import { getAngleBetweenVec2s, Vec2 } from '../../jmath/Vec';
+import { forcePushToDestination } from '../../effects/force_move';
 
 export const gripthulu_id = 'gripthulu';
 const unit: UnitSource = {
@@ -71,7 +71,7 @@ const unit: UnitSource = {
           await Unit.playComboAnimation(unit, unit.animations.attack, () => {
             return animateDrag(unit, chosenUnit);
           });
-          const pullPromise = pull(chosenUnit, unit, 1, underworld, false);
+          const pullPromise = forcePushToDestination(chosenUnit, unit, 1, underworld, false);
           underworld.triggerGameLoopHeadless();
           await pullPromise;
         } else {
