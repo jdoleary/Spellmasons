@@ -3,7 +3,6 @@ import { takeDamage } from '../entity/Unit';
 import * as Unit from '../entity/Unit';
 import { Spell } from './index';
 import { drawUICirclePrediction } from '../graphics/PlanningView';
-import { forcePush, velocityStartMagnitude } from './push';
 import { CardCategory } from '../types/commonTypes';
 import { createParticleTexture, logNoTextureWarning, simpleEmitter } from '../graphics/Particles';
 import { Vec2 } from '../jmath/Vec';
