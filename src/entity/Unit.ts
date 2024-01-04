@@ -33,7 +33,7 @@ import { explain, EXPLAIN_DEATH, EXPLAIN_MINI_BOSSES } from '../graphics/Explain
 import { ARCHER_ID } from './units/archer';
 import { BLOOD_ARCHER_ID } from './units/blood_archer';
 import * as Obstacle from './Obstacle';
-import { spellmasonUnitId } from './units/playerUnit';
+import playerUnit, { spellmasonUnitId } from './units/playerUnit';
 import { findRandomGroundLocation, SUMMONER_ID } from './units/summoner';
 import { DARK_SUMMONER_ID } from './units/darkSummoner';
 import { bossmasonUnitId } from './units/deathmason';
@@ -751,10 +751,15 @@ export function playAnimation(unit: IUnit, spritePath: string | undefined, optio
   }));
 }
 
-export function resurrect(unit: IUnit) {
+// TODO - Cleanup resurrect and sources thereof
+export function resurrect(unit: IUnit, underworld: Underworld) {
   // Return dead units back to full health
   unit.health = unit.healthMax;
   unit.alive = true;
+  if (unit.unitType == UnitType.PLAYER_CONTROLLED) {
+    const player = underworld.players.find(p => p.unit == unit);
+    if (player) player.endedTurn = false;
+  }
   returnToDefaultSprite(unit);
 }
 export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
@@ -1624,7 +1629,7 @@ export async function demoAnimations(unit: IUnit) {
 }
 export function resetUnitStats(unit: IUnit, underworld: Underworld) {
   if (!unit.alive) {
-    resurrect(unit);
+    resurrect(unit, underworld);
   }
 
   if (unit.image) {

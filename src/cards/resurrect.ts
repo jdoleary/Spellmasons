@@ -39,7 +39,7 @@ const spell: Spell = {
             unit.image.sprite.filters.push(colorOverlayFilter)
           }
           playDefaultSpellSFX(card, prediction);
-          Unit.resurrect(unit);
+          Unit.resurrect(unit, underworld);
           resurrectedUnitCount++;
           makeRisingParticles(unit, prediction);
           unit.health = unit.healthMax * resStatAmount;
