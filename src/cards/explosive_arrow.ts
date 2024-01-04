@@ -2,9 +2,9 @@ import * as Unit from '../entity/Unit';
 import { CardCategory } from '../types/commonTypes';
 import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
-import { explode } from './bloat';
 import { arrowEffect } from './arrow';
 import { arrow3CardId } from './arrow3';
+import { explode } from '../effects/explode';
 
 export const explosiveArrowCardId = 'Explosive Arrow';
 const damageDone = 10;
@@ -33,8 +33,7 @@ const spell: Spell = {
     onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
       if (unit) {
         Unit.takeDamage(unit, damageDone, projectile.startPoint, underworld, prediction, undefined, { thinBloodLine: true });
-        console.log('jtest explode')
-        explode(unit, explodeRange, explodeDamage, prediction, underworld);
+        explode(unit, explodeRange, explodeDamage, underworld, prediction, "#d66437", "#f5e8b6");
       }
     }
   }

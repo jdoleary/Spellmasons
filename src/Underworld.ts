@@ -69,7 +69,6 @@ import { raceTimeout, reportIfTakingTooLong } from './Promise';
 import { cleanUpEmitters, containerParticles, containerParticlesUnderUnits, makeManaTrail, updateParticles } from './graphics/Particles';
 import { elInstructions } from './network/networkHandler';
 import type PieClient from '@websocketpie/client';
-import { makeForcePush } from './cards/push';
 import { isOutOfRange, sendPlayerThinkingThrottled } from './PlayerUtils';
 import { DisplayObject, TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
@@ -102,6 +101,7 @@ import { corpseDecayId } from './modifierCorpseDecay';
 import { isSinglePlayer } from './network/wsPieSetup';
 import { PRIEST_ID } from './entity/units/priest';
 import { getSyncActions } from './Syncronization';
+import { forcePushAwayFrom } from './effects/force_move';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -450,7 +450,8 @@ export default class Underworld {
           const halfDist = fullDist / 2;
           // This is a second order push and second order pushes CANNOT create more pushes or else you risk infinite recursion in prediction mode
           const canCreateSecondOrderPushes = false;
-          makeForcePush({ pushedObject: other, awayFrom: forceMoveInst.pushedObject, velocityStartMagnitude: halfDist, resolve: () => { }, canCreateSecondOrderPushes }, this, prediction);
+          console.warn("Second order pushes may not work. Needs testing")
+          forcePushAwayFrom(other, forceMoveInst.pushedObject, halfDist, this, prediction);
           // Reduce own velocity by half due to the transfer of force:
           forceMoveInst.velocity = Vec.multiply(0.5, forceMoveInst.velocity);
 
@@ -524,18 +525,23 @@ export default class Underworld {
   // This is the ONLY way forceMove array can be added to because it creates a forceMovePromise
   // if it doesn't already exist so that other places in the codebase can await forceMoves.
   // Never push to this.forceMove anywhere but here.
-  addForceMove(forceMoveInst: ForceMove) {
-    this.forceMove.push(forceMoveInst);
-    if (!this.forceMovePromise) {
-      // If there is no forceMovePromise, create a new one,
-      // it will resolve when the current forceMove instances
-      // have finished; so anything that needs to await the
-      // forceMove instances can raceTimeout this.forceMovePromise
-      this.forceMovePromise = new Promise(res => {
-        forceMoveResolver = res;
-      });
+  addForceMove(forceMoveInst: ForceMove, prediction: boolean) {
+    // TODO: Further parity with promises?
+    if (prediction) {
+      this.forceMovePrediction.push(forceMoveInst);
     }
-
+    else {
+      this.forceMove.push(forceMoveInst);
+      if (!this.forceMovePromise) {
+        // If there is no forceMovePromise, create a new one,
+        // it will resolve when the current forceMove instances
+        // have finished; so anything that needs to await the
+        // forceMove instances can raceTimeout this.forceMovePromise
+        this.forceMovePromise = new Promise(res => {
+          forceMoveResolver = res;
+        });
+      }
+    }
   }
   // Returns true if there is more processing yet to be done on the next
   // gameloop
@@ -2557,7 +2563,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       if (allEnemiesAreDead) {
         console.log('Make dead, non-portaled players enter portal');
         deadNonPortaledPlayers.forEach(p => {
-          Unit.resurrect(p.unit);
+          Unit.resurrect(p.unit, this);
           Player.enterPortal(p, this);
         });
       }

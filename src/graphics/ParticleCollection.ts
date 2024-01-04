@@ -11,781 +11,781 @@ import { containerUnits } from './PixiUtils';
 import { IUnit } from '../entity/Unit';
 import Underworld from '../Underworld';
 export function makeAncientParticles(position: Vec2, prediction: boolean) {
-    if (prediction || globalThis.headless) {
-        // Don't show if just a prediction
-        return;
-    }
-    const texture = createParticleTexture();
-    if (!texture) {
-        logNoTextureWarning('makeAncientParticles');
-        return;
-    }
-    position = clone(position);
-    const config =
-        particles.upgradeConfig({
-            autoUpdate: true,
-            "alpha": {
-                "start": 1,
-                "end": 0.28
-            },
-            "scale": {
-                "start": 1.25,
-                "end": 0.5,
-                "minimumScaleMultiplier": 1
-            },
-            "color": {
-                "start": "#5a7879",
-                "end": "#304748"
-            },
-            "speed": {
-                "start": 60,
-                "end": 30,
-                "minimumSpeedMultiplier": 1
-            },
-            "acceleration": {
-                "x": 0,
-                "y": 0
-            },
-            "maxSpeed": 0,
-            "startRotation": {
-                "min": 265,
-                "max": 275
-            },
-            "noRotation": false,
-            "rotationSpeed": {
-                "min": 50,
-                "max": 50
-            },
-            "lifetime": {
-                "min": 1,
-                "max": 1
-            },
-            "blendMode": "normal",
-            "frequency": 0.02,
-            "emitterLifetime": 0.8,
-            "maxParticles": 60,
-            "pos": {
-                "x": 0,
-                "y": 0
-            },
-            "addAtBack": false,
-            "spawnType": "circle",
-            "spawnCircle": {
-                "x": 0,
-                "y": 0,
-                "r": 20
-            }
-        }, [texture]);
-    simpleEmitter(position, config, () => { }, containerParticlesUnderUnits);
+  if (prediction || globalThis.headless) {
+    // Don't show if just a prediction
+    return;
+  }
+  const texture = createParticleTexture();
+  if (!texture) {
+    logNoTextureWarning('makeAncientParticles');
+    return;
+  }
+  position = clone(position);
+  const config =
+    particles.upgradeConfig({
+      autoUpdate: true,
+      "alpha": {
+        "start": 1,
+        "end": 0.28
+      },
+      "scale": {
+        "start": 1.25,
+        "end": 0.5,
+        "minimumScaleMultiplier": 1
+      },
+      "color": {
+        "start": "#5a7879",
+        "end": "#304748"
+      },
+      "speed": {
+        "start": 60,
+        "end": 30,
+        "minimumSpeedMultiplier": 1
+      },
+      "acceleration": {
+        "x": 0,
+        "y": 0
+      },
+      "maxSpeed": 0,
+      "startRotation": {
+        "min": 265,
+        "max": 275
+      },
+      "noRotation": false,
+      "rotationSpeed": {
+        "min": 50,
+        "max": 50
+      },
+      "lifetime": {
+        "min": 1,
+        "max": 1
+      },
+      "blendMode": "normal",
+      "frequency": 0.02,
+      "emitterLifetime": 0.8,
+      "maxParticles": 60,
+      "pos": {
+        "x": 0,
+        "y": 0
+      },
+      "addAtBack": false,
+      "spawnType": "circle",
+      "spawnCircle": {
+        "x": 0,
+        "y": 0,
+        "r": 20
+      }
+    }, [texture]);
+  simpleEmitter(position, config, () => { }, containerParticlesUnderUnits);
 }
 
-export function makeParticleExplosion(position: Vec2, size: number, prediction: boolean, colorStart: string, colorEnd: string) {
-    if (prediction || globalThis.headless) {
-        // Don't show if just a prediction
-        return;
-    }
-    const texture = createParticleTexture();
-    if (!texture) {
-        logNoTextureWarning('makeParticleExplosion');
-        return;
-    }
-    const config =
-        particles.upgradeConfig({
-            autoUpdate: true,
-            "alpha": {
-                "start": 1,
-                "end": 0
-            },
-            "scale": {
-                "start": 3,
-                "end": 2,
-            },
-            "color": {
-                "start": colorStart,
-                "end": colorEnd
-            },
-            "speed": {
-                "start": 500,
-                "end": 50,
-                "minimumSpeedMultiplier": 1
-            },
-            "acceleration": {
-                "x": 0,
-                "y": 0
-            },
-            "maxSpeed": 0,
-            "startRotation": {
-                "min": 0,
-                "max": 360
-            },
-            "noRotation": false,
-            "rotationSpeed": {
-                "min": 0,
-                "max": 300
-            },
-            "lifetime": {
-                "min": 0.5 * size,
-                "max": 0.5 * size
-            },
-            "blendMode": "normal",
-            "frequency": 0.0001,
-            "emitterLifetime": 0.1,
-            "maxParticles": 300,
-            "pos": {
-                "x": 0,
-                "y": 0
-            },
-            "addAtBack": true,
-            "spawnType": "circle",
-            "spawnCircle": {
-                "x": 0,
-                "y": 0,
-                "r": 0
-            }
-        }, [texture]);
-    simpleEmitter(position, config);
+export function makeParticleExplosion(position: Vec2, size: number, colorStart: string, colorEnd: string, prediction: boolean) {
+  if (prediction || globalThis.headless) {
+    // Don't show if just a prediction
+    return;
+  }
+  const texture = createParticleTexture();
+  if (!texture) {
+    logNoTextureWarning('makeParticleExplosion');
+    return;
+  }
+  const config =
+    particles.upgradeConfig({
+      autoUpdate: true,
+      "alpha": {
+        "start": 1,
+        "end": 0
+      },
+      "scale": {
+        "start": 3,
+        "end": 2,
+      },
+      "color": {
+        "start": colorStart,
+        "end": colorEnd
+      },
+      "speed": {
+        "start": 500,
+        "end": 50,
+        "minimumSpeedMultiplier": 1
+      },
+      "acceleration": {
+        "x": 0,
+        "y": 0
+      },
+      "maxSpeed": 0,
+      "startRotation": {
+        "min": 0,
+        "max": 360
+      },
+      "noRotation": false,
+      "rotationSpeed": {
+        "min": 0,
+        "max": 300
+      },
+      "lifetime": {
+        "min": 0.5 * size,
+        "max": 0.5 * size
+      },
+      "blendMode": "normal",
+      "frequency": 0.0001,
+      "emitterLifetime": 0.1,
+      "maxParticles": 300,
+      "pos": {
+        "x": 0,
+        "y": 0
+      },
+      "addAtBack": true,
+      "spawnType": "circle",
+      "spawnCircle": {
+        "x": 0,
+        "y": 0,
+        "r": 0
+      }
+    }, [texture]);
+  simpleEmitter(position, config);
 }
 
 export function makeBloatExplosionWithParticles(position: Vec2, size: number, prediction: boolean) {
-    if (prediction || globalThis.headless) {
-        // Don't show if just a prediction
-        return;
-    }
-    const texture = createParticleTexture();
-    if (!texture) {
-        logNoTextureWarning('makeBloatExplosion');
-        return;
-    }
-    position = clone(position);
-    const config =
-        particles.upgradeConfig({
-            autoUpdate: true,
-            "alpha": {
-                "start": 1,
-                "end": 0
-            },
-            "scale": {
-                "start": 3,
-                "end": 2,
-            },
-            "color": {
-                "start": "#d66437",
-                "end": "#f5e8b6"
-            },
-            "speed": {
-                "start": 900,
-                "end": 50,
-                "minimumSpeedMultiplier": 1
-            },
-            "acceleration": {
-                "x": 0,
-                "y": 0
-            },
-            "maxSpeed": 0,
-            "startRotation": {
-                "min": 0,
-                "max": 360
-            },
-            "noRotation": false,
-            "rotationSpeed": {
-                "min": 0,
-                "max": 300
-            },
-            "lifetime": {
-                "min": 0.3 * size,
-                "max": 0.3 * size
-            },
-            "blendMode": "normal",
-            "frequency": 0.0001,
-            "emitterLifetime": 0.1,
-            "maxParticles": 300,
-            "pos": {
-                "x": 0,
-                "y": 0
-            },
-            "addAtBack": true,
-            "spawnType": "circle",
-            "spawnCircle": {
-                "x": 0,
-                "y": 0,
-                "r": 0
-            }
-        }, [texture]);
-    simpleEmitter(position, config);
+  if (prediction || globalThis.headless) {
+    // Don't show if just a prediction
+    return;
+  }
+  const texture = createParticleTexture();
+  if (!texture) {
+    logNoTextureWarning('makeBloatExplosion');
+    return;
+  }
+  position = clone(position);
+  const config =
+    particles.upgradeConfig({
+      autoUpdate: true,
+      "alpha": {
+        "start": 1,
+        "end": 0
+      },
+      "scale": {
+        "start": 3,
+        "end": 2,
+      },
+      "color": {
+        "start": "#d66437",
+        "end": "#f5e8b6"
+      },
+      "speed": {
+        "start": 900,
+        "end": 50,
+        "minimumSpeedMultiplier": 1
+      },
+      "acceleration": {
+        "x": 0,
+        "y": 0
+      },
+      "maxSpeed": 0,
+      "startRotation": {
+        "min": 0,
+        "max": 360
+      },
+      "noRotation": false,
+      "rotationSpeed": {
+        "min": 0,
+        "max": 300
+      },
+      "lifetime": {
+        "min": 0.3 * size,
+        "max": 0.3 * size
+      },
+      "blendMode": "normal",
+      "frequency": 0.0001,
+      "emitterLifetime": 0.1,
+      "maxParticles": 300,
+      "pos": {
+        "x": 0,
+        "y": 0
+      },
+      "addAtBack": true,
+      "spawnType": "circle",
+      "spawnCircle": {
+        "x": 0,
+        "y": 0,
+        "r": 0
+      }
+    }, [texture]);
+  simpleEmitter(position, config);
 }
 export function makeBleedParticles(position: Vec2, prediction: boolean, proportion: number, resolver?: () => void) {
-    if (prediction || globalThis.headless) {
-        // Don't show if just a prediction
-        if (resolver) {
-            resolver();
-        }
-        return;
+  if (prediction || globalThis.headless) {
+    // Don't show if just a prediction
+    if (resolver) {
+      resolver();
     }
-    // proportion goes from 0.0 to bleedInstantKillProportion;
-    // convert to 0.0 to 1.0
-    proportion = lerp(0, 1, proportion / bleedInstantKillProportion);
-    if (proportion == 0) {
-        // Do not emit particles if proportion is 0 because then bleed did no damage
-        if (resolver) {
-            resolver();
-        }
-        return;
+    return;
+  }
+  // proportion goes from 0.0 to bleedInstantKillProportion;
+  // convert to 0.0 to 1.0
+  proportion = lerp(0, 1, proportion / bleedInstantKillProportion);
+  if (proportion == 0) {
+    // Do not emit particles if proportion is 0 because then bleed did no damage
+    if (resolver) {
+      resolver();
     }
-    const texture = createParticleTexture();
-    if (!texture) {
-        logNoTextureWarning('makeBleedParticles');
-        if (resolver) {
-            resolver();
-        }
-        return
+    return;
+  }
+  const texture = createParticleTexture();
+  if (!texture) {
+    logNoTextureWarning('makeBleedParticles');
+    if (resolver) {
+      resolver();
     }
-    const particleConfig =
-        particles.upgradeConfig({
-            autoUpdate: true,
-            "alpha": {
-                "start": 1,
-                "end": 1
-            },
-            "scale": {
-                "start": 1.2 * Math.min(1, proportion * 2),
-                "end": 0.25,
-                "minimumScaleMultiplier": 1
-            },
-            "color": {
-                "start": "#c72828",
-                "end": "#870303"
-            },
-            "speed": {
-                "start": 10,
-                "end": 0,
-                "minimumSpeedMultiplier": 1
-            },
-            "acceleration": {
-                "x": 0,
-                "y": 40
-            },
-            "maxSpeed": 0,
-            "startRotation": {
-                "min": 90,
-                "max": 90
-            },
-            "noRotation": false,
-            "rotationSpeed": {
-                "min": 0,
-                "max": 0
-            },
-            "lifetime": {
-                "min": 1,
-                "max": 1
-            },
-            "blendMode": "normal",
-            "frequency": 0.01,
-            "emitterLifetime": 1,
-            "maxParticles": 100 * proportion * proportion,
-            "pos": {
-                "x": 0,
-                "y": 0
-            },
-            "addAtBack": true,
-            "spawnType": "circle",
-            "spawnCircle": {
-                "x": 0,
-                "y": 0,
-                "r": 10
-            }
-        }, [texture]);
-    simpleEmitter({ x: position.x, y: position.y - config.COLLISION_MESH_RADIUS / 2 }, particleConfig, resolver);
+    return
+  }
+  const particleConfig =
+    particles.upgradeConfig({
+      autoUpdate: true,
+      "alpha": {
+        "start": 1,
+        "end": 1
+      },
+      "scale": {
+        "start": 1.2 * Math.min(1, proportion * 2),
+        "end": 0.25,
+        "minimumScaleMultiplier": 1
+      },
+      "color": {
+        "start": "#c72828",
+        "end": "#870303"
+      },
+      "speed": {
+        "start": 10,
+        "end": 0,
+        "minimumSpeedMultiplier": 1
+      },
+      "acceleration": {
+        "x": 0,
+        "y": 40
+      },
+      "maxSpeed": 0,
+      "startRotation": {
+        "min": 90,
+        "max": 90
+      },
+      "noRotation": false,
+      "rotationSpeed": {
+        "min": 0,
+        "max": 0
+      },
+      "lifetime": {
+        "min": 1,
+        "max": 1
+      },
+      "blendMode": "normal",
+      "frequency": 0.01,
+      "emitterLifetime": 1,
+      "maxParticles": 100 * proportion * proportion,
+      "pos": {
+        "x": 0,
+        "y": 0
+      },
+      "addAtBack": true,
+      "spawnType": "circle",
+      "spawnCircle": {
+        "x": 0,
+        "y": 0,
+        "r": 10
+      }
+    }, [texture]);
+  simpleEmitter({ x: position.x, y: position.y - config.COLLISION_MESH_RADIUS / 2 }, particleConfig, resolver);
 
 }
 export function makeRisingParticles(position: Vec2, prediction: boolean, color: string = '#ffffff', emitterLifetime = 0.7) {
-    if (prediction || globalThis.headless) {
-        // Don't show if just a prediction
-        return;
-    }
-    const texture = createParticleTexture();
-    if (!texture) {
-        logNoTextureWarning('makeRisingParticles');
-        return;
-    }
-    const particleConfig =
-        particles.upgradeConfig({
-            autoUpdate: true,
-            "alpha": {
-                "start": 1,
-                "end": 0
-            },
-            "scale": {
-                "start": 0.25,
-                "end": 0.25,
-                "minimumScaleMultiplier": 1
-            },
-            "color": {
-                "start": color,
-                "end": color
-            },
-            "speed": {
-                "start": 1,
-                "end": 1,
-                "minimumSpeedMultiplier": 1
-            },
-            "acceleration": {
-                "x": 0,
-                "y": -400
-            },
-            "maxSpeed": 0,
-            "startRotation": {
-                "min": 90,
-                "max": 90
-            },
-            "noRotation": false,
-            "rotationSpeed": {
-                "min": 0,
-                "max": 0
-            },
-            "lifetime": {
-                "min": 0.81,
-                "max": 0.4
-            },
-            "blendMode": "normal",
-            "frequency": 0.004,
-            "emitterLifetime": emitterLifetime,
-            "maxParticles": 500,
-            "pos": {
-                "x": 0,
-                "y": 0
-            },
-            "addAtBack": false,
-            "spawnType": "rect",
-            "spawnRect": {
-                "x": -config.COLLISION_MESH_RADIUS / 2,
-                "y": 0,
-                "w": config.COLLISION_MESH_RADIUS,
-                "h": 20
-            }
+  if (prediction || globalThis.headless) {
+    // Don't show if just a prediction
+    return;
+  }
+  const texture = createParticleTexture();
+  if (!texture) {
+    logNoTextureWarning('makeRisingParticles');
+    return;
+  }
+  const particleConfig =
+    particles.upgradeConfig({
+      autoUpdate: true,
+      "alpha": {
+        "start": 1,
+        "end": 0
+      },
+      "scale": {
+        "start": 0.25,
+        "end": 0.25,
+        "minimumScaleMultiplier": 1
+      },
+      "color": {
+        "start": color,
+        "end": color
+      },
+      "speed": {
+        "start": 1,
+        "end": 1,
+        "minimumSpeedMultiplier": 1
+      },
+      "acceleration": {
+        "x": 0,
+        "y": -400
+      },
+      "maxSpeed": 0,
+      "startRotation": {
+        "min": 90,
+        "max": 90
+      },
+      "noRotation": false,
+      "rotationSpeed": {
+        "min": 0,
+        "max": 0
+      },
+      "lifetime": {
+        "min": 0.81,
+        "max": 0.4
+      },
+      "blendMode": "normal",
+      "frequency": 0.004,
+      "emitterLifetime": emitterLifetime,
+      "maxParticles": 500,
+      "pos": {
+        "x": 0,
+        "y": 0
+      },
+      "addAtBack": false,
+      "spawnType": "rect",
+      "spawnRect": {
+        "x": -config.COLLISION_MESH_RADIUS / 2,
+        "y": 0,
+        "w": config.COLLISION_MESH_RADIUS,
+        "h": 20
+      }
 
-        }, [texture]);
-    return simpleEmitter(position, particleConfig, undefined, containerParticlesUnderUnits);
+    }, [texture]);
+  return simpleEmitter(position, particleConfig, undefined, containerParticlesUnderUnits);
 }
 // Max final scale should be 1
 export function makeBurstParticles(position: Vec2, finalScale: number, prediction: boolean, resolver?: () => void) {
-    if (prediction || globalThis.headless) {
-        // Don't show if just a prediction
-        if (resolver) {
-            // Resolve immediately
-            resolver();
-        }
-        return;
+  if (prediction || globalThis.headless) {
+    // Don't show if just a prediction
+    if (resolver) {
+      // Resolve immediately
+      resolver();
     }
-    const texture = createHardCircleParticleTexture();
-    if (!texture) {
-        logNoTextureWarning('makeBurstParticles');
-        if (resolver) {
-            // Resolve immediately
-            resolver();
-        }
-        return;
+    return;
+  }
+  const texture = createHardCircleParticleTexture();
+  if (!texture) {
+    logNoTextureWarning('makeBurstParticles');
+    if (resolver) {
+      // Resolve immediately
+      resolver();
     }
-    const rings = 10;
-    const millisBetweenRings = 50;
-    const lifetime = 0.5;
-    for (let ring = 0; ring < rings; ring++) {
-        setTimeout(() => {
-            // const startColor = 0x0d3f47;
-            const startColor = [0.914, 1, 1];
-            // const endColor = 0xe9ffff;
-            const endColor = [0.051, 0.247, 0.278];
-            const lerpValue = ring / rings;
-            const cubicLerpValue = easeOutCubic(lerpValue);
-            const scale = lerp(finalScale / 10, finalScale, cubicLerpValue);
+    return;
+  }
+  const rings = 10;
+  const millisBetweenRings = 50;
+  const lifetime = 0.5;
+  for (let ring = 0; ring < rings; ring++) {
+    setTimeout(() => {
+      // const startColor = 0x0d3f47;
+      const startColor = [0.914, 1, 1];
+      // const endColor = 0xe9ffff;
+      const endColor = [0.051, 0.247, 0.278];
+      const lerpValue = ring / rings;
+      const cubicLerpValue = easeOutCubic(lerpValue);
+      const scale = lerp(finalScale / 10, finalScale, cubicLerpValue);
 
-            // Note: "|| 0" just prevents the compile time warning, the values are set
-            // above and will exist
-            const color = `#${Math.floor(rgb2hex([
-                lerp(startColor[0] || 0, endColor[0] || 0, lerpValue),
-                lerp(startColor[1] || 0, endColor[1] || 0, lerpValue),
-                lerp(startColor[2] || 0, endColor[2] || 0, lerpValue),
-            ])).toString(16)}`;
-            const particleConfig =
-                particles.upgradeConfig({
-                    autoUpdate: true,
-                    "alpha": {
-                        "start": 1,
-                        "end": 1
-                    },
-                    "scale": {
-                        "start": scale,
-                        "end": scale,
-                        "minimumScaleMultiplier": 1
-                    },
-                    "color": {
-                        "start": color,
-                        "end": color,
-                    },
-                    "speed": {
-                        "start": 0,
-                        "end": 0,
-                        "minimumSpeedMultiplier": 1
-                    },
-                    "acceleration": {
-                        "x": 0,
-                        "y": 0
-                    },
-                    "maxSpeed": 0,
-                    "startRotation": {
-                        "min": -45,
-                        "max": -135
-                    },
-                    "noRotation": true,
-                    "rotationSpeed": {
-                        "min": 0,
-                        "max": 0
-                    },
-                    "lifetime": {
-                        "min": lifetime,
-                        "max": lifetime
-                    },
-                    "blendMode": "normal",
-                    "frequency": 0.001,
-                    "emitterLifetime": lifetime - 0.1,
-                    "maxParticles": 1,
-                    "pos": {
-                        "x": 0,
-                        "y": 0
-                    },
-                    "addAtBack": true,
-                    "spawnType": "point",
-                }, [texture]);
-            simpleEmitter(position, particleConfig);
-            // Resolve promise, animation is done
-            if (resolver && ring == rings - 1) {
-                resolver();
-            }
-        }, ring * millisBetweenRings);
-    }
+      // Note: "|| 0" just prevents the compile time warning, the values are set
+      // above and will exist
+      const color = `#${Math.floor(rgb2hex([
+        lerp(startColor[0] || 0, endColor[0] || 0, lerpValue),
+        lerp(startColor[1] || 0, endColor[1] || 0, lerpValue),
+        lerp(startColor[2] || 0, endColor[2] || 0, lerpValue),
+      ])).toString(16)}`;
+      const particleConfig =
+        particles.upgradeConfig({
+          autoUpdate: true,
+          "alpha": {
+            "start": 1,
+            "end": 1
+          },
+          "scale": {
+            "start": scale,
+            "end": scale,
+            "minimumScaleMultiplier": 1
+          },
+          "color": {
+            "start": color,
+            "end": color,
+          },
+          "speed": {
+            "start": 0,
+            "end": 0,
+            "minimumSpeedMultiplier": 1
+          },
+          "acceleration": {
+            "x": 0,
+            "y": 0
+          },
+          "maxSpeed": 0,
+          "startRotation": {
+            "min": -45,
+            "max": -135
+          },
+          "noRotation": true,
+          "rotationSpeed": {
+            "min": 0,
+            "max": 0
+          },
+          "lifetime": {
+            "min": lifetime,
+            "max": lifetime
+          },
+          "blendMode": "normal",
+          "frequency": 0.001,
+          "emitterLifetime": lifetime - 0.1,
+          "maxParticles": 1,
+          "pos": {
+            "x": 0,
+            "y": 0
+          },
+          "addAtBack": true,
+          "spawnType": "point",
+        }, [texture]);
+      simpleEmitter(position, particleConfig);
+      // Resolve promise, animation is done
+      if (resolver && ring == rings - 1) {
+        resolver();
+      }
+    }, ring * millisBetweenRings);
+  }
 }
 export function makeScrollDissapearParticles(position: Vec2, prediction: boolean) {
-    if (prediction || globalThis.headless) {
-        // Don't show if just a prediction
-        return;
-    }
-    const texture = createParticleTexture();
-    if (!texture) {
-        logNoTextureWarning('makeScrollDissapearParticles');
-        return;
-    }
-    const particleConfig =
-        particles.upgradeConfig({
-            autoUpdate: true,
-            "alpha": {
-                "start": 1,
-                "end": 0
-            },
-            "scale": {
-                "start": 0.5,
-                "end": 2.0,
-                "minimumScaleMultiplier": 1
-            },
-            "color": {
-                "start": "#bd9a71",
-                "end": "#573e3d"
-            },
-            "speed": {
-                "start": 100,
-                "end": 50,
-                "minimumSpeedMultiplier": 1
-            },
-            "acceleration": {
-                "x": 0,
-                "y": -100
-            },
-            "maxSpeed": 0,
-            "startRotation": {
-                "min": -45,
-                "max": -135
-            },
-            "noRotation": false,
-            "rotationSpeed": {
-                "min": 0,
-                "max": 0
-            },
-            "lifetime": {
-                "min": 0.4,
-                "max": 0.8
-            },
-            "blendMode": "normal",
-            "frequency": 0.01,
-            "emitterLifetime": 0.5,
-            "maxParticles": 500,
-            "pos": {
-                "x": 0,
-                "y": 0
-            },
-            "addAtBack": false,
-            "spawnType": "circle",
-            "spawnCircle": {
-                "x": 0,
-                "y": 0,
-                "r": 15
-            }
-        }, [texture]);
-    simpleEmitter(position, particleConfig);
-}
-export function makeDarkPriestAttackParticles(position: Vec2, prediction: boolean, resolver?: () => void) {
-    if (prediction || globalThis.headless) {
-        // Don't show if just a prediction
-        if (resolver) {
-            resolver();
-        }
-        return;
-    }
-    const texture = createHardCircleParticleTexture();
-    if (!texture) {
-        logNoTextureWarning('makeDarkPriestAttackParticles');
-        if (resolver) {
-            resolver();
-        }
-        return;
-    }
-    const particleConfig =
-        particles.upgradeConfig({
-            autoUpdate: true,
-            "alpha": {
-                "start": 1,
-                "end": 0
-            },
-            "scale": {
-                "start": 0.4,
-                "end": 0.3,
-                "minimumScaleMultiplier": 1
-            },
-            "color": {
-                "start": "#962d2d",
-                "end": "#ffffff"
-            },
-            "speed": {
-                "start": 200,
-                "end": 0,
-                "minimumSpeedMultiplier": 1
-            },
-            "acceleration": {
-                "x": 0,
-                "y": 0
-            },
-            "maxSpeed": 0,
-            "startRotation": {
-                "min": -90,
-                "max": -90
-            },
-            "noRotation": false,
-            "rotationSpeed": {
-                "min": 0,
-                "max": 0
-            },
-            "lifetime": {
-                "min": 0.8,
-                "max": 0.8
-            },
-            "blendMode": "normal",
-            "frequency": 0.005,
-            "emitterLifetime": 0.5,
-            "maxParticles": 100,
-            "pos": {
-                "x": 0,
-                "y": 0
-            },
-            "addAtBack": true,
-            "spawnType": "point"
-        }, [texture]);
-    simpleEmitter({ x: position.x, y: position.y }, particleConfig, resolver);
-}
-const cursedEmitterConfig = (maxParticles: number) => ({
-    autoUpdate: true,
-    "alpha": {
+  if (prediction || globalThis.headless) {
+    // Don't show if just a prediction
+    return;
+  }
+  const texture = createParticleTexture();
+  if (!texture) {
+    logNoTextureWarning('makeScrollDissapearParticles');
+    return;
+  }
+  const particleConfig =
+    particles.upgradeConfig({
+      autoUpdate: true,
+      "alpha": {
         "start": 1,
         "end": 0
-    },
-    "scale": {
-        "start": 1,
-        "end": 0.2,
+      },
+      "scale": {
+        "start": 0.5,
+        "end": 2.0,
         "minimumScaleMultiplier": 1
-    },
-    "color": {
-        "start": "#321d73",
-        "end": "#9526cc"
-    },
-    "speed": {
-        "start": 20,
-        "end": 0,
+      },
+      "color": {
+        "start": "#bd9a71",
+        "end": "#573e3d"
+      },
+      "speed": {
+        "start": 100,
+        "end": 50,
         "minimumSpeedMultiplier": 1
-    },
-    "acceleration": {
+      },
+      "acceleration": {
         "x": 0,
-        "y": 0
-    },
-    "maxSpeed": 0,
-    "startRotation": {
-        "min": -90,
-        "max": -90
-    },
-    "noRotation": false,
-    "rotationSpeed": {
+        "y": -100
+      },
+      "maxSpeed": 0,
+      "startRotation": {
+        "min": -45,
+        "max": -135
+      },
+      "noRotation": false,
+      "rotationSpeed": {
         "min": 0,
         "max": 0
-    },
-    "lifetime": {
-        "min": 3.5,
-        "max": 4
-    },
-    "blendMode": "normal",
-    // freqency is relative to max particles
-    // so that it emits at a consistent rate
-    // without gaps
-    "frequency": 0.01 * (500 / maxParticles),
-    "emitterLifetime": -1,
-    "maxParticles": maxParticles,
-    "pos": {
-        "x": 0.5,
-        "y": 0.5
-    },
-    "addAtBack": true,
-    "spawnType": "circle",
-    "spawnCircle": {
+      },
+      "lifetime": {
+        "min": 0.4,
+        "max": 0.8
+      },
+      "blendMode": "normal",
+      "frequency": 0.01,
+      "emitterLifetime": 0.5,
+      "maxParticles": 500,
+      "pos": {
+        "x": 0,
+        "y": 0
+      },
+      "addAtBack": false,
+      "spawnType": "circle",
+      "spawnCircle": {
         "x": 0,
         "y": 0,
         "r": 15
+      }
+    }, [texture]);
+  simpleEmitter(position, particleConfig);
+}
+export function makeDarkPriestAttackParticles(position: Vec2, prediction: boolean, resolver?: () => void) {
+  if (prediction || globalThis.headless) {
+    // Don't show if just a prediction
+    if (resolver) {
+      resolver();
     }
+    return;
+  }
+  const texture = createHardCircleParticleTexture();
+  if (!texture) {
+    logNoTextureWarning('makeDarkPriestAttackParticles');
+    if (resolver) {
+      resolver();
+    }
+    return;
+  }
+  const particleConfig =
+    particles.upgradeConfig({
+      autoUpdate: true,
+      "alpha": {
+        "start": 1,
+        "end": 0
+      },
+      "scale": {
+        "start": 0.4,
+        "end": 0.3,
+        "minimumScaleMultiplier": 1
+      },
+      "color": {
+        "start": "#962d2d",
+        "end": "#ffffff"
+      },
+      "speed": {
+        "start": 200,
+        "end": 0,
+        "minimumSpeedMultiplier": 1
+      },
+      "acceleration": {
+        "x": 0,
+        "y": 0
+      },
+      "maxSpeed": 0,
+      "startRotation": {
+        "min": -90,
+        "max": -90
+      },
+      "noRotation": false,
+      "rotationSpeed": {
+        "min": 0,
+        "max": 0
+      },
+      "lifetime": {
+        "min": 0.8,
+        "max": 0.8
+      },
+      "blendMode": "normal",
+      "frequency": 0.005,
+      "emitterLifetime": 0.5,
+      "maxParticles": 100,
+      "pos": {
+        "x": 0,
+        "y": 0
+      },
+      "addAtBack": true,
+      "spawnType": "point"
+    }, [texture]);
+  simpleEmitter({ x: position.x, y: position.y }, particleConfig, resolver);
+}
+const cursedEmitterConfig = (maxParticles: number) => ({
+  autoUpdate: true,
+  "alpha": {
+    "start": 1,
+    "end": 0
+  },
+  "scale": {
+    "start": 1,
+    "end": 0.2,
+    "minimumScaleMultiplier": 1
+  },
+  "color": {
+    "start": "#321d73",
+    "end": "#9526cc"
+  },
+  "speed": {
+    "start": 20,
+    "end": 0,
+    "minimumSpeedMultiplier": 1
+  },
+  "acceleration": {
+    "x": 0,
+    "y": 0
+  },
+  "maxSpeed": 0,
+  "startRotation": {
+    "min": -90,
+    "max": -90
+  },
+  "noRotation": false,
+  "rotationSpeed": {
+    "min": 0,
+    "max": 0
+  },
+  "lifetime": {
+    "min": 3.5,
+    "max": 4
+  },
+  "blendMode": "normal",
+  // freqency is relative to max particles
+  // so that it emits at a consistent rate
+  // without gaps
+  "frequency": 0.01 * (500 / maxParticles),
+  "emitterLifetime": -1,
+  "maxParticles": maxParticles,
+  "pos": {
+    "x": 0.5,
+    "y": 0.5
+  },
+  "addAtBack": true,
+  "spawnType": "circle",
+  "spawnCircle": {
+    "x": 0,
+    "y": 0,
+    "r": 15
+  }
 
 });
 
 // The bossmason's "cape"
 export function makeCorruptionParticles(follow: IUnit, prediction: boolean, underworld: Underworld, resolver?: () => void) {
-    if (prediction || globalThis.headless) {
-        // Don't show if just a prediction
-        if (resolver) {
-            resolver();
-        }
-        return
+  if (prediction || globalThis.headless) {
+    // Don't show if just a prediction
+    if (resolver) {
+      resolver();
     }
-    const texture = createParticleTexture();
-    if (!texture) {
-        logNoTextureWarning('makeCorruptionParticles');
-        if (resolver) {
-            resolver();
-        }
-        return
+    return
+  }
+  const texture = createParticleTexture();
+  if (!texture) {
+    logNoTextureWarning('makeCorruptionParticles');
+    if (resolver) {
+      resolver();
     }
-    const particleConfig =
-        particles.upgradeConfig(cursedEmitterConfig(500), [texture]);
-    if (containerUnits) {
-        const wrapped = wrappedEmitter(particleConfig, containerUnits, resolver);
-        if (wrapped) {
-            const { container, emitter } = wrapped;
-            underworld.particleFollowers.push({
-                displayObject: container,
-                emitter,
-                target: follow
-            })
-        } else {
-            console.warn('Failed to create corruption particle emitter');
-        }
+    return
+  }
+  const particleConfig =
+    particles.upgradeConfig(cursedEmitterConfig(500), [texture]);
+  if (containerUnits) {
+    const wrapped = wrappedEmitter(particleConfig, containerUnits, resolver);
+    if (wrapped) {
+      const { container, emitter } = wrapped;
+      underworld.particleFollowers.push({
+        displayObject: container,
+        emitter,
+        target: follow
+      })
     } else {
-        return;
+      console.warn('Failed to create corruption particle emitter');
     }
+  } else {
+    return;
+  }
 }
 export function makeCursedEmitter(position: Vec2, prediction: boolean) {
-    if (prediction || globalThis.headless) {
-        // Don't show if just a prediction
-        return;
-    }
-    const texture = createParticleTexture();
-    if (!texture) {
-        logNoTextureWarning('cursedEmitter');
-        return;
-    }
-    const particleConfig = particles.upgradeConfig(cursedEmitterConfig(50), [texture]);
-    return simpleEmitter(position, particleConfig, undefined, containerParticlesUnderUnits);
+  if (prediction || globalThis.headless) {
+    // Don't show if just a prediction
+    return;
+  }
+  const texture = createParticleTexture();
+  if (!texture) {
+    logNoTextureWarning('cursedEmitter');
+    return;
+  }
+  const particleConfig = particles.upgradeConfig(cursedEmitterConfig(50), [texture]);
+  return simpleEmitter(position, particleConfig, undefined, containerParticlesUnderUnits);
 }
 
 export const RED_PORTAL_JID = 'redPortal';
 export const BLUE_PORTAL_JID = 'bluePortal';
 export function makeDeathmasonPortal(position: Vec2, prediction: boolean, colorStart: string, colorEnd: string) {
-    if (prediction || globalThis.headless) {
-        // Don't show if just a prediction
-        return;
-    }
-    const texture = createParticleTexture();
-    if (!texture) {
-        logNoTextureWarning('makeRedPortal');
-        return;
-    }
-    const particleConfig =
-        particles.upgradeConfig({
-            autoUpdate: true,
-            "alpha": {
-                "start": 1,
-                "end": 1
-            },
-            "scale": {
-                "start": 1.0,
-                "end": 0.3,
-                "minimumScaleMultiplier": 1
-            },
-            "color": {
-                "start": colorStart,
-                "end": colorEnd
-            },
-            "speed": {
-                "start": 20,
-                "end": 0,
-                "minimumSpeedMultiplier": 1
-            },
-            "acceleration": {
-                "x": 0,
-                "y": 0
-            },
-            "maxSpeed": 0,
-            "startRotation": {
-                "min": 0,
-                "max": 360
-            },
-            "noRotation": false,
-            "rotationSpeed": {
-                "min": 0,
-                "max": 0
-            },
-            "lifetime": {
-                "min": 1,
-                "max": 1
-            },
-            "blendMode": "normal",
-            "frequency": 0.005,
-            "emitterLifetime": -1,
-            "maxParticles": 1000,
-            "pos": {
-                "x": 0,
-                "y": 0
-            },
-            "addAtBack": false,
-            "spawnType": "rect",
-            "spawnRect": {
-                "x": -5 / 2,
-                "y": -17 / 2,
-                "w": 5,
-                "h": 17
-            }
-        }, [texture]);
-    return simpleEmitter(position, particleConfig);
+  if (prediction || globalThis.headless) {
+    // Don't show if just a prediction
+    return;
+  }
+  const texture = createParticleTexture();
+  if (!texture) {
+    logNoTextureWarning('makeRedPortal');
+    return;
+  }
+  const particleConfig =
+    particles.upgradeConfig({
+      autoUpdate: true,
+      "alpha": {
+        "start": 1,
+        "end": 1
+      },
+      "scale": {
+        "start": 1.0,
+        "end": 0.3,
+        "minimumScaleMultiplier": 1
+      },
+      "color": {
+        "start": colorStart,
+        "end": colorEnd
+      },
+      "speed": {
+        "start": 20,
+        "end": 0,
+        "minimumSpeedMultiplier": 1
+      },
+      "acceleration": {
+        "x": 0,
+        "y": 0
+      },
+      "maxSpeed": 0,
+      "startRotation": {
+        "min": 0,
+        "max": 360
+      },
+      "noRotation": false,
+      "rotationSpeed": {
+        "min": 0,
+        "max": 0
+      },
+      "lifetime": {
+        "min": 1,
+        "max": 1
+      },
+      "blendMode": "normal",
+      "frequency": 0.005,
+      "emitterLifetime": -1,
+      "maxParticles": 1000,
+      "pos": {
+        "x": 0,
+        "y": 0
+      },
+      "addAtBack": false,
+      "spawnType": "rect",
+      "spawnRect": {
+        "x": -5 / 2,
+        "y": -17 / 2,
+        "w": 5,
+        "h": 17
+      }
+    }, [texture]);
+  return simpleEmitter(position, particleConfig);
 }
 // Turns up frequency so that it "stops" spawning new particles
 // (at lease for a long time), then destroy and cleanup the emitter
 export function stopAndDestroyForeverEmitter(emitter?: particles.Emitter) {
-    if (!emitter) {
-        return;
-    }
-    const timeout = 15000;
-    emitter.frequency = timeout;
-    setTimeout(() => {
-        emitter.cleanup();
-        emitter.destroy();
-    }, timeout - 1000)
+  if (!emitter) {
+    return;
+  }
+  const timeout = 15000;
+  emitter.frequency = timeout;
+  setTimeout(() => {
+    emitter.cleanup();
+    emitter.destroy();
+  }, timeout - 1000)
 }

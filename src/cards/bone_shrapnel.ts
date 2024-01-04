@@ -3,20 +3,19 @@ import { takeDamage } from '../entity/Unit';
 import * as Unit from '../entity/Unit';
 import { Spell } from './index';
 import { drawUICirclePrediction } from '../graphics/PlanningView';
-import { forcePush, velocityStartMagnitude } from './push';
 import { CardCategory } from '../types/commonTypes';
 import { createParticleTexture, logNoTextureWarning, simpleEmitter } from '../graphics/Particles';
 import { Vec2 } from '../jmath/Vec';
 import * as colors from '../graphics/ui/colors';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
-const id = 'Bone Shrapnel';
+export const boneShrapnelCardId = 'Bone Shrapnel';
 const damage = 30;
 const baseRadius = 140;
 
 const spell: Spell = {
   card: {
-    id,
+    id: boneShrapnelCardId,
     category: CardCategory.Damage,
     supportQuantity: true,
     manaCost: 25,
@@ -26,13 +25,10 @@ const spell: Spell = {
     thumbnail: 'spellIconCorpseExplosion.png',
     description: `When cast on a corpse, the corpse will explode damaging units around it by ${damage}. Stackable to increase explosion damage.`,
     effect: async (state, card, quantity, underworld, prediction) => {
-      state.targetedUnits.forEach(unit => {
-        if (unit.alive) {
-          // Only explode corpses.
-          return;
-        }
-
-        const adjustedRadius = baseRadius + (unit.modifiers[id]?.radius || 0);
+      // Only explode corpses at time of cast
+      const targetedUnits = state.targetedUnits.filter(u => !u.alive);
+      targetedUnits.forEach(unit => {
+        const adjustedRadius = baseRadius + (unit.modifiers[boneShrapnelCardId]?.radius || 0);
         if (prediction) {
           drawUICirclePrediction(unit, adjustedRadius, colors.healthRed, 'Explosion Radius');
         } else {

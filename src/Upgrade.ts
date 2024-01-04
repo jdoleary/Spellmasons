@@ -14,6 +14,7 @@ import { drownCardId } from './cards/drown';
 import { suffocateCardId } from './cards/suffocate';
 import { isModActive } from './registerMod';
 import { allCards, getCardsFromIds } from './cards';
+import { boneShrapnelCardId } from './cards/bone_shrapnel';
 export interface IUpgrade {
   title: string;
   // Replaces previous upgrades.  They are required for this upgrade to present itself
@@ -75,7 +76,7 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
       // Prevent picking the same upgrade twice
       .filter(filterUpgrades)
       // Ensure they pick from only damage cards
-      .filter(c => (![bleedCardId, drownCardId].includes(c.title) && c.cardCategory == CardCategory.Damage) || [poisonCardId].includes(c.title));
+      .filter(c => (![bleedCardId, drownCardId, boneShrapnelCardId].includes(c.title) && c.cardCategory == CardCategory.Damage) || [poisonCardId].includes(c.title));
   }
   if (isPickingClass(player)) {
     return upgradeMageClassSource;
