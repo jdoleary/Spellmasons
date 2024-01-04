@@ -10,13 +10,13 @@ import { Vec2 } from '../jmath/Vec';
 import * as colors from '../graphics/ui/colors';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
-const id = 'Bone Shrapnel';
+export const boneShrapnelCardId = 'Bone Shrapnel';
 const damage = 30;
 const baseRadius = 140;
 
 const spell: Spell = {
   card: {
-    id,
+    id: boneShrapnelCardId,
     category: CardCategory.Damage,
     supportQuantity: true,
     manaCost: 25,
@@ -32,7 +32,7 @@ const spell: Spell = {
           return;
         }
 
-        const adjustedRadius = baseRadius + (unit.modifiers[id]?.radius || 0);
+        const adjustedRadius = baseRadius + (unit.modifiers[boneShrapnelCardId]?.radius || 0);
         if (prediction) {
           drawUICirclePrediction(unit, adjustedRadius, colors.healthRed, 'Explosion Radius');
         } else {
