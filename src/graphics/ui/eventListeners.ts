@@ -5,7 +5,7 @@ import * as Unit from '../../entity/Unit';
 import * as Pickup from '../../entity/Pickup';
 import * as Player from '../../entity/Player';
 import * as Chat from './Chat';
-import floatingText from '../FloatingText';
+import floatingText, { centeredFloatingText } from '../FloatingText';
 import {
   clearSpellEffectProjection,
   clearTooltipSelection,
@@ -1357,6 +1357,8 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         const unit = overworld.underworld.units.find(u => u.id == selectedUnitid);
         if (unit) {
           Unit.cleanup(unit);
+        } else {
+          centeredFloatingText('You must select a unit first', 'red');
         }
       },
       supportInMultiplayer: true,
@@ -1372,6 +1374,8 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         const unit = overworld.underworld.units.find(u => u.id == selectedUnitid);
         if (unit) {
           Unit.die(unit, overworld.underworld, false);
+        } else {
+          centeredFloatingText('You must select a unit first', 'red');
         }
 
       },
@@ -1392,6 +1396,8 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
           } else {
             unit.faction = Faction.ALLY;
           }
+        } else {
+          centeredFloatingText('You must select a unit first', 'red');
         }
       },
       supportInMultiplayer: true,
@@ -1402,6 +1408,8 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       action: () => {
         if (globalThis.selectedUnit) {
           Unit.demoAnimations(globalThis.selectedUnit);
+        } else {
+          centeredFloatingText('You must select a unit first', 'red');
         }
       },
       supportInMultiplayer: false,
@@ -1414,11 +1422,11 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
           console.error('Cannot admin set unit health, underworld does not exist');
           return;
         }
-        const health = prompt('Choose a new max health')
-        const parsedHealth = parseInt(health || '');
-        if (!isNaN(parsedHealth) && globalThis.selectedUnit) {
-          const unit = overworld.underworld.units.find(u => u.id == globalThis.selectedUnit?.id);
-          if (unit) {
+        const unit = overworld.underworld.units.find(u => u.id == globalThis.selectedUnit?.id);
+        if (unit) {
+          const health = prompt('Choose a new max health')
+          const parsedHealth = parseInt(health || '');
+          if (!isNaN(parsedHealth) && globalThis.selectedUnit) {
             overworld.pie.sendData({
               type: MESSAGE_TYPES.ADMIN_CHANGE_STAT,
               unitId: unit.id,
@@ -1427,7 +1435,11 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
                 health: parsedHealth
               }
             });
+          } else {
+            floatingText({ coords: getCamera(), text: 'Invalid number', style: { fill: 'red' } });
           }
+        } else {
+          centeredFloatingText('You must select a unit first', 'red');
         }
       },
       // NOTE: Commands that use `prompt` cannot run on headless server so use ADMIN_CHANGE_STAT
@@ -1443,11 +1455,11 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
           console.error('Cannot admin set unit mana, underworld does not exist');
           return;
         }
-        const mana = prompt('Choose a new max mana')
-        const parsedMana = parseInt(mana || '');
-        if (!isNaN(parsedMana)) {
-          const unit = overworld.underworld.units.find(u => u.id == globalThis.selectedUnit?.id);
-          if (unit) {
+        const unit = overworld.underworld.units.find(u => u.id == globalThis.selectedUnit?.id);
+        if (unit) {
+          const mana = prompt('Choose a new max mana')
+          const parsedMana = parseInt(mana || '');
+          if (!isNaN(parsedMana)) {
             overworld.pie.sendData({
               type: MESSAGE_TYPES.ADMIN_CHANGE_STAT,
               unitId: unit.id,
@@ -1457,7 +1469,12 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
                 manaPerTurn: parsedMana,
               }
             });
+          } else {
+            floatingText({ coords: getCamera(), text: 'Invalid number', style: { fill: 'red' } });
+
           }
+        } else {
+          centeredFloatingText('You must select a unit first', 'red');
         }
       },
       // NOTE: Commands that use `prompt` cannot run on headless server so use ADMIN_CHANGE_STAT
@@ -1474,11 +1491,11 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
           console.error('Cannot admin set unit stamina, underworld does not exist');
           return;
         }
-        const stamina = prompt('Choose a new max stamina')
-        const parsedStamina = parseInt(stamina || '');
-        if (!isNaN(parsedStamina)) {
-          const unit = overworld.underworld.units.find(u => u.id == globalThis.selectedUnit?.id);
-          if (unit) {
+        const unit = overworld.underworld.units.find(u => u.id == globalThis.selectedUnit?.id);
+        if (unit) {
+          const stamina = prompt('Choose a new max stamina')
+          const parsedStamina = parseInt(stamina || '');
+          if (!isNaN(parsedStamina)) {
             overworld.pie.sendData({
               type: MESSAGE_TYPES.ADMIN_CHANGE_STAT,
               unitId: unit.id,
@@ -1487,7 +1504,12 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
                 stamina: parsedStamina
               }
             });
+          } else {
+            floatingText({ coords: getCamera(), text: 'Invalid number', style: { fill: 'red' } });
+
           }
+        } else {
+          centeredFloatingText('You must select a unit first', 'red');
         }
       },
       // NOTE: Commands that use `prompt` cannot run on headless server so use ADMIN_CHANGE_STAT
@@ -1507,6 +1529,8 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         const unit = overworld.underworld.units.find(u => u.id == globalThis.selectedUnit?.id);
         if (unit) {
           Unit.makeMiniboss(unit);
+        } else {
+          centeredFloatingText('You must select a unit first', 'red');
         }
       },
       supportInMultiplayer: true,
@@ -1523,6 +1547,8 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         const unit = overworld.underworld.units.find(u => u.id == globalThis.selectedUnit?.id);
         if (unit) {
           Unit.addModifier(unit, summoningSicknessId, overworld.underworld, false);
+        } else {
+          centeredFloatingText('You must select a unit first', 'red');
         }
       },
       supportInMultiplayer: true,
@@ -1535,6 +1561,8 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       action: () => {
         if (globalThis.selectedUnit && player) {
           Unit.orient(globalThis.selectedUnit, player.unit);
+        } else {
+          centeredFloatingText('You must select a unit first', 'red');
         }
       },
       supportInMultiplayer: false,
