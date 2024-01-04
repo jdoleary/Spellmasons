@@ -1,4 +1,4 @@
-import { getAngleBetweenVec2s, dotProduct, isBetween, magnitude, clampVector } from '../Vec';
+import { getAngleBetweenVec2s, dotProduct, isBetween, magnitude, clampVector, normalized } from '../Vec';
 
 describe('vectorMath', () => {
     describe("getAngleBetweenVec2s", () => {
@@ -73,6 +73,29 @@ describe('vectorMath', () => {
                 expect(actual).toEqual(expected);
             });
         });
+    });
+    describe('normalized', () => {
+        it('should normalize 4,4 to 1/Math.sqrt(2),1/Math.sqrt(2)', () => {
+            const actual = normalized({ x: 4, y: 4 });
+            const expected = { x: 1 / Math.sqrt(2), y: 1 / Math.sqrt(2) };
+            expect(actual).toEqual(expected);
+        });
+        it('should normalize 3,4 to 0.6,0.8', () => {
+            const actual = normalized({ x: 3, y: 4 });
+            const expected = { x: 0.6, y: 0.8 };
+            expect(actual).toEqual(expected);
+        });
+        it('should normalize 8,0 to 1,0', () => {
+            const actual = normalized({ x: 8, y: 0 });
+            const expected = { x: 1, y: 0 };
+            expect(actual).toEqual(expected);
+        });
+        it('should normalize 0,9 to 0,1', () => {
+            const actual = normalized({ x: 0, y: 9 });
+            const expected = { x: 0, y: 1 };
+            expect(actual).toEqual(expected);
+        });
+
     });
     describe('clampVector', () => {
         it('should not modify the vector if it\'s magnitude is less than the clamp magnitude', () => {
