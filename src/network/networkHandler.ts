@@ -47,7 +47,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
   if (!NO_LOG_LIST.includes(d.payload.type)) {
     // Don't clog up server logs with payloads, leave that for the client which can handle them better
     try {
-      console.log("Recieved onData:", MESSAGE_TYPES[d.payload.type], globalThis.headless ? '' : JSON.stringify(d))
+      //console.log("Recieved onData:", MESSAGE_TYPES[d.payload.type], globalThis.headless ? '' : JSON.stringify(d))
       if (overworld.underworld && globalThis.headless) {
         try {
           const startTime = payload.type == MESSAGE_TYPES.INIT_GAME_STATE ? Date.now() : undefined;
@@ -74,7 +74,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
     return;
   }
   // Note: If the message is from the server there will not be a fromPlayer
-  const fromPlayer = globalThis.numberOfHotseatPlayers > 1 ? underworld.players[underworld.hotseatCurrentPlayerIndex] : underworld.players.find(p => p.clientId == fromClient);
+  const fromPlayer = underworld.players.find(p => p.clientId == fromClient);
 
   switch (type) {
     case MESSAGE_TYPES.CHAT_SENT:
@@ -93,6 +93,9 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       }
       break;
     case MESSAGE_TYPES.CLIENT_SEND_PLAYER_TO_SERVER:
+
+      // TODO - Outdated?
+
       // This message is only ever handled by the host.  It is for the client
       // to send it's Player state to the host because the client is the source of truth for the player object
       // Do NOT process this message for hotseat or else it will may overwrite a player https://github.com/jdoleary/Spellmasons/issues/198
@@ -483,7 +486,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
   }
   logHandleOnDataMessage(type, payload, fromClient, underworld);
   // Get player of the client that sent the message 
-  const fromPlayer = globalThis.numberOfHotseatPlayers > 1 ? underworld.players[underworld.hotseatCurrentPlayerIndex] : underworld.players.find(p => p.clientId == fromClient);
+  const fromPlayer = underworld.players.find(p => p.clientId == fromClient);
   switch (type) {
     case MESSAGE_TYPES.CHANGE_CHARACTER:
       if (fromPlayer) {
@@ -776,10 +779,6 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           // player in multiplayer
           Image.show(fromPlayer.unit.image);
           underworld.syncTurnMessage();
-          // Used for the tutorial but harmless if invoked under other circumstances.
-          // Spawns the portal after the player choses a spawn point if there are no
-          // enemies left
-          underworld.checkIfShouldSpawnPortal();
         } else {
           console.error('Cannot spawn player at NaN')
         }

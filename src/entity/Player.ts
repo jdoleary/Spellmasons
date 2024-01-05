@@ -353,7 +353,7 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
 }
 // Keep a global reference to the current client's player
 export function updateGlobalRefToCurrentClientPlayer(player: IPlayer, underworld: Underworld) {
-  if (globalThis.clientId === player.clientId) {
+  if (globalThis.clientId == player.clientId) {
     if (numberOfHotseatPlayers > 1) {
       globalThis.player = underworld.players[underworld.hotseatCurrentPlayerIndex];
       if (!globalThis.player) {
@@ -408,25 +408,16 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
     // might be wrongfully overwritten by a server SYNC_PLAYERS such as getting
     // a summon spell or rerolling.
 
-    if (globalThis.numberOfHotseatPlayers > 1) {
-      // In hotseat, players share the same client Id and if the below else statement were to run
-      // it would make the hotseat players share references to the same arrays and objects
-      // giving them a shared inventory and toolbar which is not desireable.
-      // Besides, there won't be any sync errors on hotseat anyway since hotseat isn't
-      // networked
-      console.debug('Ignore isClientPlayerSourceOfTruth on hotseat multiplayer');
-    } else {
-      if (globalThis.player && playerLoaded.clientId == globalThis.player.clientId) {
-        playerLoaded.cardsInToolbar = globalThis.player.cardsInToolbar;
-        playerLoaded.inventory = globalThis.player.inventory;
-        playerLoaded.freeSpells = globalThis.player.freeSpells;
-        playerLoaded.upgrades = globalThis.player.upgrades;
-        playerLoaded.upgradesLeftToChoose = globalThis.player.upgradesLeftToChoose;
-        playerLoaded.perksLeftToChoose = globalThis.player.perksLeftToChoose;
-        playerLoaded.reroll = globalThis.player.reroll;
-        playerLoaded.attributePerks = globalThis.player.attributePerks;
-        playerLoaded.statPointsUnspent = globalThis.player.statPointsUnspent;
-      }
+    if (globalThis.player && playerLoaded.clientId == globalThis.player.clientId) {
+      playerLoaded.cardsInToolbar = globalThis.player.cardsInToolbar;
+      playerLoaded.inventory = globalThis.player.inventory;
+      playerLoaded.freeSpells = globalThis.player.freeSpells;
+      playerLoaded.upgrades = globalThis.player.upgrades;
+      playerLoaded.upgradesLeftToChoose = globalThis.player.upgradesLeftToChoose;
+      playerLoaded.perksLeftToChoose = globalThis.player.perksLeftToChoose;
+      playerLoaded.reroll = globalThis.player.reroll;
+      playerLoaded.attributePerks = globalThis.player.attributePerks;
+      playerLoaded.statPointsUnspent = globalThis.player.statPointsUnspent;
     }
   }
   // Backwards compatibility after property name change

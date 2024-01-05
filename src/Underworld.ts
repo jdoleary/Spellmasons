@@ -623,9 +623,12 @@ export default class Underworld {
     }
     return !finishedForceMoves;
   }
+
+  // TODO - Refactor / Remove this
+
   // returns true if there is more processing yet to be done on the next game loop
   gameLoopUnit = (u: Unit.IUnit, aliveNPCs: Unit.IUnit[], deltaTime: number): boolean => {
-    if (u.alive) {
+    if (u) {
       while (u.path && u.path.points[0] && Vec.equal(Vec.round(u), Vec.round(u.path.points[0]))) {
         // Remove next points until the next point is NOT equal to the unit's current position
         // This prevent's "jittery" "slow" movement where it's moving less than {x:1.0, y:1.0}
@@ -633,9 +636,10 @@ export default class Underworld {
         // moving when it reaches the target which may be less than 1.0 and 1.0 away.
         u.path.points.shift();
       }
-      // Only allow movement if the unit has stamina and it is their turn
-      const isUnitsTurn = Unit.isUnitsTurnPhase(u, this);
-      if (u.path && u.path.points[0] && u.stamina > 0 && isUnitsTurn) {
+
+      // Only allow if the unit can act and it is their turn
+      const takeAction = Unit.canAct(u) && Unit.isUnitsTurnPhase(u, this);
+      if (u.path && u.path.points[0] && u.stamina > 0 && takeAction) {
         // Move towards target
         const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path.points[0], u.moveSpeed * deltaTime)
         let moveDist = 0;
@@ -697,10 +701,6 @@ export default class Underworld {
         }
         // done processing this unit for this unit's turn
         return false;
-      } else {
-        if (!isUnitsTurn) {
-          u.stamina = 0;
-        }
       }
     } else {
       // Unit is dead, no processing to be done
@@ -1931,11 +1931,12 @@ export default class Underworld {
       ['Level', this.getLevelText()],
       'white'
     );
-    console.log('Setup: resetPlayerForNextLevel; reset all players')
 
+    console.log('Setup: resetPlayerForNextLevel; reset all players')
     for (let player of this.players) {
       Player.resetPlayerForNextLevel(player, this);
     }
+    this.changeToFirstHotseatPlayer();
 
     // Give players stat points to spend:
     // For first play session don't show stat upgrades too early, it's information overload
@@ -1959,6 +1960,8 @@ export default class Underworld {
     // be set BEFORE postSetupLevel is invoked because postSetupLevel will send a sync message
     // that will override the clientside data.
     this.postSetupLevel();
+
+
   }
   _getLevelText(levelIndex: number): string {
     if (levelIndex > LAST_LEVEL_INDEX) {
@@ -2105,6 +2108,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
 
   }
+
+  // TODO - Move to update turn phase
   tryGameOver(): boolean {
     // Clear previous timeout that would toggle game over state
     if (gameOverModalTimeout !== undefined) {
@@ -2159,20 +2164,24 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     return isOver;
   }
 
-  async updateTurnPhase() {
+  // Handles level completion, game over, turn phases, and hotseat
+  async progressGameState() {
     console.log("Current turn phase == ", this.turn_phase);
 
-    if (this.turn_phase === turn_phase.PlayerTurns) {
+    if (this.tryProgressLevelState()) return;
+    else if (this.tryGameOver()) return;
+
+    if (this.turn_phase == turn_phase.PlayerTurns) {
       // If all hotseat players are ready, try end player turn
       await this.handleNextHotseatPlayer();
 
       // Moves to NPC.ALLY Phase if possible
       await this.tryEndPlayerTurnPhase();
-    } else if (this.turn_phase === turn_phase.NPC_ALLY) {
+    } else if (this.turn_phase == turn_phase.NPC_ALLY) {
 
-    } else if (this.turn_phase === turn_phase.NPC_ENEMY) {
+    } else if (this.turn_phase == turn_phase.NPC_ENEMY) {
 
-    } else if (this.turn_phase === turn_phase.Stalled) {
+    } else if (this.turn_phase == turn_phase.Stalled) {
 
     }
 
@@ -2186,27 +2195,41 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (!(numberOfHotseatPlayers > 1)) return;
 
     // If current player hasn't completed their turn, return
-    // We do this outside of the loop because we don't want to
-    // call changeToHotseatPlayer if that player is already set up
+    // We don't want to change hotseat players unless current player is done
     let currentPlayer = this.players[this.hotseatCurrentPlayerIndex];
     if (currentPlayer && !this.hasCompletedTurn(currentPlayer)) {
       return;
     }
 
     // Change to the next hotseat player that hasn't completed their turn
-    while (this.hotseatCurrentPlayerIndex < this.players.length - 1) {
-      this.hotseatCurrentPlayerIndex = (this.hotseatCurrentPlayerIndex + 1) % this.players.length;
-      const currentPlayer = this.players[this.hotseatCurrentPlayerIndex];
+    for (let i = 0; i < this.players.length; i++) {
+      // TODO - Remove hotseat current player index?
+      this.hotseatCurrentPlayerIndex = i;
+      const currentPlayer = this.players[i];
       // Found a player that has not completed their turn, switch to them
       if (currentPlayer && !this.hasCompletedTurn(currentPlayer)) {
-        console.log("PlayerTurn: Switching to hotseat player: ", currentPlayer.clientId);
+        console.log("PlayerTurn: Switching to hotseat player: ", currentPlayer);
         await this.changeToHotseatPlayer(currentPlayer);
         return;
       }
-      // Player doesn't exist or already completed turn, continue looping
     }
 
+    // TODO - Switch back to player 1 in prep for next turn?
     console.log("PlayerTurn: All remaining hotseat players have completed their turn");
+  }
+
+  async changeToFirstHotseatPlayer() {
+    if (!(numberOfHotseatPlayers > 1)) return;
+
+    console.log("Change to first hotseat player");
+    const firstPlayer = this.players[0];
+    if (firstPlayer) {
+      this.hotseatCurrentPlayerIndex = 0;
+      this.changeToHotseatPlayer(firstPlayer)
+    }
+    else {
+      console.error("Unexpected: Hotseat player doesn't exist");
+    }
   }
 
   async changeToHotseatPlayer(player: Player.IPlayer) {
@@ -2219,7 +2242,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     CardUI.recalcPositionForCards(globalThis.player, this);
     CardUI.syncInventory(undefined, this);
     await runPredictions(this);
-    this.checkIfShouldSpawnPortal();
 
     // For hotseat, whenever a player ends their turn, check if the current player
     // has upgrades to choose and if so, show the upgrade button
@@ -2240,11 +2262,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // - Has not spawned
     // - Can act and has not ended turn (alive, not frozen, etc.)
     if (!player.isSpawned) {
-      console.log('PlayerTurn: player has not spawned yet: ', player.clientId);
+      console.log('PlayerTurn: player has not spawned yet: ', player);
       return false;
     }
     if (Unit.canAct(player.unit) && !player.endedTurn) {
-      console.log('PlayerTurn: player can act and has not ended turn yet: ', player.clientId);
+      console.log('PlayerTurn: player can act and has not ended turn yet: ', player);
       return false;
     }
     return true;
@@ -2298,7 +2320,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     CardUI.updateCardBadges(this);
 
-    await Unit.endTurnForUnits(this.players.map(p => p.unit), this);
+    await Unit.endTurnForUnits(this.players.map(p => p.unit), this, false);
 
     // Move to next phase depending on remaining units
     // NPC_ALLY, NPC_ENEMY, or portal state
@@ -2311,13 +2333,64 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
     }
     else {
-      this.checkIfShouldSpawnPortal();
+      this.tryProgressLevelState();
       //this.broadcastTurnPhase(turn_phase.PlayerTurns);
     }
     return true;
   }
 
-  async executeFactionTurn(faction: Faction) {
+  async executePlayerTurn() {
+    await Unit.startTurnForUnits(this.players.map(p => p.unit), this, false);
+
+    for (let player of this.players) {
+      player.endedTurn = false;
+
+      if (player == globalThis.player && globalThis.player.isSpawned) {
+        // Notify the current player that their turn is starting
+        queueCenteredFloatingText(`Your Turn`);
+        // Don't play turn sfx when recording
+        if (!globalThis.isHUDHidden && !document.body?.classList.contains('hide-card-holders')) {
+          playSFXKey('yourTurn');
+        }
+      }
+
+      // TODO - Why is this here?
+      // Trigger attributePerks
+      const perkRandomGenerator = seedrandom(getUniqueSeedString(this, player));
+      for (let i = 0; i < player.attributePerks.length; i++) {
+        const perk = player.attributePerks[i];
+        if (perk) {
+          tryTriggerPerk(perk, player, 'everyTurn', perkRandomGenerator, this, 700 * i);
+        }
+      }
+    }
+    this.syncTurnMessage();
+    // Update unit health / mana bars, etc
+    await runPredictions(this);
+
+    // Quicksave at the beginning of player's turn
+    // Check globalThis.player.isSpawned to prevent quicksaving an invalid underworld file
+    if (globalThis.save && globalThis.player && globalThis.player.isSpawned) {
+      // For now, only save if in a singleplayer game
+      // because save support hasn't been added to multiplayer yet
+      if (isSinglePlayer()) {
+        console.info(`Dev: quick saving game as "${globalThis.quicksaveKey}"`);
+        // Force overwrite for quicksave, never prompt "are you sure?" when auto saving a quicksave
+        globalThis.save(globalThis.quicksaveKey, true);
+      }
+    }
+
+    // If there was an attempted save during the enemy turn, save now
+    // that the player's turn has started
+    if (globalThis.saveASAP && globalThis.save) {
+      globalThis.save(globalThis.saveASAP);
+    }
+
+    this.changeToFirstHotseatPlayer();
+    this.progressGameState();
+  }
+
+  async executeNPCTurn(faction: Faction) {
     cleanUpEmitters(true);
     // Clear unit attentionMarkers since it's not the player's turn
     globalThis.attentionMarkers = [];
@@ -2325,16 +2398,79 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     const units = this.units.filter(u => u.unitType == UnitType.AI && u.faction == faction);
 
-    // Only execute turn if there are units to take the turn:
-    if (units.filter(u => Unit.canAct(u)).length) {
-      // Run AI unit actions
-      await this.executeNPCTurn(faction);
-    } else {
-      console.log('Turn Management: Skipping executingNPCTurn for ', faction);
+    console.log('game: executeNPCTurn', Faction[faction]);
+    const cachedTargets: { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } = {};
+    this.clearPredictedNextTurnDamage();
+    await Unit.startTurnForUnits(units, this, false);
+
+    // Loop through planned unit actions for smart targeting
+    for (let u of units.filter(u => Unit.canAct(u))) {
+      const unitSource = allUnits[u.unitSourceId];
+      if (unitSource) {
+        const targets = unitSource.getUnitAttackTargets(u, this);
+        const canAttack = this.canUnitAttackTarget(u, targets && targets[0])
+        cachedTargets[u.id] = { targets, canAttack };
+        this.incrementTargetsNextTurnDamage(targets, u.damage, canAttack);
+        if (unitSource.id == PRIEST_ID) {
+          // Signal to other priests that this one is targeted for resurrection
+          // so multiple priests don't try to ressurect the same target
+          this.incrementTargetsNextTurnDamage(targets, -u.healthMax, true);
+        }
+      }
+      u.stamina = 0;
+    }
+
+    // TODO - Remove stamina workaround
+
+    // TODO - Don't control actions directly in gameLoopUnit / Refactor
+
+    // which causes issues with turn order
+    // i.e. melee units moving during the ranged units' turn
+    for (let subTypes of [[UnitSubType.RANGED_LOS, UnitSubType.RANGED_RADIUS, UnitSubType.SUPPORT_CLASS], [UnitSubType.MELEE], [UnitSubType.SPECIAL_LOS], [UnitSubType.DOODAD]]) {
+      const actionPromises: Promise<void>[] = [];
+      const readyToTakeTurnUnits = units.filter(u => Unit.canAct(u) && subTypes.includes(u.unitSubType));
+
+      for (let u of readyToTakeTurnUnits) {
+        u.stamina = u.staminaMax;
+        // Units should have their previous path cleared so that their .action can set their path if 
+        // they should move this turn.
+        // Note: This resolves a headless server desync where units go through a complete gameloop before their
+        // .action sets moveTowards, so if they had an existing path, they move on the server but not on the client
+        u.path = undefined;
+
+        const unitSource = allUnits[u.unitSourceId];
+        if (unitSource) {
+          const { targets, canAttack } = cachedTargets[u.id] || { targets: [], canAttack: false };
+          // Add unit action to the array of promises to wait for
+          let promise = raceTimeout(5000, `Unit.action; unitSourceId: ${u.unitSourceId}; subType: ${u.unitSubType}`, unitSource.action(u, targets, this, canAttack).then(async (actionResult) => {
+            // Ensure ranged units get out of liquid so they don't take DOT
+            // This doesn't apply to melee units since they will automatically move towards you to attack,
+            // whereas without this ranged units would be content to just sit in liquid and die from the DOT
+            if (u.unitSubType !== UnitSubType.MELEE && u.inLiquid) {
+
+              const seed = seedrandom(`${this.seed}-${this.turn_number}-${u.id}`);
+              const coords = findRandomGroundLocation(this, u, seed);
+              if (coords) {
+                await Unit.moveTowards(u, coords, this);
+              }
+            }
+            return actionResult;
+          }));
+          actionPromises.push(promise);
+        } else {
+          console.error(
+            'Could not find unit source data for',
+            u.unitSourceId,
+          );
+        }
+      }
+      console.log(actionPromises);
+      this.triggerGameLoopHeadless();
+      await Promise.all(actionPromises);
     }
 
     // End turn events, liquid damage, mana regen, etc.
-    await Unit.endTurnForUnits(units, this);
+    await Unit.endTurnForUnits(units, this, false);
   }
 
   // This function is invoked when all factions have finished their turns
@@ -2426,80 +2562,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     Player.syncLobby(this);
   }
 
-  // TODO - Move whole function
-  async initializePlayerTurns() {
-    // Prevent possible desynce where portals don't spawn when unit dies
-    // so it must spawn here to ensure players can move on
-    this.checkIfShouldSpawnPortal();
-    for (let player of this.players) {
-      player.endedTurn = false;
-      if (player.unit.alive) {
-        // Restore player to max mana at start of turn
-        // Let mana remain above max if it already is (due to other influences that may
-        // make it go above max like mana potions, spells, perks, etc);
-        player.unit.mana = Math.max(player.unit.manaMax, player.unit.mana);
-      }
-
-      if (player == globalThis.player && globalThis.player.isSpawned) {
-        // Notify the current player that their turn is starting
-        queueCenteredFloatingText(`Your Turn`);
-        // Don't play turn sfx when recording
-        if (!globalThis.isHUDHidden && !document.body?.classList.contains('hide-card-holders')) {
-          playSFXKey('yourTurn');
-        }
-      }
-
-      // TODO - Why is this here?
-      // Trigger attributePerks
-      const perkRandomGenerator = seedrandom(getUniqueSeedString(this, player));
-      for (let i = 0; i < player.attributePerks.length; i++) {
-        const perk = player.attributePerks[i];
-        if (perk) {
-          tryTriggerPerk(perk, player, 'everyTurn', perkRandomGenerator, this, 700 * i);
-        }
-      }
-
-      // Trigger onTurnStart Events
-      const onTurnStartEventResults: boolean[] = await Promise.all(player.unit.onTurnStartEvents.map(
-        async (eventName) => {
-          const fn = Events.onTurnStartSource[eventName];
-          return fn ? await fn(player.unit, false, this) : false;
-        },
-      ));
-    }
-    this.syncTurnMessage();
-    // Update unit health / mana bars, etc
-    await runPredictions(this);
-
-    // Quicksave at the beginning of player's turn
-    // Check globalThis.player.isSpawned to prevent quicksaving an invalid underworld file
-    if (globalThis.save && globalThis.player && globalThis.player.isSpawned) {
-      // For now, only save if in a singleplayer game
-      // because save support hasn't been added to multiplayer yet
-      if (isSinglePlayer()) {
-        console.info(`Dev: quick saving game as "${globalThis.quicksaveKey}"`);
-        // Force overwrite for quicksave, never prompt "are you sure?" when auto saving a quicksave
-        globalThis.save(globalThis.quicksaveKey, true);
-      }
-    }
-
-    // If there was an attempted save during the enemy turn, save now
-    // that the player's turn has started
-    if (globalThis.saveASAP && globalThis.save) {
-      globalThis.save(globalThis.saveASAP);
-    }
-
-    const firstPlayer = this.players[0];
-    if (firstPlayer) {
-      this.hotseatCurrentPlayerIndex = 0;
-      this.changeToHotseatPlayer(firstPlayer)
-    }
-    else {
-      console.error("Unexpected: Hotseat player doesn't exist");
-    }
-    this.updateTurnPhase();
-  }
-
   // Sends a network message to end turn
   async endMyTurnButtonHandler() {
     if (globalThis.player) {
@@ -2560,8 +2622,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // an exit of the Stalled phase and that should ONLY happen when a player reconnects
       return;
     }
-    const playerIndex = numberOfHotseatPlayers > 1 ? this.hotseatCurrentPlayerIndex : this.players.findIndex((p) => p.clientId === clientId);
-    const player = this.players[playerIndex];
+    const player = this.players.find(p => p.clientId == clientId);
     if (!player) {
       console.error('Cannot end turn, player with clientId:', clientId, 'does not exist');
       return;
@@ -2577,7 +2638,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       playSFXKey('endTurn');
     }
     // Ensure players can only end the turn when it IS their turn
-    if (this.turn_phase === turn_phase.PlayerTurns) {
+    if (this.turn_phase == turn_phase.PlayerTurns) {
       player.endedTurn = true;
       console.log('PlayerTurn: End player turn', clientId);
       this.syncTurnMessage();
@@ -2593,14 +2654,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         });
       }
 
-      const gameIsOver = this.tryGameOver();
-      if (gameIsOver) {
-        // Prevent infinite loop since there are no players
-        // alive it would continue to loop endlessly and freeze up
-        // the game if it didn't early return here
-        return;
-      }
-      this.updateTurnPhase();
+      this.progressGameState();
     } else {
       console.error("turn_phase must be PlayerTurns to end turn.  Cannot be ", this.turn_phase);
     }
@@ -3114,19 +3168,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             this.turn_phase = turn_phase.Stalled;
             console.log('Turn Management: Skipping initializingPlayerTurns, no players connected. Setting turn_phase to "Stalled"');
           } else {
-            // Start the players' turn
-            for (let u of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED)) {
-              // Reset stamina for player units so they can move again
-              // Allow overfill with stamina potion so this only sets it UP to
-              // staminaMax, it won't lower it
-              if (u.stamina < u.staminaMax) {
-                u.stamina = u.staminaMax;
-              }
-            }
-            // Lastly, initialize the player turns.
+            // Initialize the player turns.
             // Note, it is possible that calling this will immediately end
             // the player phase (if there are no players to take turns)
-            await this.initializePlayerTurns();
+            await this.executePlayerTurn();
           }
           // Note: The player turn occurs asyncronously because it depends on player input so the call to
           // `broadcastTurnPhase(turn_phase.NPC_ALLY)` happens inside tryEndPlayerTurnPhase(); whereas the other blocks in
@@ -3134,11 +3179,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // not.
           break;
         case turn_phase[turn_phase.NPC_ALLY]:
-          await this.executeFactionTurn(Faction.ALLY);
+          await this.executeNPCTurn(Faction.ALLY);
           this.broadcastTurnPhase(turn_phase.NPC_ENEMY);
           break;
         case turn_phase[turn_phase.NPC_ENEMY]:
-          await this.executeFactionTurn(Faction.ENEMY);
+          await this.executeNPCTurn(Faction.ENEMY);
           await this.endFullTurnCycle();
           this.broadcastTurnPhase(turn_phase.PlayerTurns);
           break;
@@ -3200,90 +3245,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
   }
 
-  async executeNPCTurn(faction: Faction) {
-    console.log('game: executeNPCTurn', Faction[faction]);
-    const cachedTargets: { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } = {};
-    this.clearPredictedNextTurnDamage();
-    for (let u of this.units.filter(
-      (u) => u.unitType === UnitType.AI && u.alive && u.faction == faction
-    )) {
-      const unitSource = allUnits[u.unitSourceId];
-      if (unitSource) {
-        // Set unit stamina to max so that it can calculate if they can attack target
-        // Note: This must be done BEFORE caching targets and canUnitAttackTarget so that it
-        // will have stamina to make the canUnitAttackTarget evaluation
-        u.stamina = u.staminaMax;
-        const targets = unitSource.getUnitAttackTargets(u, this);
-        const canAttack = this.canUnitAttackTarget(u, targets && targets[0])
-        cachedTargets[u.id] = { targets, canAttack };
-        this.incrementTargetsNextTurnDamage(targets, u.damage, canAttack);
-        if (unitSource.id == PRIEST_ID) {
-          // Signal to other priests that this one is targeted for resurrection
-          // so multiple priests don't try to ressurect the same target
-          this.incrementTargetsNextTurnDamage(targets, -u.healthMax, true);
-        }
-      }
-      // Set all units' stamina to 0 before their turn is initialized so that any melee units that have remaining stamina
-      // wont move during the ranged unit turn
-      u.stamina = 0;
-    }
-
-    for (let subTypes of [[UnitSubType.RANGED_LOS, UnitSubType.RANGED_RADIUS, UnitSubType.SUPPORT_CLASS], [UnitSubType.MELEE], [UnitSubType.SPECIAL_LOS], [UnitSubType.DOODAD]]) {
-      const actionPromises: Promise<void>[] = [];
-      const readyToTakeTurnUnits = this.units.filter(
-        (u) => u.unitType === UnitType.AI && u.alive && u.faction == faction && subTypes.includes(u.unitSubType),
-      );
-
-      const skipTurnUnits = await this.runTurnStartEvents(readyToTakeTurnUnits, false)
-
-      unitloop: for (let u of readyToTakeTurnUnits) {
-        // Units should have their previous path cleared so that their .action can set their path if 
-        // they should move this turn.
-        // Note: This resolves a headless server desync where units go through a complete gameloop before their
-        // .action sets moveTowards, so if they had an existing path, they move on the server but not on the client
-        u.path = undefined;
-
-        // Set unit stamina to max so that they may move now that it is their turn
-        u.stamina = u.staminaMax;
-        if (skipTurnUnits.includes(u)) {
-          continue unitloop;
-        }
-        // If unit is now dead (due to turnStartEvents)
-        // abort their turn
-        if (!u.alive) {
-          continue unitloop;
-        }
-        const unitSource = allUnits[u.unitSourceId];
-        if (unitSource) {
-          const { targets, canAttack } = cachedTargets[u.id] || { targets: [], canAttack: false };
-          // Add unit action to the array of promises to wait for
-          let promise = raceTimeout(5000, `Unit.action; unitSourceId: ${u.unitSourceId}; subType: ${u.unitSubType}`, unitSource.action(u, targets, this, canAttack).then(async (actionResult) => {
-            // Ensure ranged units get out of liquid so they don't take DOT
-            // This doesn't apply to melee units since they will automatically move towards you to attack,
-            // whereas without this ranged units would be content to just sit in liquid and die from the DOT
-            if (u.unitSubType !== UnitSubType.MELEE && u.inLiquid) {
-
-              const seed = seedrandom(`${this.seed}-${this.turn_number}-${u.id}`);
-              const coords = findRandomGroundLocation(this, u, seed);
-              if (coords) {
-                await Unit.moveTowards(u, coords, this);
-              }
-            }
-            return actionResult;
-          }));
-          actionPromises.push(promise);
-        } else {
-          console.error(
-            'Could not find unit source data for',
-            u.unitSourceId,
-          );
-        }
-      }
-      this.triggerGameLoopHeadless();
-      await Promise.all(actionPromises);
-    }
-
-  }
   canUnitAttackTarget(u: Unit.IUnit, attackTarget?: Unit.IUnit): boolean {
     if (!attackTarget) {
       return false;
@@ -3630,119 +3591,78 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     stopAndDestroyForeverEmitter(castingParticleEmitter);
     if (!prediction) {
-      this.checkIfShouldSpawnPortal();
-      this.tryGameOver();
+      this.progressGameState();
     }
-
     return effectState;
   }
-  // Returns array of unit's whose turns should be skipped
-  async runTurnStartEvents(units: Unit.IUnit[], prediction: boolean): Promise<Unit.IUnit[]> {
-    const turnStartEventPromises = units.map(u => Unit.runTurnStartEvents(u, prediction, this).then(skipTurn => skipTurn ? [u] : []))
-    if (prediction) {
-      await this.fullySimulateForceMovePredictions();
-    }
-    const skipTurnUnits = (await Promise.all(turnStartEventPromises)).flatMap(x => x);
-    return skipTurnUnits;
-
-  }
-  checkIfShouldSpawnPortal() {
+  tryProgressLevelState(): boolean {
     // If all enemy units are dead and at least one player is spawned and connected
-    if (this.units.filter(u => u.faction == Faction.ENEMY && !u.flaggedForRemoval && u.unitSubType !== UnitSubType.DOODAD).every(u => !u.alive) && this.players.some(p => p.isSpawned && p.clientConnected)) {
-      const loopIndex = Math.max(0, (this.levelIndex - config.LAST_LEVEL_INDEX));
-      if (loopIndex > this.wave) {
-        this.wave++;
-        queueCenteredFloatingText(`Wave ${this.wave + 1} of ${loopIndex + 1}`);
-        // Add corpse decay to all dead NPCs
-        this.units.filter(u => u.unitType == UnitType.AI && !u.alive).forEach(u => {
-          Unit.addModifier(u, corpseDecayId, this, false);
-        });
-        const unitIds = getEnemiesForAltitude(this, this.levelIndex);
-        const numberOfMinibossesAllowed = Math.ceil(Math.max(0, (this.levelIndex - 4) / 4));
-        let numberOfMinibossesMade = 0;
-        // Trick for finding valid spawnable tiles
-        const validSpawnCoords = this.lastLevelCreated?.imageOnlyTiles.filter(x => x.image.endsWith('all_ground.png')) || [];
+    const shouldProgressLevelState = this.units.filter(u =>
+      u.faction == Faction.ENEMY &&
+      !u.flaggedForRemoval &&
+      u.unitSubType !== UnitSubType.DOODAD)
+      .every(u =>
+        !u.alive) &&
+      this.players
+        .some(p =>
+          p.isSpawned &&
+          p.clientConnected)
 
-        // Copied from generateRandomLevelData
-        for (let id of unitIds) {
-          if (validSpawnCoords.length == 0) { break; }
-          const validSpawnCoordsIndex = randInt(0, validSpawnCoords.length - 1, this.random);
-          const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
-          const sourceUnit = allUnits[id];
-          const { unitMinLevelIndexSubtractor } = unavailableUntilLevelIndexDifficultyModifier(this);
-          // Disallow miniboss for a unit spawning on the first levelIndex that they are allowed to spawn
-          const minibossAllowed = !sourceUnit?.spawnParams?.excludeMiniboss && ((sourceUnit?.spawnParams?.unavailableUntilLevelIndex || 0) - unitMinLevelIndexSubtractor) < this.levelIndex;
-          if (coord) {
-            const isMiniboss = !minibossAllowed ? false : numberOfMinibossesAllowed > numberOfMinibossesMade;
-            if (isMiniboss) {
-              numberOfMinibossesMade++;
-            }
-            const sourceUnit = allUnits[id];
-            if (sourceUnit) {
-              Unit.create(
-                sourceUnit.id,
-                // Start the unit at the summoners location
-                coord.x,
-                coord.y,
-                // A unit always summons units in their own faction
-                Faction.ENEMY,
-                sourceUnit.info.image,
-                UnitType.AI,
-                sourceUnit.info.subtype,
-                sourceUnit.unitProps,
-                this
-              );
-              skyBeam(coord);
-            } else {
-              console.error('Cannot create unit, missing source unit for', id)
-            }
-          }
-        }
-        // end Copied from generateRandomLevelData
+    if (!shouldProgressLevelState) return false;
 
-
-        return;
-      }
-      // Make all potion pickups disappear so as to not compell players to waste time walking around picking them
-      // all up
-      // Also do not remove portals
-      this.pickups.filter(p => p.name !== Pickup.CARDS_PICKUP_NAME && p.name !== Pickup.PORTAL_PURPLE_NAME).forEach(p => {
-        makeScrollDissapearParticles(p, false);
-        Pickup.removePickup(p, this, false);
+    const loopIndex = Math.max(0, (this.levelIndex - config.LAST_LEVEL_INDEX));
+    if (loopIndex > this.wave) {
+      this.wave++;
+      queueCenteredFloatingText(`Wave ${this.wave + 1} of ${loopIndex + 1}`);
+      // Add corpse decay to all dead NPCs
+      this.units.filter(u => u.unitType == UnitType.AI && !u.alive).forEach(u => {
+        Unit.addModifier(u, corpseDecayId, this, false);
       });
-      // Spawn portal near each player
-      const portalPickup = Pickup.pickups.find(p => p.name == Pickup.PORTAL_PURPLE_NAME);
-      if (portalPickup) {
-        const portalsAlreadySpawned = !!this.pickups.filter(p => !p.flaggedForRemoval && !isNaN(p.x) && !isNaN(p.x)).find(p => p.name === Pickup.PORTAL_PURPLE_NAME)
-        if (!portalsAlreadySpawned) {
-          for (let playerUnit of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
-            const portalSpawnLocation = this.findValidSpawn(playerUnit, 4) || playerUnit;
-            if (!isOutOfBounds(portalSpawnLocation, this)) {
-              Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup, logSource: 'Portal' }, this, false);
-            } else {
-              // If a pickup is attempted to be spawned for an unspawned player this if check prevents it from being spawned out of bounds
-              // and the next invokation of checkIfShouldSpawnPortal will spawn it instead.
-            }
-            // Give all player units infinite stamina when portal spawns for convenience.
-            playerUnit.stamina = Number.POSITIVE_INFINITY;
-            // Give all players max health and mana (it will be reset anyway when they are reset for the next level
-            // but this disswades them from going around to pickup potions)
-            playerUnit.health = playerUnit.healthMax;
-            playerUnit.mana = playerUnit.manaMax;
-            // Since playerUnit's health and mana is reset, we need to immediately sync the prediction unit
-            // so that it doesn't inncorrectly warn "self damage due to spell" by seeing that the prediction unit
-            // has less health than the current player unit.
-            this.syncPlayerPredictionUnitOnly();
+      const unitIds = getEnemiesForAltitude(this, this.levelIndex);
+      const numberOfMinibossesAllowed = Math.ceil(Math.max(0, (this.levelIndex - 4) / 4));
+      let numberOfMinibossesMade = 0;
+      // Trick for finding valid spawnable tiles
+      const validSpawnCoords = this.lastLevelCreated?.imageOnlyTiles.filter(x => x.image.endsWith('all_ground.png')) || [];
 
+      // Copied from generateRandomLevelData
+      for (let id of unitIds) {
+        if (validSpawnCoords.length == 0) { break; }
+        const validSpawnCoordsIndex = randInt(0, validSpawnCoords.length - 1, this.random);
+        const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
+        const sourceUnit = allUnits[id];
+        const { unitMinLevelIndexSubtractor } = unavailableUntilLevelIndexDifficultyModifier(this);
+        // Disallow miniboss for a unit spawning on the first levelIndex that they are allowed to spawn
+        const minibossAllowed = !sourceUnit?.spawnParams?.excludeMiniboss && ((sourceUnit?.spawnParams?.unavailableUntilLevelIndex || 0) - unitMinLevelIndexSubtractor) < this.levelIndex;
+        if (coord) {
+          const isMiniboss = !minibossAllowed ? false : numberOfMinibossesAllowed > numberOfMinibossesMade;
+          if (isMiniboss) {
+            numberOfMinibossesMade++;
           }
-        } else {
-          console.log('Portals have already been spawned, do not spawn additional');
+          const sourceUnit = allUnits[id];
+          if (sourceUnit) {
+            Unit.create(
+              sourceUnit.id,
+              // Start the unit at the summoners location
+              coord.x,
+              coord.y,
+              // A unit always summons units in their own faction
+              Faction.ENEMY,
+              sourceUnit.info.image,
+              UnitType.AI,
+              sourceUnit.info.subtype,
+              sourceUnit.unitProps,
+              this
+            );
+            skyBeam(coord);
+          } else {
+            console.error('Cannot create unit, missing source unit for', id)
+          }
         }
-      } else {
-        console.error('Portal pickup not found')
       }
+      // end Copied from generateRandomLevelData
     }
 
+    return true;
   }
 
   // hasLineOfSight returns true if there are no walls interrupting
