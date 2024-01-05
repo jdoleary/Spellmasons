@@ -45,6 +45,8 @@ import seedrandom from 'seedrandom';
 import { summoningSicknessId } from '../modifierSummoningSickness';
 import * as log from '../log';
 import { suffocateCardId, updateSuffocate } from '../cards/suffocate';
+import { doLiquidEffect } from '../inLiquid';
+import { freezeCardId } from '../cards/freeze';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -756,10 +758,6 @@ export function resurrect(unit: IUnit, underworld: Underworld) {
   // Return dead units back to full health
   unit.health = unit.healthMax;
   unit.alive = true;
-  if (unit.unitType == UnitType.PLAYER_CONTROLLED) {
-    const player = underworld.players.find(p => p.unit == unit);
-    if (player) player.endedTurn = false;
-  }
   returnToDefaultSprite(unit);
 }
 export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
@@ -1161,6 +1159,20 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
 
   }
 }
+
+export function canAct(unit: IUnit): boolean {
+  if (!unit.alive) {
+    return false;
+  }
+
+  // TODO - Find cleaner method. Event args?
+  if (unit.modifiers[freezeCardId]) {
+    return false;
+  }
+
+  return true;
+}
+
 export function canMove(unit: IUnit): boolean {
   // Do not move if dead
   if (!unit.alive) {
@@ -1367,6 +1379,34 @@ export async function runTurnStartEvents(unit: IUnit, prediction: boolean = fals
   }
   return abortTurn
 
+}
+export async function endTurnForUnits(units: IUnit[], underworld: Underworld) {
+  // Trigger end turn events
+  for (let unit of units) {
+    await Promise.all(unit.onTurnEndEvents.map(
+      async (eventName) => {
+        const fn = Events.onTurnEndSource[eventName];
+        return fn ? await fn(unit, false, underworld) : false;
+      },
+    ));
+  }
+
+  // At the end of their turn, deal damage if still in liquid
+  for (let unit of units) {
+    if (unit.inLiquid && unit.alive) {
+      doLiquidEffect(underworld, unit, false);
+      floatingText({ coords: unit, text: 'Liquid damage', style: { fill: 'red' } });
+    }
+  }
+
+  // Add mana to AI units
+  for (let unit of units.filter(u => u.unitType == UnitType.AI)) {
+    if (unit.alive) {
+      unit.mana += unit.manaPerTurn;
+      // Cap manaPerTurn at manaMax
+      unit.mana = Math.min(unit.mana, unit.manaMax);
+    }
+  }
 }
 export function makeMiniboss(unit: IUnit) {
   if (unit.unitSourceId == bossmasonUnitId) {

@@ -1932,16 +1932,7 @@ export default class Underworld {
       'white'
     );
     console.log('Setup: resetPlayerForNextLevel; reset all players')
-    if (numberOfHotseatPlayers > 1) {
-      // Reset current hotseat player to player 1
-      this.hotseatCurrentPlayerIndex = 0;
-      const currentPlayer = this.players[this.hotseatCurrentPlayerIndex];
-      if (currentPlayer) {
-        Player.updateGlobalRefToCurrentClientPlayer(currentPlayer, this);
-      } else {
-        console.error('Unexpected, no hotseat current player')
-      }
-    }
+
     for (let player of this.players) {
       Player.resetPlayerForNextLevel(player, this);
     }
@@ -2167,130 +2158,238 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
     return isOver;
   }
-  tryEndPlayerTurnPhase(): boolean {
-    let doEndPlayerTurnPhase = false;
-    // Only move on from the player turn phase if there are players in the game,
-    // otherwise, wait for players to be in the game so that the serve doesn't just 
-    // run cycles pointlessly
-    const activePlayers = this.players.filter(Player.ableToAct);
-    if (this.turn_phase === turn_phase.PlayerTurns && activePlayers.length > 0) {
-      // If all players that can act have ended their turns...
-      if (
-        activePlayers.every(p => p.endedTurn)
-      ) {
-        doEndPlayerTurnPhase = true;
-      } else {
-        console.log('PlayerTurn: Check end player turn phase; players havent ended turn yet:', activePlayers.filter(p => !p.endedTurn).map(p => p.clientId));
+
+  async updateTurnPhase() {
+    console.log("Current turn phase == ", this.turn_phase);
+
+    if (this.turn_phase === turn_phase.PlayerTurns) {
+      // If all hotseat players are ready, try end player turn
+      await this.handleNextHotseatPlayer();
+
+      // Moves to NPC.ALLY Phase if possible
+      await this.tryEndPlayerTurnPhase();
+    } else if (this.turn_phase === turn_phase.NPC_ALLY) {
+
+    } else if (this.turn_phase === turn_phase.NPC_ENEMY) {
+
+    } else if (this.turn_phase === turn_phase.Stalled) {
+
+    }
+
+    console.log("New turn phase == ", this.turn_phase);
+    // TODO - Full Turn Cycle
+    // this.endFullTurnCycle();
+  }
+
+  async handleNextHotseatPlayer() {
+    // If it's not a hotseat game, return
+    if (!(numberOfHotseatPlayers > 1)) return;
+
+    // If current player hasn't completed their turn, return
+    // We do this outside of the loop because we don't want to
+    // call changeToHotseatPlayer if that player is already set up
+    let currentPlayer = this.players[this.hotseatCurrentPlayerIndex];
+    if (currentPlayer && !this.hasCompletedTurn(currentPlayer)) {
+      return;
+    }
+
+    // Change to the next hotseat player that hasn't completed their turn
+    while (this.hotseatCurrentPlayerIndex < this.players.length - 1) {
+      this.hotseatCurrentPlayerIndex = (this.hotseatCurrentPlayerIndex + 1) % this.players.length;
+      const currentPlayer = this.players[this.hotseatCurrentPlayerIndex];
+      // Found a player that has not completed their turn, switch to them
+      if (currentPlayer && !this.hasCompletedTurn(currentPlayer)) {
+        console.log("PlayerTurn: Switching to hotseat player: ", currentPlayer.clientId);
+        await this.changeToHotseatPlayer(currentPlayer);
+        return;
+      }
+      // Player doesn't exist or already completed turn, continue looping
+    }
+
+    console.log("PlayerTurn: All remaining hotseat players have completed their turn");
+  }
+
+  async changeToHotseatPlayer(player: Player.IPlayer) {
+    // If the next player has already completed turn or can't act
+    // get the next hotseat player
+    if (this.hasCompletedTurn(player)) this.handleNextHotseatPlayer();
+
+    // Otherwise, set up hotseat player
+    Player.updateGlobalRefToCurrentClientPlayer(player, this);
+    CardUI.recalcPositionForCards(globalThis.player, this);
+    CardUI.syncInventory(undefined, this);
+    await runPredictions(this);
+    this.checkIfShouldSpawnPortal();
+
+    // For hotseat, whenever a player ends their turn, check if the current player
+    // has upgrades to choose and if so, show the upgrade button
+    if (globalThis.player && this.upgradesLeftToChoose(globalThis.player)) {
+      elEndTurnBtn?.classList.toggle('upgrade', true);
+    }
+
+    // Announce new players' turn
+    if (globalThis.player && globalThis.player.name) {
+      queueCenteredFloatingText(globalThis.player.name);
+    }
+    // Turn on auto follow if they are spawned, and off if they are not
+    cameraAutoFollow(!!globalThis.player?.isSpawned);
+  }
+
+  hasCompletedTurn(player: Player.IPlayer) {
+    // Return false if the player
+    // - Has not spawned
+    // - Can act and has not ended turn (alive, not frozen, etc.)
+    if (!player.isSpawned) {
+      console.log('PlayerTurn: player has not spawned yet: ', player.clientId);
+      return false;
+    }
+    if (Unit.canAct(player.unit) && !player.endedTurn) {
+      console.log('PlayerTurn: player can act and has not ended turn yet: ', player.clientId);
+      return false;
+    }
+    return true;
+  }
+
+  async tryEndPlayerTurnPhase(): Promise<Boolean> {
+    // We care about the state of all connected players
+    // We do not care about players without a connected client
+    const connectedPlayers = this.players.filter(p => p.clientConnected);
+
+    // Only move on if there are connected players in the game,
+    // so that the server doesn't run cycles pointlessly
+    if (!(connectedPlayers.length > 0)) {
+      console.error("PlayerTurn: tryEndPlayerTurnPhase = false; No active players found");
+      return false;
+    }
+
+    // Return false if any players have not completed their turn
+    for (let player of connectedPlayers) {
+      if (!this.hasCompletedTurn(player)) {
+        return false;
       }
     }
-    // If all connected players are dead
-    if (this.players.filter(p => p.clientConnected).every(p => !p.unit.alive)) {
-      // end the player turn phase to let the AI hash it out
-      doEndPlayerTurnPhase = true;
-    }
-    if (doEndPlayerTurnPhase) {
-      console.log('Underworld: TurnPhase: End player turn phase');
-      for (let player of this.players) {
-        // Decrement cooldowns of spells
-        for (let spellState of Object.values(player.spellState)) {
-          if (spellState.cooldown) {
-            spellState.cooldown--;
-            // Update cooldown in UI
-            CardUI.recalcPositionForCards(globalThis.player, this);
-          }
-        }
-      }
-      // Safety, force die any units that are out of bounds (this should never happen)
-      // Note: Player Controlled units are out of bounds when they are inPortal so that they don't collide,
-      // this filters out PLAYER_CONTROLLED so that they don't get die()'d when they are inPortal
-      for (let u of this.units.filter(u => u.alive)) {
-        if (this.lastLevelCreated) {
+    await this.endPlayerTurnCleanup();
+    return true;
+  }
 
-          // Don't kill out of bound units if they are already flagged for removal
-          // (Note: flaggedForRemoval units are set to NaN,NaN;  thus they are out of bounds, but 
-          // they will be cleaned up so they shouldn't be killed here as this check is just to ensure
-          // no living units that are unreachable hinder progressing through the game)
-          if (!u.flaggedForRemoval) {
-            // TODO ensure that this works on headless
-            const originalTile = this.lastLevelCreated.imageOnlyTiles[vec2ToOneDimentionIndexPreventWrap({ x: Math.round(u.x / config.OBSTACLE_SIZE), y: Math.round(u.y / config.OBSTACLE_SIZE) }, this.lastLevelCreated.width)];
-            if (!originalTile || originalTile.image == '') {
+  async endPlayerTurnCleanup() {
+    console.log('Underworld: TurnPhase: End player turn phase');
 
-              if (u.unitType == UnitType.PLAYER_CONTROLLED) {
-                const player = this.players.find(p => p.unit == u);
-                if (player && !Player.inPortal(player)) {
-                  console.error('Player was reset because they ended up out of bounds');
-                  Player.resetPlayerForNextLevel(player, this);
-                } else {
-                  console.error("Unexpected: Tried to reset out of bounds player but player unit matched no player object.");
-                }
-              } else {
-                console.error('Unit was force killed because they ended up out of bounds', u.unitSubType)
-                Unit.die(u, this, false);
-              }
-            }
-          }
-        }
-      }
+    for (let p of this.players) {
       // Decrement card usage counts,
       // This makes spells less expensive
-      for (let p of this.players) {
-        for (let cardId of p.inventory) {
-          // Decrement, cap at 0
-          const cardUsage = p.cardUsageCounts[cardId];
-          if (cardUsage !== undefined) {
-            p.cardUsageCounts[cardId] = Math.max(0, cardUsage - 1);
-          }
+      for (let cardId of p.inventory) {
+        // Decrement, cap at 0
+        const cardUsage = p.cardUsageCounts[cardId];
+        if (cardUsage !== undefined) {
+          p.cardUsageCounts[cardId] = Math.max(0, cardUsage - 1);
         }
       }
-      CardUI.updateCardBadges(this);
-      // At the end of the player turn, deal damage if still in liquid
-      for (let player of this.players) {
-        if (player.unit.inLiquid && player.unit.alive) {
-          doLiquidEffect(this, player.unit, false);
-          floatingText({ coords: player.unit, text: 'Liquid damage', style: { fill: 'red' } });
+
+      // Decrement cooldowns of spells
+      for (let spellState of Object.values(p.spellState)) {
+        if (spellState.cooldown) {
+          spellState.cooldown--;
+          // Update cooldown in UI
+          CardUI.recalcPositionForCards(globalThis.player, this);
         }
       }
-      // Move onto next phase
-      // Note: BroadcastTurnPhase should happen last because it
-      // queues up a unitsync, so if changes to the units
-      // were to happen AFTER broadcastTurnPhase they would be
-      // overwritten when the sync occurred
-      // ---
-      // If there are ally units move to NPC_ALLY, if not just move to NPC_ENEMY
-      if (this.units.filter(u => u.alive && u.faction == Faction.ALLY && u.unitType == UnitType.AI).length !== 0) {
+    }
+
+    CardUI.updateCardBadges(this);
+
+    await Unit.endTurnForUnits(this.players.map(p => p.unit), this);
+
+    // Move to next phase depending on remaining units
+    // NPC_ALLY, NPC_ENEMY, or portal state
+    const aiUnits = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
+    if (aiUnits.length != 0) {
+      if (aiUnits.find(u => u.faction == Faction.ALLY)) {
         this.broadcastTurnPhase(turn_phase.NPC_ALLY);
       } else {
         this.broadcastTurnPhase(turn_phase.NPC_ENEMY);
       }
-      return true;
     }
-    return false;
+    else {
+      this.checkIfShouldSpawnPortal();
+      //this.broadcastTurnPhase(turn_phase.PlayerTurns);
+    }
+    return true;
+  }
+
+  async executeFactionTurn(faction: Faction) {
+    cleanUpEmitters(true);
+    // Clear unit attentionMarkers since it's not the player's turn
+    globalThis.attentionMarkers = [];
+    this.redPortalBehavior(faction);
+
+    const units = this.units.filter(u => u.unitType == UnitType.AI && u.faction == faction);
+
+    // Only execute turn if there are units to take the turn:
+    if (units.filter(u => Unit.canAct(u)).length) {
+      // Run AI unit actions
+      await this.executeNPCTurn(faction);
+    } else {
+      console.log('Turn Management: Skipping executingNPCTurn for ', faction);
+    }
+
+    // End turn events, liquid damage, mana regen, etc.
+    await Unit.endTurnForUnits(units, this);
   }
 
   // This function is invoked when all factions have finished their turns
   async endFullTurnCycle() {
-    // Move onto next phase
     // --
     // Note: The reason this logic happens here instead of in initializeTurnPhase
     // is because initializeTurnPhase needs to be called on game load to put everything
     // in a good state when updating to the canonical client's game state. (this 
     // happens when one client disconnects and rejoins).
     // --
-    // Trigger onTurnEnd Events
-    for (let unit of this.units.filter(u => u.unitType === UnitType.AI)) {
-      await Promise.all(unit.onTurnEndEvents.map(
-        async (eventName) => {
-          const fn = Events.onTurnEndSource[eventName];
-          return fn ? await fn(unit, false, this) : false;
-        },
-      ));
-    }
+
     // Increment the turn number now that it's starting over at the first phase
     this.turn_number++;
 
+    // Failsafe: Force die any units that are out of bounds
+    // Note: Player Controlled units are out of bounds when they are inPortal so that they don't collide,
+    // this filters out PLAYER_CONTROLLED so that they don't get die()'d when they are inPortal
+    for (let u of this.units.filter(u => u.alive)) {
+      if (this.lastLevelCreated) {
+
+        // Don't kill out of bound units if they are already flagged for removal
+        // (Note: flaggedForRemoval units are set to NaN,NaN;  thus they are out of bounds, but 
+        // they will be cleaned up so they shouldn't be killed here as this check is just to ensure
+        // no living units that are unreachable hinder progressing through the game)
+        if (!u.flaggedForRemoval) {
+          // TODO ensure that this works on headless
+          const originalTile = this.lastLevelCreated.imageOnlyTiles[vec2ToOneDimentionIndexPreventWrap({ x: Math.round(u.x / config.OBSTACLE_SIZE), y: Math.round(u.y / config.OBSTACLE_SIZE) }, this.lastLevelCreated.width)];
+          if (!originalTile || originalTile.image == '') {
+
+            if (u.unitType == UnitType.PLAYER_CONTROLLED) {
+              const player = this.players.find(p => p.unit == u);
+              if (player && !Player.inPortal(player)) {
+                console.error('Player was reset because they ended up out of bounds');
+                Player.resetPlayerForNextLevel(player, this);
+              } else {
+                console.error("Unexpected: Tried to reset out of bounds player but player unit matched no player object.");
+              }
+            } else {
+              console.error('Unit was force killed because they ended up out of bounds', u.unitSubType)
+              Unit.die(u, this, false);
+            }
+          }
+        }
+      }
+    }
+
+    // Pickups - Turns left to grab
     for (let p of this.pickups) {
       if (p.turnsLeftToGrab !== undefined) {
         p.turnsLeftToGrab--;
+        if (p.turnsLeftToGrab < 0) {
+          // Remove pickup
+          Pickup.removePickup(p, this, false);
+          continue;
+        }
         if (p.text) {
           p.text.text = `${p.turnsLeftToGrab}`;
         }
@@ -2306,31 +2405,15 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
               0.1
             );
             if (!timeCircleSprite.filters) {
-
               timeCircleSprite.filters = [];
             }
             timeCircleSprite.filters.push(timeCircleColorFilter);
-
           }
-
         }
       }
-      if (p.turnsLeftToGrab !== undefined && p.turnsLeftToGrab < 0) {
-        if (p.name == Pickup.CARDS_PICKUP_NAME) {
-          playSFXKey('scroll_disappear');
-          makeScrollDissapearParticles(p, false);
-        }
-        // Remove pickup
-        Pickup.removePickup(p, this, false);
-      }
-    }
-    // Add mana to AI units
-    for (let unit of this.units.filter((u) => u.unitType === UnitType.AI && u.alive)) {
-      unit.mana += unit.manaPerTurn;
-      // Cap manaPerTurn at manaMax
-      unit.mana = Math.min(unit.mana, unit.manaMax);
     }
   }
+
   syncTurnMessage() {
     console.log('syncTurnMessage: phase:', turn_phase[this.turn_phase]);
     let yourTurn = false;
@@ -2341,29 +2424,15 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
     document.body?.classList.toggle('your-turn', yourTurn);
     Player.syncLobby(this);
-
   }
+
+  // TODO - Move whole function
   async initializePlayerTurns() {
     // Prevent possible desynce where portals don't spawn when unit dies
     // so it must spawn here to ensure players can move on
     this.checkIfShouldSpawnPortal();
     for (let player of this.players) {
-      // Reset player.endedTurn
-      // --
-      // Important: This must be set for ALL players
-      // before the rest of player initialization happens because
-      // players that cannot start their turn (for various reasons)
-      // will have their turn ended during initialization
-      // and when a turn is ended it checks if it should move on to the
-      // next phase and that check considers if all players are either
-      // unable to act or have already ended their turns. and so if the
-      // first player has their turn auto ended before the other players
-      // have had their .endedTurn property reset to false, then the game
-      // would go to the next phase thinking all players had ended their turns
-      // or been unable to act.
       player.endedTurn = false;
-    }
-    for (let player of this.players) {
       if (player.unit.alive) {
         // Restore player to max mana at start of turn
         // Let mana remain above max if it already is (due to other influences that may
@@ -2371,18 +2440,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         player.unit.mana = Math.max(player.unit.manaMax, player.unit.mana);
       }
 
-      // If this current player is NOT able to take their turn...
-      if (!Player.ableToAct(player)) {
-        // Prevents bug that caused skipping turns in hotseat multiplayer when a player dies
-        if (numberOfHotseatPlayers > 1 && player !== globalThis.player) {
-          console.log('Hotseat: Skip ending turn for a hotseat player because it is not currently their turn');
-          continue;
-        }
-        // Skip them
-        this.endPlayerTurn(player.clientId);
-        // Do not continue with initialization
-        continue;
-      }
       if (player == globalThis.player && globalThis.player.isSpawned) {
         // Notify the current player that their turn is starting
         queueCenteredFloatingText(`Your Turn`);
@@ -2391,6 +2448,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           playSFXKey('yourTurn');
         }
       }
+
+      // TODO - Why is this here?
       // Trigger attributePerks
       const perkRandomGenerator = seedrandom(getUniqueSeedString(this, player));
       for (let i = 0; i < player.attributePerks.length; i++) {
@@ -2399,6 +2458,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           tryTriggerPerk(perk, player, 'everyTurn', perkRandomGenerator, this, 700 * i);
         }
       }
+
       // Trigger onTurnStart Events
       const onTurnStartEventResults: boolean[] = await Promise.all(player.unit.onTurnStartEvents.map(
         async (eventName) => {
@@ -2406,21 +2466,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           return fn ? await fn(player.unit, false, this) : false;
         },
       ));
-      if (onTurnStartEventResults.some((b) => b)) {
-        // If any onTurnStartEvents return true, skip the player
-        console.log(`Force end player turn, player ${player.clientId} due to onTurnStartEvent`)
-        this.endPlayerTurn(player.clientId);
-        // Do not continue with initialization for this player
-        continue;
-      }
-      // If player is killed at the start of their turn (for example, due to poison)
-      // end their turn
-      if (!player.unit.alive) {
-        console.log(`Force end player turn, player ${player.clientId} died when their turn started`)
-        this.endPlayerTurn(player.clientId);
-        // Do not continue with initialization for this player
-        continue;
-      }
     }
     this.syncTurnMessage();
     // Update unit health / mana bars, etc
@@ -2443,13 +2488,18 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (globalThis.saveASAP && globalThis.save) {
       globalThis.save(globalThis.saveASAP);
     }
-    // Hotseat: Previous player turn ended on last player in queue, switch back to first player
-    if (globalThis.player?.isSpawned) {
-      this.changeToNextHotseatPlayer();
+
+    const firstPlayer = this.players[0];
+    if (firstPlayer) {
+      this.hotseatCurrentPlayerIndex = 0;
+      this.changeToHotseatPlayer(firstPlayer)
     }
-
-
+    else {
+      console.error("Unexpected: Hotseat player doesn't exist");
+    }
+    this.updateTurnPhase();
   }
+
   // Sends a network message to end turn
   async endMyTurnButtonHandler() {
     if (globalThis.player) {
@@ -2528,42 +2578,17 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
     // Ensure players can only end the turn when it IS their turn
     if (this.turn_phase === turn_phase.PlayerTurns) {
-      // Don't trigger onTurnEndEvents more than once
-      if (!player.endedTurn) {
-        player.endedTurn = true;
-        // Trigger onTurnEnd Events
-        await Promise.all(player.unit.onTurnEndEvents.map(
-          async (eventName) => {
-            const fn = Events.onTurnEndSource[eventName];
-            return fn ? await fn(player.unit, false, this) : false;
-          },
-        ));
-      }
-      // Extra guard to protect against unexpected state
-      // where a player is dead but their turn is not ended
-      // Ensure that dead players are set to "turn ended"
-      for (let player of this.players) {
-        const unit = player.unit;
-        // If player is dead,
-        if (unit && !unit.alive) {
-          // and their turn has not been ended yet,
-          // set their endedTurn to true
-          if (!player.endedTurn) {
-            player.endedTurn = true;
-          }
-        }
-      }
+      player.endedTurn = true;
       console.log('PlayerTurn: End player turn', clientId);
       this.syncTurnMessage();
 
-      // If all enemies are dead, make dead, non portaled players portal
-      // so the game can continue
+      // If all enemies are dead, make dead, non portaled players
+      // enter the portal so the game can continue
       const allEnemiesAreDead = this.units.filter(u => u.faction == Faction.ENEMY && u.unitSubType !== UnitSubType.DOODAD).every(u => !u.alive);
       const deadNonPortaledPlayers = this.players.filter(p => !Player.inPortal(p) && !p.unit.alive);
       if (allEnemiesAreDead) {
         console.log('Make dead, non-portaled players enter portal');
         deadNonPortaledPlayers.forEach(p => {
-          Unit.resurrect(p.unit, this);
           Player.enterPortal(p, this);
         });
       }
@@ -2575,50 +2600,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         // the game if it didn't early return here
         return;
       }
-      const wentToNextPhase = this.tryEndPlayerTurnPhase();
-      if (wentToNextPhase) {
-        return;
-      }
-      await this.changeToNextHotseatPlayer();
+      this.updateTurnPhase();
     } else {
       console.error("turn_phase must be PlayerTurns to end turn.  Cannot be ", this.turn_phase);
     }
     Player.syncLobby(this);
-  }
-  async changeToNextHotseatPlayer() {
-    // If player hotseat multiplayer, change players
-    if (numberOfHotseatPlayers > 1) {
-      // Change to next hotseat player
-      this.hotseatCurrentPlayerIndex = (this.hotseatCurrentPlayerIndex + 1) % this.players.length;
-      const currentPlayer = this.players[this.hotseatCurrentPlayerIndex];
-      if (currentPlayer) {
-        Player.updateGlobalRefToCurrentClientPlayer(currentPlayer, this);
-      } else {
-        console.error('Unexpected, no hotseat current player')
-      }
-      if (globalThis.player && !Player.ableToAct(globalThis.player)) {
-        this.endPlayerTurn(globalThis.player.clientId);
-        return;
-      }
-      CardUI.recalcPositionForCards(globalThis.player, this);
-      CardUI.syncInventory(undefined, this);
-      await runPredictions(this);
-      this.checkIfShouldSpawnPortal();
-      // For hotseat, whenever a player ends their turn, check if the current player
-      // has upgrades to choose and if so, show the upgrade button
-      if (globalThis.player && this.upgradesLeftToChoose(globalThis.player)) {
-        elEndTurnBtn?.classList.toggle('upgrade', true);
-      }
-
-      // Announce new players' turn
-      if (globalThis.player && globalThis.player.name) {
-        queueCenteredFloatingText(globalThis.player.name);
-      }
-
-      // Turn on auto follow if they are spawned, and off if they are not
-      cameraAutoFollow(!!globalThis.player?.isSpawned);
-    }
-
   }
   getFreeUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
     player.freeSpells.push(upgrade.title);
@@ -3148,60 +3134,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // not.
           break;
         case turn_phase[turn_phase.NPC_ALLY]:
-          // Now that player's turn is over, clear any emitters that failed to clean up themselves
-          // that are marked as "turn lifetime" 
-          cleanUpEmitters(true);
-          // Clear enemy attentionMarkers since it's now their turn
-          globalThis.attentionMarkers = [];
-          this.redPortalBehavior(Faction.ALLY);
-          // Only execute turn if there are units to take the turn:
-          if (this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ALLY && u.alive).length) {
-            // Count the number of ally turns
-            this.allyNPCAttemptWinKillSwitch++;
-            // Run AI unit actions
-            await this.executeNPCTurn(Faction.ALLY);
-          } else {
-            console.log('Turn Management: Skipping executingNPCTurn for Faction.ALLY');
-          }
-          // At the end of their turn, deal damage if still in liquid
-          for (let unit of this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ALLY)) {
-            if (unit.inLiquid && unit.alive) {
-              doLiquidEffect(this, unit, false);
-              floatingText({ coords: unit, text: 'Liquid damage', style: { fill: 'red' } });
-            }
-          }
-          // Now that allies are done taking their turn, change to NPC Enemy turn phase
-          this.broadcastTurnPhase(turn_phase.NPC_ENEMY)
+          await this.executeFactionTurn(Faction.ALLY);
+          this.broadcastTurnPhase(turn_phase.NPC_ENEMY);
           break;
         case turn_phase[turn_phase.NPC_ENEMY]:
-          // Now that player's turn is over (player turn can go directly to NPC_ENEMY if there are no Allies),
-          // clear any emitters that failed to clean up themselves
-          // that are marked as "turn lifetime" 
-          cleanUpEmitters(true);
-          // Clear enemy attentionMarkers since it's now their turn
-          globalThis.attentionMarkers = [];
-          this.redPortalBehavior(Faction.ENEMY);
-          // Only execute turn if there are units to take the turn:
-          if (this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ENEMY && u.alive).length) {
-            // Run AI unit actions
-            await this.executeNPCTurn(Faction.ENEMY);
-          } else {
-            console.log('Turn Management: Skipping executingNPCTurn for Faction.ENEMY');
-          }
+          await this.executeFactionTurn(Faction.ENEMY);
           await this.endFullTurnCycle();
-          // At the end of their turn, deal damage if still in liquid
-          for (let unit of this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ENEMY)) {
-            if (unit.inLiquid && unit.alive) {
-              doLiquidEffect(this, unit, false);
-              floatingText({ coords: unit, text: 'Liquid damage', style: { fill: 'red' } });
-            }
-          }
-          // Remove all Immune modifiers (they only last through one enemy turn)
-          this.units.forEach(u => {
-            Unit.removeModifier(u, immune.id, this);
-          });
-
-          // Loop: go back to the player turn
           this.broadcastTurnPhase(turn_phase.PlayerTurns);
           break;
         default:
