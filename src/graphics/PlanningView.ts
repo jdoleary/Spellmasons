@@ -612,10 +612,11 @@ export async function runPredictions(underworld: Underworld) {
       globalThis.attentionMarkers = [];
       // Clear predicted next turn damage so that attack targets can be intelligently calculated
       underworld.clearPredictedNextTurnDamage();
-      const skipTurnUnits = await underworld.runTurnStartEvents(underworld.unitsPrediction, true);
+
+      // TODO - Find a way to run turn start events for units that will run it?
 
       for (let u of underworld.unitsPrediction) {
-        if (skipTurnUnits.includes(u)) {
+        if (!Unit.canAct(u)) {
           continue;
         }
         // Only check for threats if the threat is alive and AI controlled
@@ -650,7 +651,6 @@ export async function runPredictions(underworld: Underworld) {
               }
             } else {
               console.error('Cannot find unit source for unitSourceId', u.unitSourceId);
-
             }
           }
         }

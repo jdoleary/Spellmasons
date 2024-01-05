@@ -793,6 +793,9 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   // Ensure that the unit resolvesDoneMoving when they die in the event that 
   // they die while they are moving.  This prevents turn phase from getting stuck
   unit.resolveDoneMoving();
+  // Clear unit path to prevent further movement
+
+  unit.path = undefined;
 
   // Clear unit path to prevent further movement in case of ressurect or similar
   unit.path = undefined;
@@ -1297,65 +1300,72 @@ export function inRange(unit: IUnit, target: Vec2): boolean {
   return math.distance(unit, target) <= unit.attackRange;
 }
 
-// return boolean signifies if unit should abort their turn
-export async function runTurnStartEvents(unit: IUnit, prediction: boolean = false, underworld: Underworld): Promise<boolean> {
-  // Note: This must be a for loop instead of a for..of loop
-  // so that if one of the onTurnStartEvents modifies the
-  // unit's onTurnStartEvents array (for example, after death)
-  // this loop will take that into account.
-  let abortTurn = false;
-  for (let i = 0; i < unit.onTurnStartEvents.length; i++) {
-    const eventName = unit.onTurnStartEvents[i];
-    if (eventName) {
-      const fn = Events.onTurnStartSource[eventName];
-      if (fn) {
-        const shouldAbortTurn = await fn(unit, prediction, underworld);
-        // Only change abort turn from false to true,
-        // never from turn to false because if any one
-        // of the turn start events needs the unit to abort
-        // their turn, the turn should abort, regardless of
-        // the other events
-        if (shouldAbortTurn) {
-          abortTurn = true;
-        }
-      } else {
-        console.error('No function associated with turn start event', eventName);
-      }
-    } else {
-      console.error('No turn start event at index', i)
+export async function startTurnForUnits(units: IUnit[], underworld: Underworld, prediction: boolean) {
+  // Trigger start turn events
+  for (let unit of units) {
+    await runTurnStartEvents(unit, underworld, prediction);
+  }
+  // Regenerate stamina to max
+  for (let unit of units.filter(u => u.alive)) {
+    if (unit.stamina < unit.staminaMax) {
+      unit.stamina = unit.staminaMax;
     }
   }
-  return abortTurn
-
+  // Add mana to Player units
+  for (let unit of units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
+    // Restore player to max mana at start of turn
+    // Let mana remain above max if it already is
+    // (due to other influences like mana potions, spells, perks, etc);
+    unit.mana = Math.max(unit.manaMax, unit.mana);
+  }
 }
-export async function endTurnForUnits(units: IUnit[], underworld: Underworld) {
+
+export async function endTurnForUnits(units: IUnit[], underworld: Underworld, prediction: boolean) {
   // Trigger end turn events
   for (let unit of units) {
-    await Promise.all(unit.onTurnEndEvents.map(
-      async (eventName) => {
-        const fn = Events.onTurnEndSource[eventName];
-        return fn ? await fn(unit, false, underworld) : false;
-      },
-    ));
+    await runTurnEndEvents(unit, underworld, prediction);
   }
-
   // At the end of their turn, deal damage if still in liquid
-  for (let unit of units) {
-    if (unit.inLiquid && unit.alive) {
-      doLiquidEffect(underworld, unit, false);
-      floatingText({ coords: unit, text: 'Liquid damage', style: { fill: 'red' } });
-    }
+  for (let unit of units.filter(u => u.inLiquid && u.alive)) {
+    doLiquidEffect(underworld, unit, false);
+    floatingText({ coords: unit, text: 'Liquid damage', style: { fill: 'red' } });
   }
-
   // Add mana to AI units
-  for (let unit of units.filter(u => u.unitType == UnitType.AI)) {
-    if (unit.alive) {
-      unit.mana += unit.manaPerTurn;
-      // Cap manaPerTurn at manaMax
-      unit.mana = Math.min(unit.mana, unit.manaMax);
-    }
+  for (let unit of units.filter(u => u.unitType == UnitType.AI && u.alive)) {
+    unit.mana += unit.manaPerTurn;
+    // Cap manaPerTurn at manaMax
+    unit.mana = Math.min(unit.mana, unit.manaMax);
   }
 }
+
+export async function runTurnStartEvents(unit: IUnit, underworld: Underworld, prediction: boolean) {
+  await Promise.all(unit.onTurnStartEvents.map(
+    async (eventName) => {
+      const fn = Events.onTurnStartSource[eventName];
+      if (fn) {
+        return await fn(unit, prediction, underworld);
+      } else {
+        console.error('No function associated with turn start event', eventName);
+        return false;
+      }
+    },
+  ));
+}
+
+export async function runTurnEndEvents(unit: IUnit, underworld: Underworld, prediction: boolean) {
+  await Promise.all(unit.onTurnEndEvents.map(
+    async (eventName) => {
+      const fn = Events.onTurnEndSource[eventName];
+      if (fn) {
+        return await fn(unit, prediction, underworld);
+      } else {
+        console.error('No function associated with turn end event', eventName);
+        return false;
+      }
+    },
+  ));
+}
+
 export function makeMiniboss(unit: IUnit) {
   if (unit.unitSourceId == bossmasonUnitId) {
     // Bossmasons is already a boss and should not be made into a miniboss
