@@ -774,7 +774,6 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           // their image may be hidden if they are the non-current user
           // player in multiplayer
           Image.show(fromPlayer.unit.image);
-          fromPlayer.endedTurn = false;
           underworld.syncTurnMessage();
           // Used for the tutorial but harmless if invoked under other circumstances.
           // Spawns the portal after the player choses a spawn point if there are no
