@@ -68,8 +68,11 @@ function connect_to_wsPie_server(wsUri: string | undefined, overworld: Overworld
         // backup has already been made because below we set lobbyReady to false after a disconnect.
         if (globalThis.save && globalThis.player?.lobbyReady) {
           console.error('Client disconnected unintentionally')
-          const backupSaveName = `backup ${(overworld.pie as PieClient).currentRoomInfo?.name || ''}`
-          globalThis.save(`${Date.now().toString()}-${backupSaveName}`, true).then(errMsg => {
+          const backupSaveName = `backup ${(overworld.pie as PieClient).currentRoomInfo?.name || ''}`;
+          // Backups are unique to the current date and the save name
+          // so multiple backups in the same day and same game name will overwrite each other
+          const todayDate = new Date().setHours(0, 0, 0, 0);
+          globalThis.save(`${todayDate}-${backupSaveName}`, true).then(errMsg => {
             if (!errMsg) {
               Jprompt({ text: ['auto save notice', backupSaveName], yesText: 'Okay', forceShow: true });
             }
