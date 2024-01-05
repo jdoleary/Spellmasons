@@ -555,7 +555,7 @@ export function enterPortal(player: IPlayer, underworld: Underworld) {
     underworld.endPlayerTurn(player.clientId);
   }
 }
-// Note: this is also used for AI targeting to ensure that AI don't target disabled plaeyrs
+
 export function ableToAct(player: IPlayer) {
   // So long as a player is clientConnected, they can act if:
   // - They haven't spawned yet

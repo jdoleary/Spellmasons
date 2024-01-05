@@ -59,7 +59,7 @@ export function registerUrnpoisonExplode() {
       units.filter(u => u.alive)
         .forEach(u => {
           if (!prediction) {
-            animateSpell(u, 'spell-effects/spellPoison'); // TODO - Put in poison modifier?
+            animateSpell(u, 'spell-effects/spellPoison'); // TODO - Put in poison modifier "add" function?
           }
           Unit.addModifier(u, poison.poisonCardId, underworld, prediction, 1);
         });
