@@ -833,7 +833,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         }
 
 
-        if (selfPlayer.unit.modifiers[Freeze.id]) {
+        if (selfPlayer.unit.modifiers[Freeze.freezeCardId]) {
           floatingText({ coords: selfPlayer.unit, text: 'Cannot Cast. Frozen.' })
           playSFXKey('deny');
           // Cancel Casting

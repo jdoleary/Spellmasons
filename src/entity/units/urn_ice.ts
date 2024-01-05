@@ -57,7 +57,7 @@ export function registerUrnIceExplode() {
       const units = explode(unit, unit.attackRange, 0, underworld, prediction, "#002c6e", "#59deff");
       units.filter(u => u.alive)
         .forEach(u => {
-          Unit.addModifier(u, freeze.id, underworld, prediction, 1);
+          Unit.addModifier(u, freeze.freezeCardId, underworld, prediction, 1);
         });
 
       // Remove corpse
