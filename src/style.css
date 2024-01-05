@@ -1023,7 +1023,8 @@ body.showUpgrades #inspector-tooltip {
 #inspector-tooltip-inner {
   /* Allow scrolling for when perklist gets too tall */
   max-height: 70vh;
-  overflow: auto;
+  /* Prevent tooltip stutter when scrollbar appears.  Fixes #211 */
+  overflow-y: scroll;
 }
 
 .scrollable::-webkit-scrollbar {
