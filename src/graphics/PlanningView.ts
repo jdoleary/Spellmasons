@@ -339,137 +339,133 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
     // Draw unit overlay graphics
     //--
     // Prevent drawing unit overlay graphics when a unit is in the portal
-    if (u.x !== null && u.y !== null && u.alive && !globalThis.isHUDHidden) {
+    if (u.x !== null && u.y !== null && u.alive && !globalThis.isHUDHidden && globalThis.unitOverlayGraphics) {
 
       // Draw base health bar
-      if (globalThis.unitOverlayGraphics) {
-        const healthBarColor = u.faction == Faction.ALLY ? colors.healthAllyGreen : colors.healthRed;
-        const healthBarHurtColor = u.faction == Faction.ALLY ? colors.healthAllyDarkGreen : colors.healthDarkRed;
-        const healthBarHealColor = u.faction == Faction.ALLY ? colors.healthAllyBrightGreen : colors.healthBrightRed;
+      const healthBarColor = u.faction == Faction.ALLY ? colors.healthAllyGreen : colors.healthRed;
+      const healthBarHurtColor = u.faction == Faction.ALLY ? colors.healthAllyDarkGreen : colors.healthDarkRed;
+      const healthBarHealColor = u.faction == Faction.ALLY ? colors.healthAllyBrightGreen : colors.healthBrightRed;
 
-        const healthBarMax = u.healthMax || 1;
-        //background
-        let healthBarFill = getFillRect(u, 0, healthBarMax, 0, healthBarMax, zoom);
-        globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
-        globalThis.unitOverlayGraphics.beginFill(0x111111, 0.8);
-        globalThis.unitOverlayGraphics.drawRect(
-          healthBarFill.x,
-          // Stack the health bar above the mana bar
-          healthBarFill.y - healthBarFill.height,
-          healthBarFill.width,
-          healthBarFill.height
-        );
-        //current health
-        healthBarFill = getFillRect(u, 0, healthBarMax, 0, u.health, zoom);
-        globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
-        globalThis.unitOverlayGraphics.beginFill(healthBarColor, 1.0);
-        globalThis.unitOverlayGraphics.drawRect(
-          healthBarFill.x,
-          // Stack the health bar above the mana bar
-          healthBarFill.y - healthBarFill.height,
-          healthBarFill.width,
-          healthBarFill.height
-        );
+      const healthBarMax = u.healthMax || 1;
+      //background
+      let healthBarFill = getFillRect(u, 0, healthBarMax, 0, healthBarMax, zoom);
+      globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
+      globalThis.unitOverlayGraphics.beginFill(0x111111, 0.8);
+      globalThis.unitOverlayGraphics.drawRect(
+        healthBarFill.x,
+        // Stack the health bar above the mana bar
+        healthBarFill.y - healthBarFill.height,
+        healthBarFill.width,
+        healthBarFill.height
+      );
+      //current health
+      healthBarFill = getFillRect(u, 0, healthBarMax, 0, u.health, zoom);
+      globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
+      globalThis.unitOverlayGraphics.beginFill(healthBarColor, 1.0);
+      globalThis.unitOverlayGraphics.drawRect(
+        healthBarFill.x,
+        // Stack the health bar above the mana bar
+        healthBarFill.y - healthBarFill.height,
+        healthBarFill.width,
+        healthBarFill.height
+      );
 
-        // Only show health bar predictions on PlayerTurns, while players are able
-        // to cast, otherwise it will show out of sync when NPCs do damage
-        if (underworld.turn_phase == turn_phase.PlayerTurns && globalThis.unitOverlayGraphics) {
-          // Show how the health bar changes
-          if (predictionUnit) {
-            const healthAfterPrediction = predictionUnit.health;
-            if (healthAfterPrediction < u.health) {
-              globalThis.unitOverlayGraphics.beginFill(healthBarHurtColor, 1.0);
+      // Only show health bar predictions on PlayerTurns, while players are able
+      // to cast, otherwise it will show out of sync when NPCs do damage
+      if (underworld.turn_phase == turn_phase.PlayerTurns && globalThis.unitOverlayGraphics) {
+        // Show how the health bar changes
+        if (predictionUnit) {
+          const healthAfterPrediction = predictionUnit.health;
+          if (healthAfterPrediction < u.health) {
+            globalThis.unitOverlayGraphics.beginFill(healthBarHurtColor, 1.0);
+          }
+          else {
+            globalThis.unitOverlayGraphics.beginFill(healthBarHealColor, 1.0);
+          }
+
+          healthBarFill = getFillRect(u, 0, healthBarMax, u.health, healthAfterPrediction, zoom);
+          globalThis.unitOverlayGraphics.drawRect(
+            healthBarFill.x,
+            // Stack the health bar above the mana bar
+            healthBarFill.y - healthBarFill.height,
+            healthBarFill.width,
+            healthBarFill.height);
+
+          // Display a death marker if a unit is currently alive, but wont be after cast
+          if (u.alive && !predictionUnit.alive) {
+            if (globalThis.player && u.faction === globalThis.player.unit.faction) {
+              drawUnitMarker('badgeDeathAlly.png', u, u.image?.sprite.scale.y, 2)
             }
             else {
-              globalThis.unitOverlayGraphics.beginFill(healthBarHealColor, 1.0);
-            }
-
-            healthBarFill = getFillRect(u, 0, healthBarMax, u.health, healthAfterPrediction, zoom);
-            globalThis.unitOverlayGraphics.drawRect(
-              healthBarFill.x,
-              // Stack the health bar above the mana bar
-              healthBarFill.y - healthBarFill.height,
-              healthBarFill.width,
-              healthBarFill.height);
-
-            // Display a death marker if a unit is currently alive, but wont be after cast
-            if (u.alive && !predictionUnit.alive) {
-              if (globalThis.player && u.faction === globalThis.player.unit.faction) {
-                drawUnitMarker('badgeDeathAlly.png', u, u.image?.sprite.scale.y, 2)
-              }
-              else {
-                drawUnitMarker('badgeDeath.png', u, u.image?.sprite.scale.y, 1.5)
-              }
+              drawUnitMarker('badgeDeath.png', u, u.image?.sprite.scale.y, 1.5)
             }
           }
         }
+      }
 
-        // draw suffocate bar over hp
-        if (predictionUnit?.modifiers[suffocateCardId]) {
-          const buildup = getSuffocateBuildup(predictionUnit);
+      // draw suffocate bar over hp
+      if (predictionUnit?.modifiers[suffocateCardId]) {
+        const buildup = getSuffocateBuildup(predictionUnit);
 
-          healthBarFill = getFillRect(u, 0, healthBarMax, 0, buildup, zoom);
-          globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
-          globalThis.unitOverlayGraphics.beginFill(0x440088, 1);
-          globalThis.unitOverlayGraphics.drawRect(
-            healthBarFill.x,
-            // Stack the health bar over hp
-            healthBarFill.y - healthBarFill.height,
-            healthBarFill.width,
-            healthBarFill.height
-          );
-        }
+        healthBarFill = getFillRect(u, 0, healthBarMax, 0, buildup, zoom);
+        globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
+        globalThis.unitOverlayGraphics.beginFill(0x440088, 1);
+        globalThis.unitOverlayGraphics.drawRect(
+          healthBarFill.x,
+          // Stack the health bar over hp
+          healthBarFill.y - healthBarFill.height,
+          healthBarFill.width,
+          healthBarFill.height
+        );
       }
 
       // Draw base mana bar
-      if (globalThis.unitOverlayGraphics) {
+      const manaBarMax = u.manaMax || 1;
 
-        const manaBarMax = u.manaMax || 1;
-
-        //background for mana using units
-        let manaBarProps = getFillRect(u, 0, manaBarMax, 0, manaBarMax, zoom);
-        if (u.manaMax > 0) {
-          globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
-          globalThis.unitOverlayGraphics.beginFill(0x111111, 0.8);
-          globalThis.unitOverlayGraphics.drawRect(
-            manaBarProps.x,
-            manaBarProps.y,
-            manaBarProps.width,
-            manaBarProps.height
-          );
-        }
-        //current mana
-        manaBarProps = getFillRect(u, 0, manaBarMax, 0, u.mana, zoom);
+      //background for mana using units
+      let manaBarProps = getFillRect(u, 0, manaBarMax, 0, manaBarMax, zoom);
+      if (u.manaMax > 0) {
         globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
-        globalThis.unitOverlayGraphics.beginFill(colors.manaBlue, 1.0);
+        globalThis.unitOverlayGraphics.beginFill(0x111111, 0.8);
         globalThis.unitOverlayGraphics.drawRect(
           manaBarProps.x,
           manaBarProps.y,
           manaBarProps.width,
           manaBarProps.height
         );
+      }
+      //current mana
+      manaBarProps = getFillRect(u, 0, manaBarMax, 0, u.mana, zoom);
+      globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
+      globalThis.unitOverlayGraphics.beginFill(colors.manaBlue, 1.0);
+      globalThis.unitOverlayGraphics.drawRect(
+        manaBarProps.x,
+        manaBarProps.y,
+        manaBarProps.width,
+        manaBarProps.height
+      );
 
-        if (underworld.turn_phase == turn_phase.PlayerTurns && globalThis.unitOverlayGraphics) {
-          // Show mana bar prediction
-          if (predictionUnit) {
-            const manaAfterPrediction = predictionUnit.mana;
-            if (manaAfterPrediction < u.mana) {
-              globalThis.unitOverlayGraphics.beginFill(colors.manaDarkBlue, 1.0);
-            }
-            else {
-              globalThis.unitOverlayGraphics.beginFill(colors.manaBrightBlue, 1.0);
-            }
-
-            let fillRect = getFillRect(u, 0, manaBarMax, u.mana, manaAfterPrediction, zoom);
-            globalThis.unitOverlayGraphics.drawRect(
-              fillRect.x,
-              fillRect.y,
-              fillRect.width,
-              fillRect.height);
+      if (underworld.turn_phase == turn_phase.PlayerTurns && globalThis.unitOverlayGraphics) {
+        // Show mana bar prediction
+        if (predictionUnit) {
+          const manaAfterPrediction = predictionUnit.mana;
+          if (manaAfterPrediction < u.mana) {
+            globalThis.unitOverlayGraphics.beginFill(colors.manaDarkBlue, 1.0);
           }
-          globalThis.unitOverlayGraphics.endFill();
+          else {
+            globalThis.unitOverlayGraphics.beginFill(colors.manaBrightBlue, 1.0);
+          }
+
+          let fillRect = getFillRect(u, 0, manaBarMax, u.mana, manaAfterPrediction, zoom);
+          globalThis.unitOverlayGraphics.drawRect(
+            fillRect.x,
+            fillRect.y,
+            fillRect.width,
+            fillRect.height);
         }
       }
+
+      globalThis.unitOverlayGraphics.endFill();
     }
   }
 }
