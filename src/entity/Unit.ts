@@ -1290,7 +1290,9 @@ export function moveTowardsMulti(unit: IUnit, points: Vec2[], underworld: Underw
   const timeoutMs = 300 + unit.stamina / unit.moveSpeed;
 
   return raceTimeout(timeoutMs, `moveTowards; ${unit.unitSourceId}`, new Promise<void>((resolve) => {
-    // Set new resolve done moving
+    // Trigger previous resolveDoneMoving since we're overwriting it:
+    unit.resolveDoneMoving();
+    // Set new resolve done moving, so that this moveTowards can be awaited
     unit.resolveDoneMoving = resolve;
   })).then(() => {
     if (unit.image) {
