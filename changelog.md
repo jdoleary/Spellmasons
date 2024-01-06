@@ -1,5 +1,63 @@
 ## 1.27.0
 
+UI: Fix missing spellIcons
+    Closes #320
+
+fix: Prevent tooltip stutter when scrollbar appears
+    Fixes #211
+
+src: Allow backups of the same day and name
+    to overwrite each other.
+    Tested in multiplayer.
+    
+    Closes #345
+
+clean: Prevent meaningless error on client
+    `process is undefined`
+
+content: Add spell icon recall
+
+fix: runTurnStartEvents should complete for all units
+    before moving on.
+    This was not previously a problem because there weren't any onTurnStart events that were using async code, but
+    to support that potential, all onTrunStart events should be
+    awaited and completed before moving on in code execution.
+    Thanks MattTheWaz
+    Closes #326
+
+a11y: Choosing default outlines saves your setting
+    Closes #338
+
+admin: Add admin tools for testing desync
+    Closes #315
+
+admin: Warn about needing a selectedUnit
+    for admin functions that require one.
+
+content: Add images to upcoming spells
+
+Force Move Improvements (#341)
+
+Quick Fixes (#342)
+    
+    * Max mana no longer scales with strength
+    
+    * Bone Shrapnel doesn't appear in first damage list
+    
+    * Bone Shrapnel predicts correctly
+    
+    - Fixed an issue where the foreach loop would cause a chain reaction of bone shrapnels in predictions as the units die to previous bone shrapnels
+    
+    * Resurrect sets endedTurn to false
+    
+    - Sources of resurrect could use additional cleanup
+
+api: Add `pull` and `makeForcePush` to the api
+    Thanks MattTheWaz
+    Closes #326
+
+log: Send events to server hub
+src: Support sending events to Server Hub
 fix:  Refactor Force move projectile (#303)
     * src: Add Event.onProjectileCollision
     
