@@ -118,6 +118,7 @@ const smearJitter = [
   { x: 0, y: 3 },
 ]
 let gameOverModalTimeout: NodeJS.Timeout;
+let forceMoveTimeoutId: NodeJS.Timeout;
 const elUpgradePicker = document.getElementById('upgrade-picker') as (HTMLElement | undefined);
 export const elUpgradePickerContent = document.getElementById('upgrade-picker-content') as (HTMLElement | undefined);
 const elSeed = document.getElementById('seed') as (HTMLElement | undefined);
@@ -341,7 +342,7 @@ export default class Underworld {
     }
     this.simulatingMovePredictions = true;
     const prediction = true;
-    const PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD = 500;
+    const PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD = 1000;
     let loopCount = 0;
     if (globalThis.predictionGraphics) {
       globalThis.predictionGraphics.beginFill(colors.forceMoveColor);
@@ -541,6 +542,14 @@ export default class Underworld {
           forceMoveResolver = res;
         });
       }
+      // Reset the timeout every time a new forceMove is added
+      clearTimeout(forceMoveTimeoutId);
+      forceMoveTimeoutId = setTimeout(() => {
+        if (forceMoveResolver) {
+          forceMoveResolver();
+          console.error('Error: forceMovePromise timed out');
+        }
+      }, config.FORCE_MOVE_PROMISE_TIMEOUT_MILLIS);
     }
   }
   // Returns true if there is more processing yet to be done on the next
@@ -719,7 +728,11 @@ export default class Underworld {
         // No force moves to await
         return;
       } else if (this.forceMovePromise) {
-        await raceTimeout(2000, 'awaitForceMove', this.forceMovePromise);
+        // Note: This promise shall NOT use raceTimeout.  See 
+        // https://github.com/jdoleary/Spellmasons/issues/352 and 
+        // search for `forceMoveTimeoutId` in this codebase for more
+        // information
+        await this.forceMovePromise;
         // Now that the promise has resolved, clear it so that it can await the next
         this.forceMovePromise = undefined;
       }
