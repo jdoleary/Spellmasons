@@ -3277,7 +3277,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         u.stamina = u.staminaMax;
         const targets = unitSource.getUnitAttackTargets(u, this);
         const canAttack = this.canUnitAttackTarget(u, targets && targets[0])
-        console.log(u, cachedTargets[u.id]?.targets, cachedTargets[u.id]?.canAttack);
         cachedTargets[u.id] = { targets, canAttack };
         this.incrementTargetsNextTurnDamage(targets, u.damage, canAttack);
         if (unitSource.id == PRIEST_ID) {

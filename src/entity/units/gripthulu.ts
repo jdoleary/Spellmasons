@@ -63,7 +63,6 @@ const unit: UnitSource = {
     }
   },
   action: async (unit: Unit.IUnit, attackTargets, underworld) => {
-    console.log("grip targets: ", attackTargets);
     // Gripthulhu just checks attackTarget, not canAttackTarget to know if it can attack because getBestRangedLOSTarget() will return undefined
     // if it can't attack any targets
     const attackTarget = attackTargets && attackTargets[0];
