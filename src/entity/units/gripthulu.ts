@@ -69,6 +69,7 @@ const unit: UnitSource = {
     const attackTarget = attackTargets && attackTargets[0];
     // Attack
     if (attackTarget && unit.mana >= unit.manaCostToCast) {
+      Unit.orient(unit, attackTarget);
       unit.mana -= unit.manaCostToCast;
       // await Unit.playAnimation(unit, unit.animations.attack);
       await Unit.playComboAnimation(unit, unit.animations.attack, () => {
