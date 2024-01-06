@@ -4,10 +4,10 @@ import { Vec2 } from "../jmath/Vec";
 import { makeParticleExplosion } from '../graphics/ParticleCollection';
 import * as colors from '../graphics/ui/colors';
 import { IUnit, takeDamage } from "../entity/Unit";
-import { defaultPushDistance, forcePushAwayFrom } from "./force_move";
+import { forcePushAwayFrom } from "./force_move";
 
 export const baseExplosionRadius = 140
-export function explode(location: Vec2, radius: number, damage: number, underworld: Underworld, prediction: boolean, colorstart: string, colorEnd: string): IUnit[] {
+export function explode(location: Vec2, radius: number, damage: number, pushDistance: number, underworld: Underworld, prediction: boolean, colorstart: string, colorEnd: string): IUnit[] {
   if (prediction) {
     drawUICirclePrediction(location, radius, colors.healthRed, 'Explosion Radius');
   } else {
@@ -20,15 +20,20 @@ export function explode(location: Vec2, radius: number, damage: number, underwor
   units.forEach(u => {
     // Deal damage to units
     takeDamage(u, damage, u, underworld, prediction);
-    // Push units away from exploding location
-    forcePushAwayFrom(u, location, defaultPushDistance, underworld, prediction);
   });
 
-  underworld.getPickupsWithinDistanceOfTarget(location, radius, prediction)
-    .forEach(p => {
-      // Push pickups away
-      forcePushAwayFrom(p, location, defaultPushDistance, underworld, prediction);
+  if (pushDistance > 0) {
+    units.forEach(u => {
+      // Push units away from exploding location
+      forcePushAwayFrom(u, location, pushDistance, underworld, prediction);
     })
+
+    underworld.getPickupsWithinDistanceOfTarget(location, radius, prediction)
+      .forEach(p => {
+        // Push pickups away
+        forcePushAwayFrom(p, location, pushDistance, underworld, prediction);
+      })
+  }
 
   return units;
 }

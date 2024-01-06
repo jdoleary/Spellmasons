@@ -9,6 +9,7 @@ import type Underworld from '../../Underworld';
 import { containerProjectiles } from '../../graphics/PixiUtils';
 import { getAngleBetweenVec2s, Vec2 } from '../../jmath/Vec';
 import { forcePushToDestination } from '../../effects/force_move';
+import { getBestRangedLOSTarget, rangedLOSMovement } from './actions/rangedAction';
 
 export const gripthulu_id = 'gripthulu';
 const unit: UnitSource = {
@@ -27,7 +28,7 @@ const unit: UnitSource = {
     bloodColor: bloodGripthulu,
   },
   spawnParams: {
-    probability: 0,
+    probability: 20,
     budgetCost: 4,
     unavailableUntilLevelIndex: 7,
   },
@@ -62,34 +63,35 @@ const unit: UnitSource = {
     }
   },
   action: async (unit: Unit.IUnit, attackTargets, underworld) => {
-    if (attackTargets.length) {
-      const chosenUnit = attackTargets[0];
-      if (chosenUnit) {
-        if (Unit.inRange(unit, chosenUnit) && unit.mana >= unit.manaCostToCast) {
-          unit.mana - unit.manaCostToCast;
-          // await Unit.playAnimation(unit, unit.animations.attack);
-          await Unit.playComboAnimation(unit, unit.animations.attack, () => {
-            return animateDrag(unit, chosenUnit);
-          });
-          const pullPromise = forcePushToDestination(chosenUnit, unit, 1, underworld, false);
-          underworld.triggerGameLoopHeadless();
-          await pullPromise;
-        } else {
-          // Only move if not in range
-          const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, chosenUnit, unit.stamina);
-          await Unit.moveTowards(unit, moveTo, underworld);
-        }
-      }
+    // Gripthulhu just checks attackTarget, not canAttackTarget to know if it can attack because getBestRangedLOSTarget() will return undefined
+    // if it can't attack any targets
+    const attackTarget = attackTargets && attackTargets[0];
+    // Attack
+    if (attackTarget && unit.mana >= unit.manaCostToCast) {
+      Unit.orient(unit, attackTarget);
+      unit.mana -= unit.manaCostToCast;
+      // await Unit.playAnimation(unit, unit.animations.attack);
+      await Unit.playComboAnimation(unit, unit.animations.attack, () => {
+        return animateDrag(unit, attackTarget);
+      });
+      const pullPromise = forcePushToDestination(attackTarget, unit, 1, underworld, false);
+      underworld.triggerGameLoopHeadless();
+      await pullPromise;
+    } else {
+      // If it gets to this block it means it is either out of range or cannot see enemy
+      await rangedLOSMovement(unit, underworld);
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-    const livingEnemyUnits = underworld.units.filter(
-      (u) =>
-        u.faction !== unit.faction &&
-        u.alive
-    );
-    // Gripthulu can only target one enemy
-    return livingEnemyUnits.slice(0, 1);
+    const targets = getBestRangedLOSTarget(unit, underworld);
+    if (targets) {
+      // Gripthulu can only target one enemy
+      return targets.slice(0, 1).map(u => {
+        return u;
+      });
+    } else {
+      return [];
+    }
   }
 };
 const forwardSpeed = 0.2;
