@@ -427,36 +427,6 @@ export default class Underworld {
         pushedObject.x = newPosition.x;
         pushedObject.y = newPosition.y;
       }
-      for (let other of aliveUnits) {
-        if (other == forceMoveInst.pushedObject) {
-          // Don't collide with self
-          continue;
-        }
-        // The units' regular radius is for "crowding". It is much smaller than their actual size and it is used
-        // to ensure they can crowd together but not overlap perfect, so here we use a custom radius to detect
-        // forcePush collisions.
-        // Only allow instances that are flagged as able to create second order pushes create new pushes on collision or else you risk infinite
-        // recursion
-        if (forceMoveInst.canCreateSecondOrderPushes && isVecIntersectingVecWithCustomRadius(pushedObject, other, config.COLLISION_MESH_RADIUS)) {
-          // Don't collide with the same object more than once
-          if (forceMoveInst.alreadyCollided.includes(other)) {
-            continue;
-          }
-          forceMoveInst.alreadyCollided.push(other);
-          // If they collide transfer force:
-          // () => {}: No resolver needed for second order force pushes
-          // All pushable objects have the same mass so when a collision happens they'll split the distance
-          const fullDist = Vec.magnitude(forceMoveInst.velocity);
-          const halfDist = fullDist / 2;
-          // This is a second order push and second order pushes CANNOT create more pushes or else you risk infinite recursion in prediction mode
-          const canCreateSecondOrderPushes = false;
-          console.warn("Second order pushes may not work. Needs testing")
-          forcePushAwayFrom(other, forceMoveInst.pushedObject, halfDist, this, prediction);
-          // Reduce own velocity by half due to the transfer of force:
-          forceMoveInst.velocity = Vec.multiply(0.5, forceMoveInst.velocity);
-
-        }
-      }
       collideWithLineSegments(pushedObject, this.walls, this);
       forceMoveInst.velocity = Vec.multiply(Math.pow(velocity_falloff, deltaTime), velocity);
       if (Unit.isUnit(forceMoveInst.pushedObject)) {
