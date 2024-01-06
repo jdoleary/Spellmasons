@@ -8,6 +8,7 @@ import * as colors from '../graphics/ui/colors';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 import { baseExplosionRadius, explode } from '../effects/explode';
+import { defaultPushDistance } from '../effects/force_move';
 
 const id = 'Bloat';
 const imageName = 'explode-on-death.png';
@@ -90,7 +91,7 @@ const spell: Spell = {
     onDeath: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
       const quantity = unit.modifiers[id]?.quantity || 1;
       const adjustedRadius = baseExplosionRadius + (unit.modifiers[id]?.radius || 0);
-      explode(unit, adjustedRadius, damage * quantity, underworld, prediction, "#d66437", "#f5e8b6");
+      explode(unit, adjustedRadius, damage * quantity, defaultPushDistance, underworld, prediction, "#d66437", "#f5e8b6");
     },
     onDrawSelected: async (unit: IUnit, prediction: boolean, underworld: Underworld) => {
       if (globalThis.selectedUnitGraphics) {
