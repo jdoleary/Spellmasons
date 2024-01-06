@@ -27,7 +27,7 @@ const unit: UnitSource = {
     bloodColor: bloodGripthulu,
   },
   spawnParams: {
-    probability: 0,
+    probability: 20,
     budgetCost: 4,
     unavailableUntilLevelIndex: 7,
   },
@@ -66,7 +66,7 @@ const unit: UnitSource = {
       const chosenUnit = attackTargets[0];
       if (chosenUnit) {
         if (Unit.inRange(unit, chosenUnit) && unit.mana >= unit.manaCostToCast) {
-          unit.mana - unit.manaCostToCast;
+          unit.mana -= unit.manaCostToCast;
           // await Unit.playAnimation(unit, unit.animations.attack);
           await Unit.playComboAnimation(unit, unit.animations.attack, () => {
             return animateDrag(unit, chosenUnit);
