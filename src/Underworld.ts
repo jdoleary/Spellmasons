@@ -59,7 +59,7 @@ import { expandPolygon, isVec2InsidePolygon, mergePolygon2s, Polygon2, Polygon2L
 import { calculateDistanceOfVec2Array, findPath } from './jmath/Pathfinding';
 import { keyDown, useMousePosition } from './graphics/ui/eventListeners';
 import Jprompt from './graphics/Jprompt';
-import { collideWithLineSegments, ForceMove, forceMovePreventForceThroughWall, ForceMoveType, isForceMoveProjectile, isForceMoveUnitOrPickup, isVecIntersectingVecWithCustomRadius, moveWithCollisions } from './jmath/moveWithCollision';
+import { collideWithLineSegments, reflectVelocityOnWall, projectVelocityAlongWall, ForceMove, ForceMoveType, isForceMoveProjectile, isForceMoveUnitOrPickup, isVecIntersectingVecWithCustomRadius, moveWithCollisions, predictWallCollision } from './jmath/moveWithCollision';
 import { IHostApp, hostGiveClientGameState } from './network/networkUtil';
 import { withinMeleeRange } from './entity/units/actions/meleeAction';
 import { baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLimits, Limits as Limits, makeFinalTileImages, Map, Tile, toObstacle } from './MapOrganicCave';
@@ -404,27 +404,61 @@ export default class Underworld {
     const aliveUnits = ((prediction && this.unitsPrediction) ? this.unitsPrediction : this.units).filter(u => u.alive);
     if (isForceMoveUnitOrPickup(forceMoveInst)) {
       const { velocity_falloff } = forceMoveInst;
-      const handled = forceMovePreventForceThroughWall(forceMoveInst, this, deltaPosition);
-      if (handled) {
-        // If striking the wall hard enough to pass through it, deal damage if the
-        // pushed object is a unit and stop velocity:
-        if (Unit.isUnit(pushedObject)) {
-          // TODO - Velocity can be different in game loop due to simulation/delta time discrepancy
-          const magnitude = Vec.magnitude(velocity);
-          const damage = Math.floor(magnitude * 10 - 20);
-          Unit.takeDamage(pushedObject, damage, Vec.add(pushedObject, { x: velocity.x, y: velocity.y }), this, prediction);
-          if (!prediction) {
-            floatingText({ coords: pushedObject, text: `${damage} Impact damage!` });
+      const collision = predictWallCollision(forceMoveInst, this, deltaTime);
+
+      if (collision.wall) {
+        const estimatedCollisionVelocity = Vec.multiply(Math.pow(velocity_falloff, collision.msUntilCollision), velocity);
+        const magnitude = Vec.magnitude(estimatedCollisionVelocity);
+
+        let impactDamage = Math.floor((magnitude - 2) * 10);
+        // console.log("Impact Damage: ", impactDamage, prediction);
+
+        // If impact damage > 0, we hit the wall hard enough for
+        // a "heavy impact", which stops the object and damages units
+        // otherwise, make the unit slide along the wall
+        if (impactDamage > 0) {
+          if (Unit.isUnit(pushedObject)) {
+            Unit.takeDamage(pushedObject, impactDamage, Vec.add(pushedObject, { x: velocity.x, y: velocity.y }), this, prediction);
+            if (!prediction) {
+              floatingText({ coords: pushedObject, text: `${impactDamage} Impact damage!` });
+            }
           }
+          velocity.x = 0;
+          velocity.y = 0;
         }
-        velocity.x = 0;
-        velocity.y = 0;
+        else {
+          // TODO - collideWithLineSegments();
+
+          // Non-Heavy-Impact collision behavior is currently handled by collideWithLineSegments();
+          // Which pushes units away from the walls when they get close.
+          // Ideally, instead of moving the unit too far and making a correction
+          // We should calculate where the unit needs to move
+          // This should prevent units going through walls and other weird behavior
+
+          // These examples would require modifications to
+          // predictWallCollision() to work correctly
+
+          // Makes the unit bounce off of the wall
+          // const newVelocity = reflectVelocityOnWall(velocity, collision.wall);
+          // velocity.x = newVelocity.x;
+          // velocity.y = newVelocity.y;
+
+          // Sets the unit's new velocity to the projection along the wall
+          // Units will keep moving parallel to the wall after passing it
+          // const newVelocity = projectVelocityAlongWall(velocity, collision.wall);
+          // velocity.x = newVelocity.x;
+          // velocity.y = newVelocity.y;
+
+          // Moves the unit based off its velocity projection along the wall
+          // Units will moving parallel to the wall until passing it
+          // const projection = projectVelocityAlongWall(velocity, collision.wall);
+          // const newPosition = Vec.add(pushedObject, Vec.multiply(deltaTime - collision.msUntilCollision, projection));
+          // pushedObject.x = newPosition.x;
+          // pushedObject.y = newPosition.y;
+        }
       } else {
-        // If forceMove wasn't going to drive the pushedObject through a wall,
+        // If forceMove wasn't going to collide with a wall,
         // move it according to it's velocity
-        // Note: This is the normal case, "handled" occurs
-        // under special circumstances when the object is moving so fast
-        // that it would pass through solid walls
         const newPosition = Vec.add(pushedObject, deltaPosition);
         pushedObject.x = newPosition.x;
         pushedObject.y = newPosition.y;
