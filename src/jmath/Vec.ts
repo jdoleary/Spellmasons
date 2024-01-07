@@ -75,8 +75,11 @@ export function dotProduct(p1: Vec2, p2: Vec2): number {
   const angle = clockwiseAngle(getAngleBetweenVec2s(origin, p1), getAngleBetweenVec2s(origin, p2));
   return magnitude(p1) * magnitude(p2) * Math.cos(angle);
 }
+export function sqrMagnitude(p: Vec2): number {
+  return p.y * p.y + p.x * p.x;
+}
 export function magnitude(p: Vec2): number {
-  return Math.sqrt(p.y * p.y + p.x * p.x);
+  return Math.sqrt(sqrMagnitude(p));
 }
 
 export function equal(p1: Vec2, p2: Vec2): boolean {

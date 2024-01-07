@@ -1,4 +1,4 @@
-import { add, magnitude, subtract, Vec2 } from './Vec';
+import { add, magnitude, multiply, subtract, Vec2 } from './Vec';
 import { distance, similarTriangles } from "./math";
 import { closestLineSegmentIntersection, findWherePointIntersectLineSegmentAtRightAngle, LineSegment, lineSegmentIntersection } from "./lineSegment";
 import * as config from '../config';
@@ -127,11 +127,11 @@ export function collideWithLineSegments(circle: Circle, lineSegments: LineSegmen
 // Handle super fast moving objects.  If an object is moving fast enough it *would* pass through
 // solid walls, this function prevents that and stops the unit where it would collide with the wall if it were 
 // moving slower
-export function forceMovePreventForceThroughWall(forceMoveInst: ForceMove, underworld: Underworld, trueVelocity: Vec2): boolean {
+export function forceMovePreventForceThroughWall(forceMoveInst: ForceMove, underworld: Underworld, deltaPosition: Vec2): boolean {
   const { pushedObject } = forceMoveInst;
-  if (magnitude(trueVelocity) >= pushedObject.radius) {
+  if (magnitude(deltaPosition) >= pushedObject.radius) {
     for (let wall of underworld.walls) {
-      const intersection = lineSegmentIntersection({ p1: pushedObject, p2: add(pushedObject, trueVelocity) }, wall);
+      const intersection = lineSegmentIntersection({ p1: pushedObject, p2: add(pushedObject, deltaPosition) }, wall);
       if (intersection) {
         const newPos = math.getCoordsAtDistanceTowardsTarget(intersection, pushedObject, pushedObject.radius)
         pushedObject.x = newPos.x;

@@ -101,7 +101,7 @@ import { corpseDecayId } from './modifierCorpseDecay';
 import { isSinglePlayer } from './network/wsPieSetup';
 import { PRIEST_ID } from './entity/units/priest';
 import { getSyncActions } from './Syncronization';
-import { forcePushAwayFrom } from './effects/force_move';
+import { EXPECTED_MILLIS_PER_GAMELOOP, forcePushAwayFrom } from './effects/force_move';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -352,7 +352,7 @@ export default class Underworld {
         const forceMoveInst = this.forceMovePrediction[i];
         if (forceMoveInst) {
           const startPos = Vec.clone(forceMoveInst.pushedObject);
-          const done = this.runForceMove(forceMoveInst, 16, prediction);
+          const done = this.runForceMove(forceMoveInst, EXPECTED_MILLIS_PER_GAMELOOP, prediction);
           // Draw prediction lines
           if (globalThis.predictionGraphics && !globalThis.isHUDHidden) {
             globalThis.predictionGraphics.lineStyle(4, colors.forceMoveColor, 1.0);
@@ -394,22 +394,24 @@ export default class Underworld {
       // and is "complete"
       return true;
     }
-    const trueVelocity = Vec.multiply(deltaTime, velocity);
-    const trueMagnitude = Vec.magnitude(trueVelocity);
-    if (trueMagnitude <= 0.1) {
+    // Represents the positional offset for this simulation loop
+    // AKA the Vec2 distance to travel
+    const deltaPosition = Vec.multiply(deltaTime, velocity)
+    if (Vec.sqrMagnitude(deltaPosition) < 0.01) {
       // It's close enough, return true to signify complete 
       return true;
     }
     const aliveUnits = ((prediction && this.unitsPrediction) ? this.unitsPrediction : this.units).filter(u => u.alive);
     if (isForceMoveUnitOrPickup(forceMoveInst)) {
       const { velocity_falloff } = forceMoveInst;
-      const handled = forceMovePreventForceThroughWall(forceMoveInst, this, trueVelocity);
+      const handled = forceMovePreventForceThroughWall(forceMoveInst, this, deltaPosition);
       if (handled) {
         // If striking the wall hard enough to pass through it, deal damage if the
         // pushed object is a unit and stop velocity:
         if (Unit.isUnit(pushedObject)) {
-
-          const damage = Math.ceil(trueMagnitude);
+          // TODO - Velocity can be different in game loop due to simulation/delta time discrepancy
+          const magnitude = Vec.magnitude(velocity);
+          const damage = Math.floor(magnitude * 10 - 20);
           Unit.takeDamage(pushedObject, damage, Vec.add(pushedObject, { x: velocity.x, y: velocity.y }), this, prediction);
           if (!prediction) {
             floatingText({ coords: pushedObject, text: `${damage} Impact damage!` });
@@ -423,7 +425,7 @@ export default class Underworld {
         // Note: This is the normal case, "handled" occurs
         // under special circumstances when the object is moving so fast
         // that it would pass through solid walls
-        const newPosition = Vec.add(pushedObject, trueVelocity);
+        const newPosition = Vec.add(pushedObject, deltaPosition);
         pushedObject.x = newPosition.x;
         pushedObject.y = newPosition.y;
       }
