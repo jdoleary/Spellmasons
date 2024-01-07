@@ -1,5 +1,4 @@
 
-import { clockwiseAngle } from "./Angle";
 import { LineSegment } from "./lineSegment";
 import { distance, similarTriangles, lerp } from "./math";
 import { prng, randInt } from "./rand";
@@ -8,7 +7,8 @@ export interface Vec2 {
   y: number;
 }
 
-// TODO - Might fix them later. Not for 1.27.
+// TODO - see comment below and getAngleBetween functions
+// would be good to fix after 1.27
 
 // Get the angle away from the x-axis from origin to point in radians
 // Note: This function returns the counter clockwise angle from the x-axis
@@ -100,9 +100,13 @@ export function projectOnNormal(v: Vec2, normal: Vec2): Vec2 {
   const scalar = dotProduct(v, normal) / dotProduct(normal, normal);
   return multiply(scalar, normal);
 }
-// Magnitude Squared - Used for optimization
+// Magnitude without the sqrt() function - Use when performance is a concern
+// When comparing the length of two vectors, compare sqrMagnitudes
+// When comparing to a distance, use (sqrMagnitude > sqrDistance)
+// *or to (distance * distance) where distance is a constant
+// ... instead of (magnitude to magnitude) or (magnitude to distance)
 export function sqrMagnitude(p: Vec2): number {
-  return p.y * p.y + p.x * p.x;
+  return p.x * p.x + p.y * p.y;
 }
 // Magnitude of a vector
 export function magnitude(p: Vec2): number {
