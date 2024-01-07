@@ -3395,9 +3395,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           return false;
         }
       case UnitSubType.SPECIAL_LOS:
-        return u.alive && this.hasLineOfSight(u, attackTarget) && Unit.inRange(u, attackTarget);
+        return u.alive && this.hasLineOfSight(u, attackTarget) && Unit.inRange(u, attackTarget) && u.mana >= u.manaCostToCast;
       case UnitSubType.RANGED_LOS:
-        return u.alive && this.hasLineOfSight(u, attackTarget) && Unit.inRange(u, attackTarget);
+        return u.alive && this.hasLineOfSight(u, attackTarget) && Unit.inRange(u, attackTarget) && u.mana >= u.manaCostToCast;
       case UnitSubType.RANGED_RADIUS:
         return u.alive && Unit.inRange(u, attackTarget) && u.mana >= u.manaCostToCast;
       case UnitSubType.SUPPORT_CLASS:

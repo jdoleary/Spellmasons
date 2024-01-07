@@ -5,6 +5,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { arrowEffect } from './arrow';
 import { arrow3CardId } from './arrow3';
 import { explode } from '../effects/explode';
+import { defaultPushDistance } from '../effects/force_move';
 
 export const explosiveArrowCardId = 'Explosive Arrow';
 const damageDone = 10;
@@ -33,7 +34,7 @@ const spell: Spell = {
     onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
       if (unit) {
         Unit.takeDamage(unit, damageDone, projectile.startPoint, underworld, prediction, undefined, { thinBloodLine: true });
-        explode(unit, explodeRange, explodeDamage, underworld, prediction, "#d66437", "#f5e8b6");
+        explode(unit, explodeRange, explodeDamage, defaultPushDistance, underworld, prediction, "#d66437", "#f5e8b6");
       }
     }
   }

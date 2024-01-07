@@ -4,6 +4,7 @@ import * as Unit from '../Unit';
 import type Underworld from '../../Underworld';
 import { registerEvents } from '../../cards';
 import { explode } from '../../effects/explode';
+import { defaultPushDistance } from '../../effects/force_move';
 
 export const urn_explosive_id = 'Explosive Urn'
 const baseRadius = 140;
@@ -55,7 +56,7 @@ export const urnexplosiveExplode = 'urnexplosiveExplode';
 export function registerUrnexplosiveExplode() {
   registerEvents(urnexplosiveExplode, {
     onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
-      explode(unit, unit.attackRange, unit.damage, underworld, prediction, "#d66437", "#f5e8b6");
+      explode(unit, unit.attackRange, unit.damage, defaultPushDistance, underworld, prediction, "#d66437", "#f5e8b6");
       // Remove corpse
       if (!prediction) {
         Unit.cleanup(unit, false);
