@@ -8,6 +8,8 @@ export interface Vec2 {
   y: number;
 }
 
+// TODO - Might fix them later. Not for 1.27.
+
 // Get the angle away from the x-axis from origin to point in radians
 // Note: This function returns the counter clockwise angle from the x-axis
 // of "origin" to "point".  This is tricky because I built Polygons to

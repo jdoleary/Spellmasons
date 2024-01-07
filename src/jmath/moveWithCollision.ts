@@ -133,7 +133,8 @@ export function predictWallCollision(forceMoveInst: ForceMove, underworld: Under
   for (const wall of underworld.walls) {
     const intersection = lineSegmentIntersection({ p1: pushedObject, p2: farIntersection }, wall);
     if (intersection) {
-      // TODO - Should factor in sin(angleBetween(velocity, getNormalVector(wall))) or something like that.
+      // TODO - Should factor in sin(angleBetween(velocity, getNormalVector(wall))) or something like that
+      // if we want to remove collideWithLineSegments as talked about in Underworld.runForceMove
       const newPos = math.getCoordsAtDistanceTowardsTarget(intersection, pushedObject, config.COLLISION_MESH_RADIUS);
       const msUntilCollision = distance(pushedObject, newPos) / magnitude(velocity);
       pushedObject.x = newPos.x;

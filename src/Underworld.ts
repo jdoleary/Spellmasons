@@ -407,10 +407,16 @@ export default class Underworld {
       const collision = predictWallCollision(forceMoveInst, this, deltaTime);
 
       if (collision.wall) {
+        // TODO - Due to different simulation speeds
+        // This will always have a very very small (<0.1%) margin of error
+        // which can cause a 1 damage difference between prediction/gameloop
+        // The fix would be to simulate forceMoves independent of deltaTime/fps
         const estimatedCollisionVelocity = Vec.multiply(Math.pow(velocity_falloff, collision.msUntilCollision), velocity);
         const magnitude = Vec.magnitude(estimatedCollisionVelocity);
 
-        let impactDamage = Math.floor((magnitude - 2) * 10);
+        // Requires at least 2 velocity for a heavy impact and
+        // smoothly deals 10 damage per velocity thereafter
+        const impactDamage = Math.floor((magnitude - 2) * 10);
         // console.log("Impact Damage: ", impactDamage, prediction);
 
         // If impact damage > 0, we hit the wall hard enough for
