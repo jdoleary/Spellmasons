@@ -1,5 +1,6 @@
 
 import { clockwiseAngle } from "./Angle";
+import { LineSegment } from "./lineSegment";
 import { distance, similarTriangles, lerp } from "./math";
 import { prng, randInt } from "./rand";
 export interface Vec2 {
@@ -65,31 +66,53 @@ export function random(min: number, max: number, random?: prng): Vec2 {
   return { x: randInt(min, max, random), y: randInt(min, max, random) };
 }
 // Returns a scalar
-export function crossproduct(p1: Vec2, p2: Vec2): number {
-  return p1.x * p2.y - p1.y * p2.x;
+// Function to calculate the cross product of two 2D vectors
+export function crossProduct(v1: Vec2, v2: Vec2): number {
+  return v1.x * v2.y - v1.y * v2.x;
 }
 // Returns a scalar
+// Function to calculate the dot product of two 2D vectors
 // Source: https://www.cuemath.com/algebra/product-of-vectors/
-export function dotProduct(p1: Vec2, p2: Vec2): number {
-  const origin = { x: 0, y: 0 };
-  const angle = clockwiseAngle(getAngleBetweenVec2s(origin, p1), getAngleBetweenVec2s(origin, p2));
-  return magnitude(p1) * magnitude(p2) * Math.cos(angle);
+export function dotProduct(v1: Vec2, v2: Vec2): number {
+  return v1.x * v2.x + v1.y * v2.y;
 }
+// The direction a line moves from point 1 to point 2
+export function getDirectionVector(segment: LineSegment): Vec2 {
+  return { x: segment.p2.x - segment.p1.x, y: segment.p2.y - segment.p1.y }
+}
+// The line perpendicular to a wall, facing inward
+export function getNormalVector(segment: LineSegment): Vec2 {
+  const directionVector = getDirectionVector(segment);
+  const normalVector = { x: -directionVector.y, y: directionVector.x };
+  return normalized(normalVector);
+}
+// Like a laser against a mirror
+// Normal must be normalized before passing it here
+export function reflectOnNormal(v: Vec2, normal: Vec2): Vec2 {
+  const dotProd = dotProduct(v, normal);
+  const scaledNormal = multiply(2 * dotProd, normal);
+  return subtract(v, scaledNormal);
+}
+// Like a heavy box hitting a wall and continuing to slide parallel to it
+// Normal must be normalized before passing it here
+export function projectOnNormal(v: Vec2, normal: Vec2): Vec2 {
+  const scalar = dotProduct(v, normal) / dotProduct(normal, normal);
+  return multiply(scalar, normal);
+}
+// Magnitude Squared - Used for optimization
 export function sqrMagnitude(p: Vec2): number {
   return p.y * p.y + p.x * p.x;
 }
+// Magnitude of a vector
 export function magnitude(p: Vec2): number {
   return Math.sqrt(sqrMagnitude(p));
 }
-
 export function equal(p1: Vec2, p2: Vec2): boolean {
   return p1.x == p2.x && p1.y == p2.y;
 }
-
 export function clone(p: Vec2): Vec2 {
   return { x: p.x, y: p.y };
 }
-
 export function round(v: Vec2): Vec2 {
   return { x: Math.round(v.x), y: Math.round(v.y) };
 }
@@ -112,7 +135,6 @@ export function getEndpointOfMagnitudeAlongVector(pos: Vec2, angle: number, magn
   return add(pos, similarTriangles(nextPointDirection.x - pos.x, nextPointDirection.y - pos.y, dist, magnitude));
 
 }
-
 // Returns true if testPoint is within a bounding box drawn between the two bounding points
 export function isBetween(testPoint: Vec2, boundingPoint: Vec2, boundingPoint2: Vec2): boolean {
   const minY = Math.min(boundingPoint.y, boundingPoint2.y);
