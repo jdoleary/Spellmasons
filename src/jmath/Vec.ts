@@ -74,7 +74,6 @@ export function crossProduct(v1: Vec2, v2: Vec2): number {
 }
 // Returns a scalar
 // Function to calculate the dot product of two 2D vectors
-// Source: https://www.cuemath.com/algebra/product-of-vectors/
 export function dotProduct(v1: Vec2, v2: Vec2): number {
   return v1.x * v2.x + v1.y * v2.y;
 }

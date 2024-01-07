@@ -33,6 +33,14 @@ describe('vectorMath', () => {
             const expected = 21;
             expect(actual).toEqual(expected);
         });
+        it('should return 11 for [1,2] dot [3,4]', () => {
+            const v1 = { x: 1, y: 2 };
+            const v2 = { x: 3, y: 4 }
+            const actual = dotProduct(v1, v2);
+            const expected = 11;
+            expect(actual).toEqual(expected);
+        });
+
     });
     describe('isBetween', () => {
         [
