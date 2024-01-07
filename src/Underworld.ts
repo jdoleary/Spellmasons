@@ -441,7 +441,7 @@ export default class Underworld {
           // We should calculate where the unit needs to move
           // This should prevent units going through walls and other weird behavior
 
-          // These examples would require modifications to
+          // These examples would require slight modifications to
           // predictWallCollision() to work correctly
 
           // Makes the unit bounce off of the wall
@@ -456,7 +456,7 @@ export default class Underworld {
           // velocity.y = newVelocity.y;
 
           // Moves the unit based off its velocity projection along the wall
-          // Units will moving parallel to the wall until passing it
+          // Units will move parallel to the wall until passing it
           // const projection = projectVelocityAlongWall(velocity, collision.wall);
           // const newPosition = Vec.add(pushedObject, Vec.multiply(deltaTime - collision.msUntilCollision, projection));
           // pushedObject.x = newPosition.x;
