@@ -48,7 +48,7 @@ interface ForceMoveProjectileArgs {
   ignoreUnitIds: number[];
   collideFnKey: string;
 }
-const START_VELOCITY = 10;
+const START_VELOCITY = 1.5;
 export function makeForceMoveProjectile(args: ForceMoveProjectileArgs, underworld: Underworld, prediction: boolean): ForceMove {
   const { pushedObject, startPoint, endPoint, doesPierce, ignoreUnitIds, collideFnKey } = args;
   const velocity = similarTriangles(endPoint.x - pushedObject.x, endPoint.y - pushedObject.y, distance(pushedObject, endPoint), START_VELOCITY);

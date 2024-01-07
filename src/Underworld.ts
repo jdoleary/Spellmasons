@@ -485,10 +485,10 @@ export default class Underworld {
       // Check to see if unit has falled out of lava via a forcemove
       Obstacle.tryFallInOutOfLiquid(forceMoveInst.pushedObject, this, prediction);
     } else if (isForceMoveProjectile(forceMoveInst)) {
-      const newPosition = Vec.add(pushedObject, velocity);
+      const newPosition = Vec.add(pushedObject, deltaPosition);
       pushedObject.x = newPosition.x;
       pushedObject.y = newPosition.y;
-      if (math.distance(forceMoveInst.pushedObject, forceMoveInst.startPoint) >= math.distance(forceMoveInst.endPoint, forceMoveInst.startPoint)) {
+      if (math.sqrDistance(forceMoveInst.pushedObject, forceMoveInst.startPoint) >= math.sqrDistance(forceMoveInst.endPoint, forceMoveInst.startPoint)) {
         // Projectile is done if it reaches or goes beyond its end point
         return true;
       }
