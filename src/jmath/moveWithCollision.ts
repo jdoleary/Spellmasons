@@ -128,6 +128,8 @@ export function collideWithLineSegments(circle: Circle, lineSegments: LineSegmen
 export function predictWallCollision(forceMoveInst: ForceMove, underworld: Underworld, deltaTime: number): { msUntilCollision: number, wall: LineSegment | undefined } {
   const { pushedObject, velocity } = forceMoveInst;
   const deltaPosition = multiply(deltaTime, velocity);
+  // TODO - I think this could be optimized with SimilarTriangles
+  // or removed entirely with the todo below?
   const farIntersection = add(pushedObject, multiply(magnitude(deltaPosition) + config.COLLISION_MESH_RADIUS, normalized(deltaPosition)));
 
   for (const wall of underworld.walls) {
