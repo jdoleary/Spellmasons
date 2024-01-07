@@ -864,8 +864,6 @@ export const pickups: IPickupSource[] = [
           playSFXKey('potionPickupHealth');
         }
 
-        // Cap health at max
-        player.unit.health = Math.min(player.unit.health, player.unit.healthMax);
         // Now that the player unit's mana has increased,sync the new
         // mana state with the player's predictionUnit so it is properly
         // refelcted in the health bar
