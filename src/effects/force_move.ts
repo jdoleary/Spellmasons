@@ -9,7 +9,7 @@ import { ForceMoveType, ForceMoveUnitOrPickup } from "../jmath/moveWithCollision
 
 export const defaultPushDistance = 140; // In game units
 const velocity_falloff = 0.992;
-const EXPECTED_MILLIS_PER_GAMELOOP = 0.15;
+export const EXPECTED_MILLIS_PER_GAMELOOP = 16;
 
 export async function forcePushDelta(pushedObject: HasSpace, deltaMovement: Vec2, underworld: Underworld, prediction: boolean): Promise<void> {
   // Calculate velocity needed to move object
@@ -56,7 +56,6 @@ export async function forcePushToDestination(pushedObject: HasSpace, destination
 
 // Find starting velocity based on the direction and distance we want to move
 function movementToVelocity(deltaMovement: Vec2): Vec2 {
-  let mult = (1 - velocity_falloff) / EXPECTED_MILLIS_PER_GAMELOOP;
-  mult /= 7; //correction for in game units
+  let mult = (1 - velocity_falloff);
   return multiply(mult, deltaMovement);
 }

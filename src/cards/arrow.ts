@@ -69,7 +69,6 @@ export function arrowEffect(multiShotCount: number, collideFnKey: string, doesPi
           if (!prediction) {
             image = Image.create(casterPositionAtTimeOfCast, 'projectile/arrow', containerProjectiles)
             if (image) {
-
               image.sprite.rotation = Math.atan2(endPoint.y - casterPositionAtTimeOfCast.y, endPoint.x - casterPositionAtTimeOfCast.x);
             }
           }

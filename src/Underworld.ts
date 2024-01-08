@@ -59,7 +59,7 @@ import { expandPolygon, isVec2InsidePolygon, mergePolygon2s, Polygon2, Polygon2L
 import { calculateDistanceOfVec2Array, findPath } from './jmath/Pathfinding';
 import { keyDown, useMousePosition } from './graphics/ui/eventListeners';
 import Jprompt from './graphics/Jprompt';
-import { collideWithLineSegments, ForceMove, forceMovePreventForceThroughWall, ForceMoveType, isForceMoveProjectile, isForceMoveUnitOrPickup, isVecIntersectingVecWithCustomRadius, moveWithCollisions } from './jmath/moveWithCollision';
+import { collideWithLineSegments, reflectVelocityOnWall, projectVelocityAlongWall, ForceMove, ForceMoveType, isForceMoveProjectile, isForceMoveUnitOrPickup, isVecIntersectingVecWithCustomRadius, moveWithCollisions, predictWallCollision } from './jmath/moveWithCollision';
 import { IHostApp, hostGiveClientGameState } from './network/networkUtil';
 import { withinMeleeRange } from './entity/units/actions/meleeAction';
 import { baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLimits, Limits as Limits, makeFinalTileImages, Map, Tile, toObstacle } from './MapOrganicCave';
@@ -101,7 +101,7 @@ import { corpseDecayId } from './modifierCorpseDecay';
 import { isSinglePlayer } from './network/wsPieSetup';
 import { PRIEST_ID } from './entity/units/priest';
 import { getSyncActions } from './Syncronization';
-import { forcePushAwayFrom } from './effects/force_move';
+import { EXPECTED_MILLIS_PER_GAMELOOP, forcePushAwayFrom } from './effects/force_move';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -353,7 +353,7 @@ export default class Underworld {
         const forceMoveInst = this.forceMovePrediction[i];
         if (forceMoveInst) {
           const startPos = Vec.clone(forceMoveInst.pushedObject);
-          const done = this.runForceMove(forceMoveInst, 16, prediction);
+          const done = this.runForceMove(forceMoveInst, EXPECTED_MILLIS_PER_GAMELOOP, prediction);
           // Draw prediction lines
           if (globalThis.predictionGraphics && !globalThis.isHUDHidden) {
             globalThis.predictionGraphics.lineStyle(4, colors.forceMoveColor, 1.0);
@@ -395,68 +395,80 @@ export default class Underworld {
       // and is "complete"
       return true;
     }
-    const trueVelocity = Vec.multiply(deltaTime, velocity);
-    const trueMagnitude = Vec.magnitude(trueVelocity);
-    if (trueMagnitude <= 0.1) {
+    // Represents the positional offset for this simulation loop
+    // AKA the Vec2 distance to travel
+    const deltaPosition = Vec.multiply(deltaTime, velocity)
+    if (Vec.sqrMagnitude(deltaPosition) < 0.01) {
       // It's close enough, return true to signify complete 
       return true;
     }
     const aliveUnits = ((prediction && this.unitsPrediction) ? this.unitsPrediction : this.units).filter(u => u.alive);
     if (isForceMoveUnitOrPickup(forceMoveInst)) {
       const { velocity_falloff } = forceMoveInst;
-      const handled = forceMovePreventForceThroughWall(forceMoveInst, this, trueVelocity);
-      if (handled) {
-        // If striking the wall hard enough to pass through it, deal damage if the
-        // pushed object is a unit and stop velocity:
-        if (Unit.isUnit(pushedObject)) {
+      const collision = predictWallCollision(forceMoveInst, this, deltaTime);
 
-          const damage = Math.ceil(trueMagnitude);
-          Unit.takeDamage(pushedObject, damage, Vec.add(pushedObject, { x: velocity.x, y: velocity.y }), this, prediction);
-          if (!prediction) {
-            floatingText({ coords: pushedObject, text: `${damage} Impact damage!` });
+      if (collision.wall) {
+        // TODO - Due to different simulation speeds
+        // This will always have a very very small (<0.1%) margin of error
+        // which can cause a 1 damage difference between prediction/gameloop
+        // The fix would be to simulate forceMoves independent of deltaTime/fps
+        const estimatedCollisionVelocity = Vec.multiply(Math.pow(velocity_falloff, collision.msUntilCollision), velocity);
+        const magnitude = Vec.magnitude(estimatedCollisionVelocity);
+
+        // Requires at least 2 velocity for a heavy impact and
+        // smoothly deals 10 damage per velocity thereafter
+        const impactDamage = Math.floor((magnitude - 2) * 10);
+        // console.log("Impact Damage: ", impactDamage, prediction);
+
+        // If impact damage > 0, we hit the wall hard enough for
+        // a "heavy impact", which stops the object and damages units
+        // otherwise, make the unit slide along the wall
+        if (impactDamage > 0) {
+          if (Unit.isUnit(pushedObject)) {
+            Unit.takeDamage(pushedObject, impactDamage, Vec.add(pushedObject, { x: velocity.x, y: velocity.y }), this, prediction);
+            if (!prediction) {
+              floatingText({ coords: pushedObject, text: `${impactDamage} Impact damage!` });
+            }
           }
+          velocity.x = 0;
+          velocity.y = 0;
         }
-        velocity.x = 0;
-        velocity.y = 0;
+        else {
+          // TODO - collideWithLineSegments();
+
+          // Non-Heavy-Impact collision behavior is currently handled by collideWithLineSegments();
+          // Which pushes units away from the walls when they get close.
+          // Ideally, instead of moving the unit too far and making a correction
+          // We should calculate where the unit needs to move
+          // This should prevent units going through walls and other weird behavior
+
+          // These examples would require slight modifications to
+          // predictWallCollision() to work correctly
+
+          // Makes the unit bounce off of the wall
+          // const newVelocity = reflectVelocityOnWall(velocity, collision.wall);
+          // velocity.x = newVelocity.x;
+          // velocity.y = newVelocity.y;
+
+          // Sets the unit's new velocity to the projection along the wall
+          // Units will keep moving parallel to the wall after passing it
+          // const newVelocity = projectVelocityAlongWall(velocity, collision.wall);
+          // velocity.x = newVelocity.x;
+          // velocity.y = newVelocity.y;
+
+          // Moves the unit based off its velocity projection along the wall
+          // Units will move parallel to the wall until passing it
+          // const projection = projectVelocityAlongWall(velocity, collision.wall);
+          // const newPosition = Vec.add(pushedObject, Vec.multiply(deltaTime - collision.msUntilCollision, projection));
+          // pushedObject.x = newPosition.x;
+          // pushedObject.y = newPosition.y;
+        }
       } else {
-        // If forceMove wasn't going to drive the pushedObject through a wall,
+        // If forceMove wasn't going to collide with a wall,
         // move it according to it's velocity
-        // Note: This is the normal case, "handled" occurs
-        // under special circumstances when the object is moving so fast
-        // that it would pass through solid walls
-        const newPosition = Vec.add(pushedObject, trueVelocity);
+        const newPosition = Vec.add(pushedObject, deltaPosition);
         pushedObject.x = newPosition.x;
         pushedObject.y = newPosition.y;
-      }
-      for (let other of aliveUnits) {
-        if (other == forceMoveInst.pushedObject) {
-          // Don't collide with self
-          continue;
-        }
-        // The units' regular radius is for "crowding". It is much smaller than their actual size and it is used
-        // to ensure they can crowd together but not overlap perfect, so here we use a custom radius to detect
-        // forcePush collisions.
-        // Only allow instances that are flagged as able to create second order pushes create new pushes on collision or else you risk infinite
-        // recursion
-        if (forceMoveInst.canCreateSecondOrderPushes && isVecIntersectingVecWithCustomRadius(pushedObject, other, config.COLLISION_MESH_RADIUS)) {
-          // Don't collide with the same object more than once
-          if (forceMoveInst.alreadyCollided.includes(other)) {
-            continue;
-          }
-          forceMoveInst.alreadyCollided.push(other);
-          // If they collide transfer force:
-          // () => {}: No resolver needed for second order force pushes
-          // All pushable objects have the same mass so when a collision happens they'll split the distance
-          const fullDist = Vec.magnitude(forceMoveInst.velocity);
-          const halfDist = fullDist / 2;
-          // This is a second order push and second order pushes CANNOT create more pushes or else you risk infinite recursion in prediction mode
-          const canCreateSecondOrderPushes = false;
-          console.warn("Second order pushes may not work. Needs testing")
-          forcePushAwayFrom(other, forceMoveInst.pushedObject, halfDist, this, prediction);
-          // Reduce own velocity by half due to the transfer of force:
-          forceMoveInst.velocity = Vec.multiply(0.5, forceMoveInst.velocity);
-
-        }
       }
       collideWithLineSegments(pushedObject, this.walls, this);
       forceMoveInst.velocity = Vec.multiply(Math.pow(velocity_falloff, deltaTime), velocity);
@@ -474,10 +486,10 @@ export default class Underworld {
       // Check to see if unit has falled out of lava via a forcemove
       Obstacle.tryFallInOutOfLiquid(forceMoveInst.pushedObject, this, prediction);
     } else if (isForceMoveProjectile(forceMoveInst)) {
-      const newPosition = Vec.add(pushedObject, velocity);
+      const newPosition = Vec.add(pushedObject, deltaPosition);
       pushedObject.x = newPosition.x;
       pushedObject.y = newPosition.y;
-      if (math.distance(forceMoveInst.pushedObject, forceMoveInst.startPoint) >= math.distance(forceMoveInst.endPoint, forceMoveInst.startPoint)) {
+      if (math.sqrDistance(forceMoveInst.pushedObject, forceMoveInst.startPoint) >= math.sqrDistance(forceMoveInst.endPoint, forceMoveInst.startPoint)) {
         // Projectile is done if it reaches or goes beyond its end point
         return true;
       }

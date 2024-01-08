@@ -1,4 +1,4 @@
-import { add, magnitude, subtract, Vec2 } from './Vec';
+import { add, getDirectionVector, getNormalVector, magnitude, multiply, normalized, projectOnNormal, reflectOnNormal, subtract, Vec2 } from './Vec';
 import { distance, similarTriangles } from "./math";
 import { closestLineSegmentIntersection, findWherePointIntersectLineSegmentAtRightAngle, LineSegment, lineSegmentIntersection } from "./lineSegment";
 import * as config from '../config';
@@ -48,7 +48,7 @@ interface ForceMoveProjectileArgs {
   ignoreUnitIds: number[];
   collideFnKey: string;
 }
-const START_VELOCITY = 10;
+const START_VELOCITY = 1.5;
 export function makeForceMoveProjectile(args: ForceMoveProjectileArgs, underworld: Underworld, prediction: boolean): ForceMove {
   const { pushedObject, startPoint, endPoint, doesPierce, ignoreUnitIds, collideFnKey } = args;
   const velocity = similarTriangles(endPoint.x - pushedObject.x, endPoint.y - pushedObject.y, distance(pushedObject, endPoint), START_VELOCITY);
@@ -123,28 +123,50 @@ export function collideWithLineSegments(circle: Circle, lineSegments: LineSegmen
   return collisionDidOccur;
 }
 
-// Returns true if it prevented a movement through a wall
-// Handle super fast moving objects.  If an object is moving fast enough it *would* pass through
-// solid walls, this function prevents that and stops the unit where it would collide with the wall if it were 
-// moving slower
-export function forceMovePreventForceThroughWall(forceMoveInst: ForceMove, underworld: Underworld, trueVelocity: Vec2): boolean {
-  const { pushedObject } = forceMoveInst;
-  if (magnitude(trueVelocity) >= pushedObject.radius) {
-    for (let wall of underworld.walls) {
-      const intersection = lineSegmentIntersection({ p1: pushedObject, p2: add(pushedObject, trueVelocity) }, wall);
-      if (intersection) {
-        const newPos = math.getCoordsAtDistanceTowardsTarget(intersection, pushedObject, pushedObject.radius)
-        pushedObject.x = newPos.x;
-        pushedObject.y = newPos.y;
-        return true;
-      }
+// Prevents force move through walls and
+// returns some collision info
+export function predictWallCollision(forceMoveInst: ForceMove, underworld: Underworld, deltaTime: number): { msUntilCollision: number, wall: LineSegment | undefined } {
+  const { pushedObject, velocity } = forceMoveInst;
+  const deltaPosition = multiply(deltaTime, velocity);
+  // TODO - I think this could be optimized with SimilarTriangles
+  // or removed entirely with the todo below?
+  const farIntersection = add(pushedObject, multiply(magnitude(deltaPosition) + config.COLLISION_MESH_RADIUS, normalized(deltaPosition)));
+
+  for (const wall of underworld.walls) {
+    const intersection = lineSegmentIntersection({ p1: pushedObject, p2: farIntersection }, wall);
+    if (intersection) {
+      // TODO - Should factor in sin(angleBetween(velocity, getNormalVector(wall))) or something like that
+      // if we want to remove collideWithLineSegments as talked about in Underworld.runForceMove
+      const newPos = math.getCoordsAtDistanceTowardsTarget(intersection, pushedObject, config.COLLISION_MESH_RADIUS);
+      const msUntilCollision = distance(pushedObject, newPos) / magnitude(velocity);
+      pushedObject.x = newPos.x;
+      pushedObject.y = newPos.y;
+      return { msUntilCollision, wall };
     }
   }
-  return false;
-
+  // No collision
+  return { msUntilCollision: -1, wall: undefined };
 }
-
-
+export function projectVelocityAlongWall(velocity: Vec2, lineSegment: LineSegment): Vec2 {
+  // We want to use the direction vector instead of normal here
+  // that way the velocity is projected "along" the wall instead of away
+  const projection = projectOnNormal(velocity, getDirectionVector(lineSegment));
+  // projection factor is a number 0-1 that controls
+  // the magnitude of the projection relative to the velocity
+  //const projectionFactor = getAngleBetweenVec2s(velocity, projection) / (Math.PI);
+  const projectionFactor = 1;
+  return multiply(projectionFactor, projection);
+}
+export function reflectVelocityOnWall(velocity: Vec2, lineSegment: LineSegment): Vec2 {
+  // We want to use the normal vector here
+  // that way the velocity reflected away from the wall
+  const reflection = reflectOnNormal(velocity, getNormalVector(lineSegment));
+  // reflection factor is a number 0-1 that controls
+  // the magnitude of the reflection relative to the velocity
+  //const reflectionFactor = getAngleBetweenVec2s(velocity, reflection) / (Math.PI);
+  const reflectionFactor = 1;
+  return multiply(reflectionFactor, reflection);
+}
 // move moves a mover towards the destination but will consider
 // collisions with circles and eventaully lines.  Collisions may cause
 // both colliders to move
