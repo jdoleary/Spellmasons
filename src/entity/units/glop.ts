@@ -75,8 +75,6 @@ const unit: UnitSource = {
         // The following is a hacky way to make them not move too close to the enemy
         unit.stamina = Math.min(unit.stamina, distanceToEnemy - config.COLLISION_MESH_RADIUS);
         await Unit.moveTowards(unit, attackTarget, underworld);
-      } else {
-        console.log('Glop has no target to move towards')
       }
     }
   },
