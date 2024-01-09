@@ -54,6 +54,7 @@ export interface IHostApp {
     // Copied from PieClient.d.ts
     sendData(payload: any, extras?: any): void;
     isHostApp: boolean;
+    soloMode: boolean;
 }
 export function typeGuardHostApp(x: PieClient | IHostApp): x is IHostApp {
     // @ts-ignore: PieClient does not have isHostApp property but this typeguard will

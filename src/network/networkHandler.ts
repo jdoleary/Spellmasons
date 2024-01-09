@@ -1315,6 +1315,20 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       const { underworld: savedUnderworld, phase, units, players, pickups, version, numberOfHotseatPlayers } = fileSaveObj as SaveFile;
       if (numberOfHotseatPlayers !== undefined) {
         globalThis.numberOfHotseatPlayers = numberOfHotseatPlayers;
+        if (!overworld.pie.soloMode) {
+          console.log('Loading a hotseat multiplayer game into an online multiplayer server: so reset numberOfHotseatPlayers to 1 so that other players can assume control of hotseat players.');
+          globalThis.numberOfHotseatPlayers = 1;
+          for (let i = 1; i < players.length; i++) {
+            const player = players[i];
+            // Ensure players have different client ids when loading a hotseat game
+            // in a multiplayer lobby
+            if (player && player.clientId == players[0]?.clientId) {
+              player.clientId += `_${i}`;
+            }
+
+          }
+
+        }
       }
       if (version !== globalThis.SPELLMASONS_PACKAGE_VERSION) {
         Jprompt({
