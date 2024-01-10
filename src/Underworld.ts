@@ -3467,7 +3467,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // Filter for units within SELECTABLE_RADIUS of coordinates
       .filter(u => math.distance(u, coords) <= (u.isMiniboss ? config.SELECTABLE_RADIUS * config.UNIT_MINIBOSS_SCALE_MULTIPLIER : config.SELECTABLE_RADIUS))
       // Order by closest to coords
-      .sort((a, b) => math.distance(a, coords) - math.distance(b, coords))
+      .sort((a, b) => math.sqrDistance(a, coords) - math.sqrDistance(b, coords))
       // Sort dead units to the back, prefer selecting living units
       // TODO: This should be opposite if the spell is ressurect
       .sort((a, b) => a.alive && b.alive ? 0 : a.alive ? -1 : 1);
@@ -3479,7 +3479,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   getPickupAt(coords: Vec2, prediction?: boolean): Pickup.IPickup | undefined {
     const sortedByProximityToCoords = (prediction && this.pickupsPrediction ? this.pickupsPrediction : this.pickups)
       .filter(p => !p.flaggedForRemoval && !isNaN(p.x) && !isNaN(p.y))
-      .filter(p => !isNaN(p.x) && !isNaN(p.y) && math.distance(coords, p) <= p.radius).sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
+      .filter(p => !isNaN(p.x) && !isNaN(p.y) && math.distance(coords, p) <= p.radius)
+      .sort((a, b) => math.sqrDistance(a, coords) - math.sqrDistance(b, coords));
     const closest = sortedByProximityToCoords[0]
     return closest;
   }

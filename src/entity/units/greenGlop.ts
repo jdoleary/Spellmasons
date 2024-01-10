@@ -113,12 +113,8 @@ const unit: UnitSource = {
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
     return Unit.livingUnitsInDifferentFaction(unit, underworld)
-      .filter(u => math.distance(unit, u) <= unit.attackRange)
-      .map(u => ({ unit: u, dist: math.distance(unit, u) }))
-      .sort((a, b) => {
-        return a.dist - b.dist;
-      })
-      .map(x => x.unit)
+      .filter(u => Unit.inRange(unit, u))
+      .sort((a, b) => math.sqrDistance(a, unit) - math.sqrDistance(b, unit))
       .slice(0, numberOfTargets);
   }
 };

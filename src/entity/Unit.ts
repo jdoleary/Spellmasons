@@ -1185,19 +1185,16 @@ export function livingUnitsInSameFaction(unit: IUnit, underworld: Underworld) {
     (u) => u !== unit && u.faction == unit.faction && u.alive && u.unitSubType !== UnitSubType.DOODAD,
   );
 }
-export function closestInListOfUnits(
-  sourceUnit: IUnit,
-  units: IUnit[],
-): IUnit | undefined {
-  return units.reduce<{ closest: IUnit | undefined; distance: number }>(
+export function closestInListOfUnits(source: Vec2, units: IUnit[]): IUnit | undefined {
+  return units.reduce<{ closest: IUnit | undefined; sqrDistance: number }>(
     (acc, currentUnitConsidered) => {
-      const dist = distance(currentUnitConsidered, sourceUnit);
-      if (dist <= acc.distance) {
-        return { closest: currentUnitConsidered, distance: dist };
+      const sqrDist = math.sqrDistance(currentUnitConsidered, source);
+      if (sqrDist <= acc.sqrDistance) {
+        return { closest: currentUnitConsidered, sqrDistance: sqrDist };
       }
       return acc;
     },
-    { closest: undefined, distance: Number.MAX_SAFE_INTEGER },
+    { closest: undefined, sqrDistance: Number.MAX_SAFE_INTEGER },
   ).closest;
 }
 export function findClosestUnitInDifferentFaction(
@@ -1335,8 +1332,8 @@ export function syncImage(unit: IUnit) {
 export function getExplainPathForUnitId(id: string): string {
   return "images/explain/units/" + id.split(' ').join('') + ".gif";
 }
-export function inRange(unit: IUnit, coords: Vec2): boolean {
-  return math.distance(unit, coords) <= unit.attackRange;
+export function inRange(unit: IUnit, target: Vec2): boolean {
+  return math.sqrDistance(unit, target) <= unit.attackRange * unit.attackRange;
 }
 
 // return boolean signifies if unit should abort their turn
