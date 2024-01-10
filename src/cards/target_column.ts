@@ -3,6 +3,7 @@ import { addTarget, defaultTargetsForAllowNonUnitTargetTargetingSpell, getCurren
 import { drawUIPolyPrediction } from '../graphics/PlanningView';
 import { CardCategory } from '../types/commonTypes';
 import * as colors from '../graphics/ui/colors';
+import * as Vec from '../jmath/Vec';
 import { invert, Vec2 } from '../jmath/Vec';
 import { moveAlongVector, normalizedVector } from '../jmath/moveWithCollision';
 import { isVec2InsidePolygon } from '../jmath/Polygon2';
@@ -60,6 +61,10 @@ const spell: Spell = {
         ).filter(t => {
           return isVec2InsidePolygon(t, targetingColumn);
         });
+        // Sort by distance along column
+        withinColumn.sort((a, b) =>
+          sqrDistanceAlongColumn(a, target, vector)
+          - sqrDistanceAlongColumn(b, target, vector));
         // Add entities to target
         withinColumn.forEach(e => addTarget(e, state));
       }
@@ -134,5 +139,27 @@ async function animate(columns: { castLocation: Vec2, vector: Vec2, width: numbe
   })).then(() => {
     globalThis.predictionGraphics?.clear();
   });
+}
+function sqrDistanceAlongColumn(point: Vec2, columnOrigin: Vec2, vector: Vec2): number {
+  const vectorToPoint = Vec.subtract(point, columnOrigin);
+  // Vector is the direction the column extends
+  // Vector is already normalized in effect, so no need to normalize it again here
+  const projection = Vec.projectOnNormal(vectorToPoint, vector);
+
+  // if (predictionGraphics) {
+  //   const projectionEnd = Vec.add(columnOrigin, projection);
+  //   predictionGraphics.lineStyle(4, colors.trueBlue, 1.0)
+  //   predictionGraphics.moveTo(columnOrigin.x, columnOrigin.y);
+  //   predictionGraphics.lineTo(projectionEnd.x, projectionEnd.y);
+  //   predictionGraphics.endFill();
+
+  //   const columnEnd = Vec.add(columnOrigin, vector);
+  //   predictionGraphics.lineStyle(2, colors.trueRed, 1.0)
+  //   predictionGraphics.moveTo(columnOrigin.x, columnOrigin.y);
+  //   predictionGraphics.lineTo(columnEnd.x, columnEnd.y);
+  //   predictionGraphics.endFill();
+  // }
+
+  return Vec.sqrMagnitude(projection);
 }
 export default spell;
