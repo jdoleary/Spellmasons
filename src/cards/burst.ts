@@ -10,9 +10,9 @@ import { makeBurstParticles } from '../graphics/ParticleCollection';
 
 export const burstCardId = 'Burst';
 const maxDamage = 50;
-function calculateDamage(stack: number, casterPositionAtTimeOfCast: Vec2, casterAttackRange: number, target: Vec2): number {
-    const dist = distance(casterPositionAtTimeOfCast, target)
-    return Math.ceil(lerp(maxDamage, 0, (dist - config.COLLISION_MESH_RADIUS) / casterAttackRange) * stack);
+function calculateDamage(stack: number, caster: Vec2, casterAttackRange: number, target: Vec2): number {
+  const dist = distance(caster, target)
+  return Math.ceil(lerp(maxDamage, 0, (dist - config.COLLISION_MESH_RADIUS) / casterAttackRange) * stack);
 }
 export interface UnitDamage {
   id: number;
@@ -44,9 +44,11 @@ const spell: Spell = {
             playDefaultSpellSFX(card, prediction);
             for (let unit of targets) {
               const damage = calculateDamage(quantity, state.casterUnit, state.casterUnit.attackRange, unit);
-              Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
-              // Animate:
-              makeBurstParticles(unit, lerp(0.1, 1, damage / maxDamage), prediction, resolve);
+              if (damage > 0) {
+                Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
+                // Animate:
+                makeBurstParticles(unit, lerp(0.1, 1, damage / maxDamage), prediction, resolve);
+              }
             }
           } else {
             // Prevent timeout if burst is cast on no living units
