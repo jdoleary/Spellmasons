@@ -75,13 +75,12 @@ const spell: Spell = {
 function withinCone(origin: Vec2, coneStartPoint: Vec2, radius: number, startAngle: number, endAngle: number, target: Vec2): boolean {
   // and within angle:
   const targetAngle = getAngleBetweenVec2s(coneStartPoint, target);
-  const distanceToConeStart = distance(target, coneStartPoint);
+  const distanceToConeStart = sqrDistance(target, coneStartPoint);
 
   //TODO - Investigate isAngleBetweenAngles
   //temp fix for cone inversion: if angle is whole circle, just check distance.
-  return distanceToConeStart <= radius
+  return distanceToConeStart <= radius * radius
     && (isAngleBetweenAngles(targetAngle, startAngle, endAngle) || Math.abs(endAngle - startAngle) >= 2 * Math.PI);
-
 }
 
 async function animate(cones: { origin: Vec2, coneStartPoint: Vec2, radius: number, startAngle: number, endAngle: number }[], underworld: Underworld) {

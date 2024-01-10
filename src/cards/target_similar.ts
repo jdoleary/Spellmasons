@@ -56,7 +56,7 @@ export function targetSimilarEffect(numberOfTargets: number) {
             return isPickup(t) && t.name == target.name;
           }
         })
-        .sort((a, b) => math.distance(a, target) - math.distance(b, target));
+        .sort((a, b) => math.sqrDistance(a, target) - math.sqrDistance(b, target));
 
       const newTargets = potentialTargets.slice(0, numberOfTargets * quantity);
       if (!prediction) {
