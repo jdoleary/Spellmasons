@@ -30,8 +30,8 @@ const spell: Spell = {
       const swaps: [HasSpace, Vec2][] = [];
       const swapLocation = { x: casterUnit.x, y: casterUnit.y };
       const targets = getCurrentTargets(state);
-      // Swap the casterUnit
-      const casterSwapTarget = targets[0];
+      // Swap the casterUnit with the last target
+      const casterSwapTarget = targets[targets.length - 1];
       if (casterSwapTarget) {
         swaps.push([casterUnit, casterSwapTarget]);
       }
