@@ -1338,7 +1338,7 @@ export default class Underworld {
       // Slightly delay showing enemy introductions so the button doesn't flicker on for a moment before CSS has a chance
       // to mark the cinematic camera as active
       setTimeout(() => {
-        Jprompt({ imageSrc: Unit.getExplainPathForUnitId(id), text: `<h1>${id}</h1>` + '\n' + i18n(sourceUnit.info.description), yesText: 'Okay' });
+        Jprompt({ imageSrc: Unit.getExplainPathForUnitId(id), text: `<h1>${i18n(id)}</h1>` + '\n' + i18n(sourceUnit.info.description), yesText: 'Okay' });
       }, 500)
     }
     let unit: Unit.IUnit = Unit.create(
