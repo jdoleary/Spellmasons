@@ -3425,7 +3425,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     const withinDistance: HasSpace[] = [];
     const potentialTargets = this.getPotentialTargets(prediction);
     for (let entity of potentialTargets) {
-      if (math.distance(entity, target) <= distance) {
+      if (math.sqrDistance(entity, target) <= distance * distance) {
         withinDistance.push(entity);
       }
     }
@@ -3440,7 +3440,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     const withinDistance: Pickup.IPickup[] = [];
     const pickups = (prediction && this.pickupsPrediction) ? this.pickupsPrediction : this.pickups;
     for (let pickup of pickups) {
-      if (math.distance(pickup, target) <= distance) {
+      if (math.sqrDistance(pickup, target) <= distance * distance) {
         withinDistance.push(pickup);
       }
     }
@@ -3454,7 +3454,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     const withinDistance: Unit.IUnit[] = [];
     const units = (prediction && this.unitsPrediction) ? this.unitsPrediction : this.units;
     for (let unit of units) {
-      if (math.distance(unit, target) <= distance) {
+      if (math.sqrDistance(unit, target) <= distance * distance) {
         withinDistance.push(unit);
       }
     }

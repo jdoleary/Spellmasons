@@ -97,7 +97,7 @@ export function reflectOnNormal(v: Vec2, normal: Vec2): Vec2 {
 // Like a heavy box hitting a wall and continuing to slide parallel to it
 // Normal must be normalized before passing it here
 export function projectOnNormal(v: Vec2, normal: Vec2): Vec2 {
-  const scalar = dotProduct(v, normal) / dotProduct(normal, normal);
+  const scalar = dotProduct(v, normal);
   return multiply(scalar, normal);
 }
 // Magnitude without the sqrt() function - Use when performance is a concern
