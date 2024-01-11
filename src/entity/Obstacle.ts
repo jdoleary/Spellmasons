@@ -131,6 +131,5 @@ export function tryFallInOutOfLiquid(entity: HasSpace, underworld: Underworld, p
     inLiquid.add(entity, underworld, prediction);
   } else {
     inLiquid.remove(entity);
-
   }
 }

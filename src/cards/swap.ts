@@ -4,12 +4,11 @@ import { getCurrentTargets, Spell } from './index';
 import type { Vec2 } from '../jmath/Vec';
 import * as config from '../config';
 import * as Vec from '../jmath/Vec';
-import * as Obstacle from '../entity/Obstacle';
 import { CardCategory } from '../types/commonTypes';
-import { skyBeam } from '../VisualEffects';
 import { playDefaultSpellSFX } from './cardUtils';
 import { HasSpace } from '../entity/Type';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
+import { teleport } from '../effects/teleport';
 
 export const swap_id = 'swap';
 const spell: Spell = {
@@ -37,29 +36,14 @@ const spell: Spell = {
       }
       const swapLocations = [swapLocation, ...underworld.findValidSpawns(swapLocation, config.COLLISION_MESH_RADIUS / 4, 4)];
 
-      for (let targetUnit of targets) {
-        if (targetUnit) {
-          swaps.push([targetUnit, swapLocations.shift() || swapLocation]);
+      for (let targetObject of targets) {
+        if (targetObject) {
+          swaps.push([targetObject, swapLocations.shift() || swapLocation]);
         }
       }
 
-      for (let [entity, newLocation] of swaps) {
-        if (!prediction) {
-          // Animate effect of unit spawning from the sky
-          skyBeam(newLocation);
-        }
-
-        if (Unit.isUnit(entity)) {
-          // Physically swap
-          Unit.setLocation(entity, newLocation);
-          // Check to see if unit interacts with liquid
-          Obstacle.tryFallInOutOfLiquid(entity, underworld, prediction);
-        } else if (Pickup.isPickup(entity)) {
-          Pickup.setPosition(entity, newLocation.x, newLocation.y);
-        } else {
-          entity.x = newLocation.x;
-          entity.y = newLocation.y;
-        }
+      for (let [object, newLocation] of swaps) {
+        teleport(object, newLocation, underworld, prediction);
       }
       return state;
     },
