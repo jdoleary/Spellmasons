@@ -31,8 +31,7 @@ const spell: Spell = {
 };
 export function targetSimilarEffect(numberOfTargets: number) {
   return async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean) => {
-    // Note: This loop must NOT be a for..of and it must cache the length because it
-    // mutates state.targetedUnits as it iterates.  Otherwise it will continue to loop as it grows
+    // We store the initial targets because target similar mutates state.targetedUnits
     let targets: Vec2[] = getCurrentTargets(state);
     targets = targets.length ? targets : [state.castLocation];
     const initialTargets = targets;
@@ -50,10 +49,18 @@ export function targetSimilarEffect(numberOfTargets: number) {
         // Filter out dissimilar types
         // @ts-ignore Find similar units by unitSourceId, find similar pickups by name
         .filter(t => {
-          if (isUnit(target)) {
-            return isUnit(t) && t.unitSourceId == target.unitSourceId && t.alive == target.alive && t.faction == target.faction;
-          } else if (isPickup(target)) {
-            return isPickup(t) && t.name == target.name;
+          if (isUnit(target) && isUnit(t) && t.unitSourceId == target.unitSourceId) {
+            if (target.alive) {
+              // Match living units of the same faction
+              return t.alive && t.faction == target.faction;
+            } else {
+              // Match any dead unit
+              return !t.alive;
+            }
+          } else if (isPickup(target) && isPickup(t) && t.name == target.name) {
+            return true;
+          } else {
+            return false;
           }
         })
         .sort((a, b) => math.sqrDistance(a, target) - math.sqrDistance(b, target));
