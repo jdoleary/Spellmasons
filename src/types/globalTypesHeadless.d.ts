@@ -353,4 +353,7 @@ declare global {
       outOfRange: { thickness: number, color: number }
     },
   } | undefined;
+  // Feature flag set by spellmaons.com's server list for whether or not to send events to
+  // the server hub
+  var useEventLogger: boolean;
 }

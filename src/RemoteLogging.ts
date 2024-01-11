@@ -1,3 +1,4 @@
+import { SERVER_HUB_URL } from "./config";
 
 const originalConsoleError = console.error;
 // const originalConsoleWarn = console.warn;
@@ -40,9 +41,8 @@ interface Event {
     message: string;
 }
 export function sendEventToServerHub(eventG: EventGroupMessage) {
-    if (globalThis.headless) {
-        fetch("http://localhost:8080/event", {
-            // fetch("https://server-hub-d2b2v.ondigitalocean.app/event", {
+    if (globalThis.headless && globalThis.useEventLogger) {
+        fetch(`${SERVER_HUB_URL}/event`, {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(eventG)
@@ -77,7 +77,7 @@ function sendLogToServerHub(args: any[], l: LogLevel) {
     if (recentLogs.find(entry => entry.m == log.m)) {
         // Omitts FLOODing logs
     } else {
-        fetch("https://server-hub-d2b2v.ondigitalocean.app/log", {
+        fetch(`${SERVER_HUB_URL}/log`, {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(log)

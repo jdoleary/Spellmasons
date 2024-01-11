@@ -26,6 +26,7 @@ import { IHostApp, onClientPresenceChanged } from './network/networkUtil';
 import { onData } from './network/networkHandler';
 import makeOverworld, { Overworld } from "./Overworld";
 import Underworld from "./Underworld";
+import { SERVER_HUB_URL } from "./config";
 const isUsingBun = process.env.USING_BUN === 'yes';
 const pie = isUsingBun ? require('@websocketpie/server-bun') : require('@websocketpie/server');
 // Init underworld so that when clients join they can use it as the canonical
@@ -39,6 +40,17 @@ globalThis.isHost = () => true;
 globalThis.player = undefined;
 globalThis.isSuperMe = false;
 globalThis.numberOfHotseatPlayers = 1;
+globalThis.useEventLogger = false;
+
+fetch(SERVER_HUB_URL, {
+    method: "GET",
+    headers: { 'Content-Type': 'application/json' },
+}).then(x => x.json()).then(({ config }) => {
+    if (config) {
+        globalThis.useEventLogger = config.useEventLogger;
+    }
+    console.log('Use event logger:', globalThis.useEventLogger);
+}).catch(e => console.error('Could not fetch config from serverList', e))
 
 function headlessStartGame() {
     console.log('Headless Server Started at port ', PORT);

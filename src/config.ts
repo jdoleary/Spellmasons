@@ -82,3 +82,4 @@ export const TIMEMASON_PERCENT_DRAIN = 1;
 // Force Moves timeout must be changable and resettable and NOT use raceTimeout
 // due to: https://github.com/jdoleary/Spellmasons/issues/352
 export const FORCE_MOVE_PROMISE_TIMEOUT_MILLIS = 2_000;
+export const SERVER_HUB_URL = 'https://server-hub-d2b2v.ondigitalocean.app';

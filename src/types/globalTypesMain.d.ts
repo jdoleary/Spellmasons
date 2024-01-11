@@ -286,4 +286,5 @@ declare global {
       outOfRange: { thickness: number, color: number }
     },
   } | undefined;
+  var useEventLogger: boolean;
 }
