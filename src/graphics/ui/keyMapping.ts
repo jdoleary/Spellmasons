@@ -41,7 +41,11 @@ const mapping = {
     openChat: ['KeyT'],
     adminPowerBar: ['ctrlKey+Space']
 }
-globalThis.controlMap = mapping;
+// Deep copy so mapping itself isn't mutated so it can be reset
+globalThis.controlMap = JSON.parse(JSON.stringify(mapping));
+globalThis.resetControlMap = () => {
+    globalThis.controlMap = JSON.parse(JSON.stringify(mapping));
+}
 export default mapping;
 
 export function fullyUpdateControls(newMapping: any) {

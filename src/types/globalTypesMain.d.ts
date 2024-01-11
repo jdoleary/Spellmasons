@@ -287,4 +287,5 @@ declare global {
     },
   } | undefined;
   var useEventLogger: boolean;
+  var resetControlMap: undefined | (() => void);
 }

@@ -356,4 +356,5 @@ declare global {
   // Feature flag set by spellmaons.com's server list for whether or not to send events to
   // the server hub
   var useEventLogger: boolean;
+  var resetControlMap: undefined | (() => void);
 }
