@@ -60,7 +60,7 @@ const spell: Spell = {
               return false;
             }
           })
-          .sort((a, b) => math.sqrDistance(a, target) - math.sqrDistance(b, target));
+          .sort(math.sortCosestTo(target));
 
         const newTargets = potentialTargets.slice(0, NUMBER_OF_TARGETS_PER_STACK * quantity);
         if (!prediction) {

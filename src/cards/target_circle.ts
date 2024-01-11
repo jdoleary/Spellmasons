@@ -9,7 +9,7 @@ import * as config from '../config';
 import { easeOutCubic } from '../jmath/Easing';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { HasSpace } from '../entity/Type';
-import { sqrDistance } from '../jmath/math';
+import { sortCosestTo, sqrDistance } from '../jmath/math';
 
 const id = 'Target Circle';
 const baseRadius = 100;
@@ -55,7 +55,7 @@ const spell: Spell = {
           prediction
         );
         // Sort by distance to circle center
-        withinRadius.sort((a, b) => sqrDistance(a, target) - sqrDistance(b, target));
+        withinRadius.sort(sortCosestTo(target));
         // Add entities to target
         withinRadius.forEach(e => addTarget(e, state));
       }

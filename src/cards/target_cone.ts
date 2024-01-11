@@ -4,7 +4,7 @@ import { CardCategory } from '../types/commonTypes';
 import * as colors from '../graphics/ui/colors';
 import { getAngleBetweenVec2s, Vec2 } from '../jmath/Vec';
 import { isAngleBetweenAngles } from '../jmath/Angle';
-import { distance, sqrDistance } from '../jmath/math';
+import { sortCosestTo, sqrDistance } from '../jmath/math';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import type Underworld from '../Underworld';
 import { raceTimeout } from '../Promise';
@@ -61,7 +61,7 @@ const spell: Spell = {
           return withinCone(state.casterUnit, target, adjustedRange, startAngle, endAngle, t);
         });
         // Sort by distance to cone start
-        withinRadiusAndAngle.sort((a, b) => sqrDistance(a, target) - sqrDistance(b, target));
+        withinRadiusAndAngle.sort(sortCosestTo(target));
         // Add entities to target
         withinRadiusAndAngle.forEach(e => addTarget(e, state));
       }

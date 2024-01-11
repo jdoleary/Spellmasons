@@ -1,7 +1,7 @@
 import * as LineSegment from "./lineSegment";
 import { Vec2 } from "./Vec";
 import * as Vec from "./Vec";
-import { distance, sqrDistance } from "./math";
+import { distance, sortCosestTo, sqrDistance } from "./math";
 import { clockwiseAngle, isAngleBetweenAngles } from "./Angle";
 
 // Allows accessing an array without going out of bounds.  So getBoundedIndex(array.length+1)
@@ -130,7 +130,7 @@ export function splitIntersectingLineSegments(line: LineSegment.LineSegment, lin
     }
   }
   // Sort closest first
-  intersections.sort((a, b) => sqrDistance(line.p1, a) - sqrDistance(line.p1, b));
+  intersections.sort(sortCosestTo(line.p1));
   // Make new line segments
   let lastPoint = line.p1;
   for (let intersection of intersections) {

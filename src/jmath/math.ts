@@ -53,6 +53,10 @@ export function sqrDistance(coords1: Vec2, coords2: Vec2): number {
 export function distance(coords1: Vec2, coords2: Vec2): number {
   return Math.sqrt(sqrDistance(coords1, coords2));
 }
+// returns a function to be passed into a .sort() callback
+export function sortCosestTo(point: Vec2): (a: Vec2, b: Vec2) => number {
+  return (a: Vec2, b: Vec2) => sqrDistance(a, point) - sqrDistance(b, point);
+}
 
 // Returns a point distance away from origin in the direction of the angle radians
 // Currently used for finding best path to LOS for an archer

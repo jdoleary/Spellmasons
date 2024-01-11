@@ -9,7 +9,7 @@ import { clone, Vec2 } from '../jmath/Vec';
 import { findWherePointIntersectLineSegmentAtRightAngle } from '../jmath/lineSegment';
 import { findArrowPath } from './arrow';
 import Underworld from '../Underworld';
-import { distance, sqrDistance } from '../jmath/math';
+import { sortCosestTo, sqrDistance } from '../jmath/math';
 
 export const targetArrowCardId = 'Target Arrow';
 const spell: Spell = {
@@ -119,9 +119,8 @@ export function findArrowCollisions(casterPositionAtTimeOfCast: Vec2, casterId: 
       const willBeStruckByArrow = !pointAtRightAngleToArrowPath ? false : sqrDistance(u, pointAtRightAngleToArrowPath) <= config.COLLISION_MESH_RADIUS * config.COLLISION_MESH_RADIUS;
       return willBeStruckByArrow;
     },
-  ).sort((a, b) => {
-    return sqrDistance(a, arrowShootPath.p1) - sqrDistance(b, arrowShootPath.p1);
-  })
+  ).sort(sortCosestTo(arrowShootPath.p1))
+
   // Return the endPoint so the arrow will fly and hit a wall even if it doesn't hit a unit
   return hitTargets.length ? hitTargets : [arrowShootPath.p2];
 }

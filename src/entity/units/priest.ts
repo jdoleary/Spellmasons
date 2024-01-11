@@ -107,7 +107,7 @@ const unit: UnitSource = {
     const numberOfAlliesToRez = unit.isMiniboss ? 3 : 1;
     return resurrectableUnits(unit, underworld)
       .filter(u => Unit.inRange(unit, u))
-      .sort((a, b) => math.sqrDistance(a, unit) - math.sqrDistance(b, unit))
+      .sort(math.sortCosestTo(unit))
       .slice(0, numberOfAlliesToRez);
   }
 };

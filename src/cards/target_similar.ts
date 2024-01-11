@@ -63,7 +63,7 @@ export function targetSimilarEffect(numberOfTargets: number) {
             return false;
           }
         })
-        .sort((a, b) => math.sqrDistance(a, target) - math.sqrDistance(b, target));
+        .sort(math.sortCosestTo(target));
 
       const newTargets = potentialTargets.slice(0, numberOfTargets * quantity);
       if (!prediction) {
