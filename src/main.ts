@@ -6,7 +6,9 @@ import cookieConsentPopup from './cookieConsent';
 import * as storage from './storage';
 import './style.css';
 import './svelte-bundle.css';
-cookieConsentPopup(false);
+document.addEventListener("DOMContentLoaded", function (event) {
+  cookieConsentPopup(false);
+});
 
 // This import is critical so that the svelte menu has access to
 // the pie globals
