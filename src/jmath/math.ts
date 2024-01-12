@@ -41,17 +41,14 @@ export function getCoordsAtDistanceTowardsTarget(start: Vec2, target: Vec2, trav
     y: start.y + result.y
   }
 }
-// Distance without the sqrt() function - Use when performance is a concern
-// When comparing distances, compare sqrDistances
-// When comparing to a vector, use (sqrMagnitude to sqrDistance)
-// ... instead of (distance to distance) or (magnitude to distance)
-export function sqrDistance(coords1: Vec2, coords2: Vec2): number {
+export function distance(coords1: Vec2, coords2: Vec2): number {
   const dx = coords1.x - coords2.x;
   const dy = coords1.y - coords2.y;
-  return dx * dx + dy * dy;
+  return Math.sqrt(dx * dx + dy * dy);
 }
-export function distance(coords1: Vec2, coords2: Vec2): number {
-  return Math.sqrt(sqrDistance(coords1, coords2));
+// returns a function to be passed into a .sort() callback
+export function sortCosestTo(point: Vec2): (a: Vec2, b: Vec2) => number {
+  return (a: Vec2, b: Vec2) => distance(a, point) - distance(b, point);
 }
 
 // Returns a point distance away from origin in the direction of the angle radians

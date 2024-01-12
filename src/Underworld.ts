@@ -398,7 +398,7 @@ export default class Underworld {
     // Represents the positional offset for this simulation loop
     // AKA the Vec2 distance to travel
     const deltaPosition = Vec.multiply(deltaTime, velocity)
-    if (Vec.sqrMagnitude(deltaPosition) < 0.01) {
+    if (Vec.magnitude(deltaPosition) < 0.1) {
       // It's close enough, return true to signify complete 
       return true;
     }
@@ -489,7 +489,7 @@ export default class Underworld {
       const newPosition = Vec.add(pushedObject, deltaPosition);
       pushedObject.x = newPosition.x;
       pushedObject.y = newPosition.y;
-      if (math.sqrDistance(forceMoveInst.pushedObject, forceMoveInst.startPoint) >= math.sqrDistance(forceMoveInst.endPoint, forceMoveInst.startPoint)) {
+      if (math.distance(forceMoveInst.pushedObject, forceMoveInst.startPoint) >= math.distance(forceMoveInst.endPoint, forceMoveInst.startPoint)) {
         // Projectile is done if it reaches or goes beyond its end point
         return true;
       }
@@ -3467,7 +3467,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // Filter for units within SELECTABLE_RADIUS of coordinates
       .filter(u => math.distance(u, coords) <= (u.isMiniboss ? config.SELECTABLE_RADIUS * config.UNIT_MINIBOSS_SCALE_MULTIPLIER : config.SELECTABLE_RADIUS))
       // Order by closest to coords
-      .sort((a, b) => math.distance(a, coords) - math.distance(b, coords))
+      .sort(math.sortCosestTo(coords))
       // Sort dead units to the back, prefer selecting living units
       // TODO: This should be opposite if the spell is ressurect
       .sort((a, b) => a.alive && b.alive ? 0 : a.alive ? -1 : 1);
@@ -3479,7 +3479,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   getPickupAt(coords: Vec2, prediction?: boolean): Pickup.IPickup | undefined {
     const sortedByProximityToCoords = (prediction && this.pickupsPrediction ? this.pickupsPrediction : this.pickups)
       .filter(p => !p.flaggedForRemoval && !isNaN(p.x) && !isNaN(p.y))
-      .filter(p => !isNaN(p.x) && !isNaN(p.y) && math.distance(coords, p) <= p.radius).sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
+      .filter(p => !isNaN(p.x) && !isNaN(p.y) && math.distance(coords, p) <= p.radius)
+      .sort(math.sortCosestTo(coords));
     const closest = sortedByProximityToCoords[0]
     return closest;
   }

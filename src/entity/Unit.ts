@@ -1185,13 +1185,10 @@ export function livingUnitsInSameFaction(unit: IUnit, underworld: Underworld) {
     (u) => u !== unit && u.faction == unit.faction && u.alive && u.unitSubType !== UnitSubType.DOODAD,
   );
 }
-export function closestInListOfUnits(
-  sourceUnit: IUnit,
-  units: IUnit[],
-): IUnit | undefined {
+export function closestInListOfUnits(source: Vec2, units: IUnit[]): IUnit | undefined {
   return units.reduce<{ closest: IUnit | undefined; distance: number }>(
     (acc, currentUnitConsidered) => {
-      const dist = distance(currentUnitConsidered, sourceUnit);
+      const dist = math.distance(currentUnitConsidered, source);
       if (dist <= acc.distance) {
         return { closest: currentUnitConsidered, distance: dist };
       }
@@ -1335,8 +1332,8 @@ export function syncImage(unit: IUnit) {
 export function getExplainPathForUnitId(id: string): string {
   return "images/explain/units/" + id.split(' ').join('') + ".gif";
 }
-export function inRange(unit: IUnit, coords: Vec2): boolean {
-  return math.distance(unit, coords) <= unit.attackRange;
+export function inRange(unit: IUnit, target: Vec2): boolean {
+  return math.distance(unit, target) <= unit.attackRange;
 }
 
 // return boolean signifies if unit should abort their turn

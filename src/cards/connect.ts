@@ -140,7 +140,7 @@ export async function getNextConnectingEntities(
 
     for (let t of potentialTargets) {
       const dist = math.distance(t, source);
-      if (dist < closestDist) {
+      if (dist <= closestDist) {
         closestDist = dist;
         closestTarget = t;
       }

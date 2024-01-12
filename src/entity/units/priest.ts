@@ -105,9 +105,10 @@ const unit: UnitSource = {
       return [];
     }
     const numberOfAlliesToRez = unit.isMiniboss ? 3 : 1;
-    return resurrectableUnits(unit, underworld).filter(u => {
-      return Unit.inRange(unit, u)
-    }).slice(0, numberOfAlliesToRez);
+    return resurrectableUnits(unit, underworld)
+      .filter(u => Unit.inRange(unit, u))
+      .sort(math.sortCosestTo(unit))
+      .slice(0, numberOfAlliesToRez);
   }
 };
 export function resurrectableUnits(resurrector: Unit.IUnit, underworld: Underworld): Unit.IUnit[] {
@@ -123,7 +124,6 @@ export function resurrectableUnits(resurrector: Unit.IUnit, underworld: Underwor
     // Do not allow priest to rez each other.
     // That would be super annoying for players
     && u.unitSourceId !== resurrector.unitSourceId);
-
 }
 
 export default unit;

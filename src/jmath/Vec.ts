@@ -97,20 +97,12 @@ export function reflectOnNormal(v: Vec2, normal: Vec2): Vec2 {
 // Like a heavy box hitting a wall and continuing to slide parallel to it
 // Normal must be normalized before passing it here
 export function projectOnNormal(v: Vec2, normal: Vec2): Vec2 {
-  const scalar = dotProduct(v, normal) / dotProduct(normal, normal);
+  const scalar = dotProduct(v, normal);
   return multiply(scalar, normal);
-}
-// Magnitude without the sqrt() function - Use when performance is a concern
-// When comparing the length of two vectors, compare sqrMagnitudes
-// When comparing to a distance, use (sqrMagnitude > sqrDistance)
-// *or to (distance * distance) where distance is a constant
-// ... instead of (magnitude to magnitude) or (magnitude to distance)
-export function sqrMagnitude(p: Vec2): number {
-  return p.x * p.x + p.y * p.y;
 }
 // Magnitude of a vector
 export function magnitude(p: Vec2): number {
-  return Math.sqrt(sqrMagnitude(p));
+  return Math.sqrt(p.x * p.x + p.y * p.y);
 }
 export function equal(p1: Vec2, p2: Vec2): boolean {
   return p1.x == p2.x && p1.y == p2.y;

@@ -4,7 +4,7 @@ import { CardCategory } from '../types/commonTypes';
 import * as colors from '../graphics/ui/colors';
 import { getAngleBetweenVec2s, Vec2 } from '../jmath/Vec';
 import { isAngleBetweenAngles } from '../jmath/Angle';
-import { distance } from '../jmath/math';
+import { distance, sortCosestTo } from '../jmath/math';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import type Underworld from '../Underworld';
 import { raceTimeout } from '../Promise';
@@ -60,6 +60,8 @@ const spell: Spell = {
         ).filter(t => {
           return withinCone(state.casterUnit, target, adjustedRange, startAngle, endAngle, t);
         });
+        // Sort by distance to cone start
+        withinRadiusAndAngle.sort(sortCosestTo(target));
         // Add entities to target
         withinRadiusAndAngle.forEach(e => addTarget(e, state));
       }
@@ -79,7 +81,6 @@ function withinCone(origin: Vec2, coneStartPoint: Vec2, radius: number, startAng
   //temp fix for cone inversion: if angle is whole circle, just check distance.
   return distanceToConeStart <= radius
     && (isAngleBetweenAngles(targetAngle, startAngle, endAngle) || Math.abs(endAngle - startAngle) >= 2 * Math.PI);
-
 }
 
 async function animate(cones: { origin: Vec2, coneStartPoint: Vec2, radius: number, startAngle: number, endAngle: number }[], underworld: Underworld) {
