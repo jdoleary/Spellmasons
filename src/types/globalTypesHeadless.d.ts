@@ -358,4 +358,5 @@ declare global {
   // the server hub
   var useEventLogger: boolean;
   var resetControlMap: undefined | (() => void);
+  var setFontOverride: undefined | ((font: string) => void);
 }

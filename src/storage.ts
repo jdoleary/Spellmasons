@@ -45,6 +45,9 @@ export function getSavedData() {
             console.log('Setup: Initializing saved settings', storedOptions);
             if (storedOptions !== null) {
                 const options = JSON.parse(storedOptions);
+                if (options.fontOverride && globalThis.setFontOverride) {
+                    globalThis.setFontOverride(options.fontOverride);
+                }
                 if (options.cinematicCameraEnabled !== undefined) {
                     globalThis.cinematicCameraEnabled = options.cinematicCameraEnabled;
                 }
@@ -182,5 +185,14 @@ globalThis.setCinematicCameraEnabled = (enabled: boolean, saveSetting: boolean =
         assign(STORAGE_OPTIONS, { cinematicCameraEnabled: enabled });
     }
 };
+globalThis.setFontOverride = (font: string) => {
+    assign(STORAGE_OPTIONS, { fontOverride: font });
+    if (font == 'arial') {
+        document.body.classList.toggle(`font-arial`, true);
+    } else {
+        document.body.classList.toggle(`font-arial`, false);
+    }
+
+}
 globalThis.storageSet = set;
 globalThis.storageGet = get;
