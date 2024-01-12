@@ -1,56 +1,43 @@
 import * as storage from './storage';
+const PRIVACY_POLICY_AND_EULA_CONSENT_STORAGE_KEY = 'privacy_policy_and_eula_consent';
+const PRIVACY_POLICY_AND_EULA_CONSENT_STORAGE_VALUE = 'accepted';
 export function areCookiesAllowed() {
-    return localStorage.getItem('cookieConsent') === 'allowed';
+    return localStorage.getItem(PRIVACY_POLICY_AND_EULA_CONSENT_STORAGE_KEY) === PRIVACY_POLICY_AND_EULA_CONSENT_STORAGE_VALUE;
 }
 export default function cookieConsentPopup(forcePopup: boolean) {
-    // Cookie check not needed on electron
-    if (globalThis.isElectron) {
-        allow();
-        return;
-    }
     // If user has already allowed cookies, don't show the popup
-    if (!forcePopup && localStorage.getItem('cookieConsent') === 'allowed') {
-        globalThis.allowCookies = areCookiesAllowed();
-        console.log('Setup: Cookie consent:', globalThis.allowCookies);
+    if (!forcePopup && localStorage.getItem(PRIVACY_POLICY_AND_EULA_CONSENT_STORAGE_KEY) === PRIVACY_POLICY_AND_EULA_CONSENT_STORAGE_VALUE) {
+        globalThis.privacyPolicyAndEULAConsent = areCookiesAllowed();
+        console.log('Setup: Cookie consent:', globalThis.privacyPolicyAndEULAConsent);
         return
     }
-    const el = document.createElement('div')
-    document.body?.appendChild(el);
-    el.innerHTML = `
-<div id="cookie-consent">
-    <div id="cookie-consent-inner">
-        <p>
-        Spellmasons uses cookies and localStorage to save your game progress, hide the tutorial if you've already completed it, and to store other game-related data.
-        </p>
-        <p>
-        Please allow cookies for the best user experience.
-        </P>
-        <div>
-            <button id="cookie-consent-allow" type="button" style="width:100px;">
-                Allow
-            </button>
-            <button id="cookie-consent-deny" type="button">
-                Deny
-            </button>
-        </div>
-    </div>
-</div>
-`;
+    const privacyPolicyEl = document.getElementById('privacy-policy-popup');
+    if (privacyPolicyEl) {
+        privacyPolicyEl.classList.toggle('show', true);
+    } else {
+        console.error('Unexpected: could not find privacy policy popup');
+    }
     const elAllow = document.getElementById('cookie-consent-allow');
     elAllow?.addEventListener('click', allow);
     const elDeny = document.getElementById('cookie-consent-deny');
     elDeny?.addEventListener('click', deny);
 }
 function allow() {
-    globalThis.allowCookies = true;
+    globalThis.privacyPolicyAndEULAConsent = true;
     if (globalThis.pie) {
         storage.set(storage.STORAGE_PIE_CLIENTID_KEY, globalThis.pie.clientId);
     }
-    document.getElementById('cookie-consent')?.remove();
-    localStorage.setItem('cookieConsent', 'allowed');
+    const privacyPolicyEl = document.getElementById('privacy-policy-popup');
+    if (privacyPolicyEl) {
+        privacyPolicyEl.classList.toggle('show', false);
+    } else {
+        console.error('Unexpected: could not find privacy policy popup');
+    }
+    localStorage.setItem(PRIVACY_POLICY_AND_EULA_CONSENT_STORAGE_KEY, PRIVACY_POLICY_AND_EULA_CONSENT_STORAGE_VALUE);
 }
+globalThis.acceptPrivacyPolicyAndEULA = allow;
 function deny() {
-    globalThis.allowCookies = false;
+    globalThis.privacyPolicyAndEULAConsent = false;
     localStorage.clear();
     document.getElementById('cookie-consent')?.remove();
 

@@ -127,7 +127,7 @@ export function set(key: string, value: any) {
         // Headless server does not use storage
         return;
     }
-    if (globalThis.isElectron || globalThis.allowCookies) {
+    if (globalThis.isElectron || globalThis.privacyPolicyAndEULAConsent) {
         if (globalThis.diskStorage) {
             // Store both on disk and in local storage
             // because local storage is used for accessing the
@@ -143,7 +143,7 @@ export function set(key: string, value: any) {
     }
 }
 export function assign(key: string, value: object) {
-    if (globalThis.allowCookies) {
+    if (globalThis.privacyPolicyAndEULAConsent) {
         const obj = localStorage.getItem(key);
         let json = {};
         if (obj) {
@@ -161,7 +161,7 @@ export function get(key: string): string | null {
         // Headless server does not use storage
         return null;
     }
-    if (globalThis.allowCookies || areCookiesAllowed()) {
+    if (globalThis.privacyPolicyAndEULAConsent || areCookiesAllowed()) {
         const savedValue = localStorage.getItem(key);
         return savedValue;
     } else {

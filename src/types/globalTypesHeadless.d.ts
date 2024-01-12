@@ -54,7 +54,7 @@ declare global {
   // var predictionGraphics: undefined;
   // var planningViewGraphics: undefined;
   // var debugCave: undefined;
-  // var allowCookies: undefined;
+  // var privacyPolicyAndEULAConsent: undefined;
   // var playMusic: undefined;
   // var changeVolume: undefined;
   // var changeVolumeMusic: undefined;
@@ -140,7 +140,8 @@ declare global {
   var planningViewGraphics: PIXI.Graphics | undefined;
   // Graphics for debugging the cave
   var debugCave: PIXI.Graphics | undefined;
-  var allowCookies: undefined | boolean;
+  var privacyPolicyAndEULAConsent: undefined | boolean;
+  var acceptPrivacyPolicyAndEULA: undefined | (() => void);
   var configPlayer: undefined | (({ color, name }: { color?: number, name?: string, lobbyReady?: boolean }) => void);
   var playMusic: undefined | (() => void);
   var changeVolume: undefined | ((volume: number, saveSetting: boolean) => void);

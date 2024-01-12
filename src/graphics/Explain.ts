@@ -37,7 +37,7 @@ globalThis.menuExplain = (key: string) => {
 }
 function isAlreadyExplained(key: string): boolean {
     const explainData = explainMap[key];
-    if (globalThis.allowCookies) {
+    if (globalThis.privacyPolicyAndEULAConsent) {
         if (explainData) {
             // If not already explained
             return storage.get(key) == ALREADY_EXPLAINED;
