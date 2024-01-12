@@ -66,10 +66,10 @@ export type Circle = {
   radius: number;
 } & Vec2;
 export function isVecIntersectingVecWithCustomRadius(c1: Vec2, c2: Vec2, radius: number): boolean {
-  return math.sqrDistance(c1, c2) <= radius * radius;
+  return math.distance(c1, c2) <= radius;
 }
 export function isCircleIntersectingCircle(c1: Circle, c2: Circle): boolean {
-  return math.sqrDistance(c1, c2) <= (c1.radius + c2.radius) * (c1.radius + c2.radius);
+  return math.distance(c1, c2) <= c1.radius + c2.radius;
 }
 // Given a position ("from"), inside a circle, move the circle away from the position "from",
 // until "from" is at the edge of the cricle.

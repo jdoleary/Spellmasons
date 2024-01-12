@@ -1186,15 +1186,15 @@ export function livingUnitsInSameFaction(unit: IUnit, underworld: Underworld) {
   );
 }
 export function closestInListOfUnits(source: Vec2, units: IUnit[]): IUnit | undefined {
-  return units.reduce<{ closest: IUnit | undefined; sqrDistance: number }>(
+  return units.reduce<{ closest: IUnit | undefined; distance: number }>(
     (acc, currentUnitConsidered) => {
-      const sqrDist = math.sqrDistance(currentUnitConsidered, source);
-      if (sqrDist <= acc.sqrDistance) {
-        return { closest: currentUnitConsidered, sqrDistance: sqrDist };
+      const dist = math.distance(currentUnitConsidered, source);
+      if (dist <= acc.distance) {
+        return { closest: currentUnitConsidered, distance: dist };
       }
       return acc;
     },
-    { closest: undefined, sqrDistance: Number.MAX_SAFE_INTEGER },
+    { closest: undefined, distance: Number.MAX_SAFE_INTEGER },
   ).closest;
 }
 export function findClosestUnitInDifferentFaction(
@@ -1333,7 +1333,7 @@ export function getExplainPathForUnitId(id: string): string {
   return "images/explain/units/" + id.split(' ').join('') + ".gif";
 }
 export function inRange(unit: IUnit, target: Vec2): boolean {
-  return math.sqrDistance(unit, target) <= unit.attackRange * unit.attackRange;
+  return math.distance(unit, target) <= unit.attackRange;
 }
 
 // return boolean signifies if unit should abort their turn

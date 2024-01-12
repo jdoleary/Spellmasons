@@ -1,7 +1,7 @@
 import * as LineSegment from "./lineSegment";
 import { Vec2 } from "./Vec";
 import * as Vec from "./Vec";
-import { distance, sortCosestTo, sqrDistance } from "./math";
+import { distance, sortCosestTo } from "./math";
 import { clockwiseAngle, isAngleBetweenAngles } from "./Angle";
 
 // Allows accessing an array without going out of bounds.  So getBoundedIndex(array.length+1)
@@ -74,10 +74,10 @@ export function mergeCollinearOverlappingSameDirectionLines(lines: LineSegment.L
             //skip self
             continue;
           }
-          if (sqrDistance(mergeLine.p1, newLine.p2) > sqrDistance(newLine.p1, newLine.p2)) {
+          if (distance(mergeLine.p1, newLine.p2) > distance(newLine.p1, newLine.p2)) {
             newLine.p1 = mergeLine.p1;
           }
-          if (sqrDistance(newLine.p1, mergeLine.p2) > sqrDistance(newLine.p1, newLine.p2)) {
+          if (distance(newLine.p1, mergeLine.p2) > distance(newLine.p1, newLine.p2)) {
             newLine.p2 = mergeLine.p2;
           }
         }
@@ -233,7 +233,7 @@ export function growOverlappingCollinearLinesInDirectionOfP2(line: LineSegment.L
   for (let i = 0; i < originalNumberOfPotentialGrowthLoops; i++) {
     testLineGrew = false;
     for (let wall of relevantWalls) {
-      if (LineSegment.isCollinearAndOverlapping(line, wall) && sqrDistance(line.p1, line.p2) < sqrDistance(line.p1, wall.p2)) {
+      if (LineSegment.isCollinearAndOverlapping(line, wall) && distance(line.p1, line.p2) < distance(line.p1, wall.p2)) {
         testLineGrew = true;
         // Remove the wall that was used for growing
         relevantWalls = relevantWalls.filter(x => x !== wall);

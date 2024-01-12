@@ -4,7 +4,7 @@ import { CardCategory } from '../types/commonTypes';
 import * as colors from '../graphics/ui/colors';
 import { getAngleBetweenVec2s, Vec2 } from '../jmath/Vec';
 import { isAngleBetweenAngles } from '../jmath/Angle';
-import { sortCosestTo, sqrDistance } from '../jmath/math';
+import { distance, sortCosestTo } from '../jmath/math';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import type Underworld from '../Underworld';
 import { raceTimeout } from '../Promise';
@@ -75,11 +75,11 @@ const spell: Spell = {
 function withinCone(origin: Vec2, coneStartPoint: Vec2, radius: number, startAngle: number, endAngle: number, target: Vec2): boolean {
   // and within angle:
   const targetAngle = getAngleBetweenVec2s(coneStartPoint, target);
-  const distanceToConeStart = sqrDistance(target, coneStartPoint);
+  const distanceToConeStart = distance(target, coneStartPoint);
 
   //TODO - Investigate isAngleBetweenAngles
   //temp fix for cone inversion: if angle is whole circle, just check distance.
-  return distanceToConeStart <= radius * radius
+  return distanceToConeStart <= radius
     && (isAngleBetweenAngles(targetAngle, startAngle, endAngle) || Math.abs(endAngle - startAngle) >= 2 * Math.PI);
 }
 

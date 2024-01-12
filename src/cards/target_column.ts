@@ -63,8 +63,8 @@ const spell: Spell = {
         });
         // Sort by distance along column
         withinColumn.sort((a, b) =>
-          sqrDistanceAlongColumn(a, target, vector)
-          - sqrDistanceAlongColumn(b, target, vector));
+          distanceAlongColumn(a, target, vector)
+          - distanceAlongColumn(b, target, vector));
         // Add entities to target
         withinColumn.forEach(e => addTarget(e, state));
       }
@@ -140,7 +140,7 @@ async function animate(columns: { castLocation: Vec2, vector: Vec2, width: numbe
     globalThis.predictionGraphics?.clear();
   });
 }
-function sqrDistanceAlongColumn(point: Vec2, columnOrigin: Vec2, vector: Vec2): number {
+function distanceAlongColumn(point: Vec2, columnOrigin: Vec2, vector: Vec2): number {
   const vectorToPoint = Vec.subtract(point, columnOrigin);
   // Vector is the direction the column extends
   // Vector is already normalized in effect, so no need to normalize it again here
@@ -160,6 +160,6 @@ function sqrDistanceAlongColumn(point: Vec2, columnOrigin: Vec2, vector: Vec2): 
   //   predictionGraphics.endFill();
   // }
 
-  return Vec.sqrMagnitude(projection);
+  return Vec.magnitude(projection);
 }
 export default spell;

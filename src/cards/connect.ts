@@ -135,13 +135,13 @@ export async function getNextConnectingEntities(
 
   let connected: { chainSource: HasSpace, entity: HasSpace }[] = [];
   do {
-    let closestSqrDist = radius * radius;
+    let closestDist = radius;
     let closestTarget: HasSpace | undefined = undefined;
 
     for (let t of potentialTargets) {
-      const dist = math.sqrDistance(t, source);
-      if (dist <= closestSqrDist) {
-        closestSqrDist = dist;
+      const dist = math.distance(t, source);
+      if (dist <= closestDist) {
+        closestDist = dist;
         closestTarget = t;
       }
     }

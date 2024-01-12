@@ -398,7 +398,7 @@ export default class Underworld {
     // Represents the positional offset for this simulation loop
     // AKA the Vec2 distance to travel
     const deltaPosition = Vec.multiply(deltaTime, velocity)
-    if (Vec.sqrMagnitude(deltaPosition) < 0.01) {
+    if (Vec.magnitude(deltaPosition) < 0.1) {
       // It's close enough, return true to signify complete 
       return true;
     }
@@ -489,7 +489,7 @@ export default class Underworld {
       const newPosition = Vec.add(pushedObject, deltaPosition);
       pushedObject.x = newPosition.x;
       pushedObject.y = newPosition.y;
-      if (math.sqrDistance(forceMoveInst.pushedObject, forceMoveInst.startPoint) >= math.sqrDistance(forceMoveInst.endPoint, forceMoveInst.startPoint)) {
+      if (math.distance(forceMoveInst.pushedObject, forceMoveInst.startPoint) >= math.distance(forceMoveInst.endPoint, forceMoveInst.startPoint)) {
         // Projectile is done if it reaches or goes beyond its end point
         return true;
       }
@@ -3425,7 +3425,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     const withinDistance: HasSpace[] = [];
     const potentialTargets = this.getPotentialTargets(prediction);
     for (let entity of potentialTargets) {
-      if (math.sqrDistance(entity, target) <= distance * distance) {
+      if (math.distance(entity, target) <= distance) {
         withinDistance.push(entity);
       }
     }
@@ -3440,7 +3440,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     const withinDistance: Pickup.IPickup[] = [];
     const pickups = (prediction && this.pickupsPrediction) ? this.pickupsPrediction : this.pickups;
     for (let pickup of pickups) {
-      if (math.sqrDistance(pickup, target) <= distance * distance) {
+      if (math.distance(pickup, target) <= distance) {
         withinDistance.push(pickup);
       }
     }
@@ -3454,7 +3454,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     const withinDistance: Unit.IUnit[] = [];
     const units = (prediction && this.unitsPrediction) ? this.unitsPrediction : this.units;
     for (let unit of units) {
-      if (math.sqrDistance(unit, target) <= distance * distance) {
+      if (math.distance(unit, target) <= distance) {
         withinDistance.push(unit);
       }
     }

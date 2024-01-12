@@ -516,7 +516,7 @@ function getLastLineInPath(path: Path): LineSegment {
 function getClosestIntersectionWithWalls(line: LineSegment, walls: Polygon2LineSegment[], includeStartPoint: boolean = false): { intersectingWall?: Polygon2LineSegment, closestIntersection?: Vec2 } {
   let intersectingWall;
   let closestIntersection;
-  let closestIntersectionSqrDistance;
+  let closestIntersectionDistance;
   // Check for collisions between the last line in the path and pathing walls
   for (let wall of walls) {
     const intersection = lineSegmentIntersection(line, wall);
@@ -542,12 +542,12 @@ function getClosestIntersectionWithWalls(line: LineSegment, walls: Polygon2LineS
           }
         }
       }
-      const sqrDist = math.sqrDistance(line.p1, intersection);
+      const dist = math.distance(line.p1, intersection);
       // If there is no closest intersection, make this intersection the closest intersection
       // If there is and this intersection is closer, make it the closest
-      if (!closestIntersection || (closestIntersection && closestIntersectionSqrDistance && closestIntersectionSqrDistance > sqrDist)) {
+      if (!closestIntersection || (closestIntersection && closestIntersectionDistance && closestIntersectionDistance > dist)) {
         closestIntersection = intersection;
-        closestIntersectionSqrDistance = sqrDist;
+        closestIntersectionDistance = dist;
         intersectingWall = wall
       }
 

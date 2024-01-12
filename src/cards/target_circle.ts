@@ -9,7 +9,7 @@ import * as config from '../config';
 import { easeOutCubic } from '../jmath/Easing';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { HasSpace } from '../entity/Type';
-import { sortCosestTo, sqrDistance } from '../jmath/math';
+import { sortCosestTo, } from '../jmath/math';
 
 const id = 'Target Circle';
 const baseRadius = 100;

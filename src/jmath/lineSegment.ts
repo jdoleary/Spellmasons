@@ -1,4 +1,4 @@
-import { sqrDistance } from "./math";
+import { distance } from "./math";
 import * as Vec from "./Vec";
 export interface LineSegment {
   p1: Vec.Vec2;
@@ -219,7 +219,7 @@ export function isCollinearAndOverlapping(l1: LineSegment, l2: LineSegment): boo
 }
 
 export function closestLineSegmentIntersectionWithLine(l1: LineSegment, otherLines: LineSegment[]): { intersection: Vec.Vec2, lineSegment: LineSegment } | undefined {
-  let shortestSqrDist = Number.MAX_SAFE_INTEGER;
+  let shortestDist = Number.MAX_SAFE_INTEGER;
   let closestIntersection = undefined;
   let lineThatIntersected = undefined;
   for (let line of otherLines) {
@@ -229,9 +229,9 @@ export function closestLineSegmentIntersectionWithLine(l1: LineSegment, otherLin
     }
     const intersection = lineSegmentIntersection(l1, line);
     if (intersection) {
-      const sqrDistToIntersection = sqrDistance(l1.p1, intersection);
-      if (!closestIntersection || sqrDistToIntersection < shortestSqrDist) {
-        shortestSqrDist = sqrDistToIntersection;
+      const distToIntersection = distance(l1.p1, intersection);
+      if (!closestIntersection || distToIntersection < shortestDist) {
+        shortestDist = distToIntersection;
         closestIntersection = intersection;
         lineThatIntersected = line;
       }
