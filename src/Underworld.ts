@@ -3872,7 +3872,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   unitIsIdentical(unit: Unit.IUnit, serialized: Unit.IUnitSerialized): boolean {
     return unit.id == serialized.id && unit.unitSourceId == serialized.unitSourceId;
   }
-  syncUnits(units: Unit.IUnitSerialized[], excludePlayerUnits: boolean = false) {
+  syncUnits(units: Unit.IUnitSerialized[], isClientSourceOfTruthForOwnUnit: boolean = false) {
     // Remove units flagged for removal before syncing
     this.units = this.units.filter(u => !u.flaggedForRemoval);
 
@@ -3890,8 +3890,19 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Get sync actions:
     const actions = getSyncActions(this.units, units, this.findIdenticalUnit.bind(this), (u) => u.unitType == UnitType.PLAYER_CONTROLLED)
     for (let [current, serialized] of actions.sync) {
+      // During some syncs we don't want to overwrite *all* attributes of the current client's player unit
+      const doKeepOwnUnitStats = isClientSourceOfTruthForOwnUnit && !globalThis.headless && globalThis.player && current == globalThis.player.unit;
+      const { x, y } = current;
+
       // Note: Unit.syncronize maintains the player.unit reference
       Unit.syncronize(serialized, current);
+
+      if (doKeepOwnUnitStats) {
+        // Do not sync own client's player unit when player unit is the
+        // source of truth
+        current.x = x;
+        current.y = y;
+      }
     }
     for (let remove of actions.remove) {
       Unit.cleanup(remove);

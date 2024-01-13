@@ -523,7 +523,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         }
         // Units must be synced before players so that the player's
         // associated unit is available for referencing
-        underworld.syncUnits(units);
+        underworld.syncUnits(units, true);
         // isClientPlayerSourceOfTruth: true; for regular syncs the client's own player object
         // is the source of truth so that the server's async player sync call doesn't overwrite
         // something that happened syncronously on the client
@@ -565,8 +565,6 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         }
 
         if (units) {
-          // Sync all non-player units.  If it syncs player units it will overwrite player movements
-          // that occurred during the cast
           underworld.syncUnits(units, true);
         }
 
@@ -606,7 +604,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       }
 
       if (units) {
-        underworld.syncUnits(units);
+        underworld.syncUnits(units, false);
       }
       // Note: Players should sync after units so
       // that the player.unit reference is synced
