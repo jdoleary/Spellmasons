@@ -95,5 +95,6 @@ This document lays out some concrete tasks and a rough timeline.
         - Calameties and perks where my attempt at this and it did not succeed.
     - Meta progression
     - Steam Achievements
+        - Available via globalThis.steamworks.achievement(achievementName);
     - Unlocks?
     At this point I think the game will be quite stable and so I think we'll need to have a larger discussion about the grand / final vision for the game.  I'd like to be careful with feature creep - so as to not just keep piling on features, but instead to "put a bow on it", in essence to finalize the spirit of the game nicely (leaving room for expansion if wanted) but so that it feels like a cohesive experience.
