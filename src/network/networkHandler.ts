@@ -38,6 +38,7 @@ import { recalcPositionForCards } from '../graphics/ui/CardUI';
 import { isSinglePlayer } from './wsPieSetup';
 import { elEndTurnBtn } from '../HTMLElements';
 import { sendEventToServerHub } from '../RemoteLogging';
+import { distance } from '../jmath/math';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION];
@@ -804,7 +805,13 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       // of the host matches exactly the player position on the player's client
       if (isHost(overworld.pie)) {
         if (fromPlayer && fromPlayer.unit && payload.x !== undefined && payload.y !== undefined) {
+          // Ensure server unit stamina matches the client's unit stamina
+          const moveDist = distance(fromPlayer.unit, payload);
+          fromPlayer.unit.stamina -= moveDist;
+          // Force set the location so that the server's unit position matches the client
+          // doing the moving
           Unit.setLocation(fromPlayer.unit, payload);
+
         }
       }
       break;
@@ -822,13 +829,15 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       if (fromPlayer) {
         // Only allow spawned players to move
         if (fromPlayer.isSpawned) {
-          // Network Sync: Make sure other players move a little slower so that the MOVE_PLAYER messages have time to set the
-          // next move point on the client's screen.  This prevents jagged movement due to network latency
-          fromPlayer.unit.moveSpeed = config.UNIT_MOVE_SPEED * 0.9;
-          // Network Sync: Make sure the other player always has stamina to get where they're going, this is to ensure that
-          // the local copies of other player's stay in sync with the server and aren't prematurely stopped due
-          // to a stamina limitation
-          fromPlayer.unit.stamina = 100;
+          if (!globalThis.headless) {
+            // Network Sync: Make sure other players move a little slower so that the MOVE_PLAYER messages have time to set the
+            // next move point on the client's screen.  This prevents jagged movement due to network latency
+            fromPlayer.unit.moveSpeed = config.UNIT_MOVE_SPEED * 0.9;
+            // Network Sync: Make sure the other player always has stamina to get where they're going, this is to ensure that
+            // the local copies of other player's stay in sync with the server and aren't prematurely stopped due
+            // to a stamina limitation
+            fromPlayer.unit.stamina = 100;
+          }
           const moveTowardsPromise = Unit.moveTowards(fromPlayer.unit, payload, underworld).then(() => {
             if (fromPlayer.unit.path?.points.length && fromPlayer.unit.stamina == 0) {
               // If they do not reach their destination, notify that they are out of stamina
