@@ -14,6 +14,7 @@ import type { LanguageMapping, Localizable } from '../localization';
 import type { TutorialChecklist } from '../graphics/Explain';
 import type * as particles from '@pixi/particle-emitter'
 import type { PromptArgs } from '../graphics/Jprompt';
+import keyMapping from '../graphics/ui/keyMapping';
 
 declare global {
   var pixi: typeof PIXI | undefined;
@@ -184,7 +185,7 @@ declare global {
   var usingTestRunner: boolean;
   var fullyExitGame: () => void;
   // Mapping of game controls
-  var controlMap: { [key: string]: string[] };
+  var controlMap: typeof keyMapping;
   // Returns a standardized keycode for mouse buttons
   // to make input reassignment easier
   var mouseButtonToKeyCode: (button: number) => string;

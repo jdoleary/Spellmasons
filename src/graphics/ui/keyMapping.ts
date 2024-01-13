@@ -1,5 +1,5 @@
 import * as storage from '../../storage';
-const originalMapping = {
+const originalMapping = Object.freeze({
     showWalkRope: ['KeyF'],
     dequeueSpell: ['Backspace'],
     openInventory: ['Tab', 'KeyI'],
@@ -40,13 +40,13 @@ const originalMapping = {
     touchPadMoveCharacter: ['KeyG'],
     openChat: ['KeyT'],
     adminPowerBar: ['ctrlKey+Space']
-}
+});
 // Deep copy so mapping itself isn't mutated so it can be reset
 globalThis.controlMap = JSON.parse(JSON.stringify(originalMapping));
 globalThis.resetControlMap = () => {
     globalThis.controlMap = JSON.parse(JSON.stringify(originalMapping));
 }
-export default globalThis.controlMap;
+export default originalMapping;
 
 export function fullyUpdateControls(newMapping: any) {
     // Overwrite mapping with newMappping while maintaining the object reference

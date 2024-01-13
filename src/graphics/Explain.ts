@@ -2,7 +2,7 @@ import { allUnits } from '../entity/units';
 import { elTutorialChecklistInner } from '../HTMLElements';
 import * as storage from '../storage';
 import Jprompt, { PromptArgs } from './Jprompt';
-import keyMapping, { keyToHumanReadable } from './ui/keyMapping';
+import { keyToHumanReadable } from './ui/keyMapping';
 const ALREADY_EXPLAINED = 'explained'
 export function explain(key: string, forceShow?: boolean) {
     if (globalThis.headless) {
@@ -86,12 +86,12 @@ const explainMap: { [key: string]: ExplainData } = {
 
     },
     [EXPLAIN_WALK_ROPE]: {
-        prompt: () => ({ imageSrc: 'images/explain/walk-rope.gif', text: ['explain walk rope', keyToHumanReadable(keyMapping.showWalkRope)], yesText: 'Okay' })
+        prompt: () => ({ imageSrc: 'images/explain/walk-rope.gif', text: ['explain walk rope', keyToHumanReadable(globalThis.controlMap.showWalkRope)], yesText: 'Okay' })
 
     },
     [EXPLAIN_END_TURN]: {
         prompt: () => ({
-            imageSrc: 'images/explain/end-turn.gif', text: ['explain end turn', keyToHumanReadable(keyMapping.endTurn)], yesText: 'Okay'
+            imageSrc: 'images/explain/end-turn.gif', text: ['explain end turn', keyToHumanReadable(globalThis.controlMap.endTurn)], yesText: 'Okay'
         })
     },
     [EXPLAIN_OVERFILL]: {
@@ -113,13 +113,13 @@ const explainMap: { [key: string]: ExplainData } = {
     },
     [EXPLAIN_CAMERA]: {
         prompt: () => ({
-            imageSrc: 'images/explain/camera-movement.gif', text: ['explain camera movement', keyToHumanReadable(keyMapping.cameraUp), keyToHumanReadable(keyMapping.cameraLeft), keyToHumanReadable(keyMapping.cameraDown), keyToHumanReadable(keyMapping.cameraRight), keyToHumanReadable(keyMapping.recenterCamera)], yesText: 'Okay'
+            imageSrc: 'images/explain/camera-movement.gif', text: ['explain camera movement', keyToHumanReadable(globalThis.controlMap.cameraUp), keyToHumanReadable(globalThis.controlMap.cameraLeft), keyToHumanReadable(globalThis.controlMap.cameraDown), keyToHumanReadable(globalThis.controlMap.cameraRight), keyToHumanReadable(globalThis.controlMap.recenterCamera)], yesText: 'Okay'
         })
 
     },
     [EXPLAIN_INVENTORY]: {
         prompt: () => ({
-            imageSrc: 'images/explain/inventory.gif', text: ['explain inventory', keyToHumanReadable(keyMapping.openInventory)], yesText: "I'm so organized!"
+            imageSrc: 'images/explain/inventory.gif', text: ['explain inventory', keyToHumanReadable(globalThis.controlMap.openInventory)], yesText: "I'm so organized!"
         })
 
     },
@@ -135,7 +135,7 @@ const explainMap: { [key: string]: ExplainData } = {
     },
     [EXPLAIN_REMOVE_SPELLS]: {
         prompt: () => ({
-            imageSrc: 'images/explain/delete-queued-spells.gif', text: ['explain remove spells', keyToHumanReadable(keyMapping.dequeueSpell)], yesText: 'Okay'
+            imageSrc: 'images/explain/delete-queued-spells.gif', text: ['explain remove spells', keyToHumanReadable(globalThis.controlMap.dequeueSpell)], yesText: 'Okay'
         })
     },
     [EXPLAIN_FORGE_ORDER]: {
@@ -155,7 +155,7 @@ const explainMap: { [key: string]: ExplainData } = {
     },
     [EXPLAIN_PING]: {
         prompt: () => ({
-            imageSrc: 'images/explain/ping.gif', text: ['explain ping', keyToHumanReadable(keyMapping.ping)], yesText: 'Cool!'
+            imageSrc: 'images/explain/ping.gif', text: ['explain ping', keyToHumanReadable(globalThis.controlMap.ping)], yesText: 'Cool!'
         })
     },
 }
