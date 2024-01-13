@@ -1,5 +1,5 @@
 import * as storage from '../../storage';
-const mapping = {
+const originalMapping = {
     showWalkRope: ['KeyF'],
     dequeueSpell: ['Backspace'],
     openInventory: ['Tab', 'KeyI'],
@@ -42,15 +42,15 @@ const mapping = {
     adminPowerBar: ['ctrlKey+Space']
 }
 // Deep copy so mapping itself isn't mutated so it can be reset
-globalThis.controlMap = JSON.parse(JSON.stringify(mapping));
+globalThis.controlMap = JSON.parse(JSON.stringify(originalMapping));
 globalThis.resetControlMap = () => {
-    globalThis.controlMap = JSON.parse(JSON.stringify(mapping));
+    globalThis.controlMap = JSON.parse(JSON.stringify(originalMapping));
 }
-export default mapping;
+export default globalThis.controlMap;
 
 export function fullyUpdateControls(newMapping: any) {
     // Overwrite mapping with newMappping while maintaining the object reference
-    Object.assign(mapping, newMapping);
+    Object.assign(globalThis.controlMap, newMapping);
 
 }
 
@@ -74,7 +74,7 @@ export function getKeyCodeMapping(keyCode: string, modifierKeys?: ModifierKeys):
         return 'Escape';
     }
     const { ctrlKey, shiftKey, altKey } = modifierKeys || { ctrlKey: false, shiftKey: false, altKey: false };
-    for (let [mapCode, array] of Object.entries(mapping)) {
+    for (let [mapCode, array] of Object.entries(globalThis.controlMap)) {
         for (let code of array) {
             const parts = code.split('+');
             const keyCodeSansModifiers = parts[parts.length - 1];
@@ -93,5 +93,5 @@ export function getKeyCodeMapping(keyCode: string, modifierKeys?: ModifierKeys):
     return undefined;
 }
 globalThis.persistControls = () => {
-    storage.set(storage.STORAGE_CONTROLS_KEY, JSON.stringify(mapping));
+    storage.set(storage.STORAGE_CONTROLS_KEY, JSON.stringify(globalThis.controlMap));
 }
