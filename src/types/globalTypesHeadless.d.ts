@@ -275,6 +275,10 @@ declare global {
     setFullscreen: (value: boolean) => void;
     setUIZoom: (value: number) => void;
   }
+  var steamworks: undefined | {
+    shiftTab: () => void;
+    achievements: (value: number) => void;
+  }
   // A target that controls what the cinematic camera is moving to
   var cinematicCameraTarget: Vec2 | undefined;
   var cinematicCameraEnabled: boolean;

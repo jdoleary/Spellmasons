@@ -228,6 +228,8 @@ globalThis.addEventListener('keydown', event => {
   if (event.code == 'F12' && globalThis.electronSettings) {
     // @ts-ignore
     globalThis.electronSettings.toggleDevTools();
+  } else if (globalThis.steamworks && event.code == 'Tab' && event.shiftKey) {
+    globalThis.steamworks.shiftTab();
   }
 })
 
