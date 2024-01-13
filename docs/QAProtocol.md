@@ -1,16 +1,4 @@
 # QA Protocol
-## 1.27.0
-- gripthulu
-- all movement spells
-- quicksave / backup
-- bone shrapnel
-- all arrow spells
-- dark priest and ghost archer
-- target similar
-- target kind
-- end turn sfx multiplayer
-- powerbar: Test event listeners, ensure this doesn't interfere with any other inputs
-
 ## Regular
 - Run `npm run build_types` to keeps mods types up to date (and push the changes to github)
     - Test mods
