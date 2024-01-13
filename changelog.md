@@ -1,4 +1,79 @@
 ## 1.27.0
+a11y: Add font selector for accessibility
+    
+    #365
+    @Tatapstar
+
+Jan 10 Fixes (#370)
+    
+    * Burst VFX Fix
+    
+    * Some distance optimization
+    
+    * Targeting spells sort added units by distance
+    
+    * Swap targets last unit instead of initial
+    
+    * Distances and Optimization
+    
+    * Distances and Optimization 2
+    
+    * Target Similar and Kind consistency
+    
+    - Target Similar ignores factions when targeting dead units
+    - Target Kind uses the same logic target similar does, and removed multiple filter overlap to make it more readable
+    
+    * sortClosestTo Function
+    
+    * Removed Sqr Calcs for code clarity
+    
+    - SqrDist and SqrMagnitude have been removed. Turns out they provide negligible levels of optimization, and is not worth the maintenance/readability of the codebase
+
+menu: Add Privacy Policy and EULA popup
+
+keybind: Add Reset button to return
+    to defaults.
+    Allow 'Esc' to clear current key
+    Thanks @BigRedCat
+
+i18n: Fix missing localization
+    
+    Note: the " spellmasons " class upgrade has spaces so as to not conflict
+    with the summon spellmason upgrade so I had to add
+    an extra line of localization
+
+Impact Damage Fix (#353)
+    * Arrow speed fix and slight optimization
+
+fix: Health potion capping blood curse health overflow
+    Note: Regular healing over max is still denied in the takeDamage function.
+    Tested with health potions and the healing spell
+    Fixes #346
+
+Further QA and Quick Fixes (#351)
+    * Fixed Ice/Poison urns pushing units
+    * Re-enable gripthulhu
+    * Fixed blue circle issue
+    * Gripthulhu uses LOS and correct movement/mana
+    * Fixed poisoner using incorrect mana
+    - Temp fix, used same workaround as the priest
+    - Needs better fix in the future
+    * Orient to match other LOS enemy behavior
+
+fix player teleporting back to cast location when moving
+    
+    during long-lived cast in multiplayer.  This ocurred because MOVE_PLAYER is handled syncronously (in queue) on all clients and the server except the client of the player whose moving and by the time they are triggered the SYNC_SOME_STATE occurs and resets the player position.
+    
+    Now MOVE_PLAYER is handled immediately so players can move while casting on all screens (but still handled without the MOVE_PLAYER message on the current client for their own player to prevent stuttering while moving themselves).
+    Fixes #329
+
+fix: awaitForceMoves timing out for long arrow spells
+    
+    Now that projectiles work with the forceMove system, and because stacked arrow spells can continue to add force move projectils over time, the awaitForceMove timeout must be reset
+    everytime a new forceMove is added since its completion can last an arbitrary amount of time, but it still needs proecting against an erronous forcemove that never ends.
+    
+    Fixes #352
+
 
 UI: Fix missing spellIcons
     Closes #320
@@ -243,7 +318,6 @@ admin: Add "Give Card", "Level up"
     and new level skip admin commands
 admin: Add powerbar
     Accessible via Ctrl + Space
-    TODO: Test event listeners, ensure this doesn't interfere with any other inputs
 
 fix: Undefined element on server error
 log: Silence wsPie logs
@@ -253,7 +327,6 @@ npm: Update wsPieServer for enhanced statistics
 src: Add spell: Bone Shrapnel
     - Destroy corpses to damage nearby enemies
     - Thanks Ry for inspiration 
-    TODO: I18n
 
 
 ## 1.26.5 Hotfix
