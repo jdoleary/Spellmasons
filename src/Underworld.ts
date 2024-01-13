@@ -102,6 +102,7 @@ import { isSinglePlayer } from './network/wsPieSetup';
 import { PRIEST_ID } from './entity/units/priest';
 import { getSyncActions } from './Syncronization';
 import { EXPECTED_MILLIS_PER_GAMELOOP, forcePushAwayFrom } from './effects/force_move';
+import { playThrottledEndTurnSFX } from './Audio';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -2549,7 +2550,13 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
     // Don't play turn sfx when recording or for auto-ended dead players
     if ((!globalThis.isHUDHidden && !document.body?.classList.contains('hide-card-holders')) && (player.unit.alive || (!player.unit.alive && player.endedTurn))) {
-      playSFXKey('endTurn');
+      // Always play own end turn sfx
+      if (globalThis.player == player) {
+        playSFXKey('endTurn');
+      } else {
+        // Ensure other players can't annoy current player with too frequent end turn sfx
+        playThrottledEndTurnSFX();
+      }
     }
     // Ensure players can only end the turn when it IS their turn
     if (this.turn_phase === turn_phase.PlayerTurns) {

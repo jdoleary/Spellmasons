@@ -173,6 +173,9 @@ const music = [
     './sound/music/MistakenIdentity.mp3',
     './sound/music/BrokenTrust.mp3',
 ]
+export const playThrottledEndTurnSFX = throttle(() => {
+    playSFXKey('endTurn');
+}, 1000);
 
 // Preload all sounds
 Object.values(sfx).forEach(paths => {
