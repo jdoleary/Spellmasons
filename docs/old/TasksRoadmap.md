@@ -12,21 +12,45 @@ This document lays out some concrete tasks and a rough timeline.
 - New Spells
     - A variety of Aura spells
     - Alchemize (easy)
+        - Converts a potion into a random other potion
     - Empower (easy)
+        - A blessing that makes a unit deal more damage
     - Enfeeble (easy)
-    - Execution
+        - A curse that makes a unit deal less damage
+    - Execute
+        - A damage spell that insta-kills a unit under a certain health threshold.  Stacks increase the threshold
+        - This may need some work to feel different from "Bleed"
     - Merge (complex)
+        - Merges two units together, summing their stats
+        - This will be tricky, how will it interact if used on a Spellmason?  Maybe it only impacts current health / mana instead of max?
     - Meteor
+        - Meteor falls on top of enemies doing spash damage around them
     - Polymorph (complex)
+        - Changes a unit into another random unit
         - Since I love for Spellmasons to suprise people, if players are chaotic enough to self-cast polymorph I think they should be allowed to use the abilities of the unit that they poly into.  Maybe even give them hidden stat upgrades (like upgrading damage).  This would be a very rewarding suprise.  It would also have to disable or remove their regular spells (until they purify to unpolymorph)
+        - Basically the idea is to pleasantly suprise.  If you so choose to turn yourself or your ally spellmason into an archer, I'd expect you to then only have arrow spells and be able to play a "hidden game" of Spellmasons as an Archer instead of a wizard.
+        - If you poly into a golem, you'll only have a "bite" attack.  Yes, super limiting but therein lies the pleasant suprise.  It's the natural consequence of polymorphing yourself and I think players will love it.
+        - Also it being reversable via purify will make the mistake more hilarious and forgivable in multiplayer (provided you have it)
     - Recall (super cool)
+        - A movement spell that creates a mark on the ground, if the mark already exists you teleport to that mark
     - Shatter (easy)
+        - A damage spell that deals lots of damage if the enemy is frozen.  If Shatter kills the enemy, it unleashes ice shards in all directions
+        - Requires 'Freeze'
     - Soul Bind (complex)
-    - Soul Shard (complex)
+        - A curse, enemies connected with Soul Bind split the damage that they receive between all bound units
+        - I'm super excited about this one
+    - Soul Shard (medium)
+        - The caster splits a piece of their soul into the target.  When the target takes damage so does the caster, but if the caster dies, they will reincarnate in the body of the shard-haver
+        - This should be do-able with modifiers
     - Spike Pit (may need art, how is this different from trap)
+        - Deals damage on a unit when they enter or cross through it
+        - We could use "Aura" system for this to differentiate it from the trap Pickup
     - Stomp (easy)
-    - Target Cursed (medium)
+        - A movement spell that takes all units in a radius around you and thrusts them away
+    - Target Curse (medium)
+        - A curse that makes the next cast spell also target the cursed unit
     - Target Injured (easy)
+        - A spell that adds a unit with less than maximum health to the targeted list.
     - Bolt (complex graphics)
     - Last Will 2
         - This should bring back stacking so you can do rediculous potion drops
@@ -64,6 +88,9 @@ This document lays out some concrete tasks and a rough timeline.
     - All Marketing Tasks
 
 - 3rd Big Milestone
+    - MOAR Potions and Pickups!
+        - More potions will especially be interesting with Alchemize
+            - Maybe some super rare potions (resurrect potion that interacts with any corpse?)
     - Runes?  How to customize the experience
         - Calameties and perks where my attempt at this and it did not succeed.
     - Meta progression
