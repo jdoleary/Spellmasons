@@ -91,8 +91,11 @@ class HostApp implements IHostApp {
     // Automatically overridden when passed into pie.startServer
     sendData: (msg: string) => void = () => { };
     overworld: Overworld;
+    soloMode: boolean;
     constructor() {
         this.overworld = makeOverworld(this);
+        // HostApp is run on a server for multiplayer and therefore is never in soloMode.
+        this.soloMode = false;
         new Underworld(this.overworld, this.overworld.pie, Math.random().toString());
     }
     onData(data: any) {

@@ -353,13 +353,11 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
 }
 // Keep a global reference to the current client's player
 export function updateGlobalRefToCurrentClientPlayer(player: IPlayer, underworld: Underworld) {
-  if (globalThis.clientId === player.clientId) {
-    if (numberOfHotseatPlayers > 1) {
-      globalThis.player = underworld.players[underworld.hotseatCurrentPlayerIndex];
-      if (!globalThis.player) {
-        console.error('Unexpected: Hotseat player is undefined');
-      }
-    } else {
+  if (numberOfHotseatPlayers > 1) {
+    globalThis.player = player;
+    globalThis.clientId = player.clientId;
+  } else {
+    if (globalThis.clientId === player.clientId) {
       globalThis.player = player;
     }
   }
@@ -468,6 +466,10 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
 
 // Sets boolean and substring denoting if the player has a @websocketpie/client client associated with it
 export function setClientConnected(player: IPlayer, connected: boolean, underworld: Underworld) {
+  // Override: If in hotseat multiplayer than all clients are considered connected
+  if (globalThis.numberOfHotseatPlayers > 1) {
+    connected = true;
+  }
   player.clientConnected = connected;
   if (connected) {
     Image.removeSubSprite(player.unit.image, 'disconnected.png');

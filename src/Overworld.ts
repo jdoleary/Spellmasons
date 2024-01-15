@@ -100,7 +100,12 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
             console.log(`Setup: Create a Player instance for ${clientId}`)
             for (let i = 0; i < globalThis.numberOfHotseatPlayers; i++) {
                 const config = globalThis.hotseatPlayerConfig?.[i];
-                const player = Player.create(clientId, underworld);
+                let nextClientId = clientId;
+                // Hotseat players should not share the same client id
+                if (globalThis.numberOfHotseatPlayers > 1 && i > 0) {
+                    nextClientId = `${clientId}_${i}`;
+                }
+                const player = Player.create(nextClientId, underworld);
                 player.lobbyReady = !!defaultLobbyReady;
                 if (config) {
                     player.name = config.name;
