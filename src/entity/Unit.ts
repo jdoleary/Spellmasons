@@ -797,6 +797,9 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   // they die while they are moving.  This prevents turn phase from getting stuck
   unit.resolveDoneMoving();
 
+  // Clear unit path to prevent further movement in case of ressurect or similar
+  unit.path = undefined;
+
   for (let i = 0; i < unit.onDeathEvents.length; i++) {
     const eventName = unit.onDeathEvents[i];
     if (eventName) {
