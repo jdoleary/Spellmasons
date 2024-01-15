@@ -53,12 +53,12 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         try {
           const startTime = payload.type == MESSAGE_TYPES.INIT_GAME_STATE ? Date.now() : undefined;
           sendEventToServerHub({
-            seed: overworld.underworld.seed, gameName: 'default', startTime, serverRegion: process.env.serverRegion || undefined,
+            startTime,
             events: [{
               time: Date.now(),
               message: JSON.stringify({ _type: MESSAGE_TYPES[payload.type], ...payload })
             }]
-          });
+          }, overworld.underworld);
         } catch (e) {
           console.error('Could not send event to server', e);
         }

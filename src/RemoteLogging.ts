@@ -1,3 +1,4 @@
+import type Underworld from "./Underworld";
 import { SERVER_HUB_URL } from "./config";
 
 const originalConsoleError = console.error;
@@ -32,6 +33,7 @@ interface EventGroupMessage {
     seed: string; // Required to identify EventGroup
     gameName: string; // Required to identify EventGroup
     startTime?: number;
+    endTime?: number;
     serverRegion?: string;
     events: Event[];
 }
@@ -40,12 +42,18 @@ interface Event {
     time: number;
     message: string;
 }
-export function sendEventToServerHub(eventG: EventGroupMessage) {
+export function sendEventToServerHub(eventG: Partial<EventGroupMessage>, underworld: Underworld) {
     if (globalThis.headless && globalThis.useEventLogger) {
+        const eventGroup = Object.assign({
+            seed: underworld.seed,
+            gameName: underworld.pie.currentRoomInfo?.name || 'default',
+            serverRegion: process.env.serverRegion || undefined,
+            events: [],
+        }, eventG)
         fetch(`${SERVER_HUB_URL}/event`, {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(eventG)
+            body: JSON.stringify(eventGroup)
         }).catch(_ => {
             originalConsoleError('Remote Event Logging failed');
         });

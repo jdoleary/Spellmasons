@@ -6,6 +6,8 @@ import * as Pickup from '../entity/Pickup';
 import Underworld from '../Underworld';
 import type PieClient from '@websocketpie/client';
 import { ensureAllClientsHaveAssociatedPlayers, Overworld } from '../Overworld';
+import { sendEventToServerHub } from '../RemoteLogging';
+import type { Room } from '@websocketpie/client';
 
 // Copied from PieClient.d.ts so as to not have to import PieClient
 export interface ClientPresenceChangedArgs {
@@ -22,6 +24,12 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs, overworld:
     ensureAllClientsHaveAssociatedPlayers(overworld, o.clients);
     if (overworld.underworld) {
         overworld.underworld.tryGameOver();
+    }
+    if (o.clients.length == 0 && overworld.underworld) {
+        // Send an end time for the game when all clients disconnect
+        sendEventToServerHub({
+            endTime: Date.now(),
+        }, overworld.underworld);
     }
 }
 export function hostGiveClientGameState(clientId: string, underworld: Underworld, level: LevelData | undefined, message_type: MESSAGE_TYPES.INIT_GAME_STATE | MESSAGE_TYPES.LOAD_GAME_STATE) {
@@ -55,6 +63,7 @@ export interface IHostApp {
     sendData(payload: any, extras?: any): void;
     isHostApp: boolean;
     soloMode: boolean;
+    currentRoomInfo?: Room;
 }
 export function typeGuardHostApp(x: PieClient | IHostApp): x is IHostApp {
     // @ts-ignore: PieClient does not have isHostApp property but this typeguard will
