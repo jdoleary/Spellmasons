@@ -74,11 +74,14 @@ export function getSavedData() {
             const storedAccessibilityOutline = get(ACCESSIBILITY_OUTLINE_STORAGE_KEY);
             console.log('Setup: Initializing outline settings', storedAccessibilityOutline);
             if (storedAccessibilityOutline !== null) {
+                globalThis.remoteLog?.('Accessibility Outlines: Active')
                 try {
                     globalThis.accessibilityOutline = JSON.parse(storedAccessibilityOutline);
                 } catch (e) {
                     console.error('Failled to parse stored accessibility outline options', storedAccessibilityOutline)
                 }
+            } else {
+                globalThis.remoteLog?.('Accessibility Outlines: Inactive')
             }
             globalThis.playMusicIfNotAlreadyPlaying?.();
             // Default stored color if player doesn't already have one stored
