@@ -1,13 +1,12 @@
 import { AdjustmentFilter } from '@pixi/filter-adjustment';
+import * as storage from "../../storage";
 import { allUnits, UnitSource } from './index';
 import { Faction, UnitSubType, UnitType } from '../../types/commonTypes';
 import * as Unit from '../Unit';
-import Underworld from '../../Underworld';
+import Underworld, { turn_phase } from '../../Underworld';
 import * as config from '../../config';
 import { makeCorruptionParticles } from '../../graphics/ParticleCollection';
-import purify from '../../cards/purify';
 import sacrifice from '../../cards/sacrifice';
-import slash from '../../cards/slash';
 import { calculateCost } from '../../cards/cardUtils';
 import seedrandom from 'seedrandom';
 import { makeManaTrail } from '../../graphics/Particles';
@@ -20,14 +19,15 @@ import * as Vec from '../../jmath/Vec';
 import { summoningSicknessId } from '../../modifierSummoningSickness';
 import { BLOOD_GOLEM_ID } from './bloodGolem';
 import { BLOOD_ARCHER_ID } from './blood_archer';
-import { tryFallInOutOfLiquid } from '../Obstacle';
+import { registerEvents } from '../../cards';
+import floatingText from '../../graphics/FloatingText';
 
 export const bossmasonUnitId = 'Deathmason';
 const NUMBER_OF_ATTACK_TARGETS = 8;
 const bossmasonMana = 200;
 const magicColor = 0x321d73;
 const portalCastCost = 150;
-const unit: UnitSource = {
+const deathmason: UnitSource = {
   id: bossmasonUnitId,
   info: {
     description: 'deathmason description',
@@ -185,6 +185,70 @@ export function summonUnitAtPickup(faction: Faction, pickup: Pickup.IPickup, und
   } else {
     console.error('Source unit not found in summonUnitAtPickup', enemyIsClose)
   }
-
 }
-export default unit;
+export const ORIGINAL_DEATHMASON_DEATH = 'ORIGINAL_DEATHMASON_DEATH';
+export function registerDeathmasonEvents() {
+  registerEvents(ORIGINAL_DEATHMASON_DEATH, {
+    onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
+      // For the bossmason level, if the original deathmason dies spawn 3 more:
+      if (underworld.levelIndex === config.LAST_LEVEL_INDEX) {
+        if (unit.unitSourceId == bossmasonUnitId && unit.originalLife && unit.name == undefined) {
+          const mageTypeWinsKey = storage.getStoredMageTypeWinsKey(player?.mageType || 'Spellmason');
+          const currentMageTypeWins = parseInt(storageGet(mageTypeWinsKey) || '0');
+          storageSet(mageTypeWinsKey, (currentMageTypeWins + 1).toString());
+          (prediction
+            ? underworld.unitsPrediction
+            : underworld.units).filter(u => u.unitType == UnitType.AI && u.unitSubType !== UnitSubType.DOODAD).forEach(u => Unit.die(u, underworld, prediction));
+          if (!prediction) {
+            let retryAttempts = 0;
+            for (let i = 0; (i < 3 && retryAttempts < 10); i++) {
+              const seed = seedrandom(`${underworld.seed}-${underworld.turn_number}-${unit.id}`);
+              const coords = findRandomGroundLocation(underworld, unit, seed);
+              if (!coords) {
+                retryAttempts++;
+                i--;
+                continue;
+              } else {
+                retryAttempts = 0;
+              }
+              // Animate effect of unit spawning from the sky
+              const newBossmason = Unit.create(
+                bossmasonUnitId,
+                coords.x,
+                coords.y,
+                Faction.ENEMY,
+                deathmason.info.image,
+                UnitType.AI,
+                deathmason.info.subtype,
+                deathmason.unitProps,
+                underworld,
+                prediction
+              );
+              // This ensures that the deathmason brothers don't trigger this block "the original deathmason death event"
+              newBossmason.originalLife = false;
+              const givenName = ['Darius', 'Magnus', 'Lucius'][i] || '';
+              const dialogue = [
+                'deathmason dialogue 1',
+                'deathmason dialogue 2',
+                'deathmason dialogue 3',
+              ][i];
+              newBossmason.name = `${givenName}`;
+              // If deathmasons are spawned during the NPC_ALLY turn
+              // meaning an ally killed the first deathmason, give them
+              // summoning sickness so they can't attack right after spawning
+              if (underworld.turn_phase == turn_phase.NPC_ALLY) {
+                Unit.addModifier(newBossmason, summoningSicknessId, underworld, false);
+              }
+              skyBeam(newBossmason);
+              if (dialogue) {
+                floatingText({ coords: newBossmason, text: dialogue, valpha: 0.005, aalpha: 0 })
+              }
+            }
+          }
+
+        }
+      }
+    }
+  });
+}
+export default deathmason;

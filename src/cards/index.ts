@@ -107,6 +107,7 @@ import { registerUrnpoisonExplode } from '../entity/units/urn_poison';
 import { registerUrnexplosiveExplode } from '../entity/units/urn_explosive';
 import { calculateGameDifficulty } from '../Difficulty';
 import registerCorpseDecay from '../modifierCorpseDecay';
+import { registerDeathmasonEvents } from '../entity/units/deathmason';
 
 export interface Modifiers {
   subsprite?: Subsprite;
@@ -297,6 +298,7 @@ export function registerCards(overworld: Overworld) {
   registerUrnpoisonExplode();
   registerUrnexplosiveExplode();
   registerImmune();
+  registerDeathmasonEvents();
 }
 
 // This is necessary because unit stats change with difficulty.

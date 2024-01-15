@@ -1308,7 +1308,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
             console.error('Cannot "Skip to Deathmason level", underworld does not exist');
             return;
           }
-          overworld.underworld.levelIndex = config.LAST_LEVEL_INDEX;
+          overworld.underworld.levelIndex = config.LAST_LEVEL_INDEX - 1;
           Player.enterPortal(globalThis.player, overworld.underworld);
         }
       },

@@ -1,6 +1,5 @@
 import type * as PIXI from 'pixi.js';
 import { OutlineFilter } from '@pixi/filter-outline';
-import * as storage from "../storage";
 import * as config from '../config';
 import * as Image from '../graphics/Image';
 import * as math from '../jmath/math';
@@ -865,62 +864,6 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   }
   // Once a unit dies it is no longer on it's originalLife
   unit.originalLife = false;
-  // For the bossmason level, if there is only 1 bossmason, when it dies, spawn 3 more:
-  if (underworld.levelIndex === config.LAST_LEVEL_INDEX && underworld.units.filter(u => u.unitSourceId == bossmasonUnitId).length == 1) {
-    if (unit.unitSourceId == bossmasonUnitId) {
-      const mageTypeWinsKey = storage.getStoredMageTypeWinsKey(player?.mageType || 'Spellmason');
-      const currentMageTypeWins = parseInt(storageGet(mageTypeWinsKey) || '0');
-      storageSet(mageTypeWinsKey, (currentMageTypeWins + 1).toString());
-      (prediction
-        ? underworld.unitsPrediction
-        : underworld.units).filter(u => u.unitType == UnitType.AI && u.unitSubType !== UnitSubType.DOODAD).forEach(u => die(u, underworld, prediction));
-      if (!prediction) {
-        let retryAttempts = 0;
-        for (let i = 0; (i < 3 && retryAttempts < 10); i++) {
-          const seed = seedrandom(`${underworld.seed}-${underworld.turn_number}-${unit.id}`);
-          const coords = findRandomGroundLocation(underworld, unit, seed);
-          if (!coords) {
-            retryAttempts++;
-            i--;
-            continue;
-          } else {
-            retryAttempts = 0;
-          }
-          // Animate effect of unit spawning from the sky
-          const newBossmason = create(
-            bossmasonUnitId,
-            coords.x,
-            coords.y,
-            Faction.ENEMY,
-            deathmason.info.image,
-            UnitType.AI,
-            deathmason.info.subtype,
-            deathmason.unitProps,
-            underworld,
-            prediction
-          );
-          const givenName = ['Darius', 'Magnus', 'Lucius'][i] || '';
-          const dialogue = [
-            'deathmason dialogue 1',
-            'deathmason dialogue 2',
-            'deathmason dialogue 3',
-          ][i];
-          newBossmason.name = `${givenName}`;
-          // If deathmasons are spawned during the NPC_ALLY turn
-          // meaning an ally killed the first deathmason, give them
-          // summoning sickness so they can't attack right after spawning
-          if (underworld.turn_phase == turn_phase.NPC_ALLY) {
-            addModifier(newBossmason, summoningSicknessId, underworld, false);
-          }
-          skyBeam(newBossmason);
-          if (dialogue) {
-            floatingText({ coords: newBossmason, text: dialogue, valpha: 0.005, aalpha: 0 })
-          }
-        }
-      }
-
-    }
-  }
 }
 export function composeOnDamageEvents(unit: IUnit, damage: number, underworld: Underworld, prediction: boolean): number {
   // Compose onDamageEvents

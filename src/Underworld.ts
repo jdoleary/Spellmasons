@@ -78,7 +78,7 @@ import { ensureAllClientsHaveAssociatedPlayers, Overworld } from './Overworld';
 import { Emitter } from '@pixi/particle-emitter';
 import { golem_unit_id } from './entity/units/golem';
 import { cleanUpPerkList, createPerkElement, generatePerks, tryTriggerPerk, showPerkList, hidePerkList, createCursePerkElement, StatCalamity, generateRandomStatCalamity } from './Perk';
-import { bossmasonUnitId, summonUnitAtPickup } from './entity/units/deathmason';
+import { ORIGINAL_DEATHMASON_DEATH, bossmasonUnitId, summonUnitAtPickup } from './entity/units/deathmason';
 import { hexToString } from './graphics/ui/colorUtil';
 import { doLiquidEffect } from './inLiquid';
 import { findRandomGroundLocation } from './entity/units/summoner';
@@ -1950,6 +1950,13 @@ export default class Underworld {
     }
     for (let e of enemies) {
       this.spawnEnemy(e.id, e.coord, e.isMiniboss);
+    }
+
+    if (levelData.levelIndex == config.LAST_LEVEL_INDEX) {
+      const deathmason = this.units.find(u => u.unitSourceId == bossmasonUnitId);
+      if (deathmason) {
+        deathmason.onDeathEvents = [ORIGINAL_DEATHMASON_DEATH];
+      }
     }
 
     // Show text in center of screen for the new level
