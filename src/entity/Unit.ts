@@ -1118,6 +1118,9 @@ export function canMove(unit: IUnit): boolean {
     // console.log("canMove: false - unit has already used all their stamina this turn")
     return false;
   }
+  if (unit.moveSpeed <= 0) {
+    return false;
+  }
   return true;
 }
 export function livingUnitsInDifferentFaction(unit: IUnit, underworld: Underworld) {
