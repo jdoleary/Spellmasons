@@ -228,7 +228,6 @@ export default class Underworld {
   // for speed running
   startTime: number | undefined;
   winTime: number | undefined;
-  hotseatCurrentPlayerIndex: number = 0;
   headlessTimeouts: { time: number, callback: () => void }[] = [];
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
@@ -256,8 +255,12 @@ export default class Underworld {
     this.random = this.syncronizeRNG(RNGState);
   }
   clientIdToPlayer(clientId: string): Player.IPlayer | undefined {
-    const playerId = clientId + "_" + this.hotseatCurrentPlayerIndex;
-    const player = this.players.find(p => p.playerId == playerId);
+    if (globalThis.player && globalThis.clientId == clientId) {
+      console.debug("Returning current player on this client:\n", clientId, "\n", globalThis.player.playerId);
+      return globalThis.player;
+    }
+    const player = this.players.find(p => p.clientId == clientId);
+    console.debug("Finding player on different client:\n", clientId, "\n", player?.playerId);
     return player;
   }
   // Returns all potentially targetable entities
@@ -2095,20 +2098,42 @@ export default class Underworld {
     return { x, y };
   }
   isGameOver(): boolean {
+    // Game is over once ALL units on all connected player factions are dead
     // TODO will have to update this to allow PVP / factions
-    const playerFactions = this.players.map(p => p.unit.faction);
-    // Game is over once ALL units on player factions are dead (this includes player units)
-    // so long as there are some players in the game.
-    // Note: Must exclude doodads because neither will be able to fight to complete the level
-    // on the player's behalf
-    const useKillSwitch = this.allyNPCAttemptWinKillSwitch > 50;
-    const isAllyNPCAlive = !useKillSwitch && this.units.filter(u => u.unitType == UnitType.AI && playerFactions.includes(u.faction) && u.unitSubType !== UnitSubType.DOODAD).some(u => u.alive);
-    // Note: unspawned players still own an "alive" unit
-    const isConnectedPlayerAlive = this.players.filter(p => p.clientConnected && p.unit.alive).some(p => p.unit.alive)
-    if (useKillSwitch) {
-      console.error('WARN: Used Ally NPC win attempt kill switch to cause game over.  The ally npcs did not make any progress after a set number of turns.  This prevents an infinite loop.');
+
+    // Are there connected players?
+    const connectedPlayers = this.players.filter(p => p.clientConnected);
+    if (connectedPlayers.length > 0) {
+      console.log("Game State: Is Game Over?\nConnected Players: ", connectedPlayers);
     }
-    return this.players.length !== 0 && !isConnectedPlayerAlive && !isAllyNPCAlive;
+    else {
+      console.log("Game State: Game is Over.\nNo connected players in player list: ", this.players);
+      return true;
+    }
+
+    // Are any of those players or their allies alive?
+    const playerFactions = connectedPlayers.map(p => p.unit.faction);
+    // Note: This must exclude doodads
+    const remainingAllies = this.units.filter(u => u.alive && u.unitSubType != UnitSubType.DOODAD && playerFactions.includes(u.faction));
+    if (remainingAllies.length > 0) {
+      console.log("Game State: Is Game Over?\nRemaining allies: ", remainingAllies);
+    }
+    else {
+      console.log("Game State: Game is Over.\nNo allies remain");
+      return true;
+    }
+
+    // Have allies made progress towards winning in the last X turns?
+    // If not, there might be a stalemate, so we need a kill switch.
+    const useKillSwitch = this.allyNPCAttemptWinKillSwitch > 50;
+    if (!useKillSwitch) {
+      console.log("Game State: Is Game Over?\nKill Switch Counter: ", this.allyNPCAttemptWinKillSwitch);
+    }
+    else {
+      console.log("Game State: Game is Over.\nKill Switch threshold reached");
+      return true;
+    }
+    return false;
   }
   updateGameOverModal() {
     // Add stats to modal:
@@ -2181,7 +2206,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
   // Handles level completion, game over, turn phases, and hotseat
   async progressGameState() {
-    console.log("ProgressGameState:\nTurn Phase before progress == ", turn_phase[this.turn_phase]);
+    console.log("Game State: Progress...\nCurrent Turn Phase == ", turn_phase[this.turn_phase]);
 
     // try game over
     // else try next level
@@ -2189,11 +2214,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // else cycle turn phase
 
     if (this.isGameOver()) {
-      console.log("ProgressGameState:\nGame is over");
       this.doGameOver();
     }
     else if (this.handleLevelProgress()) {
-      console.log("ProgressGameState:\nLevel Progressed");
+      // If we end up here, nothing left to do, just continue
+      // Level progress has been handled by the above function
     }
     else {
       if (this.turn_phase == turn_phase.PlayerTurns) {
@@ -2214,7 +2239,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // this.endFullTurnCycle();
     }
 
-    console.log("ProgressGameState:\nTurn Phase after progress == ", turn_phase[this.turn_phase]);
+    console.log("Game State: Progress...\nNew Turn Phase == ", turn_phase[this.turn_phase]);
     return;
   }
 
@@ -2224,44 +2249,40 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     // If current player hasn't completed their turn, return
     // We don't want to change hotseat players unless current player is done
-    let currentPlayer = this.players[this.hotseatCurrentPlayerIndex];
+    let currentPlayer = globalThis.player;
     if (currentPlayer && !this.hasCompletedTurn(currentPlayer)) {
       return;
     }
 
     // Change to the next hotseat player that hasn't completed their turn
     for (let i = 0; i < this.players.length; i++) {
-      // TODO - Remove hotseat current player index?
-      this.hotseatCurrentPlayerIndex = i;
       const currentPlayer = this.players[i];
       // Found a player that has not completed their turn, switch to them
       if (currentPlayer && !this.hasCompletedTurn(currentPlayer)) {
-        console.log("PlayerTurn: Switching to hotseat player: ", currentPlayer);
+        console.log("Game State: \nSwitching to hotseat player: ", currentPlayer);
         await this.changeToHotseatPlayer(currentPlayer);
         return;
       }
     }
 
     // TODO - Switch back to player 1 in prep for next turn?
-    console.log("PlayerTurn: All remaining hotseat players have completed their turn");
+    console.log("Game State: \nAll remaining hotseat players have completed their turn");
   }
 
   async changeToFirstHotseatPlayer() {
     if (!(numberOfHotseatPlayers > 1)) return;
 
-    console.log("Change to first hotseat player");
     const firstPlayer = this.players[0];
     if (firstPlayer) {
-      this.hotseatCurrentPlayerIndex = 0;
       this.changeToHotseatPlayer(firstPlayer)
     }
     else {
-      console.error("Unexpected: Hotseat player doesn't exist");
+      console.error("Game State: \nFirst hotseat player doesn't exist");
     }
   }
 
   async changeToHotseatPlayer(player: Player.IPlayer) {
-    console.log("Change to hotseat player: " + player.playerId);
+    console.log("Game State: \nChange to hotseat player: " + player.playerId);
 
     // If the next player has already completed turn or can't act
     // get the next hotseat player
@@ -2292,11 +2313,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // - Has not spawned
     // - Can act and has not ended turn (alive, not frozen, etc.)
     if (!player.isSpawned) {
-      console.log('PlayerTurn: player has not spawned yet: ', player);
+      console.log('Game State: \nPlayer has not spawned yet: ', player);
       return false;
     }
     if (Unit.canAct(player.unit) && !player.endedTurn) {
-      console.log('PlayerTurn: player can act and has not ended turn yet: ', player);
+      console.log('Game State: \nPlayer can act and has not ended turn yet: ', player);
       return false;
     }
     return true;
@@ -2325,7 +2346,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
 
   async endPlayerTurnCleanup() {
-    console.log('Underworld: TurnPhase: End player turn phase');
+    console.log('Game State: \nEnd player turn phase');
 
     for (let p of this.players) {
       // Decrement card usage counts,
@@ -2428,7 +2449,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     const units = this.units.filter(u => u.unitType == UnitType.AI && u.faction == faction);
 
-    console.log('game: executeNPCTurn', Faction[faction]);
+    console.log('Game State: \nExecuteNPCTurn', Faction[faction]);
     const cachedTargets: { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } = {};
     this.clearPredictedNextTurnDamage();
     await Unit.startTurnForUnits(units, this, false);
@@ -2672,24 +2693,14 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Ensure players can only end the turn when it IS their turn
     if (this.turn_phase == turn_phase.PlayerTurns) {
       player.endedTurn = true;
-      console.log('PlayerTurn: End player turn', clientId);
+      console.log('Game State: \nEnd player turn', clientId);
       this.syncTurnMessage();
-
-      // If all enemies are dead, make dead, non portaled players
-      // enter the portal so the game can continue
-      const allEnemiesAreDead = this.units.filter(u => u.faction == Faction.ENEMY && u.unitSubType !== UnitSubType.DOODAD).every(u => !u.alive);
-      const deadNonPortaledPlayers = this.players.filter(p => !Player.inPortal(p) && !p.unit.alive);
-      if (allEnemiesAreDead) {
-        console.log('Make dead, non-portaled players enter portal');
-        deadNonPortaledPlayers.forEach(p => {
-          Player.enterPortal(p, this);
-        });
-      }
-
       this.progressGameState();
     } else {
-      console.error("turn_phase must be PlayerTurns to end turn.  Cannot be ", this.turn_phase);
+      console.error("Game State: \nturn_phase must be PlayerTurns to end turn. Cannot be ", this.turn_phase);
     }
+
+    // Should progress game state go here as a failsafe?
     Player.syncLobby(this);
   }
   getFreeUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
@@ -2706,8 +2717,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       player.reroll = 0;
       if (upgradesLeftToChoose <= 0) {
         // This might be a false error after the refactors
-        console.log('Player:', player);
-        console.error('Player managed to choose an upgrade without being supposed to');
+        console.error('Player managed to choose an upgrade without being supposed to: ', player);
       }
     } else if (upgrade.type == 'special') {
       // Any future logic for special cards such as 'reroll' goes here
@@ -2829,21 +2839,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
   }
 
-  // TODO - Somehow if two hotseat players are dead
-  // p1 has chosen upgrades, p2 hasn't
-  // it shows p1 the upgrade screen and gives error
-  // pick upgrades without being able to
-  // likely something to do with globalThis.player and the hotseat index
   showUpgrades() {
-    // Remove additional pickups once upgrades are shown because it will allow players to pick all upgrades on map
-    for (let p of this.pickups) {
-      if (!p.flaggedForRemoval && p.name == Pickup.CARDS_PICKUP_NAME) {
-        playSFXKey('scroll_disappear');
-        makeScrollDissapearParticles(p, false);
-        // Remove pickup
-        Pickup.removePickup(p, this, false);
-      }
-    }
     const player = globalThis.player;
     if (document.body?.classList.contains(showUpgradesClassName)) {
       console.log('showUpgrades: showUpgrades was called but it is already visible so this function returns immediately to avoid regenerating upgrades');
@@ -3056,7 +3052,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   tryRestartTurnPhaseLoop() {
     // See GameLoops.md for more details 
     if (this.turn_phase == turn_phase.Stalled && this.players.some(player => Player.ableToAct(player))) {
-      console.log('Turn Management: Restarting turn loop with PlayerTurns')
+      console.log('Game State: Turn Management\nRestarting turn loop with PlayerTurns')
       this.broadcastTurnPhase(turn_phase.PlayerTurns);
       // Special Case: in the event that a client is stuck with a stalled turn phase
       // it can set itself back to PlayerTurns. (The server won't send another 
@@ -3072,7 +3068,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   async broadcastTurnPhase(p: turn_phase) {
     // If host, send sync; if non-host, ignore 
     if (globalThis.isHost(this.pie)) {
-      console.log('Broadcast SET_PHASE: ', turn_phase[p]);
+      console.log('Game State: \nBroadcast SET_PHASE: ', turn_phase[p]);
 
       this.pie.sendData({
         type: MESSAGE_TYPES.SET_PHASE,
@@ -3096,7 +3092,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   // initializeTurnPhase (on each client and itself);
   // otherwise the clients and host could get out of sync
   setTurnPhase(p: turn_phase) {
-    console.log('setTurnPhase(', turn_phase[p], ')');
+    console.log('Game State: \nsetTurnPhase(', turn_phase[p], ')');
     this.turn_phase = p;
     this.syncTurnMessage();
 
@@ -3123,7 +3119,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   // when you want to set the turn_phase
   // See GameLoops.md for more details
   async initializeTurnPhase(p: turn_phase) {
-    console.log('initializeTurnPhase(', turn_phase[p], ')');
+    console.log('Game State: \ninitializeTurnPhase(', turn_phase[p], ')');
 
     // Clear cast this turn
     globalThis.castThisTurn = false;
@@ -3171,7 +3167,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // Setting it immediately ensures that any following messages in the queue won't reengage
           // the turn_phase loop, causing an infinite loop
           this.turn_phase = turn_phase.Stalled;
-          console.log('Turn Management: Skipping initializingPlayerTurns, no players connected. Setting turn_phase to "Stalled"');
+          console.log('Game State: Turn Management\nSkipping initializingPlayerTurns, no players connected. Setting turn_phase to "Stalled"');
         } else {
           // Initialize the player turns.
           // Note, it is possible that calling this will immediately end
@@ -3620,7 +3616,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           p.isSpawned &&
           p.clientConnected)
 
-    if (!canProgress) return false;
+    if (!canProgress) {
+      console.log("Game State: Can't Progress Level\nThere are living enemy units, or no players are spawned and connected.");
+      return false;
+    }
 
     // Should another wave of enemies be spawned?
     const loopIndex = Math.max(0, (this.levelIndex - config.LAST_LEVEL_INDEX));
@@ -3656,54 +3655,50 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
       // end Copied from generateRandomLevelData
 
-      // Spawned enemies and progressed the level, return true
+      console.log("Game State: Level Progressed\nSpawned new wave of enemies");
       return true;
+    }
+    else {
+      console.log("Game State: Handling Level Progress...\nNo more waves to spawn");
     }
 
     // No wave to spawn, so spawn portals
     const portalsAlreadySpawned = !!this.pickups.filter(p => !p.flaggedForRemoval && !isNaN(p.x) && !isNaN(p.x)).find(p => p.name === Pickup.PORTAL_PURPLE_NAME);
     if (!portalsAlreadySpawned) {
-      // Make all potion pickups disappear so as to not compell players
+      // Make all non-portal pickups disappear so as to not compell players
       // to waste time walking around picking them all up
-      // Also do not remove portals
-      this.pickups.filter(p => p.name !== Pickup.CARDS_PICKUP_NAME && p.name !== Pickup.PORTAL_PURPLE_NAME).forEach(p => {
+      this.pickups.filter(p => p.name !== Pickup.PORTAL_PURPLE_NAME).forEach(p => {
         makeScrollDissapearParticles(p, false);
         Pickup.removePickup(p, this, false);
       });
       // Spawn portal near each player
       const portalPickup = Pickup.pickups.find(p => p.name == Pickup.PORTAL_PURPLE_NAME);
       if (portalPickup) {
-        const portalsAlreadySpawned = !!this.pickups.filter(p => !p.flaggedForRemoval && !isNaN(p.x) && !isNaN(p.x)).find(p => p.name === Pickup.PORTAL_PURPLE_NAME)
-        if (!portalsAlreadySpawned) {
-          for (let playerUnit of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
-            const portalSpawnLocation = this.findValidSpawn(playerUnit, 4) || playerUnit;
-            if (!isOutOfBounds(portalSpawnLocation, this)) {
-              Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup, logSource: 'Portal' }, this, false);
-            } else {
-              // If a pickup is attempted to be spawned for an unspawned player this if check prevents it from being spawned out of bounds
-              // and the next invokation of checkIfShouldSpawnPortal will spawn it instead.
-            }
-            // Give all player units infinite stamina when portal spawns for convenience.
-            playerUnit.stamina = Number.POSITIVE_INFINITY;
-            // Give all players max health and mana (it will be reset anyway when they are reset for the next level
-            // but this disswades them from going around to pickup potions)
-            playerUnit.health = playerUnit.healthMax;
-            playerUnit.mana = playerUnit.manaMax;
-            // Since playerUnit's health and mana is reset, we need to immediately sync the prediction unit
-            // so that it doesn't inncorrectly warn "self damage due to spell" by seeing that the prediction unit
-            // has less health than the current player unit.
-            this.syncPlayerPredictionUnitOnly();
-
+        for (let playerUnit of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
+          const portalSpawnLocation = this.findValidSpawn(playerUnit, 4) || playerUnit;
+          if (!isOutOfBounds(portalSpawnLocation, this)) {
+            Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup, logSource: 'Portal' }, this, false);
           }
-        } else {
-          console.log('Portals have already been spawned, do not spawn additional');
+          // Give all player units infinite stamina when portal spawns for convenience.
+          playerUnit.stamina = Number.POSITIVE_INFINITY;
+          // Give all players max health and mana (it will be reset anyway when they are reset for the next level
+          // but this disswades them from going around to pickup potions)
+          playerUnit.health = playerUnit.healthMax;
+          playerUnit.mana = playerUnit.manaMax;
+          // Since playerUnit's health and mana is reset, we need to immediately sync the prediction unit
+          // so that it doesn't inncorrectly warn "self damage due to spell" by seeing that the prediction unit
+          // has less health than the current player unit.
+          this.syncPlayerPredictionUnitOnly();
         }
       } else {
         console.error('Portal pickup not found')
       }
 
-      // Spawned portals and progressed the level, return true
+      console.log("Game State: Level Progressed\nSpawned portals");
       return true;
+    }
+    else {
+      console.log("Game State: Handling Level Progress...\nPortals have already been spawned");
     }
 
     // Go To Next Level
@@ -3714,7 +3709,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       connectedPlayers.every(p => Player.inPortal(p) || this.hasCompletedTurn(p))
       || (numberOfHotseatPlayers > 1 && connectedPlayers.some(Player.inPortal));
     if (goToNextLevel) {
-      console.log('All living, spawned players are inPortal, go to the next level');
       // Invoke initLevel within a timeout so that this function
       // doesn't have to wait for level generation to complete before
       // returning
@@ -3726,8 +3720,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           console.log('This instance is not host, host will trigger next level generation.');
         }
       }, 0);
-      // Return of true signifies it went to the next level
+
+      console.log("Game State: Level Progressed\nMoving to next level");
       return true;
+    }
+    else {
+      console.log("Game State: Handling Level Progress...\nDon't go to next level");
     }
 
     return false;

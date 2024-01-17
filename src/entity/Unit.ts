@@ -835,19 +835,6 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
     explain(EXPLAIN_DEATH);
     playSFXKey('game_over');
   }
-  if (unit.unitType == UnitType.PLAYER_CONTROLLED && !prediction) {
-    const player = underworld.players.find(p => p.unit == unit);
-    if (!player) {
-      console.error('Player unit died but could not find them in players array to end their turn');
-    } else if (player == globalThis.player) {
-      // Send an end turn message rather than just invoking endPlayerTurn
-      // so that it waits to execute until the spell is done casting.
-      // This change was made in response to self kill + resurrect 
-      // triggering the end of your turn before the spell finished
-      // (before the resurrect occurred)
-      underworld.pie.sendData({ type: MESSAGE_TYPES.END_TURN });
-    }
-  }
   // In the event that this unit that just died is the selected unit,
   // this will remove the tooltip:
   checkIfNeedToClearTooltip();
