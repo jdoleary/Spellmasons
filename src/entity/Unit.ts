@@ -793,10 +793,6 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   // Ensure that the unit resolvesDoneMoving when they die in the event that 
   // they die while they are moving.  This prevents turn phase from getting stuck
   unit.resolveDoneMoving();
-  // Clear unit path to prevent further movement
-
-  unit.path = undefined;
-
   // Clear unit path to prevent further movement in case of ressurect or similar
   unit.path = undefined;
 
