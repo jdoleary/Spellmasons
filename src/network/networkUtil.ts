@@ -14,9 +14,6 @@ export interface ClientPresenceChangedArgs {
   type: string;
   clients: string[];
   time: number;
-  type: string;
-  clients: string[];
-  time: number;
 }
 export function onClientPresenceChanged(o: ClientPresenceChangedArgs, overworld: Overworld) {
   console.log('clientPresenceChanged', o);
@@ -60,43 +57,15 @@ export function hostGiveClientGameState(clientId: string, underworld: Underworld
       }
     }
   }
-  // Only the host should be sending INIT_GAME_STATE messages
-  // because the host has the canonical game state
-  if (globalThis.isHost(underworld.pie)) {
-    // Do not send this message to self
-    if (globalThis.clientId !== clientId) {
-      if (level) {
-        console.log(`Host: Send ${clientId} game state for initial load`);
-        underworld.pie.sendData({
-          type: message_type,
-          level,
-          underworld: underworld.serializeForSyncronize(),
-          phase: underworld.turn_phase,
-          pickups: underworld.pickups.filter(p => !p.flaggedForRemoval).map(Pickup.serialize),
-          units: underworld.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
-          players: underworld.players.map(Player.serialize)
-        }, {
-          subType: "Whisper",
-          whisperClientIds: [clientId],
-        });
-      } else {
-        console.error('hostGiveClientGameState: Could not send INIT_GAME_STATE, levelData is undefined');
-      }
-    }
-  }
 }
 export interface IHostApp {
   // Copied from PieClient.d.ts
   sendData(payload: any, extras?: any): void;
   isHostApp: boolean;
-  // Copied from PieClient.d.ts
-  sendData(payload: any, extras?: any): void;
-  isHostApp: boolean;
+  soloMode: boolean;
+  currentRoomInfo?: Room;
 }
 export function typeGuardHostApp(x: PieClient | IHostApp): x is IHostApp {
-  // @ts-ignore: PieClient does not have isHostApp property but this typeguard will
-  // still work
-  return x.isHostApp;
   // @ts-ignore: PieClient does not have isHostApp property but this typeguard will
   // still work
   return x.isHostApp;
@@ -110,25 +79,7 @@ export function getVersionInequality(clientVersion?: string, serverVersion?: str
       if ((clientMajor !== serverMajor || clientMinor !== serverMinor)) {
         if (parseInt(serverMajor) > parseInt(clientMajor)) {
           return 'client behind'
-          if (clientVersion && serverVersion) {
-            const [clientMajor, clientMinor, _clientPatch] = clientVersion.split('.');
-            const [serverMajor, serverMinor, _serverPath] = serverVersion.split('.');
-            if ((clientMajor !== undefined && clientMinor !== undefined && serverMajor !== undefined && serverMinor !== undefined)) {
-              if ((clientMajor !== serverMajor || clientMinor !== serverMinor)) {
-                if (parseInt(serverMajor) > parseInt(clientMajor)) {
-                  return 'client behind'
 
-                } else if (parseInt(serverMajor) < parseInt(clientMajor)) {
-                  return 'server behind'
-                } else {
-                  return parseInt(serverMinor) > parseInt(clientMinor) ? 'client behind' : 'server behind';
-                }
-              } else {
-                return 'equal'
-              }
-            }
-          }
-          return 'malformed'
         } else if (parseInt(serverMajor) < parseInt(clientMajor)) {
           return 'server behind'
         } else {
