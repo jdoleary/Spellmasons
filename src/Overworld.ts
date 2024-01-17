@@ -93,15 +93,17 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
   overworld.clients = clients;
   // Ensure all clients have players
   for (let clientId of overworld.clients) {
-    const player = underworld.players.find(p => p.clientId == clientId);
-    if (!player) {
-      // If the client that joined does not have a player yet, make them one immediately
-      // since all clients should always have a player associated
-      console.log(`Setup: Create a Player instance for ${clientId}`)
-      for (let i = 0; i < globalThis.numberOfHotseatPlayers; i++) {
+    for (let i = 0; i < globalThis.numberOfHotseatPlayers; i++) {
+      // playerId helps distinguish multiple players on one client
+      let playerId = clientId + "_" + i;
+
+      const player = underworld.players.find(p => p.playerId == playerId);
+      if (!player) {
+        // If the client that joined does not have a player yet, make them one immediately
+        // since all clients should always have a player associated
+        console.log(`Setup: Create a Player instance for ${clientId}`)
         const config = globalThis.hotseatPlayerConfig?.[i];
-        const hotseatId = clientId + "_" + i;
-        const player = Player.create(hotseatId, underworld);
+        const player = Player.create(clientId, playerId, underworld);
         player.lobbyReady = !!defaultLobbyReady;
         if (config) {
           player.name = config.name;
@@ -119,6 +121,8 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
   for (let player of underworld.players) {
     const wasConnected = player.clientConnected;
     const isConnected = clients.includes(player.clientId);
+
+    // TODO - Change?
     Player.setClientConnected(player, isConnected, underworld);
     if (!wasConnected && isConnected) {
       clientsToSendGameState.push(player.clientId);
@@ -152,11 +156,6 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
   // Resume turn loop if currently stalled but now a player is able to act:
   underworld.tryRestartTurnPhaseLoop();
 }
-// window.test_GC_underworld = () => {
-//     for (let i = 0; i < 1000; i++) {
-//         new Underworld(test, test.pie, Math.random().toString());
-//     }
-// }
 export function recalculateGameDifficulty(underworld: Underworld) {
   const newDifficulty = calculateGameDifficulty(underworld);
   underworld.units.forEach(unit => {

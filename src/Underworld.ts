@@ -253,6 +253,11 @@ export default class Underworld {
 
     this.random = this.syncronizeRNG(RNGState);
   }
+  clientIdToPlayer(clientId: string): Player.IPlayer | undefined {
+    const playerId = clientId + "_" + this.hotseatCurrentPlayerIndex;
+    const player = this.players.find(p => p.playerId == playerId);
+    return player;
+  }
   // Returns all potentially targetable entities
   // See cards/index.ts's getCurrentTargets() for the function that returns 
   // the current targets of a spell.
@@ -1086,10 +1091,9 @@ export default class Underworld {
     if (globalThis.thinkingPlayerGraphics) {
       containerPlayerThinking?.addChild(globalThis.thinkingPlayerGraphics);
     }
-    for (let [thinkerClientId, thought] of Object.entries(this.playerThoughts)) {
+    for (let [thinkerId, thought] of Object.entries(this.playerThoughts)) {
       const { target, cardIds, ellipsis } = thought;
-      const thinkingPlayerIndex = this.players.findIndex(p => p.clientId == thinkerClientId);
-      const thinkingPlayer = this.players[thinkingPlayerIndex];
+      const thinkingPlayer = this.players.find(p => p.playerId == thinkerId);
       if (thinkingPlayer && thinkingPlayer.isSpawned) {
         // Leave room for name tag
         const yMargin = 10;
@@ -1328,7 +1332,6 @@ export default class Underworld {
       this
     );
     unit.originalLife = true;
-
   }
   testLevelData(): LevelData {
     const baseTileValues = Object.values(baseTiles);
@@ -2109,85 +2112,77 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
   }
 
-  // TODO - Move to update turn phase
-  tryGameOver(): boolean {
-    // Clear previous timeout that would toggle game over state
-    if (gameOverModalTimeout !== undefined) {
-      clearTimeout(gameOverModalTimeout);
-    }
-    const isOver = this.isGameOver();
-    if (!isOver) {
-      // If clearing the game-over modal, clear it immediately
-      document.body.classList.toggle('game-over', isOver);
-    } else {
-      // Show game over modal after a delay
-      gameOverModalTimeout = setTimeout(() => {
-        document.body.classList.toggle('game-over', isOver);
-        // allowForceInitGameState so that when the game restarts it will get the full
-        // newly created underworld
-        this.allowForceInitGameState = true;
-      }, 3000);
-    }
+  doGameOver() {
+    console.log("- - -\nGame Over\n- - -");
+    // Show game over modal after a delay
+    gameOverModalTimeout = setTimeout(() => {
+      document.body.classList.toggle('game-over', true);
+      // allowForceInitGameState so that when the game restarts
+      // it will get the full newly created underworld
+      this.allowForceInitGameState = true;
+    }, 2000);
+
     this.updateGameOverModal();
     if (globalThis.headless) {
-      if (isOver) {
-        const overworld = this.overworld;
-        const pie = this.pie;
-        // Only allow it to start the process of creating a new underworld once
-        // because this function tryGameOver should be able to be called any number
-        // of times and only the first time that it detects game over should it trigger
-        // a new game
-        if (!this.isRestarting) {
-          const millisTillRestart = 10000;
-          console.log('-------------------Host app game over', isOver, `restarting in ${Math.floor(millisTillRestart / 1000)} seconds`);
-          this.isRestarting = setTimeout(() => {
-            const newUnderworld = new Underworld(overworld, pie, Math.random().toString());
-            // Add players back to underworld
-            // defaultLobbyReady: Since they are still in the game, set them to lobbyReady
-            ensureAllClientsHaveAssociatedPlayers(overworld, overworld.clients, true);
-            // Generate the level data
-            newUnderworld.lastLevelCreated = newUnderworld.generateLevelDataSyncronous(0, this.gameMode);
-            // Actually create the level 
-            newUnderworld.createLevelSyncronous(newUnderworld.lastLevelCreated);
-            this.overworld.clients.forEach(clientId => {
-              hostGiveClientGameState(clientId, newUnderworld, newUnderworld.lastLevelCreated, MESSAGE_TYPES.INIT_GAME_STATE);
-            });
-          }, millisTillRestart);
-        }
-      } else {
-        // If no longer game over, clear restarting timer
-        if (this.isRestarting) {
-          clearTimeout(this.isRestarting);
-        }
+      const overworld = this.overworld;
+      const pie = this.pie;
+      if (!this.isRestarting) {
+        const millisTillRestart = 10000;
+        console.log('-------------------Host app game over', true, `restarting in ${Math.floor(millisTillRestart / 1000)} seconds`);
+        this.isRestarting = setTimeout(() => {
+          const newUnderworld = new Underworld(overworld, pie, Math.random().toString());
+          // Add players back to underworld
+          // defaultLobbyReady: Since they are still in the game, set them to lobbyReady
+          ensureAllClientsHaveAssociatedPlayers(overworld, overworld.clients, true);
+          // Generate the level data
+          newUnderworld.lastLevelCreated = newUnderworld.generateLevelDataSyncronous(0, this.gameMode);
+          // Actually create the level 
+          newUnderworld.createLevelSyncronous(newUnderworld.lastLevelCreated);
+          this.overworld.clients.forEach(clientId => {
+            hostGiveClientGameState(clientId, newUnderworld, newUnderworld.lastLevelCreated, MESSAGE_TYPES.INIT_GAME_STATE);
+          });
+        }, millisTillRestart);
       }
     }
-    return isOver;
   }
 
   // Handles level completion, game over, turn phases, and hotseat
   async progressGameState() {
-    console.log("Current turn phase == ", this.turn_phase);
+    console.log("ProgressGameState:\nTurn Phase before progress == ", turn_phase[this.turn_phase]);
 
-    if (this.tryProgressLevelState()) return;
-    else if (this.tryGameOver()) return;
+    // try game over
+    // else try next level
+    // else try level progress
+    // else cycle turn phase
 
-    if (this.turn_phase == turn_phase.PlayerTurns) {
-      // If all hotseat players are ready, try end player turn
-      await this.handleNextHotseatPlayer();
+    if (this.isGameOver()) {
+      console.log("ProgressGameState:\nGame is over");
+      this.doGameOver();
+    }
+    else if (this.handleLevelProgress()) {
+      console.log("ProgressGameState:\nLevel Progressed");
+    }
+    else {
+      if (this.turn_phase == turn_phase.PlayerTurns) {
+        // If all hotseat players are ready, try end player turn
+        await this.handleNextHotseatPlayer();
 
-      // Moves to NPC.ALLY Phase if possible
-      await this.tryEndPlayerTurnPhase();
-    } else if (this.turn_phase == turn_phase.NPC_ALLY) {
+        // Moves to NPC.ALLY Phase if possible
+        await this.tryEndPlayerTurnPhase();
+      } else if (this.turn_phase == turn_phase.NPC_ALLY) {
 
-    } else if (this.turn_phase == turn_phase.NPC_ENEMY) {
+      } else if (this.turn_phase == turn_phase.NPC_ENEMY) {
 
-    } else if (this.turn_phase == turn_phase.Stalled) {
+      } else if (this.turn_phase == turn_phase.Stalled) {
 
+      }
+
+      // TODO - Full Turn Cycle
+      // this.endFullTurnCycle();
     }
 
-    console.log("New turn phase == ", this.turn_phase);
-    // TODO - Full Turn Cycle
-    // this.endFullTurnCycle();
+    console.log("ProgressGameState:\nTurn Phase after progress == ", turn_phase[this.turn_phase]);
+    return;
   }
 
   async handleNextHotseatPlayer() {
@@ -2233,12 +2228,14 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
 
   async changeToHotseatPlayer(player: Player.IPlayer) {
+    console.log("Change to hotseat player: " + player.playerId);
+
     // If the next player has already completed turn or can't act
     // get the next hotseat player
     if (this.hasCompletedTurn(player)) this.handleNextHotseatPlayer();
 
     // Otherwise, set up hotseat player
-    Player.updateGlobalRefToCurrentClientPlayer(player, this);
+    Player.updateGlobalRefToPlayer(player);
     CardUI.recalcPositionForCards(globalThis.player, this);
     CardUI.syncInventory(undefined, this);
     await runPredictions(this);
@@ -2333,7 +2330,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
     }
     else {
-      this.tryProgressLevelState();
+      this.progressGameState();
       //this.broadcastTurnPhase(turn_phase.PlayerTurns);
     }
     return true;
@@ -2550,10 +2547,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
   }
 
+  // TODO - What is this?
   syncTurnMessage() {
     console.log('syncTurnMessage: phase:', turn_phase[this.turn_phase]);
     let yourTurn = false;
-    if (!this.tryGameOver() && this.turn_phase === turn_phase.PlayerTurns) {
+    if (!this.isGameOver() && this.turn_phase === turn_phase.PlayerTurns) {
       if (!globalThis.player?.endedTurn) {
         yourTurn = true;
       }
@@ -2616,15 +2614,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
     }
   }
-  async endPlayerTurn(clientId: string) {
+  async endPlayerTurn(player: Player.IPlayer) {
     if (this.turn_phase == turn_phase.Stalled) {
       // Do not end a players turn while game is Stalled or it will trigger
       // an exit of the Stalled phase and that should ONLY happen when a player reconnects
-      return;
-    }
-    const player = this.players.find(p => p.clientId == clientId);
-    if (!player) {
-      console.error('Cannot end turn, player with clientId:', clientId, 'does not exist');
       return;
     }
     if (this.turn_phase != turn_phase.PlayerTurns) {
@@ -2735,13 +2728,15 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
 
       switch (player.mageType) {
-        case 'Timemason':
+        case 'Timemason': {
           statBumpAmount.manaMax *= 2;
           break;
-        case 'Far Gazer':
+        }
+        case 'Far Gazer': {
           statBumpAmount.attackRange *= 2;
           statBumpAmount.staminaMax = Math.floor(statBumpAmount.staminaMax as number / 2);
           break;
+        }
       }
 
       if (stat && player.unit[stat as keyof Unit.IUnit]) {
@@ -2795,6 +2790,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
   }
 
+  // TODO - Somehow if two hotseat players are dead
+  // p1 has chosen upgrades, p2 hasn't
+  // it shows p1 the upgrade screen and gives error
+  // pick upgrades without being able to
+  // likely something to do with globalThis.player and the hotseat index
   showUpgrades() {
     // Remove additional pickups once upgrades are shown because it will allow players to pick all upgrades on map
     for (let p of this.pickups) {
@@ -3009,44 +3009,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       elUpgradePickerContent.appendChild(elRerollPerks);
     }
   }
-
-  // Returns true if it goes to the next level
-  checkForEndOfLevel(): boolean {
-    // All living (and client connected) players
-    // Also check if they are spawned, otherwise in multiplayer,
-    // it will cycle through level after level quickly and infinitely
-    // because all players are in the portal and alive.  Adding the isSpawned
-    // check ensures that it will only move on once all connected players have
-    // spawned and are in the portal
-    const livingSpawnedPlayers = this.players.filter(
-      (p) => p.unit.alive && p.clientConnected && p.isSpawned,
-    );
-    const areAllLivingPlayersInPortal =
-      livingSpawnedPlayers.filter(Player.inPortal).length === livingSpawnedPlayers.length;
-
-    // If any player enters a portal during hotseat multiplayer just go to the next level, don't make all players
-    // enter the portal.  This prevents a LOT of weird conditions that would make the game get stuck in a state it
-    // can't get out of
-    const hotseatOverride = numberOfHotseatPlayers > 1 && livingSpawnedPlayers.some(Player.inPortal);
-    // Advance the level if there are living players and they all are in the portal:
-    if (hotseatOverride || (livingSpawnedPlayers.length && areAllLivingPlayersInPortal)) {
-      console.log('All living, spawned players are inPortal, go to the next level');
-      // Invoke initLevel within a timeout so that this function
-      // doesn't have to wait for level generation to complete before
-      // returning
-      setTimeout(() => {
-        // Prepare the next level
-        if (globalThis.isHost(this.pie)) {
-          this.generateLevelData(this.levelIndex + 1);
-        } else {
-          console.log('This instance is not host, host will trigger next level generation.');
-        }
-      }, 0);
-      // Return of true signifies it went to the next level
-      return true;
-    }
-    return false;
-  }
   getRandomCoordsWithinBounds(bounds: Limits, seed?: prng): Vec2 {
     const x = randInt(bounds.xMin || 0, bounds.xMax || 0, seed || this.random);
     const y = randInt(bounds.yMin || 0, bounds.yMax || 0, seed || this.random);
@@ -3154,49 +3116,54 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     this.pickups = keepPickups;
 
     const phase = turn_phase[this.turn_phase];
-    if (phase) {
-      switch (phase) {
-        case turn_phase[turn_phase.PlayerTurns]:
-          if (this.players.every(p => !p.clientConnected)) {
-            // This is the only place where the turn_phase can become Stalled, when it is supposed
-            // to be player turns but there are no players connected.
-            // Note: the Stalled turn_phase should be set immediately, not broadcast
-            // This is an exception because if the game is stalled, by definition, there
-            // are no players to broadcast to.
-            // Setting it immediately ensures that any following messages in the queue won't reengage
-            // the turn_phase loop, causing an infinite loop
-            this.turn_phase = turn_phase.Stalled;
-            console.log('Turn Management: Skipping initializingPlayerTurns, no players connected. Setting turn_phase to "Stalled"');
-          } else {
-            // Initialize the player turns.
-            // Note, it is possible that calling this will immediately end
-            // the player phase (if there are no players to take turns)
-            await this.executePlayerTurn();
-          }
-          // Note: The player turn occurs asyncronously because it depends on player input so the call to
-          // `broadcastTurnPhase(turn_phase.NPC_ALLY)` happens inside tryEndPlayerTurnPhase(); whereas the other blocks in
-          // this switch statement always move to the next faction turn on their last line before the break, but this one does
-          // not.
-          break;
-        case turn_phase[turn_phase.NPC_ALLY]:
-          await this.executeNPCTurn(Faction.ALLY);
-          this.broadcastTurnPhase(turn_phase.NPC_ENEMY);
-          break;
-        case turn_phase[turn_phase.NPC_ENEMY]:
-          await this.executeNPCTurn(Faction.ENEMY);
-          await this.endFullTurnCycle();
-          this.broadcastTurnPhase(turn_phase.PlayerTurns);
-          break;
-        default:
-          break;
-      }
-      // Sync player health, mana, stamina bars to ensure that it's up to date
-      // at the start of any turn_phase so there's no suprises
-      this.syncPlayerPredictionUnitOnly();
-      Unit.syncPlayerHealthManaUI(this);
-    } else {
-      console.error('Invalid turn phase', this.turn_phase)
+    if (!phase) {
+      console.error('Invalid turn phase', this.turn_phase);
+      return;
     }
+
+    switch (phase) {
+      case turn_phase[turn_phase.PlayerTurns]: {
+        if (this.players.every(p => !p.clientConnected)) {
+          // This is the only place where the turn_phase can become Stalled, when it is supposed
+          // to be player turns but there are no players connected.
+          // Note: the Stalled turn_phase should be set immediately, not broadcast
+          // This is an exception because if the game is stalled, by definition, there
+          // are no players to broadcast to.
+          // Setting it immediately ensures that any following messages in the queue won't reengage
+          // the turn_phase loop, causing an infinite loop
+          this.turn_phase = turn_phase.Stalled;
+          console.log('Turn Management: Skipping initializingPlayerTurns, no players connected. Setting turn_phase to "Stalled"');
+        } else {
+          // Initialize the player turns.
+          // Note, it is possible that calling this will immediately end
+          // the player phase (if there are no players to take turns)
+          await this.executePlayerTurn();
+        }
+        // Note: The player turn occurs asyncronously because it depends on player input so the call to
+        // `broadcastTurnPhase(turn_phase.NPC_ALLY)` happens inside tryEndPlayerTurnPhase(); whereas the other blocks in
+        // this switch statement always move to the next faction turn on their last line before the break, but this one does
+        // not.
+        break;
+      }
+      case turn_phase[turn_phase.NPC_ALLY]: {
+        await this.executeNPCTurn(Faction.ALLY);
+        this.broadcastTurnPhase(turn_phase.NPC_ENEMY);
+        break;
+      }
+      case turn_phase[turn_phase.NPC_ENEMY]: {
+        await this.executeNPCTurn(Faction.ENEMY);
+        await this.endFullTurnCycle();
+        this.broadcastTurnPhase(turn_phase.PlayerTurns);
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+    // Sync player health, mana, stamina bars to ensure that it's up to date
+    // at the start of any turn_phase so there's no suprises
+    this.syncPlayerPredictionUnitOnly();
+    Unit.syncPlayerHealthManaUI(this);
   }
   // Smart Targeting, fn 1
   clearPredictedNextTurnDamage() {
@@ -3595,9 +3562,14 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
     return effectState;
   }
-  tryProgressLevelState(): boolean {
+  handleLevelProgress(): boolean {
+    // Returns true if this function progresses the level state
+    // - Spawns the next wave of enemies
+    // - Spawns Purple Portals
+    // - Sends Players to Next Level
+
     // If all enemy units are dead and at least one player is spawned and connected
-    const shouldProgressLevelState = this.units.filter(u =>
+    const canProgress = this.units.filter(u =>
       u.faction == Faction.ENEMY &&
       !u.flaggedForRemoval &&
       u.unitSubType !== UnitSubType.DOODAD)
@@ -3608,8 +3580,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           p.isSpawned &&
           p.clientConnected)
 
-    if (!shouldProgressLevelState) return false;
+    if (!canProgress) return false;
 
+    // Should another wave of enemies be spawned?
     const loopIndex = Math.max(0, (this.levelIndex - config.LAST_LEVEL_INDEX));
     if (loopIndex > this.wave) {
       this.wave++;
@@ -3618,13 +3591,13 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       this.units.filter(u => u.unitType == UnitType.AI && !u.alive).forEach(u => {
         Unit.addModifier(u, corpseDecayId, this, false);
       });
-      const unitIds = getEnemiesForAltitude(this, this.levelIndex);
-      const numberOfMinibossesAllowed = Math.ceil(Math.max(0, (this.levelIndex - 4) / 4));
-      let numberOfMinibossesMade = 0;
       // Trick for finding valid spawnable tiles
       const validSpawnCoords = this.lastLevelCreated?.imageOnlyTiles.filter(x => x.image.endsWith('all_ground.png')) || [];
 
       // Copied from generateRandomLevelData
+      const unitIds = getEnemiesForAltitude(this, this.levelIndex);
+      const numberOfMinibossesAllowed = Math.ceil(Math.max(0, (this.levelIndex - 4) / 4));
+      let numberOfMinibossesMade = 0;
       for (let id of unitIds) {
         if (validSpawnCoords.length == 0) { break; }
         const validSpawnCoordsIndex = randInt(0, validSpawnCoords.length - 1, this.random);
@@ -3638,33 +3611,87 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           if (isMiniboss) {
             numberOfMinibossesMade++;
           }
-          const sourceUnit = allUnits[id];
-          if (sourceUnit) {
-            Unit.create(
-              sourceUnit.id,
-              // Start the unit at the summoners location
-              coord.x,
-              coord.y,
-              // A unit always summons units in their own faction
-              Faction.ENEMY,
-              sourceUnit.info.image,
-              UnitType.AI,
-              sourceUnit.info.subtype,
-              sourceUnit.unitProps,
-              this
-            );
-            skyBeam(coord);
-          } else {
-            console.error('Cannot create unit, missing source unit for', id)
-          }
+          this.spawnEnemy(id, coord, isMiniboss)
         }
       }
       // end Copied from generateRandomLevelData
+
+      // Spawned enemies and progressed the level, return true
+      return true;
     }
 
-    return true;
-  }
+    // No wave to spawn, so spawn portals
+    const portalsAlreadySpawned = !!this.pickups.filter(p => !p.flaggedForRemoval && !isNaN(p.x) && !isNaN(p.x)).find(p => p.name === Pickup.PORTAL_PURPLE_NAME);
+    if (!portalsAlreadySpawned) {
+      // Make all potion pickups disappear so as to not compell players
+      // to waste time walking around picking them all up
+      // Also do not remove portals
+      this.pickups.filter(p => p.name !== Pickup.CARDS_PICKUP_NAME && p.name !== Pickup.PORTAL_PURPLE_NAME).forEach(p => {
+        makeScrollDissapearParticles(p, false);
+        Pickup.removePickup(p, this, false);
+      });
+      // Spawn portal near each player
+      const portalPickup = Pickup.pickups.find(p => p.name == Pickup.PORTAL_PURPLE_NAME);
+      if (portalPickup) {
+        const portalsAlreadySpawned = !!this.pickups.filter(p => !p.flaggedForRemoval && !isNaN(p.x) && !isNaN(p.x)).find(p => p.name === Pickup.PORTAL_PURPLE_NAME)
+        if (!portalsAlreadySpawned) {
+          for (let playerUnit of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
+            const portalSpawnLocation = this.findValidSpawn(playerUnit, 4) || playerUnit;
+            if (!isOutOfBounds(portalSpawnLocation, this)) {
+              Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup, logSource: 'Portal' }, this, false);
+            } else {
+              // If a pickup is attempted to be spawned for an unspawned player this if check prevents it from being spawned out of bounds
+              // and the next invokation of checkIfShouldSpawnPortal will spawn it instead.
+            }
+            // Give all player units infinite stamina when portal spawns for convenience.
+            playerUnit.stamina = Number.POSITIVE_INFINITY;
+            // Give all players max health and mana (it will be reset anyway when they are reset for the next level
+            // but this disswades them from going around to pickup potions)
+            playerUnit.health = playerUnit.healthMax;
+            playerUnit.mana = playerUnit.manaMax;
+            // Since playerUnit's health and mana is reset, we need to immediately sync the prediction unit
+            // so that it doesn't inncorrectly warn "self damage due to spell" by seeing that the prediction unit
+            // has less health than the current player unit.
+            this.syncPlayerPredictionUnitOnly();
 
+          }
+        } else {
+          console.log('Portals have already been spawned, do not spawn additional');
+        }
+      } else {
+        console.error('Portal pickup not found')
+      }
+
+      // Spawned portals and progressed the level, return true
+      return true;
+    }
+
+    // Go To Next Level
+    // - If all connected players are in portal or done with turn
+    // - If in hotseat and at least one player is in portal
+    const connectedPlayers = this.players.filter(p => p.clientConnected);
+    const goToNextLevel =
+      connectedPlayers.every(p => Player.inPortal(p) || this.hasCompletedTurn(p))
+      || (numberOfHotseatPlayers > 1 && connectedPlayers.some(Player.inPortal));
+    if (goToNextLevel) {
+      console.log('All living, spawned players are inPortal, go to the next level');
+      // Invoke initLevel within a timeout so that this function
+      // doesn't have to wait for level generation to complete before
+      // returning
+      setTimeout(() => {
+        // Prepare the next level
+        if (globalThis.isHost(this.pie)) {
+          this.generateLevelData(this.levelIndex + 1);
+        } else {
+          console.log('This instance is not host, host will trigger next level generation.');
+        }
+      }, 0);
+      // Return of true signifies it went to the next level
+      return true;
+    }
+
+    return false;
+  }
   // hasLineOfSight returns true if there are no walls interrupting
   // a line from seer to target
   // Note: if you want a function like this that returns a Vec2, try
@@ -3747,7 +3774,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     sendPlayerThinkingThrottled(thoughts, this);
   }
   syncPlayers(players: Player.IPlayerSerialized[], isClientPlayerSourceOfTruth: boolean) {
-    console.log('sync: Syncing players', JSON.stringify(players.map(p => p.clientId)));
+    console.log('sync: Syncing players', JSON.stringify(players.map(p => p.playerId)));
     // Clear previous players array
     const previousPlayersLength = this.players.length;
     players.forEach((p, i) => Player.load(p, i, this, isClientPlayerSourceOfTruth));
