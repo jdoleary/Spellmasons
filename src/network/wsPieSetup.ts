@@ -13,7 +13,7 @@ import { onData } from './networkHandler';
 import { getVersionInequality, onClientPresenceChanged, typeGuardHostApp } from './networkUtil';
 import { setView, View } from '../views';
 import * as storage from '../storage';
-import { updateGlobalRefToCurrentClientPlayer } from '../entity/Player';
+import { updateGlobalRefToPlayer } from '../entity/Player';
 import Underworld from '../Underworld';
 import { version } from '../../package.json';
 import makeOverworld, { Overworld } from '../Overworld';
@@ -205,12 +205,6 @@ ${explainUpdateText}
 
     }
     globalThis.clientId = o.clientId;
-    if (overworld.underworld) {
-      const selfPlayer = overworld.underworld.players.find(p => p.clientId == globalThis.clientId);
-      if (selfPlayer) {
-        updateGlobalRefToCurrentClientPlayer(selfPlayer, overworld.underworld);
-      }
-    }
   };
   pie.onData = d => onData(d, overworld);
   pie.onError = ({ message }: { message: any }) => {

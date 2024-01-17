@@ -67,6 +67,10 @@ export interface IPlayer {
   endedTurn: boolean;
   // wsPie id
   clientId: string;
+  // Since two players could have the same clientId, such as in hotseat
+  // We should also store a unique player identifier, and use that
+  // instead of clientId for most game logic
+  playerId: string;
   clientConnected: boolean;
   unit: Unit.IUnit;
   awaitingSpawn: boolean,
@@ -171,13 +175,14 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
   }
 
 }
-export function create(clientId: string, underworld: Underworld): IPlayer {
+export function create(clientId: string, playerId: string, underworld: Underworld): IPlayer {
   const userSource = defaultPlayerUnit;
   const player: IPlayer = {
     name: '',
     mageType: undefined,
     endedTurn: false,
     clientId,
+    playerId,
     // init players as not connected.  clientConnected status
     // should only be handled in one place and tied directly
     // to pie.clients
@@ -234,7 +239,6 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
   player.unit.healthMax = PLAYER_BASE_HEALTH;
 
   underworld.players.push(player);
-  updateGlobalRefToCurrentClientPlayer(player, underworld);
   underworld.queueGameLoop();
   return player;
 }
@@ -346,23 +350,10 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
   }
 
   Unit.resetUnitStats(player.unit, underworld);
-
-  // Manage game over state so that if this is a restart
-  // and the game over window is currently up, it will dismiss it
-  underworld.tryGameOver();
 }
 // Keep a global reference to the current client's player
-export function updateGlobalRefToCurrentClientPlayer(player: IPlayer, underworld: Underworld) {
-  if (globalThis.clientId == player.clientId) {
-    if (numberOfHotseatPlayers > 1) {
-      globalThis.player = underworld.players[underworld.hotseatCurrentPlayerIndex];
-      if (!globalThis.player) {
-        console.error('Unexpected: Hotseat player is undefined');
-      }
-    } else {
-      globalThis.player = player;
-    }
-  }
+export function updateGlobalRefToPlayer(player: IPlayer) {
+  globalThis.player = player;
 }
 // Converts a player entity into a serialized form
 // that can be saved as JSON and rehydrated later into
@@ -408,7 +399,7 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
     // might be wrongfully overwritten by a server SYNC_PLAYERS such as getting
     // a summon spell or rerolling.
 
-    if (globalThis.player && playerLoaded.clientId == globalThis.player.clientId) {
+    if (globalThis.player && globalThis.player.playerId == playerLoaded.playerId) {
       playerLoaded.cardsInToolbar = globalThis.player.cardsInToolbar;
       playerLoaded.inventory = globalThis.player.inventory;
       playerLoaded.freeSpells = globalThis.player.freeSpells;
@@ -445,7 +436,7 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
   // Overwrite player
   underworld.players[index] = playerLoaded;
   CardUI.recalcPositionForCards(playerLoaded, underworld);
-  updateGlobalRefToCurrentClientPlayer(playerLoaded, underworld);
+  updateGlobalRefToPlayer(playerLoaded);
   if (underworld.overworld) {
     setClientConnected(playerLoaded, underworld.overworld.clients.includes(player.clientId), underworld);
   } else {
@@ -470,7 +461,7 @@ export function setClientConnected(player: IPlayer, connected: boolean, underwor
   } else {
     Image.addSubSprite(player.unit.image, 'disconnected.png');
     // If they disconnect, end their turn
-    underworld.endPlayerTurn(player.clientId);
+    underworld.endPlayerTurn(player);
   }
   syncLobby(underworld);
 }
@@ -488,7 +479,7 @@ export function syncLobby(underworld: Underworld) {
       } else if (p.endedTurn && underworld.turn_phase == turn_phase.PlayerTurns) {
         status = i18n('Ready for next turn');
       }
-      return { name: p.name || p.clientId, clientId: p.clientId, clientConnected: p.clientConnected, status, color: playerColorToCss(p), ready: p.lobbyReady ? i18n('Ready') : i18n('Not Ready') };
+      return { name: p.name || p.playerId, clientId: p.clientId, clientConnected: p.clientConnected, status, color: playerColorToCss(p), ready: p.lobbyReady ? i18n('Ready') : i18n('Not Ready') };
     });
   // Update lobby element
   if (elInGameLobby) {
@@ -540,13 +531,7 @@ export function enterPortal(player: IPlayer, underworld: Underworld) {
   // Clear the selection so that it doesn't persist after portalling (which would show
   // your user's move circle in the upper left hand of the map but without the user there)
   clearTooltipSelection();
-  // Note: This should occur AFTER dead, non-portaled players may have entered the portal
-  // because checkForEndOfLevel considers if all players are portaled.
-  const wentToNextLevel = underworld.checkForEndOfLevel();
-  if (!wentToNextLevel) {
-    // Entering the portal ends the player's turn
-    underworld.endPlayerTurn(player.clientId);
-  }
+  underworld.progressGameState();
 }
 
 export function ableToAct(player: IPlayer) {

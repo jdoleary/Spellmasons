@@ -983,7 +983,7 @@ export function triggerAdminCommand(label: string, clientId: string, payload: an
   }
 }
 interface AdminActionProps {
-  clientId?: string;
+  playerId?: string;
   pos?: Vec2;
   selectedUnitid?: number;
   selectedPickupLocation?: Vec2;
@@ -1000,9 +1000,9 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
   const options: AdminContextMenuOption[] = [
     {
       label: '🦸‍♂️ Super Me',
-      action: ({ clientId }: { clientId?: string }) => {
+      action: ({ playerId }: { playerId?: string }) => {
         if (superMe && overworld.underworld) {
-          superMe(overworld.underworld, overworld.underworld.players.find(p => p.clientId == clientId) || globalThis.player);
+          superMe(overworld.underworld, overworld.underworld.players.find(p => p.playerId == playerId) || globalThis.player);
         }
       },
       supportInMultiplayer: true,
@@ -1010,7 +1010,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     },
     {
       label: '️Level Up',
-      action: ({ clientId }: { clientId?: string }) => {
+      action: () => {
         if (superMe && overworld.underworld) {
           const numberOfEnemiesKilledNeededForNextDrop = overworld.underworld.getNumberOfEnemyKillsNeededForNextLevelUp() - overworld.underworld.enemiesKilled;
           for (let i = 0; i < numberOfEnemiesKilledNeededForNextDrop; i++) {
@@ -1035,12 +1035,12 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     {
       label: '☄️ Teleport Here',
       action: (props) => {
-        const { clientId, pos } = props;
+        const { playerId, pos } = props;
         if (!overworld.underworld) {
           console.error('Cannot teleport, underworld does not exist');
           return;
         }
-        const player = overworld.underworld.players.find(p => p.clientId == clientId);
+        const player = overworld.underworld.players.find(p => p.playerId == playerId);
         if (player && pos) {
           player.unit.x = pos.x;
           player.unit.y = pos.y;
@@ -1776,7 +1776,7 @@ export function triggerAdminOption(option: AdminContextMenuOption, overworld: Ov
         floatingText({ coords: globalThis.player.unit, style: { fill: 'red' }, text: errMsg })
       }
     }
-    action({ clientId: globalThis.clientId || '', pos });
+    action({ playerId: globalThis.player?.playerId || '', pos });
   }
 
 }
