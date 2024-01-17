@@ -192,63 +192,6 @@ export function create({ pos, pickupSource, idOverride, logSource }:
   }
 
   underworld.addPickupToArray(self, prediction);
-  // Ensure players get outstanding scroll pickups at the end of the level
-  if (self) {
-    // If pickup is a portal
-    // make existing scroll pickups fly to player
-    if (self.name == PORTAL_PURPLE_NAME) {
-      let timeBetweenPickupFly = 100;
-      const scrolls = underworld.pickups.filter(p => p.name == CARDS_PICKUP_NAME && !p.flaggedForRemoval);
-      for (let scroll of scrolls) {
-        removePickup(scroll, underworld, false);
-      }
-      scrolls.map(pickup => {
-        return raceTimeout(5000, 'spawnPortalFlyScrolls', new Promise<void>((resolve) => {
-          timeBetweenPickupFly += 100;
-          // Make the pickup fly to the player. this gives them some time so it doesn't trigger immediately.
-          setTimeout(() => {
-            if (pickup.image) {
-              pickup.image.sprite.visible = false;
-            }
-            const flyingPickupPromises = [];
-            for (let p of underworld.players) {
-              flyingPickupPromises.push(createVisualLobbingProjectile(pickup, p.unit, pickup.imagePath))
-            }
-            Promise.all(flyingPickupPromises)
-              .then(() => {
-                underworld.players.forEach(p => givePlayerUpgrade(p, underworld));
-                resolve();
-              });
-          }, timeBetweenPickupFly);
-        }))
-      });
-    }
-
-    // If there are existing portals and a pickup is spawned make pickups fly to player
-    if (self.name == CARDS_PICKUP_NAME && underworld.pickups.some(p => p.name == PORTAL_PURPLE_NAME)) {
-      removePickup(self, underworld, false);
-      raceTimeout(5000, 'spawnScrollFlyScroll', new Promise<void>((resolve) => {
-        // Make the pickup fly to the player. this gives them some time so it doesn't trigger immediately.
-        setTimeout(() => {
-          if (self) {
-            if (self.image) {
-              self.image.sprite.visible = false;
-            }
-            const flyingPickupPromises = [];
-            for (let p of underworld.players) {
-              flyingPickupPromises.push(createVisualLobbingProjectile(self, p.unit, self.imagePath))
-            }
-            Promise.all(flyingPickupPromises)
-              .then(() => {
-                underworld.players.forEach(p => givePlayerUpgrade(p, underworld));
-                resolve();
-              });
-          }
-        }, 100);
-      }));
-    }
-  }
-
   return self;
 }
 function assignEmitter(pickup: IPickup, emitterId: string, prediction: boolean, underworld: Underworld) {
@@ -496,7 +439,6 @@ export function tryTriggerPickup(pickup: IPickup, unit: IUnit, underworld: Under
 const manaPotionRestoreAmount = 40;
 const healthPotionRestoreAmount = 50;
 export const spike_damage = 30;
-export const CARDS_PICKUP_NAME = 'Spells';
 export const PICKUP_SPIKES_NAME = 'Trap';
 export const PORTAL_PURPLE_NAME = 'Portal';
 const cursedManaPotionRemovalProportion = 0.1;
