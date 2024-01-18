@@ -254,15 +254,6 @@ export default class Underworld {
 
     this.random = this.syncronizeRNG(RNGState);
   }
-  clientIdToPlayer(clientId: string): Player.IPlayer | undefined {
-    if (globalThis.player && globalThis.clientId == clientId) {
-      console.debug("Returning current player on this client:\n", clientId, "\n", globalThis.player.playerId);
-      return globalThis.player;
-    }
-    const player = this.players.find(p => p.clientId == clientId);
-    console.debug("Finding player on different client:\n", clientId, "\n", player?.playerId);
-    return player;
-  }
   // Returns all potentially targetable entities
   // See cards/index.ts's getCurrentTargets() for the function that returns 
   // the current targets of a spell.
@@ -300,14 +291,6 @@ export default class Underworld {
         this.cardDropsDropped++;
         // Give EVERY player an upgrade when any one player picks up a scroll
         this.players.forEach(p => Pickup.givePlayerUpgrade(p, this));
-        // const pickupSource = Pickup.pickups.find(p => p.name == Pickup.CARDS_PICKUP_NAME)
-        // if (pickupSource) {
-        //   Pickup.create({ pos: enemyKilledPos, pickupSource }, this, false);
-        //   tutorialShowTask('pickupScroll');
-        // } else {
-        //   console.error('pickupSource for', Pickup.CARDS_PICKUP_NAME, ' not found');
-        //   return
-        // }
       } else {
         console.log('No more cards to drop');
       }
@@ -337,7 +320,7 @@ export default class Underworld {
     // if (elSeed) {
     //   elSeed.innerText = `Seed: ${this.seed}`;
     // }
-    console.log("RNG create with seed:", this.seed, ", state: ", RNGState);
+    console.log('RNG create with seed:', this.seed, ', state: ', RNGState);
     // state of "true" initializes the RNG with the ability to save it's state,
     // state of a state object, rehydrates the RNG to a particular state
     this.random = seedrandom(this.seed, { state: RNGState })
@@ -2104,10 +2087,10 @@ export default class Underworld {
     // Are there connected players?
     const connectedPlayers = this.players.filter(p => p.clientConnected);
     if (connectedPlayers.length > 0) {
-      console.log("Game State: Is Game Over?\nConnected Players: ", connectedPlayers);
+      console.log('[GAME] Is Game Over?\nConnected Players: ', connectedPlayers);
     }
     else {
-      console.log("Game State: Game is Over.\nNo connected players in player list: ", this.players);
+      console.log('[GAME] Game is Over\nNo connected players in player list: ', this.players);
       return true;
     }
 
@@ -2116,10 +2099,10 @@ export default class Underworld {
     // Note: This must exclude doodads
     const remainingAllies = this.units.filter(u => u.alive && u.unitSubType != UnitSubType.DOODAD && playerFactions.includes(u.faction));
     if (remainingAllies.length > 0) {
-      console.log("Game State: Is Game Over?\nRemaining allies: ", remainingAllies);
+      console.log('[GAME] Is Game Over?\nRemaining allies: ', remainingAllies);
     }
     else {
-      console.log("Game State: Game is Over.\nNo allies remain");
+      console.log('[GAME] Game is Over\nNo allies remain');
       return true;
     }
 
@@ -2127,12 +2110,14 @@ export default class Underworld {
     // If not, there might be a stalemate, so we need a kill switch.
     const useKillSwitch = this.allyNPCAttemptWinKillSwitch > 50;
     if (!useKillSwitch) {
-      console.log("Game State: Is Game Over?\nKill Switch Counter: ", this.allyNPCAttemptWinKillSwitch);
+      console.log('[GAME] Is Game Over?\nKill Switch Counter: ', this.allyNPCAttemptWinKillSwitch);
     }
     else {
-      console.log("Game State: Game is Over.\nKill Switch threshold reached");
+      console.log('[GAME] Game is Over\nKill Switch threshold reached');
       return true;
     }
+
+    console.log('[GAME] Game is not over');
     return false;
   }
   updateGameOverModal() {
@@ -2171,7 +2156,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
 
   doGameOver() {
-    console.log("- - -\nGame Over\n- - -");
+    console.log('- - -\nGame Over\n- - -');
     // Show game over modal after a delay
     gameOverModalTimeout = setTimeout(() => {
       document.body.classList.toggle('game-over', true);
@@ -2206,7 +2191,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
   // Handles level completion, game over, turn phases, and hotseat
   async progressGameState() {
-    console.log("Game State: Progress...\nCurrent Turn Phase == ", turn_phase[this.turn_phase]);
+    console.log('[GAME] Progress...\nCurrent Turn Phase == ', turn_phase[this.turn_phase]);
 
     // try game over
     // else try next level
@@ -2239,7 +2224,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // this.endFullTurnCycle();
     }
 
-    console.log("Game State: Progress...\nNew Turn Phase == ", turn_phase[this.turn_phase]);
+    console.log('[GAME] Progress...\nNew Turn Phase == ', turn_phase[this.turn_phase]);
     return;
   }
 
@@ -2259,14 +2244,13 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       const currentPlayer = this.players[i];
       // Found a player that has not completed their turn, switch to them
       if (currentPlayer && !this.hasCompletedTurn(currentPlayer)) {
-        console.log("Game State: \nSwitching to hotseat player: ", currentPlayer);
+        console.log('[GAME] Turn Phase\nSwitching to hotseat player: ', currentPlayer);
         await this.changeToHotseatPlayer(currentPlayer);
         return;
       }
     }
 
-    // TODO - Switch back to player 1 in prep for next turn?
-    console.log("Game State: \nAll remaining hotseat players have completed their turn");
+    console.log('[GAME] Turn Phase\nAll remaining hotseat players have completed their turn');
   }
 
   async changeToFirstHotseatPlayer() {
@@ -2277,12 +2261,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       this.changeToHotseatPlayer(firstPlayer)
     }
     else {
-      console.error("Game State: \nFirst hotseat player doesn't exist");
+      console.error('[GAME] Turn Phase\nFirst hotseat player does not exist');
     }
   }
 
   async changeToHotseatPlayer(player: Player.IPlayer) {
-    console.log("Game State: \nChange to hotseat player: " + player.playerId);
+    console.log('[GAME] Turn Phase\nChange to hotseat player: ' + player.playerId);
 
     // If the next player has already completed turn or can't act
     // get the next hotseat player
@@ -2331,7 +2315,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Only move on if there are connected players in the game,
     // so that the server doesn't run cycles pointlessly
     if (!(connectedPlayers.length > 0)) {
-      console.error("PlayerTurn: tryEndPlayerTurnPhase = false; No active players found");
+      console.error('[GAME] Turn Phase\n tryEndPlayerTurnPhase = false; No active players found');
       return false;
     }
 
@@ -2346,7 +2330,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
 
   async endPlayerTurnCleanup() {
-    console.log('Game State: \nEnd player turn phase');
+    console.log('[GAME] Turn Phase\nEnd player turn phase');
 
     for (let p of this.players) {
       // Decrement card usage counts,
@@ -2449,7 +2433,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     const units = this.units.filter(u => u.unitType == UnitType.AI && u.faction == faction);
 
-    console.log('Game State: \nExecuteNPCTurn', Faction[faction]);
+    console.log('[GAME] Turn Phase\nExecuteNPCTurn', Faction[faction]);
     const cachedTargets: { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } = {};
     this.clearPredictedNextTurnDamage();
     await Unit.startTurnForUnits(units, this, false);
@@ -2515,7 +2499,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           );
         }
       }
-      console.log(actionPromises);
       this.triggerGameLoopHeadless();
       await Promise.all(actionPromises);
     }
@@ -2557,7 +2540,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
                 console.error('Player was reset because they ended up out of bounds');
                 Player.resetPlayerForNextLevel(player, this);
               } else {
-                console.error("Unexpected: Tried to reset out of bounds player but player unit matched no player object.");
+                console.error('Unexpected: Tried to reset out of bounds player but player unit matched no player object.');
               }
             } else {
               console.error('Unit was force killed because they ended up out of bounds', u.unitSubType)
@@ -2677,7 +2660,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (this.turn_phase != turn_phase.PlayerTurns) {
       // (A player "ending their turn" when it is not their turn
       // can occur when a client disconnects when it is not their turn)
-      console.info('Cannot end the turn of a player when it isn\'t currently their turn')
+      console.info('Cannot end the turn of a player when it is not currently their turn')
       return
     }
     // Don't play turn sfx when recording or for auto-ended dead players
@@ -2693,11 +2676,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Ensure players can only end the turn when it IS their turn
     if (this.turn_phase == turn_phase.PlayerTurns) {
       player.endedTurn = true;
-      console.log('Game State: \nEnd player turn', clientId);
+      console.log('[GAME] Turn Phase\nEnd player turn', clientId);
       this.syncTurnMessage();
       this.progressGameState();
     } else {
-      console.error("Game State: \nturn_phase must be PlayerTurns to end turn. Cannot be ", this.turn_phase);
+      console.error('[GAME] Turn Phase\nturn_phase must be PlayerTurns to end turn. Cannot be ', this.turn_phase);
     }
 
     // Should progress game state go here as a failsafe?
@@ -3052,7 +3035,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   tryRestartTurnPhaseLoop() {
     // See GameLoops.md for more details 
     if (this.turn_phase == turn_phase.Stalled && this.players.some(player => Player.ableToAct(player))) {
-      console.log('Game State: Turn Management\nRestarting turn loop with PlayerTurns')
+      console.log('[GAME] Turn Phase\nRestarting turn loop with PlayerTurns')
       this.broadcastTurnPhase(turn_phase.PlayerTurns);
       // Special Case: in the event that a client is stuck with a stalled turn phase
       // it can set itself back to PlayerTurns. (The server won't send another 
@@ -3068,7 +3051,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   async broadcastTurnPhase(p: turn_phase) {
     // If host, send sync; if non-host, ignore 
     if (globalThis.isHost(this.pie)) {
-      console.log('Game State: \nBroadcast SET_PHASE: ', turn_phase[p]);
+      console.log('[GAME] Turn Phase\nBroadcast SET_PHASE: ', turn_phase[p]);
 
       this.pie.sendData({
         type: MESSAGE_TYPES.SET_PHASE,
@@ -3092,7 +3075,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   // initializeTurnPhase (on each client and itself);
   // otherwise the clients and host could get out of sync
   setTurnPhase(p: turn_phase) {
-    console.log('Game State: \nsetTurnPhase(', turn_phase[p], ')');
+    console.log('[GAME] Turn Phase\nsetTurnPhase: ', turn_phase[p]);
     this.turn_phase = p;
     this.syncTurnMessage();
 
@@ -3119,7 +3102,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   // when you want to set the turn_phase
   // See GameLoops.md for more details
   async initializeTurnPhase(p: turn_phase) {
-    console.log('Game State: \ninitializeTurnPhase(', turn_phase[p], ')');
+    console.log('[GAME] Turn Phase\ninitializeTurnPhase: ', turn_phase[p]);
 
     // Clear cast this turn
     globalThis.castThisTurn = false;
@@ -3152,7 +3135,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     const phase = turn_phase[this.turn_phase];
     if (!phase) {
-      console.error('Invalid turn phase', this.turn_phase);
+      console.error('[GAME] Turn Phase\nInvalid turn phase: ', turn_phase[p]);
       return;
     }
 
@@ -3167,7 +3150,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // Setting it immediately ensures that any following messages in the queue won't reengage
           // the turn_phase loop, causing an infinite loop
           this.turn_phase = turn_phase.Stalled;
-          console.log('Game State: Turn Management\nSkipping initializingPlayerTurns, no players connected. Setting turn_phase to "Stalled"');
+          console.log('[GAME] Turn Phase\nSkipping initializingPlayerTurns, no players connected. Setting turn_phase to "Stalled"');
         } else {
           // Initialize the player turns.
           // Note, it is possible that calling this will immediately end
@@ -3617,7 +3600,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           p.clientConnected)
 
     if (!canProgress) {
-      console.log("Game State: Can't Progress Level\nThere are living enemy units, or no players are spawned and connected.");
+      console.log('[GAME] Cannot Progress Level\nThere are living enemy units, or no players are spawned and connected.');
       return false;
     }
 
@@ -3655,11 +3638,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
       // end Copied from generateRandomLevelData
 
-      console.log("Game State: Level Progressed\nSpawned new wave of enemies");
+      console.log('[GAME] Level Progressed\nSpawned new wave of enemies');
       return true;
     }
     else {
-      console.log("Game State: Handling Level Progress...\nNo more waves to spawn");
+      console.log('[GAME] Handling Level Progress...\nNo more waves to spawn');
     }
 
     // No wave to spawn, so spawn portals
@@ -3694,11 +3677,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         console.error('Portal pickup not found')
       }
 
-      console.log("Game State: Level Progressed\nSpawned portals");
+      console.log('[GAME] Level Progressed\nSpawned portals');
       return true;
     }
     else {
-      console.log("Game State: Handling Level Progress...\nPortals have already been spawned");
+      console.log('[GAME] Handling Level Progress...\nPortals have already been spawned');
     }
 
     // Go To Next Level
@@ -3721,11 +3704,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         }
       }, 0);
 
-      console.log("Game State: Level Progressed\nMoving to next level");
+      console.log('[GAME] Level Progressed\nMoving to next level');
       return true;
     }
     else {
-      console.log("Game State: Handling Level Progress...\nDon't go to next level");
+      console.log('[GAME] Handling Level Progress...\nDo not go to next level');
     }
 
     return false;

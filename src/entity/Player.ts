@@ -266,8 +266,6 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string, colo
   // Add player-specific shaders
   // regardless of if the image sprite changes to a new animation or not.
   if (player.unit.image && player.unit.image.sprite.filters) {
-
-
     const colorSecondary = lightenColor(color, 0.3);
     if (color && colorSecondary && color !== playerNoColor) {
       const robeColorFilter = new MultiColorReplaceFilter(
@@ -451,17 +449,11 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
 // Sets boolean and substring denoting if the player has a @websocketpie/client client associated with it
 export function setClientConnected(player: IPlayer, connected: boolean, underworld: Underworld) {
   // Override: If in hotseat multiplayer than all clients are considered connected
-  if (globalThis.numberOfHotseatPlayers > 1) {
-    connected = true;
-  }
-  player.clientConnected = connected;
+  player.clientConnected = globalThis.numberOfHotseatPlayers > 1 ? true : connected;
   if (connected) {
     Image.removeSubSprite(player.unit.image, 'disconnected.png');
-    underworld.queueGameLoop();
   } else {
     Image.addSubSprite(player.unit.image, 'disconnected.png');
-    // If they disconnect, end their turn
-    underworld.endPlayerTurn(player);
   }
   syncLobby(underworld);
 }
