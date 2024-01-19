@@ -62,8 +62,6 @@ const spell: Spell = {
           Unit.removeModifier(unit, conserveSpellId, underworld);
         }, 0);
       }
-      // Do not skip turn
-      return false;
     },
   },
 

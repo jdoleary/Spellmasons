@@ -29,8 +29,7 @@ export type onAgro = {
 const onAgroSource: { [name: string]: onAgro } = {};
 
 export type onTurnStart = {
-  // Return boolean skips the turn if true
-  (unit: IUnit, prediction: boolean, underworld: Underworld): Promise<boolean>;
+  (unit: IUnit, prediction: boolean, underworld: Underworld): Promise<void>;
 };
 const onTurnStartSource: { [name: string]: onTurnStart } = {};
 

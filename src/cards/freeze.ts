@@ -68,11 +68,6 @@ const spell: Spell = {
   },
   events: {
     onTurnStart: async (unit: Unit.IUnit) => {
-      const modifier = unit.modifiers[freezeCardId];
-      if (modifier && modifier.quantity <= 0) {
-        // do not skip turn
-        return false;
-      }
       // Ensure that the unit cannot move when frozen
       // (even when players' turns are ended they can still act so long
       // as it is underworld.turn_phase === turn_phase.PlayerTurns, this is because all players act simultaneously
@@ -80,8 +75,6 @@ const spell: Spell = {
       // prevents players from moving when they are frozen)
       // and then returning true also ends their turn.
       unit.stamina = 0;
-      // Skip turn
-      return true;
     },
     onTurnEnd: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
       // Decrement how many turns left the unit is frozen

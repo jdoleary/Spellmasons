@@ -1098,7 +1098,7 @@ export function canAct(unit: IUnit): boolean {
   }
 
   // TODO - Find cleaner method. Event args?
-  if (unit.modifiers[freezeCardId]) {
+  if (unit.modifiers[freezeCardId] || unit.modifiers[summoningSicknessId]) {
     return false;
   }
 
