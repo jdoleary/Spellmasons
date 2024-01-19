@@ -350,8 +350,10 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
   Unit.resetUnitStats(player.unit, underworld);
 }
 // Keep a global reference to the current client's player
-export function updateGlobalRefToPlayer(player: IPlayer) {
-  globalThis.player = player;
+export function updateGlobalRefToPlayerIfCurrentClient(player: IPlayer) {
+  if (globalThis.clientId == player.clientId) {
+    globalThis.player = player;
+  }
 }
 // Converts a player entity into a serialized form
 // that can be saved as JSON and rehydrated later into
@@ -434,7 +436,7 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
   // Overwrite player
   underworld.players[index] = playerLoaded;
   CardUI.recalcPositionForCards(playerLoaded, underworld);
-  updateGlobalRefToPlayer(playerLoaded);
+  updateGlobalRefToPlayerIfCurrentClient(playerLoaded);
   if (underworld.overworld) {
     setClientConnected(playerLoaded, underworld.overworld.clients.includes(player.clientId), underworld);
   } else {
@@ -452,6 +454,7 @@ export function setClientConnected(player: IPlayer, connected: boolean, underwor
   player.clientConnected = globalThis.numberOfHotseatPlayers > 1 ? true : connected;
   if (connected) {
     Image.removeSubSprite(player.unit.image, 'disconnected.png');
+    underworld.queueGameLoop();
   } else {
     Image.addSubSprite(player.unit.image, 'disconnected.png');
   }
@@ -520,6 +523,7 @@ export function enterPortal(player: IPlayer, underworld: Underworld) {
   player.unit.resolveDoneMoving();
   // Move "portaled" unit out of the way to prevent collisions and chaining while portaled
   Unit.setLocation(player.unit, { x: NaN, y: NaN });
+  updateGlobalRefToPlayerIfCurrentClient(player);
   // Clear the selection so that it doesn't persist after portalling (which would show
   // your user's move circle in the upper left hand of the map but without the user there)
   clearTooltipSelection();

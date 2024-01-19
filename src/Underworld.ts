@@ -2273,7 +2273,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (this.hasCompletedTurn(player)) this.handleNextHotseatPlayer();
 
     // Otherwise, set up hotseat player
-    Player.updateGlobalRefToPlayer(player);
+    Player.updateGlobalRefToPlayerIfCurrentClient(player);
     CardUI.recalcPositionForCards(globalThis.player, this);
     CardUI.syncInventory(undefined, this);
     await runPredictions(this);
@@ -2676,7 +2676,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Ensure players can only end the turn when it IS their turn
     if (this.turn_phase == turn_phase.PlayerTurns) {
       player.endedTurn = true;
-      console.log('[GAME] Turn Phase\nEnd player turn', clientId);
+      console.log('[GAME] Turn Phase\nPlayer ended turn: ', player);
       this.syncTurnMessage();
       this.progressGameState();
     } else {
