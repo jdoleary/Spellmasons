@@ -302,12 +302,21 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string, colo
   }
 }
 export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld) {
+  console.trace("TEMP - Reset player!");
+  console.warn("TEMP - Reset player: ", player);
+  console.warn("TEMP - Global Player: ", globalThis.player);
+  console.warn("TEMP - Same player?: ", player == globalThis.player);
+
   // Set the player so they can choose their next spawn
   player.isSpawned = false;
   if (player === globalThis.player) {
     globalThis.awaitingSpawn = false;
   }
   player.endedTurn = false;
+
+  console.warn("TEMP - isSpawned: ", player.isSpawned);
+  console.warn("TEMP - Global awaiting spawn: ", globalThis.awaitingSpawn);
+
   // Update player position to be NOT NaN or null (which indicates that the player is in portal),
   // instead, the player is now spawning so their position should be a number.
   // This is important because it allows the player to see enemy attentionMarkers when
@@ -498,6 +507,7 @@ export function enterPortal(player: IPlayer, underworld: Underworld) {
   // the client can recieve the new underworld state)
   underworld.allowForceInitGameState = false;
 
+  // TODO - Handle this outside of the enter portal function?
   // Record Progress
   const mageTypeFarthestLevel = storage.getStoredMageTypeFarthestLevelKey(player.mageType || 'Spellmason');
   const highScore = storageGet(mageTypeFarthestLevel) || '0'
