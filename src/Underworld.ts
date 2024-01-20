@@ -151,6 +151,7 @@ export default class Underworld {
   // for serializing random: prng
   RNGState?: SeedrandomState;
   turn_phase: turn_phase = turn_phase.Stalled;
+  subTypesToProcessInGameLoopUnit?: UnitSubType[];
   // An id incrementor to make sure no 2 units share the same id
   lastUnitId: number = -1;
   lastPickupId: number = -1;
@@ -637,7 +638,7 @@ export default class Underworld {
     return !finishedForceMoves;
   }
 
-  // TODO - Refactor / Remove this
+  // TODO - Examine this for state machine refactor
   // returns true if there is more processing yet to be done on the next game loop
   gameLoopUnit = (u: Unit.IUnit, aliveNPCs: Unit.IUnit[], deltaTime: number): boolean => {
     if (u) {
@@ -649,8 +650,9 @@ export default class Underworld {
         u.path.points.shift();
       }
 
-      // Only allow if the unit can act and it is their turn
-      const takeAction = Unit.canAct(u) && Unit.isUnitsTurnPhase(u, this);
+      const takeAction = Unit.canAct(u) && Unit.isUnitsTurnPhase(u, this)
+        && (u.unitType == UnitType.PLAYER_CONTROLLED || this.subTypesToProcessInGameLoopUnit?.includes(u.unitSubType));
+
       if (u.path && u.path.points[0] && u.stamina > 0 && takeAction) {
         // Move towards target
         const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path.points[0], u.moveSpeed * deltaTime)
@@ -699,6 +701,7 @@ export default class Underworld {
         }
 
       }
+
       // check for collisions with pickups in new location
       this.checkPickupCollisions(u, false);
       // Ensure that resolveDoneMoving is invoked when unit is out of stamina (and thus, done moving)
@@ -1586,9 +1589,7 @@ export default class Underworld {
         levelData.enemies.push({ id, coord, isMiniboss })
       }
     }
-
     return levelData;
-
   }
   pickGroundTileLayers(biome: Biome): string[] {
     const layers: { [biome in Biome]: {
@@ -1981,8 +1982,6 @@ export default class Underworld {
     // be set BEFORE postSetupLevel is invoked because postSetupLevel will send a sync message
     // that will override the clientside data.
     this.postSetupLevel();
-
-
   }
   _getLevelText(levelIndex: number): string {
     if (levelIndex > LAST_LEVEL_INDEX) {
@@ -2451,27 +2450,19 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           this.incrementTargetsNextTurnDamage(targets, -u.healthMax, true);
         }
       }
-      u.stamina = 0;
     }
 
-    // TODO - Remove stamina workaround
-
+    // TODO - Action after movement
     // TODO - Don't control actions directly in gameLoopUnit / Refactor
 
-    // which causes issues with turn order
-    // i.e. melee units moving during the ranged units' turn
+    // Ranged units should go before melee units
     for (let subTypes of [[UnitSubType.RANGED_LOS, UnitSubType.RANGED_RADIUS, UnitSubType.SUPPORT_CLASS], [UnitSubType.MELEE], [UnitSubType.SPECIAL_LOS], [UnitSubType.DOODAD]]) {
       const actionPromises: Promise<void>[] = [];
       const readyToTakeTurnUnits = units.filter(u => Unit.canAct(u) && subTypes.includes(u.unitSubType));
 
+      this.subTypesToProcessInGameLoopUnit = subTypes;
       for (let u of readyToTakeTurnUnits) {
-        u.stamina = u.staminaMax;
-        // Units should have their previous path cleared so that their .action can set their path if 
-        // they should move this turn.
-        // Note: This resolves a headless server desync where units go through a complete gameloop before their
-        // .action sets moveTowards, so if they had an existing path, they move on the server but not on the client
         u.path = undefined;
-
         const unitSource = allUnits[u.unitSourceId];
         if (unitSource) {
           const { targets, canAttack } = cachedTargets[u.id] || { targets: [], canAttack: false };
@@ -2481,7 +2472,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             // This doesn't apply to melee units since they will automatically move towards you to attack,
             // whereas without this ranged units would be content to just sit in liquid and die from the DOT
             if (u.unitSubType !== UnitSubType.MELEE && u.inLiquid) {
-
               const seed = seedrandom(`${this.seed}-${this.turn_number}-${u.id}`);
               const coords = findRandomGroundLocation(this, u, seed);
               if (coords) {
@@ -2492,10 +2482,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           }));
           actionPromises.push(promise);
         } else {
-          console.error(
-            'Could not find unit source data for',
-            u.unitSourceId,
-          );
+          console.error('Could not find unit source data for', u.unitSourceId);
         }
       }
       this.triggerGameLoopHeadless();
@@ -2797,7 +2784,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       document.body?.classList.toggle(showUpgradesClassName, false);
       this.showUpgrades();
     }
-
   }
   adminShowMageTypeSelect() {
     const player = globalThis.player;
@@ -2817,10 +2803,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         document.body?.classList.toggle(showUpgradesClassName, true);
       }
     }
-
-
   }
-
   showUpgrades() {
     const player = globalThis.player;
     if (document.body?.classList.contains(showUpgradesClassName)) {
@@ -2902,9 +2885,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
               }
             }
           }
-
         } else {
-
           // Show the perks that you already have
           showPerkList(player);
           if (elUpgradePickerContent) {
@@ -2968,11 +2949,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
               if (globalThis.devAutoPickUpgrades) {
                 elPlusBtn.click();
               }
-
             })
           }
         }
-
       } else {
         // Only show upgrades, not perk list
         hidePerkList();
