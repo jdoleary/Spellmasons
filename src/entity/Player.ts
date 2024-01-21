@@ -302,20 +302,11 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string, colo
   }
 }
 export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld) {
-  console.trace("TEMP - Reset player!");
-  console.warn("TEMP - Reset player: ", player);
-  console.warn("TEMP - Global Player: ", globalThis.player);
-  console.warn("TEMP - Same player?: ", player == globalThis.player);
-
   // Set the player so they can choose their next spawn
   player.isSpawned = false;
-  if (player === globalThis.player) {
+  if (player == globalThis.player) {
     globalThis.awaitingSpawn = false;
   }
-  player.endedTurn = false;
-
-  console.warn("TEMP - isSpawned: ", player.isSpawned);
-  console.warn("TEMP - Global awaiting spawn: ", globalThis.awaitingSpawn);
 
   // Update player position to be NOT NaN or null (which indicates that the player is in portal),
   // instead, the player is now spawning so their position should be a number.
@@ -533,7 +524,6 @@ export function enterPortal(player: IPlayer, underworld: Underworld) {
   player.unit.resolveDoneMoving();
   // Move "portaled" unit out of the way to prevent collisions and chaining while portaled
   Unit.setLocation(player.unit, { x: NaN, y: NaN });
-  updateGlobalRefToPlayerIfCurrentClient(player);
   // Clear the selection so that it doesn't persist after portalling (which would show
   // your user's move circle in the upper left hand of the map but without the user there)
   clearTooltipSelection();
