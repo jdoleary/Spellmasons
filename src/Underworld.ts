@@ -112,6 +112,9 @@ export enum turn_phase {
   PlayerTurns,
   NPC_ALLY,
   NPC_ENEMY,
+  // TODO - Consider a "Between Level" phase
+  // that switches to PlayerTurns after a level is generated
+  // To ensure turn start logic for PlayerTurns runs
 }
 const smearJitter = [
   { x: -3, y: -3 },
@@ -1880,6 +1883,8 @@ export default class Underworld {
 
     // Reset kill switch
     this.allyNPCAttemptWinKillSwitch = 0;
+    // Reset wave count
+    this.wave = 0;
   }
   postSetupLevel() {
     document.body?.classList.toggle('loading', false);
@@ -1974,9 +1979,6 @@ export default class Underworld {
     if (globalThis.playNextSong) {
       globalThis.playNextSong();
     }
-
-    // Reset wave count
-    this.wave = 0;
 
     // NOTE: Any data that needs to be synced from host to clients from this function MUST
     // be set BEFORE postSetupLevel is invoked because postSetupLevel will send a sync message

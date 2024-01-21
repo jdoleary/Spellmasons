@@ -302,6 +302,7 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string, colo
   }
 }
 export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld) {
+  player.endedTurn = false;
   // Set the player so they can choose their next spawn
   player.isSpawned = false;
   if (player == globalThis.player) {
