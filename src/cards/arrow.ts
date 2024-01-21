@@ -100,6 +100,7 @@ export function arrowEffect(multiShotCount: number, collideFnKey: string, doesPi
       }
 
     }
+    await underworld.awaitForceMoves();
     return state;
   }
 }
