@@ -2088,38 +2088,35 @@ export default class Underworld {
 
     // Are there connected players?
     const connectedPlayers = this.players.filter(p => p.clientConnected);
-    if (connectedPlayers.length > 0) {
-      console.log('[GAME] Is Game Over?\nConnected Players: ', connectedPlayers);
-    }
-    else {
+    if (connectedPlayers.length == 0) {
       console.log('[GAME] Game is Over\nNo connected players in player list: ', this.players);
       return true;
+    } else {
+      console.log('[GAME] isGameOver?\nConnected Players: ', connectedPlayers);
     }
 
     // Are any of those players or their allies alive?
     const playerFactions = connectedPlayers.map(p => p.unit.faction);
     // Note: This must exclude doodads
     const remainingAllies = this.units.filter(u => u.alive && u.unitSubType != UnitSubType.DOODAD && playerFactions.includes(u.faction));
-    if (remainingAllies.length > 0) {
-      console.log('[GAME] Is Game Over?\nRemaining allies: ', remainingAllies);
-    }
-    else {
+    if (remainingAllies.length == 0) {
       console.log('[GAME] Game is Over\nNo allies remain');
       return true;
+    } else {
+      console.log('[GAME] isGameOver?\nRemaining allies: ', remainingAllies);
     }
 
     // Have allies made progress towards winning in the last X turns?
     // If not, there might be a stalemate, so we need a kill switch.
     const useKillSwitch = this.allyNPCAttemptWinKillSwitch > 50;
-    if (!useKillSwitch) {
-      console.log('[GAME] Is Game Over?\nKill Switch Counter: ', this.allyNPCAttemptWinKillSwitch);
-    }
-    else {
+    if (useKillSwitch) {
       console.log('[GAME] Game is Over\nKill Switch threshold reached');
       return true;
+    } else {
+      console.log('[GAME] isGameOver?\nKill Switch Counter: ', this.allyNPCAttemptWinKillSwitch);
     }
 
-    console.log('[GAME] Game is not over');
+    console.log('[GAME] isGameOver = false\nGame is not over');
     return false;
   }
   updateGameOverModal() {
@@ -2193,21 +2190,21 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
   // Handles level completion, game over, turn phases, and hotseat
   async progressGameState() {
-    console.log('[GAME] Progress...\nCurrent Turn Phase == ', turn_phase[this.turn_phase]);
+    console.trace('[GAME] Progress Game State...');
 
-    // try game over
-    // else try next level
-    // else try level progress
-    // else cycle turn phase
-
-    if (this.isGameOver()) {
+    // We should try progressing the level before ending the game
+    // in case the player has beaten the level and died at the same time
+    // Favoring the player in this scenario should only improve player experience
+    if (this.handleLevelProgress()) {
+      // Level progress has been handled by the above function
+      // So there is nothing left to do, just continue
+    }
+    else if (this.isGameOver()) {
       this.doGameOver();
     }
-    else if (this.handleLevelProgress()) {
-      // If we end up here, nothing left to do, just continue
-      // Level progress has been handled by the above function
-    }
     else {
+      console.log('[GAME] Turn Phase\nCurrent == ', turn_phase[this.turn_phase]);
+
       if (this.turn_phase == turn_phase.PlayerTurns) {
         // If all hotseat players are ready, try end player turn
         await this.handleNextHotseatPlayer();
@@ -2222,11 +2219,13 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
       }
 
+      console.log('[GAME] Turn Phase\nNew == ', turn_phase[this.turn_phase]);
+
       // TODO - Full Turn Cycle? Handled in initializeTurnPhase()?
       // this.endFullTurnCycle();
     }
 
-    console.log('[GAME] Progress...\nNew Turn Phase == ', turn_phase[this.turn_phase]);
+    console.log('[GAME] Progress Game State Complete');
     return;
   }
 
@@ -2570,7 +2569,154 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
     }
   }
+  handleLevelProgress(): boolean {
+    // Returns true if this function progresses the level state
+    // - Spawns the next wave of enemies
+    // - Spawns Purple Portals
+    // - Sends Players to Next Level
 
+    // TODO - Move connected players to progressGameState()
+    // Because game state should never progress if no players are connected
+    // Consider other places that things like isGameOver are used.
+
+    const connectedPlayers = this.players.filter(p => p.clientConnected);
+    if (connectedPlayers.length == 0) {
+      console.log('[GAME] Can\'t Progress Level \nNo connected players in player list: ', this.players);
+      return false;
+    } else {
+      console.log('[GAME] isLevelProgressable?\nConnected Players: ', connectedPlayers);
+    }
+
+    // TODO - Remove this?
+    // Progress game state should not be getting called before enemies are spawned anyway.
+
+    const spawnedPlayers = connectedPlayers.filter(p => p.isSpawned)
+    if (spawnedPlayers.length == 0) {
+      console.log('[GAME] Can\'t Progress Level \nNo connected players have spawned in player list: ', this.players);
+      return false;
+    } else {
+      console.log('[GAME] isLevelProgressable?\nSpawned Players: ', spawnedPlayers);
+    }
+
+    const remainingEnemies = this.units.filter(u => u.alive && u.unitSubType != UnitSubType.DOODAD && u.faction == Faction.ENEMY);
+    if (remainingEnemies.length > 0) {
+      console.log('[GAME] Can\'t Progress Level\nRemaining enemies: ', remainingEnemies);
+      return false;
+    } else {
+      console.log('[GAME] isLevelProgressable?\nNo remaining enemies in unit list: ', this.units);
+    }
+
+    // Should another wave of enemies be spawned?
+    const loopIndex = Math.max(0, (this.levelIndex - config.LAST_LEVEL_INDEX));
+    if (loopIndex > this.wave) {
+      this.wave++;
+      queueCenteredFloatingText(`Wave ${this.wave + 1} of ${loopIndex + 1}`);
+      // Add corpse decay to all dead NPCs
+      this.units.filter(u => u.unitType == UnitType.AI && !u.alive).forEach(u => {
+        Unit.addModifier(u, corpseDecayId, this, false);
+      });
+      // Trick for finding valid spawnable tiles
+      const validSpawnCoords = this.lastLevelCreated?.imageOnlyTiles.filter(x => x.image.endsWith('all_ground.png')) || [];
+
+      // Copied from generateRandomLevelData
+      const unitIds = getEnemiesForAltitude(this, this.levelIndex);
+      const numberOfMinibossesAllowed = Math.ceil(Math.max(0, (this.levelIndex - 4) / 4));
+      let numberOfMinibossesMade = 0;
+      for (let id of unitIds) {
+        if (validSpawnCoords.length == 0) { break; }
+        const validSpawnCoordsIndex = randInt(0, validSpawnCoords.length - 1, this.random);
+        const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
+        const sourceUnit = allUnits[id];
+        const { unitMinLevelIndexSubtractor } = unavailableUntilLevelIndexDifficultyModifier(this);
+        // Disallow miniboss for a unit spawning on the first levelIndex that they are allowed to spawn
+        const minibossAllowed = !sourceUnit?.spawnParams?.excludeMiniboss && ((sourceUnit?.spawnParams?.unavailableUntilLevelIndex || 0) - unitMinLevelIndexSubtractor) < this.levelIndex;
+        if (coord) {
+          const isMiniboss = !minibossAllowed ? false : numberOfMinibossesAllowed > numberOfMinibossesMade;
+          if (isMiniboss) {
+            numberOfMinibossesMade++;
+          }
+          this.spawnEnemy(id, coord, isMiniboss)
+        }
+      }
+      // end Copied from generateRandomLevelData
+      console.log('[GAME] Level Progressed\nSpawned new wave of enemies');
+      return true;
+    } else {
+      console.log('[GAME] Handling Level Progress...\nNo more waves to spawn');
+    }
+
+    // No wave to spawn, so spawn portals
+    const livingPlayers = this.players.filter(p => p.unit.unitType == UnitType.PLAYER_CONTROLLED && p.unit.alive);
+    if (livingPlayers.length > 0) {
+      const spawnedPortals = this.pickups.filter(p => !p.flaggedForRemoval && p.name === Pickup.PORTAL_PURPLE_NAME);
+      if (spawnedPortals.length <= 0) {
+        // TODO - Clear pickups correctly - They are not removed from underworld list
+
+        // Make all non-portal pickups disappear so as to not compell players
+        // to waste time walking around picking them all up
+        this.pickups.filter(p => p.name !== Pickup.PORTAL_PURPLE_NAME).forEach(p => {
+          makeScrollDissapearParticles(p, false);
+          Pickup.removePickup(p, this, false);
+        });
+
+        // Spawn portal near each player
+        const portalPickup = Pickup.pickups.find(p => p.name == Pickup.PORTAL_PURPLE_NAME);
+        if (portalPickup) {
+          for (let playerUnit of livingPlayers.map(p => p.unit)) {
+            const portalSpawnLocation = this.findValidSpawn(playerUnit, 4) || playerUnit;
+            if (!isOutOfBounds(portalSpawnLocation, this)) {
+              Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup, logSource: 'Portal' }, this, false);
+            }
+            // Give all player units infinite stamina when portal spawns for convenience.
+            playerUnit.stamina = Number.POSITIVE_INFINITY;
+            // Give all players max health and mana (it will be reset anyway when they are reset for the next level
+            // but this disswades them from going around to pickup potions)
+            playerUnit.health = playerUnit.healthMax;
+            playerUnit.mana = playerUnit.manaMax;
+            // Since playerUnit's health and mana is reset, we need to immediately sync the prediction unit
+            // so that it doesn't inncorrectly warn "self damage due to spell" by seeing that the prediction unit
+            // has less health than the current player unit.
+            this.syncPlayerPredictionUnitOnly();
+          }
+          console.log('[GAME] Level Progressed\nSpawned portals');
+          return true;
+        } else {
+          console.error('[GAME] Handling Level Progress...\nPortal pickup not found')
+        }
+      } else {
+        console.log('[GAME] Handling Level Progress...\nPortals have already been spawned: ', spawnedPortals);
+      }
+    } else {
+      console.log('[GAME] Handling Level Progress...\nNo players to spawn portals for in players list: ', this.players);
+    }
+
+    // Go To Next Level
+    // - If all connected players are in portal or done with turn
+    // - If in hotseat and at least one player is in portal
+    const goToNextLevel =
+      connectedPlayers.every(p => Player.inPortal(p) || this.hasCompletedTurn(p))
+      || (numberOfHotseatPlayers > 1 && connectedPlayers.some(Player.inPortal));
+    if (goToNextLevel) {
+      // Invoke initLevel within a timeout so that this function
+      // doesn't have to wait for level generation to complete before
+      // returning
+      setTimeout(() => {
+        // Prepare the next level
+        if (globalThis.isHost(this.pie)) {
+          this.generateLevelData(this.levelIndex + 1);
+        } else {
+          console.log('This instance is not host, host will trigger next level generation.');
+        }
+      }, 0);
+      console.log('[GAME] Level Progressed\nMoving to next level');
+      return true;
+    } else {
+      console.log('[GAME] Handling Level Progress...\nDo not go to next level');
+    }
+
+    //Level was not progressed
+    return false;
+  }
   // TODO - What is this?
   syncTurnMessage() {
     console.log('syncTurnMessage: phase:', turn_phase[this.turn_phase]);
@@ -3559,138 +3705,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       this.progressGameState();
     }
     return effectState;
-  }
-  handleLevelProgress(): boolean {
-    // Returns true if this function progresses the level state
-    // - Spawns the next wave of enemies
-    // - Spawns Purple Portals
-    // - Sends Players to Next Level
-
-    // If all enemy units are dead and at least one player is spawned and connected
-    const canProgress = this.units.filter(u =>
-      u.faction == Faction.ENEMY &&
-      !u.flaggedForRemoval &&
-      u.unitSubType !== UnitSubType.DOODAD)
-      .every(u =>
-        !u.alive) &&
-      this.players
-        .some(p =>
-          p.isSpawned &&
-          p.clientConnected)
-
-    if (!canProgress) {
-      console.log('[GAME] Cannot Progress Level\nThere are living enemy units, or no players are spawned and connected.');
-      return false;
-    }
-
-    // Should another wave of enemies be spawned?
-    const loopIndex = Math.max(0, (this.levelIndex - config.LAST_LEVEL_INDEX));
-    if (loopIndex > this.wave) {
-      this.wave++;
-      queueCenteredFloatingText(`Wave ${this.wave + 1} of ${loopIndex + 1}`);
-      // Add corpse decay to all dead NPCs
-      this.units.filter(u => u.unitType == UnitType.AI && !u.alive).forEach(u => {
-        Unit.addModifier(u, corpseDecayId, this, false);
-      });
-      // Trick for finding valid spawnable tiles
-      const validSpawnCoords = this.lastLevelCreated?.imageOnlyTiles.filter(x => x.image.endsWith('all_ground.png')) || [];
-
-      // Copied from generateRandomLevelData
-      const unitIds = getEnemiesForAltitude(this, this.levelIndex);
-      const numberOfMinibossesAllowed = Math.ceil(Math.max(0, (this.levelIndex - 4) / 4));
-      let numberOfMinibossesMade = 0;
-      for (let id of unitIds) {
-        if (validSpawnCoords.length == 0) { break; }
-        const validSpawnCoordsIndex = randInt(0, validSpawnCoords.length - 1, this.random);
-        const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
-        const sourceUnit = allUnits[id];
-        const { unitMinLevelIndexSubtractor } = unavailableUntilLevelIndexDifficultyModifier(this);
-        // Disallow miniboss for a unit spawning on the first levelIndex that they are allowed to spawn
-        const minibossAllowed = !sourceUnit?.spawnParams?.excludeMiniboss && ((sourceUnit?.spawnParams?.unavailableUntilLevelIndex || 0) - unitMinLevelIndexSubtractor) < this.levelIndex;
-        if (coord) {
-          const isMiniboss = !minibossAllowed ? false : numberOfMinibossesAllowed > numberOfMinibossesMade;
-          if (isMiniboss) {
-            numberOfMinibossesMade++;
-          }
-          this.spawnEnemy(id, coord, isMiniboss)
-        }
-      }
-      // end Copied from generateRandomLevelData
-
-      console.log('[GAME] Level Progressed\nSpawned new wave of enemies');
-      return true;
-    }
-    else {
-      console.log('[GAME] Handling Level Progress...\nNo more waves to spawn');
-    }
-
-    // No wave to spawn, so spawn portals
-    const portalsAlreadySpawned = !!this.pickups.filter(p => !p.flaggedForRemoval && !isNaN(p.x) && !isNaN(p.x)).find(p => p.name === Pickup.PORTAL_PURPLE_NAME);
-    if (!portalsAlreadySpawned) {
-      // Make all non-portal pickups disappear so as to not compell players
-      // to waste time walking around picking them all up
-      this.pickups.filter(p => p.name !== Pickup.PORTAL_PURPLE_NAME).forEach(p => {
-        makeScrollDissapearParticles(p, false);
-        Pickup.removePickup(p, this, false);
-      });
-      // Spawn portal near each player
-      const portalPickup = Pickup.pickups.find(p => p.name == Pickup.PORTAL_PURPLE_NAME);
-      if (portalPickup) {
-        for (let playerUnit of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
-          const portalSpawnLocation = this.findValidSpawn(playerUnit, 4) || playerUnit;
-          if (!isOutOfBounds(portalSpawnLocation, this)) {
-            Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup, logSource: 'Portal' }, this, false);
-          }
-          // Give all player units infinite stamina when portal spawns for convenience.
-          playerUnit.stamina = Number.POSITIVE_INFINITY;
-          // Give all players max health and mana (it will be reset anyway when they are reset for the next level
-          // but this disswades them from going around to pickup potions)
-          playerUnit.health = playerUnit.healthMax;
-          playerUnit.mana = playerUnit.manaMax;
-          // Since playerUnit's health and mana is reset, we need to immediately sync the prediction unit
-          // so that it doesn't inncorrectly warn "self damage due to spell" by seeing that the prediction unit
-          // has less health than the current player unit.
-          this.syncPlayerPredictionUnitOnly();
-        }
-      } else {
-        console.error('Portal pickup not found')
-      }
-
-      console.log('[GAME] Level Progressed\nSpawned portals');
-      return true;
-    }
-    else {
-      console.log('[GAME] Handling Level Progress...\nPortals have already been spawned');
-    }
-
-    // Go To Next Level
-    // - If all connected players are in portal or done with turn
-    // - If in hotseat and at least one player is in portal
-    const connectedPlayers = this.players.filter(p => p.clientConnected);
-    const goToNextLevel =
-      connectedPlayers.every(p => Player.inPortal(p) || this.hasCompletedTurn(p))
-      || (numberOfHotseatPlayers > 1 && connectedPlayers.some(Player.inPortal));
-    if (goToNextLevel) {
-      // Invoke initLevel within a timeout so that this function
-      // doesn't have to wait for level generation to complete before
-      // returning
-      setTimeout(() => {
-        // Prepare the next level
-        if (globalThis.isHost(this.pie)) {
-          this.generateLevelData(this.levelIndex + 1);
-        } else {
-          console.log('This instance is not host, host will trigger next level generation.');
-        }
-      }, 0);
-
-      console.log('[GAME] Level Progressed\nMoving to next level');
-      return true;
-    }
-    else {
-      console.log('[GAME] Handling Level Progress...\nDo not go to next level');
-    }
-
-    return false;
   }
   // hasLineOfSight returns true if there are no walls interrupting
   // a line from seer to target
