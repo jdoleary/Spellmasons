@@ -154,7 +154,10 @@ export default class Underworld {
   // for serializing random: prng
   RNGState?: SeedrandomState;
   turn_phase: turn_phase = turn_phase.Stalled;
-  subTypesToProcessInGameLoopUnit?: UnitSubType[];
+  // The order in which units will take their turn
+  subTypesTurnOrder: UnitSubType[][] = [[UnitSubType.RANGED_LOS, UnitSubType.RANGED_RADIUS], [UnitSubType.SUPPORT_CLASS], [UnitSubType.MELEE], [UnitSubType.SPECIAL_LOS], [UnitSubType.DOODAD]];
+  // All subtypes currently taking their turn
+  subTypesCurrentTurn?: UnitSubType[];
   // An id incrementor to make sure no 2 units share the same id
   lastUnitId: number = -1;
   lastPickupId: number = -1;
@@ -654,7 +657,7 @@ export default class Underworld {
       }
 
       const takeAction = Unit.canAct(u) && Unit.isUnitsTurnPhase(u, this)
-        && (u.unitType == UnitType.PLAYER_CONTROLLED || this.subTypesToProcessInGameLoopUnit?.includes(u.unitSubType));
+        && (u.unitType == UnitType.PLAYER_CONTROLLED || this.subTypesCurrentTurn?.includes(u.unitSubType));
 
       if (u.path && u.path.points[0] && u.stamina > 0 && takeAction) {
         // Move towards target
@@ -2427,42 +2430,24 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
   async executeNPCTurn(faction: Faction) {
     cleanUpEmitters(true);
-    // Clear unit attentionMarkers since it's not the player's turn
     globalThis.attentionMarkers = [];
-    this.redPortalBehavior(faction);
-
-    const units = this.units.filter(u => u.unitType == UnitType.AI && u.faction == faction);
 
     console.log('[GAME] Turn Phase\nExecuteNPCTurn', Faction[faction]);
-    const cachedTargets: { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } = {};
-    this.clearPredictedNextTurnDamage();
+    this.redPortalBehavior(faction);
+    const units = this.units.filter(u => u.unitType == UnitType.AI && u.faction == faction);
     await Unit.startTurnForUnits(units, this, false);
 
-    // Loop through planned unit actions for smart targeting
-    for (let u of units.filter(u => Unit.canAct(u))) {
-      const unitSource = allUnits[u.unitSourceId];
-      if (unitSource) {
-        const targets = unitSource.getUnitAttackTargets(u, this);
-        const canAttack = this.canUnitAttackTarget(u, targets && targets[0])
-        cachedTargets[u.id] = { targets, canAttack };
-        this.incrementTargetsNextTurnDamage(targets, u.damage, canAttack);
-        if (unitSource.id == PRIEST_ID) {
-          // Signal to other priests that this one is targeted for resurrection
-          // so multiple priests don't try to ressurect the same target
-          this.incrementTargetsNextTurnDamage(targets, -u.healthMax, true);
-        }
-      }
-    }
-
-    // TODO - Action after movement
-    // TODO - Don't control actions directly in gameLoopUnit / Refactor
+    // TODO - Define/Control actions and smart targeting
+    // in Unit rather than gameLoopUnit, for more versatility?
+    this.clearPredictedNextTurnDamage();
+    const cachedTargets = this.getSmartTargets(units);
 
     // Ranged units should go before melee units
-    for (let subTypes of [[UnitSubType.RANGED_LOS, UnitSubType.RANGED_RADIUS, UnitSubType.SUPPORT_CLASS], [UnitSubType.MELEE], [UnitSubType.SPECIAL_LOS], [UnitSubType.DOODAD]]) {
+    for (let subTypes of this.subTypesTurnOrder) {
+      this.subTypesCurrentTurn = subTypes;
       const actionPromises: Promise<void>[] = [];
       const readyToTakeTurnUnits = units.filter(u => Unit.canAct(u) && subTypes.includes(u.unitSubType));
 
-      this.subTypesToProcessInGameLoopUnit = subTypes;
       for (let u of readyToTakeTurnUnits) {
         u.path = undefined;
         const unitSource = allUnits[u.unitSourceId];
@@ -2493,6 +2478,31 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     // End turn events, liquid damage, mana regen, etc.
     await Unit.endTurnForUnits(units, this, false);
+  }
+
+  // TODO - This should factor in fortify, debilitate, bloat explosions, etc.
+  getSmartTargets(units: Unit.IUnit[]): { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } {
+    const cachedTargets: { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } = {};
+    for (let subTypes of this.subTypesTurnOrder) {
+      const readyToTakeTurnUnits = units.filter(u => Unit.canAct(u) && subTypes.includes(u.unitSubType));
+      // Loop through planned unit actions for smart targeting
+      for (let u of readyToTakeTurnUnits) {
+        const unitSource = allUnits[u.unitSourceId];
+        if (unitSource) {
+          const targets = unitSource.getUnitAttackTargets(u, this);
+          const canAttack = this.canUnitAttackTarget(u, targets && targets[0])
+          cachedTargets[u.id] = { targets, canAttack };
+          this.incrementTargetsNextTurnDamage(targets, u.damage, canAttack);
+          if (unitSource.id == PRIEST_ID) {
+            // Signal to other priests that this one is targeted for resurrection
+            // so multiple priests don't try to ressurect the same target
+            this.incrementTargetsNextTurnDamage(targets, -u.healthMax, true);
+          }
+        }
+      }
+    }
+
+    return cachedTargets;
   }
 
   // This function is invoked when all factions have finished their turns

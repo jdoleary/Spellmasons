@@ -555,7 +555,6 @@ export async function runPredictions(underworld: Underworld) {
 
   // only show hover target when it's the correct turn phase
   if (underworld.turn_phase == turn_phase.PlayerTurns) {
-
     if (globalThis.player) {
       underworld.syncPredictionEntities();
       CardUI.updateCardBadges(underworld);
@@ -606,51 +605,43 @@ export async function runPredictions(underworld: Underworld) {
         }
       }
 
-      // Run onTurnStartEvents on unitsPrediction:
-      // Displays markers above units heads if they will attack the current client's unit
-      // next turn
+      const aiUnits = underworld.unitsPrediction.filter(u => u.unitType == UnitType.AI);
+
+      // Careful when making enemy predictions:
+      // Ally turn happens before Enemy turn, and some effects
+      // like bloat may not be easy to factor into predictions
+
+      // TODO - Run turn start events for units that will run it?
+      //Unit.startTurnForUnits(aiUnits, underworld, true);
+
+      // We want to draw attention markers above enemies
+      // who plan to attack the player next turn.
+      // This prediction is not perfect, and does not factor in:
+      // Allies, Bloat/Effects, Debilitate/Damage Modifiers
+      // So may sometimes lead to false positives/negatives
+
       globalThis.attentionMarkers = [];
-      // Clear predicted next turn damage so that attack targets can be intelligently calculated
       underworld.clearPredictedNextTurnDamage();
+      let cachedTargets = underworld.getSmartTargets(aiUnits);
 
-      // TODO - Find a way to run turn start events for units that will run it?
-
-      for (let u of underworld.unitsPrediction) {
-        if (!Unit.canAct(u)) {
-          continue;
-        }
-        // Only check for threats if the threat is alive and AI controlled
-        if (u.alive && u.unitType == UnitType.AI) {
+      for (let u of aiUnits) {
+        const unitSource = allUnits[u.unitSourceId];
+        if (unitSource) {
+          const { targets, canAttack } = cachedTargets[u.id] || { targets: [], canAttack: false };
           if (u.unitSubType == UnitSubType.SUPPORT_CLASS) {
-            const unitSource = allUnits[u.unitSourceId];
-            if (unitSource) {
-              const targets = unitSource.getUnitAttackTargets(u, underworld);
-              if (targets.length) {
-                // use u.predictionScale here since we are dealing with prediction units
-                // prediction units don't have images, and thus sprite.scale.y
-                globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u), unitSpriteScaleY: u.predictionScale || 1, markerScale: 1 });
-              }
+            // Draw attention marker over any support unit who is taking an action
+            if (targets.length) {
+              // use u.predictionScale here since we are dealing with prediction units
+              // prediction units don't have images, and thus sprite.scale.y
+              globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u), unitSpriteScaleY: u.predictionScale || 1, markerScale: 1 });
             }
-          } else {
-            const unitSource = allUnits[u.unitSourceId];
-            if (unitSource) {
-              const targets = unitSource.getUnitAttackTargets(u, underworld);
-              if (targets) {
-                for (let target of targets) {
-                  // Only bother determining if the unit can attack the target 
-                  // if the target is the current player, because that's the only
-                  // player this function has to warn with an attention marker
-                  const canAttack = underworld.canUnitAttackTarget(u, target);
-                  underworld.incrementTargetsNextTurnDamage(targets, u.damage, canAttack);
-                  if (target === globalThis.player.unit && canAttack) {
-                    // use u.predictionScale here since we are dealing with prediction units
-                    // prediction units don't have images, and thus sprite.scale.y
-                    globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u), unitSpriteScaleY: u.predictionScale || 1, markerScale: 1 });
-                  }
-                }
-              }
-            } else {
-              console.error('Cannot find unit source for unitSourceId', u.unitSourceId);
+          }
+          else {
+            // Draw attention marker over any unit who is attacking this player
+            if (targets.includes(globalThis.player.unit) && canAttack) {
+              // use u.predictionScale here since we are dealing with prediction units
+              // prediction units don't have images, and thus sprite.scale.y
+              globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u), unitSpriteScaleY: u.predictionScale || 1, markerScale: 1 });
             }
           }
         }
