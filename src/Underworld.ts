@@ -2646,8 +2646,13 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
 
     // No wave to spawn, so spawn portals
-    const livingPlayers = this.players.filter(p => p.unit.unitType == UnitType.PLAYER_CONTROLLED && p.unit.alive);
-    if (livingPlayers.length > 0) {
+
+    // We should check that there are players to spawn portals for
+    // It's possible that all players are dead, frozen, etc.
+    // When the level is completed, and in that case,
+    // we can skip spawning portals and go to next levlel
+    const remainingPlayers = this.players.filter(p => !this.hasCompletedTurn(p));
+    if (remainingPlayers.length > 0) {
       const spawnedPortals = this.pickups.filter(p => !p.flaggedForRemoval && p.name === Pickup.PORTAL_PURPLE_NAME);
       if (spawnedPortals.length <= 0) {
         // TODO - Clear pickups correctly - They are not removed from underworld list
@@ -2662,7 +2667,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         // Spawn portal near each player
         const portalPickup = Pickup.pickups.find(p => p.name == Pickup.PORTAL_PURPLE_NAME);
         if (portalPickup) {
-          for (let playerUnit of livingPlayers.map(p => p.unit)) {
+          for (let playerUnit of remainingPlayers.map(p => p.unit)) {
             const portalSpawnLocation = this.findValidSpawn(playerUnit, 4) || playerUnit;
             if (!isOutOfBounds(portalSpawnLocation, this)) {
               Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup, logSource: 'Portal' }, this, false);
