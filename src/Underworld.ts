@@ -2581,7 +2581,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     const connectedPlayers = this.players.filter(p => p.clientConnected);
     if (connectedPlayers.length == 0) {
-      console.log('[GAME] Can\'t Progress Level \nNo connected players in player list: ', this.players);
+      console.log('[GAME] Can\'t Progress Level \nNo connected players: ', this.players);
       return false;
     } else {
       console.log('[GAME] isLevelProgressable?\nConnected Players: ', connectedPlayers);
@@ -2590,9 +2590,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // TODO - Remove this?
     // Progress game state should not be getting called before enemies are spawned anyway.
 
-    const spawnedPlayers = connectedPlayers.filter(p => p.isSpawned)
+    const spawnedPlayers = this.players.filter(p => p.isSpawned)
     if (spawnedPlayers.length == 0) {
-      console.log('[GAME] Can\'t Progress Level \nNo connected players have spawned in player list: ', this.players);
+      console.log('[GAME] Can\'t Progress Level \nNo players have spawned: ', this.players);
       return false;
     } else {
       console.log('[GAME] isLevelProgressable?\nSpawned Players: ', spawnedPlayers);
@@ -2687,7 +2687,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         console.log('[GAME] Handling Level Progress...\nPortals have already been spawned: ', spawnedPortals);
       }
     } else {
-      console.log('[GAME] Handling Level Progress...\nNo players to spawn portals for in players list: ', this.players);
+      console.log('[GAME] Handling Level Progress...\nNo players to spawn portals for: ', this.players);
     }
 
     // Go To Next Level
@@ -2697,17 +2697,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       connectedPlayers.every(p => Player.inPortal(p) || this.hasCompletedTurn(p))
       || (numberOfHotseatPlayers > 1 && connectedPlayers.some(Player.inPortal));
     if (goToNextLevel) {
-      // Invoke initLevel within a timeout so that this function
-      // doesn't have to wait for level generation to complete before
-      // returning
-      setTimeout(() => {
-        // Prepare the next level
-        if (globalThis.isHost(this.pie)) {
-          this.generateLevelData(this.levelIndex + 1);
-        } else {
-          console.log('This instance is not host, host will trigger next level generation.');
-        }
-      }, 0);
+      if (globalThis.isHost(this.pie)) {
+        this.generateLevelData(this.levelIndex + 1);
+      } else {
+        console.log('This instance is not host, host will trigger next level generation.');
+      }
       console.log('[GAME] Level Progressed\nMoving to next level');
       return true;
     } else {
@@ -2717,7 +2711,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     //Level was not progressed
     return false;
   }
-  // TODO - What is this?
+  // TODO - What is this? Just a logger?
   syncTurnMessage() {
     console.log('syncTurnMessage: phase:', turn_phase[this.turn_phase]);
     let yourTurn = false;
@@ -2729,7 +2723,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     document.body?.classList.toggle('your-turn', yourTurn);
     Player.syncLobby(this);
   }
-
   // Sends a network message to end turn
   async endMyTurnButtonHandler() {
     if (globalThis.player) {
