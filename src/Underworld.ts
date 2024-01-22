@@ -705,7 +705,6 @@ export default class Underworld {
           // Once the unit reaches the target, shift so the next point in the path is the next target
           u.path.points.shift();
         }
-
       }
 
       // check for collisions with pickups in new location
@@ -2389,16 +2388,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         // Don't play turn sfx when recording
         if (!globalThis.isHUDHidden && !document.body?.classList.contains('hide-card-holders')) {
           playSFXKey('yourTurn');
-        }
-      }
-
-      // TODO - Why is this here?
-      // Trigger attributePerks
-      const perkRandomGenerator = seedrandom(getUniqueSeedString(this, player));
-      for (let i = 0; i < player.attributePerks.length; i++) {
-        const perk = player.attributePerks[i];
-        if (perk) {
-          tryTriggerPerk(perk, player, 'everyTurn', perkRandomGenerator, this, 700 * i);
         }
       }
     }

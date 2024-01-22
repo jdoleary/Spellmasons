@@ -1637,7 +1637,6 @@ export function resetUnitStats(unit: IUnit, underworld: Underworld) {
   unit.stamina = unit.staminaMax;
 
   returnToDefaultSprite(unit);
-
 }
 
 export function unitSourceIdToName(unitSourceId: string, asMiniboss: boolean): string {
