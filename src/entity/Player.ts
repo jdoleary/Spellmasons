@@ -16,7 +16,7 @@ import Underworld, { turn_phase } from '../Underworld';
 import * as target_cone from '../cards/target_cone';
 import * as lastWill from '../cards/lastwill';
 import * as captureSoul from '../cards/capture_soul';
-import { explain, EXPLAIN_BLESSINGS, isFirstTutorialStepComplete, isTutorialComplete } from '../graphics/Explain';
+import { explain, EXPLAIN_BLESSINGS, isTutorialComplete } from '../graphics/Explain';
 import { lightenColor } from '../graphics/ui/colorUtil';
 import { AttributePerk } from '../Perk';
 import { setPlayerNameUI } from '../PlayerUtils';
@@ -129,7 +129,7 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
         {
           const upgrade = Upgrade.getUpgradeByTitle(arrowCardId);
           if (upgrade) {
-            underworld.getFreeUpgrade(player, upgrade);
+            underworld.forceUpgrade(player, upgrade, true);
           } else {
             console.error('Could not find arrow upgrade for', type);
           }
@@ -139,7 +139,7 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
         {
           const upgrade = Upgrade.getUpgradeByTitle(captureSoul.id);
           if (upgrade) {
-            underworld.getFreeUpgrade(player, upgrade);
+            underworld.forceUpgrade(player, upgrade, true);
           } else {
             console.error('Could not find upgrade for', type);
           }
@@ -149,7 +149,7 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
         {
           const upgrade = Upgrade.getUpgradeByTitle(heal_id);
           if (upgrade) {
-            underworld.getFreeUpgrade(player, upgrade);
+            underworld.forceUpgrade(player, upgrade, true);
           } else {
             console.error('Could not find upgrade for', type);
           }
@@ -159,7 +159,7 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
         {
           const upgrade = Upgrade.getUpgradeByTitle(contaminate_id);
           if (upgrade) {
-            underworld.getFreeUpgrade(player, upgrade);
+            underworld.forceUpgrade(player, upgrade, true);
           } else {
             console.error('Could not find upgrade for', type);
           }

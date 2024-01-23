@@ -534,8 +534,7 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
 
             // Send current player movements to server
             sendMovePlayer(underworld);
-            tutorialCompleteTask('moved', () => !!globalThis.player && globalThis.player.unit.stamina <= globalThis.player.unit.staminaMax * 0.7);
-
+            tutorialCompleteTask('moved');
           } else {
             if (!globalThis.notifiedOutOfStamina) {
               if (globalThis.player.unit.stamina <= 0) {

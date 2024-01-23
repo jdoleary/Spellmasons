@@ -374,15 +374,14 @@ export function isTutorialComplete() {
 }
 globalThis.isTutorialComplete = isTutorialComplete;
 
-// Used to spawn the player into early tutorial levels if they've never played before
-// Will only return true for the first two steps of the tutorial, once they know how to
-// spawn and portal just let them play regular
-export function isFirstTutorialStepComplete() {
+// Used to determine whether or not the player has gone through
+// the first few steps of the tutorial, and has a basic understanding of the game
+export function isTutorialFirstStepsComplete() {
   if (globalThis.headless) {
     // Never run the tutorial on a headless server because it is hosting games for clients
     return true;
   }
-  const firstStepKeys: (keyof TutorialChecklist)[] = ['spawn', 'portal'];
+  const firstStepKeys: (keyof TutorialChecklist)[] = ['moved', 'portal', 'camera', 'cast'];
   if (firstStepKeys.every(key => tutorialChecklist[key].complete)) {
     return true;
   } else {

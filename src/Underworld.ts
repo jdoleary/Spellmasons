@@ -72,7 +72,7 @@ import type PieClient from '@websocketpie/client';
 import { isOutOfRange, sendPlayerThinkingThrottled } from './PlayerUtils';
 import { DisplayObject, TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
-import { explain, EXPLAIN_PING, isFirstTutorialStepComplete, isTutorialComplete, tutorialCompleteTask, tutorialShowTask } from './graphics/Explain';
+import { explain, EXPLAIN_PING, isTutorialFirstStepsComplete, isTutorialComplete, tutorialCompleteTask, tutorialShowTask } from './graphics/Explain';
 import { makeRisingParticles, makeScrollDissapearParticles, stopAndDestroyForeverEmitter } from './graphics/ParticleCollection';
 import { ensureAllClientsHaveAssociatedPlayers, Overworld } from './Overworld';
 import { Emitter } from '@pixi/particle-emitter';
@@ -103,6 +103,9 @@ import { PRIEST_ID } from './entity/units/priest';
 import { getSyncActions } from './Syncronization';
 import { EXPECTED_MILLIS_PER_GAMELOOP, forcePushAwayFrom } from './effects/force_move';
 import { playThrottledEndTurnSFX } from './Audio';
+import { slashCardId } from './cards/slash';
+import { pushId } from './cards/push';
+import { arrowCardId } from './cards/arrow';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -130,8 +133,6 @@ const elUpgradePickerLabel = document.getElementById('upgrade-picker-label') as 
 
 export const showUpgradesClassName = 'showUpgrades';
 
-// Must be out of Underworld context, so that it can get set on the first level only
-let isFirstEverPlaySession = false;
 let lastTime = 0;
 let requestAnimationFrameGameLoopId: number;
 const cleanupRegistry = globalThis.hasOwnProperty('FinalizationRegistry') ? new FinalizationRegistry((heldValue) => {
@@ -1462,16 +1463,28 @@ export default class Underworld {
     }
 
     const isTutorialRun = !isTutorialComplete();
-    if (levelIndex == 0) {
-      isFirstEverPlaySession = !isFirstTutorialStepComplete();
-      if (isFirstEverPlaySession) {
-        console.log('Set gamemode to "tutorial" so that the first playthrough is easier');
-        this.gameMode = 'tutorial';
+    if (isTutorialRun) {
+      console.log('Set gamemode to "tutorial" so that the first playthrough is easier');
+      this.gameMode = 'tutorial';
+      if (levelIndex == 0) {
+        // Set the level index to -1 to spawn the first tutorial level
+        levelIndex = -1;
+
+        // Give the player default tutorial cards
+        if (globalThis.player) {
+          for (let spell of [slashCardId, arrowCardId, pushId]) {
+            const upgrade = Upgrade.getUpgradeByTitle(spell);
+            if (upgrade) {
+              this.forceUpgrade(globalThis.player, upgrade, false);
+            }
+          }
+        }
       }
     }
-    const isTutorialStartLevel = isFirstEverPlaySession && levelIndex == 0;
+    const isFirstTutorialLevel = (levelIndex == -1);
+
     let caveParams = caveSizes.medium;
-    if (isTutorialStartLevel) {
+    if (isFirstTutorialLevel) {
       caveParams = caveSizes.tutorial;
     } else if (isTutorialRun) {
       caveParams = caveSizes.extrasmall;
@@ -1510,28 +1523,20 @@ export default class Underworld {
 
     let levelIndexForEnemySpawn = levelIndex;
     // Adjust difficulty via level index for tutorial runs so that it's not as hard
-    if (isFirstEverPlaySession) {
-      // This will trigger the first time they play which, working together with the next
-      // if block, results in a levelIndex of 2 less than it would be which allows the first
-      // 2 levels to be easier
-      levelIndexForEnemySpawn -= 1;
-    }
     if (isTutorialRun) {
-      // This block works together with the above to make the very first run -2 easier
-      // but if the player plays again (not their first time), but haven't completed the tutorial
-      // this block will make it easier by -1
+      // If the player has not completed the tutorial, this will make the game easier
       levelIndexForEnemySpawn -= 1;
     }
     // End Block: Adjust difficulty via level index for tutorial runs so that it's not as hard
 
     // Spawn units at the start of the level
     let unitIds = getEnemiesForAltitude(this, levelIndexForEnemySpawn);
-    if (isTutorialStartLevel) {
+    if (isFirstTutorialLevel) {
       unitIds = [];
     } else if (levelIndexForEnemySpawn < 0) {
       unitIds = [golem_unit_id];
     }
-    const numberOfPickups = isTutorialStartLevel ? 0 : 4 + levelIndex;
+    const numberOfPickups = isFirstTutorialLevel ? 0 : 4 + levelIndex;
     for (let i = 0; i < numberOfPickups; i++) {
       if (validSpawnCoords.length == 0) { break; }
       const choice = chooseObjectWithProbability(
@@ -1967,12 +1972,19 @@ export default class Underworld {
     }
     this.changeToFirstHotseatPlayer();
 
-    // Give players stat points to spend:
-    // For first play session don't show stat upgrades too early, it's information overload
-    const isFirstEverPlaySession = !isFirstTutorialStepComplete();
-    if (isFirstEverPlaySession ? this.levelIndex > 1 : this.levelIndex > 0) {
-      for (let p of this.players) {
-        p.statPointsUnspent += p.mageType === 'Spellmason' ? 4 : 3;
+    // Don't give stat points on the first level
+    if (this.levelIndex > 0) {
+      for (let player of this.players) {
+        const points = player.mageType == 'Spellmason' ? 4 : 3;
+        player.statPointsUnspent += points;
+        // If the player hasn't completed first steps, autospend stat points on health
+        // We don't want to cause information overload during tutorial
+        if (!isTutorialFirstStepsComplete()) {
+          for (let i = 0; i < points; i++) {
+            console.log("Autospend stat point on max health because tutorial");
+            this.spendStatPoint('healthMax', player);
+          }
+        }
       }
     }
     // Update toolbar (since some card's disabledLabel needs updating on every new label)
@@ -2929,8 +2941,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
     }
   }
-  getFreeUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
-    player.freeSpells.push(upgrade.title);
+  forceUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade, free: boolean) {
+    if (free) player.freeSpells.push(upgrade.title);
     upgrade.effect(player, this);
     player.upgrades.push(upgrade.title);
     // Recalc cards so the card changes show up
@@ -2961,9 +2973,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       document.body?.classList.toggle(showUpgradesClassName, false);
       // Show next round of upgrades
       this.showUpgrades();
-
     }
-
   }
   perksLeftToChoose(player: Player.IPlayer): number {
     return player.statPointsUnspent;
@@ -3073,7 +3083,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       if (!globalThis.headless) {
         console.error('showUpgrades: Cannot show upgrades, no globalThis.player');
       }
-      return
+      return;
     }
     const upgradesLeftToChoose = this.upgradesLeftToChoose(player);
     const perksLeftToChoose = this.perksLeftToChoose(player);
