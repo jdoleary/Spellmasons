@@ -2003,6 +2003,19 @@ export default class Underworld {
       // Must be called when difficulty (gameMode) changes to update summon spell stats
       Cards.refreshSummonCardDescriptions(this);
     }
+
+    // Use list here in case of hotseat
+    let clientPlayers = this.players.filter(p => p.clientId == globalThis.clientId);
+    for (let player of clientPlayers) {
+      // Record High Score Progress
+      const mageTypeFarthestLevel = storage.getStoredMageTypeFarthestLevelKey(player.mageType || 'Spellmason');
+      const highScore = storageGet(mageTypeFarthestLevel) || '0'
+      if (parseInt(highScore) < this.levelIndex) {
+        console.log('New farthest level record!', mageTypeFarthestLevel, '->', this.levelIndex);
+        storageSet(mageTypeFarthestLevel, this.levelIndex.toString());
+      }
+    }
+
     // When you get to the first plus level after beating the last level,
     // record the winTime for speedrunning
     if (levelData.levelIndex == config.LAST_LEVEL_INDEX + 1) {

@@ -193,9 +193,13 @@ export function registerDeathmasonEvents() {
       // For the bossmason level, if the original deathmason dies spawn 3 more:
       if (underworld.levelIndex === config.LAST_LEVEL_INDEX) {
         if (unit.unitSourceId == bossmasonUnitId && unit.originalLife && unit.name == undefined) {
-          const mageTypeWinsKey = storage.getStoredMageTypeWinsKey(player?.mageType || 'Spellmason');
-          const currentMageTypeWins = parseInt(storageGet(mageTypeWinsKey) || '0');
-          storageSet(mageTypeWinsKey, (currentMageTypeWins + 1).toString());
+          // Use list here in case of hotseat
+          let clientPlayers = underworld.players.filter(p => p.clientId == globalThis.clientId);
+          for (let player of clientPlayers) {
+            const mageTypeWinsKey = storage.getStoredMageTypeWinsKey(player.mageType || 'Spellmason');
+            const currentMageTypeWins = parseInt(storageGet(mageTypeWinsKey) || '0');
+            storageSet(mageTypeWinsKey, (currentMageTypeWins + 1).toString());
+          }
           (prediction
             ? underworld.unitsPrediction
             : underworld.units).filter(u => u.unitType == UnitType.AI && u.unitSubType !== UnitSubType.DOODAD).forEach(u => Unit.die(u, underworld, prediction));

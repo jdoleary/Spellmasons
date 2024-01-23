@@ -492,33 +492,6 @@ export function syncLobby(underworld: Underworld) {
 }
 export function enterPortal(player: IPlayer, underworld: Underworld) {
   console.log(`Player ${player.clientId}/${player.name} entered portal.`);
-  // In the event that it was "game over" because the player died, but ally npcs clear the
-  // level, the player will enter the portal, in which case allowForceInitGameState
-  // should be disabled so that it ignored INIT_GAME_STATE messages again
-  // (During a regular gameover this is set to true so that when the game restarts
-  // the client can recieve the new underworld state)
-  underworld.allowForceInitGameState = false;
-
-  // TODO - Handle this outside of the enter portal function?
-  // Record Progress
-  const mageTypeFarthestLevel = storage.getStoredMageTypeFarthestLevelKey(player.mageType || 'Spellmason');
-  const highScore = storageGet(mageTypeFarthestLevel) || '0'
-  if (parseInt(highScore) < underworld.levelIndex) {
-    console.log('New farthest level record!', mageTypeFarthestLevel, '->', underworld.levelIndex);
-    storageSet(mageTypeFarthestLevel, underworld.levelIndex.toString());
-  }
-
-  if (player == globalThis.player) {
-    // At the end of each level ensure the server has an up-to-date state
-    // of the current client's player object.
-    // The client is the source of truth for it's own player object
-    underworld.pie.sendData({
-      type: MESSAGE_TYPES.CLIENT_SEND_PLAYER_TO_SERVER,
-      player: serialize(player)
-    });
-  }
-
-
   Image.hide(player.unit.image);
   // Make sure to resolve the moving promise once they enter the portal or else 
   // the client queue will get stuck
