@@ -586,7 +586,6 @@ export const pickups: IPickupSource[] = [
           type: MESSAGE_TYPES.ENTER_PORTAL
         });
         CardUI.clearSelectedCards(underworld);
-        tutorialCompleteTask('portal');
       }
       // Move the player unit so they don't continue to trigger the pickup more than once
       if (player && player.unit) {

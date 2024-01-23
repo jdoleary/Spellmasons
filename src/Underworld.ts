@@ -2259,6 +2259,7 @@ export default class Underworld {
       connectedPlayers.every(p => Player.inPortal(p) || this.hasCompletedTurn(p))
       || (numberOfHotseatPlayers > 1 && connectedPlayers.some(Player.inPortal));
     if (goToNextLevel) {
+      tutorialCompleteTask('portal');
       if (globalThis.isHost(this.pie)) {
         this.generateLevelData(this.levelIndex + 1);
       } else {
