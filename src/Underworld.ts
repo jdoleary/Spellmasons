@@ -2089,10 +2089,8 @@ export default class Underworld {
     // Game State should not progress if no players are connected
     const connectedPlayers = this.players.filter(p => p.clientConnected);
     if (connectedPlayers.length == 0) {
-      console.log('[GAME] Can\'t Progress Level \nNo connected players: ', this.players);
-      return false;
-    } else {
-      console.log('[GAME] isLevelProgressable?\nConnected Players: ', connectedPlayers);
+      console.log('[GAME] No connected players: ', this.players);
+      return;
     }
 
     // We should try progressing the level before ending the game
