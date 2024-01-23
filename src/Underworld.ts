@@ -2651,7 +2651,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // It's possible that all players are dead, frozen, etc.
     // When the level is completed, and in that case,
     // we can skip spawning portals and go to next levlel
-    const remainingPlayers = this.players.filter(p => !this.hasCompletedTurn(p));
+    const remainingPlayers = this.players.filter(p => p.isSpawned && !this.hasCompletedTurn(p));
     if (remainingPlayers.length > 0) {
       const spawnedPortals = this.pickups.filter(p => !p.flaggedForRemoval && p.name === Pickup.PORTAL_PURPLE_NAME);
       if (spawnedPortals.length <= 0) {
@@ -2670,7 +2670,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           for (let playerUnit of remainingPlayers.map(p => p.unit)) {
             const portalSpawnLocation = this.findValidSpawn(playerUnit, 4) || playerUnit;
             if (!isOutOfBounds(portalSpawnLocation, this)) {
-              Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup, logSource: 'Portal' }, this, false);
+              spawnedPortals.push(Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup, logSource: 'Portal' }, this, false));
             }
             // Give all player units infinite stamina when portal spawns for convenience.
             playerUnit.stamina = Number.POSITIVE_INFINITY;
@@ -2683,7 +2683,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             // has less health than the current player unit.
             this.syncPlayerPredictionUnitOnly();
           }
-          console.log('[GAME] Level Progressed\nSpawned portals');
+          console.log('[GAME] Level Progressed\nSpawned portals: ', spawnedPortals);
           return true;
         } else {
           console.error('[GAME] Handling Level Progress...\nPortal pickup not found')
