@@ -894,10 +894,10 @@ function getFromPlayerViaClientId(clientId: string, underworld: Underworld): Pla
   }
   return player;
 }
-function joinGameAsPlayer(fromClient: string, asPlayerId: string, overworld: Overworld) {
+function joinGameAsPlayer(fromClient: string, asClientId: string, overworld: Overworld) {
   const underworld = overworld.underworld;
   if (underworld) {
-    const asPlayer = underworld.players.find(p => p.playerId == asPlayerId);
+    const asPlayer = underworld.players.find(p => p.clientId == asClientId);
     const oldFromPlayer = getFromPlayerViaClientId(fromClient, underworld);
     if (fromClient && asPlayer) {
       if (asPlayer.clientConnected) {
@@ -905,13 +905,14 @@ function joinGameAsPlayer(fromClient: string, asPlayerId: string, overworld: Ove
         return;
       }
       console.log('JOIN_GAME_AS_PLAYER: Reassigning player', asPlayer.clientId, 'to', fromClient);
-      const oldAsPlayerClientId = asPlayer.clientId;
+      const clientIdToGiveOldPlayer = asPlayer.clientId;
       asPlayer.clientId = fromClient;
+      asPlayer.playerId = asPlayer.clientId + "_" + 0;
       // Ensure their turn doesn't get skipped
       asPlayer.endedTurn = false;
       // Change the clientId of fromClient's old player now that they have inhabited the asPlayer
       if (oldFromPlayer) {
-        oldFromPlayer.clientId = oldAsPlayerClientId;
+        oldFromPlayer.clientId = clientIdToGiveOldPlayer;
         // force update clientConnected due to client switching players
         const isConnected = overworld.clients.includes(oldFromPlayer.clientId);
         oldFromPlayer.clientConnected = isConnected;
@@ -919,7 +920,7 @@ function joinGameAsPlayer(fromClient: string, asPlayerId: string, overworld: Ove
         if (!oldFromPlayer.clientConnected && oldFromPlayer.inventory.length == 0) {
           underworld.players = underworld.players.filter(p => p !== oldFromPlayer);
         } else {
-          console.error('Unexpected, joinGameAsPlayer could not delete oldPlayer')
+          console.warn('JoinGameAsPlayer could not delete oldPlayer, this is expected if oldPlayer is part of the loaded game.')
         }
       } else {
         console.error('Unexpected, joinGameAsPlayer: oldFromPlayer does not exist')
