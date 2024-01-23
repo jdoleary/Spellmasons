@@ -2192,6 +2192,15 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   async progressGameState() {
     console.trace('[GAME] Progress Game State...');
 
+    // Game State should not progress if no players are connected
+    const connectedPlayers = this.players.filter(p => p.clientConnected);
+    if (connectedPlayers.length == 0) {
+      console.log('[GAME] Can\'t Progress Level \nNo connected players: ', this.players);
+      return false;
+    } else {
+      console.log('[GAME] isLevelProgressable?\nConnected Players: ', connectedPlayers);
+    }
+
     // We should try progressing the level before ending the game
     // in case the player has beaten the level and died at the same time
     // Favoring the player in this scenario should only improve player experience
@@ -2205,24 +2214,20 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     else {
       console.log('[GAME] Turn Phase\nCurrent == ', turn_phase[this.turn_phase]);
 
+      // TODO - It would be cleaner if we found a way to move all TurnPhase logic here
+
+      // Most turn phases are currently handled in InitializeTurnPhase()
+      // the Player Turn depends on player input and thus happens asyncronously
+      // So we make a special case to handle it here instead
       if (this.turn_phase == turn_phase.PlayerTurns) {
         // If all hotseat players are ready, try end player turn
         await this.handleNextHotseatPlayer();
 
         // Moves to NPC.ALLY Phase if possible
         await this.tryEndPlayerTurnPhase();
-      } else if (this.turn_phase == turn_phase.NPC_ALLY) {
-
-      } else if (this.turn_phase == turn_phase.NPC_ENEMY) {
-
-      } else if (this.turn_phase == turn_phase.Stalled) {
-
       }
 
       console.log('[GAME] Turn Phase\nNew == ', turn_phase[this.turn_phase]);
-
-      // TODO - Full Turn Cycle? Handled in initializeTurnPhase()?
-      // this.endFullTurnCycle();
     }
 
     console.log('[GAME] Progress Game State Complete');
@@ -2495,13 +2500,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
   // This function is invoked when all factions have finished their turns
   async endFullTurnCycle() {
-    // --
-    // Note: The reason this logic happens here instead of in initializeTurnPhase
-    // is because initializeTurnPhase needs to be called on game load to put everything
-    // in a good state when updating to the canonical client's game state. (this 
-    // happens when one client disconnects and rejoins).
-    // --
-
     // Increment the turn number now that it's starting over at the first phase
     this.turn_number++;
 
@@ -2571,25 +2569,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
   handleLevelProgress(): boolean {
     // Returns true if this function progresses the level state
-    // - Spawns the next wave of enemies
-    // - Spawns Purple Portals
-    // - Sends Players to Next Level
+    // - Spawn the next wave of enemies
+    // - Spawn purple portals
+    // - Send players to next level
 
-    // TODO - Move connected players to progressGameState()
-    // Because game state should never progress if no players are connected
-    // Consider other places that things like isGameOver are used.
-
-    const connectedPlayers = this.players.filter(p => p.clientConnected);
-    if (connectedPlayers.length == 0) {
-      console.log('[GAME] Can\'t Progress Level \nNo connected players: ', this.players);
-      return false;
-    } else {
-      console.log('[GAME] isLevelProgressable?\nConnected Players: ', connectedPlayers);
-    }
-
-    // TODO - Remove this?
-    // Progress game state should not be getting called before enemies are spawned anyway.
-
+    // TODO - Below is a temp failsafe. It should be removed:
+    // Progress game state should not be getting called before enemies are spawned
     const spawnedPlayers = this.players.filter(p => p.isSpawned)
     if (spawnedPlayers.length == 0) {
       console.log('[GAME] Can\'t Progress Level \nNo players have spawned: ', this.players);
@@ -2698,6 +2683,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Go To Next Level
     // - If all connected players are in portal or done with turn
     // - If in hotseat and at least one player is in portal
+    const connectedPlayers = this.players.filter(p => p.clientConnected);
     const goToNextLevel =
       connectedPlayers.every(p => Player.inPortal(p) || this.hasCompletedTurn(p))
       || (numberOfHotseatPlayers > 1 && connectedPlayers.some(Player.inPortal));
