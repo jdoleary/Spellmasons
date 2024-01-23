@@ -46,21 +46,24 @@ const spell: Spell = {
           attackPromises.push(new Promise<void>((resolve) => {
             setTimeout(() => {
               playDefaultSpellSFX(card, prediction);
-              for (let unit of targets) {
-                const spellEffectImage = oneOffImage(unit, animationPath, containerSpells);
-                if (spellEffectImage) {
-                  // Randomize rotation a bit so that subsequent slashes don't perfectly overlap
-                  spellEffectImage.sprite.rotation = randFloat(-Math.PI / 6, Math.PI / 6);
-                  if (q % 2 == 0) {
-                    // Flip every other slash animation so that it comes from the other side
-                    spellEffectImage.sprite.scale.x = -1;
+              const slashAnimationPromises = targets.map(unit => {
+                return new Promise<void>(resolve => {
+                  const spellEffectImage = oneOffImage(unit, animationPath, containerSpells, resolve);
+                  if (spellEffectImage) {
+                    // Randomize rotation a bit so that subsequent slashes don't perfectly overlap
+                    spellEffectImage.sprite.rotation = randFloat(-Math.PI / 6, Math.PI / 6);
+                    if (q % 2 == 0) {
+                      // Flip every other slash animation so that it comes from the other side
+                      spellEffectImage.sprite.scale.x = -1;
+                    }
                   }
-                }
-                setTimeout(() => {
                   Unit.takeDamage(unit, damageDone, state.casterUnit, underworld, prediction, state);
-                  resolve();
-                }, 100);
-              }
+                })
+              })
+              Promise.all(slashAnimationPromises).then(() => {
+                resolve();
+              });
+
             }, animationDelaySum);
           }));
           animationDelaySum += delayBetweenAnimations;
