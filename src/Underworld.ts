@@ -151,6 +151,7 @@ export default class Underworld {
   pie: PieClient | IHostApp;
   // The index of the level the players are on
   levelIndex: number = -1;
+  isTutorialRun: boolean = false;
   wave: number = 0;
   // for serializing random: prng
   RNGState?: SeedrandomState;
@@ -1462,11 +1463,13 @@ export default class Underworld {
       console.error('Could not find biome for levelIndex: ', levelIndex);
     }
 
-    const isTutorialRun = !isTutorialComplete();
-    if (isTutorialRun) {
+    // isTutorialRun will always be false on headless
+    // If tutorial isn't complete, make this a tutorial run
+    if (levelIndex == 0) {
+      this.isTutorialRun = !isTutorialComplete();
       console.log('Set gamemode to "tutorial" so that the first playthrough is easier');
       this.gameMode = 'tutorial';
-      if (levelIndex == 0) {
+      if (!isTutorialFirstStepsComplete(['portal'])) {
         // Set the level index to -1 to spawn the first tutorial level
         levelIndex = -1;
 
@@ -1483,15 +1486,24 @@ export default class Underworld {
     }
     const isFirstTutorialLevel = (levelIndex == -1);
 
-    let caveParams = caveSizes.medium;
+    let caveParams = caveSizes.extrasmall;
     if (isFirstTutorialLevel) {
+      // First level override
       caveParams = caveSizes.tutorial;
-    } else if (isTutorialRun) {
-      caveParams = caveSizes.extrasmall;
-    } else if (levelIndex < 2) {
-      caveParams = caveSizes.extrasmall;
-    } else if (levelIndex < 6) {
-      caveParams = caveSizes.small;
+    } else if (this.isTutorialRun) {
+      // Tutorial Run - Smaller maps
+      if (levelIndex >= 6) {
+        caveParams = caveSizes.small;
+      } else if (levelIndex >= config.LAST_LEVEL_INDEX) {
+        caveParams = caveSizes.medium;
+      }
+    } else {
+      // Not Tutorial Run - Standard maps
+      if (levelIndex >= 3) {
+        caveParams = caveSizes.small;
+      } else if (levelIndex >= 6) {
+        caveParams = caveSizes.medium;
+      }
     }
 
     console.log('map gen: caveParams (to learn why some levels are too small)', caveParams);
@@ -1521,13 +1533,9 @@ export default class Underworld {
     // flatMap removes undefineds
     levelData.imageOnlyTiles = tiles.flatMap(x => x == undefined ? [] : [x]);
 
-    let levelIndexForEnemySpawn = levelIndex;
     // Adjust difficulty via level index for tutorial runs so that it's not as hard
-    if (isTutorialRun) {
-      // If the player has not completed the tutorial, this will make the game easier
-      levelIndexForEnemySpawn -= 1;
-    }
-    // End Block: Adjust difficulty via level index for tutorial runs so that it's not as hard
+    // If the player has not completed the tutorial, this will make the game easier
+    const levelIndexForEnemySpawn = this.isTutorialRun ? levelIndex - 1 : levelIndex;
 
     // Spawn units at the start of the level
     let unitIds = getEnemiesForAltitude(this, levelIndexForEnemySpawn);
@@ -1972,7 +1980,12 @@ export default class Underworld {
     }
     this.changeToFirstHotseatPlayer();
 
-    // Don't give stat points on the first level
+    // If a player's first game is in multiplayer, the tutorial will not immedaitely appear
+    // and will have some buggy behavior, such as tasks not completing or showing in the correct order
+    // this call is here to show tutorial tasks immediately and prevent these bugs
+    isTutorialComplete();
+
+    // Give stat points, but not in the first level
     if (this.levelIndex > 0) {
       for (let player of this.players) {
         const points = player.mageType == 'Spellmason' ? 4 : 3;
@@ -3490,12 +3503,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       initialTargetedPickupId,
     } = args;
     if (!prediction && casterUnit == (globalThis.player && globalThis.player.unit)) {
-      globalThis.castThisTurn = true;
-    }
-
-    if (!prediction) {
       tutorialCompleteTask('cast');
-      tutorialCompleteTask('castMultipleInOneTurn', () => casterUnit.mana < casterUnit.manaMax);
+      tutorialCompleteTask('castMultipleInOneTurn', () => !!globalThis.castThisTurn);
+      globalThis.castThisTurn = true;
     }
 
     let effectState: Cards.EffectState = {

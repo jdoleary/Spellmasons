@@ -266,9 +266,7 @@ export function updateTutorialChecklist() {
   if (completeTutorialItems.length) {
     let completedItemsHtml = '';
     for (let item of completeTutorialItems) {
-      if (item.visible) {
-        completedItemsHtml += `<div class="complete">&#x2611; <span class="text complete">${i18n(item.text)}</span></div>`
-      }
+      completedItemsHtml += `<div class="complete">&#x2611; <span class="text complete">${i18n(item.text)}</span></div>`
     }
     html += `<details>
             <summary>${i18n('Completed Tasks')} ${completeTutorialItems.length}/${tutorialItems.length}</summary>
@@ -376,13 +374,12 @@ globalThis.isTutorialComplete = isTutorialComplete;
 
 // Used to determine whether or not the player has gone through
 // the first few steps of the tutorial, and has a basic understanding of the game
-export function isTutorialFirstStepsComplete() {
+export function isTutorialFirstStepsComplete(steps: (keyof TutorialChecklist)[] = ['moved', 'portal', 'camera', 'cast']) {
   if (globalThis.headless) {
     // Never run the tutorial on a headless server because it is hosting games for clients
     return true;
   }
-  const firstStepKeys: (keyof TutorialChecklist)[] = ['moved', 'portal', 'camera', 'cast'];
-  if (firstStepKeys.every(key => tutorialChecklist[key].complete)) {
+  if (steps.every(key => tutorialChecklist[key].complete)) {
     return true;
   } else {
     return false;
