@@ -3718,9 +3718,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             CardUI.updateCardBadges(this);
           }
         }
-
-        // Clear images from previous card before drawing the images from the new card
-        containerSpells?.removeChildren();
       }
       // Reset quantity once a card is cast
       quantity = 1;
