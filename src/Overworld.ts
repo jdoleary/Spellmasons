@@ -104,6 +104,8 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
         console.log(`Setup: Create a Player instance for ${clientId}`)
         const config = globalThis.hotseatPlayerConfig?.[i];
         const player = Player.create(clientId, playerId, underworld);
+        // Assign created player to globalThis.player if they are the primary client player
+        if (i == 0) Player.updateGlobalRefToPlayerIfCurrentClient(player);
         player.lobbyReady = !!defaultLobbyReady;
         if (config) {
           player.name = config.name;
