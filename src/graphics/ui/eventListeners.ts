@@ -94,9 +94,21 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
   if (globalThis.view !== View.Game) {
     return;
   }
+  //console.warn("CODE: ", event.code);
+  // Disable default chromium actions to prevent weird behavior
+  if (event.code == 'ShiftLeft' || 'ShiftRight') {
+    event.preventDefault();
+  }
+  if (event.code == 'ControlLeft' || 'ControlRight') {
+    event.preventDefault();
+  }
+  if (event.code == 'AltLeft' || 'AltRight') {
+    event.preventDefault();
+  }
   if (event.code == 'Tab') {
     event.preventDefault();
   }
+
   const { underworld } = overworld;
   if (!underworld) {
     return
