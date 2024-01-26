@@ -1467,18 +1467,20 @@ export default class Underworld {
     // If tutorial isn't complete, make this a tutorial run
     if (levelIndex == 0) {
       this.isTutorialRun = !isTutorialComplete();
-      console.log('Set gamemode to "tutorial" so that the first playthrough is easier');
-      this.gameMode = 'tutorial';
-      if (!isTutorialFirstStepsComplete(['portal'])) {
-        // Set the level index to -1 to spawn the first tutorial level
-        levelIndex = -1;
+      if (this.isTutorialRun) {
+        console.log('Set gamemode to "tutorial" so that the first playthrough is easier');
+        this.gameMode = 'tutorial';
+        if (!isTutorialFirstStepsComplete(['portal'])) {
+          // Set the level index to -1 to spawn the first tutorial level
+          levelIndex = -1;
 
-        // Give the player default tutorial cards
-        if (globalThis.player) {
-          for (let spell of [slashCardId, arrowCardId, pushId]) {
-            const upgrade = Upgrade.getUpgradeByTitle(spell);
-            if (upgrade) {
-              this.forceUpgrade(globalThis.player, upgrade, false);
+          // Give the player default tutorial cards
+          if (globalThis.player) {
+            for (let spell of [slashCardId, arrowCardId, pushId]) {
+              const upgrade = Upgrade.getUpgradeByTitle(spell);
+              if (upgrade) {
+                this.forceUpgrade(globalThis.player, upgrade, false);
+              }
             }
           }
         }
