@@ -2084,12 +2084,7 @@ export default class Underworld {
       // setTimeout allows the UI to refresh before locking up the CPU with
       // heavy level generation code
       setTimeout(() => {
-        if (this.lastLevelCreated?.levelIndex == levelIndex) {
-          resolve(this.lastLevelCreated);
-          console.warn('Setup: Shortcircuit generateLevelData; returning already generated level data');
-        } else {
-          resolve(this.generateLevelDataSyncronous(levelIndex, this.gameMode));
-        }
+        resolve(this.generateLevelDataSyncronous(levelIndex, this.gameMode));
       }, 10);
     }).then(() => {
       this.generatingLevel = false;

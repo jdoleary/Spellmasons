@@ -1342,14 +1342,16 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     {
       label: 'Regenerate Level',
       action: () => {
-        if (!overworld.underworld) {
+        const underworld = overworld.underworld;
+        if (!underworld) {
           console.error('Cannot "Regenerate Level", underworld does not exist');
           return;
         }
-        // Clear lastLevelCreated in order to allow it to regenerate the level without
-        // changing the levelIndex
-        overworld.underworld.lastLevelCreated = undefined;
-        overworld.underworld.generateLevelData(overworld.underworld.levelIndex);
+        if (!globalThis.isHost(underworld.pie)) {
+          console.error('Cannot "Regenerate Level", player is not the host');
+          return;
+        }
+        underworld.generateLevelData(underworld.levelIndex);
       },
       supportInMultiplayer: false,
       domQueryContainer: '#menu-global'

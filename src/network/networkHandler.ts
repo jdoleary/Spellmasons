@@ -130,9 +130,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         // Must be called when difficulty (gameMode) changes to update summon spell stats
         Cards.refreshSummonCardDescriptions(underworld);
         recalculateGameDifficulty(underworld);
-        // Clear lastLevelCreated in order to allow it to regenerate the level without
-        // changing the levelIndex
-        underworld.lastLevelCreated = undefined;
+        // Regenerate level data with new game mode information
         underworld.generateLevelData(underworld.levelIndex);
 
         // Since svelte can't keep track of state outside of itself,
