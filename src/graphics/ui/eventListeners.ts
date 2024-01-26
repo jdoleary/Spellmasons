@@ -1229,11 +1229,16 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       label: 'Skip to Next Level',
       action: () => {
         if (globalThis.player) {
-          if (!overworld.underworld) {
+          const underworld = overworld.underworld;
+          if (!underworld) {
             console.error('Cannot "Skip to Next level", underworld does not exist');
             return;
           }
-          Player.enterPortal(globalThis.player, overworld.underworld);
+          if (!globalThis.isHost(underworld.pie)) {
+            console.error('Cannot "Skip to Next level", player is not the host');
+            return;
+          }
+          underworld.generateLevelData(underworld.levelIndex + 1);
         }
       },
       supportInMultiplayer: false,
@@ -1243,12 +1248,16 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       label: 'Skip to Water Biome',
       action: () => {
         if (globalThis.player) {
-          if (!overworld.underworld) {
-            console.error('Cannot "Skip to Water Biome", underworld does not exist');
+          const underworld = overworld.underworld;
+          if (!underworld) {
+            console.error('Cannot "Skip to Lava Biome", underworld does not exist');
             return;
           }
-          overworld.underworld.levelIndex = 0;
-          Player.enterPortal(globalThis.player, overworld.underworld);
+          if (!globalThis.isHost(underworld.pie)) {
+            console.error('Cannot "Skip to Lava Biome", player is not the host');
+            return;
+          }
+          underworld.generateLevelData(0);
         }
       },
       supportInMultiplayer: false,
@@ -1258,12 +1267,16 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       label: 'Skip to Lava Biome',
       action: () => {
         if (globalThis.player) {
-          if (!overworld.underworld) {
+          const underworld = overworld.underworld;
+          if (!underworld) {
             console.error('Cannot "Skip to Lava Biome", underworld does not exist');
             return;
           }
-          overworld.underworld.levelIndex = 3;
-          Player.enterPortal(globalThis.player, overworld.underworld);
+          if (!globalThis.isHost(underworld.pie)) {
+            console.error('Cannot "Skip to Lava Biome", player is not the host');
+            return;
+          }
+          underworld.generateLevelData(3);
         }
       },
       supportInMultiplayer: false,
@@ -1273,12 +1286,16 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       label: 'Skip to Blood Biome',
       action: () => {
         if (globalThis.player) {
-          if (!overworld.underworld) {
+          const underworld = overworld.underworld;
+          if (!underworld) {
             console.error('Cannot "Skip to Blood Biome", underworld does not exist');
             return;
           }
-          overworld.underworld.levelIndex = 6;
-          Player.enterPortal(globalThis.player, overworld.underworld);
+          if (!globalThis.isHost(underworld.pie)) {
+            console.error('Cannot "Skip to Blood Biome", player is not the host');
+            return;
+          }
+          underworld.generateLevelData(6);
         }
       },
       supportInMultiplayer: false,
@@ -1288,12 +1305,16 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       label: 'Skip to Ghost Biome',
       action: () => {
         if (globalThis.player) {
-          if (!overworld.underworld) {
+          const underworld = overworld.underworld;
+          if (!underworld) {
             console.error('Cannot "Skip to Ghost Biome", underworld does not exist');
             return;
           }
-          overworld.underworld.levelIndex = 9;
-          Player.enterPortal(globalThis.player, overworld.underworld);
+          if (!globalThis.isHost(underworld.pie)) {
+            console.error('Cannot "Skip to Ghost Biome", player is not the host');
+            return;
+          }
+          underworld.generateLevelData(9);
         }
       },
       supportInMultiplayer: false,
@@ -1303,12 +1324,16 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       label: 'Skip to Deathmason',
       action: () => {
         if (globalThis.player) {
-          if (!overworld.underworld) {
+          const underworld = overworld.underworld;
+          if (!underworld) {
             console.error('Cannot "Skip to Deathmason level", underworld does not exist');
             return;
           }
-          overworld.underworld.levelIndex = config.LAST_LEVEL_INDEX - 1;
-          Player.enterPortal(globalThis.player, overworld.underworld);
+          if (!globalThis.isHost(underworld.pie)) {
+            console.error('Cannot "Skip to Deathmason level", player is not the host');
+            return;
+          }
+          underworld.generateLevelData(config.LAST_LEVEL_INDEX);
         }
       },
       supportInMultiplayer: false,
