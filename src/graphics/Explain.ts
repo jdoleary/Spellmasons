@@ -315,6 +315,8 @@ globalThis.skipTutorial = async () => {
   }
 }
 export function tutorialShowTask(key: keyof TutorialChecklist) {
+  // This is called to reveal the next step of the tutorial
+  // If there are any popups attached to that new step, show them
   if (globalThis.doUpdateTutorialChecklist) {
     const task = tutorialChecklist[key];
     if (task) {
