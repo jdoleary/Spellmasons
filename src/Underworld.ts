@@ -2166,6 +2166,8 @@ export default class Underworld {
     // - Spawn purple portals
     // - Send players to next level
 
+    const connectedPlayers = this.players.filter(p => p.clientConnected);
+
     // TODO - Below is a temp failsafe. It should be removed:
     // Progress game state should not be getting called before enemies are spawned
     const spawnedPlayers = this.players.filter(p => p.isSpawned)
@@ -2187,38 +2189,44 @@ export default class Underworld {
     // Should another wave of enemies be spawned?
     const loopIndex = Math.max(0, (this.levelIndex - config.LAST_LEVEL_INDEX));
     if (loopIndex > this.wave) {
-      this.wave++;
-      queueCenteredFloatingText(`Wave ${this.wave + 1} of ${loopIndex + 1}`);
-      // Add corpse decay to all dead NPCs
-      this.units.filter(u => u.unitType == UnitType.AI && !u.alive).forEach(u => {
-        Unit.addModifier(u, corpseDecayId, this, false);
-      });
-      // Trick for finding valid spawnable tiles
-      const validSpawnCoords = this.lastLevelCreated?.imageOnlyTiles.filter(x => x.image.endsWith('all_ground.png')) || [];
+      // Only spawn new wave if all players have ended their turn
+      if (connectedPlayers.every(p => this.hasCompletedTurn(p))) {
+        this.wave++;
+        queueCenteredFloatingText(`Wave ${this.wave + 1} of ${loopIndex + 1}`);
+        // Add corpse decay to all dead NPCs
+        this.units.filter(u => u.unitType == UnitType.AI && !u.alive).forEach(u => {
+          Unit.addModifier(u, corpseDecayId, this, false);
+        });
+        // Trick for finding valid spawnable tiles
+        const validSpawnCoords = this.lastLevelCreated?.imageOnlyTiles.filter(x => x.image.endsWith('all_ground.png')) || [];
 
-      // Copied from generateRandomLevelData
-      const unitIds = getEnemiesForAltitude(this, this.levelIndex);
-      const numberOfMinibossesAllowed = Math.ceil(Math.max(0, (this.levelIndex - 4) / 4));
-      let numberOfMinibossesMade = 0;
-      for (let id of unitIds) {
-        if (validSpawnCoords.length == 0) { break; }
-        const validSpawnCoordsIndex = randInt(0, validSpawnCoords.length - 1, this.random);
-        const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
-        const sourceUnit = allUnits[id];
-        const { unitMinLevelIndexSubtractor } = unavailableUntilLevelIndexDifficultyModifier(this);
-        // Disallow miniboss for a unit spawning on the first levelIndex that they are allowed to spawn
-        const minibossAllowed = !sourceUnit?.spawnParams?.excludeMiniboss && ((sourceUnit?.spawnParams?.unavailableUntilLevelIndex || 0) - unitMinLevelIndexSubtractor) < this.levelIndex;
-        if (coord) {
-          const isMiniboss = !minibossAllowed ? false : numberOfMinibossesAllowed > numberOfMinibossesMade;
-          if (isMiniboss) {
-            numberOfMinibossesMade++;
+        // Copied from generateRandomLevelData
+        const unitIds = getEnemiesForAltitude(this, this.levelIndex);
+        const numberOfMinibossesAllowed = Math.ceil(Math.max(0, (this.levelIndex - 4) / 4));
+        let numberOfMinibossesMade = 0;
+        for (let id of unitIds) {
+          if (validSpawnCoords.length == 0) { break; }
+          const validSpawnCoordsIndex = randInt(0, validSpawnCoords.length - 1, this.random);
+          const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
+          const sourceUnit = allUnits[id];
+          const { unitMinLevelIndexSubtractor } = unavailableUntilLevelIndexDifficultyModifier(this);
+          // Disallow miniboss for a unit spawning on the first levelIndex that they are allowed to spawn
+          const minibossAllowed = !sourceUnit?.spawnParams?.excludeMiniboss && ((sourceUnit?.spawnParams?.unavailableUntilLevelIndex || 0) - unitMinLevelIndexSubtractor) < this.levelIndex;
+          if (coord) {
+            const isMiniboss = !minibossAllowed ? false : numberOfMinibossesAllowed > numberOfMinibossesMade;
+            if (isMiniboss) {
+              numberOfMinibossesMade++;
+            }
+            this.spawnEnemy(id, coord, isMiniboss)
           }
-          this.spawnEnemy(id, coord, isMiniboss)
         }
+        // end Copied from generateRandomLevelData
+        console.log('[GAME] Level Progressed\nSpawned new wave of enemies');
+        return true;
+      } else {
+        console.log('[GAME] Handling Level Progress...\nCan\'t spawn new wave until all connected players have ended turn: ', connectedPlayers);
+        return false;
       }
-      // end Copied from generateRandomLevelData
-      console.log('[GAME] Level Progressed\nSpawned new wave of enemies');
-      return true;
     } else {
       console.log('[GAME] Handling Level Progress...\nNo more waves to spawn');
     }
@@ -2276,7 +2284,6 @@ export default class Underworld {
     // Go To Next Level
     // - If all connected players are in portal or done with turn
     // - If in hotseat and at least one player is in portal
-    const connectedPlayers = this.players.filter(p => p.clientConnected);
     const goToNextLevel =
       connectedPlayers.every(p => Player.inPortal(p) || this.hasCompletedTurn(p))
       || (numberOfHotseatPlayers > 1 && connectedPlayers.some(Player.inPortal));
