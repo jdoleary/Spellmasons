@@ -1285,9 +1285,12 @@ export function inRange(unit: IUnit, target: Vec2): boolean {
 
 export async function startTurnForUnits(units: IUnit[], underworld: Underworld, prediction: boolean) {
   // Trigger start turn events
+  const turnStartPromises = [];
   for (let unit of units) {
-    await runTurnStartEvents(unit, underworld, prediction);
+    turnStartPromises.push(runTurnStartEvents(unit, underworld, prediction))
   }
+  await raceTimeout(5000, 'Turn Start Events did not resolve', Promise.all(turnStartPromises));
+
   // Regenerate stamina to max
   for (let unit of units.filter(u => u.alive)) {
     if (unit.stamina < unit.staminaMax) {
@@ -1305,9 +1308,12 @@ export async function startTurnForUnits(units: IUnit[], underworld: Underworld, 
 
 export async function endTurnForUnits(units: IUnit[], underworld: Underworld, prediction: boolean) {
   // Trigger end turn events
+  const turnEndPromises = [];
   for (let unit of units) {
-    await runTurnEndEvents(unit, underworld, prediction);
+    turnEndPromises.push(runTurnEndEvents(unit, underworld, prediction))
   }
+  await raceTimeout(5000, 'Turn End Events did not resolve', Promise.all(turnEndPromises));
+
   // At the end of their turn, deal damage if still in liquid
   for (let unit of units.filter(u => u.inLiquid && u.alive)) {
     doLiquidEffect(underworld, unit, false);
