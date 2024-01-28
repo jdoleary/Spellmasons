@@ -2170,8 +2170,12 @@ export default class Underworld {
 
     const connectedPlayers = this.players.filter(p => p.clientConnected);
 
-    // TODO - Below is a temp failsafe. It should be removed:
-    // Progress game state should not be getting called before enemies are spawned
+    // TODO - Below is a temp failsafe. It should be removed eventually:
+    // This failsafe is here to account for an edge case where progressGameState()
+    // is called during underworld generation / in headless when all players are still in lobby
+    // I think. Haven't had time to investigate.
+    // Point: Progress game state should not be getting called before the game "starts"
+    // I.E. level is generated, enemies are spawned, players are ready to play and spawn, etc.
     const spawnedPlayers = this.players.filter(p => p.isSpawned)
     if (spawnedPlayers.length == 0) {
       console.log('[GAME] Can\'t Progress Level \nNo players have spawned: ', this.players);
