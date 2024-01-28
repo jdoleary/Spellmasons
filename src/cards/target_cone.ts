@@ -12,12 +12,12 @@ import { easeOutCubic } from '../jmath/Easing';
 import * as config from '../config';
 import { HasSpace } from '../entity/Type';
 
-export const id = 'Target Cone';
+export const targetConeId = 'Target Cone';
 const range = 200;
 const coneAngle = Math.PI / 4
 const spell: Spell = {
   card: {
-    id,
+    id: targetConeId,
     category: CardCategory.Targeting,
     supportQuantity: true,
     manaCost: 20,

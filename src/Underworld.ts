@@ -103,9 +103,9 @@ import { PRIEST_ID } from './entity/units/priest';
 import { getSyncActions } from './Syncronization';
 import { EXPECTED_MILLIS_PER_GAMELOOP, forcePushAwayFrom } from './effects/force_move';
 import { playThrottledEndTurnSFX } from './Audio';
+import { targetConeId } from './cards/target_cone';
 import { slashCardId } from './cards/slash';
 import { pushId } from './cards/push';
-import { arrowCardId } from './cards/arrow';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -1478,7 +1478,7 @@ export default class Underworld {
 
           // Give the player default tutorial cards
           if (globalThis.player) {
-            for (let spell of [slashCardId, arrowCardId, pushId]) {
+            for (let spell of [targetConeId, slashCardId, pushId]) {
               const upgrade = Upgrade.getUpgradeByTitle(spell);
               if (upgrade) {
                 this.forceUpgrade(globalThis.player, upgrade, false);
