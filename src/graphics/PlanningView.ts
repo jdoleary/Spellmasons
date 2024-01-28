@@ -610,6 +610,7 @@ export async function runPredictions(underworld: Underworld) {
       // Careful when making enemy predictions:
       // Ally turn happens before Enemy turn, and some effects
       // like bloat may not be easy to factor into predictions
+      // Issue: https://github.com/jdoleary/Spellmasons/issues/388
 
       // TODO - Run turn start events for units that will run it?
       //Unit.startTurnForUnits(aiUnits, underworld, true);
