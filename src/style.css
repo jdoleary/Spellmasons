@@ -2377,32 +2377,30 @@ body.dragging-card .floating-card-holder .empty-slot {
 }
 
 .cinematic.deathmason.show img {
-  animation-duration: 1s;
-  /* Adjust the time as needed */
-  animation-timing-function: ease-out-quad;
+  animation-duration: 2.5s;
+  animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
   animation-fill-mode: forwards;
   /* This makes sure the element stays in the final state */
   animation-iteration-count: 1;
   /* Ensures it doesn't repeat */
 }
 
-.cinematic.guru.show {
+.cinematic.goru.show {
   display: block;
 }
 
-.cinematic.guru.show img.bg,
-.cinematic.guru.show img.fg {
+.cinematic.goru.show img.bg,
+.cinematic.goru.show img.fg {
   animation-name: slideInRight;
 }
 
-.cinematic.guru.show img {
+.cinematic.goru.show img {
   animation-name: slideInLeft;
 }
 
-.cinematic.guru.show img {
-  animation-duration: 1s;
-  /* Adjust the time as needed */
-  animation-timing-function: ease-out-quad;
+.cinematic.goru.show img {
+  animation-duration: 2.5s;
+  animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
   animation-fill-mode: forwards;
   /* This makes sure the element stays in the final state */
   animation-iteration-count: 1;
@@ -2417,7 +2415,7 @@ body.dragging-card .floating-card-holder .empty-slot {
 
 }
 
-.cinematic .guru-text {
+.cinematic .goru-text {
   left: 55%;
   top: 73%;
 }
@@ -2427,21 +2425,37 @@ body.dragging-card .floating-card-holder .empty-slot {
 }
 
 @keyframes slideInRight {
-  from {
+  0% {
     transform: translate(100%, 0%);
   }
 
-  to {
+  25% {
     transform: translate(-50%, -50%);
+  }
+
+  75% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
   }
 }
 
 @keyframes slideInLeft {
-  from {
+  0% {
     transform: translate(-200%, -100%);
   }
 
-  to {
+  25% {
     transform: translate(-50%, -50%);
+  }
+
+  75% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
   }
 }
