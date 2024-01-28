@@ -647,6 +647,8 @@ export default class Underworld {
   }
 
   // TODO - Examine this for state machine refactor
+  // Issue: https://github.com/jdoleary/Spellmasons/issues/388
+
   // returns true if there is more processing yet to be done on the next game loop
   gameLoopUnit = (u: Unit.IUnit, aliveNPCs: Unit.IUnit[], deltaTime: number): boolean => {
     if (u) {
