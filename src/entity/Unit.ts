@@ -1522,6 +1522,7 @@ export function drawSelectedGraphics(unit: IUnit, prediction: boolean = false, u
 
   // TODO - Ideally the logic below would be defined in each Unit's ts file individually
   // Instead of using if/else and unit subtypes
+  // Cleanup for AI Refactor https://github.com/jdoleary/Spellmasons/issues/388
 
   // If unit is an archer, draw LOS attack line
   // instead of attack range for them
@@ -1546,26 +1547,35 @@ export function drawSelectedGraphics(unit: IUnit, prediction: boolean = false, u
       // If getBestRangedLOSTarget returns undefined, the archer doesn't have a valid attack target
       canAttack = false;
     }
+    const rangeCircleColor = false
+      ? colors.outOfRangeGrey
+      : unit.faction == Faction.ALLY
+        ? colors.attackRangeAlly
+        : colors.attackRangeEnemy;
 
-    if (archerTargets.length) {
-      for (let target of archerTargets) {
-        const attackLine = { p1: unit, p2: target };
-        globalThis.selectedUnitGraphics.moveTo(attackLine.p1.x, attackLine.p1.y);
+    // Draw outer attack range circle
+    drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
 
-        // If the los unit can attack you, use red, if not, use grey
-        const color = canAttack ? colors.healthRed : colors.outOfRangeGrey;
+    // TODO - Consider re-implementing attack lines with AI refactor
+    // https://github.com/jdoleary/Spellmasons/issues/408
+    // if (archerTargets.length) {
+    //   for (let target of archerTargets) {
+    //     const attackLine = { p1: unit, p2: target };
+    //     globalThis.selectedUnitGraphics.moveTo(attackLine.p1.x, attackLine.p1.y);
 
-        // Draw los line
-        globalThis.selectedUnitGraphics.lineStyle(3, color, 0.7);
-        globalThis.selectedUnitGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
-        globalThis.selectedUnitGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
+    //     // If the los unit can attack you, use red, if not, use grey
+    //     const color = canAttack ? colors.healthRed : colors.outOfRangeGrey;
 
-        // Draw outer attack range circle
-        drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, color, i18n('Attack Range'));
-      }
-    }
+    //     // Draw los line
+    //     globalThis.selectedUnitGraphics.lineStyle(3, color, 0.7);
+    //     globalThis.selectedUnitGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
+    //     globalThis.selectedUnitGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
+    //   }
+    // }
   } else {
     if (unit.attackRange > 0) {
+      // TODO - Unused outOfRangeGrey below, consider for AI refactor
+      // https://github.com/jdoleary/Spellmasons/issues/388
       const rangeCircleColor = false
         ? colors.outOfRangeGrey
         : unit.faction == Faction.ALLY
