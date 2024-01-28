@@ -66,6 +66,7 @@ body.loading.HUD-hidden #loading-screen {
   display: none;
 }
 
+
 /* Hide game content and underworld when the menu is open */
 body.view-Menu #underworld-container {
   display: none;
@@ -1307,6 +1308,16 @@ body.showUpgrades #inspector-tooltip {
   user-select: none;
 }
 
+.route-PLAY #menu-app {
+  background-image: url('/ui/4masons1920-1080.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.route-PLAY #menu-app button.button-wrapper {
+  filter: drop-shadow(0px 0px 10px #000000);
+}
+
 .view-Menu #menu-app.ready {
   display: flex;
 }
@@ -2337,4 +2348,100 @@ body.dragging-card .floating-card-holder .empty-slot {
 
 .selected-admin-action {
   border: 1px solid black;
+}
+
+#cinematic {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  width: 100vw;
+  height: 100vh;
+}
+
+.cinematic {
+  display: none;
+}
+
+.cinematic.deathmason.show {
+  display: block;
+}
+
+.cinematic.deathmason.show img.bg,
+.cinematic.deathmason.show img.fg {
+  animation-name: slideInRight;
+}
+
+.cinematic.deathmason.show img {
+  animation-name: slideInLeft;
+}
+
+.cinematic.deathmason.show img {
+  animation-duration: 1s;
+  /* Adjust the time as needed */
+  animation-timing-function: ease-out-quad;
+  animation-fill-mode: forwards;
+  /* This makes sure the element stays in the final state */
+  animation-iteration-count: 1;
+  /* Ensures it doesn't repeat */
+}
+
+.cinematic.guru.show {
+  display: block;
+}
+
+.cinematic.guru.show img.bg,
+.cinematic.guru.show img.fg {
+  animation-name: slideInRight;
+}
+
+.cinematic.guru.show img {
+  animation-name: slideInLeft;
+}
+
+.cinematic.guru.show img {
+  animation-duration: 1s;
+  /* Adjust the time as needed */
+  animation-timing-function: ease-out-quad;
+  animation-fill-mode: forwards;
+  /* This makes sure the element stays in the final state */
+  animation-iteration-count: 1;
+  /* Ensures it doesn't repeat */
+}
+
+.cinematic img {
+  transform: translate(-50%, -50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+}
+
+.cinematic .guru-text {
+  left: 55%;
+  top: 73%;
+}
+
+.cinematic .deathmason-text {
+  top: 65%;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translate(100%, 0%);
+  }
+
+  to {
+    transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translate(-200%, -100%);
+  }
+
+  to {
+    transform: translate(-50%, -50%);
+  }
 }
