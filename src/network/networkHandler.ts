@@ -765,8 +765,8 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       // This message is only for the host, it ensures that the player position
       // of the host matches exactly the player position on the player's client
       if (isHost(overworld.pie)) {
-        if (fromPlayer && fromPlayer.unit && payload.x !== undefined && payload.y !== undefined) {
-          Unit.setLocation(fromPlayer.unit, payload);
+        if (fromPlayer && fromPlayer.unit && payload.position.x !== undefined && payload.position.y !== undefined) {
+          Unit.setLocation(fromPlayer.unit, payload.position);
           fromPlayer.unit.stamina = payload.stamina;
         }
       }

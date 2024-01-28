@@ -676,7 +676,8 @@ export function mouseUpHandler(overworld: Overworld, e: Pick<MouseEvent, "button
         // On release, send a final move player to ensure that the player moves to the full destination on the server
         overworld.underworld.pie.sendData({
           type: MESSAGE_TYPES.SET_PLAYER_POSITION,
-          ...Vec.clone(globalThis.player.unit),
+          position: Vec.clone(globalThis.player.unit),
+          stamina: globalThis.player.unit.stamina,
         });
       }
     } else {
