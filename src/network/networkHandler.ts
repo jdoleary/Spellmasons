@@ -767,6 +767,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       if (isHost(overworld.pie)) {
         if (fromPlayer && fromPlayer.unit && payload.x !== undefined && payload.y !== undefined) {
           Unit.setLocation(fromPlayer.unit, payload);
+          fromPlayer.unit.stamina = payload.stamina;
         }
       }
       break;
