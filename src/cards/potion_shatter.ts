@@ -4,8 +4,9 @@ import { Spell, refundLastSpell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { baseExplosionRadius, explode } from '../effects/explode';
 import { removePickup } from '../entity/Pickup';
-import { drawUICircle, drawUICirclePrediction } from '../graphics/PlanningView';
+import { drawUICirclePrediction } from '../graphics/PlanningView';
 import * as colors from '../graphics/ui/colors';
+import { COLLISION_MESH_RADIUS } from '../config';
 
 export const potionShatterId = 'Potion Shatter';
 const baseEffectRadius = 50; //baseExplosionRadius / x?
@@ -17,7 +18,7 @@ const spell: Spell = {
     manaCost: 15,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.COMMON],
+    probability: probabilityMap[CardRarity.SPECIAL],
     thumbnail: '',
     sfx: '',
     description: ['spell_potion_shatter', baseEffectRadius.toString()],
@@ -29,7 +30,7 @@ const spell: Spell = {
         return state;
       }
 
-      const adjustedRadius = baseEffectRadius * quantity + state.aggregator.radius;
+      const adjustedRadius = baseEffectRadius * quantity + state.aggregator.radius + COLLISION_MESH_RADIUS;
       playDefaultSpellSFX(card, prediction);
       for (let potion of targets) {
         if (potion.flaggedForRemoval) continue;
