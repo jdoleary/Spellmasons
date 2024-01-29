@@ -16,7 +16,7 @@ import Underworld, { turn_phase } from '../Underworld';
 import * as target_cone from '../cards/target_cone';
 import * as lastWill from '../cards/lastwill';
 import * as captureSoul from '../cards/capture_soul';
-import { explain, EXPLAIN_BLESSINGS, isFirstTutorialStepComplete, isTutorialComplete } from '../graphics/Explain';
+import { explain, EXPLAIN_BLESSINGS, isTutorialComplete } from '../graphics/Explain';
 import { lightenColor } from '../graphics/ui/colorUtil';
 import { AttributePerk } from '../Perk';
 import { setPlayerNameUI } from '../PlayerUtils';
@@ -67,6 +67,10 @@ export interface IPlayer {
   endedTurn: boolean;
   // wsPie id
   clientId: string;
+  // Since two players could have the same clientId, such as in hotseat
+  // We should also store a unique player identifier, and use that
+  // instead of clientId for most game logic
+  playerId: string;
   clientConnected: boolean;
   unit: Unit.IUnit;
   awaitingSpawn: boolean,
@@ -125,7 +129,7 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
         {
           const upgrade = Upgrade.getUpgradeByTitle(arrowCardId);
           if (upgrade) {
-            underworld.getFreeUpgrade(player, upgrade);
+            underworld.forceUpgrade(player, upgrade, true);
           } else {
             console.error('Could not find arrow upgrade for', type);
           }
@@ -135,7 +139,7 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
         {
           const upgrade = Upgrade.getUpgradeByTitle(captureSoul.id);
           if (upgrade) {
-            underworld.getFreeUpgrade(player, upgrade);
+            underworld.forceUpgrade(player, upgrade, true);
           } else {
             console.error('Could not find upgrade for', type);
           }
@@ -145,7 +149,7 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
         {
           const upgrade = Upgrade.getUpgradeByTitle(heal_id);
           if (upgrade) {
-            underworld.getFreeUpgrade(player, upgrade);
+            underworld.forceUpgrade(player, upgrade, true);
           } else {
             console.error('Could not find upgrade for', type);
           }
@@ -155,7 +159,7 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
         {
           const upgrade = Upgrade.getUpgradeByTitle(contaminate_id);
           if (upgrade) {
-            underworld.getFreeUpgrade(player, upgrade);
+            underworld.forceUpgrade(player, upgrade, true);
           } else {
             console.error('Could not find upgrade for', type);
           }
@@ -171,13 +175,14 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
   }
 
 }
-export function create(clientId: string, underworld: Underworld): IPlayer {
+export function create(clientId: string, playerId: string, underworld: Underworld): IPlayer {
   const userSource = defaultPlayerUnit;
   const player: IPlayer = {
     name: '',
     mageType: undefined,
     endedTurn: false,
     clientId,
+    playerId,
     // init players as not connected.  clientConnected status
     // should only be handled in one place and tied directly
     // to pie.clients
@@ -234,7 +239,6 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
   player.unit.healthMax = PLAYER_BASE_HEALTH;
 
   underworld.players.push(player);
-  updateGlobalRefToCurrentClientPlayer(player, underworld);
   underworld.queueGameLoop();
   return player;
 }
@@ -262,8 +266,6 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string, colo
   // Add player-specific shaders
   // regardless of if the image sprite changes to a new animation or not.
   if (player.unit.image && player.unit.image.sprite.filters) {
-
-
     const colorSecondary = lightenColor(color, 0.3);
     if (color && colorSecondary && color !== playerNoColor) {
       const robeColorFilter = new MultiColorReplaceFilter(
@@ -300,12 +302,13 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string, colo
   }
 }
 export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld) {
+  player.endedTurn = false;
   // Set the player so they can choose their next spawn
   player.isSpawned = false;
-  if (player === globalThis.player) {
+  if (player == globalThis.player) {
     globalThis.awaitingSpawn = false;
   }
-  player.endedTurn = false;
+
   // Update player position to be NOT NaN or null (which indicates that the player is in portal),
   // instead, the player is now spawning so their position should be a number.
   // This is important because it allows the player to see enemy attentionMarkers when
@@ -346,20 +349,11 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
   }
 
   Unit.resetUnitStats(player.unit, underworld);
-
-  // Manage game over state so that if this is a restart
-  // and the game over window is currently up, it will dismiss it
-  underworld.tryGameOver();
 }
 // Keep a global reference to the current client's player
-export function updateGlobalRefToCurrentClientPlayer(player: IPlayer, underworld: Underworld) {
-  if (numberOfHotseatPlayers > 1) {
+export function updateGlobalRefToPlayerIfCurrentClient(player: IPlayer) {
+  if (globalThis.clientId == player.clientId) {
     globalThis.player = player;
-    globalThis.clientId = player.clientId;
-  } else {
-    if (globalThis.clientId === player.clientId) {
-      globalThis.player = player;
-    }
   }
 }
 // Converts a player entity into a serialized form
@@ -406,25 +400,16 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
     // might be wrongfully overwritten by a server SYNC_PLAYERS such as getting
     // a summon spell or rerolling.
 
-    if (globalThis.numberOfHotseatPlayers > 1) {
-      // In hotseat, players share the same client Id and if the below else statement were to run
-      // it would make the hotseat players share references to the same arrays and objects
-      // giving them a shared inventory and toolbar which is not desireable.
-      // Besides, there won't be any sync errors on hotseat anyway since hotseat isn't
-      // networked
-      console.debug('Ignore isClientPlayerSourceOfTruth on hotseat multiplayer');
-    } else {
-      if (globalThis.player && playerLoaded.clientId == globalThis.player.clientId) {
-        playerLoaded.cardsInToolbar = globalThis.player.cardsInToolbar;
-        playerLoaded.inventory = globalThis.player.inventory;
-        playerLoaded.freeSpells = globalThis.player.freeSpells;
-        playerLoaded.upgrades = globalThis.player.upgrades;
-        playerLoaded.upgradesLeftToChoose = globalThis.player.upgradesLeftToChoose;
-        playerLoaded.perksLeftToChoose = globalThis.player.perksLeftToChoose;
-        playerLoaded.reroll = globalThis.player.reroll;
-        playerLoaded.attributePerks = globalThis.player.attributePerks;
-        playerLoaded.statPointsUnspent = globalThis.player.statPointsUnspent;
-      }
+    if (globalThis.player && globalThis.player.playerId == playerLoaded.playerId) {
+      playerLoaded.cardsInToolbar = globalThis.player.cardsInToolbar;
+      playerLoaded.inventory = globalThis.player.inventory;
+      playerLoaded.freeSpells = globalThis.player.freeSpells;
+      playerLoaded.upgrades = globalThis.player.upgrades;
+      playerLoaded.upgradesLeftToChoose = globalThis.player.upgradesLeftToChoose;
+      playerLoaded.perksLeftToChoose = globalThis.player.perksLeftToChoose;
+      playerLoaded.reroll = globalThis.player.reroll;
+      playerLoaded.attributePerks = globalThis.player.attributePerks;
+      playerLoaded.statPointsUnspent = globalThis.player.statPointsUnspent;
     }
   }
   // Backwards compatibility after property name change
@@ -452,7 +437,7 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
   // Overwrite player
   underworld.players[index] = playerLoaded;
   CardUI.recalcPositionForCards(playerLoaded, underworld);
-  updateGlobalRefToCurrentClientPlayer(playerLoaded, underworld);
+  updateGlobalRefToPlayerIfCurrentClient(playerLoaded);
   if (underworld.overworld) {
     setClientConnected(playerLoaded, underworld.overworld.clients.includes(player.clientId), underworld);
   } else {
@@ -467,17 +452,12 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
 // Sets boolean and substring denoting if the player has a @websocketpie/client client associated with it
 export function setClientConnected(player: IPlayer, connected: boolean, underworld: Underworld) {
   // Override: If in hotseat multiplayer than all clients are considered connected
-  if (globalThis.numberOfHotseatPlayers > 1) {
-    connected = true;
-  }
-  player.clientConnected = connected;
+  player.clientConnected = globalThis.numberOfHotseatPlayers > 1 ? true : connected;
   if (connected) {
     Image.removeSubSprite(player.unit.image, 'disconnected.png');
     underworld.queueGameLoop();
   } else {
     Image.addSubSprite(player.unit.image, 'disconnected.png');
-    // If they disconnect, end their turn
-    underworld.endPlayerTurn(player.clientId);
   }
   syncLobby(underworld);
 }
@@ -495,7 +475,7 @@ export function syncLobby(underworld: Underworld) {
       } else if (p.endedTurn && underworld.turn_phase == turn_phase.PlayerTurns) {
         status = i18n('Ready for next turn');
       }
-      return { name: p.name || p.clientId, clientId: p.clientId, clientConnected: p.clientConnected, status, color: playerColorToCss(p), ready: p.lobbyReady ? i18n('Ready') : i18n('Not Ready') };
+      return { name: p.name || p.playerId, clientId: p.clientId, clientConnected: p.clientConnected, status, color: playerColorToCss(p), ready: p.lobbyReady ? i18n('Ready') : i18n('Not Ready') };
     });
   // Update lobby element
   if (elInGameLobby) {
@@ -512,32 +492,6 @@ export function syncLobby(underworld: Underworld) {
 }
 export function enterPortal(player: IPlayer, underworld: Underworld) {
   console.log(`Player ${player.clientId}/${player.name} entered portal.`);
-  // In the event that it was "game over" because the player died, but ally npcs clear the
-  // level, the player will enter the portal, in which case allowForceInitGameState
-  // should be disabled so that it ignored INIT_GAME_STATE messages again
-  // (During a regular gameover this is set to true so that when the game restarts
-  // the client can recieve the new underworld state)
-  underworld.allowForceInitGameState = false;
-
-  // Record Progress
-  const mageTypeFarthestLevel = storage.getStoredMageTypeFarthestLevelKey(player.mageType || 'Spellmason');
-  const highScore = storageGet(mageTypeFarthestLevel) || '0'
-  if (parseInt(highScore) < underworld.levelIndex) {
-    console.log('New farthest level record!', mageTypeFarthestLevel, '->', underworld.levelIndex);
-    storageSet(mageTypeFarthestLevel, underworld.levelIndex.toString());
-  }
-
-  if (player == globalThis.player) {
-    // At the end of each level ensure the server has an up-to-date state
-    // of the current client's player object.
-    // The client is the source of truth for it's own player object
-    underworld.pie.sendData({
-      type: MESSAGE_TYPES.CLIENT_SEND_PLAYER_TO_SERVER,
-      player: serialize(player)
-    });
-  }
-
-
   Image.hide(player.unit.image);
   // Make sure to resolve the moving promise once they enter the portal or else 
   // the client queue will get stuck
@@ -547,15 +501,9 @@ export function enterPortal(player: IPlayer, underworld: Underworld) {
   // Clear the selection so that it doesn't persist after portalling (which would show
   // your user's move circle in the upper left hand of the map but without the user there)
   clearTooltipSelection();
-  // Note: This should occur AFTER dead, non-portaled players may have entered the portal
-  // because checkForEndOfLevel considers if all players are portaled.
-  const wentToNextLevel = underworld.checkForEndOfLevel();
-  if (!wentToNextLevel) {
-    // Entering the portal ends the player's turn
-    underworld.endPlayerTurn(player.clientId);
-  }
+  underworld.progressGameState();
 }
-// Note: this is also used for AI targeting to ensure that AI don't target disabled plaeyrs
+
 export function ableToAct(player: IPlayer) {
   // So long as a player is clientConnected, they can act if:
   // - They haven't spawned yet

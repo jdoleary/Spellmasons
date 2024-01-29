@@ -546,8 +546,7 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
 
             // Send current player movements to server
             sendMovePlayer(underworld);
-            tutorialCompleteTask('moved', () => !!globalThis.player && globalThis.player.unit.stamina <= globalThis.player.unit.staminaMax * 0.7);
-
+            tutorialCompleteTask('moved');
           } else {
             if (!globalThis.notifiedOutOfStamina) {
               if (globalThis.player.unit.stamina <= 0) {
@@ -689,7 +688,8 @@ export function mouseUpHandler(overworld: Overworld, e: Pick<MouseEvent, "button
         // On release, send a final move player to ensure that the player moves to the full destination on the server
         overworld.underworld.pie.sendData({
           type: MESSAGE_TYPES.SET_PLAYER_POSITION,
-          ...Vec.clone(globalThis.player.unit),
+          position: Vec.clone(globalThis.player.unit),
+          stamina: globalThis.player.unit.stamina,
         });
       }
     } else {
@@ -845,7 +845,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         }
 
 
-        if (selfPlayer.unit.modifiers[Freeze.id]) {
+        if (selfPlayer.unit.modifiers[Freeze.freezeCardId]) {
           floatingText({ coords: selfPlayer.unit, text: 'Cannot Cast. Frozen.' })
           playSFXKey('deny');
           // Cancel Casting
@@ -995,7 +995,7 @@ export function triggerAdminCommand(label: string, clientId: string, payload: an
   }
 }
 interface AdminActionProps {
-  clientId?: string;
+  playerId?: string;
   pos?: Vec2;
   selectedUnitid?: number;
   selectedPickupLocation?: Vec2;
@@ -1012,9 +1012,9 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
   const options: AdminContextMenuOption[] = [
     {
       label: '🦸‍♂️ Super Me',
-      action: ({ clientId }: { clientId?: string }) => {
+      action: ({ playerId }: { playerId?: string }) => {
         if (superMe && overworld.underworld) {
-          superMe(overworld.underworld, overworld.underworld.players.find(p => p.clientId == clientId) || globalThis.player);
+          superMe(overworld.underworld, overworld.underworld.players.find(p => p.playerId == playerId) || globalThis.player);
         }
       },
       supportInMultiplayer: true,
@@ -1022,7 +1022,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     },
     {
       label: '️Level Up',
-      action: ({ clientId }: { clientId?: string }) => {
+      action: () => {
         if (superMe && overworld.underworld) {
           const numberOfEnemiesKilledNeededForNextDrop = overworld.underworld.getNumberOfEnemyKillsNeededForNextLevelUp() - overworld.underworld.enemiesKilled;
           for (let i = 0; i < numberOfEnemiesKilledNeededForNextDrop; i++) {
@@ -1047,12 +1047,12 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     {
       label: '☄️ Teleport Here',
       action: (props) => {
-        const { clientId, pos } = props;
+        const { playerId, pos } = props;
         if (!overworld.underworld) {
           console.error('Cannot teleport, underworld does not exist');
           return;
         }
-        const player = overworld.underworld.players.find(p => p.clientId == clientId);
+        const player = overworld.underworld.players.find(p => p.playerId == playerId);
         if (player && pos) {
           player.unit.x = pos.x;
           player.unit.y = pos.y;
@@ -1242,11 +1242,16 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       label: 'Skip to Next Level',
       action: () => {
         if (globalThis.player) {
-          if (!overworld.underworld) {
+          const underworld = overworld.underworld;
+          if (!underworld) {
             console.error('Cannot "Skip to Next level", underworld does not exist');
             return;
           }
-          Player.enterPortal(globalThis.player, overworld.underworld);
+          if (!globalThis.isHost(underworld.pie)) {
+            console.error('Cannot "Skip to Next level", player is not the host');
+            return;
+          }
+          underworld.generateLevelData(underworld.levelIndex + 1);
         }
       },
       supportInMultiplayer: false,
@@ -1256,12 +1261,16 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       label: 'Skip to Water Biome',
       action: () => {
         if (globalThis.player) {
-          if (!overworld.underworld) {
-            console.error('Cannot "Skip to Water Biome", underworld does not exist');
+          const underworld = overworld.underworld;
+          if (!underworld) {
+            console.error('Cannot "Skip to Lava Biome", underworld does not exist');
             return;
           }
-          overworld.underworld.levelIndex = 0;
-          Player.enterPortal(globalThis.player, overworld.underworld);
+          if (!globalThis.isHost(underworld.pie)) {
+            console.error('Cannot "Skip to Lava Biome", player is not the host');
+            return;
+          }
+          underworld.generateLevelData(0);
         }
       },
       supportInMultiplayer: false,
@@ -1271,12 +1280,16 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       label: 'Skip to Lava Biome',
       action: () => {
         if (globalThis.player) {
-          if (!overworld.underworld) {
+          const underworld = overworld.underworld;
+          if (!underworld) {
             console.error('Cannot "Skip to Lava Biome", underworld does not exist');
             return;
           }
-          overworld.underworld.levelIndex = 3;
-          Player.enterPortal(globalThis.player, overworld.underworld);
+          if (!globalThis.isHost(underworld.pie)) {
+            console.error('Cannot "Skip to Lava Biome", player is not the host');
+            return;
+          }
+          underworld.generateLevelData(3);
         }
       },
       supportInMultiplayer: false,
@@ -1286,12 +1299,16 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       label: 'Skip to Blood Biome',
       action: () => {
         if (globalThis.player) {
-          if (!overworld.underworld) {
+          const underworld = overworld.underworld;
+          if (!underworld) {
             console.error('Cannot "Skip to Blood Biome", underworld does not exist');
             return;
           }
-          overworld.underworld.levelIndex = 6;
-          Player.enterPortal(globalThis.player, overworld.underworld);
+          if (!globalThis.isHost(underworld.pie)) {
+            console.error('Cannot "Skip to Blood Biome", player is not the host');
+            return;
+          }
+          underworld.generateLevelData(6);
         }
       },
       supportInMultiplayer: false,
@@ -1301,12 +1318,16 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       label: 'Skip to Ghost Biome',
       action: () => {
         if (globalThis.player) {
-          if (!overworld.underworld) {
+          const underworld = overworld.underworld;
+          if (!underworld) {
             console.error('Cannot "Skip to Ghost Biome", underworld does not exist');
             return;
           }
-          overworld.underworld.levelIndex = 9;
-          Player.enterPortal(globalThis.player, overworld.underworld);
+          if (!globalThis.isHost(underworld.pie)) {
+            console.error('Cannot "Skip to Ghost Biome", player is not the host');
+            return;
+          }
+          underworld.generateLevelData(9);
         }
       },
       supportInMultiplayer: false,
@@ -1316,12 +1337,16 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       label: 'Skip to Deathmason',
       action: () => {
         if (globalThis.player) {
-          if (!overworld.underworld) {
+          const underworld = overworld.underworld;
+          if (!underworld) {
             console.error('Cannot "Skip to Deathmason level", underworld does not exist');
             return;
           }
-          overworld.underworld.levelIndex = config.LAST_LEVEL_INDEX - 1;
-          Player.enterPortal(globalThis.player, overworld.underworld);
+          if (!globalThis.isHost(underworld.pie)) {
+            console.error('Cannot "Skip to Deathmason level", player is not the host');
+            return;
+          }
+          underworld.generateLevelData(config.LAST_LEVEL_INDEX);
         }
       },
       supportInMultiplayer: false,
@@ -1330,14 +1355,16 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     {
       label: 'Regenerate Level',
       action: () => {
-        if (!overworld.underworld) {
+        const underworld = overworld.underworld;
+        if (!underworld) {
           console.error('Cannot "Regenerate Level", underworld does not exist');
           return;
         }
-        // Clear lastLevelCreated in order to allow it to regenerate the level without
-        // changing the levelIndex
-        overworld.underworld.lastLevelCreated = undefined;
-        overworld.underworld.generateLevelData(overworld.underworld.levelIndex);
+        if (!globalThis.isHost(underworld.pie)) {
+          console.error('Cannot "Regenerate Level", player is not the host');
+          return;
+        }
+        underworld.generateLevelData(underworld.levelIndex);
       },
       supportInMultiplayer: false,
       domQueryContainer: '#menu-global'
@@ -1788,7 +1815,7 @@ export function triggerAdminOption(option: AdminContextMenuOption, overworld: Ov
         floatingText({ coords: globalThis.player.unit, style: { fill: 'red' }, text: errMsg })
       }
     }
-    action({ clientId: globalThis.clientId || '', pos });
+    action({ playerId: globalThis.player?.playerId || '', pos });
   }
 
 }

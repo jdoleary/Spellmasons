@@ -27,11 +27,6 @@ const spell: Spell = {
       let targets: Vec2[] = getCurrentTargets(state);
       targets = targets.length ? targets : [state.castLocation];
       for (let target of targets) {
-        // Disallow cloning scrolls because it ruins the spell aquisition part of the game
-        if (Pickup.isPickup(target) && target.name == Pickup.CARDS_PICKUP_NAME && !prediction) {
-          floatingText({ coords: target, text: 'The knowledge in these scrolls cannot be cloned', style: { fill: 'red' } });
-          continue;
-        }
         clonePairs.push([target, { x: target.x, y: target.y }]);
       }
       let animationPromise = Promise.resolve();

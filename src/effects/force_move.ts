@@ -6,6 +6,7 @@ import { ForceMoveType, ForceMoveUnitOrPickup } from "../jmath/moveWithCollision
 
 // TODO - Force moves need to be handled differently
 // such that they are consistent at different framerates and velocity falloffs
+// https://github.com/jdoleary/Spellmasons/issues/381
 
 export const defaultPushDistance = 140; // In game units
 const velocity_falloff = 0.992;

@@ -44,6 +44,8 @@ import seedrandom from 'seedrandom';
 import { summoningSicknessId } from '../modifierSummoningSickness';
 import * as log from '../log';
 import { suffocateCardId, updateSuffocate } from '../cards/suffocate';
+import { doLiquidEffect } from '../inLiquid';
+import { freezeCardId } from '../cards/freeze';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -755,10 +757,6 @@ export function resurrect(unit: IUnit, underworld: Underworld) {
   // Return dead units back to full health
   unit.health = unit.healthMax;
   unit.alive = true;
-  if (unit.unitType == UnitType.PLAYER_CONTROLLED) {
-    const player = underworld.players.find(p => p.unit == unit);
-    if (player) player.endedTurn = false;
-  }
   returnToDefaultSprite(unit);
 }
 export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
@@ -795,7 +793,6 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   // Ensure that the unit resolvesDoneMoving when they die in the event that 
   // they die while they are moving.  This prevents turn phase from getting stuck
   unit.resolveDoneMoving();
-
   // Clear unit path to prevent further movement in case of ressurect or similar
   unit.path = undefined;
 
@@ -837,19 +834,6 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
     queueCenteredFloatingText(`You Died`, 'red');
     explain(EXPLAIN_DEATH);
     playSFXKey('game_over');
-  }
-  if (unit.unitType == UnitType.PLAYER_CONTROLLED && !prediction) {
-    const player = underworld.players.find(p => p.unit == unit);
-    if (!player) {
-      console.error('Player unit died but could not find them in players array to end their turn');
-    } else if (player == globalThis.player) {
-      // Send an end turn message rather than just invoking endPlayerTurn
-      // so that it waits to execute until the spell is done casting.
-      // This change was made in response to self kill + resurrect 
-      // triggering the end of your turn before the spell finished
-      // (before the resurrect occurred)
-      underworld.pie.sendData({ type: MESSAGE_TYPES.END_TURN });
-    }
   }
   // In the event that this unit that just died is the selected unit,
   // this will remove the tooltip:
@@ -1107,6 +1091,20 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
 
   }
 }
+
+export function canAct(unit: IUnit): boolean {
+  if (!unit.alive) {
+    return false;
+  }
+
+  // TODO - Find cleaner method. Event args?
+  if (unit.modifiers[freezeCardId] || unit.modifiers[summoningSicknessId]) {
+    return false;
+  }
+
+  return true;
+}
+
 export function canMove(unit: IUnit): boolean {
   // Do not move if dead
   if (!unit.alive) {
@@ -1285,37 +1283,76 @@ export function inRange(unit: IUnit, target: Vec2): boolean {
   return math.distance(unit, target) <= unit.attackRange;
 }
 
-// return boolean signifies if unit should abort their turn
-export async function runTurnStartEvents(unit: IUnit, prediction: boolean = false, underworld: Underworld): Promise<boolean> {
-  // Note: This must be a for loop instead of a for..of loop
-  // so that if one of the onTurnStartEvents modifies the
-  // unit's onTurnStartEvents array (for example, after death)
-  // this loop will take that into account.
-  let abortTurn = false;
-  for (let i = 0; i < unit.onTurnStartEvents.length; i++) {
-    const eventName = unit.onTurnStartEvents[i];
-    if (eventName) {
+export async function startTurnForUnits(units: IUnit[], underworld: Underworld, prediction: boolean) {
+  // Trigger start turn events
+  const turnStartPromises = [];
+  for (let unit of units) {
+    turnStartPromises.push(runTurnStartEvents(unit, underworld, prediction))
+  }
+  await raceTimeout(5000, 'Turn Start Events did not resolve', Promise.all(turnStartPromises));
+
+  // Regenerate stamina to max
+  for (let unit of units.filter(u => u.alive)) {
+    if (unit.stamina < unit.staminaMax) {
+      unit.stamina = unit.staminaMax;
+    }
+  }
+  // Add mana to Player units
+  for (let unit of units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
+    // Restore player to max mana at start of turn
+    // Let mana remain above max if it already is
+    // (due to other influences like mana potions, spells, perks, etc);
+    unit.mana = Math.max(unit.manaMax, unit.mana);
+  }
+}
+
+export async function endTurnForUnits(units: IUnit[], underworld: Underworld, prediction: boolean) {
+  // Trigger end turn events
+  const turnEndPromises = [];
+  for (let unit of units) {
+    turnEndPromises.push(runTurnEndEvents(unit, underworld, prediction))
+  }
+  await raceTimeout(5000, 'Turn End Events did not resolve', Promise.all(turnEndPromises));
+
+  // At the end of their turn, deal damage if still in liquid
+  for (let unit of units.filter(u => u.inLiquid && u.alive)) {
+    doLiquidEffect(underworld, unit, false);
+    floatingText({ coords: unit, text: 'Liquid damage', style: { fill: 'red' } });
+  }
+  // Add mana to AI units
+  for (let unit of units.filter(u => u.unitType == UnitType.AI && u.alive)) {
+    unit.mana += unit.manaPerTurn;
+    // Cap manaPerTurn at manaMax
+    unit.mana = Math.min(unit.mana, unit.manaMax);
+  }
+}
+
+export async function runTurnStartEvents(unit: IUnit, underworld: Underworld, prediction: boolean) {
+  await Promise.all(unit.onTurnStartEvents.map(
+    async (eventName) => {
       const fn = Events.onTurnStartSource[eventName];
       if (fn) {
-        const shouldAbortTurn = await fn(unit, prediction, underworld);
-        // Only change abort turn from false to true,
-        // never from turn to false because if any one
-        // of the turn start events needs the unit to abort
-        // their turn, the turn should abort, regardless of
-        // the other events
-        if (shouldAbortTurn) {
-          abortTurn = true;
-        }
+        await fn(unit, prediction, underworld);
       } else {
         console.error('No function associated with turn start event', eventName);
       }
-    } else {
-      console.error('No turn start event at index', i)
-    }
-  }
-  return abortTurn
-
+    },
+  ));
 }
+
+export async function runTurnEndEvents(unit: IUnit, underworld: Underworld, prediction: boolean) {
+  await Promise.all(unit.onTurnEndEvents.map(
+    async (eventName) => {
+      const fn = Events.onTurnEndSource[eventName];
+      if (fn) {
+        await fn(unit, prediction, underworld);
+      } else {
+        console.error('No function associated with turn end event', eventName);
+      }
+    },
+  ));
+}
+
 export function makeMiniboss(unit: IUnit) {
   if (unit.unitSourceId == bossmasonUnitId) {
     // Bossmasons is already a boss and should not be made into a miniboss
@@ -1485,6 +1522,7 @@ export function drawSelectedGraphics(unit: IUnit, prediction: boolean = false, u
 
   // TODO - Ideally the logic below would be defined in each Unit's ts file individually
   // Instead of using if/else and unit subtypes
+  // Cleanup for AI Refactor https://github.com/jdoleary/Spellmasons/issues/388
 
   // If unit is an archer, draw LOS attack line
   // instead of attack range for them
@@ -1509,26 +1547,35 @@ export function drawSelectedGraphics(unit: IUnit, prediction: boolean = false, u
       // If getBestRangedLOSTarget returns undefined, the archer doesn't have a valid attack target
       canAttack = false;
     }
+    const rangeCircleColor = false
+      ? colors.outOfRangeGrey
+      : unit.faction == Faction.ALLY
+        ? colors.attackRangeAlly
+        : colors.attackRangeEnemy;
 
-    if (archerTargets.length) {
-      for (let target of archerTargets) {
-        const attackLine = { p1: unit, p2: target };
-        globalThis.selectedUnitGraphics.moveTo(attackLine.p1.x, attackLine.p1.y);
+    // Draw outer attack range circle
+    drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
 
-        // If the los unit can attack you, use red, if not, use grey
-        const color = canAttack ? colors.healthRed : colors.outOfRangeGrey;
+    // TODO - Consider re-implementing attack lines with AI refactor
+    // https://github.com/jdoleary/Spellmasons/issues/408
+    // if (archerTargets.length) {
+    //   for (let target of archerTargets) {
+    //     const attackLine = { p1: unit, p2: target };
+    //     globalThis.selectedUnitGraphics.moveTo(attackLine.p1.x, attackLine.p1.y);
 
-        // Draw los line
-        globalThis.selectedUnitGraphics.lineStyle(3, color, 0.7);
-        globalThis.selectedUnitGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
-        globalThis.selectedUnitGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
+    //     // If the los unit can attack you, use red, if not, use grey
+    //     const color = canAttack ? colors.healthRed : colors.outOfRangeGrey;
 
-        // Draw outer attack range circle
-        drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, color, i18n('Attack Range'));
-      }
-    }
+    //     // Draw los line
+    //     globalThis.selectedUnitGraphics.lineStyle(3, color, 0.7);
+    //     globalThis.selectedUnitGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
+    //     globalThis.selectedUnitGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
+    //   }
+    // }
   } else {
     if (unit.attackRange > 0) {
+      // TODO - Unused outOfRangeGrey below, consider for AI refactor
+      // https://github.com/jdoleary/Spellmasons/issues/388
       const rangeCircleColor = false
         ? colors.outOfRangeGrey
         : unit.faction == Faction.ALLY
@@ -1604,7 +1651,6 @@ export function resetUnitStats(unit: IUnit, underworld: Underworld) {
   unit.stamina = unit.staminaMax;
 
   returnToDefaultSprite(unit);
-
 }
 
 export function unitSourceIdToName(unitSourceId: string, asMiniboss: boolean): string {

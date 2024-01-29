@@ -66,8 +66,6 @@ const spell: Spell = {
       // Since this blessing only applies for one turn, remove it
       // on turn start
       Unit.removeModifier(unit, id, underworld);
-      // do not skip turn
-      return false;
     },
     onDamage: (unit, amount, underworld, prediction, damageDealer) => {
       const modifier = unit.modifiers[id];
