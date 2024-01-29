@@ -658,10 +658,6 @@ export const pickups: IPickupSource[] = [
             );
           }
         }
-
-        // Now that the unit's stamina has changed, sync predictions
-        // (note: this would be auto corrected on the next mouse move anyway)
-        underworld.syncPredictionEntities();
       }
     },
   },
@@ -713,10 +709,6 @@ export const pickups: IPickupSource[] = [
             );
           }
         }
-
-        // Now that the unit's mana has changed, sync predictions
-        // (note: this would be auto corrected on the next mouse move anyway)
-        underworld.syncPredictionEntities();
       }
     },
   },
@@ -767,10 +759,6 @@ export const pickups: IPickupSource[] = [
             floatingText({ coords: unit, text: `- ${previousMana - unit.manaMax} ${i18n('mana')}` });
           }
         }
-
-        // Now that the unit's mana has changed, sync predictions
-        // (note: this would be auto corrected on the next mouse move anyway)
-        underworld.syncPredictionEntities();
       }
     },
   },
@@ -796,10 +784,6 @@ export const pickups: IPickupSource[] = [
         if (!prediction) {
           playSFXKey('potionPickupHealth');
         }
-
-        // Now that the unit's stamina has changed, sync predictions
-        // (note: this would be auto corrected on the next mouse move anyway)
-        underworld.syncPredictionEntities();
       }
     },
   },
