@@ -96,13 +96,13 @@ export function keydownListener(overworld: Overworld, event: KeyboardEvent) {
   }
   //console.warn("CODE: ", event.code);
   // Disable default chromium actions to prevent weird behavior
-  if (event.code == 'ShiftLeft' || 'ShiftRight') {
+  if (event.code == 'ShiftLeft' || event.code == 'ShiftRight') {
     event.preventDefault();
   }
-  if (event.code == 'ControlLeft' || 'ControlRight') {
+  if (event.code == 'ControlLeft' || event.code == 'ControlRight') {
     event.preventDefault();
   }
-  if (event.code == 'AltLeft' || 'AltRight') {
+  if (event.code == 'AltLeft' || event.code == 'AltRight') {
     event.preventDefault();
   }
   if (event.code == 'Tab') {
