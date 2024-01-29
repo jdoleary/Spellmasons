@@ -789,10 +789,8 @@ export const pickups: IPickupSource[] = [
       return !!(player && (player.unit.health < player.unit.healthMax || hasBloodCurse(player.unit)));
     },
     effect: ({ unit, player, underworld, prediction }) => {
-      // TODO: A lot of the pickup effects don't actually trigger in prediction mode because
-      // player is undefined and there is no prediction version of a player
       if (unit) {
-        takeDamage(unit, -healthPotionRestoreAmount, undefined, underworld, false);
+        takeDamage(unit, -healthPotionRestoreAmount, undefined, underworld, prediction);
         // Add spell effect animation
         Image.addOneOffAnimation(unit, 'spell-effects/potionPickup', {}, { animationSpeed: 0.3, loop: false });
         if (!prediction) {
