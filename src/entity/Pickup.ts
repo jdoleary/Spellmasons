@@ -623,18 +623,18 @@ export const pickups: IPickupSource[] = [
       return !!player;
     },
     effect: ({ unit, player, underworld, prediction }) => {
-      if (player) {
-        player.unit.stamina += player.unit.staminaMax;
+      if (unit) {
+        unit.stamina += unit.staminaMax;
         if (!prediction) {
           playSFXKey('potionPickupMana');
         }
         // Animate
-        if (player.unit.image) {
+        if (unit.image) {
           // Note: This uses the lower-level addPixiSpriteAnimated directly so that it can get a reference to the sprite
           // and add a filter; however, addOneOffAnimation is the higher level and more common for adding a simple
           // "one off" animated sprite.  Use it instead of addPixiSpriteAnimated unless you need more direct control like
           // we do here
-          const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', player.unit.image.sprite, {
+          const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', unit.image.sprite, {
             loop: false,
             animationSpeed: 0.3,
             onComplete: () => {
@@ -659,11 +659,9 @@ export const pickups: IPickupSource[] = [
           }
         }
 
-        // Now that the player unit's stamina has increased,sync the new
-        // stamina state with the player's predictionUnit so it is properly
-        // refelcted in the stamina bar
+        // Now that the unit's stamina has changed, sync predictions
         // (note: this would be auto corrected on the next mouse move anyway)
-        underworld.syncPlayerPredictionUnitOnly();
+        underworld.syncPredictionEntities();
       }
     },
   },
@@ -679,19 +677,19 @@ export const pickups: IPickupSource[] = [
       return !!player;
     },
     effect: ({ unit, player, underworld, prediction }) => {
-      if (player) {
-        player.unit.mana += manaPotionRestoreAmount;
+      if (unit) {
+        unit.mana += manaPotionRestoreAmount;
         explain(EXPLAIN_OVERFILL);
         if (!prediction) {
           playSFXKey('potionPickupMana');
         }
         // Animate
-        if (player.unit.image) {
+        if (unit.image) {
           // Note: This uses the lower-level addPixiSpriteAnimated directly so that it can get a reference to the sprite
           // and add a filter; however, addOneOffAnimation is the higher level and more common for adding a simple
           // "one off" animated sprite.  Use it instead of addPixiSpriteAnimated unless you need more direct control like
           // we do here
-          const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', player.unit.image.sprite, {
+          const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', unit.image.sprite, {
             loop: false,
             animationSpeed: 0.3,
             onComplete: () => {
@@ -716,11 +714,9 @@ export const pickups: IPickupSource[] = [
           }
         }
 
-        // Now that the player unit's mana has increased,sync the new
-        // mana state with the player's predictionUnit so it is properly
-        // refelcted in the mana bar
+        // Now that the unit's mana has changed, sync predictions
         // (note: this would be auto corrected on the next mouse move anyway)
-        underworld.syncPlayerPredictionUnitOnly();
+        underworld.syncPredictionEntities();
       }
     },
   },
@@ -752,31 +748,29 @@ export const pickups: IPickupSource[] = [
       return !!player;
     },
     effect: ({ unit, player, underworld, prediction }) => {
-      if (player) {
-        const previousMana = player.unit.manaMax;
-        player.unit.manaMax *= (1.0 - cursedManaPotionRemovalProportion);
-        player.unit.manaMax = Math.floor(player.unit.manaMax);
-        player.unit.mana = Math.min(player.unit.mana, player.unit.manaMax);
+      if (unit) {
+        const previousMana = unit.manaMax;
+        unit.manaMax *= (1.0 - cursedManaPotionRemovalProportion);
+        unit.manaMax = Math.floor(unit.manaMax);
+        unit.mana = Math.min(unit.mana, unit.manaMax);
         if (!prediction && !globalThis.headless) {
           playSFXKey('unitDamage');
           // Animate
-          if (player.unit.image) {
-            playAnimation(player.unit, player.unit.animations.hit, { loop: false, animationSpeed: 0.2 });
+          if (unit.image) {
+            playAnimation(unit, unit.animations.hit, { loop: false, animationSpeed: 0.2 });
             // Changing the player's blood color is a quick hack to make the blood particle splatter be blue
             // like the mana lost
-            const tempBlood = player.unit.bloodColor;
-            player.unit.bloodColor = manaDarkBlue;
-            startBloodParticleSplatter(underworld, player.unit, player.unit);
-            player.unit.bloodColor = tempBlood;
-            floatingText({ coords: player.unit, text: `- ${previousMana - player.unit.manaMax} ${i18n('mana')}` });
+            const tempBlood = unit.bloodColor;
+            unit.bloodColor = manaDarkBlue;
+            startBloodParticleSplatter(underworld, unit, unit);
+            unit.bloodColor = tempBlood;
+            floatingText({ coords: unit, text: `- ${previousMana - unit.manaMax} ${i18n('mana')}` });
           }
         }
 
-        // Now that the player unit's mana has changed, sync the new
-        // mana state with the player's predictionUnit so it is properly
-        // refelcted in the mana bar
+        // Now that the unit's mana has changed, sync predictions
         // (note: this would be auto corrected on the next mouse move anyway)
-        underworld.syncPlayerPredictionUnitOnly();
+        underworld.syncPredictionEntities();
       }
     },
   },
@@ -794,22 +788,20 @@ export const pickups: IPickupSource[] = [
       // players that have blood curse will be damaged by healing so it should trigger for them too
       return !!(player && (player.unit.health < player.unit.healthMax || hasBloodCurse(player.unit)));
     },
-    effect: ({ player, underworld, prediction }) => {
+    effect: ({ unit, player, underworld, prediction }) => {
       // TODO: A lot of the pickup effects don't actually trigger in prediction mode because
       // player is undefined and there is no prediction version of a player
-      if (player) {
-        takeDamage(player.unit, -healthPotionRestoreAmount, undefined, underworld, false);
+      if (unit) {
+        takeDamage(unit, -healthPotionRestoreAmount, undefined, underworld, false);
         // Add spell effect animation
-        Image.addOneOffAnimation(player.unit, 'spell-effects/potionPickup', {}, { animationSpeed: 0.3, loop: false });
+        Image.addOneOffAnimation(unit, 'spell-effects/potionPickup', {}, { animationSpeed: 0.3, loop: false });
         if (!prediction) {
           playSFXKey('potionPickupHealth');
         }
 
-        // Now that the player unit's mana has increased,sync the new
-        // mana state with the player's predictionUnit so it is properly
-        // refelcted in the health bar
+        // Now that the unit's stamina has changed, sync predictions
         // (note: this would be auto corrected on the next mouse move anyway)
-        underworld.syncPlayerPredictionUnitOnly();
+        underworld.syncPredictionEntities();
       }
     },
   },
