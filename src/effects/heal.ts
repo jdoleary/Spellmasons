@@ -59,6 +59,7 @@ export async function healManaUnits(units: Unit.IUnit[], amount: number, underwo
       unit.mana += amount;
       explain(EXPLAIN_OVERFILL);
       // TODO - Create mana version of this healing effect or improve support for colorfilter
+      // https://github.com/jdoleary/Spellmasons/pull/423
       animationPromise = Image.addOneOffAnimation(unit, 'spell-effects/potionPickup', {}, animationOptions);
     }
     await animationPromise;
