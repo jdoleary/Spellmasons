@@ -38,6 +38,7 @@ interface SpawnParams {
 /// Units to register
 import playerUnit from './playerUnit';
 import baneling from './baneling';
+import hivemind from './hivemind';
 import golem from './golem';
 import bloodGolem from './bloodGolem';
 import archer from './archer';
@@ -67,6 +68,7 @@ export function registerUnit(unit: UnitSource) {
 }
 export function registerUnits() {
   registerUnit(baneling);
+  registerUnit(hivemind);
   registerUnit(golem);
   registerUnit(archer);
   registerUnit(lobber);

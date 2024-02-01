@@ -108,6 +108,7 @@ import { registerUrnexplosiveExplode } from '../entity/units/urn_explosive';
 import { calculateGameDifficulty } from '../Difficulty';
 import registerCorpseDecay from '../modifierCorpseDecay';
 import { registerDeathmasonEvents } from '../entity/units/deathmason';
+import { registerBanelingExplode } from '../entity/units/baneling';
 
 export interface Modifiers {
   subsprite?: Subsprite;
@@ -294,6 +295,7 @@ export function registerCards(overworld: Overworld) {
   registerSummoningSickness();
   registerImpendingDoom();
   registerCorpseDecay();
+  registerBanelingExplode();
   registerUrnIceExplode();
   registerUrnpoisonExplode();
   registerUrnexplosiveExplode();

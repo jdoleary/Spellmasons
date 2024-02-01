@@ -11,6 +11,7 @@ import { poisonCardId } from '../../cards/poison';
 import { debilitateCardId } from '../../cards/debilitate';
 import { freezeCardId } from '../../cards/freeze';
 import { randInt } from '../../jmath/rand';
+import { registerEvents } from '../../cards';
 
 export const banelingUnitId = 'baneling'
 const explosionRadius = 100;
@@ -48,6 +49,9 @@ const unit: UnitSource = {
     const debuffs = [poisonCardId, debilitateCardId, freezeCardId];
     // @ts-ignore baneling logic
     unit.debuff = debuffs[randInt(0, debuffs.length - 1)];
+    if (!unit.onDeathEvents.includes(banelingExplode)) {
+      unit.onDeathEvents.push(banelingExplode);
+    }
     if (unit.image && unit.image.sprite && unit.image.sprite.filters) {
       unit.image.sprite.scale.x *= 0.5;
       unit.image.sprite.scale.y *= 0.5;
@@ -72,14 +76,7 @@ const unit: UnitSource = {
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     await meleeAction(unit, attackTargets, underworld, canAttackTarget, async (attackTarget: Unit.IUnit) => {
       await Unit.playAnimation(unit, unit.animations.attack);
-      // Explode and apply debuff
-      const units = explode(unit, explosionRadius, unit.damage, pushDist, underworld, false,
-        colors.trueRed.toString(), colors.trueBlack.toString());
-      units.filter(u => u.alive)
-        .forEach(u => {
-          // @ts-ignore baneling logic
-          units.forEach(u => Unit.addModifier(u, unit.debuff, underworld, false))
-        });
+      Unit.die(unit, underworld, false);
     })
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
@@ -91,5 +88,23 @@ const unit: UnitSource = {
     }
   }
 };
+export const banelingExplode = 'banelingExplode';
+export function registerBanelingExplode() {
+  registerEvents(banelingExplode, {
+    onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
+      // Explode and apply debuff
+      const units = explode(unit, explosionRadius, unit.damage, pushDist, underworld, prediction,
+        colors.trueRed.toString(), colors.trueBlack.toString());
+      units.filter(u => u.alive).forEach(u =>
+        // @ts-ignore baneling logic
+        Unit.addModifier(u, unit.debuff, underworld, prediction));
+
+      // Banelings don't leave a corpse
+      if (!prediction) {
+        Unit.cleanup(unit, false);
+      }
+    }
+  });
+}
 
 export default unit;

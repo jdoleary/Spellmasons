@@ -2640,7 +2640,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
 
     // End turn events, liquid damage, mana regen, etc.
-    await Unit.endTurnForUnits(units, this, false);
+    await Unit.endTurnForUnits(this.units.filter(u => u.unitType == UnitType.AI && u.faction == faction), this, false);
   }
   // This function is invoked when all factions have finished their turns
   async endFullTurnCycle() {
