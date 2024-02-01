@@ -6,8 +6,9 @@ import { meleeAction, meleeTryAttackClosestEnemy, withinMeleeRange } from './act
 import Underworld from '../../Underworld';
 import { bloodVampire } from '../../graphics/ui/colors';
 import floatingText from '../../graphics/FloatingText';
+import { healUnit } from '../../effects/heal';
 
-const manaToSteal = 50;
+const manaToSteal = 40;
 export const MANA_VAMPIRE_ID = 'Mana Vampire';
 const unit: UnitSource = {
   id: MANA_VAMPIRE_ID,
@@ -61,11 +62,11 @@ const unit: UnitSource = {
         }
       }
     })
-    const missingHealth = unit.healthMax - unit.health;
-    if (missingHealth > 0) {
-      const healthToRestore = Math.min(unit.mana, missingHealth);
+    // Will restore up to 40 missing hp if the unit has mana to do so
+    const healthToRestore = Math.min(40, unit.mana, unit.healthMax - unit.health);
+    if (healthToRestore > 0) {
       unit.mana -= healthToRestore;
-      Unit.takeDamage(unit, -healthToRestore, undefined, underworld, false, undefined);
+      await healUnit(unit, healthToRestore, underworld, false);
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
