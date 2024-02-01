@@ -7,12 +7,12 @@ import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
-const id = 'Debilitate';
+export const debilitateCardId = 'Debilitate';
 const imageName = 'spellIconDebilitate.png';
 const proportion = 2;
 const spell: Spell = {
   card: {
-    id,
+    id: debilitateCardId,
     category: CardCategory.Curses,
     sfx: 'debilitate',
     supportQuantity: true,
@@ -30,7 +30,7 @@ const spell: Spell = {
         playDefaultSpellSFX(card, prediction);
         await playDefaultSpellAnimation(card, targets, prediction);
         for (let unit of targets) {
-          Unit.addModifier(unit, id, underworld, prediction, quantity);
+          Unit.addModifier(unit, debilitateCardId, underworld, prediction, quantity);
         }
       }
       return state;
@@ -41,7 +41,7 @@ const spell: Spell = {
   },
   events: {
     onDamage: (unit, amount, _underworld, damageDealer) => {
-      const quantity = unit.modifiers[id]?.quantity || 1;
+      const quantity = unit.modifiers[debilitateCardId]?.quantity || 1;
       // Magnify positive damage
       if (amount > 0) {
         return amount * proportion * quantity;
@@ -54,8 +54,8 @@ const spell: Spell = {
 };
 
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
-  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity }, () => {
-    unit.onDamageEvents.push(id);
+  const modifier = getOrInitModifier(unit, debilitateCardId, { isCurse: true, quantity }, () => {
+    unit.onDamageEvents.push(debilitateCardId);
   });
 }
 export default spell;
