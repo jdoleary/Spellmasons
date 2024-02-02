@@ -40,7 +40,7 @@ const unit: UnitSource = {
   },
   // Warning: init must be idempotent
   init: (unit: Unit.IUnit, underworld: Underworld) => {
-    if (!unit.onDamageEvents.includes(urnIceExplode)) {
+    if (!unit.onDeathEvents.includes(urnIceExplode)) {
       unit.onDeathEvents.push(urnIceExplode);
     }
   },
