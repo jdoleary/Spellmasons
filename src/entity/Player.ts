@@ -21,7 +21,7 @@ import { lightenColor } from '../graphics/ui/colorUtil';
 import { AttributePerk } from '../Perk';
 import { setPlayerNameUI } from '../PlayerUtils';
 import { arrowCardId } from '../cards/arrow';
-import { heal_id } from '../cards/add_heal';
+import { healCardId } from '../cards/add_heal';
 import { contaminate_id } from '../cards/contaminate';
 
 const elInGameLobby = document.getElementById('in-game-lobby') as (HTMLElement | undefined);
@@ -147,7 +147,7 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
         break;
       case 'Cleric':
         {
-          const upgrade = Upgrade.getUpgradeByTitle(heal_id);
+          const upgrade = Upgrade.getUpgradeByTitle(healCardId);
           if (upgrade) {
             underworld.forceUpgrade(player, upgrade, true);
           } else {
