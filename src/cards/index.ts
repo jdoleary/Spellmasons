@@ -23,8 +23,6 @@ import heal from './add_heal';
 import heal_greater from './heal_greater';
 import heal_mass from './heal_mass';
 import send_mana from './send_mana';
-import target_circle from './target_circle';
-import connect from './connect';
 import contaminate from './contaminate';
 import freeze from './freeze';
 import resurrect from './resurrect';
@@ -32,6 +30,7 @@ import resurrect_weak from './resurrect_weak';
 import resurrect_toxic from './resurrect_toxic';
 import shield from './shield';
 import fortify from './fortify';
+import potion_shatter, { potionShatterId } from './potion_shatter';
 import swap from './swap';
 import teleport from './teleport';
 import displace from './displace';
@@ -44,26 +43,30 @@ import clone from './clone';
 import capture_soul from './capture_soul';
 import mana_burn from './mana_burn';
 import mana_steal from './mana_steal';
-import vampire_bite from './blood_curse';
+import conserve from './conserve';
+import blood_curse from './blood_curse';
 import push from './push';
+import repel from './repel';
 import pull from './pull';
 import vortex from './vortex';
 import dash from './dash';
-import repel from './repel';
 import decoy from './summon_decoy';
 import summon_generic from './summon_generic';
 import explode from './bloat';
 import bone_shrapnel from './bone_shrapnel';
-import lastWill from './lastwill';
+import last_Will from './lastwill';
 import split from './split';
 import drown from './drown';
+import target_arrow from './target_arrow';
+import target_column from './target_column';
+import target_cone from './target_cone';
+import target_circle from './target_circle';
+import connect from './connect';
 import target_similar from './target_similar';
 import target_similar_2 from './target_similar_2';
 import target_all from './target_all';
-import target_cone from './target_cone';
 import plus_radius from './plus_radius';
 import shove from './shove';
-import target_column from './target_column';
 import burst from './burst';
 import slow from './slow';
 import death_wager from './death_wager';
@@ -80,8 +83,6 @@ import arrowTriple from './arrow_triple';
 import arrowMulti from './arrow_multi';
 import arrowFar from './arrow_far';
 import explosive_arrow from './explosive_arrow';
-import target_arrow from './target_arrow';
-import conserve from './conserve';
 import phantom_arrow from './phantom_arrow';
 // Not used as a card, for making half of looped enemies immune
 // on first turn
@@ -218,7 +219,8 @@ export function registerCards(overworld: Overworld) {
   registerSpell(send_mana, overworld);
   registerSpell(shield, overworld);
   registerSpell(fortify, overworld);
-  registerSpell(lastWill, overworld);
+  registerSpell(last_Will, overworld);
+  registerSpell(potion_shatter, overworld);
 
   // Curses
   registerSpell(poison, overworld);
@@ -228,7 +230,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(debilitate, overworld);
   registerSpell(explode, overworld);
   registerSpell(slow, overworld);
-  registerSpell(vampire_bite, overworld);
+  registerSpell(blood_curse, overworld);
   registerSpell(split, overworld);
   registerSpell(contaminate, overworld);
 
@@ -264,15 +266,15 @@ export function registerCards(overworld: Overworld) {
 
 
   // Targeting Spells
-  registerSpell(target_cone, overworld);
-  registerSpell(target_column, overworld);
   registerSpell(target_arrow, overworld);
+  registerSpell(target_column, overworld);
+  registerSpell(target_cone, overworld);
   registerSpell(target_circle, overworld);
   registerSpell(connect, overworld);
-  registerSpell(plus_radius, overworld);
   registerSpell(target_similar, overworld);
   registerSpell(target_similar_2, overworld);
   registerSpell(target_all, overworld);
+  registerSpell(plus_radius, overworld);
   // TODO: Refactor bolt into soulbind, it didn't work out well as a spell
   // register(bolt, overworld);
   // registerSpell(trap, overworld);
