@@ -41,6 +41,12 @@ const deathmason: UnitSource = {
     manaMax: bossmasonMana,
     manaPerTurn: 100,
   },
+  spawnParams: {
+    // Special case: We spawn the Deathmason manually, but still want to declare a budget
+    probability: 0,
+    budgetCost: 40,
+    unavailableUntilLevelIndex: config.LAST_LEVEL_INDEX,
+  },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     if (unit.image) {
 
