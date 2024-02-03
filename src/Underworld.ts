@@ -2655,6 +2655,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Increment the turn number now that it's starting over at the first phase
     this.turn_number++;
 
+    // TODO - This would make more sense in HandleLevelProgress()
+    // but there wasn't time before 1.28 to test the change
+    // https://github.com/jdoleary/Spellmasons/pull/433
     // Deathmason spawns on the last level after 1 turn has passed
     if (this.turn_number == 0 && this.levelIndex == config.LAST_LEVEL_INDEX) {
       await introduceBoss(deathmason, this);
