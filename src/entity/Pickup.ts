@@ -629,35 +629,11 @@ export const pickups: IPickupSource[] = [
           playSFXKey('potionPickupMana');
         }
         // Animate
-        if (unit.image) {
-          // Note: This uses the lower-level addPixiSpriteAnimated directly so that it can get a reference to the sprite
-          // and add a filter; however, addOneOffAnimation is the higher level and more common for adding a simple
-          // "one off" animated sprite.  Use it instead of addPixiSpriteAnimated unless you need more direct control like
-          // we do here
-          const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', unit.image.sprite, {
-            loop: false,
-            animationSpeed: 0.3,
-            onComplete: () => {
-              if (animationSprite && animationSprite.parent) {
-                animationSprite.parent.removeChild(animationSprite);
-              }
-            }
-          });
-          if (animationSprite) {
-            if (!animationSprite.filters) {
-              animationSprite.filters = [];
-            }
-            // Change the health color to yellow 
-            animationSprite.filters.push(
-              new MultiColorReplaceFilter(
-                [
-                  [0xff0000, stamina],
-                ],
-                0.15
-              )
-            );
-          }
-        }
+        Image.addOneOffAnimation(unit, 'spell-effects/potionPickup', {}, {
+          loop: false,
+          animationSpeed: 0.3,
+          colorReplace: { colors: [[0xff0000, stamina]], epsilon: 0.15 },
+        });
       }
     },
   },
@@ -680,35 +656,12 @@ export const pickups: IPickupSource[] = [
           playSFXKey('potionPickupMana');
         }
         // Animate
-        if (unit.image) {
-          // Note: This uses the lower-level addPixiSpriteAnimated directly so that it can get a reference to the sprite
-          // and add a filter; however, addOneOffAnimation is the higher level and more common for adding a simple
-          // "one off" animated sprite.  Use it instead of addPixiSpriteAnimated unless you need more direct control like
-          // we do here
-          const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', unit.image.sprite, {
-            loop: false,
-            animationSpeed: 0.3,
-            onComplete: () => {
-              if (animationSprite && animationSprite.parent) {
-                animationSprite.parent.removeChild(animationSprite);
-              }
-            }
-          });
-          if (animationSprite) {
-            if (!animationSprite.filters) {
-              animationSprite.filters = [];
-            }
-            // Change the health color to blue
-            animationSprite.filters.push(
-              new MultiColorReplaceFilter(
-                [
-                  [0xff0000, manaBlue],
-                ],
-                0.15
-              )
-            );
-          }
-        }
+        // Animate
+        Image.addOneOffAnimation(unit, 'spell-effects/potionPickup', {}, {
+          loop: false,
+          animationSpeed: 0.3,
+          colorReplace: { colors: [[0xff0000, manaBlue]], epsilon: 0.15 },
+        });
       }
     },
   },

@@ -1,8 +1,6 @@
 import { refundLastSpell, Spell } from './index';
 import floatingText from '../graphics/FloatingText';
 import { addPixiSpriteAnimated } from '../graphics/PixiUtils';
-import { manaBlue } from '../graphics/ui/colors';
-import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { makeManaTrail } from '../graphics/Particles';
 import { CardCategory, UnitSubType } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
@@ -10,6 +8,7 @@ import * as config from '../config';
 import { explain, EXPLAIN_OVERFILL } from '../graphics/Explain';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { die } from '../entity/Unit';
+import * as Image from '../graphics/Image';
 
 const damage = config.UNIT_BASE_HEALTH; //40 at time of writing
 export const consumeAllyCardId = 'Sacrifice';
@@ -44,27 +43,7 @@ const spell: Spell = {
             healthTrailPromises.push(makeManaTrail(unit, caster, underworld, '#ff6767n', '#ff0000').then(() => {
               if (!prediction) {
                 playDefaultSpellSFX(card, prediction);
-                // Animate
-                if (state.casterUnit.image) {
-                  // Note: This uses the lower-level addPixiSpriteAnimated directly so that it can get a reference to the sprite
-                  // and add a filter; however, addOneOffAnimation is the higher level and more common for adding a simple
-                  // "one off" animated sprite.  Use it instead of addPixiSpriteAnimated unless you need more direct control like
-                  // we do here
-                  const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', state.casterUnit.image.sprite, {
-                    loop: false,
-                    onComplete: () => {
-                      if (animationSprite?.parent) {
-                        animationSprite.parent.removeChild(animationSprite);
-                      }
-                    }
-                  });
-                  if (animationSprite) {
-
-                    if (!animationSprite.filters) {
-                      animationSprite.filters = [];
-                    }
-                  }
-                }
+                Image.addOneOffAnimation(state.casterUnit, 'spell-effects/potionPickup', {}, { loop: false });
                 explain(EXPLAIN_OVERFILL);
               }
             })
