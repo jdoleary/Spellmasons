@@ -162,6 +162,8 @@ export const sfx: { [key: string]: string[] } = {
         './sound/sfx/vampire-hurt-002.mp3',
     ],
     yourTurn: ['./sound/sfx/your-turn.mp3'],
+    deathmasonReveal: ['./sound/sfx/deathmason_reveal.wav'],
+    goruReveal: ['./sound/sfx/goru_reveal.wav']
 };
 const music = [
     './sound/music/ChainingSpells.mp3',

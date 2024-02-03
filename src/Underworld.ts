@@ -50,7 +50,7 @@ import { UnitType, Faction, UnitSubType, GameMode } from './types/commonTypes';
 import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
 import Events from './Events';
-import { allUnits } from './entity/units';
+import { UnitSource, allUnits } from './entity/units';
 import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, drawUnitMarker, isOutOfBounds, runPredictions, updatePlanningView } from './graphics/PlanningView';
 import { chooseObjectWithProbability, chooseOneOfSeeded, getUniqueSeedString, prng, randInt, SeedrandomState } from './jmath/rand';
 import { calculateCostForSingleCard } from './cards/cardUtils';
@@ -78,7 +78,7 @@ import { ensureAllClientsHaveAssociatedPlayers, Overworld } from './Overworld';
 import { Emitter } from '@pixi/particle-emitter';
 import { golem_unit_id } from './entity/units/golem';
 import { cleanUpPerkList, createPerkElement, generatePerks, tryTriggerPerk, showPerkList, hidePerkList, createCursePerkElement, StatCalamity, generateRandomStatCalamity } from './Perk';
-import { ORIGINAL_DEATHMASON_DEATH, bossmasonUnitId, summonUnitAtPickup } from './entity/units/deathmason';
+import deathmason, { ORIGINAL_DEATHMASON_DEATH, bossmasonUnitId, summonUnitAtPickup } from './entity/units/deathmason';
 import { hexToString } from './graphics/ui/colorUtil';
 import { doLiquidEffect } from './inLiquid';
 import { findRandomGroundLocation } from './entity/units/summoner';
@@ -2647,6 +2647,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   async endFullTurnCycle() {
     // Increment the turn number now that it's starting over at the first phase
     this.turn_number++;
+    if (this.turn_number == 0 && this.levelIndex == config.LAST_LEVEL_INDEX) {
+      await introduceBoss(deathmason, this);
+
+    }
 
     // Failsafe: Force die any units that are out of bounds
     // Note: Player Controlled units are out of bounds when they are inPortal so that they don't collide,
@@ -4143,10 +4147,6 @@ function getEnemiesForAltitude(underworld: Underworld, levelIndex: number): stri
   budgetLeft = Math.floor(budgetLeft);
   console.log('Budget for level index', adjustedLevelIndex, 'is', budgetLeft);
   const totalBudget = budgetLeft;
-  if (levelIndex == config.LAST_LEVEL_INDEX) {
-    budgetLeft -= 20;
-    units.push(bossmasonUnitId);
-  }
   // How we choose:
   // 1. Start with the most expensive unit and random a number between 1 and 50% budget / unit budget cost
   // 2. Keep iterating with other units
@@ -4183,6 +4183,45 @@ function getEnemiesForAltitude(underworld: Underworld, levelIndex: number): stri
     }
   }
   return units;
+}
+
+async function introduceBoss(unit: UnitSource, underworld: Underworld) {
+  let coords = { x: 0, y: 0 };
+  const seed = seedrandom(`${underworld.turn_number}-${deathmason.id}`);
+  for (let player of underworld.players) {
+    const _coords = findRandomGroundLocation(underworld, player.unit, seed);
+    if (_coords) {
+      coords = _coords;
+      break;
+    }
+  }
+  const elCinematic = document.getElementById('deathmason-cinematic');
+  if (elCinematic) {
+    elCinematic.classList.toggle('show', true);
+  }
+  playSFXKey(`${unit.id.toLowerCase()}Reveal`);
+  // Wait 2 seconds before moving on for the reaveal
+  await new Promise((resolve) => {
+    setTimeout(resolve, 2000);
+  });
+  const newBossUnitInstance = Unit.create(
+    unit.id,
+    // Start the unit at the summoners location
+    coords.x,
+    coords.y,
+    Faction.ENEMY,
+    unit.info.image,
+    UnitType.AI,
+    unit.info.subtype,
+    unit.unitProps,
+    underworld
+  );
+  skyBeam(newBossUnitInstance);
+  // Wait again for the players to digest that the boss appeared
+  await new Promise((resolve) => {
+    setTimeout(resolve, 500);
+  });
+
 }
 
 // Explicit list of biome types
