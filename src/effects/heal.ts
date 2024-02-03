@@ -11,6 +11,7 @@ import { sendManaCardId } from "../cards/send_mana";
 import { EXPLAIN_OVERFILL, explain } from "../graphics/Explain";
 
 const animationOptions = { loop: false, animationSpeed: 0.3 };
+const manaReplaceColors: [number, number][] = [[0xff0000, colors.manaBlue]];
 
 export async function healUnits(units: Unit.IUnit[], amount: number, underworld: Underworld, prediction: boolean, state?: EffectState, useFx: boolean = true) {
   units = units.filter(u => u.alive);
@@ -26,7 +27,7 @@ export async function healUnits(units: Unit.IUnit[], amount: number, underworld:
       // Instead of using Promise.All()
       floatingText({ coords: unit, text: `+${Math.abs(amount)} Health` });
       Unit.takeDamage(unit, -amount, undefined, underworld, prediction, state);
-      animationPromise = Image.addOneOffAnimation(unit, 'spell-effects/potionPickup', {}, animationOptions);
+      animationPromise = oneOffHealAnimation(unit);
     }
     await animationPromise;
     return state;
@@ -58,9 +59,9 @@ export async function healManaUnits(units: Unit.IUnit[], amount: number, underwo
       floatingText({ coords: unit, text: `+ ${amount} Mana`, style: { fill: 'blue', ...config.PIXI_TEXT_DROP_SHADOW } });
       unit.mana += amount;
       explain(EXPLAIN_OVERFILL);
-      // TODO - Create mana version of this healing effect or improve support for colorfilter
-      // https://github.com/jdoleary/Spellmasons/pull/423
-      animationPromise = Image.addOneOffAnimation(unit, 'spell-effects/potionPickup', {}, animationOptions);
+      // The default animation for restoring mana is the
+      // healing animation with a color filter on top of it
+      animationPromise = oneOffHealAnimation(unit, true);
     }
     await animationPromise;
     return state;
@@ -75,4 +76,19 @@ export async function healManaUnits(units: Unit.IUnit[], amount: number, underwo
 export async function healManaUnit(unit: Unit.IUnit, amount: number, underworld: Underworld, prediction: boolean, state?: EffectState, useFx: boolean = true) {
   const units = [unit];
   return await healManaUnits(units, amount, underworld, prediction, state, useFx);
+}
+
+function oneOffHealAnimation(imageHaver: any, asMana: boolean = false): Promise<void> {
+  // The default animation for restoring mana is the
+  // healing animation with a color filter on top of it
+  if (asMana) {
+    const options = {
+      loop: animationOptions.loop,
+      animationSpeed: animationOptions.animationSpeed,
+      colorReplace: { colors: manaReplaceColors, epsilon: 0.1 }
+    };
+    return Image.addOneOffAnimation(imageHaver, 'spell-effects/potionPickup', {}, options);
+  } else {
+    return Image.addOneOffAnimation(imageHaver, 'spell-effects/potionPickup', {}, animationOptions)
+  }
 }
