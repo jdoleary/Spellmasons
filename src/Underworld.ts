@@ -2192,6 +2192,13 @@ export default class Underworld {
       console.log('[GAME] isLevelProgressable?\nNo remaining enemies in unit list: ', this.units);
     }
 
+    // Fix for the edgecase where players can beat the last level
+    // before the Deathmason spawns
+    if (this.levelIndex == config.LAST_LEVEL_INDEX && this.turn_number == 0) {
+      console.log('[GAME] Can\'t Progress Level\nIt is the final stage, and the deathmason hasn\'t spawned yet.');
+      return false;
+    }
+
     // Should another wave of enemies be spawned?
     const loopIndex = Math.max(0, (this.levelIndex - config.LAST_LEVEL_INDEX));
     if (loopIndex > this.wave) {
@@ -2647,6 +2654,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   async endFullTurnCycle() {
     // Increment the turn number now that it's starting over at the first phase
     this.turn_number++;
+
+    // TODO - This would make more sense in HandleLevelProgress()
+    // but there wasn't time before 1.28 to test the change
+    // https://github.com/jdoleary/Spellmasons/pull/433
+    // Deathmason spawns on the last level after 1 turn has passed
     if (this.turn_number == 0 && this.levelIndex == config.LAST_LEVEL_INDEX) {
       await introduceBoss(deathmason, this);
     }
@@ -4146,6 +4158,15 @@ function getEnemiesForAltitude(underworld: Underworld, levelIndex: number): stri
   budgetLeft = Math.floor(budgetLeft);
   console.log('Budget for level index', adjustedLevelIndex, 'is', budgetLeft);
   const totalBudget = budgetLeft;
+  // Reduce remaining budget on the last level where the Deathmason will spawn
+  if (levelIndex == config.LAST_LEVEL_INDEX) {
+    if (deathmason.spawnParams) {
+      budgetLeft -= deathmason.spawnParams?.budgetCost;
+    } else {
+      console.warn("Deathmason spawn params unknown, could not modify budget correctly");
+      budgetLeft /= 2;
+    }
+  }
   // How we choose:
   // 1. Start with the most expensive unit and random a number between 1 and 50% budget / unit budget cost
   // 2. Keep iterating with other units
