@@ -2649,7 +2649,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     this.turn_number++;
     if (this.turn_number == 0 && this.levelIndex == config.LAST_LEVEL_INDEX) {
       await introduceBoss(deathmason, this);
-
     }
 
     // Failsafe: Force die any units that are out of bounds
@@ -4221,6 +4220,9 @@ async function introduceBoss(unit: UnitSource, underworld: Underworld) {
   await new Promise((resolve) => {
     setTimeout(resolve, 500);
   });
+  if (elCinematic) {
+    elCinematic.classList.toggle('show', false);
+  }
 
 }
 
