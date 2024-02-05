@@ -1,3 +1,51 @@
+## 1.28.0
+###  Major
+- Added Spell: Potion Shatter
+    - Shatters a potion to apply its effect to all nearby units
+    - The area of effect increases with each stack of the spell
+- Mana Vampire Changes
+    - No longer reduces maximum mana
+    - Steals up to 40 mana from its target with each attack
+    - Can spend up to 40 mana each turn to heal itself
+- Deathmason
+    - Spawns after the players have taken their first turn, as to not reveal his location early
+    - Has a sick intro animation
+- Steam Overlay
+    - Pressing [Shift+Tab] in the Steam verison of the game will open the steam overlay
+- Tutorial Improvements
+    - Players start the tutorial with Target Cone, Slash, and Push
+    - Stat points earned in the early stages of the tutorial are auto-allocated to Max Health instead of being removed entirely, as to not make players' first sessions more difficult
+    - Many other Tutorial fixes: Most listed at the bottom of the changelog
+- Huge Game State Refactor: This refactor encompases many different game systems and fixes. It should make the game much more stable and prevent softlocks
+    - The end turn logic accounts for unspawned players, players that can't act (due to being frozen, dead, etc.), and should handle other edge cases more consistently
+    - Players can end turn without needing to enter the portal and should never have to end their turn multiple times to progress the level
+    - Fixes an issue that sometimes caused players to choose their classes at different times - Thank you @Moonlighter
+    - Ally units have their end turn effects applied at the end of their turn, instead of at the end of the enemy turn
+    - Improved unit turn order. Ex. Ranged units will always complete their action before Priests take their turn
+    - Smart targeting factors in unit turn order, making it much more predicatble
+    - Units are much less likely to make targeting mistakes, such as targeting an enemy unit that's already been killed by another unit
+    - Planning view attention markers consider smart targeting, fixing an issue that rarely caused false prediction markers, especially with decoys around
+    - Additional waves spawn the turn after all enemies are killed, instead of spawning immediately - Thank you @BrewBreuw
+    - High scores are reliably tracked in online multiplayer, and for all hotseat players
+    - Completing a level and dying within the same series of events should favor the player and progress the level, instead of ending the game immediately
+- Rework for client ID's, which should
+    - Improve lobby handling for online lobbies to prevent issues such as duplicated players
+    - Allow saved hotseat games to be loaded in an online multiplayer lobby
+    - Ensure spells and network messages always target the correct player in hotseat (I.E. Freeze and admin commands)
+    - General stability improvements
+
+#### Other Changes
+- Fixed an issue that allowed players to skip the Deathmason's second phase. Deathmason now enters the second phase via the OnDeath event - Thank you @Tennun
+- Fixed an await issue that prevented "Slash" from resolving correctly, which could sometimes lead to desync
+- Fixed an await issue that prevented "Arrows" from resolving correctly, which could sometimes lead to desync
+- Fixed a pathing issue that caused desync in online multiplayer games where gripthulus or resurrections were involved
+- Modifier keys are ignored if there isn’t a bound action. I.E. [Shift+A] will move the camera to the left, unless you have [Shift+A] specifically bound to something else - Thank you @Innonminate
+- Fixed a bug that caused the some tutorials to not be completed when they should
+- Fixed multiple tutorial display issues, such as explain prompts not showing up, completed tasks not appearing, and the tutorial not appearing correctly in multiplayer
+- Fixed an issue that caused urn explosions to disappear too quickly - Thank you @Blue
+- Improved debug and logging
+- Temporarily removed LoS targeting lines in preparation for an AI Refactor
+
 ## 1.27.0
 a11y: Add font selector for accessibility
     
