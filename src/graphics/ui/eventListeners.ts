@@ -1487,6 +1487,35 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       supportInMultiplayer: false,
       domQueryContainer: '#menu-selected-unit'
     },
+    // These commands are needed because "Set mana/health/stamina" requires `prompt`
+    // which is not available in electron
+    ...['stamina', 'mana', 'health'].map<AdminContextMenuOption>(stat => {
+      return {
+        label: `Give 100 ${stat}`,
+        action: () => {
+          if (!overworld.underworld) {
+            console.error('Cannot admin set unit mana, underworld does not exist');
+            return;
+          }
+          const unit = overworld.underworld.units.find(u => u.id == globalThis.selectedUnit?.id) || globalThis.player?.unit;
+          if (unit) {
+            overworld.pie.sendData({
+              type: MESSAGE_TYPES.ADMIN_CHANGE_STAT,
+              unitId: unit.id,
+              stats: {
+                // @ts-ignore
+                [stat]: unit[stat] += 100,
+              }
+            });
+          } else {
+            centeredFloatingText('You must select a unit first', 'red');
+          }
+        },
+        supportInMultiplayer: true,
+        domQueryContainer: ''
+
+      }
+    }),
     {
       label: '🔵 Set Mana',
       action: () => {

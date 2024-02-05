@@ -869,6 +869,10 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       const unit = underworld.units.find(u => u.id == unitId);
       if (unit) {
         Object.assign(unit, stats);
+        if (unit == globalThis.player?.unit) {
+          underworld.syncPlayerPredictionUnitOnly();
+          Unit.syncPlayerHealthManaUI(underworld);
+        }
       } else {
         console.error('ADMIN_CHANGE_STAT failed', payload)
       }
