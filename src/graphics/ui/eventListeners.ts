@@ -1804,7 +1804,8 @@ export function triggerAdminOption(option: AdminContextMenuOption, overworld: Ov
       label,
       pos,
       selectedUnitid: globalThis.selectedUnit && globalThis.selectedUnit.id,
-      selectedPickupLocation: globalThis.selectedPickup && Vec.clone(globalThis.selectedPickup)
+      selectedPickupLocation: globalThis.selectedPickup && Vec.clone(globalThis.selectedPickup),
+      playerId: globalThis.player?.playerId || ''
     });
   } else {
     // Warn when non supportInMultiplayer admin commands are executed to let the admin know
