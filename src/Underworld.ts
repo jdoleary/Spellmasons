@@ -169,6 +169,7 @@ export default class Underworld {
   // meaning, players take their turn, npcs take their
   // turn, then it resets to player turn, that is a full "turn"
   turn_number: number = 0;
+  hasSpawnedBoss: boolean = false;
   limits: Limits = { xMin: 0, xMax: 0, yMin: 0, yMax: 0 };
   players: Player.IPlayer[] = [];
   units: Unit.IUnit[] = [];
@@ -1904,6 +1905,8 @@ export default class Underworld {
     this.allyNPCAttemptWinKillSwitch = 0;
     // Reset wave count
     this.wave = 0;
+    // Reset has spawned boss boolean
+    this.hasSpawnedBoss = false;
   }
   postSetupLevel() {
     document.body?.classList.toggle('loading', false);
@@ -2133,7 +2136,7 @@ export default class Underworld {
     // We should try progressing the level before ending the game
     // in case the player has beaten the level and died at the same time
     // Favoring the player in this scenario should only improve player experience
-    if (this.handleLevelProgress()) {
+    if (await this.handleLevelProgress()) {
       // Level progress has been handled by the above function
       // So there is nothing left to do, just continue
     }
@@ -2162,13 +2165,34 @@ export default class Underworld {
     console.log('[GAME] Progress Game State Complete');
     return;
   }
-  handleLevelProgress(): boolean {
+  async handleLevelProgress(): Promise<Boolean> {
     // Returns true if this function progresses the level state
     // - Spawn the next wave of enemies
     // - Spawn purple portals
     // - Send players to next level
 
     const connectedPlayers = this.players.filter(p => p.clientConnected);
+
+
+    // TODO - Doesn't spawn at the end of turn: Deathmason gets an action?
+
+    // Edge case for boss spawning:
+    // Deathmason spawns on the last level after players have completed their first turn
+    if (this.levelIndex == config.LAST_LEVEL_INDEX && !this.hasSpawnedBoss) {
+      if (connectedPlayers.every(p => this.hasCompletedTurn(p))) {
+        console.log('[GAME] Handling Level Progress...\nSpawning Deathmason');
+        await introduceBoss(deathmason, this);
+        // We return false here, because even though we've "progressed the level"
+        // we still want to progress the game state by ending the player turn and such
+        return false;
+      }
+
+      // Wait for boss spawn if boss hasn't spawned yet
+      // This is so portals don't immediately spawn in the last level
+      // https://github.com/jdoleary/Spellmasons/issues/434
+      console.log('[GAME] Handling Level Progress...\nWaiting to spawn Deathmason...');
+      return false;
+    }
 
     // TODO - Below is a temp failsafe. It should be removed eventually:
     // This failsafe is here to account for an edge case where progressGameState()
@@ -2190,13 +2214,6 @@ export default class Underworld {
       return false;
     } else {
       console.log('[GAME] isLevelProgressable?\nNo remaining enemies in unit list: ', this.units);
-    }
-
-    // Fix for the edgecase where players can beat the last level
-    // before the Deathmason spawns
-    if (this.levelIndex == config.LAST_LEVEL_INDEX && this.turn_number == 0) {
-      console.log('[GAME] Can\'t Progress Level\nIt is the final stage, and the deathmason hasn\'t spawned yet.');
-      return false;
     }
 
     // Should another wave of enemies be spawned?
@@ -2249,7 +2266,7 @@ export default class Underworld {
     // We should check that there are players to spawn portals for
     // It's possible that all players are dead, frozen, etc.
     // When the level is completed, and in that case,
-    // we can skip spawning portals and go to next levlel
+    // we can skip spawning portals and go to next level
     const remainingPlayers = this.players.filter(p => p.isSpawned && !this.hasCompletedTurn(p));
     if (remainingPlayers.length > 0) {
       const spawnedPortals = this.pickups.filter(p => !p.flaggedForRemoval && p.name === Pickup.PORTAL_PURPLE_NAME);
@@ -2430,6 +2447,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       console.log('Game State: \nPlayer can act and has not ended turn yet: ', player);
       return false;
     }
+    console.log('Game State: \nPlayer has completed turn: ', player);
     return true;
   }
   async handleNextHotseatPlayer() {
@@ -2508,6 +2526,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Return false if any players have not completed their turn
     for (let player of connectedPlayers) {
       if (!this.hasCompletedTurn(player)) {
+        // Log is handled in hasCompletedTurn()
         return false;
       }
     }
@@ -2551,8 +2570,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       } else {
         this.broadcastTurnPhase(turn_phase.NPC_ENEMY);
       }
-    }
-    else {
+    } else {
+      // This progressGameState is needed to ensure that handleLevelProgress()
+      // is called after player turn ends, to smoothly spawn waves and portals
+      // without having to end turn again, but can cause an infinite loop and crash
+      // if handleLevelProgress() is unsuccessful / keeps returning false
       this.progressGameState();
       //this.broadcastTurnPhase(turn_phase.PlayerTurns);
     }
@@ -2654,14 +2676,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   async endFullTurnCycle() {
     // Increment the turn number now that it's starting over at the first phase
     this.turn_number++;
-
-    // TODO - This would make more sense in HandleLevelProgress()
-    // but there wasn't time before 1.28 to test the change
-    // https://github.com/jdoleary/Spellmasons/pull/433
-    // Deathmason spawns on the last level after 1 turn has passed
-    if (this.turn_number == 1 && this.levelIndex == config.LAST_LEVEL_INDEX) {
-      await introduceBoss(deathmason, this);
-    }
 
     // Failsafe: Force die any units that are out of bounds
     // Note: Player Controlled units are out of bounds when they are inPortal so that they don't collide,
@@ -4206,6 +4220,7 @@ function getEnemiesForAltitude(underworld: Underworld, levelIndex: number): stri
 }
 
 async function introduceBoss(unit: UnitSource, underworld: Underworld) {
+  underworld.hasSpawnedBoss = true;
   let coords = { x: 0, y: 0 };
   const seed = seedrandom(`${underworld.turn_number}-${deathmason.id}`);
   for (let player of underworld.players) {
