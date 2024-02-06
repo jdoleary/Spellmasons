@@ -168,7 +168,7 @@ export default class Underworld {
   // instead of every turn.  A "turn" is a full cycle,
   // meaning, players take their turn, npcs take their
   // turn, then it resets to player turn, that is a full "turn"
-  turn_number: number = -1;
+  turn_number: number = 0;
   limits: Limits = { xMin: 0, xMax: 0, yMin: 0, yMax: 0 };
   players: Player.IPlayer[] = [];
   units: Unit.IUnit[] = [];
@@ -2659,7 +2659,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // but there wasn't time before 1.28 to test the change
     // https://github.com/jdoleary/Spellmasons/pull/433
     // Deathmason spawns on the last level after 1 turn has passed
-    if (this.turn_number == 0 && this.levelIndex == config.LAST_LEVEL_INDEX) {
+    if (this.turn_number == 1 && this.levelIndex == config.LAST_LEVEL_INDEX) {
       await introduceBoss(deathmason, this);
     }
 
