@@ -4,10 +4,10 @@ import * as colors from '../graphics/ui/colors';
 import floatingText from "../graphics/FloatingText";
 import * as Image from '../graphics/Image';
 import * as config from '../config';
+import heal from "../cards/add_heal";
+import sendMana from "../cards/send_mana";
 import { playDefaultSpellSFX } from "../cards/cardUtils";
-import { healCardId } from "../cards/add_heal";
 import { EffectState } from "../cards";
-import { sendManaCardId } from "../cards/send_mana";
 import { EXPLAIN_OVERFILL, explain } from "../graphics/Explain";
 
 const animationOptions = { loop: false, animationSpeed: 0.3 };
@@ -18,9 +18,7 @@ export async function healUnits(units: Unit.IUnit[], amount: number, underworld:
   if (units.length == 0 || amount == 0) return;
 
   if (useFx && !prediction) {
-    if (allCards) {
-      playDefaultSpellSFX(allCards[healCardId], prediction);
-    }
+    playDefaultSpellSFX(heal.card, prediction);
     let animationPromise = undefined;
     for (let unit of units) {
       // All heals animate simultaneously, so just await the last promise
@@ -49,9 +47,7 @@ export async function healManaUnits(units: Unit.IUnit[], amount: number, underwo
   if (units.length == 0 || amount == 0) return;
 
   if (useFx && !prediction) {
-    if (allCards) {
-      playDefaultSpellSFX(allCards[sendManaCardId], prediction);
-    }
+    playDefaultSpellSFX(sendMana.card, prediction);
     let animationPromise = undefined;
     for (let unit of units) {
       // All heals animate simultaneously, so just await the last promise

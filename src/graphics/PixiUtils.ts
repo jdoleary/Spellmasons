@@ -101,7 +101,7 @@ export function cacheBlood() {
   }
 }
 
-let updateLiquidFilterIntervalId: NodeJS.Timer | undefined;
+let updateLiquidFilterIntervalId: NodeJS.Timeout | undefined;
 // Setup animated liquid displacement
 export function setupLiquidFilter() {
   if (containerLiquid) {

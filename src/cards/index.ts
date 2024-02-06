@@ -14,7 +14,7 @@ import Events, {
 } from '../Events';
 import Subsprites, { Subsprite } from '../Subsprites';
 // Register spells:
-import slash, { UnitDamage } from './slash';
+import slash from './slash';
 import heavySlash from './heavy_slash';
 import megaSlash from './mega_slash';
 import rend from './rend';
@@ -379,7 +379,6 @@ export interface EffectState {
   // aggregator carries extra information that can be passed
   // between card effects.
   aggregator: {
-    unitDamage: UnitDamage[],
     radius: number;
   };
   // initialTargetedUnitId and initialTargetedPickupId:

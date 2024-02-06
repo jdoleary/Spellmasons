@@ -5,14 +5,6 @@ import * as Unit from '../entity/Unit';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 export const drownCardId = 'Drown';
-export interface UnitDamage {
-  id: number;
-  x: number;
-  y: number;
-  health: number;
-  damageTaken: number;
-
-}
 const damageDone = 40;
 const spell: Spell = {
   card: {

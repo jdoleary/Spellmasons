@@ -8,14 +8,6 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { makeBleedParticles } from '../graphics/ParticleCollection';
 
 export const bleedCardId = 'Bleed';
-export interface UnitDamage {
-  id: number;
-  x: number;
-  y: number;
-  health: number;
-  damageTaken: number;
-
-}
 function calculateDamageFromProportion(unit: HasLife, proportionDamage: number): number {
   const damage = Math.ceil(unit.healthMax * proportionDamage);
   return damage;
