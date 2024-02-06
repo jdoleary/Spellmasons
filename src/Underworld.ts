@@ -2156,8 +2156,10 @@ export default class Underworld {
         // If all hotseat players are ready, try end player turn
         await this.handleNextHotseatPlayer();
 
-        // Moves to NPC.ALLY Phase if possible
-        await this.tryEndPlayerTurnPhase();
+        // Moves to next Turn Phase [NPC.ALLY] if possible
+        if (await this.tryEndPlayerTurnPhase()) {
+          this.broadcastTurnPhase(turn_phase.NPC_ALLY);
+        }
       }
 
       console.log('[GAME] Turn Phase\nNew == ', turn_phase[this.turn_phase]);
@@ -2521,29 +2523,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
 
     await Unit.endTurnForUnits(this.players.map(p => p.unit), this, false);
-
     await this.endPlayerTurnCleanup();
-
-    // Move to next phase depending on remaining units
-    const aiUnits = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
-    if (aiUnits.find(u => u.faction == Faction.ALLY)) {
-      this.broadcastTurnPhase(turn_phase.NPC_ALLY);
-    } else if (aiUnits.find(u => u.faction == Faction.ENEMY)) {
-      this.broadcastTurnPhase(turn_phase.NPC_ENEMY);
-    } else {
-      // TODO - This doesn't work because of the SET_PHASE Message handler:
-      // if (underworld.turn_phase == phase) {
-      //   console.log(`Phase is already set to ${turn_phase[phase]}; Aborting SET_PHASE.`);
-      //   return;
-      // }
-
-      // No AI Units to take turn, loop back to the player turn
-      // This ensures that progressGameState() gets called again
-      // which runs any neccesary handleLevelProgress() or isGameOver() logic
-      await this.endFullTurnCycle();
-      this.broadcastTurnPhase(turn_phase.PlayerTurns);
-    }
-
     return true;
   }
   async endPlayerTurnCleanup() {
