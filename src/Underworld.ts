@@ -2653,6 +2653,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     globalThis.castThisTurn = false;
 
     // Deathmason spawns on the last level after players have completed their first turn
+    // This is handled here instead of handleLevelProgression()
+    // To make sure the boss spawns after a full turn is resolved
+    // and isn't affected but unit turns / doesn't get an immediate action
     if (this.levelIndex == config.LAST_LEVEL_INDEX && !this.hasSpawnedBoss) {
       await introduceBoss(deathmason, this);
     }
