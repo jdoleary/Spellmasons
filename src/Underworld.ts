@@ -2147,6 +2147,7 @@ export default class Underworld {
       console.log('[GAME] Turn Phase\nCurrent == ', turn_phase[this.turn_phase]);
 
       // TODO - It would be cleaner if we found a way to move all TurnPhase logic here
+      // https://github.com/jdoleary/Spellmasons/pull/398
 
       // Most turn phases are currently handled in InitializeTurnPhase()
       // the Player Turn depends on player input and thus happens asyncronously
@@ -2173,24 +2174,12 @@ export default class Underworld {
 
     const connectedPlayers = this.players.filter(p => p.clientConnected);
 
-
-    // TODO - Doesn't spawn at the end of turn: Deathmason gets an action?
-
-    // Edge case for boss spawning:
-    // Deathmason spawns on the last level after players have completed their first turn
+    // Don't progress level (I.E. spawn waves, portals, etc.)
+    // If a boss should spawn and hasn't spawned yet
+    // Boss spawning currently handled in endFullTurnCycle
+    // To make sure the boss spawns after a full turn is resolved
     if (this.levelIndex == config.LAST_LEVEL_INDEX && !this.hasSpawnedBoss) {
-      if (connectedPlayers.every(p => this.hasCompletedTurn(p))) {
-        console.log('[GAME] Handling Level Progress...\nSpawning Deathmason');
-        await introduceBoss(deathmason, this);
-        // We return false here, because even though we've "progressed the level"
-        // we still want to progress the game state by ending the player turn and such
-        return false;
-      }
-
-      // Wait for boss spawn if boss hasn't spawned yet
-      // This is so portals don't immediately spawn in the last level
-      // https://github.com/jdoleary/Spellmasons/issues/434
-      console.log('[GAME] Handling Level Progress...\nWaiting to spawn Deathmason...');
+      console.log('[GAME] Can\'t Progress Level...\nWaiting to spawn Deathmason...');
       return false;
     }
 
@@ -2530,7 +2519,31 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         return false;
       }
     }
+
+    await Unit.endTurnForUnits(this.players.map(p => p.unit), this, false);
+
     await this.endPlayerTurnCleanup();
+
+    // Move to next phase depending on remaining units
+    const aiUnits = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
+    if (aiUnits.find(u => u.faction == Faction.ALLY)) {
+      this.broadcastTurnPhase(turn_phase.NPC_ALLY);
+    } else if (aiUnits.find(u => u.faction == Faction.ENEMY)) {
+      this.broadcastTurnPhase(turn_phase.NPC_ENEMY);
+    } else {
+      // TODO - This doesn't work because of the SET_PHASE Message handler:
+      // if (underworld.turn_phase == phase) {
+      //   console.log(`Phase is already set to ${turn_phase[phase]}; Aborting SET_PHASE.`);
+      //   return;
+      // }
+
+      // No AI Units to take turn, loop back to the player turn
+      // This ensures that progressGameState() gets called again
+      // which runs any neccesary handleLevelProgress() or isGameOver() logic
+      await this.endFullTurnCycle();
+      this.broadcastTurnPhase(turn_phase.PlayerTurns);
+    }
+
     return true;
   }
   async endPlayerTurnCleanup() {
@@ -2558,27 +2571,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
 
     CardUI.updateCardBadges(this);
-
-    await Unit.endTurnForUnits(this.players.map(p => p.unit), this, false);
-
-    // Move to next phase depending on remaining units
-    // NPC_ALLY, NPC_ENEMY, or portal state
-    const aiUnits = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
-    if (aiUnits.length != 0) {
-      if (aiUnits.find(u => u.faction == Faction.ALLY)) {
-        this.broadcastTurnPhase(turn_phase.NPC_ALLY);
-      } else {
-        this.broadcastTurnPhase(turn_phase.NPC_ENEMY);
-      }
-    } else {
-      // This progressGameState is needed to ensure that handleLevelProgress()
-      // is called after player turn ends, to smoothly spawn waves and portals
-      // without having to end turn again, but can cause an infinite loop and crash
-      // if handleLevelProgress() is unsuccessful / keeps returning false
-      this.progressGameState();
-      //this.broadcastTurnPhase(turn_phase.PlayerTurns);
-    }
-    return true;
   }
   async executePlayerTurn() {
     await Unit.startTurnForUnits(this.players.map(p => p.unit), this, false);
@@ -2677,12 +2669,19 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Increment the turn number now that it's starting over at the first phase
     this.turn_number++;
 
+    // Clear cast this turn
+    globalThis.castThisTurn = false;
+
+    // Deathmason spawns on the last level after players have completed their first turn
+    if (this.levelIndex == config.LAST_LEVEL_INDEX && !this.hasSpawnedBoss) {
+      await introduceBoss(deathmason, this);
+    }
+
     // Failsafe: Force die any units that are out of bounds
     // Note: Player Controlled units are out of bounds when they are inPortal so that they don't collide,
     // this filters out PLAYER_CONTROLLED so that they don't get die()'d when they are inPortal
     for (let u of this.units.filter(u => u.alive)) {
       if (this.lastLevelCreated) {
-
         // Don't kill out of bound units if they are already flagged for removal
         // (Note: flaggedForRemoval units are set to NaN,NaN;  thus they are out of bounds, but 
         // they will be cleaned up so they shouldn't be killed here as this check is just to ensure
@@ -2850,9 +2849,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   async initializeTurnPhase(p: turn_phase) {
     console.log('[GAME] Turn Phase\ninitializeTurnPhase: ', turn_phase[p]);
 
-    // Clear cast this turn
-    globalThis.castThisTurn = false;
-
     // Clear debug graphics
     globalThis.debugGraphics?.clear()
 
@@ -2958,7 +2954,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     } else {
       console.error('Invalid turn phase', this.turn_phase)
     }
-
   }
   async broadcastTurnPhase(p: turn_phase) {
     // If host, send sync; if non-host, ignore 
@@ -4220,6 +4215,7 @@ function getEnemiesForAltitude(underworld: Underworld, levelIndex: number): stri
 }
 
 async function introduceBoss(unit: UnitSource, underworld: Underworld) {
+  console.log('[GAME] Spawning Boss: ', unit.id, '\n', unit);
   underworld.hasSpawnedBoss = true;
   let coords = { x: 0, y: 0 };
   const seed = seedrandom(`${underworld.turn_number}-${deathmason.id}`);
