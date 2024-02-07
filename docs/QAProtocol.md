@@ -27,6 +27,10 @@
 - Test that F12 works in electron build
 ---
 - test: do rooms get cleaned up immediately (1.26)
+- 1.28
+    - Make sure you can see mod spell icons in book and toolbar
+    - update mana vamp copy
+    - steam overlay
 
 
 # Release protocal
