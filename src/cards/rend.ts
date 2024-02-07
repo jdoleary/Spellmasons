@@ -16,14 +16,6 @@ function calculateRendDamage(stack: number): number {
   }
   return damage * 10;
 }
-export interface UnitDamage {
-  id: number;
-  x: number;
-  y: number;
-  health: number;
-  damageTaken: number;
-
-}
 const spellRendAnimationHeight = 10;
 const animationPath = 'spell-effects/spellRend';
 const spell: Spell = {

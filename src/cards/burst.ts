@@ -14,14 +14,6 @@ function calculateDamage(stack: number, caster: Vec2, casterAttackRange: number,
   const dist = distance(caster, target)
   return Math.ceil(lerp(maxDamage, 0, (dist - config.COLLISION_MESH_RADIUS) / casterAttackRange) * stack);
 }
-export interface UnitDamage {
-  id: number;
-  x: number;
-  y: number;
-  health: number;
-  damageTaken: number;
-
-}
 const spell: Spell = {
   card: {
     id: burstCardId,

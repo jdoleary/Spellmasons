@@ -168,7 +168,8 @@ export default class Underworld {
   // instead of every turn.  A "turn" is a full cycle,
   // meaning, players take their turn, npcs take their
   // turn, then it resets to player turn, that is a full "turn"
-  turn_number: number = -1;
+  turn_number: number = 0;
+  hasSpawnedBoss: boolean = false;
   limits: Limits = { xMin: 0, xMax: 0, yMin: 0, yMax: 0 };
   players: Player.IPlayer[] = [];
   units: Unit.IUnit[] = [];
@@ -1904,6 +1905,8 @@ export default class Underworld {
     this.allyNPCAttemptWinKillSwitch = 0;
     // Reset wave count
     this.wave = 0;
+    // Reset has spawned boss boolean
+    this.hasSpawnedBoss = false;
   }
   postSetupLevel() {
     document.body?.classList.toggle('loading', false);
@@ -2133,7 +2136,7 @@ export default class Underworld {
     // We should try progressing the level before ending the game
     // in case the player has beaten the level and died at the same time
     // Favoring the player in this scenario should only improve player experience
-    if (this.handleLevelProgress()) {
+    if (await this.handleLevelProgress()) {
       // Level progress has been handled by the above function
       // So there is nothing left to do, just continue
     }
@@ -2144,6 +2147,7 @@ export default class Underworld {
       console.log('[GAME] Turn Phase\nCurrent == ', turn_phase[this.turn_phase]);
 
       // TODO - It would be cleaner if we found a way to move all TurnPhase logic here
+      // https://github.com/jdoleary/Spellmasons/pull/398
 
       // Most turn phases are currently handled in InitializeTurnPhase()
       // the Player Turn depends on player input and thus happens asyncronously
@@ -2152,8 +2156,10 @@ export default class Underworld {
         // If all hotseat players are ready, try end player turn
         await this.handleNextHotseatPlayer();
 
-        // Moves to NPC.ALLY Phase if possible
-        await this.tryEndPlayerTurnPhase();
+        // Moves to next Turn Phase [NPC.ALLY] if possible
+        if (await this.tryEndPlayerTurnPhase()) {
+          this.broadcastTurnPhase(turn_phase.NPC_ALLY);
+        }
       }
 
       console.log('[GAME] Turn Phase\nNew == ', turn_phase[this.turn_phase]);
@@ -2162,13 +2168,22 @@ export default class Underworld {
     console.log('[GAME] Progress Game State Complete');
     return;
   }
-  handleLevelProgress(): boolean {
+  async handleLevelProgress(): Promise<Boolean> {
     // Returns true if this function progresses the level state
     // - Spawn the next wave of enemies
     // - Spawn purple portals
     // - Send players to next level
 
     const connectedPlayers = this.players.filter(p => p.clientConnected);
+
+    // Don't progress level (I.E. spawn waves, portals, etc.)
+    // If a boss should spawn and hasn't spawned yet
+    // Boss spawning currently handled in endFullTurnCycle
+    // To make sure the boss spawns after a full turn is resolved
+    if (this.levelIndex == config.LAST_LEVEL_INDEX && !this.hasSpawnedBoss) {
+      console.log('[GAME] Can\'t Progress Level...\nWaiting to spawn Deathmason...');
+      return false;
+    }
 
     // TODO - Below is a temp failsafe. It should be removed eventually:
     // This failsafe is here to account for an edge case where progressGameState()
@@ -2190,13 +2205,6 @@ export default class Underworld {
       return false;
     } else {
       console.log('[GAME] isLevelProgressable?\nNo remaining enemies in unit list: ', this.units);
-    }
-
-    // Fix for the edgecase where players can beat the last level
-    // before the Deathmason spawns
-    if (this.levelIndex == config.LAST_LEVEL_INDEX && this.turn_number == 0) {
-      console.log('[GAME] Can\'t Progress Level\nIt is the final stage, and the deathmason hasn\'t spawned yet.');
-      return false;
     }
 
     // Should another wave of enemies be spawned?
@@ -2249,7 +2257,7 @@ export default class Underworld {
     // We should check that there are players to spawn portals for
     // It's possible that all players are dead, frozen, etc.
     // When the level is completed, and in that case,
-    // we can skip spawning portals and go to next levlel
+    // we can skip spawning portals and go to next level
     const remainingPlayers = this.players.filter(p => p.isSpawned && !this.hasCompletedTurn(p));
     if (remainingPlayers.length > 0) {
       const spawnedPortals = this.pickups.filter(p => !p.flaggedForRemoval && p.name === Pickup.PORTAL_PURPLE_NAME);
@@ -2430,6 +2438,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       console.log('Game State: \nPlayer can act and has not ended turn yet: ', player);
       return false;
     }
+    console.log('Game State: \nPlayer has completed turn: ', player);
     return true;
   }
   async handleNextHotseatPlayer() {
@@ -2508,9 +2517,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Return false if any players have not completed their turn
     for (let player of connectedPlayers) {
       if (!this.hasCompletedTurn(player)) {
+        // Log is handled in hasCompletedTurn()
         return false;
       }
     }
+
+    await Unit.endTurnForUnits(this.players.map(p => p.unit), this, false);
     await this.endPlayerTurnCleanup();
     return true;
   }
@@ -2539,24 +2551,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
 
     CardUI.updateCardBadges(this);
-
-    await Unit.endTurnForUnits(this.players.map(p => p.unit), this, false);
-
-    // Move to next phase depending on remaining units
-    // NPC_ALLY, NPC_ENEMY, or portal state
-    const aiUnits = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
-    if (aiUnits.length != 0) {
-      if (aiUnits.find(u => u.faction == Faction.ALLY)) {
-        this.broadcastTurnPhase(turn_phase.NPC_ALLY);
-      } else {
-        this.broadcastTurnPhase(turn_phase.NPC_ENEMY);
-      }
-    }
-    else {
-      this.progressGameState();
-      //this.broadcastTurnPhase(turn_phase.PlayerTurns);
-    }
-    return true;
   }
   async executePlayerTurn() {
     await Unit.startTurnForUnits(this.players.map(p => p.unit), this, false);
@@ -2655,11 +2649,14 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Increment the turn number now that it's starting over at the first phase
     this.turn_number++;
 
-    // TODO - This would make more sense in HandleLevelProgress()
-    // but there wasn't time before 1.28 to test the change
-    // https://github.com/jdoleary/Spellmasons/pull/433
-    // Deathmason spawns on the last level after 1 turn has passed
-    if (this.turn_number == 0 && this.levelIndex == config.LAST_LEVEL_INDEX) {
+    // Clear cast this turn
+    globalThis.castThisTurn = false;
+
+    // Deathmason spawns on the last level after players have completed their first turn
+    // This is handled here instead of handleLevelProgression()
+    // To make sure the boss spawns after a full turn is resolved
+    // and isn't affected but unit turns / doesn't get an immediate action
+    if (this.levelIndex == config.LAST_LEVEL_INDEX && !this.hasSpawnedBoss) {
       await introduceBoss(deathmason, this);
     }
 
@@ -2668,7 +2665,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // this filters out PLAYER_CONTROLLED so that they don't get die()'d when they are inPortal
     for (let u of this.units.filter(u => u.alive)) {
       if (this.lastLevelCreated) {
-
         // Don't kill out of bound units if they are already flagged for removal
         // (Note: flaggedForRemoval units are set to NaN,NaN;  thus they are out of bounds, but 
         // they will be cleaned up so they shouldn't be killed here as this check is just to ensure
@@ -2836,9 +2832,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   async initializeTurnPhase(p: turn_phase) {
     console.log('[GAME] Turn Phase\ninitializeTurnPhase: ', turn_phase[p]);
 
-    // Clear cast this turn
-    globalThis.castThisTurn = false;
-
     // Clear debug graphics
     globalThis.debugGraphics?.clear()
 
@@ -2944,7 +2937,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     } else {
       console.error('Invalid turn phase', this.turn_phase)
     }
-
   }
   async broadcastTurnPhase(p: turn_phase) {
     // If host, send sync; if non-host, ignore 
@@ -3545,7 +3537,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       targetedPickups: [],
       castLocation,
       aggregator: {
-        unitDamage: [],
         radius: 0,
       },
       initialTargetedUnitId,
@@ -4206,6 +4197,8 @@ function getEnemiesForAltitude(underworld: Underworld, levelIndex: number): stri
 }
 
 async function introduceBoss(unit: UnitSource, underworld: Underworld) {
+  console.log('[GAME] Spawning Boss: ', unit.id, '\n', unit);
+  underworld.hasSpawnedBoss = true;
   let coords = { x: 0, y: 0 };
   const seed = seedrandom(`${underworld.turn_number}-${deathmason.id}`);
   for (let player of underworld.players) {
