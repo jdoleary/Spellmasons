@@ -42,7 +42,7 @@ const spell: Spell = {
         } else {
           // Create explosion using the potion color
           const colorStart = getColorFromPotion(potion);
-          makeParticleExplosion(potion, adjustedRadius / baseExplosionRadius, colorStart, colors.trueGrey, prediction);
+          makeParticleExplosion(potion, adjustedRadius / baseExplosionRadius, colorStart, colorStart, prediction);
         }
 
         // Find all living units within radius of potion explosion
