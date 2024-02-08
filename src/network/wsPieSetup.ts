@@ -20,6 +20,7 @@ import makeOverworld, { Overworld } from '../Overworld';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
 import { GameMode } from '../types/commonTypes';
 import { elEndTurnBtn } from '../HTMLElements';
+import { sendEventToServerHub } from '../RemoteLogging';
 // Locally hosted, locally accessed
 // const wsUri = 'ws://localhost:8080';
 // Locally hosted, available to LAN (use your own IP)
@@ -144,6 +145,12 @@ export function joinRoom(overworld: Overworld, _room_info = {}, isHosting = fals
   if (isSinglePlayer()) {
     // set mods:
     underworld.activeMods = globalThis.activeMods || [];
+    sendEventToServerHub({
+      events: [{
+        time: Date.now(),
+        message: 'activeMods: ' + underworld.activeMods.join(',')
+      }]
+    }, underworld);
     console.log('Mods: set active mods', underworld.activeMods);
   }
   return pie.joinRoom(room_info, isHosting).then(() => {
