@@ -35,7 +35,7 @@ export default function registerImpendingDoom() {
           modifier.quantity -= 1;
           updateTooltip(unit);
           if (modifier.quantity <= 0) {
-            Unit.die(unit, underworld, prediction);
+            await Unit.die(unit, underworld, prediction);
             floatingText({
               coords: unit, text: `Blehg!`,
               style: { fill: colors.healthRed },

@@ -54,7 +54,7 @@ export function getSuffocateBuildup(unit: Unit.IUnit): number {
 
 // Will kill the unit if buildup > current health, else will update the tooltip
 // returns true if the unit is killed
-export function updateSuffocate(unit: Unit.IUnit, underworld: Underworld, prediction: boolean): boolean {
+export async function updateSuffocate(unit: Unit.IUnit, underworld: Underworld, prediction: boolean): boolean {
   const modifier = unit.modifiers[suffocateCardId];
   if (!modifier) {
     console.warn("Checking for suffocate buildup when the Unit does not have suffocate");
@@ -62,7 +62,7 @@ export function updateSuffocate(unit: Unit.IUnit, underworld: Underworld, predic
   }
   //if the buildup of suffocate is greater than unit's health, kill it and make floating text
   if (modifier.buildup >= unit.health) {
-    Unit.die(unit, underworld, prediction);
+    await Unit.die(unit, underworld, prediction);
     if (!prediction) {
       floatingText({
         coords: unit, text: `Suffocated!`,

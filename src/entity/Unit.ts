@@ -760,7 +760,7 @@ export function resurrect(unit: IUnit, underworld: Underworld) {
   unit.alive = true;
   returnToDefaultSprite(unit);
 }
-export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
+export async function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   if (!unit.alive) {
     // If already dead, do nothing
     return;
@@ -797,12 +797,13 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   // Clear unit path to prevent further movement in case of ressurect or similar
   unit.path = undefined;
 
+  const promises = [];
   for (let i = 0; i < unit.onDeathEvents.length; i++) {
     const eventName = unit.onDeathEvents[i];
     if (eventName) {
       const fn = Events.onDeathSource[eventName];
       if (fn) {
-        fn(unit, underworld, prediction);
+        promises.push(fn(unit, underworld, prediction));
       }
     }
   }
@@ -849,6 +850,8 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   }
   // Once a unit dies it is no longer on it's originalLife
   unit.originalLife = false;
+
+  return await raceTimeout(2000, 'die promises', Promise.all(promises));
 }
 export function composeOnDamageEvents(unit: IUnit, damage: number, underworld: Underworld, prediction: boolean): number {
   // Compose onDamageEvents
@@ -863,7 +866,7 @@ export function composeOnDamageEvents(unit: IUnit, damage: number, underworld: U
 
 }
 // damageFromVec2 is the location that the damage came from and is used for blood splatter
-export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | undefined, underworld: Underworld, prediction: boolean, state?: EffectState, options?: { thinBloodLine: boolean }) {
+export async function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | undefined, underworld: Underworld, prediction: boolean, state?: EffectState, options?: { thinBloodLine: boolean }) {
   if (!unit.alive) {
     // Do not deal damage to dead units
     return;
@@ -928,7 +931,7 @@ export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | u
 
   // If taking damage (not healing) and health is 0 or less...
   if (amount > 0 && unit.health <= 0) {
-    die(unit, underworld, prediction);
+    await die(unit, underworld, prediction);
   }
 
   if (unit.modifiers[suffocateCardId]) {

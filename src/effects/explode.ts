@@ -5,9 +5,10 @@ import { makeParticleExplosion } from '../graphics/ParticleCollection';
 import * as colors from '../graphics/ui/colors';
 import { IUnit, takeDamage } from "../entity/Unit";
 import { forcePushAwayFrom } from "./force_move";
+import { raceTimeout } from "../Promise";
 
 export const baseExplosionRadius = 140
-export function explode(location: Vec2, radius: number, damage: number, pushDistance: number, underworld: Underworld, prediction: boolean, colorstart?: number, colorEnd?: number, useDefaultSound: boolean = true): IUnit[] {
+export async function explode(location: Vec2, radius: number, damage: number, pushDistance: number, underworld: Underworld, prediction: boolean, colorstart?: number, colorEnd?: number, useDefaultSound: boolean = true): IUnit[] {
   if (prediction) {
     drawUICirclePrediction(location, radius, colors.healthRed, 'Explosion Radius');
   } else {
@@ -28,18 +29,20 @@ export function explode(location: Vec2, radius: number, damage: number, pushDist
     });
   }
 
+  const promises: Promise<void>[] = [];
   if (pushDistance > 0) {
     units.forEach(u => {
       // Push units away from exploding location
-      forcePushAwayFrom(u, location, pushDistance, underworld, prediction);
+      promises.push(forcePushAwayFrom(u, location, pushDistance, underworld, prediction));
     })
 
     underworld.getPickupsWithinDistanceOfTarget(location, radius, prediction)
       .forEach(p => {
         // Push pickups away
-        forcePushAwayFrom(p, location, pushDistance, underworld, prediction);
+        promises.push(forcePushAwayFrom(p, location, pushDistance, underworld, prediction));
       })
   }
+  await raceTimeout(2000, 'Explode', Promise.all(promises));
 
   return units;
 }

@@ -2696,6 +2696,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Failsafe: Force die any units that are out of bounds
     // Note: Player Controlled units are out of bounds when they are inPortal so that they don't collide,
     // this filters out PLAYER_CONTROLLED so that they don't get die()'d when they are inPortal
+    const deathPromises = [];
     for (let u of this.units.filter(u => u.alive)) {
       if (this.lastLevelCreated) {
         // Don't kill out of bound units if they are already flagged for removal
@@ -2709,14 +2710,15 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
               console.warn('Player unit out of bounds');
             } else {
               console.error('Unit was force killed because they ended up out of bounds', u.unitSubType)
-              Unit.die(u, this, false);
+              deathPromises.push(Unit.die(u, this, false));
               // We don't want out-of-bound corpses
-              Unit.cleanup(u);
+              Unit.cleanup(u, true);
             }
           }
         }
       }
     }
+    await raceTimeout(2000, 'deathPromises', Promise.all(deathPromises));
 
     // Pickups - Turns left to grab
     for (let p of this.pickups) {
