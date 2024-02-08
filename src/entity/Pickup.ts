@@ -31,6 +31,9 @@ export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 export const PICKUP_IMAGE_PATH = 'pickups/scroll';
 export const RED_PORTAL = 'Red Portal';
 export const BLUE_PORTAL = 'Blue Portal';
+export const HEALTH_POTION = 'Health Potion';
+export const MANA_POTION = 'Mana Potion';
+export const STAMINA_POTION = 'Stamina Potion';
 export const CURSED_MANA_POTION = 'Cursed Mana Potion';
 const RED_PORTAL_DAMAGE = 30;
 type IPickupEffect = ({ unit, player, pickup, prediction }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld, prediction: boolean }) => void;
@@ -614,7 +617,7 @@ export const pickups: IPickupSource[] = [
   {
     imagePath: 'pickups/staminaPotion',
     animationSpeed: 0.2,
-    name: 'Stamina Potion',
+    name: STAMINA_POTION,
     description: ['Restores stamina to 🍞', '100%'],
     probability: 40,
     scale: 1.0,
@@ -640,7 +643,7 @@ export const pickups: IPickupSource[] = [
   {
     imagePath: 'pickups/manaPotion',
     animationSpeed: 0.2,
-    name: 'Mana Potion',
+    name: MANA_POTION,
     description: [`mana potion description`, manaPotionRestoreAmount.toString()],
     probability: 80,
     scale: 1.0,
@@ -718,7 +721,7 @@ export const pickups: IPickupSource[] = [
   {
     imagePath: 'pickups/healthPotion',
     animationSpeed: 0.2,
-    name: 'Health Potion',
+    name: HEALTH_POTION,
     probability: 80,
     scale: 1.0,
     playerOnly: true,
