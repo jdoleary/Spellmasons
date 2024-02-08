@@ -35,7 +35,10 @@ const spell: Spell = {
         // This instead of takeDamage() -> ignores shield, not modified by damage mitigation/prevention, doesn't trigger onDamage event
         unit.health -= unitHealthStolen;
         totalHealthStolen += unitHealthStolen;
-        if (unit.health <= 0) die(unit, underworld, prediction);
+        if (unit.health <= 0) {
+          // TODO: investigate will adding die() to promises make predictions await in real time
+          promises.push(die(unit, underworld, prediction));
+        }
         const healthTrailPromises = [];
         if (!prediction) {
           const NUMBER_OF_ANIMATED_TRAILS = Math.min(6, unitHealthStolen / 10);

@@ -28,6 +28,7 @@ const spell: Spell = {
         let targets = state.targetedUnits.filter(u => {
           return u.alive && u.health < healthThreshold;
         });
+        const diePromises = [];
         for (let target of targets) {
           if (target) {
             if (!prediction) {
@@ -43,9 +44,10 @@ const spell: Spell = {
                 console.error('Cannot capture soul, upgrade not found with title:', newCardId)
               }
             }
-            Unit.die(target, underworld, prediction);
+            diePromises.push(Unit.die(target, underworld, prediction));
           }
         }
+        await Promise.all(diePromises);
         if (targets.length == 0) {
           refundLastSpell(state, prediction, 'No valid targets. Cost refunded.');
         }
