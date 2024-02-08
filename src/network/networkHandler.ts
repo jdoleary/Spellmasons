@@ -900,40 +900,42 @@ function getFromPlayerViaClientId(clientId: string, underworld: Underworld): Pla
 }
 function joinGameAsPlayer(fromClient: string, asClientId: string, overworld: Overworld) {
   const underworld = overworld.underworld;
-  if (underworld) {
-    const asPlayer = underworld.players.find(p => p.clientId == asClientId);
-    const oldFromPlayer = getFromPlayerViaClientId(fromClient, underworld);
-    if (fromClient && asPlayer) {
-      if (asPlayer.clientConnected) {
-        console.error('Cannot join as player that is controlled by another client')
-        return;
-      }
-      console.log('JOIN_GAME_AS_PLAYER: Reassigning player', asPlayer.clientId, 'to', fromClient);
-      const clientIdToGiveOldPlayer = asPlayer.clientId;
-      asPlayer.clientId = fromClient;
-      asPlayer.playerId = asPlayer.clientId + "_" + 0;
-      // Ensure their turn doesn't get skipped
-      asPlayer.endedTurn = false;
-      // Change the clientId of fromClient's old player now that they have inhabited the asPlayer
-      if (oldFromPlayer) {
-        oldFromPlayer.clientId = clientIdToGiveOldPlayer;
-        // force update clientConnected due to client switching players
-        const isConnected = overworld.clients.includes(oldFromPlayer.clientId);
-        oldFromPlayer.clientConnected = isConnected;
-        // Delete old player if just created
-        if (!oldFromPlayer.clientConnected && oldFromPlayer.inventory.length == 0) {
-          underworld.players = underworld.players.filter(p => p !== oldFromPlayer);
-        } else {
-          console.warn('JoinGameAsPlayer could not delete oldPlayer, this is expected if oldPlayer is part of the loaded game.')
-        }
-      } else {
-        console.error('Unexpected, joinGameAsPlayer: oldFromPlayer does not exist')
-      }
+  if (!underworld) return;
 
-      const players = underworld.players.map(Player.serialize)
-      // isClientPlayerSourceOfTruth: false; Overwrite client's own player object because the client is switching players
-      underworld.syncPlayers(players, false);
+  const asPlayer = underworld.players.find(p => p.clientId == asClientId);
+  const oldFromPlayer = getFromPlayerViaClientId(fromClient, underworld);
+  if (fromClient && asPlayer) {
+    if (asPlayer.clientConnected) {
+      console.error('Cannot join as player that is controlled by another client')
+      return;
     }
+    console.log('JOIN_GAME_AS_PLAYER: Reassigning player', asPlayer.clientId, 'to', fromClient);
+    const previousAsPlayerClientId = asPlayer.clientId;
+    asPlayer.clientId = fromClient;
+    asPlayer.playerId = asPlayer.clientId + "_" + 0;
+    // Ensure their turn doesn't get skipped
+    asPlayer.endedTurn = false;
+    // Change the clientId of fromClient's old player now that they have inhabited the asPlayer
+    if (oldFromPlayer) {
+      oldFromPlayer.clientId = previousAsPlayerClientId;
+      oldFromPlayer.playerId = oldFromPlayer.clientId + "_" + 0;
+      // force update clientConnected due to client switching players
+      const isConnected = overworld.clients.includes(oldFromPlayer.clientId);
+      oldFromPlayer.clientConnected = isConnected;
+      // Delete old player if just created
+      if (!oldFromPlayer.clientConnected && oldFromPlayer.inventory.length == 0) {
+        underworld.players = underworld.players.filter(p => p != oldFromPlayer);
+        Unit.cleanup(oldFromPlayer.unit, false, true);
+      } else {
+        console.warn('JoinGameAsPlayer could not delete oldPlayer, this is expected if oldPlayer is part of the loaded game.')
+      }
+    } else {
+      console.error('Unexpected, joinGameAsPlayer: oldFromPlayer does not exist')
+    }
+
+    const players = underworld.players.map(Player.serialize)
+    // isClientPlayerSourceOfTruth: false; Overwrite client's own player object because the client is switching players
+    underworld.syncPlayers(players, false);
   }
 }
 async function handleLoadGameState(payload: {
