@@ -2124,7 +2124,7 @@ export default class Underworld {
   }
   // Handles level completion, game over, turn phases, and hotseat
   async progressGameState() {
-    console.trace('[GAME] Progress Game State...');
+    console.log('[GAME] Progress Game State...');
 
     // Game State should not progress if no players are connected
     const connectedPlayers = this.players.filter(p => p.clientConnected);
