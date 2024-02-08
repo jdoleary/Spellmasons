@@ -90,9 +90,14 @@ export const bloatExplodeEnd = 0xf5e8b6;
 
 export function convertToHashColor(color: number): string {
   // Convert the number to a hexadecimal string and remove the '0x' prefix
-  const hexString = color.toString(16).toUpperCase();
+  let hexString = color.toString(16).toUpperCase();
 
-  console.warn(color, " -> ", hexString);
+  // 0 padding to ensure valid color
+  while (hexString.length < 6) {
+    hexString = `0${hexString}`
+  }
+
+  //console.log(`Color: ${color} to Hex: ${hexString}`);
   // Prepend '#' to the hexadecimal string
   return `#${hexString}`;
 }
