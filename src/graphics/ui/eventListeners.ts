@@ -1638,6 +1638,46 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
 
     },
     {
+      label: 'Test: Induce server desync - selected unit position to NaN, NaN',
+      action: (props) => {
+        const selectedUnit = overworld.underworld?.units.find(u => u.id == props.selectedUnitid)
+        if (selectedUnit) {
+          if (globalThis.headless) {
+            console.log('Server desync ', selectedUnit.name, 'to NaN,NaN');
+            selectedUnit.x = NaN;
+            selectedUnit.y = NaN;
+          } else {
+            floatingText({ coords: selectedUnit, text: 'on server: unit position to NaN, NaN' })
+          }
+        } else {
+          centeredFloatingText('You must select a unit first', 'red');
+        }
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: ''
+
+    },
+    {
+      label: 'Test: Induce server desync - selected player.endedTurn',
+      action: (props) => {
+        const selectedUnit = overworld.underworld?.units.find(u => u.id == props.selectedUnitid)
+        const player = overworld.underworld?.players.find(p => p.unit == selectedUnit);
+        if (player) {
+          if (globalThis.headless) {
+            player.endedTurn = !player.endedTurn;
+            console.log('Server desync ', player.name, 'to endedTurn:', player.endedTurn);
+          } else {
+            centeredFloatingText('Desynced server player.endedTurn to: ' + !player.endedTurn, 'green');
+          }
+        } else {
+          centeredFloatingText('You must select a unit first', 'red');
+        }
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: ''
+
+    },
+    {
       label: 'Test: Induce server desync - selected unit',
       action: (props) => {
         const selectedUnit = overworld.underworld?.units.find(u => u.id == props.selectedUnitid)
