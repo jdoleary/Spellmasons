@@ -1,4 +1,5 @@
 import * as Unit from '../entity/Unit';
+import * as colors from '../graphics/ui/colors';
 import { CardCategory } from '../types/commonTypes';
 import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
@@ -34,7 +35,9 @@ const spell: Spell = {
     onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
       if (unit) {
         Unit.takeDamage(unit, damageDone, projectile.startPoint, underworld, prediction, undefined, { thinBloodLine: true });
-        explode(unit, explodeRange, explodeDamage, defaultPushDistance, underworld, prediction, "#d66437", "#f5e8b6");
+        explode(unit, explodeRange, explodeDamage, defaultPushDistance,
+          underworld, prediction,
+          colors.bloatExplodeStart, colors.bloatExplodeEnd);
       }
     }
   }

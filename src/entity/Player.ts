@@ -2,6 +2,7 @@ import { PLAYER_BASE_HEALTH } from '../config';
 import * as storage from '../storage';
 import * as Unit from './Unit';
 import * as Image from '../graphics/Image';
+import * as colors from '../graphics/ui/colors';
 import * as Upgrade from '../Upgrade';
 import * as CardUI from '../graphics/ui/CardUI';
 import * as Cards from '../cards';
@@ -462,7 +463,6 @@ export function setClientConnected(player: IPlayer, connected: boolean, underwor
   syncLobby(underworld);
 }
 export function syncLobby(underworld: Underworld) {
-  const playerColorToCss = (p: IPlayer) => `#${(p.color || 0xffffff).toString(16)}`;
   globalThis.lobbyPlayerList = underworld.players
     .map(p => {
       let status = '';
@@ -475,7 +475,7 @@ export function syncLobby(underworld: Underworld) {
       } else if (p.endedTurn && underworld.turn_phase == turn_phase.PlayerTurns) {
         status = i18n('Ready for next turn');
       }
-      return { name: p.name || p.playerId, clientId: p.clientId, clientConnected: p.clientConnected, status, color: playerColorToCss(p), ready: p.lobbyReady ? i18n('Ready') : i18n('Not Ready') };
+      return { name: p.name || p.playerId, clientId: p.clientId, clientConnected: p.clientConnected, status, color: colors.convertToHashColor(p.color || 0xffffff), ready: p.lobbyReady ? i18n('Ready') : i18n('Not Ready') };
     });
   // Update lobby element
   if (elInGameLobby) {
