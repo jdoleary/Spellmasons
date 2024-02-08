@@ -54,7 +54,10 @@ export const urnIceExplode = 'urnIceExplode';
 export function registerUrnIceExplode() {
   registerEvents(urnIceExplode, {
     onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
-      const units = explode(unit, unit.attackRange, 0, 0, underworld, prediction, "#002c6e", "#59deff");
+      const units = explode(unit, unit.attackRange, 0, 0,
+        underworld, prediction,
+        0x002c6e, 0x59deff);
+
       units.filter(u => u.alive)
         .forEach(u => {
           Unit.addModifier(u, freeze.freezeCardId, underworld, prediction, 1);

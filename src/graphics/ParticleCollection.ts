@@ -5,6 +5,7 @@ import { easeOutCubic } from '../jmath/Easing';
 import { lerp } from '../jmath/math';
 import { clone, Vec2 } from '../jmath/Vec';
 import * as config from '../config';
+import * as colors from '../graphics/ui/colors';
 import { containerParticlesUnderUnits, createHardCircleParticleTexture, createParticleTexture, logNoTextureWarning, simpleEmitter, wrappedEmitter } from './Particles';
 import { bleedInstantKillProportion } from '../cards/bleed';
 import { containerUnits } from './PixiUtils';
@@ -79,7 +80,7 @@ export function makeAncientParticles(position: Vec2, prediction: boolean) {
   simpleEmitter(position, config, () => { }, containerParticlesUnderUnits);
 }
 
-export function makeParticleExplosion(position: Vec2, size: number, colorStart: string, colorEnd: string, prediction: boolean) {
+export function makeParticleExplosion(position: Vec2, size: number, colorStart: number, colorEnd: number, prediction: boolean) {
   if (prediction || globalThis.headless) {
     // Don't show if just a prediction
     return;
@@ -101,8 +102,8 @@ export function makeParticleExplosion(position: Vec2, size: number, colorStart: 
         "end": 2,
       },
       "color": {
-        "start": colorStart,
-        "end": colorEnd
+        "start": colors.convertToHashColor(colorStart),
+        "end": colors.convertToHashColor(colorEnd)
       },
       "speed": {
         "start": 500,
@@ -400,11 +401,11 @@ export function makeBurstParticles(position: Vec2, finalScale: number, predictio
 
       // Note: "|| 0" just prevents the compile time warning, the values are set
       // above and will exist
-      const color = `#${Math.floor(rgb2hex([
+      const color = colors.convertToHashColor(Math.floor(rgb2hex([
         lerp(startColor[0] || 0, endColor[0] || 0, lerpValue),
         lerp(startColor[1] || 0, endColor[1] || 0, lerpValue),
         lerp(startColor[2] || 0, endColor[2] || 0, lerpValue),
-      ])).toString(16)}`;
+      ])));
       const particleConfig =
         particles.upgradeConfig({
           autoUpdate: true,

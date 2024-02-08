@@ -3,10 +3,12 @@ import { playDefaultSpellSFX } from './cardUtils';
 import { Spell, refundLastSpell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { baseExplosionRadius, explode } from '../effects/explode';
-import { removePickup } from '../entity/Pickup';
+import { CURSED_MANA_POTION, HEALTH_POTION, IPickup, MANA_POTION, STAMINA_POTION, removePickup } from '../entity/Pickup';
 import { drawUICirclePrediction } from '../graphics/PlanningView';
 import * as colors from '../graphics/ui/colors';
 import { COLLISION_MESH_RADIUS } from '../config';
+import { makeParticleExplosion } from '../graphics/ParticleCollection';
+import { includes } from 'lodash';
 
 export const potionShatterId = 'Potion Shatter';
 const baseEffectRadius = 50; //baseExplosionRadius / x?
@@ -19,8 +21,8 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.SPECIAL],
-    thumbnail: '',
-    sfx: '',
+    thumbnail: 'spellIconPotionBreak.png',
+    sfx: 'bloatExplosion',
     description: ['spell_potion_shatter', baseEffectRadius.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target potions
@@ -37,6 +39,10 @@ const spell: Spell = {
 
         if (prediction) {
           drawUICirclePrediction(potion, adjustedRadius, colors.healthRed, 'Explosion Radius');
+        } else {
+          // Create explosion using the potion color
+          const colorStart = getColorFromPotion(potion);
+          makeParticleExplosion(potion, adjustedRadius / baseExplosionRadius, colorStart, colorStart, prediction);
         }
 
         // Find all living units within radius of potion explosion
@@ -56,4 +62,20 @@ const spell: Spell = {
     },
   },
 };
+
+function getColorFromPotion(potion: IPickup): number {
+  switch (potion.name) {
+    case HEALTH_POTION:
+      return colors.healthRed;
+    case MANA_POTION:
+      return colors.manaBlue;
+    case STAMINA_POTION:
+      return colors.stamina;
+    case CURSED_MANA_POTION:
+      return colors.manaDarkBlue;
+  }
+
+  return colors.errorRed;
+}
+
 export default spell;

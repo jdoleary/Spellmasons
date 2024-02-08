@@ -91,7 +91,9 @@ const spell: Spell = {
     onDeath: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
       const quantity = unit.modifiers[id]?.quantity || 1;
       const adjustedRadius = baseExplosionRadius + (unit.modifiers[id]?.radius || 0);
-      explode(unit, adjustedRadius, damage * quantity, defaultPushDistance, underworld, prediction, "#d66437", "#f5e8b6");
+      explode(unit, adjustedRadius, damage * quantity, defaultPushDistance,
+        underworld, prediction,
+        colors.bloatExplodeStart, colors.bloatExplodeEnd);
     },
     onDrawSelected: async (unit: IUnit, prediction: boolean, underworld: Underworld) => {
       if (globalThis.selectedUnitGraphics) {

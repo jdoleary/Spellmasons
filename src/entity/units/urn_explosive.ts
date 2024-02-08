@@ -1,6 +1,7 @@
 import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import * as Unit from '../Unit';
+import * as colors from '../../graphics/ui/colors';
 import type Underworld from '../../Underworld';
 import { registerEvents } from '../../cards';
 import { explode } from '../../effects/explode';
@@ -56,7 +57,9 @@ export const urnexplosiveExplode = 'urnexplosiveExplode';
 export function registerUrnexplosiveExplode() {
   registerEvents(urnexplosiveExplode, {
     onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
-      explode(unit, unit.attackRange, unit.damage, defaultPushDistance, underworld, prediction, "#d66437", "#f5e8b6");
+      explode(unit, unit.attackRange, unit.damage, defaultPushDistance,
+        underworld, prediction,
+        colors.bloatExplodeStart, colors.bloatExplodeEnd);
       // Remove corpse
       if (!prediction) {
         Unit.cleanup(unit, false);
