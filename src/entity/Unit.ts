@@ -1081,7 +1081,9 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
 
   const staminaLeft = Math.max(0, Math.round(unit.stamina));
   elStaminaBar.style["width"] = `${100 * (unit.stamina) / unit.staminaMax}%`;
-  elStaminaBarLabel.innerHTML = `${staminaLeft}`;
+  // At the end of the level when stamina is set super high, just show their max stamina so that
+  // it appears that moving after level end doesn't decrease your stamina
+  elStaminaBarLabel.innerHTML = staminaLeft > 100_000 ? `${unit.staminaMax}` : `${staminaLeft}`;
   if (staminaLeft <= 0 && !player?.endedTurn) {
     // Now that the current player has moved, highlight the "end-turn-btn" to
     // remind them that they need to end their turn before they can move again

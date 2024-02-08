@@ -2279,8 +2279,8 @@ export default class Underworld {
             if (!isOutOfBounds(portalSpawnLocation, this)) {
               spawnedPortals.push(Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup, logSource: 'Portal' }, this, false));
             }
-            // Give all player units infinite stamina when portal spawns for convenience.
-            playerUnit.stamina = Number.POSITIVE_INFINITY;
+            // Give all player units huge stamina when portal spawns for convenience.
+            playerUnit.stamina = 1_000_000;
             // Give all players max health and mana (it will be reset anyway when they are reset for the next level
             // but this disswades them from going around to pickup potions)
             playerUnit.health = playerUnit.healthMax;
