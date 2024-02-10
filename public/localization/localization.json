@@ -315,7 +315,7 @@
         "arrow": "Arrow",
         "mods": "Mods",
         "return to game": "Return to Game",
-        "mana_vampire_copy": "In addition to damaging you, the mana vampire will permanently remove some of your mana.❕Would suck the magic out of a sunset if they could.",
+        "mana_vampire_copy": "The Mana Vampires steals 🍞 of your mana and uses it to heal itself",
         "mana vampire": "Mana Vampire",
         "load saved game": "Load saved game",
         "suffocated!": "Suffocated!",
@@ -453,7 +453,10 @@
         "turns until decay": "🍞 turns until decay",
         "turns until suffocation": "🍞 turns until suffocation",
         "corpse decayed": "Corpse decayed!",
-        " spellmason ": "Spellmason"
+        " spellmason ": "Spellmason",
+        "reset": "Reset",
+        "confirm reset": "Are you sure you want to reset?",
+        "spell_potion_shatter": "This spell breaks a potion causing it to effect all units within the radius."
     },
     {
         "language": "Français",
@@ -771,7 +774,7 @@
         "arrow": "Flèche",
         "mods": "Mods de jeu",
         "return to game": "Retourner au jeu",
-        "mana_vampire_copy": "En plus de vous infliger des dégâts, les Vampires de Mana draineront une partie de votre mana définitivement.",
+        "mana_vampire_copy": "Les vampires de mana volent 🍞 de votre mana et l'utilisent pour se soigner.",
         "mana vampire": "Vampire de Mana",
         "load saved game": "Charger une partie",
         "suffocated!": "Étranglé!",
@@ -909,7 +912,10 @@
         "turns until decay": "🍞 tours jusqu'à la décomposition",
         "turns until suffocation": "🍞 tours jusqu'à l'asphyxie",
         "corpse decayed": "Cadavre décomposé !",
-        " spellmason ": "Maçon de sorts"
+        " spellmason ": "Maçon de sorts",
+        "reset": "Réinitialiser",
+        "confirm reset": "Êtes-vous sûr de vouloir réinitialiser?",
+        "spell_potion_shatter": "Ce sort brise une potion, la faisant agir sur toutes les unités à l'intérieur du rayon."
     },
     {
         "language": "italiano",
@@ -1227,7 +1233,7 @@
         "arrow": "Freccia",
         "mods": "Mod di gioco",
         "return to game": "Tornare al gioco",
-        "mana_vampire_copy": "Oltre a danneggiarti, il vampiro di mana rimuoverà permanentemente un po 'del tuo mana. Succhiare la magia da un tramonto se potessero.",
+        "mana_vampire_copy": "I vampiri del mana rubano 🍞 del tuo mana e lo usano per curarsi.",
         "mana vampire": "Mana Vampire",
         "load saved game": "Carica il gioco salvato",
         "suffocated!": "Soffocato!",
@@ -1365,7 +1371,10 @@
         "turns until decay": "🍞 turni fino alla decomposizione",
         "turns until suffocation": "🍞 turni fino alla soffocazione",
         "corpse decayed": "Cadavere decomposto!",
-        " spellmason ": "Spellmason"
+        " spellmason ": "Spellmason",
+        "reset": "Ripristina",
+        "confirm reset": "Sei sicuro di voler ripristinare?",
+        "spell_potion_shatter": "Questo incantesimo rompe una pozione facendola agire su tutte le unità nel raggio."
     },
     {
         "language": "Deutsche",
@@ -1683,7 +1692,7 @@
         "arrow": "Pfeil",
         "mods": "Spielmods",
         "return to game": "Zum Spiel zurückkehren",
-        "mana_vampire_copy": "Zusätzlich zum Schaden reduziert der Manavampir auch noch permanent die maximale Mana seines Ziels",
+        "mana_vampire_copy": "Die Mana-Vampire stehlen 🍞 deiner Mana und verwenden sie, um sich selbst zu heilen.",
         "mana vampire": "Manavampir",
         "load saved game": "Spielstand laden",
         "suffocated!": "Erstickt!",
@@ -1821,7 +1830,10 @@
         "turns until decay": "🍞 Runden bis zum Verfall",
         "turns until suffocation": "🍞 Runden bis zur Erstickung",
         "corpse decayed": "Leiche verfallen!",
-        " spellmason ": "Spellmason"
+        " spellmason ": "Spellmason",
+        "reset": "Zurücksetzen",
+        "confirm reset": "Sind Sie sicher, dass Sie zurücksetzen möchten?",
+        "spell_potion_shatter": "Dieser Zauber bricht einen Trank und bewirkt, dass er alle Einheiten im Radius beeinflusst."
     },
     {
         "language": "español",
@@ -2139,7 +2151,7 @@
         "arrow": "Flecha",
         "mods": "Modificaciones de juego",
         "return to game": "Regresar al juego",
-        "mana_vampire_copy": "Además de dañarte, el vampiro de maná eliminará permanentemente parte de tu maná.",
+        "mana_vampire_copy": "Los vampiros de maná roban 🍞 de tu maná y lo usan para curarse.",
         "mana vampire": "Vampiro de maná",
         "load saved game": "Cargar juego guardado",
         "suffocated!": "Asfixiado!",
@@ -2277,7 +2289,10 @@
         "turns until decay": "🍞 turnos hasta la descomposición",
         "turns until suffocation": "🍞 turnos hasta la sofocación",
         "corpse decayed": "¡Cadáver descompuesto!",
-        " spellmason ": "Spellmason"
+        " spellmason ": "Spellmason",
+        "reset": "Reiniciar",
+        "confirm reset": "¿Está seguro que quiere reiniciar?",
+        "spell_potion_shatter": "Este hechizo rompe una poción, haciendo que afecte a todas las unidades dentro del radio."
     },
     {
         "language": "日本",
@@ -2595,7 +2610,7 @@
         "arrow": "矢",
         "mods": "ゲーム改造",
         "return to game": "ゲームに戻る",
-        "mana_vampire_copy": "ダメージを与える同時に、マナを永久に減らせる",
+        "mana_vampire_copy": "マナヴァンパイアはあなたのマナを🍞盗み、それを使って自分自身を癒します。",
         "mana vampire": "マナ吸血鬼",
         "load saved game": "保存されたゲームをロードします",
         "suffocated!": "窒息！",
@@ -2733,7 +2748,10 @@
         "turns until decay": "🍞 ターンまで腐敗 ",
         "turns until suffocation": "🍞 ターンまで窒息 ",
         "corpse decayed": "死体が腐敗した!",
-        " spellmason ": "Spellmason"
+        " spellmason ": "Spellmason",
+        "reset": "リセット",
+        "confirm reset": "リセットしたいですか？",
+        "spell_potion_shatter": "この呪文はポーションを破壊し、半径内のすべてのユニットに影響を与えます。"
     },
     {
         "language": "Português",
@@ -3051,7 +3069,7 @@
         "arrow": "Seta",
         "mods": "Mods de jogo",
         "return to game": "Retornar ao jogo",
-        "mana_vampire_copy": "Além de causar dano, o vampiro de mana removerá permanentemente parte de sua mana. ❕Eles sugariam a magia de um pôr do sol se pudessem.",
+        "mana_vampire_copy": "Os Vampiros de Mana roubam 🍞 do seu mana e o usam para se curarem.",
         "mana vampire": "Vampiro de Mana",
         "load saved game": "Carregar jogo salvo",
         "suffocated!": "Sufocado!",
@@ -3189,7 +3207,10 @@
         "turns until decay": "🍞 turnos até a decomposição",
         "turns until suffocation": "🍞 turnos até a sufocação",
         "corpse decayed": "Cadáver decomposto!",
-        " spellmason ": "Spellmason"
+        " spellmason ": "Spellmason",
+        "reset": "Reiniciar",
+        "confirm reset": "Tem certeza de que deseja redefinir?",
+        "spell_potion_shatter": "Este feitiço quebra uma poção, fazendo com que afete todas as unidades dentro do raio."
     },
     {
         "language": "عربى",
@@ -3507,7 +3528,7 @@
         "arrow": "سهم",
         "mods": "تعديل اللعبة",
         "return to game": "يعود الى اللعبة",
-        "mana_vampire_copy": "بالإضافة إلى إتلافك ، ستقوم مصاص الدماء المانا بإزالة بعض مانا بشكل دائم. سوف تمتص السحر من غروب الشمس إذا أمكن ذلك.",
+        "mana_vampire_copy": "بالإضافة إلى إتلافك ، ستقوم مصاص الدماء المانا بإزالة بعض مانا بشكل دائم. سوف تمتص السحر من غروب الشمس إذا أمكن ذلك",
         "mana vampire": "مصاص الدماء مانا",
         "load saved game": "تحميل اللعبة المحفوظة",
         "suffocated!": "خنق!",
@@ -3645,7 +3666,10 @@
         "turns until decay": "🍞 دورات حتى التحلل ",
         "turns until suffocation": "🍞 دورات حتى الاختناق ",
         "corpse decayed": "تحللت الجثة! ",
-        " spellmason ": "Spellmason"
+        " spellmason ": "Spellmason",
+        "reset": "إعادة ضبط",
+        "confirm reset": "هل أنت متأكد أنك تريد إعادة تعيين؟",
+        "spell_potion_shatter": "هذا التعويذ يكسر جرعة ما، مما يجعلها تؤثر على جميع الوحدات ضمن النطاق."
     },
     {
         "language": "한국어",
@@ -3963,7 +3987,7 @@
         "arrow": "화살",
         "mods": "게임 모드",
         "return to game": "게임으로 돌아가기",
-        "mana_vampire_copy": "마나 흡혈귀는 피해를 입힐 뿐만 아니라 마력을 영구히 제거할 것입니다.",
+        "mana_vampire_copy": "마나 뱀파이어는 당신의 마나 🍞을 훔치고 그것을 사용하여 자신을 치유합니다.",
         "mana vampire": "마나 흡혈귀",
         "load saved game": "저장된 게임 불러오기",
         "suffocated!": "질식사했다!",
@@ -4101,7 +4125,10 @@
         "turns until decay": "🍞 턴까지 부패 ",
         "turns until suffocation": "🍞 턴까지 질식",
         "corpse decayed": "시체가 썩었네",
-        " spellmason ": "스펠메이슨"
+        " spellmason ": "스펠메이슨",
+        "reset": "초기화",
+        "confirm reset": "재설정 하시겠습니까?",
+        "spell_potion_shatter": "이 주문은 포션을 깨고 반경 내의 모든 유닛에 영향을 미칩니다."
     },
     {
         "language": "Русский",
@@ -4419,7 +4446,7 @@
         "arrow": "Стрела",
         "mods": "Моды",
         "return to game": "Продолжить Игру",
-        "mana_vampire_copy": "Магический вампир навсегда лишает вас части маны.",
+        "mana_vampire_copy": "Мана вампиры крадут 🍞 вашей маны и используют ее, чтобы исцелить себя.",
         "mana vampire": "Магический вампир",
         "load saved game": "Загрузить сохраненную игру",
         "suffocated!": "Задохнулся!",
@@ -4557,7 +4584,10 @@
         "turns until decay": "🍞 ходов до разложения",
         "turns until suffocation": "🍞 ходов до удушья",
         "corpse decayed": "Труп сгнил!",
-        " spellmason ": "Заклинатель"
+        " spellmason ": "Заклинатель",
+        "reset": "Перезагрузить",
+        "confirm reset": "Вы уверены, что хотите сбросить?",
+        "spell_potion_shatter": "Это заклинание разрушает зелье, заставляя его действовать на все единицы в радиусе."
     },
     {
         "language": "中文(简)",
@@ -4875,7 +4905,7 @@
         "arrow": "箭矢",
         "mods": "游戏mod",
         "return to game": "返回游戏",
-        "mana_vampire_copy": "除了造成伤害,法力吸血鬼也会永久减少你的法力",
+        "mana_vampire_copy": "法力吸血鬼偷走你🍞点法力，并使用它来治疗自己。",
         "mana vampire": "法力吸血鬼",
         "load saved game": "负载保存的游戏",
         "suffocated!": "窒息！",
@@ -5013,7 +5043,10 @@
         "turns until decay": "🍞 回合直到腐烂",
         "turns until suffocation": "🍞 回合直到窒息",
         "corpse decayed": "尸体已腐烂！",
-        " spellmason ": "Spellmason"
+        " spellmason ": "Spellmason",
+        "reset": "重置",
+        "confirm reset": "您确定要重置吗？",
+        "spell_potion_shatter": "这个咒语破坏了一个药水，使其影响半径内的所有单位。"
     },
     {
         "language": "中文(繁)",
@@ -5331,7 +5364,7 @@
         "arrow": "箭矢",
         "mods": "遊戲mod",
         "return to game": "返回游戲",
-        "mana_vampire_copy": "除了造成傷害,法力吸血鬼也會永久減少你的法力",
+        "mana_vampire_copy": "法力吸血鬼偷走你的🍞點法力，並使用它來治療自己。",
         "mana vampire": "法力吸血鬼",
         "load saved game": "負載保存的遊戲",
         "suffocated!": "窒息！",
@@ -5469,7 +5502,10 @@
         "turns until decay": "🍞 回合直到腐爛",
         "turns until suffocation": "🍞 回合直到窒息",
         "corpse decayed": "屍體已腐爛！",
-        " spellmason ": "Spellmason"
+        " spellmason ": "Spellmason",
+        "reset": "重置",
+        "confirm reset": "您確定要重置嗎？",
+        "spell_potion_shatter": "這個咒語破壞了一個藥水，使其影響半徑內的所有單位。"
     },
     {
         "language": "Polskie",
@@ -5787,7 +5823,7 @@
         "arrow": "Strzałka",
         "mods": "Mody gry",
         "return to game": "Wróć do gry",
-        "mana_vampire_copy": "Oprócz uszkodzenia cię, wampir many na stałe usunie część twojej many. ❕, gdyby mogli wyssiać magię z zachodu słońca.",
+        "mana_vampire_copy": "Wampiry Many kradną 🍞 twojej many i używają jej, aby się uleczyć.",
         "mana vampire": "Mana Vampire",
         "load saved game": "Załaduj zapisaną grę",
         "suffocated!": "Uduszony!",
@@ -5925,7 +5961,10 @@
         "turns until decay": "🍞 tury do rozkładu",
         "turns until suffocation": "🍞 tury do uduszenia",
         "corpse decayed": "Zwłoki rozłożone!",
-        " spellmason ": "Spellmason"
+        " spellmason ": "Spellmason",
+        "reset": "Resetowanie",
+        "confirm reset": "Czy na pewno chcesz zresetować?",
+        "spell_potion_shatter": "To zaklęcie łamie miksturę, powodując, że wpływa na wszystkie jednostki w promieniu."
     },
     {
         "language": "Dutch",
@@ -6243,7 +6282,7 @@
         "arrow": "Pijl",
         "mods": "Game Mods",
         "return to game": "Terug naar spel",
-        "mana_vampire_copy": "Naast het beschadigen van je, zal de Mana Vampire een deel van je mana permanent verwijderen. Zou de magie uit een zonsondergang moeten zuigen als ze konden.",
+        "mana_vampire_copy": "De Mana Vampieren stelen 🍞 van je mana en gebruiken het om zichzelf te genezen.",
         "mana vampire": "Mana Vampire",
         "load saved game": "Laad opgeslagen spel",
         "suffocated!": "Verstikt!",
@@ -6381,6 +6420,9 @@
         "turns until decay": "🍞 beurten tot ontbinding",
         "turns until suffocation": "🍞 beurten tot verstikking",
         "corpse decayed": "Het lijk is ontbonden!",
-        " spellmason ": "Spreukenmaker"
+        " spellmason ": "Spreukenmaker",
+        "reset": "Reset",
+        "confirm reset": "Weet u zeker dat u opnieuw wilt instellen?",
+        "spell_potion_shatter": "Deze spreuk breekt een drankje waardoor het alle eenheden binnen de straal beïnvloedt."
     }
 ]

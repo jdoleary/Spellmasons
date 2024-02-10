@@ -1,3 +1,14 @@
+## 2024.02.09
+Translation orders:
+Given the following JSON:
+{
+    "from_language": "English",
+    "text": "This spell breaks a potion causing it to effect all units within the radius."
+    "to_languages": ["french", "italian", "german", "spanish", "japanese", "portuguese", "arabic", "korean", "russian", "chinese (simplified)", "chinese (traditional)", "polish", "dutch"],
+    "translations": []
+}
+
+Fill the "translations" array.
 ## 2023.11.14
 Trying to fix awaitForceMoves
 
