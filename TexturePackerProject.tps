@@ -840,6 +840,7 @@
             <key type="filename">public/images/spell/spellIconPoison.png</key>
             <key type="filename">public/images/spell/spellIconPoison2.png</key>
             <key type="filename">public/images/spell/spellIconPolymorph.png</key>
+            <key type="filename">public/images/spell/spellIconPotionBreak.png</key>
             <key type="filename">public/images/spell/spellIconProtection.png</key>
             <key type="filename">public/images/spell/spellIconPull.png</key>
             <key type="filename">public/images/spell/spellIconPurify.png</key>
@@ -1500,6 +1501,74 @@
                 <rect>17,17,34,34</rect>
                 <key>scale9Paddings</key>
                 <rect>17,17,34,34</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">images/units/guruAttack1.png</key>
+            <key type="filename">images/units/guruAttack10.png</key>
+            <key type="filename">images/units/guruAttack11.png</key>
+            <key type="filename">images/units/guruAttack12.png</key>
+            <key type="filename">images/units/guruAttack13.png</key>
+            <key type="filename">images/units/guruAttack14.png</key>
+            <key type="filename">images/units/guruAttack15.png</key>
+            <key type="filename">images/units/guruAttack16.png</key>
+            <key type="filename">images/units/guruAttack17.png</key>
+            <key type="filename">images/units/guruAttack2.png</key>
+            <key type="filename">images/units/guruAttack3.png</key>
+            <key type="filename">images/units/guruAttack4.png</key>
+            <key type="filename">images/units/guruAttack5.png</key>
+            <key type="filename">images/units/guruAttack6.png</key>
+            <key type="filename">images/units/guruAttack7.png</key>
+            <key type="filename">images/units/guruAttack8.png</key>
+            <key type="filename">images/units/guruAttack9.png</key>
+            <key type="filename">images/units/guruDeath1.png</key>
+            <key type="filename">images/units/guruDeath10.png</key>
+            <key type="filename">images/units/guruDeath11.png</key>
+            <key type="filename">images/units/guruDeath12.png</key>
+            <key type="filename">images/units/guruDeath13.png</key>
+            <key type="filename">images/units/guruDeath14.png</key>
+            <key type="filename">images/units/guruDeath15.png</key>
+            <key type="filename">images/units/guruDeath16.png</key>
+            <key type="filename">images/units/guruDeath17.png</key>
+            <key type="filename">images/units/guruDeath18.png</key>
+            <key type="filename">images/units/guruDeath19.png</key>
+            <key type="filename">images/units/guruDeath2.png</key>
+            <key type="filename">images/units/guruDeath20.png</key>
+            <key type="filename">images/units/guruDeath21.png</key>
+            <key type="filename">images/units/guruDeath3.png</key>
+            <key type="filename">images/units/guruDeath4.png</key>
+            <key type="filename">images/units/guruDeath5.png</key>
+            <key type="filename">images/units/guruDeath6.png</key>
+            <key type="filename">images/units/guruDeath7.png</key>
+            <key type="filename">images/units/guruDeath8.png</key>
+            <key type="filename">images/units/guruDeath9.png</key>
+            <key type="filename">images/units/guruHit1.png</key>
+            <key type="filename">images/units/guruHit2.png</key>
+            <key type="filename">images/units/guruHit3.png</key>
+            <key type="filename">images/units/guruHit4.png</key>
+            <key type="filename">images/units/guruIdle1.png</key>
+            <key type="filename">images/units/guruIdle10.png</key>
+            <key type="filename">images/units/guruIdle11.png</key>
+            <key type="filename">images/units/guruIdle12.png</key>
+            <key type="filename">images/units/guruIdle2.png</key>
+            <key type="filename">images/units/guruIdle3.png</key>
+            <key type="filename">images/units/guruIdle4.png</key>
+            <key type="filename">images/units/guruIdle5.png</key>
+            <key type="filename">images/units/guruIdle6.png</key>
+            <key type="filename">images/units/guruIdle7.png</key>
+            <key type="filename">images/units/guruIdle8.png</key>
+            <key type="filename">images/units/guruIdle9.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0,0</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>40,21,79,41</rect>
+                <key>scale9Paddings</key>
+                <rect>40,21,79,41</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
