@@ -57,4 +57,5 @@ global.localStorage = {
     getItem: () => 'headless server does not use localStorage',
     setItem: () => { },
 }
+global.getChosenLanguageCode = () => '';
 export { };
