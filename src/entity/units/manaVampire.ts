@@ -13,7 +13,7 @@ export const MANA_VAMPIRE_ID = 'Mana Vampire';
 const unit: UnitSource = {
   id: MANA_VAMPIRE_ID,
   info: {
-    description: 'mana_vampire_copy',
+    description: ['mana_vampire_copy', manaToSteal.toString()],
     image: 'units/vampireIdle',
     subtype: UnitSubType.MELEE,
   },
@@ -54,7 +54,7 @@ const unit: UnitSource = {
         attackTarget.mana -= manaStolen;
         unit.mana += manaStolen;
         unit.mana = Math.min(unit.mana, unit.manaMax);
-        floatingText({ coords: attackTarget, text: `${manaStolen} mana stolen.` });
+        floatingText({ coords: attackTarget, text: `-${manaStolen} ${i18n('mana')}` });
         if (attackTarget.unitType == UnitType.PLAYER_CONTROLLED) {
           // Update mana bar UI
           underworld.syncPlayerPredictionUnitOnly();

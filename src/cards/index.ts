@@ -400,7 +400,7 @@ export function refundLastSpell(state: EffectState, prediction: boolean, floatin
   if (!prediction && state.casterUnit.unitType == UnitType.PLAYER_CONTROLLED) {
     state.shouldRefundLastSpell = true;
     if (floatingMessage) {
-      floatingText({ coords: state.casterUnit, text: floatingMessage });
+      floatingText({ coords: state.casterUnit, text: globalThis.getChosenLanguageCode() == 'en' ? floatingMessage : i18n('refunded') });
     }
   }
 

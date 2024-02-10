@@ -456,7 +456,8 @@
         " spellmason ": "Spellmason",
         "reset": "Reset",
         "confirm reset": "Are you sure you want to reset?",
-        "spell_potion_shatter": "This spell breaks a potion causing it to effect all units within the radius."
+        "spell_potion_shatter": "This spell breaks a potion causing it to effect all units within the radius.",
+        "refunded": "Cost Refunded"
     },
     {
         "language": "Français",
@@ -915,7 +916,8 @@
         " spellmason ": "Maçon de sorts",
         "reset": "Réinitialiser",
         "confirm reset": "Êtes-vous sûr de vouloir réinitialiser?",
-        "spell_potion_shatter": "Ce sort brise une potion, la faisant agir sur toutes les unités à l'intérieur du rayon."
+        "spell_potion_shatter": "Ce sort brise une potion, la faisant agir sur toutes les unités à l'intérieur du rayon.",
+        "refunded": "Coût remboursé"
     },
     {
         "language": "italiano",
@@ -1374,7 +1376,8 @@
         " spellmason ": "Spellmason",
         "reset": "Ripristina",
         "confirm reset": "Sei sicuro di voler ripristinare?",
-        "spell_potion_shatter": "Questo incantesimo rompe una pozione facendola agire su tutte le unità nel raggio."
+        "spell_potion_shatter": "Questo incantesimo rompe una pozione facendola agire su tutte le unità nel raggio.",
+        "refunded": "Costo rimborsato"
     },
     {
         "language": "Deutsche",
@@ -1833,7 +1836,8 @@
         " spellmason ": "Spellmason",
         "reset": "Zurücksetzen",
         "confirm reset": "Sind Sie sicher, dass Sie zurücksetzen möchten?",
-        "spell_potion_shatter": "Dieser Zauber bricht einen Trank und bewirkt, dass er alle Einheiten im Radius beeinflusst."
+        "spell_potion_shatter": "Dieser Zauber bricht einen Trank und bewirkt, dass er alle Einheiten im Radius beeinflusst.",
+        "refunded": "Kosten zurückerstattet"
     },
     {
         "language": "español",
@@ -2292,7 +2296,8 @@
         " spellmason ": "Spellmason",
         "reset": "Reiniciar",
         "confirm reset": "¿Está seguro que quiere reiniciar?",
-        "spell_potion_shatter": "Este hechizo rompe una poción, haciendo que afecte a todas las unidades dentro del radio."
+        "spell_potion_shatter": "Este hechizo rompe una poción, haciendo que afecte a todas las unidades dentro del radio.",
+        "refunded": "Costo reembolsado"
     },
     {
         "language": "日本",
@@ -2751,7 +2756,8 @@
         " spellmason ": "Spellmason",
         "reset": "リセット",
         "confirm reset": "リセットしたいですか？",
-        "spell_potion_shatter": "この呪文はポーションを破壊し、半径内のすべてのユニットに影響を与えます。"
+        "spell_potion_shatter": "この呪文はポーションを破壊し、半径内のすべてのユニットに影響を与えます。",
+        "refunded": "費用返金"
     },
     {
         "language": "Português",
@@ -3210,7 +3216,8 @@
         " spellmason ": "Spellmason",
         "reset": "Reiniciar",
         "confirm reset": "Tem certeza de que deseja redefinir?",
-        "spell_potion_shatter": "Este feitiço quebra uma poção, fazendo com que afete todas as unidades dentro do raio."
+        "spell_potion_shatter": "Este feitiço quebra uma poção, fazendo com que afete todas as unidades dentro do raio.",
+        "refunded": "Reembolso do custo"
     },
     {
         "language": "عربى",
@@ -3669,7 +3676,8 @@
         " spellmason ": "Spellmason",
         "reset": "إعادة ضبط",
         "confirm reset": "هل أنت متأكد أنك تريد إعادة تعيين؟",
-        "spell_potion_shatter": "هذا التعويذ يكسر جرعة ما، مما يجعلها تؤثر على جميع الوحدات ضمن النطاق."
+        "spell_potion_shatter": "هذا التعويذ يكسر جرعة ما، مما يجعلها تؤثر على جميع الوحدات ضمن النطاق.",
+        "refunded": "استرداد التكلفة"
     },
     {
         "language": "한국어",
@@ -4128,7 +4136,8 @@
         " spellmason ": "스펠메이슨",
         "reset": "초기화",
         "confirm reset": "재설정 하시겠습니까?",
-        "spell_potion_shatter": "이 주문은 포션을 깨고 반경 내의 모든 유닛에 영향을 미칩니다."
+        "spell_potion_shatter": "이 주문은 포션을 깨고 반경 내의 모든 유닛에 영향을 미칩니다.",
+        "refunded": "비용 환불"
     },
     {
         "language": "Русский",
@@ -4503,10 +4512,10 @@
         "impossible": "Невозможно",
         "players": "Игроки",
         "password (optional)": "пароль (необязательно)",
-        "experience": "Выберите тип мага",
-        "pick a class": "Выберите Класс",
-        "performance": "Частицы",
-        "particle emitters": "Выключенный",
+        "experience": "Опыт",
+        "pick a class": "Выберите тип мага",
+        "performance": "Производительность",
+        "particle emitters": "Частицы",
         "off": "Выключены",
         "low": "Меньше",
         "on": "Включены",
@@ -4526,12 +4535,12 @@
         "cleric": "Священник",
         "gambler": "Картежник",
         "immune": "Иммун",
-        "urn explosive description": "Близлежащие подразделения отравлены, когда урна уничтожена",
+        "urn explosive description": "Взрывается при уничтожении",
         "urn poison description": "Отравит существ поблизости если разбить",
         "urn ice description": "Заморозит существ поблизости если разбить",
-        "explosive urn": "Ледяная урна",
-        "ice urn": "Токсичная урна",
-        "toxic urn": "Синий портал",
+        "explosive urn": "Взрывоопасная урна",
+        "ice urn": "Ледяная урна",
+        "toxic urn": "Токсичная урна",
         "blue portal": "Синий портал",
         "blue portal description": "Телепортирует к другому порталу и исцеляет 🍞 здоровья",
         "cannot assign duplicate key": "Ключ уже используется",
@@ -4587,7 +4596,8 @@
         " spellmason ": "Заклинатель",
         "reset": "Перезагрузить",
         "confirm reset": "Вы уверены, что хотите сбросить?",
-        "spell_potion_shatter": "Это заклинание разрушает зелье, заставляя его действовать на все единицы в радиусе."
+        "spell_potion_shatter": "Это заклинание разрушает зелье, заставляя его действовать на все единицы в радиусе.",
+        "refunded": "Стоимость возвращена"
     },
     {
         "language": "中文(简)",
@@ -5046,7 +5056,8 @@
         " spellmason ": "Spellmason",
         "reset": "重置",
         "confirm reset": "您确定要重置吗？",
-        "spell_potion_shatter": "这个咒语破坏了一个药水，使其影响半径内的所有单位。"
+        "spell_potion_shatter": "这个咒语破坏了一个药水，使其影响半径内的所有单位。",
+        "refunded": "费用退款"
     },
     {
         "language": "中文(繁)",
@@ -5505,7 +5516,8 @@
         " spellmason ": "Spellmason",
         "reset": "重置",
         "confirm reset": "您確定要重置嗎？",
-        "spell_potion_shatter": "這個咒語破壞了一個藥水，使其影響半徑內的所有單位。"
+        "spell_potion_shatter": "這個咒語破壞了一個藥水，使其影響半徑內的所有單位。",
+        "refunded": "費用退款"
     },
     {
         "language": "Polskie",
@@ -5964,7 +5976,8 @@
         " spellmason ": "Spellmason",
         "reset": "Resetowanie",
         "confirm reset": "Czy na pewno chcesz zresetować?",
-        "spell_potion_shatter": "To zaklęcie łamie miksturę, powodując, że wpływa na wszystkie jednostki w promieniu."
+        "spell_potion_shatter": "To zaklęcie łamie miksturę, powodując, że wpływa na wszystkie jednostki w promieniu.",
+        "refunded": "Zwrot kosztów"
     },
     {
         "language": "Dutch",
@@ -6423,6 +6436,7 @@
         " spellmason ": "Spreukenmaker",
         "reset": "Reset",
         "confirm reset": "Weet u zeker dat u opnieuw wilt instellen?",
-        "spell_potion_shatter": "Deze spreuk breekt een drankje waardoor het alle eenheden binnen de straal beïnvloedt."
+        "spell_potion_shatter": "Deze spreuk breekt een drankje waardoor het alle eenheden binnen de straal beïnvloedt.",
+        "refunded": "Kosten terugbetaald"
     }
 ]

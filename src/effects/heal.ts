@@ -23,7 +23,7 @@ export async function healUnits(units: Unit.IUnit[], amount: number, underworld:
     for (let unit of units) {
       // All heals animate simultaneously, so just await the last promise
       // Instead of using Promise.All()
-      floatingText({ coords: unit, text: `+${Math.abs(amount)} Health` });
+      floatingText({ coords: unit, text: globalThis.getChosenLanguageCode() == 'en' ? `+${Math.abs(amount)} Health` : `${i18n('heal')} ${Math.abs(amount)}` });
       Unit.takeDamage(unit, -amount, undefined, underworld, prediction, state);
       animationPromise = oneOffHealAnimation(unit);
     }
@@ -52,7 +52,7 @@ export async function healManaUnits(units: Unit.IUnit[], amount: number, underwo
     for (let unit of units) {
       // All heals animate simultaneously, so just await the last promise
       // Instead of using Promise.All()
-      floatingText({ coords: unit, text: `+ ${amount} Mana`, style: { fill: 'blue', ...config.PIXI_TEXT_DROP_SHADOW } });
+      floatingText({ coords: unit, text: `+ ${amount} ${i18n('Mana')}`, style: { fill: 'blue', ...config.PIXI_TEXT_DROP_SHADOW } });
       unit.mana += amount;
       explain(EXPLAIN_OVERFILL);
       // The default animation for restoring mana is the
