@@ -664,7 +664,7 @@ export default class Underworld {
       const takeAction = Unit.canAct(u) && Unit.isUnitsTurnPhase(u, this)
         && (u.unitType == UnitType.PLAYER_CONTROLLED || this.subTypesCurrentTurn?.includes(u.unitSubType));
 
-      if (u.path && u.path.points[0] && u.stamina > 0 && takeAction) {
+      if (takeAction && u.stamina > 0 && u.path && u.path.points[0]) {
         // Move towards target
         const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path.points[0], u.moveSpeed * deltaTime)
         let moveDist = 0;
@@ -710,15 +710,18 @@ export default class Underworld {
           // Once the unit reaches the target, shift so the next point in the path is the next target
           u.path.points.shift();
         }
-      }
 
-      // check for collisions with pickups in new location
-      this.checkPickupCollisions(u, false);
-      // Ensure that resolveDoneMoving is invoked when unit is out of stamina (and thus, done moving)
-      // or when find point in the path has been reached.
-      // This is necessary to end the moving units turn because elsewhere we are awaiting the fulfillment of that promise
-      // to know they are done moving
-      if (u.stamina <= 0 || !u.path || u.path.points.length === 0) {
+        // check for collisions with pickups in new location
+        this.checkPickupCollisions(u, false);
+      } else {
+        // We cannot process the unit: Finalize movement and return false
+        // check for collisions with pickups in final location
+        this.checkPickupCollisions(u, false);
+
+        // Ensure that resolveDoneMoving is invoked when unit:
+        // can't take action, is out of stamina, or has reached the find point in the path
+        // This is necessary to end the moving units turn because elsewhere we are
+        // awaiting the fulfillment of that promise to know they are done moving
         u.resolveDoneMoving();
         if (u.path) {
           // Update last position that changed via own movement
