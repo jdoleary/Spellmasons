@@ -2679,11 +2679,15 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
             if (u.unitType == UnitType.PLAYER_CONTROLLED) {
               const player = this.players.find(p => p.unit == u);
-              if (player && !Player.inPortal(player)) {
-                console.error('Player was reset because they ended up out of bounds');
-                Player.resetPlayerForNextLevel(player, this);
-              } else {
-                console.error('Unexpected: Tried to reset out of bounds player but player unit matched no player object.');
+              // Clients are the source of truth for themselves and therefore a player shouldn't get reset
+              // unless it is on it's own client.
+              if (globalThis.player == player) {
+                if (player && !Player.inPortal(player)) {
+                  console.error('Player was reset because they ended up out of bounds');
+                  Player.resetPlayerForNextLevel(player, this);
+                } else {
+                  console.error('Unexpected: Tried to reset out of bounds player but player unit matched no player object.');
+                }
               }
             } else {
               console.error('Unit was force killed because they ended up out of bounds', u.unitSubType)

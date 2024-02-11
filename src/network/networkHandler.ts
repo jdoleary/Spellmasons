@@ -853,6 +853,14 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
     }
     case MESSAGE_TYPES.END_TURN: {
       if (fromPlayer) {
+        if (!fromPlayer.clientConnected) {
+          fromPlayer.clientConnected = true;
+          console.error('Unexpected: Player ended turn while not connected.');
+        }
+        if (!fromPlayer.isSpawned) {
+          fromPlayer.isSpawned = true;
+          console.error('Unexpected: Player ended turn while not spawned.');
+        }
         underworld.endPlayerTurn(fromPlayer);
       } else {
         console.error('Unable to end turn because caster is undefined');
