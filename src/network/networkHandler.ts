@@ -84,12 +84,12 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
     case MESSAGE_TYPES.PLAYER_THINKING: {
       const thinkingPlayer = fromPlayer;
       if (thinkingPlayer && thinkingPlayer != globalThis.player) {
-        const thought = underworld.playerThoughts[thinkingPlayer.clientId];
+        const thought = underworld.playerThoughts[thinkingPlayer.playerId];
         // Default the currentDrawLocation to target if it doesn't already exist
         // Clear currentDrawLocation if thought contains no cardIds
         const currentDrawLocation = thought && thought.cardIds.length == 0 ? undefined : thought?.currentDrawLocation || payload.target
         // When a new thought comes in, reset the lerp value so the currentDrawLocation will smoothly animate to the new target
-        underworld.playerThoughts[thinkingPlayer.clientId] = { ...payload, currentDrawLocation, lerp: 0 };
+        underworld.playerThoughts[thinkingPlayer.playerId] = { ...payload, currentDrawLocation, lerp: 0 };
       }
       break;
     }
