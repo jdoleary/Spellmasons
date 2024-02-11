@@ -65,40 +65,77 @@ export interface Limits { xMin: number, xMax: number, yMin: number, yMax: number
 // Then the materials array is converted into a tiles array
 // Then convertBaseTilesToFinalTiles is used to turn the tiles into their final images
 export function generateCave(params: CaveParams, biome: Biome, underworld: Underworld): { map: Map, limits: Limits } {
-    let { materials, width } = makeLevelMaterialsArray(params, underworld);
-    stampLiquids(materials, width, underworld);
-    // Increase the size of the map on all sides so that no stamped liquid pools
-    // touch the outside edge which would break the pathing polygons of the walls
-    const { contents: matrixContents, width: newWidth } = surround(materials, width);
-    // Reassign width, height and materials array now that it has grown
-    width = newWidth;
-    const height = Math.floor(matrixContents.length / width);
-    materials = matrixContents;
+    // let { materials, width } = makeLevelMaterialsArray(params, underworld);
+    // stampLiquids(materials, width, underworld);
+    // // Increase the size of the map on all sides so that no stamped liquid pools
+    // // touch the outside edge which would break the pathing polygons of the walls
+    // const { contents: matrixContents, width: newWidth } = surround(materials, width);
+    // // Reassign width, height and materials array now that it has grown
+    // width = newWidth;
+    // const height = Math.floor(matrixContents.length / width);
+    // materials = matrixContents;
 
-    // 1st pass for walls
-    conway(materials, width, underworld);
-    // 2nd pass for semi-walls
-    conway(materials, width, underworld);
+    // // 1st pass for walls
+    // conway(materials, width, underworld);
+    // // 2nd pass for semi-walls
+    // conway(materials, width, underworld);
 
-    // Convert array of materials into tiles
-    let tiles: Tile[] = materials.map((m, i) => {
-        const dimentions = oneDimentionIndexToVec2(i, width);
-        let image = baseTiles.empty;
-        switch (m) {
-            case Material.GROUND:
-                image = baseTiles.ground;
-                break;
-            case Material.LIQUID:
-                image = baseTiles.liquid;
-                break;
-            case Material.WALL:
-                image = baseTiles.wall;
-                break;
-        }
-        return { image, x: dimentions.x * config.OBSTACLE_SIZE, y: dimentions.y * config.OBSTACLE_SIZE }
-    });
+    // // Convert array of materials into tiles
+    // let tiles: Tile[] = materials.map((m, i) => {
+    //     const dimentions = oneDimentionIndexToVec2(i, width);
+    //     let image = baseTiles.empty;
+    //     switch (m) {
+    //         case Material.GROUND:
+    //             image = baseTiles.ground;
+    //             break;
+    //         case Material.LIQUID:
+    //             image = baseTiles.liquid;
+    //             break;
+    //         case Material.WALL:
+    //             image = baseTiles.wall;
+    //             break;
+    //     }
+    //     return { image, x: dimentions.x * config.OBSTACLE_SIZE, y: dimentions.y * config.OBSTACLE_SIZE }
+    // });
+    const _height = 15;
+    const _width = 16;
+    const tiles = [15, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 15,
+        15, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 15,
+        15, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 15,
+        15, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 15,
+        15, 1, 1, 1, 1, 1, 1, 1, 1, 5, 13, 13, 6, 1, 1, 15,
+        15, 1, 1, 1, 1, 1, 1, 1, 1, 7, 10, 11, 14, 1, 1, 15,
+        15, 1, 1, 1, 5, 13, 6, 1, 1, 7, 8, 9, 14, 1, 1, 15,
+        15, 1, 1, 1, 7, 2, 14, 1, 1, 3, 12, 12, 4, 1, 1, 15,
+        15, 1, 1, 1, 3, 12, 4, 1, 1, 1, 1, 1, 1, 1, 1, 15,
+        15, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 15,
+        15, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 15,
+        15, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 15,
+        15, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 15,
+        15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
+        15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15].map((t, i) => ({
+            image: ['', `tiles/${biome}/all_ground.png`,
+                `tiles/${biome}/all_liquid.png`,
+                `tiles/${biome}/liquidCornerNE.png`,
+                `tiles/${biome}/liquidCornerNW.png`,
+                `tiles/${biome}/liquidCornerSE.png`,
+                `tiles/${biome}/liquidCornerSW.png`,
+                `tiles/${biome}/liquidEGroundW.png`,
+                `tiles/${biome}/liquidInsideCornerNE.png`,
+                `tiles/${biome}/liquidInsideCornerNW.png`,
+                `tiles/${biome}/liquidInsideCornerSE.png`,
+                `tiles/${biome}/liquidInsideCornerSW.png`,
+                `tiles/${biome}/liquidNGroundS.png`,
+                `tiles/${biome}/liquidSGroundN.png`,
+                `tiles/${biome}/liquidWGroundE.png`,
+                `tiles/${biome}/wall.png`, `tiles/${biome}/wallN.png`][t] as string,
+            x: 64 * (i % _width),
+            y: 64 * Math.floor(i / _width)
+        }));
+    const width = _width * 64;
+    const height = Math.floor(tiles.length / _height) * 64;
     const bounds = getLimits(tiles);
-    const liquid = tiles.filter(t => t.image == baseTiles.liquid);
+    const liquid = tiles.filter(t => t.image.includes('liquid')).map(x => ({ ...x, image: `tiles/${biome}/all_liquid.png` }));
 
 
     const map = {
