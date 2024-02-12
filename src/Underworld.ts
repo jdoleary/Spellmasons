@@ -2337,7 +2337,7 @@ export default class Underworld {
       console.log('[GAME] Game is Over\nNo connected players in player list: ', this.players);
       return true;
     } else {
-      console.log('[GAME] isGameOver?\nConnected Players: ', connectedPlayers);
+      console.debug('[GAME] isGameOver?\nConnected Players: ', connectedPlayers);
     }
 
     // Are any of those players or their allies alive?
@@ -2348,7 +2348,7 @@ export default class Underworld {
       console.log('[GAME] Game is Over\nNo allies remain');
       return true;
     } else {
-      console.log('[GAME] isGameOver?\nRemaining allies: ', remainingAllies);
+      console.debug('[GAME] isGameOver?\nRemaining allies: ', remainingAllies);
     }
 
     // Have allies made progress towards winning in the last X turns?
@@ -2358,7 +2358,7 @@ export default class Underworld {
       console.log('[GAME] Game is Over\nKill Switch threshold reached');
       return true;
     } else {
-      console.log('[GAME] isGameOver?\nKill Switch Counter: ', this.allyNPCAttemptWinKillSwitch);
+      console.debug('[GAME] isGameOver?\nKill Switch Counter: ', this.allyNPCAttemptWinKillSwitch);
     }
 
     console.log('[GAME] isGameOver = false\nGame is not over');
