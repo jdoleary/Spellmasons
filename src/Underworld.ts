@@ -2676,19 +2676,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // TODO ensure that this works on headless
           const originalTile = this.lastLevelCreated.imageOnlyTiles[vec2ToOneDimentionIndexPreventWrap({ x: Math.round(u.x / config.OBSTACLE_SIZE), y: Math.round(u.y / config.OBSTACLE_SIZE) }, this.lastLevelCreated.width)];
           if (!originalTile || originalTile.image == '') {
-
             if (u.unitType == UnitType.PLAYER_CONTROLLED) {
-              const player = this.players.find(p => p.unit == u);
-              // Clients are the source of truth for themselves and therefore a player shouldn't get reset
-              // unless it is on it's own client.
-              if (globalThis.player == player) {
-                if (player && !Player.inPortal(player)) {
-                  console.error('Player was reset because they ended up out of bounds');
-                  Player.resetPlayerForNextLevel(player, this);
-                } else {
-                  console.error('Unexpected: Tried to reset out of bounds player but player unit matched no player object.');
-                }
-              }
+              // Do NOT kill player units that are out of bounds
+              console.warn('Player unit out of bounds');
             } else {
               console.error('Unit was force killed because they ended up out of bounds', u.unitSubType)
               Unit.die(u, this, false);
