@@ -49,7 +49,6 @@ const deathmason: UnitSource = {
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     if (unit.image) {
-
       const adjustmentFilter = new AdjustmentFilter({
         saturation: 0.4,
         contrast: 5,
