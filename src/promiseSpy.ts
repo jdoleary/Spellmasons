@@ -1,5 +1,10 @@
 
-let testPromisesList: { label: string, prom: Promise<any>, resolved:boolean }[] = [];
+interface PromiseTracker {
+    label: string;
+    prom?: Promise<any>;
+    resolved:boolean;
+}
+let testPromisesList: PromiseTracker[] = [];
 let testPromisesLabel = 'None';
 export function test_endCheckPromises(): boolean {
     const labelledPromises = testPromisesList.filter(({ label }) => label == testPromisesLabel)
@@ -18,11 +23,21 @@ export function test_startCheckPromises(label: string) {
         const remainingLabels = testPromisesList.map(({label}) => label);
         console.log('Test: Unfinished promises: ', remainingLabels.filter((x, i) => remainingLabels.indexOf(x) === i))
     }
-    // Clear
+    // Clear list because they don't need to be tracked now that the test has been reported
     testPromisesList = [];
 }
+function addToList(t: PromiseTracker){
+    if(window.doTrace){
+    console.trace('debug');
+    }
+    testPromisesList.push(t);
+}
 let spyPromiseActive = false;
-export function spyPromise() {
+export function test_spyPromise() {
+    if(!location.href.includes('localhost')) {
+        console.debug('Skipping spyPromise in production');
+        return;
+    }
     if(spyPromiseActive){
         console.warn('Test: spyPromise invoked more than once');
         return;
@@ -30,28 +45,42 @@ export function spyPromise() {
     spyPromiseActive = true;
     
     const OriginalPromise = Promise;
+    // @ts-ignore
     window.Promise = function(executor) {
         console.log('Promise constructor called');
         // Capture stack trace or any other debug information here
-        let ob = {label: testPromisesLabel, prom:undefined, resolved:false};
-        ob.prom = new OriginalPromise((resolve, reject) => {
+        let tracker:PromiseTracker = {label: testPromisesLabel, prom:undefined, resolved:false};
+        tracker.prom = new OriginalPromise((resolve, reject) => {
             // Optionally modify the behavior of resolve and reject here
-            executor(value => {
+            executor((value: any) => {
                 console.log('Promise resolved with value:', value, this);
-                ob.resolved = true;
+                tracker.resolved = true;
                 resolve(value);
-            }, reason => {
+            }, (reason: any) => {
                 console.log('Promise rejected with reason:', reason);
                 reject(reason);
             });
         });
-        testPromisesList.push(ob);
+        addToList(tracker);
         console.log('jtest testPromises', testPromisesList)
-        return ob.prom;
+        return tracker.prom;
     };
     window.Promise.resolve = () => {
         const prom = new window.Promise<void>((res) => res());
         return prom;
+    }
+    window.Promise.all = (promises: Promise<any>[]) => {
+        let tracker:PromiseTracker = {label: testPromisesLabel, prom:undefined, resolved:false};
+        // Must wrap in a new promise so that it only resolves AFTER
+        // tracker.resolved is set to true;
+        return new OriginalPromise<any[]>((res) => {
+            tracker.prom = OriginalPromise.all(promises).then((resolution) => {
+                tracker.resolved = true;
+                console.log('jtest Test: Promise.all is resolved')
+                res(resolution);
+            });
+            addToList(tracker);
+        })
     }
 }
 // export function spyPromise2() {

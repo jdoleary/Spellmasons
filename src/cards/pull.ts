@@ -25,6 +25,7 @@ const spell: Spell = {
         promises.push(forcePushTowards(entity, state.casterUnit, defaultPushDistance * quantity, underworld, prediction));
       }
       await Promise.all(promises);
+      console.log('jtest Test: finished awaiting Promise.all')
       return state;
     },
   },

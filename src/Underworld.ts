@@ -106,6 +106,7 @@ import { playThrottledEndTurnSFX } from './Audio';
 import { targetConeId } from './cards/target_cone';
 import { slashCardId } from './cards/slash';
 import { pushId } from './cards/push';
+import { test_spyPromise, test_endCheckPromises, test_startCheckPromises } from './promiseSpy';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -3648,6 +3649,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         // Filter out protected units
         effectState.targetedUnits = effectState.targetedUnits.filter(u => !excludedTargets.includes(u));
 
+        test_spyPromise();
+        test_startCheckPromises(card.id);
+        window.doTrace = !prediction;
         const cardEffectPromise = card.effect(effectState, card, quantity, this, prediction, outOfRange);
         await this.awaitForceMoves(prediction);
 
@@ -3657,6 +3661,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         } catch (e) {
           console.error('Unexpected error from card.effect', e);
         }
+        test_endCheckPromises();
 
         if (!effectState.shouldRefundLastSpell) {
           // Add cooldown
