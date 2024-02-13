@@ -2126,20 +2126,24 @@ export default class Underworld {
     return { x, y };
   }
   getPlayerFactions() {
-    // Returns all players' current faction
-    return this.players.filter(p => p.clientConnected).map(p => p.unit.faction);
+    // Returns all factions that currently contain at least one player
+    const factions = this.players.filter(p => p.clientConnected).map(p => p.unit.faction);
+    // This removes all duplicate entries from the list
+    return [...new Set(factions)];
   }
   getRemainingPlayerUnits(): Unit.IUnit[] {
     // Returns all living units currently controlled by a player
-    return this.players.filter(p => p.isSpawned).map(p => p.unit).filter(u => u.alive);
+    return this.players.filter(p => p.clientConnected && p.isSpawned).map(p => p.unit).filter(u => u.alive);
   }
   getRemainingAllies(): Unit.IUnit[] {
     // Returns all living units that share a faction with a player
-    return this.units.filter(u => u.alive && this.getPlayerFactions().includes(u.faction) && u.unitSubType != UnitSubType.DOODAD);
+    const playerFactions = this.getPlayerFactions();
+    return this.units.filter(u => u.alive && playerFactions.includes(u.faction) && u.unitSubType != UnitSubType.DOODAD);
   }
   getRemainingEnemies(): Unit.IUnit[] {
     // Returns all living units that don't share a faction with a player
-    return this.units.filter(u => u.alive && !this.getPlayerFactions().includes(u.faction) && u.unitSubType != UnitSubType.DOODAD);
+    const playerFactions = this.getPlayerFactions();
+    return this.units.filter(u => u.alive && !playerFactions.includes(u.faction) && u.unitSubType != UnitSubType.DOODAD);
   }
   // Handles level completion, game over, turn phases, and hotseat
   async progressGameState() {
