@@ -86,7 +86,7 @@ const unit: UnitSource = {
     }
     if (!didAction) {
       // Move to closest enemy
-      const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
+      const closestEnemy = Unit.findClosestUnitInDifferentFactionSmartTarget(unit, underworld.units);
       if (closestEnemy) {
         const distanceToEnemy = math.distance(unit, closestEnemy);
         // The following is a hacky way to make them not move too close to the enemy
@@ -96,7 +96,7 @@ const unit: UnitSource = {
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-    return Unit.livingUnitsInDifferentFaction(unit, underworld)
+    return Unit.livingUnitsInDifferentFaction(unit, underworld.units)
       .filter(u => Unit.inRange(unit, u))
       .sort(math.sortCosestTo(unit))
       .slice(0, NUMBER_OF_GEYSERS);

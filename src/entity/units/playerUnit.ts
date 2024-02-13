@@ -32,7 +32,7 @@ const playerUnit: UnitSource = {
       await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
     }
     // Movement:
-    const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
+    const closestEnemy = Unit.findClosestUnitInDifferentFactionSmartTarget(unit, underworld.units);
     if (closestEnemy) {
       const distanceToEnemy = math.distance(unit, closestEnemy);
       // Trick to make the unit only move as far as will put them in range but no closer
@@ -42,7 +42,7 @@ const playerUnit: UnitSource = {
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
     if (unit.unitType == UnitType.AI) {
-      const closestUnit = Unit.findClosestUnitInDifferentFaction(unit, underworld);
+      const closestUnit = Unit.findClosestUnitInDifferentFactionSmartTarget(unit, underworld.units);
       if (closestUnit) {
         return [closestUnit];
       } else {

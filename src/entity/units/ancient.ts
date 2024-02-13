@@ -66,7 +66,7 @@ const unit: UnitSource = {
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-    return Unit.livingUnitsInDifferentFaction(unit, underworld)
+    return Unit.livingUnitsInDifferentFaction(unit, underworld.units)
       .filter(u => Unit.inRange(unit, u))
       .sort(math.sortCosestTo(unit))
       .slice(0, numberOfTargets);

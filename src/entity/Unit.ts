@@ -1123,15 +1123,26 @@ export function canMove(unit: IUnit): boolean {
   }
   return true;
 }
-export function livingUnitsInDifferentFaction(unit: IUnit, underworld: Underworld) {
-  return underworld.units.filter(
-    (u) => u.faction !== unit.faction && u.alive && u.unitSubType !== UnitSubType.DOODAD,
+export function livingUnitsInSameFaction(unit: IUnit, units: IUnit[]) {
+  // u !== unit excludes self from returning as the closest unit
+  return units.filter(
+    u => u !== unit && u.faction == unit.faction && u.alive && u.unitSubType !== UnitSubType.DOODAD,
   );
 }
-export function livingUnitsInSameFaction(unit: IUnit, underworld: Underworld) {
-  // u !== unit excludes self from returning as the closest unit
-  return underworld.units.filter(
-    (u) => u !== unit && u.faction == unit.faction && u.alive && u.unitSubType !== UnitSubType.DOODAD,
+export function livingUnitsInDifferentFaction(unit: IUnit, units: IUnit[]) {
+  return units.filter(
+    u => u.faction !== unit.faction && u.alive && u.unitSubType !== UnitSubType.DOODAD,
+  );
+}
+export function findClosestUnitInSameFaction(unit: IUnit, units: IUnit[]): IUnit | undefined {
+  return closestInListOfUnits(unit, livingUnitsInSameFaction(unit, units));
+}
+export function findClosestUnitInDifferentFactionSmartTarget(
+  unit: IUnit,
+  units: IUnit[]
+): IUnit | undefined {
+  return closestInListOfUnits(unit, livingUnitsInDifferentFaction(unit, units)
+    .filter(filterSmartTarget)
   );
 }
 export function closestInListOfUnits(source: Vec2, units: IUnit[]): IUnit | undefined {
@@ -1146,14 +1157,6 @@ export function closestInListOfUnits(source: Vec2, units: IUnit[]): IUnit | unde
     { closest: undefined, distance: Number.MAX_SAFE_INTEGER },
   ).closest;
 }
-export function findClosestUnitInDifferentFaction(
-  unit: IUnit,
-  underworld: Underworld
-): IUnit | undefined {
-  return closestInListOfUnits(unit, livingUnitsInDifferentFaction(unit, underworld)
-    .filter(filterSmartTarget)
-  );
-}
 // To be used in a filterFunction
 export function filterSmartTarget(u: IUnit) {
   // Smart Target: Try to attack units that aren't already going to take fatal damage from other ally npc
@@ -1161,9 +1164,6 @@ export function filterSmartTarget(u: IUnit) {
   // The player unit may be shielded or absorb damage in some way that predictNextTurnDamage doesn't catch
   // also filtering player units out may interfere with prediction attack badges
   return u.unitType == UnitType.PLAYER_CONTROLLED || u.predictedNextTurnDamage < u.health;
-}
-export function findClosestUnitInSameFaction(unit: IUnit, underworld: Underworld): IUnit | undefined {
-  return closestInListOfUnits(unit, livingUnitsInSameFaction(unit, underworld));
 }
 export function orient(unit: IUnit, faceTarget: Vec2) {
   // Orient; make the sprite face it's enemy
@@ -1542,7 +1542,7 @@ export function drawSelectedGraphics(unit: IUnit, prediction: boolean = false, u
     // they had LOS
     let canAttack = true;
     if (!archerTargets.length) {
-      const nextTarget = findClosestUnitInDifferentFaction(unit, underworld)
+      const nextTarget = findClosestUnitInDifferentFactionSmartTarget(unit, underworld.units)
       if (nextTarget) {
         archerTargets.push(nextTarget);
       }
