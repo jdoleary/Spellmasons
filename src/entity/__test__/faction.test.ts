@@ -1,6 +1,6 @@
 import { Faction } from "../../types/commonTypes.ts";
 import { getFactionsOf } from "../Player.ts";
-import { livingUnitsInSameFaction } from "../Unit.ts";
+import { livingUnitsInSameFaction, livingUnitsInDifferentFaction } from "../Unit.ts";
 
 describe('getFactionsOf', () => {
   it('should return an array of factions', () => {
@@ -31,3 +31,6 @@ describe('getFactionsOf', () => {
     expect(expected).toEqual(actual);
   });
 });
+
+// TODO - Implement Unit Tests for livingUnitsInSameFaction, livingUnitsInDifferentFaction,
+// and other similar functions
