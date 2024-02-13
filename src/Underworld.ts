@@ -2125,24 +2125,18 @@ export default class Underworld {
     );
     return { x, y };
   }
-  getPlayerFactions() {
-    // Returns all factions that currently contain at least one player
-    const factions = this.players.filter(p => p.clientConnected).map(p => p.unit.faction);
-    // This removes all duplicate entries from the list
-    return [...new Set(factions)];
-  }
   getRemainingPlayerUnits(): Unit.IUnit[] {
     // Returns all living units currently controlled by a player
     return this.players.filter(p => p.clientConnected && p.isSpawned).map(p => p.unit).filter(u => u.alive);
   }
-  getRemainingAllies(): Unit.IUnit[] {
+  getRemainingPlayerAllies(): Unit.IUnit[] {
     // Returns all living units that share a faction with a player
-    const playerFactions = this.getPlayerFactions();
+    const playerFactions = Player.getFactionsOf(this.players);
     return this.units.filter(u => u.alive && playerFactions.includes(u.faction) && u.unitSubType != UnitSubType.DOODAD);
   }
-  getRemainingEnemies(): Unit.IUnit[] {
+  getRemainingPlayerEnemies(): Unit.IUnit[] {
     // Returns all living units that don't share a faction with a player
-    const playerFactions = this.getPlayerFactions();
+    const playerFactions = Player.getFactionsOf(this.players);
     return this.units.filter(u => u.alive && !playerFactions.includes(u.faction) && u.unitSubType != UnitSubType.DOODAD);
   }
   // Handles level completion, game over, turn phases, and hotseat
@@ -2230,7 +2224,7 @@ export default class Underworld {
       return false;
     }
 
-    const remainingEnemies = this.getRemainingEnemies();
+    const remainingEnemies = this.getRemainingPlayerEnemies();
     if (remainingEnemies.length > 0) {
       console.debug('[GAME] Can\'t Spawn Next Wave\nRemaining enemies: ', remainingEnemies);
       return false;
@@ -2271,7 +2265,7 @@ export default class Underworld {
   }
   isLevelComplete(): boolean {
     // The level is complete if all enemies, waves, and bosses have been killed
-    const remainingEnemies = this.getRemainingEnemies();
+    const remainingEnemies = this.getRemainingPlayerEnemies();
     if (remainingEnemies.length > 0) {
       console.debug('[GAME] Level Incomplete...\nEnemies remain...');
       return false;
@@ -2370,7 +2364,7 @@ export default class Underworld {
       console.debug('[GAME] isGameOver?\nConnected Players: ', connectedPlayers);
     }
 
-    const remainingAllies = this.getRemainingAllies();
+    const remainingAllies = this.getRemainingPlayerAllies();
     if (remainingAllies.length == 0) {
       console.log('[GAME] Game is Over\nNo allies remain');
       return true;
