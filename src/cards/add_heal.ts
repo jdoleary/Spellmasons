@@ -6,6 +6,7 @@ import { playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { healUnits } from '../effects/heal';
+import { test_startCheckPromises, spyPromise, test_endCheckPromises } from '../promiseSpy';
 
 export const healCardId = 'heal';
 const healAmount = 30;
@@ -24,7 +25,13 @@ const spell: Spell = {
     animationPath: 'spell-effects/potionPickup',
     description: ['spell_heal', healAmount.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
-      await healUnits(state.targetedUnits, healAmount * quantity, underworld, prediction, state);
+      if (!prediction) {
+        spyPromise();
+
+        test_startCheckPromises('heal');
+        await healUnits(state.targetedUnits, healAmount * quantity, underworld, prediction, state);
+        test_endCheckPromises();
+      }
       return state;
     },
   },
