@@ -4226,6 +4226,7 @@ async function introduceBoss(unit: UnitSource, underworld: Underworld) {
     unit.unitProps,
     underworld
   );
+  newBossUnitInstance.originalLife = true;
   skyBeam(newBossUnitInstance);
   // Wait again for the players to digest that the boss appeared
   await new Promise((resolve) => {
