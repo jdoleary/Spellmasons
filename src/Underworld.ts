@@ -152,7 +152,7 @@ export default class Underworld {
   // The index of the level the players are on
   levelIndex: number = -1;
   isTutorialRun: boolean = false;
-  wave: number = 0;
+  wave: number = 1;
   // for serializing random: prng
   RNGState?: SeedrandomState;
   turn_phase: turn_phase = turn_phase.Stalled;
@@ -1907,7 +1907,7 @@ export default class Underworld {
     // Reset kill switch
     this.allyNPCAttemptWinKillSwitch = 0;
     // Reset wave count
-    this.wave = 0;
+    this.wave = 1;
     // Reset has spawned boss boolean
     this.hasSpawnedBoss = false;
   }
@@ -2125,6 +2125,22 @@ export default class Underworld {
     );
     return { x, y };
   }
+  getPlayerFactions() {
+    // Returns all players' current faction
+    return this.players.filter(p => p.clientConnected).map(p => p.unit.faction);
+  }
+  getRemainingPlayerUnits(): Unit.IUnit[] {
+    // Returns all living units currently controlled by a player
+    return this.players.filter(p => p.isSpawned).map(p => p.unit).filter(u => u.alive);
+  }
+  getRemainingAllies(): Unit.IUnit[] {
+    // Returns all living units that share a faction with a player
+    return this.units.filter(u => u.alive && this.getPlayerFactions().includes(u.faction) && u.unitSubType != UnitSubType.DOODAD);
+  }
+  getRemainingEnemies(): Unit.IUnit[] {
+    // Returns all living units that don't share a faction with a player
+    return this.units.filter(u => u.alive && !this.getPlayerFactions().includes(u.faction) && u.unitSubType != UnitSubType.DOODAD);
+  }
   // Handles level completion, game over, turn phases, and hotseat
   async progressGameState() {
     console.log('[GAME] Progress Game State...');
@@ -2133,199 +2149,209 @@ export default class Underworld {
     const connectedPlayers = this.players.filter(p => p.clientConnected);
     if (connectedPlayers.length == 0) {
       console.log('[GAME] No connected players: ', this.players);
+      console.log('[GAME] Progress Game State Complete');
       return;
     }
 
-    // We should try progressing the level before ending the game
+    // Game State should not progress if no players are spawned
+    const spawnedPlayers = this.players.filter(p => p.isSpawned);
+    if (spawnedPlayers.length == 0) {
+      console.log('[GAME] No spawned players: ', this.players);
+      console.log('[GAME] Progress Game State Complete');
+      return;
+    }
+
+    // We should try completing the level before ending the game
     // in case the player has beaten the level and died at the same time
     // Favoring the player in this scenario should only improve player experience
-    if (await this.handleLevelProgress()) {
-      // Level progress has been handled by the above function
-      // So there is nothing left to do, just continue
-    }
-    else if (this.isGameOver()) {
-      this.doGameOver();
-    }
-    else {
-      console.log('[GAME] Turn Phase\nCurrent == ', turn_phase[this.turn_phase]);
-
-      // TODO - It would be cleaner if we found a way to move all TurnPhase logic here
-      // https://github.com/jdoleary/Spellmasons/pull/398
-
-      // Most turn phases are currently handled in InitializeTurnPhase()
-      // the Player Turn depends on player input and thus happens asyncronously
-      // So we make a special case to handle it here instead
-      if (this.turn_phase == turn_phase.PlayerTurns) {
-        // If all hotseat players are ready, try end player turn
-        await this.handleNextHotseatPlayer();
-
-        // Moves to next Turn Phase [NPC.ALLY] if possible
-        if (await this.tryEndPlayerTurnPhase()) {
-          this.broadcastTurnPhase(turn_phase.NPC_ALLY);
-        }
+    if (this.isLevelComplete()) {
+      if (this.trySpawnPortals()) {
+        console.log('[GAME] Progress Game State Complete');
+        return;
       }
-
-      console.log('[GAME] Turn Phase\nNew == ', turn_phase[this.turn_phase]);
+      if (this.tryGoToNextLevel()) {
+        console.log('[GAME] Progress Game State Complete');
+        return;
+      }
+      // If we don't spawn portals or go to the next level, DONT RETURN!
+      // Continue progressGameState to check for game over and cycle turn phases
     }
 
+    if (this.isGameOver()) {
+      this.doGameOver();
+      console.log('[GAME] Progress Game State Complete');
+      return;
+    }
+
+    console.log('[GAME] Turn Phase\nCurrent == ', turn_phase[this.turn_phase]);
+
+    // TODO - It might be cleaner if we found a way to move all TurnPhase logic here
+    // https://github.com/jdoleary/Spellmasons/pull/398
+
+    // Most turn phases are currently handled in InitializeTurnPhase()
+    // the Player Turn depends on player input and thus happens asyncronously
+    // So we make a special case to handle it here instead
+    if (this.turn_phase == turn_phase.PlayerTurns) {
+      // If all hotseat players are ready, try end player turn
+      await this.handleNextHotseatPlayer();
+
+      // Moves to next Turn Phase [NPC.ALLY] if possible
+      if (await this.tryEndPlayerTurnPhase()) {
+        this.broadcastTurnPhase(turn_phase.NPC_ALLY);
+      }
+    }
+
+    console.log('[GAME] Turn Phase\nNew == ', turn_phase[this.turn_phase]);
     console.log('[GAME] Progress Game State Complete');
     return;
   }
-  async handleLevelProgress(): Promise<Boolean> {
-    // Returns true if this function progresses the level state
-    // - Spawn the next wave of enemies
-    // - Spawn purple portals
-    // - Send players to next level
-
-    const connectedPlayers = this.players.filter(p => p.clientConnected);
-
-    // Don't progress level (I.E. spawn waves, portals, etc.)
-    // If a boss should spawn and hasn't spawned yet
-    // Boss spawning currently handled in endFullTurnCycle
-    // To make sure the boss spawns after a full turn is resolved
-    if (this.levelIndex == config.LAST_LEVEL_INDEX && !this.hasSpawnedBoss) {
-      console.log('[GAME] Can\'t Progress Level...\nWaiting to spawn Deathmason...');
+  async trySpawnBoss(): Promise<boolean> {
+    if (this.levelIndex != config.LAST_LEVEL_INDEX) {
+      console.debug('[GAME] Can\'t Spawn Boss\nNo boss to spawn');
       return false;
     }
 
-    // TODO - Below is a temp failsafe. It should be removed eventually:
-    // This failsafe is here to account for an edge case where progressGameState()
-    // is called during underworld generation / in headless when all players are still in lobby
-    // I think. Haven't had time to investigate.
-    // Point: Progress game state should not be getting called before the game "starts"
-    // I.E. level is generated, enemies are spawned, players are ready to play and spawn, etc.
-    const spawnedPlayers = this.players.filter(p => p.isSpawned)
-    if (spawnedPlayers.length == 0) {
-      console.log('[GAME] Can\'t Progress Level \nNo players have spawned: ', this.players);
+    if (this.hasSpawnedBoss) {
+      console.debug('[GAME] Can\'t Spawn Boss\nBoss is already spawned');
       return false;
-    } else {
-      console.log('[GAME] isLevelProgressable?\nSpawned Players: ', spawnedPlayers);
     }
 
-    const remainingEnemies = this.units.filter(u => u.alive && u.unitSubType != UnitSubType.DOODAD && u.faction == Faction.ENEMY);
+    await introduceBoss(deathmason, this);
+    return true;
+  }
+  trySpawnNextWave(): boolean {
+    const wavesToSpawn = Math.max(1, (this.levelIndex - config.LAST_LEVEL_INDEX) + 1);
+    if (this.wave >= wavesToSpawn) {
+      console.debug('[GAME] Can\'t Spawn Next Wave\nNo more waves to spawn: ', this.wave, '/', wavesToSpawn);
+      return false;
+    }
+
+    const remainingEnemies = this.getRemainingEnemies();
     if (remainingEnemies.length > 0) {
-      console.log('[GAME] Can\'t Progress Level\nRemaining enemies: ', remainingEnemies);
+      console.debug('[GAME] Can\'t Spawn Next Wave\nRemaining enemies: ', remainingEnemies);
       return false;
-    } else {
-      console.log('[GAME] isLevelProgressable?\nNo remaining enemies in unit list: ', this.units);
     }
 
-    // Should another wave of enemies be spawned?
-    const loopIndex = Math.max(0, (this.levelIndex - config.LAST_LEVEL_INDEX));
-    if (loopIndex > this.wave) {
-      // Only spawn new wave if all players have ended their turn
-      if (connectedPlayers.every(p => this.hasCompletedTurn(p))) {
-        this.wave++;
-        queueCenteredFloatingText(`Wave ${this.wave + 1} of ${loopIndex + 1}`);
-        // Add corpse decay to all dead NPCs
-        this.units.filter(u => u.unitType == UnitType.AI && !u.alive).forEach(u => {
-          Unit.addModifier(u, corpseDecayId, this, false);
-        });
-        // Trick for finding valid spawnable tiles
-        const validSpawnCoords = this.lastLevelCreated?.imageOnlyTiles.filter(x => x.image.endsWith('all_ground.png')) || [];
+    this.wave++;
+    queueCenteredFloatingText(`Wave ${this.wave} of ${wavesToSpawn}`);
+    // Add corpse decay to all dead NPCs
+    this.units.filter(u => u.unitType == UnitType.AI && !u.alive).forEach(u => {
+      Unit.addModifier(u, corpseDecayId, this, false);
+    });
+    // Trick for finding valid spawnable tiles
+    const validSpawnCoords = this.lastLevelCreated?.imageOnlyTiles.filter(x => x.image.endsWith('all_ground.png')) || [];
 
-        // Copied from generateRandomLevelData
-        const unitIds = getEnemiesForAltitude(this, this.levelIndex);
-        const numberOfMinibossesAllowed = Math.ceil(Math.max(0, (this.levelIndex - 4) / 4));
-        let numberOfMinibossesMade = 0;
-        for (let id of unitIds) {
-          if (validSpawnCoords.length == 0) { break; }
-          const validSpawnCoordsIndex = randInt(0, validSpawnCoords.length - 1, this.random);
-          const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
-          const sourceUnit = allUnits[id];
-          const { unitMinLevelIndexSubtractor } = unavailableUntilLevelIndexDifficultyModifier(this);
-          // Disallow miniboss for a unit spawning on the first levelIndex that they are allowed to spawn
-          const minibossAllowed = !sourceUnit?.spawnParams?.excludeMiniboss && ((sourceUnit?.spawnParams?.unavailableUntilLevelIndex || 0) - unitMinLevelIndexSubtractor) < this.levelIndex;
-          if (coord) {
-            const isMiniboss = !minibossAllowed ? false : numberOfMinibossesAllowed > numberOfMinibossesMade;
-            if (isMiniboss) {
-              numberOfMinibossesMade++;
-            }
-            this.spawnEnemy(id, coord, isMiniboss)
-          }
+    // Copied from generateRandomLevelData
+    const unitIds = getEnemiesForAltitude(this, this.levelIndex);
+    const numberOfMinibossesAllowed = Math.ceil(Math.max(0, (this.levelIndex - 4) / 4));
+    let numberOfMinibossesMade = 0;
+    for (let id of unitIds) {
+      if (validSpawnCoords.length == 0) { break; }
+      const validSpawnCoordsIndex = randInt(0, validSpawnCoords.length - 1, this.random);
+      const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
+      const sourceUnit = allUnits[id];
+      const { unitMinLevelIndexSubtractor } = unavailableUntilLevelIndexDifficultyModifier(this);
+      // Disallow miniboss for a unit spawning on the first levelIndex that they are allowed to spawn
+      const minibossAllowed = !sourceUnit?.spawnParams?.excludeMiniboss && ((sourceUnit?.spawnParams?.unavailableUntilLevelIndex || 0) - unitMinLevelIndexSubtractor) < this.levelIndex;
+      if (coord) {
+        const isMiniboss = !minibossAllowed ? false : numberOfMinibossesAllowed > numberOfMinibossesMade;
+        if (isMiniboss) {
+          numberOfMinibossesMade++;
         }
-        // end Copied from generateRandomLevelData
-        console.log('[GAME] Level Progressed\nSpawned new wave of enemies');
-        return true;
-      } else {
-        console.log('[GAME] Handling Level Progress...\nCan\'t spawn new wave until all connected players have ended turn: ', connectedPlayers);
-        return false;
+        this.spawnEnemy(id, coord, isMiniboss)
       }
-    } else {
-      console.log('[GAME] Handling Level Progress...\nNo more waves to spawn');
+    }
+    // end Copied from generateRandomLevelData
+    console.log('[GAME] Spawned new wave of enemies');
+    return true;
+  }
+  isLevelComplete(): boolean {
+    // The level is complete if all enemies, waves, and bosses have been killed
+    const remainingEnemies = this.getRemainingEnemies();
+    if (remainingEnemies.length > 0) {
+      console.debug('[GAME] Level Incomplete...\nEnemies remain...');
+      return false;
     }
 
-    // No wave to spawn, so spawn portals
-
-    // We should check that there are players to spawn portals for
-    // It's possible that all players are dead, frozen, etc.
-    // When the level is completed, and in that case,
-    // we can skip spawning portals and go to next level
-    const remainingPlayers = this.players.filter(p => p.isSpawned && !this.hasCompletedTurn(p));
-    if (remainingPlayers.length > 0) {
-      const spawnedPortals = this.pickups.filter(p => !p.flaggedForRemoval && p.name === Pickup.PORTAL_PURPLE_NAME);
-      if (spawnedPortals.length <= 0) {
-        // TODO - Clear pickups correctly - They are not removed from underworld list
-
-        // Make all non-portal pickups disappear so as to not compell players
-        // to waste time walking around picking them all up
-        this.pickups.filter(p => p.name !== Pickup.PORTAL_PURPLE_NAME).forEach(p => {
-          makeScrollDissapearParticles(p, false);
-          Pickup.removePickup(p, this, false);
-        });
-
-        // Spawn portal near each player
-        const portalPickup = Pickup.pickups.find(p => p.name == Pickup.PORTAL_PURPLE_NAME);
-        if (portalPickup) {
-          for (let playerUnit of remainingPlayers.map(p => p.unit)) {
-            const portalSpawnLocation = this.findValidSpawn(playerUnit, 4) || playerUnit;
-            if (!isOutOfBounds(portalSpawnLocation, this)) {
-              spawnedPortals.push(Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup, logSource: 'Portal' }, this, false));
-            }
-            // Give all player units huge stamina when portal spawns for convenience.
-            playerUnit.stamina = 1_000_000;
-            // Give all players max health and mana (it will be reset anyway when they are reset for the next level
-            // but this disswades them from going around to pickup potions)
-            playerUnit.health = playerUnit.healthMax;
-            playerUnit.mana = playerUnit.manaMax;
-            // Since playerUnit's health and mana is reset, we need to immediately sync the prediction unit
-            // so that it doesn't inncorrectly warn "self damage due to spell" by seeing that the prediction unit
-            // has less health than the current player unit.
-            this.syncPlayerPredictionUnitOnly();
-          }
-          console.log('[GAME] Level Progressed\nSpawned portals: ', spawnedPortals);
-          return true;
-        } else {
-          console.error('[GAME] Handling Level Progress...\nPortal pickup not found')
-        }
-      } else {
-        console.log('[GAME] Handling Level Progress...\nPortals have already been spawned: ', spawnedPortals);
-      }
-    } else {
-      console.log('[GAME] Handling Level Progress...\nNo players to spawn portals for: ', this.players);
+    if (this.levelIndex == config.LAST_LEVEL_INDEX && !this.hasSpawnedBoss) {
+      console.debug('[GAME] Level Incomplete...\nWaiting to spawn Deathmason...');
+      return false;
     }
 
-    // Go To Next Level
-    // - If all connected players are in portal or done with turn
-    // - If in hotseat and at least one player is in portal
-    const goToNextLevel =
-      connectedPlayers.every(p => Player.inPortal(p) || this.hasCompletedTurn(p))
+    const wavesToSpawn = Math.max(1, (this.levelIndex - config.LAST_LEVEL_INDEX) + 1);
+    if (this.wave < wavesToSpawn) {
+      console.debug('[GAME] Level Incomplete... \nWaiting to spawn new wave');
+      return false;
+    }
+
+    return true;
+  }
+  trySpawnPortals(): boolean {
+    const remainingPlayers = this.getRemainingPlayerUnits();
+    if (remainingPlayers.length == 0) {
+      console.debug('[GAME] TrySpawnPortals()...\nNo players to spawn portals for: ', this.players);
+      return false;
+    }
+
+    const spawnedPortals = this.pickups.filter(p => !p.flaggedForRemoval && p.name === Pickup.PORTAL_PURPLE_NAME);
+    if (spawnedPortals.length > 0) {
+      console.debug('[GAME] TrySpawnPortals()...\nPortals have already been spawned: ', spawnedPortals);
+      return false;
+    }
+
+    const portalPickup = Pickup.pickups.find(p => p.name == Pickup.PORTAL_PURPLE_NAME);
+    if (!portalPickup) {
+      console.error('[GAME] TrySpawnPortals()...\nUnexpected: Portal pickup does not exist: ', Pickup.pickups);
+      return false;
+    }
+
+    // Make all non-portal pickups disappear so as to not compell players
+    // to waste time walking around picking them all up
+    this.pickups.filter(p => p.name !== Pickup.PORTAL_PURPLE_NAME).forEach(p => {
+      makeScrollDissapearParticles(p, false);
+      Pickup.removePickup(p, this, false);
+    });
+
+    // Spawn a portal near each remaining player
+    for (let playerUnit of remainingPlayers) {
+      const portalSpawnLocation = this.findValidSpawn(playerUnit, 4) || playerUnit;
+      if (!isOutOfBounds(portalSpawnLocation, this)) {
+        spawnedPortals.push(Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup, logSource: 'Portal' }, this, false));
+      }
+      // Give all player units huge stamina when portal spawns for convenience.
+      playerUnit.stamina = 1_000_000;
+      // Give all players max health and mana (it will be reset anyway when they are reset for the next level
+      // but this disswades them from going around to pickup potions)
+      playerUnit.health = playerUnit.healthMax;
+      playerUnit.mana = playerUnit.manaMax;
+      // Since playerUnit's health and mana is reset, we need to immediately sync the prediction unit
+      // so that it doesn't inncorrectly warn "self damage due to spell" by seeing that the prediction unit
+      // has less health than the current player unit.
+      this.syncPlayerPredictionUnitOnly();
+    }
+    console.log('[GAME] TrySpawnPortal()\nSuccessfully spawned portals: ', spawnedPortals);
+    return true;
+  }
+  tryGoToNextLevel(): boolean {
+    // We can only go to the next level if all players are
+    // inPortal or have completed their turn
+    // This includes players that can't act due to death/freeze/etc.
+    // In hotseat, one player inPortal is enough
+    const connectedPlayers = this.players.filter(p => p.clientConnected);
+    const goToNextLevel = connectedPlayers.every(p => Player.inPortal(p) || this.hasCompletedTurn(p))
       || (numberOfHotseatPlayers > 1 && connectedPlayers.some(Player.inPortal));
-    if (goToNextLevel) {
-      tutorialCompleteTask('portal');
-      if (globalThis.isHost(this.pie)) {
-        this.generateLevelData(this.levelIndex + 1);
-      } else {
-        console.log('This instance is not host, host will trigger next level generation.');
-      }
-      console.log('[GAME] Level Progressed\nMoving to next level');
-      return true;
-    } else {
-      console.log('[GAME] Handling Level Progress...\nDo not go to next level');
-    }
 
-    //Level was not progressed
-    return false;
+    if (!goToNextLevel) return false;
+
+    console.log('- - -\nLevel Complete\n- - -');
+    tutorialCompleteTask('portal');
+    if (globalThis.isHost(this.pie)) {
+      this.generateLevelData(this.levelIndex + 1);
+    } else {
+      console.log('This instance is not host, host will trigger next level generation.');
+    }
+    console.log('[GAME] Level Complete\nMoving to next level');
+    return true;
   }
   isGameOver(): boolean {
     // Game is over once ALL units on all connected player factions are dead
@@ -2340,10 +2366,7 @@ export default class Underworld {
       console.debug('[GAME] isGameOver?\nConnected Players: ', connectedPlayers);
     }
 
-    // Are any of those players or their allies alive?
-    const playerFactions = connectedPlayers.map(p => p.unit.faction);
-    // Note: This must exclude doodads
-    const remainingAllies = this.units.filter(u => u.alive && u.unitSubType != UnitSubType.DOODAD && playerFactions.includes(u.faction));
+    const remainingAllies = this.getRemainingAllies();
     if (remainingAllies.length == 0) {
       console.log('[GAME] Game is Over\nNo allies remain');
       return true;
@@ -2655,14 +2678,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Clear cast this turn
     globalThis.castThisTurn = false;
 
-    // Deathmason spawns on the last level after players have completed their first turn
-    // This is handled here instead of handleLevelProgression()
-    // To make sure the boss spawns after a full turn is resolved
-    // and isn't affected but unit turns / doesn't get an immediate action
-    if (this.levelIndex == config.LAST_LEVEL_INDEX && !this.hasSpawnedBoss) {
-      await introduceBoss(deathmason, this);
-    }
-
     // Failsafe: Force die any units that are out of bounds
     // Note: Player Controlled units are out of bounds when they are inPortal so that they don't collide,
     // this filters out PLAYER_CONTROLLED so that they don't get die()'d when they are inPortal
@@ -2728,6 +2743,20 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           }
         }
       }
+    }
+
+    // We handle boss and wave spawning here after a full turn has been resolved
+    // to make sure the spawning isn't affected by npc turns, turn events, etc.
+    // and ensure the newly spawned units don't get an immediate action
+
+    // Deathmason spawns on the last level after players have completed their first turn
+    if (await this.trySpawnBoss()) {
+      // Boss has been spawned
+    }
+
+    // New waves spawn when the current wave of enemies is defeated
+    if (this.trySpawnNextWave()) {
+      // New wave has been spawned
     }
   }
   // Sends a network message to end turn
