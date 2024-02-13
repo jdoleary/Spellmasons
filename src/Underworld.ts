@@ -2287,7 +2287,7 @@ export default class Underworld {
     return true;
   }
   trySpawnPortals(): boolean {
-    const remainingPlayers = this.getRemainingPlayerUnits();
+    const remainingPlayers = this.getRemainingPlayerUnits().filter(u => Unit.canAct(u));
     if (remainingPlayers.length == 0) {
       console.debug('[GAME] TrySpawnPortals()...\nNo players to spawn portals for: ', this.players);
       return false;
