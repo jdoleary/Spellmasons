@@ -2487,7 +2487,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     const firstPlayer = this.players[0];
     if (firstPlayer) {
-      this.changeToHotseatPlayer(firstPlayer)
+      await this.changeToHotseatPlayer(firstPlayer)
     }
     else {
       console.error('[GAME] Turn Phase\nFirst hotseat player does not exist');
