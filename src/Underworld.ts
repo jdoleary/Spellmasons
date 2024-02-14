@@ -2540,10 +2540,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
 
     await Unit.endTurnForUnits(this.players.map(p => p.unit), this, false);
-    await this.endPlayerTurnCleanup();
+    this.endPlayerTurnCleanup();
     return true;
   }
-  async endPlayerTurnCleanup() {
+  endPlayerTurnCleanup() {
     console.log('[GAME] Turn Phase\nEnd player turn phase');
 
     for (let p of this.players) {
@@ -2821,7 +2821,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       player.endedTurn = true;
       console.log('[GAME] Turn Phase\nPlayer ended turn: ', player);
       this.syncTurnMessage();
-      this.progressGameState();
+      await this.progressGameState();
     } else {
       console.error('[GAME] Turn Phase\nturn_phase must be PlayerTurns to end turn. Cannot be ', this.turn_phase);
     }
@@ -3732,7 +3732,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     stopAndDestroyForeverEmitter(castingParticleEmitter);
     if (!prediction) {
-      this.progressGameState();
+      await this.progressGameState();
     }
     return effectState;
   }
