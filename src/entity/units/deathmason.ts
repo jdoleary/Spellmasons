@@ -120,7 +120,7 @@ const deathmason: UnitSource = {
           unit.mana -= sacrificeCost.manaCost;
           // Consume allies if hurt
           // Note: Do not allow Deathmason to siphon allied player units
-          const closestUnit = Unit.livingUnitsInSameFaction(unit, underworld).filter(u => u.unitType !== UnitType.PLAYER_CONTROLLED && u.unitSourceId !== bossmasonUnitId && Unit.inRange(unit, u))[0]
+          const closestUnit = Unit.livingUnitsInSameFaction(unit, underworld.units).filter(u => u.unitType !== UnitType.PLAYER_CONTROLLED && u.unitSourceId !== bossmasonUnitId && Unit.inRange(unit, u))[0]
           if (closestUnit) {
             const keyMoment = () => underworld.castCards({
               casterCardUsage: {},

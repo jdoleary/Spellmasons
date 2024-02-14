@@ -71,7 +71,7 @@ const unit: UnitSource = {
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
     // Maybe the mana vampire should prioritize units with more mana?
-    const closestUnit = Unit.findClosestUnitInDifferentFaction(unit, underworld);
+    const closestUnit = Unit.findClosestUnitInDifferentFactionSmartTarget(unit, underworld.units);
     if (closestUnit) {
       return [closestUnit];
     } else {
