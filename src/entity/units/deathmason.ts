@@ -67,7 +67,9 @@ const deathmason: UnitSource = {
     const seed = seedrandom(`${underworld.seed}-${underworld.turn_number}-${unit.id}`);
 
     const portalName = unit.faction == Faction.ENEMY ? RED_PORTAL : Pickup.BLUE_PORTAL;
-    const deathmasonPortals = underworld.pickups.filter(p => p.name == portalName);
+    const deathmasonPortals = underworld.pickups.filter(p => p.name == portalName
+      // @ts-expect-error special property of portals to distinguish them from portals that just teleport
+      && p.doesSpawn);
     const deathmasonPortalPickupSource = pickups.find(p => p.name == portalName);
     if (deathmasonPortalPickupSource) {
       if (deathmasonPortals.length == 0 && unit.mana >= portalCastCost) {
