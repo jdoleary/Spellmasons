@@ -1,8 +1,4 @@
-import * as Unit from '../entity/Unit';
-import floatingText from '../graphics/FloatingText';
-import * as Image from '../graphics/Image';
 import { CardCategory } from '../types/commonTypes';
-import { playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { healUnits } from '../effects/heal';

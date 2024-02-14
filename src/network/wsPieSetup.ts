@@ -13,7 +13,6 @@ import { onData } from './networkHandler';
 import { getVersionInequality, onClientPresenceChanged, typeGuardHostApp } from './networkUtil';
 import { setView, View } from '../views';
 import * as storage from '../storage';
-import { updateGlobalRefToPlayerIfCurrentClient } from '../entity/Player';
 import Underworld from '../Underworld';
 import { version } from '../../package.json';
 import makeOverworld, { Overworld } from '../Overworld';

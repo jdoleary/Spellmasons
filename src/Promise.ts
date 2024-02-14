@@ -1,5 +1,7 @@
-export function raceTimeout(ms: number, message: string, promise: Promise<any>): Promise<any> {
-    return new Promise((resolve, reject) => {
+import { test_ignorePromiseSpy } from "./promiseSpy";
+
+export function raceTimeout(ms: number, message: string, promise: Promise<any>, options?: { skipSpyPromise?: boolean }): Promise<any> {
+    const timeoutPromise = new Promise((resolve, reject) => {
         let timeoutId = setTimeout(() => {
             console.error('raceTimeout:', message);
             resolve(undefined);
@@ -13,6 +15,11 @@ export function raceTimeout(ms: number, message: string, promise: Promise<any>):
             resolve(x);
         }).catch(reject);
     });
+    if (options?.skipSpyPromise) {
+        test_ignorePromiseSpy(timeoutPromise);
+        test_ignorePromiseSpy(promise);
+    }
+    return timeoutPromise;
 }
 
 // reportIfTakingTooLong is a wrapper that logs an error if a promise takes

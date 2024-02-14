@@ -749,7 +749,7 @@ export function playAnimation(unit: IUnit, spritePath: string | undefined, optio
         }
       }
     });
-  }));
+  }), { skipSpyPromise: true });
 }
 
 // TODO - Cleanup resurrect and sources thereof
