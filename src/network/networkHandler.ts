@@ -757,7 +757,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       }
       Player.syncLobby(underworld);
       underworld.tryRestartTurnPhaseLoop();
-      underworld.progressGameState();
+      await underworld.progressGameState();
       underworld.assertDemoExit();
       break;
     }

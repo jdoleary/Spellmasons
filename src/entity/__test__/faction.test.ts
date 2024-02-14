@@ -1,6 +1,6 @@
-import { Faction } from "../../types/commonTypes.ts";
-import { getFactionsOf } from "../Player.ts";
-import { livingUnitsInSameFaction, livingUnitsInDifferentFaction } from "../Unit.ts";
+import { Faction } from "../../types/commonTypes";
+import { getFactionsOf } from "../Player";
+import { livingUnitsInSameFaction, livingUnitsInDifferentFaction } from "../Unit";
 
 describe('getFactionsOf', () => {
   it('should return an array of factions', () => {
