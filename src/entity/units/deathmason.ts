@@ -49,7 +49,6 @@ const deathmason: UnitSource = {
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     if (unit.image) {
-
       const adjustmentFilter = new AdjustmentFilter({
         saturation: 0.4,
         contrast: 5,
@@ -196,6 +195,7 @@ export const ORIGINAL_DEATHMASON_DEATH = 'ORIGINAL_DEATHMASON_DEATH';
 export function registerDeathmasonEvents() {
   registerEvents(ORIGINAL_DEATHMASON_DEATH, {
     onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
+      console.log("Deathmason onDeath() has been called");
       // For the bossmason level, if the original deathmason dies spawn 3 more:
       if (underworld.levelIndex === config.LAST_LEVEL_INDEX) {
         if (unit.unitSourceId == bossmasonUnitId && unit.originalLife && unit.name == undefined) {
@@ -215,6 +215,7 @@ export function registerDeathmasonEvents() {
               const seed = seedrandom(`${underworld.seed}-${underworld.turn_number}-${unit.id}`);
               const coords = findRandomGroundLocation(underworld, unit, seed);
               if (!coords) {
+                console.warn("Deathmason onDeath() spawning failed attempt: ", retryAttempts);
                 retryAttempts++;
                 i--;
                 continue;

@@ -1332,11 +1332,11 @@ export default class Underworld {
       console.error('Could not find pickup with index', index);
     }
   }
-  spawnEnemy(id: string, coords: Vec2, isMiniboss: boolean) {
+  spawnEnemy(id: string, coords: Vec2, isMiniboss: boolean): Unit.IUnit | undefined {
     const sourceUnit = allUnits[id];
     if (!sourceUnit) {
       console.error('Unit with id', id, 'does not exist.  Have you registered it in src/units/index.ts?');
-      return;
+      return undefined;
     }
     if (globalThis.enemyEncountered && !globalThis.enemyEncountered.includes(id)) {
       globalThis.enemyEncountered.push(id);
@@ -1355,10 +1355,10 @@ export default class Underworld {
       sourceUnit.info.image,
       UnitType.AI,
       sourceUnit.info.subtype,
-      { ...sourceUnit.unitProps, isMiniboss },
+      { ...sourceUnit.unitProps, isMiniboss, originalLife: true },
       this
     );
-    unit.originalLife = true;
+    return unit;
   }
   testLevelData(): LevelData {
     const baseTileValues = Object.values(baseTiles);
@@ -1969,13 +1969,6 @@ export default class Underworld {
     }
     for (let e of enemies) {
       this.spawnEnemy(e.id, e.coord, e.isMiniboss);
-    }
-
-    if (levelData.levelIndex == config.LAST_LEVEL_INDEX) {
-      const deathmason = this.units.find(u => u.unitSourceId == bossmasonUnitId);
-      if (deathmason) {
-        deathmason.onDeathEvents = [ORIGINAL_DEATHMASON_DEATH];
-      }
     }
 
     // Show text in center of screen for the new level
@@ -4232,6 +4225,8 @@ async function introduceBoss(unit: UnitSource, underworld: Underworld) {
       break;
     }
   }
+
+  // Play boss intro FX
   const elCinematic = document.getElementById('deathmason-cinematic');
   if (elCinematic) {
     elCinematic.classList.toggle('show', true);
@@ -4241,27 +4236,29 @@ async function introduceBoss(unit: UnitSource, underworld: Underworld) {
   await new Promise((resolve) => {
     setTimeout(resolve, 2000);
   });
-  const newBossUnitInstance = Unit.create(
-    unit.id,
-    // Start the unit at the summoners location
-    coords.x,
-    coords.y,
-    Faction.ENEMY,
-    unit.info.image,
-    UnitType.AI,
-    unit.info.subtype,
-    unit.unitProps,
-    underworld
-  );
-  skyBeam(newBossUnitInstance);
+
+  const newBossUnitInstance = underworld.spawnEnemy(unit.id, coords, false);
+  if (newBossUnitInstance) {
+    skyBeam(newBossUnitInstance);
+
+    // We add the Deathmason onDeathEvent here instead of in Deathmason's init()
+    // because we only want to add it in this special case/boss sequence
+    // and not any other time (I.E. admin/player summoned Deathmasons)
+    if (newBossUnitInstance.unitSourceId == bossmasonUnitId) {
+      newBossUnitInstance.onDeathEvents.push(ORIGINAL_DEATHMASON_DEATH);
+    }
+  } else {
+    console.error("Failed to spawn newBossUnitInstance for id: ", unit.id);
+  }
+
   // Wait again for the players to digest that the boss appeared
+  // Remove boss intro FX
   await new Promise((resolve) => {
     setTimeout(resolve, 500);
   });
   if (elCinematic) {
     elCinematic.classList.toggle('show', false);
   }
-
 }
 
 // Explicit list of biome types
