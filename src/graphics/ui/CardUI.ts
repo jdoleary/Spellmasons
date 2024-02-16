@@ -1013,22 +1013,49 @@ export function updateCardBadges(underworld: Underworld) {
     }
 
     // Update hotkey badges
-    if (elCardHand) {
-      for (let x = 0; x < elCardHand.children.length && x < 10; x++) {
-        // Card hotkeys start being indexed by 1 not 0
-        // and the 9th card is accessible by hotkey 0 on the keyboard
-        const key = x == 9 ? 0 : x + 1;
-        const card = elCardHand.children.item(x) as HTMLElement;
-        if (card) {
-          const elHotkeyBadge = card.querySelector('.hotkey-badge') as HTMLElement;
-          if (elHotkeyBadge) {
-            elHotkeyBadge.innerHTML = `${key}`;
+    const cardHolders = Array.from(document.querySelectorAll('.card-holder'));
+    for (let cardHolder of cardHolders) {
+      if (cardHolder) {
+        for (let x = 0; x < cardHolder.children.length && x < 10; x++) {
+          // Card hotkeys start being indexed by 1 not 0
+          // and the 9th card is accessible by hotkey 0 on the keyboard
+          const key = x == 9 ? 0 : x + 1;
+          const card = cardHolder.children.item(x) as HTMLElement;
+          if (card) {
+            const elHotkeyBadge = card.querySelector('.hotkey-badge') as HTMLElement;
+            if (elHotkeyBadge) {
+              let map = key.toString();
+              try {
+                map = mappings[cardHolder.id as keyof typeof mappings](key) || key.toString();
+              } catch (_) {
+                map = key.toString();
+              }
+              let hotkeyString = '';
+              if (map.startsWith('shiftKey')) {
+                hotkeyString += SHIFT_SYMBOL;
+              }
+              if (map.startsWith('ctrlKey')) {
+                hotkeyString += CTRL_SYMBOL;
+              }
+              hotkeyString += map.charAt(map.length - 1);
+
+
+              elHotkeyBadge.innerHTML = hotkeyString;
+            }
           }
         }
       }
     }
 
   }
+}
+const SHIFT_SYMBOL = '⇧';
+const CTRL_SYMBOL = '^';
+const mappings = {
+  'card-hand': (x: number): string | undefined => (globalThis.controlMap[`spell${x}` as keyof typeof globalThis.controlMap] || [])[0],
+  'floating-card-holder-left': (x: number): string | undefined => (globalThis.controlMap[`spellLeft${x}` as keyof typeof globalThis.controlMap] || [])[0],
+  'floating-card-holder-right': (x: number): string | undefined => (globalThis.controlMap[`spellRight${x}` as keyof typeof globalThis.controlMap] || [])[0],
+
 }
 
 function setTransform(element: HTMLElement, transform: any) {
