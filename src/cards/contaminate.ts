@@ -14,9 +14,10 @@ import { IPlayer } from '../entity/Player';
 import { Modifier } from './util';
 import { summoningSicknessId } from '../modifierSummoningSickness';
 import { corpseDecayId } from '../modifierCorpseDecay';
+import { baseExplosionRadius } from '../effects/explode';
 
 export const contaminate_id = 'contaminate';
-
+const baseRange = baseExplosionRadius;
 const spell: Spell = {
   card: {
     id: contaminate_id,
@@ -32,7 +33,7 @@ const spell: Spell = {
       // .filter: only target living units
       let promises = [];
       for (let unit of state.targetedUnits.filter(u => u.alive)) {
-        promises.push(contaminate(state.casterPlayer, unit, underworld, state.aggregator.radius, prediction, quantity));
+        promises.push(contaminate(state.casterPlayer, unit, quantity, state.aggregator.radiusBoost, underworld, prediction));
       }
       await Promise.all(promises);
       return state;
@@ -47,8 +48,9 @@ interface CurseData {
 }
 
 // separate function to handle synchronous recursion and animation - avoids long wait times
-async function contaminate(casterPlayer: IPlayer | undefined, unit: IUnit, underworld: Underworld, extraRadius: number, prediction: boolean, quantity: number) {
-  const range = (COLLISION_MESH_RADIUS * 4 + extraRadius) * (casterPlayer?.mageType == 'Witch' ? 1.5 : 1);
+async function contaminate(casterPlayer: IPlayer | undefined, unit: IUnit, quantity: number, radiusBoost: number, underworld: Underworld, prediction: boolean) {
+  const adjustedRadiusBoost = quantity - 1 + radiusBoost;
+  const adjustedRange = baseRange * (1 + (0.5 * adjustedRadiusBoost)) * (casterPlayer?.mageType == 'Witch' ? 1.5 : 1);
 
   // the units to spread contaminate from
   // initally just this unit, then only the latest additions to the chain
@@ -76,7 +78,7 @@ async function contaminate(casterPlayer: IPlayer | undefined, unit: IUnit, under
   while (recursions < quantity) {
     const promises = [];
     for (let nextUnit of nextUnits) {
-      promises.push(spreadCurses(nextUnit, ignore, curses, range, underworld, prediction));
+      promises.push(spreadCurses(nextUnit, ignore, curses, adjustedRange, underworld, prediction));
     }
     nextUnits = [];
     let affectedUnitsArrays = await Promise.all(promises);

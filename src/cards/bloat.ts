@@ -35,11 +35,10 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity:
       unit.image.sprite.scale.x *= 1.5;
     }
   });
-  if (!modifier.radius) {
-    modifier.radius = 0;
+  if (!modifier.radiusBoost) {
+    modifier.radiusBoost = 0;
   }
-  modifier.radius += extra && extra.radius || 0;
-
+  modifier.radiusBoost += extra && extra.radiusBoost || 0;
 }
 function remove(unit: IUnit, underworld: Underworld) {
   if (unit.modifiers && unit.modifiers[id] && unit.image) {
@@ -66,7 +65,7 @@ const spell: Spell = {
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       for (let unit of state.targetedUnits.filter(u => u.alive)) {
-        Unit.addModifier(unit, id, underworld, prediction, quantity, { radius: state.aggregator.radius });
+        Unit.addModifier(unit, id, underworld, prediction, quantity, { radiusBoost: state.aggregator.radiusBoost });
       }
       return state;
     },
@@ -90,17 +89,27 @@ const spell: Spell = {
   events: {
     onDeath: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
       const quantity = unit.modifiers[id]?.quantity || 1;
-      const adjustedRadius = baseExplosionRadius + (unit.modifiers[id]?.radius || 0);
-      explode(unit, adjustedRadius, damage * quantity, defaultPushDistance,
+      const radiusBoost = unit.modifiers[id]?.radiusBoost;
+      const adjustedRadius = getAdjustedRadius(radiusBoost);
+      explode(unit, adjustedRadius, damage * quantity, getAdjustedPushDist(radiusBoost),
         underworld, prediction,
         colors.bloatExplodeStart, colors.bloatExplodeEnd);
     },
     onDrawSelected: async (unit: IUnit, prediction: boolean, underworld: Underworld) => {
       if (globalThis.selectedUnitGraphics) {
-        const adjustedRadius = baseExplosionRadius + (unit.modifiers[id]?.radius || 0);
+        const radiusBoost = unit.modifiers[id]?.radiusBoost;
+        const adjustedRadius = getAdjustedRadius(radiusBoost);
         drawUICircle(globalThis.selectedUnitGraphics, unit, adjustedRadius, colors.healthRed, 'Explosion Radius');
       }
     }
   }
 };
+function getAdjustedRadius(radiusBoost: number = 0) {
+  // +50% radius per radius boost
+  return baseExplosionRadius * (1 + (0.5 * radiusBoost));
+}
+function getAdjustedPushDist(radiusBoost: number = 0) {
+  // +25% push distance per radius boost
+  return defaultPushDistance * (1 + (0.25 * radiusBoost));
+}
 export default spell;

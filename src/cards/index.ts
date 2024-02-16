@@ -381,7 +381,7 @@ export interface EffectState {
   // aggregator carries extra information that can be passed
   // between card effects.
   aggregator: {
-    radius: number;
+    radiusBoost: number;
   };
   // initialTargetedUnitId and initialTargetedPickupId:
   // Used to ensure the castCards targets the right starting

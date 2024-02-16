@@ -41,8 +41,9 @@ const spell: Spell = {
       for (let unit of targetedUnits) {
         const freezeMod = unit.modifiers[freezeCardId];
         if (freezeMod) {
-          // Radius is +50% larger per stack of freeze removed
-          const adjustedRadius = baseRadius * (1 + (0.5 * (freezeMod?.quantity - 1))) + state.aggregator.radius;
+          // +50% radius per radius boost
+          const adjustedRadiusBoost = freezeMod.quantity - 1 + state.aggregator.radiusBoost;
+          const adjustedRadius = baseRadius * (1 + (0.5 * adjustedRadiusBoost));
           explosions.push({ location: unit, radius: adjustedRadius });
           Unit.removeModifier(unit, freezeCardId, underworld);
         }
