@@ -38,7 +38,7 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity:
   if (!modifier.radius) {
     modifier.radius = 0;
   }
-  modifier.radius = extra && extra.radius || 0;
+  modifier.radius += extra && extra.radius || 0;
 
 }
 function remove(unit: IUnit, underworld: Underworld) {
