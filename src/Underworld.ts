@@ -2365,8 +2365,9 @@ export default class Underworld {
       console.debug('[GAME] isGameOver?\nRemaining allies: ', remainingAllies);
     }
 
-    // Have allies made progress towards winning in the last X turns?
-    // If not, there might be a stalemate, so we need a kill switch.
+    // If players have not been able to act for X turns
+    // there may be a stalemate with ally and enemy NPC's
+    // so we need a kill switch to handle this scenario
     const useKillSwitch = this.allyNPCAttemptWinKillSwitch > 50;
     if (useKillSwitch) {
       console.log('[GAME] Game is Over\nKill Switch threshold reached');
@@ -2535,6 +2536,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     for (let player of connectedPlayers) {
       if (!this.hasCompletedTurn(player)) {
         // Log is handled in hasCompletedTurn()
+
+        // Any time the player is able to act
+        // we should reset the allyNPCAttemptWinKillSwitch
+        this.allyNPCAttemptWinKillSwitch = 0;
+
         return false;
       }
     }
@@ -2665,6 +2671,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   async endFullTurnCycle() {
     // Increment the turn number now that it's starting over at the first phase
     this.turn_number++;
+    this.allyNPCAttemptWinKillSwitch++;
 
     // Clear cast this turn
     globalThis.castThisTurn = false;
