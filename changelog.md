@@ -1,4 +1,4 @@
-## 1.28.3
+## 1.29.0
 - UI: Add hotkey numbers to side card holders
     Update hotkeys of spellbar if they change in controls
     Closes: #494
