@@ -2,27 +2,27 @@ import { getCurrentTargets, Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
-import { forcePushToDestination } from '../effects/force_move';
+import { defaultPushDistance, forcePushToDestination, forcePushTowards } from '../effects/force_move';
+import { dash_id } from './dash';
 
-export const dash_id = 'Dash';
+export const id = 'Fling';
 const spell: Spell = {
   card: {
-    id: dash_id,
+    id,
     category: CardCategory.Movement,
+    requires: [dash_id],
     supportQuantity: true,
     sfx: 'dash',
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.COMMON],
-    thumbnail: 'spellIconDash.png',
-    description: 'spell_dash',
+    thumbnail: 'spellIconFling.png',
+    description: 'spell_fling',
+    allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction) => {
-      const targets = getCurrentTargets(state);
       playDefaultSpellSFX(card, prediction);
-      if (targets[0]) {
-        await forcePushToDestination(state.casterUnit, targets[0], quantity, underworld, prediction);
-      }
+      await forcePushTowards(state.casterUnit, state.castLocation, defaultPushDistance * quantity, underworld, prediction);
       return state;
     },
   },

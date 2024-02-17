@@ -50,6 +50,7 @@ import repel from './repel';
 import pull from './pull';
 import vortex from './vortex';
 import dash from './dash';
+import fling from './fling';
 import decoy from './summon_decoy';
 import summon_generic from './summon_generic';
 import explode from './bloat';
@@ -255,6 +256,7 @@ export function registerCards(overworld: Overworld) {
 
   // Movement
   registerSpell(dash, overworld);
+  registerSpell(fling, overworld);
   registerSpell(push, overworld);
   registerSpell(repel, overworld);
   registerSpell(pull, overworld);
