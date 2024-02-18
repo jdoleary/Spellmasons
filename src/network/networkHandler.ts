@@ -544,7 +544,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
     }
     case MESSAGE_TYPES.SET_PHASE: {
       console.log('sync: SET_PHASE; syncs units and players')
-      const { phase, units, players, pickups, lastUnitId, lastPickupId, RNGState } = payload as {
+      const { phase, units, players, pickups, lastUnitId, lastPickupId, RNGState, currentLevelIndex } = payload as {
         phase: turn_phase,
         // Sync data for players
         players?: Player.IPlayerSerialized[],
@@ -555,6 +555,11 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         lastUnitId: number,
         lastPickupId: number,
         RNGState: SeedrandomState,
+        currentLevelIndex: number,
+      }
+      if (underworld.levelIndex !== currentLevelIndex) {
+        console.log('Discarding SET_PHASE message from old level')
+        return;
       }
       if (RNGState) {
         underworld.syncronizeRNG(RNGState);
