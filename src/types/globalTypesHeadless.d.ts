@@ -364,4 +364,5 @@ declare global {
   var useEventLogger: boolean;
   var resetControlMap: undefined | (() => void);
   var setFontOverride: undefined | ((font: string) => void);
+  var noGore: undefined | boolean;
 }

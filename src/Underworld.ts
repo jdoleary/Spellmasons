@@ -589,7 +589,7 @@ export default class Underworld {
         startPos.y += unitImageYOffset;
         const done = this.runForceMove(forceMoveInst, deltaTime, false);
         const endPos = { x: forceMoveInst.pushedObject.x, y: forceMoveInst.pushedObject.y + unitImageYOffset };
-        if (graphicsBloodSmear && Unit.isUnit(forceMoveInst.pushedObject) && forceMoveInst.pushedObject.health !== undefined && forceMoveInst.pushedObject.health <= 0) {
+        if (!globalThis.noGore && graphicsBloodSmear && Unit.isUnit(forceMoveInst.pushedObject) && forceMoveInst.pushedObject.health !== undefined && forceMoveInst.pushedObject.health <= 0) {
           const size = 3;
           for (let j of smearJitter) {
             // Multiple blood trails

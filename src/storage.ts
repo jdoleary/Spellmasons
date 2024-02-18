@@ -45,6 +45,8 @@ export function getSavedData() {
       console.log('Setup: Initializing saved settings', storedOptions);
       if (storedOptions !== null) {
         const options = JSON.parse(storedOptions);
+        console.log('[OPTIONS] noGore', options.noGore);
+        globalThis.noGore = options.noGore;
         if (options.fontOverride && globalThis.setFontOverride) {
           globalThis.setFontOverride(options.fontOverride);
         }
