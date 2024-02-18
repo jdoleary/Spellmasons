@@ -914,7 +914,7 @@ export type BloodParticle = {
   color: number,
 }
 export function startBloodParticleSplatter(underworld: Underworld, damageOrigin: Vec2, target: IUnit, options?: { maxRotationOffset: number, numberOfParticles: number }) {
-  if (globalThis.headless) {
+  if (globalThis.headless || globalThis.noGore) {
     return;
   }
   const bloodAmount = options ? options.numberOfParticles : randInt(30, 60);

@@ -79,7 +79,7 @@ const explainMap: { [key: string]: ExplainData } = {
     prompt: () => ({ imageSrc: 'images/explain/walk.gif', text: 'explain move', yesText: 'Okay' })
   },
   [EXPLAIN_CAST]: {
-    prompt: () => ({ imageSrc: 'images/explain/cast.gif', text: ['explain cast', keyToHumanReadable(['Escape'])], yesText: 'Nice!' })
+    prompt: () => ({ gore: true, imageSrc: 'images/explain/cast.gif', text: ['explain cast', keyToHumanReadable(['Escape'])], yesText: 'Nice!' })
   },
   [EXPLAIN_STACK]: {
     prompt: () => ({ imageSrc: 'images/explain/stack-spells.gif', text: 'explain stack', yesText: 'Intriguing...' })
@@ -100,7 +100,7 @@ const explainMap: { [key: string]: ExplainData } = {
 
   },
   [EXPLAIN_MANA_COST]: {
-    prompt: () => ({ imageSrc: 'images/explain/mana-cost.gif', text: 'explain mana cost', yesText: 'Okay' })
+    prompt: () => ({ gore: true, imageSrc: 'images/explain/mana-cost.gif', text: 'explain mana cost', yesText: 'Okay' })
 
   },
   [EXPLAIN_ATTENTION_MARKER_MELEE]: {
@@ -125,6 +125,7 @@ const explainMap: { [key: string]: ExplainData } = {
   },
   [EXPLAIN_LIQUID_DAMAGE]: {
     prompt: () => ({
+      gore: true,
       imageSrc: 'images/explain/liquid-damage.gif', text: 'explain liquid damage', yesText: 'Yikes!'
     })
   },

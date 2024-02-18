@@ -599,7 +599,8 @@ export function syncronize(unitSerialized: IUnitSerialized, originalUnit: IUnit)
 export function changeToDieSprite(unit: IUnit) {
   Image.changeSprite(
     unit.image,
-    unit.animations.die,
+    globalThis.noGore ? 'units/tombstone' :
+      unit.animations.die,
     containerUnits,
     // DieSprite intentionally stops animating when it is complete, therefore
     // resolver is undefined, since no promise is waiting for it.
@@ -766,7 +767,7 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   }
   // Play death sfx
   if (!prediction && !unit.flaggedForRemoval) {
-    playSFXKey(unit.sfx.death);
+    playSFXKey(globalThis.noGore ? 'oof' : unit.sfx.death);
   }
   // Health should already be 0 but make sure it is for the sake of the UI bar
   unit.health = 0;
@@ -1279,6 +1280,10 @@ export function syncImage(unit: IUnit) {
   }
 }
 export function getExplainPathForUnitId(id: string): string {
+  // Disable explain unit gifs if gore is disabled because they contain gore
+  if (globalThis.noGore) {
+    return '';
+  }
   return "images/explain/units/" + id.split(' ').join('') + ".gif";
 }
 export function inRange(unit: IUnit, target: Vec2): boolean {
