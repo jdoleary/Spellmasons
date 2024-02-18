@@ -27,9 +27,10 @@ const spell: Spell = {
     description: 'spell_target_circle',
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
-      // +100% range per radius boost
-      const adjustedRadiusBoost = quantity - 1 + state.aggregator.radiusBoost;
-      const adjustedRange = baseRadius * (1 + (1 * adjustedRadiusBoost));
+      // Slightly different / unique formula for balance purposes:
+      // +100% range per quantity, +50% range per radius boost
+      const adjustedRange = baseRadius * (quantity + (0.5 * state.aggregator.radiusBoost));
+
       // Note: This loop must NOT be a for..of and it must cache the length because it
       // mutates state.targetedUnits as it iterates.  Otherwise it will continue to loop as it grows
       let targets: Vec2[] = getCurrentTargets(state);
