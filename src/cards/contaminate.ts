@@ -49,8 +49,10 @@ interface CurseData {
 
 // separate function to handle synchronous recursion and animation - avoids long wait times
 async function contaminate(casterPlayer: IPlayer | undefined, unit: IUnit, quantity: number, radiusBoost: number, underworld: Underworld, prediction: boolean) {
-  const adjustedRadiusBoost = quantity - 1 + radiusBoost;
-  const adjustedRange = baseRange * (1 + (0.5 * adjustedRadiusBoost)) * (casterPlayer?.mageType == 'Witch' ? 1.5 : 1);
+  // Contaminate does not get extra radius from quantity,
+  // but can instead chain an additional time
+  // +25% range per radius boost
+  const adjustedRange = baseRange * (1 + (0.25 * radiusBoost)) * (casterPlayer?.mageType == 'Witch' ? 1.5 : 1);
 
   // the units to spread contaminate from
   // initally just this unit, then only the latest additions to the chain
