@@ -791,13 +791,15 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       if (fromPlayer) {
         // Only allow spawned players to move
         if (fromPlayer.isSpawned) {
-          // Network Sync: Make sure other players move a little slower so that the MOVE_PLAYER messages have time to set the
-          // next move point on the client's screen.  This prevents jagged movement due to network latency
-          fromPlayer.unit.moveSpeed = config.UNIT_MOVE_SPEED * 0.9;
-          // Network Sync: Make sure the other player always has stamina to get where they're going, this is to ensure that
-          // the local copies of other player's stay in sync with the server and aren't prematurely stopped due
-          // to a stamina limitation
-          fromPlayer.unit.stamina = 100;
+          if (!globalThis.headless) {
+            // Network Sync: Make sure other players move a little slower so that the MOVE_PLAYER messages have time to set the
+            // next move point on the client's screen.  This prevents jagged movement due to network latency
+            fromPlayer.unit.moveSpeed = config.UNIT_MOVE_SPEED * 0.9;
+            // Network Sync: Make sure the other player always has stamina to get where they're going, this is to ensure that
+            // the local copies of other player's stay in sync with the server and aren't prematurely stopped due
+            // to a stamina limitation
+            fromPlayer.unit.stamina = fromPlayer.unit.staminaMax;
+          }
           const moveTowardsPromise = Unit.moveTowards(fromPlayer.unit, payload, underworld).then(() => {
             if (fromPlayer.unit.path?.points.length && fromPlayer.unit.stamina == 0) {
               // If they do not reach their destination, notify that they are out of stamina
