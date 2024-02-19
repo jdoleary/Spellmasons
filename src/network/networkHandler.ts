@@ -453,7 +453,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         const userSource = allUnits[payload.unitId];
         if (!userSource) {
           console.error('User unit source file not registered, cannot create player');
-          return undefined;
+          break;
         }
         fromPlayer.unit.unitSourceId = payload.unitId;
         // Update the player image
@@ -475,14 +475,20 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
     }
     case MESSAGE_TYPES.SYNC_PLAYERS: {
       console.log('sync: SYNC_PLAYERS; syncs units and players')
-      const { units, players, lastUnitId } = payload as {
+      const { units, players, lastUnitId, currentLevelIndex } = payload as {
         // Note: When syncing players, must also sync units
         // because IPlayerSerialized doesn't container a full
         // unit serialized
         units: Unit.IUnitSerialized[],
         // Sync data for players
         players: Player.IPlayerSerialized[],
-        lastUnitId: number
+        lastUnitId: number,
+        currentLevelIndex: number,
+      }
+
+      if (underworld.levelIndex !== currentLevelIndex) {
+        console.log('Discarding SYNC_PLAYERS message from old level')
+        break;
       }
       // Units must be synced before players so that the player's
       // associated unit is available for referencing
@@ -504,7 +510,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         break;
       }
       console.log('sync: SYNC_SOME_STATE; syncs non-player units')
-      const { timeOfLastSpellMessage, units, pickups, lastUnitId, lastPickupId, RNGState } = payload as {
+      const { timeOfLastSpellMessage, units, pickups, lastUnitId, lastPickupId, RNGState, currentLevelIndex } = payload as {
         // timeOfLastSpellMessage ensures that SYNC_SOME_STATE won't overwrite valid state with old state
         // if someone a second SPELL message is recieved between this message and it's corresponding SPELL message
         // Messages don't currently have a unique id so I'm storing d.time which should be good enough
@@ -516,10 +522,15 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         lastUnitId: number,
         lastPickupId: number,
         RNGState: SeedrandomState,
+        currentLevelIndex: number,
       }
       if (timeOfLastSpellMessage !== lastSpellMessageTime) {
         // Do not sync, state has changed since this sync message was sent
         console.warn('Discarding SYNC_SOME_STATE message, it is no longer valid');
+        break;
+      }
+      if (underworld.levelIndex !== currentLevelIndex) {
+        console.log('Discarding SYNC_PLAYERS message from old level')
         break;
       }
       if (RNGState) {
@@ -559,7 +570,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       }
       if (underworld.levelIndex !== currentLevelIndex) {
         console.log('Discarding SET_PHASE message from old level')
-        return;
+        break;
       }
       if (RNGState) {
         underworld.syncronizeRNG(RNGState);
@@ -568,7 +579,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       // being invoked multiple times before the first message is processed.  This is normal.
       if (underworld.turn_phase == phase) {
         console.log(`Phase is already set to ${turn_phase[phase]}; Aborting SET_PHASE.`);
-        return;
+        break;
       }
 
       if (units) {
@@ -649,7 +660,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         // Hotseat multiplayer has it's own player config management
         // because it needs to hold configs for multiple players on a single
         // computer
-        return;
+        break;
       }
       const { color, colorMagic, name, lobbyReady } = payload;
       if (fromPlayer) {
@@ -851,6 +862,11 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
             lastPickupId: underworld.lastPickupId,
             // the state of the Random Number Generator
             RNGState: underworld.random.state(),
+            // Store the level index that this function was invoked on
+            // so that it can be sent along with the message so that if
+            // the level index changes, 
+            // the old SYNC_SOME_STATE state won't overwrite the newer state
+            currentLevelIndex: underworld.levelIndex,
           });
         }
       } else {
