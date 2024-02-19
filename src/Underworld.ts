@@ -1823,6 +1823,10 @@ export default class Underworld {
   // ringLimit limits how far away from the spawnSource it will check for valid spawn locations
   // same as below "findValidSpanws", but shortcircuits at the first valid spawn found and returns that
   findValidSpawn(spawnSource: Vec2, ringLimit: number, radius: number = config.COLLISION_MESH_RADIUS): Vec2 | undefined {
+    if (isNaN(spawnSource.x) || isNaN(spawnSource.y)) {
+      console.error('Attempted to findValidSpawn but spawnSource was NaN');
+      return undefined;
+    }
     const honeycombRings = ringLimit;
     for (let s of math.honeycombGenerator(radius, spawnSource, honeycombRings)) {
       const attemptSpawn = { ...s, radius: config.COLLISION_MESH_RADIUS };

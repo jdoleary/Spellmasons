@@ -62,7 +62,7 @@ export function registerUrnexplosiveExplode() {
         colors.bloatExplodeStart, colors.bloatExplodeEnd);
       // Remove corpse
       if (!prediction) {
-        Unit.cleanup(unit, false);
+        Unit.cleanup(unit, true);
       }
     }
   });

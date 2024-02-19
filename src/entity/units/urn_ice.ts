@@ -65,7 +65,7 @@ export function registerUrnIceExplode() {
 
       // Remove corpse
       if (!prediction) {
-        Unit.cleanup(unit, false);
+        Unit.cleanup(unit, true);
       }
     }
   });
