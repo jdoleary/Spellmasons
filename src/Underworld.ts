@@ -2969,6 +2969,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
       this.pie.sendData({
         type: MESSAGE_TYPES.SET_PHASE,
+        // Store the level index that this function was invoked on
+        // so that it can be sent along with the message so that if
+        // the level index changes, 
+        // the old SET_PHASE state won't overwrite the newer state
+        currentLevelIndex: this.levelIndex,
         phase: p,
         units: this.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
         pickups: this.pickups.filter(p => !p.flaggedForRemoval).map(Pickup.serialize),
