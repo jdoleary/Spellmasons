@@ -1,3 +1,20 @@
+## 1.30.0
+- Feature: "No Gore" mode - removes gore from the game if desired
+- Feature: Purify now works on Cursed Mana Potions
+    - Thanks @Koliostro for this AMAZING idea
+
+- Fix: prevent network messages from old levels from executing
+on a new level.
+    - Thanks @ReddPine, @Raven, @MrMarblz and others for reporting
+
+- Fix: player stamina unexpectedly getting set to 100
+    - Thanks @Innonminate for reporting
+
+- Fix: Potions spawned from Urns with Last Will from appearing at 0,0
+    - Thanks @Innonminate
+
+- Fix double decoy scaling
+
 ## 1.29.0
 - UI: Add hotkey numbers to side card holders
     Update hotkeys of spellbar if they change in controls
