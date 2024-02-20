@@ -3747,7 +3747,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
 
     stopAndDestroyForeverEmitter(castingParticleEmitter);
-    if (!prediction) {
+    if (!prediction && casterPlayer) {
+      // We should only progress the game state if the caster is a player.
+      // AI handles progress game state at the end of each entire NPC Turn.
       await this.progressGameState();
     }
     return effectState;

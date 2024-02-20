@@ -1181,6 +1181,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         for (let unit of overworld.underworld.units.filter(u => u.faction == Faction.ENEMY)) {
           Unit.die(unit, overworld.underworld, false);
         }
+        overworld.underworld.progressGameState();
       },
       supportInMultiplayer: true,
       domQueryContainer: '#menu-global'
@@ -1413,10 +1414,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         const unit = overworld.underworld.units.find(u => u.id == selectedUnitid);
         if (unit) {
           Unit.die(unit, overworld.underworld, false);
+          overworld.underworld.progressGameState();
         } else {
           centeredFloatingText('You must select a unit first', 'red');
         }
-
       },
       supportInMultiplayer: true,
       domQueryContainer: '#menu-selected-unit'

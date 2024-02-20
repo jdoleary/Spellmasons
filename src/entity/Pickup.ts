@@ -365,6 +365,7 @@ export function triggerPickup(pickup: IPickup, unit: IUnit, player: Player.IPlay
     // Now that the players attributes may have changed, sync UI
     syncPlayerHealthManaUI(underworld);
   }
+  underworld.progressGameState();
 }
 export function tryTriggerPickup(pickup: IPickup, unit: IUnit, underworld: Underworld, prediction: boolean) {
   if (pickup.flaggedForRemoval) {
