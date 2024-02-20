@@ -365,6 +365,11 @@ export function triggerPickup(pickup: IPickup, unit: IUnit, player: Player.IPlay
     // Now that the players attributes may have changed, sync UI
     syncPlayerHealthManaUI(underworld);
   }
+  // We exclude purple portals because they are not removed and
+  // Send many progress game state messages
+  if (pickup.name !== PORTAL_PURPLE_NAME) {
+    underworld.progressGameState();
+  }
 }
 export function tryTriggerPickup(pickup: IPickup, unit: IUnit, underworld: Underworld, prediction: boolean) {
   if (pickup.flaggedForRemoval) {
