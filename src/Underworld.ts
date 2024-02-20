@@ -2211,6 +2211,11 @@ export default class Underworld {
       return false;
     }
 
+    // Don't spawn boss if the game is over
+    if (this.isGameOver()) {
+      return false;
+    }
+
     await introduceBoss(deathmason, this);
     return true;
   }
@@ -2224,6 +2229,11 @@ export default class Underworld {
     const remainingEnemies = this.getRemainingPlayerEnemies();
     if (remainingEnemies.length > 0) {
       console.debug('[GAME] Can\'t Spawn Next Wave\nRemaining enemies: ', remainingEnemies);
+      return false;
+    }
+
+    // Don't spawn waves if the game is over
+    if (this.isGameOver()) {
       return false;
     }
 
