@@ -2690,15 +2690,15 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         // they will be cleaned up so they shouldn't be killed here as this check is just to ensure
         // no living units that are unreachable hinder progressing through the game)
         if (!u.flaggedForRemoval) {
-          // TODO ensure that this works on headless
-          const originalTile = this.lastLevelCreated.imageOnlyTiles[vec2ToOneDimentionIndexPreventWrap({ x: Math.round(u.x / config.OBSTACLE_SIZE), y: Math.round(u.y / config.OBSTACLE_SIZE) }, this.lastLevelCreated.width)];
-          if (!originalTile || originalTile.image == '') {
+          if (this.isCoordOnWallTile({ x: u.x, y: u.y - u.radius })) {
             if (u.unitType == UnitType.PLAYER_CONTROLLED) {
               // Do NOT kill player units that are out of bounds
               console.warn('Player unit out of bounds');
             } else {
               console.error('Unit was force killed because they ended up out of bounds', u.unitSubType)
               Unit.die(u, this, false);
+              // We don't want out-of-bound corpses
+              Unit.cleanup(u);
             }
           }
         }
