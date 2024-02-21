@@ -85,6 +85,7 @@ export function arrowEffect(multiShotCount: number, collideFnKey: string, doesPi
             pushedObject,
             startPoint: casterPositionAtTimeOfCast,
             endPoint: endPoint,
+            speed: 1.5,
             doesPierce,
             ignoreUnitIds: [state.casterUnit.id],
             collideFnKey
