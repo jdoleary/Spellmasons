@@ -93,7 +93,6 @@ async function meteorProjectiles(meteorLocations: Vec2[], underworld: Underworld
     meteors.push({ destination: meteorLocation, travelTime: travelTime, angle: angleFromUp })
   }
   meteors.sort((a, b) => b.travelTime - a.travelTime);
-  console.log(meteors);
 
   if (meteors.length == 0 || meteors[0] == undefined) return;
 
@@ -127,8 +126,8 @@ async function meteorProjectiles(meteorLocations: Vec2[], underworld: Underworld
       immovable: false,
       beingPushed: false
     }
-    attachMeteorParticles(pushedObject, underworld);
 
+    attachMeteorParticles(pushedObject, underworld);
     makeForceMoveProjectile({
       pushedObject,
       startPoint: startPos,
@@ -176,20 +175,20 @@ const meteorEmitterConfig = (maxParticles: number) => ({
   autoUpdate: true,
   "alpha": {
     "start": 1,
-    "end": 0
+    "end": 0.2
   },
   "scale": {
-    "start": 1,
-    "end": 0.2,
+    "start": 2,
+    "end": 2,
     "minimumScaleMultiplier": 1
   },
   "color": {
-    "start": "#321d73",
-    "end": "#9526cc"
+    "start": "#ff7f30",
+    "end": "#543938"
   },
   "speed": {
-    "start": 20,
-    "end": 0,
+    "start": 200,
+    "end": 20,
     "minimumSpeedMultiplier": 1
   },
   "acceleration": {
@@ -198,8 +197,8 @@ const meteorEmitterConfig = (maxParticles: number) => ({
   },
   "maxSpeed": 0,
   "startRotation": {
-    "min": -90,
-    "max": -90
+    "min": 210,
+    "max": 330
   },
   "noRotation": false,
   "rotationSpeed": {
@@ -207,26 +206,23 @@ const meteorEmitterConfig = (maxParticles: number) => ({
     "max": 0
   },
   "lifetime": {
-    "min": 3.5,
-    "max": 4
+    "min": 0.4,
+    "max": 0.8
   },
   "blendMode": "normal",
-  // freqency is relative to max particles
-  // so that it emits at a consistent rate
-  // without gaps
-  "frequency": 0.01 * (500 / maxParticles),
+  "frequency": 0.01,
   "emitterLifetime": -1,
-  "maxParticles": maxParticles,
+  "maxParticles": 500,
   "pos": {
-    "x": 0.5,
-    "y": 0.5
+    "x": 0,
+    "y": 0
   },
-  "addAtBack": true,
+  "addAtBack": false,
   "spawnType": "circle",
   "spawnCircle": {
     "x": 0,
     "y": 0,
-    "r": 15
+    "r": 0
   }
 });
 
