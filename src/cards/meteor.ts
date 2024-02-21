@@ -1,3 +1,5 @@
+import Underworld from '../Underworld';
+import { HasSpace } from '../entity/Type';
 import { refundLastSpell, Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
@@ -10,9 +12,9 @@ import * as colors from '../graphics/ui/colors';
 import { randFloat } from '../jmath/rand';
 import * as Image from '../graphics/Image';
 import { makeForceMoveProjectile } from '../jmath/moveWithCollision';
-import { containerProjectiles } from '../graphics/PixiUtils';
-import { HasSpace } from '../entity/Type';
-import Underworld from '../Underworld';
+import { containerProjectiles, containerSpells } from '../graphics/PixiUtils';
+import * as particles from '@pixi/particle-emitter'
+import { createParticleTexture, logNoTextureWarning, wrappedEmitter } from '../graphics/Particles';
 
 export const meteorCardId = 'meteor';
 const damage = 60;
@@ -56,12 +58,12 @@ const spell: Spell = {
         meteorLocations.push(state.castLocation);
       }
 
-      if (!prediction) {
+      if (!prediction && !globalThis.headless) {
         await meteorProjectiles(meteorLocations, underworld)
+        playDefaultSpellSFX(card, prediction);
       }
 
       let promises = [];
-      playDefaultSpellSFX(card, prediction);
       // TODO - Update with new radiusBoost https://github.com/jdoleary/Spellmasons/pull/491
       const adjustedRadius = baseRadius + state.aggregator.radius;
       for (let meteorLocation of meteorLocations) {
@@ -86,14 +88,17 @@ async function meteorProjectiles(meteorLocations: Vec2[], underworld: Underworld
   // Setup meteor data
   const meteors: { destination: Vec2, travelTime: number, angle: number }[] = [];
   for (let meteorLocation of meteorLocations) {
-    const travelTime = randFloat(500, 2000); //ms
+    const travelTime = randFloat(500, arrivalTime); //ms
     const angleFromUp = randFloat(-30, 30);
     meteors.push({ destination: meteorLocation, travelTime: travelTime, angle: angleFromUp })
   }
   meteors.sort((a, b) => b.travelTime - a.travelTime);
   console.log(meteors);
 
-  let timePassed = 0; //ms
+  if (meteors.length == 0 || meteors[0] == undefined) return;
+
+  // Don't wait for the first meteor
+  let timePassed = arrivalTime - meteors[0].travelTime; //ms
   for (let meteor of meteors) {
     // Can't access destination, speed, or angle
     //createVisualFlyingProjectile({ x: meteor.destination.x, y: meteor.destination.y + 100 }, meteor.destination,)
@@ -102,7 +107,12 @@ async function meteorProjectiles(meteorLocations: Vec2[], underworld: Underworld
     await new Promise(resolve => setTimeout(resolve, spawnTime - timePassed));
     timePassed = spawnTime;
 
-    const startPos = { x: meteor.destination.x, y: meteor.destination.y - distanceOffset };
+    const angleInRadians = meteor.angle * (Math.PI / 180);
+    // Calculate new point coordinates
+    const startPos = {
+      x: meteor.destination.x + distanceOffset * Math.sin(angleInRadians),
+      y: meteor.destination.y - distanceOffset * Math.cos(angleInRadians),
+    }
     let image: Image.IImageAnimated | undefined;
     image = Image.create(startPos, 'projectile/arrow', containerProjectiles)
     if (image) {
@@ -117,6 +127,8 @@ async function meteorProjectiles(meteorLocations: Vec2[], underworld: Underworld
       immovable: false,
       beingPushed: false
     }
+    attachMeteorParticles(pushedObject, underworld);
+
     makeForceMoveProjectile({
       pushedObject,
       startPoint: startPos,
@@ -133,5 +145,89 @@ async function meteorProjectiles(meteorLocations: Vec2[], underworld: Underworld
 
   return;
 }
+
+function attachMeteorParticles(target: any, underworld: Underworld, resolver?: () => void) {
+  const texture = createParticleTexture();
+  if (!texture) {
+    logNoTextureWarning('makeMeteorParticles');
+    if (resolver) {
+      resolver();
+    }
+    return;
+  }
+  const particleConfig =
+    particles.upgradeConfig(meteorEmitterConfig(500), [texture]);
+  if (containerSpells) {
+    const wrapped = wrappedEmitter(particleConfig, containerSpells, resolver);
+    if (wrapped) {
+      underworld.particleFollowers.push({
+        displayObject: wrapped.container,
+        emitter: wrapped.emitter,
+        target,
+      })
+    } else {
+      console.warn('Failed to create meteor particle emitter');
+    }
+  }
+}
+
+// TODO - Update this: Currently using deathmason particle config
+const meteorEmitterConfig = (maxParticles: number) => ({
+  autoUpdate: true,
+  "alpha": {
+    "start": 1,
+    "end": 0
+  },
+  "scale": {
+    "start": 1,
+    "end": 0.2,
+    "minimumScaleMultiplier": 1
+  },
+  "color": {
+    "start": "#321d73",
+    "end": "#9526cc"
+  },
+  "speed": {
+    "start": 20,
+    "end": 0,
+    "minimumSpeedMultiplier": 1
+  },
+  "acceleration": {
+    "x": 0,
+    "y": 0
+  },
+  "maxSpeed": 0,
+  "startRotation": {
+    "min": -90,
+    "max": -90
+  },
+  "noRotation": false,
+  "rotationSpeed": {
+    "min": 0,
+    "max": 0
+  },
+  "lifetime": {
+    "min": 3.5,
+    "max": 4
+  },
+  "blendMode": "normal",
+  // freqency is relative to max particles
+  // so that it emits at a consistent rate
+  // without gaps
+  "frequency": 0.01 * (500 / maxParticles),
+  "emitterLifetime": -1,
+  "maxParticles": maxParticles,
+  "pos": {
+    "x": 0.5,
+    "y": 0.5
+  },
+  "addAtBack": true,
+  "spawnType": "circle",
+  "spawnCircle": {
+    "x": 0,
+    "y": 0,
+    "r": 15
+  }
+});
 
 export default spell;
