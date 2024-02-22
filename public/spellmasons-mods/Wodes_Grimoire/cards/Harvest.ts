@@ -38,7 +38,7 @@ const spell: Spell = {
                 const manaTrailPromises: any[] = [];
                 if (!prediction) {
                     for (let i = 0; i < quantity; i++) {
-                        manaTrailPromises.push(Particles.makeManaTrail(unit, state.casterUnit, underworld, '#e4ffee', '#40ff66')); //Light green means souls :)
+                        manaTrailPromises.push(Particles.makeManaTrail(unit, state.casterUnit, underworld, '#e4ffee', '#40ff66', targets.length * quantity)); //Light green means souls :)
                     }
                 }
                 promises.push((prediction ? Promise.resolve() : Promise.all(manaTrailPromises)));

@@ -41,7 +41,7 @@ const spell: Spell = {
           unit.mana -= unitManaStolen;
           if (!prediction) {
             for (let i = 0; i < quantity; i++) {
-              promises.push(makeManaTrail(unit, caster, underworld, '#e4f9ff', '#3fcbff'));
+              promises.push(makeManaTrail(unit, caster, underworld, '#e4f9ff', '#3fcbff', targets.length * quantity));
             }
           }
         }

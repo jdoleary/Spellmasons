@@ -146,11 +146,25 @@ export function cleanUpTrail(trail: Trail) {
         trails.splice(i, 1)
     }
 }
-export function makeManaTrail(start: Vec2, target: Vec2, underworld: Underworld, colorStart: string, colorEnd: string): Promise<void> {
+export function calculateMaxParticles(defaultMaxParticles: number, totalNumberOfTrails?: number): { maxParticles: number, ratioToDefault: number } {
+    // Optimization, regularly there are 90 total particles,
+    // however, when a spell creates LOTS of trails this can slow
+    // down the game a lot, so by passing totalNumberOfTrails as an
+    // arg, the below calculation will automatically adjust the max particles
+    // and the lifetime so that it still remains a trail but doesn't create lag
+    // ---
+    // the "20" is arbitrary, but it means the maxParticles will be reduced in chunks of 20
+    const maxParticles = totalNumberOfTrails ? Math.max(2, Math.min(defaultMaxParticles, Math.round(20 * defaultMaxParticles / totalNumberOfTrails))) : defaultMaxParticles;
+    const ratioToDefault = maxParticles / defaultMaxParticles;
+    return { maxParticles, ratioToDefault };
+
+}
+export function makeManaTrail(start: Vec2, target: Vec2, underworld: Underworld, colorStart: string, colorEnd: string, totalNumberOfTrails?: number): Promise<void> {
     const texture = createParticleTexture();
     if (!texture) {
         return Promise.resolve();
     }
+    const { maxParticles, ratioToDefault } = calculateMaxParticles(90, totalNumberOfTrails);
     return addTrail(
         start,
         target,
@@ -190,13 +204,13 @@ export function makeManaTrail(start: Vec2, target: Vec2, underworld: Underworld,
                 max: 0
             },
             lifetime: {
-                min: 0.4,
-                max: 0.4
+                min: 0.4 * ratioToDefault,
+                max: 0.4 * ratioToDefault
             },
             blendMode: "normal",
             frequency: 0.011,
             emitterLifetime: -1,
-            maxParticles: 90,
+            maxParticles,
             pos: {
                 x: 0,
                 y: 0
