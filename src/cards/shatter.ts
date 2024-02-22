@@ -8,7 +8,6 @@ import * as colors from '../graphics/ui/colors';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { freezeCardId } from './freeze';
 import { baseExplosionRadius, explode } from '../effects/explode';
-import { boneShrapnelParticleConfig } from './bone_shrapnel';
 
 export const shatterCardId = 'Shatter';
 const damage = 40;
@@ -71,79 +70,70 @@ function makeShatterParticles(position: Vec2, size: number, prediction: boolean)
     return;
   }
 
-  //
-  const textureBoneShrapnel = createParticleTexture();
-  if (!textureBoneShrapnel) {
-    logNoTextureWarning('makeCorpseExplosion');
-    return;
-  }
-  const configBoneShrapnel = boneShrapnelParticleConfig;
-  configBoneShrapnel.lifetime.max *= size;
-  configBoneShrapnel.lifetime.min *= size;
-  simpleEmitter(position, particles.upgradeConfig(configBoneShrapnel, [textureBoneShrapnel]));
-
-  const textureIceExplosion = createParticleTexture();
-  if (!textureIceExplosion) {
+  const texture = createParticleTexture();
+  if (!texture) {
     logNoTextureWarning('makeIceExplosion');
     return;
   }
-  const configIceExplosion = iceExplosionConfig;
-  configIceExplosion.lifetime.max *= size;
-  configIceExplosion.lifetime.min *= size;
-  simpleEmitter(position, particles.upgradeConfig(configIceExplosion, [textureIceExplosion]));
-}
 
-const iceExplosionConfig = {
-  autoUpdate: true,
-  "alpha": {
-    "start": 1,
-    "end": 0
-  },
-  "scale": {
-    "start": 2,
-    "end": 1,
-  },
-  "color": {
-    "start": colors.convertToHashColor(0x002c6e),
-    "end": colors.convertToHashColor(0x59deff)
-  },
-  "speed": {
-    "start": 500,
-    "end": 50,
-    "minimumSpeedMultiplier": 1
-  },
-  "acceleration": {
-    "x": 0,
-    "y": 0
-  },
-  "maxSpeed": 0,
-  "startRotation": {
-    "min": 0,
-    "max": 360
-  },
-  "noRotation": false,
-  "rotationSpeed": {
-    "min": 0,
-    "max": 300
-  },
-  "lifetime": {
-    "min": 0.5,
-    "max": 0.5
-  },
-  "blendMode": "normal",
-  "frequency": 0.0001,
-  "emitterLifetime": 0.1,
-  "maxParticles": 300,
-  "pos": {
-    "x": 0,
-    "y": 0
-  },
-  "addAtBack": true,
-  "spawnType": "circle",
-  "spawnCircle": {
-    "x": 0,
-    "y": 0,
-    "r": 0
-  }
+  const config = {
+    "alpha": {
+      "start": 0.8,
+      "end": 0.8
+    },
+    "scale": {
+      "start": 1,
+      "end": 0.5,
+      "minimumScaleMultiplier": 0.4
+    },
+    "color": {
+      "start": "#a1e3f7",
+      "end": "#a1e3f7"
+    },
+    "speed": {
+      "start": 300,
+      "end": 300,
+      "minimumSpeedMultiplier": 0.8
+    },
+    "acceleration": {
+      "x": 0,
+      "y": 0
+    },
+    "maxSpeed": 0,
+    "startRotation": {
+      "min": 0,
+      "max": 360
+    },
+    "noRotation": false,
+    "rotationSpeed": {
+      "min": 0,
+      "max": 0
+    },
+    "lifetime": {
+      "min": 0.4,
+      "max": 0.4
+    },
+    "blendMode": "normal",
+    "frequency": 0.003,
+    "emitterLifetime": 0.1,
+    "maxParticles": 500,
+    "pos": {
+      "x": 0,
+      "y": 0
+    },
+    "addAtBack": false,
+    "spawnType": "circle",
+    "spawnCircle": {
+      "x": 0,
+      "y": 0,
+      "r": 0
+    }
+  };
+  const scalar = Math.sqrt(size);
+  config.speed.start *= scalar;
+  config.speed.end *= scalar;
+  config.lifetime.min *= scalar;
+  config.lifetime.max *= scalar;
+  simpleEmitter(position, particles.upgradeConfig(config, [texture]));
 }
 export default spell;
