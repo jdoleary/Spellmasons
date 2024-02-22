@@ -8,6 +8,7 @@ import * as colors from '../graphics/ui/colors';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { freezeCardId } from './freeze';
 import { baseExplosionRadius, explode } from '../effects/explode';
+import { boneShrapnelParticleConfig } from './bone_shrapnel';
 
 export const shatterCardId = 'Shatter';
 const damage = 40;
@@ -51,8 +52,7 @@ const spell: Spell = {
       }
       for (let { location, radius } of explosions) {
         explode(location, radius, damage * quantity, 0,
-          underworld, prediction,
-          0x002c6e, 0x59deff);
+          underworld, prediction);
         makeShatterParticles(location, radius / baseRadius, prediction);
       }
       return state;
@@ -70,61 +70,80 @@ function makeShatterParticles(position: Vec2, size: number, prediction: boolean)
     // Don't show if just a prediction
     return;
   }
-  const texture = createParticleTexture();
-  if (!texture) {
+
+  //
+  const textureBoneShrapnel = createParticleTexture();
+  if (!textureBoneShrapnel) {
     logNoTextureWarning('makeCorpseExplosion');
     return;
   }
-  const config =
-    particles.upgradeConfig({
-      autoUpdate: true,
-      "alpha": {
-        "start": 1,
-        "end": 0.5
-      },
-      "scale": {
-        "start": 0.5,
-        "end": 0.5,
-        "minimumScaleMultiplier": 1
-      },
-      "color": {
-        "start": "#707070",
-        "end": "#c2c2c2"
-      },
-      "speed": {
-        "start": 600,
-        "end": 600,
-        "minimumSpeedMultiplier": 1
-      },
-      "acceleration": {
-        "x": 0,
-        "y": 0
-      },
-      "maxSpeed": 0,
-      "startRotation": {
-        "min": 0,
-        "max": 360
-      },
-      "noRotation": false,
-      "rotationSpeed": {
-        "min": 50,
-        "max": 50
-      },
-      "lifetime": {
-        "min": 0.2 * size,
-        "max": 0.2 * size
-      },
-      "blendMode": "normal",
-      "frequency": 0.001,
-      "emitterLifetime": 0.1,
-      "maxParticles": 50,
-      "pos": {
-        "x": 0,
-        "y": 0
-      },
-      "addAtBack": true,
-      "spawnType": "point"
-    }, [texture]);
-  simpleEmitter(position, config);
+  const configBoneShrapnel = boneShrapnelParticleConfig;
+  configBoneShrapnel.lifetime.max *= size;
+  configBoneShrapnel.lifetime.min *= size;
+  simpleEmitter(position, particles.upgradeConfig(configBoneShrapnel, [textureBoneShrapnel]));
+
+  const textureIceExplosion = createParticleTexture();
+  if (!textureIceExplosion) {
+    logNoTextureWarning('makeIceExplosion');
+    return;
+  }
+  const configIceExplosion = iceExplosionConfig;
+  configIceExplosion.lifetime.max *= size;
+  configIceExplosion.lifetime.min *= size;
+  simpleEmitter(position, particles.upgradeConfig(configIceExplosion, [textureIceExplosion]));
+}
+
+const iceExplosionConfig = {
+  autoUpdate: true,
+  "alpha": {
+    "start": 1,
+    "end": 0
+  },
+  "scale": {
+    "start": 2,
+    "end": 1,
+  },
+  "color": {
+    "start": colors.convertToHashColor(0x002c6e),
+    "end": colors.convertToHashColor(0x59deff)
+  },
+  "speed": {
+    "start": 500,
+    "end": 50,
+    "minimumSpeedMultiplier": 1
+  },
+  "acceleration": {
+    "x": 0,
+    "y": 0
+  },
+  "maxSpeed": 0,
+  "startRotation": {
+    "min": 0,
+    "max": 360
+  },
+  "noRotation": false,
+  "rotationSpeed": {
+    "min": 0,
+    "max": 300
+  },
+  "lifetime": {
+    "min": 0.5,
+    "max": 0.5
+  },
+  "blendMode": "normal",
+  "frequency": 0.0001,
+  "emitterLifetime": 0.1,
+  "maxParticles": 300,
+  "pos": {
+    "x": 0,
+    "y": 0
+  },
+  "addAtBack": true,
+  "spawnType": "circle",
+  "spawnCircle": {
+    "x": 0,
+    "y": 0,
+    "r": 0
+  }
 }
 export default spell;

@@ -67,56 +67,59 @@ function makeShrapnelParticles(position: Vec2, size: number, prediction: boolean
     logNoTextureWarning('makeCorpseExplosion');
     return;
   }
-  const config =
-    particles.upgradeConfig({
-      autoUpdate: true,
-      "alpha": {
-        "start": 1,
-        "end": 0.5
-      },
-      "scale": {
-        "start": 0.5,
-        "end": 0.5,
-        "minimumScaleMultiplier": 1
-      },
-      "color": {
-        "start": "#707070",
-        "end": "#c2c2c2"
-      },
-      "speed": {
-        "start": 600,
-        "end": 600,
-        "minimumSpeedMultiplier": 1
-      },
-      "acceleration": {
-        "x": 0,
-        "y": 0
-      },
-      "maxSpeed": 0,
-      "startRotation": {
-        "min": 0,
-        "max": 360
-      },
-      "noRotation": false,
-      "rotationSpeed": {
-        "min": 50,
-        "max": 50
-      },
-      "lifetime": {
-        "min": 0.2 * size,
-        "max": 0.2 * size
-      },
-      "blendMode": "normal",
-      "frequency": 0.001,
-      "emitterLifetime": 0.1,
-      "maxParticles": 50,
-      "pos": {
-        "x": 0,
-        "y": 0
-      },
-      "addAtBack": true,
-      "spawnType": "point"
-    }, [texture]);
-  simpleEmitter(position, config);
+  const config = boneShrapnelParticleConfig;
+  config.lifetime.max *= size;
+  config.lifetime.min *= size;
+  simpleEmitter(position, particles.upgradeConfig(config, [texture]));
+}
+
+export const boneShrapnelParticleConfig = {
+  autoUpdate: true,
+  "alpha": {
+    "start": 1,
+    "end": 0.5
+  },
+  "scale": {
+    "start": 0.5,
+    "end": 0.5,
+    "minimumScaleMultiplier": 1
+  },
+  "color": {
+    "start": "#707070",
+    "end": "#c2c2c2"
+  },
+  "speed": {
+    "start": 600,
+    "end": 600,
+    "minimumSpeedMultiplier": 1
+  },
+  "acceleration": {
+    "x": 0,
+    "y": 0
+  },
+  "maxSpeed": 0,
+  "startRotation": {
+    "min": 0,
+    "max": 360
+  },
+  "noRotation": false,
+  "rotationSpeed": {
+    "min": 50,
+    "max": 50
+  },
+  "lifetime": {
+    "min": 0.2,
+    "max": 0.2
+  },
+  "blendMode": "normal",
+  "frequency": 0.001,
+  "emitterLifetime": 0.1,
+  "maxParticles": 50,
+  "pos": {
+    "x": 0,
+    "y": 0
+  },
+  "addAtBack": true,
+  "spawnType": "point"
 }
 export default spell;
