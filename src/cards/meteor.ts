@@ -82,13 +82,13 @@ async function meteorProjectiles(meteorLocations: Vec2[], underworld: Underworld
   // Fore cinematic purposes, they will start at different times
   // and come from different angles (30 to -30 degrees from "up")
 
-  const arrivalTime = 2000; //ms
-  const distanceOffset = 150;
+  const arrivalTime = 600; //ms
+  const distanceOffset = 300;
 
   // Setup meteor data
   const meteors: { destination: Vec2, travelTime: number, angle: number }[] = [];
   for (let meteorLocation of meteorLocations) {
-    const travelTime = randFloat(500, arrivalTime); //ms
+    const travelTime = randFloat(200, arrivalTime); //ms
     const angleFromUp = randFloat(-30, 30);
     meteors.push({ destination: meteorLocation, travelTime: travelTime, angle: angleFromUp })
   }
@@ -145,6 +145,7 @@ async function meteorProjectiles(meteorLocations: Vec2[], underworld: Underworld
   return;
 }
 
+// TODO - Don't destroy meteor particles after impact
 function attachMeteorParticles(target: any, underworld: Underworld, resolver?: () => void) {
   const texture = createParticleTexture();
   if (!texture) {
@@ -155,7 +156,7 @@ function attachMeteorParticles(target: any, underworld: Underworld, resolver?: (
     return;
   }
   const particleConfig =
-    particles.upgradeConfig(meteorEmitterConfig(500), [texture]);
+    particles.upgradeConfig(meteorEmitterConfig(), [texture]);
   if (containerSpells) {
     const wrapped = wrappedEmitter(particleConfig, containerSpells, resolver);
     if (wrapped) {
@@ -171,24 +172,24 @@ function attachMeteorParticles(target: any, underworld: Underworld, resolver?: (
 }
 
 // TODO - Update this: Currently using deathmason particle config
-const meteorEmitterConfig = (maxParticles: number) => ({
+const meteorEmitterConfig = () => ({
   autoUpdate: true,
   "alpha": {
     "start": 1,
     "end": 0.2
   },
   "scale": {
-    "start": 2,
-    "end": 2,
+    "start": 4,
+    "end": 1,
     "minimumScaleMultiplier": 1
   },
   "color": {
-    "start": "#ff7f30",
-    "end": "#543938"
+    "start": "#fa3e14",
+    "end": "#080404"
   },
   "speed": {
-    "start": 200,
-    "end": 20,
+    "start": 0,
+    "end": 0,
     "minimumSpeedMultiplier": 1
   },
   "acceleration": {
@@ -210,8 +211,8 @@ const meteorEmitterConfig = (maxParticles: number) => ({
     "max": 0.8
   },
   "blendMode": "normal",
-  "frequency": 0.01,
-  "emitterLifetime": -1,
+  "frequency": 0.005,
+  "emitterLifetime": 0,
   "maxParticles": 500,
   "pos": {
     "x": 0,
@@ -222,7 +223,7 @@ const meteorEmitterConfig = (maxParticles: number) => ({
   "spawnCircle": {
     "x": 0,
     "y": 0,
-    "r": 0
+    "r": 10
   }
 });
 
