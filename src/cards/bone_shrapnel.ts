@@ -28,7 +28,8 @@ const spell: Spell = {
       // Only explode corpses at time of cast
       const targetedUnits = state.targetedUnits.filter(u => !u.alive);
       targetedUnits.forEach(unit => {
-        const adjustedRadius = baseRadius + (unit.modifiers[boneShrapnelCardId]?.radius || 0);
+        // +50% radius per radius boost
+        const adjustedRadius = baseRadius * (1 + (0.5 * state.aggregator.radiusBoost));
         if (prediction) {
           drawUICirclePrediction(unit, adjustedRadius, colors.healthRed, 'Explosion Radius');
         } else {
