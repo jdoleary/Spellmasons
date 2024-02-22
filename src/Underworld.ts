@@ -2608,17 +2608,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Update unit health / mana bars, etc
     await runPredictions(this);
 
-    // Quicksave at the beginning of player's turn
-    // Check globalThis.player.isSpawned to prevent quicksaving an invalid underworld file
-    if (globalThis.save && globalThis.player && globalThis.player.isSpawned) {
-      // For now, only save if in a singleplayer game
-      // because save support hasn't been added to multiplayer yet
-      if (isSinglePlayer()) {
-        console.info(`Dev: quick saving game as "${globalThis.quicksaveKey}"`);
-        // Force overwrite for quicksave, never prompt "are you sure?" when auto saving a quicksave
-        globalThis.save(globalThis.quicksaveKey, true);
-      }
-    }
+    this.quicksave(`Last Turn`);
 
     // If there was an attempted save during the enemy turn, save now
     // that the player's turn has started
@@ -2628,6 +2618,19 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     this.changeToFirstHotseatPlayer();
     this.progressGameState();
+  }
+  quicksave(extraInfo?: string) {
+    // Quicksave at the beginning of player's turn
+    // Check globalThis.player.isSpawned to prevent quicksaving an invalid underworld file
+    if (!globalThis.headless && globalThis.save && globalThis.player && globalThis.player.isSpawned) {
+      // For now, only save if in a singleplayer game
+      // because save support hasn't been added to multiplayer yet
+      const quicksaveName = `${globalThis.quicksaveKey}${!this.pie.soloMode && this.pie.currentRoomInfo && `-${this.pie.currentRoomInfo.name}` || ''}${extraInfo ? `-${extraInfo}` : ''}`;
+      console.info(`Dev: quick saving game as "${quicksaveName}"`);
+      // Force overwrite for quicksave, never prompt "are you sure?" when auto saving a quicksave
+      globalThis.save(quicksaveName, true);
+    }
+
   }
   async executeNPCTurn(faction: Faction) {
     cleanUpEmitters(true);

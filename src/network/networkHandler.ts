@@ -728,6 +728,9 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         }
         if (!(isNaN(payload.x) && isNaN(payload.y))) {
           fromPlayer.isSpawned = true;
+          if (fromPlayer == globalThis.player) {
+            underworld.quicksave('Level Start');
+          }
           if (fromPlayer.clientId == globalThis.clientId) {
             globalThis.awaitingSpawn = false;
           }
