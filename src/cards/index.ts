@@ -53,7 +53,7 @@ import dash from './dash';
 // import fling from './fling';
 import decoy from './summon_decoy';
 import summon_generic from './summon_generic';
-import explode from './bloat';
+import bloat from './bloat';
 import bone_shrapnel from './bone_shrapnel';
 import last_Will from './lastwill';
 import split from './split';
@@ -66,6 +66,7 @@ import connect from './connect';
 import target_similar from './target_similar';
 import target_similar_2 from './target_similar_2';
 import target_all from './target_all';
+import target_curse from './target_curse';
 import plus_radius from './plus_radius';
 import shove from './shove';
 import burst from './burst';
@@ -229,7 +230,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(freeze, overworld);
   registerSpell(purify, overworld);
   registerSpell(debilitate, overworld);
-  registerSpell(explode, overworld);
+  registerSpell(bloat, overworld);
   registerSpell(slow, overworld);
   registerSpell(blood_curse, overworld);
   registerSpell(split, overworld);
@@ -276,6 +277,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(target_similar, overworld);
   registerSpell(target_similar_2, overworld);
   registerSpell(target_all, overworld);
+  registerSpell(target_curse, overworld);
   registerSpell(plus_radius, overworld);
   // TODO: Refactor bolt into soulbind, it didn't work out well as a spell
   // register(bolt, overworld);
