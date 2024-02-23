@@ -11,7 +11,7 @@ import { makeParticleExplosion } from '../graphics/ParticleCollection';
 import { includes } from 'lodash';
 
 export const potionShatterId = 'Potion Shatter';
-const baseEffectRadius = 50; //baseExplosionRadius / x?
+const baseEffectRadius = 80; //baseExplosionRadius / x?
 const spell: Spell = {
   card: {
     id: potionShatterId,
@@ -32,7 +32,9 @@ const spell: Spell = {
         return state;
       }
 
-      const adjustedRadius = baseEffectRadius * quantity + state.aggregator.radius + COLLISION_MESH_RADIUS;
+      // +50% radius per radius boost
+      const adjustedRadiusBoost = quantity - 1 + state.aggregator.radiusBoost;
+      const adjustedRadius = baseEffectRadius * (1 + (0.5 * adjustedRadiusBoost));
       playDefaultSpellSFX(card, prediction);
       for (let potion of targets) {
         if (potion.flaggedForRemoval) continue;

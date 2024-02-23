@@ -3583,7 +3583,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       targetedPickups: [],
       castLocation,
       aggregator: {
-        radius: 0,
+        radiusBoost: 0,
       },
       initialTargetedUnitId,
       initialTargetedPickupId

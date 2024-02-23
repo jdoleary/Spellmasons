@@ -55,6 +55,7 @@ import decoy from './summon_decoy';
 import summon_generic from './summon_generic';
 import explode from './bloat';
 import bone_shrapnel from './bone_shrapnel';
+import shatter from './shatter';
 import last_Will from './lastwill';
 import split from './split';
 import drown from './drown';
@@ -203,6 +204,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(drown, overworld);
   registerSpell(burst, overworld);
   registerSpell(bone_shrapnel, overworld);
+  registerSpell(shatter, overworld);
   registerSpell(arrow, overworld);
   registerSpell(arrow2, overworld);
   registerSpell(arrow3, overworld);
@@ -381,7 +383,7 @@ export interface EffectState {
   // aggregator carries extra information that can be passed
   // between card effects.
   aggregator: {
-    radius: number;
+    radiusBoost: number;
   };
   // initialTargetedUnitId and initialTargetedPickupId:
   // Used to ensure the castCards targets the right starting

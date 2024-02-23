@@ -37,7 +37,7 @@ const spell: Spell = {
         for (let newAngle of [Math.PI / 12, -Math.PI / 12, 2 * Math.PI / 12, -2 * Math.PI / 12, 3 * Math.PI / 12, -3 * Math.PI / 12]) {
           const angle = getAngleBetweenVec2s(projectile.startPoint, unit) + newAngle;
           const castLocation = getEndpointOfMagnitudeAlongVector(unit, angle, 10_000);
-          arrowEffect(1, arrowCardId)({ cardIds: [regularArrow.card.id], shouldRefundLastSpell: false, casterPositionAtTimeOfCast: unit, targetedUnits: [], targetedPickups: [], casterUnit: unit, castLocation, aggregator: { radius: 0 }, initialTargetedPickupId: undefined, initialTargetedUnitId: undefined }, regularArrow.card, 1, underworld, prediction, false);
+          arrowEffect(1, arrowCardId)({ cardIds: [regularArrow.card.id], shouldRefundLastSpell: false, casterPositionAtTimeOfCast: unit, targetedUnits: [], targetedPickups: [], casterUnit: unit, castLocation, aggregator: { radiusBoost: 0 }, initialTargetedPickupId: undefined, initialTargetedUnitId: undefined }, regularArrow.card, 1, underworld, prediction, false);
         }
       }
     }

@@ -28,7 +28,8 @@ const spell: Spell = {
       // Only explode corpses at time of cast
       const targetedUnits = state.targetedUnits.filter(u => !u.alive);
       targetedUnits.forEach(unit => {
-        const adjustedRadius = baseRadius + (unit.modifiers[boneShrapnelCardId]?.radius || 0);
+        // +50% radius per radius boost
+        const adjustedRadius = baseRadius * (1 + (0.5 * state.aggregator.radiusBoost));
         if (prediction) {
           drawUICirclePrediction(unit, adjustedRadius, colors.healthRed, 'Explosion Radius');
         } else {
@@ -67,56 +68,61 @@ function makeShrapnelParticles(position: Vec2, size: number, prediction: boolean
     logNoTextureWarning('makeCorpseExplosion');
     return;
   }
-  const config =
-    particles.upgradeConfig({
-      autoUpdate: true,
-      "alpha": {
-        "start": 1,
-        "end": 0.5
-      },
-      "scale": {
-        "start": 0.5,
-        "end": 0.5,
-        "minimumScaleMultiplier": 1
-      },
-      "color": {
-        "start": "#707070",
-        "end": "#c2c2c2"
-      },
-      "speed": {
-        "start": 600,
-        "end": 600,
-        "minimumSpeedMultiplier": 1
-      },
-      "acceleration": {
-        "x": 0,
-        "y": 0
-      },
-      "maxSpeed": 0,
-      "startRotation": {
-        "min": 0,
-        "max": 360
-      },
-      "noRotation": false,
-      "rotationSpeed": {
-        "min": 50,
-        "max": 50
-      },
-      "lifetime": {
-        "min": 0.2 * size,
-        "max": 0.2 * size
-      },
-      "blendMode": "normal",
-      "frequency": 0.001,
-      "emitterLifetime": 0.1,
-      "maxParticles": 50,
-      "pos": {
-        "x": 0,
-        "y": 0
-      },
-      "addAtBack": true,
-      "spawnType": "point"
-    }, [texture]);
-  simpleEmitter(position, config);
+  const config = {
+    autoUpdate: true,
+    "alpha": {
+      "start": 1,
+      "end": 0.5
+    },
+    "scale": {
+      "start": 0.5,
+      "end": 0.5,
+      "minimumScaleMultiplier": 1
+    },
+    "color": {
+      "start": "#707070",
+      "end": "#c2c2c2"
+    },
+    "speed": {
+      "start": 600,
+      "end": 600,
+      "minimumSpeedMultiplier": 1
+    },
+    "acceleration": {
+      "x": 0,
+      "y": 0
+    },
+    "maxSpeed": 0,
+    "startRotation": {
+      "min": 0,
+      "max": 360
+    },
+    "noRotation": false,
+    "rotationSpeed": {
+      "min": 50,
+      "max": 50
+    },
+    "lifetime": {
+      "min": 0.2,
+      "max": 0.2
+    },
+    "blendMode": "normal",
+    "frequency": 0.001,
+    "emitterLifetime": 0.1,
+    "maxParticles": 50,
+    "pos": {
+      "x": 0,
+      "y": 0
+    },
+    "addAtBack": true,
+    "spawnType": "point"
+  }
+  const scalar = Math.sqrt(size);
+  config.speed.start *= scalar;
+  config.speed.end *= scalar;
+  config.lifetime.min *= scalar;
+  config.lifetime.max *= scalar;
+  simpleEmitter(position, particles.upgradeConfig(config, [texture]));
 }
+
 export default spell;

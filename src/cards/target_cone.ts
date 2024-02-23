@@ -29,8 +29,9 @@ const spell: Spell = {
     description: 'spell_target_cone',
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
-      // Range increases linearly with each quantity
-      const adjustedRange = (range + state.aggregator.radius) * (0.75 + 0.25 * quantity);
+      // +25% range per radius boost
+      const adjustedRadiusBoost = quantity - 1 + state.aggregator.radiusBoost;
+      const adjustedRange = range * (1 + (0.25 * adjustedRadiusBoost));
       // Angle doubles up to 4 casts, capping at 360 degrees: 45 > 90 > 180 > full circle
       const adjustedAngle = coneAngle * Math.pow(2, Math.min(quantity, 4)) / 2;
 
