@@ -10,32 +10,32 @@ import * as colors from '../graphics/ui/colors';
 import Underworld from '../Underworld';
 import { getOrInitModifier } from './util';
 
-export const targetCurseId = 'Target Curse';
+export const targetCursedId = 'Target Cursed';
 function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra?: any) {
-  const modifier = getOrInitModifier(unit, targetCurseId, { isCurse: true, quantity: 1, keepOnDeath: true }, () => {
+  const modifier = getOrInitModifier(unit, targetCursedId, { isCurse: true, quantity: 1, keepOnDeath: true }, () => {
     // Nothing to init
   });
 }
 const spell: Spell = {
   card: {
-    id: targetCurseId,
+    id: targetCursedId,
     category: CardCategory.Targeting,
     supportQuantity: true,
     manaCost: 40,
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.RARE],
-    thumbnail: 'spellIconTargetCurse.png',
+    thumbnail: 'spellIconTargetCursed.png',
     requiresFollowingCard: false,
-    description: 'spell_target_curse',
+    description: 'spell_target_cursed',
     allowNonUnitTarget: true,
     effect: async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean) => {
       // We store the initial targets because target curse mutates state.targetedUnits
       const targets = state.targetedUnits;
       // Add Target Curse to all targeted units
       for (const target of targets) {
-        if (!target.modifiers[targetCurseId]) {
-          Unit.addModifier(target, targetCurseId, underworld, prediction);
+        if (!target.modifiers[targetCursedId]) {
+          Unit.addModifier(target, targetCursedId, underworld, prediction);
         }
       }
 
@@ -45,14 +45,14 @@ const spell: Spell = {
 
       // Add all other target-cursed enemies to targets
       for (const unit of potentialTargets) {
-        if (!targets.includes(unit) && unit.modifiers[targetCurseId]) {
+        if (!targets.includes(unit) && unit.modifiers[targetCursedId]) {
           addTarget(unit, state);
         }
       }
 
       if (!prediction && !globalThis.headless && targets.length) {
         playSFXKey('targeting');
-        await animateTargetCurse(targets);
+        await animateTargetCursed(targets);
       }
 
       return state;
@@ -63,7 +63,7 @@ const spell: Spell = {
   },
 };
 
-export async function animateTargetCurse(newTargets: Vec2[]) {
+export async function animateTargetCursed(newTargets: Vec2[]) {
   // Draw a purple star and green circle around
   const radius = config.COLLISION_MESH_RADIUS;
   const iterations = 100;
