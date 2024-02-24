@@ -64,8 +64,7 @@ const spell: Spell = {
       }
 
       let promises = [];
-      // TODO - Update with new radiusBoost https://github.com/jdoleary/Spellmasons/pull/491
-      const adjustedRadius = baseRadius + state.aggregator.radius;
+      const adjustedRadius = baseRadius * (1 + (0.25 * state.aggregator.radiusBoost));
       for (let meteorLocation of meteorLocations) {
         promises.push(explode(meteorLocation, adjustedRadius, damage * quantity, basePushDistance,
           underworld, prediction,
