@@ -63,14 +63,13 @@ const spell: Spell = {
         playDefaultSpellSFX(card, prediction);
       }
 
-      let promises = [];
       const adjustedRadius = baseRadius * (1 + (0.25 * state.aggregator.radiusBoost));
       for (let meteorLocation of meteorLocations) {
-        promises.push(explode(meteorLocation, adjustedRadius, damage * quantity, basePushDistance,
+        explode(meteorLocation, adjustedRadius, damage * quantity, basePushDistance,
           underworld, prediction,
-          colors.bloatExplodeStart, colors.bloatExplodeEnd))
+          colors.bloatExplodeStart, colors.bloatExplodeEnd)
       }
-      await Promise.all(promises);
+      await underworld.awaitForceMoves();
       return state;
     },
   },
