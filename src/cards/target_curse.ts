@@ -39,7 +39,10 @@ const spell: Spell = {
         }
       }
 
-      const potentialTargets = underworld.getPotentialUnitTargets(prediction);
+      const potentialTargets =
+        (prediction ? underworld.unitsPrediction : underworld.units)
+          .filter(u => !u.flaggedForRemoval);
+
       // Add all other target-cursed enemies to targets
       for (const unit of potentialTargets) {
         if (!targets.includes(unit) && unit.modifiers[targetCurseId]) {

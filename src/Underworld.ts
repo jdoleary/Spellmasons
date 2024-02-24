@@ -274,13 +274,6 @@ export default class Underworld {
       return [...this.units.filter(u => !u.flaggedForRemoval), ...this.pickups.filter(p => !p.flaggedForRemoval)];
     }
   }
-  getPotentialUnitTargets(prediction: boolean): Unit.IUnit[] {
-    if (prediction) {
-      return [...this.unitsPrediction.filter(u => !u.flaggedForRemoval)]
-    } else {
-      return [...this.units.filter(u => !u.flaggedForRemoval)];
-    }
-  }
   calculateKillsNeededForLevel(level: number): number {
     // Check if should drop cards
     let numberOfEnemiesKilledNeededForNextDrop = 0;
