@@ -81,13 +81,13 @@ async function meteorProjectiles(meteorLocations: Vec2[], underworld: Underworld
   // Fore cinematic purposes, they will start at different times
   // and come from different angles (30 to -30 degrees from "up")
 
-  const arrivalTime = 600; //ms
-  const distanceOffset = 300;
+  const arrivalTime = 1500; //ms
+  const distanceOffset = 1500;
 
   // Setup meteor data
   const meteors: { destination: Vec2, travelTime: number, angle: number }[] = [];
   for (let meteorLocation of meteorLocations) {
-    const travelTime = randFloat(200, arrivalTime); //ms
+    const travelTime = randFloat(arrivalTime / 4, arrivalTime); //ms
     const angleFromUp = randFloat(-30, 30);
     meteors.push({ destination: meteorLocation, travelTime: travelTime, angle: angleFromUp })
   }
