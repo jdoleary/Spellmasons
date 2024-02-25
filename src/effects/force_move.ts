@@ -1,8 +1,8 @@
 import { raceTimeout } from "../Promise";
 import Underworld from "../Underworld";
 import { HasSpace } from "../entity/Type";
-import { Vec2, multiply, normalized, subtract } from "../jmath/Vec";
-import { ForceMoveType, ForceMoveUnitOrPickup } from "../jmath/moveWithCollision";
+import { Vec2, multiply, normalized, subtract, add } from "../jmath/Vec";
+import { ForceMove, ForceMoveType, ForceMoveUnitOrPickup } from "../jmath/moveWithCollision";
 
 // TODO - Force moves need to be handled differently
 // such that they are consistent at different framerates and velocity falloffs
@@ -19,9 +19,6 @@ export async function forcePushDelta(pushedObject: HasSpace, deltaMovement: Vec2
 
   let forceMoveInst: ForceMoveUnitOrPickup;
   return await raceTimeout(2000, 'Push', new Promise<void>((resolve) => {
-    // Experiment: canCreateSecondOrderPushes now is ALWAYS disabled.
-    // I've had feedback that it's suprising - which is bad for a tactical game
-    // also I suspect it has significant performance costs for levels with many enemies
     forceMoveInst = { type: ForceMoveType.UNIT_OR_PICKUP, canCreateSecondOrderPushes: false, alreadyCollided: [], pushedObject, velocity, velocity_falloff, resolve }
     underworld.addForceMove(forceMoveInst, prediction);
   })).then(() => {
@@ -59,4 +56,9 @@ export async function forcePushToDestination(pushedObject: HasSpace, destination
 function movementToVelocity(deltaMovement: Vec2): Vec2 {
   let mult = (1 - velocity_falloff);
   return multiply(mult, deltaMovement);
+}
+// Adds the properties of a newForceMove onto a preexisting force move
+export function sumForceMoves(preExistingForceMove: ForceMove, newForceMove: ForceMove) {
+  preExistingForceMove.velocity = add(preExistingForceMove.velocity, newForceMove.velocity);
+
 }

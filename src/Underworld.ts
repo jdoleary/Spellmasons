@@ -101,7 +101,7 @@ import { corpseDecayId } from './modifierCorpseDecay';
 import { isSinglePlayer } from './network/wsPieSetup';
 import { PRIEST_ID } from './entity/units/priest';
 import { getSyncActions } from './Syncronization';
-import { EXPECTED_MILLIS_PER_GAMELOOP, forcePushAwayFrom } from './effects/force_move';
+import { EXPECTED_MILLIS_PER_GAMELOOP, sumForceMoves } from './effects/force_move';
 import { playThrottledEndTurnSFX } from './Audio';
 import { targetConeId } from './cards/target_cone';
 import { slashCardId } from './cards/slash';
@@ -542,11 +542,25 @@ export default class Underworld {
   // Never push to this.forceMove anywhere but here.
   addForceMove(forceMoveInst: ForceMove, prediction: boolean) {
     // TODO: Further parity with promises?
+    // Add to existing forceMove if it already exists 
+    // to eliminate wobbly lines:
+    const foundForceMove = (prediction ? this.forceMovePrediction : this.forceMove).find(fm => fm.pushedObject == forceMoveInst.pushedObject);
     if (prediction) {
-      this.forceMovePrediction.push(forceMoveInst);
+      if (foundForceMove) {
+        // Add the velocity of the new force move to the existing force move
+        sumForceMoves(foundForceMove, forceMoveInst);
+      } else {
+        // Add new forceMove
+        this.forceMovePrediction.push(forceMoveInst);
+      }
     }
     else {
-      this.forceMove.push(forceMoveInst);
+      if (foundForceMove) {
+        // Add the velocity of the new force move to the existing force move
+        sumForceMoves(foundForceMove, forceMoveInst);
+      } else {
+        this.forceMove.push(forceMoveInst);
+      }
       if (!this.forceMovePromise) {
         // If there is no forceMovePromise, create a new one,
         // it will resolve when the current forceMove instances
