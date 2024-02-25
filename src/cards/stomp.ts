@@ -39,7 +39,7 @@ const spell: Spell = {
         const moveDistance = Math.min(distance(state.casterUnit, target), stompMoveDistance * quantity)
         await forcePushTowards(state.casterUnit, target, moveDistance, underworld, prediction);
 
-        const delayBetweenStomps = 500; //ms
+        const delayBetweenStomps = 400; //ms
         const radius = stompRadius * (1 + (0.25 * state.aggregator.radiusBoost));
         for (let i = 1; i <= quantity; i++) {
           if (prediction) {
