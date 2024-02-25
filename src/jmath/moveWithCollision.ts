@@ -44,14 +44,14 @@ interface ForceMoveProjectileArgs {
   pushedObject: HasSpace;
   startPoint: Vec2;
   endPoint: Vec2;
+  speed: number; // units per ms
   doesPierce: boolean;
   ignoreUnitIds: number[];
   collideFnKey: string;
 }
-const START_VELOCITY = 1.5;
 export function makeForceMoveProjectile(args: ForceMoveProjectileArgs, underworld: Underworld, prediction: boolean): ForceMove {
-  const { pushedObject, startPoint, endPoint, doesPierce, ignoreUnitIds, collideFnKey } = args;
-  const velocity = similarTriangles(endPoint.x - pushedObject.x, endPoint.y - pushedObject.y, distance(pushedObject, endPoint), START_VELOCITY);
+  const { pushedObject, startPoint, endPoint, speed, doesPierce, ignoreUnitIds, collideFnKey } = args;
+  const velocity = similarTriangles(endPoint.x - pushedObject.x, endPoint.y - pushedObject.y, distance(pushedObject, endPoint), speed);
   pushedObject.beingPushed = true;
   // Experiment: canCreateSecondOrderPushes now is ALWAYS disabled.
   // I've had feedback that it's suprising - which is bad for a tactical game
