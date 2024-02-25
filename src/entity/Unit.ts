@@ -807,18 +807,29 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
     }
   }
 
-  // Invoke simulating forceMovePredictions after onDeath callbacks
-  // as the callbacks may create predictions that need to be processed such as
-  // bloat + die causing a push.  Otherwise a raceTimeout could occur
-  if (prediction) {
-    underworld.fullySimulateForceMovePredictions();
-  }
-  // Invoke gameLoopHeadless after onDeath callbacks
-  // as the callbacks may create predictions that need to be processed such as
-  // bloat + die causing a push.  Otherwise a raceTimeout could occur
-  if (globalThis.headless) {
-    underworld.triggerGameLoopHeadless();
-  }
+  // Wait to run gameloopHeadless and forceMovePrediction
+  // until syncronous code completes.
+  // This ensures that if multiple units die at the "same" time
+  // their resulting forcemoves (ex from explosion), will be processed
+  // the same was it will be on clients
+  // So: 
+  // die, die, die, all force moves processed
+  // rather than:
+  // die, force moves, die, force moves, die, force moves
+  setTimeout(() => {
+    // Invoke simulating forceMovePredictions after onDeath callbacks
+    // as the callbacks may create predictions that need to be processed such as
+    // bloat + die causing a push.  Otherwise a raceTimeout could occur
+    if (prediction) {
+      underworld.fullySimulateForceMovePredictions();
+    }
+    // Invoke gameLoopHeadless after onDeath callbacks
+    // as the callbacks may create predictions that need to be processed such as
+    // bloat + die causing a push.  Otherwise a raceTimeout could occur
+    if (globalThis.headless) {
+      underworld.triggerGameLoopHeadless();
+    }
+  }, 0);
 
   // Remove all modifiers
   // Note: This must come AFTER onDeathEvents or else it will remove the modifier
