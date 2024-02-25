@@ -45,8 +45,6 @@ const spell: Spell = {
           if (prediction) {
             drawUICirclePrediction(state.casterUnit, radius, colors.errorRed, 'Stomp Radius');
           } else if (!globalThis.headless) {
-            // Await some delay between stomps, then play stomp particles
-            await new Promise(resolve => setTimeout(resolve, delayBetweenStomps));
             if (i < quantity) {
               // Play stomp particles
               makeStompExplodeParticles2(state.casterUnit, false, prediction);
@@ -66,9 +64,13 @@ const spell: Spell = {
             // Final Stomp - Does pushback
             stompExplode(state.casterUnit, radius, stompDamage, stompRadius, underworld, prediction);
           }
-        }
 
-        await underworld.awaitForceMoves();
+          if (!prediction && !globalThis.headless) {
+            // Await some delay before the next stomp
+            await new Promise(resolve => setTimeout(resolve, delayBetweenStomps));
+          }
+          await underworld.awaitForceMoves();
+        }
       }
 
       return state;
