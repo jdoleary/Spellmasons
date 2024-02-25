@@ -6,15 +6,15 @@ import { playDefaultSpellSFX } from './cardUtils';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { addWarningAtMouse } from '../graphics/PlanningView';
 import { Vec2 } from '../jmath/Vec';
-import { baseExplosionRadius, explode } from '../effects/explode';
-import { defaultPushDistance } from '../effects/force_move';
+import { explode } from '../effects/explode';
 import * as colors from '../graphics/ui/colors';
 import { randFloat } from '../jmath/rand';
 import * as Image from '../graphics/Image';
 import { makeForceMoveProjectile } from '../jmath/moveWithCollision';
-import { containerProjectiles, containerSpells } from '../graphics/PixiUtils';
-import * as particles from '@pixi/particle-emitter'
+import { containerProjectiles } from '../graphics/PixiUtils';
+import * as particles from '@pixi/particle-emitter';
 import { createParticleTexture, logNoTextureWarning, wrappedEmitter } from '../graphics/Particles';
+import { stopAndDestroyForeverEmitter } from '../graphics/ParticleCollection';
 
 export const meteorCardId = 'meteor';
 const damage = 60;
@@ -96,6 +96,7 @@ async function meteorProjectiles(meteorLocations: Vec2[], underworld: Underworld
 
   // Don't wait for the first meteor
   let timePassed = arrivalTime - meteors[0].travelTime; //ms
+  const emitters = [];
   for (let meteor of meteors) {
     // Can't access destination, speed, or angle
     //createVisualFlyingProjectile({ x: meteor.destination.x, y: meteor.destination.y + 100 }, meteor.destination,)
@@ -125,7 +126,7 @@ async function meteorProjectiles(meteorLocations: Vec2[], underworld: Underworld
       beingPushed: false
     }
 
-    attachMeteorParticles(pushedObject, underworld);
+    emitters.push(attachMeteorParticles(pushedObject, underworld));
     makeForceMoveProjectile({
       pushedObject,
       startPoint: startPos,
@@ -139,12 +140,25 @@ async function meteorProjectiles(meteorLocations: Vec2[], underworld: Underworld
 
   await new Promise(resolve => setTimeout(resolve, arrivalTime - timePassed));
   // all meteors have arrived
+  for (let e of emitters) {
+    if (e) {
+      // "Stop" producing new particles
+      // by making the frequency super high and then
+      // stopping the emitter once the existing particles have
+      // faded out
+      e.frequency = 100000;
+      // Destroy after existing particles have faded
+      setTimeout(() => {
+        stopAndDestroyForeverEmitter(e);
+      }, e.maxLifetime);
+    }
+  }
 
   return;
 }
 
 // TODO - Don't destroy meteor particles after impact
-function attachMeteorParticles(target: any, underworld: Underworld, resolver?: () => void) {
+function attachMeteorParticles(target: any, underworld: Underworld, resolver?: () => void): particles.Emitter | undefined {
   const texture = createParticleTexture();
   if (!texture) {
     logNoTextureWarning('makeMeteorParticles');
@@ -155,18 +169,20 @@ function attachMeteorParticles(target: any, underworld: Underworld, resolver?: (
   }
   const particleConfig =
     particles.upgradeConfig(meteorEmitterConfig(), [texture]);
-  if (containerSpells) {
-    const wrapped = wrappedEmitter(particleConfig, containerSpells, resolver);
+  if (containerProjectiles) {
+    const wrapped = wrappedEmitter(particleConfig, containerProjectiles, resolver);
     if (wrapped) {
       underworld.particleFollowers.push({
         displayObject: wrapped.container,
         emitter: wrapped.emitter,
         target,
-      })
+      });
+      return wrapped.emitter;
     } else {
       console.warn('Failed to create meteor particle emitter');
     }
   }
+  return undefined;
 }
 
 // TODO - Update this: Currently using deathmason particle config
