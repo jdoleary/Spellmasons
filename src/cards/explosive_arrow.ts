@@ -32,10 +32,10 @@ const spell: Spell = {
     effect: arrowEffect(1, explosiveArrowCardId)
   },
   events: {
-    onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
+    onProjectileCollision: async ({ unit, underworld, projectile, prediction }) => {
       if (unit) {
-        Unit.takeDamage(unit, damageDone, projectile.startPoint, underworld, prediction, undefined, { thinBloodLine: true });
-        explode(unit, explodeRange, explodeDamage, defaultPushDistance,
+        await Unit.takeDamage(unit, damageDone, projectile.startPoint, underworld, prediction, undefined, { thinBloodLine: true });
+        await explode(unit, explodeRange, explodeDamage, defaultPushDistance,
           underworld, prediction,
           colors.bloatExplodeStart, colors.bloatExplodeEnd);
       }

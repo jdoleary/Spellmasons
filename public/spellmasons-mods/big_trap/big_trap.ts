@@ -21,7 +21,7 @@ const huge_trap: IPickupSource = {
     willTrigger: ({ unit, player, pickup, underworld }) => {
         return !!unit;
     },
-    effect: ({ unit, player, pickup, prediction, underworld }) => {
+    effect: async ({ unit, player, pickup, prediction, underworld }) => {
         if (unit) {
             // Play trap spring animation
             if (!prediction) {
@@ -56,7 +56,7 @@ const huge_trap: IPickupSource = {
                 }
 
             }
-            Unit.takeDamage(unit, spike_damage, unit, underworld, prediction)
+            await Unit.takeDamage(unit, spike_damage, unit, underworld, prediction)
         }
     }
 };

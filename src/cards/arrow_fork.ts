@@ -30,9 +30,9 @@ const spell: Spell = {
     effect: arrowEffect(1, arrowForkCardId)
   },
   events: {
-    onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
+    onProjectileCollision: async ({ unit, underworld, projectile, prediction }) => {
       if (unit) {
-        Unit.takeDamage(unit, damageDone, projectile.startPoint, underworld, prediction, undefined, { thinBloodLine: true });
+        await Unit.takeDamage(unit, damageDone, projectile.startPoint, underworld, prediction, undefined, { thinBloodLine: true });
         // Now fork into regular arrows that fire in directions
         for (let newAngle of [Math.PI / 12, -Math.PI / 12, 2 * Math.PI / 12, -2 * Math.PI / 12, 3 * Math.PI / 12, -3 * Math.PI / 12]) {
           const angle = getAngleBetweenVec2s(projectile.startPoint, unit) + newAngle;

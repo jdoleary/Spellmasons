@@ -4,22 +4,22 @@ import { explain, EXPLAIN_LIQUID_DAMAGE } from "./graphics/Explain";
 import { addMask, removeMask } from "./graphics/Image";
 import type Underworld from "./Underworld";
 
-export function doLiquidEffect(underworld: Underworld, unit: IUnit, prediction: boolean) {
+export async function doLiquidEffect(underworld: Underworld, unit: IUnit, prediction: boolean) {
     if (!underworld.lastLevelCreated) {
         return;
     }
     switch (underworld.lastLevelCreated.biome) {
         case 'water':
-            takeDamage(unit, 20, undefined, underworld, prediction);
+            await takeDamage(unit, 20, undefined, underworld, prediction);
             break;
         case 'lava':
-            takeDamage(unit, 30, undefined, underworld, prediction);
+            await takeDamage(unit, 30, undefined, underworld, prediction);
             break;
         case 'blood':
-            takeDamage(unit, 40, undefined, underworld, prediction);
+            await takeDamage(unit, 40, undefined, underworld, prediction);
             break;
         case 'ghost':
-            takeDamage(unit, 50, undefined, underworld, prediction);
+            await takeDamage(unit, 50, undefined, underworld, prediction);
             break;
         default:
             console.error('Unknown biome')

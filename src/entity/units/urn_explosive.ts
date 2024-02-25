@@ -57,7 +57,7 @@ export const urnexplosiveExplode = 'urnexplosiveExplode';
 export function registerUrnexplosiveExplode() {
   registerEvents(urnexplosiveExplode, {
     onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
-      explode(unit, unit.attackRange, unit.damage, defaultPushDistance,
+      await explode(unit, unit.attackRange, unit.damage, defaultPushDistance,
         underworld, prediction,
         colors.bloatExplodeStart, colors.bloatExplodeEnd);
       // Remove corpse

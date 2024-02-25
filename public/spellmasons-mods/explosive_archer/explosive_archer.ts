@@ -87,14 +87,14 @@ const unit: UnitSource = {
           unit,
           attackTarget,
           'projectile/arrow',
-        ).then(() => {
+        ).then(async () => {
           JAudio.playSFXKey('explosiveArcherAttack');
-          Unit.takeDamage(attackTarget, unit.damage, unit, underworld, false, undefined, { thinBloodLine: true });
+          await Unit.takeDamage(attackTarget, unit.damage, unit, underworld, false, undefined, { thinBloodLine: true });
           ParticleCollection.makeBloatExplosionWithParticles(attackTarget, 1, false);
           // Await the resolution of the forcePushes before moving on
-          return JPromise.raceTimeout(3000, 'explosive archer push', Promise.all(explosionTargets.map(u => {
+          return JPromise.raceTimeout(3000, 'explosive archer push', Promise.all(explosionTargets.map(async u => {
             // Deal damage to units
-            Unit.takeDamage(u, explosionDamage, u, underworld, false);
+            await Unit.takeDamage(u, explosionDamage, u, underworld, false);
             // Push units away from exploding unit
             return forcePush(u, attackTarget, 10, underworld, false);
           })));
@@ -135,7 +135,7 @@ const huge_trap: IPickupSource = {
   willTrigger: ({ unit, player, pickup, underworld }) => {
     return !!unit;
   },
-  effect: ({ unit, player, pickup, prediction, underworld }) => {
+  effect: async ({ unit, player, pickup, prediction, underworld }) => {
     if (unit) {
       // Play trap spring animation
       if (!prediction) {
@@ -170,7 +170,7 @@ const huge_trap: IPickupSource = {
         }
 
       }
-      Unit.takeDamage(unit, spike_damage, unit, underworld, prediction)
+      await Unit.takeDamage(unit, spike_damage, unit, underworld, prediction)
     }
   }
 };

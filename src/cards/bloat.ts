@@ -91,7 +91,7 @@ const spell: Spell = {
       const quantity = unit.modifiers[id]?.quantity || 1;
       const radiusBoost = unit.modifiers[id]?.radiusBoost;
       const adjustedRadius = getAdjustedRadius(radiusBoost);
-      explode(unit, adjustedRadius, damage * quantity, getAdjustedPushDist(radiusBoost),
+      await explode(unit, adjustedRadius, damage * quantity, getAdjustedPushDist(radiusBoost),
         underworld, prediction,
         colors.bloatExplodeStart, colors.bloatExplodeEnd);
     },

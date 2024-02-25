@@ -64,12 +64,10 @@ const spell: Spell = {
       }
 
       const adjustedRadius = baseRadius * (1 + (0.25 * state.aggregator.radiusBoost));
-      for (let meteorLocation of meteorLocations) {
-        explode(meteorLocation, adjustedRadius, damage * quantity, basePushDistance,
-          underworld, prediction,
-          colors.bloatExplodeStart, colors.bloatExplodeEnd)
-      }
-      await underworld.awaitForceMoves();
+      await Promise.all(meteorLocations.map(meteorLocation => explode(meteorLocation, adjustedRadius, damage * quantity, basePushDistance,
+        underworld, prediction,
+        colors.bloatExplodeStart, colors.bloatExplodeEnd)));
+      // await underworld.awaitForceMoves();
       return state;
     },
   },

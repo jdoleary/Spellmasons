@@ -42,7 +42,7 @@ const spell: Spell = {
       Math.floor(calculateDamageProportion({ health: 90, healthMax: 100, alive: true }) * 100).toString(),
     ],
     effect: async (state, card, quantity, underworld, prediction) => {
-      await new Promise<void>((resolve) => {
+      await new Promise<void>(async (resolve) => {
         // .filter: only target living units
         const targets = state.targetedUnits.filter(u => u.alive)
         let biggestProportion = 0;
@@ -59,7 +59,7 @@ const spell: Spell = {
           if (!prediction) {
             makeBleedParticles(unit, prediction, proportion, resolve);
           }
-          Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
+          await Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
         }
         if (!prediction) {
           if (biggestProportion < bleedInstantKillProportion / 3) {

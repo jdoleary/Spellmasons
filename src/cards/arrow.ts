@@ -35,9 +35,9 @@ const spell: Spell = {
     effect: arrowEffect(1, arrowCardId)
   },
   events: {
-    onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
+    onProjectileCollision: async ({ unit, underworld, projectile, prediction }) => {
       if (unit) {
-        Unit.takeDamage(unit, damage, projectile.startPoint, underworld, prediction, undefined, { thinBloodLine: true });
+        await Unit.takeDamage(unit, damage, projectile.startPoint, underworld, prediction, undefined, { thinBloodLine: true });
       }
     }
   }

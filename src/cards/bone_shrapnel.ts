@@ -27,7 +27,7 @@ const spell: Spell = {
     effect: async (state, card, quantity, underworld, prediction) => {
       // Only explode corpses at time of cast
       const targetedUnits = state.targetedUnits.filter(u => !u.alive);
-      targetedUnits.forEach(unit => {
+      await Promise.all(targetedUnits.map(async unit => {
         // +50% radius per radius boost
         const adjustedRadius = baseRadius * (1 + (0.5 * state.aggregator.radiusBoost));
         if (prediction) {
@@ -36,20 +36,20 @@ const spell: Spell = {
           playSFXKey('bloatExplosion');
         }
         makeShrapnelParticles(unit, adjustedRadius / baseRadius, prediction);
-        underworld.getUnitsWithinDistanceOfTarget(
+        await Promise.all(underworld.getUnitsWithinDistanceOfTarget(
           unit,
           adjustedRadius,
           prediction
-        ).forEach(u => {
+        ).map(u => {
           // Deal damage to units
           takeDamage(u, damage * quantity, u, underworld, prediction);
-        });
+        }));
 
         // Remove corpse
         // Note: This must be called after all other explode logic or else it will affect the position
         // of the explosion
         Unit.cleanup(unit, true);
-      });
+      }));
       return state;
     },
   },

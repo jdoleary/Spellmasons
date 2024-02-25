@@ -55,7 +55,7 @@ export const urnpoisonExplode = 'urnpoisonExplode';
 export function registerUrnpoisonExplode() {
   registerEvents(urnpoisonExplode, {
     onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
-      const units = explode(unit, unit.attackRange, 0, 0,
+      const units = await explode(unit, unit.attackRange, 0, 0,
         underworld, prediction,
         0x164a15, 0x6bff77);
 

@@ -27,9 +27,9 @@ const spell: Spell = {
     effect: arrowEffect(1, arrow3CardId),
   },
   events: {
-    onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
+    onProjectileCollision: async ({ unit, underworld, projectile, prediction }) => {
       if (unit) {
-        takeDamage(unit, damageDone, projectile.startPoint, underworld, prediction, undefined, { thinBloodLine: true });
+        await takeDamage(unit, damageDone, projectile.startPoint, underworld, prediction, undefined, { thinBloodLine: true });
       }
     }
   }

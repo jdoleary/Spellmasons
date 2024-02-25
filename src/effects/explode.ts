@@ -8,7 +8,7 @@ import { forcePushAwayFrom } from "./force_move";
 import { raceTimeout } from "../Promise";
 
 export const baseExplosionRadius = 140
-export async function explode(location: Vec2, radius: number, damage: number, pushDistance: number, underworld: Underworld, prediction: boolean, colorstart?: number, colorEnd?: number, useDefaultSound: boolean = true): IUnit[] {
+export async function explode(location: Vec2, radius: number, damage: number, pushDistance: number, underworld: Underworld, prediction: boolean, colorstart?: number, colorEnd?: number, useDefaultSound: boolean = true): Promise<IUnit[]> {
   if (prediction) {
     drawUICirclePrediction(location, radius, colors.healthRed, 'Explosion Radius');
   } else {

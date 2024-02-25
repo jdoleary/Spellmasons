@@ -337,7 +337,7 @@ export default class Underworld {
     return this.random;
   }
   // Simulate the forceMove until it's complete
-  fullySimulateForceMovePredictions() {
+  async fullySimulateForceMovePredictions() {
     if (this.simulatingMovePredictions) {
       console.debug('Already simulating move predictions');
       return;
@@ -355,7 +355,7 @@ export default class Underworld {
         const forceMoveInst = this.forceMovePrediction[i];
         if (forceMoveInst) {
           const startPos = Vec.clone(forceMoveInst.pushedObject);
-          const done = this.runForceMove(forceMoveInst, EXPECTED_MILLIS_PER_GAMELOOP, prediction);
+          const done = await this.runForceMove(forceMoveInst, EXPECTED_MILLIS_PER_GAMELOOP, prediction);
           // Draw prediction lines
           if (globalThis.predictionGraphics && !globalThis.isHUDHidden) {
             globalThis.predictionGraphics.lineStyle(4, colors.forceMoveColor, 1.0);
@@ -387,7 +387,7 @@ export default class Underworld {
     this.simulatingMovePredictions = false;
   }
   // Returns true when forceMove is complete
-  runForceMove(forceMoveInst: ForceMove, deltaTime: number, prediction: boolean): boolean {
+  async runForceMove(forceMoveInst: ForceMove, deltaTime: number, prediction: boolean): Promise<boolean> {
     const { pushedObject, velocity, timedOut } = forceMoveInst;
     if (timedOut) {
       return true;
@@ -427,7 +427,7 @@ export default class Underworld {
         // otherwise, make the unit slide along the wall
         if (impactDamage > 0) {
           if (Unit.isUnit(pushedObject)) {
-            Unit.takeDamage(pushedObject, impactDamage, Vec.add(pushedObject, { x: velocity.x, y: velocity.y }), this, prediction);
+            await Unit.takeDamage(pushedObject, impactDamage, Vec.add(pushedObject, { x: velocity.x, y: velocity.y }), this, prediction);
             if (!prediction) {
               floatingText({ coords: pushedObject, text: `${impactDamage} Impact damage!` });
             }
@@ -568,7 +568,7 @@ export default class Underworld {
   }
   // Returns true if there is more processing yet to be done on the next
   // gameloop
-  gameLoopForceMove = (deltaTime: number) => {
+  gameLoopForceMove = async (deltaTime: number) => {
     // No need to process if there are no instances to process
     if (!this.forceMove.length) {
       return false;
@@ -587,7 +587,7 @@ export default class Underworld {
         const unitImageYOffset = config.COLLISION_MESH_RADIUS / 2;
         const startPos = Vec.clone(forceMoveInst.pushedObject);
         startPos.y += unitImageYOffset;
-        const done = this.runForceMove(forceMoveInst, deltaTime, false);
+        const done = await this.runForceMove(forceMoveInst, deltaTime, false);
         const endPos = { x: forceMoveInst.pushedObject.x, y: forceMoveInst.pushedObject.y + unitImageYOffset };
         if (!globalThis.noGore && graphicsBloodSmear && Unit.isUnit(forceMoveInst.pushedObject) && forceMoveInst.pushedObject.health !== undefined && forceMoveInst.pushedObject.health <= 0) {
           const size = 3;
@@ -758,7 +758,7 @@ export default class Underworld {
     }
   }
   // See GameLoops.md for more details
-  triggerGameLoopHeadless = () => {
+  triggerGameLoopHeadless = async () => {
     if (globalThis.headless) {
       // Now that NPC actions have been setup, trigger the gameLoopHeadless
       // which will run until all actions are processed:
@@ -767,7 +767,7 @@ export default class Underworld {
       let loopCount = 0;
       while (moreProcessingToBeDone) {
         loopCount++;
-        moreProcessingToBeDone = this._gameLoopHeadless(loopCount);
+        moreProcessingToBeDone = await this._gameLoopHeadless(loopCount);
         if (loopCount > loopCountLimit) {
           // TODO: this number is arbitrary, test later levels and make sure this is high enough
           // so that it doesn't early exit
@@ -784,8 +784,8 @@ export default class Underworld {
   // Only to be invoked by triggerGameLoopHeadless
   // Returns true if there is more processing to be done
   // See GameLoops.md for more details
-  _gameLoopHeadless = (loopCount: number): boolean => {
-    const stillProcessingForceMoves = this.gameLoopForceMove(16);
+  _gameLoopHeadless = async (loopCount: number): Promise<boolean> => {
+    const stillProcessingForceMoves = await this.gameLoopForceMove(16);
     if (loopCount > loopCountLimit && stillProcessingForceMoves) {
       console.error('_gameLoopHeadless hit limit; stillProcessingForceMoves');
     }
@@ -3740,7 +3740,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           }
 
           if (spellCostTally.healthCost !== 0) {
-            Unit.takeDamage(effectState.casterUnit, spellCostTally.healthCost, effectState.casterUnit, this, prediction, effectState);
+            await Unit.takeDamage(effectState.casterUnit, spellCostTally.healthCost, effectState.casterUnit, this, prediction, effectState);
           }
 
           // Increment card usage; now that the caster is using the card
