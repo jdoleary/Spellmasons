@@ -13,6 +13,7 @@ import { IUnit, takeDamage } from '../entity/Unit';
 import { makeParticleExplosion } from '../graphics/ParticleCollection';
 import { createParticleTexture, logNoTextureWarning, simpleEmitter } from '../graphics/Particles';
 import * as particles from '@pixi/particle-emitter'
+import { baseExplosionRadius } from '../effects/explode';
 
 export const stompCardId = 'stomp';
 const stompMoveDistance = 100;
@@ -47,12 +48,12 @@ const spell: Spell = {
           } else if (!globalThis.headless) {
             if (i < quantity) {
               // Play stomp particles
-              makeStompExplodeParticles2(state.casterUnit, false, prediction);
+              makeStompExplodeParticles2(state.casterUnit, radius, false, prediction);
             } else {
               // For final stomp, play implosion and then big stomp particles
               makeStompWindupParticles(state.casterUnit, prediction);
               await new Promise(resolve => setTimeout(resolve, delayBetweenStomps));
-              makeStompExplodeParticles2(state.casterUnit, true, prediction);
+              makeStompExplodeParticles2(state.casterUnit, radius, true, prediction);
             }
             playSFXKey('bloatExplosion');
           }
@@ -61,7 +62,7 @@ const spell: Spell = {
             // Early Stomp - does not push
             stompExplode(state.casterUnit, radius, stompDamage, 0, underworld, prediction);
           } else {
-            // Final Stomp - Does pushback
+            // Final Stomp - Does pushback = base stomp radius
             stompExplode(state.casterUnit, radius, stompDamage, stompRadius, underworld, prediction);
           }
 
@@ -102,16 +103,17 @@ async function stompExplode(caster: IUnit, radius: number, damage: number, pushD
 }
 
 // Temporary particles for Stomp implementation
-function makeStompExplodeParticles2(position: Vec2, big: boolean, prediction: boolean) {
+function makeStompExplodeParticles2(position: Vec2, radius: number, big: boolean, prediction: boolean) {
   if (prediction || globalThis.headless) {
     // Don't show if just a prediction
     return;
   }
 
-  makeParticleExplosion(position, big ? 0.8 : 0.5, colors.trueGrey, colors.trueWhite, prediction)
+  const explosionSize = radius / baseExplosionRadius * (big ? 1 : 0.7);
+  makeParticleExplosion(position, explosionSize, colors.trueGrey, colors.trueWhite, prediction)
 }
 
-function makeStompExplodeParticles(position: Vec2, big: boolean, prediction: boolean) {
+function makeStompExplodeParticles(position: Vec2, radius: number, big: boolean, prediction: boolean) {
   if (prediction || globalThis.headless) {
     // Don't show if just a prediction
     return;
