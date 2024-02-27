@@ -70,7 +70,7 @@ const spell: Spell = {
             // Await some delay before the next stomp
             await new Promise(resolve => setTimeout(resolve, delayBetweenStomps));
           }
-          await underworld.awaitForceMoves();
+          await underworld.awaitForceMoves(prediction);
         }
       }
 
