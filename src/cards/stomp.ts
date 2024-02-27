@@ -40,7 +40,8 @@ const spell: Spell = {
         const moveDistance = Math.min(distance(state.casterUnit, target), stompMoveDistance * quantity)
         await forcePushTowards(state.casterUnit, target, moveDistance, underworld, prediction);
 
-        const delayBetweenStomps = 400; //ms
+        const basedelayBetweenStomps = 400; //ms
+        let delayBetweenStomps = basedelayBetweenStomps;
         const radius = stompRadius * (1 + (0.25 * state.aggregator.radiusBoost));
         for (let i = 1; i <= quantity; i++) {
           if (prediction) {
@@ -52,7 +53,7 @@ const spell: Spell = {
             } else {
               // For final stomp, play implosion and then big stomp particles
               makeStompWindupParticles(state.casterUnit, prediction);
-              await new Promise(resolve => setTimeout(resolve, delayBetweenStomps));
+              await new Promise(resolve => setTimeout(resolve, basedelayBetweenStomps * 2));
               makeStompExplodeParticles2(state.casterUnit, radius, true, prediction);
             }
             playSFXKey('bloatExplosion');
@@ -68,6 +69,7 @@ const spell: Spell = {
 
           if (!prediction && !globalThis.headless) {
             // Await some delay before the next stomp
+            delayBetweenStomps = Math.max(delayBetweenStomps * 0.85, 50);
             await new Promise(resolve => setTimeout(resolve, delayBetweenStomps));
           }
           await underworld.awaitForceMoves(prediction);
