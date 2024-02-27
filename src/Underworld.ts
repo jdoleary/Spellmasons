@@ -106,6 +106,7 @@ import { playThrottledEndTurnSFX } from './Audio';
 import { targetConeId } from './cards/target_cone';
 import { slashCardId } from './cards/slash';
 import { pushId } from './cards/push';
+import { targetCursedId } from './cards/target_curse';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -3644,6 +3645,21 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
     }
 
+    // Refactor notice: This hard-coded "Target Curse"
+    // https://github.com/jdoleary/Spellmasons/pull/521
+    // Add all target-cursed enemies to targets list and decrement curse quantity
+    for (const unit of prediction ? this.unitsPrediction : this.units) {
+      const targetCurse = unit.modifiers[targetCursedId];
+      if (targetCurse) {
+        targetCurse.quantity--;
+        if (targetCurse.quantity == 0) {
+          Unit.removeModifier(unit, targetCursedId, this);
+        }
+        if (!effectState.targetedUnits.includes(unit) && !unit.flaggedForRemoval) {
+          effectState.targetedUnits.push(unit);
+        }
+      }
+    }
 
     if (!effectState.casterUnit.alive) {
       // Prevent dead players from casting
@@ -3754,6 +3770,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // Reset quantity once a card is cast
       quantity = 1;
     }
+
     if (!prediction) {
       // Clear spell animations once all cards are done playing their animations
       containerSpells?.removeChildren();

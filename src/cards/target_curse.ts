@@ -12,7 +12,7 @@ import { getOrInitModifier } from './util';
 
 export const targetCursedId = 'Target Cursed';
 function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra?: any) {
-  const modifier = getOrInitModifier(unit, targetCursedId, { isCurse: true, quantity: 1, keepOnDeath: true }, () => {
+  const modifier = getOrInitModifier(unit, targetCursedId, { isCurse: true, quantity, keepOnDeath: true }, () => {
     // Nothing to init
   });
 }
@@ -34,20 +34,7 @@ const spell: Spell = {
       const targets = state.targetedUnits;
       // Add Target Curse to all targeted units
       for (const target of targets) {
-        if (!target.modifiers[targetCursedId]) {
-          Unit.addModifier(target, targetCursedId, underworld, prediction);
-        }
-      }
-
-      const potentialTargets =
-        (prediction ? underworld.unitsPrediction : underworld.units)
-          .filter(u => !u.flaggedForRemoval);
-
-      // Add all other target-cursed enemies to targets
-      for (const unit of potentialTargets) {
-        if (!targets.includes(unit) && unit.modifiers[targetCursedId]) {
-          addTarget(unit, state);
-        }
+        Unit.addModifier(target, targetCursedId, underworld, prediction, quantity);
       }
 
       if (!prediction && !globalThis.headless && targets.length) {

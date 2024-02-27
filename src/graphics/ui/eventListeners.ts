@@ -40,6 +40,7 @@ import { summoningSicknessId } from '../../modifierSummoningSickness';
 import { errorRed } from './colors';
 import { isSinglePlayer } from '../../network/wsPieSetup';
 import { elAdminPowerBar, elAdminPowerBarInput, elAdminPowerBarOptions } from '../../HTMLElements';
+import { targetCursedId } from '../../cards/target_curse';
 
 export const keyDown = {
   showWalkRope: false,
@@ -834,7 +835,12 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         // unless the first card (like AOE) specifically allows casting
         // on non unit targets
         const hasTarget = hasTargetAtPosition(target, underworld);
-        if ((!hasTarget) && cards.length && cards[0] && !cards[0].allowNonUnitTarget) {
+        // Refactor notice: This hard-coded "Target Curse"
+        // https://github.com/jdoleary/Spellmasons/pull/521
+        // Allows players to cast spells without a target under cursor
+        // if there are target cursed units
+        const hasTargetCursedUnit = underworld.units.find(u => u.modifiers[targetCursedId]);
+        if ((!hasTarget && !hasTargetCursedUnit) && cards.length && cards[0] && !cards[0].allowNonUnitTarget) {
           floatingText({
             coords: target,
             text: 'No Target!'
@@ -843,7 +849,6 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
           // Cancel Casting
           return;
         }
-
 
         if (selfPlayer.unit.modifiers[Freeze.freezeCardId]) {
           floatingText({ coords: selfPlayer.unit, text: 'Cannot Cast. Frozen.' })
