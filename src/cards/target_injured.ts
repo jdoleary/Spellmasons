@@ -21,7 +21,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconTargetInjured.png',
-    requiresFollowingCard: false,
+    requiresFollowingCard: true,
     description: 'spell_target_injured',
     allowNonUnitTarget: true,
     effect: async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean) => {
