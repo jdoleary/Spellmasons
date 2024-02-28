@@ -33,7 +33,7 @@ const spell: Spell = {
       const addedTargets = [];
 
       for (const target of potentialTargets) {
-        if (target.health <= adjustedHealthThreshold && target.unitSubType != UnitSubType.DOODAD) {
+        if (target.alive && target.health <= adjustedHealthThreshold && target.unitSubType != UnitSubType.DOODAD) {
           addedTargets.push(target);
         }
       }
