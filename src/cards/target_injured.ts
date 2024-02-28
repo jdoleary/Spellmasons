@@ -1,5 +1,5 @@
 import { addTarget, EffectState, ICard, Spell } from './index';
-import { CardCategory } from '../types/commonTypes';
+import { CardCategory, UnitSubType } from '../types/commonTypes';
 import { Vec2, lerpVec2 } from '../jmath/Vec';
 import * as Unit from '../entity/Unit';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
@@ -33,7 +33,7 @@ const spell: Spell = {
       const addedTargets = [];
 
       for (const target of potentialTargets) {
-        if (target.health <= adjustedHealthThreshold) {
+        if (target.health <= adjustedHealthThreshold && target.unitSubType != UnitSubType.DOODAD) {
           addedTargets.push(target);
         }
       }
