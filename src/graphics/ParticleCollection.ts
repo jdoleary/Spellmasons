@@ -11,6 +11,7 @@ import { bleedInstantKillProportion } from '../cards/bleed';
 import { containerUnits } from './PixiUtils';
 import { IUnit } from '../entity/Unit';
 import Underworld from '../Underworld';
+import { CURSED_MANA_POTION, HEALTH_POTION, IPickup, MANA_POTION, STAMINA_POTION } from '../entity/Pickup';
 export function makeAncientParticles(position: Vec2, prediction: boolean) {
   if (prediction || globalThis.headless) {
     // Don't show if just a prediction
@@ -213,6 +214,87 @@ export function makeBloatExplosionWithParticles(position: Vec2, size: number, pr
       }
     }, [texture]);
   simpleEmitter(position, config);
+}
+export function makeAlchemizeParticles(potion: IPickup, prediction: boolean, resolver?: () => void) {
+  if (prediction || globalThis.headless) {
+    // Don't show if just a prediction
+    if (resolver) {
+      resolver();
+    }
+    return;
+  }
+  const texture = createParticleTexture();
+  if (!texture) {
+    logNoTextureWarning('makeAlchemizeParticles');
+    if (resolver) {
+      resolver();
+    }
+    return
+  }
+  const colorMap = {
+    [MANA_POTION]: colors.manaBrightBlue,
+    [HEALTH_POTION]: colors.healthRed,
+    [STAMINA_POTION]: colors.stamina,
+    [CURSED_MANA_POTION]: colors.manaDarkBlue,
+  }
+  const color = colors.convertToHashColor(colorMap[potion.name as keyof typeof colorMap] || 0xffffff);
+  const particleConfig =
+    particles.upgradeConfig({
+      autoUpdate: true,
+      "alpha": {
+        "start": 0.7,
+        "end": 0
+      },
+      "scale": {
+        "start": 1.5,
+        "end": 1.0,
+        "minimumScaleMultiplier": 1
+      },
+      "color": {
+        "start": color,
+        "end": color
+      },
+      "speed": {
+        "start": -40,
+        "end": -40,
+        "minimumSpeedMultiplier": 1
+      },
+      "acceleration": {
+        "x": 0,
+        "y": 0
+      },
+      "maxSpeed": 0,
+      "startRotation": {
+        "min": 80,
+        "max": 100
+      },
+      "noRotation": false,
+      "rotationSpeed": {
+        "min": 50,
+        "max": 50
+      },
+      "lifetime": {
+        "min": 1,
+        "max": 1
+      },
+      "blendMode": "normal",
+      "frequency": 0.001,
+      "emitterLifetime": 0.5,
+      "maxParticles": 100,
+      "pos": {
+        "x": 0,
+        "y": 0
+      },
+      "addAtBack": true,
+      "spawnType": "circle",
+      "spawnCircle": {
+        "x": 0,
+        "y": 0,
+        "r": 10
+      }
+    }, [texture]);
+  simpleEmitter({ x: potion.x, y: potion.y }, particleConfig, resolver);
+
 }
 export function makeBleedParticles(position: Vec2, prediction: boolean, proportion: number, resolver?: () => void) {
   if (prediction || globalThis.headless) {

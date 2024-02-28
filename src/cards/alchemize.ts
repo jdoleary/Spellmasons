@@ -3,8 +3,8 @@ import { playDefaultSpellSFX } from './cardUtils';
 import { Spell, refundLastSpell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { CURSED_MANA_POTION, HEALTH_POTION, IPickup, MANA_POTION, STAMINA_POTION, removePickup } from '../entity/Pickup';
-import * as colors from '../graphics/ui/colors';
 import * as Pickup from '../entity/Pickup';
+import { makeAlchemizeParticles } from '../graphics/ParticleCollection';
 
 export const alchemizeId = 'Alchemize';
 const spell: Spell = {
@@ -31,6 +31,7 @@ const spell: Spell = {
       playDefaultSpellSFX(card, prediction);
       for (let potion of targets) {
         if (potion.flaggedForRemoval) continue;
+        makeAlchemizeParticles(potion, prediction);
 
         const next = getNextPotion(potion, quantity);
         if (next) {
