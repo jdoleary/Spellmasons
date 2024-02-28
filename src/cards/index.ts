@@ -68,6 +68,7 @@ import connect from './connect';
 import target_similar from './target_similar';
 import target_similar_2 from './target_similar_2';
 import target_all from './target_all';
+import target_curse from './target_curse';
 import plus_radius from './plus_radius';
 import shove from './shove';
 import burst from './burst';
@@ -280,6 +281,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(target_similar, overworld);
   registerSpell(target_similar_2, overworld);
   registerSpell(target_all, overworld);
+  registerSpell(target_curse, overworld);
   registerSpell(plus_radius, overworld);
   // TODO: Refactor bolt into soulbind, it didn't work out well as a spell
   // register(bolt, overworld);
