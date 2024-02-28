@@ -3645,8 +3645,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
     }
 
-    // Refactor notice: This hard-coded "Target Curse"
-    // https://github.com/jdoleary/Spellmasons/pull/521
+    // https://github.com/jdoleary/Spellmasons/pull/521 
+    // Refactor notice: Hard-Coded "Target Curse"
     // Add all target-cursed enemies to targets list and decrement curse quantity
     for (const unit of prediction ? this.unitsPrediction : this.units) {
       const targetCurse = unit.modifiers[targetCursedId];

@@ -835,10 +835,11 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         // unless the first card (like AOE) specifically allows casting
         // on non unit targets
         const hasTarget = hasTargetAtPosition(target, underworld);
-        // Refactor notice: This hard-coded "Target Curse"
+
+
         // https://github.com/jdoleary/Spellmasons/pull/521
-        // Allows players to cast spells without a target under cursor
-        // if there are target cursed units
+        // Hard-coded "Target Curse" -> Allows players to cast spells
+        // without a target under cursor, if there are target cursed units
         const hasTargetCursedUnit = underworld.units.find(u => u.modifiers[targetCursedId]);
         if ((!hasTarget && !hasTargetCursedUnit) && cards.length && cards[0] && !cards[0].allowNonUnitTarget) {
           floatingText({
