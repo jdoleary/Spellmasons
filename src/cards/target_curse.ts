@@ -30,7 +30,6 @@ const spell: Spell = {
     description: 'spell_target_cursed',
     allowNonUnitTarget: true,
     effect: async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean) => {
-      // We store the initial targets because target curse mutates state.targetedUnits
       const targets = state.targetedUnits;
       // Add Target Curse to all targeted units
       for (const target of targets) {
