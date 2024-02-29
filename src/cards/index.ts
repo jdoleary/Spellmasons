@@ -30,7 +30,9 @@ import resurrect_weak from './resurrect_weak';
 import resurrect_toxic from './resurrect_toxic';
 import shield from './shield';
 import fortify from './fortify';
-import potion_shatter, { potionShatterId } from './potion_shatter';
+import alchemize from './alchemize';
+import last_Will from './lastwill';
+import potion_shatter from './potion_shatter';
 import swap from './swap';
 import teleport from './teleport';
 import displace from './displace';
@@ -57,7 +59,6 @@ import bloat from './bloat';
 import bone_shrapnel from './bone_shrapnel';
 import shatter from './shatter';
 import meteor from './meteor';
-import last_Will from './lastwill';
 import split from './split';
 import drown from './drown';
 import target_arrow from './target_arrow';
@@ -225,6 +226,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(send_mana, overworld);
   registerSpell(shield, overworld);
   registerSpell(fortify, overworld);
+  registerSpell(alchemize, overworld);
   registerSpell(last_Will, overworld);
   registerSpell(potion_shatter, overworld);
 
