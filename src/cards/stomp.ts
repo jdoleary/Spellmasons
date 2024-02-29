@@ -37,43 +37,31 @@ const spell: Spell = {
       const target = state.castLocation;
 
       if (target) {
+        // Charge up VFX
+        if (!prediction && !globalThis.headless) {
+          const delayBeforeDash = 500; //ms
+          makeStompWindupParticles(state.casterUnit, prediction);
+          await new Promise(resolve => setTimeout(resolve, delayBeforeDash));
+        }
+
+        // Dash
         const moveDistance = Math.min(distance(state.casterUnit, target), stompMoveDistance * quantity)
         await forcePushTowards(state.casterUnit, target, moveDistance, underworld, prediction);
 
-        const basedelayBetweenStomps = 400; //ms
-        let delayBetweenStomps = basedelayBetweenStomps;
+        // Stomp
         const radius = stompRadius * (1 + (0.25 * state.aggregator.radiusBoost));
-        for (let i = 1; i <= quantity; i++) {
-          if (prediction) {
-            drawUICirclePrediction(state.casterUnit, radius, colors.errorRed, 'Stomp Radius');
-          } else if (!globalThis.headless) {
-            if (i < quantity) {
-              // Play stomp particles
-              makeStompExplodeParticles2(state.casterUnit, radius, false, prediction);
-            } else {
-              // For final stomp, play implosion and then big stomp particles
-              makeStompWindupParticles(state.casterUnit, prediction);
-              await new Promise(resolve => setTimeout(resolve, basedelayBetweenStomps * 2));
-              makeStompExplodeParticles2(state.casterUnit, radius, true, prediction);
-            }
-            playSFXKey('bloatExplosion');
-          }
-
-          if (i < quantity) {
-            // Early Stomp - does not push
-            stompExplode(state.casterUnit, radius, stompDamage, 0, underworld, prediction);
-          } else {
-            // Final Stomp - Does pushback = base stomp radius
-            stompExplode(state.casterUnit, radius, stompDamage, stompRadius, underworld, prediction);
-          }
-
-          if (!prediction && !globalThis.headless) {
-            // Await some delay before the next stomp
-            delayBetweenStomps = Math.max(delayBetweenStomps * 0.85, 50);
-            await new Promise(resolve => setTimeout(resolve, delayBetweenStomps));
-          }
-          await underworld.awaitForceMoves(prediction);
+        if (prediction) {
+          // Stomp Prediction
+          drawUICirclePrediction(state.casterUnit, radius, colors.errorRed, 'Stomp Radius');
+        } else if (!globalThis.headless) {
+          // Stomp VFX
+          makeStompExplodeParticles2(state.casterUnit, radius, true, prediction);
+          playSFXKey('bloatExplosion');
         }
+
+        // Stomp does damage * quantity and pushback = base stomp radius
+        stompExplode(state.casterUnit, radius, stompDamage * quantity, stompRadius, underworld, prediction);
+        await underworld.awaitForceMoves(prediction);
       }
 
       return state;
@@ -90,18 +78,16 @@ async function stompExplode(caster: IUnit, radius: number, damage: number, pushD
     takeDamage(u, damage, u, underworld, prediction);
   });
 
-  if (pushDistance > 0) {
-    units.forEach(u => {
-      // Push units away from exploding location
-      forcePushAwayFrom(u, caster, pushDistance, underworld, prediction);
-    })
+  units.forEach(u => {
+    // Push units away from exploding location
+    forcePushAwayFrom(u, caster, pushDistance, underworld, prediction);
+  })
 
-    underworld.getPickupsWithinDistanceOfTarget(caster, radius, prediction)
-      .forEach(p => {
-        // Push pickups away
-        forcePushAwayFrom(p, caster, pushDistance, underworld, prediction);
-      })
-  }
+  underworld.getPickupsWithinDistanceOfTarget(caster, radius, prediction)
+    .forEach(p => {
+      // Push pickups away
+      forcePushAwayFrom(p, caster, pushDistance, underworld, prediction);
+    })
 }
 
 // Temporary particles for Stomp implementation
