@@ -72,6 +72,7 @@ import target_all from './target_all';
 import target_curse from './target_curse';
 import plus_radius from './plus_radius';
 import shove from './shove';
+import stomp from './stomp';
 import burst from './burst';
 import slow from './slow';
 import death_wager from './death_wager';
@@ -269,6 +270,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(pull, overworld);
   registerSpell(vortex, overworld);
   registerSpell(shove, overworld);
+  registerSpell(stomp, overworld);
   registerSpell(displace, overworld);
   registerSpell(swap, overworld);
   registerSpell(teleport, overworld);
