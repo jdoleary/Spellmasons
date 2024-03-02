@@ -48,14 +48,21 @@ const spell: Spell = {
         Pickup.removePickup(mark, underworld, prediction);
       } else {
         const target = state.castLocation;
-        const pickupSource = Pickup.pickups.find(p => p.name == Pickup.RECALL_POINT);
-        if (pickupSource) {
-          const pickupInst = Pickup.create({
-            pos: target,
-            pickupSource,
-            logSource: 'recall.ts'
-          }, underworld, prediction);
-          addTarget(pickupInst, state);
+
+        if (underworld.isCoordOnWallTile(target) || isOutOfBounds(target, underworld)) {
+          console.warn("Can't place mark out of bounds");
+          refundLastSpell(state, prediction, "Can't place mark out of bounds")
+          return state;
+        } else {
+          const pickupSource = Pickup.pickups.find(p => p.name == Pickup.RECALL_POINT);
+          if (pickupSource) {
+            const pickupInst = Pickup.create({
+              pos: target,
+              pickupSource,
+              logSource: 'recall.ts'
+            }, underworld, prediction);
+            addTarget(pickupInst, state);
+          }
         }
       }
       playDefaultSpellSFX(card, prediction);
