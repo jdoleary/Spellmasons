@@ -35,6 +35,7 @@ export const HEALTH_POTION = 'Health Potion';
 export const MANA_POTION = 'Mana Potion';
 export const STAMINA_POTION = 'Stamina Potion';
 export const CURSED_MANA_POTION = 'Cursed Mana Potion';
+export const RECALL_POINT = 'Recall Point';
 const RED_PORTAL_DAMAGE = 30;
 type IPickupEffect = ({ unit, player, pickup, prediction }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld, prediction: boolean }) => void;
 type IPickupInit = ({ pickup, underworld }: { pickup: IPickup, underworld: Underworld }) => void;
@@ -746,6 +747,21 @@ export const pickups: IPickupSource[] = [
           playSFXKey('potionPickupHealth');
         }
       }
+    },
+  },
+  {
+    imagePath: 'portal',
+    animationSpeed: 1,
+    playerOnly: true,
+    name: RECALL_POINT,
+    probability: 0,
+    scale: 1,
+    description: ['recall point description'],
+    willTrigger: ({ unit, player, pickup, underworld }) => {
+      return false;
+    },
+    effect: ({ unit, player, pickup, underworld }) => {
+      // the recall point does not have a collision effect
     },
   },
 ];
