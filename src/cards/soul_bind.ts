@@ -39,11 +39,8 @@ const spell: Spell = {
   },
   events: {
     onDamage: (unit, amount, underworld, prediction) => {
-      // Split the amount among all soul bound units
-      // To avoid creating an infinite loop here, we may have to temporarily disable the event for all units
-
+      // Split the damage / healing amount among all soul bound units
       let units = prediction ? underworld.unitsPrediction : underworld.units;
-
       units = units.filter(u => !!u.modifiers[soulBindId] && u.alive && !u.flaggedForRemoval);
 
       for (let i = 0; i < units.length; i++) {
