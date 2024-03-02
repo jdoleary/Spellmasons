@@ -40,6 +40,7 @@ import purify from './purify';
 import poison from './poison';
 import suffocate from './suffocate';
 import debilitate from './debilitate';
+import soul_bind from './soul_bind';
 import * as protection from './protection';
 import clone from './clone';
 import capture_soul from './capture_soul';
@@ -238,6 +239,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(freeze, overworld);
   registerSpell(purify, overworld);
   registerSpell(debilitate, overworld);
+  registerSpell(soul_bind, overworld);
   registerSpell(bloat, overworld);
   registerSpell(slow, overworld);
   registerSpell(blood_curse, overworld);
