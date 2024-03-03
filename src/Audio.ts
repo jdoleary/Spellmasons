@@ -31,6 +31,7 @@ export const sfx: { [key: string]: string[] } = {
   bleedMedium: ['./sound/sfx/BleedMed.mp3'],
   bleedSmall: ['./sound/sfx/BleedLow.mp3'],
   bloatExplosion: ['./sound/sfx/bloat.mp3'],
+  bolt: ['./sound/sfx/RPG3_ElectricMagic_LightningZap01.mp3'],
   burst: ['./sound/sfx/Burst_v2.mp3'],
   captureSoul: ['./sound/sfx/capture_soul.mp3'],
   drown: ['./sound/sfx/Drown_v2.mp3'],

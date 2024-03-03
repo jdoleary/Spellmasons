@@ -93,6 +93,7 @@ import arrowMulti from './arrow_multi';
 import arrowFar from './arrow_far';
 import explosive_arrow from './explosive_arrow';
 import phantom_arrow from './phantom_arrow';
+import bolt from './bolt';
 // Not used as a card, for making half of looped enemies immune
 // on first turn
 import registerImmune, * as immune from './immune';
@@ -293,8 +294,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(target_all, overworld);
   registerSpell(target_curse, overworld);
   registerSpell(plus_radius, overworld);
-  // TODO: Refactor bolt into soulbind, it didn't work out well as a spell
-  // register(bolt, overworld);
+  registerSpell(bolt, overworld);
   // registerSpell(trap, overworld);
   for (let unitId of Object.keys(allUnits)) {
     const spell = summon_generic(unitId, false);
