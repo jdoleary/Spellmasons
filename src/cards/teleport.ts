@@ -1,6 +1,6 @@
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
-import { getCurrentTargets, Spell } from './index';
+import { getCurrentTargets, refundLastSpell, Spell } from './index';
 import type { Vec2 } from '../jmath/Vec';
 import * as config from '../config';
 import * as Vec from '../jmath/Vec';
@@ -10,6 +10,7 @@ import { HasSpace } from '../entity/Type';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { swap_id } from './swap';
 import { teleport } from '../effects/teleport';
+import { isOutOfBounds } from '../graphics/PlanningView';
 
 const id = 'teleport';
 const spell: Spell = {
@@ -32,8 +33,16 @@ const spell: Spell = {
       if (targets.length == 0) {
         targets = [state.castLocation];
       }
+
+      let hasTeleported = false;
       for (let target of targets) {
+        if (underworld.isCoordOnWallTile(target) || isOutOfBounds(target, underworld)) continue;
         teleport(state.casterUnit, target, underworld, prediction);
+        hasTeleported = true;
+      }
+
+      if (!hasTeleported) {
+        refundLastSpell(state, prediction, "Failed to teleport");
       }
       return state;
     },

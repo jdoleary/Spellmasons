@@ -35,6 +35,7 @@ import last_Will from './lastwill';
 import potion_shatter from './potion_shatter';
 import swap from './swap';
 import teleport from './teleport';
+import recall from './recall';
 import displace from './displace';
 import purify from './purify';
 import poison from './poison';
@@ -277,6 +278,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(displace, overworld);
   registerSpell(swap, overworld);
   registerSpell(teleport, overworld);
+  registerSpell(recall, overworld);
 
 
   // Targeting Spells
