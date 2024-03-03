@@ -4,6 +4,7 @@ import * as config from '../config';
 import { app, containerFloatingText, containerUIFixed, withinCameraBounds } from './PixiUtils';
 import { Localizable } from '../localization';
 import throttle from 'lodash.throttle';
+import { test_ignorePromiseSpy } from '../promiseSpy';
 
 interface FText {
   startPosition: Vec2;
@@ -62,9 +63,11 @@ export default function floatingText({
     keepWithinCameraBounds,
   };
   container.addChild(pixiText);
-  return new Promise<void>((resolve) => {
+  const promise = new Promise<void>((resolve) => {
     requestAnimationFrame(() => floatAway(instance, resolve));
-  })
+  });
+  test_ignorePromiseSpy(promise);
+  return promise;
 }
 function floatAway(instance: FText, resolve: (value: void) => void) {
   if (instance.alpha > 0) {

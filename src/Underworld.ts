@@ -106,6 +106,7 @@ import { playThrottledEndTurnSFX } from './Audio';
 import { targetConeId } from './cards/target_cone';
 import { slashCardId } from './cards/slash';
 import { pushId } from './cards/push';
+import { test_endCheckPromises, test_startCheckPromises } from './promiseSpy';
 import { targetCursedId } from './cards/target_curse';
 
 const loopCountLimit = 10000;
@@ -3727,6 +3728,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         // Filter out protected units
         effectState.targetedUnits = effectState.targetedUnits.filter(u => !excludedTargets.includes(u));
 
+        if (!prediction) {
+          test_startCheckPromises(card.id);
+        }
         const cardEffectPromise = card.effect(effectState, card, quantity, this, prediction, outOfRange);
         await this.awaitForceMoves(prediction);
 
@@ -3735,6 +3739,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           effectState = await reportIfTakingTooLong(10000, `${card.id};${prediction}`, cardEffectPromise);
         } catch (e) {
           console.error('Unexpected error from card.effect', e);
+        }
+        if (!prediction) {
+          test_endCheckPromises();
         }
 
         if (!effectState.shouldRefundLastSpell) {

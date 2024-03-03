@@ -13,7 +13,6 @@ import { onData } from './networkHandler';
 import { getVersionInequality, onClientPresenceChanged, typeGuardHostApp } from './networkUtil';
 import { setView, View } from '../views';
 import * as storage from '../storage';
-import { updateGlobalRefToPlayerIfCurrentClient } from '../entity/Player';
 import Underworld from '../Underworld';
 import { version } from '../../package.json';
 import makeOverworld, { Overworld } from '../Overworld';
@@ -21,6 +20,7 @@ import { MESSAGE_TYPES } from '../types/MessageTypes';
 import { GameMode } from '../types/commonTypes';
 import { elEndTurnBtn } from '../HTMLElements';
 import { sendEventToServerHub } from '../RemoteLogging';
+import { test_spyPromises } from '../promiseSpy';
 // Locally hosted, locally accessed
 // const wsUri = 'ws://localhost:8080';
 // Locally hosted, available to LAN (use your own IP)
@@ -333,6 +333,7 @@ export function setupPieAndUnderworld() {
     }
     globalThis.setMenu?.('PLAY');
     setView(View.Menu);
+    test_spyPromises();
   }
 }
 export function isSinglePlayer(): boolean {
