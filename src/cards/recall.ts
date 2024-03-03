@@ -23,7 +23,7 @@ const spell: Spell = {
     healthCost: 0,
     probability: probabilityMap[CardRarity.UNCOMMON],
     expenseScaling: 1,
-    thumbnail: 'spellIconRecall.png',
+    thumbnail: 'spell-effects/recall',
     description: 'spell_recall',
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction) => {
