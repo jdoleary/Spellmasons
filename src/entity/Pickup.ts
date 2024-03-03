@@ -750,8 +750,8 @@ export const pickups: IPickupSource[] = [
     },
   },
   {
-    imagePath: 'portal',
-    animationSpeed: 1,
+    imagePath: 'spell-effects/recall',
+    animationSpeed: 0,
     playerOnly: true,
     name: RECALL_POINT,
     probability: 0,
