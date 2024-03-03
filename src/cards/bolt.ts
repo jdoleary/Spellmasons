@@ -52,7 +52,7 @@ const spell: Spell = {
                 return false;
               };
 
-          const adjustedRadius = baseRadius * (1 + (0.25 * state.aggregator.radiusBoost))
+          let adjustedRadius = baseRadius * (1 + (0.25 * state.aggregator.radiusBoost))
           // Find all units touching the spell origin
           const chained = await getConnectingEntities(
             target,
@@ -62,6 +62,8 @@ const spell: Spell = {
             potentialTargets,
             typeFilter,
             prediction,
+            // Submerged units increase radius dramatically
+            2
           );
           const affected = [target, ...chained.map(x => x.entity)];
           if (!prediction) {

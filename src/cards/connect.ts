@@ -23,7 +23,7 @@ const spell: Spell = {
     manaCost: 25,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.UNCOMMON],
+    probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconConnect.png',
     supportQuantity: true,
     requiresFollowingCard: true,
@@ -111,6 +111,7 @@ export async function getConnectingEntities(
   potentialTargets: HasSpace[],
   filterFn: (x: any) => boolean, //selects which type of entities this can chain to
   prediction: boolean,
+  inLiquidRadiusMultiplier: number = 1,
 ): Promise<{ chainSource: HasSpace, entity: HasSpace }[]> {
 
   potentialTargets = potentialTargets
@@ -119,28 +120,29 @@ export async function getConnectingEntities(
 
   let connected: { chainSource: HasSpace, entity: HasSpace }[] = [];
   if (chainsLeft > 0) {
-    connected = await getNextConnectingEntities(source, radius, chainsLeft, potentialTargets, prediction)
+    connected = await getNextConnectingEntities(source, radius, chainsLeft, potentialTargets, prediction, inLiquidRadiusMultiplier)
   }
   return connected;
 }
 
 export async function getNextConnectingEntities(
   source: HasSpace,
-  radius: number,
+  baseRadius: number,
   chainsLeft: number,
   potentialTargets: HasSpace[],
   prediction: boolean,
+  inLiquidRadiusMultiplier: number = 1,
 ): Promise<{ chainSource: HasSpace, entity: HasSpace }[]> {
 
   potentialTargets = potentialTargets.filter(x => x != source);
 
   if (prediction) {
-    drawUICircleFillPrediction(source, radius - config.COLLISION_MESH_RADIUS / 2, colors.trueWhite, i18n("Connect Area"));
+    drawUICircleFillPrediction(source, (baseRadius * inLiquidRadiusMultiplier) - config.COLLISION_MESH_RADIUS / 2, colors.trueWhite, i18n("Connect Area"));
   }
 
   let connected: { chainSource: HasSpace, entity: HasSpace }[] = [];
   do {
-    let closestDist = radius;
+    let closestDist = baseRadius * inLiquidRadiusMultiplier;
     let closestTarget: HasSpace | undefined = undefined;
 
     for (let t of potentialTargets) {
@@ -155,7 +157,7 @@ export async function getNextConnectingEntities(
       connected.push({ chainSource: source, entity: closestTarget });
       chainsLeft--;
       if (chainsLeft > 0) {
-        const next = await getNextConnectingEntities(closestTarget, radius, chainsLeft, potentialTargets, prediction)
+        const next = await getNextConnectingEntities(closestTarget, baseRadius, chainsLeft, potentialTargets, prediction, inLiquidRadiusMultiplier)
         chainsLeft -= next.length;
         connected = connected.concat(next);
         potentialTargets = potentialTargets.filter(x => {
