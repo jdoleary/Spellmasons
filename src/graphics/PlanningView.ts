@@ -861,7 +861,10 @@ export function updateTooltipContent(underworld: Underworld) {
         if (unitSource) {
           const imageSrc = Unit.getExplainPathForUnitId(unitSource.id);
           if (!elInspectorTooltipImage.src.endsWith(imageSrc)) {
-            elInspectorTooltipImage.src = imageSrc;
+            // Only show tooltip images if gore is allowed since they contain gore
+            if (!globalThis.noGore) {
+              elInspectorTooltipImage.src = imageSrc;
+            }
             elInspectorTooltipImage.onerror = e => {
               elInspectorTooltipImage.style.display = 'none';
               elInspectorTooltipImage.dataset.errorSrc = imageSrc;

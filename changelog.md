@@ -1,3 +1,58 @@
+## 1.30.0
+- Feature: "No Gore" mode - removes gore from the game if desired
+- Feature: Purify now works on Cursed Mana Potions
+    - Thanks @Koliostro for this AMAZING idea
+
+- Fix: prevent network messages from old levels from executing
+on a new level.
+    - Thanks @ReddPine, @Raven, @MrMarblz and others for reporting
+
+- Fix: player stamina unexpectedly getting set to 100
+    - Thanks @Innonminate for reporting
+
+- Fix: Potions spawned from Urns with Last Will from appearing at 0,0
+    - Thanks @Innonminate
+
+- Fix double decoy scaling
+
+## 1.29.0
+- UI: Add hotkey numbers to side card holders
+    Update hotkeys of spellbar if they change in controls
+    Closes: #494
+
+- Fixed Server Crash due to broken kill switch (#490)
+    Fixed kill switch and server crash
+
+- Await Cleanup for ProgressGameState (#484)
+    * fix: await changeToHotseatPlayer call
+    in changeToFirstHotseatPlayer
+    
+- fix: Ally deathmason not summoning
+    units on levels with Natural blue portal pickups.
+    Fixes: #486
+
+- Deathmason On Death Event Fix (#467)
+    * Boss spawns with originalLife = True
+    * Ensure Deathmason gets onDeathEvent
+
+- Waves Fix (#460)
+    * Improved Handling for GameLoop and Waves
+    * No longer waits for frozen players to enter portal
+
+- fix: Players suddenly at -1000,-1000
+    
+    Old code was attempting to let players rechoose their
+    spawn if they got out of bounds
+    but this unfortunately just would make them
+    be not-choosing spawn and at -1000,-1000.
+    
+    I also tried just setting isSpawned to false
+    to let them rechoose spawn but that results
+    in all the enemies dying.
+    So let's just not do anything if they're out of bounds.
+    
+    Fixes: #457
+
 ## 1.28.0
 ###  Major
 - Added Spell: Potion Shatter

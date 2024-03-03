@@ -4,10 +4,10 @@ import { playDefaultSpellSFX } from './cardUtils';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { forcePushToDestination } from '../effects/force_move';
 
-export const id = 'Dash';
+export const dash_id = 'Dash';
 const spell: Spell = {
   card: {
-    id,
+    id: dash_id,
     category: CardCategory.Movement,
     supportQuantity: true,
     sfx: 'dash',

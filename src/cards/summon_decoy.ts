@@ -62,12 +62,6 @@ const spell: Spell = {
           // Animate effect of unit spawning from the sky
           skyBeam(unit);
         }
-        if (unit.image) {
-          const quantityScaleModifier = 1 + 0.3 * (quantity - 1);
-          unit.image.sprite.scale.x = unit.image.sprite.scale.x * quantityScaleModifier;
-          unit.image.sprite.scale.y = unit.image.sprite.scale.y * quantityScaleModifier;
-        }
-
       } else {
         console.error(`Source unit ${unitId} is missing`);
       }

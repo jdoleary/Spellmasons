@@ -31,8 +31,9 @@ const spell: Spell = {
     description: 'spell_target_column',
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
-      // Range increases linearly with each quantity
-      const depth = (range + state.aggregator.radius) * (0.5 + 0.5 * quantity);
+      // +50% depth per radius boost
+      const adjustedRadiusBoost = quantity - 1 + state.aggregator.radiusBoost;
+      const depth = range * (1 + (0.5 * adjustedRadiusBoost));
       // Width doubles up to 4 casts, capping at 8x multiplier: 1 > 2 > 4 > 8
       const width = baseWidth * Math.pow(2, Math.min(quantity, 4)) / 2;
 

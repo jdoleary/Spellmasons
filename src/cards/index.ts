@@ -30,7 +30,9 @@ import resurrect_weak from './resurrect_weak';
 import resurrect_toxic from './resurrect_toxic';
 import shield from './shield';
 import fortify from './fortify';
-import potion_shatter, { potionShatterId } from './potion_shatter';
+import alchemize from './alchemize';
+import last_Will from './lastwill';
+import potion_shatter from './potion_shatter';
 import swap from './swap';
 import teleport from './teleport';
 import displace from './displace';
@@ -38,6 +40,7 @@ import purify from './purify';
 import poison from './poison';
 import suffocate from './suffocate';
 import debilitate from './debilitate';
+import soul_bind from './soul_bind';
 import * as protection from './protection';
 import clone from './clone';
 import capture_soul from './capture_soul';
@@ -50,11 +53,13 @@ import repel from './repel';
 import pull from './pull';
 import vortex from './vortex';
 import dash from './dash';
+// import fling from './fling';
 import decoy from './summon_decoy';
 import summon_generic from './summon_generic';
-import explode from './bloat';
+import bloat from './bloat';
 import bone_shrapnel from './bone_shrapnel';
-import last_Will from './lastwill';
+import shatter from './shatter';
+import meteor from './meteor';
 import split from './split';
 import drown from './drown';
 import target_arrow from './target_arrow';
@@ -64,9 +69,12 @@ import target_circle from './target_circle';
 import connect from './connect';
 import target_similar from './target_similar';
 import target_similar_2 from './target_similar_2';
+import target_injured from './target_injured';
 import target_all from './target_all';
+import target_curse from './target_curse';
 import plus_radius from './plus_radius';
 import shove from './shove';
+import stomp from './stomp';
 import burst from './burst';
 import slow from './slow';
 import death_wager from './death_wager';
@@ -202,6 +210,8 @@ export function registerCards(overworld: Overworld) {
   registerSpell(drown, overworld);
   registerSpell(burst, overworld);
   registerSpell(bone_shrapnel, overworld);
+  registerSpell(shatter, overworld);
+  registerSpell(meteor, overworld);
   registerSpell(arrow, overworld);
   registerSpell(arrow2, overworld);
   registerSpell(arrow3, overworld);
@@ -219,6 +229,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(send_mana, overworld);
   registerSpell(shield, overworld);
   registerSpell(fortify, overworld);
+  registerSpell(alchemize, overworld);
   registerSpell(last_Will, overworld);
   registerSpell(potion_shatter, overworld);
 
@@ -228,7 +239,8 @@ export function registerCards(overworld: Overworld) {
   registerSpell(freeze, overworld);
   registerSpell(purify, overworld);
   registerSpell(debilitate, overworld);
-  registerSpell(explode, overworld);
+  registerSpell(soul_bind, overworld);
+  registerSpell(bloat, overworld);
   registerSpell(slow, overworld);
   registerSpell(blood_curse, overworld);
   registerSpell(split, overworld);
@@ -255,11 +267,13 @@ export function registerCards(overworld: Overworld) {
 
   // Movement
   registerSpell(dash, overworld);
+  // registerSpell(fling, overworld);
   registerSpell(push, overworld);
   registerSpell(repel, overworld);
   registerSpell(pull, overworld);
   registerSpell(vortex, overworld);
   registerSpell(shove, overworld);
+  registerSpell(stomp, overworld);
   registerSpell(displace, overworld);
   registerSpell(swap, overworld);
   registerSpell(teleport, overworld);
@@ -273,7 +287,9 @@ export function registerCards(overworld: Overworld) {
   registerSpell(connect, overworld);
   registerSpell(target_similar, overworld);
   registerSpell(target_similar_2, overworld);
+  registerSpell(target_injured, overworld);
   registerSpell(target_all, overworld);
+  registerSpell(target_curse, overworld);
   registerSpell(plus_radius, overworld);
   // TODO: Refactor bolt into soulbind, it didn't work out well as a spell
   // register(bolt, overworld);
@@ -379,7 +395,7 @@ export interface EffectState {
   // aggregator carries extra information that can be passed
   // between card effects.
   aggregator: {
-    radius: number;
+    radiusBoost: number;
   };
   // initialTargetedUnitId and initialTargetedPickupId:
   // Used to ensure the castCards targets the right starting

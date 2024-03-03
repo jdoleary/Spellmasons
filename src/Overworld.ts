@@ -148,9 +148,14 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
   if (globalThis.isHost(underworld.pie)) {
     overworld.pie.sendData({
       type: MESSAGE_TYPES.SYNC_PLAYERS,
+      // Store the level index that this function was invoked on
+      // so that it can be sent along with the message so that if
+      // the level index changes, 
+      // the old SYNC_PLAYERS state won't overwrite the newer state
+      currentLevelIndex: underworld.levelIndex,
       units: underworld.units.map(Unit.serialize),
       players: underworld.players.map(Player.serialize),
-      lastUnitId: underworld.lastUnitId
+      lastUnitId: underworld.lastUnitId,
     });
   }
 

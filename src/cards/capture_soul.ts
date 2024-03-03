@@ -36,7 +36,7 @@ const spell: Spell = {
               if (upgrade) {
                 floatingText({ coords: target, text: 'Soul Captured!' });
                 underworld.forceUpgrade(player, upgrade, true);
-                makeManaTrail(target, state.casterUnit, underworld, '#321d73', '#9526cc').then(() => {
+                makeManaTrail(target, state.casterUnit, underworld, '#321d73', '#9526cc', targets.length).then(() => {
                   playDefaultSpellSFX(card, prediction);
                 });
               } else {

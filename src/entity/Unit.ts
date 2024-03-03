@@ -599,7 +599,8 @@ export function syncronize(unitSerialized: IUnitSerialized, originalUnit: IUnit)
 export function changeToDieSprite(unit: IUnit) {
   Image.changeSprite(
     unit.image,
-    unit.animations.die,
+    globalThis.noGore ? 'units/tombstone' :
+      unit.animations.die,
     containerUnits,
     // DieSprite intentionally stops animating when it is complete, therefore
     // resolver is undefined, since no promise is waiting for it.
@@ -766,7 +767,7 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   }
   // Play death sfx
   if (!prediction && !unit.flaggedForRemoval) {
-    playSFXKey(unit.sfx.death);
+    playSFXKey(globalThis.noGore ? 'oof' : unit.sfx.death);
   }
   // Health should already be 0 but make sure it is for the sake of the UI bar
   unit.health = 0;
@@ -806,18 +807,29 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
     }
   }
 
-  // Invoke simulating forceMovePredictions after onDeath callbacks
-  // as the callbacks may create predictions that need to be processed such as
-  // bloat + die causing a push.  Otherwise a raceTimeout could occur
-  if (prediction) {
-    underworld.fullySimulateForceMovePredictions();
-  }
-  // Invoke gameLoopHeadless after onDeath callbacks
-  // as the callbacks may create predictions that need to be processed such as
-  // bloat + die causing a push.  Otherwise a raceTimeout could occur
-  if (globalThis.headless) {
-    underworld.triggerGameLoopHeadless();
-  }
+  // Wait to run gameloopHeadless and forceMovePrediction
+  // until syncronous code completes.
+  // This ensures that if multiple units die at the "same" time
+  // their resulting forcemoves (ex from explosion), will be processed
+  // the same was it will be on clients
+  // So: 
+  // die, die, die, all force moves processed
+  // rather than:
+  // die, force moves, die, force moves, die, force moves
+  setTimeout(() => {
+    // Invoke simulating forceMovePredictions after onDeath callbacks
+    // as the callbacks may create predictions that need to be processed such as
+    // bloat + die causing a push.  Otherwise a raceTimeout could occur
+    if (prediction) {
+      underworld.fullySimulateForceMovePredictions();
+    }
+    // Invoke gameLoopHeadless after onDeath callbacks
+    // as the callbacks may create predictions that need to be processed such as
+    // bloat + die causing a push.  Otherwise a raceTimeout could occur
+    if (globalThis.headless) {
+      underworld.triggerGameLoopHeadless();
+    }
+  }, 0);
 
   // Remove all modifiers
   // Note: This must come AFTER onDeathEvents or else it will remove the modifier
@@ -1123,15 +1135,26 @@ export function canMove(unit: IUnit): boolean {
   }
   return true;
 }
-export function livingUnitsInDifferentFaction(unit: IUnit, underworld: Underworld) {
-  return underworld.units.filter(
-    (u) => u.faction !== unit.faction && u.alive && u.unitSubType !== UnitSubType.DOODAD,
+export function livingUnitsInSameFaction(unit: IUnit, units: IUnit[]) {
+  // u !== unit excludes self from returning as the closest unit
+  return units.filter(
+    u => u !== unit && u.faction == unit.faction && u.alive && u.unitSubType !== UnitSubType.DOODAD,
   );
 }
-export function livingUnitsInSameFaction(unit: IUnit, underworld: Underworld) {
-  // u !== unit excludes self from returning as the closest unit
-  return underworld.units.filter(
-    (u) => u !== unit && u.faction == unit.faction && u.alive && u.unitSubType !== UnitSubType.DOODAD,
+export function livingUnitsInDifferentFaction(unit: IUnit, units: IUnit[]) {
+  return units.filter(
+    u => u.faction !== unit.faction && u.alive && u.unitSubType !== UnitSubType.DOODAD,
+  );
+}
+export function findClosestUnitInSameFaction(unit: IUnit, units: IUnit[]): IUnit | undefined {
+  return closestInListOfUnits(unit, livingUnitsInSameFaction(unit, units));
+}
+export function findClosestUnitInDifferentFactionSmartTarget(
+  unit: IUnit,
+  units: IUnit[]
+): IUnit | undefined {
+  return closestInListOfUnits(unit, livingUnitsInDifferentFaction(unit, units)
+    .filter(filterSmartTarget)
   );
 }
 export function closestInListOfUnits(source: Vec2, units: IUnit[]): IUnit | undefined {
@@ -1146,14 +1169,6 @@ export function closestInListOfUnits(source: Vec2, units: IUnit[]): IUnit | unde
     { closest: undefined, distance: Number.MAX_SAFE_INTEGER },
   ).closest;
 }
-export function findClosestUnitInDifferentFaction(
-  unit: IUnit,
-  underworld: Underworld
-): IUnit | undefined {
-  return closestInListOfUnits(unit, livingUnitsInDifferentFaction(unit, underworld)
-    .filter(filterSmartTarget)
-  );
-}
 // To be used in a filterFunction
 export function filterSmartTarget(u: IUnit) {
   // Smart Target: Try to attack units that aren't already going to take fatal damage from other ally npc
@@ -1161,9 +1176,6 @@ export function filterSmartTarget(u: IUnit) {
   // The player unit may be shielded or absorb damage in some way that predictNextTurnDamage doesn't catch
   // also filtering player units out may interfere with prediction attack badges
   return u.unitType == UnitType.PLAYER_CONTROLLED || u.predictedNextTurnDamage < u.health;
-}
-export function findClosestUnitInSameFaction(unit: IUnit, underworld: Underworld): IUnit | undefined {
-  return closestInListOfUnits(unit, livingUnitsInSameFaction(unit, underworld));
 }
 export function orient(unit: IUnit, faceTarget: Vec2) {
   // Orient; make the sprite face it's enemy
@@ -1279,6 +1291,10 @@ export function syncImage(unit: IUnit) {
   }
 }
 export function getExplainPathForUnitId(id: string): string {
+  // Disable explain unit gifs if gore is disabled because they contain gore
+  if (globalThis.noGore) {
+    return '';
+  }
   return "images/explain/units/" + id.split(' ').join('') + ".gif";
 }
 export function inRange(unit: IUnit, target: Vec2): boolean {
@@ -1542,7 +1558,7 @@ export function drawSelectedGraphics(unit: IUnit, prediction: boolean = false, u
     // they had LOS
     let canAttack = true;
     if (!archerTargets.length) {
-      const nextTarget = findClosestUnitInDifferentFaction(unit, underworld)
+      const nextTarget = findClosestUnitInDifferentFactionSmartTarget(unit, underworld.units)
       if (nextTarget) {
         archerTargets.push(nextTarget);
       }

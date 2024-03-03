@@ -2,6 +2,8 @@ import { Localizable } from "../localization";
 
 export interface PromptArgs {
     text: Localizable;
+    // If the prompt contains gore
+    gore?: boolean;
     noBtnText?: string;
     noBtnKey?: string;
     yesText: string;
@@ -14,7 +16,7 @@ export interface PromptArgs {
     forceShow?: boolean;
 }
 export default async function Jprompt(prompt: PromptArgs): Promise<boolean> {
-    const { text, noBtnText, noBtnKey, yesText, yesKey, yesKeyText = '', imageSrc, portal, forceShow } = prompt;
+    const { gore, text, noBtnText, noBtnKey, yesText, yesKey, yesKeyText = '', imageSrc, portal, forceShow } = prompt;
     if (globalThis.headless) {
         return Promise.resolve(true);
     }
@@ -47,7 +49,7 @@ export default async function Jprompt(prompt: PromptArgs): Promise<boolean> {
 <div class="ui-border">
 <div class="prompt-inner ${!imageSrc ? 'thin' : ''}">
     <div class="prompt-content">
-        ${imageSrc ? `<img src="${imageSrc}" onerror="this.style.display='none';"/>` : ''}
+        ${gore && globalThis.noGore ? '' : imageSrc ? `<img src="${imageSrc}" onerror="this.style.display='none';"/>` : ''}
         <div class="text">
             ${globalThis.i18n(text)}
         </div>

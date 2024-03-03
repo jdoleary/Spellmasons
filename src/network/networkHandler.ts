@@ -453,7 +453,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         const userSource = allUnits[payload.unitId];
         if (!userSource) {
           console.error('User unit source file not registered, cannot create player');
-          return undefined;
+          break;
         }
         fromPlayer.unit.unitSourceId = payload.unitId;
         // Update the player image
@@ -475,14 +475,20 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
     }
     case MESSAGE_TYPES.SYNC_PLAYERS: {
       console.log('sync: SYNC_PLAYERS; syncs units and players')
-      const { units, players, lastUnitId } = payload as {
+      const { units, players, lastUnitId, currentLevelIndex } = payload as {
         // Note: When syncing players, must also sync units
         // because IPlayerSerialized doesn't container a full
         // unit serialized
         units: Unit.IUnitSerialized[],
         // Sync data for players
         players: Player.IPlayerSerialized[],
-        lastUnitId: number
+        lastUnitId: number,
+        currentLevelIndex: number,
+      }
+
+      if (underworld.levelIndex !== currentLevelIndex) {
+        console.log('Discarding SYNC_PLAYERS message from old level')
+        break;
       }
       // Units must be synced before players so that the player's
       // associated unit is available for referencing
@@ -504,7 +510,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         break;
       }
       console.log('sync: SYNC_SOME_STATE; syncs non-player units')
-      const { timeOfLastSpellMessage, units, pickups, lastUnitId, lastPickupId, RNGState } = payload as {
+      const { timeOfLastSpellMessage, units, pickups, lastUnitId, lastPickupId, RNGState, currentLevelIndex } = payload as {
         // timeOfLastSpellMessage ensures that SYNC_SOME_STATE won't overwrite valid state with old state
         // if someone a second SPELL message is recieved between this message and it's corresponding SPELL message
         // Messages don't currently have a unique id so I'm storing d.time which should be good enough
@@ -516,10 +522,15 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         lastUnitId: number,
         lastPickupId: number,
         RNGState: SeedrandomState,
+        currentLevelIndex: number,
       }
       if (timeOfLastSpellMessage !== lastSpellMessageTime) {
         // Do not sync, state has changed since this sync message was sent
         console.warn('Discarding SYNC_SOME_STATE message, it is no longer valid');
+        break;
+      }
+      if (underworld.levelIndex !== currentLevelIndex) {
+        console.log('Discarding SYNC_PLAYERS message from old level')
         break;
       }
       if (RNGState) {
@@ -544,7 +555,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
     }
     case MESSAGE_TYPES.SET_PHASE: {
       console.log('sync: SET_PHASE; syncs units and players')
-      const { phase, units, players, pickups, lastUnitId, lastPickupId, RNGState } = payload as {
+      const { phase, units, players, pickups, lastUnitId, lastPickupId, RNGState, currentLevelIndex } = payload as {
         phase: turn_phase,
         // Sync data for players
         players?: Player.IPlayerSerialized[],
@@ -555,6 +566,11 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         lastUnitId: number,
         lastPickupId: number,
         RNGState: SeedrandomState,
+        currentLevelIndex: number,
+      }
+      if (underworld.levelIndex !== currentLevelIndex) {
+        console.log('Discarding SET_PHASE message from old level')
+        break;
       }
       if (RNGState) {
         underworld.syncronizeRNG(RNGState);
@@ -563,7 +579,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       // being invoked multiple times before the first message is processed.  This is normal.
       if (underworld.turn_phase == phase) {
         console.log(`Phase is already set to ${turn_phase[phase]}; Aborting SET_PHASE.`);
-        return;
+        break;
       }
 
       if (units) {
@@ -644,7 +660,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         // Hotseat multiplayer has it's own player config management
         // because it needs to hold configs for multiple players on a single
         // computer
-        return;
+        break;
       }
       const { color, colorMagic, name, lobbyReady } = payload;
       if (fromPlayer) {
@@ -712,6 +728,9 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         }
         if (!(isNaN(payload.x) && isNaN(payload.y))) {
           fromPlayer.isSpawned = true;
+          if (fromPlayer == globalThis.player) {
+            underworld.quicksave('Level Start');
+          }
           if (fromPlayer.clientId == globalThis.clientId) {
             globalThis.awaitingSpawn = false;
           }
@@ -757,7 +776,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       }
       Player.syncLobby(underworld);
       underworld.tryRestartTurnPhaseLoop();
-      underworld.progressGameState();
+      await underworld.progressGameState();
       underworld.assertDemoExit();
       break;
     }
@@ -786,13 +805,15 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       if (fromPlayer) {
         // Only allow spawned players to move
         if (fromPlayer.isSpawned) {
-          // Network Sync: Make sure other players move a little slower so that the MOVE_PLAYER messages have time to set the
-          // next move point on the client's screen.  This prevents jagged movement due to network latency
-          fromPlayer.unit.moveSpeed = config.UNIT_MOVE_SPEED * 0.9;
-          // Network Sync: Make sure the other player always has stamina to get where they're going, this is to ensure that
-          // the local copies of other player's stay in sync with the server and aren't prematurely stopped due
-          // to a stamina limitation
-          fromPlayer.unit.stamina = 100;
+          if (!globalThis.headless) {
+            // Network Sync: Make sure other players move a little slower so that the MOVE_PLAYER messages have time to set the
+            // next move point on the client's screen.  This prevents jagged movement due to network latency
+            fromPlayer.unit.moveSpeed = config.UNIT_MOVE_SPEED * 0.9;
+            // Network Sync: Make sure the other player always has stamina to get where they're going, this is to ensure that
+            // the local copies of other player's stay in sync with the server and aren't prematurely stopped due
+            // to a stamina limitation
+            fromPlayer.unit.stamina = fromPlayer.unit.staminaMax;
+          }
           const moveTowardsPromise = Unit.moveTowards(fromPlayer.unit, payload, underworld).then(() => {
             if (fromPlayer.unit.path?.points.length && fromPlayer.unit.stamina == 0) {
               // If they do not reach their destination, notify that they are out of stamina
@@ -844,6 +865,11 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
             lastPickupId: underworld.lastPickupId,
             // the state of the Random Number Generator
             RNGState: underworld.random.state(),
+            // Store the level index that this function was invoked on
+            // so that it can be sent along with the message so that if
+            // the level index changes, 
+            // the old SYNC_SOME_STATE state won't overwrite the newer state
+            currentLevelIndex: underworld.levelIndex,
           });
         }
       } else {
@@ -857,11 +883,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           fromPlayer.clientConnected = true;
           console.error('Unexpected: Player ended turn while not connected.');
         }
-        if (!fromPlayer.isSpawned) {
-          fromPlayer.isSpawned = true;
-          console.error('Unexpected: Player ended turn while not spawned.');
-        }
-        underworld.endPlayerTurn(fromPlayer);
+        await underworld.endPlayerTurn(fromPlayer);
       } else {
         console.error('Unable to end turn because caster is undefined');
       }

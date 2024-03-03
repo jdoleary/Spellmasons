@@ -40,6 +40,7 @@ import { summoningSicknessId } from '../../modifierSummoningSickness';
 import { errorRed } from './colors';
 import { isSinglePlayer } from '../../network/wsPieSetup';
 import { elAdminPowerBar, elAdminPowerBarInput, elAdminPowerBarOptions } from '../../HTMLElements';
+import { targetCursedId } from '../../cards/target_curse';
 
 export const keyDown = {
   showWalkRope: false,
@@ -834,7 +835,13 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         // unless the first card (like AOE) specifically allows casting
         // on non unit targets
         const hasTarget = hasTargetAtPosition(target, underworld);
-        if ((!hasTarget) && cards.length && cards[0] && !cards[0].allowNonUnitTarget) {
+
+
+        // https://github.com/jdoleary/Spellmasons/pull/521
+        // Hard-coded "Target Curse" -> Allows players to cast spells
+        // without a target under cursor, if there are target cursed units
+        const hasTargetCursedUnit = underworld.units.find(u => u.modifiers[targetCursedId]);
+        if ((!hasTarget && !hasTargetCursedUnit) && cards.length && cards[0] && !cards[0].allowNonUnitTarget) {
           floatingText({
             coords: target,
             text: 'No Target!'
@@ -843,7 +850,6 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
           // Cancel Casting
           return;
         }
-
 
         if (selfPlayer.unit.modifiers[Freeze.freezeCardId]) {
           floatingText({ coords: selfPlayer.unit, text: 'Cannot Cast. Frozen.' })
@@ -1181,6 +1187,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         for (let unit of overworld.underworld.units.filter(u => u.faction == Faction.ENEMY)) {
           Unit.die(unit, overworld.underworld, false);
         }
+        overworld.underworld.progressGameState();
       },
       supportInMultiplayer: true,
       domQueryContainer: '#menu-global'
@@ -1413,10 +1420,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         const unit = overworld.underworld.units.find(u => u.id == selectedUnitid);
         if (unit) {
           Unit.die(unit, overworld.underworld, false);
+          overworld.underworld.progressGameState();
         } else {
           centeredFloatingText('You must select a unit first', 'red');
         }
-
       },
       supportInMultiplayer: true,
       domQueryContainer: '#menu-selected-unit'

@@ -40,7 +40,7 @@ const spell: Spell = {
         if (!prediction) {
           const NUMBER_OF_ANIMATED_TRAILS = Math.min(6, unitHealthStolen / 10);
           for (let i = 0; i < quantity * NUMBER_OF_ANIMATED_TRAILS; i++) {
-            healthTrailPromises.push(makeManaTrail(unit, caster, underworld, '#ff6767n', '#ff0000').then(() => {
+            healthTrailPromises.push(makeManaTrail(unit, caster, underworld, '#ff6767n', '#ff0000', targets.length * quantity * NUMBER_OF_ANIMATED_TRAILS).then(() => {
               if (!prediction) {
                 playDefaultSpellSFX(card, prediction);
                 Image.addOneOffAnimation(state.casterUnit, 'spell-effects/potionPickup', {}, { loop: false });

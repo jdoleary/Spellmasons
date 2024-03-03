@@ -58,10 +58,15 @@ const spell: Spell = {
             }
           }
 
+          // Connect does not get extra radius from quantity,
+          // but can instead chain to more targets
+          // +25% range per radius boost
+          const adjustedRadius = baseRadius * (1 + (0.25 * state.aggregator.radiusBoost))
+
           // Find all units touching the spell origin
           const chained = await getConnectingEntities(
             target,
-            baseRadius + state.aggregator.radius,
+            adjustedRadius,
             limitTargetsLeft,
             targets,
             potentialTargets,

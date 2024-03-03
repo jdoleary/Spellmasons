@@ -79,7 +79,7 @@ const unit: UnitSource = {
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-    const closestUnit = Unit.findClosestUnitInDifferentFaction(unit, underworld);
+    const closestUnit = Unit.findClosestUnitInDifferentFactionSmartTarget(unit, underworld.units);
     if (closestUnit) {
       return [closestUnit];
     } else {

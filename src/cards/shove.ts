@@ -8,11 +8,11 @@ import * as colors from '../graphics/ui/colors';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { defaultPushDistance, forcePushAwayFrom } from '../effects/force_move';
 
-export const id = 'shove';
+export const shoveCardId = 'shove';
 const shoveRange = config.COLLISION_MESH_RADIUS * 2
 const spell: Spell = {
   card: {
-    id,
+    id: shoveCardId,
     category: CardCategory.Movement,
     supportQuantity: true,
     sfx: 'shove',

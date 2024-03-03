@@ -49,7 +49,6 @@ const deathmason: UnitSource = {
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     if (unit.image) {
-
       const adjustmentFilter = new AdjustmentFilter({
         saturation: 0.4,
         contrast: 5,
@@ -68,7 +67,9 @@ const deathmason: UnitSource = {
     const seed = seedrandom(`${underworld.seed}-${underworld.turn_number}-${unit.id}`);
 
     const portalName = unit.faction == Faction.ENEMY ? RED_PORTAL : Pickup.BLUE_PORTAL;
-    const deathmasonPortals = underworld.pickups.filter(p => p.name == portalName);
+    const deathmasonPortals = underworld.pickups.filter(p => p.name == portalName
+      // @ts-expect-error special property of portals to distinguish them from portals that just teleport
+      && p.doesSpawn);
     const deathmasonPortalPickupSource = pickups.find(p => p.name == portalName);
     if (deathmasonPortalPickupSource) {
       if (deathmasonPortals.length == 0 && unit.mana >= portalCastCost) {
@@ -120,7 +121,7 @@ const deathmason: UnitSource = {
           unit.mana -= sacrificeCost.manaCost;
           // Consume allies if hurt
           // Note: Do not allow Deathmason to siphon allied player units
-          const closestUnit = Unit.livingUnitsInSameFaction(unit, underworld).filter(u => u.unitType !== UnitType.PLAYER_CONTROLLED && u.unitSourceId !== bossmasonUnitId && Unit.inRange(unit, u))[0]
+          const closestUnit = Unit.livingUnitsInSameFaction(unit, underworld.units).filter(u => u.unitType !== UnitType.PLAYER_CONTROLLED && u.unitSourceId !== bossmasonUnitId && Unit.inRange(unit, u))[0]
           if (closestUnit) {
             const keyMoment = () => underworld.castCards({
               casterCardUsage: {},
@@ -196,6 +197,7 @@ export const ORIGINAL_DEATHMASON_DEATH = 'ORIGINAL_DEATHMASON_DEATH';
 export function registerDeathmasonEvents() {
   registerEvents(ORIGINAL_DEATHMASON_DEATH, {
     onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
+      console.log("Deathmason onDeath() has been called");
       // For the bossmason level, if the original deathmason dies spawn 3 more:
       if (underworld.levelIndex === config.LAST_LEVEL_INDEX) {
         if (unit.unitSourceId == bossmasonUnitId && unit.originalLife && unit.name == undefined) {
@@ -215,6 +217,7 @@ export function registerDeathmasonEvents() {
               const seed = seedrandom(`${underworld.seed}-${underworld.turn_number}-${unit.id}`);
               const coords = findRandomGroundLocation(underworld, unit, seed);
               if (!coords) {
+                console.warn("Deathmason onDeath() spawning failed attempt: ", retryAttempts);
                 retryAttempts++;
                 i--;
                 continue;

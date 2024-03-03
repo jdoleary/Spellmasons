@@ -615,9 +615,7 @@ export function setSpellmasonsToChannellingAnimation(player: IPlayer) {
       );
       Image.addOneOffAnimation(player.unit, 'units/playerBookIdleMagic', { doRemoveWhenPrimaryAnimationChanges: true }, { loop: true });
     }
-
   });
-
 }
 // This function fully deletes the cards from the player's hand
 export function removeCardsFromHand(player: IPlayer, cards: string[], underworld: Underworld) {
@@ -630,4 +628,10 @@ export function removeCardsFromHand(player: IPlayer, cards: string[], underworld
     });
   }
   CardUI.recalcPositionForCards(player, underworld);
+}
+export function getFactionsOf(players: { clientConnected: boolean, unit: { faction: Faction } }[]): Faction[] {
+  // Returns all factions that currently contain at least one player
+  const factions = players.filter(p => p.clientConnected).map(p => p.unit.faction);
+  // This removes all duplicate entries from the list
+  return [...new Set(factions)];
 }
