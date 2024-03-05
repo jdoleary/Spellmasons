@@ -38,7 +38,7 @@ const spell: Spell = {
       }
 
       if (targets.length == 0) {
-        refundLastSpell(state, prediction);
+        refundLastSpell(state, prediction, 'No targets damaged, mana refunded');
       }
 
       playDefaultSpellSFX(card, prediction);
