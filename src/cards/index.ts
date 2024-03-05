@@ -42,6 +42,7 @@ import poison from './poison';
 import suffocate from './suffocate';
 import debilitate from './debilitate';
 import soul_bind from './soul_bind';
+import soul_shard from './soul_shard';
 import * as protection from './protection';
 import clone from './clone';
 import capture_soul from './capture_soul';
@@ -242,6 +243,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(purify, overworld);
   registerSpell(debilitate, overworld);
   registerSpell(soul_bind, overworld);
+  registerSpell(soul_shard, overworld);
   registerSpell(bloat, overworld);
   registerSpell(slow, overworld);
   registerSpell(blood_curse, overworld);
