@@ -36,6 +36,7 @@ const spell: Spell = {
   },
   modifiers: {
     add,
+    remove,
   },
   events: {
     onDamage: (unit, amount, underworld, prediction) => {
@@ -67,14 +68,9 @@ function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, qu
     // If there was already a different SoulSource
     if (modifier.shardOwnerId && modifier.shardOwnerId != extra.shardOwnerId) {
 
-      const oldSoulSource = unitById(modifier.shardOwnerId, _underworld, _prediction);
+      const oldShardOwner = unitById(modifier.shardOwnerId, _underworld, _prediction);
       // Remove the on death event
-      if (oldSoulSource) {
-        const index = oldSoulSource.onDeathEvents.indexOf(soulShardId, 0);
-        if (index > -1) {
-          oldSoulSource.onDeathEvents.splice(index, 1);
-        }
-      }
+      removeSoulShardOnDeathEvent(oldShardOwner);
     }
     const soulSource = unitById(extra.shardOwnerId, _underworld, _prediction);
     soulSource?.onDeathEvents.push(soulShardId);
@@ -83,9 +79,32 @@ function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, qu
   modifier.shardOwnerId = extra.shardOwnerId;
 }
 
+function remove(unit: Unit.IUnit, underworld: Underworld) {
+  if (!unit.modifiers[soulShardId]) {
+    console.error(`Missing modifier object for ${soulShardId}; cannot remove.  This should never happen`);
+    return;
+  }
+
+  // Better to pass prediction boolean through remove function?
+  const prediction = underworld.unitsPrediction.includes(unit);
+
+  const shardOwnerId = unit.modifiers[soulShardId].shardOwnerId;
+  const shardOwner = unitById(shardOwnerId, underworld, prediction);
+  removeSoulShardOnDeathEvent(shardOwner);
+}
+
 function unitById(id: number, underworld: Underworld, prediction: boolean): Unit.IUnit | undefined {
   const units = prediction ? underworld.unitsPrediction : underworld.units;
   return units.find(u => u.id == id);
+}
+
+function removeSoulShardOnDeathEvent(unit: Unit.IUnit | undefined) {
+  if (unit) {
+    const index = unit.onDeathEvents.indexOf(soulShardId, 0);
+    if (index > -1) {
+      unit.onDeathEvents.splice(index, 1);
+    }
+  }
 }
 
 export default spell;
