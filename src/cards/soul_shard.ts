@@ -6,6 +6,7 @@ import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
+import { distance } from '../jmath/math';
 
 const soulShardId = 'Soul Shard';
 const spell: Spell = {
@@ -40,20 +41,36 @@ const spell: Spell = {
   },
   events: {
     onDamage: (unit, amount, underworld, prediction) => {
-      //@ts-ignore Redirect all damage to the modifier's source unit
-      const shardOwnerId = unit.modifiers[soulShardId].shardOwnerId;
+      // Redirect all damage to the modifier's source unit
+      const shardOwnerId = unit.modifiers[soulShardId]?.shardOwnerId;
       // != undefined because the ID could be 0
       if (shardOwnerId != undefined) {
         const shardOwner = unitById(shardOwnerId, underworld, prediction);
         if (shardOwner) {
-          Unit.takeDamage(shardOwner, amount, undefined, underworld, prediction, undefined)
+          Unit.takeDamage(shardOwner, amount, undefined, underworld, prediction, undefined);
         }
       }
       return 0;
     },
     onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
-      // Resurrect in place of the nearest shard haver
-      console.warn("Soul Source On Death");
+      // Find nearest unit with a matching Soul Shard
+      const units = prediction ? underworld.unitsPrediction : underworld.units;
+      const nearestShardBearer = units.filter(u =>
+        u.modifiers[soulShardId] &&
+        u.modifiers[soulShardId].shardOwnerId == unit.id)
+        .sort((a, b) => distance(a, unit) - distance(b, unit))[0];
+
+      // Resurrect in place of the nearestShardBearer
+      if (nearestShardBearer) {
+        //console.log("Resurrect unit at soul shard bearer: ", nearestShardBearer);
+
+        // TODO - Await death?
+        Unit.die(nearestShardBearer, underworld, prediction);
+        Unit.setLocation(unit, nearestShardBearer);
+        Unit.resurrect(unit, underworld);
+      } else {
+        console.log("Unit had soul shard death event, but no shard bearers were left: ", unit);
+      }
     },
   },
 };
