@@ -20,7 +20,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.RARE],
-    thumbnail: 'spellIconExecute.png',
+    thumbnail: 'spellIconExecution.png',
     // no animation path, animation is done with particles
     animationPath: '',
     sfx: '',
@@ -34,7 +34,7 @@ const spell: Spell = {
         distance(u, state.casterUnit) < executeRange);
 
       if (prediction) {
-        drawUICirclePrediction(state.casterUnit, executeRange, colors.targetBlue, 'Shove Range');
+        drawUICirclePrediction(state.casterUnit, executeRange, colors.targetBlue, 'Execute Range');
       }
 
       if (targets.length == 0) {
