@@ -28,7 +28,7 @@ const spell: Spell = {
         playDefaultSpellSFX(card, prediction);
         await playDefaultSpellAnimation(card, targets, prediction);
         for (let unit of targets) {
-          Unit.addModifier(unit, soulShardId, underworld, prediction, quantity, { soulSource: state.casterUnit });
+          Unit.addModifier(unit, soulShardId, underworld, prediction, quantity, { shardOwnerId: state.casterUnit.id });
         }
       }
       return state;
@@ -40,24 +40,52 @@ const spell: Spell = {
   events: {
     onDamage: (unit, amount, underworld, prediction) => {
       //@ts-ignore Redirect all damage to the modifier's source unit
-      const soulSource = unit.modifiers[soulShardId].soulSource;
-      console.log(soulSource);
-      Unit.takeDamage(soulSource, amount, undefined, underworld, prediction, undefined)
+      const shardOwnerId = unit.modifiers[soulShardId].shardOwnerId;
+      // != undefined because the ID could be 0
+      if (shardOwnerId != undefined) {
+        const shardOwner = unitById(shardOwnerId, underworld, prediction);
+        if (shardOwner) {
+          Unit.takeDamage(shardOwner, amount, undefined, underworld, prediction, undefined)
+        }
+      }
       return 0;
     },
     onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       // Resurrect in place of the nearest shard haver
-      console.log("Soul Source On Death");
+      console.warn("Soul Source On Death");
     },
   },
 };
 
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1, extra?: any) {
-  const modifier = getOrInitModifier(unit, soulShardId, { isCurse: true, quantity }, () => {
-    unit.onDamageEvents.push(soulShardId);
-    console.log(extra);
-    extra?.soulSource.onDeathEvents.push(soulShardId);
-  });
-  modifier.soulSource = extra?.soulSource;
+  const modifier = getOrInitModifier(unit, soulShardId, { isCurse: true, quantity }, () => { });
+
+  unit.onDamageEvents.push(soulShardId);
+
+  // != undefined because the ID could be 0
+  if (extra.shardOwnerId != undefined) {
+    // If there was already a different SoulSource
+    if (modifier.shardOwnerId && modifier.shardOwnerId != extra.shardOwnerId) {
+
+      const oldSoulSource = unitById(modifier.shardOwnerId, _underworld, _prediction);
+      // Remove the on death event
+      if (oldSoulSource) {
+        const index = oldSoulSource.onDeathEvents.indexOf(soulShardId, 0);
+        if (index > -1) {
+          oldSoulSource.onDeathEvents.splice(index, 1);
+        }
+      }
+    }
+    const soulSource = unitById(extra.shardOwnerId, _underworld, _prediction);
+    soulSource?.onDeathEvents.push(soulShardId);
+  }
+
+  modifier.shardOwnerId = extra.shardOwnerId;
 }
+
+function unitById(id: number, underworld: Underworld, prediction: boolean): Unit.IUnit | undefined {
+  const units = prediction ? underworld.unitsPrediction : underworld.units;
+  return units.find(u => u.id == id);
+}
+
 export default spell;
