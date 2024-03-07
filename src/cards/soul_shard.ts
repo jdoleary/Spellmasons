@@ -42,20 +42,31 @@ const spell: Spell = {
   events: {
     onDamage: (unit, amount, underworld, prediction) => {
       // Redirect all damage to the modifier's source unit
-      const shardOwnerId = unit.modifiers[soulShardId]?.shardOwnerId;
+      const modifier = unit.modifiers[soulShardId];
       // != undefined because the ID could be 0
-      if (shardOwnerId != undefined) {
-        const shardOwner = unitById(shardOwnerId, underworld, prediction);
+      if (modifier && modifier.shardOwnerId != undefined) {
+        const shardOwner = unitById(modifier.shardOwnerId, underworld, prediction);
         if (shardOwner) {
-          Unit.takeDamage(shardOwner, amount, undefined, underworld, prediction, undefined);
+          // Prevents an infinite loop in the case of multiple
+          // shard owners redirecting to eachother
+          if (!modifier.hasRedirectedDamage) {
+            modifier.hasRedirectedDamage = true;
+            Unit.takeDamage(shardOwner, amount, undefined, underworld, prediction, undefined);
+            modifier.hasRedirectedDamage = false;
+            return 0;
+          } else {
+            //console.log("Breaking infinite Soul Shard loop: ", modifier.hasRedirectedDamage);
+          }
         }
+        modifier.hasRedirectedDamage = false;
       }
-      return 0;
+      return amount;
     },
     onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       // Find nearest unit with a matching Soul Shard
       const units = prediction ? underworld.unitsPrediction : underworld.units;
       const nearestShardBearer = units.filter(u =>
+        u.alive &&
         u.modifiers[soulShardId] &&
         u.modifiers[soulShardId].shardOwnerId == unit.id)
         .sort((a, b) => distance(a, unit) - distance(b, unit))[0];
