@@ -1,12 +1,13 @@
 import * as Unit from '../entity/Unit';
-import * as Image from '../graphics/Image';
 import { CardCategory } from '../types/commonTypes';
 import type Underworld from '../Underworld';
-import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
+import { oneOffImage, playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 import { distance } from '../jmath/math';
+import { makeManaTrail } from '../graphics/Particles';
+import { containerUnits } from '../graphics/PixiUtils';
 
 const soulShardId = 'Soul Shard';
 const spell: Spell = {
@@ -74,6 +75,13 @@ const spell: Spell = {
       // Resurrect in place of the nearestShardBearer
       if (nearestShardBearer) {
         //console.log("Resurrect unit at soul shard bearer: ", nearestShardBearer);
+
+        if (!prediction) {
+          // Trail VFX
+          await new Promise<void>(resolve => oneOffImage(unit, 'units/summonerMagic', containerUnits, resolve))
+          await makeManaTrail(unit, nearestShardBearer, underworld, '#774772', '#5b3357')
+          await new Promise<void>(resolve => oneOffImage(nearestShardBearer, 'units/summonerMagic', containerUnits, resolve));
+        }
 
         // TODO - Await death?
         Unit.die(nearestShardBearer, underworld, prediction);
