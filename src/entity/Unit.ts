@@ -124,7 +124,8 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   // Note: flaggedForRemoval should ONLY be changed in Unit.cleanup
   flaggedForRemoval?: boolean;
   // A list of names that correspond to Events.ts functions
-  onDamageEvents: string[];
+  onDealDamageEvents: string[];
+  onTakeDamageEvents: string[];
   onDeathEvents: string[];
   onAgroEvents: string[];
   onTurnStartEvents: string[];
@@ -195,7 +196,8 @@ export function create(
       immovable: false,
       unitType,
       unitSubType,
-      onDamageEvents: [],
+      onDealDamageEvents: [],
+      onTakeDamageEvents: [],
       onDeathEvents: [],
       onAgroEvents: [],
       onTurnStartEvents: [],
@@ -418,7 +420,8 @@ export function removeModifier(unit: IUnit, key: string, underworld: Underworld)
   if (modifier && modifier.subsprite) {
     Image.removeSubSprite(unit.image, modifier.subsprite.imageName);
   }
-  unit.onDamageEvents = unit.onDamageEvents.filter((e) => e !== key);
+  unit.onDealDamageEvents = unit.onDealDamageEvents.filter((e) => e !== key);
+  unit.onTakeDamageEvents = unit.onTakeDamageEvents.filter((e) => e !== key);
   unit.onDeathEvents = unit.onDeathEvents.filter((e) => e !== key);
   unit.onAgroEvents = unit.onAgroEvents.filter((e) => e !== key);
   unit.onTurnStartEvents = unit.onTurnStartEvents.filter((e) => e !== key);
@@ -466,11 +469,12 @@ export function serialize(unit: IUnit): IUnitSerialized {
   // resolveDoneMoving is a callback that cannot be serialized
   // animations and sfx come from the source unit and need not be saved or sent over
   // the network (it would just be extra data), better to restore from the source unit
-  const { resolveDoneMoving, animations, sfx, onDamageEvents, onDeathEvents, onAgroEvents, onTurnStartEvents, onTurnEndEvents, onDrawSelectedEvents, ...rest } = unit
+  const { resolveDoneMoving, animations, sfx, onDealDamageEvents, onTakeDamageEvents, onDeathEvents, onAgroEvents, onTurnStartEvents, onTurnEndEvents, onDrawSelectedEvents, ...rest } = unit
   return {
     ...rest,
     // Deep copy array so that serialized units don't share the object
-    onDamageEvents: [...onDamageEvents],
+    onDealDamageEvents: [...onDealDamageEvents],
+    onTakeDamageEvents: [...onTakeDamageEvents],
     onDeathEvents: [...onDeathEvents],
     onAgroEvents: [...onAgroEvents],
     onTurnStartEvents: [...onTurnStartEvents],
@@ -861,20 +865,42 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   // Once a unit dies it is no longer on it's originalLife
   unit.originalLife = false;
 }
-export function composeOnDamageEvents(unit: IUnit, damage: number, underworld: Underworld, prediction: boolean): number {
+export function composeOnDealDamageEvents(damageArgs: damageArgs, underworld: Underworld, prediction: boolean): number {
+  let { source, unit, amount } = damageArgs;
   // Compose onDamageEvents
-  for (let eventName of unit.onDamageEvents) {
-    const fn = Events.onDamageSource[eventName];
+  for (let eventName of source.onDealDamageEvents) {
+    const fn = Events.onDealDamageSource[eventName];
     if (fn) {
-      // onDamage events can alter the amount of damage taken
-      damage = fn(unit, damage, underworld, prediction);
+      // onDamage events can trigger effects and alter damage amount
+      amount = fn(source, amount, underworld, prediction);
     }
   }
-  return damage
-
+  return amount;
 }
+export function composeOnTakeDamageEvents(damageArgs: damageArgs, underworld: Underworld, prediction: boolean): number {
+  let { source, unit, amount } = damageArgs;
+  // Compose onDamageEvents
+  for (let eventName of unit.onTakeDamageEvents) {
+    const fn = Events.onTakeDamageSource[eventName];
+    if (fn) {
+      // onDamage events can trigger effects and alter damage amount
+      amount = fn(unit, amount, underworld, prediction);
+    }
+  }
+  return amount;
+}
+
+interface damageArgs {
+  source?: any,
+  unit: IUnit,
+  amount: number,
+  fromVec2?: Vec2,
+  thinBloodLine?: boolean,
+}
+
 // damageFromVec2 is the location that the damage came from and is used for blood splatter
-export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | undefined, underworld: Underworld, prediction: boolean, state?: EffectState, options?: { thinBloodLine: boolean }) {
+export function takeDamage(damageArgs: damageArgs, underworld: Underworld, prediction: boolean) {
+  let { source, unit, amount, fromVec2, thinBloodLine } = damageArgs;
   if (!unit.alive) {
     // Do not deal damage to dead units
     return;
@@ -884,7 +910,8 @@ export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | u
     immune.notifyImmune(unit, false);
     return
   }
-  amount = composeOnDamageEvents(unit, amount, underworld, prediction);
+  amount = composeOnDealDamageEvents(damageArgs, underworld, prediction);
+  amount = composeOnTakeDamageEvents(damageArgs, underworld, prediction);
   if (amount == 0) {
     // Even though damage is 0, sync the player UI in the event that the
     // damage took down shield
@@ -903,11 +930,11 @@ export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | u
       playAnimation(unit, unit.animations.hit, { loop: false, animationSpeed: 0.2 });
       // All units bleed except Doodads
       if (unit.unitSubType !== UnitSubType.DOODAD) {
-        if (damageFromVec2) {
-          if (options?.thinBloodLine) {
-            startBloodParticleSplatter(underworld, damageFromVec2, unit, { maxRotationOffset: Math.PI / 16, numberOfParticles: 30 });
+        if (fromVec2) {
+          if (thinBloodLine) {
+            startBloodParticleSplatter(underworld, fromVec2, unit, { maxRotationOffset: Math.PI / 16, numberOfParticles: 30 });
           } else {
-            startBloodParticleSplatter(underworld, damageFromVec2, unit);
+            startBloodParticleSplatter(underworld, fromVec2, unit);
           }
         }
       }
@@ -1429,7 +1456,8 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
     // Prediction units should have full stamina because they will
     // when it is their turn
     stamina: rest.staminaMax,
-    onDamageEvents: [...rest.onDamageEvents],
+    onDealDamageEvents: [...rest.onDealDamageEvents],
+    onTakeDamageEvents: [...rest.onTakeDamageEvents],
     onDeathEvents: [...rest.onDeathEvents],
     onAgroEvents: [...rest.onAgroEvents],
     onTurnStartEvents: [...rest.onTurnStartEvents],

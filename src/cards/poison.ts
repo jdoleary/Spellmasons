@@ -105,7 +105,12 @@ const spell: Spell = {
       if (!prediction) {
         if (modifier) {
           const damage = (modifier.quantity || 1) * baseDamage;
-          takeDamage(unit, damage, unit, underworld, prediction, undefined);
+          Unit.takeDamage({
+            source: undefined, // TODO - CASTER?
+            unit: unit,
+            amount: damage,
+            fromVec2: unit,
+          }, underworld, prediction);
           floatingText({
             coords: unit, text: `${damage} poison damage`,
             style: { fill: '#44b944' },

@@ -498,7 +498,12 @@ export const pickups: IPickupSource[] = [
           }
 
         }
-        takeDamage(unit, spike_damage, unit, underworld, prediction)
+        takeDamage({
+          source: pickup,
+          unit: unit,
+          amount: -spike_damage,
+          fromVec2: unit,
+        }, underworld, prediction);
       }
     }
   },
@@ -536,7 +541,11 @@ export const pickups: IPickupSource[] = [
           } else {
           }
         }
-        takeDamage(player.unit, RED_PORTAL_DAMAGE, undefined, underworld, false);
+        takeDamage({
+          source: pickup,
+          unit: player.unit,
+          amount: RED_PORTAL_DAMAGE,
+        }, underworld, false);
       }
     },
   },
@@ -572,7 +581,11 @@ export const pickups: IPickupSource[] = [
             skyBeam(randomOtherBluePortal);
           }
         }
-        takeDamage(player.unit, -RED_PORTAL_DAMAGE, undefined, underworld, false);
+        takeDamage({
+          source: pickup,
+          unit: player.unit,
+          amount: -RED_PORTAL_DAMAGE,
+        }, underworld, false);
       }
     },
   },
@@ -738,9 +751,14 @@ export const pickups: IPickupSource[] = [
       // players that have blood curse will be damaged by healing so it should trigger for them too
       return !!(player && (player.unit.health < player.unit.healthMax || hasBloodCurse(player.unit)));
     },
-    effect: ({ unit, player, underworld, prediction }) => {
+    effect: ({ unit, player, pickup, underworld, prediction }) => {
       if (unit) {
-        takeDamage(unit, -healthPotionRestoreAmount, undefined, underworld, prediction);
+        takeDamage({
+          source: pickup,
+          unit: unit,
+          amount: -healthPotionRestoreAmount,
+          fromVec2: unit
+        }, underworld, false);
         // Add spell effect animation
         Image.addOneOffAnimation(unit, 'spell-effects/potionPickup', {}, { animationSpeed: 0.3, loop: false });
         if (!prediction) {

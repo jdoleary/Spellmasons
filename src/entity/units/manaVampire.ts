@@ -48,7 +48,12 @@ const unit: UnitSource = {
     await meleeAction(unit, attackTargets, underworld, canAttackTarget, async (attackTarget: Unit.IUnit) => {
       playSFXKey('vampireAttack');
       await Unit.playAnimation(unit, unit.animations.attack);
-      Unit.takeDamage(attackTarget, unit.damage, unit, underworld, false, undefined);
+      Unit.takeDamage({
+        source: unit,
+        unit: attackTarget,
+        amount: unit.damage,
+        fromVec2: unit,
+      }, underworld, false);
       if (attackTarget.mana) {
         const manaStolen = Math.min(attackTarget.mana, manaToSteal);
         attackTarget.mana -= manaStolen;

@@ -27,7 +27,12 @@ const playerUnit: UnitSource = {
       const keyMoment = async () => {
         playSFXKey('hurt');
         oneOffImage(attackTarget, 'spell-effects/spellHurtCuts', containerSpells);
-        Unit.takeDamage(attackTarget, unit.damage, unit, underworld, false);
+        Unit.takeDamage({
+          source: unit,
+          unit: attackTarget,
+          amount: unit.damage,
+          fromVec2: unit,
+        }, underworld, false);
       }
       await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
     }

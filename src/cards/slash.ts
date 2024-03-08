@@ -53,7 +53,13 @@ export async function slashEffect(state: EffectState, card: ICard, quantity: num
           spellEffectImage.sprite.scale.x *= scale;
           spellEffectImage.sprite.scale.y *= scale;
         }
-        Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
+
+        Unit.takeDamage({
+          source: state.casterUnit,
+          unit: unit,
+          amount: damage,
+          fromVec2: state.casterUnit,
+        }, underworld, prediction);
       }
       // Wait some delay between attacks
       await new Promise(resolve => setTimeout(resolve, delayBetweenAnimations));
@@ -63,7 +69,12 @@ export async function slashEffect(state: EffectState, card: ICard, quantity: num
       delayBetweenAnimations = Math.max(20, delayBetweenAnimations);
     } else {
       for (let unit of targets) {
-        Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
+        Unit.takeDamage({
+          source: state.casterUnit,
+          unit: unit,
+          amount: damage,
+          fromVec2: state.casterUnit,
+        }, underworld, prediction);
       }
     }
   }

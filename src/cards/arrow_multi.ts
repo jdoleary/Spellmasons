@@ -30,7 +30,13 @@ const spell: Spell = {
   events: {
     onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
       if (unit) {
-        takeDamage(unit, damageDone, projectile.startPoint, underworld, prediction, undefined, { thinBloodLine: true });
+        takeDamage({
+          source: undefined, // TODO - CASTER
+          unit: unit,
+          amount: damageDone,
+          fromVec2: projectile.startPoint,
+          thinBloodLine: true,
+        }, underworld, prediction);
       }
     }
   }

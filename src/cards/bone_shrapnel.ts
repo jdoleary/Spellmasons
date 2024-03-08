@@ -42,7 +42,12 @@ const spell: Spell = {
           prediction
         ).forEach(u => {
           // Deal damage to units
-          takeDamage(u, damage * quantity, u, underworld, prediction);
+          Unit.takeDamage({
+            source: state.casterUnit,
+            unit: u,
+            amount: damage * quantity,
+            fromVec2: unit,
+          }, underworld, prediction);
         });
 
         // Remove corpse

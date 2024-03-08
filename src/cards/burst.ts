@@ -37,7 +37,12 @@ const spell: Spell = {
             for (let unit of targets) {
               const damage = calculateDamage(quantity, state.casterUnit, state.casterUnit.attackRange, unit);
               if (damage > 0) {
-                Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
+                Unit.takeDamage({
+                  source: state.casterUnit,
+                  unit: unit,
+                  amount: damage * quantity,
+                  fromVec2: state.casterUnit,
+                }, underworld, prediction);
                 // Animate:
                 makeBurstParticles(unit, lerp(0.1, 1, damage / maxDamage), prediction, resolve);
               }
@@ -50,7 +55,12 @@ const spell: Spell = {
         } else {
           for (let unit of targets) {
             const damage = calculateDamage(quantity, state.casterUnit, state.casterUnit.attackRange, unit);
-            Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
+            Unit.takeDamage({
+              source: state.casterUnit,
+              unit: unit,
+              amount: damage * quantity,
+              fromVec2: state.casterUnit,
+            }, underworld, prediction);
           }
           resolve();
         }

@@ -24,7 +24,11 @@ export function explode(location: Vec2, radius: number, damage: number, pushDist
   if (damage != 0) {
     units.forEach(u => {
       // Deal damage to units
-      takeDamage(u, damage, u, underworld, prediction);
+      takeDamage({
+        unit: u,
+        amount: damage,
+        fromVec2: location,
+      }, underworld, prediction);
     });
   }
 

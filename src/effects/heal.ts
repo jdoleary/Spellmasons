@@ -24,14 +24,22 @@ export async function healUnits(units: Unit.IUnit[], amount: number, underworld:
       // All heals animate simultaneously, so just await the last promise
       // Instead of using Promise.All()
       floatingText({ coords: unit, text: globalThis.getChosenLanguageCode() == 'en' ? `+${Math.abs(amount)} Health` : `${i18n('heal')} ${Math.abs(amount)}` });
-      Unit.takeDamage(unit, -amount, undefined, underworld, prediction, state);
+      Unit.takeDamage({
+        // TODO - New damage - Add source?
+        unit: unit,
+        amount: -amount,
+      }, underworld, prediction);
       animationPromise = oneOffHealAnimation(unit);
     }
     await animationPromise;
     return state;
   } else {
     for (let unit of units) {
-      Unit.takeDamage(unit, -amount, undefined, underworld, prediction, state);
+      Unit.takeDamage({
+        // TODO - New damage - Add source?
+        unit: unit,
+        amount: -amount,
+      }, underworld, prediction);
     }
     return state;
   }

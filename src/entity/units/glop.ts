@@ -61,7 +61,12 @@ const unit: UnitSource = {
           'projectile/lobberProjectile',
         ).then(() => {
           if (attackTarget) {
-            Unit.takeDamage(attackTarget, unit.damage, attackTarget, underworld, false, undefined);
+            Unit.takeDamage({
+              source: unit,
+              unit: attackTarget,
+              amount: unit.damage,
+              fromVec2: unit,
+            }, underworld, false);
             // Add projectile hit animation
             Image.addOneOffAnimation(attackTarget, 'projectile/lobberProjectileHit');
           }

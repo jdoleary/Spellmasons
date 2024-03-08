@@ -59,7 +59,12 @@ const spell: Spell = {
           if (!prediction) {
             makeBleedParticles(unit, prediction, proportion, resolve);
           }
-          Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
+          Unit.takeDamage({
+            source: state.casterUnit,
+            unit: unit,
+            amount: damage,
+            fromVec2: state.casterUnit,
+          }, underworld, prediction);
         }
         if (!prediction) {
           if (biggestProportion < bleedInstantKillProportion / 3) {

@@ -429,7 +429,7 @@ export default class Underworld {
         // otherwise, make the unit slide along the wall
         if (impactDamage > 0) {
           if (Unit.isUnit(pushedObject)) {
-            Unit.takeDamage(pushedObject, impactDamage, Vec.add(pushedObject, { x: velocity.x, y: velocity.y }), this, prediction);
+            Unit.takeDamage({ unit: pushedObject, amount: impactDamage, fromVec2: Vec.add(pushedObject, { x: velocity.x, y: velocity.y }) }, this, prediction);
             if (!prediction) {
               floatingText({ coords: pushedObject, text: `${impactDamage} Impact damage!` });
             }
@@ -3091,7 +3091,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (stat == 'Good Looks') {
       const damageMultiplier = 0.1 / this.players.length;
       // Deals 10% damage to all AI units
-      this.units.filter(u => u.unitType == UnitType.AI).forEach(u => Unit.takeDamage(u, u.healthMax * damageMultiplier, undefined, this, false));
+      this.units.filter(u => u.unitType == UnitType.AI).forEach(u => Unit.takeDamage({ unit: u, amount: u.healthMax * damageMultiplier }, this, false));
     } else {
 
       if (isCurrentPlayer) {
@@ -3775,7 +3775,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           }
 
           if (spellCostTally.healthCost !== 0) {
-            Unit.takeDamage(effectState.casterUnit, spellCostTally.healthCost, effectState.casterUnit, this, prediction, effectState);
+            Unit.takeDamage({ source: effectState.casterUnit, unit: effectState.casterUnit, amount: spellCostTally.healthCost, fromVec2: effectState.casterUnit }, this, prediction);
           }
 
           // Increment card usage; now that the caster is using the card

@@ -3,7 +3,8 @@ import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
 import type { Vec2 } from '../jmath/Vec';
 import Events, {
-  onDamage,
+  onDealDamage,
+  onTakeDamage,
   onDeath,
   onMove,
   onAgro,
@@ -131,7 +132,8 @@ export interface Modifiers {
   remove?: (unit: Unit.IUnit, underworld: Underworld) => void;
 }
 interface Events {
-  onDamage?: onDamage;
+  onDealDamage?: onDealDamage;
+  onTakeDamage?: onTakeDamage;
   onDeath?: onDeath;
   onMove?: onMove;
   onAgro?: onAgro;
@@ -154,8 +156,11 @@ export function registerEvents(id: string, events: Events) {
   if (events.onAgro) {
     Events.onAgroSource[id] = events.onAgro;
   }
-  if (events.onDamage) {
-    Events.onDamageSource[id] = events.onDamage;
+  if (events.onDealDamage) {
+    Events.onDealDamageSource[id] = events.onDealDamage;
+  }
+  if (events.onTakeDamage) {
+    Events.onTakeDamageSource[id] = events.onTakeDamage;
   }
   if (events.onDeath) {
     Events.onDeathSource[id] = events.onDeath;
