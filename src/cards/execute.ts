@@ -34,7 +34,7 @@ const spell: Spell = {
         distance(u, state.casterUnit) < executeRange);
 
       if (prediction) {
-        drawUICirclePrediction(state.casterUnit, executeRange - config.COLLISION_MESH_RADIUS, colors.targetBlue, 'Execute Range');
+        drawUICirclePrediction(state.casterUnit, executeRange - config.COLLISION_MESH_RADIUS / 2, colors.targetBlue, 'Execute Range');
       }
 
       if (targets.length == 0) {
