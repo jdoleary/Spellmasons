@@ -19,6 +19,7 @@ import heavySlash from './heavy_slash';
 import megaSlash from './mega_slash';
 import rend from './rend';
 import bleed from './bleed';
+import execute from './execute';
 import heal from './add_heal';
 import heal_greater from './heal_greater';
 import heal_mass from './heal_mass';
@@ -209,6 +210,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(megaSlash, overworld);
   registerSpell(rend, overworld);
   registerSpell(bleed, overworld);
+  registerSpell(execute, overworld);
   registerSpell(drown, overworld);
   registerSpell(burst, overworld);
   registerSpell(bone_shrapnel, overworld);

@@ -30,7 +30,7 @@ const spell: Spell = {
         return t !== state.casterUnit && distance(state.casterUnit, t) <= shoveRange;
       });
       if (prediction) {
-        drawUICirclePrediction(state.casterUnit, shoveRange, colors.targetBlue, 'Shove Range');
+        drawUICirclePrediction(state.casterUnit, shoveRange - config.COLLISION_MESH_RADIUS / 2, colors.targetBlue, 'Shove Range');
       }
       for (let entity of targets) {
         promises.push(forcePushAwayFrom(entity, state.casterUnit, defaultPushDistance * 3 * quantity, underworld, prediction));
