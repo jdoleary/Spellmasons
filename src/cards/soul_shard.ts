@@ -25,7 +25,7 @@ const spell: Spell = {
     description: ['spell_soul_shard'],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
-      const targets = state.targetedUnits.filter(u => u.alive);
+      const targets = state.targetedUnits.filter(u => u.alive && u.faction == state.casterUnit.faction);
       if (targets.length) {
         playDefaultSpellSFX(card, prediction);
         await playDefaultSpellAnimation(card, targets, prediction);
