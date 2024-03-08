@@ -75,6 +75,8 @@ const spell: Spell = {
       // Resurrect in place of the nearestShardBearer
       if (nearestShardBearer) {
         //console.log("Resurrect unit at soul shard bearer: ", nearestShardBearer);
+        // Prevent game over screen from coming up while the soul is travelling
+        unit.alive = true;
 
         if (!prediction) {
           // Trail VFX
