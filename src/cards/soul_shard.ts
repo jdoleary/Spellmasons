@@ -87,6 +87,7 @@ const spell: Spell = {
         Unit.die(nearestShardBearer, underworld, prediction);
         Unit.setLocation(unit, nearestShardBearer);
         Unit.resurrect(unit, underworld);
+        unit.health = 1;
       } else {
         console.log("Unit had soul shard death event, but no shard bearers were left: ", unit);
       }
