@@ -106,7 +106,7 @@ const spell: Spell = {
         if (modifier) {
           const damage = (modifier.quantity || 1) * baseDamage;
           Unit.takeDamage({
-            source: undefined, // TODO - CASTER?
+            source: modifier,
             unit: unit,
             amount: damage,
             fromVec2: unit,

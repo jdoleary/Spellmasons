@@ -38,7 +38,7 @@ const spell: Spell = {
     onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
       if (unit) {
         Unit.takeDamage({
-          source: undefined, // TODO - CASTER
+          source: projectile.source,
           unit: unit,
           amount: damage,
           fromVec2: projectile.startPoint,
@@ -88,6 +88,7 @@ export function arrowEffect(multiShotCount: number, collideFnKey: string, doesPi
             beingPushed: false
           }
           makeForceMoveProjectile({
+            source: state.casterUnit,
             pushedObject,
             startPoint: casterPositionAtTimeOfCast,
             endPoint: endPoint,

@@ -38,7 +38,7 @@ const spell: Spell = {
     onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
       if (unit) {
         Unit.takeDamage({
-          source: undefined, // TODO - CASTER
+          source: projectile.source,
           unit: unit,
           amount: calculateDamage(projectile.startPoint, unit),
           fromVec2: projectile.startPoint,
