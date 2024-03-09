@@ -2,7 +2,7 @@ import * as Unit from '../entity/Unit';
 import { CardCategory } from '../types/commonTypes';
 import type Underworld from '../Underworld';
 import { oneOffImage, playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
-import { Spell } from './index';
+import { Spell, refundLastSpell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 import { distance } from '../jmath/math';
@@ -32,13 +32,14 @@ const spell: Spell = {
         for (let unit of targets) {
           Unit.addModifier(unit, soulShardId, underworld, prediction, quantity, { shardOwnerId: state.casterUnit.id });
         }
+      } else {
+        refundLastSpell(state, prediction, "Must target an ally");
       }
       return state;
     },
   },
   modifiers: {
     add,
-    remove,
   },
   events: {
     onDamage: (unit, amount, underworld, prediction) => {
@@ -78,14 +79,13 @@ const spell: Spell = {
         // Prevent game over screen from coming up while the soul is travelling
         unit.alive = true;
 
-        if (!prediction) {
-          // Trail VFX
-          await new Promise<void>(resolve => oneOffImage(unit, 'units/summonerMagic', containerUnits, resolve))
-          await makeManaTrail(unit, nearestShardBearer, underworld, '#774772', '#5b3357')
-          await new Promise<void>(resolve => oneOffImage(nearestShardBearer, 'units/summonerMagic', containerUnits, resolve));
-        }
+        // if (!prediction) {
+        //   // Trail VFX
+        //   await new Promise<void>(resolve => oneOffImage(unit, 'units/summonerMagic', containerUnits, resolve))
+        //   await makeManaTrail(unit, nearestShardBearer, underworld, '#774772', '#5b3357')
+        //   await new Promise<void>(resolve => oneOffImage(nearestShardBearer, 'units/summonerMagic', containerUnits, resolve));
+        // }
 
-        // TODO - Await death?
         Unit.die(nearestShardBearer, underworld, prediction);
         Unit.setLocation(unit, nearestShardBearer);
         Unit.resurrect(unit, underworld);
@@ -103,47 +103,21 @@ function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, qu
 
     // != undefined because the ID could be 0
     if (extra.shardOwnerId != undefined) {
-      // If there was already a different SoulSource
-      if (modifier.shardOwnerId && modifier.shardOwnerId != extra.shardOwnerId) {
-
-        const oldShardOwner = unitById(modifier.shardOwnerId, _underworld, _prediction);
-        // Remove the on death event
-        removeSoulShardOnDeathEvent(oldShardOwner);
-      }
       const soulSource = unitById(extra.shardOwnerId, _underworld, _prediction);
-      soulSource?.onDeathEvents.push(soulShardId);
+      if (soulSource) {
+        if (!soulSource.onDeathEvents.includes(soulShardId)) {
+          soulSource?.onDeathEvents.push(soulShardId);
+        }
+      }
     }
-
-    modifier.shardOwnerId = extra.shardOwnerId;
   });
-}
 
-function remove(unit: Unit.IUnit, underworld: Underworld) {
-  if (!unit.modifiers[soulShardId]) {
-    console.error(`Missing modifier object for ${soulShardId}; cannot remove.  This should never happen`);
-    return;
-  }
-
-  // Better to pass prediction boolean through remove function?
-  const prediction = underworld.unitsPrediction.includes(unit);
-
-  const shardOwnerId = unit.modifiers[soulShardId].shardOwnerId;
-  const shardOwner = unitById(shardOwnerId, underworld, prediction);
-  removeSoulShardOnDeathEvent(shardOwner);
+  modifier.shardOwnerId = extra.shardOwnerId;
 }
 
 function unitById(id: number, underworld: Underworld, prediction: boolean): Unit.IUnit | undefined {
   const units = prediction ? underworld.unitsPrediction : underworld.units;
   return units.find(u => u.id == id);
-}
-
-function removeSoulShardOnDeathEvent(unit: Unit.IUnit | undefined) {
-  if (unit) {
-    const index = unit.onDeathEvents.indexOf(soulShardId, 0);
-    if (index > -1) {
-      unit.onDeathEvents.splice(index, 1);
-    }
-  }
 }
 
 export default spell;
