@@ -98,24 +98,24 @@ const spell: Spell = {
 };
 
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1, extra?: any) {
-  const modifier = getOrInitModifier(unit, soulShardId, { isCurse: true, quantity }, () => { });
+  const modifier = getOrInitModifier(unit, soulShardId, { isCurse: true, quantity }, () => {
+    unit.onDamageEvents.push(soulShardId);
 
-  unit.onDamageEvents.push(soulShardId);
+    // != undefined because the ID could be 0
+    if (extra.shardOwnerId != undefined) {
+      // If there was already a different SoulSource
+      if (modifier.shardOwnerId && modifier.shardOwnerId != extra.shardOwnerId) {
 
-  // != undefined because the ID could be 0
-  if (extra.shardOwnerId != undefined) {
-    // If there was already a different SoulSource
-    if (modifier.shardOwnerId && modifier.shardOwnerId != extra.shardOwnerId) {
-
-      const oldShardOwner = unitById(modifier.shardOwnerId, _underworld, _prediction);
-      // Remove the on death event
-      removeSoulShardOnDeathEvent(oldShardOwner);
+        const oldShardOwner = unitById(modifier.shardOwnerId, _underworld, _prediction);
+        // Remove the on death event
+        removeSoulShardOnDeathEvent(oldShardOwner);
+      }
+      const soulSource = unitById(extra.shardOwnerId, _underworld, _prediction);
+      soulSource?.onDeathEvents.push(soulShardId);
     }
-    const soulSource = unitById(extra.shardOwnerId, _underworld, _prediction);
-    soulSource?.onDeathEvents.push(soulShardId);
-  }
 
-  modifier.shardOwnerId = extra.shardOwnerId;
+    modifier.shardOwnerId = extra.shardOwnerId;
+  });
 }
 
 function remove(unit: Unit.IUnit, underworld: Underworld) {
