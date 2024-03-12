@@ -20,7 +20,7 @@ const spell: Spell = {
     category: CardCategory.Curses,
     sfx: 'sacrifice',
     supportQuantity: true,
-    manaCost: 60,
+    manaCost: 90,
     healthCost: 0,
     expenseScaling: 3,
     probability: probabilityMap[CardRarity.RARE],
@@ -28,7 +28,7 @@ const spell: Spell = {
     description: ['spell_soul_shard'],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
-      const targets = state.targetedUnits.filter(u => u.alive && u.faction == state.casterUnit.faction);
+      const targets = state.targetedUnits.filter(u => u.alive && u.faction == state.casterUnit.faction && u != state.casterUnit);
       if (targets.length) {
         playDefaultSpellSFX(card, prediction);
         unitTakeDamageFX(state.casterUnit, underworld, prediction);
@@ -89,11 +89,11 @@ const spell: Spell = {
       // Resurrect in place of the nearestShardBearer
       if (nearestShardBearer) {
         //console.log("Resurrect unit at soul shard bearer: ", nearestShardBearer);
-        // Prevent game over screen from coming up while the soul is travelling
-        unit.alive = true;
 
         if (!prediction) {
-          // Trail VFX
+          // // Prevent game over screen from coming up while the soul is travelling
+          // unit.alive = true;
+          // // Trail VFX
           // await new Promise<void>(resolve => oneOffImage(unit, 'units/summonerMagic', containerUnits, resolve))
           // await makeManaTrail(unit, nearestShardBearer, underworld, '#774772', '#5b3357')
           // await new Promise<void>(resolve => oneOffImage(nearestShardBearer, 'units/summonerMagic', containerUnits, resolve));
