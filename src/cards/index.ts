@@ -115,8 +115,8 @@ import { Localizable } from '../localization';
 import { distance } from '../jmath/math';
 import { getSpellThumbnailPath } from '../graphics/ui/CardUI';
 import { registerUrnIceExplode } from '../entity/units/urn_ice';
-import { registerUrnpoisonExplode } from '../entity/units/urn_poison';
-import { registerUrnexplosiveExplode } from '../entity/units/urn_explosive';
+import { registerUrnPoisonExplode } from '../entity/units/urn_poison';
+import { registerUrnExplosiveExplode } from '../entity/units/urn_explosive';
 import { calculateGameDifficulty } from '../Difficulty';
 import registerCorpseDecay from '../modifierCorpseDecay';
 import { registerDeathmasonEvents } from '../entity/units/deathmason';
@@ -314,12 +314,14 @@ export function registerCards(overworld: Overworld) {
 
   // Register floating modifier (non-card);
   registerSummoningSickness();
-  registerImpendingDoom();
   registerCorpseDecay();
-  registerUrnIceExplode();
-  registerUrnpoisonExplode();
-  registerUrnexplosiveExplode();
+
   registerImmune();
+  registerImpendingDoom();
+
+  registerUrnIceExplode();
+  registerUrnPoisonExplode();
+  registerUrnExplosiveExplode();
   registerDeathmasonEvents();
 }
 
