@@ -2139,18 +2139,18 @@ export default class Underworld {
     return { x, y };
   }
   getRemainingPlayerUnits(): Unit.IUnit[] {
-    // Returns all living units currently controlled by a player
-    return this.players.filter(p => p.clientConnected && p.isSpawned).map(p => p.unit).filter(u => u.alive);
+    // Returns all remaining units currently controlled by a player; See isRemaining()
+    return this.players.filter(p => p.clientConnected && p.isSpawned).map(p => p.unit).filter(u => Unit.isRemaining(u, this));
   }
   getRemainingPlayerAllies(): Unit.IUnit[] {
-    // Returns all living units that share a faction with a player
+    // Returns all remaining units that share a faction with a player; See isRemaining()
     const playerFactions = Player.getFactionsOf(this.players);
-    return this.units.filter(u => u.alive && playerFactions.includes(u.faction) && u.unitSubType != UnitSubType.DOODAD);
+    return this.units.filter(u => Unit.isRemaining(u, this) && playerFactions.includes(u.faction) && u.unitSubType != UnitSubType.DOODAD);
   }
   getRemainingPlayerEnemies(): Unit.IUnit[] {
-    // Returns all living units that don't share a faction with a player
+    // Returns all remaining units that don't share a faction with a player; See isRemaining()
     const playerFactions = Player.getFactionsOf(this.players);
-    return this.units.filter(u => u.alive && !playerFactions.includes(u.faction) && u.unitSubType != UnitSubType.DOODAD);
+    return this.units.filter(u => Unit.isRemaining(u, this) && !playerFactions.includes(u.faction) && u.unitSubType != UnitSubType.DOODAD);
   }
   // Handles level completion, game over, turn phases, and hotseat
   async progressGameState() {

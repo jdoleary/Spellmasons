@@ -46,6 +46,7 @@ import * as log from '../log';
 import { suffocateCardId, updateSuffocate } from '../cards/suffocate';
 import { doLiquidEffect } from '../inLiquid';
 import { freezeCardId } from '../cards/freeze';
+import { undyingModifierId } from '../modifierUndying';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -1104,6 +1105,14 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
     document.querySelector('#end-turn-btn')?.classList.remove('highlight');
 
   }
+}
+
+// Returns whether or not a unit is truly dead
+// Considers game state and undying effects
+// Used for game loop logic
+export function isRemaining(unit: IUnit, underworld: Underworld) {
+  return unit.alive
+    || (unit.modifiers[undyingModifierId]);
 }
 
 export function canAct(unit: IUnit): boolean {
