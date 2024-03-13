@@ -7,6 +7,7 @@ import * as colors from './graphics/ui/colors';
 import { makeManaTrail } from "./graphics/Particles";
 import { containerUnits, startBloodParticleSplatter } from "./graphics/PixiUtils";
 import Underworld from './Underworld';
+import { UnitType } from "./types/commonTypes";
 
 // An additional modifier for Soul Shard, given to the caster
 export const soulShardOwnerModifierId = 'soulShardOwner';
@@ -41,7 +42,9 @@ export default function registerSoulShardOwner() {
           }
 
           Unit.die(nearestShardBearer, underworld, prediction);
-          Unit.cleanup(nearestShardBearer, true);
+          if (nearestShardBearer.unitType != UnitType.PLAYER_CONTROLLED) {
+            Unit.cleanup(nearestShardBearer, true);
+          }
           Unit.setLocation(unit, nearestShardBearer);
           Unit.resurrect(unit, underworld);
           unit.health = 1;
