@@ -121,6 +121,7 @@ import { calculateGameDifficulty } from '../Difficulty';
 import registerCorpseDecay from '../modifierCorpseDecay';
 import { registerDeathmasonEvents } from '../entity/units/deathmason';
 import registerUndying from '../modifierUndying';
+import registerSoulShardOwner from '../modifierSoulShardOwner';
 
 export interface Modifiers {
   subsprite?: Subsprite;
@@ -320,6 +321,7 @@ export function registerCards(overworld: Overworld) {
   registerImmune();
   registerImpendingDoom();
   registerUndying();
+  registerSoulShardOwner();
 
   registerUrnIceExplode();
   registerUrnPoisonExplode();

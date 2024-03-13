@@ -12,8 +12,9 @@ import { addTrail, calculateMaxParticles, createParticleTexture, makeManaTrail }
 import { containerUnits, startBloodParticleSplatter } from '../graphics/PixiUtils';
 import { Vec2 } from '../jmath/Vec';
 import { addLerpable } from '../lerpList';
+import { soulShardOwnerModifierId } from '../modifierSoulShardOwner';
 
-const soulShardId = 'Soul Shard';
+export const soulShardId = 'Soul Shard';
 const spell: Spell = {
   card: {
     id: soulShardId,
@@ -53,14 +54,14 @@ const spell: Spell = {
   },
   modifiers: {
     add,
+    remove,
   },
   events: {
     onDamage: (unit, amount, underworld, prediction) => {
       // Redirect all damage to the modifier's source unit
       const modifier = unit.modifiers[soulShardId];
-      // != undefined because the ID could be 0
-      if (modifier && modifier.shardOwnerId != undefined) {
-        const shardOwner = unitById(modifier.shardOwnerId, underworld, prediction);
+      if (modifier) {
+        const shardOwner = getShardOwnerById(modifier.shardOwnerId, underworld, prediction);
         if (shardOwner) {
           // Prevents an infinite loop in the case of multiple
           // shard owners redirecting to eachother
@@ -76,63 +77,73 @@ const spell: Spell = {
         modifier.hasRedirectedDamage = false;
       }
       return amount;
-    },
-    onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
-      // Find nearest unit with a matching Soul Shard
-      const units = prediction ? underworld.unitsPrediction : underworld.units;
-      const nearestShardBearer = units.filter(u =>
-        u.alive &&
-        u.modifiers[soulShardId] &&
-        u.modifiers[soulShardId].shardOwnerId == unit.id)
-        .sort((a, b) => distance(a, unit) - distance(b, unit))[0];
-
-      // Resurrect in place of the nearestShardBearer
-      if (nearestShardBearer) {
-        //console.log("Resurrect unit at soul shard bearer: ", nearestShardBearer);
-
-        if (!prediction) {
-          // // Prevent game over screen from coming up while the soul is travelling
-          // unit.alive = true;
-          // // Trail VFX
-          // await new Promise<void>(resolve => oneOffImage(unit, 'units/summonerMagic', containerUnits, resolve))
-          // await makeManaTrail(unit, nearestShardBearer, underworld, '#774772', '#5b3357')
-          // await new Promise<void>(resolve => oneOffImage(nearestShardBearer, 'units/summonerMagic', containerUnits, resolve));
-          startBloodParticleSplatter(underworld, unit, nearestShardBearer, { maxRotationOffset: Math.PI * 2, numberOfParticles: 300 });
-        }
-
-        Unit.die(nearestShardBearer, underworld, prediction);
-        Unit.cleanup(nearestShardBearer, true);
-        Unit.setLocation(unit, nearestShardBearer);
-        Unit.resurrect(unit, underworld);
-        unit.health = 1;
-      } else {
-        console.log("Unit had soul shard death event, but no shard bearers were left: ", unit);
-      }
-    },
+    }
   },
 };
 
-function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1, extra?: any) {
+function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1, extra?: any) {
+  if (extra.shardOwnerId == undefined) {
+    console.log("Cannot add soul shard modifier without a shard owner id");
+    return;
+  }
+
   const modifier = getOrInitModifier(unit, soulShardId, { isCurse: true, quantity }, () => {
     unit.onDamageEvents.push(soulShardId);
-
-    // != undefined because the ID could be 0
-    if (extra.shardOwnerId != undefined) {
-      const soulSource = unitById(extra.shardOwnerId, _underworld, _prediction);
-      if (soulSource) {
-        if (!soulSource.onDeathEvents.includes(soulShardId)) {
-          soulSource?.onDeathEvents.push(soulShardId);
-        }
-      }
-    }
   });
 
+  if (modifier.shardOwnerId != extra.shardOwnerId) {
+    // If we're changing to a new shard owner, remove the modifier from the old one
+    if (modifier.shardOwnerId != undefined) {
+      removeShardOwner(modifier.shardOwnerId, underworld, prediction);
+    }
+
+    const newShardOwner = getShardOwnerById(extra.shardOwnerId, underworld, prediction);
+    if (newShardOwner) {
+      Unit.addModifier(newShardOwner, soulShardOwnerModifierId, underworld, prediction);
+    }
+  }
+
   modifier.shardOwnerId = extra.shardOwnerId;
+  modifier.quantity = 1;
+}
+function remove(unit: Unit.IUnit, underworld: Underworld) {
+  const soulShardModifier = unit.modifiers[soulShardId];
+  if (soulShardModifier) {
+    removeShardOwner(soulShardModifier.shardOwnerId, underworld, unit.isPrediction);
+  }
 }
 
-function unitById(id: number, underworld: Underworld, prediction: boolean): Unit.IUnit | undefined {
+function removeShardOwner(shardOwnerId: number, underworld: Underworld, prediction: boolean) {
+  const shardOwner = getShardOwnerById(shardOwnerId, underworld, prediction);
+  if (shardOwner) {
+    const shardOwnerModifier = shardOwner.modifiers[soulShardOwnerModifierId];
+    if (shardOwnerModifier) {
+      shardOwnerModifier.quantity -= 1;
+      if (shardOwnerModifier.quantity <= 0) {
+        Unit.removeModifier(shardOwner, soulShardOwnerModifierId, underworld);
+      }
+    } else {
+      console.error("Shard owner does not have the shard owner modifier. This should never happen\n", shardOwner);
+    }
+  } else {
+    console.error("Shard owner with ID does not exist. This should never happen\n", shardOwnerId);
+  }
+}
+
+function getShardOwnerById(id: number, underworld: Underworld, prediction: boolean): Unit.IUnit | undefined {
   const units = prediction ? underworld.unitsPrediction : underworld.units;
   return units.find(u => u.id == id);
+}
+
+export function getNearestShardBearer(unit: Unit.IUnit, underworld: Underworld, prediction: boolean): Unit.IUnit | undefined {
+  // Find nearest unit with a matching Soul Shard
+  const units = prediction ? underworld.unitsPrediction : underworld.units;
+
+  return units.filter(u =>
+    u.alive &&
+    u.modifiers[soulShardId] &&
+    u.modifiers[soulShardId].shardOwnerId == unit.id)
+    .sort((a, b) => distance(a, unit) - distance(b, unit))[0];
 }
 
 function unitTakeDamageFX(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {

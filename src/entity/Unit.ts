@@ -46,6 +46,8 @@ import * as log from '../log';
 import { suffocateCardId, updateSuffocate } from '../cards/suffocate';
 import { doLiquidEffect } from '../inLiquid';
 import { freezeCardId } from '../cards/freeze';
+import { soulShardOwnerModifierId } from '../modifierSoulShardOwner';
+import { getNearestShardBearer } from '../cards/soul_shard';
 import { undyingModifierId } from '../modifierUndying';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
@@ -109,7 +111,7 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   name?: string;
   isMiniboss: boolean;
   // Denotes that this is a prediction copy of a unit
-  isPrediction?: boolean;
+  isPrediction: boolean;
   // For attention markers
   predictionScale?: number;
   faction: Faction;
@@ -178,6 +180,7 @@ export function create(
       staminaMax,
       attackRange: config.UNIT_BASE_RANGE,
       isMiniboss: false,
+      isPrediction: false,
       faction,
       image: prediction ? undefined : Image.create({ x, y }, defaultImagePath, containerUnits),
       defaultImagePath,
@@ -1112,7 +1115,8 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
 // Used for game loop logic
 export function isRemaining(unit: IUnit, underworld: Underworld) {
   return unit.alive
-    || (unit.modifiers[undyingModifierId]);
+    || (unit.modifiers[undyingModifierId])
+    || (unit.modifiers[soulShardOwnerModifierId] && getNearestShardBearer(unit, underworld, true) != undefined);
 }
 
 export function canAct(unit: IUnit): boolean {
