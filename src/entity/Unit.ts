@@ -47,7 +47,7 @@ import { suffocateCardId, updateSuffocate } from '../cards/suffocate';
 import { doLiquidEffect } from '../inLiquid';
 import { freezeCardId } from '../cards/freeze';
 import { soulShardOwnerModifierId } from '../modifierSoulShardOwner';
-import { getNearestShardBearer } from '../cards/soul_shard';
+import { getAllShardBearers } from '../cards/soul_shard';
 import { undyingModifierId } from '../modifierUndying';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
@@ -1116,7 +1116,7 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
 export function isRemaining(unit: IUnit, underworld: Underworld) {
   return unit.alive
     || (unit.modifiers[undyingModifierId])
-    || (unit.modifiers[soulShardOwnerModifierId] && getNearestShardBearer(unit, underworld, true) != undefined);
+    || (unit.modifiers[soulShardOwnerModifierId] && getAllShardBearers(unit, underworld, true).length > 0);
 }
 
 export function canAct(unit: IUnit): boolean {

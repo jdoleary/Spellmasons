@@ -1,6 +1,6 @@
 import { registerEvents, registerModifiers } from "./cards";
 import { oneOffImage } from "./cards/cardUtils";
-import { getAllShardBearers, getNearestShardBearer } from "./cards/soul_shard";
+import { getAllShardBearers, soulShardId } from "./cards/soul_shard";
 import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import * as colors from './graphics/ui/colors';
@@ -29,16 +29,30 @@ export default function registerSoulShardOwner() {
     onTurnStart: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
       if (!unit.alive) {
         // Resurrect in place of the nearestShardBearer
-        const nearestShardBearer = getNearestShardBearer(unit, underworld, prediction);
-        if (nearestShardBearer) {
+        const allShardBearers = getAllShardBearers(unit, underworld, prediction);
+        const nearestShardBearer = allShardBearers[0];
+        if (allShardBearers.length && nearestShardBearer) {
           //console.log("Resurrect unit at soul shard bearer: ", nearestShardBearer);
 
           if (!prediction) {
-            // Trail VFX
+            const trailColorStart = colors.convertToHashColor(colors.healthDarkRed);
+            const trailColorEnd = colors.convertToHashColor(colors.healthBrightRed);
+            // Trails from bearers
+            let promises = [];
+            for (let shardBearer of allShardBearers) {
+              promises.push(makeManaTrail(shardBearer, unit, underworld, trailColorStart, trailColorEnd));
+            }
+            await Promise.all(promises);
+
+            // Trail from shard owner
             await new Promise<void>(resolve => oneOffImage(unit, 'units/summonerMagic', containerUnits, resolve));
-            await makeManaTrail(unit, nearestShardBearer, underworld, '#774772', '#5b3357');
+            await makeManaTrail(unit, nearestShardBearer, underworld, trailColorStart, trailColorEnd);
             await new Promise<void>(resolve => oneOffImage(nearestShardBearer, 'units/summonerMagic', containerUnits, resolve));
             startBloodParticleSplatter(underworld, unit, nearestShardBearer, { maxRotationOffset: Math.PI * 2, numberOfParticles: 300 });
+          }
+
+          for (let shardBearer of allShardBearers) {
+            Unit.removeModifier(shardBearer, soulShardId, underworld);
           }
 
           Unit.die(nearestShardBearer, underworld, prediction);
@@ -47,7 +61,6 @@ export default function registerSoulShardOwner() {
           }
           Unit.setLocation(unit, nearestShardBearer);
           Unit.resurrect(unit, underworld);
-          unit.health = 1;
         } else {
           console.error("Unit had shard owner event, but no shard bearers were left. This should not happen ", unit);
         }
