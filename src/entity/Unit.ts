@@ -1686,5 +1686,4 @@ export function resetUnitStats(unit: IUnit, underworld: Underworld) {
 
 export function unitSourceIdToName(unitSourceId: string, asMiniboss: boolean): string {
   return unitSourceId + (asMiniboss ? ' Miniboss' : '');
-
 }

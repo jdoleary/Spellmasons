@@ -1,5 +1,5 @@
 import * as Unit from '../entity/Unit';
-import * as color from '../graphics/ui/colors';
+import * as colors from '../graphics/ui/colors';
 import * as particles from '@pixi/particle-emitter'
 import { CardCategory } from '../types/commonTypes';
 import type Underworld from '../Underworld';
@@ -77,6 +77,22 @@ const spell: Spell = {
         modifier.hasRedirectedDamage = false;
       }
       return amount;
+    },
+    onDrawSelected: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
+      const modifier = unit.modifiers[soulShardId];
+      if (modifier) {
+        const shardOwner = getShardOwnerById(modifier.shardOwnerId, underworld, prediction);
+        if (shardOwner) {
+          const graphics = globalThis.selectedUnitGraphics;
+          if (graphics) {
+            const lineColor = colors.healthDarkRed;
+            graphics.lineStyle(3, lineColor, 0.7);
+            graphics.moveTo(unit.x, unit.y);
+            graphics.lineTo(shardOwner.x, shardOwner.y);
+            graphics.drawCircle(shardOwner.x, shardOwner.y, 3);
+          }
+        }
+      }
     }
   },
 };
@@ -89,6 +105,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
 
   const modifier = getOrInitModifier(unit, soulShardId, { isCurse: true, quantity }, () => {
     unit.onDamageEvents.push(soulShardId);
+    unit.onDrawSelectedEvents.push(soulShardId);
   });
 
   if (modifier.shardOwnerId != extra.shardOwnerId) {
@@ -135,7 +152,7 @@ function getShardOwnerById(id: number, underworld: Underworld, prediction: boole
   return units.find(u => u.id == id);
 }
 
-export function getNearestShardBearer(unit: Unit.IUnit, underworld: Underworld, prediction: boolean): Unit.IUnit | undefined {
+export function getAllShardBearers(unit: Unit.IUnit, underworld: Underworld, prediction: boolean): Unit.IUnit[] {
   // Find nearest unit with a matching Soul Shard
   const units = prediction ? underworld.unitsPrediction : underworld.units;
 
@@ -143,7 +160,10 @@ export function getNearestShardBearer(unit: Unit.IUnit, underworld: Underworld, 
     u.alive &&
     u.modifiers[soulShardId] &&
     u.modifiers[soulShardId].shardOwnerId == unit.id)
-    .sort((a, b) => distance(a, unit) - distance(b, unit))[0];
+    .sort((a, b) => distance(a, unit) - distance(b, unit));
+}
+export function getNearestShardBearer(unit: Unit.IUnit, underworld: Underworld, prediction: boolean): Unit.IUnit | undefined {
+  return getAllShardBearers(unit, underworld, prediction)[0];
 }
 
 function unitTakeDamageFX(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
@@ -181,8 +201,8 @@ function makeSoulShardVFX(start: Vec2, target: Vec2, underworld: Underworld, tot
         minimumScaleMultiplier: 1
       },
       color: {
-        start: color.convertToHashColor(color.healthDarkRed),
-        end: color.convertToHashColor(color.healthDarkRed)
+        start: colors.convertToHashColor(colors.healthDarkRed),
+        end: colors.convertToHashColor(colors.healthDarkRed)
       },
       speed: {
         start: 0,

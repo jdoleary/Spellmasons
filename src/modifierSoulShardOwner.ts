@@ -1,8 +1,9 @@
 import { registerEvents, registerModifiers } from "./cards";
 import { oneOffImage } from "./cards/cardUtils";
-import { getNearestShardBearer } from "./cards/soul_shard";
+import { getAllShardBearers, getNearestShardBearer } from "./cards/soul_shard";
 import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
+import * as colors from './graphics/ui/colors';
 import { makeManaTrail } from "./graphics/Particles";
 import { containerUnits, startBloodParticleSplatter } from "./graphics/PixiUtils";
 import Underworld from './Underworld';
@@ -16,6 +17,9 @@ export default function registerSoulShardOwner() {
         // Add event
         if (!unit.onTurnStartEvents.includes(soulShardOwnerModifierId)) {
           unit.onTurnStartEvents.push(soulShardOwnerModifierId);
+        }
+        if (!unit.onDrawSelectedEvents.includes(soulShardOwnerModifierId)) {
+          unit.onDrawSelectedEvents.push(soulShardOwnerModifierId);
         }
       });
     }
@@ -43,6 +47,24 @@ export default function registerSoulShardOwner() {
           unit.health = 1;
         } else {
           console.error("Unit had shard owner event, but no shard bearers were left. This should not happen ", unit);
+        }
+      }
+    },
+    onDrawSelected: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
+      const modifier = unit.modifiers[soulShardOwnerModifierId];
+      if (modifier) {
+        const shardBearers = getAllShardBearers(unit, underworld, prediction);
+        if (shardBearers.length) {
+          const graphics = globalThis.selectedUnitGraphics;
+          if (graphics) {
+            const lineColor = colors.healthDarkRed;
+            for (let shardBearer of shardBearers) {
+              graphics.lineStyle(3, lineColor, 0.7);
+              graphics.moveTo(shardBearer.x, shardBearer.y);
+              graphics.lineTo(unit.x, unit.y);
+              graphics.drawCircle(unit.x, unit.y, 3);
+            }
+          }
         }
       }
     }
