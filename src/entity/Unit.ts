@@ -111,7 +111,7 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   name?: string;
   isMiniboss: boolean;
   // Denotes that this is a prediction copy of a unit
-  isPrediction: boolean;
+  isPrediction?: boolean;
   // For attention markers
   predictionScale?: number;
   faction: Faction;
@@ -180,7 +180,6 @@ export function create(
       staminaMax,
       attackRange: config.UNIT_BASE_RANGE,
       isMiniboss: false,
-      isPrediction: false,
       faction,
       image: prediction ? undefined : Image.create({ x, y }, defaultImagePath, containerUnits),
       defaultImagePath,

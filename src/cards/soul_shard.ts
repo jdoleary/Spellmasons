@@ -140,7 +140,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
 function remove(unit: Unit.IUnit, underworld: Underworld) {
   const soulShardModifier = unit.modifiers[soulShardId];
   if (soulShardModifier) {
-    removeShardOwner(soulShardModifier.shardOwnerId, underworld, unit.isPrediction);
+    removeShardOwner(soulShardModifier.shardOwnerId, underworld, !!unit.isPrediction);
   }
 }
 
