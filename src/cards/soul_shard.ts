@@ -1,3 +1,4 @@
+import type * as PIXI from 'pixi.js';
 import * as Unit from '../entity/Unit';
 import * as colors from '../graphics/ui/colors';
 import { CardCategory } from '../types/commonTypes';
@@ -37,12 +38,7 @@ const spell: Spell = {
           if (graphics) {
             const lineColor = colors.healthDarkRed;
             for (let target of targets) {
-              graphics.lineStyle(4, lineColor, 1);
-              // Temp VFX - Draw X
-              graphics.moveTo(target.x + 10, target.y + 10);
-              graphics.lineTo(target.x - 10, target.y - 10);
-              graphics.moveTo(target.x - 10, target.y + 10);
-              graphics.lineTo(target.x + 10, target.y - 10);
+              drawDiamond(target, graphics);
             }
           }
         } else {
@@ -188,6 +184,26 @@ function unitTakeDamageFX(unit: Unit.IUnit, underworld: Underworld, prediction: 
     unit.shaderUniforms.all_red.alpha = 1;
     addLerpable(unit.shaderUniforms.all_red, "alpha", 0, 200);
   }
+}
+
+function drawDiamond(target: Unit.IUnit, graphics: PIXI.Graphics) {
+  const lineColor = colors.healthDarkRed;
+  const fillColor = colors.manaBlue;
+  const diamondSize = 3.5;
+
+  const points: Vec2[] =
+    [{ x: target.x, y: target.y + diamondSize * 3 },
+    { x: target.x - diamondSize * 2, y: target.y },
+    { x: target.x, y: target.y - diamondSize * 3 },
+    { x: target.x + diamondSize * 2, y: target.y }]
+
+  //Draw Border
+  graphics.lineStyle(diamondSize + 1, colors.trueBlack, 1);
+  graphics.drawPolygon(points as PIXI.Point[]);
+
+  //Draw Fill
+  graphics.lineStyle(diamondSize, lineColor, 1);
+  graphics.beginFill(fillColor).drawPolygon(points as PIXI.Point[]).endFill();
 }
 
 export default spell;
