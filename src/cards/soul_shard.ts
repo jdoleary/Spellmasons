@@ -9,9 +9,10 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 import { distance } from '../jmath/math';
 import { makeManaTrail } from '../graphics/Particles';
-import { Vec2 } from '../jmath/Vec';
+import { Vec2, jitter, lerpVec2 } from '../jmath/Vec';
 import { addLerpable } from '../lerpList';
 import { soulShardOwnerModifierId } from '../modifierSoulShardOwner';
+import { HasSpace } from '../entity/Type';
 
 export const soulShardId = 'Soul Shard';
 const spell: Spell = {
@@ -77,7 +78,11 @@ const spell: Spell = {
           // shard owners redirecting to eachother
           if (!modifier.hasRedirectedDamage) {
             modifier.hasRedirectedDamage = true;
+
+            // Do lightning effect
+            if (!prediction) animateDamageRedirection(shardOwner, unit);
             Unit.takeDamage(shardOwner, amount, undefined, underworld, prediction, undefined);
+
             modifier.hasRedirectedDamage = false;
             return 0;
           } else {
@@ -204,6 +209,50 @@ function drawDiamond(target: Unit.IUnit, graphics: PIXI.Graphics) {
   //Draw Fill
   graphics.lineStyle(diamondSize, lineColor, 1);
   graphics.beginFill(fillColor).drawPolygon(points as PIXI.Point[]).endFill();
+}
+
+// Copied and modified from bolt.ts
+async function animateDamageRedirection(shardOwner: HasSpace, shardBearer: HasSpace) {
+  // Animations do not occur on headless
+  if (!globalThis.headless) {
+    return new Promise<void>((resolve) => {
+      doDraw(resolve, shardOwner, shardBearer, Date.now() + 400);
+    });
+  }
+}
+function doDraw(resolve: (value: void | PromiseLike<void>) => void, shardOwner: HasSpace, shardBearer: HasSpace, endTime: number) {
+  const didDraw = drawLineBetweenTargest(shardOwner, shardBearer);
+  if (didDraw) {
+    // Show the electricity for a moment
+    if (Date.now() > endTime) {
+      resolve();
+    } else {
+      requestAnimationFrame(() => doDraw(resolve, shardOwner, shardBearer, endTime))
+    }
+  } else {
+    resolve();
+  }
+}
+// Returns true if it did draw
+function drawLineBetweenTargest(shardOwner: HasSpace, shardBearer: HasSpace): boolean {
+  // Animations do not occur on headless
+  if (!globalThis.headless) {
+    const graphics = globalThis.unitOverlayGraphics;
+    if (graphics) {
+      if (shardOwner == undefined || shardBearer == undefined) {
+        return false;
+      }
+      graphics.lineStyle(1, colors.healthDarkRed, 0.8);
+      graphics.moveTo(shardBearer.x, shardBearer.y);
+      for (let i = 0; i < 5; i++) {
+        const intermediaryPoint = jitter(lerpVec2(shardOwner, shardBearer, 0.2 * i), 12);
+        graphics.lineTo(intermediaryPoint.x, intermediaryPoint.y);
+      }
+      graphics.lineTo(shardBearer.x, shardBearer.y);
+      return true;
+    }
+  }
+  return false;
 }
 
 export default spell;
