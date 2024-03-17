@@ -50,6 +50,10 @@ export function targetSimilarEffect(numberOfTargets: number) {
         // @ts-ignore Find similar units by unitSourceId, find similar pickups by name
         .filter(t => {
           if (isUnit(target) && isUnit(t) && t.unitSourceId == target.unitSourceId) {
+            if (underworld.players.filter(p => !p.isSpawned).map(p => p.unit).includes(target)) {
+              // Do not allow targeting unspawned players
+              return false;
+            }
             if (target.alive) {
               // Match living units of the same faction
               return t.alive && t.faction == target.faction;
