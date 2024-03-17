@@ -522,6 +522,7 @@ export function addTarget(target: any, effectState: EffectState, underworld: Und
   if (Unit.isUnit(target)) {
     if (underworld.players.filter(p => !p.isSpawned).map(p => p.unit).includes(target)) {
       // Do not allow targeting unspawned players
+      console.warn("Tried to add an unspawned player to the targets list: ", target);
       return;
     }
     addUnitTarget(target, effectState);
