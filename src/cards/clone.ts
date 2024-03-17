@@ -74,7 +74,7 @@ const spell: Spell = {
                 // Clones don't provide experience when killed
                 clone.originalLife = false;
                 // Add clones to target list
-                addTarget(clone, state);
+                addTarget(clone, state, underworld);
               }
             }
             if (Pickup.isPickup(target)) {
@@ -88,7 +88,7 @@ const spell: Spell = {
                     Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
                   }
                   // Add clones to target list
-                  addTarget(clone, state);
+                  addTarget(clone, state, underworld);
                 } else {
                   console.log('Pickup', target);
                   console.error('Could not clone pickup because source could not be found');

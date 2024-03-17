@@ -518,11 +518,10 @@ export function getCardsFromIds(cardIds: string[]): ICard[] {
   return _getCardsFromIds(cardIds, allCards);
 }
 
-export function addTarget(target: any, effectState: EffectState) {
+export function addTarget(target: any, effectState: EffectState, underworld: Underworld) {
   if (Unit.isUnit(target)) {
-    if (globalThis.player && globalThis.player.unit == target && !globalThis.player.isSpawned) {
-      // Do not allow targeting self when self isn't spawned
-      // (Note, this only needs to run locally because the positional change when choosing a spawn isn't networked)
+    if (underworld.players.filter(p => !p.isSpawned).map(p => p.unit).includes(target)) {
+      // Do not allow targeting unspawned players
       return;
     }
     addUnitTarget(target, effectState);

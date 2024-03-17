@@ -181,7 +181,7 @@ const spell: Spell = {
                 // Clones don't provide experience when killed
                 clone.originalLife = false;
                 // Add the clone as a target
-                addTarget(clone, state);
+                addTarget(clone, state, underworld);
 
                 // Add the curse to both the target and the clone
                 Unit.addModifier(target, id, underworld, prediction, quantity);
