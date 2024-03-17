@@ -520,7 +520,7 @@ export function getCardsFromIds(cardIds: string[]): ICard[] {
 
 export function addTarget(target: any, effectState: EffectState, underworld: Underworld) {
   if (Unit.isUnit(target)) {
-    if (underworld.players.filter(p => !p.isSpawned).map(p => p.unit).includes(target)) {
+    if (underworld.players.filter(p => !p.isSpawned).map(p => p.unit.id).includes(target.id)) {
       // Do not allow targeting unspawned players
       console.warn("Tried to add an unspawned player to the targets list: ", target);
       return;
