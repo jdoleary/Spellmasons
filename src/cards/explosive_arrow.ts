@@ -42,6 +42,7 @@ const spell: Spell = {
           thinBloodLine: true,
         }, underworld, prediction);
         explode(unit, explodeRange, explodeDamage, defaultPushDistance,
+          projectile.sourceUnit,
           underworld, prediction,
           colors.bloatExplodeStart, colors.bloatExplodeEnd);
       }

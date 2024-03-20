@@ -56,6 +56,7 @@ export function registerUrnpoisonExplode() {
   registerEvents(urnpoisonExplode, {
     onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       const units = explode(unit, unit.attackRange, 0, 0,
+        unit,
         underworld, prediction,
         0x164a15, 0x6bff77);
 

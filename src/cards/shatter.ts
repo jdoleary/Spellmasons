@@ -51,6 +51,7 @@ const spell: Spell = {
       }
       for (let { location, radius } of explosions) {
         explode(location, radius, damage * quantity, 0,
+          state.casterUnit,
           underworld, prediction);
         makeShatterParticles(location, radius / baseRadius, prediction);
       }

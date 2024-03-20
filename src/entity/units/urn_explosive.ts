@@ -58,6 +58,7 @@ export function registerUrnexplosiveExplode() {
   registerEvents(urnexplosiveExplode, {
     onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       explode(unit, unit.attackRange, unit.damage, defaultPushDistance,
+        unit,
         underworld, prediction,
         colors.bloatExplodeStart, colors.bloatExplodeEnd);
       // Remove corpse
