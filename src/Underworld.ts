@@ -1932,6 +1932,7 @@ export default class Underworld {
     this.hasSpawnedBoss = false;
   }
   postSetupLevel() {
+    runPredictions(this); // Removes prediction overlay from last level
     document.body?.classList.toggle('loading', false);
     runCinematicLevelCamera(this).then(() => {
       console.log('Cinematic Cam: Finished');
@@ -2013,6 +2014,9 @@ export default class Underworld {
       for (let player of this.players) {
         const points = player.mageType == 'Spellmason' ? 4 : 3;
         player.statPointsUnspent += points;
+        console.log("Setup: Gave player: [" + player.clientId + "] " + points + " upgrade points for level index: " + levelIndex);
+        if (player.statPointsUnspent > 4) console.error("Setup: Player has more stat points than expected: ", player);
+
         // If the player hasn't completed first steps, autospend stat points on health
         // We don't want to cause information overload during tutorial
         if (!isTutorialFirstStepsComplete()) {
@@ -2073,8 +2077,7 @@ export default class Underworld {
       document.body?.classList.toggle('loading', true);
       // Add timeout so that loading can update dom
       setTimeout(() => {
-        this.createLevelSyncronous(levelData);
-        resolve();
+        resolve(this.createLevelSyncronous(levelData));
       }, 10);
     });
   }
@@ -2085,6 +2088,7 @@ export default class Underworld {
     do {
       // Invoke generateRandomLevel again until it succeeds
       level = this.generateRandomLevelData(levelIndex);
+      if (level == undefined) console.log("Undefined level. Regenerating");
     } while (level === undefined);
     this.pie.sendData({
       type: MESSAGE_TYPES.CREATE_LEVEL,
