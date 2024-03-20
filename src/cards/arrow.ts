@@ -40,7 +40,7 @@ const spell: Spell = {
         Unit.takeDamage({
           unit: unit,
           amount: damage,
-          sourceUnit: projectile.source,
+          sourceUnit: projectile.sourceUnit,
           fromVec2: projectile.startPoint,
           thinBloodLine: true,
         }, underworld, prediction);
@@ -88,7 +88,7 @@ export function arrowEffect(multiShotCount: number, collideFnKey: string, doesPi
             beingPushed: false
           }
           makeForceMoveProjectile({
-            source: state.casterUnit,
+            sourceUnit: state.casterUnit,
             pushedObject,
             startPoint: casterPositionAtTimeOfCast,
             endPoint: endPoint,

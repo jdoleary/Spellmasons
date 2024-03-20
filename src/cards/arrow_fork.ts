@@ -35,7 +35,7 @@ const spell: Spell = {
         Unit.takeDamage({
           unit: unit,
           amount: damageDone,
-          sourceUnit: projectile.source,
+          sourceUnit: projectile.sourceUnit,
           fromVec2: projectile.startPoint,
           thinBloodLine: true,
         }, underworld, prediction);
