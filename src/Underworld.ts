@@ -3091,7 +3091,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (stat == 'Good Looks') {
       const damageMultiplier = 0.1 / this.players.length;
       // Deals 10% damage to all AI units
-      this.units.filter(u => u.unitType == UnitType.AI).forEach(u => Unit.takeDamage(u, u.healthMax * damageMultiplier, undefined, this, false));
+      this.units.filter(u => u.unitType == UnitType.AI && u.unitSubType != UnitSubType.DOODAD)
+        .forEach(u => Unit.takeDamage(u, u.healthMax * damageMultiplier, undefined, this, false));
     } else {
 
       if (isCurrentPlayer) {
