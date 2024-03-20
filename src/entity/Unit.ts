@@ -866,41 +866,43 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   unit.originalLife = false;
 }
 export function composeOnDealDamageEvents(damageArgs: damageArgs, underworld: Underworld, prediction: boolean): number {
-  let { source, unit, amount } = damageArgs;
+  let { unit, amount, source } = damageArgs;
+
   // Compose onDamageEvents
   for (let eventName of source.onDealDamageEvents) {
     const fn = Events.onDealDamageSource[eventName];
     if (fn) {
       // onDamage events can trigger effects and alter damage amount
-      amount = fn(source, amount, underworld, prediction);
+      amount = fn(source, amount, underworld, prediction, unit);
     }
   }
   return amount;
 }
 export function composeOnTakeDamageEvents(damageArgs: damageArgs, underworld: Underworld, prediction: boolean): number {
-  let { source, unit, amount } = damageArgs;
+  let { unit, amount, source } = damageArgs;
+
   // Compose onDamageEvents
   for (let eventName of unit.onTakeDamageEvents) {
     const fn = Events.onTakeDamageSource[eventName];
     if (fn) {
       // onDamage events can trigger effects and alter damage amount
-      amount = fn(unit, amount, underworld, prediction);
+      amount = fn(unit, amount, underworld, prediction, source);
     }
   }
   return amount;
 }
 
 interface damageArgs {
-  source?: any,
   unit: IUnit,
   amount: number,
+  source?: any,
   fromVec2?: Vec2,
   thinBloodLine?: boolean,
 }
 
 // damageFromVec2 is the location that the damage came from and is used for blood splatter
 export function takeDamage(damageArgs: damageArgs, underworld: Underworld, prediction: boolean) {
-  let { source, unit, amount, fromVec2, thinBloodLine } = damageArgs;
+  let { unit, amount, source, fromVec2, thinBloodLine } = damageArgs;
   if (!unit.alive) {
     // Do not deal damage to dead units
     return;

@@ -6,7 +6,7 @@ import { ForceMoveProjectile } from './jmath/moveWithCollision';
 
 export type onDealDamage = {
   // Returns a possibly modified damage
-  (unit: IUnit, amount: number, underworld: Underworld, prediction: boolean, damageDealer?: IUnit): number;
+  (damageDealer: IUnit, amount: number, underworld: Underworld, prediction: boolean, damageReciever?: IUnit): number;
 };
 const onDealDamageSource: { [name: string]: onDealDamage } = {};
 
