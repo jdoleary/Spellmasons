@@ -80,9 +80,9 @@ const unit: UnitSource = {
 
             setTimeout(() => {
               Unit.takeDamage({
-                source: unit,
                 unit: pierceTarget,
                 amount: unit.damage / 2,
+                sourceUnit: unit,
                 fromVec2: unit,
                 thinBloodLine: true
               }, underworld, false);
@@ -98,9 +98,9 @@ const unit: UnitSource = {
           'projectile/arrow_ghost',
         ).then(() => {
           Unit.takeDamage({
-            source: unit,
             unit: firstTarget,
             amount: unit.damage,
+            sourceUnit: unit,
             fromVec2: unit,
             thinBloodLine: true
           }, underworld, false);

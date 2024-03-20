@@ -41,9 +41,9 @@ const spell: Spell = {
       await animateRend(targets, quantity, prediction);
       for (let unit of targets) {
         Unit.takeDamage({
-          source: state.casterUnit,
           unit: unit,
           amount: damage,
+          sourceUnit: state.casterUnit,
           fromVec2: state.casterUnit,
         }, underworld, prediction);
       }

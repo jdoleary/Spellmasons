@@ -3091,7 +3091,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (stat == 'Good Looks') {
       const damageMultiplier = 0.1 / this.players.length;
       // Deals 10% damage to all AI units
-      this.units.filter(u => u.unitType == UnitType.AI).forEach(u => Unit.takeDamage({ unit: u, amount: u.healthMax * damageMultiplier }, this, false));
+      this.units.filter(u => u.unitType == UnitType.AI)
+        .forEach(u => Unit.takeDamage({
+          unit: u,
+          amount: u.healthMax * damageMultiplier,
+          sourceUnit: player.unit
+        }, this, false));
     } else {
 
       if (isCurrentPlayer) {
@@ -3775,7 +3780,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           }
 
           if (spellCostTally.healthCost !== 0) {
-            Unit.takeDamage({ source: effectState.casterUnit, unit: effectState.casterUnit, amount: spellCostTally.healthCost, fromVec2: effectState.casterUnit }, this, prediction);
+            Unit.takeDamage({
+              unit: effectState.casterUnit,
+              amount: spellCostTally.healthCost,
+              sourceUnit: effectState.casterUnit,
+              fromVec2: effectState.casterUnit
+            }, this, prediction);
           }
 
           // Increment card usage; now that the caster is using the card

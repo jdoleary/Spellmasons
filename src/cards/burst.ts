@@ -38,9 +38,9 @@ const spell: Spell = {
               const damage = calculateDamage(quantity, state.casterUnit, state.casterUnit.attackRange, unit);
               if (damage > 0) {
                 Unit.takeDamage({
-                  source: state.casterUnit,
                   unit: unit,
                   amount: damage * quantity,
+                  sourceUnit: state.casterUnit,
                   fromVec2: state.casterUnit,
                 }, underworld, prediction);
                 // Animate:
@@ -56,9 +56,9 @@ const spell: Spell = {
           for (let unit of targets) {
             const damage = calculateDamage(quantity, state.casterUnit, state.casterUnit.attackRange, unit);
             Unit.takeDamage({
-              source: state.casterUnit,
               unit: unit,
               amount: damage * quantity,
+              sourceUnit: state.casterUnit,
               fromVec2: state.casterUnit,
             }, underworld, prediction);
           }

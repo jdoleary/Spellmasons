@@ -37,9 +37,9 @@ const spell: Spell = {
         unit.mana -= unitManaBurnt;
         const damage = Math.ceil(unitManaBurnt * health_burn_ratio);
         Unit.takeDamage({
-          source: state.casterUnit,
           unit: unit,
           amount: damage,
+          sourceUnit: state.casterUnit,
           fromVec2: state.casterUnit,
         }, underworld, prediction);
       }

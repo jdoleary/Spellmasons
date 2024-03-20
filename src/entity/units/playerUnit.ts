@@ -28,9 +28,9 @@ const playerUnit: UnitSource = {
         playSFXKey('hurt');
         oneOffImage(attackTarget, 'spell-effects/spellHurtCuts', containerSpells);
         Unit.takeDamage({
-          source: unit,
           unit: attackTarget,
           amount: unit.damage,
+          sourceUnit: unit,
           fromVec2: unit,
         }, underworld, false);
       }

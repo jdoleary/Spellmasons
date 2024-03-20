@@ -60,9 +60,9 @@ const spell: Spell = {
             makeBleedParticles(unit, prediction, proportion, resolve);
           }
           Unit.takeDamage({
-            source: state.casterUnit,
             unit: unit,
             amount: damage,
+            sourceUnit: state.casterUnit,
             fromVec2: state.casterUnit,
           }, underworld, prediction);
         }

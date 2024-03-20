@@ -49,9 +49,9 @@ const unit: UnitSource = {
       playSFXKey('vampireAttack');
       await Unit.playAnimation(unit, unit.animations.attack);
       Unit.takeDamage({
-        source: unit,
         unit: attackTarget,
         amount: unit.damage,
+        sourceUnit: unit,
         fromVec2: unit,
       }, underworld, false);
       if (attackTarget.mana) {

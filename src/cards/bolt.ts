@@ -72,9 +72,9 @@ const spell: Spell = {
           affected.forEach(u => {
             if (Unit.isUnit(u)) {
               Unit.takeDamage({
-                source: state.casterUnit,
                 unit: u,
                 amount: damage * quantity,
+                sourceUnit: state.casterUnit,
               }, underworld, prediction);
             }
           })

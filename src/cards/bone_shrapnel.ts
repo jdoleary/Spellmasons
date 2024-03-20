@@ -43,9 +43,9 @@ const spell: Spell = {
         ).forEach(u => {
           // Deal damage to units
           Unit.takeDamage({
-            source: state.casterUnit,
             unit: u,
             amount: damage * quantity,
+            sourceUnit: state.casterUnit,
             fromVec2: unit,
           }, underworld, prediction);
         });

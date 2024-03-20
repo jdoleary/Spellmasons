@@ -78,9 +78,9 @@ const unit: UnitSource = {
       }
       Unit.addModifier(attackTarget, blood_curse.id, underworld, false);
       Unit.takeDamage({
-        source: unit,
         unit: attackTarget,
         amount: unit.damage,
+        sourceUnit: unit,
         fromVec2: unit,
       }, underworld, false);
     })

@@ -866,27 +866,28 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   unit.originalLife = false;
 }
 export function composeOnDealDamageEvents(damageArgs: damageArgs, underworld: Underworld, prediction: boolean): number {
-  let { unit, amount, source } = damageArgs;
+  let { unit, amount, sourceUnit } = damageArgs;
+  if (!sourceUnit) return amount;
 
   // Compose onDamageEvents
-  for (let eventName of source.onDealDamageEvents) {
+  for (let eventName of sourceUnit.onDealDamageEvents) {
     const fn = Events.onDealDamageSource[eventName];
     if (fn) {
       // onDamage events can trigger effects and alter damage amount
-      amount = fn(source, amount, underworld, prediction, unit);
+      amount = fn(sourceUnit, amount, underworld, prediction, unit);
     }
   }
   return amount;
 }
 export function composeOnTakeDamageEvents(damageArgs: damageArgs, underworld: Underworld, prediction: boolean): number {
-  let { unit, amount, source } = damageArgs;
+  let { unit, amount, sourceUnit } = damageArgs;
 
   // Compose onDamageEvents
   for (let eventName of unit.onTakeDamageEvents) {
     const fn = Events.onTakeDamageSource[eventName];
     if (fn) {
       // onDamage events can trigger effects and alter damage amount
-      amount = fn(unit, amount, underworld, prediction, source);
+      amount = fn(unit, amount, underworld, prediction, sourceUnit);
     }
   }
   return amount;
@@ -895,14 +896,14 @@ export function composeOnTakeDamageEvents(damageArgs: damageArgs, underworld: Un
 interface damageArgs {
   unit: IUnit,
   amount: number,
-  source?: any,
+  sourceUnit?: IUnit,
   fromVec2?: Vec2,
   thinBloodLine?: boolean,
 }
 
 // damageFromVec2 is the location that the damage came from and is used for blood splatter
 export function takeDamage(damageArgs: damageArgs, underworld: Underworld, prediction: boolean) {
-  let { unit, amount, source, fromVec2, thinBloodLine } = damageArgs;
+  let { unit, amount, sourceUnit, fromVec2, thinBloodLine } = damageArgs;
   if (!unit.alive) {
     // Do not deal damage to dead units
     return;

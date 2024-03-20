@@ -76,9 +76,9 @@ const unit: UnitSource = {
               // Space them out in time
               setTimeout(() => {
                 Unit.takeDamage({
-                  source: unit,
                   unit: attackTarget,
                   amount: unit.damage,
+                  sourceUnit: unit,
                   fromVec2: unit,
                 }, underworld, false);
                 makeDarkPriestAttackParticles(attackTarget, false, resolve);

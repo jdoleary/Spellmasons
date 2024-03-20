@@ -84,9 +84,9 @@ const unit: UnitSource = {
                 ).then(() => {
                   if (attackTarget) {
                     Unit.takeDamage({
-                      source: unit,
                       unit: attackTarget,
                       amount: unit.damage,
+                      sourceUnit: unit,
                       fromVec2: unit,
                     }, underworld, false);
                     // Add projectile hit animation

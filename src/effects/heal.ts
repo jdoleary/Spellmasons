@@ -25,9 +25,9 @@ export async function healUnits(source: any | undefined, units: Unit.IUnit[], am
       // Instead of using Promise.All()
       floatingText({ coords: unit, text: globalThis.getChosenLanguageCode() == 'en' ? `+${Math.abs(amount)} Health` : `${i18n('heal')} ${Math.abs(amount)}` });
       Unit.takeDamage({
-        source: source,
         unit: unit,
         amount: -amount,
+        sourceUnit: source,
       }, underworld, prediction);
       animationPromise = oneOffHealAnimation(unit);
     }
@@ -36,9 +36,9 @@ export async function healUnits(source: any | undefined, units: Unit.IUnit[], am
   } else {
     for (let unit of units) {
       Unit.takeDamage({
-        source: source,
         unit: unit,
         amount: -amount,
+        sourceUnit: source,
       }, underworld, prediction);
     }
     return state;

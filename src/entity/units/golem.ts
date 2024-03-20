@@ -40,9 +40,9 @@ const unit: UnitSource = {
     await meleeAction(unit, attackTargets, underworld, canAttackTarget, async (attackTarget: Unit.IUnit) => {
       await Unit.playComboAnimation(unit, unit.animations.attack, async () =>
         Unit.takeDamage({
-          source: unit,
           unit: attackTarget,
           amount: unit.damage,
+          sourceUnit: unit,
           fromVec2: unit,
         }, underworld, false)
       );

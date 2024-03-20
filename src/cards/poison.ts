@@ -106,9 +106,9 @@ const spell: Spell = {
         if (modifier) {
           const damage = (modifier.quantity || 1) * baseDamage;
           Unit.takeDamage({
-            source: modifier,
             unit: unit,
             amount: damage,
+            //sourceUnit: modifier, // TODO - Add source to modifier?
             fromVec2: unit,
           }, underworld, prediction);
           floatingText({

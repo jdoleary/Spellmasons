@@ -76,9 +76,9 @@ async function stompExplode(caster: IUnit, radius: number, damage: number, pushD
   units.forEach(u => {
     // Deal damage to units
     takeDamage({
-      source: caster,
       unit: u,
       amount: damage,
+      sourceUnit: caster,
       fromVec2: caster,
     }, underworld, prediction);
   });

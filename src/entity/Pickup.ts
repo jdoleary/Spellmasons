@@ -499,7 +499,6 @@ export const pickups: IPickupSource[] = [
 
         }
         takeDamage({
-          source: pickup,
           unit: unit,
           amount: -spike_damage,
           fromVec2: unit,
@@ -542,7 +541,6 @@ export const pickups: IPickupSource[] = [
           }
         }
         takeDamage({
-          source: pickup,
           unit: player.unit,
           amount: RED_PORTAL_DAMAGE,
         }, underworld, false);
@@ -582,7 +580,6 @@ export const pickups: IPickupSource[] = [
           }
         }
         takeDamage({
-          source: pickup,
           unit: player.unit,
           amount: -RED_PORTAL_DAMAGE,
         }, underworld, false);
@@ -754,7 +751,6 @@ export const pickups: IPickupSource[] = [
     effect: ({ unit, player, pickup, underworld, prediction }) => {
       if (unit) {
         takeDamage({
-          source: pickup,
           unit: unit,
           amount: -healthPotionRestoreAmount,
           fromVec2: unit

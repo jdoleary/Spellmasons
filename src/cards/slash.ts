@@ -55,9 +55,9 @@ export async function slashEffect(state: EffectState, card: ICard, quantity: num
         }
 
         Unit.takeDamage({
-          source: state.casterUnit,
           unit: unit,
           amount: damage,
+          sourceUnit: state.casterUnit,
           fromVec2: state.casterUnit,
         }, underworld, prediction);
       }
@@ -70,9 +70,9 @@ export async function slashEffect(state: EffectState, card: ICard, quantity: num
     } else {
       for (let unit of targets) {
         Unit.takeDamage({
-          source: state.casterUnit,
           unit: unit,
           amount: damage,
+          sourceUnit: state.casterUnit,
           fromVec2: state.casterUnit,
         }, underworld, prediction);
       }

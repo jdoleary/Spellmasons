@@ -59,9 +59,9 @@ const unit: UnitSource = {
           makeAncientParticles(unit, false);
           promises.push(makeManaTrail(unit, attackTarget, underworld, '#5a7879', '#304748').then(() => {
             Unit.takeDamage({
-              source: unit,
               unit: attackTarget,
               amount: unit.damage,
+              sourceUnit: unit,
               fromVec2: unit,
             }, underworld, false);
           }));

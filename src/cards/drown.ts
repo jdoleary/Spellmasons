@@ -28,9 +28,9 @@ const spell: Spell = {
         }
         for (let unit of targets) {
           Unit.takeDamage({
-            source: state.casterUnit,
             unit: unit,
             amount: damageDone * quantity,
+            sourceUnit: state.casterUnit,
             fromVec2: state.casterUnit,
           }, underworld, prediction);
         }
