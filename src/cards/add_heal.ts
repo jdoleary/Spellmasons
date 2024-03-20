@@ -20,7 +20,7 @@ const spell: Spell = {
     animationPath: 'spell-effects/potionPickup',
     description: ['spell_heal', healAmount.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
-      await healUnits(state.casterUnit, state.targetedUnits, healAmount * quantity, underworld, prediction, state);
+      await healUnits(state.targetedUnits, healAmount * quantity, state.casterUnit, underworld, prediction, state);
       return state;
     },
   },

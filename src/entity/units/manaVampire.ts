@@ -71,7 +71,7 @@ const unit: UnitSource = {
     const healthToRestore = Math.min(40, unit.mana, unit.healthMax - unit.health);
     if (healthToRestore > 0) {
       unit.mana -= healthToRestore;
-      await healUnit(unit, unit, healthToRestore, underworld, false);
+      await healUnit(unit, healthToRestore, unit, underworld, false);
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {

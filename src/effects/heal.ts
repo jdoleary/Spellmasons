@@ -13,7 +13,7 @@ import { EXPLAIN_OVERFILL, explain } from "../graphics/Explain";
 const animationOptions = { loop: false, animationSpeed: 0.3 };
 const manaReplaceColors: [number, number][] = [[0xff0000, colors.manaBlue]];
 
-export async function healUnits(source: any | undefined, units: Unit.IUnit[], amount: number, underworld: Underworld, prediction: boolean, state?: EffectState, useFx: boolean = true) {
+export async function healUnits(units: Unit.IUnit[], amount: number, sourceUnit: Unit.IUnit | undefined, underworld: Underworld, prediction: boolean, state?: EffectState, useFx: boolean = true) {
   units = units.filter(u => u.alive);
   if (units.length == 0 || amount == 0) return;
 
@@ -27,7 +27,7 @@ export async function healUnits(source: any | undefined, units: Unit.IUnit[], am
       Unit.takeDamage({
         unit: unit,
         amount: -amount,
-        sourceUnit: source,
+        sourceUnit: sourceUnit,
       }, underworld, prediction);
       animationPromise = oneOffHealAnimation(unit);
     }
@@ -38,19 +38,19 @@ export async function healUnits(source: any | undefined, units: Unit.IUnit[], am
       Unit.takeDamage({
         unit: unit,
         amount: -amount,
-        sourceUnit: source,
+        sourceUnit: sourceUnit,
       }, underworld, prediction);
     }
     return state;
   }
 }
 
-export async function healUnit(source: any | undefined, unit: Unit.IUnit, amount: number, underworld: Underworld, prediction: boolean, state?: EffectState, useFx: boolean = true) {
+export async function healUnit(unit: Unit.IUnit, amount: number, sourceUnit: Unit.IUnit | undefined, underworld: Underworld, prediction: boolean, state?: EffectState, useFx: boolean = true) {
   const units = [unit];
-  return await healUnits(source, units, amount, underworld, prediction, state, useFx);
+  return await healUnits(units, amount, sourceUnit, underworld, prediction, state, useFx);
 }
 
-export async function healManaUnits(source: any | undefined, units: Unit.IUnit[], amount: number, underworld: Underworld, prediction: boolean, state?: EffectState, useFx: boolean = true) {
+export async function healManaUnits(units: Unit.IUnit[], amount: number, sourceUnit: Unit.IUnit | undefined, underworld: Underworld, prediction: boolean, state?: EffectState, useFx: boolean = true) {
   units = units.filter(u => u.alive);
   if (units.length == 0 || amount == 0) return;
 
@@ -77,9 +77,9 @@ export async function healManaUnits(source: any | undefined, units: Unit.IUnit[]
   }
 }
 
-export async function healManaUnit(source: any | undefined, unit: Unit.IUnit, amount: number, underworld: Underworld, prediction: boolean, state?: EffectState, useFx: boolean = true) {
+export async function healManaUnit(unit: Unit.IUnit, amount: number, sourceUnit: Unit.IUnit | undefined, underworld: Underworld, prediction: boolean, state?: EffectState, useFx: boolean = true) {
   const units = [unit];
-  return await healManaUnits(source, units, amount, underworld, prediction, state, useFx);
+  return await healManaUnits(units, amount, sourceUnit, underworld, prediction, state, useFx);
 }
 
 function oneOffHealAnimation(imageHaver: any, asMana: boolean = false): Promise<void> {

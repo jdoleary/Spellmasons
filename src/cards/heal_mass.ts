@@ -30,7 +30,7 @@ const spell: Spell = {
     effect: async (state, card, quantity, underworld, prediction) => {
       const units = (prediction ? underworld.unitsPrediction : underworld.units)
         .filter(u => u.alive && u.faction == state.casterUnit.faction);
-      await healUnits(state.casterUnit, units, healAmount * quantity, underworld, prediction, state);
+      await healUnits(units, healAmount * quantity, state.casterUnit, underworld, prediction, state);
       return state;
     },
   },
