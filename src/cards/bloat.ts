@@ -92,7 +92,7 @@ const spell: Spell = {
       const radiusBoost = unit.modifiers[id]?.radiusBoost;
       const adjustedRadius = getAdjustedRadius(radiusBoost);
       explode(unit, adjustedRadius, damage * quantity, getAdjustedPushDist(radiusBoost),
-        undefined, // TODO - Add source to modifier
+        unit.modifiers[id]?.sourceUnit, // TODO - Implement source unit for modifiers
         underworld, prediction,
         colors.bloatExplodeStart, colors.bloatExplodeEnd);
     },
