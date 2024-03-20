@@ -30,7 +30,7 @@ export function isForceMoveUnitOrPickup(x: ForceMove): x is ForceMoveUnitOrPicku
 }
 export type ForceMoveProjectile = ForceMove & {
   type: ForceMoveType.PROJECTILE;
-  sourceUnit: IUnit;
+  sourceUnit?: IUnit;
   startPoint: Vec2;
   endPoint: Vec2;
   doesPierce: boolean;
@@ -43,7 +43,7 @@ export function isForceMoveProjectile(x: ForceMove): x is ForceMoveProjectile {
 
 interface ForceMoveProjectileArgs {
   pushedObject: HasSpace;
-  sourceUnit: IUnit;
+  sourceUnit?: IUnit;
   startPoint: Vec2;
   endPoint: Vec2;
   speed: number; // units per ms
