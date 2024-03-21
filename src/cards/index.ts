@@ -30,6 +30,7 @@ import freeze from './freeze';
 import resurrect from './resurrect';
 import resurrect_weak from './resurrect_weak';
 import resurrect_toxic from './resurrect_toxic';
+import empower from './empower';
 import shield from './shield';
 import fortify from './fortify';
 import alchemize from './alchemize';
@@ -40,6 +41,7 @@ import teleport from './teleport';
 import recall from './recall';
 import displace from './displace';
 import purify from './purify';
+import enfeeble from './enfeeble';
 import poison from './poison';
 import suffocate from './suffocate';
 import debilitate from './debilitate';
@@ -236,6 +238,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(heal_greater, overworld);
   registerSpell(heal_mass, overworld);
   registerSpell(send_mana, overworld);
+  registerSpell(empower, overworld);
   registerSpell(shield, overworld);
   registerSpell(fortify, overworld);
   registerSpell(alchemize, overworld);
@@ -243,6 +246,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(potion_shatter, overworld);
 
   // Curses
+  registerSpell(enfeeble, overworld);
   registerSpell(poison, overworld);
   registerSpell(suffocate, overworld);
   registerSpell(freeze, overworld);
