@@ -42,7 +42,7 @@ const spell: Spell = {
 
       if (addedTargets.length) {
         for (const target of addedTargets) {
-          addTarget(target, state);
+          addTarget(target, state, underworld);
         }
         if (!prediction && !globalThis.headless) {
           playSFXKey('targeting');

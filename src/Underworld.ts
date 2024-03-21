@@ -3633,7 +3633,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       if (effectState.initialTargetedUnitId !== undefined) {
         const initialTargetUnit = this.units.find(u => u.id === effectState.initialTargetedUnitId);
         if (initialTargetUnit) {
-          Cards.addTarget(initialTargetUnit, effectState);
+          Cards.addTarget(initialTargetUnit, effectState, this);
         } else {
           console.error('effectState.initialTargetedUnitId was defined but the unit was not found');
         }
@@ -3641,14 +3641,14 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         const unitAtCastLocation = unitsAtCastLocation[0];
         if (unitAtCastLocation) {
           effectState.initialTargetedUnitId = unitAtCastLocation.id;
-          Cards.addTarget(unitAtCastLocation, effectState);
+          Cards.addTarget(unitAtCastLocation, effectState, this);
         }
       }
       // Get first pickup at cast location
       if (effectState.initialTargetedPickupId !== undefined) {
         const initialTargetPickup = this.pickups.find(p => p.id === effectState.initialTargetedPickupId);
         if (initialTargetPickup) {
-          Cards.addTarget(initialTargetPickup, effectState);
+          Cards.addTarget(initialTargetPickup, effectState, this);
         } else {
           console.error('effectState.initialTargetedPickupId was defined but the unit was not found');
         }
@@ -3656,7 +3656,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         const pickupAtCastLocation = this.getPickupAt(castLocation, prediction);
         if (pickupAtCastLocation) {
           effectState.initialTargetedPickupId = pickupAtCastLocation.id;
-          Cards.addTarget(pickupAtCastLocation, effectState);
+          Cards.addTarget(pickupAtCastLocation, effectState, this);
         }
       }
     }

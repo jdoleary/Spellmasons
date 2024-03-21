@@ -61,7 +61,7 @@ const spell: Spell = {
               pickupSource,
               logSource: 'recall.ts'
             }, underworld, prediction);
-            addTarget(pickupInst, state);
+            addTarget(pickupInst, state, underworld);
           }
         }
       }
