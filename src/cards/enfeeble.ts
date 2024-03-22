@@ -46,9 +46,6 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
   });
 
   unit.damage += statChange * quantity;
-
-  // Ensure damage doesn't go below 0
-  unit.damage = Math.max(unit.damage, 0);
 }
 
 function remove(unit: Unit.IUnit, underworld: Underworld) {

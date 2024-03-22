@@ -56,9 +56,6 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
   }
 
   unit.damage -= statChange * modifier.quantity;
-
-  // Ensure damage doesn't go below 0
-  unit.damage = Math.max(unit.damage, 0);
 }
 
 export default spell;
