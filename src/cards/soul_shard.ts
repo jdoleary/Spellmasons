@@ -237,7 +237,7 @@ function doDraw(resolve: (value: void | PromiseLike<void>) => void, shardOwner: 
 function drawLineBetweenTargest(shardOwner: HasSpace, shardBearer: HasSpace): boolean {
   // Animations do not occur on headless
   if (!globalThis.headless) {
-    const graphics = globalThis.unitOverlayGraphics;
+    const graphics = globalThis.projectileGraphics;
     if (graphics) {
       if (shardOwner == undefined || shardBearer == undefined) {
         return false;

@@ -132,6 +132,8 @@ declare global {
   var thinkingPlayerGraphics: PIXI.Graphics | undefined;
   // Graphics for drawing unit health and mana bars
   var unitOverlayGraphics: PIXI.Graphics | undefined;
+  // Graphics for drawing spell effects such as bolt
+  var projectileGraphics: PIXI.Graphics | undefined;
   // Graphics for drawing unit attack radius and such
   var selectedUnitGraphics: PIXI.Graphics | undefined;
   // Graphics for drawing the spell effects during the dry run phase
