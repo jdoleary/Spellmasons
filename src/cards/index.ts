@@ -407,6 +407,7 @@ export interface EffectState {
   // Overriddes castLocation if exists.
   initialTargetedUnitId: number | undefined;
   initialTargetedPickupId: number | undefined;
+  diff?: Unit.IDiff;
 }
 export function refundLastSpell(state: EffectState, prediction: boolean, floatingMessage?: string) {
   // Only refund the spell when it's not a prediction so that

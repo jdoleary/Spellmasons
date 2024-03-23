@@ -853,25 +853,9 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         // Await forcemoves in case the result of any spells caused a forceMove to be added to the array
         // such as Bloat's onDeath
         await underworld.awaitForceMoves();
-        // Only send SYNC_SOME_STATE from the headless server
-        if (globalThis.headless) {
-          // Sync state directly after each cast to attempt to reduce snowballing desyncs
-          underworld.pie.sendData({
-            type: MESSAGE_TYPES.SYNC_SOME_STATE,
-            timeOfLastSpellMessage: lastSpellMessageTime,
-            units: underworld.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
-            pickups: underworld.pickups.filter(p => !p.flaggedForRemoval).map(Pickup.serialize),
-            lastUnitId: underworld.lastUnitId,
-            lastPickupId: underworld.lastPickupId,
-            // the state of the Random Number Generator
-            RNGState: underworld.random.state(),
-            // Store the level index that this function was invoked on
-            // so that it can be sent along with the message so that if
-            // the level index changes, 
-            // the old SYNC_SOME_STATE state won't overwrite the newer state
-            currentLevelIndex: underworld.levelIndex,
-          });
-        }
+
+        // apply diff
+        underworld.applyDiff(payload.diff);
       } else {
         console.error('Cannot cast, caster does not exist');
       }

@@ -4,7 +4,7 @@ import * as config from '../config';
 import * as Image from '../graphics/Image';
 import * as math from '../jmath/math';
 import { distance } from '../jmath/math';
-import { addPixiSpriteAnimated, containerDoodads, containerUnits, PixiSpriteOptions, startBloodParticleSplatter, updateNameText } from '../graphics/PixiUtils';
+import { containerUnits, PixiSpriteOptions, startBloodParticleSplatter, updateNameText } from '../graphics/PixiUtils';
 import * as colors from '../graphics/ui/colors';
 import { UnitSubType, UnitType, Faction } from '../types/commonTypes';
 import type { Vec2 } from '../jmath/Vec';
@@ -32,15 +32,11 @@ import { explain, EXPLAIN_DEATH, EXPLAIN_MINI_BOSSES } from '../graphics/Explain
 import { ARCHER_ID } from './units/archer';
 import { BLOOD_ARCHER_ID } from './units/blood_archer';
 import * as Obstacle from './Obstacle';
-import playerUnit, { spellmasonUnitId } from './units/playerUnit';
-import { findRandomGroundLocation, SUMMONER_ID } from './units/summoner';
+import { spellmasonUnitId } from './units/playerUnit';
+import { SUMMONER_ID } from './units/summoner';
 import { DARK_SUMMONER_ID } from './units/darkSummoner';
 import { bossmasonUnitId } from './units/deathmason';
-import deathmason from './units/deathmason';
-import { MESSAGE_TYPES } from '../types/MessageTypes';
 import { StatCalamity } from '../Perk';
-import { skyBeam } from '../VisualEffects';
-import seedrandom from 'seedrandom';
 import { summoningSicknessId } from '../modifierSummoningSickness';
 import * as log from '../log';
 import { suffocateCardId, updateSuffocate } from '../cards/suffocate';
@@ -72,7 +68,7 @@ export interface UnitPath {
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
 // rehydrate the JSON into an entity
-export type IUnitSerialized = Omit<IUnit, "resolveDoneMoving" | "image" | "animations" | "sfx"> & { image?: Image.IImageAnimatedSerialized };
+export type IUnitSerialized = Omit<IUnit, "predictionCopy" | "resolveDoneMoving" | "image" | "animations" | "sfx"> & { image?: Image.IImageAnimatedSerialized };
 export interface UnitAnimations {
   idle: string;
   hit: string;
@@ -95,6 +91,9 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   unitSourceId: string;
   // if this IUnit is a prediction copy, real is a reference to the real unit that it is a copy of
   real?: IUnit;
+  // if this IUnit is a real unit, predictionCopy is a reference to the latest prediction copy.
+  // used for diffing the effects of a spell to sync multiplayer
+  predictionCopy?: IUnit;
   // strength is a multiplier that affects base level stats
   strength: number;
   // true if the unit was spawned at the beginning of the level and not
@@ -466,7 +465,8 @@ export function serialize(unit: IUnit): IUnitSerialized {
   // resolveDoneMoving is a callback that cannot be serialized
   // animations and sfx come from the source unit and need not be saved or sent over
   // the network (it would just be extra data), better to restore from the source unit
-  const { resolveDoneMoving, animations, sfx, onDamageEvents, onDeathEvents, onAgroEvents, onTurnStartEvents, onTurnEndEvents, onDrawSelectedEvents, ...rest } = unit
+  // omit predictionCopy because it is a transient reference and shouldn't be serialized
+  const { resolveDoneMoving, animations, sfx, onDamageEvents, onDeathEvents, onAgroEvents, onTurnStartEvents, onTurnEndEvents, onDrawSelectedEvents, predictionCopy, ...rest } = unit
   return {
     ...rest,
     // Deep copy array so that serialized units don't share the object
@@ -1410,7 +1410,7 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
     }
   }
   const { image, resolveDoneMoving, modifiers, ...rest } = u;
-  return {
+  const predictionUnit = {
     ...rest,
     real: u,
     isPrediction: true,
@@ -1440,6 +1440,8 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
     shaderUniforms: {},
     resolveDoneMoving: () => { }
   };
+  u.predictionCopy = predictionUnit;
+  return predictionUnit;
 
 }
 
@@ -1673,5 +1675,36 @@ export function resetUnitStats(unit: IUnit, underworld: Underworld) {
 
 export function unitSourceIdToName(unitSourceId: string, asMiniboss: boolean): string {
   return unitSourceId + (asMiniboss ? ' Miniboss' : '');
+}
 
+export interface IDiff {
+  units: (IUnitDiff | undefined)[]
+}
+interface IUnitDiff {
+  id: number;
+  x: number;
+  y: number;
+  health: number;
+  alive: boolean;
+}
+export function getDiff(realUnit: IUnit): IUnitDiff | undefined {
+  const { predictionCopy } = realUnit;
+  if (predictionCopy) {
+    return {
+      id: realUnit.id,
+      x: predictionCopy.x,
+      y: predictionCopy.y,
+      health: predictionCopy.health,
+      alive: predictionCopy.alive,
+    }
+  } else {
+    console.warn('Cannot get unit diff, no prediction copy');
+    return undefined;
+  }
+}
+export function applyDiff(diff: IUnitDiff, unit: IUnit) {
+  unit.x = diff.x;
+  unit.y = diff.y;
+  unit.health = diff.health;
+  unit.alive = diff.alive;
 }

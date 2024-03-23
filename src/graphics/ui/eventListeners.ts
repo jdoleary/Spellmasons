@@ -901,6 +901,9 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
                 cards: cardIds,
                 initialTargetedUnitId: effectState.initialTargetedUnitId,
                 initialTargetedPickupId: effectState.initialTargetedPickupId,
+                diff: {
+                  units: underworld.units.map(Unit.getDiff)
+                }
               });
               CardUI.clearSelectedCards(underworld);
               // Now that the cast has begun, clear the prediction tint so it doesn't color the targeted units anymore

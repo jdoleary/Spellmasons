@@ -4142,6 +4142,16 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   updateAccessibilityOutlines() {
     this.units.forEach(u => Unit.updateAccessibilityOutline(u, false));
   }
+  applyDiff(diff?: Unit.IDiff) {
+    if (diff) {
+      for (let u of this.units) {
+        const unitDiff = diff.units.find(du => du && du.id == u.id)
+        if (unitDiff) {
+          Unit.applyDiff(unitDiff, u);
+        }
+      }
+    }
+  }
 }
 
 export type IUnderworldSerialized = Omit<typeof Underworld, "pie" | "overworld" | "prototype" | "players" | "units"
