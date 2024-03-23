@@ -120,7 +120,6 @@ import { registerUrnExplosiveExplode } from '../entity/units/urn_explosive';
 import { calculateGameDifficulty } from '../Difficulty';
 import registerCorpseDecay from '../modifierCorpseDecay';
 import { registerDeathmasonEvents } from '../entity/units/deathmason';
-import registerUndying from '../modifierUndying';
 import registerSoulShardOwner from '../modifierSoulShardOwner';
 
 export interface Modifiers {
@@ -320,7 +319,6 @@ export function registerCards(overworld: Overworld) {
 
   registerImmune();
   registerImpendingDoom();
-  registerUndying();
   registerSoulShardOwner();
 
   registerUrnIceExplode();
