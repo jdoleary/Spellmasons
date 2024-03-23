@@ -15,11 +15,13 @@ export function getOrInitModifier(unit: IUnit, key: string, { isCurse, quantity,
     let modifier = unit.modifiers[key];
     if (!modifier) {
         modifier = {
+            // ...rest is added first so that it doesn't override other explicit
+            // properties, for example, when copied from contaminate
+            ...rest,
             isCurse,
             quantity: 0,
             keepOnDeath,
             keepBetweenLevels,
-            ...rest
         };
         firstTimeSetup();
         unit.modifiers[key] = modifier;
