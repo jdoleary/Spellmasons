@@ -150,10 +150,7 @@ function removeShardOwner(shardOwnerId: number, underworld: Underworld, predicti
   if (shardOwner) {
     const shardOwnerModifier = shardOwner.modifiers[soulShardOwnerModifierId];
     if (shardOwnerModifier) {
-      shardOwnerModifier.quantity -= 1;
-      if (shardOwnerModifier.quantity <= 0) {
-        Unit.removeModifier(shardOwner, soulShardOwnerModifierId, underworld);
-      }
+      Unit.removeModifier(shardOwner, soulShardOwnerModifierId, underworld);
     } else {
       console.error("Shard owner does not have the shard owner modifier. This should never happen\n", shardOwner);
     }
