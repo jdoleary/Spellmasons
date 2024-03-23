@@ -8,6 +8,11 @@ import { makeManaTrail } from "./graphics/Particles";
 import { containerUnits, startBloodParticleSplatter } from "./graphics/PixiUtils";
 import Underworld from './Underworld';
 import { UnitType } from "./types/commonTypes";
+import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
+import { IImageAnimated } from "./graphics/Image";
+
+const trailColorStart = colors.convertToHashColor(colors.healthDarkRed);
+const trailColorEnd = colors.convertToHashColor(colors.healthBrightRed);
 
 // An additional modifier for Soul Shard, given to the caster
 export const soulShardOwnerModifierId = 'soulShardOwner';
@@ -35,8 +40,6 @@ export default function registerSoulShardOwner() {
           //console.log("Resurrect unit at soul shard bearer: ", nearestShardBearer);
 
           if (!prediction) {
-            const trailColorStart = colors.convertToHashColor(colors.healthDarkRed);
-            const trailColorEnd = colors.convertToHashColor(colors.healthBrightRed);
             // Trails from bearers
             let promises = [];
             for (let shardBearer of allShardBearers) {
@@ -45,9 +48,9 @@ export default function registerSoulShardOwner() {
             await Promise.all(promises);
 
             // Trail from shard owner
-            await new Promise<void>(resolve => oneOffImage(unit, 'units/summonerMagic', containerUnits, resolve));
+            await new Promise<void>(resolve => colorMagic(oneOffImage(unit, 'units/summonerMagic', containerUnits, resolve)));
             await makeManaTrail(unit, nearestShardBearer, underworld, trailColorStart, trailColorEnd);
-            await new Promise<void>(resolve => oneOffImage(nearestShardBearer, 'units/summonerMagic', containerUnits, resolve));
+            await new Promise<void>(resolve => colorMagic(oneOffImage(nearestShardBearer, 'units/summonerMagic', containerUnits, resolve)));
             startBloodParticleSplatter(underworld, unit, nearestShardBearer, { maxRotationOffset: Math.PI * 2, numberOfParticles: 300 });
           }
 
@@ -85,4 +88,22 @@ export default function registerSoulShardOwner() {
       }
     }
   });
+}
+
+// Colors the summoner teleport magic the same color as the rest of the soul shard fx
+function colorMagic(image?: IImageAnimated): IImageAnimated | undefined {
+  const filter = new MultiColorReplaceFilter(
+    [
+      [0xff0000, colors.healthDarkRed],
+    ],
+    0.05
+  );
+  if (image) {
+    if (!image.sprite.filters) {
+      image.sprite.filters = [];
+    }
+    image.sprite.filters.push(filter);
+    return image;
+  }
+  return undefined;
 }
