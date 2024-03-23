@@ -53,18 +53,19 @@ const spell: Spell = {
   modifiers: {
     add,
     remove,
-    subsprite: {
-      imageName,
-      alpha: 1.0,
-      anchor: {
-        x: 0.5,
-        y: 0.5,
-      },
-      scale: {
-        x: 1,
-        y: 1,
-      },
-    },
+    // Special subsprite handling in remove function
+    // subsprite: {
+    //   imageName,
+    //   alpha: 1.0,
+    //   anchor: {
+    //     x: 0.5,
+    //     y: 0.5,
+    //   },
+    //   scale: {
+    //     x: 1,
+    //     y: 1,
+    //   },
+    // },
   },
   events: {
     onTurnStart: async (unit: Unit.IUnit) => {
@@ -82,19 +83,7 @@ const spell: Spell = {
       if (modifier) {
         modifier.quantity--;
         if (modifier.quantity <= 0) {
-          // Special handling:
-          // If players freeze themself it will skip their turn
-          // which makes the freeze image get removed immediately
-          // which is a bad UX because it's unclear why their turn ended
-          // so if it's a player that gets frozen, delay 2 seconds before
-          // removing the ice image
-          if (unit.unitType == UnitType.PLAYER_CONTROLLED) {
-            setTimeout(() => {
-              Unit.removeModifier(unit, freezeCardId, underworld);
-            }, 1000)
-          } else {
-            Unit.removeModifier(unit, freezeCardId, underworld);
-          }
+          Unit.removeModifier(unit, freezeCardId, underworld);
         }
       }
     },
@@ -129,6 +118,20 @@ function remove(unit: Unit.IUnit) {
   unit.immovable = false;
   // Resume the animation
   unit.image?.sprite.play();
+
+  // Special handling:
+  // If players freeze themself it will skip their turn
+  // which makes the freeze image get removed immediately
+  // which is a bad UX because it's unclear why their turn ended
+  // so if it's a player that gets frozen, delay 1 second before
+  // removing the ice image
+  if (unit.unitType == UnitType.PLAYER_CONTROLLED) {
+    setTimeout(() => {
+      Image.removeSubSprite(unit.image, imageName);
+    }, 1000)
+  } else {
+    Image.removeSubSprite(unit.image, imageName);
+  }
 }
 
 export default spell;
