@@ -1,3 +1,10 @@
+- Fix: contaminate now spreads extra properties of modifiers (curses) such as expanded range
+    - Thanks to @theytookmysoul aka Wisky
+- Fix: Good Looks no longer explodes urns
+    - Thanks @Elvarien
+- Fix: Game soft locks if whole party is froze
+    - Thanks @Waterbending Squirrel for reporting
+
 ## 1.30.0
 - Feature: "No Gore" mode - removes gore from the game if desired
 - Feature: Purify now works on Cursed Mana Potions
