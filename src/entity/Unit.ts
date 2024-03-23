@@ -72,7 +72,7 @@ export interface UnitPath {
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
 // rehydrate the JSON into an entity
-export type IUnitSerialized = Omit<IUnit, "resolveDoneMoving" | "image" | "animations" | "sfx"> & { image?: Image.IImageAnimatedSerialized };
+export type IUnitSerialized = Omit<IUnit, "predictionCopy" | "resolveDoneMoving" | "image" | "animations" | "sfx"> & { image?: Image.IImageAnimatedSerialized };
 export interface UnitAnimations {
   idle: string;
   hit: string;
@@ -95,6 +95,9 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   unitSourceId: string;
   // if this IUnit is a prediction copy, real is a reference to the real unit that it is a copy of
   real?: IUnit;
+  // if this IUnit is a real unit, predictionCopy is a reference to the latest prediction copy.
+  // used for diffing the effects of a spell to sync multiplayer
+  predictionCopy?: IUnit;
   // strength is a multiplier that affects base level stats
   strength: number;
   // true if the unit was spawned at the beginning of the level and not
@@ -466,7 +469,8 @@ export function serialize(unit: IUnit): IUnitSerialized {
   // resolveDoneMoving is a callback that cannot be serialized
   // animations and sfx come from the source unit and need not be saved or sent over
   // the network (it would just be extra data), better to restore from the source unit
-  const { resolveDoneMoving, animations, sfx, onDamageEvents, onDeathEvents, onAgroEvents, onTurnStartEvents, onTurnEndEvents, onDrawSelectedEvents, ...rest } = unit
+  // omit predictionCopy because it is a transient reference and shouldn't be serialized
+  const { resolveDoneMoving, animations, sfx, onDamageEvents, onDeathEvents, onAgroEvents, onTurnStartEvents, onTurnEndEvents, onDrawSelectedEvents, predictionCopy, ...rest } = unit
   return {
     ...rest,
     // Deep copy array so that serialized units don't share the object
@@ -1410,7 +1414,7 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
     }
   }
   const { image, resolveDoneMoving, modifiers, ...rest } = u;
-  return {
+  const predictionUnit = {
     ...rest,
     real: u,
     isPrediction: true,
@@ -1440,6 +1444,8 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
     shaderUniforms: {},
     resolveDoneMoving: () => { }
   };
+  u.predictionCopy = predictionUnit;
+  return predictionUnit;
 
 }
 
