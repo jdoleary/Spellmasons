@@ -1112,10 +1112,10 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
 // Returns whether or not a unit is truly dead
 // Considers game state and undying effects
 // Used for game loop logic
-export function isRemaining(unit: IUnit, underworld: Underworld) {
+export function isRemaining(unit: IUnit, underworld: Underworld, prediction: boolean) {
   return unit.alive
     || (unit.modifiers[undyingModifierId])
-    || (unit.modifiers[soulShardOwnerModifierId] && getAllShardBearers(unit, underworld, true).length > 0);
+    || (unit.modifiers[soulShardOwnerModifierId] && getAllShardBearers(unit, underworld, prediction).length > 0);
 }
 
 export function canAct(unit: IUnit): boolean {
