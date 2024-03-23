@@ -134,7 +134,7 @@ async function spreadCurses(unit: IUnit, ignore: IUnit[], curses: CurseData[], r
           const existingQuantity = touchingUnit.modifiers[curse.modId]?.quantity as number;
           if (existingQuantity == undefined || existingQuantity < curse.modifier.quantity) {
             const quantityToAdd = curse.modifier.quantity - (existingQuantity != undefined ? existingQuantity : 0);
-            Unit.addModifier(touchingUnit, curse.modId, underworld, prediction, quantityToAdd);
+            Unit.addModifier(touchingUnit, curse.modId, underworld, prediction, quantityToAdd, curse.modifier);
           }
         }
       });

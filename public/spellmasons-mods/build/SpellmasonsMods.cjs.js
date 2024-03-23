@@ -7,14 +7,14 @@ const {
   forcePush,
   JPromise,
   JAudio: JAudio$1,
-  PixiUtils: PixiUtils$5,
+  PixiUtils: PixiUtils$4,
   ParticleCollection: ParticleCollection$1,
   MultiColorReplaceFilter
 } = globalThis.SpellmasonsAPI;
 const { createVisualLobbingProjectile } = Projectile;
 const { getBestRangedLOSTarget, rangedLOSMovement } = rangedAction;
 const { UnitSubType } = commonTypes$g;
-const { addPixiSpriteAnimated, containerUnits } = PixiUtils$5;
+const { addPixiSpriteAnimated, containerUnits } = PixiUtils$4;
 const Unit$e = globalThis.SpellmasonsAPI.Unit;
 const ARCHER_ID = "Explosive Archer";
 const explosionDamage = 40;
@@ -174,7 +174,7 @@ const mod$3 = {
   }
 };
 const {
-  PixiUtils: PixiUtils$4,
+  PixiUtils: PixiUtils$3,
   rand,
   cardUtils: cardUtils$f,
   commonTypes: commonTypes$f,
@@ -182,9 +182,9 @@ const {
 } = globalThis.SpellmasonsAPI;
 const { randFloat } = rand;
 const { refundLastSpell: refundLastSpell$f } = cards$f;
-const { containerSpells: containerSpells$1 } = PixiUtils$4;
+const { containerSpells: containerSpells$1 } = PixiUtils$3;
 const Unit$d = globalThis.SpellmasonsAPI.Unit;
-const { oneOffImage: oneOffImage$2, playDefaultSpellSFX: playDefaultSpellSFX$c } = cardUtils$f;
+const { oneOffImage: oneOffImage$1, playDefaultSpellSFX: playDefaultSpellSFX$c } = cardUtils$f;
 const { CardCategory: CardCategory$f, probabilityMap: probabilityMap$f, CardRarity: CardRarity$f } = commonTypes$f;
 const cardId$f = "Undead Blade";
 const damageDone$1 = 60;
@@ -213,7 +213,7 @@ const spell$f = {
           setTimeout(() => {
             playDefaultSpellSFX$c(card, prediction);
             for (let unit2 of targets) {
-              const spellEffectImage = oneOffImage$2(unit2, animationPath$1, containerSpells$1);
+              const spellEffectImage = oneOffImage$1(unit2, animationPath$1, containerSpells$1);
               if (spellEffectImage) {
                 spellEffectImage.sprite.rotation = randFloat(-Math.PI / 6, Math.PI / 6);
                 if (q % 2 == 0) {
@@ -258,7 +258,7 @@ const mod$2 = {
   spritesheet: "spellmasons-mods/undead_blade/undead_blade.json"
 };
 const {
-  PixiUtils: PixiUtils$3,
+  PixiUtils: PixiUtils$2,
   cardUtils: cardUtils$e,
   commonTypes: commonTypes$e,
   cards: cards$e,
@@ -454,7 +454,6 @@ function remove$3(unit2, underworld) {
   }
 }
 const {
-  PixiUtils: PixiUtils$2,
   cardUtils: cardUtils$b,
   commonTypes: commonTypes$b,
   cards: cards$b,
@@ -462,7 +461,7 @@ const {
 } = globalThis.SpellmasonsAPI;
 const { refundLastSpell: refundLastSpell$b } = cards$b;
 globalThis.SpellmasonsAPI.Unit;
-const { oneOffImage: oneOffImage$1, playDefaultSpellSFX: playDefaultSpellSFX$8 } = cardUtils$b;
+const { playDefaultSpellSFX: playDefaultSpellSFX$8 } = cardUtils$b;
 const { CardCategory: CardCategory$b, probabilityMap: probabilityMap$b, CardRarity: CardRarity$b } = commonTypes$b;
 const Events = globalThis.SpellmasonsAPI.Events;
 const cardId$b = "Fast Forward";
@@ -477,10 +476,9 @@ const spell$b = {
     expenseScaling: 1.5,
     probability: probabilityMap$b[CardRarity$b.RARE],
     thumbnail: "spellmasons-mods/Wodes_grimoire/graphics/icons/spelliconFastForward.png",
-    //animationPath,
     sfx: "push",
     //TODO
-    description: [`Shunt the target forward through time. Causes progression of modifiers but does not effect cooldowns.`],
+    description: [`Shunt the target forward through time. Causes progression of spell effects but does not affect cooldowns.`],
     //TODO: better deffinition
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = state.targetedUnits.filter((u) => u.alive);
@@ -631,7 +629,7 @@ const spell$a = {
     effect: async (state, card, quantity, underworld, prediction) => {
       await new Promise((resolve) => {
         const targets = state.targetedUnits.filter((u) => u.alive);
-        const adjustedRadius = splashRadius + state.aggregator.radius;
+        const adjustedRadius = getAdjustedRadius(state.aggregator.radiusBoost);
         if (targets.length == 0) {
           refundLastSpell$a(state, prediction);
           resolve();
@@ -665,6 +663,9 @@ const spell$a = {
     }
   }
 };
+function getAdjustedRadius(radiusBoost = 0) {
+  return splashRadius * (1 + 0.5 * radiusBoost);
+}
 const {
   cardUtils: cardUtils$9,
   commonTypes: commonTypes$9,
@@ -780,27 +781,25 @@ const spell$8 = {
   card: {
     id: cardId$8,
     category: CardCategory$8.Mana,
-    supportQuantity: true,
+    supportQuantity: false,
     manaCost: 0,
     healthCost: 35,
     expenseScaling: 1,
     probability: probabilityMap$8[CardRarity$8.UNCOMMON],
     thumbnail: "spellmasons-mods/Wodes_grimoire/graphics/icons/spelliconHarvest.png",
     sfx: "sacrifice",
-    description: [`Consumes target corpse for ${manaRegain} mana. Does not work on player corpses.
+    description: [`Consumes target corpse for ${manaRegain} mana. Does not work on player corpses. Unstackable.
 
 Tastes like chicken.`],
     effect: async (state, card, quantity, underworld, prediction) => {
       let promises = [];
       let totalManaHarvested = 0;
-      const targets = state.targetedUnits.filter((u) => !u.alive && u.unitType != UnitType.PLAYER_CONTROLLED);
+      const targets = state.targetedUnits.filter((u) => !u.alive && u.unitType != UnitType.PLAYER_CONTROLLED && u.flaggedForRemoval != true);
       for (let unit2 of targets) {
         totalManaHarvested += manaRegain * quantity;
         const manaTrailPromises = [];
         if (!prediction) {
-          for (let i = 0; i < quantity; i++) {
-            manaTrailPromises.push(Particles$4.makeManaTrail(unit2, state.casterUnit, underworld, "#e4ffee", "#40ff66"));
-          }
+          manaTrailPromises.push(Particles$4.makeManaTrail(unit2, state.casterUnit, underworld, "#e4ffee", "#40ff66", targets.length * quantity));
         }
         promises.push(prediction ? Promise.resolve() : Promise.all(manaTrailPromises));
       }
@@ -1054,7 +1053,7 @@ const spell$5 = {
         const manaTrailPromises = [];
         if (!prediction) {
           for (let i = 0; i < quantity; i++) {
-            manaTrailPromises.push(Particles$3.makeManaTrail(state.casterUnit, unit2, underworld, "#ef4242", "#400d0d"));
+            manaTrailPromises.push(Particles$3.makeManaTrail(state.casterUnit, unit2, underworld, "#ef4242", "#400d0d", targets.length * quantity));
           }
         }
         promises.push(prediction ? Promise.resolve() : Promise.all(manaTrailPromises));
