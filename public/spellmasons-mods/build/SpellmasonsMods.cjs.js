@@ -645,8 +645,9 @@ const spell$a = {
                 const damage = t == unit2 ? quantityAdjustedDamageMain : quantityAdjustedDamageSplash;
                 Unit$9.takeDamage(t, damage, void 0, underworld, prediction, state);
               });
+              resolve();
             }, 400);
-            makeFlameStrikeWithParticles(unit2, prediction, resolve);
+            makeFlameStrikeWithParticles(unit2, prediction);
           } else {
             if (prediction) {
               drawUICircle(globalThis.predictionGraphics, unit2, adjustedRadius, 13981270);
