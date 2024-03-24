@@ -861,7 +861,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         globalThis.resMarkers = [];
 
         // If multiplayer, play channelling animation until you are able to cast
-        if ((overworld.underworld?.players.length || 0) > 1) {
+        if (globalThis.spellCasting) {
           Player.setSpellmasonsToChannellingAnimation(selfPlayer);
         }
         // syncPredictionEntities to update the mana and health of predictionPlayer if the spell were to be cast

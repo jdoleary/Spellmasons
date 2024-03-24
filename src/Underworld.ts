@@ -265,6 +265,8 @@ export default class Underworld {
     cleanupRegistry?.register(this, `underworld-${this.seed}-${this.localUnderworldNumber}`);
 
     this.random = this.syncronizeRNG(RNGState);
+
+    globalThis.spellCasting = false;
   }
   // Returns all potentially targetable entities
   // See cards/index.ts's getCurrentTargets() for the function that returns 

@@ -81,6 +81,18 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       Chat.ReceiveMessage(fromPlayer, message);
       break;
     }
+    case MESSAGE_TYPES.VIEWING_INVENTORY: {
+      // Show animation when spellmason is viewing inventory
+      if (fromPlayer) {
+        const { isOpen } = payload;
+        if (isOpen) {
+          Player.setSpellmasonsToChannellingAnimation(fromPlayer);
+        } else {
+          Player.setSpellmasonsToChannellingAnimationClose(fromPlayer);
+        }
+      }
+      break;
+    }
     case MESSAGE_TYPES.PLAYER_THINKING: {
       const thinkingPlayer = fromPlayer;
       if (thinkingPlayer && thinkingPlayer != globalThis.player) {
@@ -842,6 +854,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       break;
     }
     case MESSAGE_TYPES.SPELL: {
+      globalThis.spellCasting = true;
       lastSpellMessageTime = d.time;
       if (fromPlayer) {
         if (underworld.turn_phase == turn_phase.Stalled) {
@@ -872,6 +885,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
             currentLevelIndex: underworld.levelIndex,
           });
         }
+        globalThis.spellCasting = false;
       } else {
         console.error('Cannot cast, caster does not exist');
       }
@@ -1137,32 +1151,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
     } else if (payload.cards.length < 6) {
       animationKey = 'playerAttackMedium0';
     }
-    if (['units/playerBookIn', 'units/playerBookIdle'].includes(caster.unit.image?.sprite.imagePath || '')) {
-      await new Promise<void>((resolve) => {
-        if (caster.unit.image) {
-          Image.changeSprite(
-            caster.unit.image,
-            'units/playerBookReturn',
-            caster.unit.image.sprite.parent,
-            resolve,
-            {
-              loop: false,
-              // Play the book close animation a little faster than usual so
-              // the player can get on with casting
-              animationSpeed: 0.2
-            }
-          );
-          Image.addOneOffAnimation(caster.unit, 'units/playerBookReturnMagic', { doRemoveWhenPrimaryAnimationChanges: true }, {
-            loop: false,
-            // Play the book close animation a little faster than usual so
-            // the player can get on with casting
-            animationSpeed: 0.2
-          });
-        } else {
-          resolve();
-        }
-      });
-    }
+    await Player.setSpellmasonsToChannellingAnimationClose(caster);
     if (caster.colorMagic === null) {
       caster.colorMagic = caster.color !== colors.playerNoColor ? playerCastAnimationColor : caster.color;
     }

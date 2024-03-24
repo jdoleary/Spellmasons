@@ -453,6 +453,10 @@ export function toggleInventory(toolbarIndex: number | undefined, forceState: bo
     syncInventory(toolbarIndex, underworld);
     // Update spellcosts in the inventory
     updateCardBadges(underworld);
+    underworld.pie.sendData({
+      type: MESSAGE_TYPES.VIEWING_INVENTORY,
+      isOpen: true,
+    });
   } else {
     // If inventory just closed, play sfx
     if (inventoryWasOpen) {
@@ -460,6 +464,10 @@ export function toggleInventory(toolbarIndex: number | undefined, forceState: bo
     }
     // When inventory closes, remove active toolbar element class
     document.querySelectorAll('.active-toolbar-element').forEach(e => e.classList.remove(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME))
+    underworld.pie.sendData({
+      type: MESSAGE_TYPES.VIEWING_INVENTORY,
+      isOpen: false,
+    });
   }
 }
 const ACTIVE_TOOLBAR_ELEMENT_CLASSNAME = 'active-toolbar-element'

@@ -365,4 +365,6 @@ declare global {
   var resetControlMap: undefined | (() => void);
   var setFontOverride: undefined | ((font: string) => void);
   var noGore: undefined | boolean;
+  // True when a SPELL message is currently being executed
+  var spellCasting: boolean | undefined;
 }
