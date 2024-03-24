@@ -1679,5 +1679,42 @@ export function resetUnitStats(unit: IUnit, underworld: Underworld) {
 
 export function unitSourceIdToName(unitSourceId: string, asMiniboss: boolean): string {
   return unitSourceId + (asMiniboss ? ' Miniboss' : '');
+}
+
+type SmallSyncState = Pick<IUnit, "id" | "health" | "healthMax" | "mana" | "manaMax" | "faction" | "alive" | "onDamageEvents" | "onDeathEvents" | "onAgroEvents" | "onTurnStartEvents" | "onTurnEndEvents" | "onDrawSelectedEvents" | "modifiers">;
+export function smallSyncState(u: IUnit): SmallSyncState {
+  let modifiers = {};
+  if (u.modifiers) {
+    try {
+      modifiers = JSON.parse(JSON.stringify(u.modifiers));
+    } catch (e) {
+      console.error('Cannot stringify modifiers for', u.modifiers);
+    }
+  }
+  return {
+    id: u.id,
+    health: u.health,
+    healthMax: u.healthMax,
+    mana: u.mana,
+    manaMax: u.manaMax,
+    faction: u.faction,
+    alive: u.alive,
+    onDamageEvents: [...u.onDamageEvents],
+    onDeathEvents: [...u.onDeathEvents],
+    onAgroEvents: [...u.onAgroEvents],
+    onTurnStartEvents: [...u.onTurnStartEvents],
+    onTurnEndEvents: [...u.onTurnEndEvents],
+    onDrawSelectedEvents: [...u.onDrawSelectedEvents],
+    // Deep copy modifiers so that serialized units don't share the object
+    modifiers
+  };
+}
+export function applySmallSyncState(targetUnit: IUnit, state: SmallSyncState) {
+  if (targetUnit.id == state.id) {
+    // LEFT OFF HERE
+
+  } else {
+    console.error('Attempting to applySmallSyncState to unit with wrong ID')
+  }
 
 }

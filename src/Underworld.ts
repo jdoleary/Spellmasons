@@ -4142,6 +4142,46 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   updateAccessibilityOutlines() {
     this.units.forEach(u => Unit.updateAccessibilityOutline(u, false));
   }
+  syncSomeState(syncState: {
+    // Sync data for units
+    units?: Unit.IUnitSerialized[],
+    // Sync data for pickups
+    pickups?: Pickup.IPickupSerialized[],
+    lastUnitId?: number,
+    lastPickupId?: number,
+    RNGState?: SeedrandomState,
+    currentLevelIndex?: number,
+  }) {
+    const { units, pickups, lastUnitId, lastPickupId, RNGState, currentLevelIndex } = syncState;
+    console.log('sync: syncSomeState', units, pickups)
+    if (currentLevelIndex !== undefined && this.levelIndex !== currentLevelIndex) {
+      console.log('Discarding syncSomeState message from old level')
+      return;
+    }
+    if (RNGState) {
+      this.syncronizeRNG(RNGState);
+    }
+
+    if (units) {
+      // Sync all non-player units.  If it syncs player units it will overwrite player movements
+      // that occurred during the cast
+      this.syncUnits(units, true);
+    }
+
+    if (pickups) {
+      this.syncPickups(pickups);
+    }
+
+    // Syncronize the lastXId so that when a new unit or pickup is created
+    // it will get the same id on both server and client
+    if (lastUnitId !== undefined) {
+      this.lastUnitId = lastUnitId;
+    }
+    if (lastPickupId !== undefined) {
+      this.lastPickupId = lastPickupId;
+    }
+
+  }
 }
 
 export type IUnderworldSerialized = Omit<typeof Underworld, "pie" | "overworld" | "prototype" | "players" | "units"

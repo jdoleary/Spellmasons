@@ -901,6 +901,20 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
                 cards: cardIds,
                 initialTargetedUnitId: effectState.initialTargetedUnitId,
                 initialTargetedPickupId: effectState.initialTargetedPickupId,
+                syncState: {
+                  units: underworld.unitsPrediction.filter(u => !u.flaggedForRemoval).map(Unit.smallSyncState),
+                  // TODO pickups smallSyncState
+                  // pickups: underworld.pickupsPrediction.filter(p => !p.flaggedForRemoval).map(Pickup.smallSyncState),
+                  // lastUnitId: underworld.lastUnitId,
+                  // lastPickupId: underworld.lastPickupId,
+                  // the state of the Random Number Generator
+                  // RNGState: underworld.random.state(),
+                  // Store the level index that this function was invoked on
+                  // so that it can be sent along with the message so that if
+                  // the level index changes, 
+                  // the old SYNC_SOME_STATE state won't overwrite the newer state
+                  currentLevelIndex: underworld.levelIndex,
+                }
               });
               CardUI.clearSelectedCards(underworld);
               // Now that the cast has begun, clear the prediction tint so it doesn't color the targeted units anymore
@@ -1839,7 +1853,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
                 y: unit.y,
                 cards: cardIds,
                 initialTargetedUnitId: unit.id,
-                initialTargetedPickupId: undefined
+                initialTargetedPickupId: undefined,
               });
             }
           }

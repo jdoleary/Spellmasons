@@ -433,7 +433,6 @@ function logHandleOnDataMessage(type: MESSAGE_TYPES, payload: any, fromClient: s
   }
 
 }
-let lastSpellMessageTime = 0;
 async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise<any> {
   currentlyProcessingOnDataMessage = d;
   const { payload, fromClient } = d;
@@ -502,55 +501,6 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       if (lastUnitId !== undefined) {
         underworld.lastUnitId = lastUnitId
       }
-      break;
-    }
-    case MESSAGE_TYPES.SYNC_SOME_STATE: {
-      if (globalThis.headless) {
-        // SYNC_SOME_STATE is only ever sent from headless and doesn't need to be run on headless
-        break;
-      }
-      console.log('sync: SYNC_SOME_STATE; syncs non-player units')
-      const { timeOfLastSpellMessage, units, pickups, lastUnitId, lastPickupId, RNGState, currentLevelIndex } = payload as {
-        // timeOfLastSpellMessage ensures that SYNC_SOME_STATE won't overwrite valid state with old state
-        // if someone a second SPELL message is recieved between this message and it's corresponding SPELL message
-        // Messages don't currently have a unique id so I'm storing d.time which should be good enough
-        timeOfLastSpellMessage: number,
-        // Sync data for units
-        units?: Unit.IUnitSerialized[],
-        // Sync data for pickups
-        pickups?: Pickup.IPickupSerialized[],
-        lastUnitId: number,
-        lastPickupId: number,
-        RNGState: SeedrandomState,
-        currentLevelIndex: number,
-      }
-      if (timeOfLastSpellMessage !== lastSpellMessageTime) {
-        // Do not sync, state has changed since this sync message was sent
-        console.warn('Discarding SYNC_SOME_STATE message, it is no longer valid');
-        break;
-      }
-      if (underworld.levelIndex !== currentLevelIndex) {
-        console.log('Discarding SYNC_PLAYERS message from old level')
-        break;
-      }
-      if (RNGState) {
-        underworld.syncronizeRNG(RNGState);
-      }
-
-      if (units) {
-        // Sync all non-player units.  If it syncs player units it will overwrite player movements
-        // that occurred during the cast
-        underworld.syncUnits(units, true);
-      }
-
-      if (pickups) {
-        underworld.syncPickups(pickups);
-      }
-
-      // Syncronize the lastXId so that when a new unit or pickup is created
-      // it will get the same id on both server and client
-      underworld.lastUnitId = lastUnitId;
-      underworld.lastPickupId = lastPickupId;
       break;
     }
     case MESSAGE_TYPES.SET_PHASE: {
@@ -842,7 +792,6 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       break;
     }
     case MESSAGE_TYPES.SPELL: {
-      lastSpellMessageTime = d.time;
       if (fromPlayer) {
         if (underworld.turn_phase == turn_phase.Stalled) {
           // This check shouldn't have to be here but it protects against the game getting stuck in stalled phase
@@ -853,24 +802,10 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         // Await forcemoves in case the result of any spells caused a forceMove to be added to the array
         // such as Bloat's onDeath
         await underworld.awaitForceMoves();
-        // Only send SYNC_SOME_STATE from the headless server
-        if (globalThis.headless) {
-          // Sync state directly after each cast to attempt to reduce snowballing desyncs
-          underworld.pie.sendData({
-            type: MESSAGE_TYPES.SYNC_SOME_STATE,
-            timeOfLastSpellMessage: lastSpellMessageTime,
-            units: underworld.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
-            pickups: underworld.pickups.filter(p => !p.flaggedForRemoval).map(Pickup.serialize),
-            lastUnitId: underworld.lastUnitId,
-            lastPickupId: underworld.lastPickupId,
-            // the state of the Random Number Generator
-            RNGState: underworld.random.state(),
-            // Store the level index that this function was invoked on
-            // so that it can be sent along with the message so that if
-            // the level index changes, 
-            // the old SYNC_SOME_STATE state won't overwrite the newer state
-            currentLevelIndex: underworld.levelIndex,
-          });
+
+        // Sync end state that was sent along with the spell
+        if (payload.syncState) {
+          underworld.syncSomeState(payload.syncState);
         }
       } else {
         console.error('Cannot cast, caster does not exist');
