@@ -63,7 +63,7 @@ const spell: Spell = {
     },
   },
   events: {
-    onDamage: (unit, amount, underworld, prediction, damageDealer) => {
+    onTakeDamage: (unit, amount, underworld, prediction, damageDealer) => {
       const modifier = unit.modifiers[id];
       if (modifier) {
         // Only block damage, not heals
@@ -108,7 +108,7 @@ function updateTooltip(unit: Unit.IUnit) {
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
   const modifier = getOrInitModifier(unit, id, { isCurse: false, quantity }, () => {
     // Add event
-    unit.onDamageEvents.push(id);
+    unit.onTakeDamageEvents.push(id);
     // Add subsprite image
     Image.addSubSprite(unit.image, modifierImagePath);
   });

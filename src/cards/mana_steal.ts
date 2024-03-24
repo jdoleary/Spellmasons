@@ -51,7 +51,7 @@ const spell: Spell = {
       // In case there wasn't enough mana to steal
       totalManaStolen -= remainingManaToSteal;
       if (totalManaStolen > 0) {
-        await healManaUnit(state.casterUnit, state.casterUnit, totalManaStolen, underworld, prediction, state);
+        await healManaUnit(state.casterUnit, totalManaStolen, state.casterUnit, underworld, prediction, state);
       } else {
         refundLastSpell(state, prediction, 'No targets have mana to steal\nHealth cost refunded')
       }
