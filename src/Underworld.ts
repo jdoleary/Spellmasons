@@ -3555,6 +3555,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     const closest = sortedByProximityToCoords[0]
     return closest;
   }
+  getUnitById(id: number, prediction: boolean): Unit.IUnit | undefined {
+    const units = prediction ? this.unitsPrediction : this.units;
+    return units.find(u => u.id == id);
+  }
   addUnitToArray(unit: Unit.IUnit, prediction: boolean): Unit.IUnit {
     if (prediction && this.unitsPrediction) {
       this.unitsPrediction.push(unit);

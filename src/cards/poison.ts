@@ -27,7 +27,7 @@ function init(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
     }
   }
 }
-function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
+function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1, extra?: any) {
   const modifier = getOrInitModifier(unit, poisonCardId, { isCurse: true, quantity }, () => {
     // Add event
     if (!unit.onTurnEndEvents.includes(poisonCardId)) {
@@ -40,13 +40,15 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
         init(unit, underworld, prediction);
       }
     }
-
   });
 
   if (!prediction) {
     updateTooltip(unit);
   }
+
+  modifier.sourceUnitId = extra.sourceUnitId;
 }
+
 export function updateTooltip(unit: Unit.IUnit) {
   if (unit.modifiers[poisonCardId]) {
     // Set tooltip:
@@ -73,7 +75,7 @@ const spell: Spell = {
       if (targets.length) {
         await Promise.all([playDefaultSpellAnimation(card, targets, prediction), playDefaultSpellSFX(card, prediction)]);
         for (let unit of targets) {
-          Unit.addModifier(unit, poisonCardId, underworld, prediction, quantity);
+          Unit.addModifier(unit, poisonCardId, underworld, prediction, quantity, { sourceUnitId: state.casterUnit.id });
         }
       }
       return state;
@@ -100,24 +102,26 @@ const spell: Spell = {
     onTurnEnd: async (unit: IUnit, prediction: boolean, underworld: Underworld) => {
       // TODO: There was a bug here where somehow modifiers['poison'] was undefined after i did chain, vulx10, poisonx10
       const modifier = unit.modifiers[poisonCardId];
+      if (!modifier) {
+        console.error(`Should have ${poisonCardId} modifier on unit but it is missing`);
+        return;
+      }
+
+      const sourceUnit = underworld.getUnitById(modifier.sourceUnitId, prediction);
       // Don't take damage on prediction because it is confusing for people to see the prediction damage that poison will do,
       // they assume prediction damage is only from their direct cast, not including the start of the next turn
       if (!prediction) {
-        if (modifier) {
-          const damage = (modifier.quantity || 1) * baseDamage;
-          Unit.takeDamage({
-            unit: unit,
-            amount: damage,
-            sourceUnit: modifier.sourceUnit, // TODO - Implement source unit for modifiers
-            fromVec2: unit,
-          }, underworld, prediction);
-          floatingText({
-            coords: unit, text: `${damage} poison damage`,
-            style: { fill: '#44b944' },
-          });
-        } else {
-          console.error(`Should have ${poisonCardId} modifier on unit but it is missing`);
-        }
+        const damage = (modifier.quantity || 1) * baseDamage;
+        Unit.takeDamage({
+          unit: unit,
+          amount: damage,
+          sourceUnit: sourceUnit,
+          fromVec2: unit,
+        }, underworld, prediction);
+        floatingText({
+          coords: unit, text: `${damage} poison damage`,
+          style: { fill: '#44b944' },
+        });
       }
     },
   },
