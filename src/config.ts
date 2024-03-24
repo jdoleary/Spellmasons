@@ -83,3 +83,4 @@ export const TIMEMASON_PERCENT_DRAIN = 1;
 // due to: https://github.com/jdoleary/Spellmasons/issues/352
 export const FORCE_MOVE_PROMISE_TIMEOUT_MILLIS = 2_000;
 export const SERVER_HUB_URL = 'https://server-hub-d2b2v.ondigitalocean.app';
+export const PATHING_POLYGON_OFFSET = 10;

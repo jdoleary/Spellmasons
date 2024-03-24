@@ -2,7 +2,7 @@ import { raceTimeout } from "../Promise";
 import Underworld from "../Underworld";
 import { HasSpace } from "../entity/Type";
 import { Vec2, multiply, normalized, subtract, add } from "../jmath/Vec";
-import { ForceMove, ForceMoveType, ForceMoveUnitOrPickup } from "../jmath/moveWithCollision";
+import { ForceMove, ForceMoveType, ForceMoveUnitOrPickup, isForceMoveUnitOrPickup } from "../jmath/moveWithCollision";
 
 // TODO - Force moves need to be handled differently
 // such that they are consistent at different framerates and velocity falloffs
@@ -59,6 +59,15 @@ function movementToVelocity(deltaMovement: Vec2): Vec2 {
 }
 // Adds the properties of a newForceMove onto a preexisting force move
 export function sumForceMoves(preExistingForceMove: ForceMove, newForceMove: ForceMove) {
+  if (isForceMoveUnitOrPickup(newForceMove)) {
+    // Since the new force move is mutating the existing force
+    // move instead of being added as a new one, resolve it since
+    // it won't be processed any more
+    // ---
+    // This prevents dangling forcemoves that timeout even tho
+    // their force effect still takes place
+    newForceMove.resolve();
+  }
   preExistingForceMove.velocity = add(preExistingForceMove.velocity, newForceMove.velocity);
 
 }

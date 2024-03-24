@@ -88,7 +88,7 @@ const spell: Spell = {
             animationPromises.push(animationPromise);
           }
           // Update effectState targets
-          chained.forEach(u => addTarget(u.entity, state))
+          chained.forEach(u => addTarget(u.entity, state, underworld))
         }
       }
       await Promise.all(animationPromises).then(() => {

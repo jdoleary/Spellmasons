@@ -38,7 +38,7 @@ const spell: Spell = {
             await new Promise<void>((resolve) => {
                 //Living units
                 const targets = state.targetedUnits.filter(u => u.alive);
-                const adjustedRadius = splashRadius + state.aggregator.radius;
+                const adjustedRadius = getAdjustedRadius(state.aggregator.radiusBoost);
                 if (targets.length == 0) {
                     refundLastSpell(state, prediction);
                     resolve();
@@ -56,9 +56,10 @@ const spell: Spell = {
                                 const damage = t == unit ? quantityAdjustedDamageMain : quantityAdjustedDamageSplash;
                                 Unit.takeDamage(t, damage, undefined, underworld, prediction, state);
                             });
+                            resolve();
                         }, 400);
                         //This lasts 2.5 seconds
-                        makeFlameStrikeWithParticles(unit, prediction, resolve);
+                        makeFlameStrikeWithParticles(unit, prediction);
                     } else {
                         //Does spell effect for underworld
                         if (prediction) {
@@ -76,4 +77,8 @@ const spell: Spell = {
         },
     },
 };
+function getAdjustedRadius(radiusBoost: number = 0) {
+    // +50% radius per radius boost
+    return splashRadius * (1 + (0.5 * radiusBoost));
+}
 export default spell;

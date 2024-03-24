@@ -1323,7 +1323,7 @@ export default class Underworld {
     // this.pathingPolygons = mergePolygon2s([...obstacles.map(o => o.bounds)]
 
     this.pathingPolygons = mergePolygon2s([...getWallPolygons().map(p => expandPolygon(p, config.COLLISION_MESH_RADIUS * 0.4))
-      .map(p => p.map(vec2 => ({ x: vec2.x, y: vec2.y - 10 })))
+      .map(p => p.map(vec2 => ({ x: vec2.x, y: vec2.y - config.PATHING_POLYGON_OFFSET })))
       , ...expandedLiquidPolygons
         .map(p => expandPolygon(p, expandMagnitude))])
       // remove polygons that border empty tiles (the outermost poly) so that if player tries to path to an out of bounds location
@@ -2719,7 +2719,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         // they will be cleaned up so they shouldn't be killed here as this check is just to ensure
         // no living units that are unreachable hinder progressing through the game)
         if (!u.flaggedForRemoval) {
-          if (this.isCoordOnWallTile({ x: u.x, y: u.y - u.radius })) {
+          if (this.isCoordOnWallTile({ x: u.x, y: u.y + config.PATHING_POLYGON_OFFSET })) {
             if (u.unitType == UnitType.PLAYER_CONTROLLED) {
               // Do NOT kill player units that are out of bounds
               console.warn('Player unit out of bounds');
@@ -3091,7 +3091,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (stat == 'Good Looks') {
       const damageMultiplier = 0.1 / this.players.length;
       // Deals 10% damage to all AI units
-      this.units.filter(u => u.unitType == UnitType.AI)
+      this.units.filter(u => u.unitType == UnitType.AI && u.unitSubType != UnitSubType.DOODAD)
         .forEach(u => Unit.takeDamage({
           unit: u,
           amount: u.healthMax * damageMultiplier,
@@ -3637,7 +3637,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       if (effectState.initialTargetedUnitId !== undefined) {
         const initialTargetUnit = this.units.find(u => u.id === effectState.initialTargetedUnitId);
         if (initialTargetUnit) {
-          Cards.addTarget(initialTargetUnit, effectState);
+          Cards.addTarget(initialTargetUnit, effectState, this);
         } else {
           console.error('effectState.initialTargetedUnitId was defined but the unit was not found');
         }
@@ -3645,14 +3645,14 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         const unitAtCastLocation = unitsAtCastLocation[0];
         if (unitAtCastLocation) {
           effectState.initialTargetedUnitId = unitAtCastLocation.id;
-          Cards.addTarget(unitAtCastLocation, effectState);
+          Cards.addTarget(unitAtCastLocation, effectState, this);
         }
       }
       // Get first pickup at cast location
       if (effectState.initialTargetedPickupId !== undefined) {
         const initialTargetPickup = this.pickups.find(p => p.id === effectState.initialTargetedPickupId);
         if (initialTargetPickup) {
-          Cards.addTarget(initialTargetPickup, effectState);
+          Cards.addTarget(initialTargetPickup, effectState, this);
         } else {
           console.error('effectState.initialTargetedPickupId was defined but the unit was not found');
         }
@@ -3660,7 +3660,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         const pickupAtCastLocation = this.getPickupAt(castLocation, prediction);
         if (pickupAtCastLocation) {
           effectState.initialTargetedPickupId = pickupAtCastLocation.id;
-          Cards.addTarget(pickupAtCastLocation, effectState);
+          Cards.addTarget(pickupAtCastLocation, effectState, this);
         }
       }
     }
