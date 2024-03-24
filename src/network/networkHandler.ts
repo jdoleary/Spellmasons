@@ -798,15 +798,24 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           console.error('Game was in Stalled turn_phase when a player sent MESSAGE_TYPES.SPELL.');
           underworld.tryRestartTurnPhaseLoop();
         }
+        console.log('jtest got SPELL')
         await handleSpell(fromPlayer, payload, underworld);
         // Await forcemoves in case the result of any spells caused a forceMove to be added to the array
         // such as Bloat's onDeath
         await underworld.awaitForceMoves();
 
         // Sync end state that was sent along with the spell
-        if (payload.syncState) {
-          underworld.syncSomeState(payload.syncState);
+        const { syncState } = payload;
+        if (syncState) {
+          console.log('sync: syncSomeState')
+          for (let u of underworld.units) {
+            const syncUnit = syncState.units.find((su: Unit.SmallSyncState) => su.id == u.id);
+            if (syncUnit) {
+              Unit.applySmallSyncState(u, syncUnit);
+            }
+          }
         }
+        console.log('jtest finish SPELL')
       } else {
         console.error('Cannot cast, caster does not exist');
       }

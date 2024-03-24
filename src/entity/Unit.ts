@@ -1681,11 +1681,12 @@ export function unitSourceIdToName(unitSourceId: string, asMiniboss: boolean): s
   return unitSourceId + (asMiniboss ? ' Miniboss' : '');
 }
 
-type SmallSyncState = Pick<IUnit, "id" | "health" | "healthMax" | "mana" | "manaMax" | "faction" | "alive" | "onDamageEvents" | "onDeathEvents" | "onAgroEvents" | "onTurnStartEvents" | "onTurnEndEvents" | "onDrawSelectedEvents" | "modifiers">;
+export type SmallSyncState = Pick<IUnit, "id" | "health" | "healthMax" | "mana" | "manaMax" | "faction" | "alive" | "onDamageEvents" | "onDeathEvents" | "onAgroEvents" | "onTurnStartEvents" | "onTurnEndEvents" | "onDrawSelectedEvents" | "modifiers">;
 export function smallSyncState(u: IUnit): SmallSyncState {
   let modifiers = {};
   if (u.modifiers) {
     try {
+      // Deep copy modifiers so that serialized units don't share the object
       modifiers = JSON.parse(JSON.stringify(u.modifiers));
     } catch (e) {
       console.error('Cannot stringify modifiers for', u.modifiers);
@@ -1699,20 +1700,19 @@ export function smallSyncState(u: IUnit): SmallSyncState {
     manaMax: u.manaMax,
     faction: u.faction,
     alive: u.alive,
+    // Deep copy events arrays so that serialized units don't share the object
     onDamageEvents: [...u.onDamageEvents],
     onDeathEvents: [...u.onDeathEvents],
     onAgroEvents: [...u.onAgroEvents],
     onTurnStartEvents: [...u.onTurnStartEvents],
     onTurnEndEvents: [...u.onTurnEndEvents],
     onDrawSelectedEvents: [...u.onDrawSelectedEvents],
-    // Deep copy modifiers so that serialized units don't share the object
     modifiers
   };
 }
 export function applySmallSyncState(targetUnit: IUnit, state: SmallSyncState) {
   if (targetUnit.id == state.id) {
-    // LEFT OFF HERE
-
+    Object.assign(targetUnit, state);
   } else {
     console.error('Attempting to applySmallSyncState to unit with wrong ID')
   }
