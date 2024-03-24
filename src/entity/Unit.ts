@@ -46,6 +46,7 @@ import * as log from '../log';
 import { suffocateCardId, updateSuffocate } from '../cards/suffocate';
 import { doLiquidEffect } from '../inLiquid';
 import { freezeCardId } from '../cards/freeze';
+import { healSfx, oneOffHealAnimation } from '../effects/heal';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -923,12 +924,24 @@ export function takeDamage(damageArgs: damageArgs, underworld: Underworld, predi
     }
     return;
   }
+
+  // Clamp the incoming healing amount to 0 to prevent heal over max
+  // Don't clamp hp value itself because we dont want to remove existing overhealth
+  if (amount < 0) {
+    const maxHealingAllowed = Math.max(0, unit.healthMax - unit.health);
+    if (Math.abs(amount) > maxHealingAllowed) {
+      amount = -maxHealingAllowed;
+    }
+  }
+  unit.health -= amount;
+  // Prevent health from going under 0
+  unit.health = Math.max(0, unit.health);
+  // Ensure health is a whole number
+  unit.health = Math.floor(unit.health);
+
   if (!prediction) {
-    // console.log(`takeDamage: unit ${unit.id}; amount: ${amount}; events:`, unit.onDamageEvents);
-    // Only play hit animation if taking actual damage,
-    // note: heals call takeDamage with a negative amount, so we don't want to play a hit animation when
-    // player is healed
     if (amount > 0) {
+      // - - - DAMAGE FX - - -
       playSFXKey(unit.sfx.damage);
       playAnimation(unit, unit.animations.hit, { loop: false, animationSpeed: 0.2 });
       // All units bleed except Doodads
@@ -941,29 +954,16 @@ export function takeDamage(damageArgs: damageArgs, underworld: Underworld, predi
           }
         }
       }
-    }
-  }
-  // if healing
-  if (amount < 0) {
-    // Ensure it doesn't heal over max health
-    const maxHealingAllowed = Math.max(0, unit.healthMax - unit.health);
-    if (Math.abs(amount) > maxHealingAllowed) {
-      amount = -maxHealingAllowed;
-    }
-  }
-  unit.health -= amount;
-  // Prevent health from going under 0
-  unit.health = Math.max(0, unit.health);
-  // Ensure health is a whole number
-  unit.health = Math.floor(unit.health);
-  // If the unit is actually taking damage (not taking 0 damage or being healed - (negative damage))
-  if (!prediction) {
-    if (amount > 0) {
       // Use all_red shader to flash the unit to show they are taking damage
       if (unit.shaderUniforms.all_red) {
         unit.shaderUniforms.all_red.alpha = 1;
         addLerpable(unit.shaderUniforms.all_red, "alpha", 0, 200);
       }
+    } else if (amount < 0) {
+      // - - - HEALING FX - - -
+      playSFXKey(healSfx);
+      floatingText({ coords: unit, text: globalThis.getChosenLanguageCode() == 'en' ? `+${Math.abs(amount)} Health` : `${i18n('heal')} ${Math.abs(amount)}` });
+      oneOffHealAnimation(unit);
     }
   }
 
@@ -984,8 +984,8 @@ export function takeDamage(damageArgs: damageArgs, underworld: Underworld, predi
     underworld.syncPlayerPredictionUnitOnly();
     syncPlayerHealthManaUI(underworld);
   }
-
 }
+
 export function syncPlayerHealthManaUI(underworld: Underworld) {
   if (globalThis.headless) { return; }
   if (!(globalThis.player && elHealthBar && elManaBar && elStaminaBar && elHealthLabel && elManaLabel && elStaminaBarLabel)) {

@@ -1,7 +1,7 @@
 import { CardCategory } from '../types/commonTypes';
 import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
-import { healUnits } from '../effects/heal';
+import { healSfx, healUnits } from '../effects/heal';
 
 export const healCardId = 'heal';
 const healAmount = 30;
@@ -10,7 +10,7 @@ const spell: Spell = {
   card: {
     id: healCardId,
     category: CardCategory.Blessings,
-    sfx: 'heal',
+    //sfx: healSfx, // Heal FX Handled in Unit.takeDamage()
     supportQuantity: true,
     manaCost: 15,
     healthCost: 0,
