@@ -52,7 +52,7 @@ const urnPoisonSource: UnitSource = {
   }
 };
 export const urnpoisonExplode = 'urnpoisonExplode';
-export function registerUrnpoisonExplode() {
+export function registerUrnPoisonExplode() {
   registerEvents(urnpoisonExplode, {
     onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       const units = explode(unit, unit.attackRange, 0, 0,

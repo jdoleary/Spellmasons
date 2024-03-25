@@ -92,7 +92,7 @@ async function animate(targets: HasSpace[]) {
   }
 }
 function doDraw(resolve: (value: void | PromiseLike<void>) => void, targets: HasSpace[], endTime: number) {
-  const didDraw = drawLineBetweenTargest(targets);
+  const didDraw = drawLineBetweenTargets(targets);
   if (didDraw) {
     // Show the electricity for a moment
     if (Date.now() > endTime) {
@@ -105,7 +105,7 @@ function doDraw(resolve: (value: void | PromiseLike<void>) => void, targets: Has
   }
 }
 // Returns true if it did draw
-function drawLineBetweenTargest(targets: HasSpace[]): boolean {
+function drawLineBetweenTargets(targets: HasSpace[]): boolean {
   // Animations do not occur on headless
   if (!globalThis.headless) {
     if (globalThis.predictionGraphics) {
@@ -128,6 +128,6 @@ function drawLineBetweenTargest(targets: HasSpace[]): boolean {
     }
   }
   return false;
-
 }
+
 export default spell;
