@@ -1,10 +1,16 @@
 import * as Unit from '../entity/Unit';
-import { CardCategory } from '../types/commonTypes';
+import { CardCategory, UnitSubType, UnitType } from '../types/commonTypes';
 import type Underworld from '../Underworld';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
-import { Spell } from './index';
+import { Spell, refundLastSpell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
+import { PRIEST_ID } from '../entity/units/priest';
+import { POISONER_ID } from '../entity/units/poisoner';
+import { gripthulu_id } from '../entity/units/gripthulu';
+import { decoyId } from './summon_decoy';
+import { bossmasonUnitId } from '../entity/units/deathmason';
+import { DARK_SUMMONER_ID } from '../entity/units/darkSummoner';
 
 const enfeebleId = 'Enfeeble';
 const statChange = -5;
@@ -23,8 +29,20 @@ const spell: Spell = {
     description: ['spell_enfeeble', (statChange).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
-      const targets = state.targetedUnits.filter(u => u.alive);
-      if (targets.length) {
+      const targets = state.targetedUnits.filter(
+        u => u.alive
+          && u.unitSourceId != PRIEST_ID
+          && u.unitSourceId != POISONER_ID
+          && u.unitSourceId != gripthulu_id
+          && u.unitSourceId != decoyId
+          && u.unitSourceId != bossmasonUnitId
+          && u.unitSourceId != DARK_SUMMONER_ID);
+      // Even though the player's damage stat doesn't affect their spells
+      // it will affect cloned spellmasons, so we allow it.
+
+      if (!targets.length) {
+        refundLastSpell(state, prediction, "No valid targets");
+      } else {
         playDefaultSpellSFX(card, prediction);
         //await playDefaultSpellAnimation(card, targets, prediction);
         for (let unit of targets) {
