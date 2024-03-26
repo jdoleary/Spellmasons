@@ -132,6 +132,8 @@ declare global {
   var thinkingPlayerGraphics: PIXI.Graphics | undefined;
   // Graphics for drawing unit health and mana bars
   var unitOverlayGraphics: PIXI.Graphics | undefined;
+  // Graphics for drawing spell effects such as bolt
+  var projectileGraphics: PIXI.Graphics | undefined;
   // Graphics for drawing unit attack radius and such
   var selectedUnitGraphics: PIXI.Graphics | undefined;
   // Graphics for drawing the spell effects during the dry run phase
@@ -365,4 +367,6 @@ declare global {
   var resetControlMap: undefined | (() => void);
   var setFontOverride: undefined | ((font: string) => void);
   var noGore: undefined | boolean;
+  // True when a SPELL message is currently being executed
+  var spellCasting: boolean | undefined;
 }

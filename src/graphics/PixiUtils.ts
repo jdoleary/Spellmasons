@@ -199,6 +199,10 @@ if (globalThis.pixi && containerUI && app && containerRadiusUI) {
       containerFloatingText,
     ];
   }
+  if (containerProjectiles) {
+    globalThis.projectileGraphics = new globalThis.pixi.Graphics();
+    containerProjectiles.addChild(globalThis.projectileGraphics);
+  }
 
   utilProps.elPIXIHolder = document.getElementById('PIXI-holder') as (HTMLElement | undefined);
   utilProps.elCardHoldersBorder = document.getElementById('card-holders-border') as (HTMLElement | undefined);

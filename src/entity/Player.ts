@@ -576,6 +576,37 @@ export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | u
     CardUI.recalcPositionForCards(player, underworld);
   }
 }
+export async function setSpellmasonsToChannellingAnimationClose(player: IPlayer) {
+  if (['units/playerBookIn', 'units/playerBookIdle'].includes(player.unit.image?.sprite.imagePath || '')) {
+    await new Promise<void>((resolve) => {
+      if (player.unit.image) {
+        Image.changeSprite(
+          player.unit.image,
+          'units/playerBookReturn',
+          player.unit.image.sprite.parent,
+          resolve,
+          {
+            loop: false,
+            // Play the book close animation a little faster than usual so
+            // the player can get on with casting
+            animationSpeed: 0.2
+          }
+        );
+        Image.addOneOffAnimation(player.unit, 'units/playerBookReturnMagic', { doRemoveWhenPrimaryAnimationChanges: true }, {
+          loop: false,
+          // Play the book close animation a little faster than usual so
+          // the player can get on with casting
+          animationSpeed: 0.2
+        });
+      } else {
+        resolve();
+      }
+    });
+
+    Unit.returnToDefaultSprite(player.unit);
+  }
+
+}
 export function setSpellmasonsToChannellingAnimation(player: IPlayer) {
   const bookInAnimationPath = 'units/playerBookIn';
   new Promise<void>((resolve) => {

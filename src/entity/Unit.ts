@@ -47,6 +47,8 @@ import { suffocateCardId, updateSuffocate } from '../cards/suffocate';
 import { doLiquidEffect } from '../inLiquid';
 import { freezeCardId } from '../cards/freeze';
 import { healSfx, oneOffHealAnimation } from '../effects/heal';
+import { soulShardOwnerModifierId } from '../modifierSoulShardOwner';
+import { getAllShardBearers } from '../cards/soul_shard';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -1141,6 +1143,16 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
   }
 }
 
+// Returns whether or not a unit is truly dead
+// Considers game state and soulshard modifier
+// so that soul shard owners are considered "remaining"
+// since they will be resurrected on their next turn
+// Used for game loop logic
+export function isRemaining(unit: IUnit, underworld: Underworld, prediction: boolean) {
+  return unit.alive
+    || (unit.modifiers[soulShardOwnerModifierId] && getAllShardBearers(unit, underworld, prediction).length > 0);
+}
+
 export function canAct(unit: IUnit): boolean {
   if (!unit.alive) {
     return false;
@@ -1711,5 +1723,4 @@ export function resetUnitStats(unit: IUnit, underworld: Underworld) {
 
 export function unitSourceIdToName(unitSourceId: string, asMiniboss: boolean): string {
   return unitSourceId + (asMiniboss ? ' Miniboss' : '');
-
 }

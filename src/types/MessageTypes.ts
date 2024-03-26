@@ -40,4 +40,7 @@ export enum MESSAGE_TYPES {
   // Could add typing indicator in future
   CHAT_SENT,
   CLIENT_SEND_PLAYER_TO_SERVER,
+  // Just for visual juice, a player plays the bookIdle animation
+  // when viewing the inventory
+  VIEWING_INVENTORY,
 }

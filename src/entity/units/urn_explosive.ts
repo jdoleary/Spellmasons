@@ -54,7 +54,7 @@ const unit: UnitSource = {
   }
 };
 export const urnexplosiveExplode = 'urnexplosiveExplode';
-export function registerUrnexplosiveExplode() {
+export function registerUrnExplosiveExplode() {
   registerEvents(urnexplosiveExplode, {
     onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       explode(unit, unit.attackRange, unit.damage, defaultPushDistance,

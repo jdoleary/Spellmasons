@@ -46,6 +46,7 @@ import poison from './poison';
 import suffocate from './suffocate';
 import debilitate from './debilitate';
 import soul_bind from './soul_bind';
+import soul_shard from './soul_shard';
 import * as protection from './protection';
 import clone from './clone';
 import capture_soul from './capture_soul';
@@ -118,11 +119,12 @@ import { Localizable } from '../localization';
 import { distance } from '../jmath/math';
 import { getSpellThumbnailPath } from '../graphics/ui/CardUI';
 import { registerUrnIceExplode } from '../entity/units/urn_ice';
-import { registerUrnpoisonExplode } from '../entity/units/urn_poison';
-import { registerUrnexplosiveExplode } from '../entity/units/urn_explosive';
+import { registerUrnPoisonExplode } from '../entity/units/urn_poison';
+import { registerUrnExplosiveExplode } from '../entity/units/urn_explosive';
 import { calculateGameDifficulty } from '../Difficulty';
 import registerCorpseDecay from '../modifierCorpseDecay';
 import { registerDeathmasonEvents } from '../entity/units/deathmason';
+import registerSoulShardOwner from '../modifierSoulShardOwner';
 
 export interface Modifiers {
   subsprite?: Subsprite;
@@ -253,6 +255,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(purify, overworld);
   registerSpell(debilitate, overworld);
   registerSpell(soul_bind, overworld);
+  registerSpell(soul_shard, overworld);
   registerSpell(bloat, overworld);
   registerSpell(slow, overworld);
   registerSpell(blood_curse, overworld);
@@ -323,12 +326,15 @@ export function registerCards(overworld: Overworld) {
 
   // Register floating modifier (non-card);
   registerSummoningSickness();
-  registerImpendingDoom();
   registerCorpseDecay();
-  registerUrnIceExplode();
-  registerUrnpoisonExplode();
-  registerUrnexplosiveExplode();
+
   registerImmune();
+  registerImpendingDoom();
+  registerSoulShardOwner();
+
+  registerUrnIceExplode();
+  registerUrnPoisonExplode();
+  registerUrnExplosiveExplode();
   registerDeathmasonEvents();
 }
 
