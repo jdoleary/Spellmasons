@@ -19,6 +19,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
+    damage: 0,
     attackRange: 350,
     healthMax: 60,
     mana: 60,
