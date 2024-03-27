@@ -13,7 +13,7 @@ import { bossmasonUnitId } from '../entity/units/deathmason';
 import { DARK_SUMMONER_ID } from '../entity/units/darkSummoner';
 
 const enfeebleId = 'Enfeeble';
-const statChange = -5;
+const statChange = 5;
 const spell: Spell = {
   card: {
     id: enfeebleId,
@@ -32,7 +32,6 @@ const spell: Spell = {
       const targets = state.targetedUnits.filter(
         u => u.alive
           && u.unitSourceId != PRIEST_ID
-          && u.unitSourceId != POISONER_ID
           && u.unitSourceId != gripthulu_id
           && u.unitSourceId != decoyId
           && u.unitSourceId != bossmasonUnitId
@@ -63,7 +62,12 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     //no first time setup
   });
 
-  unit.damage += statChange * quantity;
+  // Special balance case: Poisoner applies 1 stack of poison per damage
+  if (unit.unitSourceId == POISONER_ID) {
+    unit.damage -= quantity;
+  } else {
+    unit.damage -= statChange * quantity;
+  }
 }
 
 function remove(unit: Unit.IUnit, underworld: Underworld) {
@@ -73,7 +77,12 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
     return
   }
 
-  unit.damage -= statChange * modifier.quantity;
+  // Special balance case: Poisoner applies 1 stack of poison per damage
+  if (unit.unitSourceId == POISONER_ID) {
+    unit.damage += modifier.quantity;
+  } else {
+    unit.damage += statChange * modifier.quantity;
+  }
 }
 
 export default spell;
