@@ -27,7 +27,12 @@ const spell: Spell = {
           // playSFXKey(`fallIntoLiquid-${underworld.lastLevelCreated?.biome}`);
         }
         for (let unit of targets) {
-          Unit.takeDamage(unit, damageDone * quantity, state.casterUnit, underworld, prediction, state);
+          Unit.takeDamage({
+            unit: unit,
+            amount: damageDone * quantity,
+            sourceUnit: state.casterUnit,
+            fromVec2: state.casterUnit,
+          }, underworld, prediction);
         }
       }
       // No targets to cast on. Refund mana

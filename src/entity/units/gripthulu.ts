@@ -20,6 +20,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.SPECIAL_LOS,
   },
   unitProps: {
+    damage: 0,
     attackRange: 500,
     mana: 30,
     manaMax: 30,

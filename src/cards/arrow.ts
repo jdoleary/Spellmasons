@@ -37,7 +37,13 @@ const spell: Spell = {
   events: {
     onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
       if (unit) {
-        Unit.takeDamage(unit, damage, projectile.startPoint, underworld, prediction, undefined, { thinBloodLine: true });
+        Unit.takeDamage({
+          unit: unit,
+          amount: damage,
+          sourceUnit: projectile.sourceUnit,
+          fromVec2: projectile.startPoint,
+          thinBloodLine: true,
+        }, underworld, prediction);
       }
     }
   }
@@ -82,6 +88,7 @@ export function arrowEffect(multiShotCount: number, collideFnKey: string, doesPi
             beingPushed: false
           }
           makeForceMoveProjectile({
+            sourceUnit: state.casterUnit,
             pushedObject,
             startPoint: casterPositionAtTimeOfCast,
             endPoint: endPoint,

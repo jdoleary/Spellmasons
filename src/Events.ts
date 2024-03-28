@@ -4,12 +4,17 @@ import Underworld from './Underworld';
 import { IPickup } from './entity/Pickup';
 import { ForceMoveProjectile } from './jmath/moveWithCollision';
 
-export type onDamage = {
+export type onDealDamage = {
+  // Returns a possibly modified damage
+  (damageDealer: IUnit, amount: number, underworld: Underworld, prediction: boolean, damageReciever?: IUnit): number;
+};
+const onDealDamageSource: { [name: string]: onDealDamage } = {};
+
+export type onTakeDamage = {
   // Returns a possibly modified damage
   (unit: IUnit, amount: number, underworld: Underworld, prediction: boolean, damageDealer?: IUnit): number;
 };
-
-const onDamageSource: { [name: string]: onDamage } = {};
+const onTakeDamageSource: { [name: string]: onTakeDamage } = {};
 
 export type onDeath = {
   (unit: IUnit, underworld: Underworld, prediction: boolean): Promise<void>;
@@ -48,7 +53,8 @@ const onProjectileCollisionSource: { [name: string]: onProjectileCollision } = {
 
 export default {
   onAgroSource,
-  onDamageSource,
+  onDealDamageSource,
+  onTakeDamageSource,
   onDeathSource,
   onMoveSource,
   onTurnStartSource,

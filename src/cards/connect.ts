@@ -44,7 +44,7 @@ const spell: Spell = {
             if (Unit.isUnit(x) && Unit.isUnit(target)) {
               if (target.alive) {
                 // Match living units of the same faction
-                return x.faction == target.faction && x.alive; //TODO - Neutral faction?
+                return x.faction == target.faction && x.alive; // TODO - Neutral faction?
               } else {
                 // Match any dead unit
                 return !x.alive;

@@ -40,7 +40,7 @@ const spell: Spell = {
     add,
   },
   events: {
-    onDamage: (unit, amount, _underworld, damageDealer) => {
+    onTakeDamage: (unit, amount, _underworld, damageDealer) => {
       const quantity = unit.modifiers[id]?.quantity || 1;
       // Magnify positive damage
       if (amount > 0) {
@@ -55,7 +55,7 @@ const spell: Spell = {
 
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
   const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity }, () => {
-    unit.onDamageEvents.push(id);
+    unit.onTakeDamageEvents.push(id);
   });
 }
 export default spell;

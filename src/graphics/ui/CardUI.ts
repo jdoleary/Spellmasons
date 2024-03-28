@@ -7,7 +7,7 @@ import {
 } from '../PlanningView';
 import { calculateCost, calculateCostForSingleCard, getCardCooldown, levelsUntilCardIsEnabled } from '../../cards/cardUtils';
 import floatingText from '../FloatingText';
-import { composeOnDamageEvents, copyForPredictionUnit } from '../../entity/Unit';
+import { copyForPredictionUnit } from '../../entity/Unit';
 import { NUMBER_OF_TOOLBAR_SLOTS } from '../../config';
 import Underworld from '../../Underworld';
 import { CardCategory, CardRarity, probabilityMap } from '../../types/commonTypes';

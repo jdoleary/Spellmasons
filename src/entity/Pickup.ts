@@ -26,6 +26,7 @@ import { createVisualLobbingProjectile } from './Projectile';
 import floatingText from '../graphics/FloatingText';
 import { containerParticles } from '../graphics/Particles';
 import { elEndTurnBtn } from '../HTMLElements';
+import { healManaUnit, healUnit } from '../effects/heal';
 
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 export const PICKUP_IMAGE_PATH = 'pickups/scroll';
@@ -498,7 +499,11 @@ export const pickups: IPickupSource[] = [
           }
 
         }
-        takeDamage(unit, spike_damage, unit, underworld, prediction)
+        takeDamage({
+          unit: unit,
+          amount: spike_damage,
+          fromVec2: unit,
+        }, underworld, prediction);
       }
     }
   },
@@ -536,7 +541,10 @@ export const pickups: IPickupSource[] = [
           } else {
           }
         }
-        takeDamage(player.unit, RED_PORTAL_DAMAGE, undefined, underworld, false);
+        takeDamage({
+          unit: player.unit,
+          amount: RED_PORTAL_DAMAGE,
+        }, underworld, false);
       }
     },
   },
@@ -572,7 +580,10 @@ export const pickups: IPickupSource[] = [
             skyBeam(randomOtherBluePortal);
           }
         }
-        takeDamage(player.unit, -RED_PORTAL_DAMAGE, undefined, underworld, false);
+        takeDamage({
+          unit: player.unit,
+          amount: -RED_PORTAL_DAMAGE,
+        }, underworld, false);
       }
     },
   },
@@ -659,18 +670,10 @@ export const pickups: IPickupSource[] = [
     },
     effect: ({ unit, player, underworld, prediction }) => {
       if (unit) {
-        unit.mana += manaPotionRestoreAmount;
-        explain(EXPLAIN_OVERFILL);
         if (!prediction) {
           playSFXKey('potionPickupMana');
         }
-        // Animate
-        // Animate
-        Image.addOneOffAnimation(unit, 'spell-effects/potionPickup', {}, {
-          loop: false,
-          animationSpeed: 0.3,
-          colorReplace: { colors: [[0xff0000, manaBlue]], epsilon: 0.15 },
-        });
+        healManaUnit(unit, manaPotionRestoreAmount, undefined, underworld, prediction);
       }
     },
   },
@@ -738,14 +741,12 @@ export const pickups: IPickupSource[] = [
       // players that have blood curse will be damaged by healing so it should trigger for them too
       return !!(player && (player.unit.health < player.unit.healthMax || hasBloodCurse(player.unit)));
     },
-    effect: ({ unit, player, underworld, prediction }) => {
+    effect: ({ unit, player, pickup, underworld, prediction }) => {
       if (unit) {
-        takeDamage(unit, -healthPotionRestoreAmount, undefined, underworld, prediction);
-        // Add spell effect animation
-        Image.addOneOffAnimation(unit, 'spell-effects/potionPickup', {}, { animationSpeed: 0.3, loop: false });
         if (!prediction) {
           playSFXKey('potionPickupHealth');
         }
+        healUnit(unit, healthPotionRestoreAmount, undefined, underworld, prediction);
       }
     },
   },

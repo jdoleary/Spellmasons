@@ -37,7 +37,6 @@ const spell: Spell = {
           // Prediction circles to show affected targets
           const graphics = globalThis.predictionGraphics;
           if (graphics) {
-            const lineColor = colors.healthDarkRed;
             for (let target of targets) {
               drawDiamond(target, graphics);
             }
@@ -68,11 +67,11 @@ const spell: Spell = {
     remove,
   },
   events: {
-    onDamage: (unit, amount, underworld, prediction) => {
+    onTakeDamage: (unit, amount, underworld, prediction) => {
       // Redirect all damage to the modifier's source unit
       const modifier = unit.modifiers[soulShardId];
       if (modifier) {
-        const shardOwner = getShardOwnerById(modifier.shardOwnerId, underworld, prediction);
+        const shardOwner = underworld.getUnitById(modifier.shardOwnerId, prediction);
         if (shardOwner) {
           // Prevents an infinite loop in the case of multiple
           // shard owners redirecting to eachother
@@ -81,7 +80,10 @@ const spell: Spell = {
 
             // Do lightning effect
             if (!prediction) animateDamageRedirection(shardOwner, unit);
-            Unit.takeDamage(shardOwner, amount, undefined, underworld, prediction, undefined);
+            Unit.takeDamage({
+              unit: shardOwner,
+              amount: amount,
+            }, underworld, prediction);
 
             modifier.hasRedirectedDamage = false;
             return 0;
@@ -96,7 +98,7 @@ const spell: Spell = {
     onDrawSelected: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
       const modifier = unit.modifiers[soulShardId];
       if (modifier) {
-        const shardOwner = getShardOwnerById(modifier.shardOwnerId, underworld, prediction);
+        const shardOwner = underworld.getUnitById(modifier.shardOwnerId, prediction);
         if (shardOwner) {
           const graphics = globalThis.selectedUnitGraphics;
           if (graphics) {
@@ -119,7 +121,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
   }
 
   const modifier = getOrInitModifier(unit, soulShardId, { isCurse: true, quantity }, () => {
-    unit.onDamageEvents.push(soulShardId);
+    unit.onTakeDamageEvents.push(soulShardId);
     unit.onDrawSelectedEvents.push(soulShardId);
   });
 
@@ -129,7 +131,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
       removeShardOwner(modifier.shardOwnerId, underworld, prediction);
     }
 
-    const newShardOwner = getShardOwnerById(extra.shardOwnerId, underworld, prediction);
+    const newShardOwner = underworld.getUnitById(extra.shardOwnerId, prediction);
     if (newShardOwner) {
       Unit.addModifier(newShardOwner, soulShardOwnerModifierId, underworld, prediction);
     }
@@ -146,7 +148,7 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
 }
 
 function removeShardOwner(shardOwnerId: number, underworld: Underworld, prediction: boolean) {
-  const shardOwner = getShardOwnerById(shardOwnerId, underworld, prediction);
+  const shardOwner = underworld.getUnitById(shardOwnerId, prediction);
   if (shardOwner) {
     const shardOwnerModifier = shardOwner.modifiers[soulShardOwnerModifierId];
     if (shardOwnerModifier) {
@@ -157,11 +159,6 @@ function removeShardOwner(shardOwnerId: number, underworld: Underworld, predicti
   } else {
     console.error("Shard owner with ID does not exist. This should never happen\n", shardOwnerId);
   }
-}
-
-function getShardOwnerById(id: number, underworld: Underworld, prediction: boolean): Unit.IUnit | undefined {
-  const units = prediction ? underworld.unitsPrediction : underworld.units;
-  return units.find(u => u.id == id);
 }
 
 export function getAllShardBearers(unit: Unit.IUnit, underworld: Underworld, prediction: boolean): Unit.IUnit[] {

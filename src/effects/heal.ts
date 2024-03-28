@@ -4,62 +4,46 @@ import * as colors from '../graphics/ui/colors';
 import floatingText from "../graphics/FloatingText";
 import * as Image from '../graphics/Image';
 import * as config from '../config';
-import heal from "../cards/add_heal";
-import sendMana from "../cards/send_mana";
-import { playDefaultSpellSFX } from "../cards/cardUtils";
 import { EffectState } from "../cards";
 import { EXPLAIN_OVERFILL, explain } from "../graphics/Explain";
 
+export const healSfx = 'heal';
 const animationOptions = { loop: false, animationSpeed: 0.3 };
 const manaReplaceColors: [number, number][] = [[0xff0000, colors.manaBlue]];
 
-export async function healUnits(units: Unit.IUnit[], amount: number, underworld: Underworld, prediction: boolean, state?: EffectState, useFx: boolean = true) {
+export async function healUnits(units: Unit.IUnit[], amount: number, sourceUnit: Unit.IUnit | undefined, underworld: Underworld, prediction: boolean, state?: EffectState) {
   units = units.filter(u => u.alive);
   if (units.length == 0 || amount == 0) return;
 
-  if (useFx && !prediction) {
-    playDefaultSpellSFX(heal.card, prediction);
-    let animationPromise = undefined;
-    for (let unit of units) {
-      // All heals animate simultaneously, so just await the last promise
-      // Instead of using Promise.All()
-      floatingText({ coords: unit, text: globalThis.getChosenLanguageCode() == 'en' ? `+${Math.abs(amount)} Health` : `${i18n('heal')} ${Math.abs(amount)}` });
-      Unit.takeDamage(unit, -amount, undefined, underworld, prediction, state);
-      animationPromise = oneOffHealAnimation(unit);
-    }
-    await animationPromise;
-    return state;
-  } else {
-    for (let unit of units) {
-      Unit.takeDamage(unit, -amount, undefined, underworld, prediction, state);
-    }
-    return state;
+  for (let unit of units) {
+    Unit.takeDamage({
+      unit: unit,
+      amount: -amount,
+      sourceUnit: sourceUnit,
+    }, underworld, prediction);
   }
+
+  return state;
 }
 
-export async function healUnit(unit: Unit.IUnit, amount: number, underworld: Underworld, prediction: boolean, state?: EffectState, useFx: boolean = true) {
+export async function healUnit(unit: Unit.IUnit, amount: number, sourceUnit: Unit.IUnit | undefined, underworld: Underworld, prediction: boolean, state?: EffectState) {
   const units = [unit];
-  return await healUnits(units, amount, underworld, prediction, state, useFx);
+  return await healUnits(units, amount, sourceUnit, underworld, prediction, state);
 }
 
-export async function healManaUnits(units: Unit.IUnit[], amount: number, underworld: Underworld, prediction: boolean, state?: EffectState, useFx: boolean = true) {
+export async function healManaUnits(units: Unit.IUnit[], amount: number, sourceUnit: Unit.IUnit | undefined, underworld: Underworld, prediction: boolean, state?: EffectState) {
   units = units.filter(u => u.alive);
   if (units.length == 0 || amount == 0) return;
 
-  if (useFx && !prediction) {
-    playDefaultSpellSFX(sendMana.card, prediction);
-    let animationPromise = undefined;
+  if (!prediction) {
     for (let unit of units) {
-      // All heals animate simultaneously, so just await the last promise
-      // Instead of using Promise.All()
-      floatingText({ coords: unit, text: `+ ${amount} ${i18n('Mana')}`, style: { fill: 'blue', ...config.PIXI_TEXT_DROP_SHADOW } });
-      unit.mana += amount;
-      explain(EXPLAIN_OVERFILL);
       // The default animation for restoring mana is the
       // healing animation with a color filter on top of it
-      animationPromise = oneOffHealAnimation(unit, true);
+      oneOffHealAnimation(unit, true);
+      floatingText({ coords: unit, text: `+ ${amount} ${i18n('Mana')}`, style: { fill: 'blue', ...config.PIXI_TEXT_DROP_SHADOW } });
+      explain(EXPLAIN_OVERFILL);
+      unit.mana += amount;
     }
-    await animationPromise;
     return state;
   } else {
     for (let unit of units) {
@@ -69,12 +53,13 @@ export async function healManaUnits(units: Unit.IUnit[], amount: number, underwo
   }
 }
 
-export async function healManaUnit(unit: Unit.IUnit, amount: number, underworld: Underworld, prediction: boolean, state?: EffectState, useFx: boolean = true) {
+
+export async function healManaUnit(unit: Unit.IUnit, amount: number, sourceUnit: Unit.IUnit | undefined, underworld: Underworld, prediction: boolean, state?: EffectState) {
   const units = [unit];
-  return await healManaUnits(units, amount, underworld, prediction, state, useFx);
+  return await healManaUnits(units, amount, sourceUnit, underworld, prediction, state);
 }
 
-function oneOffHealAnimation(imageHaver: any, asMana: boolean = false): Promise<void> {
+export function oneOffHealAnimation(imageHaver: any, asMana: boolean = false): Promise<void> {
   // The default animation for restoring mana is the
   // healing animation with a color filter on top of it
   if (asMana) {
