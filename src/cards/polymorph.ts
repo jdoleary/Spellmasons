@@ -56,9 +56,10 @@ const spell: Spell = {
               // TODO - Show new unit?
             }
 
-            // Cleanup unit and remove from targets list. Add new unit to targets
+            // Cleanup old unit and remove it from targets
             Unit.cleanup(unit, false);
             state.targetedUnits = state.targetedUnits.filter(u => u != unit);
+            // Add new unit to targets
             addTarget(newUnit, state, underworld);
           }
         }
