@@ -60,7 +60,6 @@ const unit: UnitSource = {
           // Casts one stack of poison per damage
           for (let i = 0; i < unit.damage; i++) {
             cardsIds.push(poison.poisonCardId);
-            console.log(cardsIds);
           }
           await underworld.castCards({
             casterCardUsage: {},
