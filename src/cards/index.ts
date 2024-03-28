@@ -64,6 +64,7 @@ import bone_shrapnel from './bone_shrapnel';
 import shatter from './shatter';
 import meteor from './meteor';
 import split from './split';
+import polymorph from './polymorph';
 import drown from './drown';
 import target_arrow from './target_arrow';
 import target_column from './target_column';
@@ -251,6 +252,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(slow, overworld);
   registerSpell(blood_curse, overworld);
   registerSpell(split, overworld);
+  registerSpell(polymorph, overworld);
   registerSpell(contaminate, overworld);
 
   // Mana
