@@ -3558,6 +3558,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     const closest = sortedByProximityToCoords[0]
     return closest;
   }
+  // Note, predictions ids intentionally won't always align with real unit ids.
+  // If you are trying to find a unit's corresponding prediction or a predictionUnit's
+  // corresponding real unit, use unit.predictionCopy or unit.real respectively.
+  // See `lastPredictionUnitId` for more context on why ids are different.
   getUnitById(id: number, prediction: boolean): Unit.IUnit | undefined {
     const units = prediction ? this.unitsPrediction : this.units;
     return units.find(u => u.id == id);
