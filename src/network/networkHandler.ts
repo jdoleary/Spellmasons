@@ -458,6 +458,8 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
   }
   logHandleOnDataMessage(type, payload, fromClient, underworld);
 
+  // TODO LEFT OFF transformed message from headless loses fromClient
+  console.log('jtest fromClient', fromClient)
   const fromPlayer = getFromPlayerViaClientId(fromClient, underworld);
   switch (type) {
     case MESSAGE_TYPES.CHANGE_CHARACTER: {
@@ -868,21 +870,26 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         await underworld.awaitForceMoves();
         // Only send SYNC_SOME_STATE from the headless server
         if (globalThis.headless) {
-          // Sync state directly after each cast to attempt to reduce snowballing desyncs
+          // Send a new SPELL message with the sync state attached
+          console.log('jtest send spell message')
           underworld.pie.sendData({
-            type: MESSAGE_TYPES.SYNC_SOME_STATE,
-            timeOfLastSpellMessage: lastSpellMessageTime,
-            units: underworld.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
-            pickups: underworld.pickups.filter(p => !p.flaggedForRemoval).map(Pickup.serialize),
-            lastUnitId: underworld.lastUnitId,
-            lastPickupId: underworld.lastPickupId,
-            // the state of the Random Number Generator
-            RNGState: underworld.random.state(),
-            // Store the level index that this function was invoked on
-            // so that it can be sent along with the message so that if
-            // the level index changes, 
-            // the old SYNC_SOME_STATE state won't overwrite the newer state
-            currentLevelIndex: underworld.levelIndex,
+            asFromClient: d.fromClient,
+            type: MESSAGE_TYPES.SPELL,
+            ...payload,
+            syncState: {
+              timeOfLastSpellMessage: lastSpellMessageTime,
+              units: underworld.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
+              pickups: underworld.pickups.filter(p => !p.flaggedForRemoval).map(Pickup.serialize),
+              lastUnitId: underworld.lastUnitId,
+              lastPickupId: underworld.lastPickupId,
+              // the state of the Random Number Generator
+              RNGState: underworld.random.state(),
+              // Store the level index that this function was invoked on
+              // so that it can be sent along with the message so that if
+              // the level index changes, 
+              // the old SYNC_SOME_STATE state won't overwrite the newer state
+              currentLevelIndex: underworld.levelIndex,
+            }
           });
         }
         globalThis.spellCasting = false;
