@@ -3,7 +3,8 @@ import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
 import type { Vec2 } from '../jmath/Vec';
 import Events, {
-  onDamage,
+  onDealDamage,
+  onTakeDamage,
   onDeath,
   onMove,
   onAgro,
@@ -29,6 +30,7 @@ import freeze from './freeze';
 import resurrect from './resurrect';
 import resurrect_weak from './resurrect_weak';
 import resurrect_toxic from './resurrect_toxic';
+import empower from './empower';
 import shield from './shield';
 import fortify from './fortify';
 import alchemize from './alchemize';
@@ -39,6 +41,7 @@ import teleport from './teleport';
 import recall from './recall';
 import displace from './displace';
 import purify from './purify';
+import enfeeble from './enfeeble';
 import poison from './poison';
 import suffocate from './suffocate';
 import debilitate from './debilitate';
@@ -133,7 +136,8 @@ export interface Modifiers {
   remove?: (unit: Unit.IUnit, underworld: Underworld) => void;
 }
 interface Events {
-  onDamage?: onDamage;
+  onDealDamage?: onDealDamage;
+  onTakeDamage?: onTakeDamage;
   onDeath?: onDeath;
   onMove?: onMove;
   onAgro?: onAgro;
@@ -156,8 +160,11 @@ export function registerEvents(id: string, events: Events) {
   if (events.onAgro) {
     Events.onAgroSource[id] = events.onAgro;
   }
-  if (events.onDamage) {
-    Events.onDamageSource[id] = events.onDamage;
+  if (events.onDealDamage) {
+    Events.onDealDamageSource[id] = events.onDealDamage;
+  }
+  if (events.onTakeDamage) {
+    Events.onTakeDamageSource[id] = events.onTakeDamage;
   }
   if (events.onDeath) {
     Events.onDeathSource[id] = events.onDeath;
@@ -233,6 +240,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(heal_greater, overworld);
   registerSpell(heal_mass, overworld);
   registerSpell(send_mana, overworld);
+  registerSpell(empower, overworld);
   registerSpell(shield, overworld);
   registerSpell(fortify, overworld);
   registerSpell(alchemize, overworld);
@@ -240,6 +248,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(potion_shatter, overworld);
 
   // Curses
+  registerSpell(enfeeble, overworld);
   registerSpell(poison, overworld);
   registerSpell(suffocate, overworld);
   registerSpell(freeze, overworld);

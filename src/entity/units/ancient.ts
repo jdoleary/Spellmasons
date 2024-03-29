@@ -58,7 +58,12 @@ const unit: UnitSource = {
           Unit.orient(unit, attackTarget);
           makeAncientParticles(unit, false);
           promises.push(makeManaTrail(unit, attackTarget, underworld, '#5a7879', '#304748').then(() => {
-            Unit.takeDamage(attackTarget, unit.damage, attackTarget, underworld, false, undefined);
+            Unit.takeDamage({
+              unit: attackTarget,
+              amount: unit.damage,
+              sourceUnit: unit,
+              fromVec2: unit,
+            }, underworld, false);
           }));
         }
       }

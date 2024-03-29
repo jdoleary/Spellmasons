@@ -67,7 +67,7 @@ const spell: Spell = {
       // on turn start
       Unit.removeModifier(unit, id, underworld);
     },
-    onDamage: (unit, amount, underworld, prediction, damageDealer) => {
+    onTakeDamage: (unit, amount, underworld, prediction, damageDealer) => {
       const modifier = unit.modifiers[id];
       if (modifier) {
         // Only block damage, not heals
@@ -104,7 +104,7 @@ const spell: Spell = {
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
   const modifier = getOrInitModifier(unit, id, { isCurse: false, quantity }, () => {
     // Add event
-    unit.onDamageEvents.push(id);
+    unit.onTakeDamageEvents.push(id);
     unit.onTurnStartEvents.push(id);
     // Add subsprite image
     const animatedFortifySprite = Image.addSubSprite(unit.image, modifierImagePath);

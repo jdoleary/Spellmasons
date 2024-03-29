@@ -39,6 +39,7 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity:
     modifier.radiusBoost = 0;
   }
   modifier.radiusBoost += extra && extra.radiusBoost || 0;
+  modifier.sourceUnitId = extra.sourceUnitId;
 }
 function remove(unit: IUnit, underworld: Underworld) {
   if (unit.modifiers && unit.modifiers[id] && unit.image) {
@@ -65,7 +66,7 @@ const spell: Spell = {
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       for (let unit of state.targetedUnits.filter(u => u.alive)) {
-        Unit.addModifier(unit, id, underworld, prediction, quantity, { radiusBoost: state.aggregator.radiusBoost });
+        Unit.addModifier(unit, id, underworld, prediction, quantity, { radiusBoost: state.aggregator.radiusBoost, sourceUnitId: state.casterUnit.id });
       }
       return state;
     },
@@ -88,10 +89,18 @@ const spell: Spell = {
   },
   events: {
     onDeath: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
-      const quantity = unit.modifiers[id]?.quantity || 1;
-      const radiusBoost = unit.modifiers[id]?.radiusBoost;
+      const modifier = unit.modifiers[id];
+      if (!modifier) {
+        console.error(`Should have ${id} modifier on unit but it is missing`);
+        return;
+      }
+
+      const quantity = modifier.quantity || 1;
+      const radiusBoost = modifier.radiusBoost;
+      const sourceUnit = underworld.getUnitById(modifier.sourceUnitId, prediction);
       const adjustedRadius = getAdjustedRadius(radiusBoost);
       explode(unit, adjustedRadius, damage * quantity, getAdjustedPushDist(radiusBoost),
+        sourceUnit,
         underworld, prediction,
         colors.bloatExplodeStart, colors.bloatExplodeEnd);
     },

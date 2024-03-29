@@ -32,7 +32,14 @@ const spell: Spell = {
   events: {
     onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
       if (unit) {
-        Unit.takeDamage(unit, damageDone, projectile.startPoint, underworld, prediction, undefined, { thinBloodLine: true });
+        Unit.takeDamage({
+          unit: unit,
+          amount: damageDone,
+          sourceUnit: projectile.sourceUnit,
+          fromVec2: projectile.startPoint,
+          thinBloodLine: true,
+        }, underworld, prediction);
+
         // Now fork into regular arrows that fire in directions
         for (let newAngle of [Math.PI / 12, -Math.PI / 12, 2 * Math.PI / 12, -2 * Math.PI / 12, 3 * Math.PI / 12, -3 * Math.PI / 12]) {
           const angle = getAngleBetweenVec2s(projectile.startPoint, unit) + newAngle;

@@ -79,7 +79,13 @@ const unit: UnitSource = {
           flyingProjectilePromises.push(new Promise<void>((resolve) => {
 
             setTimeout(() => {
-              Unit.takeDamage(pierceTarget, unit.damage / 2, unit, underworld, false, undefined, { thinBloodLine: true });
+              Unit.takeDamage({
+                unit: pierceTarget,
+                amount: unit.damage / 2,
+                sourceUnit: unit,
+                fromVec2: unit,
+                thinBloodLine: true
+              }, underworld, false);
               resolve();
             }, millisecondsUntilCollision);
           }));
@@ -91,7 +97,13 @@ const unit: UnitSource = {
           firstTarget,
           'projectile/arrow_ghost',
         ).then(() => {
-          Unit.takeDamage(firstTarget, unit.damage, unit, underworld, false, undefined, { thinBloodLine: true });
+          Unit.takeDamage({
+            unit: firstTarget,
+            amount: unit.damage,
+            sourceUnit: unit,
+            fromVec2: unit,
+            thinBloodLine: true
+          }, underworld, false);
         }));
         return Promise.all(flyingProjectilePromises);
       });

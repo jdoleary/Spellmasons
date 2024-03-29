@@ -7,7 +7,7 @@ import { IUnit, takeDamage } from "../entity/Unit";
 import { forcePushAwayFrom } from "./force_move";
 
 export const baseExplosionRadius = 140
-export function explode(location: Vec2, radius: number, damage: number, pushDistance: number, underworld: Underworld, prediction: boolean, colorstart?: number, colorEnd?: number, useDefaultSound: boolean = true): IUnit[] {
+export function explode(location: Vec2, radius: number, damage: number, pushDistance: number, sourceUnit: IUnit | undefined, underworld: Underworld, prediction: boolean, colorstart?: number, colorEnd?: number, useDefaultSound: boolean = true): IUnit[] {
   if (prediction) {
     drawUICirclePrediction(location, radius, colors.healthRed, 'Explosion Radius');
   } else {
@@ -24,7 +24,12 @@ export function explode(location: Vec2, radius: number, damage: number, pushDist
   if (damage != 0) {
     units.forEach(u => {
       // Deal damage to units
-      takeDamage(u, damage, u, underworld, prediction);
+      takeDamage({
+        unit: u,
+        amount: damage,
+        sourceUnit: sourceUnit,
+        fromVec2: location,
+      }, underworld, prediction);
     });
   }
 

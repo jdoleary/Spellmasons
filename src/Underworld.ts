@@ -431,7 +431,7 @@ export default class Underworld {
         // otherwise, make the unit slide along the wall
         if (impactDamage > 0) {
           if (Unit.isUnit(pushedObject)) {
-            Unit.takeDamage(pushedObject, impactDamage, Vec.add(pushedObject, { x: velocity.x, y: velocity.y }), this, prediction);
+            Unit.takeDamage({ unit: pushedObject, amount: impactDamage, fromVec2: Vec.add(pushedObject, { x: velocity.x, y: velocity.y }) }, this, prediction);
             if (!prediction) {
               floatingText({ coords: pushedObject, text: `${impactDamage} Impact damage!` });
             }
@@ -3095,7 +3095,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       const damageMultiplier = 0.1 / this.players.length;
       // Deals 10% damage to all AI units
       this.units.filter(u => u.unitType == UnitType.AI && u.unitSubType != UnitSubType.DOODAD)
-        .forEach(u => Unit.takeDamage(u, u.healthMax * damageMultiplier, undefined, this, false));
+        .forEach(u => Unit.takeDamage({
+          unit: u,
+          amount: u.healthMax * damageMultiplier,
+          sourceUnit: player.unit
+        }, this, false));
     } else {
 
       if (isCurrentPlayer) {
@@ -3554,6 +3558,14 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     const closest = sortedByProximityToCoords[0]
     return closest;
   }
+  // Note, predictions ids intentionally won't always align with real unit ids.
+  // If you are trying to find a unit's corresponding prediction or a predictionUnit's
+  // corresponding real unit, use unit.predictionCopy or unit.real respectively.
+  // See `lastPredictionUnitId` for more context on why ids are different.
+  getUnitById(id: number, prediction: boolean): Unit.IUnit | undefined {
+    const units = prediction ? this.unitsPrediction : this.units;
+    return units.find(u => u.id == id);
+  }
   addUnitToArray(unit: Unit.IUnit, prediction: boolean): Unit.IUnit {
     if (prediction && this.unitsPrediction) {
       this.unitsPrediction.push(unit);
@@ -3779,7 +3791,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           }
 
           if (spellCostTally.healthCost !== 0) {
-            Unit.takeDamage(effectState.casterUnit, spellCostTally.healthCost, effectState.casterUnit, this, prediction, effectState);
+            Unit.takeDamage({
+              unit: effectState.casterUnit,
+              amount: spellCostTally.healthCost,
+              sourceUnit: effectState.casterUnit,
+              fromVec2: effectState.casterUnit
+            }, this, prediction);
           }
 
           // Increment card usage; now that the caster is using the card
