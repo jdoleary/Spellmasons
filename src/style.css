@@ -1570,6 +1570,7 @@ body.open-inventory #inventory-container {
 #inventory-content .category-label {
   display: none;
   color: var(--book-leather-dark);
+  font-size: 2em;
   white-space: nowrap;
 }
 
@@ -2459,4 +2460,104 @@ body.dragging-card .floating-card-holder .empty-slot {
   100% {
     opacity: 0;
   }
+}
+
+.book-padding {
+  /* For alignment of bookmarks */
+  position: relative;
+}
+
+.bookmark {
+  aspect-ratio: 35 / 36;
+  height: 50px;
+  width: unset;
+  position: absolute;
+  transform: scale(-1);
+  left: 45px;
+  top: 40px;
+}
+
+#bookmark-movement {
+  left: 43px;
+  top: 120px;
+}
+
+#bookmark-target {
+  left: 41px;
+  top: 200px;
+}
+
+#bookmark-mana {
+  left: 39px;
+  top: 280px;
+}
+
+#bookmark-curse {
+  left: 37px;
+  top: 360px;
+}
+
+#bookmark-defense {
+  left: 35px;
+  top: 440px;
+}
+
+#bookmark-soul {
+  left: 33px;
+  top: 520px;
+}
+
+#bookmark-all {
+  left: 33px;
+  top: 600px;
+}
+
+#inventory-container:not(.bookmark-all) .category,
+#inventory-container:not(.bookmark-all) .category-label.category-label.visible {
+  display: none;
+}
+
+#inventory-container.bookmark-damage .category[data-category="Damage"],
+#inventory-container.bookmark-damage .category-label[data-category="Damage"] {
+  display: flex;
+}
+
+#inventory-container.bookmark-movement .category[data-category="Movement"],
+#inventory-container.bookmark-movement .category-label[data-category="Movement"] {
+  display: flex;
+}
+
+#inventory-container.bookmark-target .category[data-category="Targeting"],
+#inventory-container.bookmark-target .category-label[data-category="Targeting"] {
+  display: flex;
+}
+
+#inventory-container.bookmark-mana .category[data-category="Mana"],
+#inventory-container.bookmark-mana .category-label[data-category="Mana"] {
+  display: flex;
+}
+
+#inventory-container.bookmark-curse .category[data-category="Curses"],
+#inventory-container.bookmark-curse .category-label[data-category="Curses"] {
+  display: flex;
+}
+
+#inventory-container.bookmark-defense .category[data-category="Blessings"],
+#inventory-container.bookmark-defense .category-label[data-category="Blessings"] {
+  display: flex;
+}
+
+#inventory-container.bookmark-soul .category[data-category="Soul"],
+#inventory-container.bookmark-soul .category-label[data-category="Soul"] {
+  display: flex;
+}
+
+#inventory-container.bookmark-movement .category[data-category="Movement"],
+#inventory-container.bookmark-movement .category-label[data-category="Movement"] {
+  display: flex;
+}
+
+#inventory-container.bookmark-movement .category[data-category="Movement"],
+#inventory-container.bookmark-movement .category-label[data-category="Movement"] {
+  display: flex;
 }
