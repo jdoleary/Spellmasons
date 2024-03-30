@@ -457,7 +457,10 @@
         "reset": "Reset",
         "confirm reset": "Are you sure you want to reset?",
         "spell_potion_shatter": "This spell breaks a potion causing it to effect all units within the radius.",
-        "refunded": "Cost Refunded"
+        "refunded": "Cost Refunded",
+        "spell_fling": "Throw yourself towards the cast location",
+        "fling": "Fling",
+        "bolt": "Bolt"
     },
     {
         "language": "Français",
@@ -917,7 +920,10 @@
         "reset": "Réinitialiser",
         "confirm reset": "Êtes-vous sûr de vouloir réinitialiser?",
         "spell_potion_shatter": "Ce sort brise une potion, la faisant agir sur toutes les unités à l'intérieur du rayon.",
-        "refunded": "Coût remboursé"
+        "refunded": "Coût remboursé",
+        "spell_fling": "Jetez votre corps dans une direction donnée",
+        "fling": "Jeter",
+        "bolt": "Boulon électrique"
     },
     {
         "language": "italiano",
@@ -1377,7 +1383,10 @@
         "reset": "Ripristina",
         "confirm reset": "Sei sicuro di voler ripristinare?",
         "spell_potion_shatter": "Questo incantesimo rompe una pozione facendola agire su tutte le unità nel raggio.",
-        "refunded": "Costo rimborsato"
+        "refunded": "Costo rimborsato",
+        "spell_fling": "Lancia il tuo corpo verso una determinata direzione",
+        "fling": "Lanciare",
+        "bolt": "Bullone elettrico"
     },
     {
         "language": "Deutsche",
@@ -1837,7 +1846,10 @@
         "reset": "Zurücksetzen",
         "confirm reset": "Sind Sie sicher, dass Sie zurücksetzen möchten?",
         "spell_potion_shatter": "Dieser Zauber bricht einen Trank und bewirkt, dass er alle Einheiten im Radius beeinflusst.",
-        "refunded": "Kosten zurückerstattet"
+        "refunded": "Kosten zurückerstattet",
+        "spell_fling": "Werfen Sie Ihren Körper in Richtung der Gipsstelle",
+        "fling": "Schleudern",
+        "bolt": "Elektrischer Bolzen"
     },
     {
         "language": "español",
@@ -2297,7 +2309,10 @@
         "reset": "Reiniciar",
         "confirm reset": "¿Está seguro que quiere reiniciar?",
         "spell_potion_shatter": "Este hechizo rompe una poción, haciendo que afecte a todas las unidades dentro del radio.",
-        "refunded": "Costo reembolsado"
+        "refunded": "Costo reembolsado",
+        "spell_fling": "Lanza tu cuerpo hacia el lugar del yeso.",
+        "fling": "Arrojar",
+        "bolt": "Perno eléctrico"
     },
     {
         "language": "日本",
@@ -2757,7 +2772,10 @@
         "reset": "リセット",
         "confirm reset": "リセットしたいですか？",
         "spell_potion_shatter": "この呪文はポーションを破壊し、半径内のすべてのユニットに影響を与えます。",
-        "refunded": "費用返金"
+        "refunded": "費用返金",
+        "spell_fling": "与えられた方向に向かって身を投げる",
+        "fling": "フリング",
+        "bolt": "電動ボルト"
     },
     {
         "language": "Português",
@@ -3217,7 +3235,10 @@
         "reset": "Reiniciar",
         "confirm reset": "Tem certeza de que deseja redefinir?",
         "spell_potion_shatter": "Este feitiço quebra uma poção, fazendo com que afete todas as unidades dentro do raio.",
-        "refunded": "Reembolso do custo"
+        "refunded": "Reembolso do custo",
+        "spell_fling": "Jogue-se em uma determinada direção",
+        "fling": "lançar",
+        "bolt": "Parafuso Elétrico"
     },
     {
         "language": "عربى",
@@ -3677,7 +3698,10 @@
         "reset": "إعادة ضبط",
         "confirm reset": "هل أنت متأكد أنك تريد إعادة تعيين؟",
         "spell_potion_shatter": "هذا التعويذ يكسر جرعة ما، مما يجعلها تؤثر على جميع الوحدات ضمن النطاق.",
-        "refunded": "استرداد التكلفة"
+        "refunded": "استرداد التكلفة",
+        "spell_fling": "ارمي نفسك في اتجاه معين",
+        "fling": "اندفع",
+        "bolt": "بولت كهربائي"
     },
     {
         "language": "한국어",
@@ -4137,7 +4161,10 @@
         "reset": "초기화",
         "confirm reset": "재설정 하시겠습니까?",
         "spell_potion_shatter": "이 주문은 포션을 깨고 반경 내의 모든 유닛에 영향을 미칩니다.",
-        "refunded": "비용 환불"
+        "refunded": "비용 환불",
+        "spell_fling": "주어진 방향으로 몸을 던져라",
+        "fling": "나서다",
+        "bolt": "전기 볼트"
     },
     {
         "language": "Русский",
@@ -4597,7 +4624,10 @@
         "reset": "Перезагрузить",
         "confirm reset": "Вы уверены, что хотите сбросить?",
         "spell_potion_shatter": "Это заклинание разрушает зелье, заставляя его действовать на все единицы в радиусе.",
-        "refunded": "Стоимость возвращена"
+        "refunded": "Стоимость возвращена",
+        "spell_fling": "Бросайте себя в заданном направлении",
+        "fling": "швырять",
+        "bolt": "Электрический болт"
     },
     {
         "language": "中文(简)",
@@ -5057,7 +5087,10 @@
         "reset": "重置",
         "confirm reset": "您确定要重置吗？",
         "spell_potion_shatter": "这个咒语破坏了一个药水，使其影响半径内的所有单位。",
-        "refunded": "费用退款"
+        "refunded": "费用退款",
+        "spell_fling": "把自己推向一个既定的方向",
+        "fling": "一扔",
+        "bolt": "电动螺栓"
     },
     {
         "language": "中文(繁)",
@@ -5517,7 +5550,10 @@
         "reset": "重置",
         "confirm reset": "您確定要重置嗎？",
         "spell_potion_shatter": "這個咒語破壞了一個藥水，使其影響半徑內的所有單位。",
-        "refunded": "費用退款"
+        "refunded": "費用退款",
+        "spell_fling": "把自己推向一個既定的方向",
+        "fling": "一丟",
+        "bolt": "電動螺栓"
     },
     {
         "language": "Polskie",
@@ -5977,7 +6013,10 @@
         "reset": "Resetowanie",
         "confirm reset": "Czy na pewno chcesz zresetować?",
         "spell_potion_shatter": "To zaklęcie łamie miksturę, powodując, że wpływa na wszystkie jednostki w promieniu.",
-        "refunded": "Zwrot kosztów"
+        "refunded": "Zwrot kosztów",
+        "spell_fling": "Rzuć się w określonym kierunku",
+        "fling": "Rzucać",
+        "bolt": "Elektryczny rygiel"
     },
     {
         "language": "Dutch",
@@ -6437,6 +6476,9 @@
         "reset": "Reset",
         "confirm reset": "Weet u zeker dat u opnieuw wilt instellen?",
         "spell_potion_shatter": "Deze spreuk breekt een drankje waardoor het alle eenheden binnen de straal beïnvloedt.",
-        "refunded": "Kosten terugbetaald"
+        "refunded": "Kosten terugbetaald",
+        "spell_fling": "Gooi jezelf richting de castlocatie",
+        "fling": "Gooien",
+        "bolt": "Elektrische bout"
     }
 ]
