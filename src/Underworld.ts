@@ -1807,6 +1807,16 @@ export default class Underworld {
           sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
           sprite.y = tile.y - config.COLLISION_MESH_RADIUS;
         }
+        // Add wall shadows
+        if (tile.image.endsWith('wallN.png')) {
+          const sprite = addPixiSprite('tiles/wallShadow.png', containerUnits);
+          if (sprite) {
+            sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
+            // Place directly below the wall
+            sprite.y = tile.y + config.COLLISION_MESH_RADIUS;
+          }
+
+        }
       }
     }
   }
