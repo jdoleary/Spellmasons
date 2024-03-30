@@ -155,10 +155,10 @@ export function addOverworldEventListeners(overworld: Overworld) {
   ) as HTMLButtonElement;
   const elBookmarkDamage: HTMLButtonElement = document.getElementById('bookmark-damage',) as HTMLButtonElement;
   const elBookmarkMovement: HTMLButtonElement = document.getElementById('bookmark-movement',) as HTMLButtonElement;
-  const elBookmarkTarget: HTMLButtonElement = document.getElementById('bookmark-target',) as HTMLButtonElement;
+  const elBookmarkTarget: HTMLButtonElement = document.getElementById('bookmark-targeting',) as HTMLButtonElement;
   const elBookmarkMana: HTMLButtonElement = document.getElementById('bookmark-mana',) as HTMLButtonElement;
-  const elBookmarkCurse: HTMLButtonElement = document.getElementById('bookmark-curse',) as HTMLButtonElement;
-  const elBookmarkDefense: HTMLButtonElement = document.getElementById('bookmark-defense',) as HTMLButtonElement;
+  const elBookmarkCurse: HTMLButtonElement = document.getElementById('bookmark-curses',) as HTMLButtonElement;
+  const elBookmarkDefense: HTMLButtonElement = document.getElementById('bookmark-blessings',) as HTMLButtonElement;
   const elBookmarkSoul: HTMLButtonElement = document.getElementById('bookmark-soul',) as HTMLButtonElement;
   const elBookmarkAll: HTMLButtonElement = document.getElementById('bookmark-all',) as HTMLButtonElement;
   const elQuitButton: HTMLButtonElement = document.getElementById(
@@ -260,10 +260,10 @@ export function addOverworldEventListeners(overworld: Overworld) {
       ...[
         { target: elBookmarkDamage, targetClassName: 'bookmark-damage' },
         { target: elBookmarkMovement, targetClassName: 'bookmark-movement' },
-        { target: elBookmarkTarget, targetClassName: 'bookmark-target' },
+        { target: elBookmarkTarget, targetClassName: 'bookmark-targeting' },
         { target: elBookmarkMana, targetClassName: 'bookmark-mana' },
-        { target: elBookmarkCurse, targetClassName: 'bookmark-curse' },
-        { target: elBookmarkDefense, targetClassName: 'bookmark-defense' },
+        { target: elBookmarkCurse, targetClassName: 'bookmark-curses' },
+        { target: elBookmarkDefense, targetClassName: 'bookmark-blessings' },
         { target: elBookmarkSoul, targetClassName: 'bookmark-soul' },
         { target: elBookmarkAll, targetClassName: 'bookmark-all' },
       ].map(({ target, targetClassName }) => {
@@ -271,19 +271,25 @@ export function addOverworldEventListeners(overworld: Overworld) {
           target,
           event: 'click',
           listener: () => {
-            ['bookmark-damage',
-              'bookmark-movement',
-              'bookmark-target',
-              'bookmark-mana',
-              'bookmark-curse',
-              'bookmark-defense',
-              'bookmark-soul',
-              'bookmark-all'].forEach(className => {
-
-                elInventoryContainer.classList.toggle(className, false);
-              })
-            console.log('jtest', targetClassName)
-            elInventoryContainer.classList.toggle(targetClassName, true);
+            // Disallow clicking on disabled bookmarks
+            if (target.classList.contains('disabled')) {
+              playSFXKey('deny');
+            } else {
+              ['bookmark-damage',
+                'bookmark-movement',
+                'bookmark-targeting',
+                'bookmark-mana',
+                'bookmark-curses',
+                'bookmark-blessings',
+                'bookmark-soul',
+                'bookmark-all'].forEach(className => {
+                  elInventoryContainer.classList.toggle(className, false);
+                })
+              document.querySelectorAll('.bookmark').forEach((el) => (el as HTMLElement).classList.toggle('active', false));
+              elInventoryContainer.classList.toggle(targetClassName, true);
+              target.classList.toggle('active', true);
+              playSFXKey('inventory_open');
+            }
           }
         };
 

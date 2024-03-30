@@ -2477,14 +2477,30 @@ body.dragging-card .floating-card-holder .empty-slot {
   top: 40px;
 }
 
+.bookmark.active {
+  left: 55px;
+}
+
+.bookmark.disabled {
+  display: none;
+}
+
 #bookmark-movement {
   left: 43px;
   top: 120px;
 }
 
-#bookmark-target {
+#bookmark-movement.active {
+  left: 55px;
+}
+
+#bookmark-targeting {
   left: 41px;
   top: 200px;
+}
+
+#bookmark-targeting.active {
+  left: 55px;
 }
 
 #bookmark-mana {
@@ -2492,14 +2508,26 @@ body.dragging-card .floating-card-holder .empty-slot {
   top: 280px;
 }
 
-#bookmark-curse {
+#bookmark-mana.active {
+  left: 55px;
+}
+
+#bookmark-curses {
   left: 37px;
   top: 360px;
 }
 
-#bookmark-defense {
+#bookmark-curses.active {
+  left: 55px;
+}
+
+#bookmark-blessings {
   left: 35px;
   top: 440px;
+}
+
+#bookmark-blessings.active {
+  left: 55px;
 }
 
 #bookmark-soul {
@@ -2507,14 +2535,30 @@ body.dragging-card .floating-card-holder .empty-slot {
   top: 520px;
 }
 
+#bookmark-soul.active {
+  left: 55px;
+}
+
 #bookmark-all {
   left: 33px;
   top: 600px;
 }
 
-#inventory-container:not(.bookmark-all) .category,
-#inventory-container:not(.bookmark-all) .category-label.category-label.visible {
+#inventory-container.bookmark-all #bookmark-all {
+  /* Disable bookmark all when bookmark all is selected */
   display: none;
+}
+
+#inventory-container:not(.bookmark-all) .category {
+  display: none;
+}
+
+#inventory-container:not(.bookmark-all) .category-label {
+  display: none;
+}
+
+#inventory-container.bookmark-all .category-label.category-label.visible {
+  display: block;
 }
 
 #inventory-container.bookmark-damage .category[data-category="Damage"],
@@ -2527,8 +2571,8 @@ body.dragging-card .floating-card-holder .empty-slot {
   display: flex;
 }
 
-#inventory-container.bookmark-target .category[data-category="Targeting"],
-#inventory-container.bookmark-target .category-label[data-category="Targeting"] {
+#inventory-container.bookmark-targeting .category[data-category="Targeting"],
+#inventory-container.bookmark-targeting .category-label[data-category="Targeting"] {
   display: flex;
 }
 
@@ -2537,13 +2581,13 @@ body.dragging-card .floating-card-holder .empty-slot {
   display: flex;
 }
 
-#inventory-container.bookmark-curse .category[data-category="Curses"],
-#inventory-container.bookmark-curse .category-label[data-category="Curses"] {
+#inventory-container.bookmark-curses .category[data-category="Curses"],
+#inventory-container.bookmark-curses .category-label[data-category="Curses"] {
   display: flex;
 }
 
-#inventory-container.bookmark-defense .category[data-category="Blessings"],
-#inventory-container.bookmark-defense .category-label[data-category="Blessings"] {
+#inventory-container.bookmark-blessings .category[data-category="Blessings"],
+#inventory-container.bookmark-blessings .category-label[data-category="Blessings"] {
   display: flex;
 }
 
