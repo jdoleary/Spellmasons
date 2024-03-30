@@ -1822,7 +1822,7 @@ export default class Underworld {
   }
   // fromSource is used when the spawn in question is spawning FROM something else,
   // like clone.  This prevents clones from spawning through walls
-  isPointValidSpawn(spawnPoint: Vec2, radius: number, fromSource?: Vec2): boolean {
+  isPointValidSpawn(spawnPoint: Vec2, radius: number, prediction: boolean, fromSource?: Vec2): boolean {
     if (fromSource) {
       // Ensure attemptSpawn isn't through any walls or liquidBounds
       if ([...this.walls, ...this.liquidBounds].some(wall => lineSegmentIntersection({ p1: fromSource, p2: spawnPoint }, wall))) {
@@ -1838,7 +1838,7 @@ export default class Underworld {
     }
     // Ensure spawnPoint doesn't share coordinates with any other entity
     // (This prevents units from spawning directly on top of each other)
-    const entities = this.getPotentialTargets(false);
+    const entities = this.getPotentialTargets(prediction);
     if (entities.some(entity => Vec.equal(Vec.round(entity), Vec.round(spawnPoint)))) {
       return false;
     }
@@ -1851,7 +1851,7 @@ export default class Underworld {
   }
   // ringLimit limits how far away from the spawnSource it will check for valid spawn locations
   // same as below "findValidSpanws", but shortcircuits at the first valid spawn found and returns that
-  findValidSpawn(spawnSource: Vec2, ringLimit: number, radius: number = config.COLLISION_MESH_RADIUS): Vec2 | undefined {
+  findValidSpawn({ spawnSource, ringLimit, radius = config.COLLISION_MESH_RADIUS / 4, prediction }: { spawnSource: Vec2, ringLimit: number, radius?: number, prediction: boolean }): Vec2 | undefined {
     if (isNaN(spawnSource.x) || isNaN(spawnSource.y)) {
       console.error('Attempted to findValidSpawn but spawnSource was NaN');
       return undefined;
@@ -1859,14 +1859,14 @@ export default class Underworld {
     const honeycombRings = ringLimit;
     for (let s of math.honeycombGenerator(radius, spawnSource, honeycombRings)) {
       const attemptSpawn = { ...s, radius: config.COLLISION_MESH_RADIUS };
-      if (this.isPointValidSpawn(attemptSpawn, config.COLLISION_MESH_RADIUS, spawnSource)) {
+      if (this.isPointValidSpawn(attemptSpawn, config.COLLISION_MESH_RADIUS, prediction, spawnSource)) {
         return attemptSpawn
       }
     }
     return undefined;
   }
   // Same as above "findValidSpawn", but returns an array of valid spawns
-  findValidSpawns(spawnSource: Vec2, radius: number = config.COLLISION_MESH_RADIUS / 4, ringLimit: number): Vec2[] {
+  findValidSpawns({ spawnSource, ringLimit, radius = config.COLLISION_MESH_RADIUS / 4, prediction }: { spawnSource: Vec2, ringLimit: number, radius?: number, prediction: boolean }): Vec2[] {
     const validSpawns: Vec2[] = [];
     const honeycombRings = ringLimit;
     // The radius passed into honeycombGenerator is how far between vec2s each honeycomb cell is
@@ -1874,7 +1874,7 @@ export default class Underworld {
       // attemptSpawns radius must be the full config.COLLISION_MESH_RADIUS to ensure
       // that the spawning unit wont intersect something it shouldn't
       const attemptSpawn = { ...s, radius: config.COLLISION_MESH_RADIUS };
-      if (this.isPointValidSpawn(attemptSpawn, config.COLLISION_MESH_RADIUS, spawnSource)) {
+      if (this.isPointValidSpawn(attemptSpawn, config.COLLISION_MESH_RADIUS, prediction, spawnSource)) {
         // Return the first valid spawn found
         validSpawns.push(attemptSpawn);
       }
@@ -2348,7 +2348,7 @@ export default class Underworld {
 
     // Spawn a portal near each remaining player
     for (let playerUnit of remainingPlayers) {
-      const portalSpawnLocation = this.findValidSpawn(playerUnit, 4) || playerUnit;
+      const portalSpawnLocation = this.findValidSpawn({ spawnSource: playerUnit, ringLimit: 4, prediction: false }) || playerUnit;
       if (!isOutOfBounds(portalSpawnLocation, this)) {
         spawnedPortals.push(Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup, logSource: 'Portal' }, this, false));
       }

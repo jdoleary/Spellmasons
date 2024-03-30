@@ -518,7 +518,7 @@ export const pickups: IPickupSource[] = [
     willTrigger: ({ unit, player, pickup, underworld }) => {
       return !!player;
     },
-    effect: ({ unit, player, pickup, underworld }) => {
+    effect: ({ unit, player, pickup, underworld, prediction }) => {
       const otherRedPortals = underworld.pickups.filter(p => !p.flaggedForRemoval && p.name == RED_PORTAL && p !== pickup)
       const seed = seedrandom(getUniqueSeedString(underworld, player));
       const randomOtherRedPortal = chooseOneOfSeeded(otherRedPortals, seed);
@@ -532,7 +532,7 @@ export const pickups: IPickupSource[] = [
           // Note: pickup MUST be removed before checking if the point is valid because
           // isPointValidSpawn returns false if it's spawning a unit on a point taken up by a pickup
           // (that isn't flagged for removal)
-          if (underworld.isPointValidSpawn(randomOtherRedPortal, config.COLLISION_MESH_RADIUS / 2)) {
+          if (underworld.isPointValidSpawn(randomOtherRedPortal, config.COLLISION_MESH_RADIUS / 2, prediction)) {
             player.unit.x = randomOtherRedPortal.x;
             player.unit.y = randomOtherRedPortal.y;
             playSFXKey('swap');
@@ -559,7 +559,7 @@ export const pickups: IPickupSource[] = [
     willTrigger: ({ unit, player, pickup, underworld }) => {
       return !!player;
     },
-    effect: ({ unit, player, pickup, underworld }) => {
+    effect: ({ unit, player, pickup, underworld, prediction }) => {
       const otherBluePortals = underworld.pickups.filter(p => !p.flaggedForRemoval && p.name == BLUE_PORTAL && p !== pickup)
       const seed = seedrandom(getUniqueSeedString(underworld, player));
       const randomOtherBluePortal = chooseOneOfSeeded(otherBluePortals, seed);
@@ -573,7 +573,7 @@ export const pickups: IPickupSource[] = [
           // Note: pickup MUST be removed before checking if the point is valid because
           // isPointValidSpawn returns false if it's spawning a unit on a point taken up by a pickup
           // (that isn't flagged for removal)
-          if (underworld.isPointValidSpawn(randomOtherBluePortal, config.COLLISION_MESH_RADIUS / 2)) {
+          if (underworld.isPointValidSpawn(randomOtherBluePortal, config.COLLISION_MESH_RADIUS / 2, prediction)) {
             player.unit.x = randomOtherBluePortal.x;
             player.unit.y = randomOtherBluePortal.y;
             skyBeam(pickup);

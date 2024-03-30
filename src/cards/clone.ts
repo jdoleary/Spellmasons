@@ -18,90 +18,95 @@ const spell: Spell = {
     healthCost: 0,
     probability: probabilityMap[CardRarity.FORBIDDEN],
     expenseScaling: 4,
+    supportQuantity: true,
     thumbnail: 'spellIconClone.png',
     description: 'spell_clone',
     effect: async (state, card, quantity, underworld, prediction) => {
       // Batch find targets that should be cloned
       // Note: They need to be batched so that the new clones don't get cloned
-      const clonePairs: Vec2[][] = [];
-      let targets: Vec2[] = getCurrentTargets(state);
-      targets = targets.length ? targets : [state.castLocation];
-      for (let target of targets) {
-        clonePairs.push([target, { x: target.x, y: target.y }]);
-      }
-      let animationPromise = Promise.resolve();
-      // Animate all the clonings
-      for (let [target, cloneSourceCoords] of clonePairs) {
-        if (target) {
-          animationPromise = animateMitosis((target as any).image);
+      // Note: Limit max quantity to 10 or else is spawns so many units that it breaks the game
+      for (let q = 0; q < Math.min(10, quantity); q++) {
+        const clonePairs: Vec2[][] = [];
+        let targets: Vec2[] = getCurrentTargets(state);
+
+        targets = targets.length ? targets : [state.castLocation];
+        for (let target of targets) {
+          clonePairs.push([target, { x: target.x, y: target.y }]);
         }
-      }
-      if (!prediction) {
-        playSFXKey('clone');
-      }
-      // Note: animationPromise is overwritten over and over because each animateMitosis will take the same amount of time
-      // and they are all triggered at once so we only need to wait for one of them.
-      await animationPromise;
-      // Clone all the batched clone jobs
-      for (let [target, cloneSourceCoords] of clonePairs) {
-        if (target) {
-          // If there is are clone coordinates to clone into
-          if (cloneSourceCoords) {
-            if (Unit.isUnit(target)) {
-              const validSpawnCoords = underworld.findValidSpawn(cloneSourceCoords, 5, 10);
-              if (validSpawnCoords) {
-                const clone = Unit.load(Unit.serialize(target), underworld, prediction);
-                if (!prediction) {
-                  // Change id of the clone so that it doesn't share the same
-                  // 'supposed-to-be-unique' id of the original
-                  clone.id = ++underworld.lastUnitId;
-                } else {
-                  // Get a unique id for the clone
-                  clone.id = underworld.unitsPrediction.reduce((lastId, unit) => {
-                    if (unit.id > lastId) {
-                      return unit.id;
-                    }
-                    return lastId;
-                  }, 0) + 1;
-                }
-                // If the cloned unit is player controlled, make them be controlled by the AI
-                if (clone.unitType == UnitType.PLAYER_CONTROLLED) {
-                  clone.unitType = UnitType.AI;
-                  returnToDefaultSprite(clone);
-                }
-                clone.x = validSpawnCoords.x;
-                clone.y = validSpawnCoords.y;
-                // Clones don't provide experience when killed
-                clone.originalLife = false;
-                // Add clones to target list
-                addTarget(clone, state, underworld);
-              }
-            }
-            if (Pickup.isPickup(target)) {
-              const targetName = target.name;
-              const validSpawnCoords = underworld.findValidSpawn(cloneSourceCoords, 5, 20)
-              if (validSpawnCoords) {
-                let foundPickup = Pickup.pickups.find((p) => p.name == targetName);
-                if (foundPickup) {
-                  const clone = Pickup.create({ pos: target, pickupSource: foundPickup, logSource: 'Clone' }, underworld, prediction);
-                  if (clone) {
-                    Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
+        let animationPromise = Promise.resolve();
+        // Animate all the clonings
+        for (let [target, cloneSourceCoords] of clonePairs) {
+          if (target) {
+            animationPromise = animateMitosis((target as any).image);
+          }
+        }
+        if (!prediction) {
+          playSFXKey('clone');
+        }
+        // Note: animationPromise is overwritten over and over because each animateMitosis will take the same amount of time
+        // and they are all triggered at once so we only need to wait for one of them.
+        await animationPromise;
+        // Clone all the batched clone jobs
+        for (let [target, cloneSourceCoords] of clonePairs) {
+          if (target) {
+            // If there is are clone coordinates to clone into
+            if (cloneSourceCoords) {
+              if (Unit.isUnit(target)) {
+                const validSpawnCoords = underworld.findValidSpawn({ spawnSource: cloneSourceCoords, ringLimit: 5, prediction, radius: 10 });
+                if (validSpawnCoords) {
+                  const clone = Unit.load(Unit.serialize(target), underworld, prediction);
+                  if (!prediction) {
+                    // Change id of the clone so that it doesn't share the same
+                    // 'supposed-to-be-unique' id of the original
+                    clone.id = ++underworld.lastUnitId;
+                  } else {
+                    // Get a unique id for the clone
+                    clone.id = underworld.unitsPrediction.reduce((lastId, unit) => {
+                      if (unit.id > lastId) {
+                        return unit.id;
+                      }
+                      return lastId;
+                    }, 0) + 1;
                   }
+                  // If the cloned unit is player controlled, make them be controlled by the AI
+                  if (clone.unitType == UnitType.PLAYER_CONTROLLED) {
+                    clone.unitType = UnitType.AI;
+                    returnToDefaultSprite(clone);
+                  }
+                  clone.x = validSpawnCoords.x;
+                  clone.y = validSpawnCoords.y;
+                  // Clones don't provide experience when killed
+                  clone.originalLife = false;
                   // Add clones to target list
                   addTarget(clone, state, underworld);
-                } else {
-                  console.log('Pickup', target);
-                  console.error('Could not clone pickup because source could not be found');
                 }
-              } else {
-                floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
+              }
+              if (Pickup.isPickup(target)) {
+                const targetName = target.name;
+                const validSpawnCoords = underworld.findValidSpawn({ spawnSource: cloneSourceCoords, ringLimit: 5, prediction, radius: 15 })
+                if (validSpawnCoords) {
+                  let foundPickup = Pickup.pickups.find((p) => p.name == targetName);
+                  if (foundPickup) {
+                    const clone = Pickup.create({ pos: target, pickupSource: foundPickup, logSource: 'Clone' }, underworld, prediction);
+                    if (clone) {
+                      Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
+                    }
+                    // Add clones to target list
+                    addTarget(clone, state, underworld);
+                  } else {
+                    console.log('Pickup', target);
+                    console.error('Could not clone pickup because source could not be found');
+                  }
+                } else {
+                  floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
+                }
               }
             }
           }
         }
-      }
-      if (clonePairs.length == 0) {
-        refundLastSpell(state, prediction, 'no target, mana refunded')
+        if (clonePairs.length == 0) {
+          refundLastSpell(state, prediction, 'no target, mana refunded')
+        }
       }
       return state;
     },

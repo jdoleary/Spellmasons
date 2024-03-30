@@ -185,7 +185,7 @@ export function findRandomGroundLocation(underworld: Underworld, summoner: Unit.
     // Only summon with the summoner's attack range
     isValid = math.distance(summoner, randomCoord) <= summoner.attackRange
       // Make sure the summon point is valid
-      && underworld.isPointValidSpawn(randomCoord, config.COLLISION_MESH_RADIUS)
+      && underworld.isPointValidSpawn(randomCoord, config.COLLISION_MESH_RADIUS, false)
       // Make sure the summon point isn't in water
       && !isCoordInLiquid(randomCoord, underworld);
   } while (!isValid);

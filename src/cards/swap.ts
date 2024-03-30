@@ -34,7 +34,7 @@ const spell: Spell = {
       if (casterSwapTarget) {
         swaps.push([casterUnit, casterSwapTarget]);
       }
-      const swapLocations = [swapLocation, ...underworld.findValidSpawns(swapLocation, config.COLLISION_MESH_RADIUS / 4, 4)];
+      const swapLocations = [swapLocation, ...underworld.findValidSpawns({ spawnSource: swapLocation, ringLimit: 4, prediction, radius: config.COLLISION_MESH_RADIUS / 4 })];
 
       for (let targetObject of targets) {
         if (targetObject) {

@@ -12,7 +12,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import * as config from '../config';
 import { teleport } from '../effects/teleport';
 
-export function findRandomDisplaceLocation(underworld: Underworld, radius: number, seed: prng): Vec2 | undefined {
+export function findRandomDisplaceLocation(underworld: Underworld, radius: number, seed: prng, prediction: boolean): Vec2 | undefined {
   let isValid = false;
   let randomCoord;
   const infiniteLoopLimit = 100;
@@ -24,7 +24,7 @@ export function findRandomDisplaceLocation(underworld: Underworld, radius: numbe
       return undefined;
     }
     randomCoord = underworld.getRandomCoordsWithinBounds(underworld.limits, seed);
-    isValid = underworld.isPointValidSpawn(randomCoord, radius);
+    isValid = underworld.isPointValidSpawn(randomCoord, radius, prediction);
   } while (!isValid);
   return randomCoord
 
@@ -54,7 +54,7 @@ const spell: Spell = {
         const swaps: [HasSpace, Vec2][] = [];
         for (let targetObject of targets) {
           if (targetObject) {
-            const displaceLocation = findRandomDisplaceLocation(underworld, config.COLLISION_MESH_RADIUS, seed);
+            const displaceLocation = findRandomDisplaceLocation(underworld, config.COLLISION_MESH_RADIUS, seed, prediction);
             swaps.push([targetObject, displaceLocation || targetObject]);
           }
         }
