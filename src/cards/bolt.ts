@@ -15,7 +15,7 @@ const spell: Spell = {
   card: {
     id,
     category: CardCategory.Damage,
-    manaCost: 40,
+    manaCost: 12,
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
