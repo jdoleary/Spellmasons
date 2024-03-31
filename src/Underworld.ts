@@ -2231,7 +2231,6 @@ export default class Underworld {
     return;
   }
   async trySpawnBoss(): Promise<boolean> {
-    debugger;
     if (this.levelIndex != config.LAST_LEVEL_INDEX && this.levelIndex != config.GORU_LEVEL_INDEX) {
       console.debug('[GAME] Can\'t Spawn Boss\nNo boss to spawn');
       return false;
