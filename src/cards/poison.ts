@@ -27,7 +27,7 @@ function init(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
     }
   }
 }
-function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1, extra?: any) {
+function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1, extra?: { [key: string]: any }) {
   const modifier = getOrInitModifier(unit, poisonCardId, { isCurse: true, quantity }, () => {
     // Add event
     if (!unit.onTurnEndEvents.includes(poisonCardId)) {
@@ -46,7 +46,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     updateTooltip(unit);
   }
 
-  modifier.sourceUnitId = extra.sourceUnitId;
+  modifier.sourceUnitId = extra?.sourceUnitId;
 }
 
 export function updateTooltip(unit: Unit.IUnit) {
