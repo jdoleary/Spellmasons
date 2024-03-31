@@ -24,7 +24,7 @@ const spell: Spell = {
     // no animation path, animation is done with particles
     animationPath: '',
     sfx: '',
-    description: ['spell_Execute', (executeThreshold * 100).toString()],
+    description: ['spell_execute', `${(executeThreshold * 100).toString()}%`],
     effect: async (state, card, quantity, underworld, prediction) => {
 
       // Only target units under execute threshold and in range

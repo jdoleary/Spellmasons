@@ -24,7 +24,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconShatter.png',
-    description: `Shatters the ice surrounding a frozen unit, dealing ${damage} damage to it and all units nearby. Stackable to increase damage. Radius increases with freeze stacks.`,
+    description: [`spell_shatter`, damage.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // Only target frozen units
       const targetedUnits = state.targetedUnits.filter(u => u.modifiers[freezeCardId]);
