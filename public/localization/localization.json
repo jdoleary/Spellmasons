@@ -462,7 +462,11 @@
         "fling": "Fling",
         "bolt": "Bolt",
         "bone shrapnel": "Bone Shrapnel",
-        "spell_bone_shrapnel": "Cause a corpse to explode, damaging units around it by 🍞. Stacks increase explosion damage."
+        "spell_bone_shrapnel": "Cause a corpse to explode, damaging units around it by 🍞. Stacks increase explosion damage.",
+        "target injured": "Target Injured",
+        "spell_target_injured": "Target 🍞 units with less than full health.  Stackable",
+        "target cursed": "Target Cursed",
+        "spell_target_cursed": "Mark the target to be selected for the next spell"
     },
     {
         "language": "Français",
@@ -927,7 +931,11 @@
         "fling": "Jeter",
         "bolt": "Boulon électrique",
         "bone shrapnel": "Shrapnel d'os",
-        "spell_bone_shrapnel": "Faites exploser un cadavre, endommageant les unités autour de lui par 🍞. Les cumuls augmentent les dégâts d'explosion."
+        "spell_bone_shrapnel": "Faites exploser un cadavre, endommageant les unités autour de lui par 🍞. Les cumuls augmentent les dégâts d'explosion.",
+        "target injured": "Cible blessée",
+        "spell_target_injured": "Ciblez 🍞 unités dont la santé n'est pas complète. Empilable",
+        "target cursed": "Ciblez l'unité maudite",
+        "spell_target_cursed": "Marquez la cible à sélectionner pour le prochain sort"
     },
     {
         "language": "italiano",
@@ -1392,7 +1400,11 @@
         "fling": "Lanciare",
         "bolt": "Bullone elettrico",
         "bone shrapnel": "Schegge d'osso",
-        "spell_bone_shrapnel": "Fai esplodere un cadavere, danneggiando le unità circostanti con 🍞. Le pile aumentano il danno da esplosione."
+        "spell_bone_shrapnel": "Fai esplodere un cadavere, danneggiando le unità circostanti con 🍞. Le pile aumentano il danno da esplosione.",
+        "target injured": "Bersaglio ferito",
+        "spell_target_injured": "Prendi di mira 🍞 unità con meno di piena salute. Impilabile",
+        "target cursed": "Bersaglio dell'unità maledetta",
+        "spell_target_cursed": "Segna il bersaglio da selezionare per il prossimo incantesimo"
     },
     {
         "language": "Deutsche",
@@ -1857,7 +1869,11 @@
         "fling": "Schleudern",
         "bolt": "Elektrischer Bolzen",
         "bone shrapnel": "Knochensplitter",
-        "spell_bone_shrapnel": "Bringt eine Leiche zum Explodieren und fügt den umliegenden Einheiten 🍞 Schaden zu. Stapel erhöhen den Explosionsschaden."
+        "spell_bone_shrapnel": "Bringt eine Leiche zum Explodieren und fügt den umliegenden Einheiten 🍞 Schaden zu. Stapel erhöhen den Explosionsschaden.",
+        "target injured": "Ziel verletzt",
+        "spell_target_injured": "Zielen Sie auf 🍞 Einheiten mit weniger als voller Gesundheit. Stapelbar",
+        "target cursed": "Wähle das Verfluchte aus",
+        "spell_target_cursed": "Markieren Sie das Ziel, das für den nächsten Zauber ausgewählt werden soll"
     },
     {
         "language": "español",
@@ -2322,7 +2338,11 @@
         "fling": "Arrojar",
         "bolt": "Perno eléctrico",
         "bone shrapnel": "Metralla de hueso",
-        "spell_bone_shrapnel": "Haz que un cadáver explote, dañando las unidades a su alrededor con 🍞. Las acumulaciones aumentan el daño de la explosión."
+        "spell_bone_shrapnel": "Haz que un cadáver explote, dañando las unidades a su alrededor con 🍞. Las acumulaciones aumentan el daño de la explosión.",
+        "target injured": "Objetivo herido",
+        "spell_target_injured": "Apunte a 🍞 unidades con salud inferior al máximo. Apilable",
+        "target cursed": "Seleccione el maldito",
+        "spell_target_cursed": "Marca el objetivo que se seleccionará para el próximo hechizo."
     },
     {
         "language": "日本",
@@ -2787,7 +2807,11 @@
         "fling": "フリング",
         "bolt": "電動ボルト",
         "bone shrapnel": "骨の破片",
-        "spell_bone_shrapnel": "死体を爆発させ、🍞によって周囲のユニットにダメージを与えます。スタックすると爆発ダメージが増加します。"
+        "spell_bone_shrapnel": "死体を爆発させ、🍞によって周囲のユニットにダメージを与えます。スタックすると爆発ダメージが増加します。",
+        "target injured": "負傷したターゲット",
+        "spell_target_injured": "体力が完全ではない🍞ユニットをターゲットにします。積み重ね可能",
+        "target cursed": "呪われたものを選択",
+        "spell_target_cursed": "次の呪文のために選択されるターゲットをマークします"
     },
     {
         "language": "Português",
@@ -3252,7 +3276,11 @@
         "fling": "lançar",
         "bolt": "Parafuso Elétrico",
         "bone shrapnel": "Estilhaços de Osso",
-        "spell_bone_shrapnel": "Faz com que um cadáver exploda, causando dano às unidades ao seu redor em 🍞. As pilhas aumentam o dano de explosão."
+        "spell_bone_shrapnel": "Faz com que um cadáver exploda, causando dano às unidades ao seu redor em 🍞. As pilhas aumentam o dano de explosão.",
+        "target injured": "Alvo ferido",
+        "spell_target_injured": "Alvo 🍞 unidades com saúde menos que plena. Empilhável",
+        "target cursed": "selecione o amaldiçoado",
+        "spell_target_cursed": "Marque o alvo a ser selecionado para o próximo feitiço"
     },
     {
         "language": "عربى",
@@ -3717,7 +3745,11 @@
         "fling": "اندفع",
         "bolt": "بولت كهربائي",
         "bone shrapnel": "شظايا العظام",
-        "spell_bone_shrapnel": "التسبب في انفجار الجثة وإتلاف الوحدات المحيطة بها عن طريق 🍞. الأكوام تزيد من أضرار الانفجار."
+        "spell_bone_shrapnel": "التسبب في انفجار الجثة وإتلاف الوحدات المحيطة بها عن طريق 🍞. الأكوام تزيد من أضرار الانفجار.",
+        "target injured": "اختيار الجرحى",
+        "spell_target_injured": "استهدف 🍞 الوحدات ذات الصحة الأقل من الكاملة. ",
+        "target cursed": "حدد ملعون",
+        "spell_target_cursed": "سيتم اختيار الهدف للتعويذة القادمة"
     },
     {
         "language": "한국어",
@@ -4182,7 +4214,11 @@
         "fling": "나서다",
         "bolt": "전기 볼트",
         "bone shrapnel": "뼈 파편",
-        "spell_bone_shrapnel": "시체를 폭발시켜 주변 유닛에게 🍞 피해를 입힙니다. 스택은 폭발 피해를 증가시킵니다."
+        "spell_bone_shrapnel": "시체를 폭발시켜 주변 유닛에게 🍞 피해를 입힙니다. 스택은 폭발 피해를 증가시킵니다.",
+        "target injured": "목표 부상 유닛",
+        "spell_target_injured": "체력이 최대치 미만인 유닛 🍞을 대상으로 합니다. 쌓을 수 있음",
+        "target cursed": "저주받은자를 선택하세요",
+        "spell_target_cursed": "다음 주문의 대상이 선택됩니다."
     },
     {
         "language": "Русский",
@@ -4647,7 +4683,11 @@
         "fling": "швырять",
         "bolt": "Электрический болт",
         "bone shrapnel": "Костяная шрапнель",
-        "spell_bone_shrapnel": "Взорвать труп, нанося урон юнитам вокруг него на 🍞. Стеки увеличивают урон от взрыва."
+        "spell_bone_shrapnel": "Взорвать труп, нанося урон юнитам вокруг него на 🍞. Стеки увеличивают урон от взрыва.",
+        "target injured": "Выберите раненых",
+        "spell_target_injured": "Нацельтесь на 🍞 юниты с неполным здоровьем. Штабелируемый",
+        "target cursed": "выбрать проклятого",
+        "spell_target_cursed": "Отметьте цель, которая будет выбрана для следующего заклинания"
     },
     {
         "language": "中文(简)",
@@ -5112,7 +5152,11 @@
         "fling": "一扔",
         "bolt": "电动螺栓",
         "bone shrapnel": "骨弹片",
-        "spell_bone_shrapnel": "导致尸体爆炸，对周围的单位造成 🍞 伤害。堆叠会增加爆炸伤害。"
+        "spell_bone_shrapnel": "导致尸体爆炸，对周围的单位造成 🍞 伤害。堆叠会增加爆炸伤害。",
+        "target injured": "选择伤员",
+        "spell_target_injured": "目标🍞 生命值未满的单位。可堆叠",
+        "target cursed": "选择被诅咒的",
+        "spell_target_cursed": "标记下一个咒语要选择的目标"
     },
     {
         "language": "中文(繁)",
@@ -5577,7 +5621,11 @@
         "fling": "一丟",
         "bolt": "電動螺栓",
         "bone shrapnel": "骨彈片",
-        "spell_bone_shrapnel": "導致屍體爆炸，對周圍的單位造成 🍞 傷害。堆疊會增加爆炸傷害。"
+        "spell_bone_shrapnel": "導致屍體爆炸，對周圍的單位造成 🍞 傷害。堆疊會增加爆炸傷害。",
+        "target injured": "選擇傷員",
+        "spell_target_injured": "目標🍞 生命值未滿的單位。可堆疊",
+        "target cursed": "選擇被詛咒的",
+        "spell_target_cursed": "標記下一個咒語要選擇的目標"
     },
     {
         "language": "Polskie",
@@ -6042,7 +6090,11 @@
         "fling": "Rzucać",
         "bolt": "Elektryczny rygiel",
         "bone shrapnel": "odłamki kości",
-        "spell_bone_shrapnel": "Spowoduj eksplozję zwłok, zadając obrażenia jednostkom wokół niego za pomocą 🍞. Kumulacje zwiększają obrażenia od eksplozji."
+        "spell_bone_shrapnel": "Spowoduj eksplozję zwłok, zadając obrażenia jednostkom wokół niego za pomocą 🍞. Kumulacje zwiększają obrażenia od eksplozji.",
+        "target injured": "Wybierz rannych",
+        "spell_target_injured": "Celuj w 🍞 jednostki posiadające mniej niż pełne zdrowie. Możliwość układania w stosy",
+        "target cursed": "wybierz przeklętego",
+        "spell_target_cursed": "Zaznacz cel, który ma zostać wybrany dla następnego zaklęcia"
     },
     {
         "language": "Dutch",
@@ -6507,6 +6559,10 @@
         "fling": "Gooien",
         "bolt": "Elektrische bout",
         "bone shrapnel": "Botscherf",
-        "spell_bone_shrapnel": "Zorg ervoor dat een lijk explodeert, waardoor eenheden eromheen beschadigd raken door 🍞. Stapels vergroten explosieschade."
+        "spell_bone_shrapnel": "Zorg ervoor dat een lijk explodeert, waardoor eenheden eromheen beschadigd raken door 🍞. Stapels vergroten explosieschade.",
+        "target injured": "Selecteer de gewonden",
+        "spell_target_injured": "Richt je op 🍞 eenheden met minder dan volledige gezondheid. Stapelbaar",
+        "target cursed": "selecteer de vervloekte",
+        "spell_target_cursed": "Het doelwit wordt geselecteerd voor de volgende spreuk"
     }
 ]
