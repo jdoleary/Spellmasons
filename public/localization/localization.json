@@ -460,7 +460,9 @@
         "refunded": "Cost Refunded",
         "spell_fling": "Throw yourself towards the cast location",
         "fling": "Fling",
-        "bolt": "Bolt"
+        "bolt": "Bolt",
+        "bone shrapnel": "Bone Shrapnel",
+        "spell_bone_shrapnel": "Cause a corpse to explode, damaging units around it by 🍞. Stacks increase explosion damage."
     },
     {
         "language": "Français",
@@ -923,7 +925,9 @@
         "refunded": "Coût remboursé",
         "spell_fling": "Jetez votre corps dans une direction donnée",
         "fling": "Jeter",
-        "bolt": "Boulon électrique"
+        "bolt": "Boulon électrique",
+        "bone shrapnel": "Shrapnel d'os",
+        "spell_bone_shrapnel": "Faites exploser un cadavre, endommageant les unités autour de lui par 🍞. Les cumuls augmentent les dégâts d'explosion."
     },
     {
         "language": "italiano",
@@ -1386,7 +1390,9 @@
         "refunded": "Costo rimborsato",
         "spell_fling": "Lancia il tuo corpo verso una determinata direzione",
         "fling": "Lanciare",
-        "bolt": "Bullone elettrico"
+        "bolt": "Bullone elettrico",
+        "bone shrapnel": "Schegge d'osso",
+        "spell_bone_shrapnel": "Fai esplodere un cadavere, danneggiando le unità circostanti con 🍞. Le pile aumentano il danno da esplosione."
     },
     {
         "language": "Deutsche",
@@ -1849,7 +1855,9 @@
         "refunded": "Kosten zurückerstattet",
         "spell_fling": "Werfen Sie Ihren Körper in Richtung der Gipsstelle",
         "fling": "Schleudern",
-        "bolt": "Elektrischer Bolzen"
+        "bolt": "Elektrischer Bolzen",
+        "bone shrapnel": "Knochensplitter",
+        "spell_bone_shrapnel": "Bringt eine Leiche zum Explodieren und fügt den umliegenden Einheiten 🍞 Schaden zu. Stapel erhöhen den Explosionsschaden."
     },
     {
         "language": "español",
@@ -2312,7 +2320,9 @@
         "refunded": "Costo reembolsado",
         "spell_fling": "Lanza tu cuerpo hacia el lugar del yeso.",
         "fling": "Arrojar",
-        "bolt": "Perno eléctrico"
+        "bolt": "Perno eléctrico",
+        "bone shrapnel": "Metralla de hueso",
+        "spell_bone_shrapnel": "Haz que un cadáver explote, dañando las unidades a su alrededor con 🍞. Las acumulaciones aumentan el daño de la explosión."
     },
     {
         "language": "日本",
@@ -2775,7 +2785,9 @@
         "refunded": "費用返金",
         "spell_fling": "与えられた方向に向かって身を投げる",
         "fling": "フリング",
-        "bolt": "電動ボルト"
+        "bolt": "電動ボルト",
+        "bone shrapnel": "骨の破片",
+        "spell_bone_shrapnel": "死体を爆発させ、🍞によって周囲のユニットにダメージを与えます。スタックすると爆発ダメージが増加します。"
     },
     {
         "language": "Português",
@@ -3238,7 +3250,9 @@
         "refunded": "Reembolso do custo",
         "spell_fling": "Jogue-se em uma determinada direção",
         "fling": "lançar",
-        "bolt": "Parafuso Elétrico"
+        "bolt": "Parafuso Elétrico",
+        "bone shrapnel": "Estilhaços de Osso",
+        "spell_bone_shrapnel": "Faz com que um cadáver exploda, causando dano às unidades ao seu redor em 🍞. As pilhas aumentam o dano de explosão."
     },
     {
         "language": "عربى",
@@ -3701,7 +3715,9 @@
         "refunded": "استرداد التكلفة",
         "spell_fling": "ارمي نفسك في اتجاه معين",
         "fling": "اندفع",
-        "bolt": "بولت كهربائي"
+        "bolt": "بولت كهربائي",
+        "bone shrapnel": "شظايا العظام",
+        "spell_bone_shrapnel": "التسبب في انفجار الجثة وإتلاف الوحدات المحيطة بها عن طريق 🍞. الأكوام تزيد من أضرار الانفجار."
     },
     {
         "language": "한국어",
@@ -4164,7 +4180,9 @@
         "refunded": "비용 환불",
         "spell_fling": "주어진 방향으로 몸을 던져라",
         "fling": "나서다",
-        "bolt": "전기 볼트"
+        "bolt": "전기 볼트",
+        "bone shrapnel": "뼈 파편",
+        "spell_bone_shrapnel": "시체를 폭발시켜 주변 유닛에게 🍞 피해를 입힙니다. 스택은 폭발 피해를 증가시킵니다."
     },
     {
         "language": "Русский",
@@ -4627,7 +4645,9 @@
         "refunded": "Стоимость возвращена",
         "spell_fling": "Бросайте себя в заданном направлении",
         "fling": "швырять",
-        "bolt": "Электрический болт"
+        "bolt": "Электрический болт",
+        "bone shrapnel": "Костяная шрапнель",
+        "spell_bone_shrapnel": "Взорвать труп, нанося урон юнитам вокруг него на 🍞. Стеки увеличивают урон от взрыва."
     },
     {
         "language": "中文(简)",
@@ -5090,7 +5110,9 @@
         "refunded": "费用退款",
         "spell_fling": "把自己推向一个既定的方向",
         "fling": "一扔",
-        "bolt": "电动螺栓"
+        "bolt": "电动螺栓",
+        "bone shrapnel": "骨弹片",
+        "spell_bone_shrapnel": "导致尸体爆炸，对周围的单位造成 🍞 伤害。堆叠会增加爆炸伤害。"
     },
     {
         "language": "中文(繁)",
@@ -5553,7 +5575,9 @@
         "refunded": "費用退款",
         "spell_fling": "把自己推向一個既定的方向",
         "fling": "一丟",
-        "bolt": "電動螺栓"
+        "bolt": "電動螺栓",
+        "bone shrapnel": "骨彈片",
+        "spell_bone_shrapnel": "導致屍體爆炸，對周圍的單位造成 🍞 傷害。堆疊會增加爆炸傷害。"
     },
     {
         "language": "Polskie",
@@ -6016,7 +6040,9 @@
         "refunded": "Zwrot kosztów",
         "spell_fling": "Rzuć się w określonym kierunku",
         "fling": "Rzucać",
-        "bolt": "Elektryczny rygiel"
+        "bolt": "Elektryczny rygiel",
+        "bone shrapnel": "odłamki kości",
+        "spell_bone_shrapnel": "Spowoduj eksplozję zwłok, zadając obrażenia jednostkom wokół niego za pomocą 🍞. Kumulacje zwiększają obrażenia od eksplozji."
     },
     {
         "language": "Dutch",
@@ -6479,6 +6505,8 @@
         "refunded": "Kosten terugbetaald",
         "spell_fling": "Gooi jezelf richting de castlocatie",
         "fling": "Gooien",
-        "bolt": "Elektrische bout"
+        "bolt": "Elektrische bout",
+        "bone shrapnel": "Botscherf",
+        "spell_bone_shrapnel": "Zorg ervoor dat een lijk explodeert, waardoor eenheden eromheen beschadigd raken door 🍞. Stapels vergroten explosieschade."
     }
 ]
