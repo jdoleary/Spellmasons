@@ -73,7 +73,8 @@ export const PIXI_TEXT_DROP_SHADOW = { dropShadow: true, dropShadowDistance: 1 }
 export const NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES = 2;
 
 // The boss is on this level.  Levels beyond are considered "loop" levels
-export const LAST_LEVEL_INDEX = 11;
+export const LAST_LEVEL_INDEX = 12;
+export const GORU_LEVEL_INDEX = 9;
 export const NUMBER_OF_UNITS_TO_MERGE = 5;
 
 // The percentage of mana Timemason drains every second

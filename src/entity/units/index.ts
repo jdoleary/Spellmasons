@@ -50,6 +50,7 @@ import poisoner from './poisoner';
 import vampire from './vampire';
 import manaVampire from './manaVampire';
 import bossmason from './deathmason';
+import goru from './goru';
 import decoy from './decoy';
 import ancient from './ancient';
 import gripthulu from './gripthulu';
@@ -83,6 +84,7 @@ export function registerUnits() {
   registerUnit(darkPriest);
   registerUnit(playerUnit);
   registerUnit(bossmason);
+  registerUnit(goru);
   registerUnit(decoy);
   registerUnit(urn_ice);
   registerUnit(urn_poison);

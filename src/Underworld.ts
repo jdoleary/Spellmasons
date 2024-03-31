@@ -79,6 +79,7 @@ import { Emitter } from '@pixi/particle-emitter';
 import { golem_unit_id } from './entity/units/golem';
 import { cleanUpPerkList, createPerkElement, generatePerks, tryTriggerPerk, showPerkList, hidePerkList, createCursePerkElement, StatCalamity, generateRandomStatCalamity } from './Perk';
 import deathmason, { ORIGINAL_DEATHMASON_DEATH, bossmasonUnitId, summonUnitAtPickup } from './entity/units/deathmason';
+import goru from './entity/units/goru';
 import { hexToString } from './graphics/ui/colorUtil';
 import { doLiquidEffect } from './inLiquid';
 import { findRandomGroundLocation } from './entity/units/summoner';
@@ -2230,7 +2231,8 @@ export default class Underworld {
     return;
   }
   async trySpawnBoss(): Promise<boolean> {
-    if (this.levelIndex != config.LAST_LEVEL_INDEX) {
+    debugger;
+    if (this.levelIndex != config.LAST_LEVEL_INDEX && this.levelIndex != config.GORU_LEVEL_INDEX) {
       console.debug('[GAME] Can\'t Spawn Boss\nNo boss to spawn');
       return false;
     }
@@ -2245,7 +2247,12 @@ export default class Underworld {
       return false;
     }
 
-    await introduceBoss(deathmason, this);
+    if (this.levelIndex == config.GORU_LEVEL_INDEX) {
+      await introduceBoss(goru, this);
+    }
+    if (this.levelIndex == config.LAST_LEVEL_INDEX) {
+      await introduceBoss(deathmason, this);
+    }
     return true;
   }
   trySpawnNextWave(): boolean {
@@ -2307,7 +2314,7 @@ export default class Underworld {
       return false;
     }
 
-    if (this.levelIndex == config.LAST_LEVEL_INDEX && !this.hasSpawnedBoss) {
+    if ((this.levelIndex == config.LAST_LEVEL_INDEX || this.levelIndex == config.GORU_LEVEL_INDEX) && !this.hasSpawnedBoss) {
       console.debug('[GAME] Level Incomplete...\nWaiting to spawn Deathmason...');
       return false;
     }
@@ -4266,6 +4273,14 @@ function getEnemiesForAltitude(underworld: Underworld, levelIndex: number): stri
   budgetLeft = Math.floor(budgetLeft);
   console.log('Budget for level index', adjustedLevelIndex, 'is', budgetLeft);
   const totalBudget = budgetLeft;
+  // Reduce remaining budget on the last level where Goru will spawn
+  if (levelIndex == config.GORU_LEVEL_INDEX) {
+    if (goru.spawnParams) {
+      budgetLeft -= goru.spawnParams?.budgetCost;
+    } else {
+      console.warn("Goru spawn params unknown, could not modify budget correctly");
+    }
+  }
   // Reduce remaining budget on the last level where the Deathmason will spawn
   if (levelIndex == config.LAST_LEVEL_INDEX) {
     if (deathmason.spawnParams) {
@@ -4327,7 +4342,7 @@ async function introduceBoss(unit: UnitSource, underworld: Underworld) {
   }
 
   // Play boss intro FX
-  const elCinematic = document.getElementById('deathmason-cinematic');
+  const elCinematic = unit.id == bossmasonUnitId ? document.getElementById('deathmason-cinematic') : document.getElementById('goru-cinematic');
   if (elCinematic) {
     elCinematic.classList.toggle('show', true);
   }
