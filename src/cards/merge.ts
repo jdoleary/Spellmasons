@@ -10,6 +10,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { findSimilar } from './target_similar';
 import { hasSpace, HasSpace } from '../entity/Type';
 import Underworld from '../Underworld';
+import { makeManaTrail } from '../graphics/Particles';
 
 const merge_id = 'merge';
 const spell: Spell = {
@@ -43,7 +44,13 @@ const spell: Spell = {
         if (similarThings.length) {
           if (!prediction) {
             playSFXKey('clone');
-            await animateMitosis((target as any).image);
+            for (const thing of similarThings) {
+              makeManaTrail(thing, target, underworld,
+                colors.convertToHashColor(colors.manaBrightBlue),
+                colors.convertToHashColor(colors.manaDarkBlue),
+                1);
+            }
+            await animateMerge((target as any).image);
           }
 
           mergedTargets = mergedTargets.concat(similarThings);
@@ -155,7 +162,7 @@ export function mergePickup(target: Pickup.IPickup, pickupsToMerge: Pickup.IPick
 //   return;
 // }
 
-export async function animateMitosis(image?: IImageAnimated) {
+export async function animateMerge(image?: IImageAnimated) {
   if (!image) {
     return;
   }
@@ -166,7 +173,6 @@ export async function animateMitosis(image?: IImageAnimated) {
   // "iterations + 10" gives it a little extra time so it doesn't timeout right when the animation would finish on time
   return raceTimeout(millisBetweenIterations * (iterations + 10), 'animatedMitosis', new Promise<void>(resolve => {
     for (let i = 0; i < iterations; i++) {
-
       setTimeout(() => {
         // Stretch
         if (image) {
