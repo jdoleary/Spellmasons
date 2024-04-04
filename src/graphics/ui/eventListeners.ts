@@ -1131,7 +1131,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       label: '🦹‍♂️🦹‍♂️🦹‍♂️ Spawn many enemies',
       action: ({ pos }) => {
         if (pos && overworld.underworld) {
-          const spawns = overworld.underworld.findValidSpawns(pos, 20, 5);
+          const spawns = overworld.underworld.findValidSpawns({ spawnSource: pos, ringLimit: 5, prediction: false, radius: 20 });
           for (let spawn of spawns) {
             overworld.underworld.spawnEnemy('golem', spawn, false);
           }
@@ -1144,7 +1144,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       label: '🦹‍♂️🧛‍♂️🧝‍♂️ Spawn All Enemies',
       action: ({ pos }) => {
         if (pos && overworld.underworld) {
-          const spawns = overworld.underworld.findValidSpawns(pos, 20, 5);
+          const spawns = overworld.underworld.findValidSpawns({ spawnSource: pos, ringLimit: 5, prediction: false, radius: 20 });
           Object.keys(allUnits).forEach((unitId, index) => {
             const spawn = spawns[index];
             if (spawn) {

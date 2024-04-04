@@ -26,6 +26,7 @@ import { createVisualLobbingProjectile } from './Projectile';
 import floatingText from '../graphics/FloatingText';
 import { containerParticles } from '../graphics/Particles';
 import { elEndTurnBtn } from '../HTMLElements';
+import { healManaUnit, healUnit } from '../effects/heal';
 
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 export const PICKUP_IMAGE_PATH = 'pickups/scroll';
@@ -498,7 +499,11 @@ export const pickups: IPickupSource[] = [
           }
 
         }
-        takeDamage(unit, spike_damage, unit, underworld, prediction)
+        takeDamage({
+          unit: unit,
+          amount: spike_damage,
+          fromVec2: unit,
+        }, underworld, prediction);
       }
     }
   },
@@ -513,7 +518,7 @@ export const pickups: IPickupSource[] = [
     willTrigger: ({ unit, player, pickup, underworld }) => {
       return !!player;
     },
-    effect: ({ unit, player, pickup, underworld }) => {
+    effect: ({ unit, player, pickup, underworld, prediction }) => {
       const otherRedPortals = underworld.pickups.filter(p => !p.flaggedForRemoval && p.name == RED_PORTAL && p !== pickup)
       const seed = seedrandom(getUniqueSeedString(underworld, player));
       const randomOtherRedPortal = chooseOneOfSeeded(otherRedPortals, seed);
@@ -527,7 +532,7 @@ export const pickups: IPickupSource[] = [
           // Note: pickup MUST be removed before checking if the point is valid because
           // isPointValidSpawn returns false if it's spawning a unit on a point taken up by a pickup
           // (that isn't flagged for removal)
-          if (underworld.isPointValidSpawn(randomOtherRedPortal, config.COLLISION_MESH_RADIUS / 2)) {
+          if (underworld.isPointValidSpawn(randomOtherRedPortal, config.COLLISION_MESH_RADIUS / 2, prediction)) {
             player.unit.x = randomOtherRedPortal.x;
             player.unit.y = randomOtherRedPortal.y;
             playSFXKey('swap');
@@ -536,7 +541,10 @@ export const pickups: IPickupSource[] = [
           } else {
           }
         }
-        takeDamage(player.unit, RED_PORTAL_DAMAGE, undefined, underworld, false);
+        takeDamage({
+          unit: player.unit,
+          amount: RED_PORTAL_DAMAGE,
+        }, underworld, false);
       }
     },
   },
@@ -551,7 +559,7 @@ export const pickups: IPickupSource[] = [
     willTrigger: ({ unit, player, pickup, underworld }) => {
       return !!player;
     },
-    effect: ({ unit, player, pickup, underworld }) => {
+    effect: ({ unit, player, pickup, underworld, prediction }) => {
       const otherBluePortals = underworld.pickups.filter(p => !p.flaggedForRemoval && p.name == BLUE_PORTAL && p !== pickup)
       const seed = seedrandom(getUniqueSeedString(underworld, player));
       const randomOtherBluePortal = chooseOneOfSeeded(otherBluePortals, seed);
@@ -565,14 +573,17 @@ export const pickups: IPickupSource[] = [
           // Note: pickup MUST be removed before checking if the point is valid because
           // isPointValidSpawn returns false if it's spawning a unit on a point taken up by a pickup
           // (that isn't flagged for removal)
-          if (underworld.isPointValidSpawn(randomOtherBluePortal, config.COLLISION_MESH_RADIUS / 2)) {
+          if (underworld.isPointValidSpawn(randomOtherBluePortal, config.COLLISION_MESH_RADIUS / 2, prediction)) {
             player.unit.x = randomOtherBluePortal.x;
             player.unit.y = randomOtherBluePortal.y;
             skyBeam(pickup);
             skyBeam(randomOtherBluePortal);
           }
         }
-        takeDamage(player.unit, -RED_PORTAL_DAMAGE, undefined, underworld, false);
+        takeDamage({
+          unit: player.unit,
+          amount: -RED_PORTAL_DAMAGE,
+        }, underworld, false);
       }
     },
   },
@@ -659,18 +670,10 @@ export const pickups: IPickupSource[] = [
     },
     effect: ({ unit, player, underworld, prediction }) => {
       if (unit) {
-        unit.mana += manaPotionRestoreAmount;
-        explain(EXPLAIN_OVERFILL);
         if (!prediction) {
           playSFXKey('potionPickupMana');
         }
-        // Animate
-        // Animate
-        Image.addOneOffAnimation(unit, 'spell-effects/potionPickup', {}, {
-          loop: false,
-          animationSpeed: 0.3,
-          colorReplace: { colors: [[0xff0000, manaBlue]], epsilon: 0.15 },
-        });
+        healManaUnit(unit, manaPotionRestoreAmount, undefined, underworld, prediction);
       }
     },
   },
@@ -738,14 +741,12 @@ export const pickups: IPickupSource[] = [
       // players that have blood curse will be damaged by healing so it should trigger for them too
       return !!(player && (player.unit.health < player.unit.healthMax || hasBloodCurse(player.unit)));
     },
-    effect: ({ unit, player, underworld, prediction }) => {
+    effect: ({ unit, player, pickup, underworld, prediction }) => {
       if (unit) {
-        takeDamage(unit, -healthPotionRestoreAmount, undefined, underworld, prediction);
-        // Add spell effect animation
-        Image.addOneOffAnimation(unit, 'spell-effects/potionPickup', {}, { animationSpeed: 0.3, loop: false });
         if (!prediction) {
           playSFXKey('potionPickupHealth');
         }
+        healUnit(unit, healthPotionRestoreAmount, undefined, underworld, prediction);
       }
     },
   },

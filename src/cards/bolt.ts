@@ -15,7 +15,7 @@ const spell: Spell = {
   card: {
     id,
     category: CardCategory.Damage,
-    manaCost: 40,
+    manaCost: 12,
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
@@ -71,7 +71,11 @@ const spell: Spell = {
           }
           affected.forEach(u => {
             if (Unit.isUnit(u)) {
-              Unit.takeDamage(u, damage * quantity, undefined, underworld, prediction, state);
+              Unit.takeDamage({
+                unit: u,
+                amount: damage * quantity,
+                sourceUnit: state.casterUnit,
+              }, underworld, prediction);
             }
           })
         }

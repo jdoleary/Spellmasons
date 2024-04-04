@@ -78,7 +78,7 @@ function withinCone(origin: Vec2, coneStartPoint: Vec2, radius: number, startAng
   const targetAngle = getAngleBetweenVec2s(coneStartPoint, target);
   const distanceToConeStart = distance(target, coneStartPoint);
 
-  //TODO - Investigate isAngleBetweenAngles
+  // TODO - Investigate isAngleBetweenAngles
   //temp fix for cone inversion: if angle is whole circle, just check distance.
   return distanceToConeStart <= radius
     && (isAngleBetweenAngles(targetAngle, startAngle, endAngle) || Math.abs(endAngle - startAngle) >= 2 * Math.PI);

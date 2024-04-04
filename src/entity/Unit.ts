@@ -46,6 +46,7 @@ import * as log from '../log';
 import { suffocateCardId, updateSuffocate } from '../cards/suffocate';
 import { doLiquidEffect } from '../inLiquid';
 import { freezeCardId } from '../cards/freeze';
+import { healSfx, oneOffHealAnimation } from '../effects/heal';
 import { soulShardOwnerModifierId } from '../modifierSoulShardOwner';
 import { getAllShardBearers } from '../cards/soul_shard';
 
@@ -129,7 +130,8 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   // Note: flaggedForRemoval should ONLY be changed in Unit.cleanup
   flaggedForRemoval?: boolean;
   // A list of names that correspond to Events.ts functions
-  onDamageEvents: string[];
+  onDealDamageEvents: string[];
+  onTakeDamageEvents: string[];
   onDeathEvents: string[];
   onAgroEvents: string[];
   onTurnStartEvents: string[];
@@ -200,7 +202,8 @@ export function create(
       immovable: false,
       unitType,
       unitSubType,
-      onDamageEvents: [],
+      onDealDamageEvents: [],
+      onTakeDamageEvents: [],
       onDeathEvents: [],
       onAgroEvents: [],
       onTurnStartEvents: [],
@@ -423,7 +426,8 @@ export function removeModifier(unit: IUnit, key: string, underworld: Underworld)
   if (modifier && modifier.subsprite) {
     Image.removeSubSprite(unit.image, modifier.subsprite.imageName);
   }
-  unit.onDamageEvents = unit.onDamageEvents.filter((e) => e !== key);
+  unit.onDealDamageEvents = unit.onDealDamageEvents.filter((e) => e !== key);
+  unit.onTakeDamageEvents = unit.onTakeDamageEvents.filter((e) => e !== key);
   unit.onDeathEvents = unit.onDeathEvents.filter((e) => e !== key);
   unit.onAgroEvents = unit.onAgroEvents.filter((e) => e !== key);
   unit.onTurnStartEvents = unit.onTurnStartEvents.filter((e) => e !== key);
@@ -471,12 +475,14 @@ export function serialize(unit: IUnit): IUnitSerialized {
   // resolveDoneMoving is a callback that cannot be serialized
   // animations and sfx come from the source unit and need not be saved or sent over
   // the network (it would just be extra data), better to restore from the source unit
+
   // omit predictionCopy because it is a transient reference and shouldn't be serialized
-  const { resolveDoneMoving, animations, sfx, onDamageEvents, onDeathEvents, onAgroEvents, onTurnStartEvents, onTurnEndEvents, onDrawSelectedEvents, predictionCopy, ...rest } = unit
+  const { resolveDoneMoving, animations, sfx, onDealDamageEvents, onTakeDamageEvents, onDeathEvents, onAgroEvents, onTurnStartEvents, onTurnEndEvents, onDrawSelectedEvents, predictionCopy, ...rest } = unit
   return {
     ...rest,
     // Deep copy array so that serialized units don't share the object
-    onDamageEvents: [...onDamageEvents],
+    onDealDamageEvents: [...onDealDamageEvents],
+    onTakeDamageEvents: [...onTakeDamageEvents],
     onDeathEvents: [...onDeathEvents],
     onAgroEvents: [...onAgroEvents],
     onTurnStartEvents: [...onTurnStartEvents],
@@ -867,20 +873,45 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   // Once a unit dies it is no longer on it's originalLife
   unit.originalLife = false;
 }
-export function composeOnDamageEvents(unit: IUnit, damage: number, underworld: Underworld, prediction: boolean): number {
+export function composeOnDealDamageEvents(damageArgs: damageArgs, underworld: Underworld, prediction: boolean): number {
+  let { unit, amount, sourceUnit } = damageArgs;
+  if (!sourceUnit) return amount;
+
   // Compose onDamageEvents
-  for (let eventName of unit.onDamageEvents) {
-    const fn = Events.onDamageSource[eventName];
+  for (let eventName of sourceUnit.onDealDamageEvents) {
+    const fn = Events.onDealDamageSource[eventName];
     if (fn) {
-      // onDamage events can alter the amount of damage taken
-      damage = fn(unit, damage, underworld, prediction);
+      // onDamage events can trigger effects and alter damage amount
+      amount = fn(sourceUnit, amount, underworld, prediction, unit);
     }
   }
-  return damage
-
+  return amount;
 }
+export function composeOnTakeDamageEvents(damageArgs: damageArgs, underworld: Underworld, prediction: boolean): number {
+  let { unit, amount, sourceUnit } = damageArgs;
+
+  // Compose onDamageEvents
+  for (let eventName of unit.onTakeDamageEvents) {
+    const fn = Events.onTakeDamageSource[eventName];
+    if (fn) {
+      // onDamage events can trigger effects and alter damage amount
+      amount = fn(unit, amount, underworld, prediction, sourceUnit);
+    }
+  }
+  return amount;
+}
+
+interface damageArgs {
+  unit: IUnit,
+  amount: number,
+  sourceUnit?: IUnit,
+  fromVec2?: Vec2,
+  thinBloodLine?: boolean,
+}
+
 // damageFromVec2 is the location that the damage came from and is used for blood splatter
-export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | undefined, underworld: Underworld, prediction: boolean, state?: EffectState, options?: { thinBloodLine: boolean }) {
+export function takeDamage(damageArgs: damageArgs, underworld: Underworld, prediction: boolean) {
+  let { unit, amount, sourceUnit, fromVec2, thinBloodLine } = damageArgs;
   if (!unit.alive) {
     // Do not deal damage to dead units
     return;
@@ -890,7 +921,8 @@ export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | u
     immune.notifyImmune(unit, false);
     return
   }
-  amount = composeOnDamageEvents(unit, amount, underworld, prediction);
+  amount = composeOnDealDamageEvents(damageArgs, underworld, prediction);
+  amount = composeOnTakeDamageEvents(damageArgs, underworld, prediction);
   if (amount == 0) {
     // Even though damage is 0, sync the player UI in the event that the
     // damage took down shield
@@ -899,29 +931,10 @@ export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | u
     }
     return;
   }
-  if (!prediction) {
-    // console.log(`takeDamage: unit ${unit.id}; amount: ${amount}; events:`, unit.onDamageEvents);
-    // Only play hit animation if taking actual damage,
-    // note: heals call takeDamage with a negative amount, so we don't want to play a hit animation when
-    // player is healed
-    if (amount > 0) {
-      playSFXKey(unit.sfx.damage);
-      playAnimation(unit, unit.animations.hit, { loop: false, animationSpeed: 0.2 });
-      // All units bleed except Doodads
-      if (unit.unitSubType !== UnitSubType.DOODAD) {
-        if (damageFromVec2) {
-          if (options?.thinBloodLine) {
-            startBloodParticleSplatter(underworld, damageFromVec2, unit, { maxRotationOffset: Math.PI / 16, numberOfParticles: 30 });
-          } else {
-            startBloodParticleSplatter(underworld, damageFromVec2, unit);
-          }
-        }
-      }
-    }
-  }
-  // if healing
+
+  // Clamp the incoming healing amount to 0 to prevent heal over max
+  // Don't clamp hp value itself because we dont want to remove existing overhealth
   if (amount < 0) {
-    // Ensure it doesn't heal over max health
     const maxHealingAllowed = Math.max(0, unit.healthMax - unit.health);
     if (Math.abs(amount) > maxHealingAllowed) {
       amount = -maxHealingAllowed;
@@ -932,14 +945,32 @@ export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | u
   unit.health = Math.max(0, unit.health);
   // Ensure health is a whole number
   unit.health = Math.floor(unit.health);
-  // If the unit is actually taking damage (not taking 0 damage or being healed - (negative damage))
+
   if (!prediction) {
     if (amount > 0) {
+      // - - - DAMAGE FX - - -
+      playSFXKey(unit.sfx.damage);
+      playAnimation(unit, unit.animations.hit, { loop: false, animationSpeed: 0.2 });
+      // All units bleed except Doodads
+      if (unit.unitSubType !== UnitSubType.DOODAD) {
+        if (fromVec2) {
+          if (thinBloodLine) {
+            startBloodParticleSplatter(underworld, fromVec2, unit, { maxRotationOffset: Math.PI / 16, numberOfParticles: 30 });
+          } else {
+            startBloodParticleSplatter(underworld, fromVec2, unit);
+          }
+        }
+      }
       // Use all_red shader to flash the unit to show they are taking damage
       if (unit.shaderUniforms.all_red) {
         unit.shaderUniforms.all_red.alpha = 1;
         addLerpable(unit.shaderUniforms.all_red, "alpha", 0, 200);
       }
+    } else if (amount < 0) {
+      // - - - HEALING FX - - -
+      playSFXKey(healSfx);
+      floatingText({ coords: unit, text: globalThis.getChosenLanguageCode() == 'en' ? `+${Math.abs(amount)} Health` : `${i18n('heal')} ${Math.abs(amount)}` });
+      oneOffHealAnimation(unit);
     }
   }
 
@@ -960,8 +991,8 @@ export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | u
     underworld.syncPlayerPredictionUnitOnly();
     syncPlayerHealthManaUI(underworld);
   }
-
 }
+
 export function syncPlayerHealthManaUI(underworld: Underworld) {
   if (globalThis.headless) { return; }
   if (!(globalThis.player && elHealthBar && elManaBar && elStaminaBar && elHealthLabel && elManaLabel && elStaminaBarLabel)) {
@@ -1445,7 +1476,8 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
     // Prediction units should have full stamina because they will
     // when it is their turn
     stamina: rest.staminaMax,
-    onDamageEvents: [...rest.onDamageEvents],
+    onDealDamageEvents: [...rest.onDealDamageEvents],
+    onTakeDamageEvents: [...rest.onTakeDamageEvents],
     onDeathEvents: [...rest.onDeathEvents],
     onAgroEvents: [...rest.onAgroEvents],
     onTurnStartEvents: [...rest.onTurnStartEvents],

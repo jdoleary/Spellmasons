@@ -8,13 +8,12 @@ import { bloodLobber } from '../../graphics/ui/colors';
 import * as config from '../../config';
 import * as Image from '../../graphics/Image';
 
-// "glop" was initially "lobber"
-export const GLOP_UNIT_ID = 'glop';
+export const GORU_UNIT_ID = 'Goru';
 const unit: UnitSource = {
-  id: GLOP_UNIT_ID,
+  id: GORU_UNIT_ID,
   info: {
-    description: 'glop description',
-    image: 'units/lobberIdle',
+    description: 'goru description',
+    image: 'units/guruIdle',
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
@@ -28,25 +27,23 @@ const unit: UnitSource = {
     bloodColor: bloodLobber,
   },
   spawnParams: {
-    probability: 40,
-    budgetCost: 4,
-    unavailableUntilLevelIndex: 2,
+    // Special case: We spawn the Goru manually, but still want to declare a budget
+    probability: 0,
+    budgetCost: 0,
+    unavailableUntilLevelIndex: 9,
   },
   animations: {
-    idle: 'units/lobberIdle',
-    hit: 'units/lobberHit',
-    attack: 'units/lobberAttack',
-    die: 'units/lobberDeath',
-    walk: 'units/lobberWalk',
+    idle: 'units/guruIdle',
+    hit: 'units/guruHit',
+    attack: 'units/guruAttack',
+    die: 'units/guruDeath',
+    walk: 'units/guruIdle',
   },
   sfx: {
-    damage: 'lobberHurt',
-    death: 'lobberDeath'
+    damage: 'goruHurt',
+    death: 'goruDeath'
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
-    if (unit.image) {
-      unit.image.sprite.anchor.y = 0.3;
-    }
   },
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     const attackTarget = attackTargets && attackTargets[0];

@@ -1570,6 +1570,7 @@ body.open-inventory #inventory-container {
 #inventory-content .category-label {
   display: none;
   color: var(--book-leather-dark);
+  font-size: 2em;
   white-space: nowrap;
 }
 
@@ -2459,4 +2460,148 @@ body.dragging-card .floating-card-holder .empty-slot {
   100% {
     opacity: 0;
   }
+}
+
+.book-padding {
+  /* For alignment of bookmarks */
+  position: relative;
+}
+
+.bookmark {
+  aspect-ratio: 35 / 36;
+  height: 50px;
+  width: unset;
+  position: absolute;
+  transform: scale(-1);
+  left: 45px;
+  top: 40px;
+}
+
+.bookmark.active {
+  left: 55px;
+}
+
+.bookmark.disabled {
+  display: none;
+}
+
+#bookmark-movement {
+  left: 43px;
+  top: 120px;
+}
+
+#bookmark-movement.active {
+  left: 55px;
+}
+
+#bookmark-targeting {
+  left: 41px;
+  top: 200px;
+}
+
+#bookmark-targeting.active {
+  left: 55px;
+}
+
+#bookmark-mana {
+  left: 39px;
+  top: 280px;
+}
+
+#bookmark-mana.active {
+  left: 55px;
+}
+
+#bookmark-curses {
+  left: 37px;
+  top: 360px;
+}
+
+#bookmark-curses.active {
+  left: 55px;
+}
+
+#bookmark-blessings {
+  left: 35px;
+  top: 440px;
+}
+
+#bookmark-blessings.active {
+  left: 55px;
+}
+
+#bookmark-soul {
+  left: 33px;
+  top: 520px;
+}
+
+#bookmark-soul.active {
+  left: 55px;
+}
+
+#bookmark-all {
+  left: 33px;
+  top: 600px;
+}
+
+#inventory-container.bookmark-all #bookmark-all {
+  /* Disable bookmark all when bookmark all is selected */
+  display: none;
+}
+
+#inventory-container:not(.bookmark-all) .category {
+  display: none;
+}
+
+#inventory-container:not(.bookmark-all) .category-label {
+  display: none;
+}
+
+#inventory-container.bookmark-all .category-label.category-label.visible {
+  display: block;
+}
+
+#inventory-container.bookmark-damage .category[data-category="Damage"],
+#inventory-container.bookmark-damage .category-label[data-category="Damage"] {
+  display: flex;
+}
+
+#inventory-container.bookmark-movement .category[data-category="Movement"],
+#inventory-container.bookmark-movement .category-label[data-category="Movement"] {
+  display: flex;
+}
+
+#inventory-container.bookmark-targeting .category[data-category="Targeting"],
+#inventory-container.bookmark-targeting .category-label[data-category="Targeting"] {
+  display: flex;
+}
+
+#inventory-container.bookmark-mana .category[data-category="Mana"],
+#inventory-container.bookmark-mana .category-label[data-category="Mana"] {
+  display: flex;
+}
+
+#inventory-container.bookmark-curses .category[data-category="Curses"],
+#inventory-container.bookmark-curses .category-label[data-category="Curses"] {
+  display: flex;
+}
+
+#inventory-container.bookmark-blessings .category[data-category="Blessings"],
+#inventory-container.bookmark-blessings .category-label[data-category="Blessings"] {
+  display: flex;
+}
+
+#inventory-container.bookmark-soul .category[data-category="Soul"],
+#inventory-container.bookmark-soul .category-label[data-category="Soul"] {
+  display: flex;
+}
+
+#inventory-container.bookmark-movement .category[data-category="Movement"],
+#inventory-container.bookmark-movement .category-label[data-category="Movement"] {
+  display: flex;
+}
+
+#inventory-container.bookmark-movement .category[data-category="Movement"],
+#inventory-container.bookmark-movement .category-label[data-category="Movement"] {
+  display: flex;
 }

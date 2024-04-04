@@ -27,7 +27,7 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean) {
 
   const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity: 1 }, () => {
     // Add event
-    unit.onDamageEvents.push(id);
+    unit.onTakeDamageEvents.push(id);
 
     unit.healthMax *= healthMultiplier;
     unit.health *= healthMultiplier;
@@ -83,7 +83,7 @@ const spell: Spell = {
     init: () => { },
   },
   events: {
-    onDamage: (unit: IUnit, amount: number, _underworld: Underworld, prediction: boolean, damageDealer?: IUnit) => {
+    onTakeDamage: (unit: IUnit, amount: number, _underworld: Underworld, prediction: boolean, damageDealer?: IUnit) => {
       // Takes healing as damage
       if (amount < 0) {
         if (!prediction) {

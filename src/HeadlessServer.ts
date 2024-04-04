@@ -27,6 +27,7 @@ import { onData } from './network/networkHandler';
 import makeOverworld, { Overworld } from "./Overworld";
 import Underworld from "./Underworld";
 import { SERVER_HUB_URL } from "./config";
+import { MESSAGE_TYPES } from "./types/MessageTypes";
 const isUsingBun = process.env.USING_BUN === 'yes';
 const pie = isUsingBun ? require('@websocketpie/server-bun') : require('@websocketpie/server');
 // Init underworld so that when clients join they can use it as the canonical
@@ -98,7 +99,7 @@ class HostApp implements IHostApp {
         this.soloMode = false;
         new Underworld(this.overworld, this.overworld.pie, Math.random().toString());
     }
-    onData(data: any) {
+    onData(data: any): any {
         onData(data, this.overworld);
     }
     cleanup() {
@@ -110,6 +111,15 @@ class HostApp implements IHostApp {
             case MessageType.Data:
                 if (this.onData) {
                     this.onData(message);
+                    if (message.payload.type === MESSAGE_TYPES.SPELL && !message.payload.syncState) {
+                        // Transform the message to prevent it from triggering,
+                        // headless will send it's own SPELL message
+                        // that will add the sync state onto it
+                        return {
+                            doNotEcho: true
+                        }
+
+                    }
                 }
                 break;
             case MessageType.ResolvePromise:
@@ -153,6 +163,7 @@ class HostApp implements IHostApp {
                 console.log(message);
                 console.error(`Above message of type ${message.type} not recognized!`);
         }
+        return undefined;
     }
 }
 // Copied from PieClient

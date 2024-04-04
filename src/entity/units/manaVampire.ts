@@ -48,7 +48,12 @@ const unit: UnitSource = {
     await meleeAction(unit, attackTargets, underworld, canAttackTarget, async (attackTarget: Unit.IUnit) => {
       playSFXKey('vampireAttack');
       await Unit.playAnimation(unit, unit.animations.attack);
-      Unit.takeDamage(attackTarget, unit.damage, unit, underworld, false, undefined);
+      Unit.takeDamage({
+        unit: attackTarget,
+        amount: unit.damage,
+        sourceUnit: unit,
+        fromVec2: unit,
+      }, underworld, false);
       if (attackTarget.mana) {
         const manaStolen = Math.min(attackTarget.mana, manaToSteal);
         attackTarget.mana -= manaStolen;
@@ -66,7 +71,7 @@ const unit: UnitSource = {
     const healthToRestore = Math.min(40, unit.mana, unit.healthMax - unit.health);
     if (healthToRestore > 0) {
       unit.mana -= healthToRestore;
-      await healUnit(unit, healthToRestore, underworld, false);
+      await healUnit(unit, healthToRestore, unit, underworld, false);
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {

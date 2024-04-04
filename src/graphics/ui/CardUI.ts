@@ -7,7 +7,7 @@ import {
 } from '../PlanningView';
 import { calculateCost, calculateCostForSingleCard, getCardCooldown, levelsUntilCardIsEnabled } from '../../cards/cardUtils';
 import floatingText from '../FloatingText';
-import { composeOnDamageEvents, copyForPredictionUnit } from '../../entity/Unit';
+import { copyForPredictionUnit } from '../../entity/Unit';
 import { NUMBER_OF_TOOLBAR_SLOTS } from '../../config';
 import Underworld from '../../Underworld';
 import { CardCategory, CardRarity, probabilityMap } from '../../types/commonTypes';
@@ -422,9 +422,14 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
       }
     }
     // Make category labels visible if player has at least one card in that category
-    invCards.map(c => c ? CardCategory[c.category] : '')
-      .map(category => elInvContent.querySelector(`.category-label[data-category="${category}"]`))
+    const categories = Array.from(new Set(invCards.map(c => c ? CardCategory[c.category] : '')));
+    categories.map(category => elInvContent.querySelector(`.category-label[data-category="${category}"]`))
       .forEach(el => el?.classList.add('visible'))
+    // Disable bookmarks for categories that are empty:
+    document.querySelectorAll('.bookmark').forEach(el => (el as HTMLElement).classList.toggle('disabled', true));
+    categories.forEach(category => document.getElementById(`bookmark-${category.toLowerCase()}`)?.classList.toggle('disabled', false));
+    // All bookmark is always enabled
+    document.getElementById('bookmark-all')?.classList.toggle('disabled', false);
     // Add an inventory element to clear the currently selected toolbar item
     if (slotModifyingIndex !== undefined) {
       const elClearSlotModifiyingIndex = createNonCardInventoryElement('toolbar-slot.png', 'Empty');

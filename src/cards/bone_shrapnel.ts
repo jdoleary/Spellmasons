@@ -23,7 +23,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconCorpseExplosion.png',
-    description: `When cast on a corpse, the corpse will explode damaging units around it by ${damage}. Stackable to increase explosion damage.`,
+    description: [`spell_bone_shrapnel`, damage.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // Only explode corpses at time of cast
       const targetedUnits = state.targetedUnits.filter(u => !u.alive);
@@ -42,7 +42,12 @@ const spell: Spell = {
           prediction
         ).forEach(u => {
           // Deal damage to units
-          takeDamage(u, damage * quantity, u, underworld, prediction);
+          Unit.takeDamage({
+            unit: u,
+            amount: damage * quantity,
+            sourceUnit: state.casterUnit,
+            fromVec2: unit,
+          }, underworld, prediction);
         });
 
         // Remove corpse

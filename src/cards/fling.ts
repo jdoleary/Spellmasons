@@ -20,6 +20,7 @@ const spell: Spell = {
     thumbnail: 'spellIconFling.png',
     description: 'spell_fling',
     allowNonUnitTarget: true,
+    ignoreRange: true,
     effect: async (state, card, quantity, underworld, prediction) => {
       playDefaultSpellSFX(card, prediction);
       await forcePushTowards(state.casterUnit, state.castLocation, defaultPushDistance * quantity, underworld, prediction);

@@ -155,7 +155,7 @@ const spell: Spell = {
           // If there is are clone coordinates to clone into
           if (cloneSourceCoords) {
             if (Unit.isUnit(target)) {
-              const validSpawnCoords = underworld.findValidSpawn(cloneSourceCoords, 5, 10);
+              const validSpawnCoords = underworld.findValidSpawn({ spawnSource: cloneSourceCoords, ringLimit: 5, prediction, radius: 10 });
               if (validSpawnCoords) {
                 const clone = Unit.load(Unit.serialize(target), underworld, prediction);
                 if (!prediction) {
@@ -190,7 +190,7 @@ const spell: Spell = {
             }
             // TODO: Make split for for doodads and pickups
             // if (Pickup.isPickup(target)) {
-            //   const validSpawnCoords = underworld.findValidSpawn(cloneSourceCoords, 5, 20)
+            //   const validSpawnCoords = underworld.findValidSpawn({spawnSource:cloneSourceCoords, ringLimit: 5, prediction, radius:20})
             //   if (validSpawnCoords) {
             //     const clone = Pickup.load(Pickup.serialize(target), underworld, prediction);
             //     if (clone) {

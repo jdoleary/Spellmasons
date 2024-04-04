@@ -34,8 +34,15 @@ const spell: Spell = {
   events: {
     onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
       if (unit) {
-        Unit.takeDamage(unit, damageDone, projectile.startPoint, underworld, prediction, undefined, { thinBloodLine: true });
+        Unit.takeDamage({
+          unit: unit,
+          amount: damageDone,
+          sourceUnit: projectile.sourceUnit,
+          fromVec2: projectile.startPoint,
+          thinBloodLine: true,
+        }, underworld, prediction);
         explode(unit, explodeRange, explodeDamage, defaultPushDistance,
+          projectile.sourceUnit,
           underworld, prediction,
           colors.bloatExplodeStart, colors.bloatExplodeEnd);
       }

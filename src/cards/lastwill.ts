@@ -72,7 +72,7 @@ const spell: Spell = {
       // Unique for the unit and for quantity and same across all clients due to turn_number and unit.id
       const seed = seedrandom(`${underworld.turn_number} -${unit.id} `);
       for (let i = 0; i < quantity; i++) {
-        const coord = underworld.findValidSpawn(unit, 3, 32);
+        const coord = underworld.findValidSpawn({ spawnSource: unit, ringLimit: 3, prediction, radius: 32 });
         const choice = chooseObjectWithProbability(Pickup.pickups.map((p, index) => {
           if (p.name == Pickup.CURSED_MANA_POTION) {
             // Higher probability of returning cursed mana potions with last will

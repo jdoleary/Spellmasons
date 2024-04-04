@@ -38,7 +38,7 @@ const spell: Spell = {
     add,
   },
   events: {
-    onDamage: (unit, amount, underworld, prediction) => {
+    onTakeDamage: (unit, amount, underworld, prediction) => {
       // Split the damage / healing amount among all soul bound units
       let units = prediction ? underworld.unitsPrediction : underworld.units;
       units = units.filter(u => !!u.modifiers[soulBindId] && u.alive && !u.flaggedForRemoval);
@@ -46,13 +46,16 @@ const spell: Spell = {
       for (let i = 0; i < units.length; i++) {
         const unit = units[i];
         if (unit) {
-          const index = unit.onDamageEvents.findIndex(e => e == soulBindId);
+          const index = unit.onTakeDamageEvents.findIndex(e => e == soulBindId);
           // Remove Soul Bind damage event to prevent infinite loop
-          unit.onDamageEvents.splice(index, 1);
+          unit.onTakeDamageEvents.splice(index, 1);
           // Deal damage to unit
-          Unit.takeDamage(unit, Math.ceil(amount / units.length), undefined, underworld, prediction, undefined)
+          Unit.takeDamage({
+            unit: unit,
+            amount: Math.ceil(amount / units.length)
+          }, underworld, prediction);
           // Return Soul Bind damage event
-          unit.onDamageEvents.splice(index, 0, soulBindId)
+          unit.onTakeDamageEvents.splice(index, 0, soulBindId)
         }
       }
 
@@ -63,7 +66,7 @@ const spell: Spell = {
 
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
   const modifier = getOrInitModifier(unit, soulBindId, { isCurse: true, quantity }, () => {
-    unit.onDamageEvents.push(soulBindId);
+    unit.onTakeDamageEvents.push(soulBindId);
   });
 }
 export default spell;

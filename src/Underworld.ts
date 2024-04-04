@@ -79,6 +79,7 @@ import { Emitter } from '@pixi/particle-emitter';
 import { golem_unit_id } from './entity/units/golem';
 import { cleanUpPerkList, createPerkElement, generatePerks, tryTriggerPerk, showPerkList, hidePerkList, createCursePerkElement, StatCalamity, generateRandomStatCalamity } from './Perk';
 import deathmason, { ORIGINAL_DEATHMASON_DEATH, bossmasonUnitId, summonUnitAtPickup } from './entity/units/deathmason';
+import goru from './entity/units/goru';
 import { hexToString } from './graphics/ui/colorUtil';
 import { doLiquidEffect } from './inLiquid';
 import { findRandomGroundLocation } from './entity/units/summoner';
@@ -431,7 +432,7 @@ export default class Underworld {
         // otherwise, make the unit slide along the wall
         if (impactDamage > 0) {
           if (Unit.isUnit(pushedObject)) {
-            Unit.takeDamage(pushedObject, impactDamage, Vec.add(pushedObject, { x: velocity.x, y: velocity.y }), this, prediction);
+            Unit.takeDamage({ unit: pushedObject, amount: impactDamage, fromVec2: Vec.add(pushedObject, { x: velocity.x, y: velocity.y }) }, this, prediction);
             if (!prediction) {
               floatingText({ coords: pushedObject, text: `${impactDamage} Impact damage!` });
             }
@@ -1807,12 +1808,22 @@ export default class Underworld {
           sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
           sprite.y = tile.y - config.COLLISION_MESH_RADIUS;
         }
+        // Add wall shadows
+        if (tile.image.endsWith('wallN.png')) {
+          const sprite = addPixiSprite('tiles/wallShadow.png', containerUnits);
+          if (sprite) {
+            sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
+            // Place directly below the wall
+            sprite.y = tile.y + config.COLLISION_MESH_RADIUS;
+          }
+
+        }
       }
     }
   }
   // fromSource is used when the spawn in question is spawning FROM something else,
   // like clone.  This prevents clones from spawning through walls
-  isPointValidSpawn(spawnPoint: Vec2, radius: number, fromSource?: Vec2): boolean {
+  isPointValidSpawn(spawnPoint: Vec2, radius: number, prediction: boolean, fromSource?: Vec2): boolean {
     if (fromSource) {
       // Ensure attemptSpawn isn't through any walls or liquidBounds
       if ([...this.walls, ...this.liquidBounds].some(wall => lineSegmentIntersection({ p1: fromSource, p2: spawnPoint }, wall))) {
@@ -1828,7 +1839,7 @@ export default class Underworld {
     }
     // Ensure spawnPoint doesn't share coordinates with any other entity
     // (This prevents units from spawning directly on top of each other)
-    const entities = this.getPotentialTargets(false);
+    const entities = this.getPotentialTargets(prediction);
     if (entities.some(entity => Vec.equal(Vec.round(entity), Vec.round(spawnPoint)))) {
       return false;
     }
@@ -1841,7 +1852,7 @@ export default class Underworld {
   }
   // ringLimit limits how far away from the spawnSource it will check for valid spawn locations
   // same as below "findValidSpanws", but shortcircuits at the first valid spawn found and returns that
-  findValidSpawn(spawnSource: Vec2, ringLimit: number, radius: number = config.COLLISION_MESH_RADIUS): Vec2 | undefined {
+  findValidSpawn({ spawnSource, ringLimit, radius = config.COLLISION_MESH_RADIUS / 4, prediction }: { spawnSource: Vec2, ringLimit: number, radius?: number, prediction: boolean }): Vec2 | undefined {
     if (isNaN(spawnSource.x) || isNaN(spawnSource.y)) {
       console.error('Attempted to findValidSpawn but spawnSource was NaN');
       return undefined;
@@ -1849,14 +1860,14 @@ export default class Underworld {
     const honeycombRings = ringLimit;
     for (let s of math.honeycombGenerator(radius, spawnSource, honeycombRings)) {
       const attemptSpawn = { ...s, radius: config.COLLISION_MESH_RADIUS };
-      if (this.isPointValidSpawn(attemptSpawn, config.COLLISION_MESH_RADIUS, spawnSource)) {
+      if (this.isPointValidSpawn(attemptSpawn, config.COLLISION_MESH_RADIUS, prediction, spawnSource)) {
         return attemptSpawn
       }
     }
     return undefined;
   }
   // Same as above "findValidSpawn", but returns an array of valid spawns
-  findValidSpawns(spawnSource: Vec2, radius: number = config.COLLISION_MESH_RADIUS / 4, ringLimit: number): Vec2[] {
+  findValidSpawns({ spawnSource, ringLimit, radius = config.COLLISION_MESH_RADIUS / 4, prediction }: { spawnSource: Vec2, ringLimit: number, radius?: number, prediction: boolean }): Vec2[] {
     const validSpawns: Vec2[] = [];
     const honeycombRings = ringLimit;
     // The radius passed into honeycombGenerator is how far between vec2s each honeycomb cell is
@@ -1864,7 +1875,7 @@ export default class Underworld {
       // attemptSpawns radius must be the full config.COLLISION_MESH_RADIUS to ensure
       // that the spawning unit wont intersect something it shouldn't
       const attemptSpawn = { ...s, radius: config.COLLISION_MESH_RADIUS };
-      if (this.isPointValidSpawn(attemptSpawn, config.COLLISION_MESH_RADIUS, spawnSource)) {
+      if (this.isPointValidSpawn(attemptSpawn, config.COLLISION_MESH_RADIUS, prediction, spawnSource)) {
         // Return the first valid spawn found
         validSpawns.push(attemptSpawn);
       }
@@ -2220,7 +2231,7 @@ export default class Underworld {
     return;
   }
   async trySpawnBoss(): Promise<boolean> {
-    if (this.levelIndex != config.LAST_LEVEL_INDEX) {
+    if (this.levelIndex != config.LAST_LEVEL_INDEX && this.levelIndex != config.GORU_LEVEL_INDEX) {
       console.debug('[GAME] Can\'t Spawn Boss\nNo boss to spawn');
       return false;
     }
@@ -2235,7 +2246,12 @@ export default class Underworld {
       return false;
     }
 
-    await introduceBoss(deathmason, this);
+    if (this.levelIndex == config.GORU_LEVEL_INDEX) {
+      await introduceBoss(goru, this);
+    }
+    if (this.levelIndex == config.LAST_LEVEL_INDEX) {
+      await introduceBoss(deathmason, this);
+    }
     return true;
   }
   trySpawnNextWave(): boolean {
@@ -2297,7 +2313,7 @@ export default class Underworld {
       return false;
     }
 
-    if (this.levelIndex == config.LAST_LEVEL_INDEX && !this.hasSpawnedBoss) {
+    if ((this.levelIndex == config.LAST_LEVEL_INDEX || this.levelIndex == config.GORU_LEVEL_INDEX) && !this.hasSpawnedBoss) {
       console.debug('[GAME] Level Incomplete...\nWaiting to spawn Deathmason...');
       return false;
     }
@@ -2338,7 +2354,7 @@ export default class Underworld {
 
     // Spawn a portal near each remaining player
     for (let playerUnit of remainingPlayers) {
-      const portalSpawnLocation = this.findValidSpawn(playerUnit, 4) || playerUnit;
+      const portalSpawnLocation = this.findValidSpawn({ spawnSource: playerUnit, ringLimit: 4, prediction: false }) || playerUnit;
       if (!isOutOfBounds(portalSpawnLocation, this)) {
         spawnedPortals.push(Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup, logSource: 'Portal' }, this, false));
       }
@@ -3095,7 +3111,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       const damageMultiplier = 0.1 / this.players.length;
       // Deals 10% damage to all AI units
       this.units.filter(u => u.unitType == UnitType.AI && u.unitSubType != UnitSubType.DOODAD)
-        .forEach(u => Unit.takeDamage(u, u.healthMax * damageMultiplier, undefined, this, false));
+        .forEach(u => Unit.takeDamage({
+          unit: u,
+          amount: u.healthMax * damageMultiplier,
+          sourceUnit: player.unit
+        }, this, false));
     } else {
 
       if (isCurrentPlayer) {
@@ -3554,6 +3574,14 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     const closest = sortedByProximityToCoords[0]
     return closest;
   }
+  // Note, predictions ids intentionally won't always align with real unit ids.
+  // If you are trying to find a unit's corresponding prediction or a predictionUnit's
+  // corresponding real unit, use unit.predictionCopy or unit.real respectively.
+  // See `lastPredictionUnitId` for more context on why ids are different.
+  getUnitById(id: number, prediction: boolean): Unit.IUnit | undefined {
+    const units = prediction ? this.unitsPrediction : this.units;
+    return units.find(u => u.id == id);
+  }
   addUnitToArray(unit: Unit.IUnit, prediction: boolean): Unit.IUnit {
     if (prediction && this.unitsPrediction) {
       this.unitsPrediction.push(unit);
@@ -3779,7 +3807,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           }
 
           if (spellCostTally.healthCost !== 0) {
-            Unit.takeDamage(effectState.casterUnit, spellCostTally.healthCost, effectState.casterUnit, this, prediction, effectState);
+            Unit.takeDamage({
+              unit: effectState.casterUnit,
+              amount: spellCostTally.healthCost,
+              sourceUnit: effectState.casterUnit,
+              fromVec2: effectState.casterUnit
+            }, this, prediction);
           }
 
           // Increment card usage; now that the caster is using the card
@@ -4239,6 +4272,14 @@ function getEnemiesForAltitude(underworld: Underworld, levelIndex: number): stri
   budgetLeft = Math.floor(budgetLeft);
   console.log('Budget for level index', adjustedLevelIndex, 'is', budgetLeft);
   const totalBudget = budgetLeft;
+  // Reduce remaining budget on the last level where Goru will spawn
+  if (levelIndex == config.GORU_LEVEL_INDEX) {
+    if (goru.spawnParams) {
+      budgetLeft -= goru.spawnParams?.budgetCost;
+    } else {
+      console.warn("Goru spawn params unknown, could not modify budget correctly");
+    }
+  }
   // Reduce remaining budget on the last level where the Deathmason will spawn
   if (levelIndex == config.LAST_LEVEL_INDEX) {
     if (deathmason.spawnParams) {
@@ -4300,7 +4341,7 @@ async function introduceBoss(unit: UnitSource, underworld: Underworld) {
   }
 
   // Play boss intro FX
-  const elCinematic = document.getElementById('deathmason-cinematic');
+  const elCinematic = unit.id == bossmasonUnitId ? document.getElementById('deathmason-cinematic') : document.getElementById('goru-cinematic');
   if (elCinematic) {
     elCinematic.classList.toggle('show', true);
   }
