@@ -1,6 +1,6 @@
 import { CardCategory, UnitType } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
-import { Spell, addTarget, getCurrentTargets, refundLastSpell } from './index';
+import { Spell, addTarget, allModifiers, getCurrentTargets, refundLastSpell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
@@ -69,6 +69,20 @@ const spell: Spell = {
               if (prediction) {
                 // TODO - Show new unit?
               }
+
+              // Keep Modifiers
+              for (const modifierKey of Object.keys(unit.modifiers)) {
+                const modifier = allModifiers[modifierKey];
+                const modifierInstance = unit.modifiers[modifierKey];
+                if (modifier && modifierInstance) {
+                  if (modifier?.add) {
+                    modifier.add(newUnit, underworld, prediction, modifierInstance.quantity, modifierInstance);
+                  }
+                } else {
+                  console.error("Modifier doesn't exist? This shouldn't happen.");
+                }
+              }
+
               // Cleanup old unit and remove it from targets
               Unit.cleanup(unit, false);
               state.targetedUnits = state.targetedUnits.filter(u => u != unit);
