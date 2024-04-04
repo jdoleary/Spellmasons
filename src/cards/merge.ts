@@ -71,6 +71,9 @@ export function mergeUnit(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], underw
   // I.E. Target gets a few stacks of suffocate and dies, bloat triggers, bunch of stuff changes.
   // Loop keeps going and reaches some undefined value, or tries to add modifiers to dead target, etc.
   for (const unit of unitsToMerge) {
+    // Never merge a player controlled unit
+    if (unit.unitType == UnitType.PLAYER_CONTROLLED) continue;
+
     // HP / Stam / Mana
     target.healthMax += unit.healthMax;
     target.health += unit.health;
