@@ -35,89 +35,91 @@ const spell: Spell = {
 
       playDefaultSpellSFX(card, prediction);
 
-      for (let target of targets) {
+      for (let i = 0; i < quantity; i++) {
+        for (const target of targets) {
+          if (Unit.isUnit(target)) {
+            const unit = target as Unit.IUnit;
+            const unitSource = allUnits[unit.unitSourceId]
 
-        if (Unit.isUnit(target)) {
-          const unit = target as Unit.IUnit;
-          const unitSource = allUnits[unit.unitSourceId]
+            let possibleUnitTypes = Object.values(allUnits).filter(u => isModActive(u, underworld) && u.id != unitSource?.id);
+            if (unit.isBoss) {
+              possibleUnitTypes = possibleUnitTypes
+                .filter(u => u.unitProps.isBoss);
+            } else {
+              // Get all units with budget and spawn chance
+              possibleUnitTypes = possibleUnitTypes
+                .filter(u => u.spawnParams && u.spawnParams.probability > 0 && u.spawnParams.budgetCost);
+            }
 
-          let possibleUnitTypes = Object.values(allUnits).filter(u => isModActive(u, underworld) && u.id != unitSource?.id);
-          if (unit.isBoss) {
-            possibleUnitTypes = possibleUnitTypes
-              .filter(u => u.unitProps.isBoss);
-          } else {
-            // Get all units with budget and spawn chance
-            possibleUnitTypes = possibleUnitTypes
-              .filter(u => u.spawnParams && u.spawnParams.probability > 0 && u.spawnParams.budgetCost);
-          }
+            // We have to seed this to prevent multiplayer desync
+            const seed = seedrandom(`${underworld.turn_number} -${target.id} `);
+            const chosenIndex = chooseObjectWithProbability(possibleUnitTypes.map((p, index) => {
+              // Units are weighted by their difference in budget.
+              // Units twice as far away in the budget are half as likely to be chosen.
+              const budgetDiff = Math.abs((unitSource?.spawnParams?.budgetCost || 0) - (p.spawnParams?.budgetCost || 0));
+              return { index, probability: (budgetDiff == 0) ? 1 : 1 / budgetDiff }
+            }), seed)?.index;
 
-          // We have to seed this to prevent multiplayer desync
-          const seed = seedrandom(`${underworld.turn_number} -${target.id} `);
-          const chosenIndex = chooseObjectWithProbability(possibleUnitTypes.map((p, index) => {
-            // Units are weighted by their difference in budget.
-            // Units twice as far away in the budget are half as likely to be chosen.
-            const budgetDiff = Math.abs((unitSource?.spawnParams?.budgetCost || 0) - (p.spawnParams?.budgetCost || 0));
-            return { index, probability: (budgetDiff == 0) ? 1 : 1 / budgetDiff }
-          }), seed)?.index;
-
-          const chosenUnitType = (chosenIndex != undefined) ? possibleUnitTypes[chosenIndex] : undefined;
-          if (chosenUnitType) {
-            // Replace current unit with new unit
-            const newUnit = polymorphUnit(unit, chosenUnitType.id, underworld, prediction);
-            if (newUnit) {
-              // Visual aid only
-              if (prediction) {
-                // TODO - Show new unit?
-              }
-
-              // Keep Modifiers
-              for (const modifierKey of Object.keys(unit.modifiers)) {
-                const modifier = allModifiers[modifierKey];
-                const modifierInstance = unit.modifiers[modifierKey];
-                if (modifier && modifierInstance) {
-                  if (modifier?.add) {
-                    modifier.add(newUnit, underworld, prediction, modifierInstance.quantity, modifierInstance);
-                  }
-                } else {
-                  console.error("Modifier doesn't exist? This shouldn't happen.");
+            const chosenUnitType = (chosenIndex != undefined) ? possibleUnitTypes[chosenIndex] : undefined;
+            if (chosenUnitType) {
+              // Replace current unit with new unit
+              const newUnit = polymorphUnit(unit, chosenUnitType.id, underworld, prediction);
+              if (newUnit) {
+                // Visual aid only
+                if (prediction) {
+                  // TODO - Show new unit?
                 }
+
+                // Keep Modifiers
+                for (const modifierKey of Object.keys(unit.modifiers)) {
+                  const modifier = allModifiers[modifierKey];
+                  const modifierInstance = unit.modifiers[modifierKey];
+                  if (modifier && modifierInstance) {
+                    if (modifier?.add) {
+                      modifier.add(newUnit, underworld, prediction, modifierInstance.quantity, modifierInstance);
+                    }
+                  } else {
+                    console.error("Modifier doesn't exist? This shouldn't happen.");
+                  }
+                }
+
+                // Cleanup old unit and remove it from targets
+                Unit.cleanup(unit, false);
+                state.targetedUnits = state.targetedUnits.filter(u => u != unit);
+                // Add new unit to targets
+                addTarget(newUnit, state, underworld);
               }
-
-              // Cleanup old unit and remove it from targets
-              Unit.cleanup(unit, false);
-              state.targetedUnits = state.targetedUnits.filter(u => u != unit);
-              // Add new unit to targets
-              addTarget(newUnit, state, underworld);
+            } else {
+              console.error("Polymorph failed to choose a new unit type.");
             }
-          } else {
-            console.error("Polymorph failed to choose a new unit type.");
-          }
-        } else if (isPickup(target)) {
-          const pickup = target as IPickup;
-          if (pickup.name == Pickup.PORTAL_PURPLE_NAME) continue;
+          } else if (isPickup(target)) {
+            const pickup = target as IPickup;
+            // Don't polymorph purple portals
+            if (pickup.name == Pickup.PORTAL_PURPLE_NAME) continue;
 
-          let possiblePickupTypes = pickups.filter(p => isModActive(p, underworld) && p.name != pickup.name
-            && p.name != Pickup.PORTAL_PURPLE_NAME && p.name != Pickup.RECALL_POINT);
+            let possiblePickupTypes = pickups.filter(p => isModActive(p, underworld) && p.name != pickup.name
+              && p.name != Pickup.PORTAL_PURPLE_NAME && p.name != Pickup.RECALL_POINT);
 
-          // We have to seed this to prevent multiplayer desync
-          const seed = seedrandom(`${underworld.turn_number} -${pickup.id} `);
-          const chosenPickupType = chooseOneOfSeeded(possiblePickupTypes, seed);
-          if (chosenPickupType) {
-            // Replace current pickup with new pickup
-            const newPickup = polymorphPickup(pickup, chosenPickupType, underworld, prediction);
-            if (newPickup) {
-              // Visual aid only
-              if (prediction) {
-                // TODO - Show new pickup?
+            // We have to seed this to prevent multiplayer desync
+            const seed = seedrandom(`${underworld.turn_number} -${pickup.id} `);
+            const chosenPickupType = chooseOneOfSeeded(possiblePickupTypes, seed);
+            if (chosenPickupType) {
+              // Replace current pickup with new pickup
+              const newPickup = polymorphPickup(pickup, chosenPickupType, underworld, prediction);
+              if (newPickup) {
+                // Visual aid only
+                if (prediction) {
+                  // TODO - Show new pickup?
+                }
+                // Cleanup old pickup and remove it from targets
+                Pickup.removePickup(pickup, underworld, prediction);
+                state.targetedPickups = state.targetedPickups.filter(p => p != pickup);
+                // Add new pickup to targets
+                addTarget(newPickup, state, underworld);
               }
-              // Cleanup old pickup and remove it from targets
-              Pickup.removePickup(pickup, underworld, prediction);
-              state.targetedPickups = state.targetedPickups.filter(p => p != pickup);
-              // Add new pickup to targets
-              addTarget(newPickup, state, underworld);
+            } else {
+              console.error("Polymorph failed to choose a new unit type.");
             }
-          } else {
-            console.error("Polymorph failed to choose a new unit type.");
           }
         }
       }
