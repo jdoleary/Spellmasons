@@ -51,7 +51,7 @@ export function _chooseObjectWithProbability<T extends objectWithProbability>(ro
   let rollingLowerBound = 0;
   // Iterate each object and check if the roll is between the lower bound and the upper bound
   // which means that the current object would have been rolled
-  for (let x of source) {
+  for (let x of source.filter(i => i.probability > 0)) {
     if (
       roll > rollingLowerBound &&
       roll <= x.probability + rollingLowerBound
@@ -87,8 +87,8 @@ export function chooseObjectWithProbability<T extends objectWithProbability>(
     (maxProbability, current) => current.probability + maxProbability,
     0,
   );
-  // Choose random integer within the sum of all the probabilities
-  const roll = randInt(1, maxProbability, seedRandomInstance);
+  // Choose random number within the sum of all the probabilities
+  const roll = randFloat(0, maxProbability, seedRandomInstance);
   return _chooseObjectWithProbability(roll, source);
 }
 export function getUniqueSeedString(underworld: Underworld, player?: IPlayer): string {
