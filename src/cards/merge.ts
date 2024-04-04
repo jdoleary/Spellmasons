@@ -1,6 +1,7 @@
 import { allModifiers, getCurrentTargets, refundLastSpell, Spell } from './index';
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
+import * as colors from '../graphics/ui/colors';
 import { CardCategory, UnitType } from '../types/commonTypes';
 import floatingText from '../graphics/FloatingText';
 import { IImageAnimated } from '../graphics/Image';
@@ -69,7 +70,7 @@ export function mergeUnit(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], underw
   // TODO - I forsee a bug that causes modifier addition to change game state before merge is complete
   // I.E. Target gets a few stacks of suffocate and dies, bloat triggers, bunch of stuff changes.
   // Loop keeps going and reaches some undefined value, or tries to add modifiers to dead target, etc.
-  for (let unit of unitsToMerge) {
+  for (const unit of unitsToMerge) {
     // HP / Stam / Mana
     target.healthMax += unit.healthMax;
     target.health += unit.health;
@@ -102,6 +103,18 @@ export function mergeUnit(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], underw
       underworld.enemiesKilled++;
     }
 
+    // Prediction Lines
+    if (prediction) {
+      const graphics = globalThis.predictionGraphics;
+      if (graphics) {
+        const lineColor = colors.manaBlue;
+        graphics.lineStyle(3, lineColor, 0.7);
+        graphics.moveTo(unit.x, unit.y);
+        graphics.lineTo(target.x, target.y);
+        graphics.drawCircle(target.x, target.y, 3);
+      }
+    }
+
     Unit.cleanup(unit);
   }
 }
@@ -109,11 +122,23 @@ export function mergeUnit(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], underw
 
 export function mergePickup(target: Pickup.IPickup, pickupsToMerge: Pickup.IPickup[], underworld: Underworld, prediction: boolean) {
   console.log("TODO - Merge Pickups");
-  for (let pickup of pickupsToMerge) {
+  for (const pickup of pickupsToMerge) {
     // TODO - Pickup Merging
     // Will require pickup rewrite
 
     // Combine pickup effects / strength?
+
+    // Prediction Lines
+    if (prediction) {
+      const graphics = globalThis.predictionGraphics;
+      if (graphics) {
+        const lineColor = colors.manaBlue;
+        graphics.lineStyle(3, lineColor, 0.7);
+        graphics.moveTo(pickup.x, pickup.y);
+        graphics.lineTo(target.x, target.y);
+        graphics.drawCircle(target.x, target.y, 3);
+      }
+    }
 
     Pickup.removePickup(pickup, underworld, prediction);
   }
