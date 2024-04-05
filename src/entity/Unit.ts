@@ -49,6 +49,7 @@ import { freezeCardId } from '../cards/freeze';
 import { healSfx, oneOffHealAnimation } from '../effects/heal';
 import { soulShardOwnerModifierId } from '../modifierSoulShardOwner';
 import { getAllShardBearers } from '../cards/soul_shard';
+import { GORU_UNIT_ID } from './units/goru';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -113,7 +114,6 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   attackRange: number;
   name?: string;
   isMiniboss: boolean;
-  isBoss: boolean;
   // Denotes that this is a prediction copy of a unit
   isPrediction?: boolean;
   // For attention markers
@@ -185,7 +185,6 @@ export function create(
       staminaMax,
       attackRange: config.UNIT_BASE_RANGE,
       isMiniboss: false,
-      isBoss: false,
       faction,
       image: prediction ? undefined : Image.create({ x, y }, defaultImagePath, containerUnits),
       defaultImagePath,
@@ -1143,6 +1142,11 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
     document.querySelector('#end-turn-btn')?.classList.remove('highlight');
 
   }
+}
+
+export function isBoss(unitSourceId: string) {
+  const bosses = [bossmasonUnitId, GORU_UNIT_ID]
+  return bosses.includes(unitSourceId);
 }
 
 // Returns whether or not a unit is truly dead

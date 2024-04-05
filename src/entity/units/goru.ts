@@ -25,7 +25,6 @@ const unit: UnitSource = {
     manaPerTurn: 10,
     manaCostToCast: 5,
     bloodColor: bloodLobber,
-    isBoss: true,
   },
   spawnParams: {
     // Special case: We spawn the Goru manually, but still want to declare a budget

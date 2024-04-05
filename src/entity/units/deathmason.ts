@@ -40,7 +40,6 @@ const deathmason: UnitSource = {
     healthMax: 600,
     manaMax: bossmasonMana,
     manaPerTurn: 100,
-    isBoss: true,
   },
   spawnParams: {
     // Special case: We spawn the Deathmason manually, but still want to declare a budget

@@ -42,9 +42,10 @@ const spell: Spell = {
             const unitSource = allUnits[unit.unitSourceId]
 
             let possibleUnitTypes = Object.values(allUnits).filter(u => isModActive(u, underworld) && u.id != unitSource?.id);
-            if (unit.isBoss) {
+            if (Unit.isBoss(unit.unitSourceId)) {
+              // Get all boss units
               possibleUnitTypes = possibleUnitTypes
-                .filter(u => u.unitProps.isBoss);
+                .filter(u => Unit.isBoss(u.id));
             } else {
               // Get all units with budget and spawn chance
               possibleUnitTypes = possibleUnitTypes
