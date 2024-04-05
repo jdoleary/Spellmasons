@@ -32,16 +32,16 @@ export function randInt(minInclusive: number, maxInclusive: number, seedrandomIn
   }
   return Math.floor(randFloat(minInclusive, maxInclusive + 1, seedrandomInstance))
 }
-export function randFloat(minInclusive: number, maxInclusive: number, seedrandomInstance?: prng) {
-  if (maxInclusive < minInclusive) {
+export function randFloat(minInclusive: number, maxExclusive: number, seedrandomInstance?: prng) {
+  if (maxExclusive < minInclusive) {
     // Switch min and max due max being less than min
-    const temp = maxInclusive;
-    maxInclusive = minInclusive;
+    const temp = maxExclusive;
+    maxExclusive = minInclusive;
     minInclusive = temp;
   }
   // Allow for using unseeded random gen for things that don't require a deterministic result
   let x = seedrandomInstance ? seedrandomInstance.quick() : Math.random();
-  return x * (maxInclusive - minInclusive) + minInclusive;
+  return x * (maxExclusive - minInclusive) + minInclusive;
 }
 
 interface objectWithProbability {
@@ -51,10 +51,10 @@ export function _chooseObjectWithProbability<T extends objectWithProbability>(ro
   let rollingLowerBound = 0;
   // Iterate each object and check if the roll is between the lower bound and the upper bound
   // which means that the current object would have been rolled
-  for (let x of source.filter(i => i.probability > 0)) {
+  for (let x of source) {
     if (
       roll > rollingLowerBound &&
-      roll <= x.probability + rollingLowerBound
+      roll < x.probability + rollingLowerBound
     ) {
       return x;
     } else {
@@ -62,7 +62,6 @@ export function _chooseObjectWithProbability<T extends objectWithProbability>(ro
     }
   }
   return undefined;
-
 }
 export function chooseOneOfSeeded<T>(arr: T[], seedRandomInstance: prng): T | undefined {
   const index = randInt(0, arr.length - 1, seedRandomInstance);
