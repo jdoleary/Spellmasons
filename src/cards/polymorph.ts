@@ -87,7 +87,8 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
     }
 
     // We have to seed this to prevent multiplayer desync
-    const seed = seedrandom(getUniqueSeedString(underworld));
+    // ID is required here to ensure that every polymorph changes the seed to prevent looping
+    const seed = seedrandom(`${getUniqueSeedString(underworld)} - ${fromUnit.id}`);
     toUnitId = chooseObjectWithProbability(possibleUnitTypes.map((p, index) => {
       // Units are weighted by their difference in budget.
       // Units twice as far away in the budget are half as likely to be chosen.
@@ -159,7 +160,8 @@ function polymorphPickup(fromPickup: IPickup, underworld: Underworld, prediction
       && p.name != Pickup.PORTAL_PURPLE_NAME && p.name != Pickup.RECALL_POINT);
 
     // We have to seed this to prevent multiplayer desync
-    const seed = seedrandom(getUniqueSeedString(underworld));
+    // ID is required here to ensure that every polymorph changes the seed to prevent looping
+    const seed = seedrandom(`${getUniqueSeedString(underworld)} - ${fromPickup.id}`);
     toPickupSource = chooseOneOfSeeded(possiblePickupTypes, seed);
     if (toPickupSource == undefined) {
       console.error("Polymorph failed to choose a new pickup type.");
@@ -171,10 +173,8 @@ function polymorphPickup(fromPickup: IPickup, underworld: Underworld, prediction
   const pickup = Pickup.create({ pos: fromPickup, pickupSource: toPickupSource, logSource: 'spawnPickup' }, underworld, prediction);
   if (pickup != undefined) {
     if (!prediction) {
-      setTimeout(() => {
-        playSFXKey('spawnPotion');
-        floatingText({ coords: fromPickup, text: toPickupSource.name });
-      }, 500);
+      playSFXKey('spawnPotion');
+      floatingText({ coords: fromPickup, text: toPickupSource.name });
     }
     // Cleanup old pickup and remove it from targets
     Pickup.removePickup(fromPickup, underworld, prediction);
