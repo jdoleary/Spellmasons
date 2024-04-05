@@ -11,7 +11,7 @@ import { IPickup, isPickup, pickups } from '../entity/Pickup';
 import { bossmasonUnitId } from '../entity/units/deathmason';
 import floatingText from '../graphics/FloatingText';
 import seedrandom from 'seedrandom';
-import { chooseObjectWithProbability, chooseOneOf, chooseOneOfSeeded } from '../jmath/rand';
+import { chooseObjectWithProbability, chooseOneOf, chooseOneOfSeeded, getUniqueSeedString } from '../jmath/rand';
 
 export const polymorphId = 'Polymorph';
 const spell: Spell = {
@@ -52,7 +52,7 @@ const spell: Spell = {
             }
 
             // We have to seed this to prevent multiplayer desync
-            const seed = seedrandom(`${underworld.turn_number} -${target.id} `);
+            const seed = seedrandom(getUniqueSeedString(underworld));
             const chosenIndex = chooseObjectWithProbability(possibleUnitTypes.map((p, index) => {
               // Units are weighted by their difference in budget.
               // Units twice as far away in the budget are half as likely to be chosen.
