@@ -11,6 +11,7 @@ import { bleedInstantKillProportion } from '../cards/bleed';
 import { containerUnits } from './PixiUtils';
 import { IUnit } from '../entity/Unit';
 import Underworld from '../Underworld';
+import { COLLISION_MESH_RADIUS } from '../config';
 import { CURSED_MANA_POTION, HEALTH_POTION, IPickup, MANA_POTION, STAMINA_POTION } from '../entity/Pickup';
 export function makeAncientParticles(position: Vec2, prediction: boolean) {
   if (prediction || globalThis.headless) {
@@ -859,6 +860,74 @@ export function makeDeathmasonPortal(position: Vec2, prediction: boolean, colorS
     }, [texture]);
   return simpleEmitter(position, particleConfig);
 }
+
+export function makeLightBeamParticles(position: Vec2) {
+  if (globalThis.headless) {
+    // Don't show if just a prediction
+    return;
+  }
+  const texture = createParticleTexture();
+  if (!texture) {
+    logNoTextureWarning('makeLightBeamParticles');
+    return;
+  }
+  const config =
+    particles.upgradeConfig({
+      autoUpdate: true,
+      "alpha": {
+        "start": 0.8,
+        "end": 0
+      },
+      "scale": {
+        "start": 0.8,
+        "end": 0.4,
+      },
+      "color": {
+        "start": '#ffffff',
+        "end": '#ffffff',
+      },
+      "speed": {
+        "start": 40,
+        "end": 0,
+        "minimumSpeedMultiplier": 0.1
+      },
+      "acceleration": {
+        "x": 0,
+        "y": -20
+      },
+      "maxSpeed": 0,
+      "startRotation": {
+        "min": -90,
+        "max": -90
+      },
+      "noRotation": false,
+      "rotationSpeed": {
+        "min": 0,
+        "max": 300
+      },
+      "lifetime": {
+        "min": 0.3,
+        "max": 2
+      },
+      "blendMode": "normal",
+      "frequency": 0.0001,
+      "emitterLifetime": 0.1,
+      "maxParticles": 600,
+      "pos": {
+        "x": 0,
+        "y": 0
+      },
+      "addAtBack": true,
+      "spawnType": "circle",
+      "spawnCircle": {
+        "x": 0,
+        "y": -10,
+        "r": 30
+      }
+    }, [texture]);
+  simpleEmitter({ x: position.x, y: position.y + COLLISION_MESH_RADIUS / 2 }, config, undefined, containerParticlesUnderUnits);
+}
+
 // Turns up frequency so that it "stops" spawning new particles
 // (at lease for a long time), then destroy and cleanup the emitter
 export function stopAndDestroyForeverEmitter(emitter?: particles.Emitter) {

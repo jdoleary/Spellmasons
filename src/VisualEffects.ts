@@ -1,4 +1,6 @@
-import { addPixiSprite, addPixiSpriteAnimated, containerProjectiles, containerSpells, containerUnits } from "./graphics/PixiUtils";
+import { COLLISION_MESH_RADIUS } from "./config";
+import { makeLightBeamParticles } from "./graphics/ParticleCollection";
+import { addPixiSprite, containerProjectiles, containerSpells, containerUnits } from "./graphics/PixiUtils";
 import { Vec2 } from "./jmath/Vec";
 
 // A 'level up' style beam that is cast down from the sky and fades out on it's own
@@ -10,9 +12,8 @@ export function skyBeam(position: Vec2) {
     const whiteCircle = addPixiSprite('half-circle.png', containerProjectiles)
     if (whiteCircle) {
         whiteCircle.x = position.x;
-        // -1 ensures the white circle and light beam don't
-        // have a visible empty line between them.
-        whiteCircle.y = position.y - 1;
+        // + COLLISION_MESH_RADIUS / 2 aligns the beam better with the units's feat
+        whiteCircle.y = position.y + COLLISION_MESH_RADIUS / 2;
         whiteCircle.scale.y = 0.75;
         whiteCircle.anchor.set(0.5);
     }
@@ -24,6 +25,7 @@ export function skyBeam(position: Vec2) {
         lightBeam.scale.y = beamHeight;
         lightBeam.x = 0;
         lightBeam.y = - beamHeight / 2;
+        makeLightBeamParticles(position);
         const animateAway = () => {
             if (whiteCircle) {
                 whiteCircle.alpha *= 0.97
