@@ -1,8 +1,8 @@
-import { allModifiers, getCurrentTargets, refundLastSpell, Spell } from './index';
+import { addUnitTarget, allModifiers, EffectState, getCurrentTargets, refundLastSpell, Spell } from './index';
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
 import * as colors from '../graphics/ui/colors';
-import { CardCategory, UnitType } from '../types/commonTypes';
+import { CardCategory, Faction, UnitType } from '../types/commonTypes';
 import floatingText from '../graphics/FloatingText';
 import { IImageAnimated } from '../graphics/Image';
 import { raceTimeout } from '../Promise';
@@ -11,6 +11,11 @@ import { findSimilar } from './target_similar';
 import { hasSpace, HasSpace } from '../entity/Type';
 import Underworld from '../Underworld';
 import { makeManaTrail } from '../graphics/Particles';
+import { spellmasonUnitId } from '../entity/units/playerUnit';
+import { findRandomGroundLocation } from '../entity/units/summoner';
+import { findRandomDisplaceLocation } from './displace';
+import { allUnits } from '../entity/units';
+import { skyBeam } from '../VisualEffects';
 
 const merge_id = 'merge';
 const spell: Spell = {
@@ -73,46 +78,11 @@ const spell: Spell = {
   },
 };
 
-export function mergeUnit(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], underworld: Underworld, prediction: boolean) {
+export function mergeUnit(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], underworld: Underworld, prediction: boolean, state?: EffectState) {
   // TODO - I forsee a bug that causes modifier addition to change game state before merge is complete
   // I.E. Target gets a few stacks of suffocate and dies, bloat triggers, bunch of stuff changes.
   // Loop keeps going and reaches some undefined value, or tries to add modifiers to dead target, etc.
   for (const unit of unitsToMerge) {
-    // Never merge a player controlled unit
-    if (unit.unitType == UnitType.PLAYER_CONTROLLED) continue;
-
-    // HP / Stam / Mana
-    target.healthMax += unit.healthMax;
-    target.health += unit.health;
-    //target.staminaMax += unit.staminaMax
-    //target.stamina += unit.stamina;
-    target.manaMax += unit.manaMax;
-    target.mana += unit.mana;
-    // Damage / Other
-    target.damage += unit.damage;
-    target.manaCostToCast += unit.manaCostToCast;
-    target.manaPerTurn += unit.manaPerTurn;
-
-    // Modifiers
-    for (const modifierKey of Object.keys(unit.modifiers)) {
-      const modifier = allModifiers[modifierKey];
-      const modifierInstance = unit.modifiers[modifierKey];
-      if (modifier && modifierInstance) {
-        if (modifier?.add) {
-          modifier.add(target, underworld, prediction, modifierInstance.quantity, modifierInstance);
-        }
-      } else {
-        console.error("Modifier doesn't exist? This shouldn't happen.");
-      }
-    }
-
-    // Give XP
-    // Should be done via an OnDeathEvent that merge adds to the target
-    // which calls reportEnemyKilled() once per merged unit
-    if (unit.originalLife) {
-      underworld.enemiesKilled++;
-    }
-
     // Prediction Lines
     if (prediction) {
       const graphics = globalThis.predictionGraphics;
@@ -125,13 +95,82 @@ export function mergeUnit(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], underw
       }
     }
 
-    Unit.cleanup(unit);
+    if (unit.unitType == UnitType.PLAYER_CONTROLLED) {
+      // Special case for player units: Don't merge them,
+      // instead, spawn a little spellmason near the main target.
+      const spellmasonSourceUnit = allUnits[spellmasonUnitId];
+      if (!spellmasonSourceUnit) {
+        console.error("Spellmason source doersn't exist: ", spellmasonUnitId);
+        continue;
+      }
+
+      const unit = Unit.create(
+        spellmasonSourceUnit.id,
+        target.x,
+        target.y,
+        Faction.ALLY,
+        spellmasonSourceUnit.info.image,
+        UnitType.AI,
+        spellmasonSourceUnit.info.subtype,
+        {
+          ...spellmasonSourceUnit.unitProps,
+        },
+        underworld,
+        prediction
+      );
+
+      if (state) {
+        addUnitTarget(unit, state);
+      }
+
+      if (!prediction) {
+        // Animate effect of unit spawning from the sky
+        skyBeam(unit);
+      }
+    } else {
+      // Merge AI Units by combining stats
+
+      // HP / Stam / Mana
+      target.healthMax += unit.healthMax;
+      target.health += unit.health;
+      //target.staminaMax += unit.staminaMax
+      //target.stamina += unit.stamina;
+      target.manaMax += unit.manaMax;
+      target.mana += unit.mana;
+      // Damage / Other
+      target.damage += unit.damage;
+      target.manaCostToCast += unit.manaCostToCast;
+      target.manaPerTurn += unit.manaPerTurn;
+
+      // Modifiers
+      for (const modifierKey of Object.keys(unit.modifiers)) {
+        const modifier = allModifiers[modifierKey];
+        const modifierInstance = unit.modifiers[modifierKey];
+        if (modifier && modifierInstance) {
+          if (modifier?.add) {
+            modifier.add(target, underworld, prediction, modifierInstance.quantity, modifierInstance);
+          }
+        } else {
+          console.error("Modifier doesn't exist? This shouldn't happen.");
+        }
+      }
+
+      // Give XP
+      // This gives xp immediately when something gets merged, but ideally:
+      // - Would be stored in an OnDeathEvent on the primary target instead of being immediate
+      // - Would run the rest of the reportEnemyKilled() logic, for stat tracking and whatever else
+      if (unit.originalLife) {
+        underworld.enemiesKilled++;
+      }
+
+      // Delete the unit that got merged
+      Unit.cleanup(unit);
+    }
   }
 }
 
 
 export function mergePickup(target: Pickup.IPickup, pickupsToMerge: Pickup.IPickup[], underworld: Underworld, prediction: boolean) {
-  console.log("TODO - Merge Pickups");
   for (const pickup of pickupsToMerge) {
     Pickup.setPower(target, target.power + pickup.power);
 
