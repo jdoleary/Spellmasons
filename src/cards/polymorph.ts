@@ -4,6 +4,7 @@ import { Spell, addTarget, allModifiers, getCurrentTargets, refundLastSpell } fr
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
+import * as Image from '../graphics/Image';
 import { allUnits } from '../entity/units';
 import { isModActive } from '../registerMod';
 import Underworld from '../Underworld';
@@ -107,7 +108,6 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
     return undefined;
   }
 
-  console.log(toSourceUnit);
   // Cases for polymorphing AI / Player
   if (fromUnit.unitType != UnitType.PLAYER_CONTROLLED) {
     let unit: Unit.IUnit = Unit.create(
@@ -123,9 +123,7 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
       prediction
     );
 
-    console.log(unit);
     if (unit != undefined) {
-      console.log("unit exists");
       // Keep Modifiers
       for (const modifierKey of Object.keys(unit.modifiers)) {
         const modifier = allModifiers[modifierKey];
@@ -144,8 +142,19 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
     }
     return unit;
   } else {
-    // Only change img for player
-    fromUnit.image = allUnits[toUnitId]?.unitProps.image;
+    // Only change vfx/sfx for player
+    fromUnit.defaultImagePath = toSourceUnit.unitProps.defaultImagePath || fromUnit.defaultImagePath;
+    fromUnit.animations = toSourceUnit.animations || fromUnit.animations;
+    fromUnit.sfx = toSourceUnit.sfx || fromUnit.sfx;
+    fromUnit.bloodColor = toSourceUnit.unitProps.bloodColor || fromUnit.bloodColor;
+
+    Image.changeSprite(
+      fromUnit.image,
+      fromUnit.animations.idle,
+      fromUnit.image?.sprite.parent,
+      undefined,
+    );
+
     return fromUnit;
   }
 }
