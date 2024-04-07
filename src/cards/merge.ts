@@ -133,10 +133,7 @@ export function mergeUnit(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], underw
 export function mergePickup(target: Pickup.IPickup, pickupsToMerge: Pickup.IPickup[], underworld: Underworld, prediction: boolean) {
   console.log("TODO - Merge Pickups");
   for (const pickup of pickupsToMerge) {
-    // TODO - Pickup Merging
-    // Will require pickup rewrite
-
-    // Combine pickup effects / strength?
+    Pickup.setPower(target, target.power + pickup.power);
 
     // Prediction Lines
     if (prediction) {
