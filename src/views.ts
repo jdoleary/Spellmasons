@@ -232,23 +232,12 @@ export function addOverworldEventListeners(overworld: Overworld) {
           if (overworld.underworld) {
             useMousePosition(overworld.underworld, e);
 
-            // Perf: Wrap runPredictions inside of requestIdleCallback
-            // so that it won't trigger until the UI is unblocked
-            // This greatly improves performance when runPredictions is
-            // expensive because it is attempted to be called on every mouse
-            // move.
-            // This can be tested by loading in a map with a large amount of 
-            // a large variety of units, without requestIdleCallback, even
-            // the cam cinematic lags terribly.
-            // if (runPredictionsIdleCallbackId !== undefined) {
-            //   cancelIdleCallback(runPredictionsIdleCallbackId);
-            // }
-            // runPredictionsIdleCallbackId = requestIdleCallback(() => {
-            //   if (!overworld.underworld) {
-            //     return;
-            //   }
-            runPredictions(overworld.underworld);
-            // })
+            // Only run predictions if the game canvas is being hovered,
+            // this will improve performance for heavy computation spells
+            // when browsing the spellbook or hovering over your toolbar
+            if (e.target && (e.target as HTMLElement).tagName === 'CANVAS') {
+              runPredictions(overworld.underworld);
+            }
           }
         }
       },
