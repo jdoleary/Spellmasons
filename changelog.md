@@ -108,15 +108,6 @@ New Trailer!
     is async and not being awaited.
     Based on a visual inspection this only effects hotseat
 - menu: Support quicksave at beginning of level
-- optim: makeManaTrail to lower particles
-    if number of trails gets large
-    Fixes: #519
-- fix: contaminate now spreads extra properties of modifiers (curses) such as expanded range
-    - Thanks to @theytookmysoul aka Wisky
-- Fix: Good Looks no longer explodes urns
-    - Thanks @Elvarien
-- Fix: Game soft locks if whole party is froze
-    - Thanks @Waterbending Squirrel for reporting
 - On Deal Damage Event (#543)
     * Added on Deal Damage Event
     * Added source to projectiles
@@ -139,6 +130,23 @@ New Trailer!
     exist yet (like from clone) and each of them need to be distinct
     This property serves as an easy way to access the associated prediction
     unit
+- optim: makeManaTrail to lower particles
+    if number of trails gets large
+    Fixes: #519
+- fix: contaminate now spreads extra properties of modifiers (curses) such as expanded range
+    - Thanks to @theytookmysoul aka Wisky
+- Fix: Good Looks no longer explodes urns
+    - Thanks @Elvarien
+- Fix: Game soft locks if whole party is froze
+    - Thanks @Waterbending Squirrel for reporting
+- Optimization: Only run prediction calculations
+    if the player is hovering over the game space.
+    If they are hovering over the spellbook or toolbar,
+    it will not run predictions and thus not bog down
+    the experience of picking new spells when
+    the prediction calculation is hefty.
+
+    Thank you @Whisky for this idea!
 
 
 
