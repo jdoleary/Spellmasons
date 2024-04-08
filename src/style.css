@@ -2473,12 +2473,13 @@ body.dragging-card .floating-card-holder .empty-slot {
   width: unset;
   position: absolute;
   transform: scale(-1);
-  left: 45px;
-  top: 40px;
+  left: 30px;
+  top: 25px;
+  padding: 15px;
 }
 
 .bookmark.active {
-  left: 55px;
+  left: 40px;
 }
 
 .bookmark.disabled {
@@ -2486,62 +2487,62 @@ body.dragging-card .floating-card-holder .empty-slot {
 }
 
 #bookmark-movement {
-  left: 43px;
-  top: 120px;
+  left: 28px;
+  top: 105px;
 }
 
 #bookmark-movement.active {
-  left: 55px;
+  left: 40px;
 }
 
 #bookmark-targeting {
-  left: 41px;
-  top: 200px;
+  left: 26px;
+  top: 185px;
 }
 
 #bookmark-targeting.active {
-  left: 55px;
+  left: 40px;
 }
 
 #bookmark-mana {
-  left: 39px;
-  top: 280px;
+  left: 24px;
+  top: 265px;
 }
 
 #bookmark-mana.active {
-  left: 55px;
+  left: 40px;
 }
 
 #bookmark-curses {
-  left: 37px;
-  top: 360px;
+  left: 22px;
+  top: 345px;
 }
 
 #bookmark-curses.active {
-  left: 55px;
+  left: 40px;
 }
 
 #bookmark-blessings {
-  left: 35px;
-  top: 440px;
+  left: 20px;
+  top: 425px;
 }
 
 #bookmark-blessings.active {
-  left: 55px;
+  left: 40px;
 }
 
 #bookmark-soul {
-  left: 33px;
-  top: 520px;
+  left: 18px;
+  top: 505px;
 }
 
 #bookmark-soul.active {
-  left: 55px;
+  left: 40px;
 }
 
 #bookmark-all {
-  left: 33px;
-  top: 600px;
+  left: 18px;
+  top: 585px;
 }
 
 #inventory-container.bookmark-all #bookmark-all {
