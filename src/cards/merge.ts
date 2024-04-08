@@ -16,6 +16,9 @@ import { findRandomGroundLocation } from '../entity/units/summoner';
 import { findRandomDisplaceLocation } from './displace';
 import { allUnits } from '../entity/units';
 import { skyBeam } from '../VisualEffects';
+import { changeStatWithCap } from './split';
+import { jitter } from '../jmath/Vec';
+import { isOutOfBounds } from '../graphics/PlanningView';
 
 const merge_id = 'merge';
 const spell: Spell = {
@@ -61,7 +64,7 @@ const spell: Spell = {
           mergedTargets = mergedTargets.concat(similarThings);
           if (Unit.isUnit(target)) {
             const similarUnits = similarThings as Unit.IUnit[];
-            mergeUnit(target, similarUnits, underworld, prediction);
+            mergeUnit(target, similarUnits, underworld, prediction, state);
           } else if (Pickup.isPickup(target)) {
             const similarPickups = similarThings as Pickup.IPickup[];
             mergePickup(target, similarPickups, underworld, prediction);
@@ -95,7 +98,7 @@ export function mergeUnit(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], underw
       }
     }
 
-    if (unit.unitType == UnitType.PLAYER_CONTROLLED) {
+    if (unit.unitType == UnitType.PLAYER_CONTROLLED || target.unitType == UnitType.PLAYER_CONTROLLED) {
       // Special case for player units: Don't merge them,
       // instead, spawn a little spellmason near the main target.
       const spellmasonSourceUnit = allUnits[spellmasonUnitId];
@@ -104,10 +107,22 @@ export function mergeUnit(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], underw
         continue;
       }
 
-      const unit = Unit.create(
+      let i = 0;
+      let spawnLocation = jitter(target, 50);
+      while (isOutOfBounds(spawnLocation, underworld)) {
+        i += 1;
+        spawnLocation = jitter(target, 50);
+        if (i >= 100) {
+          console.error("Can't find spawn location in bounds");
+          spawnLocation = target;
+          break;
+        }
+      }
+
+      const spellmason = Unit.create(
         spellmasonSourceUnit.id,
-        target.x,
-        target.y,
+        spawnLocation.x,
+        spawnLocation.y,
         Faction.ALLY,
         spellmasonSourceUnit.info.image,
         UnitType.AI,
@@ -119,13 +134,29 @@ export function mergeUnit(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], underw
         prediction
       );
 
+      const mult = 0.5;
+      changeStatWithCap(spellmason, "health", mult);
+      changeStatWithCap(spellmason, "healthMax", mult);
+      changeStatWithCap(spellmason, "stamina", mult);
+      changeStatWithCap(spellmason, "staminaMax", mult);
+      changeStatWithCap(spellmason, "mana", mult);
+      changeStatWithCap(spellmason, "manaMax", mult);
+      changeStatWithCap(spellmason, "manaPerTurn", mult);
+      changeStatWithCap(spellmason, "manaCostToCast", mult);
+      changeStatWithCap(spellmason, "damage", mult);
+      changeStatWithCap(spellmason, "attackRange", mult);
+      if (spellmason.image) {
+        spellmason.image.sprite.scale.x *= mult;
+        spellmason.image.sprite.scale.y *= mult;
+      }
+
       if (state) {
-        addUnitTarget(unit, state);
+        addUnitTarget(spellmason, state);
       }
 
       if (!prediction) {
         // Animate effect of unit spawning from the sky
-        skyBeam(unit);
+        skyBeam(spellmason);
       }
     } else {
       // Merge AI Units by combining stats

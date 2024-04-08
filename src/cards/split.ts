@@ -12,7 +12,7 @@ import { suffocateCardId, updateSuffocate } from './suffocate';
 
 const id = 'split';
 const splitLimit = 3;
-function changeStatWithCap(unit: Unit.IUnit, statKey: 'health' | 'healthMax' | 'mana' | 'manaMax' | 'manaPerTurn' | 'stamina' | 'staminaMax' | 'moveSpeed' | 'damage', multiplier: number) {
+export function changeStatWithCap(unit: Unit.IUnit, statKey: 'health' | 'healthMax' | 'mana' | 'manaMax' | 'manaPerTurn' | 'manaCostToCast' | 'stamina' | 'staminaMax' | 'moveSpeed' | 'damage' | 'attackRange', multiplier: number) {
   if (unit[statKey] && typeof unit[statKey] === 'number') {
 
     // Do not let stats go below 1
@@ -20,8 +20,8 @@ function changeStatWithCap(unit: Unit.IUnit, statKey: 'health' | 'healthMax' | '
     const newValue = Math.max(1, Math.floor(unit[statKey] * multiplier));
     unit[statKey] = newValue;
   }
-
 }
+
 const addMultiplier = 0.5;
 const scaleMultiplier = 0.75;
 function remove(unit: Unit.IUnit, underworld: Underworld) {
