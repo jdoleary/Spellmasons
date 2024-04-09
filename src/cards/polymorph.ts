@@ -1,6 +1,6 @@
 import { CardCategory, UnitType } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
-import { Spell, addTarget, allModifiers, getCurrentTargets, refundLastSpell } from './index';
+import { EffectState, Spell, addTarget, allModifiers, getCurrentTargets, refundLastSpell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
@@ -20,7 +20,7 @@ const spell: Spell = {
     id: polymorphId,
     category: CardCategory.Curses,
     supportQuantity: true,
-    manaCost: 40,
+    manaCost: 60,
     healthCost: 0,
     expenseScaling: 2,
     probability: probabilityMap[CardRarity.RARE],
@@ -39,31 +39,11 @@ const spell: Spell = {
       for (let i = 0; i < quantity; i++) {
         for (const target of targets) {
           if (Unit.isUnit(target)) {
-            const unit = target as Unit.IUnit;
             // Replace current unit with new unit
-            const newUnit = polymorphUnit(unit, underworld, prediction);
-            if (newUnit) {
-              // Visual aid only
-              if (prediction) {
-                // TODO - Show new unit?
-              }
-              state.targetedUnits = state.targetedUnits.filter(u => u != unit);
-              // Add new unit to targets
-              addTarget(newUnit, state, underworld);
-            }
+            polymorphUnit(target, underworld, prediction, undefined, state);
           } else if (isPickup(target)) {
-            const pickup = target as IPickup;
             // Replace current pickup with new pickup
-            const newPickup = polymorphPickup(pickup, underworld, prediction);
-            if (newPickup) {
-              // Visual aid only
-              if (prediction) {
-                // TODO - Show new pickup?
-              }
-              state.targetedPickups = state.targetedPickups.filter(p => p != pickup);
-              // Add new pickup to targets
-              addTarget(newPickup, state, underworld);
-            }
+            polymorphPickup(target, underworld, prediction, undefined, state);
           }
         }
       }
@@ -73,7 +53,7 @@ const spell: Spell = {
   },
 };
 
-function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction: boolean, toUnitId?: string): Unit.IUnit | undefined {
+function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction: boolean, toUnitId?: string, state?: EffectState): Unit.IUnit | undefined {
   // If a specific ID isn't passed in, choose a random one
   if (!toUnitId) {
     let possibleUnitTypes = Object.values(allUnits).filter(u => isModActive(u, underworld) && u.id != fromUnit.unitSourceId);
@@ -137,8 +117,13 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
         }
       }
 
-      // Cleanup old unit and remove it from targets
+      // Cleanup old unit
       Unit.cleanup(fromUnit, false);
+      if (state) {
+        // Targets: Remove old, add new
+        state.targetedUnits = state.targetedUnits.filter(u => u != fromUnit);
+        addTarget(unit, state, underworld);
+      }
     }
     return unit;
   } else {
@@ -159,7 +144,7 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
   }
 }
 
-function polymorphPickup(fromPickup: IPickup, underworld: Underworld, prediction: boolean, toPickupSource?: Pickup.IPickupSource): IPickup | undefined {
+function polymorphPickup(fromPickup: IPickup, underworld: Underworld, prediction: boolean, toPickupSource?: Pickup.IPickupSource, state?: EffectState): IPickup | undefined {
   // If a specific ID isn't passed in, choose a random one
   if (!toPickupSource) {
     // Don't polymorph purple portals
@@ -178,7 +163,6 @@ function polymorphPickup(fromPickup: IPickup, underworld: Underworld, prediction
     }
   }
 
-  console.log(toPickupSource);
   const pickup = Pickup.create({ pos: fromPickup, pickupSource: toPickupSource, logSource: 'spawnPickup' }, underworld, prediction);
   if (pickup != undefined) {
     if (!prediction) {
@@ -187,6 +171,11 @@ function polymorphPickup(fromPickup: IPickup, underworld: Underworld, prediction
     }
     // Cleanup old pickup and remove it from targets
     Pickup.removePickup(fromPickup, underworld, prediction);
+    if (state) {
+      // Targets: Remove old, add new
+      state.targetedPickups = state.targetedPickups.filter(p => p != fromPickup);
+      addTarget(pickup, state, underworld);
+    }
   }
   return pickup;
 }
