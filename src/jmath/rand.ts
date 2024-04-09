@@ -47,6 +47,22 @@ export function randFloat(minInclusive: number, maxExclusive: number, seedrandom
 interface objectWithProbability {
   probability: number;
 }
+export function _chooseObjectWithProbability<T extends objectWithProbability>(roll: number, source: T[]): T | undefined {
+  let rollingLowerBound = 0;
+  // Iterate each object and check if the roll is between the lower bound and the upper bound
+  // which means that the current object would have been rolled
+  for (let x of source) {
+    if (
+      roll > rollingLowerBound &&
+      roll < x.probability + rollingLowerBound
+    ) {
+      return x;
+    } else {
+      rollingLowerBound += x.probability;
+    }
+  }
+  return undefined;
+}
 export function chooseOneOfSeeded<T>(arr: T[], seedRandomInstance: prng): T | undefined {
   const index = randInt(0, arr.length - 1, seedRandomInstance);
   return arr[index];
@@ -71,17 +87,8 @@ export function chooseObjectWithProbability<T extends objectWithProbability>(
     0,
   );
   // Choose random number within the sum of all the probabilities
-  let roll = randFloat(0, maxProbability, seedRandomInstance);
-  // Iterate each object and check if the roll is within the probability range
-  for (let x of source) {
-    if (roll < x.probability) {
-      return x;
-    }
-    roll -= x.probability;
-  }
-
-  console.warn("ChooseObjectWithProbability returned nothing. This probably shouldn't happen?: ", roll, source)
-  return undefined;
+  const roll = randFloat(0, maxProbability, seedRandomInstance);
+  return _chooseObjectWithProbability(roll, source);
 }
 export function getUniqueSeedString(underworld: Underworld, player?: IPlayer): string {
   // Seeded random based on the turn so it's consistent across all clients
