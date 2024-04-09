@@ -74,7 +74,7 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
       // Units are weighted by their difference in budget.
       // Units twice as far away in the budget are half as likely to be chosen.
       const budgetDiff = Math.abs((allUnits[fromUnit.unitSourceId]?.spawnParams?.budgetCost || 0) - (p.spawnParams?.budgetCost || 0));
-      return { unitSource: p, probability: (budgetDiff == 0) ? 1 : 1 / budgetDiff }
+      return { unitSource: p, probability: (budgetDiff == 0) ? 1000 : Math.ceil(1000 / budgetDiff) }
     }), seed)?.unitSource.id;
 
     if (toUnitId == undefined) {
