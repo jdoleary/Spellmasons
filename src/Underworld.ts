@@ -741,7 +741,6 @@ export default class Underworld {
         // can't take action, is out of stamina, or has reached the find point in the path
         // This is necessary to end the moving units turn because elsewhere we are
         // awaiting the fulfillment of that promise to know they are done moving
-        console.log('jtest resolve', takeAction, u.stamina, u.path, u.path?.points[0]);
         u.resolveDoneMoving();
         if (u.path) {
           // Update last position that changed via own movement
