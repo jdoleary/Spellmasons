@@ -678,12 +678,15 @@ export default class Underworld {
         // because the unit's position may have a decimal while the path does not so it'll stop
         // moving when it reaches the target which may be less than 1.0 and 1.0 away.
         u.path.points.shift();
+        if (u.path.points.length == 0) {
+          u.resolveDoneMoving();
+        }
       }
 
       const takeAction = Unit.canAct(u) && Unit.isUnitsTurnPhase(u, this)
         && (u.unitType == UnitType.PLAYER_CONTROLLED || this.subTypesCurrentTurn?.includes(u.unitSubType));
 
-      if (takeAction && u.stamina > 0 && u.path && u.path.points[0]) {
+      if (u.path && u.path.points[0] && u.stamina > 0 && takeAction) {
         // Move towards target
         const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path.points[0], u.moveSpeed * deltaTime)
         let moveDist = 0;
@@ -729,32 +732,33 @@ export default class Underworld {
           // Once the unit reaches the target, shift so the next point in the path is the next target
           u.path.points.shift();
         }
-
         // check for collisions with pickups in new location
         this.checkPickupCollisions(u, false);
-      } else {
-        // We cannot process the unit: Finalize movement and return false
-        // check for collisions with pickups in final location
-        this.checkPickupCollisions(u, false);
+        if (u.stamina > 0 && u.path && u.path.points.length !== 0) {
+          // more processing yet to be done
+          return true;
+        } else {
+          // Ensure that resolveDoneMoving is invoked when unit is out of stamina (and thus, done moving)
+          // or when find point in the path has been reached.
+          // This is necessary to end the moving units turn because elsewhere we are awaiting the fulfillment of that promise
+          // to know they are done moving
+          u.resolveDoneMoving();
+          if (u.path) {
+            // Update last position that changed via own movement
+            u.path.lastOwnPosition = Vec.clone(u);
+          }
+          // done processing this unit for this unit's turn
+          return false;
 
-        // Ensure that resolveDoneMoving is invoked when unit:
-        // can't take action, is out of stamina, or has reached the find point in the path
-        // This is necessary to end the moving units turn because elsewhere we are
-        // awaiting the fulfillment of that promise to know they are done moving
-        u.resolveDoneMoving();
-        if (u.path) {
-          // Update last position that changed via own movement
-          u.path.lastOwnPosition = Vec.clone(u);
         }
-        // done processing this unit for this unit's turn
+      } else {
+        // unit has nothing to do and thus is done processing
         return false;
       }
     } else {
       // Unit is dead, no processing to be done
       return false;
     }
-    // more processing yet to be done
-    return true;
   }
   awaitForceMoves = async (prediction: boolean = false) => {
     if (prediction) {
@@ -993,8 +997,8 @@ export default class Underworld {
         if (pickup) {
           if (unit) {
             const player = this.players.find(p => p.unit == unit);
-            queuedPickup.flaggedForRemoval = true;
             Pickup.triggerPickup(pickup, unit, player, this, false);
+            queuedPickup.flaggedForRemoval = true;
             console.error('Queued pickup timed out and was force triggered');
           } else {
             console.error('Attempted to aquire queued pickup via timeout but unit is undefined');

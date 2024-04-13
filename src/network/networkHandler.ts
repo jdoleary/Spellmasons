@@ -836,9 +836,6 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
               explain(EXPLAIN_END_TURN);
               playSFXKey('deny_stamina');
             }
-            // Clear player unit path when they are done moving so they get
-            // to choose a new path next turn
-            fromPlayer.unit.path = undefined;
           });
           // Now that player movement has been set up, trigger the headless server to process it immediately
           underworld.triggerGameLoopHeadless();
