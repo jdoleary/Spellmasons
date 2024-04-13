@@ -1,14 +1,13 @@
 /// <reference path="../../globalTypes.d.ts" />
+import Underworld from '../../types/Underworld';
 import type { Spell } from '../../types/cards/index';
+import { IUnit } from '../../types/entity/Unit';
 const {
-    PixiUtils,
     cardUtils,
     commonTypes,
     cards,
     cardsUtil,
-    FloatingText,
-    JImage
-} = globalThis.SpellmasonsAPI;
+    FloatingText } = globalThis.SpellmasonsAPI;
 
 const { refundLastSpell } = cards;
 const Unit = globalThis.SpellmasonsAPI.Unit;
@@ -24,7 +23,7 @@ const spell: Spell = {
         manaCost: 35,
         healthCost: 0,
         expenseScaling: 2,
-        probability: probabilityMap[CardRarity.RARE], 
+        probability: probabilityMap[CardRarity.RARE],
         thumbnail: 'spellmasons-mods/Wodes_grimoire/graphics/icons/spelliconDecay.png',
         sfx: 'poison',
         description: [`Causes the target to take damage equal to the number of decay stacks squared at the start of their turn. The target then gains another stack.`],
@@ -35,7 +34,7 @@ const spell: Spell = {
             if (targets.length == 0) {
                 refundLastSpell(state, prediction, 'No target, mana refunded')
             } else {
-                if (!prediction){
+                if (!prediction) {
                     playDefaultSpellSFX(card, prediction);
                 }
                 for (let unit of targets) {
@@ -44,7 +43,7 @@ const spell: Spell = {
             }
             if (!prediction && !globalThis.headless) {
                 await new Promise((resolve) => {
-                    setTimeout(resolve, 100);  
+                    setTimeout(resolve, 100);
                 })
             }
             return state;
@@ -56,21 +55,20 @@ const spell: Spell = {
     events: {
         onTurnStart: async (unit, prediction, underworld) => {
             // Damage unit and increment modifier counter
-            const modifier = unit.modifiers[cardId]; 
+            const modifier = unit.modifiers[cardId];
             if (modifier && !!Math.pow(modifier.quantity, 2) && !prediction) {
-                Unit.takeDamage(unit, Math.pow(modifier.quantity, 2), undefined, underworld, prediction);
+                Unit.takeDamage({ unit, amount: Math.pow(modifier.quantity, 2) }, underworld, prediction);
                 FloatingText.default({
-                    coords: unit, 
+                    coords: unit,
                     text: `${Math.pow(modifier.quantity, 2)} decay damage`,
-                    style: {fill: '#525863', strokeThickness: 1}
+                    style: { fill: '#525863', strokeThickness: 1 }
                 });
                 modifier.quantity++;
             }
-            return false;
         }
     }
 };
-function add(unit, underworld, prediction, quantity) {
+function add(unit: IUnit, _underworld: Underworld, _prediction: boolean, quantity: number) {
     cardsUtil.getOrInitModifier(unit, cardId, {
         isCurse: true, quantity, persistBetweenLevels: false,
     }, () => {
@@ -78,8 +76,6 @@ function add(unit, underworld, prediction, quantity) {
         if (!unit.onTurnStartEvents.includes(cardId)) {
             unit.onTurnStartEvents.push(cardId);
         }
-        //Adds subsprite, also TODO
-        //JImage.addSubSprite(unit.image, imageName);
-    }); 
+    });
 }
 export default spell;

@@ -1,5 +1,5 @@
 /// <reference path="../../globalTypes.d.ts" />
-import type { Spell } from '../../types/cards/index';
+import type { EffectState, Spell } from '../../types/cards/index';
 
 const {
     cardUtils,
@@ -61,7 +61,7 @@ const spell: Spell = {
                 for (let q = 0; q < quantity; q++) {
                     for (let unit of targets) {
                         //Does spell effect for underworld
-                        Unit.takeDamage(unit, damageDone(state), state.casterUnit, underworld, prediction, state);
+                        Unit.takeDamage({ unit, amount: damageDone(state), sourceUnit: state.casterUnit, fromVec2: state.casterUnit }, underworld, prediction);
                     }
                 }
             });
@@ -69,7 +69,7 @@ const spell: Spell = {
         },
     },
 };
-function damageDone(state) {
+function damageDone(state: EffectState) {
     //This is made into a function so it also changes damage mid cast.
     let damageMain = state.casterUnit.healthMax - state.casterUnit.health;
     damageMain = Math.max(0, damageMain); //Prevents healing

@@ -2,15 +2,12 @@
 import type { Spell } from '../../types/cards/index';
 
 const {
-    cardUtils,
     commonTypes,
     cards,
-    Particles,
 } = globalThis.SpellmasonsAPI;
 
 const { refundLastSpell } = cards;
 const Unit = globalThis.SpellmasonsAPI.Unit;
-const { playDefaultSpellSFX } = cardUtils;
 const { CardCategory, probabilityMap, CardRarity } = commonTypes;
 
 const retaliate = 0.15
@@ -27,9 +24,8 @@ const spell: Spell = {
         probability: probabilityMap[CardRarity.UNCOMMON],
         thumbnail: 'spellmasons-mods/Renes_gimmicks/graphics/icons/Sadism.png',
         sfx: 'hurt',
-        description: [`Damage to target equal to its attack, you receive ${retaliate *100}% of that attack damage`],
-        effect: async (state, card, quantity, underworld, prediction) => {
-            let promises: any[] = [];
+        description: [`Damage to target equal to its attack, you receive ${retaliate * 100}% of that attack damage`],
+        effect: async (state, _card, quantity, underworld, prediction) => {
             //Living units
             const targets = state.targetedUnits.filter(u => u.alive);
 
@@ -40,10 +36,10 @@ const spell: Spell = {
             }
             for (let unit of targets) {
                 let damage = unit.damage * quantity;
-                Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
-                Unit.takeDamage(state.casterUnit, damage * retaliate, undefined, underworld, prediction, state);
+                Unit.takeDamage({ unit, amount: damage, fromVec2: state.casterUnit, sourceUnit: state.casterUnit }, underworld, prediction);
+                Unit.takeDamage({ unit: state.casterUnit, amount: damage * retaliate }, underworld, prediction);
             }
-            state.casterUnit.health -= state.casterUnit.health%1;
+            state.casterUnit.health -= state.casterUnit.health % 1;
             return state;
         },
     },
