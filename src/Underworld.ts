@@ -678,6 +678,9 @@ export default class Underworld {
         // because the unit's position may have a decimal while the path does not so it'll stop
         // moving when it reaches the target which may be less than 1.0 and 1.0 away.
         u.path.points.shift();
+        if (u.path.points.length == 0) {
+          u.resolveDoneMoving();
+        }
       }
 
       const takeAction = Unit.canAct(u) && Unit.isUnitsTurnPhase(u, this)
@@ -729,29 +732,33 @@ export default class Underworld {
           // Once the unit reaches the target, shift so the next point in the path is the next target
           u.path.points.shift();
         }
-      }
+        // check for collisions with pickups in new location
+        this.checkPickupCollisions(u, false);
+        if (u.stamina > 0 && u.path && u.path.points.length !== 0) {
+          // more processing yet to be done
+          return true;
+        } else {
+          // Ensure that resolveDoneMoving is invoked when unit is out of stamina (and thus, done moving)
+          // or when find point in the path has been reached.
+          // This is necessary to end the moving units turn because elsewhere we are awaiting the fulfillment of that promise
+          // to know they are done moving
+          u.resolveDoneMoving();
+          if (u.path) {
+            // Update last position that changed via own movement
+            u.path.lastOwnPosition = Vec.clone(u);
+          }
+          // done processing this unit for this unit's turn
+          return false;
 
-      // check for collisions with pickups in new location
-      this.checkPickupCollisions(u, false);
-      // Ensure that resolveDoneMoving is invoked when unit is out of stamina (and thus, done moving)
-      // or when find point in the path has been reached.
-      // This is necessary to end the moving units turn because elsewhere we are awaiting the fulfillment of that promise
-      // to know they are done moving
-      if (u.stamina <= 0 || !u.path || u.path.points.length === 0) {
-        u.resolveDoneMoving();
-        if (u.path) {
-          // Update last position that changed via own movement
-          u.path.lastOwnPosition = Vec.clone(u);
         }
-        // done processing this unit for this unit's turn
+      } else {
+        // unit has nothing to do and thus is done processing
         return false;
       }
     } else {
       // Unit is dead, no processing to be done
       return false;
     }
-    // more processing yet to be done
-    return true;
   }
   awaitForceMoves = async (prediction: boolean = false) => {
     if (prediction) {
