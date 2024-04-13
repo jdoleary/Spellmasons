@@ -1043,6 +1043,10 @@ async function handleLoadGameState(payload: {
   // Check it carefully before manually syncronizing properties
   await underworld.createLevel(level, underworld.gameMode);
 
+  // Unlike turn_number, hasSpawnedBoss is per-level, 
+  // so it has to go after createLevel() as to not be overwritten by cleanUpLevel()
+  underworld.hasSpawnedBoss = loadedGameState.hasSpawnedBoss;
+
   // Since level data has pickups stored in it and since those pickups' locations
   // for existance may have changed between when the level was created and when
   // the gamestate was saved, remove all pickups and spawn pickups from the pickups array
