@@ -741,6 +741,7 @@ export default class Underworld {
         // can't take action, is out of stamina, or has reached the find point in the path
         // This is necessary to end the moving units turn because elsewhere we are
         // awaiting the fulfillment of that promise to know they are done moving
+        console.log('jtest resolve', takeAction, u.stamina, u.path, u.path?.points[0]);
         u.resolveDoneMoving();
         if (u.path) {
           // Update last position that changed via own movement
@@ -993,8 +994,8 @@ export default class Underworld {
         if (pickup) {
           if (unit) {
             const player = this.players.find(p => p.unit == unit);
-            queuedPickup.flaggedForRemoval = true;
             Pickup.triggerPickup(pickup, unit, player, this, false);
+            queuedPickup.flaggedForRemoval = true;
             console.error('Queued pickup timed out and was force triggered');
           } else {
             console.error('Attempted to aquire queued pickup via timeout but unit is undefined');
