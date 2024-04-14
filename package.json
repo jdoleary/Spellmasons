@@ -48,7 +48,7 @@
     "@pixi/particle-emitter": "^5.0.7",
     "@sentry/browser": "^7.31.1",
     "@sentry/node": "^7.31.1",
-    "@websocketpie/client": "^1.1.4",
+    "@websocketpie/client": "^1.1.5",
     "@websocketpie/server": "^1.2.0",
     "@websocketpie/server-bun": "^1.2.0",
     "fast-safe-stringify": "^2.1.1",
