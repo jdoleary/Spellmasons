@@ -201,6 +201,10 @@ export function create({ pos, pickupSource, idOverride, logSource }:
   }
 
   underworld.addPickupToArray(self, prediction);
+  // Check for collisions when a new pickup is created
+  for (let unit of underworld.units) {
+    underworld.checkPickupCollisions(unit, false);
+  }
   return self;
 }
 function assignEmitter(pickup: IPickup, emitterId: string, prediction: boolean, underworld: Underworld) {
