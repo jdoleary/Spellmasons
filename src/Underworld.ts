@@ -2358,7 +2358,7 @@ export default class Underworld {
 
     // Spawn a portal near each remaining player
     for (let playerUnit of remainingPlayers) {
-      const portalSpawnLocation = this.findValidSpawn({ spawnSource: playerUnit, ringLimit: 4, prediction: false }) || playerUnit;
+      const portalSpawnLocation = this.findValidSpawn({ spawnSource: playerUnit, ringLimit: 4, radius: config.COLLISION_MESH_RADIUS * .8, prediction: false }) || playerUnit;
       if (!isOutOfBounds(portalSpawnLocation, this)) {
         spawnedPortals.push(Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup, logSource: 'Portal' }, this, false));
       }
