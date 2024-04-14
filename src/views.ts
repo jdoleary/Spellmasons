@@ -247,15 +247,15 @@ export function addOverworldEventListeners(overworld: Overworld) {
         listener: endTurnBtnListener.bind(undefined, overworld)
       },
       ...[
-        { target: elBookmarkDamage, targetClassName: 'bookmark-damage' },
-        { target: elBookmarkMovement, targetClassName: 'bookmark-movement' },
-        { target: elBookmarkTarget, targetClassName: 'bookmark-targeting' },
-        { target: elBookmarkMana, targetClassName: 'bookmark-mana' },
-        { target: elBookmarkCurse, targetClassName: 'bookmark-curses' },
-        { target: elBookmarkDefense, targetClassName: 'bookmark-blessings' },
-        { target: elBookmarkSoul, targetClassName: 'bookmark-soul' },
-        { target: elBookmarkAll, targetClassName: 'bookmark-all' },
-      ].map(({ target, targetClassName }) => {
+        { target: elBookmarkDamage, targetId: 'bookmark-damage' },
+        { target: elBookmarkMovement, targetId: 'bookmark-movement' },
+        { target: elBookmarkTarget, targetId: 'bookmark-targeting' },
+        { target: elBookmarkMana, targetId: 'bookmark-mana' },
+        { target: elBookmarkCurse, targetId: 'bookmark-curses' },
+        { target: elBookmarkDefense, targetId: 'bookmark-blessings' },
+        { target: elBookmarkSoul, targetId: 'bookmark-soul' },
+        { target: elBookmarkAll, targetId: 'bookmark-all' },
+      ].map(({ target, targetId }) => {
         return {
           target,
           event: 'click',
@@ -271,13 +271,21 @@ export function addOverworldEventListeners(overworld: Overworld) {
                 'bookmark-curses',
                 'bookmark-blessings',
                 'bookmark-soul',
-                'bookmark-all'].forEach(className => {
+                'bookmark-all'].filter(x => x !== targetId).forEach(className => {
                   elInventoryContainer.classList.toggle(className, false);
-                })
-              document.querySelectorAll('.bookmark').forEach((el) => (el as HTMLElement).classList.toggle('active', false));
-              elInventoryContainer.classList.toggle(targetClassName, true);
-              target.classList.toggle('active', true);
-              playSFXKey('inventory_open');
+                });
+              Array.from(document.querySelectorAll('.bookmark'))
+                .filter((el) => el.id !== targetId)
+                .forEach((el) => el.classList.toggle('active', false));
+              elInventoryContainer.classList.toggle(targetId);
+              target.classList.toggle('active');
+              if (!target.classList.contains('active')) {
+                elInventoryContainer.classList.toggle('bookmark-all');
+                document.getElementById('bookmark-all')?.classList.toggle('active', true);
+                playSFXKey('inventory_close');
+              } else {
+                playSFXKey('inventory_open');
+              }
             }
           }
         };
