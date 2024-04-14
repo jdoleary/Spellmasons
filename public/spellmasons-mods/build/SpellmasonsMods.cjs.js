@@ -1251,7 +1251,7 @@ const {
   ParticleCollection
 } = globalThis.SpellmasonsAPI;
 const BURNING_RAGE_PARTICLE_EMITTER_NAME = "BURNING_RAGE";
-function makeBurningRageParticles(follow, prediction, underworld) {
+function makeBurningRageParticles(follow, prediction, underworld, quantity) {
   if (prediction || globalThis.headless) {
     return;
   }
@@ -1299,9 +1299,9 @@ function makeBurningRageParticles(follow, prediction, underworld) {
       "max": 1.5
     },
     "blendMode": "normal",
-    "frequency": 0.45,
+    "frequency": 0.45 / quantity,
     "emitterLifetime": -1,
-    "maxParticles": 20,
+    "maxParticles": 20 * quantity,
     "pos": {
       "x": 0,
       "y": 0
@@ -1400,7 +1400,7 @@ function add$1(unit2, underworld, prediction, quantity) {
     if (!unit2.onTurnStartEvents.includes(cardId$1)) {
       unit2.onTurnStartEvents.push(cardId$1);
     }
-    makeBurningRageParticles(unit2, prediction, underworld);
+    makeBurningRageParticles(unit2, prediction, underworld, quantity);
   });
 }
 function remove(unit2, underworld) {
@@ -1508,6 +1508,9 @@ function updateTooltip(unit2) {
   }
 }
 function triggerDistanceDamage(unit2, underworld, prediction = false) {
+  if (!unit2.alive) {
+    return;
+  }
   const modifier = unit2.modifiers && unit2.modifiers[cardId];
   let x_diff = unit2.x - modifier.last_x;
   let y_diff = unit2.y - modifier.last_y;
