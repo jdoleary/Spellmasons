@@ -25,6 +25,7 @@
 - Merge master branch to keep it up to date
 - Test tutorial ALWAYS on electron build
 - Test that F12 works in electron build
+- Test mod thumbnail paths on electron build
 
 
 # Release protocal
