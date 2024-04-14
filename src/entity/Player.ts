@@ -495,7 +495,7 @@ export function enterPortal(player: IPlayer, underworld: Underworld) {
   Image.hide(player.unit.image);
   // Make sure to resolve the moving promise once they enter the portal or else 
   // the client queue will get stuck
-  player.unit.resolveDoneMoving();
+  player.unit.resolveDoneMoving(true);
   // Move "portaled" unit out of the way to prevent collisions and chaining while portaled
   Unit.setLocation(player.unit, { x: NaN, y: NaN });
   // Clear the selection so that it doesn't persist after portalling (which would show

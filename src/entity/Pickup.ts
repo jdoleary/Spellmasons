@@ -622,7 +622,7 @@ export const pickups: IPickupSource[] = [
       }
       // Move the player unit so they don't continue to trigger the pickup more than once
       if (player && player.unit) {
-        player.unit.resolveDoneMoving();
+        player.unit.resolveDoneMoving(true);
         player.unit.x = NaN;
         player.unit.y = NaN;
       }

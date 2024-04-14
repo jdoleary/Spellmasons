@@ -679,7 +679,7 @@ export default class Underworld {
         // moving when it reaches the target which may be less than 1.0 and 1.0 away.
         u.path.points.shift();
         if (u.path.points.length == 0) {
-          u.resolveDoneMoving();
+          u.resolveDoneMoving(true);
         }
       }
 
@@ -742,7 +742,7 @@ export default class Underworld {
           // or when find point in the path has been reached.
           // This is necessary to end the moving units turn because elsewhere we are awaiting the fulfillment of that promise
           // to know they are done moving
-          u.resolveDoneMoving();
+          u.resolveDoneMoving(true);
           if (u.path) {
             // Update last position that changed via own movement
             u.path.lastOwnPosition = Vec.clone(u);
