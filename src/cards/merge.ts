@@ -98,94 +98,45 @@ export function mergeUnit(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], underw
       }
     }
 
-    if (unit.unitType == UnitType.PLAYER_CONTROLLED || target.unitType == UnitType.PLAYER_CONTROLLED) {
-      // Special case for player units: Don't merge them,
-      // instead, spawn a little spellmason near the main target.
-      const spellmasonSourceUnit = allUnits[spellmasonUnitId];
-      if (!spellmasonSourceUnit) {
-        console.error("Spellmason source doersn't exist: ", spellmasonUnitId);
-        continue;
-      }
+    // Merge Units by combining stats
 
-      let i = 0;
-      let spawnLocation = jitter(target, 50);
-      while (isOutOfBounds(spawnLocation, underworld)) {
-        i += 1;
-        spawnLocation = jitter(target, 50);
-        if (i >= 100) {
-          console.error("Can't find spawn location in bounds");
-          spawnLocation = target;
-          break;
-        }
-      }
-
-      const spellmason = Unit.create(
-        spellmasonSourceUnit.id,
-        spawnLocation.x,
-        spawnLocation.y,
-        Faction.ALLY,
-        spellmasonSourceUnit.info.image,
-        UnitType.AI,
-        spellmasonSourceUnit.info.subtype,
-        {
-          ...spellmasonSourceUnit.unitProps,
-        },
-        underworld,
-        prediction
-      );
-
-      const mult = 0.5;
-      changeStatWithCap(spellmason, "health", mult);
-      changeStatWithCap(spellmason, "healthMax", mult);
-      changeStatWithCap(spellmason, "stamina", mult);
-      changeStatWithCap(spellmason, "staminaMax", mult);
-      changeStatWithCap(spellmason, "mana", mult);
-      changeStatWithCap(spellmason, "manaMax", mult);
-      changeStatWithCap(spellmason, "manaPerTurn", mult);
-      changeStatWithCap(spellmason, "manaCostToCast", mult);
-      changeStatWithCap(spellmason, "damage", mult);
-      changeStatWithCap(spellmason, "attackRange", mult);
-      if (spellmason.image) {
-        spellmason.image.sprite.scale.x *= mult;
-        spellmason.image.sprite.scale.y *= mult;
-      }
-
-      if (state) {
-        addUnitTarget(spellmason, state);
-      }
-
-      if (!prediction) {
-        // Animate effect of unit spawning from the sky
-        skyBeam(spellmason);
-      }
+    // Combine stats for merged units
+    if (target.unitType == UnitType.PLAYER_CONTROLLED) {
+      // Players don't gain any permanent stat boosts
+      target.health += unit.health;
+      target.stamina += unit.stamina;
+      target.mana += unit.mana;
     } else {
-      // Merge AI Units by combining stats
-
-      // HP / Stam / Mana
       target.healthMax += unit.healthMax;
       target.health += unit.health;
       //target.staminaMax += unit.staminaMax
       //target.stamina += unit.stamina;
       target.manaMax += unit.manaMax;
       target.mana += unit.mana;
-      // Damage / Other
+
       target.damage += unit.damage;
       target.manaCostToCast += unit.manaCostToCast;
       target.manaPerTurn += unit.manaPerTurn;
+    }
 
-      // Modifiers
-      for (const modifierKey of Object.keys(unit.modifiers)) {
-        const modifier = allModifiers[modifierKey];
-        const modifierInstance = unit.modifiers[modifierKey];
-        if (modifier && modifierInstance) {
-          if (modifier?.add) {
-            modifier.add(target, underworld, prediction, modifierInstance.quantity, modifierInstance);
-          }
-        } else {
-          console.error("Modifier doesn't exist? This shouldn't happen.");
+    // Modifiers
+    for (const modifierKey of Object.keys(unit.modifiers)) {
+      const modifier = allModifiers[modifierKey];
+      const modifierInstance = unit.modifiers[modifierKey];
+      if (modifier && modifierInstance) {
+        if (modifier?.add) {
+          modifier.add(target, underworld, prediction, modifierInstance.quantity, modifierInstance);
         }
+      } else {
+        console.error("Modifier doesn't exist? This shouldn't happen.");
       }
+    }
 
+    // Kill/Delete the unit that got merged
+    if (unit.unitType == UnitType.PLAYER_CONTROLLED) {
+      // Players die instead of being deleted
+      Unit.die(unit, underworld, prediction);
+    } else {
       // Give XP
       // This gives xp immediately when something gets merged, but ideally:
       // - Would be stored in an OnDeathEvent on the primary target instead of being immediate
@@ -194,7 +145,6 @@ export function mergeUnit(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], underw
         underworld.enemiesKilled++;
       }
 
-      // Delete the unit that got merged
       Unit.cleanup(unit);
     }
   }
