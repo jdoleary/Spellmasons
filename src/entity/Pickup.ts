@@ -448,7 +448,7 @@ export function tryTriggerPickup(pickup: IPickup, unit: IUnit, underworld: Under
                 pickupId: pickup.id,
                 pickupName: pickup.name,
                 unitId: unit.id,
-                playerClientId: player?.clientId
+                collidedPlayerId: player?.playerId
               });
             }
           }

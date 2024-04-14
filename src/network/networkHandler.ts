@@ -752,7 +752,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
             }
             cameraAutoFollow(true);
           }
-          Unit.setLocation(fromPlayer.unit, payload);
+          Unit.setLocation(fromPlayer.unit, payload, underworld);
           // Trigger 'everyLevel' attributePerks
           // now that the player has spawned in at the new level
           const perkRandomGenerator = seedrandom(getUniqueSeedString(underworld, fromPlayer));
@@ -797,7 +797,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       // of the host matches exactly the player position on the player's client
       if (isHost(overworld.pie)) {
         if (fromPlayer && fromPlayer.unit && payload.position.x !== undefined && payload.position.y !== undefined) {
-          Unit.setLocation(fromPlayer.unit, payload.position);
+          Unit.setLocation(fromPlayer.unit, payload.position, underworld);
           fromPlayer.unit.stamina = payload.stamina;
         }
       }

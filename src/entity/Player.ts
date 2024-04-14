@@ -497,7 +497,7 @@ export function enterPortal(player: IPlayer, underworld: Underworld) {
   // the client queue will get stuck
   player.unit.resolveDoneMoving(true);
   // Move "portaled" unit out of the way to prevent collisions and chaining while portaled
-  Unit.setLocation(player.unit, { x: NaN, y: NaN });
+  Unit.setLocation(player.unit, { x: NaN, y: NaN }, underworld);
   // Clear the selection so that it doesn't persist after portalling (which would show
   // your user's move circle in the upper left hand of the map but without the user there)
   clearTooltipSelection();
