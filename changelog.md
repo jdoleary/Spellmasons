@@ -30,30 +30,25 @@ New Trailer!
 - i18n: Polish
     Update Polish translations with Whisky's translation
     Closes #602
-- VFX: Add particles to skyBeam
+- art: Add particles to skyBeam
     and reposition it slightly to better cover the player's feet
-- menu: Add bookmarks to menu (#588)
-    * menu: Add bookmarks to menu
-    Closes #358
+- art: Default to 1px unit outline
+    Closes: #400
+- art: Add shadows below walls
+    so they feel more connected to the environment.
+    Closes: #581
+- art: Update animated tombstone
+- art: Spellmasons play the bookIdle animation
+    when viewing their inventory.
+    Fixes bookOpen from playing every time a spell is cast in multiplayer
+    even if no other player is casting
 - fix: poison undefined bug
-- i18n: Poison "start" -> "end"
-    Closes #513
 - fix: clone
     Too many stacks would break the game due to the
     absurd number (limit to 10).
     Fix clone prediction badges, it now shows the actual number of
     cloned units because they no longer overlap
     Closes #587
-- menu: Style Accessibility menu so it's more organized
-    Add gore options to a11y menu in addition to
-    graphics menu
-    menu: Make actively selected buttons more obvious
-- art: Default to 1px unit outline
-    Closes: #400
-- art: Add shadows below walls
-    so they feel more connected to the environment.
-    Closes: #581
-- npm: @websocketpie/client@1.1.4
 - fix: SYNC_SOME_STATE (#584)
     * fix: SYNC_SOME_STATE
     to send the state in the same message as
@@ -63,30 +58,24 @@ New Trailer!
     allows for modified messages.
     * chore: Restore @websocketpie/server
     so that players can run a server locally with node
-- art: Update animated tombstone
-- art: Spellmasons play the bookIdle animation
-    when viewing their inventory.
-    Fixes bookOpen from playing every time a spell is cast in multiplayer
-    even if no other player is casting
 - fix: forceMove timeouts when multiple (#575)
     force moves were added to a unit or pickup
     Closes #571
 - fix: Async damage on flamestrike
-- fix contaminate extras (#573)
+- fix: contaminate extras (#573)
     * fix: radiusBoost refactor for mods
     Closes: #572
     Closes: #546
     * fix: Contaminate not spreading modifier "extras"
     Fixes soul shard, bloat, etc
     Closes #570
-- Special Handling for Freeze Subsprite (#569)
-- Fix Targeting Unspawned Players (#551)
+- fix: Targeting Unspawned Players (#551)
     * Underworld param for addTarget()
     Fixes a bug that allowed unspawned players to be targeted, which could cause a desync in the game over state, and adds further support for additional universal targeting catches by passing underworld through as a parameter to the add target function
     * Fix Target Similar Targeting Unspawned Units
     * Added warning for future bug catching
     * Fixed prediction discrepancy
-- "Good Looks" upgrade filters out Doodads now (#559)
+- fix: "Good Looks" upgrade filters out Doodads now (#559)
 - fix: Units being removed for being "out of bounds"
     when they were just close up against an upper wall.
     Unit's center point is the center of their image, and since this game is 2D but
@@ -94,8 +83,6 @@ New Trailer!
     are pulled up by 10 (-10) and so when checking if a units' center point is
     inside a wall, we need to + 10 (down) to account for the fact that they can overlap
     by 10 with a wall that is above them.
-- menu: Add "recent custom server urls"
-    Closes #514
 - fix: Squiggly force move lines (#527)
     when multiple forces were applied to the same object.
     Now forces get summed.
@@ -107,21 +94,35 @@ New Trailer!
     This is not in response to a bug, but I noticed that endPlayerTurn
     is async and not being awaited.
     Based on a visual inspection this only effects hotseat
+- fix: contaminate now spreads extra properties of modifiers (curses) such as expanded range
+    - Thanks to @theytookmysoul aka Wisky
+- fix: Good Looks no longer explodes urns
+    - Thanks @Elvarien
+- fix: Game soft locks if whole party is froze
+    - Thanks @Waterbending Squirrel for reporting
+- menu: Add "recent custom server urls"
+    Closes #514
 - menu: Support quicksave at beginning of level
-- On Deal Damage Event (#543)
-    * Added on Deal Damage Event
-    * Added source to projectiles
-    * Added source to healing effects
-    * Take Damage Source as IUnit + Organization
-    * Updated heal source
-    * Updated SourceUnit for projectiles
-    * Made Source unit optional for projectiles
-    * Fixed some damage events
-    * Added source unit to explode
-    * Added sourceUnitId to bloat/poison
-    * Updated Soul Shard to use new damage events
-    * Exclude caster targets
-    * Poisoner stacks based on damage
+- menu: Add bookmarks to menu (#588)
+    * menu: Add bookmarks to menu
+    Closes #358
+- i18n: Poison "start" -> "end"
+    Closes #513
+- menu: Style Accessibility menu so it's more organized
+    Add gore options to a11y menu in addition to
+    graphics menu
+    menu: Make actively selected buttons more obvious
+- npm: @websocketpie/client@1.1.4
+- optim: makeManaTrail to lower particles
+    if number of trails gets large
+    Fixes: #519
+- Optimization: Only run prediction calculations
+    if the player is hovering over the game space.
+    If they are hovering over the spellbook or toolbar,
+    it will not run predictions and thus not bog down
+    the experience of picking new spells when
+    the prediction calculation is hefty.
+    Thank you @Whisky for this idea!
 - chore: Add unit.predictionCopy to real units (#577)
     so that you can reference their latest prediction unit.
     Sometimes predictionUnit ids and unit ids will not match
@@ -130,23 +131,6 @@ New Trailer!
     exist yet (like from clone) and each of them need to be distinct
     This property serves as an easy way to access the associated prediction
     unit
-- optim: makeManaTrail to lower particles
-    if number of trails gets large
-    Fixes: #519
-- fix: contaminate now spreads extra properties of modifiers (curses) such as expanded range
-    - Thanks to @theytookmysoul aka Wisky
-- Fix: Good Looks no longer explodes urns
-    - Thanks @Elvarien
-- Fix: Game soft locks if whole party is froze
-    - Thanks @Waterbending Squirrel for reporting
-- Optimization: Only run prediction calculations
-    if the player is hovering over the game space.
-    If they are hovering over the spellbook or toolbar,
-    it will not run predictions and thus not bog down
-    the experience of picking new spells when
-    the prediction calculation is hefty.
-
-    Thank you @Whisky for this idea!
 
 
 
