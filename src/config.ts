@@ -74,9 +74,9 @@ export const NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES = 2;
 
 // The boss is on this level.  Levels beyond are considered "loop" levels
 export const LAST_LEVEL_INDEX = 11;
-export const GORU_LEVEL_INDEX = 9999; // Temporarily "turned off" by being set too high to prevent game from getting stuck on level 9
+export const GORU_LEVEL_INDEX = 9; // Temporarily "turned off" by being set too high to prevent game from getting stuck on level 9
 export const NUMBER_OF_UNITS_TO_MERGE = 5;
-export const IS_ANNIVERSARY_UPDATE_OUT = false;
+export const IS_ANNIVERSARY_UPDATE_OUT = true;
 
 // The percentage of mana Timemason drains every second
 export const TIMEMASON_PERCENT_DRAIN = 1;
