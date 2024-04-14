@@ -276,7 +276,7 @@ const spell$e = {
     healthCost: 0,
     expenseScaling: 2,
     probability: probabilityMap$e[CardRarity$e.RARE],
-    thumbnail: "spellmasons-mods/Wodes_grimoire/graphics/icons/spelliconDecay.png",
+    thumbnail: "spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconDecay.png",
     sfx: "poison",
     description: [`Causes the target to take damage equal to the number of decay stacks squared at the start of their turn. The target then gains another stack.`],
     effect: async (state, card, quantity, underworld, prediction) => {
@@ -348,7 +348,7 @@ const spell$d = {
     healthCost: 0,
     expenseScaling: 2.5,
     probability: probabilityMap$d[CardRarity$d.RARE],
-    thumbnail: "spellmasons-mods/Wodes_grimoire/graphics/icons/spelliconDominate.png",
+    thumbnail: "spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconDominate.png",
     sfx: "suffocate",
     description: [`Converts an enemy to fight for you if they are below ${healthThreshhold * 100}% health.`],
     //Wololo
@@ -387,7 +387,7 @@ const spell$c = {
     healthCost: 0,
     expenseScaling: 2,
     probability: probabilityMap$c[CardRarity$c.SPECIAL],
-    thumbnail: "spellmasons-mods/Wodes_grimoire/graphics/icons/spelliconEnsnare.png",
+    thumbnail: "spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconEnsnare.png",
     sfx: "",
     description: [`Prevents the target from moving for one turn. Furthur casts increase duration.`],
     effect: async (state, card, quantity, underworld, prediction) => {
@@ -470,7 +470,7 @@ const spell$b = {
     healthCost: 0,
     expenseScaling: 1.5,
     probability: probabilityMap$b[CardRarity$b.RARE],
-    thumbnail: "spellmasons-mods/Wodes_grimoire/graphics/icons/spelliconFastForward.png",
+    thumbnail: "spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconFastForward.png",
     sfx: "push",
     //TODO
     description: [`Shunt the target forward through time. Causes progression of spell effects but does not affect cooldowns.`],
@@ -618,7 +618,7 @@ const spell$a = {
     healthCost: 0,
     expenseScaling: 1.5,
     probability: probabilityMap$a[CardRarity$a.UNCOMMON],
-    thumbnail: "spellmasons-mods/Wodes_grimoire/graphics/icons/spelliconFlameStrike.png",
+    thumbnail: "spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconFlameStrike.png",
     sfx: "burst",
     description: [`Deals ${damageMain} damage to the target and ${damageSplash} damage to nearby targets in a small area.`],
     effect: async (state, card, quantity, underworld, prediction) => {
@@ -686,7 +686,7 @@ const spell$9 = {
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap$9[CardRarity$9.RARE],
-    thumbnail: "spellmasons-mods/Wodes_grimoire/graphics/icons/spelliconGrace.png",
+    thumbnail: "spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconGrace.png",
     sfx: "purify",
     //TODO
     description: [`Heals the target for ${-healingAmount$1} after 3 turns. Stacks increase the amount, but do not change duration`],
@@ -781,7 +781,7 @@ const spell$8 = {
     healthCost: 35,
     expenseScaling: 1,
     probability: probabilityMap$8[CardRarity$8.UNCOMMON],
-    thumbnail: "spellmasons-mods/Wodes_grimoire/graphics/icons/spelliconHarvest.png",
+    thumbnail: "spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconHarvest.png",
     sfx: "sacrifice",
     description: [`Consumes target corpse for ${manaRegain} mana. Does not work on player corpses. Unstackable.
 
@@ -842,7 +842,7 @@ const spell$7 = {
     healthCost: 0,
     expenseScaling: 2,
     probability: probabilityMap$7[CardRarity$7.SPECIAL],
-    thumbnail: "spellmasons-mods/Wodes_grimoire/graphics/icons/spelliconRegen.png",
+    thumbnail: "spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconRegen.png",
     sfx: "heal",
     //TODO
     description: [`Heals the target for 10 health at the end of their turn for 5 turns. Stacks increase the amount and refresh the duration.`],
@@ -949,7 +949,7 @@ const spell$6 = {
     healthCost: 0,
     expenseScaling: 2,
     probability: probabilityMap$6[CardRarity$6.SPECIAL],
-    thumbnail: "spellmasons-mods/Wodes_grimoire/graphics/icons/spelliconPacify.png",
+    thumbnail: "spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconPacify.png",
     sfx: "",
     description: [`Prevents the target from attacking for one turn. Stacks increase duration. Does not affect Support Class units such as summoners or priests.`],
     effect: async (state, card, quantity, underworld, prediction) => {
@@ -1029,7 +1029,7 @@ const spell$5 = {
     healthCost: 0,
     expenseScaling: 1.5,
     probability: probabilityMap$5[CardRarity$5.UNCOMMON],
-    thumbnail: "spellmasons-mods/Wodes_grimoire/graphics/icons/spelliconVengeance.png",
+    thumbnail: "spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconVengeance.png",
     sfx: "hurt",
     description: [`Deals damage equal to your missing health. This harms you first if you are targeted, then enemies.`],
     effect: async (state, card, quantity, underworld, prediction) => {
@@ -1077,7 +1077,7 @@ const mod$1 = {
   author: "Blood Spartan",
   description: "Adds 10 new spells to your arsenal.",
   //TODO make word good
-  screenshot: "spellmasons-mods/Wodes_grimoire/graphics/icons/Wodes_grimoire_icon.png",
+  screenshot: "spellmasons-mods/Wodes_Grimoire/graphics/icons/Wodes_grimoire_icon.png",
   spells: [
     //Add or Remove spells here.
     spell$e,
