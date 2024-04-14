@@ -25,10 +25,6 @@
 - Merge master branch to keep it up to date
 - Test tutorial ALWAYS on electron build
 - Test that F12 works in electron build
----
-- test: do rooms get cleaned up immediately (1.26)
-- 1.28
-    - mana vamp changes
 
 
 # Release protocal

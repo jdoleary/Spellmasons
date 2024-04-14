@@ -2250,7 +2250,7 @@ export default class Underworld {
       return false;
     }
 
-    if (this.levelIndex == config.GORU_LEVEL_INDEX) {
+    if (config.IS_ANNIVERSARY_UPDATE_OUT && this.levelIndex == config.GORU_LEVEL_INDEX) {
       await introduceBoss(goru, this);
     }
     if (this.levelIndex == config.LAST_LEVEL_INDEX) {
@@ -2358,7 +2358,7 @@ export default class Underworld {
 
     // Spawn a portal near each remaining player
     for (let playerUnit of remainingPlayers) {
-      const portalSpawnLocation = this.findValidSpawn({ spawnSource: playerUnit, ringLimit: 4, prediction: false }) || playerUnit;
+      const portalSpawnLocation = this.findValidSpawn({ spawnSource: playerUnit, ringLimit: 4, radius: config.COLLISION_MESH_RADIUS * .8, prediction: false }) || playerUnit;
       if (!isOutOfBounds(portalSpawnLocation, this)) {
         spawnedPortals.push(Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup, logSource: 'Portal' }, this, false));
       }
@@ -4277,7 +4277,7 @@ function getEnemiesForAltitude(underworld: Underworld, levelIndex: number): stri
   console.log('Budget for level index', adjustedLevelIndex, 'is', budgetLeft);
   const totalBudget = budgetLeft;
   // Reduce remaining budget on the last level where Goru will spawn
-  if (levelIndex == config.GORU_LEVEL_INDEX) {
+  if (config.IS_ANNIVERSARY_UPDATE_OUT && levelIndex == config.GORU_LEVEL_INDEX) {
     if (goru.spawnParams) {
       budgetLeft -= goru.spawnParams?.budgetCost;
     } else {

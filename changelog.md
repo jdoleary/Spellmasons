@@ -1,4 +1,4 @@
-## 1.31.0 - One Year Anniversary Update!
+## 1.32.0 - One Year Anniversary Update!
 New Music!
 2 new songs for the anniversiary release
 
@@ -26,7 +26,7 @@ New Spells!
 
 New Trailer!
 
-## 1.30.1 - Stability update in preparation for big content update!
+## 1.31.0 - Stability update in preparation for big content update!
 - i18n: Polish
     Update Polish translations with Whisky's translation
     Closes #602

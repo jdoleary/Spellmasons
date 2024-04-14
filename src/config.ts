@@ -76,6 +76,7 @@ export const NUMBER_OF_PLAYERS_BEFORE_BUDGET_INCREASES = 2;
 export const LAST_LEVEL_INDEX = 12;
 export const GORU_LEVEL_INDEX = 9;
 export const NUMBER_OF_UNITS_TO_MERGE = 5;
+export const IS_ANNIVERSARY_UPDATE_OUT = false;
 
 // The percentage of mana Timemason drains every second
 export const TIMEMASON_PERCENT_DRAIN = 1;
