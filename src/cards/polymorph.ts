@@ -1,5 +1,5 @@
 import { CardCategory, UnitType } from '../types/commonTypes';
-import { playDefaultSpellSFX } from './cardUtils';
+import { oneOffImage, playDefaultSpellSFX } from './cardUtils';
 import { EffectState, Spell, addTarget, allModifiers, getCurrentTargets, refundLastSpell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import * as Unit from '../entity/Unit';
@@ -9,10 +9,10 @@ import { allUnits } from '../entity/units';
 import { isModActive } from '../registerMod';
 import Underworld from '../Underworld';
 import { IPickup, isPickup, pickups } from '../entity/Pickup';
-import { bossmasonUnitId } from '../entity/units/deathmason';
 import floatingText from '../graphics/FloatingText';
 import seedrandom from 'seedrandom';
-import { chooseObjectWithProbability, chooseOneOf, chooseOneOfSeeded, getUniqueSeedString } from '../jmath/rand';
+import { chooseObjectWithProbability, chooseOneOfSeeded, getUniqueSeedString } from '../jmath/rand';
+import { containerProjectiles } from '../graphics/PixiUtils';
 
 export const polymorphId = 'Polymorph';
 const spell: Spell = {
@@ -35,18 +35,33 @@ const spell: Spell = {
       }
 
       playDefaultSpellSFX(card, prediction);
+      const promises = [];
 
       for (let i = 0; i < quantity; i++) {
         for (const target of targets) {
-          if (Unit.isUnit(target)) {
-            // Replace current unit with new unit
-            polymorphUnit(target, underworld, prediction, undefined, state);
-          } else if (isPickup(target)) {
-            // Replace current pickup with new pickup
-            polymorphPickup(target, underworld, prediction, undefined, state);
-          }
+          promises.push(new Promise<void>(resolve => {
+            if (!prediction) {
+              const animatingSpell = oneOffImage(target, 'spell-effects/spellPurify', containerProjectiles, resolve);
+              if (animatingSpell) {
+                animatingSpell.sprite.tint = 0x643B9F;
+              }
+            } else {
+              resolve();
+            }
+          }).then(() => {
+
+            if (Unit.isUnit(target)) {
+              // Replace current unit with new unit
+              polymorphUnit(target, underworld, prediction, undefined, state);
+            } else if (isPickup(target)) {
+              // Replace current pickup with new pickup
+              polymorphPickup(target, underworld, prediction, undefined, state);
+            }
+          }));
+
         }
       }
+      await Promise.all(promises);
 
       return state;
     },
@@ -78,7 +93,6 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
 
       // TODO - Improve probability curve and move to unit test
       // https://github.com/jdoleary/Spellmasons/pull/583#discussion_r1551439805
-      console.log("stest", fromUnit.unitSourceId, "->", p.id, probability);
 
       return { unitSource: p, probability }
     }), seed)?.unitSource.id;
