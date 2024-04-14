@@ -168,10 +168,8 @@ export const sfx: { [key: string]: string[] } = {
   oof: ['./sound/sfx/oof.wav']
 };
 const music = [
-  // config.IS_ANNIVERSARY_UPDATE_OUT
-  // './sound/music/TheDangerIsYou.mp3',
-  // config.IS_ANNIVERSARY_UPDATE_OUT
-  // './sound/music/NeverendingTale.mp3',
+  './sound/music/TheDangerIsYou.mp3',
+  './sound/music/NeverendingTale.mp3',
   './sound/music/ChainingSpells.mp3',
   './sound/music/FirstSteps2.mp3',
   './sound/music/DeepWandering.mp3',

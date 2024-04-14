@@ -219,14 +219,12 @@ export function registerCards(overworld: Overworld) {
   registerSpell(megaSlash, overworld);
   registerSpell(rend, overworld);
   registerSpell(bleed, overworld);
-  config.IS_ANNIVERSARY_UPDATE_OUT && registerSpell(execute, overworld);
+  registerSpell(execute, overworld);
   registerSpell(drown, overworld);
   registerSpell(burst, overworld);
   registerSpell(bone_shrapnel, overworld);
-  config.IS_ANNIVERSARY_UPDATE_OUT &&
-    registerSpell(shatter, overworld);
-  config.IS_ANNIVERSARY_UPDATE_OUT &&
-    registerSpell(meteor, overworld);
+  registerSpell(shatter, overworld);
+  registerSpell(meteor, overworld);
   registerSpell(arrow, overworld);
   registerSpell(arrow2, overworld);
   registerSpell(arrow3, overworld);
@@ -236,33 +234,28 @@ export function registerCards(overworld: Overworld) {
   registerSpell(arrowFar, overworld);
   registerSpell(explosive_arrow, overworld);
   registerSpell(phantom_arrow, overworld);
-  config.IS_ANNIVERSARY_UPDATE_OUT &&
-    registerSpell(bolt, overworld);
 
   // Blessings
   registerSpell(heal, overworld);
   registerSpell(heal_greater, overworld);
   registerSpell(heal_mass, overworld);
   registerSpell(send_mana, overworld);
-  config.IS_ANNIVERSARY_UPDATE_OUT && registerSpell(empower, overworld);
+  registerSpell(empower, overworld);
   registerSpell(shield, overworld);
   registerSpell(fortify, overworld);
-  config.IS_ANNIVERSARY_UPDATE_OUT && registerSpell(alchemize, overworld);
+  registerSpell(alchemize, overworld);
   registerSpell(last_Will, overworld);
   registerSpell(potion_shatter, overworld);
 
   // Curses
-  config.IS_ANNIVERSARY_UPDATE_OUT &&
-    registerSpell(enfeeble, overworld);
+  registerSpell(enfeeble, overworld);
   registerSpell(poison, overworld);
   registerSpell(suffocate, overworld);
   registerSpell(freeze, overworld);
   registerSpell(purify, overworld);
   registerSpell(debilitate, overworld);
-  config.IS_ANNIVERSARY_UPDATE_OUT &&
-    registerSpell(soul_bind, overworld);
-  config.IS_ANNIVERSARY_UPDATE_OUT &&
-    registerSpell(soul_shard, overworld);
+  registerSpell(soul_bind, overworld);
+  registerSpell(soul_shard, overworld);
   registerSpell(bloat, overworld);
   registerSpell(slow, overworld);
   registerSpell(blood_curse, overworld);
@@ -290,20 +283,17 @@ export function registerCards(overworld: Overworld) {
 
   // Movement
   registerSpell(dash, overworld);
-  config.IS_ANNIVERSARY_UPDATE_OUT &&
-    registerSpell(fling, overworld);
+  registerSpell(fling, overworld);
   registerSpell(push, overworld);
   registerSpell(repel, overworld);
   registerSpell(pull, overworld);
   registerSpell(vortex, overworld);
   registerSpell(shove, overworld);
-  config.IS_ANNIVERSARY_UPDATE_OUT &&
-    registerSpell(stomp, overworld);
+  registerSpell(stomp, overworld);
   registerSpell(displace, overworld);
   registerSpell(swap, overworld);
   registerSpell(teleport, overworld);
-  config.IS_ANNIVERSARY_UPDATE_OUT &&
-    registerSpell(recall, overworld);
+  registerSpell(recall, overworld);
 
 
   // Targeting Spells
@@ -314,12 +304,11 @@ export function registerCards(overworld: Overworld) {
   registerSpell(connect, overworld);
   registerSpell(target_similar, overworld);
   registerSpell(target_similar_2, overworld);
-  config.IS_ANNIVERSARY_UPDATE_OUT &&
-    registerSpell(target_injured, overworld);
+  registerSpell(target_injured, overworld);
   registerSpell(target_all, overworld);
-  config.IS_ANNIVERSARY_UPDATE_OUT &&
-    registerSpell(target_curse, overworld);
+  registerSpell(target_curse, overworld);
   registerSpell(plus_radius, overworld);
+  registerSpell(bolt, overworld);
   // registerSpell(trap, overworld);
   for (let unitId of Object.keys(allUnits)) {
     const spell = summon_generic(unitId, false);
