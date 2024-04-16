@@ -34,41 +34,39 @@ const spell: Spell = {
         return state;
       }
 
+      // Play FX
       playDefaultSpellSFX(card, prediction);
-      const promises = [];
-
-      for (let i = 0; i < quantity; i++) {
+      if (!prediction) {
+        const promises = [];
         for (const target of targets) {
           promises.push(new Promise<void>(resolve => {
-            if (!prediction) {
-              const animatingSpell = oneOffImage(target, 'spell-effects/spellPurify', containerProjectiles, resolve);
-              if (animatingSpell) {
-                animatingSpell.sprite.tint = 0x643B9F;
-              }
-            } else {
-              resolve();
-            }
-          }).then(() => {
-
-            if (Unit.isUnit(target)) {
-              // Replace current unit with new unit
-              polymorphUnit(target, underworld, prediction, undefined, state);
-            } else if (isPickup(target)) {
-              // Replace current pickup with new pickup
-              polymorphPickup(target, underworld, prediction, undefined, state);
+            const animatingSpell = oneOffImage(target, 'spell-effects/spellPurify', containerProjectiles, resolve);
+            if (animatingSpell) {
+              animatingSpell.sprite.tint = 0x643B9F;
             }
           }));
-
         }
+        await Promise.all(promises);
       }
-      await Promise.all(promises);
+
+
+      // We have to get targets again here, to prevent polymorphing old units
+      for (const target of getCurrentTargets(state)) {
+        if (Unit.isUnit(target)) {
+          // Replace current unit with new unit
+          polymorphUnit(target, underworld, prediction, undefined, state, quantity);
+        } else if (isPickup(target)) {
+          // Replace current pickup with new pickup
+          polymorphPickup(target, underworld, prediction, undefined, state, quantity);
+        }
+      };
 
       return state;
     },
   },
 };
 
-function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction: boolean, toUnitId?: string, state?: EffectState): Unit.IUnit | undefined {
+function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction: boolean, toUnitId?: string, state?: EffectState, quantity: number = 1): Unit.IUnit | undefined {
   // If a specific ID isn't passed in, choose a random one
   if (!toUnitId) {
     let possibleUnitTypes = Object.values(allUnits).filter(u => isModActive(u, underworld) && u.id != fromUnit.unitSourceId);
@@ -83,19 +81,21 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
     }
 
     // We have to seed this to prevent multiplayer desync
-    // ID is required here to ensure that every polymorph changes the seed to prevent looping
     const seed = seedrandom(`${getUniqueSeedString(underworld)} - ${fromUnit.id}`);
-    toUnitId = chooseObjectWithProbability(possibleUnitTypes.map((p, index) => {
-      // Units are weighted by their difference in budget.
-      // Units twice as far away in the budget are half as likely to be chosen.
-      const budgetDiff = Math.abs((allUnits[fromUnit.unitSourceId]?.spawnParams?.budgetCost || 0) - (p.spawnParams?.budgetCost || 0));
-      const probability = (budgetDiff == 0) ? 1000 : Math.ceil(1000 / budgetDiff);
+    const lastUnitChosen = allUnits[fromUnit.unitSourceId];
+    for (let i = 0; i < quantity; i++) {
+      toUnitId = chooseObjectWithProbability(possibleUnitTypes.map((p, index) => {
+        // Units are weighted by their difference in budget.
+        // Units twice as far away in the budget are half as likely to be chosen.
+        const budgetDiff = Math.abs((lastUnitChosen?.spawnParams?.budgetCost || 0) - (p.spawnParams?.budgetCost || 0));
+        const probability = (budgetDiff == 0) ? 1000 : Math.ceil(1000 / budgetDiff);
 
-      // TODO - Improve probability curve and move to unit test
-      // https://github.com/jdoleary/Spellmasons/pull/583#discussion_r1551439805
+        // TODO - Improve probability curve and move to unit test
+        // https://github.com/jdoleary/Spellmasons/pull/583#discussion_r1551439805
 
-      return { unitSource: p, probability }
-    }), seed)?.unitSource.id;
+        return { unitSource: p, probability }
+      }), seed)?.unitSource.id;
+    }
 
     if (toUnitId == undefined) {
       console.error("Polymorph failed to choose a new unit type.");
@@ -164,7 +164,7 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
   }
 }
 
-function polymorphPickup(fromPickup: IPickup, underworld: Underworld, prediction: boolean, toPickupSource?: Pickup.IPickupSource, state?: EffectState): IPickup | undefined {
+function polymorphPickup(fromPickup: IPickup, underworld: Underworld, prediction: boolean, toPickupSource?: Pickup.IPickupSource, state?: EffectState, quantity: number = 1): IPickup | undefined {
   // If a specific ID isn't passed in, choose a random one
   if (!toPickupSource) {
     // Don't polymorph purple portals
@@ -174,9 +174,11 @@ function polymorphPickup(fromPickup: IPickup, underworld: Underworld, prediction
       && p.name != Pickup.PORTAL_PURPLE_NAME && p.name != Pickup.RECALL_POINT);
 
     // We have to seed this to prevent multiplayer desync
-    // ID is required here to ensure that every polymorph changes the seed to prevent looping
     const seed = seedrandom(`${getUniqueSeedString(underworld)} - ${fromPickup.id}`);
-    toPickupSource = chooseOneOfSeeded(possiblePickupTypes, seed);
+    for (let i = 0; i < quantity; i++) {
+      toPickupSource = chooseOneOfSeeded(possiblePickupTypes, seed);
+    }
+
     if (toPickupSource == undefined) {
       console.error("Polymorph failed to choose a new pickup type.");
       return undefined;
