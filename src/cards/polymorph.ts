@@ -5,7 +5,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
 import * as Image from '../graphics/Image';
-import { allUnits } from '../entity/units';
+import { UnitSource, allUnits } from '../entity/units';
 import { isModActive } from '../registerMod';
 import Underworld from '../Underworld';
 import { IPickup, isPickup, pickups } from '../entity/Pickup';
@@ -69,31 +69,14 @@ const spell: Spell = {
 function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction: boolean, toUnitId?: string, state?: EffectState, quantity: number = 1): Unit.IUnit | undefined {
   // If a specific ID isn't passed in, choose a random one
   if (!toUnitId) {
-    let possibleUnitTypes = Object.values(allUnits).filter(u => isModActive(u, underworld) && u.id != fromUnit.unitSourceId);
-    if (Unit.isBoss(fromUnit.unitSourceId)) {
-      // Get all boss units
-      possibleUnitTypes = possibleUnitTypes
-        .filter(u => Unit.isBoss(u.id));
-    } else {
-      // Get all units with budget and spawn chance
-      possibleUnitTypes = possibleUnitTypes
-        .filter(u => u.spawnParams && u.spawnParams.probability > 0 && u.spawnParams.budgetCost);
-    }
+    let possibleUnitTypes = getPossibleUnitPolymorphs(fromUnit.unitSourceId, underworld);
 
     // We have to seed this to prevent multiplayer desync
     const seed = seedrandom(`${getUniqueSeedString(underworld)} - ${fromUnit.id}`);
     const lastUnitChosen = allUnits[fromUnit.unitSourceId];
     for (let i = 0; i < quantity; i++) {
-      toUnitId = chooseObjectWithProbability(possibleUnitTypes.map((p, index) => {
-        // Units are weighted by their difference in budget.
-        // Units twice as far away in the budget are half as likely to be chosen.
-        const budgetDiff = Math.abs((lastUnitChosen?.spawnParams?.budgetCost || 0) - (p.spawnParams?.budgetCost || 0));
-        const probability = (budgetDiff == 0) ? 1000 : Math.ceil(1000 / budgetDiff);
-
-        // TODO - Improve probability curve and move to unit test
-        // https://github.com/jdoleary/Spellmasons/pull/583#discussion_r1551439805
-
-        return { unitSource: p, probability }
+      toUnitId = chooseObjectWithProbability(possibleUnitTypes.map(p => {
+        return { unitSource: p, probability: getPolymorphProbabilityFromBudget(lastUnitChosen?.spawnParams?.budgetCost, p.spawnParams?.budgetCost) }
       }), seed)?.unitSource.id;
     }
 
@@ -162,6 +145,35 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
 
     return fromUnit;
   }
+}
+
+export function getPossibleUnitPolymorphs(unitSourceId: string, underworld?: Underworld): UnitSource[] {
+  // Start with all units except self
+  let possibleUnitTypes = Object.values(allUnits).filter(u => u.id != unitSourceId);
+
+  // Remove modded units that aren't enabled
+  if (underworld) {
+    possibleUnitTypes.filter(u => isModActive(u, underworld));
+  }
+
+  if (Unit.isBoss(unitSourceId)) {
+    // Filter to all boss units
+    possibleUnitTypes = possibleUnitTypes
+      .filter(u => Unit.isBoss(u.id));
+  } else {
+    // Filter to all units with budget and spawn chance
+    possibleUnitTypes = possibleUnitTypes
+      .filter(u => u.spawnParams && u.spawnParams.probability > 0 && u.spawnParams.budgetCost);
+  }
+
+  return possibleUnitTypes;
+}
+
+export function getPolymorphProbabilityFromBudget(budget1: number = 0, budget2: number = 0): number {
+  // Units are weighted by their difference in budget.
+  // Units twice as far away in the budget are half as likely to be chosen.
+  const budgetDiff = Math.abs(budget1 - budget2);
+  return (budgetDiff == 0) ? 1000 : Math.ceil(1000 / budgetDiff);
 }
 
 function polymorphPickup(fromPickup: IPickup, underworld: Underworld, prediction: boolean, toPickupSource?: Pickup.IPickupSource, state?: EffectState, quantity: number = 1): IPickup | undefined {
