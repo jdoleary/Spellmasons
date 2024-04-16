@@ -1,4 +1,4 @@
-import { addUnitTarget, allModifiers, EffectState, getCurrentTargets, refundLastSpell, Spell } from './index';
+import { allModifiers, EffectState, getCurrentTargets, refundLastSpell, Spell } from './index';
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
 import * as colors from '../graphics/ui/colors';
@@ -8,27 +8,19 @@ import { IImageAnimated } from '../graphics/Image';
 import { raceTimeout } from '../Promise';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { findSimilar } from './target_similar';
-import { hasSpace, HasSpace } from '../entity/Type';
+import { HasSpace } from '../entity/Type';
 import Underworld from '../Underworld';
 import { makeManaTrail } from '../graphics/Particles';
-import { spellmasonUnitId } from '../entity/units/playerUnit';
-import { findRandomGroundLocation } from '../entity/units/summoner';
-import { findRandomDisplaceLocation } from './displace';
-import { allUnits } from '../entity/units';
-import { skyBeam } from '../VisualEffects';
-import { changeStatWithCap } from './split';
-import { jitter } from '../jmath/Vec';
-import { isOutOfBounds } from '../graphics/PlanningView';
 
 const merge_id = 'merge';
 const spell: Spell = {
   card: {
     id: merge_id,
     category: CardCategory.Soul,
-    manaCost: 60,
+    manaCost: 40,
     healthCost: 0,
     probability: probabilityMap[CardRarity.RARE],
-    expenseScaling: 1,
+    expenseScaling: 2,
     supportQuantity: false,
     thumbnail: 'spellIconMerge.png',
     description: 'spell_merge',
