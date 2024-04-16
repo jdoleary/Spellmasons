@@ -29,6 +29,7 @@ const spell: Spell = {
     healthCost: 0,
     probability: probabilityMap[CardRarity.RARE],
     expenseScaling: 1,
+    supportQuantity: false,
     thumbnail: 'spellIconMerge.png',
     description: 'spell_merge',
     effect: async (state, card, quantity, underworld, prediction) => {
@@ -64,11 +65,10 @@ const spell: Spell = {
           mergedTargets = mergedTargets.concat(similarThings);
           if (Unit.isUnit(target)) {
             const similarUnits = similarThings as Unit.IUnit[];
-            mergeUnit(target, similarUnits, underworld, prediction, state);
+            mergeUnits(target, similarUnits, underworld, prediction, state);
           } else if (Pickup.isPickup(target)) {
             const similarPickups = similarThings as Pickup.IPickup[];
-            mergePickup(target, similarPickups, underworld, prediction);
-            mergedTargets.concat(similarPickups);
+            mergePickups(target, similarPickups, underworld, prediction);
           }
         }
       }
@@ -81,10 +81,8 @@ const spell: Spell = {
   },
 };
 
-export function mergeUnit(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], underworld: Underworld, prediction: boolean, state?: EffectState) {
-  // TODO - I forsee a bug that causes modifier addition to change game state before merge is complete
-  // I.E. Target gets a few stacks of suffocate and dies, bloat triggers, bunch of stuff changes.
-  // Loop keeps going and reaches some undefined value, or tries to add modifiers to dead target, etc.
+export function mergeUnits(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], underworld: Underworld, prediction: boolean, state?: EffectState) {
+  let storedModifiers = [];
   for (const unit of unitsToMerge) {
     // Prediction Lines
     if (prediction) {
@@ -98,9 +96,7 @@ export function mergeUnit(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], underw
       }
     }
 
-    // Merge Units by combining stats
-
-    // Combine stats for merged units
+    // Combine Stats
     if (target.unitType == UnitType.PLAYER_CONTROLLED) {
       // Players don't gain any permanent stat boosts
       target.health += unit.health;
@@ -119,17 +115,11 @@ export function mergeUnit(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], underw
       target.manaPerTurn += unit.manaPerTurn;
     }
 
-    // Modifiers
+    // Store Modifiers
     for (const modifierKey of Object.keys(unit.modifiers)) {
       const modifier = allModifiers[modifierKey];
       const modifierInstance = unit.modifiers[modifierKey];
-      if (modifier && modifierInstance) {
-        if (modifier?.add) {
-          modifier.add(target, underworld, prediction, modifierInstance.quantity, modifierInstance);
-        }
-      } else {
-        console.error("Modifier doesn't exist? This shouldn't happen.");
-      }
+      storedModifiers.push({ modifier, modifierInstance });
     }
 
     // Kill/Delete the unit that got merged
@@ -145,13 +135,28 @@ export function mergeUnit(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], underw
         underworld.enemiesKilled++;
       }
 
+      if (state) {
+        state.targetedUnits = state.targetedUnits.filter(u => u != unit);
+      }
+
       Unit.cleanup(unit);
+    }
+  }
+
+  // Modifiers are stored and added at the end to prevent weird scenarios
+  // such as suffocate killing the primary target mid-merge
+  for (const { modifier, modifierInstance } of storedModifiers) {
+    if (modifier && modifierInstance) {
+      if (modifier?.add) {
+        modifier.add(target, underworld, prediction, modifierInstance.quantity, modifierInstance);
+      }
+    } else {
+      console.error("Modifier doesn't exist? This shouldn't happen.");
     }
   }
 }
 
-
-export function mergePickup(target: Pickup.IPickup, pickupsToMerge: Pickup.IPickup[], underworld: Underworld, prediction: boolean) {
+export function mergePickups(target: Pickup.IPickup, pickupsToMerge: Pickup.IPickup[], underworld: Underworld, prediction: boolean, state?: EffectState) {
   for (const pickup of pickupsToMerge) {
     Pickup.setPower(target, target.power + pickup.power);
 
@@ -165,6 +170,10 @@ export function mergePickup(target: Pickup.IPickup, pickupsToMerge: Pickup.IPick
         graphics.lineTo(target.x, target.y);
         graphics.drawCircle(target.x, target.y, 3);
       }
+    }
+
+    if (state) {
+      state.targetedPickups = state.targetedPickups.filter(p => p != pickup);
     }
 
     Pickup.removePickup(pickup, underworld, prediction);
