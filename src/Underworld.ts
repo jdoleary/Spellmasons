@@ -79,6 +79,7 @@ import { Emitter } from '@pixi/particle-emitter';
 import { golem_unit_id } from './entity/units/golem';
 import { cleanUpPerkList, createPerkElement, generatePerks, tryTriggerPerk, showPerkList, hidePerkList, createCursePerkElement, StatCalamity, generateRandomStatCalamity } from './Perk';
 import deathmason, { ORIGINAL_DEATHMASON_DEATH, bossmasonUnitId, summonUnitAtPickup } from './entity/units/deathmason';
+import goru from './entity/units/goru';
 import { hexToString } from './graphics/ui/colorUtil';
 import { doLiquidEffect } from './inLiquid';
 import { findRandomGroundLocation } from './entity/units/summoner';
@@ -677,12 +678,15 @@ export default class Underworld {
         // because the unit's position may have a decimal while the path does not so it'll stop
         // moving when it reaches the target which may be less than 1.0 and 1.0 away.
         u.path.points.shift();
+        if (u.path.points.length == 0) {
+          u.resolveDoneMoving(true);
+        }
       }
 
       const takeAction = Unit.canAct(u) && Unit.isUnitsTurnPhase(u, this)
         && (u.unitType == UnitType.PLAYER_CONTROLLED || this.subTypesCurrentTurn?.includes(u.unitSubType));
 
-      if (takeAction && u.stamina > 0 && u.path && u.path.points[0]) {
+      if (u.path && u.path.points[0] && u.stamina > 0 && takeAction) {
         // Move towards target
         const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path.points[0], u.moveSpeed * deltaTime)
         let moveDist = 0;
@@ -728,32 +732,33 @@ export default class Underworld {
           // Once the unit reaches the target, shift so the next point in the path is the next target
           u.path.points.shift();
         }
-
         // check for collisions with pickups in new location
         this.checkPickupCollisions(u, false);
-      } else {
-        // We cannot process the unit: Finalize movement and return false
-        // check for collisions with pickups in final location
-        this.checkPickupCollisions(u, false);
+        if (u.stamina > 0 && u.path && u.path.points.length !== 0) {
+          // more processing yet to be done
+          return true;
+        } else {
+          // Ensure that resolveDoneMoving is invoked when unit is out of stamina (and thus, done moving)
+          // or when find point in the path has been reached.
+          // This is necessary to end the moving units turn because elsewhere we are awaiting the fulfillment of that promise
+          // to know they are done moving
+          u.resolveDoneMoving(true);
+          if (u.path) {
+            // Update last position that changed via own movement
+            u.path.lastOwnPosition = Vec.clone(u);
+          }
+          // done processing this unit for this unit's turn
+          return false;
 
-        // Ensure that resolveDoneMoving is invoked when unit:
-        // can't take action, is out of stamina, or has reached the find point in the path
-        // This is necessary to end the moving units turn because elsewhere we are
-        // awaiting the fulfillment of that promise to know they are done moving
-        u.resolveDoneMoving();
-        if (u.path) {
-          // Update last position that changed via own movement
-          u.path.lastOwnPosition = Vec.clone(u);
         }
-        // done processing this unit for this unit's turn
+      } else {
+        // unit has nothing to do and thus is done processing
         return false;
       }
     } else {
       // Unit is dead, no processing to be done
       return false;
     }
-    // more processing yet to be done
-    return true;
   }
   awaitForceMoves = async (prediction: boolean = false) => {
     if (prediction) {
@@ -992,8 +997,8 @@ export default class Underworld {
         if (pickup) {
           if (unit) {
             const player = this.players.find(p => p.unit == unit);
-            queuedPickup.flaggedForRemoval = true;
             Pickup.triggerPickup(pickup, unit, player, this, false);
+            queuedPickup.flaggedForRemoval = true;
             console.error('Queued pickup timed out and was force triggered');
           } else {
             console.error('Attempted to aquire queued pickup via timeout but unit is undefined');
@@ -2230,7 +2235,7 @@ export default class Underworld {
     return;
   }
   async trySpawnBoss(): Promise<boolean> {
-    if (this.levelIndex != config.LAST_LEVEL_INDEX) {
+    if (this.levelIndex != config.LAST_LEVEL_INDEX && this.levelIndex != config.GORU_LEVEL_INDEX) {
       console.debug('[GAME] Can\'t Spawn Boss\nNo boss to spawn');
       return false;
     }
@@ -2245,7 +2250,12 @@ export default class Underworld {
       return false;
     }
 
-    await introduceBoss(deathmason, this);
+    if (config.IS_ANNIVERSARY_UPDATE_OUT && this.levelIndex == config.GORU_LEVEL_INDEX) {
+      await introduceBoss(goru, this);
+    }
+    if (this.levelIndex == config.LAST_LEVEL_INDEX) {
+      await introduceBoss(deathmason, this);
+    }
     return true;
   }
   trySpawnNextWave(): boolean {
@@ -2307,7 +2317,7 @@ export default class Underworld {
       return false;
     }
 
-    if (this.levelIndex == config.LAST_LEVEL_INDEX && !this.hasSpawnedBoss) {
+    if ((this.levelIndex == config.LAST_LEVEL_INDEX || this.levelIndex == config.GORU_LEVEL_INDEX) && !this.hasSpawnedBoss) {
       console.debug('[GAME] Level Incomplete...\nWaiting to spawn Deathmason...');
       return false;
     }
@@ -2348,7 +2358,7 @@ export default class Underworld {
 
     // Spawn a portal near each remaining player
     for (let playerUnit of remainingPlayers) {
-      const portalSpawnLocation = this.findValidSpawn({ spawnSource: playerUnit, ringLimit: 4, prediction: false }) || playerUnit;
+      const portalSpawnLocation = this.findValidSpawn({ spawnSource: playerUnit, ringLimit: 4, radius: config.COLLISION_MESH_RADIUS * .8, prediction: false }) || playerUnit;
       if (!isOutOfBounds(portalSpawnLocation, this)) {
         spawnedPortals.push(Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup, logSource: 'Portal' }, this, false));
       }
@@ -4266,6 +4276,14 @@ function getEnemiesForAltitude(underworld: Underworld, levelIndex: number): stri
   budgetLeft = Math.floor(budgetLeft);
   console.log('Budget for level index', adjustedLevelIndex, 'is', budgetLeft);
   const totalBudget = budgetLeft;
+  // Reduce remaining budget on the last level where Goru will spawn
+  if (config.IS_ANNIVERSARY_UPDATE_OUT && levelIndex == config.GORU_LEVEL_INDEX) {
+    if (goru.spawnParams) {
+      budgetLeft -= goru.spawnParams?.budgetCost;
+    } else {
+      console.warn("Goru spawn params unknown, could not modify budget correctly");
+    }
+  }
   // Reduce remaining budget on the last level where the Deathmason will spawn
   if (levelIndex == config.LAST_LEVEL_INDEX) {
     if (deathmason.spawnParams) {
@@ -4327,7 +4345,7 @@ async function introduceBoss(unit: UnitSource, underworld: Underworld) {
   }
 
   // Play boss intro FX
-  const elCinematic = document.getElementById('deathmason-cinematic');
+  const elCinematic = unit.id == bossmasonUnitId ? document.getElementById('deathmason-cinematic') : document.getElementById('goru-cinematic');
   if (elCinematic) {
     elCinematic.classList.toggle('show', true);
   }

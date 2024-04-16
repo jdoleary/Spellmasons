@@ -109,7 +109,7 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   path?: UnitPath;
   moveSpeed: number;
   // A resolve callback for when a unit is done moving
-  resolveDoneMoving: () => void;
+  resolveDoneMoving: (doReturnToDefaultSprite: boolean | PromiseLike<boolean>) => void
   attackRange: number;
   name?: string;
   isMiniboss: boolean;
@@ -440,7 +440,7 @@ export function removeModifier(unit: IUnit, key: string, underworld: Underworld)
 export function cleanup(unit: IUnit, maintainPosition?: boolean, forceCleanPlayerUnit?: boolean) {
   // Resolve done moving on cleanup to ensure that there are no forever-blocking promises
   if (unit.resolveDoneMoving) {
-    unit.resolveDoneMoving();
+    unit.resolveDoneMoving(true);
   }
   if (unit.unitType == UnitType.PLAYER_CONTROLLED && !forceCleanPlayerUnit) {
     console.log('Protection: Do not clean up player unit, instead move to portal');
@@ -805,7 +805,7 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   }
   // Ensure that the unit resolvesDoneMoving when they die in the event that 
   // they die while they are moving.  This prevents turn phase from getting stuck
-  unit.resolveDoneMoving();
+  unit.resolveDoneMoving(false);
   // Clear unit path to prevent further movement in case of ressurect or similar
   unit.path = undefined;
 
@@ -1294,13 +1294,13 @@ export function moveTowardsMulti(unit: IUnit, points: Vec2[], underworld: Underw
   // to resolve is within a reasonable range
   const timeoutMs = 300 + unit.stamina / unit.moveSpeed;
 
-  return raceTimeout(timeoutMs, `moveTowards; ${unit.unitSourceId}`, new Promise<void>((resolve) => {
+  return raceTimeout(timeoutMs, `moveTowards; ${unit.unitSourceId}`, new Promise<boolean>((resolve) => {
     // Trigger previous resolveDoneMoving since we're overwriting it:
-    unit.resolveDoneMoving();
+    unit.resolveDoneMoving(false);
     // Set new resolve done moving, so that this moveTowards can be awaited
     unit.resolveDoneMoving = resolve;
-  })).then(() => {
-    if (unit.image) {
+  })).then((doReturnToDefaultSprite) => {
+    if (unit.image && doReturnToDefaultSprite) {
       // When done moving return to default
       returnToDefaultSprite(unit);
     }
@@ -1314,11 +1314,12 @@ export function moveTowards(unit: IUnit, point: Vec2, underworld: Underworld): P
 // setLocation, unlike moveTo, simply sets a unit to a coordinate without
 // considering in-game blockers or changing any unit flags
 // Note: NOT TO BE USED FOR in-game collision-based movement
-export function setLocation(unit: IUnit, coordinates: Vec2) {
+export function setLocation(unit: IUnit, coordinates: Vec2, underworld: Underworld) {
   // Set state instantly to new position
   unit.x = coordinates.x;
   unit.y = coordinates.y;
   unit.path = undefined;
+  underworld.checkPickupCollisions(unit, false);
 }
 export function changeFaction(unit: IUnit, faction: Faction) {
   unit.faction = faction;

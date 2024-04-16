@@ -72,6 +72,10 @@ export type IPickup = HasSpace & {
   // Identifier for serailized emitter
   emitterJID?: string;
   flaggedForRemoval: boolean;
+  // A rarely used property that prevents multiple
+  // SENT_FORCE_TRIGGER messages from being sent
+  // on the same pickup.
+  sentForceTrigger?: boolean;
 
 }
 export interface IPickupSource {
@@ -201,6 +205,10 @@ export function create({ pos, pickupSource, idOverride, logSource }:
   }
 
   underworld.addPickupToArray(self, prediction);
+  // Check for collisions when a new pickup is created
+  for (let unit of underworld.units) {
+    underworld.checkPickupCollisions(unit, false);
+  }
   return self;
 }
 function assignEmitter(pickup: IPickup, emitterId: string, prediction: boolean, underworld: Underworld) {
@@ -432,16 +440,25 @@ export function tryTriggerPickup(pickup: IPickup, unit: IUnit, underworld: Under
         if (willTrigger) {
           // Unit has touched pickup before headless has, so force trigger it
           // This happens when unit is walking as opposed to being pushed
-          console.log(`Unit touched pickup before headless has: ${pickup.name}, ${unit.id}, ${player?.name}`)
-          // Only send a FORCE_TRIGGER_PICKUP message if the unit is the client's own player unit or a non player unit
-          if (!player || player && globalThis.player == player) {
-            underworld.pie.sendData({
-              type: MESSAGE_TYPES.FORCE_TRIGGER_PICKUP,
-              pickupId: pickup.id,
-              pickupName: pickup.name,
-              unitId: unit.id,
-              playerClientId: player?.clientId
-            });
+          if (!pickup.sentForceTrigger) {
+            console.log(`Unit touched pickup before headless has: ${pickup.name}, ${unit.id}, ${player?.name}`)
+            // Only send a FORCE_TRIGGER_PICKUP message if the unit is the client's own player unit or a non player unit
+            if (player && globalThis.player == player) {
+              // flag pickup so it doesn't continue to send FORCE_TRIGGER_PICKUP
+              // until the FORCE_TRIGGER_PICKUP message is recieved and the pickup is finally removed
+              // Note: exlude the Purple Portal which is the only pickup that isn't removed
+              // after getting activated.
+              if (pickup.name !== PORTAL_PURPLE_NAME) {
+                pickup.sentForceTrigger = true;
+              }
+              underworld.pie.sendData({
+                type: MESSAGE_TYPES.FORCE_TRIGGER_PICKUP,
+                pickupId: pickup.id,
+                pickupName: pickup.name,
+                unitId: unit.id,
+                collidedPlayerId: player?.playerId
+              });
+            }
           }
         }
 
@@ -613,7 +630,7 @@ export const pickups: IPickupSource[] = [
       }
       // Move the player unit so they don't continue to trigger the pickup more than once
       if (player && player.unit) {
-        player.unit.resolveDoneMoving();
+        player.unit.resolveDoneMoving(true);
         player.unit.x = NaN;
         player.unit.y = NaN;
       }

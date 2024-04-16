@@ -25,7 +25,7 @@ const spell: Spell = {
         healthCost: 0,
         expenseScaling: 2,
         probability: probabilityMap[CardRarity.SPECIAL],
-        thumbnail: 'spellmasons-mods/Wodes_grimoire/graphics/icons/spelliconRegen.png',
+        thumbnail: 'spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconRegen.png',
         sfx: 'heal', //TODO
         description: [`Heals the target for 10 health at the end of their turn for 5 turns. Stacks increase the amount and refresh the duration.`],
         effect: async (state, card, quantity, underworld, prediction) => {
@@ -60,7 +60,7 @@ const spell: Spell = {
             const modifier = unit.modifiers[cardId];
             if (modifier) {
                 const healing = healingAmount(modifier.regenCounter)
-                Unit.takeDamage(unit, healing, undefined, underworld, prediction);
+                Unit.takeDamage({ unit, amount: healing }, underworld, prediction);
                 modifier.quantity--;
                 if (!prediction) {
                     updateTooltip(unit);
@@ -77,13 +77,13 @@ const spell: Spell = {
         },
     }
 };
-function remove(unit, underworld) {
+function remove(unit: IUnit, underworld: Underworld) {
     const modifier = unit.modifiers[cardId];
     if (modifier) {
         modifier.regenCounter = 0;
     }
 }
-function add(unit, underworld, prediction, quantity, extra) {
+function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra: any) {
     const modifier = cardsUtil.getOrInitModifier(unit, cardId, {
         isCurse: false, quantity, persistBetweenLevels: false,
     }, () => {
@@ -110,7 +110,7 @@ function healingAmount(castquantity: number) {
     }
     return healing;
 }
-function updateTooltip(unit) {
+function updateTooltip(unit: IUnit) {
     const modifier = unit.modifiers && unit.modifiers[cardId];
     if (modifier) {
         modifier.tooltip = `Healing ${-healingAmount(modifier.regenCounter)} every ${modifier.quantity} turns`

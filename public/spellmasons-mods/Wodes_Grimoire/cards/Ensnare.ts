@@ -24,7 +24,7 @@ const spell: Spell = {
         healthCost: 0,
         expenseScaling: 2,
         probability: probabilityMap[CardRarity.SPECIAL],
-        thumbnail: 'spellmasons-mods/Wodes_grimoire/graphics/icons/spelliconEnsnare.png',
+        thumbnail: 'spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconEnsnare.png',
         sfx: '',
         description: [`Prevents the target from moving for one turn. Furthur casts increase duration.`],
         effect: async (state, card, quantity, underworld, prediction) => {
@@ -68,7 +68,7 @@ const spell: Spell = {
         }
     }
 };
-function add(unit, underworld, prediction, quantity) {
+function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number) {
     cardsUtil.getOrInitModifier(unit, cardId, {
         isCurse: true, quantity, persistBetweenLevels: false,
         originalstat: unit.staminaMax,
@@ -81,7 +81,7 @@ function add(unit, underworld, prediction, quantity) {
         unit.staminaMax = 0;
     });
 }
-function remove(unit, underworld) {
+function remove(unit: IUnit, underworld: Underworld) {
     //Give back ability to attack when debuff is gone
     if (unit.modifiers && unit.modifiers[cardId]) {
         const originalStamina = unit.modifiers[cardId].originalstat;

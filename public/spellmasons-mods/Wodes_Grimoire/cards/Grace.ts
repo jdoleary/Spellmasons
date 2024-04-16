@@ -1,5 +1,7 @@
 /// <reference path="../../globalTypes.d.ts" />
+import Underworld from '../../types/Underworld';
 import type { Spell } from '../../types/cards/index';
+import { IUnit } from '../../types/entity/Unit';
 const {
     cardUtils,
     commonTypes,
@@ -26,7 +28,7 @@ const spell: Spell = {
         healthCost: 0,
         expenseScaling: 1,
         probability: probabilityMap[CardRarity.RARE],
-        thumbnail: 'spellmasons-mods/Wodes_grimoire/graphics/icons/spelliconGrace.png',
+        thumbnail: 'spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconGrace.png',
         sfx: 'purify', //TODO
         description: [`Heals the target for ${-healingAmount} after 3 turns. Stacks increase the amount, but do not change duration`],
         effect: async (state, card, quantity, underworld, prediction) => {
@@ -58,7 +60,7 @@ const spell: Spell = {
                 updateTooltip(unit);
                 if (modifier.graceCountdown <= 0) {
                     let healing = calculateGraceHealing(modifier.graceQuantity);
-                    Unit.takeDamage(unit, healing, undefined, underworld, prediction);
+                    Unit.takeDamage({ unit, amount: healing }, underworld, prediction);
                     if (!prediction) {
                         FloatingText.default({
                             coords: unit,
@@ -71,11 +73,10 @@ const spell: Spell = {
                     Unit.removeModifier(unit, cardId, underworld);
                 }
             }
-            return false;
         }
     }
 };
-function add(unit, underworld, prediction, quantity, extra) {
+function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra: any) {
     const modifier = cardsUtil.getOrInitModifier(unit, cardId, {
         isCurse: false, quantity, persistBetweenLevels: false,
     }, () => {
@@ -93,7 +94,7 @@ function add(unit, underworld, prediction, quantity, extra) {
         updateTooltip(unit);
     }
 }
-function updateTooltip(unit) {
+function updateTooltip(unit: IUnit) {
     const modifier = unit.modifiers && unit.modifiers[cardId];
     if (modifier) {
         modifier.tooltip = `${modifier.graceCountdown} turns until healed for ${-calculateGraceHealing(modifier.graceQuantity)}`

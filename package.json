@@ -1,6 +1,6 @@
 {
   "name": "golems",
-  "version": "1.30.0",
+  "version": "1.32.2",
   "description": "",
   "private": true,
   "scripts": {
@@ -37,7 +37,7 @@
     "jest": "^26.6.3",
     "prettier": "^2.0.5",
     "typescript": "^5.2.2",
-    "vite": "^2.9.16"
+    "vite": "^2.9.18"
   },
   "dependencies": {
     "@pixi/filter-adjustment": "^4.2.0",
@@ -48,7 +48,7 @@
     "@pixi/particle-emitter": "^5.0.7",
     "@sentry/browser": "^7.31.1",
     "@sentry/node": "^7.31.1",
-    "@websocketpie/client": "^1.1.4",
+    "@websocketpie/client": "^1.1.5",
     "@websocketpie/server": "^1.2.0",
     "@websocketpie/server-bun": "^1.2.0",
     "fast-safe-stringify": "^2.1.1",

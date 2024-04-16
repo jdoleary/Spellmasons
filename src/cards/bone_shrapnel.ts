@@ -1,7 +1,7 @@
 import * as particles from '@pixi/particle-emitter'
 import { takeDamage } from '../entity/Unit';
 import * as Unit from '../entity/Unit';
-import { Spell } from './index';
+import { Spell, refundLastSpell } from './index';
 import { drawUICirclePrediction } from '../graphics/PlanningView';
 import { CardCategory } from '../types/commonTypes';
 import { createParticleTexture, logNoTextureWarning, simpleEmitter } from '../graphics/Particles';
@@ -27,6 +27,11 @@ const spell: Spell = {
     effect: async (state, card, quantity, underworld, prediction) => {
       // Only explode corpses at time of cast
       const targetedUnits = state.targetedUnits.filter(u => !u.alive);
+      if (!targetedUnits.length) {
+        refundLastSpell(state, prediction, "No valid targets");
+        return state;
+      }
+
       targetedUnits.forEach(unit => {
         // +50% radius per radius boost
         const adjustedRadius = baseRadius * (1 + (0.5 * state.aggregator.radiusBoost));

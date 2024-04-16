@@ -752,7 +752,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
             }
             cameraAutoFollow(true);
           }
-          Unit.setLocation(fromPlayer.unit, payload);
+          Unit.setLocation(fromPlayer.unit, payload, underworld);
           // Trigger 'everyLevel' attributePerks
           // now that the player has spawned in at the new level
           const perkRandomGenerator = seedrandom(getUniqueSeedString(underworld, fromPlayer));
@@ -797,7 +797,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       // of the host matches exactly the player position on the player's client
       if (isHost(overworld.pie)) {
         if (fromPlayer && fromPlayer.unit && payload.position.x !== undefined && payload.position.y !== undefined) {
-          Unit.setLocation(fromPlayer.unit, payload.position);
+          Unit.setLocation(fromPlayer.unit, payload.position, underworld);
           fromPlayer.unit.stamina = payload.stamina;
         }
       }
@@ -836,9 +836,6 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
               explain(EXPLAIN_END_TURN);
               playSFXKey('deny_stamina');
             }
-            // Clear player unit path when they are done moving so they get
-            // to choose a new path next turn
-            fromPlayer.unit.path = undefined;
           });
           // Now that player movement has been set up, trigger the headless server to process it immediately
           underworld.triggerGameLoopHeadless();
@@ -1045,6 +1042,11 @@ async function handleLoadGameState(payload: {
   // Note: createLevel syncronizes a bunch of underworld properties; for example it invokes cache_walls.
   // Check it carefully before manually syncronizing properties
   await underworld.createLevel(level, underworld.gameMode);
+
+  // Unlike turn_number, these variables are tracked per-level, 
+  // they have to go after createLevel() as to not be overwritten by cleanUpLevel()
+  underworld.wave = loadedGameState.wave;
+  underworld.hasSpawnedBoss = loadedGameState.hasSpawnedBoss;
 
   // Since level data has pickups stored in it and since those pickups' locations
   // for existance may have changed between when the level was created and when
