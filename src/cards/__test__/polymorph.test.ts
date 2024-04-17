@@ -1,5 +1,5 @@
-import { allUnits, registerUnits } from '../../entity/units/index.ts';
-import { getPolymorphProbabilityFromBudget, getPossibleUnitPolymorphs } from '../polymorph.ts';
+import { allUnits, registerUnits } from '../../entity/units/index';
+import { getPolymorphProbabilityFromBudget, getPossibleUnitPolymorphs } from '../polymorph';
 
 describe("polymorph", () => {
     describe('getPolymorphProbabilityFromBudget', () => {
