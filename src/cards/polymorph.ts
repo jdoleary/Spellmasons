@@ -72,7 +72,13 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
     let possibleUnitTypes = getPossibleUnitPolymorphs(fromUnit.unitSourceId, underworld);
 
     // We have to seed this to prevent multiplayer desync
-    const seed = seedrandom(`${getUniqueSeedString(underworld)} - ${fromUnit.id}`);
+    let seed = undefined;
+    if (fromUnit.unitType == UnitType.PLAYER_CONTROLLED) {
+      // @ts-ignore polymorphCount - Special case for player seeding
+      seed = seedrandom(`${getUniqueSeedString(underworld)} - ${fromUnit.id} - ${fromUnit.polymorphCount || 0}`);
+    } else {
+      seed = seedrandom(`${getUniqueSeedString(underworld)} - ${fromUnit.id}`);
+    }
     const lastUnitChosen = allUnits[fromUnit.unitSourceId];
     for (let i = 0; i < quantity; i++) {
       toUnitId = chooseObjectWithProbability(possibleUnitTypes.map(p => {
@@ -142,6 +148,17 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
       fromUnit.image?.sprite.parent,
       undefined,
     );
+
+    // Polymorph count changes the seed used for future polymorphing,
+    // ensuring the player visual can change to multiple units
+    // @ts-ignore polymorphCount
+    if (fromUnit.polymorphCount) {
+      // @ts-ignore polymorphCount
+      fromUnit.polymorphCount++;
+    } else {
+      // @ts-ignore polymorphCount
+      fromUnit.polymorphCount = 1;
+    }
 
     return fromUnit;
   }
