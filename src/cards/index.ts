@@ -48,6 +48,7 @@ import debilitate from './debilitate';
 import soul_bind from './soul_bind';
 import soul_shard from './soul_shard';
 import * as protection from './protection';
+import merge from './merge';
 import clone from './clone';
 import capture_soul from './capture_soul';
 import mana_burn from './mana_burn';
@@ -279,6 +280,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(resurrect_weak, overworld);
   registerSpell(resurrect_toxic, overworld);
   registerSpell(resurrect, overworld);
+  registerSpell(merge, overworld);
   registerSpell(clone, overworld);
   registerSpell(sacrifice, overworld);
   registerSpell(capture_soul, overworld);

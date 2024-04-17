@@ -32,45 +32,18 @@ const spell: Spell = {
 export function targetSimilarEffect(numberOfTargets: number) {
   return async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean) => {
     // We store the initial targets because target similar mutates state.targetedUnits
-    let targets: Vec2[] = getCurrentTargets(state);
-    targets = targets.length ? targets : [state.castLocation];
+    let targets: HasSpace[] = getCurrentTargets(state);
     const initialTargets = targets;
     const animators = [];
     for (let i = 0; i < initialTargets.length; i++) {
       targets = getCurrentTargets(state);
       const target = initialTargets[i];
-      if (!target) {
-        continue;
-      }
+      if (!target) continue;
 
-      const potentialTargets = underworld.getPotentialTargets(prediction)
-        // Filter out current targets
-        .filter(t => !targets.includes(t))
-        // Filter out dissimilar types
-        // @ts-ignore Find similar units by unitSourceId, find similar pickups by name
-        .filter(t => {
-          if (isUnit(target) && isUnit(t) && t.unitSourceId == target.unitSourceId) {
-            if (underworld.players.filter(p => !p.isSpawned).map(p => p.unit.id).includes(t.id)) {
-              // Do not allow targeting unspawned players
-              console.log("Filtered out unspawned player from target similar's potential targets");
-              return false;
-            }
-            if (target.alive) {
-              // Match living units of the same faction
-              return t.alive && t.faction == target.faction;
-            } else {
-              // Match any dead unit
-              return !t.alive;
-            }
-          } else if (isPickup(target) && isPickup(t) && t.name == target.name) {
-            return true;
-          } else {
-            return false;
-          }
-        })
-        .sort(math.sortCosestTo(target));
+      const potentialTargets = underworld.getPotentialTargets(prediction).filter(t => !targets.includes(t));
+      const similarThings = findSimilar(target, underworld, prediction, potentialTargets);
 
-      const newTargets = potentialTargets.slice(0, numberOfTargets * quantity);
+      const newTargets = similarThings.slice(0, numberOfTargets * quantity);
       if (!prediction) {
         playSFXKey('targeting');
         animators.push({ pos: target, newTargets: newTargets });
@@ -85,6 +58,37 @@ export function targetSimilarEffect(numberOfTargets: number) {
     return state;
   }
 
+}
+
+export function findSimilar(target: HasSpace, underworld: Underworld, prediction: boolean, potentialTargets?: HasSpace[]): HasSpace[] {
+  const similarThings = (potentialTargets || underworld.getPotentialTargets(prediction))
+    // Filter out source
+    .filter(t => t != target)
+    // Filter out dissimilar types
+    // @ts-ignore Find similar units by unitSourceId, find similar pickups by name
+    .filter(t => {
+      if (isUnit(target) && isUnit(t) && t.unitSourceId == target.unitSourceId) {
+        if (underworld.players.filter(p => !p.isSpawned).map(p => p.unit.id).includes(t.id)) {
+          // Do not allow targeting unspawned players
+          console.log("Filtered out unspawned player from target similar's potential targets");
+          return false;
+        }
+        if (target.alive) {
+          // Match living units of the same faction
+          return t.alive && t.faction == target.faction;
+        } else {
+          // Match any dead unit
+          return !t.alive;
+        }
+      } else if (isPickup(target) && isPickup(t) && t.name == target.name) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    .sort(math.sortCosestTo(target));
+
+  return similarThings;
 }
 
 export async function animateTargetSimilar(circles: { pos: Vec2, newTargets: Vec2[] }[]) {
