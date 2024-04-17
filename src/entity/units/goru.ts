@@ -29,7 +29,7 @@ const unit: UnitSource = {
   spawnParams: {
     // Special case: We spawn the Goru manually, but still want to declare a budget
     probability: 0,
-    budgetCost: 0,
+    budgetCost: 40,
     unavailableUntilLevelIndex: 9,
   },
   animations: {
