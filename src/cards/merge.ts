@@ -11,6 +11,7 @@ import { findSimilar } from './target_similar';
 import { HasSpace } from '../entity/Type';
 import Underworld from '../Underworld';
 import { makeManaTrail } from '../graphics/Particles';
+import { clone, lerpVec2, Vec2 } from '../jmath/Vec';
 
 const merge_id = 'merge';
 const spell: Spell = {
@@ -34,6 +35,7 @@ const spell: Spell = {
       // because there is other criteria to consider:
       // we don't want to merge living units into dead ones, for example
       for (let i = 0; i < targets.length; i++) {
+        const mergePromises = []
         const target = targets[i];
         if (!target || mergedTargets.includes(target)) continue;
 
@@ -46,13 +48,24 @@ const spell: Spell = {
           if (!prediction) {
             playSFXKey('clone');
             for (const thing of similarThings) {
-              makeManaTrail(thing, target, underworld,
-                colors.convertToHashColor(colors.manaBrightBlue),
-                colors.convertToHashColor(colors.manaDarkBlue),
-                1);
+              mergePromises.push(animateMerge((thing as any).image, target));
             }
-            await animateMerge((target as any).image);
           }
+          await Promise.all(mergePromises);
+
+          // scale target, now that units and their stats have merged into it
+          // (copied from Unit.ts)
+          // this final scale of the unit will always be less than the max multiplier
+          const maxMultiplier = 4;
+          // calculate scale multiplier with diminishing formula
+          // 6 is an arbitrary number that controls the speed at which the scale approaches the max
+          const scaler = similarThings.reduce((strength, current) => strength + ((Unit.isUnit(current) ? current.strength : Pickup.isPickup(current) ? current.power : 1) || 1), 1);
+          const quantityScaleModifier = 1 + (maxMultiplier - 1) * (scaler / (scaler + 6));
+          if (target.image) {
+            target.image.sprite.scale.x = quantityScaleModifier;
+            target.image.sprite.scale.y = quantityScaleModifier;
+          }
+          // End scale target
 
           mergedTargets = mergedTargets.concat(similarThings);
           if (Unit.isUnit(target)) {
@@ -89,23 +102,17 @@ export function mergeUnits(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], under
     }
 
     // Combine Stats
-    if (target.unitType == UnitType.PLAYER_CONTROLLED) {
-      // Players don't gain any permanent stat boosts
-      target.health += unit.health;
-      target.stamina += unit.stamina;
-      target.mana += unit.mana;
-    } else {
-      target.healthMax += unit.healthMax;
-      target.health += unit.health;
-      //target.staminaMax += unit.staminaMax
-      //target.stamina += unit.stamina;
-      target.manaMax += unit.manaMax;
-      target.mana += unit.mana;
+    target.healthMax += unit.healthMax;
+    target.health += unit.health;
+    target.staminaMax += unit.staminaMax
+    target.stamina += unit.stamina;
+    target.manaMax += unit.manaMax;
+    target.mana += unit.mana;
 
-      target.damage += unit.damage;
-      target.manaCostToCast += unit.manaCostToCast;
-      target.manaPerTurn += unit.manaPerTurn;
-    }
+    target.damage += unit.damage;
+    target.manaCostToCast += unit.manaCostToCast;
+    target.manaPerTurn += unit.manaPerTurn;
+    target.strength += unit.strength;
 
     // Store Modifiers
     for (const modifierKey of Object.keys(unit.modifiers)) {
@@ -172,30 +179,25 @@ export function mergePickups(target: Pickup.IPickup, pickupsToMerge: Pickup.IPic
   }
 }
 
-// TODO - Merge VFX - Trails/Lines to main unit + Similar mitosis stretch
-// export async function animateMerge(image?: IImageAnimated) {
-//   if (!image) {
-//     return;
-//   }
-//   return;
-// }
-
-export async function animateMerge(image?: IImageAnimated) {
+export async function animateMerge(image: IImageAnimated | undefined, target: Vec2) {
   if (!image) {
     return;
   }
-  const iterations = 100;
+  const iterations = 160;
   const millisBetweenIterations = 3;
-  const startScaleX = image.sprite.scale.x || 1.0;
-  const startScaleY = image.sprite.scale.y || 1.0;
+  const startPos = clone(image.sprite);
   // "iterations + 10" gives it a little extra time so it doesn't timeout right when the animation would finish on time
-  return raceTimeout(millisBetweenIterations * (iterations + 10), 'animatedMitosis', new Promise<void>(resolve => {
+  return raceTimeout(millisBetweenIterations * (iterations + 10), 'animateMerge', new Promise<void>(resolve => {
     for (let i = 0; i < iterations; i++) {
       setTimeout(() => {
-        // Stretch
         if (image) {
-          image.sprite.scale.x *= 1.01;
-          image.sprite.scale.y -= 0.001;
+          const t = i / iterations;
+          // Just move the sprite for this animation since the merged unit will
+          // get cleaned up anyway and we don't want any collisions on the way to merging
+          const lerped = lerpVec2(startPos, target, t * t);
+          image.sprite.x = lerped.x;
+          image.sprite.y = lerped.y;
+
           if (i >= iterations - 1) {
             resolve();
           }
@@ -203,10 +205,6 @@ export async function animateMerge(image?: IImageAnimated) {
         }
       }, millisBetweenIterations * i)
     }
-  })).then(() => {
-    // Restore scale
-    image.sprite.scale.x = startScaleX;
-    image.sprite.scale.y = startScaleY;
-  });
+  }));
 }
 export default spell;
