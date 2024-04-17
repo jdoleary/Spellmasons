@@ -101,6 +101,15 @@ export function mergeUnits(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], under
       }
     }
 
+    // Consequences for merging with another player so
+    // you can't just resurrect them and have an infinite
+    // stats hack.  So you can steal their stats with merge
+    // but basically not "make more" out of thin air
+    // since it doesn't remove the merged player unit
+    if (unit.unitType == UnitType.PLAYER_CONTROLLED) {
+      unit.healthMax = 1;
+      unit.manaMax = 1;
+    }
     // Combine Stats
     target.healthMax += unit.healthMax;
     target.health += unit.health;
