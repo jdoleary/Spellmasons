@@ -104,8 +104,6 @@ export function mergeUnits(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], under
     // Combine Stats
     target.healthMax += unit.healthMax;
     target.health += unit.health;
-    target.staminaMax += unit.staminaMax
-    target.stamina += unit.stamina;
     target.manaMax += unit.manaMax;
     target.mana += unit.mana;
 
