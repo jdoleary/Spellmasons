@@ -12,11 +12,9 @@ const spell: Spell = {
   card: {
     id: darkTideId,
     category: CardCategory.Curses,
-    cooldown: 1,
     manaCost: 30,
     healthCost: 0,
-    expenseScaling: 2,
-    supportQuantity: false,
+    expenseScaling: 1,
     allowNonUnitTarget: true,
     ignoreRange: true,
     requires: [drownCardId],
