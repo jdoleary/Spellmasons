@@ -1158,7 +1158,6 @@ export function canAct(unit: IUnit): boolean {
     return false;
   }
 
-  // TODO - Find cleaner method. Event args?
   if (unit.modifiers[freezeCardId] || unit.modifiers[summoningSicknessId]) {
     return false;
   }
@@ -1350,19 +1349,6 @@ export function inRange(unit: IUnit, target: Vec2): boolean {
 }
 
 export async function startTurnForUnits(units: IUnit[], underworld: Underworld, prediction: boolean) {
-  // Trigger start turn events
-  const turnStartPromises = [];
-  for (let unit of units) {
-    turnStartPromises.push(runTurnStartEvents(unit, underworld, prediction))
-  }
-  await raceTimeout(5000, 'Turn Start Events did not resolve', Promise.all(turnStartPromises));
-
-  // Regenerate stamina to max
-  for (let unit of units.filter(u => u.alive)) {
-    if (unit.stamina < unit.staminaMax) {
-      unit.stamina = unit.staminaMax;
-    }
-  }
   // Add mana to Player units
   for (let unit of units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
     // Restore player to max mana at start of turn
@@ -1370,27 +1356,42 @@ export async function startTurnForUnits(units: IUnit[], underworld: Underworld, 
     // (due to other influences like mana potions, spells, perks, etc);
     unit.mana = Math.max(unit.manaMax, unit.mana);
   }
+
+  // Regenerate stamina to max
+  for (let unit of units.filter(u => u.alive)) {
+    if (unit.stamina < unit.staminaMax) {
+      unit.stamina = unit.staminaMax;
+    }
+  }
+
+  // Trigger start turn events
+  const turnStartPromises = [];
+  for (let unit of units) {
+    turnStartPromises.push(runTurnStartEvents(unit, underworld, prediction))
+  }
+  await raceTimeout(5000, 'Turn Start Events did not resolve', Promise.all(turnStartPromises));
 }
 
 export async function endTurnForUnits(units: IUnit[], underworld: Underworld, prediction: boolean) {
-  // Trigger end turn events
-  const turnEndPromises = [];
-  for (let unit of units) {
-    turnEndPromises.push(runTurnEndEvents(unit, underworld, prediction))
-  }
-  await raceTimeout(5000, 'Turn End Events did not resolve', Promise.all(turnEndPromises));
-
-  // At the end of their turn, deal damage if still in liquid
-  for (let unit of units.filter(u => u.inLiquid && u.alive)) {
-    doLiquidEffect(underworld, unit, false);
-    floatingText({ coords: unit, text: 'Liquid damage', style: { fill: 'red' } });
-  }
   // Add mana to AI units
   for (let unit of units.filter(u => u.unitType == UnitType.AI && u.alive)) {
     unit.mana += unit.manaPerTurn;
     // Cap manaPerTurn at manaMax
     unit.mana = Math.min(unit.mana, unit.manaMax);
   }
+
+  // At the end of their turn, deal damage if still in liquid
+  for (let unit of units.filter(u => u.inLiquid && u.alive)) {
+    doLiquidEffect(underworld, unit, false);
+    floatingText({ coords: unit, text: 'Liquid damage', style: { fill: 'red' } });
+  }
+
+  // Trigger end turn events
+  const turnEndPromises = [];
+  for (let unit of units) {
+    turnEndPromises.push(runTurnEndEvents(unit, underworld, prediction))
+  }
+  await raceTimeout(5000, 'Turn End Events did not resolve', Promise.all(turnEndPromises));
 }
 
 export async function runTurnStartEvents(unit: IUnit, underworld: Underworld, prediction: boolean) {
