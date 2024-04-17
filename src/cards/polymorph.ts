@@ -169,11 +169,22 @@ export function getPossibleUnitPolymorphs(unitSourceId: string, underworld?: Und
   return possibleUnitTypes;
 }
 
-export function getPolymorphProbabilityFromBudget(budget1: number = 0, budget2: number = 0): number {
-  // Units are weighted by their difference in budget.
-  // Units twice as far away in the budget are half as likely to be chosen.
-  const budgetDiff = Math.abs(budget1 - budget2);
-  return (budgetDiff == 0) ? 1000 : Math.ceil(1000 / budgetDiff);
+export function getPolymorphProbabilityFromBudget(budget1: number = 1, budget2: number = 1): number {
+  // Clamp budget to positive number, and dont divide by 0
+  budget1 = Math.max(budget1, 1);
+  budget2 = Math.max(budget2, 1);
+
+  // Units are weighted by their % difference in budget.
+  let budgetDiff = budget1 / budget2;
+  budgetDiff = (budgetDiff >= 1) ? budgetDiff : 1 / budgetDiff;
+
+  // Exponent controls how steep the curve is. Higher = more predictable outcome.
+  // 0 = all outcomes equally likely
+  // 1 = Default - Units with twice the budget are half as likely as units with the same budget
+  // 2 = likely outcomes much more likely, unlikely outcomes much more unlikely
+  const exponent = 1.5;
+  budgetDiff = Math.pow(budgetDiff, exponent);
+  return Math.ceil(1000 / budgetDiff);
 }
 
 function polymorphPickup(fromPickup: IPickup, underworld: Underworld, prediction: boolean, toPickupSource?: Pickup.IPickupSource, state?: EffectState, quantity: number = 1): IPickup | undefined {
