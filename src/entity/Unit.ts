@@ -49,6 +49,7 @@ import { freezeCardId } from '../cards/freeze';
 import { healSfx, oneOffHealAnimation } from '../effects/heal';
 import { soulShardOwnerModifierId } from '../modifierSoulShardOwner';
 import { getAllShardBearers } from '../cards/soul_shard';
+import { darkTideId } from '../cards/dark_tide';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -1158,6 +1159,7 @@ export function canAct(unit: IUnit): boolean {
     return false;
   }
 
+  // Frozen and newly summoned units can't act
   if (unit.modifiers[freezeCardId] || unit.modifiers[summoningSicknessId]) {
     return false;
   }
@@ -1171,11 +1173,16 @@ export function canMove(unit: IUnit): boolean {
     // console.log("canMove: false - unit is not alive")
     return false;
   }
+  // Dark Tide is a curse that prevents movement
+  if (unit.modifiers[darkTideId]) {
+    return false;
+  }
   // Do not move if already moved
   if (unit.stamina <= 0) {
     // console.log("canMove: false - unit has already used all their stamina this turn")
     return false;
   }
+  // No reason to move if speed is <= 0
   if (unit.moveSpeed <= 0) {
     return false;
   }

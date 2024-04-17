@@ -68,6 +68,8 @@ import shatter from './shatter';
 import meteor from './meteor';
 import split from './split';
 import drown from './drown';
+import blood_bath from './blood_bath';
+import dark_tide from './dark_tide';
 import target_arrow from './target_arrow';
 import target_column from './target_column';
 import target_cone from './target_cone';
@@ -221,6 +223,8 @@ export function registerCards(overworld: Overworld) {
   registerSpell(bleed, overworld);
   config.IS_ANNIVERSARY_UPDATE_OUT && registerSpell(execute, overworld);
   registerSpell(drown, overworld);
+  registerSpell(blood_bath, overworld);
+  registerSpell(dark_tide, overworld);
   registerSpell(burst, overworld);
   registerSpell(bone_shrapnel, overworld);
   config.IS_ANNIVERSARY_UPDATE_OUT &&
