@@ -1173,8 +1173,8 @@ export function canMove(unit: IUnit): boolean {
     // console.log("canMove: false - unit is not alive")
     return false;
   }
-  // Dark Tide is a curse that prevents movement
-  if (unit.modifiers[darkTideId]) {
+  // Dark Tide is a curse that prevents movement if the unit is in liquid
+  if (unit.modifiers[darkTideId] && unit.inLiquid) {
     return false;
   }
   // Do not move if already moved
