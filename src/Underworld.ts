@@ -3443,6 +3443,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
   }
   // TODO - This should factor in fortify, debilitate, bloat explosions, etc.
+  // Any reason we dont fully simulate the enemy turn and store relevant results?
   getSmartTargets(units: Unit.IUnit[]): { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } {
     const cachedTargets: { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } = {};
     for (let subTypes of this.subTypesTurnOrder) {
@@ -3472,7 +3473,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
     switch (u.unitSubType) {
       case UnitSubType.MELEE:
-        const maxPathDistance = u.attackRange + u.stamina;
+        const maxPathDistance = u.attackRange + (Unit.canMove(u) ? u.stamina : 0);
         // optimization: Only calculate full path if the unit is less than or equal to their remaining
         // stamina and attackRange because they certainly cannot attack the target if the target
         // is beyond their stamina radius and range

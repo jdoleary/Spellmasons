@@ -68,15 +68,6 @@ const spell: Spell = {
     // },
   },
   events: {
-    onTurnStart: async (unit: Unit.IUnit) => {
-      // Ensure that the unit cannot move when frozen
-      // (even when players' turns are ended they can still act so long
-      // as it is underworld.turn_phase === turn_phase.PlayerTurns, this is because all players act simultaneously
-      // during that phase, so setting stamina to 0
-      // prevents players from moving when they are frozen)
-      // and then returning true also ends their turn.
-      unit.stamina = 0;
-    },
     onTurnEnd: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
       // Decrement how many turns left the unit is frozen
       const modifier = unit.modifiers[freezeCardId];
@@ -93,12 +84,7 @@ const spell: Spell = {
 function add(unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) {
   getOrInitModifier(unit, freezeCardId, { isCurse: true, quantity }, () => {
     unit.radius = config.COLLISION_MESH_RADIUS;
-    // Immediately set stamina to 0 so they can't move
-    unit.stamina = 0;
     // Add event
-    if (!unit.onTurnStartEvents.includes(freezeCardId)) {
-      unit.onTurnStartEvents.push(freezeCardId);
-    }
     if (!unit.onTurnEndEvents.includes(freezeCardId)) {
       unit.onTurnEndEvents.push(freezeCardId);
     }
