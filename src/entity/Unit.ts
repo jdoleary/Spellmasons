@@ -50,6 +50,7 @@ import { healSfx, oneOffHealAnimation } from '../effects/heal';
 import { soulShardOwnerModifierId } from '../modifierSoulShardOwner';
 import { getAllShardBearers } from '../cards/soul_shard';
 import { darkTideId } from '../cards/dark_tide';
+import { GORU_UNIT_ID } from './units/goru';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -356,7 +357,7 @@ export function adjustUnitDifficulty(unit: IUnit, difficulty: number) {
       // ensures scale = 1 at strength = 1
       const strAdj = unit.strength - 1;
       // calculate scale multiplier with diminishing formula
-      // 11 is an arbitrary number that controls the speed at which the scale approaches the max
+      // 6 is an arbitrary number that controls the speed at which the scale approaches the max
       const quantityScaleModifier = 1 + (maxMultiplier - 1) * (strAdj / (strAdj + 6));
       unit.image.sprite.scale.x *= quantityScaleModifier;
       unit.image.sprite.scale.y *= quantityScaleModifier;
@@ -1142,6 +1143,11 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
     document.querySelector('#end-turn-btn')?.classList.remove('highlight');
 
   }
+}
+
+export function isBoss(unitSourceId: string) {
+  const bosses = [bossmasonUnitId, GORU_UNIT_ID]
+  return bosses.includes(unitSourceId);
 }
 
 // Returns whether or not a unit is truly dead

@@ -48,6 +48,7 @@ import debilitate from './debilitate';
 import soul_bind from './soul_bind';
 import soul_shard from './soul_shard';
 import * as protection from './protection';
+import merge from './merge';
 import clone from './clone';
 import capture_soul from './capture_soul';
 import mana_burn from './mana_burn';
@@ -67,6 +68,7 @@ import bone_shrapnel from './bone_shrapnel';
 import shatter from './shatter';
 import meteor from './meteor';
 import split from './split';
+import polymorph from './polymorph';
 import drown from './drown';
 import blood_bath from './blood_bath';
 import dark_tide from './dark_tide';
@@ -271,6 +273,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(slow, overworld);
   registerSpell(blood_curse, overworld);
   registerSpell(split, overworld);
+  registerSpell(polymorph, overworld);
   registerSpell(contaminate, overworld);
 
   // Mana
@@ -283,6 +286,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(resurrect_weak, overworld);
   registerSpell(resurrect_toxic, overworld);
   registerSpell(resurrect, overworld);
+  registerSpell(merge, overworld);
   registerSpell(clone, overworld);
   registerSpell(sacrifice, overworld);
   registerSpell(capture_soul, overworld);
