@@ -21,9 +21,6 @@ export default function registerUndying() {
   registerEvents(undyingModifierId, {
     onTurnStart: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
       if (!unit.alive) {
-        // https://github.com/jdoleary/Spellmasons/pull/641
-        // TODO - Cast cards needs an optional parameter to cast without spending mana/health/etc.
-        // Should apply to poisoner/priest/etc. as well
         const { targetedUnits } = await underworld.castCards({
           casterCardUsage: {},
           casterUnit: unit,
@@ -32,6 +29,7 @@ export default function registerUndying() {
           castLocation: unit,
           prediction: prediction,
           outOfRange: false,
+          castForFree: true,
         });
         for (let unit of targetedUnits) {
           // Add summoning sickeness so they can't act after they are summoned

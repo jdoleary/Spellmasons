@@ -3776,7 +3776,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           test_endCheckPromises();
         }
 
-        if (!effectState.shouldRefundLastSpell) {
+        if (!args.castForFree && !effectState.shouldRefundLastSpell) {
           // Add cooldown
           if (!prediction && effectState.casterPlayer && card.cooldown) {
             Object.assign(effectState.casterPlayer.spellState[card.id] || {}, { cooldown: card.cooldown });
@@ -4423,6 +4423,7 @@ interface CastCardsArgs {
   // (like the color of a radius circle in the "Target Circle" card) to clue the user in to
   // the fact that the spell is out of range but it's showing them what would happen.
   outOfRange?: boolean,
+  castForFree?: boolean,
   magicColor?: number,
   casterPlayer?: Player.IPlayer,
   initialTargetedUnitId?: number,
