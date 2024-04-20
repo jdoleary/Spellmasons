@@ -1156,9 +1156,9 @@ export function isBoss(unitSourceId: string) {
 // to-be-revived enemies are counted in "remaining" units
 // Used for game loop logic
 export function isRemaining(unit: IUnit, underworld: Underworld, prediction: boolean) {
-  return unit.alive
+  return !unit.flaggedForRemoval && (unit.alive
     || (unit.modifiers[undyingModifierId])
-    || (unit.modifiers[soulShardOwnerModifierId] && getAllShardBearers(unit, underworld, prediction).length > 0);
+    || (unit.modifiers[soulShardOwnerModifierId] && getAllShardBearers(unit, underworld, prediction).length > 0));
 }
 
 export function canAct(unit: IUnit): boolean {
