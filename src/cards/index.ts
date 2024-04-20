@@ -91,8 +91,6 @@ import death_wager from './death_wager';
 import sacrifice from './sacrifice';
 import devRecordDelay from './devRecordDelay';
 import devCauseDesync from './devCauseDesync';
-import registerImpendingDoom from '../modifierImpendingDoom';
-import registerSummoningSickness from '../modifierSummoningSickness';
 import arrow from './arrow';
 import arrow2 from './arrow2';
 import arrow3 from './arrow3';
@@ -105,7 +103,16 @@ import phantom_arrow from './phantom_arrow';
 import bolt from './bolt';
 // Not used as a card, for making half of looped enemies immune
 // on first turn
+import registerSummoningSickness from '../modifierSummoningSickness';
+import registerCorpseDecay from '../modifierCorpseDecay';
 import registerImmune, * as immune from './immune';
+import registerImpendingDoom from '../modifierImpendingDoom';
+import registerSoulShardOwner from '../modifierSoulShardOwner';
+import registerUndying from '../modifierUndying';
+import { registerUrnIceExplode } from '../entity/units/urn_ice';
+import { registerUrnPoisonExplode } from '../entity/units/urn_poison';
+import { registerUrnExplosiveExplode } from '../entity/units/urn_explosive';
+import { registerDeathmasonEvents } from '../entity/units/deathmason';
 // import trap from './trap';
 
 import * as config from '../config';
@@ -122,13 +129,7 @@ import floatingText from '../graphics/FloatingText';
 import { Localizable } from '../localization';
 import { distance } from '../jmath/math';
 import { getSpellThumbnailPath } from '../graphics/ui/CardUI';
-import { registerUrnIceExplode } from '../entity/units/urn_ice';
-import { registerUrnPoisonExplode } from '../entity/units/urn_poison';
-import { registerUrnExplosiveExplode } from '../entity/units/urn_explosive';
 import { calculateGameDifficulty } from '../Difficulty';
-import registerCorpseDecay from '../modifierCorpseDecay';
-import { registerDeathmasonEvents } from '../entity/units/deathmason';
-import registerSoulShardOwner from '../modifierSoulShardOwner';
 
 export interface Modifiers {
   subsprite?: Subsprite;
@@ -350,6 +351,7 @@ export function registerCards(overworld: Overworld) {
   registerImmune();
   registerImpendingDoom();
   registerSoulShardOwner();
+  registerUndying();
 
   registerUrnIceExplode();
   registerUrnPoisonExplode();

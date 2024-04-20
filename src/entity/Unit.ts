@@ -51,6 +51,7 @@ import { soulShardOwnerModifierId } from '../modifierSoulShardOwner';
 import { getAllShardBearers } from '../cards/soul_shard';
 import { darkTideId } from '../cards/dark_tide';
 import { GORU_UNIT_ID } from './units/goru';
+import { undyingModifierId } from '../modifierUndying';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -1151,12 +1152,12 @@ export function isBoss(unitSourceId: string) {
 }
 
 // Returns whether or not a unit is truly dead
-// Considers game state and soulshard modifier
-// so that soul shard owners are considered "remaining"
-// since they will be resurrected on their next turn
+// Considers game state and undying effects
+// to-be-revived enemies are counted in "remaining" units
 // Used for game loop logic
 export function isRemaining(unit: IUnit, underworld: Underworld, prediction: boolean) {
   return unit.alive
+    || (unit.modifiers[undyingModifierId])
     || (unit.modifiers[soulShardOwnerModifierId] && getAllShardBearers(unit, underworld, prediction).length > 0);
 }
 
