@@ -3713,11 +3713,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
     }
 
-    if (!effectState.casterUnit.alive) {
-      // Prevent dead players from casting
-      return effectState;
-    }
-
     const castingParticleEmitter = makeRisingParticles(effectState.casterUnit, prediction, hexToString(magicColor || 0xffffff), -1);
 
     // "quantity" is the number of identical cards cast in a row. Rather than casting the card sequentially

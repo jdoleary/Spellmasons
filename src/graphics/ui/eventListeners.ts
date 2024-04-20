@@ -857,6 +857,12 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
           // Cancel Casting
           return
         }
+        if (!selfPlayer.unit.alive) {
+          floatingText({ coords: selfPlayer.unit, text: 'Cannot Cast. Dead.' })
+          playSFXKey('deny');
+          // Cancel Casting
+          return
+        }
         // Clear resMarkers so they don't hang around once the spell is cast
         globalThis.resMarkers = [];
 
