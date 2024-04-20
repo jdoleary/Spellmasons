@@ -52,7 +52,7 @@ const spell: Spell = {
         add,
     },
     events: {
-        onTurnStart: async (unit, prediction, underworld) => {
+        onTurnStart: async (unit, underworld, prediction) => {
             // Heal unit and decremit modifier
             const modifier = unit.modifiers[cardId];
             if (modifier) {

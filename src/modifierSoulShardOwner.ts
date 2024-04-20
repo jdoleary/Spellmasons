@@ -31,7 +31,7 @@ export default function registerSoulShardOwner() {
     }
   });
   registerEvents(soulShardOwnerModifierId, {
-    onTurnStart: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
+    onTurnStart: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       if (!unit.alive) {
         // Resurrect in place of the nearestShardBearer
         const allShardBearers = getAllShardBearers(unit, underworld, prediction);
@@ -69,7 +69,7 @@ export default function registerSoulShardOwner() {
         }
       }
     },
-    onDrawSelected: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
+    onDrawSelected: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       const modifier = unit.modifiers[soulShardOwnerModifierId];
       if (modifier) {
         const shardBearers = getAllShardBearers(unit, underworld, prediction);

@@ -45,7 +45,7 @@ const spell: Spell = {
     add,
   },
   events: {
-    onTurnEnd: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
+    onTurnEnd: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       // Decrement how many turns left the unit is affected by dark tide
       const modifier = unit.modifiers[darkTideId];
       if (modifier) {

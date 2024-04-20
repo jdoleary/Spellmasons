@@ -19,7 +19,7 @@ export default function registerUndying() {
     }
   });
   registerEvents(undyingModifierId, {
-    onTurnStart: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
+    onTurnStart: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       if (!unit.alive) {
         const { targetedUnits } = await underworld.castCards({
           casterCardUsage: {},

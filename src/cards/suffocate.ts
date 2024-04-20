@@ -130,7 +130,7 @@ const spell: Spell = {
     // },
   },
   events: {
-    onTurnEnd: async (unit: IUnit, prediction: boolean, underworld: Underworld) => {
+    onTurnEnd: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
       const modifier = unit.modifiers[suffocateCardId];
       if (!prediction) {
         if (modifier) {

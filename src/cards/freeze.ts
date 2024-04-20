@@ -68,7 +68,7 @@ const spell: Spell = {
     // },
   },
   events: {
-    onTurnEnd: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
+    onTurnEnd: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       // Decrement how many turns left the unit is frozen
       const modifier = unit.modifiers[freezeCardId];
       if (modifier) {

@@ -104,7 +104,7 @@ const spell: Spell = {
         underworld, prediction,
         colors.bloatExplodeStart, colors.bloatExplodeEnd);
     },
-    onDrawSelected: async (unit: IUnit, prediction: boolean, underworld: Underworld) => {
+    onDrawSelected: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
       if (globalThis.selectedUnitGraphics) {
         const radiusBoost = unit.modifiers[id]?.radiusBoost;
         const adjustedRadius = getAdjustedRadius(radiusBoost);

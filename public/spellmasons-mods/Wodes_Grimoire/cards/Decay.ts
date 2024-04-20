@@ -53,7 +53,7 @@ const spell: Spell = {
         add,
     },
     events: {
-        onTurnStart: async (unit, prediction, underworld) => {
+        onTurnStart: async (unit, underworld, prediction) => {
             // Damage unit and increment modifier counter
             const modifier = unit.modifiers[cardId];
             if (modifier && !!Math.pow(modifier.quantity, 2) && !prediction) {

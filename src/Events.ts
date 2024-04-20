@@ -34,17 +34,17 @@ export type onAgro = {
 const onAgroSource: { [name: string]: onAgro } = {};
 
 export type onTurnStart = {
-  (unit: IUnit, prediction: boolean, underworld: Underworld): Promise<void>;
+  (unit: IUnit, underworld: Underworld, prediction: boolean): Promise<void>;
 };
 const onTurnStartSource: { [name: string]: onTurnStart } = {};
 
 export type onTurnEnd = {
-  (unit: IUnit, prediction: boolean, underworld: Underworld): Promise<void>;
+  (unit: IUnit, underworld: Underworld, prediction: boolean): Promise<void>;
 };
 const onTurnEndSource: { [name: string]: onTurnEnd } = {};
 
 export type onDrawSelected = {
-  (unit: IUnit, prediction: boolean, underworld: Underworld): Promise<void>;
+  (unit: IUnit, underworld: Underworld, prediction: boolean): Promise<void>;
 };
 const onDrawSelectedSource: { [name: string]: onDrawSelected } = {};
 

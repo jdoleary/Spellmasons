@@ -1413,7 +1413,7 @@ export async function runTurnStartEvents(unit: IUnit, underworld: Underworld, pr
     async (eventName) => {
       const fn = Events.onTurnStartSource[eventName];
       if (fn) {
-        await fn(unit, prediction, underworld);
+        await fn(unit, underworld, prediction);
       } else {
         console.error('No function associated with turn start event', eventName);
       }
@@ -1426,7 +1426,7 @@ export async function runTurnEndEvents(unit: IUnit, underworld: Underworld, pred
     async (eventName) => {
       const fn = Events.onTurnEndSource[eventName];
       if (fn) {
-        await fn(unit, prediction, underworld);
+        await fn(unit, underworld, prediction);
       } else {
         console.error('No function associated with turn end event', eventName);
       }
@@ -1597,7 +1597,7 @@ export function drawSelectedGraphics(unit: IUnit, prediction: boolean = false, u
     if (drawEvent) {
       const fn = Events.onDrawSelectedSource[drawEvent];
       if (fn) {
-        fn(unit, prediction, underworld);
+        fn(unit, underworld, prediction);
       } else {
         console.error('No function associated with onDrawSelected event', drawEvent);
       }
