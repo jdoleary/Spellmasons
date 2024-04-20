@@ -1,6 +1,8 @@
 import { registerEvents, registerModifiers } from "./cards";
+import { resurrect_id } from "./cards/resurrect";
 import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
+import { summoningSicknessId } from "./modifierSummoningSickness";
 import Underworld from './Underworld';
 
 // A modifier that makes a unit resurrect during its next onTurnStart()
@@ -19,10 +21,22 @@ export default function registerUndying() {
   registerEvents(undyingModifierId, {
     onTurnStart: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
       if (!unit.alive) {
-        if (!prediction) {
-          // Resurrect FX
+        // https://github.com/jdoleary/Spellmasons/pull/641
+        // TODO - Cast cards needs an optional parameter to cast without spending mana/health/etc.
+        // Should apply to poisoner/priest/etc. as well
+        const { targetedUnits } = await underworld.castCards({
+          casterCardUsage: {},
+          casterUnit: unit,
+          casterPositionAtTimeOfCast: unit,
+          cardIds: [resurrect_id],
+          castLocation: unit,
+          prediction: prediction,
+          outOfRange: false,
+        });
+        for (let unit of targetedUnits) {
+          // Add summoning sickeness so they can't act after they are summoned
+          Unit.addModifier(unit, summoningSicknessId, underworld, false);
         }
-        Unit.resurrect(unit, underworld);
 
         const undyingModifier = unit.modifiers[undyingModifierId];
         if (undyingModifier) {
