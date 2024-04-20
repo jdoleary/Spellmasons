@@ -49,6 +49,8 @@ import { freezeCardId } from '../cards/freeze';
 import { healSfx, oneOffHealAnimation } from '../effects/heal';
 import { soulShardOwnerModifierId } from '../modifierSoulShardOwner';
 import { getAllShardBearers } from '../cards/soul_shard';
+import { darkTideId } from '../cards/dark_tide';
+import { GORU_UNIT_ID } from './units/goru';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -355,7 +357,7 @@ export function adjustUnitDifficulty(unit: IUnit, difficulty: number) {
       // ensures scale = 1 at strength = 1
       const strAdj = unit.strength - 1;
       // calculate scale multiplier with diminishing formula
-      // 11 is an arbitrary number that controls the speed at which the scale approaches the max
+      // 6 is an arbitrary number that controls the speed at which the scale approaches the max
       const quantityScaleModifier = 1 + (maxMultiplier - 1) * (strAdj / (strAdj + 6));
       unit.image.sprite.scale.x *= quantityScaleModifier;
       unit.image.sprite.scale.y *= quantityScaleModifier;
@@ -1143,6 +1145,11 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
   }
 }
 
+export function isBoss(unitSourceId: string) {
+  const bosses = [bossmasonUnitId, GORU_UNIT_ID]
+  return bosses.includes(unitSourceId);
+}
+
 // Returns whether or not a unit is truly dead
 // Considers game state and soulshard modifier
 // so that soul shard owners are considered "remaining"
@@ -1158,7 +1165,7 @@ export function canAct(unit: IUnit): boolean {
     return false;
   }
 
-  // TODO - Find cleaner method. Event args?
+  // Frozen and newly summoned units can't act
   if (unit.modifiers[freezeCardId] || unit.modifiers[summoningSicknessId]) {
     return false;
   }
@@ -1172,11 +1179,16 @@ export function canMove(unit: IUnit): boolean {
     // console.log("canMove: false - unit is not alive")
     return false;
   }
+  // Dark Tide is a curse that prevents movement if the unit is in liquid
+  if (unit.modifiers[darkTideId] && unit.inLiquid) {
+    return false;
+  }
   // Do not move if already moved
   if (unit.stamina <= 0) {
     // console.log("canMove: false - unit has already used all their stamina this turn")
     return false;
   }
+  // No reason to move if speed is <= 0
   if (unit.moveSpeed <= 0) {
     return false;
   }
@@ -1350,19 +1362,6 @@ export function inRange(unit: IUnit, target: Vec2): boolean {
 }
 
 export async function startTurnForUnits(units: IUnit[], underworld: Underworld, prediction: boolean) {
-  // Trigger start turn events
-  const turnStartPromises = [];
-  for (let unit of units) {
-    turnStartPromises.push(runTurnStartEvents(unit, underworld, prediction))
-  }
-  await raceTimeout(5000, 'Turn Start Events did not resolve', Promise.all(turnStartPromises));
-
-  // Regenerate stamina to max
-  for (let unit of units.filter(u => u.alive)) {
-    if (unit.stamina < unit.staminaMax) {
-      unit.stamina = unit.staminaMax;
-    }
-  }
   // Add mana to Player units
   for (let unit of units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
     // Restore player to max mana at start of turn
@@ -1370,27 +1369,42 @@ export async function startTurnForUnits(units: IUnit[], underworld: Underworld, 
     // (due to other influences like mana potions, spells, perks, etc);
     unit.mana = Math.max(unit.manaMax, unit.mana);
   }
+
+  // Regenerate stamina to max
+  for (let unit of units.filter(u => u.alive)) {
+    if (unit.stamina < unit.staminaMax) {
+      unit.stamina = unit.staminaMax;
+    }
+  }
+
+  // Trigger start turn events
+  const turnStartPromises = [];
+  for (let unit of units) {
+    turnStartPromises.push(runTurnStartEvents(unit, underworld, prediction))
+  }
+  await raceTimeout(5000, 'Turn Start Events did not resolve', Promise.all(turnStartPromises));
 }
 
 export async function endTurnForUnits(units: IUnit[], underworld: Underworld, prediction: boolean) {
-  // Trigger end turn events
-  const turnEndPromises = [];
-  for (let unit of units) {
-    turnEndPromises.push(runTurnEndEvents(unit, underworld, prediction))
-  }
-  await raceTimeout(5000, 'Turn End Events did not resolve', Promise.all(turnEndPromises));
-
-  // At the end of their turn, deal damage if still in liquid
-  for (let unit of units.filter(u => u.inLiquid && u.alive)) {
-    doLiquidEffect(underworld, unit, false);
-    floatingText({ coords: unit, text: 'Liquid damage', style: { fill: 'red' } });
-  }
   // Add mana to AI units
   for (let unit of units.filter(u => u.unitType == UnitType.AI && u.alive)) {
     unit.mana += unit.manaPerTurn;
     // Cap manaPerTurn at manaMax
     unit.mana = Math.min(unit.mana, unit.manaMax);
   }
+
+  // At the end of their turn, deal damage if still in liquid
+  for (let unit of units.filter(u => u.inLiquid && u.alive)) {
+    doLiquidEffect(underworld, unit, false);
+    floatingText({ coords: unit, text: 'Liquid damage', style: { fill: 'red' } });
+  }
+
+  // Trigger end turn events
+  const turnEndPromises = [];
+  for (let unit of units) {
+    turnEndPromises.push(runTurnEndEvents(unit, underworld, prediction))
+  }
+  await raceTimeout(5000, 'Turn End Events did not resolve', Promise.all(turnEndPromises));
 }
 
 export async function runTurnStartEvents(unit: IUnit, underworld: Underworld, prediction: boolean) {

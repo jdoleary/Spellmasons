@@ -38,6 +38,7 @@ export const STAMINA_POTION = 'Stamina Potion';
 export const CURSED_MANA_POTION = 'Cursed Mana Potion';
 export const RECALL_POINT = 'Recall Point';
 const RED_PORTAL_DAMAGE = 30;
+type IPickupDescription = (pickup: IPickup) => Localizable;
 type IPickupEffect = ({ unit, player, pickup, prediction }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld, prediction: boolean }) => void;
 type IPickupInit = ({ pickup, underworld }: { pickup: IPickup, underworld: Underworld }) => void;
 type IPickupWillTrigger = ({ unit, player, pickup }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld }) => boolean;
@@ -48,7 +49,6 @@ export type IPickup = HasSpace & {
   type: 'pickup';
   id: number;
   name: string;
-  description: Localizable;
   imagePath?: string;
   image?: Image.IImageAnimated;
   // if this IPickup is a prediction copy, real is a reference to the real pickup that it is a copy of
@@ -58,10 +58,13 @@ export type IPickup = HasSpace & {
   // Pickups optionally have a "time limit" and will disappear after this many turns
   turnsLeftToGrab?: number;
   text?: PIXI.Text;
+  // Boosts the effect of the pickup, default 1
+  power: number;
   // effect is ONLY to be called within triggerPickup
   // returns true if the pickup did in fact trigger - this is useful
   // for preventing one use health potions from triggering if the unit
   // already has max health
+  description: IPickupDescription;
   effect: IPickupEffect;
   // Determines if the pickup will trigger for a given unit
   willTrigger: IPickupWillTrigger;
@@ -80,7 +83,6 @@ export interface IPickupSource {
   // If a pickup belongs to a mod, it's modName will be automatically assigned
   // This is used to dictate wether or not the modded pickup is used
   modName?: string;
-  description: Localizable;
   imagePath?: string;
   animationSpeed?: number;
   playerOnly?: boolean;
@@ -88,6 +90,7 @@ export interface IPickupSource {
   scale: number;
   probability: number;
   init?: IPickupInit;
+  description: IPickupDescription;
   effect: IPickupEffect;
   willTrigger: IPickupWillTrigger;
 }
@@ -150,12 +153,13 @@ export function create({ pos, pickupSource, idOverride, logSource }:
     name,
     immovable: true,
     inLiquid: false,
-    description,
     imagePath,
     // Pickups are stored in containerUnits so that they
     // will be automatically z-indexed
     image: (!imagePath || !containerUnits || prediction) ? undefined : Image.create({ x, y }, imagePath, containerUnits, { animationSpeed, loop: true }),
     playerOnly,
+    power: 1,
+    description,
     effect,
     willTrigger,
     flaggedForRemoval: false,
@@ -477,7 +481,7 @@ export const pickups: IPickupSource[] = [
     name: PICKUP_SPIKES_NAME,
     probability: 40,
     scale: 1,
-    description: ['Deals 🍞 to any unit that touches it', spike_damage.toString()],
+    description: (pickup) => ['Deals 🍞 to any unit that touches it', (spike_damage * pickup.power).toString()],
     willTrigger: ({ unit, player, pickup, underworld }) => {
       return !!unit;
     },
@@ -518,7 +522,7 @@ export const pickups: IPickupSource[] = [
         }
         takeDamage({
           unit: unit,
-          amount: spike_damage,
+          amount: spike_damage * pickup.power,
           fromVec2: unit,
         }, underworld, prediction);
       }
@@ -531,7 +535,7 @@ export const pickups: IPickupSource[] = [
     name: RED_PORTAL,
     probability: 0,
     scale: 1,
-    description: ['red portal description', bossmasonUnitId, RED_PORTAL_DAMAGE.toString()],
+    description: (pickup) => ['red portal description', bossmasonUnitId, (RED_PORTAL_DAMAGE * pickup.power).toString()],
     willTrigger: ({ unit, player, pickup, underworld }) => {
       return !!player;
     },
@@ -560,7 +564,7 @@ export const pickups: IPickupSource[] = [
         }
         takeDamage({
           unit: player.unit,
-          amount: RED_PORTAL_DAMAGE,
+          amount: RED_PORTAL_DAMAGE * pickup.power,
         }, underworld, false);
       }
     },
@@ -572,7 +576,7 @@ export const pickups: IPickupSource[] = [
     name: BLUE_PORTAL,
     probability: 0,
     scale: 1,
-    description: ['blue portal description', (RED_PORTAL_DAMAGE).toString()],
+    description: (pickup) => ['blue portal description', (RED_PORTAL_DAMAGE * pickup.power).toString()],
     willTrigger: ({ unit, player, pickup, underworld }) => {
       return !!player;
     },
@@ -599,7 +603,7 @@ export const pickups: IPickupSource[] = [
         }
         takeDamage({
           unit: player.unit,
-          amount: -RED_PORTAL_DAMAGE,
+          amount: -RED_PORTAL_DAMAGE * pickup.power,
         }, underworld, false);
       }
     },
@@ -611,7 +615,7 @@ export const pickups: IPickupSource[] = [
     name: PORTAL_PURPLE_NAME,
     probability: 0,
     scale: 1,
-    description: 'explain portal',
+    description: (pickup) => 'explain portal',
     willTrigger: ({ unit, player, pickup, underworld }) => {
       return !!player;
     },
@@ -632,36 +636,20 @@ export const pickups: IPickupSource[] = [
       }
     },
   },
-  // {
-  //   imagePath: PICKUP_IMAGE_PATH,
-  //   name: CARDS_PICKUP_NAME,
-  //   description: 'Pickup a spell scroll to get more spells',
-  //   probability: 0,
-  //   scale: 0.5,
-  //   playerOnly: true,
-  //   willTrigger: ({ unit, player, pickup, underworld }) => {
-  //     return !!player;
-  //   },
-  //   effect: ({ unit, player, underworld }) => {
-  //     // Give EVERY player an upgrade when any one player picks up a scroll
-  //     underworld.players.forEach(p => givePlayerUpgrade(p, underworld));
-  //     playSFXKey('levelUp');
-  //   },
-  // },
   {
     imagePath: 'pickups/staminaPotion',
     animationSpeed: 0.2,
     name: STAMINA_POTION,
-    description: ['Restores stamina to 🍞', '100%'],
+    description: (pickup) => ['Restores stamina to 🍞', (100 * pickup.power).toString().concat("%")],
     probability: 40,
     scale: 1.0,
     playerOnly: true,
     willTrigger: ({ unit, player, pickup, underworld }) => {
       return !!player;
     },
-    effect: ({ unit, player, underworld, prediction }) => {
+    effect: ({ unit, pickup, player, underworld, prediction }) => {
       if (unit) {
-        unit.stamina += unit.staminaMax;
+        unit.stamina += unit.staminaMax * pickup.power;
         if (!prediction) {
           playSFXKey('potionPickupMana');
         }
@@ -678,19 +666,19 @@ export const pickups: IPickupSource[] = [
     imagePath: 'pickups/manaPotion',
     animationSpeed: 0.2,
     name: MANA_POTION,
-    description: [`mana potion description`, manaPotionRestoreAmount.toString()],
+    description: (pickup) => [`mana potion description`, (manaPotionRestoreAmount * pickup.power).toString()],
     probability: 80,
     scale: 1.0,
     playerOnly: true,
     willTrigger: ({ unit, player, pickup, underworld }) => {
       return !!player;
     },
-    effect: ({ unit, player, underworld, prediction }) => {
+    effect: ({ unit, pickup, player, underworld, prediction }) => {
       if (unit) {
         if (!prediction) {
           playSFXKey('potionPickupMana');
         }
-        healManaUnit(unit, manaPotionRestoreAmount, undefined, underworld, prediction);
+        healManaUnit(unit, manaPotionRestoreAmount * pickup.power, undefined, underworld, prediction);
       }
     },
   },
@@ -698,7 +686,7 @@ export const pickups: IPickupSource[] = [
     imagePath: 'pickups/manaPotion',
     animationSpeed: 0.2,
     name: CURSED_MANA_POTION,
-    description: ['curse_mana_potion_copy', '10%'],
+    description: (pickup) => ['curse_mana_potion_copy', (cursedManaPotionRemovalProportion * pickup.power).toString().concat("%")],
     probability: 1,
     scale: 1.0,
     playerOnly: true,
@@ -721,10 +709,10 @@ export const pickups: IPickupSource[] = [
     willTrigger: ({ unit, player, pickup, underworld }) => {
       return !!player;
     },
-    effect: ({ unit, player, underworld, prediction }) => {
+    effect: ({ unit, pickup, player, underworld, prediction }) => {
       if (unit) {
         const previousMana = unit.manaMax;
-        unit.manaMax *= (1.0 - cursedManaPotionRemovalProportion);
+        unit.manaMax *= (1.0 - cursedManaPotionRemovalProportion * pickup.power);
         unit.manaMax = Math.floor(unit.manaMax);
         unit.mana = Math.min(unit.mana, unit.manaMax);
         if (!prediction && !globalThis.headless) {
@@ -751,7 +739,7 @@ export const pickups: IPickupSource[] = [
     probability: 80,
     scale: 1.0,
     playerOnly: true,
-    description: ['health potion description', healthPotionRestoreAmount.toString()],
+    description: pickup => ['health potion description', (healthPotionRestoreAmount * pickup.power).toString()],
     willTrigger: ({ unit, player, pickup, underworld }) => {
       // Only trigger the health potion if the player will be affected by the health potion
       // Normally that's when they have less than full health, but there's an exception where
@@ -763,7 +751,7 @@ export const pickups: IPickupSource[] = [
         if (!prediction) {
           playSFXKey('potionPickupHealth');
         }
-        healUnit(unit, healthPotionRestoreAmount, undefined, underworld, prediction);
+        healUnit(unit, healthPotionRestoreAmount * pickup.power, undefined, underworld, prediction);
       }
     },
   },
@@ -774,7 +762,7 @@ export const pickups: IPickupSource[] = [
     name: RECALL_POINT,
     probability: 0,
     scale: 1,
-    description: ['recall point description'],
+    description: pickup => ['recall point description'],
     willTrigger: ({ unit, player, pickup, underworld }) => {
       return false;
     },
@@ -783,6 +771,25 @@ export const pickups: IPickupSource[] = [
     },
   },
 ];
+export function setPower(pickup: IPickup, newPower: number) {
+  if (pickup.image) {
+    const baseScale = pickup.image.sprite.scale.y / getScaleFromPower(pickup.power);
+    const newScale = baseScale * getScaleFromPower(newPower);
+
+    pickup.image.sprite.scale.x = newScale;
+    pickup.image.sprite.scale.y = newScale;
+  }
+  pickup.power = newPower;
+}
+function getScaleFromPower(power: number): number {
+  // this final scale of the pickup will always be less than the max multiplier
+  const maxMultiplier = 4;
+  // adjust power to ensure scale = 1 at power = 1
+  power -= 1;
+  // calculate scale multiplier with diminishing formula
+  // 6 is an arbitrary number that controls the speed at which the scale approaches the max
+  return 1 + (maxMultiplier - 1) * (power / (power + 6))
+}
 export function givePlayerUpgrade(p: Player.IPlayer, underworld: Underworld) {
   elEndTurnBtn?.classList.toggle('upgrade', true);
   skyBeam(p.unit);

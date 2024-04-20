@@ -335,18 +335,17 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
       // Don't draw healthbars for Doodads
       return;
     }
-    const predictionUnit = !underworld.unitsPrediction ? undefined : underworld.unitsPrediction[unitIndex];
+    const predictionUnit = u.predictionCopy;
     // Draw unit overlay graphics
     //--
     // Prevent drawing unit overlay graphics when a unit is in the portal
-    if (u.x !== null && u.y !== null && u.alive && !globalThis.isHUDHidden && globalThis.unitOverlayGraphics) {
-
+    if (u.x !== null && u.y !== null && u.alive && predictionUnit && !predictionUnit.flaggedForRemoval && !globalThis.isHUDHidden && globalThis.unitOverlayGraphics) {
       // Draw base health bar
       const healthBarColor = u.faction == Faction.ALLY ? colors.healthAllyGreen : colors.healthRed;
       const healthBarHurtColor = u.faction == Faction.ALLY ? colors.healthAllyDarkGreen : colors.healthDarkRed;
       const healthBarHealColor = u.faction == Faction.ALLY ? colors.healthAllyBrightGreen : colors.healthBrightRed;
 
-      const healthBarMax = u.healthMax || 1;
+      const healthBarMax = predictionUnit.healthMax || 1;
       //background
       let healthBarFill = getFillRect(u, 0, healthBarMax, 0, healthBarMax, zoom);
       globalThis.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
@@ -420,7 +419,7 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
       }
 
       // Draw base mana bar
-      const manaBarMax = u.manaMax || 1;
+      const manaBarMax = predictionUnit.manaMax || 1;
 
       //background for mana using units
       let manaBarProps = getFillRect(u, 0, manaBarMax, 0, manaBarMax, zoom);
@@ -904,7 +903,7 @@ ${playerSpecificInfo}
         text += `\
 <h1>${i18n(globalThis.selectedPickup.name)}</h1>
 <hr/>
-${i18n(globalThis.selectedPickup.description)}
+${i18n(globalThis.selectedPickup.description(globalThis.selectedPickup))}
 <hr/>
       `;
       }
