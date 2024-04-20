@@ -7,6 +7,7 @@ import Underworld from '../../Underworld';
 import { bloodLobber } from '../../graphics/ui/colors';
 import * as config from '../../config';
 import * as Image from '../../graphics/Image';
+import { undyingModifierId } from '../../modifierUndying';
 
 export const GORU_UNIT_ID = 'Goru';
 const unit: UnitSource = {
@@ -20,10 +21,10 @@ const unit: UnitSource = {
     damage: 20,
     attackRange: 400,
     healthMax: 60,
-    mana: 30,
-    manaMax: 30,
-    manaPerTurn: 10,
-    manaCostToCast: 5,
+    mana: 120,
+    manaMax: 120,
+    manaPerTurn: 60,
+    manaCostToCast: 60,
     bloodColor: bloodLobber,
   },
   spawnParams: {
@@ -44,6 +45,11 @@ const unit: UnitSource = {
     death: 'goruDeath'
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
+    // TODO - Bug: Undying 2 can be re-added by splitting a goru with no undying modifier
+    // Using originalLife prevents this, but also prevents summoned Goru's from getting undying.
+    if (!unit.modifiers[undyingModifierId]) {
+      Unit.addModifier(unit, undyingModifierId, underworld, false, 2);
+    }
   },
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     const attackTarget = attackTargets && attackTargets[0];
@@ -68,7 +74,6 @@ const unit: UnitSource = {
             Image.addOneOffAnimation(attackTarget, 'projectile/lobberProjectileHit');
           }
         });
-
       });
     } else {
       // Movement:
