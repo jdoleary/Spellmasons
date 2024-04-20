@@ -16,17 +16,17 @@ docker build . -f Dockerfile.bun -t "$BETA_IMAGE_PATH:latest" -t "$BETA_IMAGE_PA
 docker push "$BETA_IMAGE_PATH:latest"
 docker push "$BETA_IMAGE_PATH:$PACKAGE_VERSION"
 
-# SEASHELL_IMAGE_PATH=registry.digitalocean.com/jdoleary-containers/smms
-# echo "Package Version:$PACKAGE_VERSION"
-# docker build . -f Dockerfile.bun -t "$SEASHELL_IMAGE_PATH:latest" -t "$SEASHELL_IMAGE_PATH:$PACKAGE_VERSION"
-# docker push "$SEASHELL_IMAGE_PATH:latest"
-# docker push "$SEASHELL_IMAGE_PATH:$PACKAGE_VERSION"
+SEASHELL_IMAGE_PATH=registry.digitalocean.com/jdoleary-containers/smms
+echo "Package Version:$PACKAGE_VERSION"
+docker build . -f Dockerfile.bun -t "$SEASHELL_IMAGE_PATH:latest" -t "$SEASHELL_IMAGE_PATH:$PACKAGE_VERSION"
+docker push "$SEASHELL_IMAGE_PATH:latest"
+docker push "$SEASHELL_IMAGE_PATH:$PACKAGE_VERSION"
 
-# PUBLIC_IMAGE_PATH=jordanoleary/spellmasons-server
-# # Now using @websocketpie/server-bun
-# docker build . -f Dockerfile.bun -t "$PUBLIC_IMAGE_PATH:latest" -t "$PUBLIC_IMAGE_PATH:$PACKAGE_VERSION"
-# docker push "$PUBLIC_IMAGE_PATH:$PACKAGE_VERSION"
-# docker push "$PUBLIC_IMAGE_PATH:latest"
+PUBLIC_IMAGE_PATH=jordanoleary/spellmasons-server
+# Now using @websocketpie/server-bun
+docker build . -f Dockerfile.bun -t "$PUBLIC_IMAGE_PATH:latest" -t "$PUBLIC_IMAGE_PATH:$PACKAGE_VERSION"
+docker push "$PUBLIC_IMAGE_PATH:$PACKAGE_VERSION"
+docker push "$PUBLIC_IMAGE_PATH:latest"
 
 echo "Pushed image to Digital Ocean" 
 echo "Don't Forget to manually update any apps that are using the hub.docker.com image such as the Walrus server"
