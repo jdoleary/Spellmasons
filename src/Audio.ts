@@ -165,7 +165,16 @@ export const sfx: { [key: string]: string[] } = {
   yourTurn: ['./sound/sfx/your-turn.mp3'],
   deathmasonReveal: ['./sound/sfx/deathmason_reveal.wav'],
   goruReveal: ['./sound/sfx/goru_reveal.wav'],
-  oof: ['./sound/sfx/oof.wav']
+  oof: ['./sound/sfx/oof.wav'],
+  alchemize: ['./sound/sfx/alchemize-001.mp3', './sound/sfx/alchemize-002.mp3'],
+  goruAttack: ['./sound/sfx/goruAttack-001.mp3', './sound/sfx/goruAttack-002.mp3', './sound/sfx/goruAttack-003.mp3'],
+  goruDeath: ['./sound/sfx/goruDeath-001.mp3', './sound/sfx/goruDeath-002.mp3'],
+  goruHurt: ['./sound/sfx/goruHurt-001.mp3', './sound/sfx/goruHurt-002.mp3'],
+  meteorExplode: ['./sound/sfx/meteor_explode-001.mp3', './sound/sfx/meteor_explode-002.mp3', './sound/sfx/meteor_explode-003.mp3', './sound/sfx/meteor_explode-004.mp3', './sound/sfx/meteor_explode-005.mp3'],
+  meteorFall: ['./sound/sfx/meteor_fall-001.mp3', './sound/sfx/meteor_fall-002.mp3', './sound/sfx/meteor_fall-003.mp3', './sound/sfx/meteor_fall-004.mp3', './sound/sfx/meteor_fall-005.mp3'],
+  shatter: ['./sound/sfx/shatter-001.mp3', './sound/sfx/shatter-002.mp3', './sound/sfx/shatter-003.mp3'],
+  stomp: ['./sound/sfx/stomp-001.mp3', './sound/sfx/stomp-002.mp3', './sound/sfx/stomp-003.mp3'],
+  targetCursed: ['./sound/sfx/targetCursed-001.mp3', './sound/sfx/targetCursed-002.mp3', './sound/sfx/targetCursed-003.mp3'],
 };
 const music = [
   // config.IS_ANNIVERSARY_UPDATE_OUT
@@ -292,6 +301,32 @@ export function playSFXKey(key?: string) {
     console.error('Missing sfx key', key);
   }
 }
+export function testAllSFXKey(key?: string) {
+  if (globalThis.headless) {
+    return;
+  }
+  if (!key) {
+    return
+  }
+  const paths = sfx[key];
+  if (paths) {
+    let timeout = 0;
+    for (let path of paths) {
+      if (path) {
+        setTimeout(() => {
+          console.log('sfx:', path);
+          playSFX(path);
+        }, timeout)
+        timeout += 1000;
+      } else {
+        console.error('Error choosing random sfx from ', key);
+      }
+    }
+  } else {
+    console.error('Missing sfx key', key);
+  }
+}
+globalThis.testAllSFXKey = testAllSFXKey;
 const lastPlayed: { [key: string]: number } = {};
 export function playSFX(path?: string) {
   if (globalThis.headless) {

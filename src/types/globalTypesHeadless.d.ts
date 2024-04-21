@@ -213,6 +213,7 @@ declare global {
   var playNextSong: undefined | (() => Promise<void> | undefined);
   var playSFX: ((path?: string) => void | undefined);
   var playSFXKey: ((key: string) => void | undefined);
+  var testAllSFXKey: ((key: string) => void | undefined);
   var sfx: { [key: string]: string[] } | undefined;
   // Returns pie.isConnected()
   var isConnected: undefined | (() => boolean);
