@@ -136,7 +136,7 @@ export async function getNextConnectingEntities(
 
   potentialTargets = potentialTargets.filter(x => x != source);
 
-  if (prediction) {
+  if (prediction && !globalThis.isHUDHidden) {
     drawUICircleFillPrediction(source, (baseRadius * inLiquidRadiusMultiplier) - config.COLLISION_MESH_RADIUS / 2, colors.trueWhite, i18n("Connect Area"));
   }
 
