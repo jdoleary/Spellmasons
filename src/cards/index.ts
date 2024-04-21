@@ -113,6 +113,7 @@ import { registerUrnIceExplode } from '../entity/units/urn_ice';
 import { registerUrnPoisonExplode } from '../entity/units/urn_poison';
 import { registerUrnExplosiveExplode } from '../entity/units/urn_explosive';
 import { registerDeathmasonEvents } from '../entity/units/deathmason';
+import { registerGoruEvents } from '../entity/units/goru';
 // import trap from './trap';
 
 import * as config from '../config';
@@ -357,6 +358,7 @@ export function registerCards(overworld: Overworld) {
   registerUrnPoisonExplode();
   registerUrnExplosiveExplode();
   registerDeathmasonEvents();
+  registerGoruEvents();
 }
 
 // This is necessary because unit stats change with difficulty.
