@@ -29,7 +29,7 @@ const unit: UnitSource = {
   unitProps: {
     damage: 20,
     attackRange: 400,
-    healthMax: 60,
+    healthMax: 400,
     staminaMax: 200,
     mana: 120,
     manaMax: 120,
@@ -114,7 +114,7 @@ const unit: UnitSource = {
         || Unit.closestInListOfUnits(unit, Unit.livingUnitsInDifferentFaction(unit, underworld.units));
       console.log(nearestEnemy);
       // Curse / Contaminate the nearest living enemy
-      if (nearestEnemy) {
+      if (nearestEnemy && math.distance(unit, nearestEnemy) < unit.attackRange) {
         Unit.orient(unit, nearestEnemy);
         unit.mana -= unit.manaCostToCast;
         await Unit.playComboAnimation(unit, unit.animations.attack, () => {
@@ -190,6 +190,7 @@ export function registerGoruEvents() {
 
       // https://github.com/jdoleary/Spellmasons/pull/641
       // TODO - Should this aura be handled in the action instead, so it plays with the first combo animation?
+      // BUG: Keeps firing even when unit is dead dead. Note when fixing: Consider undying (this should go in action)
 
       const livingUnits = underworld.getUnitsWithinDistanceOfTarget(unit, goruAuraRadius, prediction)
         .filter(u => !u.flaggedForRemoval);
