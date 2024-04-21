@@ -2,7 +2,7 @@ import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import { Spell, refundLastSpell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
-import { CURSED_MANA_POTION, HEALTH_POTION, IPickup, MANA_POTION, STAMINA_POTION, removePickup } from '../entity/Pickup';
+import { HEALTH_POTION, IPickup, MANA_POTION, STAMINA_POTION, removePickup } from '../entity/Pickup';
 import * as Pickup from '../entity/Pickup';
 import { makeAlchemizeParticles } from '../graphics/ParticleCollection';
 
@@ -49,7 +49,7 @@ const spell: Spell = {
 function getNextPotion(potion: IPickup, quantity: number): string | undefined {
   // Deterministically cycle to the next pickup,
   // moving one index forward for each quantity
-  const pickups = [STAMINA_POTION, HEALTH_POTION, MANA_POTION, CURSED_MANA_POTION];
+  const pickups = [STAMINA_POTION, HEALTH_POTION, MANA_POTION];
 
   let index = pickups.findIndex(p => p == potion.name);
   if (index != -1) {

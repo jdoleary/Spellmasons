@@ -32,22 +32,6 @@ const spell: Spell = {
           apply(unit, underworld)
         }
       }
-      if (state.targetedPickups.length) {
-        doRefund = false;
-        state.targetedPickups.filter(p => p.name === Pickup.CURSED_MANA_POTION).forEach(cursedManaPotion => {
-          const manaPotionSource = Pickup.pickups.find(p => p.name == Pickup.MANA_POTION);
-          if (manaPotionSource) {
-            Pickup.create({
-              pos: cursedManaPotion,
-              pickupSource: manaPotionSource,
-            }, underworld, prediction);
-          } else {
-            console.error('Could not find manaPotionSource')
-          }
-          Pickup.removePickup(cursedManaPotion, underworld, prediction);
-
-        })
-      }
       if (doRefund) {
         refundLastSpell(state, prediction, 'No valid targets. Cost refunded.')
       }

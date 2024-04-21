@@ -12,7 +12,7 @@ import { containerUnits } from './PixiUtils';
 import { IUnit } from '../entity/Unit';
 import Underworld from '../Underworld';
 import { COLLISION_MESH_RADIUS } from '../config';
-import { CURSED_MANA_POTION, HEALTH_POTION, IPickup, MANA_POTION, STAMINA_POTION } from '../entity/Pickup';
+import { HEALTH_POTION, IPickup, MANA_POTION, STAMINA_POTION } from '../entity/Pickup';
 export function makeAncientParticles(position: Vec2, prediction: boolean) {
   if (prediction || globalThis.headless) {
     // Don't show if just a prediction
@@ -236,7 +236,6 @@ export function makeAlchemizeParticles(potion: IPickup, prediction: boolean, res
     [MANA_POTION]: colors.manaBrightBlue,
     [HEALTH_POTION]: colors.healthRed,
     [STAMINA_POTION]: colors.stamina,
-    [CURSED_MANA_POTION]: colors.manaDarkBlue,
   }
   const color = colors.convertToHashColor(colorMap[potion.name as keyof typeof colorMap] || 0xffffff);
   const particleConfig =

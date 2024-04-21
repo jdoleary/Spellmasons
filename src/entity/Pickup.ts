@@ -35,7 +35,6 @@ export const BLUE_PORTAL = 'Blue Portal';
 export const HEALTH_POTION = 'Health Potion';
 export const MANA_POTION = 'Mana Potion';
 export const STAMINA_POTION = 'Stamina Potion';
-export const CURSED_MANA_POTION = 'Cursed Mana Potion';
 export const RECALL_POINT = 'Recall Point';
 const RED_PORTAL_DAMAGE = 30;
 type IPickupDescription = (pickup: IPickup) => Localizable;
@@ -179,8 +178,6 @@ export function create({ pos, pickupSource, idOverride, logSource }:
     // however if that changes in the future this should be refactored so
     // that there isn't a special case inside of Pickup.create
     assignEmitter(self, BLUE_PORTAL_JID, prediction, underworld);
-  } else if (name == CURSED_MANA_POTION) {
-    assignEmitter(self, CURSED_MANA_POTION, prediction, underworld);
   }
 
   if (turnsLeftToGrab) {
@@ -246,8 +243,6 @@ function assignEmitter(pickup: IPickup, emitterId: string, prediction: boolean, 
         pickup.image.sprite.tint = pickup.image.sprite.keepTint;
       }
     }
-  } else if (emitterId == CURSED_MANA_POTION) {
-    pickup.emitter = makeCursedEmitter(pickup, prediction);
   } else {
     console.error('Attempting to assignEmitter with unkown id:', emitterId);
   }
@@ -679,56 +674,6 @@ export const pickups: IPickupSource[] = [
           playSFXKey('potionPickupMana');
         }
         healManaUnit(unit, manaPotionRestoreAmount * pickup.power, undefined, underworld, prediction);
-      }
-    },
-  },
-  {
-    imagePath: 'pickups/manaPotion',
-    animationSpeed: 0.2,
-    name: CURSED_MANA_POTION,
-    description: (pickup) => ['curse_mana_potion_copy', (cursedManaPotionRemovalProportion * pickup.power).toString().concat("%")],
-    probability: 1,
-    scale: 1.0,
-    playerOnly: true,
-    init: ({ pickup, underworld }) => {
-      if (pickup.image) {
-        pickup.image.sprite.filters = [
-          new MultiColorReplaceFilter(
-            [
-              [0xa7cfff, 0xa69feb],
-              [0x819eff, 0x6458dc],
-              [0x3e6bff, 0x3024ac],
-              [0x184dff, 0x221a7b],
-            ],
-            0.15
-          )
-        ]
-      }
-
-    },
-    willTrigger: ({ unit, player, pickup, underworld }) => {
-      return !!player;
-    },
-    effect: ({ unit, pickup, player, underworld, prediction }) => {
-      if (unit) {
-        const previousMana = unit.manaMax;
-        unit.manaMax *= (1.0 - cursedManaPotionRemovalProportion * pickup.power);
-        unit.manaMax = Math.floor(unit.manaMax);
-        unit.mana = Math.min(unit.mana, unit.manaMax);
-        if (!prediction && !globalThis.headless) {
-          playSFXKey('unitDamage');
-          // Animate
-          if (unit.image) {
-            playAnimation(unit, unit.animations.hit, { loop: false, animationSpeed: 0.2 });
-            // Changing the player's blood color is a quick hack to make the blood particle splatter be blue
-            // like the mana lost
-            const tempBlood = unit.bloodColor;
-            unit.bloodColor = manaDarkBlue;
-            startBloodParticleSplatter(underworld, unit, unit);
-            unit.bloodColor = tempBlood;
-            floatingText({ coords: unit, text: `- ${previousMana - unit.manaMax} ${i18n('mana')}` });
-          }
-        }
       }
     },
   },
