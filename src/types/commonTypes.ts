@@ -13,7 +13,8 @@ export enum UnitSubType {
   RANGED_RADIUS,
   SUPPORT_CLASS,
   SPECIAL_LOS,
-  DOODAD
+  DOODAD,
+  GORU_BOSS,
 }
 
 export enum Faction {

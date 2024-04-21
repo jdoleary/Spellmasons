@@ -160,7 +160,7 @@ export default class Underworld {
   RNGState?: SeedrandomState;
   turn_phase: turn_phase = turn_phase.Stalled;
   // The order in which units will take their turn
-  subTypesTurnOrder: UnitSubType[][] = [[UnitSubType.RANGED_LOS, UnitSubType.RANGED_RADIUS], [UnitSubType.SUPPORT_CLASS], [UnitSubType.MELEE], [UnitSubType.SPECIAL_LOS], [UnitSubType.DOODAD]];
+  subTypesTurnOrder: UnitSubType[][] = [[UnitSubType.GORU_BOSS], [UnitSubType.RANGED_LOS, UnitSubType.RANGED_RADIUS], [UnitSubType.SUPPORT_CLASS], [UnitSubType.MELEE], [UnitSubType.SPECIAL_LOS], [UnitSubType.DOODAD]];
   // All subtypes currently taking their turn
   subTypesCurrentTurn?: UnitSubType[];
   // An id incrementor to make sure no 2 units share the same id

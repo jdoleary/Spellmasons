@@ -1551,7 +1551,7 @@ const subTypeAttentionMarkerMapping = {
   [UnitSubType.SUPPORT_CLASS]: 'badgeMagic.png',
   [UnitSubType.SPECIAL_LOS]: 'badgeMagic.png',
   [UnitSubType.DOODAD]: 'badgeMagic.png',
-
+  [UnitSubType.GORU_BOSS]: 'badgeMagic.png',
 }
 export function subTypeToAttentionMarkerImage(unit: IUnit): string {
   if (unit.unitSourceId == ARCHER_ID || unit.unitSourceId == BLOOD_ARCHER_ID) {
