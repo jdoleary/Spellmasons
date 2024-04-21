@@ -478,7 +478,7 @@
         "recall": "Recall",
         "spell_recall": "Create a mark on the ground. If the mark already exists, you teleport to that mark.",
         "meteor": "Meteor",
-        "spell_meteor": "Summon a meteor from the sky that deals splash damage.",
+        "spell_meteor": "Summon a meteor from the sky that deals 🍞 splash damage.",
         "execute": "Execute",
         "spell_execute": "Instantly kill units below 🍞 health if you are within melee range.",
         "empower": "Empower",
@@ -490,7 +490,14 @@
         "polymorph": "Polymorph",
         "spell_plymorph": "Transform a targeted unit into another unit.  There is a higher probability that it will be transformed into a unit near its power level than one further from its power level.",
         "merge": "Merge",
-        "spell_merge": "Combine targeted units of the same type to form a single, stronger unit."
+        "spell_merge": "Combine targeted units of the same type to form a single, stronger unit.",
+        "spell_dark_tide": "Prevent SUBMERGED targets from moving for 1 turn",
+        "spell_blood_bath": "Deal 🍞 damage to all SUBMERGED units (even if they are not targeted)",
+        "spell_polymorph": "Change the target into a different entity of the same kind.",
+        "timemason": "Timemason",
+        "far gazer": "Far Gazer",
+        "dark tide": "Dark Tide",
+        "blood bath": "Blood Bath"
     },
     {
         "language": "Français",
@@ -983,7 +990,14 @@
         "polymorph": "Polymorphe",
         "spell_plymorph": "Transformez une unité ciblée en une autre unité. Il y a une plus grande probabilité qu'il soit transformé en une unité proche de son niveau de puissance plutôt qu'en une unité plus éloignée de son niveau de puissance.",
         "merge": "Fusionner",
-        "spell_merge": "Combinez des unités ciblées du même type pour former une seule unité plus forte."
+        "spell_merge": "Combinez des unités ciblées du même type pour former une seule unité plus forte.",
+        "spell_dark_tide": "Empêcher les cibles SUBMERGÉES de bouger pendant 1 tour",
+        "spell_blood_bath": "Infliger 🍞 dégâts à toutes les unités SUBMERGÉES (même si elles ne sont pas ciblées)",
+        "spell_polymorph": "Changez la cible en une entité différente du même type.",
+        "timemason": "Maçon du temps",
+        "far gazer": "Regard lointain",
+        "dark tide": "La marée noire",
+        "blood bath": "Bain de sang"
     },
     {
         "language": "italiano",
@@ -1476,7 +1490,14 @@
         "polymorph": "Polimorfo",
         "spell_plymorph": "Trasforma un'unità mirata in un'altra unità. C'è una probabilità maggiore che venga trasformata in un'unità vicina al suo livello di potenza piuttosto che in un'unità più lontana dal suo livello di potenza.",
         "merge": "Unisci",
-        "spell_merge": "Combina unità mirate dello stesso tipo per formare un unica unità più forte."
+        "spell_merge": "Combina unità mirate dello stesso tipo per formare un unica unità più forte.",
+        "spell_dark_tide": "Impedisci ai bersagli SOMMERSI di muoversi per 1 turno",
+        "spell_blood_bath": "Causa 🍞 danni a tutte le unità SOMMERSE (anche se non sono prese di mira)",
+        "spell_polymorph": "Cambia il bersaglio in un'entità diversa dello stesso tipo.",
+        "timemason": "Mago del tempo",
+        "far gazer": "Lungo raggio",
+        "dark tide": "Marea scura",
+        "blood bath": "Bagno di sangue"
     },
     {
         "language": "Deutsche",
@@ -1969,7 +1990,14 @@
         "polymorph": "Verändern",
         "spell_plymorph": "Verwandeln Sie eine Zieleinheit in eine andere Einheit. Es besteht eine höhere Wahrscheinlichkeit, dass es sich in eine Einheit in der Nähe seines Machtniveaus verwandelt als in eine Einheit, die weiter von seinem Machtniveau entfernt ist.",
         "merge": "Verschmelzen",
-        "spell_merge": "Kombiniere anvisierte Einheiten desselben Typs zu einer einzigen, stärkeren Einheit."
+        "spell_merge": "Kombiniere anvisierte Einheiten desselben Typs zu einer einzigen, stärkeren Einheit.",
+        "spell_dark_tide": "Verhindern Sie 1 Runde lang, dass sich UNTERWASSER-Ziele bewegen",
+        "spell_blood_bath": "Füge allen untergetauchten Einheiten 🍞 Schaden zu (auch wenn sie nicht als Ziel ausgewählt wurden)",
+        "spell_polymorph": "Ändern Sie das Ziel in eine andere Entität derselben Art.",
+        "timemason": "Zeitassistent",
+        "far gazer": "Langstrecken",
+        "dark tide": "Dunkle Flut",
+        "blood bath": "Blutbad"
     },
     {
         "language": "español",
@@ -2462,7 +2490,14 @@
         "polymorph": "Polimorfo",
         "spell_plymorph": "Transforma una unidad objetivo en otra unidad. Hay una mayor probabilidad de que se transforme en una unidad cerca de su nivel de poder que en una más lejos de su nivel de poder.",
         "merge": "Unir",
-        "spell_merge": "Combina unidades objetivo del mismo tipo para formar una unidad única y más fuerte."
+        "spell_merge": "Combina unidades objetivo del mismo tipo para formar una unidad única y más fuerte.",
+        "spell_dark_tide": "Evita que los objetivos SUBACUÁTICOS se muevan durante 1 turno.",
+        "spell_blood_bath": "Inflige 🍞 daño a todas las unidades SUMERGIDAS (incluso si no son objetivo)",
+        "spell_polymorph": "Cambie el objetivo a una entidad diferente del mismo tipo.",
+        "timemason": "Asistente del reloj",
+        "far gazer": "De largo alcance",
+        "dark tide": "Marea Oscura",
+        "blood bath": "baño de sangre"
     },
     {
         "language": "日本",
@@ -2955,7 +2990,14 @@
         "polymorph": "ポリモーフ",
         "spell_plymorph": "対象のユニットを別のユニットに変身させる。パワー レベルから 1 つ離れたユニットよりも、そのパワー レベルに近いユニットに変換される可能性が高くなります。",
         "merge": "マージ",
-        "spell_merge": "同じタイプのターゲットユニットを組み合わせて、単一のより強力なユニットを形成します。"
+        "spell_merge": "同じタイプのターゲットユニットを組み合わせて、単一のより強力なユニットを形成します。",
+        "spell_dark_tide": "水没したターゲットの移動を1ターン阻止",
+        "spell_blood_bath": "水没したユニットすべてに🍞ダメージを与える(ターゲットにされていない場合も含む)",
+        "spell_polymorph": "ターゲットを同じ種類の別のエンティティに変更します。",
+        "timemason": "タイムウィザード",
+        "far gazer": "長距離",
+        "dark tide": "暗い潮",
+        "blood bath": "ブラッドバス"
     },
     {
         "language": "Português",
@@ -3448,7 +3490,14 @@
         "polymorph": "Polimorfo",
         "spell_plymorph": "Transforme uma unidade alvo em outra unidade. Há uma probabilidade maior de que ele seja transformado em uma unidade próxima ao seu nível de potência do que em uma unidade mais distante do seu nível de potência.",
         "merge": "Mesclar",
-        "spell_merge": "Combine unidades alvo do mesmo tipo para formar uma unidade única e mais forte."
+        "spell_merge": "Combine unidades alvo do mesmo tipo para formar uma unidade única e mais forte.",
+        "spell_dark_tide": "Impedir que alvos SUBMERGADOS se movam por 1 turno",
+        "spell_blood_bath": "Causa 🍞 dano a todas as unidades SUBMERSAS (mesmo que não sejam o alvo)",
+        "spell_polymorph": "Mude o alvo para uma entidade diferente do mesmo tipo.",
+        "timemason": "Mago do tempo",
+        "far gazer": "Longo alcance",
+        "dark tide": "aguas oscuras",
+        "blood bath": "Banho de Sangue"
     },
     {
         "language": "عربى",
@@ -3941,7 +3990,14 @@
         "polymorph": "متعدد الأشكال",
         "spell_plymorph": "تحويل الوحدة المستهدفة إلى وحدة أخرى. هناك احتمال أكبر أن تتحول إلى وحدة قريبة من مستوى قوتها أكثر من وحدة أبعد عن مستوى قوتها.",
         "merge": "دمج",
-        "spell_merge": "اجمع الوحدات المستهدفة من نفس النوع لتكوين وحدة واحدة أقوى."
+        "spell_merge": "اجمع الوحدات المستهدفة من نفس النوع لتكوين وحدة واحدة أقوى.",
+        "spell_dark_tide": "منع الأهداف المغمورة من التحرك لدورة واحدة",
+        "spell_blood_bath": "ألحق 🍞 الضرر بجميع الوحدات الغارقة (حتى لو لم تكن مستهدفة)",
+        "spell_polymorph": "تغيير الهدف إلى كيان مختلف من نفس النوع.",
+        "timemason": "معالج الوقت",
+        "far gazer": "عيون بعيدة",
+        "dark tide": "المد المظلم",
+        "blood bath": "حمام الدم"
     },
     {
         "language": "한국어",
@@ -4434,7 +4490,14 @@
         "polymorph": "다형체",
         "spell_plymorph": "대상 유닛을 다른 유닛으로 변환합니다.",
         "merge": "병합",
-        "spell_merge": "동일한 유형의 대상 유닛을 결합하여 더욱 강력한 단일 유닛을 형성합니다."
+        "spell_merge": "동일한 유형의 대상 유닛을 결합하여 더욱 강력한 단일 유닛을 형성합니다.",
+        "spell_dark_tide": "1턴 동안 물에 잠긴 대상의 이동을 방지합니다.",
+        "spell_blood_bath": "잠수된 모든 유닛에 🍞 피해를 줍니다(대상이 아니더라도).",
+        "spell_polymorph": "대상을 같은 종류의 다른 개체로 변경합니다.",
+        "timemason": "시간 마법사",
+        "far gazer": "장거리",
+        "dark tide": "암흑의 조류",
+        "blood bath": "피목욕"
     },
     {
         "language": "Русский",
@@ -4927,7 +4990,14 @@
         "polymorph": "Полиморф",
         "spell_plymorph": "Превратите выбранный отряд в другой отряд. Существует более высокая вероятность того, что он будет преобразован в отряд, близкий к его уровню мощности, чем в отряд, расположенный дальше от его уровня мощности.",
         "merge": "Объединить",
-        "spell_merge": "Объедините целевые отряды одного типа, чтобы сформировать один, более сильный отряд."
+        "spell_merge": "Объедините целевые отряды одного типа, чтобы сформировать один, более сильный отряд.",
+        "spell_dark_tide": "Не позволяйте ПОДВОДНЫМ целям двигаться в течение 1 хода.",
+        "spell_blood_bath": "Нанесите 🍞 урон всем ПОДВОДНЫМ юнитам (даже если они не являются целью).",
+        "spell_polymorph": "Измените цель на другую сущность того же типа.",
+        "timemason": "Мастер времени",
+        "far gazer": "Дальняя дистанция",
+        "dark tide": "Темный прилив",
+        "blood bath": "Кровавая баня"
     },
     {
         "language": "中文(简)",
@@ -5420,7 +5490,14 @@
         "polymorph": "多晶型物",
         "spell_plymorph": "将目标单位转变为另一个单位。它转变为接近其力量水平的单位的可能性比远离其力量水平的单位更高。",
         "merge": "合并",
-        "spell_merge": "将相同类型的目标单位组合起来，形成一个更强大的单位。"
+        "spell_merge": "将相同类型的目标单位组合起来，形成一个更强大的单位。",
+        "spell_dark_tide": "阻止淹没目标移动 1 回合",
+        "spell_blood_bath": "对所有淹没单位造成 🍞 伤害（即使它们不是目标）",
+        "spell_polymorph": "将目标更改为同类的不同实体。",
+        "timemason": "时间向导",
+        "far gazer": "长距离",
+        "dark tide": "暗潮",
+        "blood bath": "血浴"
     },
     {
         "language": "中文(繁)",
@@ -5913,7 +5990,14 @@
         "polymorph": "多晶型物",
         "spell_plymorph": "多晶型將目標單位轉變為另一個單位。它轉變為接近其力量水平的單位的可能性比遠離其力量水平的單位更高。",
         "merge": "合併",
-        "spell_merge": "將相同類型的目標單位組合起來，形成一個更強大的單位。"
+        "spell_merge": "將相同類型的目標單位組合起來，形成一個更強大的單位。",
+        "spell_dark_tide": "阻止淹沒目標移動 1 回合",
+        "spell_blood_bath": "對所有淹沒單位造成 🍞 傷害（即使它們不是目標）",
+        "spell_polymorph": "將目標更改為同類的不同實體。",
+        "timemason": "時間嚮導",
+        "far gazer": "長距離",
+        "dark tide": "暗潮",
+        "blood bath": "血浴"
     },
     {
         "language": "Polski",
@@ -6406,7 +6490,14 @@
         "polymorph": "Transformacja",
         "spell_plymorph": "Przekształć wybraną jednostkę w inną jednostkę. Istnieje większe prawdopodobieństwo, że zostanie ona przekształcona w jednostkę o podobnej sile, niż w dużo silniejszą/słabszą jednostkę.",
         "merge": "Jedność",
-        "spell_merge": "Połącz wybrane jednostki tego samego typu, aby stworzyć jedną, silniejszą jednostkę."
+        "spell_merge": "Połącz wybrane jednostki tego samego typu, aby stworzyć jedną, silniejszą jednostkę.",
+        "spell_dark_tide": "Uniemożliwiaj celom PODWODNYM poruszanie się przez 1 turę",
+        "spell_blood_bath": "Zadaj 🍞 obrażenia wszystkim ZANURZONYM jednostkom (nawet jeśli nie są one celem)",
+        "spell_polymorph": "Zmień cel na inny obiekt tego samego rodzaju.",
+        "timemason": "Czarodziej Czasu",
+        "far gazer": "Daleki zasięg",
+        "dark tide": "Ciemna fala",
+        "blood bath": "Krwawa kąpiel"
     },
     {
         "language": "Dutch",
@@ -6899,6 +6990,13 @@
         "polymorph": "Polymorf",
         "spell_plymorph": "Transformeer een beoogde eenheid in een andere eenheid. De kans is groter dat het zal worden getransformeerd in een eenheid die dichtbij zijn vermogensniveau ligt dan in een eenheid verder van zijn vermogensniveau.",
         "merge": "Samenvoegen",
-        "spell_merge": "Combineer gerichte eenheden van hetzelfde type om één enkele, sterkere eenheid te vormen."
+        "spell_merge": "Combineer gerichte eenheden van hetzelfde type om één enkele, sterkere eenheid te vormen.",
+        "spell_dark_tide": "Voorkom dat ONDERGEDOMPELDE doelen 1 beurt lang bewegen",
+        "spell_blood_bath": "Breng 🍞 schade aan aan alle ONDERGEDOMPELDE eenheden (zelfs als ze niet het doelwit zijn)",
+        "spell_polymorph": "Verander het doelwit in een andere entiteit van dezelfde soort.",
+        "timemason": "Tijd tovenaar",
+        "far gazer": "Langeafstand",
+        "dark tide": "Donker tij",
+        "blood bath": "Bloed in het water"
     }
 ]

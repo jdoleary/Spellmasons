@@ -21,7 +21,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.SPECIAL],
     thumbnail: 'spellIconDrown2.png',
     sfx: 'drown',
-    description: ['spell_blood_bath'],
+    description: ['spell_blood_bath', damageDone.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: target all living units that are submerged
       const targets = (prediction ? underworld.unitsPrediction : underworld.units).filter(u => u.alive && u.inLiquid);

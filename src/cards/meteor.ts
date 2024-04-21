@@ -32,7 +32,7 @@ const spell: Spell = {
     allowNonUnitTarget: true,
     probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconMeteor.png',
-    description: 'spell_meteor',
+    description: ['spell_meteor', damage.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // We should create a meteor at each targeted unit
       // Or if no targeted units, at the cast location
