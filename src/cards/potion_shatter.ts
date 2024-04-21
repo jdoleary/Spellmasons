@@ -3,7 +3,7 @@ import { playDefaultSpellSFX } from './cardUtils';
 import { Spell, refundLastSpell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { baseExplosionRadius, explode } from '../effects/explode';
-import { CURSED_MANA_POTION, HEALTH_POTION, IPickup, MANA_POTION, STAMINA_POTION, removePickup } from '../entity/Pickup';
+import { HEALTH_POTION, IPickup, MANA_POTION, STAMINA_POTION, removePickup } from '../entity/Pickup';
 import { drawUICirclePrediction } from '../graphics/PlanningView';
 import * as colors from '../graphics/ui/colors';
 import { COLLISION_MESH_RADIUS } from '../config';
@@ -73,8 +73,6 @@ function getColorFromPotion(potion: IPickup): number {
       return colors.manaBlue;
     case STAMINA_POTION:
       return colors.stamina;
-    case CURSED_MANA_POTION:
-      return colors.manaDarkBlue;
   }
 
   return colors.errorRed;
