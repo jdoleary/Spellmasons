@@ -30,7 +30,7 @@ const unit: UnitSource = {
     damage: 20,
     attackRange: 400,
     healthMax: 400,
-    staminaMax: 200,
+    staminaMax: 300,
     mana: 120,
     manaMax: 120,
     manaPerTurn: 60,
@@ -84,64 +84,71 @@ const unit: UnitSource = {
 
       // Resurrect Corpses
       if (deadUnits.length) {
-        let promises: Promise<EffectState>[] = [];
         unit.mana -= unit.manaCostToCast;
+        let promises: Promise<void>[] = [];
         await Unit.playComboAnimation(unit, unit.animations.attack, async () => {
           for (const deadUnit of deadUnits) {
-            createVisualLobbingProjectile(
-              unit,
-              deadUnit,
-              'projectile/lobberProjectile',
-            );
-
-            promises.push(underworld.castCards({
-              casterCardUsage: {},
-              casterUnit: unit,
-              casterPositionAtTimeOfCast: unit,
-              cardIds: [resurrect_id],
-              castLocation: deadUnit,
-              prediction: false,
-              outOfRange: false,
-              castForFree: true,
+            promises.push(new Promise((resolve) => {
+              createVisualLobbingProjectile(
+                unit,
+                deadUnit,
+                'projectile/lobberProjectile',
+              ).then(() => {
+                underworld.castCards({
+                  casterCardUsage: {},
+                  casterUnit: unit,
+                  casterPositionAtTimeOfCast: unit,
+                  cardIds: [resurrect_id],
+                  castLocation: deadUnit,
+                  prediction: false,
+                  outOfRange: false,
+                  castForFree: true,
+                });
+                resolve();
+              });
             }));
           }
         });
         await Promise.all(promises);
       }
 
-      // Get nearest enemy prioritizing players
-      const nearestEnemy = Unit.closestInListOfUnits(unit, underworld.getRemainingPlayerUnits().filter(u => u.faction != unit.faction))
-        || Unit.closestInListOfUnits(unit, Unit.livingUnitsInDifferentFaction(unit, underworld.units));
-      console.log(nearestEnemy);
-      // Curse / Contaminate the nearest living enemy
-      if (nearestEnemy && math.distance(unit, nearestEnemy) < unit.attackRange) {
-        Unit.orient(unit, nearestEnemy);
+      // Allows 2nd playComboAnimation without significant await time
+      Unit.returnToDefaultSprite(unit);
+      const enemiesInRange = attackTargets.filter(u => u.alive && u.faction != unit.faction && math.distance(unit, u) <= unit.attackRange);
+      // Attack enemies in range
+      if (enemiesInRange.length) {
         unit.mana -= unit.manaCostToCast;
-        await Unit.playComboAnimation(unit, unit.animations.attack, () => {
-          return createVisualLobbingProjectile(
-            unit,
-            nearestEnemy,
-            'projectile/lobberProjectile',
-          );
-        });
+        let promises: Promise<void>[] = [];
+        await Unit.playComboAnimation(unit, unit.animations.attack, async () => {
+          for (const enemy of enemiesInRange) {
+            promises.push(new Promise((resolve) => {
+              createVisualLobbingProjectile(
+                unit,
+                enemy,
+                'projectile/lobberProjectile',
+              ).then(() => {
+                // Add projectile hit animation
+                Image.addOneOffAnimation(enemy, 'projectile/lobberProjectileHit');
 
-        // Add projectile hit animation
-        Image.addOneOffAnimation(nearestEnemy, 'projectile/lobberProjectileHit');
-        Unit.addModifier(nearestEnemy, suffocateCardId, underworld, false, 1);
-        Unit.addModifier(nearestEnemy, slowCardId, underworld, false);
+                // Inflict slow and an extra stack of suffocate
+                Unit.addModifier(enemy, slowCardId, underworld, false, 1);
+                if (!unit.modifiers[suffocateCardId]) {
+                  Unit.addModifier(enemy, suffocateCardId, underworld, false, 1);
+                }
 
-        // https://github.com/jdoleary/Spellmasons/pull/641
-        // TODO - Contaminate the best way to do this? Should it really affect enemy units too?
-        await underworld.castCards({
-          casterCardUsage: {},
-          casterUnit: unit,
-          casterPositionAtTimeOfCast: unit,
-          cardIds: [contaminate_id, contaminate_id, contaminate_id],
-          castLocation: nearestEnemy,
-          prediction: false,
-          outOfRange: false,
-          castForFree: true,
+                Unit.takeDamage({
+                  unit: enemy,
+                  amount: unit.damage,
+                  sourceUnit: unit,
+                  fromVec2: unit,
+                }, underworld, false);
+
+                resolve();
+              })
+            }))
+          }
         });
+        await Promise.all(promises);
       }
     }
 
@@ -158,10 +165,6 @@ const unit: UnitSource = {
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-
-    // https://github.com/jdoleary/Spellmasons/pull/641
-    // TODO - How does this work with predictions, will it show badge if player isnt targeted but another action is planned?
-
     // Can either target living enemies, or any dead units
     const possibleTargets = underworld.getUnitsWithinDistanceOfTarget(unit, unit.attackRange, false)
       .filter(u => !u.flaggedForRemoval && (
@@ -182,34 +185,34 @@ const goruAuraRadius = 200;
 export function registerGoruEvents() {
   registerEvents(goruAura, {
     onDrawSelected: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
-      if (globalThis.selectedUnitGraphics) {
-        drawUICircle(globalThis.selectedUnitGraphics, unit, goruAuraRadius, colors.manaBrightBlue, 'Death Aura');
-      }
+      // if (globalThis.selectedUnitGraphics) {
+      //   drawUICircle(globalThis.selectedUnitGraphics, unit, goruAuraRadius, colors.manaBrightBlue, 'Death Aura');
+      // }
     },
     onTurnStart: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
 
-      // https://github.com/jdoleary/Spellmasons/pull/641
-      // TODO - Should this aura be handled in the action instead, so it plays with the first combo animation?
-      // BUG: Keeps firing even when unit is dead dead. Note when fixing: Consider undying (this should go in action)
+      // // https://github.com/jdoleary/Spellmasons/pull/641
+      // // TODO - Should this aura be handled in the action instead, so it plays with the first combo animation?
+      // // BUG: Keeps firing even when unit is dead dead. Note when fixing: Consider undying (this should go in action)
 
-      const livingUnits = underworld.getUnitsWithinDistanceOfTarget(unit, goruAuraRadius, prediction)
-        .filter(u => !u.flaggedForRemoval);
+      // const livingUnits = underworld.getUnitsWithinDistanceOfTarget(unit, goruAuraRadius, prediction)
+      //   .filter(u => !u.flaggedForRemoval);
 
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      // https://github.com/jdoleary/Spellmasons/pull/641
-      // Temp aura VFX for Goru - Needs improvement
-      makeParticleExplosion(unit, goruAuraRadius / baseExplosionRadius, 0x002c6e, 0x59deff, prediction);
+      // await new Promise((resolve) => setTimeout(resolve, 500));
+      // // https://github.com/jdoleary/Spellmasons/pull/641
+      // // Temp aura VFX for Goru - Needs improvement
+      // makeParticleExplosion(unit, goruAuraRadius / baseExplosionRadius, 0x002c6e, 0x59deff, prediction);
 
-      livingUnits.filter(u => u.alive && u.faction != unit.faction).forEach(u => {
-        Unit.takeDamage({
-          unit: u,
-          amount: unit.damage,
-          sourceUnit: unit,
-          fromVec2: unit,
-        }, underworld, false);
-      });
+      // livingUnits.filter(u => u.alive && u.faction != unit.faction).forEach(u => {
+      //   Unit.takeDamage({
+      //     unit: u,
+      //     amount: unit.damage,
+      //     sourceUnit: unit,
+      //     fromVec2: unit,
+      //   }, underworld, false);
+      // });
 
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      // await new Promise((resolve) => setTimeout(resolve, 100));
     }
   });
 }
