@@ -51,6 +51,8 @@ export const sfx: { [key: string]: string[] } = {
   game_over: ['./sound/sfx/game_over.mp3'],
   golemAttack: ['./sound/sfx/golem-attack.mp3'],
   golemDeath: ['./sound/sfx/golem-death.mp3'],
+  goruAttack: ['./sound/sfx/goru-attack.mp3'],
+  goruDeath: ['./sound/sfx/goru-death.mp3'],
   heal: ['./sound/sfx/heal.mp3'],
   hurt: ['./sound/sfx/hurt.mp3'],
   hurt2: ['./sound/sfx/hurt2.mp3'],
