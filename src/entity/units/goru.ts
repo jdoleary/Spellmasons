@@ -77,6 +77,11 @@ const unit: UnitSource = {
 
     if (attackTargets) {
       const deadUnits = attackTargets.filter(u => !u.alive);
+
+      // https://github.com/jdoleary/Spellmasons/pull/641
+      // TODO - Add corpse explode, prioritise actions based on game state
+      // Too much stuff at once? Pick less actions?
+
       // Resurrect Corpses
       if (deadUnits.length) {
         let promises: Promise<EffectState>[] = [];
@@ -125,6 +130,8 @@ const unit: UnitSource = {
         Unit.addModifier(nearestEnemy, suffocateCardId, underworld, false, 1);
         Unit.addModifier(nearestEnemy, slowCardId, underworld, false);
 
+        // https://github.com/jdoleary/Spellmasons/pull/641
+        // TODO - Contaminate the best way to do this? Should it really affect enemy units too?
         await underworld.castCards({
           casterCardUsage: {},
           casterUnit: unit,
@@ -151,7 +158,10 @@ const unit: UnitSource = {
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-    // TODO - How does this work with predictions, will it show rez if player isnt targeted?
+
+    // https://github.com/jdoleary/Spellmasons/pull/641
+    // TODO - How does this work with predictions, will it show badge if player isnt targeted but another action is planned?
+
     // Can either target living enemies, or any dead units
     const possibleTargets = underworld.getUnitsWithinDistanceOfTarget(unit, unit.attackRange, false)
       .filter(u => !u.flaggedForRemoval && (
@@ -177,6 +187,10 @@ export function registerGoruEvents() {
       }
     },
     onTurnStart: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
+
+      // https://github.com/jdoleary/Spellmasons/pull/641
+      // TODO - Should this aura be handled in the action instead, so it plays with the first combo animation?
+
       const livingUnits = underworld.getUnitsWithinDistanceOfTarget(unit, goruAuraRadius, prediction)
         .filter(u => !u.flaggedForRemoval);
 
