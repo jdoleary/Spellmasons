@@ -175,6 +175,7 @@ export const sfx: { [key: string]: string[] } = {
   shatter: ['./sound/sfx/shatter-001.mp3', './sound/sfx/shatter-002.mp3', './sound/sfx/shatter-003.mp3'],
   stomp: ['./sound/sfx/stomp-001.mp3', './sound/sfx/stomp-002.mp3', './sound/sfx/stomp-003.mp3'],
   targetCursed: ['./sound/sfx/targetCursed-001.mp3', './sound/sfx/targetCursed-002.mp3', './sound/sfx/targetCursed-003.mp3'],
+  purplePortal: ['./sound/sfx/purple_portal.mp3']
 };
 const music = [
   // config.IS_ANNIVERSARY_UPDATE_OUT

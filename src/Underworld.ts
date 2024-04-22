@@ -2182,10 +2182,12 @@ export default class Underworld {
       return;
     }
 
-    // Game State should not progress if no players are spawned
+    // Game State should not progress if no players are spawned for the first round
+    // note: turn_number cannot be used because you can clear a map on the first turn
+    // so check to see if any AI have been killed
     const spawnedPlayers = this.players.filter(p => p.isSpawned);
-    if (spawnedPlayers.length == 0) {
-      console.log('[GAME] No spawned players: ', this.players);
+    if (spawnedPlayers.length == 0 && this.units.filter(u => u.unitType == UnitType.AI && !u.alive).length === 0) {
+      console.log('[GAME] No spawned players and no units have been killed yet: ', this.players);
       console.log('[GAME] Progress Game State Complete');
       return;
     }
