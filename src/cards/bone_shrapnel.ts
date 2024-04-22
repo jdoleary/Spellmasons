@@ -11,7 +11,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 export const boneShrapnelCardId = 'Bone Shrapnel';
 const damage = 30;
-const baseRadius = 140;
+export const boneShrapnelRadius = 140;
 
 const spell: Spell = {
   card: {
@@ -34,13 +34,13 @@ const spell: Spell = {
 
       targetedUnits.forEach(unit => {
         // +50% radius per radius boost
-        const adjustedRadius = baseRadius * (1 + (0.5 * state.aggregator.radiusBoost));
+        const adjustedRadius = boneShrapnelRadius * (1 + (0.5 * state.aggregator.radiusBoost));
         if (prediction) {
           drawUICirclePrediction(unit, adjustedRadius, colors.healthRed, 'Explosion Radius');
         } else {
           playSFXKey('bloatExplosion');
         }
-        makeShrapnelParticles(unit, adjustedRadius / baseRadius, prediction);
+        makeShrapnelParticles(unit, adjustedRadius / boneShrapnelRadius, prediction);
         underworld.getUnitsWithinDistanceOfTarget(
           unit,
           adjustedRadius,
