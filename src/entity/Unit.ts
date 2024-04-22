@@ -352,18 +352,7 @@ export function adjustUnitDifficulty(unit: IUnit, difficulty: number) {
     const quantityStatModifier = 1 + 0.8 * ((unit.strength || 1) - 1);
     healthMax = Math.round(healthMax * quantityStatModifier);
     unit.damage = Math.round(unit.damage * quantityStatModifier);
-
-    if (unit.image) {
-      // this final scale of the unit will always be less than the max multiplier
-      const maxMultiplier = 4;
-      // ensures scale = 1 at strength = 1
-      const strAdj = unit.strength - 1;
-      // calculate scale multiplier with diminishing formula
-      // 6 is an arbitrary number that controls the speed at which the scale approaches the max
-      const quantityScaleModifier = 1 + (maxMultiplier - 1) * (strAdj / (strAdj + 6));
-      unit.image.sprite.scale.x *= quantityScaleModifier;
-      unit.image.sprite.scale.y *= quantityScaleModifier;
-    }
+    updateStrengthSpriteScaling(unit, 1);
 
     // Maintain Health/Mana Ratios
     const oldHealthRatio = (unit.health / unit.healthMax) || 0;
@@ -385,6 +374,28 @@ export function adjustUnitDifficulty(unit: IUnit, difficulty: number) {
   } else {
     console.error('missing unit source');
   }
+}
+export function updateStrengthSpriteScaling(unit: IUnit, oldStrength: number) {
+  // WARN: Providing an incorrect value for oldStrength value will create large/repeated changes in sprite size
+
+  // We have to multiply the sprite scale instead of setting it
+  // as to not undo other scalars such as the ones applied by bloat and split,
+  // so we need to divide newStrength scalar by the oldStrength scalar
+  if (unit.image) {
+    const strengthScaleQuotient = getScaleFromStrength(unit.strength) / getScaleFromStrength(oldStrength);
+
+    unit.image.sprite.scale.x *= strengthScaleQuotient;
+    unit.image.sprite.scale.y *= strengthScaleQuotient;
+  }
+}
+function getScaleFromStrength(strength: number): number {
+  // this final scale of the unit will always be less than the max multiplier
+  const maxMultiplier = 4;
+  // adjust strength to ensure scale = 1 at strength = 1
+  strength -= 1;
+  // calculate scale multiplier with diminishing formula
+  // 6 is an arbitrary number that controls the speed at which the scale approaches the max
+  return 1 + (maxMultiplier - 1) * (strength / (strength + 6))
 }
 function setupShaders(unit: IUnit) {
   if (unit.image) {

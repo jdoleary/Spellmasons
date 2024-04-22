@@ -53,20 +53,6 @@ const spell: Spell = {
           }
           await Promise.all(mergePromises);
 
-          // scale target, now that units and their stats have merged into it
-          // (copied from Unit.ts)
-          // this final scale of the unit will always be less than the max multiplier
-          const maxMultiplier = 4;
-          // calculate scale multiplier with diminishing formula
-          // 6 is an arbitrary number that controls the speed at which the scale approaches the max
-          const scaler = similarThings.reduce((strength, current) => strength + ((Unit.isUnit(current) ? current.strength : Pickup.isPickup(current) ? current.power : 1) || 1), 1);
-          const quantityScaleModifier = 1 + (maxMultiplier - 1) * (scaler / (scaler + 6));
-          if (target.image) {
-            target.image.sprite.scale.x = quantityScaleModifier;
-            target.image.sprite.scale.y = quantityScaleModifier;
-          }
-          // End scale target
-
           mergedTargets = mergedTargets.concat(similarThings);
           if (Unit.isUnit(target)) {
             const similarUnits = similarThings as Unit.IUnit[];
@@ -87,6 +73,7 @@ const spell: Spell = {
 };
 
 export function mergeUnits(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], underworld: Underworld, prediction: boolean, state?: EffectState) {
+  const oldStrength = target.strength;
   let storedModifiers = [];
   for (const unit of unitsToMerge) {
     // Prediction Lines
@@ -160,6 +147,8 @@ export function mergeUnits(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], under
       console.error("Modifier doesn't exist? This shouldn't happen.");
     }
   }
+
+  Unit.updateStrengthSpriteScaling(target, oldStrength);
 }
 
 export function mergePickups(target: Pickup.IPickup, pickupsToMerge: Pickup.IPickup[], underworld: Underworld, prediction: boolean, state?: EffectState) {
