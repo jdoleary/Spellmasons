@@ -2318,7 +2318,7 @@ export default class Underworld {
     }
 
     if ((this.levelIndex == config.LAST_LEVEL_INDEX || this.levelIndex == config.GORU_LEVEL_INDEX) && !this.hasSpawnedBoss) {
-      console.debug('[GAME] Level Incomplete...\nWaiting to spawn Deathmason...');
+      console.debug('[GAME] Level Incomplete...\nWaiting to spawn Boss...');
       return false;
     }
 
@@ -4275,7 +4275,13 @@ function getEnemiesForAltitude(underworld: Underworld, levelIndex: number): stri
   // Reduce remaining budget on the last level where Goru will spawn
   if (config.IS_ANNIVERSARY_UPDATE_OUT && levelIndex == config.GORU_LEVEL_INDEX) {
     if (goru.spawnParams) {
-      budgetLeft -= goru.spawnParams?.budgetCost;
+      // https://github.com/jdoleary/Spellmasons/issues/168
+      // Budgeting system still needs an overhaul
+
+      // This is intentionally commented out, since this 
+      // often results in very few enemies and enemy types
+      // Goru needs units to support him, being a corpse-based boss without summon capability
+      //budgetLeft -= goru.spawnParams?.budgetCost;
     } else {
       console.warn("Goru spawn params unknown, could not modify budget correctly");
     }
