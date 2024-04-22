@@ -733,7 +733,7 @@ function getScaleFromPower(power: number): number {
   power -= 1;
   // calculate scale multiplier with diminishing formula
   // 6 is an arbitrary number that controls the speed at which the scale approaches the max
-  return 1 + (maxMultiplier - 1) * (power / (power + 6))
+  return 1 + (maxMultiplier - 1) * (power / (power + 20))
 }
 export function givePlayerUpgrade(p: Player.IPlayer, underworld: Underworld) {
   elEndTurnBtn?.classList.toggle('upgrade', true);
