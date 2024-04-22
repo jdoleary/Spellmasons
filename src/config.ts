@@ -86,3 +86,8 @@ export const TIMEMASON_PERCENT_DRAIN = 1;
 export const FORCE_MOVE_PROMISE_TIMEOUT_MILLIS = 2_000;
 export const SERVER_HUB_URL = 'https://server-hub-d2b2v.ondigitalocean.app';
 export const PATHING_POLYGON_OFFSET = 10;
+// WallN tiles' bounds don't fill the full 64x64 square because at "unit height", you should
+// be able to see past and shoot past a wall up until, say eye level, it looks more realistic.
+// the corner of a WallN tile that touches the floor shouldn't block arrows flying at 
+// eye level for example.  This is what WALL_BOUNDS_OFFSET accounts for
+export const WALL_BOUNDS_OFFSET = 14;

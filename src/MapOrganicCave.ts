@@ -701,8 +701,8 @@ export function toObstacle(t: Tile, biome: Biome): IObstacle | undefined {
             bounds: [
                 { x: 0, y: 0 },
                 { x: 64, y: 0 },
-                { x: 64, y: 50 },
-                { x: 0, y: 50 },
+                { x: 64, y: 64 - config.WALL_BOUNDS_OFFSET },
+                { x: 0, y: 64 - config.WALL_BOUNDS_OFFSET },
             ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
 
         }

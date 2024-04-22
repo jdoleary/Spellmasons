@@ -2742,7 +2742,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         // they will be cleaned up so they shouldn't be killed here as this check is just to ensure
         // no living units that are unreachable hinder progressing through the game)
         if (!u.flaggedForRemoval) {
-          if (this.isCoordOnWallTile({ x: u.x, y: u.y + config.PATHING_POLYGON_OFFSET })) {
+          if (this.isCoordOnWallTile({ x: u.x, y: u.y + config.WALL_BOUNDS_OFFSET })) {
             if (u.unitType == UnitType.PLAYER_CONTROLLED) {
               // Do NOT kill player units that are out of bounds
               console.warn('Player unit out of bounds');
