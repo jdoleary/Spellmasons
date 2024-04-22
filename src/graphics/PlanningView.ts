@@ -108,11 +108,9 @@ export function updatePlanningView(underworld: Underworld) {
       if (selectedType == "unit" && globalThis.selectedUnit) {
         // Draw circle to show that unit is selected
         drawCircleUnderTarget(globalThis.selectedUnit, underworld, 1.0, planningViewGraphics);
-        if (globalThis.selectedUnit.alive) {
-          // Draws the unit's graphics, and the graphics of any relevant modifiers
-          // I.E. attack range and bloat radius
-          Unit.drawSelectedGraphics(globalThis.selectedUnit, false, underworld);
-        }
+        // Draws the unit's graphics, and the graphics of any relevant modifiers
+        // I.E. attack range and bloat radius
+        Unit.drawSelectedGraphics(globalThis.selectedUnit, false, underworld);
       }
 
       // Draw selected pickup stuff

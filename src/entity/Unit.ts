@@ -1623,73 +1623,75 @@ export function drawSelectedGraphics(unit: IUnit, prediction: boolean = false, u
   // Instead of using if/else and unit subtypes
   // Cleanup for AI Refactor https://github.com/jdoleary/Spellmasons/issues/388
 
-  // If unit is an archer, draw LOS attack line
-  // instead of attack range for them
-  if (unit.unitSubType == UnitSubType.RANGED_LOS || unit.unitSubType == UnitSubType.SPECIAL_LOS) {
-    const unitSource = allUnits[unit.unitSourceId];
-    let archerTargets: IUnit[] = [];
+  if (unit.alive) {
+    // If unit is an archer, draw LOS attack line
+    // instead of attack range for them
+    if (unit.unitSubType == UnitSubType.RANGED_LOS || unit.unitSubType == UnitSubType.SPECIAL_LOS) {
+      const unitSource = allUnits[unit.unitSourceId];
+      let archerTargets: IUnit[] = [];
 
-    if (unitSource) {
-      archerTargets = unitSource.getUnitAttackTargets(unit, underworld);
-    } else {
-      console.error('Cannot find unitSource for ', unit.unitSourceId);
-    }
-    // If they don't have a target they can actually attack
-    // draw a line to the closest enemy that they would target if
-    // they had LOS
-    let canAttack = true;
-    if (!archerTargets.length) {
-      const nextTarget = findClosestUnitInDifferentFactionSmartTarget(unit, underworld.units)
-      if (nextTarget) {
-        archerTargets.push(nextTarget);
+      if (unitSource) {
+        archerTargets = unitSource.getUnitAttackTargets(unit, underworld);
+      } else {
+        console.error('Cannot find unitSource for ', unit.unitSourceId);
       }
-      // If getBestRangedLOSTarget returns undefined, the archer doesn't have a valid attack target
-      canAttack = false;
-    }
-    const rangeCircleColor = false
-      ? colors.outOfRangeGrey
-      : unit.faction == Faction.ALLY
-        ? colors.attackRangeAlly
-        : colors.attackRangeEnemy;
-
-    // Draw outer attack range circle
-    drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
-
-    // TODO - Consider re-implementing attack lines with AI refactor
-    // https://github.com/jdoleary/Spellmasons/issues/408
-    // if (archerTargets.length) {
-    //   for (let target of archerTargets) {
-    //     const attackLine = { p1: unit, p2: target };
-    //     globalThis.selectedUnitGraphics.moveTo(attackLine.p1.x, attackLine.p1.y);
-
-    //     // If the los unit can attack you, use red, if not, use grey
-    //     const color = canAttack ? colors.healthRed : colors.outOfRangeGrey;
-
-    //     // Draw los line
-    //     globalThis.selectedUnitGraphics.lineStyle(3, color, 0.7);
-    //     globalThis.selectedUnitGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
-    //     globalThis.selectedUnitGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
-    //   }
-    // }
-  } else {
-    if (unit.attackRange > 0) {
-      // TODO - Unused outOfRangeGrey below, consider for AI refactor
-      // https://github.com/jdoleary/Spellmasons/issues/388
+      // If they don't have a target they can actually attack
+      // draw a line to the closest enemy that they would target if
+      // they had LOS
+      let canAttack = true;
+      if (!archerTargets.length) {
+        const nextTarget = findClosestUnitInDifferentFactionSmartTarget(unit, underworld.units)
+        if (nextTarget) {
+          archerTargets.push(nextTarget);
+        }
+        // If getBestRangedLOSTarget returns undefined, the archer doesn't have a valid attack target
+        canAttack = false;
+      }
       const rangeCircleColor = false
         ? colors.outOfRangeGrey
         : unit.faction == Faction.ALLY
           ? colors.attackRangeAlly
           : colors.attackRangeEnemy;
-      globalThis.selectedUnitGraphics.lineStyle(2, rangeCircleColor, 1.0);
 
-      if (unit.unitSubType === UnitSubType.RANGED_RADIUS) {
-        drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
-      } else if (unit.unitSubType === UnitSubType.SUPPORT_CLASS) {
-        drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Support Range'));
-      } else if (unit.unitSubType === UnitSubType.MELEE) {
-        drawUICircle(globalThis.selectedUnitGraphics, unit, unit.staminaMax + unit.attackRange, rangeCircleColor, i18n('Attack Range'));
-      } else if (unit.unitSubType === UnitSubType.DOODAD) {
-        drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Explosion Radius'));
+      // Draw outer attack range circle
+      drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
+
+      // TODO - Consider re-implementing attack lines with AI refactor
+      // https://github.com/jdoleary/Spellmasons/issues/408
+      // if (archerTargets.length) {
+      //   for (let target of archerTargets) {
+      //     const attackLine = { p1: unit, p2: target };
+      //     globalThis.selectedUnitGraphics.moveTo(attackLine.p1.x, attackLine.p1.y);
+
+      //     // If the los unit can attack you, use red, if not, use grey
+      //     const color = canAttack ? colors.healthRed : colors.outOfRangeGrey;
+
+      //     // Draw los line
+      //     globalThis.selectedUnitGraphics.lineStyle(3, color, 0.7);
+      //     globalThis.selectedUnitGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
+      //     globalThis.selectedUnitGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
+      //   }
+      // }
+    } else {
+      if (unit.attackRange > 0) {
+        // TODO - Unused outOfRangeGrey below, consider for AI refactor
+        // https://github.com/jdoleary/Spellmasons/issues/388
+        const rangeCircleColor = false
+          ? colors.outOfRangeGrey
+          : unit.faction == Faction.ALLY
+            ? colors.attackRangeAlly
+            : colors.attackRangeEnemy;
+        globalThis.selectedUnitGraphics.lineStyle(2, rangeCircleColor, 1.0);
+
+        if (unit.unitSubType === UnitSubType.RANGED_RADIUS) {
+          drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
+        } else if (unit.unitSubType === UnitSubType.SUPPORT_CLASS) {
+          drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Support Range'));
+        } else if (unit.unitSubType === UnitSubType.MELEE) {
+          drawUICircle(globalThis.selectedUnitGraphics, unit, unit.staminaMax + unit.attackRange, rangeCircleColor, i18n('Attack Range'));
+        } else if (unit.unitSubType === UnitSubType.DOODAD) {
+          drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Explosion Radius'));
+        }
       }
     }
   }
