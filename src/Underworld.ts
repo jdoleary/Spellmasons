@@ -1814,7 +1814,7 @@ export default class Underworld {
         }
         // Add wall shadows
         if (tile.image.endsWith('wallN.png')) {
-          const sprite = addPixiSprite('tiles/wallShadow.png', containerUnits);
+          const sprite = addPixiSprite('tiles/wallShadow.png', containerBoard);
           if (sprite) {
             sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
             // Place directly below the wall
