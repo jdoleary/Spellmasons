@@ -52,6 +52,7 @@ import { getAllShardBearers } from '../cards/soul_shard';
 import { darkTideId } from '../cards/dark_tide';
 import { GORU_UNIT_ID } from './units/goru';
 import { undyingModifierId } from '../modifierUndying';
+import { corpsePrimedId } from '../modifierCorpsePrimed';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -773,6 +774,9 @@ export function resurrect(unit: IUnit, underworld: Underworld) {
   // Return dead units back to full health
   unit.health = unit.healthMax;
   unit.alive = true;
+  if (unit.modifiers[corpsePrimedId]) {
+    removeModifier(unit, corpsePrimedId, underworld);
+  }
   returnToDefaultSprite(unit);
 }
 export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {

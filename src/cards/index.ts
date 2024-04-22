@@ -131,6 +131,7 @@ import { Localizable } from '../localization';
 import { distance } from '../jmath/math';
 import { getSpellThumbnailPath } from '../graphics/ui/CardUI';
 import { calculateGameDifficulty } from '../Difficulty';
+import registerCorpsePrimed from '../modifierCorpsePrimed';
 
 export interface Modifiers {
   subsprite?: Subsprite;
@@ -348,6 +349,7 @@ export function registerCards(overworld: Overworld) {
   // Register floating modifier (non-card);
   registerSummoningSickness();
   registerCorpseDecay();
+  registerCorpsePrimed();
 
   registerImmune();
   registerImpendingDoom();
