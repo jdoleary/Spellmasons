@@ -225,7 +225,8 @@ export default class Underworld {
   particleFollowers: {
     displayObject: DisplayObject,
     emitter?: Emitter,
-    target: Vec2
+    target: Vec2,
+    keepOnDeath?: boolean
   }[] = [];
   activeMods: string[] = [];
   generatingLevel: boolean = false;
@@ -895,8 +896,8 @@ export default class Underworld {
     // Remove destroyed emitters from particle followers
     this.particleFollowers = this.particleFollowers.filter(pf => pf.emitter && !pf.emitter.destroyed);
     // Now that units have moved update any particle emitters that are following them:
-    for (let { displayObject, emitter, target } of this.particleFollowers) {
-      if (Unit.isUnit(target) && !target.alive) {
+    for (let { displayObject, emitter, target, keepOnDeath } of this.particleFollowers) {
+      if (Unit.isUnit(target) && ((!target.alive && !keepOnDeath) || target.flaggedForRemoval)) {
         stopAndDestroyForeverEmitter(emitter);
       } else if (emitter && !emitter.destroyed) {
 

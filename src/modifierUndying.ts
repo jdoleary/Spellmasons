@@ -9,7 +9,7 @@ import Underworld from './Underworld';
 export const undyingModifierId = 'undying';
 export default function registerUndying() {
   registerModifiers(undyingModifierId, {
-    add: (unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) => {
+    add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, undyingModifierId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         // Add event
         if (!unit.onTurnStartEvents.includes(undyingModifierId)) {
