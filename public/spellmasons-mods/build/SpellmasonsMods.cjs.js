@@ -1,178 +1,5 @@
 "use strict";
 const {
-  Projectile,
-  rangedAction,
-  commonTypes: commonTypes$g,
-  config,
-  JPromise,
-  JAudio: JAudio$1,
-  PixiUtils: PixiUtils$3,
-  ParticleCollection: ParticleCollection$1,
-  MultiColorReplaceFilter
-} = globalThis.SpellmasonsAPI;
-const { createVisualLobbingProjectile } = Projectile;
-const { getBestRangedLOSTarget, rangedLOSMovement } = rangedAction;
-const { UnitSubType } = commonTypes$g;
-const { addPixiSpriteAnimated, containerUnits } = PixiUtils$3;
-const Unit$e = globalThis.SpellmasonsAPI.Unit;
-const ARCHER_ID = "Explosive Archer";
-const explosionDamage = 40;
-const explosion_radius = 140;
-const unit = {
-  id: ARCHER_ID,
-  info: {
-    description: "Shoot explosive arrows",
-    image: "units/archerIdle",
-    subtype: UnitSubType.RANGED_LOS
-  },
-  unitProps: {
-    attackRange: 500,
-    manaMax: 0,
-    damage: 10,
-    healthMax: 40,
-    bloodColor: 4399460
-  },
-  spawnParams: {
-    probability: 50,
-    budgetCost: 1,
-    unavailableUntilLevelIndex: 7
-  },
-  animations: {
-    idle: "units/archerIdle",
-    hit: "units/archerHit",
-    attack: "units/archerAttack",
-    die: "units/archerDeath",
-    walk: "units/archerWalk"
-  },
-  sfx: {
-    damage: "archerHurt",
-    death: "archerDeath"
-  },
-  init: (unit2, _underworld) => {
-    if (unit2.image && unit2.image.sprite && unit2.image.sprite.filters) {
-      unit2.image.sprite.filters.push(
-        new MultiColorReplaceFilter(
-          [
-            [8807010, 5056115],
-            //skinLight
-            [8147795, 4399460],
-            //skinMedium
-            [6304306, 2889281],
-            //skinDark
-            [8621471, 1129823],
-            //loin cloth
-            [4179906, 1129823]
-            // feathers 
-          ],
-          0.05
-        )
-      );
-    }
-  },
-  action: async (unit2, attackTargets, underworld, _canAttackTarget) => {
-    const attackTarget = attackTargets && attackTargets[0];
-    const explosionTargets = attackTargets ? attackTargets.slice(1) : [];
-    if (attackTarget) {
-      unit2.path = void 0;
-      Unit$e.orient(unit2, attackTarget);
-      await Unit$e.playComboAnimation(unit2, unit2.animations.attack, () => {
-        return createVisualLobbingProjectile(
-          unit2,
-          attackTarget,
-          "projectile/arrow"
-        ).then(() => {
-          JAudio$1.playSFXKey("explosiveArcherAttack");
-          Unit$e.takeDamage({ unit: attackTarget, amount: unit2.damage, fromVec2: unit2, thinBloodLine: true }, underworld, false);
-          ParticleCollection$1.makeBloatExplosionWithParticles(attackTarget, 1, false);
-          return JPromise.raceTimeout(3e3, "explosive archer push", Promise.all(explosionTargets.map((u) => {
-            Unit$e.takeDamage({ unit: u, amount: explosionDamage, fromVec2: attackTarget }, underworld, false);
-            return SpellmasonsAPI.forcePushAwayFrom(u, attackTarget, 10, underworld, false);
-          })));
-        });
-      });
-    } else {
-      await rangedLOSMovement(unit2, underworld);
-    }
-  },
-  getUnitAttackTargets: (unit2, underworld) => {
-    const targets = getBestRangedLOSTarget(unit2, underworld);
-    const target = targets[0];
-    if (target) {
-      const explosionTargets = underworld.getUnitsWithinDistanceOfTarget(
-        target,
-        explosion_radius,
-        false
-      );
-      return [target, ...explosionTargets];
-    } else {
-      return [];
-    }
-  }
-};
-const spike_damage = 80;
-const huge_trap = {
-  imagePath: "pickups/trap",
-  animationSpeed: -config.DEFAULT_ANIMATION_SPEED,
-  playerOnly: false,
-  name: "Huge Trap",
-  probability: 70,
-  scale: 1.5,
-  description: ["Deals 🍞 to any unit that touches it", spike_damage.toString()],
-  willTrigger: ({ unit: unit2 }) => {
-    return !!unit2;
-  },
-  effect: ({ unit: unit2, pickup, prediction, underworld }) => {
-    if (unit2) {
-      if (!prediction) {
-        const animationSprite = addPixiSpriteAnimated("pickups/trapAttack", containerUnits, {
-          loop: false,
-          animationSpeed: 0.2,
-          onComplete: () => {
-            if (animationSprite == null ? void 0 : animationSprite.parent) {
-              animationSprite.parent.removeChild(animationSprite);
-            }
-          }
-        });
-        if (animationSprite) {
-          animationSprite.anchor.set(0.5);
-          animationSprite.x = pickup.x;
-          animationSprite.y = pickup.y;
-        }
-        const animationSprite2 = addPixiSpriteAnimated("pickups/trapAttackMagic", containerUnits, {
-          loop: false,
-          animationSpeed: 0.2,
-          onComplete: () => {
-            if (animationSprite2 == null ? void 0 : animationSprite2.parent) {
-              animationSprite2.parent.removeChild(animationSprite2);
-            }
-          }
-        });
-        if (animationSprite2) {
-          animationSprite2.anchor.set(0.5);
-          animationSprite2.x = pickup.x;
-          animationSprite2.y = pickup.y;
-        }
-      }
-      Unit$e.takeDamage({ unit: unit2, amount: spike_damage, fromVec2: unit2 }, underworld, prediction);
-    }
-  }
-};
-const mod$3 = {
-  modName: "Explosive Archer & Big Trap",
-  author: "Jordan O'Leary",
-  description: "Adds an archer that shoots explosive arrows and a large trap that does more damage.",
-  screenshot: "spellmasons-mods/explosive_archer/explosiveArcher.png",
-  units: [
-    unit
-  ],
-  pickups: [
-    huge_trap
-  ],
-  sfx: {
-    "explosiveArcherAttack": ["./spellmasons-mods/explosive_archer/RPG3_FireMagic_Impact01.mp3"]
-  }
-};
-const {
   PixiUtils: PixiUtils$2,
   rand,
   cardUtils: cardUtils$d,
@@ -208,8 +35,8 @@ const spell$f = {
       for (let q = 0; q < quantity; q++) {
         if (!prediction && !globalThis.headless) {
           playDefaultSpellSFX$c(card, prediction);
-          for (let unit2 of targets) {
-            const spellEffectImage = oneOffImage$1(unit2, animationPath$1, containerSpells$1);
+          for (let unit of targets) {
+            const spellEffectImage = oneOffImage$1(unit, animationPath$1, containerSpells$1);
             if (spellEffectImage) {
               spellEffectImage.sprite.rotation = randFloat(-Math.PI / 6, Math.PI / 6);
               if (q % 2 == 0) {
@@ -217,7 +44,7 @@ const spell$f = {
               }
             }
             Unit$d.takeDamage({
-              unit: unit2,
+              unit,
               amount: damageDone$1,
               sourceUnit: state.casterUnit,
               fromVec2: state.casterUnit
@@ -227,9 +54,9 @@ const spell$f = {
           delayBetweenAnimations *= 0.8;
           delayBetweenAnimations = Math.max(20, delayBetweenAnimations);
         } else {
-          for (let unit2 of targets) {
+          for (let unit of targets) {
             Unit$d.takeDamage({
-              unit: unit2,
+              unit,
               amount: damageDone$1,
               sourceUnit: state.casterUnit,
               fromVec2: state.casterUnit
@@ -287,8 +114,8 @@ const spell$e = {
         if (!prediction) {
           playDefaultSpellSFX$b(card, prediction);
         }
-        for (let unit2 of targets) {
-          Unit$c.addModifier(unit2, card.id, underworld, prediction, quantity);
+        for (let unit of targets) {
+          Unit$c.addModifier(unit, card.id, underworld, prediction, quantity);
         }
       }
       if (!prediction && !globalThis.headless) {
@@ -303,12 +130,12 @@ const spell$e = {
     add: add$6
   },
   events: {
-    onTurnStart: async (unit2, prediction, underworld) => {
-      const modifier = unit2.modifiers[cardId$e];
+    onTurnStart: async (unit, prediction, underworld) => {
+      const modifier = unit.modifiers[cardId$e];
       if (modifier && !!Math.pow(modifier.quantity, 2) && !prediction) {
-        Unit$c.takeDamage({ unit: unit2, amount: Math.pow(modifier.quantity, 2) }, underworld, prediction);
+        Unit$c.takeDamage({ unit, amount: Math.pow(modifier.quantity, 2) }, underworld, prediction);
         FloatingText$6.default({
-          coords: unit2,
+          coords: unit,
           text: `${Math.pow(modifier.quantity, 2)} decay damage`,
           style: { fill: "#525863", strokeThickness: 1 }
         });
@@ -317,14 +144,14 @@ const spell$e = {
     }
   }
 };
-function add$6(unit2, _underworld, _prediction, quantity) {
-  cardsUtil$6.getOrInitModifier(unit2, cardId$e, {
+function add$6(unit, _underworld, _prediction, quantity) {
+  cardsUtil$6.getOrInitModifier(unit, cardId$e, {
     isCurse: true,
     quantity,
     persistBetweenLevels: false
   }, () => {
-    if (!unit2.onTurnStartEvents.includes(cardId$e)) {
-      unit2.onTurnStartEvents.push(cardId$e);
+    if (!unit.onTurnStartEvents.includes(cardId$e)) {
+      unit.onTurnStartEvents.push(cardId$e);
     }
   });
 }
@@ -357,8 +184,8 @@ const spell$d = {
       if (!prediction && !globalThis.headless) {
         playDefaultSpellSFX$a(card, prediction);
       }
-      for (let unit2 of targets) {
-        Unit$b.changeFaction(unit2, state.casterUnit.faction);
+      for (let unit of targets) {
+        Unit$b.changeFaction(unit, state.casterUnit.faction);
       }
       if (targets.length == 0) {
         refundLastSpell$d(state, prediction, "No low health targets to convert, mana refunded");
@@ -398,8 +225,8 @@ const spell$c = {
         if (!prediction) {
           playDefaultSpellSFX$9(card, prediction);
         }
-        for (let unit2 of targets) {
-          Unit$a.addModifier(unit2, card.id, underworld, prediction, quantity);
+        for (let unit of targets) {
+          Unit$a.addModifier(unit, card.id, underworld, prediction, quantity);
         }
       }
       if (!prediction && !globalThis.headless) {
@@ -415,36 +242,36 @@ const spell$c = {
     remove: remove$3
   },
   events: {
-    onTurnEnd: async (unit2, prediction, underworld) => {
-      const modifier = unit2.modifiers[cardId$c];
+    onTurnEnd: async (unit, prediction, underworld) => {
+      const modifier = unit.modifiers[cardId$c];
       if (modifier) {
         modifier.quantity--;
         if (modifier.quantity <= 0) {
-          Unit$a.removeModifier(unit2, cardId$c, underworld);
+          Unit$a.removeModifier(unit, cardId$c, underworld);
         }
       }
     }
   }
 };
-function add$5(unit2, underworld, prediction, quantity) {
-  cardsUtil$5.getOrInitModifier(unit2, cardId$c, {
+function add$5(unit, underworld, prediction, quantity) {
+  cardsUtil$5.getOrInitModifier(unit, cardId$c, {
     isCurse: true,
     quantity,
     persistBetweenLevels: false,
-    originalstat: unit2.staminaMax
+    originalstat: unit.staminaMax
   }, () => {
-    if (!unit2.onTurnEndEvents.includes(cardId$c)) {
-      unit2.onTurnEndEvents.push(cardId$c);
+    if (!unit.onTurnEndEvents.includes(cardId$c)) {
+      unit.onTurnEndEvents.push(cardId$c);
     }
-    unit2.stamina = 0;
-    unit2.staminaMax = 0;
+    unit.stamina = 0;
+    unit.staminaMax = 0;
   });
 }
-function remove$3(unit2, underworld) {
-  if (unit2.modifiers && unit2.modifiers[cardId$c]) {
-    const originalStamina = unit2.modifiers[cardId$c].originalstat;
-    if (originalStamina && unit2.staminaMax == 0) {
-      unit2.staminaMax = originalStamina;
+function remove$3(unit, underworld) {
+  if (unit.modifiers && unit.modifiers[cardId$c]) {
+    const originalStamina = unit.modifiers[cardId$c].originalstat;
+    if (originalStamina && unit.staminaMax == 0) {
+      unit.staminaMax = originalStamina;
     }
   }
 }
@@ -479,19 +306,19 @@ const spell$b = {
       const targets = state.targetedUnits.filter((u) => u.alive);
       if (!prediction && !globalThis.headless) {
         playDefaultSpellSFX$8(card, prediction);
-        for (let unit2 of targets) {
+        for (let unit of targets) {
           setTimeout(() => {
             FloatingText$5.default({
-              coords: unit2,
+              coords: unit,
               text: `Fast Forward`,
               style: { fill: "#ff0000", strokeThickness: 1 }
             });
           }, 200);
-          procEvents(unit2, prediction, underworld);
+          procEvents(unit, prediction, underworld);
         }
       } else {
-        for (let unit2 of targets) {
-          procEvents(unit2, prediction, underworld);
+        for (let unit of targets) {
+          procEvents(unit, prediction, underworld);
         }
       }
       if (targets.length == 0) {
@@ -501,22 +328,22 @@ const spell$b = {
     }
   }
 };
-async function procEvents(unit2, prediction, underworld) {
-  for (let i = 0; i < unit2.onTurnStartEvents.length; i++) {
-    const eventName = unit2.onTurnStartEvents[i];
+async function procEvents(unit, prediction, underworld) {
+  for (let i = 0; i < unit.onTurnStartEvents.length; i++) {
+    const eventName = unit.onTurnStartEvents[i];
     if (eventName) {
       const fns = Events.default.onTurnStartSource[eventName];
       if (fns) {
-        await fns(unit2, prediction, underworld);
+        await fns(unit, prediction, underworld);
       }
     }
   }
-  for (let i = 0; i < unit2.onTurnEndEvents.length; i++) {
-    const eventName = unit2.onTurnEndEvents[i];
+  for (let i = 0; i < unit.onTurnEndEvents.length; i++) {
+    const eventName = unit.onTurnEndEvents[i];
     if (eventName) {
       const fne = Events.default.onTurnEndSource[eventName];
       if (fne) {
-        await fne(unit2, prediction, underworld);
+        await fne(unit, prediction, underworld);
       }
     }
   }
@@ -537,7 +364,7 @@ function makeFlameStrikeWithParticles(position, prediction, resolver) {
     Particles$3.logNoTextureWarning("makeFlameStrikeAttack");
     return;
   }
-  const config2 = particleEmitter$1.upgradeConfig({
+  const config = particleEmitter$1.upgradeConfig({
     autoUpdate: true,
     "alpha": {
       "start": 0.425,
@@ -592,7 +419,7 @@ function makeFlameStrikeWithParticles(position, prediction, resolver) {
       "h": 0
     }
   }, [texture]);
-  Particles$3.simpleEmitter(position, config2, resolver);
+  Particles$3.simpleEmitter(position, config, resolver);
 }
 const {
   cardUtils: cardUtils$8,
@@ -629,26 +456,26 @@ const spell$a = {
           refundLastSpell$a(state, prediction);
           resolve();
         }
-        for (let unit2 of targets) {
-          const explosionTargets = underworld.getUnitsWithinDistanceOfTarget(unit2, adjustedRadius, prediction);
+        for (let unit of targets) {
+          const explosionTargets = underworld.getUnitsWithinDistanceOfTarget(unit, adjustedRadius, prediction);
           const quantityAdjustedDamageMain = damageMain * quantity;
           const quantityAdjustedDamageSplash = damageSplash * quantity;
           if (!prediction && !globalThis.headless) {
             playDefaultSpellSFX$7(card, prediction);
             setTimeout(() => {
               explosionTargets.forEach((t) => {
-                const damage = t == unit2 ? quantityAdjustedDamageMain : quantityAdjustedDamageSplash;
+                const damage = t == unit ? quantityAdjustedDamageMain : quantityAdjustedDamageSplash;
                 Unit$9.takeDamage({ unit: t, amount: damage, sourceUnit: state.casterUnit }, underworld, prediction);
               });
               resolve();
             }, 400);
-            makeFlameStrikeWithParticles(unit2, prediction);
+            makeFlameStrikeWithParticles(unit, prediction);
           } else {
             if (prediction) {
-              drawUICircle(globalThis.predictionGraphics, unit2, adjustedRadius, 13981270);
+              drawUICircle(globalThis.predictionGraphics, unit, adjustedRadius, 13981270);
             }
             explosionTargets.forEach((t) => {
-              const damage = t == unit2 ? quantityAdjustedDamageMain : quantityAdjustedDamageSplash;
+              const damage = t == unit ? quantityAdjustedDamageMain : quantityAdjustedDamageSplash;
               Unit$9.takeDamage({ unit: t, amount: damage, sourceUnit: state.casterUnit }, underworld, prediction);
             });
             resolve();
@@ -698,8 +525,8 @@ const spell$9 = {
         if (!prediction) {
           playDefaultSpellSFX$6(card, prediction);
         }
-        for (let unit2 of targets) {
-          Unit$8.addModifier(unit2, card.id, underworld, prediction, 0, { amount: quantity });
+        for (let unit of targets) {
+          Unit$8.addModifier(unit, card.id, underworld, prediction, 0, { amount: quantity });
         }
       }
       return state;
@@ -709,37 +536,37 @@ const spell$9 = {
     add: add$4
   },
   events: {
-    onTurnStart: async (unit2, prediction, underworld) => {
-      const modifier = unit2.modifiers[cardId$9];
+    onTurnStart: async (unit, prediction, underworld) => {
+      const modifier = unit.modifiers[cardId$9];
       if (modifier) {
         modifier.graceCountdown--;
-        updateTooltip$2(unit2);
+        updateTooltip$2(unit);
         if (modifier.graceCountdown <= 0) {
           let healing = calculateGraceHealing(modifier.graceQuantity);
-          Unit$8.takeDamage({ unit: unit2, amount: healing }, underworld, prediction);
+          Unit$8.takeDamage({ unit, amount: healing }, underworld, prediction);
           if (!prediction) {
             FloatingText$4.default({
-              coords: unit2,
+              coords: unit,
               text: `Grace +${-healing} health`,
               style: { fill: "#40a058", strokeThickness: 1 }
             });
-            JImage.addOneOffAnimation(unit2, "spell-effects/potionPickup", {}, { animationSpeed: 0.3, loop: false });
+            JImage.addOneOffAnimation(unit, "spell-effects/potionPickup", {}, { animationSpeed: 0.3, loop: false });
             JAudio.playSFXKey("potionPickupHealth");
           }
-          Unit$8.removeModifier(unit2, cardId$9, underworld);
+          Unit$8.removeModifier(unit, cardId$9, underworld);
         }
       }
     }
   }
 };
-function add$4(unit2, underworld, prediction, quantity, extra) {
-  const modifier = cardsUtil$4.getOrInitModifier(unit2, cardId$9, {
+function add$4(unit, underworld, prediction, quantity, extra) {
+  const modifier = cardsUtil$4.getOrInitModifier(unit, cardId$9, {
     isCurse: false,
     quantity,
     persistBetweenLevels: false
   }, () => {
-    if (!unit2.onTurnStartEvents.includes(cardId$9)) {
-      unit2.onTurnStartEvents.push(cardId$9);
+    if (!unit.onTurnStartEvents.includes(cardId$9)) {
+      unit.onTurnStartEvents.push(cardId$9);
     }
   });
   if (!modifier.graceCountdown) {
@@ -747,11 +574,11 @@ function add$4(unit2, underworld, prediction, quantity, extra) {
   }
   modifier.graceQuantity = (modifier.graceQuantity || 0) + extra.amount;
   if (!prediction) {
-    updateTooltip$2(unit2);
+    updateTooltip$2(unit);
   }
 }
-function updateTooltip$2(unit2) {
-  const modifier = unit2.modifiers && unit2.modifiers[cardId$9];
+function updateTooltip$2(unit) {
+  const modifier = unit.modifiers && unit.modifiers[cardId$9];
   if (modifier) {
     modifier.tooltip = `${modifier.graceCountdown} turns until healed for ${-calculateGraceHealing(modifier.graceQuantity)}`;
   }
@@ -790,11 +617,11 @@ Tastes like chicken.`],
       let promises = [];
       let totalManaHarvested = 0;
       const targets = state.targetedUnits.filter((u) => !u.alive && u.unitType != UnitType.PLAYER_CONTROLLED && u.flaggedForRemoval != true);
-      for (let unit2 of targets) {
+      for (let unit of targets) {
         totalManaHarvested += manaRegain * quantity;
         const manaTrailPromises = [];
         if (!prediction) {
-          manaTrailPromises.push(Particles$2.makeManaTrail(unit2, state.casterUnit, underworld, "#e4ffee", "#40ff66", targets.length * quantity));
+          manaTrailPromises.push(Particles$2.makeManaTrail(unit, state.casterUnit, underworld, "#e4ffee", "#40ff66", targets.length * quantity));
         }
         promises.push(prediction ? Promise.resolve() : Promise.all(manaTrailPromises));
       }
@@ -802,8 +629,8 @@ Tastes like chicken.`],
         if (!prediction && !globalThis.headless) {
           playDefaultSpellSFX$5(card, prediction);
         }
-        for (let unit2 of targets) {
-          Unit$7.cleanup(unit2);
+        for (let unit of targets) {
+          Unit$7.cleanup(unit);
         }
         state.casterUnit.mana += totalManaHarvested;
       });
@@ -854,8 +681,8 @@ const spell$7 = {
         if (!prediction) {
           playDefaultSpellSFX$4(card, prediction);
         }
-        for (let unit2 of targets) {
-          Unit$6.addModifier(unit2, card.id, underworld, prediction, 5, { amount: quantity });
+        for (let unit of targets) {
+          Unit$6.addModifier(unit, card.id, underworld, prediction, 5, { amount: quantity });
         }
       }
       if (!prediction && !globalThis.headless) {
@@ -871,41 +698,41 @@ const spell$7 = {
     remove: remove$2
   },
   events: {
-    onTurnEnd: async (unit2, prediction, underworld) => {
-      const modifier = unit2.modifiers[cardId$7];
+    onTurnEnd: async (unit, prediction, underworld) => {
+      const modifier = unit.modifiers[cardId$7];
       if (modifier) {
         const healing = healingAmount(modifier.regenCounter);
-        Unit$6.takeDamage({ unit: unit2, amount: healing }, underworld, prediction);
+        Unit$6.takeDamage({ unit, amount: healing }, underworld, prediction);
         modifier.quantity--;
         if (!prediction) {
-          updateTooltip$1(unit2);
+          updateTooltip$1(unit);
           FloatingText$2.default({
-            coords: unit2,
+            coords: unit,
             text: `Regenerate +${-healing} health`,
             style: { fill: "#40a058", strokeThickness: 1 }
           });
         }
         if (modifier.quantity <= 0) {
-          Unit$6.removeModifier(unit2, cardId$7, underworld);
+          Unit$6.removeModifier(unit, cardId$7, underworld);
         }
       }
     }
   }
 };
-function remove$2(unit2, underworld) {
-  const modifier = unit2.modifiers[cardId$7];
+function remove$2(unit, underworld) {
+  const modifier = unit.modifiers[cardId$7];
   if (modifier) {
     modifier.regenCounter = 0;
   }
 }
-function add$3(unit2, underworld, prediction, quantity, extra) {
-  const modifier = cardsUtil$3.getOrInitModifier(unit2, cardId$7, {
+function add$3(unit, underworld, prediction, quantity, extra) {
+  const modifier = cardsUtil$3.getOrInitModifier(unit, cardId$7, {
     isCurse: false,
     quantity,
     persistBetweenLevels: false
   }, () => {
-    if (!unit2.onTurnEndEvents.includes(cardId$7)) {
-      unit2.onTurnEndEvents.push(cardId$7);
+    if (!unit.onTurnEndEvents.includes(cardId$7)) {
+      unit.onTurnEndEvents.push(cardId$7);
     }
   });
   if (modifier.quantity > 5) {
@@ -913,7 +740,7 @@ function add$3(unit2, underworld, prediction, quantity, extra) {
   }
   if (!prediction) {
     modifier.regenCounter = (modifier.regenCounter || 0) + extra.amount;
-    updateTooltip$1(unit2);
+    updateTooltip$1(unit);
   }
 }
 function healingAmount(castquantity) {
@@ -923,8 +750,8 @@ function healingAmount(castquantity) {
   }
   return healing;
 }
-function updateTooltip$1(unit2) {
-  const modifier = unit2.modifiers && unit2.modifiers[cardId$7];
+function updateTooltip$1(unit) {
+  const modifier = unit.modifiers && unit.modifiers[cardId$7];
   if (modifier) {
     modifier.tooltip = `Healing ${-healingAmount(modifier.regenCounter)} every ${modifier.quantity} turns`;
   }
@@ -960,8 +787,8 @@ const spell$6 = {
         if (!prediction) {
           playDefaultSpellSFX$3(card, prediction);
         }
-        for (let unit2 of targets) {
-          Unit$5.addModifier(unit2, card.id, underworld, prediction, quantity);
+        for (let unit of targets) {
+          Unit$5.addModifier(unit, card.id, underworld, prediction, quantity);
         }
       }
       if (!prediction && !globalThis.headless) {
@@ -977,35 +804,35 @@ const spell$6 = {
     remove: remove$1
   },
   events: {
-    onTurnEnd: async (unit2, prediction, underworld) => {
-      const modifier = unit2.modifiers[cardId$6];
+    onTurnEnd: async (unit, prediction, underworld) => {
+      const modifier = unit.modifiers[cardId$6];
       if (modifier) {
         modifier.quantity--;
         if (modifier.quantity <= 0) {
-          Unit$5.removeModifier(unit2, cardId$6, underworld);
+          Unit$5.removeModifier(unit, cardId$6, underworld);
         }
       }
     }
   }
 };
-function add$2(unit2, underworld, prediction, quantity) {
-  cardsUtil$2.getOrInitModifier(unit2, cardId$6, {
+function add$2(unit, underworld, prediction, quantity) {
+  cardsUtil$2.getOrInitModifier(unit, cardId$6, {
     isCurse: true,
     quantity,
     persistBetweenLevels: false,
-    originalstat: unit2.attackRange
+    originalstat: unit.attackRange
   }, () => {
-    if (!unit2.onTurnEndEvents.includes(cardId$6)) {
-      unit2.onTurnEndEvents.push(cardId$6);
+    if (!unit.onTurnEndEvents.includes(cardId$6)) {
+      unit.onTurnEndEvents.push(cardId$6);
     }
-    unit2.attackRange = 0;
+    unit.attackRange = 0;
   });
 }
-function remove$1(unit2, underworld) {
-  if (unit2.modifiers && unit2.modifiers[cardId$6]) {
-    const originalRange = unit2.modifiers[cardId$6].originalstat;
-    if (originalRange && unit2.attackRange == 0) {
-      unit2.attackRange = originalRange;
+function remove$1(unit, underworld) {
+  if (unit.modifiers && unit.modifiers[cardId$6]) {
+    const originalRange = unit.modifiers[cardId$6].originalstat;
+    if (originalRange && unit.attackRange == 0) {
+      unit.attackRange = originalRange;
     }
   }
 }
@@ -1044,11 +871,11 @@ const spell$5 = {
         refundLastSpell$5(state, prediction, "No targets damaged, mana refunded");
         return state;
       }
-      for (let unit2 of targets) {
+      for (let unit of targets) {
         const manaTrailPromises = [];
         if (!prediction) {
           for (let i = 0; i < quantity; i++) {
-            manaTrailPromises.push(Particles$1.makeManaTrail(state.casterUnit, unit2, underworld, "#ef4242", "#400d0d", targets.length * quantity));
+            manaTrailPromises.push(Particles$1.makeManaTrail(state.casterUnit, unit, underworld, "#ef4242", "#400d0d", targets.length * quantity));
           }
         }
         promises.push(prediction ? Promise.resolve() : Promise.all(manaTrailPromises));
@@ -1058,8 +885,8 @@ const spell$5 = {
           playDefaultSpellSFX$2(card, prediction);
         }
         for (let q = 0; q < quantity; q++) {
-          for (let unit2 of targets) {
-            Unit$4.takeDamage({ unit: unit2, amount: damageDone(state), sourceUnit: state.casterUnit, fromVec2: state.casterUnit }, underworld, prediction);
+          for (let unit of targets) {
+            Unit$4.takeDamage({ unit, amount: damageDone(state), sourceUnit: state.casterUnit, fromVec2: state.casterUnit }, underworld, prediction);
           }
         }
       });
@@ -1128,10 +955,10 @@ const spell$4 = {
         refundLastSpell$4(state, prediction, "No targets damaged, mana refunded");
         return state;
       }
-      for (let unit2 of targets) {
+      for (let unit of targets) {
         if (state.casterUnit.health < state.casterUnit.healthMax) {
-          if (unit2.health < 10 * quantity) {
-            state.casterUnit.health += unit2.health / 2;
+          if (unit.health < 10 * quantity) {
+            state.casterUnit.health += unit.health / 2;
           } else {
             state.casterUnit.health += 5 * quantity;
           }
@@ -1140,9 +967,9 @@ const spell$4 = {
           }
         }
         if (!prediction) {
-          oneOffImage(unit2, animationPath, containerSpells);
+          oneOffImage(unit, animationPath, containerSpells);
         }
-        Unit$3.takeDamage({ unit: unit2, amount: 10 * quantity, sourceUnit: state.casterUnit, fromVec2: state.casterUnit }, underworld, prediction);
+        Unit$3.takeDamage({ unit, amount: 10 * quantity, sourceUnit: state.casterUnit, fromVec2: state.casterUnit }, underworld, prediction);
       }
       state.casterUnit.health -= state.casterUnit.health % 1;
       if (!prediction && !globalThis.headless) {
@@ -1229,9 +1056,9 @@ const spell$2 = {
         refundLastSpell$2(state, prediction, "No targets damaged, mana refunded");
         return state;
       }
-      for (let unit2 of targets) {
-        let damage = unit2.damage * quantity;
-        Unit$2.takeDamage({ unit: unit2, amount: damage, fromVec2: state.casterUnit, sourceUnit: state.casterUnit }, underworld, prediction);
+      for (let unit of targets) {
+        let damage = unit.damage * quantity;
+        Unit$2.takeDamage({ unit, amount: damage, fromVec2: state.casterUnit, sourceUnit: state.casterUnit }, underworld, prediction);
         Unit$2.takeDamage({ unit: state.casterUnit, amount: damage * retaliate }, underworld, prediction);
       }
       state.casterUnit.health -= state.casterUnit.health % 1;
@@ -1358,9 +1185,9 @@ const spell$1 = {
         if (!prediction) {
           playDefaultSpellSFX(card, prediction);
         }
-        for (let unit2 of targets) {
-          Unit$1.addModifier(unit2, card.id, underworld, prediction, quantity);
-          unit2.damage += quantity * attackMultiplier;
+        for (let unit of targets) {
+          Unit$1.addModifier(unit, card.id, underworld, prediction, quantity);
+          unit.damage += quantity * attackMultiplier;
         }
       }
       if (!prediction && !globalThis.headless) {
@@ -1376,38 +1203,38 @@ const spell$1 = {
     remove
   },
   events: {
-    onTurnStart: async (unit2, prediction, underworld) => {
-      const modifier = unit2.modifiers[cardId$1];
+    onTurnStart: async (unit, prediction, underworld) => {
+      const modifier = unit.modifiers[cardId$1];
       if (modifier && !prediction) {
-        Unit$1.takeDamage({ unit: unit2, amount: modifier.quantity * damageMultiplier }, underworld, prediction);
+        Unit$1.takeDamage({ unit, amount: modifier.quantity * damageMultiplier }, underworld, prediction);
         FloatingText$1.default({
-          coords: unit2,
+          coords: unit,
           text: `${modifier.quantity * damageMultiplier} rage damage`,
           style: { fill: "red", strokeThickness: 1 }
         });
-        unit2.damage += attackMultiplier;
+        unit.damage += attackMultiplier;
         modifier.quantity++;
       }
     }
   }
 };
-function add$1(unit2, underworld, prediction, quantity) {
-  cardsUtil$1.getOrInitModifier(unit2, cardId$1, {
+function add$1(unit, underworld, prediction, quantity) {
+  cardsUtil$1.getOrInitModifier(unit, cardId$1, {
     isCurse: true,
     quantity,
     persistBetweenLevels: false
   }, () => {
-    if (!unit2.onTurnStartEvents.includes(cardId$1)) {
-      unit2.onTurnStartEvents.push(cardId$1);
+    if (!unit.onTurnStartEvents.includes(cardId$1)) {
+      unit.onTurnStartEvents.push(cardId$1);
     }
-    makeBurningRageParticles(unit2, prediction, underworld, quantity);
+    makeBurningRageParticles(unit, prediction, underworld, quantity);
   });
 }
-function remove(unit2, underworld) {
-  unit2.damage -= unit2.modifiers[cardId$1].quantity * attackMultiplier;
-  unit2.damage = Math.max(unit2.damage, 0);
+function remove(unit, underworld) {
+  unit.damage -= unit.modifiers[cardId$1].quantity * attackMultiplier;
+  unit.damage = Math.max(unit.damage, 0);
   for (let follower of underworld.particleFollowers) {
-    if (follower.emitter.name === BURNING_RAGE_PARTICLE_EMITTER_NAME && follower.target == unit2) {
+    if (follower.emitter.name === BURNING_RAGE_PARTICLE_EMITTER_NAME && follower.target == unit) {
       ParticleCollection.stopAndDestroyForeverEmitter(follower.emitter);
       break;
     }
@@ -1443,10 +1270,10 @@ const spell = {
         refundLastSpell(state, prediction, "No targets damaged, mana refunded");
         return state;
       }
-      for (let unit2 of targets) {
-        Unit.addModifier(unit2, cardId, underworld, prediction, maxDuration, { amount: quantity });
+      for (let unit of targets) {
+        Unit.addModifier(unit, cardId, underworld, prediction, maxDuration, { amount: quantity });
         if (!prediction) {
-          triggerDistanceDamage(unit2, underworld, prediction);
+          triggerDistanceDamage(unit, underworld, prediction);
         }
       }
       return state;
@@ -1457,41 +1284,41 @@ const spell = {
   },
   events: {
     //onMove: (unit, newLocation) => {triggerDistanceDamage(unit);return newLocation},
-    onTakeDamage: (unit2, amount, underworld, prediction) => {
-      triggerDistanceDamage(unit2, underworld, prediction);
+    onTakeDamage: (unit, amount, underworld, prediction) => {
+      triggerDistanceDamage(unit, underworld, prediction);
       return amount;
     },
-    onTurnStart: async (unit2, prediction, underworld) => {
-      triggerDistanceDamage(unit2, underworld, prediction);
+    onTurnStart: async (unit, prediction, underworld) => {
+      triggerDistanceDamage(unit, underworld, prediction);
     },
-    onTurnEnd: async (unit2, prediction, underworld) => {
-      triggerDistanceDamage(unit2, underworld, prediction);
+    onTurnEnd: async (unit, prediction, underworld) => {
+      triggerDistanceDamage(unit, underworld, prediction);
     }
   }
 };
-function add(unit2, _underworld, prediction, quantity, extra) {
-  let firstStack = !unit2.onTurnStartEvents.includes(cardId);
-  const modifier = cardsUtil.getOrInitModifier(unit2, cardId, {
+function add(unit, _underworld, prediction, quantity, extra) {
+  let firstStack = !unit.onTurnStartEvents.includes(cardId);
+  const modifier = cardsUtil.getOrInitModifier(unit, cardId, {
     isCurse: false,
     quantity,
     persistBetweenLevels: false
   }, () => {
     if (firstStack) {
-      unit2.onTurnEndEvents.push(cardId);
-      unit2.onTurnStartEvents.push(cardId);
-      unit2.onTakeDamageEvents.push(cardId);
+      unit.onTurnEndEvents.push(cardId);
+      unit.onTurnStartEvents.push(cardId);
+      unit.onTakeDamageEvents.push(cardId);
     }
   });
   if (firstStack) {
-    modifier.last_x = unit2.x;
-    modifier.last_y = unit2.y;
+    modifier.last_x = unit.x;
+    modifier.last_y = unit.y;
   }
   if (modifier.quantity > maxDuration) {
     modifier.quantity = maxDuration;
   }
   if (!prediction) {
     modifier.caltropsCounter = (modifier.caltropsCounter || 0) + extra.amount;
-    updateTooltip(unit2);
+    updateTooltip(unit);
   }
 }
 function caltropsAmount(castquantity) {
@@ -1501,19 +1328,19 @@ function caltropsAmount(castquantity) {
   }
   return caltrops;
 }
-function updateTooltip(unit2) {
-  const modifier = unit2.modifiers && unit2.modifiers[cardId];
+function updateTooltip(unit) {
+  const modifier = unit.modifiers && unit.modifiers[cardId];
   if (modifier) {
     modifier.tooltip = `When target moves deal ${caltropsAmount(modifier.caltropsCounter)} damage, lasts ${modifier.quantity} turns`;
   }
 }
-function triggerDistanceDamage(unit2, underworld, prediction = false) {
-  if (!unit2.alive) {
+function triggerDistanceDamage(unit, underworld, prediction = false) {
+  if (!unit.alive) {
     return;
   }
-  const modifier = unit2.modifiers && unit2.modifiers[cardId];
-  let x_diff = unit2.x - modifier.last_x;
-  let y_diff = unit2.y - modifier.last_y;
+  const modifier = unit.modifiers && unit.modifiers[cardId];
+  let x_diff = unit.x - modifier.last_x;
+  let y_diff = unit.y - modifier.last_y;
   if (x_diff == 0 && y_diff == 0) {
     return;
   }
@@ -1523,12 +1350,12 @@ function triggerDistanceDamage(unit2, underworld, prediction = false) {
   if (!modifier || damage < 1) {
     return;
   }
-  modifier.last_x = unit2.x;
-  modifier.last_y = unit2.y;
-  Unit.takeDamage({ unit: unit2, amount: damage }, underworld, prediction);
+  modifier.last_x = unit.x;
+  modifier.last_y = unit.y;
+  Unit.takeDamage({ unit, amount: damage }, underworld, prediction);
   if (!prediction) {
     FloatingText.default({
-      coords: unit2,
+      coords: unit,
       text: `${damage} caltrops damage`,
       style: { fill: "#grey", strokeThickness: 1 }
     });
@@ -1552,7 +1379,6 @@ const mod = {
   spritesheet: "spellmasons-mods/Renes_gimmicks/graphics/icons/renes_spritesheet.json"
 };
 const mods = [
-  mod$3,
   mod$2,
   mod$1,
   mod

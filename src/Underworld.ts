@@ -1814,7 +1814,7 @@ export default class Underworld {
         }
         // Add wall shadows
         if (tile.image.endsWith('wallN.png')) {
-          const sprite = addPixiSprite('tiles/wallShadow.png', containerUnits);
+          const sprite = addPixiSprite('tiles/wallShadow.png', containerBoard);
           if (sprite) {
             sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
             // Place directly below the wall
@@ -2742,7 +2742,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         // they will be cleaned up so they shouldn't be killed here as this check is just to ensure
         // no living units that are unreachable hinder progressing through the game)
         if (!u.flaggedForRemoval) {
-          if (this.isCoordOnWallTile({ x: u.x, y: u.y + config.PATHING_POLYGON_OFFSET })) {
+          if (this.isCoordOnWallTile({ x: u.x, y: u.y + config.WALL_BOUNDS_OFFSET })) {
             if (u.unitType == UnitType.PLAYER_CONTROLLED) {
               // Do NOT kill player units that are out of bounds
               console.warn('Player unit out of bounds');
