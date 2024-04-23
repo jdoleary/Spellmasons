@@ -2697,7 +2697,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         if (unitSource) {
           const { targets, canAttack } = cachedTargets[u.id] || { targets: [], canAttack: false };
           // Add unit action to the array of promises to wait for
-          let promise = raceTimeout(5000, `Unit.action; unitSourceId: ${u.unitSourceId}; subType: ${u.unitSubType}`, unitSource.action(u, targets, this, canAttack).then(async (actionResult) => {
+          let promise = raceTimeout(10000, `Unit.action; unitSourceId: ${u.unitSourceId}; subType: ${u.unitSubType}`, unitSource.action(u, targets, this, canAttack).then(async (actionResult) => {
             // Ensure ranged units get out of liquid so they don't take DOT
             // This doesn't apply to melee units since they will automatically move towards you to attack,
             // whereas without this ranged units would be content to just sit in liquid and die from the DOT
@@ -3510,6 +3510,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         return u.alive && Unit.inRange(u, attackTarget) && u.mana >= u.manaCostToCast;
       case UnitSubType.SUPPORT_CLASS:
         // Support classes (such as priests and summoners) dont attack targets
+        return false;
+      case UnitSubType.GORU_BOSS:
         return false;
       default:
         console.error('Cannot determine canUnitAttackTarget, unit sub type is unaccounted for', u.unitSubType)

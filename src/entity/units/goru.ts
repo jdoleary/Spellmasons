@@ -29,7 +29,7 @@ const unit: UnitSource = {
   info: {
     description: 'goru description',
     image: 'units/guruIdle',
-    subtype: UnitSubType.RANGED_RADIUS,
+    subtype: UnitSubType.GORU_BOSS,
   },
   unitProps: {
     damage: 30,
@@ -75,8 +75,6 @@ const unit: UnitSource = {
     // - 1AP - Summon allies
     // - 1AP - Move
     let actionPoints = 2;
-
-    // TODO - Fix Goru Race Timeout (5000ms)
 
     // - Action -
     // Consume/Explode/Resurrect primed corpses

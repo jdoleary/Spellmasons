@@ -1691,6 +1691,8 @@ export function drawSelectedGraphics(unit: IUnit, prediction: boolean = false, u
           drawUICircle(globalThis.selectedUnitGraphics, unit, unit.staminaMax + unit.attackRange, rangeCircleColor, i18n('Attack Range'));
         } else if (unit.unitSubType === UnitSubType.DOODAD) {
           drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Explosion Radius'));
+        } else if (unit.unitSubType === UnitSubType.GORU_BOSS) {
+          drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
         }
       }
     }
