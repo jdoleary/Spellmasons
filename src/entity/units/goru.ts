@@ -60,7 +60,7 @@ const unit: UnitSource = {
     death: 'goruDeath'
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
-    // TODO - Bug: Undying 2 can be re-added by cloning/splitting/creating a goru with no undying modifier
+    // TODO - Bug: Undying 2 can be re-added by cloning/splitting/creating a Goru with no undying modifier
     // Using originalLife might prevent this, but also prevents summoned Goru's from getting undying.
     if (!unit.modifiers[undyingModifierId]) {
       Unit.addModifier(unit, undyingModifierId, underworld, false, 2);
@@ -130,7 +130,7 @@ const unit: UnitSource = {
                   unit.healthMax += 10;
                   unit.staminaMax += 10;
                   unit.manaMax += 10;
-                  // TODO - Need to scale bone shrapnel damage?
+                  // TODO - Doesn't scale bone shrapnel damage. Should it?
                   unit.damage += 10;
                   unit.attackRange += 10;
                   unit.strength += 1;
@@ -376,7 +376,7 @@ const unit: UnitSource = {
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-    // TODO - Improve / Fix attention marker
+    // TODO - Improve / Fix attention marker and smart filter
     // If the goru has mana, he will usually take an action
     if (unit.mana >= unit.manaCostToCast) {
       return [unit];
