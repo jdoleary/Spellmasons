@@ -61,7 +61,7 @@ const unit: UnitSource = {
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     // TODO - Bug: Undying 2 can be re-added by cloning/splitting/creating a goru with no undying modifier
-    // Using originalLife prevents this, but also prevents summoned Goru's from getting undying.
+    // Using originalLife might prevent this, but also prevents summoned Goru's from getting undying.
     if (!unit.modifiers[undyingModifierId]) {
       Unit.addModifier(unit, undyingModifierId, underworld, false, 2);
     }
