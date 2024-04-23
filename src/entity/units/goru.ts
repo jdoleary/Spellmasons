@@ -10,7 +10,7 @@ import * as Image from '../../graphics/Image';
 import * as colors from '../../graphics/ui/colors';
 import { undyingModifierId } from '../../modifierUndying';
 import { resurrect_id } from '../../cards/resurrect';
-import { corpsePrimedId } from '../../modifierCorpsePrimed';
+import { primedCorpseId } from '../../modifierPrimedCorpse';
 import { boneShrapnelCardId, boneShrapnelRadius } from '../../cards/bone_shrapnel';
 import { makeManaTrail } from '../../graphics/Particles';
 import seedrandom from 'seedrandom';
@@ -79,7 +79,7 @@ const unit: UnitSource = {
     // - Action -
     // Consume/Explode/Resurrect primed corpses
     if (actionPoints >= 2 && unit.mana >= unit.manaCostToCast) {
-      const primedCorpses = underworld.units.filter(u => u.modifiers[corpsePrimedId])
+      const primedCorpses = underworld.units.filter(u => u.modifiers[primedCorpseId])
       if (primedCorpses.length) {
         Unit.returnToDefaultSprite(unit);
         // Triggering corpse effects should feel like a high impact action
@@ -243,7 +243,7 @@ const unit: UnitSource = {
                 // Add projectile hit animation
                 Image.addOneOffAnimation(target, 'projectile/lobberProjectileHit');
 
-                Unit.addModifier(target, corpsePrimedId, underworld, false, 1);
+                Unit.addModifier(target, primedCorpseId, underworld, false, 1);
                 resolve();
               });
             }));

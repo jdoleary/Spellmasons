@@ -7,17 +7,17 @@ import Underworld from './Underworld';
 import * as colors from './graphics/ui/colors';
 
 // A modifier used by the Goru boss to prime corpses for explosion/consumption/resurrection
-export const corpsePrimedId = 'corpsePrimed';
-export default function registerCorpsePrimed() {
-  registerModifiers(corpsePrimedId, {
+export const primedCorpseId = 'primedCorpse';
+export default function registerPrimedCorpse() {
+  registerModifiers(primedCorpseId, {
     add: (unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) => {
-      const modifier = getOrInitModifier(unit, corpsePrimedId, { isCurse: false, quantity, keepOnDeath: true }, () => {
+      const modifier = getOrInitModifier(unit, primedCorpseId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         // Add events
-        if (!unit.onDrawSelectedEvents.includes(corpsePrimedId)) {
-          unit.onDrawSelectedEvents.push(corpsePrimedId);
+        if (!unit.onDrawSelectedEvents.includes(primedCorpseId)) {
+          unit.onDrawSelectedEvents.push(primedCorpseId);
         }
-        if (!unit.onTurnStartEvents.includes(corpsePrimedId)) {
-          unit.onTurnStartEvents.push(corpsePrimedId);
+        if (!unit.onTurnStartEvents.includes(primedCorpseId)) {
+          unit.onTurnStartEvents.push(primedCorpseId);
         }
       });
 
@@ -25,7 +25,7 @@ export default function registerCorpsePrimed() {
       modifier.quantity = Math.min(modifier.quantity, 1);
     }
   });
-  registerEvents(corpsePrimedId, {
+  registerEvents(primedCorpseId, {
     onDrawSelected: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       if (globalThis.selectedUnitGraphics) {
         drawUICircle(globalThis.selectedUnitGraphics, unit, baseExplosionRadius, colors.healthRed, 'Explosion Radius');
