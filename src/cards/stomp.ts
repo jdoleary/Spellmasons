@@ -40,6 +40,7 @@ const spell: Spell = {
         // Charge up VFX
         if (!prediction && !globalThis.headless) {
           const delayBeforeDash = 500; //ms
+          playDefaultSpellSFX(card, prediction);
           makeStompWindupParticles(state.casterUnit, prediction);
           await new Promise(resolve => setTimeout(resolve, delayBeforeDash));
         }
@@ -56,6 +57,7 @@ const spell: Spell = {
         } else if (!globalThis.headless) {
           // Stomp VFX
           makeStompExplodeParticles2(state.casterUnit, radius, true, prediction);
+          // BloatExplosion SFX is left here intentionally for game-feel
           playSFXKey('bloatExplosion');
         }
 

@@ -9,6 +9,7 @@ import * as config from '../config';
 import * as colors from '../graphics/ui/colors';
 import Underworld from '../Underworld';
 import { getOrInitModifier } from './util';
+import { playDefaultSpellSFX } from './cardUtils';
 
 export const targetCursedId = 'Target Cursed';
 function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra?: any) {
@@ -25,8 +26,9 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.FORBIDDEN],
-    thumbnail: 'spellIconTargetCursed.png',
     requiresFollowingCard: false,
+    sfx: 'targetCursed',
+    thumbnail: 'spellIconTargetCursed.png',
     description: 'spell_target_cursed',
     allowNonUnitTarget: true,
     effect: async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean) => {
@@ -37,7 +39,7 @@ const spell: Spell = {
       }
 
       if (!prediction && !globalThis.headless && targets.length) {
-        playSFXKey('targeting');
+        playDefaultSpellSFX(card, prediction);
         await animateTargetCursed(targets);
       }
 

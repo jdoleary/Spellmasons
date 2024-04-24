@@ -25,7 +25,7 @@ const spell: Spell = {
     id: meteorCardId,
     category: CardCategory.Damage,
     supportQuantity: true,
-    sfx: 'push',
+    sfx: 'meteorFall',
     manaCost: 60,
     healthCost: 0,
     expenseScaling: 2,
@@ -59,8 +59,9 @@ const spell: Spell = {
       }
 
       if (!prediction && !globalThis.headless) {
-        await meteorProjectiles(meteorLocations, underworld)
         playDefaultSpellSFX(card, prediction);
+        await meteorProjectiles(meteorLocations, underworld)
+        playSFXKey('meteorExplode');
       }
 
       const adjustedRadius = baseRadius * (1 + (0.25 * state.aggregator.radiusBoost));
