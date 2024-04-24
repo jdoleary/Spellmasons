@@ -79,7 +79,7 @@ import { Emitter } from '@pixi/particle-emitter';
 import { golem_unit_id } from './entity/units/golem';
 import { cleanUpPerkList, createPerkElement, generatePerks, tryTriggerPerk, showPerkList, hidePerkList, createCursePerkElement, StatCalamity, generateRandomStatCalamity } from './Perk';
 import deathmason, { ORIGINAL_DEATHMASON_DEATH, bossmasonUnitId, summonUnitAtPickup } from './entity/units/deathmason';
-import goru from './entity/units/goru';
+import goru, { GORU_UNIT_ID } from './entity/units/goru';
 import { hexToString } from './graphics/ui/colorUtil';
 import { doLiquidEffect } from './inLiquid';
 import { findRandomGroundLocation } from './entity/units/summoner';
@@ -3443,8 +3443,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
     }
   }
-  // TODO - This should factor in fortify, debilitate, bloat explosions, etc.
-  // Any reason we dont fully simulate the enemy turn and store relevant results?
+  // For AI Refactor: https://github.com/jdoleary/Spellmasons/issues/388
+  // TODO - This doesn't factor in fortify, debilitate, bloat explosions, etc.
+  // This also doesn't play well with units that have different actions, such as the Goru
+  // Is there a way for us to better predict the enemy turn, in a way that considers
+  // the game state and always stays in sync with the actual outcome of combat?
   getSmartTargets(units: Unit.IUnit[]): { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } {
     const cachedTargets: { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } = {};
     for (let subTypes of this.subTypesTurnOrder) {
@@ -3453,14 +3456,20 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       for (let u of readyToTakeTurnUnits) {
         const unitSource = allUnits[u.unitSourceId];
         if (unitSource) {
-          const targets = unitSource.getUnitAttackTargets(u, this);
-          const canAttack = this.canUnitAttackTarget(u, targets && targets[0])
-          cachedTargets[u.id] = { targets, canAttack };
-          this.incrementTargetsNextTurnDamage(targets, u.damage, canAttack);
-          if (unitSource.id == PRIEST_ID) {
-            // Signal to other priests that this one is targeted for resurrection
-            // so multiple priests don't try to ressurect the same target
-            this.incrementTargetsNextTurnDamage(targets, -u.healthMax, true);
+          if (unitSource.id == GORU_UNIT_ID) {
+            // Special smart targeting for goru
+            // Save for AI refactor?
+          }
+          else {
+            const targets = unitSource.getUnitAttackTargets(u, this);
+            const canAttack = this.canUnitAttackTarget(u, targets && targets[0])
+            cachedTargets[u.id] = { targets, canAttack };
+            this.incrementTargetsNextTurnDamage(targets, u.damage, canAttack);
+            if (unitSource.id == PRIEST_ID) {
+              // Signal to other priests that this one is targeted for resurrection
+              // so multiple priests don't try to ressurect the same target
+              this.incrementTargetsNextTurnDamage(targets, -u.healthMax, true);
+            }
           }
         }
       }
