@@ -17,7 +17,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconAlchemize.png',
-    sfx: 'heal',
+    sfx: 'alchemize',
     description: ['spell_alchemize'],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target potions
@@ -26,7 +26,6 @@ const spell: Spell = {
         refundLastSpell(state, prediction, 'No valid targets. Cost refunded.');
         return state;
       }
-
 
       playDefaultSpellSFX(card, prediction);
       for (let potion of targets) {

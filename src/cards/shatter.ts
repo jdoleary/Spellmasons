@@ -8,6 +8,7 @@ import * as colors from '../graphics/ui/colors';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { freezeCardId } from './freeze';
 import { baseExplosionRadius, explode } from '../effects/explode';
+import { playDefaultSpellSFX } from './cardUtils';
 
 export const shatterCardId = 'Shatter';
 const damage = 40;
@@ -23,6 +24,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
+    sfx: 'shatter',
     thumbnail: 'spellIconShatter.png',
     description: [`spell_shatter`, damage.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
@@ -33,6 +35,7 @@ const spell: Spell = {
         return state;
       }
 
+      playDefaultSpellSFX(card, prediction);
       // We can't use a simple for-loop here, because one explosion may cause
       // another unit to die and thus lose their freeze modifier before they shatter.
       // Instead, we'll cache an array of locations and radii
