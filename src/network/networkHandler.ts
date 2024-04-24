@@ -1254,7 +1254,7 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       storage.set(storage.STORAGE_ID_PLAYER_COLOR_MAGIC, colorMagic);
     }
     let capped_name = name;
-    if (capped_name !== undefined) {
+    if (capped_name) {
       capped_name = capped_name.slice(0, 70);
       storage.set(storage.STORAGE_ID_PLAYER_NAME, capped_name || '');
     }
