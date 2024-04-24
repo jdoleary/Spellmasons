@@ -3208,7 +3208,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
     const upgradesLeftToChoose = this.upgradesLeftToChoose(player);
     const perksLeftToChoose = this.perksLeftToChoose(player);
-    const cursesLeftToChoose = this.cursesLeftToChoose(player);
+    // Calamities have been removed, and the commented code below causes a bug
+    // that prevents upgrades from working in the plus levels
+    const cursesLeftToChoose = 0; //this.cursesLeftToChoose(player);
+    console.log("Upgrades/Perks/Curses left to choose:", upgradesLeftToChoose, perksLeftToChoose, cursesLeftToChoose);
+
     // Return immediately if player has no upgrades that left to pick from
     if (upgradesLeftToChoose <= 0 && perksLeftToChoose <= 0 && cursesLeftToChoose <= 0) {
       console.log('showUpgrades: Closing upgrade screen, nothing left to pick');
@@ -3216,6 +3220,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       elEndTurnBtn?.classList.toggle('upgrade', false);
       return;
     }
+
     const isPerk = perksLeftToChoose > 0 || cursesLeftToChoose > 0;
     let minimumProbability = 0;
     if (upgradesLeftToChoose > 0 && player.inventory.length < config.STARTING_CARD_COUNT) {
@@ -3229,6 +3234,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         isCursePerk ? 'Pick a Calamity' : i18n(['Spend Points', perksLeftToChoose.toString()])
         : pickingClass ? 'Pick a Class' : 'Pick a Spell');
     }
+
     // If playing hotseat multiplayer, prepend the player name so users know which player they
     // are picking an upgrade for
     if (elUpgradePickerLabel) {
@@ -3242,6 +3248,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (!elUpgradePicker || !elUpgradePickerContent) {
       console.error('showUpgrades: elUpgradePicker or elUpgradePickerContent are undefined.');
     }
+
     if (player) {
       let numberOfUpgradesToChooseFrom = 3 - player.reroll;
       if (player.mageType == 'Gambler') {
