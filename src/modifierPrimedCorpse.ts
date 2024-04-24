@@ -17,9 +17,6 @@ export default function registerPrimedCorpse() {
         if (!unit.onDrawSelectedEvents.includes(primedCorpseId)) {
           unit.onDrawSelectedEvents.push(primedCorpseId);
         }
-        if (!unit.onTurnStartEvents.includes(primedCorpseId)) {
-          unit.onTurnStartEvents.push(primedCorpseId);
-        }
         makePrimedCorpseParticles(unit, underworld, prediction);
       });
 
