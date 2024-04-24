@@ -3459,6 +3459,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           if (unitSource.id == GORU_UNIT_ID) {
             // Special smart targeting for goru
             // Save for AI refactor?
+            const targets = unitSource.getUnitAttackTargets(u, this);
+            const canAttack = this.canUnitAttackTarget(u, targets && targets[0])
+            cachedTargets[u.id] = { targets, canAttack };
           }
           else {
             const targets = unitSource.getUnitAttackTargets(u, this);

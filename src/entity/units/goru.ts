@@ -376,7 +376,7 @@ const unit: UnitSource = {
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
-    // TODO - Improve / Fix attention marker and smart filter
+    // TODO - Improve attention marker and smart filter? See: underworld.getSmartTargets()
     // If the goru has mana, he will usually take an action
     if (unit.mana >= unit.manaCostToCast) {
       return [unit];
