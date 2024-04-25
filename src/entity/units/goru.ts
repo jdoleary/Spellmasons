@@ -23,6 +23,10 @@ import { containerUnits } from '../../graphics/PixiUtils';
 import { BLOOD_GOLEM_ID } from './bloodGolem';
 import { BLOOD_ARCHER_ID } from './blood_archer';
 
+const projectileColorReplace: { colors: [number, number][]; epsilon: number } = {
+  colors: [[0x899da2, 0xffffff], [0x758d92, 0xf1f1f1]],
+  epsilon: 0.2
+};
 export const GORU_UNIT_ID = 'Goru';
 const unit: UnitSource = {
   id: GORU_UNIT_ID,
@@ -160,6 +164,7 @@ const unit: UnitSource = {
                   unit,
                   target,
                   'projectile/lobberProjectile',
+                  { colorReplace: projectileColorReplace, loop: true }
                 ).then(() => {
                   // Add projectile hit animation
                   Image.addOneOffAnimation(target, 'projectile/lobberProjectileHit');
@@ -194,6 +199,7 @@ const unit: UnitSource = {
                   unit,
                   target,
                   'projectile/lobberProjectile',
+                  { colorReplace: projectileColorReplace, loop: true }
                 ).then(() => {
                   // Add projectile hit animation
                   Image.addOneOffAnimation(target, 'projectile/lobberProjectileHit');
@@ -239,6 +245,7 @@ const unit: UnitSource = {
                 unit,
                 target,
                 'projectile/lobberProjectile',
+                { colorReplace: projectileColorReplace, loop: true }
               ).then(() => {
                 // Add projectile hit animation
                 Image.addOneOffAnimation(target, 'projectile/lobberProjectileHit');
@@ -272,6 +279,7 @@ const unit: UnitSource = {
                 unit,
                 target,
                 'projectile/lobberProjectile',
+                { colorReplace: projectileColorReplace, loop: true }
               ).then(() => {
                 // Add projectile hit animation
                 Image.addOneOffAnimation(target, 'projectile/lobberProjectileHit');
@@ -328,6 +336,7 @@ const unit: UnitSource = {
                 unit,
                 target.coords,
                 'projectile/lobberProjectile',
+                { colorReplace: projectileColorReplace, loop: true }
               ).then(() => {
                 // Add projectile hit animation
                 Image.addOneOffAnimation(target, 'projectile/lobberProjectileHit');
