@@ -394,7 +394,7 @@ function getScaleFromStrength(strength: number): number {
   // adjust strength to ensure scale = 1 at strength = 1
   strength -= 1;
   // calculate scale multiplier with diminishing formula
-  // 6 is an arbitrary number that controls the speed at which the scale approaches the max
+  // 20 is an arbitrary number that controls the speed at which the scale approaches the max
   return 1 + (maxMultiplier - 1) * (strength / (strength + 20))
 }
 function setupShaders(unit: IUnit) {
