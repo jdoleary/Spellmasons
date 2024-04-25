@@ -2,8 +2,10 @@ import { registerEvents, registerModifiers } from "./cards";
 import { resurrect_id } from "./cards/resurrect";
 import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
+import * as config from './config';
 import { summoningSicknessId } from "./modifierSummoningSickness";
 import Underworld from './Underworld';
+import floatingText from "./graphics/FloatingText";
 
 // A modifier that makes a unit resurrect during its next onTurnStart()
 export const undyingModifierId = 'undying';
@@ -21,6 +23,13 @@ export default function registerUndying() {
   registerEvents(undyingModifierId, {
     onTurnStart: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       if (!unit.alive) {
+        if (!prediction) {
+          floatingText({
+            coords: unit,
+            text: `Undying`,
+            style: { fill: 'white', ...config.PIXI_TEXT_DROP_SHADOW }
+          });
+        }
         const { targetedUnits } = await underworld.castCards({
           casterCardUsage: {},
           casterUnit: unit,
