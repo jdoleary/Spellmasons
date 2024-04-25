@@ -3525,6 +3525,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         // Support classes (such as priests and summoners) dont attack targets
         return false;
       case UnitSubType.GORU_BOSS:
+        // Goru's attention marker is handled elsewhere: He's always going to do some action when he has mana
+        // Goru's getUnitAttackTargets functions similarly to summoners, returning himself if he has mana to act
         return false;
       default:
         console.error('Cannot determine canUnitAttackTarget, unit sub type is unaccounted for', u.unitSubType)
