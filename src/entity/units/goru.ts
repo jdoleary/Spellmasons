@@ -64,10 +64,10 @@ const unit: UnitSource = {
     death: 'goruDeath'
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
-    // TODO - Bug: Undying 2 can be re-added by cloning/splitting/creating a Goru with no undying modifier
+    // TODO - Bug: Undying can be re-added by cloning/splitting/creating a Goru with no undying modifier
     // Using originalLife might prevent this, but also prevents summoned Goru's from getting undying.
     if (!unit.modifiers[undyingModifierId]) {
-      Unit.addModifier(unit, undyingModifierId, underworld, false, 2);
+      Unit.addModifier(unit, undyingModifierId, underworld, false, 1);
     }
   },
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
