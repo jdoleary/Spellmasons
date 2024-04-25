@@ -369,7 +369,11 @@ const unit: UnitSource = {
       }
     }
 
-    if (actionPoints >= 1) {
+    // TODO - https://github.com/jdoleary/Spellmasons/issues/663
+    // This should say (actionPoints >= 1), to allow the Goru movement after attacking/summoning
+    // Using (actionPoints >= 2) ensures the Goru never moves after taking an action,
+    // which prevents the above issue from happening
+    if (actionPoints >= 2) {
       // Goru can move after some actions
       // Movement: Walk towards nearest enemy, prioritizing players
       const nearestEnemy = Unit.closestInListOfUnits(unit, underworld.getRemainingPlayerUnits().filter(u => u.faction != unit.faction))
