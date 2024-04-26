@@ -361,24 +361,11 @@ export function triggerPickup(pickup: IPickup, unit: IUnit, player: Player.IPlay
   const willTrigger = !pickup.flaggedForRemoval && unit.alive && pickup.willTrigger({ unit, player, pickup, underworld });
   if (willTrigger) {
     pickup.effect({ unit, player, pickup, underworld, prediction });
-    // Removal all pickups when they are "picked up", unless it is
-    // the Purple Portal.  This is because in multiplayer, it's possible
-    // for a player to trigger multiple portals at once, leaving the other
-    // player stranded.  This ensures that portals are not removed when
-    // used but all other pickups should be.  If, in the future, there's
-    // another pickup that shouldn't be removed when used, this behavior
-    // should be refactored into a property on IPickup
-    if (pickup.name !== PORTAL_PURPLE_NAME) {
-      removePickup(pickup, underworld, prediction);
-    }
+    removePickup(pickup, underworld, prediction);
     // Now that the players attributes may have changed, sync UI
     syncPlayerHealthManaUI(underworld);
   }
-  // We exclude purple portals because they are not removed and
-  // Send many progress game state messages
-  if (pickup.name !== PORTAL_PURPLE_NAME) {
-    underworld.progressGameState();
-  }
+  underworld.progressGameState();
 }
 export function tryTriggerPickup(pickup: IPickup, unit: IUnit, underworld: Underworld, prediction: boolean) {
   if (pickup.flaggedForRemoval) {
@@ -439,13 +426,6 @@ export function tryTriggerPickup(pickup: IPickup, unit: IUnit, underworld: Under
             console.log(`Unit touched pickup before headless has: ${pickup.name}, ${unit.id}, ${player?.name}`)
             // Only send a FORCE_TRIGGER_PICKUP message if the unit is the client's own player unit or a non player unit
             if (player && globalThis.player == player) {
-              // flag pickup so it doesn't continue to send FORCE_TRIGGER_PICKUP
-              // until the FORCE_TRIGGER_PICKUP message is recieved and the pickup is finally removed
-              // Note: exlude the Purple Portal which is the only pickup that isn't removed
-              // after getting activated.
-              if (pickup.name !== PORTAL_PURPLE_NAME) {
-                pickup.sentForceTrigger = true;
-              }
               underworld.pie.sendData({
                 type: MESSAGE_TYPES.FORCE_TRIGGER_PICKUP,
                 pickupId: pickup.id,
@@ -467,7 +447,6 @@ const healthPotionRestoreAmount = 50;
 export const spike_damage = 30;
 export const PICKUP_SPIKES_NAME = 'Trap';
 export const PORTAL_PURPLE_NAME = 'Portal';
-const cursedManaPotionRemovalProportion = 0.1;
 export const pickups: IPickupSource[] = [
   {
     imagePath: 'pickups/trap',
@@ -608,7 +587,7 @@ export const pickups: IPickupSource[] = [
     animationSpeed: -0.5,
     playerOnly: true,
     name: PORTAL_PURPLE_NAME,
-    probability: 0,
+    probability: 1,
     scale: 1,
     description: (pickup) => 'explain portal',
     willTrigger: ({ unit, player, pickup, underworld }) => {
@@ -618,6 +597,7 @@ export const pickups: IPickupSource[] = [
       // Only send the ENTER_PORTAL message from
       // the client of the player that entered the portal
       if (player && player == globalThis.player) {
+        playSFXKey('purplePortal');
         underworld.pie.sendData({
           type: MESSAGE_TYPES.ENTER_PORTAL
         });

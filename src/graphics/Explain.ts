@@ -205,7 +205,7 @@ export interface TutorialChecklist {
   camera: TutorialChecklistItem;
   recenterCamera: TutorialChecklistItem;
 }
-const tutorialChecklist: TutorialChecklist = {
+export const tutorialChecklist: TutorialChecklist = {
   spawn: {
     visible: true,
     complete: false,

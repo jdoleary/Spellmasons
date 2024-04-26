@@ -72,7 +72,7 @@ import type PieClient from '@websocketpie/client';
 import { isOutOfRange, sendPlayerThinkingThrottled } from './PlayerUtils';
 import { DisplayObject, TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
-import { explain, EXPLAIN_PING, isTutorialFirstStepsComplete, isTutorialComplete, tutorialCompleteTask, tutorialShowTask } from './graphics/Explain';
+import { explain, EXPLAIN_PING, isTutorialFirstStepsComplete, isTutorialComplete, tutorialCompleteTask, tutorialChecklist } from './graphics/Explain';
 import { makeRisingParticles, makeScrollDissapearParticles, stopAndDestroyForeverEmitter } from './graphics/ParticleCollection';
 import { ensureAllClientsHaveAssociatedPlayers, Overworld } from './Overworld';
 import { Emitter } from '@pixi/particle-emitter';
@@ -2183,14 +2183,6 @@ export default class Underworld {
       return;
     }
 
-    // Game State should not progress if no players are spawned
-    const spawnedPlayers = this.players.filter(p => p.isSpawned);
-    if (spawnedPlayers.length == 0) {
-      console.log('[GAME] No spawned players: ', this.players);
-      console.log('[GAME] Progress Game State Complete');
-      return;
-    }
-
     // We should try completing the level before ending the game
     // in case the player has beaten the level and died at the same time
     // Favoring the player in this scenario should only improve player experience
@@ -2199,13 +2191,20 @@ export default class Underworld {
         console.log('[GAME] Progress Game State Complete');
         return;
       }
-      if (this.tryGoToNextLevel()) {
-        console.log('[GAME] Progress Game State Complete');
-        return;
-      }
-      // If we don't spawn portals or go to the next level, DONT RETURN!
-      // Continue progressGameState to check for game over and cycle turn phases
     }
+    if (this.levelIndex === -1 && !tutorialChecklist['spawn'].complete) {
+      console.log('[GAME] Do not progress on first tutorial level until you spawn');
+      return;
+    }
+    // If we don't spawn portals, DONT RETURN!
+    // Continue progressGameState to check for game over and cycle turn phases
+    if (this.tryGoToNextLevel()) {
+      console.log('[GAME] Progress Game State Complete');
+      return;
+    }
+
+    // If we don't go to the next level, DONT RETURN!
+    // Continue progressGameState to check for game over and cycle turn phases
 
     if (this.isGameOver()) {
       this.doGameOver();
@@ -2378,6 +2377,10 @@ export default class Underworld {
     return true;
   }
   tryGoToNextLevel(): boolean {
+    // Level must be complete to go to the next level
+    if (!this.isLevelComplete()) {
+      return false;
+    }
     // We can only go to the next level if all players are
     // inPortal or have completed their turn
     // This includes players that can't act due to death/freeze/etc.

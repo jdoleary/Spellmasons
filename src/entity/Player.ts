@@ -24,6 +24,7 @@ import { setPlayerNameUI } from '../PlayerUtils';
 import { arrowCardId } from '../cards/arrow';
 import { healCardId } from '../cards/add_heal';
 import { contaminate_id } from '../cards/contaminate';
+import { cameraAutoFollow } from '../graphics/PixiUtils';
 
 const elInGameLobby = document.getElementById('in-game-lobby') as (HTMLElement | undefined);
 const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
@@ -105,7 +106,10 @@ export interface IPlayer {
   statPointsUnspent: number;
 }
 export function inPortal(player: IPlayer): boolean {
-  return isNaN(player.unit.x) || isNaN(player.unit.y) || player.unit.x === null || player.unit.y === null;
+  // Note: Even though inPortal can be determined by player.isSpawned,
+  // it is also important to account for invalid player position, as inPortal is
+  // often used to determine if player is "in valid game space"
+  return !player.isSpawned || isNaN(player.unit.x) || isNaN(player.unit.y) || player.unit.x === null || player.unit.y === null;
 }
 export function changeMageType(type: MageType, player?: IPlayer, underworld?: Underworld) {
   if (!player || !underworld) {
@@ -304,25 +308,8 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string, colo
 }
 export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld) {
   player.endedTurn = false;
-  // Set the player so they can choose their next spawn
-  player.isSpawned = false;
-  if (player == globalThis.player) {
-    globalThis.awaitingSpawn = false;
-  }
 
-  // Update player position to be NOT NaN or null (which indicates that the player is in portal),
-  // instead, the player is now spawning so their position should be a number.
-  // This is important because it allows the player to see enemy attentionMarkers when
-  // they are choosing their spwan; whereas if the position remained NaN or null inPortal would
-  // return true and it wouldn't run predictions on them.
-  player.unit.x = -1000;
-  player.unit.y = -1000;
-
-  // Clear the player units path when resetting
-  // This prevents a bug where on a multiplayer game restart after a loss
-  // the player unit's stamina would drain while they were picking a spawn point
-  // because they still had a path set
-  player.unit.path = undefined;
+  resetPlayerForSpawn(player, underworld);
 
   if (elInstructions && globalThis.player == player) {
     elInstructions.innerHTML = `${i18n('choose spawn instructions')}`
@@ -343,11 +330,6 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
     }
   }
 
-  // Make unit visible only if they are current users player
-  // so that they can see where to spawn them
-  if (globalThis.player == player) {
-    Image.show(player.unit.image);
-  }
 
   Unit.resetUnitStats(player.unit, underworld);
 }
@@ -492,16 +474,38 @@ export function syncLobby(underworld: Underworld) {
 }
 export function enterPortal(player: IPlayer, underworld: Underworld) {
   console.log(`Player ${player.clientId}/${player.name} entered portal.`);
+  resetPlayerForSpawn(player, underworld);
+  underworld.progressGameState();
+}
+
+export function resetPlayerForSpawn(player: IPlayer, underworld: Underworld) {
+
   Image.hide(player.unit.image);
   // Make sure to resolve the moving promise once they enter the portal or else 
   // the client queue will get stuck
   player.unit.resolveDoneMoving(true);
   // Move "portaled" unit out of the way to prevent collisions and chaining while portaled
   Unit.setLocation(player.unit, { x: NaN, y: NaN }, underworld);
+  player.isSpawned = false;
+  if (player == globalThis.player) {
+    globalThis.awaitingSpawn = false;
+    // Allow respawning if the level is not complete
+    if (!underworld.isLevelComplete()) {
+      // Make unit visible only if they are current users player
+      // so that they can see where to spawn them
+      Image.show(player.unit.image);
+    }
+  }
+  cameraAutoFollow(false);
   // Clear the selection so that it doesn't persist after portalling (which would show
   // your user's move circle in the upper left hand of the map but without the user there)
   clearTooltipSelection();
-  underworld.progressGameState();
+
+  // Clear the player units path when resetting
+  // This prevents a bug where on a multiplayer game restart after a loss
+  // the player unit's stamina would drain while they were picking a spawn point
+  // because they still had a path set
+  player.unit.path = undefined;
 }
 
 export function ableToAct(player: IPlayer) {
