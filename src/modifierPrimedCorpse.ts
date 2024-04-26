@@ -11,22 +11,21 @@ import { makePrimedCorpseParticles, stopAndDestroyForeverEmitter } from "./graph
 export const primedCorpseId = 'primedCorpse';
 export default function registerPrimedCorpse() {
   registerModifiers(primedCorpseId, {
+    init: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => initCorpsePrimed(unit, underworld, prediction),
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       const modifier = getOrInitModifier(unit, primedCorpseId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         // Add events
         if (!unit.onDrawSelectedEvents.includes(primedCorpseId)) {
           unit.onDrawSelectedEvents.push(primedCorpseId);
         }
-        makePrimedCorpseParticles(unit, underworld, prediction);
+        initCorpsePrimed(unit, underworld, prediction);
       });
 
       // Limit to 1 quantity
       modifier.quantity = Math.min(modifier.quantity, 1);
     },
     remove: (unit: Unit.IUnit, underworld: Underworld) => {
-      // TODO - May remove other unrelated particles attached to the unit
-      // Needs a better/more specific identifier for the particles given by this modifier
-      underworld.particleFollowers.filter(pf => pf.target == unit).forEach(({ emitter }) => stopAndDestroyForeverEmitter(emitter));
+      getPrimedCorpseEmitters(unit, underworld).forEach(({ emitter }) => stopAndDestroyForeverEmitter(emitter));
     }
   });
   registerEvents(primedCorpseId, {
@@ -36,4 +35,14 @@ export default function registerPrimedCorpse() {
       }
     }
   });
+  function initCorpsePrimed(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
+    // If no emitter, add one
+    if (!getPrimedCorpseEmitters(unit, underworld).length) {
+      makePrimedCorpseParticles(unit, underworld, prediction);
+    }
+  }
+  function getPrimedCorpseEmitters(unit: Unit.IUnit, underworld: Underworld) {
+    // @ts-ignore jid is a unique identifier that allows us to search for this pf later
+    return underworld.particleFollowers.filter(pf => pf.target == unit && pf.jid == primedCorpseId);
+  }
 }

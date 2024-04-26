@@ -13,6 +13,7 @@ import { IUnit } from '../entity/Unit';
 import Underworld from '../Underworld';
 import { COLLISION_MESH_RADIUS } from '../config';
 import { HEALTH_POTION, IPickup, MANA_POTION, STAMINA_POTION } from '../entity/Pickup';
+import { primedCorpseId } from '../modifierPrimedCorpse';
 export function makeAncientParticles(position: Vec2, prediction: boolean) {
   if (prediction || globalThis.headless) {
     // Don't show if just a prediction
@@ -1004,12 +1005,15 @@ export function makePrimedCorpseParticles(follow: IUnit, underworld: Underworld,
     const wrapped = wrappedEmitter(particleConfig, containerUnits, resolver);
     if (wrapped) {
       const { container, emitter } = wrapped;
-      underworld.particleFollowers.push({
+      const particleFollower = {
         displayObject: container,
         emitter,
         target: follow,
         keepOnDeath: true,
-      })
+      }
+      // @ts-ignore jid is a unique identifier that allows us to search for this pf later
+      particleFollower.jid = primedCorpseId;
+      underworld.particleFollowers.push(particleFollower);
     } else {
       console.warn('Failed to create primed corpse particle emitter');
     }
