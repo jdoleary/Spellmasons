@@ -1,18 +1,19 @@
 import * as Unit from '../entity/Unit';
-import * as Image from '../graphics/Image';
 import { CardCategory } from '../types/commonTypes';
 import type Underworld from '../Underworld';
-import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
+import { playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
+import { jitter, lerpVec2 } from '../jmath/Vec';
+import { HasSpace } from '../entity/Type';
 
 const soulBindId = 'Soul Bind';
 const spell: Spell = {
   card: {
     id: soulBindId,
     category: CardCategory.Curses,
-    sfx: 'debilitate',
+    sfx: 'soulBind',
     supportQuantity: true,
     manaCost: 25,
     healthCost: 0,
@@ -26,7 +27,9 @@ const spell: Spell = {
       const targets = state.targetedUnits.filter(u => u.alive);
       if (targets.length) {
         playDefaultSpellSFX(card, prediction);
-        await playDefaultSpellAnimation(card, targets, prediction);
+        if (!prediction) {
+          await animate(targets);
+        }
         for (let unit of targets) {
           Unit.addModifier(unit, soulBindId, underworld, prediction, quantity);
         }
@@ -65,8 +68,56 @@ const spell: Spell = {
 };
 
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
-  const modifier = getOrInitModifier(unit, soulBindId, { isCurse: true, quantity }, () => {
+  getOrInitModifier(unit, soulBindId, { isCurse: true, quantity }, () => {
     unit.onTakeDamageEvents.push(soulBindId);
   });
 }
 export default spell;
+async function animate(targets: HasSpace[]) {
+  // Animations do not occur on headless
+  if (!globalThis.headless) {
+    return new Promise<void>((resolve) => {
+      doDraw(resolve, targets, Date.now() + 700);
+    }).then(() => {
+      globalThis.predictionGraphics?.clear();
+    });
+  }
+}
+function doDraw(resolve: (value: void | PromiseLike<void>) => void, targets: HasSpace[], endTime: number) {
+  const didDraw = drawLineBetweenTargets(targets);
+  if (didDraw) {
+    // Show the electricity for a moment
+    if (Date.now() > endTime) {
+      resolve();
+    } else {
+      requestAnimationFrame(() => doDraw(resolve, targets, endTime))
+    }
+  } else {
+    resolve();
+  }
+}
+// Returns true if it did draw
+function drawLineBetweenTargets(targets: HasSpace[]): boolean {
+  // Animations do not occur on headless
+  if (!globalThis.headless) {
+    if (globalThis.predictionGraphics) {
+      if (targets[0] === undefined) {
+        return false;
+      }
+      globalThis.predictionGraphics.clear();
+      globalThis.predictionGraphics.lineStyle(4, 0x371f76, 1.0)
+      globalThis.predictionGraphics.moveTo(targets[0].x, targets[0].y);
+      let from = targets[0];
+      for (let target of targets) {
+        for (let i = 0; i < 5; i++) {
+          const intermediaryPoint = jitter(lerpVec2(from, target, 0.2 * i), 1);
+          globalThis.predictionGraphics.lineTo(intermediaryPoint.x, intermediaryPoint.y);
+        }
+        globalThis.predictionGraphics.lineTo(target.x, target.y);
+        from = target;
+      }
+      return true;
+    }
+  }
+  return false;
+}
