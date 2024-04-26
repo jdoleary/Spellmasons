@@ -130,7 +130,7 @@ const spell$e = {
     add: add$6
   },
   events: {
-    onTurnStart: async (unit, prediction, underworld) => {
+    onTurnStart: async (unit, underworld, prediction) => {
       const modifier = unit.modifiers[cardId$e];
       if (modifier && !!Math.pow(modifier.quantity, 2) && !prediction) {
         Unit$c.takeDamage({ unit, amount: Math.pow(modifier.quantity, 2) }, underworld, prediction);
@@ -242,7 +242,7 @@ const spell$c = {
     remove: remove$3
   },
   events: {
-    onTurnEnd: async (unit, prediction, underworld) => {
+    onTurnEnd: async (unit, underworld, prediction) => {
       const modifier = unit.modifiers[cardId$c];
       if (modifier) {
         modifier.quantity--;
@@ -314,11 +314,11 @@ const spell$b = {
               style: { fill: "#ff0000", strokeThickness: 1 }
             });
           }, 200);
-          procEvents(unit, prediction, underworld);
+          procEvents(unit, underworld, prediction);
         }
       } else {
         for (let unit of targets) {
-          procEvents(unit, prediction, underworld);
+          procEvents(unit, underworld, prediction);
         }
       }
       if (targets.length == 0) {
@@ -328,13 +328,13 @@ const spell$b = {
     }
   }
 };
-async function procEvents(unit, prediction, underworld) {
+async function procEvents(unit, underworld, prediction) {
   for (let i = 0; i < unit.onTurnStartEvents.length; i++) {
     const eventName = unit.onTurnStartEvents[i];
     if (eventName) {
       const fns = Events.default.onTurnStartSource[eventName];
       if (fns) {
-        await fns(unit, prediction, underworld);
+        await fns(unit, underworld, prediction);
       }
     }
   }
@@ -343,7 +343,7 @@ async function procEvents(unit, prediction, underworld) {
     if (eventName) {
       const fne = Events.default.onTurnEndSource[eventName];
       if (fne) {
-        await fne(unit, prediction, underworld);
+        await fne(unit, underworld, prediction);
       }
     }
   }
@@ -536,7 +536,7 @@ const spell$9 = {
     add: add$4
   },
   events: {
-    onTurnStart: async (unit, prediction, underworld) => {
+    onTurnStart: async (unit, underworld, prediction) => {
       const modifier = unit.modifiers[cardId$9];
       if (modifier) {
         modifier.graceCountdown--;
@@ -698,7 +698,7 @@ const spell$7 = {
     remove: remove$2
   },
   events: {
-    onTurnEnd: async (unit, prediction, underworld) => {
+    onTurnEnd: async (unit, underworld, prediction) => {
       const modifier = unit.modifiers[cardId$7];
       if (modifier) {
         const healing = healingAmount(modifier.regenCounter);
@@ -804,7 +804,7 @@ const spell$6 = {
     remove: remove$1
   },
   events: {
-    onTurnEnd: async (unit, prediction, underworld) => {
+    onTurnEnd: async (unit, underworld, prediction) => {
       const modifier = unit.modifiers[cardId$6];
       if (modifier) {
         modifier.quantity--;
@@ -1078,7 +1078,7 @@ const {
   ParticleCollection
 } = globalThis.SpellmasonsAPI;
 const BURNING_RAGE_PARTICLE_EMITTER_NAME = "BURNING_RAGE";
-function makeBurningRageParticles(follow, prediction, underworld, quantity) {
+function makeBurningRageParticles(follow, underworld, prediction) {
   if (prediction || globalThis.headless) {
     return;
   }
@@ -1126,9 +1126,9 @@ function makeBurningRageParticles(follow, prediction, underworld, quantity) {
       "max": 1.5
     },
     "blendMode": "normal",
-    "frequency": 0.45 / quantity,
+    "frequency": 0.45,
     "emitterLifetime": -1,
-    "maxParticles": 20 * quantity,
+    "maxParticles": 20,
     "pos": {
       "x": 0,
       "y": 0
@@ -1203,7 +1203,7 @@ const spell$1 = {
     remove
   },
   events: {
-    onTurnStart: async (unit, prediction, underworld) => {
+    onTurnStart: async (unit, underworld, prediction) => {
       const modifier = unit.modifiers[cardId$1];
       if (modifier && !prediction) {
         Unit$1.takeDamage({ unit, amount: modifier.quantity * damageMultiplier }, underworld, prediction);
@@ -1227,7 +1227,7 @@ function add$1(unit, underworld, prediction, quantity) {
     if (!unit.onTurnStartEvents.includes(cardId$1)) {
       unit.onTurnStartEvents.push(cardId$1);
     }
-    makeBurningRageParticles(unit, prediction, underworld, quantity);
+    makeBurningRageParticles(unit, underworld, prediction);
   });
 }
 function remove(unit, underworld) {
@@ -1288,10 +1288,10 @@ const spell = {
       triggerDistanceDamage(unit, underworld, prediction);
       return amount;
     },
-    onTurnStart: async (unit, prediction, underworld) => {
+    onTurnStart: async (unit, underworld, prediction) => {
       triggerDistanceDamage(unit, underworld, prediction);
     },
-    onTurnEnd: async (unit, prediction, underworld) => {
+    onTurnEnd: async (unit, underworld, prediction) => {
       triggerDistanceDamage(unit, underworld, prediction);
     }
   }

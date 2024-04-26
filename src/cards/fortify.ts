@@ -62,7 +62,7 @@ const spell: Spell = {
     },
   },
   events: {
-    onTurnStart: async (unit, prediction, underworld) => {
+    onTurnStart: async (unit, underworld, prediction) => {
       // Since this blessing only applies for one turn, remove it
       // on turn start
       Unit.removeModifier(unit, id, underworld);

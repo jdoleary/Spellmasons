@@ -30,7 +30,7 @@ export default function registerSummoningSickness() {
     }
   });
   registerEvents(summoningSicknessId, {
-    onTurnStart: async (unit: Unit.IUnit, _prediction: boolean, underworld: Underworld) => {
+    onTurnStart: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       // Ensure that the unit cannot move with summoning sickness
       // (even when players' turns are ended they can still act so long
       // as it is underworld.turn_phase === turn_phase.PlayerTurns, this is because all players act simultaneously
@@ -39,7 +39,7 @@ export default function registerSummoningSickness() {
       // and then returning true also ends their turn.
       unit.stamina = 0;
     },
-    onTurnEnd: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
+    onTurnEnd: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       Unit.removeModifier(unit, summoningSicknessId, underworld);
     }
   });

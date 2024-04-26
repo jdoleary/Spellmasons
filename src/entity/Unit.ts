@@ -51,6 +51,8 @@ import { soulShardOwnerModifierId } from '../modifierSoulShardOwner';
 import { getAllShardBearers } from '../cards/soul_shard';
 import { darkTideId } from '../cards/dark_tide';
 import { GORU_UNIT_ID } from './units/goru';
+import { undyingModifierId } from '../modifierUndying';
+import { primedCorpseId } from '../modifierPrimedCorpse';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -350,18 +352,7 @@ export function adjustUnitDifficulty(unit: IUnit, difficulty: number) {
     const quantityStatModifier = 1 + 0.8 * ((unit.strength || 1) - 1);
     healthMax = Math.round(healthMax * quantityStatModifier);
     unit.damage = Math.round(unit.damage * quantityStatModifier);
-
-    if (unit.image) {
-      // this final scale of the unit will always be less than the max multiplier
-      const maxMultiplier = 4;
-      // ensures scale = 1 at strength = 1
-      const strAdj = unit.strength - 1;
-      // calculate scale multiplier with diminishing formula
-      // 6 is an arbitrary number that controls the speed at which the scale approaches the max
-      const quantityScaleModifier = 1 + (maxMultiplier - 1) * (strAdj / (strAdj + 6));
-      unit.image.sprite.scale.x *= quantityScaleModifier;
-      unit.image.sprite.scale.y *= quantityScaleModifier;
-    }
+    updateStrengthSpriteScaling(unit, 1);
 
     // Maintain Health/Mana Ratios
     const oldHealthRatio = (unit.health / unit.healthMax) || 0;
@@ -383,6 +374,28 @@ export function adjustUnitDifficulty(unit: IUnit, difficulty: number) {
   } else {
     console.error('missing unit source');
   }
+}
+export function updateStrengthSpriteScaling(unit: IUnit, oldStrength: number) {
+  // WARN: Providing an incorrect value for oldStrength value will create large/repeated changes in sprite size
+
+  // We have to multiply the sprite scale instead of setting it
+  // as to not undo other scalars such as the ones applied by bloat and split,
+  // so we need to divide newStrength scalar by the oldStrength scalar
+  if (unit.image) {
+    const strengthScaleQuotient = getScaleFromStrength(unit.strength) / getScaleFromStrength(oldStrength);
+
+    unit.image.sprite.scale.x *= strengthScaleQuotient;
+    unit.image.sprite.scale.y *= strengthScaleQuotient;
+  }
+}
+function getScaleFromStrength(strength: number): number {
+  // this final scale of the unit will always be less than the max multiplier
+  const maxMultiplier = 4;
+  // adjust strength to ensure scale = 1 at strength = 1
+  strength -= 1;
+  // calculate scale multiplier with diminishing formula
+  // 20 is an arbitrary number that controls the speed at which the scale approaches the max
+  return 1 + (maxMultiplier - 1) * (strength / (strength + 20))
 }
 function setupShaders(unit: IUnit) {
   if (unit.image) {
@@ -772,6 +785,9 @@ export function resurrect(unit: IUnit, underworld: Underworld) {
   // Return dead units back to full health
   unit.health = unit.healthMax;
   unit.alive = true;
+  if (unit.modifiers[primedCorpseId]) {
+    removeModifier(unit, primedCorpseId, underworld);
+  }
   returnToDefaultSprite(unit);
 }
 export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
@@ -1151,13 +1167,13 @@ export function isBoss(unitSourceId: string) {
 }
 
 // Returns whether or not a unit is truly dead
-// Considers game state and soulshard modifier
-// so that soul shard owners are considered "remaining"
-// since they will be resurrected on their next turn
+// Considers game state and undying effects
+// to-be-revived enemies are counted in "remaining" units
 // Used for game loop logic
 export function isRemaining(unit: IUnit, underworld: Underworld, prediction: boolean) {
-  return unit.alive
-    || (unit.modifiers[soulShardOwnerModifierId] && getAllShardBearers(unit, underworld, prediction).length > 0);
+  return !unit.flaggedForRemoval && (unit.alive
+    || (unit.modifiers[undyingModifierId])
+    || (unit.modifiers[soulShardOwnerModifierId] && getAllShardBearers(unit, underworld, prediction).length > 0));
 }
 
 export function canAct(unit: IUnit): boolean {
@@ -1412,7 +1428,7 @@ export async function runTurnStartEvents(unit: IUnit, underworld: Underworld, pr
     async (eventName) => {
       const fn = Events.onTurnStartSource[eventName];
       if (fn) {
-        await fn(unit, prediction, underworld);
+        await fn(unit, underworld, prediction);
       } else {
         console.error('No function associated with turn start event', eventName);
       }
@@ -1425,7 +1441,7 @@ export async function runTurnEndEvents(unit: IUnit, underworld: Underworld, pred
     async (eventName) => {
       const fn = Events.onTurnEndSource[eventName];
       if (fn) {
-        await fn(unit, prediction, underworld);
+        await fn(unit, underworld, prediction);
       } else {
         console.error('No function associated with turn end event', eventName);
       }
@@ -1550,7 +1566,7 @@ const subTypeAttentionMarkerMapping = {
   [UnitSubType.SUPPORT_CLASS]: 'badgeMagic.png',
   [UnitSubType.SPECIAL_LOS]: 'badgeMagic.png',
   [UnitSubType.DOODAD]: 'badgeMagic.png',
-
+  [UnitSubType.GORU_BOSS]: 'badgeMagic.png',
 }
 export function subTypeToAttentionMarkerImage(unit: IUnit): string {
   if (unit.unitSourceId == ARCHER_ID || unit.unitSourceId == BLOOD_ARCHER_ID) {
@@ -1596,7 +1612,7 @@ export function drawSelectedGraphics(unit: IUnit, prediction: boolean = false, u
     if (drawEvent) {
       const fn = Events.onDrawSelectedSource[drawEvent];
       if (fn) {
-        fn(unit, prediction, underworld);
+        fn(unit, underworld, prediction);
       } else {
         console.error('No function associated with onDrawSelected event', drawEvent);
       }
@@ -1607,73 +1623,77 @@ export function drawSelectedGraphics(unit: IUnit, prediction: boolean = false, u
   // Instead of using if/else and unit subtypes
   // Cleanup for AI Refactor https://github.com/jdoleary/Spellmasons/issues/388
 
-  // If unit is an archer, draw LOS attack line
-  // instead of attack range for them
-  if (unit.unitSubType == UnitSubType.RANGED_LOS || unit.unitSubType == UnitSubType.SPECIAL_LOS) {
-    const unitSource = allUnits[unit.unitSourceId];
-    let archerTargets: IUnit[] = [];
+  if (unit.alive) {
+    // If unit is an archer, draw LOS attack line
+    // instead of attack range for them
+    if (unit.unitSubType == UnitSubType.RANGED_LOS || unit.unitSubType == UnitSubType.SPECIAL_LOS) {
+      const unitSource = allUnits[unit.unitSourceId];
+      let archerTargets: IUnit[] = [];
 
-    if (unitSource) {
-      archerTargets = unitSource.getUnitAttackTargets(unit, underworld);
-    } else {
-      console.error('Cannot find unitSource for ', unit.unitSourceId);
-    }
-    // If they don't have a target they can actually attack
-    // draw a line to the closest enemy that they would target if
-    // they had LOS
-    let canAttack = true;
-    if (!archerTargets.length) {
-      const nextTarget = findClosestUnitInDifferentFactionSmartTarget(unit, underworld.units)
-      if (nextTarget) {
-        archerTargets.push(nextTarget);
+      if (unitSource) {
+        archerTargets = unitSource.getUnitAttackTargets(unit, underworld);
+      } else {
+        console.error('Cannot find unitSource for ', unit.unitSourceId);
       }
-      // If getBestRangedLOSTarget returns undefined, the archer doesn't have a valid attack target
-      canAttack = false;
-    }
-    const rangeCircleColor = false
-      ? colors.outOfRangeGrey
-      : unit.faction == Faction.ALLY
-        ? colors.attackRangeAlly
-        : colors.attackRangeEnemy;
-
-    // Draw outer attack range circle
-    drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
-
-    // TODO - Consider re-implementing attack lines with AI refactor
-    // https://github.com/jdoleary/Spellmasons/issues/408
-    // if (archerTargets.length) {
-    //   for (let target of archerTargets) {
-    //     const attackLine = { p1: unit, p2: target };
-    //     globalThis.selectedUnitGraphics.moveTo(attackLine.p1.x, attackLine.p1.y);
-
-    //     // If the los unit can attack you, use red, if not, use grey
-    //     const color = canAttack ? colors.healthRed : colors.outOfRangeGrey;
-
-    //     // Draw los line
-    //     globalThis.selectedUnitGraphics.lineStyle(3, color, 0.7);
-    //     globalThis.selectedUnitGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
-    //     globalThis.selectedUnitGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
-    //   }
-    // }
-  } else {
-    if (unit.attackRange > 0) {
-      // TODO - Unused outOfRangeGrey below, consider for AI refactor
-      // https://github.com/jdoleary/Spellmasons/issues/388
+      // If they don't have a target they can actually attack
+      // draw a line to the closest enemy that they would target if
+      // they had LOS
+      let canAttack = true;
+      if (!archerTargets.length) {
+        const nextTarget = findClosestUnitInDifferentFactionSmartTarget(unit, underworld.units)
+        if (nextTarget) {
+          archerTargets.push(nextTarget);
+        }
+        // If getBestRangedLOSTarget returns undefined, the archer doesn't have a valid attack target
+        canAttack = false;
+      }
       const rangeCircleColor = false
         ? colors.outOfRangeGrey
         : unit.faction == Faction.ALLY
           ? colors.attackRangeAlly
           : colors.attackRangeEnemy;
-      globalThis.selectedUnitGraphics.lineStyle(2, rangeCircleColor, 1.0);
 
-      if (unit.unitSubType === UnitSubType.RANGED_RADIUS) {
-        drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
-      } else if (unit.unitSubType === UnitSubType.SUPPORT_CLASS) {
-        drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Support Range'));
-      } else if (unit.unitSubType === UnitSubType.MELEE) {
-        drawUICircle(globalThis.selectedUnitGraphics, unit, unit.staminaMax + unit.attackRange, rangeCircleColor, i18n('Attack Range'));
-      } else if (unit.unitSubType === UnitSubType.DOODAD) {
-        drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Explosion Radius'));
+      // Draw outer attack range circle
+      drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
+
+      // TODO - Consider re-implementing attack lines with AI refactor
+      // https://github.com/jdoleary/Spellmasons/issues/408
+      // if (archerTargets.length) {
+      //   for (let target of archerTargets) {
+      //     const attackLine = { p1: unit, p2: target };
+      //     globalThis.selectedUnitGraphics.moveTo(attackLine.p1.x, attackLine.p1.y);
+
+      //     // If the los unit can attack you, use red, if not, use grey
+      //     const color = canAttack ? colors.healthRed : colors.outOfRangeGrey;
+
+      //     // Draw los line
+      //     globalThis.selectedUnitGraphics.lineStyle(3, color, 0.7);
+      //     globalThis.selectedUnitGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
+      //     globalThis.selectedUnitGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
+      //   }
+      // }
+    } else {
+      if (unit.attackRange > 0) {
+        // TODO - Unused outOfRangeGrey below, consider for AI refactor
+        // https://github.com/jdoleary/Spellmasons/issues/388
+        const rangeCircleColor = false
+          ? colors.outOfRangeGrey
+          : unit.faction == Faction.ALLY
+            ? colors.attackRangeAlly
+            : colors.attackRangeEnemy;
+        globalThis.selectedUnitGraphics.lineStyle(2, rangeCircleColor, 1.0);
+
+        if (unit.unitSubType === UnitSubType.RANGED_RADIUS) {
+          drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
+        } else if (unit.unitSubType === UnitSubType.SUPPORT_CLASS) {
+          drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Support Range'));
+        } else if (unit.unitSubType === UnitSubType.MELEE) {
+          drawUICircle(globalThis.selectedUnitGraphics, unit, unit.staminaMax + unit.attackRange, rangeCircleColor, i18n('Attack Range'));
+        } else if (unit.unitSubType === UnitSubType.DOODAD) {
+          drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Explosion Radius'));
+        } else if (unit.unitSubType === UnitSubType.GORU_BOSS) {
+          drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
+        }
       }
     }
   }

@@ -108,11 +108,9 @@ export function updatePlanningView(underworld: Underworld) {
       if (selectedType == "unit" && globalThis.selectedUnit) {
         // Draw circle to show that unit is selected
         drawCircleUnderTarget(globalThis.selectedUnit, underworld, 1.0, planningViewGraphics);
-        if (globalThis.selectedUnit.alive) {
-          // Draws the unit's graphics, and the graphics of any relevant modifiers
-          // I.E. attack range and bloat radius
-          Unit.drawSelectedGraphics(globalThis.selectedUnit, false, underworld);
-        }
+        // Draws the unit's graphics, and the graphics of any relevant modifiers
+        // I.E. attack range and bloat radius
+        Unit.drawSelectedGraphics(globalThis.selectedUnit, false, underworld);
       }
 
       // Draw selected pickup stuff
@@ -628,7 +626,7 @@ export async function runPredictions(underworld: Underworld) {
         const unitSource = allUnits[u.unitSourceId];
         if (unitSource) {
           const { targets, canAttack } = cachedTargets[u.id] || { targets: [], canAttack: false };
-          if (u.unitSubType == UnitSubType.SUPPORT_CLASS) {
+          if (u.unitSubType == UnitSubType.SUPPORT_CLASS || u.unitSubType == UnitSubType.GORU_BOSS) {
             // Draw attention marker over any support unit who is taking an action
             if (targets.length) {
               // use u.predictionScale here since we are dealing with prediction units

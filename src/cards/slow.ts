@@ -10,15 +10,15 @@ import floatingText from '../graphics/FloatingText';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
-export const id = 'slow';
+export const slowCardId = 'slow';
 const changeProportion = 0.80;
 function remove(unit: Unit.IUnit, underworld: Underworld) {
-  if (!unit.modifiers[id]) {
-    console.error(`Missing modifier object for ${id}; cannot remove.  This should never happen`);
+  if (!unit.modifiers[slowCardId]) {
+    console.error(`Missing modifier object for ${slowCardId}; cannot remove.  This should never happen`);
     return;
   }
   // Safely restore unit's original properties
-  const { staminaMax, moveSpeed } = unit.modifiers[id].originalStats;
+  const { staminaMax, moveSpeed } = unit.modifiers[slowCardId].originalStats;
 
   const staminaChange = staminaMax / unit.staminaMax;
   unit.stamina *= staminaChange;
@@ -31,7 +31,7 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
 }
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
   const { staminaMax, moveSpeed } = unit;
-  const modifier = getOrInitModifier(unit, id, {
+  const modifier = getOrInitModifier(unit, slowCardId, {
     isCurse: true,
     quantity,
     originalStats: {
@@ -47,7 +47,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
 
 const spell: Spell = {
   card: {
-    id,
+    id: slowCardId,
     category: CardCategory.Curses,
     sfx: '',
     supportQuantity: true,
@@ -64,7 +64,7 @@ const spell: Spell = {
       if (targets.length) {
         await Promise.all([playDefaultSpellAnimation(card, targets, prediction), playDefaultSpellSFX(card, prediction)]);
         for (let unit of targets) {
-          Unit.addModifier(unit, id, underworld, prediction, quantity);
+          Unit.addModifier(unit, slowCardId, underworld, prediction, quantity);
           if (!prediction) {
             floatingText({ coords: unit, text: 'slow' });
           }

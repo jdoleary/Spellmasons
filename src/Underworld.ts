@@ -79,7 +79,7 @@ import { Emitter } from '@pixi/particle-emitter';
 import { golem_unit_id } from './entity/units/golem';
 import { cleanUpPerkList, createPerkElement, generatePerks, tryTriggerPerk, showPerkList, hidePerkList, createCursePerkElement, StatCalamity, generateRandomStatCalamity } from './Perk';
 import deathmason, { ORIGINAL_DEATHMASON_DEATH, bossmasonUnitId, summonUnitAtPickup } from './entity/units/deathmason';
-import goru from './entity/units/goru';
+import goru, { GORU_UNIT_ID } from './entity/units/goru';
 import { hexToString } from './graphics/ui/colorUtil';
 import { doLiquidEffect } from './inLiquid';
 import { findRandomGroundLocation } from './entity/units/summoner';
@@ -160,7 +160,7 @@ export default class Underworld {
   RNGState?: SeedrandomState;
   turn_phase: turn_phase = turn_phase.Stalled;
   // The order in which units will take their turn
-  subTypesTurnOrder: UnitSubType[][] = [[UnitSubType.RANGED_LOS, UnitSubType.RANGED_RADIUS], [UnitSubType.SUPPORT_CLASS], [UnitSubType.MELEE], [UnitSubType.SPECIAL_LOS], [UnitSubType.DOODAD]];
+  subTypesTurnOrder: UnitSubType[][] = [[UnitSubType.GORU_BOSS], [UnitSubType.RANGED_LOS, UnitSubType.RANGED_RADIUS], [UnitSubType.SUPPORT_CLASS], [UnitSubType.MELEE], [UnitSubType.SPECIAL_LOS], [UnitSubType.DOODAD]];
   // All subtypes currently taking their turn
   subTypesCurrentTurn?: UnitSubType[];
   // An id incrementor to make sure no 2 units share the same id
@@ -225,7 +225,8 @@ export default class Underworld {
   particleFollowers: {
     displayObject: DisplayObject,
     emitter?: Emitter,
-    target: Vec2
+    target: Vec2,
+    keepOnDeath?: boolean
   }[] = [];
   activeMods: string[] = [];
   generatingLevel: boolean = false;
@@ -895,8 +896,8 @@ export default class Underworld {
     // Remove destroyed emitters from particle followers
     this.particleFollowers = this.particleFollowers.filter(pf => pf.emitter && !pf.emitter.destroyed);
     // Now that units have moved update any particle emitters that are following them:
-    for (let { displayObject, emitter, target } of this.particleFollowers) {
-      if (Unit.isUnit(target) && !target.alive) {
+    for (let { displayObject, emitter, target, keepOnDeath } of this.particleFollowers) {
+      if (Unit.isUnit(target) && ((!target.alive && !keepOnDeath) || target.flaggedForRemoval)) {
         stopAndDestroyForeverEmitter(emitter);
       } else if (emitter && !emitter.destroyed) {
 
@@ -2318,7 +2319,7 @@ export default class Underworld {
     }
 
     if ((this.levelIndex == config.LAST_LEVEL_INDEX || this.levelIndex == config.GORU_LEVEL_INDEX) && !this.hasSpawnedBoss) {
-      console.debug('[GAME] Level Incomplete...\nWaiting to spawn Deathmason...');
+      console.debug('[GAME] Level Incomplete...\nWaiting to spawn Boss...');
       return false;
     }
 
@@ -2697,7 +2698,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         if (unitSource) {
           const { targets, canAttack } = cachedTargets[u.id] || { targets: [], canAttack: false };
           // Add unit action to the array of promises to wait for
-          let promise = raceTimeout(5000, `Unit.action; unitSourceId: ${u.unitSourceId}; subType: ${u.unitSubType}`, unitSource.action(u, targets, this, canAttack).then(async (actionResult) => {
+          let promise = raceTimeout(10000, `Unit.action; unitSourceId: ${u.unitSourceId}; subType: ${u.unitSubType}`, unitSource.action(u, targets, this, canAttack).then(async (actionResult) => {
             // Ensure ranged units get out of liquid so they don't take DOT
             // This doesn't apply to melee units since they will automatically move towards you to attack,
             // whereas without this ranged units would be content to just sit in liquid and die from the DOT
@@ -3449,8 +3450,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
     }
   }
-  // TODO - This should factor in fortify, debilitate, bloat explosions, etc.
-  // Any reason we dont fully simulate the enemy turn and store relevant results?
+  // For AI Refactor: https://github.com/jdoleary/Spellmasons/issues/388
+  // TODO - This doesn't factor in fortify, debilitate, bloat explosions, etc.
+  // This also doesn't play well with units that have different actions, such as the Goru
+  // Is there a way for us to better predict the enemy turn, in a way that considers
+  // the game state and always stays in sync with the actual outcome of combat?
   getSmartTargets(units: Unit.IUnit[]): { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } {
     const cachedTargets: { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } = {};
     for (let subTypes of this.subTypesTurnOrder) {
@@ -3459,14 +3463,23 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       for (let u of readyToTakeTurnUnits) {
         const unitSource = allUnits[u.unitSourceId];
         if (unitSource) {
-          const targets = unitSource.getUnitAttackTargets(u, this);
-          const canAttack = this.canUnitAttackTarget(u, targets && targets[0])
-          cachedTargets[u.id] = { targets, canAttack };
-          this.incrementTargetsNextTurnDamage(targets, u.damage, canAttack);
-          if (unitSource.id == PRIEST_ID) {
-            // Signal to other priests that this one is targeted for resurrection
-            // so multiple priests don't try to ressurect the same target
-            this.incrementTargetsNextTurnDamage(targets, -u.healthMax, true);
+          if (unitSource.id == GORU_UNIT_ID) {
+            // Special smart targeting for goru
+            // Save for AI refactor?
+            const targets = unitSource.getUnitAttackTargets(u, this);
+            const canAttack = this.canUnitAttackTarget(u, targets && targets[0])
+            cachedTargets[u.id] = { targets, canAttack };
+          }
+          else {
+            const targets = unitSource.getUnitAttackTargets(u, this);
+            const canAttack = this.canUnitAttackTarget(u, targets && targets[0])
+            cachedTargets[u.id] = { targets, canAttack };
+            this.incrementTargetsNextTurnDamage(targets, u.damage, canAttack);
+            if (unitSource.id == PRIEST_ID) {
+              // Signal to other priests that this one is targeted for resurrection
+              // so multiple priests don't try to ressurect the same target
+              this.incrementTargetsNextTurnDamage(targets, -u.healthMax, true);
+            }
           }
         }
       }
@@ -3517,6 +3530,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         return u.alive && Unit.inRange(u, attackTarget) && u.mana >= u.manaCostToCast;
       case UnitSubType.SUPPORT_CLASS:
         // Support classes (such as priests and summoners) dont attack targets
+        return false;
+      case UnitSubType.GORU_BOSS:
+        // Goru's attention marker is handled elsewhere: He's always going to do some action when he has mana
+        // Goru's getUnitAttackTargets functions similarly to summoners, returning himself if he has mana to act
         return false;
       default:
         console.error('Cannot determine canUnitAttackTarget, unit sub type is unaccounted for', u.unitSubType)
@@ -3720,11 +3737,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       }
     }
 
-    if (!effectState.casterUnit.alive) {
-      // Prevent dead players from casting
-      return effectState;
-    }
-
     const castingParticleEmitter = makeRisingParticles(effectState.casterUnit, prediction, hexToString(magicColor || 0xffffff), -1);
 
     // "quantity" is the number of identical cards cast in a row. Rather than casting the card sequentially
@@ -3788,7 +3800,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           test_endCheckPromises();
         }
 
-        if (!effectState.shouldRefundLastSpell) {
+        if (!args.castForFree && !effectState.shouldRefundLastSpell) {
           // Add cooldown
           if (!prediction && effectState.casterPlayer && card.cooldown) {
             Object.assign(effectState.casterPlayer.spellState[card.id] || {}, { cooldown: card.cooldown });
@@ -4287,7 +4299,13 @@ function getEnemiesForAltitude(underworld: Underworld, levelIndex: number): stri
   // Reduce remaining budget on the last level where Goru will spawn
   if (config.IS_ANNIVERSARY_UPDATE_OUT && levelIndex == config.GORU_LEVEL_INDEX) {
     if (goru.spawnParams) {
-      budgetLeft -= goru.spawnParams?.budgetCost;
+      // https://github.com/jdoleary/Spellmasons/issues/168
+      // Budgeting system still needs an overhaul
+
+      // This is intentionally commented out, since this 
+      // often results in very few enemies and enemy types
+      // Goru needs units to support him, being a corpse-based boss without summon capability
+      //budgetLeft -= goru.spawnParams?.budgetCost;
     } else {
       console.warn("Goru spawn params unknown, could not modify budget correctly");
     }
@@ -4435,6 +4453,7 @@ interface CastCardsArgs {
   // (like the color of a radius circle in the "Target Circle" card) to clue the user in to
   // the fact that the spell is out of range but it's showing them what would happen.
   outOfRange?: boolean,
+  castForFree?: boolean,
   magicColor?: number,
   casterPlayer?: Player.IPlayer,
   initialTargetedUnitId?: number,

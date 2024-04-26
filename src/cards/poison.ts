@@ -99,7 +99,7 @@ const spell: Spell = {
 
   },
   events: {
-    onTurnEnd: async (unit: IUnit, prediction: boolean, underworld: Underworld) => {
+    onTurnEnd: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
       // TODO: There was a bug here where somehow modifiers['poison'] was undefined after i did chain, vulx10, poisonx10
       const modifier = unit.modifiers[poisonCardId];
       if (!modifier) {

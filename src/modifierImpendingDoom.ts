@@ -27,7 +27,7 @@ export default function registerImpendingDoom() {
   }
 
   registerEvents(impendingDoomId, {
-    onTurnEnd: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
+    onTurnEnd: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       const modifier = unit.modifiers[impendingDoomId];
       if (!prediction) {
         if (modifier) {

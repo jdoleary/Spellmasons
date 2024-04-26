@@ -22,7 +22,7 @@ async function resurrectUnits(self: Unit.IUnit, units: Unit.IUnit[], underworld:
   }
   playSFXKey('priestAttack');
   await Unit.playAnimation(self, unit.animations.attack);
-  let manaBeforeCast = self.mana;
+  self.mana -= self.manaCostToCast;
   let didResurrect = false;
   let promises = [];
   for (let ally of units) {
@@ -35,6 +35,7 @@ async function resurrectUnits(self: Unit.IUnit, units: Unit.IUnit[], underworld:
         castLocation: ally,
         prediction: false,
         outOfRange: false,
+        castForFree: true,
       });
       for (let unit of targetedUnits) {
         // Add summoning sickeness so they can't act after they are summoned
@@ -44,11 +45,7 @@ async function resurrectUnits(self: Unit.IUnit, units: Unit.IUnit[], underworld:
     didResurrect = true;
   }
   await Promise.all(promises);
-
-  // Fixes an issue where cast card resurrect would cause incorrect mana cost
-  self.mana = manaBeforeCast - self.manaCostToCast;
   return didResurrect;
-
 }
 export const PRIEST_ID = 'priest';
 const unit: UnitSource = {

@@ -54,7 +54,7 @@ const spell: Spell = {
     },
   },
   events: {
-    onTurnStart: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
+    onTurnStart: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       const modifier = unit.modifiers[conserveSpellId];
       if (modifier) {
         setTimeout(() => {

@@ -432,6 +432,10 @@ export function addOneOffAnimation(imageHaver: any, spritePath: string, oneOffOp
     if (animationSprite) {
       animationSprite.doRemoveWhenPrimaryAnimationChanges = oneOffOptions?.doRemoveWhenPrimaryAnimationChanges || false;
       animationSprite.anchor.set(0.5);
+      // exception: lobberProjectile is too high to explode in center
+      if (spritePath == 'projectile/lobberProjectileHit') {
+        animationSprite.anchor.set(0.5, 0.25);
+      }
     }
     // Resolve if set to loop, since this sprite loops it will never finish animating
     // (well, until it is removed), in which case the promise shouldn't wait for it.

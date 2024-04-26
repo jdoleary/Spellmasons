@@ -47,7 +47,7 @@ const unit: UnitSource = {
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     const chosenUnit = attackTargets && attackTargets[0];
     if (chosenUnit && canAttackTarget) {
-      let manaBeforeCast = unit.mana;
+      unit.mana -= unit.manaCostToCast;
       await Unit.playComboAnimation(unit, unit.animations.attack, async () => {
         await createVisualLobbingProjectile(
           unit,
@@ -69,12 +69,10 @@ const unit: UnitSource = {
             castLocation: chosenUnit,
             prediction: false,
             outOfRange: false,
+            castForFree: true,
           });
         });
       });
-      // TODO - Workaround used several times, refactor.
-      // Needs effect function and/or castCardsFree method
-      unit.mana = manaBeforeCast - unit.manaCostToCast;
     } else {
       if (chosenUnit) {
         const distanceToEnemy = math.distance(unit, chosenUnit);

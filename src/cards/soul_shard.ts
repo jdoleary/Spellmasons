@@ -95,7 +95,7 @@ const spell: Spell = {
       }
       return amount;
     },
-    onDrawSelected: async (unit: Unit.IUnit, prediction: boolean, underworld: Underworld) => {
+    onDrawSelected: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       const modifier = unit.modifiers[soulShardId];
       if (modifier) {
         const shardOwner = underworld.getUnitById(modifier.shardOwnerId, prediction);

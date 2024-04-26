@@ -13,6 +13,7 @@ import { IUnit } from '../entity/Unit';
 import Underworld from '../Underworld';
 import { COLLISION_MESH_RADIUS } from '../config';
 import { HEALTH_POTION, IPickup, MANA_POTION, STAMINA_POTION } from '../entity/Pickup';
+import { primedCorpseId } from '../modifierPrimedCorpse';
 export function makeAncientParticles(position: Vec2, prediction: boolean) {
   if (prediction || globalThis.headless) {
     // Don't show if just a prediction
@@ -925,6 +926,100 @@ export function makeLightBeamParticles(position: Vec2) {
       }
     }, [texture]);
   simpleEmitter({ x: position.x, y: position.y + COLLISION_MESH_RADIUS / 2 }, config, undefined, containerParticlesUnderUnits);
+}
+
+
+
+export function makePrimedCorpseParticles(follow: IUnit, underworld: Underworld, prediction: boolean, resolver?: () => void) {
+  if (prediction || globalThis.headless) {
+    // Don't show if just a prediction
+    if (resolver) {
+      resolver();
+    }
+    return
+  }
+  const texture = createParticleTexture();
+  if (!texture) {
+    logNoTextureWarning('makePrimedCorpseParticles');
+    if (resolver) {
+      resolver();
+    }
+    return
+  }
+  const particleConfig = particles.upgradeConfig(
+    {
+      "alpha": {
+        "start": 0.7,
+        "end": 0
+      },
+      "scale": {
+        "start": 1,
+        "end": 0.001,
+        "minimumScaleMultiplier": 2
+      },
+      "color": {
+        "start": "#d9fff9",
+        "end": "#566d70"
+      },
+      "speed": {
+        "start": 20,
+        "end": 20,
+        "minimumSpeedMultiplier": 1
+      },
+      "acceleration": {
+        "x": 0,
+        "y": -150
+      },
+      "maxSpeed": 0,
+      "startRotation": {
+        "min": 265,
+        "max": 265
+      },
+      "noRotation": false,
+      "rotationSpeed": {
+        "min": 0,
+        "max": 0
+      },
+      "lifetime": {
+        "min": 1,
+        "max": 1
+      },
+      "blendMode": "normal",
+      "frequency": 0.005,
+      "emitterLifetime": -1,
+      "maxParticles": 1000,
+      "pos": {
+        "x": 0,
+        "y": 0
+      },
+      "addAtBack": false,
+      "spawnType": "circle",
+      "spawnCircle": {
+        "x": 0,
+        "y": 0,
+        "r": 2
+      }
+    }, [texture]);
+
+  if (containerUnits) {
+    const wrapped = wrappedEmitter(particleConfig, containerUnits, resolver);
+    if (wrapped) {
+      const { container, emitter } = wrapped;
+      const particleFollower = {
+        displayObject: container,
+        emitter,
+        target: follow,
+        keepOnDeath: true,
+      }
+      // @ts-ignore jid is a unique identifier that allows us to search for this pf later
+      particleFollower.jid = primedCorpseId;
+      underworld.particleFollowers.push(particleFollower);
+    } else {
+      console.warn('Failed to create primed corpse particle emitter');
+    }
+  } else {
+    return;
+  }
 }
 
 // Turns up frequency so that it "stops" spawning new particles
