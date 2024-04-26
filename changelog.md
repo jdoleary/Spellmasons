@@ -1,9 +1,6 @@
-## 1.32.0 - One Year Anniversary Update!
-New Music!
-2 new songs for the anniversiary release
-
+## 1.33.0 - One Year Anniversary Update!
 New Boss!
-Introducing Goru!
+Goru the Corpse Warlock
 
 New Spells!
 - Alchemize
@@ -21,10 +18,31 @@ New Spells!
 - Empower
 - Enfeeble
 - Bolt
-- Drown Upgrades
+- Dark Tide
+- Blood Bath
 - Fling
 
+New Music!
+2 new songs for the anniversiary release
+
 New Trailer!
+https://youtu.be/NNAzAQcNUXc?si=PsdDjUjowZFW0B1a
+
+Other changes
+- content: Remove cursed mana potion
+    because it is anti-fun.
+    Thanks to Kyte from Steam Community
+- i18n: Save dialog, modifiers, undying
+- menu: Deduplicate previousCustomUrls
+- ref: Allow purple portal to be used mid-game (#653)
+- fix: Upgrades work in the + levels
+- fix: shadows overlapping newly spawned units
+- fix: Prevent units disappearing when too close to Wall
+    Thank you @Viz for reporting
+- mods: Remove broken explosive archer mod
+- fix: Protect against MessageQueue softlock
+    Thanks @JCDreamz for reporting
+
 
 ## 1.31.0 - Stability update in preparation for big content update!
 - i18n: Polish
