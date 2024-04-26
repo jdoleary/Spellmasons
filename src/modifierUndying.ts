@@ -26,7 +26,7 @@ export default function registerUndying() {
         if (!prediction) {
           floatingText({
             coords: unit,
-            text: `Undying`,
+            text: i18n(`Undying`),
             style: { fill: 'white', ...config.PIXI_TEXT_DROP_SHADOW }
           });
         }

@@ -922,7 +922,7 @@ function modifiersToText(modifiers: object): string {
   }
   let message = '';
   for (let [key, value] of Object.entries(modifiers)) {
-    message += `<div style="line-height:16px; display:flex;"><img width="16px" height="16px" src="${CardUI.getSpellThumbnailPath(allCards[key]?.thumbnail)}"> ${value.tooltip || `${key} ${value.quantity || ''}`}</div>`
+    message += `<div style="line-height:16px; display:flex;"><img width="16px" height="16px" src="${CardUI.getSpellThumbnailPath(allCards[key]?.thumbnail)}"> ${value.tooltip || `${i18n(key)} ${value.quantity || ''}`}</div>`
   }
   return `<div class="modifiers">${message}</div>`;
 

@@ -497,7 +497,13 @@
         "timemason": "Timemason",
         "far gazer": "Far Gazer",
         "dark tide": "Dark Tide",
-        "blood bath": "Blood Bath"
+        "blood bath": "Blood Bath",
+        "goru description": "Nearly dead himself, Goru is able to resurrect allies, explode corpses, or consume them to strengthen himself.  He is also able to self-ressurect once.",
+        "undying": "Undying",
+        "there is a previous save file with this name, are you sure you want to overwrite it?": "There is a previous save file with this name, are you sure you want to overwrite it?",
+        "yes, overwrite it": "Yes, Overwrite it",
+        "name your save file": "Name your save file",
+        "save cancelled": "Save Cancelled"
     },
     {
         "language": "Français",
@@ -997,7 +1003,13 @@
         "timemason": "Maçon du temps",
         "far gazer": "Regard lointain",
         "dark tide": "La marée noire",
-        "blood bath": "Bain de sang"
+        "blood bath": "Bain de sang",
+        "goru description": "Cette momie est capable de ressusciter des alliés, de faire exploser des cadavres ou de les consommer pour se renforcer. Il est également capable de se ressusciter une fois.",
+        "undying": "Ranimer",
+        "there is a previous save file with this name, are you sure you want to overwrite it?": "Il existe un fichier de sauvegarde précédent portant ce nom, êtes-vous sûr de vouloir l'écraser ?",
+        "yes, overwrite it": "Oui, écrasez-le",
+        "name your save file": "Nommez votre fichier de sauvegarde",
+        "save cancelled": "Sauvegarde annulée"
     },
     {
         "language": "italiano",
@@ -1497,7 +1509,13 @@
         "timemason": "Mago del tempo",
         "far gazer": "Lungo raggio",
         "dark tide": "Marea scura",
-        "blood bath": "Bagno di sangue"
+        "blood bath": "Bagno di sangue",
+        "goru description": "Questa mummia è in grado di resuscitare gli alleati, far esplodere i cadaveri o consumarli per rafforzarsi. È anche in grado di rianimarsi una volta.",
+        "undying": "Rianimare",
+        "there is a previous save file with this name, are you sure you want to overwrite it?": "Esiste un file di salvataggio precedente con questo nome. Sei sicuro di volerlo sovrascrivere?",
+        "yes, overwrite it": "Sì, sovrascrivilo",
+        "name your save file": "Assegna un nome al file di salvataggio",
+        "save cancelled": "Salvataggio annullato"
     },
     {
         "language": "Deutsche",
@@ -1997,7 +2015,13 @@
         "timemason": "Zeitassistent",
         "far gazer": "Langstrecken",
         "dark tide": "Dunkle Flut",
-        "blood bath": "Blutbad"
+        "blood bath": "Blutbad",
+        "goru description": "Diese Mumie ist in der Lage, Verbündete wiederzubeleben, Leichen explodieren zu lassen oder sie zu verzehren, um sich zu stärken. Er ist auch in der Lage, sich einmal wiederzubeleben.",
+        "undying": "Wiederbeleben",
+        "there is a previous save file with this name, are you sure you want to overwrite it?": "Es gibt bereits eine gespeicherte Datei mit diesem Namen. Sind Sie sicher, dass Sie diese überschreiben möchten?",
+        "yes, overwrite it": "Ja, überschreiben",
+        "name your save file": "Benennen Sie Ihre Sicherungsdatei",
+        "save cancelled": "Speichern abgebrochen"
     },
     {
         "language": "español",
@@ -2497,7 +2521,13 @@
         "timemason": "Asistente del reloj",
         "far gazer": "De largo alcance",
         "dark tide": "Marea Oscura",
-        "blood bath": "baño de sangre"
+        "blood bath": "baño de sangre",
+        "goru description": "Esta momia es capaz de resucitar aliados, hacer explotar cadáveres o consumirlos para fortalecerse. También puede resucitarse a sí mismo una vez.",
+        "undying": "Reanimar",
+        "there is a previous save file with this name, are you sure you want to overwrite it?": "Hay un archivo guardado anterior con este nombre, ¿está seguro de que desea sobrescribirlo?",
+        "yes, overwrite it": "Sí, sobrescríbelo",
+        "name your save file": "Ponle un nombre a tu archivo guardado",
+        "save cancelled": "Guardar Cancelado"
     },
     {
         "language": "日本",
@@ -2997,7 +3027,13 @@
         "timemason": "タイムウィザード",
         "far gazer": "長距離",
         "dark tide": "暗い潮",
-        "blood bath": "ブラッドバス"
+        "blood bath": "ブラッドバス",
+        "goru description": "このミイラは、味方を復活させたり、死体を爆発させたり、それらを消費して自分自身を強化したりすることができます。彼は死後に一度生き返る",
+        "undying": "リバイバル",
+        "there is a previous save file with this name, are you sure you want to overwrite it?": "この名前の以前の保存ファイルがあります。上書きしてもよろしいですか?",
+        "yes, overwrite it": "はい、上書きします",
+        "name your save file": "保存ファイルに名前を付けます",
+        "save cancelled": "保存がキャンセルされました"
     },
     {
         "language": "Português",
@@ -3497,7 +3533,13 @@
         "timemason": "Mago do tempo",
         "far gazer": "Longo alcance",
         "dark tide": "aguas oscuras",
-        "blood bath": "Banho de Sangue"
+        "blood bath": "Banho de Sangue",
+        "goru description": "Esta múmia é capaz de ressuscitar aliados, explodir cadáveres ou consumi-los para se fortalecer. Ele também é capaz de se ressuscitar uma vez.",
+        "undying": "Reviver",
+        "there is a previous save file with this name, are you sure you want to overwrite it?": "Existe um arquivo salvo anterior com este nome. Tem certeza de que deseja substituí-lo?",
+        "yes, overwrite it": "Sim, sobrescrever",
+        "name your save file": "Nomeie seu arquivo salvo",
+        "save cancelled": "Salvar cancelado"
     },
     {
         "language": "عربى",
@@ -3997,7 +4039,13 @@
         "timemason": "معالج الوقت",
         "far gazer": "عيون بعيدة",
         "dark tide": "المد المظلم",
-        "blood bath": "حمام الدم"
+        "blood bath": "حمام الدم",
+        "goru description": "هذه المومياء قادرة على إحياء الحلفاء أو تفجير الجثث أو استهلاكها لتقوية نفسها. كما أنه قادر على بعث نفسه مرة واحدة.",
+        "undying": "اعادة احياء",
+        "there is a previous save file with this name, are you sure you want to overwrite it?": "يوجد ملف حفظ سابق بهذا الاسم، هل أنت متأكد من أنك تريد الكتابة فوقه؟",
+        "yes, overwrite it": "نعم، الكتابة فوقه",
+        "name your save file": "قم بتسمية ملف الحفظ الخاص بك",
+        "save cancelled": "حفظ ملغى"
     },
     {
         "language": "한국어",
@@ -4497,7 +4545,13 @@
         "timemason": "시간 마법사",
         "far gazer": "장거리",
         "dark tide": "암흑의 조류",
-        "blood bath": "피목욕"
+        "blood bath": "피목욕",
+        "goru description": "이 미라는 아군을 부활시키거나, 시체를 폭발시키거나, 먹어치워 자신을 강화할 수 있습니다. 그는 또한 한 번 자신을 부활시킬 수 있습니다.",
+        "undying": "부활",
+        "there is a previous save file with this name, are you sure you want to overwrite it?": "이 이름을 가진 이전 저장 파일이 있습니다. 덮어쓰시겠습니까?",
+        "yes, overwrite it": "예, 덮어씁니다",
+        "name your save file": "저장 파일 이름 지정",
+        "save cancelled": "저장이 취소되었습니다."
     },
     {
         "language": "Русский",
@@ -4997,7 +5051,13 @@
         "timemason": "Мастер времени",
         "far gazer": "Дальняя дистанция",
         "dark tide": "Темный прилив",
-        "blood bath": "Кровавая баня"
+        "blood bath": "Кровавая баня",
+        "goru description": "Эта мумия способна воскрешать союзников, взрывать трупы или поглощать их, чтобы усилить себя. Он также способен один раз воскресить себя.",
+        "undying": "Оживить",
+        "there is a previous save file with this name, are you sure you want to overwrite it?": "Существует предыдущий файл сохранения с таким именем. Вы уверены, что хотите его перезаписать?",
+        "yes, overwrite it": "Да, перезаписать",
+        "name your save file": "Назовите свой файл сохранения",
+        "save cancelled": "Сохранить отменено"
     },
     {
         "language": "中文(简)",
@@ -5497,7 +5557,13 @@
         "timemason": "时间向导",
         "far gazer": "长距离",
         "dark tide": "暗潮",
-        "blood bath": "血浴"
+        "blood bath": "血浴",
+        "goru description": "这具木乃伊能够复活盟友、引爆尸体或吞噬他们来增强自己。他也能够复活自己一次。",
+        "undying": "复活",
+        "there is a previous save file with this name, are you sure you want to overwrite it?": "之前有一个同名的保存文件，您确定要覆盖它吗？",
+        "yes, overwrite it": "是的，覆盖它",
+        "name your save file": "为您的保存文件命名",
+        "save cancelled": "保存已取消"
     },
     {
         "language": "中文(繁)",
@@ -5997,7 +6063,13 @@
         "timemason": "時間嚮導",
         "far gazer": "長距離",
         "dark tide": "暗潮",
-        "blood bath": "血浴"
+        "blood bath": "血浴",
+        "goru description": "這具木乃伊能夠復活盟友、引爆屍體或吞噬他們來增強自己。他也能夠復活自己一次。",
+        "undying": "復活",
+        "there is a previous save file with this name, are you sure you want to overwrite it?": "之前有一個同名的保存文件，您確定要覆蓋它嗎？",
+        "yes, overwrite it": "是的，覆蓋它",
+        "name your save file": "為您的儲存檔案命名",
+        "save cancelled": "儲存已取消"
     },
     {
         "language": "Polski",
@@ -6497,7 +6569,13 @@
         "timemason": "Czarodziej Czasu",
         "far gazer": "Daleki zasięg",
         "dark tide": "Ciemna fala",
-        "blood bath": "Krwawa kąpiel"
+        "blood bath": "Krwawa kąpiel",
+        "goru description": "Ta mumia jest w stanie wskrzeszać sojuszników, eksplodować zwłoki lub pochłaniać je, aby się wzmocnić. Potrafi też raz się wskrzesić.",
+        "undying": "Wskrzesić",
+        "there is a previous save file with this name, are you sure you want to overwrite it?": "Istnieje poprzedni plik zapisu o tej nazwie. Czy na pewno chcesz go zastąpić?",
+        "yes, overwrite it": "Tak, nadpisz to",
+        "name your save file": "Nazwij swój plik zapisu",
+        "save cancelled": "Zapisz Anulowano"
     },
     {
         "language": "Dutch",
@@ -6997,6 +7075,12 @@
         "timemason": "Tijd tovenaar",
         "far gazer": "Langeafstand",
         "dark tide": "Donker tij",
-        "blood bath": "Bloed in het water"
+        "blood bath": "Bloed in het water",
+        "goru description": "Deze mummie kan bondgenoten weer tot leven wekken, lijken laten exploderen of ze consumeren om zichzelf te versterken. Hij is ook in staat zichzelf een keer te herbronnen.",
+        "undying": "Herleven",
+        "there is a previous save file with this name, are you sure you want to overwrite it?": "Er is een eerder opgeslagen bestand met deze naam. Weet u zeker dat u dit wilt overschrijven?",
+        "yes, overwrite it": "Ja, overschrijf het",
+        "name your save file": "Geef uw opslagbestand een naam",
+        "save cancelled": "Opslaan Geannuleerd"
     }
 ]
