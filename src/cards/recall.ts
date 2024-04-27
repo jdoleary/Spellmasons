@@ -36,10 +36,12 @@ const spell: Spell = {
         .sort((a, b) => distance(a, state.casterUnit) - distance(b, state.casterUnit))[0];
 
       if (mark) {
-        // Teleport all targets to the mark
-        const targets = getCurrentTargets(state);
+        // Remove all recall points from target list,
+        // we don't want to recall a mark to itself or to another mark
+        const targets = getCurrentTargets(state).filter(t => !(Pickup.isPickup(t) && t.name == Pickup.RECALL_POINT));
         if (targets.length == 0) targets.push(state.casterUnit);
 
+        // Teleport all targets to the mark
         for (let target of targets) {
           teleport(target, mark, underworld, prediction, true);
         }
