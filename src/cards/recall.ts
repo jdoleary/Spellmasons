@@ -19,7 +19,7 @@ const spell: Spell = {
     category: CardCategory.Movement,
     supportQuantity: false,
     sfx: 'swap',
-    manaCost: 15,
+    manaCost: 10,
     healthCost: 0,
     probability: probabilityMap[CardRarity.UNCOMMON],
     expenseScaling: 1,
@@ -48,6 +48,7 @@ const spell: Spell = {
 
         // Remove mark
         Pickup.removePickup(mark, underworld, prediction);
+        playDefaultSpellSFX(card, prediction);
       } else {
         const target = state.castLocation;
 
@@ -64,10 +65,12 @@ const spell: Spell = {
               logSource: 'recall.ts'
             }, underworld, prediction);
             addTarget(pickupInst, state, underworld);
+            if (!prediction) {
+              playSFXKey('recallPlace');
+            }
           }
         }
       }
-      playDefaultSpellSFX(card, prediction);
       return state;
     },
   },

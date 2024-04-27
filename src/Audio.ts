@@ -188,7 +188,8 @@ export const sfx: { [key: string]: string[] } = {
   stomp: ['./sound/sfx/stomp-001.mp3', './sound/sfx/stomp-002.mp3', './sound/sfx/stomp-003.mp3'],
   targetCursed: ['./sound/sfx/targetCursed-001.mp3', './sound/sfx/targetCursed-002.mp3', './sound/sfx/targetCursed-003.mp3'],
   purplePortal: ['./sound/sfx/purple_portal.mp3'],
-  soulBind: ['./sound/sfx/RPG3_PlasmaMagic_Debuff02.mp3']
+  soulBind: ['./sound/sfx/RPG3_PlasmaMagic_Debuff02.mp3'],
+  recallPlace: ['./sound/sfx/RPG3_WindMagic_Buff02_P1_Cast.mp3']
 };
 const music = [
   // config.IS_ANNIVERSARY_UPDATE_OUT
