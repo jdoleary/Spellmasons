@@ -1,5 +1,5 @@
 import { addTarget, EffectState, ICard, Spell } from './index';
-import { CardCategory, UnitSubType } from '../types/commonTypes';
+import { CardCategory, Faction, UnitSubType } from '../types/commonTypes';
 import { Vec2 } from '../jmath/Vec';
 import * as Unit from '../entity/Unit';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
@@ -26,6 +26,8 @@ const spell: Spell = {
     allowNonUnitTarget: true,
     effect: async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean) => {
 
+      const targets = state.targetedUnits;
+      const factions = Unit.getFactionsOf(targets);
       // Only target living units who have less than max hp
       let addedTargets = prediction ? underworld.unitsPrediction : underworld.units;
       addedTargets = addedTargets.filter(u =>
@@ -33,6 +35,15 @@ const spell: Spell = {
         u.health < u.healthMax &&
         u.unitSubType != UnitSubType.DOODAD &&
         !u.flaggedForRemoval &&
+        // Limit to the factions that are targeted
+        // so if you're targeting enemies it will only target wounded enemies
+        // Default to enemy if no-one is targeted for convenience
+        (factions.length === 0 ? [Faction.ENEMY] : factions).includes(u.faction) &&
+        // Filter out caster Unit since they are naturally
+        // the "closest" to themselves and if they want to target
+        // themselves they can by casting on themselves and wont
+        // need target injured to do it
+        u !== state.casterUnit &&
         !state.targetedUnits.includes(u))
         // Sort by most missing health, and then dist to caster
         .sort((a, b) =>

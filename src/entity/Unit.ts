@@ -1759,3 +1759,9 @@ export function resetUnitStats(unit: IUnit, underworld: Underworld) {
 export function unitSourceIdToName(unitSourceId: string, asMiniboss: boolean): string {
   return unitSourceId + (asMiniboss ? ' Miniboss' : '');
 }
+
+export function getFactionsOf(units: { faction: Faction }[]): Faction[] {
+  const factions = units.map(u => u.faction);
+  // This removes all duplicate entries from the list
+  return [...new Set(factions)];
+}
