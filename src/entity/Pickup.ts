@@ -35,7 +35,7 @@ export const BLUE_PORTAL = 'Blue Portal';
 export const HEALTH_POTION = 'Health Potion';
 export const MANA_POTION = 'Mana Potion';
 export const STAMINA_POTION = 'Stamina Potion';
-export const RECALL_POINT = 'Recall Point';
+export const RECALL_POINT = 'Recall';
 const RED_PORTAL_DAMAGE = 30;
 type IPickupDescription = (pickup: IPickup) => Localizable;
 type IPickupEffect = ({ unit, player, pickup, prediction }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld, prediction: boolean }) => void;
@@ -687,7 +687,7 @@ export const pickups: IPickupSource[] = [
     name: RECALL_POINT,
     probability: 0,
     scale: 1,
-    description: pickup => ['recall point description'],
+    description: pickup => [''],
     willTrigger: ({ unit, player, pickup, underworld }) => {
       return false;
     },
