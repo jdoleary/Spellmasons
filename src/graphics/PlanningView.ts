@@ -334,10 +334,6 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
       return;
     }
     const predictionUnit = u.predictionCopy;
-    // Do not draw healthbar for units that are full health
-    if (u.health >= u.healthMax && predictionUnit?.health == u.health) {
-      return;
-    }
     // Draw unit overlay graphics
     //--
     // Prevent drawing unit overlay graphics when a unit is in the portal
