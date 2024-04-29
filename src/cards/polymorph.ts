@@ -113,12 +113,30 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
     );
 
     if (unit != undefined) {
-      // Keep Modifiers
-      for (const modifierKey of Object.keys(unit.modifiers)) {
+      // Persist death state: We shouldn't use Unit.die here because we dont want to 
+      // play sfx, invoke death events, log enemy killed, or use much other die() logic
+      if (!fromUnit.alive) {
+        unit.health = 0;
+        unit.mana = 0;
+        unit.alive = false;
+        if (unit.image) {
+          Unit.changeToDieSprite(unit);
+        }
+
+        // In case a unit is created with a modifier that would be removed on death
+        for (let [modifier, modifierProperties] of Object.entries(unit.modifiers)) {
+          if (!modifierProperties.keepOnDeath) {
+            Unit.removeModifier(unit, modifier, underworld);
+          }
+        }
+      }
+
+      // Keep Modifiers from fromUnit
+      for (const modifierKey of Object.keys(fromUnit.modifiers)) {
         const modifier = allModifiers[modifierKey];
-        const modifierInstance = unit.modifiers[modifierKey];
+        const modifierInstance = fromUnit.modifiers[modifierKey];
         if (modifier && modifierInstance) {
-          if (modifier?.add) {
+          if (modifier.add) {
             modifier.add(unit, underworld, prediction, modifierInstance.quantity, modifierInstance);
           }
         } else {
@@ -136,6 +154,17 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
     }
     return unit;
   } else {
+    // Polymorph count changes the seed used for future polymorphing,
+    // ensuring the player visual can change to multiple units
+    // @ts-ignore polymorphCount
+    if (fromUnit.polymorphCount) {
+      // @ts-ignore polymorphCount
+      fromUnit.polymorphCount++;
+    } else {
+      // @ts-ignore polymorphCount
+      fromUnit.polymorphCount = 1;
+    }
+
     // Only change vfx/sfx for player
     fromUnit.defaultImagePath = toSourceUnit.unitProps.defaultImagePath || fromUnit.defaultImagePath;
     fromUnit.animations = toSourceUnit.animations || fromUnit.animations;
@@ -148,18 +177,6 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
       fromUnit.image?.sprite.parent,
       undefined,
     );
-
-    // Polymorph count changes the seed used for future polymorphing,
-    // ensuring the player visual can change to multiple units
-    // @ts-ignore polymorphCount
-    if (fromUnit.polymorphCount) {
-      // @ts-ignore polymorphCount
-      fromUnit.polymorphCount++;
-    } else {
-      // @ts-ignore polymorphCount
-      fromUnit.polymorphCount = 1;
-    }
-
     return fromUnit;
   }
 }
