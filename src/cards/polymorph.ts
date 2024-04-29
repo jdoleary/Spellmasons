@@ -225,7 +225,7 @@ function polymorphPickup(fromPickup: IPickup, underworld: Underworld, prediction
   // If a specific ID isn't passed in, choose a random one
   if (!toPickupSource) {
     // Don't polymorph purple portals
-    if (fromPickup.name == Pickup.PORTAL_PURPLE_NAME) return undefined;
+    if (fromPickup.name == Pickup.PORTAL_PURPLE_NAME || fromPickup.name == Pickup.RECALL_POINT) return undefined;
 
     let possiblePickupTypes = pickups.filter(p => isModActive(p, underworld) && p.name != fromPickup.name
       && p.name != Pickup.PORTAL_PURPLE_NAME && p.name != Pickup.RECALL_POINT);
