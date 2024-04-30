@@ -1951,6 +1951,8 @@ export default class Underworld {
     this.hasSpawnedBoss = false;
   }
   postSetupLevel() {
+    // runPrediction cleans up overlay from last level and sets up new health bars
+    runPredictions(this);
     document.body?.classList.toggle('loading', false);
     runCinematicLevelCamera(this).then(() => {
       console.log('Cinematic Cam: Finished');
