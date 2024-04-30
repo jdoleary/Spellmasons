@@ -1970,6 +1970,7 @@ export default class Underworld {
 
     console.log('Setup: createLevelSyncronous');
     this.lastLevelCreated = levelData;
+    this.generatingLevel = false;
     setAbyssColor(levelData.biome);
     // Clean up the previous level
     this.cleanUpLevel();
@@ -2032,6 +2033,8 @@ export default class Underworld {
       for (let player of this.players) {
         const points = player.mageType == 'Spellmason' ? 4 : 3;
         player.statPointsUnspent += points;
+        console.log("Setup: Gave player: [" + player.clientId + "] " + points + " upgrade points for level index: " + levelIndex);
+        if (player.statPointsUnspent > points) console.error("Setup: Player has more stat points than expected: ", player);
         // If the player hasn't completed first steps, autospend stat points on health
         // We don't want to cause information overload during tutorial
         if (!isTutorialFirstStepsComplete()) {
@@ -2104,6 +2107,7 @@ export default class Underworld {
     do {
       // Invoke generateRandomLevel again until it succeeds
       level = this.generateRandomLevelData(levelIndex);
+      if (level == undefined) console.log("Undefined level. Regenerating");
     } while (level === undefined);
     this.pie.sendData({
       type: MESSAGE_TYPES.CREATE_LEVEL,
@@ -2127,7 +2131,9 @@ export default class Underworld {
         resolve(this.generateLevelDataSyncronous(levelIndex, this.gameMode));
       }, 10);
     }).then(() => {
-      this.generatingLevel = false;
+      // We set generatingLevel = false in createLevelSyncronous because we want to
+      // create the level we already generated before generating more
+      // The old way caused a bug that caused players to regenerate the level if many network messages were queued up
       return;
     })
   }
@@ -2183,9 +2189,9 @@ export default class Underworld {
       return;
     }
 
-    // Failsafe, do not progress game state during level generation
+    // Game State should not progress if a level is currently being generated/loaded
     if (this.generatingLevel) {
-      console.warn('[GAME] Level still generating: Return');
+      console.log('[GAME] Level still generating: Return');
       console.log('[GAME] Progress Game State Complete');
       return false;
     }
