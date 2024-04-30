@@ -2194,28 +2194,31 @@ export default class Underworld {
       return false;
     }
 
-    // We should try completing the level before ending the game
-    // in case the player has beaten the level and died at the same time
-    // Favoring the player in this scenario should only improve player experience
-    if (this.isLevelComplete()) {
-      if (this.trySpawnPortals()) {
-        console.log('[GAME] Progress Game State Complete');
-        return;
-      }
-    }
+    // Game State should not progress if a level is currently being generated/loaded
     if (this.levelIndex === -1 && !tutorialChecklist['spawn'].complete) {
       console.log('[GAME] Do not progress on first tutorial level until you spawn');
       return;
     }
-    // If we don't spawn portals, DONT RETURN!
-    // Continue progressGameState to check for game over and cycle turn phases
-    if (this.tryGoToNextLevel()) {
-      console.log('[GAME] Progress Game State Complete');
-      return;
+
+    // We should try completing the level before ending the game
+    // in case the player has beaten the level and died at the same time
+    // Favoring the player in this scenario should only improve player experience
+    if (this.isLevelComplete()) {
+      // If the level is complete, try going to the next one
+      // Will fail if players aren't ready (haven't ended turns / entered portals)
+      if (this.tryGoToNextLevel()) {
+        console.log('[GAME] Progress Game State Complete');
+        return;
+      }
+      // Double check that portals are spawned, and spawn more if needed
+      if (this.trySpawnPortals()) {
+        console.log('[GAME] Progress Game State Complete');
+        return;
+      }
+      // If we don't spawn portals or go to the next level, coontinue
+      // progressGameState to check for a gameOver() and cycle turn phases
     }
 
-    // If we don't go to the next level, DONT RETURN!
-    // Continue progressGameState to check for game over and cycle turn phases
     if (this.isGameOver()) {
       this.doGameOver();
       console.log('[GAME] Progress Game State Complete');
@@ -2387,10 +2390,6 @@ export default class Underworld {
     return true;
   }
   tryGoToNextLevel(): boolean {
-    // Level must be complete to go to the next level
-    if (!this.isLevelComplete()) {
-      return false;
-    }
     // We can only go to the next level if all players are
     // inPortal or have completed their turn
     // This includes players that can't act due to death/freeze/etc.
