@@ -13,6 +13,10 @@ const velocity_falloff = 0.992;
 export const EXPECTED_MILLIS_PER_GAMELOOP = 16;
 
 export async function forcePushDelta(pushedObject: HasSpace, deltaMovement: Vec2, underworld: Underworld, prediction: boolean): Promise<void> {
+  // Do not act on objects that are flagged for removal
+  if (pushedObject.flaggedForRemoval) {
+    return Promise.resolve();
+  }
   // Calculate velocity needed to move object
   let velocity = movementToVelocity(deltaMovement);
   pushedObject.beingPushed = true;

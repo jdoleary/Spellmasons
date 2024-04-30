@@ -9,6 +9,7 @@ export interface HasSpace {
     immovable: boolean;
     // Currently being pushed
     beingPushed: boolean;
+    flaggedForRemoval?: boolean;
 }
 export function hasSpace(maybe: any): maybe is HasSpace {
     return maybe && typeof maybe.x == 'number' && typeof maybe.y == 'number' && typeof maybe.radius == 'number';
