@@ -9,6 +9,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 import { isPickup } from '../entity/Pickup';
 import { suffocateCardId, updateSuffocate } from './suffocate';
+import { addScaleModifier, removeScaleModifier } from '../graphics/Image';
 
 const id = 'split';
 const splitLimit = 3;
@@ -30,11 +31,8 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
     return;
   }
   // Safely restore unit's original properties
-  const { scaleX, scaleY, healthMax, manaMax, manaPerTurn, staminaMax, damage, moveSpeed } = unit.modifiers[id].originalStats;
-  if (unit.image) {
-    unit.image.sprite.scale.x = scaleX;
-    unit.image.sprite.scale.y = scaleY;
-  }
+  const { healthMax, manaMax, manaPerTurn, staminaMax, damage, moveSpeed } = unit.modifiers[id].originalStats;
+  removeScaleModifier(unit.image, id)
   const healthChange = healthMax / unit.healthMax;
   unit.health *= healthChange;
   unit.health = Math.floor(unit.health);
@@ -68,8 +66,6 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     quantity,
     keepOnDeath: true,
     originalStats: {
-      scaleX: unit.image && unit.image.sprite.scale.x || 1,
-      scaleY: unit.image && unit.image.sprite.scale.y || 1,
       healthMax,
       manaMax,
       manaPerTurn,
@@ -87,10 +83,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
   modifier.quantity = Math.min(modifier.quantity, splitLimit);
 
   for (let i = 0; i < timesToSplit; i++) {
-    if (unit.image) {
-      unit.image.sprite.scale.x *= scaleMultiplier;
-      unit.image.sprite.scale.y *= scaleMultiplier;
-    }
+    addScaleModifier(unit.image, { x: scaleMultiplier, y: scaleMultiplier, id })
     changeStatWithCap(unit, 'health', addMultiplier);
     changeStatWithCap(unit, 'healthMax', addMultiplier);
     changeStatWithCap(unit, 'mana', addMultiplier);

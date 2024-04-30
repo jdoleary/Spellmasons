@@ -348,11 +348,10 @@ export function adjustUnitDifficulty(unit: IUnit, difficulty: number) {
     // Damage should remain unaffected by difficulty
     unit.damage = Math.round(source.unitProps.damage !== undefined ? source.unitProps.damage : config.UNIT_BASE_DAMAGE);
 
-    // Strength scaling
+    // Difficulty scaling
     const quantityStatModifier = 1 + 0.8 * ((unit.strength || 1) - 1);
     healthMax = Math.round(healthMax * quantityStatModifier);
     unit.damage = Math.round(unit.damage * quantityStatModifier);
-    updateStrengthSpriteScaling(unit, 1);
 
     // Maintain Health/Mana Ratios
     const oldHealthRatio = (unit.health / unit.healthMax) || 0;
@@ -374,28 +373,6 @@ export function adjustUnitDifficulty(unit: IUnit, difficulty: number) {
   } else {
     console.error('missing unit source');
   }
-}
-export function updateStrengthSpriteScaling(unit: IUnit, oldStrength: number) {
-  // WARN: Providing an incorrect value for oldStrength value will create large/repeated changes in sprite size
-
-  // We have to multiply the sprite scale instead of setting it
-  // as to not undo other scalars such as the ones applied by bloat and split,
-  // so we need to divide newStrength scalar by the oldStrength scalar
-  if (unit.image) {
-    const strengthScaleQuotient = getScaleFromStrength(unit.strength) / getScaleFromStrength(oldStrength);
-
-    unit.image.sprite.scale.x *= strengthScaleQuotient;
-    unit.image.sprite.scale.y *= strengthScaleQuotient;
-  }
-}
-function getScaleFromStrength(strength: number): number {
-  // this final scale of the unit will always be less than the max multiplier
-  const maxMultiplier = 4;
-  // adjust strength to ensure scale = 1 at strength = 1
-  strength -= 1;
-  // calculate scale multiplier with diminishing formula
-  // 20 is an arbitrary number that controls the speed at which the scale approaches the max
-  return 1 + (maxMultiplier - 1) * (strength / (strength + 20))
 }
 function setupShaders(unit: IUnit) {
   if (unit.image) {
@@ -594,6 +571,7 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
   if (loadedunit.stamina == null) {
     loadedunit.stamina = loadedunit.staminaMax || config.UNIT_BASE_STAMINA;
   }
+  Image.setScaleFromModifiers(loadedunit.image);
   return loadedunit;
 }
 // Similar but not the same as `load`, syncronize updates (mutates) a unit 
@@ -1457,10 +1435,6 @@ export function makeMiniboss(unit: IUnit) {
   unit.isMiniboss = true;
   explain(EXPLAIN_MINI_BOSSES);
   unit.name = unitSourceIdToName(unit.unitSourceId, true);
-  if (unit.image) {
-    unit.image.sprite.scale.x *= config.UNIT_MINIBOSS_SCALE_MULTIPLIER;
-    unit.image.sprite.scale.y *= config.UNIT_MINIBOSS_SCALE_MULTIPLIER;
-  }
   unit.radius *= config.UNIT_MINIBOSS_SCALE_MULTIPLIER;
   unit.damage *= config.UNIT_MINIBOSS_DAMAGE_MULTIPLIER;
   unit.healthMax *= config.UNIT_MINIBOSS_HEALTH_MULTIPLIER;
@@ -1469,6 +1443,8 @@ export function makeMiniboss(unit: IUnit) {
   unit.mana *= config.UNIT_MINIBOSS_MANA_MULTIPLIER;
   unit.manaPerTurn *= config.UNIT_MINIBOSS_MANA_MULTIPLIER;
   unit.manaCostToCast *= config.UNIT_MINIBOSS_MANA_MULTIPLIER;
+  unit.strength = 7;
+  Image.setScaleFromModifiers(unit.image, unit.strength);
 }
 // Makes a copy of the unit's data suitable for 
 // a predictionUnit

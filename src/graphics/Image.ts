@@ -5,7 +5,7 @@ import Subsprites from '../Subsprites';
 import type { Vec2 } from "../jmath/Vec";
 import * as config from '../config';
 import { raceTimeout } from '../Promise';
-import { add, LIQUID_MASK } from '../inLiquid';
+import { LIQUID_MASK } from '../inLiquid';
 
 export interface HasImage {
   image: IImageAnimated;
@@ -34,9 +34,15 @@ export type IImageAnimatedSerialized = {
 // 'doRemoveWhenPrimaryAnimationChanges' is a custom property that I'm adding to denote if a sprite is a oneOff sprite
 // meaning, it should get removed if the primary sprite changes
 export type JSpriteAnimated = PIXI.AnimatedSprite & { imagePath: string, doRemoveWhenPrimaryAnimationChanges: boolean };
+interface ScaleModifier {
+  id: string;
+  x?: number;
+  y?: number;
+}
 export interface IImageAnimated {
   // Not to be serialized
   sprite: JSpriteAnimated;
+  scaleModifiers?: ScaleModifier[];
   // When invoked, resolves any promises waiting on this animation to complete
   // such as the underworld waiting for a spell animation before moving on
   resolver: undefined | (() => void);
@@ -62,10 +68,62 @@ export function create(
 
   const image: IImageAnimated = {
     sprite,
-    resolver: undefined
+    resolver: undefined,
   };
   setPosition(image, coords);
   return image;
+}
+export function removeScaleModifier(image: IImageAnimated | undefined, id: string) {
+  if (image && image.scaleModifiers) {
+    image.scaleModifiers = image.scaleModifiers.filter(x => x.id !== id)
+    setScaleFromModifiers(image);
+  }
+  setScaleFromModifiers(image);
+}
+export function addScaleModifier(image: IImageAnimated | undefined, mod: ScaleModifier) {
+  if (image) {
+    if (!image.scaleModifiers) {
+      image.scaleModifiers = [];
+    }
+    const prev = image.scaleModifiers.find(x => x.id == mod.id);
+    // overwrite existing modifier with same id
+    if (prev) {
+      prev.x = mod.x;
+      prev.y = mod.y;
+    } else {
+      // add
+      image.scaleModifiers.push(mod);
+    }
+  }
+  setScaleFromModifiers(image);
+}
+export function setScaleFromModifiers(image?: IImageAnimated, strength?: number) {
+  const strengthScale = getScaleFromStrength(strength || 1);
+  let scaleX = strengthScale;
+  let scaleY = strengthScale;
+  if (image?.scaleModifiers) {
+    for (let { x, y } of image.scaleModifiers) {
+      if (x) {
+        scaleX *= x;
+      }
+      if (y) {
+        scaleY *= y;
+      }
+    }
+  }
+  if (image) {
+    image.sprite.scale.x = scaleX;
+    image.sprite.scale.y = scaleY;
+  }
+}
+function getScaleFromStrength(strength: number): number {
+  // this final scale of the unit will always be less than the max multiplier
+  const maxMultiplier = 4;
+  // adjust strength to ensure scale = 1 at strength = 1
+  strength -= 1;
+  // calculate scale multiplier with diminishing formula
+  // 20 is an arbitrary number that controls the speed at which the scale approaches the max
+  return 1 + (maxMultiplier - 1) * (strength / (strength + 20))
 }
 export function cleanup(image?: IImageAnimated) {
   // Remove PIXI sprite

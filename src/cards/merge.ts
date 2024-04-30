@@ -4,7 +4,7 @@ import * as Pickup from '../entity/Pickup';
 import * as colors from '../graphics/ui/colors';
 import { CardCategory, Faction, UnitType } from '../types/commonTypes';
 import floatingText from '../graphics/FloatingText';
-import { IImageAnimated } from '../graphics/Image';
+import { IImageAnimated, setScaleFromModifiers } from '../graphics/Image';
 import { raceTimeout } from '../Promise';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { findSimilar } from './target_similar';
@@ -73,7 +73,6 @@ const spell: Spell = {
 };
 
 export function mergeUnits(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], underworld: Underworld, prediction: boolean, state?: EffectState) {
-  const oldStrength = target.strength;
   let storedModifiers = [];
   for (const unit of unitsToMerge) {
     // Prediction Lines
@@ -92,6 +91,8 @@ export function mergeUnits(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], under
       // Players only gain current stats, for balance purposes
       target.health += unit.health;
       target.mana += unit.mana;
+      // Allows player to grow in size
+      target.strength += unit.strength;
     } else {
       // Combine Stats
       target.healthMax += unit.healthMax;
@@ -145,7 +146,8 @@ export function mergeUnits(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], under
     }
   }
 
-  Unit.updateStrengthSpriteScaling(target, oldStrength);
+  setScaleFromModifiers(target.image, target.strength);
+
 }
 
 export function mergePickups(target: Pickup.IPickup, pickupsToMerge: Pickup.IPickup[], underworld: Underworld, prediction: boolean, state?: EffectState) {
