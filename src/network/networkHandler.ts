@@ -1141,7 +1141,6 @@ async function handleLoadGameState(payload: {
     // that the inventory is filled with the spells it had when saved
     recalcPositionForCards(globalThis.player, underworld);
   }
-
 }
 async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Underworld) {
   if (typeof payload.x !== 'number' || typeof payload.y !== 'number' || typeof payload.casterPositionAtTimeOfCast.x !== 'number' || typeof payload.casterPositionAtTimeOfCast.y !== 'number') {

@@ -2127,11 +2127,7 @@ export default class Underworld {
     this.generatingLevel = true;
     return new Promise<LevelData>(resolve => {
       document.body?.classList.toggle('loading', true);
-      // setTimeout allows the UI to refresh before locking up the CPU with
-      // heavy level generation code
-      setTimeout(() => {
-        resolve(this.generateLevelDataSyncronous(levelIndex, this.gameMode));
-      }, 10);
+      resolve(this.generateLevelDataSyncronous(levelIndex, this.gameMode));
     }).then(() => {
       // We set generatingLevel = false in createLevelSyncronous because we want to
       // create the level we already generated before generating more
