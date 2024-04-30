@@ -2183,6 +2183,13 @@ export default class Underworld {
       return;
     }
 
+    // Failsafe, do not progress game state during level generation
+    if (this.generatingLevel) {
+      console.warn('[GAME] Level still generating: Return');
+      console.log('[GAME] Progress Game State Complete');
+      return false;
+    }
+
     // We should try completing the level before ending the game
     // in case the player has beaten the level and died at the same time
     // Favoring the player in this scenario should only improve player experience
@@ -2205,7 +2212,6 @@ export default class Underworld {
 
     // If we don't go to the next level, DONT RETURN!
     // Continue progressGameState to check for game over and cycle turn phases
-
     if (this.isGameOver()) {
       this.doGameOver();
       console.log('[GAME] Progress Game State Complete');
