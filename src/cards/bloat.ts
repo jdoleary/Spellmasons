@@ -28,7 +28,7 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity:
     }
 
     // Visually "bloat" the image
-    addScaleModifier(unit.image, { x: 1.5, id });
+    addScaleModifier(unit.image, { x: 1.5, id }, unit.strength);
   });
   if (!modifier.radiusBoost) {
     modifier.radiusBoost = 0;
@@ -38,7 +38,7 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity:
 }
 function remove(unit: IUnit, underworld: Underworld) {
   if (unit.modifiers && unit.modifiers[id] && unit.image) {
-    removeScaleModifier(unit.image, id)
+    removeScaleModifier(unit.image, id, unit.strength)
   }
 }
 

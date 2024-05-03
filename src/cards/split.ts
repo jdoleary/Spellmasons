@@ -32,7 +32,7 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
   }
   // Safely restore unit's original properties
   const { healthMax, manaMax, manaPerTurn, staminaMax, damage, moveSpeed } = unit.modifiers[id].originalStats;
-  removeScaleModifier(unit.image, id)
+  removeScaleModifier(unit.image, id, unit.strength)
   const healthChange = healthMax / unit.healthMax;
   unit.health *= healthChange;
   unit.health = Math.floor(unit.health);
@@ -83,7 +83,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
   modifier.quantity = Math.min(modifier.quantity, splitLimit);
 
   for (let i = 0; i < timesToSplit; i++) {
-    addScaleModifier(unit.image, { x: scaleMultiplier, y: scaleMultiplier, id })
+    addScaleModifier(unit.image, { x: scaleMultiplier, y: scaleMultiplier, id }, unit.strength)
     changeStatWithCap(unit, 'health', addMultiplier);
     changeStatWithCap(unit, 'healthMax', addMultiplier);
     changeStatWithCap(unit, 'mana', addMultiplier);

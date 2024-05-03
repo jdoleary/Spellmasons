@@ -571,7 +571,7 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
   if (loadedunit.stamina == null) {
     loadedunit.stamina = loadedunit.staminaMax || config.UNIT_BASE_STAMINA;
   }
-  Image.setScaleFromModifiers(loadedunit.image);
+  Image.setScaleFromModifiers(loadedunit.image, loadedunit.strength);
   return loadedunit;
 }
 // Similar but not the same as `load`, syncronize updates (mutates) a unit 

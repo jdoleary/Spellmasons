@@ -17,6 +17,7 @@ export function hasImage(maybe: any): maybe is HasImage {
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
 // rehydrate the JSON into an entity
 export type IImageAnimatedSerialized = {
+  scaleModifiers?: ScaleModifier[],
   sprite: {
     x: number,
     y: number,
@@ -73,14 +74,13 @@ export function create(
   setPosition(image, coords);
   return image;
 }
-export function removeScaleModifier(image: IImageAnimated | undefined, id: string) {
+export function removeScaleModifier(image: IImageAnimated | undefined, id: string, strength: number) {
   if (image && image.scaleModifiers) {
     image.scaleModifiers = image.scaleModifiers.filter(x => x.id !== id)
-    setScaleFromModifiers(image);
   }
-  setScaleFromModifiers(image);
+  setScaleFromModifiers(image, strength);
 }
-export function addScaleModifier(image: IImageAnimated | undefined, mod: ScaleModifier) {
+export function addScaleModifier(image: IImageAnimated | undefined, mod: ScaleModifier, strength: number) {
   if (image) {
     if (!image.scaleModifiers) {
       image.scaleModifiers = [];
@@ -95,10 +95,10 @@ export function addScaleModifier(image: IImageAnimated | undefined, mod: ScaleMo
       image.scaleModifiers.push(mod);
     }
   }
-  setScaleFromModifiers(image);
+  setScaleFromModifiers(image, strength);
 }
-export function setScaleFromModifiers(image?: IImageAnimated, strength?: number) {
-  const strengthScale = getScaleFromStrength(strength || 1);
+export function setScaleFromModifiers(image: IImageAnimated | undefined, strength: number) {
+  const strengthScale = getScaleFromStrength(strength);
   let scaleX = strengthScale;
   let scaleY = strengthScale;
   if (image?.scaleModifiers) {
@@ -262,6 +262,7 @@ export function serialize(image: IImageAnimated): IImageAnimatedSerialized {
     // remove nulls
     .flatMap(x => x !== null && x !== undefined ? [x] : []);
   return {
+    scaleModifiers: image.scaleModifiers,
     sprite: {
       x: image.sprite.x,
       y: image.sprite.y,
@@ -294,7 +295,11 @@ export function load(image: IImageAnimatedSerialized | undefined, parent: PIXI.C
   // Recreate the sprite using the create function so it initializes it properly
   const newImage = create(copy.sprite, imagePath, parent, { loop: image.sprite.loop });
   if (!newImage) { return undefined; }
+  newImage.scaleModifiers = copy.scaleModifiers;
   newImage.sprite.scale.set(scale.x, scale.y);
+  // Strength is unknown so scale will have to be reset when
+  // Unit or Pickup loads and strength is known
+  setScaleFromModifiers(newImage, 1);
   // Restore subsprites (the actual sprites)
   restoreSubsprites(newImage, copy.sprite.children);
 
