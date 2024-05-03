@@ -1972,7 +1972,6 @@ export default class Underworld {
 
     console.log('Setup: createLevelSyncronous');
     this.lastLevelCreated = levelData;
-    this.generatingLevel = false;
     setAbyssColor(levelData.biome);
     // Clean up the previous level
     this.cleanUpLevel();
@@ -2053,6 +2052,9 @@ export default class Underworld {
     if (globalThis.playNextSong) {
       globalThis.playNextSong();
     }
+    // Now that level is done being generated, set generatingLevel to
+    // false so that the next level generation may begin when it is time
+    this.generatingLevel = false;
 
     // NOTE: Any data that needs to be synced from host to clients from this function MUST
     // be set BEFORE postSetupLevel is invoked because postSetupLevel will send a sync message
