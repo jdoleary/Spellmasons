@@ -1062,17 +1062,7 @@ async function handleLoadGameState(payload: {
       if (p.flaggedForRemoval) {
         continue;
       }
-      const pickup = Pickup.pickups.find(pickupSource => pickupSource.name == p.name);
-      if (pickup) {
-        const newPickup = Pickup.create({ pos: { x: p.x, y: p.y }, pickupSource: pickup, idOverride: p.id, logSource: 'handleLoadGameState' }, underworld, false);
-        if (newPickup) {
-          const { image, ...rest } = p;
-          // Override pickup properties such as turnsLeftToGrab
-          Object.assign(newPickup, rest);
-        }
-      } else {
-        console.error('Could not spawn pickup, pickup source missing for imagePath', p.imagePath);
-      }
+      Pickup.load(p, underworld, false)
     }
   }
 

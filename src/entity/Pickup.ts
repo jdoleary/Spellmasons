@@ -333,6 +333,8 @@ export function load(pickup: IPickupSerialized, underworld: Underworld, predicti
     // create function because the create function passes that ref to the underworld pickups array.
     // So when you mutate the properties, the ref must stay the same.
     Object.assign(newPickup, toCopy);
+    // Restore scale which is set when power is set
+    setPower(newPickup, newPickup.power);
     if (!prediction) {
       addText(newPickup);
     }
@@ -698,8 +700,7 @@ export const pickups: IPickupSource[] = [
 ];
 export function setPower(pickup: IPickup, newPower: number) {
   if (pickup.image) {
-    const baseScale = pickup.image.sprite.scale.y / getScaleFromPower(pickup.power);
-    const newScale = baseScale * getScaleFromPower(newPower);
+    const newScale = getScaleFromPower(newPower);
 
     pickup.image.sprite.scale.x = newScale;
     pickup.image.sprite.scale.y = newScale;
