@@ -519,10 +519,8 @@ export function updateCameraPosition(underworld: Underworld) {
           tutorialCompleteTask('camera');
         }
         // Clamp centerTarget so that there isn't a lot of empty space
-        // in the camera if the camera is in auto follow mode
-        if (utilProps.doCameraAutoFollow) {
-          utilProps.camera = clampCameraPosition(utilProps.camera, zoom, underworld);
-        }
+        // in the camera 
+        utilProps.camera = clampCameraPosition(utilProps.camera, zoom, underworld, utilProps.doCameraAutoFollow);
 
         // Actuall move the camera to be centered on the centerTarget
         const cameraTarget = {
@@ -586,12 +584,12 @@ export function updateCameraPosition(underworld: Underworld) {
   tryShowRecenterTip();
 }
 // Clamp the camera position so it doesn't go too far out of bounds when autofollowing a target
-function clampCameraPosition(camPos: Vec2, zoom: number, underworld: Underworld): Vec2 {
+function clampCameraPosition(camPos: Vec2, zoom: number, underworld: Underworld, isCameraAutoFollowing: boolean): Vec2 {
   const clampedPos = { x: 0, y: 0 };
   // Users can move the camera further if they are manually controlling the camera
   // whereas if the camera is following a target it keeps more of the map on screen
-  const marginY = config.COLLISION_MESH_RADIUS * 4;
-  const marginX = config.COLLISION_MESH_RADIUS * 4;
+  const marginY = isCameraAutoFollowing ? config.COLLISION_MESH_RADIUS * 4 : 500 / zoom;
+  const marginX = isCameraAutoFollowing ? config.COLLISION_MESH_RADIUS * 4 : 500 / zoom;
   // Clamp camera X
   const mapLeftMostPoint = 0 - marginX;
   const mapRightMostPoint = underworld.limits.xMax + marginX;
