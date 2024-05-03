@@ -2351,7 +2351,7 @@ export default class Underworld {
 
     // Make all non-portal pickups disappear so as to not compell players
     // to waste time walking around picking them all up
-    this.pickups.filter(p => p.name !== Pickup.PORTAL_PURPLE_NAME).forEach(p => {
+    this.pickups.filter(p => p.name !== Pickup.PORTAL_PURPLE_NAME && !p.flaggedForRemoval).forEach(p => {
       makeScrollDissapearParticles(p, false);
       Pickup.removePickup(p, this, false);
     });
