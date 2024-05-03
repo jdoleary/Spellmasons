@@ -131,6 +131,7 @@ let gameOverModalTimeout: NodeJS.Timeout;
 let forceMoveTimeoutId: NodeJS.Timeout;
 const elUpgradePicker = document.getElementById('upgrade-picker') as (HTMLElement | undefined);
 export const elUpgradePickerContent = document.getElementById('upgrade-picker-content') as (HTMLElement | undefined);
+const rerollBtnContainer = document.getElementById('reroll-btn-container') as (HTMLElement | undefined);
 const elSeed = document.getElementById('seed') as (HTMLElement | undefined);
 const elUpgradePickerLabel = document.getElementById('upgrade-picker-label') as (HTMLElement | undefined);
 
@@ -3397,7 +3398,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
   }
   addRerollButton(player: Player.IPlayer) {
-    if (elUpgradePickerContent) {
+    if (rerollBtnContainer) {
       const elRerollPerks = document.createElement('div');
       elRerollPerks.classList.add('reroll-btn');
       elRerollPerks.style.color = 'white';
@@ -3411,7 +3412,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       elRerollPerks.addEventListener('mouseenter', (e) => {
         playSFXKey('click');
       });
-      elUpgradePickerContent.appendChild(elRerollPerks);
+      rerollBtnContainer.appendChild(elRerollPerks);
     }
   }
   getRandomCoordsWithinBounds(bounds: Limits, seed?: prng): Vec2 {
