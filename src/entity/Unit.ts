@@ -105,7 +105,7 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   // if this IUnit is a real unit, predictionCopy is a reference to the latest prediction copy.
   // used for diffing the effects of a spell to sync multiplayer
   predictionCopy?: IUnit;
-  // strength is a multiplier that affects base level stats
+  // strength is a number that affects the sprite scale of this unit
   strength: number;
   // true if the unit was spawned at the beginning of the level and not
   // resurrected or cloned.  This prevents EXP scamming.
@@ -236,8 +236,9 @@ export function create(
       unit.stamina = 0;
     }
 
-    // Set sprite scale before difficulty, due to strength scaling the sprite
+    // Set the sprite scale, factoring in strength
     unit.image?.sprite.scale.set(config.NON_HEAVY_UNIT_SCALE);
+    Image.setScaleFromModifiers(unit.image, unit.strength);
 
     // Note: This must be invoked after initial setting of stat and statMax (health, mana, stamina, etc) so that it can scale
     // stat relative to maxStat
@@ -255,6 +256,7 @@ export function create(
     if (unit.isMiniboss) {
       makeMiniboss(unit);
     }
+
     setupShaders(unit);
     if (sourceUnit.init) {
       // Initialize unit IF unit contains initialization function
@@ -347,11 +349,6 @@ export function adjustUnitDifficulty(unit: IUnit, difficulty: number) {
     let { healthMax, manaMax } = adjustUnitPropsDueToDifficulty(source, difficulty);
     // Damage should remain unaffected by difficulty
     unit.damage = Math.round(source.unitProps.damage !== undefined ? source.unitProps.damage : config.UNIT_BASE_DAMAGE);
-
-    // Difficulty scaling
-    const quantityStatModifier = 1 + 0.8 * ((unit.strength || 1) - 1);
-    healthMax = Math.round(healthMax * quantityStatModifier);
-    unit.damage = Math.round(unit.damage * quantityStatModifier);
 
     // Maintain Health/Mana Ratios
     const oldHealthRatio = (unit.health / unit.healthMax) || 0;
@@ -1443,7 +1440,7 @@ export function makeMiniboss(unit: IUnit) {
   unit.mana *= config.UNIT_MINIBOSS_MANA_MULTIPLIER;
   unit.manaPerTurn *= config.UNIT_MINIBOSS_MANA_MULTIPLIER;
   unit.manaCostToCast *= config.UNIT_MINIBOSS_MANA_MULTIPLIER;
-  unit.strength = 7;
+  unit.strength *= 7;
   Image.setScaleFromModifiers(unit.image, unit.strength);
 }
 // Makes a copy of the unit's data suitable for 

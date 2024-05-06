@@ -204,7 +204,9 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean, 
             underworld,
             prediction
           );
-
+          unit.healthMax *= quantity;
+          unit.health *= quantity;
+          unit.damage *= quantity;
           addUnitTarget(unit, state);
 
           if (!prediction) {
