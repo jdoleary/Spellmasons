@@ -19,7 +19,7 @@ import {
 } from '../PlanningView';
 import { toggleMenu, View } from '../../views';
 import * as config from '../../config';
-import { cleanBlood, cameraAutoFollow, getCamera, moveCamera, toggleHUD } from '../PixiUtils';
+import { cleanBlood, cameraAutoFollow, getCamera, moveCamera, toggleHUD, setCameraToMapCenter } from '../PixiUtils';
 import { isOutOfRange } from '../../PlayerUtils';
 import { vec2ToOneDimentionIndexPreventWrap } from '../../jmath/ArrayUtil';
 import * as Vec from '../../jmath/Vec';
@@ -281,12 +281,7 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
         cameraAutoFollow(true);
         tutorialCompleteTask('recenterCamera');
       } else {
-        const mouseTarget = underworld.getMousePos();
-        floatingText({
-          coords: mouseTarget,
-          text: 'You must spawn first'
-        })
-        playSFXKey('deny');
+        setCameraToMapCenter(underworld);
       }
       break;
     case 'endTurn':

@@ -131,6 +131,7 @@ let gameOverModalTimeout: NodeJS.Timeout;
 let forceMoveTimeoutId: NodeJS.Timeout;
 const elUpgradePicker = document.getElementById('upgrade-picker') as (HTMLElement | undefined);
 export const elUpgradePickerContent = document.getElementById('upgrade-picker-content') as (HTMLElement | undefined);
+const rerollBtnContainer = document.getElementById('reroll-btn-container') as (HTMLElement | undefined);
 const elSeed = document.getElementById('seed') as (HTMLElement | undefined);
 const elUpgradePickerLabel = document.getElementById('upgrade-picker-label') as (HTMLElement | undefined);
 
@@ -1951,6 +1952,8 @@ export default class Underworld {
     this.hasSpawnedBoss = false;
   }
   postSetupLevel() {
+    // runPrediction cleans up overlay from last level and sets up new health bars
+    runPredictions(this);
     document.body?.classList.toggle('loading', false);
     runCinematicLevelCamera(this).then(() => {
       console.log('Cinematic Cam: Finished');
@@ -2032,6 +2035,8 @@ export default class Underworld {
       for (let player of this.players) {
         const points = player.mageType == 'Spellmason' ? 4 : 3;
         player.statPointsUnspent += points;
+        console.log("Setup: Gave player: [" + player.clientId + "] " + points + " upgrade points for level index: " + levelIndex);
+        if (player.statPointsUnspent > points) console.error("Setup: Player has more stat points than expected: ", player);
         // If the player hasn't completed first steps, autospend stat points on health
         // We don't want to cause information overload during tutorial
         if (!isTutorialFirstStepsComplete()) {
@@ -2048,6 +2053,9 @@ export default class Underworld {
     if (globalThis.playNextSong) {
       globalThis.playNextSong();
     }
+    // Now that level is done being generated, set generatingLevel to
+    // false so that the next level generation may begin when it is time
+    this.generatingLevel = false;
 
     // NOTE: Any data that needs to be synced from host to clients from this function MUST
     // be set BEFORE postSetupLevel is invoked because postSetupLevel will send a sync message
@@ -2104,6 +2112,7 @@ export default class Underworld {
     do {
       // Invoke generateRandomLevel again until it succeeds
       level = this.generateRandomLevelData(levelIndex);
+      if (level == undefined) console.log("Undefined level. Regenerating");
     } while (level === undefined);
     this.pie.sendData({
       type: MESSAGE_TYPES.CREATE_LEVEL,
@@ -2121,13 +2130,11 @@ export default class Underworld {
     this.generatingLevel = true;
     return new Promise<LevelData>(resolve => {
       document.body?.classList.toggle('loading', true);
-      // setTimeout allows the UI to refresh before locking up the CPU with
-      // heavy level generation code
-      setTimeout(() => {
-        resolve(this.generateLevelDataSyncronous(levelIndex, this.gameMode));
-      }, 10);
+      resolve(this.generateLevelDataSyncronous(levelIndex, this.gameMode));
     }).then(() => {
-      this.generatingLevel = false;
+      // We set generatingLevel = false in createLevelSyncronous because we want to
+      // create the level we already generated before generating more
+      // The old way caused a bug that caused players to regenerate the level if many network messages were queued up
       return;
     })
   }
@@ -2183,28 +2190,37 @@ export default class Underworld {
       return;
     }
 
-    // We should try completing the level before ending the game
-    // in case the player has beaten the level and died at the same time
-    // Favoring the player in this scenario should only improve player experience
-    if (this.isLevelComplete()) {
-      if (this.trySpawnPortals()) {
-        console.log('[GAME] Progress Game State Complete');
-        return;
-      }
+    // Game State should not progress if a level is currently being generated/loaded
+    if (this.generatingLevel) {
+      console.log('[GAME] Level still generating: Return');
+      console.log('[GAME] Progress Game State Complete');
+      return false;
     }
+
+    // Game State should not progress if a level is currently being generated/loaded
     if (this.levelIndex === -1 && !tutorialChecklist['spawn'].complete) {
       console.log('[GAME] Do not progress on first tutorial level until you spawn');
       return;
     }
-    // If we don't spawn portals, DONT RETURN!
-    // Continue progressGameState to check for game over and cycle turn phases
-    if (this.tryGoToNextLevel()) {
-      console.log('[GAME] Progress Game State Complete');
-      return;
-    }
 
-    // If we don't go to the next level, DONT RETURN!
-    // Continue progressGameState to check for game over and cycle turn phases
+    // We should try completing the level before ending the game
+    // in case the player has beaten the level and died at the same time
+    // Favoring the player in this scenario should only improve player experience
+    if (this.isLevelComplete()) {
+      // If the level is complete, try going to the next one
+      // Will fail if players aren't ready (haven't ended turns / entered portals)
+      if (this.tryGoToNextLevel()) {
+        console.log('[GAME] Progress Game State Complete');
+        return;
+      }
+      // Double check that portals are spawned, and spawn more if needed
+      if (this.trySpawnPortals()) {
+        console.log('[GAME] Progress Game State Complete');
+        return;
+      }
+      // If we don't spawn portals or go to the next level, coontinue
+      // progressGameState to check for a gameOver() and cycle turn phases
+    }
 
     if (this.isGameOver()) {
       this.doGameOver();
@@ -2351,7 +2367,7 @@ export default class Underworld {
 
     // Make all non-portal pickups disappear so as to not compell players
     // to waste time walking around picking them all up
-    this.pickups.filter(p => p.name !== Pickup.PORTAL_PURPLE_NAME).forEach(p => {
+    this.pickups.filter(p => p.name !== Pickup.PORTAL_PURPLE_NAME && !p.flaggedForRemoval).forEach(p => {
       makeScrollDissapearParticles(p, false);
       Pickup.removePickup(p, this, false);
     });
@@ -2377,10 +2393,6 @@ export default class Underworld {
     return true;
   }
   tryGoToNextLevel(): boolean {
-    // Level must be complete to go to the next level
-    if (!this.isLevelComplete()) {
-      return false;
-    }
     // We can only go to the next level if all players are
     // inPortal or have completed their turn
     // This includes players that can't act due to death/freeze/etc.
@@ -3386,7 +3398,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
   }
   addRerollButton(player: Player.IPlayer) {
-    if (elUpgradePickerContent) {
+    if (rerollBtnContainer) {
       const elRerollPerks = document.createElement('div');
       elRerollPerks.classList.add('reroll-btn');
       elRerollPerks.style.color = 'white';
@@ -3400,7 +3412,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       elRerollPerks.addEventListener('mouseenter', (e) => {
         playSFXKey('click');
       });
-      elUpgradePickerContent.appendChild(elRerollPerks);
+      rerollBtnContainer.appendChild(elRerollPerks);
     }
   }
   getRandomCoordsWithinBounds(bounds: Limits, seed?: prng): Vec2 {
