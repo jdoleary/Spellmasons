@@ -57,8 +57,10 @@ const spell: Spell = {
             unit: unit,
             amount: Math.ceil(amount / units.length)
           }, underworld, prediction);
-          // Return Soul Bind damage event
-          unit.onTakeDamageEvents.splice(index, 0, soulBindId)
+          // Return Soul Bind damage event if the unit is not dead
+          if (unit.alive) {
+            unit.onTakeDamageEvents.splice(index, 0, soulBindId);
+          }
         }
       }
 
