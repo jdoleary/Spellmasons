@@ -335,7 +335,7 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
     }
     // For some reason, u.predictionCopy and underworld.unitsPrediction[unitIndex]
     // are not the same thing for PLAYER units. This may need further investigation
-    // [Insert Issue Link Here]
+    // https://github.com/jdoleary/Spellmasons/pull/706
     const predictionUnit = underworld.unitsPrediction[unitIndex];
     // Draw unit overlay graphics
     //--
