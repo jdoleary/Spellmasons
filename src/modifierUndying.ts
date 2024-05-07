@@ -6,6 +6,7 @@ import * as config from './config';
 import { summoningSicknessId } from "./modifierSummoningSickness";
 import Underworld from './Underworld';
 import floatingText from "./graphics/FloatingText";
+import { UnitType } from "./types/commonTypes";
 
 // A modifier that makes a unit resurrect during its next onTurnStart()
 export const undyingModifierId = 'undying';
@@ -41,8 +42,10 @@ export default function registerUndying() {
           castForFree: true,
         });
         for (let unit of targetedUnits) {
-          // Add summoning sickeness so they can't act after they are summoned
-          Unit.addModifier(unit, summoningSicknessId, underworld, false);
+          if (unit.unitType != UnitType.PLAYER_CONTROLLED) {
+            // Add summoning sickeness to AI so they can't act after they are summoned
+            Unit.addModifier(unit, summoningSicknessId, underworld, false);
+          }
         }
 
         const undyingModifier = unit.modifiers[undyingModifierId];
