@@ -1,4 +1,5 @@
 import * as Unit from '../entity/Unit';
+import * as colors from '../graphics/ui/colors';
 import { CardCategory } from '../types/commonTypes';
 import type Underworld from '../Underworld';
 import { playDefaultSpellSFX } from './cardUtils';
@@ -9,6 +10,7 @@ import { jitter, lerpVec2 } from '../jmath/Vec';
 import { HasSpace } from '../entity/Type';
 
 const soulBindId = 'Soul Bind';
+const soulBindLineColor = 0x371f76;
 const spell: Spell = {
   card: {
     id: soulBindId,
@@ -65,12 +67,29 @@ const spell: Spell = {
 
       return 0;
     },
+    onDrawSelected: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
+      const modifier = unit.modifiers[soulBindId];
+      if (modifier) {
+        const soulBoundUnits = getSoulBoundUnits(underworld, prediction);
+        if (soulBoundUnits.length) {
+          const graphics = globalThis.selectedUnitGraphics;
+          if (graphics) {
+            for (let soulBoundUnit of soulBoundUnits) {
+              graphics.lineStyle(3, soulBindLineColor, 0.7);
+              graphics.moveTo(soulBoundUnit.x, soulBoundUnit.y);
+              graphics.lineTo(unit.x, unit.y);
+            }
+          }
+        }
+      }
+    }
   },
 };
 
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
   getOrInitModifier(unit, soulBindId, { isCurse: true, quantity }, () => {
     unit.onTakeDamageEvents.push(soulBindId);
+    unit.onDrawSelectedEvents.push(soulBindId);
   });
 }
 export default spell;
@@ -109,7 +128,7 @@ function drawLineBetweenTargets(targets: HasSpace[]): boolean {
         return false;
       }
       globalThis.predictionGraphics.clear();
-      globalThis.predictionGraphics.lineStyle(4, 0x371f76, 1.0)
+      globalThis.predictionGraphics.lineStyle(4, soulBindLineColor, 1.0);
       globalThis.predictionGraphics.moveTo(targets[0].x, targets[0].y);
       let from = targets[0];
       for (let target of targets) {
