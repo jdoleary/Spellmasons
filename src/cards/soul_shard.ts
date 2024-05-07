@@ -57,7 +57,7 @@ const spell: Spell = {
           unitTakeDamageFX(unit, underworld, prediction);
         }
       } else {
-        refundLastSpell(state, prediction, "Target a unit with less Max Health");
+        refundLastSpell(state, prediction, "Target a unit with Max Health <= to yours");
       }
       return state;
     },
