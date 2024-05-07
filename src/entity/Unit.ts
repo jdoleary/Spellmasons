@@ -780,11 +780,12 @@ export function playAnimation(unit: IUnit, spritePath: string | undefined, optio
   }), { skipSpyPromise: true });
 }
 
-// TODO - Cleanup resurrect and sources thereof
 export function resurrect(unit: IUnit, underworld: Underworld) {
-  // Return dead units back to full health
-  unit.health = unit.healthMax;
   unit.alive = true;
+  // Return dead units back to full health/stamina/mana
+  unit.health = unit.healthMax;
+  unit.stamina = unit.staminaMax;
+  unit.mana = unit.manaMax;
   if (unit.modifiers[primedCorpseId]) {
     removeModifier(unit, primedCorpseId, underworld);
   }
