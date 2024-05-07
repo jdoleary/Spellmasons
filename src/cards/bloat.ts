@@ -9,6 +9,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 import { baseExplosionRadius, explode } from '../effects/explode';
 import { defaultPushDistance } from '../effects/force_move';
+import { addScaleModifier, removeScaleModifier, setScaleFromModifiers } from '../graphics/Image';
 
 const id = 'Bloat';
 const imageName = 'explode-on-death.png';
@@ -16,10 +17,6 @@ const damage = 40;
 function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra?: any) {
   const modifier = getOrInitModifier(unit, id, {
     isCurse: true, quantity,
-    originalStats: {
-      scaleX: unit.image && unit.image.sprite.scale.x || 1,
-      scaleY: unit.image && unit.image.sprite.scale.y || 1,
-    }
   }, () => {
     // Add event
     if (!unit.onDeathEvents.includes(id)) {
@@ -29,11 +26,9 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity:
     if (!unit.onDrawSelectedEvents.includes(id)) {
       unit.onDrawSelectedEvents.push(id);
     }
-    // Add subsprite image
-    if (unit.image) {
-      // Visually "bloat" the image
-      unit.image.sprite.scale.x *= 1.5;
-    }
+
+    // Visually "bloat" the image
+    addScaleModifier(unit.image, { x: 1.5, id }, unit.strength);
   });
   if (!modifier.radiusBoost) {
     modifier.radiusBoost = 0;
@@ -43,12 +38,7 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity:
 }
 function remove(unit: IUnit, underworld: Underworld) {
   if (unit.modifiers && unit.modifiers[id] && unit.image) {
-    // Safely restore unit's original properties
-    const { scaleX, scaleY } = unit.modifiers[id].originalStats;
-    if (unit.image) {
-      unit.image.sprite.scale.x = scaleX;
-      unit.image.sprite.scale.y = scaleY;
-    }
+    removeScaleModifier(unit.image, id, unit.strength)
   }
 }
 

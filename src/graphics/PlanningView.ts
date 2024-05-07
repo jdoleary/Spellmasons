@@ -878,6 +878,7 @@ ${globalThis.selectedUnit.manaCostToCast && globalThis.selectedUnit.manaCostToCa
           `.trim();
           // NOTE: globalThis.selectedUnit.name is NOT localized on purpose
           // because those are user provided names
+          // Use this to debug strength when developing, but strength isn't relevant to players `💪 ${globalThis.selectedUnit.strength} Strength`
           text += `\
 <h1>${globalThis.selectedUnit.name || i18n(unitSource.id)}</h1>
 <hr/>

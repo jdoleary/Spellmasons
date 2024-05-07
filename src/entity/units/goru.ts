@@ -114,7 +114,6 @@ const unit: UnitSource = {
         // With corpses organized into action lists, run Goru effects
         let promises: Promise<void>[] = [];
         if (corpsesToConsume.length) {
-          const oldStrength = unit.strength;
           for (const target of corpsesToConsume) {
             // Consume target
             // Adds red overlay effect on target as they get consumed
@@ -149,7 +148,7 @@ const unit: UnitSource = {
           promises = [];
           Unit.returnToDefaultSprite(unit);
           // Fixes Goru sprite size after consuming
-          Unit.updateStrengthSpriteScaling(unit, oldStrength);
+          Image.setScaleFromModifiers(unit.image, unit.strength);
           // TODO - Red VFX Doesn't scale with Goru sprite size
           // Adds red overlay effect to Goru
           await new Promise<void>(resolve => oneOffImage(unit, 'units/summonerMagic', containerUnits, resolve));
