@@ -29,7 +29,7 @@ const spell: Spell = {
     description: ['spell_soul_shard'],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
-      const targets = state.targetedUnits.filter(u => u.alive && u.healthMax <= state.casterUnit.healthMax && u != state.casterUnit);
+      const targets = state.targetedUnits.filter(u => u.alive && u.faction == state.casterUnit.faction && u != state.casterUnit);
       if (targets.length) {
         playDefaultSpellSFX(card, prediction);
         unitTakeDamageFX(state.casterUnit, underworld, prediction);
@@ -57,7 +57,7 @@ const spell: Spell = {
           unitTakeDamageFX(unit, underworld, prediction);
         }
       } else {
-        refundLastSpell(state, prediction, "Target a unit with Max Health <= to yours");
+        refundLastSpell(state, prediction, "Target an ally unit!");
       }
       return state;
     },
