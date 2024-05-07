@@ -3271,6 +3271,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         numberOfUpgradesToChooseFrom += 1;
       }
       if (isPerk) {
+        // Remove reroll btn
+        if (rerollBtnContainer) {
+          rerollBtnContainer.innerHTML = '';
+        }
         if (isCursePerk) {
           const mostUsedLastLevelCards = Object.entries(player.spellState || {}).sort((a, b) => b[1].count - a[1].count)
             // Remove cards that are already affected by calamity
@@ -3412,6 +3416,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       elRerollPerks.addEventListener('mouseenter', (e) => {
         playSFXKey('click');
       });
+      // Empty before adding new reroll btn
+      rerollBtnContainer.innerHTML = '';
       rerollBtnContainer.appendChild(elRerollPerks);
     }
   }

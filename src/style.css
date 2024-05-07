@@ -2151,9 +2151,7 @@ body.view-Game.showUpgrades #perkList.visible {
   width: 94px;
   height: 95px;
   background-image: url('/ui/iconRerollUp.png');
-  /* The 40% makes the reroll button wide enough that it has to flex-wrap
-  to the next row which ensures the 3 card choices are centered */
-  margin: 8px 40%;
+  margin: 8px auto;
 }
 
 .reroll-btn:hover {
