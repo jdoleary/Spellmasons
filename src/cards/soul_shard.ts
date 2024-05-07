@@ -29,7 +29,7 @@ const spell: Spell = {
     description: ['spell_soul_shard'],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
-      const targets = state.targetedUnits.filter(u => u.alive && u.healthMax <= state.casterUnit.healthMax && u != state.casterUnit);
+      const targets = state.targetedUnits.filter(u => u.alive && u.faction == state.casterUnit.faction && u != state.casterUnit);
       if (targets.length) {
         playDefaultSpellSFX(card, prediction);
         unitTakeDamageFX(state.casterUnit, underworld, prediction);
@@ -57,7 +57,7 @@ const spell: Spell = {
           unitTakeDamageFX(unit, underworld, prediction);
         }
       } else {
-        refundLastSpell(state, prediction, "Target a unit with less Max Health");
+        refundLastSpell(state, prediction, "Target an ally unit!");
       }
       return state;
     },
@@ -152,7 +152,7 @@ function removeShardOwner(shardOwnerId: number, underworld: Underworld, predicti
   if (shardOwner) {
     const shardOwnerModifier = shardOwner.modifiers[soulShardOwnerModifierId];
     if (shardOwnerModifier) {
-      Unit.removeModifier(shardOwner, soulShardOwnerModifierId, underworld);
+      shardOwnerModifier.quantity -= 1;
     } else {
       console.error("Shard owner does not have the shard owner modifier. This should never happen\n", shardOwner);
     }

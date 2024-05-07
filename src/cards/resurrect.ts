@@ -9,8 +9,6 @@ import { resurrect_weak_id } from './resurrect_weak';
 
 export const resurrect_id = 'resurrect';
 export const thumbnail = 'spellIconResurrect2.png';
-// Brings stats back to this amount on res
-const resStatAmount = 1.0;
 const spell: Spell = {
   card: {
     id: resurrect_id,
@@ -40,10 +38,9 @@ const spell: Spell = {
           }
           playDefaultSpellSFX(card, prediction);
           Unit.resurrect(unit, underworld);
+
           resurrectedUnitCount++;
           makeRisingParticles(unit, prediction);
-          unit.health = unit.healthMax * resStatAmount;
-          unit.mana = unit.manaMax * resStatAmount;
           Unit.changeFaction(unit, state.casterUnit.faction);
           // Resurrect animation is the die animation played backwards
           animationPromises.push(Unit.playAnimation(unit, unit.animations.die, { loop: false, animationSpeed: -0.2 }));
