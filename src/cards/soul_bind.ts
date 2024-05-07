@@ -26,12 +26,13 @@ const spell: Spell = {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);
       if (targets.length) {
-        playDefaultSpellSFX(card, prediction);
-        if (!prediction) {
-          await animate(targets);
-        }
         for (let unit of targets) {
           Unit.addModifier(unit, soulBindId, underworld, prediction, quantity);
+        }
+        if (!prediction) {
+          // Animate beam for all Soul Bound Units
+          playDefaultSpellSFX(card, prediction);
+          await animate(getSoulBoundUnits(underworld, prediction));
         }
       }
       return state;
@@ -43,9 +44,7 @@ const spell: Spell = {
   events: {
     onTakeDamage: (unit, amount, underworld, prediction) => {
       // Split the damage / healing amount among all soul bound units
-      let units = prediction ? underworld.unitsPrediction : underworld.units;
-      units = units.filter(u => !!u.modifiers[soulBindId] && u.alive && !u.flaggedForRemoval);
-
+      const units = getSoulBoundUnits(underworld, prediction);
       for (let i = 0; i < units.length; i++) {
         const unit = units[i];
         if (unit) {
@@ -75,6 +74,9 @@ function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, qu
   });
 }
 export default spell;
+function getSoulBoundUnits(underworld: Underworld, prediction: boolean): Unit.IUnit[] {
+  return (prediction ? underworld.unitsPrediction : underworld.units).filter(u => !!u.modifiers[soulBindId] && u.alive && !u.flaggedForRemoval);
+}
 async function animate(targets: HasSpace[]) {
   // Animations do not occur on headless
   if (!globalThis.headless) {
