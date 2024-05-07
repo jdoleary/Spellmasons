@@ -336,8 +336,8 @@ export function runCinematicLevelCamera(underworld: Underworld): Promise<void> {
     // The greater the margin, the closer the unit scanned will get to
     // the center of the camera before the camera moves on
     const margin = 3;
-    const firstUnitToView = clampCameraPosition({ x: underworld.limits.xMin, y: underworld.limits.yMin }, realCam.zoom, underworld);//positionSortedUnits[0];
-    const lastUnitToView = clampCameraPosition({ x: underworld.limits.xMax, y: underworld.limits.yMax }, realCam.zoom, underworld);//positionSortedUnits[positionSortedUnits.length - 1];
+    const firstUnitToView = clampCameraPosition({ x: underworld.limits.xMin, y: underworld.limits.yMin }, realCam.zoom, underworld, false);//positionSortedUnits[0];
+    const lastUnitToView = clampCameraPosition({ x: underworld.limits.xMax, y: underworld.limits.yMax }, realCam.zoom, underworld, false);//positionSortedUnits[positionSortedUnits.length - 1];
     if (!firstUnitToView || isInvalid(firstUnitToView) || !lastUnitToView || isInvalid(lastUnitToView)) {
       // First tutorial level has no units, resolve immediately
       resolve();

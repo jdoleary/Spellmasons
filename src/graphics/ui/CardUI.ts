@@ -963,10 +963,6 @@ function updateHealthBadge(elBadge: Element | null, healthCost: number, card: Ca
 export function updateCardBadges(underworld: Underworld) {
   if (globalThis.headless) { return; }
   if (globalThis.player) {
-    // Using a prediction unit here so that composeOnDamageEvents
-    // used to determine the modified health cost of
-    // spells that cost health will not affect the real player unit
-    const predictionPlayerUnit = copyForPredictionUnit(globalThis.player.unit, underworld);
     // Update selected cards
     const selectedCards = getSelectedCards();
     for (let i = 0; i < selectedCards.length; i++) {

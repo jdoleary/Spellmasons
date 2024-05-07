@@ -1,3 +1,65 @@
+## 1.34.0 - Patch
+- fix: Player unit self damage not showing on healthbar
+- Soul Bind Visuals (#703)
+    - Thanks @Monarch
+- fix: Crazy unit size scaling bug
+- fix: Remove soul bind on death (#702)
+    - Thanks @chrillo
+- UI: Fix card scaling
+    - Thanks @Chumler
+- camera: Sensible camera clamp limits
+    so that the camera doesn't get lost.
+    'z' centers camera on map if not spawned.
+    - Thanks @Viz
+
+
+- Fix ProgressGameState and LevelRegen (#691)
+    Thanks @Elvarien, @Viz, and Caiden from SteamCommunity
+    
+    * Level cannot progress while generating
+    
+    - Added failsafe for level generation in progress game state
+    
+    * Fixed generating multiple levels at once
+    
+    - Also added some logs to help track future issues
+    
+    * Update predictions and UI between levels
+    
+    - Keeps the visuals up to date with what's on the screen
+    - Fixes an issue where old health bars would persist into new levels until you moved your mouse
+    
+    * Removed setTimeout in level generation
+    
+    - Removed a setTimeout that would add a createLevel network message to the queue after LOAD_GAME_STATE already cleared it, which would then cause loaded games to be overwritten with a new level
+    - Turns out the setTimeout was not needed to show the "loading" text anyways
+    
+    * Cleanup portal spawning
+    
+    - Fixes an issue where spawning portals would be prioritized over moving to the next level
+    
+    * src: Move generatingLevel = false to end
+    
+    of createLevelSyncronous so that
+    all the players are reset (players are considered in tryGoToNextLevel
+    which is what calls generateLevelData which considers `generatingLevel`
+
+- fix: Don't play "disappear particles"
+    for pickups that are already flagged for removal
+- fix: Prevent forceMove from
+    acting on units and pickups that are flagged to be removed
+    Closes #670
+- Polymorph no longer works on recall points (#689)
+    - Thanks @Whisky and @Viz
+- Merge balancing (#685)
+    Merge: Players gain current stats instead of max
+- Polymorph Fixes (#684)
+    - Thanks @Whisky
+    Polymorph: Persist death and modifiers
+    - Fixes a bug where polymorph would revive dead units
+    - Fixes a bug where polymorph would not persist modifiers
+
+
 ## 1.33.0 - One Year Anniversary Update!
 New Boss!
 Goru the Corpse Warlock

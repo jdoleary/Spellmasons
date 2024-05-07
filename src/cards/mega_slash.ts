@@ -7,7 +7,7 @@ import { heavyslashCardId } from './heavy_slash';
 
 export const megaSlashCardId = 'Mega Slash';
 const damageDone = 80;
-const slashScale = 4;
+const slashScale = 3;
 const spell: Spell = {
   card: {
     id: megaSlashCardId,
