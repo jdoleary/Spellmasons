@@ -333,7 +333,10 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
       // Don't draw healthbars for Doodads
       return;
     }
-    const predictionUnit = u.predictionCopy;
+    // For some reason, u.predictionCopy and underworld.unitsPrediction[unitIndex]
+    // are not the same thing for PLAYER units. This may need further investigation
+    // [Insert Issue Link Here]
+    const predictionUnit = underworld.unitsPrediction[unitIndex];
     // Draw unit overlay graphics
     //--
     // Prevent drawing unit overlay graphics when a unit is in the portal
