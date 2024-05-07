@@ -1,4 +1,12 @@
 ## 1.34.0 - Patch
+- fix: soul Shard
+    - Thanks @Monarch
+    - Soul shard can only target allies
+    
+    Now resurrects players with full hp/stamina/mana, since resurrecting without these resources felt bad/hopeless and resulted in some unexpected deaths.
+    Soul Shard modifier is no longer cleared from all other sharded units when the shard owner gets revived, while this old behavior created some sense of balance, it also felt really buggy and causes some unexpected interactions and deaths. It also gives the spell an artificial limit, which goes against the core design of Spellmasons.
+
+
 - fix: Player unit self damage not showing on healthbar
 - Soul Bind Visuals (#703)
     - Thanks @Monarch
