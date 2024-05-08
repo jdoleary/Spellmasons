@@ -27,9 +27,6 @@
 - Test that F12 works in electron build
 - Test mod thumbnail paths on electron build
 
-- For anniversary release:
-    - Check translated descriptions of pickups due to merge pr
-
 
 # Release protocal
 - QA: 1:44
