@@ -118,7 +118,7 @@ export function setScaleFromModifiers(image: IImageAnimated | undefined, strengt
 }
 function getScaleFromStrength(strength: number): number {
   // this final scale of the unit will always be less than the max multiplier
-  const maxMultiplier = 4;
+  const maxMultiplier = 3;
   // adjust strength to ensure scale = 1 at strength = 1
   strength -= 1;
   // calculate scale multiplier with diminishing formula
