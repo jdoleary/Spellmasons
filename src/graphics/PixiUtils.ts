@@ -588,13 +588,15 @@ function clampCameraPosition(camPos: Vec2, zoom: number, underworld: Underworld,
   const clampedPos = { x: 0, y: 0 };
   // Users can move the camera further if they are manually controlling the camera
   // whereas if the camera is following a target it keeps more of the map on screen
-  const marginY = isCameraAutoFollowing ? config.COLLISION_MESH_RADIUS * 4 : 500 / zoom;
-  const marginX = isCameraAutoFollowing ? config.COLLISION_MESH_RADIUS * 4 : 500 / zoom;
+  const marginY = (isCameraAutoFollowing ? 1 : -1) * elPIXIHolder.clientHeight / 2 / zoom;
+  const marginX = (isCameraAutoFollowing ? 1 : -1) * elPIXIHolder.clientWidth / 2 / zoom;
+
   // Clamp camera X
-  const mapLeftMostPoint = 0 - marginX;
-  const mapRightMostPoint = underworld.limits.xMax + marginX;
-  const camCenterXMin = mapLeftMostPoint + elPIXIHolder.clientWidth / 2 / zoom;
-  const camCenterXMax = mapRightMostPoint - elPIXIHolder.clientWidth / 2 / zoom;
+  const mapLeftMostPoint = underworld.limits.xMin;
+  const mapRightMostPoint = underworld.limits.xMax;
+  const camCenterXMin = mapLeftMostPoint + marginX;
+  const camCenterXMax = mapRightMostPoint - marginX;
+
   // If the supposed minimum is more than the maximum, just center the camera:
   if (camCenterXMin > camCenterXMax) {
     clampedPos.x = (mapRightMostPoint + mapLeftMostPoint) / 2;
@@ -604,10 +606,10 @@ function clampCameraPosition(camPos: Vec2, zoom: number, underworld: Underworld,
   }
 
   //Clamp camera Y
-  const mapTopMostPoint = 0 - marginY;
-  const mapBottomMostPoint = underworld.limits.yMax + marginY;
-  const camCenterYMin = mapTopMostPoint + elPIXIHolder.clientHeight / 2 / zoom;
-  const camCenterYMax = mapBottomMostPoint - elPIXIHolder.clientHeight / 2 / zoom;
+  const mapTopMostPoint = underworld.limits.yMin;
+  const mapBottomMostPoint = underworld.limits.yMax;
+  const camCenterYMin = mapTopMostPoint + marginY;
+  const camCenterYMax = mapBottomMostPoint - marginY;
   // If the supposed minimum is more than the maximum, just center the camera:
   if (camCenterYMin > camCenterYMax) {
     clampedPos.y = (mapBottomMostPoint + mapTopMostPoint) / 2;
@@ -615,9 +617,28 @@ function clampCameraPosition(camPos: Vec2, zoom: number, underworld: Underworld,
     // clamp the camera x between the min and max possible camera targets
     clampedPos.y = Math.min(camCenterYMax, Math.max(camCenterYMin, camPos.y));
   }
+
+  // const graphics = devDebugGraphics;
+  // if (graphics) {
+  //   graphics.clear();
+  //   // Draw underworld limits
+  //   graphics.lineStyle(4, colors.trueRed, 1.0)
+  //   graphics.moveTo(mapLeftMostPoint, mapTopMostPoint);
+  //   graphics.lineTo(mapRightMostPoint, mapTopMostPoint);
+  //   graphics.lineTo(mapRightMostPoint, mapBottomMostPoint);
+  //   graphics.lineTo(mapLeftMostPoint, mapBottomMostPoint);
+  //   graphics.lineTo(mapLeftMostPoint, mapTopMostPoint);
+
+  //   // Draw camera limits
+  //   graphics.lineStyle(4, colors.trueGreen, 1.0)
+  //   graphics.moveTo(camCenterXMin, camCenterYMax);
+  //   graphics.lineTo(camCenterXMax, camCenterYMax);
+  //   graphics.lineTo(camCenterXMax, camCenterYMin);
+  //   graphics.lineTo(camCenterXMin, camCenterYMin);
+  //   graphics.lineTo(camCenterXMin, camCenterYMax);
+  // }
+
   return clampedPos;
-
-
 }
 export function updateNameText(nameText?: PIXI.Text, zoom?: number) {
   if (nameText) {
