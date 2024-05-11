@@ -12,6 +12,7 @@ import { HasSpace } from '../entity/Type';
 import Underworld from '../Underworld';
 import { makeManaTrail } from '../graphics/Particles';
 import { clone, lerpVec2, Vec2 } from '../jmath/Vec';
+import { getOrInitModifier } from './util';
 
 const merge_id = 'merge';
 const spell: Spell = {
@@ -70,7 +71,27 @@ const spell: Spell = {
       return state;
     },
   },
+  modifiers: {
+    add,
+    remove,
+  },
 };
+export function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1, extra?: { [key: string]: any }) {
+  const modifier = getOrInitModifier(unit, merge_id, { isCurse: false, quantity }, () => {
+    // Nothing to init
+  });
+}
+// The merge modifier is used to remove strength from players between levels,
+// since players only get a temporary boost to stats, but we still want them to gain size/strength
+export function remove(unit: Unit.IUnit, underworld: Underworld) {
+  if (unit.modifiers) {
+    const modifier = unit.modifiers[merge_id];
+    if (modifier) {
+      unit.strength -= modifier.quantity;
+      setScaleFromModifiers(unit.image, unit.strength);
+    }
+  }
+}
 
 export function mergeUnits(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], underworld: Underworld, prediction: boolean, state?: EffectState) {
   let storedModifiers = [];
@@ -93,6 +114,7 @@ export function mergeUnits(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], under
       target.mana += unit.mana;
       // Allows player to grow in size
       target.strength += unit.strength;
+      Unit.addModifier(unit, merge_id, underworld, prediction, 1);
     } else {
       // Combine Stats
       target.healthMax += unit.healthMax;
@@ -147,7 +169,6 @@ export function mergeUnits(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], under
   }
 
   setScaleFromModifiers(target.image, target.strength);
-
 }
 
 export function mergePickups(target: Pickup.IPickup, pickupsToMerge: Pickup.IPickup[], underworld: Underworld, prediction: boolean, state?: EffectState) {
