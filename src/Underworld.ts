@@ -3394,6 +3394,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // Allow reroll if there is more than 1 upgrade to choose from
           if (numberOfUpgradesToChooseFrom > 1 && (!upgrades[0] || upgrades[0].type !== 'mageType')) {
             this.addRerollButton(player);
+          } else {
+            // Remove reroll btn
+            if (rerollBtnContainer) {
+              rerollBtnContainer.innerHTML = '';
+            }
           }
         }
       }

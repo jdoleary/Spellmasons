@@ -134,7 +134,7 @@ body.view-Game.showUpgrades #upgrade-picker {
 
 #upgrade-picker-content {
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
   display: flex;
   pointer-events: all;
   max-height: 100vh;
@@ -152,68 +152,11 @@ body.view-Game.showUpgrades #upgrade-picker {
 #upgrade-picker .card,
 .card-inspect .card {
   width: unset;
-  height: 744px;
+  height: unset;
   max-height: 100%;
   margin: 8px;
   aspect-ratio: 462/744;
 }
-
-@media (min-width: 300px) {
-
-  #upgrade-picker .card {
-    height: 300px;
-  }
-
-  #upgrade-picker .card.tiny {
-    height: 240px;
-  }
-}
-
-@media (min-width: 800px) {
-
-  #upgrade-picker .card {
-    height: 400px;
-  }
-
-  #upgrade-picker .card.tiny {
-    height: 320px;
-  }
-}
-
-@media (min-width: 1280px) {
-
-  #upgrade-picker .card {
-    height: 500px;
-  }
-
-  #upgrade-picker .card.tiny {
-    height: 400px;
-  }
-}
-
-@media (min-width: 1440px) {
-
-  #upgrade-picker .card {
-    height: 600px;
-  }
-
-  #upgrade-picker .card.tiny {
-    height: 480px;
-  }
-}
-
-@media (min-width: 1920px) {
-
-  #upgrade-picker .card {
-    height: 700px;
-  }
-
-  #upgrade-picker .card.tiny {
-    height: 560px;
-  }
-}
-
-
 
 #upgrade-picker .card-badge,
 .card-inspect .card-badge {
