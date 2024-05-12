@@ -132,6 +132,12 @@ body.view-Game.showUpgrades #upgrade-picker {
   display: flex;
 }
 
+#upgrade-picker-content.perks {
+  /* Adjust the height so that perk list isn't occluded
+  when ui zoom is set high */
+  max-height: unset;
+}
+
 #upgrade-picker-content {
   justify-content: center;
   align-items: stretch;

@@ -3270,6 +3270,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       if (player.mageType == 'Gambler') {
         numberOfUpgradesToChooseFrom += 1;
       }
+      elUpgradePickerContent?.classList.toggle('perks', isPerk);
       if (isPerk) {
         // Remove reroll btn
         if (rerollBtnContainer) {
