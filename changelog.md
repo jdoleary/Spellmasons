@@ -1,3 +1,11 @@
+## 1.35.0 - Patch
+- Fix Card size for various resolutions and zoom levels
+    Thanks Moonlighter, MaitrePhoenix, Monarch
+- Balance max scale of units that have been merged and reset player scale between levels
+    Thanks Monarch
+- Fix remove "reroll" button from Class selection screen
+- Improve Camera max movement so you can move freely but not so far off screen that you get lost
+
 ## 1.34.0 - Patch
 - Balance: Merge 
     Merge: Players gain current stats instead of max
