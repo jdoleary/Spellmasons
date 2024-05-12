@@ -306,6 +306,9 @@ export function withinCameraBounds(position: Vec2, marginHorizontal: number = 5,
   return withinBoundsPos;
 }
 export function runCinematicLevelCamera(underworld: Underworld): Promise<void> {
+  // Temporarily disable cinematic camera.  Now that the camera bounds have changed
+  // it spends too long still before it starts moving which is confusing.
+  return Promise.resolve();
   if (globalThis.headless) {
     return Promise.resolve();
   }
@@ -376,6 +379,7 @@ export function runCinematicLevelCamera(underworld: Underworld): Promise<void> {
       const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(cinematicCam, cinematicCam.target, cinematicCameraMoveSpeed * elapsed)
       cinematicCam.x = stepTowardsTarget.x;
       cinematicCam.y = stepTowardsTarget.y;
+      console.log('jtest cam', cinematicCam);
       // Once the camera is returning to the map center and it get's close enough, finish cinematic
       if (cinematicCam.target == mapCenter && math.distance(cinematicCam, mapCenter) < 1) {
         globalThis.zoomTarget = 1.6;
