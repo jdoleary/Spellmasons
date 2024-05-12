@@ -1726,6 +1726,9 @@ export function resetUnitStats(unit: IUnit, underworld: Underworld) {
   unit.mana = unit.manaMax;
   unit.health = unit.healthMax;
   unit.stamina = unit.staminaMax;
+  // Reset size
+  unit.strength = 1;
+  Image.setScaleFromModifiers(unit.image, unit.strength);
 
   returnToDefaultSprite(unit);
 }
