@@ -588,8 +588,8 @@ function clampCameraPosition(camPos: Vec2, zoom: number, underworld: Underworld,
   const clampedPos = { x: 0, y: 0 };
   // Users can move the camera further if they are manually controlling the camera
   // whereas if the camera is following a target it keeps more of the map on screen
-  const marginY = isCameraAutoFollowing ? config.COLLISION_MESH_RADIUS * 4 : 500 / zoom;
-  const marginX = isCameraAutoFollowing ? config.COLLISION_MESH_RADIUS * 4 : 500 / zoom;
+  const marginY = isCameraAutoFollowing ? config.COLLISION_MESH_RADIUS * 4 : 900 / zoom;
+  const marginX = isCameraAutoFollowing ? config.COLLISION_MESH_RADIUS * 4 : 1400 / zoom;
   // Clamp camera X
   const mapLeftMostPoint = 0 - marginX;
   const mapRightMostPoint = underworld.limits.xMax + marginX;
