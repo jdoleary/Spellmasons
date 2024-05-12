@@ -139,7 +139,7 @@ body.view-Game.showUpgrades #upgrade-picker {
   pointer-events: all;
   /* Remain the same height regardless of how many cards
   are visible */
-  height: 50%;
+  max-height: 50%;
 }
 
 #upgrade-picker-label {
