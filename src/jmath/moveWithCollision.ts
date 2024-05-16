@@ -261,7 +261,7 @@ function repelCircleFromLine(mover: Circle, line: LineSegment, underworld: Under
   let repelled = false;
   // The radius used for the line points makes up the different between a regular unit collision radius and the units physicsMover's radius
   // The units physicsMover's radius is small so that units can "squeeze" past each other, but I want the full unit size to collide
-  // with walls (lines and their verticies).
+  // with walls (lines and their vertices).
   const totalRepelDistance = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE;
   // Test for intersection with the line segment
   // globalThis.unitOverlayGraphics.lineStyle(4, 0xff0000, 1);
