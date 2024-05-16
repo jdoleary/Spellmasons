@@ -67,6 +67,7 @@ const unit: UnitSource = {
             casterPositionAtTimeOfCast: Vec.clone(unit),
             cardIds: cardsIds,
             castLocation: chosenUnit,
+            initialTargetedUnitId: chosenUnit.id,
             prediction: false,
             outOfRange: false,
             castForFree: true,

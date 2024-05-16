@@ -33,6 +33,7 @@ async function resurrectUnits(self: Unit.IUnit, units: Unit.IUnit[], underworld:
         casterPositionAtTimeOfCast: Vec.clone(self),
         cardIds: [resurrect.resurrect_id],
         castLocation: ally,
+        initialTargetedUnitId: ally.id,
         prediction: false,
         outOfRange: false,
         castForFree: true,

@@ -129,6 +129,7 @@ const deathmason: UnitSource = {
               casterPositionAtTimeOfCast: Vec.clone(unit),
               cardIds: [sacrifice.card.id],
               castLocation: closestUnit,
+              initialTargetedUnitId: closestUnit.id,
               prediction: false,
               outOfRange: false,
               magicColor
