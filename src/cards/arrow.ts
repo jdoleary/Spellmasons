@@ -98,7 +98,7 @@ export function arrowEffect(multiShotCount: number, collideFnKey: string, doesPi
             collideFnKey
           }, underworld, prediction);
 
-          if (!prediction) {
+          if (!prediction && !globalThis.headless) {
             const timeout = Math.max(0, timeoutToNextArrow);
             await new Promise(resolve => setTimeout(resolve, timeout));
             // Decrease timeout with each subsequent arrow fired to ensure that players don't have to wait too long
