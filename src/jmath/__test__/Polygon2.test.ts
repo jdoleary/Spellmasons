@@ -4,7 +4,7 @@ import { Vec2, clone } from '../Vec';
 
 describe('Polygon2', () => {
     describe('splitIntersectingLineSegments', () => {
-        it('should ignore intersections at verticies', () => {
+        it('should ignore intersections at vertices', () => {
             const lineSegments = [
                 { p1: { x: 0, y: 0 }, p2: { x: 0, y: 10 } },
                 { p1: { x: 0, y: 10 }, p2: { x: 0, y: 20 } },
@@ -527,7 +527,7 @@ describe('Polygon2', () => {
         })
 
     });
-    describe('given polygons that intersect at exactly a point of one of the verticies of a polygon', () => {
+    describe('given polygons that intersect at exactly a point of one of the vertices of a polygon', () => {
         it('should merge the polygons', () => {
             //square
             const p1 = { x: 0, y: 0 }
@@ -574,7 +574,7 @@ describe('Polygon2', () => {
         });
     });
     describe('given overlapping boxes on one axis', () => {
-        it("should remove the overlapping verticies and return a polygon that is one large rectangle", () => {
+        it("should remove the overlapping vertices and return a polygon that is one large rectangle", () => {
             const p1 = { x: 0, y: 0 }
             const p2 = { x: 0, y: 1 }
             const p3 = { x: 1, y: 1 }
@@ -701,7 +701,7 @@ describe('Polygon2', () => {
         });
     });
     describe('given boxes that each share 1 vertex inside of the other', () => {
-        it("should remove inside verticies and make a polygon that is the spacial addition of the two boxes", () => {
+        it("should remove inside vertices and make a polygon that is the spacial addition of the two boxes", () => {
             const p1 = { x: 0, y: 0 }
             const p2 = { x: 0, y: 2 }
             const p3 = { x: 2, y: 2 }

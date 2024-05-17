@@ -22,7 +22,7 @@ export function findPolygonsThatVec2IsInsideOf(point: Vec2, testPolygons: Polygo
       insideOfPolys = [poly];
       // Exit immediately if the point is inside a non-inverted polygon
       // since overlapping polygons should be merged, we can assume it
-      // is only inide this one polygon
+      // is only inside this one polygon
       break;
     }
 
@@ -31,7 +31,7 @@ export function findPolygonsThatVec2IsInsideOf(point: Vec2, testPolygons: Polygo
 }
 interface Path {
   // done represents that the path should no longer be processing;
-  // it gives no guaruntee as to the validity of the path
+  // it gives no guarantee as to the validity of the path
   done: boolean;
   // Represents if the path reached the destination
   complete: boolean;
@@ -43,9 +43,9 @@ interface Path {
   // The distance that the full path traverses
   distance: number;
   walkAroundPolyInfo?: {
-    // A mutatable array of verticies that the pathing process with shift()
+    // A mutable array of vertices that the pathing process with shift()
     // one at a time to walk around the polygon
-    verticies: Vec2[];
+    vertices: Vec2[];
     // The original polygon
     poly: Polygon2;
   };
@@ -244,11 +244,11 @@ function addWalkAroundPolyInfoToPath(path: Path, direction: 'prev' | 'next', sta
   // --
   // Now keep iterative in the "direction" until we have a path that doesn't intersect with this polygon
   // and heads right for the target or intersects with another polygon:
-  const _verticies = getPointsFromPolygonStartingAt(poly, startVertex);
+  const _vertices = getPointsFromPolygonStartingAt(poly, startVertex);
   // If the direction is 'prev', walk in the opposite direction
-  const verticies = direction == 'prev' ? _verticies.reverse() : _verticies;
+  const vertices = direction == 'prev' ? _vertices.reverse() : _vertices;
   path.walkAroundPolyInfo = {
-    verticies,
+    vertices: vertices,
     poly
   }
 
@@ -258,9 +258,9 @@ function walkAroundAPoly(path: Path, pathingWalls: Polygon2LineSegment[]) {
     // Cannot walk if there is no walk info
     return;
   }
-  const vertex = path.walkAroundPolyInfo.verticies.shift();
+  const vertex = path.walkAroundPolyInfo.vertices.shift();
   if (!vertex) {
-    // No verticies left to be processed
+    // No vertices left to be processed
     return;
   }
   // If the target point is on the line between the last point and this point, we've found the path and can exit.
@@ -343,7 +343,7 @@ function processPaths(paths: Path[], pathingWalls: Polygon2LineSegment[]): Path[
     }
 
     // There are 2 main ways to process a path, if the path has "walkAroundPolyInfo",
-    // that means it is currently in the process of walking around a polygon's verticies,
+    // that means it is currently in the process of walking around a polygon's vertices,
     // one by one, so it should be processed with walkAroundAPoly()
     // Otherwise, it drops into the "else" below and tests the last line in the path
     // to see if it's a valid line, if not, that means it intersected at least 1 polygonLineSegment
@@ -437,7 +437,7 @@ function processPaths(paths: Path[], pathingWalls: Polygon2LineSegment[]): Path[
 
           // Starting from the "prev" corner, walk around the poly until you can make a 
           // straight line to the target that doesn't intersect with this same poly
-          // Note: It is INTENTIONAL that "next" is passed into this function because the ordered verticies
+          // Note: It is INTENTIONAL that "next" is passed into this function because the ordered vertices
           // will be reversed when 'prev' is the direction
           addWalkAroundPolyInfoToPath(path, 'prev', nextWalkPoint, intersectingWall.polygon);
           // Starting from the "next" corner, walk around the poly until you can make a 

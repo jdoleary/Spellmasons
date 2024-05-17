@@ -54,4 +54,4 @@ Ways to determine which points are branchable
   - If there is an intersection keep adding next and prev to 2 new paths until the next line doesn't collide with the same shape
 
 ### 2022-03-05
-- What if I didn't need verticies to be doubly linked? and I could just determine the normal by iterating the polygon? and store in the Polygon structure if it's inverted or not
+- What if I didn't need vertices to be doubly linked? and I could just determine the normal by iterating the polygon? and store in the Polygon structure if it's inverted or not

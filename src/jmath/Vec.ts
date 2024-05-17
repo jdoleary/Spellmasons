@@ -14,7 +14,7 @@ export interface Vec2 {
 // Note: This function returns the counter clockwise angle from the x-axis
 // of "origin" to "point".  This is tricky because I built Polygons to
 // have their "inside" (non-walkable zone) to be filled by iterating
-// the polygon verticies in a clockwise direction.  Many of the 
+// the polygon vertices in a clockwise direction.  Many of the 
 // functions dealing with polygons have to consider clockwise angles between
 // points (in order to determine the inside of the polygon).
 // So for example, the polygonLineSegment 0,0 to 1,0 has an inside

@@ -160,7 +160,7 @@ export function mergePolygon2s(polygons: Polygon2[]): Polygon2[] {
 
   // Split all line segments along intersections
   // so that there are no line segments left with intersections
-  // other than at their verticies
+  // other than at their vertices
   polyLineSegments = splitIntersectingPolygon2LineSegments(polyLineSegments);
 
   // resultPolys stores the merged polygons:
@@ -208,7 +208,7 @@ export function mergePolygon2s(polygons: Polygon2[]): Polygon2[] {
     reversals.push(...polyLineSegments.filter(other => Vec.equal(line.p1, other.p2) && Vec.equal(line.p2, other.p1)));
   }
   polyLineSegments = polyLineSegments.filter(line => !reversals.includes(line));
-  // Remove unnecessary in-between verticies:
+  // Remove unnecessary in-between vertices:
   const lineSegments = mergeCollinearOverlappingSameDirectionLines(polyLineSegments)
   // Turn all remaining line segments into polygons:
   for (let i = lineSegments.length - 1; i >= 0; i--) {
@@ -486,7 +486,7 @@ export function isVec2InsidePolygon(point: Vec2, polygon: Polygon2): boolean {
     const intersection = _intersection ? { x: +_intersection.x.toFixed(2), y: +_intersection.y.toFixed(2) } : undefined
 
     //  Don't process the same intersection more than once
-    //  Only process intersections at verticies once
+    //  Only process intersections at vertices once
     if (intersection && !intersections.find(i =>
       // intersection already processed
       Vec.equal(i, intersection) &&

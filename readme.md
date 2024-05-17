@@ -15,10 +15,10 @@ Spellmasons is a turn-based, tactical roguelike where you devise spell combinati
 - Press F12 to open the console (this works in the Steam version of the game too!)
 - If you set `adminMode = true` in the console,  you can then `Shift + Left Click` during a live game to open the admin menu which allows you to spawn things and change unit stats.
 - You can access the current game state in the console via `devUnderworld`.  To get you started messing around with the game in the console, move your character's position with the following: `devUnderworld.players[0].unit.x += 100`.
-- Important note, there are some development-only features (such as auto picking upgrades) that are meant to speed up develoment.  If you need them off, go to the console (F12) and type `devAutoPickUpgrades=false;`
+- Important note, there are some development-only features (such as auto picking upgrades) that are meant to speed up development.  If you need them off, go to the console (F12) and type `devAutoPickUpgrades=false;`
 
 ## License
-Please read and respect the [licence](./LICENSE.md).  I am making this software publicly available because I love video games and I love making them and I want to give players and tinkerers the ability to see how I made it and the ability to make changes of their own.  I'd like the game to live beyond the time I spend working on it and so I am giving you the ability to fully edit the game for your own enjoyment!  If you want to use a portion of my work in your own separate project, please reach out to me for permission.
+Please read and respect the [license](./LICENSE.md).  I am making this software publicly available because I love video games and I love making them and I want to give players and tinkerers the ability to see how I made it and the ability to make changes of their own.  I'd like the game to live beyond the time I spend working on it and so I am giving you the ability to fully edit the game for your own enjoyment!  If you want to use a portion of my work in your own separate project, please reach out to me for permission.
 
 ## Support my work
 The best way you can support my work is to purchase Spellmasons on [Steam](https://store.steampowered.com/app/1618380/Spellmasons/) and review it on Steam!  Also spreading the word to friends helps :)
