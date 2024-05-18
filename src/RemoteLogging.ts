@@ -4,6 +4,11 @@ import { SERVER_HUB_URL } from "./config";
 const originalConsoleError = console.error;
 // const originalConsoleWarn = console.warn;
 export function enableRemoteLogging() {
+    if (globalThis.headless) {
+        // Squelch console.debug so as to not flood server logs
+        console.debug = () => { }
+    }
+
     if (!globalThis.headless && location.href.includes('localhost')) {
         console.warn('Remote Logging is disabled for localhost development')
         return;
@@ -16,6 +21,7 @@ export function enableRemoteLogging() {
         // @ts-ignore
         originalConsoleError.apply(console, arguments);
     };
+
 
     // console.warn = function () {
     //     sendLogToServerHub(Array.from(arguments), LogLevel.WARN);

@@ -337,7 +337,7 @@ export default class Underworld {
     // if (elSeed) {
     //   elSeed.innerText = `Seed: ${this.seed}`;
     // }
-    console.log('RNG create with seed:', this.seed, ', state: ', RNGState);
+    console.debug('RNG create with seed:', this.seed, ', state: ', RNGState);
     // state of "true" initializes the RNG with the ability to save it's state,
     // state of a state object, rehydrates the RNG to a particular state
     this.random = seedrandom(this.seed, { state: RNGState })
@@ -4004,6 +4004,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     CardUI.syncInventory(undefined, this);
     // Update toolbar
     CardUI.recalcPositionForCards(globalThis.player, this);
+    Player.syncLobby(this);
   }
   pickupIsIdentical(pickup: Pickup.IPickup, serialized: Pickup.IPickupSerialized): boolean {
     return pickup.id == serialized.id && pickup.name == serialized.name;
