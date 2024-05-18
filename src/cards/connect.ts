@@ -64,7 +64,7 @@ const spell: Spell = {
           const adjustedRadius = baseRadius * (1 + (0.25 * state.aggregator.radiusBoost))
 
           // Find all units touching the spell origin
-          const chained = await getConnectingEntities(
+          const chained = getConnectingEntities(
             target,
             adjustedRadius,
             limitTargetsLeft,
@@ -103,7 +103,7 @@ const spell: Spell = {
   },
 };
 
-export async function getConnectingEntities(
+export function getConnectingEntities(
   source: HasSpace,
   radius: number,
   chainsLeft: number,
@@ -112,7 +112,7 @@ export async function getConnectingEntities(
   filterFn: (x: any) => boolean, //selects which type of entities this can chain to
   prediction: boolean,
   inLiquidRadiusMultiplier: number = 1,
-): Promise<{ chainSource: HasSpace, entity: HasSpace }[]> {
+): { chainSource: HasSpace, entity: HasSpace }[] {
 
   potentialTargets = potentialTargets
     .filter(x => filterFn(x))
@@ -120,19 +120,19 @@ export async function getConnectingEntities(
 
   let connected: { chainSource: HasSpace, entity: HasSpace }[] = [];
   if (chainsLeft > 0) {
-    connected = await getNextConnectingEntities(source, radius, chainsLeft, potentialTargets, prediction, inLiquidRadiusMultiplier)
+    connected = getNextConnectingEntities(source, radius, chainsLeft, potentialTargets, prediction, inLiquidRadiusMultiplier)
   }
   return connected;
 }
 
-export async function getNextConnectingEntities(
+export function getNextConnectingEntities(
   source: HasSpace,
   baseRadius: number,
   chainsLeft: number,
   potentialTargets: HasSpace[],
   prediction: boolean,
   inLiquidRadiusMultiplier: number = 1,
-): Promise<{ chainSource: HasSpace, entity: HasSpace }[]> {
+): { chainSource: HasSpace, entity: HasSpace }[] {
 
   potentialTargets = potentialTargets.filter(x => x != source);
 
@@ -157,7 +157,7 @@ export async function getNextConnectingEntities(
       connected.push({ chainSource: source, entity: closestTarget });
       chainsLeft--;
       if (chainsLeft > 0) {
-        const next = await getNextConnectingEntities(closestTarget, baseRadius, chainsLeft, potentialTargets, prediction, inLiquidRadiusMultiplier)
+        const next = getNextConnectingEntities(closestTarget, baseRadius, chainsLeft, potentialTargets, prediction, inLiquidRadiusMultiplier)
         chainsLeft -= next.length;
         connected = connected.concat(next);
         potentialTargets = potentialTargets.filter(x => {

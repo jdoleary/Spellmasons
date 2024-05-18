@@ -54,7 +54,7 @@ const spell: Spell = {
 
           let adjustedRadius = baseRadius * (1 + (0.25 * state.aggregator.radiusBoost))
           // Find all units touching the spell origin
-          const chained = await getConnectingEntities(
+          const chained = getConnectingEntities(
             target,
             adjustedRadius,
             limitTargetsLeft,
