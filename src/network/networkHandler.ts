@@ -907,6 +907,23 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       } else {
         console.error('Unable to end turn because caster is undefined');
       }
+
+      // Extra protection against end turn desync
+      // https://github.com/jdoleary/Spellmasons/issues/683
+      if (globalThis.headless) {
+        for (let clientId of payload.playersTurnEnded) {
+          const player = underworld.players.find(up => up.clientId == clientId);
+          if (player) {
+            if (!player.endedTurn) {
+              console.error('EndTurnGuard: Force ending player turn')
+              await underworld.endPlayerTurn(player);
+            }
+          } else {
+            console.log('EndTurnGuard: Player', clientId, payload)
+            console.error('EndTurnGuard: Unable to find player by clientId for end turn extra protection')
+          }
+        }
+      }
       break;
     }
     case MESSAGE_TYPES.ADMIN_COMMAND: {
