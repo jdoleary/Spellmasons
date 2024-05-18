@@ -39,7 +39,7 @@ const spell: Spell = {
               if (damage > 0) {
                 Unit.takeDamage({
                   unit: unit,
-                  amount: damage * quantity,
+                  amount: damage,
                   sourceUnit: state.casterUnit,
                   fromVec2: state.casterUnit,
                 }, underworld, prediction);
@@ -57,7 +57,7 @@ const spell: Spell = {
             const damage = calculateDamage(quantity, state.casterUnit, state.casterUnit.attackRange, unit);
             Unit.takeDamage({
               unit: unit,
-              amount: damage * quantity,
+              amount: damage,
               sourceUnit: state.casterUnit,
               fromVec2: state.casterUnit,
             }, underworld, prediction);
