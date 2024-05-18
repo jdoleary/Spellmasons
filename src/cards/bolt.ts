@@ -36,6 +36,7 @@ const spell: Spell = {
       if (length) {
         playDefaultSpellSFX(card, prediction);
       }
+      const affected: HasSpace[] = [];
       for (let i = 0; i < length; i++) {
         const target = targets[i];
         if (target) {
@@ -66,21 +67,26 @@ const spell: Spell = {
             // Submerged units increase radius dramatically
             2
           );
-          const affected = [target, ...chained.map(x => x.entity)];
-          if (!prediction) {
-            await raceTimeout(1000, 'bolt animate', animate(affected));
-          }
-          affected.forEach(u => {
-            if (Unit.isUnit(u)) {
-              Unit.takeDamage({
-                unit: u,
-                amount: damage * quantity,
-                sourceUnit: state.casterUnit,
-              }, underworld, prediction);
+          for (let entity of chained.map(x => x.entity).concat(target)) {
+            if (!affected.includes(entity)) {
+              affected.push(entity);
             }
-          })
+          }
         }
       }
+
+      if (!prediction) {
+        await raceTimeout(1000, 'bolt animate', animate(affected));
+      }
+      affected.forEach(u => {
+        if (Unit.isUnit(u)) {
+          Unit.takeDamage({
+            unit: u,
+            amount: damage * quantity,
+            sourceUnit: state.casterUnit,
+          }, underworld, prediction);
+        }
+      })
 
       return state;
     },
