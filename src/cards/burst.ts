@@ -7,6 +7,7 @@ import { Vec2 } from '../jmath/Vec';
 import { distance, lerp } from '../jmath/math';
 import * as config from '../config';
 import { makeBurstParticles } from '../graphics/ParticleCollection';
+import { raceTimeout } from '../Promise';
 
 export const burstCardId = 'Burst';
 const maxDamage = 50;
@@ -28,7 +29,7 @@ const spell: Spell = {
     sfx: 'burst',
     description: ['spell_burst', maxDamage.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
-      await new Promise<void>((resolve) => {
+      await raceTimeout(1000, 'Burst timeout', new Promise<void>((resolve) => {
         // .filter: only target living units
         const targets = state.targetedUnits.filter(u => u.alive)
         if (!prediction && !globalThis.headless) {
@@ -64,7 +65,7 @@ const spell: Spell = {
           }
           resolve();
         }
-      });
+      }));
       return state;
     },
   },

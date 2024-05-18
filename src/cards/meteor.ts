@@ -15,6 +15,7 @@ import { containerProjectiles } from '../graphics/PixiUtils';
 import * as particles from '@pixi/particle-emitter';
 import { createParticleTexture, logNoTextureWarning, wrappedEmitter } from '../graphics/Particles';
 import { stopAndDestroyForeverEmitter } from '../graphics/ParticleCollection';
+import { raceTimeout } from '../Promise';
 
 export const meteorCardId = 'meteor';
 const damage = 60;
@@ -60,7 +61,7 @@ const spell: Spell = {
 
       if (!prediction && !globalThis.headless) {
         playDefaultSpellSFX(card, prediction);
-        await meteorProjectiles(meteorLocations, underworld)
+        await raceTimeout(1500, 'meteor', meteorProjectiles(meteorLocations, underworld));
         playSFXKey('meteorExplode');
       }
 

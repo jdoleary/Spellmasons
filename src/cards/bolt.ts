@@ -7,6 +7,7 @@ import { HasSpace } from '../entity/Type';
 import { getConnectingEntities } from './connect';
 import { jitter, lerpVec2 } from '../jmath/Vec';
 import { playDefaultSpellSFX } from './cardUtils';
+import { raceTimeout } from '../Promise';
 
 const id = 'Bolt';
 const damage = 8;
@@ -67,7 +68,7 @@ const spell: Spell = {
           );
           const affected = [target, ...chained.map(x => x.entity)];
           if (!prediction) {
-            await animate(affected);
+            await raceTimeout(1000, 'bolt animate', animate(affected));
           }
           affected.forEach(u => {
             if (Unit.isUnit(u)) {

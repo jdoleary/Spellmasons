@@ -45,7 +45,7 @@ const spell: Spell = {
         }
         // Note: animationPromise is overwritten over and over because each animateMitosis will take the same amount of time
         // and they are all triggered at once so we only need to wait for one of them.
-        await animationPromise;
+        await raceTimeout(600, 'clone', animationPromise);
         // Clone all the batched clone jobs
         for (let [target, cloneSourceCoords] of clonePairs) {
           if (target) {

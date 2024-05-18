@@ -49,7 +49,7 @@ const spell: Spell = {
               mergePromises.push(animateMerge((thing as any).image, target));
             }
           }
-          await Promise.all(mergePromises);
+          await raceTimeout(1000, 'merge animage', Promise.all(mergePromises));
 
           mergedTargets = mergedTargets.concat(similarThings);
           if (Unit.isUnit(target)) {

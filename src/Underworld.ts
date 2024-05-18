@@ -3819,7 +3819,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
         // Await the cast
         try {
-          effectState = await reportIfTakingTooLong(10000, `${card.id};${prediction}`, cardEffectPromise);
+          effectState = await reportIfTakingTooLong(10000, `${card.id};Prediction:${prediction}`, cardEffectPromise);
         } catch (e) {
           console.error('Unexpected error from card.effect', e);
         }
