@@ -157,11 +157,18 @@ body.view-Game.showUpgrades #upgrade-picker {
   text-shadow: 2px 2px 2px #000;
 }
 
-#upgrade-picker .card,
-.card-inspect .card {
+#upgrade-picker .card {
   width: unset;
   height: unset;
   max-height: 100%;
+  margin: 8px;
+  aspect-ratio: 462/744;
+}
+
+.card-inspect .card {
+  width: unset;
+  height: 100%;
+  max-height: 744px;
   margin: 8px;
   aspect-ratio: 462/744;
 }
@@ -265,10 +272,10 @@ body.open-inventory .card-inspect {
 
 
 .card-inspect {
-  /* position: fixed; */
   top: 0;
   left: 0;
   width: 100%;
+  height: 100%;
   justify-content: flex-end;
   align-items: center;
   pointer-events: none;
