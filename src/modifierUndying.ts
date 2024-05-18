@@ -37,6 +37,7 @@ export default function registerUndying() {
           casterPositionAtTimeOfCast: unit,
           cardIds: [resurrect_id],
           castLocation: unit,
+          initialTargetedUnitId: unit.id,
           prediction: prediction,
           outOfRange: false,
           castForFree: true,
