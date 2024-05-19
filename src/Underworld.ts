@@ -810,14 +810,14 @@ export default class Underworld {
   // Returns true if there is more processing to be done
   // See GameLoops.md for more details
   _gameLoopHeadless = (loopCount: number): boolean => {
-    const stillProcessingForceMoves = this.gameLoopForceMove(16);
+    const stillProcessingForceMoves = this.gameLoopForceMove(EXPECTED_MILLIS_PER_GAMELOOP);
     if (loopCount > loopCountLimit && stillProcessingForceMoves) {
       console.error('_gameLoopHeadless hit limit; stillProcessingForceMoves');
     }
     let stillProcessingUnits = 0;
     const aliveNPCs = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
     for (let u of this.units) {
-      const unitStillProcessing = this.gameLoopUnit(u, aliveNPCs, 16);
+      const unitStillProcessing = this.gameLoopUnit(u, aliveNPCs, EXPECTED_MILLIS_PER_GAMELOOP);
       if (unitStillProcessing) {
         stillProcessingUnits++;
         if (loopCount > loopCountLimit) {
@@ -869,10 +869,10 @@ export default class Underworld {
       }
     }
 
-    const aliveNPCs = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
     // Run all forces in this.forceMove
     this.gameLoopForceMove(deltaTime);
 
+    const aliveNPCs = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
     for (let i = 0; i < this.units.length; i++) {
       const u = this.units[i];
       if (u) {
