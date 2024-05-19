@@ -206,6 +206,8 @@ export default class Underworld {
   forceMove: ForceMove[] = [];
   forceMovePrediction: ForceMove[] = [];
   forceMovePromise: Promise<void> | undefined;
+  // Used to smoothly simulate force moves on a fixed timestep
+  timeSinceLastSimulationStep: number = 0;
   // A hash of the last thing this client was thinking
   // Used with MESSAGE_TYPES.PLAYER_THINKING so other clients 
   // can see what another client is planning.
@@ -810,14 +812,14 @@ export default class Underworld {
   // Returns true if there is more processing to be done
   // See GameLoops.md for more details
   _gameLoopHeadless = (loopCount: number): boolean => {
-    const stillProcessingForceMoves = this.gameLoopForceMove(16);
+    const stillProcessingForceMoves = this.gameLoopForceMove(EXPECTED_MILLIS_PER_GAMELOOP);
     if (loopCount > loopCountLimit && stillProcessingForceMoves) {
       console.error('_gameLoopHeadless hit limit; stillProcessingForceMoves');
     }
     let stillProcessingUnits = 0;
     const aliveNPCs = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
     for (let u of this.units) {
-      const unitStillProcessing = this.gameLoopUnit(u, aliveNPCs, 16);
+      const unitStillProcessing = this.gameLoopUnit(u, aliveNPCs, EXPECTED_MILLIS_PER_GAMELOOP);
       if (unitStillProcessing) {
         stillProcessingUnits++;
         if (loopCount > loopCountLimit) {
@@ -869,10 +871,18 @@ export default class Underworld {
       }
     }
 
-    const aliveNPCs = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
-    // Run all forces in this.forceMove
-    this.gameLoopForceMove(deltaTime);
+    // We should always run gameLoopForceMoves in a specific simulation step to ensure
+    // there is no desync between headless/prediction/gameloop at different framerates.
+    // We also want to create the illusion of smooth movement/simulation by tracking time passed
+    // and only simulating X ms of force movement after X ms of real time has passed
+    this.timeSinceLastSimulationStep += deltaTime;
+    if (this.timeSinceLastSimulationStep >= EXPECTED_MILLIS_PER_GAMELOOP) {
+      // Simulate one step of all forces in this.forceMove
+      this.gameLoopForceMove(EXPECTED_MILLIS_PER_GAMELOOP);
+      this.timeSinceLastSimulationStep -= EXPECTED_MILLIS_PER_GAMELOOP;
+    }
 
+    const aliveNPCs = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
     for (let i = 0; i < this.units.length; i++) {
       const u = this.units[i];
       if (u) {
