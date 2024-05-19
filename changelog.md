@@ -1,3 +1,59 @@
+## 1.36.0 - Patch
+ui fix: card-inspect scale
+    where cards had greatly varying sizes
+    (slash was super small)
+
+menu: Update default ally unit outlines to be 2px
+    consistent with enemy default outline
+
+fix: NPCs casting on wrong faction units
+    - Thanks @Viz and @CandyKiller
+
+fix: All bolts play at once
+
+fix: Burst quantity damage (#736)
+    Stacks of burst were being double multiplied
+
+fix: Protect specific spells from hanging server
+    Burst: 52
+    Bolt: 46
+    merge: 28
+    Connect: 11
+    Triple Arrow: 8
+    Multi Arrow: 4
+    clone: 4
+    Phantom Arrow: 4
+    meteor: 1
+
+fix: Add end turn protection
+    
+    Many players have been experiencing issues
+    where all players have turn ended on their clients
+    but the game does not progress
+    
+    It seems there are multiple causes
+    > Re-readying up would have one of a few effects for us:
+    1: It unlocked for us
+    2: It made the noise over and over before unlocking after a 15-40 sec wait
+    3: It was completely stuck requiring us to save and restart the server completely (because when we would try to rejoin some players were in the game alone at the starting map even while others were still in the game)
+    4: A few of us had full whitescreens with a force quit required
+    ~Wispy
+    
+    This commit handles Cause 1, where somehow the
+    clients have that everyone is readied up but the
+    server is missing one.
+    A client, when ending turn, also sends an array of
+    all clientIds that have ended turn.
+    If any of them are endedTurn == false on the
+    server is will end their turn.
+    
+    This should prevent players from having to re-ready up
+
+fix: Arrows being slow to cast in multiplayer
+
+fix: typos
+    Thanks to WestonVincze for contributing!
+
 ## 1.35.0 - Patch
 - Fix Card size for various resolutions and zoom levels
     Thanks Moonlighter, MaitrePhoenix, Monarch
