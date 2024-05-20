@@ -52,6 +52,9 @@ export type IPickup = HasSpace & {
   image?: Image.IImageAnimated;
   // if this IPickup is a prediction copy, real is a reference to the real pickup that it is a copy of
   real?: IPickup;
+  // if this IPickup is a real pickup, predictionCopy is a reference to the latest prediction copy.
+  // used for diffing the effects of a spell to sync multiplayer
+  predictionCopy?: IPickup;
   // Only can be picked up by players
   playerOnly: boolean;
   // Pickups optionally have a "time limit" and will disappear after this many turns
@@ -99,10 +102,12 @@ export function copyForPredictionPickup(p: IPickup): IPickup {
   if (p.id > lastPredictionPickupId) {
     lastPredictionPickupId = p.id;
   }
-  return {
+  const predictionPickup = Object.assign(p.predictionCopy || {}, {
     real: p,
     ...rest
-  }
+  });
+  p.predictionCopy = predictionPickup;
+  return predictionPickup;
 }
 export const TIME_CIRCLE_JID = 'timeCircle';
 

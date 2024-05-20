@@ -1462,7 +1462,7 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
     }
   }
   const { image, resolveDoneMoving, modifiers, ...rest } = u;
-  const predictionUnit = {
+  const predictionUnit = Object.assign(u.predictionCopy || {}, {
     ...rest,
     real: u,
     isPrediction: true,
@@ -1492,7 +1492,7 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
     modifiers: JSON.parse(JSON.stringify(modifiers)),
     shaderUniforms: {},
     resolveDoneMoving: () => { }
-  };
+  });
   u.predictionCopy = predictionUnit;
   return predictionUnit;
 
