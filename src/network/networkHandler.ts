@@ -38,7 +38,7 @@ import { recalcPositionForCards } from '../graphics/ui/CardUI';
 import { isSinglePlayer } from './wsPieSetup';
 import { elEndTurnBtn } from '../HTMLElements';
 import { sendEventToServerHub } from '../RemoteLogging';
-import { distance } from '../jmath/math';
+import { raceTimeout } from '../Promise';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION];
@@ -1185,7 +1185,16 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
         record.count++;
       }
     }
-    const keyMoment = () => underworld.castCards({
+    // Timeouts differ on server vs clients
+    // The server executes the spell as fast as it can so it can aggregate the
+    // sync state and send the spell to the clients.  The clients have
+    // animations and their spells take much longer.
+    // For now, I've put the limit of any spell at 60 seconds, this may
+    // need to change in the future
+    // Timings: https://docs.google.com/spreadsheets/d/1NmTIjMnbWclifBaxzm1l4pAcsacuv9fLbH8JhR_umEM/edit#gid=0
+    // Experiments: https://github.com/jdoleary/Spellmasons/issues/683#issuecomment-2120797899
+    const timeoutMs = globalThis.headless ? 5000 : 60_000;
+    const keyMoment = () => raceTimeout(timeoutMs, `handleSpell: ${payload.cards}`, underworld.castCards({
       casterCardUsage: caster.cardUsageCounts,
       casterUnit: caster.unit,
       casterPositionAtTimeOfCast: payload.casterPositionAtTimeOfCast,
@@ -1197,7 +1206,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
       casterPlayer: caster,
       initialTargetedUnitId: payload.initialTargetedUnitId,
       initialTargetedPickupId: payload.initialTargetedPickupId,
-    });
+    }));
     const colorMagicMedium = lightenColor(caster.colorMagic, 0.3);
     const colorMagicLight = lightenColor(caster.colorMagic, 0.6);
 

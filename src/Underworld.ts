@@ -3830,7 +3830,14 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
         // Await the cast
         try {
-          effectState = await reportIfTakingTooLong(10000, `${card.id};Prediction:${prediction}`, cardEffectPromise);
+          // Timeouts differ on server vs clients
+          // The server executes the spell as fast as it can so it can aggregate the
+          // sync state and send the spell to the clients.  The clients have
+          // animations and their spells take much longer.
+          // For now, I've put the limit of any individual card at 30 seconds
+          // https://github.com/jdoleary/Spellmasons/issues/683#issuecomment-2120797899
+          const timeoutMs = globalThis.headless ? 1000 : 30_000;
+          effectState = await raceTimeout(timeoutMs, `${card.id};Prediction:${prediction}`, cardEffectPromise);
         } catch (e) {
           console.error('Unexpected error from card.effect', e);
         }
