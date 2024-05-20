@@ -19,6 +19,7 @@ import * as fortify from './cards/fortify';
 import * as immune from './cards/immune';
 import * as CSSClasses from './CSSClasses';
 import * as log from './log';
+import safeStringify from 'fast-safe-stringify';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import {
@@ -2532,10 +2533,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       return false;
     }
     if (Unit.canAct(player.unit) && !player.endedTurn) {
-      console.log('Game State: \nPlayer can act and has not ended turn yet: ', player);
+      console.log('Game State: Player can act and has not ended turn yet:', globalThis.headless ? safeStringify(player) : player);
       return false;
     }
-    console.log('Game State: \nPlayer has completed turn: ', player);
+    console.log('Game State: Player has completed turn: ', globalThis.headless ? safeStringify(player) : player);
     return true;
   }
   async handleNextHotseatPlayer() {
