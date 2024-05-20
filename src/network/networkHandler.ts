@@ -1185,28 +1185,31 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
         record.count++;
       }
     }
-    // Timeouts differ on server vs clients
-    // The server executes the spell as fast as it can so it can aggregate the
-    // sync state and send the spell to the clients.  The clients have
-    // animations and their spells take much longer.
-    // For now, I've put the limit of any spell at 60 seconds, this may
-    // need to change in the future
-    // Timings: https://docs.google.com/spreadsheets/d/1NmTIjMnbWclifBaxzm1l4pAcsacuv9fLbH8JhR_umEM/edit#gid=0
-    // Experiments: https://github.com/jdoleary/Spellmasons/issues/683#issuecomment-2120797899
-    const timeoutMs = globalThis.headless ? 5000 : 60_000;
-    const keyMoment = () => raceTimeout(timeoutMs, `handleSpell: ${payload.cards}`, underworld.castCards({
-      casterCardUsage: caster.cardUsageCounts,
-      casterUnit: caster.unit,
-      casterPositionAtTimeOfCast: payload.casterPositionAtTimeOfCast,
-      cardIds: payload.cards,
-      castLocation: clone(payload),
-      prediction: false,
-      outOfRange: false,
-      magicColor: caster.colorMagic,
-      casterPlayer: caster,
-      initialTargetedUnitId: payload.initialTargetedUnitId,
-      initialTargetedPickupId: payload.initialTargetedPickupId,
-    }));
+    const keyMoment = () => {
+      const castCardsPromise = underworld.castCards({
+        casterCardUsage: caster.cardUsageCounts,
+        casterUnit: caster.unit,
+        casterPositionAtTimeOfCast: payload.casterPositionAtTimeOfCast,
+        cardIds: payload.cards,
+        castLocation: clone(payload),
+        prediction: false,
+        outOfRange: false,
+        magicColor: caster.colorMagic,
+        casterPlayer: caster,
+        initialTargetedUnitId: payload.initialTargetedUnitId,
+        initialTargetedPickupId: payload.initialTargetedPickupId,
+      });
+      if (globalThis.headless) {
+        // Since each individual card has it's own timeout (see Underworld.ts castCards) even on clients,
+        // this whole spell timeout will only apply on the server to prevent the server from getting stuck.
+        // The server calculates spells very quickly and if it takes a whole 5 seconds, then we have
+        // high confidence that it is hanging.
+        // Experiments: https://github.com/jdoleary/Spellmasons/issues/683#issuecomment-2120797899
+        return raceTimeout(5000, `handleSpell: ${payload.cards}`, castCardsPromise)
+      } else {
+        return castCardsPromise
+      }
+    };
     const colorMagicMedium = lightenColor(caster.colorMagic, 0.3);
     const colorMagicLight = lightenColor(caster.colorMagic, 0.6);
 

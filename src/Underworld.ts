@@ -3825,6 +3825,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         if (!prediction) {
           test_startCheckPromises(card.id);
         }
+        const s1 = performance.now();
         const cardEffectPromise = card.effect(effectState, card, quantity, this, prediction, outOfRange);
         await this.awaitForceMoves(prediction);
 
@@ -3834,9 +3835,18 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // The server executes the spell as fast as it can so it can aggregate the
           // sync state and send the spell to the clients.  The clients have
           // animations and their spells take much longer.
-          // For now, I've put the limit of any individual card at 30 seconds
-          // https://github.com/jdoleary/Spellmasons/issues/683#issuecomment-2120797899
-          const timeoutMs = globalThis.headless ? 1000 : 30_000;
+          // This is the timeout for each card.  Card timeouts were calculated
+          // "per quantity" so that cards that scale their duration with quantity
+          // can have a higher timeout
+          // The Server; however, calculates each card very quickly, so 1 second is
+          // ample padding to finish unless it is hanging in which case we want to timeout
+          // Timings: https://docs.google.com/spreadsheets/d/1NmTIjMnbWclifBaxzm1l4pAcsacuv9fLbH8JhR_umEM/edit#gid=0
+          // Experiments: https://github.com/jdoleary/Spellmasons/issues/683#issuecomment-2120797899
+
+          // provide for double the average per quantity timeout as padding
+          const clientCardTimeout = (Cards.cardTimings[card.id] || 1500) * quantity * 2;
+          console.debug(`Card ${card.id} will timeout in ${clientCardTimeout} milliseonds if it does not complete`);
+          const timeoutMs = globalThis.headless ? 1000 : clientCardTimeout;
           effectState = await raceTimeout(timeoutMs, `${card.id};Prediction:${prediction}`, cardEffectPromise);
         } catch (e) {
           console.error('Unexpected error from card.effect', e);
