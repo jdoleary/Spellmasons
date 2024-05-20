@@ -309,9 +309,9 @@ export type IPickupSerialized = Omit<IPickup, "image" | "effect" | "text" | "rea
 };
 export function serialize(p: IPickup): IPickupSerialized {
   // effect is a callback and cannot be serialized
-  // real is a reference to self if self is not a prediction copy and cannot be serialized
+  // real and predictionCopy are references and cannot be serialized
   // because it would be cyclical
-  const { effect, text, real, emitter, ...rest } = p;
+  const { effect, text, real, emitter, predictionCopy, ...rest } = p;
   const serialized: IPickupSerialized = {
     ...rest,
     image: p.image ? Image.serialize(p.image) : undefined,
