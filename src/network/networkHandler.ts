@@ -851,7 +851,9 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       break;
     }
     case MESSAGE_TYPES.SPELL: {
-      globalThis.spellCasting = true;
+      if (!globalThis.headless) {
+        globalThis.spellCasting = true;
+      }
       lastSpellMessageTime = d.time;
       if (fromPlayer) {
         if (underworld.turn_phase == turn_phase.Stalled) {
