@@ -26,6 +26,7 @@ const spell: Spell = {
     thumbnail: 'spellIconShield.png',
     animationPath: 'spell-effects/spellShield',
     description: ['spell_shield', damageBlocked.toString()],
+    timeoutMs: 1515,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);

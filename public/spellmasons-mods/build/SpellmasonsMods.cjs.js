@@ -28,6 +28,7 @@ const spell$f = {
     thumbnail: "spellmasons-mods/undead_blade/spellIconUndeadBlade.png",
     animationPath: animationPath$1,
     sfx: "hurt",
+    timeoutMs: 403,
     description: [`Deals ${damageDone$1} to summoned units and resurrected units only.`],
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = state.targetedUnits.filter((u) => u.alive && !u.originalLife);
@@ -106,6 +107,7 @@ const spell$e = {
     thumbnail: "spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconDecay.png",
     sfx: "poison",
     description: [`Causes the target to take damage equal to the number of decay stacks squared at the start of their turn. The target then gains another stack.`],
+    timeoutMs: 20,
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = state.targetedUnits.filter((u) => u.alive);
       if (targets.length == 0) {
@@ -117,11 +119,6 @@ const spell$e = {
         for (let unit of targets) {
           Unit$c.addModifier(unit, card.id, underworld, prediction, quantity);
         }
-      }
-      if (!prediction && !globalThis.headless) {
-        await new Promise((resolve) => {
-          setTimeout(resolve, 100);
-        });
       }
       return state;
     }
@@ -179,6 +176,7 @@ const spell$d = {
     sfx: "suffocate",
     description: [`Converts an enemy to fight for you if they are below ${healthThreshhold * 100}% health.`],
     //Wololo
+    timeoutMs: 20,
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = state.targetedUnits.filter((u) => u.alive && u.health <= u.healthMax * healthThreshhold && u.faction !== state.casterUnit.faction);
       if (!prediction && !globalThis.headless) {
@@ -217,6 +215,7 @@ const spell$c = {
     thumbnail: "spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconEnsnare.png",
     sfx: "",
     description: [`Prevents the target from moving for one turn. Furthur casts increase duration.`],
+    timeoutMs: 20,
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = state.targetedUnits.filter((u) => u.alive);
       if (targets.length == 0) {
@@ -228,11 +227,6 @@ const spell$c = {
         for (let unit of targets) {
           Unit$a.addModifier(unit, card.id, underworld, prediction, quantity);
         }
-      }
-      if (!prediction && !globalThis.headless) {
-        await new Promise((resolve) => {
-          setTimeout(resolve, 100);
-        });
       }
       return state;
     }
@@ -302,6 +296,7 @@ const spell$b = {
     //TODO
     description: [`Shunt the target forward through time. Causes progression of spell effects but does not affect cooldowns.`],
     //TODO: better deffinition
+    timeoutMs: 20,
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = state.targetedUnits.filter((u) => u.alive);
       if (!prediction && !globalThis.headless) {
@@ -448,6 +443,7 @@ const spell$a = {
     thumbnail: "spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconFlameStrike.png",
     sfx: "burst",
     description: [`Deals ${damageMain} damage to the target and ${damageSplash} damage to nearby targets in a small area.`],
+    timeoutMs: 400,
     effect: async (state, card, quantity, underworld, prediction) => {
       await new Promise((resolve) => {
         const targets = state.targetedUnits.filter((u) => u.alive);
@@ -517,6 +513,7 @@ const spell$9 = {
     sfx: "purify",
     //TODO
     description: [`Heals the target for ${-healingAmount$1} after 3 turns. Stacks increase the amount, but do not change duration`],
+    timeoutMs: 20,
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = state.targetedUnits.filter((u) => u.alive);
       if (targets.length == 0) {
@@ -613,6 +610,8 @@ const spell$8 = {
     description: [`Consumes target corpse for ${manaRegain} mana. Does not work on player corpses. Unstackable.
 
 Tastes like chicken.`],
+    // TODO timeout needs verification
+    timeoutMs: 900,
     effect: async (state, card, quantity, underworld, prediction) => {
       let promises = [];
       let totalManaHarvested = 0;
@@ -673,6 +672,7 @@ const spell$7 = {
     sfx: "heal",
     //TODO
     description: [`Heals the target for 10 health at the end of their turn for 5 turns. Stacks increase the amount and refresh the duration.`],
+    timeoutMs: 20,
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = state.targetedUnits.filter((u) => u.alive);
       if (targets.length == 0) {
@@ -684,11 +684,6 @@ const spell$7 = {
         for (let unit of targets) {
           Unit$6.addModifier(unit, card.id, underworld, prediction, 5, { amount: quantity });
         }
-      }
-      if (!prediction && !globalThis.headless) {
-        await new Promise((resolve) => {
-          setTimeout(resolve, 100);
-        });
       }
       return state;
     }
@@ -779,6 +774,7 @@ const spell$6 = {
     thumbnail: "spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconPacify.png",
     sfx: "",
     description: [`Prevents the target from attacking for one turn. Stacks increase duration. Does not affect Support Class units such as summoners or priests.`],
+    timeoutMs: 20,
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = state.targetedUnits.filter((u) => u.alive && !(u.unitSubType == 3));
       if (targets.length == 0) {
@@ -790,11 +786,6 @@ const spell$6 = {
         for (let unit of targets) {
           Unit$5.addModifier(unit, card.id, underworld, prediction, quantity);
         }
-      }
-      if (!prediction && !globalThis.headless) {
-        await new Promise((resolve) => {
-          setTimeout(resolve, 100);
-        });
       }
       return state;
     }
@@ -859,6 +850,7 @@ const spell$5 = {
     thumbnail: "spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconVengeance.png",
     sfx: "hurt",
     description: [`Deals damage equal to your missing health. This harms you first if you are targeted, then enemies.`],
+    timeoutMs: 20,
     effect: async (state, card, quantity, underworld, prediction) => {
       let promises = [];
       const targets = state.targetedUnits.filter((u) => u.alive);
@@ -949,6 +941,8 @@ const spell$4 = {
     animationPath,
     sfx: "hurt",
     description: [`Deals 10 to the target and heals you for up to 50% damage done. Healing is not affected by modifiers, including blood curse`],
+    // TODO timeout needs validation
+    timeoutMs: 1e3,
     effect: async (state, _card, quantity, underworld, prediction) => {
       const targets = state.targetedUnits.filter((u) => u.alive);
       if (targets.length == 0) {
@@ -1004,6 +998,7 @@ const spell$3 = {
     sfx: "hurt",
     description: [`Summons a trap that does 30 damage when stepped on`],
     allowNonUnitTarget: true,
+    timeoutMs: 20,
     effect: async (state, card, _quantity, underworld, prediction) => {
       const summonLocation = {
         x: state.castLocation.x,
@@ -1050,6 +1045,7 @@ const spell$2 = {
     thumbnail: "spellmasons-mods/Renes_gimmicks/graphics/icons/Sadism.png",
     sfx: "hurt",
     description: [`Damage to target equal to its attack, you receive ${retaliate * 100}% of that attack damage`],
+    timeoutMs: 20,
     effect: async (state, _card, quantity, underworld, prediction) => {
       const targets = state.targetedUnits.filter((u) => u.alive);
       if (targets.length == 0) {
@@ -1177,6 +1173,8 @@ const spell$1 = {
     thumbnail: "spellmasons-mods/Renes_gimmicks/graphics/icons/Burninig_rage.png",
     sfx: "poison",
     description: [`Each stack causes target to take ${damageMultiplier} damage, but also increases the target's damage by ${attackMultiplier}. Staks increase each turn`],
+    // TODO timeout needs validation
+    timeoutMs: 1e3,
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = state.targetedUnits.filter((u) => u.alive);
       if (targets.length == 0) {
@@ -1264,6 +1262,7 @@ const spell = {
     thumbnail: "spellmasons-mods/Renes_gimmicks/graphics/icons/" + cardId + ".png",
     sfx: "hurt",
     description: [`Target takes some damage it moves. Stacks, casting again replenishes duration up to ${maxDuration} turns. (Updates on turn change, recasts or damage)`],
+    timeoutMs: 20,
     effect: async (state, _card, quantity, underworld, prediction) => {
       const targets = state.targetedUnits.filter((u) => u.alive);
       if (targets.length == 0) {

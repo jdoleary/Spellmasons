@@ -41,6 +41,7 @@ const spell: Spell = {
       '90',
       Math.floor(calculateDamageProportion({ health: 90, healthMax: 100, alive: true }) * 100).toString(),
     ],
+    timeoutMs: 1000,
     effect: async (state, card, quantity, underworld, prediction) => {
       await new Promise<void>((resolve) => {
         // .filter: only target living units

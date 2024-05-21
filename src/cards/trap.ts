@@ -12,6 +12,7 @@ const spell: Spell = {
         expenseScaling: 0,
         probability: 50,
         thumbnail: 'spellIconDelay.png',
+        timeoutMs: 20,
         description: `
 Sets a trap that does ${Pickup.spike_damage} damage.
     `,

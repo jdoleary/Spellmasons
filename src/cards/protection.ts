@@ -27,6 +27,8 @@ const spell: Spell = {
     supportQuantity: true,
     thumbnail: 'spellIconProtection.png',
     description: 'spell_protection',
+    // TODO timeout needs verification
+    timeoutMs: 2000,
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = state.targetedUnits;
       for (let unit of targets) {

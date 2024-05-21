@@ -27,6 +27,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconSoulShard.png',
     description: ['spell_soul_shard'],
+    timeoutMs: 1000,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive && u.faction == state.casterUnit.faction && u != state.casterUnit);

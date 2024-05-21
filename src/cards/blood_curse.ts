@@ -68,6 +68,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: imageName,
     description: ['spell_blood_curse'],
+    timeoutMs: 20,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       for (let unit of state.targetedUnits.filter(u => u.alive)) {

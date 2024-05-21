@@ -22,6 +22,7 @@ const spell: Spell = {
     expenseScaling: 1,
     thumbnail: 'spellIconSwap.png',
     description: 'spell_swap',
+    timeoutMs: 20,
     effect: async (state, card, quantity, underworld, prediction) => {
       const { casterUnit } = state;
       playDefaultSpellSFX(card, prediction);

@@ -25,6 +25,7 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'arrow',
     description: ['spell_arrow_many', arrowCount.toString(), damageDone.toString()],
+    timeoutMs: 600,
     effect: arrowEffect(arrowCount, arrowTripleCardId)
   },
   events: {

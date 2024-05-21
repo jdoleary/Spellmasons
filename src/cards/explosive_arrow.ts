@@ -29,6 +29,7 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'arrow',
     description: ['spell_arrow_explosive', damageDone.toString(), explodeDamage.toString()],
+    timeoutMs: 200,
     effect: arrowEffect(1, explosiveArrowCardId)
   },
   events: {

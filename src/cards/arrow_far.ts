@@ -32,6 +32,7 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'arrow',
     description: ['spell_arrow_far', maxDamage.toString()],
+    timeoutMs: 200,
     effect: arrowEffect(1, arrowFarCardId),
   },
   events: {

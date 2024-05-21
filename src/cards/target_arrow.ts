@@ -32,6 +32,7 @@ const spell: Spell = {
     animationPath: '',
     sfx: '',
     description: 'spell_target_arrow',
+    timeoutMs: 200,
     effect: async (state, card, quantity, underworld, prediction) => {
       let targets: Vec2[] = state.targetedUnits;
       targets = targets.length ? targets : [state.castLocation];

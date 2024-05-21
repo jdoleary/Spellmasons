@@ -31,6 +31,7 @@ const spell: Spell = {
     thumbnail: 'spellIconTargetCursed.png',
     description: 'spell_target_cursed',
     allowNonUnitTarget: true,
+    timeoutMs: 2165,
     effect: async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean) => {
       const targets = state.targetedUnits;
       // Add Target Curse to all targeted units

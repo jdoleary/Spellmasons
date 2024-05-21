@@ -25,6 +25,7 @@ const spell: Spell = {
     animationPath: '',
     sfx: '',
     description: ['spell_execute', `${(executeThreshold * 100).toString()}%`],
+    timeoutMs: 100,
     effect: async (state, card, quantity, underworld, prediction) => {
 
       // Only target units under execute threshold and in range

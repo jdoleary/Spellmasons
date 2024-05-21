@@ -25,6 +25,7 @@ const spell: Spell = {
     thumbnail: 'spellIconFreeze.png',
     animationPath: 'spell-effects/spellFreeze',
     description: 'spell_freeze',
+    timeoutMs: 1150,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);

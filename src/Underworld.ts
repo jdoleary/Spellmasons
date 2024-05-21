@@ -3844,7 +3844,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // Experiments: https://github.com/jdoleary/Spellmasons/issues/683#issuecomment-2120797899
 
           // provide for double the average per quantity timeout as padding
-          const clientCardTimeout = (Cards.cardTimings[card.id] || 1500) * quantity * 2;
+          const clientCardTimeout = (card.timeoutMs || 1500) * quantity * 2;
           console.debug(`Card ${card.id} will timeout in ${clientCardTimeout} milliseonds if it does not complete`);
           const timeoutMs = globalThis.headless ? 1000 : clientCardTimeout;
           await raceTimeout(timeoutMs, `${card.id};Prediction:${prediction}`, cardEffectPromise.then(state => {

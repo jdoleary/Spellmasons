@@ -19,6 +19,7 @@ const spell: Spell = {
     thumbnail: 'spellIconAlchemize.png',
     sfx: 'alchemize',
     description: ['spell_alchemize'],
+    timeoutMs: 920,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target potions
       const targets = state.targetedPickups.filter(p => p.name.includes("Potion"));

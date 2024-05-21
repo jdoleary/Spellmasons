@@ -14,6 +14,7 @@ const spell: Spell = {
     probability: 0,
     expenseScaling: 1,
     thumbnail: 'unknown.png',
+    timeoutMs: WAIT_TIME,
     description: `
     Waits a certain amount of time.  This is useful when recording so spells don't play back to back too quickly
     `,

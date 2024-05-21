@@ -21,6 +21,7 @@ const spell: Spell = {
     supportQuantity: true,
     thumbnail: 'spellIconClone.png',
     description: 'spell_clone',
+    timeoutMs: 400,
     effect: async (state, card, quantity, underworld, prediction) => {
       // Batch find targets that should be cloned
       // Note: They need to be batched so that the new clones don't get cloned

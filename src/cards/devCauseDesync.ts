@@ -1,8 +1,6 @@
 import { Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
-import { CardRarity, probabilityMap } from '../types/commonTypes';
 
-const WAIT_TIME = 500;
 const id = 'Dev Cause Desync';
 const spell: Spell = {
   card: {
@@ -14,6 +12,7 @@ const spell: Spell = {
     probability: 0,
     expenseScaling: 1,
     thumbnail: 'unknown.png',
+    timeoutMs: 20,
     description: `
     Moves the first targeted unit on the client ONLY causing a desync between the server and the client
     `,

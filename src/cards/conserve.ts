@@ -23,6 +23,7 @@ const spell: Spell = {
     thumbnail: 'spellIconConserve.png',
     animationPath: '',
     description: 'spell_conserve',
+    timeoutMs: 20,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units with mana
       const targets = state.targetedUnits.filter(u => u.alive && u.mana > 0);

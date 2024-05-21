@@ -24,6 +24,8 @@ const spell: Spell = {
     onlySelectDeadUnits: true,
     thumbnail,
     description: ['spell_resurrect_toxic', turnsLeftToLive.toString()],
+    // TODO verify this timing
+    timeoutMs: 1000,
     effect: async (state, card, quantity, underworld, prediction) => {
       const animationPromises = [];
       const targets = state.targetedUnits;
