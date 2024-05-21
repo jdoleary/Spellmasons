@@ -1,3 +1,17 @@
+## 1.37.0 - Patch
+fix: Softlock fix attempt 2
+All spells now have builtin timeouts with error reporting to prevent
+softlocks (where the game is working but the turn wont continue).
+This *should* resolve the softlock issue or in the least tell me what's
+causing it.
+
+fix: large memory leak
+HUGE THANKS to DeathmonkeyJ (Github) and @Jace (Discord) for pointing me in the right direction
+
+fix: Force Move desync fix
+All spells that use force move (push, pull, etc) should be MUCH more reliable
+in multiplayer now
+
 ## 1.36.0 - Patch
 ui fix: card-inspect scale
     where cards had greatly varying sizes
