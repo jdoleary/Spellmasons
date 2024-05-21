@@ -850,7 +850,7 @@ const spell$5 = {
     thumbnail: "spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconVengeance.png",
     sfx: "hurt",
     description: [`Deals damage equal to your missing health. This harms you first if you are targeted, then enemies.`],
-    timeoutMs: 20,
+    timeoutMs: 840,
     effect: async (state, card, quantity, underworld, prediction) => {
       let promises = [];
       const targets = state.targetedUnits.filter((u) => u.alive);
@@ -941,8 +941,7 @@ const spell$4 = {
     animationPath,
     sfx: "hurt",
     description: [`Deals 10 to the target and heals you for up to 50% damage done. Healing is not affected by modifiers, including blood curse`],
-    // TODO timeout needs validation
-    timeoutMs: 1e3,
+    timeoutMs: 400,
     effect: async (state, _card, quantity, underworld, prediction) => {
       const targets = state.targetedUnits.filter((u) => u.alive);
       if (targets.length == 0) {

@@ -22,7 +22,7 @@ const spell: Spell = {
     thumbnail: 'spellIconDrown2.png',
     sfx: 'drown',
     description: ['spell_blood_bath', damageDone.toString()],
-    timeoutMs: 100,
+    timeoutMs: 20,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: target all living units that are submerged
       const targets = (prediction ? underworld.unitsPrediction : underworld.units).filter(u => u.alive && u.inLiquid);

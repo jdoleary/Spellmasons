@@ -22,7 +22,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconShove.png',
     description: 'spell_shove',
-    timeoutMs: 70,
+    timeoutMs: 820,
     effect: async (state, card, quantity, underworld, prediction) => {
       let promises = [];
       playDefaultSpellSFX(card, prediction);

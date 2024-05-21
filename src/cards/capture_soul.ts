@@ -22,7 +22,7 @@ const spell: Spell = {
     thumbnail: 'spellIconCaptureSoul.png',
     sfx: 'captureSoul',
     description: ['spell_capture_soul', healthThreshold.toString()],
-    timeoutMs: 900,
+    timeoutMs: 20,
     effect: async (state, card, quantity, underworld, prediction) => {
       const player = state.casterPlayer;
       if (player) {
