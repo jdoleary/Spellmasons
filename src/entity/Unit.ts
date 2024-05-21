@@ -94,6 +94,10 @@ export interface UnitSFX {
 export function isUnit(maybeUnit: any): maybeUnit is IUnit {
   return maybeUnit && maybeUnit.type == 'unit';
 }
+// NOTE: All **optional** props need to be explicitly in the 
+// copyForPredictionUnit Object.assign object
+// or else if they are missing from the real and present in the copy
+// they will not update.
 export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   type: 'unit';
   // A unique id so that units can be identified
@@ -1491,7 +1495,11 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
     // Deep copy modifiers so it doesn't mutate the unit's actual modifiers object
     modifiers: JSON.parse(JSON.stringify(modifiers)),
     shaderUniforms: {},
-    resolveDoneMoving: () => { }
+    resolveDoneMoving: () => { },
+    // NOTE: All **optional** props need to be explicitly in this object
+    // or else if they are missing from the real and present in the copy
+    // they will not update.
+    flaggedForRemoval: u.flaggedForRemoval,
   });
   u.predictionCopy = predictionUnit;
   return predictionUnit;
