@@ -23,8 +23,7 @@ const spell: Spell = {
     onlySelectDeadUnits: true,
     thumbnail,
     description: 'spell_resurrect',
-    // TODO verify this timing
-    timeoutMs: 1000,
+    timeoutMs: 1100,
     effect: async (state, card, quantity, underworld, prediction) => {
       const animationPromises = [];
       const targets = state.targetedUnits;
