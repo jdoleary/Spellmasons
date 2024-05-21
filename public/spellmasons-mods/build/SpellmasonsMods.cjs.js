@@ -610,7 +610,6 @@ const spell$8 = {
     description: [`Consumes target corpse for ${manaRegain} mana. Does not work on player corpses. Unstackable.
 
 Tastes like chicken.`],
-    // TODO timeout needs verification
     timeoutMs: 900,
     effect: async (state, card, quantity, underworld, prediction) => {
       let promises = [];
@@ -1172,8 +1171,7 @@ const spell$1 = {
     thumbnail: "spellmasons-mods/Renes_gimmicks/graphics/icons/Burninig_rage.png",
     sfx: "poison",
     description: [`Each stack causes target to take ${damageMultiplier} damage, but also increases the target's damage by ${attackMultiplier}. Staks increase each turn`],
-    // TODO timeout needs validation
-    timeoutMs: 1e3,
+    timeoutMs: 103,
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = state.targetedUnits.filter((u) => u.alive);
       if (targets.length == 0) {
