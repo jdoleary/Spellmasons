@@ -18,6 +18,7 @@ const spell: Spell = {
     allowNonUnitTarget: true,
     thumbnail: 'spellIconDeathWager.png',
     description: ['spell_death_wager', Math.round(reduceMaxHealthPreportion * 100).toString()],
+    timeoutMs: 20,
     effect: async (state, card, quantity, underworld, prediction) => {
       const player = underworld.players.find(p => p.unit == state.casterUnit);
       if (player) {

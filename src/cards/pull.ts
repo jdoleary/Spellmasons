@@ -17,6 +17,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconPull.png',
     description: 'spell_pull',
+    timeoutMs: 700,
     effect: async (state, card, quantity, underworld, prediction) => {
       let promises = [];
       playDefaultSpellSFX(card, prediction);

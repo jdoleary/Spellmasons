@@ -19,6 +19,7 @@ import * as fortify from './cards/fortify';
 import * as immune from './cards/immune';
 import * as CSSClasses from './CSSClasses';
 import * as log from './log';
+import safeStringify from 'fast-safe-stringify';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import {
@@ -2532,10 +2533,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       return false;
     }
     if (Unit.canAct(player.unit) && !player.endedTurn) {
-      console.log('Game State: \nPlayer can act and has not ended turn yet: ', player);
+      console.log('Game State: Player can act and has not ended turn yet:', globalThis.headless ? safeStringify(player) : player);
       return false;
     }
-    console.log('Game State: \nPlayer has completed turn: ', player);
+    console.log('Game State: Player has completed turn: ', globalThis.headless ? safeStringify(player) : player);
     return true;
   }
   async handleNextHotseatPlayer() {
@@ -3829,7 +3830,27 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
         // Await the cast
         try {
-          effectState = await reportIfTakingTooLong(10000, `${card.id};Prediction:${prediction}`, cardEffectPromise);
+          // Timeouts differ on server vs clients
+          // The server executes the spell as fast as it can so it can aggregate the
+          // sync state and send the spell to the clients.  The clients have
+          // animations and their spells take much longer.
+          // This is the timeout for each card.  Card timeouts were calculated
+          // "per quantity" so that cards that scale their duration with quantity
+          // can have a higher timeout
+          // The Server; however, calculates each card very quickly, so 1 second is
+          // ample padding to finish unless it is hanging in which case we want to timeout
+          // Timings: https://docs.google.com/spreadsheets/d/1NmTIjMnbWclifBaxzm1l4pAcsacuv9fLbH8JhR_umEM/edit#gid=0
+          // Experiments: https://github.com/jdoleary/Spellmasons/issues/683#issuecomment-2120797899
+
+          // provide for double the average per quantity timeout as padding
+          const clientCardTimeout = (card.timeoutMs || 1500) * quantity * 2;
+          if (!prediction) {
+            console.debug(`Card ${card.id} will timeout in ${clientCardTimeout} milliseonds if it does not complete`);
+          }
+          const timeoutMs = globalThis.headless ? 1000 : clientCardTimeout;
+          await raceTimeout(timeoutMs, `${card.id};Prediction:${prediction}`, cardEffectPromise.then(state => {
+            effectState = state;
+          }));
         } catch (e) {
           console.error('Unexpected error from card.effect', e);
         }

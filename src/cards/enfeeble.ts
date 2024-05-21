@@ -27,6 +27,7 @@ const spell: Spell = {
     thumbnail: 'spellIconEnfeeble.png',
     animationPath: 'spell-effects/spellEnfeeble',
     description: ['spell_enfeeble', (statChange).toString()],
+    timeoutMs: 20,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(

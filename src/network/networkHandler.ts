@@ -38,7 +38,7 @@ import { recalcPositionForCards } from '../graphics/ui/CardUI';
 import { isSinglePlayer } from './wsPieSetup';
 import { elEndTurnBtn } from '../HTMLElements';
 import { sendEventToServerHub } from '../RemoteLogging';
-import { distance } from '../jmath/math';
+import { raceTimeout } from '../Promise';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION];
@@ -851,7 +851,9 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       break;
     }
     case MESSAGE_TYPES.SPELL: {
-      globalThis.spellCasting = true;
+      if (!globalThis.headless) {
+        globalThis.spellCasting = true;
+      }
       lastSpellMessageTime = d.time;
       if (fromPlayer) {
         if (underworld.turn_phase == turn_phase.Stalled) {
@@ -1183,19 +1185,31 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
         record.count++;
       }
     }
-    const keyMoment = () => underworld.castCards({
-      casterCardUsage: caster.cardUsageCounts,
-      casterUnit: caster.unit,
-      casterPositionAtTimeOfCast: payload.casterPositionAtTimeOfCast,
-      cardIds: payload.cards,
-      castLocation: clone(payload),
-      prediction: false,
-      outOfRange: false,
-      magicColor: caster.colorMagic,
-      casterPlayer: caster,
-      initialTargetedUnitId: payload.initialTargetedUnitId,
-      initialTargetedPickupId: payload.initialTargetedPickupId,
-    });
+    const keyMoment = () => {
+      const castCardsPromise = underworld.castCards({
+        casterCardUsage: caster.cardUsageCounts,
+        casterUnit: caster.unit,
+        casterPositionAtTimeOfCast: payload.casterPositionAtTimeOfCast,
+        cardIds: payload.cards,
+        castLocation: clone(payload),
+        prediction: false,
+        outOfRange: false,
+        magicColor: caster.colorMagic,
+        casterPlayer: caster,
+        initialTargetedUnitId: payload.initialTargetedUnitId,
+        initialTargetedPickupId: payload.initialTargetedPickupId,
+      });
+      if (globalThis.headless) {
+        // Since each individual card has it's own timeout (see Underworld.ts castCards) even on clients,
+        // this whole spell timeout will only apply on the server to prevent the server from getting stuck.
+        // The server calculates spells very quickly and if it takes a whole 5 seconds, then we have
+        // high confidence that it is hanging.
+        // Experiments: https://github.com/jdoleary/Spellmasons/issues/683#issuecomment-2120797899
+        return raceTimeout(5000, `handleSpell: ${payload.cards}`, castCardsPromise)
+      } else {
+        return castCardsPromise
+      }
+    };
     const colorMagicMedium = lightenColor(caster.colorMagic, 0.3);
     const colorMagicLight = lightenColor(caster.colorMagic, 0.6);
 

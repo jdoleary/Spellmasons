@@ -22,6 +22,7 @@ const spell: Spell = {
     thumbnail: 'spellIconSendMana.png',
     animationPath: 'spell-effects/potionPickup',
     description: ['spell_send_mana', amount.toString()],
+    timeoutMs: 840,
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = state.targetedUnits.filter(u => u.alive);
       let promises = [];

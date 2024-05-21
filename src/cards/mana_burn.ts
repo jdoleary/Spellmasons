@@ -20,6 +20,7 @@ const spell: Spell = {
     thumbnail: 'spellIconManaBurn.png',
     animationPath: 'spell-effects/spellManaBurn',
     description: ['spell_mana_burn', mana_burnt.toString()],
+    timeoutMs: 763,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive && u.mana > 0);

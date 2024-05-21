@@ -28,6 +28,7 @@ const spell: Spell = {
     supportQuantity: true,
     requiresFollowingCard: true,
     description: ['spell_connect', id, numberOfTargetsPerQuantity.toString()],
+    timeoutMs: 912,
     effect: async (state, card, quantity, underworld, prediction) => {
       let limitTargetsLeft = numberOfTargetsPerQuantity * quantity;
       const potentialTargets = underworld.getPotentialTargets(prediction);

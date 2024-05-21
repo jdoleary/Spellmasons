@@ -1,4 +1,3 @@
-import * as Unit from '../entity/Unit';
 import { CardCategory } from '../types/commonTypes';
 import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
@@ -21,6 +20,7 @@ const spell: Spell = {
     animationPath: 'spell-effects/spellHurtCuts',
     sfx: 'hurt2',
     description: ['spell_slash', damageDone.toString()],
+    timeoutMs: 405,
     effect: async (state, card, quantity, underworld, prediction) => {
       return await slashEffect(state, card, quantity, underworld, prediction, damageDone, slashScale);
     },

@@ -23,6 +23,7 @@ const spell: Spell = {
     thumbnail: 'spellIconDecoy.png',
     description: 'spell_summon_decoy',
     allowNonUnitTarget: true,
+    timeoutMs: 20,
     effect: async (state, card, quantity, underworld, prediction) => {
       const unitId = 'decoy';
       const sourceUnit = allUnits[unitId];

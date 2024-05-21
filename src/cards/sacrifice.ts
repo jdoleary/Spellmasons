@@ -24,6 +24,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconSacrifice.png',
     description: ['spell_sacrifice', damage.toString()],
+    timeoutMs: 900,
     effect: async (state, card, quantity, underworld, prediction) => {
       const caster = state.casterUnit;
       // .filter: only target living units of the same faction

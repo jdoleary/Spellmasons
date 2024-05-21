@@ -27,6 +27,7 @@ const spell: Spell = {
     thumbnail: 'spellIconHeal3.png',
     animationPath: 'spell-effects/potionPickup',
     description: ['spell_heal_mass', healAmount.toString()],
+    timeoutMs: 1000,
     effect: async (state, card, quantity, underworld, prediction) => {
       const units = (prediction ? underworld.unitsPrediction : underworld.units)
         .filter(u => u.alive && u.faction == state.casterUnit.faction);

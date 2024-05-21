@@ -27,6 +27,8 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'arrow',
     description: ['spell_arrow_fork', damageDone.toString()],
+    // Arrows time depends on how far they have to fly
+    timeoutMs: 1100,
     effect: arrowEffect(1, arrowForkCardId)
   },
   events: {

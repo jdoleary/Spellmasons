@@ -24,6 +24,7 @@ const spell: Spell = {
     onlySelectDeadUnits: true,
     thumbnail,
     description: ['spell_resurrect_weak', (resStatAmount * 100).toString()],
+    timeoutMs: 1100,
     effect: async (state, card, quantity, underworld, prediction) => {
       const animationPromises = [];
       const targets = state.targetedUnits;

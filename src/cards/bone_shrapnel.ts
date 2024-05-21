@@ -24,6 +24,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconCorpseExplosion.png',
     description: [`spell_bone_shrapnel`, damage.toString()],
+    timeoutMs: 100,
     effect: async (state, card, quantity, underworld, prediction) => {
       // Only explode corpses at time of cast
       const targetedUnits = state.targetedUnits.filter(u => !u.alive);

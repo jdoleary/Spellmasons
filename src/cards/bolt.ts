@@ -25,6 +25,7 @@ const spell: Spell = {
     supportQuantity: true,
     requiresFollowingCard: false,
     description: ['spell_bolt', damage.toString()],
+    timeoutMs: 713,
     effect: async (state, card, quantity, underworld, prediction) => {
       // Bolt has functionally unlimited targets
       let limitTargetsLeft = 10_000;

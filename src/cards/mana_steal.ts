@@ -22,6 +22,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconManaSteal.png',
     description: ['spell_mana_steal', base_mana_stolen.toString()],
+    timeoutMs: 840,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive && u.mana > 0);

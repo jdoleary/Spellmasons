@@ -24,6 +24,7 @@ const spell: Spell = {
     animationPath,
     sfx: 'hurt',
     description: ['spell_slash', damageDone.toString()],
+    timeoutMs: 405,
     effect: async (state, card, quantity, underworld, prediction) => {
       return await slashEffect(state, card, quantity, underworld, prediction, damageDone, 1);
     },

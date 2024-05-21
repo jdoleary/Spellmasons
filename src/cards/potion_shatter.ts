@@ -24,6 +24,7 @@ const spell: Spell = {
     thumbnail: 'spellIconPotionBreak.png',
     sfx: 'bloatExplosion',
     description: ['spell_potion_shatter', baseEffectRadius.toString()],
+    timeoutMs: 20,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target potions
       const targets = state.targetedPickups.filter(p => p.name.includes("Potion"));
