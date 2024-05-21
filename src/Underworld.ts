@@ -3825,7 +3825,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         if (!prediction) {
           test_startCheckPromises(card.id);
         }
-        const s1 = performance.now();
         const cardEffectPromise = card.effect(effectState, card, quantity, this, prediction, outOfRange);
         await this.awaitForceMoves(prediction);
 
@@ -3845,7 +3844,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
           // provide for double the average per quantity timeout as padding
           const clientCardTimeout = (card.timeoutMs || 1500) * quantity * 2;
-          console.debug(`Card ${card.id} will timeout in ${clientCardTimeout} milliseonds if it does not complete`);
+          if (!prediction) {
+            console.debug(`Card ${card.id} will timeout in ${clientCardTimeout} milliseonds if it does not complete`);
+          }
           const timeoutMs = globalThis.headless ? 1000 : clientCardTimeout;
           await raceTimeout(timeoutMs, `${card.id};Prediction:${prediction}`, cardEffectPromise.then(state => {
             effectState = state;
