@@ -18,6 +18,7 @@ const spell: Spell = {
     healthCost: 0,
     probability: probabilityMap[CardRarity.FORBIDDEN],
     expenseScaling: 4,
+    cooldown: 1,
     supportQuantity: true,
     thumbnail: 'spellIconClone.png',
     description: 'spell_clone',
