@@ -533,12 +533,6 @@ function addListenersToCardElement(
         );
       }
     } else {
-      // Don't let card get added if it's on cooldown
-      if (getCardCooldown(cardId, underworld)) {
-        floatingText({ coords: underworld.getMousePos(), text: i18n(['card cooldown', getCardCooldown(cardId, underworld).toString()]), style: { fill: 'red' } });
-        playSFXKey('deny');
-        return;
-      }
       cardsSelected.push(cardId);
       selectCard(player, element, cardId, underworld);
     }
@@ -601,6 +595,17 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
       await runPredictions(underworld);
     }
 
+    console.log("get cooldown", getCardCooldown(cardId, underworld, true));
+    if (getCardCooldown(cardId, underworld, true)) {
+      floatingText({
+        coords: underworld.getMousePos(),
+        text: i18n(['card cooldown', getCardCooldown(cardId, underworld, true).toString()]),
+        style: { fill: colors.errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
+      })
+      explain(EXPLAIN_END_TURN);
+      deselectLastCard(underworld);
+    }
+
     const predictionPlayerUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id);
     if (predictionPlayerUnit) {
       if (predictionPlayerUnit.mana < 0) {
@@ -611,7 +616,6 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
         })
         explain(EXPLAIN_END_TURN);
         deselectLastCard(underworld);
-
       }
 
       if (predictionPlayerUnit.health < 0) {
@@ -621,7 +625,6 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
           style: { fill: colors.errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
         })
         deselectLastCard(underworld);
-
       }
     } else {
       console.warn('Unexpected: predictionPlayerUnit is undefined');

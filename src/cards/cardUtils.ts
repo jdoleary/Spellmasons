@@ -25,13 +25,12 @@ export function levelsUntilCardIsEnabled(cardId: string, underworld?: Underworld
     return (cardState.disabledUntilLevel || 0) - underworld.levelIndex
 
 }
-export function getCardCooldown(cardId: string, underworld?: Underworld): number {
+export function getCardCooldown(cardId: string, underworld?: Underworld, prediction?: boolean): number {
     if (!globalThis.player || !underworld) {
         return 0;
     }
     const cardState = globalThis.player.spellState[cardId] || {};
-    return cardState.cooldown;
-
+    return prediction ? cardState.cooldownPrediction : cardState.cooldown;
 }
 export function playSpellSFX(sfxKey: string, prediction: boolean) {
     if (globalThis.headless) {

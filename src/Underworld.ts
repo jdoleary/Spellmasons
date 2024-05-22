@@ -3859,9 +3859,15 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         }
 
         if (!args.castForFree && !effectState.shouldRefundLastSpell) {
+          const nextCardId = effectState.cardIds[index + 1];
           // Add cooldown
-          if (!prediction && effectState.casterPlayer && card.cooldown) {
-            Object.assign(effectState.casterPlayer.spellState[card.id] || {}, { cooldown: card.cooldown });
+          if (effectState.casterPlayer && card.cooldown) {
+            if (!prediction) {
+              Object.assign(effectState.casterPlayer.spellState[card.id] || {}, { cooldown: card.cooldown });
+            } else if ((nextCardId != undefined && nextCardId != cardId)) {
+              Object.assign(effectState.casterPlayer.spellState[card.id] || {}, { cooldownPrediction: card.cooldown });
+              // TODO - This is not assigning correctly, and accessing it returns undefined
+            }
           }
           // Compute spell mana/health cost and add card usage count
           // This happens after the spell is cast so that fizzle spells can be refunded
