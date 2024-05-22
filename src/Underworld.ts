@@ -3777,6 +3777,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     const castingParticleEmitter = makeRisingParticles(effectState.casterUnit, prediction, hexToString(magicColor || 0xffffff), -1);
 
+    // remove prediction spellState data
+    for (let spellStateInst of Object.values(effectState.casterPlayer?.spellState || {})) {
+      spellStateInst.cooldownPrediction = spellStateInst.cooldown;
+    }
+
     // "quantity" is the number of identical cards cast in a row. Rather than casting the card sequentially
     // quantity allows the card to have a unique scaling effect when cast sequentially after itself.
     let quantity = 1;
@@ -3862,11 +3867,14 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           const nextCardId = effectState.cardIds[index + 1];
           // Add cooldown
           if (effectState.casterPlayer && card.cooldown) {
+            // Make sure spellState exists for the card we want to put on cooldown
+            if (!effectState.casterPlayer.spellState[cardId]) {
+              effectState.casterPlayer.spellState[cardId] = {};
+            }
             if (!prediction) {
-              Object.assign(effectState.casterPlayer.spellState[card.id] || {}, { cooldown: card.cooldown });
+              Object.assign(effectState.casterPlayer.spellState[card.id], { cooldown: card.cooldown });
             } else if ((nextCardId != undefined && nextCardId != cardId)) {
-              Object.assign(effectState.casterPlayer.spellState[card.id] || {}, { cooldownPrediction: card.cooldown });
-              // TODO - This is not assigning correctly, and accessing it returns undefined
+              Object.assign(effectState.casterPlayer.spellState[card.id], { cooldownPrediction: card.cooldown });
             }
           }
           // Compute spell mana/health cost and add card usage count
