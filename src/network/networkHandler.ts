@@ -1164,6 +1164,8 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
 
   // Only allow casting during the PlayerTurns phase
   if (underworld.turn_phase === turn_phase.PlayerTurns) {
+    Player.lockStamina(caster.unit, underworld);
+
     globalThis.animatingSpells = true;
     let animationKey = 'playerAttackEpic';
     if (payload.cards.length < 3) {
