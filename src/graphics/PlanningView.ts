@@ -215,6 +215,7 @@ export function drawWalkRope(target: Vec2, underworld: Underworld) {
         lastPoint = point;
       }
     }
+    drawOuterStaminaCircle(globalThis.player.staminaStartPoint, globalThis.player.lockedStaminaMax, globalThis.walkPathGraphics);
     drawCastRangeCircle(lastStaminaPoint, globalThis.player.unit.attackRange, globalThis.walkPathGraphics, 'Potential Cast Range');
     // Draw the points along the path at which the unit will stop on each turn
     for (let i = 0; i < turnStopPoints.length; i++) {
@@ -240,6 +241,24 @@ export function drawWalkRope(target: Vec2, underworld: Underworld) {
     }
   }
 
+}
+export function drawInnerStaminaCircle(point: Vec2, range: number, graphics?: Graphics) {
+  if (graphics) {
+    // Draw remaining walk range after locking in
+    // Copied from drawUICircle
+    graphics.lineStyle(2, colors.stamina, 0.5)
+    graphics.endFill();
+    graphics.drawCircle(point.x, point.y, range);
+  }
+}
+export function drawOuterStaminaCircle(point: Vec2, range: number, graphics?: Graphics) {
+  if (graphics) {
+    // Draw full walk range
+    // Copied from drawUICircle
+    graphics.lineStyle(2, colors.stamina, 1)
+    graphics.endFill();
+    graphics.drawCircle(point.x, point.y, range);
+  }
 }
 function drawCastRangeCircle(point: Vec2, range: number, graphics?: Graphics, text: string = 'Cast Range') {
   if (graphics) {

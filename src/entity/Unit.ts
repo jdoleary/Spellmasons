@@ -53,6 +53,7 @@ import { darkTideId } from '../cards/dark_tide';
 import { GORU_UNIT_ID } from './units/goru';
 import { undyingModifierId } from '../modifierUndying';
 import { primedCorpseId } from '../modifierPrimedCorpse';
+import { lockStamina } from './Player';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -1370,6 +1371,10 @@ export async function startTurnForUnits(units: IUnit[], underworld: Underworld, 
   for (let unit of units.filter(u => u.alive)) {
     if (unit.stamina < unit.staminaMax) {
       unit.stamina = unit.staminaMax;
+    }
+
+    if (unit.unitType == UnitType.PLAYER_CONTROLLED) {
+      lockStamina(unit, underworld);
     }
   }
 

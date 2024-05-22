@@ -753,6 +753,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
             cameraAutoFollow(true);
           }
           Unit.setLocation(fromPlayer.unit, payload, underworld);
+          Player.lockStamina(fromPlayer.unit, underworld);
           // Trigger 'everyLevel' attributePerks
           // now that the player has spawned in at the new level
           const perkRandomGenerator = seedrandom(getUniqueSeedString(underworld, fromPlayer));

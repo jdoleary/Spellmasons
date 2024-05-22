@@ -16,6 +16,8 @@ import {
   runPredictions,
   updateTooltipSelection,
   updateTooltipSelectionWhileSpawning,
+  drawOuterStaminaCircle,
+  drawInnerStaminaCircle,
 } from '../PlanningView';
 import { toggleMenu, View } from '../../views';
 import * as config from '../../config';
@@ -539,6 +541,10 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
             // runPredictionsIdleCallbackId = requestIdleCallback(() => {
             runPredictions(underworld);
             // })
+
+            // Draw Stamina Circles while moving
+            drawOuterStaminaCircle(globalThis.player.staminaStartPoint, globalThis.player.lockedStaminaMax, walkPathGraphics);
+            drawInnerStaminaCircle(globalThis.player.unit, globalThis.player.unit.stamina, walkPathGraphics);
 
             // Send current player movements to server
             sendMovePlayer(underworld);

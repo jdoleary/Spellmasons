@@ -52,7 +52,7 @@ import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
 import Events from './Events';
 import { UnitSource, allUnits } from './entity/units';
-import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, drawUnitMarker, isOutOfBounds, runPredictions, updatePlanningView } from './graphics/PlanningView';
+import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, drawInnerStaminaCircle, drawUnitMarker, drawOuterStaminaCircle, isOutOfBounds, runPredictions, updatePlanningView } from './graphics/PlanningView';
 import { chooseObjectWithProbability, chooseOneOfSeeded, getUniqueSeedString, prng, randInt, SeedrandomState } from './jmath/rand';
 import { calculateCostForSingleCard } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle, closestLineSegmentIntersection } from './jmath/lineSegment';
@@ -695,15 +695,35 @@ export default class Underworld {
         // Move towards target
         const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path.points[0], u.moveSpeed * deltaTime)
         let moveDist = 0;
-        // For now, only AI units will collide with each other
-        // This is because the collisions were causing issues with player movement that I don't
-        // have time to solve at the moment.
+
         if (u.unitType == UnitType.PLAYER_CONTROLLED) {
-          // Player units don't collide, they just move, and pathfinding keeps
-          // them from moving through walls
-          moveDist = math.distance(u, stepTowardsTarget);
-          u.x = stepTowardsTarget.x;
-          u.y = stepTowardsTarget.y;
+          const player = this.players.find(p => p.unit == u);
+          if (player) {
+            const remainingStamina = player.lockedStaminaMax - math.distance(player.staminaStartPoint, stepTowardsTarget);
+            if (remainingStamina > 0) {
+              u.stamina = remainingStamina;
+              // Player units don't collide, they just move, and pathfinding keeps
+              // them from moving through walls
+              u.x = stepTowardsTarget.x;
+              u.y = stepTowardsTarget.y;
+            } else {
+              // TODO - Smoothly walk around edge of circle
+              // Problem: Doesn't currently use pathfinding
+
+              // Find point between desired destination and stamina start along max walk range
+              // const newTargetLocation = math.getCoordsAtDistanceTowardsTarget(player.staminaStartPoint, u.path.targetPosition, player.lockedStaminaMax);
+              // const newStepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, newTargetLocation, u.moveSpeed * deltaTime)
+
+              // const remainingStamina = player.lockedStaminaMax - math.distance(player.staminaStartPoint, newStepTowardsTarget);
+              // if (remainingStamina > 0) {
+              //   u.stamina = remainingStamina;
+              //   // Player units don't collide, they just move, and pathfinding keeps
+              //   // them from moving through walls
+              //   u.x = newStepTowardsTarget.x;
+              //   u.y = newStepTowardsTarget.y;
+              // }
+            }
+          }
         } else {
           // AI collide with each other and walls
           const originalPosition = Vec.clone(u);

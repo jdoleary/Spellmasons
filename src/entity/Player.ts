@@ -104,6 +104,8 @@ export interface IPlayer {
   stats: Stats;
   cursesChosen: number;
   statPointsUnspent: number;
+  staminaStartPoint: { x: number, y: number };
+  lockedStaminaMax: number;
 }
 export function inPortal(player: IPlayer): boolean {
   // Note: Even though inPortal can be determined by player.isSpawned,
@@ -229,6 +231,8 @@ export function create(clientId: string, playerId: string, underworld: Underworl
       totalKills: 0
     },
     statPointsUnspent: 0,
+    staminaStartPoint: { x: 0, y: 0 },
+    lockedStaminaMax: 0,
   };
   player.unit.originalLife = true;
   // Player units get full mana every turn
@@ -473,6 +477,15 @@ export function syncLobby(underworld: Underworld) {
     }).join('');
   }
 }
+
+export function lockStamina(unit: Unit.IUnit, underworld: Underworld) {
+  const player = underworld.players.find(p => p.unit == unit);
+  if (player) {
+    player.staminaStartPoint = { x: unit.x, y: unit.y };
+    player.lockedStaminaMax = unit.stamina;
+  }
+}
+
 export function enterPortal(player: IPlayer, underworld: Underworld) {
   console.log(`Player ${player.clientId}/${player.name} entered portal.`);
   resetPlayerForSpawn(player, underworld);
