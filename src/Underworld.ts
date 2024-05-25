@@ -2585,7 +2585,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     Player.updateGlobalRefToPlayerIfCurrentClient(player);
     CardUI.recalcPositionForCards(globalThis.player, this);
     CardUI.syncInventory(undefined, this);
-    await runPredictions(this);
+    await raceTimeout(10_000, 'hotseat runPredictions', runPredictions(this));
 
     // For hotseat, whenever a player ends their turn, check if the current player
     // has upgrades to choose and if so, show the upgrade button
