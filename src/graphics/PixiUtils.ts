@@ -923,7 +923,14 @@ export function startBloodParticleSplatter(underworld: Underworld, damageOrigin:
   if (globalThis.headless || globalThis.noGore) {
     return;
   }
-  const bloodAmount = options ? options.numberOfParticles : randInt(30, 60);
+  // If there are a lot of bloods being calculated lower the next
+  // bloods amount proportionally so as to not slow down the computer.
+  // ---
+  // FPS Divider is used to decrease the number of particles if 
+  // there are too many being animated at once (should never be less than 1);
+  const FPSDivider = Math.max(1, underworld.bloods.length / 300);
+  const idealNumberOfBloodParticles = options ? options.numberOfParticles : randInt(30, 60)
+  const bloodAmount = Math.max(1, idealNumberOfBloodParticles / FPSDivider);
   const angle = getAngleBetweenVec2sYInverted(damageOrigin, target);
   for (let i = 0; i < bloodAmount; i++) {
     const isDamageFromSelf = equal(damageOrigin, target);

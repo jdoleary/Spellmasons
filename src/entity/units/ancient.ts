@@ -52,12 +52,13 @@ const unit: UnitSource = {
     if (attackTargets && attackTargets.length && canAttackTarget && unit.mana >= unit.manaCostToCast) {
       let promises = [];
       unit.mana -= unit.manaCostToCast;
+      const numberOfAllyAncients = underworld.units.reduce((sum, cur) => cur.faction == unit.faction && cur.unitSourceId == unit.unitSourceId ? sum + 1 : sum, 0);
       for (let i = 0; i < numberOfTargets; i++) {
         const attackTarget = attackTargets[i];
         if (attackTarget) {
           Unit.orient(unit, attackTarget);
           makeAncientParticles(unit, false);
-          promises.push(makeManaTrail(unit, attackTarget, underworld, '#5a7879', '#304748').then(() => {
+          promises.push(makeManaTrail(unit, attackTarget, underworld, '#5a7879', '#304748', numberOfAllyAncients).then(() => {
             Unit.takeDamage({
               unit: attackTarget,
               amount: unit.damage,
