@@ -641,6 +641,12 @@ export default class Underworld {
             }
           }
         }
+
+        // Player stamina circle is locked after they are affected by a force move
+        if (Unit.isUnit(forceMoveInst.pushedObject)) {
+          Player.lockStamina(forceMoveInst.pushedObject, this);
+        }
+
         // Remove it from forceMove array once the distance has been covers
         // This works even if collisions prevent the unit from moving since
         // distance is modified even if the unit doesn't move each loop
