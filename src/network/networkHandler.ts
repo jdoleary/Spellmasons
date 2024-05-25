@@ -909,23 +909,35 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       } else {
         console.error('Unable to end turn because caster is undefined');
       }
-
-      // Extra protection against end turn desync
-      // https://github.com/jdoleary/Spellmasons/issues/683
       if (globalThis.headless) {
-        for (let clientId of payload.playersTurnEnded) {
-          const player = underworld.players.find(up => up.clientId == clientId);
-          if (player) {
-            if (!player.endedTurn) {
-              console.error('EndTurnGuard: Force ending player turn')
-              await underworld.endPlayerTurn(player);
+        // Add server's playersTurnEnded state so clients can update lobby
+        underworld.pie.sendData({
+          skipHostAppHandler: true,
+          // Spoof the client so it knows which player cast
+          asFromClient: d.fromClient,
+          ...payload,
+          playersTurnEnded: underworld.players.filter(p => p.endedTurn).map(p => p.clientId)
+        });
+      } else {
+        if (payload.playersTurnEnded) {
+          for (const player of underworld.players) {
+            const isTurnEndedOnServer = payload.playersTurnEnded.find((clientId: string) => clientId == player.clientId);
+            // Sync ended turn state
+            if (player && player.endedTurn !== isTurnEndedOnServer) {
+              if (isTurnEndedOnServer) {
+                await underworld.endPlayerTurn(player);
+              } else {
+                player.endedTurn = false;
+              }
             }
-          } else {
-            console.log('EndTurnGuard: Player', clientId, payload)
-            console.error('EndTurnGuard: Unable to find player by clientId for end turn extra protection')
+
           }
+          Player.syncLobby(underworld);
+        } else {
+          console.error('Unexpected: Client recieving END_TURN message should include playersTurnEnded from server.')
         }
       }
+
       break;
     }
     case MESSAGE_TYPES.ADMIN_COMMAND: {

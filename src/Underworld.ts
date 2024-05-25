@@ -2879,7 +2879,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // so they they don't cover the screen while AI take their turn
           clearSpellEffectProjection(this);
           clearTints(this);
-          this.pie.sendData({ type: MESSAGE_TYPES.END_TURN, playersTurnEnded: this.players.filter(p => p.endedTurn).map(p => p.clientId) });
+          this.pie.sendData({ type: MESSAGE_TYPES.END_TURN });
         }
       }
     }
