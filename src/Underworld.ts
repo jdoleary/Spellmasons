@@ -699,13 +699,36 @@ export default class Underworld {
 
       if (u.path && u.path.points[0] && u.stamina > 0 && takeAction) {
         // Move towards target
-        const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path.points[0], u.moveSpeed * deltaTime)
+        const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path.points[0], u.moveSpeed * deltaTime);
         let moveDist = 0;
 
         if (u.unitType == UnitType.PLAYER_CONTROLLED) {
           const player = this.players.find(p => p.unit == u);
           if (player) {
-            const remainingStamina = player.lockedStaminaMax - math.distance(player.staminaStartPoint, stepTowardsTarget);
+            let remainingStamina = player.lockedStaminaMax;
+
+            // UsePath is a testing boolean for https://github.com/jdoleary/Spellmasons/pull/768
+            // and is used to switch between two stamina modes
+            // When false, the player can walk anywhere within the stamina circle
+            // When true, the path can only walk (stamina) units from the center via path distance
+            // It can be safely removed later once a stamina mode is decided on
+            const usePath = false;
+            if (usePath) {
+              // Uses path distance to limit movement
+              const pathFromStart = this.calculatePath(undefined, player.staminaStartPoint, stepTowardsTarget);
+              let lastPoint: Vec2 = player.staminaStartPoint;
+              for (let i = 0; i < pathFromStart.points.length; i++) {
+                const point = pathFromStart.points[i];
+                if (point) {
+                  remainingStamina -= math.distance(lastPoint, point);
+                  lastPoint = point;
+                }
+              }
+            } else {
+              // Uses the stamina circle to limit movement
+              remainingStamina -= math.distance(player.staminaStartPoint, stepTowardsTarget);
+            }
+
             if (remainingStamina > 0) {
               u.stamina = remainingStamina;
               // Player units don't collide, they just move, and pathfinding keeps
