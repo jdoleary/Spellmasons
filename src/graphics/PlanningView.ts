@@ -177,8 +177,6 @@ export function drawWalkRope(target: Vec2, underworld: Underworld) {
   walkRopePath = underworld.calculatePath(walkRopePath, round(globalThis.player.unit), round(target));
   const { points: currentPlayerPath } = walkRopePath;
   if (currentPlayerPath[0]) {
-    const turnStopPoints = pointsEveryXDistanceAlongPath(globalThis.player.unit, currentPlayerPath, globalThis.player.unit.staminaMax, globalThis.player.unit.staminaMax - globalThis.player.unit.stamina);
-    globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
     // Use this similarTriangles calculation to make the line pretty so it doesn't originate from the exact center of the
     // other player but from the edge instead
     const startPoint = math.distance(globalThis.player.unit, currentPlayerPath[0]) <= config.COLLISION_MESH_RADIUS
@@ -186,11 +184,10 @@ export function drawWalkRope(target: Vec2, underworld: Underworld) {
       : Vec.subtract(globalThis.player.unit, math.similarTriangles(globalThis.player.unit.x - currentPlayerPath[0].x, globalThis.player.unit.y - currentPlayerPath[0].y, math.distance(globalThis.player.unit, currentPlayerPath[0]), config.COLLISION_MESH_RADIUS));
     globalThis.walkPathGraphics?.moveTo(startPoint.x, startPoint.y);
 
-    let lastPoint: Vec2 = globalThis.player.unit;
     // Default to current unit position, in the event that they have no stamina this will be the point
     // at which they are out of stamina.  If they do have stamina it will be reassigned later
     let lastStaminaPoint: Vec2 = globalThis.player.unit;
-    const distanceLeftToMove = globalThis.player.unit.stamina;
+    let lastPoint: Vec2 = globalThis.player.unit;
     let hasLeftStaminaCircle = false;
     for (let i = 0; i < currentPlayerPath.length; i++) {
       const point = currentPlayerPath[i];
@@ -203,12 +200,15 @@ export function drawWalkRope(target: Vec2, underworld: Underworld) {
           // Next point is within stamina circle, draw in yellow
           globalThis.walkPathGraphics?.lineStyle(4, colors.stamina, 1.0);
           globalThis.walkPathGraphics?.lineTo(point.x, point.y);
+          lastStaminaPoint = point;
         } else {
           // Next point crosses stamina circle, draw yellow to intersection, then white
           hasLeftStaminaCircle = true;
           let intersection = findCircleLineIntersections(globalThis.player.staminaStartPoint, globalThis.player.lockedStaminaMax, lastPoint, point)[0];
 
           if (intersection) {
+            lastStaminaPoint = intersection;
+
             globalThis.walkPathGraphics?.lineStyle(4, colors.stamina, 1.0);
             globalThis.walkPathGraphics?.lineTo(intersection.x, intersection.y);
             globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
@@ -221,27 +221,31 @@ export function drawWalkRope(target: Vec2, underworld: Underworld) {
         lastPoint = point;
       }
     }
+
+    // Starting at the player's last stamina point
+    // Get a point every maxStamina units along the displayed path
+    // To show how far the player could walk each turn
+    const futurePath = underworld.calculatePath(undefined, round(lastStaminaPoint), round(target));
+    const turnStopPoints = pointsEveryXDistanceAlongPath(lastStaminaPoint, futurePath.points, globalThis.player.unit.staminaMax, globalThis.player.unit.staminaMax);
+    // Add a point at the end
+    const lastPointInPath = futurePath.points[futurePath.points.length - 1];
+    if (lastPointInPath) {
+      turnStopPoints.push(lastPointInPath);
+    }
+
     // Draw the points along the path at which the unit will stop on each turn
     for (let i = 0; i < turnStopPoints.length; i++) {
-      if (i == 0 && distanceLeftToMove > 0) {
-        globalThis.walkPathGraphics?.lineStyle(4, colors.stamina, 1.0);
-      } else {
-        globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
-      }
       const point = turnStopPoints[i];
       if (point) {
+        // First point is always stamina colored, rest are white
+        if (i == 0) {
+          globalThis.walkPathGraphics?.lineStyle(4, colors.stamina, 1.0);
+        } else {
+          globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
+        }
+
         globalThis.walkPathGraphics?.drawCircle(point.x, point.y, 3);
       }
-    }
-    if (turnStopPoints.length == 0 && distanceLeftToMove > 0) {
-      globalThis.walkPathGraphics?.lineStyle(4, colors.stamina, 1.0);
-    } else {
-      globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
-    }
-    // Draw a stop circle at the end
-    const lastPointInPath = currentPlayerPath[currentPlayerPath.length - 1]
-    if (lastPointInPath) {
-      globalThis.walkPathGraphics?.drawCircle(lastPointInPath.x, lastPointInPath.y, 3);
     }
 
     drawOuterStaminaCircle(globalThis.player.staminaStartPoint, globalThis.player.lockedStaminaMax, globalThis.walkPathGraphics);
