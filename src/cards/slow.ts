@@ -58,7 +58,6 @@ const spell: Spell = {
     thumbnail: 'spellIconSlow.png',
     animationPath: '',
     description: ['spell_slow', Math.floor(changeProportion * 100).toString()],
-    timeoutMs: 20,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);

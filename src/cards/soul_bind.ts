@@ -24,7 +24,6 @@ const spell: Spell = {
     thumbnail: 'spellIconSoulBind.png',
     animationPath: 'spell-effects/spellDebilitate',
     description: ['spell_soul_bind'],
-    timeoutMs: 715,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);

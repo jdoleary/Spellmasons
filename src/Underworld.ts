@@ -3830,27 +3830,17 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
         // Await the cast
         try {
-          // Timeouts differ on server vs clients
-          // The server executes the spell as fast as it can so it can aggregate the
-          // sync state and send the spell to the clients.  The clients have
-          // animations and their spells take much longer.
-          // This is the timeout for each card.  Card timeouts were calculated
-          // "per quantity" so that cards that scale their duration with quantity
-          // can have a higher timeout
-          // The Server; however, calculates each card very quickly, so 1 second is
-          // ample padding to finish unless it is hanging in which case we want to timeout
-          // Timings: https://docs.google.com/spreadsheets/d/1NmTIjMnbWclifBaxzm1l4pAcsacuv9fLbH8JhR_umEM/edit#gid=0
-          // Experiments: https://github.com/jdoleary/Spellmasons/issues/683#issuecomment-2120797899
-
-          // provide for double the average per quantity timeout as padding
-          const clientCardTimeout = (card.timeoutMs || 1500) * quantity * 2;
-          if (!prediction) {
-            console.debug(`Card ${card.id} will timeout in ${clientCardTimeout} milliseonds if it does not complete`);
+          if (globalThis.headless) {
+            // The server should timeout a card if it is hanging.
+            // The Server; however, calculates each card very quickly, so 1 second is
+            // ample padding to finish unless it is hanging in which case we want to timeout
+            await raceTimeout(1000, `${card.id};Prediction:${prediction}`, cardEffectPromise.then(state => {
+              // Note: Using .then so that effect state is ONLY set if the promise succeeds and does not timeout
+              effectState = state;
+            }));
+          } else {
+            effectState = await cardEffectPromise;
           }
-          const timeoutMs = globalThis.headless ? 1000 : clientCardTimeout;
-          await raceTimeout(timeoutMs, `${card.id};Prediction:${prediction}`, cardEffectPromise.then(state => {
-            effectState = state;
-          }));
         } catch (e) {
           console.error('Unexpected error from card.effect', e);
         }

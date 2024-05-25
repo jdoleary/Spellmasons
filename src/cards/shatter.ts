@@ -27,7 +27,6 @@ const spell: Spell = {
     sfx: 'shatter',
     thumbnail: 'spellIconShatter.png',
     description: [`spell_shatter`, damage.toString()],
-    timeoutMs: 100,
     effect: async (state, card, quantity, underworld, prediction) => {
       // Only target frozen units
       const targetedUnits = state.targetedUnits.filter(u => u.modifiers[freezeCardId]);

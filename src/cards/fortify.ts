@@ -25,7 +25,6 @@ const spell: Spell = {
     thumbnail: 'spellIconFortify.png',
     animationPath: 'spell-effects/spellShield',
     description: ['spell_fortify', Math.round(DAMGAGE_REDUCTION_PROPORTION * 100).toString()],
-    timeoutMs: 1515,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);

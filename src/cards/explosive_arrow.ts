@@ -29,8 +29,6 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'arrow',
     description: ['spell_arrow_explosive', damageDone.toString(), explodeDamage.toString()],
-    // Arrows time depends on how far they have to fly
-    timeoutMs: 1100,
     effect: arrowEffect(1, explosiveArrowCardId)
   },
   events: {

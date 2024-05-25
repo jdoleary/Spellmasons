@@ -21,7 +21,6 @@ const spell: Spell = {
     description: 'spell_fling',
     allowNonUnitTarget: true,
     ignoreRange: true,
-    timeoutMs: 700,
     effect: async (state, card, quantity, underworld, prediction) => {
       playDefaultSpellSFX(card, prediction);
       await forcePushTowards(state.casterUnit, state.castLocation, defaultPushDistance * quantity, underworld, prediction);

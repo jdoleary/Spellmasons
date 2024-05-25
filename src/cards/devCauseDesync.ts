@@ -12,7 +12,6 @@ const spell: Spell = {
     probability: 0,
     expenseScaling: 1,
     thumbnail: 'unknown.png',
-    timeoutMs: 20,
     description: `
     Moves the first targeted unit on the client ONLY causing a desync between the server and the client
     `,

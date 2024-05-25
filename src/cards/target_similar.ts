@@ -26,7 +26,6 @@ const spell: Spell = {
     requiresFollowingCard: true,
     description: 'spell_target_similar',
     allowNonUnitTarget: true,
-    timeoutMs: 400,
     effect: targetSimilarEffect(1),
   }
 };

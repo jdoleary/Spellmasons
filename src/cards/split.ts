@@ -109,7 +109,6 @@ const spell: Spell = {
     expenseScaling: 2,
     thumbnail: 'spellIconSplit.png',
     description: ['spell_split', splitLimit.toString()],
-    timeoutMs: 300,
     effect: async (state, card, quantity, underworld, prediction) => {
       // Batch find targets that should be cloned
       // Note: They need to be batched so that the new clones don't get cloned

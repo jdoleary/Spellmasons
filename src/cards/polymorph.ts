@@ -27,7 +27,6 @@ const spell: Spell = {
     thumbnail: 'spellIconPolymorph.png',
     sfx: 'purify',
     description: ['spell_polymorph'],
-    timeoutMs: 1900,
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = getCurrentTargets(state);
       if (targets.length == 0) {

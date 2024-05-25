@@ -42,7 +42,6 @@ const spell: Spell = {
     expenseScaling: 1,
     thumbnail: 'spellIconDisplace.png',
     description: 'spell_displace',
-    timeoutMs: 20,
     effect: async (state, card, quantity, underworld, prediction) => {
       playDefaultSpellSFX(card, prediction);
       const targets = getCurrentTargets(state);

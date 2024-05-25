@@ -101,7 +101,6 @@ const spell: Spell = {
     thumbnail: 'spellIconSuffocate.png',
     // animationPath: 'spell-effects/TODO',
     description: 'spell_suffocate',
-    timeoutMs: 20,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);

@@ -33,7 +33,6 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconStomp.png',
     description: 'spell_stomp',
-    timeoutMs: 1050,
     effect: async (state, card, quantity, underworld, prediction) => {
       const target = state.castLocation;
 

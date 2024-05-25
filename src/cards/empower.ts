@@ -27,7 +27,6 @@ const spell: Spell = {
     thumbnail: 'spellIconEmpower.png',
     animationPath: 'spell-effects/spellEmpower',
     description: ['spell_empower', (statChange).toString()],
-    timeoutMs: 20,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(

@@ -19,7 +19,6 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconVortex.png',
     description: 'spell_vortex',
-    timeoutMs: 600,
     effect: async (state, card, quantity, underworld, prediction) => {
       let promises = [];
       playDefaultSpellSFX(card, prediction);

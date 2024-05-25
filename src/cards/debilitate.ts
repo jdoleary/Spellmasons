@@ -23,7 +23,6 @@ const spell: Spell = {
     thumbnail: 'spellIconDebilitate.png',
     animationPath: 'spell-effects/spellDebilitate',
     description: ['spell_debilitate', (proportion * 100).toString()],
-    timeoutMs: 2240,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);

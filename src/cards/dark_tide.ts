@@ -22,7 +22,6 @@ const spell: Spell = {
     thumbnail: 'spellIconDrown3.png',
     sfx: 'drown',
     description: ['spell_dark_tide'],
-    timeoutMs: 20,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: target all living units that are submerged
       const targets = (prediction ? underworld.unitsPrediction : underworld.units).filter(u => u.alive && u.inLiquid);

@@ -69,7 +69,6 @@ const spell: Spell = {
     thumbnail: 'spellIconPoison.png',
     animationPath: 'spell-effects/spellPoison',
     description: ['spell_poison', baseDamage.toString()],
-    timeoutMs: 1220,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);

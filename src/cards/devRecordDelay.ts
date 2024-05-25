@@ -2,7 +2,6 @@ import { Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
-const WAIT_TIME = 500;
 const id = 'Dev Record Delay';
 const spell: Spell = {
   card: {
@@ -14,14 +13,13 @@ const spell: Spell = {
     probability: 0,
     expenseScaling: 1,
     thumbnail: 'unknown.png',
-    timeoutMs: WAIT_TIME,
     description: `
     Waits a certain amount of time.  This is useful when recording so spells don't play back to back too quickly
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       if (!prediction) {
         await new Promise((resolve) => {
-          setTimeout(resolve, WAIT_TIME);
+          setTimeout(resolve, 500);
         });
       }
       return state;

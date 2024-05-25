@@ -171,7 +171,6 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean, 
       thumbnail: `spellIconSummon_${unitId.split(' ').join('').toLowerCase()}.png`,
       description: i18n([`spell_summon_generic`, unitId, expenseScaling.toString()]) + '\n' + unitStats,
       allowNonUnitTarget: true,
-      timeoutMs: 20,
       effect: async (state, card, quantity, underworld, prediction) => {
         const sourceUnit = allUnits[unitId];
         if (sourceUnit) {

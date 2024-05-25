@@ -31,7 +31,6 @@ const spell: Spell = {
     animationPath,
     sfx: 'rend',
     description: ['spell_rend', `${calculateRendDamage(1)}, ${calculateRendDamage(2)}, ${calculateRendDamage(3)}, ${calculateRendDamage(4)}, ${calculateRendDamage(5)}, ${calculateRendDamage(6)}, ${calculateRendDamage(7)}, ${calculateRendDamage(8)}, ${calculateRendDamage(9)}, ${calculateRendDamage(10)}`],
-    timeoutMs: 576,
     effect: async (state, card, quantity, underworld, prediction) => {
       const damage = calculateRendDamage(quantity);
       // .filter: only target living units

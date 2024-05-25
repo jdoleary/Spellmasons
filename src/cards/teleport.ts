@@ -26,7 +26,6 @@ const spell: Spell = {
     allowNonUnitTarget: true,
     thumbnail: 'spellIconTeleport.png',
     description: 'spell_teleport',
-    timeoutMs: 20,
     effect: async (state, card, quantity, underworld, prediction) => {
       playDefaultSpellSFX(card, prediction);
 

@@ -26,7 +26,6 @@ const spell: Spell = {
     requiresFollowingCard: true,
     description: 'spell_target_circle',
     allowNonUnitTarget: true,
-    timeoutMs: 1200,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
       // Slightly different / unique formula for balance purposes:
       // +100% range per quantity, +50% range per radius boost

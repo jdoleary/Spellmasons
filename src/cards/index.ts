@@ -522,9 +522,6 @@ export interface ICard {
   animationPath?: string;
   effect: EffectFn;
   description: Localizable;
-  // This is how long the spell effect execution takes
-  // on average on a client PER quantity.
-  timeoutMs: number;
   // requiresFollowingCard is for cards like chain or AOE that need another
   // card to follow them in order to have an effect
   requiresFollowingCard?: boolean;

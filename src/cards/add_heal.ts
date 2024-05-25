@@ -19,7 +19,6 @@ const spell: Spell = {
     thumbnail: 'spellIconHeal.png',
     animationPath: 'spell-effects/potionPickup',
     description: ['spell_heal', healAmount.toString()],
-    timeoutMs: 1000,
     effect: async (state, card, quantity, underworld, prediction) => {
       await healUnits(state.targetedUnits, healAmount * quantity, state.casterUnit, underworld, prediction, state);
       return state;

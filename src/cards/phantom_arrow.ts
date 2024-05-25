@@ -22,8 +22,6 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'phantomArrow',
     description: ['spell_phantom_arrow', damageDone.toString()],
-    // Arrows time depends on how far they have to fly
-    timeoutMs: 1100,
     effect: arrowEffect(1, phantomArrowCardId, true)
   },
   events: {

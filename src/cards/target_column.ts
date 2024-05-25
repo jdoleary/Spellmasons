@@ -30,7 +30,6 @@ const spell: Spell = {
     requiresFollowingCard: true,
     description: 'spell_target_column',
     allowNonUnitTarget: true,
-    timeoutMs: 1200,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
       // +50% depth per radius boost
       const adjustedRadiusBoost = quantity - 1 + state.aggregator.radiusBoost;

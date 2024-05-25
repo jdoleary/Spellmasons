@@ -26,7 +26,6 @@ const spell: Spell = {
     requiresFollowingCard: true,
     description: ['spell_target_kind', NUMBER_OF_TARGETS_PER_STACK.toString()],
     allowNonUnitTarget: true,
-    timeoutMs: 400,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
       // We store the initial targets because target similar mutates state.targetedUnits
       let targets: Vec2[] = getCurrentTargets(state);

@@ -28,7 +28,6 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'burst',
     description: ['spell_burst', maxDamage.toString()],
-    timeoutMs: 453,
     effect: async (state, card, quantity, underworld, prediction) => {
       await raceTimeout(1000, 'Burst timeout', new Promise<void>((resolve) => {
         // .filter: only target living units

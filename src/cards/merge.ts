@@ -23,7 +23,6 @@ const spell: Spell = {
     supportQuantity: false,
     thumbnail: 'spellIconMerge.png',
     description: 'spell_merge',
-    timeoutMs: 500,
     effect: async (state, card, quantity, underworld, prediction) => {
       // Batch find targets that should be merged
       // Note: They need to be batched because the list will be changed as units are merged

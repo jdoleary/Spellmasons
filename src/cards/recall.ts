@@ -26,7 +26,6 @@ const spell: Spell = {
     thumbnail: 'spellIconRecall.png',
     description: 'spell_recall',
     allowNonUnitTarget: true,
-    timeoutMs: 20,
     effect: async (state, card, quantity, underworld, prediction) => {
       // If there is a mark on the ground, recall all targets to it
       // Else place a mark at the target location

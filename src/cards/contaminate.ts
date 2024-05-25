@@ -29,10 +29,6 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconContaminate.png',
     description: 'spell_contaminate',
-    // Note, contaminate is unusual in that it takes longer based on how many curses are on
-    // the unit not given how many quantity of the card there is so this one is very high to
-    // account for many curses
-    timeoutMs: 10_000,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       let promises = [];

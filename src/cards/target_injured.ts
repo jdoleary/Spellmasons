@@ -24,7 +24,6 @@ const spell: Spell = {
     requiresFollowingCard: true,
     description: ['spell_target_injured', targetsPerQuantity.toString()],
     allowNonUnitTarget: true,
-    timeoutMs: 400,
     effect: async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean) => {
 
       const targets = state.targetedUnits;

@@ -21,7 +21,6 @@ const spell: Spell = {
     thumbnail: 'spellIconPurify.png',
     animationPath: 'spell-effects/spellPurify',
     description: 'spell_purify',
-    timeoutMs: 1900,
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = state.targetedUnits;
       let doRefund = true;
