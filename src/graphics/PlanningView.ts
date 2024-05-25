@@ -25,6 +25,7 @@ import { View } from '../views';
 import { gripthulu_id } from '../entity/units/gripthulu';
 import { getSuffocateBuildup, suffocateCardId } from '../cards/suffocate';
 import * as Cards from '../cards';
+import { findCircleLineIntersections, findWherePointIntersectLineSegmentAtRightAngle } from '../jmath/lineSegment';
 
 const TEXT_OUT_OF_RANGE = 'Out of Range';
 // Graphics for rendering above board and walls but beneath units and doodads,
@@ -186,38 +187,40 @@ export function drawWalkRope(target: Vec2, underworld: Underworld) {
     globalThis.walkPathGraphics?.moveTo(startPoint.x, startPoint.y);
 
     let lastPoint: Vec2 = globalThis.player.unit;
-    let distanceCovered = 0;
     // Default to current unit position, in the event that they have no stamina this will be the point
     // at which they are out of stamina.  If they do have stamina it will be reassigned later
     let lastStaminaPoint: Vec2 = globalThis.player.unit;
     const distanceLeftToMove = globalThis.player.unit.stamina;
+    let hasLeftStaminaCircle = false;
     for (let i = 0; i < currentPlayerPath.length; i++) {
       const point = currentPlayerPath[i];
       if (point) {
-        const thisLineDistance = distance(lastPoint, point);
-        if (distanceCovered > distanceLeftToMove) {
+        if (hasLeftStaminaCircle) {
+          // Next point is not within stamina circle, draw in white
           globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
           globalThis.walkPathGraphics?.lineTo(point.x, point.y);
-        } else {
+        } else if (distance(point, globalThis.player.staminaStartPoint) <= globalThis.player.lockedStaminaMax) {
+          // Next point is within stamina circle, draw in yellow
           globalThis.walkPathGraphics?.lineStyle(4, colors.stamina, 1.0);
-          lastStaminaPoint = point;
-          if (distanceCovered + thisLineDistance > distanceLeftToMove) {
-            // Draw up to the firstStop with the stamina color
-            lastStaminaPoint = getCoordsAtDistanceTowardsTarget(lastPoint, point, distanceLeftToMove - distanceCovered);
-            globalThis.walkPathGraphics?.lineTo(lastStaminaPoint.x, lastStaminaPoint.y);
+          globalThis.walkPathGraphics?.lineTo(point.x, point.y);
+        } else {
+          // Next point crosses stamina circle, draw yellow to intersection, then white
+          hasLeftStaminaCircle = true;
+          let intersection = findCircleLineIntersections(globalThis.player.staminaStartPoint, globalThis.player.lockedStaminaMax, lastPoint, point)[0];
+
+          if (intersection) {
+            globalThis.walkPathGraphics?.lineStyle(4, colors.stamina, 1.0);
+            globalThis.walkPathGraphics?.lineTo(intersection.x, intersection.y);
             globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
             globalThis.walkPathGraphics?.lineTo(point.x, point.y);
           } else {
-            globalThis.walkPathGraphics?.lineTo(point.x, point.y);
+            console.error("This should only happen if start point is already outside of the stamina circle, which should be impossible");
           }
         }
-        distanceCovered += distance(lastPoint, point);
+
         lastPoint = point;
       }
     }
-    drawOuterStaminaCircle(globalThis.player.staminaStartPoint, globalThis.player.lockedStaminaMax, globalThis.walkPathGraphics);
-    drawInnerStaminaCircle(globalThis.player.unit, globalThis.player.unit.stamina, globalThis.walkPathGraphics);
-    drawCastRangeCircle(lastStaminaPoint, globalThis.player.unit.attackRange, globalThis.walkPathGraphics, 'Potential Cast Range');
     // Draw the points along the path at which the unit will stop on each turn
     for (let i = 0; i < turnStopPoints.length; i++) {
       if (i == 0 && distanceLeftToMove > 0) {
@@ -240,9 +243,13 @@ export function drawWalkRope(target: Vec2, underworld: Underworld) {
     if (lastPointInPath) {
       globalThis.walkPathGraphics?.drawCircle(lastPointInPath.x, lastPointInPath.y, 3);
     }
-  }
 
+    drawOuterStaminaCircle(globalThis.player.staminaStartPoint, globalThis.player.lockedStaminaMax, globalThis.walkPathGraphics);
+    drawInnerStaminaCircle(globalThis.player.unit, globalThis.player.unit.stamina, globalThis.walkPathGraphics);
+    drawCastRangeCircle(lastStaminaPoint, globalThis.player.unit.attackRange, globalThis.walkPathGraphics, 'Potential Cast Range');
+  }
 }
+
 export function drawInnerStaminaCircle(point: Vec2, range: number, graphics?: Graphics) {
   if (graphics) {
     // Draw remaining walk range after locking in
@@ -267,6 +274,7 @@ function drawCastRangeCircle(point: Vec2, range: number, graphics?: Graphics, te
     drawUICircle(graphics, point, range, colors.attackRangeAlly, text);
   }
 }
+
 export function clearTints(underworld: Underworld) {
   // Reset tints before setting new tints to show targeting
   underworld.units.forEach(unit => {
