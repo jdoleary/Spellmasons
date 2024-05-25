@@ -6,6 +6,7 @@ import Underworld from '../../Underworld';
 import * as config from '../../config';
 import { oneOffImage } from '../../cards/cardUtils';
 import { containerSpells } from '../../graphics/PixiUtils';
+import { raceTimeout } from '../../Promise';
 
 export const spellmasonUnitId = 'Spellmason';
 const playerUnit: UnitSource = {
@@ -34,15 +35,16 @@ const playerUnit: UnitSource = {
           fromVec2: unit,
         }, underworld, false);
       }
-      await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
-    }
-    // Movement:
-    const closestEnemy = Unit.findClosestUnitInDifferentFactionSmartTarget(unit, underworld.units);
-    if (closestEnemy) {
-      const distanceToEnemy = math.distance(unit, closestEnemy);
-      // Trick to make the unit only move as far as will put them in range but no closer
-      unit.stamina = Math.min(unit.stamina, distanceToEnemy + config.COLLISION_MESH_RADIUS - unit.attackRange);
-      await Unit.moveTowards(unit, closestEnemy, underworld);
+      await raceTimeout(8_000, 'NPC Spellmason', Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false }));
+    } else {
+      // Movement:
+      const closestEnemy = Unit.findClosestUnitInDifferentFactionSmartTarget(unit, underworld.units);
+      if (closestEnemy) {
+        const distanceToEnemy = math.distance(unit, closestEnemy);
+        // Trick to make the unit only move as far as will put them in range but no closer
+        unit.stamina = Math.min(unit.stamina, distanceToEnemy + config.COLLISION_MESH_RADIUS - unit.attackRange);
+        await Unit.moveTowards(unit, closestEnemy, underworld);
+      }
     }
   },
   getUnitAttackTargets: (unit: Unit.IUnit, underworld: Underworld) => {
