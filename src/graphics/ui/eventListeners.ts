@@ -1069,6 +1069,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         if (player && pos) {
           player.unit.x = pos.x;
           player.unit.y = pos.y;
+          Player.lockStamina(player.unit, overworld.underworld);
         }
       },
       supportInMultiplayer: true,
@@ -1586,6 +1587,11 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
                 stamina: parsedStamina
               }
             });
+
+            // Additional client override for updating stamina circle
+            unit.staminaMax = parsedStamina;
+            unit.stamina = parsedStamina;
+            Player.lockStamina(unit, overworld.underworld);
           } else {
             floatingText({ coords: getCamera(), text: 'Invalid number', style: { fill: 'red' } });
 
