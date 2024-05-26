@@ -613,6 +613,8 @@ export async function setSpellmasonsToChannellingAnimationClose(player: IPlayer)
 
 }
 export function setSpellmasonsToChannellingAnimation(player: IPlayer) {
+  if (!player.unit.alive) return;
+
   const bookInAnimationPath = 'units/playerBookIn';
   new Promise<void>((resolve) => {
     if (player.unit.image) {
