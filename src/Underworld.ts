@@ -697,7 +697,7 @@ export default class Underworld {
       const takeAction = Unit.canAct(u) && Unit.isUnitsTurnPhase(u, this)
         && (u.unitType == UnitType.PLAYER_CONTROLLED || this.subTypesCurrentTurn?.includes(u.unitSubType));
 
-      if (u.path && u.path.points[0] && u.stamina > 0 && takeAction) {
+      if (u.path && u.path.points[0] && takeAction && (u.unitType == UnitType.PLAYER_CONTROLLED || u.stamina > 0)) {
         // Move towards target
         const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path.points[0], u.moveSpeed * deltaTime);
         let moveDist = 0;
@@ -726,6 +726,7 @@ export default class Underworld {
               }
             } else {
               // Uses the stamina circle to limit movement
+              u.stamina = player.lockedStaminaMax - math.distance(player.staminaStartPoint, u);
               remainingStamina -= math.distance(player.staminaStartPoint, stepTowardsTarget);
             }
 
