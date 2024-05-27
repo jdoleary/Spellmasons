@@ -8,7 +8,7 @@ import * as colors from './graphics/ui/colors';
 import { makePrimedCorpseParticles, stopAndDestroyForeverEmitter } from "./graphics/ParticleCollection";
 
 // A modifier used by the Goru boss to prime corpses for explosion/consumption/resurrection
-export const primedCorpseId = 'primedCorpse';
+export const primedCorpseId = 'Primed Corpse';
 export default function registerPrimedCorpse() {
   registerModifiers(primedCorpseId, {
     init: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => initCorpsePrimed(unit, underworld, prediction),
