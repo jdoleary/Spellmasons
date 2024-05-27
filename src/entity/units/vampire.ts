@@ -49,9 +49,9 @@ const unit: UnitSource = {
       unit.image.sprite.filters.push(
         new MultiColorReplaceFilter(
           [
-            [0x0c456f, 0x563d2a], // rear foot
             [0x6896d1, 0xb98553], // skin light
             [0x5280bc, 0xa37242], // skin medium
+            [0x0c456f, 0x563d2a], // rear foot
             [0x3767a4, 0x815933], // skin dark / foot
             [0x0c456f, 0xff371f], // skin darkest
             [0xf1fa68, 0x293a1b], // bubbles

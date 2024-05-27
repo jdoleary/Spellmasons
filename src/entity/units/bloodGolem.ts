@@ -43,9 +43,9 @@ const unit: UnitSource = {
       unit.image.sprite.filters.push(
         new MultiColorReplaceFilter(
           [
-            [0x9a7d7d, 0x7089a6], // skin head
-            [0x866262, 0x627386], //skinLight
             [0x7c5353, 0x53667c], //skinMedium
+            [0x866262, 0x627386], //skinLight
+            [0x9a7d7d, 0x7089a6], // skin head
             [0x603232, 0x324860], //skinDark
             [0x838d9f, 0x802230], //loin cloth
             [0x583131, 0x1c324b], // mouth opening
