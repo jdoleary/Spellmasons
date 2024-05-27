@@ -106,6 +106,48 @@ export function findWherePointIntersectLineSegmentAtRightAngle(point: Vec.Vec2, 
   }
 
 }
+// Function to find the intersection points of a line and a circle
+export function findCircleLineIntersections(center: Vec.Vec2, radius: number, lineStart: Vec.Vec2, lineEnd: Vec.Vec2): Vec.Vec2[] {
+  const cx = center.x;
+  const cy = center.y;
+  const dx = lineEnd.x - lineStart.x;
+  const dy = lineEnd.y - lineStart.y;
+  const fx = lineStart.x - cx;
+  const fy = lineStart.y - cy;
+
+  const a = dx * dx + dy * dy;
+  const b = 2 * (fx * dx + fy * dy);
+  const c = (fx * fx + fy * fy) - radius * radius;
+
+  const discriminant = b * b - 4 * a * c;
+  // No intersection
+  if (discriminant < 0) {
+    return [];
+  }
+
+  // Discriminant > 0, theres an intersection
+  const sqrtDiscriminant = Math.sqrt(discriminant);
+  const t1 = (-b + sqrtDiscriminant) / (2 * a);
+  const t2 = (-b - sqrtDiscriminant) / (2 * a);
+
+  const intersections: Vec.Vec2[] = [];
+
+  if (t1 >= 0 && t1 <= 1) {
+    intersections.push({
+      x: lineStart.x + t1 * dx,
+      y: lineStart.y + t1 * dy
+    });
+  }
+
+  if (t2 >= 0 && t2 <= 1) {
+    intersections.push({
+      x: lineStart.x + t2 * dx,
+      y: lineStart.y + t2 * dy
+    });
+  }
+
+  return intersections;
+}
 export function getCenterPoint(ls: LineSegment): Vec.Vec2 {
   return Vec.add(ls.p1, Vec.multiply(0.5, Vec.subtract(ls.p2, ls.p1)));
 

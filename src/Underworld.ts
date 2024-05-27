@@ -52,7 +52,7 @@ import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
 import Events from './Events';
 import { UnitSource, allUnits } from './entity/units';
-import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, drawUnitMarker, isOutOfBounds, runPredictions, updatePlanningView } from './graphics/PlanningView';
+import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, drawInnerStaminaCircle, drawUnitMarker, drawOuterStaminaCircle, isOutOfBounds, runPredictions, updatePlanningView } from './graphics/PlanningView';
 import { chooseObjectWithProbability, chooseOneOfSeeded, getUniqueSeedString, prng, randInt, SeedrandomState } from './jmath/rand';
 import { calculateCostForSingleCard } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle, closestLineSegmentIntersection } from './jmath/lineSegment';
@@ -641,6 +641,12 @@ export default class Underworld {
             }
           }
         }
+
+        // Player stamina circle is locked after they are affected by a force move
+        if (Unit.isUnit(forceMoveInst.pushedObject)) {
+          Player.lockStamina(forceMoveInst.pushedObject, this);
+        }
+
         // Remove it from forceMove array once the distance has been covers
         // This works even if collisions prevent the unit from moving since
         // distance is modified even if the unit doesn't move each loop
@@ -691,19 +697,63 @@ export default class Underworld {
       const takeAction = Unit.canAct(u) && Unit.isUnitsTurnPhase(u, this)
         && (u.unitType == UnitType.PLAYER_CONTROLLED || this.subTypesCurrentTurn?.includes(u.unitSubType));
 
-      if (u.path && u.path.points[0] && u.stamina > 0 && takeAction) {
+      if (u.path && u.path.points[0] && takeAction && (u.unitType == UnitType.PLAYER_CONTROLLED || u.stamina > 0)) {
         // Move towards target
-        const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path.points[0], u.moveSpeed * deltaTime)
+        const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path.points[0], u.moveSpeed * deltaTime);
         let moveDist = 0;
-        // For now, only AI units will collide with each other
-        // This is because the collisions were causing issues with player movement that I don't
-        // have time to solve at the moment.
+
         if (u.unitType == UnitType.PLAYER_CONTROLLED) {
-          // Player units don't collide, they just move, and pathfinding keeps
-          // them from moving through walls
-          moveDist = math.distance(u, stepTowardsTarget);
-          u.x = stepTowardsTarget.x;
-          u.y = stepTowardsTarget.y;
+          const player = this.players.find(p => p.unit == u);
+          if (player) {
+            let remainingStamina = player.lockedStaminaMax;
+
+            // UsePath is a testing boolean for https://github.com/jdoleary/Spellmasons/pull/768
+            // and is used to switch between two stamina modes
+            // When false, the player can walk anywhere within the stamina circle
+            // When true, the path can only walk (stamina) units from the center via path distance
+            // It can be safely removed later once a stamina mode is decided on
+            const usePath = false;
+            if (usePath) {
+              // Uses path distance to limit movement
+              const pathFromStart = this.calculatePath(undefined, player.staminaStartPoint, stepTowardsTarget);
+              let lastPoint: Vec2 = player.staminaStartPoint;
+              for (let i = 0; i < pathFromStart.points.length; i++) {
+                const point = pathFromStart.points[i];
+                if (point) {
+                  remainingStamina -= math.distance(lastPoint, point);
+                  lastPoint = point;
+                }
+              }
+            } else {
+              // Uses the stamina circle to limit movement
+              u.stamina = player.lockedStaminaMax - math.distance(player.staminaStartPoint, u);
+              remainingStamina -= math.distance(player.staminaStartPoint, stepTowardsTarget);
+            }
+
+            if (remainingStamina > 0) {
+              u.stamina = remainingStamina;
+              // Player units don't collide, they just move, and pathfinding keeps
+              // them from moving through walls
+              u.x = stepTowardsTarget.x;
+              u.y = stepTowardsTarget.y;
+            } else {
+              // TODO - Smoothly walk around edge of circle
+              // Problem: Doesn't currently use pathfinding
+
+              // Find point between desired destination and stamina start along max walk range
+              // const newTargetLocation = math.getCoordsAtDistanceTowardsTarget(player.staminaStartPoint, u.path.targetPosition, player.lockedStaminaMax);
+              // const newStepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, newTargetLocation, u.moveSpeed * deltaTime)
+
+              // const remainingStamina = player.lockedStaminaMax - math.distance(player.staminaStartPoint, newStepTowardsTarget);
+              // if (remainingStamina > 0) {
+              //   u.stamina = remainingStamina;
+              //   // Player units don't collide, they just move, and pathfinding keeps
+              //   // them from moving through walls
+              //   u.x = newStepTowardsTarget.x;
+              //   u.y = newStepTowardsTarget.y;
+              // }
+            }
+          }
         } else {
           // AI collide with each other and walls
           const originalPosition = Vec.clone(u);

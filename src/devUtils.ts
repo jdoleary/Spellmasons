@@ -7,7 +7,7 @@ import * as Unit from './entity/Unit';
 import { UnitType } from './types/commonTypes';
 import * as Cards from './cards';
 import { syncInventory } from './graphics/ui/CardUI';
-import { addCardToHand, IPlayer } from './entity/Player';
+import { addCardToHand, IPlayer, lockStamina } from './entity/Player';
 import { Overworld } from './Overworld';
 
 // Development helpers
@@ -93,6 +93,7 @@ export function setupDevGlobalFunctions(overworld: Overworld) {
             player.unit.staminaMax = 10000;
             player.unit.stamina = player.unit.staminaMax;
             player.unit.moveSpeed = 0.3;
+            lockStamina(player.unit, underworld);
             // Now that player's health and mana has changed we must sync
             // unitsPrediction so that the player's prediction copy
             // has the same mana and health

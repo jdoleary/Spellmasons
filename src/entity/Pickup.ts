@@ -1,6 +1,6 @@
 import type * as PIXI from 'pixi.js';
 import * as Image from '../graphics/Image';
-import type * as Player from './Player';
+import * as Player from './Player';
 import { addPixiSprite, addPixiSpriteAnimated, containerUnits, pixiText, startBloodParticleSplatter } from '../graphics/PixiUtils';
 import { syncPlayerHealthManaUI, IUnit, takeDamage, playAnimation } from './Unit';
 import { checkIfNeedToClearTooltip } from '../graphics/PlanningView';
@@ -369,6 +369,7 @@ export function triggerPickup(pickup: IPickup, unit: IUnit, player: Player.IPlay
   if (willTrigger) {
     pickup.effect({ unit, player, pickup, underworld, prediction });
     removePickup(pickup, underworld, prediction);
+    Player.lockStamina(unit, underworld);
     // Now that the players attributes may have changed, sync UI
     syncPlayerHealthManaUI(underworld);
   }

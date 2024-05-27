@@ -16,6 +16,8 @@ import {
   runPredictions,
   updateTooltipSelection,
   updateTooltipSelectionWhileSpawning,
+  drawOuterStaminaCircle,
+  drawInnerStaminaCircle,
 } from '../PlanningView';
 import { toggleMenu, View } from '../../views';
 import * as config from '../../config';
@@ -540,6 +542,10 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
             runPredictions(underworld);
             // })
 
+            // Draw Stamina Circles while moving
+            drawOuterStaminaCircle(globalThis.player.staminaStartPoint, globalThis.player.lockedStaminaMax, walkPathGraphics);
+            drawInnerStaminaCircle(globalThis.player.unit, globalThis.player.unit.stamina, walkPathGraphics);
+
             // Send current player movements to server
             sendMovePlayer(underworld);
             tutorialCompleteTask('moved');
@@ -1063,6 +1069,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         if (player && pos) {
           player.unit.x = pos.x;
           player.unit.y = pos.y;
+          Player.lockStamina(player.unit, overworld.underworld);
         }
       },
       supportInMultiplayer: true,
@@ -1580,6 +1587,11 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
                 stamina: parsedStamina
               }
             });
+
+            // Additional client override for updating stamina circle
+            unit.staminaMax = parsedStamina;
+            unit.stamina = parsedStamina;
+            Player.lockStamina(unit, overworld.underworld);
           } else {
             floatingText({ coords: getCamera(), text: 'Invalid number', style: { fill: 'red' } });
 

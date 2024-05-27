@@ -753,6 +753,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
             cameraAutoFollow(true);
           }
           Unit.setLocation(fromPlayer.unit, payload, underworld);
+          Player.lockStamina(fromPlayer.unit, underworld);
           // Trigger 'everyLevel' attributePerks
           // now that the player has spawned in at the new level
           const perkRandomGenerator = seedrandom(getUniqueSeedString(underworld, fromPlayer));
@@ -1172,6 +1173,10 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
 
   // Only allow casting during the PlayerTurns phase
   if (underworld.turn_phase === turn_phase.PlayerTurns) {
+    // Lock stamina when the player starts the cast so
+    // they cant move before it resolves to cheat the stamina circles
+    Player.lockStamina(caster.unit, underworld);
+
     globalThis.animatingSpells = true;
     let animationKey = 'playerAttackEpic';
     if (payload.cards.length < 3) {
@@ -1262,6 +1267,8 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
     cacheBlood();
 
     globalThis.animatingSpells = false;
+    // Lock stamina again after the cast in case of teleport or other displacement
+    Player.lockStamina(caster.unit, underworld);
 
     // Now that the previous spell is over, rerun predictions because
     // the player may have queued up another spell while the previous spell was
