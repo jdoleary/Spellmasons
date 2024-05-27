@@ -4,7 +4,7 @@ import { MESSAGE_TYPES } from '../types/MessageTypes';
 import * as Image from '../graphics/Image';
 import floatingText from '../graphics/FloatingText';
 import { getUpgradeByTitle } from '../Upgrade';
-import Underworld, { elUpgradePickerContent, IUnderworldSerialized, IUnderworldSerializedForSyncronize, LevelData, showUpgradesClassName, turn_phase } from '../Underworld';
+import Underworld, { elUpgradePickerContent, IUnderworldSerialized, LevelData, showUpgradesClassName, turn_phase } from '../Underworld';
 import * as Player from '../entity/Player';
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
@@ -18,7 +18,7 @@ import { allUnits } from '../entity/units';
 import { hostGiveClientGameState, typeGuardHostApp } from './networkUtil';
 import { skyBeam } from '../VisualEffects';
 import { tryFallInOutOfLiquid } from '../entity/Obstacle';
-import { IPickupSerialized, removePickup } from '../entity/Pickup';
+import { removePickup } from '../entity/Pickup';
 import { triggerAdminCommand } from '../graphics/ui/eventListeners';
 import { clone, Vec2 } from '../jmath/Vec';
 import pingSprite from '../graphics/Ping';
@@ -1020,17 +1020,14 @@ function joinGameAsPlayer(fromClient: string, asClientId: string, overworld: Ove
   }
 }
 async function handleLoadGameState(payload: {
-  underworld: IUnderworldSerializedForSyncronize,
-  phase: turn_phase,
-  pickups: IPickupSerialized[],
-  units: Unit.IUnitSerialized[],
-  players: Player.IPlayerSerialized[]
+  underworld: IUnderworldSerialized,
 }, overworld: Overworld) {
   console.log("Setup: Load game state", payload)
-  const { underworld: payloadUnderworld, phase, pickups, units, players } = payload
+  const { underworld: payloadUnderworld } = payload
+  const { pickups, units, players, turn_phase } = payloadUnderworld;
   console.log('Setup: activeMods', payloadUnderworld.activeMods);
   // Sync underworld properties
-  const loadedGameState: IUnderworldSerializedForSyncronize = { ...payloadUnderworld };
+  const loadedGameState: IUnderworldSerialized = { ...payloadUnderworld };
   const { underworld } = overworld;
   if (!underworld) {
     return console.error('Cannot handleLoadGameState, underworld is undefined');
@@ -1129,7 +1126,7 @@ async function handleLoadGameState(payload: {
   // Set the turn_phase; do not use initializeTurnPhase
   // because that function runs initialization logic that would
   // make the loaded underworld desync from the host's underworld
-  underworld.setTurnPhase(phase);
+  underworld.setTurnPhase(turn_phase);
 
   underworld.syncTurnMessage();
   if (globalThis.headless) {
@@ -1349,10 +1346,6 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
     const saveObject: SaveFile = {
       version: globalThis.SPELLMASONS_PACKAGE_VERSION,
       underworld: underworld.serializeForSaving(),
-      phase: underworld.turn_phase,
-      pickups: underworld.pickups.filter(p => !p.flaggedForRemoval).map(Pickup.serialize),
-      units: underworld.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
-      players: underworld.players.map(Player.serialize),
       numberOfHotseatPlayers
     };
     try {
@@ -1404,7 +1397,8 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
         }
       }
 
-      const { underworld: savedUnderworld, phase, units, players, pickups, version, numberOfHotseatPlayers } = fileSaveObj as SaveFile;
+      const { underworld: savedUnderworld, version, numberOfHotseatPlayers } = fileSaveObj as SaveFile;
+      const { players } = savedUnderworld;
       if (numberOfHotseatPlayers !== undefined) {
         globalThis.numberOfHotseatPlayers = numberOfHotseatPlayers;
         if (!overworld.pie.soloMode) {
@@ -1471,10 +1465,6 @@ Current game version: ${globalThis.SPELLMASONS_PACKAGE_VERSION}`,
       overworld.pie.sendData({
         type: MESSAGE_TYPES.LOAD_GAME_STATE,
         underworld: savedUnderworld,
-        pickups,
-        phase,
-        units,
-        players
       });
       setView(View.Game);
 
@@ -1500,9 +1490,5 @@ Current game version: ${globalThis.SPELLMASONS_PACKAGE_VERSION}`,
 export interface SaveFile {
   version: string;
   underworld: IUnderworldSerialized;
-  phase: turn_phase.PlayerTurns;
-  pickups: Pickup.IPickupSerialized[];
-  units: Unit.IUnitSerialized[];
-  players: Player.IPlayerSerialized[];
   numberOfHotseatPlayers: number;
 }

@@ -4215,46 +4215,15 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       RNGState: this.random.state(),
     };
   }
-  // Updates specifically selected properties of underworld
-  // Mutates current object
-  // The purpose of this function is to keep underworld in sync
-  // between clients
-  // syncronize(serialized: IUnderworldSerializedForSyncronize) {
-  //   if (serialized.RNGState) {
-  //     this.syncronizeRNG(serialized.RNGState);
-  //   }
-  //   this.levelIndex = serialized.levelIndex;
-  //   this.turn_phase = serialized.turn_phase;
-  //   this.turn_number = serialized.turn_number;
-  //   // Note: obstacles are not serialized since they are unchanging between levels
-  //   // TODO, remove walls and pathingPolygons here, they are set in cacheWalls, so this is redundant
-  //   // make sure obstacles come over when serialized
-  //   this.walls = serialized.walls;
-  //   this.pathingPolygons = serialized.pathingPolygons;
-  //   this.processedMessageCount = this.processedMessageCount;
-  //   this.addGroundTileImages();
-  //   this.cacheWalls();
-  // }
-  serializeForSyncronize(): IUnderworldSerializedForSyncronize {
-    const { pie, overworld, players, units, pickups, random, gameLoop, particleFollowers, ...rest } = this;
-    const serialized: IUnderworldSerializedForSyncronize = {
-      ...rest,
-      // isRestarting is an id for SetTimeout and cannot be serialized
-      isRestarting: undefined,
-      // simulatingMovePredictions should never be serialized, it is only for a running instance to keep track of if the simulateRunForceMovePredictions is running
-      simulatingMovePredictions: false,
-      // the state of the Random Number Generator
-      RNGState: this.random.state() as SeedrandomState,
-    }
-    return serialized;
-  }
   updateAccessibilityOutlines() {
     this.units.forEach(u => Unit.updateAccessibilityOutline(u, false));
   }
 }
 
-export type IUnderworldSerialized = Omit<typeof Underworld, "pie" | "overworld" | "prototype" | "players" | "units"
-  | "unitsPrediction" | "pickups" | "pickupsPrediction" | "doodads" | "doodadsPrediction" | "random" | "turnInterval" | "liquidSprites"
+type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
+type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underworld>, null | undefined>;
+export type IUnderworldSerialized = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "pie" | "overworld" | "prototype" | "players" | "units"
+  | "unitsPrediction" | "pickups" | "pickupsPrediction" | "random" | "turnInterval" | "liquidSprites"
   | "particleFollowers"
   // walls and pathingPolygons are omitted because they are derived from obstacles when cacheWalls() in invoked
   | "walls" | "pathingPolygons"> & {
@@ -4262,9 +4231,6 @@ export type IUnderworldSerialized = Omit<typeof Underworld, "pie" | "overworld" 
     units: Unit.IUnitSerialized[],
     pickups: Pickup.IPickupSerialized[],
   };
-type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
-type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underworld>, null | undefined>;
-export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "pie" | "overworld" | "debugGraphics" | "players" | "units" | "pickups" | "obstacles" | "random" | "gameLoop" | "particleFollowers">;
 
 // globalThis.testUnitAlgorithms = () => {
 

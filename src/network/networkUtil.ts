@@ -43,11 +43,7 @@ export function hostGiveClientGameState(clientId: string, underworld: Underworld
         underworld.pie.sendData({
           type: message_type,
           level,
-          underworld: underworld.serializeForSyncronize(),
-          phase: underworld.turn_phase,
-          pickups: underworld.pickups.filter(p => !p.flaggedForRemoval).map(Pickup.serialize),
-          units: underworld.units.filter(u => !u.flaggedForRemoval).map(Unit.serialize),
-          players: underworld.players.map(Player.serialize)
+          underworld: underworld.serializeForSaving(),
         }, {
           subType: "Whisper",
           whisperClientIds: [clientId],
