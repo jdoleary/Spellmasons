@@ -14,7 +14,6 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconPlusRadius.png',
-    requiresFollowingCard: true,
     description: 'spell_plus_radius',
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
