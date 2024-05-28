@@ -24,7 +24,7 @@ export function teleport(object: HasSpace, newLocation: Vec2, underworld: Underw
 
   if (Unit.isUnit(object)) {
     // Moves the unit to location and resets path
-    Unit.setLocation(object, newLocation, underworld);
+    Unit.setLocation(object, newLocation, underworld, prediction);
     // Check to see if unit interacts with liquid
     Obstacle.tryFallInOutOfLiquid(object, underworld, prediction);
   } else if (Pickup.isPickup(object)) {

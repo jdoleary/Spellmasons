@@ -1322,12 +1322,12 @@ export function moveTowards(unit: IUnit, point: Vec2, underworld: Underworld): P
 // setLocation, unlike moveTo, simply sets a unit to a coordinate without
 // considering in-game blockers or changing any unit flags
 // Note: NOT TO BE USED FOR in-game collision-based movement
-export function setLocation(unit: IUnit, coordinates: Vec2, underworld: Underworld) {
+export function setLocation(unit: IUnit, coordinates: Vec2, underworld: Underworld, prediction: boolean) {
   // Set state instantly to new position
   unit.x = coordinates.x;
   unit.y = coordinates.y;
   unit.path = undefined;
-  underworld.checkPickupCollisions(unit, false);
+  underworld.checkPickupCollisions(unit, prediction);
 }
 export function changeFaction(unit: IUnit, faction: Faction) {
   unit.faction = faction;
