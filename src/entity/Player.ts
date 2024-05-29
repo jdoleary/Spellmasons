@@ -486,7 +486,7 @@ export function resetPlayerForSpawn(player: IPlayer, underworld: Underworld) {
   // the client queue will get stuck
   player.unit.resolveDoneMoving(true);
   // Move "portaled" unit out of the way to prevent collisions and chaining while portaled
-  Unit.setLocation(player.unit, { x: NaN, y: NaN }, underworld);
+  Unit.setLocation(player.unit, { x: NaN, y: NaN }, underworld, false);
   player.isSpawned = false;
   if (player == globalThis.player) {
     globalThis.awaitingSpawn = false;
