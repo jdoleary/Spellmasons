@@ -15,9 +15,9 @@ function calculateDamage(casterDamage: number, casterAttackRange: number, distan
   // Damage scales linearly with distance
   // - Collision Radius = Max Damage
   // - Max range = 0 damage
-  const damageRatio = (distance - config.COLLISION_MESH_RADIUS) / casterAttackRange;
+  const damageRatio = 1 - ((distance - config.COLLISION_MESH_RADIUS) / casterAttackRange);
   const maxDamage = Unit.GetSpellDamage(casterDamage, maxDamageMult);
-  return Math.ceil(maxDamage * damageRatio) * quantity;
+  return Math.ceil(lerp(0, maxDamage, damageRatio)) * quantity;
 }
 const spell: Spell = {
   card: {
