@@ -15,7 +15,7 @@ import { makeForceMoveProjectile, moveAlongVector, normalizedVector } from '../j
 import { addPixiSpriteAnimated, containerProjectiles } from '../graphics/PixiUtils';
 
 export const arrowCardId = 'Arrow';
-const damage = 10;
+const damageMult = 0.5;
 const spell: Spell = {
   card: {
     id: arrowCardId,
@@ -31,19 +31,23 @@ const spell: Spell = {
     ignoreRange: true,
     animationPath: '',
     sfx: 'arrow',
-    description: ['spell_arrow', damage.toString()],
+    description: ['spell_arrow', Unit.GetSpellDamage(undefined, damageMult).toString()],
     effect: arrowEffect(1, arrowCardId)
   },
   events: {
     onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
       if (unit) {
-        Unit.takeDamage({
-          unit: unit,
-          amount: damage,
-          sourceUnit: projectile.sourceUnit,
-          fromVec2: projectile.startPoint,
-          thinBloodLine: true,
-        }, underworld, prediction);
+        if (projectile.sourceUnit) {
+          Unit.takeDamage({
+            unit: unit,
+            amount: Unit.GetSpellDamage(projectile.sourceUnit.damage, damageMult),
+            sourceUnit: projectile.sourceUnit,
+            fromVec2: projectile.startPoint,
+            thinBloodLine: true,
+          }, underworld, prediction);
+        } else {
+          console.error("No source unit for projectile: ", projectile);
+        }
       }
     }
   }
