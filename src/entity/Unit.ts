@@ -899,6 +899,14 @@ export function composeOnTakeDamageEvents(damageArgs: damageArgs, underworld: Un
   return amount;
 }
 
+export function GetSpellDamage(baseDamage: number | undefined, multiplier: number) {
+  if (baseDamage == undefined) {
+    // Use to automatically update tooltips where applicable
+    baseDamage = globalThis.player?.unit.damage || config.UNIT_BASE_DAMAGE;
+  }
+  return Math.floor(baseDamage * multiplier);
+}
+
 interface damageArgs {
   unit: IUnit,
   amount: number,

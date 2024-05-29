@@ -11,7 +11,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
 export const poisonCardId = 'poison';
-const baseDamage = 20;
+const damageMult = 1;
 function init(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
   if (spell.modifiers?.subsprite) {
     // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
@@ -52,7 +52,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
 export function updateTooltip(unit: Unit.IUnit) {
   if (unit.modifiers[poisonCardId]) {
     // Set tooltip:
-    unit.modifiers[poisonCardId].tooltip = `${unit.modifiers[poisonCardId].quantity} ${i18n('Poison')} ${i18n('Stack')} | ${baseDamage * unit.modifiers[poisonCardId].quantity} ${i18n('damage')}`
+    unit.modifiers[poisonCardId].tooltip = `${unit.modifiers[poisonCardId].quantity} ${i18n('Poison')} ${i18n('Stack')}`
   }
 }
 
@@ -68,14 +68,14 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconPoison.png',
     animationPath: 'spell-effects/spellPoison',
-    description: ['spell_poison', baseDamage.toString()],
+    description: ['spell_poison', Unit.GetSpellDamage(globalThis.player?.unit.damage, damageMult).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);
       if (targets.length) {
         await Promise.all([playDefaultSpellAnimation(card, targets, prediction), playDefaultSpellSFX(card, prediction)]);
         for (let unit of targets) {
-          Unit.addModifier(unit, poisonCardId, underworld, prediction, quantity, { sourceUnitId: state.casterUnit.id });
+          Unit.addModifier(unit, poisonCardId, underworld, prediction, Unit.GetSpellDamage(state.casterUnit.damage, damageMult) * quantity, { sourceUnitId: state.casterUnit.id });
         }
       }
       return state;
@@ -111,7 +111,7 @@ const spell: Spell = {
       // Don't take damage on prediction because it is confusing for people to see the prediction damage that poison will do,
       // they assume prediction damage is only from their direct cast, not including the start of the next turn
       if (!prediction) {
-        const damage = (modifier.quantity || 1) * baseDamage;
+        const damage = (modifier.quantity || 1);
         Unit.takeDamage({
           unit: unit,
           amount: damage,

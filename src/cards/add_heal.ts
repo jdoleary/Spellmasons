@@ -2,9 +2,10 @@ import { CardCategory } from '../types/commonTypes';
 import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { healSfx, healUnits } from '../effects/heal';
+import { GetSpellDamage } from '../entity/Unit';
 
 export const healCardId = 'heal';
-const healAmount = 30;
+const healMult = 1.5;
 
 const spell: Spell = {
   card: {
@@ -18,9 +19,9 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconHeal.png',
     animationPath: 'spell-effects/potionPickup',
-    description: ['spell_heal', healAmount.toString()],
+    description: ['spell_heal', GetSpellDamage(undefined, healMult).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
-      await healUnits(state.targetedUnits, healAmount * quantity, state.casterUnit, underworld, prediction, state);
+      await healUnits(state.targetedUnits, GetSpellDamage(state.casterUnit.damage, healMult) * quantity, state.casterUnit, underworld, prediction, state);
       return state;
     },
   },

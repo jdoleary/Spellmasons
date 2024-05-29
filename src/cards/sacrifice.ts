@@ -7,10 +7,10 @@ import { playDefaultSpellSFX } from './cardUtils';
 import * as config from '../config';
 import { explain, EXPLAIN_OVERFILL } from '../graphics/Explain';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
-import { die } from '../entity/Unit';
+import { die, GetSpellDamage } from '../entity/Unit';
 import * as Image from '../graphics/Image';
 
-const damage = config.UNIT_BASE_HEALTH; //40 at time of writing
+const damageMult = 2;
 export const consumeAllyCardId = 'Sacrifice';
 const spell: Spell = {
   card: {
@@ -23,7 +23,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconSacrifice.png',
-    description: ['spell_sacrifice', damage.toString()],
+    description: ['spell_sacrifice', GetSpellDamage(undefined, damageMult).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       const caster = state.casterUnit;
       // .filter: only target living units of the same faction
@@ -31,7 +31,7 @@ const spell: Spell = {
       let promises = [];
       let totalHealthStolen = 0;
       for (let unit of targets) {
-        const unitHealthStolen = Math.min(unit.health, damage * quantity);
+        const unitHealthStolen = Math.min(unit.health, GetSpellDamage(state.casterUnit.damage, damageMult) * quantity);
         // This instead of takeDamage() -> ignores shield, not modified by damage mitigation/prevention, doesn't trigger onDamage event
         unit.health -= unitHealthStolen;
         totalHealthStolen += unitHealthStolen;

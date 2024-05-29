@@ -6,7 +6,8 @@ import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 export const manaBurnCardId = 'mana_burn';
-const mana_burnt = 30;
+// How much mana is burnt, based on player's spell damage
+const spellDamageMult = 1.5;
 const health_burn_ratio = 1;
 const spell: Spell = {
   card: {
@@ -19,7 +20,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconManaBurn.png',
     animationPath: 'spell-effects/spellManaBurn',
-    description: ['spell_mana_burn', mana_burnt.toString()],
+    description: ['spell_mana_burn', Unit.GetSpellDamage(undefined, spellDamageMult).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive && u.mana > 0);
@@ -33,7 +34,7 @@ const spell: Spell = {
       await animationPromise;
       // Take damage and remove mana AFTER the animation and sfx has finished
       for (let unit of targets) {
-        const unitManaBurnt = Math.min(unit.mana, mana_burnt);
+        const unitManaBurnt = Math.min(unit.mana, Unit.GetSpellDamage(state.casterUnit.damage, spellDamageMult));
         unit.mana -= unitManaBurnt;
         const damage = Math.ceil(unitManaBurnt * health_burn_ratio);
         Unit.takeDamage({

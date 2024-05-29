@@ -7,8 +7,9 @@ import { manaBurnCardId } from './mana_burn';
 import { healManaUnit } from '../effects/heal';
 
 const id = 'Mana Steal';
-const base_mana_stolen = 60;
-const health_burn = 30;
+// How much total mana is stolen, per quantity
+const manaStolen = 60;
+const healthCost = 30;
 const spell: Spell = {
   card: {
     id,
@@ -17,18 +18,18 @@ const spell: Spell = {
     requires: [manaBurnCardId],
     supportQuantity: true,
     manaCost: 0,
-    healthCost: health_burn,
+    healthCost: healthCost,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconManaSteal.png',
-    description: ['spell_mana_steal', base_mana_stolen.toString()],
+    description: ['spell_mana_steal', manaStolen.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive && u.mana > 0);
       const caster = state.casterUnit;
       let promises = [];
       // Start with the amount we intend to steal, adjust after for loop
-      let totalManaStolen = base_mana_stolen * quantity;
+      let totalManaStolen = manaStolen * quantity;
       let remainingManaToSteal = totalManaStolen;
 
       // sort targets by current mana to carry remainder, in case you try to steal more mana than a unit has

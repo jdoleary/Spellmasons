@@ -16,9 +16,10 @@ import * as particles from '@pixi/particle-emitter';
 import { createParticleTexture, logNoTextureWarning, wrappedEmitter } from '../graphics/Particles';
 import { stopAndDestroyForeverEmitter } from '../graphics/ParticleCollection';
 import { raceTimeout } from '../Promise';
+import { GetSpellDamage } from '../entity/Unit';
 
 export const meteorCardId = 'meteor';
-const damage = 60;
+const damageMult = 3;
 const baseRadius = 100;
 const basePushDistance = 100;
 const spell: Spell = {
@@ -33,7 +34,7 @@ const spell: Spell = {
     allowNonUnitTarget: true,
     probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconMeteor.png',
-    description: ['spell_meteor', damage.toString()],
+    description: ['spell_meteor', GetSpellDamage(undefined, damageMult).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // We should create a meteor at each targeted unit
       // Or if no targeted units, at the cast location
@@ -67,7 +68,7 @@ const spell: Spell = {
 
       const adjustedRadius = baseRadius * (1 + (0.25 * state.aggregator.radiusBoost));
       for (let meteorLocation of meteorLocations) {
-        explode(meteorLocation, adjustedRadius, damage * quantity, basePushDistance,
+        explode(meteorLocation, adjustedRadius, GetSpellDamage(state.casterUnit.damage, damageMult) * quantity, basePushDistance,
           state.casterUnit,
           underworld, prediction,
           colors.bloatExplodeStart, colors.bloatExplodeEnd)

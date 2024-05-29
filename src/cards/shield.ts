@@ -11,7 +11,7 @@ import { getOrInitModifier } from './util';
 
 export const id = 'shield';
 export const modifierImagePath = 'spell-effects/modifierShield.png';
-const damageBlocked = 30;
+const damageMult = 1.5;
 const spell: Spell = {
   card: {
     id,
@@ -25,7 +25,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.SPECIAL],
     thumbnail: 'spellIconShield.png',
     animationPath: 'spell-effects/spellShield',
-    description: ['spell_shield', damageBlocked.toString()],
+    description: ['spell_shield', Unit.GetSpellDamage(undefined, damageMult).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);
@@ -40,7 +40,7 @@ const spell: Spell = {
         // Add the modifier after the animation so that the subsprite doesn't get added until after the animation is
         // complete
         for (let unit of targets) {
-          Unit.addModifier(unit, id, underworld, prediction, quantity);
+          Unit.addModifier(unit, id, underworld, prediction, Unit.GetSpellDamage(state.casterUnit.damage, damageMult) * quantity);
         }
       }
 
@@ -79,10 +79,10 @@ const spell: Spell = {
               },
             });
           }
-          adjustedAmount = Math.max(0, amount - modifier.damage_block);
-          modifier.damage_block -= amount - adjustedAmount;
+          adjustedAmount = Math.max(0, amount - modifier.quantity);
+          modifier.quantity -= amount - adjustedAmount;
 
-          if (modifier && modifier.damage_block <= 0) {
+          if (modifier && modifier.quantity <= 0) {
             Unit.removeModifier(unit, id, underworld);
           }
           updateTooltip(unit);
@@ -101,7 +101,7 @@ const spell: Spell = {
 function updateTooltip(unit: Unit.IUnit) {
   if (unit.modifiers[id]) {
     // Set tooltip:
-    unit.modifiers[id].tooltip = `${unit.modifiers[id].damage_block} damage block`
+    unit.modifiers[id].tooltip = `${unit.modifiers[id].quantity} damage block`
   }
 }
 
@@ -112,10 +112,7 @@ function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, qu
     // Add subsprite image
     Image.addSubSprite(unit.image, modifierImagePath);
   });
-  // Increment the number of damage_block on this modifier
-  // Note: This is only adding the quantity of this invokation, NOT any preexisting
-  // modifier.quantity that may have existed from previous invokations of this spell
-  modifier.damage_block = (modifier.damage_block || 0) + damageBlocked * quantity;
+
   updateTooltip(unit);
 }
 export default spell;

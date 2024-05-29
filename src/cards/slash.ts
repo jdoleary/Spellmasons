@@ -8,7 +8,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import Underworld from '../Underworld';
 
 export const slashCardId = 'Slash';
-const damageDone = 20;
+const damageMult = 1;
 const delayBetweenAnimationsStart = 400;
 const animationPath = 'spell-effects/spellHurtCuts';
 const spell: Spell = {
@@ -23,9 +23,9 @@ const spell: Spell = {
     thumbnail: 'spellIconHurt.png',
     animationPath,
     sfx: 'hurt',
-    description: ['spell_slash', damageDone.toString()],
+    description: ['spell_slash', Unit.GetSpellDamage(undefined, damageMult).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
-      return await slashEffect(state, card, quantity, underworld, prediction, damageDone, 1);
+      return await slashEffect(state, card, quantity, underworld, prediction, Unit.GetSpellDamage(state.casterUnit.damage, damageMult), 1);
     },
   },
 };
