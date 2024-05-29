@@ -62,12 +62,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     //no first time setup
   });
 
-  // Special balance case: Poisoner applies 1 stack of poison per damage
-  if (unit.unitSourceId == POISONER_ID) {
-    unit.damage -= quantity;
-  } else {
-    unit.damage -= statChange * quantity;
-  }
+  unit.damage -= statChange * quantity;
 }
 
 function remove(unit: Unit.IUnit, underworld: Underworld) {
@@ -77,12 +72,7 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
     return
   }
 
-  // Special balance case: Poisoner applies 1 stack of poison per damage
-  if (unit.unitSourceId == POISONER_ID) {
-    unit.damage += modifier.quantity;
-  } else {
-    unit.damage += statChange * modifier.quantity;
-  }
+  unit.damage += statChange * modifier.quantity;
 }
 
 export default spell;

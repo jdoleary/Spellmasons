@@ -9,7 +9,6 @@ import { defaultPushDistance } from '../../effects/force_move';
 
 export const urn_explosive_id = 'Explosive Urn'
 const baseRadius = 140;
-const damage = 80;
 const unit: UnitSource = {
   id: urn_explosive_id,
   info: {
@@ -18,7 +17,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.DOODAD,
   },
   unitProps: {
-    damage,
+    damage: 80,
     attackRange: baseRadius,
     staminaMax: 0,
     healthMax: 1,
