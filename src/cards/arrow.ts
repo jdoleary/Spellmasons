@@ -52,7 +52,7 @@ const spell: Spell = {
     }
   }
 };
-export function arrowEffect(multiShotCount: number, collideFnKey: string, doesPierce: boolean = false) {
+export function arrowEffect(multiShotCount: number, collideFnKey: string, doesPierce: boolean = false, extraIgnoreUnitIds: number[] = []) {
   return async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean) => {
     let targets: Vec2[] = state.targetedUnits;
     const path = findArrowPath(state.casterPositionAtTimeOfCast, state.castLocation, underworld)
@@ -91,6 +91,8 @@ export function arrowEffect(multiShotCount: number, collideFnKey: string, doesPi
             immovable: false,
             beingPushed: false
           }
+
+          const ignoreUnitIds = extraIgnoreUnitIds.concat(state.casterUnit.id);
           makeForceMoveProjectile({
             sourceUnit: state.casterUnit,
             pushedObject,
@@ -98,7 +100,7 @@ export function arrowEffect(multiShotCount: number, collideFnKey: string, doesPi
             endPoint: endPoint,
             speed: 1.5,
             doesPierce,
-            ignoreUnitIds: [state.casterUnit.id],
+            ignoreUnitIds,
             collideFnKey
           }, underworld, prediction);
 
