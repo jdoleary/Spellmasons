@@ -64,6 +64,10 @@ export function createVisualFlyingProjectile(
   imagePath: string,
   interceptEndTarget?: Vec2
 ): Promise<void> {
+  if (globalThis.headless) {
+    // Simulate finishing immediately on headless since there are no visuals
+    return Promise.resolve();
+  }
   // Use this similarTriangles calculation to make the projectile animation pretty so it doesn't originate from the exact center of the
   // source but at the edge instead
   const startPoint = math.distance(coords, target) <= config.COLLISION_MESH_RADIUS
@@ -89,6 +93,11 @@ function fly(
   time: number,
   resolve: (value: void | PromiseLike<void>) => void,
 ) {
+  if (globalThis.headless) {
+    // Simulate finishing immediately on headless since there are no visuals
+    resolve();
+    return;
+  }
   const shouldInitialize = instance.startTime == 0;
   // This block is invoked when the first time fly() is invoked for this instance
   if (shouldInitialize) {
@@ -134,7 +143,7 @@ export function createVisualLobbingProjectile(
   imagePath?: string,
   options?: PixiSpriteOptions
 ): Promise<void> {
-  if (!imagePath) {
+  if (!imagePath || globalThis.headless) {
     return Promise.resolve();
   }
   const instance = createProjectile(coords, target, imagePath, options);
@@ -156,6 +165,11 @@ function lob(
   time: number,
   resolve: (value: void | PromiseLike<void>) => void,
 ) {
+  if (globalThis.headless) {
+    // Simulate finishing immediately on headless since there are no visuals
+    resolve();
+    return;
+  }
   if (instance.startTime == 0) {
     instance.startTime = time;
     const time_in_flight = config.LOB_PROJECTILE_SPEED;
