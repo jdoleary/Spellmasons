@@ -169,7 +169,7 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
     const rarityText = document.createElement('div');
     rarityText.classList.add('card-rarity')
     rarityText.style.color = getCardRarityColor(upgrade);
-    rarityText.innerHTML = cardRarityAsString(upgrade).toLocaleLowerCase();
+    rarityText.innerHTML = globalThis.i18n(cardRarityAsString(upgrade).toLocaleLowerCase());
     elCardInner.appendChild(rarityText);
   }
 

@@ -863,7 +863,7 @@ function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSi
   const rarityText = document.createElement('div');
   rarityText.classList.add('card-rarity')
   rarityText.style.color = getCardRarityColor(content);
-  rarityText.innerHTML = cardRarityAsString(content).toLocaleLowerCase();
+  rarityText.innerHTML = globalThis.i18n(cardRarityAsString(content).toLocaleLowerCase());
   elCardInner.appendChild(rarityText);
   const desc = document.createElement('div');
   desc.classList.add('card-description');
