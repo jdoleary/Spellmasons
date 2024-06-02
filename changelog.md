@@ -12,7 +12,7 @@ Fix: Bolt radius increases for submerged units (#797)
     Thanks R?c??l?sc?nc?/recoalescence
 
 
-Plus Radius can now be cast on its own (#786)
+src: Plus Radius can now be cast on its own (#786)
     * Plus Radius can now be cast on its own
     - To let players increase Urn Radius
     * Add refund for plus radius
@@ -25,7 +25,7 @@ Fix: Teleport pickup prediction (#787)
 ref: Change up order of color replace colors
     to see if it affects #695
 
-copy: Fix modifier name since it is visible to players
+copy: Fix modifier name "Primed Corpse" since it is visible to players
     Thanks Chumler
 
 Fix: Player channelling animation while dead (#781)

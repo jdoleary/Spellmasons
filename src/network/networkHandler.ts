@@ -934,7 +934,9 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           }
           Player.syncLobby(underworld);
         } else {
-          console.error('Unexpected: Client recieving END_TURN message should include playersTurnEnded from server.')
+          if (!underworld.pie.soloMode) {
+            console.error('Unexpected: Client recieving END_TURN message should include playersTurnEnded from server.')
+          }
         }
       }
 
