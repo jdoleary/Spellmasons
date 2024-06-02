@@ -42,7 +42,6 @@ import {
   setAbyssColor,
   setCameraToMapCenter,
   addPixiTilingSprite,
-  runCinematicLevelCamera,
   cleanBlood,
   cacheBlood,
 } from './graphics/PixiUtils';
@@ -1966,18 +1965,15 @@ export default class Underworld {
     // runPrediction cleans up overlay from last level and sets up new health bars
     runPredictions(this);
     document.body?.classList.toggle('loading', false);
-    runCinematicLevelCamera(this).then(() => {
-      console.log('Cinematic Cam: Finished');
-      // Set the first turn phase
-      this.broadcastTurnPhase(turn_phase.PlayerTurns);
-      cameraAutoFollow(false);
-      setCameraToMapCenter(this);
-      // If in a multiplayer game and it's a few levels in (giving time for players to get situated)
-      // explaining pinging
-      if (this.players.length > 1 && this.levelIndex > 2) {
-        explain(EXPLAIN_PING);
-      }
-    });
+    // Set the first turn phase
+    this.broadcastTurnPhase(turn_phase.PlayerTurns);
+    cameraAutoFollow(false);
+    setCameraToMapCenter(this);
+    // If in a multiplayer game and it's a few levels in (giving time for players to get situated)
+    // explaining pinging
+    if (this.players.length > 1 && this.levelIndex > 2) {
+      explain(EXPLAIN_PING);
+    }
   }
   // creates a level from levelData
   createLevelSyncronous(levelData: LevelData) {

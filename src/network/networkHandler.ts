@@ -24,7 +24,7 @@ import { clone, Vec2 } from '../jmath/Vec';
 import pingSprite from '../graphics/Ping';
 import { clearLastNonMenuView, setView, View } from '../views';
 import { autoExplain, explain, EXPLAIN_END_TURN, tutorialCompleteTask } from '../graphics/Explain';
-import { cacheBlood, cameraAutoFollow, runCinematicLevelCamera } from '../graphics/PixiUtils';
+import { cacheBlood, cameraAutoFollow } from '../graphics/PixiUtils';
 import { ensureAllClientsHaveAssociatedPlayers, Overworld, recalculateGameDifficulty } from '../Overworld';
 import { playerCastAnimationColor, playerCastAnimationColorLighter, playerCastAnimationGlow } from '../graphics/ui/colors';
 import { lightenColor } from '../graphics/ui/colorUtil';
@@ -683,13 +683,6 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           if (connectedPlayers.length > 0 && connectedPlayers.every(p => p.lobbyReady)) {
             console.log('Lobby: All players are ready, start game.');
             setView(View.Game);
-            if (globalThis.player && fromPlayer.clientId == globalThis.player.clientId && !globalThis.player.isSpawned) {
-              // Retrigger the cinematic camera since the first time
-              // a user joins a game from the lobby, postLevelSetup will
-              // already have completed before they enter View.Game, so now
-              // that they have, run the cinematic again.
-              runCinematicLevelCamera(underworld);
-            }
             // Change end turn button from End Turn to Ready in multiplayer
             if (elEndTurnBtn && !globalThis.headless) {
               const elEndTurnSpan = elEndTurnBtn.querySelector('[data-localize-text]') as HTMLElement;
