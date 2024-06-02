@@ -1,3 +1,66 @@
+## 1.38.0 - Patch
+
+fix: NPCs not ending their turns
+    Big thanks to Un4o1y, Xeddar and Adriller
+    Resolves #737
+
+i18n: Translate card rarity
+    Update Polish
+    Thanks @Whisky!
+
+Fix: Bolt radius increases for submerged units (#797)
+    Thanks R?c??l?sc?nc?/recoalescence
+
+
+Plus Radius can now be cast on its own (#786)
+    * Plus Radius can now be cast on its own
+    - To let players increase Urn Radius
+    * Add refund for plus radius
+
+
+Fix: Teleport pickup prediction (#787)
+    Fixes an issue that cause displace, teleport, and similar "set location" spells to trigger real world pickups while in prediction mode
+    Thanks @Whisky
+
+ref: Change up order of color replace colors
+    to see if it affects #695
+
+copy: Fix modifier name since it is visible to players
+    Thanks Chumler
+
+Fix: Player channelling animation while dead (#781)
+
+optimization: Save function to not have duplicate (#777)
+    units, pickups, players arrays
+
+menu: Server list will be sorted by version number so servers on the latest version will be at the top
+
+src: Guard spellmason NPC action
+    with timeout
+
+menu: Readd enemies to the codex
+    Close #746
+
+ref: Remove client side timeout for cards.
+    
+    When there are many enemies on screen the game's fps can slow
+    which can cause cards to timeout which means the result of a cast may not match the prediction.  This is bad.
+    
+    Instead, I will just leave the timeout on the serverside
+    so the server will not hang.
+
+perf: Optimize ancient attack for FPS
+    also optimize Blood splatter.
+    
+    Thanks @Whisky
+
+ref: END_TURN syncing
+    Now when a client sends END_TURN, the server
+    will append the list of client ids of all clients that
+    have ended their turn.
+    When clients recieve END_TURN they will now
+    sync to the server's END_TURN state.
+
 ## 1.37.0 - Patch
 fix: Softlock fix attempt 2
 All spells now have builtin timeouts with error reporting to prevent
