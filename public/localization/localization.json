@@ -510,6 +510,7 @@
         "uncommon": "uncommon",
         "rare": "rare",
         "forbidden": "forbidden",
+        "spell_clone_2": "Clones each target.  Clones are added as a target to following spells.",
         "dev": "keep translate forumula"
     },
     {
@@ -1023,6 +1024,7 @@
         "uncommon": "peu fréquent",
         "rare": "rare",
         "forbidden": "ultra rare",
+        "spell_clone_2": "Clone chaque cible.  Les clones sont ajoutés comme cibles aux sorts suivants.",
         "dev": "continuer à traduire le forum"
     },
     {
@@ -1536,6 +1538,7 @@
         "uncommon": "non comune",
         "rare": "raro",
         "forbidden": "estremamente raro",
+        "spell_clone_2": "Clona ciascun bersaglio.  I cloni vengono aggiunti come bersaglio agli incantesimi successivi.",
         "dev": "continua a tradurre forumula"
     },
     {
@@ -2049,6 +2052,7 @@
         "uncommon": "ungewöhnlich",
         "rare": "selten",
         "forbidden": "sehr selten",
+        "spell_clone_2": "Klont jedes Ziel.  Klone werden folgenden Zaubersprüchen als Ziel hinzugefügt.",
         "dev": "Übersetzen Sie weiterhin das Forum"
     },
     {
@@ -2562,6 +2566,7 @@
         "uncommon": "poco común",
         "rare": "extraño",
         "forbidden": "ultra raro",
+        "spell_clone_2": "Clona cada objetivo.  Los clones se añaden como objetivo de los siguientes hechizos.",
         "dev": "sigue traduciendo el foro"
     },
     {
@@ -3075,6 +3080,7 @@
         "uncommon": "珍しい",
         "rare": "レア",
         "forbidden": "ウルトラ・レア",
+        "spell_clone_2": "各ターゲットのクローンを作成します。  クローンは次の呪文の対象として追加されます。",
         "dev": "数式を翻訳し続ける"
     },
     {
@@ -3588,6 +3594,7 @@
         "uncommon": "incomum",
         "rare": "excepcional",
         "forbidden": "Ultra raro",
+        "spell_clone_2": "Clona cada alvo.  Clones são adicionados como alvo aos feitiços seguintes.",
         "dev": "continue traduzindo forumula"
     },
     {
@@ -4101,6 +4108,7 @@
         "uncommon": "غير مألوف",
         "rare": "نادر",
         "forbidden": "نادر جدا",
+        "spell_clone_2": "استنساخ كل هدف.  تتم إضافة النسخ كهدف للتعاويذ التالية.",
         "dev": "استمر في ترجمة المنتدى"
     },
     {
@@ -4614,6 +4622,7 @@
         "uncommon": "드문",
         "rare": "희귀한",
         "forbidden": "매우 희귀함",
+        "spell_clone_2": "각 대상을 복제합니다.  클론은 다음 주문의 대상으로 추가됩니다.",
         "dev": "계속 번역 포럼"
     },
     {
@@ -5127,6 +5136,7 @@
         "uncommon": "необычный",
         "rare": "редкий",
         "forbidden": "ультра редкий",
+        "spell_clone_2": "Клонирует каждую цель.  Клоны добавляются в качестве цели к следующим заклинаниям.",
         "dev": "продолжайте переводить форум"
     },
     {
@@ -5640,6 +5650,7 @@
         "uncommon": "罕见",
         "rare": "稀有的",
         "forbidden": "超稀有",
+        "spell_clone_2": "克隆每个目标。  克隆体将作为目标添加到以下法术中。",
         "dev": "保留翻译论坛"
     },
     {
@@ -6153,6 +6164,7 @@
         "uncommon": "罕見",
         "rare": "稀有的",
         "forbidden": "超稀有",
+        "spell_clone_2": "克隆每個目標。  克隆體將作為目標添加到以下法術。",
         "dev": "保留翻譯論壇"
     },
     {
@@ -6666,6 +6678,7 @@
         "uncommon": "niezwykły",
         "rare": "rzadki",
         "forbidden": "bardzo rzadki",
+        "spell_clone_2": "Klonuje każdy cel.  Klony są dodawane jako cel następujących zaklęć.",
         "dev": "tłumacz dalej forum"
     },
     {
@@ -7179,6 +7192,7 @@
         "uncommon": "ongewoon",
         "rare": "zeldzaam",
         "forbidden": "uiterst zeldzaam",
+        "spell_clone_2": "Kloont elk doel.  Klonen worden als doelwit toegevoegd aan volgende spreuken.",
         "dev": "blijf het forumula vertalen"
     }
 ]

@@ -50,6 +50,7 @@ import soul_shard from './soul_shard';
 import * as protection from './protection';
 import merge from './merge';
 import clone from './clone';
+import clone2 from './clone2';
 import capture_soul from './capture_soul';
 import mana_burn from './mana_burn';
 import mana_steal from './mana_steal';
@@ -290,6 +291,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(resurrect, overworld);
   registerSpell(merge, overworld);
   registerSpell(clone, overworld);
+  registerSpell(clone2, overworld);
   registerSpell(sacrifice, overworld);
   registerSpell(capture_soul, overworld);
   registerSpell(decoy, overworld);
