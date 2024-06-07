@@ -1,4 +1,5 @@
 import * as Unit from '../entity/Unit';
+import * as GameStatistics from '../GameStatistics';
 import type { HasSpace } from '../entity/Type';
 import * as Image from '../graphics/Image';
 import { CardCategory } from '../types/commonTypes';
@@ -97,6 +98,8 @@ export function arrowEffect(multiShotCount: number, collideFnKey: string, doesPi
             ignoreUnitIds: [state.casterUnit.id],
             collideFnKey
           }, underworld, prediction);
+
+          GameStatistics.trackArrowFired({ prediction });
 
           if (!prediction && !globalThis.headless) {
             const timeout = Math.max(0, timeoutToNextArrow);

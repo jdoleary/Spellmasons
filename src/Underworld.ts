@@ -8,6 +8,8 @@ import * as Upgrade from './Upgrade';
 import * as math from './jmath/math';
 import * as Cards from './cards';
 import * as CardUI from './graphics/ui/CardUI';
+import * as Achievements from './Achievements';
+import * as GameStatistics from './GameStatistics';
 import * as Image from './graphics/Image';
 import * as storage from './storage';
 import * as ImmediateMode from './graphics/ImmediateModeSprites';
@@ -3700,6 +3702,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       initialTargetedPickupId
     };
 
+    GameStatistics.trackCastCards({ effectState, prediction });
+
     // Get initial targets.  If initial targets are already determined (by being passed into this function, use them;
     // this is so that networked SPELL messages have consistent targets).  otherwise determine the initial target
     // based on the castLocation and special logic such as noInitialTarget and onlySelectDeadUnits which depend on the
@@ -3896,6 +3900,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // Reset quantity once a card is cast
       quantity = 1;
     }
+
+    Achievements.UnlockEvent_CastCards(this);
 
     if (!prediction) {
       // Clear spell animations once all cards are done playing their animations
