@@ -45,6 +45,12 @@ export function registerAllAchievements() {
   console.log("Registered achievements!", allAchievements);
 }
 
+// ID's and registry maybe not needed?
+export function getAchievementById(id: string) {
+  const achievement = allAchievements[id];
+  return achievement;
+}
+
 //
 
 export function UnlockAchievement(achievement: IAchievement) {
@@ -53,14 +59,6 @@ export function UnlockAchievement(achievement: IAchievement) {
     console.log("Achievement unlocked!", achievement)
   } else {
     console.log("Achievement is already unlocked.", achievement)
-  }
-}
-
-// ID's and registry maybe not needed?
-export function UnlockAchievementById(id: string) {
-  const achievement = allAchievements[id];
-  if (achievement) {
-    UnlockAchievement(achievement)
   }
 }
 
