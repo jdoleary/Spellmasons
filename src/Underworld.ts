@@ -2216,6 +2216,8 @@ export default class Underworld {
     // in case the player has beaten the level and died at the same time
     // Favoring the player in this scenario should only improve player experience
     if (this.isLevelComplete()) {
+      GameStatistics.trackEndLevel(this);
+
       // If the level is complete, try going to the next one
       // Will fail if players aren't ready (haven't ended turns / entered portals)
       if (this.tryGoToNextLevel()) {

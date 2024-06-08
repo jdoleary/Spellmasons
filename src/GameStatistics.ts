@@ -1,6 +1,7 @@
 import * as Unit from './entity/Unit';
 import * as Cards from './cards';
 import * as Achievements from './Achievements';
+import Underworld from './Underworld';
 
 //
 
@@ -12,7 +13,7 @@ export interface IStatistics {
 }
 
 // This function can be used to initialize or reset a statistics object
-function EmptyStatistics(stats?: IStatistics): IStatistics {
+export function EmptyStatistics(stats?: IStatistics): IStatistics {
   return Object.assign(stats || {}, {
     myPlayerDamageTaken: 0,
     cardsCast: 0,
@@ -118,4 +119,9 @@ export function trackCursePurified(args: trackCursePurifiedArgs) {
   }
 
   allStatsAtDepth(StatDepth.SPELL).forEach(s => s.myPlayerCursesPurified += 1);
+}
+
+export function trackEndLevel(underworld: Underworld) {
+  Achievements.UnlockEvent_EndOfLevel(underworld);
+  EmptyStatistics(allStats[StatDepth.LEVEL]);
 }

@@ -25,6 +25,11 @@ const achievement_CompleteGameNoDamageTaken: IAchievement = {
   description: "Complete the first 12 levels without taking any damage",
   unlocked: false,
 }
+const achievement_BrinkOfDeath: IAchievement = {
+  id: "Brink Of Death",
+  description: "Complete a level with less than 10 health remaining",
+  unlocked: false,
+}
 const achievement_ArrowRain: IAchievement = {
   id: "Arrow Rain",
   description: "Shoot 100 or more arrows with one spell",
@@ -42,6 +47,7 @@ function registerAchievement(achievement: IAchievement) {
 export function registerAllAchievements() {
   registerAchievement(achievement_CompleteTheGame);
   registerAchievement(achievement_CompleteGameNoDamageTaken);
+  registerAchievement(achievement_BrinkOfDeath);
   registerAchievement(achievement_ArrowRain);
   console.log("[ACHIEVEMENT] - Registered achievements!", allAchievements);
 }
@@ -70,6 +76,10 @@ export function UnlockEvent_CastCards() {
 }
 
 export function UnlockEvent_EndOfLevel(underworld: Underworld) {
+  if (globalThis.player && globalThis.player.unit.health < 10) {
+    UnlockAchievement(achievement_BrinkOfDeath);
+  }
+
   if (underworld.levelIndex == LAST_LEVEL_INDEX) {
     UnlockAchievement(achievement_CompleteTheGame)
     if (allStats[StatDepth.RUN] && allStats[StatDepth.RUN].myPlayerDamageTaken == 0) {
