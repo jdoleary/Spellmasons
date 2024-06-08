@@ -12,15 +12,16 @@ import Underworld from '../Underworld';
 import { clone, lerpVec2, Vec2 } from '../jmath/Vec';
 
 const merge_id = 'merge';
+const UNITS_MERGED_PER_QUANTITY = 3;
 const spell: Spell = {
   card: {
     id: merge_id,
     category: CardCategory.Soul,
-    manaCost: 40,
+    manaCost: 80,
     healthCost: 0,
     probability: probabilityMap[CardRarity.RARE],
     expenseScaling: 2,
-    supportQuantity: false,
+    supportQuantity: true,
     thumbnail: 'spellIconMerge.png',
     description: 'spell_merge',
     effect: async (state, card, quantity, underworld, prediction) => {
@@ -45,7 +46,8 @@ const spell: Spell = {
         if (similarThings.length) {
           if (!prediction) {
             playSFXKey('clone');
-            for (const thing of similarThings) {
+            // .slice limits the number of things that can merge by quantity
+            for (const thing of similarThings.slice(0, quantity * UNITS_MERGED_PER_QUANTITY)) {
               mergePromises.push(animateMerge((thing as any).image, target));
             }
           }
