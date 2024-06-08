@@ -9,20 +9,22 @@ export interface IStatistics {
   myPlayerDamageTaken: number;
 }
 
-// How can we initialize these without manually typing everything out 3+ times?
-export const totalStatistics: IStatistics = { cardsCast: 0, myPlayerArrowsFired: 0, myPlayerDamageTaken: 0 };
-export const runStatistics: IStatistics = { cardsCast: 0, myPlayerArrowsFired: 0, myPlayerDamageTaken: 0 };
-export const levelStatistics: IStatistics = { cardsCast: 0, myPlayerArrowsFired: 0, myPlayerDamageTaken: 0 };
-export const spellStatistics: IStatistics = { cardsCast: 0, myPlayerArrowsFired: 0, myPlayerDamageTaken: 0 };
+// This function can be used to initialize or reset a statistics object
+function EmptyStatistics(stats?: IStatistics): IStatistics {
+  return Object.assign(stats || {}, {
+    cardsCast: 0,
+    myPlayerArrowsFired: 0,
+    myPlayerDamageTaken: 0,
+  })
+}
+
+export const totalStatistics: IStatistics = EmptyStatistics();
+export const runStatistics: IStatistics = EmptyStatistics();
+export const levelStatistics: IStatistics = EmptyStatistics();
+export const spellStatistics: IStatistics = EmptyStatistics();
 
 export function TestStats() {
   // This is a test function called once in makeOverworld
-}
-
-function ClearStatistics(stats: IStatistics) {
-  stats.cardsCast = 0;
-  stats.myPlayerArrowsFired = 0;
-  stats.myPlayerDamageTaken = 0;
 }
 
 //
@@ -37,7 +39,7 @@ export function trackCastCards(args: trackCastCardsArgs) {
     return;
   }
 
-  ClearStatistics(spellStatistics);
+  EmptyStatistics(spellStatistics);
   if (effectState.casterPlayer == globalThis.player) {
     spellStatistics.cardsCast += effectState.cardIds.length;
   }
