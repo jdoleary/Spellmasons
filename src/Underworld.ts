@@ -2056,10 +2056,6 @@ export default class Underworld {
     }
     // Update toolbar (since some card's disabledLabel needs updating on every new label)
     CardUI.recalcPositionForCards(globalThis.player, this);
-    // Change song now that level has changed:
-    if (globalThis.playNextSong) {
-      globalThis.playNextSong();
-    }
     // Now that level is done being generated, set generatingLevel to
     // false so that the next level generation may begin when it is time
     this.generatingLevel = false;
