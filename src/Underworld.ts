@@ -3901,7 +3901,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       quantity = 1;
     }
 
-    Achievements.UnlockEvent_CastCards(this);
+    GameStatistics.trackCastCardsEnd({ effectState, prediction });
 
     if (!prediction) {
       // Clear spell animations once all cards are done playing their animations
