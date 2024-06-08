@@ -21,7 +21,6 @@
 - Test saving if you modify underworld with new elements added to the level that need to be serialized
 - Test loading an old save file for backwards compatibility
 - Test hosting LAN server from Electron build
-- Merge master branch to keep it up to date
 - Test tutorial ALWAYS on electron build
 - Test that F12 works in electron build
 - Test mod thumbnail paths on electron build
