@@ -38,8 +38,13 @@ function allStatsAtDepth(depth: StatDepth): IStatistics[] {
   return allStats.slice(0, depth + 1);
 }
 
-export function TestStats() {
-  // This is a test function called once in makeOverworld
+export function LogStats() {
+  console.log("[STATS]", allStats);
+
+  console.log("[STATS] - TOTAL", allStats[StatDepth.TOTAL]);
+  console.log("[STATS] - RUN", allStats[StatDepth.RUN]);
+  console.log("[STATS] - LEVEL", allStats[StatDepth.LEVEL]);
+  console.log("[STATS] - SPELL", allStats[StatDepth.SPELL]);
 }
 
 //

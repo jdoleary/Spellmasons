@@ -43,7 +43,7 @@ export function registerAllAchievements() {
   registerAchievement(achievement_CompleteTheGame);
   registerAchievement(achievement_CompleteGameNoDamageTaken);
   registerAchievement(achievement_ArrowRain);
-  console.log("Registered achievements!", allAchievements);
+  console.log("[ACHIEVEMENT] - Registered achievements!", allAchievements);
 }
 
 // ID's and registry maybe not needed?
@@ -57,9 +57,9 @@ export function getAchievementById(id: string) {
 export function UnlockAchievement(achievement: IAchievement) {
   if (!achievement.unlocked) {
     achievement.unlocked = true;
-    console.log("Achievement unlocked!", achievement)
+    console.log("[ACHIEVEMENT] - Achievement unlocked!", achievement)
   } else {
-    console.log("Achievement is already unlocked.", achievement)
+    console.log("[ACHIEVEMENT] - Achievement is already unlocked.", achievement)
   }
 }
 
