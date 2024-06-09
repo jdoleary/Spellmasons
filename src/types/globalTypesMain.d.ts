@@ -12,7 +12,7 @@ import type { IPickup } from '../entity/Pickup';
 import type { IHostApp } from '../network/networkUtil';
 import type { LanguageMapping, Localizable } from '../localization';
 import type { TutorialChecklist } from '../graphics/Explain';
-import type * as particles from '@pixi/particle-emitter'
+import type * as particles from 'jdoleary-fork-pixi-particle-emitter'
 import type { PromptArgs } from '../graphics/Jprompt';
 import keyMapping from '../graphics/ui/keyMapping';
 

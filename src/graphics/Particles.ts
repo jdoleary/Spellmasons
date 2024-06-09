@@ -1,4 +1,4 @@
-import * as particles from '@pixi/particle-emitter'
+import * as particles from 'jdoleary-fork-pixi-particle-emitter'
 import * as Vec from '../jmath/Vec';
 import { Vec2 } from '../jmath/Vec';
 import { prng, randFloat } from '../jmath/rand';
@@ -300,6 +300,81 @@ export function createHardCircleParticleTexture() {
     img.src = './images/hard-circle.png';
     const base = new globalThis.pixi.BaseTexture(img);
     return new globalThis.pixi.Texture(base);
+}
+export function auraEmitter(position: Vec2, size: number, prediction: boolean) {
+    if (prediction) {
+        // Don't show if just a prediction
+        return undefined;
+    }
+    const texture = createParticleTexture();
+    if (!texture) {
+        logNoTextureWarning('makeBloatExplosion');
+        return;
+    }
+    const config =
+        particles.upgradeConfig({
+            autoUpdate: true,
+            "alpha": {
+                "start": 1,
+                "end": 0
+            },
+            "scale": {
+                "start": 0.5,
+                "end": 0.5,
+                "minimumScaleMultiplier": 1
+            },
+            "color": {
+                "start": "#ff0000",
+                "end": "#ff0000"
+            },
+            "speed": {
+                "start": 1,
+                "end": -100,
+                "minimumSpeedMultiplier": 1
+            },
+            "acceleration": {
+                "x": 0,
+                "y": -10
+            },
+            "maxSpeed": 0,
+            "startRotation": {
+                "min": 0,
+                "max": 0
+            },
+            "noRotation": false,
+            "rotationSpeed": {
+                "min": 50,
+                "max": 50
+            },
+            "lifetime": {
+                "min": 2,
+                "max": 2
+            },
+            "blendMode": "normal",
+            "frequency": 0.01,
+            "emitterLifetime": -1,
+            "maxParticles": 999,
+            "pos": {
+                "x": 0,
+                "y": 0
+            },
+            "addAtBack": true,
+            "spawnType": "ring",
+            "spawnCircle": {
+                "x": 0,
+                "y": 0,
+                "r": 200,
+                "minR": 200
+            }
+        }, [texture]);
+    const shape = config.behaviors.find(b => b.type == "spawnShape");
+    if (shape) {
+        shape.config.data.semiMinorAxis = 3 * size;
+        shape.config.data.semiMajorAxis = 2 * size;
+        shape.config.type = 'oval';
+    }
+    return simpleEmitter(position, config, undefined, containerParticlesUnderUnits);
+
 }
 
 export function moveStreakEmitter(position: Vec2, prediction: boolean) {

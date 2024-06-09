@@ -1,5 +1,5 @@
 
-import * as particles from '@pixi/particle-emitter'
+import * as particles from 'jdoleary-fork-pixi-particle-emitter'
 import { rgb2hex } from '@pixi/utils';
 import { easeOutCubic } from '../jmath/Easing';
 import { lerp } from '../jmath/math';

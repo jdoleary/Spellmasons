@@ -1,4 +1,4 @@
-import * as particles from '@pixi/particle-emitter'
+import * as particles from 'jdoleary-fork-pixi-particle-emitter'
 import { takeDamage } from '../entity/Unit';
 import * as Unit from '../entity/Unit';
 import { Spell, refundLastSpell } from './index';
