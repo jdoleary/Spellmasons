@@ -35,6 +35,11 @@ const achievement_ArrowRain: IAchievement = {
   description: "Shoot 100 or more arrows with one spell",
   unlocked: false,
 }
+const achievement_100Percent: IAchievement = {
+  id: "100 Percent",
+  description: "Earn all other achievements",
+  unlocked: false,
+}
 
 //
 
@@ -49,6 +54,7 @@ export function registerAllAchievements() {
   registerAchievement(achievement_CompleteGameNoDamageTaken);
   registerAchievement(achievement_BrinkOfDeath);
   registerAchievement(achievement_ArrowRain);
+  registerAchievement(achievement_100Percent);
   console.log("[ACHIEVEMENT] - Registered achievements!", allAchievements);
 }
 
@@ -63,9 +69,16 @@ export function getAchievementById(id: string) {
 export function UnlockAchievement(achievement: IAchievement) {
   if (!achievement.unlocked) {
     achievement.unlocked = true;
-    console.log("[ACHIEVEMENT] - Achievement unlocked!", achievement)
+    console.log("[ACHIEVEMENT] - New Achievement unlocked!", achievement.id, achievement)
   } else {
-    console.log("[ACHIEVEMENT] - Achievement is already unlocked.", achievement)
+    console.log("[ACHIEVEMENT] - Already unlocked ", achievement.id, achievement)
+  }
+
+  // There is an achievement for earning all other achievements
+  if (!achievement_100Percent.unlocked) {
+    if (Object.entries(allAchievements).every(e => e[1].unlocked || e[1] == achievement_100Percent)) {
+      UnlockAchievement(achievement_100Percent);
+    }
   }
 }
 
