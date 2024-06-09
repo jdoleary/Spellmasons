@@ -5,6 +5,7 @@ import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import * as Pickup from '../entity/Pickup';
+import * as GameStatistics from '../GameStatistics';
 
 
 export const purifyCardId = 'purify';
@@ -29,7 +30,7 @@ const spell: Spell = {
         playDefaultSpellSFX(card, prediction);
         await playDefaultSpellAnimation(card, targets, prediction);
         for (let unit of targets) {
-          apply(unit, underworld)
+          apply(unit, underworld, prediction, state.casterUnit)
         }
       }
       if (doRefund) {
@@ -39,11 +40,12 @@ const spell: Spell = {
     },
   },
 };
-export function apply(unit: Unit.IUnit, underworld: Underworld) {
+export function apply(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, sourceUnit: Unit.IUnit) {
 
   for (let [modifier, modifierProperties] of Object.entries(unit.modifiers)) {
     if (modifierProperties.isCurse) {
       Unit.removeModifier(unit, modifier, underworld);
+      GameStatistics.trackCursePurified({ unit, sourceUnit, prediction });
     }
   }
 }

@@ -125,16 +125,19 @@ export function trackArrowFired(args: trackArrowFiredArgs) {
 }
 
 interface trackCursePurifiedArgs {
+  unit: Unit.IUnit,
   sourceUnit: Unit.IUnit,
   prediction: boolean,
 }
 export function trackCursePurified(args: trackCursePurifiedArgs) {
-  let { prediction } = args;
+  let { unit, sourceUnit, prediction } = args;
   if (prediction) {
     return;
   }
 
-  allStatsAtDepth(StatDepth.SPELL).forEach(s => s.myPlayerCursesPurified += 1);
+  if (sourceUnit == globalThis.player?.unit) {
+    allStatsAtDepth(StatDepth.SPELL).forEach(s => s.myPlayerCursesPurified += 1);
+  }
 }
 
 // Warning, this gets called mulitple times per level

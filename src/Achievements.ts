@@ -40,6 +40,11 @@ const achievement_ArrowRain: IAchievement = {
   description: "Shoot 100 or more arrows with one spell",
   unlocked: false,
 }
+const achievement_MiracleWorker: IAchievement = {
+  id: "Miracle Worker",
+  description: "Purify 5 or more curses with one spell",
+  unlocked: false,
+}
 export const achievement_PotionSeller: IAchievement = {
   id: "Potion Seller",
   description: "'Hello Potion Seller. I'm going into battle, and I want your strongest potions.' (Create a stronger potion)",
@@ -65,6 +70,7 @@ export function registerAllAchievements() {
   registerAchievement(achievement_AllPartOfThePlan);
   registerAchievement(achievement_BrinkOfDeath);
   registerAchievement(achievement_ArrowRain);
+  registerAchievement(achievement_MiracleWorker);
   registerAchievement(achievement_PotionSeller);
   registerAchievement(achievement_100Percent);
   console.log("[ACHIEVEMENT] - Registered achievements!", allAchievements);
@@ -95,8 +101,13 @@ export function UnlockAchievement(achievement: IAchievement) {
 }
 
 export function UnlockEvent_CastCards() {
-  if (allStats[StatDepth.SPELL] && allStats[StatDepth.SPELL].myPlayerArrowsFired >= 100) {
-    UnlockAchievement(achievement_ArrowRain);
+  if (allStats[StatDepth.SPELL]) {
+    if (allStats[StatDepth.SPELL].myPlayerArrowsFired >= 100) {
+      UnlockAchievement(achievement_ArrowRain);
+    }
+    if (allStats[StatDepth.SPELL].myPlayerCursesPurified >= 5) {
+      UnlockAchievement(achievement_MiracleWorker);
+    }
   }
 }
 
