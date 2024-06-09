@@ -42,7 +42,7 @@ const achievement_ArrowRain: IAchievement = {
 }
 export const achievement_PotionSeller: IAchievement = {
   id: "Potion Seller",
-  description: "\"Hello Potion Seller. I'm going into battle, and I want your strongest potions.\" (Create a stronger potion)",
+  description: "'Hello Potion Seller. I'm going into battle, and I want your strongest potions.' (Create a stronger potion)",
   unlocked: false,
 }
 const achievement_100Percent: IAchievement = {

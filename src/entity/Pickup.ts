@@ -712,7 +712,7 @@ export function setPower(pickup: IPickup, newPower: number) {
     pickup.image.sprite.scale.y = newScale;
   }
   pickup.power = newPower;
-  if (pickup.power > 1) {
+  if (pickup.predictionCopy != pickup && pickup.power > 1) {
     UnlockAchievement(achievement_PotionSeller);
   }
 }
