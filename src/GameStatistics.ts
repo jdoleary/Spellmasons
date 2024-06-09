@@ -7,6 +7,7 @@ import Underworld from './Underworld';
 
 export interface IStatistics {
   myPlayerDamageTaken: number;
+  myPlayerDeaths: number;
   cardsCast: number;
   myPlayerArrowsFired: number;
   myPlayerCursesPurified: number;
@@ -16,6 +17,7 @@ export interface IStatistics {
 export function EmptyStatistics(stats?: IStatistics): IStatistics {
   return Object.assign(stats || {}, {
     myPlayerDamageTaken: 0,
+    myPlayerDeaths: 0,
     cardsCast: 0,
     myPlayerArrowsFired: 0,
     myPlayerCursesPurified: 0,
@@ -50,12 +52,12 @@ export function LogStats() {
 
 //
 
-interface trackDamageArgs {
+interface trackUnitDamageArgs {
   unit: Unit.IUnit,
   amount: number,
   prediction: boolean,
 }
-export function trackDamage(args: trackDamageArgs) {
+export function trackUnitDamage(args: trackUnitDamageArgs) {
   let { unit, amount, prediction } = args;
   if (prediction) {
     return;
@@ -65,6 +67,21 @@ export function trackDamage(args: trackDamageArgs) {
     if (unit == globalThis.player?.unit) {
       allStatsAtDepth(StatDepth.LEVEL).forEach(s => s.myPlayerDamageTaken += amount);
     }
+  }
+}
+
+interface trackUnitDieArgs {
+  unit: Unit.IUnit,
+  prediction: boolean,
+}
+export function trackUnitDie(args: trackUnitDieArgs) {
+  let { unit, prediction } = args;
+  if (prediction) {
+    return;
+  }
+
+  if (unit == globalThis.player?.unit) {
+    allStatsAtDepth(StatDepth.LEVEL).forEach(s => s.myPlayerDeaths += 1);
   }
 }
 
@@ -121,6 +138,7 @@ export function trackCursePurified(args: trackCursePurifiedArgs) {
   allStatsAtDepth(StatDepth.SPELL).forEach(s => s.myPlayerCursesPurified += 1);
 }
 
+// Warning, this gets called mulitple times per level
 export function trackEndLevel(underworld: Underworld) {
   Achievements.UnlockEvent_EndOfLevel(underworld);
   EmptyStatistics(allStats[StatDepth.LEVEL]);

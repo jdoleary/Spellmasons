@@ -25,6 +25,11 @@ const achievement_CompleteGameNoDamageTaken: IAchievement = {
   description: "Complete the first 12 levels without taking any damage",
   unlocked: false,
 }
+const achievement_AllPartOfThePlan: IAchievement = {
+  id: "All Part of the Plan",
+  description: "Complete a level in which you died",
+  unlocked: false,
+}
 const achievement_BrinkOfDeath: IAchievement = {
   id: "Brink Of Death",
   description: "Complete a level with less than 10 health remaining",
@@ -52,6 +57,7 @@ function registerAchievement(achievement: IAchievement) {
 export function registerAllAchievements() {
   registerAchievement(achievement_CompleteTheGame);
   registerAchievement(achievement_CompleteGameNoDamageTaken);
+  registerAchievement(achievement_AllPartOfThePlan);
   registerAchievement(achievement_BrinkOfDeath);
   registerAchievement(achievement_ArrowRain);
   registerAchievement(achievement_100Percent);
@@ -91,6 +97,10 @@ export function UnlockEvent_CastCards() {
 export function UnlockEvent_EndOfLevel(underworld: Underworld) {
   if (globalThis.player && globalThis.player.unit.health < 10) {
     UnlockAchievement(achievement_BrinkOfDeath);
+  }
+
+  if (allStats[StatDepth.LEVEL] && allStats[StatDepth.LEVEL].myPlayerDeaths == 0) {
+    UnlockAchievement(achievement_AllPartOfThePlan)
   }
 
   if (underworld.levelIndex == LAST_LEVEL_INDEX) {

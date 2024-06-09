@@ -862,6 +862,7 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   // this will remove the tooltip:
   checkIfNeedToClearTooltip();
 
+  GameStatistics.trackUnitDie({ unit, prediction });
   if (!prediction && unit.originalLife && unit.faction !== globalThis.player?.unit.faction) {
     underworld.reportEnemyKilled(unit);
   }
@@ -945,7 +946,7 @@ export function takeDamage(damageArgs: damageArgs, underworld: Underworld, predi
   if (amount > unit.health) {
     amount = unit.health;
   }
-  GameStatistics.trackDamage({ unit, amount, prediction });
+  GameStatistics.trackUnitDamage({ unit, amount, prediction });
 
   unit.health -= amount;
   // Ensure health is a whole number
