@@ -50,6 +50,11 @@ export const achievement_PotionSeller: IAchievement = {
   description: "'Hello Potion Seller. I'm going into battle, and I want your strongest potions.' (Create a stronger potion)",
   unlocked: false,
 }
+export const achievement_Doomsayer: IAchievement = {
+  id: "Doomsayer",
+  description: "Curse an enemy with 'Impending Doom'",
+  unlocked: false,
+}
 const achievement_100Percent: IAchievement = {
   id: "100 Percent",
   description: "Earn all other achievements",
