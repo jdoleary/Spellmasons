@@ -970,7 +970,8 @@ function getFromPlayerViaClientId(clientId: string, underworld: Underworld): Pla
   const player = underworld.players.find(p => p.clientId == clientId);
   //console.debug("Finding player on different client:\n", clientId, "\n", player?.playerId);
   if (!player) {
-    console.error("No fromPlayer found for clientId: ", clientId);
+    console.error("No fromPlayer found via clientId");
+    console.log("No fromPlayer found for clientId: ", clientId);
   }
   return player;
 }
