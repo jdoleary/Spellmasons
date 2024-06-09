@@ -40,6 +40,11 @@ const achievement_ArrowRain: IAchievement = {
   description: "Shoot 100 or more arrows with one spell",
   unlocked: false,
 }
+export const achievement_PotionSeller: IAchievement = {
+  id: "Potion Seller",
+  description: "\"Hello Potion Seller. I'm going into battle, and I want your strongest potions.\" (Create a stronger potion)",
+  unlocked: false,
+}
 const achievement_100Percent: IAchievement = {
   id: "100 Percent",
   description: "Earn all other achievements",
@@ -60,6 +65,7 @@ export function registerAllAchievements() {
   registerAchievement(achievement_AllPartOfThePlan);
   registerAchievement(achievement_BrinkOfDeath);
   registerAchievement(achievement_ArrowRain);
+  registerAchievement(achievement_PotionSeller);
   registerAchievement(achievement_100Percent);
   console.log("[ACHIEVEMENT] - Registered achievements!", allAchievements);
 }

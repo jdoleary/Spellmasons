@@ -27,6 +27,7 @@ import floatingText from '../graphics/FloatingText';
 import { containerParticles } from '../graphics/Particles';
 import { elEndTurnBtn } from '../HTMLElements';
 import { healManaUnit, healUnit } from '../effects/heal';
+import { UnlockAchievement, achievement_PotionSeller } from '../Achievements';
 
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 export const PICKUP_IMAGE_PATH = 'pickups/scroll';
@@ -711,6 +712,9 @@ export function setPower(pickup: IPickup, newPower: number) {
     pickup.image.sprite.scale.y = newScale;
   }
   pickup.power = newPower;
+  if (pickup.power > 1) {
+    UnlockAchievement(achievement_PotionSeller);
+  }
 }
 function getScaleFromPower(power: number): number {
   // this final scale of the pickup will always be less than the max multiplier
