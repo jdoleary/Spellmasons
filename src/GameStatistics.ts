@@ -43,7 +43,6 @@ function allStatsAtDepth(depth: StatDepth): IStatistics[] {
 
 export function LogStats() {
   console.log("[STATS]", allStats);
-
   console.log("[STATS] - TOTAL", allStats[StatDepth.TOTAL]);
   console.log("[STATS] - RUN", allStats[StatDepth.RUN]);
   console.log("[STATS] - LEVEL", allStats[StatDepth.LEVEL]);
@@ -140,6 +139,10 @@ export function trackCursePurified(args: trackCursePurifiedArgs) {
 
 // Warning, this gets called mulitple times per level
 export function trackEndLevel(underworld: Underworld) {
+  // Helpful debug log
+  console.log("[STATS] - At the end of level", underworld.levelIndex);
+  LogStats();
+
   Achievements.UnlockEvent_EndOfLevel(underworld);
   EmptyStatistics(allStats[StatDepth.LEVEL]);
 }

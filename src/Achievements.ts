@@ -105,12 +105,13 @@ export function UnlockEvent_EndOfLevel(underworld: Underworld) {
     UnlockAchievement(achievement_BrinkOfDeath);
   }
 
-  if (allStats[StatDepth.LEVEL] && allStats[StatDepth.LEVEL].myPlayerDeaths == 0) {
-    UnlockAchievement(achievement_AllPartOfThePlan)
+  if (allStats[StatDepth.LEVEL] && allStats[StatDepth.LEVEL].myPlayerDeaths > 0) {
+    UnlockAchievement(achievement_AllPartOfThePlan);
   }
 
   if (underworld.levelIndex == LAST_LEVEL_INDEX) {
-    UnlockAchievement(achievement_CompleteTheGame)
+    UnlockAchievement(achievement_CompleteTheGame);
+
     if (allStats[StatDepth.RUN] && allStats[StatDepth.RUN].myPlayerDamageTaken == 0) {
       UnlockAchievement(achievement_CompleteGameNoDamageTaken);
     }
