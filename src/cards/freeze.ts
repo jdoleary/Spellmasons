@@ -16,18 +16,17 @@ const spell: Spell = {
     id: freezeCardId,
     category: CardCategory.Curses,
     sfx: 'freeze',
-    supportQuantity: true,
+    supportQuantity: false,
     manaCost: 25,
     healthCost: 0,
-    cooldown: 2,
-    expenseScaling: 3,
+    expenseScaling: 4,
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconFreeze.png',
     animationPath: 'spell-effects/spellFreeze',
     description: 'spell_freeze',
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
-      const targets = state.targetedUnits.filter(u => u.alive);
+      const targets = state.targetedUnits.filter(u => u.alive && !u.onTurnEndEvents.includes(freezeCardId));
       if (targets.length) {
         let spellAnimationPromise = Promise.resolve();
         targets.forEach(t => {
@@ -81,8 +80,8 @@ const spell: Spell = {
   },
 };
 
-function add(unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) {
-  getOrInitModifier(unit, freezeCardId, { isCurse: true, quantity }, () => {
+function add(unit: Unit.IUnit, underworld: Underworld, _prediction: boolean) {
+  getOrInitModifier(unit, freezeCardId, { isCurse: true, quantity: 1 }, () => {
     unit.radius = config.COLLISION_MESH_RADIUS;
     // Add event
     if (!unit.onTurnEndEvents.includes(freezeCardId)) {
