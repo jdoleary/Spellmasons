@@ -448,7 +448,7 @@ export interface EffectState {
   initialTargetedUnitId: number | undefined;
   initialTargetedPickupId: number | undefined;
 }
-export function refundLastSpell(state: EffectState, prediction: boolean, floatingMessage?: string) {
+export function refundLastSpell(state: EffectState, prediction: boolean, floatingMessage: string = 'No valid targets. Cost refunded.') {
   // Only refund the spell when it's not a prediction so that
   // it will show the mana cost in the UI of "remaining mana" even if
   // they are not currently hovering a valid target.
