@@ -323,14 +323,6 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
     }
   }
 
-  // Reset cooldowns on spells
-  for (let spellState of Object.values(player.spellState)) {
-    if (spellState.cooldown) {
-      spellState.cooldown = 0;
-    }
-  }
-
-
   Unit.resetUnitStats(player.unit, underworld);
   Unit.syncPlayerHealthManaUI(underworld);
 }

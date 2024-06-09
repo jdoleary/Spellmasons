@@ -2635,14 +2635,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         }
       }
 
-      // Decrement cooldowns of spells
-      for (let spellState of Object.values(p.spellState)) {
-        if (spellState.cooldown) {
-          spellState.cooldown--;
-          // Update cooldown in UI
-          CardUI.recalcPositionForCards(globalThis.player, this);
-        }
-      }
     }
 
     CardUI.updateCardBadges(this);
@@ -3841,10 +3833,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         }
 
         if (!args.castForFree && !effectState.shouldRefundLastSpell) {
-          // Add cooldown
-          if (!prediction && effectState.casterPlayer && card.cooldown) {
-            Object.assign(effectState.casterPlayer.spellState[card.id] || {}, { cooldown: card.cooldown });
-          }
           // Compute spell mana/health cost and add card usage count
           // This happens after the spell is cast so that fizzle spells can be refunded
           const spellCostTally = {

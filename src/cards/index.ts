@@ -530,8 +530,6 @@ export interface ICard {
   // The number of turns it takes after use to return to it's original cost
   // Default is 1
   expenseScaling: number;
-  // The number of turns before the card may be cast again
-  cooldown?: number;
   // This flag allows casting on the ground and is necessary
   // for spells like AOE, Trap, etc
   allowNonUnitTarget?: boolean;

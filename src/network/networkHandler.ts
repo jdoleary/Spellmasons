@@ -1230,9 +1230,6 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
       }
     });
 
-    // Sync cards to reflect "cooldown" label on cards in inventory
-    recalcPositionForCards(globalThis.player, underworld);
-
     // Record best spell stats
     const statsUnitsKilledFromCast = underworld.enemiesKilled - statsUnitDeadBeforeCast;
     if (globalThis.player == caster) {
