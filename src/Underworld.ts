@@ -2040,10 +2040,14 @@ export default class Underworld {
     // Give stat points, but not in the first level
     if (this.levelIndex > 0) {
       for (let player of this.players) {
-        const points = player.mageType == 'Spellmason' ? 4 : 3;
+        const points = player.mageType == 'Spellmason' ? config.STAT_POINTS_PER_LEVEL + 1 : config.STAT_POINTS_PER_LEVEL;
         player.statPointsUnspent += points;
         console.log("Setup: Gave player: [" + player.clientId + "] " + points + " upgrade points for level index: " + levelIndex);
-        if (player.statPointsUnspent > points) console.error("Setup: Player has more stat points than expected: ", player);
+        // only warn unexpected stat points if player has modified mana or health since
+        // NEW players that join a game mid-way through will get backfilled stats
+        if (player.statPointsUnspent > points && player.unit.healthMax !== config.PLAYER_BASE_HEALTH && player.unit.manaMax !== config.UNIT_BASE_MANA) {
+          console.error("Setup: Player has more stat points than expected: ", player);
+        }
         // If the player hasn't completed first steps, autospend stat points on health
         // We don't want to cause information overload during tutorial
         if (!isTutorialFirstStepsComplete()) {

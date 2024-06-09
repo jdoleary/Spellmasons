@@ -228,7 +228,8 @@ export function create(clientId: string, playerId: string, underworld: Underworl
       gameStartTime: Date.now(),
       totalKills: 0
     },
-    statPointsUnspent: 0,
+    // backfill stat upgrades for players who join late
+    statPointsUnspent: Math.max(0, underworld.levelIndex) * config.STAT_POINTS_PER_LEVEL,
   };
   player.unit.originalLife = true;
   // Player units get full mana every turn

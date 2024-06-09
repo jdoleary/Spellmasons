@@ -91,3 +91,4 @@ export const PATHING_POLYGON_OFFSET = 10;
 // the corner of a WallN tile that touches the floor shouldn't block arrows flying at 
 // eye level for example.  This is what WALL_BOUNDS_OFFSET accounts for
 export const WALL_BOUNDS_OFFSET = 14;
+export const STAT_POINTS_PER_LEVEL = 3;
