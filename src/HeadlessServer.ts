@@ -119,6 +119,12 @@ class HostApp implements IHostApp {
                             doNotEcho: true
                         }
 
+                    } else if (message.payload.type === MESSAGE_TYPES.END_TURN && !message.payload.playersTurnEnded) {
+                        // END_TURN messages are intercepted by server and have playerTurnEded appended
+                        // so the original message should not be echo'd, only the transformed message
+                        return {
+                            doNotEcho: true
+                        }
                     }
                 }
                 break;

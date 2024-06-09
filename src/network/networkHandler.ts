@@ -865,6 +865,9 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
             // Prevents an infinite loop since headless intercepts SPELL, calculates it fully
             // then sends it's own version with syncState attached and spoofs the fromClient
             // so the correct unit casts, it must not reprocess the message.
+            // ---
+            // Note: when intercepting and modifying a message be sure to use `doNotEcho`
+            // in HeadlessServer.ts
             skipHostAppHandler: true,
             // Spoof the client so it knows which player cast
             asFromClient: d.fromClient,
@@ -905,6 +908,8 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       if (globalThis.headless) {
         // Add server's playersTurnEnded state so clients can update lobby
         underworld.pie.sendData({
+          // Note: when intercepting and modifying a message be sure to use `doNotEcho`
+          // in HeadlessServer.ts
           skipHostAppHandler: true,
           // Spoof the client so it knows which player cast
           asFromClient: d.fromClient,
