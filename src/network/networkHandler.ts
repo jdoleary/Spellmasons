@@ -1179,6 +1179,8 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
       animationKey = 'playerAttackSmall';
     } else if (payload.cards.length < 6) {
       animationKey = 'playerAttackMedium0';
+    } else if (payload.cards.length < 10) {
+      animationKey = 'playerAttackMedium1';
     }
     await Player.setSpellmasonsToChannellingAnimationClose(caster);
     if (caster.colorMagic === null) {
