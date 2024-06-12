@@ -82,12 +82,6 @@ export function registerAllAchievements() {
   console.log("[ACHIEVEMENT] - Registered achievements!", allAchievements);
 }
 
-// ID's and registry maybe not needed?
-export function getAchievementById(id: string) {
-  const achievement = allAchievements[id];
-  return achievement;
-}
-
 //
 
 export function UnlockAchievement(achievement: IAchievement) {
