@@ -55,6 +55,11 @@ export const achievement_Doomsayer: IAchievement = {
   description: "Curse an enemy with 'Impending Doom'",
   unlocked: false,
 }
+export const achievement_CaptureDeathmason: IAchievement = {
+  id: "Capture Deathmason",
+  description: "Capture the Deathmason's soul",
+  unlocked: false,
+}
 const achievement_100Percent: IAchievement = {
   id: "100 Percent",
   description: "Earn all other achievements",
@@ -78,6 +83,7 @@ export function registerAllAchievements() {
   registerAchievement(achievement_MiracleWorker);
   registerAchievement(achievement_PotionSeller);
   registerAchievement(achievement_Doomsayer);
+  registerAchievement(achievement_CaptureDeathmason);
   registerAchievement(achievement_100Percent);
   console.log("[ACHIEVEMENT] - Registered achievements!", allAchievements);
 }
