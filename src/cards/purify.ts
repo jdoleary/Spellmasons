@@ -6,6 +6,7 @@ import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import * as Pickup from '../entity/Pickup';
 import * as GameStatistics from '../GameStatistics';
+import { UnlockAchievement, achievement_MiracleWorker } from '../Achievements';
 
 
 export const purifyCardId = 'purify';
@@ -41,12 +42,17 @@ const spell: Spell = {
   },
 };
 export function apply(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, sourceUnit: Unit.IUnit) {
-
+  let cursesRemoved = 0;
   for (let [modifier, modifierProperties] of Object.entries(unit.modifiers)) {
     if (modifierProperties.isCurse) {
       Unit.removeModifier(unit, modifier, underworld);
+      cursesRemoved += 1;
       GameStatistics.trackCursePurified({ unit, sourceUnit, prediction });
     }
+  }
+
+  if (sourceUnit == globalThis.player?.unit && cursesRemoved >= 5 && !prediction) {
+    UnlockAchievement(achievement_MiracleWorker);
   }
 }
 export default spell;

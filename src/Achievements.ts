@@ -40,9 +40,9 @@ const achievement_ArrowRain: IAchievement = {
   description: "Shoot 100 or more arrows with one spell",
   unlocked: false,
 }
-const achievement_MiracleWorker: IAchievement = {
+export const achievement_MiracleWorker: IAchievement = {
   id: "Miracle Worker",
-  description: "Purify 5 or more curses with one spell",
+  description: "Purify 5 or more curses on a sinlge unit at once",
   unlocked: false,
 }
 export const achievement_PotionSeller: IAchievement = {
@@ -90,6 +90,10 @@ export function getAchievementById(id: string) {
 //
 
 export function UnlockAchievement(achievement: IAchievement) {
+  if (globalThis.headless) {
+    return;
+  }
+
   if (!achievement.unlocked) {
     achievement.unlocked = true;
     console.log("[ACHIEVEMENT] - New Achievement unlocked!", achievement.id, achievement)
@@ -109,9 +113,6 @@ export function UnlockEvent_CastCards() {
   if (allStats[StatDepth.SPELL]) {
     if (allStats[StatDepth.SPELL].myPlayerArrowsFired >= 100) {
       UnlockAchievement(achievement_ArrowRain);
-    }
-    if (allStats[StatDepth.SPELL].myPlayerCursesPurified >= 5) {
-      UnlockAchievement(achievement_MiracleWorker);
     }
   }
 }
