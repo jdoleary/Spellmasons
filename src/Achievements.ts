@@ -77,6 +77,7 @@ export function registerAllAchievements() {
   registerAchievement(achievement_ArrowRain);
   registerAchievement(achievement_MiracleWorker);
   registerAchievement(achievement_PotionSeller);
+  registerAchievement(achievement_Doomsayer);
   registerAchievement(achievement_100Percent);
   console.log("[ACHIEVEMENT] - Registered achievements!", allAchievements);
 }
@@ -94,11 +95,15 @@ export function UnlockAchievement(achievement: IAchievement) {
     return;
   }
 
+  if (!allAchievements[achievement.id]) {
+    console.error("[ACHIEVEMENT] - Not registered", achievement.id, achievement);
+  }
+
   if (!achievement.unlocked) {
     achievement.unlocked = true;
-    console.log("[ACHIEVEMENT] - New Achievement unlocked!", achievement.id, achievement)
+    console.log("[ACHIEVEMENT] - New Achievement unlocked!", achievement.id, achievement);
   } else {
-    console.log("[ACHIEVEMENT] - Already unlocked ", achievement.id, achievement)
+    console.log("[ACHIEVEMENT] - Already unlocked ", achievement.id, achievement);
   }
 
   // There is an achievement for earning all other achievements

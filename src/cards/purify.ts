@@ -51,7 +51,7 @@ export function apply(unit: Unit.IUnit, underworld: Underworld, prediction: bool
     }
   }
 
-  if (sourceUnit == globalThis.player?.unit && cursesRemoved >= 5 && !prediction) {
+  if (!prediction && sourceUnit == globalThis.player?.unit && cursesRemoved >= 5) {
     UnlockAchievement(achievement_MiracleWorker);
   }
 }
