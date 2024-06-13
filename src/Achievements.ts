@@ -42,7 +42,7 @@ const achievement_ArrowRain: IAchievement = {
 }
 export const achievement_MiracleWorker: IAchievement = {
   id: "Miracle Worker",
-  description: "Purify 5 or more curses on a sinlge unit at once",
+  description: "Purify 5 or more curses on a single unit at once",
   unlocked: false,
 }
 export const achievement_PotionSeller: IAchievement = {
