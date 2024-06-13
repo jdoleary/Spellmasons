@@ -53,10 +53,6 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
     && (u.maxCopies ? player.upgrades.filter((pu) => pu === u.title).length < u.maxCopies : true)
     // Exclude card upgrades already obtained by the player (Can this be done with max copies?)
     && !player.inventory.includes(u.title)
-    // Upgrade is NOT included in list of rerollOmit
-    // this prevents a reroll from presenting an upgrade
-    // that was in the last selection
-    && !(globalThis.rerollOmit || []).some(omittedTitle => omittedTitle == u.title)
     // Exclude upgrades considered too rare for this generated set
     && u.probability >= minimumProbability
     // Exclude upgrades with a probability of 0 or less
@@ -87,12 +83,30 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
   const rSeed = `${underworld.seed}-${player.playerId}-${player.reroll}-${player.inventory.filter(x => !!x).length}`;
   const random = seedrandom(rSeed);
 
+  // Returns all upgrades that would be omitted
+  // This filter function lets us softly omit upgrades.
+  // Softly omitted upgrades will only appear if no other options are available
+  // This is used to prevent rerolled cards from appearing again unless they are all that's left to show
+  const filterUpgradesSoft = (u: IUpgrade) => (
+    !globalThis.rerollOmit?.includes(u.title)
+  );
+
   // Clone upgrades for later mutation
   let clonedUpgradeList = [...upgradeList];
+  // Store all softly omitted upgrades for later
+  const omittedUpgrades = clonedUpgradeList.filter(u => !filterUpgradesSoft(u));
+  // Remove omittedUpgrades from clonedUpgradeList
+  clonedUpgradeList = clonedUpgradeList.filter(u => !omittedUpgrades.includes(u));
   // Limited by desired numberOfUpgrades or upgrades left, whichever is less
-  const numberOfCardsToChoose = Math.min(numberOfUpgrades, clonedUpgradeList.length);
+  const numberOfCardsToChoose = Math.min(numberOfUpgrades, clonedUpgradeList.length + omittedUpgrades.length);
 
   for (let i = 0; i < numberOfCardsToChoose; i++) {
+    // If upgradeList is empty, restore softly omitted upgrades
+    if (clonedUpgradeList.length == 0 && omittedUpgrades.length > 0) {
+      clonedUpgradeList = clonedUpgradeList.concat(omittedUpgrades);
+      console.log("Restored softly omitted upgrades", omittedUpgrades);
+    }
+
     const upgrade = chooseObjectWithProbability(clonedUpgradeList, random);
     if (upgrade) {
       const index = clonedUpgradeList.indexOf(upgrade);
