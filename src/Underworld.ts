@@ -3084,6 +3084,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (upgrade.type == 'card') {
       // Reset reroll counter now that player has chosen a card
       player.reroll = 0;
+      globalThis.rerollOmit = [];
       if (upgradesLeftToChoose <= 0) {
         // This might be a false error after the refactors
         console.error('Player managed to choose an upgrade without being supposed to: ', player);

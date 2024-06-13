@@ -111,7 +111,7 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
       console.log('No upgrades to choose from', clonedUpgradeSource);
     }
   }
-  globalThis.rerollOmit = upgrades.map(u => u.title);
+  globalThis.rerollOmit = globalThis.rerollOmit?.concat(upgrades.map(u => u.title));
   return upgrades;
 }
 export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underworld: Underworld) {
