@@ -45,6 +45,13 @@ export const achievement_MiracleWorker: IAchievement = {
   description: "Purify 5 or more curses on a single unit at once",
   unlocked: false,
 }
+export const achievement_Splat: IAchievement = {
+  id: "Splat",
+  description: "Kill an enemy with impact damage",
+  // This will unlock when any unit dies to impact damage.
+  // We can't ensure THIS player caused the forcemove, because forcemoves don't have a "source".
+  unlocked: false,
+}
 export const achievement_PotionSeller: IAchievement = {
   id: "Potion Seller",
   description: "'Hello Potion Seller. I'm going into battle, and I want your strongest potions.' (Create a stronger potion)",
@@ -81,6 +88,7 @@ export function registerAllAchievements() {
   registerAchievement(achievement_BrinkOfDeath);
   registerAchievement(achievement_ArrowRain);
   registerAchievement(achievement_MiracleWorker);
+  registerAchievement(achievement_Splat);
   registerAchievement(achievement_PotionSeller);
   registerAchievement(achievement_Doomsayer);
   registerAchievement(achievement_CaptureDeathmason);

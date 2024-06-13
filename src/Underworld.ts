@@ -437,10 +437,14 @@ export default class Underworld {
         // a "heavy impact", which stops the object and damages units
         // otherwise, make the unit slide along the wall
         if (impactDamage > 0) {
-          if (Unit.isUnit(pushedObject)) {
+          if (Unit.isUnit(pushedObject) && pushedObject.alive) {
             Unit.takeDamage({ unit: pushedObject, amount: impactDamage, fromVec2: Vec.add(pushedObject, { x: velocity.x, y: velocity.y }) }, this, prediction);
             if (!prediction) {
               floatingText({ coords: pushedObject, text: `${impactDamage} Impact damage!` });
+              if (!pushedObject.alive) {
+                // Unit died to impact damage
+                Achievements.UnlockAchievement(Achievements.achievement_Splat);
+              }
             }
           }
           velocity.x = 0;
