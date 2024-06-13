@@ -57,14 +57,16 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
     // this prevents a reroll from presenting an upgrade
     // that was in the last selection
     && !(globalThis.rerollOmit || []).some(omittedTitle => omittedTitle == u.title)
+    // Exclude upgrades considered too rare for this generated set
+    && u.probability >= minimumProbability
+    // Exclude upgrades with a probability of 0 or less
+    && u.probability > 0
     // Exclude modded upgrades where the mod is not active
     && isModActive(u, underworld)
   );
 
   let filteredUpgradeCardsSource = upgradeCardsSource.filter(filterUpgrades);
   let upgradeList = filteredUpgradeCardsSource;
-  // Limit the rarity of cards that are possible to attain
-  upgradeList = upgradeList.filter(u => u.probability >= minimumProbability);
 
   // For third pick, override upgradeList with damage spells
   if (player.upgrades.length == 2) {
