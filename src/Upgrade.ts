@@ -64,13 +64,16 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
   let filteredUpgradeCardsSource = upgradeCardsSource.filter(filterUpgrades);
   let upgradeList = filteredUpgradeCardsSource;
 
+  // The player is guaranteed a damage spell in the first level to prevent a softlock
   // For third pick, override upgradeList with damage spells
   if (player.upgrades.length == 2) {
-    upgradeList = upgradeCardsSource
-      // Prevent picking the same upgrade twice
-      .filter(filterUpgrades)
-      // Ensure they pick from only damage cards
-      .filter(c => (![bleedCardId, drownCardId, boneShrapnelCardId, executeCardId].includes(c.title) && c.cardCategory == CardCategory.Damage) || [poisonCardId].includes(c.title));
+    // Upgrade list is filtered down to damage spells only
+    upgradeList = upgradeList.filter(c => (
+      // Any card in the damage category is acceptable, unless dependent on special conditions
+      ![bleedCardId, drownCardId, boneShrapnelCardId, executeCardId].includes(c.title) && c.cardCategory == CardCategory.Damage)
+      // Poison is acceptable here, even though it is a curse
+      || [poisonCardId].includes(c.title)
+    );
   }
   if (isPickingClass(player)) {
     return upgradeMageClassSource;
