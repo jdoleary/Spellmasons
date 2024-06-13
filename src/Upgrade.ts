@@ -44,29 +44,24 @@ export function isPickingClass(player: IPlayer): boolean {
 }
 // Chooses a random card based on the card's probabilities
 // minimumProbability ensures that super rare cards won't be presented too early on
-// onlyStats: means it'll present stats upgrades instead of card upgrades
 export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, minimumProbability: number, underworld: Underworld): IUpgrade[] {
   let upgrades: IUpgrade[] = [];
-  const filterUpgrades = (u: IUpgrade) =>
-    (u.maxCopies === undefined
-      ? // Always include upgrades that don't have a specified maxCopies
-      true
-      : // Filter out  upgrades that the player can't have more of
-      player.upgrades.filter((pu) => pu === u.title).length <
-      u.maxCopies)
-    && (u.requires ? u.requires.every(title => player.upgrades.find(u => u == title)) : true)
-    // Now that upgrades are cards too, make sure it doesn't
-    // show upgrades that the player already has as cards
+  const filterUpgrades = (u: IUpgrade) => (
+    // Exclude upgrades whose requirements have not been met
+    (u.requires ? u.requires.every(title => player.upgrades.find(u => u == title)) : true)
+    // Exclude upgrades that the player can't have more of
+    && (u.maxCopies ? player.upgrades.filter((pu) => pu === u.title).length < u.maxCopies : true)
+    // Exclude card upgrades already obtained by the player (Can this be done with max copies?)
     && !player.inventory.includes(u.title)
     // Upgrade is NOT included in list of rerollOmit
     // this prevents a reroll from presenting an upgrade
     // that was in the last selection
     && !(globalThis.rerollOmit || []).some(omittedTitle => omittedTitle == u.title)
-    && isModActive(u, underworld);
+    // Exclude modded upgrades where the mod is not active
+    && isModActive(u, underworld)
+  );
+
   let filteredUpgradeCardsSource = upgradeCardsSource.filter(filterUpgrades);
-  // Every other level, players get to choose from stas upgrades or card upgrades
-  // Unless Player already has all of the upgrades, in which case they
-  // only have stat upgrades to choose from
   let upgradeList = filteredUpgradeCardsSource;
   // Limit the rarity of cards that are possible to attain
   upgradeList = upgradeList.filter(u => u.probability >= minimumProbability);
@@ -83,37 +78,31 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
     return upgradeMageClassSource;
   }
 
-  // Clone upgrades for later mutation
-  const clonedUpgradeSource = [...upgradeList];
-  // Choose from upgrades
-  const numberOfCardsToChoose = Math.min(
-    numberOfUpgrades,
-    clonedUpgradeSource.length,
-  );
-  // Upgrade random generate should be unique for the underworld seed, each player, the number of rerolls that they have,
-  // the number of cards that they have  This will prevent save scamming the chances and also make sure each time you are presented with
-  // cards it is unique.
-  // Note: Only count non-empty card spaces
+  // Upgrade random generate should be unique for the:
+  // underworld seed, each player, the number of rerolls they have, the number of cards they have
+  // This prevents save scamming and makes sure each time you are presented with cards it is unique.
+  // Note: Only count non-empty card spaces in player inventory
   const rSeed = `${underworld.seed}-${player.playerId}-${player.reroll}-${player.inventory.filter(x => !!x).length}`;
   const random = seedrandom(rSeed);
-  for (
-    let i = 0;
-    // limited by the config.NUMBER_OF_UPGRADES_TO_CHOOSE_FROM or the number of cloned
-    // upgrades that are left, whichever is less
-    i < numberOfCardsToChoose;
-    i++
-  ) {
-    const upgrade = chooseObjectWithProbability(clonedUpgradeSource, random);
+
+  // Clone upgrades for later mutation
+  let clonedUpgradeList = [...upgradeList];
+  // Limited by desired numberOfUpgrades or upgrades left, whichever is less
+  const numberOfCardsToChoose = Math.min(numberOfUpgrades, clonedUpgradeList.length);
+
+  for (let i = 0; i < numberOfCardsToChoose; i++) {
+    const upgrade = chooseObjectWithProbability(clonedUpgradeList, random);
     if (upgrade) {
-      const index = clonedUpgradeSource.indexOf(upgrade);
-      upgrades = upgrades.concat(clonedUpgradeSource.splice(index, 1));
+      const index = clonedUpgradeList.indexOf(upgrade);
+      upgrades = upgrades.concat(clonedUpgradeList.splice(index, 1));
     } else {
-      console.log('No upgrades to choose from', clonedUpgradeSource);
+      console.log('No upgrades to choose from', clonedUpgradeList);
     }
   }
   globalThis.rerollOmit = globalThis.rerollOmit?.concat(upgrades.map(u => u.title));
   return upgrades;
 }
+
 export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underworld: Underworld) {
   if (globalThis.headless) {
     // There is no DOM in headless mode
