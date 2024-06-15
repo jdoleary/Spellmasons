@@ -99,11 +99,9 @@ import { urn_ice_id } from './entity/units/urn_ice';
 import { urn_poison_id } from './entity/units/urn_poison';
 import { elEndTurnBtn } from './HTMLElements';
 import { corpseDecayId } from './modifierCorpseDecay';
-import { isSinglePlayer } from './network/wsPieSetup';
 import { PRIEST_ID } from './entity/units/priest';
 import { getSyncActions } from './Syncronization';
 import { EXPECTED_MILLIS_PER_GAMELOOP, sumForceMoves } from './effects/force_move';
-import { playThrottledEndTurnSFX } from './Audio';
 import { targetConeId } from './cards/target_cone';
 import { slashCardId } from './cards/slash';
 import { pushId } from './cards/push';
@@ -2886,12 +2884,15 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
     // Don't play turn sfx when recording or for auto-ended dead players
     if ((!globalThis.isHUDHidden && !document.body?.classList.contains('hide-card-holders')) && (player.unit.alive || (!player.unit.alive && player.endedTurn))) {
-      // Always play own end turn sfx
-      if (globalThis.player == player) {
+      if (!player.endedTurn) {
+        // Play endTurn sfx for any player so you know when they ready up
         playSFXKey('endTurn');
       } else {
-        // Ensure other players can't annoy current player with too frequent end turn sfx
-        playThrottledEndTurnSFX();
+        // If turn is already ended for self, play the deny sfx
+        // if other player, play nothing.
+        if (globalThis.player == player) {
+          playSFXKey('deny');
+        }
       }
     }
     // Ensure players can only end the turn when it IS their turn
