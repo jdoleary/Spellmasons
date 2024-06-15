@@ -10,6 +10,8 @@ import * as Units from './entity/units';
 import * as CardUI from './graphics/ui/CardUI';
 import * as Player from './entity/Player';
 import * as Unit from './entity/Unit';
+import * as GameStatistics from "./GameStatistics";
+import * as Achievements from "./Achievements";
 import { UnitType } from './types/commonTypes';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import { addOverworldEventListeners } from "./views";
@@ -44,6 +46,8 @@ export default function makeOverworld(pie: PieClient | IHostApp): Overworld {
   // card for that monster)
   registerAllMods(overworld);
   Cards.registerCards(overworld);
+  GameStatistics.LogStats();
+  Achievements.registerAllAchievements()
 
   addOverworldEventListeners(overworld);
   // Setup global functions that need access to underworld:

@@ -39,6 +39,7 @@ const spell: Spell = {
           }
           playDefaultSpellSFX(card, prediction);
           Unit.resurrect(unit, underworld);
+          Unit.changeFaction(unit, state.casterUnit.faction);
           // Impending doom is added to kill units after a specified number of turns.
           // This is the distinguishing characteristic of Toxic Resurrect,
           // it is weaker than Resurrect because the resurrected unit will die in X turns.
@@ -46,7 +47,6 @@ const spell: Spell = {
 
           resurrectedUnitCount++;
           makeRisingParticles(unit, prediction);
-          Unit.changeFaction(unit, state.casterUnit.faction);
           // Resurrect animation is the die animation played backwards
           animationPromises.push(Unit.playAnimation(unit, unit.animations.die, { loop: false, animationSpeed: -0.2 }));
           if (unit.image) {

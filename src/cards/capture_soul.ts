@@ -1,4 +1,4 @@
-import { getCurrentTargets, refundLastSpell, Spell } from './index';
+import { EffectState, getCurrentTargets, refundLastSpell, Spell } from './index';
 import * as Unit from '../entity/Unit';
 import { CardCategory } from '../types/commonTypes';
 import { Vec2 } from '../jmath/Vec';
@@ -8,6 +8,8 @@ import { recalcPositionForCards } from '../graphics/ui/CardUI';
 import floatingText from '../graphics/FloatingText';
 import { makeManaTrail } from '../graphics/Particles';
 import { playDefaultSpellSFX } from './cardUtils';
+import { bossmasonUnitId } from '../entity/units/deathmason';
+import { achievement_CaptureDeathmason, UnlockAchievement } from '../Achievements';
 
 export const id = 'Capture Soul';
 const healthThreshold = 31;
@@ -39,6 +41,10 @@ const spell: Spell = {
                 makeManaTrail(target, state.casterUnit, underworld, '#321d73', '#9526cc', targets.length).then(() => {
                   playDefaultSpellSFX(card, prediction);
                 });
+
+                if (!prediction && player == globalThis.player && target.unitSourceId == bossmasonUnitId) {
+                  UnlockAchievement(achievement_CaptureDeathmason);
+                }
               } else {
                 console.error('Cannot capture soul, upgrade not found with title:', newCardId)
               }

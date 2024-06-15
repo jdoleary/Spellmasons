@@ -10,6 +10,7 @@ import { UnitSubType, UnitType, Faction } from '../types/commonTypes';
 import type { Vec2 } from '../jmath/Vec';
 import * as Vec from '../jmath/Vec';
 import * as CardUI from '../graphics/ui/CardUI';
+import * as GameStatistics from '../GameStatistics';
 import Events from '../Events';
 import makeAllRedShader from '../graphics/shaders/selected';
 import { addLerpable } from '../lerpList';
@@ -861,6 +862,7 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   // this will remove the tooltip:
   checkIfNeedToClearTooltip();
 
+  GameStatistics.trackUnitDie({ unit, prediction });
   if (!prediction && unit.originalLife && unit.faction !== globalThis.player?.unit.faction) {
     underworld.reportEnemyKilled(unit);
   }
@@ -938,9 +940,15 @@ export function takeDamage(damageArgs: damageArgs, underworld: Underworld, predi
       amount = -maxHealingAllowed;
     }
   }
+
+  // Clamp amount to remaining health for accurate stat tracking,
+  // and to prevent unit health from going under 0
+  if (amount > unit.health) {
+    amount = unit.health;
+  }
+  GameStatistics.trackUnitDamage({ unit, amount, prediction });
+
   unit.health -= amount;
-  // Prevent health from going under 0
-  unit.health = Math.max(0, unit.health);
   // Ensure health is a whole number
   unit.health = Math.floor(unit.health);
 

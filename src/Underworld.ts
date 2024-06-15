@@ -8,6 +8,8 @@ import * as Upgrade from './Upgrade';
 import * as math from './jmath/math';
 import * as Cards from './cards';
 import * as CardUI from './graphics/ui/CardUI';
+import * as Achievements from './Achievements';
+import * as GameStatistics from './GameStatistics';
 import * as Image from './graphics/Image';
 import * as storage from './storage';
 import * as ImmediateMode from './graphics/ImmediateModeSprites';
@@ -435,10 +437,14 @@ export default class Underworld {
         // a "heavy impact", which stops the object and damages units
         // otherwise, make the unit slide along the wall
         if (impactDamage > 0) {
-          if (Unit.isUnit(pushedObject)) {
+          if (Unit.isUnit(pushedObject) && pushedObject.alive) {
             Unit.takeDamage({ unit: pushedObject, amount: impactDamage, fromVec2: Vec.add(pushedObject, { x: velocity.x, y: velocity.y }) }, this, prediction);
             if (!prediction) {
               floatingText({ coords: pushedObject, text: `${impactDamage} Impact damage!` });
+              if (!pushedObject.alive) {
+                // Unit died to impact damage
+                Achievements.UnlockAchievement(Achievements.achievement_Splat);
+              }
             }
           }
           velocity.x = 0;
@@ -2214,6 +2220,8 @@ export default class Underworld {
     // in case the player has beaten the level and died at the same time
     // Favoring the player in this scenario should only improve player experience
     if (this.isLevelComplete()) {
+      GameStatistics.trackEndLevel(this);
+
       // If the level is complete, try going to the next one
       // Will fail if players aren't ready (haven't ended turns / entered portals)
       if (this.tryGoToNextLevel()) {
@@ -3692,6 +3700,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       initialTargetedPickupId
     };
 
+    GameStatistics.trackCastCards({ effectState, prediction });
+
     // Get initial targets.  If initial targets are already determined (by being passed into this function, use them;
     // this is so that networked SPELL messages have consistent targets).  otherwise determine the initial target
     // based on the castLocation and special logic such as noInitialTarget and onlySelectDeadUnits which depend on the
@@ -3884,6 +3894,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // Reset quantity once a card is cast
       quantity = 1;
     }
+
+    GameStatistics.trackCastCardsEnd({ effectState, prediction });
 
     if (!prediction) {
       // Clear spell animations once all cards are done playing their animations
