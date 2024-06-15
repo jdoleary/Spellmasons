@@ -25,13 +25,13 @@ export function EmptyStatistics(stats?: IStatistics): IStatistics {
 }
 
 export enum StatDepth {
-  TOTAL,
+  LIFETIME,
   RUN,
   LEVEL,
   SPELL,
 }
 export const allStats: IStatistics[] = [
-  EmptyStatistics(), // 0 - Total
+  EmptyStatistics(), // 0 - Lifetime
   EmptyStatistics(), // 1 - Run
   EmptyStatistics(), // 2 - Level
   EmptyStatistics(), // 3 - Spell
@@ -43,10 +43,27 @@ function allStatsAtDepth(depth: StatDepth): IStatistics[] {
 
 export function LogStats() {
   console.log("[STATS]", allStats);
-  console.log("[STATS] - TOTAL", allStats[StatDepth.TOTAL]);
+  console.log("[STATS] - LIFETIME", allStats[StatDepth.LIFETIME]);
   console.log("[STATS] - RUN", allStats[StatDepth.RUN]);
   console.log("[STATS] - LEVEL", allStats[StatDepth.LEVEL]);
   console.log("[STATS] - SPELL", allStats[StatDepth.SPELL]);
+}
+
+const GAME_STATISTICS_STORAGE_KEY = "Game Statistics - Lifetime";
+export function SaveStats() {
+  const statsToSave = allStats[StatDepth.LIFETIME];
+  if (statsToSave) {
+    storageSet(GAME_STATISTICS_STORAGE_KEY, JSON.stringify(statsToSave));
+  }
+}
+export function LoadStats() {
+  const loadedString = storageGet(GAME_STATISTICS_STORAGE_KEY);
+  if (loadedString) {
+    const loadedStats = JSON.parse(loadedString);
+    if (loadedStats) {
+      allStats[StatDepth.LIFETIME] = loadedStats;
+    }
+  }
 }
 
 //
