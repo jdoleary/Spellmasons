@@ -1,3 +1,61 @@
+## 1.39.0
+ref: Remove cooldowns
+    After considering, I've determined that the idea of a cooldown itself is
+    against the design of Spellmasons.  This was just a bandaid to
+    a few select spells being overpowered.  I've found it better to
+    alter the spell logic itself (in the case of freeze to not allow stacking)
+    and to make them more mana expensive (in the case of resurrect)
+    which will prevent them from just being cast turn after turn.
+    
+    Also the modifier itself can prevent the unit from being
+    refrozen (see freeze) which is much better than cooldowns
+     because it also prevents refreezing in multiplayer.
+
+Balance: Freeze
+    Removes cooldown
+    Freeze no longer stacks
+
+fix: Prevent empower from targeting players to prevent confusion
+i18n: Clarify that Empower does not affect players
+
+art: Add slightly new cast animation
+
+fix: Backfill stat upgrades for players who
+    join late.
+    Thanks Waterbending Squirrel!
+    Fixes: #567
+
+audio: Smoothly switch songs
+    Don't switch songs every time a level is beaten, switch
+    when the song is done
+    Closes #805
+
+content: Add Ultra Clone as upgrade to clone
+    in order to balance out the clone + merge exploit which
+    was mainly possible because clone with adding the clone as a target
+    yields exponential results when stacked.  Now the basic clone does
+    not add clones as a target
+
+fix: Intercept END_TURN message
+    and do not send the original.  Send a new END_TURN message as client with playersTurnEnded attached.
+    (Note: this already worked except it still sent through the original END_TURN message, this fixes the original from being
+    sent through and only sends the transformed one through)
+    Resolved: #811
+
+log: Improve error message for proper aggregation
+    on remote logger
+
+experiment: MultiColorReplaceFilter
+    Decrease epsilon for blood golem to see if
+    it resolves #695
+
+UI: Fix default "Refund" text
+    Before if no text was provided, none would appear for refund.
+
+
+balance: Exclude Execute from starting damage spells (#807)
+    - Since it cannot deal damage on its own
+
 ## 1.38.0 - Patch
 
 fix: NPCs not ending their turns
