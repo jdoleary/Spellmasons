@@ -1218,8 +1218,6 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
     const colorMagicMedium = lightenColor(caster.colorMagic, 0.3);
     const colorMagicLight = lightenColor(caster.colorMagic, 0.6);
 
-    const statsUnitDeadBeforeCast = underworld.enemiesKilled;
-
     await Unit.playComboAnimation(caster.unit, animationKey, keyMoment, {
       animationSpeed: 0.2, loop: false, colorReplace: {
         colors: [
@@ -1233,26 +1231,6 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
 
     // Sync cards to reflect "cooldown" label on cards in inventory
     recalcPositionForCards(globalThis.player, underworld);
-
-    // Record best spell stats
-    const statsUnitsKilledFromCast = underworld.enemiesKilled - statsUnitDeadBeforeCast;
-    if (globalThis.player == caster) {
-      const stats = GameStatistics.globalStats;
-      if (stats) {
-        if (stats.bestSpell.unitsKilled < statsUnitsKilledFromCast) {
-          stats.bestSpell.unitsKilled = statsUnitsKilledFromCast;
-          stats.bestSpell.spell = payload.cards;
-        }
-        if (stats.longestSpell.length < payload.cards.length) {
-          stats.longestSpell = payload.cards;
-        }
-      } else {
-        console.error('GameStatistics.globalStats is undefined');
-      }
-      // Updates the game over modal in the event that this spell caused the game over modal to render
-      // before the stats were updated
-      underworld.updateGameOverModal();
-    }
 
     // Optimize: Cache blood after every cast
     cacheBlood();

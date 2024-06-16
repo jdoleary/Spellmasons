@@ -50,6 +50,7 @@ export const allStats: IStatistics[] = [
   EmptyStatistics(), // 3 - Spell
 ];
 export interface IStatistics {
+  unitDeaths: number;
   myPlayerDamageTaken: number;
   myPlayerDeaths: number;
   cardsCast: number;
@@ -59,6 +60,7 @@ export interface IStatistics {
 // This function can be used to initialize or reset a statistics object
 export function EmptyStatistics(stats?: IStatistics): IStatistics {
   return Object.assign(stats || {}, {
+    unitDeaths: 0,
     myPlayerDamageTaken: 0,
     myPlayerDeaths: 0,
     cardsCast: 0,
@@ -128,6 +130,8 @@ export function trackUnitDie(args: trackUnitDieArgs) {
     return;
   }
 
+  allStatsAtDepth(StatDepth.SPELL).forEach(s => s.unitDeaths += 1);
+
   if (unit == globalThis.player?.unit) {
     allStatsAtDepth(StatDepth.SPELL).forEach(s => s.myPlayerDeaths += 1);
   }
@@ -153,6 +157,20 @@ export function trackCastCardsEnd(args: trackCastCardsArgs) {
   let { effectState, prediction } = args;
   if (prediction) {
     return;
+  }
+
+  if (allStats[StatDepth.SPELL]) {
+    const unitDeaths = allStats[StatDepth.SPELL].unitDeaths;
+
+    if (effectState.casterPlayer == globalThis.player) {
+      if (globalStats.bestSpell.unitsKilled < unitDeaths) {
+        globalStats.bestSpell.unitsKilled = unitDeaths;
+        globalStats.bestSpell.spell = effectState.cardIds;
+      }
+      if (globalStats.longestSpell.length < effectState.cardIds.length) {
+        globalStats.longestSpell = effectState.cardIds;
+      }
+    }
   }
 
   Achievements.UnlockEvent_CastCards();
