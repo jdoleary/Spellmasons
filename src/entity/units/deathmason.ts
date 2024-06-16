@@ -1,5 +1,4 @@
 import { AdjustmentFilter } from '@pixi/filter-adjustment';
-import * as storage from "../../storage";
 import { allUnits, UnitSource } from './index';
 import { Faction, UnitSubType, UnitType } from '../../types/commonTypes';
 import * as Unit from '../Unit';
@@ -202,16 +201,10 @@ export function registerDeathmasonEvents() {
       // For the bossmason level, if the original deathmason dies spawn 3 more:
       if (underworld.levelIndex === config.LAST_LEVEL_INDEX) {
         if (unit.unitSourceId == bossmasonUnitId && unit.originalLife && unit.name == undefined) {
-          // Use list here in case of hotseat
-          let clientPlayers = underworld.players.filter(p => p.clientId == globalThis.clientId);
-          for (let player of clientPlayers) {
-            const mageTypeWinsKey = storage.getStoredMageTypeWinsKey(player.mageType || 'Spellmason');
-            const currentMageTypeWins = parseInt(storageGet(mageTypeWinsKey) || '0');
-            storageSet(mageTypeWinsKey, (currentMageTypeWins + 1).toString());
-          }
-          (prediction
-            ? underworld.unitsPrediction
-            : underworld.units).filter(u => u.unitType == UnitType.AI && u.unitSubType !== UnitSubType.DOODAD).forEach(u => Unit.die(u, underworld, prediction));
+          // Kill all remaining units
+          (prediction ? underworld.unitsPrediction : underworld.units)
+            .filter(u => u.unitType == UnitType.AI && u.unitSubType !== UnitSubType.DOODAD).forEach(u => Unit.die(u, underworld, prediction));
+
           if (!prediction) {
             let retryAttempts = 0;
             for (let i = 0; (i < 3 && retryAttempts < 10); i++) {

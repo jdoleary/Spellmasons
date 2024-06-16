@@ -2089,23 +2089,6 @@ export default class Underworld {
       Cards.refreshSummonCardDescriptions(this);
     }
 
-    // Use list here in case of hotseat
-    let clientPlayers = this.players.filter(p => p.clientId == globalThis.clientId);
-    for (let player of clientPlayers) {
-      // Record High Score Progress
-      const mageTypeFarthestLevel = storage.getStoredMageTypeFarthestLevelKey(player.mageType || 'Spellmason');
-      const highScore = storageGet(mageTypeFarthestLevel) || '0'
-      if (parseInt(highScore) < this.levelIndex) {
-        console.log('New farthest level record!', mageTypeFarthestLevel, '->', this.levelIndex);
-        storageSet(mageTypeFarthestLevel, this.levelIndex.toString());
-      }
-    }
-
-    // When you get to the first plus level after beating the last level,
-    // record the winTime for speedrunning
-    if (levelData.levelIndex == config.LAST_LEVEL_INDEX + 1) {
-      this.winTime = Date.now();
-    }
     return new Promise<void>(resolve => {
       document.body?.classList.toggle('loading', true);
       // Add timeout so that loading can update dom

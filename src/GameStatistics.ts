@@ -1,7 +1,9 @@
 import * as Unit from './entity/Unit';
 import * as Cards from './cards';
 import * as Achievements from './Achievements';
+import * as storage from "./storage";
 import Underworld from './Underworld';
+import { LAST_LEVEL_INDEX } from './config';
 
 //
 
@@ -13,6 +15,8 @@ interface IGlobalStats {
     spell: string[]
   };
   longestSpell: string[];
+  // Used to make sure trackEndLevel() doesn't run logic multiple times
+  levelsComplete: number,
   runStartTime: number,
   runWinTime: number | undefined,
   runEndTime: number | undefined,
@@ -22,6 +26,7 @@ export function EmptyGlobalStatistics(stats?: IGlobalStats): IGlobalStats {
   return Object.assign(stats || {}, {
     bestSpell: { unitsKilled: 0, spell: [] },
     longestSpell: [],
+    levelsComplete: 0,
     runStartTime: Date.now(),
     runWinTime: undefined,
     runEndTime: undefined,
@@ -185,8 +190,40 @@ export function trackCursePurified(args: trackCursePurifiedArgs) {
   }
 }
 
-// Warning, this gets called mulitple times per level
 export function trackEndLevel(underworld: Underworld) {
+  // We can check if this function has already been called for this level
+  // via globalStats.levelsComplete, and return early if so
+  if (globalStats.levelsComplete > underworld.levelIndex) {
+    return;
+  }
+  globalStats.levelsComplete = underworld.levelIndex + 1;
+
+  // Store highest level reached - In case of hotseat, store it for each player
+  let clientPlayers = underworld.players.filter(p => p.clientId == globalThis.clientId);
+  for (let player of clientPlayers) {
+    const mageTypeFarthestLevelKey = storage.getStoredMageTypeFarthestLevelKey(player.mageType || 'Spellmason');
+    const highScore = parseInt(storageGet(mageTypeFarthestLevelKey) || '0')
+    if (highScore < globalStats.levelsComplete) {
+      console.log('New farthest level record!', mageTypeFarthestLevelKey, '->', globalStats.levelsComplete);
+      storageSet(mageTypeFarthestLevelKey, (globalStats.levelsComplete).toString());
+    }
+  }
+
+  // If this was the last level, run win-game logic
+  if (underworld.levelIndex == LAST_LEVEL_INDEX) {
+    if (!globalStats.runWinTime) {
+      globalStats.runWinTime = Date.now();
+
+      // Store wins - In case of hotseat, store it for each player
+      let clientPlayers = underworld.players.filter(p => p.clientId == globalThis.clientId);
+      for (let player of clientPlayers) {
+        const mageTypeWinsKey = storage.getStoredMageTypeWinsKey(player.mageType || 'Spellmason');
+        const currentMageTypeWins = parseInt(storageGet(mageTypeWinsKey) || '0');
+        storageSet(mageTypeWinsKey, (currentMageTypeWins + 1).toString());
+      }
+    }
+  }
+
   Achievements.UnlockEvent_EndOfLevel(underworld);
   clearLevelStatistics(underworld);
 }
