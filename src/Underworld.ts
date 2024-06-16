@@ -244,9 +244,6 @@ export default class Underworld {
   // AI turns.
   allyNPCAttemptWinKillSwitch: number = 0;
   aquirePickupQueue: { pickupId: number, unitId: number, timeout: number, flaggedForRemoval: boolean }[] = [];
-  // for speed running
-  startTime: number | undefined;
-  winTime: number | undefined;
   headlessTimeouts: { time: number, callback: () => void }[] = [];
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
@@ -257,7 +254,7 @@ export default class Underworld {
     this.overworld = overworld;
     this.overworld.underworld = this;
     this.localUnderworldNumber = ++localUnderworldCount;
-    this.startTime = Date.now();
+    GameStatistics.trackGameStart();
     // Clear inventory html from previous game
     CardUI.resetInventoryContent();
     if (typeof window !== 'undefined') {
@@ -2465,6 +2462,8 @@ export default class Underworld {
   }
   doGameOver() {
     console.log('- - -\nGame Over\n- - -');
+
+    GameStatistics.trackGameEnd();
     // Show game over modal after a delay
     gameOverModalTimeout = setTimeout(() => {
       document.body.classList.toggle('game-over', true);
@@ -2499,26 +2498,26 @@ export default class Underworld {
   updateGameOverModal() {
     // Add stats to modal:
     const elGameOverStats = document.getElementById('game-over-stats');
-    const player = globalThis.player;
     if (!globalThis.headless) {
-      if (elGameOverStats && player && player.stats) {
+      const stats = GameStatistics.globalStats;
+      if (elGameOverStats && stats) {
         elGameOverStats.innerHTML = `
 Got to level ${this.getLevelText()}
       
-Survived for ${((Date.now() - player.stats.gameStartTime) / 60000).toFixed(2)} Minutes
-${this.winTime && this.startTime ? `Beat deathmasons in ${((this.winTime - this.startTime) / 60000).toFixed(2)} Minutes` : ''}
+${stats.runEndTime ? `Survived for ${((stats.runEndTime - stats.runStartTime) / 60000).toFixed(2)} Minutes` : ''}
+${stats.runWinTime ? `Beat deathmasons in ${((stats.runWinTime - stats.runStartTime) / 60000).toFixed(2)} Minutes` : ''}
 
 Total Kills: ${this.enemiesKilled}
 
-${player.stats.bestSpell.unitsKilled > 0 ? `Best Spell killed ${player.stats.bestSpell.unitsKilled} units
+${stats.bestSpell.unitsKilled > 0 ? `Best Spell killed ${stats.bestSpell.unitsKilled} units
       <div class="stats-spell">
-${CardUI.cardListToImages(player.stats.bestSpell.spell)}
+${CardUI.cardListToImages(stats.bestSpell.spell)}
       </div>`: ''}
-      ${JSON.stringify(player.stats.bestSpell.spell) !== JSON.stringify(player.stats.longestSpell) ?
+      ${JSON.stringify(stats.bestSpell.spell) !== JSON.stringify(stats.longestSpell) ?
             `
 Longest Spell:
       <div class="stats-spell">
-${CardUI.cardListToImages(player.stats.longestSpell)}
+${CardUI.cardListToImages(stats.longestSpell)}
       </div>
         `
             : ''}
@@ -3708,7 +3707,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       initialTargetedPickupId
     };
 
-    GameStatistics.trackCastCards({ effectState, prediction });
+    GameStatistics.trackCastCardsStart({ effectState, prediction });
 
     // Get initial targets.  If initial targets are already determined (by being passed into this function, use them;
     // this is so that networked SPELL messages have consistent targets).  otherwise determine the initial target

@@ -5,6 +5,45 @@ import Underworld from './Underworld';
 
 //
 
+// Global Stats are only stored once, and we don't care "when" they happened
+export const globalStats: IGlobalStats = EmptyGlobalStatistics();
+interface IGlobalStats {
+  bestSpell: {
+    unitsKilled: number,
+    spell: string[]
+  };
+  longestSpell: string[];
+  runStartTime: number,
+  runWinTime: number | undefined,
+  runEndTime: number | undefined,
+}
+// This function can be used to initialize or reset globalStats
+export function EmptyGlobalStatistics(stats?: IGlobalStats): IGlobalStats {
+  return Object.assign(stats || {}, {
+    bestSpell: { unitsKilled: 0, spell: [] },
+    longestSpell: [],
+    runStartTime: Date.now(),
+    runWinTime: undefined,
+    runEndTime: undefined,
+  })
+}
+
+//
+
+export enum StatDepth {
+  LIFETIME,
+  RUN,
+  LEVEL,
+  SPELL,
+}
+// These statistics help us keep track of game events as they progress
+// and are separated by when they occured for the purpose of achievements
+export const allStats: IStatistics[] = [
+  EmptyStatistics(), // 0 - Lifetime
+  EmptyStatistics(), // 1 - Run
+  EmptyStatistics(), // 2 - Level
+  EmptyStatistics(), // 3 - Spell
+];
 export interface IStatistics {
   myPlayerDamageTaken: number;
   myPlayerDeaths: number;
@@ -12,7 +51,6 @@ export interface IStatistics {
   myPlayerArrowsFired: number;
   myPlayerCursesPurified: number;
 }
-
 // This function can be used to initialize or reset a statistics object
 export function EmptyStatistics(stats?: IStatistics): IStatistics {
   return Object.assign(stats || {}, {
@@ -24,18 +62,7 @@ export function EmptyStatistics(stats?: IStatistics): IStatistics {
   })
 }
 
-export enum StatDepth {
-  LIFETIME,
-  RUN,
-  LEVEL,
-  SPELL,
-}
-export const allStats: IStatistics[] = [
-  EmptyStatistics(), // 0 - Lifetime
-  EmptyStatistics(), // 1 - Run
-  EmptyStatistics(), // 2 - Level
-  EmptyStatistics(), // 3 - Spell
-];
+//
 
 function allStatsAtDepth(depth: StatDepth): IStatistics[] {
   return allStats.slice(0, depth + 1);
@@ -97,7 +124,7 @@ export function trackUnitDie(args: trackUnitDieArgs) {
   }
 
   if (unit == globalThis.player?.unit) {
-    allStatsAtDepth(StatDepth.LEVEL).forEach(s => s.myPlayerDeaths += 1);
+    allStatsAtDepth(StatDepth.SPELL).forEach(s => s.myPlayerDeaths += 1);
   }
 }
 
@@ -105,17 +132,18 @@ interface trackCastCardsArgs {
   effectState: Cards.EffectState,
   prediction: boolean,
 }
-export function trackCastCards(args: trackCastCardsArgs) {
+export function trackCastCardsStart(args: trackCastCardsArgs) {
   let { effectState, prediction } = args;
   if (prediction) {
     return;
   }
 
+  clearSpellStatistics();
+
   if (effectState.casterPlayer == globalThis.player) {
     allStatsAtDepth(StatDepth.SPELL).forEach(s => s.cardsCast += effectState.cardIds.length);
   }
 }
-
 export function trackCastCardsEnd(args: trackCastCardsArgs) {
   let { effectState, prediction } = args;
   if (prediction) {
@@ -123,7 +151,7 @@ export function trackCastCardsEnd(args: trackCastCardsArgs) {
   }
 
   Achievements.UnlockEvent_CastCards();
-  EmptyStatistics(allStats[StatDepth.SPELL]);
+  clearSpellStatistics()
 }
 
 interface trackArrowFiredArgs {
@@ -159,10 +187,32 @@ export function trackCursePurified(args: trackCursePurifiedArgs) {
 
 // Warning, this gets called mulitple times per level
 export function trackEndLevel(underworld: Underworld) {
-  // Helpful debug log
-  console.log("[STATS] - At the end of level", underworld.levelIndex);
-  LogStats();
-
   Achievements.UnlockEvent_EndOfLevel(underworld);
+  clearLevelStatistics(underworld);
+}
+
+export function trackGameStart() {
+  EmptyGlobalStatistics(globalStats);
+}
+
+export function trackGameEnd() {
+  if (!globalStats.runEndTime) {
+    globalStats.runEndTime = Date.now();
+  }
+}
+
+export function clearSpellStatistics() {
+  console.log("[STATS] - Clear Spell Statistics");
+  LogStats();
+  EmptyStatistics(allStats[StatDepth.SPELL]);
+}
+export function clearLevelStatistics(underworld: Underworld) {
+  console.log("[STATS] - Clear Level Statistics", underworld.levelIndex);
+  LogStats();
   EmptyStatistics(allStats[StatDepth.LEVEL]);
+}
+export function clearRunStatistics(underworld: Underworld) {
+  console.log("[STATS] - Clear Run Statistics", underworld.levelIndex);
+  LogStats();
+  EmptyStatistics(allStats[StatDepth.RUN]);
 }

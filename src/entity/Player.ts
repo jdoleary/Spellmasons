@@ -35,15 +35,6 @@ export type IPlayerSerialized = Omit<IPlayer, "unit"> & { unit: { id: number } }
 export interface CardUsage {
   [cardId: string]: number
 }
-interface Stats {
-  bestSpell: {
-    unitsKilled: number,
-    spell: string[]
-  };
-  longestSpell: string[];
-  gameStartTime: number;
-  totalKills: number;
-}
 export type MageType = 'Spellmason' | 'Timemason' | 'Bloodmason' | 'Necromancer' | 'Archer' | 'Far Gazer' | 'Cleric' | 'Witch' | 'Gambler';
 // This array allows the UI to select a mageType, mageTypes not in this array
 // will not appear in the UI
@@ -101,7 +92,6 @@ export interface IPlayer {
   attributePerks: AttributePerk[];
   // Stores state that modifies spells
   spellState: { [spellId: string]: any };
-  stats: Stats;
   cursesChosen: number;
   statPointsUnspent: number;
 }
@@ -222,12 +212,6 @@ export function create(clientId: string, playerId: string, underworld: Underworl
     attributePerks: [],
     spellState: {},
     cursesChosen: 0,
-    stats: {
-      bestSpell: { unitsKilled: 0, spell: [] },
-      longestSpell: [],
-      gameStartTime: Date.now(),
-      totalKills: 0
-    },
     statPointsUnspent: 0,
   };
   player.unit.originalLife = true;

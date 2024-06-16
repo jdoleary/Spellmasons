@@ -9,6 +9,7 @@ import * as Player from '../entity/Player';
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
 import * as messageQueue from '../messageQueue';
+import * as GameStatistics from '../GameStatistics';
 import * as storage from '../storage';
 import * as config from '../config';
 import * as Cards from '../cards';
@@ -1236,7 +1237,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
     // Record best spell stats
     const statsUnitsKilledFromCast = underworld.enemiesKilled - statsUnitDeadBeforeCast;
     if (globalThis.player == caster) {
-      const { stats } = globalThis.player;
+      const stats = GameStatistics.globalStats;
       if (stats) {
         if (stats.bestSpell.unitsKilled < statsUnitsKilledFromCast) {
           stats.bestSpell.unitsKilled = statsUnitsKilledFromCast;
@@ -1246,7 +1247,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
           stats.longestSpell = payload.cards;
         }
       } else {
-        console.error('player.stats is undefined');
+        console.error('GameStatistics.globalStats is undefined');
       }
       // Updates the game over modal in the event that this spell caused the game over modal to render
       // before the stats were updated
