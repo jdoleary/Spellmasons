@@ -99,7 +99,7 @@ export function arrowEffect(multiShotCount: number, collideFnKey: string, doesPi
             collideFnKey
           }, underworld, prediction);
 
-          GameStatistics.trackArrowFired({ sourceUnit: state.casterUnit, prediction });
+          GameStatistics.trackArrowFired({ sourceUnit: state.casterUnit }, underworld, prediction);
 
           if (!prediction && !globalThis.headless) {
             const timeout = Math.max(0, timeoutToNextArrow);

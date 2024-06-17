@@ -105,10 +105,9 @@ export function LoadStats() {
 interface trackUnitDamageArgs {
   unit: Unit.IUnit,
   amount: number,
-  prediction: boolean,
 }
-export function trackUnitDamage(args: trackUnitDamageArgs) {
-  let { unit, amount, prediction } = args;
+export function trackUnitDamage(args: trackUnitDamageArgs, underworld: Underworld, prediction: boolean) {
+  let { unit, amount } = args;
   if (prediction) {
     return;
   }
@@ -122,13 +121,12 @@ export function trackUnitDamage(args: trackUnitDamageArgs) {
 
 interface trackUnitDieArgs {
   unit: Unit.IUnit,
-  prediction: boolean,
 }
-export function trackUnitDie(args: trackUnitDieArgs) {
-  let { unit, prediction } = args;
+export function trackUnitDie(args: trackUnitDieArgs, underworld: Underworld, prediction: boolean) {
   if (prediction) {
     return;
   }
+  let { unit } = args;
 
   allStatsAtDepth(StatDepth.SPELL).forEach(s => s.unitDeaths += 1);
 
@@ -139,10 +137,9 @@ export function trackUnitDie(args: trackUnitDieArgs) {
 
 interface trackCastCardsArgs {
   effectState: Cards.EffectState,
-  prediction: boolean,
 }
-export function trackCastCardsStart(args: trackCastCardsArgs) {
-  let { effectState, prediction } = args;
+export function trackCastCardsStart(args: trackCastCardsArgs, underworld: Underworld, prediction: boolean) {
+  let { effectState } = args;
   if (prediction) {
     return;
   }
@@ -153,8 +150,8 @@ export function trackCastCardsStart(args: trackCastCardsArgs) {
     allStatsAtDepth(StatDepth.SPELL).forEach(s => s.cardsCast += effectState.cardIds.length);
   }
 }
-export function trackCastCardsEnd(args: trackCastCardsArgs) {
-  let { effectState, prediction } = args;
+export function trackCastCardsEnd(args: trackCastCardsArgs, underworld: Underworld, prediction: boolean) {
+  let { effectState } = args;
   if (prediction) {
     return;
   }
@@ -173,16 +170,15 @@ export function trackCastCardsEnd(args: trackCastCardsArgs) {
     }
   }
 
-  Achievements.UnlockEvent_CastCards();
+  Achievements.UnlockEvent_CastCards(underworld);
   clearSpellStatistics()
 }
 
 interface trackArrowFiredArgs {
   sourceUnit: Unit.IUnit,
-  prediction: boolean,
 }
-export function trackArrowFired(args: trackArrowFiredArgs) {
-  let { sourceUnit, prediction } = args;
+export function trackArrowFired(args: trackArrowFiredArgs, underworld: Underworld, prediction: boolean) {
+  let { sourceUnit } = args;
   if (prediction) {
     return;
   }
@@ -195,10 +191,9 @@ export function trackArrowFired(args: trackArrowFiredArgs) {
 interface trackCursePurifiedArgs {
   unit: Unit.IUnit,
   sourceUnit: Unit.IUnit,
-  prediction: boolean,
 }
-export function trackCursePurified(args: trackCursePurifiedArgs) {
-  let { unit, sourceUnit, prediction } = args;
+export function trackCursePurified(args: trackCursePurifiedArgs, underworld: Underworld, prediction: boolean) {
+  let { unit, sourceUnit } = args;
   if (prediction) {
     return;
   }

@@ -47,12 +47,12 @@ export function apply(unit: Unit.IUnit, underworld: Underworld, prediction: bool
     if (modifierProperties.isCurse) {
       Unit.removeModifier(unit, modifier, underworld);
       cursesRemoved += 1;
-      GameStatistics.trackCursePurified({ unit, sourceUnit, prediction });
+      GameStatistics.trackCursePurified({ unit, sourceUnit }, underworld, prediction);
     }
   }
 
   if (!prediction && sourceUnit == globalThis.player?.unit && cursesRemoved >= 5) {
-    UnlockAchievement(achievement_MiracleWorker);
+    UnlockAchievement(achievement_MiracleWorker, underworld);
   }
 }
 export default spell;

@@ -2,6 +2,7 @@ import * as GameStatistics from "./GameStatistics";
 import { allStats, StatDepth } from "./GameStatistics";
 import Underworld from "./Underworld";
 import { LAST_LEVEL_INDEX } from "./config";
+import * as Overworld from './Overworld';
 
 //
 
@@ -98,13 +99,21 @@ export function registerAllAchievements() {
 
 //
 
-export function UnlockAchievement(achievement: IAchievement) {
+// Underworld can be undefined in the case of achievements outside of the game,
+// such as achievements that can be earned in the main menu
+export function UnlockAchievement(achievement: IAchievement, underworld: Underworld | undefined) {
   if (globalThis.headless) {
     return;
   }
 
   if (!allAchievements[achievement.id]) {
     console.error("[ACHIEVEMENT] - Not registered", achievement.id, achievement);
+    return;
+  }
+
+  if (underworld && !underworld.allowAchievements) {
+    console.log("[ACHIEVEMENT] - AllowAchievements = false", achievement.id, achievement);
+    return;
   }
 
   if (!achievement.unlocked) {
@@ -117,33 +126,33 @@ export function UnlockAchievement(achievement: IAchievement) {
   // There is an achievement for earning all other achievements
   if (!achievement_100Percent.unlocked) {
     if (Object.entries(allAchievements).every(e => e[1].unlocked || e[1] == achievement_100Percent)) {
-      UnlockAchievement(achievement_100Percent);
+      UnlockAchievement(achievement_100Percent, underworld);
     }
   }
 }
 
-export function UnlockEvent_CastCards() {
+export function UnlockEvent_CastCards(underworld: Underworld) {
   if (allStats[StatDepth.SPELL]) {
     if (allStats[StatDepth.SPELL].myPlayerArrowsFired >= 100) {
-      UnlockAchievement(achievement_ArrowRain);
+      UnlockAchievement(achievement_ArrowRain, underworld);
     }
   }
 }
 
 export function UnlockEvent_EndOfLevel(underworld: Underworld) {
   if (globalThis.player && globalThis.player.unit.health < 10) {
-    UnlockAchievement(achievement_BrinkOfDeath);
+    UnlockAchievement(achievement_BrinkOfDeath, underworld);
   }
 
   if (allStats[StatDepth.LEVEL] && allStats[StatDepth.LEVEL].myPlayerDeaths > 0) {
-    UnlockAchievement(achievement_AllPartOfThePlan);
+    UnlockAchievement(achievement_AllPartOfThePlan, underworld);
   }
 
   if (underworld.levelIndex == LAST_LEVEL_INDEX) {
-    UnlockAchievement(achievement_CompleteTheGame);
+    UnlockAchievement(achievement_CompleteTheGame, underworld);
 
     if (allStats[StatDepth.RUN] && allStats[StatDepth.RUN].myPlayerDamageTaken == 0) {
-      UnlockAchievement(achievement_CompleteGameNoDamageTaken);
+      UnlockAchievement(achievement_CompleteGameNoDamageTaken, underworld);
     }
   }
 }

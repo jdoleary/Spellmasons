@@ -245,6 +245,9 @@ export default class Underworld {
   allyNPCAttemptWinKillSwitch: number = 0;
   aquirePickupQueue: { pickupId: number, unitId: number, timeout: number, flaggedForRemoval: boolean }[] = [];
   headlessTimeouts: { time: number, callback: () => void }[] = [];
+  // This should only be set to true on underworld creation,
+  // and should be set to false if any adminCommands are used
+  allowAchievements: boolean = true;
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
@@ -440,7 +443,7 @@ export default class Underworld {
               floatingText({ coords: pushedObject, text: `${impactDamage} Impact damage!` });
               if (!pushedObject.alive) {
                 // Unit died to impact damage
-                Achievements.UnlockAchievement(Achievements.achievement_Splat);
+                Achievements.UnlockAchievement(Achievements.achievement_Splat, this);
               }
             }
           }
@@ -3690,7 +3693,7 @@ ${CardUI.cardListToImages(stats.longestSpell)}
       initialTargetedPickupId
     };
 
-    GameStatistics.trackCastCardsStart({ effectState, prediction });
+    GameStatistics.trackCastCardsStart({ effectState }, this, prediction);
 
     // Get initial targets.  If initial targets are already determined (by being passed into this function, use them;
     // this is so that networked SPELL messages have consistent targets).  otherwise determine the initial target
@@ -3889,7 +3892,7 @@ ${CardUI.cardListToImages(stats.longestSpell)}
       quantity = 1;
     }
 
-    GameStatistics.trackCastCardsEnd({ effectState, prediction });
+    GameStatistics.trackCastCardsEnd({ effectState }, this, prediction);
 
     if (!prediction) {
       // Clear spell animations once all cards are done playing their animations

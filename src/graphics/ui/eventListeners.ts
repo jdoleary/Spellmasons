@@ -1875,6 +1875,11 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
 }
 export function triggerAdminOption(option: AdminContextMenuOption, overworld: Overworld, pos?: Vec2) {
   const { label, action, domQueryContainer, supportInMultiplayer } = option;
+  if (overworld.underworld) {
+    // Disable achievements if any admin commands are used
+    overworld.underworld.allowAchievements = false;
+  }
+
   if (supportInMultiplayer) {
     overworld.pie.sendData({
       type: MESSAGE_TYPES.ADMIN_COMMAND,
@@ -1895,7 +1900,6 @@ export function triggerAdminOption(option: AdminContextMenuOption, overworld: Ov
     }
     action({ playerId: globalThis.player?.playerId || '', pos });
   }
-
 }
 function createContextMenuOptions(menu: HTMLElement, overworld: Overworld) {
   if (!overworld.underworld) {
