@@ -15,10 +15,16 @@ Balance: Freeze
     Removes cooldown
     Freeze no longer stacks
 
+Balance: Increase Merge rarity
+
 fix: Prevent empower from targeting players to prevent confusion
 i18n: Clarify that Empower does not affect players
 
 art: Add slightly new cast animation
+
+audio: Only play "endTurn" sfx once per turn
+    Thanks Hazzie and Nord from Youtube for   
+    this suggestion!
 
 fix: Backfill stat upgrades for players who
     join late.
