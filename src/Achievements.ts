@@ -2,7 +2,6 @@ import * as GameStatistics from "./GameStatistics";
 import { allStats, StatDepth } from "./GameStatistics";
 import Underworld from "./Underworld";
 import { LAST_LEVEL_INDEX } from "./config";
-import * as Overworld from './Overworld';
 
 //
 
