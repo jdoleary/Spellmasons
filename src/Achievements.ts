@@ -112,7 +112,7 @@ export function UnlockAchievement(achievement: IAchievement, underworld: Underwo
   }
 
   if (underworld && !underworld.allowAchievements) {
-    console.log("[ACHIEVEMENT] - AllowAchievements = false", achievement.id, achievement);
+    console.log("[ACHIEVEMENT] - Disabled", achievement.id, achievement);
     return;
   }
 
