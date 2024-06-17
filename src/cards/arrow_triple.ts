@@ -3,10 +3,10 @@ import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { arrowEffect } from './arrow';
 import { arrow2CardId } from './arrow2';
-import { takeDamage } from '../entity/Unit';
+import { GetSpellDamage, takeDamage } from '../entity/Unit';
 
 export const arrowTripleCardId = 'Triple Arrow';
-const damageDone = 10;
+const damageMult = 0.5;
 const arrowCount = 3;
 const spell: Spell = {
   card: {
@@ -24,19 +24,23 @@ const spell: Spell = {
     ignoreRange: true,
     animationPath: '',
     sfx: 'arrow',
-    description: ['spell_arrow_many', arrowCount.toString(), damageDone.toString()],
+    description: ['spell_arrow_many', arrowCount.toString(), GetSpellDamage(undefined, damageMult).toString()],
     effect: arrowEffect(arrowCount, arrowTripleCardId)
   },
   events: {
     onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
       if (unit) {
-        takeDamage({
-          unit: unit,
-          amount: damageDone,
-          sourceUnit: projectile.sourceUnit,
-          fromVec2: projectile.startPoint,
-          thinBloodLine: true,
-        }, underworld, prediction);
+        if (projectile.sourceUnit) {
+          takeDamage({
+            unit: unit,
+            amount: GetSpellDamage(projectile.sourceUnit.damage, damageMult),
+            sourceUnit: projectile.sourceUnit,
+            fromVec2: projectile.startPoint,
+            thinBloodLine: true,
+          }, underworld, prediction);
+        } else {
+          console.error("No source unit for projectile: ", projectile);
+        }
       }
     }
   }

@@ -9,7 +9,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { forcePushAwayFrom, forcePushTowards } from '../effects/force_move';
 import { Vec2 } from '../jmath/Vec';
 import Underworld from '../Underworld';
-import { IUnit, takeDamage } from '../entity/Unit';
+import { GetSpellDamage, IUnit, takeDamage } from '../entity/Unit';
 import { makeParticleExplosion } from '../graphics/ParticleCollection';
 import { createParticleTexture, logNoTextureWarning, simpleEmitter } from '../graphics/Particles';
 import * as particles from 'jdoleary-fork-pixi-particle-emitter'
@@ -18,7 +18,7 @@ import { baseExplosionRadius } from '../effects/explode';
 export const stompCardId = 'stomp';
 const stompMoveDistance = 100;
 const stompRadius = 100;
-const stompDamage = 20;
+const damageMult = 1;
 const spell: Spell = {
   card: {
     id: stompCardId,
@@ -62,7 +62,7 @@ const spell: Spell = {
         }
 
         // Stomp does damage * quantity and pushback = base stomp radius
-        stompExplode(state.casterUnit, radius, stompDamage * quantity, stompRadius, underworld, prediction);
+        stompExplode(state.casterUnit, radius, GetSpellDamage(state.casterUnit.damage, damageMult) * quantity, stompRadius, underworld, prediction);
         await underworld.awaitForceMoves(prediction);
       }
 

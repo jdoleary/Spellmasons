@@ -6,7 +6,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { drownCardId } from './drown';
 
 export const bloodBathId = 'Blood Bath';
-const damageDone = 40;
+const damageMult = 2;
 const spell: Spell = {
   card: {
     id: bloodBathId,
@@ -21,7 +21,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.SPECIAL],
     thumbnail: 'spellIconDrown2.png',
     sfx: 'drown',
-    description: ['spell_blood_bath', damageDone.toString()],
+    description: ['spell_blood_bath', Unit.GetSpellDamage(undefined, damageMult).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: target all living units that are submerged
       const targets = (prediction ? underworld.unitsPrediction : underworld.units).filter(u => u.alive && u.inLiquid);
@@ -33,7 +33,7 @@ const spell: Spell = {
         for (let unit of targets) {
           Unit.takeDamage({
             unit: unit,
-            amount: damageDone * quantity,
+            amount: Unit.GetSpellDamage(state.casterUnit.damage, damageMult) * quantity,
             sourceUnit: state.casterUnit,
             fromVec2: state.casterUnit,
           }, underworld, prediction);

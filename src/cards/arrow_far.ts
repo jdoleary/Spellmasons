@@ -7,12 +7,16 @@ import { arrowEffect } from './arrow';
 import { arrow2CardId } from './arrow2';
 
 export const arrowFarCardId = 'Long Arrow';
-const maxDamage = 50;
+const maxDamageMult = 2.5;
 const minRange = 100;
 const maxDamageRange = 600;
-function calculateDamage(casterPositionAtTimeOfCast: Vec2, target: Vec2): number {
-  const dist = math.distance(casterPositionAtTimeOfCast, target)
-  return Math.ceil(math.lerp(0, maxDamage, Math.max(0, dist - minRange) / maxDamageRange));
+function calculateDamage(casterDamage: number, distance: number): number {
+  // Damage scales linearly with distance
+  // - Min Range = 0 Damage
+  // - Max range = Max damage
+  const damageRatio = Math.max(0, distance - minRange) / maxDamageRange;
+  const maxDamage = Unit.GetSpellDamage(casterDamage, maxDamageMult);
+  return Math.ceil(math.lerp(0, maxDamage, damageRatio));
 }
 
 const spell: Spell = {
@@ -31,19 +35,24 @@ const spell: Spell = {
     ignoreRange: true,
     animationPath: '',
     sfx: 'arrow',
-    description: ['spell_arrow_far', maxDamage.toString()],
+    description: ['spell_arrow_far', Unit.GetSpellDamage(undefined, maxDamageMult).toString()],
     effect: arrowEffect(1, arrowFarCardId),
   },
   events: {
     onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
       if (unit) {
-        Unit.takeDamage({
-          unit: unit,
-          amount: calculateDamage(projectile.startPoint, unit),
-          sourceUnit: projectile.sourceUnit,
-          fromVec2: projectile.startPoint,
-          thinBloodLine: true
-        }, underworld, prediction);
+        if (projectile.sourceUnit) {
+          const dist = math.distance(projectile.startPoint, unit);
+          Unit.takeDamage({
+            unit: unit,
+            amount: calculateDamage(projectile.sourceUnit.damage, dist),
+            sourceUnit: projectile.sourceUnit,
+            fromVec2: projectile.startPoint,
+            thinBloodLine: true,
+          }, underworld, prediction);
+        } else {
+          console.error("No source unit for projectile: ", projectile);
+        }
       }
     }
   }

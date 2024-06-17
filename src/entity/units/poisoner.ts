@@ -19,7 +19,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
-    damage: 1,
+    damage: 20,
     attackRange: 350,
     healthMax: 60,
     mana: 60,
@@ -56,16 +56,11 @@ const unit: UnitSource = {
         ).then(async () => {
           // Add projectile hit animation
           Image.addOneOffAnimation(chosenUnit, 'projectile/poisonerProjectileHit');
-          const cardsIds = [];
-          // Casts one stack of poison per damage
-          for (let i = 0; i < unit.damage; i++) {
-            cardsIds.push(poison.poisonCardId);
-          }
           await underworld.castCards({
             casterCardUsage: {},
             casterUnit: unit,
             casterPositionAtTimeOfCast: Vec.clone(unit),
-            cardIds: cardsIds,
+            cardIds: [poison.poisonCardId],
             castLocation: chosenUnit,
             initialTargetedUnitId: chosenUnit.id,
             prediction: false,

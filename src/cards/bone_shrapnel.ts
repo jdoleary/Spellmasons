@@ -10,7 +10,7 @@ import * as colors from '../graphics/ui/colors';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 export const boneShrapnelCardId = 'Bone Shrapnel';
-const damage = 30;
+const damageMult = 1.5;
 export const boneShrapnelRadius = 140;
 
 const spell: Spell = {
@@ -23,7 +23,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconCorpseExplosion.png',
-    description: [`spell_bone_shrapnel`, damage.toString()],
+    description: [`spell_bone_shrapnel`, Unit.GetSpellDamage(undefined, damageMult).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // Only explode corpses at time of cast
       const targetedUnits = state.targetedUnits.filter(u => !u.alive);
@@ -49,7 +49,7 @@ const spell: Spell = {
           // Deal damage to units
           Unit.takeDamage({
             unit: u,
-            amount: damage * quantity,
+            amount: Unit.GetSpellDamage(state.casterUnit.damage, damageMult) * quantity,
             sourceUnit: state.casterUnit,
             fromVec2: unit,
           }, underworld, prediction);

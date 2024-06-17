@@ -27,7 +27,7 @@ export const UNIT_UI_BAR_WIDTH = 36;
 
 export const LOB_PROJECTILE_SPEED = 800; // in millis
 export const UNIT_SIZE = COLLISION_MESH_RADIUS * 2;
-export const UNIT_BASE_DAMAGE = 30;
+export const UNIT_BASE_DAMAGE = 20;
 // Primarily for melee Units
 export const UNIT_BASE_RANGE = 10 + COLLISION_MESH_RADIUS * 2;
 export const UNIT_BASE_STAMINA = 300;

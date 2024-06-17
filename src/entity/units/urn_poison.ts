@@ -16,7 +16,7 @@ const urnPoisonSource: UnitSource = {
     subtype: UnitSubType.DOODAD,
   },
   unitProps: {
-    damage: 0,
+    damage: 20,
     attackRange: baseExplosionRadius,
     staminaMax: 0,
     healthMax: 1,
@@ -65,7 +65,7 @@ export function registerUrnPoisonExplode() {
           if (!prediction) {
             animateSpell(u, 'spell-effects/spellPoison'); // TODO - Put in poison modifier "add" function?
           }
-          Unit.addModifier(u, poison.poisonCardId, underworld, prediction, 1);
+          Unit.addModifier(u, poison.poisonCardId, underworld, prediction, unit.damage);
         });
       // Remove corpse
       if (!prediction) {

@@ -1,17 +1,15 @@
 import * as Unit from '../entity/Unit';
-import { CardCategory } from '../types/commonTypes';
+import { CardCategory, UnitType } from '../types/commonTypes';
 import type Underworld from '../Underworld';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import { Spell, refundLastSpell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 import { PRIEST_ID } from '../entity/units/priest';
-import { POISONER_ID } from '../entity/units/poisoner';
 import { gripthulu_id } from '../entity/units/gripthulu';
 import { decoyId } from './summon_decoy';
 import { bossmasonUnitId } from '../entity/units/deathmason';
 import { DARK_SUMMONER_ID } from '../entity/units/darkSummoner';
-import { spellmasonUnitId } from '../entity/units/playerUnit';
 
 const empowerId = 'Empower';
 const statChange = 5;
@@ -37,7 +35,7 @@ const spell: Spell = {
           && u.unitSourceId != decoyId
           && u.unitSourceId != bossmasonUnitId
           && u.unitSourceId != DARK_SUMMONER_ID
-          && u.unitSourceId != spellmasonUnitId
+          && u.unitType != UnitType.PLAYER_CONTROLLED
       );
       // Even though the player's damage stat doesn't affect their spells
       // it will affect cloned spellmasons, so we allow it.
@@ -65,12 +63,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     //no first time setup
   });
 
-  // Special balance case: Poisoner applies 1 stack of poison per damage
-  if (unit.unitSourceId == POISONER_ID) {
-    unit.damage += quantity;
-  } else {
-    unit.damage += statChange * quantity;
-  }
+  unit.damage += statChange * quantity;
 }
 
 function remove(unit: Unit.IUnit, underworld: Underworld) {
@@ -80,12 +73,7 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
     return
   }
 
-  // Special balance case: Poisoner applies 1 stack of poison per damage
-  if (unit.unitSourceId == POISONER_ID) {
-    unit.damage -= modifier.quantity;
-  } else {
-    unit.damage -= statChange * modifier.quantity;
-  }
+  unit.damage -= statChange * modifier.quantity;
 }
 
 export default spell;

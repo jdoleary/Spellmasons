@@ -6,7 +6,7 @@ import { slashEffect } from './slash';
 import { heavyslashCardId } from './heavy_slash';
 
 export const megaSlashCardId = 'Mega Slash';
-const damageDone = 80;
+const damageMult = 4;
 const slashScale = 3;
 const spell: Spell = {
   card: {
@@ -21,9 +21,9 @@ const spell: Spell = {
     thumbnail: 'spellIconMegaSlash.png',
     animationPath: 'spell-effects/spellHurtCuts',
     sfx: 'hurt3',
-    description: ['spell_slash', damageDone.toString()],
+    description: ['spell_slash', Unit.GetSpellDamage(undefined, damageMult).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
-      return await slashEffect(state, card, quantity, underworld, prediction, damageDone, slashScale);
+      return await slashEffect(state, card, quantity, underworld, prediction, Unit.GetSpellDamage(state.casterUnit.damage, damageMult), slashScale);
     },
   },
 };

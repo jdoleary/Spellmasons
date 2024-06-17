@@ -9,9 +9,9 @@ import { explode } from '../effects/explode';
 import { defaultPushDistance } from '../effects/force_move';
 
 export const explosiveArrowCardId = 'Explosive Arrow';
-const damageDone = 10;
+const arrowDamageMult = 0.5;
+const explodeDamageMult = 2;
 const explodeRange = 140;
-const explodeDamage = 40;
 const spell: Spell = {
   card: {
     id: explosiveArrowCardId,
@@ -28,23 +28,28 @@ const spell: Spell = {
     ignoreRange: true,
     animationPath: '',
     sfx: 'arrow',
-    description: ['spell_arrow_explosive', damageDone.toString(), explodeDamage.toString()],
+    description: ['spell_arrow_explosive', Unit.GetSpellDamage(undefined, arrowDamageMult).toString(), Unit.GetSpellDamage(undefined, explodeDamageMult).toString()],
     effect: arrowEffect(1, explosiveArrowCardId)
   },
   events: {
     onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
       if (unit) {
-        Unit.takeDamage({
-          unit: unit,
-          amount: damageDone,
-          sourceUnit: projectile.sourceUnit,
-          fromVec2: projectile.startPoint,
-          thinBloodLine: true,
-        }, underworld, prediction);
-        explode(unit, explodeRange, explodeDamage, defaultPushDistance,
-          projectile.sourceUnit,
-          underworld, prediction,
-          colors.bloatExplodeStart, colors.bloatExplodeEnd);
+        if (projectile.sourceUnit) {
+          Unit.takeDamage({
+            unit: unit,
+            amount: Unit.GetSpellDamage(projectile.sourceUnit.damage, arrowDamageMult),
+            sourceUnit: projectile.sourceUnit,
+            fromVec2: projectile.startPoint,
+            thinBloodLine: true,
+          }, underworld, prediction);
+
+          explode(unit, explodeRange, Unit.GetSpellDamage(projectile.sourceUnit.damage, explodeDamageMult), defaultPushDistance,
+            projectile.sourceUnit,
+            underworld, prediction,
+            colors.bloatExplodeStart, colors.bloatExplodeEnd);
+        } else {
+          console.error("No source unit for projectile: ", projectile);
+        }
       }
     }
   }

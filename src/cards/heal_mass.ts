@@ -9,7 +9,7 @@ import { healGreaterId } from './heal_greater';
 import { healSfx, healUnits } from '../effects/heal';
 
 export const heal_mass_id = 'Mass Heal';
-const healAmount = 10;
+const healMult = 0.5;
 
 const spell: Spell = {
   card: {
@@ -26,11 +26,11 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.FORBIDDEN],
     thumbnail: 'spellIconHeal3.png',
     animationPath: 'spell-effects/potionPickup',
-    description: ['spell_heal_mass', healAmount.toString()],
+    description: ['spell_heal_mass', Unit.GetSpellDamage(undefined, healMult).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       const units = (prediction ? underworld.unitsPrediction : underworld.units)
         .filter(u => u.alive && u.faction == state.casterUnit.faction);
-      await healUnits(units, healAmount * quantity, state.casterUnit, underworld, prediction, state);
+      await healUnits(units, Unit.GetSpellDamage(state.casterUnit.damage, healMult) * quantity, state.casterUnit, underworld, prediction, state);
       return state;
     },
   },

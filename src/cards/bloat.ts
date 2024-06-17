@@ -13,7 +13,7 @@ import { addScaleModifier, removeScaleModifier, setScaleFromModifiers } from '..
 
 const id = 'Bloat';
 const imageName = 'explode-on-death.png';
-const damage = 40;
+const damageMult = 2;
 function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra?: any) {
   const modifier = getOrInitModifier(unit, id, {
     isCurse: true, quantity,
@@ -52,11 +52,11 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconBloat.png',
-    description: ['spell_bloat', id, damage.toString(), id],
+    description: ['spell_bloat', id, Unit.GetSpellDamage(undefined, damageMult).toString(), id],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       for (let unit of state.targetedUnits.filter(u => u.alive)) {
-        Unit.addModifier(unit, id, underworld, prediction, quantity, { radiusBoost: state.aggregator.radiusBoost, sourceUnitId: state.casterUnit.id });
+        Unit.addModifier(unit, id, underworld, prediction, Unit.GetSpellDamage(state.casterUnit.damage, damageMult) * quantity, { radiusBoost: state.aggregator.radiusBoost, sourceUnitId: state.casterUnit.id });
       }
       return state;
     },
@@ -89,7 +89,7 @@ const spell: Spell = {
       const radiusBoost = modifier.radiusBoost;
       const sourceUnit = underworld.getUnitById(modifier.sourceUnitId, prediction);
       const adjustedRadius = getAdjustedRadius(radiusBoost);
-      explode(unit, adjustedRadius, damage * quantity, getAdjustedPushDist(radiusBoost),
+      explode(unit, adjustedRadius, quantity, getAdjustedPushDist(radiusBoost),
         sourceUnit,
         underworld, prediction,
         colors.bloatExplodeStart, colors.bloatExplodeEnd);

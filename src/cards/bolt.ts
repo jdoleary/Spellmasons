@@ -11,8 +11,8 @@ import { raceTimeout } from '../Promise';
 import { baseExplosionRadius } from '../effects/explode';
 
 const id = 'Bolt';
-const damage = 8;
-const baseRadius = baseExplosionRadius;
+const damageMult = 0.4;
+const baseRadius = config.PLAYER_BASE_ATTACK_RANGE / 2;
 // Submerged units increase radius dramatically
 const liquidRadiusMultiplier = 2;
 const spell: Spell = {
@@ -27,7 +27,7 @@ const spell: Spell = {
     sfx: 'bolt',
     supportQuantity: true,
     requiresFollowingCard: false,
-    description: ['spell_bolt', damage.toString()],
+    description: ['spell_bolt', Unit.GetSpellDamage(undefined, damageMult).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // Bolt has functionally unlimited targets
       let limitTargetsLeft = 10_000;
@@ -84,7 +84,7 @@ const spell: Spell = {
         if (Unit.isUnit(u)) {
           Unit.takeDamage({
             unit: u,
-            amount: damage * quantity,
+            amount: Unit.GetSpellDamage(state.casterUnit.damage, damageMult) * quantity,
             sourceUnit: state.casterUnit,
           }, underworld, prediction);
         }

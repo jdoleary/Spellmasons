@@ -11,7 +11,7 @@ import { baseExplosionRadius, explode } from '../effects/explode';
 import { playDefaultSpellSFX } from './cardUtils';
 
 export const shatterCardId = 'Shatter';
-const damage = 40;
+const damageMult = 2;
 const baseRadius = 100;
 
 const spell: Spell = {
@@ -26,7 +26,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.UNCOMMON],
     sfx: 'shatter',
     thumbnail: 'spellIconShatter.png',
-    description: [`spell_shatter`, damage.toString()],
+    description: [`spell_shatter`, Unit.GetSpellDamage(undefined, damageMult).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // Only target frozen units
       const targetedUnits = state.targetedUnits.filter(u => u.modifiers[freezeCardId]);
@@ -53,7 +53,7 @@ const spell: Spell = {
         }
       }
       for (let { location, radius } of explosions) {
-        explode(location, radius, damage * quantity, 0,
+        explode(location, radius, Unit.GetSpellDamage(state.casterUnit.damage, damageMult) * quantity, 0,
           state.casterUnit,
           underworld, prediction);
         makeShatterParticles(location, radius / baseRadius, prediction);

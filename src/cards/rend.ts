@@ -9,13 +9,14 @@ import { clone, Vec2 } from '../jmath/Vec';
 import { raceTimeout } from '../Promise';
 
 export const rendCardId = 'Rend';
-function calculateRendDamage(stack: number): number {
-  let damage = 0;
-  for (let i = 1; i < stack + 1; i++) {
-    damage += i;
+function calculateRendDamage(baseDamage: number, quantity: number): number {
+  let stackDamageMult = 0;
+  for (let i = 1; i < quantity + 1; i++) {
+    stackDamageMult += i;
   }
-  return damage * 10;
+  return baseDamage * stackDamageMult;
 }
+const baseDamageMult = 0.5;
 const spellRendAnimationHeight = 10;
 const animationPath = 'spell-effects/spellRend';
 const spell: Spell = {
@@ -30,9 +31,9 @@ const spell: Spell = {
     thumbnail: 'spellIconRend.png',
     animationPath,
     sfx: 'rend',
-    description: ['spell_rend', `${calculateRendDamage(1)}, ${calculateRendDamage(2)}, ${calculateRendDamage(3)}, ${calculateRendDamage(4)}, ${calculateRendDamage(5)}, ${calculateRendDamage(6)}, ${calculateRendDamage(7)}, ${calculateRendDamage(8)}, ${calculateRendDamage(9)}, ${calculateRendDamage(10)}`],
+    description: ['spell_rend', rendDescription()],
     effect: async (state, card, quantity, underworld, prediction) => {
-      const damage = calculateRendDamage(quantity);
+      const damage = calculateRendDamage(Unit.GetSpellDamage(state.casterUnit.damage, baseDamageMult), quantity);
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive)
       if (!prediction) {
@@ -51,6 +52,13 @@ const spell: Spell = {
     },
   },
 };
+
+// Returns damage values for the first 10 stacks of rend
+function rendDescription(): string {
+  const baseDamage = Unit.GetSpellDamage(undefined, baseDamageMult);
+  return `${calculateRendDamage(baseDamage, 1)}, ${calculateRendDamage(baseDamage, 2)}, ${calculateRendDamage(baseDamage, 3)}, ${calculateRendDamage(baseDamage, 4)}, ${calculateRendDamage(baseDamage, 5)}, ${calculateRendDamage(baseDamage, 6)}, ${calculateRendDamage(baseDamage, 7)}, ${calculateRendDamage(baseDamage, 8)}, ${calculateRendDamage(baseDamage, 9)}, ${calculateRendDamage(baseDamage, 10)}`
+}
+
 export default spell;
 function animateRend(targets: Vec2[], quantity: number, prediction: boolean): Promise<void> {
   if (prediction || globalThis.headless) {
