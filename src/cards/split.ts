@@ -24,8 +24,8 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
 
   const inverseMult = 1 / splitStatMultiplier;
   for (let i = 0; i < modifier.quantity; i++) {
-    unit.healthMax = Math.max(1, Math.floor(unit.healthMax *= inverseMult));
-    unit.health = Math.max(1, Math.floor(unit.health *= inverseMult));
+    unit.healthMax = Math.max(1, Math.floor(unit.healthMax * inverseMult));
+    unit.health = Math.max(1, Math.floor(unit.health * inverseMult));
     //unit.manaMax = Math.floor(unit.manaMax * inverseMult);
     unit.mana = Math.floor(unit.mana * inverseMult);
     unit.manaPerTurn = Math.floor(unit.manaPerTurn * inverseMult);
@@ -54,8 +54,8 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
   modifier.quantity = Math.min(modifier.quantity, splitLimit);
 
   for (let i = 0; i < timesToSplit; i++) {
-    unit.healthMax = Math.max(1, Math.floor(unit.healthMax *= splitStatMultiplier));
-    unit.health = Math.max(1, Math.floor(unit.health *= splitStatMultiplier));
+    unit.healthMax = Math.max(1, Math.floor(unit.healthMax * splitStatMultiplier));
+    unit.health = Math.max(1, Math.floor(unit.health * splitStatMultiplier));
     //unit.manaMax = Math.floor(unit.manaMax * splitStatMultiplier);
     unit.mana = Math.floor(unit.mana * splitStatMultiplier);
     unit.manaPerTurn = Math.floor(unit.manaPerTurn * splitStatMultiplier);
