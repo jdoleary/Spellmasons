@@ -26,10 +26,12 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean) {
   }
 
   getOrInitModifier(unit, id, { isCurse: true, quantity: 1 }, () => {
+    // Add event
     Unit.addEvent(unit, id);
-
-    unit.healthMax *= healthMultiplier;
-    unit.health *= healthMultiplier;
+    // This is done in first time setup because the modified stats are stored on the unit
+    // otherwise it would apply the multiplier each time the unit is loaded
+    unit.healthMax = Math.floor(unit.healthMax *= healthMultiplier);
+    unit.health = Math.floor(unit.health *= healthMultiplier);
   });
 
   if (!prediction) {
@@ -42,10 +44,9 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean) {
 }
 
 function remove(unit: IUnit, underworld: Underworld) {
-  unit.health /= healthMultiplier;
-  unit.health = Math.round(unit.health);
-  unit.healthMax /= healthMultiplier;
-  unit.healthMax = Math.round(unit.healthMax);
+  // Health should not go below 1
+  unit.healthMax = Math.max(1, Math.floor(unit.healthMax / healthMultiplier));
+  unit.health = Math.max(1, Math.floor(unit.health / healthMultiplier));
 }
 
 
