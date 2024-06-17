@@ -13,68 +13,36 @@ import { addScaleModifier, removeScaleModifier } from '../graphics/Image';
 
 export const splitId = 'split';
 const splitLimit = 3;
-export function changeStatWithCap(unit: Unit.IUnit, statKey: 'health' | 'healthMax' | 'mana' | 'manaMax' | 'manaPerTurn' | 'manaCostToCast' | 'stamina' | 'staminaMax' | 'moveSpeed' | 'damage' | 'attackRange', multiplier: number) {
-  if (unit[statKey] && typeof unit[statKey] === 'number') {
-
-    // Do not let stats go below 1
-    // Ensure stats are a whole number
-    const newValue = Math.max(1, Math.floor(unit[statKey] * multiplier));
-    unit[statKey] = newValue;
-  }
-}
-
-const addMultiplier = 0.5;
+const splitStatMultiplier = 0.5;
 const scaleMultiplier = 0.75;
 function remove(unit: Unit.IUnit, underworld: Underworld) {
-  if (!unit.modifiers[splitId]) {
+  const modifier = unit.modifiers[splitId];
+  if (!modifier) {
     console.error(`Missing modifier object for ${splitId}; cannot remove.  This should never happen`);
     return;
   }
-  // Safely restore unit's original properties
-  const { healthMax, manaMax, manaPerTurn, staminaMax, damage, moveSpeed } = unit.modifiers[splitId].originalStats;
-  removeScaleModifier(unit.image, splitId, unit.strength)
-  const healthChange = healthMax / unit.healthMax;
-  unit.health *= healthChange;
-  unit.health = Math.floor(unit.health);
-  unit.healthMax = healthMax;
-  // Prevent unexpected overflow
-  unit.health = Math.min(healthMax, unit.health);
 
-  // || 1 prevents div by 0 since some units don't have mana
-  const manaChange = manaMax / (unit.manaMax || 1);
-  unit.mana *= manaChange;
-  unit.mana = Math.floor(unit.mana);
-  unit.manaMax = manaMax;
-  // Prevent unexpected overflow
-  unit.mana = Math.min(manaMax, unit.mana);
-  unit.manaPerTurn = manaPerTurn;
+  const inverseMult = 1 / splitStatMultiplier;
+  for (let i = 0; i < modifier.quantity; i++) {
+    unit.healthMax = Math.max(1, Math.floor(unit.healthMax *= inverseMult));
+    unit.health = Math.max(1, Math.floor(unit.health *= inverseMult));
+    //unit.manaMax = Math.floor(unit.manaMax * inverseMult);
+    unit.mana = Math.floor(unit.mana * inverseMult);
+    unit.manaPerTurn = Math.floor(unit.manaPerTurn * inverseMult);
+    unit.staminaMax = Math.floor(unit.staminaMax * inverseMult);
+    unit.stamina = Math.floor(unit.stamina * inverseMult);
+    unit.damage = Math.floor(unit.damage * inverseMult);
+    unit.moveSpeed = Math.floor(unit.moveSpeed * inverseMult);
+  }
 
-  const staminaChange = staminaMax / unit.staminaMax;
-  unit.stamina *= staminaChange;
-  unit.stamina = Math.floor(unit.stamina);
-  unit.staminaMax = staminaMax;
-  // Prevent unexpected overflow
-  unit.stamina = Math.min(staminaMax, unit.stamina);
+  removeScaleModifier(unit.image, splitId, unit.strength);
 
-  unit.damage = damage;
-  unit.moveSpeed = moveSpeed;
 }
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
-  const { healthMax, manaMax, manaPerTurn, staminaMax, damage, moveSpeed } = unit;
-  const modifier = getOrInitModifier(unit, splitId, {
-    isCurse: true,
-    quantity,
-    keepOnDeath: true,
-    originalStats: {
-      healthMax,
-      manaMax,
-      manaPerTurn,
-      staminaMax,
-      damage,
-      moveSpeed
-    }
-  }, () => { }); //no first time setup
 
+  const modifier = getOrInitModifier(unit, splitId, { isCurse: true, quantity, keepOnDeath: true }, () => {
+    // no first time setup
+  });
 
   // modifier.quantity is after the new quantity has been added (due to getOrInitModifier)
   // math to find previous quantity and calc how many times I need to split
@@ -83,16 +51,16 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
   modifier.quantity = Math.min(modifier.quantity, splitLimit);
 
   for (let i = 0; i < timesToSplit; i++) {
-    addScaleModifier(unit.image, { x: scaleMultiplier, y: scaleMultiplier, id: splitId }, unit.strength)
-    changeStatWithCap(unit, 'health', addMultiplier);
-    changeStatWithCap(unit, 'healthMax', addMultiplier);
-    changeStatWithCap(unit, 'mana', addMultiplier);
-    //changeStatWithCap(unit, 'manaMax', addMultiplier);
-    changeStatWithCap(unit, 'manaPerTurn', addMultiplier);
-    changeStatWithCap(unit, 'stamina', addMultiplier);
-    changeStatWithCap(unit, 'staminaMax', addMultiplier);
-    changeStatWithCap(unit, 'damage', addMultiplier);
-    unit.moveSpeed *= addMultiplier;
+    addScaleModifier(unit.image, { x: scaleMultiplier, y: scaleMultiplier, splitId }, unit.strength)
+    unit.healthMax = Math.max(1, Math.floor(unit.healthMax *= splitStatMultiplier));
+    unit.health = Math.max(1, Math.floor(unit.health *= splitStatMultiplier));
+    //unit.manaMax = Math.floor(unit.manaMax * splitStatMultiplier);
+    unit.mana = Math.floor(unit.mana * splitStatMultiplier);
+    unit.manaPerTurn = Math.floor(unit.manaPerTurn * splitStatMultiplier);
+    unit.staminaMax = Math.floor(unit.staminaMax * splitStatMultiplier);
+    unit.stamina = Math.floor(unit.stamina * splitStatMultiplier);
+    unit.damage = Math.floor(unit.damage * splitStatMultiplier);
+    unit.moveSpeed = Math.floor(unit.moveSpeed * splitStatMultiplier);
   }
 
   if (unit.modifiers[suffocateCardId]) {
