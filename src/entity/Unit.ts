@@ -1162,7 +1162,7 @@ export function canAct(unit: IUnit): boolean {
   }
 
   // Frozen and newly summoned units can't act
-  if (unit.modifiers[freezeCardId] || unit.modifiers[summoningSicknessId]) {
+  if ((unit.modifiers[freezeCardId] && unit.modifiers[freezeCardId].quantity > 0) || unit.modifiers[summoningSicknessId]) {
     return false;
   }
 
