@@ -37,6 +37,9 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
 
   removeScaleModifier(unit.image, splitId, unit.strength);
 
+  if (unit.modifiers[suffocateCardId]) {
+    updateSuffocate(unit, underworld, false);
+  }
 }
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
 
