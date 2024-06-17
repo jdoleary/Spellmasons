@@ -50,7 +50,6 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
   modifier.quantity = Math.min(modifier.quantity, splitLimit);
 
   for (let i = 0; i < timesToSplit; i++) {
-    addScaleModifier(unit.image, { x: scaleMultiplier, y: scaleMultiplier, id }, unit.strength)
     unit.healthMax = Math.max(1, Math.floor(unit.healthMax *= splitStatMultiplier));
     unit.health = Math.max(1, Math.floor(unit.health *= splitStatMultiplier));
     //unit.manaMax = Math.floor(unit.manaMax * splitStatMultiplier);
@@ -61,6 +60,8 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     unit.damage = Math.floor(unit.damage * splitStatMultiplier);
     unit.moveSpeed = Math.floor(unit.moveSpeed * splitStatMultiplier);
   }
+
+  addScaleModifier(unit.image, { x: Math.pow(scaleMultiplier, modifier.quantity), y: Math.pow(scaleMultiplier, modifier.quantity), id }, unit.strength)
 
   if (unit.modifiers[suffocateCardId]) {
     updateSuffocate(unit, underworld, prediction);
