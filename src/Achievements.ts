@@ -68,11 +68,6 @@ export const achievement_CaptureDeathmason: IAchievement = {
   description: "Capture the Deathmason's soul",
   unlocked: false,
 }
-const achievement_100Percent: IAchievement = {
-  id: "100 Percent",
-  description: "Earn all other achievements",
-  unlocked: false,
-}
 
 //
 
@@ -93,7 +88,6 @@ export function registerAllAchievements() {
   registerAchievement(achievement_PotionSeller);
   registerAchievement(achievement_Doomsayer);
   registerAchievement(achievement_CaptureDeathmason);
-  registerAchievement(achievement_100Percent);
   console.log("[ACHIEVEMENT] - Registered achievements!", allAchievements);
 }
 
@@ -121,13 +115,6 @@ export function UnlockAchievement(achievement: IAchievement, underworld: Underwo
     console.log("[ACHIEVEMENT] - New Achievement unlocked!", achievement.id, achievement);
   } else {
     console.log("[ACHIEVEMENT] - Already unlocked ", achievement.id, achievement);
-  }
-
-  // There is an achievement for earning all other achievements
-  if (!achievement_100Percent.unlocked) {
-    if (Object.entries(allAchievements).every(e => e[1].unlocked || e[1] == achievement_100Percent)) {
-      UnlockAchievement(achievement_100Percent, underworld);
-    }
   }
 }
 
