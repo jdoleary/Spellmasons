@@ -16,7 +16,7 @@ const spell: Spell = {
     expenseScaling: 4,
     supportQuantity: true,
     thumbnail: 'spellIconClone2.png',
-    description: 'spell_clone',
+    description: 'spell_clone_2',
     effect: cloneEffect(true)
   },
 };
