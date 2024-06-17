@@ -426,6 +426,8 @@ from https://stackoverflow.com/a/48999882/4418836
 Instead of using npm link with pieclient, just copy it into node_modules.  I've tried for hours and just cannot get vite to work with npm link
 and use `--force`
 
+For linking other packages just remove `node_modules/.vite` after linking: https://dev.to/hontas/using-vite-with-linked-dependencies-37n7
+
 ## 2022.08.02
 
 Horizontall flip image:

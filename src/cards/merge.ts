@@ -18,7 +18,7 @@ const spell: Spell = {
     category: CardCategory.Soul,
     manaCost: 40,
     healthCost: 0,
-    probability: probabilityMap[CardRarity.RARE],
+    probability: probabilityMap[CardRarity.FORBIDDEN],
     expenseScaling: 2,
     supportQuantity: false,
     thumbnail: 'spellIconMerge.png',

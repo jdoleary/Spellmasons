@@ -8,7 +8,6 @@ import type { Vec2 } from '../jmath/Vec';
 import type { View } from '../views';
 import type { IHostApp } from '../network/networkUtil';
 import type { Localizable } from '../localization';
-import type * as particles from '@pixi/particle-emitter'
 import type { PromptArgs } from '../graphics/Jprompt';
 import { Faction, JEmitter, Mod } from './commonTypes';
 import { ICard } from '../cards';

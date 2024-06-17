@@ -58,7 +58,7 @@ export default function registerSoulShardOwner() {
           if (nearestShardBearer.unitType != UnitType.PLAYER_CONTROLLED) {
             Unit.cleanup(nearestShardBearer, true);
           }
-          Unit.setLocation(unit, nearestShardBearer, underworld);
+          Unit.setLocation(unit, nearestShardBearer, underworld, prediction);
           Unit.resurrect(unit, underworld);
         } else {
           console.error("Unit had shard owner event, but no shard bearers were left. This should not happen ", unit);

@@ -1,6 +1,6 @@
 {
   "name": "golems",
-  "version": "1.37.0",
+  "version": "1.39.1",
   "description": "",
   "private": true,
   "scripts": {
@@ -45,13 +45,13 @@
     "@pixi/filter-glow": "^4.2.0",
     "@pixi/filter-multi-color-replace": "^4.2.0",
     "@pixi/filter-outline": "^4.2.0",
-    "@pixi/particle-emitter": "^5.0.7",
     "@sentry/browser": "^7.31.1",
     "@sentry/node": "^7.31.1",
     "@websocketpie/client": "^1.1.5",
     "@websocketpie/server": "^1.2.0",
     "@websocketpie/server-bun": "^1.2.0",
     "fast-safe-stringify": "^2.1.1",
+    "jdoleary-fork-pixi-particle-emitter": "^5.0.9",
     "lodash.throttle": "^4.1.1",
     "object-hash": "^3.0.0",
     "pixi.js": "^6.4.2",

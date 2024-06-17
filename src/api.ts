@@ -55,7 +55,7 @@ import * as Events from './Events';
 import { forcePushTowards, forcePushAwayFrom, forcePushToDestination, forcePushDelta } from './effects/force_move';
 
 import * as commonTypes from './types/commonTypes';
-import * as particleEmitter from '@pixi/particle-emitter'
+import * as particleEmitter from 'jdoleary-fork-pixi-particle-emitter'
 
 
 const SpellmasonsAPI = {

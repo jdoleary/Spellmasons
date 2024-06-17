@@ -1,4 +1,4 @@
-import * as particles from '@pixi/particle-emitter'
+import * as particles from 'jdoleary-fork-pixi-particle-emitter'
 import * as Unit from '../entity/Unit';
 import { Spell, refundLastSpell } from './index';
 import { CardCategory } from '../types/commonTypes';

@@ -111,7 +111,7 @@ export function getConnectingEntities(
   potentialTargets: HasSpace[],
   filterFn: (x: any) => boolean, //selects which type of entities this can chain to
   prediction: boolean,
-  inLiquidRadiusMultiplier: number = 1,
+  radiusFn?: (chainSource: HasSpace) => number,
 ): { chainSource: HasSpace, entity: HasSpace }[] {
 
   potentialTargets = potentialTargets
@@ -120,7 +120,7 @@ export function getConnectingEntities(
 
   let connected: { chainSource: HasSpace, entity: HasSpace }[] = [];
   if (chainsLeft > 0) {
-    connected = getNextConnectingEntities(source, radius, chainsLeft, potentialTargets, prediction, inLiquidRadiusMultiplier)
+    connected = getNextConnectingEntities(source, radius, chainsLeft, potentialTargets, prediction, radiusFn)
   }
   return connected;
 }
@@ -131,18 +131,23 @@ export function getNextConnectingEntities(
   chainsLeft: number,
   potentialTargets: HasSpace[],
   prediction: boolean,
-  inLiquidRadiusMultiplier: number = 1,
+  radiusModifierFn?: (chainSource: HasSpace) => number,
 ): { chainSource: HasSpace, entity: HasSpace }[] {
 
   potentialTargets = potentialTargets.filter(x => x != source);
 
+  let adjustedRadius = baseRadius;
+  if (radiusModifierFn) {
+    adjustedRadius *= radiusModifierFn(source);
+  }
+
   if (prediction && !globalThis.isHUDHidden) {
-    drawUICircleFillPrediction(source, (baseRadius * inLiquidRadiusMultiplier) - config.COLLISION_MESH_RADIUS / 2, colors.trueWhite, i18n("Connect Area"));
+    drawUICircleFillPrediction(source, adjustedRadius - config.COLLISION_MESH_RADIUS / 2, colors.trueWhite, i18n("Connect Area"));
   }
 
   let connected: { chainSource: HasSpace, entity: HasSpace }[] = [];
   do {
-    let closestDist = baseRadius * inLiquidRadiusMultiplier;
+    let closestDist = adjustedRadius;
     let closestTarget: HasSpace | undefined = undefined;
 
     for (let t of potentialTargets) {
@@ -157,7 +162,7 @@ export function getNextConnectingEntities(
       connected.push({ chainSource: source, entity: closestTarget });
       chainsLeft--;
       if (chainsLeft > 0) {
-        const next = getNextConnectingEntities(closestTarget, baseRadius, chainsLeft, potentialTargets, prediction, inLiquidRadiusMultiplier)
+        const next = getNextConnectingEntities(closestTarget, baseRadius, chainsLeft, potentialTargets, prediction, radiusModifierFn)
         chainsLeft -= next.length;
         connected = connected.concat(next);
         potentialTargets = potentialTargets.filter(x => {

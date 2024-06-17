@@ -1,3 +1,128 @@
+## 1.39.0
+ref: Remove cooldowns
+    After considering, I've determined that the idea of a cooldown itself is
+    against the design of Spellmasons.  This was just a bandaid to
+    a few select spells being overpowered.  I've found it better to
+    alter the spell logic itself (in the case of freeze to not allow stacking)
+    and to make them more mana expensive (in the case of resurrect)
+    which will prevent them from just being cast turn after turn.
+    
+    Also the modifier itself can prevent the unit from being
+    refrozen (see freeze) which is much better than cooldowns
+     because it also prevents refreezing in multiplayer.
+
+Balance: Freeze
+    Removes cooldown
+    Freeze no longer stacks
+
+Balance: Increase Merge rarity
+
+fix: Prevent empower from targeting players to prevent confusion
+i18n: Clarify that Empower does not affect players
+
+art: Add slightly new cast animation
+
+audio: Only play "endTurn" sfx once per turn
+    Thanks Hazzie and Nord from Youtube for   
+    this suggestion!
+
+fix: Backfill stat upgrades for players who
+    join late.
+    Thanks Waterbending Squirrel!
+    Fixes: #567
+
+audio: Smoothly switch songs
+    Don't switch songs every time a level is beaten, switch
+    when the song is done
+    Closes #805
+
+content: Add Ultra Clone as upgrade to clone
+    in order to balance out the clone + merge exploit which
+    was mainly possible because clone with adding the clone as a target
+    yields exponential results when stacked.  Now the basic clone does
+    not add clones as a target
+
+fix: Intercept END_TURN message
+    and do not send the original.  Send a new END_TURN message as client with playersTurnEnded attached.
+    (Note: this already worked except it still sent through the original END_TURN message, this fixes the original from being
+    sent through and only sends the transformed one through)
+    Resolved: #811
+
+log: Improve error message for proper aggregation
+    on remote logger
+
+experiment: MultiColorReplaceFilter
+    Decrease epsilon for blood golem to see if
+    it resolves #695
+
+UI: Fix default "Refund" text
+    Before if no text was provided, none would appear for refund.
+
+
+balance: Exclude Execute from starting damage spells (#807)
+    - Since it cannot deal damage on its own
+
+## 1.38.0 - Patch
+
+fix: NPCs not ending their turns
+    Big thanks to Un4o1y, Xeddar and Adriller
+    Resolves #737
+
+ref: Remove client side timeout for cards.
+    When there are many enemies on screen the game's fps can slow
+    which can cause cards to timeout which means the result of a cast may not match the prediction.  This is bad.
+    Instead, I will just leave the timeout on the serverside
+    so the server will not hang.
+
+perf: Optimize ancient attack for FPS
+    also optimize Blood splatter.
+    Thanks @Whisky
+
+ref: END_TURN syncing
+    Now when a client sends END_TURN, the server
+    will append the list of client ids of all clients that
+    have ended their turn.
+    When clients recieve END_TURN they will now
+    sync to the server's END_TURN state.
+
+i18n: Translate card rarity
+    Update Polish
+    Thanks @Whisky!
+
+fix: Bolt radius increases for submerged units (#797)
+    Thanks R?c??l?sc?nc?/recoalescence
+
+fix: Teleport pickup prediction (#787)
+    Fixes an issue that cause displace, teleport, and similar "set location" spells to trigger real world pickups while in prediction mode
+    Thanks @Whisky
+
+fix: Primed Corpse particles not reinitializing on units that recently had them
+
+fix: Player channelling animation while dead (#781)
+
+src: Plus Radius can now be cast on its own (#786)
+    * Plus Radius can now be cast on its own
+    - To let players increase Urn Radius
+    * Add refund for plus radius
+
+ref: Change up order of color replace colors
+    to see if it affects #695
+
+copy: Fix modifier name "Primed Corpse" since it is visible to players
+    Thanks Chumler
+
+optimization: Save function to not have duplicate (#777)
+    units, pickups, players arrays
+
+src: Guard spellmason NPC action
+    with timeout
+
+menu: Server list will be sorted by version number so servers on the latest version will be at the top
+
+menu: Readd enemies to the codex
+    Close #746
+
+
 ## 1.37.0 - Patch
 fix: Softlock fix attempt 2
 All spells now have builtin timeouts with error reporting to prevent

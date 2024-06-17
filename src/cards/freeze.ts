@@ -5,29 +5,30 @@ import { Spell, refundLastSpell } from './index';
 import { CardCategory, UnitType } from '../types/commonTypes';
 import * as config from '../config'
 import type Underworld from '../Underworld';
-import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
+import { playDefaultSpellSFX } from './cardUtils';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
 export const freezeCardId = 'freeze';
+// The number of turns that a unit cannot be refrozen after being frozen
+const immuneForTurns = 2;
 const imageName = 'spell-effects/spellFreeze_still.png';
 const spell: Spell = {
   card: {
     id: freezeCardId,
     category: CardCategory.Curses,
     sfx: 'freeze',
-    supportQuantity: true,
+    supportQuantity: false,
     manaCost: 25,
     healthCost: 0,
-    cooldown: 2,
-    expenseScaling: 3,
+    expenseScaling: 5,
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconFreeze.png',
     animationPath: 'spell-effects/spellFreeze',
-    description: 'spell_freeze',
+    description: ['spell_freeze', immuneForTurns.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
-      const targets = state.targetedUnits.filter(u => u.alive);
+      const targets = state.targetedUnits.filter(u => u.alive && !u.onTurnEndEvents.includes(freezeCardId));
       if (targets.length) {
         let spellAnimationPromise = Promise.resolve();
         targets.forEach(t => {
@@ -53,19 +54,6 @@ const spell: Spell = {
   modifiers: {
     add,
     remove,
-    // Special subsprite handling in remove function
-    // subsprite: {
-    //   imageName,
-    //   alpha: 1.0,
-    //   anchor: {
-    //     x: 0.5,
-    //     y: 0.5,
-    //   },
-    //   scale: {
-    //     x: 1,
-    //     y: 1,
-    //   },
-    // },
   },
   events: {
     onTurnEnd: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
@@ -73,16 +61,28 @@ const spell: Spell = {
       const modifier = unit.modifiers[freezeCardId];
       if (modifier) {
         modifier.quantity--;
-        if (modifier.quantity <= 0) {
+        updateTooltip(unit, modifier.quantity, prediction);
+        if (modifier.quantity == 0) {
+          // Remove freeze effects at 0
+          remove(unit);
+        }
+        if (modifier.quantity <= -immuneForTurns) {
+          // Remove modifier.  This prevents a unit from being re-frozen within 2 turns
           Unit.removeModifier(unit, freezeCardId, underworld);
         }
       }
     },
   },
 };
+function updateTooltip(unit: Unit.IUnit, quantity: number, prediction: boolean) {
+  if (!prediction && unit.modifiers[freezeCardId] && quantity <= 0) {
+    // Set tooltip:
+    unit.modifiers[freezeCardId].tooltip = `${i18n(freezeCardId)} ${i18n('immune').toLocaleLowerCase()}: ${quantity + immuneForTurns}`;
+  }
+}
 
-function add(unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) {
-  getOrInitModifier(unit, freezeCardId, { isCurse: true, quantity }, () => {
+function add(unit: Unit.IUnit, underworld: Underworld, _prediction: boolean) {
+  getOrInitModifier(unit, freezeCardId, { isCurse: true, quantity: 1 }, () => {
     unit.radius = config.COLLISION_MESH_RADIUS;
     // Add event
     if (!unit.onTurnEndEvents.includes(freezeCardId)) {

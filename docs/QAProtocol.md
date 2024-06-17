@@ -7,14 +7,13 @@
 - Test loading a saved multiplayer game
 - Test Hotseat multiplayer basics
     - Test one player dying and next player carrying on to next level and make sure they both spawn
-- Test liquid
-- Test rerolling spells and perks
-- Test all pickups in singleplayer
-- Test all pickups in multiplayer
-- Test Pickups + movement spells prediction (trap)
-- Test allies carrying on the battle
+- (Archived) Test liquid
+- (Archived) Test rerolling spells and perks
+- (Archived) Test all pickups in singleplayer
+- (Archived) Test all pickups in multiplayer
+- (Archived) Test allies carrying on the battle
     - both when you kill yourself and when an enemy kills you
-- have a multiplayer game with 1 player, beat a level, then connect with another player
+- (Archived) have a multiplayer game with 1 player, beat a level, then connect with another player
 
 - Test all spells in multiplayer: ~20 minutes
     - and end turn after each to test for desyncs
@@ -22,7 +21,6 @@
 - Test saving if you modify underworld with new elements added to the level that need to be serialized
 - Test loading an old save file for backwards compatibility
 - Test hosting LAN server from Electron build
-- Merge master branch to keep it up to date
 - Test tutorial ALWAYS on electron build
 - Test that F12 works in electron build
 - Test mod thumbnail paths on electron build

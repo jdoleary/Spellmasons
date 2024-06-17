@@ -42,7 +42,6 @@ import {
   setAbyssColor,
   setCameraToMapCenter,
   addPixiTilingSprite,
-  runCinematicLevelCamera,
   cleanBlood,
   cacheBlood,
 } from './graphics/PixiUtils';
@@ -76,7 +75,7 @@ import { HasSpace } from './entity/Type';
 import { explain, EXPLAIN_PING, isTutorialFirstStepsComplete, isTutorialComplete, tutorialCompleteTask, tutorialChecklist } from './graphics/Explain';
 import { makeRisingParticles, makeScrollDissapearParticles, stopAndDestroyForeverEmitter } from './graphics/ParticleCollection';
 import { ensureAllClientsHaveAssociatedPlayers, Overworld } from './Overworld';
-import { Emitter } from '@pixi/particle-emitter';
+import { Emitter } from 'jdoleary-fork-pixi-particle-emitter';
 import { golem_unit_id } from './entity/units/golem';
 import { cleanUpPerkList, createPerkElement, generatePerks, tryTriggerPerk, showPerkList, hidePerkList, createCursePerkElement, StatCalamity, generateRandomStatCalamity } from './Perk';
 import deathmason, { ORIGINAL_DEATHMASON_DEATH, bossmasonUnitId, summonUnitAtPickup } from './entity/units/deathmason';
@@ -100,11 +99,9 @@ import { urn_ice_id } from './entity/units/urn_ice';
 import { urn_poison_id } from './entity/units/urn_poison';
 import { elEndTurnBtn } from './HTMLElements';
 import { corpseDecayId } from './modifierCorpseDecay';
-import { isSinglePlayer } from './network/wsPieSetup';
 import { PRIEST_ID } from './entity/units/priest';
 import { getSyncActions } from './Syncronization';
 import { EXPECTED_MILLIS_PER_GAMELOOP, sumForceMoves } from './effects/force_move';
-import { playThrottledEndTurnSFX } from './Audio';
 import { targetConeId } from './cards/target_cone';
 import { slashCardId } from './cards/slash';
 import { pushId } from './cards/push';
@@ -1966,18 +1963,15 @@ export default class Underworld {
     // runPrediction cleans up overlay from last level and sets up new health bars
     runPredictions(this);
     document.body?.classList.toggle('loading', false);
-    runCinematicLevelCamera(this).then(() => {
-      console.log('Cinematic Cam: Finished');
-      // Set the first turn phase
-      this.broadcastTurnPhase(turn_phase.PlayerTurns);
-      cameraAutoFollow(false);
-      setCameraToMapCenter(this);
-      // If in a multiplayer game and it's a few levels in (giving time for players to get situated)
-      // explaining pinging
-      if (this.players.length > 1 && this.levelIndex > 2) {
-        explain(EXPLAIN_PING);
-      }
-    });
+    // Set the first turn phase
+    this.broadcastTurnPhase(turn_phase.PlayerTurns);
+    cameraAutoFollow(false);
+    setCameraToMapCenter(this);
+    // If in a multiplayer game and it's a few levels in (giving time for players to get situated)
+    // explaining pinging
+    if (this.players.length > 1 && this.levelIndex > 2) {
+      explain(EXPLAIN_PING);
+    }
   }
   // creates a level from levelData
   createLevelSyncronous(levelData: LevelData) {
@@ -2044,10 +2038,14 @@ export default class Underworld {
     // Give stat points, but not in the first level
     if (this.levelIndex > 0) {
       for (let player of this.players) {
-        const points = player.mageType == 'Spellmason' ? 4 : 3;
+        const points = player.mageType == 'Spellmason' ? config.STAT_POINTS_PER_LEVEL + 1 : config.STAT_POINTS_PER_LEVEL;
         player.statPointsUnspent += points;
         console.log("Setup: Gave player: [" + player.clientId + "] " + points + " upgrade points for level index: " + levelIndex);
-        if (player.statPointsUnspent > points) console.error("Setup: Player has more stat points than expected: ", player);
+        // only warn unexpected stat points if player has modified mana or health since
+        // NEW players that join a game mid-way through will get backfilled stats
+        if (player.statPointsUnspent > points && player.unit.healthMax !== config.PLAYER_BASE_HEALTH && player.unit.manaMax !== config.UNIT_BASE_MANA) {
+          console.error("Setup: Player has more stat points than expected: ", player);
+        }
         // If the player hasn't completed first steps, autospend stat points on health
         // We don't want to cause information overload during tutorial
         if (!isTutorialFirstStepsComplete()) {
@@ -2060,10 +2058,6 @@ export default class Underworld {
     }
     // Update toolbar (since some card's disabledLabel needs updating on every new label)
     CardUI.recalcPositionForCards(globalThis.player, this);
-    // Change song now that level has changed:
-    if (globalThis.playNextSong) {
-      globalThis.playNextSong();
-    }
     // Now that level is done being generated, set generatingLevel to
     // false so that the next level generation may begin when it is time
     this.generatingLevel = false;
@@ -2643,14 +2637,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         }
       }
 
-      // Decrement cooldowns of spells
-      for (let spellState of Object.values(p.spellState)) {
-        if (spellState.cooldown) {
-          spellState.cooldown--;
-          // Update cooldown in UI
-          CardUI.recalcPositionForCards(globalThis.player, this);
-        }
-      }
     }
 
     CardUI.updateCardBadges(this);
@@ -2898,12 +2884,15 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
     // Don't play turn sfx when recording or for auto-ended dead players
     if ((!globalThis.isHUDHidden && !document.body?.classList.contains('hide-card-holders')) && (player.unit.alive || (!player.unit.alive && player.endedTurn))) {
-      // Always play own end turn sfx
-      if (globalThis.player == player) {
+      if (!player.endedTurn) {
+        // Play endTurn sfx for any player so you know when they ready up
         playSFXKey('endTurn');
       } else {
-        // Ensure other players can't annoy current player with too frequent end turn sfx
-        playThrottledEndTurnSFX();
+        // If turn is already ended for self, play the deny sfx
+        // if other player, play nothing.
+        if (globalThis.player == player) {
+          playSFXKey('deny');
+        }
       }
     }
     // Ensure players can only end the turn when it IS their turn
@@ -3849,10 +3838,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         }
 
         if (!args.castForFree && !effectState.shouldRefundLastSpell) {
-          // Add cooldown
-          if (!prediction && effectState.casterPlayer && card.cooldown) {
-            Object.assign(effectState.casterPlayer.spellState[card.id] || {}, { cooldown: card.cooldown });
-          }
           // Compute spell mana/health cost and add card usage count
           // This happens after the spell is cast so that fizzle spells can be refunded
           const spellCostTally = {

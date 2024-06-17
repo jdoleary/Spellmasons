@@ -50,6 +50,7 @@ import soul_shard from './soul_shard';
 import * as protection from './protection';
 import merge from './merge';
 import clone from './clone';
+import clone2 from './clone2';
 import capture_soul from './capture_soul';
 import mana_burn from './mana_burn';
 import mana_steal from './mana_steal';
@@ -290,6 +291,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(resurrect, overworld);
   registerSpell(merge, overworld);
   registerSpell(clone, overworld);
+  registerSpell(clone2, overworld);
   registerSpell(sacrifice, overworld);
   registerSpell(capture_soul, overworld);
   registerSpell(decoy, overworld);
@@ -446,7 +448,7 @@ export interface EffectState {
   initialTargetedUnitId: number | undefined;
   initialTargetedPickupId: number | undefined;
 }
-export function refundLastSpell(state: EffectState, prediction: boolean, floatingMessage?: string) {
+export function refundLastSpell(state: EffectState, prediction: boolean, floatingMessage: string = 'No valid targets. Cost refunded.') {
   // Only refund the spell when it's not a prediction so that
   // it will show the mana cost in the UI of "remaining mana" even if
   // they are not currently hovering a valid target.
@@ -528,8 +530,6 @@ export interface ICard {
   // The number of turns it takes after use to return to it's original cost
   // Default is 1
   expenseScaling: number;
-  // The number of turns before the card may be cast again
-  cooldown?: number;
   // This flag allows casting on the ground and is necessary
   // for spells like AOE, Trap, etc
   allowNonUnitTarget?: boolean;

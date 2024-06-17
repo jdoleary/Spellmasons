@@ -1,5 +1,5 @@
 
-import * as particles from '@pixi/particle-emitter'
+import * as particles from 'jdoleary-fork-pixi-particle-emitter'
 import { rgb2hex } from '@pixi/utils';
 import { easeOutCubic } from '../jmath/Easing';
 import { lerp } from '../jmath/math';
@@ -1025,9 +1025,14 @@ export function makePrimedCorpseParticles(follow: IUnit, underworld: Underworld,
 // Turns up frequency so that it "stops" spawning new particles
 // (at lease for a long time), then destroy and cleanup the emitter
 export function stopAndDestroyForeverEmitter(emitter?: particles.Emitter) {
-  if (!emitter) {
+  // @ts-ignore flaggedForRemoval custom property
+  if (!emitter || emitter.flaggedForRemoval) {
     return;
   }
+  // @ts-ignore flaggedForRemoval custom property to make sure emitters aren't removed more
+  // than once (and that the timeout isn't set more than once)
+  emitter.flaggedForRemoval = true;
+
   const timeout = 15000;
   emitter.frequency = timeout;
   setTimeout(() => {

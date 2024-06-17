@@ -43,6 +43,7 @@ export default function registerPrimedCorpse() {
   }
   function getPrimedCorpseEmitters(unit: Unit.IUnit, underworld: Underworld) {
     // @ts-ignore jid is a unique identifier that allows us to search for this pf later
-    return underworld.particleFollowers.filter(pf => pf.target == unit && pf.jid == primedCorpseId);
+    // @ts-ignore flaggedForRemoval is a custom prop
+    return underworld.particleFollowers.filter(pf => pf.target == unit && pf.jid == primedCorpseId && !pf.emitter.flaggedForRemoval);
   }
 }

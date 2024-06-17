@@ -8,10 +8,13 @@ import { getConnectingEntities } from './connect';
 import { jitter, lerpVec2 } from '../jmath/Vec';
 import { playDefaultSpellSFX } from './cardUtils';
 import { raceTimeout } from '../Promise';
+import { baseExplosionRadius } from '../effects/explode';
 
 const id = 'Bolt';
 const damageMult = 0.4;
 const baseRadius = config.PLAYER_BASE_ATTACK_RANGE / 2;
+// Submerged units increase radius dramatically
+const liquidRadiusMultiplier = 2;
 const spell: Spell = {
   card: {
     id,
@@ -64,8 +67,7 @@ const spell: Spell = {
             potentialTargets,
             typeFilter,
             prediction,
-            // Submerged units increase radius dramatically
-            2
+            ModifyBoltRadius,
           );
           for (let entity of chained.map(x => x.entity).concat(target)) {
             if (!affected.includes(entity)) {
@@ -92,6 +94,11 @@ const spell: Spell = {
     },
   },
 };
+
+export function ModifyBoltRadius(sourceEntity: HasSpace): number {
+  return sourceEntity.inLiquid ? liquidRadiusMultiplier : 1;
+}
+
 async function animate(targets: HasSpace[]) {
   // Animations do not occur on headless
   if (!globalThis.headless) {

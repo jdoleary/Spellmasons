@@ -50,7 +50,7 @@ const unit: UnitSource = {
             [0x838d9f, 0x802230], //loin cloth
             [0x583131, 0x1c324b], // mouth opening
           ],
-          0.05
+          0.001
         )
       );
     }

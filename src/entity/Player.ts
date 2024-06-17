@@ -228,7 +228,8 @@ export function create(clientId: string, playerId: string, underworld: Underworl
       gameStartTime: Date.now(),
       totalKills: 0
     },
-    statPointsUnspent: 0,
+    // backfill stat upgrades for players who join late
+    statPointsUnspent: Math.max(0, underworld.levelIndex) * config.STAT_POINTS_PER_LEVEL,
   };
   player.unit.originalLife = true;
   // Player units get full mana every turn
@@ -322,14 +323,6 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
       elInstructions.style.top = "20px";
     }
   }
-
-  // Reset cooldowns on spells
-  for (let spellState of Object.values(player.spellState)) {
-    if (spellState.cooldown) {
-      spellState.cooldown = 0;
-    }
-  }
-
 
   Unit.resetUnitStats(player.unit, underworld);
   Unit.syncPlayerHealthManaUI(underworld);
@@ -486,7 +479,7 @@ export function resetPlayerForSpawn(player: IPlayer, underworld: Underworld) {
   // the client queue will get stuck
   player.unit.resolveDoneMoving(true);
   // Move "portaled" unit out of the way to prevent collisions and chaining while portaled
-  Unit.setLocation(player.unit, { x: NaN, y: NaN }, underworld);
+  Unit.setLocation(player.unit, { x: NaN, y: NaN }, underworld, false);
   player.isSpawned = false;
   if (player == globalThis.player) {
     globalThis.awaitingSpawn = false;

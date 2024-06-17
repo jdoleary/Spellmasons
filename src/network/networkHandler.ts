@@ -24,7 +24,7 @@ import { clone, Vec2 } from '../jmath/Vec';
 import pingSprite from '../graphics/Ping';
 import { clearLastNonMenuView, setView, View } from '../views';
 import { autoExplain, explain, EXPLAIN_END_TURN, tutorialCompleteTask } from '../graphics/Explain';
-import { cacheBlood, cameraAutoFollow, runCinematicLevelCamera } from '../graphics/PixiUtils';
+import { cacheBlood, cameraAutoFollow } from '../graphics/PixiUtils';
 import { ensureAllClientsHaveAssociatedPlayers, Overworld, recalculateGameDifficulty } from '../Overworld';
 import { playerCastAnimationColor, playerCastAnimationColorLighter, playerCastAnimationGlow } from '../graphics/ui/colors';
 import { lightenColor } from '../graphics/ui/colorUtil';
@@ -683,13 +683,6 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           if (connectedPlayers.length > 0 && connectedPlayers.every(p => p.lobbyReady)) {
             console.log('Lobby: All players are ready, start game.');
             setView(View.Game);
-            if (globalThis.player && fromPlayer.clientId == globalThis.player.clientId && !globalThis.player.isSpawned) {
-              // Retrigger the cinematic camera since the first time
-              // a user joins a game from the lobby, postLevelSetup will
-              // already have completed before they enter View.Game, so now
-              // that they have, run the cinematic again.
-              runCinematicLevelCamera(underworld);
-            }
             // Change end turn button from End Turn to Ready in multiplayer
             if (elEndTurnBtn && !globalThis.headless) {
               const elEndTurnSpan = elEndTurnBtn.querySelector('[data-localize-text]') as HTMLElement;
@@ -752,7 +745,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
             }
             cameraAutoFollow(true);
           }
-          Unit.setLocation(fromPlayer.unit, payload, underworld);
+          Unit.setLocation(fromPlayer.unit, payload, underworld, false);
           // Trigger 'everyLevel' attributePerks
           // now that the player has spawned in at the new level
           const perkRandomGenerator = seedrandom(getUniqueSeedString(underworld, fromPlayer));
@@ -797,7 +790,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       // of the host matches exactly the player position on the player's client
       if (isHost(overworld.pie)) {
         if (fromPlayer && fromPlayer.unit && payload.position.x !== undefined && payload.position.y !== undefined) {
-          Unit.setLocation(fromPlayer.unit, payload.position, underworld);
+          Unit.setLocation(fromPlayer.unit, payload.position, underworld, false);
           fromPlayer.unit.stamina = payload.stamina;
         }
       }
@@ -872,6 +865,9 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
             // Prevents an infinite loop since headless intercepts SPELL, calculates it fully
             // then sends it's own version with syncState attached and spoofs the fromClient
             // so the correct unit casts, it must not reprocess the message.
+            // ---
+            // Note: when intercepting and modifying a message be sure to use `doNotEcho`
+            // in HeadlessServer.ts
             skipHostAppHandler: true,
             // Spoof the client so it knows which player cast
             asFromClient: d.fromClient,
@@ -912,6 +908,8 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       if (globalThis.headless) {
         // Add server's playersTurnEnded state so clients can update lobby
         underworld.pie.sendData({
+          // Note: when intercepting and modifying a message be sure to use `doNotEcho`
+          // in HeadlessServer.ts
           skipHostAppHandler: true,
           // Spoof the client so it knows which player cast
           asFromClient: d.fromClient,
@@ -934,7 +932,9 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           }
           Player.syncLobby(underworld);
         } else {
-          console.error('Unexpected: Client recieving END_TURN message should include playersTurnEnded from server.')
+          if (!underworld.pie.soloMode) {
+            console.error('Unexpected: Client recieving END_TURN message should include playersTurnEnded from server.')
+          }
         }
       }
 
@@ -975,7 +975,8 @@ function getFromPlayerViaClientId(clientId: string, underworld: Underworld): Pla
   const player = underworld.players.find(p => p.clientId == clientId);
   //console.debug("Finding player on different client:\n", clientId, "\n", player?.playerId);
   if (!player) {
-    console.error("No fromPlayer found for clientId: ", clientId);
+    console.error("No fromPlayer found via clientId");
+    console.log("No fromPlayer found for clientId: ", clientId);
   }
   return player;
 }
@@ -1178,6 +1179,8 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
       animationKey = 'playerAttackSmall';
     } else if (payload.cards.length < 6) {
       animationKey = 'playerAttackMedium0';
+    } else if (payload.cards.length < 10) {
+      animationKey = 'playerAttackMedium1';
     }
     await Player.setSpellmasonsToChannellingAnimationClose(caster);
     if (caster.colorMagic === null) {
@@ -1234,9 +1237,6 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
         epsilon: 0.2
       }
     });
-
-    // Sync cards to reflect "cooldown" label on cards in inventory
-    recalcPositionForCards(globalThis.player, underworld);
 
     // Record best spell stats
     const statsUnitsKilledFromCast = underworld.enemiesKilled - statsUnitDeadBeforeCast;

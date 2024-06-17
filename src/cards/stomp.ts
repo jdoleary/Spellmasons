@@ -12,7 +12,7 @@ import Underworld from '../Underworld';
 import { GetSpellDamage, IUnit, takeDamage } from '../entity/Unit';
 import { makeParticleExplosion } from '../graphics/ParticleCollection';
 import { createParticleTexture, logNoTextureWarning, simpleEmitter } from '../graphics/Particles';
-import * as particles from '@pixi/particle-emitter'
+import * as particles from 'jdoleary-fork-pixi-particle-emitter'
 import { baseExplosionRadius } from '../effects/explode';
 
 export const stompCardId = 'stomp';

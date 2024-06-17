@@ -11,6 +11,7 @@ import { gripthulu_id } from '../entity/units/gripthulu';
 import { decoyId } from './summon_decoy';
 import { bossmasonUnitId } from '../entity/units/deathmason';
 import { DARK_SUMMONER_ID } from '../entity/units/darkSummoner';
+import { spellmasonUnitId } from '../entity/units/playerUnit';
 
 const empowerId = 'Empower';
 const statChange = 5;
@@ -35,7 +36,9 @@ const spell: Spell = {
           && u.unitSourceId != gripthulu_id
           && u.unitSourceId != decoyId
           && u.unitSourceId != bossmasonUnitId
-          && u.unitSourceId != DARK_SUMMONER_ID);
+          && u.unitSourceId != DARK_SUMMONER_ID
+          && u.unitSourceId != spellmasonUnitId
+      );
       // Even though the player's damage stat doesn't affect their spells
       // it will affect cloned spellmasons, so we allow it.
 

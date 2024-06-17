@@ -568,16 +568,6 @@ invisibly blocked, change with caution! */
   font-size: 24px;
 }
 
-.card-cooldown-badge {
-  display: none;
-}
-
-.card-inspect .card-cooldown-badge {
-  display: block;
-  background-image: url('images/time-circle.png');
-  background-size: cover;
-}
-
 .card-inspect .card .disabled-label {
   top: 25%;
   display: flex;

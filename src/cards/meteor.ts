@@ -12,7 +12,7 @@ import { randFloat } from '../jmath/rand';
 import * as Image from '../graphics/Image';
 import { makeForceMoveProjectile } from '../jmath/moveWithCollision';
 import { containerProjectiles } from '../graphics/PixiUtils';
-import * as particles from '@pixi/particle-emitter';
+import * as particles from 'jdoleary-fork-pixi-particle-emitter';
 import { createParticleTexture, logNoTextureWarning, wrappedEmitter } from '../graphics/Particles';
 import { stopAndDestroyForeverEmitter } from '../graphics/ParticleCollection';
 import { raceTimeout } from '../Promise';

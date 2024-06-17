@@ -5,7 +5,7 @@ import * as config from '../../config';
 import {
   clearSpellEffectProjection, runPredictions,
 } from '../PlanningView';
-import { calculateCost, calculateCostForSingleCard, getCardCooldown, levelsUntilCardIsEnabled } from '../../cards/cardUtils';
+import { calculateCost, calculateCostForSingleCard, levelsUntilCardIsEnabled } from '../../cards/cardUtils';
 import floatingText from '../FloatingText';
 import { copyForPredictionUnit } from '../../entity/Unit';
 import { NUMBER_OF_TOOLBAR_SLOTS } from '../../config';
@@ -533,12 +533,6 @@ function addListenersToCardElement(
         );
       }
     } else {
-      // Don't let card get added if it's on cooldown
-      if (getCardCooldown(cardId, underworld)) {
-        floatingText({ coords: underworld.getMousePos(), text: i18n(['card cooldown', getCardCooldown(cardId, underworld).toString()]), style: { fill: 'red' } });
-        playSFXKey('deny');
-        return;
-      }
       cardsSelected.push(cardId);
       selectCard(player, element, cardId, underworld);
     }
@@ -780,23 +774,12 @@ function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSi
   }
   element.classList.add('card');
   const levelsDisabled = levelsUntilCardIsEnabled(content.id, underworld);
-  const cooldown = getCardCooldown(content.id, underworld);
   if (!fullSize && globalThis.player && underworld && levelsDisabled > 0) {
     element.classList.add('disabled');
     const elDisabledLabel = document.createElement('div');
     elDisabledLabel.classList.add('disabled-label');
     elDisabledLabel.innerHTML = `${levelsDisabled}`;
     element.appendChild(elDisabledLabel);
-  } else if (cooldown) {
-    element.classList.add('disabled');
-    const elDisabledLabel = document.createElement('div');
-    elDisabledLabel.classList.add('disabled-label');
-    elDisabledLabel.innerHTML = `${cooldown}`;
-    element.appendChild(elDisabledLabel);
-    const elDisabledLabelLong = document.createElement('span');
-    elDisabledLabelLong.classList.add('long');
-    elDisabledLabelLong.innerHTML = `&nbsp;Turn Cooldown`;
-    elDisabledLabel.appendChild(elDisabledLabelLong);
   }
   element.classList.add(cardRarityAsString(content));
   element.dataset.cardId = content.id;
@@ -826,14 +809,6 @@ function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSi
   elCardHealthBadge.classList.add('card-health-badge', 'card-badge');
   updateHealthBadge(elCardHealthBadge, cost.healthCost, content);
   elCardBadgeHolder.appendChild(elCardHealthBadge);
-  // Cooldown badge
-  if (content.cooldown) {
-    const elCardCooldownBadge = document.createElement('div');
-    elCardCooldownBadge.classList.add('card-cooldown-badge', 'card-badge');
-    elCardCooldownBadge.innerHTML = content.cooldown.toString();
-    elCardBadgeHolder.appendChild(elCardCooldownBadge);
-  }
-
   const thumbHolder = document.createElement('div');
   const thumbnail = document.createElement('img');
   thumbnail.src = getSpellThumbnailPath(hideAsUnknown ? 'unknown.png' : content.thumbnail);
@@ -863,7 +838,7 @@ function createCardElement(content: Cards.ICard, underworld?: Underworld, fullSi
   const rarityText = document.createElement('div');
   rarityText.classList.add('card-rarity')
   rarityText.style.color = getCardRarityColor(content);
-  rarityText.innerHTML = cardRarityAsString(content).toLocaleLowerCase();
+  rarityText.innerHTML = globalThis.i18n(cardRarityAsString(content).toLocaleLowerCase());
   elCardInner.appendChild(rarityText);
   const desc = document.createElement('div');
   desc.classList.add('card-description');

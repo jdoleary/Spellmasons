@@ -203,9 +203,6 @@ const music = [
   './sound/music/MistakenIdentity.mp3',
   './sound/music/BrokenTrust.mp3',
 ]
-export const playThrottledEndTurnSFX = throttle(() => {
-  playSFXKey('endTurn');
-}, 1000);
 
 // Preload all sounds
 Object.values(sfx).forEach(paths => {
@@ -282,7 +279,8 @@ export async function playNextSong() {
   // Reassign the src of the music instance, this ensures we only have
   // one song playing at a time
   musicInstance.setAttribute('src', nextSong);
-  musicInstance.loop = true;
+  musicInstance.loop = false;
+  musicInstance.addEventListener('ended', playNextSong);
 
   // task: Master all audio and sfx
   // task: Make independent volume sliders for audio and music

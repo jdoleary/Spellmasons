@@ -165,7 +165,6 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean, 
       manaCost,
       healthCost: 0,
       expenseScaling,
-      cooldown: 0,
       // These cards are not available as upgrades and must be accessed through capture_soul
       probability: 0,
       thumbnail: `spellIconSummon_${unitId.split(' ').join('').toLowerCase()}.png`,
