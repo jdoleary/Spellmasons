@@ -2,18 +2,17 @@ import seedrandom from 'seedrandom';
 import * as config from './config';
 import * as storage from "./storage";
 import { calculateCostForSingleCard, type CardCost } from './cards/cardUtils';
-import { cardRarityAsString, getCardRarityColor, getReplacesCardText, getSpellThumbnailPath } from './graphics/ui/CardUI';
+import { cardRarityAsString, getCardRarityColor, getReplacesCardText } from './graphics/ui/CardUI';
 import { chooseObjectWithProbability } from './jmath/rand';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import { IPlayer, MageType, changeMageType } from './entity/Player';
 import Underworld from './Underworld';
-import { CardCategory, CardRarity, probabilityMap } from './types/commonTypes';
+import { CardCategory } from './types/commonTypes';
 import { poisonCardId } from './cards/poison';
 import { bleedCardId } from './cards/bleed';
 import { drownCardId } from './cards/drown';
-import { suffocateCardId } from './cards/suffocate';
 import { isModActive } from './registerMod';
-import { allCards, getCardsFromIds } from './cards';
+import { allCards } from './cards';
 import { boneShrapnelCardId } from './cards/bone_shrapnel';
 import { executeCardId } from './cards/execute';
 export interface IUpgrade {
@@ -29,8 +28,6 @@ export interface IUpgrade {
   cardCategory?: CardCategory;
   description: (player: IPlayer) => string;
   thumbnail: string;
-  // The maximum number of copies a player can have of this upgrade
-  maxCopies?: number;
   // note: effect shouldn't be called directly, use Underworld.chooseUpgrade instead so
   // it will keep track of how many upgrades the player has left to choose
   effect: (player: IPlayer, underworld: Underworld) => void;
@@ -42,27 +39,46 @@ export function isPickingClass(player: IPlayer): boolean {
   // undefined mageType means they haven't picked yet
   return (player.upgrades.length >= 5 && player.mageType == undefined || !!globalThis.adminPickMageType);
 }
+export const filterUpgrades = (u: IUpgrade, minimumProbability: number, player: Pick<IPlayer, "upgrades" | "inventory">, underworld: Pick<Underworld, "activeMods">) =>
+  // Exclude upgrades whose requirements have not been met
+  (u.requires ? u.requires.every(title => player.upgrades.find(u => u == title)) : true)
+  // Exclude card upgrades already obtained by the player (Can this be done with max copies?)
+  && !player.inventory.includes(u.title)
+  // Exclude upgrades considered too rare for this generated set
+  && u.probability >= minimumProbability
+  // Exclude upgrades with a probability of 0 or less
+  && u.probability > 0
+  // Exclude modded upgrades where the mod is not active
+  && isModActive(u, underworld);
+
+export function omitRerolledUpgrades(upgradeList: IUpgrade[]): IUpgrade[] {
+
+  // Returns all upgrades that would be omitted
+  // This filter function lets us softly omit upgrades.
+  // Softly omitted upgrades will only appear if no other options are available
+  // This is used to prevent rerolled cards from appearing again unless they are all that's left to show
+  const filterUpgradesSoft = (u: IUpgrade) => (
+    !globalThis.rerollOmit?.includes(u.title)
+  );
+  // Clone upgrades for later mutation
+  let clonedUpgradeList = [...upgradeList];
+  // Store all softly omitted upgrades for later
+  const omittedUpgrades = clonedUpgradeList.filter(u => !filterUpgradesSoft(u));
+  // Remove omittedUpgrades from clonedUpgradeList
+  clonedUpgradeList = clonedUpgradeList.filter(u => !omittedUpgrades.includes(u));
+
+  // If upgradeList is empty, restore softly omitted upgrades
+  if (clonedUpgradeList.length == 0 && omittedUpgrades.length > 0) {
+    clonedUpgradeList = clonedUpgradeList.concat(omittedUpgrades);
+  }
+
+  return clonedUpgradeList;
+}
 // Chooses a random card based on the card's probabilities
 // minimumProbability ensures that super rare cards won't be presented too early on
 export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, minimumProbability: number, underworld: Underworld): IUpgrade[] {
   let upgrades: IUpgrade[] = [];
-  const filterUpgrades = (u: IUpgrade) => (
-    // Exclude upgrades whose requirements have not been met
-    (u.requires ? u.requires.every(title => player.upgrades.find(u => u == title)) : true)
-    // Exclude upgrades that the player can't have more of
-    && (u.maxCopies ? player.upgrades.filter((pu) => pu === u.title).length < u.maxCopies : true)
-    // Exclude card upgrades already obtained by the player (Can this be done with max copies?)
-    && !player.inventory.includes(u.title)
-    // Exclude upgrades considered too rare for this generated set
-    && u.probability >= minimumProbability
-    // Exclude upgrades with a probability of 0 or less
-    && u.probability > 0
-    // Exclude modded upgrades where the mod is not active
-    && isModActive(u, underworld)
-  );
-
-  let filteredUpgradeCardsSource = upgradeCardsSource.filter(filterUpgrades);
-  let upgradeList = filteredUpgradeCardsSource;
+  let upgradeList = upgradeCardsSource.filter(u => filterUpgrades(u, minimumProbability, player, underworld));
 
   // The player is guaranteed a damage spell in the first level to prevent a softlock
   // For third pick, override upgradeList with damage spells
@@ -86,39 +102,21 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
   const rSeed = `${underworld.seed}-${player.playerId}-${player.reroll}-${player.inventory.filter(x => !!x).length}`;
   const random = seedrandom(rSeed);
 
-  // Returns all upgrades that would be omitted
-  // This filter function lets us softly omit upgrades.
-  // Softly omitted upgrades will only appear if no other options are available
-  // This is used to prevent rerolled cards from appearing again unless they are all that's left to show
-  const filterUpgradesSoft = (u: IUpgrade) => (
-    !globalThis.rerollOmit?.includes(u.title)
-  );
-
-  // Clone upgrades for later mutation
-  let clonedUpgradeList = [...upgradeList];
-  // Store all softly omitted upgrades for later
-  const omittedUpgrades = clonedUpgradeList.filter(u => !filterUpgradesSoft(u));
-  // Remove omittedUpgrades from clonedUpgradeList
-  clonedUpgradeList = clonedUpgradeList.filter(u => !omittedUpgrades.includes(u));
+  upgradeList = omitRerolledUpgrades(upgradeList)
   // Limited by desired numberOfUpgrades or upgrades left, whichever is less
-  const numberOfCardsToChoose = Math.min(numberOfUpgrades, clonedUpgradeList.length + omittedUpgrades.length);
+  const numberOfCardsToChoose = Math.min(numberOfUpgrades, upgradeList.length);
 
   for (let i = 0; i < numberOfCardsToChoose; i++) {
-    // If upgradeList is empty, restore softly omitted upgrades
-    if (clonedUpgradeList.length == 0 && omittedUpgrades.length > 0) {
-      clonedUpgradeList = clonedUpgradeList.concat(omittedUpgrades);
-      console.log("Restored softly omitted upgrades", omittedUpgrades);
-    }
 
-    const upgrade = chooseObjectWithProbability(clonedUpgradeList, random);
+    const upgrade = chooseObjectWithProbability(upgradeList, random);
     if (upgrade) {
-      const index = clonedUpgradeList.indexOf(upgrade);
-      upgrades = upgrades.concat(clonedUpgradeList.splice(index, 1));
+      const index = upgradeList.indexOf(upgrade);
+      upgrades = upgrades.concat(upgradeList.splice(index, 1));
     } else {
-      console.log('No upgrades to choose from', clonedUpgradeList);
+      console.log('No upgrades to choose from', upgradeList);
     }
   }
-  globalThis.rerollOmit = globalThis.rerollOmit?.concat(upgrades.map(u => u.title));
+  globalThis.rerollOmit = (globalThis.rerollOmit || []).concat(upgrades.map(u => u.title));
   return upgrades;
 }
 

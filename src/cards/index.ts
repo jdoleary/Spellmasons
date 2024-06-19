@@ -407,7 +407,6 @@ function cardToUpgrade(c: ICard, overworld: Overworld): IUpgrade {
     cardCategory: c.category,
     description: () => i18n(c.description).trim(),
     thumbnail,
-    maxCopies: 1,
     effect: (player) => {
       if (!overworld.underworld) {
         console.error('Cannot add card to hand, underworld is undefined');
