@@ -15,11 +15,8 @@ export default function registerTargetImmune() {
     addModifierVisuals,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, targetImmuneId, { isCurse: false, quantity, keepOnDeath: true }, () => {
-        // Add events
-        if (!unit.onTurnEndEvents.includes(targetImmuneId)) {
-          unit.onTurnEndEvents.push(targetImmuneId);
-          addModifierVisuals(unit, underworld, prediction);
-        }
+        Unit.addEvent(unit, targetImmuneId);
+        addModifierVisuals(unit, underworld, prediction);
       });
     },
     subsprite: {

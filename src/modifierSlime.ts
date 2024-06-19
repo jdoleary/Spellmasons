@@ -12,10 +12,7 @@ export default function registerSlime() {
     description: 'Causes a unit to split into two units every turn.',
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, slimeId, { isCurse: false, quantity, keepOnDeath: true }, () => {
-        // Add events
-        if (!unit.onTurnEndEvents.includes(slimeId)) {
-          unit.onTurnEndEvents.push(slimeId);
-        }
+        Unit.addEvent(unit, slimeId);
       });
     },
   });

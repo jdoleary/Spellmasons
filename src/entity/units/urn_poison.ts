@@ -41,9 +41,7 @@ const urnPoisonSource: UnitSource = {
   },
   // Warning: init must be idempotent
   init: (unit: Unit.IUnit, underworld: Underworld) => {
-    if (!unit.onDeathEvents.includes(urnpoisonExplode)) {
-      unit.onDeathEvents.push(urnpoisonExplode);
-    }
+    Unit.addEvent(unit, urnpoisonExplode);
   },
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
   },

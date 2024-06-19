@@ -30,10 +30,7 @@ function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld, prediction
 }
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1, extra?: { [key: string]: any }) {
   const modifier = getOrInitModifier(unit, poisonCardId, { isCurse: true, quantity }, () => {
-    // Add event
-    if (!unit.onTurnEndEvents.includes(poisonCardId)) {
-      unit.onTurnEndEvents.push(poisonCardId);
-    }
+    Unit.addEvent(unit, poisonCardId);
     // Add subsprite image
     if (!prediction) {
       if (spell.modifiers?.subsprite) {

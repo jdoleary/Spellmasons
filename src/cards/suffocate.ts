@@ -14,10 +14,7 @@ import { buildMatchMemberExpression } from '@babel/types';
 export const suffocateCardId = 'suffocate';
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
   const modifier = getOrInitModifier(unit, suffocateCardId, { isCurse: true, quantity }, () => {
-    // Add event
-    if (!unit.onTurnEndEvents.includes(suffocateCardId)) {
-      unit.onTurnEndEvents.push(suffocateCardId);
-    }
+    Unit.addEvent(unit, suffocateCardId);
     // Add subsprite image
     if (!prediction) {
       if (spell.modifiers?.subsprite) {

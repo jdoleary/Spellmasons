@@ -19,13 +19,7 @@ export default function registerSummoningSickness() {
       getOrInitModifier(unit, summoningSicknessId, { isCurse: true, quantity }, () => {
         // Immediately set stamina to 0 so they can't move
         unit.stamina = 0;
-        // Add event
-        if (!unit.onTurnStartEvents.includes(summoningSicknessId)) {
-          unit.onTurnStartEvents.push(summoningSicknessId);
-        }
-        if (!unit.onTurnEndEvents.includes(summoningSicknessId)) {
-          unit.onTurnEndEvents.push(summoningSicknessId);
-        }
+        Unit.addEvent(unit, summoningSicknessId);
       });
     }
   });
