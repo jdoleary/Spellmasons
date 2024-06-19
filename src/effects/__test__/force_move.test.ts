@@ -27,7 +27,7 @@ describe('forceMove', () => {
                 canCreateSecondOrderPushes: false,
                 velocity_falloff: 1,
                 alreadyCollided: [],
-                resolve: vi.fn(),
+                resolve: jest.fn(),
             }
             const two: ForceMoveUnitOrPickup = {
                 type: ForceMoveType.UNIT_OR_PICKUP,
@@ -36,7 +36,7 @@ describe('forceMove', () => {
                 canCreateSecondOrderPushes: false,
                 velocity_falloff: 1,
                 alreadyCollided: [],
-                resolve: vi.fn()
+                resolve: jest.fn()
             }
             sumForceMoves(one, two);
             expect(one.velocity).toEqual({ x: 1, y: 1 });
