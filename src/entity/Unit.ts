@@ -533,7 +533,7 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
     if (modifier && modifier.init) {
       // Invoke modifier.init so that special init logic
       // such as there is in 'poison' will run
-      modifier.init(loadedunit, underworld, false);
+      modifier.init(loadedunit, underworld, prediction);
     } else {
       console.warn('No init for modifier with key', key)
     }
