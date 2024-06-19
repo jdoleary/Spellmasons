@@ -1,9 +1,5 @@
-import * as Unit from "../entity/Unit"
-import playerUnit from "../entity/units/playerUnit";
-import { Faction, UnitSubType, UnitType } from "../types/commonTypes";
-import golem from '../entity/units/golem';
+import { describe, it, expect } from "vitest";
 import { getSyncActions } from '../Syncronization';
-import { registerUnit } from "../entity/units";
 
 interface testSyncObject {
     id: number;

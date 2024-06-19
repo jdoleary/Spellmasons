@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { allUnits, registerUnits } from '../../entity/units/index';
 import { getPolymorphProbabilityFromBudget, getPossibleUnitPolymorphs } from '../polymorph';
 
@@ -23,7 +24,6 @@ describe("polymorph", () => {
                 }
 
                 results.sort((a, b) => b.p - a.p)
-                console.log("\n-----\n[" + u1.id + "] - [" + u1.spawnParams?.budgetCost + "]\n", results)
             }
         });
         it('should handle positive/negative numbers', () => {

@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 const { performance } = require('perf_hooks');
 import type { Vec2 } from '../Vec';
 import type { LineSegment } from '../lineSegment';

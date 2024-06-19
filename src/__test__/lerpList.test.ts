@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { testable } from '../lerpList'
 const { processLerpList } = testable;
 describe('lerpList', () => {

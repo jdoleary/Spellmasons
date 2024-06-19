@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { IUpgrade, filterUpgrades, omitRerolledUpgrades } from "./Upgrade";
 describe('Upgrade', () => {
     let i = 0;

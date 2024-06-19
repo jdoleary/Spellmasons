@@ -1,5 +1,5 @@
-import type * as PIXI from 'pixi.js';
-import { OutlineFilter } from '@pixi/filter-outline';
+// import type * as PIXI from 'pixi.js';
+// import { OutlineFilter } from '@pixi/filter-outline';
 import * as config from '../config';
 import * as Image from '../graphics/Image';
 import * as math from '../jmath/math';
@@ -288,24 +288,24 @@ export function updateAccessibilityOutline(unit: IUnit, targeted: boolean, outOf
     unit.image.sprite.filters = [];
   }
   const outlineSettings = globalThis.accessibilityOutline[unit.faction][outOfRange ? 'outOfRange' : targeted ? 'targeted' : 'regular'];
-  let outlineFilter: OutlineFilter | undefined;
-  // @ts-ignore __proto__ is not typed
-  outlineFilter = unit.image.sprite.filters.find(f => f.__proto__ == OutlineFilter.prototype)
-  if (outlineFilter) {
-    if (outlineSettings.thickness) {
-      outlineFilter.thickness = outlineSettings.thickness;
-      outlineFilter.color = outlineSettings.color;
-    } else {
-      // If thickness is 0, remove the filter:
-      unit.image.sprite.filters = unit.image.sprite.filters.filter(x => x !== outlineFilter);
-    }
-  } else {
-    // Only add the filter if thickness is not 0
-    if (outlineSettings.thickness) {
-      outlineFilter = new OutlineFilter(outlineSettings.thickness, outlineSettings.color, 0.1);
-      unit.image.sprite.filters.push(outlineFilter);
-    }
-  }
+  // let outlineFilter: OutlineFilter | undefined;
+  // // @ts-ignore __proto__ is not typed
+  // outlineFilter = unit.image.sprite.filters.find(f => f.__proto__ == OutlineFilter.prototype)
+  // if (outlineFilter) {
+  //   if (outlineSettings.thickness) {
+  //     outlineFilter.thickness = outlineSettings.thickness;
+  //     outlineFilter.color = outlineSettings.color;
+  //   } else {
+  //     // If thickness is 0, remove the filter:
+  //     unit.image.sprite.filters = unit.image.sprite.filters.filter(x => x !== outlineFilter);
+  //   }
+  // } else {
+  //   // Only add the filter if thickness is not 0
+  //   if (outlineSettings.thickness) {
+  //     outlineFilter = new OutlineFilter(outlineSettings.thickness, outlineSettings.color, 0.1);
+  //     unit.image.sprite.filters.push(outlineFilter);
+  //   }
+  // }
 }
 export function adjustUnitStatsByUnderworldCalamity(unit: IUnit, statCalamity: StatCalamity) {
   if (statCalamity.unitId == unit.unitSourceId) {
@@ -533,7 +533,7 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
     if (modifier && modifier.init) {
       // Invoke modifier.init so that special init logic
       // such as there is in 'poison' will run
-      modifier.init(loadedunit, underworld, prediction);
+      modifier.init(loadedunit, underworld, false);
     } else {
       console.warn('No init for modifier with key', key)
     }

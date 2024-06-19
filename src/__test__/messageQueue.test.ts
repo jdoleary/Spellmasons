@@ -1,3 +1,4 @@
+import { describe, it, expect, vi } from "vitest";
 import { makeContainer, processNextInQueue } from '../messageQueue';
 
 describe('processNextInQueue', () => {
@@ -46,7 +47,7 @@ describe('processNextInQueue', () => {
         container.queue = []
 
         // This should never be invoked, since the queue is empty
-        const handle = jest.fn(() => new Promise((resolve) => {
+        const handle = vi.fn(() => new Promise((resolve) => {
             // Making handle resolve after a delay ensures that
             // (if the test would fail) it won't enter an infinite
             // callback loop that would prevent jest from throwing

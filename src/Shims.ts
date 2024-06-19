@@ -1,6 +1,5 @@
 
 // @ts-nocheck
-
 // Shims:
 const fakeElement = {
     style: {},
@@ -13,7 +12,7 @@ const fakeElement = {
     querySelector: () => fakeElement,
     dataset: {}
 };
-global.document = {
+globalThis.document = global.document = {
     getElementById: () => fakeElement,
     createElement: () => fakeElement,
     querySelector: () => fakeElement,
@@ -58,4 +57,5 @@ global.localStorage = {
     setItem: () => { },
 }
 global.getChosenLanguageCode = () => '';
+global.window = {};
 export { };

@@ -1,6 +1,6 @@
+import { describe, it, expect } from "vitest";
 import { Faction } from "../../types/commonTypes";
 import { getFactionsOf } from "../Player";
-import { livingUnitsInSameFaction, livingUnitsInDifferentFaction } from "../Unit";
 
 describe('getFactionsOf', () => {
   it('should return an array of factions', () => {

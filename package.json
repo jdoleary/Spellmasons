@@ -1,6 +1,7 @@
 {
   "name": "golems",
   "version": "1.39.1",
+  "type": "module",
   "description": "",
   "private": true,
   "scripts": {
@@ -8,7 +9,7 @@
     "tsc": "tsc",
     "build_types": "tsc --project tsconfig.outputtypes.json && cp -r public/spellmasons-mods/types/src/. ../spellmasons-mods/types",
     "build": "npm run build_types && tsc && vite build && npm run headless-build-only && node makeBuildManifest.js",
-    "test": "jest",
+    "test": "vitest",
     "format": "prettier --write \"src/**/*.{ts,js}\"",
     "lint": "prettier --check \"src/**/*.{ts,js}\"",
     "headless-build-only": "tsc --project tsconfig.headless.json --outDir headless-server-build/ && cp package-lock.json headless-server-build/ && cp public/spellmasons-mods/build/SpellmasonsMods.cjs.js headless-server-build/src/SpellmasonsMods.cjs.js && cd headless-server-build/ && npm install --omit=dev",
@@ -33,11 +34,12 @@
     "@types/pixi.js": "^5.0.0",
     "@types/seedrandom": "^3.0.1",
     "@types/stats.js": "^0.17.0",
+    "happy-dom": "^14.12.0",
     "husky": "^7.0.4",
-    "jest": "^26.6.3",
     "prettier": "^2.0.5",
     "typescript": "^5.2.2",
-    "vite": "^2.9.18"
+    "vite": "^5.3.1",
+    "vitest": "^1.6.0"
   },
   "dependencies": {
     "@pixi/filter-adjustment": "^4.2.0",

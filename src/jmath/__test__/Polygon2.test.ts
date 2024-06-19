@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach } from "vitest";
 import { LineSegment } from '../lineSegment';
 import { Polygon2, mergePolygon2s, toLineSegments, processLineSegment, mergeCollinearOverlappingSameDirectionLines, splitIntersectingLineSegments } from '../Polygon2';
 import { Vec2, clone } from '../Vec';

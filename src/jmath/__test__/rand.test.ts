@@ -1,3 +1,4 @@
+import { describe, it, expect, vi } from "vitest";
 import { _chooseObjectWithProbability } from "../rand";
 
 describe('probability', () => {

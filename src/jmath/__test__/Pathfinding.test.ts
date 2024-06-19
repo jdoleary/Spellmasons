@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { removeBetweenIndexAtoB, pointsEveryXDistanceAlongPath, calculateDistanceOfVec2Array } from '../Pathfinding';
 import type { Vec2 } from '../Vec';
 describe('Pathfinding', () => {

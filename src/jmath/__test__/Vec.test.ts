@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { getAngleBetweenVec2s, dotProduct, isBetween, magnitude, clampVector, normalized } from '../Vec';
 
 describe('vectorMath', () => {

@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { LineSegment, isOnOutside, findWherePointIntersectLineSegmentAtRightAngle, lineSegmentIntersection, testables, isPointOnLineSegment, isCollinearAndOverlapping, getCenterPoint, toString, getParametricRelation } from '../lineSegment';
 import type { Vec2 } from '../Vec';
 const { slope, toStandardForm } = testables;
