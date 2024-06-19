@@ -53,7 +53,7 @@ const spell: Spell = {
 
       if (addedTargets.length) {
         for (const target of addedTargets) {
-          addTarget(target, state, underworld);
+          addTarget(target, state, underworld, prediction);
         }
         if (!prediction && !globalThis.headless) {
           playSFXKey('targeting');

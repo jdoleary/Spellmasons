@@ -132,6 +132,8 @@ import { distance } from '../jmath/math';
 import { getSpellThumbnailPath } from '../graphics/ui/CardUI';
 import { calculateGameDifficulty } from '../Difficulty';
 import registerPrimedCorpse from '../modifierPrimedCorpse';
+import registerSlime from '../modifierSlime';
+import registerTargetImmune, { targetImmuneId } from '../modifierTargetImmune';
 
 export interface Modifiers {
   subsprite?: Subsprite;
@@ -142,6 +144,7 @@ export interface Modifiers {
   addModifierVisuals?: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => void;
   add?: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra?: object) => void;
   remove?: (unit: Unit.IUnit, underworld: Underworld) => void;
+  description?: string;
 }
 interface Events {
   onDealDamage?: onDealDamage;
@@ -163,6 +166,11 @@ export interface Spell {
 }
 export function registerModifiers(id: string, modifiers: Modifiers) {
   allModifiers[id] = modifiers;
+
+  // Add subsprites
+  if (modifiers && modifiers.subsprite) {
+    Subsprites[modifiers.subsprite.imageName] = modifiers.subsprite;
+  }
 }
 export function registerEvents(id: string, events: Events) {
   if (events.onAgro) {
@@ -352,6 +360,8 @@ export function registerCards(overworld: Overworld) {
   registerSummoningSickness();
   registerCorpseDecay();
   registerPrimedCorpse();
+  registerSlime();
+  registerTargetImmune();
 
   registerImmune();
   registerImpendingDoom();
@@ -556,14 +566,14 @@ export function getCardsFromIds(cardIds: string[]): ICard[] {
   return _getCardsFromIds(cardIds, allCards);
 }
 
-export function addTarget(target: any, effectState: EffectState, underworld: Underworld) {
+export function addTarget(target: any, effectState: EffectState, underworld: Underworld, prediction: boolean) {
   if (Unit.isUnit(target)) {
     if (underworld.players.filter(p => !p.isSpawned).map(p => p.unit.id).includes(target.id)) {
       // Do not allow targeting unspawned players
       console.warn("Tried to add an unspawned player to the targets list: ", target);
       return;
     }
-    addUnitTarget(target, effectState);
+    addUnitTarget(target, effectState, prediction);
   } else if (Pickup.isPickup(target)) {
     addPickupTarget(target, effectState);
   } else {
@@ -571,7 +581,14 @@ export function addTarget(target: any, effectState: EffectState, underworld: Und
   }
 }
 
-export function addUnitTarget(unit: Unit.IUnit, effectState: EffectState) {
+// Note: See related `addTarget` function above which should be used for all
+// targeting spells
+export function addUnitTarget(unit: Unit.IUnit, effectState: EffectState, prediction: boolean) {
+  // Exception: modifierTargetImmune prevents targeting unless targeted directly
+  if (unit.modifiers[targetImmuneId] && effectState.targetedUnits.length !== 0) {
+    floatingText({ coords: unit, text: targetImmuneId, prediction });
+    return;
+  }
   // Adds a unit to effectState.targetedUnits IF it is not already in unitTargets
   if (effectState.targetedUnits.indexOf(unit) === -1) {
     effectState.targetedUnits.push(unit);

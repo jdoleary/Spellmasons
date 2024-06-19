@@ -1,6 +1,6 @@
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
-import { addUnitTarget, refundLastSpell, Spell } from './index';
+import { refundLastSpell, Spell } from './index';
 import * as Unit from '../entity/Unit';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { drownCardId } from './drown';

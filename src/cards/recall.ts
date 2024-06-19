@@ -64,7 +64,7 @@ const spell: Spell = {
               pickupSource,
               logSource: 'recall.ts'
             }, underworld, prediction);
-            addTarget(pickupInst, state, underworld);
+            addTarget(pickupInst, state, underworld, prediction);
             if (!prediction) {
               playSFXKey('recallPlace');
             }

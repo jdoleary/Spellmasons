@@ -49,7 +49,7 @@ export function targetSimilarEffect(numberOfTargets: number) {
         animators.push({ pos: target, newTargets: newTargets });
       }
       for (let newTarget of newTargets) {
-        addTarget(newTarget, state, underworld);
+        addTarget(newTarget, state, underworld, prediction);
       }
     }
 

@@ -33,7 +33,7 @@ import * as Freeze from '../../cards/freeze';
 import { collideWithLineSegments } from '../../jmath/moveWithCollision';
 import { getKeyCodeMapping } from './keyMapping';
 import { inPortal } from '../../entity/Player';
-import { allCards, hasTargetAtPosition } from '../../cards';
+import { allCards, allModifiers, hasTargetAtPosition } from '../../cards';
 import { explain, EXPLAIN_END_TURN, tutorialCompleteTask } from '../Explain';
 import { Overworld } from '../../Overworld';
 import { summoningSicknessId } from '../../modifierSummoningSickness';
@@ -1411,6 +1411,24 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       supportInMultiplayer: true,
       domQueryContainer: '#menu-selected-unit'
     },
+    // Support adding any modifier from Shift+Space menu
+    ...Object.entries(allModifiers).map<AdminContextMenuOption>(([key, value]) => ({
+      label: `Add modifier: ${key}`,
+      action: ({ selectedUnitid }) => {
+        if (!overworld.underworld) {
+          console.error('add modifier, underworld does not exist');
+          return;
+        }
+        const unit = overworld.underworld.units.find(u => u.id == selectedUnitid);
+        if (unit) {
+          Unit.addModifier(unit, key, overworld.underworld, false, 1);
+        } else {
+          centeredFloatingText('You must select a unit first', 'red');
+        }
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '',
+    })),
     {
       label: '🔪 Die',
       action: ({ selectedUnitid }) => {

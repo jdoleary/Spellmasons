@@ -59,7 +59,7 @@ const spell: Spell = {
         unit.healthMax *= quantity;
         unit.health *= quantity;
         unit.damage *= quantity;
-        addUnitTarget(unit, state);
+        addUnitTarget(unit, state, prediction);
 
         if (!prediction) {
           // Animate effect of unit spawning from the sky

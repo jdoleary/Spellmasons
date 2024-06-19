@@ -64,7 +64,7 @@ const spell: Spell = {
         // Sort by distance to cone start
         withinRadiusAndAngle.sort(sortCosestTo(target));
         // Add entities to target
-        withinRadiusAndAngle.forEach(e => addTarget(e, state, underworld));
+        withinRadiusAndAngle.forEach(e => addTarget(e, state, underworld, prediction));
       }
       await animate(animatedCones, underworld);
 

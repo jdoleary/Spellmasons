@@ -55,7 +55,7 @@ const spell: Spell = {
           if (prediction) {
             if (Unit.isUnit(firstTarget)) {
               addedNewTarget = true;
-              addTarget(firstTarget, state, underworld);
+              addTarget(firstTarget, state, underworld, prediction);
             }
           } else {
             promises.push(createVisualFlyingProjectile(
@@ -65,7 +65,7 @@ const spell: Spell = {
             ).then(() => {
               if (Unit.isUnit(firstTarget)) {
                 addedNewTarget = true;
-                addTarget(firstTarget, state, underworld);
+                addTarget(firstTarget, state, underworld, prediction);
                 // Animations do not occur on headless
                 if (!globalThis.headless) {
                   return new Promise<void>((resolve) => {

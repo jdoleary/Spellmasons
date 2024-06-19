@@ -91,7 +91,7 @@ export function cloneEffect(addClonesToTargetArray: boolean): EffectFn {
                 // This is super powerful as it allows for exponential clones
                 if (addClonesToTargetArray) {
                   // Add clones to target list
-                  addTarget(clone, state, underworld);
+                  addTarget(clone, state, underworld, prediction);
                 }
               }
             }
@@ -106,7 +106,7 @@ export function cloneEffect(addClonesToTargetArray: boolean): EffectFn {
                     Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
                   }
                   // Add clones to target list
-                  addTarget(clone, state, underworld);
+                  addTarget(clone, state, underworld, prediction);
                 } else {
                   console.log('Pickup', target);
                   console.error('Could not clone pickup because source could not be found');

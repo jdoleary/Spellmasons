@@ -27,6 +27,7 @@ interface FloatingTextInsructions {
   // floating text disappears
   valpha?: number;
   aalpha?: number;
+  prediction?: boolean;
 }
 export default function floatingText({
   coords,
@@ -36,8 +37,9 @@ export default function floatingText({
   keepWithinCameraBounds = true,
   valpha = -0.2,
   aalpha = 0.003,
+  prediction,
 }: FloatingTextInsructions): Promise<void> {
-  if (!(globalThis.pixi && app && container)) {
+  if (!(globalThis.pixi && app && container) || prediction) {
     return Promise.resolve();
   }
   // Ensure style has drop shadow, but allow it to be overridden

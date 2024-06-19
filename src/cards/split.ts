@@ -11,7 +11,7 @@ import { isPickup } from '../entity/Pickup';
 import { suffocateCardId, updateSuffocate } from './suffocate';
 import { addScaleModifier, removeScaleModifier } from '../graphics/Image';
 
-const id = 'split';
+export const splitId = 'split';
 const splitLimit = 3;
 export function changeStatWithCap(unit: Unit.IUnit, statKey: 'health' | 'healthMax' | 'mana' | 'manaMax' | 'manaPerTurn' | 'manaCostToCast' | 'stamina' | 'staminaMax' | 'moveSpeed' | 'damage' | 'attackRange', multiplier: number) {
   if (unit[statKey] && typeof unit[statKey] === 'number') {
@@ -26,13 +26,13 @@ export function changeStatWithCap(unit: Unit.IUnit, statKey: 'health' | 'healthM
 const addMultiplier = 0.5;
 const scaleMultiplier = 0.75;
 function remove(unit: Unit.IUnit, underworld: Underworld) {
-  if (!unit.modifiers[id]) {
-    console.error(`Missing modifier object for ${id}; cannot remove.  This should never happen`);
+  if (!unit.modifiers[splitId]) {
+    console.error(`Missing modifier object for ${splitId}; cannot remove.  This should never happen`);
     return;
   }
   // Safely restore unit's original properties
-  const { healthMax, manaMax, manaPerTurn, staminaMax, damage, moveSpeed } = unit.modifiers[id].originalStats;
-  removeScaleModifier(unit.image, id, unit.strength)
+  const { healthMax, manaMax, manaPerTurn, staminaMax, damage, moveSpeed } = unit.modifiers[splitId].originalStats;
+  removeScaleModifier(unit.image, splitId, unit.strength)
   const healthChange = healthMax / unit.healthMax;
   unit.health *= healthChange;
   unit.health = Math.floor(unit.health);
@@ -61,7 +61,7 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
 }
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
   const { healthMax, manaMax, manaPerTurn, staminaMax, damage, moveSpeed } = unit;
-  const modifier = getOrInitModifier(unit, id, {
+  const modifier = getOrInitModifier(unit, splitId, {
     isCurse: true,
     quantity,
     keepOnDeath: true,
@@ -83,7 +83,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
   modifier.quantity = Math.min(modifier.quantity, splitLimit);
 
   for (let i = 0; i < timesToSplit; i++) {
-    addScaleModifier(unit.image, { x: scaleMultiplier, y: scaleMultiplier, id }, unit.strength)
+    addScaleModifier(unit.image, { x: scaleMultiplier, y: scaleMultiplier, id: splitId }, unit.strength)
     changeStatWithCap(unit, 'health', addMultiplier);
     changeStatWithCap(unit, 'healthMax', addMultiplier);
     changeStatWithCap(unit, 'mana', addMultiplier);
@@ -101,7 +101,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
 }
 const spell: Spell = {
   card: {
-    id,
+    id: splitId,
     category: CardCategory.Curses,
     manaCost: 80,
     healthCost: 0,
@@ -117,7 +117,7 @@ const spell: Spell = {
       targets = targets.length ? targets : [state.castLocation];
       targets = targets
         // filter out targets that have reached the split limit
-        .filter(x => !(Unit.isUnit(x) && x.modifiers[id] && x.modifiers[id].quantity >= splitLimit))
+        .filter(x => !(Unit.isUnit(x) && x.modifiers[splitId] && x.modifiers[splitId].quantity >= splitLimit))
         // filter out pickups (not implemented)
         .filter(x => !(isPickup(x)));
 
@@ -144,58 +144,10 @@ const spell: Spell = {
       await animationPromise;
       // Clone all the batched clone jobs
       for (let [target, cloneSourceCoords] of clonePairs) {
-        if (target) {
-          // If there is are clone coordinates to clone into
-          if (cloneSourceCoords) {
-            if (Unit.isUnit(target)) {
-              const validSpawnCoords = underworld.findValidSpawn({ spawnSource: cloneSourceCoords, ringLimit: 5, prediction, radius: 10 });
-              if (validSpawnCoords) {
-                const clone = Unit.load(Unit.serialize(target), underworld, prediction);
-                if (!prediction) {
-                  // Change id of the clone so that it doesn't share the same
-                  // 'supposed-to-be-unique' id of the original
-                  clone.id = ++underworld.lastUnitId;
-                } else {
-                  // Get a unique id for the clone
-                  clone.id = underworld.unitsPrediction.reduce((lastId, unit) => {
-                    if (unit.id > lastId) {
-                      return unit.id;
-                    }
-                    return lastId;
-                  }, 0) + 1;
-                }
-                // If the cloned unit is player controlled, make them be controlled by the AI
-                if (clone.unitType == UnitType.PLAYER_CONTROLLED) {
-                  clone.unitType = UnitType.AI;
-                  returnToDefaultSprite(clone);
-                }
-                clone.x = validSpawnCoords.x;
-                clone.y = validSpawnCoords.y;
-                // Clones don't provide experience when killed
-                clone.originalLife = false;
-                // Add the clone as a target
-                addTarget(clone, state, underworld);
-
-                // Add the curse to both the target and the clone
-                Unit.addModifier(target, id, underworld, prediction, quantity);
-                Unit.addModifier(clone, id, underworld, prediction, quantity);
-              }
-            }
-            // TODO: Make split for for doodads and pickups
-            // if (Pickup.isPickup(target)) {
-            //   const validSpawnCoords = underworld.findValidSpawn({spawnSource:cloneSourceCoords, ringLimit: 5, prediction, radius:20})
-            //   if (validSpawnCoords) {
-            //     const clone = Pickup.load(Pickup.serialize(target), underworld, prediction);
-            //     if (clone) {
-            //       Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
-            //     }
-            //     // Add the clone as a target
-            //     addTarget(clone, state);
-            //   } else {
-            //     floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
-            //   }
-            // }
-          }
+        const clone = doSplit(target, underworld, quantity, prediction);
+        if (clone) {
+          // Add the clone as a target
+          addTarget(clone, state, underworld, prediction);
         }
       }
       return state;
@@ -207,3 +159,58 @@ const spell: Spell = {
   }
 };
 export default spell;
+export function doSplit(target: Vec2 | undefined, underworld: Underworld, quantity: number, prediction: boolean) {
+  if (target) {
+    // If there is are clone coordinates to clone into
+    if (Unit.isUnit(target)) {
+      const validSpawnCoords = underworld.findValidSpawn({ spawnSource: target, ringLimit: 5, prediction, radius: 10 });
+      if (validSpawnCoords) {
+        const clone = Unit.load(Unit.serialize(target), underworld, prediction);
+        if (!prediction) {
+          // Change id of the clone so that it doesn't share the same
+          // 'supposed-to-be-unique' id of the original
+          clone.id = ++underworld.lastUnitId;
+        } else {
+          // Get a unique id for the clone
+          clone.id = underworld.unitsPrediction.reduce((lastId, unit) => {
+            if (unit.id > lastId) {
+              return unit.id;
+            }
+            return lastId;
+          }, 0) + 1;
+        }
+        // If the cloned unit is player controlled, make them be controlled by the AI
+        if (clone.unitType == UnitType.PLAYER_CONTROLLED) {
+          clone.unitType = UnitType.AI;
+        }
+        // Always have the clone idle regardless of which animation was playing when they were cloned
+        returnToDefaultSprite(clone);
+        clone.x = validSpawnCoords.x;
+        clone.y = validSpawnCoords.y;
+        // Clones don't provide experience when killed
+        clone.originalLife = false;
+
+        // Add the curse to both the target and the clone
+        Unit.addModifier(target, splitId, underworld, prediction, quantity);
+        Unit.addModifier(clone, splitId, underworld, prediction, quantity);
+        return clone;
+      }
+    }
+    // TODO: Make split for for doodads and pickups
+    // if (Pickup.isPickup(target)) {
+    //   const validSpawnCoords = underworld.findValidSpawn({spawnSource:cloneSourceCoords, ringLimit: 5, prediction, radius:20})
+    //   if (validSpawnCoords) {
+    //     const clone = Pickup.load(Pickup.serialize(target), underworld, prediction);
+    //     if (clone) {
+    //       Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
+    //     }
+    //     // Add the clone as a target
+    //     addTarget(clone, state);
+    //   } else {
+    //     floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
+    //   }
+    // }
+  }
+  return undefined;
+
+}

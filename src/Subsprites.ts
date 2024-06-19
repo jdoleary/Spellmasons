@@ -13,6 +13,9 @@ export interface Subsprite {
 export interface ISubsprites {
   [id: string]: Subsprite;
 }
+
+// Many subsprites are added automatically to this object 
+// via registerModifiers / registerSpell
 const Subsprites: ISubsprites = {
   heavy_armor: {
     imageName: 'units/heavy_armor.png',

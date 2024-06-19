@@ -1,5 +1,5 @@
 import { drawPredictionLine, drawUICircleFillPrediction } from '../graphics/PlanningView';
-import { addTarget, addUnitTarget, getCurrentTargets, Spell } from './index';
+import { addTarget, getCurrentTargets, Spell } from './index';
 import * as Unit from '../entity/Unit';
 import * as colors from '../graphics/ui/colors';
 import * as config from '../config';
@@ -88,7 +88,7 @@ const spell: Spell = {
             animationPromises.push(animationPromise);
           }
           // Update effectState targets
-          chained.forEach(u => addTarget(u.entity, state, underworld))
+          chained.forEach(u => addTarget(u.entity, state, underworld, prediction))
         }
       }
       await Promise.all(animationPromises).then(() => {

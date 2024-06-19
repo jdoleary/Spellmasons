@@ -67,7 +67,7 @@ const spell: Spell = {
           distanceAlongColumn(a, target, vector)
           - distanceAlongColumn(b, target, vector));
         // Add entities to target
-        withinColumn.forEach(e => addTarget(e, state, underworld));
+        withinColumn.forEach(e => addTarget(e, state, underworld, prediction));
       }
       await animate(animateColumns, underworld);
 

@@ -60,7 +60,7 @@ const spell: Spell = {
         // Sort by distance to circle center
         withinRadius.sort(sortCosestTo(target));
         // Add entities to target
-        withinRadius.forEach(e => addTarget(e, state, underworld));
+        withinRadius.forEach(e => addTarget(e, state, underworld, prediction));
       }
       await animate(animateCircles, underworld);
 

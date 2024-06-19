@@ -149,7 +149,7 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
       if (state) {
         // Targets: Remove old, add new
         state.targetedUnits = state.targetedUnits.filter(u => u != fromUnit);
-        addTarget(unit, state, underworld);
+        addTarget(unit, state, underworld, prediction);
       }
     }
     return unit;
@@ -253,7 +253,7 @@ function polymorphPickup(fromPickup: IPickup, underworld: Underworld, prediction
     if (state) {
       // Targets: Remove old, add new
       state.targetedPickups = state.targetedPickups.filter(p => p != fromPickup);
-      addTarget(pickup, state, underworld);
+      addTarget(pickup, state, underworld, prediction);
     }
   }
   return pickup;
