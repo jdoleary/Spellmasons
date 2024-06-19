@@ -39,17 +39,23 @@ export function isPickingClass(player: IPlayer): boolean {
   // undefined mageType means they haven't picked yet
   return (player.upgrades.length >= 5 && player.mageType == undefined || !!globalThis.adminPickMageType);
 }
-export const filterUpgrades = (u: IUpgrade, minimumProbability: number, player: Pick<IPlayer, "upgrades" | "inventory">, underworld: Pick<Underworld, "activeMods">) =>
+export const filterUpgrades = (u: IUpgrade, player: Pick<IPlayer, "upgrades" | "inventory">, underworld: Pick<Underworld, "activeMods">) => {
+  let minimumProbability = 0;
+  if (player.inventory.length < config.STARTING_CARD_COUNT) {
+    // Limit starting cards to a probability of 10 or more
+    minimumProbability = 10;
+  }
   // Exclude upgrades whose requirements have not been met
-  (u.requires ? u.requires.every(title => player.upgrades.find(u => u == title)) : true)
-  // Exclude card upgrades already obtained by the player (Can this be done with max copies?)
-  && !player.inventory.includes(u.title)
-  // Exclude upgrades considered too rare for this generated set
-  && u.probability >= minimumProbability
-  // Exclude upgrades with a probability of 0 or less
-  && u.probability > 0
-  // Exclude modded upgrades where the mod is not active
-  && isModActive(u, underworld);
+  return (u.requires ? u.requires.every(title => player.upgrades.find(u => u == title)) : true)
+    // Exclude card upgrades already obtained by the player (Can this be done with max copies?)
+    && !player.inventory.includes(u.title)
+    // Exclude upgrades considered too rare for this generated set
+    && u.probability >= minimumProbability
+    // Exclude upgrades with a probability of 0 or less
+    && u.probability > 0
+    // Exclude modded upgrades where the mod is not active
+    && isModActive(u, underworld);
+}
 
 export function omitRerolledUpgrades(upgradeList: IUpgrade[]): IUpgrade[] {
 
@@ -76,9 +82,9 @@ export function omitRerolledUpgrades(upgradeList: IUpgrade[]): IUpgrade[] {
 }
 // Chooses a random card based on the card's probabilities
 // minimumProbability ensures that super rare cards won't be presented too early on
-export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, minimumProbability: number, underworld: Underworld): IUpgrade[] {
+export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, underworld: Underworld): IUpgrade[] {
   let upgrades: IUpgrade[] = [];
-  let upgradeList = upgradeCardsSource.filter(u => filterUpgrades(u, minimumProbability, player, underworld));
+  let upgradeList = upgradeCardsSource.filter(u => filterUpgrades(u, player, underworld));
 
   // The player is guaranteed a damage spell in the first level to prevent a softlock
   // For third pick, override upgradeList with damage spells

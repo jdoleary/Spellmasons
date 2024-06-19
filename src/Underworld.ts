@@ -3194,7 +3194,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     const player = globalThis.player;
     if (player) {
 
-      const upgrades = Upgrade.generateUpgrades(player, 0, 0, this);
+      const upgrades = Upgrade.generateUpgrades(player, 0, this);
       if (upgrades.length) {
         const elUpgrades = upgrades.map((upgrade) => Upgrade.createUpgradeElement(upgrade, player, this));
         if (elUpgradePickerContent) {
@@ -3239,11 +3239,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
 
     const isPerk = perksLeftToChoose > 0 || cursesLeftToChoose > 0;
-    let minimumProbability = 0;
-    if (upgradesLeftToChoose > 0 && player.inventory.length < config.STARTING_CARD_COUNT) {
-      // Limit starting cards to a probability of 10 or more
-      minimumProbability = 10;
-    }
     const isCursePerk = cursesLeftToChoose > 0;
     if (elUpgradePickerLabel) {
       const pickingClass = globalThis.player ? Upgrade.isPickingClass(globalThis.player) : false;
@@ -3373,7 +3368,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         // Only show upgrades, not perk list
         hidePerkList();
 
-        const upgrades = Upgrade.generateUpgrades(player, numberOfUpgradesToChooseFrom, minimumProbability, this);
+        const upgrades = Upgrade.generateUpgrades(player, numberOfUpgradesToChooseFrom, this);
         if (!upgrades.length) {
           // Player already has all the upgrades
           document.body?.classList.toggle(showUpgradesClassName, false);
