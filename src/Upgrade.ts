@@ -122,7 +122,6 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, unde
       console.log('No upgrades to choose from', upgradeList);
     }
   }
-  globalThis.rerollOmit = (globalThis.rerollOmit || []).concat(upgrades.map(u => u.title));
   return upgrades;
 }
 

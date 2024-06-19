@@ -722,11 +722,14 @@ function getScaleFromPower(power: number): number {
   return 1 + (maxMultiplier - 1) * (power / (power + 20))
 }
 export function givePlayerUpgrade(p: Player.IPlayer, underworld: Underworld) {
-  elEndTurnBtn?.classList.toggle('upgrade', true);
-  skyBeam(p.unit);
-  if (player && player == globalThis.player) {
-    if (player.inventory.length > config.NUMBER_OF_TOOLBAR_SLOTS - 1) {
-      explain(EXPLAIN_INVENTORY);
+  // Only give an upgrade if there is an upgrade available to choose
+  if (p && underworld.upgradesLeftToChoose(p)) {
+    elEndTurnBtn?.classList.toggle('upgrade', true);
+    skyBeam(p.unit);
+    if (p && p == globalThis.player) {
+      if (p.inventory.length > config.NUMBER_OF_TOOLBAR_SLOTS - 1) {
+        explain(EXPLAIN_INVENTORY);
+      }
     }
   }
 }
