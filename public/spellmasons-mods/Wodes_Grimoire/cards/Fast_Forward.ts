@@ -30,7 +30,6 @@ const spell: Spell = {
         thumbnail: 'spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconFastForward.png',
         sfx: 'push', //TODO
         description: [`Shunt the target forward through time. Causes progression of spell effects but does not affect cooldowns.`], //TODO: better deffinition
-        timeoutMs: 20,
         effect: async (state, card, quantity, underworld, prediction) => {
             //Living units
             const targets = state.targetedUnits.filter(u => u.alive);
@@ -70,8 +69,8 @@ const spell: Spell = {
 };
 async function procEvents(unit: IUnit, underworld: Underworld, prediction: boolean) {
     //onTurnStart events first for order.
-    for (let i = 0; i < unit.onTurnStartEvents.length; i++) {
-        const eventName = unit.onTurnStartEvents[i];
+    for (let i = 0; i < unit.events.length; i++) {
+        const eventName = unit.events[i];
         if (eventName) {
             //Made into function because eventName points to a modifier (probably) whose arguments need to be pass in.
             const fns = Events.default.onTurnStartSource[eventName];
@@ -80,8 +79,8 @@ async function procEvents(unit: IUnit, underworld: Underworld, prediction: boole
             }
         }
     }
-    for (let i = 0; i < unit.onTurnEndEvents.length; i++) {
-        const eventName = unit.onTurnEndEvents[i];
+    for (let i = 0; i < unit.events.length; i++) {
+        const eventName = unit.events[i];
         if (eventName) {
             const fne = Events.default.onTurnEndSource[eventName];
             if (fne) {
