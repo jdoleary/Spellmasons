@@ -52,6 +52,7 @@ const spell: Spell = {
     },
   },
   modifiers: {
+    addModifierVisuals,
     add,
     remove,
   },
@@ -74,6 +75,12 @@ const spell: Spell = {
     },
   },
 };
+function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
+  // Add subsprite image
+  Image.addSubSprite(unit.image, imageName);
+  // Stop the animation
+  unit.image?.sprite.stop();
+}
 function updateTooltip(unit: Unit.IUnit, quantity: number, prediction: boolean) {
   if (!prediction && unit.modifiers[freezeCardId] && quantity <= 0) {
     // Set tooltip:
@@ -81,18 +88,15 @@ function updateTooltip(unit: Unit.IUnit, quantity: number, prediction: boolean) 
   }
 }
 
-function add(unit: Unit.IUnit, underworld: Underworld, _prediction: boolean) {
+function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
   getOrInitModifier(unit, freezeCardId, { isCurse: true, quantity: 1 }, () => {
     unit.radius = config.COLLISION_MESH_RADIUS;
     // Add event
     if (!unit.onTurnEndEvents.includes(freezeCardId)) {
       unit.onTurnEndEvents.push(freezeCardId);
     }
+    addModifierVisuals(unit, underworld, prediction);
 
-    // Add subsprite image
-    Image.addSubSprite(unit.image, imageName);
-    // Stop the animation
-    unit.image?.sprite.stop();
     // Prevents units from being pushed out of the way and units
     // act as a blockade
     unit.immovable = true;

@@ -12,7 +12,8 @@ import { getOrInitModifier } from './util';
 
 export const poisonCardId = 'poison';
 const baseDamage = 20;
-function init(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
+function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
+  Image.addSubSprite(unit.image, subspriteImageName);
   if (spell.modifiers?.subsprite) {
     // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
     // which is used for identifying the sprite or animation that is currently active
@@ -36,8 +37,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     // Add subsprite image
     if (!prediction) {
       if (spell.modifiers?.subsprite) {
-        Image.addSubSprite(unit.image, spell.modifiers.subsprite.imageName);
-        init(unit, underworld, prediction);
+        addModifierVisuals(unit, underworld, prediction);
       }
     }
   });
@@ -56,6 +56,7 @@ export function updateTooltip(unit: Unit.IUnit) {
   }
 }
 
+const subspriteImageName = 'spell-effects/modifierPoisonDrip';
 const spell: Spell = {
   card: {
     id: poisonCardId,
@@ -83,9 +84,9 @@ const spell: Spell = {
   },
   modifiers: {
     add,
-    init,
+    addModifierVisuals,
     subsprite: {
-      imageName: 'spell-effects/modifierPoisonDrip',
+      imageName: subspriteImageName,
       alpha: 1.0,
       anchor: {
         x: 0.6,

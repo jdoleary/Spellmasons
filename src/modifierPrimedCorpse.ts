@@ -11,7 +11,7 @@ import { makePrimedCorpseParticles, stopAndDestroyForeverEmitter } from "./graph
 export const primedCorpseId = 'Primed Corpse';
 export default function registerPrimedCorpse() {
   registerModifiers(primedCorpseId, {
-    init: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => initCorpsePrimed(unit, underworld, prediction),
+    addModifierVisuals: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => initCorpsePrimed(unit, underworld, prediction),
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       const modifier = getOrInitModifier(unit, primedCorpseId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         // Add events

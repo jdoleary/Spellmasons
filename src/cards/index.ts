@@ -138,7 +138,8 @@ export interface Modifiers {
   // run special init logic (usually for visuals) when a modifier is added or loaded
   // see 'poison' for example
   // init is inteded to be called within add.
-  init?: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => void;
+  // Anything that is not governed by the unit's state should be set in addModifierVisuals
+  addModifierVisuals?: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => void;
   add?: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra?: object) => void;
   remove?: (unit: Unit.IUnit, underworld: Underworld) => void;
 }

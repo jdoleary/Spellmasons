@@ -79,8 +79,6 @@ const spell: Spell = {
   modifiers: {
     add,
     remove,
-    // init is noop; not needed to restore bloodcurse
-    init: () => { },
   },
   events: {
     onTakeDamage: (unit: IUnit, amount: number, _underworld: Underworld, prediction: boolean, damageDealer?: IUnit) => {

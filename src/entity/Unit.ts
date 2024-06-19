@@ -530,10 +530,10 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
   }
   for (let key of Object.keys(loadedunit.modifiers)) {
     const modifier = allModifiers[key];
-    if (modifier && modifier.init) {
-      // Invoke modifier.init so that special init logic
+    if (modifier && modifier.addModifierVisuals) {
+      // Invoke modifier.addModifierVisuals so that special init logic
       // such as there is in 'poison' will run
-      modifier.init(loadedunit, underworld, prediction);
+      modifier.addModifierVisuals(loadedunit, underworld, prediction);
     } else {
       console.warn('No init for modifier with key', key)
     }
