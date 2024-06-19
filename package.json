@@ -8,7 +8,7 @@
     "tsc": "tsc",
     "build_types": "tsc --project tsconfig.outputtypes.json && cp -r public/spellmasons-mods/types/src/. ../spellmasons-mods/types",
     "build": "npm run build_types && tsc && vite build && npm run headless-build-only && node makeBuildManifest.js",
-    "test": "tsc && jest",
+    "test": "jest",
     "format": "prettier --write \"src/**/*.{ts,js}\"",
     "lint": "prettier --check \"src/**/*.{ts,js}\"",
     "headless-build-only": "tsc --project tsconfig.headless.json --outDir headless-server-build/ && cp package-lock.json headless-server-build/ && cp public/spellmasons-mods/build/SpellmasonsMods.cjs.js headless-server-build/src/SpellmasonsMods.cjs.js && cd headless-server-build/ && npm install --omit=dev",

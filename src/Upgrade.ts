@@ -2,18 +2,17 @@ import seedrandom from 'seedrandom';
 import * as config from './config';
 import * as storage from "./storage";
 import { calculateCostForSingleCard, type CardCost } from './cards/cardUtils';
-import { cardRarityAsString, getCardRarityColor, getReplacesCardText, getSpellThumbnailPath } from './graphics/ui/CardUI';
+import { cardRarityAsString, getCardRarityColor, getReplacesCardText } from './graphics/ui/CardUI';
 import { chooseObjectWithProbability } from './jmath/rand';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import { IPlayer, MageType, changeMageType } from './entity/Player';
 import Underworld from './Underworld';
-import { CardCategory, CardRarity, probabilityMap } from './types/commonTypes';
+import { CardCategory } from './types/commonTypes';
 import { poisonCardId } from './cards/poison';
 import { bleedCardId } from './cards/bleed';
 import { drownCardId } from './cards/drown';
-import { suffocateCardId } from './cards/suffocate';
 import { isModActive } from './registerMod';
-import { allCards, getCardsFromIds } from './cards';
+import { allCards } from './cards';
 import { boneShrapnelCardId } from './cards/bone_shrapnel';
 import { executeCardId } from './cards/execute';
 export interface IUpgrade {
@@ -29,8 +28,6 @@ export interface IUpgrade {
   cardCategory?: CardCategory;
   description: (player: IPlayer) => string;
   thumbnail: string;
-  // The maximum number of copies a player can have of this upgrade
-  maxCopies?: number;
   // note: effect shouldn't be called directly, use Underworld.chooseUpgrade instead so
   // it will keep track of how many upgrades the player has left to choose
   effect: (player: IPlayer, underworld: Underworld) => void;
@@ -42,78 +39,87 @@ export function isPickingClass(player: IPlayer): boolean {
   // undefined mageType means they haven't picked yet
   return (player.upgrades.length >= 5 && player.mageType == undefined || !!globalThis.adminPickMageType);
 }
+export const filterUpgrades = (u: IUpgrade, minimumProbability: number, player: Pick<IPlayer, "upgrades" | "inventory">, underworld: Pick<Underworld, "activeMods">) =>
+  // Exclude upgrades whose requirements have not been met
+  (u.requires ? u.requires.every(title => player.upgrades.find(u => u == title)) : true)
+  // Exclude card upgrades already obtained by the player (Can this be done with max copies?)
+  && !player.inventory.includes(u.title)
+  // Exclude upgrades considered too rare for this generated set
+  && u.probability >= minimumProbability
+  // Exclude upgrades with a probability of 0 or less
+  && u.probability > 0
+  // Exclude modded upgrades where the mod is not active
+  && isModActive(u, underworld);
+
+export function omitRerolledUpgrades(upgradeList: IUpgrade[]): IUpgrade[] {
+
+  // Returns all upgrades that would be omitted
+  // This filter function lets us softly omit upgrades.
+  // Softly omitted upgrades will only appear if no other options are available
+  // This is used to prevent rerolled cards from appearing again unless they are all that's left to show
+  const filterUpgradesSoft = (u: IUpgrade) => (
+    !globalThis.rerollOmit?.includes(u.title)
+  );
+  // Clone upgrades for later mutation
+  let clonedUpgradeList = [...upgradeList];
+  // Store all softly omitted upgrades for later
+  const omittedUpgrades = clonedUpgradeList.filter(u => !filterUpgradesSoft(u));
+  // Remove omittedUpgrades from clonedUpgradeList
+  clonedUpgradeList = clonedUpgradeList.filter(u => !omittedUpgrades.includes(u));
+
+  // If upgradeList is empty, restore softly omitted upgrades
+  if (clonedUpgradeList.length == 0 && omittedUpgrades.length > 0) {
+    clonedUpgradeList = clonedUpgradeList.concat(omittedUpgrades);
+  }
+
+  return clonedUpgradeList;
+}
 // Chooses a random card based on the card's probabilities
 // minimumProbability ensures that super rare cards won't be presented too early on
-// onlyStats: means it'll present stats upgrades instead of card upgrades
 export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, minimumProbability: number, underworld: Underworld): IUpgrade[] {
   let upgrades: IUpgrade[] = [];
-  const filterUpgrades = (u: IUpgrade) =>
-    (u.maxCopies === undefined
-      ? // Always include upgrades that don't have a specified maxCopies
-      true
-      : // Filter out  upgrades that the player can't have more of
-      player.upgrades.filter((pu) => pu === u.title).length <
-      u.maxCopies)
-    && (u.requires ? u.requires.every(title => player.upgrades.find(u => u == title)) : true)
-    // Now that upgrades are cards too, make sure it doesn't
-    // show upgrades that the player already has as cards
-    && !player.inventory.includes(u.title)
-    // Upgrade is NOT included in list of rerollOmit
-    // this prevents a reroll from presenting an upgrade
-    // that was in the last selection
-    && !(globalThis.rerollOmit || []).some(omittedTitle => omittedTitle == u.title)
-    && isModActive(u, underworld);
-  let filteredUpgradeCardsSource = upgradeCardsSource.filter(filterUpgrades);
-  // Every other level, players get to choose from stas upgrades or card upgrades
-  // Unless Player already has all of the upgrades, in which case they
-  // only have stat upgrades to choose from
-  let upgradeList = filteredUpgradeCardsSource;
-  // Limit the rarity of cards that are possible to attain
-  upgradeList = upgradeList.filter(u => u.probability >= minimumProbability);
+  let upgradeList = upgradeCardsSource.filter(u => filterUpgrades(u, minimumProbability, player, underworld));
 
+  // The player is guaranteed a damage spell in the first level to prevent a softlock
   // For third pick, override upgradeList with damage spells
   if (player.upgrades.length == 2) {
-    upgradeList = upgradeCardsSource
-      // Prevent picking the same upgrade twice
-      .filter(filterUpgrades)
-      // Ensure they pick from only damage cards
-      .filter(c => (![bleedCardId, drownCardId, boneShrapnelCardId, executeCardId].includes(c.title) && c.cardCategory == CardCategory.Damage) || [poisonCardId].includes(c.title));
+    // Upgrade list is filtered down to damage spells only
+    upgradeList = upgradeList.filter(c => (
+      // Any card in the damage category is acceptable, unless dependent on special conditions
+      ![bleedCardId, drownCardId, boneShrapnelCardId, executeCardId].includes(c.title) && c.cardCategory == CardCategory.Damage)
+      // Poison is acceptable here, even though it is a curse
+      || [poisonCardId].includes(c.title)
+    );
   }
   if (isPickingClass(player)) {
     return upgradeMageClassSource;
   }
 
-  // Clone upgrades for later mutation
-  const clonedUpgradeSource = [...upgradeList];
-  // Choose from upgrades
-  const numberOfCardsToChoose = Math.min(
-    numberOfUpgrades,
-    clonedUpgradeSource.length,
-  );
-  // Upgrade random generate should be unique for the underworld seed, each player, the number of rerolls that they have,
-  // the number of cards that they have  This will prevent save scamming the chances and also make sure each time you are presented with
-  // cards it is unique.
-  // Note: Only count non-empty card spaces
+  // Upgrade random generate should be unique for the:
+  // underworld seed, each player, the number of rerolls they have, the number of cards they have
+  // This prevents save scamming and makes sure each time you are presented with cards it is unique.
+  // Note: Only count non-empty card spaces in player inventory
   const rSeed = `${underworld.seed}-${player.playerId}-${player.reroll}-${player.inventory.filter(x => !!x).length}`;
   const random = seedrandom(rSeed);
-  for (
-    let i = 0;
-    // limited by the config.NUMBER_OF_UPGRADES_TO_CHOOSE_FROM or the number of cloned
-    // upgrades that are left, whichever is less
-    i < numberOfCardsToChoose;
-    i++
-  ) {
-    const upgrade = chooseObjectWithProbability(clonedUpgradeSource, random);
+
+  upgradeList = omitRerolledUpgrades(upgradeList)
+  // Limited by desired numberOfUpgrades or upgrades left, whichever is less
+  const numberOfCardsToChoose = Math.min(numberOfUpgrades, upgradeList.length);
+
+  for (let i = 0; i < numberOfCardsToChoose; i++) {
+
+    const upgrade = chooseObjectWithProbability(upgradeList, random);
     if (upgrade) {
-      const index = clonedUpgradeSource.indexOf(upgrade);
-      upgrades = upgrades.concat(clonedUpgradeSource.splice(index, 1));
+      const index = upgradeList.indexOf(upgrade);
+      upgrades = upgrades.concat(upgradeList.splice(index, 1));
     } else {
-      console.log('No upgrades to choose from', clonedUpgradeSource);
+      console.log('No upgrades to choose from', upgradeList);
     }
   }
-  globalThis.rerollOmit = upgrades.map(u => u.title);
+  globalThis.rerollOmit = (globalThis.rerollOmit || []).concat(upgrades.map(u => u.title));
   return upgrades;
 }
+
 export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underworld: Underworld) {
   if (globalThis.headless) {
     // There is no DOM in headless mode
