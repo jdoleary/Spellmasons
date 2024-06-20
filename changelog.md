@@ -1,3 +1,13 @@
+## 1.40.0
+src: New Modifiers
+    
+    - Target Immune
+    - Slime
+    
+    Support adding modifiers to a selected unit with the Shift+space menu
+    Auto omit floating text if it is passed prediction==true
+    
+    Thanks NoZ and Baalstrum
 ## 1.39.0
 ref: Remove cooldowns
     After considering, I've determined that the idea of a cooldown itself is
