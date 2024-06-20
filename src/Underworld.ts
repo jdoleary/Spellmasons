@@ -2702,6 +2702,8 @@ ${CardUI.cardListToImages(stats.longestSpell)}
       globalThis.save(quicksaveName, true);
     }
 
+    // We should also save any changes to lifetimeStats here
+    GameStatistics.SaveLifetimeStats();
   }
   async executeNPCTurn(faction: Faction) {
     cleanUpEmitters(true);

@@ -86,13 +86,13 @@ export function LogStats() {
 }
 
 const GAME_STATISTICS_STORAGE_KEY = "Game Statistics - Lifetime";
-export function SaveStats() {
+export function SaveLifetimeStats() {
   const statsToSave = allStats[StatDepth.LIFETIME];
   if (statsToSave) {
     storageSet(GAME_STATISTICS_STORAGE_KEY, JSON.stringify(statsToSave));
   }
 }
-export function LoadStats() {
+export function LoadLifetimeStats() {
   const loadedString = storageGet(GAME_STATISTICS_STORAGE_KEY);
   if (loadedString) {
     const loadedStats = JSON.parse(loadedString);

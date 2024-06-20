@@ -2,6 +2,7 @@ import { areCookiesAllowed } from "./cookieConsent";
 import { MageType } from "./entity/Player";
 import { robeColors } from "./graphics/ui/colors";
 import { fullyUpdateControls } from "./graphics/ui/keyMapping";
+import * as GameStatistics from './GameStatistics';
 export const STORAGE_OPTIONS = 'OPTIONS';
 export const STORAGE_LANGUAGE_CODE_KEY = 'language';
 export const STORAGE_ID_PLAYER_COLOR = 'player-color';
@@ -114,6 +115,8 @@ export function getSavedData() {
       // Update spells discovered:
       globalThis.spellsDiscovered = JSON.parse(get(SPELLS_DISCOVERED_STORAGE_KEY) || '[]');
       console.log('Setup: initializing spellsDiscovered as', globalThis.spellsDiscovered);
+      // Update lifetime stats:
+      GameStatistics.LoadLifetimeStats();
     });
 }
 
