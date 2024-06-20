@@ -9,7 +9,7 @@ import { LAST_LEVEL_INDEX } from './config';
 
 // Global Stats are only stored once, and we don't care "when" they happened
 export const globalStats: IGlobalStats = EmptyGlobalStatistics();
-interface IGlobalStats {
+export interface IGlobalStats {
   bestSpell: {
     unitsKilled: number,
     spell: string[]

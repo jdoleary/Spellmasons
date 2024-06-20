@@ -248,6 +248,7 @@ export default class Underworld {
   // This should only be set to true on underworld creation,
   // and should be set to false if any adminCommands are used
   allowAchievements: boolean = true;
+  clientGameStats: GameStatistics.IGlobalStats = GameStatistics.globalStats;
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
