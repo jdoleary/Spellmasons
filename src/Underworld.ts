@@ -847,6 +847,9 @@ export default class Underworld {
 
     const deltaTime = timestamp - lastTime;
     lastTime = timestamp;
+    if (GameStatistics.globalStats.runEndTime == undefined) {
+      GameStatistics.globalStats.gameTimeElapsed += deltaTime;
+    }
     const { zoom } = getCamera();
 
     ImmediateMode.loop();
@@ -2491,8 +2494,8 @@ export default class Underworld {
         elGameOverStats.innerHTML = `
 Got to level ${this.getLevelText()}
       
-${stats.runEndTime ? `Survived for ${((stats.runEndTime - stats.runStartTime) / 60000).toFixed(2)} Minutes` : ''}
-${stats.runWinTime ? `Beat deathmasons in ${((stats.runWinTime - stats.runStartTime) / 60000).toFixed(2)} Minutes` : ''}
+${stats.runEndTime ? `Survived for ${((stats.gameTimeElapsed) / 60000).toFixed(2)} Minutes` : ''}
+${stats.runWinTime ? `Beat deathmasons in ${((stats.gameTimeElapsed) / 60000).toFixed(2)} Minutes` : ''}
 
 Total Kills: ${this.enemiesKilled}
 

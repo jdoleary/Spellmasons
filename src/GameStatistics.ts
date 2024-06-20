@@ -17,6 +17,7 @@ export interface IGlobalStats {
   longestSpell: string[];
   // Used to make sure trackEndLevel() doesn't run logic multiple times
   levelsComplete: number,
+  gameTimeElapsed: number,
   runStartTime: number,
   runWinTime: number | undefined,
   runEndTime: number | undefined,
@@ -27,6 +28,7 @@ export function EmptyGlobalStatistics(stats?: IGlobalStats): IGlobalStats {
     bestSpell: { unitsKilled: 0, spell: [] },
     longestSpell: [],
     levelsComplete: 0,
+    gameTimeElapsed: 0,
     runStartTime: Date.now(),
     runWinTime: undefined,
     runEndTime: undefined,
