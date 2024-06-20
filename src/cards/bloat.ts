@@ -18,14 +18,7 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity:
   const modifier = getOrInitModifier(unit, id, {
     isCurse: true, quantity,
   }, () => {
-    // Add event
-    if (!unit.onDeathEvents.includes(id)) {
-      unit.onDeathEvents.push(id);
-    }
-    // Add event
-    if (!unit.onDrawSelectedEvents.includes(id)) {
-      unit.onDrawSelectedEvents.push(id);
-    }
+    Unit.addEvent(unit, id);
 
     // Visually "bloat" the image
     addScaleModifier(unit.image, { x: 1.5, id }, unit.strength);

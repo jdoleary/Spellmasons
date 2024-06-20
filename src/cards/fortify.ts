@@ -102,10 +102,8 @@ const spell: Spell = {
 };
 
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
-  const modifier = getOrInitModifier(unit, id, { isCurse: false, quantity }, () => {
-    // Add event
-    unit.onTakeDamageEvents.push(id);
-    unit.onTurnStartEvents.push(id);
+  getOrInitModifier(unit, id, { isCurse: false, quantity }, () => {
+    Unit.addEvent(unit, id);
     // Add subsprite image
     const animatedFortifySprite = Image.addSubSprite(unit.image, modifierImagePath);
     if (animatedFortifySprite) {

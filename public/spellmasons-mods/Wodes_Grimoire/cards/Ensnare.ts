@@ -27,7 +27,6 @@ const spell: Spell = {
         thumbnail: 'spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconEnsnare.png',
         sfx: '',
         description: [`Prevents the target from moving for one turn. Furthur casts increase duration.`],
-        timeoutMs: 20,
         effect: async (state, card, quantity, underworld, prediction) => {
             //Only filter unit thats are alive.
             const targets = state.targetedUnits.filter(u => u.alive);
@@ -69,10 +68,7 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity:
         isCurse: true, quantity, persistBetweenLevels: false,
         originalstat: unit.staminaMax,
     }, () => {
-        //Register onTurnEndEvents
-        if (!unit.onTurnEndEvents.includes(cardId)) {
-            unit.onTurnEndEvents.push(cardId);
-        }
+        SpellmasonsAPI.Unit.addEvent(unit, cardId);
         unit.stamina = 0;
         unit.staminaMax = 0;
     });

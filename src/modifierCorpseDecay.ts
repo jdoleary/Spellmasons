@@ -15,10 +15,7 @@ export default function registerCorpseDecay() {
       if (unit.unitType == UnitType.PLAYER_CONTROLLED || unit.alive) return;
 
       const modifier = getOrInitModifier(unit, corpseDecayId, { isCurse: true, quantity }, () => {
-        // Add event
-        if (!unit.onTurnEndEvents.includes(corpseDecayId)) {
-          unit.onTurnEndEvents.push(corpseDecayId);
-        }
+        Unit.addEvent(unit, corpseDecayId);
       });
       modifier.turnsLeftToLive = 1;
 

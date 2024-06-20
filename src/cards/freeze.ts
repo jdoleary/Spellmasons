@@ -28,7 +28,7 @@ const spell: Spell = {
     description: ['spell_freeze', immuneForTurns.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
-      const targets = state.targetedUnits.filter(u => u.alive && !u.onTurnEndEvents.includes(freezeCardId));
+      const targets = state.targetedUnits.filter(u => u.alive && !u.events.includes(freezeCardId));
       if (targets.length) {
         let spellAnimationPromise = Promise.resolve();
         targets.forEach(t => {
@@ -91,10 +91,7 @@ function updateTooltip(unit: Unit.IUnit, quantity: number, prediction: boolean) 
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
   getOrInitModifier(unit, freezeCardId, { isCurse: true, quantity: 1 }, () => {
     unit.radius = config.COLLISION_MESH_RADIUS;
-    // Add event
-    if (!unit.onTurnEndEvents.includes(freezeCardId)) {
-      unit.onTurnEndEvents.push(freezeCardId);
-    }
+    Unit.addEvent(unit, freezeCardId);
     addModifierVisuals(unit, underworld, prediction);
 
     // Prevents units from being pushed out of the way and units

@@ -48,7 +48,7 @@ export type onDrawSelected = {
 };
 const onDrawSelectedSource: { [name: string]: onDrawSelected } = {};
 
-export type onProjectileCollision = ({ unit, pickup, underworld, prediction }: { unit?: IUnit, pickup?: IPickup, projectile: ForceMoveProjectile, underworld: Underworld, prediction: boolean }) => void;
+export type onProjectileCollision = ({ unit, pickup, projectile, underworld, prediction }: { unit?: IUnit, pickup?: IPickup, projectile: ForceMoveProjectile, underworld: Underworld, prediction: boolean }) => void;
 const onProjectileCollisionSource: { [name: string]: onProjectileCollision } = {};
 
 export default {

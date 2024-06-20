@@ -59,8 +59,8 @@ const spell: Spell = {
 };
 
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
-  const modifier = getOrInitModifier(unit, darkTideId, { isCurse: true, quantity }, () => {
-    unit.onTurnEndEvents.push(darkTideId);
+  getOrInitModifier(unit, darkTideId, { isCurse: true, quantity }, () => {
+    Unit.addEvent(unit, darkTideId);
   });
 }
 export default spell;

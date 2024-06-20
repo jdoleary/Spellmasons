@@ -28,7 +28,6 @@ const spell: Spell = {
         thumbnail: 'spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconRegen.png',
         sfx: 'heal', //TODO
         description: [`Heals the target for 10 health at the end of their turn for 5 turns. Stacks increase the amount and refresh the duration.`],
-        timeoutMs: 20,
         effect: async (state, card, quantity, underworld, prediction) => {
             //Only filter unit thats are alive
             const targets = state.targetedUnits.filter(u => u.alive);
@@ -83,10 +82,7 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity:
     const modifier = cardsUtil.getOrInitModifier(unit, cardId, {
         isCurse: false, quantity, persistBetweenLevels: false,
     }, () => {
-        //Register onTurnEndEvents
-        if (!unit.onTurnEndEvents.includes(cardId)) {
-            unit.onTurnEndEvents.push(cardId);
-        }
+        SpellmasonsAPI.Unit.addEvent(unit, cardId);
     });
     if (modifier.quantity > 5) {
         modifier.quantity = 5; //All casts give 5 turns, the max duration. When over 5, a new cast was done so update stacks

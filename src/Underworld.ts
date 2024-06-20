@@ -4389,7 +4389,7 @@ async function introduceBoss(unit: UnitSource, underworld: Underworld) {
     // because we only want to add it in this special case/boss sequence
     // and not any other time (I.E. admin/player summoned Deathmasons)
     if (newBossUnitInstance.unitSourceId == bossmasonUnitId) {
-      newBossUnitInstance.onDeathEvents.push(ORIGINAL_DEATHMASON_DEATH);
+      Unit.addEvent(newBossUnitInstance, ORIGINAL_DEATHMASON_DEATH);
     }
   } else {
     console.error("Failed to spawn newBossUnitInstance for id: ", unit.id);

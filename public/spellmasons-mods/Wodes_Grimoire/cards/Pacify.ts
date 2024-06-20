@@ -27,7 +27,6 @@ const spell: Spell = {
         thumbnail: 'spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconPacify.png',
         sfx: '',
         description: [`Prevents the target from attacking for one turn. Stacks increase duration. Does not affect Support Class units such as summoners or priests.`],
-        timeoutMs: 20,
         effect: async (state, card, quantity, underworld, prediction) => {
             //Only filter unit thats are alive and can attack. u.unitSubType[3] presumed SUPPORT_CLASS, cant effect summoners, prists dont attack
             const targets = state.targetedUnits.filter(u => u.alive && !(u.unitSubType == 3));
@@ -69,10 +68,7 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity:
         isCurse: true, quantity, persistBetweenLevels: false,
         originalstat: unit.attackRange,
     }, () => {
-        //Register onTurnEndEvents
-        if (!unit.onTurnEndEvents.includes(cardId)) {
-            unit.onTurnEndEvents.push(cardId);
-        }
+        SpellmasonsAPI.Unit.addEvent(unit, cardId);
         unit.attackRange = 0;
     });
 }

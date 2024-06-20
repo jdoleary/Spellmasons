@@ -145,9 +145,7 @@ function add$6(unit, _underworld, _prediction, quantity) {
     quantity,
     persistBetweenLevels: false
   }, () => {
-    if (!unit.onTurnStartEvents.includes(cardId$e)) {
-      unit.onTurnStartEvents.push(cardId$e);
-    }
+    SpellmasonsAPI.Unit.addEvent(unit, cardId$e);
   });
 }
 const {
@@ -250,9 +248,7 @@ function add$5(unit, underworld, prediction, quantity) {
     persistBetweenLevels: false,
     originalstat: unit.staminaMax
   }, () => {
-    if (!unit.onTurnEndEvents.includes(cardId$c)) {
-      unit.onTurnEndEvents.push(cardId$c);
-    }
+    SpellmasonsAPI.Unit.addEvent(unit, cardId$c);
     unit.stamina = 0;
     unit.staminaMax = 0;
   });
@@ -319,8 +315,8 @@ const spell$b = {
   }
 };
 async function procEvents(unit, underworld, prediction) {
-  for (let i = 0; i < unit.onTurnStartEvents.length; i++) {
-    const eventName = unit.onTurnStartEvents[i];
+  for (let i = 0; i < unit.events.length; i++) {
+    const eventName = unit.events[i];
     if (eventName) {
       const fns = Events.default.onTurnStartSource[eventName];
       if (fns) {
@@ -328,8 +324,8 @@ async function procEvents(unit, underworld, prediction) {
       }
     }
   }
-  for (let i = 0; i < unit.onTurnEndEvents.length; i++) {
-    const eventName = unit.onTurnEndEvents[i];
+  for (let i = 0; i < unit.events.length; i++) {
+    const eventName = unit.events[i];
     if (eventName) {
       const fne = Events.default.onTurnEndSource[eventName];
       if (fne) {
@@ -555,9 +551,7 @@ function add$4(unit, underworld, prediction, quantity, extra) {
     quantity,
     persistBetweenLevels: false
   }, () => {
-    if (!unit.onTurnStartEvents.includes(cardId$9)) {
-      unit.onTurnStartEvents.push(cardId$9);
-    }
+    SpellmasonsAPI.Unit.addEvent(unit, cardId$9);
   });
   if (!modifier.graceCountdown) {
     modifier.graceCountdown = 3;
@@ -716,9 +710,7 @@ function add$3(unit, underworld, prediction, quantity, extra) {
     quantity,
     persistBetweenLevels: false
   }, () => {
-    if (!unit.onTurnEndEvents.includes(cardId$7)) {
-      unit.onTurnEndEvents.push(cardId$7);
-    }
+    SpellmasonsAPI.Unit.addEvent(unit, cardId$7);
   });
   if (modifier.quantity > 5) {
     modifier.quantity = 5;
@@ -802,9 +794,7 @@ function add$2(unit, underworld, prediction, quantity) {
     persistBetweenLevels: false,
     originalstat: unit.attackRange
   }, () => {
-    if (!unit.onTurnEndEvents.includes(cardId$6)) {
-      unit.onTurnEndEvents.push(cardId$6);
-    }
+    SpellmasonsAPI.Unit.addEvent(unit, cardId$6);
     unit.attackRange = 0;
   });
 }
@@ -1204,9 +1194,7 @@ function add$1(unit, underworld, prediction, quantity) {
     quantity,
     persistBetweenLevels: false
   }, () => {
-    if (!unit.onTurnStartEvents.includes(cardId$1)) {
-      unit.onTurnStartEvents.push(cardId$1);
-    }
+    SpellmasonsAPI.Unit.addEvent(unit, cardId$1);
     makeBurningRageParticles(unit, underworld, prediction);
   });
 }
@@ -1277,16 +1265,14 @@ const spell = {
   }
 };
 function add(unit, _underworld, prediction, quantity, extra) {
-  let firstStack = !unit.onTurnStartEvents.includes(cardId);
+  let firstStack = !unit.events.includes(cardId);
   const modifier = cardsUtil.getOrInitModifier(unit, cardId, {
     isCurse: false,
     quantity,
     persistBetweenLevels: false
   }, () => {
     if (firstStack) {
-      unit.onTurnEndEvents.push(cardId);
-      unit.onTurnStartEvents.push(cardId);
-      unit.onTakeDamageEvents.push(cardId);
+      SpellmasonsAPI.Unit.addEvent(unit, cardId);
     }
   });
   if (firstStack) {

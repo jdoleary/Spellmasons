@@ -25,9 +25,8 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean) {
     return;
   }
 
-  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity: 1 }, () => {
-    // Add event
-    unit.onTakeDamageEvents.push(id);
+  getOrInitModifier(unit, id, { isCurse: true, quantity: 1 }, () => {
+    Unit.addEvent(unit, id);
 
     unit.healthMax *= healthMultiplier;
     unit.health *= healthMultiplier;

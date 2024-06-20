@@ -31,7 +31,6 @@ const spell: Spell = {
         thumbnail: 'spellmasons-mods/Wodes_Grimoire/graphics/icons/spelliconGrace.png',
         sfx: 'purify', //TODO
         description: [`Heals the target for ${-healingAmount} after 3 turns. Stacks increase the amount, but do not change duration`],
-        timeoutMs: 20,
         effect: async (state, card, quantity, underworld, prediction) => {
             //Only filter unit thats are alive
             const targets = state.targetedUnits.filter(u => u.alive);
@@ -81,10 +80,7 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity:
     const modifier = cardsUtil.getOrInitModifier(unit, cardId, {
         isCurse: false, quantity, persistBetweenLevels: false,
     }, () => {
-        // Register onTurnStart event
-        if (!unit.onTurnStartEvents.includes(cardId)) {
-            unit.onTurnStartEvents.push(cardId);
-        }
+        SpellmasonsAPI.Unit.addEvent(unit, cardId);
     });
 
     if (!modifier.graceCountdown) {

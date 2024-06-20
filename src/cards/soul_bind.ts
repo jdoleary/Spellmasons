@@ -50,9 +50,9 @@ const spell: Spell = {
       for (let i = 0; i < units.length; i++) {
         const unit = units[i];
         if (unit) {
-          const index = unit.onTakeDamageEvents.findIndex(e => e == soulBindId);
+          const index = unit.events.findIndex(e => e == soulBindId);
           // Remove Soul Bind damage event to prevent infinite loop
-          unit.onTakeDamageEvents.splice(index, 1);
+          unit.events.splice(index, 1);
           // Deal damage to unit
           Unit.takeDamage({
             unit: unit,
@@ -60,7 +60,7 @@ const spell: Spell = {
           }, underworld, prediction);
           // Return Soul Bind damage event if the unit is not dead
           if (unit.alive) {
-            unit.onTakeDamageEvents.splice(index, 0, soulBindId);
+            unit.events.splice(index, 0, soulBindId);
           }
         }
       }
@@ -88,8 +88,7 @@ const spell: Spell = {
 
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
   getOrInitModifier(unit, soulBindId, { isCurse: true, quantity }, () => {
-    unit.onTakeDamageEvents.push(soulBindId);
-    unit.onDrawSelectedEvents.push(soulBindId);
+    Unit.addEvent(unit, soulBindId);
   });
 }
 export default spell;

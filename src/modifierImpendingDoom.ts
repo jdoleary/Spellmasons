@@ -11,9 +11,7 @@ export default function registerImpendingDoom() {
   registerModifiers(impendingDoomId, {
     add: (unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, impendingDoomId, { isCurse: true, quantity }, () => {
-        if (!unit.onTurnEndEvents.includes(impendingDoomId)) {
-          unit.onTurnEndEvents.push(impendingDoomId);
-        }
+        Unit.addEvent(unit, impendingDoomId);
       });
       updateTooltip(unit);
     }

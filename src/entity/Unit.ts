@@ -4,7 +4,7 @@ import * as config from '../config';
 import * as Image from '../graphics/Image';
 import * as math from '../jmath/math';
 import { distance } from '../jmath/math';
-import { addPixiSpriteAnimated, containerDoodads, containerUnits, PixiSpriteOptions, startBloodParticleSplatter, updateNameText } from '../graphics/PixiUtils';
+import { containerUnits, PixiSpriteOptions, startBloodParticleSplatter, updateNameText } from '../graphics/PixiUtils';
 import * as colors from '../graphics/ui/colors';
 import { UnitSubType, UnitType, Faction } from '../types/commonTypes';
 import type { Vec2 } from '../jmath/Vec';
@@ -14,7 +14,7 @@ import Events from '../Events';
 import makeAllRedShader from '../graphics/shaders/selected';
 import { addLerpable } from '../lerpList';
 import { allUnits, UnitSource } from './units';
-import { allCards, allModifiers, EffectState } from '../cards';
+import { allCards, allModifiers } from '../cards';
 import * as immune from '../cards/immune';
 import { checkIfNeedToClearTooltip, clearSpellEffectProjection, drawUICircle } from '../graphics/PlanningView';
 import floatingText, { queueCenteredFloatingText } from '../graphics/FloatingText';
@@ -32,15 +32,11 @@ import { explain, EXPLAIN_DEATH, EXPLAIN_MINI_BOSSES } from '../graphics/Explain
 import { ARCHER_ID } from './units/archer';
 import { BLOOD_ARCHER_ID } from './units/blood_archer';
 import * as Obstacle from './Obstacle';
-import playerUnit, { spellmasonUnitId } from './units/playerUnit';
-import { findRandomGroundLocation, SUMMONER_ID } from './units/summoner';
+import { spellmasonUnitId } from './units/playerUnit';
+import { SUMMONER_ID } from './units/summoner';
 import { DARK_SUMMONER_ID } from './units/darkSummoner';
 import { bossmasonUnitId } from './units/deathmason';
-import deathmason from './units/deathmason';
-import { MESSAGE_TYPES } from '../types/MessageTypes';
 import { StatCalamity } from '../Perk';
-import { skyBeam } from '../VisualEffects';
-import seedrandom from 'seedrandom';
 import { summoningSicknessId } from '../modifierSummoningSickness';
 import * as log from '../log';
 import { suffocateCardId, updateSuffocate } from '../cards/suffocate';
@@ -138,13 +134,7 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   // Note: flaggedForRemoval should ONLY be changed in Unit.cleanup
   flaggedForRemoval?: boolean;
   // A list of names that correspond to Events.ts functions
-  onDealDamageEvents: string[];
-  onTakeDamageEvents: string[];
-  onDeathEvents: string[];
-  onAgroEvents: string[];
-  onTurnStartEvents: string[];
-  onTurnEndEvents: string[];
-  onDrawSelectedEvents: string[];
+  events: string[];
   animations: UnitAnimations;
   sfx: UnitSFX;
   modifiers: { [key: string]: Modifier };
@@ -210,13 +200,7 @@ export function create(
       immovable: false,
       unitType,
       unitSubType,
-      onDealDamageEvents: [],
-      onTakeDamageEvents: [],
-      onDeathEvents: [],
-      onAgroEvents: [],
-      onTurnStartEvents: [],
-      onTurnEndEvents: [],
-      onDrawSelectedEvents: [],
+      events: [],
       modifiers: {},
       animations: sourceUnit.animations,
       sfx: sourceUnit.sfx,
@@ -419,13 +403,7 @@ export function removeModifier(unit: IUnit, key: string, underworld: Underworld)
   if (modifier && modifier.subsprite) {
     Image.removeSubSprite(unit.image, modifier.subsprite.imageName);
   }
-  unit.onDealDamageEvents = unit.onDealDamageEvents.filter((e) => e !== key);
-  unit.onTakeDamageEvents = unit.onTakeDamageEvents.filter((e) => e !== key);
-  unit.onDeathEvents = unit.onDeathEvents.filter((e) => e !== key);
-  unit.onAgroEvents = unit.onAgroEvents.filter((e) => e !== key);
-  unit.onTurnStartEvents = unit.onTurnStartEvents.filter((e) => e !== key);
-  unit.onTurnEndEvents = unit.onTurnEndEvents.filter((e) => e !== key);
-  unit.onDrawSelectedEvents = unit.onDrawSelectedEvents.filter((e) => e !== key);
+  unit.events = unit.events.filter((e) => e !== key);
   delete unit.modifiers[key];
 
 }
@@ -470,17 +448,11 @@ export function serialize(unit: IUnit): IUnitSerialized {
   // the network (it would just be extra data), better to restore from the source unit
 
   // omit predictionCopy because it is a transient reference and shouldn't be serialized
-  const { resolveDoneMoving, animations, sfx, onDealDamageEvents, onTakeDamageEvents, onDeathEvents, onAgroEvents, onTurnStartEvents, onTurnEndEvents, onDrawSelectedEvents, predictionCopy, ...rest } = unit
+  const { resolveDoneMoving, animations, sfx, predictionCopy, events, ...rest } = unit
   return {
     ...rest,
-    // Deep copy array so that serialized units don't share the object
-    onDealDamageEvents: [...onDealDamageEvents],
-    onTakeDamageEvents: [...onTakeDamageEvents],
-    onDeathEvents: [...onDeathEvents],
-    onAgroEvents: [...onAgroEvents],
-    onTurnStartEvents: [...onTurnStartEvents],
-    onTurnEndEvents: [...onTurnEndEvents],
-    onDrawSelectedEvents: [...onDrawSelectedEvents],
+    // Deep copy events so that serialized units don't share the object
+    events: [...events],
     // Deep copy modifiers so that serialized units don't share the object
     modifiers: unit.modifiers ? JSON.parse(JSON.stringify(unit.modifiers)) : undefined,
     // Deep copy path so that the serialized object doesn't share the path object
@@ -512,7 +484,6 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
   let loadedunit: IUnit = {
     // Load defaults for new props that old save files might not have
     ...{ strength: 1 },
-    ...{ onDrawSelectedEvents: [] },
     ...restUnit,
     shaderUniforms: {},
     resolveDoneMoving: () => { },
@@ -807,8 +778,7 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   // Clear unit path to prevent further movement in case of ressurect or similar
   unit.path = undefined;
 
-  for (let i = 0; i < unit.onDeathEvents.length; i++) {
-    const eventName = unit.onDeathEvents[i];
+  for (let eventName of unit.events) {
     if (eventName) {
       const fn = Events.onDeathSource[eventName];
       if (fn) {
@@ -876,7 +846,7 @@ export function composeOnDealDamageEvents(damageArgs: damageArgs, underworld: Un
   if (!sourceUnit) return amount;
 
   // Compose onDamageEvents
-  for (let eventName of sourceUnit.onDealDamageEvents) {
+  for (let eventName of sourceUnit.events) {
     const fn = Events.onDealDamageSource[eventName];
     if (fn) {
       // onDamage events can trigger effects and alter damage amount
@@ -889,7 +859,7 @@ export function composeOnTakeDamageEvents(damageArgs: damageArgs, underworld: Un
   let { unit, amount, sourceUnit } = damageArgs;
 
   // Compose onDamageEvents
-  for (let eventName of unit.onTakeDamageEvents) {
+  for (let eventName of unit.events) {
     const fn = Events.onTakeDamageSource[eventName];
     if (fn) {
       // onDamage events can trigger effects and alter damage amount
@@ -1404,7 +1374,7 @@ export async function endTurnForUnits(units: IUnit[], underworld: Underworld, pr
 }
 
 export async function runTurnStartEvents(unit: IUnit, underworld: Underworld, prediction: boolean) {
-  await Promise.all(unit.onTurnStartEvents.map(
+  await Promise.all(unit.events.map(
     async (eventName) => {
       const fn = Events.onTurnStartSource[eventName];
       if (fn) {
@@ -1417,7 +1387,7 @@ export async function runTurnStartEvents(unit: IUnit, underworld: Underworld, pr
 }
 
 export async function runTurnEndEvents(unit: IUnit, underworld: Underworld, prediction: boolean) {
-  await Promise.all(unit.onTurnEndEvents.map(
+  await Promise.all(unit.events.map(
     async (eventName) => {
       const fn = Events.onTurnEndSource[eventName];
       if (fn) {
@@ -1485,13 +1455,7 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
     // Prediction units should have full stamina because they will
     // when it is their turn
     stamina: rest.staminaMax,
-    onDealDamageEvents: [...rest.onDealDamageEvents],
-    onTakeDamageEvents: [...rest.onTakeDamageEvents],
-    onDeathEvents: [...rest.onDeathEvents],
-    onAgroEvents: [...rest.onAgroEvents],
-    onTurnStartEvents: [...rest.onTurnStartEvents],
-    onTurnEndEvents: [...rest.onTurnEndEvents],
-    onDrawSelectedEvents: [...rest.onDrawSelectedEvents],
+    events: [...rest.events],
     // Deep copy modifiers so it doesn't mutate the unit's actual modifiers object
     modifiers: JSON.parse(JSON.stringify(modifiers)),
     shaderUniforms: {},
@@ -1590,7 +1554,7 @@ export function drawSelectedGraphics(unit: IUnit, prediction: boolean = false, u
 
   if (globalThis.headless || prediction || !globalThis.selectedUnitGraphics) return;
 
-  for (let drawEvent of unit.onDrawSelectedEvents) {
+  for (let drawEvent of unit.events) {
     if (drawEvent) {
       const fn = Events.onDrawSelectedSource[drawEvent];
       if (fn) {
@@ -1749,4 +1713,10 @@ export function getFactionsOf(units: { faction: Faction }[]): Faction[] {
   const factions = units.map(u => u.faction);
   // This removes all duplicate entries from the list
   return [...new Set(factions)];
+}
+
+export function addEvent(unit: IUnit, eventId: string) {
+  if (!unit.events.includes(eventId)) {
+    unit.events.push(eventId);
+  }
 }

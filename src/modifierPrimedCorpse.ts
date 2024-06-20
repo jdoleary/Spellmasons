@@ -14,10 +14,7 @@ export default function registerPrimedCorpse() {
     addModifierVisuals: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => initCorpsePrimed(unit, underworld, prediction),
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       const modifier = getOrInitModifier(unit, primedCorpseId, { isCurse: false, quantity, keepOnDeath: true }, () => {
-        // Add events
-        if (!unit.onDrawSelectedEvents.includes(primedCorpseId)) {
-          unit.onDrawSelectedEvents.push(primedCorpseId);
-        }
+        Unit.addEvent(unit, primedCorpseId);
         initCorpsePrimed(unit, underworld, prediction);
       });
 

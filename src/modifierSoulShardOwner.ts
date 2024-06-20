@@ -20,13 +20,7 @@ export default function registerSoulShardOwner() {
   registerModifiers(soulShardOwnerModifierId, {
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, soulShardOwnerModifierId, { isCurse: true, quantity, keepOnDeath: true }, () => {
-        // Add event
-        if (!unit.onTurnStartEvents.includes(soulShardOwnerModifierId)) {
-          unit.onTurnStartEvents.push(soulShardOwnerModifierId);
-        }
-        if (!unit.onDrawSelectedEvents.includes(soulShardOwnerModifierId)) {
-          unit.onDrawSelectedEvents.push(soulShardOwnerModifierId);
-        }
+        Unit.addEvent(unit, soulShardOwnerModifierId);
       });
     }
   });

@@ -121,8 +121,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
   }
 
   const modifier = getOrInitModifier(unit, soulShardId, { isCurse: true, quantity }, () => {
-    unit.onTakeDamageEvents.push(soulShardId);
-    unit.onDrawSelectedEvents.push(soulShardId);
+    Unit.addEvent(unit, soulShardId);
   });
 
   if (modifier.shardOwnerId != extra.shardOwnerId) {
