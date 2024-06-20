@@ -155,6 +155,10 @@ export default class Underworld {
   overworld: Overworld;
   random: prng;
   pie: PieClient | IHostApp;
+  // When gameloop() is called, it calculates a deltaTime based on the last gameloop() timestamp
+  // In the case of multiple underworlds (i.e. loading games), RequestAnimationFrame will inflate deltaTime.
+  // This boolean ensures the first gameloop() on each Underworld disposes the last Underworld's timestamp
+  firstGameloop: boolean = true;
   // The index of the level the players are on
   levelIndex: number = -1;
   isTutorialRun: boolean = false;
@@ -843,6 +847,13 @@ export default class Underworld {
       // Returning without requesting a new AnimationFrame is equivalent to 'pausing'
       // the gameloop
       return;
+    }
+
+    // Resets the timestamp in the case of new Underworld creation
+    // Since we dont want to base delta time off of an old Underworld's timestamp
+    if (this.firstGameloop) {
+      lastTime = timestamp - 1;
+      this.firstGameloop = false;
     }
 
     const deltaTime = timestamp - lastTime;
