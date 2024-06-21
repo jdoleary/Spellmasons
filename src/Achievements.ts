@@ -110,7 +110,10 @@ export function UnlockAchievement(achievement: IAchievement, underworld: Underwo
     return;
   }
 
-  if (underworld && !underworld.allowAchievements) {
+  // TODO - Achievements and stats have not been made multiplayer-compatible,
+  // so achievements will be unobtainable and statistics will be incorrect until then
+  // https://github.com/jdoleary/Spellmasons/pull/808
+  if (underworld && (!underworld.allowAchievements || underworld.players.length > 1)) {
     console.log("[ACHIEVEMENT] - Disabled", achievement.id, achievement);
     return;
   }
