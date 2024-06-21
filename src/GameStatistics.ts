@@ -170,7 +170,7 @@ export function trackCastCardsStart(args: trackCastCardsArgs, underworld: Underw
 
   clearGameStatsAtDepth(StatDepth.SPELL);
 
-  if (effectState.casterPlayer == globalThis.player) {
+  if (effectState.casterPlayer != undefined) {
     gameStatsAtDepth(StatDepth.SPELL).forEach(s => s.cardsCast += effectState.cardIds.length);
   }
 }
