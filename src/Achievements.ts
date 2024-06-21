@@ -1,5 +1,5 @@
 import * as GameStatistics from "./GameStatistics";
-import { allStats, StatDepth } from "./GameStatistics";
+import { gameStats, StatDepth } from "./GameStatistics";
 import Underworld from "./Underworld";
 import { LAST_LEVEL_INDEX } from "./config";
 
@@ -118,8 +118,8 @@ export function UnlockAchievement(achievement: IAchievement, underworld: Underwo
 }
 
 export function UnlockEvent_CastCards(underworld: Underworld) {
-  if (allStats[StatDepth.SPELL]) {
-    if (allStats[StatDepth.SPELL].myPlayerArrowsFired >= 100) {
+  if (gameStats[StatDepth.SPELL]) {
+    if (gameStats[StatDepth.SPELL].myPlayerArrowsFired >= 100) {
       UnlockAchievement(achievement_ArrowRain, underworld);
     }
   }
@@ -130,14 +130,14 @@ export function UnlockEvent_EndOfLevel(underworld: Underworld) {
     UnlockAchievement(achievement_BrinkOfDeath, underworld);
   }
 
-  if (allStats[StatDepth.LEVEL] && allStats[StatDepth.LEVEL].myPlayerDeaths > 0) {
+  if (gameStats[StatDepth.LEVEL] && gameStats[StatDepth.LEVEL].myPlayerDeaths > 0) {
     UnlockAchievement(achievement_AllPartOfThePlan, underworld);
   }
 
   if (underworld.levelIndex == LAST_LEVEL_INDEX) {
     UnlockAchievement(achievement_CompleteTheGame, underworld);
 
-    if (allStats[StatDepth.RUN] && allStats[StatDepth.RUN].myPlayerDamageTaken == 0) {
+    if (gameStats[StatDepth.RUN] && gameStats[StatDepth.RUN].myPlayerDamageTaken == 0) {
       UnlockAchievement(achievement_CompleteGameNoDamageTaken, underworld);
     }
   }

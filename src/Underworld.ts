@@ -252,10 +252,10 @@ export default class Underworld {
   // This should only be set to true on underworld creation,
   // and should be set to false if any adminCommands are used
   allowAchievements: boolean = true;
-  // Since globalStats should generally be saved alongside their respective Underworld
-  globalStatsForSerialization: GameStatistics.IGlobalStats = GameStatistics.globalStats;
-  // Since run/level/spell related stats should be saved alongside their respective Underworld
-  allStatsForSerialization: GameStatistics.IStatistics[] = GameStatistics.allStats;
+  // This reference allows relevant underworldStats to be serialized and loaded alongside Underworld
+  underworldStatsForSerialization: GameStatistics.IGlobalStats = GameStatistics.underworldStats;
+  // This reference allows relevant gameStats to be serialized and loaded alongside Underworld
+  gameStatsForSerialization: GameStatistics.IStatistics[] = GameStatistics.gameStats;
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
@@ -266,7 +266,7 @@ export default class Underworld {
     this.overworld.underworld = this;
     this.localUnderworldNumber = ++localUnderworldCount;
     // We should clear run statistics since we are creating a new underworld
-    GameStatistics.clearAllStatsAtDepth(GameStatistics.StatDepth.RUN);
+    GameStatistics.clearGameStatsAtDepth(GameStatistics.StatDepth.RUN);
     GameStatistics.trackGameStart();
     // Clear inventory html from previous game
     CardUI.resetInventoryContent();
@@ -863,8 +863,8 @@ export default class Underworld {
 
     const deltaTime = timestamp - lastTime;
     lastTime = timestamp;
-    if (GameStatistics.globalStats.runEndTime == undefined) {
-      GameStatistics.globalStats.gameTimeElapsed += deltaTime;
+    if (GameStatistics.underworldStats.runEndTime == undefined) {
+      GameStatistics.underworldStats.gameTimeElapsed += deltaTime;
     }
     const { zoom } = getCamera();
 
@@ -2505,7 +2505,7 @@ export default class Underworld {
     // Add stats to modal:
     const elGameOverStats = document.getElementById('game-over-stats');
     if (!globalThis.headless) {
-      const stats = GameStatistics.globalStats;
+      const stats = GameStatistics.underworldStats;
       if (elGameOverStats && stats) {
         elGameOverStats.innerHTML = `
 Got to level ${this.getLevelText()}
