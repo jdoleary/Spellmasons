@@ -253,7 +253,7 @@ export default class Underworld {
   // and should be set to false if any adminCommands are used
   allowAchievements: boolean = true;
   // This reference allows relevant underworldStats to be serialized and loaded alongside Underworld
-  underworldStatsForSerialization: GameStatistics.IGlobalStats = GameStatistics.underworldStats;
+  underworldStatsForSerialization: GameStatistics.IUnderworldStats = GameStatistics.underworldStats;
   // This reference allows relevant gameStats to be serialized and loaded alongside Underworld
   gameStatsForSerialization: GameStatistics.IStatistics[] = GameStatistics.gameStats;
 

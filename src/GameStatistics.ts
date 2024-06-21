@@ -8,8 +8,8 @@ import { LAST_LEVEL_INDEX } from './config';
 //
 
 // Underworld Stats are only stored once, and we don't care "when" they happened
-export const underworldStats: IGlobalStats = EmptyGlobalStatistics();
-export interface IGlobalStats {
+export const underworldStats: IUnderworldStats = EmptyGlobalStatistics();
+export interface IUnderworldStats {
   bestSpell: {
     unitsKilled: number,
     spell: string[]
@@ -23,7 +23,7 @@ export interface IGlobalStats {
   runEndTime: number | undefined,
 }
 // This function can be used to initialize or reset globalStats
-export function EmptyGlobalStatistics(stats?: IGlobalStats): IGlobalStats {
+export function EmptyGlobalStatistics(stats?: IUnderworldStats): IUnderworldStats {
   return Object.assign(stats || {}, {
     bestSpell: { unitsKilled: 0, spell: [] },
     longestSpell: [],
@@ -112,7 +112,7 @@ export function LoadLifetimeStats() {
   }
 }
 
-export function LoadRunStatsToUnderworld(stats: IStatistics[]) {
+export function LoadUnderworldGameStats(stats: IStatistics[]) {
   // Lifetime stats should NOT be overwritten, only stats related to the current underworld
   // I.E. Run/Level/Spell stats
   // This prevents cheesing achievements by loading an empty stats list at the end of the game
