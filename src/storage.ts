@@ -117,6 +117,7 @@ export function getSavedData() {
       console.log('Setup: initializing spellsDiscovered as', globalThis.spellsDiscovered);
       // Update lifetime stats:
       GameStatistics.LoadLifetimeStats();
+      console.log('Setup: Loaded lifetime game stats: ', GameStatistics.allStats[GameStatistics.StatDepth.LIFETIME]);
     });
 }
 

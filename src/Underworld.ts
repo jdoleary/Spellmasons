@@ -266,7 +266,7 @@ export default class Underworld {
     this.overworld.underworld = this;
     this.localUnderworldNumber = ++localUnderworldCount;
     // We should clear run statistics since we are creating a new underworld
-    GameStatistics.clearRunStatistics(this);
+    GameStatistics.clearAllStatsAtDepth(GameStatistics.StatDepth.RUN);
     GameStatistics.trackGameStart();
     // Clear inventory html from previous game
     CardUI.resetInventoryContent();

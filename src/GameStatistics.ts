@@ -77,13 +77,23 @@ function allStatsAtDepth(depth: StatDepth): IStatistics[] {
   return allStats.slice(0, depth + 1);
 }
 
+export function clearAllStatsAtDepth(depth: StatDepth) {
+  LogStats();
+  for (let i = depth; i < allStats.length; i++) {
+    console.log("Clearing stats at depth:", StatDepth[i])
+    EmptyStatistics(allStats[i])
+  }
+}
+
 export function LogStats() {
   console.log("[STATS]", allStats);
-  console.log("[STATS] - LIFETIME", allStats[StatDepth.LIFETIME]);
-  console.log("[STATS] - RUN", allStats[StatDepth.RUN]);
-  console.log("[STATS] - LEVEL", allStats[StatDepth.LEVEL]);
-  console.log("[STATS] - SPELL", allStats[StatDepth.SPELL]);
+  //console.log("[STATS] - LIFETIME", allStats[StatDepth.LIFETIME]);
+  //console.log("[STATS] - RUN", allStats[StatDepth.RUN]);
+  //console.log("[STATS] - LEVEL", allStats[StatDepth.LEVEL]);
+  //console.log("[STATS] - SPELL", allStats[StatDepth.SPELL]);
 }
+
+//
 
 const GAME_STATISTICS_STORAGE_KEY = "Game Statistics - Lifetime";
 export function SaveLifetimeStats() {
@@ -156,7 +166,7 @@ export function trackCastCardsStart(args: trackCastCardsArgs, underworld: Underw
     return;
   }
 
-  clearSpellStatistics();
+  clearAllStatsAtDepth(StatDepth.SPELL);
 
   if (effectState.casterPlayer == globalThis.player) {
     allStatsAtDepth(StatDepth.SPELL).forEach(s => s.cardsCast += effectState.cardIds.length);
@@ -183,7 +193,7 @@ export function trackCastCardsEnd(args: trackCastCardsArgs, underworld: Underwor
   }
 
   Achievements.UnlockEvent_CastCards(underworld);
-  clearSpellStatistics()
+  clearAllStatsAtDepth(StatDepth.SPELL);
 }
 
 interface trackArrowFiredArgs {
@@ -250,7 +260,7 @@ export function trackEndLevel(underworld: Underworld) {
   }
 
   Achievements.UnlockEvent_EndOfLevel(underworld);
-  clearLevelStatistics(underworld);
+  clearAllStatsAtDepth(StatDepth.LEVEL);
 }
 
 export function trackGameStart() {
@@ -261,20 +271,4 @@ export function trackGameEnd() {
   if (!globalStats.runEndTime) {
     globalStats.runEndTime = Date.now();
   }
-}
-
-export function clearSpellStatistics() {
-  console.log("[STATS] - Clear Spell Statistics");
-  LogStats();
-  EmptyStatistics(allStats[StatDepth.SPELL]);
-}
-export function clearLevelStatistics(underworld: Underworld) {
-  console.log("[STATS] - Clear Level Statistics", underworld.levelIndex);
-  LogStats();
-  EmptyStatistics(allStats[StatDepth.LEVEL]);
-}
-export function clearRunStatistics(underworld: Underworld) {
-  console.log("[STATS] - Clear Run Statistics", underworld.levelIndex);
-  LogStats();
-  EmptyStatistics(allStats[StatDepth.RUN]);
 }

@@ -46,7 +46,6 @@ export default function makeOverworld(pie: PieClient | IHostApp): Overworld {
   // card for that monster)
   registerAllMods(overworld);
   Cards.registerCards(overworld);
-  GameStatistics.LogStats();
   Achievements.registerAllAchievements()
 
   addOverworldEventListeners(overworld);
