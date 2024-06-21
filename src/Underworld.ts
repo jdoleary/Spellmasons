@@ -254,6 +254,8 @@ export default class Underworld {
   allowAchievements: boolean = true;
   // Since globalStats should generally be saved alongside their respective Underworld
   globalStatsForSerialization: GameStatistics.IGlobalStats = GameStatistics.globalStats;
+  // Since run/level/spell related stats should be saved alongside their respective Underworld
+  allStatsForSerialization: GameStatistics.IStatistics[] = GameStatistics.allStats;
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
@@ -263,6 +265,8 @@ export default class Underworld {
     this.overworld = overworld;
     this.overworld.underworld = this;
     this.localUnderworldNumber = ++localUnderworldCount;
+    // We should clear run statistics since we are creating a new underworld
+    GameStatistics.clearRunStatistics(this);
     GameStatistics.trackGameStart();
     // Clear inventory html from previous game
     CardUI.resetInventoryContent();

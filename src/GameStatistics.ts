@@ -102,6 +102,16 @@ export function LoadLifetimeStats() {
   }
 }
 
+export function LoadRunStatsToUnderworld(stats: IStatistics[]) {
+  // Lifetime stats should NOT be overwritten, only stats related to the current run
+  if (stats[StatDepth.LIFETIME] && allStats[StatDepth.LIFETIME]) {
+    stats[StatDepth.LIFETIME] = allStats[StatDepth.LIFETIME];
+    Object.assign(allStats, stats);
+  } else {
+    console.error("Something went wrong with loading stats.")
+  }
+}
+
 //
 
 interface trackUnitDamageArgs {
