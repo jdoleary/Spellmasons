@@ -25,6 +25,11 @@ const achievement_CompleteGameNoDamageTaken: IAchievement = {
   description: "Complete the first 12 levels without taking any damage",
   unlocked: false,
 }
+const achievement_CompleteGameSpeedrun: IAchievement = {
+  id: "Speedrunner",
+  description: "Complete the first 12 levels in under 15 minutes",
+  unlocked: false,
+}
 const achievement_AllPartOfThePlan: IAchievement = {
   id: "All Part of the Plan",
   description: "Complete a level in which you died",
@@ -79,6 +84,7 @@ function registerAchievement(achievement: IAchievement) {
 export function registerAllAchievements() {
   registerAchievement(achievement_CompleteTheGame);
   registerAchievement(achievement_CompleteGameNoDamageTaken);
+  registerAchievement(achievement_CompleteGameSpeedrun);
   registerAchievement(achievement_AllPartOfThePlan);
   registerAchievement(achievement_BrinkOfDeath);
   registerAchievement(achievement_ArrowRain);
@@ -139,6 +145,10 @@ export function UnlockEvent_EndOfLevel(underworld: Underworld) {
 
     if (gameStats[StatDepth.RUN] && gameStats[StatDepth.RUN].myPlayerDamageTaken == 0) {
       UnlockAchievement(achievement_CompleteGameNoDamageTaken, underworld);
+    }
+
+    if (GameStatistics.underworldStats.gameTimeElapsed <= 15 * 60000) {
+      UnlockAchievement(achievement_CompleteGameSpeedrun, underworld);
     }
   }
 }
