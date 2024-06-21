@@ -149,7 +149,7 @@ export function mergeUnits(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], under
 
 export function mergePickups(target: Pickup.IPickup, pickupsToMerge: Pickup.IPickup[], underworld: Underworld, prediction: boolean, state?: EffectState) {
   for (const pickup of pickupsToMerge) {
-    Pickup.setPower(target, target.power + pickup.power);
+    Pickup.setPower(target, target.power + pickup.power, underworld);
 
     // Prediction Lines
     if (prediction) {

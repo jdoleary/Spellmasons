@@ -19,7 +19,7 @@ export default function registerImpendingDoom() {
       updateTooltip(unit);
 
       if (!prediction && unit.faction == Faction.ENEMY) {
-        UnlockAchievement(achievement_Doomsayer);
+        UnlockAchievement(achievement_Doomsayer, underworld);
       }
     }
   });

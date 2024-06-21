@@ -43,7 +43,7 @@ const spell: Spell = {
                 });
 
                 if (!prediction && player == globalThis.player && target.unitSourceId == bossmasonUnitId) {
-                  UnlockAchievement(achievement_CaptureDeathmason);
+                  UnlockAchievement(achievement_CaptureDeathmason, underworld);
                 }
               } else {
                 console.error('Cannot capture soul, upgrade not found with title:', newCardId)

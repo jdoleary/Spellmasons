@@ -340,7 +340,7 @@ export function load(pickup: IPickupSerialized, underworld: Underworld, predicti
     // So when you mutate the properties, the ref must stay the same.
     Object.assign(newPickup, toCopy);
     // Restore scale which is set when power is set
-    setPower(newPickup, newPickup.power);
+    setPower(newPickup, newPickup.power, underworld);
     if (!prediction) {
       addText(newPickup);
     }
@@ -704,7 +704,7 @@ export const pickups: IPickupSource[] = [
     },
   },
 ];
-export function setPower(pickup: IPickup, newPower: number) {
+export function setPower(pickup: IPickup, newPower: number, underworld: Underworld) {
   if (pickup.image) {
     const newScale = getScaleFromPower(newPower);
 
@@ -713,7 +713,7 @@ export function setPower(pickup: IPickup, newPower: number) {
   }
   pickup.power = newPower;
   if (pickup.predictionCopy != pickup && pickup.power > 1) {
-    UnlockAchievement(achievement_PotionSeller);
+    UnlockAchievement(achievement_PotionSeller, underworld);
   }
 }
 function getScaleFromPower(power: number): number {
