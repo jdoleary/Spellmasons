@@ -1057,8 +1057,10 @@ async function handleLoadGameState(payload: {
   underworld.statCalamities = loadedGameState.statCalamities || [];
   underworld.allowAchievements = loadedGameState.allowAchievements;
   Object.assign(GameStatistics.underworldStats, loadedGameState.underworldStatsForSerialization);
-  // We don't assign directly because a lifetime stats should not be overwritten. See function.
-  GameStatistics.LoadUnderworldGameStats(loadedGameState.gameStatsForSerialization);
+  if (!(underworld.players.length > 1)) {
+    // We don't assign directly because a lifetime stats should not be overwritten. See function.
+    GameStatistics.LoadUnderworldGameStats(loadedGameState.gameStatsForSerialization);
+  }
 
   // simulatingMovePredictions should never be serialized, it is only for a running instance to keep track of if the simulateRunForceMovePredictions is running
   underworld.simulatingMovePredictions = false;
