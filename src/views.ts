@@ -99,6 +99,10 @@ export function setView(v: View) {
       break;
     case View.Game:
       resizePixi();
+      // Start non-theme soundtrack
+      if (playMusicIfNotAlreadyPlaying) {
+        playMusicIfNotAlreadyPlaying();
+      }
       break;
     case View.Disconnected:
       // Intentionally left blank - this view is handled in css

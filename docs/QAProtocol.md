@@ -25,6 +25,8 @@
 - Test that F12 works in electron build
 - Test mod thumbnail paths on electron build
 
+- IMPORTANT Test sound effect volume (default) relative to music
+
 
 # Release protocal
 - QA: 1:44

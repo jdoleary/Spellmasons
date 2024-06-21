@@ -204,6 +204,7 @@ const music = [
   './sound/music/MistakenIdentity.mp3',
   './sound/music/BrokenTrust.mp3',
 ]
+const music_theme = './sound/music/SpellmasonsTheme.mp3';
 
 // Preload all sounds
 Object.values(sfx).forEach(paths => {
@@ -217,12 +218,21 @@ Object.values(sfx).forEach(paths => {
 
 let songIndex = Math.round(Math.random() * music.length - 1);
 let musicInstance: HTMLAudioElement;
+let musicThemeInstance = new Audio(music_theme);
+musicThemeInstance.loop = true;
+musicThemeInstance.pause();
 // Used to ensure music is playing when adjusting audio volume
 export function playMusicIfNotAlreadyPlaying() {
-  if (musicInstance) {
-    musicInstance.play();
+  if (globalThis.view === undefined || globalThis.view == View.Menu) {
+    musicInstance?.pause();
+    musicThemeInstance.play();
   } else {
-    playNextSong();
+    musicThemeInstance.pause();
+    if (musicInstance) {
+      musicInstance.play();
+    } else {
+      playNextSong();
+    }
   }
 }
 // Expose to global so storage.ts can call it without importing Audio.ts
