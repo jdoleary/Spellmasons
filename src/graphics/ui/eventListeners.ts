@@ -17,7 +17,8 @@ import {
   updateTooltipSelection,
   updateTooltipSelectionWhileSpawning,
 } from '../PlanningView';
-import { toggleMenu, View } from '../../views';
+import { toggleMenu } from '../../views';
+import { View } from '../../View';
 import * as config from '../../config';
 import { cleanBlood, cameraAutoFollow, getCamera, moveCamera, toggleHUD, setCameraToMapCenter } from '../PixiUtils';
 import { isOutOfRange } from '../../PlayerUtils';

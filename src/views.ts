@@ -19,14 +19,8 @@ import {
 } from './graphics/ui/eventListeners';
 import { sendChatHandler } from './graphics/ui/Chat';
 import { Overworld } from './Overworld';
+import { View } from './View';
 
-// A view is not shared between players in the same game, a player could choose any view at any time
-export enum View {
-  Menu,
-  Setup,
-  Game,
-  Disconnected
-}
 const elUpgradePicker = document.getElementById('upgrade-picker') as HTMLElement;
 let lastNonMenuView: View | undefined;
 export function clearLastNonMenuView() {

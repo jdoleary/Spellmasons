@@ -6,7 +6,7 @@ import type Underworld from '../Underworld';
 import type PieClient from '@websocketpie/client';
 import type { Vec2 } from '../jmath/Vec';
 import type { LevelData } from '../Underworld';
-import type { View } from '../views';
+import type { View } from '../View';
 import type { Faction, JEmitter, Mod } from './commonTypes';
 import type { IPickup } from '../entity/Pickup';
 import type { IHostApp } from '../network/networkUtil';

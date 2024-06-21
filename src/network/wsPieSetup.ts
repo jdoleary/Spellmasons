@@ -11,7 +11,8 @@
 import PieClient, { Room } from '@websocketpie/client';
 import { onData } from './networkHandler';
 import { getVersionInequality, onClientPresenceChanged, typeGuardHostApp } from './networkUtil';
-import { setView, View } from '../views';
+import { setView } from '../views';
+import { View } from '../View';
 import * as storage from '../storage';
 import Underworld from '../Underworld';
 import { version } from '../../package.json';

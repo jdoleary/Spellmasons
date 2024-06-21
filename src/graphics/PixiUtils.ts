@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { clone, equal, getAngleBetweenVec2sYInverted, isInvalid, Vec2 } from '../jmath/Vec';
-import { View } from '../views';
+import { View } from '../View';
 import * as math from '../jmath/math';
 import * as config from '../config';
 import { keyDown } from './ui/eventListeners';

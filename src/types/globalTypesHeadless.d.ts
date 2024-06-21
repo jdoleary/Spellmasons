@@ -5,7 +5,7 @@ import type * as Pickup from '../entity/Pickup';
 import type Underworld from '../Underworld';
 import type PieClient from '@websocketpie/client';
 import type { Vec2 } from '../jmath/Vec';
-import type { View } from '../views';
+import type { View } from '../View';
 import type { IHostApp } from '../network/networkUtil';
 import type { Localizable } from '../localization';
 import type { PromptArgs } from '../graphics/Jprompt';

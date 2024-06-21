@@ -92,7 +92,7 @@ import { MANA_VAMPIRE_ID } from './entity/units/manaVampire';
 import { DARK_PRIEST_ID } from './entity/units/darkPriest';
 import { LAST_LEVEL_INDEX } from './config';
 import { unavailableUntilLevelIndexDifficultyModifier } from './Difficulty';
-import { View } from './views';
+import { View } from './View';
 import { skyBeam } from './VisualEffects';
 import { urn_explosive_id } from './entity/units/urn_explosive';
 import { urn_ice_id } from './entity/units/urn_ice';

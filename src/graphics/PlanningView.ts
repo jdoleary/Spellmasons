@@ -21,7 +21,7 @@ import { allCards } from '../cards';
 import { keyDown } from './ui/eventListeners';
 import { inPortal } from '../entity/Player';
 import { getPerkText } from '../Perk';
-import { View } from '../views';
+import { View } from '../View';
 import { gripthulu_id } from '../entity/units/gripthulu';
 import { getSuffocateBuildup, suffocateCardId } from '../cards/suffocate';
 import * as Cards from '../cards';

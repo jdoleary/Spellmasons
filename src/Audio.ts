@@ -3,6 +3,7 @@ import * as storage from "./storage";
 import throttle from 'lodash.throttle';
 import { chooseOneOf } from "./jmath/rand";
 import { lerp } from "./jmath/math";
+import { View } from "./View";
 
 export const sfx: { [key: string]: string[] } = {
   arrow: ['./sound/sfx/arrow.mp3'],
