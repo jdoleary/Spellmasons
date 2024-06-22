@@ -1,5 +1,6 @@
 import { addTarget, getCurrentTargets, refundLastSpell, Spell } from './index';
 import * as Unit from '../entity/Unit';
+import * as Pickup from '../entity/Pickup';
 import { CardCategory, UnitSubType, UnitType } from '../types/commonTypes';
 import { Vec2 } from '../jmath/Vec';
 import { returnToDefaultSprite } from '../entity/Unit';
@@ -10,6 +11,7 @@ import { getOrInitModifier } from './util';
 import { isPickup } from '../entity/Pickup';
 import { suffocateCardId, updateSuffocate } from './suffocate';
 import { addScaleModifier, removeScaleModifier } from '../graphics/Image';
+import floatingText from '../graphics/FloatingText';
 
 export const splitId = 'split';
 const splitLimit = 3;
@@ -90,8 +92,6 @@ const spell: Spell = {
       targets = targets
         // filter out targets that have reached the split limit
         .filter(x => !(Unit.isUnit(x) && x.modifiers[splitId] && x.modifiers[splitId].quantity >= splitLimit))
-        // filter out pickups (not implemented)
-        .filter(x => !(isPickup(x)));
 
       if (targets.length == 0) {
         refundLastSpell(state, prediction, 'No target, mana refunded')
@@ -131,7 +131,7 @@ const spell: Spell = {
   }
 };
 export default spell;
-export function doSplit(target: Vec2 | undefined, underworld: Underworld, quantity: number, prediction: boolean) {
+export function doSplit(target: Vec2 | undefined, underworld: Underworld, quantity: number, prediction: boolean): Unit.IUnit | Pickup.IPickup | undefined {
   if (target) {
     // If there is are clone coordinates to clone into
     if (Unit.isUnit(target)) {
@@ -167,21 +167,23 @@ export function doSplit(target: Vec2 | undefined, underworld: Underworld, quanti
         Unit.addModifier(clone, splitId, underworld, prediction, quantity);
         return clone;
       }
+    } else if (Pickup.isPickup(target)) {
+      const validSpawnCoords = underworld.findValidSpawn({ spawnSource: target, ringLimit: 5, prediction, radius: 20 })
+      if (validSpawnCoords) {
+        // Since there is a safety for loading/creating pickups of duplicate id's
+        const serializedPickup = Pickup.serialize(target);
+        serializedPickup.id = ++underworld.lastPickupId;
+        const clone = Pickup.load(serializedPickup, underworld, prediction);
+        if (clone) {
+          Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
+          Pickup.setPower(target, target.power * splitStatMultiplier);
+          Pickup.setPower(clone, clone.power * splitStatMultiplier);
+          return clone;
+        }
+      } else {
+        floatingText({ coords: target, text: 'No space to clone into!' });
+      }
     }
-    // TODO: Make split for for doodads and pickups
-    // if (Pickup.isPickup(target)) {
-    //   const validSpawnCoords = underworld.findValidSpawn({spawnSource:cloneSourceCoords, ringLimit: 5, prediction, radius:20})
-    //   if (validSpawnCoords) {
-    //     const clone = Pickup.load(Pickup.serialize(target), underworld, prediction);
-    //     if (clone) {
-    //       Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
-    //     }
-    //     // Add the clone as a target
-    //     addTarget(clone, state);
-    //   } else {
-    //     floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
-    //   }
-    // }
   }
   return undefined;
 

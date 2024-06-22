@@ -94,8 +94,7 @@ export function cloneEffect(addClonesToTargetArray: boolean): EffectFn {
                   addTarget(clone, state, underworld, prediction);
                 }
               }
-            }
-            if (Pickup.isPickup(target)) {
+            } else if (Pickup.isPickup(target)) {
               const targetName = target.name;
               const validSpawnCoords = underworld.findValidSpawn({ spawnSource: cloneSourceCoords, ringLimit: 5, prediction, radius: 15 })
               if (validSpawnCoords) {
@@ -104,9 +103,9 @@ export function cloneEffect(addClonesToTargetArray: boolean): EffectFn {
                   const clone = Pickup.create({ pos: target, pickupSource: foundPickup, logSource: 'Clone' }, underworld, prediction);
                   if (clone) {
                     Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
+                    // Add clones to target list
+                    addTarget(clone, state, underworld, prediction);
                   }
-                  // Add clones to target list
-                  addTarget(clone, state, underworld, prediction);
                 } else {
                   console.log('Pickup', target);
                   console.error('Could not clone pickup because source could not be found');
