@@ -300,17 +300,17 @@ export default class Underworld {
       console.log('HUD-hidden: Skipping dropping scroll pickup')
       return;
     }
-    const numberOfEnemiesKilledNeededForNextDrop = this.getNumberOfEnemyKillsNeededForNextLevelUp();
-    if (numberOfEnemiesKilledNeededForNextDrop <= this.enemiesKilled) {
-      // Stop dropping cards if players have enough scrolls have been dropped to cover all cards that can be picked
-      if (Object.values(Cards.allCards).filter(c => c.probability > 0).length > this.cardDropsDropped) {
-        console.log('Give players new card');
-        this.cardDropsDropped++;
-        // Give EVERY player an upgrade when any one player picks up a scroll
-        this.players.forEach(p => Pickup.givePlayerUpgrade(p, this));
-      } else {
-        console.log('No more cards to drop');
-      }
+
+    // We use a while loop in case the player has earned enough exp to level up multiple times
+    // Loop counter will prevent an infinite loop in the case of extreme/bugged exp values
+    let loopCounter = 0;
+    let numberOfEnemiesKilledNeededForNextDrop = this.getNumberOfEnemyKillsNeededForNextLevelUp();
+    while (numberOfEnemiesKilledNeededForNextDrop <= this.enemiesKilled && loopCounter < 50) {
+      console.log(`Level Up! Level ${this.cardDropsDropped + 1}\n${this.enemiesKilled} / ${numberOfEnemiesKilledNeededForNextDrop} EXP`);
+      this.cardDropsDropped++;
+      this.players.forEach(p => Pickup.givePlayerUpgrade(p, this));
+      numberOfEnemiesKilledNeededForNextDrop = this.getNumberOfEnemyKillsNeededForNextLevelUp();
+      loopCounter++;
     }
   }
   syncPlayerPredictionUnitOnly() {
