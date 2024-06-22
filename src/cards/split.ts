@@ -32,7 +32,7 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
     unit.staminaMax = Math.floor(unit.staminaMax * inverseMult);
     unit.stamina = Math.floor(unit.stamina * inverseMult);
     unit.damage = Math.floor(unit.damage * inverseMult);
-    unit.moveSpeed = Math.floor(unit.moveSpeed * inverseMult);
+    unit.moveSpeed *= inverseMult;
   }
 
   removeScaleModifier(unit.image, splitId, unit.strength);
@@ -62,7 +62,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     unit.staminaMax = Math.floor(unit.staminaMax * splitStatMultiplier);
     unit.stamina = Math.floor(unit.stamina * splitStatMultiplier);
     unit.damage = Math.floor(unit.damage * splitStatMultiplier);
-    unit.moveSpeed = Math.floor(unit.moveSpeed * splitStatMultiplier);
+    unit.moveSpeed *= splitStatMultiplier;
   }
 
   addScaleModifier(unit.image, { x: Math.pow(scaleMultiplier, modifier.quantity), y: Math.pow(scaleMultiplier, modifier.quantity), id: splitId }, unit.strength)
