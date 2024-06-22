@@ -1,5 +1,6 @@
 import { addTarget, getCurrentTargets, refundLastSpell, Spell } from './index';
 import * as Unit from '../entity/Unit';
+import * as Pickup from '../entity/Pickup';
 import { CardCategory, UnitSubType, UnitType } from '../types/commonTypes';
 import { Vec2 } from '../jmath/Vec';
 import { returnToDefaultSprite } from '../entity/Unit';
@@ -10,15 +11,16 @@ import { getOrInitModifier } from './util';
 import { isPickup } from '../entity/Pickup';
 import { suffocateCardId, updateSuffocate } from './suffocate';
 import { addScaleModifier, removeScaleModifier } from '../graphics/Image';
+import floatingText from '../graphics/FloatingText';
 
-const id = 'split';
+const splitCardId = 'split';
 const splitLimit = 3;
 const splitStatMultiplier = 0.5;
 const scaleMultiplier = 0.75;
 function remove(unit: Unit.IUnit, underworld: Underworld) {
-  const modifier = unit.modifiers[id];
+  const modifier = unit.modifiers[splitCardId];
   if (!modifier) {
-    console.error(`Missing modifier object for ${id}; cannot remove.  This should never happen`);
+    console.error(`Missing modifier object for ${splitCardId}; cannot remove.  This should never happen`);
     return;
   }
 
@@ -35,14 +37,14 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
     unit.moveSpeed *= inverseMult;
   }
 
-  removeScaleModifier(unit.image, id, unit.strength);
+  removeScaleModifier(unit.image, splitCardId, unit.strength);
 
   if (unit.modifiers[suffocateCardId]) {
     updateSuffocate(unit, underworld, false);
   }
 }
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
-  const modifier = getOrInitModifier(unit, id, { isCurse: true, quantity, keepOnDeath: true }, () => {
+  const modifier = getOrInitModifier(unit, splitCardId, { isCurse: true, quantity, keepOnDeath: true }, () => {
     // no first time setup
   });
 
@@ -64,7 +66,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     unit.moveSpeed *= splitStatMultiplier;
   }
 
-  addScaleModifier(unit.image, { x: Math.pow(scaleMultiplier, modifier.quantity), y: Math.pow(scaleMultiplier, modifier.quantity), id }, unit.strength)
+  addScaleModifier(unit.image, { x: Math.pow(scaleMultiplier, modifier.quantity), y: Math.pow(scaleMultiplier, modifier.quantity), id: splitCardId }, unit.strength)
 
   if (unit.modifiers[suffocateCardId]) {
     updateSuffocate(unit, underworld, prediction);
@@ -72,7 +74,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
 }
 const spell: Spell = {
   card: {
-    id,
+    id: splitCardId,
     category: CardCategory.Curses,
     manaCost: 80,
     healthCost: 0,
@@ -88,9 +90,7 @@ const spell: Spell = {
       targets = targets.length ? targets : [state.castLocation];
       targets = targets
         // filter out targets that have reached the split limit
-        .filter(x => !(Unit.isUnit(x) && x.modifiers[id] && x.modifiers[id].quantity >= splitLimit))
-        // filter out pickups (not implemented)
-        .filter(x => !(isPickup(x)));
+        .filter(x => !(Unit.isUnit(x) && x.modifiers[splitCardId] && x.modifiers[splitCardId].quantity >= splitLimit));
 
       if (targets.length == 0) {
         refundLastSpell(state, prediction, 'No target, mana refunded')
@@ -148,24 +148,27 @@ const spell: Spell = {
                 addTarget(clone, state, underworld);
 
                 // Add the curse to both the target and the clone
-                Unit.addModifier(target, id, underworld, prediction, quantity);
-                Unit.addModifier(clone, id, underworld, prediction, quantity);
+                Unit.addModifier(target, splitCardId, underworld, prediction, quantity);
+                Unit.addModifier(clone, splitCardId, underworld, prediction, quantity);
+              }
+            } else if (Pickup.isPickup(target)) {
+              const validSpawnCoords = underworld.findValidSpawn({ spawnSource: cloneSourceCoords, ringLimit: 5, prediction, radius: 20 })
+              if (validSpawnCoords) {
+                // Since there is a safety for loading/creating pickups of duplicate id's
+                const serializedPickup = Pickup.serialize(target);
+                serializedPickup.id = ++underworld.lastPickupId;
+                const clone = Pickup.load(serializedPickup, underworld, prediction);
+                if (clone) {
+                  Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
+                  // Add the clone as a target
+                  addTarget(clone, state, underworld);
+                  Pickup.setPower(target, target.power * splitStatMultiplier);
+                  Pickup.setPower(clone, clone.power * splitStatMultiplier);
+                }
+              } else {
+                floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
               }
             }
-            // TODO: Make split for for doodads and pickups
-            // if (Pickup.isPickup(target)) {
-            //   const validSpawnCoords = underworld.findValidSpawn({spawnSource:cloneSourceCoords, ringLimit: 5, prediction, radius:20})
-            //   if (validSpawnCoords) {
-            //     const clone = Pickup.load(Pickup.serialize(target), underworld, prediction);
-            //     if (clone) {
-            //       Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
-            //     }
-            //     // Add the clone as a target
-            //     addTarget(clone, state);
-            //   } else {
-            //     floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
-            //   }
-            // }
           }
         }
       }
