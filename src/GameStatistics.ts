@@ -56,7 +56,6 @@ export interface IStatistics {
   myPlayerDamageTaken: number;
   myPlayerDeaths: number;
   cardsCast: number;
-  myPlayerArrowsFired: number;
 }
 // This function can be used to initialize or reset a statistics object
 export function EmptyStatistics(stats?: IStatistics): IStatistics {
@@ -65,7 +64,6 @@ export function EmptyStatistics(stats?: IStatistics): IStatistics {
     myPlayerDamageTaken: 0,
     myPlayerDeaths: 0,
     cardsCast: 0,
-    myPlayerArrowsFired: 0,
   })
 }
 
@@ -192,22 +190,12 @@ export function trackCastCardsEnd(args: trackCastCardsArgs, underworld: Underwor
     }
   }
 
+  if (effectState.aggregator.arrowsFired >= 100) {
+    Achievements.UnlockAchievement(Achievements.achievement_ArrowRain, underworld);
+  }
+
   Achievements.UnlockEvent_CastCards(underworld);
   clearGameStatsAtDepth(StatDepth.SPELL);
-}
-
-interface trackArrowFiredArgs {
-  sourceUnit: Unit.IUnit,
-}
-export function trackArrowFired(args: trackArrowFiredArgs, underworld: Underworld, prediction: boolean) {
-  let { sourceUnit } = args;
-  if (prediction) {
-    return;
-  }
-
-  if (sourceUnit == globalThis.player?.unit) {
-    gameStatsAtDepth(StatDepth.SPELL).forEach(s => s.myPlayerArrowsFired += 1);
-  }
 }
 
 export function trackEndLevel(underworld: Underworld) {

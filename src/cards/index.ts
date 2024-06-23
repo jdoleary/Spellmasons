@@ -438,6 +438,8 @@ export interface EffectState {
   // between card effects.
   aggregator: {
     radiusBoost: number;
+    // Tracked for achievement purposes
+    arrowsFired: number;
   };
   // initialTargetedUnitId and initialTargetedPickupId:
   // Used to ensure the castCards targets the right starting

@@ -40,7 +40,7 @@ const achievement_BrinkOfDeath: IAchievement = {
   description: "Complete a level with less than 10 health remaining",
   unlocked: false,
 }
-const achievement_ArrowRain: IAchievement = {
+export const achievement_ArrowRain: IAchievement = {
   id: "Arrow Rain",
   description: "Shoot 100 or more arrows with one spell",
   unlocked: false,
@@ -111,7 +111,7 @@ export function UnlockAchievement(achievement: IAchievement, underworld: Underwo
   }
 
   // TODO - Achievements and stats have not been made multiplayer-compatible,
-  // so achievements will be unobtainable and statistics will be incorrect until then
+  // so achievements will be unobtainable and statistics may be incorrect until then
   // https://github.com/jdoleary/Spellmasons/pull/808
   if (underworld && (!underworld.allowAchievements || underworld.players.length > 1)) {
     console.log("[ACHIEVEMENT] - Disabled", achievement.id, achievement);
@@ -128,9 +128,7 @@ export function UnlockAchievement(achievement: IAchievement, underworld: Underwo
 
 export function UnlockEvent_CastCards(underworld: Underworld) {
   if (gameStats[StatDepth.SPELL]) {
-    if (gameStats[StatDepth.SPELL].myPlayerArrowsFired >= 100) {
-      UnlockAchievement(achievement_ArrowRain, underworld);
-    }
+    //
   }
 }
 
