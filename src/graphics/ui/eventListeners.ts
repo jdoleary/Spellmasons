@@ -1878,6 +1878,7 @@ export function triggerAdminOption(option: AdminContextMenuOption, overworld: Ov
   if (overworld.underworld) {
     // Disable achievements if any admin commands are used
     overworld.underworld.allowAchievements = false;
+    console.log("ADMIN MODE: ACHIEVEMENTS DISABLED");
   }
 
   if (supportInMultiplayer) {
