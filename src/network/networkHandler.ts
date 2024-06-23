@@ -1057,7 +1057,7 @@ async function handleLoadGameState(payload: {
   underworld.statCalamities = loadedGameState.statCalamities || [];
   underworld.allowAchievements = loadedGameState.allowAchievements;
   Object.assign(GameStatistics.underworldStats, loadedGameState.underworldStatsForSerialization);
-  if (!(underworld.players.length > 1)) {
+  if (underworld.players.length == 1) {
     // We don't assign directly because a lifetime stats should not be overwritten. See function.
     GameStatistics.LoadUnderworldGameStats(loadedGameState.gameStatsForSerialization);
   }
