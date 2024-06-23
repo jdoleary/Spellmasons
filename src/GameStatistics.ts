@@ -57,7 +57,6 @@ export interface IStatistics {
   myPlayerDeaths: number;
   cardsCast: number;
   myPlayerArrowsFired: number;
-  myPlayerCursesPurified: number;
 }
 // This function can be used to initialize or reset a statistics object
 export function EmptyStatistics(stats?: IStatistics): IStatistics {
@@ -67,7 +66,6 @@ export function EmptyStatistics(stats?: IStatistics): IStatistics {
     myPlayerDeaths: 0,
     cardsCast: 0,
     myPlayerArrowsFired: 0,
-    myPlayerCursesPurified: 0,
   })
 }
 
@@ -209,21 +207,6 @@ export function trackArrowFired(args: trackArrowFiredArgs, underworld: Underworl
 
   if (sourceUnit == globalThis.player?.unit) {
     gameStatsAtDepth(StatDepth.SPELL).forEach(s => s.myPlayerArrowsFired += 1);
-  }
-}
-
-interface trackCursePurifiedArgs {
-  unit: Unit.IUnit,
-  sourceUnit: Unit.IUnit,
-}
-export function trackCursePurified(args: trackCursePurifiedArgs, underworld: Underworld, prediction: boolean) {
-  let { unit, sourceUnit } = args;
-  if (prediction) {
-    return;
-  }
-
-  if (sourceUnit == globalThis.player?.unit) {
-    gameStatsAtDepth(StatDepth.SPELL).forEach(s => s.myPlayerCursesPurified += 1);
   }
 }
 

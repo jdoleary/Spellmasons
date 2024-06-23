@@ -42,17 +42,15 @@ const spell: Spell = {
   },
 };
 export function apply(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, sourceUnit: Unit.IUnit) {
-  let cursesRemoved = 0;
+  // If the player purifies 5 or more curses from a single unit at once, unlock achievement
+  if (!prediction && sourceUnit == globalThis.player?.unit && Object.entries(unit.modifiers).filter(m => m[1].isCurse).length >= 5) {
+    UnlockAchievement(achievement_MiracleWorker, underworld);
+  }
+
   for (let [modifier, modifierProperties] of Object.entries(unit.modifiers)) {
     if (modifierProperties.isCurse) {
       Unit.removeModifier(unit, modifier, underworld);
-      cursesRemoved += 1;
-      GameStatistics.trackCursePurified({ unit, sourceUnit }, underworld, prediction);
     }
-  }
-
-  if (!prediction && sourceUnit == globalThis.player?.unit && cursesRemoved >= 5) {
-    UnlockAchievement(achievement_MiracleWorker, underworld);
   }
 }
 export default spell;
