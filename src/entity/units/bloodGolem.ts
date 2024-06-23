@@ -40,7 +40,7 @@ const unit: UnitSource = {
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     if (unit.image && unit.image.sprite && unit.image.sprite.filters) {
-      unit.image.sprite.filters.push(
+      unit.image.sprite.filters.unshift(
         new MultiColorReplaceFilter(
           [
             [0x7c5353, 0x53667c], //skinMedium

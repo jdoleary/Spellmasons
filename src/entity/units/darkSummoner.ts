@@ -44,7 +44,7 @@ const unit: UnitSource = {
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     if (unit.image && unit.image.sprite && unit.image.sprite.filters) {
-      unit.image.sprite.filters.push(
+      unit.image.sprite.filters.unshift(
         new MultiColorReplaceFilter(
           [
             [0x5b3357, 0x222222], // dark robes

@@ -210,6 +210,10 @@ export function create(
       predictedNextTurnDamage: 0
     }, sourceUnitProps);
 
+    if (unit.image && !unit.image.sprite.filters) {
+      unit.image.sprite.filters = [];
+    }
+
 
     // Since unit stats can be overridden with sourceUnitProps
     // Ensure that the unit starts will full mana and health
@@ -245,11 +249,15 @@ export function create(
       makeMiniboss(unit);
     }
 
-    setupShaders(unit);
     if (sourceUnit.init) {
       // Initialize unit IF unit contains initialization function
       sourceUnit.init(unit, underworld);
     }
+    // Add on damage filter AFTER init.
+    // init filters must come first so that
+    // multi-color-replace filter is adjusting the original pixel colors
+    // https://github.com/jdoleary/Spellmasons/issues/695
+    addOnDamageFilter(unit);
 
     // Ensure all change factions logic applies when a unit is first created
     changeFaction(unit, faction);
@@ -359,12 +367,16 @@ export function adjustUnitDifficulty(unit: IUnit, difficulty: number) {
     console.error('missing unit source');
   }
 }
-function setupShaders(unit: IUnit) {
+function addOnDamageFilter(unit: IUnit) {
   if (unit.image) {
-    const all_red = makeAllRedShader();
-    if (all_red) {
-      unit.shaderUniforms.all_red = all_red.uniforms;
-      unit.image.sprite.filters = [all_red.filter];
+    if (unit.image.sprite.filters) {
+      const all_red = makeAllRedShader();
+      if (all_red) {
+        unit.shaderUniforms.all_red = all_red.uniforms;
+        unit.image.sprite.filters.push(all_red.filter);
+      }
+    } else {
+      console.error('Cannot add all_red filter')
     }
   }
 }
@@ -509,11 +521,20 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
       console.warn('No init for modifier with key', key)
     }
   }
-  setupShaders(loadedunit);
+  // Init filters array so that the filters can be re-added
+  // below
+  if (loadedunit.image && !loadedunit.image.sprite.filters) {
+    loadedunit.image.sprite.filters = []
+  }
   if (sourceUnit && sourceUnit.init) {
     // Initialize unit IF unit contains initialization function
     sourceUnit.init(loadedunit, underworld);
   }
+  // Must come after init.
+  // init filters must come first so that
+  // multi-color-replace filter is adjusting the original pixel colors
+  // https://github.com/jdoleary/Spellmasons/issues/695
+  addOnDamageFilter(loadedunit);
   // Headless server doesn't need to keep track of shader uniforms
   if (!globalThis.headless) {
     // Load in shader uniforms by ONLY setting the uniforms that are saved

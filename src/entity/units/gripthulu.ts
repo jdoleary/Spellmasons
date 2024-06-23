@@ -46,7 +46,7 @@ const unit: UnitSource = {
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     if (unit.image && unit.image.sprite && unit.image.sprite.filters) {
-      unit.image.sprite.filters.push(
+      unit.image.sprite.filters.unshift(
         new MultiColorReplaceFilter(
           [
             [0x859784, 0x6e868a], // cloak top

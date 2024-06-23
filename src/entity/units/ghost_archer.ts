@@ -46,7 +46,7 @@ const unit: UnitSource = {
     if (unit.image && unit.image.sprite && unit.image.sprite.filters) {
       // Ghost unit is slightly transparent
       unit.image.sprite.alpha = 0.8;
-      unit.image.sprite.filters.push(
+      unit.image.sprite.filters.unshift(
         new MultiColorReplaceFilter(
           [
             [0x866262, 0x569769], //skinLight

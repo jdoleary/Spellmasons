@@ -51,7 +51,7 @@ const unit: UnitSource = {
       unit.image.sprite.anchor.y = 0.3;
     }
     if (unit.image && unit.image.sprite && unit.image.sprite.filters) {
-      unit.image.sprite.filters.push(
+      unit.image.sprite.filters.unshift(
         new MultiColorReplaceFilter(
           greenGlopColorReplaceColors,
           0.05

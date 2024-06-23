@@ -46,7 +46,7 @@ const unit: UnitSource = {
       unit.modifiers[blood_curse.id].keepOnDeath = true;
     }
     if (unit.image && unit.image.sprite && unit.image.sprite.filters) {
-      unit.image.sprite.filters.push(
+      unit.image.sprite.filters.unshift(
         new MultiColorReplaceFilter(
           [
             [0x6896d1, 0xb98553], // skin light
