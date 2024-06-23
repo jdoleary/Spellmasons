@@ -26,6 +26,8 @@
 - Test mod thumbnail paths on electron build
 
 - IMPORTANT Test sound effect volume (default) relative to music
+- TODO: Update soundtrack with theme
+- TODO: Check volume of all tracks
 
 
 # Release protocal

@@ -218,16 +218,12 @@ Object.values(sfx).forEach(paths => {
 
 let songIndex = Math.round(Math.random() * music.length - 1);
 let musicInstance: HTMLAudioElement;
-let musicThemeInstance = new Audio(music_theme);
-musicThemeInstance.loop = true;
-musicThemeInstance.pause();
 // Used to ensure music is playing when adjusting audio volume
 export function playMusicIfNotAlreadyPlaying() {
-  if (globalThis.view === undefined || globalThis.view == View.Menu) {
-    musicInstance?.pause();
-    musicThemeInstance.play();
+  if (musicInstance && currentSong == music_theme) {
+    // Stop playing theme on loop and go to soundtrack
+    playNextSong();
   } else {
-    musicThemeInstance.pause();
     if (musicInstance) {
       musicInstance.play();
     } else {
@@ -241,6 +237,7 @@ globalThis.playMusicIfNotAlreadyPlaying = playMusicIfNotAlreadyPlaying;
 
 let fadeOutSongPromiseResolver: () => void;
 let fadeOutSongInterval: NodeJS.Timeout;
+let currentSong: string | undefined;
 export async function playNextSong() {
   if (globalThis.headless) {
     return;
@@ -248,8 +245,11 @@ export async function playNextSong() {
   console.log('playNextSong', musicInstance);
   // Loops through songs
   const index = getLoopableIndex(songIndex++, music)
-  const nextSong = music[index];
-  if (!nextSong) {
+  currentSong = music[index];
+  if (globalThis.view === undefined || globalThis.view == View.Menu) {
+    currentSong = music_theme;
+  }
+  if (!currentSong) {
     console.error('No next song at index', index);
     return;
   }
@@ -279,18 +279,19 @@ export async function playNextSong() {
       }, INTERVAL_MILLIS);
     })]);
   } else {
-    console.log('Audio: Create music instance for the first time', nextSong);
-    musicInstance = new Audio(nextSong);
+    console.log('Audio: Create music instance for the first time', currentSong);
+    musicInstance = new Audio(currentSong);
   }
 
   // Clear any previously running intervals to ensure it won't overwrite the volume
   // for the new song which should start at set volume
   clearInterval(fadeOutSongInterval);
-  console.log('Audio: change song to', nextSong);
+  console.log('Audio: change song to', currentSong);
   // Reassign the src of the music instance, this ensures we only have
   // one song playing at a time
-  musicInstance.setAttribute('src', nextSong);
-  musicInstance.loop = false;
+  musicInstance.setAttribute('src', currentSong);
+  // Only loop if the theme is playing, otherwise don't loop
+  musicInstance.loop = currentSong == music_theme;
   musicInstance.addEventListener('ended', playNextSong);
 
   // task: Master all audio and sfx
