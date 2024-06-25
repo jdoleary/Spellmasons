@@ -1576,13 +1576,9 @@ export function drawSelectedGraphics(unit: IUnit, prediction: boolean = false, u
   if (globalThis.headless || prediction || !globalThis.selectedUnitGraphics) return;
 
   for (let drawEvent of unit.events) {
-    if (drawEvent) {
-      const fn = Events.onDrawSelectedSource[drawEvent];
-      if (fn) {
-        fn(unit, underworld, prediction);
-      } else {
-        console.error('No function associated with onDrawSelected event', drawEvent);
-      }
+    const fn = Events.onDrawSelectedSource[drawEvent];
+    if (fn) {
+      fn(unit, underworld, prediction);
     }
   }
 
