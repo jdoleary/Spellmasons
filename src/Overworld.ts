@@ -165,8 +165,7 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
 export function recalculateGameDifficulty(underworld: Underworld) {
   const newDifficulty = calculateGameDifficulty(underworld);
   underworld.units.forEach(unit => {
-    // Adjust npc unit strength when the number of players changes
-    // Do NOT adjust player unit strength
+    // Adjust stats for all non-player units
     if (unit.unitType !== UnitType.PLAYER_CONTROLLED) {
       Unit.adjustUnitDifficulty(unit, newDifficulty);
     }
