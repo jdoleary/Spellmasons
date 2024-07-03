@@ -847,7 +847,8 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
           return;
         }
 
-        if (selfPlayer.unit.modifiers[Freeze.freezeCardId]) {
+        // Check for quantity here because the freeze modifier persists after 0 quantity to grant freeze immunity
+        if (selfPlayer.unit.modifiers[Freeze.freezeCardId] && selfPlayer.unit.modifiers[Freeze.freezeCardId].quantity > 0) {
           floatingText({ coords: selfPlayer.unit, text: 'Cannot Cast. Frozen.' })
           playSFXKey('deny');
           // Cancel Casting
