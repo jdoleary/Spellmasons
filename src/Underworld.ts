@@ -3158,12 +3158,15 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
       switch (player.mageType) {
         case 'Timemason': {
+          // @ts-ignore
           statBumpAmount.manaMax *= 2;
           break;
         }
         case 'Far Gazer': {
+          // @ts-ignore
           statBumpAmount.attackRange *= 2;
-          statBumpAmount.staminaMax = Math.floor(statBumpAmount.staminaMax as number / 2);
+          // @ts-ignore
+          statBumpAmount.staminaMax = Math.floor(statBumpAmount.staminaMax / 2);
           break;
         }
       }
@@ -3176,12 +3179,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         if (stat.endsWith('Max') && player.unit[stat.replace('Max', '')]) {
           // @ts-ignore
           player.unit[stat.replace('Max', '')] += statBump;
-
         }
         if (isCurrentPlayer) {
           // Now that the player unit's properties have changed, sync the new
           // state with the player's predictionUnit so it is properly
-          // refelcted in the bar
+          // reflected in the bar
           // (note: this would be auto corrected on the next mouse move anyway)
           this.syncPlayerPredictionUnitOnly();
           Unit.syncPlayerHealthManaUI(this);
