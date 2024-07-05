@@ -3149,30 +3149,33 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         playSFXKey('levelUp');
       }
 
-      const statBumpAmount: { [key: string]: number } = {
-        'attackRange': 20, //previously 8
-        'manaMax': 5,
-        'healthMax': 20, //previously 8
-        'staminaMax': 20 //previously 10
+      interface IStatBumpAmount {
+        attackRange: number,
+        manaMax: number,
+        healthMax: number,
+        staminaMax: number,
+      }
+      const statBumpAmount: IStatBumpAmount = {
+        attackRange: 20, //previously 8
+        manaMax: 5,
+        healthMax: 20, //previously 8
+        staminaMax: 20 //previously 10
       }
 
       switch (player.mageType) {
         case 'Timemason': {
-          // @ts-ignore
           statBumpAmount.manaMax *= 2;
           break;
         }
         case 'Far Gazer': {
-          // @ts-ignore
           statBumpAmount.attackRange *= 2;
-          // @ts-ignore
           statBumpAmount.staminaMax = Math.floor(statBumpAmount.staminaMax / 2);
           break;
         }
       }
 
-      if (stat && player.unit[stat as keyof Unit.IUnit]) {
-        const statBump = statBumpAmount[stat] || 10;
+      if (stat && statBumpAmount[stat as keyof IStatBumpAmount] && player.unit[stat as keyof Unit.IUnit]) {
+        const statBump = statBumpAmount[stat as keyof IStatBumpAmount] || 10;
         // @ts-ignore
         player.unit[stat as keyof Unit.IUnit] += statBump;
         // @ts-ignore
