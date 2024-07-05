@@ -232,10 +232,11 @@ export function create(
     unit.image?.sprite.scale.set(config.NON_HEAVY_UNIT_SCALE);
     Image.setScaleFromModifiers(unit.image, unit.strength);
 
-    // Note: This must be invoked after initial setting of stat and statMax (health, mana, stamina, etc) so that it can scale
-    // stat relative to maxStat
-    const difficulty = calculateGameDifficulty(underworld);
-    adjustUnitDifficulty(unit, difficulty);
+    // Note: This must be invoked after initial setting of stat and statMax (health, mana, stamina, etc)
+    // so that it can scale stat relative to maxStat
+    // We must also pass in '1' as the old difficulty, since the unit is being created
+    // and thus has not been adjusted by previous difficulty changes
+    adjustUnitDifficulty(unit, 1, underworld.difficulty);
 
     // Apply underworld statCalamities to units
     for (let statCalamity of underworld.statCalamities) {
@@ -321,51 +322,32 @@ export function adjustUnitStatsByUnderworldCalamity(unit: IUnit, statCalamity: S
 }
 interface DifficultyAdjustedUnitStats {
   healthMax: number;
-  manaMax: number;
+  health: number;
 }
-export function adjustUnitPropsDueToDifficulty(source: Partial<UnitSource>, difficulty: number): DifficultyAdjustedUnitStats {
+export function adjustUnitPropsDueToDifficulty(stats: DifficultyAdjustedUnitStats, difficultyRatio: number): DifficultyAdjustedUnitStats {
   const returnStats: DifficultyAdjustedUnitStats = {
-    healthMax: source.unitProps && source.unitProps.healthMax ? source.unitProps.healthMax : config.UNIT_BASE_HEALTH,
-    manaMax: source.unitProps && source.unitProps.manaMax !== undefined ? source.unitProps.manaMax : config.UNIT_BASE_MANA,
+    // Max Health is multiplied by the current difficulty
+    healthMax: stats.healthMax = Math.round(stats.healthMax * difficultyRatio),
+    health: Math.round(stats.health * difficultyRatio),
   };
-  returnStats.healthMax = Math.round(returnStats.healthMax * difficulty);
-  returnStats.manaMax = Math.round(returnStats.manaMax);
   return returnStats;
 }
 
 // sets all the properties that depend on difficulty
-export function adjustUnitDifficulty(unit: IUnit, difficulty: number) {
+export function adjustUnitDifficulty(unit: IUnit, oldDifficulty: number, newDifficulty: number) {
   // Don't let difficulty be 0 which can occur on 0 player multiplayer games
   // which would initialize all units to 0 health
-  if (difficulty == 0) {
-    difficulty = 1;
+  if (oldDifficulty == 0) {
+    oldDifficulty = 1;
   }
-  const source = allUnits[unit.unitSourceId];
-  if (source) {
-    let { healthMax, manaMax } = adjustUnitPropsDueToDifficulty(source, difficulty);
-    // Damage should remain unaffected by difficulty
-    unit.damage = Math.round(source.unitProps.damage !== undefined ? source.unitProps.damage : config.UNIT_BASE_DAMAGE);
-
-    // Maintain Health/Mana Ratios
-    const oldHealthRatio = (unit.health / unit.healthMax) || 0;
-    unit.healthMax = healthMax;
-    unit.health = Math.floor(healthMax * oldHealthRatio);
-    const oldManaRatio = (unit.mana / unit.manaMax) || 0;
-    unit.manaMax = manaMax;
-    unit.mana = Math.floor(manaMax * oldManaRatio);
-
-    // Check for NaN (Can probably remove)
-    if (isNaN(unit.health)) {
-      unit.health = healthMax;
-      console.error('Unit.health is NaN');
-    }
-    if (isNaN(unit.mana)) {
-      unit.mana = manaMax;
-      console.error('Unit.mana is NaN');
-    }
-  } else {
-    console.error('missing unit source');
+  if (newDifficulty == 0) {
+    newDifficulty = 1;
   }
+
+  const newDifficultyRatio = newDifficulty / oldDifficulty;
+
+  const newStats = adjustUnitPropsDueToDifficulty(unit, newDifficultyRatio);
+  Object.assign(unit, newStats);
 }
 function addOnDamageFilter(unit: IUnit) {
   if (unit.image) {
