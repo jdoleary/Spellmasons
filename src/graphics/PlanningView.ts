@@ -889,6 +889,7 @@ ${globalThis.selectedUnit.faction == Faction.ALLY ? '🤝' : '⚔️️'} ${i18n
 🎯 ${globalThis.selectedUnit.attackRange} ${i18n(['attack range'])}` : ''}
 ❤️ ${globalThis.selectedUnit.health}/${globalThis.selectedUnit.healthMax} ${i18n(['health capacity'])}
 🔵 ${globalThis.selectedUnit.mana}/${globalThis.selectedUnit.manaMax} + ${globalThis.selectedUnit.manaPerTurn} ${i18n('Mana')} ${i18n('per turn')}
+👻 ${globalThis.selectedUnit.souls} ${i18n('Souls')}
 ${extraText}
 ${playerSpecificInfo}
       `;
