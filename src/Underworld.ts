@@ -107,8 +107,6 @@ import { slashCardId } from './cards/slash';
 import { pushId } from './cards/push';
 import { test_endCheckPromises, test_startCheckPromises } from './promiseSpy';
 import { targetCursedId } from './cards/target_curse';
-import { splitId } from './cards/split';
-import { soulShardId } from './cards/soul_shard';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -3852,7 +3850,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             const singleCardCost = calculateCostForSingleCard(card, timesUsedSoFar, casterPlayer);
             spellCostTally.manaCost += singleCardCost.manaCost;
             spellCostTally.healthCost += singleCardCost.healthCost;
-            if (card.category == CardCategory.Soul || [splitId, soulShardId].includes(card.id)) {
+            if (card.category == CardCategory.Soul) {
               spellCostTally.souls += 1
             }
           }

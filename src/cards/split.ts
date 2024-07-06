@@ -102,7 +102,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
 const spell: Spell = {
   card: {
     id: splitId,
-    category: CardCategory.Curses,
+    category: CardCategory.Soul,
     manaCost: 80,
     healthCost: 0,
     probability: probabilityMap[CardRarity.FORBIDDEN],

@@ -5,6 +5,7 @@ import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import * as Pickup from '../entity/Pickup';
+import { splitId } from './split';
 
 
 export const purifyCardId = 'purify';
@@ -42,7 +43,7 @@ const spell: Spell = {
 export function apply(unit: Unit.IUnit, underworld: Underworld) {
 
   for (let [modifier, modifierProperties] of Object.entries(unit.modifiers)) {
-    if (modifierProperties.isCurse) {
+    if (modifierProperties.isCurse || [splitId].includes(modifier)) {
       Unit.removeModifier(unit, modifier, underworld);
     }
   }

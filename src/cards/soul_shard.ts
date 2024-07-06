@@ -18,7 +18,7 @@ export const soulShardId = 'Soul Shard';
 const spell: Spell = {
   card: {
     id: soulShardId,
-    category: CardCategory.Curses,
+    category: CardCategory.Soul,
     sfx: 'sacrifice',
     supportQuantity: false,
     manaCost: 60,
