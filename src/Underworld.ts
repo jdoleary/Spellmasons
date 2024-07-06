@@ -46,7 +46,7 @@ import {
   cacheBlood,
 } from './graphics/PixiUtils';
 import floatingText, { queueCenteredFloatingText, warnNoMoreSpellsToChoose } from './graphics/FloatingText';
-import { UnitType, Faction, UnitSubType, GameMode } from './types/commonTypes';
+import { UnitType, Faction, UnitSubType, GameMode, CardCategory } from './types/commonTypes';
 import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
 import Events from './Events';
@@ -107,6 +107,8 @@ import { slashCardId } from './cards/slash';
 import { pushId } from './cards/push';
 import { test_endCheckPromises, test_startCheckPromises } from './promiseSpy';
 import { targetCursedId } from './cards/target_curse';
+import { splitId } from './cards/split';
+import { soulShardId } from './cards/soul_shard';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -3842,18 +3844,23 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // This happens after the spell is cast so that fizzle spells can be refunded
           const spellCostTally = {
             manaCost: 0,
-            healthCost: 0
+            healthCost: 0,
+            souls: 0,
           };
           for (let i = 0; i < quantity; i++) {
             const timesUsedSoFar = (casterCardUsage[card.id] || 0) + (quantity > 1 ? i * card.expenseScaling : i);
             const singleCardCost = calculateCostForSingleCard(card, timesUsedSoFar, casterPlayer);
             spellCostTally.manaCost += singleCardCost.manaCost;
             spellCostTally.healthCost += singleCardCost.healthCost;
+            if (card.category == CardCategory.Soul || [splitId, soulShardId].includes(card.id)) {
+              spellCostTally.souls += 1
+            }
           }
           // Apply mana and health cost to caster
           // Note: it is important that this is done BEFORE a card is actually cast because
           // the card may affect the caster's mana
           effectState.casterUnit.mana -= spellCostTally.manaCost;
+          effectState.casterUnit.souls -= spellCostTally.souls;
 
           // Bandaid: Prevent mana from going negative to hide that mana scamming is possible
           // This is a temporary solution, recent changes that made it possible to use mana gained
@@ -3861,6 +3868,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           // have to do for now
           if (!prediction) {
             effectState.casterUnit.mana = Math.max(0, effectState.casterUnit.mana);
+            effectState.casterUnit.souls = Math.max(0, effectState.casterUnit.souls);
           }
 
           if (spellCostTally.healthCost !== 0) {
