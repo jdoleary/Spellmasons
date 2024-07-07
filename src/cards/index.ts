@@ -142,7 +142,7 @@ export interface Modifiers {
   // see 'poison' for example
   // init is inteded to be called within add.
   // Anything that is not governed by the unit's state should be set in addModifierVisuals
-  addModifierVisuals?: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => void;
+  addModifierVisuals?: (unit: Unit.IUnit, underworld: Underworld) => void;
   add?: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra?: object) => void;
   remove?: (unit: Unit.IUnit, underworld: Underworld) => void;
   description?: string;

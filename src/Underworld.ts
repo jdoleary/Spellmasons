@@ -91,7 +91,7 @@ import { BLOOD_GOLEM_ID } from './entity/units/bloodGolem';
 import { MANA_VAMPIRE_ID } from './entity/units/manaVampire';
 import { DARK_PRIEST_ID } from './entity/units/darkPriest';
 import { LAST_LEVEL_INDEX } from './config';
-import { unavailableUntilLevelIndexDifficultyModifier } from './Difficulty';
+import { calculateGameDifficulty, unavailableUntilLevelIndexDifficultyModifier } from './Difficulty';
 import { View } from './View';
 import { skyBeam } from './VisualEffects';
 import { urn_explosive_id } from './entity/units/urn_explosive';
@@ -144,6 +144,7 @@ let localUnderworldCount = 0;
 export default class Underworld {
   seed: string;
   gameMode?: GameMode;
+  difficulty: number = 1;
   // A simple number to keep track of which underworld this is
   // Used for development to help ensure that all references to the underworld are current
   localUnderworldNumber: number;

@@ -1117,11 +1117,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
             console.error('Cannot spawn unit, underworld does not exist');
             return;
           }
-          overworld.underworld.spawnEnemy(u.id, pos, false);
-          // Orient newly spawned units towards the player
-          if (globalThis.player) {
-            const justSpawnedUnit = overworld.underworld.units[overworld.underworld.units.length - 1];
-            if (justSpawnedUnit) {
+          const justSpawnedUnit = overworld.underworld.spawnEnemy(u.id, pos, false);
+          if (justSpawnedUnit) {
+            // Orient newly spawned units towards the player
+            if (globalThis.player) {
               Unit.orient(justSpawnedUnit, globalThis.player.unit);
             }
           }

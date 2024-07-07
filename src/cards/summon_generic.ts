@@ -136,9 +136,8 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean, 
     let manaMax = unitSource.unitProps.manaMax || 0;
     let manaPerTurn = unitSource.unitProps.manaPerTurn || 0;
     if (difficulty && unitSource) {
-      const adjustedUnitProps = Unit.adjustUnitPropsDueToDifficulty(unitSource, difficulty);
+      const adjustedUnitProps = Unit.adjustUnitPropsDueToDifficulty({ healthMax, health: healthMax }, difficulty);
       healthMax = adjustedUnitProps.healthMax;
-      manaMax = adjustedUnitProps.manaMax;
     }
 
     if (asMiniboss) {

@@ -163,14 +163,17 @@ export function ensureAllClientsHaveAssociatedPlayers(overworld: Overworld, clie
   underworld.tryRestartTurnPhaseLoop();
 }
 export function recalculateGameDifficulty(underworld: Underworld) {
-  const newDifficulty = calculateGameDifficulty(underworld);
-  underworld.units.forEach(unit => {
-    // Adjust npc unit strength when the number of players changes
-    // Do NOT adjust player unit strength
-    if (unit.unitType !== UnitType.PLAYER_CONTROLLED) {
-      Unit.adjustUnitDifficulty(unit, newDifficulty);
-    }
-  });
-  console.log('adjusting game difficulty to ', newDifficulty, ' for ', underworld.players.filter(p => p.clientConnected).length, ' connected players.');
-
+  const oldDifficulty = underworld.difficulty;
+  underworld.difficulty = calculateGameDifficulty(underworld);
+  // The host should be the only one to update unit difficulty, 
+  // otherwise the stat changes will be applied multiple times (once for each connected player)
+  if (globalThis.isHost(underworld.pie)) {
+    underworld.units.forEach(unit => {
+      // Adjust stats for all non-player units
+      if (unit.unitType !== UnitType.PLAYER_CONTROLLED) {
+        Unit.adjustUnitDifficulty(unit, oldDifficulty, underworld.difficulty);
+      }
+    });
+  }
+  console.log('adjusting game difficulty from ', oldDifficulty, ' to ', underworld.difficulty, ' for ', underworld.players.filter(p => p.clientConnected).length, ' connected players.');
 }

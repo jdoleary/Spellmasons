@@ -1,5 +1,6 @@
 import { addTarget, getCurrentTargets, refundLastSpell, Spell } from './index';
 import * as Unit from '../entity/Unit';
+import * as Pickup from '../entity/Pickup';
 import { CardCategory, UnitSubType, UnitType } from '../types/commonTypes';
 import { Vec2 } from '../jmath/Vec';
 import { returnToDefaultSprite } from '../entity/Unit';
@@ -10,71 +11,43 @@ import { getOrInitModifier } from './util';
 import { isPickup } from '../entity/Pickup';
 import { suffocateCardId, updateSuffocate } from './suffocate';
 import { addScaleModifier, removeScaleModifier } from '../graphics/Image';
+import floatingText from '../graphics/FloatingText';
 
 export const splitId = 'split';
 const splitLimit = 3;
-export function changeStatWithCap(unit: Unit.IUnit, statKey: 'health' | 'healthMax' | 'mana' | 'manaMax' | 'manaPerTurn' | 'manaCostToCast' | 'stamina' | 'staminaMax' | 'moveSpeed' | 'damage' | 'attackRange', multiplier: number) {
-  if (unit[statKey] && typeof unit[statKey] === 'number') {
-
-    // Do not let stats go below 1
-    // Ensure stats are a whole number
-    const newValue = Math.max(1, Math.floor(unit[statKey] * multiplier));
-    unit[statKey] = newValue;
-  }
-}
-
-const addMultiplier = 0.5;
+const splitStatMultiplier = 0.5;
 const scaleMultiplier = 0.75;
 function remove(unit: Unit.IUnit, underworld: Underworld) {
-  if (!unit.modifiers[splitId]) {
+  const modifier = unit.modifiers[splitId];
+  if (!modifier) {
     console.error(`Missing modifier object for ${splitId}; cannot remove.  This should never happen`);
     return;
   }
-  // Safely restore unit's original properties
-  const { healthMax, manaMax, manaPerTurn, staminaMax, damage, moveSpeed } = unit.modifiers[splitId].originalStats;
-  removeScaleModifier(unit.image, splitId, unit.strength)
-  const healthChange = healthMax / unit.healthMax;
-  unit.health *= healthChange;
-  unit.health = Math.floor(unit.health);
-  unit.healthMax = healthMax;
-  // Prevent unexpected overflow
-  unit.health = Math.min(healthMax, unit.health);
 
-  // || 1 prevents div by 0 since some units don't have mana
-  const manaChange = manaMax / (unit.manaMax || 1);
-  unit.mana *= manaChange;
-  unit.mana = Math.floor(unit.mana);
-  unit.manaMax = manaMax;
-  // Prevent unexpected overflow
-  unit.mana = Math.min(manaMax, unit.mana);
-  unit.manaPerTurn = manaPerTurn;
+  const inverseMult = 1 / splitStatMultiplier;
+  for (let i = 0; i < modifier.quantity; i++) {
+    unit.healthMax = Math.max(1, Math.floor(unit.healthMax * inverseMult));
+    unit.health = Math.max(1, Math.floor(unit.health * inverseMult));
+    // Note: manaMax is not changed or else it would render casters useless
+    unit.mana = Math.floor(unit.mana * inverseMult);
+    unit.manaPerTurn = Math.floor(unit.manaPerTurn * inverseMult);
+    unit.staminaMax = Math.floor(unit.staminaMax * inverseMult);
+    unit.stamina = Math.floor(unit.stamina * inverseMult);
+    unit.damage = Math.floor(unit.damage * inverseMult);
+    unit.moveSpeed *= inverseMult;
+  }
 
-  const staminaChange = staminaMax / unit.staminaMax;
-  unit.stamina *= staminaChange;
-  unit.stamina = Math.floor(unit.stamina);
-  unit.staminaMax = staminaMax;
-  // Prevent unexpected overflow
-  unit.stamina = Math.min(staminaMax, unit.stamina);
+  removeScaleModifier(unit.image, splitId, unit.strength);
 
-  unit.damage = damage;
-  unit.moveSpeed = moveSpeed;
+  if (unit.modifiers[suffocateCardId]) {
+    updateSuffocate(unit, underworld, false);
+  }
 }
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
-  const { healthMax, manaMax, manaPerTurn, staminaMax, damage, moveSpeed } = unit;
-  const modifier = getOrInitModifier(unit, splitId, {
-    isCurse: true,
-    quantity,
-    keepOnDeath: true,
-    originalStats: {
-      healthMax,
-      manaMax,
-      manaPerTurn,
-      staminaMax,
-      damage,
-      moveSpeed
-    }
-  }, () => { }); //no first time setup
 
+  const modifier = getOrInitModifier(unit, splitId, { isCurse: true, quantity, keepOnDeath: true }, () => {
+    // no first time setup
+  });
 
   // modifier.quantity is after the new quantity has been added (due to getOrInitModifier)
   // math to find previous quantity and calc how many times I need to split
@@ -83,16 +56,15 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
   modifier.quantity = Math.min(modifier.quantity, splitLimit);
 
   for (let i = 0; i < timesToSplit; i++) {
-    addScaleModifier(unit.image, { x: scaleMultiplier, y: scaleMultiplier, id: splitId }, unit.strength)
-    changeStatWithCap(unit, 'health', addMultiplier);
-    changeStatWithCap(unit, 'healthMax', addMultiplier);
-    changeStatWithCap(unit, 'mana', addMultiplier);
-    //changeStatWithCap(unit, 'manaMax', addMultiplier);
-    changeStatWithCap(unit, 'manaPerTurn', addMultiplier);
-    changeStatWithCap(unit, 'stamina', addMultiplier);
-    changeStatWithCap(unit, 'staminaMax', addMultiplier);
-    changeStatWithCap(unit, 'damage', addMultiplier);
-    unit.moveSpeed *= addMultiplier;
+    unit.healthMax = Math.max(1, Math.floor(unit.healthMax * splitStatMultiplier));
+    unit.health = Math.max(1, Math.floor(unit.health * splitStatMultiplier));
+    // Note: manaMax is not changed or else it would render casters useless
+    unit.mana = Math.floor(unit.mana * splitStatMultiplier);
+    unit.manaPerTurn = Math.floor(unit.manaPerTurn * splitStatMultiplier);
+    unit.staminaMax = Math.floor(unit.staminaMax * splitStatMultiplier);
+    unit.stamina = Math.floor(unit.stamina * splitStatMultiplier);
+    unit.damage = Math.floor(unit.damage * splitStatMultiplier);
+    unit.moveSpeed *= splitStatMultiplier;
   }
 
   if (unit.modifiers[suffocateCardId]) {
@@ -118,8 +90,6 @@ const spell: Spell = {
       targets = targets
         // filter out targets that have reached the split limit
         .filter(x => !(Unit.isUnit(x) && x.modifiers[splitId] && x.modifiers[splitId].quantity >= splitLimit))
-        // filter out pickups (not implemented)
-        .filter(x => !(isPickup(x)));
 
       if (targets.length == 0) {
         refundLastSpell(state, prediction, 'No target, mana refunded')
@@ -155,11 +125,18 @@ const spell: Spell = {
   },
   modifiers: {
     add,
-    remove
+    remove,
+    addModifierVisuals: (unit: Unit.IUnit, underworld: Underworld) => {
+      const modifier = unit.modifiers[splitId];
+      if (modifier) {
+        addScaleModifier(unit.image, { x: Math.pow(scaleMultiplier, modifier.quantity), y: Math.pow(scaleMultiplier, modifier.quantity), id: splitId }, unit.strength);
+      }
+
+    }
   }
 };
 export default spell;
-export function doSplit(target: Vec2 | undefined, underworld: Underworld, quantity: number, prediction: boolean) {
+export function doSplit(target: Vec2 | undefined, underworld: Underworld, quantity: number, prediction: boolean): Unit.IUnit | Pickup.IPickup | undefined {
   if (target) {
     // If there is are clone coordinates to clone into
     if (Unit.isUnit(target)) {
@@ -195,21 +172,23 @@ export function doSplit(target: Vec2 | undefined, underworld: Underworld, quanti
         Unit.addModifier(clone, splitId, underworld, prediction, quantity);
         return clone;
       }
+    } else if (Pickup.isPickup(target)) {
+      const validSpawnCoords = underworld.findValidSpawn({ spawnSource: target, ringLimit: 5, prediction, radius: 20 })
+      if (validSpawnCoords) {
+        // Since there is a safety for loading/creating pickups of duplicate id's
+        const serializedPickup = Pickup.serialize(target);
+        serializedPickup.id = ++underworld.lastPickupId;
+        const clone = Pickup.load(serializedPickup, underworld, prediction);
+        if (clone) {
+          Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
+          Pickup.setPower(target, target.power * splitStatMultiplier);
+          Pickup.setPower(clone, clone.power * splitStatMultiplier);
+          return clone;
+        }
+      } else {
+        floatingText({ coords: target, text: 'No space to clone into!' });
+      }
     }
-    // TODO: Make split for for doodads and pickups
-    // if (Pickup.isPickup(target)) {
-    //   const validSpawnCoords = underworld.findValidSpawn({spawnSource:cloneSourceCoords, ringLimit: 5, prediction, radius:20})
-    //   if (validSpawnCoords) {
-    //     const clone = Pickup.load(Pickup.serialize(target), underworld, prediction);
-    //     if (clone) {
-    //       Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
-    //     }
-    //     // Add the clone as a target
-    //     addTarget(clone, state);
-    //   } else {
-    //     floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
-    //   }
-    // }
   }
   return undefined;
 
