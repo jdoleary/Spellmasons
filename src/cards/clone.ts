@@ -103,6 +103,7 @@ export function cloneEffect(addClonesToTargetArray: boolean): EffectFn {
                   const clone = Pickup.create({ pos: target, pickupSource: foundPickup, logSource: 'Clone' }, underworld, prediction);
                   if (clone) {
                     Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
+                    Pickup.setPower(clone, target.power);
                     // Add clones to target list
                     addTarget(clone, state, underworld, prediction);
                   }
