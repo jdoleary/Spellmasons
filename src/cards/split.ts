@@ -28,7 +28,7 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
   for (let i = 0; i < modifier.quantity; i++) {
     unit.healthMax = Math.max(1, Math.floor(unit.healthMax * inverseMult));
     unit.health = Math.max(1, Math.floor(unit.health * inverseMult));
-    //unit.manaMax = Math.floor(unit.manaMax * inverseMult);
+    // Note: manaMax is not changed or else it would render casters useless
     unit.mana = Math.floor(unit.mana * inverseMult);
     unit.manaPerTurn = Math.floor(unit.manaPerTurn * inverseMult);
     unit.staminaMax = Math.floor(unit.staminaMax * inverseMult);
@@ -58,7 +58,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
   for (let i = 0; i < timesToSplit; i++) {
     unit.healthMax = Math.max(1, Math.floor(unit.healthMax * splitStatMultiplier));
     unit.health = Math.max(1, Math.floor(unit.health * splitStatMultiplier));
-    //unit.manaMax = Math.floor(unit.manaMax * splitStatMultiplier);
+    // Note: manaMax is not changed or else it would render casters useless
     unit.mana = Math.floor(unit.mana * splitStatMultiplier);
     unit.manaPerTurn = Math.floor(unit.manaPerTurn * splitStatMultiplier);
     unit.staminaMax = Math.floor(unit.staminaMax * splitStatMultiplier);
