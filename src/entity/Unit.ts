@@ -490,7 +490,7 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
         : Image.create({ x: unit.x, y: unit.y }, unit.defaultImagePath, containerUnits),
   };
 
-  if (loadedunit.id > underworld.lastUnitId) {
+  if (!prediction && loadedunit.id > underworld.lastUnitId) {
     underworld.lastUnitId = loadedunit.id;
   }
   for (let key of Object.keys(loadedunit.modifiers)) {
