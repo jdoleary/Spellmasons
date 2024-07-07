@@ -3149,13 +3149,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         playSFXKey('levelUp');
       }
 
-      interface IStatBumpAmount {
-        attackRange: number,
-        manaMax: number,
-        healthMax: number,
-        staminaMax: number,
-      }
-      const statBumpAmount: IStatBumpAmount = {
+      const statBumpAmount: Pick<Unit.IUnit, "attackRange" | "manaMax" | "healthMax" | "staminaMax"> = {
         attackRange: 20, //previously 8
         manaMax: 5,
         healthMax: 20, //previously 8
@@ -3174,14 +3168,13 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         }
       }
 
-      if (stat && statBumpAmount[stat as keyof IStatBumpAmount] && player.unit[stat as keyof Unit.IUnit]) {
-        const statBump = statBumpAmount[stat as keyof IStatBumpAmount] || 10;
-        // @ts-ignore
-        player.unit[stat as keyof Unit.IUnit] += statBump;
-        // @ts-ignore
-        if (stat.endsWith('Max') && player.unit[stat.replace('Max', '')]) {
-          // @ts-ignore
-          player.unit[stat.replace('Max', '')] += statBump;
+      const unitStatKey = stat as keyof typeof statBumpAmount;
+      if (stat && statBumpAmount[unitStatKey] && player.unit[unitStatKey]) {
+        const statBump = statBumpAmount[unitStatKey] || 10;
+        player.unit[unitStatKey] += statBump;
+        const nonMaxStatKey = stat.replace('Max', '') as keyof Pick<Unit.IUnit, "attackRange" | "mana" | "health" | "stamina">;
+        if (stat.endsWith('Max') && typeof player.unit[nonMaxStatKey] === 'number') {
+          player.unit[nonMaxStatKey] += statBump;
         }
         if (isCurrentPlayer) {
           // Now that the player unit's properties have changed, sync the new
