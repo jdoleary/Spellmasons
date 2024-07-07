@@ -3149,11 +3149,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         playSFXKey('levelUp');
       }
 
-      const statBumpAmount: { [key: string]: number } = {
-        'attackRange': 20, //previously 8
-        'manaMax': 5,
-        'healthMax': 20, //previously 8
-        'staminaMax': 20 //previously 10
+      const statBumpAmount: Pick<Unit.IUnit, "attackRange" | "manaMax" | "healthMax" | "staminaMax"> = {
+        attackRange: 20, //previously 8
+        manaMax: 5,
+        healthMax: 20, //previously 8
+        staminaMax: 20 //previously 10
       }
 
       switch (player.mageType) {
@@ -3163,25 +3163,23 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         }
         case 'Far Gazer': {
           statBumpAmount.attackRange *= 2;
-          statBumpAmount.staminaMax = Math.floor(statBumpAmount.staminaMax as number / 2);
+          statBumpAmount.staminaMax = Math.floor(statBumpAmount.staminaMax / 2);
           break;
         }
       }
 
-      if (stat && player.unit[stat as keyof Unit.IUnit]) {
-        const statBump = statBumpAmount[stat] || 10;
-        // @ts-ignore
-        player.unit[stat as keyof Unit.IUnit] += statBump;
-        // @ts-ignore
-        if (stat.endsWith('Max') && player.unit[stat.replace('Max', '')]) {
-          // @ts-ignore
-          player.unit[stat.replace('Max', '')] += statBump;
-
+      const unitStatKey = stat as keyof typeof statBumpAmount;
+      if (stat && statBumpAmount[unitStatKey] && player.unit[unitStatKey]) {
+        const statBump = statBumpAmount[unitStatKey] || 10;
+        player.unit[unitStatKey] += statBump;
+        const nonMaxStatKey = stat.replace('Max', '') as keyof Pick<Unit.IUnit, "attackRange" | "mana" | "health" | "stamina">;
+        if (stat.endsWith('Max') && typeof player.unit[nonMaxStatKey] === 'number') {
+          player.unit[nonMaxStatKey] += statBump;
         }
         if (isCurrentPlayer) {
           // Now that the player unit's properties have changed, sync the new
           // state with the player's predictionUnit so it is properly
-          // refelcted in the bar
+          // reflected in the bar
           // (note: this would be auto corrected on the next mouse move anyway)
           this.syncPlayerPredictionUnitOnly();
           Unit.syncPlayerHealthManaUI(this);
