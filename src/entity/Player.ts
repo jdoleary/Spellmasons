@@ -324,6 +324,7 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
     }
   }
 
+  player.unit.souls = player.mageType == 'Necromancer' ? 3 : 0;
   Unit.resetUnitStats(player.unit, underworld);
   Unit.syncPlayerHealthManaUI(underworld);
 }

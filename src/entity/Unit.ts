@@ -49,6 +49,7 @@ import { darkTideId } from '../cards/dark_tide';
 import { GORU_UNIT_ID } from './units/goru';
 import { undyingModifierId } from '../modifierUndying';
 import { primedCorpseId } from '../modifierPrimedCorpse';
+import { makeManaTrail } from '../graphics/Particles';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -140,6 +141,8 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   modifiers: { [key: string]: Modifier };
   // Used for more intelligent AI battles so many unit don't overkill a single unit and leave a bunch of others untouched
   predictedNextTurnDamage: number;
+  // A resource used for powerful "soul" spells
+  souls: number;
 }
 // This does not need to be unique to underworld, it just needs to be unique
 let lastPredictionUnitId = 0;
@@ -207,7 +210,8 @@ export function create(
       inLiquid: false,
       UITargetCircleOffsetY: -10,
       beingPushed: false,
-      predictedNextTurnDamage: 0
+      predictedNextTurnDamage: 0,
+      souls: 0,
     }, sourceUnitProps);
 
     if (unit.image && !unit.image.sprite.filters) {
@@ -854,6 +858,11 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
 
   if (!prediction && unit.originalLife && unit.faction !== globalThis.player?.unit.faction) {
     underworld.reportEnemyKilled(unit);
+    // Give 1 soul to each player
+    underworld.players.forEach(p => {
+      makeManaTrail(unit, p.unit, underworld, colors.convertToHashColor(colors.trueWhite), colors.convertToHashColor(colors.manaBrightBlue), 1);
+      p.unit.souls++;
+    });
   }
   if (unit.originalLife && unit.faction == Faction.ENEMY) {
     // Reset kill switch since the allies are making progress

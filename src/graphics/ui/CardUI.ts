@@ -605,7 +605,6 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
         })
         explain(EXPLAIN_END_TURN);
         deselectLastCard(underworld);
-
       }
 
       if (predictionPlayerUnit.health < 0) {
@@ -615,7 +614,15 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
           style: { fill: colors.errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
         })
         deselectLastCard(underworld);
+      }
 
+      if (predictionPlayerUnit.souls < 0) {
+        floatingText({
+          coords: underworld.getMousePos(),
+          text: 'Insufficient Souls',
+          style: { fill: colors.errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
+        })
+        deselectLastCard(underworld);
       }
     } else {
       console.warn('Unexpected: predictionPlayerUnit is undefined');
