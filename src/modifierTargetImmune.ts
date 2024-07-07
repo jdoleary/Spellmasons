@@ -6,7 +6,7 @@ import Underworld from './Underworld';
 
 export const targetImmuneId = 'Target Immune';
 const subspriteId = 'spell-effects/targetImmune';
-function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
+function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
   Image.addSubSprite(unit.image, subspriteId);
 }
 export default function registerTargetImmune() {
@@ -16,7 +16,6 @@ export default function registerTargetImmune() {
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, targetImmuneId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, targetImmuneId);
-        addModifierVisuals(unit, underworld, prediction);
       });
     },
     subsprite: {

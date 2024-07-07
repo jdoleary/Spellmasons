@@ -12,7 +12,7 @@ import { getOrInitModifier } from './util';
 
 export const poisonCardId = 'poison';
 const baseDamage = 20;
-function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
+function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
   Image.addSubSprite(unit.image, subspriteImageName);
   if (spell.modifiers?.subsprite) {
     // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
@@ -31,12 +31,6 @@ function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld, prediction
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1, extra?: { [key: string]: any }) {
   const modifier = getOrInitModifier(unit, poisonCardId, { isCurse: true, quantity }, () => {
     Unit.addEvent(unit, poisonCardId);
-    // Add subsprite image
-    if (!prediction) {
-      if (spell.modifiers?.subsprite) {
-        addModifierVisuals(unit, underworld, prediction);
-      }
-    }
   });
 
   if (!prediction) {

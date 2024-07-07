@@ -19,9 +19,6 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity:
     isCurse: true, quantity,
   }, () => {
     Unit.addEvent(unit, id);
-
-    // Visually "bloat" the image
-    addScaleModifier(unit.image, { x: 1.5, id }, unit.strength);
   });
   if (!modifier.radiusBoost) {
     modifier.radiusBoost = 0;
@@ -56,6 +53,11 @@ const spell: Spell = {
   },
   modifiers: {
     add,
+    addModifierVisuals(unit, underworld) {
+      // Visually "bloat" the image
+      addScaleModifier(unit.image, { x: 1.5, id }, unit.strength);
+
+    },
     remove,
     subsprite: {
       imageName,

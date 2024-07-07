@@ -16,7 +16,7 @@ export default function registerImmune() {
   });
 }
 const imageName = 'spell-effects/modifierShield.png';
-export function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
+export function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
   // Add subsprite image
   // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
   // which is used for identifying the sprite or animation that is currently active
@@ -28,9 +28,7 @@ export function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld, pre
   }
 }
 export function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
-  getOrInitModifier(unit, id, { isCurse: false, quantity }, () => {
-    addModifierVisuals(unit, underworld, prediction)
-  });
+  getOrInitModifier(unit, id, { isCurse: false, quantity }, () => { });
 }
 export function remove(unit: Unit.IUnit, underworld: Underworld) {
   Image.removeSubSprite(unit.image, imageName);

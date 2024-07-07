@@ -380,6 +380,9 @@ export function addModifier(unit: IUnit, key: string, underworld: Underworld, pr
     } else {
       console.error('No "add" modifier for ', key);
     }
+    if (modifier.addModifierVisuals && !prediction) {
+      modifier.addModifierVisuals(unit, underworld);
+    }
   } else {
     console.error('Modifier ', key, 'never registered.');
   }
@@ -495,10 +498,10 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
   }
   for (let key of Object.keys(loadedunit.modifiers)) {
     const modifier = allModifiers[key];
-    if (modifier && modifier.addModifierVisuals) {
+    if (modifier && modifier.addModifierVisuals && !prediction) {
       // Invoke modifier.addModifierVisuals so that special init logic
       // such as there is in 'poison' will run
-      modifier.addModifierVisuals(loadedunit, underworld, prediction);
+      modifier.addModifierVisuals(loadedunit, underworld);
     } else {
       console.warn('No init for modifier with key', key)
     }

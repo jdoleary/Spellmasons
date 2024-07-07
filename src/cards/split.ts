@@ -67,8 +67,6 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     unit.moveSpeed *= splitStatMultiplier;
   }
 
-  addScaleModifier(unit.image, { x: Math.pow(scaleMultiplier, modifier.quantity), y: Math.pow(scaleMultiplier, modifier.quantity), id: splitId }, unit.strength)
-
   if (unit.modifiers[suffocateCardId]) {
     updateSuffocate(unit, underworld, prediction);
   }
@@ -127,7 +125,14 @@ const spell: Spell = {
   },
   modifiers: {
     add,
-    remove
+    remove,
+    addModifierVisuals: (unit: Unit.IUnit, underworld: Underworld) => {
+      const modifier = unit.modifiers[splitId];
+      if (modifier) {
+        addScaleModifier(unit.image, { x: Math.pow(scaleMultiplier, modifier.quantity), y: Math.pow(scaleMultiplier, modifier.quantity), id: splitId }, unit.strength);
+      }
+
+    }
   }
 };
 export default spell;

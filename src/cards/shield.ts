@@ -48,6 +48,10 @@ const spell: Spell = {
   },
   modifiers: {
     add,
+    addModifierVisuals(unit, underworld) {
+      // Add subsprite image
+      Image.addSubSprite(unit.image, modifierImagePath);
+    },
     subsprite: {
       imageName: modifierImagePath,
       alpha: 0.5,
@@ -107,8 +111,6 @@ function updateTooltip(unit: Unit.IUnit) {
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
   const modifier = getOrInitModifier(unit, id, { isCurse: false, quantity }, () => {
     Unit.addEvent(unit, id);
-    // Add subsprite image
-    Image.addSubSprite(unit.image, modifierImagePath);
   });
   // Increment the number of damage_block on this modifier
   // Note: This is only adding the quantity of this invokation, NOT any preexisting

@@ -75,7 +75,7 @@ const spell: Spell = {
     },
   },
 };
-function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
+function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
   // Add subsprite image
   Image.addSubSprite(unit.image, imageName);
   // Stop the animation
@@ -92,7 +92,6 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
   getOrInitModifier(unit, freezeCardId, { isCurse: true, quantity: 1 }, () => {
     unit.radius = config.COLLISION_MESH_RADIUS;
     Unit.addEvent(unit, freezeCardId);
-    addModifierVisuals(unit, underworld, prediction);
 
     // Prevents units from being pushed out of the way and units
     // act as a blockade
