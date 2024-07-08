@@ -135,6 +135,7 @@ import { calculateGameDifficulty } from '../Difficulty';
 import registerPrimedCorpse from '../modifierPrimedCorpse';
 import registerSlime from '../modifierSlime';
 import registerTargetImmune, { targetImmuneId } from '../modifierTargetImmune';
+import registerGrowth from '../modifierGrowth';
 
 export interface Modifiers {
   subsprite?: Subsprite;
@@ -367,6 +368,7 @@ export function registerCards(overworld: Overworld) {
   registerPrimedCorpse();
   registerSlime();
   registerTargetImmune();
+  registerGrowth();
 
   registerImmune();
   registerImpendingDoom();
