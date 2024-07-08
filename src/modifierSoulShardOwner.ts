@@ -15,13 +15,22 @@ const trailColorStart = colors.convertToHashColor(colors.healthDarkRed);
 const trailColorEnd = colors.convertToHashColor(colors.healthBrightRed);
 
 // An additional modifier for Soul Shard, given to the caster
-export const soulShardOwnerModifierId = 'soulShardOwner';
+export const soulShardOwnerModifierId = 'Soul Shard Owner';
 export default function registerSoulShardOwner() {
   registerModifiers(soulShardOwnerModifierId, {
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, soulShardOwnerModifierId, { isCurse: true, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, soulShardOwnerModifierId);
       });
+    },
+    remove: (unit: Unit.IUnit, underworld: Underworld) => {
+      const soulShardOwnerModifier = unit.modifiers[soulShardOwnerModifierId];
+      if (soulShardOwnerModifier) {
+        // Remove modifier from soul shard bearers or else they will become immortal
+        // if the owner is dead and doens't have shardOwner
+        const shardBearers = getAllShardBearers(unit, underworld, false);
+        shardBearers.forEach(u => Unit.removeModifier(u, soulShardId, underworld));
+      }
     }
   });
   registerEvents(soulShardOwnerModifierId, {
