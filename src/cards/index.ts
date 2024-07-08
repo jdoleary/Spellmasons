@@ -587,7 +587,7 @@ export function addTarget(target: any, effectState: EffectState, underworld: Und
 // targeting spells
 export function addUnitTarget(unit: Unit.IUnit, effectState: EffectState, prediction: boolean) {
   // Exception: modifierTargetImmune prevents targeting unless targeted directly
-  if (unit.modifiers[targetImmuneId] && effectState.targetedUnits.length !== 0) {
+  if (unit.modifiers[targetImmuneId] && unit.id !== effectState.initialTargetedUnitId) {
     floatingText({ coords: unit, text: targetImmuneId, prediction });
     return;
   }
