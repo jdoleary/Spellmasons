@@ -16,7 +16,8 @@ export default function registerUndying() {
       getOrInitModifier(unit, undyingModifierId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, undyingModifierId);
       });
-    }
+    },
+    probability: 5,
   });
   registerEvents(undyingModifierId, {
     onTurnStart: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {

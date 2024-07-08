@@ -30,5 +30,6 @@ export default function registerTargetImmune() {
         y: 1.2,
       },
     },
+    probability: 100,
   });
 }

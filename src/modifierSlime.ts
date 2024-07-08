@@ -15,6 +15,7 @@ export default function registerSlime() {
         Unit.addEvent(unit, slimeId);
       });
     },
+    probability: 100,
   });
   registerEvents(slimeId, {
     onTurnEnd: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {

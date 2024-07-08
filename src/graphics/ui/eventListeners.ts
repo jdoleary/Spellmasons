@@ -1623,7 +1623,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         }
         const unit = overworld.underworld.units.find(u => u.id == globalThis.selectedUnit?.id);
         if (unit) {
-          Unit.makeMiniboss(unit);
+          Unit.makeMiniboss(unit, overworld.underworld);
         } else {
           centeredFloatingText('You must select a unit first', 'red');
         }

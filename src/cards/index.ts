@@ -146,6 +146,9 @@ export interface Modifiers {
   add?: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra?: object) => void;
   remove?: (unit: Unit.IUnit, underworld: Underworld) => void;
   description?: string;
+  // If the modifier may be automatically added to minibosses
+  // when the spawn, then the modifier gets a probability
+  probability?: number;
 }
 interface Events {
   onDealDamage?: onDealDamage;

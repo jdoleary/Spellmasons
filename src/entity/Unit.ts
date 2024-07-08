@@ -13,7 +13,7 @@ import * as CardUI from '../graphics/ui/CardUI';
 import Events from '../Events';
 import makeAllRedShader from '../graphics/shaders/selected';
 import { addLerpable } from '../lerpList';
-import { allUnits, UnitSource } from './units';
+import { allUnits } from './units';
 import { allCards, allModifiers } from '../cards';
 import * as immune from '../cards/immune';
 import { checkIfNeedToClearTooltip, clearSpellEffectProjection, drawUICircle } from '../graphics/PlanningView';
@@ -25,7 +25,6 @@ import { closestLineSegmentIntersection } from '../jmath/lineSegment';
 import { bloodColorDefault } from '../graphics/ui/colors';
 import { HasLife, HasMana, HasSpace, HasStamina } from './Type';
 import { collideWithLineSegments } from '../jmath/moveWithCollision';
-import { calculateGameDifficulty } from '../Difficulty';
 import * as inLiquid from '../inLiquid';
 import { Modifier } from '../cards/util';
 import { explain, EXPLAIN_DEATH, EXPLAIN_MINI_BOSSES } from '../graphics/Explain';
@@ -49,6 +48,7 @@ import { darkTideId } from '../cards/dark_tide';
 import { GORU_UNIT_ID } from './units/goru';
 import { undyingModifierId } from '../modifierUndying';
 import { primedCorpseId } from '../modifierPrimedCorpse';
+import { chooseObjectWithProbability } from '../jmath/rand';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -247,7 +247,7 @@ export function create(
     // Note, this is the idempotent way to create a miniboss, pass isMiniboss:true to to the sourceUnitProps override
     // argument so that the unit is made a miniboss BEFORE tryFallInOutOfLiquid is called
     if (unit.isMiniboss) {
-      makeMiniboss(unit);
+      makeMiniboss(unit, underworld);
     }
 
     if (sourceUnit.init) {
@@ -1405,7 +1405,7 @@ export async function runTurnEndEvents(unit: IUnit, underworld: Underworld, pred
   ));
 }
 
-export function makeMiniboss(unit: IUnit) {
+export function makeMiniboss(unit: IUnit, underworld: Underworld) {
   if (unit.unitSourceId == bossmasonUnitId) {
     // Bossmasons is already a boss and should not be made into a miniboss
     return;
@@ -1423,6 +1423,31 @@ export function makeMiniboss(unit: IUnit) {
   unit.manaCostToCast *= config.UNIT_MINIBOSS_MANA_MULTIPLIER;
   unit.strength *= 7;
   Image.setScaleFromModifiers(unit.image, unit.strength);
+  const numberOfModifiers = chooseObjectWithProbability([
+    {
+      num: 1,
+      probability: 100,
+    },
+    {
+      num: 2,
+      probability: 20,
+    },
+    {
+      num: 3,
+      probability: 2,
+    },
+  ], underworld.random) || { num: 1 };
+  // Filter out modifiers with no probability and add the modifier key to the object.
+  let availableSpawnModifiers = Object.entries(allModifiers).flatMap(([key, mod]) => typeof mod.probability === 'number' ? [{ ...mod, key }] : []);
+  for (let i = 0; i < numberOfModifiers.num; i++) {
+    // .map satisfies the compiler's need for certainty that probability is not undefined
+    const mod = chooseObjectWithProbability(availableSpawnModifiers.map(m => ({ probability: 0, ...m })), underworld.random);
+    if (mod) {
+      addModifier(unit, mod.key, underworld, false, 1);
+      // Remove mod from next selection
+      availableSpawnModifiers = availableSpawnModifiers.filter(m => m !== mod);
+    }
+  }
 }
 // Makes a copy of the unit's data suitable for 
 // a predictionUnit
