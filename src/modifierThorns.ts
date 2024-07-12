@@ -3,6 +3,7 @@ import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
 
+// Deals (quantity) damage to an attacker when taking damage
 export const thornsId = 'Thorns';
 export default function registerThorns() {
   registerModifiers(thornsId, {
