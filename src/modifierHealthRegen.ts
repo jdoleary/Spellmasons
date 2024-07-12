@@ -4,6 +4,7 @@ import { healUnit } from "./effects/heal";
 import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
 
+// Regenerates (quantity) health at the start of each turn
 export const healthRegenId = 'Health Regen';
 export default function registerHealthRegen() {
   registerModifiers(healthRegenId, {
