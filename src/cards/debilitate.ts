@@ -30,7 +30,7 @@ const spell: Spell = {
         playDefaultSpellSFX(card, prediction);
         await playDefaultSpellAnimation(card, targets, prediction);
         for (let unit of targets) {
-          Unit.addModifier(unit, id, underworld, prediction, 100);
+          Unit.addModifier(unit, id, underworld, prediction, percentDamageIncrease * quantity);
         }
       }
       return state;
