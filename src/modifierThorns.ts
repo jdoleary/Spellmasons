@@ -7,6 +7,7 @@ import Underworld from './Underworld';
 export const thornsId = 'Thorns';
 export default function registerThorns() {
   registerModifiers(thornsId, {
+    description: 'thorns description',
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, thornsId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, thornsId);
