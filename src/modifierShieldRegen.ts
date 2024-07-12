@@ -8,6 +8,7 @@ import Underworld from './Underworld';
 export const shieldRegenId = 'Shield Regen';
 export default function registerShieldRegen() {
   registerModifiers(shieldRegenId, {
+    description: 'shield regen',
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, shieldRegenId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, shieldRegenId);
