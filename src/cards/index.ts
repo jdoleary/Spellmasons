@@ -136,6 +136,7 @@ import registerPrimedCorpse from '../modifierPrimedCorpse';
 import registerSlime from '../modifierSlime';
 import registerTargetImmune, { targetImmuneId } from '../modifierTargetImmune';
 import registerGrowth from '../modifierGrowth';
+import registerThorns from '../modifierThorns';
 
 export interface Modifiers {
   subsprite?: Subsprite;
@@ -379,6 +380,8 @@ export function registerCards(overworld: Overworld) {
   registerUrnPoisonExplode();
   registerUrnExplosiveExplode();
   registerDeathmasonEvents();
+
+  registerThorns();
 }
 
 // This is necessary because unit stats change with difficulty.
