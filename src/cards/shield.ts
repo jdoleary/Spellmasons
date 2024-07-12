@@ -39,7 +39,7 @@ const spell: Spell = {
         // Add the modifier after the animation so that the subsprite doesn't get added until after the animation is
         // complete
         for (let unit of targets) {
-          Unit.addModifier(unit, shieldId, underworld, prediction, shieldToAdd);
+          Unit.addModifier(unit, shieldId, underworld, prediction, shieldToAdd * quantity);
         }
       }
 
