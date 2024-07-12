@@ -4,6 +4,7 @@ import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
 
+// Regenerates (quantity) shield at the start of each turn
 export const shieldRegenId = 'Shield Regen';
 export default function registerShieldRegen() {
   registerModifiers(shieldRegenId, {
