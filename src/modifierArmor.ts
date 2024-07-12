@@ -3,6 +3,7 @@ import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
 
+// Reduces incoming damage by (quantity)
 export const armorId = 'Armor';
 export default function registerArmor() {
   registerModifiers(armorId, {
