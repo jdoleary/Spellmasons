@@ -3,6 +3,7 @@ import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
 
+// Increases incoming healing by (quantity)%
 export const revitalizeId = 'Revitalize';
 export default function registerRevitalize() {
   registerModifiers(revitalizeId, {
