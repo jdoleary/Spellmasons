@@ -9,12 +9,12 @@ import * as config from '../config';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
-export const id = 'shield';
+export const shieldId = 'shield';
 export const modifierImagePath = 'spell-effects/modifierShield.png';
-const damageBlocked = 30;
+const shieldToAdd = 30;
 const spell: Spell = {
   card: {
-    id,
+    id: shieldId,
     category: CardCategory.Blessings,
     sfx: 'shield',
     supportQuantity: true,
@@ -24,7 +24,7 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.SPECIAL],
     thumbnail: 'spellIconShield.png',
     animationPath: 'spell-effects/spellShield',
-    description: ['spell_shield', damageBlocked.toString()],
+    description: ['spell_shield', shieldToAdd.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);
@@ -39,7 +39,7 @@ const spell: Spell = {
         // Add the modifier after the animation so that the subsprite doesn't get added until after the animation is
         // complete
         for (let unit of targets) {
-          Unit.addModifier(unit, id, underworld, prediction, quantity);
+          Unit.addModifier(unit, shieldId, underworld, prediction, shieldToAdd);
         }
       }
 
@@ -67,7 +67,7 @@ const spell: Spell = {
   },
   events: {
     onTakeDamage: (unit, amount, underworld, prediction, damageDealer) => {
-      const modifier = unit.modifiers[id];
+      const modifier = unit.modifiers[shieldId];
       if (modifier) {
         // Only block damage, not heals
         if (amount > 0) {
@@ -82,40 +82,36 @@ const spell: Spell = {
               },
             });
           }
-          adjustedAmount = Math.max(0, amount - modifier.damage_block);
-          modifier.damage_block -= amount - adjustedAmount;
+          adjustedAmount = Math.max(0, amount - modifier.quantity);
+          modifier.quantity -= amount - adjustedAmount;
 
-          if (modifier && modifier.damage_block <= 0) {
-            Unit.removeModifier(unit, id, underworld);
+          if (modifier && modifier.quantity <= 0) {
+            Unit.removeModifier(unit, shieldId, underworld);
           }
           updateTooltip(unit);
 
           return adjustedAmount;
-        } else {
-          return amount;
         }
-      } else {
-        return amount;
       }
+
+      return amount;
     },
   },
 
 };
 function updateTooltip(unit: Unit.IUnit) {
-  if (unit.modifiers[id]) {
+  const modifier = unit.modifiers[shieldId];
+  if (modifier) {
     // Set tooltip:
-    unit.modifiers[id].tooltip = `${unit.modifiers[id].damage_block} damage block`
+    modifier.tooltip = `${modifier.quantity} ${i18n('Shield')}`
   }
 }
 
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
-  const modifier = getOrInitModifier(unit, id, { isCurse: false, quantity }, () => {
-    Unit.addEvent(unit, id);
+  const modifier = getOrInitModifier(unit, shieldId, { isCurse: false, quantity }, () => {
+    Unit.addEvent(unit, shieldId);
   });
-  // Increment the number of damage_block on this modifier
-  // Note: This is only adding the quantity of this invokation, NOT any preexisting
-  // modifier.quantity that may have existed from previous invokations of this spell
-  modifier.damage_block = (modifier.damage_block || 0) + damageBlocked * quantity;
+
   updateTooltip(unit);
 }
 export default spell;
