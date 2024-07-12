@@ -7,6 +7,7 @@ import Underworld from './Underworld';
 export const revitalizeId = 'Revitalize';
 export default function registerRevitalize() {
   registerModifiers(revitalizeId, {
+    description: 'revitalize description',
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, revitalizeId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, revitalizeId);
