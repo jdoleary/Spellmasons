@@ -141,6 +141,7 @@ import registerHealthRegen from '../modifierHealthRegen';
 import registerOnHitPoison from '../modifierOnHitPoison';
 import registerRevitalize from '../modifierRevitalize';
 import registerShieldRegen from '../modifierShieldRegen';
+import registerThorns from '../modifierThorns';
 
 export interface Modifiers {
   subsprite?: Subsprite;
@@ -390,6 +391,7 @@ export function registerCards(overworld: Overworld) {
   registerOnHitPoison();
   registerRevitalize();
   registerShieldRegen();
+  registerThorns();
 }
 
 // This is necessary because unit stats change with difficulty.
