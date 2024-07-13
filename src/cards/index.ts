@@ -138,6 +138,7 @@ import registerTargetImmune, { targetImmuneId } from '../modifierTargetImmune';
 import registerGrowth from '../modifierGrowth';
 import registerArmor from '../modifierArmor';
 import registerHealthRegen from '../modifierHealthRegen';
+import registerShieldRegen from '../modifierShieldRegen';
 
 export interface Modifiers {
   subsprite?: Subsprite;
@@ -384,6 +385,7 @@ export function registerCards(overworld: Overworld) {
 
   registerArmor();
   registerHealthRegen();
+  registerShieldRegen();
 }
 
 // This is necessary because unit stats change with difficulty.

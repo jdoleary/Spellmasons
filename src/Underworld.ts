@@ -891,7 +891,7 @@ export default class Underworld {
         Unit.syncImage(u)
         drawHealthBarAboveHead(i, this, zoom);
         // Animate shield modifier sprites
-        if ((u.modifiers[shield.id] || u.modifiers[fortify.id] || u.modifiers[immune.id]) && u.image) {
+        if ((u.modifiers[shield.shieldId] || u.modifiers[fortify.id] || u.modifiers[immune.id]) && u.image) {
           // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
           // which is used for identifying the sprite or animation that is currently active
           const modifierSprite = u.image.sprite.children.find(c => c.imagePath == shield.modifierImagePath)
