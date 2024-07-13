@@ -12,42 +12,6 @@ import { getOrInitModifier } from './util';
 
 export const poisonCardId = 'poison';
 const basePoisonStacks = 20;
-function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
-  Image.addSubSprite(unit.image, subspriteImageName);
-  if (spell.modifiers?.subsprite) {
-    // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
-    // which is used for identifying the sprite or animation that is currently active
-    const poisonSubsprite = unit.image?.sprite.children.find(c => c.imagePath == spell.modifiers?.subsprite?.imageName)
-    if (poisonSubsprite) {
-      const animatedSprite = poisonSubsprite as PIXI.AnimatedSprite;
-      animatedSprite.onFrameChange = (currentFrame) => {
-        if (currentFrame == 5) {
-          animatedSprite.anchor.x = (3 + Math.random() * (6 - 3)) / 10;
-        }
-      }
-    }
-  }
-}
-function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1, extra?: { [key: string]: any }) {
-  const modifier = getOrInitModifier(unit, poisonCardId, { isCurse: true, quantity }, () => {
-    Unit.addEvent(unit, poisonCardId);
-  });
-
-  if (!prediction) {
-    updateTooltip(unit);
-  }
-
-  modifier.sourceUnitId = extra?.sourceUnitId;
-}
-
-function updateTooltip(unit: Unit.IUnit) {
-  const modifier = unit.modifiers[poisonCardId];
-  if (modifier) {
-    // Set tooltip:
-    modifier.tooltip = `${modifier.quantity} ${i18n('Poison')}`;
-  }
-}
-
 const subspriteImageName = 'spell-effects/modifierPoisonDrip';
 const spell: Spell = {
   card: {
@@ -89,7 +53,6 @@ const spell: Spell = {
         y: 1.0,
       },
     },
-
   },
   events: {
     onTurnEnd: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
@@ -118,4 +81,42 @@ const spell: Spell = {
     },
   },
 };
+
+function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1, extra?: { [key: string]: any }) {
+  const modifier = getOrInitModifier(unit, poisonCardId, { isCurse: true, quantity }, () => {
+    Unit.addEvent(unit, poisonCardId);
+  });
+
+  if (!prediction) {
+    updateTooltip(unit);
+  }
+
+  modifier.sourceUnitId = extra?.sourceUnitId;
+}
+
+function updateTooltip(unit: Unit.IUnit) {
+  const modifier = unit.modifiers[poisonCardId];
+  if (modifier) {
+    // Set tooltip:
+    modifier.tooltip = `${modifier.quantity} ${i18n('Poison')}`;
+  }
+}
+
+function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
+  Image.addSubSprite(unit.image, subspriteImageName);
+  if (spell.modifiers?.subsprite) {
+    // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
+    // which is used for identifying the sprite or animation that is currently active
+    const poisonSubsprite = unit.image?.sprite.children.find(c => c.imagePath == spell.modifiers?.subsprite?.imageName)
+    if (poisonSubsprite) {
+      const animatedSprite = poisonSubsprite as PIXI.AnimatedSprite;
+      animatedSprite.onFrameChange = (currentFrame) => {
+        if (currentFrame == 5) {
+          animatedSprite.anchor.x = (3 + Math.random() * (6 - 3)) / 10;
+        }
+      }
+    }
+  }
+}
+
 export default spell;
