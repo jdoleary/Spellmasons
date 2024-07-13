@@ -11,7 +11,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
 export const poisonCardId = 'poison';
-const baseDamage = 20;
+const basePoisonStacks = 20;
 function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
   Image.addSubSprite(unit.image, subspriteImageName);
   if (spell.modifiers?.subsprite) {
@@ -40,10 +40,11 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
   modifier.sourceUnitId = extra?.sourceUnitId;
 }
 
-export function updateTooltip(unit: Unit.IUnit) {
-  if (unit.modifiers[poisonCardId]) {
+function updateTooltip(unit: Unit.IUnit) {
+  const modifier = unit.modifiers[poisonCardId];
+  if (modifier) {
     // Set tooltip:
-    unit.modifiers[poisonCardId].tooltip = `${unit.modifiers[poisonCardId].quantity} ${i18n('Poison')} ${i18n('Stack')} | ${baseDamage * unit.modifiers[poisonCardId].quantity} ${i18n('damage')}`
+    modifier.tooltip = `${modifier.quantity} ${i18n('Poison')}`;
   }
 }
 
@@ -60,14 +61,14 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconPoison.png',
     animationPath: 'spell-effects/spellPoison',
-    description: ['spell_poison', baseDamage.toString()],
+    description: ['spell_poison', basePoisonStacks.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);
       if (targets.length) {
         await Promise.all([playDefaultSpellAnimation(card, targets, prediction), playDefaultSpellSFX(card, prediction)]);
         for (let unit of targets) {
-          Unit.addModifier(unit, poisonCardId, underworld, prediction, quantity, { sourceUnitId: state.casterUnit.id });
+          Unit.addModifier(unit, poisonCardId, underworld, prediction, basePoisonStacks * quantity, { sourceUnitId: state.casterUnit.id });
         }
       }
       return state;
@@ -92,28 +93,27 @@ const spell: Spell = {
   },
   events: {
     onTurnEnd: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
-      // TODO: There was a bug here where somehow modifiers['poison'] was undefined after i did chain, vulx10, poisonx10
       const modifier = unit.modifiers[poisonCardId];
-      if (!modifier) {
+      if (modifier) {
+        // Don't take damage on prediction because it is confusing for people to see the prediction damage that poison will do,
+        // they assume prediction damage is only from their direct cast, not including the start of the next turn
+        if (!prediction) {
+          const sourceUnit = underworld.getUnitById(modifier.sourceUnitId, prediction);
+          const damage = modifier.quantity;
+          Unit.takeDamage({
+            unit: unit,
+            amount: damage,
+            sourceUnit: sourceUnit,
+            fromVec2: unit,
+          }, underworld, prediction);
+          floatingText({
+            coords: unit, text: `${damage} poison damage`,
+            style: { fill: '#44b944' },
+          });
+        }
+      } else {
         console.error(`Should have ${poisonCardId} modifier on unit but it is missing`);
         return;
-      }
-
-      const sourceUnit = underworld.getUnitById(modifier.sourceUnitId, prediction);
-      // Don't take damage on prediction because it is confusing for people to see the prediction damage that poison will do,
-      // they assume prediction damage is only from their direct cast, not including the start of the next turn
-      if (!prediction) {
-        const damage = (modifier.quantity || 1) * baseDamage;
-        Unit.takeDamage({
-          unit: unit,
-          amount: damage,
-          sourceUnit: sourceUnit,
-          fromVec2: unit,
-        }, underworld, prediction);
-        floatingText({
-          coords: unit, text: `${damage} poison damage`,
-          style: { fill: '#44b944' },
-        });
       }
     },
   },
