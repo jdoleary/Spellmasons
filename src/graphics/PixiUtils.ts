@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { clone, equal, getAngleBetweenVec2sYInverted, isInvalid, lerpVec2, Vec2 } from '../jmath/Vec';
+import { clampVector, clone, equal, getAngleBetweenVec2sYInverted, isInvalid, lerpVec2, Vec2 } from '../jmath/Vec';
 import { View } from '../View';
 import * as math from '../jmath/math';
 import * as config from '../config';
@@ -401,7 +401,7 @@ export function updateCameraPosition(underworld: Underworld) {
           }
         }
 
-        const targetCameraVelocity = { x: 0, y: 0 }
+        let targetCameraVelocity = { x: 0, y: 0 }
         // Allow camera movement via WSAD
         if (keyDown.cameraUp) {
           targetCameraVelocity.y -= 1;
@@ -427,10 +427,17 @@ export function updateCameraPosition(underworld: Underworld) {
           }
         } else {
           tutorialCompleteTask('camera');
+          // This ensures that the camera won't move faster in a
+          // diagonal than up/down ; left/right.
+          targetCameraVelocity = clampVector(targetCameraVelocity, 1);
         }
 
+        const cameraKeyDown = keyDown.cameraUp || keyDown.cameraLeft || keyDown.cameraDown || keyDown.cameraRight;
         // Lerp camera velocity for smooth movement
-        cameraVelocity = lerpVec2(cameraVelocity, targetCameraVelocity, 0.15);
+        // Lerps more slowly when camera is stopping
+        // Faster lerp while changing direction prevents it from feeling
+        // like the camera is "dragging" behind the users intention
+        cameraVelocity = lerpVec2(cameraVelocity, targetCameraVelocity, cameraKeyDown ? 0.4 : 0.15)
 
         utilProps.camera.x += cameraVelocity.x * (config.CAMERA_BASE_SPEED * 1 / zoom);
         utilProps.camera.y += cameraVelocity.y * (config.CAMERA_BASE_SPEED * 1 / zoom);
