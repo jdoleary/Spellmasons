@@ -159,6 +159,7 @@ export function addOverworldEventListeners(overworld: Overworld) {
   const elBookmarkDefense: HTMLButtonElement = document.getElementById('bookmark-blessings',) as HTMLButtonElement;
   const elBookmarkSoul: HTMLButtonElement = document.getElementById('bookmark-soul',) as HTMLButtonElement;
   const elBookmarkAll: HTMLButtonElement = document.getElementById('bookmark-all',) as HTMLButtonElement;
+  const elBookmarkRunes: HTMLButtonElement = document.getElementById('bookmark-runes',) as HTMLButtonElement;
   const elQuitButton: HTMLButtonElement = document.getElementById(
     'quit',
   ) as HTMLButtonElement;
@@ -253,6 +254,7 @@ export function addOverworldEventListeners(overworld: Overworld) {
         { target: elBookmarkDefense, targetId: 'bookmark-blessings' },
         { target: elBookmarkSoul, targetId: 'bookmark-soul' },
         { target: elBookmarkAll, targetId: 'bookmark-all' },
+        { target: elBookmarkRunes, targetId: 'bookmark-runes' },
       ].map(({ target, targetId }) => {
         return {
           target,
@@ -269,7 +271,8 @@ export function addOverworldEventListeners(overworld: Overworld) {
                 'bookmark-curses',
                 'bookmark-blessings',
                 'bookmark-soul',
-                'bookmark-all'].filter(x => x !== targetId).forEach(className => {
+                'bookmark-all',
+                'bookmark-runes'].filter(x => x !== targetId).forEach(className => {
                   elInventoryContainer.classList.toggle(className, false);
                 });
               Array.from(document.querySelectorAll('.bookmark'))

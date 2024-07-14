@@ -40,6 +40,10 @@ export function resetInventoryContent() {
       el.dataset.category = category.toString();
       elInvContent.appendChild(el);
     })
+    const elRunes = document.createElement('div');
+    elRunes.innerHTML = 'Runes';
+    elRunes.id = 'runes';
+    elInvContent.appendChild(elRunes);
   }
 
 }
@@ -430,6 +434,8 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
     categories.forEach(category => document.getElementById(`bookmark-${category.toLowerCase()}`)?.classList.toggle('disabled', false));
     // All bookmark is always enabled
     document.getElementById('bookmark-all')?.classList.toggle('disabled', false);
+    // Runes bookmark is always enabled
+    document.getElementById('bookmark-runes')?.classList.toggle('disabled', false);
     // Add an inventory element to clear the currently selected toolbar item
     if (slotModifyingIndex !== undefined) {
       const elClearSlotModifiyingIndex = createNonCardInventoryElement('toolbar-slot.png', 'Empty');

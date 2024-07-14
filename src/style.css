@@ -2489,6 +2489,11 @@ body.dragging-card .floating-card-holder .empty-slot {
   top: 585px;
 }
 
+#bookmark-runes {
+  left: 18px;
+  top: 645px;
+}
+
 #inventory-container.bookmark-all #bookmark-all {
   /* Disable bookmark all when bookmark all is selected */
   display: none;
@@ -2548,5 +2553,13 @@ body.dragging-card .floating-card-holder .empty-slot {
 
 #inventory-container.bookmark-movement .category[data-category="Movement"],
 #inventory-container.bookmark-movement .category-label[data-category="Movement"] {
+  display: flex;
+}
+
+#inventory-container #runes {
+  display: none;
+}
+
+#inventory-container.bookmark-runes #runes {
   display: flex;
 }
