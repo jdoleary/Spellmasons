@@ -91,18 +91,16 @@ Finally, open a PR.  If the mod works well and is bug free (I will help with Qua
 
 You will also earn the "Modder" role in the Discord!
 
-# DOCS BELOW ARE UNDER CONSTRUCTION
-## INTERNAL _ Jordan todo
-- [ ] Make sample mods for
-  - [ ] New Enemy
-  - [ ] New Modifier
-  - [ ] New Animation and SFX
+## Engine Complexities
+### Async / Await
+A lot of functions in Spellmasons use javascripts async / await pattern.  This is because some functions (like a spell's effect()) need to wait for animations to complete before moving on to the next step in the spell or to the next spell since chained spells are cast one at a time. A good example is Connect (src\cards\connect.ts).
 
-## Background
-[The game engine repository](https://github.com/jdoleary/Spellmasons) holds the Spellmasons game and engine code.  There you can run the game locally and test out your mod quickly!  When you're ready to make your mod public, it will have to be moved to the [mods repository](https://github.com/jdoleary/spellmasons-mods).  But I'll show you how to do that later.  
+Connect just adds nearby units to the target array; however, it shows this occurring during an animation that happens over time and we don't want to move onto the next spell until this animation is done so we `await` the resolution of the animation.
 
-Let's start with a quick example.
-## Footguns
+You can read here for more information about async / await and promises in javascript:
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await#awaiting_a_promise_to_be_fulfilled
+
+### Targeting
 - When making a targeting spell be sure to iterate it like so:
 ```js
       const length = targets.length;
@@ -129,3 +127,18 @@ for(let target of targets){
 ```
 This is because `addTarget` mutates the target array and you will get undesired behavior if
 you invoke addTarget within a for..of that iterates targets array.
+
+
+## Discord
+If you want to create a mod that isn't currently supported, please let me know in the #modding channel of the [Spellmasons Discord](https://discord.com/invite/q6sUCreHeJ)
+
+# DOCS BELOW ARE UNDER CONSTRUCTION
+## INTERNAL _ Jordan todo
+- [ ] Make sample mods for
+  - [ ] New Enemy
+  - [ ] New Animation and SFX
+
+## Background
+[The game engine repository](https://github.com/jdoleary/Spellmasons) holds the Spellmasons game and engine code.  There you can run the game locally and test out your mod quickly!  When you're ready to make your mod public, it will have to be moved to the [mods repository](https://github.com/jdoleary/spellmasons-mods).  But I'll show you how to do that later.  
+
+Let's start with a quick example.
