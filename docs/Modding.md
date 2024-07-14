@@ -59,10 +59,17 @@ a unit that the cursor is hovering when you bring up the menu.
 
 ![Control + Space Menu](./ControlSpaceMenu.png)
 
+Also I recommend using the menu's Save and Load regularly.  Do note that some changes occur on init of a unit or pickup and so won't be reflected in a loaded savefile but some changes (like spell effects that trigger when cast) will work after loading an save that occurred before the change was made.
+Regardless, with the admin tools it's super easy and quick to set up a test scene so even without save / load it is still rather efficient.
+
 
 ### More examples
-- Mod a Pickup (potion, etc): src\DevelopmentMods\SamplePickup\SamplePickup.ts
-- Mod a Spell: public\spellmasons-mods\undead_blade\undead_blade.ts
+- Pickup (potion, etc): src\DevelopmentMods\SamplePickup\SamplePickup.ts
+- Spell: public\spellmasons-mods\undead_blade\undead_blade.ts
+- Modifier (Poison, Frozen, etc): TODO
+- Unit: TODO
+- Animation: https://youtu.be/_DkjB0BvVU4?si=clsWXsOj2rq3iiOn
+- SFX: TODO
 
 ## Publishing Your Mod
 To publish your mod so it's available on the Community Servers and available to all players, clone the [mods repository](https://github.com/jdoleary/spellmasons-mods), and move your mod into that folder.
@@ -76,10 +83,8 @@ You will also earn the "Modder" role in the Discord!
 # DOCS BELOW ARE UNDER CONSTRUCTION
 ## INTERNAL _ Jordan todo
 - [ ] Make sample mods for
-  - [ ] New Spell
   - [ ] New Enemy
   - [ ] New Modifier
-  - [x] New Pickup
   - [ ] New Animation and SFX
 
 ## Background
