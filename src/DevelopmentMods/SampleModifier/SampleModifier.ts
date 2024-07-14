@@ -1,6 +1,6 @@
 import type { Mod } from "../../types/commonTypes";
-import type { IUnit } from "../../../public/spellmasons-mods/types/entity/Unit";
 import type { Events, Modifiers } from "../../cards";
+import type { IUnit } from "../../entity/Unit";
 import type Underworld from "../../Underworld";
 
 
