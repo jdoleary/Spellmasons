@@ -15,9 +15,11 @@ import { MESSAGE_TYPES } from '../../types/MessageTypes';
 import { explain, EXPLAIN_END_TURN } from '../Explain';
 import { Overworld } from '../../Overworld';
 import { resetNotifiedImmune } from '../../cards/immune';
+import { keyDown } from './eventListeners';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
+let elRunes: HTMLElement | undefined;
 resetInventoryContent();
 export function resetInventoryContent() {
   if (globalThis.headless) {
@@ -40,7 +42,7 @@ export function resetInventoryContent() {
       el.dataset.category = category.toString();
       elInvContent.appendChild(el);
     })
-    const elRunes = document.createElement('div');
+    elRunes = document.createElement('div');
     elRunes.innerHTML = 'Runes';
     elRunes.id = 'runes';
     elInvContent.appendChild(elRunes);
@@ -353,7 +355,7 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
   if (globalThis.player) {
     // clear contents
     resetInventoryContent();
-
+    renderRunesMenu(underworld);
     // Get list of cards that have been replaced by more advanced cards to hide them in inventory
     // The reason they are not removed entirely is because the number of cards in the inventory determines
     // how many new cards the player gets to pick in the next upgrade relative to progress in the underworld,
@@ -450,10 +452,89 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
         })
       }
     }
-  } else {
-    console.error('Cannot sync inventory, globalThis.player is undefined');
   }
 }
+export function renderRunesMenu(underworld: Underworld) {
+  if (!elRunes) {
+    console.error('No elRunes for showing rune upgrades');
+    return;
+  }
+  if (!globalThis.player) {
+    console.error("Cannot render runesMenu, no globalThis.player");
+    return;
+  }
+  const statPoints = underworld.perksLeftToChoose(globalThis.player);
+  const wordMap: { [key: string]: string } = {
+    'attackRange': 'Cast Range',
+    'manaMax': 'Mana',
+    'healthMax': 'Health',
+    'staminaMax': 'Stamina',
+    'Good Looks': 'Good Looks'
+  }
+  const statValueModifier = (stat: string, value: number | undefined) => {
+    if (value === undefined) {
+      // Good looks is an effect on the game and not a value on the Unit object
+      if (stat !== 'Good Looks') {
+        console.error('Undefined stat value', stat);
+      }
+      return '';
+    }
+    return value;
+  }
+  const elStatUpgradeRow = (stat: string) => {
+    if (!globalThis.player) {
+      return '';
+    }
+
+    return `<tr class="stat-row">
+            <td><h1>${wordMap[stat] || ''}${stat === 'Good Looks' ? '' : ':'} ${statValueModifier(stat, globalThis.player.unit[stat as keyof Unit.IUnit] as number)}</h1></td>
+            <td data-stat="${stat}" class="plus-btn-container"></td>
+</tr>`;
+  }
+  elRunes.innerHTML = `
+<div class="pick-stats">
+  <div class="card-inner flex">
+  <h2>Points: ${statPoints}</h2>
+  <table>
+            <thead><tr><th></th><th></th></tr></thead>
+    <tbody>
+  ${['healthMax', 'manaMax', 'staminaMax', 'attackRange', 'Good Looks'].map(elStatUpgradeRow).join('')}
+    </tbody>
+  </table>
+  </div>
+</div>`;
+
+  elRunes.querySelectorAll('.stat-row .plus-btn-container').forEach(el => {
+    const elPlusBtn = document.createElement('div');
+    elPlusBtn.classList.add('plus-btn');
+    elPlusBtn.style.color = 'white';
+    const stat = (el as HTMLElement).dataset.stat;
+    if (stat && stat == 'attackRange') {
+      elPlusBtn.addEventListener('mouseenter', () => {
+        keyDown.showWalkRope = true;
+      });
+      elPlusBtn.addEventListener('mouseleave', () => {
+        keyDown.showWalkRope = false;
+      });
+
+    }
+    elPlusBtn.addEventListener('click', () => {
+      underworld.pie.sendData({
+        type: MESSAGE_TYPES.SPEND_STAT_POINT,
+        stat
+      })
+    });
+    elPlusBtn.addEventListener('mouseenter', (e) => {
+      playSFXKey('click');
+    });
+    el.appendChild(elPlusBtn);
+    if (globalThis.devAutoPickUpgrades) {
+      elPlusBtn.click();
+    }
+  })
+}
+
+
 export function toggleInventory(toolbarIndex: number | undefined, forceState: boolean | undefined, underworld: Underworld) {
   if (globalThis.headless) { return; }
   const inventoryWasOpen = document.body?.classList.contains(openInvClass);
@@ -708,19 +789,19 @@ export function getCardRarityColor(content: { probability: number }): string {
 .t1 {
   color: #241623;
 }
-
+ 
 .t2 {
   color: #432534;
 }
-
+ 
 .t3 {
   color: #004e64;
 }
-
+ 
 .t4 {
   color: #19381F;
 }
-
+ 
 .t5 {
   color: #3b322c;
 }

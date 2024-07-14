@@ -2494,6 +2494,10 @@ body.dragging-card .floating-card-holder .empty-slot {
   top: 645px;
 }
 
+#bookmark-runes.active {
+  left: 40px;
+}
+
 #inventory-container.bookmark-all #bookmark-all {
   /* Disable bookmark all when bookmark all is selected */
   display: none;
