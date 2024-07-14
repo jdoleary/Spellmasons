@@ -978,11 +978,11 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
   const healthRatio = unit.health / unit.healthMax
   // Set the health bar that shows how much health you currently have
   elHealthBar.style["width"] = `${100 * healthRatio}%`;
-  const shieldAmount = unit.modifiers.shield?.damage_block || 0;
+  const shieldAmount = unit.modifiers.shield?.quantity || 0;
   const shieldRatio = shieldAmount / unit.healthMax;
   elHealthBarSheild.style["width"] = `${100 * Math.min(shieldRatio, 1)}%`;
   if (shieldAmount) {
-    const shieldText = `${unit.modifiers.shield?.damage_block} shield`;
+    const shieldText = `${unit.modifiers.shield?.quantity} shield`;
     elHealthLabel.innerHTML = `${shieldText} + ${unit.health} / ${unit.healthMax}`;
   } else {
     // Label health without shield
@@ -1000,7 +1000,7 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
   if (predictionPlayerUnit) {
     const losingHealth = predictionPlayerUnit.health < unit.health;
     const willDie = predictionPlayerUnit.health <= 0;
-    const predictionPlayerShield = predictionPlayerUnit.modifiers.shield?.damage_block || 0
+    const predictionPlayerShield = predictionPlayerUnit.modifiers.shield?.quantity || 0
     const shieldLost = predictionPlayerShield < shieldAmount;
     if (elCautionBox) {
       if (elCautionBoxText) {
