@@ -19,9 +19,10 @@ import type PieClient from '@websocketpie/client';
 import { setupPieAndUnderworld } from './network/wsPieSetup';
 import { returnToDefaultSprite } from './entity/Unit';
 import Jprompt from './graphics/Jprompt';
-import SpellmasonsAPI from './api';
 import { Faction } from './types/commonTypes';
-globalThis.SpellmasonsAPI = SpellmasonsAPI;
+import './api';
+// DevelopmentMods must be imported AFTER api
+import "./DevelopmentMods";
 
 // Globalize injected Audio functions
 globalThis.playNextSong = playNextSong;
@@ -61,7 +62,6 @@ globalThis.devAutoPickUpgrades = location.href.includes('localhost');
 globalThis.adminMode = location.href.includes('localhost');
 globalThis.zoomTarget = 1.8;
 globalThis.hotseatPlayerConfig = [];
-globalThis.mods = [];
 globalThis.awaitingSpawn = false;
 globalThis.currentHoverElement = null;
 // Default to 1 for singleplayer

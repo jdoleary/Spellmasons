@@ -1695,5 +1695,6 @@ const mods = [
   mod$1,
   mod
 ];
-console.log("Mods: Add mods", mods);
-globalThis.mods = mods;
+console.log('jtest', globalThis.mods);
+globalThis.mods = globalThis.mods !== void 0 ? [...globalThis.mods, ...mods] : mods;
+console.log("Mods: Add mods", globalThis.mods);
