@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { clone, equal, getAngleBetweenVec2sYInverted, isInvalid, Vec2 } from '../jmath/Vec';
+import { clampVector, clone, equal, getAngleBetweenVec2sYInverted, isInvalid, lerpVec2, Vec2 } from '../jmath/Vec';
 import { View } from '../View';
 import * as math from '../jmath/math';
 import * as config from '../config';
@@ -368,6 +368,8 @@ export function setCameraToMapCenter(underworld: Underworld) {
   utilProps.camera = getMapCenter(underworld);
 }
 let lastZoom = globalThis.zoomTarget;
+// Used for lerping the camera over multiple frames
+let cameraVelocity: Vec2 = { x: 0, y: 0 }
 export function updateCameraPosition(underworld: Underworld) {
   // Headless does not use graphics
   if (globalThis.headless) { return; }
@@ -398,23 +400,48 @@ export function updateCameraPosition(underworld: Underworld) {
             }
           }
         }
+
+        let targetCameraVelocity = { x: 0, y: 0 }
         // Allow camera movement via WSAD
         if (keyDown.cameraUp) {
-          utilProps.camera.y -= config.CAMERA_BASE_SPEED * 1 / zoom;
-          tutorialCompleteTask('camera');
+          targetCameraVelocity.y -= 1;
         }
         if (keyDown.cameraDown) {
-          utilProps.camera.y += config.CAMERA_BASE_SPEED * 1 / zoom;
-          tutorialCompleteTask('camera');
-        }
-        if (keyDown.cameraRight) {
-          utilProps.camera.x += config.CAMERA_BASE_SPEED * 1 / zoom;
-          tutorialCompleteTask('camera');
+          targetCameraVelocity.y += 1
         }
         if (keyDown.cameraLeft) {
-          utilProps.camera.x -= config.CAMERA_BASE_SPEED * 1 / zoom;
-          tutorialCompleteTask('camera');
+          targetCameraVelocity.x -= 1;
         }
+        if (keyDown.cameraRight) {
+          targetCameraVelocity.x += 1;
+        }
+
+        if (targetCameraVelocity.x == 0 && targetCameraVelocity.y == 0) {
+          // Stop camera movement if velocity is near 0 target
+          // To prevent endless camera sliding/lerping
+          if (Math.abs(cameraVelocity.x) < 0.01) {
+            cameraVelocity.x = 0;
+          }
+          if (Math.abs(cameraVelocity.y) < 0.01) {
+            cameraVelocity.y = 0;
+          }
+        } else {
+          tutorialCompleteTask('camera');
+          // This ensures that the camera won't move faster in a
+          // diagonal than up/down ; left/right.
+          targetCameraVelocity = clampVector(targetCameraVelocity, 1);
+        }
+
+        const cameraKeyDown = keyDown.cameraUp || keyDown.cameraLeft || keyDown.cameraDown || keyDown.cameraRight;
+        // Lerp camera velocity for smooth movement
+        // Lerps more slowly when camera is stopping
+        // Faster lerp while changing direction prevents it from feeling
+        // like the camera is "dragging" behind the users intention
+        cameraVelocity = lerpVec2(cameraVelocity, targetCameraVelocity, cameraKeyDown ? 0.4 : 0.15)
+
+        utilProps.camera.x += cameraVelocity.x * (config.CAMERA_BASE_SPEED * 1 / zoom);
+        utilProps.camera.y += cameraVelocity.y * (config.CAMERA_BASE_SPEED * 1 / zoom);
+
         // Clamp centerTarget so that there isn't a lot of empty space
         // in the camera 
         utilProps.camera = clampCameraPosition(utilProps.camera, zoom, underworld, utilProps.doCameraAutoFollow);
