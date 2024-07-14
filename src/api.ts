@@ -117,4 +117,5 @@ const SpellmasonsAPI = {
   Vec,
   VisualEffects,
 }
+globalThis.SpellmasonsAPI = SpellmasonsAPI;
 export default SpellmasonsAPI;

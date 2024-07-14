@@ -3,7 +3,6 @@ import { pickups } from "./entity/Pickup";
 import { registerUnit } from "./entity/units";
 import { Overworld } from "./Overworld";
 import { Mod } from "./types/commonTypes";
-import Underworld from "./Underworld";
 type moddedEntity = {
     modName?: string;
 };

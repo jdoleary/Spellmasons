@@ -6,10 +6,6 @@ All you need is a good idea and a little [Typescript](https://www.typescriptlang
 
 Let's get started!
 
-[This repository](https://github.com/jdoleary/Spellmasons) holds the Spellmasons game and engine code.  Here you can run the game locally and test out your mod quickly!  When you're ready to make your mod public, it will have to be moved to the [mods repository](https://github.com/jdoleary/spellmasons-mods).  But I'll show you how to do that later.  
-
-Let's start with a quick example.
-
 ## Getting Started
 ### Installation
 1. Install [Node.js](https://nodejs.org)
@@ -21,10 +17,49 @@ Now let's modify our first mod!
 
 ### Tweaking a sample mod
 
+### Mod Rules
+1. Mods can import any `type`
+For example 
+`import type { Vec2 } from './jmath/Vec';`
+2. Mods may **not** import anything else from outside the mod's folder that isn't exposed via SpellmasonsAPI
+Example:
+```js
+// INCORRECT:
+import * as cardUtils from "./cards/cardUtils";
+import * as PlanningView from './graphics/PlanningView';
+import * as cards from './cards/index';
 
+// Correct:
+const {
+    cardUtils,
+    PlanningView,
+    cards,
+} = globalThis.SpellmasonsAPI;
+```
 
-TBD... in progress
----
+## Publishing Your Mod
+TODO
+To publish your mod so it's available on the Community Servers and available to all players, clone the [mods repository](https://github.com/jdoleary/spellmasons-mods), and move your mod into that folder.
+
+You may need to update the imports.  Make sure that the imports follow the "Mod Rules" outlined above.
+
+Finally, open a PR.  If the mod works well and is bug free (I will help with Quality Assurance), I will merge it into the mods repo and it will ship out with the next update!
+
+You will also earn the "Modder" role in the Discord!
+
+# DOCS BELOW ARE UNDER CONSTRUCTION
+## INTERNAL _ Jordan todo
+- [ ] Make sample mods for
+  - [ ] New Spell
+  - [ ] New Enemy
+  - [ ] New Modifier
+  - [ ] New Pickup
+  - [ ] New Animation and SFX
+
+## Background
+[The game engine repository](https://github.com/jdoleary/Spellmasons) holds the Spellmasons game and engine code.  There you can run the game locally and test out your mod quickly!  When you're ready to make your mod public, it will have to be moved to the [mods repository](https://github.com/jdoleary/spellmasons-mods).  But I'll show you how to do that later.  
+
+Let's start with a quick example.
 ## Footguns
 - When making a targeting spell be sure to iterate it like so:
 ```js
