@@ -3,11 +3,11 @@ import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
 
-// Grants invulnerability to one's own damage (I.E. explosives)
+// Grants a unit invulnerability to its own damage (I.E. explosives)
 export const selfInvulnerabilityId = 'Self Invulnerability';
 export default function registerSelfInvulnerability() {
   registerModifiers(selfInvulnerabilityId, {
-    description: 'self invulnerability description',
+    description: 'Grants a unit invulnerability to its own damage (I.E. explosives)',
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, selfInvulnerabilityId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, selfInvulnerabilityId);

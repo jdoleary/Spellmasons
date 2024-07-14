@@ -8,7 +8,7 @@ import Underworld from './Underworld';
 export const onHitPoisonId = 'On Hit Poison';
 export default function registerOnHitPoison() {
   registerModifiers(onHitPoisonId, {
-    description: 'on hit poison description',
+    description: 'Applies (quantity) poison to a unit when hitting it',
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, onHitPoisonId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, onHitPoisonId);

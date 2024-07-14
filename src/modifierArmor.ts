@@ -7,7 +7,7 @@ import Underworld from './Underworld';
 export const armorId = 'Armor';
 export default function registerArmor() {
   registerModifiers(armorId, {
-    description: 'armor description',
+    description: 'Reduces incoming damage by (quantity)',
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, armorId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, armorId);
