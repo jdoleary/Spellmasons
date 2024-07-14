@@ -1,6 +1,7 @@
 import { registerEvents, registerModifiers } from "./cards";
 import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
+import floatingText from "./graphics/FloatingText";
 import Underworld from './Underworld';
 
 // Grants a unit invulnerability to its own damage (I.E. explosives)
@@ -25,6 +26,7 @@ export default function registerSelfInvulnerability() {
         // If the source of incoming damage is myself, negate it
         if (damageDealer == unit && amount > 0) {
           amount = 0;
+          floatingText({ coords: unit, text: 'Self-Invulnerable', prediction });
         }
       }
 
