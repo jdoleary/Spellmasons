@@ -1,5 +1,5 @@
 import { Mod } from '../types/commonTypes';
-import SamplePickup from './SamplePickup';
+import SamplePickup from './SamplePickup/SamplePickup';
 
 const developmentMods: Mod[] = [
     SamplePickup
