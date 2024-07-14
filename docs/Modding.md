@@ -16,6 +16,13 @@ Let's get started!
 Now let's modify our first mod!
 
 ### Tweaking a sample mod
+Let's modify the Sample Pickup.  First we need to spawn one.  Once you have the game running per the above instructions, hover your cursor over where you want to spawn the pickup and press the control key and the space key.  This brings up the Admin Quick Menu.  Type "Sample Pickup" and press "Enter". You should see a light purple potion spawn.
+
+Now this is the fun part!  Open `src\DevelopmentMods\SamplePickup\SamplePickup.ts` and change something!  Make sure it's obvious like changing `scale: 1.0` to `scale: 3.0` or something.
+When you save the file, the browser should automatically refresh.  Recreate the potion and notice that it's much larger!
+
+Congrats! You've successfully made your first change!  Feel free to use spells and pickups in the core engine code or other mods for a jumping-off point to get you started.
+
 
 ### Mod Rules
 1. Mods can import any `type`
@@ -37,11 +44,30 @@ const {
 } = globalThis.SpellmasonsAPI;
 ```
 
+### Admin Tools
+Admin tools make development a lot easier.
+
+Press F12 to open up the Developer Tools.  In the console tab, you can type `devUnderworld` to inspect the gamestate.
+
+AdminMode is automatically turned on when you're developing locally in a browser.  If AdminMode is on you can **Shift+Left click** anywhere in the game to bring up an Admin menu that allows you to place enemies, pickups and more.
+
+![Shift + Left Click Menu](./ShiftLeftClickMenu.png)
+
+
+There's also the Admin Quick Menu.  Press the **Control and Space keys** at the same time and type what you want.  This menu is useful for giving yourself specific spells or adding a modifier to
+a unit that the cursor is hovering when you bring up the menu.
+
+![Control + Space Menu](./ControlSpaceMenu.png)
+
+
+### More examples
+- Mod a Pickup (potion, etc): src\DevelopmentMods\SamplePickup\SamplePickup.ts
+- Mod a Spell: public\spellmasons-mods\undead_blade\undead_blade.ts
+
 ## Publishing Your Mod
-TODO
 To publish your mod so it's available on the Community Servers and available to all players, clone the [mods repository](https://github.com/jdoleary/spellmasons-mods), and move your mod into that folder.
 
-You may need to update the imports.  Make sure that the imports follow the "Mod Rules" outlined above.
+You will probably need to update the paths of the imports.  Make sure that the imports follow the "Mod Rules" outlined above, and use the other mods as examples if you get stuck.
 
 Finally, open a PR.  If the mod works well and is bug free (I will help with Quality Assurance), I will merge it into the mods repo and it will ship out with the next update!
 
@@ -53,7 +79,7 @@ You will also earn the "Modder" role in the Discord!
   - [ ] New Spell
   - [ ] New Enemy
   - [ ] New Modifier
-  - [ ] New Pickup
+  - [x] New Pickup
   - [ ] New Animation and SFX
 
 ## Background
