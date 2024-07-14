@@ -15,6 +15,7 @@ import type { TutorialChecklist } from '../graphics/Explain';
 import type * as particles from 'jdoleary-fork-pixi-particle-emitter'
 import type { PromptArgs } from '../graphics/Jprompt';
 import keyMapping from '../graphics/ui/keyMapping';
+import api from '../api';
 
 declare global {
   var pixi: typeof PIXI | undefined;
@@ -251,7 +252,7 @@ declare global {
   var UIEasyOnTheEyes: boolean | undefined;
   // This type is used in public/mods and defined in the globalTypes.d.ts in public/mods
   // since it is not used in this project it need not be typed here
-  var SpellmasonsAPI: any;
+  var SpellmasonsAPI: typeof api;
   var SpellmasonsAPIFrontend: any | undefined;
   // Note: Initialized in the mods repo
   var mods: Mod[];

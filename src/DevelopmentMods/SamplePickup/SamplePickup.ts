@@ -43,7 +43,7 @@ const samplePickup: IPickupSource = {
         }
 
     },
-    // If this function returns ture it will trigger the pickup
+    // If this function returns true it will trigger the pickup
     // for the unit that collided with it.  See also `playerOnly` above
     willTrigger: ({ unit, player, pickup, underworld }) => {
         // Only trigger the health potion if the player will be affected by the health potion

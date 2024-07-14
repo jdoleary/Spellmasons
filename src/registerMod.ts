@@ -1,4 +1,4 @@
-import { registerSpell } from "./cards";
+import { registerEvents, registerModifiers, registerSpell } from "./cards";
 import { pickups } from "./entity/Pickup";
 import { registerUnit } from "./entity/units";
 import { Overworld } from "./Overworld";
@@ -43,6 +43,30 @@ function registerMod(mod: Mod, overworld: Overworld) {
         for (let spell of mod.spells) {
             spell.card.modName = mod.modName;
             registerSpell(spell, overworld);
+        }
+    }
+
+    // Register Modifiers
+    // Some modifiers are attached to Spells but some
+    // like Growth for example can be independent from Spells
+    if (mod.modifiers) {
+        for (let modifier of mod.modifiers) {
+            if (modifier.id) {
+                registerModifiers(modifier.id, modifier);
+            } else {
+                console.error(`A modifier is missing an "id" and cannot be registered!`);
+            }
+        }
+    }
+
+    // Register Events
+    if (mod.events) {
+        for (let event of mod.events) {
+            if (event.id) {
+                registerEvents(event.id, event);
+            } else {
+                console.error(`A modifier is missing an "id" and cannot be registered!`);
+            }
         }
     }
 

@@ -1,8 +1,10 @@
 import { Mod } from '../types/commonTypes';
 import SamplePickup from './SamplePickup/SamplePickup';
+import SampleModifier from './SampleModifier/SampleModifier';
 
 const developmentMods: Mod[] = [
-    SamplePickup
+    SamplePickup,
+    SampleModifier
     // Attention Modder!
     // Add your in-progress mod here.
     // See Modding.md for more information

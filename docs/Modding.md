@@ -48,6 +48,7 @@ const {
 Admin tools make development a lot easier.
 
 Press F12 to open up the Developer Tools.  In the console tab, you can type `devUnderworld` to inspect the gamestate.
+Type `selectedUnit` to inspect the unit that has last been clicked on (selected) or `selectedPickup` to inspect the pickup that is selected.
 
 AdminMode is automatically turned on when you're developing locally in a browser.  If AdminMode is on you can **Shift+Left click** anywhere in the game to bring up an Admin menu that allows you to place enemies, pickups and more.
 
@@ -55,21 +56,31 @@ AdminMode is automatically turned on when you're developing locally in a browser
 
 
 There's also the Admin Quick Menu.  Press the **Control and Space keys** at the same time and type what you want.  This menu is useful for giving yourself specific spells or adding a modifier to
-a unit that the cursor is hovering when you bring up the menu.
+a unit that is selected.
 
 ![Control + Space Menu](./ControlSpaceMenu.png)
 
 Also I recommend using the menu's Save and Load regularly.  Do note that some changes occur on init of a unit or pickup and so won't be reflected in a loaded savefile but some changes (like spell effects that trigger when cast) will work after loading an save that occurred before the change was made.
 Regardless, with the admin tools it's super easy and quick to set up a test scene so even without save / load it is still rather efficient.
 
-
 ### More examples
 - Pickup (potion, etc): src\DevelopmentMods\SamplePickup\SamplePickup.ts
 - Spell: public\spellmasons-mods\undead_blade\undead_blade.ts
-- Modifier (Poison, Frozen, etc): TODO
+- Modifier (Poison, Frozen, etc): src\DevelopmentMods\SampleModifier\SampleModifier.ts
 - Unit: TODO
 - Animation: https://youtu.be/_DkjB0BvVU4?si=clsWXsOj2rq3iiOn
 - SFX: TODO
+
+## Modifiers and Events
+Many things in Spellmasons take immediate effect (such as spells); however, if you wish to do something more complex you're probably looking for Modifiers and Events.
+
+Modifiers attach `data` to a unit instance that can be later used in events.  Example events are "onDealDamage", "onDeath", "onTurnEnd".  You can view the full list in `src\cards\index.ts` (look for `interface Events`).
+
+Check out `src\DevelopmentMods\SampleModifier\SampleModifier.ts` for an example modifier and event.  Modifiers can be added to units when a spell is triggered, when a pickup is triggered, or automatically (with a probability) when a miniboss spawns.
+
+Modifiers and events often work hand-in-hand.  For example, the modifier "poison" (`src\cards\poison.ts`) tracks the strength of the poison while it's associated event of the same id delivers damage when the unit's turn ends.  
+
+There's a LOT of cool stuff you can do with modifiers.
 
 ## Publishing Your Mod
 To publish your mod so it's available on the Community Servers and available to all players, clone the [mods repository](https://github.com/jdoleary/spellmasons-mods), and move your mod into that folder.
