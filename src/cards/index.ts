@@ -139,6 +139,7 @@ import registerGrowth from '../modifierGrowth';
 import registerArmor from '../modifierArmor';
 import registerHealthRegen from '../modifierHealthRegen';
 import registerOnHitPoison from '../modifierOnHitPoison';
+import registerOverheal from '../modifierOverheal';
 import registerRevitalize from '../modifierRevitalize';
 import registerSelfInvulnerability from '../modifierSelfImmunity';
 import registerShieldRegen from '../modifierShieldRegen';
@@ -390,6 +391,7 @@ export function registerCards(overworld: Overworld) {
   registerArmor();
   registerHealthRegen();
   registerOnHitPoison();
+  registerOverheal();
   registerRevitalize();
   registerSelfInvulnerability();
   registerShieldRegen();
