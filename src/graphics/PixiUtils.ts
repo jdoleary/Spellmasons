@@ -370,7 +370,7 @@ export function setCameraToMapCenter(underworld: Underworld) {
 let lastZoom = globalThis.zoomTarget;
 // Used for lerping the camera over multiple frames
 let cameraVelocity: Vec2 = { x: 0, y: 0 }
-export function updateCameraPosition(underworld: Underworld) {
+export function updateCameraPosition(underworld: Underworld, deltaTime: number) {
   // Headless does not use graphics
   if (globalThis.headless) { return; }
   if (!(app)) {
@@ -381,7 +381,6 @@ export function updateCameraPosition(underworld: Underworld) {
   // Note: This must happen BEFORE the stage x and y is updated
   // or else it will get jumpy when zooming
   const zoom = !app ? 0 : app.stage.scale.x + ((globalThis.zoomTarget || 1) - app.stage.scale.x) / 8;
-
   app.stage.scale.x = zoom;
   app.stage.scale.y = zoom;
 
@@ -432,21 +431,14 @@ export function updateCameraPosition(underworld: Underworld) {
           targetCameraVelocity = clampVector(targetCameraVelocity, 1);
         }
 
-        const cameraKeyDown = keyDown.cameraUp || keyDown.cameraLeft || keyDown.cameraDown || keyDown.cameraRight;
-        // Lerp camera velocity for smooth movement
-        // Lerps more slowly when camera is stopping
-        // Faster lerp while changing direction prevents it from feeling
-        // like the camera is "dragging" behind the users intention
-        cameraVelocity = lerpVec2(cameraVelocity, targetCameraVelocity, cameraKeyDown ? 0.4 : 0.15)
+        // Lerp to the new camera velocity using old velocity, target velocity, and time passed
+        cameraVelocity = getNextCameraVelocity(cameraVelocity, targetCameraVelocity, deltaTime);
+        // Get next camera position using new velocity, and time passed
+        const nextPos = getNextCameraPosition({ x: utilProps.camera.x, y: utilProps.camera.y }, cameraVelocity, zoom, deltaTime);
+        // Clamp centerTarget so that there isn't a lot of empty space in the camera
+        utilProps.camera = clampCameraPosition(nextPos, zoom, underworld, utilProps.doCameraAutoFollow);
 
-        utilProps.camera.x += cameraVelocity.x * (config.CAMERA_BASE_SPEED * 1 / zoom);
-        utilProps.camera.y += cameraVelocity.y * (config.CAMERA_BASE_SPEED * 1 / zoom);
-
-        // Clamp centerTarget so that there isn't a lot of empty space
-        // in the camera 
-        utilProps.camera = clampCameraPosition(utilProps.camera, zoom, underworld, utilProps.doCameraAutoFollow);
-
-        // Actuall move the camera to be centered on the centerTarget
+        // Actually move the camera to be centered on the centerTarget
         const cameraTarget = {
           x: elPIXIHolder.clientWidth / 2 - (utilProps.camera.x * zoom),
           y: elPIXIHolder.clientHeight / 2 - (utilProps.camera.y * zoom)
@@ -506,6 +498,33 @@ export function updateCameraPosition(underworld: Underworld) {
   });
 
   tryShowRecenterTip();
+}
+export function getNextCameraVelocity(cameraVelocity: Vec2, targetCameraVelocity: Vec2, deltaTime: number): Vec2 {
+  // Camera should lerp quickly when given playerInput and slowly when stopping
+  // this ensures the camera isn't "dragging" behind the user's intention
+  const cameraKeyDown = (targetCameraVelocity.x != 0 || targetCameraVelocity.y != 0);
+
+  // How long it should take to lerp the camera (higher amount = slower lerp)
+  const interpolationTime = cameraKeyDown ? 40 : 50;
+
+  // We adjust the lerp amount based on framerate
+  const frameLerpAmount = 1 - Math.pow(Math.E, -deltaTime / interpolationTime);
+  cameraVelocity = lerpVec2(cameraVelocity, targetCameraVelocity, frameLerpAmount)
+
+  return cameraVelocity;
+}
+export function getNextCameraPosition(cameraPos: Vec2, cameraVelocity: Vec2, zoom: number, deltaTime: number): Vec2 {
+  // Camera velocity is still clamped to [0, 1] or [Stationary, MaxSpeed] so we need to
+  // CAMERA_BASE_SPEED (configurable constant)
+  // * zoom factor, (move slower when zoomed in, faster when zoomed out)
+  // * seconds passed, (maintains camera speed at different framerates)
+  const cameraSpeedMult = (config.CAMERA_BASE_SPEED * 1 / Math.sqrt(zoom)) * (deltaTime / 1000);
+  const nextPos = {
+    x: cameraPos.x + cameraVelocity.x * cameraSpeedMult,
+    y: cameraPos.y + cameraVelocity.y * cameraSpeedMult,
+  }
+
+  return nextPos;
 }
 // Clamp the camera position so it doesn't go too far out of bounds when autofollowing a target
 function clampCameraPosition(camPos: Vec2, zoom: number, underworld: Underworld, isCameraAutoFollowing: boolean): Vec2 {
