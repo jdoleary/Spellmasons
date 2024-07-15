@@ -36,15 +36,15 @@ describe('camera', () => {
                 averageDist /= results.length;
 
                 // Log results
-                console.log("Average Distance: ", averageDist);
-                console.log("Results: ", results);
+                // console.log("Average Distance: ", averageDist);
+                // console.log("Results: ", results);
 
                 // Test fails if any framerates is more than 10% off from the average distance
                 results.forEach(r => {
                     const maxErrorMargin = 0.1;
                     const errorMargin = (r.dist - averageDist) / averageDist;
 
-                    console.log(`[${r.framerate} fps: ${r.dist}] = ${errorMargin * 100}%`);
+                    // console.log(`[${r.framerate} fps: ${r.dist}] = ${errorMargin * 100}%`);
                     expect(Math.abs(errorMargin)).toBeLessThan(maxErrorMargin);
                 })
             }
