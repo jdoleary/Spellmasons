@@ -53,7 +53,7 @@ export const UNIT_MINIBOSS_MANA_MULTIPLIER = 2;
 // organic
 export const UNIT_BASE_RADIUS = COLLISION_MESH_RADIUS / 4;
 
-export const CAMERA_BASE_SPEED = 20;
+export const CAMERA_BASE_SPEED = 1500;
 export const DEFAULT_ANIMATION_SPEED = 0.132;
 
 export const CAST_RANGE_COYOTE_MARGIN = 25;

@@ -989,7 +989,7 @@ export default class Underworld {
       })
     }
 
-    updateCameraPosition(this);
+    updateCameraPosition(this, deltaTime);
     this.drawEnemyAttentionMarkers();
     this.drawResMarkers();
     this.drawPlayerThoughts();
