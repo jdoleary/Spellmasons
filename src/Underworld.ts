@@ -107,6 +107,7 @@ import { slashCardId } from './cards/slash';
 import { pushId } from './cards/push';
 import { test_endCheckPromises, test_startCheckPromises } from './promiseSpy';
 import { targetCursedId } from './cards/target_curse';
+import { chooseBookmark } from './views';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -1968,6 +1969,10 @@ export default class Underworld {
     this.broadcastTurnPhase(turn_phase.PlayerTurns);
     cameraAutoFollow(false);
     setCameraToMapCenter(this);
+    if (globalThis.player && this.perksLeftToChoose(globalThis.player)) {
+      CardUI.toggleInventory(undefined, true, this);
+      chooseBookmark('bookmark-runes', );
+    }
     // If in a multiplayer game and it's a few levels in (giving time for players to get situated)
     // explaining pinging
     if (this.players.length > 1 && this.levelIndex > 2) {

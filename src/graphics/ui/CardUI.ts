@@ -487,7 +487,7 @@ export function renderRunesMenu(underworld: Underworld) {
     }
 
     return `<tr class="stat-row">
-            <td><h1>${wordMap[stat] || ''}${stat === 'Good Looks' ? '' : ':'} ${statValueModifier(stat, globalThis.player.unit[stat as keyof Unit.IUnit] as number)}</h1></td>
+            <td><div>${wordMap[stat] || ''}${stat === 'Good Looks' ? '' : ':'} ${statValueModifier(stat, globalThis.player.unit[stat as keyof Unit.IUnit] as number)}</div></td>
             <td data-stat="${stat}" class="plus-btn-container"></td>
 </tr>`;
   }
@@ -506,7 +506,7 @@ export function renderRunesMenu(underworld: Underworld) {
 
   elRunes.querySelectorAll('.stat-row .plus-btn-container').forEach(el => {
     const elPlusBtn = document.createElement('div');
-    elPlusBtn.classList.add('plus-btn');
+    elPlusBtn.classList.add('plus-btn', 'small');
     elPlusBtn.style.color = 'white';
     const stat = (el as HTMLElement).dataset.stat;
     if (stat && stat == 'attackRange') {
