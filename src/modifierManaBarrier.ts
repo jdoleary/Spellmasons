@@ -52,6 +52,7 @@ export default function registerManaBarrier() {
           if (blockableDamage > 0) {
             amount -= blockableDamage;
             unit.mana -= blockableDamage / CalcMult(modifier.quantity);
+            unit.mana = Math.floor(unit.mana); // To prevents rounding errors
             if (!prediction) {
               floatingText({
                 coords: unit,
