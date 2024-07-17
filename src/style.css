@@ -2513,26 +2513,18 @@ body.dragging-card .floating-card-holder .empty-slot {
   padding: 0;
   margin: 0;
   height: 0;
+  position: absolute;
+  top: 171px;
+  left: 370px;
+}
+
+.top-bookmarks-holder .bookmark {
+  left: 0;
+  top: 0;
 }
 
 body.open-inventory .top-bookmarks-holder {
   display: block
-}
-
-#bookmark-all {
-  left: -470px;
-  top: -34px;
-  position: relative;
-  /* Override ui-positioner */
-  pointer-events: all;
-}
-
-#bookmark-runes {
-  left: -420px;
-  top: -34px;
-  position: relative;
-  /* Override ui-positioner */
-  pointer-events: all;
 }
 
 
@@ -2608,6 +2600,6 @@ body.open-inventory .top-bookmarks-holder {
   display: none;
 }
 
-body.bookmark-runes #runes {
+#inventory-container.bookmark-runes #runes {
   display: flex;
 }
