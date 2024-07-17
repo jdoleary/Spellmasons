@@ -25,6 +25,7 @@ export const HEALTH_BAR_UI_Y_POS = 30;
 export const UNIT_UI_BAR_HEIGHT = 6;
 export const UNIT_UI_BAR_WIDTH = 36;
 
+export const ARROW_PROJECTILE_SPEED = 1.5;
 export const LOB_PROJECTILE_SPEED = 800; // in millis
 export const UNIT_SIZE = COLLISION_MESH_RADIUS * 2;
 export const UNIT_BASE_DAMAGE = 30;

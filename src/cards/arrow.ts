@@ -51,16 +51,11 @@ const spell: Spell = {
 export function arrowEffect(multiShotCount: number, collideFnKey: string, piercesRemaining: number = 0, bouncesRemaining: number = 0) {
   return async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean) => {
     let targets: Vec2[] = state.targetedUnits;
-    const path = findArrowPath(state.casterPositionAtTimeOfCast, state.castLocation, underworld)
-    targets = targets.length ? targets.map(t => {
-      const path = findArrowPath(state.casterPositionAtTimeOfCast, t, underworld);
-      return path ? path.p2 : state.castLocation;
-    }) : [path ? path.p2 : state.castLocation];
+    targets = targets.length ? targets : [state.castLocation];
     let timeoutToNextArrow = 200;
     for (let i = 0; i < quantity; i++) {
       for (let target of targets) {
         for (let arrowNumber = 0; arrowNumber < multiShotCount; arrowNumber++) {
-
           // START: Shoot multiple arrows at offset
           let casterPositionAtTimeOfCast = state.casterPositionAtTimeOfCast;
           let castLocation = target;
@@ -71,8 +66,7 @@ export function arrowEffect(multiShotCount: number, collideFnKey: string, pierce
           }
           // END: Shoot multiple arrows at offset
           const startPoint = casterPositionAtTimeOfCast;
-          const speed = 1.5
-          const velocity = math.similarTriangles(target.x - startPoint.x, target.y - casterPositionAtTimeOfCast.y, math.distance(startPoint, target), speed)
+          const velocity = math.similarTriangles(target.x - startPoint.x, target.y - casterPositionAtTimeOfCast.y, math.distance(startPoint, target), config.ARROW_PROJECTILE_SPEED)
           let image: Image.IImageAnimated | undefined;
           if (!prediction) {
             image = Image.create(casterPositionAtTimeOfCast, 'projectile/arrow', containerProjectiles)
@@ -97,7 +91,8 @@ export function arrowEffect(multiShotCount: number, collideFnKey: string, pierce
             piercesRemaining,
             bouncesRemaining,
             ignoreUnitIds: [state.casterUnit.id],
-            collideFnKey
+            collideFnKey,
+            state,
           }, underworld, prediction);
 
           if (!prediction && !globalThis.headless) {

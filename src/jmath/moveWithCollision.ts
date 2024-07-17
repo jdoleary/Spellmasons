@@ -7,6 +7,7 @@ import Underworld from '../Underworld';
 import { HasSpace } from '../entity/Type';
 import { IUnit } from '../entity/Unit';
 import { IPickup } from '../entity/Pickup';
+import { EffectState } from '../cards';
 export enum ForceMoveType {
   PROJECTILE,
   UNIT_OR_PICKUP
@@ -37,6 +38,7 @@ export type ForceMoveProjectile = ForceMove & {
   bouncesRemaining: number;
   ignoreUnitIds: number[];
   collideFnKey: string;
+  state: EffectState;
 }
 export function isForceMoveProjectile(x: ForceMove): x is ForceMoveProjectile {
   return x.type == ForceMoveType.PROJECTILE;
@@ -51,6 +53,7 @@ interface ForceMoveProjectileArgs {
   bouncesRemaining: number;
   ignoreUnitIds: number[];
   collideFnKey: string;
+  state: EffectState;
 }
 export function makeForceMoveProjectile(args: ForceMoveProjectileArgs, underworld: Underworld, prediction: boolean): ForceMove {
   const { pushedObject } = args;
