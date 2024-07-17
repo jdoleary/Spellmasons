@@ -48,7 +48,7 @@ const spell: Spell = {
     }
   }
 };
-export function arrowEffect(multiShotCount: number, collideFnKey: string, doesPierce: boolean = false) {
+export function arrowEffect(multiShotCount: number, collideFnKey: string, piercesRemaining: number = 0, bouncesRemaining: number = 0) {
   return async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean) => {
     let targets: Vec2[] = state.targetedUnits;
     const path = findArrowPath(state.casterPositionAtTimeOfCast, state.castLocation, underworld)
@@ -70,12 +70,14 @@ export function arrowEffect(multiShotCount: number, collideFnKey: string, doesPi
             castLocation = subtract(castLocation, diff);
           }
           // END: Shoot multiple arrows at offset
-          const endPoint = target;
+          const startPoint = casterPositionAtTimeOfCast;
+          const speed = 1.5
+          const velocity = math.similarTriangles(target.x - startPoint.x, target.y - casterPositionAtTimeOfCast.y, math.distance(startPoint, target), speed)
           let image: Image.IImageAnimated | undefined;
           if (!prediction) {
             image = Image.create(casterPositionAtTimeOfCast, 'projectile/arrow', containerProjectiles)
             if (image) {
-              image.sprite.rotation = Math.atan2(endPoint.y - casterPositionAtTimeOfCast.y, endPoint.x - casterPositionAtTimeOfCast.x);
+              image.sprite.rotation = Math.atan2(velocity.y, velocity.x);
             }
           }
           const pushedObject: HasSpace = {
@@ -90,10 +92,10 @@ export function arrowEffect(multiShotCount: number, collideFnKey: string, doesPi
           makeForceMoveProjectile({
             sourceUnit: state.casterUnit,
             pushedObject,
-            startPoint: casterPositionAtTimeOfCast,
-            endPoint: endPoint,
-            speed: 1.5,
-            doesPierce,
+            startPoint,
+            velocity,
+            piercesRemaining,
+            bouncesRemaining,
             ignoreUnitIds: [state.casterUnit.id],
             collideFnKey
           }, underworld, prediction);
