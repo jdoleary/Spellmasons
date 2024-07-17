@@ -107,6 +107,7 @@ import { slashCardId } from './cards/slash';
 import { pushId } from './cards/push';
 import { test_endCheckPromises, test_startCheckPromises } from './promiseSpy';
 import { targetCursedId } from './cards/target_curse';
+import { manaBarrierId, updateTooltip } from './modifierManaBarrier';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -891,7 +892,7 @@ export default class Underworld {
         Unit.syncImage(u)
         drawHealthBarAboveHead(i, this, zoom);
         // Animate shield modifier sprites
-        if ((u.modifiers[shield.shieldId] || u.modifiers[fortify.id] || u.modifiers[immune.id]) && u.image) {
+        if ((u.modifiers[shield.shieldId] || u.modifiers[fortify.id] || u.modifiers[immune.id] || u.modifiers[manaBarrierId]) && u.image) {
           // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
           // which is used for identifying the sprite or animation that is currently active
           const modifierSprite = u.image.sprite.children.find(c => c.imagePath == shield.modifierImagePath)
@@ -3888,6 +3889,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (!prediction) {
       // Clear spell animations once all cards are done playing their animations
       containerSpells?.removeChildren();
+    }
+
+    if (casterUnit.modifiers[manaBarrierId]) {
+      updateTooltip(casterUnit);
     }
 
     stopAndDestroyForeverEmitter(castingParticleEmitter);

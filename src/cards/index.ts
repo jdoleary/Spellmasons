@@ -138,6 +138,7 @@ import registerTargetImmune, { targetImmuneId } from '../modifierTargetImmune';
 import registerGrowth from '../modifierGrowth';
 import registerArmor from '../modifierArmor';
 import registerHealthRegen from '../modifierHealthRegen';
+import registerManaBarrier from '../modifierManaBarrier';
 import registerOnHitPoison from '../modifierOnHitPoison';
 import registerOverheal from '../modifierOverheal';
 import registerRevitalize from '../modifierRevitalize';
@@ -394,6 +395,7 @@ export function registerCards(overworld: Overworld) {
 
   registerArmor();
   registerHealthRegen();
+  registerManaBarrier();
   registerOnHitPoison();
   registerOverheal();
   registerRevitalize();
