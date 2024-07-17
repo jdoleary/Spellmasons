@@ -502,6 +502,15 @@ export default class Underworld {
     } else if (isForceMoveProjectile(forceMoveInst)) {
       const collision = handleWallCollision(forceMoveInst, this, deltaTime);
       if (collision.wall) {
+        if (Events.onProjectileCollisionSource) {
+          const collideFn = Events.onProjectileCollisionSource[forceMoveInst.collideFnKey];
+          if (collideFn) {
+            collideFn({ unit: undefined, underworld: this, prediction, projectile: forceMoveInst });
+          } else {
+            console.error('No projectile collide fn for', forceMoveInst.collideFnKey);
+          }
+        }
+
         if (forceMoveInst.bouncesRemaining <= 0) {
           // If cannot bounce and collides with a wall, remove
           return true;
