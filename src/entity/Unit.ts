@@ -898,9 +898,13 @@ export function takeDamage(damageArgs: damageArgs, underworld: Underworld, predi
   amount = composeOnDealDamageEvents(damageArgs, underworld, prediction);
   amount = composeOnTakeDamageEvents(damageArgs, underworld, prediction);
   if (amount == 0) {
-    // Even though damage is 0, sync the player UI in the event that the
-    // damage took down shield
-    if (unit === globalThis.player?.unit) {
+    // Even though damage is 0, sync the player UI in the event that
+    // the damage took down shield/mana barrier/etc.
+    if (unit === globalThis.player?.unit && !prediction) {
+      // Now that the player unit's properties have changed, sync the new state
+      // with the player's predictionUnit so it is properly refelcted in the bar
+      // (note: this would be auto corrected on the next mouse move anyway)
+      underworld.syncPlayerPredictionUnitOnly();
       syncPlayerHealthManaUI(underworld);
     }
     return;
@@ -958,9 +962,8 @@ export function takeDamage(damageArgs: damageArgs, underworld: Underworld, predi
   }
 
   if (unit.id == globalThis.player?.unit.id && !prediction) {
-    // Now that the player unit's properties have changed, sync the new
-    // state with the player's predictionUnit so it is properly
-    // refelcted in the bar
+    // Now that the player unit's properties have changed, sync the new state
+    // with the player's predictionUnit so it is properly refelcted in the bar
     // (note: this would be auto corrected on the next mouse move anyway)
     underworld.syncPlayerPredictionUnitOnly();
     syncPlayerHealthManaUI(underworld);
