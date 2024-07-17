@@ -69,7 +69,7 @@ const spell: Spell = {
           velocity,
           piercesRemaining: 0,
           bouncesRemaining: quantity,
-          ignoreUnitIds: [state.casterUnit.id],
+          collidingUnitIds: [state.casterUnit.id],
           collideFnKey: targetRicochetArrowCardId,
           state,
         }, underworld, prediction);

@@ -36,9 +36,12 @@ export type ForceMoveProjectile = ForceMove & {
   velocity: Vec2;
   piercesRemaining: number;
   bouncesRemaining: number;
-  ignoreUnitIds: number[];
+  collidingUnitIds: number[];
   collideFnKey: string;
   state: EffectState;
+  // If this number != undefined, the projectile will ignore all collisions,
+  // and be destroyed after a lifetime instead. Used for vfx
+  ignoreCollisionLifetime?: number | undefined;
 }
 export function isForceMoveProjectile(x: ForceMove): x is ForceMoveProjectile {
   return x.type == ForceMoveType.PROJECTILE;
@@ -51,9 +54,12 @@ interface ForceMoveProjectileArgs {
   velocity: Vec2; // units per ms
   piercesRemaining: number;
   bouncesRemaining: number;
-  ignoreUnitIds: number[];
+  collidingUnitIds: number[];
   collideFnKey: string;
   state: EffectState;
+  // If this number != 0, the projectile will ignore all collisions,
+  // and be destroyed after a lifetime instead. Used for vfx
+  ignoreCollisionLifetime?: number | undefined;
 }
 export function makeForceMoveProjectile(args: ForceMoveProjectileArgs, underworld: Underworld, prediction: boolean): ForceMove {
   const { pushedObject } = args;

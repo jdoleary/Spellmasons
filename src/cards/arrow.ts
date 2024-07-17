@@ -90,7 +90,7 @@ export function arrowEffect(multiShotCount: number, collideFnKey: string, pierce
             velocity,
             piercesRemaining,
             bouncesRemaining,
-            ignoreUnitIds: [state.casterUnit.id],
+            collidingUnitIds: [state.casterUnit.id],
             collideFnKey,
             state,
           }, underworld, prediction);

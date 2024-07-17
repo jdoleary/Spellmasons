@@ -500,90 +500,109 @@ export default class Underworld {
       // Check to see if unit has falled out of lava via a forcemove
       Obstacle.tryFallInOutOfLiquid(forceMoveInst.pushedObject, this, prediction);
     } else if (isForceMoveProjectile(forceMoveInst)) {
-      const collision = handleWallCollision(forceMoveInst, this, deltaTime);
-      if (collision.wall) {
-        if (Events.onProjectileCollisionSource) {
-          const collideFn = Events.onProjectileCollisionSource[forceMoveInst.collideFnKey];
-          if (collideFn) {
-            collideFn({ unit: undefined, underworld: this, prediction, projectile: forceMoveInst });
-          } else {
-            console.error('No projectile collide fn for', forceMoveInst.collideFnKey);
+      // ignoreCollisionLiftime is only set if we ignore collisions
+      // so for everything else, run collision logic
+      if (forceMoveInst.ignoreCollisionLifetime == undefined) {
+        const collision = handleWallCollision(forceMoveInst, this, deltaTime);
+        if (collision.wall) {
+          if (Events.onProjectileCollisionSource) {
+            const collideFn = Events.onProjectileCollisionSource[forceMoveInst.collideFnKey];
+            if (collideFn) {
+              collideFn({ unit: undefined, underworld: this, prediction, projectile: forceMoveInst });
+            } else {
+              console.error('No projectile collide fn for', forceMoveInst.collideFnKey);
+            }
           }
-        }
 
-        if (forceMoveInst.bouncesRemaining <= 0) {
-          // If cannot bounce and collides with a wall, remove
-          return true;
+          if (forceMoveInst.bouncesRemaining <= 0) {
+            // If cannot bounce and collides with a wall, remove
+            return true;
+          } else {
+            // Bounce the projectile
+            forceMoveInst.bouncesRemaining--;
+
+            // Reflect velocity
+            const newVelocity = reflectVelocityOnWall(velocity, collision.wall);
+            velocity.x = newVelocity.x;
+            velocity.y = newVelocity.y;
+            // Move for remaining delta time (after wall collision)
+            const newPosition = Vec.add(pushedObject, Vec.multiply(deltaTime - collision.msUntilCollision, velocity));
+            pushedObject.x = newPosition.x;
+            pushedObject.y = newPosition.y;
+          }
         } else {
-          // Bounce the projectile
-          forceMoveInst.bouncesRemaining--;
-
-          // Reflect velocity
-          const newVelocity = reflectVelocityOnWall(velocity, collision.wall);
-          velocity.x = newVelocity.x;
-          velocity.y = newVelocity.y;
-          // Move for remaining delta time (after wall collision)
-          const newPosition = Vec.add(pushedObject, Vec.multiply(deltaTime - collision.msUntilCollision, velocity));
+          // If projectile wasn't going to collide with a wall,
+          // move it according to it's velocity
+          const newPosition = Vec.add(pushedObject, deltaPosition);
           pushedObject.x = newPosition.x;
           pushedObject.y = newPosition.y;
         }
+
+        // TODO - For accuracy, we may have to predict these collisions before they happen (Needs testing)
+        for (let unit of aliveUnits) {
+          if (isVecIntersectingVecWithCustomRadius(pushedObject, unit, config.COLLISION_MESH_RADIUS)) {
+            if (forceMoveInst.collidingUnitIds.includes(unit.id)) {
+              // If already colliding with this unit, skip to the next one
+              continue;
+            }
+
+            if (Events.onProjectileCollisionSource) {
+              const collideFn = Events.onProjectileCollisionSource[forceMoveInst.collideFnKey];
+              if (collideFn) {
+                collideFn({ unit: unit, underworld: this, prediction, projectile: forceMoveInst });
+              } else {
+                console.error('No projectile collide fn for', forceMoveInst.collideFnKey);
+              }
+
+              if (forceMoveInst.piercesRemaining <= 0) {
+                if (forceMoveInst.bouncesRemaining <= 0) {
+                  // If cannot pierce or bounce and collides with a unit, remove
+                  return true;
+                } else {
+                  forceMoveInst.bouncesRemaining--;
+                  forceMoveInst.collidingUnitIds.push(unit.id);
+                  // Units aren't walls, so we use a different method for reflecting velocity
+                  const directionToProjectile = Vec.normalized({ x: unit.x - pushedObject.x, y: unit.y - pushedObject.y });
+
+                  // Reflect velocity
+                  // Note that because a unit is not a wall segment, we use a different function
+                  const newVelocity = Vec.reflectOnNormal(velocity, directionToProjectile)
+                  velocity.x = newVelocity.x;
+                  velocity.y = newVelocity.y;
+                }
+              } else {
+                forceMoveInst.piercesRemaining--;
+                forceMoveInst.collidingUnitIds.push(unit.id);
+              }
+            }
+          } else {
+            if (forceMoveInst.collidingUnitIds.includes(unit.id)) {
+              // Left the collision zone for a unit, may want to collide with it again later (pierce/bounce)
+              forceMoveInst.collidingUnitIds = forceMoveInst.collidingUnitIds.filter(id => id != unit.id);
+            }
+          }
+        }
       } else {
-        // If projectile wasn't going to collide with a wall,
-        // move it according to it's velocity
-        const newPosition = Vec.add(pushedObject, deltaPosition);
-        pushedObject.x = newPosition.x;
-        pushedObject.y = newPosition.y;
+        // This projectile is ignoring collisions. Common for VFX
+        // Since we aren't destroying the projectile through collision logic
+        // We give it a maximum lifetime, and destroy it at the end
+        if (forceMoveInst.ignoreCollisionLifetime > 0) {
+          forceMoveInst.ignoreCollisionLifetime -= deltaTime;
+          // Move according to its velocity
+          const newPosition = Vec.add(pushedObject, deltaPosition);
+          pushedObject.x = newPosition.x;
+          pushedObject.y = newPosition.y;
+        } else {
+          // Destroy projectile if lifetime is complete
+          return true;
+        }
       }
 
+      // All projectiles should face the direction they are moving
       if (pushedObject.image) {
         pushedObject.image.sprite.x = pushedObject.x;
         pushedObject.image.sprite.y = pushedObject.y;
         pushedObject.image.sprite.rotation = Math.atan2(velocity.y, velocity.x);
-      }
-
-      // TODO - For accuracy, we may have to predict these collisions before they happen (Needs testing)
-      for (let unit of aliveUnits) {
-        if (isVecIntersectingVecWithCustomRadius(pushedObject, unit, config.COLLISION_MESH_RADIUS)) {
-          if (forceMoveInst.ignoreUnitIds.includes(unit.id)) {
-            // If colliding with ignored unit, skip to the next one
-            continue;
-          }
-
-          if (Events.onProjectileCollisionSource) {
-            const collideFn = Events.onProjectileCollisionSource[forceMoveInst.collideFnKey];
-            if (collideFn) {
-              collideFn({ unit: unit, underworld: this, prediction, projectile: forceMoveInst });
-            } else {
-              console.error('No projectile collide fn for', forceMoveInst.collideFnKey);
-            }
-
-            if (forceMoveInst.piercesRemaining <= 0) {
-              if (forceMoveInst.bouncesRemaining <= 0) {
-                // If cannot pierce or bounce and collides with a unit, remove
-                return true;
-              } else {
-                forceMoveInst.bouncesRemaining--;
-                forceMoveInst.ignoreUnitIds.push(unit.id);
-                // Units aren't walls, so we use a different method for reflecting velocity
-                const directionToProjectile = Vec.normalized({ x: unit.x - pushedObject.x, y: unit.y - pushedObject.y });
-
-                // Reflect velocity
-                // Note that because a unit is not a wall segment, we use a different function
-                const newVelocity = Vec.reflectOnNormal(velocity, directionToProjectile)
-                velocity.x = newVelocity.x;
-                velocity.y = newVelocity.y;
-              }
-            } else {
-              forceMoveInst.piercesRemaining--;
-              forceMoveInst.ignoreUnitIds.push(unit.id);
-            }
-          }
-        } else {
-          if (forceMoveInst.ignoreUnitIds.includes(unit.id)) {
-            // Left the collision zone for a unit, may want to collide with it again later (pierce/bounce)
-            forceMoveInst.ignoreUnitIds = forceMoveInst.ignoreUnitIds.filter(id => id != unit.id);
-          }
-        }
       }
     }
     return false;
