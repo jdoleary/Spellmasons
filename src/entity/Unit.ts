@@ -53,8 +53,8 @@ import { chooseObjectWithProbability } from '../jmath/rand';
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
 const elHealthBar = document.querySelector('#health .fill') as HTMLElement;
-const elHealthBarSheild = document.querySelector('#health .fill:nth-child(2)') as HTMLElement;
-const elHealthCostSheild = document.querySelector('#health .cost:nth-child(4)') as HTMLElement;
+const elHealthBarShield = document.querySelector('#health .fill:nth-child(2)') as HTMLElement;
+const elHealthCostShield = document.querySelector('#health .cost:nth-child(4)') as HTMLElement;
 const elHealthCost = document.querySelector('#health .cost') as HTMLElement;
 const elHealthLabel = document.querySelector('#health .label') as HTMLElement;
 const elManaBar = document.querySelector('#mana .fill:nth-child(1)') as HTMLElement;
@@ -975,25 +975,16 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
   const predictionPlayerUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id);
 
   const unit = globalThis.player.unit;
-  const healthRatio = unit.health / unit.healthMax
-  // Set the health bar that shows how much health you currently have
-  elHealthBar.style["width"] = `${100 * healthRatio}%`;
   const shieldAmount = unit.modifiers.shield?.quantity || 0;
-  const shieldRatio = shieldAmount / unit.healthMax;
-  elHealthBarSheild.style["width"] = `${100 * Math.min(shieldRatio, 1)}%`;
+  // Set the health/shield bars that shows how much health/shield you currently have
+  elHealthBar.style["width"] = `${100 * unit.health / unit.healthMax}%`;
+  elHealthBarShield.style["width"] = `${100 * Math.min(shieldAmount / unit.healthMax, 1)}%`;
   if (shieldAmount) {
     const shieldText = `${unit.modifiers.shield?.quantity} shield`;
     elHealthLabel.innerHTML = `${shieldText} + ${unit.health} / ${unit.healthMax}`;
   } else {
     // Label health without shield
     elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;
-  }
-  if (predictionPlayerUnit && predictionPlayerUnit.health !== unit.health) {
-    if (predictionPlayerUnit.health <= 0) {
-      elHealthLabel.innerHTML = i18n('Death');
-    } else {
-      elHealthLabel.innerHTML = `${predictionPlayerUnit.health} ${i18n('Remaining')}`;
-    }
   }
 
   // Set the health cost bar that shows how much health will be changed if the spell is cast
@@ -1002,6 +993,7 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
     const willDie = predictionPlayerUnit.health <= 0;
     const predictionPlayerShield = predictionPlayerUnit.modifiers.shield?.quantity || 0
     const shieldLost = predictionPlayerShield < shieldAmount;
+
     if (elCautionBox) {
       if (elCautionBoxText) {
         const cursingSelf = Object.values(predictionPlayerUnit.modifiers).filter(m => m.isCurse).length > Object.values(unit.modifiers).filter(m => m.isCurse).length;
@@ -1026,80 +1018,116 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
         elCautionBox.classList.toggle('visible', underworld.isMyTurn() && warnings.length > 0);
       }
     }
+
+    // Show death, shield/health text, or health remaining if health has changed
+    if (willDie) {
+      elHealthLabel.innerHTML = i18n('Death');
+    } else if (predictionPlayerShield) {
+      const shieldText = `${predictionPlayerShield} shield`;
+      elHealthLabel.innerHTML = `${shieldText} + ${predictionPlayerUnit.health} / ${predictionPlayerUnit.healthMax}`;
+    } else if (predictionPlayerUnit.health != unit.health || predictionPlayerUnit.healthMax != unit.healthMax) {
+      elHealthLabel.innerHTML = `${predictionPlayerUnit.health} ${i18n('Remaining')}`;
+    }
+
+    // Set the health bar that shows how much health you have after prediction
+    elHealthBar.style["width"] = `${100 * predictionPlayerUnit.health / predictionPlayerUnit.healthMax}%`;
     if (losingHealth) {
       // Visualize health loss
-      elHealthCost.style['left'] = `${100 * predictionPlayerUnit.health / unit.healthMax}%`;
-      elHealthCost.style['width'] = `${100 * (unit.health - predictionPlayerUnit.health) / unit.healthMax}%`;
+      elHealthCost.style['left'] = `${100 * predictionPlayerUnit.health / predictionPlayerUnit.healthMax}%`;
+      elHealthCost.style['width'] = `${100 * (unit.health - predictionPlayerUnit.health) / predictionPlayerUnit.healthMax}%`;
     } else {
       // Visualize health gain
-      elHealthCost.style['left'] = `${100 * unit.health / unit.healthMax}%`;
-      elHealthCost.style['width'] = `${100 * (predictionPlayerUnit.health - unit.health) / unit.healthMax}%`;
+      elHealthCost.style['left'] = `${100 * unit.health / predictionPlayerUnit.healthMax}%`;
+      elHealthCost.style['width'] = `${100 * (predictionPlayerUnit.health - unit.health) / predictionPlayerUnit.healthMax}%`;
     }
+
+    elHealthBarShield.style["width"] = `${100 * Math.min(predictionPlayerShield / predictionPlayerUnit.healthMax, 1)}%`;
     if (shieldLost) {
       // Visualize shield loss
-      elHealthCostSheild.style['left'] = `${100 * predictionPlayerShield / unit.healthMax}%`;
-      elHealthCostSheild.style['width'] = `${100 * (shieldAmount - predictionPlayerShield) / unit.healthMax}%`;
+      elHealthCostShield.style['left'] = `${100 * predictionPlayerShield / predictionPlayerUnit.healthMax}%`;
+      elHealthCostShield.style['width'] = `${100 * (shieldAmount - predictionPlayerShield) / predictionPlayerUnit.healthMax}%`;
     } else {
       // Visualize shield gain
-      elHealthCostSheild.style['left'] = `${100 * shieldAmount / unit.healthMax}%`;
-      elHealthCostSheild.style['width'] = `${100 * (predictionPlayerShield - shieldAmount) / unit.healthMax}%`;
+      elHealthCostShield.style['left'] = `${100 * shieldAmount / predictionPlayerUnit.healthMax}%`;
+      elHealthCostShield.style['width'] = `${100 * (predictionPlayerShield - shieldAmount) / predictionPlayerUnit.healthMax}%`;
     }
   }
 
   // Set the 3 mana bars that show how much mana you currently have
-  const manaRatio = unit.mana / unit.manaMax;
-  elManaBar.style["width"] = `${100 * Math.min(manaRatio, 1)}%`;
-  const manaRatio2 = (Math.max(0, unit.mana - unit.manaMax)) / unit.manaMax
-  elManaBar2.style["width"] = `${100 * Math.min(manaRatio2, 1)}%`;
-  const manaRatio3 = (Math.max(0, unit.mana - unit.manaMax * 2)) / unit.manaMax;
-  elManaBar3.style["width"] = `${100 * Math.min(manaRatio3, 1)}%`;
-  if (predictionPlayerUnit && predictionPlayerUnit.mana !== unit.mana) {
-    if (predictionPlayerUnit.mana < 0) {
-      // If a player queues up a spell while another spell is casting,
-      // it may not block them from adding a spell beyond the mana that they have
-      // because the mana is actively changing from the currently casting spell,
-      // so rather than showing negative mana, show "Insufficient Mana"
-      // (Note, it will still prevent them from casting this spell on click, it's just
-      // that it won't prevent them from queing a spell)
-      elManaLabel.innerHTML = i18n('Insufficient Mana');
-    } else {
-      elManaLabel.innerHTML = `${predictionPlayerUnit.mana} ${i18n('Remaining')}`;
-
-    }
-  } else {
-    elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax}`;
-  }
+  const manaRatio1 = Math.max(0, Math.min(unit.mana / unit.manaMax, 1));
+  const manaRatio2 = Math.max(0, Math.min((unit.mana - unit.manaMax) / unit.manaMax, 1));
+  const manaRatio3 = Math.max(0, Math.min((unit.mana - unit.manaMax * 2) / unit.manaMax, 1));
+  elManaBar.style["width"] = `${100 * manaRatio1}%`;
+  elManaBar2.style["width"] = `${100 * manaRatio2}%`;
+  elManaBar3.style["width"] = `${100 * manaRatio3}%`;
 
   // Set the 3 mana cost bars that show how much mana will be removed if the spell is cast
   if (predictionPlayerUnit) {
-    // Show cost bar from current mana location minus whatever it's value is
-    elManaCost.style['left'] = `${100 * predictionPlayerUnit.mana / unit.manaMax}%`;
-    elManaCost.style['width'] = `${100 * Math.min(((unit.mana - predictionPlayerUnit.mana) / unit.manaMax), 1)}%`;
-
-    elManaCost2.style['left'] = `${100 * (predictionPlayerUnit.mana - unit.manaMax) / unit.manaMax}%`;
-    let cost2Left = 100 * (predictionPlayerUnit.mana - unit.manaMax) / unit.manaMax;
-    if (cost2Left < 0) {
-      elManaBar2.style['left'] = `${cost2Left}%`;
-      elManaCost2.style['left'] = `0%`;
+    if (predictionPlayerUnit.mana != unit.mana || predictionPlayerUnit.manaMax != unit.manaMax) {
+      if (predictionPlayerUnit.mana < 0) {
+        // If a player queues up a spell while another spell is casting,
+        // it may not block them from adding a spell beyond the mana that they have
+        // because the mana is actively changing from the currently casting spell,
+        // so rather than showing negative mana, show "Insufficient Mana"
+        // (Note, it will still prevent them from casting this spell on click, it's just
+        // that it won't prevent them from queing a spell)
+        elManaLabel.innerHTML = i18n('Insufficient Mana');
+      } else {
+        elManaLabel.innerHTML = `${predictionPlayerUnit.mana} ${i18n('Remaining')}`;
+      }
     } else {
-      elManaBar2.style['left'] = '0%';
-      elManaCost2.style['left'] = `${cost2Left}%`;
+      elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax}`;
     }
-    elManaCost2.style['width'] = `${100 * Math.min(manaRatio2, 1)}%`;
 
-    let cost3Left = 100 * (predictionPlayerUnit.mana - unit.manaMax * 2) / unit.manaMax;
-    if (cost3Left < 0) {
-      elManaBar3.style['left'] = `${cost3Left}%`;
-      elManaCost3.style['left'] = `0%`;
-    } else {
-      elManaBar3.style['left'] = '0%';
-      elManaCost3.style['left'] = `${cost3Left}%`;
-    }
-    elManaCost3.style['width'] = `${100 * Math.min(manaRatio3, 1)}%`;
-  } else {
+    // Display amount of post-prediction mana in each of the 3 mana bars
+    // Cannot be < 0 or more than manaMax (aka 1 full bar)
+    const predictionManaRatio1 = Math.max(0, Math.min(predictionPlayerUnit.mana / predictionPlayerUnit.manaMax, 1));
+    const predictionManaRatio2 = Math.max(0, Math.min((predictionPlayerUnit.mana - predictionPlayerUnit.manaMax) / predictionPlayerUnit.manaMax, 1));
+    const predictionManaRatio3 = Math.max(0, Math.min((predictionPlayerUnit.mana - predictionPlayerUnit.manaMax * 2) / predictionPlayerUnit.manaMax, 1));
+    elManaBar.style["width"] = `${100 * predictionManaRatio1}%`;
+    elManaBar2.style["width"] = `${100 * predictionManaRatio2}%`;
+    elManaBar3.style["width"] = `${100 * predictionManaRatio3}%`;
+
     elManaCost.style['left'] = `100%`;
     elManaCost2.style['left'] = `100%`;
     elManaCost3.style['left'] = `100%`;
+
+    if (predictionPlayerUnit.mana < unit.mana) {
+      // Visualize mana loss
+      let leftstart = predictionPlayerUnit.mana / predictionPlayerUnit.manaMax;
+      let rightEnd = unit.mana / predictionPlayerUnit.manaMax;
+
+      // First bar
+      elManaCost.style['left'] = `${100 * leftstart}%`;
+      elManaCost.style['width'] = `${100 * Math.min((rightEnd - leftstart), 1)}%`;
+
+      // Second bar
+      elManaCost2.style['left'] = `${100 * (leftstart - 1)}%`;
+      elManaCost2.style['width'] = `${100 * Math.min((rightEnd - leftstart), 1)}%`;
+
+      // Third bar
+      elManaCost3.style['left'] = `${100 * (leftstart - 2)}%`;
+      elManaCost3.style['width'] = `${100 * Math.min((rightEnd - leftstart), 1)}%`;
+    } else {
+      // Visualize mana gain
+      let leftstart = unit.mana / predictionPlayerUnit.manaMax;
+      let rightEnd = predictionPlayerUnit.mana / predictionPlayerUnit.manaMax;
+
+      // First bar
+      let barStart = Math.max(leftstart, rightEnd - 1);
+      elManaCost.style['left'] = `${100 * barStart}%`;
+      elManaCost.style['width'] = `${100 * (rightEnd - barStart)}%`;
+
+      // Second bar
+      barStart = Math.max(leftstart - 1, rightEnd - 2);
+      elManaCost2.style['left'] = `${100 * barStart}%`;
+      elManaCost2.style['width'] = `${100 * (rightEnd - 1 - barStart)}%`;
+
+      // Third bar
+      barStart = Math.max(leftstart - 2, rightEnd - 3);
+      elManaCost3.style['left'] = `${100 * barStart}%`;
+      elManaCost3.style['width'] = `${100 * (rightEnd - 2 - barStart)}%`;
+    }
   }
 
   const staminaLeft = Math.max(0, Math.round(unit.stamina));
@@ -1113,7 +1141,6 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
     document.querySelector('#end-turn-btn')?.classList.add('highlight');
   } else {
     document.querySelector('#end-turn-btn')?.classList.remove('highlight');
-
   }
 }
 

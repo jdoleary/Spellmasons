@@ -146,6 +146,8 @@ import registerShieldRegen from '../modifierShieldRegen';
 import registerThorns from '../modifierThorns';
 
 export interface Modifiers {
+  // modifier sthat are not attached to a spell need an explicit id set
+  id?: string;
   subsprite?: Subsprite;
   // run special init logic (usually for visuals) when a modifier is added or loaded
   // see 'poison' for example
@@ -159,7 +161,9 @@ export interface Modifiers {
   // when the spawn, then the modifier gets a probability
   probability?: number;
 }
-interface Events {
+export interface Events {
+  // events that are not attached to a spell need an explicit id set
+  id?: string;
   onDealDamage?: onDealDamage;
   onTakeDamage?: onTakeDamage;
   onDeath?: onDeath;
