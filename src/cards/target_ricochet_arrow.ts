@@ -68,7 +68,7 @@ const spell: Spell = {
           startPoint,
           velocity,
           piercesRemaining: 0,
-          bouncesRemaining: quantity - 1,
+          bouncesRemaining: quantity,
           ignoreUnitIds: [state.casterUnit.id],
           collideFnKey: targetRicochetArrowCardId,
           state,
