@@ -339,7 +339,7 @@ export function chooseBookmark(bookmark: string) {
   Array.from(document.querySelectorAll('.bookmark'))
     .filter((el) => el.id !== bookmark)
     .forEach((el) => el.classList.toggle('active', false));
-  elInventoryContainer.classList.toggle(bookmark);
-  document.getElementById(bookmark)?.classList.toggle('active');
+  elInventoryContainer.classList.toggle(bookmark, true);
+  document.getElementById(bookmark)?.classList.toggle('active', true);
 
 }

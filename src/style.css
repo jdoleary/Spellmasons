@@ -856,6 +856,23 @@ body.your-turn #end-turn-btn:hover {
 
 }
 
+.goldGlow {
+  animation: goldGlow 2s infinite;
+}
+
+@keyframes goldGlow {
+
+  0%,
+  100% {
+    filter: drop-shadow(0 0 5px rgba(244, 231, 144, 0.5)) drop-shadow(0 0 5px rgba(244, 231, 144, 0.5)) drop-shadow(0 0 5px rgba(244, 231, 144, 0.5)) drop-shadow(0 0 5px rgba(244, 231, 144, 0.5));
+  }
+
+  50% {
+    filter: drop-shadow(0 10px 5px rgba(255, 231, 144, 1)) drop-shadow(-10px 0 5px rgba(255, 231, 144, 1)) drop-shadow(0 -10px 5px rgba(255, 231, 144, 1)) drop-shadow(10px 0 5px rgba(255, 231, 144, 1));
+  }
+
+}
+
 #end-turn-btn:active {
   background-image: url('/ui/iconButtonBlankDown.png');
 }
@@ -1649,6 +1666,8 @@ body.open-inventory #inventory-container {
 }
 
 body.open-inventory #inventory-icon {
+  animation: none;
+  /* Override gold glow */
   filter: drop-shadow(0 0 0.4rem rgb(0, 243, 255));
 }
 
@@ -2489,18 +2508,38 @@ body.dragging-card .floating-card-holder .empty-slot {
   left: 40px;
 }
 
+.top-bookmarks-holder {
+  display: none;
+  padding: 0;
+  margin: 0;
+  height: 0;
+}
+
+body.open-inventory .top-bookmarks-holder {
+  display: block
+}
+
 #bookmark-all {
-  left: 18px;
-  top: 585px;
+  left: -470px;
+  top: -34px;
+  position: relative;
+  /* Override ui-positioner */
+  pointer-events: all;
 }
 
 #bookmark-runes {
-  left: 18px;
-  top: 645px;
+  left: -420px;
+  top: -34px;
+  position: relative;
+  /* Override ui-positioner */
+  pointer-events: all;
 }
 
-#bookmark-runes.active {
-  left: 40px;
+
+#bookmark-runes.active.goldGlow {
+  display: none;
+  /* Clear goldGlow when active */
+  animation: none;
 }
 
 #inventory-container.bookmark-all #bookmark-all {
@@ -2565,10 +2604,10 @@ body.dragging-card .floating-card-holder .empty-slot {
   display: flex;
 }
 
-#inventory-container #runes {
+#runes {
   display: none;
 }
 
-#inventory-container.bookmark-runes #runes {
+body.bookmark-runes #runes {
   display: flex;
 }
