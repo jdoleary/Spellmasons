@@ -1969,10 +1969,6 @@ export default class Underworld {
     this.broadcastTurnPhase(turn_phase.PlayerTurns);
     cameraAutoFollow(false);
     setCameraToMapCenter(this);
-    if (globalThis.player && this.perksLeftToChoose(globalThis.player)) {
-      CardUI.toggleInventory(undefined, true, this);
-      chooseBookmark('bookmark-runes', );
-    }
     // If in a multiplayer game and it's a few levels in (giving time for players to get situated)
     // explaining pinging
     if (this.players.length > 1 && this.levelIndex > 2) {
@@ -2046,6 +2042,7 @@ export default class Underworld {
       for (let player of this.players) {
         const points = player.mageType == 'Spellmason' ? config.STAT_POINTS_PER_LEVEL + 1 : config.STAT_POINTS_PER_LEVEL;
         player.statPointsUnspent += points;
+        CardUI.tryShowStatPointsSpendable();
         console.log("Setup: Gave player: [" + player.clientId + "] " + points + " upgrade points for level index: " + levelIndex);
         // only warn unexpected stat points if player has modified mana or health since
         // NEW players that join a game mid-way through will get backfilled stats
@@ -3132,6 +3129,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
   spendStatPoint(stat: string, player: Player.IPlayer) {
     const isCurrentPlayer = player == globalThis.player;
+    console.log('jtest', stat, player.statPointsUnspent);
     // Do not allow overspend
     if (player.statPointsUnspent <= 0) {
       return;
@@ -3196,6 +3194,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // Clear special showWalkRope for attackRange hover
       keyDown.showWalkRope = false;
       CardUI.renderRunesMenu(this)
+      // Clear gold glow on inv button if necessary
+      CardUI.tryShowStatPointsSpendable();
     }
   }
   adminShowMageTypeSelect() {

@@ -16,6 +16,7 @@ import { explain, EXPLAIN_END_TURN } from '../Explain';
 import { Overworld } from '../../Overworld';
 import { resetNotifiedImmune } from '../../cards/immune';
 import { keyDown } from './eventListeners';
+import { chooseBookmark } from '../../views';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
@@ -49,7 +50,17 @@ export function resetInventoryContent() {
   }
 
 }
-const elInvButton = document.getElementById('inventory-icon') as HTMLElement;
+export const elInvButton = document.getElementById('inventory-icon') as HTMLElement;
+const elBookmarkRunes = document.getElementById('bookmark-runes')
+export function tryShowStatPointsSpendable() {
+  const hasStatPointsToSpend = globalThis.player && globalThis.player.statPointsUnspent > 0;
+  if (elInvButton) {
+    elInvButton.classList.toggle('goldGlow', hasStatPointsToSpend);
+  }
+  if (elBookmarkRunes) {
+    elBookmarkRunes.classList.toggle('goldGlow', hasStatPointsToSpend);
+  }
+}
 // Where the non-selected cards are displayed
 export const elCardHand = document.getElementById('card-hand') as HTMLElement;
 export const elFloatingCardHolderLeft = document.getElementById('floating-card-holder-left') as HTMLElement;
@@ -528,7 +539,7 @@ export function renderRunesMenu(underworld: Underworld) {
       playSFXKey('click');
     });
     el.appendChild(elPlusBtn);
-    if (globalThis.devAutoPickUpgrades) {
+    if (globalThis.devAutoPickUpgrades && globalThis.player?.statPointsUnspent || 0 > 0) {
       elPlusBtn.click();
     }
   })
@@ -543,6 +554,9 @@ export function toggleInventory(toolbarIndex: number | undefined, forceState: bo
     // Create inventory
     playSFXKey('inventory_open');
     syncInventory(toolbarIndex, underworld);
+    if (globalThis.player && underworld.perksLeftToChoose(globalThis.player)) {
+      chooseBookmark('bookmark-runes');
+    }
     // Update spellcosts in the inventory
     updateCardBadges(underworld);
     underworld.pie.sendData({

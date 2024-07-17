@@ -423,6 +423,7 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
   underworld.queueGameLoop();
   setPlayerRobeColor(playerLoaded, playerLoaded.color);
   setPlayerNameUI(playerLoaded);
+  CardUI.tryShowStatPointsSpendable();
   return playerLoaded;
 }
 

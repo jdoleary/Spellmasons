@@ -9,7 +9,7 @@
   <title>Spellmasons</title>
 </head>
 
-<body>
+<body class="bookmark-all">
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <pre id="ready-state"></pre>
   <div id="vote-level-label"></div>
@@ -144,7 +144,7 @@
         <div id="selected-cards-container" class="ui-border">
           <div id="selected-cards" class="scrollable"> </div>
         </div>
-        <div id="inventory-container" class="bookmark-all">
+        <div id="inventory-container">
           <div class="book-padding">
             <img src="ui/bookmarkDamage.png" class="bookmark" id="bookmark-damage" draggable="false" />
             <img src="ui/bookmarkMovement.png" class="bookmark" id="bookmark-movement" draggable="false" />
@@ -153,13 +153,15 @@
             <img src="ui/bookmarkCurse.png" class="bookmark" id="bookmark-curses" draggable="false" />
             <img src="ui/bookmarkDefense.png" class="bookmark" id="bookmark-blessings" draggable="false" />
             <img src="ui/bookmarkDarkRed.png" class="bookmark" id="bookmark-soul" draggable="false" />
-            <img src="ui/bookmarkArrow.png" class="bookmark" id="bookmark-all" draggable="false" />
-            <img src="ui/bookmarkRunes.png" class="bookmark" id="bookmark-runes" draggable="false" />
           </div>
           <div id="inventory-content" class="pad-15"></div>
           <div class="card-inspect"></div>
           <div class="book-padding"></div>
           <div id="level-tracker"></div>
+        </div>
+        <div class="top-bookmarks-holder">
+          <img src="ui/bookmarkArrow.png" class="bookmark" id="bookmark-all" draggable="false" />
+          <img src="ui/bookmarkRunes.png" class="bookmark" id="bookmark-runes" draggable="false" />
         </div>
         <div class="card-inspect"></div>
       </div>
