@@ -8,10 +8,11 @@ import Underworld from './Underworld';
 import objectHash from 'object-hash';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import { targetArrowCardId } from './cards/target_arrow';
+import { targetRicochetArrowCardId } from './cards/target_ricochet_arrow';
 
 function isAllowedToCastOutOfRange(cardIds: string[]): boolean {
     // Exception, if all of the cards cast are arrow cards, let them cast out of range
-    return cardIds[0] == targetArrowCardId || cardIds.every(id => Cards.allCards[id]?.ignoreRange);
+    return (cardIds[0] && [targetArrowCardId, targetRicochetArrowCardId].includes(cardIds[0])) || cardIds.every(id => Cards.allCards[id]?.ignoreRange);
 }
 export function isOutOfRange(caster: Player.IPlayer, target: Vec2, underworld: Underworld, cardIds?: string[]): boolean {
     if (cardIds && cardIds.length && isAllowedToCastOutOfRange(cardIds)) {

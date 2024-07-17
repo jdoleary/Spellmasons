@@ -74,6 +74,7 @@ import drown from './drown';
 import blood_bath from './blood_bath';
 import dark_tide from './dark_tide';
 import target_arrow from './target_arrow';
+import target_ricochet_arrow from './target_ricochet_arrow';
 import target_column from './target_column';
 import target_cone from './target_cone';
 import target_circle from './target_circle';
@@ -347,6 +348,7 @@ export function registerCards(overworld: Overworld) {
 
   // Targeting Spells
   registerSpell(target_arrow, overworld);
+  registerSpell(target_ricochet_arrow, overworld);
   registerSpell(target_column, overworld);
   registerSpell(target_cone, overworld);
   registerSpell(target_circle, overworld);
