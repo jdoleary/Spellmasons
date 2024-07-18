@@ -110,35 +110,3 @@ export function arrowEffect(multiShotCount: number, collideFnKey: string, pierce
   }
 }
 export default spell;
-// Returns the start and end point that an arrow will take until it hits a wall
-export function findArrowPath(casterPositionAtTimeOfCast: Vec2, target: Vec2, underworld: Underworld): LineSegment | undefined {
-  if (equal(casterPositionAtTimeOfCast, target)) {
-    // Don't allow shooting arrow at self, an arrow needs a direction
-    return undefined;
-  }
-  // Find a point that the arrow is shooting towards that is sure to be farther than the farthest wall
-  let endPoint = add(casterPositionAtTimeOfCast, math.similarTriangles(target.x - casterPositionAtTimeOfCast.x, target.y - casterPositionAtTimeOfCast.y, math.distance(casterPositionAtTimeOfCast, target), 10000));
-  let arrowShootPath = { p1: casterPositionAtTimeOfCast, p2: endPoint };
-  // revise end point to stop where it hits the first wall
-  const LOSResult = closestLineSegmentIntersectionWithLine(arrowShootPath, underworld.walls);
-  let intersection = LOSResult ? LOSResult.intersection : undefined;
-  if (intersection) {
-    // If arrow intersects with wall
-    // modify intersection so that it lands in game space and not out of bounds.
-    // This ensures target_arrow can't spawn units out of bounds:
-    // It should have no meaninful effect on other arrows
-    if (LOSResult?.lineSegment) {
-      const wallVector = normalizedVector(LOSResult.lineSegment.p2, LOSResult.lineSegment.p1);
-      if (wallVector.vector) {
-        intersection = moveAlongVector(intersection, invert(wallVector.vector), config.COLLISION_MESH_RADIUS / 2);
-      }
-    }
-
-    endPoint = intersection;
-    // revise arrow shoot path now that endpoint has changed
-    return { p1: casterPositionAtTimeOfCast, p2: endPoint };
-  } else {
-    console.error('Unexpected: arrow couldnt find wall to intersect with');
-    return { p1: casterPositionAtTimeOfCast, p2: target };
-  }
-}
