@@ -444,7 +444,6 @@ export default class Underworld {
           velocity.x = 0;
           velocity.y = 0;
         } else {
-
           // Non-Heavy-Impact collision behavior is currently handled by collideWithLineSegments();
           // Which pushes units away from the walls when they get close.
           // Ideally, instead of moving the unit too far and making a correction
@@ -471,7 +470,7 @@ export default class Underworld {
           //velocity.x = 0;
           //velocity.y = 0;
 
-          // UNCOMMENT THIS WITH ANY EXAMPLES
+          // If testing out the above examples, make sure to uncomment this chunk of code as well
           // Use remaining delta time after collision to continue movement based on new velocity
           //const newPosition = Vec.add(pushedObject, Vec.multiply(deltaTime - collision.msUntilCollision, velocity));
           //pushedObject.x = newPosition.x;
