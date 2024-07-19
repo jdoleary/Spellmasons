@@ -2095,8 +2095,24 @@ body.view-Game.showUpgrades #perkList.visible {
   display: flex;
 }
 
-.stat-row div {
-  font-size: 1.5em;
+#runes,
+.pick-stats {
+  width: 100%;
+}
+
+.stat-row-holder {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stat-row {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.stat-value {
+  text-align: center;
 }
 
 .plus-btn.small {

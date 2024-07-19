@@ -497,21 +497,25 @@ export function renderRunesMenu(underworld: Underworld) {
       return '';
     }
 
-    return `<tr class="stat-row">
-            <td><div>${wordMap[stat] || ''}${stat === 'Good Looks' ? '' : ':'} ${statValueModifier(stat, globalThis.player.unit[stat as keyof Unit.IUnit] as number)}</div></td>
-            <td data-stat="${stat}" class="plus-btn-container"></td>
-</tr>`;
+    return `<div class="stat-row flex">
+              <div>
+                <div>
+                ${wordMap[stat] || ''}
+                </div>
+                <div>
+                  Rune Description
+                </div>
+              </div>
+              <div data-stat="${stat}" class="plus-btn-container"><div class="stat-value">${statValueModifier(stat, globalThis.player.unit[stat as keyof Unit.IUnit] as number) || '&nbsp;'}</div></div>
+            </div>`;
   }
   elRunes.innerHTML = `
 <div class="pick-stats">
   <div class="card-inner flex">
-  <h2>Points: ${statPoints}</h2>
-  <table>
-            <thead><tr><th></th><th></th></tr></thead>
-    <tbody>
+  <h2>Skill Points: ${statPoints}</h2>
+  <div class="stat-row-holder">
   ${['healthMax', 'manaMax', 'staminaMax', 'attackRange', 'Good Looks'].map(elStatUpgradeRow).join('')}
-    </tbody>
-  </table>
+  </div>
   </div>
 </div>`;
 
