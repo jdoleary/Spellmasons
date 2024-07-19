@@ -2508,7 +2508,7 @@ body.dragging-card .floating-card-holder .empty-slot {
 }
 
 
-#bookmark-runes.active.goldGlow {
+#bookmark-runes.active {
   /* Override default #bookmark-id position */
   left: -16px !important;
   /* Clear goldGlow when active */
