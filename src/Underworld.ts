@@ -528,6 +528,9 @@ export default class Underworld {
             const newPosition = Vec.add(pushedObject, Vec.multiply(deltaTime - collision.msUntilCollision, velocity));
             pushedObject.x = newPosition.x;
             pushedObject.y = newPosition.y;
+            if (!prediction) {
+              playSFXKey('ricochet');
+            }
           }
         } else {
           // If projectile wasn't going to collide with a wall,
@@ -568,6 +571,9 @@ export default class Underworld {
                   const newVelocity = Vec.reflectOnNormal(velocity, directionToProjectile)
                   velocity.x = newVelocity.x;
                   velocity.y = newVelocity.y;
+                  if (!prediction) {
+                    playSFXKey('ricochet');
+                  }
                 }
               } else {
                 forceMoveInst.piercesRemaining--;

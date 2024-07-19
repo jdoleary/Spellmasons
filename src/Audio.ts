@@ -137,6 +137,7 @@ export const sfx: { [key: string]: string[] } = {
   rend: ['./sound/sfx/rend.mp3'],
   reroll: ['./sound/sfx/Reroll_v2-001.mp3', './sound/sfx/Reroll_v2-002.mp3', './sound/sfx/Reroll_v2-003.mp3'],
   resurrect: ['./sound/sfx/resurrect.mp3'],
+  ricochet: ['./sound/sfx/ricochet_1.mp3', './sound/sfx/ricochet_2.mp3', './sound/sfx/ricochet_3.mp3', './sound/sfx/ricochet_4.mp3', './sound/sfx/ricochet_5.mp3', './sound/sfx/ricochet_6.mp3'],
   sacrifice: ['./sound/sfx/sacrifice.mp3'],
   scroll_disappear: ['./sound/sfx/RPG3_FireMagicFlameThrower_P3_End01.mp3'],
   shield: ['./sound/sfx/shield.mp3'],
