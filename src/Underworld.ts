@@ -107,6 +107,7 @@ import { slashCardId } from './cards/slash';
 import { pushId } from './cards/push';
 import { test_endCheckPromises, test_startCheckPromises } from './promiseSpy';
 import { targetCursedId } from './cards/target_curse';
+import { chooseBookmark } from './views';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -2041,6 +2042,7 @@ export default class Underworld {
       for (let player of this.players) {
         const points = player.mageType == 'Spellmason' ? config.STAT_POINTS_PER_LEVEL + 1 : config.STAT_POINTS_PER_LEVEL;
         player.statPointsUnspent += points;
+        CardUI.tryShowStatPointsSpendable();
         console.log("Setup: Gave player: [" + player.clientId + "] " + points + " upgrade points for level index: " + levelIndex);
         // only warn unexpected stat points if player has modified mana or health since
         // NEW players that join a game mid-way through will get backfilled stats
@@ -3190,9 +3192,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (isCurrentPlayer) {
       // Clear special showWalkRope for attackRange hover
       keyDown.showWalkRope = false;
-      // Clear upgrades
-      document.body?.classList.toggle(showUpgradesClassName, false);
-      this.showUpgrades();
+      CardUI.renderRunesMenu(this)
+      // Clear gold glow on inv button if necessary
+      CardUI.tryShowStatPointsSpendable();
     }
   }
   adminShowMageTypeSelect() {
@@ -3229,27 +3231,25 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       return;
     }
     const upgradesLeftToChoose = this.upgradesLeftToChoose(player);
-    const perksLeftToChoose = this.perksLeftToChoose(player);
     // Calamities have been removed, and the commented code below causes a bug
     // that prevents upgrades from working in the plus levels
     const cursesLeftToChoose = 0; //this.cursesLeftToChoose(player);
-    console.log("Upgrades/Perks/Curses left to choose:", upgradesLeftToChoose, perksLeftToChoose, cursesLeftToChoose);
+    console.log("Upgrades/Curses left to choose:", upgradesLeftToChoose, cursesLeftToChoose);
 
     // Return immediately if player has no upgrades that left to pick from
-    if (upgradesLeftToChoose <= 0 && perksLeftToChoose <= 0 && cursesLeftToChoose <= 0) {
+    if (upgradesLeftToChoose <= 0 && cursesLeftToChoose <= 0) {
       console.log('showUpgrades: Closing upgrade screen, nothing left to pick');
       // Hide the upgrade button since there are no upgrades left to pick
       elEndTurnBtn?.classList.toggle('upgrade', false);
       return;
     }
 
-    const isPerk = perksLeftToChoose > 0 || cursesLeftToChoose > 0;
     const isCursePerk = cursesLeftToChoose > 0;
     if (elUpgradePickerLabel) {
       const pickingClass = globalThis.player ? Upgrade.isPickingClass(globalThis.player) : false;
-      elUpgradePickerLabel.innerHTML = i18n(isPerk ?
-        isCursePerk ? 'Pick a Calamity' : i18n(['Spend Points', perksLeftToChoose.toString()])
-        : pickingClass ? 'Pick a Class' : 'Pick a Spell');
+      elUpgradePickerLabel.innerHTML = i18n(
+        isCursePerk ? 'Pick a Calamity'
+          : pickingClass ? 'Pick a Class' : 'Pick a Spell');
     }
 
     // If playing hotseat multiplayer, prepend the player name so users know which player they
@@ -3266,102 +3266,34 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       console.error('showUpgrades: elUpgradePicker or elUpgradePickerContent are undefined.');
     }
 
-    elUpgradePickerContent?.classList.toggle('perks', isPerk);
-    if (isPerk) {
+    elUpgradePickerContent?.classList.toggle('perks', isCursePerk);
+    if (isCursePerk) {
       // Remove reroll btn
       if (rerollBtnContainer) {
         rerollBtnContainer.innerHTML = '';
       }
-      if (isCursePerk) {
-        const mostUsedLastLevelCards = Object.entries(player.spellState || {}).sort((a, b) => b[1].count - a[1].count)
-          // Remove cards that are already affected by calamity
-          .filter(([_spellId, spellState]) => !(spellState.disabledUntilLevel > this.levelIndex))
-          .slice(0, 3);
-        if (mostUsedLastLevelCards.length == 0) {
-          // Clear upgrades, nothing to pick
-          document.body?.classList.toggle(showUpgradesClassName, false);
-        } else {
-          const elPerks = mostUsedLastLevelCards.slice(0, 2).map(count => createCursePerkElement({ cardId: count[0] }, this));
-          for (let i = 0; i < 2; i++) {
-            const statCalamity = generateRandomStatCalamity(this, i);
-            if (statCalamity) {
-              elPerks.push(createCursePerkElement({ statCalamity }, this));
-            }
-          }
-          if (elUpgradePickerContent) {
-            elUpgradePickerContent.innerHTML = '';
-            for (let elUpgrade of elPerks) {
-              if (elUpgrade) {
-                elUpgradePickerContent.appendChild(elUpgrade);
-              }
-            }
+      const mostUsedLastLevelCards = Object.entries(player.spellState || {}).sort((a, b) => b[1].count - a[1].count)
+        // Remove cards that are already affected by calamity
+        .filter(([_spellId, spellState]) => !(spellState.disabledUntilLevel > this.levelIndex))
+        .slice(0, 3);
+      if (mostUsedLastLevelCards.length == 0) {
+        // Clear upgrades, nothing to pick
+        document.body?.classList.toggle(showUpgradesClassName, false);
+      } else {
+        const elPerks = mostUsedLastLevelCards.slice(0, 2).map(count => createCursePerkElement({ cardId: count[0] }, this));
+        for (let i = 0; i < 2; i++) {
+          const statCalamity = generateRandomStatCalamity(this, i);
+          if (statCalamity) {
+            elPerks.push(createCursePerkElement({ statCalamity }, this));
           }
         }
-      } else {
-        // Show the perks that you already have
-        showPerkList(player);
         if (elUpgradePickerContent) {
-          const wordMap: { [key: string]: string } = {
-            'attackRange': 'Cast Range',
-            'manaMax': 'Mana',
-            'healthMax': 'Health',
-            'staminaMax': 'Stamina',
-            'Good Looks': 'Good Looks'
+          elUpgradePickerContent.innerHTML = '';
+          for (let elUpgrade of elPerks) {
+            if (elUpgrade) {
+              elUpgradePickerContent.appendChild(elUpgrade);
+            }
           }
-          const statValueModifier = (stat: string, value: number | undefined) => {
-            if (value === undefined) {
-              // Good looks is an effect on the game and not a value on the Unit object
-              if (stat !== 'Good Looks') {
-                console.error('Undefined stat value', stat);
-              }
-              return '';
-            }
-            return value;
-          }
-          const elStatUpgradeRow = (stat: string) => `<tr class="stat-row">
-            <td><h1>${wordMap[stat] || ''}${stat === 'Good Looks' ? '' : ':'} ${statValueModifier(stat, player.unit[stat as keyof Unit.IUnit] as number)}</h1></td>
-            <td data-stat="${stat}" class="plus-btn-container"></td>
-</tr>`;
-          elUpgradePickerContent.innerHTML = `
-<div class="card upgrade perk ui-border pick-stats">
-  <div class="card-inner flex">
-  <table>
-            <thead><tr><th></th><th></th></tr></thead>
-    <tbody>
-  ${['healthMax', 'manaMax', 'staminaMax', 'attackRange', 'Good Looks'].map(elStatUpgradeRow).join('')}
-    </tbody>
-  </table>
-  </div>
-</div>
-            `;
-          elUpgradePickerContent.querySelectorAll('.stat-row .plus-btn-container').forEach(el => {
-            const elPlusBtn = document.createElement('div');
-            elPlusBtn.classList.add('plus-btn');
-            elPlusBtn.style.color = 'white';
-            const stat = (el as HTMLElement).dataset.stat;
-            if (stat && stat == 'attackRange') {
-              elPlusBtn.addEventListener('mouseenter', () => {
-                keyDown.showWalkRope = true;
-              });
-              elPlusBtn.addEventListener('mouseleave', () => {
-                keyDown.showWalkRope = false;
-              });
-
-            }
-            elPlusBtn.addEventListener('click', () => {
-              this.pie.sendData({
-                type: MESSAGE_TYPES.SPEND_STAT_POINT,
-                stat
-              })
-            });
-            elPlusBtn.addEventListener('mouseenter', (e) => {
-              playSFXKey('click');
-            });
-            el.appendChild(elPlusBtn);
-            if (globalThis.devAutoPickUpgrades) {
-              elPlusBtn.click();
-            }
-          })
         }
       }
     } else {

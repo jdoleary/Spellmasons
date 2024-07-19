@@ -142,13 +142,16 @@ function zoom(overworld: Overworld, e: WheelEvent) {
 }
 
 let runPredictionsIdleCallbackId: number;
+let elInventoryContainer: HTMLButtonElement = document.getElementById(
+  'inventory-container',
+) as HTMLButtonElement;
 
 export function addOverworldEventListeners(overworld: Overworld) {
   if (globalThis.headless) { return; }
   const elEndTurnButton: HTMLButtonElement = document.getElementById(
     'end-turn-btn',
   ) as HTMLButtonElement;
-  const elInventoryContainer: HTMLButtonElement = document.getElementById(
+  elInventoryContainer = document.getElementById(
     'inventory-container',
   ) as HTMLButtonElement;
   const elBookmarkDamage: HTMLButtonElement = document.getElementById('bookmark-damage',) as HTMLButtonElement;
@@ -159,6 +162,7 @@ export function addOverworldEventListeners(overworld: Overworld) {
   const elBookmarkDefense: HTMLButtonElement = document.getElementById('bookmark-blessings',) as HTMLButtonElement;
   const elBookmarkSoul: HTMLButtonElement = document.getElementById('bookmark-soul',) as HTMLButtonElement;
   const elBookmarkAll: HTMLButtonElement = document.getElementById('bookmark-all',) as HTMLButtonElement;
+  const elBookmarkRunes: HTMLButtonElement = document.getElementById('bookmark-runes',) as HTMLButtonElement;
   const elQuitButton: HTMLButtonElement = document.getElementById(
     'quit',
   ) as HTMLButtonElement;
@@ -253,6 +257,7 @@ export function addOverworldEventListeners(overworld: Overworld) {
         { target: elBookmarkDefense, targetId: 'bookmark-blessings' },
         { target: elBookmarkSoul, targetId: 'bookmark-soul' },
         { target: elBookmarkAll, targetId: 'bookmark-all' },
+        { target: elBookmarkRunes, targetId: 'bookmark-runes' },
       ].map(({ target, targetId }) => {
         return {
           target,
@@ -262,21 +267,7 @@ export function addOverworldEventListeners(overworld: Overworld) {
             if (target.classList.contains('disabled')) {
               playSFXKey('deny');
             } else {
-              ['bookmark-damage',
-                'bookmark-movement',
-                'bookmark-targeting',
-                'bookmark-mana',
-                'bookmark-curses',
-                'bookmark-blessings',
-                'bookmark-soul',
-                'bookmark-all'].filter(x => x !== targetId).forEach(className => {
-                  elInventoryContainer.classList.toggle(className, false);
-                });
-              Array.from(document.querySelectorAll('.bookmark'))
-                .filter((el) => el.id !== targetId)
-                .forEach((el) => el.classList.toggle('active', false));
-              elInventoryContainer.classList.toggle(targetId);
-              target.classList.toggle('active');
+              chooseBookmark(targetId);
               if (!target.classList.contains('active')) {
                 elInventoryContainer.classList.toggle('bookmark-all');
                 document.getElementById('bookmark-all')?.classList.toggle('active', true);
@@ -331,4 +322,24 @@ export function addOverworldEventListeners(overworld: Overworld) {
     }
 
   }
+}
+
+export function chooseBookmark(bookmark: string) {
+  ['bookmark-damage',
+    'bookmark-movement',
+    'bookmark-targeting',
+    'bookmark-mana',
+    'bookmark-curses',
+    'bookmark-blessings',
+    'bookmark-soul',
+    'bookmark-all',
+    'bookmark-runes'].filter(x => x !== bookmark).forEach(className => {
+      elInventoryContainer.classList.toggle(className, false);
+    });
+  Array.from(document.querySelectorAll('.bookmark'))
+    .filter((el) => el.id !== bookmark)
+    .forEach((el) => el.classList.toggle('active', false));
+  elInventoryContainer.classList.toggle(bookmark);
+  document.getElementById(bookmark)?.classList.toggle('active');
+
 }
