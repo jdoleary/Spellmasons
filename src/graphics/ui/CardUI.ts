@@ -518,6 +518,10 @@ export function renderRunesMenu(underworld: Underworld) {
   elRunes.querySelectorAll('.stat-row .plus-btn-container').forEach(el => {
     const elPlusBtn = document.createElement('div');
     elPlusBtn.classList.add('plus-btn', 'small');
+    const isDisabled = statPoints <= 0;
+    if (isDisabled) {
+      elPlusBtn.classList.add('disabled');
+    }
     elPlusBtn.style.color = 'white';
     const stat = (el as HTMLElement).dataset.stat;
     if (stat && stat == 'attackRange') {
@@ -530,10 +534,14 @@ export function renderRunesMenu(underworld: Underworld) {
 
     }
     elPlusBtn.addEventListener('click', () => {
-      underworld.pie.sendData({
-        type: MESSAGE_TYPES.SPEND_STAT_POINT,
-        stat
-      })
+      if (isDisabled) {
+        playSFXKey('deny');
+      } else {
+        underworld.pie.sendData({
+          type: MESSAGE_TYPES.SPEND_STAT_POINT,
+          stat
+        })
+      }
     });
     elPlusBtn.addEventListener('mouseenter', (e) => {
       playSFXKey('click');

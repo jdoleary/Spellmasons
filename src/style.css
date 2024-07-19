@@ -2113,11 +2113,15 @@ body.view-Game.showUpgrades #perkList.visible {
   background-size: contain;
 }
 
-.plus-btn:hover {
+.plus-btn.disabled {
+  opacity: 0.5;
+}
+
+.plus-btn:not(.disabled):hover {
   filter: drop-shadow(0 0 0.4rem rgb(255, 255, 255));
 }
 
-.plus-btn:active {
+.plus-btn:not(.disabled):active {
   background-image: url('/ui/iconPlusDown.png');
 }
 
@@ -2583,4 +2587,9 @@ body.dragging-card .floating-card-holder .empty-slot {
 
 #inventory-container.bookmark-runes #runes {
   display: flex;
+}
+
+#runes h2 {
+  margin: 0;
+
 }
