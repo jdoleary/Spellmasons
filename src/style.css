@@ -1506,6 +1506,8 @@ body.open-inventory #inventory-container {
 .book-padding {
   width: 8%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 
@@ -2439,104 +2441,83 @@ body.dragging-card .floating-card-holder .empty-slot {
   aspect-ratio: 35 / 36;
   height: 50px;
   width: unset;
-  position: absolute;
+  max-width: 51px;
   transform: scale(-1);
-  left: 30px;
-  top: 25px;
   padding: 15px;
+  position: relative;
+}
+
+#bookmark-all {
+  transform: scale(1, -1);
+  height: unset;
+}
+
+#bookmark-all.active {
+  /* Override default #bookmark-id position */
+  left: 0 !important;
+}
+
+
+#bookmark-runes {
+  transform: scale(1, -1);
+  height: unset;
 }
 
 .bookmark.active {
-  left: 40px;
+  /* Override default #bookmark-id position */
+  left: 38% !important;
+}
+
+@media screen and (max-height: 1024px) {
+  .bookmark.active {
+    /* Override default #bookmark-id position */
+    left: 32% !important;
+  }
 }
 
 .bookmark.disabled {
-  display: none;
+  visibility: hidden;
+}
+
+#bookmark-damage {
+  left: 16px;
 }
 
 #bookmark-movement {
-  left: 28px;
-  top: 105px;
-}
-
-#bookmark-movement.active {
-  left: 40px;
+  left: 14px;
 }
 
 #bookmark-targeting {
-  left: 26px;
-  top: 185px;
-}
-
-#bookmark-targeting.active {
-  left: 40px;
+  left: 12px;
 }
 
 #bookmark-mana {
-  left: 24px;
-  top: 265px;
-}
-
-#bookmark-mana.active {
-  left: 40px;
+  left: 10px;
 }
 
 #bookmark-curses {
-  left: 22px;
-  top: 345px;
-}
-
-#bookmark-curses.active {
-  left: 40px;
+  left: 8px;
 }
 
 #bookmark-blessings {
-  left: 20px;
-  top: 425px;
-}
-
-#bookmark-blessings.active {
-  left: 40px;
+  left: 6px;
 }
 
 #bookmark-soul {
-  left: 18px;
-  top: 505px;
-}
-
-#bookmark-soul.active {
-  left: 40px;
-}
-
-.top-bookmarks-holder {
-  display: none;
-  padding: 0;
-  margin: 0;
-  height: 0;
-  position: absolute;
-  top: 171px;
-  left: 370px;
-}
-
-.top-bookmarks-holder .bookmark {
-  left: 0;
-  top: 0;
-}
-
-body.open-inventory .top-bookmarks-holder {
-  display: block
+  left: 4px;
 }
 
 
 #bookmark-runes.active.goldGlow {
-  display: none;
+  /* Override default #bookmark-id position */
+  left: -16px !important;
   /* Clear goldGlow when active */
   animation: none;
 }
 
 #inventory-container.bookmark-all #bookmark-all {
   /* Disable bookmark all when bookmark all is selected */
-  display: none;
+  visibility: hidden;
 }
 
 #inventory-container:not(.bookmark-all) .category {
