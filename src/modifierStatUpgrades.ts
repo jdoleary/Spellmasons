@@ -12,7 +12,7 @@ const wordMap: { [key: string]: string } = {
 }
 export default function registerStatUpgradeModifiers() {
   ['healthMax', 'manaMax', 'staminaMax', 'attackRange'].map(stat => {
-    registerModifiers(stat, {
+    registerModifiers(wordMap[stat] || stat, {
       description: `Upgrade player ${wordMap[stat]}`,
       // addModifierVisuals,
       add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

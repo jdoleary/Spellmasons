@@ -483,10 +483,10 @@ export function renderRunesMenu(underworld: Underworld) {
 
     return `<div class="stat-row flex">
               <div>
-                <div>
+                <div class="rune-name">
                 ${stat || ''}
                 </div>
-                <div>
+                <div class="description">
                 ${Cards.allModifiers[stat]?.description}
                 </div>
               </div>
@@ -510,14 +510,18 @@ export function renderRunesMenu(underworld: Underworld) {
 </div>`;
 
   elRunes.querySelectorAll('.stat-row .plus-btn-container').forEach(el => {
+    const stat = (el as HTMLElement).dataset.stat;
+    if (!stat) {
+      return
+    }
     const elPlusBtn = document.createElement('div');
+    const modifier = Cards.allModifiers[stat]
     elPlusBtn.classList.add('plus-btn', 'small');
-    const isDisabled = statPoints <= 0;
+    const isDisabled = (modifier && modifier.cost) ? statPoints < modifier.cost : true;
     if (isDisabled) {
       elPlusBtn.classList.add('disabled');
     }
     elPlusBtn.style.color = 'white';
-    const stat = (el as HTMLElement).dataset.stat;
     if (stat && stat == 'attackRange') {
       elPlusBtn.addEventListener('mouseenter', () => {
         keyDown.showWalkRope = true;
@@ -532,7 +536,7 @@ export function renderRunesMenu(underworld: Underworld) {
         playSFXKey('deny');
       } else {
         underworld.pie.sendData({
-          type: MESSAGE_TYPES.SPEND_STAT_POINT,
+          type: MESSAGE_TYPES.CHOOSE_RUNE,
           stat
         })
       }

@@ -2095,7 +2095,11 @@ body.view-Game.showUpgrades #perkList.visible {
   display: flex;
 }
 
-#runes,
+#runes {
+  width: 90%;
+  margin: 0 auto;
+}
+
 .pick-stats {
   width: 100%;
 }
@@ -2103,12 +2107,16 @@ body.view-Game.showUpgrades #perkList.visible {
 .stat-row-holder {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 
 .stat-row {
   width: 100%;
   justify-content: space-between;
+}
+
+.stat-row .description {
+  font-size: 0.7em;
 }
 
 .stat-value {

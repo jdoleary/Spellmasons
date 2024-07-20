@@ -3129,25 +3129,26 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
   upgradeRune(runeModifierId: string, player: Player.IPlayer) {
     const isCurrentPlayer = player == globalThis.player;
-    // Do not allow overspend
-    if (player.statPointsUnspent <= 0) {
-      return;
-    }
     if (remoteLog) {
       remoteLog(`Stat Point: ${runeModifierId}`);
     }
-    player.statPointsUnspent--;
+    const modifier = Cards.allModifiers[runeModifierId];
+    if (!modifier) {
+      console.error(`Failed to upgrade rune ${runeModifierId}`)
+      return;
+    }
+    // Do not allow overspend
+    if (player.statPointsUnspent < (modifier.cost || 0)) {
+      return;
+    }
+
+    player.statPointsUnspent -= modifier.cost || 0;
 
     if (isCurrentPlayer) {
       playSFXKey('levelUp');
     }
 
-    const modifier = Cards.allModifiers[runeModifierId];
-    if (modifier) {
-      Unit.addModifier(player.unit, runeModifierId, this, false, 1);
-    } else {
-      console.error(`Failed to upgrade rune ${runeModifierId}`)
-    }
+    Unit.addModifier(player.unit, runeModifierId, this, false, 1);
     if (isCurrentPlayer) {
       // Clear special showWalkRope for attackRange hover
       keyDown.showWalkRope = false;
