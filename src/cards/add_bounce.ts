@@ -3,10 +3,10 @@ import { CardCategory, UnitSubType } from '../types/commonTypes';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { arrowCardId } from './arrow';
 
-const id = 'Add Bounce';
+export const addBounceId = 'Add Bounce';
 const spell: Spell = {
   card: {
-    id,
+    id: addBounceId,
     category: CardCategory.Targeting,
     probability: probabilityMap[CardRarity.UNCOMMON],
     requires: [arrowCardId],

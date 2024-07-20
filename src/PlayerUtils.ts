@@ -9,10 +9,33 @@ import objectHash from 'object-hash';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import { targetArrowCardId } from './cards/target_arrow';
 import { targetRicochetArrowCardId } from './cards/target_ricochet_arrow';
+import { plusRadiusId } from './cards/plus_radius';
+import { addPierceId } from './cards/add_pierce';
+import { addBounceId } from './cards/add_bounce';
+
 
 function isAllowedToCastOutOfRange(cardIds: string[]): boolean {
-    // Exception, if all of the cards cast are arrow cards, let them cast out of range
-    return (cardIds[0] && [targetArrowCardId, targetRicochetArrowCardId].includes(cardIds[0])) || cardIds.every(id => Cards.allCards[id]?.ignoreRange);
+    // If all cards can ignore range (i.e. arrows), return true
+    if (cardIds.every(id => Cards.allCards[id]?.ignoreRange)) {
+        return true;
+    }
+
+    // Otherwise, we need to find the first functional card (non aggregator/spell modifier)
+    // and check whether it is a Target Arrow type of card
+    for (let i = 0; i < cardIds.length; i++) {
+        const cardId = cardIds[i];
+        if (cardId) {
+            if ([plusRadiusId, addPierceId, addBounceId].includes(cardId)) {
+                // Continue to next card id
+                continue;
+            } else {
+                // This is a functional card. Return whether or not it is a Target Arrow card
+                return [targetArrowCardId, targetRicochetArrowCardId].includes(cardId);
+            }
+        }
+
+    }
+    return false;
 }
 export function isOutOfRange(caster: Player.IPlayer, target: Vec2, underworld: Underworld, cardIds?: string[]): boolean {
     if (cardIds && cardIds.length && isAllowedToCastOutOfRange(cardIds)) {
