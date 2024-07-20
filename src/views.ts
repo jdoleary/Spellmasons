@@ -20,6 +20,8 @@ import {
 import { sendChatHandler } from './graphics/ui/Chat';
 import { Overworld } from './Overworld';
 import { View } from './View';
+import { renderRunesMenu } from './graphics/ui/CardUI';
+import Underworld from './Underworld';
 
 const elUpgradePicker = document.getElementById('upgrade-picker') as HTMLElement;
 let lastNonMenuView: View | undefined;
@@ -267,7 +269,7 @@ export function addOverworldEventListeners(overworld: Overworld) {
             if (target.classList.contains('disabled')) {
               playSFXKey('deny');
             } else {
-              chooseBookmark(targetId);
+              chooseBookmark(targetId, undefined, overworld.underworld);
               if (!target.classList.contains('active')) {
                 elInventoryContainer.classList.toggle('bookmark-all');
                 document.getElementById('bookmark-all')?.classList.toggle('active', true);
@@ -324,7 +326,9 @@ export function addOverworldEventListeners(overworld: Overworld) {
   }
 }
 
-export function chooseBookmark(bookmark: string) {
+// if forceActive is undefined, the bookmark will be toggled,
+// if it is true, it will always keep the bookmark chosen and open
+export function chooseBookmark(bookmark: string, forceActive?: true | undefined, underworld?: Underworld) {
   ['bookmark-damage',
     'bookmark-movement',
     'bookmark-targeting',
@@ -339,7 +343,14 @@ export function chooseBookmark(bookmark: string) {
   Array.from(document.querySelectorAll('.bookmark'))
     .filter((el) => el.id !== bookmark)
     .forEach((el) => el.classList.toggle('active', false));
-  elInventoryContainer.classList.toggle(bookmark);
-  document.getElementById(bookmark)?.classList.toggle('active');
+  elInventoryContainer.classList.toggle(bookmark, forceActive);
+  document.getElementById(bookmark)?.classList.toggle('active', forceActive);
+  if (bookmark == 'bookmark-runes') {
+    if (underworld) {
+      renderRunesMenu(underworld);
+    } else {
+      console.error('Attempted to render runes menu but underworld is undefined');
+    }
+  }
 
 }

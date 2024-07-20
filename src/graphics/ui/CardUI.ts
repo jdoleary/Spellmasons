@@ -561,7 +561,7 @@ export function toggleInventory(toolbarIndex: number | undefined, forceState: bo
     playSFXKey('inventory_open');
     syncInventory(toolbarIndex, underworld);
     if (globalThis.player && underworld.perksLeftToChoose(globalThis.player)) {
-      chooseBookmark('bookmark-runes');
+      chooseBookmark('bookmark-runes', true, underworld);
     }
     // Update spellcosts in the inventory
     updateCardBadges(underworld);
