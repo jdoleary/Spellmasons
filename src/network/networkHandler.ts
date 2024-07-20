@@ -231,7 +231,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         const { stat } = payload;
         if (stat) {
           if (fromPlayer) {
-            underworld.spendStatPoint(stat, fromPlayer);
+            underworld.upgradeRune(stat, fromPlayer);
           } else {
             console.error('SPEND_STAT_POINT, missing fromPlayer', fromClient);
           }
