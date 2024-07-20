@@ -729,7 +729,11 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
   //hide chat if its active
   document.body.classList.toggle('showChat', false);
 
-  if (isOutOfBounds(mousePos, underworld)) {
+  const cardIds = CardUI.getSelectedCardIds();
+  // If the first card ignores range, it should also be castable out of bounds
+  // This allows players to more precisely aim arrow spells
+  const firstCardIgnoreOutOfBounds = cardIds[0] && allCards[cardIds[0]]?.ignoreRange;
+  if (!firstCardIgnoreOutOfBounds && isOutOfBounds(mousePos, underworld)) {
     // Disallow click out of bounds
     floatingText({
       coords: mousePos,
