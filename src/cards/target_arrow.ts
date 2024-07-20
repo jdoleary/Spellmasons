@@ -17,11 +17,10 @@ const spell: Spell = {
   card: {
     id: targetArrowCardId,
     category: CardCategory.Targeting,
+    probability: probabilityMap[CardRarity.UNCOMMON],
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.UNCOMMON],
-    thumbnail: 'spellIconArrowGreen.png',
     supportQuantity: true,
     ignoreRange: true,
     // so that you can fire the arrow at targets out of range
@@ -32,6 +31,7 @@ const spell: Spell = {
     requiresFollowingCard: true,
     animationPath: '',
     sfx: '',
+    thumbnail: 'spellIconArrowGreen.png',
     description: 'spell_target_arrow',
     effect: async (state, card, quantity, underworld, prediction) => {
       const initialCastLocation = state.castLocation;
@@ -65,8 +65,8 @@ const spell: Spell = {
           pushedObject,
           startPoint,
           velocity,
-          piercesRemaining: quantity - 1,
-          bouncesRemaining: 0,
+          piercesRemaining: quantity - 1 + state.aggregator.additionalPierce,
+          bouncesRemaining: state.aggregator.additionalBounce,
           collidingUnitIds: [state.casterUnit.id],
           collideFnKey: targetArrowCardId,
           state,

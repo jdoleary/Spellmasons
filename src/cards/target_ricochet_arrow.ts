@@ -19,12 +19,11 @@ const spell: Spell = {
   card: {
     id: targetRicochetArrowCardId,
     category: CardCategory.Targeting,
+    probability: probabilityMap[CardRarity.UNCOMMON],
+    requires: [targetArrowCardId],
     manaCost: 15,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.UNCOMMON],
-    requires: [targetArrowCardId],
-    thumbnail: 'spellIconArrowGreen.png',
     supportQuantity: true,
     ignoreRange: true,
     // so that you can fire the arrow at targets out of range
@@ -35,6 +34,7 @@ const spell: Spell = {
     requiresFollowingCard: true,
     animationPath: '',
     sfx: '',
+    thumbnail: 'spellIconArrowGreen.png',
     description: 'spell_target_ricochet_arrow',
     effect: async (state, card, quantity, underworld, prediction) => {
       const initialCastLocation = state.castLocation;
@@ -68,8 +68,8 @@ const spell: Spell = {
           pushedObject,
           startPoint,
           velocity,
-          piercesRemaining: 0,
-          bouncesRemaining: quantity,
+          piercesRemaining: state.aggregator.additionalPierce,
+          bouncesRemaining: quantity + state.aggregator.additionalBounce,
           collidingUnitIds: [state.casterUnit.id],
           collideFnKey: targetRicochetArrowCardId,
           state,

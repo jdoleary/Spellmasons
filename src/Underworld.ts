@@ -3657,6 +3657,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       castLocation,
       aggregator: {
         radiusBoost: 0,
+        additionalPierce: 0,
+        additionalBounce: 0,
       },
       initialTargetedUnitId,
       initialTargetedPickupId

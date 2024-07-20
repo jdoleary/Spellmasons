@@ -84,6 +84,8 @@ import target_similar_2 from './target_similar_2';
 import target_injured from './target_injured';
 import target_all from './target_all';
 import target_curse from './target_curse';
+import add_pierce from './add_pierce';
+import add_bounce from './add_bounce';
 import plus_radius from './plus_radius';
 import shove from './shove';
 import stomp from './stomp';
@@ -360,6 +362,8 @@ export function registerCards(overworld: Overworld) {
   registerSpell(target_all, overworld);
   config.IS_ANNIVERSARY_UPDATE_OUT &&
     registerSpell(target_curse, overworld);
+  registerSpell(add_pierce, overworld);
+  registerSpell(add_bounce, overworld);
   registerSpell(plus_radius, overworld);
   // registerSpell(trap, overworld);
   for (let unitId of Object.keys(allUnits)) {
@@ -471,7 +475,12 @@ export interface EffectState {
   // aggregator carries extra information that can be passed
   // between card effects.
   aggregator: {
+    // Used for radius effects like Target Circle
     radiusBoost: number;
+    // Used for arrow effects
+    additionalPierce: number;
+    // Used for arrow effects
+    additionalBounce: number;
   };
   // initialTargetedUnitId and initialTargetedPickupId:
   // Used to ensure the castCards targets the right starting
