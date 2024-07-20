@@ -37,6 +37,7 @@ const spell: Spell = {
     sfx: '',
     description: 'spell_target_ricochet_arrow',
     effect: async (state, card, quantity, underworld, prediction) => {
+      const initialCastLocation = state.castLocation;
       // - - - - - Start copied from arrow.ts - - - - -
       let targets: Vec2[] = getCurrentTargets(state);
       targets = targets.length ? targets : [state.castLocation];
@@ -87,6 +88,11 @@ const spell: Spell = {
 
       // Update targets variable to include newly added targets
       targets = getCurrentTargets(state);
+      // To allow combos like [Target Arrow + Teleport], we set castLocation at wall collision
+      // but we should only do this if no other targets (units or pickups) are added.
+      // This ensures combos like [Ricochet Arrow + Target Cone] behave predictably
+      state.castLocation = targets.length ? initialCastLocation : state.castLocation;
+
       if (!prediction && !globalThis.headless && globalThis.predictionGraphics) {
         const promises: Promise<void>[] = [];
         targets.forEach(t => {
@@ -115,8 +121,8 @@ const spell: Spell = {
         } else if (pickup) {
           addTarget(pickup, projectile.state, underworld, prediction);
         } else {
-          // Add collision location as target
-          //addTarget(projectile.pushedObject, projectile.state, underworld, prediction);
+          // There is no support for adding multiple vector locations as targets
+          projectile.state.castLocation = projectile.pushedObject;
         }
       } else {
         console.error("State was not passed through projectile");
