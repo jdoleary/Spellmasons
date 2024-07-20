@@ -475,38 +475,22 @@ export function renderRunesMenu(underworld: Underworld) {
     return;
   }
   const statPoints = underworld.perksLeftToChoose(globalThis.player);
-  const wordMap: { [key: string]: string } = {
-    'attackRange': 'Cast Range',
-    'manaMax': 'Mana',
-    'healthMax': 'Health',
-    'staminaMax': 'Stamina',
-    'Good Looks': 'Good Looks'
-  }
-  const statValueModifier = (stat: string, value: number | undefined) => {
-    if (value === undefined) {
-      // Good looks is an effect on the game and not a value on the Unit object
-      if (stat !== 'Good Looks') {
-        console.error('Undefined stat value', stat);
-      }
-      return '';
-    }
-    return value;
-  }
   const elStatUpgradeRow = (stat: string) => {
     if (!globalThis.player) {
       return '';
     }
+    const modifier = Cards.allModifiers[stat]
 
     return `<div class="stat-row flex">
               <div>
-                <div>
-                ${wordMap[stat] || ''}
+                <div class="rune-name">
+                ${stat || ''}
                 </div>
-                <div>
-                  Rune Description
+                <div class="description">
+                ${Cards.allModifiers[stat]?.description}
                 </div>
               </div>
-              <div data-stat="${stat}" class="plus-btn-container"><div class="stat-value">${statValueModifier(stat, globalThis.player.unit[stat as keyof Unit.IUnit] as number) || '&nbsp;'}</div></div>
+              <div data-stat="${stat}" class="plus-btn-container"><div class="stat-value">${modifier?.cost || '&nbsp;'}</div></div>
             </div>`;
   }
   elRunes.innerHTML = `
@@ -514,20 +498,30 @@ export function renderRunesMenu(underworld: Underworld) {
   <div class="card-inner flex">
   <h2>Skill Points: ${statPoints}</h2>
   <div class="stat-row-holder">
-  ${['healthMax', 'manaMax', 'staminaMax', 'attackRange', 'Good Looks'].map(elStatUpgradeRow).join('')}
+  ${Object.entries(Cards.allModifiers).flatMap(([key, modifier]) => {
+    if (modifier.cost) {
+      return [elStatUpgradeRow(key)];
+    } else {
+      return [];
+    }
+  }).join('')}
   </div>
   </div>
 </div>`;
 
   elRunes.querySelectorAll('.stat-row .plus-btn-container').forEach(el => {
+    const stat = (el as HTMLElement).dataset.stat;
+    if (!stat) {
+      return
+    }
     const elPlusBtn = document.createElement('div');
+    const modifier = Cards.allModifiers[stat]
     elPlusBtn.classList.add('plus-btn', 'small');
-    const isDisabled = statPoints <= 0;
+    const isDisabled = (modifier && modifier.cost) ? statPoints < modifier.cost : true;
     if (isDisabled) {
       elPlusBtn.classList.add('disabled');
     }
     elPlusBtn.style.color = 'white';
-    const stat = (el as HTMLElement).dataset.stat;
     if (stat && stat == 'attackRange') {
       elPlusBtn.addEventListener('mouseenter', () => {
         keyDown.showWalkRope = true;
@@ -542,7 +536,7 @@ export function renderRunesMenu(underworld: Underworld) {
         playSFXKey('deny');
       } else {
         underworld.pie.sendData({
-          type: MESSAGE_TYPES.SPEND_STAT_POINT,
+          type: MESSAGE_TYPES.CHOOSE_RUNE,
           stat
         })
       }

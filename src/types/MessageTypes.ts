@@ -34,7 +34,7 @@ export enum MESSAGE_TYPES {
   JOIN_GAME_AS_PLAYER,
   SET_MODS,
   SET_GAME_MODE,
-  SPEND_STAT_POINT,
+  CHOOSE_RUNE,
   FORCE_TRIGGER_PICKUP,
   PREVENT_IDLE_TIMEOUT,
   // Could add typing indicator in future

@@ -2054,7 +2054,7 @@ export default class Underworld {
         if (!isTutorialFirstStepsComplete()) {
           for (let i = 0; i < points; i++) {
             console.log("Autospend stat point on max health because tutorial");
-            this.spendStatPoint('healthMax', player);
+            this.upgradeRune('healthMax', player);
           }
         }
       }
@@ -3127,68 +3127,28 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // .filter out freeSpells because they shouldn't count against upgrades available since they are given to you
     return this.cardDropsDropped + config.STARTING_CARD_COUNT - player.inventory.filter(spellId => (player.freeSpells || []).indexOf(spellId) == -1).length;
   }
-  spendStatPoint(stat: string, player: Player.IPlayer) {
+  upgradeRune(runeModifierId: string, player: Player.IPlayer) {
     const isCurrentPlayer = player == globalThis.player;
-    // Do not allow overspend
-    if (player.statPointsUnspent <= 0) {
+    if (remoteLog) {
+      remoteLog(`Stat Point: ${runeModifierId}`);
+    }
+    const modifier = Cards.allModifiers[runeModifierId];
+    if (!modifier) {
+      console.error(`Failed to upgrade rune ${runeModifierId}`)
       return;
     }
-    if (remoteLog) {
-      remoteLog(`Stat Point: ${stat}`);
+    // Do not allow overspend
+    if (player.statPointsUnspent < (modifier.cost || 0)) {
+      return;
     }
-    player.statPointsUnspent--;
-    if (stat == 'Good Looks') {
-      const damageMultiplier = 0.1 / this.players.length;
-      // Deals 10% damage to all AI units
-      this.units.filter(u => u.unitType == UnitType.AI && u.unitSubType != UnitSubType.DOODAD)
-        .forEach(u => Unit.takeDamage({
-          unit: u,
-          amount: u.healthMax * damageMultiplier,
-          sourceUnit: player.unit
-        }, this, false));
-    } else {
 
-      if (isCurrentPlayer) {
-        playSFXKey('levelUp');
-      }
+    player.statPointsUnspent -= modifier.cost || 0;
 
-      const statBumpAmount: Pick<Unit.IUnit, "attackRange" | "manaMax" | "healthMax" | "staminaMax"> = {
-        attackRange: 20, //previously 8
-        manaMax: 5,
-        healthMax: 20, //previously 8
-        staminaMax: 20 //previously 10
-      }
-
-      switch (player.mageType) {
-        case 'Timemason': {
-          statBumpAmount.manaMax *= 2;
-          break;
-        }
-        case 'Far Gazer': {
-          statBumpAmount.attackRange *= 2;
-          statBumpAmount.staminaMax = Math.floor(statBumpAmount.staminaMax / 2);
-          break;
-        }
-      }
-
-      const unitStatKey = stat as keyof typeof statBumpAmount;
-      if (stat && statBumpAmount[unitStatKey] && player.unit[unitStatKey]) {
-        const statBump = statBumpAmount[unitStatKey] || 10;
-        player.unit[unitStatKey] += statBump;
-        const nonMaxStatKey = stat.replace('Max', '') as keyof Pick<Unit.IUnit, "attackRange" | "mana" | "health" | "stamina">;
-        if (stat.endsWith('Max') && typeof player.unit[nonMaxStatKey] === 'number') {
-          player.unit[nonMaxStatKey] += statBump;
-        }
-        if (isCurrentPlayer) {
-          // Now that the player unit's properties have changed, sync the new
-          // state with the player's predictionUnit so it is properly
-          // reflected in the bar
-          // (note: this would be auto corrected on the next mouse move anyway)
-          this.syncPlayerPredictionUnitOnly();
-          Unit.syncPlayerHealthManaUI(this);
-        }
-      }
+    if (isCurrentPlayer) {
+      playSFXKey('levelUp');
     }
+
+    Unit.addModifier(player.unit, runeModifierId, this, false, 1);
     if (isCurrentPlayer) {
       // Clear special showWalkRope for attackRange hover
       keyDown.showWalkRope = false;

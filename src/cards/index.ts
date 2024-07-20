@@ -136,6 +136,7 @@ import registerPrimedCorpse from '../modifierPrimedCorpse';
 import registerSlime from '../modifierSlime';
 import registerTargetImmune, { targetImmuneId } from '../modifierTargetImmune';
 import registerGrowth from '../modifierGrowth';
+import registerModifierStatUpgrades from '../modifierStatUpgrades';
 
 export interface Modifiers {
   // modifier sthat are not attached to a spell need an explicit id set
@@ -152,6 +153,9 @@ export interface Modifiers {
   // If the modifier may be automatically added to minibosses
   // when the spawn, then the modifier gets a probability
   probability?: number;
+  // Specifying a cost allows the modifier to be upgradable via
+  // the runes menu.
+  cost?: number;
 }
 export interface Events {
   // events that are not attached to a spell need an explicit id set
@@ -175,6 +179,10 @@ export interface Spell {
 }
 export function registerModifiers(id: string, modifiers: Modifiers) {
   allModifiers[id] = modifiers;
+  // @ts-ignore: For dev debug viewing modifiers.
+  // ts-ignored because it's not declared in global
+  // types and meant to be used as debug only
+  globalThis.devAllModifiers = allModifiers;
 
   // Add subsprites
   if (modifiers && modifiers.subsprite) {
@@ -373,6 +381,7 @@ export function registerCards(overworld: Overworld) {
   registerSlime();
   registerTargetImmune();
   registerGrowth();
+  registerModifierStatUpgrades();
 
   registerImmune();
   registerImpendingDoom();
