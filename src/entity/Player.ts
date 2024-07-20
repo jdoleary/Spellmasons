@@ -22,7 +22,7 @@ import { lightenColor } from '../graphics/ui/colorUtil';
 import { AttributePerk } from '../Perk';
 import { setPlayerNameUI } from '../PlayerUtils';
 import { arrowCardId } from '../cards/arrow';
-import { healCardId } from '../cards/add_heal';
+import { healCardId } from '../cards/heal';
 import { contaminate_id } from '../cards/contaminate';
 import { cameraAutoFollow } from '../graphics/PixiUtils';
 

@@ -21,7 +21,7 @@ import megaSlash from './mega_slash';
 import rend from './rend';
 import bleed from './bleed';
 import execute from './execute';
-import heal from './add_heal';
+import heal from './heal';
 import heal_greater from './heal_greater';
 import heal_mass from './heal_mass';
 import send_mana from './send_mana';
