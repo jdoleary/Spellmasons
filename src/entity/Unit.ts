@@ -928,7 +928,11 @@ export function takeDamage(damageArgs: damageArgs, underworld: Underworld, predi
     if (amount > 0) {
       // - - - DAMAGE FX - - -
       playSFXKey(unit.sfx.damage);
-      playAnimation(unit, unit.animations.hit, { loop: false, animationSpeed: 0.2 });
+      // Interupting an attack animation can skip the unit's action,
+      // so we should ensure the unit is not attacking before playing the hit animation
+      if (unit.image && !unit.animations.attack.includes(unit.image.sprite.imagePath)) {
+        playAnimation(unit, unit.animations.hit, { loop: false, animationSpeed: 0.2 });
+      }
       // All units bleed except Doodads
       if (unit.unitSubType !== UnitSubType.DOODAD) {
         if (fromVec2) {
