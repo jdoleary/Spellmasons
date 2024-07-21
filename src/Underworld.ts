@@ -108,6 +108,8 @@ import { pushId } from './cards/push';
 import { test_endCheckPromises, test_startCheckPromises } from './promiseSpy';
 import { targetCursedId } from './cards/target_curse';
 import { chooseBookmark } from './views';
+import { runeGamblerId } from './modifierGambler';
+import { runeTimemasonId } from './modifierTimemason';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -956,7 +958,7 @@ export default class Underworld {
     });
 
     // Special: Handle timemason:
-    const timemasons = this.players.filter(p => p.mageType == 'Timemason');
+    const timemasons = this.players.filter(p => p.unit.modifiers[runeTimemasonId]);
     if (this.turn_phase == turn_phase.PlayerTurns && timemasons.length && globalThis.view == View.Game) {
       timemasons.forEach(timemason => {
         if (timemason.isSpawned && timemason.unit.alive && timemason.unit.mana > 0) {
@@ -2040,7 +2042,7 @@ export default class Underworld {
     // Give stat points, but not in the first level
     if (this.levelIndex > 0) {
       for (let player of this.players) {
-        const points = player.mageType == 'Spellmason' ? config.STAT_POINTS_PER_LEVEL + 1 : config.STAT_POINTS_PER_LEVEL;
+        const points = config.STAT_POINTS_PER_LEVEL;
         player.statPointsUnspent += points;
         CardUI.tryShowStatPointsSpendable();
         console.log("Setup: Gave player: [" + player.clientId + "] " + points + " upgrade points for level index: " + levelIndex);
@@ -2085,18 +2087,6 @@ export default class Underworld {
       this.gameMode = gameMode;
       // Must be called when difficulty (gameMode) changes to update summon spell stats
       Cards.refreshSummonCardDescriptions(this);
-    }
-
-    // Use list here in case of hotseat
-    let clientPlayers = this.players.filter(p => p.clientId == globalThis.clientId);
-    for (let player of clientPlayers) {
-      // Record High Score Progress
-      const mageTypeFarthestLevel = storage.getStoredMageTypeFarthestLevelKey(player.mageType || 'Spellmason');
-      const highScore = storageGet(mageTypeFarthestLevel) || '0'
-      if (parseInt(highScore) < this.levelIndex) {
-        console.log('New farthest level record!', mageTypeFarthestLevel, '->', this.levelIndex);
-        storageSet(mageTypeFarthestLevel, this.levelIndex.toString());
-      }
     }
 
     // When you get to the first plus level after beating the last level,
@@ -3206,10 +3196,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     const isCursePerk = cursesLeftToChoose > 0;
     if (elUpgradePickerLabel) {
-      const pickingClass = globalThis.player ? Upgrade.isPickingClass(globalThis.player) : false;
-      elUpgradePickerLabel.innerHTML = i18n(
-        isCursePerk ? 'Pick a Calamity'
-          : pickingClass ? 'Pick a Class' : 'Pick a Spell');
+      elUpgradePickerLabel.innerHTML = i18n(isCursePerk ? 'Pick a Calamity' : 'Pick a Spell');
     }
 
     // If playing hotseat multiplayer, prepend the player name so users know which player they
@@ -3261,7 +3248,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       hidePerkList();
 
       let numberOfUpgradesToChooseFrom = 3 - player.reroll;
-      if (player.mageType == 'Gambler') {
+      if (player.unit.modifiers[runeGamblerId]) {
         numberOfUpgradesToChooseFrom += 1;
       }
       const upgrades = Upgrade.generateUpgrades(player, numberOfUpgradesToChooseFrom, this);
