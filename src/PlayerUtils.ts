@@ -14,7 +14,7 @@ import { addPierceId } from './cards/add_pierce';
 import { addBounceId } from './cards/add_bounce';
 
 
-function isAllowedToCastOutOfRange(cardIds: string[]): boolean {
+export function isAllowedToCastOutOfRange(cardIds: string[]): boolean {
     // If all cards can ignore range (i.e. arrows), return true
     if (cardIds.every(id => Cards.allCards[id]?.ignoreRange)) {
         return true;
