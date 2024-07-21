@@ -5,7 +5,7 @@ import { calculateCostForSingleCard, type CardCost } from './cards/cardUtils';
 import { cardRarityAsString, getCardRarityColor, getReplacesCardText } from './graphics/ui/CardUI';
 import { chooseObjectWithProbability } from './jmath/rand';
 import { MESSAGE_TYPES } from './types/MessageTypes';
-import { IPlayer, MageType, changeMageType } from './entity/Player';
+import { IPlayer } from './entity/Player';
 import Underworld from './Underworld';
 import { CardCategory } from './types/commonTypes';
 import { poisonCardId } from './cards/poison';
@@ -35,10 +35,7 @@ export interface IUpgrade {
   probability: number;
   cost: CardCost;
 }
-export function isPickingClass(player: IPlayer): boolean {
-  // undefined mageType means they haven't picked yet
-  return (player.upgrades.length >= 5 && player.mageType == undefined || !!globalThis.adminPickMageType);
-}
+
 export const filterUpgrades = (u: IUpgrade, player: Pick<IPlayer, "upgrades" | "inventory">, underworld: Pick<Underworld, "activeMods">) => {
   let minimumProbability = 0;
   if (player.inventory.length < config.STARTING_CARD_COUNT) {
@@ -96,9 +93,6 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, unde
       // Poison is acceptable here, even though it is a curse
       || [poisonCardId].includes(c.title)
     );
-  }
-  if (isPickingClass(player)) {
-    return upgradeMageClassSource;
   }
 
   // Upgrade random generate should be unique for the:
@@ -197,20 +191,6 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
   descriptionText.appendChild(label);
   desc.appendChild(descriptionText);
 
-  if (upgrade.type == 'mageType') {
-    const mageTypeWinsKey = storage.getStoredMageTypeWinsKey(upgrade.title as MageType);
-    const currentMageTypeWins = parseInt(storageGet(mageTypeWinsKey) || '0');
-    const mageTypeFarthestLevel = storage.getStoredMageTypeFarthestLevelKey(upgrade.title as MageType);
-    const currentMageTypeFarthestLevel = underworld._getLevelText(parseInt(storageGet(mageTypeFarthestLevel) || '0'));
-    // winsEl.innerHTML = `👑${currentMageTypeWins}`;
-    if (currentMageTypeWins > 0 || currentMageTypeFarthestLevel !== '1') {
-      const winsEl = document.createElement('div');
-      winsEl.classList.add('mageType-wins');
-      winsEl.innerHTML = `${currentMageTypeWins > 0 ? `🏆${currentMageTypeWins} ` : ''}${currentMageTypeFarthestLevel !== '1' ? `🗺️${currentMageTypeFarthestLevel}` : ''}`;
-      element.appendChild(winsEl);
-    }
-  }
-
   elCardInner.appendChild(desc);
   element.addEventListener('click', (e) => {
     globalThis.timeLastChoseUpgrade = Date.now();
@@ -233,7 +213,7 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
   return element;
 }
 export function getUpgradeByTitle(title: string): IUpgrade | undefined {
-  const all_upgrades = [...upgradeCardsSource, ...upgradeSourceWhenDead, ...upgradeMageClassSource];
+  const all_upgrades = [...upgradeCardsSource, ...upgradeSourceWhenDead];
   if (all_upgrades.filter(u => u.title == title).length > 1) {
     console.error('Multiple upgrades with the same title', title);
   }
@@ -254,97 +234,3 @@ export const upgradeSourceWhenDead: IUpgrade[] = [
 ];
 
 export const upgradeCardsSource: IUpgrade[] = []
-
-export const upgradeMageClassSource: IUpgrade[] = [
-  {
-    // This upgrade has leading and trailing spaces so it doesn't conflict with the upgrade
-    // for summoning a spellmason
-    title: ' Spellmason ',
-    type: 'mageType',
-    description: () => i18n('class_spellmason'),
-    thumbnail: 'images/upgrades/class-spellmason.png',
-    effect: (player, underworld) => {
-      changeMageType('Spellmason', player, underworld);
-    },
-    probability: 1,
-    cost: { healthCost: 0, manaCost: 0 },
-  },
-  {
-    title: 'Timemason',
-    type: 'mageType',
-    description: () => i18n(['class_timemason', `${config.TIMEMASON_PERCENT_DRAIN}%`]),
-    thumbnail: 'images/upgrades/class-timemason.png',
-    effect: (player, underworld) => {
-      changeMageType('Timemason', player, underworld);
-    },
-    probability: 1,
-    cost: { healthCost: 0, manaCost: 0 },
-  },
-  // {
-  //   title: 'Bloodmason',
-  //   type: 'mageType',
-  //   description: () => i18n('class_bloodmason'),
-  //   thumbnail: 'images/upgrades/class-bloodmason.png',
-  //   effect: (player, underworld) => {
-  //     changeMageType('Bloodmason', player, underworld);
-  //   },
-  //   probability: 1,
-  //   cost: { healthCost: 0, manaCost: 0 },
-  // },
-  {
-    title: i18n('Necromancer'),
-    type: 'mageType',
-    description: () => i18n('class_necromancer'),
-    thumbnail: 'images/upgrades/class-necromancer.png',
-    effect: (player, underworld) => {
-      changeMageType('Necromancer', player, underworld);
-    },
-    probability: 1,
-    cost: { healthCost: 0, manaCost: 0 },
-  },
-  {
-    title: 'Far Gazer',
-    type: 'mageType',
-    description: () => i18n('class_far_gazer'),
-    thumbnail: 'images/upgrades/class-sniper.png',
-    effect: (player, underworld) => {
-      changeMageType('Far Gazer', player, underworld);
-    },
-    probability: 1,
-    cost: { healthCost: 0, manaCost: 0 },
-  },
-  {
-    title: i18n('Cleric'),
-    type: 'mageType',
-    description: () => i18n('class_cleric'),
-    thumbnail: 'images/upgrades/class-cleric.png',
-    effect: (player, underworld) => {
-      changeMageType('Cleric', player, underworld);
-    },
-    probability: 1,
-    cost: { healthCost: 0, manaCost: 0 },
-  },
-  {
-    title: i18n('Witch'),
-    type: 'mageType',
-    description: () => i18n('class_witch'),
-    thumbnail: 'images/upgrades/class-witch.png',
-    effect: (player, underworld) => {
-      changeMageType('Witch', player, underworld);
-    },
-    probability: 1,
-    cost: { healthCost: 0, manaCost: 0 },
-  },
-  {
-    title: i18n('Gambler'),
-    type: 'mageType',
-    description: () => i18n('class_gambler'),
-    thumbnail: 'images/upgrades/class-gambler.png',
-    effect: (player, underworld) => {
-      changeMageType('Gambler', player, underworld);
-    },
-    probability: 1,
-    cost: { healthCost: 0, manaCost: 0 },
-  },
-
-]

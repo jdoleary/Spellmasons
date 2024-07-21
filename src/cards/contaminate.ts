@@ -15,6 +15,7 @@ import { Modifier } from './util';
 import { summoningSicknessId } from '../modifierSummoningSickness';
 import { corpseDecayId } from '../modifierCorpseDecay';
 import { baseExplosionRadius } from '../effects/explode';
+import { runeWitchId } from '../modifierWitch';
 
 export const contaminate_id = 'contaminate';
 const baseRange = baseExplosionRadius;
@@ -52,7 +53,7 @@ async function contaminate(casterPlayer: IPlayer | undefined, unit: IUnit, quant
   // Contaminate does not get extra radius from quantity,
   // but can instead chain an additional time
   // +25% range per radius boost
-  const adjustedRange = baseRange * (1 + (0.25 * radiusBoost)) * (casterPlayer?.mageType == 'Witch' ? 1.5 : 1);
+  const adjustedRange = baseRange * (1 + (0.25 * radiusBoost)) * (casterPlayer?.unit.modifiers[runeWitchId] ? 1.5 : 1);
 
   // the units to spread contaminate from
   // initally just this unit, then only the latest additions to the chain

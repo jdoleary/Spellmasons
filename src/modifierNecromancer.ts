@@ -1,20 +1,20 @@
 import { registerModifiers } from "./cards";
-import { arrowCardId } from "./cards/arrow";
 import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
 import * as Upgrade from './Upgrade';
+import * as captureSoul from './cards/capture_soul';
 
-export const runeArcherId = 'Archer';
+export const runeNecromancerId = 'Necromancer';
 
-export default function registerArcher() {
-  registerModifiers(runeArcherId, {
-    description: i18n('class_archer'),
+export default function registerNecromancer() {
+  registerModifiers(runeNecromancerId, {
+    description: i18n('class_necromancer'),
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       const player = underworld.players.find(p => p.unit == unit);
       if (player) {
-        getOrInitModifier(unit, runeArcherId, { isCurse: false, quantity, keepOnDeath: true }, () => {
-          const upgrade = Upgrade.getUpgradeByTitle(arrowCardId);
+        getOrInitModifier(unit, runeNecromancerId, { isCurse: false, quantity, keepOnDeath: true }, () => {
+          const upgrade = Upgrade.getUpgradeByTitle(captureSoul.id);
           if (upgrade) {
             underworld.forceUpgrade(player, upgrade, true);
           } else {
@@ -23,7 +23,7 @@ export default function registerArcher() {
         });
 
       } else {
-        console.error('Cannot add rune Archer, no player is associated with unit');
+        console.error('Cannot add rune Necromancer, no player is associated with unit');
       }
     },
     cost: 5,
