@@ -137,6 +137,7 @@ import registerSlime from '../modifierSlime';
 import registerTargetImmune, { targetImmuneId } from '../modifierTargetImmune';
 import registerGrowth from '../modifierGrowth';
 import registerModifierStatUpgrades from '../modifierStatUpgrades';
+import registerArcherRune from '../modifierArcher';
 
 export interface Modifiers {
   // modifier sthat are not attached to a spell need an explicit id set
@@ -382,6 +383,7 @@ export function registerCards(overworld: Overworld) {
   registerTargetImmune();
   registerGrowth();
   registerModifierStatUpgrades();
+  registerArcherRune();
 
   registerImmune();
   registerImpendingDoom();

@@ -132,12 +132,6 @@ export function changeMageType(type: MageType, player?: IPlayer, underworld?: Un
         break;
       case 'Archer':
         {
-          const upgrade = Upgrade.getUpgradeByTitle(arrowCardId);
-          if (upgrade) {
-            underworld.forceUpgrade(player, upgrade, true);
-          } else {
-            console.error('Could not find arrow upgrade for', type);
-          }
         }
         break;
       case 'Necromancer':

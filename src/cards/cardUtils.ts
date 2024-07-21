@@ -12,6 +12,7 @@ import Underworld from "../Underworld";
 import { arrowCardId } from "./arrow";
 import { CardCategory } from "../types/commonTypes";
 import { allUnits } from "../entity/units";
+import { runeArcherId } from "../modifierArcher";
 export interface CardCost {
     manaCost: number;
     healthCost: number;
@@ -162,7 +163,7 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
             cardCost.manaCost = Math.floor(cardCost.manaCost / 2);
         } else if (caster.mageType == 'Witch' && card.category == CardCategory.Curses) {
             cardCost.manaCost = Math.floor(cardCost.manaCost * 0.8);
-        } else if (caster.mageType == 'Archer' && card.id.toLowerCase().includes('arrow')) {
+        } else if (caster.unit.modifiers[runeArcherId] && card.id.toLowerCase().includes('arrow')) {
             // Freeze mana cost for archer MageType
             cardCost.manaCost = card.manaCost;
         }

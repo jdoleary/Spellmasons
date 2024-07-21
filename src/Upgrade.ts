@@ -303,17 +303,6 @@ export const upgradeMageClassSource: IUpgrade[] = [
     cost: { healthCost: 0, manaCost: 0 },
   },
   {
-    title: i18n('Archer'),
-    type: 'mageType',
-    description: () => i18n('class_archer'),
-    thumbnail: 'images/upgrades/class-archer.png',
-    effect: (player, underworld) => {
-      changeMageType('Archer', player, underworld);
-    },
-    probability: 1,
-    cost: { healthCost: 0, manaCost: 0 },
-  },
-  {
     title: 'Far Gazer',
     type: 'mageType',
     description: () => i18n('class_far_gazer'),
