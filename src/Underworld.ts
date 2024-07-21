@@ -524,6 +524,11 @@ export default class Underworld {
             const newVelocity = reflectVelocityOnWall(velocity, collision.wall);
             velocity.x = newVelocity.x;
             velocity.y = newVelocity.y;
+            if (pushedObject.image) {
+              // Velocity has changed, so sprite rotation changes too
+              pushedObject.image.sprite.rotation = Math.atan2(velocity.y, velocity.x);
+            }
+
             // Move for remaining delta time (after wall collision)
             const newPosition = Vec.add(pushedObject, Vec.multiply(deltaTime - collision.msUntilCollision, velocity));
             pushedObject.x = newPosition.x;
@@ -571,6 +576,11 @@ export default class Underworld {
                   const newVelocity = Vec.reflectOnNormal(velocity, directionToProjectile)
                   velocity.x = newVelocity.x;
                   velocity.y = newVelocity.y;
+                  if (pushedObject.image) {
+                    // Velocity has changed, so sprite rotation changes too
+                    pushedObject.image.sprite.rotation = Math.atan2(velocity.y, velocity.x);
+                  }
+
                   if (!prediction) {
                     playSFXKey('ricochet');
                   }
@@ -607,7 +617,6 @@ export default class Underworld {
       if (pushedObject.image) {
         pushedObject.image.sprite.x = pushedObject.x;
         pushedObject.image.sprite.y = pushedObject.y;
-        pushedObject.image.sprite.rotation = Math.atan2(velocity.y, velocity.x);
       }
     }
     return false;
