@@ -1419,8 +1419,6 @@ export async function runTurnStartEvents(unit: IUnit, underworld: Underworld, pr
       const fn = Events.onTurnStartSource[eventName];
       if (fn) {
         await fn(unit, underworld, prediction);
-      } else {
-        console.error('No function associated with turn start event', eventName);
       }
     },
   ));
@@ -1432,8 +1430,6 @@ export async function runTurnEndEvents(unit: IUnit, underworld: Underworld, pred
       const fn = Events.onTurnEndSource[eventName];
       if (fn) {
         await fn(unit, underworld, prediction);
-      } else {
-        console.error('No function associated with turn end event', eventName);
       }
     },
   ));
