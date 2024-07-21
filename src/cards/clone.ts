@@ -57,42 +57,11 @@ export function cloneEffect(addClonesToTargetArray: boolean): EffectFn {
           // If there is are clone coordinates to clone into
           if (cloneSourceCoords) {
             if (Unit.isUnit(target)) {
-              const validSpawnCoords = underworld.findValidSpawn({ spawnSource: cloneSourceCoords, ringLimit: 5, prediction, radius: 10 });
-              if (validSpawnCoords) {
-                const clone = Unit.load(Unit.serialize(target), underworld, prediction);
-                if (!prediction) {
-                  // Change id of the clone so that it doesn't share the same
-                  // 'supposed-to-be-unique' id of the original
-                  clone.id = ++underworld.lastUnitId;
-                } else {
-                  // Get a unique id for the clone
-                  clone.id = underworld.unitsPrediction.reduce((lastId, unit) => {
-                    if (unit.id > lastId) {
-                      return unit.id;
-                    }
-                    return lastId;
-                  }, 0) + 1;
-                }
-                // If the cloned unit is player controlled, make them be controlled by the AI
-                if (clone.unitType == UnitType.PLAYER_CONTROLLED) {
-                  clone.unitType = UnitType.AI;
-                  returnToDefaultSprite(clone);
-                }
-                clone.x = validSpawnCoords.x;
-                clone.y = validSpawnCoords.y;
-                // // If cloned unit is a player unit, set the mana to be
-                // // the value of the mana AFTER the player casts clone.
-                // // This is to balance the infinite-mana clone merge exploit
-                // if (target.unitType == UnitType.PLAYER_CONTROLLED && target.predictionCopy) {
-                //   clone.mana = 0;
-                // }
-                // Clones don't provide experience when killed
-                clone.originalLife = false;
-                // This is super powerful as it allows for exponential clones
-                if (addClonesToTargetArray) {
-                  // Add clones to target list
-                  addTarget(clone, state, underworld, prediction);
-                }
+              const clone = doCloneUnit(target, underworld, prediction, cloneSourceCoords);
+              // This is super powerful as it allows for exponential clones
+              if (clone && addClonesToTargetArray) {
+                // Add clones to target list
+                addTarget(clone, state, underworld, prediction);
               }
             } else if (Pickup.isPickup(target)) {
               const targetName = target.name;
@@ -124,6 +93,43 @@ export function cloneEffect(addClonesToTargetArray: boolean): EffectFn {
     }
     return state;
   }
+}
+export function doCloneUnit(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, spawnSource?: Vec2): Unit.IUnit | undefined {
+  const validSpawnCoords = underworld.findValidSpawn({ spawnSource: spawnSource || unit, ringLimit: 5, prediction, radius: 10 });
+  if (validSpawnCoords) {
+    const clone = Unit.load(Unit.serialize(unit), underworld, prediction);
+    if (!prediction) {
+      // Change id of the clone so that it doesn't share the same
+      // 'supposed-to-be-unique' id of the original
+      clone.id = ++underworld.lastUnitId;
+    } else {
+      // Get a unique id for the clone
+      clone.id = underworld.unitsPrediction.reduce((lastId, unit) => {
+        if (unit.id > lastId) {
+          return unit.id;
+        }
+        return lastId;
+      }, 0) + 1;
+    }
+    // If the cloned unit is player controlled, make them be controlled by the AI
+    if (clone.unitType == UnitType.PLAYER_CONTROLLED) {
+      clone.unitType = UnitType.AI;
+      returnToDefaultSprite(clone);
+    }
+    clone.x = validSpawnCoords.x;
+    clone.y = validSpawnCoords.y;
+    // // If cloned unit is a player unit, set the mana to be
+    // // the value of the mana AFTER the player casts clone.
+    // // This is to balance the infinite-mana clone merge exploit
+    // if (target.unitType == UnitType.PLAYER_CONTROLLED && target.predictionCopy) {
+    //   clone.mana = 0;
+    // }
+    // Clones don't provide experience when killed
+    clone.originalLife = false;
+    return clone;
+  }
+  return undefined;
+
 }
 export async function animateMitosis(image?: IImageAnimated) {
   if (!image) {

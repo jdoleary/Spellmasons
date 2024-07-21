@@ -14,15 +14,11 @@ import { MESSAGE_TYPES } from '../types/MessageTypes';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary, playerNoColor } from '../graphics/ui/colors';
 import Underworld, { turn_phase } from '../Underworld';
-import * as target_cone from '../cards/target_cone';
 import * as lastWill from '../cards/lastwill';
-import * as captureSoul from '../cards/capture_soul';
 import { explain, EXPLAIN_BLESSINGS, isTutorialComplete } from '../graphics/Explain';
 import { lightenColor } from '../graphics/ui/colorUtil';
 import { AttributePerk } from '../Perk';
 import { setPlayerNameUI } from '../PlayerUtils';
-import { arrowCardId } from '../cards/arrow';
-import { healCardId } from '../cards/add_heal';
 import { contaminate_id } from '../cards/contaminate';
 import { cameraAutoFollow } from '../graphics/PixiUtils';
 
@@ -44,24 +40,9 @@ interface Stats {
   gameStartTime: number;
   totalKills: number;
 }
-export type MageType = 'Spellmason' | 'Timemason' | 'Bloodmason' | 'Necromancer' | 'Archer' | 'Far Gazer' | 'Cleric' | 'Witch' | 'Gambler';
-// This array allows the UI to select a mageType, mageTypes not in this array
-// will not appear in the UI
-globalThis.mageTypes = [
-  'Spellmason',
-  'Timemason',
-  'Bloodmason',
-  'Necromancer',
-  'Archer',
-  'Far Gazer',
-  'Cleric',
-  'Witch',
-  'Gambler'
-];
 export interface IPlayer {
   // Multiplayer "gamer handle"
   name: string;
-  mageType?: MageType;
   // color of robe
   color: number;
   // color of the player's magic
@@ -111,80 +92,10 @@ export function inPortal(player: IPlayer): boolean {
   // often used to determine if player is "in valid game space"
   return !player.isSpawned || isNaN(player.unit.x) || isNaN(player.unit.y) || player.unit.x === null || player.unit.y === null;
 }
-export function changeMageType(type: MageType, player?: IPlayer, underworld?: Underworld) {
-  if (!player || !underworld) {
-    console.error('Cannot set mage type', player, underworld);
-  } else {
-    if (player == globalThis.player) {
-      // Turn off adminPickMageType
-      globalThis.adminPickMageType = false;
-    }
-    console.log(`Player ${player.name} mageType changed to`, type);
-    player.mageType = type;
-    switch (type) {
-      case 'Timemason':
-        {
-          player.unit.manaMax *= 2;
-          player.unit.mana *= 2;
-          underworld.syncPlayerPredictionUnitOnly();
-          Unit.syncPlayerHealthManaUI(underworld);
-        }
-        break;
-      case 'Archer':
-        {
-          const upgrade = Upgrade.getUpgradeByTitle(arrowCardId);
-          if (upgrade) {
-            underworld.forceUpgrade(player, upgrade, true);
-          } else {
-            console.error('Could not find arrow upgrade for', type);
-          }
-        }
-        break;
-      case 'Necromancer':
-        {
-          const upgrade = Upgrade.getUpgradeByTitle(captureSoul.id);
-          if (upgrade) {
-            underworld.forceUpgrade(player, upgrade, true);
-          } else {
-            console.error('Could not find upgrade for', type);
-          }
-        }
-        break;
-      case 'Cleric':
-        {
-          const upgrade = Upgrade.getUpgradeByTitle(healCardId);
-          if (upgrade) {
-            underworld.forceUpgrade(player, upgrade, true);
-          } else {
-            console.error('Could not find upgrade for', type);
-          }
-        }
-        break;
-      case 'Witch':
-        {
-          const upgrade = Upgrade.getUpgradeByTitle(contaminate_id);
-          if (upgrade) {
-            underworld.forceUpgrade(player, upgrade, true);
-          } else {
-            console.error('Could not find upgrade for', type);
-          }
-        }
-        break;
-      case 'Far Gazer':
-        {
-          player.unit.attackRange *= 2;
-          player.unit.staminaMax = Math.floor(player.unit.staminaMax / 2);
-        }
-        break;
-    }
-  }
-
-}
 export function create(clientId: string, playerId: string, underworld: Underworld): IPlayer {
   const userSource = defaultPlayerUnit;
   const player: IPlayer = {
     name: '',
-    mageType: undefined,
     endedTurn: false,
     clientId,
     playerId,
@@ -423,6 +334,7 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
   underworld.queueGameLoop();
   setPlayerRobeColor(playerLoaded, playerLoaded.color);
   setPlayerNameUI(playerLoaded);
+  CardUI.tryShowStatPointsSpendable();
   return playerLoaded;
 }
 

@@ -271,7 +271,6 @@ declare global {
   var setMenuIsInRoom: undefined | ((inRoom: boolean) => void);
   // Used to stop sending PLAYER_THINKING if player is hovering over non game space
   var currentHoverElement: undefined | HTMLElement | null;
-  var mageTypes: Array<Player.MageType>;
   var adminPickMageType: boolean | undefined;
   // A list of upgrades to omit for the next reroll
   var rerollOmit: string[] | undefined;

@@ -107,6 +107,9 @@ import { slashCardId } from './cards/slash';
 import { pushId } from './cards/push';
 import { test_endCheckPromises, test_startCheckPromises } from './promiseSpy';
 import { targetCursedId } from './cards/target_curse';
+import { chooseBookmark } from './views';
+import { runeGamblerId } from './modifierGambler';
+import { runeTimemasonId } from './modifierTimemason';
 import { manaBarrierId, updateTooltip } from './modifierManaBarrier';
 
 const loopCountLimit = 10000;
@@ -956,7 +959,7 @@ export default class Underworld {
     });
 
     // Special: Handle timemason:
-    const timemasons = this.players.filter(p => p.mageType == 'Timemason');
+    const timemasons = this.players.filter(p => p.unit.modifiers[runeTimemasonId]);
     if (this.turn_phase == turn_phase.PlayerTurns && timemasons.length && globalThis.view == View.Game) {
       timemasons.forEach(timemason => {
         if (timemason.isSpawned && timemason.unit.alive && timemason.unit.mana > 0) {
@@ -2040,8 +2043,9 @@ export default class Underworld {
     // Give stat points, but not in the first level
     if (this.levelIndex > 0) {
       for (let player of this.players) {
-        const points = player.mageType == 'Spellmason' ? config.STAT_POINTS_PER_LEVEL + 1 : config.STAT_POINTS_PER_LEVEL;
+        const points = config.STAT_POINTS_PER_LEVEL;
         player.statPointsUnspent += points;
+        CardUI.tryShowStatPointsSpendable();
         console.log("Setup: Gave player: [" + player.clientId + "] " + points + " upgrade points for level index: " + levelIndex);
         // only warn unexpected stat points if player has modified mana or health since
         // NEW players that join a game mid-way through will get backfilled stats
@@ -2053,7 +2057,7 @@ export default class Underworld {
         if (!isTutorialFirstStepsComplete()) {
           for (let i = 0; i < points; i++) {
             console.log("Autospend stat point on max health because tutorial");
-            this.spendStatPoint('healthMax', player);
+            this.upgradeRune('healthMax', player);
           }
         }
       }
@@ -2084,18 +2088,6 @@ export default class Underworld {
       this.gameMode = gameMode;
       // Must be called when difficulty (gameMode) changes to update summon spell stats
       Cards.refreshSummonCardDescriptions(this);
-    }
-
-    // Use list here in case of hotseat
-    let clientPlayers = this.players.filter(p => p.clientId == globalThis.clientId);
-    for (let player of clientPlayers) {
-      // Record High Score Progress
-      const mageTypeFarthestLevel = storage.getStoredMageTypeFarthestLevelKey(player.mageType || 'Spellmason');
-      const highScore = storageGet(mageTypeFarthestLevel) || '0'
-      if (parseInt(highScore) < this.levelIndex) {
-        console.log('New farthest level record!', mageTypeFarthestLevel, '->', this.levelIndex);
-        storageSet(mageTypeFarthestLevel, this.levelIndex.toString());
-      }
     }
 
     // When you get to the first plus level after beating the last level,
@@ -3126,74 +3118,34 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // .filter out freeSpells because they shouldn't count against upgrades available since they are given to you
     return this.cardDropsDropped + config.STARTING_CARD_COUNT - player.inventory.filter(spellId => (player.freeSpells || []).indexOf(spellId) == -1).length;
   }
-  spendStatPoint(stat: string, player: Player.IPlayer) {
+  upgradeRune(runeModifierId: string, player: Player.IPlayer) {
     const isCurrentPlayer = player == globalThis.player;
-    // Do not allow overspend
-    if (player.statPointsUnspent <= 0) {
+    if (remoteLog) {
+      remoteLog(`Stat Point: ${runeModifierId}`);
+    }
+    const modifier = Cards.allModifiers[runeModifierId];
+    if (!modifier) {
+      console.error(`Failed to upgrade rune ${runeModifierId}`)
       return;
     }
-    if (remoteLog) {
-      remoteLog(`Stat Point: ${stat}`);
+    // Do not allow overspend
+    if (player.statPointsUnspent < (modifier.cost || 0)) {
+      return;
     }
-    player.statPointsUnspent--;
-    if (stat == 'Good Looks') {
-      const damageMultiplier = 0.1 / this.players.length;
-      // Deals 10% damage to all AI units
-      this.units.filter(u => u.unitType == UnitType.AI && u.unitSubType != UnitSubType.DOODAD)
-        .forEach(u => Unit.takeDamage({
-          unit: u,
-          amount: u.healthMax * damageMultiplier,
-          sourceUnit: player.unit
-        }, this, false));
-    } else {
 
-      if (isCurrentPlayer) {
-        playSFXKey('levelUp');
-      }
+    player.statPointsUnspent -= modifier.cost || 0;
 
-      const statBumpAmount: Pick<Unit.IUnit, "attackRange" | "manaMax" | "healthMax" | "staminaMax"> = {
-        attackRange: 20, //previously 8
-        manaMax: 5,
-        healthMax: 20, //previously 8
-        staminaMax: 20 //previously 10
-      }
-
-      switch (player.mageType) {
-        case 'Timemason': {
-          statBumpAmount.manaMax *= 2;
-          break;
-        }
-        case 'Far Gazer': {
-          statBumpAmount.attackRange *= 2;
-          statBumpAmount.staminaMax = Math.floor(statBumpAmount.staminaMax / 2);
-          break;
-        }
-      }
-
-      const unitStatKey = stat as keyof typeof statBumpAmount;
-      if (stat && statBumpAmount[unitStatKey] && player.unit[unitStatKey]) {
-        const statBump = statBumpAmount[unitStatKey] || 10;
-        player.unit[unitStatKey] += statBump;
-        const nonMaxStatKey = stat.replace('Max', '') as keyof Pick<Unit.IUnit, "attackRange" | "mana" | "health" | "stamina">;
-        if (stat.endsWith('Max') && typeof player.unit[nonMaxStatKey] === 'number') {
-          player.unit[nonMaxStatKey] += statBump;
-        }
-        if (isCurrentPlayer) {
-          // Now that the player unit's properties have changed, sync the new
-          // state with the player's predictionUnit so it is properly
-          // reflected in the bar
-          // (note: this would be auto corrected on the next mouse move anyway)
-          this.syncPlayerPredictionUnitOnly();
-          Unit.syncPlayerHealthManaUI(this);
-        }
-      }
+    if (isCurrentPlayer) {
+      playSFXKey('levelUp');
     }
+
+    Unit.addModifier(player.unit, runeModifierId, this, false, 1);
     if (isCurrentPlayer) {
       // Clear special showWalkRope for attackRange hover
       keyDown.showWalkRope = false;
-      // Clear upgrades
-      document.body?.classList.toggle(showUpgradesClassName, false);
-      this.showUpgrades();
+      CardUI.renderRunesMenu(this)
+      // Clear gold glow on inv button if necessary
+      CardUI.tryShowStatPointsSpendable();
     }
   }
   adminShowMageTypeSelect() {
@@ -3230,27 +3182,22 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       return;
     }
     const upgradesLeftToChoose = this.upgradesLeftToChoose(player);
-    const perksLeftToChoose = this.perksLeftToChoose(player);
     // Calamities have been removed, and the commented code below causes a bug
     // that prevents upgrades from working in the plus levels
     const cursesLeftToChoose = 0; //this.cursesLeftToChoose(player);
-    console.log("Upgrades/Perks/Curses left to choose:", upgradesLeftToChoose, perksLeftToChoose, cursesLeftToChoose);
+    console.log("Upgrades/Curses left to choose:", upgradesLeftToChoose, cursesLeftToChoose);
 
     // Return immediately if player has no upgrades that left to pick from
-    if (upgradesLeftToChoose <= 0 && perksLeftToChoose <= 0 && cursesLeftToChoose <= 0) {
+    if (upgradesLeftToChoose <= 0 && cursesLeftToChoose <= 0) {
       console.log('showUpgrades: Closing upgrade screen, nothing left to pick');
       // Hide the upgrade button since there are no upgrades left to pick
       elEndTurnBtn?.classList.toggle('upgrade', false);
       return;
     }
 
-    const isPerk = perksLeftToChoose > 0 || cursesLeftToChoose > 0;
     const isCursePerk = cursesLeftToChoose > 0;
     if (elUpgradePickerLabel) {
-      const pickingClass = globalThis.player ? Upgrade.isPickingClass(globalThis.player) : false;
-      elUpgradePickerLabel.innerHTML = i18n(isPerk ?
-        isCursePerk ? 'Pick a Calamity' : i18n(['Spend Points', perksLeftToChoose.toString()])
-        : pickingClass ? 'Pick a Class' : 'Pick a Spell');
+      elUpgradePickerLabel.innerHTML = i18n(isCursePerk ? 'Pick a Calamity' : 'Pick a Spell');
     }
 
     // If playing hotseat multiplayer, prepend the player name so users know which player they
@@ -3267,102 +3214,34 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       console.error('showUpgrades: elUpgradePicker or elUpgradePickerContent are undefined.');
     }
 
-    elUpgradePickerContent?.classList.toggle('perks', isPerk);
-    if (isPerk) {
+    elUpgradePickerContent?.classList.toggle('perks', isCursePerk);
+    if (isCursePerk) {
       // Remove reroll btn
       if (rerollBtnContainer) {
         rerollBtnContainer.innerHTML = '';
       }
-      if (isCursePerk) {
-        const mostUsedLastLevelCards = Object.entries(player.spellState || {}).sort((a, b) => b[1].count - a[1].count)
-          // Remove cards that are already affected by calamity
-          .filter(([_spellId, spellState]) => !(spellState.disabledUntilLevel > this.levelIndex))
-          .slice(0, 3);
-        if (mostUsedLastLevelCards.length == 0) {
-          // Clear upgrades, nothing to pick
-          document.body?.classList.toggle(showUpgradesClassName, false);
-        } else {
-          const elPerks = mostUsedLastLevelCards.slice(0, 2).map(count => createCursePerkElement({ cardId: count[0] }, this));
-          for (let i = 0; i < 2; i++) {
-            const statCalamity = generateRandomStatCalamity(this, i);
-            if (statCalamity) {
-              elPerks.push(createCursePerkElement({ statCalamity }, this));
-            }
-          }
-          if (elUpgradePickerContent) {
-            elUpgradePickerContent.innerHTML = '';
-            for (let elUpgrade of elPerks) {
-              if (elUpgrade) {
-                elUpgradePickerContent.appendChild(elUpgrade);
-              }
-            }
+      const mostUsedLastLevelCards = Object.entries(player.spellState || {}).sort((a, b) => b[1].count - a[1].count)
+        // Remove cards that are already affected by calamity
+        .filter(([_spellId, spellState]) => !(spellState.disabledUntilLevel > this.levelIndex))
+        .slice(0, 3);
+      if (mostUsedLastLevelCards.length == 0) {
+        // Clear upgrades, nothing to pick
+        document.body?.classList.toggle(showUpgradesClassName, false);
+      } else {
+        const elPerks = mostUsedLastLevelCards.slice(0, 2).map(count => createCursePerkElement({ cardId: count[0] }, this));
+        for (let i = 0; i < 2; i++) {
+          const statCalamity = generateRandomStatCalamity(this, i);
+          if (statCalamity) {
+            elPerks.push(createCursePerkElement({ statCalamity }, this));
           }
         }
-      } else {
-        // Show the perks that you already have
-        showPerkList(player);
         if (elUpgradePickerContent) {
-          const wordMap: { [key: string]: string } = {
-            'attackRange': 'Cast Range',
-            'manaMax': 'Mana',
-            'healthMax': 'Health',
-            'staminaMax': 'Stamina',
-            'Good Looks': 'Good Looks'
+          elUpgradePickerContent.innerHTML = '';
+          for (let elUpgrade of elPerks) {
+            if (elUpgrade) {
+              elUpgradePickerContent.appendChild(elUpgrade);
+            }
           }
-          const statValueModifier = (stat: string, value: number | undefined) => {
-            if (value === undefined) {
-              // Good looks is an effect on the game and not a value on the Unit object
-              if (stat !== 'Good Looks') {
-                console.error('Undefined stat value', stat);
-              }
-              return '';
-            }
-            return value;
-          }
-          const elStatUpgradeRow = (stat: string) => `<tr class="stat-row">
-            <td><h1>${wordMap[stat] || ''}${stat === 'Good Looks' ? '' : ':'} ${statValueModifier(stat, player.unit[stat as keyof Unit.IUnit] as number)}</h1></td>
-            <td data-stat="${stat}" class="plus-btn-container"></td>
-</tr>`;
-          elUpgradePickerContent.innerHTML = `
-<div class="card upgrade perk ui-border pick-stats">
-  <div class="card-inner flex">
-  <table>
-            <thead><tr><th></th><th></th></tr></thead>
-    <tbody>
-  ${['healthMax', 'manaMax', 'staminaMax', 'attackRange', 'Good Looks'].map(elStatUpgradeRow).join('')}
-    </tbody>
-  </table>
-  </div>
-</div>
-            `;
-          elUpgradePickerContent.querySelectorAll('.stat-row .plus-btn-container').forEach(el => {
-            const elPlusBtn = document.createElement('div');
-            elPlusBtn.classList.add('plus-btn');
-            elPlusBtn.style.color = 'white';
-            const stat = (el as HTMLElement).dataset.stat;
-            if (stat && stat == 'attackRange') {
-              elPlusBtn.addEventListener('mouseenter', () => {
-                keyDown.showWalkRope = true;
-              });
-              elPlusBtn.addEventListener('mouseleave', () => {
-                keyDown.showWalkRope = false;
-              });
-
-            }
-            elPlusBtn.addEventListener('click', () => {
-              this.pie.sendData({
-                type: MESSAGE_TYPES.SPEND_STAT_POINT,
-                stat
-              })
-            });
-            elPlusBtn.addEventListener('mouseenter', (e) => {
-              playSFXKey('click');
-            });
-            el.appendChild(elPlusBtn);
-            if (globalThis.devAutoPickUpgrades) {
-              elPlusBtn.click();
-            }
-          })
         }
       }
     } else {
@@ -3370,7 +3249,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       hidePerkList();
 
       let numberOfUpgradesToChooseFrom = 3 - player.reroll;
-      if (player.mageType == 'Gambler') {
+      if (player.unit.modifiers[runeGamblerId]) {
         numberOfUpgradesToChooseFrom += 1;
       }
       const upgrades = Upgrade.generateUpgrades(player, numberOfUpgradesToChooseFrom, this);

@@ -15,9 +15,12 @@ import { MESSAGE_TYPES } from '../../types/MessageTypes';
 import { explain, EXPLAIN_END_TURN } from '../Explain';
 import { Overworld } from '../../Overworld';
 import { resetNotifiedImmune } from '../../cards/immune';
+import { keyDown } from './eventListeners';
+import { chooseBookmark } from '../../views';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
+let elRunes: HTMLElement | undefined;
 resetInventoryContent();
 export function resetInventoryContent() {
   if (globalThis.headless) {
@@ -40,10 +43,24 @@ export function resetInventoryContent() {
       el.dataset.category = category.toString();
       elInvContent.appendChild(el);
     })
+    elRunes = document.createElement('div');
+    elRunes.innerHTML = 'Runes';
+    elRunes.id = 'runes';
+    elInvContent.appendChild(elRunes);
   }
 
 }
-const elInvButton = document.getElementById('inventory-icon') as HTMLElement;
+export const elInvButton = document.getElementById('inventory-icon') as HTMLElement;
+const elBookmarkRunes = document.getElementById('bookmark-runes')
+export function tryShowStatPointsSpendable() {
+  const hasStatPointsToSpend = globalThis.player && globalThis.player.statPointsUnspent > 0;
+  if (elInvButton) {
+    elInvButton.classList.toggle('goldGlow', hasStatPointsToSpend);
+  }
+  if (elBookmarkRunes) {
+    elBookmarkRunes.classList.toggle('goldGlow', hasStatPointsToSpend);
+  }
+}
 // Where the non-selected cards are displayed
 export const elCardHand = document.getElementById('card-hand') as HTMLElement;
 export const elFloatingCardHolderLeft = document.getElementById('floating-card-holder-left') as HTMLElement;
@@ -349,7 +366,7 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
   if (globalThis.player) {
     // clear contents
     resetInventoryContent();
-
+    renderRunesMenu(underworld);
     // Get list of cards that have been replaced by more advanced cards to hide them in inventory
     // The reason they are not removed entirely is because the number of cards in the inventory determines
     // how many new cards the player gets to pick in the next upgrade relative to progress in the underworld,
@@ -430,6 +447,8 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
     categories.forEach(category => document.getElementById(`bookmark-${category.toLowerCase()}`)?.classList.toggle('disabled', false));
     // All bookmark is always enabled
     document.getElementById('bookmark-all')?.classList.toggle('disabled', false);
+    // Runes bookmark is always enabled
+    document.getElementById('bookmark-runes')?.classList.toggle('disabled', false);
     // Add an inventory element to clear the currently selected toolbar item
     if (slotModifyingIndex !== undefined) {
       const elClearSlotModifiyingIndex = createNonCardInventoryElement('toolbar-slot.png', 'Empty');
@@ -444,10 +463,95 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
         })
       }
     }
-  } else {
-    console.error('Cannot sync inventory, globalThis.player is undefined');
   }
 }
+export function renderRunesMenu(underworld: Underworld) {
+  if (!elRunes) {
+    console.error('No elRunes for showing rune upgrades');
+    return;
+  }
+  if (!globalThis.player) {
+    console.error("Cannot render runesMenu, no globalThis.player");
+    return;
+  }
+  const statPoints = underworld.perksLeftToChoose(globalThis.player);
+  const elStatUpgradeRow = (stat: string) => {
+    if (!globalThis.player) {
+      return '';
+    }
+    const modifier = Cards.allModifiers[stat]
+
+    return `<div class="stat-row flex">
+              <div>
+                <div class="rune-name">
+                ${stat || ''}
+                </div>
+                <div class="description">
+                ${Cards.allModifiers[stat]?.description}
+                </div>
+              </div>
+              <div data-stat="${stat}" class="plus-btn-container"><div class="stat-value">${modifier?.cost || '&nbsp;'}</div></div>
+            </div>`;
+  }
+  elRunes.innerHTML = `
+<div class="pick-stats">
+  <div class="card-inner flex">
+  <h2>Skill Points: ${statPoints}</h2>
+  <div class="stat-row-holder">
+  ${Object.entries(Cards.allModifiers).flatMap(([key, modifier]) => {
+    if (modifier.cost) {
+      return [elStatUpgradeRow(key)];
+    } else {
+      return [];
+    }
+  }).join('')}
+  </div>
+  </div>
+</div>`;
+
+  elRunes.querySelectorAll('.stat-row .plus-btn-container').forEach(el => {
+    const stat = (el as HTMLElement).dataset.stat;
+    if (!stat) {
+      return
+    }
+    const elPlusBtn = document.createElement('div');
+    const modifier = Cards.allModifiers[stat]
+    elPlusBtn.classList.add('plus-btn', 'small');
+    const isDisabled = (modifier && modifier.cost) ? statPoints < modifier.cost : true;
+    if (isDisabled) {
+      elPlusBtn.classList.add('disabled');
+    }
+    elPlusBtn.style.color = 'white';
+    if (stat && stat == 'attackRange') {
+      elPlusBtn.addEventListener('mouseenter', () => {
+        keyDown.showWalkRope = true;
+      });
+      elPlusBtn.addEventListener('mouseleave', () => {
+        keyDown.showWalkRope = false;
+      });
+
+    }
+    elPlusBtn.addEventListener('click', () => {
+      if (isDisabled) {
+        playSFXKey('deny');
+      } else {
+        underworld.pie.sendData({
+          type: MESSAGE_TYPES.CHOOSE_RUNE,
+          stat
+        })
+      }
+    });
+    elPlusBtn.addEventListener('mouseenter', (e) => {
+      playSFXKey('click');
+    });
+    el.appendChild(elPlusBtn);
+    if (globalThis.devAutoPickUpgrades && globalThis.player?.statPointsUnspent || 0 > 0) {
+      elPlusBtn.click();
+    }
+  })
+}
+
+
 export function toggleInventory(toolbarIndex: number | undefined, forceState: boolean | undefined, underworld: Underworld) {
   if (globalThis.headless) { return; }
   const inventoryWasOpen = document.body?.classList.contains(openInvClass);
@@ -456,6 +560,9 @@ export function toggleInventory(toolbarIndex: number | undefined, forceState: bo
     // Create inventory
     playSFXKey('inventory_open');
     syncInventory(toolbarIndex, underworld);
+    if (globalThis.player && underworld.perksLeftToChoose(globalThis.player)) {
+      chooseBookmark('bookmark-runes', true, underworld);
+    }
     // Update spellcosts in the inventory
     updateCardBadges(underworld);
     underworld.pie.sendData({
@@ -702,19 +809,19 @@ export function getCardRarityColor(content: { probability: number }): string {
 .t1 {
   color: #241623;
 }
-
+ 
 .t2 {
   color: #432534;
 }
-
+ 
 .t3 {
   color: #004e64;
 }
-
+ 
 .t4 {
   color: #19381F;
 }
-
+ 
 .t5 {
   color: #3b322c;
 }

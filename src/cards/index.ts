@@ -136,6 +136,14 @@ import registerPrimedCorpse from '../modifierPrimedCorpse';
 import registerSlime from '../modifierSlime';
 import registerTargetImmune, { targetImmuneId } from '../modifierTargetImmune';
 import registerGrowth from '../modifierGrowth';
+import registerModifierStatUpgrades from '../modifierStatUpgrades';
+import registerArcherRune from '../modifierArcher';
+import registerClericRune from '../modifierCleric';
+import registerFarGazerRune from '../modifierFarGazer';
+import registerGamblerRune from '../modifierGambler';
+import registerNecromancerRune from '../modifierNecromancer';
+import registerTimemasonRune from '../modifierTimemason';
+import registerWitchRune from '../modifierWitch';
 import registerArmor from '../modifierArmor';
 import registerHealthRegen from '../modifierHealthRegen';
 import registerManaBarrier from '../modifierManaBarrier';
@@ -162,6 +170,9 @@ export interface Modifiers {
   // If the modifier may be automatically added to minibosses
   // when the spawn, then the modifier gets a probability
   probability?: number;
+  // Specifying a cost allows the modifier to be upgradable via
+  // the runes menu.
+  cost?: number;
 }
 export interface Events {
   // events that are not attached to a spell need an explicit id set
@@ -185,6 +196,10 @@ export interface Spell {
 }
 export function registerModifiers(id: string, modifiers: Modifiers) {
   allModifiers[id] = modifiers;
+  // @ts-ignore: For dev debug viewing modifiers.
+  // ts-ignored because it's not declared in global
+  // types and meant to be used as debug only
+  globalThis.devAllModifiers = allModifiers;
 
   // Add subsprites
   if (modifiers && modifiers.subsprite) {
@@ -383,6 +398,14 @@ export function registerCards(overworld: Overworld) {
   registerSlime();
   registerTargetImmune();
   registerGrowth();
+  registerModifierStatUpgrades();
+  registerArcherRune();
+  registerClericRune();
+  registerFarGazerRune();
+  registerGamblerRune();
+  registerNecromancerRune();
+  registerTimemasonRune();
+  registerWitchRune();
 
   registerImmune();
   registerImpendingDoom();

@@ -390,6 +390,10 @@ export function addModifier(unit: IUnit, key: string, underworld: Underworld, pr
 
 export function removeModifier(unit: IUnit, key: string, underworld: Underworld) {
   const modifier = allModifiers[key];
+  if (modifier && modifier.cost) {
+    // Modifier is a Rune and should NOT be removed
+    return;
+  }
 
   // Call custom modifier's remove function
   const customRemoveFn = allModifiers[key]?.remove;
@@ -1744,9 +1748,7 @@ export function resetUnitStats(unit: IUnit, underworld: Underworld) {
   Object.keys(unit.modifiers).forEach(modifierKey => {
     const modifier = unit.modifiers[modifierKey];
     if (modifier) {
-      if (!modifier.keepBetweenLevels) {
-        removeModifier(unit, modifierKey, underworld);
-      }
+      removeModifier(unit, modifierKey, underworld);
     }
   });
 

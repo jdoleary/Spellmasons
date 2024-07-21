@@ -1,5 +1,5 @@
 import type { ICard } from ".";
-import { MageType, type CardUsage, type IPlayer } from "../entity/Player";
+import { type CardUsage, type IPlayer } from "../entity/Player";
 import { Vec2 } from "../jmath/Vec";
 import { raceTimeout } from "../Promise";
 import * as Image from '../graphics/Image';
@@ -9,9 +9,12 @@ import * as lastWill from '../cards/lastwill';
 import { Container } from "pixi.js";
 import { chooseOneOf } from "../jmath/rand";
 import Underworld from "../Underworld";
-import { arrowCardId } from "./arrow";
 import { CardCategory } from "../types/commonTypes";
 import { allUnits } from "../entity/units";
+import { runeArcherId } from "../modifierArcher";
+import { runeNecromancerId } from "../modifierNecromancer";
+import { runeClericId } from "../modifierCleric";
+import { runeWitchId } from "../modifierWitch";
 export interface CardCost {
     manaCost: number;
     healthCost: number;
@@ -137,7 +140,7 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
 
     // Handle unique changes due to player mageType
     if (caster) {
-        if (caster.mageType == 'Bloodmason') {
+        if (caster.unit.modifiers['Bloodmason']) {
             if (card.id === lastWill.id) {
                 // Just for fun, allow Bloodmason to still cast lastWill at a cost of 50%
                 // of their health.  it's a gamble!
@@ -150,7 +153,7 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
                 cardCost.healthCost = Math.ceil(cardCost.manaCost / 5);
                 cardCost.manaCost = 0;
             }
-        } else if (caster.mageType == 'Necromancer') {
+        } else if (caster.unit.modifiers[runeNecromancerId]) {
             if (card.id == captureSoul.id) {
                 cardCost.healthCost = 40;
                 cardCost.manaCost = 0;
@@ -158,11 +161,11 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
                 // Make summon spells discounted
                 cardCost.manaCost = Math.floor(cardCost.manaCost * 0.7);
             }
-        } else if (caster.mageType == 'Cleric' && card.category == CardCategory.Blessings) {
+        } else if (caster.unit.modifiers[runeClericId] && card.category == CardCategory.Blessings) {
             cardCost.manaCost = Math.floor(cardCost.manaCost / 2);
-        } else if (caster.mageType == 'Witch' && card.category == CardCategory.Curses) {
+        } else if (caster.unit.modifiers[runeWitchId] && card.category == CardCategory.Curses) {
             cardCost.manaCost = Math.floor(cardCost.manaCost * 0.8);
-        } else if (caster.mageType == 'Archer' && card.id.toLowerCase().includes('arrow')) {
+        } else if (caster.unit.modifiers[runeArcherId] && card.id.toLowerCase().includes('arrow')) {
             // Freeze mana cost for archer MageType
             cardCost.manaCost = card.manaCost;
         }

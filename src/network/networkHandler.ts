@@ -226,14 +226,14 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         console.error('Attempted to aquire pickup but could not find it in list');
       }
       break;
-    case MESSAGE_TYPES.SPEND_STAT_POINT:
+    case MESSAGE_TYPES.CHOOSE_RUNE:
       {
         const { stat } = payload;
         if (stat) {
           if (fromPlayer) {
-            underworld.spendStatPoint(stat, fromPlayer);
+            underworld.upgradeRune(stat, fromPlayer);
           } else {
-            console.error('SPEND_STAT_POINT, missing fromPlayer', fromClient);
+            console.error('CHOOSE_RUNE, missing fromPlayer', fromClient);
           }
         } else {
           console.error('Missing stat in payload', payload);
