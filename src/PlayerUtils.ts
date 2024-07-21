@@ -8,7 +8,7 @@ import Underworld from './Underworld';
 import objectHash from 'object-hash';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import { targetArrowCardId } from './cards/target_arrow';
-import { targetRicochetArrowCardId } from './cards/target_ricochet_arrow';
+import { targetDiskCardId } from './cards/target_disk';
 import { plusRadiusId } from './cards/plus_radius';
 import { addPierceId } from './cards/add_pierce';
 import { addBounceId } from './cards/add_bounce';
@@ -30,7 +30,7 @@ function isAllowedToCastOutOfRange(cardIds: string[]): boolean {
                 continue;
             } else {
                 // This is a functional card. Return whether or not it is a Target Arrow card
-                return [targetArrowCardId, targetRicochetArrowCardId].includes(cardId);
+                return [targetArrowCardId, targetDiskCardId].includes(cardId);
             }
         }
 

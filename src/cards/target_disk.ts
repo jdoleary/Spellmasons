@@ -13,11 +13,11 @@ import { HasSpace } from '../entity/Type';
 import { containerProjectiles } from '../graphics/PixiUtils';
 import { targetArrowCardId } from './target_arrow';
 
-export const targetRicochetArrowCardId = 'Target Ricochet Arrow';
+export const targetDiskCardId = 'Target Disk'
 let targetsToAdd: Vec2[] = [];
 const spell: Spell = {
   card: {
-    id: targetRicochetArrowCardId,
+    id: targetDiskCardId,
     category: CardCategory.Targeting,
     probability: probabilityMap[CardRarity.UNCOMMON],
     requires: [targetArrowCardId],
@@ -34,7 +34,7 @@ const spell: Spell = {
     requiresFollowingCard: true,
     animationPath: '',
     sfx: '',
-    thumbnail: 'spellIconArrowGreen.png',
+    thumbnail: 'spellIconTargetDisk.png',
     description: 'spell_target_ricochet_arrow',
     effect: async (state, card, quantity, underworld, prediction) => {
       const initialCastLocation = state.castLocation;
@@ -49,7 +49,7 @@ const spell: Spell = {
         const velocity = math.similarTriangles(target.x - startPoint.x, target.y - casterPositionAtTimeOfCast.y, math.distance(startPoint, target), config.ARROW_PROJECTILE_SPEED)
         let image: Image.IImageAnimated | undefined;
         if (!prediction) {
-          image = Image.create(casterPositionAtTimeOfCast, 'projectile/arrow', containerProjectiles)
+          image = Image.create(casterPositionAtTimeOfCast, 'projectile/targetDisk', containerProjectiles)
           if (image) {
             image.sprite.rotation = Math.atan2(velocity.y, velocity.x);
           }
@@ -71,7 +71,7 @@ const spell: Spell = {
           piercesRemaining: state.aggregator.additionalPierce,
           bouncesRemaining: quantity + state.aggregator.additionalBounce,
           collidingUnitIds: [state.casterUnit.id],
-          collideFnKey: targetRicochetArrowCardId,
+          collideFnKey: targetDiskCardId,
           state,
         }, underworld, prediction);
 

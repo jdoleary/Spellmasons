@@ -18,7 +18,7 @@ const spell: Spell = {
     allowNonUnitTarget: true,
     noInitialTarget: true,
     requiresFollowingCard: true,
-    thumbnail: 'spellIconArrowGreen.png',
+    thumbnail: 'spellIconPierce.png',
     description: 'spell_add_pierce',
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
       state.aggregator.additionalPierce += quantity;
