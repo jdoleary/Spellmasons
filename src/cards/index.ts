@@ -138,6 +138,12 @@ import registerTargetImmune, { targetImmuneId } from '../modifierTargetImmune';
 import registerGrowth from '../modifierGrowth';
 import registerModifierStatUpgrades from '../modifierStatUpgrades';
 import registerArcherRune from '../modifierArcher';
+import registerClericRune from '../modifierCleric';
+import registerFarGazerRune from '../modifierFarGazer';
+import registerGamblerRune from '../modifierGambler';
+import registerNecromancerRune from '../modifierNecromancer';
+import registerTimemasonRune from '../modifierTimemason';
+import registerWitchRune from '../modifierWitch';
 
 export interface Modifiers {
   // modifier sthat are not attached to a spell need an explicit id set
@@ -384,6 +390,12 @@ export function registerCards(overworld: Overworld) {
   registerGrowth();
   registerModifierStatUpgrades();
   registerArcherRune();
+  registerClericRune();
+  registerFarGazerRune();
+  registerGamblerRune();
+  registerNecromancerRune();
+  registerTimemasonRune();
+  registerWitchRune();
 
   registerImmune();
   registerImpendingDoom();
