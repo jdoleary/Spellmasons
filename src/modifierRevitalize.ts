@@ -44,5 +44,6 @@ function updateTooltip(unit: Unit.IUnit) {
 
 function CalcMult(quantity: number): number {
   // Each Quantity = 1% healing boost
-  return 1 + (quantity / 100);
+  // toFixed() prevents floating point errors
+  return parseFloat((1 + (quantity / 100)).toFixed(2));
 }
