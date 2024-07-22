@@ -1745,9 +1745,7 @@ export function resetUnitStats(unit: IUnit, underworld: Underworld) {
   Object.keys(unit.modifiers).forEach(modifierKey => {
     const modifier = unit.modifiers[modifierKey];
     if (modifier) {
-      if (!modifier.keepBetweenLevels) {
-        removeModifier(unit, modifierKey, underworld);
-      }
+      removeModifier(unit, modifierKey, underworld);
     }
   });
 

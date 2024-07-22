@@ -1,6 +1,5 @@
 import { registerEvents, registerModifiers } from "./cards";
-import { animateMitosis } from "./cards/clone";
-import { doSplit, splitId } from "./cards/split";
+import { animateMitosis, doCloneUnit } from "./cards/clone";
 import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import floatingText from "./graphics/FloatingText";
@@ -20,11 +19,12 @@ export default function registerSlime() {
   registerEvents(slimeId, {
     onTurnEnd: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       await animateMitosis(unit.image);
-      floatingText({ coords: unit, text: slimeId, prediction });
-      doSplit(unit, underworld, 1, prediction);
-      // Stop splitting after 3
-      if (unit.modifiers[splitId]?.quantity || 0 >= 3) {
-        Unit.removeModifier(unit, slimeId, underworld)
+      const clone = doCloneUnit(unit, underworld, prediction);
+      if (clone) {
+        floatingText({ coords: unit, text: slimeId, prediction });
+        // Only the source unit maintains slimeId or else it gets exponential
+        Unit.removeModifier(clone, slimeId, underworld)
+
       }
     }
   });

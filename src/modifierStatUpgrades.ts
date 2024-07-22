@@ -28,18 +28,6 @@ export default function registerStatUpgradeModifiers() {
           return;
         }
 
-        switch (player.mageType) {
-          case 'Timemason': {
-            statBumpAmount.manaMax *= 2;
-            break;
-          }
-          case 'Far Gazer': {
-            statBumpAmount.attackRange *= 2;
-            statBumpAmount.staminaMax = Math.floor(statBumpAmount.staminaMax / 2);
-            break;
-          }
-        }
-
         const unitStatKey = stat as keyof typeof statBumpAmount;
         if (stat && statBumpAmount[unitStatKey] && player.unit[unitStatKey]) {
           const statBump = statBumpAmount[unitStatKey] || 10;
