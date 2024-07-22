@@ -18,7 +18,7 @@ export default function registerCleric() {
           if (upgrade) {
             underworld.forceUpgrade(player, upgrade, true);
           } else {
-            console.error('Could not find arrow upgrade for Archer rune');
+            console.error('Could not find arrow upgrade for Cleric rune');
           }
         });
       } else {
