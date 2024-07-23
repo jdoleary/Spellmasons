@@ -3,11 +3,12 @@ import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
 
-// Reduces incoming damage by (quantity)
+// Reduces incoming damage by [quantity]
 export const armorId = 'Armor';
 export default function registerArmor() {
   registerModifiers(armorId, {
-    description: 'Reduces incoming damage by (quantity)',
+    description: 'Reduces incoming damage by [quantity]',
+    cost: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, armorId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, armorId);

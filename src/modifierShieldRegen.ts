@@ -4,11 +4,12 @@ import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
 
-// Regenerates (quantity) shield at the start of each turn
+// Regenerates [quantity] shield at the start of each turn
 export const shieldRegenId = 'Shield Regen';
 export default function registerShieldRegen() {
   registerModifiers(shieldRegenId, {
-    description: 'Regenerates (quantity) shield at the start of each turn',
+    description: 'Regenerates [quantity] shield at the start of each turn',
+    cost: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, shieldRegenId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, shieldRegenId);

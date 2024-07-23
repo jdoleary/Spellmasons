@@ -14,6 +14,7 @@ export default function registerStatUpgradeModifiers() {
   ['healthMax', 'manaMax', 'staminaMax', 'attackRange'].map(stat => {
     registerModifiers(wordMap[stat] || stat, {
       description: `Upgrade player ${wordMap[stat]}`,
+      cost: 1,
       // addModifierVisuals,
       add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
         const statBumpAmount: Pick<Unit.IUnit, "attackRange" | "manaMax" | "healthMax" | "staminaMax"> = {
@@ -47,7 +48,6 @@ export default function registerStatUpgradeModifiers() {
         }
       },
       probability: 0,
-      cost: 1,
     });
 
   })

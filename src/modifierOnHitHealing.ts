@@ -4,11 +4,12 @@ import { healUnit } from "./effects/heal";
 import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
 
-// Restores (quantity) health per hit
+// Restores [quantity] health on hit
 export const onHitHealingId = 'On Hit Healing';
 export default function registerOnHitHealing() {
   registerModifiers(onHitHealingId, {
-    description: 'Restores (quantity) health per hit',
+    description: 'Restores [quantity] health on hit',
+    cost: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, onHitHealingId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, onHitHealingId);

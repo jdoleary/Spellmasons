@@ -3,11 +3,12 @@ import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
 
-// Increases incoming healing by (quantity)%
+// Increases incoming healing by [quantity]%
 export const revitalizeId = 'Revitalize';
 export default function registerRevitalize() {
   registerModifiers(revitalizeId, {
-    description: 'Increases incoming healing by (quantity)%',
+    description: 'Increases incoming healing by [quantity]%',
+    cost: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, revitalizeId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, revitalizeId);

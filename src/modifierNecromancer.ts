@@ -10,6 +10,7 @@ export const runeNecromancerId = 'Necromancer';
 export default function registerNecromancer() {
   registerModifiers(runeNecromancerId, {
     description: i18n('class_necromancer'),
+    cost: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       const player = underworld.players.find(p => p.unit == unit);
       if (player) {
@@ -26,6 +27,5 @@ export default function registerNecromancer() {
         console.error('Cannot add rune Necromancer, no player is associated with unit');
       }
     },
-    cost: 5,
   });
 }

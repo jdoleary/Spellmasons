@@ -3,11 +3,12 @@ import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
 
-// Deals (quantity) damage to an attacker when taking damage
+// Deals [quantity] damage to an attacker when hit
 export const thornsId = 'Thorns';
 export default function registerThorns() {
   registerModifiers(thornsId, {
-    description: 'Deals (quantity) damage to an attacker when taking damage',
+    description: 'Deals [quantity] damage to an attacker when hit',
+    cost: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, thornsId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, thornsId);

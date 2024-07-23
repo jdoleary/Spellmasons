@@ -9,12 +9,12 @@ export const slimeId = 'Slime';
 export default function registerSlime() {
   registerModifiers(slimeId, {
     description: 'Causes a unit to split into two units every turn.',
+    probability: 100,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, slimeId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, slimeId);
       });
     },
-    probability: 100,
   });
   registerEvents(slimeId, {
     onTurnEnd: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {

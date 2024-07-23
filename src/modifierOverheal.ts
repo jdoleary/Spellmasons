@@ -4,12 +4,13 @@ import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
 
-// Grants healing over max as shield at (quantity)% effectiveness
+// Grants healing over max as a shield at [quantity]% effectiveness
 // Such that at 100 quantity, 30 healing over max grants 30 shield
 export const overhealId = 'Overheal';
 export default function registerOverheal() {
   registerModifiers(overhealId, {
-    description: 'Grants healing over max as shield at (quantity)% effectiveness',
+    description: 'Grants healing over max as a shield at [quantity]% effectiveness',
+    cost: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, overhealId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, overhealId);

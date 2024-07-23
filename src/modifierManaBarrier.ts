@@ -6,12 +6,13 @@ import * as Image from './graphics/Image';
 import floatingText from "./graphics/FloatingText";
 import Underworld from './Underworld';
 
-// Damage is taken from remaining mana before health
+// Damage is taken from mana before health at [quantity]% effectiveness
 export const manaBarrierId = 'Mana Barrier';
 export const modifierImagePath = 'spell-effects/modifierShield.png';
 export default function registerManaBarrier() {
   registerModifiers(manaBarrierId, {
-    description: 'Damage is taken from remaining mana before health',
+    description: 'Damage is taken from mana before health at [quantity]% effectiveness',
+    cost: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, manaBarrierId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, manaBarrierId);

@@ -14,6 +14,7 @@ export const growthId = 'Growth';
 export default function registerGrowth() {
   registerModifiers(growthId, {
     description: 'Unit gets stronger every turn.',
+    probability: 100,
     // addModifierVisuals,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, growthId, { isCurse: false, quantity, keepOnDeath: true }, () => {
@@ -32,7 +33,6 @@ export default function registerGrowth() {
     //     y: 1.2,
     //   },
     // },
-    probability: 100,
   });
 
   registerEvents(growthId, {

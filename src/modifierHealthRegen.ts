@@ -4,11 +4,12 @@ import { healUnit } from "./effects/heal";
 import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
 
-// Regenerates (quantity) health at the start of each turn
+// Regenerates [quantity] health at the start of each turn
 export const healthRegenId = 'Health Regen';
 export default function registerHealthRegen() {
   registerModifiers(healthRegenId, {
-    description: 'Regenerates (quantity) health at the start of each turn',
+    description: 'Regenerates [quantity] health at the start of each turn',
+    cost: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, healthRegenId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, healthRegenId);

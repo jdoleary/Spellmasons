@@ -8,6 +8,7 @@ export const runeFarGazerId = 'Far Gazer';
 export default function registerFarGazer() {
   registerModifiers(runeFarGazerId, {
     description: i18n('class_far_gazer'),
+    cost: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       const player = underworld.players.find(p => p.unit == unit);
       if (player) {
@@ -19,6 +20,5 @@ export default function registerFarGazer() {
         console.error(`Cannot add rune ${runeFarGazerId}, no player is associated with unit`);
       }
     },
-    cost: 5,
   });
 }

@@ -4,11 +4,12 @@ import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
 
-// Applies (quantity) poison to a unit when hitting it
+// Applies (quantity) poison on hit
 export const onHitPoisonId = 'On Hit Poison';
 export default function registerOnHitPoison() {
   registerModifiers(onHitPoisonId, {
-    description: 'Applies (quantity) poison to a unit when hitting it',
+    description: 'Applies [quantity] poison on hit',
+    cost: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, onHitPoisonId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, onHitPoisonId);

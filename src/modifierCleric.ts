@@ -10,6 +10,7 @@ export const runeClericId = 'Cleric';
 export default function registerCleric() {
   registerModifiers(runeClericId, {
     description: i18n('class_cleric'),
+    cost: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       const player = underworld.players.find(p => p.unit == unit);
       if (player) {
@@ -25,6 +26,5 @@ export default function registerCleric() {
         console.error(`Cannot add rune ${runeClericId}, no player is associated with unit`);
       }
     },
-    cost: 5,
   });
 }
