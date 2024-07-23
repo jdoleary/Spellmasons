@@ -52,8 +52,7 @@ const spell: Spell = {
         // This unit is already running the take damage event, so exclude it
         if (boundUnit && boundUnit != unit) {
           // Exception: Temporarily remove the bound unit's Soul Bind event to prevent infinite loop
-          const index = boundUnit.events.findIndex(e => e == soulBindId);
-          boundUnit.events.splice(index, 1);
+          boundUnit.events = boundUnit.events.filter(x => x !== soulBindId);
 
           // Unit.TakeDamage, it's important to preserve all damage args
           Unit.takeDamage({

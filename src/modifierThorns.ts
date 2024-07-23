@@ -26,10 +26,7 @@ export default function registerThorns() {
         if (damageDealer && amount > 0) {
           // Thorns should not trigger thorns
           // Exception: Temporarily remove the damageDealer's Thorns event to prevent infinite loop
-          const index = damageDealer.events.findIndex(e => e == thornsId);
-          if (index != -1) {
-            damageDealer.events.splice(index, 1);
-          }
+          damageDealer.events = damageDealer.events.filter(x => x !== thornsId);
 
           // Deal flat damage to the attacker
           Unit.takeDamage({
