@@ -395,6 +395,8 @@ export default class Underworld {
     if (loopCount >= PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD) {
       console.error('forceMove simulation hit PREVENT_INFINITE threshold');
     }
+    // Empty forceMovePredictions to prepare for next simulation
+    this.forceMovePrediction = [];
     this.simulatingMovePredictions = false;
   }
   // Returns true when forceMove is complete
