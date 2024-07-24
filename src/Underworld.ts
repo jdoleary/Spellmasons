@@ -523,6 +523,7 @@ export default class Underworld {
           } else {
             // Bounce the projectile
             forceMoveInst.bouncesRemaining--;
+            this.resetForceMoveTimeout();
 
             // Reflect velocity
             const newVelocity = reflectVelocityOnWall(velocity, collision.wall);
@@ -571,6 +572,7 @@ export default class Underworld {
                   return true;
                 } else {
                   forceMoveInst.bouncesRemaining--;
+                  this.resetForceMoveTimeout();
                   forceMoveInst.collidingUnitIds.push(unit.id);
                   // Units aren't walls, so we use a different method for reflecting velocity
                   const directionToProjectile = Vec.normalized({ x: unit.x - pushedObject.x, y: unit.y - pushedObject.y });
@@ -671,14 +673,23 @@ export default class Underworld {
         });
       }
       // Reset the timeout every time a new forceMove is added
-      clearTimeout(forceMoveTimeoutId);
-      forceMoveTimeoutId = setTimeout(() => {
-        if (forceMoveResolver) {
-          forceMoveResolver();
-          console.error('Error: forceMovePromise timed out');
-        }
-      }, config.FORCE_MOVE_PROMISE_TIMEOUT_MILLIS);
+      this.resetForceMoveTimeout();
     }
+  }
+  // Some force moves may take longer than the timeout
+  // for example if an arrow bounces or if a new force move
+  // is added (say by an explosion), so the forceMove timeout
+  // has to be reset to allow for more time to pass
+  resetForceMoveTimeout() {
+    console.log('reset forcemove timeout');
+    clearTimeout(forceMoveTimeoutId);
+    forceMoveTimeoutId = setTimeout(() => {
+      if (forceMoveResolver) {
+        forceMoveResolver();
+        console.error('Error: forceMovePromise timed out');
+      }
+    }, config.FORCE_MOVE_PROMISE_TIMEOUT_MILLIS);
+
   }
   // Returns true if there is more processing yet to be done on the next
   // gameloop
