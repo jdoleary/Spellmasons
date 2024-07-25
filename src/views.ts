@@ -241,6 +241,11 @@ export function addOverworldEventListeners(overworld: Overworld) {
             // when browsing the spellbook or hovering over your toolbar
             if (e.target && (e.target as HTMLElement).tagName === 'CANVAS') {
               runPredictions(overworld.underworld);
+              if (globalThis._queueLastPredictionMousePos) {
+                globalThis.lastPredictionMouse = { time: Date.now(), pos: globalThis._queueLastPredictionMousePos };
+              } else {
+                console.warn('Could not assign _queueLastPredictionMousePos');
+              }
             }
           }
         }

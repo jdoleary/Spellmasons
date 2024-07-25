@@ -42,6 +42,7 @@ import { errorRed } from './colors';
 import { isSinglePlayer } from '../../network/wsPieSetup';
 import { elAdminPowerBar, elAdminPowerBarInput, elAdminPowerBarOptions } from '../../HTMLElements';
 import { targetCursedId } from '../../cards/target_curse';
+import { distance } from '../../jmath/math';
 
 export const keyDown = {
   showWalkRope: false,
@@ -789,6 +790,23 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
       if (selfPlayer) {
         // cast the spell
         let target = mousePos;
+        // Improved targeting:
+        // Ensure that click sent in cast is not slightly different from last 
+        // runPrediction target which can result in different outcomes than the
+        // user is expecting
+        if (globalThis.lastPredictionMouse) {
+
+          const distFromLastPredictionMouse = distance(target, globalThis.lastPredictionMouse.pos);
+          const isSmallDistFromLastPrediction = distFromLastPredictionMouse < config.COLLISION_MESH_RADIUS;
+          const timeFromLastPredictionMouse = Date.now() - globalThis.lastPredictionMouse.time;
+          const isSmallTimeFromLastPrediction = timeFromLastPredictionMouse < 100;
+          if (isSmallDistFromLastPrediction && isSmallTimeFromLastPrediction) {
+            console.log("Quality of Life: Overriding mouse position with last successful runPrediction mouse position.")
+            target = globalThis.lastPredictionMouse.pos;
+          }
+        }
+
+        // End Improved targeting
         const cardIds = CardUI.getSelectedCardIds();
         const cards = CardUI.getSelectedCards();
 
