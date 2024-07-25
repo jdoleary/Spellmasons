@@ -363,7 +363,7 @@ function addOnDamageFilter(unit: IUnit) {
   }
 }
 
-export function addModifier(unit: IUnit, key: string, underworld: Underworld, prediction: boolean, quantity?: number, extra?: object) {
+export function addModifier(unit: IUnit, key: string, underworld: Underworld, prediction: boolean, quantity: number = 1, extra?: object) {
   // Call custom modifier's add function
   const modifier = allModifiers[key];
   if (modifier) {
@@ -376,7 +376,7 @@ export function addModifier(unit: IUnit, key: string, underworld: Underworld, pr
       if (allCards[key]?.supportQuantity && quantity == undefined) {
         console.error('Dev warning:', key, 'supportsQuantity; however quantity was not provided to the addModifier function.');
       }
-      modifier.add(unit, underworld, prediction, quantity || 1, extra);
+      modifier.add(unit, underworld, prediction, quantity, extra);
     } else {
       console.error('No "add" modifier for ', key);
     }
@@ -390,7 +390,7 @@ export function addModifier(unit: IUnit, key: string, underworld: Underworld, pr
 
 export function removeModifier(unit: IUnit, key: string, underworld: Underworld) {
   const modifier = allModifiers[key];
-  if (modifier && modifier.cost) {
+  if (modifier && modifier.costPerUpgrade) {
     // Modifier is a Rune and should NOT be removed
     return;
   }

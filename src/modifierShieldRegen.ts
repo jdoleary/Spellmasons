@@ -9,7 +9,8 @@ export const shieldRegenId = 'Shield Regen';
 export default function registerShieldRegen() {
   registerModifiers(shieldRegenId, {
     description: 'Regenerates [quantity] shield at the start of each turn',
-    cost: 1,
+    costPerUpgrade: 30,
+    quantityPerUpgrade: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, shieldRegenId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, shieldRegenId);

@@ -9,7 +9,8 @@ export const healthRegenId = 'Health Regen';
 export default function registerHealthRegen() {
   registerModifiers(healthRegenId, {
     description: 'Regenerates [quantity] health at the start of each turn',
-    cost: 1,
+    costPerUpgrade: 20,
+    quantityPerUpgrade: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, healthRegenId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, healthRegenId);

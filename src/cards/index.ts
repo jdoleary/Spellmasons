@@ -137,8 +137,8 @@ import registerSlime from '../modifierSlime';
 import registerTargetImmune, { targetImmuneId } from '../modifierTargetImmune';
 import registerGrowth from '../modifierGrowth';
 import registerModifierStatUpgrades from '../modifierStatUpgrades';
-import registerArcherRune from '../modifierArcher';
-import registerClericRune from '../modifierCleric';
+import registerEndlessQuiver from '../modifierEndlessQuiver';
+import registerBlessingAffinity from '../modifierBlessingAffinity';
 import registerFarGazerRune from '../modifierFarGazer';
 import registerGamblerRune from '../modifierGambler';
 import registerNecromancerRune from '../modifierNecromancer';
@@ -170,9 +170,12 @@ export interface Modifiers {
   // If the modifier may be automatically added to minibosses
   // when the spawn, then the modifier gets a probability
   probability?: number;
-  // Specifying a cost allows the modifier to be upgradable via
-  // the runes menu.
-  cost?: number;
+  // Specifying a cost allows the modifier to be upgradable via the runes menu.
+  costPerUpgrade?: number;
+  // Adds X quantity per purchase of the rune
+  quantityPerUpgrade?: number;
+  // Upgrade can be purchased X times
+  maxUpgradeCount?: number;
 }
 export interface Events {
   // events that are not attached to a spell need an explicit id set
@@ -398,14 +401,27 @@ export function registerCards(overworld: Overworld) {
   registerSlime();
   registerTargetImmune();
   registerGrowth();
+
   registerModifierStatUpgrades();
-  registerArcherRune();
-  registerClericRune();
+
+  registerNecromancerRune();
+  registerWitchRune();
+  registerBlessingAffinity();
+  registerEndlessQuiver();
+  registerTimemasonRune();
   registerFarGazerRune();
   registerGamblerRune();
-  registerNecromancerRune();
-  registerTimemasonRune();
-  registerWitchRune();
+
+  registerSelfInvulnerability();
+  registerArmor();
+  registerThorns();
+  registerHealthRegen();
+  registerShieldRegen();
+  registerRevitalize();
+  registerOverheal();
+  registerManaBarrier();
+  registerOnHitHealing();
+  registerOnHitPoison();
 
   registerImmune();
   registerImpendingDoom();
@@ -416,17 +432,6 @@ export function registerCards(overworld: Overworld) {
   registerUrnPoisonExplode();
   registerUrnExplosiveExplode();
   registerDeathmasonEvents();
-
-  registerArmor();
-  registerHealthRegen();
-  registerManaBarrier();
-  registerOnHitHealing();
-  registerOnHitPoison();
-  registerOverheal();
-  registerRevitalize();
-  registerSelfInvulnerability();
-  registerShieldRegen();
-  registerThorns();
 }
 
 // This is necessary because unit stats change with difficulty.
@@ -654,4 +659,11 @@ export function addPickupTarget(pickup: Pickup.IPickup, effectState: EffectState
   if (effectState.targetedPickups.indexOf(pickup) === -1) {
     effectState.targetedPickups.push(pickup);
   }
+}
+
+export function getMaxRuneQuantity(modifier: Modifiers) {
+  if (modifier.maxUpgradeCount) {
+    return (modifier.maxUpgradeCount * (modifier.quantityPerUpgrade || 1));
+  }
+  return Infinity
 }

@@ -962,12 +962,15 @@ export default class Underworld {
     const timemasons = this.players.filter(p => p.unit.modifiers[runeTimemasonId]);
     if (this.turn_phase == turn_phase.PlayerTurns && timemasons.length && globalThis.view == View.Game) {
       timemasons.forEach(timemason => {
-        if (timemason.isSpawned && timemason.unit.alive && timemason.unit.mana > 0) {
+        const modifier = timemason.unit.modifiers[runeTimemasonId];
+        if (modifier && timemason.isSpawned && timemason.unit.alive && timemason.unit.mana > 0) {
           if (numberOfHotseatPlayers > 1 && timemason !== globalThis.player) {
             // Do not run timemason timer on hotseat multiplayer unless it is the timemasons turn
             return;
           }
           let drainPerSecond = timemason.unit.manaMax * config.TIMEMASON_PERCENT_DRAIN / 100;
+          // Drain doubles per quantity of rune
+          drainPerSecond *= Math.pow(2, modifier.quantity);
 
           //@ts-ignore Special logic for timemason, does not need to be persisted
           if (!timemason.manaToDrain) {
@@ -2047,11 +2050,6 @@ export default class Underworld {
         player.statPointsUnspent += points;
         CardUI.tryShowStatPointsSpendable();
         console.log("Setup: Gave player: [" + player.clientId + "] " + points + " upgrade points for level index: " + levelIndex);
-        // only warn unexpected stat points if player has modified mana or health since
-        // NEW players that join a game mid-way through will get backfilled stats
-        if (player.statPointsUnspent > points && player.unit.healthMax !== config.PLAYER_BASE_HEALTH && player.unit.manaMax !== config.UNIT_BASE_MANA) {
-          console.error("Setup: Player has more stat points than expected: ", player);
-        }
         // If the player hasn't completed first steps, autospend stat points on health
         // We don't want to cause information overload during tutorial
         if (!isTutorialFirstStepsComplete()) {
@@ -3121,7 +3119,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   upgradeRune(runeModifierId: string, player: Player.IPlayer) {
     const isCurrentPlayer = player == globalThis.player;
     if (remoteLog) {
-      remoteLog(`Stat Point: ${runeModifierId}`);
+      remoteLog(`Buy Rune: ${runeModifierId}`);
     }
     const modifier = Cards.allModifiers[runeModifierId];
     if (!modifier) {
@@ -3129,17 +3127,17 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       return;
     }
     // Do not allow overspend
-    if (player.statPointsUnspent < (modifier.cost || 0)) {
+    if (player.statPointsUnspent < (modifier.costPerUpgrade || 0)) {
       return;
     }
 
-    player.statPointsUnspent -= modifier.cost || 0;
+    player.statPointsUnspent -= modifier.costPerUpgrade || 0;
 
     if (isCurrentPlayer) {
       playSFXKey('levelUp');
     }
 
-    Unit.addModifier(player.unit, runeModifierId, this, false, 1);
+    Unit.addModifier(player.unit, runeModifierId, this, false, modifier.quantityPerUpgrade || 1);
     if (isCurrentPlayer) {
       // Clear special showWalkRope for attackRange hover
       keyDown.showWalkRope = false;

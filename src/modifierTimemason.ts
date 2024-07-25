@@ -8,13 +8,17 @@ export const runeTimemasonId = 'Timemason';
 export default function registerTimemason() {
   registerModifiers(runeTimemasonId, {
     description: i18n('class_timemason'),
-    cost: 5,
+    costPerUpgrade: 200,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       const player = underworld.players.find(p => p.unit == unit);
       if (player) {
         getOrInitModifier(unit, runeTimemasonId, { isCurse: false, quantity, keepOnDeath: true }, () => {
-          player.unit.manaMax *= 2;
+          //
         });
+
+        const factor = Math.pow(2, quantity);
+        player.unit.manaMax *= factor;
+        player.unit.mana *= factor;
       } else {
         console.error(`Cannot add rune ${runeTimemasonId}, no player is associated with unit`);
       }

@@ -10,7 +10,8 @@ export const overhealId = 'Overheal';
 export default function registerOverheal() {
   registerModifiers(overhealId, {
     description: 'Grants healing over max as a shield at [quantity]% effectiveness',
-    cost: 1,
+    costPerUpgrade: 50,
+    quantityPerUpgrade: 20,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, overhealId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, overhealId);
@@ -33,8 +34,10 @@ export default function registerOverheal() {
           if (overheal > 0) {
             // shieldToGive = overheal * % effectiveness/conversion rate
             const shieldToGive = Math.floor(overheal * CalcMult(modifier.quantity));
-            // Grant shield
-            Unit.addModifier(unit, shieldId, underworld, prediction, shieldToGive);
+            if (shieldToGive != 0) {
+              // Grant shield
+              Unit.addModifier(unit, shieldId, underworld, prediction, shieldToGive);
+            }
           }
         }
       }

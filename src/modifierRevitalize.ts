@@ -8,7 +8,8 @@ export const revitalizeId = 'Revitalize';
 export default function registerRevitalize() {
   registerModifiers(revitalizeId, {
     description: 'Increases incoming healing by [quantity]%',
-    cost: 1,
+    costPerUpgrade: 40,
+    quantityPerUpgrade: 20,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, revitalizeId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, revitalizeId);

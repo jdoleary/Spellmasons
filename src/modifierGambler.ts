@@ -8,7 +8,7 @@ export const runeGamblerId = 'Gambler';
 export default function registerGambler() {
   registerModifiers(runeGamblerId, {
     description: i18n('class_gambler'),
-    cost: 5,
+    costPerUpgrade: 70,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       const player = underworld.players.find(p => p.unit == unit);
       if (player) {

@@ -9,7 +9,8 @@ export const selfInvulnerabilityId = 'Self Invulnerability';
 export default function registerSelfInvulnerability() {
   registerModifiers(selfInvulnerabilityId, {
     description: 'Grants a unit invulnerability to its own damage (I.E. explosives)',
-    cost: 1,
+    costPerUpgrade: 80,
+    maxUpgradeCount: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, selfInvulnerabilityId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, selfInvulnerabilityId);

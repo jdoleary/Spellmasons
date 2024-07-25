@@ -8,7 +8,8 @@ export const thornsId = 'Thorns';
 export default function registerThorns() {
   registerModifiers(thornsId, {
     description: 'Deals [quantity] damage to an attacker when hit',
-    cost: 1,
+    costPerUpgrade: 80,
+    quantityPerUpgrade: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, thornsId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, thornsId);

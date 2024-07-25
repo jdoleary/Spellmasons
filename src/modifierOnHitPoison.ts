@@ -9,7 +9,7 @@ export const onHitPoisonId = 'On Hit Poison';
 export default function registerOnHitPoison() {
   registerModifiers(onHitPoisonId, {
     description: 'Applies [quantity] poison on hit',
-    cost: 1,
+    costPerUpgrade: 80,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, onHitPoisonId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, onHitPoisonId);

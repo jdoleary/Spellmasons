@@ -12,7 +12,8 @@ export const modifierImagePath = 'spell-effects/modifierShield.png';
 export default function registerManaBarrier() {
   registerModifiers(manaBarrierId, {
     description: 'Damage is taken from mana before health at [quantity]% effectiveness',
-    cost: 1,
+    costPerUpgrade: 100,
+    quantityPerUpgrade: 50,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, manaBarrierId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, manaBarrierId);
