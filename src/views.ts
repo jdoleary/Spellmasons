@@ -242,7 +242,7 @@ export function addOverworldEventListeners(overworld: Overworld) {
             if (e.target && (e.target as HTMLElement).tagName === 'CANVAS') {
               runPredictions(overworld.underworld);
               if (globalThis._queueLastPredictionMousePos) {
-                globalThis.lastPredictionMouse = { time: Date.now(), pos: globalThis._queueLastPredictionMousePos };
+                globalThis.lastPredictionMousePos = globalThis._queueLastPredictionMousePos;
               } else {
                 console.warn('Could not assign _queueLastPredictionMousePos');
               }

@@ -794,14 +794,13 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         // Ensure that click sent in cast is not slightly different from last 
         // runPrediction target which can result in different outcomes than the
         // user is expecting
-        if (globalThis.lastPredictionMouse && !Vec.equal(target, globalThis.lastPredictionMouse.pos)) {
-          const distFromLastPredictionMouse = distance(target, globalThis.lastPredictionMouse.pos);
+        if (globalThis.lastPredictionMousePos && !Vec.equal(target, globalThis.lastPredictionMousePos)) {
+          const distFromLastPredictionMouse = distance(target, globalThis.lastPredictionMousePos);
           const isSmallDistFromLastPrediction = distFromLastPredictionMouse < config.COLLISION_MESH_RADIUS;
-          const timeFromLastPredictionMouse = Date.now() - globalThis.lastPredictionMouse.time;
-          const isSmallTimeFromLastPrediction = timeFromLastPredictionMouse < 100;
-          if (isSmallDistFromLastPrediction && isSmallTimeFromLastPrediction) {
+          console.debug('Mouse position override; dist from last position: ', distFromLastPredictionMouse);
+          if (isSmallDistFromLastPrediction) {
+            target = globalThis.lastPredictionMousePos;
             console.log("Quality of Life: Overriding mouse position with last successful runPrediction mouse position.")
-            target = globalThis.lastPredictionMouse.pos;
           }
         }
 
