@@ -794,8 +794,7 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         // Ensure that click sent in cast is not slightly different from last 
         // runPrediction target which can result in different outcomes than the
         // user is expecting
-        if (globalThis.lastPredictionMouse) {
-
+        if (globalThis.lastPredictionMouse && !Vec.equal(target, globalThis.lastPredictionMouse.pos)) {
           const distFromLastPredictionMouse = distance(target, globalThis.lastPredictionMouse.pos);
           const isSmallDistFromLastPrediction = distFromLastPredictionMouse < config.COLLISION_MESH_RADIUS;
           const timeFromLastPredictionMouse = Date.now() - globalThis.lastPredictionMouse.time;
