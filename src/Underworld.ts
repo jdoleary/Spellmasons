@@ -3248,7 +3248,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
       let numberOfUpgradesToChooseFrom = 3 - player.reroll;
       if (player.unit.modifiers[runeGamblerId]) {
-        numberOfUpgradesToChooseFrom += 1;
+        numberOfUpgradesToChooseFrom += player.unit.modifiers[runeGamblerId].quantity;
       }
       const upgrades = Upgrade.generateUpgrades(player, numberOfUpgradesToChooseFrom, this);
       if (!upgrades.length) {
