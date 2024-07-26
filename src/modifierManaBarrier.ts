@@ -5,6 +5,7 @@ import * as config from './config';
 import * as Image from './graphics/Image';
 import floatingText from "./graphics/FloatingText";
 import Underworld from './Underworld';
+import type { Sprite } from 'pixi.js';
 
 // Damage is taken from mana before health at [quantity]% effectiveness
 export const manaBarrierId = 'Mana Barrier';
@@ -14,16 +15,22 @@ export default function registerManaBarrier() {
     description: 'Damage is taken from unused mana before health at [quantity]% effectiveness',
     costPerUpgrade: 100,
     quantityPerUpgrade: 50,
+    addModifierVisuals: (unit: Unit.IUnit, underworld: Underworld) => {
+      // Add subsprite image
+      // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
+      // which is used for identifying the sprite or animation that is currently active
+      // Add subsprite image
+      const animatedBarrierSprite = unit.image?.sprite.children.find(c => c.imagePath == modifierImagePath)
+        || Image.addSubSprite(unit.image, modifierImagePath);
+      if (animatedBarrierSprite) {
+        // Make it blue just so it looks distinct from shield
+        (animatedBarrierSprite as Sprite).tint = 0x0000ff;
+      }
+
+    },
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, manaBarrierId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, manaBarrierId);
-
-        // Add subsprite image
-        const animatedBarrierSprite = Image.addSubSprite(unit.image, modifierImagePath);
-        if (animatedBarrierSprite) {
-          // Make it blue just so it looks distinct from shield
-          animatedBarrierSprite.tint = 0x0000ff;
-        }
       });
 
       if (!prediction) {
