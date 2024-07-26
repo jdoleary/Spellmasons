@@ -614,11 +614,6 @@ export function renderRunesMenu(underworld: Underworld) {
       }
     }
   });
-
-  if (globalThis.devAutoPickUpgrades && globalThis.player?.statPointsUnspent || 0 > 0) {
-    // Disabled for testing
-    //elPlusBtn.click();
-  }
 }
 
 
