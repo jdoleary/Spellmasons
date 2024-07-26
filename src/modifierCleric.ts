@@ -3,7 +3,7 @@ import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
 import * as Upgrade from './Upgrade';
-import { healCardId } from './cards/add_heal';
+import { healCardId } from './cards/heal';
 
 export const runeClericId = 'Cleric';
 

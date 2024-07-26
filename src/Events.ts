@@ -3,6 +3,7 @@ import type { IUnit } from './entity/Unit';
 import Underworld from './Underworld';
 import { IPickup } from './entity/Pickup';
 import { ForceMoveProjectile } from './jmath/moveWithCollision';
+import { EffectState } from './cards';
 
 export type onDealDamage = {
   // Returns a possibly modified damage

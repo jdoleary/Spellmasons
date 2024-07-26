@@ -7,6 +7,7 @@ import Underworld from '../Underworld';
 import { HasSpace } from '../entity/Type';
 import { IUnit } from '../entity/Unit';
 import { IPickup } from '../entity/Pickup';
+import { EffectState } from '../cards';
 export enum ForceMoveType {
   PROJECTILE,
   UNIT_OR_PICKUP
@@ -32,10 +33,15 @@ export type ForceMoveProjectile = ForceMove & {
   type: ForceMoveType.PROJECTILE;
   sourceUnit?: IUnit;
   startPoint: Vec2;
-  endPoint: Vec2;
-  doesPierce: boolean;
-  ignoreUnitIds: number[];
+  velocity: Vec2;
+  piercesRemaining: number;
+  bouncesRemaining: number;
+  collidingUnitIds: number[];
   collideFnKey: string;
+  state: EffectState;
+  // If this number != undefined, the projectile will ignore all collisions,
+  // and be destroyed after a lifetime instead. Used for vfx
+  ignoreCollisionLifetime?: number | undefined;
 }
 export function isForceMoveProjectile(x: ForceMove): x is ForceMoveProjectile {
   return x.type == ForceMoveType.PROJECTILE;
@@ -45,20 +51,23 @@ interface ForceMoveProjectileArgs {
   pushedObject: HasSpace;
   sourceUnit?: IUnit;
   startPoint: Vec2;
-  endPoint: Vec2;
-  speed: number; // units per ms
-  doesPierce: boolean;
-  ignoreUnitIds: number[];
+  velocity: Vec2; // units per ms
+  piercesRemaining: number;
+  bouncesRemaining: number;
+  collidingUnitIds: number[];
   collideFnKey: string;
+  state: EffectState;
+  // If this number != 0, the projectile will ignore all collisions,
+  // and be destroyed after a lifetime instead. Used for vfx
+  ignoreCollisionLifetime?: number | undefined;
 }
 export function makeForceMoveProjectile(args: ForceMoveProjectileArgs, underworld: Underworld, prediction: boolean): ForceMove {
-  const { sourceUnit, pushedObject, startPoint, endPoint, speed, doesPierce, ignoreUnitIds, collideFnKey } = args;
-  const velocity = similarTriangles(endPoint.x - pushedObject.x, endPoint.y - pushedObject.y, distance(pushedObject, endPoint), speed);
+  const { pushedObject } = args;
   pushedObject.beingPushed = true;
   // Experiment: canCreateSecondOrderPushes now is ALWAYS disabled.
   // I've had feedback that it's suprising - which is bad for a tactical game
   // also I suspect it has significant performance costs for levels with many enemies
-  const forceMoveInst: ForceMoveProjectile = { type: ForceMoveType.PROJECTILE, collideFnKey, ignoreUnitIds, doesPierce, sourceUnit, pushedObject, startPoint, endPoint, velocity };
+  const forceMoveInst: ForceMoveProjectile = { type: ForceMoveType.PROJECTILE, ...args };
   underworld.addForceMove(forceMoveInst, prediction);
   return forceMoveInst;
 
@@ -127,7 +136,7 @@ export function collideWithLineSegments(circle: Circle, lineSegments: LineSegmen
 
 // Prevents force move through walls and
 // returns some collision info
-export function predictWallCollision(forceMoveInst: ForceMove, underworld: Underworld, deltaTime: number): { msUntilCollision: number, wall: LineSegment | undefined } {
+export function handleWallCollision(forceMoveInst: ForceMove, underworld: Underworld, deltaTime: number): { msUntilCollision: number, wall: LineSegment | undefined } {
   const { pushedObject, velocity } = forceMoveInst;
   const deltaPosition = multiply(deltaTime, velocity);
   // TODO - I think this could be optimized with SimilarTriangles

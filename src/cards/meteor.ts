@@ -1,11 +1,11 @@
 import Underworld from '../Underworld';
 import { HasSpace } from '../entity/Type';
-import { refundLastSpell, Spell } from './index';
+import { EffectState, refundLastSpell, Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { addWarningAtMouse } from '../graphics/PlanningView';
-import { Vec2 } from '../jmath/Vec';
+import { multiply, normalized, Vec2 } from '../jmath/Vec';
 import { explode } from '../effects/explode';
 import * as colors from '../graphics/ui/colors';
 import { randFloat } from '../jmath/rand';
@@ -16,6 +16,7 @@ import * as particles from 'jdoleary-fork-pixi-particle-emitter';
 import { createParticleTexture, logNoTextureWarning, wrappedEmitter } from '../graphics/Particles';
 import { stopAndDestroyForeverEmitter } from '../graphics/ParticleCollection';
 import { raceTimeout } from '../Promise';
+import { similarTriangles } from '../jmath/math';
 
 export const meteorCardId = 'meteor';
 const damage = 60;
@@ -61,7 +62,7 @@ const spell: Spell = {
 
       if (!prediction && !globalThis.headless) {
         playDefaultSpellSFX(card, prediction);
-        await raceTimeout(1500, 'meteor', meteorProjectiles(meteorLocations, underworld));
+        await raceTimeout(1500, 'meteor', meteorProjectiles(meteorLocations, underworld, state));
         playSFXKey('meteorExplode');
       }
 
@@ -78,7 +79,7 @@ const spell: Spell = {
   },
 };
 
-async function meteorProjectiles(meteorLocations: Vec2[], underworld: Underworld) {
+async function meteorProjectiles(meteorLocations: Vec2[], underworld: Underworld, state: EffectState) {
   // We want all meteors to hit at the same time.
   // Fore cinematic purposes, they will start at different times
   // and come from different angles (30 to -30 degrees from "up")
@@ -114,10 +115,15 @@ async function meteorProjectiles(meteorLocations: Vec2[], underworld: Underworld
       x: meteor.destination.x + distanceOffset * Math.sin(angleInRadians),
       y: meteor.destination.y - distanceOffset * Math.cos(angleInRadians),
     }
+
+    let velocity = { x: meteor.destination.x - startPos.x, y: meteor.destination.y - startPos.y };
+    velocity = normalized(velocity);
+    velocity = multiply(distanceOffset / meteor.travelTime, velocity);
+
     let image: Image.IImageAnimated | undefined;
     image = Image.create(startPos, 'projectile/arrow', containerProjectiles)
     if (image) {
-      image.sprite.rotation = Math.atan2(meteor.destination.y - startPos.y, meteor.destination.x - startPos.x);
+      image.sprite.rotation = Math.atan2(velocity.y, velocity.x);
     }
     const pushedObject: HasSpace = {
       x: startPos.x,
@@ -133,11 +139,13 @@ async function meteorProjectiles(meteorLocations: Vec2[], underworld: Underworld
     makeForceMoveProjectile({
       pushedObject,
       startPoint: startPos,
-      endPoint: meteor.destination,
-      speed: distanceOffset / meteor.travelTime,
-      doesPierce: true,
-      ignoreUnitIds: underworld.units.map(u => u.id),
+      velocity,
+      piercesRemaining: 0,
+      bouncesRemaining: 0,
+      collidingUnitIds: [],
       collideFnKey: "",
+      state,
+      ignoreCollisionLifetime: meteor.travelTime,
     }, underworld, false);
   }
 

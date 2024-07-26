@@ -2,11 +2,11 @@ import { Spell, refundLastSpell } from './index';
 import { CardCategory, UnitSubType } from '../types/commonTypes';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 
-const id = 'Plus Radius';
+export const plusRadiusId = 'Plus Radius';
 const radiusBoost = 1;
 const spell: Spell = {
   card: {
-    id,
+    id: plusRadiusId,
     category: CardCategory.Targeting,
     supportQuantity: true,
     manaCost: 10,
@@ -16,6 +16,7 @@ const spell: Spell = {
     thumbnail: 'spellIconPlusRadius.png',
     description: 'spell_plus_radius',
     allowNonUnitTarget: true,
+    frontload: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
       const adjustedRadiusBoost = radiusBoost * quantity;
       state.aggregator.radiusBoost += adjustedRadiusBoost;
@@ -25,7 +26,7 @@ const spell: Spell = {
       })
 
       // Plus radius requires other cards unless used to target an urn
-      if (!(state.cardIds.some(c => c != id) || urns.length != 0)) {
+      if (!(state.cardIds.some(c => c != plusRadiusId) || urns.length != 0)) {
         refundLastSpell(state, prediction);
       }
       return state;

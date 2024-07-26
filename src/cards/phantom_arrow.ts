@@ -22,7 +22,8 @@ const spell: Spell = {
     animationPath: '',
     sfx: 'phantomArrow',
     description: ['spell_phantom_arrow', damageDone.toString()],
-    effect: arrowEffect(1, phantomArrowCardId, true)
+    // Phantom arrow has "infinte" pierce built in
+    effect: arrowEffect(1, phantomArrowCardId, Infinity, 0)
   },
   events: {
     onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {

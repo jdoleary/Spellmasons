@@ -48,19 +48,14 @@ const spell: Spell = {
     }
   }
 };
-export function arrowEffect(multiShotCount: number, collideFnKey: string, doesPierce: boolean = false) {
+export function arrowEffect(multiShotCount: number, collideFnKey: string, piercesRemaining: number = 0, bouncesRemaining: number = 0) {
   return async (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean) => {
     let targets: Vec2[] = state.targetedUnits;
-    const path = findArrowPath(state.casterPositionAtTimeOfCast, state.castLocation, underworld)
-    targets = targets.length ? targets.map(t => {
-      const path = findArrowPath(state.casterPositionAtTimeOfCast, t, underworld);
-      return path ? path.p2 : state.castLocation;
-    }) : [path ? path.p2 : state.castLocation];
+    targets = targets.length ? targets : [state.castLocation];
     let timeoutToNextArrow = 200;
     for (let i = 0; i < quantity; i++) {
       for (let target of targets) {
         for (let arrowNumber = 0; arrowNumber < multiShotCount; arrowNumber++) {
-
           // START: Shoot multiple arrows at offset
           let casterPositionAtTimeOfCast = state.casterPositionAtTimeOfCast;
           let castLocation = target;
@@ -70,12 +65,13 @@ export function arrowEffect(multiShotCount: number, collideFnKey: string, doesPi
             castLocation = subtract(castLocation, diff);
           }
           // END: Shoot multiple arrows at offset
-          const endPoint = target;
+          const startPoint = casterPositionAtTimeOfCast;
+          const velocity = math.similarTriangles(target.x - startPoint.x, target.y - casterPositionAtTimeOfCast.y, math.distance(startPoint, target), config.ARROW_PROJECTILE_SPEED)
           let image: Image.IImageAnimated | undefined;
           if (!prediction) {
             image = Image.create(casterPositionAtTimeOfCast, 'projectile/arrow', containerProjectiles)
             if (image) {
-              image.sprite.rotation = Math.atan2(endPoint.y - casterPositionAtTimeOfCast.y, endPoint.x - casterPositionAtTimeOfCast.x);
+              image.sprite.rotation = Math.atan2(velocity.y, velocity.x);
             }
           }
           const pushedObject: HasSpace = {
@@ -90,12 +86,13 @@ export function arrowEffect(multiShotCount: number, collideFnKey: string, doesPi
           makeForceMoveProjectile({
             sourceUnit: state.casterUnit,
             pushedObject,
-            startPoint: casterPositionAtTimeOfCast,
-            endPoint: endPoint,
-            speed: 1.5,
-            doesPierce,
-            ignoreUnitIds: [state.casterUnit.id],
-            collideFnKey
+            startPoint,
+            velocity,
+            piercesRemaining: piercesRemaining + state.aggregator.additionalPierce,
+            bouncesRemaining: bouncesRemaining + state.aggregator.additionalBounce,
+            collidingUnitIds: [state.casterUnit.id],
+            collideFnKey,
+            state,
           }, underworld, prediction);
 
           if (!prediction && !globalThis.headless) {
@@ -113,35 +110,3 @@ export function arrowEffect(multiShotCount: number, collideFnKey: string, doesPi
   }
 }
 export default spell;
-// Returns the start and end point that an arrow will take until it hits a wall
-export function findArrowPath(casterPositionAtTimeOfCast: Vec2, target: Vec2, underworld: Underworld): LineSegment | undefined {
-  if (equal(casterPositionAtTimeOfCast, target)) {
-    // Don't allow shooting arrow at self, an arrow needs a direction
-    return undefined;
-  }
-  // Find a point that the arrow is shooting towards that is sure to be farther than the farthest wall
-  let endPoint = add(casterPositionAtTimeOfCast, math.similarTriangles(target.x - casterPositionAtTimeOfCast.x, target.y - casterPositionAtTimeOfCast.y, math.distance(casterPositionAtTimeOfCast, target), 10000));
-  let arrowShootPath = { p1: casterPositionAtTimeOfCast, p2: endPoint };
-  // revise end point to stop where it hits the first wall
-  const LOSResult = closestLineSegmentIntersectionWithLine(arrowShootPath, underworld.walls);
-  let intersection = LOSResult ? LOSResult.intersection : undefined;
-  if (intersection) {
-    // If arrow intersects with wall
-    // modify intersection so that it lands in game space and not out of bounds.
-    // This ensures target_arrow can't spawn units out of bounds:
-    // It should have no meaninful effect on other arrows
-    if (LOSResult?.lineSegment) {
-      const wallVector = normalizedVector(LOSResult.lineSegment.p2, LOSResult.lineSegment.p1);
-      if (wallVector.vector) {
-        intersection = moveAlongVector(intersection, invert(wallVector.vector), config.COLLISION_MESH_RADIUS / 2);
-      }
-    }
-
-    endPoint = intersection;
-    // revise arrow shoot path now that endpoint has changed
-    return { p1: casterPositionAtTimeOfCast, p2: endPoint };
-  } else {
-    console.error('Unexpected: arrow couldnt find wall to intersect with');
-    return { p1: casterPositionAtTimeOfCast, p2: target };
-  }
-}
