@@ -16,6 +16,7 @@ const spell: Spell = {
     thumbnail: 'spellIconPlusRadius.png',
     description: 'spell_plus_radius',
     allowNonUnitTarget: true,
+    frontload: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
       const adjustedRadiusBoost = radiusBoost * quantity;
       state.aggregator.radiusBoost += adjustedRadiusBoost;

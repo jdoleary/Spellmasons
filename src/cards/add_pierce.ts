@@ -20,6 +20,7 @@ const spell: Spell = {
     requiresFollowingCard: true,
     thumbnail: 'spellIconPierce.png',
     description: 'spell_add_pierce',
+    frontload: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
       state.aggregator.additionalPierce += quantity;
       return state;

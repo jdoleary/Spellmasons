@@ -601,6 +601,10 @@ export interface ICard {
   // if true, character range will be ignored for this spell
   ignoreRange?: boolean;
   sfx?: string;
+  // if a card should be triggered at the front of the spell list.
+  // rare, but useful for spells like add radius so you can use them at the
+  // end of your spell chain
+  frontload?: boolean;
 }
 
 export const allCards: { [cardId: string]: ICard } = {};

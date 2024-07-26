@@ -681,7 +681,6 @@ export default class Underworld {
   // is added (say by an explosion), so the forceMove timeout
   // has to be reset to allow for more time to pass
   resetForceMoveTimeout() {
-    console.log('reset forcemove timeout');
     clearTimeout(forceMoveTimeoutId);
     forceMoveTimeoutId = setTimeout(() => {
       if (forceMoveResolver) {
@@ -3655,7 +3654,23 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
 
     let effectState: Cards.EffectState = {
-      cardIds,
+      // frontload cardIds (quality of life)
+      // for spells such as Plus Radius
+      // so you can add them anywhere in the spell
+      cardIds: cardIds.sort((a, b) => {
+        const A = Cards.allCards[a];
+        const B = Cards.allCards[b];
+        if (!A || !B) {
+          return 0;
+        }
+        if (A.frontload && !B.frontload) {
+          return -1;
+        }
+        if (B.frontload && !A.frontload) {
+          return 1;
+        }
+        return 0;
+      }),
       shouldRefundLastSpell: false,
       casterCardUsage,
       casterUnit,

@@ -20,6 +20,7 @@ const spell: Spell = {
     requiresFollowingCard: true,
     thumbnail: 'spellIconRicochet.png',
     description: 'spell_add_bounce',
+    frontload: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
       state.aggregator.additionalBounce += quantity;
       return state;
