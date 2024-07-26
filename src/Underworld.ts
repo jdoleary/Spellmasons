@@ -3144,6 +3144,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       CardUI.renderRunesMenu(this)
       // Clear gold glow on inv button if necessary
       CardUI.tryShowStatPointsSpendable();
+      // Some runes change the cost of cards so the card badges must be upgraded
+      // when the current player chooses a rune
+      CardUI.updateCardBadges(this);
     }
   }
   adminShowMageTypeSelect() {
