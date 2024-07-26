@@ -73,22 +73,14 @@ const spell: Spell = {
             filterFn,
             prediction
           );
-          // Draw prediction lines so user can see how it chains
-          if (prediction) {
-            chained.forEach(chained_entity => {
-              drawPredictionLine(chained_entity.chainSource, chained_entity.entity);
-            });
-          } else {
-            for (let { chainSource, entity } of chained) {
+          for (let { chainSource, entity } of chained) {
+            if (!prediction) {
               playSFXKey('targeting');
-              animationPromise = animationPromise.then(() => animate(chainSource, [entity]));
             }
-            // Draw all final circles for a moment before casting
-            animationPromise = animationPromise.then(() => animate({ x: 0, y: 0 }, []));
-            animationPromises.push(animationPromise);
+            animationPromise = animationPromise.then(() => animate(chainSource, [entity], prediction))
+              .then(() => addTarget(entity, state, underworld, prediction));
           }
-          // Update effectState targets
-          chained.forEach(u => addTarget(u.entity, state, underworld, prediction))
+          animationPromises.push(animationPromise);
         }
       }
       await Promise.all(animationPromises).then(() => {
@@ -183,7 +175,13 @@ export function getNextConnectingEntities(
   return connected;
 }
 
-async function animate(pos: Vec2, newTargets: Vec2[]) {
+async function animate(pos: Vec2, newTargets: Vec2[], prediction: boolean) {
+  if (prediction) {
+    for (let target of newTargets) {
+      drawPredictionLine(pos, target);
+    }
+    return Promise.resolve();
+  }
   if (globalThis.headless) {
     // Animations do not occur on headless, so resolve immediately or else it
     // will just waste cycles on the server
