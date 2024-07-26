@@ -1061,6 +1061,17 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       supportInMultiplayer: true,
       domQueryContainer: '',
     },
+    {
+      label: '⭐ Give 1000 Skill Points',
+      action: () => {
+        if (globalThis.player) {
+          globalThis.player.statPointsUnspent += 1000;
+        }
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '#menu-self'
+
+    },
     ...Object.values(allCards).map(x => ({
       label: `Give card: ${x.id}`,
       action: () => {
