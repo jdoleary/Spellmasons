@@ -797,7 +797,6 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         if (globalThis.lastPredictionMousePos && !Vec.equal(target, globalThis.lastPredictionMousePos)) {
           const distFromLastPredictionMouse = distance(target, globalThis.lastPredictionMousePos);
           const isSmallDistFromLastPrediction = distFromLastPredictionMouse < config.COLLISION_MESH_RADIUS;
-          console.debug('Mouse position override; dist from last position: ', distFromLastPredictionMouse);
           if (isSmallDistFromLastPrediction) {
             target = globalThis.lastPredictionMousePos;
             console.log("Quality of Life: Overriding mouse position with last successful runPrediction mouse position.")
