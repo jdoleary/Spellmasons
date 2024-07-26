@@ -2,8 +2,6 @@ import { registerModifiers } from "./cards";
 import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
-import * as Upgrade from './Upgrade';
-import { healCardId } from './cards/add_heal';
 
 export const blessingAffinityId = 'Blessing Affinity';
 
