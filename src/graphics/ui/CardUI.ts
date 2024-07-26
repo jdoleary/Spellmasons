@@ -482,6 +482,7 @@ export function renderRunesMenu(underworld: Underworld) {
     const modifier = Cards.allModifiers[stat]
 
     return `<div class="stat-row flex" data-stat="${stat}">
+              <div class="plus-btn-container" style="color:black"><div class="stat-value" style="color:black">${modifier?.costPerUpgrade || '&nbsp;'}</div></div>
               <div>
                 <div class="rune-name" style="color:black">
                 ${stat || ''} ${globalThis.player.unit.modifiers[stat]?.quantity || ''}
@@ -490,7 +491,6 @@ export function renderRunesMenu(underworld: Underworld) {
                 ${Cards.allModifiers[stat]?.description}
                 </div>
               </div>
-              <div class="plus-btn-container" style="color:black"><div class="stat-value" style="color:black">${modifier?.costPerUpgrade || '&nbsp;'}</div></div>
             </div>`;
   }
   elRunes.innerHTML = `
@@ -520,6 +520,10 @@ export function renderRunesMenu(underworld: Underworld) {
 
     const elRuneName = (el as HTMLElement).querySelector('.rune-name');
     const updateRuneName = (hovered: boolean = false) => {
+      if (['Health', 'Mana', 'Stamina', 'Cast Range'].includes(stat)) {
+        // Do not update name for basic player stats since they aren't stored as modifiers
+        return;
+      }
       if (elRuneName) {
         if (modifier) {
           // Quantity already owned by the player
@@ -538,7 +542,7 @@ export function renderRunesMenu(underworld: Underworld) {
             }
             // If going to max, show maxed in green
             if (newQuantity >= maxRuneQuantity) {
-              elRuneName.innerHTML = `${stat || ''}   <span style="color:green"> [Maxed] </span>`;
+              elRuneName.innerHTML = `${stat || ''}   <span style="color:green"> [Max] </span>`;
               return;
             }
           }

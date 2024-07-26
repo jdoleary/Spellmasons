@@ -2112,7 +2112,14 @@ body.view-Game.showUpgrades #perkList.visible {
 
 .stat-row {
   width: 100%;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 8px;
+  align-items: center;
+  padding: 4px;
+}
+
+.stat-row:hover {
+  background-color: #cbb385;
 }
 
 .stat-row .description {
