@@ -368,4 +368,6 @@ declare global {
   var noGore: undefined | boolean;
   // True when a SPELL message is currently being executed
   var spellCasting: boolean | undefined;
+  var _queueLastPredictionMousePos: Vec2 | undefined;
+  var lastPredictionMousePos: Vec2 | undefined;
 }

@@ -33,6 +33,7 @@ const spell: Spell = {
   },
   events: {
     onProjectileCollision: ({ unit, underworld, projectile, prediction }) => {
+      let explodeLocation = projectile.pushedObject;
       if (unit) {
         Unit.takeDamage({
           unit: unit,
@@ -41,11 +42,13 @@ const spell: Spell = {
           fromVec2: projectile.startPoint,
           thinBloodLine: true,
         }, underworld, prediction);
-        explode(unit, explodeRange, explodeDamage, defaultPushDistance,
-          projectile.sourceUnit,
-          underworld, prediction,
-          colors.bloatExplodeStart, colors.bloatExplodeEnd);
+        explodeLocation = unit;
       }
+
+      explode(explodeLocation, explodeRange, explodeDamage, defaultPushDistance,
+        projectile.sourceUnit,
+        underworld, prediction,
+        colors.bloatExplodeStart, colors.bloatExplodeEnd);
     }
   }
 };

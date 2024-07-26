@@ -42,6 +42,7 @@ import { errorRed } from './colors';
 import { isSinglePlayer } from '../../network/wsPieSetup';
 import { elAdminPowerBar, elAdminPowerBarInput, elAdminPowerBarOptions } from '../../HTMLElements';
 import { targetCursedId } from '../../cards/target_curse';
+import { distance } from '../../jmath/math';
 
 export const keyDown = {
   showWalkRope: false,
@@ -729,7 +730,11 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
   //hide chat if its active
   document.body.classList.toggle('showChat', false);
 
-  if (isOutOfBounds(mousePos, underworld)) {
+  const cardIds = CardUI.getSelectedCardIds();
+  // If the first card ignores range, it should also be castable out of bounds
+  // This allows players to more precisely aim arrow spells
+  const firstCardIgnoreOutOfBounds = cardIds[0] && allCards[cardIds[0]]?.ignoreRange;
+  if (!firstCardIgnoreOutOfBounds && isOutOfBounds(mousePos, underworld)) {
     // Disallow click out of bounds
     floatingText({
       coords: mousePos,
@@ -789,6 +794,20 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
       if (selfPlayer) {
         // cast the spell
         let target = mousePos;
+        // Improved targeting:
+        // Ensure that click sent in cast is not slightly different from last 
+        // runPrediction target which can result in different outcomes than the
+        // user is expecting
+        if (globalThis.lastPredictionMousePos && !Vec.equal(target, globalThis.lastPredictionMousePos)) {
+          const distFromLastPredictionMouse = distance(target, globalThis.lastPredictionMousePos);
+          const isSmallDistFromLastPrediction = distFromLastPredictionMouse < config.COLLISION_MESH_RADIUS;
+          if (isSmallDistFromLastPrediction) {
+            target = globalThis.lastPredictionMousePos;
+            console.log("Quality of Life: Overriding mouse position with last successful runPrediction mouse position.")
+          }
+        }
+
+        // End Improved targeting
         const cardIds = CardUI.getSelectedCardIds();
         const cards = CardUI.getSelectedCards();
 

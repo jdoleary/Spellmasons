@@ -5,7 +5,7 @@ import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
-import { healCardId } from './add_heal';
+import { healCardId } from './heal';
 import { healSfx, healUnits } from '../effects/heal';
 
 export const healGreaterId = 'Greater Heal';

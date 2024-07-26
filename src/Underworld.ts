@@ -59,7 +59,7 @@ import { expandPolygon, isVec2InsidePolygon, mergePolygon2s, Polygon2, Polygon2L
 import { calculateDistanceOfVec2Array, findPath } from './jmath/Pathfinding';
 import { keyDown, useMousePosition } from './graphics/ui/eventListeners';
 import Jprompt from './graphics/Jprompt';
-import { collideWithLineSegments, reflectVelocityOnWall, projectVelocityAlongWall, ForceMove, ForceMoveType, isForceMoveProjectile, isForceMoveUnitOrPickup, isVecIntersectingVecWithCustomRadius, moveWithCollisions, predictWallCollision } from './jmath/moveWithCollision';
+import { collideWithLineSegments, reflectVelocityOnWall, projectVelocityAlongWall, ForceMove, ForceMoveType, isForceMoveProjectile, isForceMoveUnitOrPickup, isVecIntersectingVecWithCustomRadius, moveWithCollisions, handleWallCollision } from './jmath/moveWithCollision';
 import { IHostApp, hostGiveClientGameState } from './network/networkUtil';
 import { withinMeleeRange } from './entity/units/actions/meleeAction';
 import { baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLimits, Limits as Limits, makeFinalTileImages, Map, Tile, toObstacle } from './MapOrganicCave';
@@ -396,6 +396,8 @@ export default class Underworld {
     if (loopCount >= PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD) {
       console.error('forceMove simulation hit PREVENT_INFINITE threshold');
     }
+    // Empty forceMovePredictions to prepare for next simulation
+    this.forceMovePrediction = [];
     this.simulatingMovePredictions = false;
   }
   // Returns true when forceMove is complete
@@ -419,7 +421,7 @@ export default class Underworld {
     const aliveUnits = ((prediction && this.unitsPrediction) ? this.unitsPrediction : this.units).filter(u => u.alive);
     if (isForceMoveUnitOrPickup(forceMoveInst)) {
       const { velocity_falloff } = forceMoveInst;
-      const collision = predictWallCollision(forceMoveInst, this, deltaTime);
+      const collision = handleWallCollision(forceMoveInst, this, deltaTime);
 
       if (collision.wall) {
         // TODO - Due to different simulation speeds
@@ -446,18 +448,17 @@ export default class Underworld {
           }
           velocity.x = 0;
           velocity.y = 0;
-        }
-        else {
-          // TODO - collideWithLineSegments();
-
+        } else {
           // Non-Heavy-Impact collision behavior is currently handled by collideWithLineSegments();
           // Which pushes units away from the walls when they get close.
           // Ideally, instead of moving the unit too far and making a correction
-          // We should calculate where the unit needs to move
-          // This should prevent units going through walls and other weird behavior
+          // We should premptively calculate where the unit needs to be
+          // to prevent units going through walls and other weird behavior
+          // TODO - put collideWithLineSegments() here instead of past the if/else
 
-          // These examples would require slight modifications to
-          // predictWallCollision() to work correctly
+          // We can also decide what happens on non-impact collisions here:
+          // Does the unit bounce of the wall, slide along it, stop entirely, or something else?
+          // Examples below: May require slight modifications to work 100% as intended
 
           // Makes the unit bounce off of the wall
           // const newVelocity = reflectVelocityOnWall(velocity, collision.wall);
@@ -470,12 +471,15 @@ export default class Underworld {
           // velocity.x = newVelocity.x;
           // velocity.y = newVelocity.y;
 
-          // Moves the unit based off its velocity projection along the wall
-          // Units will move parallel to the wall until passing it
-          // const projection = projectVelocityAlongWall(velocity, collision.wall);
-          // const newPosition = Vec.add(pushedObject, Vec.multiply(deltaTime - collision.msUntilCollision, projection));
-          // pushedObject.x = newPosition.x;
-          // pushedObject.y = newPosition.y;
+          // Stops the unit
+          //velocity.x = 0;
+          //velocity.y = 0;
+
+          // If testing out the above examples, make sure to uncomment this chunk of code as well
+          // Use remaining delta time after collision to continue movement based on new velocity
+          //const newPosition = Vec.add(pushedObject, Vec.multiply(deltaTime - collision.msUntilCollision, velocity));
+          //pushedObject.x = newPosition.x;
+          //pushedObject.y = newPosition.y;
         }
       } else {
         // If forceMove wasn't going to collide with a wall,
@@ -500,42 +504,129 @@ export default class Underworld {
       // Check to see if unit has falled out of lava via a forcemove
       Obstacle.tryFallInOutOfLiquid(forceMoveInst.pushedObject, this, prediction);
     } else if (isForceMoveProjectile(forceMoveInst)) {
-      const newPosition = Vec.add(pushedObject, deltaPosition);
-      pushedObject.x = newPosition.x;
-      pushedObject.y = newPosition.y;
-      if (math.distance(forceMoveInst.pushedObject, forceMoveInst.startPoint) >= math.distance(forceMoveInst.endPoint, forceMoveInst.startPoint)) {
-        // Projectile is done if it reaches or goes beyond its end point
-        return true;
+      // ignoreCollisionLiftime is only set if we ignore collisions
+      // so for everything else, run collision logic
+      if (forceMoveInst.ignoreCollisionLifetime == undefined) {
+        const collision = handleWallCollision(forceMoveInst, this, deltaTime);
+        if (collision.wall) {
+          if (Events.onProjectileCollisionSource) {
+            const collideFn = Events.onProjectileCollisionSource[forceMoveInst.collideFnKey];
+            if (collideFn) {
+              collideFn({ unit: undefined, underworld: this, prediction, projectile: forceMoveInst });
+            } else {
+              console.error('No projectile collide fn for', forceMoveInst.collideFnKey);
+            }
+          }
+
+          if (forceMoveInst.bouncesRemaining <= 0) {
+            // If cannot bounce and collides with a wall, remove
+            return true;
+          } else {
+            // Bounce the projectile
+            forceMoveInst.bouncesRemaining--;
+            this.resetForceMoveTimeout();
+
+            // Reflect velocity
+            const newVelocity = reflectVelocityOnWall(velocity, collision.wall);
+            velocity.x = newVelocity.x;
+            velocity.y = newVelocity.y;
+            if (pushedObject.image) {
+              // Velocity has changed, so sprite rotation changes too
+              pushedObject.image.sprite.rotation = Math.atan2(velocity.y, velocity.x);
+            }
+
+            // Move for remaining delta time (after wall collision)
+            const newPosition = Vec.add(pushedObject, Vec.multiply(deltaTime - collision.msUntilCollision, velocity));
+            pushedObject.x = newPosition.x;
+            pushedObject.y = newPosition.y;
+            if (!prediction) {
+              playSFXKey('ricochet');
+            }
+          }
+        } else {
+          // If projectile wasn't going to collide with a wall,
+          // move it according to it's velocity
+          const newPosition = Vec.add(pushedObject, deltaPosition);
+          pushedObject.x = newPosition.x;
+          pushedObject.y = newPosition.y;
+        }
+
+        // TODO - For accuracy, we may have to predict these collisions before they happen (Needs testing)
+        for (let unit of aliveUnits) {
+          if (isVecIntersectingVecWithCustomRadius(pushedObject, unit, config.COLLISION_MESH_RADIUS)) {
+            if (forceMoveInst.collidingUnitIds.includes(unit.id)) {
+              // If already colliding with this unit, skip to the next one
+              continue;
+            }
+
+            if (Events.onProjectileCollisionSource) {
+              const collideFn = Events.onProjectileCollisionSource[forceMoveInst.collideFnKey];
+              if (collideFn) {
+                collideFn({ unit: unit, underworld: this, prediction, projectile: forceMoveInst });
+              } else {
+                console.error('No projectile collide fn for', forceMoveInst.collideFnKey);
+              }
+
+              if (forceMoveInst.piercesRemaining <= 0) {
+                if (forceMoveInst.bouncesRemaining <= 0) {
+                  // If cannot pierce or bounce and collides with a unit, remove
+                  return true;
+                } else {
+                  forceMoveInst.bouncesRemaining--;
+                  this.resetForceMoveTimeout();
+                  forceMoveInst.collidingUnitIds.push(unit.id);
+                  // Units aren't walls, so we use a different method for reflecting velocity
+                  const directionToProjectile = Vec.normalized({ x: unit.x - pushedObject.x, y: unit.y - pushedObject.y });
+
+                  // Reflect velocity
+                  // Note that because a unit is not a wall segment, we use a different function
+                  const newVelocity = Vec.reflectOnNormal(velocity, directionToProjectile)
+                  velocity.x = newVelocity.x;
+                  velocity.y = newVelocity.y;
+                  if (pushedObject.image) {
+                    // Velocity has changed, so sprite rotation changes too
+                    pushedObject.image.sprite.rotation = Math.atan2(velocity.y, velocity.x);
+                  }
+
+                  if (!prediction) {
+                    playSFXKey('ricochet');
+                  }
+                }
+              } else {
+                forceMoveInst.piercesRemaining--;
+                forceMoveInst.collidingUnitIds.push(unit.id);
+              }
+            }
+          } else {
+            if (forceMoveInst.collidingUnitIds.includes(unit.id)) {
+              // Left the collision zone for a unit, may want to collide with it again later (pierce/bounce)
+              forceMoveInst.collidingUnitIds = forceMoveInst.collidingUnitIds.filter(id => id != unit.id);
+            }
+          }
+        }
+      } else {
+        // This projectile is ignoring collisions. Common for VFX
+        // Since we aren't destroying the projectile through collision logic
+        // We give it a maximum lifetime, and destroy it at the end
+        if (forceMoveInst.ignoreCollisionLifetime > 0) {
+          forceMoveInst.ignoreCollisionLifetime -= deltaTime;
+          // Move according to its velocity
+          const newPosition = Vec.add(pushedObject, deltaPosition);
+          pushedObject.x = newPosition.x;
+          pushedObject.y = newPosition.y;
+        } else {
+          // Destroy projectile if lifetime is complete
+          return true;
+        }
       }
+
+      // All projectiles should face the direction they are moving
       if (pushedObject.image) {
         pushedObject.image.sprite.x = pushedObject.x;
         pushedObject.image.sprite.y = pushedObject.y;
       }
-      for (let other of aliveUnits) {
-        if (forceMoveInst.ignoreUnitIds.includes(other.id)) {
-          continue;
-        }
-        if (isVecIntersectingVecWithCustomRadius(pushedObject, other, config.COLLISION_MESH_RADIUS)) {
-          if (Events.onProjectileCollisionSource) {
-            if (forceMoveInst.doesPierce) {
-              forceMoveInst.ignoreUnitIds.push(other.id);
-            }
-            const collideFn = Events.onProjectileCollisionSource[forceMoveInst.collideFnKey];
-            if (collideFn) {
-              collideFn({ unit: other, underworld: this, prediction, projectile: forceMoveInst });
-            } else {
-              console.error('No projectile collide fn for', forceMoveInst.collideFnKey);
-            }
-            if (!forceMoveInst.doesPierce) {
-              // If projectile does not pierce, remove it once it collides
-              return true;
-            }
-          }
-        }
-      }
     }
     return false;
-
   }
   queueGameLoop = () => {
     if (globalThis.headless) {
@@ -583,14 +674,22 @@ export default class Underworld {
         });
       }
       // Reset the timeout every time a new forceMove is added
-      clearTimeout(forceMoveTimeoutId);
-      forceMoveTimeoutId = setTimeout(() => {
-        if (forceMoveResolver) {
-          forceMoveResolver();
-          console.error('Error: forceMovePromise timed out');
-        }
-      }, config.FORCE_MOVE_PROMISE_TIMEOUT_MILLIS);
+      this.resetForceMoveTimeout();
     }
+  }
+  // Some force moves may take longer than the timeout
+  // for example if an arrow bounces or if a new force move
+  // is added (say by an explosion), so the forceMove timeout
+  // has to be reset to allow for more time to pass
+  resetForceMoveTimeout() {
+    clearTimeout(forceMoveTimeoutId);
+    forceMoveTimeoutId = setTimeout(() => {
+      if (forceMoveResolver) {
+        forceMoveResolver();
+        console.error('Error: forceMovePromise timed out');
+      }
+    }, config.FORCE_MOVE_PROMISE_TIMEOUT_MILLIS);
+
   }
   // Returns true if there is more processing yet to be done on the next
   // gameloop
@@ -3557,7 +3656,23 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
 
     let effectState: Cards.EffectState = {
-      cardIds,
+      // frontload cardIds (quality of life)
+      // for spells such as Plus Radius
+      // so you can add them anywhere in the spell
+      cardIds: cardIds.sort((a, b) => {
+        const A = Cards.allCards[a];
+        const B = Cards.allCards[b];
+        if (!A || !B) {
+          return 0;
+        }
+        if (A.frontload && !B.frontload) {
+          return -1;
+        }
+        if (B.frontload && !A.frontload) {
+          return 1;
+        }
+        return 0;
+      }),
       shouldRefundLastSpell: false,
       casterCardUsage,
       casterUnit,
@@ -3568,6 +3683,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       castLocation,
       aggregator: {
         radiusBoost: 0,
+        additionalPierce: 0,
+        additionalBounce: 0,
       },
       initialTargetedUnitId,
       initialTargetedPickupId

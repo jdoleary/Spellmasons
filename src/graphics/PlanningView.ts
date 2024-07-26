@@ -547,6 +547,10 @@ export async function runPredictions(underworld: Underworld) {
   }
   const startTime = Date.now();
   const mousePos = underworld.getMousePos();
+  // Queue mousePosition from the start of runPredictions so that when
+  // runPredictions is successful it can be saved to
+  // check if castLocation is different from last successful runPredictions
+  globalThis._queueLastPredictionMousePos = mousePos;
   // Clear the spelleffectprojection in preparation for showing the current ones
   clearSpellEffectProjection(underworld);
 

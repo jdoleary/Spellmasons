@@ -9,16 +9,19 @@ import { addTarget, getCurrentTargets, refundLastSpell, Spell } from './index';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { clone, Vec2 } from '../jmath/Vec';
 import { makeForceMoveProjectile } from '../jmath/moveWithCollision';
-import { containerProjectiles } from '../graphics/PixiUtils';
 import { HasSpace } from '../entity/Type';
+import { containerProjectiles } from '../graphics/PixiUtils';
+import { targetArrowCardId } from './target_arrow';
 
-export const targetArrowCardId = 'Target Arrow';
+export const targetDiskCardId = 'Target Disk'
+let targetsToAdd: Vec2[] = [];
 const spell: Spell = {
   card: {
-    id: targetArrowCardId,
+    id: targetDiskCardId,
     category: CardCategory.Targeting,
     probability: probabilityMap[CardRarity.UNCOMMON],
-    manaCost: 10,
+    requires: [targetArrowCardId],
+    manaCost: 15,
     healthCost: 0,
     expenseScaling: 1,
     supportQuantity: true,
@@ -31,8 +34,8 @@ const spell: Spell = {
     requiresFollowingCard: true,
     animationPath: '',
     sfx: '',
-    thumbnail: 'spellIconArrowGreen.png',
-    description: 'spell_target_arrow',
+    thumbnail: 'spellIconTargetDisk.png',
+    description: 'spell_target_ricochet_arrow',
     effect: async (state, card, quantity, underworld, prediction) => {
       const initialCastLocation = state.castLocation;
       // - - - - - Start copied from arrow.ts - - - - -
@@ -46,7 +49,7 @@ const spell: Spell = {
         const velocity = math.similarTriangles(target.x - startPoint.x, target.y - casterPositionAtTimeOfCast.y, math.distance(startPoint, target), config.ARROW_PROJECTILE_SPEED)
         let image: Image.IImageAnimated | undefined;
         if (!prediction) {
-          image = Image.create(casterPositionAtTimeOfCast, 'projectile/arrow', containerProjectiles)
+          image = Image.create(casterPositionAtTimeOfCast, 'projectile/targetDisk', containerProjectiles)
           if (image) {
             image.sprite.rotation = Math.atan2(velocity.y, velocity.x);
           }
@@ -65,10 +68,10 @@ const spell: Spell = {
           pushedObject,
           startPoint,
           velocity,
-          piercesRemaining: quantity - 1 + state.aggregator.additionalPierce,
-          bouncesRemaining: state.aggregator.additionalBounce,
+          piercesRemaining: state.aggregator.additionalPierce,
+          bouncesRemaining: quantity + state.aggregator.additionalBounce,
           collidingUnitIds: [state.casterUnit.id],
-          collideFnKey: targetArrowCardId,
+          collideFnKey: targetDiskCardId,
           state,
         }, underworld, prediction);
 

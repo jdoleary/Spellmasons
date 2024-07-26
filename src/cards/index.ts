@@ -21,7 +21,7 @@ import megaSlash from './mega_slash';
 import rend from './rend';
 import bleed from './bleed';
 import execute from './execute';
-import heal from './add_heal';
+import heal from './heal';
 import heal_greater from './heal_greater';
 import heal_mass from './heal_mass';
 import send_mana from './send_mana';
@@ -74,6 +74,7 @@ import drown from './drown';
 import blood_bath from './blood_bath';
 import dark_tide from './dark_tide';
 import target_arrow from './target_arrow';
+import target_disk from './target_disk';
 import target_column from './target_column';
 import target_cone from './target_cone';
 import target_circle from './target_circle';
@@ -83,6 +84,8 @@ import target_similar_2 from './target_similar_2';
 import target_injured from './target_injured';
 import target_all from './target_all';
 import target_curse from './target_curse';
+import add_pierce from './add_pierce';
+import add_bounce from './add_bounce';
 import plus_radius from './plus_radius';
 import shove from './shove';
 import stomp from './stomp';
@@ -367,6 +370,7 @@ export function registerCards(overworld: Overworld) {
 
   // Targeting Spells
   registerSpell(target_arrow, overworld);
+  registerSpell(target_disk, overworld);
   registerSpell(target_column, overworld);
   registerSpell(target_cone, overworld);
   registerSpell(target_circle, overworld);
@@ -378,6 +382,8 @@ export function registerCards(overworld: Overworld) {
   registerSpell(target_all, overworld);
   config.IS_ANNIVERSARY_UPDATE_OUT &&
     registerSpell(target_curse, overworld);
+  registerSpell(add_pierce, overworld);
+  registerSpell(add_bounce, overworld);
   registerSpell(plus_radius, overworld);
   // registerSpell(trap, overworld);
   for (let unitId of Object.keys(allUnits)) {
@@ -509,7 +515,12 @@ export interface EffectState {
   // aggregator carries extra information that can be passed
   // between card effects.
   aggregator: {
+    // Used for radius effects like Target Circle
     radiusBoost: number;
+    // Used for arrow effects
+    additionalPierce: number;
+    // Used for arrow effects
+    additionalBounce: number;
   };
   // initialTargetedUnitId and initialTargetedPickupId:
   // Used to ensure the castCards targets the right starting
@@ -616,6 +627,10 @@ export interface ICard {
   // if true, character range will be ignored for this spell
   ignoreRange?: boolean;
   sfx?: string;
+  // if a card should be triggered at the front of the spell list.
+  // rare, but useful for spells like add radius so you can use them at the
+  // end of your spell chain
+  frontload?: boolean;
 }
 
 export const allCards: { [cardId: string]: ICard } = {};
