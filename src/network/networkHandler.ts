@@ -1402,13 +1402,29 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       const { players } = savedUnderworld;
       if (numberOfHotseatPlayers !== undefined) {
         globalThis.numberOfHotseatPlayers = numberOfHotseatPlayers;
-        if (!overworld.pie.soloMode) {
+        if (overworld.pie.soloMode) {
+          console.log('Loading a hotseat multiplayer game into a singleplayer underworld: reassinging cliendIds and playerIds');
+          // Reassign playerId's and client ids so that single player can load a hotseat multiplayer game
+          for (let i = 0; i < players.length; i++) {
+            const player = players[i];
+            // Reset all player clientId's so they are the same
+            // and set playerId's as different so that a singleplayer
+            // game can load a hotseat game
+            if (globalThis.clientId) {
+              if (player) {
+                player.clientId = globalThis.clientId;
+                player.playerId = `${player.clientId}_${i}`;
+              }
+            }
+          }
+        } else {
           console.log('Loading a hotseat multiplayer game into an online multiplayer server: so reset numberOfHotseatPlayers to 1 so that other players can assume control of hotseat players.');
           globalThis.numberOfHotseatPlayers = 1;
           for (let i = 1; i < players.length; i++) {
             const player = players[i];
             // Ensure players have different client ids when loading a hotseat game
-            // in a multiplayer lobby
+            // in a multiplayer lobby so that multiple players can assume
+            // control on different computers
             if (player && player.clientId == players[0]?.clientId) {
               player.clientId += `_${i}`;
             }
