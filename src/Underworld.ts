@@ -111,6 +111,9 @@ import { chooseBookmark } from './views';
 import { runeGamblerId } from './modifierGambler';
 import { runeTimemasonId } from './modifierTimemason';
 import { manaBarrierId, updateTooltip } from './modifierManaBarrier';
+import { modifierBaseBounceId } from './modifierBaseBounce';
+import { modifierBasePierceId } from './modifierBasePierce';
+import { modifierBaseRadiusBoostId } from './modifierBaseRadiusBoost';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -3682,9 +3685,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       targetedPickups: [],
       castLocation,
       aggregator: {
-        radiusBoost: 0,
-        additionalPierce: 0,
-        additionalBounce: 0,
+        radiusBoost: casterUnit.modifiers[modifierBaseRadiusBoostId]?.quantity || 0,
+        additionalPierce: casterUnit.modifiers[modifierBasePierceId]?.quantity || 0,
+        additionalBounce: casterUnit.modifiers[modifierBaseBounceId]?.quantity || 0,
       },
       initialTargetedUnitId,
       initialTargetedPickupId

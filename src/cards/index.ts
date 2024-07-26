@@ -157,6 +157,10 @@ import registerRevitalize from '../modifierRevitalize';
 import registerSelfInvulnerability from '../modifierSelfImmunity';
 import registerShieldRegen from '../modifierShieldRegen';
 import registerThorns from '../modifierThorns';
+import registerBaseBounce from '../modifierBaseBounce';
+import registerBasePierce from '../modifierBasePierce';
+import modifierBaseRadiusBoost from '../modifierBaseRadiusBoost';
+import registerBaseRadiusBoost from '../modifierBaseRadiusBoost';
 
 export interface Modifiers {
   // modifier sthat are not attached to a spell need an explicit id set
@@ -428,6 +432,9 @@ export function registerCards(overworld: Overworld) {
   registerManaBarrier();
   registerOnHitHealing();
   registerOnHitPoison();
+  registerBaseBounce();
+  registerBasePierce();
+  registerBaseRadiusBoost();
 
   registerImmune();
   registerImpendingDoom();
@@ -438,6 +445,8 @@ export function registerCards(overworld: Overworld) {
   registerUrnPoisonExplode();
   registerUrnExplosiveExplode();
   registerDeathmasonEvents();
+
+
 }
 
 // This is necessary because unit stats change with difficulty.
