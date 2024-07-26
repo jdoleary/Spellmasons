@@ -5,10 +5,10 @@ import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
 
 // Applies (quantity) poison on hit
-export const onHitPoisonId = 'On Hit Poison';
+export const onHitPoisonId = 'Inflict Poison';
 export default function registerOnHitPoison() {
   registerModifiers(onHitPoisonId, {
-    description: 'Applies [quantity] poison on hit',
+    description: 'Applies [quantity] poison when you deal damage',
     costPerUpgrade: 80,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, onHitPoisonId, { isCurse: false, quantity, keepOnDeath: true }, () => {
