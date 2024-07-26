@@ -481,25 +481,25 @@ export function renderRunesMenu(underworld: Underworld) {
     }
     const modifier = Cards.allModifiers[stat]
 
-    return `<div class="stat-row flex">
+    return `<div class="stat-row flex" data-stat="${stat}">
+              <div class="plus-btn-container" style="color:black"><div class="stat-value" style="color:black">${modifier?.costPerUpgrade || '&nbsp;'}</div></div>
               <div>
-                <div class="rune-name">
-                ${stat || ''}
+                <div class="rune-name" style="color:black">
+                ${stat || ''} ${globalThis.player.unit.modifiers[stat]?.quantity || ''}
                 </div>
-                <div class="description">
+                <div class="description" style="color:black">
                 ${Cards.allModifiers[stat]?.description}
                 </div>
               </div>
-              <div data-stat="${stat}" class="plus-btn-container"><div class="stat-value">${modifier?.cost || '&nbsp;'}</div></div>
             </div>`;
   }
   elRunes.innerHTML = `
 <div class="pick-stats">
-  <div class="card-inner flex">
+  <div class="card-inner flex" style="color:black">
   <h2>Skill Points: ${statPoints}</h2>
   <div class="stat-row-holder">
   ${Object.entries(Cards.allModifiers).flatMap(([key, modifier]) => {
-    if (modifier.cost) {
+    if (modifier.costPerUpgrade) {
       return [elStatUpgradeRow(key)];
     } else {
       return [];
@@ -509,46 +509,111 @@ export function renderRunesMenu(underworld: Underworld) {
   </div>
 </div>`;
 
-  elRunes.querySelectorAll('.stat-row .plus-btn-container').forEach(el => {
+  elRunes.querySelectorAll('.stat-row').forEach(el => {
     const stat = (el as HTMLElement).dataset.stat;
     if (!stat) {
       return
     }
-    const elPlusBtn = document.createElement('div');
+
     const modifier = Cards.allModifiers[stat]
-    elPlusBtn.classList.add('plus-btn', 'small');
-    const isDisabled = (modifier && modifier.cost) ? statPoints < modifier.cost : true;
-    if (isDisabled) {
-      elPlusBtn.classList.add('disabled');
+    const playerModifier = globalThis.player?.unit.modifiers[stat];
+
+    const elRuneName = (el as HTMLElement).querySelector('.rune-name');
+    const updateRuneName = (hovered: boolean = false) => {
+      if (['Health', 'Mana', 'Stamina', 'Cast Range'].includes(stat)) {
+        // Do not update name for basic player stats since they aren't stored as modifiers
+        return;
+      }
+      if (elRuneName) {
+        if (modifier) {
+          // Quantity already owned by the player
+          const playerRuneQuantity = playerModifier?.quantity || 0;
+          // Quantity after buying rune upgrade
+          const newQuantity = playerRuneQuantity + (hovered ? (modifier.quantityPerUpgrade || 1) : 0);
+          // Change quantity color when hovered for better UX
+          const color = hovered ? "green" : "black";
+
+          if (modifier.maxUpgradeCount) {
+            const maxRuneQuantity = Cards.getMaxRuneQuantity(modifier);
+            // If already maxed, show maxed in black to indicate no change
+            if (playerRuneQuantity >= maxRuneQuantity) {
+              elRuneName.innerHTML = `${stat || ''}  [Maxed]`;
+              return;
+            }
+            // If going to max, show maxed in green
+            if (newQuantity >= maxRuneQuantity) {
+              elRuneName.innerHTML = `${stat || ''}   <span style="color:green"> [Max] </span>`;
+              return;
+            }
+          }
+
+          // If not going to max, just show new quantity (or nothing if newQuantity is 0)
+          elRuneName.innerHTML = `${stat || ''}  ${newQuantity ? `<span style="color:${color}"> [${newQuantity}] </span>` : ''}`
+        }
+      }
     }
-    elPlusBtn.style.color = 'white';
-    if (stat && stat == 'attackRange') {
-      elPlusBtn.addEventListener('mouseenter', () => {
-        keyDown.showWalkRope = true;
+    updateRuneName();
+
+    const elPlusBtnContainer = (el as HTMLElement).querySelector('.plus-btn-container');
+    if (elPlusBtnContainer) {
+      const elPlusBtn = document.createElement('div');
+      elPlusBtn.classList.add('plus-btn', 'small');
+      elPlusBtn.style.color = 'white';
+
+      elPlusBtnContainer.appendChild(elPlusBtn);
+      const modifier = Cards.allModifiers[stat]
+      let isDisabled = false;
+      if (modifier) {
+        // If cost > points, disable
+        if (modifier.costPerUpgrade && modifier.costPerUpgrade > statPoints) {
+          isDisabled = true;
+        }
+        // If player has reached max upgrade count, disable
+        if (modifier.maxUpgradeCount) {
+          const playerModifier = globalThis.player?.unit.modifiers[stat];
+          if (playerModifier) {
+            // Factor in quantity per upgrade
+            const currentUpgradeCount = playerModifier.quantity / (modifier.quantityPerUpgrade || 1)
+            if (currentUpgradeCount >= modifier.maxUpgradeCount) {
+              isDisabled = true;
+            }
+          }
+        }
+      }
+      if (isDisabled) {
+        elPlusBtn.classList.add('disabled');
+      }
+
+      elPlusBtn.addEventListener('click', () => {
+        if (isDisabled) {
+          playSFXKey('deny');
+        } else {
+          underworld.pie.sendData({
+            type: MESSAGE_TYPES.CHOOSE_RUNE,
+            stat
+          })
+        }
       });
-      elPlusBtn.addEventListener('mouseleave', () => {
-        keyDown.showWalkRope = false;
+      elPlusBtn.addEventListener('mouseenter', (e) => {
+        playSFXKey('click');
+        updateRuneName(true);
+      });
+      elPlusBtn.addEventListener('mouseleave', (e) => {
+        playSFXKey('click');
+        updateRuneName(false);
       });
 
-    }
-    elPlusBtn.addEventListener('click', () => {
-      if (isDisabled) {
-        playSFXKey('deny');
-      } else {
-        underworld.pie.sendData({
-          type: MESSAGE_TYPES.CHOOSE_RUNE,
-          stat
-        })
+      // Exception: Show cast range when hovered
+      if (stat == 'Cast Range') {
+        elPlusBtn.addEventListener('mouseenter', () => {
+          keyDown.showWalkRope = true;
+        });
+        elPlusBtn.addEventListener('mouseleave', () => {
+          keyDown.showWalkRope = false;
+        });
       }
-    });
-    elPlusBtn.addEventListener('mouseenter', (e) => {
-      playSFXKey('click');
-    });
-    el.appendChild(elPlusBtn);
-    if (globalThis.devAutoPickUpgrades && globalThis.player?.statPointsUnspent || 0 > 0) {
-      elPlusBtn.click();
     }
-  })
+  });
 }
 
 

@@ -12,6 +12,7 @@ function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
 export default function registerTargetImmune() {
   registerModifiers(targetImmuneId, {
     description: 'Unit resists targeting unless targeted directly.',
+    probability: 100,
     addModifierVisuals,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, targetImmuneId, { isCurse: false, quantity, keepOnDeath: true }, () => {
@@ -30,6 +31,5 @@ export default function registerTargetImmune() {
         y: 1.2,
       },
     },
-    probability: 100,
   });
 }

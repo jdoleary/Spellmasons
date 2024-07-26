@@ -363,7 +363,7 @@ function addOnDamageFilter(unit: IUnit) {
   }
 }
 
-export function addModifier(unit: IUnit, key: string, underworld: Underworld, prediction: boolean, quantity?: number, extra?: object) {
+export function addModifier(unit: IUnit, key: string, underworld: Underworld, prediction: boolean, quantity: number = 1, extra?: object) {
   // Call custom modifier's add function
   const modifier = allModifiers[key];
   if (modifier) {
@@ -376,7 +376,7 @@ export function addModifier(unit: IUnit, key: string, underworld: Underworld, pr
       if (allCards[key]?.supportQuantity && quantity == undefined) {
         console.error('Dev warning:', key, 'supportsQuantity; however quantity was not provided to the addModifier function.');
       }
-      modifier.add(unit, underworld, prediction, quantity || 1, extra);
+      modifier.add(unit, underworld, prediction, quantity, extra);
     } else {
       console.error('No "add" modifier for ', key);
     }
@@ -390,7 +390,7 @@ export function addModifier(unit: IUnit, key: string, underworld: Underworld, pr
 
 export function removeModifier(unit: IUnit, key: string, underworld: Underworld) {
   const modifier = allModifiers[key];
-  if (modifier && modifier.cost) {
+  if (modifier && modifier.costPerUpgrade) {
     // Modifier is a Rune and should NOT be removed
     return;
   }
@@ -902,9 +902,13 @@ export function takeDamage(damageArgs: damageArgs, underworld: Underworld, predi
   amount = composeOnDealDamageEvents(damageArgs, underworld, prediction);
   amount = composeOnTakeDamageEvents(damageArgs, underworld, prediction);
   if (amount == 0) {
-    // Even though damage is 0, sync the player UI in the event that the
-    // damage took down shield
-    if (unit === globalThis.player?.unit) {
+    // Even though damage is 0, sync the player UI in the event that
+    // the damage took down shield/mana barrier/etc.
+    if (unit === globalThis.player?.unit && !prediction) {
+      // Now that the player unit's properties have changed, sync the new state
+      // with the player's predictionUnit so it is properly refelcted in the bar
+      // (note: this would be auto corrected on the next mouse move anyway)
+      underworld.syncPlayerPredictionUnitOnly();
       syncPlayerHealthManaUI(underworld);
     }
     return;
@@ -928,7 +932,11 @@ export function takeDamage(damageArgs: damageArgs, underworld: Underworld, predi
     if (amount > 0) {
       // - - - DAMAGE FX - - -
       playSFXKey(unit.sfx.damage);
-      playAnimation(unit, unit.animations.hit, { loop: false, animationSpeed: 0.2 });
+      // Interupting an attack animation can skip the unit's action,
+      // so we should ensure the unit is not attacking before playing the hit animation
+      if (unit.image && !unit.animations.attack.includes(unit.image.sprite.imagePath)) {
+        playAnimation(unit, unit.animations.hit, { loop: false, animationSpeed: 0.2 });
+      }
       // All units bleed except Doodads
       if (unit.unitSubType !== UnitSubType.DOODAD) {
         if (fromVec2) {
@@ -962,9 +970,8 @@ export function takeDamage(damageArgs: damageArgs, underworld: Underworld, predi
   }
 
   if (unit.id == globalThis.player?.unit.id && !prediction) {
-    // Now that the player unit's properties have changed, sync the new
-    // state with the player's predictionUnit so it is properly
-    // refelcted in the bar
+    // Now that the player unit's properties have changed, sync the new state
+    // with the player's predictionUnit so it is properly refelcted in the bar
     // (note: this would be auto corrected on the next mouse move anyway)
     underworld.syncPlayerPredictionUnitOnly();
     syncPlayerHealthManaUI(underworld);
@@ -979,12 +986,12 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
   const predictionPlayerUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id);
 
   const unit = globalThis.player.unit;
-  const shieldAmount = unit.modifiers.shield?.damage_block || 0;
+  const shieldAmount = unit.modifiers.shield?.quantity || 0;
   // Set the health/shield bars that shows how much health/shield you currently have
   elHealthBar.style["width"] = `${100 * unit.health / unit.healthMax}%`;
   elHealthBarShield.style["width"] = `${100 * Math.min(shieldAmount / unit.healthMax, 1)}%`;
   if (shieldAmount) {
-    const shieldText = `${unit.modifiers.shield?.damage_block} shield`;
+    const shieldText = `${unit.modifiers.shield?.quantity} shield`;
     elHealthLabel.innerHTML = `${shieldText} + ${unit.health} / ${unit.healthMax}`;
   } else {
     // Label health without shield
@@ -995,7 +1002,7 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
   if (predictionPlayerUnit) {
     const losingHealth = predictionPlayerUnit.health < unit.health;
     const willDie = predictionPlayerUnit.health <= 0;
-    const predictionPlayerShield = predictionPlayerUnit.modifiers.shield?.damage_block || 0
+    const predictionPlayerShield = predictionPlayerUnit.modifiers.shield?.quantity || 0
     const shieldLost = predictionPlayerShield < shieldAmount;
 
     if (elCautionBox) {
@@ -1416,8 +1423,6 @@ export async function runTurnStartEvents(unit: IUnit, underworld: Underworld, pr
       const fn = Events.onTurnStartSource[eventName];
       if (fn) {
         await fn(unit, underworld, prediction);
-      } else {
-        console.error('No function associated with turn start event', eventName);
       }
     },
   ));
@@ -1429,8 +1434,6 @@ export async function runTurnEndEvents(unit: IUnit, underworld: Underworld, pred
       const fn = Events.onTurnEndSource[eventName];
       if (fn) {
         await fn(unit, underworld, prediction);
-      } else {
-        console.error('No function associated with turn end event', eventName);
       }
     },
   ));

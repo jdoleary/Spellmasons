@@ -12,12 +12,12 @@ import { UnitType } from "./types/commonTypes";
 export const undyingModifierId = 'undying';
 export default function registerUndying() {
   registerModifiers(undyingModifierId, {
+    probability: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, undyingModifierId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, undyingModifierId);
       });
     },
-    probability: 5,
   });
   registerEvents(undyingModifierId, {
     onTurnStart: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {

@@ -11,9 +11,9 @@ import { chooseOneOf } from "../jmath/rand";
 import Underworld from "../Underworld";
 import { CardCategory } from "../types/commonTypes";
 import { allUnits } from "../entity/units";
-import { runeArcherId } from "../modifierArcher";
+import { endlessQuiverId } from "../modifierEndlessQuiver";
 import { runeNecromancerId } from "../modifierNecromancer";
-import { runeClericId } from "../modifierCleric";
+import { blessingAffinityId } from "../modifierBlessingAffinity";
 import { runeWitchId } from "../modifierWitch";
 export interface CardCost {
     manaCost: number;
@@ -153,7 +153,8 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
                 cardCost.healthCost = Math.ceil(cardCost.manaCost / 5);
                 cardCost.manaCost = 0;
             }
-        } else if (caster.unit.modifiers[runeNecromancerId]) {
+        }
+        if (caster.unit.modifiers[runeNecromancerId]) {
             if (card.id == captureSoul.id) {
                 cardCost.healthCost = 40;
                 cardCost.manaCost = 0;
@@ -161,11 +162,14 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
                 // Make summon spells discounted
                 cardCost.manaCost = Math.floor(cardCost.manaCost * 0.7);
             }
-        } else if (caster.unit.modifiers[runeClericId] && card.category == CardCategory.Blessings) {
+        }
+        if (caster.unit.modifiers[blessingAffinityId] && card.category == CardCategory.Blessings) {
             cardCost.manaCost = Math.floor(cardCost.manaCost / 2);
-        } else if (caster.unit.modifiers[runeWitchId] && card.category == CardCategory.Curses) {
+        }
+        if (caster.unit.modifiers[runeWitchId] && card.category == CardCategory.Curses) {
             cardCost.manaCost = Math.floor(cardCost.manaCost * 0.8);
-        } else if (caster.unit.modifiers[runeArcherId] && card.id.toLowerCase().includes('arrow')) {
+        }
+        if (caster.unit.modifiers[endlessQuiverId] && card.id.toLowerCase().includes('arrow')) {
             // Freeze mana cost for archer MageType
             cardCost.manaCost = card.manaCost;
         }

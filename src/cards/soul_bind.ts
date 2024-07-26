@@ -44,28 +44,32 @@ const spell: Spell = {
     add,
   },
   events: {
-    onTakeDamage: (unit, amount, underworld, prediction) => {
-      // Split the damage / healing amount among all soul bound units
-      const units = getSoulBoundUnits(underworld, prediction);
-      for (let i = 0; i < units.length; i++) {
-        const unit = units[i];
-        if (unit) {
-          const index = unit.events.findIndex(e => e == soulBindId);
-          // Remove Soul Bind damage event to prevent infinite loop
-          unit.events.splice(index, 1);
-          // Deal damage to unit
+    onTakeDamage: (unit, amount, underworld, prediction, damageDealer) => {
+      // Soul Bind splits damage/healing across all soul bound units
+      const boundUnits = getSoulBoundUnits(underworld, prediction);
+      for (let i = 0; i < boundUnits.length; i++) {
+        const boundUnit = boundUnits[i];
+        // This unit is already running the take damage event, so exclude it
+        if (boundUnit && boundUnit != unit) {
+          // Exception: Temporarily remove the bound unit's Soul Bind event to prevent infinite loop
+          boundUnit.events = boundUnit.events.filter(x => x !== soulBindId);
+
+          // Unit.TakeDamage, it's important to preserve all damage args
           Unit.takeDamage({
-            unit: unit,
-            amount: Math.ceil(amount / units.length)
+            unit: boundUnit,
+            amount: Math.ceil(amount / boundUnits.length),
+            sourceUnit: damageDealer,
           }, underworld, prediction);
-          // Return Soul Bind damage event if the unit is not dead
-          if (unit.alive) {
-            unit.events.splice(index, 0, soulBindId);
+
+          // Restore the Soul Bind event if the boundUnit still has the Soul Bind modifier
+          if (boundUnit.modifiers[soulBindId]) {
+            Unit.addEvent(boundUnit, soulBindId);
           }
         }
       }
 
-      return 0;
+      // Soul Bind modifies incoming damage/healing
+      return Math.ceil(amount / boundUnits.length);
     },
     onDrawSelected: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       const modifier = unit.modifiers[soulBindId];
