@@ -23,7 +23,9 @@ export default function registerContaminateSelfOnTeleport() {
     onTeleport: (unit: Unit.IUnit, newLocation: Vec2, underworld: Underworld, prediction: boolean) => {
       const player = underworld.players.find(p => p.unit == unit);
       contaminate(player, unit, 1, unit.modifiers[modifierBaseRadiusBoostId]?.quantity || 0, underworld, prediction);
-      floatingText({ coords: newLocation, text: "Contaminate on Teleport", prediction })
+      if (Object.values(unit.modifiers).filter(x => x.isCurse).length) {
+        floatingText({ coords: newLocation, text: "Contaminate on Teleport", prediction })
+      }
     }
   });
 }
