@@ -211,7 +211,8 @@ export function registerModifiers(id: string, modifiers: Modifiers) {
   // @ts-ignore: For dev debug viewing modifiers.
   // ts-ignored because it's not declared in global
   // types and meant to be used as debug only
-  globalThis.devAllModifiers = allModifiers;
+  // (Also used for codex to display modifiers)
+  globalThis.allModifiers = allModifiers;
 
   // Add subsprites
   if (modifiers && modifiers.subsprite) {
