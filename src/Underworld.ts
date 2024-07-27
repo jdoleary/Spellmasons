@@ -1741,7 +1741,9 @@ export default class Underworld {
         }
       }
     }
-    const numberOfMinibossesAllowed = Math.ceil(Math.max(0, (levelIndex - 4) / 4));
+    const numberOfMinibossesAllowed = levelIndex > LAST_LEVEL_INDEX
+      ? (levelIndex - LAST_LEVEL_INDEX) * 2 + 2
+      : Math.ceil(Math.max(0, (levelIndex - 4) / 4));
     let numberOfMinibossesMade = 0;
     for (let id of unitIds) {
       if (validSpawnCoords.length == 0) { break; }
