@@ -12,6 +12,7 @@ import Events, {
   onTurnEnd,
   onDrawSelected,
   onProjectileCollision,
+  onTeleport,
 } from '../Events';
 import Subsprites, { Subsprite } from '../Subsprites';
 // Register spells:
@@ -161,8 +162,9 @@ import registerShieldRegen from '../modifierShieldRegen';
 import registerThorns from '../modifierThorns';
 import registerBaseBounce from '../modifierBaseBounce';
 import registerBasePierce from '../modifierBasePierce';
-import modifierBaseRadiusBoost from '../modifierBaseRadiusBoost';
 import registerBaseRadiusBoost from '../modifierBaseRadiusBoost';
+import registerContaminateSelfOnTeleport from '../modifierContaminateSelfOnTeleport';
+
 
 export interface Modifiers {
   // modifier sthat are not attached to a spell need an explicit id set
@@ -193,6 +195,7 @@ export interface Events {
   onTakeDamage?: onTakeDamage;
   onDeath?: onDeath;
   onMove?: onMove;
+  onTeleport?: onTeleport;
   onAgro?: onAgro;
   onTurnStart?: onTurnStart;
   onTurnEnd?: onTurnEnd;
@@ -234,6 +237,9 @@ export function registerEvents(id: string, events: Events) {
   }
   if (events.onMove) {
     Events.onMoveSource[id] = events.onMove;
+  }
+  if (events.onTeleport) {
+    Events.onTeleportSource[id] = events.onTeleport;
   }
   if (events.onTurnStart) {
     Events.onTurnStartSource[id] = events.onTurnStart;
@@ -440,6 +446,7 @@ export function registerCards(overworld: Overworld) {
   registerBaseBounce();
   registerBasePierce();
   registerBaseRadiusBoost();
+  registerContaminateSelfOnTeleport();
 
   registerImmune();
   registerImpendingDoom();

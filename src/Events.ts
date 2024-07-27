@@ -28,6 +28,11 @@ export type onMove = {
 };
 const onMoveSource: { [name: string]: onMove } = {};
 
+export type onTeleport = {
+  (unit: IUnit, newLocation: Vec2, underworld: Underworld, prediction: boolean): void;
+};
+const onTeleportSource: { [name: string]: onTeleport } = {};
+
 export type onAgro = {
   // Returns a possibly modified agroTarget
   (agroer: IUnit, agroTarget: IUnit): IUnit;
@@ -61,5 +66,6 @@ export default {
   onTurnStartSource,
   onTurnEndSource,
   onDrawSelectedSource,
-  onProjectileCollisionSource
+  onProjectileCollisionSource,
+  onTeleportSource
 };

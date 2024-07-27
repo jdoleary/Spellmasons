@@ -27,6 +27,7 @@ import floatingText from '../graphics/FloatingText';
 import { containerParticles } from '../graphics/Particles';
 import { elEndTurnBtn } from '../HTMLElements';
 import { healManaUnit, healUnit } from '../effects/heal';
+import { teleport } from '../effects/teleport';
 
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 export const PICKUP_IMAGE_PATH = 'pickups/scroll';
@@ -539,8 +540,7 @@ export const pickups: IPickupSource[] = [
           // isPointValidSpawn returns false if it's spawning a unit on a point taken up by a pickup
           // (that isn't flagged for removal)
           if (underworld.isPointValidSpawn(randomOtherRedPortal, config.COLLISION_MESH_RADIUS / 2, prediction)) {
-            player.unit.x = randomOtherRedPortal.x;
-            player.unit.y = randomOtherRedPortal.y;
+            teleport(player.unit, randomOtherRedPortal, underworld, prediction);
             playSFXKey('swap');
             skyBeam(pickup);
             skyBeam(randomOtherRedPortal);
@@ -580,8 +580,7 @@ export const pickups: IPickupSource[] = [
           // isPointValidSpawn returns false if it's spawning a unit on a point taken up by a pickup
           // (that isn't flagged for removal)
           if (underworld.isPointValidSpawn(randomOtherBluePortal, config.COLLISION_MESH_RADIUS / 2, prediction)) {
-            player.unit.x = randomOtherBluePortal.x;
-            player.unit.y = randomOtherBluePortal.y;
+            teleport(player.unit, randomOtherBluePortal, underworld, prediction);
             skyBeam(pickup);
             skyBeam(randomOtherBluePortal);
           }

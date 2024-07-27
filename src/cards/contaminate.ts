@@ -49,7 +49,7 @@ interface CurseData {
 }
 
 // separate function to handle synchronous recursion and animation - avoids long wait times
-async function contaminate(casterPlayer: IPlayer | undefined, unit: IUnit, quantity: number, radiusBoost: number, underworld: Underworld, prediction: boolean) {
+export async function contaminate(casterPlayer: IPlayer | undefined, unit: IUnit, quantity: number, radiusBoost: number, underworld: Underworld, prediction: boolean) {
   // Contaminate does not get extra radius from quantity,
   // but can instead chain an additional time
   // +25% range per radius boost

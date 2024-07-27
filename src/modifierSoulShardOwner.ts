@@ -10,6 +10,7 @@ import Underworld from './Underworld';
 import { UnitType } from "./types/commonTypes";
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { IImageAnimated } from "./graphics/Image";
+import { teleport } from "./effects/teleport";
 
 const trailColorStart = colors.convertToHashColor(colors.healthDarkRed);
 const trailColorEnd = colors.convertToHashColor(colors.healthBrightRed);
@@ -61,7 +62,7 @@ export default function registerSoulShardOwner() {
           if (nearestShardBearer.unitType != UnitType.PLAYER_CONTROLLED) {
             Unit.cleanup(nearestShardBearer, true);
           }
-          Unit.setLocation(unit, nearestShardBearer, underworld, prediction);
+          teleport(unit, nearestShardBearer, underworld, prediction);
           Unit.resurrect(unit, underworld);
         } else {
           console.error("Unit had shard owner event, but no shard bearers were left. This should not happen ", unit);

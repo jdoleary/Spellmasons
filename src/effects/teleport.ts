@@ -6,6 +6,7 @@ import * as Pickup from '../entity/Pickup';
 import * as Obstacle from '../entity/Obstacle';
 import { skyBeam } from '../VisualEffects';
 import * as colors from '../graphics/ui/colors';
+import Events from "../Events";
 
 export function teleport(object: HasSpace, newLocation: Vec2, underworld: Underworld, prediction: boolean, usePredictionLines?: boolean) {
   if (usePredictionLines) {
@@ -25,6 +26,16 @@ export function teleport(object: HasSpace, newLocation: Vec2, underworld: Underw
   if (Unit.isUnit(object)) {
     // Moves the unit to location and resets path
     Unit.setLocation(object, newLocation, underworld, prediction);
+
+    // Trigger onTeleport events
+    for (let eventName of object.events) {
+      if (eventName) {
+        const fn = Events.onTeleportSource[eventName];
+        if (fn) {
+          fn(object, newLocation, underworld, prediction);
+        }
+      }
+    }
     // Check to see if unit interacts with liquid
     Obstacle.tryFallInOutOfLiquid(object, underworld, prediction);
   } else if (Pickup.isPickup(object)) {
