@@ -20,11 +20,10 @@ import { Graphics } from 'pixi.js';
 import { allCards } from '../cards';
 import { keyDown } from './ui/eventListeners';
 import { inPortal } from '../entity/Player';
-import { getPerkText } from '../Perk';
 import { View } from '../View';
-import { gripthulu_id } from '../entity/units/gripthulu';
 import { getSuffocateBuildup, suffocateCardId } from '../cards/suffocate';
 import * as Cards from '../cards';
+import { ANCIENT_UNIT_ID } from '../entity/units/ancient';
 
 const TEXT_OUT_OF_RANGE = 'Out of Range';
 // Graphics for rendering above board and walls but beneath units and doodads,
@@ -475,13 +474,18 @@ export function getFillRect(unit: Unit.IUnit, min: number, max: number, value1: 
   const fillWidth = widthAdjusted * Math.abs(end01 - start01);
   const height = config.UNIT_UI_BAR_HEIGHT / zoom;
 
+  let HEALTH_BAR_UI_Y_POS = config.HEALTH_BAR_UI_Y_POS;
+  if (unit.unitSourceId == ANCIENT_UNIT_ID) {
+    HEALTH_BAR_UI_Y_POS /= 2;
+  }
+
   return {
     x: unit.x - widthAdjusted / 2 + Math.min(start01, end01) * widthAdjusted,
     // - height so that bar stays in the same position relative to the unit
     // regardless of zoom
-    // - config.HEALTH_BAR_UI_Y_POS so that it renders above their head instead of
+    // - HEALTH_BAR_UI_Y_POS so that it renders above their head instead of
     // on their center point
-    y: unit.y - config.HEALTH_BAR_UI_Y_POS * (unit.image?.sprite.scale.y || 1) - height,
+    y: unit.y - HEALTH_BAR_UI_Y_POS * (unit.image?.sprite.scale.y || 1) - height,
     width: fillWidth,
     height,
   }
@@ -630,12 +634,18 @@ export async function runPredictions(underworld: Underworld) {
         const unitSource = allUnits[u.unitSourceId];
         if (unitSource) {
           const { targets, canAttack } = cachedTargets[u.id] || { targets: [], canAttack: false };
+          const pos = clone(u);
+          // Exception: Ancients are short,
+          // draw their attention marker lower
+          if (u.unitSourceId == ANCIENT_UNIT_ID) {
+            pos.y += config.HEALTH_BAR_UI_Y_POS / 2;
+          }
           if (u.unitSubType == UnitSubType.SUPPORT_CLASS || u.unitSubType == UnitSubType.GORU_BOSS) {
             // Draw attention marker over any support unit who is taking an action
             if (targets.length) {
               // use u.predictionScale here since we are dealing with prediction units
               // prediction units don't have images, and thus sprite.scale.y
-              globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u), unitSpriteScaleY: u.predictionScale || 1, markerScale: 1 });
+              globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos, unitSpriteScaleY: u.predictionScale || 1, markerScale: 1 });
             }
           }
           else {
@@ -643,7 +653,7 @@ export async function runPredictions(underworld: Underworld) {
             if (targets.includes(globalThis.player.unit) && canAttack) {
               // use u.predictionScale here since we are dealing with prediction units
               // prediction units don't have images, and thus sprite.scale.y
-              globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u), unitSpriteScaleY: u.predictionScale || 1, markerScale: 1 });
+              globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos, unitSpriteScaleY: u.predictionScale || 1, markerScale: 1 });
             }
           }
         }

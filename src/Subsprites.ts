@@ -41,5 +41,17 @@ const Subsprites: ISubsprites = {
       y: 1,
     },
   },
+  "crown": {
+    imageName: 'crown',
+    alpha: 1.0,
+    anchor: {
+      x: -0.7,
+      y: 3.0,
+    },
+    scale: {
+      x: 0.5,
+      y: 0.5,
+    },
+  }
 };
 export default Subsprites;

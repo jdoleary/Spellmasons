@@ -49,6 +49,7 @@ import { GORU_UNIT_ID } from './units/goru';
 import { undyingModifierId } from '../modifierUndying';
 import { primedCorpseId } from '../modifierPrimedCorpse';
 import { chooseObjectWithProbability } from '../jmath/rand';
+import { ANCIENT_UNIT_ID } from './units/ancient';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -1457,6 +1458,12 @@ export function makeMiniboss(unit: IUnit, underworld: Underworld) {
   unit.manaCostToCast *= config.UNIT_MINIBOSS_MANA_MULTIPLIER;
   unit.strength *= 7;
   Image.setScaleFromModifiers(unit.image, unit.strength);
+  const crown = Image.addSubSprite(unit.image, 'crown');
+  // Exception: Ancients are short so their crown
+  // should be placed lower
+  if (crown && unit.unitSourceId == ANCIENT_UNIT_ID) {
+    crown.y += config.HEALTH_BAR_UI_Y_POS / 2;
+  }
   const numberOfModifiers = chooseObjectWithProbability([
     {
       num: 1,
