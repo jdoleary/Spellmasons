@@ -32,7 +32,9 @@ export function enableRemoteLogging() {
     // };
 }
 globalThis.remoteLog = (...args: any[]) => {
-    sendLogToServerHub(args, LogLevel.LOG);
+    if (globalThis.headless || globalThis.privacyPolicyAndEULAConsent) {
+        sendLogToServerHub(args, LogLevel.LOG);
+    }
 }
 // Copied from spellmasons-server-hub
 interface EventGroupMessage {
@@ -70,6 +72,9 @@ export function sendEventToServerHub(eventG: Partial<EventGroupMessage>, underwo
 // the same logs that may occur, for example, if mousemove causes an error
 let recentLogs: { m: string, d: number }[] = [];
 function sendLogToServerHub(args: any[], l: LogLevel) {
+    if (!globalThis.headless && !globalThis.privacyPolicyAndEULAConsent) {
+        return;
+    }
     if (!globalThis.headless && location && location.href.includes('localhost')) {
         console.debug('on localhost: do not log remotely', args.join(' '));
         return;
