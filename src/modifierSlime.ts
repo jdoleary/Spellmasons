@@ -23,7 +23,7 @@ export default function registerSlime() {
     },
     subsprite: {
       imageName: subspriteId,
-      alpha: 1.0,
+      alpha: 0.95,
       anchor: {
         x: 0.5,
         y: 0,
