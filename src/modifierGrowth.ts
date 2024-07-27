@@ -37,6 +37,9 @@ export default function registerGrowth() {
 
   registerEvents(growthId, {
     onTurnEnd: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
+      if (!unit.alive) {
+        return;
+      }
       floatingText({ coords: unit, text: growthId, prediction });
       unit.strength++;
       Image.setScaleFromModifiers(unit.image, unit.strength);

@@ -18,13 +18,15 @@ export default function registerSlime() {
   });
   registerEvents(slimeId, {
     onTurnEnd: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
+      if (!unit.alive) {
+        return;
+      }
       await animateMitosis(unit.image);
       const clone = doCloneUnit(unit, underworld, prediction);
       if (clone) {
         floatingText({ coords: unit, text: slimeId, prediction });
         // Only the source unit maintains slimeId or else it gets exponential
         Unit.removeModifier(clone, slimeId, underworld)
-
       }
     }
   });
