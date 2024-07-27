@@ -42,6 +42,7 @@ function connect_to_wsPie_server(wsUri: string | undefined, overworld: Overworld
     pie.onConnectInfo = (o) => {
       console.log('onConnectInfo', o);
       if (o.connected) {
+        globalThis.remoteLog?.(`User connected: ${wsUri}`);
         // Reset intentionalDisconnect because now that we are connected, if it disconnects without intentionalDisconnect being set to true,
         // it should show the View.Disconnect view.
         intentionalDisconnect = false;
