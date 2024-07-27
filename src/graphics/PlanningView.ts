@@ -895,8 +895,8 @@ ${globalThis.selectedUnit.manaCostToCast && globalThis.selectedUnit.manaCostToCa
 <hr/>
 <div>${i18n(unitSource.info.description)}</div>
 <hr/>
-${globalThis.selectedUnit.faction == Faction.ALLY ? '🤝' : '⚔️️'} ${i18n((Faction[globalThis.selectedUnit.faction] || '').toString())}
-🗡️ ${globalThis.selectedUnit.damage} ${i18n(['damage'])}${globalThis.selectedUnit.unitSubType !== UnitSubType.MELEE ? `
+${globalThis.selectedUnit.faction == Faction.ALLY ? '🤝' : '⚔️️'} ${i18n((Faction[globalThis.selectedUnit.faction] || '').toString())} ${globalThis.selectedUnit.unitType !== UnitType.PLAYER_CONTROLLED ? `
+🗡️ ${globalThis.selectedUnit.damage} ${i18n(['damage'])}` : ''}${globalThis.selectedUnit.unitSubType !== UnitSubType.MELEE ? `
 🎯 ${globalThis.selectedUnit.attackRange} ${i18n(['attack range'])}` : ''}
 ❤️ ${globalThis.selectedUnit.health}/${globalThis.selectedUnit.healthMax} ${i18n(['health capacity'])}
 🔵 ${globalThis.selectedUnit.mana}/${globalThis.selectedUnit.manaMax} + ${globalThis.selectedUnit.manaPerTurn} ${i18n('Mana')} ${i18n('per turn')}

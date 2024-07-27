@@ -9,7 +9,7 @@ import * as Cards from '../cards';
 import * as config from '../config';
 import { CardCategory, Faction, UnitType } from '../types/commonTypes';
 import { clearTooltipSelection } from '../graphics/PlanningView';
-import defaultPlayerUnit from './units/playerUnit';
+import defaultPlayerUnit, { spellmasonUnitId } from './units/playerUnit';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary, playerNoColor } from '../graphics/ui/colors';
@@ -21,6 +21,7 @@ import { AttributePerk } from '../Perk';
 import { setPlayerNameUI } from '../PlayerUtils';
 import { contaminate_id } from '../cards/contaminate';
 import { cameraAutoFollow } from '../graphics/PixiUtils';
+import { allUnits } from './units';
 
 const elInGameLobby = document.getElementById('in-game-lobby') as (HTMLElement | undefined);
 const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
@@ -115,7 +116,7 @@ export function create(clientId: string, playerId: string, underworld: Underworl
       userSource.info.image,
       UnitType.PLAYER_CONTROLLED,
       userSource.info.subtype,
-      undefined,
+      allUnits[spellmasonUnitId]?.unitProps,
       underworld
     ),
     awaitingSpawn: false,

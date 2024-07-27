@@ -17,6 +17,8 @@ const playerUnit: UnitSource = {
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
+    // Player clones must be able to deal damage
+    damage: 20,
     attackRange: config.PLAYER_BASE_ATTACK_RANGE
   },
   // This is how a user unit would act if controlled by AI (this can happen if you clone yourself)
