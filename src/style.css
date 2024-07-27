@@ -2624,3 +2624,13 @@ body.dragging-card .floating-card-holder .empty-slot {
   margin: 0;
 
 }
+
+#inspector-tooltip-content .tooltip-modifier-row {
+  margin-bottom: 4px;
+}
+
+#inspector-tooltip-content .tooltip-modifier-key {
+  line-height: 16px;
+  display: flex;
+  font-weight: bold;
+}

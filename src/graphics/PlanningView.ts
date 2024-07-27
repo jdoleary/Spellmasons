@@ -924,7 +924,8 @@ function modifiersToText(modifiers: object): string {
   }
   let message = '';
   for (let [key, value] of Object.entries(modifiers)) {
-    message += `<div style="line-height:16px; display:flex;"><img width="16px" height="16px" src="${CardUI.getSpellThumbnailPath(allCards[key]?.thumbnail)}"> ${value.tooltip || `${i18n(key)} ${value.quantity || ''}`}</div>`
+    const modifier = Cards.allModifiers[key];
+    message += `<div class="tooltip-modifier-row"><div class="tooltip-modifier-key"><img width="16px" height="16px" src="${CardUI.getSpellThumbnailPath(allCards[key]?.thumbnail)}"> ${value.tooltip || `${i18n(key)} ${value.quantity || ''}`}</div>${modifier?.description ? `<div>${modifier.description}</div>` : ''}</div>`
   }
   return `<div class="modifiers">${message}</div>`;
 
