@@ -2634,3 +2634,13 @@ body.dragging-card .floating-card-holder .empty-slot {
   display: flex;
   font-weight: bold;
 }
+
+#inspector-tooltip-content .tooltip-modifier-key.curse {
+  color: rgb(223, 88, 223);
+}
+
+#inspector-tooltip-content .tooltip-modifier-key.blessing {
+  color: rgb(255, 232, 101);
+}
+
+color: purple;
