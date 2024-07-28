@@ -28,6 +28,11 @@ export type onMove = {
 };
 const onMoveSource: { [name: string]: onMove } = {};
 
+export type onSpawn = {
+  (unit: IUnit, underworld: Underworld, prediction: boolean): void;
+};
+const onSpawnSource: { [name: string]: onSpawn } = {};
+
 export type onTeleport = {
   (unit: IUnit, newLocation: Vec2, underworld: Underworld, prediction: boolean): void;
 };
@@ -67,5 +72,6 @@ export default {
   onTurnEndSource,
   onDrawSelectedSource,
   onProjectileCollisionSource,
-  onTeleportSource
+  onTeleportSource,
+  onSpawnSource,
 };

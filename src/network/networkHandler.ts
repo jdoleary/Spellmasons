@@ -41,6 +41,7 @@ import { elEndTurnBtn } from '../HTMLElements';
 import { sendEventToServerHub } from '../RemoteLogging';
 import { raceTimeout } from '../Promise';
 import { teleport } from '../effects/teleport';
+import Events from '../Events';
 
 export const NO_LOG_LIST = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PREVENT_IDLE_TIMEOUT, MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING, MESSAGE_TYPES.MOVE_PLAYER, MESSAGE_TYPES.SET_PLAYER_POSITION];
@@ -748,6 +749,16 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
             cameraAutoFollow(true);
           }
           teleport(fromPlayer.unit, payload, underworld, false);
+
+          // Trigger onSpawn events
+          for (let eventName of fromPlayer.unit.events) {
+            if (eventName) {
+              const fn = Events.onSpawnSource[eventName];
+              if (fn) {
+                fn(fromPlayer.unit, underworld, false);
+              }
+            }
+          }
           // Trigger 'everyLevel' attributePerks
           // now that the player has spawned in at the new level
           const perkRandomGenerator = seedrandom(getUniqueSeedString(underworld, fromPlayer));

@@ -13,6 +13,7 @@ import Events, {
   onDrawSelected,
   onProjectileCollision,
   onTeleport,
+  onSpawn
 } from '../Events';
 import Subsprites, { Subsprite } from '../Subsprites';
 // Register spells:
@@ -164,6 +165,7 @@ import registerBaseBounce from '../modifierBaseBounce';
 import registerBasePierce from '../modifierBasePierce';
 import registerBaseRadiusBoost from '../modifierBaseRadiusBoost';
 import registerContaminateSelfOnTeleport from '../modifierContaminateSelfOnTeleport';
+import registerCloneOnSpawn from '../modifierCloneOnSpawn';
 
 
 export interface Modifiers {
@@ -196,6 +198,7 @@ export interface Events {
   onDeath?: onDeath;
   onMove?: onMove;
   onTeleport?: onTeleport;
+  onSpawn?: onSpawn;
   onAgro?: onAgro;
   onTurnStart?: onTurnStart;
   onTurnEnd?: onTurnEnd;
@@ -240,6 +243,9 @@ export function registerEvents(id: string, events: Events) {
   }
   if (events.onTeleport) {
     Events.onTeleportSource[id] = events.onTeleport;
+  }
+  if (events.onSpawn) {
+    Events.onSpawnSource[id] = events.onSpawn;
   }
   if (events.onTurnStart) {
     Events.onTurnStartSource[id] = events.onTurnStart;
@@ -447,6 +453,7 @@ export function registerCards(overworld: Overworld) {
   registerBasePierce();
   registerBaseRadiusBoost();
   registerContaminateSelfOnTeleport();
+  registerCloneOnSpawn();
 
   registerImmune();
   registerImpendingDoom();
