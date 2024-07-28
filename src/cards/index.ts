@@ -167,6 +167,7 @@ import registerBasePierce from '../modifierBasePierce';
 import registerBaseRadiusBoost from '../modifierBaseRadiusBoost';
 import registerContaminateSelfOnTeleport from '../modifierContaminateSelfOnTeleport';
 import registerCloneOnSpawn from '../modifierCloneOnSpawn';
+import registerShieldBash from '../modifierShieldBash';
 
 
 export interface Modifiers {
@@ -456,6 +457,7 @@ export function registerCards(overworld: Overworld) {
   registerBaseRadiusBoost();
   registerContaminateSelfOnTeleport();
   registerCloneOnSpawn();
+  registerShieldBash();
 
   registerImmune();
   registerImpendingDoom();
@@ -466,8 +468,6 @@ export function registerCards(overworld: Overworld) {
   registerUrnPoisonExplode();
   registerUrnExplosiveExplode();
   registerDeathmasonEvents();
-
-
 }
 
 // This is necessary because unit stats change with difficulty.
