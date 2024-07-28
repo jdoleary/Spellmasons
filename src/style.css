@@ -2111,14 +2111,17 @@ body.view-Game.showUpgrades #perkList.visible {
   width: 100%;
 }
 
+.pick-stats h2 {
+  padding-left: 8px;
+}
+
 .stat-row-holder {
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 10%;
 }
 
 .stat-row {
-  width: 43%;
   gap: 8px;
   justify-content: space-between;
   align-items: center;
@@ -2129,11 +2132,6 @@ body.view-Game.showUpgrades #perkList.visible {
   display: flex;
   gap: 8px;
   justify-content: flex-start;
-}
-
-.stat-row:nth-child(odd) {
-  width: 43%;
-  padding: 0 10% 0 2%;
 }
 
 .stat-row .description {
