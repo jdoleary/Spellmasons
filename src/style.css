@@ -2104,8 +2104,7 @@ body.view-Game.showUpgrades #perkList.visible {
 }
 
 #runes {
-  width: 90%;
-  margin: 0 auto;
+  width: 100%;
 }
 
 .pick-stats {
@@ -2119,20 +2118,51 @@ body.view-Game.showUpgrades #perkList.visible {
 }
 
 .stat-row {
-  width: 40%;
-  justify-content: flex-start;
+  width: 43%;
   gap: 8px;
+  justify-content: space-between;
   align-items: center;
   padding: 4px;
 }
 
+.stat-row-left {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;
+}
+
 .stat-row:nth-child(odd) {
-  width: 48%;
-  padding-right: 7%;
+  width: 43%;
+  padding: 0 10% 0 2%;
 }
 
 .stat-row .description {
   font-size: 0.7em;
+}
+
+.stat-row:hover .stat-lock {
+  visibility: visible;
+}
+
+.stat-row .stat-lock.locked {
+  visibility: visible;
+  opacity: 1.0;
+}
+
+.stat-row .stat-lock {
+  visibility: hidden;
+  width: 32px;
+  height: 32px;
+  opacity: 0.5;
+  background-image: url('/ui/icons/lock.png')
+}
+
+.stat-row .stat-lock:hover {
+  opacity: 1.0;
+}
+
+.stat-row .stat-lock.locked {
+  background-image: url('/ui/icons/lock-active.png')
 }
 
 .stat-value {
@@ -2631,7 +2661,6 @@ body.dragging-card .floating-card-holder .empty-slot {
 
 #runes h2 {
   margin: 0;
-
 }
 
 #inspector-tooltip-content .tooltip-modifier-row {
@@ -2651,5 +2680,3 @@ body.dragging-card .floating-card-holder .empty-slot {
 #inspector-tooltip-content .tooltip-modifier-key.blessing {
   color: rgb(255, 232, 101);
 }
-
-color: purple;

@@ -35,7 +35,7 @@ import seedrandom from 'seedrandom';
 import { getUniqueSeedString, SeedrandomState } from '../jmath/rand';
 import { setPlayerNameUI } from '../PlayerUtils';
 import { GameMode } from '../types/commonTypes';
-import { recalcPositionForCards } from '../graphics/ui/CardUI';
+import { recalcPositionForCards, renderRunesMenu } from '../graphics/ui/CardUI';
 import { isSinglePlayer } from './wsPieSetup';
 import { elEndTurnBtn } from '../HTMLElements';
 import { sendEventToServerHub } from '../RemoteLogging';
@@ -240,7 +240,27 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         } else {
           console.error('Missing stat in payload', payload);
         }
-
+        break;
+      }
+    case MESSAGE_TYPES.LOCK_RUNE:
+      {
+        const { key } = payload;
+        debugger;
+        if (key) {
+          if (fromPlayer) {
+            const preexistingIndex = fromPlayer.lockedRunes.indexOf(key);
+            if (preexistingIndex !== -1) {
+              fromPlayer.lockedRunes.splice(preexistingIndex, 1);
+            } else {
+              fromPlayer.lockedRunes.push(key);
+            }
+            renderRunesMenu(underworld);
+          } else {
+            console.error('LOCK_RUNE, missing fromPlayer', fromClient);
+          }
+        } else {
+          console.error('Missing LOCK_RUNE key in payload', payload);
+        }
         break;
       }
     case MESSAGE_TYPES.PING:

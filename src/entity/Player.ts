@@ -86,6 +86,7 @@ export interface IPlayer {
   stats: Stats;
   cursesChosen: number;
   statPointsUnspent: number;
+  lockedRunes: string[];
 }
 export function inPortal(player: IPlayer): boolean {
   // Note: Even though inPortal can be determined by player.isSpawned,
@@ -142,6 +143,7 @@ export function create(clientId: string, playerId: string, underworld: Underworl
     },
     // backfill stat upgrades for players who join late
     statPointsUnspent: Math.max(0, underworld.levelIndex) * config.STAT_POINTS_PER_LEVEL,
+    lockedRunes: []
   };
   player.unit.originalLife = true;
   // Player units get full mana every turn

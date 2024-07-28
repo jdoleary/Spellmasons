@@ -35,6 +35,7 @@ export enum MESSAGE_TYPES {
   SET_MODS,
   SET_GAME_MODE,
   CHOOSE_RUNE,
+  LOCK_RUNE,
   FORCE_TRIGGER_PICKUP,
   PREVENT_IDLE_TIMEOUT,
   // Could add typing indicator in future

@@ -475,22 +475,25 @@ export function renderRunesMenu(underworld: Underworld) {
     return;
   }
   const statPoints = underworld.perksLeftToChoose(globalThis.player);
-  const elStatUpgradeRow = (stat: string) => {
+  const elStatUpgradeRow = (modifierKey: string) => {
     if (!globalThis.player) {
       return '';
     }
-    const modifier = Cards.allModifiers[stat]
+    const modifier = Cards.allModifiers[modifierKey]
 
-    return `<div class="stat-row flex" data-stat="${stat}">
-              <div class="plus-btn-container" style="color:black"><div class="stat-value" style="color:black">${modifier?.costPerUpgrade || '&nbsp;'}</div></div>
-              <div>
-                <div class="rune-name" style="color:black">
-                ${stat || ''} ${globalThis.player.unit.modifiers[stat]?.quantity || ''}
-                </div>
-                <div class="description" style="color:black">
-                ${Cards.allModifiers[stat]?.description}
+    return `<div class="stat-row flex" data-stat="${modifierKey}">
+              <div class="stat-row-left">
+                <div class="plus-btn-container" style="color:black"><div class="stat-value" style="color:black">${modifier?.costPerUpgrade || '&nbsp;'}</div></div>
+                <div>
+                  <div class="rune-name" style="color:black">
+                  ${modifierKey || ''} ${globalThis.player.unit.modifiers[modifierKey]?.quantity || ''}
+                  </div>
+                  <div class="description" style="color:black">
+                  ${Cards.allModifiers[modifierKey]?.description}
+                  </div>
                 </div>
               </div>
+              <div class="stat-lock ${globalThis.player.lockedRunes.includes(modifierKey) ? 'locked' : ''}" data-key="${modifierKey}"></div>
             </div>`;
   }
   elRunes.innerHTML = `
@@ -602,6 +605,15 @@ export function renderRunesMenu(underworld: Underworld) {
         playSFXKey('click');
         updateRuneName(false);
       });
+      const elLock = el.querySelector('.stat-lock');
+      if (elLock) {
+        elLock.addEventListener('click', () => {
+          underworld.pie.sendData({
+            type: MESSAGE_TYPES.LOCK_RUNE,
+            key: (elLock as HTMLElement).dataset.key
+          });
+        })
+      }
 
       // Exception: Show cast range when hovered
       if (stat == 'Cast Range') {
