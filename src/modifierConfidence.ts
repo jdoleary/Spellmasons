@@ -23,6 +23,15 @@ export default function registerConfidence() {
     onTakeDamage: (unit: Unit.IUnit, amount: number, underworld: Underworld, prediction: boolean, damageDealer?: Unit.IUnit) => {
       // Melee units have to consider maxStamina as part of their range or else this modifier would have virtually no effect
       const range = unit.unitSubType === UnitSubType.MELEE ? unit.staminaMax + unit.attackRange : unit.attackRange;
+      // No effect if attackRange is 0
+      // This is a special handled case for Pacified melee units
+      // since Pacify (or other spells that affect attack range) lowers melee 
+      // attackRange but not stamina and with an attack range of 0 no red circle appears
+      // and since this modifier uses stamina + attack range, to be visually consistent
+      // units with stamina but no attack range shouldn't benefit from this modifier
+      if (unit.attackRange === 0) {
+        return amount;
+      }
       const nearbyAllies = underworld.units.filter(u => u.faction == unit.faction && distance(u, unit) <= range)
       const reductionAmount = (nearbyAllies.length * reductionProportion)
       // Cannot be below 0 (must still be damage, not healing)
