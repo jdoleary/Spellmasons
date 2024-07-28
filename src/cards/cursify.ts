@@ -11,7 +11,9 @@ const spell: Spell = {
     manaCost: 30,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.RARE],
+    // Forbidden because it is SO powerful when used on
+    // minibosses and with it's synergies
+    probability: probabilityMap[CardRarity.FORBIDDEN],
     thumbnail: 'spellIconCursify.png',
     description: ['Designates target\'s blessings as curses.  Does not change the functionality of the blessings.'],
     effect: async (state, card, quantity, underworld, prediction) => {
