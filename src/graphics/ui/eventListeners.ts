@@ -815,7 +815,8 @@ export function clickHandler(overworld: Overworld, e: MouseEvent) {
         // Ensure that last card doesn't require a following card
         // If it does, warn the player that their card order won't do what
         // they are expecting it to do
-        const lastCard = cards[cards.length - 1];
+        const nonFrontloadCards = cards.filter(c => !c.frontload)
+        const lastCard = nonFrontloadCards[nonFrontloadCards.length - 1];
         if (lastCard && lastCard.requiresFollowingCard) {
           floatingText({
             coords: target,

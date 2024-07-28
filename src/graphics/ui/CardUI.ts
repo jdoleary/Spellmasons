@@ -756,7 +756,12 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
     addListenersToCardElement(player, clone, cardId, underworld);
     clone.classList.add('selected');
     if (card.requiresFollowingCard) {
-      clone.classList.add('requires-following-card')
+      const selectedCards = getSelectedCards();
+      // Show that you need a non frontload card for the spell to work
+      // only if there isn't any frontload card selected
+      if (selectedCards.filter(c => !c.frontload).length == 0) {
+        clone.classList.add('requires-following-card')
+      }
     }
     elSelectedCards.appendChild(clone);
     manageSelectedCardsParentVisibility();
