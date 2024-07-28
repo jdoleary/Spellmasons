@@ -40,11 +40,14 @@ export default function registerSlime() {
         return;
       }
       await animateMitosis(unit.image);
-      const clone = doCloneUnit(unit, underworld, prediction);
-      if (clone) {
-        floatingText({ coords: unit, text: slimeId, prediction });
-        // Only the source unit maintains slimeId or else it gets exponential
-        Unit.removeModifier(clone, slimeId, underworld)
+      floatingText({ coords: unit, text: slimeId, prediction });
+      const modifier = unit.modifiers[slimeId];
+      for (let i = 0; i < (modifier?.quantity || 1); i++) {
+        const clone = doCloneUnit(unit, underworld, prediction);
+        if (clone) {
+          // Only the source unit maintains slimeId or else it gets exponential
+          Unit.removeModifier(clone, slimeId, underworld)
+        }
       }
     }
   });
