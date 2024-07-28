@@ -244,15 +244,14 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
       }
     case MESSAGE_TYPES.LOCK_RUNE:
       {
-        const { key } = payload;
-        debugger;
+        const { key, index } = payload;
         if (key) {
           if (fromPlayer) {
-            const preexistingIndex = fromPlayer.lockedRunes.indexOf(key);
+            const preexistingIndex = fromPlayer.lockedRunes.findIndex(lr => lr.key === key);
             if (preexistingIndex !== -1) {
               fromPlayer.lockedRunes.splice(preexistingIndex, 1);
             } else {
-              fromPlayer.lockedRunes.push(key);
+              fromPlayer.lockedRunes.push({ index, key });
             }
             renderRunesMenu(underworld);
           } else {

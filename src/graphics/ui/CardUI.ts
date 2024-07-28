@@ -17,6 +17,8 @@ import { Overworld } from '../../Overworld';
 import { resetNotifiedImmune } from '../../cards/immune';
 import { keyDown } from './eventListeners';
 import { chooseBookmark } from '../../views';
+import { chooseOneOfSeeded, getUniqueSeedString } from '../../jmath/rand';
+import seedrandom from 'seedrandom';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
@@ -474,6 +476,28 @@ export function renderRunesMenu(underworld: Underworld) {
     console.error("Cannot render runesMenu, no globalThis.player");
     return;
   }
+  let listOfRemainingRunesToChoose = Object.entries(Cards.allModifiers).flatMap(([key, modifier]) => {
+    if (modifier.costPerUpgrade) {
+      return [{ key, ...modifier }];
+    } else {
+      return [];
+    }
+  });
+  const lockedRunes = listOfRemainingRunesToChoose.filter(r => globalThis.player?.lockedRunes.find(lr => r.key === lr.key));
+  // Remove lockedRunes from remaining
+  listOfRemainingRunesToChoose = listOfRemainingRunesToChoose.filter(r => !lockedRunes.includes(r));
+  const chosenRunes = [];
+  for (let i = 0; i < config.RUNES_PER_LEVEL; i++) {
+    const seed = seedrandom(getUniqueSeedString(underworld, globalThis.player) + `-${i}`);
+    // This must trigger for every i or else runes will change when a different rune is locked
+    const newRune = chooseOneOfSeeded(listOfRemainingRunesToChoose, seed);
+    // If a rune has been locked in this index, choose it; otherwise choose a seeded random rune
+    const previouslyLockedRune = globalThis.player.lockedRunes.find(lr => lr.index === i);
+    const chosen = previouslyLockedRune ? previouslyLockedRune : newRune;
+    // Remove chosen from list
+    listOfRemainingRunesToChoose = listOfRemainingRunesToChoose.filter(x => x !== chosen);
+    chosenRunes.push(chosen);
+  }
   const statPoints = underworld.perksLeftToChoose(globalThis.player);
   const elStatUpgradeRow = (modifierKey: string) => {
     if (!globalThis.player) {
@@ -493,7 +517,7 @@ export function renderRunesMenu(underworld: Underworld) {
                   </div>
                 </div>
               </div>
-              <div class="stat-lock ${globalThis.player.lockedRunes.includes(modifierKey) ? 'locked' : ''}" data-key="${modifierKey}"></div>
+              <div class="stat-lock ${globalThis.player.lockedRunes.find(r => r.key === modifierKey) ? 'locked' : ''}" data-key="${modifierKey}"></div>
             </div>`;
   }
   elRunes.innerHTML = `
@@ -501,18 +525,12 @@ export function renderRunesMenu(underworld: Underworld) {
   <div class="card-inner flex" style="color:black">
   <h2>Skill Points: ${statPoints}</h2>
   <div class="stat-row-holder">
-  ${Object.entries(Cards.allModifiers).flatMap(([key, modifier]) => {
-    if (modifier.costPerUpgrade) {
-      return [elStatUpgradeRow(key)];
-    } else {
-      return [];
-    }
-  }).join('')}
+  ${chosenRunes.flatMap(r => r ? [elStatUpgradeRow(r.key)] : []).join('')}
+</div>
   </div>
-  </div>
-</div>`;
+  </div>`;
 
-  elRunes.querySelectorAll('.stat-row').forEach(el => {
+  elRunes.querySelectorAll('.stat-row').forEach((el, index) => {
     const stat = (el as HTMLElement).dataset.stat;
     if (!stat) {
       return
@@ -610,7 +628,8 @@ export function renderRunesMenu(underworld: Underworld) {
         elLock.addEventListener('click', () => {
           underworld.pie.sendData({
             type: MESSAGE_TYPES.LOCK_RUNE,
-            key: (elLock as HTMLElement).dataset.key
+            key: (elLock as HTMLElement).dataset.key,
+            index
           });
         })
       }
