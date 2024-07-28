@@ -8,7 +8,7 @@ import Underworld from './Underworld';
 export const cloneOnSpawnId = 'Clone on Spawn';
 export default function registerContaminateSelfOnTeleport() {
   registerModifiers(cloneOnSpawnId, {
-    description: 'Casts "Contaminate" on self when teleporting',
+    description: 'Clone self on spawn',
     costPerUpgrade: 100,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, cloneOnSpawnId, { isCurse: false, quantity, keepOnDeath: true }, () => {
