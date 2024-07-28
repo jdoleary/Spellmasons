@@ -907,7 +907,7 @@ interface damageArgs {
 
 // damageFromVec2 is the location that the damage came from and is used for blood splatter
 export function takeDamage(damageArgs: damageArgs, underworld: Underworld, prediction: boolean) {
-  let { unit, amount, sourceUnit, fromVec2, thinBloodLine } = damageArgs;
+  let { unit, sourceUnit, fromVec2, thinBloodLine } = damageArgs;
   if (!unit.alive) {
     // Do not deal damage to dead units
     return;
@@ -917,8 +917,9 @@ export function takeDamage(damageArgs: damageArgs, underworld: Underworld, predi
     immune.notifyImmune(unit, false);
     return
   }
-  amount = composeOnDealDamageEvents(damageArgs, underworld, prediction);
-  amount = composeOnTakeDamageEvents(damageArgs, underworld, prediction);
+  damageArgs.amount = composeOnDealDamageEvents(damageArgs, underworld, prediction);
+  damageArgs.amount = composeOnTakeDamageEvents(damageArgs, underworld, prediction);
+  let amount = damageArgs.amount;
   if (amount == 0) {
     // Even though damage is 0, sync the player UI in the event that
     // the damage took down shield/mana barrier/etc.
