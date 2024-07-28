@@ -982,6 +982,18 @@ export function takeDamage(damageArgs: damageArgs, underworld: Underworld, predi
   // If taking damage (not healing) and health is 0 or less...
   if (amount > 0 && unit.health <= 0) {
     die(unit, underworld, prediction);
+    // Run onKill events for the sourceUnit of the lethal damage
+    const sourceUnit = damageArgs.sourceUnit;
+    if (sourceUnit) {
+      for (let eventName of sourceUnit.events) {
+        if (eventName) {
+          const fn = Events.onKillSource[eventName];
+          if (fn) {
+            fn(sourceUnit, unit, underworld, prediction);
+          }
+        }
+      }
+    }
   }
 
   if (unit.modifiers[suffocateCardId]) {

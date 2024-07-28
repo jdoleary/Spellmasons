@@ -17,6 +17,11 @@ export type onTakeDamage = {
 };
 const onTakeDamageSource: { [name: string]: onTakeDamage } = {};
 
+export type onKill = {
+  (unit: IUnit, killedUnit: IUnit, underworld: Underworld, prediction: boolean): Promise<void>;
+};
+const onKillSource: { [name: string]: onKill } = {};
+
 export type onDeath = {
   (unit: IUnit, underworld: Underworld, prediction: boolean): Promise<void>;
 };
@@ -66,6 +71,7 @@ export default {
   onAgroSource,
   onDealDamageSource,
   onTakeDamageSource,
+  onKillSource,
   onDeathSource,
   onMoveSource,
   onTurnStartSource,

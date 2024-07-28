@@ -5,6 +5,7 @@ import type { Vec2 } from '../jmath/Vec';
 import Events, {
   onDealDamage,
   onTakeDamage,
+  onKill,
   onDeath,
   onMove,
   onAgro,
@@ -13,7 +14,7 @@ import Events, {
   onDrawSelected,
   onProjectileCollision,
   onTeleport,
-  onSpawn
+  onSpawn,
 } from '../Events';
 import Subsprites, { Subsprite } from '../Subsprites';
 // Register spells:
@@ -197,6 +198,7 @@ export interface Events {
   id?: string;
   onDealDamage?: onDealDamage;
   onTakeDamage?: onTakeDamage;
+  onKill?: onKill;
   onDeath?: onDeath;
   onMove?: onMove;
   onTeleport?: onTeleport;
@@ -236,6 +238,9 @@ export function registerEvents(id: string, events: Events) {
   }
   if (events.onTakeDamage) {
     Events.onTakeDamageSource[id] = events.onTakeDamage;
+  }
+  if (events.onKill) {
+    Events.onKillSource[id] = events.onKill;
   }
   if (events.onDeath) {
     Events.onDeathSource[id] = events.onDeath;
