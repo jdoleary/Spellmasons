@@ -751,6 +751,14 @@ export function resurrect(unit: IUnit, underworld: Underworld) {
     removeModifier(unit, primedCorpseId, underworld);
   }
   returnToDefaultSprite(unit);
+  // Unhide subsprites on resurrect
+  for (let subsprite of unit.image?.sprite.children || []) {
+    // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
+    // which is used for identifying the sprite or animation that is currently active
+    if (subsprite.imagePath) {
+      subsprite.visible = true;
+    }
+  }
 }
 export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   if (!unit.alive) {
@@ -828,6 +836,15 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   for (let [modifier, modifierProperties] of Object.entries(unit.modifiers)) {
     if (!modifierProperties.keepOnDeath) {
       removeModifier(unit, modifier, underworld);
+    }
+  }
+
+  // Hide subsprites on death
+  for (let subsprite of unit.image?.sprite.children || []) {
+    // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
+    // which is used for identifying the sprite or animation that is currently active
+    if (subsprite.imagePath) {
+      subsprite.visible = false;
     }
   }
 
