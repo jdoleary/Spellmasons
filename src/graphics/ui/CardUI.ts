@@ -483,20 +483,21 @@ export function renderRunesMenu(underworld: Underworld) {
       return [];
     }
   });
-  const lockedRunes = listOfRemainingRunesToChoose.filter(r => globalThis.player?.lockedRunes.find(lr => r.key === lr.key));
-  // Remove lockedRunes from remaining
-  listOfRemainingRunesToChoose = listOfRemainingRunesToChoose.filter(r => !lockedRunes.includes(r));
-  const chosenRunes = [];
+  const chosenRunes: ({ key: string } & Cards.Modifiers)[] = [];
   for (let i = 0; i < config.RUNES_PER_LEVEL; i++) {
-    const seed = seedrandom(getUniqueSeedString(underworld, globalThis.player) + `-${i}`);
-    // This must trigger for every i or else runes will change when a different rune is locked
-    const newRune = chooseOneOfSeeded(listOfRemainingRunesToChoose, seed);
-    // If a rune has been locked in this index, choose it; otherwise choose a seeded random rune
-    const previouslyLockedRune = globalThis.player.lockedRunes.find(lr => lr.index === i);
-    const chosen = previouslyLockedRune ? previouslyLockedRune : newRune;
-    // Remove chosen from list
-    listOfRemainingRunesToChoose = listOfRemainingRunesToChoose.filter(x => x !== chosen);
-    chosenRunes.push(chosen);
+    let chosen;
+    // Give a number of attempts to find a non duplicate rune
+    for (let attempt = 0; attempt < 100; attempt++) {
+      const seed = seedrandom(getUniqueSeedString(underworld, globalThis.player) + `-${i}`);
+      // If a rune has been locked in this index, choose it; otherwise choose a seeded random rune
+      const previouslyLockedRune = globalThis.player.lockedRunes.find(lr => lr.index === i);
+      chosen = previouslyLockedRune ? previouslyLockedRune : chooseOneOfSeeded(listOfRemainingRunesToChoose, seed);
+      if (chosen && !chosenRunes.includes(chosen)) {
+        // Found a unique rune
+        chosenRunes.push(chosen);
+        break;
+      }
+    }
   }
   const statPoints = underworld.perksLeftToChoose(globalThis.player);
   const elStatUpgradeRow = (modifierKey: string) => {
