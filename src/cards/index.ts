@@ -169,6 +169,7 @@ import registerBaseRadiusBoost from '../modifierBaseRadiusBoost';
 import registerContaminateSelfOnTeleport from '../modifierContaminateSelfOnTeleport';
 import registerCloneOnSpawn from '../modifierCloneOnSpawn';
 import registerShieldBash from '../modifierShieldBash';
+import registerOnKillMana from '../modifierOnKillMana';
 
 
 export interface Modifiers {
@@ -463,6 +464,7 @@ export function registerCards(overworld: Overworld) {
   registerContaminateSelfOnTeleport();
   registerCloneOnSpawn();
   registerShieldBash();
+  registerOnKillMana();
 
   registerImmune();
   registerImpendingDoom();
