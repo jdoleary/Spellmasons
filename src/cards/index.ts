@@ -147,7 +147,12 @@ import registerTargetImmune, { targetImmuneId } from '../modifierTargetImmune';
 import registerGrowth from '../modifierGrowth';
 import registerModifierStatUpgrades from '../modifierStatUpgrades';
 import registerEndlessQuiver from '../modifierEndlessQuiver';
-import registerBlessingAffinity from '../modifierBlessingAffinity';
+import registerAffinityBlessing from '../modifierAffinityBlessing';
+import registerAffinityCurse from '../modifierAffinityCurse';
+import registerAffinityDamage from '../modifierAffinityDamage';
+import registerAffinityMovement from '../modifierAffinityMovement';
+import registerAffinitySoul from '../modifierAffinitySoul';
+import registerAffinityTargeting from '../modifierAffinityTargeting';
 import registerFarGazerRune from '../modifierFarGazer';
 import registerGamblerRune from '../modifierGambler';
 import registerNecromancerRune from '../modifierNecromancer';
@@ -449,12 +454,18 @@ export function registerCards(overworld: Overworld) {
 
   registerNecromancerRune();
   registerWitchRune();
-  registerBlessingAffinity();
   registerEndlessQuiver();
   registerTimemasonRune();
   registerFarGazerRune();
   registerGamblerRune();
   registerLiquidmancer();
+
+  registerAffinityBlessing();
+  registerAffinityCurse();
+  registerAffinityDamage();
+  registerAffinityMovement();
+  registerAffinitySoul();
+  registerAffinityTargeting();
 
   registerSelfInvulnerability();
   registerArmor();

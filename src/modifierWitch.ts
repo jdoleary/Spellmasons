@@ -5,12 +5,12 @@ import Underworld from './Underworld';
 import * as Upgrade from './Upgrade';
 import { contaminate_id } from './cards/contaminate';
 
+// Grants a cheaper/empowered contaminate
 export const runeWitchId = 'Witch';
-
 export default function registerWitch() {
   registerModifiers(runeWitchId, {
-    description: i18n('class_witch'),
-    costPerUpgrade: 140,
+    description: i18n('Grants an empowered contaminate spell'),
+    costPerUpgrade: 100,
     maxUpgradeCount: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       const player = underworld.players.find(p => p.unit == unit);
@@ -20,7 +20,7 @@ export default function registerWitch() {
           if (upgrade) {
             underworld.forceUpgrade(player, upgrade, true);
           } else {
-            console.error('Could not find arrow upgrade for Archer rune');
+            console.error('Could not find contaminate upgrade for Witch rune');
           }
         });
       } else {
