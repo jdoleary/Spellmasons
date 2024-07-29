@@ -170,6 +170,8 @@ import registerContaminateSelfOnTeleport from '../modifierContaminateSelfOnTelep
 import registerCloneOnSpawn from '../modifierCloneOnSpawn';
 import registerShieldBash from '../modifierShieldBash';
 import registerOnKillMana from '../modifierOnKillMana';
+import registerBounty from '../modifierBounty';
+import registerBountyHunter from '../modifierBountyHunter';
 
 
 export interface Modifiers {
@@ -465,6 +467,9 @@ export function registerCards(overworld: Overworld) {
   registerCloneOnSpawn();
   registerShieldBash();
   registerOnKillMana();
+
+  registerBounty();
+  registerBountyHunter();
 
   registerImmune();
   registerImpendingDoom();

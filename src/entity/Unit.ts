@@ -50,6 +50,7 @@ import { undyingModifierId } from '../modifierUndying';
 import { primedCorpseId } from '../modifierPrimedCorpse';
 import { chooseObjectWithProbability } from '../jmath/rand';
 import { ANCIENT_UNIT_ID } from './units/ancient';
+import { bountyId } from '../modifierBounty';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -994,6 +995,11 @@ export function takeDamage(damageArgs: damageArgs, underworld: Underworld, predi
         }
       }
     }
+
+    // Special case: Bounty modifier persists on death and is removed AFTER onKill events run
+    if (unit.modifiers[bountyId]) {
+      removeModifier(unit, bountyId, underworld);
+    }
   }
 
   if (unit.modifiers[suffocateCardId]) {
@@ -1785,7 +1791,7 @@ export function resetUnitStats(unit: IUnit, underworld: Underworld) {
   // on infinite mana
   Object.keys(unit.modifiers).forEach(modifierKey => {
     const modifier = unit.modifiers[modifierKey];
-    if (modifier) {
+    if (modifier && !modifier.keepBetweenLevels) {
       removeModifier(unit, modifierKey, underworld);
     }
   });

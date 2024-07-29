@@ -114,6 +114,8 @@ import { manaBarrierId, updateTooltip } from './modifierManaBarrier';
 import { modifierBaseBounceId } from './modifierBaseBounce';
 import { modifierBasePierceId } from './modifierBasePierce';
 import { modifierBaseRadiusBoostId } from './modifierBaseRadiusBoost';
+import { bountyHunterId } from './modifierBountyHunter';
+import { bountyId } from './modifierBounty';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -2126,8 +2128,21 @@ export default class Underworld {
         console.error('Could not find pickup source with index', p.index);
       }
     }
+
     for (let e of enemies) {
       this.spawnEnemy(e.id, e.coord, e.isMiniboss);
+    }
+    // if any players have the bounty hunter modifier, add a bounty to a random unit's head at the start of level
+    // to get a bounty, a unit must be alive, in the enemy faction, not a doodad, and not yet have a bounty
+    if (this.players.some(p => p.unit.modifiers[bountyHunterId])) {
+      let units = this.units;
+      units = units.filter(u => u.alive && (u.faction == Faction.ENEMY) && (u.unitSubType != UnitSubType.DOODAD) && !u.modifiers[bountyId]);
+      if (units.length > 0) {
+        const chosenUnit = units[randInt(0, units.length - 1)];
+        if (chosenUnit) {
+          Unit.addModifier(chosenUnit, bountyId, this, false);
+        }
+      }
     }
 
     // Show text in center of screen for the new level
