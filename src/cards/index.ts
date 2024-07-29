@@ -176,6 +176,7 @@ import registerBountyRestoreHealth from '../modifierBountyRestoreHealth';
 import registerBountyRestoreStamina from '../modifierBountyRestoreStamina';
 import registerBountyRestoreMana from '../modifierBountyRestoreMana';
 import registerBountyDamage from '../modifierBountyDamage';
+import registerLiquidmancer from '../modifierLiquidmancer';
 
 
 export interface Modifiers {
@@ -453,6 +454,7 @@ export function registerCards(overworld: Overworld) {
   registerTimemasonRune();
   registerFarGazerRune();
   registerGamblerRune();
+  registerLiquidmancer();
 
   registerSelfInvulnerability();
   registerArmor();
