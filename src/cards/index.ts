@@ -172,6 +172,10 @@ import registerShieldBash from '../modifierShieldBash';
 import registerOnKillMana from '../modifierOnKillMana';
 import registerBounty from '../modifierBounty';
 import registerBountyHunter from '../modifierBountyHunter';
+import registerBountyRestoreHealth from '../modifierBountyRestoreHealth';
+import registerBountyRestoreStamina from '../modifierBountyRestoreStamina';
+import registerBountyRestoreMana from '../modifierBountyRestoreMana';
+import registerBountyDamage from '../modifierBountyDamage';
 
 
 export interface Modifiers {
@@ -470,6 +474,10 @@ export function registerCards(overworld: Overworld) {
 
   registerBounty();
   registerBountyHunter();
+  registerBountyRestoreHealth();
+  registerBountyRestoreStamina();
+  registerBountyRestoreMana();
+  registerBountyDamage();
 
   registerImmune();
   registerImpendingDoom();
