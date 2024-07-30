@@ -483,18 +483,17 @@ export function renderRunesMenu(underworld: Underworld) {
       return [];
     }
   })
-    // Filter out lockedRunes so you don't get duplicates
-    .filter(x => !globalThis.player?.lockedRunes.find(lr => lr.key === x.key))
-  const chosenRunes: ({ key: string } & Cards.Modifiers)[] = [];
+  // Start with lockedRunes as chosenRunes so they don't get offered in another place as a duplicate
+  const chosenRunes: string[] = []
   for (let i = 0; i < config.RUNES_PER_LEVEL; i++) {
-    let chosen;
+    let chosen: string | undefined;
     // Give a number of attempts to find a non duplicate rune
     for (let attempt = 0; attempt < 100; attempt++) {
-      const seed = seedrandom(getUniqueSeedString(underworld, globalThis.player) + `-${i}`);
+      const seed = seedrandom(getUniqueSeedString(underworld, globalThis.player) + `-${i}-${attempt}`);
       // If a rune has been locked in this index, choose it; otherwise choose a seeded random rune
       const previouslyLockedRune = globalThis.player.lockedRunes.find(lr => lr.index === i);
-      chosen = previouslyLockedRune ? previouslyLockedRune : chooseOneOfSeeded(listOfRemainingRunesToChoose, seed);
-      if (chosen && !chosenRunes.includes(chosen)) {
+      chosen = previouslyLockedRune ? previouslyLockedRune.key : chooseOneOfSeeded(listOfRemainingRunesToChoose, seed)?.key;
+      if (chosen && !chosenRunes.find(cr => cr === chosen)) {
         // Found a unique rune
         chosenRunes.push(chosen);
         break;
@@ -528,7 +527,7 @@ export function renderRunesMenu(underworld: Underworld) {
   <div class="card-inner flex" style="color:black">
   <h2>Skill Points: ${statPoints}</h2>
   <div class="stat-row-holder">
-  ${chosenRunes.flatMap(r => r ? [elStatUpgradeRow(r.key)] : []).join('')}
+  ${chosenRunes.flatMap(key => key ? [elStatUpgradeRow(key)] : []).join('')}
 </div>
   </div>
   </div>`;
