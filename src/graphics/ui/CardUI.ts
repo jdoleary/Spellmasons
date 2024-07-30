@@ -482,7 +482,9 @@ export function renderRunesMenu(underworld: Underworld) {
     } else {
       return [];
     }
-  });
+  })
+    // Filter out lockedRunes so you don't get duplicates
+    .filter(x => !globalThis.player?.lockedRunes.find(lr => lr.key === x.key))
   const chosenRunes: ({ key: string } & Cards.Modifiers)[] = [];
   for (let i = 0; i < config.RUNES_PER_LEVEL; i++) {
     let chosen;
