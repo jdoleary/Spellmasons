@@ -21,6 +21,7 @@ import { affinityTargeting } from "../modifierAffinityTargeting";
 import { affinitySoulId } from "../modifierAffinitySoul";
 import { contaminate_id } from "./contaminate";
 import { runeWitchId } from "../modifierWitch";
+import { inexhaustibleId } from "../modifierInexhaustible";
 export interface CardCost {
     manaCost: number;
     healthCost: number;
@@ -146,6 +147,18 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
 
     // Handle unique changes due to player mageType
     if (caster) {
+        // Prevents expense scaling: Spells will not increase in mana cost with usage
+        // Must be done before other cost changes
+        if (caster.unit.modifiers[endlessQuiverId] && card.id.toLowerCase().includes('arrow')) {
+            // Freeze mana cost for arrows
+            cardCost.manaCost = card.manaCost;
+        }
+        if (card.category == CardCategory.Movement && caster.unit.modifiers[inexhaustibleId]) {
+            // Freeze mana cost for movement spells
+            cardCost.manaCost = card.manaCost;
+        }
+
+        // Bloodmason
         if (caster.unit.modifiers['Bloodmason']) {
             if (card.id === lastWill.id) {
                 // Just for fun, allow Bloodmason to still cast lastWill at a cost of 50%
@@ -195,12 +208,6 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
         }
         if (card.category == CardCategory.Targeting && caster.unit.modifiers[affinityTargeting]) {
             cardCost.manaCost = Math.floor(cardCost.manaCost * (1 - (0.01 * caster.unit.modifiers[affinityTargeting].quantity)));
-        }
-
-        // Prevents expense scaling: Spells will not increase in mana cost
-        if (caster.unit.modifiers[endlessQuiverId] && card.id.toLowerCase().includes('arrow')) {
-            // Freeze mana cost for arrows
-            cardCost.manaCost = card.manaCost;
         }
     }
 
