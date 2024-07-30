@@ -185,6 +185,7 @@ import registerBountyRestoreMana from '../modifierBountyRestoreMana';
 import registerBountyDamage from '../modifierBountyDamage';
 import registerLiquidmancer from '../modifierLiquidmancer';
 import registerHeavyImpacts from '../modifierHeavyImpact';
+import registerPotionEffectiveness from '../modifierPotionEffectiveness';
 import registerPotionBarrier from '../modifierPotionBarrier';
 
 
@@ -502,6 +503,7 @@ export function registerCards(overworld: Overworld) {
   registerBountyRestoreMana();
   registerBountyDamage();
 
+  registerPotionEffectiveness();
   registerPotionBarrier();
 
   registerImmune();

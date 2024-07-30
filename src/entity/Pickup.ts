@@ -372,8 +372,8 @@ export function removePickup(pickup: IPickup, underworld: Underworld, prediction
 export function triggerPickup(pickup: IPickup, unit: IUnit, player: Player.IPlayer | undefined, underworld: Underworld, prediction: boolean) {
   const willTrigger = !pickup.flaggedForRemoval && unit.alive && pickup.willTrigger({ unit, player, pickup, underworld });
   if (willTrigger) {
-    pickup.effect({ unit, player, pickup, underworld, prediction });
     runPickupEvents(unit, pickup, underworld, prediction);
+    pickup.effect({ unit, player, pickup, underworld, prediction });
     removePickup(pickup, underworld, prediction);
     // Now that the players attributes may have changed, sync UI
     syncPlayerHealthManaUI(underworld);
