@@ -15,6 +15,7 @@ import Events, {
   onProjectileCollision,
   onTeleport,
   onSpawn,
+  onPickup,
 } from '../Events';
 import Subsprites, { Subsprite } from '../Subsprites';
 // Register spells:
@@ -184,6 +185,7 @@ import registerBountyRestoreMana from '../modifierBountyRestoreMana';
 import registerBountyDamage from '../modifierBountyDamage';
 import registerLiquidmancer from '../modifierLiquidmancer';
 import registerHeavyImpacts from '../modifierHeavyImpact';
+import registerPotionBarrier from '../modifierPotionBarrier';
 
 
 export interface Modifiers {
@@ -218,6 +220,7 @@ export interface Events {
   onMove?: onMove;
   onTeleport?: onTeleport;
   onSpawn?: onSpawn;
+  onPickup?: onPickup;
   onAgro?: onAgro;
   onTurnStart?: onTurnStart;
   onTurnEnd?: onTurnEnd;
@@ -268,6 +271,9 @@ export function registerEvents(id: string, events: Events) {
   }
   if (events.onSpawn) {
     Events.onSpawnSource[id] = events.onSpawn;
+  }
+  if (events.onPickup) {
+    Events.onPickupSource[id] = events.onPickup;
   }
   if (events.onTurnStart) {
     Events.onTurnStartSource[id] = events.onTurnStart;
@@ -495,6 +501,8 @@ export function registerCards(overworld: Overworld) {
   registerBountyRestoreStamina();
   registerBountyRestoreMana();
   registerBountyDamage();
+
+  registerPotionBarrier();
 
   registerImmune();
   registerImpendingDoom();

@@ -43,6 +43,11 @@ export type onTeleport = {
 };
 const onTeleportSource: { [name: string]: onTeleport } = {};
 
+export type onPickup = {
+  (unit: IUnit, pickup: IPickup, underworld: Underworld, prediction: boolean): Promise<void>;
+};
+const onPickupSource: { [name: string]: onPickup } = {};
+
 export type onAgro = {
   // Returns a possibly modified agroTarget
   (agroer: IUnit, agroTarget: IUnit): IUnit;
@@ -74,6 +79,7 @@ export default {
   onKillSource,
   onDeathSource,
   onMoveSource,
+  onPickupSource,
   onTurnStartSource,
   onTurnEndSource,
   onDrawSelectedSource,

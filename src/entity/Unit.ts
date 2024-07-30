@@ -51,6 +51,7 @@ import { primedCorpseId } from '../modifierPrimedCorpse';
 import { chooseObjectWithProbability } from '../jmath/rand';
 import { ANCIENT_UNIT_ID } from './units/ancient';
 import { bountyId } from '../modifierBounty';
+import { IPickup } from './Pickup';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -1471,6 +1472,17 @@ export async function runTurnEndEvents(unit: IUnit, underworld: Underworld, pred
       const fn = Events.onTurnEndSource[eventName];
       if (fn) {
         await fn(unit, underworld, prediction);
+      }
+    },
+  ));
+}
+
+export async function runPickupEvents(unit: IUnit, pickup: IPickup, underworld: Underworld, prediction: boolean) {
+  await Promise.all(unit.events.map(
+    async (eventName) => {
+      const fn = Events.onPickupSource[eventName];
+      if (fn) {
+        await fn(unit, pickup, underworld, prediction);
       }
     },
   ));
