@@ -8,7 +8,7 @@ export const liquidmancerId = 'Liquidmancer';
 export default function registerLiquidmancer() {
   registerModifiers(liquidmancerId, {
     description: 'All units take [quantity]% more damage from liquid',
-    costPerUpgrade: 80,
+    costPerUpgrade: 100,
     quantityPerUpgrade: 100,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, liquidmancerId, { isCurse: false, quantity, keepOnDeath: true }, () => {
