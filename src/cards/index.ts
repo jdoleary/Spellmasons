@@ -183,6 +183,7 @@ import registerBountyRestoreStamina from '../modifierBountyRestoreStamina';
 import registerBountyRestoreMana from '../modifierBountyRestoreMana';
 import registerBountyDamage from '../modifierBountyDamage';
 import registerLiquidmancer from '../modifierLiquidmancer';
+import registerHeavyImpacts from '../modifierHeavyImpact';
 
 
 export interface Modifiers {
@@ -461,6 +462,7 @@ export function registerCards(overworld: Overworld) {
   registerFarGazerRune();
   registerGamblerRune();
   registerLiquidmancer();
+  registerHeavyImpacts();
 
   registerAffinityBlessing();
   registerAffinityCurse();

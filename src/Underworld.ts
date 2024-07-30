@@ -116,6 +116,7 @@ import { modifierBasePierceId } from './modifierBasePierce';
 import { modifierBaseRadiusBoostId } from './modifierBaseRadiusBoost';
 import { bountyHunterId } from './modifierBountyHunter';
 import { bountyId } from './modifierBounty';
+import { heavyImpactsId } from './modifierHeavyImpact';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -429,28 +430,35 @@ export default class Underworld {
       const collision = handleWallCollision(forceMoveInst, this, deltaTime);
 
       if (collision.wall) {
-        // TODO - Due to different simulation speeds
-        // This will always have a very very small (<0.1%) margin of error
-        // which can cause a 1 damage difference between prediction/gameloop
-        // The fix would be to simulate forceMoves independent of deltaTime/fps
+        // The unit collided with a wall, now we check if it was a heavy impact
+        // Heavy impacts occur when a unit hits a wall at a high velocity
+        // Heavy impacts deal impact damage and can cause other effects
         const estimatedCollisionVelocity = Vec.multiply(Math.pow(velocity_falloff, collision.msUntilCollision), velocity);
-        const magnitude = Vec.magnitude(estimatedCollisionVelocity);
+        let magnitudeOfImpact = Vec.magnitude(estimatedCollisionVelocity);
 
-        // Requires at least 2 velocity for a heavy impact and
-        // smoothly deals 10 damage per velocity thereafter
-        const impactDamage = Math.floor((magnitude - 2) * 10);
-        // console.log("Impact Damage: ", impactDamage, prediction);
+        // Runes increase the magnitude of the impact:
+        let impactMultiplier = 1;
+        this.players.forEach(p => {
+          const heavyImpactModifier = p.unit.modifiers[heavyImpactsId];
+          if (heavyImpactModifier) {
+            impactMultiplier += 0.01 * heavyImpactModifier.quantity;
+          }
+        });
+        magnitudeOfImpact *= impactMultiplier;
 
-        // If impact damage > 0, we hit the wall hard enough for
-        // a "heavy impact", which stops the object and damages units
-        // otherwise, make the unit slide along the wall
-        if (impactDamage > 0) {
+        // Heavy Impact if magnitude > 2
+        if (magnitudeOfImpact > 2) {
+          // Calculate impact damage using magnitude
+          const impactDamage = Math.floor((magnitudeOfImpact - 2) * 10);
+
           if (Unit.isUnit(pushedObject)) {
             Unit.takeDamage({ unit: pushedObject, amount: impactDamage, fromVec2: Vec.add(pushedObject, { x: velocity.x, y: velocity.y }) }, this, prediction);
             if (!prediction) {
               floatingText({ coords: pushedObject, text: `${impactDamage} Impact damage!` });
             }
           }
+
+          // The unit stops against the wall
           velocity.x = 0;
           velocity.y = 0;
         } else {
