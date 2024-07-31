@@ -68,6 +68,9 @@ export function makeForceMoveProjectile(args: ForceMoveProjectileArgs, underworl
   // I've had feedback that it's suprising - which is bad for a tactical game
   // also I suspect it has significant performance costs for levels with many enemies
   const forceMoveInst: ForceMoveProjectile = { type: ForceMoveType.PROJECTILE, ...args };
+  // Limit bounces remaining until we can optimize:
+  // https://github.com/jdoleary/Spellmasons/issues/906
+  forceMoveInst.bouncesRemaining = Math.min(3, forceMoveInst.bouncesRemaining);
   underworld.addForceMove(forceMoveInst, prediction);
   return forceMoveInst;
 
