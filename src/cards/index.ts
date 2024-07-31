@@ -210,6 +210,8 @@ export interface Modifiers {
   quantityPerUpgrade?: number;
   // Upgrade can be purchased X times
   maxUpgradeCount?: number;
+  // Allows certain non-rune modifiers to persist between levels
+  keepBetweenLevels?: boolean;
 }
 export interface Events {
   // events that are not attached to a spell need an explicit id set

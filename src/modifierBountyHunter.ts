@@ -11,8 +11,9 @@ export const bountyHunterId = 'Bounty Hunter';
 export default function registerBountyHunter() {
   registerModifiers(bountyHunterId, {
     description: 'This unit can claim bounties. Bounties appear on turn start.',
+    keepBetweenLevels: true,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
-      const modifier = getOrInitModifier(unit, bountyHunterId, { isCurse: false, quantity, keepOnDeath: true, keepBetweenLevels: true }, () => {
+      const modifier = getOrInitModifier(unit, bountyHunterId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, bountyHunterId);
       });
     }

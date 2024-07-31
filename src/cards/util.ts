@@ -6,7 +6,6 @@ export interface Modifier {
     quantity: number;
     // If true, the modifier will not be removed from the unit on death 
     keepOnDeath?: boolean;
-    keepBetweenLevels?: boolean;
 }
 // Returns the unit's modifier object for a given key
 // Will initialize a modifier if it doesn't currently exist

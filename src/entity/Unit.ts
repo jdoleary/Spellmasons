@@ -393,8 +393,8 @@ export function addModifier(unit: IUnit, key: string, underworld: Underworld, pr
 
 export function removeModifier(unit: IUnit, key: string, underworld: Underworld) {
   const modifier = allModifiers[key];
-  if (modifier && modifier.costPerUpgrade) {
-    // Modifier is a Rune and should NOT be removed
+  if (modifier && (modifier.costPerUpgrade || modifier.keepBetweenLevels)) {
+    // Modifier is a Rune or Persistent and should NOT be removed
     return;
   }
 
@@ -1802,7 +1802,7 @@ export function resetUnitStats(unit: IUnit, underworld: Underworld) {
   // on infinite mana
   Object.keys(unit.modifiers).forEach(modifierKey => {
     const modifier = unit.modifiers[modifierKey];
-    if (modifier && !modifier.keepBetweenLevels) {
+    if (modifier) {
       removeModifier(unit, modifierKey, underworld);
     }
   });
