@@ -110,7 +110,7 @@ import { targetCursedId } from './cards/target_curse';
 import { chooseBookmark } from './views';
 import { runeGamblerId } from './modifierGambler';
 import { runeTimemasonId } from './modifierTimemason';
-import { manaBarrierId, updateTooltip } from './modifierManaBarrier';
+import { manaBarrierId } from './modifierManaBarrier';
 import { modifierBaseBounceId } from './modifierBaseBounce';
 import { modifierBasePierceId } from './modifierBasePierce';
 import { modifierBaseRadiusBoostId } from './modifierBaseRadiusBoost';
@@ -3900,10 +3900,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (!prediction) {
       // Clear spell animations once all cards are done playing their animations
       containerSpells?.removeChildren();
-    }
-
-    if (casterUnit.modifiers[manaBarrierId]) {
-      updateTooltip(casterUnit);
     }
 
     stopAndDestroyForeverEmitter(castingParticleEmitter);
