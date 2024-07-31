@@ -52,7 +52,7 @@ const unit: UnitSource = {
             [0x838d9f, 0x802230], //loin cloth
             [0x3fc7c2, 0xc73f53], // feathers 
           ],
-          0.05
+          0.15
         )
       );
     }
