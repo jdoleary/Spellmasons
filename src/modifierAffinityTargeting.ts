@@ -8,7 +8,7 @@ export const affinityTargeting = 'Affinity: Targeting';
 export default function registerTargetingAffinity() {
   registerModifiers(affinityTargeting, {
     description: i18n('Targeting spells cost [quantity]% less mana'),
-    costPerUpgrade: 40,
+    costPerUpgrade: 60,
     quantityPerUpgrade: 10,
     maxUpgradeCount: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

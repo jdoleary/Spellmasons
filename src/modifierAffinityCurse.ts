@@ -8,7 +8,7 @@ export const affinityCurseId = 'Affinity: Curse';
 export default function registerCurseAffinity() {
   registerModifiers(affinityCurseId, {
     description: i18n('Curse spells cost [quantity]% less mana'),
-    costPerUpgrade: 40,
+    costPerUpgrade: 60,
     quantityPerUpgrade: 10,
     maxUpgradeCount: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

@@ -8,7 +8,7 @@ export const affinitySoulId = 'Affinity: Soul';
 export default function registerAffinitySoul() {
   registerModifiers(affinitySoulId, {
     description: i18n('Soul spells cost [quantity]% less mana'),
-    costPerUpgrade: 40,
+    costPerUpgrade: 60,
     quantityPerUpgrade: 10,
     maxUpgradeCount: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

@@ -8,7 +8,7 @@ export const affinityMovementId = 'Affinity: Movement';
 export default function registerMovementAffinity() {
   registerModifiers(affinityMovementId, {
     description: i18n('Movement spells cost [quantity]% less mana'),
-    costPerUpgrade: 40,
+    costPerUpgrade: 60,
     quantityPerUpgrade: 10,
     maxUpgradeCount: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
