@@ -781,6 +781,13 @@ export default class Underworld {
   // returns true if there is more processing yet to be done on the next game loop
   gameLoopUnit = (u: Unit.IUnit, aliveNPCs: Unit.IUnit[], deltaTime: number): boolean => {
     if (u) {
+      // Compose onDamageEvents
+      for (let eventName of u.events) {
+        const fn = Events.onGameLoopSource[eventName];
+        if (fn) {
+          fn(u, this);
+        }
+      }
       while (u.path && u.path.points[0] && Vec.equal(Vec.round(u), Vec.round(u.path.points[0]))) {
         // Remove next points until the next point is NOT equal to the unit's current position
         // This prevent's "jittery" "slow" movement where it's moving less than {x:1.0, y:1.0}

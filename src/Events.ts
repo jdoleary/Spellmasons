@@ -11,6 +11,13 @@ export type onDealDamage = {
 };
 const onDealDamageSource: { [name: string]: onDealDamage } = {};
 
+export type onGameLoop = {
+  // Returns a possibly modified damage
+  (unit: IUnit, underworld: Underworld): void;
+};
+const onGameLoopSource: { [name: string]: onGameLoop } = {};
+
+
 export type onTakeDamage = {
   // Returns a possibly modified damage
   (unit: IUnit, amount: number, underworld: Underworld, prediction: boolean, damageDealer?: IUnit): number;
@@ -66,6 +73,7 @@ export default {
   onAgroSource,
   onDealDamageSource,
   onTakeDamageSource,
+  onGameLoopSource,
   onDeathSource,
   onMoveSource,
   onTurnStartSource,

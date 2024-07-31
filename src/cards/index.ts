@@ -5,6 +5,7 @@ import type { Vec2 } from '../jmath/Vec';
 import Events, {
   onDealDamage,
   onTakeDamage,
+  onGameLoop,
   onDeath,
   onMove,
   onAgro,
@@ -196,6 +197,7 @@ export interface Events {
   id?: string;
   onDealDamage?: onDealDamage;
   onTakeDamage?: onTakeDamage;
+  onGameLoop?: onGameLoop;
   onDeath?: onDeath;
   onMove?: onMove;
   onTeleport?: onTeleport;
@@ -235,6 +237,9 @@ export function registerEvents(id: string, events: Events) {
   }
   if (events.onTakeDamage) {
     Events.onTakeDamageSource[id] = events.onTakeDamage;
+  }
+  if (events.onGameLoop) {
+    Events.onGameLoopSource[id] = events.onGameLoop;
   }
   if (events.onDeath) {
     Events.onDeathSource[id] = events.onDeath;
