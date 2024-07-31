@@ -2146,7 +2146,7 @@ export default class Underworld {
       let units = this.units;
       units = units.filter(u => u.alive && (u.faction == Faction.ENEMY) && (u.unitSubType != UnitSubType.DOODAD) && !u.modifiers[bountyId]);
       if (units.length > 0) {
-        const chosenUnit = units[randInt(0, units.length - 1)];
+        const chosenUnit = chooseOneOfSeeded(units, seedrandom(`${this.seed}-${this.levelIndex}`));
         if (chosenUnit) {
           Unit.addModifier(chosenUnit, bountyId, this, false);
         }
