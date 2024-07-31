@@ -287,7 +287,13 @@ function handleInputDown(keyCodeMapping: string | undefined, overworld: Overworl
       }
       break;
     case 'endTurn':
-      underworld.endMyTurnButtonHandler();
+      const isInventoryOpen = document.body?.classList.contains(CardUI.openInvClass);
+      // Protect user from accidentally ending turn while inventory is open
+      if (isInventoryOpen) {
+        playSFXKey('deny');
+      } else {
+        underworld.endMyTurnButtonHandler();
+      }
       break;
     case 'spell1':
       CardUI.selectCardByIndex(0, CardUI.elCardHand);
