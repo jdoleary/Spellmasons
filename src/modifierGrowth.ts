@@ -39,12 +39,15 @@ export default function registerGrowth() {
       if (!unit.alive) {
         return;
       }
+      const modifier = unit.modifiers[growthId];
+      const quantity = modifier ? modifier.quantity : 1;
+
       floatingText({ coords: unit, text: growthId, prediction });
-      unit.strength++;
+      unit.strength += quantity;
       Image.setScaleFromModifiers(unit.image, unit.strength);
-      unit.healthMax = Math.round(unit.healthMax * 1.25)
-      unit.health = Math.round(unit.health * 1.25)
-      unit.damage = Math.round(unit.damage * 1.25)
+      unit.healthMax = Math.round(unit.healthMax * 1.25 * quantity)
+      unit.health = Math.round(unit.health * 1.25 * quantity)
+      unit.damage = Math.round(unit.damage * 1.25 * quantity)
 
     }
   });
