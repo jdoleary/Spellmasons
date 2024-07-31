@@ -61,9 +61,9 @@ export function registerUrnPoisonExplode() {
       units.filter(u => u.alive)
         .forEach(u => {
           if (!prediction) {
-            animateSpell(u, 'spell-effects/spellPoison'); // TODO - Put in poison modifier "add" function?
+            animateSpell(u, 'spell-effects/spellPoison');
           }
-          Unit.addModifier(u, poison.poisonCardId, underworld, prediction, 1);
+          Unit.addModifier(u, poison.poisonCardId, underworld, prediction, 20);
         });
       // Remove corpse
       if (!prediction) {
