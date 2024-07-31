@@ -2678,3 +2678,9 @@ body.dragging-card .floating-card-holder .empty-slot {
 #inspector-tooltip-content .tooltip-modifier-key.blessing {
   color: rgb(255, 232, 101);
 }
+
+.modifier-tooltip-image {
+  width: 16px;
+  height: 16px;
+  background-size: contain;
+}
