@@ -803,7 +803,7 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean, so
     if (eventName) {
       const fn = Events.onDeathSource[eventName];
       if (fn) {
-        fn(unit, underworld, prediction);
+        fn(unit, underworld, prediction, sourceUnit);
       }
     }
   }

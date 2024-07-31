@@ -52,18 +52,23 @@ const urnPoisonSource: UnitSource = {
 export const urnpoisonExplode = 'urnpoisonExplode';
 export function registerUrnPoisonExplode() {
   registerEvents(urnpoisonExplode, {
-    onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
+    onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, sourceUnit?: Unit.IUnit) => {
+      // The sourceunit is considered to be the unit that killed the urn, rather than the urn itself
+      // This allows players to trigger events such as onDamage/onKill through urn explosions
       const units = explode(unit, unit.attackRange, 0, 0,
         unit,
         underworld, prediction,
         0x164a15, 0x6bff77);
 
+      // Urn adds poison to each unit in the explosion raidus
       units.filter(u => u.alive)
         .forEach(u => {
           if (!prediction) {
             animateSpell(u, 'spell-effects/spellPoison'); // TODO - Put in poison modifier "add" function?
           }
-          Unit.addModifier(u, poison.poisonCardId, underworld, prediction, 1);
+          // The source of the poison is considered to be the unit that killed the urn
+          // Poison modifier takes in a sourceUnit ID, so convert here
+          Unit.addModifier(u, poison.poisonCardId, underworld, prediction, 1, { sourceUnitId: sourceUnit?.id });
         });
       // Remove corpse
       if (!prediction) {

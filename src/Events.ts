@@ -23,7 +23,7 @@ export type onKill = {
 const onKillSource: { [name: string]: onKill } = {};
 
 export type onDeath = {
-  (unit: IUnit, underworld: Underworld, prediction: boolean): Promise<void>;
+  (unit: IUnit, underworld: Underworld, prediction: boolean, sourceUnit?: IUnit): Promise<void>;
 };
 const onDeathSource: { [name: string]: onDeath } = {};
 

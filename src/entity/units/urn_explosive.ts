@@ -54,9 +54,11 @@ const unit: UnitSource = {
 export const urnexplosiveExplode = 'urnexplosiveExplode';
 export function registerUrnExplosiveExplode() {
   registerEvents(urnexplosiveExplode, {
-    onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
+    onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, sourceUnit?: Unit.IUnit) => {
+      // The sourceunit is considered to be the unit that killed the urn, rather than the urn itself
+      // This allows players to trigger events such as onDamage/onKill through urn explosions
       explode(unit, unit.attackRange, unit.damage, defaultPushDistance,
-        unit,
+        sourceUnit,
         underworld, prediction,
         colors.bloatExplodeStart, colors.bloatExplodeEnd);
       // Remove corpse
