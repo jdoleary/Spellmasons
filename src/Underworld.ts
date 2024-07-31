@@ -1009,6 +1009,15 @@ export default class Underworld {
         }
       }
     }
+    // Run onTooltip events for selected unit
+    if (globalThis.selectedUnit) {
+      for (let eventName of globalThis.selectedUnit.events) {
+        const fn = Events.onTooltipSource[eventName];
+        if (fn) {
+          fn(globalThis.selectedUnit, this);
+        }
+      }
+    }
     // Remove destroyed emitters from particle followers
     this.particleFollowers = this.particleFollowers.filter(pf => pf.emitter && !pf.emitter.destroyed);
     // Now that units have moved update any particle emitters that are following them:
