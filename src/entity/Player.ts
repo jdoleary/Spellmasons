@@ -86,7 +86,7 @@ export interface IPlayer {
   stats: Stats;
   cursesChosen: number;
   statPointsUnspent: number;
-  lockedRunes: { index: number, key: string }[];
+  lockedRunes: { index: number, key: string, levelIndexUnlocked?: number }[];
 }
 export function inPortal(player: IPlayer): boolean {
   // Note: Even though inPortal can be determined by player.isSpawned,

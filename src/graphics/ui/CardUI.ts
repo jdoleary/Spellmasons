@@ -485,6 +485,8 @@ export function renderRunesMenu(underworld: Underworld) {
   })
   // Start with lockedRunes as chosenRunes so they don't get offered in another place as a duplicate
   const chosenRunes: string[] = []
+  // Remove old unlocked level indexes
+  globalThis.player.lockedRunes = globalThis.player.lockedRunes.filter(lr => lr.levelIndexUnlocked === undefined || underworld.levelIndex == lr.levelIndexUnlocked);
   for (let i = 0; i < config.RUNES_PER_LEVEL; i++) {
     let chosen: string | undefined;
     // Give a number of attempts to find a non duplicate rune
@@ -519,7 +521,7 @@ export function renderRunesMenu(underworld: Underworld) {
                   </div>
                 </div>
               </div>
-              <div class="stat-lock ${globalThis.player.lockedRunes.find(r => r.key === modifierKey) ? 'locked' : ''}" data-key="${modifierKey}"></div>
+              <div class="stat-lock ${globalThis.player.lockedRunes.find(r => r.key === modifierKey && r.levelIndexUnlocked === undefined) ? 'locked' : ''}" data-key="${modifierKey}"></div>
             </div>`;
   }
   elRunes.innerHTML = `
