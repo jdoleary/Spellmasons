@@ -1475,14 +1475,16 @@ export async function runTurnEndEvents(unit: IUnit, underworld: Underworld, pred
 }
 
 export async function runPickupEvents(unit: IUnit, pickup: IPickup, underworld: Underworld, prediction: boolean) {
-  await Promise.all(unit.events.map(
-    async (eventName) => {
-      const fn = Events.onPickupSource[eventName];
-      if (fn) {
-        await fn(unit, pickup, underworld, prediction);
-      }
-    },
-  ));
+  await raceTimeout(3000, `RunPickupEvents (Unit: ${unit.unitSourceId} | Pickup: ${pickup.name} | Prediction: ${prediction})`,
+    Promise.all(unit.events.map(
+      async (eventName) => {
+        const fn = Events.onPickupSource[eventName];
+        if (fn) {
+          await fn(unit, pickup, underworld, prediction);
+        }
+      },
+    ))
+  );
 }
 
 export function makeMiniboss(unit: IUnit, underworld: Underworld) {
