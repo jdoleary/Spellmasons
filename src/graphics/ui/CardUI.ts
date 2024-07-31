@@ -55,7 +55,8 @@ export function resetInventoryContent() {
 export const elInvButton = document.getElementById('inventory-icon') as HTMLElement;
 const elBookmarkRunes = document.getElementById('bookmark-runes')
 export function tryShowStatPointsSpendable() {
-  const hasStatPointsToSpend = globalThis.player && globalThis.player.statPointsUnspent > 0;
+  // Only show glow if player can afford a rune upgrade
+  const hasStatPointsToSpend = globalThis.player && globalThis.player.statPointsUnspent >= (globalThis.cheapestAvailableRune || 1);
   if (elInvButton) {
     elInvButton.classList.toggle('goldGlow', hasStatPointsToSpend);
   }
@@ -502,6 +503,14 @@ export function renderRunesMenu(underworld: Underworld) {
       }
     }
   }
+  globalThis.cheapestAvailableRune = chosenRunes.reduce<number>((cheapest, current) => {
+    const modifier = Cards.allModifiers[current]
+    if (modifier?.costPerUpgrade && modifier.costPerUpgrade < cheapest) {
+      return modifier.costPerUpgrade
+    } else {
+      return cheapest;
+    }
+  }, Infinity);
   const statPoints = underworld.perksLeftToChoose(globalThis.player);
   const elStatUpgradeRow = (modifierKey: string) => {
     if (!globalThis.player) {

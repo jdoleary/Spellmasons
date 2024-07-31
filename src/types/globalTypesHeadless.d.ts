@@ -370,4 +370,5 @@ declare global {
   var spellCasting: boolean | undefined;
   var _queueLastPredictionMousePos: Vec2 | undefined;
   var lastPredictionMousePos: Vec2 | undefined;
+  var cheapestAvailableRune: number | undefined;
 }
