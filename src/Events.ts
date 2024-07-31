@@ -11,6 +11,13 @@ export type onDealDamage = {
 };
 const onDealDamageSource: { [name: string]: onDealDamage } = {};
 
+// onTooltip is invoked every gameLoop for the selectedUnit if there is one
+export type onTooltip = {
+  (unit: IUnit, underworld: Underworld): void;
+};
+const onTooltipSource: { [name: string]: onTooltip } = {};
+
+
 export type onTakeDamage = {
   // Returns a possibly modified damage
   (unit: IUnit, amount: number, underworld: Underworld, prediction: boolean, damageDealer?: IUnit): number;
@@ -66,6 +73,7 @@ export default {
   onAgroSource,
   onDealDamageSource,
   onTakeDamageSource,
+  onTooltipSource,
   onDeathSource,
   onMoveSource,
   onTurnStartSource,

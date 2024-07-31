@@ -5,6 +5,7 @@ import type { Vec2 } from '../jmath/Vec';
 import Events, {
   onDealDamage,
   onTakeDamage,
+  onTooltip,
   onDeath,
   onMove,
   onAgro,
@@ -140,7 +141,7 @@ import { calculateGameDifficulty } from '../Difficulty';
 import registerPrimedCorpse from '../modifierPrimedCorpse';
 import registerSlime from '../modifierSlime';
 import registerConfidence from '../modifierConfidence';
-import registerDefiant from '../modifierDefiant';
+import registerdefiance from '../modifierdefiance';
 import registerDamageLimiter from '../modifierDamageLimiter';
 import registerTargetImmune, { targetImmuneId } from '../modifierTargetImmune';
 import registerGrowth from '../modifierGrowth';
@@ -196,6 +197,7 @@ export interface Events {
   id?: string;
   onDealDamage?: onDealDamage;
   onTakeDamage?: onTakeDamage;
+  onTooltip?: onTooltip;
   onDeath?: onDeath;
   onMove?: onMove;
   onTeleport?: onTeleport;
@@ -235,6 +237,9 @@ export function registerEvents(id: string, events: Events) {
   }
   if (events.onTakeDamage) {
     Events.onTakeDamageSource[id] = events.onTakeDamage;
+  }
+  if (events.onTooltip) {
+    Events.onTooltipSource[id] = events.onTooltip;
   }
   if (events.onDeath) {
     Events.onDeathSource[id] = events.onDeath;
@@ -426,7 +431,7 @@ export function registerCards(overworld: Overworld) {
   registerPrimedCorpse();
   registerSlime();
   registerConfidence();
-  registerDefiant();
+  registerdefiance();
   registerDamageLimiter();
   registerTargetImmune();
   registerGrowth();

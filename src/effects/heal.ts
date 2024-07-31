@@ -6,7 +6,6 @@ import * as Image from '../graphics/Image';
 import * as config from '../config';
 import { EffectState } from "../cards";
 import { EXPLAIN_OVERFILL, explain } from "../graphics/Explain";
-import { manaBarrierId, updateTooltip } from "../modifierManaBarrier";
 
 export const healSfx = 'heal';
 const animationOptions = { loop: false, animationSpeed: 0.3 };
@@ -44,19 +43,11 @@ export async function healManaUnits(units: Unit.IUnit[], amount: number, sourceU
       floatingText({ coords: unit, text: `+ ${amount} ${i18n('Mana')}`, style: { fill: 'blue', ...config.PIXI_TEXT_DROP_SHADOW } });
       explain(EXPLAIN_OVERFILL);
       unit.mana += amount;
-
-      if (unit.modifiers[manaBarrierId]) {
-        updateTooltip(unit);
-      }
     }
     return state;
   } else {
     for (let unit of units) {
       unit.mana += amount;
-
-      if (unit.modifiers[manaBarrierId]) {
-        updateTooltip(unit);
-      }
     }
     return state;
   }

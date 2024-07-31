@@ -110,7 +110,7 @@ import { targetCursedId } from './cards/target_curse';
 import { chooseBookmark } from './views';
 import { runeGamblerId } from './modifierGambler';
 import { runeTimemasonId } from './modifierTimemason';
-import { manaBarrierId, updateTooltip } from './modifierManaBarrier';
+import { manaBarrierId } from './modifierManaBarrier';
 import { modifierBaseBounceId } from './modifierBaseBounce';
 import { modifierBasePierceId } from './modifierBasePierce';
 import { modifierBaseRadiusBoostId } from './modifierBaseRadiusBoost';
@@ -1006,6 +1006,15 @@ export default class Underworld {
             modifierSprite.x = Math.sin(timestamp / 1000) * 3;
             modifierSprite.y = Math.cos(timestamp / 1000) * 3;
           }
+        }
+      }
+    }
+    // Run onTooltip events for selected unit
+    if (globalThis.selectedUnit) {
+      for (let eventName of globalThis.selectedUnit.events) {
+        const fn = Events.onTooltipSource[eventName];
+        if (fn) {
+          fn(globalThis.selectedUnit, this);
         }
       }
     }
@@ -3891,10 +3900,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (!prediction) {
       // Clear spell animations once all cards are done playing their animations
       containerSpells?.removeChildren();
-    }
-
-    if (casterUnit.modifiers[manaBarrierId]) {
-      updateTooltip(casterUnit);
     }
 
     stopAndDestroyForeverEmitter(castingParticleEmitter);
