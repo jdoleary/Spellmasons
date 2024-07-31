@@ -204,7 +204,7 @@ export function registerDeathmasonEvents() {
         if (unit.unitSourceId == bossmasonUnitId && unit.originalLife && unit.name == undefined) {
           ; (prediction
             ? underworld.unitsPrediction
-            : underworld.units).filter(u => u.unitType == UnitType.AI && u.unitSubType !== UnitSubType.DOODAD).forEach(u => Unit.die(u, underworld, prediction));
+            : underworld.units).filter(u => u.unitType == UnitType.AI && u.unitSubType !== UnitSubType.DOODAD).forEach(u => Unit.die(u, underworld, prediction, unit));
           if (!prediction) {
             let retryAttempts = 0;
             for (let i = 0; (i < 3 && retryAttempts < 10); i++) {

@@ -58,7 +58,7 @@ export default function registerSoulShardOwner() {
             startBloodParticleSplatter(underworld, unit, nearestShardBearer, { maxRotationOffset: Math.PI * 2, numberOfParticles: 300 });
           }
 
-          Unit.die(nearestShardBearer, underworld, prediction);
+          Unit.die(nearestShardBearer, underworld, prediction, unit);
           if (nearestShardBearer.unitType != UnitType.PLAYER_CONTROLLED) {
             Unit.cleanup(nearestShardBearer, true);
           }

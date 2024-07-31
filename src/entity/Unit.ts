@@ -762,7 +762,7 @@ export function resurrect(unit: IUnit, underworld: Underworld) {
     }
   }
 }
-export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
+export function die(unit: IUnit, underworld: Underworld, prediction: boolean, sourceUnit?: IUnit) {
   if (!unit.alive) {
     // If already dead, do nothing
     return;
@@ -804,6 +804,19 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
       const fn = Events.onDeathSource[eventName];
       if (fn) {
         fn(unit, underworld, prediction);
+      }
+    }
+  }
+
+  // Run onKill events for the sourceUnit of the lethal damage
+  // This must occur before onDeath events are removed (Bounty)
+  if (sourceUnit) {
+    for (let eventName of sourceUnit.events) {
+      if (eventName) {
+        const fn = Events.onKillSource[eventName];
+        if (fn) {
+          fn(sourceUnit, unit, underworld, prediction);
+        }
       }
     }
   }
@@ -983,24 +996,8 @@ export function takeDamage(damageArgs: damageArgs, underworld: Underworld, predi
 
   // If taking damage (not healing) and health is 0 or less...
   if (amount > 0 && unit.health <= 0) {
-    die(unit, underworld, prediction);
-    // Run onKill events for the sourceUnit of the lethal damage
     const sourceUnit = damageArgs.sourceUnit;
-    if (sourceUnit) {
-      for (let eventName of sourceUnit.events) {
-        if (eventName) {
-          const fn = Events.onKillSource[eventName];
-          if (fn) {
-            fn(sourceUnit, unit, underworld, prediction);
-          }
-        }
-      }
-    }
-
-    // Special case: Bounty modifier persists on death and is removed AFTER onKill events run
-    if (unit.modifiers[bountyId]) {
-      removeModifier(unit, bountyId, underworld);
-    }
+    die(unit, underworld, prediction, sourceUnit);
   }
 
   if (unit.modifiers[suffocateCardId]) {

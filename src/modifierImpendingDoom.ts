@@ -10,10 +10,15 @@ export const impendingDoomId = 'impendingDoom';
 export default function registerImpendingDoom() {
   registerModifiers(impendingDoomId, {
     description: "Afflicited unit will die in (quantity) turns",
-    add: (unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) => {
-      getOrInitModifier(unit, impendingDoomId, { isCurse: true, quantity }, () => {
+    add: (unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1, extra?: { [key: string]: any }) => {
+      const modifier = getOrInitModifier(unit, impendingDoomId, { isCurse: true, quantity }, () => {
         Unit.addEvent(unit, impendingDoomId);
       });
+
+      if (extra && extra.sourceUnitId != undefined) {
+        modifier.sourceUnitId = extra.sourceUnitId;
+      }
+
       updateTooltip(unit);
     }
   });
@@ -34,7 +39,8 @@ export default function registerImpendingDoom() {
           modifier.quantity -= 1;
           updateTooltip(unit);
           if (modifier.quantity <= 0) {
-            Unit.die(unit, underworld, prediction);
+            const sourceUnit = underworld.getUnitById(modifier.sourceUnitId, prediction);
+            Unit.die(unit, underworld, prediction, sourceUnit);
             floatingText({
               coords: unit, text: `Blehg!`,
               style: { fill: colors.healthRed },

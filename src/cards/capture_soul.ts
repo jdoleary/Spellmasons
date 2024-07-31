@@ -43,7 +43,7 @@ const spell: Spell = {
                 console.error('Cannot capture soul, upgrade not found with title:', newCardId)
               }
             }
-            Unit.die(target, underworld, prediction);
+            Unit.die(target, underworld, prediction, state.casterUnit);
           }
         }
         if (targets.length == 0) {

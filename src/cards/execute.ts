@@ -46,7 +46,7 @@ const spell: Spell = {
         if (!prediction) {
           // VFX
         }
-        Unit.die(unit, underworld, prediction);
+        Unit.die(unit, underworld, prediction, state.casterUnit);
       }
       return state;
     },

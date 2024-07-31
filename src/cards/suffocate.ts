@@ -12,7 +12,7 @@ import { getOrInitModifier } from './util';
 import { buildMatchMemberExpression } from '@babel/types';
 
 export const suffocateCardId = 'suffocate';
-function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
+function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1, extra?: { [key: string]: any }) {
   const modifier = getOrInitModifier(unit, suffocateCardId, { isCurse: true, quantity }, () => {
     Unit.addEvent(unit, suffocateCardId);
     // Add subsprite image
@@ -22,6 +22,10 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
       }
     }
   });
+
+  if (extra && extra.sourceUnitId != undefined) {
+    modifier.sourceUnitId = extra.sourceUnitId;
+  }
 
   // One suffocate stack is added per cast and per turn passed
   // Buildup doubles every 2 stacks until > hp, then unit dies
@@ -59,7 +63,8 @@ export function updateSuffocate(unit: Unit.IUnit, underworld: Underworld, predic
   }
   //if the buildup of suffocate is greater than unit's health, kill it and make floating text
   if (modifier.buildup >= unit.health) {
-    Unit.die(unit, underworld, prediction);
+    const sourceUnit = underworld.getUnitById(modifier.sourceUnitId, prediction);
+    Unit.die(unit, underworld, prediction, sourceUnit);
     if (!prediction) {
       floatingText({
         coords: unit, text: `Suffocated!`,
@@ -104,7 +109,7 @@ const spell: Spell = {
       if (targets.length) {
         await Promise.all([playDefaultSpellAnimation(card, targets, prediction), playDefaultSpellSFX(card, prediction)]);
         for (let unit of targets) {
-          Unit.addModifier(unit, suffocateCardId, underworld, prediction, quantity);
+          Unit.addModifier(unit, suffocateCardId, underworld, prediction, quantity, { sourceUnitId: state.casterUnit.id });
         }
       }
       return state;
@@ -131,7 +136,7 @@ const spell: Spell = {
       const modifier = unit.modifiers[suffocateCardId];
       if (!prediction) {
         if (modifier) {
-          Unit.addModifier(unit, suffocateCardId, underworld, prediction, 1)
+          Unit.addModifier(unit, suffocateCardId, underworld, prediction, 1);
         } else {
           console.error(`Should have ${suffocateCardId} modifier on unit but it is missing`);
         }
