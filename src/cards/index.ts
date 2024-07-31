@@ -141,7 +141,7 @@ import { calculateGameDifficulty } from '../Difficulty';
 import registerPrimedCorpse from '../modifierPrimedCorpse';
 import registerSlime from '../modifierSlime';
 import registerConfidence from '../modifierConfidence';
-import registerdefiance from '../modifierdefiance';
+import registerDefiance from '../modifierDefiance';
 import registerDamageLimiter from '../modifierDamageLimiter';
 import registerTargetImmune, { targetImmuneId } from '../modifierTargetImmune';
 import registerGrowth from '../modifierGrowth';
@@ -431,7 +431,7 @@ export function registerCards(overworld: Overworld) {
   registerPrimedCorpse();
   registerSlime();
   registerConfidence();
-  registerdefiance();
+  registerDefiance();
   registerDamageLimiter();
   registerTargetImmune();
   registerGrowth();
