@@ -264,6 +264,7 @@ export function registerEvents(id: string, events: Events) {
   }
   if (events.onKill) {
     Events.onKillSource[id] = events.onKill;
+  }
   if (events.onTooltip) {
     Events.onTooltipSource[id] = events.onTooltip;
   }
