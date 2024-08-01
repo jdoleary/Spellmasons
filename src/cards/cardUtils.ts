@@ -1,4 +1,4 @@
-import type { ICard } from ".";
+import type { ICard, Modifiers } from ".";
 import { type CardUsage, type IPlayer } from "../entity/Player";
 import { Vec2 } from "../jmath/Vec";
 import { raceTimeout } from "../Promise";
@@ -25,6 +25,9 @@ import { inexhaustibleId } from "../modifierInexhaustible";
 export interface CardCost {
     manaCost: number;
     healthCost: number;
+}
+export function isRune(m?: Modifiers): boolean {
+    return !!(m && (m.costPerUpgrade || m.keepBetweenLevels));
 }
 // Positive number means card is still disabled
 export function levelsUntilCardIsEnabled(cardId: string, underworld?: Underworld): number {

@@ -24,6 +24,7 @@ import { View } from '../View';
 import { getSuffocateBuildup, suffocateCardId } from '../cards/suffocate';
 import * as Cards from '../cards';
 import { ANCIENT_UNIT_ID } from '../entity/units/ancient';
+import { isRune } from '../cards/cardUtils';
 
 const TEXT_OUT_OF_RANGE = 'Out of Range';
 // Graphics for rendering above board and walls but beneath units and doodads,
@@ -936,7 +937,8 @@ function modifiersToText(modifiers: object): string {
   for (let [key, value] of Object.entries(modifiers)) {
     const modifier = Cards.allModifiers[key];
     const thumbnailPath = CardUI.getSpellThumbnailPath(allCards[key]?.thumbnail);
-    message += `<div class="tooltip-modifier-row"><div class="tooltip-modifier-key ${value.isCurse ? 'curse' : 'blessing'}">${thumbnailPath ? `<div class="modifier-tooltip-image" style="background-image:url(${thumbnailPath})"></div> ` : ''}${value.tooltip || `${i18n(key)} ${modifier?.probability ? /*Only show quantity for non miniboss modifiers*/'' : value.quantity || ''}`}</div>${modifier?.description ? `<div>${modifier.description}</div>` : ''}</div>`
+    // Note: Runes do not recieve a 'blessing' nor 'curse' class
+    message += `<div class="tooltip-modifier-row"><div class="tooltip-modifier-key ${isRune(modifier) ? '' : value.isCurse ? 'curse' : 'blessing'}">${thumbnailPath ? `<div class="modifier-tooltip-image" style="background-image:url(${thumbnailPath})"></div> ` : ''}${value.tooltip || `${i18n(key)} ${modifier?.probability ? /*Only show quantity for non miniboss modifiers*/'' : value.quantity || ''}`}</div>${modifier?.description ? `<div>${modifier.description}</div>` : ''}</div>`
   }
   return `<div class="modifiers">${message}</div>`;
 

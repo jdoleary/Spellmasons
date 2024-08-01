@@ -1,6 +1,7 @@
-import { Spell } from './index';
+import { allModifiers, Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
+import { isRune } from './cardUtils';
 
 const id = 'Cursify';
 const spell: Spell = {
@@ -20,7 +21,8 @@ const spell: Spell = {
       // .filter: only target living units
       for (let unit of state.targetedUnits.filter(u => u.alive)) {
         if (unit.modifiers) {
-          Object.values(unit.modifiers).filter(m => !m.isCurse).forEach(modifier => {
+          // Exclude Runes (denoted by costPerUpgrade)
+          Object.entries(unit.modifiers).filter(([key, m]) => !m.isCurse && !(isRune(allModifiers[key]))).forEach(([key, modifier]) => {
             modifier.isCurse = true;
           })
         }
