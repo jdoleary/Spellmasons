@@ -2,7 +2,7 @@ import type * as PIXI from 'pixi.js';
 import * as Image from '../graphics/Image';
 import type * as Player from './Player';
 import { addPixiSprite, addPixiSpriteAnimated, containerUnits, pixiText, startBloodParticleSplatter } from '../graphics/PixiUtils';
-import { syncPlayerHealthManaUI, IUnit, takeDamage, playAnimation } from './Unit';
+import { syncPlayerHealthManaUI, IUnit, takeDamage, playAnimation, runPickupEvents } from './Unit';
 import { checkIfNeedToClearTooltip } from '../graphics/PlanningView';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
 import * as config from '../config';
@@ -372,6 +372,7 @@ export function removePickup(pickup: IPickup, underworld: Underworld, prediction
 export function triggerPickup(pickup: IPickup, unit: IUnit, player: Player.IPlayer | undefined, underworld: Underworld, prediction: boolean) {
   const willTrigger = !pickup.flaggedForRemoval && unit.alive && pickup.willTrigger({ unit, player, pickup, underworld });
   if (willTrigger) {
+    runPickupEvents(unit, pickup, underworld, prediction);
     pickup.effect({ unit, player, pickup, underworld, prediction });
     removePickup(pickup, underworld, prediction);
     // Now that the players attributes may have changed, sync UI

@@ -24,8 +24,13 @@ export type onTakeDamage = {
 };
 const onTakeDamageSource: { [name: string]: onTakeDamage } = {};
 
+export type onKill = {
+  (unit: IUnit, killedUnit: IUnit, underworld: Underworld, prediction: boolean): Promise<void>;
+};
+const onKillSource: { [name: string]: onKill } = {};
+
 export type onDeath = {
-  (unit: IUnit, underworld: Underworld, prediction: boolean): Promise<void>;
+  (unit: IUnit, underworld: Underworld, prediction: boolean, sourceUnit?: IUnit): Promise<void>;
 };
 const onDeathSource: { [name: string]: onDeath } = {};
 
@@ -44,6 +49,11 @@ export type onTeleport = {
   (unit: IUnit, newLocation: Vec2, underworld: Underworld, prediction: boolean): void;
 };
 const onTeleportSource: { [name: string]: onTeleport } = {};
+
+export type onPickup = {
+  (unit: IUnit, pickup: IPickup, underworld: Underworld, prediction: boolean): Promise<void>;
+};
+const onPickupSource: { [name: string]: onPickup } = {};
 
 export type onAgro = {
   // Returns a possibly modified agroTarget
@@ -73,9 +83,11 @@ export default {
   onAgroSource,
   onDealDamageSource,
   onTakeDamageSource,
+  onKillSource,
   onTooltipSource,
   onDeathSource,
   onMoveSource,
+  onPickupSource,
   onTurnStartSource,
   onTurnEndSource,
   onDrawSelectedSource,

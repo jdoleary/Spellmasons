@@ -5,6 +5,7 @@ import type { Vec2 } from '../jmath/Vec';
 import Events, {
   onDealDamage,
   onTakeDamage,
+  onKill,
   onTooltip,
   onDeath,
   onMove,
@@ -14,7 +15,8 @@ import Events, {
   onDrawSelected,
   onProjectileCollision,
   onTeleport,
-  onSpawn
+  onSpawn,
+  onPickup,
 } from '../Events';
 import Subsprites, { Subsprite } from '../Subsprites';
 // Register spells:
@@ -147,7 +149,13 @@ import registerTargetImmune, { targetImmuneId } from '../modifierTargetImmune';
 import registerGrowth from '../modifierGrowth';
 import registerModifierStatUpgrades from '../modifierStatUpgrades';
 import registerEndlessQuiver from '../modifierEndlessQuiver';
-import registerBlessingAffinity from '../modifierBlessingAffinity';
+import registerInexhaustible from '../modifierInexhaustible';
+import registerAffinityBlessing from '../modifierAffinityBlessing';
+import registerAffinityCurse from '../modifierAffinityCurse';
+import registerAffinityDamage from '../modifierAffinityDamage';
+import registerAffinityMovement from '../modifierAffinityMovement';
+import registerAffinitySoul from '../modifierAffinitySoul';
+import registerAffinityTargeting from '../modifierAffinityTargeting';
 import registerFarGazerRune from '../modifierFarGazer';
 import registerGamblerRune from '../modifierGambler';
 import registerNecromancerRune from '../modifierNecromancer';
@@ -168,6 +176,18 @@ import registerBasePierce from '../modifierBasePierce';
 import registerBaseRadiusBoost from '../modifierBaseRadiusBoost';
 import registerContaminateSelfOnTeleport from '../modifierContaminateSelfOnTeleport';
 import registerCloneOnSpawn from '../modifierCloneOnSpawn';
+import registerShieldBash from '../modifierShieldBash';
+import registerOnKillMana from '../modifierOnKillMana';
+import registerBounty from '../modifierBounty';
+import registerBountyHunter from '../modifierBountyHunter';
+import registerBountyRestoreHealth from '../modifierBountyRestoreHealth';
+import registerBountyRestoreStamina from '../modifierBountyRestoreStamina';
+import registerBountyRestoreMana from '../modifierBountyRestoreMana';
+import registerBountyDamage from '../modifierBountyDamage';
+import registerLiquidmancer from '../modifierLiquidmancer';
+import registerHeavyImpacts from '../modifierHeavyImpact';
+import registerPotionEffectiveness from '../modifierPotionEffectiveness';
+import registerPotionBarrier from '../modifierPotionBarrier';
 
 
 export interface Modifiers {
@@ -191,17 +211,21 @@ export interface Modifiers {
   quantityPerUpgrade?: number;
   // Upgrade can be purchased X times
   maxUpgradeCount?: number;
+  // Allows certain non-rune modifiers to persist between levels
+  keepBetweenLevels?: boolean;
 }
 export interface Events {
   // events that are not attached to a spell need an explicit id set
   id?: string;
   onDealDamage?: onDealDamage;
   onTakeDamage?: onTakeDamage;
+  onKill?: onKill;
   onTooltip?: onTooltip;
   onDeath?: onDeath;
   onMove?: onMove;
   onTeleport?: onTeleport;
   onSpawn?: onSpawn;
+  onPickup?: onPickup;
   onAgro?: onAgro;
   onTurnStart?: onTurnStart;
   onTurnEnd?: onTurnEnd;
@@ -238,6 +262,9 @@ export function registerEvents(id: string, events: Events) {
   if (events.onTakeDamage) {
     Events.onTakeDamageSource[id] = events.onTakeDamage;
   }
+  if (events.onKill) {
+    Events.onKillSource[id] = events.onKill;
+  }
   if (events.onTooltip) {
     Events.onTooltipSource[id] = events.onTooltip;
   }
@@ -252,6 +279,9 @@ export function registerEvents(id: string, events: Events) {
   }
   if (events.onSpawn) {
     Events.onSpawnSource[id] = events.onSpawn;
+  }
+  if (events.onPickup) {
+    Events.onPickupSource[id] = events.onPickup;
   }
   if (events.onTurnStart) {
     Events.onTurnStartSource[id] = events.onTurnStart;
@@ -440,11 +470,20 @@ export function registerCards(overworld: Overworld) {
 
   registerNecromancerRune();
   registerWitchRune();
-  registerBlessingAffinity();
   registerEndlessQuiver();
+  registerInexhaustible();
   registerTimemasonRune();
   registerFarGazerRune();
   registerGamblerRune();
+  registerLiquidmancer();
+  registerHeavyImpacts();
+
+  registerAffinityBlessing();
+  registerAffinityCurse();
+  registerAffinityDamage();
+  registerAffinityMovement();
+  registerAffinitySoul();
+  registerAffinityTargeting();
 
   registerSelfInvulnerability();
   registerArmor();
@@ -461,6 +500,18 @@ export function registerCards(overworld: Overworld) {
   registerBaseRadiusBoost();
   registerContaminateSelfOnTeleport();
   registerCloneOnSpawn();
+  registerShieldBash();
+  registerOnKillMana();
+
+  registerBounty();
+  registerBountyHunter();
+  registerBountyRestoreHealth();
+  registerBountyRestoreStamina();
+  registerBountyRestoreMana();
+  registerBountyDamage();
+
+  registerPotionEffectiveness();
+  registerPotionBarrier();
 
   registerImmune();
   registerImpendingDoom();
@@ -471,8 +522,6 @@ export function registerCards(overworld: Overworld) {
   registerUrnPoisonExplode();
   registerUrnExplosiveExplode();
   registerDeathmasonEvents();
-
-
 }
 
 // This is necessary because unit stats change with difficulty.

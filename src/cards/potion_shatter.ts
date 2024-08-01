@@ -9,6 +9,7 @@ import * as colors from '../graphics/ui/colors';
 import { COLLISION_MESH_RADIUS } from '../config';
 import { makeParticleExplosion } from '../graphics/ParticleCollection';
 import { includes } from 'lodash';
+import { runPickupEvents } from '../entity/Unit';
 
 export const potionShatterId = 'Potion Shatter';
 const baseEffectRadius = 80; //baseExplosionRadius / x?
@@ -54,6 +55,7 @@ const spell: Spell = {
 
         // Apply the potion effect to all units within radius
         for (let unit of withinRadius) {
+          runPickupEvents(unit, potion, underworld, prediction);
           potion.effect({ unit, player: undefined, pickup: potion, underworld, prediction });
         }
 

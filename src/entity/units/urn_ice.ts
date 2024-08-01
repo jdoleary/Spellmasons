@@ -51,12 +51,15 @@ const unit: UnitSource = {
 export const urnIceExplode = 'urnIceExplode';
 export function registerUrnIceExplode() {
   registerEvents(urnIceExplode, {
-    onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
+    onDeath: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, sourceUnit?: Unit.IUnit) => {
+      // The sourceunit is considered to be the unit that killed the urn, rather than the urn itself
+      // This allows players to trigger events such as onDamage/onKill through urn explosions
       const units = explode(unit, unit.attackRange, 0, 0,
-        unit,
+        sourceUnit,
         underworld, prediction,
         0x002c6e, 0x59deff);
 
+      // Urn adds freeze to each unit in the explosion radius
       units.filter(u => u.alive)
         .forEach(u => {
           Unit.addModifier(u, freeze.freezeCardId, underworld, prediction, 1);

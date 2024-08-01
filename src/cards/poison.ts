@@ -91,7 +91,9 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     updateTooltip(unit);
   }
 
-  modifier.sourceUnitId = extra?.sourceUnitId;
+  if (extra && extra.sourceUnitId != undefined) {
+    modifier.sourceUnitId = extra.sourceUnitId;
+  }
 }
 
 function updateTooltip(unit: Unit.IUnit) {

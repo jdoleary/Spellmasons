@@ -88,7 +88,7 @@ const spell: Spell = {
           if (modifier && modifier.quantity <= 0) {
             Unit.removeModifier(unit, shieldId, underworld);
           }
-          updateTooltip(unit);
+          shield_UpdateTooltip(unit);
 
           return adjustedAmount;
         }
@@ -99,7 +99,7 @@ const spell: Spell = {
   },
 
 };
-function updateTooltip(unit: Unit.IUnit) {
+export function shield_UpdateTooltip(unit: Unit.IUnit) {
   const modifier = unit.modifiers[shieldId];
   if (modifier) {
     // Set tooltip:
@@ -112,6 +112,6 @@ function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, qu
     Unit.addEvent(unit, shieldId);
   });
 
-  updateTooltip(unit);
+  shield_UpdateTooltip(unit);
 }
 export default spell;

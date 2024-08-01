@@ -50,6 +50,8 @@ import { undyingModifierId } from '../modifierUndying';
 import { primedCorpseId } from '../modifierPrimedCorpse';
 import { chooseObjectWithProbability } from '../jmath/rand';
 import { ANCIENT_UNIT_ID } from './units/ancient';
+import { bountyId } from '../modifierBounty';
+import { IPickup } from './Pickup';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -391,8 +393,8 @@ export function addModifier(unit: IUnit, key: string, underworld: Underworld, pr
 
 export function removeModifier(unit: IUnit, key: string, underworld: Underworld) {
   const modifier = allModifiers[key];
-  if (modifier && modifier.costPerUpgrade) {
-    // Modifier is a Rune and should NOT be removed
+  if (modifier && (modifier.costPerUpgrade || modifier.keepBetweenLevels)) {
+    // Modifier is a Rune or Persistent and should NOT be removed
     return;
   }
 
@@ -760,7 +762,7 @@ export function resurrect(unit: IUnit, underworld: Underworld) {
     }
   }
 }
-export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
+export function die(unit: IUnit, underworld: Underworld, prediction: boolean, sourceUnit?: IUnit) {
   if (!unit.alive) {
     // If already dead, do nothing
     return;
@@ -801,7 +803,20 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
     if (eventName) {
       const fn = Events.onDeathSource[eventName];
       if (fn) {
-        fn(unit, underworld, prediction);
+        fn(unit, underworld, prediction, sourceUnit);
+      }
+    }
+  }
+
+  // Run onKill events for the sourceUnit of the lethal damage
+  // This must occur before onDeath events are removed (Bounty)
+  if (sourceUnit) {
+    for (let eventName of sourceUnit.events) {
+      if (eventName) {
+        const fn = Events.onKillSource[eventName];
+        if (fn) {
+          fn(sourceUnit, unit, underworld, prediction);
+        }
       }
     }
   }
@@ -907,7 +922,7 @@ interface damageArgs {
 
 // damageFromVec2 is the location that the damage came from and is used for blood splatter
 export function takeDamage(damageArgs: damageArgs, underworld: Underworld, prediction: boolean) {
-  let { unit, amount, sourceUnit, fromVec2, thinBloodLine } = damageArgs;
+  let { unit, sourceUnit, fromVec2, thinBloodLine } = damageArgs;
   if (!unit.alive) {
     // Do not deal damage to dead units
     return;
@@ -917,8 +932,9 @@ export function takeDamage(damageArgs: damageArgs, underworld: Underworld, predi
     immune.notifyImmune(unit, false);
     return
   }
-  amount = composeOnDealDamageEvents(damageArgs, underworld, prediction);
-  amount = composeOnTakeDamageEvents(damageArgs, underworld, prediction);
+  damageArgs.amount = composeOnDealDamageEvents(damageArgs, underworld, prediction);
+  damageArgs.amount = composeOnTakeDamageEvents(damageArgs, underworld, prediction);
+  let amount = damageArgs.amount;
   if (amount == 0) {
     // Even though damage is 0, sync the player UI in the event that
     // the damage took down shield/mana barrier/etc.
@@ -980,7 +996,8 @@ export function takeDamage(damageArgs: damageArgs, underworld: Underworld, predi
 
   // If taking damage (not healing) and health is 0 or less...
   if (amount > 0 && unit.health <= 0) {
-    die(unit, underworld, prediction);
+    const sourceUnit = damageArgs.sourceUnit;
+    die(unit, underworld, prediction, sourceUnit);
   }
 
   if (unit.modifiers[suffocateCardId]) {
@@ -1455,6 +1472,19 @@ export async function runTurnEndEvents(unit: IUnit, underworld: Underworld, pred
       }
     },
   ));
+}
+
+export async function runPickupEvents(unit: IUnit, pickup: IPickup, underworld: Underworld, prediction: boolean) {
+  await raceTimeout(3000, `RunPickupEvents (Unit: ${unit.unitSourceId} | Pickup: ${pickup.name} | Prediction: ${prediction})`,
+    Promise.all(unit.events.map(
+      async (eventName) => {
+        const fn = Events.onPickupSource[eventName];
+        if (fn) {
+          await fn(unit, pickup, underworld, prediction);
+        }
+      },
+    ))
+  );
 }
 
 export function makeMiniboss(unit: IUnit, underworld: Underworld) {

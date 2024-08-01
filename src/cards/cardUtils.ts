@@ -13,8 +13,15 @@ import { CardCategory } from "../types/commonTypes";
 import { allUnits } from "../entity/units";
 import { endlessQuiverId } from "../modifierEndlessQuiver";
 import { runeNecromancerId } from "../modifierNecromancer";
-import { blessingAffinityId } from "../modifierBlessingAffinity";
+import { affinityBlessingId } from "../modifierAffinityBlessing";
+import { affinityCurseId } from "../modifierAffinityCurse";
+import { affinityDamageId } from "../modifierAffinityDamage";
+import { affinityMovementId } from "../modifierAffinityMovement";
+import { affinityTargeting } from "../modifierAffinityTargeting";
+import { affinitySoulId } from "../modifierAffinitySoul";
+import { contaminate_id } from "./contaminate";
 import { runeWitchId } from "../modifierWitch";
+import { inexhaustibleId } from "../modifierInexhaustible";
 export interface CardCost {
     manaCost: number;
     healthCost: number;
@@ -140,6 +147,18 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
 
     // Handle unique changes due to player mageType
     if (caster) {
+        // Prevents expense scaling: Spells will not increase in mana cost with usage
+        // Must be done before other cost changes
+        if (caster.unit.modifiers[endlessQuiverId] && card.id.toLowerCase().includes('arrow')) {
+            // Freeze mana cost for arrows
+            cardCost.manaCost = card.manaCost;
+        }
+        if (card.category == CardCategory.Movement && caster.unit.modifiers[inexhaustibleId]) {
+            // Freeze mana cost for movement spells
+            cardCost.manaCost = card.manaCost;
+        }
+
+        // Bloodmason
         if (caster.unit.modifiers['Bloodmason']) {
             if (card.id === lastWill.id) {
                 // Just for fun, allow Bloodmason to still cast lastWill at a cost of 50%
@@ -154,6 +173,8 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
                 cardCost.manaCost = 0;
             }
         }
+
+        // Necromancer grants an empowered capture soul and cheaper summons
         if (caster.unit.modifiers[runeNecromancerId]) {
             if (card.id == captureSoul.id) {
                 cardCost.healthCost = 40;
@@ -163,15 +184,30 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
                 cardCost.manaCost = Math.floor(cardCost.manaCost * 0.7);
             }
         }
-        if (caster.unit.modifiers[blessingAffinityId] && card.category == CardCategory.Blessings) {
-            cardCost.manaCost = Math.floor(cardCost.manaCost / 2);
+
+        // Witch grants a cheaper/empowered contaminate
+        if (card.id == contaminate_id && caster.unit.modifiers[runeWitchId]) {
+            cardCost.manaCost = Math.floor(cardCost.manaCost * 0.5);
         }
-        if (caster.unit.modifiers[runeWitchId] && card.category == CardCategory.Curses) {
-            cardCost.manaCost = Math.floor(cardCost.manaCost * 0.8);
+
+        // Affinity Modifiers - Reduce cost of spell by 1% per quantity
+        if (card.category == CardCategory.Blessings && caster.unit.modifiers[affinityBlessingId]) {
+            cardCost.manaCost = Math.floor(cardCost.manaCost * (1 - (0.01 * caster.unit.modifiers[affinityBlessingId].quantity)));
         }
-        if (caster.unit.modifiers[endlessQuiverId] && card.id.toLowerCase().includes('arrow')) {
-            // Freeze mana cost for archer MageType
-            cardCost.manaCost = card.manaCost;
+        if (card.category == CardCategory.Curses && caster.unit.modifiers[affinityCurseId]) {
+            cardCost.manaCost = Math.floor(cardCost.manaCost * (1 - (0.01 * caster.unit.modifiers[affinityCurseId].quantity)));
+        }
+        if (card.category == CardCategory.Damage && caster.unit.modifiers[affinityDamageId]) {
+            cardCost.manaCost = Math.floor(cardCost.manaCost * (1 - (0.01 * caster.unit.modifiers[affinityDamageId].quantity)));
+        }
+        if (card.category == CardCategory.Movement && caster.unit.modifiers[affinityMovementId]) {
+            cardCost.manaCost = Math.floor(cardCost.manaCost * (1 - (0.01 * caster.unit.modifiers[affinityMovementId].quantity)));
+        }
+        if (card.category == CardCategory.Soul && caster.unit.modifiers[affinitySoulId]) {
+            cardCost.manaCost = Math.floor(cardCost.manaCost * (1 - (0.01 * caster.unit.modifiers[affinitySoulId].quantity)));
+        }
+        if (card.category == CardCategory.Targeting && caster.unit.modifiers[affinityTargeting]) {
+            cardCost.manaCost = Math.floor(cardCost.manaCost * (1 - (0.01 * caster.unit.modifiers[affinityTargeting].quantity)));
         }
     }
 
