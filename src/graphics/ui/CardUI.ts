@@ -55,7 +55,8 @@ export function resetInventoryContent() {
 export const elInvButton = document.getElementById('inventory-icon') as HTMLElement;
 const elBookmarkRunes = document.getElementById('bookmark-runes')
 export function tryShowStatPointsSpendable() {
-  const hasStatPointsToSpend = globalThis.player && globalThis.player.statPointsUnspent > 0;
+  // Only show glow if player can afford a rune upgrade
+  const hasStatPointsToSpend = globalThis.player && globalThis.player.statPointsUnspent >= (globalThis.cheapestAvailableRune || 1);
   if (elInvButton) {
     elInvButton.classList.toggle('goldGlow', hasStatPointsToSpend);
   }
@@ -482,23 +483,34 @@ export function renderRunesMenu(underworld: Underworld) {
     } else {
       return [];
     }
-  });
-  const chosenRunes: ({ key: string } & Cards.Modifiers)[] = [];
+  })
+  // Start with lockedRunes as chosenRunes so they don't get offered in another place as a duplicate
+  const chosenRunes: string[] = []
+  // Remove old unlocked level indexes
+  globalThis.player.lockedRunes = globalThis.player.lockedRunes.filter(lr => lr.levelIndexUnlocked === undefined || underworld.levelIndex == lr.levelIndexUnlocked);
   for (let i = 0; i < config.RUNES_PER_LEVEL; i++) {
-    let chosen;
+    let chosen: string | undefined;
     // Give a number of attempts to find a non duplicate rune
     for (let attempt = 0; attempt < 100; attempt++) {
-      const seed = seedrandom(getUniqueSeedString(underworld, globalThis.player) + `-${i}`);
+      const seed = seedrandom(getUniqueSeedString(underworld, globalThis.player) + `-${i}-${attempt}`);
       // If a rune has been locked in this index, choose it; otherwise choose a seeded random rune
       const previouslyLockedRune = globalThis.player.lockedRunes.find(lr => lr.index === i);
-      chosen = previouslyLockedRune ? previouslyLockedRune : chooseOneOfSeeded(listOfRemainingRunesToChoose, seed);
-      if (chosen && !chosenRunes.includes(chosen)) {
+      chosen = previouslyLockedRune ? previouslyLockedRune.key : chooseOneOfSeeded(listOfRemainingRunesToChoose, seed)?.key;
+      if (chosen && !chosenRunes.find(cr => cr === chosen)) {
         // Found a unique rune
         chosenRunes.push(chosen);
         break;
       }
     }
   }
+  globalThis.cheapestAvailableRune = chosenRunes.reduce<number>((cheapest, current) => {
+    const modifier = Cards.allModifiers[current]
+    if (modifier?.costPerUpgrade && modifier.costPerUpgrade < cheapest) {
+      return modifier.costPerUpgrade
+    } else {
+      return cheapest;
+    }
+  }, Infinity);
   const statPoints = underworld.perksLeftToChoose(globalThis.player);
   const elStatUpgradeRow = (modifierKey: string) => {
     if (!globalThis.player) {
@@ -518,7 +530,7 @@ export function renderRunesMenu(underworld: Underworld) {
                   </div>
                 </div>
               </div>
-              <div class="stat-lock ${globalThis.player.lockedRunes.find(r => r.key === modifierKey) ? 'locked' : ''}" data-key="${modifierKey}"></div>
+              <div class="stat-lock ${globalThis.player.lockedRunes.find(r => r.key === modifierKey && r.levelIndexUnlocked === undefined) ? 'locked' : ''}" data-key="${modifierKey}"></div>
             </div>`;
   }
   elRunes.innerHTML = `
@@ -526,7 +538,7 @@ export function renderRunesMenu(underworld: Underworld) {
   <div class="card-inner flex" style="color:black">
   <h2>Skill Points: ${statPoints}</h2>
   <div class="stat-row-holder">
-  ${chosenRunes.flatMap(r => r ? [elStatUpgradeRow(r.key)] : []).join('')}
+  ${chosenRunes.flatMap(key => key ? [elStatUpgradeRow(key)] : []).join('')}
 </div>
   </div>
   </div>`;

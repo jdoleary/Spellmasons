@@ -29,6 +29,10 @@
 - TODO: Update soundtrack with theme
 - TODO: Check volume of all tracks
 
+- **NEW** Check to make sure modifier images are rendering (may not be because the loop is called too much and it's recreating elements)
+- bounty hunter - test that same bounty unit is chosen in multiplayer
+- Test modifier potion effectiveness with prediction
+
 
 # Release protocal
 - QA: 1:44

@@ -1,5 +1,4 @@
 import { registerEvents, registerModifiers } from "./cards";
-import { animateMitosis, doCloneUnit } from "./cards/clone";
 import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import floatingText from "./graphics/FloatingText";
@@ -8,17 +7,17 @@ import { UnitSubType } from "./types/commonTypes";
 import Underworld from './Underworld';
 import * as Image from './graphics/Image';
 
-export const confidenceId = 'Confidence';
-const reductionProportion = 0.05;
+export const defianceId = 'Defiance';
+const reductionProportion = 0.02;
 const maxReductionProportion = 0.5;
-const subspriteImageName = 'spell-effects/shield-blue.png';
-export default function registerConfidence() {
-  registerModifiers(confidenceId, {
-    description: `Each ally within attack range reduces incoming damage by ${Math.floor(reductionProportion * 100)}%`,
+const subspriteImageName = 'spell-effects/shield-red.png';
+export default function registerdefiance() {
+  registerModifiers(defianceId, {
+    description: `Each enemy within attack range reduces incoming damage by ${Math.floor(reductionProportion * 100)}%`,
     probability: 100,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
-      getOrInitModifier(unit, confidenceId, { isCurse: false, quantity, keepOnDeath: true }, () => {
-        Unit.addEvent(unit, confidenceId);
+      getOrInitModifier(unit, defianceId, { isCurse: false, quantity, keepOnDeath: true }, () => {
+        Unit.addEvent(unit, defianceId);
       });
     },
     addModifierVisuals: (unit: Unit.IUnit, underworld: Underworld) => {
@@ -28,8 +27,8 @@ export default function registerConfidence() {
       imageName: subspriteImageName,
       alpha: 0.9,
       anchor: {
-        x: -0.5,
-        y: 1.5
+        x: 1.5,
+        y: 1.5,
       },
       scale: {
         x: 0.2,
@@ -37,11 +36,11 @@ export default function registerConfidence() {
       },
     },
   });
-  registerEvents(confidenceId, {
+  registerEvents(defianceId, {
     onTooltip: (unit: Unit.IUnit, underworld: Underworld) => {
-      const modifier = unit.modifiers[confidenceId];
+      const modifier = unit.modifiers[defianceId];
       if (modifier) {
-        modifier.tooltip = `${confidenceId}: ${Math.floor(getReductionProportion(unit, underworld) * 100)}% ${i18n('Damage Reduction')}`;
+        modifier.tooltip = `${defianceId}: ${Math.floor(getReductionProportion(unit, underworld) * 100)}% ${i18n('Damage Reduction')}`;
       }
     },
     onTakeDamage: (unit: Unit.IUnit, amount: number, underworld: Underworld, prediction: boolean, damageDealer?: Unit.IUnit) => {
@@ -57,7 +56,7 @@ export default function registerConfidence() {
       }
       // Cannot be below 0 (must still be damage, not healing)
       const overriddenAmount = Math.max(0, Math.floor(amount - amount * reductionAmount));
-      floatingText({ coords: unit, text: `${confidenceId}: Damage reduced by ${Math.floor(reductionAmount * 100)}%`, prediction });
+      floatingText({ coords: unit, text: `${defianceId}: Damage reduced by ${Math.floor(reductionAmount * 100)}%`, prediction });
       return overriddenAmount;
     }
   });
@@ -66,7 +65,7 @@ export default function registerConfidence() {
 function getReductionProportion(unit: Unit.IUnit, underworld: Underworld): number {
   // Melee units have to consider maxStamina as part of their range or else this modifier would have virtually no effect
   const range = unit.unitSubType === UnitSubType.MELEE ? unit.staminaMax + unit.attackRange : unit.attackRange;
-  const nearbyAllies = underworld.units.filter(u => u.faction == unit.faction && distance(u, unit) <= range)
-  const reductionAmount = (nearbyAllies.length * reductionProportion);
+  const nearbyEnemies = underworld.units.filter(u => u.faction !== unit.faction && distance(u, unit) <= range);
+  const reductionAmount = (nearbyEnemies.length * reductionProportion);
   return Math.min(maxReductionProportion, reductionAmount);
 }

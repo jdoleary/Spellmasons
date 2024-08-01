@@ -32,10 +32,6 @@ export default function registerManaBarrier() {
       getOrInitModifier(unit, manaBarrierId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, manaBarrierId);
       });
-
-      if (!prediction) {
-        updateTooltip(unit);
-      }
     },
     subsprite: {
       imageName: modifierImagePath,
@@ -51,6 +47,15 @@ export default function registerManaBarrier() {
     },
   });
   registerEvents(manaBarrierId, {
+    onTooltip: (unit: Unit.IUnit, underworld: Underworld) => {
+      const modifier = unit.modifiers[manaBarrierId];
+      if (modifier) {
+        // This returns the maximum blockable damage,
+        // based on the unit's mana and modifier quantity
+        // We need to update this any time mana changes
+        modifier.tooltip = `${Math.floor(unit.mana * CalcMult(modifier.quantity))} ${i18n('Damage')} ${i18n('Mana Barrier')}`
+      }
+    },
     onTakeDamage: (unit: Unit.IUnit, amount: number, underworld: Underworld, prediction: boolean, damageDealer?: Unit.IUnit) => {
       const modifier = unit.modifiers[manaBarrierId];
       if (modifier) {
@@ -72,7 +77,6 @@ export default function registerManaBarrier() {
                 },
               });
             }
-            updateTooltip(unit);
           }
         }
       }
@@ -80,26 +84,7 @@ export default function registerManaBarrier() {
       // Does not modify incoming damage/healing otherwise
       return amount;
     },
-    onTurnStart: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
-      const modifier = unit.modifiers[manaBarrierId];
-      if (modifier) {
-        updateTooltip(unit);
-      }
-    }
   });
-}
-
-export function updateTooltip(unit: Unit.IUnit) {
-  const modifier = unit.modifiers[manaBarrierId];
-  if (modifier) {
-    // Set tooltip:
-    // modifier.tooltip = `${modifier.quantity}% ${i18n('Mana Barrier')}`
-
-    // This returns the maximum blockable damage,
-    // based on the unit's mana and modifier quantity
-    // We need to update this any time mana changes
-    modifier.tooltip = `${Math.floor(unit.mana * CalcMult(modifier.quantity))} ${i18n('Damage')} ${i18n('Mana Barrier')}`
-  }
 }
 
 function CalcMult(quantity: number): number {

@@ -64,11 +64,11 @@ export function registerUrnPoisonExplode() {
       units.filter(u => u.alive)
         .forEach(u => {
           if (!prediction) {
-            animateSpell(u, 'spell-effects/spellPoison'); // TODO - Put in poison modifier "add" function?
+            animateSpell(u, 'spell-effects/spellPoison');
           }
           // The source of the poison is considered to be the unit that killed the urn
           // Poison modifier takes in a sourceUnit ID, so convert here
-          Unit.addModifier(u, poison.poisonCardId, underworld, prediction, 1, { sourceUnitId: sourceUnit?.id });
+          Unit.addModifier(u, poison.poisonCardId, underworld, prediction, 20, { sourceUnitId: sourceUnit?.id });
         });
       // Remove corpse
       if (!prediction) {

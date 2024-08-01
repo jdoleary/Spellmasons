@@ -6,6 +6,7 @@ import Events, {
   onDealDamage,
   onTakeDamage,
   onKill,
+  onTooltip,
   onDeath,
   onMove,
   onAgro,
@@ -142,7 +143,7 @@ import { calculateGameDifficulty } from '../Difficulty';
 import registerPrimedCorpse from '../modifierPrimedCorpse';
 import registerSlime from '../modifierSlime';
 import registerConfidence from '../modifierConfidence';
-import registerDefiant from '../modifierDefiant';
+import registerDefiance from '../modifierDefiance';
 import registerDamageLimiter from '../modifierDamageLimiter';
 import registerTargetImmune, { targetImmuneId } from '../modifierTargetImmune';
 import registerGrowth from '../modifierGrowth';
@@ -219,6 +220,7 @@ export interface Events {
   onDealDamage?: onDealDamage;
   onTakeDamage?: onTakeDamage;
   onKill?: onKill;
+  onTooltip?: onTooltip;
   onDeath?: onDeath;
   onMove?: onMove;
   onTeleport?: onTeleport;
@@ -262,6 +264,8 @@ export function registerEvents(id: string, events: Events) {
   }
   if (events.onKill) {
     Events.onKillSource[id] = events.onKill;
+  if (events.onTooltip) {
+    Events.onTooltipSource[id] = events.onTooltip;
   }
   if (events.onDeath) {
     Events.onDeathSource[id] = events.onDeath;
@@ -456,7 +460,7 @@ export function registerCards(overworld: Overworld) {
   registerPrimedCorpse();
   registerSlime();
   registerConfidence();
-  registerDefiant();
+  registerDefiance();
   registerDamageLimiter();
   registerTargetImmune();
   registerGrowth();
