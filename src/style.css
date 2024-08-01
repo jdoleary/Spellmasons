@@ -1022,13 +1022,12 @@ body.showUpgrades #inspector-tooltip {
 }
 
 #inspector-tooltip-inner {
-  padding: 8px;
   width: 100%;
 }
 
 #inspector-tooltip-container {
   color: white;
-  width: 340px;
+  width: 380px;
 }
 
 .text-center {
