@@ -525,7 +525,7 @@ export function renderRunesMenu(underworld: Underworld) {
                 <div>
                   <div class="rune-name" style="color:black"> </div>
                   <div class="description" style="color:black">
-                  ${modifier?.description && modifier.description}
+                  ${modifier?.description && i18n(modifier.description)}
                   </div>
                 </div>
               </div>

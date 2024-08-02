@@ -9,7 +9,8 @@ import Underworld from './Underworld';
 export const bountyRestoreHealthId = 'Bounty: Restore Health';
 export default function registerBountyRestoreHealth() {
   registerModifiers(bountyRestoreHealthId, {
-    description: 'Restore [quantity] Health when claiming a bounty',
+    description: ('rune_bounty_restore_health'),
+    unitOfMeasure: 'Health',
     costPerUpgrade: 30,
     quantityPerUpgrade: 20,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

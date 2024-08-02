@@ -36,7 +36,7 @@ export function quantityWithUnit(quantity: number, unitOfMeasure: string | undef
     if (!unitOfMeasure) {
         return quantity.toString();
     }
-    // Add space for non `%` unitOfMeasures
-    const unit = unitOfMeasure === '%' ? '%' : ' ' + unitOfMeasure;
+    // Add space units of measure that don't start with %
+    const unit = unitOfMeasure[0] === '%' ? i18n(unitOfMeasure) : ' ' + i18n(unitOfMeasure);
     return `${quantity}${unit}`;
 }

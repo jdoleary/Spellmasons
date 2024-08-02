@@ -10,7 +10,7 @@ import Underworld from './Underworld';
 export const contaminateselfonteleportId = 'Contaminate Self On Teleport';
 export default function registerContaminateSelfOnTeleport() {
   registerModifiers(contaminateselfonteleportId, {
-    description: 'Casts "Contaminate" on self when teleporting',
+    description: ('rune_contaminate_on_tele'),
     costPerUpgrade: 200,
     maxUpgradeCount: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

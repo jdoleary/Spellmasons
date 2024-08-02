@@ -9,7 +9,8 @@ import Underworld from './Underworld';
 export const bountyRestoreStaminaId = 'Bounty: Restore Stamina';
 export default function registerBountyRestoreStamina() {
   registerModifiers(bountyRestoreStaminaId, {
-    description: 'Restore [quantity] Stamina when claiming a bounty',
+    description: ('rune_bounty_restore_stamina'),
+    unitOfMeasure: 'Stamina',
     costPerUpgrade: 20,
     quantityPerUpgrade: 100,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

@@ -7,7 +7,8 @@ import Underworld from './Underworld';
 export const armorId = 'Armor';
 export default function registerArmor() {
   registerModifiers(armorId, {
-    description: 'Reduces incoming damage by [quantity]',
+    description: ('rune_armor'),
+    unitOfMeasure: 'Damage',
     costPerUpgrade: 30,
     quantityPerUpgrade: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

@@ -7,7 +7,8 @@ import Underworld from './Underworld';
 export const liquidmancerId = 'Liquidmancer';
 export default function registerLiquidmancer() {
   registerModifiers(liquidmancerId, {
-    description: 'All units take [quantity]% more damage from liquid',
+    description: ('rune_liquidmancer'),
+    unitOfMeasure: 'Damage',
     costPerUpgrade: 100,
     quantityPerUpgrade: 100,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

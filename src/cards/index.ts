@@ -172,7 +172,6 @@ import registerRevitalize from '../modifierRevitalize';
 import registerSelfInvulnerability from '../modifierSelfImmunity';
 import registerShieldRegen from '../modifierShieldRegen';
 import registerThorns from '../modifierThorns';
-import registerBaseBounce from '../modifierBaseBounce';
 import registerBasePierce from '../modifierBasePierce';
 import registerBaseRadiusBoost from '../modifierBaseRadiusBoost';
 import registerContaminateSelfOnTeleport from '../modifierContaminateSelfOnTeleport';
@@ -504,7 +503,6 @@ export function registerCards(overworld: Overworld) {
   registerManaBarrier();
   registerOnHitHealing();
   registerOnHitPoison();
-  registerBaseBounce();
   registerBasePierce();
   registerBaseRadiusBoost();
   registerContaminateSelfOnTeleport();

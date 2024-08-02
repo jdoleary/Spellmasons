@@ -12,7 +12,8 @@ export const manaBarrierId = 'Mana Barrier';
 export const modifierImagePath = 'spell-effects/modifierShield.png';
 export default function registerManaBarrier() {
   registerModifiers(manaBarrierId, {
-    description: 'Damage is taken from unused mana before health at [quantity]% effectiveness',
+    description: ('rune_manabarrier'),
+    unitOfMeasure: ('% effectiveness'),
     costPerUpgrade: 100,
     quantityPerUpgrade: 50,
     addModifierVisuals: (unit: Unit.IUnit, underworld: Underworld) => {

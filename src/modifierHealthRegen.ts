@@ -8,7 +8,8 @@ import Underworld from './Underworld';
 export const healthRegenId = 'Health Regen';
 export default function registerHealthRegen() {
   registerModifiers(healthRegenId, {
-    description: 'Regenerates [quantity] health at the start of each turn',
+    description: ('rune_health_regen'),
+    unitOfMeasure: 'Health',
     costPerUpgrade: 20,
     quantityPerUpgrade: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

@@ -7,7 +7,7 @@ export const inexhaustibleId = 'Inexhaustible';
 
 export default function registerInexhaustible() {
   registerModifiers(inexhaustibleId, {
-    description: i18n('Movement spells have no expense scaling'),
+    description: ('rune_inexhaustible'),
     costPerUpgrade: 200,
     maxUpgradeCount: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

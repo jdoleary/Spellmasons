@@ -7,7 +7,8 @@ export const affinityDamageId = 'Affinity: Damage';
 
 export default function registerDamageAffinity() {
   registerModifiers(affinityDamageId, {
-    description: i18n('Damage spells cost [quantity]% less mana'),
+    description: ('rune_affinity_damage'),
+    unitOfMeasure: '%',
     costPerUpgrade: 60,
     quantityPerUpgrade: 10,
     maxUpgradeCount: 5,

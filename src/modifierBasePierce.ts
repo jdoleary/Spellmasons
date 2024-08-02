@@ -6,7 +6,8 @@ import Underworld from './Underworld';
 export const modifierBasePierceId = 'Default Pierce';
 export default function registerBasePierce() {
   registerModifiers(modifierBasePierceId, {
-    description: 'Increases default projectile pierce by [quantity]',
+    description: ('rune_base_pierce'),
+    unitOfMeasure: 'Units',
     costPerUpgrade: 80,
     quantityPerUpgrade: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

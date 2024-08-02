@@ -7,7 +7,7 @@ export const endlessQuiverId = 'Endless Quiver';
 
 export default function registerEndlessQuiver() {
   registerModifiers(endlessQuiverId, {
-    description: i18n('Arrows have no expense scaling'),
+    description: ('rune_endless_quiver'),
     costPerUpgrade: 200,
     maxUpgradeCount: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

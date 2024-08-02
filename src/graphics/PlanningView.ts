@@ -940,7 +940,7 @@ function modifiersToText(selectedUnit: Unit.IUnit): string {
     const modifierInstance = selectedUnit.modifiers[key];
     const thumbnailPath = CardUI.getSpellThumbnailPath(allCards[key]?.thumbnail);
     // Note: Runes do not recieve a 'blessing' nor 'curse' class
-    message += `<div class="tooltip-modifier-row"><div class="tooltip-modifier-key ${isRune(modifier) ? '' : value.isCurse ? 'curse' : 'blessing'}">${thumbnailPath ? `<div class="modifier-tooltip-image" style="background-image:url(${thumbnailPath})"></div> ` : ''}${value.tooltip || `${i18n(key)} ${modifier?.probability ? /*Only show quantity for non miniboss modifiers*/'' : value.quantity || ''}`}</div>${modifier?.description ? `<div>${modifier.description}</div>` : ''}</div>`
+    message += `<div class="tooltip-modifier-row"><div class="tooltip-modifier-key ${isRune(modifier) ? '' : value.isCurse ? 'curse' : 'blessing'}">${thumbnailPath ? `<div class="modifier-tooltip-image" style="background-image:url(${thumbnailPath})"></div> ` : ''}${value.tooltip || `${i18n(key)} ${modifier?.probability ? /*Only show quantity for non miniboss modifiers*/'' : value.quantity || ''}`}</div>${modifier?.description ? `<div>${i18n(modifier.description)}</div>` : ''}</div>`
   }
   return `<div class="modifiers">${message}</div>`;
 
