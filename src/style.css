@@ -2167,6 +2167,13 @@ body.view-Game.showUpgrades #perkList.visible {
   text-align: center;
 }
 
+.stat-row-holder .plus-btn-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 40px;
+}
+
 .plus-btn.small {
   width: 24px;
   height: 24px;
