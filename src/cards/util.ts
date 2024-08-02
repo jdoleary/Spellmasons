@@ -33,6 +33,9 @@ export function getOrInitModifier(unit: IUnit, key: string, { isCurse, quantity,
     return modifier;
 }
 export function quantityWithUnit(quantity: number, unitOfMeasure: string | undefined): string {
+    if (!unitOfMeasure) {
+        return quantity.toString();
+    }
     // Add space for non `%` unitOfMeasures
     const unit = unitOfMeasure === '%' ? '%' : ' ' + unitOfMeasure;
     return `${quantity}${unit}`;
