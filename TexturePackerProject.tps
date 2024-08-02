@@ -231,6 +231,30 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">images/crown_1.png</key>
+            <key type="filename">images/crown_10.png</key>
+            <key type="filename">images/crown_2.png</key>
+            <key type="filename">images/crown_3.png</key>
+            <key type="filename">images/crown_4.png</key>
+            <key type="filename">images/crown_5.png</key>
+            <key type="filename">images/crown_6.png</key>
+            <key type="filename">images/crown_7.png</key>
+            <key type="filename">images/crown_8.png</key>
+            <key type="filename">images/crown_9.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0,0</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>6,6,12,12</rect>
+                <key>scale9Paddings</key>
+                <rect>6,6,12,12</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">images/disconnected.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -420,15 +444,30 @@
             <key type="filename">images/projectile/poisonerProjectile_6.png</key>
             <key type="filename">images/projectile/poisonerProjectile_7.png</key>
             <key type="filename">images/projectile/poisonerProjectile_8.png</key>
+            <key type="filename">images/projectile/targetDisk_1.png</key>
+            <key type="filename">images/projectile/targetDisk_2.png</key>
             <key type="filename">images/shadow-summoner.png</key>
+            <key type="filename">images/spell-effects/growth_1.png</key>
+            <key type="filename">images/spell-effects/growth_10.png</key>
+            <key type="filename">images/spell-effects/growth_11.png</key>
+            <key type="filename">images/spell-effects/growth_12.png</key>
+            <key type="filename">images/spell-effects/growth_13.png</key>
+            <key type="filename">images/spell-effects/growth_14.png</key>
+            <key type="filename">images/spell-effects/growth_15.png</key>
+            <key type="filename">images/spell-effects/growth_2.png</key>
+            <key type="filename">images/spell-effects/growth_3.png</key>
+            <key type="filename">images/spell-effects/growth_4.png</key>
+            <key type="filename">images/spell-effects/growth_5.png</key>
+            <key type="filename">images/spell-effects/growth_6.png</key>
+            <key type="filename">images/spell-effects/growth_7.png</key>
+            <key type="filename">images/spell-effects/growth_8.png</key>
+            <key type="filename">images/spell-effects/growth_9.png</key>
             <key type="filename">images/spell-effects/modifierPoisonDrip_1.png</key>
             <key type="filename">images/spell-effects/modifierPoisonDrip_2.png</key>
             <key type="filename">images/spell-effects/modifierPoisonDrip_3.png</key>
             <key type="filename">images/spell-effects/modifierPoisonDrip_4.png</key>
             <key type="filename">images/spell-effects/modifierShield.png</key>
             <key type="filename">images/spell-effects/recall_1.png</key>
-            <key type="filename">images/spell-effects/recall_10.png</key>
-            <key type="filename">images/spell-effects/recall_11.png</key>
             <key type="filename">images/spell-effects/recall_2.png</key>
             <key type="filename">images/spell-effects/recall_3.png</key>
             <key type="filename">images/spell-effects/recall_4.png</key>
@@ -437,6 +476,30 @@
             <key type="filename">images/spell-effects/recall_7.png</key>
             <key type="filename">images/spell-effects/recall_8.png</key>
             <key type="filename">images/spell-effects/recall_9.png</key>
+            <key type="filename">images/spell-effects/shield-blue.png</key>
+            <key type="filename">images/spell-effects/shield-red.png</key>
+            <key type="filename">images/spell-effects/slime_1.png</key>
+            <key type="filename">images/spell-effects/slime_10.png</key>
+            <key type="filename">images/spell-effects/slime_11.png</key>
+            <key type="filename">images/spell-effects/slime_12.png</key>
+            <key type="filename">images/spell-effects/slime_13.png</key>
+            <key type="filename">images/spell-effects/slime_14.png</key>
+            <key type="filename">images/spell-effects/slime_15.png</key>
+            <key type="filename">images/spell-effects/slime_16.png</key>
+            <key type="filename">images/spell-effects/slime_17.png</key>
+            <key type="filename">images/spell-effects/slime_18.png</key>
+            <key type="filename">images/spell-effects/slime_19.png</key>
+            <key type="filename">images/spell-effects/slime_2.png</key>
+            <key type="filename">images/spell-effects/slime_20.png</key>
+            <key type="filename">images/spell-effects/slime_21.png</key>
+            <key type="filename">images/spell-effects/slime_22.png</key>
+            <key type="filename">images/spell-effects/slime_3.png</key>
+            <key type="filename">images/spell-effects/slime_4.png</key>
+            <key type="filename">images/spell-effects/slime_5.png</key>
+            <key type="filename">images/spell-effects/slime_6.png</key>
+            <key type="filename">images/spell-effects/slime_7.png</key>
+            <key type="filename">images/spell-effects/slime_8.png</key>
+            <key type="filename">images/spell-effects/slime_9.png</key>
             <key type="filename">images/spell-effects/spellDebilitate_1.png</key>
             <key type="filename">images/spell-effects/spellDebilitate_10.png</key>
             <key type="filename">images/spell-effects/spellDebilitate_11.png</key>
@@ -631,6 +694,7 @@
             <key type="filename">images/tiles/lava/liquidWGroundE.png</key>
             <key type="filename">images/tiles/lava/wall.png</key>
             <key type="filename">images/tiles/lava/wallN.png</key>
+            <key type="filename">images/tiles/wallShadow.png</key>
             <key type="filename">images/tiles/water/all_ground.png</key>
             <key type="filename">images/tiles/water/all_ground_brick_1.png</key>
             <key type="filename">images/tiles/water/all_ground_brick_2.png</key>
@@ -805,10 +869,12 @@
             <key type="filename">public/images/spell/spellIconBurst.png</key>
             <key type="filename">public/images/spell/spellIconCaptureSoul.png</key>
             <key type="filename">public/images/spell/spellIconClone.png</key>
+            <key type="filename">public/images/spell/spellIconClone2.png</key>
             <key type="filename">public/images/spell/spellIconConnect.png</key>
             <key type="filename">public/images/spell/spellIconConserve.png</key>
             <key type="filename">public/images/spell/spellIconContaminate.png</key>
             <key type="filename">public/images/spell/spellIconCorpseExplosion.png</key>
+            <key type="filename">public/images/spell/spellIconCursify.png</key>
             <key type="filename">public/images/spell/spellIconDash.png</key>
             <key type="filename">public/images/spell/spellIconDeathWager.png</key>
             <key type="filename">public/images/spell/spellIconDebilitate.png</key>
@@ -816,12 +882,15 @@
             <key type="filename">public/images/spell/spellIconDelay.png</key>
             <key type="filename">public/images/spell/spellIconDisplace.png</key>
             <key type="filename">public/images/spell/spellIconDrown.png</key>
+            <key type="filename">public/images/spell/spellIconDrown2.png</key>
+            <key type="filename">public/images/spell/spellIconDrown3.png</key>
             <key type="filename">public/images/spell/spellIconEmpower.png</key>
             <key type="filename">public/images/spell/spellIconEnfeeble.png</key>
             <key type="filename">public/images/spell/spellIconExecution.png</key>
             <key type="filename">public/images/spell/spellIconExecutioner.png</key>
             <key type="filename">public/images/spell/spellIconExpanding.png</key>
             <key type="filename">public/images/spell/spellIconExplosiveArrow.png</key>
+            <key type="filename">public/images/spell/spellIconFling.png</key>
             <key type="filename">public/images/spell/spellIconFortify.png</key>
             <key type="filename">public/images/spell/spellIconFreeze.png</key>
             <key type="filename">public/images/spell/spellIconHeal.png</key>
@@ -836,6 +905,7 @@
             <key type="filename">public/images/spell/spellIconMegaSlash.png</key>
             <key type="filename">public/images/spell/spellIconMerge.png</key>
             <key type="filename">public/images/spell/spellIconMeteor.png</key>
+            <key type="filename">public/images/spell/spellIconPierce.png</key>
             <key type="filename">public/images/spell/spellIconPlusRadius.png</key>
             <key type="filename">public/images/spell/spellIconPoison.png</key>
             <key type="filename">public/images/spell/spellIconPoison2.png</key>
@@ -851,6 +921,7 @@
             <key type="filename">public/images/spell/spellIconResurrect.png</key>
             <key type="filename">public/images/spell/spellIconResurrect2.png</key>
             <key type="filename">public/images/spell/spellIconResurrect3.png</key>
+            <key type="filename">public/images/spell/spellIconRicochet.png</key>
             <key type="filename">public/images/spell/spellIconSacrifice.png</key>
             <key type="filename">public/images/spell/spellIconSendMana.png</key>
             <key type="filename">public/images/spell/spellIconShatter.png</key>
@@ -879,6 +950,7 @@
             <key type="filename">public/images/spell/spellIconSummon_glop.png</key>
             <key type="filename">public/images/spell/spellIconSummon_golem.png</key>
             <key type="filename">public/images/spell/spellIconSummon_golemcrew.png</key>
+            <key type="filename">public/images/spell/spellIconSummon_goru.png</key>
             <key type="filename">public/images/spell/spellIconSummon_greenglop.png</key>
             <key type="filename">public/images/spell/spellIconSummon_gripthulu.png</key>
             <key type="filename">public/images/spell/spellIconSummon_iceurn.png</key>
@@ -893,6 +965,7 @@
             <key type="filename">public/images/spell/spellIconTargetColumn.png</key>
             <key type="filename">public/images/spell/spellIconTargetCone.png</key>
             <key type="filename">public/images/spell/spellIconTargetCursed.png</key>
+            <key type="filename">public/images/spell/spellIconTargetDisk.png</key>
             <key type="filename">public/images/spell/spellIconTargetInjured.png</key>
             <key type="filename">public/images/spell/spellIconTargetKind.png</key>
             <key type="filename">public/images/spell/spellIconTargetSimilar.png</key>
@@ -1085,6 +1158,20 @@
             <key type="filename">images/spell-effects/potionPickup_7.png</key>
             <key type="filename">images/spell-effects/potionPickup_8.png</key>
             <key type="filename">images/spell-effects/potionPickup_9.png</key>
+            <key type="filename">images/units/playerAttackBomb_1.png</key>
+            <key type="filename">images/units/playerAttackBomb_10.png</key>
+            <key type="filename">images/units/playerAttackBomb_11.png</key>
+            <key type="filename">images/units/playerAttackBomb_12.png</key>
+            <key type="filename">images/units/playerAttackBomb_13.png</key>
+            <key type="filename">images/units/playerAttackBomb_14.png</key>
+            <key type="filename">images/units/playerAttackBomb_2.png</key>
+            <key type="filename">images/units/playerAttackBomb_3.png</key>
+            <key type="filename">images/units/playerAttackBomb_4.png</key>
+            <key type="filename">images/units/playerAttackBomb_5.png</key>
+            <key type="filename">images/units/playerAttackBomb_6.png</key>
+            <key type="filename">images/units/playerAttackBomb_7.png</key>
+            <key type="filename">images/units/playerAttackBomb_8.png</key>
+            <key type="filename">images/units/playerAttackBomb_9.png</key>
             <key type="filename">images/units/playerAttackSmallMagic_1.png</key>
             <key type="filename">images/units/playerAttackSmallMagic_10.png</key>
             <key type="filename">images/units/playerAttackSmallMagic_11.png</key>
@@ -1306,21 +1393,19 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">images/time-circle.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0,0</point_f>
-                <key>spriteScale</key>
-                <double>1</double>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>10,10,20,20</rect>
-                <key>scale9Paddings</key>
-                <rect>10,10,20,20</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
+            <key type="filename">images/spell-effects/targetImmune_1.png</key>
+            <key type="filename">images/spell-effects/targetImmune_10.png</key>
+            <key type="filename">images/spell-effects/targetImmune_11.png</key>
+            <key type="filename">images/spell-effects/targetImmune_12.png</key>
+            <key type="filename">images/spell-effects/targetImmune_13.png</key>
+            <key type="filename">images/spell-effects/targetImmune_2.png</key>
+            <key type="filename">images/spell-effects/targetImmune_3.png</key>
+            <key type="filename">images/spell-effects/targetImmune_4.png</key>
+            <key type="filename">images/spell-effects/targetImmune_5.png</key>
+            <key type="filename">images/spell-effects/targetImmune_6.png</key>
+            <key type="filename">images/spell-effects/targetImmune_7.png</key>
+            <key type="filename">images/spell-effects/targetImmune_8.png</key>
+            <key type="filename">images/spell-effects/targetImmune_9.png</key>
             <key type="filename">images/units/archerAttack_1.png</key>
             <key type="filename">images/units/archerAttack_2.png</key>
             <key type="filename">images/units/archerAttack_3.png</key>
@@ -1501,6 +1586,21 @@
                 <rect>17,17,34,34</rect>
                 <key>scale9Paddings</key>
                 <rect>17,17,34,34</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">images/time-circle.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0,0</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>10,10,20,20</rect>
+                <key>scale9Paddings</key>
+                <rect>10,10,20,20</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -1729,6 +1829,33 @@
                 <rect>33,32,65,64</rect>
                 <key>scale9Paddings</key>
                 <rect>33,32,65,64</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">images/units/tombstone_0.png</key>
+            <key type="filename">images/units/tombstone_1.png</key>
+            <key type="filename">images/units/tombstone_10.png</key>
+            <key type="filename">images/units/tombstone_11.png</key>
+            <key type="filename">images/units/tombstone_12.png</key>
+            <key type="filename">images/units/tombstone_2.png</key>
+            <key type="filename">images/units/tombstone_3.png</key>
+            <key type="filename">images/units/tombstone_4.png</key>
+            <key type="filename">images/units/tombstone_5.png</key>
+            <key type="filename">images/units/tombstone_6.png</key>
+            <key type="filename">images/units/tombstone_7.png</key>
+            <key type="filename">images/units/tombstone_8.png</key>
+            <key type="filename">images/units/tombstone_9.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0,0</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>18,18,35,35</rect>
+                <key>scale9Paddings</key>
+                <rect>18,18,35,35</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
