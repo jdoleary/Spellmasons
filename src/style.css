@@ -2131,6 +2131,7 @@ body.view-Game.showUpgrades #perkList.visible {
   display: flex;
   gap: 8px;
   justify-content: flex-start;
+  align-items: center;
 }
 
 .stat-row .description {
