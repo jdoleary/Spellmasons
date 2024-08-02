@@ -17,10 +17,6 @@ export default function registerOverheal() {
       getOrInitModifier(unit, overhealId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, overhealId);
       });
-
-      if (!prediction) {
-        updateTooltip(unit);
-      }
     }
   });
   registerEvents(overhealId, {
