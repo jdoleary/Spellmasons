@@ -571,12 +571,12 @@ export function renderRunesMenu(underworld: Underworld) {
             const maxRuneQuantity = Cards.getMaxRuneQuantity(modifier);
             // If already maxed, show maxed in black to indicate no change
             if (playerRuneQuantity >= maxRuneQuantity) {
-              elRuneName.innerHTML = `${stat || ''}  Maxed`;
+              elRuneName.innerHTML = `${stat || ''} Maxed`;
               return;
             }
             // If going to max, show maxed in green
             if (newQuantity >= maxRuneQuantity) {
-              elRuneName.innerHTML = `${stat || ''}   <span style="color:green"> Max </span>`;
+              elRuneName.innerHTML = `${stat || ''}  <span>${quantityWithUnit(playerRuneQuantity, modifier.unitOfMeasure)}</span> <span style="color:green"> → Max </span>`;
               return;
             }
           }
