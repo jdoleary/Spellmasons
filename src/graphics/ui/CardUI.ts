@@ -553,11 +553,12 @@ export function renderRunesMenu(underworld: Underworld) {
 
     const elRuneName = (el as HTMLElement).querySelector('.rune-name');
     const updateRuneName = (hovered: boolean = false) => {
-      if (['Health', 'Mana', 'Stamina', 'Cast Range'].includes(stat)) {
-        // Do not update name for basic player stats since they aren't stored as modifiers
-        return;
-      }
       if (elRuneName) {
+        if (['Health', 'Mana', 'Stamina', 'Cast Range'].includes(stat)) {
+          // Special handling for basic player stats since they aren't stored as modifiers
+          elRuneName.innerHTML = `${stat}`;
+          return;
+        }
         if (modifier) {
           // Quantity already owned by the player
           const playerRuneQuantity = playerModifier?.quantity || 0;
