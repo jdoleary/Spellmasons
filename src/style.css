@@ -2131,6 +2131,7 @@ body.view-Game.showUpgrades #perkList.visible {
   display: flex;
   gap: 8px;
   justify-content: flex-start;
+  align-items: center;
 }
 
 .stat-row .description {
@@ -2164,6 +2165,13 @@ body.view-Game.showUpgrades #perkList.visible {
 
 .stat-value {
   text-align: center;
+}
+
+.stat-row-holder .plus-btn-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 40px;
 }
 
 .plus-btn.small {

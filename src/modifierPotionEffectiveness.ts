@@ -8,7 +8,8 @@ import Underworld from './Underworld';
 export const potionEffectivenessId = 'Potion Effectiveness';
 export default function registerPotionEffectiveness() {
   registerModifiers(potionEffectivenessId, {
-    description: 'Potions are [quantity]% more effective',
+    description: 'rune_potion_effectiveness',
+    unitOfMeasure: '% more effective',
     costPerUpgrade: 60,
     quantityPerUpgrade: 50,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

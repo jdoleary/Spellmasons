@@ -6,7 +6,7 @@ import Underworld from './Underworld';
 export const modifierBaseRadiusBoostId = 'Default Radius Boost';
 export default function registerBaseRadiusBoost() {
   registerModifiers(modifierBaseRadiusBoostId, {
-    description: 'Increases radius of all spell effects by [quantity]',
+    description: ('rune_base_radius'),
     costPerUpgrade: 100,
     quantityPerUpgrade: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

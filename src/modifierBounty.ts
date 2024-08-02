@@ -11,7 +11,7 @@ export const bountyId = 'Bounty';
 export const bountyColor = 0xffdc64;
 export default function registerBounty() {
   registerModifiers(bountyId, {
-    description: 'This unit has a bounty. Killing them will trigger bounty effects.',
+    description: ('rune_bounty'),
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, bountyId, { isCurse: false, quantity, keepOnDeath: false }, () => {
         Unit.addEvent(unit, bountyId);

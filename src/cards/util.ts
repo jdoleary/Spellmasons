@@ -1,3 +1,4 @@
+import { allModifiers } from ".";
 import { IUnit } from "../entity/Unit";
 
 export interface Modifier {
@@ -24,5 +25,18 @@ export function getOrInitModifier(unit: IUnit, key: string, { isCurse, quantity,
         unit.modifiers[key] = modifier;
     }
     modifier.quantity += quantity;
+    // Auto tooltip for modifiers with `unitOfMeasure`
+    const modifierSource = allModifiers[key];
+    if (modifierSource && modifierSource.unitOfMeasure) {
+        modifier.tooltip = `${i18n(key)}: ${quantityWithUnit(modifier.quantity, modifierSource.unitOfMeasure)}`
+    }
     return modifier;
+}
+export function quantityWithUnit(quantity: number, unitOfMeasure: string | undefined): string {
+    if (!unitOfMeasure) {
+        return quantity.toString();
+    }
+    // Add space units of measure that don't start with %
+    const unit = unitOfMeasure[0] === '%' ? i18n(unitOfMeasure) : ' ' + i18n(unitOfMeasure);
+    return `${quantity}${unit}`;
 }

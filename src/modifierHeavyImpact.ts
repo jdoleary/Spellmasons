@@ -7,7 +7,8 @@ import Underworld from './Underworld';
 export const heavyImpactsId = 'Heavy Impacts';
 export default function registerHeavyImpacts() {
   registerModifiers(heavyImpactsId, {
-    description: 'All units take [quantity]% more impact damage',
+    description: ('rune_heavy_impact'),
+    unitOfMeasure: 'Damage',
     costPerUpgrade: 100,
     quantityPerUpgrade: 100,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

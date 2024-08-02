@@ -2,22 +2,20 @@ import { registerEvents, registerModifiers } from "./cards";
 import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
+import * as Cards from './cards';
 
 // Deals [quantity] damage to an attacker when hit
 export const thornsId = 'Thorns';
 export default function registerThorns() {
   registerModifiers(thornsId, {
-    description: 'Deals [quantity] damage to an attacker when hit',
+    unitOfMeasure: 'Damage',
+    description: 'rune_thorns_description',
     costPerUpgrade: 80,
     quantityPerUpgrade: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, thornsId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, thornsId);
       });
-
-      if (!prediction) {
-        updateTooltip(unit);
-      }
     }
   });
   registerEvents(thornsId, {
@@ -48,12 +46,4 @@ export default function registerThorns() {
       return amount;
     }
   });
-}
-
-function updateTooltip(unit: Unit.IUnit) {
-  const modifier = unit.modifiers[thornsId];
-  if (modifier) {
-    // Set tooltip:
-    modifier.tooltip = `${modifier.quantity} ${i18n('Thorns')} ${i18n('Damage')}`
-  }
 }

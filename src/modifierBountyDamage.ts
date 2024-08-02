@@ -9,7 +9,8 @@ import Underworld from './Underworld';
 export const bountyDamageId = 'Bounty: Extra Damage';
 export default function registerBountyDamage() {
   registerModifiers(bountyDamageId, {
-    description: 'Deal [quantity]% more damage against units with a bounty',
+    description: ('rune_bounty_damage'),
+    unitOfMeasure: 'Damage',
     costPerUpgrade: 100,
     quantityPerUpgrade: 100,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

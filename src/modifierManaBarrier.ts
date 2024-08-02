@@ -12,7 +12,8 @@ export const manaBarrierId = 'Mana Barrier';
 export const modifierImagePath = 'spell-effects/modifierShield.png';
 export default function registerManaBarrier() {
   registerModifiers(manaBarrierId, {
-    description: 'Damage is taken from unused mana before health at [quantity]% effectiveness',
+    description: ('rune_manabarrier'),
+    unitOfMeasure: ('% effectiveness'),
     costPerUpgrade: 100,
     quantityPerUpgrade: 50,
     addModifierVisuals: (unit: Unit.IUnit, underworld: Underworld) => {
@@ -53,7 +54,7 @@ export default function registerManaBarrier() {
         // This returns the maximum blockable damage,
         // based on the unit's mana and modifier quantity
         // We need to update this any time mana changes
-        modifier.tooltip = `${Math.floor(unit.mana * CalcMult(modifier.quantity))} ${i18n('Damage')} ${i18n('Mana Barrier')}`
+        modifier.tooltip = `${i18n('Mana Barrier')}: ${Math.floor(unit.mana * CalcMult(modifier.quantity))} ${i18n('Damage')}`
       }
     },
     onTakeDamage: (unit: Unit.IUnit, amount: number, underworld: Underworld, prediction: boolean, damageDealer?: Unit.IUnit) => {

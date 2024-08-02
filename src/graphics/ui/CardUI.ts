@@ -19,6 +19,7 @@ import { keyDown } from './eventListeners';
 import { chooseBookmark } from '../../views';
 import { chooseOneOfSeeded, getUniqueSeedString } from '../../jmath/rand';
 import seedrandom from 'seedrandom';
+import { quantityWithUnit } from '../../cards/util';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
@@ -516,17 +517,15 @@ export function renderRunesMenu(underworld: Underworld) {
     if (!globalThis.player) {
       return '';
     }
-    const modifier = Cards.allModifiers[modifierKey]
-
+    const modifier = Cards.allModifiers[modifierKey];
+    const modifierInstance = globalThis.player.unit.modifiers[modifierKey];
     return `<div class="stat-row flex" data-stat="${modifierKey}">
               <div class="stat-row-left">
-                <div class="plus-btn-container" style="color:black"><div class="stat-value" style="color:black">${modifier?.costPerUpgrade !== undefined && `${modifier.costPerUpgrade < 0 ? '+' : ''}${Math.abs(modifier.costPerUpgrade)}` || '&nbsp;'}</div></div>
+                <div class="plus-btn-container" style="color:black"><div class="stat-value" style="color:black">${modifier?.costPerUpgrade !== undefined && `${modifier.costPerUpgrade < 0 ? '+' : ''}${Math.abs(modifier.costPerUpgrade)}sp` || '&nbsp;'}</div></div>
                 <div>
-                  <div class="rune-name" style="color:black">
-                  ${modifierKey || ''} ${globalThis.player.unit.modifiers[modifierKey]?.quantity || ''}
-                  </div>
+                  <div class="rune-name" style="color:black"> </div>
                   <div class="description" style="color:black">
-                  ${Cards.allModifiers[modifierKey]?.description}
+                  ${modifier?.description && i18n(modifier.description)}
                   </div>
                 </div>
               </div>
@@ -536,7 +535,7 @@ export function renderRunesMenu(underworld: Underworld) {
   elRunes.innerHTML = `
 <div class="pick-stats">
   <div class="card-inner flex" style="color:black">
-  <h2>Skill Points: ${statPoints}</h2>
+  <h2>Skill Points: ${statPoints}sp</h2>
   <div class="stat-row-holder">
   ${chosenRunes.flatMap(key => key ? [elStatUpgradeRow(key)] : []).join('')}
 </div>
@@ -554,11 +553,12 @@ export function renderRunesMenu(underworld: Underworld) {
 
     const elRuneName = (el as HTMLElement).querySelector('.rune-name');
     const updateRuneName = (hovered: boolean = false) => {
-      if (['Health', 'Mana', 'Stamina', 'Cast Range'].includes(stat)) {
-        // Do not update name for basic player stats since they aren't stored as modifiers
-        return;
-      }
       if (elRuneName) {
+        if (['Health', 'Mana', 'Stamina', 'Cast Range'].includes(stat)) {
+          // Special handling for basic player stats since they aren't stored as modifiers
+          elRuneName.innerHTML = `${stat}`;
+          return;
+        }
         if (modifier) {
           // Quantity already owned by the player
           const playerRuneQuantity = playerModifier?.quantity || 0;
@@ -571,18 +571,18 @@ export function renderRunesMenu(underworld: Underworld) {
             const maxRuneQuantity = Cards.getMaxRuneQuantity(modifier);
             // If already maxed, show maxed in black to indicate no change
             if (playerRuneQuantity >= maxRuneQuantity) {
-              elRuneName.innerHTML = `${stat || ''}  [Maxed]`;
+              elRuneName.innerHTML = `${stat || ''} Maxed`;
               return;
             }
             // If going to max, show maxed in green
             if (newQuantity >= maxRuneQuantity) {
-              elRuneName.innerHTML = `${stat || ''}   <span style="color:green"> [Max] </span>`;
+              elRuneName.innerHTML = `${stat || ''}  <span>${quantityWithUnit(playerRuneQuantity, modifier.unitOfMeasure)}</span> <span style="color:green"> → Max </span>`;
               return;
             }
           }
 
           // If not going to max, just show new quantity (or nothing if newQuantity is 0)
-          elRuneName.innerHTML = `${stat || ''}  ${newQuantity ? `<span style="color:${color}"> [${newQuantity}] </span>` : ''}`
+          elRuneName.innerHTML = `${stat || ''}  ${newQuantity ? `${playerRuneQuantity === 0 ? '' : `<span>${quantityWithUnit(playerRuneQuantity, modifier.unitOfMeasure)}</span>`}<span style="color:${color}"> ${hovered ? ` + ${quantityWithUnit(modifier.quantityPerUpgrade || 1, modifier.unitOfMeasure)}` : ''}</span>` : ''}`
         }
       }
     }

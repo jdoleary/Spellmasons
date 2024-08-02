@@ -9,7 +9,8 @@ import Underworld from './Underworld';
 export const bountyRestoreManaId = 'Bounty: Restore Mana';
 export default function registerBountyRestoreMana() {
   registerModifiers(bountyRestoreManaId, {
-    description: 'Restore [quantity] Mana when claiming a bounty',
+    description: ('rune_bounty_restore_mana'),
+    unitOfMeasure: 'Mana',
     costPerUpgrade: 30,
     quantityPerUpgrade: 10,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

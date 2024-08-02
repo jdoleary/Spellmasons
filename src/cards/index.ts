@@ -172,7 +172,6 @@ import registerRevitalize from '../modifierRevitalize';
 import registerSelfInvulnerability from '../modifierSelfImmunity';
 import registerShieldRegen from '../modifierShieldRegen';
 import registerThorns from '../modifierThorns';
-import registerBaseBounce from '../modifierBaseBounce';
 import registerBasePierce from '../modifierBasePierce';
 import registerBaseRadiusBoost from '../modifierBaseRadiusBoost';
 import registerContaminateSelfOnTeleport from '../modifierContaminateSelfOnTeleport';
@@ -189,6 +188,7 @@ import registerLiquidmancer from '../modifierLiquidmancer';
 import registerHeavyImpacts from '../modifierHeavyImpact';
 import registerPotionEffectiveness from '../modifierPotionEffectiveness';
 import registerPotionBarrier from '../modifierPotionBarrier';
+import type { Modifier } from './util';
 
 
 export interface Modifiers {
@@ -202,6 +202,9 @@ export interface Modifiers {
   addModifierVisuals?: (unit: Unit.IUnit, underworld: Underworld) => void;
   add?: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra?: object) => void;
   remove?: (unit: Unit.IUnit, underworld: Underworld) => void;
+  /* Quantity must be overridden special in the description so that it can change based on hover / current / next
+  state in the Rune purchasing menu */
+  unitOfMeasure?: string;
   description?: string;
   // If the modifier may be automatically added to minibosses
   // when the spawn, then the modifier gets a probability
@@ -500,7 +503,6 @@ export function registerCards(overworld: Overworld) {
   registerManaBarrier();
   registerOnHitHealing();
   registerOnHitPoison();
-  registerBaseBounce();
   registerBasePierce();
   registerBaseRadiusBoost();
   registerContaminateSelfOnTeleport();

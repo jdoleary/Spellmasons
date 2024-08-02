@@ -885,7 +885,7 @@ export function updateTooltipContent(underworld: Underworld) {
             elInspectorTooltipImage.style.display = "block";
           }
           const extraText = `
-${modifiersToText(globalThis.selectedUnit.modifiers)}
+${modifiersToText(globalThis.selectedUnit)}
 ${globalThis.selectedUnit.manaCostToCast && globalThis.selectedUnit.manaCostToCast > 0 ? `${i18n('mana cost to cast')}: ${globalThis.selectedUnit.manaCostToCast}` : ''}
           `.trim();
           // NOTE: globalThis.selectedUnit.name is NOT localized on purpose
@@ -929,16 +929,18 @@ ${i18n(globalThis.selectedPickup.description(globalThis.selectedPickup))}
 
   }
 }
-function modifiersToText(modifiers: object): string {
+function modifiersToText(selectedUnit: Unit.IUnit): string {
+  const { modifiers } = selectedUnit;
   if (Object.keys(modifiers).length === 0) {
     return ''
   }
   let message = '';
   for (let [key, value] of Object.entries(modifiers)) {
     const modifier = Cards.allModifiers[key];
+    const modifierInstance = selectedUnit.modifiers[key];
     const thumbnailPath = CardUI.getSpellThumbnailPath(allCards[key]?.thumbnail);
     // Note: Runes do not recieve a 'blessing' nor 'curse' class
-    message += `<div class="tooltip-modifier-row"><div class="tooltip-modifier-key ${isRune(modifier) ? '' : value.isCurse ? 'curse' : 'blessing'}">${thumbnailPath ? `<div class="modifier-tooltip-image" style="background-image:url(${thumbnailPath})"></div> ` : ''}${value.tooltip || `${i18n(key)} ${modifier?.probability ? /*Only show quantity for non miniboss modifiers*/'' : value.quantity || ''}`}</div>${modifier?.description ? `<div>${modifier.description}</div>` : ''}</div>`
+    message += `<div class="tooltip-modifier-row"><div class="tooltip-modifier-key ${isRune(modifier) ? '' : value.isCurse ? 'curse' : 'blessing'}">${thumbnailPath ? `<div class="modifier-tooltip-image" style="background-image:url(${thumbnailPath})"></div> ` : ''}${value.tooltip || `${i18n(key)} ${modifier?.probability ? /*Only show quantity for non miniboss modifiers*/'' : value.quantity || ''}`}</div>${modifier?.description ? `<div>${i18n(modifier.description)}</div>` : ''}</div>`
   }
   return `<div class="modifiers">${message}</div>`;
 

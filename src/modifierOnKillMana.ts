@@ -8,7 +8,8 @@ import Underworld from './Underworld';
 export const onKillManaId = 'Mana on Kill';
 export default function registerOnKillMana() {
   registerModifiers(onKillManaId, {
-    description: 'Restores [quantity] mana on kill',
+    description: 'rune_on_kill_mana',
+    unitOfMeasure: 'Mana',
     costPerUpgrade: 20,
     quantityPerUpgrade: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

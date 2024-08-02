@@ -9,17 +9,14 @@ import Underworld from './Underworld';
 export const overhealId = 'Overheal';
 export default function registerOverheal() {
   registerModifiers(overhealId, {
-    description: 'Grants healing over max as a shield at [quantity]% effectiveness',
+    description: 'rune_overheal',
+    unitOfMeasure: '% effectiveness',
     costPerUpgrade: 50,
     quantityPerUpgrade: 20,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, overhealId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, overhealId);
       });
-
-      if (!prediction) {
-        updateTooltip(unit);
-      }
     }
   });
   registerEvents(overhealId, {
@@ -46,14 +43,6 @@ export default function registerOverheal() {
       return amount;
     }
   });
-}
-
-function updateTooltip(unit: Unit.IUnit) {
-  const modifier = unit.modifiers[overhealId];
-  if (modifier) {
-    // Set tooltip:
-    modifier.tooltip = `${modifier.quantity}% ${i18n('Overheal')} ${i18n('Effectiveness')}`
-  }
 }
 
 function CalcMult(quantity: number): number {

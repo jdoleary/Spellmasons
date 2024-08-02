@@ -9,7 +9,7 @@ import { contaminate_id } from './cards/contaminate';
 export const runeWitchId = 'Witch';
 export default function registerWitch() {
   registerModifiers(runeWitchId, {
-    description: i18n('Grants an empowered contaminate spell'),
+    description: 'rune_witch',
     costPerUpgrade: 100,
     maxUpgradeCount: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

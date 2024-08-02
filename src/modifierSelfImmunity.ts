@@ -8,7 +8,7 @@ import Underworld from './Underworld';
 export const selfInvulnerabilityId = 'Self Invulnerability';
 export default function registerSelfInvulnerability() {
   registerModifiers(selfInvulnerabilityId, {
-    description: 'Grants a unit invulnerability to its own damage (I.E. explosives)',
+    description: 'rune_self_invulnerability',
     costPerUpgrade: 80,
     maxUpgradeCount: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

@@ -111,7 +111,6 @@ import { chooseBookmark } from './views';
 import { runeGamblerId } from './modifierGambler';
 import { runeTimemasonId } from './modifierTimemason';
 import { manaBarrierId } from './modifierManaBarrier';
-import { modifierBaseBounceId } from './modifierBaseBounce';
 import { modifierBasePierceId } from './modifierBasePierce';
 import { modifierBaseRadiusBoostId } from './modifierBaseRadiusBoost';
 import { bountyHunterId } from './modifierBountyHunter';
@@ -3721,7 +3720,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       aggregator: {
         radiusBoost: casterUnit.modifiers[modifierBaseRadiusBoostId]?.quantity || 0,
         additionalPierce: casterUnit.modifiers[modifierBasePierceId]?.quantity || 0,
-        additionalBounce: casterUnit.modifiers[modifierBaseBounceId]?.quantity || 0,
+        additionalBounce: 0,
       },
       initialTargetedUnitId,
       initialTargetedPickupId
