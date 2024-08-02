@@ -1716,7 +1716,7 @@ export function drawSelectedGraphics(unit: IUnit, prediction: boolean = false, u
           : colors.attackRangeEnemy;
 
       // Draw outer attack range circle
-      drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
+      drawUICircle(globalThis.selectedUnitGraphics, unit.predictionCopy || unit, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
 
       // TODO - Consider re-implementing attack lines with AI refactor
       // https://github.com/jdoleary/Spellmasons/issues/408
@@ -1746,15 +1746,15 @@ export function drawSelectedGraphics(unit: IUnit, prediction: boolean = false, u
         globalThis.selectedUnitGraphics.lineStyle(2, rangeCircleColor, 1.0);
 
         if (unit.unitSubType === UnitSubType.RANGED_RADIUS) {
-          drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
+          drawUICircle(globalThis.selectedUnitGraphics, unit.predictionCopy || unit, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
         } else if (unit.unitSubType === UnitSubType.SUPPORT_CLASS) {
-          drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Support Range'));
+          drawUICircle(globalThis.selectedUnitGraphics, unit.predictionCopy || unit, unit.attackRange, rangeCircleColor, i18n('Support Range'));
         } else if (unit.unitSubType === UnitSubType.MELEE) {
-          drawUICircle(globalThis.selectedUnitGraphics, unit, unit.staminaMax + unit.attackRange, rangeCircleColor, i18n('Attack Range'));
+          drawUICircle(globalThis.selectedUnitGraphics, unit.predictionCopy || unit, unit.staminaMax + unit.attackRange, rangeCircleColor, i18n('Attack Range'));
         } else if (unit.unitSubType === UnitSubType.DOODAD) {
-          drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Explosion Radius'));
+          drawUICircle(globalThis.selectedUnitGraphics, unit.predictionCopy || unit, unit.attackRange, rangeCircleColor, i18n('Explosion Radius'));
         } else if (unit.unitSubType === UnitSubType.GORU_BOSS) {
-          drawUICircle(globalThis.selectedUnitGraphics, unit, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
+          drawUICircle(globalThis.selectedUnitGraphics, unit.predictionCopy || unit, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
         }
       }
     }
