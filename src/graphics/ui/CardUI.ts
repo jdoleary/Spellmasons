@@ -520,7 +520,7 @@ export function renderRunesMenu(underworld: Underworld) {
 
     return `<div class="stat-row flex" data-stat="${modifierKey}">
               <div class="stat-row-left">
-                <div class="plus-btn-container" style="color:black"><div class="stat-value" style="color:black">${modifier?.costPerUpgrade || '&nbsp;'}</div></div>
+                <div class="plus-btn-container" style="color:black"><div class="stat-value" style="color:black">${modifier?.costPerUpgrade !== undefined && `${modifier.costPerUpgrade < 0 ? '+' : ''}${Math.abs(modifier.costPerUpgrade)}` || '&nbsp;'}</div></div>
                 <div>
                   <div class="rune-name" style="color:black">
                   ${modifierKey || ''} ${globalThis.player.unit.modifiers[modifierKey]?.quantity || ''}
