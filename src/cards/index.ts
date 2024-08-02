@@ -205,6 +205,7 @@ export interface Modifiers {
   remove?: (unit: Unit.IUnit, underworld: Underworld) => void;
   /* Quantity must be overridden special in the description so that it can change based on hover / current / next
   state in the Rune purchasing menu */
+  unitOfMeasure?: string;
   description?: (unit: Unit.IUnit, modifierSource: Modifiers, quantityOverride: string, modifierInstance: Modifier | undefined) => string;
   // If the modifier may be automatically added to minibosses
   // when the spawn, then the modifier gets a probability

@@ -2,13 +2,15 @@ import { registerEvents, registerModifiers } from "./cards";
 import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
+import * as Cards from './cards';
 
 // Increases incoming healing by [quantity]%
 export const revitalizeId = 'Revitalize';
 const QUANTITY_PER_UPGRADE = 20;
 export default function registerRevitalize() {
   registerModifiers(revitalizeId, {
-    description: (unit, modifierSource, quantity, modifierInstance) => i18n(['revitalize_description', quantity.toString()]),
+    unitOfMeasure: '%',
+    description: (unit, modifierSource, quantity, modifierInstance) => i18n('revitalize_description'),
     costPerUpgrade: 40,
     quantityPerUpgrade: QUANTITY_PER_UPGRADE,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
@@ -38,10 +40,11 @@ export default function registerRevitalize() {
 }
 
 function updateTooltip(unit: Unit.IUnit) {
+  const modifierSource = Cards.allModifiers[revitalizeId];
   const modifier = unit.modifiers[revitalizeId];
   if (modifier) {
     // Set tooltip:
-    modifier.tooltip = i18n(revitalizeId);
+    modifier.tooltip = `${i18n(revitalizeId)}: ${modifier.quantity}${modifierSource?.unitOfMeasure || ''}`;
   }
 }
 

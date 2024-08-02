@@ -522,9 +522,7 @@ export function renderRunesMenu(underworld: Underworld) {
               <div class="stat-row-left">
                 <div class="plus-btn-container" style="color:black"><div class="stat-value" style="color:black">${modifier?.costPerUpgrade !== undefined && `${modifier.costPerUpgrade < 0 ? '+' : ''}${Math.abs(modifier.costPerUpgrade)}sp` || '&nbsp;'}</div></div>
                 <div>
-                  <div class="rune-name" style="color:black">
-                  ${modifierKey || ''} ${globalThis.player.unit.modifiers[modifierKey]?.quantity || ''}
-                  </div>
+                  <div class="rune-name" style="color:black"> </div>
                   <div class="description" style="color:black">
                   ${modifier?.description && modifier.description(globalThis.player.unit, modifier, (modifier.quantityPerUpgrade || '').toString(), modifierInstance)}
                   </div>
@@ -582,7 +580,7 @@ export function renderRunesMenu(underworld: Underworld) {
           }
 
           // If not going to max, just show new quantity (or nothing if newQuantity is 0)
-          elRuneName.innerHTML = `${stat || ''}  ${newQuantity ? `<span style="color:${color}"> ${playerRuneQuantity}${hovered ? ` + ${modifier.quantityPerUpgrade || 1}` : ''}</span>` : ''}`
+          elRuneName.innerHTML = `${stat || ''}  ${newQuantity ? `<span style="color:${color}"> ${playerRuneQuantity} ${modifier.unitOfMeasure || ''}${hovered ? ` + ${modifier.quantityPerUpgrade || 1} ${modifier.unitOfMeasure || ''}` : ''}</span>` : ''}`
         }
       }
     }
