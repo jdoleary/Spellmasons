@@ -9,7 +9,7 @@ export const thornsId = 'Thorns';
 export default function registerThorns() {
   registerModifiers(thornsId, {
     unitOfMeasure: 'Damage',
-    description: (unit, modifierSource, quantity, modifierInstance) => i18n(['rune_thorns_description']),
+    description: i18n(['rune_thorns_description']),
     costPerUpgrade: 80,
     quantityPerUpgrade: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

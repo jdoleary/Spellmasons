@@ -525,7 +525,7 @@ export function renderRunesMenu(underworld: Underworld) {
                 <div>
                   <div class="rune-name" style="color:black"> </div>
                   <div class="description" style="color:black">
-                  ${modifier?.description && modifier.description(globalThis.player.unit, modifier, (modifier.quantityPerUpgrade || '').toString(), modifierInstance)}
+                  ${modifier?.description && modifier.description}
                   </div>
                 </div>
               </div>
