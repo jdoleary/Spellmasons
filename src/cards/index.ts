@@ -211,6 +211,9 @@ export interface Modifiers {
   // Adds X quantity per purchase of the rune
   quantityPerUpgrade?: number;
   // Upgrade can be purchased X times
+  // IMPORTANT NOTE: The modifier MUST be added to the unit's modifiers array
+  // with `getOrInitModifier` in order for it's quantity to be tracked
+  // and to prevent it being upgraded more than maxUpgradeCount
   maxUpgradeCount?: number;
   // Allows certain non-rune modifiers to persist between levels
   keepBetweenLevels?: boolean;
@@ -762,6 +765,9 @@ export function addPickupTarget(pickup: Pickup.IPickup, effectState: EffectState
   }
 }
 
+// IMPORTANT NOTE: The modifier MUST be added to the unit's modifiers array
+// with `getOrInitModifier` in order for it's quantity to be tracked
+// and to prevent it being upgraded more than maxUpgradeCount
 export function getMaxRuneQuantity(modifier: Modifiers) {
   if (modifier.maxUpgradeCount) {
     return (modifier.maxUpgradeCount * (modifier.quantityPerUpgrade || 1));
