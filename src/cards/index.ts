@@ -189,6 +189,7 @@ import registerLiquidmancer from '../modifierLiquidmancer';
 import registerHeavyImpacts from '../modifierHeavyImpact';
 import registerPotionEffectiveness from '../modifierPotionEffectiveness';
 import registerPotionBarrier from '../modifierPotionBarrier';
+import type { Modifier } from './util';
 
 
 export interface Modifiers {
@@ -202,7 +203,9 @@ export interface Modifiers {
   addModifierVisuals?: (unit: Unit.IUnit, underworld: Underworld) => void;
   add?: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra?: object) => void;
   remove?: (unit: Unit.IUnit, underworld: Underworld) => void;
-  description?: string;
+  /* Quantity must be overridden special in the description so that it can change based on hover / current / next
+  state in the Rune purchasing menu */
+  description?: (unit: Unit.IUnit, modifierSource: Modifiers, quantityOverride: string, modifierInstance: Modifier | undefined) => string;
   // If the modifier may be automatically added to minibosses
   // when the spawn, then the modifier gets a probability
   probability?: number;

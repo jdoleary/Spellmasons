@@ -5,11 +5,12 @@ import Underworld from './Underworld';
 
 // Increases incoming healing by [quantity]%
 export const revitalizeId = 'Revitalize';
+const QUANTITY_PER_UPGRADE = 20;
 export default function registerRevitalize() {
   registerModifiers(revitalizeId, {
-    description: 'Increases incoming healing by [quantity]%',
+    description: (unit, modifierSource, quantity, modifierInstance) => i18n(['revitalize_description', quantity.toString()]),
     costPerUpgrade: 40,
-    quantityPerUpgrade: 20,
+    quantityPerUpgrade: QUANTITY_PER_UPGRADE,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, revitalizeId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, revitalizeId);
@@ -40,7 +41,7 @@ function updateTooltip(unit: Unit.IUnit) {
   const modifier = unit.modifiers[revitalizeId];
   if (modifier) {
     // Set tooltip:
-    modifier.tooltip = `${CalcMult(modifier.quantity)}x ${i18n('Incoming')} ${i18n('Healing')}`;
+    modifier.tooltip = i18n(revitalizeId);
   }
 }
 
