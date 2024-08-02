@@ -9,7 +9,8 @@ import { shieldId } from "./cards/shield";
 export const potionBarrierId = 'Potion Barrier';
 export default function registerPotionBarrier() {
   registerModifiers(potionBarrierId, {
-    description: 'Picking up a potion grants [quantity] shield, scaling with pickup power',
+    description: 'rune_potion_barrier',
+    unitOfMeasure: 'Shield',
     costPerUpgrade: 20,
     quantityPerUpgrade: 10,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

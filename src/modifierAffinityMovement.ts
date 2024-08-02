@@ -8,7 +8,7 @@ export const affinityMovementId = 'Affinity: Movement';
 export default function registerMovementAffinity() {
   registerModifiers(affinityMovementId, {
     description: ('rune_affinity_movement'),
-    unitOfMeasure: '%',
+    unitOfMeasure: '% less mana',
     costPerUpgrade: 60,
     quantityPerUpgrade: 10,
     maxUpgradeCount: 5,

@@ -514,3 +514,46 @@ forbidden	forbidden	ultra rare	estremamente raro	sehr selten	ultra raro	ウル�
 spell_clone_2	Clones each target.  Clones are added as a target to following spells.	Clone chaque cible.  Les clones sont ajoutés comme cibles aux sorts suivants.	Clona ciascun bersaglio.  I cloni vengono aggiunti come bersaglio agli incantesimi successivi.	Klont jedes Ziel.  Klone werden als Ziel für folgende Zaubersprüche hinzugefügt.	Clona cada objetivo.  Los clones se añaden como objetivo de los siguientes hechizos.	各ターゲットのクローンを作成します。  クローンは次の呪文の対象として追加されます。	Clona cada alvo.  Clones são adicionados como alvo aos feitiços seguintes.	استنساخ كل هدف.  تتم إضافة النسخ كهدف للتعاويذ التالية.	각 대상을 복제합니다.  클론은 다음 주문의 대상으로 추가됩니다.	Клонирует каждую цель.  Клоны добавляются в качестве цели к следующим заклинаниям.	克隆每个目标。  克隆体将作为目标添加到以下法术中。	克隆每個目標。  克隆體將作為目標添加到以下法術。	Klonuje każdy cel.  Klony są dodawane jako cel następujących zaklęć.	Kloont elk doel.  Klonen worden als doelwit toegevoegd aan volgende spreuken.
 revitalize_description	Increases incoming healing													
 rune_thorns_description	Deals damage back to the attacker when hurt													
+rune_affinity_blessing	Blessing spells cost less mana													
+rune_affinity_curse	Curse spells cost less mana													
+rune_affinity_damage	Damage spells cost less mana													
+rune_affinity_movement	Movement spells cost less mana													
+rune_affinity_soul	Soul spells cost less mana													
+rune_affinity_targeting	Targeting spells cost less mana													
+rune_armor	Reduce incoming damage													
+rune_base_pierce	Increase the number of units that arrows will pierce													
+rune_base_radius	Increase the base radius of spell effects													
+rune_bounty	This unit has a bounty. Killing them will trigger bounty effects													
+rune_bounty_damage	Deal more damage against units with a bounty													
+rune_bounty_hunter	This unit can claim bounties. Bounties appear on turn start													
+rune_bounty_restore_health	Restore health when claiming a bounty													
+rune_bounty_restore_mana	Restore mana when claiming a bounty													
+rune_bounty_restore_stamina	Restore stamina when claiming a bounty													
+rune_clone_on_spawn	Clone self when spawning													
+rune_contaminate_on_tele	Cast "Contaminate" on self when teleporting													
+rune_endless_quiver	Arrows have no expense scaling													
+rune_health_regen	Regenerate health at the start of each turn													
+rune_heavy_impact	All units take more impact damage													
+rune_inexhaustable	Movement spells have no expense scaling													
+rune_liquidmancer	All units take more damage from liquid													
+rune_manabarrier	Take damage from unused mana before health													
+% effectiveness	% effectiveness													
+rune_on_hit_healing	Restore health when you deal damage													
+health	health													
+rune_on_hit_poison	Apply poison when you deal damage													
+rune_on_kill_mana	Restore mana on kill													
+rune_overheal	Grant health over max as shield													
+rune_potion_barrier	Grant shield when picking up a potion. Scales with pickup power.													
+rune_potion_effectiveness	Potions become more effective													
+% more effective	% more effective													
+rune_self_invulnerability	Grant invulnerability to own damage													
+rune_shield_bash	Consume shield to deal extra damage when you deal damage													
+shield to damage	shield to damage													
+rune_shield_regen	Regenerate shield on turn start													
+rune_healthMax	Increase maximum health													
+rune_manaMax	Increase maximum mana													
+rune_staminaMax	Increase maximum stamina													
+rune_attackRange	Increase cast range													
+rune_witch	Get Contaminate spell. Contaminate is cheaper to cast.													
+armor	armor													
+% less mana	% less mana													

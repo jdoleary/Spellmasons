@@ -8,17 +8,13 @@ export const armorId = 'Armor';
 export default function registerArmor() {
   registerModifiers(armorId, {
     description: ('rune_armor'),
-    unitOfMeasure: 'Damage',
+    unitOfMeasure: 'Armor',
     costPerUpgrade: 30,
     quantityPerUpgrade: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, armorId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, armorId);
       });
-
-      if (!prediction) {
-        updateTooltip(unit);
-      }
     }
   });
   registerEvents(armorId, {
@@ -35,12 +31,4 @@ export default function registerArmor() {
       return amount;
     }
   });
-}
-
-function updateTooltip(unit: Unit.IUnit) {
-  const modifier = unit.modifiers[armorId];
-  if (modifier) {
-    // Set tooltip:
-    modifier.tooltip = `${modifier.quantity} ${i18n('Armor')}`
-  }
 }

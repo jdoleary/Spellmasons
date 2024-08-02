@@ -7,7 +7,7 @@ export const runeTimemasonId = 'Timemason';
 
 export default function registerTimemason() {
   registerModifiers(runeTimemasonId, {
-    description: i18n('class_timemason'),
+    description: 'class_timemason',
     costPerUpgrade: 200,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       const player = underworld.players.find(p => p.unit == unit);

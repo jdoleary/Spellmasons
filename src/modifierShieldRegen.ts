@@ -8,17 +8,14 @@ import Underworld from './Underworld';
 export const shieldRegenId = 'Shield Regen';
 export default function registerShieldRegen() {
   registerModifiers(shieldRegenId, {
-    description: 'Regenerates [quantity] shield at the start of each turn',
+    description: 'rune_shield_regen',
+    unitOfMeasure: 'shield',
     costPerUpgrade: 30,
     quantityPerUpgrade: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, shieldRegenId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, shieldRegenId);
       });
-
-      if (!prediction) {
-        updateTooltip(unit);
-      }
     }
   });
   registerEvents(shieldRegenId, {
@@ -29,12 +26,4 @@ export default function registerShieldRegen() {
       }
     }
   });
-}
-
-function updateTooltip(unit: Unit.IUnit) {
-  const modifier = unit.modifiers[shieldRegenId];
-  if (modifier) {
-    // Set tooltip:
-    modifier.tooltip = `${modifier.quantity} ${i18n('Shield')} ${i18n('Regen')}`
-  }
 }

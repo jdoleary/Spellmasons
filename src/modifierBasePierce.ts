@@ -13,18 +13,6 @@ export default function registerBasePierce() {
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, modifierBasePierceId, { isCurse: false, quantity, keepOnDeath: true }, () => {
       });
-
-      if (!prediction) {
-        updateTooltip(unit);
-      }
     }
   });
-}
-
-function updateTooltip(unit: Unit.IUnit) {
-  const modifier = unit.modifiers[modifierBasePierceId];
-  if (modifier) {
-    // Set tooltip:
-    modifier.tooltip = `${modifier.quantity} ${i18n('Base Pierce')}`
-  }
 }

@@ -8,7 +8,8 @@ import Underworld from './Underworld';
 export const shieldBashId = 'Shield Bash';
 export default function registerShieldBash() {
   registerModifiers(shieldBashId, {
-    description: 'Consume [quantity] shield to deal [quantity] extra damage when you deal damage',
+    description: 'rune_shield_bash',
+    unitOfMeasure: 'shield to damage',
     costPerUpgrade: 20,
     quantityPerUpgrade: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

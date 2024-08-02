@@ -8,7 +8,7 @@ export const affinitySoulId = 'Affinity: Soul';
 export default function registerAffinitySoul() {
   registerModifiers(affinitySoulId, {
     description: ('rune_affinity_soul'),
-    unitOfMeasure: '%',
+    unitOfMeasure: '% less mana',
     costPerUpgrade: 60,
     quantityPerUpgrade: 10,
     maxUpgradeCount: 5,

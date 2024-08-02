@@ -54,7 +54,7 @@ export default function registerManaBarrier() {
         // This returns the maximum blockable damage,
         // based on the unit's mana and modifier quantity
         // We need to update this any time mana changes
-        modifier.tooltip = `${Math.floor(unit.mana * CalcMult(modifier.quantity))} ${i18n('Damage')} ${i18n('Mana Barrier')}`
+        modifier.tooltip = `${i18n('Mana Barrier')}: ${Math.floor(unit.mana * CalcMult(modifier.quantity))} ${i18n('Damage')}`
       }
     },
     onTakeDamage: (unit: Unit.IUnit, amount: number, underworld: Underworld, prediction: boolean, damageDealer?: Unit.IUnit) => {

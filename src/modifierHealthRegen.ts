@@ -9,7 +9,7 @@ export const healthRegenId = 'Health Regen';
 export default function registerHealthRegen() {
   registerModifiers(healthRegenId, {
     description: ('rune_health_regen'),
-    unitOfMeasure: 'Health',
+    unitOfMeasure: 'Health Regen',
     costPerUpgrade: 20,
     quantityPerUpgrade: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
@@ -17,9 +17,6 @@ export default function registerHealthRegen() {
         Unit.addEvent(unit, healthRegenId);
       });
 
-      if (!prediction) {
-        updateTooltip(unit);
-      }
     }
   });
   registerEvents(healthRegenId, {
@@ -30,12 +27,4 @@ export default function registerHealthRegen() {
       }
     }
   });
-}
-
-function updateTooltip(unit: Unit.IUnit) {
-  const modifier = unit.modifiers[healthRegenId];
-  if (modifier) {
-    // Set tooltip:
-    modifier.tooltip = `${modifier.quantity} ${i18n('Health')} ${i18n('Regen')}`
-  }
 }

@@ -8,7 +8,7 @@ export const affinityCurseId = 'Affinity: Curse';
 export default function registerCurseAffinity() {
   registerModifiers(affinityCurseId, {
     description: ('rune_affinity_curse'),
-    unitOfMeasure: '%',
+    unitOfMeasure: '% less mana',
     costPerUpgrade: 60,
     quantityPerUpgrade: 10,
     maxUpgradeCount: 5,

@@ -8,7 +8,7 @@ export const affinityTargeting = 'Affinity: Targeting';
 export default function registerTargetingAffinity() {
   registerModifiers(affinityTargeting, {
     description: ('rune_affinity_targeting'),
-    unitOfMeasure: '%',
+    unitOfMeasure: '% less mana',
     costPerUpgrade: 60,
     quantityPerUpgrade: 10,
     maxUpgradeCount: 5,

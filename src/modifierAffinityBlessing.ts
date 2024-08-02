@@ -8,7 +8,7 @@ export const affinityBlessingId = 'Affinity: Blessing';
 export default function registerBlessingAffinity() {
   registerModifiers(affinityBlessingId, {
     description: ('rune_affinity_blessing'),
-    unitOfMeasure: '%',
+    unitOfMeasure: '% less mana',
     costPerUpgrade: 60,
     quantityPerUpgrade: 10,
     maxUpgradeCount: 5,

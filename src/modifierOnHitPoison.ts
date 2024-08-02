@@ -8,7 +8,8 @@ import Underworld from './Underworld';
 export const onHitPoisonId = 'Inflict Poison';
 export default function registerOnHitPoison() {
   registerModifiers(onHitPoisonId, {
-    description: 'Applies [quantity] poison when you deal damage',
+    description: 'rune_on_hit_poison',
+    unitOfMeasure: 'poison',
     costPerUpgrade: 80,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, onHitPoisonId, { isCurse: false, quantity, keepOnDeath: true }, () => {

@@ -9,7 +9,7 @@ export const onHitHealingId = 'Heal on Attack';
 export default function registerOnHitHealing() {
   registerModifiers(onHitHealingId, {
     description: 'rune_on_hit_healing',
-    unitOfMeasure: 'Health',
+    unitOfMeasure: 'health',
     costPerUpgrade: 60,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, onHitHealingId, { isCurse: false, quantity, keepOnDeath: true }, () => {
