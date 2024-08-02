@@ -19,6 +19,7 @@ import { keyDown } from './eventListeners';
 import { chooseBookmark } from '../../views';
 import { chooseOneOfSeeded, getUniqueSeedString } from '../../jmath/rand';
 import seedrandom from 'seedrandom';
+import { quantityWithUnit } from '../../cards/util';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
@@ -580,7 +581,7 @@ export function renderRunesMenu(underworld: Underworld) {
           }
 
           // If not going to max, just show new quantity (or nothing if newQuantity is 0)
-          elRuneName.innerHTML = `${stat || ''}  ${newQuantity ? `<span style="color:${color}"> ${playerRuneQuantity} ${modifier.unitOfMeasure || ''}${hovered ? ` + ${modifier.quantityPerUpgrade || 1} ${modifier.unitOfMeasure || ''}` : ''}</span>` : ''}`
+          elRuneName.innerHTML = `${stat || ''}  ${newQuantity ? `${playerRuneQuantity === 0 ? '' : `<span>${quantityWithUnit(playerRuneQuantity, modifier.unitOfMeasure)}</span>`}<span style="color:${color}"> ${hovered ? ` + ${quantityWithUnit(modifier.quantityPerUpgrade || 1, modifier.unitOfMeasure)}` : ''}</span>` : ''}`
         }
       }
     }

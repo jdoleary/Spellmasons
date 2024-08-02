@@ -17,10 +17,6 @@ export default function registerRevitalize() {
       getOrInitModifier(unit, revitalizeId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, revitalizeId);
       });
-
-      if (!prediction) {
-        updateTooltip(unit);
-      }
     }
   });
   registerEvents(revitalizeId, {
@@ -37,15 +33,6 @@ export default function registerRevitalize() {
       return amount;
     }
   });
-}
-
-function updateTooltip(unit: Unit.IUnit) {
-  const modifierSource = Cards.allModifiers[revitalizeId];
-  const modifier = unit.modifiers[revitalizeId];
-  if (modifier) {
-    // Set tooltip:
-    modifier.tooltip = `${i18n(revitalizeId)}: ${modifier.quantity}${modifierSource?.unitOfMeasure || ''}`;
-  }
 }
 
 function CalcMult(quantity: number): number {

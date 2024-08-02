@@ -16,10 +16,6 @@ export default function registerThorns() {
       getOrInitModifier(unit, thornsId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, thornsId);
       });
-
-      if (!prediction) {
-        updateTooltip(unit);
-      }
     }
   });
   registerEvents(thornsId, {
@@ -50,13 +46,4 @@ export default function registerThorns() {
       return amount;
     }
   });
-}
-
-function updateTooltip(unit: Unit.IUnit) {
-  const modifier = unit.modifiers[thornsId];
-  const modifierSource = Cards.allModifiers[thornsId];
-  if (modifier) {
-    // Set tooltip:
-    modifier.tooltip = `${i18n('Thorns')}: ${modifier.quantity} ${modifierSource?.unitOfMeasure || ''}`
-  }
 }
