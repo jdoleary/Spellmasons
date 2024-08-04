@@ -11,7 +11,7 @@ export const contaminateselfonteleportId = 'Contaminate Self On Teleport';
 export default function registerContaminateSelfOnTeleport() {
   registerModifiers(contaminateselfonteleportId, {
     description: ('rune_contaminate_on_tele'),
-    costPerUpgrade: 200,
+    costPerUpgrade: 120,
     maxUpgradeCount: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, contaminateselfonteleportId, { isCurse: false, quantity, keepOnDeath: true }, () => {
