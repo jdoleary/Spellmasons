@@ -46,11 +46,11 @@ const unit: UnitSource = {
       unit.image.sprite.filters.unshift(
         new MultiColorReplaceFilter(
           [
+            [0x3fc7c2, 0xc73f53], // feathers 
             [0x7c5353, 0x53667c], //skinMedium
             [0x866262, 0x627386], //skinLight
             [0x603232, 0x324860], //skinDark
             [0x838d9f, 0x802230], //loin cloth
-            [0x3fc7c2, 0xc73f53], // feathers 
           ],
           0.15
         )
