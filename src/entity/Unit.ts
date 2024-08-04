@@ -1511,7 +1511,12 @@ export function makeMiniboss(unit: IUnit, underworld: Underworld) {
   if (crown && unit.unitSourceId == ANCIENT_UNIT_ID) {
     crown.y += config.HEALTH_BAR_UI_Y_POS / 2;
   }
-  const loopLevel = Math.max(0, underworld.levelIndex - config.LAST_LEVEL_INDEX);
+
+  // dangeLevel: The level when multi-modifier minibosses becomes possible
+  const dangerLevel = 7;
+  const dangerLevel2 = 10;
+  const numLevelsPastDangerLevel = Math.max(0, underworld.levelIndex - dangerLevel);
+  const numLevelsPastDangerLevel2 = Math.max(0, underworld.levelIndex - dangerLevel2);
   const numberOfModifiers = chooseObjectWithProbability([
     {
       num: 1,
@@ -1519,11 +1524,11 @@ export function makeMiniboss(unit: IUnit, underworld: Underworld) {
     },
     {
       num: 2,
-      probability: 10 + loopLevel * 20,
+      probability: numLevelsPastDangerLevel * 20,
     },
     {
       num: 3,
-      probability: 0 + loopLevel * 10,
+      probability: 0 + numLevelsPastDangerLevel2 * 10,
     },
   ], underworld.random) || { num: 1 };
   // Filter out modifiers with no probability and add the modifier key to the object.
