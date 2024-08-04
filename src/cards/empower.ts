@@ -1,5 +1,5 @@
 import * as Unit from '../entity/Unit';
-import { CardCategory } from '../types/commonTypes';
+import { CardCategory, UnitType } from '../types/commonTypes';
 import type Underworld from '../Underworld';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import { Spell, refundLastSpell } from './index';
@@ -31,13 +31,12 @@ const spell: Spell = {
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(
-        u => u.alive
+        u => u.alive && u.unitType !== UnitType.PLAYER_CONTROLLED
           && u.unitSourceId != PRIEST_ID
           && u.unitSourceId != gripthulu_id
           && u.unitSourceId != decoyId
           && u.unitSourceId != bossmasonUnitId
           && u.unitSourceId != DARK_SUMMONER_ID
-          && u.unitSourceId != spellmasonUnitId
       );
       // Even though the player's damage stat doesn't affect their spells
       // it will affect cloned spellmasons, so we allow it.
