@@ -48,10 +48,10 @@ import { darkTideId } from '../cards/dark_tide';
 import { GORU_UNIT_ID } from './units/goru';
 import { undyingModifierId } from '../modifierUndying';
 import { primedCorpseId } from '../modifierPrimedCorpse';
-import { chooseObjectWithProbability } from '../jmath/rand';
+import { chooseObjectWithProbability, getUniqueSeedStringPerLevel } from '../jmath/rand';
 import { ANCIENT_UNIT_ID } from './units/ancient';
-import { bountyId } from '../modifierBounty';
 import { IPickup } from './Pickup';
+import seedrandom from 'seedrandom';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -1517,6 +1517,8 @@ export function makeMiniboss(unit: IUnit, underworld: Underworld) {
   const dangerLevel2 = 10;
   const numLevelsPastDangerLevel = Math.max(0, underworld.levelIndex - dangerLevel);
   const numLevelsPastDangerLevel2 = Math.max(0, underworld.levelIndex - dangerLevel2);
+  // A seed unique to each underworld and level and unit (NOT unique to players, intentionally left undefined)
+  const seed = seedrandom(getUniqueSeedStringPerLevel(underworld, undefined) + `${unit.id}`);
   const numberOfModifiers = chooseObjectWithProbability([
     {
       num: 1,
@@ -1530,12 +1532,12 @@ export function makeMiniboss(unit: IUnit, underworld: Underworld) {
       num: 3,
       probability: 0 + numLevelsPastDangerLevel2 * 10,
     },
-  ], underworld.random) || { num: 1 };
+  ], seed) || { num: 1 };
   // Filter out modifiers with no probability and add the modifier key to the object.
   let availableSpawnModifiers = Object.entries(allModifiers).flatMap(([key, mod]) => typeof mod.probability === 'number' ? [{ ...mod, key }] : []);
   for (let i = 0; i < numberOfModifiers.num; i++) {
     // .map satisfies the compiler's need for certainty that probability is not undefined
-    const mod = chooseObjectWithProbability(availableSpawnModifiers.map(m => ({ probability: 0, ...m })), underworld.random);
+    const mod = chooseObjectWithProbability(availableSpawnModifiers.map(m => ({ probability: 0, ...m })), seed);
     if (mod) {
       addModifier(unit, mod.key, underworld, false, 1);
       // Remove mod from next selection
