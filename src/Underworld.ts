@@ -2713,6 +2713,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (globalThis.player && this.upgradesLeftToChoose(globalThis.player)) {
       elEndTurnBtn?.classList.toggle('upgrade', true);
     }
+    // Now that hotseat player has changed, update inventory glow if needed
+    CardUI.tryShowStatPointsSpendable();
 
     // Announce new players' turn
     if (globalThis.player && globalThis.player.name) {
