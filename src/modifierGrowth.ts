@@ -4,9 +4,12 @@ import * as Image from './graphics/Image';
 import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
 import floatingText from "./graphics/FloatingText";
+import { allUnits } from "./entity/units";
+import * as config from './config';
 
 export const growthId = 'Growth';
 const subspriteId = 'spell-effects/growth';
+const increase_proportion = 0.2;
 function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
   Image.addSubSprite(unit.image, subspriteId);
 }
@@ -41,10 +44,13 @@ export default function registerGrowth() {
       }
       floatingText({ coords: unit, text: growthId, prediction });
       unit.strength++;
+      const sourceUnit = allUnits[unit.unitSourceId];
+      const { healthMax: sourceHealthMax, damage: sourceDamage } = Object.assign({ healthMax: config.UNIT_BASE_HEALTH, damage: config.UNIT_BASE_DAMAGE }, sourceUnit?.unitProps || {});
       Image.setScaleFromModifiers(unit.image, unit.strength);
-      unit.healthMax = Math.round(unit.healthMax * 1.25)
-      unit.health = Math.round(unit.health * 1.25)
-      unit.damage = Math.round(unit.damage * 1.25)
+      const addHealth = Math.round(sourceHealthMax * increase_proportion);
+      unit.healthMax += addHealth;
+      unit.health += addHealth;
+      unit.damage = Math.round(sourceDamage * increase_proportion);
 
     }
   });
