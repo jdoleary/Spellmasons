@@ -76,10 +76,15 @@ const spell: Spell = {
   },
 };
 function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
-  // Add subsprite image
-  Image.addSubSprite(unit.image, imageName);
-  // Stop the animation
-  unit.image?.sprite.stop();
+  // Only add freeze subsprite if unit is frozen and not "freeze immune"
+  // (which is when quantity is <= 0)
+  const modifier = unit.modifiers[freezeCardId];
+  if (modifier && modifier.quantity > 0) {
+    // Add subsprite image
+    Image.addSubSprite(unit.image, imageName);
+    // Stop the animation
+    unit.image?.sprite.stop();
+  }
 }
 function updateTooltip(unit: Unit.IUnit, quantity: number, prediction: boolean) {
   if (!prediction && unit.modifiers[freezeCardId] && quantity <= 0) {
