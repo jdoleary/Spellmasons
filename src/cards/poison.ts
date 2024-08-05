@@ -39,6 +39,7 @@ const spell: Spell = {
     },
   },
   modifiers: {
+    stage: 'Amount Flat',
     add,
     addModifierVisuals,
     subsprite: {

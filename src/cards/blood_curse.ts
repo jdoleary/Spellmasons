@@ -77,6 +77,7 @@ const spell: Spell = {
     },
   },
   modifiers: {
+    stage: 'Blood Curse',
     add,
     remove,
   },
