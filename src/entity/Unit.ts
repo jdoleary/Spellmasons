@@ -14,7 +14,7 @@ import Events from '../Events';
 import makeAllRedShader from '../graphics/shaders/selected';
 import { addLerpable } from '../lerpList';
 import { allUnits } from './units';
-import { allCards, allModifiers } from '../cards';
+import { allCards, allModifiers, eventsSorter } from '../cards';
 import * as immune from '../cards/immune';
 import { checkIfNeedToClearTooltip, clearSpellEffectProjection, drawUICircle } from '../graphics/PlanningView';
 import floatingText, { queueCenteredFloatingText } from '../graphics/FloatingText';
@@ -1839,5 +1839,6 @@ export function getFactionsOf(units: { faction: Faction }[]): Faction[] {
 export function addEvent(unit: IUnit, eventId: string) {
   if (!unit.events.includes(eventId)) {
     unit.events.push(eventId);
+    unit.events.sort(eventsSorter(allModifiers));
   }
 }

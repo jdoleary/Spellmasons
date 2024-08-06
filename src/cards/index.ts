@@ -188,13 +188,15 @@ import registerLiquidmancer from '../modifierLiquidmancer';
 import registerHeavyImpacts from '../modifierHeavyImpact';
 import registerPotionEffectiveness from '../modifierPotionEffectiveness';
 import registerPotionBarrier from '../modifierPotionBarrier';
-import type { Modifier } from './util';
 
 
 export interface Modifiers {
   // modifier sthat are not attached to a spell need an explicit id set
   id?: string;
   subsprite?: Subsprite;
+  // Controls the order in which a modifier's events trigger
+  // relative to other events
+  stage?: MODIFIER_STAGE;
   // run special init logic (usually for visuals) when a modifier is added or loaded
   // see 'poison' for example
   // init is inteded to be called within add.
@@ -775,4 +777,39 @@ export function getMaxRuneQuantity(modifier: Modifiers) {
     return (modifier.maxUpgradeCount * (modifier.quantityPerUpgrade || 1));
   }
   return Infinity
+}
+
+export type MODIFIER_STAGE = 'Soul Bind' | 'Amount Multiplier' | 'Amount Flat' | 'Amount Override'
+  | 'Blood Curse' | 'Reactive Effects' | 'Unstaged Events';
+export const MODIFIER_ORDER: MODIFIER_STAGE[] = [
+  'Soul Bind',
+  'Amount Multiplier',
+  'Amount Flat',
+  'Amount Override',
+  'Blood Curse',
+  'Reactive Effects',
+  'Unstaged Events'
+]
+
+// Returns a sorting function to be used in .sort
+// Pass in allModifiers as lookup for real use.  Injectable for testing.
+export function eventsSorter(lookup: typeof allModifiers): (eventA: string, eventB: string) => number {
+  return (eventA: string, eventB: string): number => {
+    // Unstaged events trigger last so they are easier to debug
+    const DEFAULT_STAGE = 'Unstaged Events';
+    const lookupA = lookup[eventA];
+    const eventAStage: MODIFIER_STAGE = lookupA?.stage !== undefined ? lookupA.stage : DEFAULT_STAGE;
+    const lookupB = lookup[eventB];
+    const eventBStage: MODIFIER_STAGE = lookupB?.stage !== undefined ? lookupB.stage : DEFAULT_STAGE;
+    const indexA = MODIFIER_ORDER.indexOf(eventAStage);
+    const indexB = MODIFIER_ORDER.indexOf(eventBStage);
+    const orderA = indexA === -1 ? MODIFIER_ORDER.indexOf(DEFAULT_STAGE) : indexA;
+    const orderB = indexB === -1 ? MODIFIER_ORDER.indexOf(DEFAULT_STAGE) : indexB;
+    if (orderA === orderB) {
+      // Sort alphabetically by event title if they are in the same stage
+      return eventA.localeCompare(eventB);
+    } else {
+      return orderA - orderB;
+    }
+  }
 }
