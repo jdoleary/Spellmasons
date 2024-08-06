@@ -2,7 +2,7 @@
 import { eventsSorter, type MODIFIER_STAGE } from "./index";
 
 describe('eventSorter', () => {
-    const lookup: { [id: string]: { id: string, stage: MODIFIER_STAGE } } = {
+    const lookup: { [id: string]: { id: string, stage?: MODIFIER_STAGE } } = {
         'eventA': {
             id: 'eventA',
             stage: 'Amount Flat',
@@ -19,16 +19,21 @@ describe('eventSorter', () => {
             id: 'eventAfter',
             stage: 'Reactive Effects',
         },
+        'eventUnstaged': {
+            id: 'eventUnstaged',
+        },
 
     };
     it('should sort events in the same stage alphabetically', () => {
-        const events = ['eventAfter', 'eventZ', 'eventA', 'eventBefore'];
+        const events = ['eventAfter', 'eventZ', 'eventUnstaged', 'eventA', 'eventBefore'];
         events.sort(eventsSorter(lookup))
         expect(events).toEqual([
             'eventBefore',
             'eventA',
             'eventZ',
-            'eventAfter'
+            'eventAfter',
+            // Unstaged events are sorted to the end
+            'eventUnstaged'
         ])
 
     });

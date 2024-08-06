@@ -780,21 +780,23 @@ export function getMaxRuneQuantity(modifier: Modifiers) {
 }
 
 export type MODIFIER_STAGE = 'Soul Bind' | 'Amount Multiplier' | 'Amount Flat' | 'Amount Override'
-  | 'Blood Curse' | 'Reactive Effects';
+  | 'Blood Curse' | 'Reactive Effects' | 'Unstaged Events';
 export const MODIFIER_ORDER: MODIFIER_STAGE[] = [
   'Soul Bind',
   'Amount Multiplier',
   'Amount Flat',
   'Amount Override',
   'Blood Curse',
-  'Reactive Effects'
+  'Reactive Effects',
+  'Unstaged Events'
 ]
 
 // Returns a sorting function to be used in .sort
 // Pass in allModifiers as lookup for real use.  Injectable for testing.
 export function eventsSorter(lookup: typeof allModifiers): (eventA: string, eventB: string) => number {
   return (eventA: string, eventB: string): number => {
-    const DEFAULT_STAGE = "Amount Flat";
+    // Unstaged events trigger last so they are easier to debug
+    const DEFAULT_STAGE = 'Unstaged Events';
     const lookupA = lookup[eventA];
     const eventAStage: MODIFIER_STAGE = lookupA?.stage !== undefined ? lookupA.stage : DEFAULT_STAGE;
     const lookupB = lookup[eventB];
