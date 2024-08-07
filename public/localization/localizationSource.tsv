@@ -531,15 +531,11 @@ rune_bounty_restore_mana	Restore mana when claiming a bounty
 rune_bounty_restore_stamina	Restore stamina when claiming a bounty													
 rune_clone_on_spawn	Clone self when spawning													
 rune_contaminate_on_tele	Cast "Contaminate" on self when teleporting													
-rune_endless_quiver	Arrows have no expense scaling													
 rune_health_regen	Regenerate health at the start of each turn													
-rune_heavy_impact	All units take more impact damage													
-rune_inexhaustible	Movement spells have no expense scaling													
-rune_liquidmancer	All units take more damage from liquid													
+rune_heavy_impact	All units take more impact damage	Toutes les unités subissent plus de dégâts d'impact lorsqu'elles sont poussées contre un mur.	Tutte le unità subiscono più danni da impatto quando vengono spinte contro un muro.	Alle Einheiten erleiden mehr Aufprallschaden, wenn sie gegen eine Wand geschoben werden.	Todas las unidades reciben más daño por impacto al ser empujadas contra una pared.	すべてのユニットは、壁に押し込まれた際に受ける衝撃ダメージが増加します。	Todas as unidades recebem mais dano de impacto quando empurradas contra uma parede.	تتلقى جميع الوحدات ضرر تأثير أكبر عند الدفع بها نحو الحائط.	모든 유닛은 벽에 강제로 밀렸을 때 더 많은 충격 피해를 받습니다.	Все юниты получают больше урона от ударов, когда их толкают в стену.	所有单位在被推撞到墙壁时会受到更多的冲击伤害。	所有單位在被推入牆壁時會受到更多的衝擊傷害。	Wszystkie jednostki otrzymują większe obrażenia od uderzenia, gdy są wpchnięte w ścianę.	Alle eenheden nemen meer impactschade op wanneer ze tegen een muur worden geduwd.
 rune_manabarrier	Take damage from unused mana before health													
 % effectiveness	% effectiveness													
 rune_on_hit_healing	Restore health when you deal damage													
-health	health													
 rune_on_hit_poison	Apply poison when you deal damage													
 rune_on_kill_mana	Restore mana on kill													
 rune_overheal	Grant health over max as shield													
@@ -550,17 +546,22 @@ rune_self_invulnerability	Grant invulnerability to own damage
 rune_shield_bash	Consume shield to deal extra damage when you deal damage													
 shield to damage	shield to damage													
 rune_shield_regen	Regenerate shield on turn start													
-rune_healthMax	Increase maximum health													
-rune_manaMax	Increase maximum mana													
-rune_staminaMax	Increase maximum stamina													
-rune_attackRange	Increase cast range													
-rune_witch	Get Contaminate spell. Contaminate is cheaper to cast.													
 armor	armor													
 % less mana	% less mana													
-Skill Points	Skill Points													
-Maxed	Maxed													
-Max	Max													
-Endless Quiver	Endless Quiver													
-Liquidmancer	Liquidmancer													
 Heavy Impacts	Heavy Impacts													
-Inexhaustible	Inexhaustible													
+Skill Points	Skill Points	Points de compétence	Punti Abilità	Fähigkeitspunkte	Puntos de Habilidad	スキルポイント	Pontos de Habilidade	نقاط المهارة	스킬 포인트	Очки навыков	技能点	技能點數	Punkty umiejętności	Vaardigheidspunten
+Maxed	Maxed	À son maximum	Massimizzato	Vollständig verbessert	Máximo alcanzado	限界突破	Maximizado	مستوى الحد الأقصى	최대치에 도달함	Максимально прокачано	满级	達到極限	Maksymalnie zwiększony	Volledig Maximaal
+Max	Max	Maximum	Massimo	Maximal	Máximo	最大限	Máximo	أقصى	최대	Максимум	最大值	最大值	Maksymalny	Maximaal
+Inexhaustible	Inexhaustible	Inépuisable	Inesauribile	Unermüdlich	Inagotable	尽竭しない	Inexaurível	لا نهائي	무궁무진한	Неистощимый	取之不尽的	無窮無盡	Niezrównany	Onuitputtelijk
+Endless Quiver	Endless Quiver	Carquois Infini	Faretra Infinita	Endloser Köcher	Aljaba Infinita	果てしない矢筒	Aljava Infinita	قوس لا نهاية له	끝없는 화살통	Бесконечный колчан	无尽箭囊	無盡箭囊	Nieskończona Kołczan	Eindeloze Pijlenschacht
+Liquidmancer	Liquid wizard	Sorcier liquide	Mago liquido	Flüssiger Zauberer	Mago líquido	液体の魔法使い	Mago líquido	ساحر السائل	액체 마법사	Жидкий маг	液体法师	液體巫師	Cieczowy czarodziej	Vloeibare tovenaar
+rune_liquidmancer	All units take more damage from liquid	Toutes les unités subissent plus de dégâts de la part des liquides.	Tutte le unità subiscono più danni dai liquidi.	Alle Einheiten erleiden mehr Schaden durch Flüssigkeiten.	Todas las unidades reciben más daño del líquido.	全てのユニットは液体からのダメージを受けやすくなります。	Todas as unidades recebem mais dano de líquido.	تتعرض جميع الوحدات لمزيد من الضرر من السوائل.	모든 유닛은 액체로부터 더 많은 피해를 입습니다.	Все юниты получают больше урона от жидкости.	所有单位对液体造成的伤害增加。	所有單位受到液體的傷害更高。	Wszystkie jednostki otrzymują więcej obrażeń od cieczy.	Alle eenheden nemen meer schade van vloeistof.
+rune_endless_quiver	Arrows have no expense scaling	Les flèches conservent le même coût à mesure que vous les utilisez.	Le frecce mantengono lo stesso costo man mano che le usi.	Pfeile behalten die gleichen Kosten, während du sie verwendest.	Las flechas mantienen el mismo costo a medida que las usas.	矢は使用してもコストは変わりません。	As flechas mantêm o mesmo custo conforme você as utiliza.	تبقى سهام بنفس التكلفة عند استخدامها	화살은 사용함에 따라 동일한 비용을 유지합니다.	Стрелы остаются прежними по стоимости при их использовании.	箭矢的成本保持不变，使用时不会增加。	箭矢的成本在使用時保持不變。	Strzały pozostają w tej samej cenie, gdy ich używasz.	Pijlen blijven dezelfde kosten hebben naarmate je ze gebruikt.
+rune_witch	Get Contaminate spell. Contaminate is cheaper to cast.	Obtenez le sort "Contaminer". "Contaminer" est moins cher à lancer.	Ottieni il incantesimo "Contamina". "Contamina" è più economico da lanciare.	Erhalte den Zauber "Kontaminieren". "Kontaminieren" ist günstiger zu wirken.	Consigue el hechizo "Contaminar". "Contaminar" es más barato de lanzar.	「汚染」スペルを取得する。「汚染」はキャストするのが安い。	Obter a magia "Contaminar". "Contaminar" é mais barato de conjurar.	احصل على تعويذة "تلوث". تعويذة "تلوث" أرخص للتعاويذ.	오염 주문을 얻으세요. "오염"은 시전 비용이 더 저렴합니다.	Получите заклинание "Заражение". "Заражение" стоит дешевле для произнесения.	获得“污染”法术。“污染”施法成本更低。	獲得「污染」法術。「污染」施法成本較低。	Zdobądź zaklęcie "Zanieczyścić". "Zanieczyścić" jest tańsze w rzucaniu.	Krijg de spreuk "Vervuilen". "Vervuilen" is goedkoper om te casten.
+rune_inexhaustible	Movement spells have no expense scaling	Les sorts de mouvement n'ont pas de montée en coût.	Gli incantesimi di movimento non hanno scaling dei costi.	Bewegungszauber haben keine Kostensteigerung.	Los hechizos de movimiento no tienen escalado de coste.	移動魔法は費用スケーリングがありません。	Feitiços de movimento não têm escalonamento de custo.	تعويذات الحركة لا تتأثر بتكاليف التقدم	이동 마법은 비용 비례 증가가 없습니다.	Заклинания перемещения не имеют увеличения стоимости.	移动法术没有费用缩放。	移動法術沒有消耗比例。	Zaklęcia ruchu nie mają skali wydatków.	Beweging spreuken hebben geen kosten schaalverhouding.
+health	health	santé	salute	Gesundheit	salud	健康	saúde	صحة	health: 건강	здоровье	健康	健康	zdrowie	gezondheid
+rune_healthMax	Increase maximum health	Augmente la santé maximale.	Aumenta la salute massima	Maximale Gesundheit erhöhen	Aumentar la salud máxima	最大健康を増加させる	Aumentar saúde máxima	زيادة الحد الأقصى للصحة	최대 체력 증가	Увеличить максимальное здоровье	增加最大生命值	增加最大生命值	Zwiększ maksymalne zdrowie	Verhoog maximale gezondheid
+rune_manaMax	Increase maximum mana	Augmenter le mana maximum	Aumenta il mana massimo	Maximale Mana erhöhen	Aumentar el maná máximo	最大マナを増加させる	Aumentar mana máxima	زيادة الحد الأقصى من المانا	최대 마나 증가	Увеличить максимальное количество маны	增加最大法力值	增加最大法力值	Zwiększ maksymalną manę	Verhoog de maximale mana
+rune_staminaMax	Increase maximum stamina	Augmenter l'endurance maximale	Aumenta la stamina massima	Maximale Ausdauer erhöhen	Aumentar la resistencia máxima	最大スタミナを増加させる	Aumentar a resistência máxima	زيادة الحد الأقصى للتحمل	최대 스태미나 증가	Увеличить максимальную выносливость	增加最大耐力	提升最大耐力	Zwiększ maksymalną wytrzymałość	Verhoog de maximale uithoudingsvermogen
+rune_attackRange	Increase cast range	Augmenter la portée de lancement	Aumenta il raggio di lancio	Reichweite des Zauberns erhöhen	Aumentar el rango de lanzamiento	キャスト範囲を増加させる	Aumentar o alcance da magia	زيادة مدى السحر	시전 범위 증가	Увеличить расстояние заклинания	增加施法范围	增加施法範圍	Zwiększ zasięg rzucania	Verhoog de spreiding van je spreuken
+heavy impacts	Heavy Impacts	Impacts Lourd	Impatti Pesanti	Schwere Auswirkungen	Impactos Pesados	強力な衝撃	Impactos Pesados	آثار ثقيلة	강력한 충격	Тяжелые удары	重击	重擊	Ciężkie Uderzenia	Zware Impacten
