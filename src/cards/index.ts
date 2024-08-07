@@ -194,6 +194,9 @@ export interface Modifiers {
   // modifier sthat are not attached to a spell need an explicit id set
   id?: string;
   subsprite?: Subsprite;
+  // Denotes a rune that is on the left side of the runes menu
+  // cannot be locked, and does not change 
+  constant?: boolean;
   // Controls the order in which a modifier's events trigger
   // relative to other events
   stage?: MODIFIER_STAGE;
