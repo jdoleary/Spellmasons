@@ -534,7 +534,7 @@ rune_contaminate_on_tele	Cast "Contaminate" on self when teleporting
 rune_endless_quiver	Arrows have no expense scaling													
 rune_health_regen	Regenerate health at the start of each turn													
 rune_heavy_impact	All units take more impact damage													
-rune_inexhaustable	Movement spells have no expense scaling													
+rune_inexhaustible	Movement spells have no expense scaling													
 rune_liquidmancer	All units take more damage from liquid													
 rune_manabarrier	Take damage from unused mana before health													
 % effectiveness	% effectiveness													
@@ -557,3 +557,4 @@ rune_attackRange	Increase cast range
 rune_witch	Get Contaminate spell. Contaminate is cheaper to cast.													
 armor	armor													
 % less mana	% less mana													
+Skill Points	Skill Points													
