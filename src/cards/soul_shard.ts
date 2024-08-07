@@ -73,7 +73,7 @@ const spell: Spell = {
       const modifier = unit.modifiers[soulShardId];
       if (modifier) {
         const shardOwner = underworld.getUnitById(modifier.shardOwnerId, prediction);
-        if (shardOwner) {
+        if (shardOwner && shardOwner.alive) {
           // Prevents an infinite loop in the case of multiple
           // shard owners redirecting to eachother
           if (!modifier.hasRedirectedDamage) {
