@@ -7,7 +7,7 @@ export const inexhaustibleId = 'Inexhaustible';
 
 export default function registerInexhaustible() {
   registerModifiers(inexhaustibleId, {
-    description: ('rune_inexhaustible'),
+    description: 'rune_inexhaustible',
     costPerUpgrade: 200,
     maxUpgradeCount: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
