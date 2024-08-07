@@ -556,7 +556,13 @@
         "rune_witch": "Get Contaminate spell. Contaminate is cheaper to cast.",
         "armor": "armor",
         "% less mana": "% less mana",
-        "skill points": "Skill Points"
+        "skill points": "Skill Points",
+        "maxed": "Maxed",
+        "max": "Max",
+        "endless quiver": "Endless Quiver",
+        "liquidmancer": "Liquidmancer",
+        "heavy impacts": "Heavy Impacts",
+        "inexhaustible": "Inexhaustible"
     },
     {
         "language": "Français",
@@ -1115,7 +1121,13 @@
         "rune_witch": "",
         "armor": "",
         "% less mana": "",
-        "skill points": ""
+        "skill points": "",
+        "maxed": "",
+        "max": "",
+        "endless quiver": "",
+        "liquidmancer": "",
+        "heavy impacts": "",
+        "inexhaustible": ""
     },
     {
         "language": "italiano",
@@ -1674,7 +1686,13 @@
         "rune_witch": "",
         "armor": "",
         "% less mana": "",
-        "skill points": ""
+        "skill points": "",
+        "maxed": "",
+        "max": "",
+        "endless quiver": "",
+        "liquidmancer": "",
+        "heavy impacts": "",
+        "inexhaustible": ""
     },
     {
         "language": "Deutsche",
@@ -2233,7 +2251,13 @@
         "rune_witch": "",
         "armor": "",
         "% less mana": "",
-        "skill points": ""
+        "skill points": "",
+        "maxed": "",
+        "max": "",
+        "endless quiver": "",
+        "liquidmancer": "",
+        "heavy impacts": "",
+        "inexhaustible": ""
     },
     {
         "language": "español",
@@ -2792,7 +2816,13 @@
         "rune_witch": "",
         "armor": "",
         "% less mana": "",
-        "skill points": ""
+        "skill points": "",
+        "maxed": "",
+        "max": "",
+        "endless quiver": "",
+        "liquidmancer": "",
+        "heavy impacts": "",
+        "inexhaustible": ""
     },
     {
         "language": "日本",
@@ -3351,7 +3381,13 @@
         "rune_witch": "",
         "armor": "",
         "% less mana": "",
-        "skill points": ""
+        "skill points": "",
+        "maxed": "",
+        "max": "",
+        "endless quiver": "",
+        "liquidmancer": "",
+        "heavy impacts": "",
+        "inexhaustible": ""
     },
     {
         "language": "Português",
@@ -3910,7 +3946,13 @@
         "rune_witch": "",
         "armor": "",
         "% less mana": "",
-        "skill points": ""
+        "skill points": "",
+        "maxed": "",
+        "max": "",
+        "endless quiver": "",
+        "liquidmancer": "",
+        "heavy impacts": "",
+        "inexhaustible": ""
     },
     {
         "language": "عربى",
@@ -4469,7 +4511,13 @@
         "rune_witch": "",
         "armor": "",
         "% less mana": "",
-        "skill points": ""
+        "skill points": "",
+        "maxed": "",
+        "max": "",
+        "endless quiver": "",
+        "liquidmancer": "",
+        "heavy impacts": "",
+        "inexhaustible": ""
     },
     {
         "language": "한국어",
@@ -5028,7 +5076,13 @@
         "rune_witch": "",
         "armor": "",
         "% less mana": "",
-        "skill points": ""
+        "skill points": "",
+        "maxed": "",
+        "max": "",
+        "endless quiver": "",
+        "liquidmancer": "",
+        "heavy impacts": "",
+        "inexhaustible": ""
     },
     {
         "language": "Русский",
@@ -5587,7 +5641,13 @@
         "rune_witch": "",
         "armor": "",
         "% less mana": "",
-        "skill points": ""
+        "skill points": "",
+        "maxed": "",
+        "max": "",
+        "endless quiver": "",
+        "liquidmancer": "",
+        "heavy impacts": "",
+        "inexhaustible": ""
     },
     {
         "language": "中文(简)",
@@ -6146,7 +6206,13 @@
         "rune_witch": "",
         "armor": "",
         "% less mana": "",
-        "skill points": ""
+        "skill points": "",
+        "maxed": "",
+        "max": "",
+        "endless quiver": "",
+        "liquidmancer": "",
+        "heavy impacts": "",
+        "inexhaustible": ""
     },
     {
         "language": "中文(繁)",
@@ -6705,7 +6771,13 @@
         "rune_witch": "",
         "armor": "",
         "% less mana": "",
-        "skill points": ""
+        "skill points": "",
+        "maxed": "",
+        "max": "",
+        "endless quiver": "",
+        "liquidmancer": "",
+        "heavy impacts": "",
+        "inexhaustible": ""
     },
     {
         "language": "Polski",
@@ -7264,7 +7336,13 @@
         "rune_witch": "",
         "armor": "",
         "% less mana": "",
-        "skill points": ""
+        "skill points": "",
+        "maxed": "",
+        "max": "",
+        "endless quiver": "",
+        "liquidmancer": "",
+        "heavy impacts": "",
+        "inexhaustible": ""
     },
     {
         "language": "Dutch",
@@ -7823,6 +7901,12 @@
         "rune_witch": "",
         "armor": "",
         "% less mana": "",
-        "skill points": ""
+        "skill points": "",
+        "maxed": "",
+        "max": "",
+        "endless quiver": "",
+        "liquidmancer": "",
+        "heavy impacts": "",
+        "inexhaustible": ""
     }
 ]
