@@ -479,12 +479,20 @@ export function renderRunesMenu(underworld: Underworld) {
     return;
   }
   let listOfRemainingRunesToChoose = Object.entries(Cards.allModifiers).flatMap(([key, modifier]) => {
-    if (modifier.costPerUpgrade) {
+    if (modifier.costPerUpgrade && !modifier.constant) {
       return [{ key, ...modifier }];
     } else {
       return [];
     }
   })
+
+  const constantRunes: string[] = Object.entries(Cards.allModifiers).flatMap(([key, modifier]) => {
+    if (modifier.costPerUpgrade && modifier.constant) {
+      return [key];
+    } else {
+      return [];
+    }
+  });
   // Start with lockedRunes as chosenRunes so they don't get offered in another place as a duplicate
   const chosenRunes: string[] = []
   // Remove old unlocked level indexes
@@ -513,7 +521,7 @@ export function renderRunesMenu(underworld: Underworld) {
     }
   }, Infinity);
   const statPoints = underworld.perksLeftToChoose(globalThis.player);
-  const elStatUpgradeRow = (modifierKey: string) => {
+  const elStatUpgradeRow = (modifierKey: string, index: number, constant?: boolean) => {
     if (!globalThis.player) {
       return '';
     }
@@ -529,15 +537,22 @@ export function renderRunesMenu(underworld: Underworld) {
                   </div>
                 </div>
               </div>
-              <div class="stat-lock ${globalThis.player.lockedRunes.find(r => r.key === modifierKey && r.levelIndexUnlocked === undefined) ? 'locked' : ''}" data-key="${modifierKey}"></div>
+              ${constant ? '' : `
+                <div class="stat-lock ${globalThis.player.lockedRunes.find(r => r.key === modifierKey && r.levelIndexUnlocked === undefined) ? 'locked' : ''}" data-key="${modifierKey}" data-index="${index}"></div>
+              `}
             </div>`;
   }
   elRunes.innerHTML = `
 <div class="pick-stats">
   <div class="card-inner flex" style="color:black">
-  <h2>Skill Points: ${statPoints}sp</h2>
   <div class="stat-row-holder">
-  ${chosenRunes.flatMap(key => key ? [elStatUpgradeRow(key)] : []).join('')}
+  <div class="stats-constant">
+    <h2>${i18n('Skill Points')}: ${statPoints}sp</h2>
+    ${constantRunes.map((key, i) => elStatUpgradeRow(key, i, true)).join('')}
+  </div>
+  <div class="rune-rows">
+    ${chosenRunes.flatMap((key, i) => key ? [elStatUpgradeRow(key, i)] : []).join('')}
+  </div>
 </div>
   </div>
   </div>`;
@@ -642,7 +657,7 @@ export function renderRunesMenu(underworld: Underworld) {
           underworld.pie.sendData({
             type: MESSAGE_TYPES.LOCK_RUNE,
             key: (elLock as HTMLElement).dataset.key,
-            index
+            index: (elLock as HTMLElement).dataset.index,
           });
         })
       }
