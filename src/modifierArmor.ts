@@ -10,7 +10,7 @@ export default function registerArmor() {
     description: ('rune_armor'),
     unitOfMeasure: 'Armor',
     stage: "Amount Flat",
-    costPerUpgrade: 30,
+    costPerUpgrade: 20,
     quantityPerUpgrade: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, armorId, { isCurse: false, quantity, keepOnDeath: true }, () => {
