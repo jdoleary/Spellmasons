@@ -25,17 +25,16 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
   }
 
   const inverseMult = 1 / splitStatMultiplier;
-  for (let i = 0; i < modifier.quantity; i++) {
-    unit.healthMax = Math.max(1, Math.floor(unit.healthMax * inverseMult));
-    unit.health = Math.max(1, Math.floor(unit.health * inverseMult));
-    // Note: manaMax is not changed or else it would render casters useless
-    unit.mana = Math.floor(unit.mana * inverseMult);
-    unit.manaPerTurn = Math.floor(unit.manaPerTurn * inverseMult);
-    unit.staminaMax = Math.floor(unit.staminaMax * inverseMult);
-    unit.stamina = Math.floor(unit.stamina * inverseMult);
-    unit.damage = Math.floor(unit.damage * inverseMult);
-    unit.moveSpeed *= inverseMult;
-  }
+  const multiplier = Math.pow(inverseMult, modifier.quantity);
+  unit.healthMax = Math.max(1, unit.healthMax * multiplier);
+  unit.health = Math.max(1, unit.health * multiplier);
+  // Note: manaMax is not changed or else split would render casters useless
+  unit.mana = unit.mana * multiplier;
+  unit.manaPerTurn = unit.manaPerTurn * multiplier;
+  unit.staminaMax = unit.staminaMax * multiplier;
+  unit.stamina = unit.stamina * multiplier;
+  unit.damage = unit.damage * multiplier;
+  unit.moveSpeed *= multiplier;
 
   removeScaleModifier(unit.image, splitId, unit.strength);
 
@@ -44,7 +43,6 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
   }
 }
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
-
   const modifier = getOrInitModifier(unit, splitId, { isCurse: true, quantity, keepOnDeath: true }, () => {
     // no first time setup
   });
@@ -55,17 +53,16 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
   const timesToSplit = Math.min(splitLimit - lastQuant, quantity);
   modifier.quantity = Math.min(modifier.quantity, splitLimit);
 
-  for (let i = 0; i < timesToSplit; i++) {
-    unit.healthMax = Math.max(1, Math.floor(unit.healthMax * splitStatMultiplier));
-    unit.health = Math.max(1, Math.floor(unit.health * splitStatMultiplier));
-    // Note: manaMax is not changed or else it would render casters useless
-    unit.mana = Math.floor(unit.mana * splitStatMultiplier);
-    unit.manaPerTurn = Math.floor(unit.manaPerTurn * splitStatMultiplier);
-    unit.staminaMax = Math.floor(unit.staminaMax * splitStatMultiplier);
-    unit.stamina = Math.floor(unit.stamina * splitStatMultiplier);
-    unit.damage = Math.floor(unit.damage * splitStatMultiplier);
-    unit.moveSpeed *= splitStatMultiplier;
-  }
+  const multiplier = Math.pow(splitStatMultiplier, timesToSplit);
+  unit.healthMax = Math.max(1, unit.healthMax * multiplier);
+  unit.health = Math.max(1, unit.health * multiplier);
+  // Note: manaMax is not changed or else split would render casters useless
+  unit.mana = unit.mana * multiplier;
+  unit.manaPerTurn = unit.manaPerTurn * multiplier;
+  unit.staminaMax = unit.staminaMax * multiplier;
+  unit.stamina = unit.stamina * multiplier;
+  unit.damage = unit.damage * multiplier;
+  unit.moveSpeed *= multiplier;
 
   if (unit.modifiers[suffocateCardId]) {
     updateSuffocate(unit, underworld, prediction);

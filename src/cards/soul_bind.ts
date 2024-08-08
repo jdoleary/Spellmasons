@@ -58,7 +58,7 @@ const spell: Spell = {
           // Unit.TakeDamage, it's important to preserve all damage args
           Unit.takeDamage({
             unit: boundUnit,
-            amount: Math.ceil(amount / boundUnits.length),
+            amount: amount / boundUnits.length,
             sourceUnit: damageDealer,
           }, underworld, prediction);
 
@@ -70,7 +70,7 @@ const spell: Spell = {
       }
 
       // Soul Bind modifies incoming damage/healing
-      return Math.ceil(amount / boundUnits.length);
+      return amount / boundUnits.length;
     },
     onDrawSelected: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       const modifier = unit.modifiers[soulBindId];

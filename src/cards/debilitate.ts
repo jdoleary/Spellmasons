@@ -53,7 +53,7 @@ const spell: Spell = {
         // Will only increase damage (doesn't affect incoming healing)
         if (amount > 0) {
           // Each quantity = 1% damage boost
-          amount = Math.floor(amount * CalcMult(modifier.quantity));
+          amount *= CalcMult(modifier.quantity);
         }
       }
 

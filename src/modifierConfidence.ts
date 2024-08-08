@@ -57,7 +57,7 @@ export default function registerConfidence() {
         return amount;
       }
       // Cannot be below 0 (must still be damage, not healing)
-      const overriddenAmount = Math.max(0, Math.floor(amount - amount * reductionAmount));
+      const overriddenAmount = Math.max(0, amount - amount * reductionAmount);
       floatingText({ coords: unit, text: `${confidenceId}: Damage reduced by ${Math.floor(reductionAmount * 100)}%`, prediction });
       return overriddenAmount;
     }

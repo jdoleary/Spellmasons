@@ -27,7 +27,7 @@ export default function registerRevitalize() {
         // Will only increase healing (doesn't affect incoming damage)
         if (amount < 0) {
           // Each quantity = 1% healing boost
-          amount = Math.ceil(amount * CalcMult(modifier.quantity));
+          amount *= CalcMult(modifier.quantity);
         }
       }
 

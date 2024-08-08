@@ -47,10 +47,10 @@ export default function registerGrowth() {
       const sourceUnit = allUnits[unit.unitSourceId];
       const { healthMax: sourceHealthMax, damage: sourceDamage } = Object.assign({ healthMax: config.UNIT_BASE_HEALTH, damage: config.UNIT_BASE_DAMAGE }, sourceUnit?.unitProps || {});
       Image.setScaleFromModifiers(unit.image, unit.strength);
-      const addHealth = Math.round(sourceHealthMax * increase_proportion);
+      const addHealth = sourceHealthMax * increase_proportion;
       unit.healthMax += addHealth;
       unit.health += addHealth;
-      unit.damage = Math.round(sourceDamage * increase_proportion);
+      unit.damage = sourceDamage * increase_proportion;
 
     }
   });

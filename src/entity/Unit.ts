@@ -308,7 +308,7 @@ export function adjustUnitStatsByUnderworldCalamity(unit: IUnit, statCalamity: S
     if (statCalamity.stat in unit) {
       const stat: keyof IUnit = statCalamity.stat as keyof IUnit;
       if (typeof unit[stat] === 'number') {
-        (unit[stat] as number) = Math.round((unit[stat] as number) * (1 + statCalamity.percent / 100));
+        (unit[stat] as number) = (unit[stat] as number) * (1 + statCalamity.percent / 100);
         if (stat.includes('Max')) {
           const currentStat = stat.replace('Max', '') as keyof IUnit;
           if (currentStat in unit && unit[currentStat] && unit[stat] && typeof unit[stat] === 'number') {
@@ -330,8 +330,8 @@ interface DifficultyAdjustedUnitStats {
 export function adjustUnitPropsDueToDifficulty(stats: DifficultyAdjustedUnitStats, difficultyRatio: number): DifficultyAdjustedUnitStats {
   const returnStats: DifficultyAdjustedUnitStats = {
     // Max Health is multiplied by the current difficulty
-    healthMax: stats.healthMax = Math.round(stats.healthMax * difficultyRatio),
-    health: Math.round(stats.health * difficultyRatio),
+    healthMax: stats.healthMax = stats.healthMax * difficultyRatio,
+    health: stats.health * difficultyRatio,
   };
   return returnStats;
 }
@@ -959,8 +959,6 @@ export function takeDamage(damageArgs: damageArgs, underworld: Underworld, predi
   unit.health -= amount;
   // Prevent health from going under 0
   unit.health = Math.max(0, unit.health);
-  // Ensure health is a whole number
-  unit.health = Math.floor(unit.health);
 
   if (!prediction) {
     if (amount > 0) {
@@ -1020,6 +1018,11 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
   }
   const predictionPlayerUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id);
 
+  // Turns decimals into UI friendly numbers
+  function txt(attribute: number): number {
+    return Math.ceil(attribute);
+  }
+
   const unit = globalThis.player.unit;
   const shieldAmount = unit.modifiers.shield?.quantity || 0;
   // Set the health/shield bars that shows how much health/shield you currently have
@@ -1027,10 +1030,10 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
   elHealthBarShield.style["width"] = `${100 * Math.min(shieldAmount / unit.healthMax, 1)}%`;
   if (shieldAmount) {
     const shieldText = `${unit.modifiers.shield?.quantity} shield`;
-    elHealthLabel.innerHTML = `${shieldText} + ${unit.health} / ${unit.healthMax}`;
+    elHealthLabel.innerHTML = `${shieldText} + ${txt(unit.health)} / ${txt(unit.healthMax)}`;
   } else {
     // Label health without shield
-    elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;
+    elHealthLabel.innerHTML = `${txt(unit.health)}/${txt(unit.healthMax)}`;
   }
 
   // Set the health cost bar that shows how much health will be changed if the spell is cast
@@ -1070,9 +1073,9 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
       elHealthLabel.innerHTML = i18n('Death');
     } else if (predictionPlayerShield) {
       const shieldText = `${predictionPlayerShield} shield`;
-      elHealthLabel.innerHTML = `${shieldText} + ${predictionPlayerUnit.health} / ${predictionPlayerUnit.healthMax}`;
+      elHealthLabel.innerHTML = `${shieldText} + ${txt(predictionPlayerUnit.health)} / ${txt(predictionPlayerUnit.healthMax)}`;
     } else if (predictionPlayerUnit.health != unit.health || predictionPlayerUnit.healthMax != unit.healthMax) {
-      elHealthLabel.innerHTML = `${predictionPlayerUnit.health} ${i18n('Remaining')}`;
+      elHealthLabel.innerHTML = `${txt(predictionPlayerUnit.health)} ${i18n('Remaining')}`;
     }
 
     // Set the health bar that shows how much health you have after prediction
@@ -1119,10 +1122,10 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
         // that it won't prevent them from queing a spell)
         elManaLabel.innerHTML = i18n('Insufficient Mana');
       } else {
-        elManaLabel.innerHTML = `${predictionPlayerUnit.mana} ${i18n('Remaining')}`;
+        elManaLabel.innerHTML = `${txt(predictionPlayerUnit.mana)} ${i18n('Remaining')}`;
       }
     } else {
-      elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax}`;
+      elManaLabel.innerHTML = `${txt(unit.mana)}/${txt(unit.manaMax)}`;
     }
 
     // Display amount of post-prediction mana in each of the 3 mana bars
@@ -1176,11 +1179,11 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
     }
   }
 
-  const staminaLeft = Math.max(0, Math.round(unit.stamina));
-  elStaminaBar.style["width"] = `${100 * (unit.stamina) / unit.staminaMax}%`;
+  const staminaLeft = Math.max(0, unit.stamina);
+  elStaminaBar.style["width"] = `${100 * unit.stamina / unit.staminaMax}%`;
   // At the end of the level when stamina is set super high, just show their max stamina so that
   // it appears that moving after level end doesn't decrease your stamina
-  elStaminaBarLabel.innerHTML = staminaLeft > 100_000 ? `${unit.staminaMax}` : `${staminaLeft}`;
+  elStaminaBarLabel.innerHTML = staminaLeft > 100_000 ? `${txt(unit.staminaMax)}` : `${txt(staminaLeft)}`;
   if (staminaLeft <= 0 && !player?.endedTurn) {
     // Now that the current player has moved, highlight the "end-turn-btn" to
     // remind them that they need to end their turn before they can move again

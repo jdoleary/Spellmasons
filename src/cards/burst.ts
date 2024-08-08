@@ -13,7 +13,7 @@ export const burstCardId = 'Burst';
 const maxDamage = 50;
 function calculateDamage(stack: number, caster: Vec2, casterAttackRange: number, target: Vec2): number {
   const dist = distance(caster, target)
-  return Math.ceil(lerp(maxDamage, 0, (dist - config.COLLISION_MESH_RADIUS) / casterAttackRange) * stack);
+  return lerp(maxDamage, 0, (dist - config.COLLISION_MESH_RADIUS) / casterAttackRange) * stack;
 }
 const spell: Spell = {
   card: {

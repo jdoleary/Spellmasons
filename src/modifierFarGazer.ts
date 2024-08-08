@@ -18,8 +18,8 @@ export default function registerFarGazer() {
 
         const factor = Math.pow(2, quantity);
         player.unit.attackRange *= factor;
-        player.unit.staminaMax = Math.floor(player.unit.staminaMax / factor);
-        player.unit.stamina = Math.floor(player.unit.staminaMax / factor);
+        player.unit.staminaMax = player.unit.staminaMax / factor;
+        player.unit.stamina = player.unit.staminaMax / factor;
       } else {
         console.error(`Cannot add rune ${runeFarGazerId}, no player is associated with unit`);
       }

@@ -39,7 +39,7 @@ function strengthen(unit: IUnit, strengthChange: number, prediction: boolean) {
     FloatingText.default({ coords: unit, text: id, prediction });
     unit.strength += strengthChange;
     JImage.setScaleFromModifiers(unit.image, unit.strength);
-    unit.damage = Math.round(unit.damage + strengthChange * 10)
+    unit.damage = unit.damage + strengthChange * 10;
 }
 const shrinkEvent: Events = {
     id,

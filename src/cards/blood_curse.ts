@@ -30,8 +30,8 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean) {
     Unit.addEvent(unit, id);
     // This is done in first time setup because the modified stats are stored on the unit
     // otherwise it would apply the multiplier each time the unit is loaded
-    unit.healthMax = Math.floor(unit.healthMax * healthMultiplier);
-    unit.health = Math.floor(unit.health * healthMultiplier);
+    unit.healthMax *= healthMultiplier;
+    unit.health *= healthMultiplier;
   });
 
   if (unit.modifiers[suffocateCardId]) {
@@ -41,8 +41,8 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean) {
 
 function remove(unit: IUnit, underworld: Underworld) {
   // Health should not go below 1
-  unit.healthMax = Math.max(1, Math.floor(unit.healthMax / healthMultiplier));
-  unit.health = Math.max(1, Math.floor(unit.health / healthMultiplier));
+  unit.healthMax = Math.max(1, unit.healthMax / healthMultiplier);
+  unit.health = Math.max(1, unit.health / healthMultiplier);
 }
 
 const imageName = 'spellIconBloodCurse.png';

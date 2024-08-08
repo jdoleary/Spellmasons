@@ -12,7 +12,7 @@ const minRange = 100;
 const maxDamageRange = 600;
 function calculateDamage(casterPositionAtTimeOfCast: Vec2, target: Vec2): number {
   const dist = math.distance(casterPositionAtTimeOfCast, target)
-  return Math.ceil(math.lerp(0, maxDamage, Math.max(0, dist - minRange) / maxDamageRange));
+  return math.lerp(0, maxDamage, Math.max(0, dist - minRange) / maxDamageRange);
 }
 
 const spell: Spell = {

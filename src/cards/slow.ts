@@ -22,7 +22,6 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
 
   const staminaChange = staminaMax / unit.staminaMax;
   unit.stamina *= staminaChange;
-  unit.stamina = Math.floor(unit.stamina);
   unit.staminaMax = staminaMax;
   // Prevent unexpected overflow
   unit.stamina = Math.min(staminaMax, unit.stamina);

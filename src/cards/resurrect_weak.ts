@@ -42,7 +42,7 @@ const spell: Spell = {
           Unit.resurrect(unit, underworld);
           // This is the distinguishing characteristic of Weak Resurrect,
           // it is weaker than Resurrect because it doesn't restore health to full.
-          unit.health = Math.max(1, Math.round(unit.healthMax * resStatAmount));
+          unit.health = Math.max(1, unit.healthMax * resStatAmount);
 
           resurrectedUnitCount++;
           makeRisingParticles(unit, prediction);

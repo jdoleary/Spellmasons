@@ -132,7 +132,7 @@ function polymorphUnit(fromUnit: Unit.IUnit, underworld: Underworld, prediction:
       } else {
         // A unit at half health should remain at half health after polymorphing
         const healthRatio = fromUnit.health / fromUnit.healthMax;
-        unit.health = Math.max(Math.floor(unit.healthMax * healthRatio), 1);
+        unit.health = Math.max(1, unit.healthMax * healthRatio);
       }
 
       // Keep Modifiers from fromUnit
