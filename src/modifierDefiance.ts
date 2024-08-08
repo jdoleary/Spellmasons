@@ -14,6 +14,7 @@ const subspriteImageName = 'spell-effects/shield-red.png';
 export default function registerdefiance() {
   registerModifiers(defianceId, {
     description: `Each enemy within attack range reduces incoming damage by ${Math.floor(reductionProportion * 100)}%`,
+    stage: "Amount Multiplier",
     probability: 100,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, defianceId, { isCurse: false, quantity, keepOnDeath: true }, () => {

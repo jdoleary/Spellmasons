@@ -9,6 +9,7 @@ export default function registerArmor() {
   registerModifiers(armorId, {
     description: ('rune_armor'),
     unitOfMeasure: 'Armor',
+    stage: "Amount Flat",
     costPerUpgrade: 30,
     quantityPerUpgrade: 1,
     maxUpgradeCount: 5,

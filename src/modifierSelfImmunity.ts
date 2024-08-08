@@ -9,6 +9,7 @@ export const selfInvulnerabilityId = 'Self Invulnerability';
 export default function registerSelfInvulnerability() {
   registerModifiers(selfInvulnerabilityId, {
     description: 'rune_self_invulnerability',
+    stage: "Amount Override",
     costPerUpgrade: 80,
     maxUpgradeCount: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

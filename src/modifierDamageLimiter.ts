@@ -14,6 +14,7 @@ function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
 export default function registerDamageLimiter() {
   registerModifiers(damagelimiterId, {
     description: `Each instance of damage taken is capped at ${limit}.`,
+    stage: "Amount Override",
     probability: 50,
     addModifierVisuals,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

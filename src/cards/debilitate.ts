@@ -37,6 +37,7 @@ const spell: Spell = {
     },
   },
   modifiers: {
+    stage: 'Amount Multiplier',
     add,
   },
   events: {

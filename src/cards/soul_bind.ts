@@ -41,6 +41,7 @@ const spell: Spell = {
     },
   },
   modifiers: {
+    stage: 'Soul Bind',
     add,
   },
   events: {

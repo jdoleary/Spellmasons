@@ -11,6 +11,7 @@ export default function registerRevitalize() {
   registerModifiers(revitalizeId, {
     unitOfMeasure: '%',
     description: i18n('revitalize_description'),
+    stage: "Amount Multiplier",
     costPerUpgrade: 40,
     quantityPerUpgrade: QUANTITY_PER_UPGRADE,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

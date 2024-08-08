@@ -47,6 +47,7 @@ const spell: Spell = {
     },
   },
   modifiers: {
+    stage: 'Amount Multiplier',
     add,
     subsprite: {
       imageName: modifierImagePath,

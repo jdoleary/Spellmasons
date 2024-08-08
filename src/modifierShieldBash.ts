@@ -10,6 +10,7 @@ export default function registerShieldBash() {
   registerModifiers(shieldBashId, {
     description: 'rune_shield_bash',
     unitOfMeasure: 'shield to damage',
+    stage: "Amount Flat",
     costPerUpgrade: 20,
     quantityPerUpgrade: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

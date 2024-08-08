@@ -15,6 +15,7 @@ const subspriteImageName = 'spell-effects/shield-blue.png';
 export default function registerConfidence() {
   registerModifiers(confidenceId, {
     description: `Each ally within attack range reduces incoming damage by ${Math.floor(reductionProportion * 100)}%`,
+    stage: "Amount Multiplier",
     probability: 100,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, confidenceId, { isCurse: false, quantity, keepOnDeath: true }, () => {

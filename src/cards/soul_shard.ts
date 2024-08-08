@@ -63,6 +63,7 @@ const spell: Spell = {
     },
   },
   modifiers: {
+    stage: 'Soul Shard',
     add,
     remove,
   },
