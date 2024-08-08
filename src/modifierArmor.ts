@@ -12,7 +12,6 @@ export default function registerArmor() {
     stage: "Amount Flat",
     costPerUpgrade: 30,
     quantityPerUpgrade: 1,
-    maxUpgradeCount: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, armorId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, armorId);
