@@ -34,12 +34,10 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
   // returns true if it kills the unit
   if (updateSuffocate(unit, underworld, prediction)) {
     // nothing to do here
-  }
-  else if (!prediction) {
+  } else if (!prediction) {
     // Show that suffocate was added to the unit
     // Temporarily use floating text until spell animation is finished
     floatingText({ coords: unit, text: suffocateCardId });
-    updateTooltip(unit);
   }
 }
 
@@ -74,20 +72,7 @@ export function updateSuffocate(unit: Unit.IUnit, underworld: Underworld, predic
     return true;
   }
 
-  updateTooltip(unit);
-
   return false;
-}
-
-export function updateTooltip(unit: Unit.IUnit) {
-  const modifier = unit.modifiers[suffocateCardId];
-  if (modifier) {
-    // calculate turns until suffocation
-    const turnsUntilSuffocation = Math.ceil(2 * Math.log2(unit.health / 10) + 1) - modifier.quantity;
-
-    // Set tooltip:
-    modifier.tooltip = `${turnsUntilSuffocation} ${i18n('turns until suffocation')}`;
-  }
 }
 
 const spell: Spell = {
@@ -132,6 +117,15 @@ const spell: Spell = {
     // },
   },
   events: {
+    onTooltip: (unit: Unit.IUnit, underworld: Underworld) => {
+      const modifier = unit.modifiers[suffocateCardId];
+      if (modifier) {
+        // calculate turns until suffocation
+        const turnsUntilSuffocation = Math.ceil(2 * Math.log2(unit.health / 10) + 1) - modifier.quantity;
+        // Set tooltip:
+        modifier.tooltip = `${turnsUntilSuffocation} ${i18n('turns until suffocation')}`;
+      }
+    },
     onTurnEnd: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
       const modifier = unit.modifiers[suffocateCardId];
       if (!prediction) {

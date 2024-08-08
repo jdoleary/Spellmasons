@@ -55,6 +55,13 @@ const spell: Spell = {
     },
   },
   events: {
+    onTooltip: (unit: Unit.IUnit, underworld: Underworld) => {
+      const modifier = unit.modifiers[poisonCardId];
+      if (modifier) {
+        // Set tooltip:
+        modifier.tooltip = `${modifier.quantity} ${i18n('Poison')}`;
+      }
+    },
     onTurnEnd: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
       const modifier = unit.modifiers[poisonCardId];
       if (modifier) {
@@ -87,20 +94,8 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     Unit.addEvent(unit, poisonCardId);
   });
 
-  if (!prediction) {
-    updateTooltip(unit);
-  }
-
   if (extra && extra.sourceUnitId != undefined) {
     modifier.sourceUnitId = extra.sourceUnitId;
-  }
-}
-
-function updateTooltip(unit: Unit.IUnit) {
-  const modifier = unit.modifiers[poisonCardId];
-  if (modifier) {
-    // Set tooltip:
-    modifier.tooltip = `${modifier.quantity} ${i18n('Poison')}`;
   }
 }
 

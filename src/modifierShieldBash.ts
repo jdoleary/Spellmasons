@@ -1,5 +1,5 @@
 import { registerEvents, registerModifiers } from "./cards";
-import { shieldId, shield_UpdateTooltip } from "./cards/shield";
+import { shieldId } from "./cards/shield";
 import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
@@ -35,7 +35,6 @@ export default function registerShieldBash() {
             if (shieldModifier.quantity <= 0) {
               Unit.removeModifier(damageDealer, shieldId, underworld);
             }
-            shield_UpdateTooltip(damageDealer)
 
             // Increase damage
             amount += shieldConsumed;

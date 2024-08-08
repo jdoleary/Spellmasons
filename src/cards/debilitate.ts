@@ -41,6 +41,12 @@ const spell: Spell = {
     add,
   },
   events: {
+    onTooltip: (unit: Unit.IUnit, underworld: Underworld) => {
+      const modifier = unit.modifiers[id];
+      if (modifier) {
+        modifier.tooltip = `${CalcMult(modifier.quantity)}x ${i18n('Incoming')} ${i18n('Damage')}`;
+      }
+    },
     onTakeDamage: (unit, amount, _underworld, damageDealer) => {
       const modifier = unit.modifiers[id];
       if (modifier) {
@@ -60,16 +66,6 @@ function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, qu
   getOrInitModifier(unit, id, { isCurse: true, quantity }, () => {
     Unit.addEvent(unit, id);
   });
-
-  updateTooltip(unit);
-}
-
-function updateTooltip(unit: Unit.IUnit) {
-  const modifier = unit.modifiers[id];
-  if (modifier) {
-    // Set tooltip:
-    modifier.tooltip = `${CalcMult(modifier.quantity)}x ${i18n('Incoming')} ${i18n('Damage')}`;
-  }
 }
 
 function CalcMult(quantity: number): number {

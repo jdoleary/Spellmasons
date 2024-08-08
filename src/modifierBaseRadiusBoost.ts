@@ -12,18 +12,15 @@ export default function registerBaseRadiusBoost() {
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, modifierBaseRadiusBoostId, { isCurse: false, quantity, keepOnDeath: true }, () => {
       });
-
-      if (!prediction) {
-        updateTooltip(unit);
-      }
     }
   });
-}
-
-function updateTooltip(unit: Unit.IUnit) {
-  const modifier = unit.modifiers[modifierBaseRadiusBoostId];
-  if (modifier) {
-    // Set tooltip:
-    modifier.tooltip = `+${modifier.quantity} ${i18n('Radius Boost')}`
-  }
+  registerEvents(modifierBaseRadiusBoostId, {
+    onTooltip: (unit: Unit.IUnit, underworld: Underworld) => {
+      const modifier = unit.modifiers[modifierBaseRadiusBoostId];
+      if (modifier) {
+        // Set tooltip:
+        modifier.tooltip = `+${modifier.quantity} ${i18n('Radius Boost')}`;
+      }
+    },
+  });
 }

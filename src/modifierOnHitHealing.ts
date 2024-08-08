@@ -15,13 +15,16 @@ export default function registerOnHitHealing() {
       getOrInitModifier(unit, onHitHealingId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, onHitHealingId);
       });
-
-      if (!prediction) {
-        updateTooltip(unit);
-      }
     }
   });
   registerEvents(onHitHealingId, {
+    onTooltip: (unit: Unit.IUnit, underworld: Underworld) => {
+      const modifier = unit.modifiers[onHitHealingId];
+      if (modifier) {
+        // Set tooltip:
+        modifier.tooltip = `${modifier.quantity} ${i18n('On Hit')} ${i18n('Healing')}`;
+      }
+    },
     onDealDamage: (damageDealer: Unit.IUnit, amount: number, underworld: Underworld, prediction: boolean, damageReciever?: Unit.IUnit) => {
       const modifier = damageDealer.modifiers[onHitHealingId];
       if (modifier) {
@@ -35,12 +38,4 @@ export default function registerOnHitHealing() {
       return amount;
     }
   });
-}
-
-function updateTooltip(unit: Unit.IUnit) {
-  const modifier = unit.modifiers[onHitHealingId];
-  if (modifier) {
-    // Set tooltip:
-    modifier.tooltip = `${modifier.quantity} ${i18n('On Hit')} ${i18n('Healing')}`;
-  }
 }
