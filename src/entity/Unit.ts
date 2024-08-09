@@ -52,6 +52,7 @@ import { chooseObjectWithProbability, getUniqueSeedStringPerLevel } from '../jma
 import { ANCIENT_UNIT_ID } from './units/ancient';
 import { IPickup } from './Pickup';
 import seedrandom from 'seedrandom';
+import { slimeId } from '../modifierSlime';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -1534,12 +1535,17 @@ export function makeMiniboss(unit: IUnit, underworld: Underworld) {
     },
   ], seed) || { num: 1 };
   // Filter out modifiers with no probability and add the modifier key to the object.
-  let availableSpawnModifiers = Object.entries(allModifiers).flatMap(([key, mod]) => typeof mod.probability === 'number' ? [{ ...mod, key }] : []);
+  let availableSpawnModifiers = Object.entries(allModifiers).flatMap(([key, mod]) => typeof mod.probability === 'number' ? [{ ...mod, id: key }] : []);
+  // Special exception, ban "Slime" from Support classes
+  if (unit.unitSubType === UnitSubType.SUPPORT_CLASS) {
+    availableSpawnModifiers = availableSpawnModifiers.filter(x => x.id !== slimeId);
+  }
+  console.log('jtest', availableSpawnModifiers)
   for (let i = 0; i < numberOfModifiers.num; i++) {
     // .map satisfies the compiler's need for certainty that probability is not undefined
     const mod = chooseObjectWithProbability(availableSpawnModifiers.map(m => ({ probability: 0, ...m })), seed);
     if (mod) {
-      addModifier(unit, mod.key, underworld, false, 1);
+      addModifier(unit, mod.id, underworld, false, 1);
       // Remove mod from next selection
       availableSpawnModifiers = availableSpawnModifiers.filter(m => m !== mod);
     }
