@@ -7,6 +7,7 @@ import Underworld from './Underworld';
 export const summoningSicknessId = 'summoningSickness';
 export default function registerSummoningSickness() {
   registerModifiers(summoningSicknessId, {
+    description: 'summoning_sickness_description',
     add: (unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) => {
       // Only add summoning sickness to AI
       // Summoning sickness is only meant to prevent units from attacking 

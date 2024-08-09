@@ -14,7 +14,7 @@ const maxReductionProportion = 0.5;
 const subspriteImageName = 'spell-effects/shield-blue.png';
 export default function registerConfidence() {
   registerModifiers(confidenceId, {
-    description: `Each ally within attack range reduces incoming damage by ${Math.floor(reductionProportion * 100)}%`,
+    description: ['confidence_description', Math.floor(reductionProportion * 100).toString()],
     probability: 100,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, confidenceId, { isCurse: false, quantity, keepOnDeath: true }, () => {
@@ -41,7 +41,7 @@ export default function registerConfidence() {
     onTooltip: (unit: Unit.IUnit, underworld: Underworld) => {
       const modifier = unit.modifiers[confidenceId];
       if (modifier) {
-        modifier.tooltip = `${confidenceId}: ${Math.floor(getReductionProportion(unit, underworld) * 100)}% ${i18n('Damage Reduction')}`;
+        modifier.tooltip = `${i18n(confidenceId)}: ${i18n(['damage_reduced', Math.floor(getReductionProportion(unit, underworld) * 100).toString()])}`;
       }
     },
     onTakeDamage: (unit: Unit.IUnit, amount: number, underworld: Underworld, prediction: boolean, damageDealer?: Unit.IUnit) => {
@@ -57,7 +57,7 @@ export default function registerConfidence() {
       }
       // Cannot be below 0 (must still be damage, not healing)
       const overriddenAmount = Math.max(0, Math.floor(amount - amount * reductionAmount));
-      floatingText({ coords: unit, text: `${confidenceId}: Damage reduced by ${Math.floor(reductionAmount * 100)}%`, prediction });
+      floatingText({ coords: unit, text: `${i18n(confidenceId)}: ${i18n(['damage_reduced', Math.floor(reductionAmount * 100).toString()])}`, prediction });
       return overriddenAmount;
     }
   });

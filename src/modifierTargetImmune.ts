@@ -4,14 +4,14 @@ import * as Image from './graphics/Image';
 import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
 
-export const targetImmuneId = 'Target Immune';
+export const targetImmuneId = 'target_immune';
 const subspriteId = 'spell-effects/targetImmune';
 function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
   Image.addSubSprite(unit.image, subspriteId);
 }
 export default function registerTargetImmune() {
   registerModifiers(targetImmuneId, {
-    description: 'Unit resists targeting unless targeted directly.',
+    description: 'target_immune_description',
     probability: 100,
     addModifierVisuals,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
