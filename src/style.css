@@ -1366,6 +1366,10 @@ body.view-Menu .prompt:not(.forceShow) {
 
 }
 
+.prompt-inner img {
+  max-height: 90%;
+}
+
 @media (max-height: 1024px) {
 
   /* Prevent image from taking up too much space on small screens */

@@ -213,7 +213,7 @@
         "invalid summon location": "invalid summon location",
         "enable cinematic camera": "Enable Cinematic Camera",
         "explain liquid damage": "Units that fall into bodies of liquid will take damage.  Some units are stronger than others and will survive.  Some types of liquid will deal more damage than others.  Units that remain in liquid will take additional damage when their turn ends.",
-        "explain minibosses": "Minibosses are larger than their meager counterparts.  They have more health and do more damage.  Take extra caution when facing one.",
+        "explain minibosses": "Minibosses are more powerful than their meager counterparts, and they have special enhancements that make them difficult to handle.  Read about their enhacements in their tooltip.",
         "summoner description": "A summoner uses mana to summon enemies.",
         "no target!": "No target!",
         "soul captured!": "Soul Captured!",
@@ -562,7 +562,11 @@
         "rune_healthmax": "Increase maximum health",
         "rune_manamax": "Increase maximum mana",
         "rune_staminamax": "Increase maximum stamina",
-        "rune_attackrange": "Increase cast range"
+        "rune_attackrange": "Increase cast range",
+        "explain bookmarks": "Click on bookmarks to navigate the spellbook more easily",
+        "explain upgrade bookmark": "At the end of every level you get \"skill points\" to spend on upgrades.  Use the Yellow Bookmark to access the upgrades menu and the grey bookmark to return to view all spells.",
+        "bookmarks": "Bookmarks",
+        "upgrade points": "Upgrade Points"
     },
     {
         "language": "Français",
@@ -778,7 +782,7 @@
         "invalid summon location": "emplacement d'invocation invalide",
         "enable cinematic camera": "Activer la Caméra Cinématique",
         "explain liquid damage": "Les unités qui tombent dans un corps de liquide subiront des dégâts. Certaines unités sont plus fortes que d'autres et survivront. Certains types de liquide infligent plus de dégâts. Les unités qui restent immergées subiront des dégâts supplémentaires à la fin de leur tour.",
-        "explain minibosses": "Les mini boss sont plus gros que leurs piètres homologues. Ils ont plus de vie et infligent plus de dégâts. Prenez vos précaution face à eux.",
+        "explain minibosses": "Les minibosses sont plus puissants que leurs homologues modestes, et ils possèdent des améliorations spéciales qui les rendent difficiles à affronter. Lisez à propos de leurs améliorations dans l'infobulle.",
         "summoner description": "Un invocateur utilise du mana pour invoquer des ennemis",
         "no target!": "Pas de cible !",
         "soul captured!": "Âme Capturée !",
@@ -1127,7 +1131,11 @@
         "rune_healthmax": "Augmente la santé maximale.",
         "rune_manamax": "Augmenter le mana maximum",
         "rune_staminamax": "Augmenter l'endurance maximale",
-        "rune_attackrange": "Augmenter la portée de lancement"
+        "rune_attackrange": "Augmenter la portée de lancement",
+        "explain bookmarks": "Cliquez sur les signets pour naviguer plus facilement dans le grimoire.",
+        "explain upgrade bookmark": "À la fin de chaque niveau, vous obtenez des \"points de compétence\" à dépenser pour des améliorations. Utilisez le Signet Jaune pour accéder au menu des améliorations et le Signet Gris pour revenir à la visualisation de tous les sorts.",
+        "bookmarks": "Signets",
+        "upgrade points": "Points de mise à niveau"
     },
     {
         "language": "italiano",
@@ -1343,7 +1351,7 @@
         "invalid summon location": "posizione di evocazione non valida",
         "enable cinematic camera": "Attiva telecamera cinematografica",
         "explain liquid damage": "Le unità che cadono all'interno di corpi liquidi subiranno danni. Alcune unità sono più resistenti di altre e sopravviveranno. Alcuni tipi di liquido infliggeranno più danni di altri.",
-        "explain minibosses": "I mini boss sono più grandi delle loro controparti, hanno più salute e infliggono più danni. Fai attenzione quando ne affronti uno.",
+        "explain minibosses": "I miniboss sono più potenti dei loro deboli compagni, e hanno miglioramenti speciali che li rendono difficili da affrontare. Leggi dei loro miglioramenti nel loro tooltip.",
         "summoner description": "Un evocatore usa mana per evocare i nemici.",
         "no target!": "Nessun Bersaglio!",
         "soul captured!": "Anima Catturata!",
@@ -1692,7 +1700,11 @@
         "rune_healthmax": "Aumenta la salute massima",
         "rune_manamax": "Aumenta il mana massimo",
         "rune_staminamax": "Aumenta la stamina massima",
-        "rune_attackrange": "Aumenta il raggio di lancio"
+        "rune_attackrange": "Aumenta il raggio di lancio",
+        "explain bookmarks": "Clicca sui segnalibri per navigare più facilmente nel libro degli incantesimi.",
+        "explain upgrade bookmark": "Alla fine di ogni livello ricevi \"punti abilità\" da spendere nei potenziamenti. Usa il Segnalibro Giallo per accedere al menu dei potenziamenti e il segnalibro grigio per tornare a visualizzare tutti i incantesimi.",
+        "bookmarks": "Segnalibri",
+        "upgrade points": "Punti di Aggiornamento"
     },
     {
         "language": "Deutsche",
@@ -1908,7 +1920,7 @@
         "invalid summon location": "ungültiger Beschwörungspunkt",
         "enable cinematic camera": "Cinematische Kamera aktivieren",
         "explain liquid damage": "Einheiten die in eine Flüssigkeit fallen nehmen Schaden. Manche Einheiten sind stärker als andere und überleben. Manche Flüssigkeiten fügen mehr Schaden zu als andere. Einheiten die ihren Zug in einer Flüssigkeit beenden nehmen zusätzlichen Schaden.",
-        "explain minibosses": "Minibosse sind grösser als ihre mickrigen Ebenbilder, haben mehr Leben und fügen mehr Schaden zu. Sei achtsam wenn du einen bekämpfst.",
+        "explain minibosses": "Minibosse sind mächtiger als ihre schwächeren Gegenstücke und verfügen über spezielle Verbesserungen, die es schwierig machen, mit ihnen umzugehen. Lesen Sie in ihrem Tooltip nach, welche Verbesserungen sie haben.",
         "summoner description": "Ein Beschwörer verwendet Mana um Gegner zu beschwören ",
         "no target!": "Kein Ziel!",
         "soul captured!": "Seele gefangen!",
@@ -2257,7 +2269,11 @@
         "rune_healthmax": "Maximale Gesundheit erhöhen",
         "rune_manamax": "Maximale Mana erhöhen",
         "rune_staminamax": "Maximale Ausdauer erhöhen",
-        "rune_attackrange": "Reichweite des Zauberns erhöhen"
+        "rune_attackrange": "Reichweite des Zauberns erhöhen",
+        "explain bookmarks": "Klicken Sie auf Lesezeichen, um das Zauberbuch einfacher zu navigieren.",
+        "explain upgrade bookmark": "Am Ende jedes Levels erhältst du \"Fähigkeitspunkte\", die du für Upgrades ausgeben kannst. Verwende das gelbe Lesezeichen, um auf das Upgrade-Menü zuzugreifen, und das graue Lesezeichen, um zurückzukehren und alle Zauber anzusehen.",
+        "bookmarks": "Lesezeichen",
+        "upgrade points": "Upgrade-Punkte"
     },
     {
         "language": "español",
@@ -2473,7 +2489,7 @@
         "invalid summon location": "Ubicación no válida de convocatoria",
         "enable cinematic camera": "Habilitar cámara cinematográfica",
         "explain liquid damage": "Las unidades que caen en cuerpos de líquido recibirán daño. Algunas unidades son más fuertes que otras y sobrevivirán. Algunos tipos de líquido causarán más daño que otros. Las unidades que permanecen en líquido recibirán daño adicional cuando termine su turno.",
-        "explain minibosses": "Los miniboses son más grandes que sus escasas contrapartes. Tienen más salud y hacen más daño. Tenga más precaución al enfrentar uno.",
+        "explain minibosses": "Los minibosses son más poderosos que sus insignificantes contrapartes, y tienen mejoras especiales que los hacen difíciles de manejar. Lee sobre sus mejoras en su descripción.",
         "summoner description": "Un invocador usa maná para convocar a los enemigos.",
         "no target!": "¡Sin objetivo!",
         "soul captured!": "¡Alma capturada!",
@@ -2822,7 +2838,11 @@
         "rune_healthmax": "Aumentar la salud máxima",
         "rune_manamax": "Aumentar el maná máximo",
         "rune_staminamax": "Aumentar la resistencia máxima",
-        "rune_attackrange": "Aumentar el rango de lanzamiento"
+        "rune_attackrange": "Aumentar el rango de lanzamiento",
+        "explain bookmarks": "Haz clic en los marcadores para navegar más fácilmente por el grimorio.",
+        "explain upgrade bookmark": "Al final de cada nivel obtienes \"puntos de habilidad\" para gastar en mejoras. Usa el Marcador Amarillo para acceder al menú de mejoras y el marcador gris para volver a ver todos los hechizos.",
+        "bookmarks": "Marcadores",
+        "upgrade points": "Puntos de Mejora"
     },
     {
         "language": "日本",
@@ -3038,7 +3058,7 @@
         "invalid summon location": "無効な召喚地点",
         "enable cinematic camera": "カメラ演出を有効にする",
         "explain liquid damage": "液体に落ちるものはダメージを受ける.違うものは異なるダメージを受ける.違う液体から受けるダメージも異なる",
-        "explain minibosses": "ミニボスは普通より大きく,体力もより高く,与えるダメージ量も高くなる.遭遇の際は要注意です",
+        "explain minibosses": "ミニボスはその微弱な仲間よりも強力であり、扱いが難しくなる特別な強化があります。彼らの強化についてはツールチップを読んでください。",
         "summoner description": "サモナーはマナを使って新たの敵を召喚する",
         "no target!": "ターゲットがいません!",
         "soul captured!": "魂捕獲成功!",
@@ -3387,7 +3407,11 @@
         "rune_healthmax": "最大健康を増加させる",
         "rune_manamax": "最大マナを増加させる",
         "rune_staminamax": "最大スタミナを増加させる",
-        "rune_attackrange": "キャスト範囲を増加させる"
+        "rune_attackrange": "キャスト範囲を増加させる",
+        "explain bookmarks": "ブックマークをクリックして、魔法書をより簡単にナビゲートします。",
+        "explain upgrade bookmark": "各レベルの最後には、アップグレードのために「スキルポイント」を獲得します。イエローブックマークを使用してアップグレードメニューにアクセスし、グレーブックマークを使ってすべての呪文を表示するために戻ります。",
+        "bookmarks": "ブックマーク",
+        "upgrade points": "アップグレードポイント"
     },
     {
         "language": "Português",
@@ -3603,7 +3627,7 @@
         "invalid summon location": "Localização inválida de convocação",
         "enable cinematic camera": "Habilite a câmera cinematográfica",
         "explain liquid damage": "As unidades que entrarem em contato com líquidos durante os turnos sofrerão danos, algumas unidades são mais resistêntes que outras e conseguem sobreviver mesmo sobre a superficie líquida, além disso alguns líquidos causam mais dano do que outros, exemplo a água dá menos dano que a lava. Unidades que permanecerem no líquido sofrerão danos adicionais quando seu turno encerrar.",
-        "explain minibosses": "Os minibosses são maiores que seus colegas do mesmo tipo, eles possuem mais saúde e causam mais dano. Sempre que enfrentar um tome uma cautela extra.",
+        "explain minibosses": "Minibosses são mais poderosos do que seus fracos companheiros, e eles têm melhorias especiais que os tornam difíceis de enfrentar. Leia sobre suas melhorias em sua dica de ferramenta.",
         "summoner description": "Um invocador usa mana para invocar seus inimigos ao seu lado, quando invocado a criatura vai passar a agir ao seu favor dando dano em outras criaturas e te auxiliando noque podem.",
         "no target!": "Sem alvo!",
         "soul captured!": "Alma capturada!",
@@ -3952,7 +3976,11 @@
         "rune_healthmax": "Aumentar saúde máxima",
         "rune_manamax": "Aumentar mana máxima",
         "rune_staminamax": "Aumentar a resistência máxima",
-        "rune_attackrange": "Aumentar o alcance da magia"
+        "rune_attackrange": "Aumentar o alcance da magia",
+        "explain bookmarks": "Clique em favoritos para navegar pelo grimório mais facilmente.",
+        "explain upgrade bookmark": "No final de cada nível, você recebe \"pontos de habilidade\" para gastar em melhorias. Use o Marcador Amarelo para acessar o menu de melhorias e o Marcador Cinza para voltar e visualizar todos os feitiços.",
+        "bookmarks": "Marcadores",
+        "upgrade points": "Pontos de Upgrade"
     },
     {
         "language": "عربى",
@@ -4168,7 +4196,7 @@
         "invalid summon location": "موقع استدعاء غير صالح",
         "enable cinematic camera": "تمكين الكاميرا السينمائية",
         "explain liquid damage": "الوحدات التي تقع في جثث السائل ستتسبب في أضرار. بعض الوحدات أقوى من غيرها وسوف تنجو. بعض أنواع السائل سوف تتسبب في أضرار أكثر من غيرها. الوحدات التي تبقى في السائل ستتسبب في أضرار إضافية عندما ينتهي دورها.",
-        "explain minibosses": "MiniBosses أكبر من نظرائها الضئيلة. لديهم المزيد من الصحة ويفعلون المزيد من الأضرار. خذ المزيد من الحذر عند مواجهة واحدة.",
+        "explain minibosses": "تكون الرؤساء الصغار أكثر قوة من نظرائهم الضعيفين، ولديهم تحسينات خاصة تجعل من الصعب التعامل معهم. اقرأ عن تحسيناتهم في تلميحات الأدوات الخاصة بهم.",
         "summoner description": "يستخدم المستدعي مانا لاستدعاء الأعداء.",
         "no target!": "لا هدف!",
         "soul captured!": "تم القبض على الروح!",
@@ -4517,7 +4545,11 @@
         "rune_healthmax": "زيادة الحد الأقصى للصحة",
         "rune_manamax": "زيادة الحد الأقصى من المانا",
         "rune_staminamax": "زيادة الحد الأقصى للتحمل",
-        "rune_attackrange": "زيادة مدى السحر"
+        "rune_attackrange": "زيادة مدى السحر",
+        "explain bookmarks": "انقر على العلامات للتنقل في كتاب السحر بشكل أسهل",
+        "explain upgrade bookmark": "في نهاية كل مستوى ستحصل على \"نقاط مهارة\" لإنفاقها على التحديثات. استخدم علامة الكتاب الصفراء للوصول إلى قائمة التحديثات وعلامة الكتاب الرمادية للعودة لرؤية جميع التعويذات.",
+        "bookmarks": "علامات الكتب",
+        "upgrade points": "نقاط الترقية"
     },
     {
         "language": "한국어",
@@ -4733,7 +4765,7 @@
         "invalid summon location": "유효하지 않은 소환 위치",
         "enable cinematic camera": "시네마틱 시점 활성화",
         "explain liquid damage": "액체로 떨어지는 유닛은 피해을 입을 것입니다. 보다 강력한 어떤 유닛들은 살아남을 것입니다. 어떤 종류의 액체는 다른 액체보다 더 많은 피해를 입힙니다. 액체 안에 남아 있는 유닛은 턴이 종료되면 추가 피해를 입습니다.",
-        "explain minibosses": "미니보스는 그의 빈약한 적들보다 훨씬 거대합니다. 그들은 훨씬 더 체력이 많고 더 많은 피해를 입힙니다. 미니보스을 마주할 때는 각별히 주의하십시오.",
+        "explain minibosses": "미니보스는 보잘것없는 상대보다 더 강력하며, 그들을 다루기 어렵게 만드는 특별한 강화가 있습니다. 그들의 툴팁에서 강화에 대해 읽어보세요.",
         "summoner description": "소환사는 마나를 사용해 적을 소환합니다.",
         "no target!": "대상 없음!",
         "soul captured!": "영혼 사로잡힘!",
@@ -5082,7 +5114,11 @@
         "rune_healthmax": "최대 체력 증가",
         "rune_manamax": "최대 마나 증가",
         "rune_staminamax": "최대 스태미나 증가",
-        "rune_attackrange": "시전 범위 증가"
+        "rune_attackrange": "시전 범위 증가",
+        "explain bookmarks": "책갈피를 클릭하여 마법서를 더 쉽게 탐색하세요.",
+        "explain upgrade bookmark": "각 레벨의 끝에서 업그레이드를 위한 \"스킬 포인트\"를 얻습니다. 노란 책갈피를 사용하여 업그레이드 메뉴에 접근하고, 회색 책갈피를 사용하여 모든 마법을 다시 볼 수 있습니다.",
+        "bookmarks": "북마크",
+        "upgrade points": "업그레이드 포인트"
     },
     {
         "language": "Русский",
@@ -5298,7 +5334,7 @@
         "invalid summon location": "недопустимое место призыва",
         "enable cinematic camera": "Включить Кинематографичную Камеру",
         "explain liquid damage": "Существа в воде/лаве и других жидкостях получают урон. В конце хода получают дополнительный урон.",
-        "explain minibosses": "Минибоссы крупнее своих мелких собратьев. У них больше здоровья и урона. Будьте осторожны при встрече с ними.",
+        "explain minibosses": "Минибоссы сильнее своих скромных собратьев и обладают специальными улучшениями, которые делают их трудными для борьбы. Узнайте о их улучшениях в подсказке.",
         "summoner description": "Призыватель использует ману для призыва существ.",
         "no target!": "Нет цели!",
         "soul captured!": "Душа захвачена!",
@@ -5647,7 +5683,11 @@
         "rune_healthmax": "Увеличить максимальное здоровье",
         "rune_manamax": "Увеличить максимальное количество маны",
         "rune_staminamax": "Увеличить максимальную выносливость",
-        "rune_attackrange": "Увеличить расстояние заклинания"
+        "rune_attackrange": "Увеличить расстояние заклинания",
+        "explain bookmarks": "Нажмите на закладки, чтобы легче перемещаться по книге заклинаний.",
+        "explain upgrade bookmark": "В конце каждого уровня вы получаете «очки навыков» для улучшений. Используйте Жёлтую закладку для доступа к меню улучшений и Серую закладку, чтобы вернуться и просмотреть все заклинания.",
+        "bookmarks": "Закладки",
+        "upgrade points": "Очки улучшения"
     },
     {
         "language": "中文(简)",
@@ -5863,7 +5903,7 @@
         "invalid summon location": "无效的召唤位置",
         "enable cinematic camera": "启用特效演出镜头",
         "explain liquid damage": "掉进液体的单位会受到伤害.不同单位受到的液体伤害不同,不同的液体会造成的伤害也不同.",
-        "explain minibosses": "小boss体型比同类单位大,拥有更高的生命值以及伤害.当遭遇时需要特别注意.",
+        "explain minibosses": "小boss比它们微弱的同类更强大，它们具有特殊的强化，使得处理起来十分棘手。 请在工具提示中查看它们的强化信息。",
         "summoner description": "召唤师拥有法力,并使用法力召唤怪物",
         "no target!": "缺失目标!",
         "soul captured!": "成功捕获灵魂!",
@@ -6212,7 +6252,11 @@
         "rune_healthmax": "增加最大生命值",
         "rune_manamax": "增加最大法力值",
         "rune_staminamax": "增加最大耐力",
-        "rune_attackrange": "增加施法范围"
+        "rune_attackrange": "增加施法范围",
+        "explain bookmarks": "点击书签可以更方便地浏览魔法书",
+        "explain upgrade bookmark": "在每个关卡结束时，你会获得“技能点”来进行升级。使用黄色书签访问升级菜单，使用灰色书签返回查看所有法术。",
+        "bookmarks": "书签",
+        "upgrade points": "升级点数"
     },
     {
         "language": "中文(繁)",
@@ -6428,7 +6472,7 @@
         "invalid summon location": "無效的召喚位置",
         "enable cinematic camera": "啟用特效演出鏡頭",
         "explain liquid damage": "掉進液體的單位會受到傷害.不同單位受到的液體傷害不同,不同的液體會造成的傷害也不同.",
-        "explain minibosses": "小boss體型比同類單位大,擁有更高的生命值以及傷害.當遭遇時需要特別注意.",
+        "explain minibosses": "小首領比他們微弱的對手更強大，並且擁有使他們難以處理的特殊增強。請在提示中閱讀有關他們增強的資訊。",
         "summoner description": "召喚師擁有法力,並使用法力召喚怪物",
         "no target!": "缺失目標!",
         "soul captured!": "成功捕獲靈魂!",
@@ -6777,7 +6821,11 @@
         "rune_healthmax": "增加最大生命值",
         "rune_manamax": "增加最大法力值",
         "rune_staminamax": "提升最大耐力",
-        "rune_attackrange": "增加施法範圍"
+        "rune_attackrange": "增加施法範圍",
+        "explain bookmarks": "點擊書籤可更輕鬆地導航咒語書",
+        "explain upgrade bookmark": "在每個關卡結束時，你會獲得「技能點數」來用於升級。使用黃色書籤來訪問升級菜單，使用灰色書籤返回查看所有法術。",
+        "bookmarks": "書籤",
+        "upgrade points": "升級點數"
     },
     {
         "language": "Polski",
@@ -6993,7 +7041,7 @@
         "invalid summon location": "Nie możesz przywołać w tym miejscu",
         "enable cinematic camera": "Włącz kamerę filmową",
         "explain liquid damage": "Jednostki, które wpadają w jeziora, otrzymują obrażenia. Niektóre jednostki są silniejsze niż inne i przetrwają wpadnięcie do cieczy. Niektóre rodzaje płynu zadają więcej obrażeń niż inne. Jednostki, które pozostają w płynie, otrzymają dodatkowe obrażenia po zakończeniu ich tury.",
-        "explain minibosses": "Minibossy są większe niż ich zwyczajne odpowiedniki. Mają więcej zdrowia i zadają więcej obrażen. Zachowaj ostrożność mierząc się z nim.",
+        "explain minibosses": "Minibosowie są potężniejsi od swoich skromnych odpowiedników i mają specjalne ulepszenia, które sprawiają, że są trudni do pokonania. Przeczytaj o ich ulepszeniach w podpowiedzi.",
         "summoner description": "Przywoływacz używa many aby przywołać więcej wrogów.",
         "no target!": "Brak celu!",
         "soul captured!": "Uchwycono duszę!",
@@ -7342,7 +7390,11 @@
         "rune_healthmax": "Zwiększ maksymalne zdrowie",
         "rune_manamax": "Zwiększ maksymalną manę",
         "rune_staminamax": "Zwiększ maksymalną wytrzymałość",
-        "rune_attackrange": "Zwiększ zasięg rzucania"
+        "rune_attackrange": "Zwiększ zasięg rzucania",
+        "explain bookmarks": "Kliknij na zakładki, aby łatwiej nawigować po księdze zaklęć.",
+        "explain upgrade bookmark": "Na końcu każdego poziomu otrzymujesz „punkty umiejętności” do wydania na ulepszenia. Użyj Żółtej Zakładki, aby uzyskać dostęp do menu ulepszeń, a szarej zakładki, aby wrócić do przeglądania wszystkich zaklęć.",
+        "bookmarks": "Zakładki",
+        "upgrade points": "Punkty ulepszeń"
     },
     {
         "language": "Dutch",
@@ -7558,7 +7610,7 @@
         "invalid summon location": "Ongeldige oproeplocatie",
         "enable cinematic camera": "Schakel filmische camera in",
         "explain liquid damage": "Eenheden die in vloeibare lichamen vallen, zullen schade op zich nemen. Sommige eenheden zijn sterker dan andere en zullen overleven. Sommige soorten vloeistof zullen meer schade aanrichten dan andere. Eenheden die in vloeistof blijven, zullen extra schade aanrichten wanneer hun bocht eindigt.",
-        "explain minibosses": "Minibosses zijn groter dan hun magere tegenhangers. Ze hebben meer gezondheid en doen meer schade aan. Neem extra voorzichtigheid wanneer u er een kijkt.",
+        "explain minibosses": "Minibazen zijn krachtiger dan hun magere tegenhangers en ze hebben speciale verbeteringen die het moeilijk maken om met hen om te gaan. Lees over hun verbeteringen in hun tooltip.",
         "summoner description": "Een summoner gebruikt mana om vijanden op te roepen.",
         "no target!": "Geen doel!",
         "soul captured!": "Soul gevangen!",
@@ -7907,6 +7959,10 @@
         "rune_healthmax": "Verhoog maximale gezondheid",
         "rune_manamax": "Verhoog de maximale mana",
         "rune_staminamax": "Verhoog de maximale uithoudingsvermogen",
-        "rune_attackrange": "Verhoog de spreiding van je spreuken"
+        "rune_attackrange": "Verhoog de spreiding van je spreuken",
+        "explain bookmarks": "Klik op bladwijzers om gemakkelijker door het spellboek te navigeren.",
+        "explain upgrade bookmark": "Aan het einde van elk niveau krijg je \"vaardigheidspunten\" om uit te geven aan upgrades. Gebruik de Gele Boekmarker om toegang te krijgen tot het upgrade-menu en de Grijze Boekmarker om terug te keren naar het overzicht van alle spreuken.",
+        "bookmarks": "Bladwijzers",
+        "upgrade points": "Verbeterpunten"
     }
 ]
