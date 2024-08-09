@@ -1,4 +1,4 @@
-## 1.40.0
+## 1.41.0
 src: New Modifiers
     
     - Target Immune
@@ -8,6 +8,100 @@ src: New Modifiers
     Auto omit floating text if it is passed prediction==true
     
     Thanks NoZ and Baalstrum
+
+
+Content:
+- New Spell: Cursify
+- New Spell: Add Ricochet
+- New Spell: Add Pierce
+- Split works on pickups
+- New mod! DaiNekolchis Tome of Spells!
+- New attributes for minibosses (Now named "Champions")
+    which make them much more formidible especially in the late game
+    - Target Immune
+    - Defiance
+    - Confidence
+    - Slime
+    - Damage Limiter
+
+Improvements:
+- Improve smoothness of camera when moving it with WASD
+- Upgrades are now always available in the Spellbook via the yellow bookmark on the right
+- Add Crown sprites to minibosses so they are easily identifiable
+- Improved targeting prediction (#894)
+- Frontload cards like "Plus Radius", "Add Bounce", and "Add Ricochet" so they can be added to the end of a spell instead of undoing the whole spell queue to put more at the beginning
+- Protect user from accidentally ending turn while inventory is open.  Inventory must be closed to use Spacebar to end turn.
+- Show selectedUnit's prediction unit range
+    instead of the unit itself so that if you move them
+    with a movement spell it shows what their range will
+    be
+- Lots of missing translations added
+- Modifiers now have an explicit order so any given set of modifiers (e.g. Debilitate and Split) will have the same effect regardless of in which order they were added
+
+Balance:
+- Increase the number of minibosses on loop levels
+- Make minibosses having multiple modifiers; probability increase drastically for each loop level
+
+Music: 
+Normalized volume of tracks
+Added "Spellmasons Theme" to soundtrack!!
+(Theme plays only on the menu screen)
+
+Sound:
+Normalize all sound effects
+
+UI:
+- "Class" upgrades are now available in the persistent Upgrade Menu in the Spellbook
+- Add modifier descriptions to tooltip content
+- Color Blessings Gold and Curses Purple in tooltip
+- Show inventory book icon glow if you are able to purchase an upgrade
+
+Fixes:
+
+- **BIG FIX**: unit and pickup id desync
+    HORRAY! This has been the cause of many-a-desync.
+    underworld's lastPickupId and lastUnitId are now only updated
+    if !prediction.  This ensures that the headless server and the clients
+    always have synced ids.
+- fix: Loading Hotseat Multiplayer games
+    in a singleplayer context.
+    Thanks Sippy for reporting!
+- Modifier.Init wasn't using prediction in load unit (#823)
+- Cards wont reappear after reroll within the same upgrade selection. Omitted cards reset each time an upgrade has been picked.
+- Fixes an issue where player could get "No upgrades to choose from" even when there are upgrades left to get.
+- Prevent showing upgrade button if there are no upgrades to choose from.
+- modifier subsprites and visuals missing on load
+    Refactors modifier `init` to `addModifierVisuals` to better
+    describe what it does.
+    It is separate from `add` because `add` setup up state that
+    is still present on save/load, whereas visuals such as
+    subsprites or particles have to be reinitialized on load
+- Fix shield and bloat not persisting through loads / mutliplayer late join
+- Fix player being unable to cast while immune to freeze
+- Polymorph preserves currentHealthRatio (#841)
+- Clone supports pickup power property
+- Fix: RecalcDifficulty no longer overrides Unit Stats
+    - Overriding unit stats based on source stats would cause modifiers and other stat changes to be "undone" any time the game difficulty was recalculated
+- Blood Curse guarantees integer stats
+- Fix an issue where the scale modifier applied by split was not changing properly with quantity
+- fix: Soul Shard Owner purification from making soul shard havers invulnerable.
+- fix: Consistent camera movement speed.  Camera will move and lerp at roughly the same speed across all reasonable framerates
+- fix Player Health/Mana bar visuals (#869)
+    - The value of incoming shield is now displayed during prediction
+    - Changes to max Health/Mana are now shown in the lower UI bars the same way they are shown in the overhead prediction bars (i.e. blood curse shows as doubling current hp and preserving max health ratio)
+    - Health/Mana gain visuals were swapped such that increases give a "fuller" looking bar, and decreases give an "emptier" one
+    - Fixed an issue where overfilling mana would always display mana cost bars, even when no prediction was running
+    - Fixed inaccurate and overlapping mana cost bars
+    - Overfilling mana is now much more clear, and you can see each stage of mana bar as it appears, instead of mana just appearing "full" until post-prediction
+    - The Health/Mana bars now look the same in prediction as they will after the effect occurs (predicting blood curse no longer shows hp going to full, overfilled mana displays correctly, etc. healing/damage and mana gain/loss visuals are still present)
+    - Fixed "sheild" typo
+- fix: Player clones now deal damage
+- fix: Don't restore freeze sprite
+    when in "freeze immune" state
+Docs:
+- Improve Modding Documentation (#870)
+- Doc: Clarify why split does not affect max mana
+
 ## 1.39.0
 ref: Remove cooldowns
     After considering, I've determined that the idea of a cooldown itself is
