@@ -59,7 +59,6 @@ function spawnGolems(unit: Unit.IUnit, quantity: number, underworld: Underworld,
     // Summon ally golems up to quantity
     const golemsToSummon = quantity - allyGolems.length;
     for (let i = 0; i < golemsToSummon; i++) {
-      console.log(i + '/' + golemsToSummon);
       const coords = findRandomSummonLocation(unit, unit.attackRange / 2, underworld, prediction, seed)
       if (coords) {
         let sourceUnit = allUnits[golem_unit_id];
