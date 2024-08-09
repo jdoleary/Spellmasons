@@ -1020,6 +1020,7 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
 
   // Turns decimals into UI friendly numbers
   function txt(attribute: number): number {
+    // We use ceil so 0.3 health doesn't display as 0 health
     return Math.ceil(attribute);
   }
 
