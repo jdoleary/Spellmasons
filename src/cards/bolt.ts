@@ -84,7 +84,7 @@ const spell: Spell = {
         if (Unit.isUnit(u)) {
           Unit.takeDamage({
             unit: u,
-            amount: damage * quantity,
+            amount: damage * quantity * targets.length,
             sourceUnit: state.casterUnit,
           }, underworld, prediction);
         }
