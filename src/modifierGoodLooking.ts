@@ -3,8 +3,9 @@ import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import * as config from './config';
 import Underworld from './Underworld';
-import { chooseOneOfSeeded, randInt } from "./jmath/rand";
+import { chooseOneOfSeeded, getUniqueSeedString, randInt } from "./jmath/rand";
 import { UnitSubType } from "./types/commonTypes";
+import seedrandom from "seedrandom";
 
 // Converts [quantity] random non-miniboss units to the player's faction on spawn
 export const goodLookingId = 'Good Looking';
@@ -36,7 +37,8 @@ function convertRandomUnitToMyFaction(unit: Unit.IUnit, underworld: Underworld, 
   // Unit must be alive, in enemy faction, not a doodad, and not a miniboss
   units = units.filter(u => u.alive && (u.faction != unit.faction) && (u.unitSubType != UnitSubType.DOODAD) && (!u.isMiniboss));
   if (units.length > 0) {
-    const chosenUnit = chooseOneOfSeeded(units, underworld.random);
+    const seed = getUniqueSeedString(underworld) + unit.id;
+    const chosenUnit = chooseOneOfSeeded(units, seedrandom(seed));
     if (chosenUnit) {
       Unit.changeFaction(chosenUnit, unit.faction);
     }

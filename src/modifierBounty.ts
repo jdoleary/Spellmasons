@@ -6,8 +6,9 @@ import floatingText from "./graphics/FloatingText";
 import { bountyHunterId } from "./modifierBountyHunter";
 import Underworld from './Underworld';
 import { skyBeam } from "./VisualEffects";
-import { chooseOneOfSeeded } from "./jmath/rand";
+import { chooseOneOfSeeded, getUniqueSeedString } from "./jmath/rand";
 import { UnitSubType } from "./types/commonTypes";
+import seedrandom from "seedrandom";
 
 export const bountyId = 'Bounty';
 export const bountyColor = 0xffdc64;
@@ -64,7 +65,8 @@ export function placeRandomBounty(bountyHunter: Unit.IUnit, underworld: Underwor
   // Unit must be alive, in enemy faction, not a doodad, and not yet have a bounty
   units = units.filter(u => u.alive && (u.faction != bountyHunter.faction) && (u.unitSubType != UnitSubType.DOODAD) && !u.modifiers[bountyId]);
   if (units.length > 0) {
-    const chosenUnit = chooseOneOfSeeded(units, underworld.random);
+    const seed = getUniqueSeedString(underworld) + bountyHunter.id;
+    const chosenUnit = chooseOneOfSeeded(units, seedrandom(seed));
     if (chosenUnit) {
       Unit.addModifier(chosenUnit, bountyId, underworld, prediction);
     }

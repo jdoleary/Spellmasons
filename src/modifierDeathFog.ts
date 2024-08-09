@@ -3,9 +3,10 @@ import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import * as config from './config';
 import Underworld from './Underworld';
-import { chooseOneOfSeeded, randInt } from "./jmath/rand";
+import { chooseOneOfSeeded, getUniqueSeedString, randInt } from "./jmath/rand";
 import { UnitSubType } from "./types/commonTypes";
 import { suffocateCardId } from "./cards/suffocate";
+import seedrandom from "seedrandom";
 
 // Suffocates [quantity] random enemy units each turn
 export const deathFogId = 'Death Fog';
@@ -37,7 +38,8 @@ function suffocateRandomEnemyUnit(unit: Unit.IUnit, underworld: Underworld, pred
   // Unit must be alive, in enemy faction, and not a doodad
   units = units.filter(u => u.alive && (u.faction != unit.faction) && (u.unitSubType != UnitSubType.DOODAD));
   if (units.length > 0) {
-    const chosenUnit = chooseOneOfSeeded(units, underworld.random);
+    const seed = getUniqueSeedString(underworld);
+    const chosenUnit = chooseOneOfSeeded(units, seedrandom(seed));
     if (chosenUnit) {
       Unit.addModifier(chosenUnit, suffocateCardId, underworld, prediction);
     }
