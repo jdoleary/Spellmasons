@@ -1540,7 +1540,6 @@ export function makeMiniboss(unit: IUnit, underworld: Underworld) {
   if (unit.unitSubType === UnitSubType.SUPPORT_CLASS) {
     availableSpawnModifiers = availableSpawnModifiers.filter(x => x.id !== slimeId);
   }
-  console.log('jtest', availableSpawnModifiers)
   for (let i = 0; i < numberOfModifiers.num; i++) {
     // .map satisfies the compiler's need for certainty that probability is not undefined
     const mod = chooseObjectWithProbability(availableSpawnModifiers.map(m => ({ probability: 0, ...m })), seed);
