@@ -6,7 +6,7 @@ import floatingText from "./graphics/FloatingText";
 import Underworld from './Underworld';
 
 export const damagelimiterId = 'Damage Limiter';
-const limit = 10;
+const limit = 20;
 const subspriteId = 'spell-effects/damage-limiter';
 function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
   Image.addSubSprite(unit.image, subspriteId);
