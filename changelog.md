@@ -41,6 +41,7 @@ Improvements:
 Balance:
 - Increase the number of minibosses on loop levels
 - Make minibosses having multiple modifiers; probability increase drastically for each loop level
+- Bolt deals more damage when more units are targeted
 
 Music: 
 Normalized volume of tracks
