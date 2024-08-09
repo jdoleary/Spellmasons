@@ -159,6 +159,7 @@ import registerAffinitySoul from '../modifierAffinitySoul';
 import registerAffinityTargeting from '../modifierAffinityTargeting';
 import registerFarGazerRune from '../modifierFarGazer';
 import registerGamblerRune from '../modifierGambler';
+import registerGolemancer from '../modifierGolemancer';
 import registerNecromancerRune from '../modifierNecromancer';
 import registerTimemasonRune from '../modifierTimemason';
 import registerWitchRune from '../modifierWitch';
@@ -482,6 +483,7 @@ export function registerCards(overworld: Overworld) {
   registerModifierStatUpgrades();
   registerDareDevil();
 
+  registerGolemancer();
   registerNecromancerRune();
   registerWitchRune();
   registerEndlessQuiver();
