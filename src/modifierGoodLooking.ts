@@ -6,7 +6,7 @@ import Underworld from './Underworld';
 import { chooseOneOfSeeded, randInt } from "./jmath/rand";
 import { UnitSubType } from "./types/commonTypes";
 
-// Converts a random non-miniboss unit to the player's faction on spawn
+// Converts [quantity] random non-miniboss units to the player's faction on spawn
 export const goodLookingId = 'Good Looking';
 export default function registerGoodLooking() {
   registerModifiers(goodLookingId, {
@@ -16,11 +16,6 @@ export default function registerGoodLooking() {
       getOrInitModifier(unit, goodLookingId, { isCurse: false, quantity, keepOnDeath: false }, () => {
         Unit.addEvent(unit, goodLookingId);
       });
-
-      // Good looking will trigger on purchase as well
-      for (let i = 0; i < quantity; i++) {
-        convertRandomUnitToMyFaction(unit, underworld, prediction);
-      }
     }
   });
   registerEvents(goodLookingId, {
