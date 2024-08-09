@@ -67,7 +67,7 @@ export default function registerConfidence() {
 function getReductionProportion(unit: Unit.IUnit, underworld: Underworld): number {
   // Melee units have to consider maxStamina as part of their range or else this modifier would have virtually no effect
   const range = unit.unitSubType === UnitSubType.MELEE ? unit.staminaMax + unit.attackRange : unit.attackRange;
-  const nearbyAllies = underworld.units.filter(u => u.faction == unit.faction && distance(u, unit) <= range)
+  const nearbyAllies = underworld.units.filter(u => u.faction == unit.faction && u.alive && distance(u, unit) <= range)
   const reductionAmount = (nearbyAllies.length * reductionProportion);
   return Math.min(maxReductionProportion, reductionAmount);
 }
