@@ -20,6 +20,7 @@ import { chooseBookmark } from '../../views';
 import { chooseOneOfSeeded, getUniqueSeedString, getUniqueSeedStringPerLevel } from '../../jmath/rand';
 import seedrandom from 'seedrandom';
 import { quantityWithUnit } from '../../cards/util';
+import { version } from '../../../package.json';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
@@ -479,12 +480,20 @@ export function renderRunesMenu(underworld: Underworld) {
     return;
   }
   let listOfRemainingRunesToChoose = Object.entries(Cards.allModifiers).flatMap(([key, modifier]) => {
-    if (modifier.costPerUpgrade) {
+    if (modifier.costPerUpgrade && !modifier.constant) {
       return [{ key, ...modifier }];
     } else {
       return [];
     }
   })
+
+  const constantRunes: string[] = Object.entries(Cards.allModifiers).flatMap(([key, modifier]) => {
+    if (modifier.costPerUpgrade && modifier.constant) {
+      return [key];
+    } else {
+      return [];
+    }
+  });
   // Start with lockedRunes as chosenRunes so they don't get offered in another place as a duplicate
   const chosenRunes: string[] = []
   // Remove old unlocked level indexes
@@ -493,7 +502,10 @@ export function renderRunesMenu(underworld: Underworld) {
     let chosen: string | undefined;
     // Give a number of attempts to find a non duplicate rune
     for (let attempt = 0; attempt < 100; attempt++) {
-      const seed = seedrandom(getUniqueSeedStringPerLevel(underworld, globalThis.player) + `-${i}-${attempt}`);
+      // Runes should not shuffle for version 1.41 because only classes are available as runes
+      // This can be removed after version 1.41
+      const seedString = version.includes('1.41') ? `unchanging-${i}-${attempt}` : getUniqueSeedStringPerLevel(underworld, globalThis.player) + `-${i}-${attempt}`;
+      const seed = seedrandom(seedString);
       // If a rune has been locked in this index, choose it; otherwise choose a seeded random rune
       const previouslyLockedRune = globalThis.player.lockedRunes.find(lr => lr.index === i);
       chosen = previouslyLockedRune ? previouslyLockedRune.key : chooseOneOfSeeded(listOfRemainingRunesToChoose, seed)?.key;
@@ -513,7 +525,7 @@ export function renderRunesMenu(underworld: Underworld) {
     }
   }, Infinity);
   const statPoints = underworld.perksLeftToChoose(globalThis.player);
-  const elStatUpgradeRow = (modifierKey: string) => {
+  const elStatUpgradeRow = (modifierKey: string, index: number, constant?: boolean) => {
     if (!globalThis.player) {
       return '';
     }
@@ -529,15 +541,22 @@ export function renderRunesMenu(underworld: Underworld) {
                   </div>
                 </div>
               </div>
-              <div class="stat-lock ${globalThis.player.lockedRunes.find(r => r.key === modifierKey && r.levelIndexUnlocked === undefined) ? 'locked' : ''}" data-key="${modifierKey}"></div>
+              ${constant ? '' : `
+                <div class="stat-lock ${globalThis.player.lockedRunes.find(r => r.key === modifierKey && r.levelIndexUnlocked === undefined) ? 'locked' : ''}" data-key="${modifierKey}" data-index="${index}"></div>
+              `}
             </div>`;
   }
   elRunes.innerHTML = `
 <div class="pick-stats">
   <div class="card-inner flex" style="color:black">
-  <h2>Skill Points: ${statPoints}sp</h2>
   <div class="stat-row-holder">
-  ${chosenRunes.flatMap(key => key ? [elStatUpgradeRow(key)] : []).join('')}
+  <div class="stats-constant">
+    <h2>${i18n('Skill Points')}: ${statPoints}sp</h2>
+    ${constantRunes.map((key, i) => elStatUpgradeRow(key, i, true)).join('')}
+  </div>
+  <div class="rune-rows">
+    ${chosenRunes.flatMap((key, i) => key ? [elStatUpgradeRow(key, i)] : []).join('')}
+  </div>
 </div>
   </div>
   </div>`;
@@ -556,7 +575,7 @@ export function renderRunesMenu(underworld: Underworld) {
       if (elRuneName) {
         if (['Health', 'Mana', 'Stamina', 'Cast Range'].includes(stat)) {
           // Special handling for basic player stats since they aren't stored as modifiers
-          elRuneName.innerHTML = `${stat}`;
+          elRuneName.innerHTML = i18n(stat);
           return;
         }
         if (modifier) {
@@ -571,18 +590,18 @@ export function renderRunesMenu(underworld: Underworld) {
             const maxRuneQuantity = Cards.getMaxRuneQuantity(modifier);
             // If already maxed, show maxed in black to indicate no change
             if (playerRuneQuantity >= maxRuneQuantity) {
-              elRuneName.innerHTML = `${stat || ''} Maxed`;
+              elRuneName.innerHTML = `${i18n(stat) || ''} ${i18n('Maxed')}`;
               return;
             }
             // If going to max, show maxed in green
             if (newQuantity >= maxRuneQuantity) {
-              elRuneName.innerHTML = `${stat || ''}  <span>${quantityWithUnit(playerRuneQuantity, modifier.unitOfMeasure)}</span> <span style="color:green"> → Max </span>`;
+              elRuneName.innerHTML = `${i18n(stat) || ''}  <span>${quantityWithUnit(playerRuneQuantity, modifier.unitOfMeasure)}</span> <span style="color:green"> → ${i18n('Max')} </span>`;
               return;
             }
           }
 
           // If not going to max, just show new quantity (or nothing if newQuantity is 0)
-          elRuneName.innerHTML = `${stat || ''}  ${newQuantity ? `${playerRuneQuantity === 0 ? '' : `<span>${quantityWithUnit(playerRuneQuantity, modifier.unitOfMeasure)}</span>`}<span style="color:${color}"> ${hovered ? ` + ${quantityWithUnit(modifier.quantityPerUpgrade || 1, modifier.unitOfMeasure)}` : ''}</span>` : ''}`
+          elRuneName.innerHTML = `${i18n(stat) || ''}  ${newQuantity ? `${playerRuneQuantity === 0 ? '' : `<span>${quantityWithUnit(playerRuneQuantity, modifier.unitOfMeasure)}</span>`}<span style="color:${color}"> ${hovered ? ` + ${quantityWithUnit(modifier.quantityPerUpgrade || 1, modifier.unitOfMeasure)}` : ''}</span>` : ''}`
         }
       }
     }
@@ -642,7 +661,7 @@ export function renderRunesMenu(underworld: Underworld) {
           underworld.pie.sendData({
             type: MESSAGE_TYPES.LOCK_RUNE,
             key: (elLock as HTMLElement).dataset.key,
-            index
+            index: (elLock as HTMLElement).dataset.index,
           });
         })
       }

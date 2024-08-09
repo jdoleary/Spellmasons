@@ -72,7 +72,7 @@ import type PieClient from '@websocketpie/client';
 import { isOutOfRange, sendPlayerThinkingThrottled } from './PlayerUtils';
 import { DisplayObject, TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
-import { explain, EXPLAIN_PING, isTutorialFirstStepsComplete, isTutorialComplete, tutorialCompleteTask, tutorialChecklist } from './graphics/Explain';
+import { explain, EXPLAIN_PING, isTutorialFirstStepsComplete, isTutorialComplete, tutorialCompleteTask, tutorialChecklist, EXPLAIN_UPGRADE_BOOKMARK } from './graphics/Explain';
 import { makeRisingParticles, makeScrollDissapearParticles, stopAndDestroyForeverEmitter } from './graphics/ParticleCollection';
 import { ensureAllClientsHaveAssociatedPlayers, Overworld } from './Overworld';
 import { Emitter } from 'jdoleary-fork-pixi-particle-emitter';
@@ -2184,6 +2184,7 @@ export default class Underworld {
         const points = config.STAT_POINTS_PER_LEVEL;
         player.statPointsUnspent += points;
         CardUI.tryShowStatPointsSpendable();
+        explain(EXPLAIN_UPGRADE_BOOKMARK);
         console.log("Setup: Gave player: [" + player.clientId + "] " + points + " upgrade points for level index: " + levelIndex);
         // If the player hasn't completed first steps, autospend stat points on health
         // We don't want to cause information overload during tutorial

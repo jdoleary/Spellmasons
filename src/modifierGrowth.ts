@@ -15,7 +15,7 @@ function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
 }
 export default function registerGrowth() {
   registerModifiers(growthId, {
-    description: 'Unit gets stronger every turn.',
+    description: 'growth_description',
     probability: 100,
     addModifierVisuals,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

@@ -191,9 +191,12 @@ import registerPotionBarrier from '../modifierPotionBarrier';
 
 
 export interface Modifiers {
-  // modifier sthat are not attached to a spell need an explicit id set
+  // modifiers that are not attached to a spell need an explicit id set
   id?: string;
   subsprite?: Subsprite;
+  // Denotes a rune that is on the left side of the runes menu
+  // cannot be locked, and does not change 
+  constant?: boolean;
   // Controls the order in which a modifier's events trigger
   // relative to other events
   stage?: MODIFIER_STAGE;
@@ -207,7 +210,7 @@ export interface Modifiers {
   /* Quantity must be overridden special in the description so that it can change based on hover / current / next
   state in the Rune purchasing menu */
   unitOfMeasure?: string;
-  description?: string;
+  description?: Localizable;
   // If the modifier may be automatically added to minibosses
   // when the spawn, then the modifier gets a probability
   probability?: number;
@@ -476,7 +479,7 @@ export function registerCards(overworld: Overworld) {
   registerGrowth();
 
   registerModifierStatUpgrades();
-  registerDareDevil();
+  // registerDareDevil();
 
   registerNecromancerRune();
   registerWitchRune();
@@ -488,39 +491,39 @@ export function registerCards(overworld: Overworld) {
   registerLiquidmancer();
   registerHeavyImpacts();
 
-  registerAffinityBlessing();
-  registerAffinityCurse();
-  registerAffinityDamage();
-  registerAffinityMovement();
-  registerAffinitySoul();
-  registerAffinityTargeting();
+  // registerAffinityBlessing();
+  // registerAffinityCurse();
+  // registerAffinityDamage();
+  // registerAffinityMovement();
+  // registerAffinitySoul();
+  // registerAffinityTargeting();
 
-  registerSelfInvulnerability();
-  registerArmor();
-  registerThorns();
-  registerHealthRegen();
-  registerShieldRegen();
-  registerRevitalize();
-  registerOverheal();
-  registerManaBarrier();
-  registerOnHitHealing();
-  registerOnHitPoison();
-  registerBasePierce();
-  registerBaseRadiusBoost();
-  registerContaminateSelfOnTeleport();
-  registerCloneOnSpawn();
-  registerShieldBash();
-  registerOnKillMana();
+  // registerSelfInvulnerability();
+  // registerArmor();
+  // registerThorns();
+  // registerHealthRegen();
+  // registerShieldRegen();
+  // registerRevitalize();
+  // registerOverheal();
+  // registerManaBarrier();
+  // registerOnHitHealing();
+  // registerOnHitPoison();
+  // registerBasePierce();
+  // registerBaseRadiusBoost();
+  // registerContaminateSelfOnTeleport();
+  // registerCloneOnSpawn();
+  // registerShieldBash();
+  // registerOnKillMana();
 
-  registerBounty();
-  registerBountyHunter();
-  registerBountyRestoreHealth();
-  registerBountyRestoreStamina();
-  registerBountyRestoreMana();
-  registerBountyDamage();
+  // registerBounty();
+  // registerBountyHunter();
+  // registerBountyRestoreHealth();
+  // registerBountyRestoreStamina();
+  // registerBountyRestoreMana();
+  // registerBountyDamage();
 
-  registerPotionEffectiveness();
-  registerPotionBarrier();
+  // registerPotionEffectiveness();
+  // registerPotionBarrier();
 
   registerImmune();
   registerImpendingDoom();

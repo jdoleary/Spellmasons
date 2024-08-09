@@ -8,7 +8,7 @@ export const liquidmancerId = 'Liquidmancer';
 export default function registerLiquidmancer() {
   registerModifiers(liquidmancerId, {
     description: ('rune_liquidmancer'),
-    unitOfMeasure: 'Damage',
+    unitOfMeasure: '% Damage',
     costPerUpgrade: 100,
     quantityPerUpgrade: 100,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
