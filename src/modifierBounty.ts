@@ -65,8 +65,8 @@ export function placeRandomBounty(bountyHunter: Unit.IUnit, underworld: Underwor
   // Unit must be alive, in enemy faction, not a doodad, and not yet have a bounty
   units = units.filter(u => u.alive && (u.faction != bountyHunter.faction) && (u.unitSubType != UnitSubType.DOODAD) && !u.modifiers[bountyId]);
   if (units.length > 0) {
-    const seed = getUniqueSeedString(underworld) + bountyHunter.id;
-    const chosenUnit = chooseOneOfSeeded(units, seedrandom(seed));
+    const random = seedrandom(`${getUniqueSeedString(underworld)} - ${bountyHunter.id}`);
+    const chosenUnit = chooseOneOfSeeded(units, random);
     if (chosenUnit) {
       Unit.addModifier(chosenUnit, bountyId, underworld, prediction);
     }

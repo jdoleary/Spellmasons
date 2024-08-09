@@ -38,8 +38,8 @@ function poisonRandomEnemyUnit(unit: Unit.IUnit, underworld: Underworld, predict
   // Unit must be alive, in enemy faction, not a doodad, and not already poisoned
   units = units.filter(u => u.alive && (u.faction != unit.faction) && (u.unitSubType != UnitSubType.DOODAD));
   if (units.length > 0) {
-    const seed = getUniqueSeedString(underworld);
-    const chosenUnit = chooseOneOfSeeded(units, seedrandom(seed));
+    const random = seedrandom(`${getUniqueSeedString(underworld)} - ${unit.id}`);
+    const chosenUnit = chooseOneOfSeeded(units, random);
     if (chosenUnit) {
       Unit.addModifier(chosenUnit, poisonCardId, underworld, prediction);
     }

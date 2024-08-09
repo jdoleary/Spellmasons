@@ -25,9 +25,9 @@ export default function registerOnKillResurrect() {
       const modifier = unit.modifiers[onKillRessurectId];
       if (modifier) {
         if (killedUnit) {
-          const seed = getUniqueSeedString(underworld) + killedUnit.id;
+          const random = seedrandom(`${getUniqueSeedString(underworld)} - ${killedUnit.id}`);
           const chance = Math.min(100, modifier.quantity);
-          if (randFloat(0, 100, seedrandom(seed)) < chance) {
+          if (randFloat(0, 100, random) < chance) {
             killedUnit.faction = unit.faction;
             Unit.resurrect(killedUnit, underworld);
           }

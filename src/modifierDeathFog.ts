@@ -38,8 +38,8 @@ function suffocateRandomEnemyUnit(unit: Unit.IUnit, underworld: Underworld, pred
   // Unit must be alive, in enemy faction, and not a doodad
   units = units.filter(u => u.alive && (u.faction != unit.faction) && (u.unitSubType != UnitSubType.DOODAD));
   if (units.length > 0) {
-    const seed = getUniqueSeedString(underworld);
-    const chosenUnit = chooseOneOfSeeded(units, seedrandom(seed));
+    const random = seedrandom(`${getUniqueSeedString(underworld)} - ${unit.id}`);
+    const chosenUnit = chooseOneOfSeeded(units, random);
     if (chosenUnit) {
       Unit.addModifier(chosenUnit, suffocateCardId, underworld, prediction);
     }

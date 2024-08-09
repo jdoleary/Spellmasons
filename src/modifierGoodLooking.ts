@@ -37,8 +37,8 @@ function convertRandomUnitToMyFaction(unit: Unit.IUnit, underworld: Underworld, 
   // Unit must be alive, in enemy faction, not a doodad, and not a miniboss
   units = units.filter(u => u.alive && (u.faction != unit.faction) && (u.unitSubType != UnitSubType.DOODAD) && (!u.isMiniboss));
   if (units.length > 0) {
-    const seed = getUniqueSeedString(underworld) + unit.id;
-    const chosenUnit = chooseOneOfSeeded(units, seedrandom(seed));
+    const random = seedrandom(`${getUniqueSeedString(underworld)} - ${unit.id}`);
+    const chosenUnit = chooseOneOfSeeded(units, random);
     if (chosenUnit) {
       Unit.changeFaction(chosenUnit, unit.faction);
     }
