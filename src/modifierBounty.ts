@@ -6,6 +6,8 @@ import floatingText from "./graphics/FloatingText";
 import { bountyHunterId } from "./modifierBountyHunter";
 import Underworld from './Underworld';
 import { skyBeam } from "./VisualEffects";
+import { chooseOneOfSeeded } from "./jmath/rand";
+import { UnitSubType } from "./types/commonTypes";
 
 export const bountyId = 'Bounty';
 export const bountyColor = 0xffdc64;
@@ -53,4 +55,24 @@ export default function registerBounty() {
       }
     }
   });
+}
+
+export function placeRandomBounty(bountyHunter: Unit.IUnit, underworld: Underworld, prediction: boolean) {
+  let units = prediction ? underworld.unitsPrediction : underworld.units;
+
+  // Find a random enemy unit and give it a bounty
+  // Unit must be alive, in enemy faction, not a doodad, and not yet have a bounty
+  units = units.filter(u => u.alive && (u.faction != bountyHunter.faction) && (u.unitSubType != UnitSubType.DOODAD) && !u.modifiers[bountyId]);
+  if (units.length > 0) {
+    const chosenUnit = chooseOneOfSeeded(units, underworld.random);
+    if (chosenUnit) {
+      Unit.addModifier(chosenUnit, bountyId, underworld, prediction);
+    }
+  }
+}
+
+export function getUnitsWithBounty(underworld: Underworld, prediction: boolean) {
+  let units = prediction ? underworld.unitsPrediction : underworld.units;
+  units = units.filter(u => u.modifiers[bountyId]);
+  return units;
 }

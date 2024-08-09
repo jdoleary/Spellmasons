@@ -114,7 +114,7 @@ import { manaBarrierId } from './modifierManaBarrier';
 import { modifierBasePierceId } from './modifierBasePierce';
 import { modifierBaseRadiusBoostId } from './modifierBaseRadiusBoost';
 import { bountyHunterId } from './modifierBountyHunter';
-import { bountyId } from './modifierBounty';
+import { bountyId, placeRandomBounty } from './modifierBounty';
 import { heavyImpactsId } from './modifierHeavyImpact';
 
 const loopCountLimit = 10000;
@@ -2148,18 +2148,13 @@ export default class Underworld {
     for (let e of enemies) {
       this.spawnEnemy(e.id, e.coord, e.isMiniboss);
     }
-    // if any players have the bounty hunter modifier, add a bounty to a random unit's head at the start of level
-    // to get a bounty, a unit must be alive, in the enemy faction, not a doodad, and not yet have a bounty
-    if (this.players.some(p => p.unit.modifiers[bountyHunterId])) {
-      let units = this.units;
-      units = units.filter(u => u.alive && (u.faction == Faction.ENEMY) && (u.unitSubType != UnitSubType.DOODAD) && !u.modifiers[bountyId]);
-      if (units.length > 0) {
-        const chosenUnit = chooseOneOfSeeded(units, seedrandom(`${this.seed}-${this.levelIndex}`));
-        if (chosenUnit) {
-          Unit.addModifier(chosenUnit, bountyId, this, false);
-        }
+
+    // each bounty hunter places a bounty on a random unit in an opposing faction
+    this.units.forEach(u => {
+      if (u.modifiers[bountyHunterId]) {
+        placeRandomBounty(u, this, false);
       }
-    }
+    });
 
     // Show text in center of screen for the new level
     queueCenteredFloatingText(
