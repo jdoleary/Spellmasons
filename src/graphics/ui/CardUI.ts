@@ -20,6 +20,7 @@ import { chooseBookmark } from '../../views';
 import { chooseOneOfSeeded, getUniqueSeedString, getUniqueSeedStringPerLevel } from '../../jmath/rand';
 import seedrandom from 'seedrandom';
 import { quantityWithUnit } from '../../cards/util';
+import { version } from '../../../package.json';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
@@ -501,7 +502,10 @@ export function renderRunesMenu(underworld: Underworld) {
     let chosen: string | undefined;
     // Give a number of attempts to find a non duplicate rune
     for (let attempt = 0; attempt < 100; attempt++) {
-      const seed = seedrandom(getUniqueSeedStringPerLevel(underworld, globalThis.player) + `-${i}-${attempt}`);
+      // Runes should not shuffle for version 1.41 because only classes are available as runes
+      // This can be removed after version 1.41
+      const seedString = version.includes('1.41') ? `unchanging-${i}-${attempt}` : getUniqueSeedStringPerLevel(underworld, globalThis.player) + `-${i}-${attempt}`;
+      const seed = seedrandom(seedString);
       // If a rune has been locked in this index, choose it; otherwise choose a seeded random rune
       const previouslyLockedRune = globalThis.player.lockedRunes.find(lr => lr.index === i);
       chosen = previouslyLockedRune ? previouslyLockedRune.key : chooseOneOfSeeded(listOfRemainingRunesToChoose, seed)?.key;
