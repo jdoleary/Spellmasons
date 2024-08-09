@@ -159,6 +159,7 @@ import registerAffinitySoul from '../modifierAffinitySoul';
 import registerAffinityTargeting from '../modifierAffinityTargeting';
 import registerFarGazerRune from '../modifierFarGazer';
 import registerGamblerRune from '../modifierGambler';
+import registerAlchemist from '../modifierAlchemist';
 import registerGolemancer from '../modifierGolemancer';
 import registerNecromancerRune from '../modifierNecromancer';
 import registerTimemasonRune from '../modifierTimemason';
@@ -188,6 +189,7 @@ import registerBountyRestoreMana from '../modifierBountyRestoreMana';
 import registerBountyDamage from '../modifierBountyDamage';
 import registerLiquidmancer from '../modifierLiquidmancer';
 import registerHeavyImpacts from '../modifierHeavyImpact';
+import registerSecretIngredients from '../modifierSecretIngredients';
 import registerPotionEffectiveness from '../modifierPotionEffectiveness';
 import registerPotionBarrier from '../modifierPotionBarrier';
 import registerDeathFog from '../modifierDeathFog';
@@ -483,6 +485,7 @@ export function registerCards(overworld: Overworld) {
   registerModifierStatUpgrades();
   registerDareDevil();
 
+  registerAlchemist();
   registerGolemancer();
   registerNecromancerRune();
   registerWitchRune();
@@ -529,6 +532,7 @@ export function registerCards(overworld: Overworld) {
   registerBountyRestoreMana();
   registerBountyDamage();
 
+  registerSecretIngredients();
   registerPotionEffectiveness();
   registerPotionBarrier();
 

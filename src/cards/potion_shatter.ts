@@ -67,7 +67,7 @@ const spell: Spell = {
   },
 };
 
-function getColorFromPotion(potion: IPickup): number {
+export function getColorFromPotion(potion: IPickup): number {
   switch (potion.name) {
     case HEALTH_POTION:
       return colors.healthRed;
