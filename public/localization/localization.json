@@ -583,7 +583,14 @@
         "summoningsickness": "Summoning Sickness",
         "summoning_sickness_description": "Unable to act",
         "damage_reduced": "Damage reduced by 🍞%",
-        "miniboss": "Champion"
+        "miniboss": "Champion",
+        "% damage": "% Damage",
+        "spell_add_bounce": "Makes arrows ricochet off walls and units",
+        "add bounce": "Add Arrow Ricochet",
+        "spell_add_pierce": "Makes arrows pierce units",
+        "add pierce": "Add Arrow Pierce",
+        "cursify": "Become Curse",
+        "spell_cursify": "Designates target's blessings as curses. Does not change the functionality of the blessings."
     },
     {
         "language": "Français",
@@ -1169,7 +1176,14 @@
         "summoningsickness": "Maladie d'invocation",
         "summoning_sickness_description": "Incapable d'agir",
         "damage_reduced": "Dommages réduits de 🍞%",
-        "miniboss": "Champion"
+        "miniboss": "Champion",
+        "% damage": "% Dégâts",
+        "spell_add_bounce": "Fait ricocher les flèches contre les murs et les unités.",
+        "add bounce": "Ajouter Ricochet de Flèche",
+        "spell_add_pierce": "Fait percer les flèches à travers les unités.",
+        "add pierce": "Ajouter Pénétration de flèche",
+        "cursify": "Devenir Malédiction",
+        "spell_cursify": "Désigne les bénédictions de la cible comme des malédictions. Ne change pas la fonctionnalité des bénédictions."
     },
     {
         "language": "italiano",
@@ -1755,7 +1769,14 @@
         "summoningsickness": "Malattia di Evocazione",
         "summoning_sickness_description": "Impossibile agire",
         "damage_reduced": "Danno ridotto del 🍞%",
-        "miniboss": "Campione"
+        "miniboss": "Campione",
+        "% damage": "% Danno",
+        "spell_add_bounce": "Fa' rimbalzare le frecce contro i muri e le unità.",
+        "add bounce": "Aggiungi Rimbalzo della Freccia",
+        "spell_add_pierce": "Fa' che le frecce attraversino le unità.",
+        "add pierce": "Aggiungi Punte di Freccia",
+        "cursify": "Diventa Maledizione",
+        "spell_cursify": "Designa le benedizioni del bersaglio come maledizioni. Non cambia la funzionalità delle benedizioni."
     },
     {
         "language": "Deutsche",
@@ -2341,7 +2362,14 @@
         "summoningsickness": "Beschwörungsfieber",
         "summoning_sickness_description": "Handlungsunfähig",
         "damage_reduced": "Schaden um 🍞% reduziert",
-        "miniboss": "Champion"
+        "miniboss": "Champion",
+        "% damage": "% Schaden",
+        "spell_add_bounce": "Lässt Pfeile von Wänden und Einheiten abprallen.",
+        "add bounce": "Pfeil-Abpraller hinzufügen",
+        "spell_add_pierce": "Lässt Pfeile Einheiten durchdringen",
+        "add pierce": "Füge Pfeil Durchbohren hinzu",
+        "cursify": "Werde Fluch",
+        "spell_cursify": "Bezeichnet die Segnungen des Ziels als Flüche. Ändert nicht die Funktionalität der Segnungen."
     },
     {
         "language": "español",
@@ -2927,7 +2955,14 @@
         "summoningsickness": "Enfermedad de Invocación",
         "summoning_sickness_description": "Incapaz de actuar",
         "damage_reduced": "Daño reducido en 🍞%.",
-        "miniboss": "Campeón"
+        "miniboss": "Campeón",
+        "% damage": "% Daño",
+        "spell_add_bounce": "Hace que las flechas rebote en paredes y unidades.",
+        "add bounce": "Agregar Rebote de Flecha",
+        "spell_add_pierce": "Hace que las flechas perforen a las unidades.",
+        "add pierce": "Añadir Flecha Perforante",
+        "cursify": "Conviértete en Maldición",
+        "spell_cursify": "Designa las bendiciones del objetivo como maldiciones. No cambia la funcionalidad de las bendiciones."
     },
     {
         "language": "日本",
@@ -3513,7 +3548,14 @@
         "summoningsickness": "召喚病",
         "summoning_sickness_description": "行動できない",
         "damage_reduced": "ダメージが🍞%減少しました。",
-        "miniboss": "チャンピオン"
+        "miniboss": "チャンピオン",
+        "% damage": "%ダメージ",
+        "spell_add_bounce": "矢を壁やユニットに弾けさせる",
+        "add bounce": "矢の跳ね返りを追加",
+        "spell_add_pierce": "矢がユニットを貫通する",
+        "add pierce": "矢の貫通を追加",
+        "cursify": "呪いを受ける",
+        "spell_cursify": "対象の祝福を呪いとして指定します。祝福の機能には変更はありません。"
     },
     {
         "language": "Português",
@@ -4099,7 +4141,14 @@
         "summoningsickness": "Doença de Invocação",
         "summoning_sickness_description": "Incapaz de agir",
         "damage_reduced": "Dano reduzido em 🍞%",
-        "miniboss": "Campeão"
+        "miniboss": "Campeão",
+        "% damage": "% Dano",
+        "spell_add_bounce": "Faz com que flechas quichem em paredes e unidades.",
+        "add bounce": "Adicionar Ricochete de Flecha",
+        "spell_add_pierce": "Faz com que as flechas atravessem unidades.",
+        "add pierce": "Adicionar Flecha Penetrante",
+        "cursify": "Tornar-se Maldição",
+        "spell_cursify": "Designa as bênçãos do alvo como maldições. Não altera a funcionalidade das bênçãos."
     },
     {
         "language": "عربى",
@@ -4685,7 +4734,14 @@
         "summoningsickness": "مرض الاستدعاء",
         "summoning_sickness_description": "غير قادر على الفعل",
         "damage_reduced": "تم تقليل الضرر بنسبة 🍞%",
-        "miniboss": "بطل"
+        "miniboss": "بطل",
+        "% damage": "% ضرر",
+        "spell_add_bounce": "يجعل السهام تقفز عن الجدران والوحدات",
+        "add bounce": "أضف ارتداد السهم",
+        "spell_add_pierce": "يجعل السهام تخترق الوحدات",
+        "add pierce": "أضف سهم الاختراق",
+        "cursify": "أصبح لعنة",
+        "spell_cursify": "يعتبر بركات الهدف لعنات. لا يغير وظيفة البركات."
     },
     {
         "language": "한국어",
@@ -5271,7 +5327,14 @@
         "summoningsickness": "소환 질병",
         "summoning_sickness_description": "행동할 수 없음",
         "damage_reduced": "피해가 🍞% 감소했습니다.",
-        "miniboss": "챔피언"
+        "miniboss": "챔피언",
+        "% damage": "% 피해",
+        "spell_add_bounce": "화살이 벽과 유닛에서 튕겨나가게 만듭니다.",
+        "add bounce": "화살 튕김 추가",
+        "spell_add_pierce": "화살이 유닛을 꿰뚫게 만듭니다.",
+        "add pierce": "화살 관통 추가",
+        "cursify": "저주가 되다",
+        "spell_cursify": "대상의 축복을 저주로 지정합니다. 축복의 기능에는 변화를 주지 않습니다."
     },
     {
         "language": "Русский",
@@ -5857,7 +5920,14 @@
         "summoningsickness": "Сломанное Заклинание",
         "summoning_sickness_description": "Не в состоянии действовать",
         "damage_reduced": "Урон уменьшен на 🍞%",
-        "miniboss": "Чемпион"
+        "miniboss": "Чемпион",
+        "% damage": "% Урон",
+        "spell_add_bounce": "Заставляет стрелы отскакивать от стен и юнитов.",
+        "add bounce": "Добавить рикошет стрелы",
+        "spell_add_pierce": "Заставляет стрелы пронзать юниты.",
+        "add pierce": "Добавить Проникающую Стрелу",
+        "cursify": "Стать Проклятием",
+        "spell_cursify": "Обращает благословения цели в проклятия. Не меняет функциональность благословений."
     },
     {
         "language": "中文(简)",
@@ -6443,7 +6513,14 @@
         "summoningsickness": "召唤病",
         "summoning_sickness_description": "无法行动",
         "damage_reduced": "伤害减少 🍞%",
-        "miniboss": "冠军"
+        "miniboss": "冠军",
+        "% damage": "% 伤害",
+        "spell_add_bounce": "使箭矢从墙壁和单位上反弹",
+        "add bounce": "添加箭矢反弹",
+        "spell_add_pierce": "使箭矢穿透单位",
+        "add pierce": "增加箭矢穿透",
+        "cursify": "变成诅咒",
+        "spell_cursify": "将目标的祝福标记为诅咒。不会改变祝福的功能。"
     },
     {
         "language": "中文(繁)",
@@ -7029,7 +7106,14 @@
         "summoningsickness": "召喚病症",
         "summoning_sickness_description": "無法行動",
         "damage_reduced": "傷害降低了 🍞%",
-        "miniboss": "冠軍"
+        "miniboss": "冠軍",
+        "% damage": "% 傷害",
+        "spell_add_bounce": "使箭矢在牆壁和單位上彈跳",
+        "add bounce": "添加箭矢彈射",
+        "spell_add_pierce": "使箭矢穿透單位",
+        "add pierce": "添加箭矢穿透",
+        "cursify": "成爲詛咒",
+        "spell_cursify": "將目標的祝福標記為詛咒。並不改變祝福的功能性。"
     },
     {
         "language": "Polski",
@@ -7615,7 +7699,14 @@
         "summoningsickness": "Choroba Przywołania",
         "summoning_sickness_description": "Nie mogący działać",
         "damage_reduced": "Zadawane obrażenia zmniejszone o 🍞%",
-        "miniboss": "Championie"
+        "miniboss": "Championie",
+        "% damage": "% Zniszczeń",
+        "spell_add_bounce": "Sprawia, że strzały odbijają się od ścian i jednostek.",
+        "add bounce": "Dodaj Odbicie Strzałki",
+        "spell_add_pierce": "Sprawia, że strzały przebijają jednostki.",
+        "add pierce": "Dodaj Przekłuwającą Strzałę",
+        "cursify": "Zostań Klątwą",
+        "spell_cursify": "Oznacza błogosławieństwa celu jako klątwy. Nie zmienia funkcjonalności błogosławieństw."
     },
     {
         "language": "Dutch",
@@ -8201,6 +8292,13 @@
         "summoningsickness": "Ziekte oproepen",
         "summoning_sickness_description": "Niet in staat om te handelen",
         "damage_reduced": "Schade verminderd met 🍞%",
-        "miniboss": "Kampioen"
+        "miniboss": "Kampioen",
+        "% damage": "% Schade",
+        "spell_add_bounce": "Laat pijlen van muren en eenheden afketsen.",
+        "add bounce": "Voeg Pijl Weerkaatsing toe",
+        "spell_add_pierce": "Laat pijlen door eenheden heen dringen.",
+        "add pierce": "Voeg Pijl Doorsteek toe",
+        "cursify": "Word een Vloek",
+        "spell_cursify": "Benoemt de zegeningen van het doelwit als vervloekingen. Verandert de functionaliteit van de zegeningen niet."
     }
 ]
