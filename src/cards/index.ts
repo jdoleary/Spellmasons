@@ -191,6 +191,7 @@ import registerPotionEffectiveness from '../modifierPotionEffectiveness';
 import registerPotionBarrier from '../modifierPotionBarrier';
 import registerDeathFog from '../modifierDeathFog';
 import registerPlagueBringer from '../modifierPlagueBringer';
+import registerOnKillResurrect from '../modifierOnKillResurrect';
 
 
 export interface Modifiers {
@@ -517,6 +518,7 @@ export function registerCards(overworld: Overworld) {
   registerOnKillMana();
   registerDeathFog();
   registerPlagueBringer();
+  registerOnKillResurrect();
 
   registerBounty();
   registerBountyHunter();
