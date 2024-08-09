@@ -1,0 +1,49 @@
+import { registerEvents, registerModifiers } from "./cards";
+import { getOrInitModifier } from "./cards/util";
+import * as Unit from './entity/Unit';
+import * as config from './config';
+import Underworld from './Underworld';
+import { chooseOneOfSeeded, randInt } from "./jmath/rand";
+import { UnitSubType } from "./types/commonTypes";
+
+// Converts a random non-miniboss unit to the player's faction on spawn
+export const goodLookingId = 'Good Looking';
+export default function registerGoodLooking() {
+  registerModifiers(goodLookingId, {
+    description: i18n('rune_good_looking'),
+    costPerUpgrade: 280,
+    add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
+      getOrInitModifier(unit, goodLookingId, { isCurse: false, quantity, keepOnDeath: false }, () => {
+        Unit.addEvent(unit, goodLookingId);
+      });
+
+      // Good looking will trigger on purchase as well
+      for (let i = 0; i < quantity; i++) {
+        convertRandomUnitToMyFaction(unit, underworld, prediction);
+      }
+    }
+  });
+  registerEvents(goodLookingId, {
+    onSpawn: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
+      const modifier = unit.modifiers[goodLookingId];
+      if (modifier) {
+        for (let i = 0; i < modifier.quantity; i++) {
+          convertRandomUnitToMyFaction(unit, underworld, prediction);
+        }
+      }
+    }
+  });
+}
+
+function convertRandomUnitToMyFaction(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
+  let units = prediction ? underworld.unitsPrediction : underworld.units;
+  // Find a random enemy unit and charm it
+  // Unit must be alive, in enemy faction, not a doodad, and not a miniboss
+  units = units.filter(u => u.alive && (u.faction != unit.faction) && (u.unitSubType != UnitSubType.DOODAD) && (!u.isMiniboss));
+  if (units.length > 0) {
+    const chosenUnit = chooseOneOfSeeded(units, underworld.random);
+    if (chosenUnit) {
+      Unit.changeFaction(chosenUnit, unit.faction);
+    }
+  }
+}
