@@ -50,7 +50,7 @@ export default function registerGrowth() {
       const addHealth = sourceHealthMax * increase_proportion;
       unit.healthMax += addHealth;
       unit.health += addHealth;
-      unit.damage = sourceDamage * increase_proportion;
+      unit.damage += sourceDamage * increase_proportion;
 
     }
   });
