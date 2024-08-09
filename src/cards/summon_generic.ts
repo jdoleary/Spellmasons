@@ -147,6 +147,8 @@ export default function makeSpellForUnitId(unitId: string, asMiniboss: boolean, 
       manaPerTurn *= config.UNIT_MINIBOSS_MANA_MULTIPLIER;
     }
 
+
+
     unitStats = `${!!unitSource.unitProps.damage ? `
 🗡️ ${damage} ${i18n(['damage'])}` : ''}${!!unitSource.unitProps.attackRange ? `
 🎯 ${unitSource.unitProps.attackRange} ${i18n(['attack range'])}` : ''}

@@ -2,6 +2,7 @@ import { registerModifiers } from "./cards";
 import { getOrInitModifier } from "./cards/util";
 import { IPlayer } from "./entity/Player";
 import * as Unit from './entity/Unit';
+import { dareDevilId } from "./modifierDareDevil";
 import { runeFarGazerId } from "./modifierFarGazer";
 import { runeTimemasonId } from "./modifierTimemason";
 import Underworld from './Underworld';
@@ -17,13 +18,13 @@ export default function registerStatUpgradeModifiers() {
   ['healthMax', 'manaMax', 'staminaMax', 'attackRange'].map(stat => {
     registerModifiers(wordMap[stat] || stat, {
       description: `rune_${stat}`,
-      costPerUpgrade: 25,
+      costPerUpgrade: 30,
       // addModifierVisuals,
       add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
         const statBumpAmount: Pick<Unit.IUnit, "attackRange" | "manaMax" | "healthMax" | "staminaMax"> = {
           attackRange: 20, //previously 8
-          manaMax: 10,
-          healthMax: 25, //previously 8
+          manaMax: 5,
+          healthMax: 20, //previously 8
           staminaMax: 20 //previously 10
         }
         const player = underworld.players.find(p => p.unit == unit);
@@ -61,7 +62,10 @@ export default function registerStatUpgradeModifiers() {
 function modifyStatBumpAmount(statBump: number, unitStatKey: "attackRange" | "manaMax" | "healthMax" | "staminaMax", player: IPlayer): number {
   switch (unitStatKey) {
     case "healthMax": {
-      // No current modifiers
+      // Dare devil gets half hp per quantity
+      if (player.unit.modifiers[dareDevilId]) {
+        statBump *= Math.pow(0.5, player.unit.modifiers[dareDevilId].quantity);
+      }
       break;
     }
     case "manaMax": {

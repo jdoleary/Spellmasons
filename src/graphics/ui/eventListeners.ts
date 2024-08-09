@@ -1670,6 +1670,29 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
 
     },
     {
+      label: 'Give all modifiers',
+      action: () => {
+        if (!overworld.underworld) {
+          console.error('Cannot admin give unit all modifiers, underworld does not exist');
+          return;
+        }
+        const unit = overworld.underworld.units.find(u => u.id == globalThis.selectedUnit?.id);
+        if (unit) {
+          Object.keys(allModifiers).forEach(key => {
+            // Some modifiers throw errors if not given "extra" parameter. Manually exclude these
+            const ignoreKeys = ['Grace', 'Regenerate', 'Caltrops', 'Soul Shard', 'Soul Shard Owner', 'Bloat', "Poison"];
+            if (overworld.underworld && !ignoreKeys.includes(key)) {
+              Unit.addModifier(unit, key, overworld.underworld, false, 1);
+            }
+          });
+        } else {
+          centeredFloatingText('You must select a unit first', 'red');
+        }
+      },
+      supportInMultiplayer: false,
+      domQueryContainer: '#menu-selected-unit'
+    },
+    {
       label: 'Skip next turn action',
       action: () => {
         if (!overworld.underworld) {

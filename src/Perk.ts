@@ -409,7 +409,6 @@ export function tryTriggerPerk(perk: AttributePerk, player: IPlayer, when: WhenU
           maxAmount = player.unit['staminaMax'];
         }
         player.unit[perk.attribute] = perk.amount + maxAmount;
-        player.unit[perk.attribute] = Math.ceil(player.unit[perk.attribute]);
       }
       if (player === globalThis.player) {
         setTimeout(() => {

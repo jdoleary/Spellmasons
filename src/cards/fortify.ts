@@ -47,6 +47,7 @@ const spell: Spell = {
     },
   },
   modifiers: {
+    stage: 'Amount Multiplier',
     add,
     subsprite: {
       imageName: modifierImagePath,
@@ -62,6 +63,12 @@ const spell: Spell = {
     },
   },
   events: {
+    onTooltip: (unit: Unit.IUnit, underworld: Underworld) => {
+      const modifier = unit.modifiers[id];
+      if (modifier) {
+        modifier.tooltip = `${CalcMult(modifier.quantity)}x ${i18n('Incoming')} ${i18n('Damage')}`;
+      }
+    },
     onTurnStart: async (unit, underworld, prediction) => {
       // Since this blessing only applies for one turn, remove it
       // on turn start
@@ -70,14 +77,11 @@ const spell: Spell = {
     onTakeDamage: (unit, amount, underworld, prediction, damageDealer) => {
       const modifier = unit.modifiers[id];
       if (modifier) {
-        // Only block damage, not heals
+        // Only reduce incoming damage, not healing
         if (amount > 0) {
-          let reduceProportion = DAMGAGE_REDUCTION_PROPORTION;
-          // Fortify stacks as 50%, 75%, 87.5%, etc...
-          for (let i = 1; i < (modifier.quantity || 1); i++) {
-            reduceProportion = reduceProportion + (1 - reduceProportion) * DAMGAGE_REDUCTION_PROPORTION;
-          }
-          const adjustedAmount = Math.round(amount * (1.0 - Math.min(1, reduceProportion)));
+          // Fortify stacks as 50%, 75%, 87.5%, etc... damage reduction
+          amount *= CalcMult(modifier.quantity);
+
           if (!prediction) {
             floatingText({
               coords: unit,
@@ -88,14 +92,10 @@ const spell: Spell = {
               },
             });
           }
-
-          return adjustedAmount;
-        } else {
-          return amount;
         }
-      } else {
-        return amount;
       }
+
+      return amount;
     },
   },
 
@@ -111,5 +111,12 @@ function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, qu
       animatedFortifySprite.tint = 0x0000ff;
     }
   });
+}
+
+function CalcMult(quantity: number): number {
+  // Each Quantity cuts incoming damage in half multiplicatively
+  const damageReduction = Math.pow(DAMGAGE_REDUCTION_PROPORTION, quantity);
+  return damageReduction;
+  //return parseFloat(damageReduction.toFixed(2));
 }
 export default spell;

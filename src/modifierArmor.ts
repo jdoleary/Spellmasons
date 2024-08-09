@@ -9,9 +9,9 @@ export default function registerArmor() {
   registerModifiers(armorId, {
     description: ('rune_armor'),
     unitOfMeasure: 'Armor',
-    costPerUpgrade: 30,
+    stage: "Amount Flat",
+    costPerUpgrade: 20,
     quantityPerUpgrade: 1,
-    maxUpgradeCount: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, armorId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, armorId);

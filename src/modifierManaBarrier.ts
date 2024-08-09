@@ -63,11 +63,10 @@ export default function registerManaBarrier() {
         // If the incoming effect is damage (not healing)
         if (amount > 0) {
           // Damage should be taken from mana before health
-          const blockableDamage = Math.floor(Math.min(amount, unit.mana * CalcMult(modifier.quantity)));
+          const blockableDamage = Math.min(amount, unit.mana * CalcMult(modifier.quantity));
           if (blockableDamage > 0) {
             amount -= blockableDamage;
             unit.mana -= blockableDamage / CalcMult(modifier.quantity);
-            unit.mana = Math.floor(unit.mana); // To prevents rounding errors
             if (!prediction) {
               floatingText({
                 coords: unit,

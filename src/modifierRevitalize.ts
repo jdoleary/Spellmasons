@@ -11,6 +11,7 @@ export default function registerRevitalize() {
   registerModifiers(revitalizeId, {
     unitOfMeasure: '%',
     description: i18n('revitalize_description'),
+    stage: "Amount Multiplier",
     costPerUpgrade: 40,
     quantityPerUpgrade: QUANTITY_PER_UPGRADE,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
@@ -26,7 +27,7 @@ export default function registerRevitalize() {
         // Will only increase healing (doesn't affect incoming damage)
         if (amount < 0) {
           // Each quantity = 1% healing boost
-          amount = Math.ceil(amount * CalcMult(modifier.quantity));
+          amount *= CalcMult(modifier.quantity);
         }
       }
 

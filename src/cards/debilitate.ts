@@ -37,16 +37,23 @@ const spell: Spell = {
     },
   },
   modifiers: {
+    stage: 'Amount Multiplier',
     add,
   },
   events: {
+    onTooltip: (unit: Unit.IUnit, underworld: Underworld) => {
+      const modifier = unit.modifiers[id];
+      if (modifier) {
+        modifier.tooltip = `${CalcMult(modifier.quantity)}x ${i18n('Incoming')} ${i18n('Damage')}`;
+      }
+    },
     onTakeDamage: (unit, amount, _underworld, damageDealer) => {
       const modifier = unit.modifiers[id];
       if (modifier) {
         // Will only increase damage (doesn't affect incoming healing)
         if (amount > 0) {
           // Each quantity = 1% damage boost
-          amount = Math.floor(amount * CalcMult(modifier.quantity));
+          amount *= CalcMult(modifier.quantity);
         }
       }
 
@@ -59,16 +66,6 @@ function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, qu
   getOrInitModifier(unit, id, { isCurse: true, quantity }, () => {
     Unit.addEvent(unit, id);
   });
-
-  updateTooltip(unit);
-}
-
-function updateTooltip(unit: Unit.IUnit) {
-  const modifier = unit.modifiers[id];
-  if (modifier) {
-    // Set tooltip:
-    modifier.tooltip = `${CalcMult(modifier.quantity)}x ${i18n('Incoming')} ${i18n('Damage')}`;
-  }
 }
 
 function CalcMult(quantity: number): number {

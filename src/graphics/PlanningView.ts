@@ -884,6 +884,12 @@ export function updateTooltipContent(underworld: Underworld) {
             // the onError handler prevents the broken image icon from showing
             elInspectorTooltipImage.style.display = "block";
           }
+          // Turns decimals into UI friendly numbers
+          function txt(attribute: number): number {
+            // We use ceil so 0.3 health doesn't display as 0 health
+            return Math.ceil(attribute);
+          }
+
           const extraText = `
 ${modifiersToText(globalThis.selectedUnit)}
 ${globalThis.selectedUnit.manaCostToCast && globalThis.selectedUnit.manaCostToCast > 0 ? `${i18n('mana cost to cast')}: ${globalThis.selectedUnit.manaCostToCast}` : ''}
@@ -897,10 +903,10 @@ ${globalThis.selectedUnit.manaCostToCast && globalThis.selectedUnit.manaCostToCa
 <div>${i18n(unitSource.info.description)}</div>
 <hr/>
 ${globalThis.selectedUnit.faction == Faction.ALLY ? '🤝' : '⚔️️'} ${i18n((Faction[globalThis.selectedUnit.faction] || '').toString())} ${globalThis.selectedUnit.unitType !== UnitType.PLAYER_CONTROLLED ? `
-🗡️ ${globalThis.selectedUnit.damage} ${i18n(['damage'])}` : ''}${globalThis.selectedUnit.unitSubType !== UnitSubType.MELEE ? `
-🎯 ${globalThis.selectedUnit.attackRange} ${i18n(['attack range'])}` : ''}
-❤️ ${globalThis.selectedUnit.health}/${globalThis.selectedUnit.healthMax} ${i18n(['health capacity'])}
-🔵 ${globalThis.selectedUnit.mana}/${globalThis.selectedUnit.manaMax} + ${globalThis.selectedUnit.manaPerTurn} ${i18n('Mana')} ${i18n('per turn')}
+🗡️ ${txt(globalThis.selectedUnit.damage)} ${i18n(['damage'])}` : ''}${globalThis.selectedUnit.unitSubType !== UnitSubType.MELEE ? `
+🎯 ${txt(globalThis.selectedUnit.attackRange)} ${i18n(['attack range'])}` : ''}
+❤️ ${txt(globalThis.selectedUnit.health)}/${txt(globalThis.selectedUnit.healthMax)} ${i18n(['health capacity'])}
+🔵 ${txt(globalThis.selectedUnit.mana)}/${txt(globalThis.selectedUnit.manaMax)} + ${txt(globalThis.selectedUnit.manaPerTurn)} ${i18n('Mana')} ${i18n('per turn')}
 ${extraText}
 ${playerSpecificInfo}
       `;

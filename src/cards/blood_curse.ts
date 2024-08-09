@@ -30,13 +30,9 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean) {
     Unit.addEvent(unit, id);
     // This is done in first time setup because the modified stats are stored on the unit
     // otherwise it would apply the multiplier each time the unit is loaded
-    unit.healthMax = Math.floor(unit.healthMax * healthMultiplier);
-    unit.health = Math.floor(unit.health * healthMultiplier);
+    unit.healthMax *= healthMultiplier;
+    unit.health *= healthMultiplier;
   });
-
-  if (!prediction) {
-    updateTooltip(unit);
-  }
 
   if (unit.modifiers[suffocateCardId]) {
     updateSuffocate(unit, underworld, prediction);
@@ -45,16 +41,8 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean) {
 
 function remove(unit: IUnit, underworld: Underworld) {
   // Health should not go below 1
-  unit.healthMax = Math.max(1, Math.floor(unit.healthMax / healthMultiplier));
-  unit.health = Math.max(1, Math.floor(unit.health / healthMultiplier));
-}
-
-
-export function updateTooltip(unit: Unit.IUnit) {
-  if (unit.modifiers[id]) {
-    // Set tooltip:
-    unit.modifiers[id].tooltip = `Blood Curse`;
-  }
+  unit.healthMax = Math.max(1, unit.healthMax / healthMultiplier);
+  unit.health = Math.max(1, unit.health / healthMultiplier);
 }
 
 const imageName = 'spellIconBloodCurse.png';
@@ -82,6 +70,13 @@ const spell: Spell = {
     remove,
   },
   events: {
+    onTooltip: (unit: Unit.IUnit, underworld: Underworld) => {
+      const modifier = unit.modifiers[id];
+      if (modifier) {
+        // Set tooltip:
+        modifier.tooltip = `Blood Curse`;
+      }
+    },
     onTakeDamage: (unit: IUnit, amount: number, _underworld: Underworld, prediction: boolean, damageDealer?: IUnit) => {
       // Takes healing as damage
       if (amount < 0) {

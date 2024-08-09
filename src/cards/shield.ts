@@ -66,6 +66,13 @@ const spell: Spell = {
     },
   },
   events: {
+    onTooltip: (unit: Unit.IUnit, underworld: Underworld) => {
+      const modifier = unit.modifiers[shieldId];
+      if (modifier) {
+        // Set tooltip:
+        modifier.tooltip = `${modifier.quantity} ${i18n('Shield')}`;
+      }
+    },
     onTakeDamage: (unit, amount, underworld, prediction, damageDealer) => {
       const modifier = unit.modifiers[shieldId];
       if (modifier) {
@@ -88,7 +95,6 @@ const spell: Spell = {
           if (modifier && modifier.quantity <= 0) {
             Unit.removeModifier(unit, shieldId, underworld);
           }
-          shield_UpdateTooltip(unit);
 
           return adjustedAmount;
         }
@@ -99,19 +105,10 @@ const spell: Spell = {
   },
 
 };
-export function shield_UpdateTooltip(unit: Unit.IUnit) {
-  const modifier = unit.modifiers[shieldId];
-  if (modifier) {
-    // Set tooltip:
-    modifier.tooltip = `${modifier.quantity} ${i18n('Shield')}`
-  }
-}
 
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
   const modifier = getOrInitModifier(unit, shieldId, { isCurse: false, quantity }, () => {
     Unit.addEvent(unit, shieldId);
   });
-
-  shield_UpdateTooltip(unit);
 }
 export default spell;

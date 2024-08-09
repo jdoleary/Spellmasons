@@ -18,26 +18,22 @@ export default function registerImpendingDoom() {
       if (extra && extra.sourceUnitId != undefined) {
         modifier.sourceUnitId = extra.sourceUnitId;
       }
-
-      updateTooltip(unit);
     }
   });
-
-  function updateTooltip(unit: Unit.IUnit) {
-    if (unit.modifiers[impendingDoomId]) {
-      // Set tooltip:
-      unit.modifiers[impendingDoomId].tooltip = `${i18n('impending doom')} ${unit.modifiers[impendingDoomId].quantity}...`
-    }
-  }
-
   registerEvents(impendingDoomId, {
+    onTooltip: (unit: Unit.IUnit, underworld: Underworld) => {
+      const modifier = unit.modifiers[impendingDoomId];
+      if (modifier) {
+        // Set tooltip:
+        modifier.tooltip = `${i18n('impending doom')} ${modifier.quantity}...`;
+      }
+    },
     onTurnEnd: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       const modifier = unit.modifiers[impendingDoomId];
       if (!prediction) {
         if (modifier) {
           // Decrement the turns left to live
           modifier.quantity -= 1;
-          updateTooltip(unit);
           if (modifier.quantity <= 0) {
             const sourceUnit = underworld.getUnitById(modifier.sourceUnitId, prediction);
             Unit.die(unit, underworld, prediction, sourceUnit);

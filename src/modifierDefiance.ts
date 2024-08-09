@@ -14,6 +14,7 @@ const subspriteImageName = 'spell-effects/shield-red.png';
 export default function registerdefiance() {
   registerModifiers(defianceId, {
     description: `Each enemy within attack range reduces incoming damage by ${Math.floor(reductionProportion * 100)}%`,
+    stage: "Amount Multiplier",
     probability: 100,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, defianceId, { isCurse: false, quantity, keepOnDeath: true }, () => {
@@ -55,7 +56,7 @@ export default function registerdefiance() {
         return amount;
       }
       // Cannot be below 0 (must still be damage, not healing)
-      const overriddenAmount = Math.max(0, Math.floor(amount - amount * reductionAmount));
+      const overriddenAmount = Math.max(0, amount - amount * reductionAmount);
       floatingText({ coords: unit, text: `${defianceId}: Damage reduced by ${Math.floor(reductionAmount * 100)}%`, prediction });
       return overriddenAmount;
     }

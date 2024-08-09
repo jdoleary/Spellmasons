@@ -62,7 +62,7 @@ const samplePickup: IPickupSource = {
             // The actual data effect of the potion: The unit gets healed.
             // We pass `prediction` into this function so that game can calculate if this is something that will 
             // happen (like if we're pulling a potion to us) or if it actually happened.
-            healUnit(unit, Math.round((unit.stamina * percentHeal)) * pickup.power, undefined, underworld, prediction);
+            healUnit(unit, (unit.stamina * percentHeal) * pickup.power, undefined, underworld, prediction);
         }
     },
 };

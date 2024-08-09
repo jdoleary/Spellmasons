@@ -9,19 +9,23 @@ export const selfInvulnerabilityId = 'Self Invulnerability';
 export default function registerSelfInvulnerability() {
   registerModifiers(selfInvulnerabilityId, {
     description: 'rune_self_invulnerability',
+    stage: "Amount Override",
     costPerUpgrade: 80,
     maxUpgradeCount: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, selfInvulnerabilityId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, selfInvulnerabilityId);
       });
-
-      if (!prediction) {
-        updateTooltip(unit);
-      }
     }
   });
   registerEvents(selfInvulnerabilityId, {
+    onTooltip: (unit: Unit.IUnit, underworld: Underworld) => {
+      const modifier = unit.modifiers[selfInvulnerabilityId];
+      if (modifier) {
+        // Set tooltip:
+        modifier.tooltip = `${i18n('Invulnerable')} to self ${i18n('Damage')}`;
+      }
+    },
     onTakeDamage: (unit: Unit.IUnit, amount: number, underworld: Underworld, prediction: boolean, damageDealer?: Unit.IUnit) => {
       const modifier = unit.modifiers[selfInvulnerabilityId];
       if (modifier) {
@@ -35,12 +39,4 @@ export default function registerSelfInvulnerability() {
       return amount;
     }
   });
-}
-
-function updateTooltip(unit: Unit.IUnit) {
-  const modifier = unit.modifiers[selfInvulnerabilityId];
-  if (modifier) {
-    // Set tooltip:
-    modifier.tooltip = `${i18n('Invulnerable')} to self ${i18n('Damage')}`
-  }
 }

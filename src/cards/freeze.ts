@@ -57,12 +57,18 @@ const spell: Spell = {
     remove,
   },
   events: {
+    onTooltip: (unit: Unit.IUnit, underworld: Underworld) => {
+      const modifier = unit.modifiers[freezeCardId];
+      if (modifier && modifier.quantity <= 0) {
+        // Set tooltip:
+        modifier.tooltip = `${i18n(freezeCardId)} ${i18n('immune').toLocaleLowerCase()}: ${modifier.quantity + immuneForTurns}`;
+      }
+    },
     onTurnEnd: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       // Decrement how many turns left the unit is frozen
       const modifier = unit.modifiers[freezeCardId];
       if (modifier) {
         modifier.quantity--;
-        updateTooltip(unit, modifier.quantity, prediction);
         if (modifier.quantity == 0) {
           // Remove freeze effects at 0
           remove(unit);
@@ -84,12 +90,6 @@ function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
     Image.addSubSprite(unit.image, imageName);
     // Stop the animation
     unit.image?.sprite.stop();
-  }
-}
-function updateTooltip(unit: Unit.IUnit, quantity: number, prediction: boolean) {
-  if (!prediction && unit.modifiers[freezeCardId] && quantity <= 0) {
-    // Set tooltip:
-    unit.modifiers[freezeCardId].tooltip = `${i18n(freezeCardId)} ${i18n('immune').toLocaleLowerCase()}: ${quantity + immuneForTurns}`;
   }
 }
 

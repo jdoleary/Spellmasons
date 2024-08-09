@@ -12,8 +12,8 @@ export default function registerDareDevil() {
     maxUpgradeCount: 4,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, dareDevilId, { isCurse: false, quantity, keepOnDeath: true }, () => { });
-      unit.healthMax = Math.floor(unit.healthMax / 2);
-      unit.health = Math.floor(unit.health / 2);
+      unit.healthMax = unit.healthMax / 2;
+      unit.health = unit.health / 2;
       if (player == globalThis.player) {
         // Now that the player unit's properties have changed, sync the new
         // state with the player's predictionUnit so it is properly

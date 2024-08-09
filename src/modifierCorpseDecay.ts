@@ -22,18 +22,23 @@ export default function registerCorpseDecay() {
       if (!prediction) {
         // Temporarily use floating text until spell animation is finished
         floatingText({ coords: unit, text: corpseDecayId });
-        updateTooltip(unit);
       }
     }
   });
   registerEvents(corpseDecayId, {
+    onTooltip: (unit: Unit.IUnit, underworld: Underworld) => {
+      const modifier = unit.modifiers[corpseDecayId];
+      if (modifier) {
+        // Set tooltip:
+        modifier.tooltip = i18n(['turns until decay', modifier.turnsLeftToLive]);
+      }
+    },
     onTurnEnd: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       const modifier = unit.modifiers[corpseDecayId];
       if (!prediction) {
         if (modifier) {
           // Decrement the turns left to live
           modifier.turnsLeftToLive -= 1;
-          updateTooltip(unit);
           // Ensure the unit is still dead, don't remove resurrected unitsn
           if (!unit.alive) {
             if (modifier.turnsLeftToLive <= 0) {
@@ -53,10 +58,4 @@ export default function registerCorpseDecay() {
       return;
     },
   });
-}
-export function updateTooltip(unit: Unit.IUnit) {
-  if (unit.modifiers[corpseDecayId]) {
-    // Set tooltip:
-    unit.modifiers[corpseDecayId].tooltip = i18n(['turns until decay', unit.modifiers[corpseDecayId].turnsLeftToLive]);
-  }
 }

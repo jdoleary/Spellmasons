@@ -35,7 +35,7 @@ const spell: Spell = {
       for (let unit of targets) {
         const unitManaBurnt = Math.min(unit.mana, mana_burnt);
         unit.mana -= unitManaBurnt;
-        const damage = Math.ceil(unitManaBurnt * health_burn_ratio);
+        const damage = unitManaBurnt * health_burn_ratio;
         Unit.takeDamage({
           unit: unit,
           amount: damage,

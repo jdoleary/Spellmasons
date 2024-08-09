@@ -32,8 +32,7 @@ const spell: Spell = {
         for (let key of Object.keys(player.cardUsageCounts)) {
           delete player.cardUsageCounts[key];
         }
-        state.casterUnit.healthMax *= 1.0 - reduceMaxHealthPreportion;
-        state.casterUnit.healthMax = Math.floor(state.casterUnit.healthMax);
+        state.casterUnit.healthMax *= (1.0 - reduceMaxHealthPreportion);
         state.casterUnit.health = Math.min(state.casterUnit.healthMax, state.casterUnit.health);
       }
       return state;

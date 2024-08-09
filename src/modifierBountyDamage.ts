@@ -11,6 +11,7 @@ export default function registerBountyDamage() {
   registerModifiers(bountyDamageId, {
     description: ('rune_bounty_damage'),
     unitOfMeasure: 'Damage',
+    stage: "Amount Multiplier",
     costPerUpgrade: 100,
     quantityPerUpgrade: 100,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
