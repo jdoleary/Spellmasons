@@ -72,7 +72,7 @@ import type PieClient from '@websocketpie/client';
 import { isOutOfRange, sendPlayerThinkingThrottled } from './PlayerUtils';
 import { DisplayObject, TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
-import { explain, EXPLAIN_PING, isTutorialFirstStepsComplete, isTutorialComplete, tutorialCompleteTask, tutorialChecklist, EXPLAIN_UPGRADE_BOOKMARK } from './graphics/Explain';
+import { explain, EXPLAIN_PING, isTutorialFirstStepsComplete, isTutorialComplete, tutorialCompleteTask, tutorialChecklist, EXPLAIN_UPGRADE_BOOKMARK, tutorialShowTask } from './graphics/Explain';
 import { makeRisingParticles, makeScrollDissapearParticles, stopAndDestroyForeverEmitter } from './graphics/ParticleCollection';
 import { ensureAllClientsHaveAssociatedPlayers, Overworld } from './Overworld';
 import { Emitter } from 'jdoleary-fork-pixi-particle-emitter';
@@ -1500,7 +1500,9 @@ export default class Underworld {
       console.error('Unit with id', id, 'does not exist.  Have you registered it in src/units/index.ts?');
       return undefined;
     }
-    if (globalThis.enemyEncountered && !globalThis.enemyEncountered.includes(id)) {
+    // levelIndex >= 2: Don't show enemy introductions while the early tutorial explain popups
+    // are still coming up otherwise it gets crowded
+    if (globalThis.enemyEncountered && !globalThis.enemyEncountered.includes(id) && this.levelIndex >= 2) {
       globalThis.enemyEncountered.push(id);
       storage.set(storage.ENEMY_ENCOUNTERED_STORAGE_KEY, JSON.stringify(globalThis.enemyEncountered));
       // Slightly delay showing enemy introductions so the button doesn't flicker on for a moment before CSS has a chance
@@ -2183,8 +2185,10 @@ export default class Underworld {
       for (let player of this.players) {
         const points = config.STAT_POINTS_PER_LEVEL;
         player.statPointsUnspent += points;
+        if (!tutorialChecklist.spendUpgradePoints.complete) {
+          tutorialShowTask('spendUpgradePoints');
+        }
         CardUI.tryShowStatPointsSpendable();
-        explain(EXPLAIN_UPGRADE_BOOKMARK);
         console.log("Setup: Gave player: [" + player.clientId + "] " + points + " upgrade points for level index: " + levelIndex);
         // If the player hasn't completed first steps, autospend stat points on health
         // We don't want to cause information overload during tutorial

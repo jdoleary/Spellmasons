@@ -174,6 +174,7 @@ const explainMap: { [key: string]: ExplainData } = {
 }
 globalThis.explainKeys = Object.keys(explainMap);
 export const autoExplains = [
+  EXPLAIN_UPGRADE_BOOKMARK,
   EXPLAIN_ATTENTION_MARKER_MELEE,
   EXPLAIN_MANA_COST,
   EXPLAIN_WALK_ROPE,
@@ -217,6 +218,7 @@ export interface TutorialChecklist {
   castMultipleInOneTurn: TutorialChecklistItem;
   camera: TutorialChecklistItem;
   recenterCamera: TutorialChecklistItem;
+  spendUpgradePoints: TutorialChecklistItem;
 }
 export const tutorialChecklist: TutorialChecklist = {
   spawn: {
@@ -239,6 +241,13 @@ export const tutorialChecklist: TutorialChecklist = {
     text: "Move into the portal to go to the next level",
     nextVisibleTasks: ['camera', 'cast'],
     showExplainPopup: [],
+  },
+  spendUpgradePoints: {
+    visible: false,
+    complete: false,
+    text: "Click on the spellbook in the toolbar to see the upgrade menu",
+    nextVisibleTasks: [],
+    showExplainPopup: [EXPLAIN_UPGRADE_BOOKMARK],
   },
   cast: {
     visible: false,
