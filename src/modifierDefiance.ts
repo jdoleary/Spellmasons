@@ -45,6 +45,10 @@ export default function registerdefiance() {
       }
     },
     onTakeDamage: (unit: Unit.IUnit, amount: number, underworld: Underworld, prediction: boolean, damageDealer?: Unit.IUnit) => {
+      // Do not affect healing
+      if (amount < 0) {
+        return amount;
+      }
       const reductionAmount = getReductionProportion(unit, underworld);
       // No effect if attackRange is 0
       // This is a special handled case for Pacified melee units
