@@ -502,10 +502,7 @@ export function renderRunesMenu(underworld: Underworld) {
     let chosen: string | undefined;
     // Give a number of attempts to find a non duplicate rune
     for (let attempt = 0; attempt < 100; attempt++) {
-      // Runes should not shuffle for version 1.41 because only classes are available as runes
-      // This can be removed after version 1.41
-      const seedString = version.includes('1.41') ? `unchanging-${i}-${attempt}` : getUniqueSeedStringPerLevel(underworld, globalThis.player) + `-${i}-${attempt}`;
-      const seed = seedrandom(seedString);
+      const seed = seedrandom(getUniqueSeedStringPerLevel(underworld, globalThis.player) + `-${i}-${attempt}`);
       // If a rune has been locked in this index, choose it; otherwise choose a seeded random rune
       const previouslyLockedRune = globalThis.player.lockedRunes.find(lr => lr.index === i);
       chosen = previouslyLockedRune ? previouslyLockedRune.key : chooseOneOfSeeded(listOfRemainingRunesToChoose, seed)?.key;

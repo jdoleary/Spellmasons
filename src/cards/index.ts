@@ -479,7 +479,7 @@ export function registerCards(overworld: Overworld) {
   registerGrowth();
 
   registerModifierStatUpgrades();
-  // registerDareDevil();
+  registerDareDevil();
 
   registerNecromancerRune();
   registerWitchRune();
@@ -491,39 +491,39 @@ export function registerCards(overworld: Overworld) {
   registerLiquidmancer();
   registerHeavyImpacts();
 
-  // registerAffinityBlessing();
-  // registerAffinityCurse();
-  // registerAffinityDamage();
-  // registerAffinityMovement();
-  // registerAffinitySoul();
-  // registerAffinityTargeting();
+  registerAffinityBlessing();
+  registerAffinityCurse();
+  registerAffinityDamage();
+  registerAffinityMovement();
+  registerAffinitySoul();
+  registerAffinityTargeting();
 
-  // registerSelfInvulnerability();
-  // registerArmor();
-  // registerThorns();
-  // registerHealthRegen();
-  // registerShieldRegen();
-  // registerRevitalize();
-  // registerOverheal();
-  // registerManaBarrier();
-  // registerOnHitHealing();
-  // registerOnHitPoison();
-  // registerBasePierce();
-  // registerBaseRadiusBoost();
-  // registerContaminateSelfOnTeleport();
-  // registerCloneOnSpawn();
-  // registerShieldBash();
-  // registerOnKillMana();
+  registerSelfInvulnerability();
+  registerArmor();
+  registerThorns();
+  registerHealthRegen();
+  registerShieldRegen();
+  registerRevitalize();
+  registerOverheal();
+  registerManaBarrier();
+  registerOnHitHealing();
+  registerOnHitPoison();
+  registerBasePierce();
+  registerBaseRadiusBoost();
+  registerContaminateSelfOnTeleport();
+  registerCloneOnSpawn();
+  registerShieldBash();
+  registerOnKillMana();
 
-  // registerBounty();
-  // registerBountyHunter();
-  // registerBountyRestoreHealth();
-  // registerBountyRestoreStamina();
-  // registerBountyRestoreMana();
-  // registerBountyDamage();
+  registerBounty();
+  registerBountyHunter();
+  registerBountyRestoreHealth();
+  registerBountyRestoreStamina();
+  registerBountyRestoreMana();
+  registerBountyDamage();
 
-  // registerPotionEffectiveness();
-  // registerPotionBarrier();
+  registerPotionEffectiveness();
+  registerPotionBarrier();
 
   registerImmune();
   registerImpendingDoom();
