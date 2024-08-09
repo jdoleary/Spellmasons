@@ -15,7 +15,6 @@
 - Test loading an old save file for backwards compatibility
 - Test hosting LAN server from Electron build
 - Test tutorial ALWAYS on electron build
-- Test that F12 works in electron build
 - Test mod thumbnail paths on electron build
 
 
