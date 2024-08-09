@@ -102,7 +102,7 @@ export function findRandomSummonLocation(unit: Unit.IUnit, radius: number, under
     // Generate a random angle in radians
     const angle = randFloat(0, 2 * Math.PI);
     // Generate a random distance within the range [0, maxDistance]
-    const distance = randFloat(0, radius);
+    const distance = randFloat(COLLISION_MESH_RADIUS, radius);
 
     // Set coordinate based on dir and distance
     randomCoord = {
