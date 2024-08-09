@@ -590,7 +590,8 @@
         "spell_add_pierce": "Makes arrows pierce units",
         "add pierce": "Add Arrow Pierce",
         "cursify": "Become Curse",
-        "spell_cursify": "Designates target's blessings as curses. Does not change the functionality of the blessings."
+        "spell_cursify": "Designates target's blessings as curses. Does not change the functionality of the blessings.",
+        "click on the spellbook in the toolbar to see the upgrade menu": "Click on the spellbook in the toolbar to see the upgrade menu"
     },
     {
         "language": "Français",
@@ -1183,7 +1184,8 @@
         "spell_add_pierce": "Fait percer les flèches à travers les unités.",
         "add pierce": "Ajouter Pénétration de flèche",
         "cursify": "Devenir Malédiction",
-        "spell_cursify": "Désigne les bénédictions de la cible comme des malédictions. Ne change pas la fonctionnalité des bénédictions."
+        "spell_cursify": "Désigne les bénédictions de la cible comme des malédictions. Ne change pas la fonctionnalité des bénédictions.",
+        "click on the spellbook in the toolbar to see the upgrade menu": "Cliquez sur le grimoire dans la barre d'outils pour accéder au menu de mise à niveau."
     },
     {
         "language": "italiano",
@@ -1776,7 +1778,8 @@
         "spell_add_pierce": "Fa' che le frecce attraversino le unità.",
         "add pierce": "Aggiungi Punte di Freccia",
         "cursify": "Diventa Maledizione",
-        "spell_cursify": "Designa le benedizioni del bersaglio come maledizioni. Non cambia la funzionalità delle benedizioni."
+        "spell_cursify": "Designa le benedizioni del bersaglio come maledizioni. Non cambia la funzionalità delle benedizioni.",
+        "click on the spellbook in the toolbar to see the upgrade menu": "Clicca sul libro degli incantesimi nella barra degli strumenti per vedere il menu di aggiornamento."
     },
     {
         "language": "Deutsche",
@@ -2369,7 +2372,8 @@
         "spell_add_pierce": "Lässt Pfeile Einheiten durchdringen",
         "add pierce": "Füge Pfeil Durchbohren hinzu",
         "cursify": "Werde Fluch",
-        "spell_cursify": "Bezeichnet die Segnungen des Ziels als Flüche. Ändert nicht die Funktionalität der Segnungen."
+        "spell_cursify": "Bezeichnet die Segnungen des Ziels als Flüche. Ändert nicht die Funktionalität der Segnungen.",
+        "click on the spellbook in the toolbar to see the upgrade menu": "Klicke auf das Zauberbuch in der Schnellleiste, um das Upgrade-Menü zu sehen."
     },
     {
         "language": "español",
@@ -2962,7 +2966,8 @@
         "spell_add_pierce": "Hace que las flechas perforen a las unidades.",
         "add pierce": "Añadir Flecha Perforante",
         "cursify": "Conviértete en Maldición",
-        "spell_cursify": "Designa las bendiciones del objetivo como maldiciones. No cambia la funcionalidad de las bendiciones."
+        "spell_cursify": "Designa las bendiciones del objetivo como maldiciones. No cambia la funcionalidad de las bendiciones.",
+        "click on the spellbook in the toolbar to see the upgrade menu": "Haz clic en el grimorio en la barra de herramientas para ver el menú de mejoras."
     },
     {
         "language": "日本",
@@ -3555,7 +3560,8 @@
         "spell_add_pierce": "矢がユニットを貫通する",
         "add pierce": "矢の貫通を追加",
         "cursify": "呪いを受ける",
-        "spell_cursify": "対象の祝福を呪いとして指定します。祝福の機能には変更はありません。"
+        "spell_cursify": "対象の祝福を呪いとして指定します。祝福の機能には変更はありません。",
+        "click on the spellbook in the toolbar to see the upgrade menu": "ツールバーの呪文書をクリックしてアップグレードメニューを表示してください。"
     },
     {
         "language": "Português",
@@ -4148,7 +4154,8 @@
         "spell_add_pierce": "Faz com que as flechas atravessem unidades.",
         "add pierce": "Adicionar Flecha Penetrante",
         "cursify": "Tornar-se Maldição",
-        "spell_cursify": "Designa as bênçãos do alvo como maldições. Não altera a funcionalidade das bênçãos."
+        "spell_cursify": "Designa as bênçãos do alvo como maldições. Não altera a funcionalidade das bênçãos.",
+        "click on the spellbook in the toolbar to see the upgrade menu": "Clique no grimório na barra de ferramentas para ver o menu de upgrade"
     },
     {
         "language": "عربى",
@@ -4741,7 +4748,8 @@
         "spell_add_pierce": "يجعل السهام تخترق الوحدات",
         "add pierce": "أضف سهم الاختراق",
         "cursify": "أصبح لعنة",
-        "spell_cursify": "يعتبر بركات الهدف لعنات. لا يغير وظيفة البركات."
+        "spell_cursify": "يعتبر بركات الهدف لعنات. لا يغير وظيفة البركات.",
+        "click on the spellbook in the toolbar to see the upgrade menu": "انقر على كتاب التعويذات في شريط الأدوات لرؤية قائمة الترقية"
     },
     {
         "language": "한국어",
@@ -5334,7 +5342,8 @@
         "spell_add_pierce": "화살이 유닛을 꿰뚫게 만듭니다.",
         "add pierce": "화살 관통 추가",
         "cursify": "저주가 되다",
-        "spell_cursify": "대상의 축복을 저주로 지정합니다. 축복의 기능에는 변화를 주지 않습니다."
+        "spell_cursify": "대상의 축복을 저주로 지정합니다. 축복의 기능에는 변화를 주지 않습니다.",
+        "click on the spellbook in the toolbar to see the upgrade menu": "툴바에서 주문서 아이콘을 클릭하여 업그레이드 메뉴를 보세요."
     },
     {
         "language": "Русский",
@@ -5927,7 +5936,8 @@
         "spell_add_pierce": "Заставляет стрелы пронзать юниты.",
         "add pierce": "Добавить Проникающую Стрелу",
         "cursify": "Стать Проклятием",
-        "spell_cursify": "Обращает благословения цели в проклятия. Не меняет функциональность благословений."
+        "spell_cursify": "Обращает благословения цели в проклятия. Не меняет функциональность благословений.",
+        "click on the spellbook in the toolbar to see the upgrade menu": "Нажмите на книгу заклинаний в панели инструментов, чтобы открыть меню улучшений."
     },
     {
         "language": "中文(简)",
@@ -6520,7 +6530,8 @@
         "spell_add_pierce": "使箭矢穿透单位",
         "add pierce": "增加箭矢穿透",
         "cursify": "变成诅咒",
-        "spell_cursify": "将目标的祝福标记为诅咒。不会改变祝福的功能。"
+        "spell_cursify": "将目标的祝福标记为诅咒。不会改变祝福的功能。",
+        "click on the spellbook in the toolbar to see the upgrade menu": "点击工具栏中的法术书以查看升级菜单"
     },
     {
         "language": "中文(繁)",
@@ -7113,7 +7124,8 @@
         "spell_add_pierce": "使箭矢穿透單位",
         "add pierce": "添加箭矢穿透",
         "cursify": "成爲詛咒",
-        "spell_cursify": "將目標的祝福標記為詛咒。並不改變祝福的功能性。"
+        "spell_cursify": "將目標的祝福標記為詛咒。並不改變祝福的功能性。",
+        "click on the spellbook in the toolbar to see the upgrade menu": "點擊工具欄中的魔法書以查看升級菜單"
     },
     {
         "language": "Polski",
@@ -7706,7 +7718,8 @@
         "spell_add_pierce": "Sprawia, że strzały przebijają jednostki.",
         "add pierce": "Dodaj Przekłuwającą Strzałę",
         "cursify": "Zostań Klątwą",
-        "spell_cursify": "Oznacza błogosławieństwa celu jako klątwy. Nie zmienia funkcjonalności błogosławieństw."
+        "spell_cursify": "Oznacza błogosławieństwa celu jako klątwy. Nie zmienia funkcjonalności błogosławieństw.",
+        "click on the spellbook in the toolbar to see the upgrade menu": "Kliknij na księgę zaklęć w pasku narzędzi, aby zobaczyć menu ulepszeń."
     },
     {
         "language": "Dutch",
@@ -8299,6 +8312,7 @@
         "spell_add_pierce": "Laat pijlen door eenheden heen dringen.",
         "add pierce": "Voeg Pijl Doorsteek toe",
         "cursify": "Word een Vloek",
-        "spell_cursify": "Benoemt de zegeningen van het doelwit als vervloekingen. Verandert de functionaliteit van de zegeningen niet."
+        "spell_cursify": "Benoemt de zegeningen van het doelwit als vervloekingen. Verandert de functionaliteit van de zegeningen niet.",
+        "click on the spellbook in the toolbar to see the upgrade menu": "Klik op het spellensboek in de werkbalk om het upgrade-menu te zien."
     }
 ]

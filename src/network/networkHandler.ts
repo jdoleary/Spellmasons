@@ -234,6 +234,9 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
         if (stat) {
           if (fromPlayer) {
             underworld.upgradeRune(stat, fromPlayer);
+            if (fromPlayer === globalThis.player) {
+              tutorialCompleteTask('spendUpgradePoints');
+            }
           } else {
             console.error('CHOOSE_RUNE, missing fromPlayer', fromClient);
           }
