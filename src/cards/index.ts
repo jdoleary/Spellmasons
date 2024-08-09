@@ -189,6 +189,8 @@ import registerLiquidmancer from '../modifierLiquidmancer';
 import registerHeavyImpacts from '../modifierHeavyImpact';
 import registerPotionEffectiveness from '../modifierPotionEffectiveness';
 import registerPotionBarrier from '../modifierPotionBarrier';
+import registerDeathFog from '../modifierDeathFog';
+import registerPlagueBringer from '../modifierPlagueBringer';
 
 
 export interface Modifiers {
@@ -513,6 +515,8 @@ export function registerCards(overworld: Overworld) {
   registerGoodLooking();
   registerShieldBash();
   registerOnKillMana();
+  registerDeathFog();
+  registerPlagueBringer();
 
   registerBounty();
   registerBountyHunter();
