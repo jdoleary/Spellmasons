@@ -898,7 +898,7 @@ ${globalThis.selectedUnit.manaCostToCast && globalThis.selectedUnit.manaCostToCa
           // because those are user provided names
           // Use this to debug strength when developing, but strength isn't relevant to players `💪 ${globalThis.selectedUnit.strength} Strength`
           text += `\
-<h1>${globalThis.selectedUnit.name || i18n(unitSource.id)}</h1>
+<h1>${globalThis.selectedUnit.name ? globalThis.selectedUnit.name.split(' ').map(name => i18n(name)).join(' ') : i18n(unitSource.id)}</h1>
 <hr/>
 <div>${i18n(unitSource.info.description)}</div>
 <hr/>

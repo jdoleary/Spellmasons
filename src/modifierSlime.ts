@@ -13,7 +13,7 @@ function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
 }
 export default function registerSlime() {
   registerModifiers(slimeId, {
-    description: 'Causes a unit to split into two units every turn.',
+    description: 'slime_description',
     probability: 100,
     addModifierVisuals,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

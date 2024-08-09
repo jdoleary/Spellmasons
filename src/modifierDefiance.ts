@@ -13,7 +13,7 @@ const maxReductionProportion = 0.5;
 const subspriteImageName = 'spell-effects/shield-red.png';
 export default function registerdefiance() {
   registerModifiers(defianceId, {
-    description: `Each enemy within attack range reduces incoming damage by ${Math.floor(reductionProportion * 100)}%`,
+    description: ['defiance_description', Math.floor(reductionProportion * 100).toString()],
     stage: "Amount Multiplier",
     probability: 100,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
@@ -41,7 +41,7 @@ export default function registerdefiance() {
     onTooltip: (unit: Unit.IUnit, underworld: Underworld) => {
       const modifier = unit.modifiers[defianceId];
       if (modifier) {
-        modifier.tooltip = `${defianceId}: ${Math.floor(getReductionProportion(unit, underworld) * 100)}% ${i18n('Damage Reduction')}`;
+        modifier.tooltip = `${i18n(defianceId)}: ${i18n(['damage_reduced', Math.floor(getReductionProportion(unit, underworld) * 100).toString()])}`;
       }
     },
     onTakeDamage: (unit: Unit.IUnit, amount: number, underworld: Underworld, prediction: boolean, damageDealer?: Unit.IUnit) => {
@@ -57,7 +57,7 @@ export default function registerdefiance() {
       }
       // Cannot be below 0 (must still be damage, not healing)
       const overriddenAmount = Math.max(0, amount - amount * reductionAmount);
-      floatingText({ coords: unit, text: `${defianceId}: Damage reduced by ${Math.floor(reductionAmount * 100)}%`, prediction });
+      floatingText({ coords: unit, text: `${i18n(defianceId)}: ${i18n(['damage_reduced', Math.floor(reductionAmount * 100).toString()])}`, prediction });
       return overriddenAmount;
     }
   });
