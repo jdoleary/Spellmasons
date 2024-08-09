@@ -20,10 +20,10 @@ export default function registerGolemancer() {
     description: 'rune_golemancer',
     costPerUpgrade: 200,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
-      const player = underworld.players.find(p => p.unit == unit);
-      if (player) {
-        getOrInitModifier(unit, golemancerId, { isCurse: false, quantity, keepOnDeath: true }, () => {
-          Unit.addEvent(unit, golemancerId);
+      getOrInitModifier(unit, golemancerId, { isCurse: false, quantity, keepOnDeath: true }, () => {
+        Unit.addEvent(unit, golemancerId);
+        const player = underworld.players.find(p => p.unit == unit);
+        if (player) {
           // Give summon golem
           const newCardId = Unit.unitSourceIdToName(golem_unit_id, false);
           const upgrade = Upgrade.upgradeCardsSource.find(u => u.title == newCardId)
@@ -32,10 +32,8 @@ export default function registerGolemancer() {
           } else {
             console.error('Could not find summon golem upgrade for Golemancer rune');
           }
-        });
-      } else {
-        console.error(`Cannot add rune ${golemancerId}, no player is associated with unit`);
-      }
+        }
+      });
     },
   });
   registerEvents(golemancerId, {
