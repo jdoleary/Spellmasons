@@ -191,7 +191,7 @@ import registerPotionBarrier from '../modifierPotionBarrier';
 
 
 export interface Modifiers {
-  // modifier sthat are not attached to a spell need an explicit id set
+  // modifiers that are not attached to a spell need an explicit id set
   id?: string;
   subsprite?: Subsprite;
   // Denotes a rune that is on the left side of the runes menu
