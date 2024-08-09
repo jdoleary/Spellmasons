@@ -84,7 +84,9 @@ export function setupDevGlobalFunctions(overworld: Overworld) {
             Object.keys(Cards.allCards).forEach(cardId => {
                 const card = Cards.allCards[cardId];
                 if (card) {
-                    addCardToHand(card, player, underworld);
+                    if (!card.modName || globalThis.activeMods?.includes(card.modName)) {
+                        addCardToHand(card, player, underworld);
+                    }
                 } else {
                     console.log('card', card, 'not found');
                 }
