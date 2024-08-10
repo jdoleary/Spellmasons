@@ -13,7 +13,7 @@ export const secretIngredientsId = 'Secret Ingredients';
 export default function registerSecretIngredients() {
   registerModifiers(secretIngredientsId, {
     description: 'rune_secret_ingredients',
-    costPerUpgrade: 80,
+    costPerUpgrade: 100,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, secretIngredientsId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, secretIngredientsId);
