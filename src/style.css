@@ -1332,7 +1332,8 @@ body.view-Menu .prompt:not(.forceShow) {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1;
+  /*Render overtop of inventory and especially toolbar so it may be dismissed*/
+  z-index: 3;
   position: absolute;
   top: 0;
   left: 0;
