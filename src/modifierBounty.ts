@@ -58,14 +58,14 @@ export default function registerBounty() {
   });
 }
 
-export function placeRandomBounty(bountyHunter: Unit.IUnit, underworld: Underworld, prediction: boolean) {
+export function placeRandomBounty(bountyHunter: Unit.IUnit, underworld: Underworld, prediction: boolean, ignoreMax: boolean = false) {
   let units = prediction ? underworld.unitsPrediction : underworld.units;
 
   // Get existing bounty targets
   const unitsWithBounty = getUnitsWithBounty(underworld, prediction);
   // Max bounties = number of bounty hunters on team
   const maxBounties = units.filter(u => u.faction == bountyHunter.faction && u.modifiers[bountyHunterId]).length;
-  if (unitsWithBounty.length < maxBounties) {
+  if (ignoreMax || unitsWithBounty.length < maxBounties) {
     // Find a random enemy unit and give it a bounty
     // Unit must be alive, in enemy faction, not a doodad, and not yet have a bounty
     units = units.filter(u => u.alive && (u.faction != bountyHunter.faction) && (u.unitSubType != UnitSubType.DOODAD) && !u.modifiers[bountyId]);

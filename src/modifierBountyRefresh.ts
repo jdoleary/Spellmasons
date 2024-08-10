@@ -24,7 +24,9 @@ export default function registerBountyRefresh() {
       const modifier = unit.modifiers[bountyRefreshId];
       if (modifier) {
         if (killedUnit.modifiers[bountyId]) {
-          placeRandomBounty(unit, underworld, prediction);
+          // This ignores the max bounty limit because the bounty modifier
+          // cannot be removed from the killed unit yet
+          placeRandomBounty(unit, underworld, prediction, true);
         }
       }
     }
