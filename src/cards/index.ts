@@ -187,6 +187,7 @@ import registerBountyRestoreHealth from '../modifierBountyRestoreHealth';
 import registerBountyRestoreStamina from '../modifierBountyRestoreStamina';
 import registerBountyRestoreMana from '../modifierBountyRestoreMana';
 import registerBountyDamage from '../modifierBountyDamage';
+import registerBountySuffocate from '../modifierBountySuffocate';
 import registerBountyPotion from '../modifierBountyPotion';
 import registerBountyPortal from '../modifierBountyPortal';
 import registerBountyGolem from '../modifierBountyGolem';
@@ -536,6 +537,7 @@ export function registerCards(overworld: Overworld) {
   registerBountyRestoreStamina();
   registerBountyRestoreMana();
   registerBountyDamage();
+  registerBountySuffocate();
   registerBountyPotion();
   registerBountyPortal();
   registerBountyGolem();

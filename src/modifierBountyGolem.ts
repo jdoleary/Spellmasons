@@ -12,7 +12,7 @@ import { COLLISION_MESH_RADIUS } from "./config";
 import { findRandomSummonLocation } from "./modifierGolemancer";
 import seedrandom from "seedrandom";
 
-// Spawn a golem when claiming a bounty
+// Spawn [quantity] golems when claiming a bounty
 export const bountyGolemId = 'Bounty: Golem';
 export default function registerBountyGolem() {
   registerModifiers(bountyGolemId, {
