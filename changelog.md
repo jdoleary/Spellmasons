@@ -1,14 +1,24 @@
-## 1.41.0
-src: New Modifiers
-    
-    - Target Immune
-    - Slime
-    
-    Support adding modifiers to a selected unit with the Shift+space menu
-    Auto omit floating text if it is passed prediction==true
-    
-    Thanks NoZ and Baalstrum
+## 1.41.5
 
+- src: Temp: Disabling explosive arrow
+    It does not handle async with onProjectileCollision
+    yet which is necessary for explosion.
+    Also it doesn't get extra radius from plus radius
+
+- i18n: Fix copy on Shatter ice since freeze cannot stack more than once anymore
+
+- balance: Extra skillpoints per level
+    to account for classes
+
+- admin: Support 1000 skill points
+    and give card in multiplayer
+
+- UI: Prevent inventory from being occluded
+- UI: Fix capitalization of runes
+- UI: Temp: Remove lock icons from runes for 1.41.5
+- Translate: Target Disk
+
+## 1.41.4
 
 Content:
 - New Spell: Cursify
