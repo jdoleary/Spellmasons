@@ -106,3 +106,26 @@ export function getUniqueSeedStringPerLevel(underworld: Underworld, player?: IPl
   const playerUniqueIdentifier = !player ? '0' : player.playerId;
   return `${underworld.seed}-${underworld.levelIndex}-${playerUniqueIdentifier}`;
 }
+
+// https://bost.ocks.org/mike/shuffle/
+// Mutates array, shuffles to random order
+export function shuffle<T>(array: T[], seedRandomInstance: prng): T[] {
+  var lastIndex = array.length - 1;
+  let t: T | undefined;
+  let i: number;
+
+  // While there remain elements to shuffle…
+  while (lastIndex) {
+
+    // Pick a remaining element…
+    // Note: randInt is inclusive
+    i = randInt(0, lastIndex--, seedRandomInstance);
+
+    // And swap it with the current element.
+    t = array[lastIndex] as T;
+    array[lastIndex] = array[i] as T;
+    array[i] = t;
+  }
+
+  return array;
+}
