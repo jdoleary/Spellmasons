@@ -41,7 +41,7 @@ function suffocateRandomEnemyUnit(unit: Unit.IUnit, underworld: Underworld, pred
     const random = seedrandom(`${getUniqueSeedString(underworld)} - ${unit.id}`);
     const chosenUnit = chooseOneOfSeeded(units, random);
     if (chosenUnit) {
-      Unit.addModifier(chosenUnit, suffocateCardId, underworld, prediction);
+      Unit.addModifier(chosenUnit, suffocateCardId, underworld, prediction, 1, { sourceUnitId: unit.id });
     }
   }
 }

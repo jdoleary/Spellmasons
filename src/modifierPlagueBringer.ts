@@ -41,7 +41,7 @@ function poisonRandomEnemyUnit(unit: Unit.IUnit, underworld: Underworld, predict
     const random = seedrandom(`${getUniqueSeedString(underworld)} - ${unit.id}`);
     const chosenUnit = chooseOneOfSeeded(units, random);
     if (chosenUnit) {
-      Unit.addModifier(chosenUnit, poisonCardId, underworld, prediction);
+      Unit.addModifier(chosenUnit, poisonCardId, underworld, prediction, 1, { sourceUnitId: unit.id });
     }
   }
 }
