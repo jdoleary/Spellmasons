@@ -187,6 +187,9 @@ import registerBountyRestoreHealth from '../modifierBountyRestoreHealth';
 import registerBountyRestoreStamina from '../modifierBountyRestoreStamina';
 import registerBountyRestoreMana from '../modifierBountyRestoreMana';
 import registerBountyDamage from '../modifierBountyDamage';
+import registerBountyPotion from '../modifierBountyPotion';
+import registerBountyPortal from '../modifierBountyPortal';
+import registerBountyGolem from '../modifierBountyGolem';
 import registerLiquidmancer from '../modifierLiquidmancer';
 import registerHeavyImpacts from '../modifierHeavyImpact';
 import registerSecretIngredients from '../modifierSecretIngredients';
@@ -196,7 +199,6 @@ import registerCreepingDeath from '../modifierCreepingDeath';
 import registerPlagueBringer from '../modifierPlagueBringer';
 import registerHeavyToxins from '../modifierHeavyToxins';
 import registerOnKillResurrect from '../modifierOnKillResurrect';
-import registerBountyPotion from '../modifierBountyPotion';
 
 
 export interface Modifiers {
@@ -535,6 +537,8 @@ export function registerCards(overworld: Overworld) {
   registerBountyRestoreMana();
   registerBountyDamage();
   registerBountyPotion();
+  registerBountyPortal();
+  registerBountyGolem();
 
   registerSecretIngredients();
   registerPotionEffectiveness();

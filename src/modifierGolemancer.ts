@@ -72,7 +72,8 @@ function spawnGolems(unit: Unit.IUnit, quantity: number, underworld: Underworld,
             UnitType.AI,
             sourceUnit.info.subtype,
             sourceUnit.unitProps,
-            underworld
+            underworld,
+            prediction,
           );
 
           makeRisingParticles(summonedUnit, prediction);
