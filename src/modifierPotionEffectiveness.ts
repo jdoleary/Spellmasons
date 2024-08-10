@@ -11,7 +11,7 @@ export default function registerPotionEffectiveness() {
     description: 'rune_potion_effectiveness',
     unitOfMeasure: '% more effective',
     stage: "Amount Multiplier",
-    costPerUpgrade: 60,
+    costPerUpgrade: 120,
     quantityPerUpgrade: 50,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, potionEffectivenessId, { isCurse: false, quantity, keepOnDeath: true }, () => {
