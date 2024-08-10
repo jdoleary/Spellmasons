@@ -6,22 +6,22 @@ import { bountyHunterId } from "./modifierBountyHunter";
 import Underworld from './Underworld';
 
 // Spawns a new bounty immediately when one is claimed
-export const bountyPortalId = 'Bounty: Refresh';
-export default function registerBountyPortal() {
-  registerModifiers(bountyPortalId, {
+export const bountyRefreshId = 'Bounty: Refresh';
+export default function registerBountyRefresh() {
+  registerModifiers(bountyRefreshId, {
     description: ('rune_bounty_refresh'),
     costPerUpgrade: 150,
     maxUpgradeCount: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
-      getOrInitModifier(unit, bountyPortalId, { isCurse: false, quantity, keepOnDeath: true }, () => {
+      getOrInitModifier(unit, bountyRefreshId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addModifier(unit, bountyHunterId, underworld, prediction);
-        Unit.addEvent(unit, bountyPortalId);
+        Unit.addEvent(unit, bountyRefreshId);
       });
     }
   });
-  registerEvents(bountyPortalId, {
+  registerEvents(bountyRefreshId, {
     onKill: async (unit: Unit.IUnit, killedUnit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
-      const modifier = unit.modifiers[bountyPortalId];
+      const modifier = unit.modifiers[bountyRefreshId];
       if (modifier) {
         if (killedUnit.modifiers[bountyId]) {
           placeRandomBounty(unit, underworld, prediction);

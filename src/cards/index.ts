@@ -183,6 +183,7 @@ import registerShieldBash from '../modifierShieldBash';
 import registerOnKillMana from '../modifierOnKillMana';
 import registerBounty from '../modifierBounty';
 import registerBountyHunter from '../modifierBountyHunter';
+import registerBountyRefresh from '../modifierBountyRefresh';
 import registerBountyRestoreStamina from '../modifierBountyRestoreStamina';
 import registerBountyDamage from '../modifierBountyDamage';
 import registerBountySuffocate from '../modifierBountySuffocate';
@@ -531,6 +532,7 @@ export function registerCards(overworld: Overworld) {
 
   registerBounty();
   registerBountyHunter();
+  registerBountyRefresh();
   registerBountyRestoreStamina();
   registerBountyDamage();
   registerBountySuffocate();
