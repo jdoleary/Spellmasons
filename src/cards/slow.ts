@@ -11,7 +11,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
 export const slowCardId = 'slow';
-const slowPercentage = 20;
+const slowPercentage = 30;
 function remove(unit: Unit.IUnit, underworld: Underworld) {
   const modifier = unit.modifiers[slowCardId];
   if (!modifier) {
@@ -59,7 +59,7 @@ const spell: Spell = {
     category: CardCategory.Curses,
     sfx: '',
     supportQuantity: true,
-    manaCost: 20,
+    manaCost: 15,
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
