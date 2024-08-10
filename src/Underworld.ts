@@ -1090,26 +1090,26 @@ export default class Underworld {
           }
           let drainPerSecond = timemason.unit.manaMax * config.TIMEMASON_PERCENT_DRAIN / 100;
           // Drain doubles per quantity of rune
-          drainPerSecond *= Math.pow(2, modifier.quantity);
+          drainPerSecond *= Math.pow(2, modifier.quantity - 1);
 
           //@ts-ignore Special logic for timemason, does not need to be persisted
           if (!timemason.manaToDrain) {
             //@ts-ignore Special logic for timemason, does not need to be persisted
             timemason.manaToDrain = deltaTime / 1000 * drainPerSecond;
-          }
-          else {
+          } else {
             //@ts-ignore Special logic for timemason, does not need to be persisted
             timemason.manaToDrain += deltaTime / 1000 * drainPerSecond;
 
             //@ts-ignore Special logic for timemason, does not need to be persisted
             if (timemason.manaToDrain >= 1) {
               //@ts-ignore Special logic for timemason, does not need to be persisted
-              timemason.unit.mana -= Math.floor(timemason.manaToDrain);;
+              timemason.unit.mana -= Math.floor(timemason.manaToDrain);
               //@ts-ignore Special logic for timemason, does not need to be persisted
-              timemason.manaToDrain -= Math.floor(timemason.manaToDrain);;
+              timemason.manaToDrain -= Math.floor(timemason.manaToDrain);
+              timemason.unit.mana = Math.max(0, timemason.unit.mana);
+
               this.syncPlayerPredictionUnitOnly();
               Unit.syncPlayerHealthManaUI(this);
-              //floatingText({ coords: timemason.unit, text: '-1 mana' });
             }
           }
         }
