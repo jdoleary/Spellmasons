@@ -11,37 +11,46 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
 export const slowCardId = 'slow';
-const changeProportion = 0.80;
+const slowPercentage = 20;
 function remove(unit: Unit.IUnit, underworld: Underworld) {
-  if (!unit.modifiers[slowCardId]) {
+  const modifier = unit.modifiers[slowCardId];
+  if (!modifier) {
     console.error(`Missing modifier object for ${slowCardId}; cannot remove.  This should never happen`);
     return;
   }
-  // Safely restore unit's original properties
-  const { staminaMax, moveSpeed } = unit.modifiers[slowCardId].originalStats;
 
-  const staminaChange = staminaMax / unit.staminaMax;
-  unit.stamina *= staminaChange;
-  unit.staminaMax = staminaMax;
-  // Prevent unexpected overflow
-  unit.stamina = Math.min(staminaMax, unit.stamina);
-
-  unit.moveSpeed = moveSpeed;
+  // Get the current slowMultiplier so we can calculate the inverse of it
+  const slowMultiplier = (1 - (modifier.quantity / 100));
+  // Prevent divide by 0
+  const multiplier = 1 / (slowMultiplier || 1);
+  unit.moveSpeed *= multiplier;
+  unit.staminaMax *= multiplier;
+  unit.stamina *= multiplier;
 }
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
-  const { staminaMax, moveSpeed } = unit;
-  const modifier = getOrInitModifier(unit, slowCardId, {
-    isCurse: true,
-    quantity,
-    originalStats: {
-      staminaMax,
-      moveSpeed
-    }
-  }, () => { });
-  const quantityModifiedChangeProportion = Math.pow(changeProportion, quantity);
-  unit.moveSpeed *= quantityModifiedChangeProportion;
-  unit.staminaMax *= quantityModifiedChangeProportion;
-  unit.stamina *= quantityModifiedChangeProportion;
+  // Slow handles quantity differently than other modifiers, so override to 0
+  const modifier = getOrInitModifier(unit, slowCardId, { isCurse: true, quantity: 0 }, () => {
+    Unit.addEvent(unit, slowCardId);
+  });
+
+  // Quantity = Slow % (I.E. 20 quantity = 80% multiplier to move speed and stamina)
+  // Quantity is formulaically capped at 100, or a 100% slow, but
+  // this shouldn't be attainable under normal circumstances
+
+  // Slow is unique in that the added quantity is multiplicative, and thus has diminishing returns:
+  // Adding a 50% slow to a unit without slow gives 50 quantity (or a total 50% slow)
+  // Adding a 20% slow after this will add another 10 quantity, (or a total 60% slow)
+
+  // Figure out new quantity (multiplicative)
+  modifier.quantity = modifier.quantity + ((100 - modifier.quantity) * (quantity / 100));
+  // Safeguard to prevent slows over 100%
+  modifier.quantity = Math.min(modifier.quantity, 100);
+
+  // Apply the added Slow (use the newly added quantity here instead of modifier.quantity)
+  const addedSlowMultiplier = (1 - (quantity / 100));
+  unit.moveSpeed *= addedSlowMultiplier;
+  unit.staminaMax *= addedSlowMultiplier;
+  unit.stamina *= addedSlowMultiplier;
 }
 
 const spell: Spell = {
@@ -56,14 +65,17 @@ const spell: Spell = {
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconSlow.png',
     animationPath: '',
-    description: ['spell_slow', Math.floor(changeProportion * 100).toString()],
+    description: ['spell_slow', Math.floor(100 - slowPercentage).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);
       if (targets.length) {
         await Promise.all([playDefaultSpellAnimation(card, targets, prediction), playDefaultSpellSFX(card, prediction)]);
         for (let unit of targets) {
-          Unit.addModifier(unit, slowCardId, underworld, prediction, quantity);
+          // Each application of slow is multiplicative, so we must add the modifier like this
+          for (let i = 0; i < quantity; i++) {
+            Unit.addModifier(unit, slowCardId, underworld, prediction, slowPercentage);
+          }
           if (!prediction) {
             floatingText({ coords: unit, text: 'slow' });
           }
@@ -90,6 +102,13 @@ const spell: Spell = {
 
   },
   events: {
+    onTooltip: (unit: Unit.IUnit, underworld: Underworld) => {
+      const modifier = unit.modifiers[slowCardId];
+      if (modifier) {
+        // Set tooltip:
+        modifier.tooltip = `${slowCardId} ${modifier.quantity.toFixed(0)}%`;
+      }
+    },
   },
 };
 export default spell;
