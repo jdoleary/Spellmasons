@@ -541,9 +541,6 @@ export function renderRunesMenu(underworld: Underworld) {
                   </div>
                 </div>
               </div>
-              ${constant ? '' : `
-                <div class="stat-lock ${globalThis.player.lockedRunes.find(r => r.key === modifierKey && r.levelIndexUnlocked === undefined) ? 'locked' : ''}" data-key="${modifierKey}" data-index="${index}"></div>
-              `}
             </div>`;
   }
   elRunes.innerHTML = `
