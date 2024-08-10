@@ -10,7 +10,7 @@ import { suffocateCardId } from "./cards/suffocate";
 import seedrandom from "seedrandom";
 import { makeManaTrail } from "./graphics/Particles";
 
-// Adds [quantity] stacks of suffocate to a random enemy on kill
+// Inflicts a random enemy with [quantity] stacks of suffocate on kill
 export const creepingDeathId = 'Creeping Death';
 export default function registerCreepingDeath() {
   registerModifiers(creepingDeathId, {
