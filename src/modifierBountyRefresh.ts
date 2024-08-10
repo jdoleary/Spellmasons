@@ -10,7 +10,7 @@ export const bountyRefreshId = 'Bounty: Refresh';
 export default function registerBountyRefresh() {
   registerModifiers(bountyRefreshId, {
     description: ('rune_bounty_refresh'),
-    costPerUpgrade: 150,
+    costPerUpgrade: 140,
     maxUpgradeCount: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, bountyRefreshId, { isCurse: false, quantity, keepOnDeath: true }, () => {

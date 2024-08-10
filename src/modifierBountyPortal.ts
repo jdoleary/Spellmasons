@@ -11,7 +11,7 @@ export const bountyPortalId = 'Bounty: Portal';
 export default function registerBountyPortal() {
   registerModifiers(bountyPortalId, {
     description: ('rune_bounty_portal'),
-    costPerUpgrade: 320,
+    costPerUpgrade: 300,
     maxUpgradeCount: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, bountyPortalId, { isCurse: false, quantity, keepOnDeath: true }, () => {

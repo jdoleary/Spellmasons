@@ -1,7 +1,6 @@
 import { registerEvents, registerModifiers } from "./cards";
 import { suffocateCardId } from "./cards/suffocate";
 import { getOrInitModifier } from "./cards/util";
-import { healUnit } from "./effects/heal";
 import * as Unit from './entity/Unit';
 import { bountyId } from "./modifierBounty";
 import { bountyHunterId } from "./modifierBountyHunter";
