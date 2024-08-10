@@ -8,12 +8,12 @@ import { makeManaTrail } from "./graphics/Particles";
 import { getColorFromPotion } from "./cards/potion_shatter";
 import { convertToHashColor } from "./graphics/ui/colors";
 
-// Empower potions within cast range each turn
+// Empower the nearest potion by [quantity] each turn
 export const secretIngredientsId = 'Secret Ingredients';
 export default function registerSecretIngredients() {
   registerModifiers(secretIngredientsId, {
     description: 'rune_secret_ingredients',
-    costPerUpgrade: 200,
+    costPerUpgrade: 80,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, secretIngredientsId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, secretIngredientsId);
@@ -24,19 +24,19 @@ export default function registerSecretIngredients() {
     onTurnStart: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       const modifier = unit.modifiers[secretIngredientsId];
       if (modifier && unit.alive) {
-        const potions = getAllPotionsInAttackRange(unit, underworld, prediction);
-        potions.forEach(p => {
-          makeManaTrail(unit, p, underworld, convertToHashColor(getColorFromPotion(p)), '#ff0000', potions.length * modifier.quantity).then(() =>
-            setPower(p, p.power + modifier.quantity)
+        const nearestPotion = getNearestPotion(unit, underworld, prediction);
+        if (nearestPotion) {
+          makeManaTrail(unit, nearestPotion, underworld, convertToHashColor(getColorFromPotion(nearestPotion)), '#ff0000', modifier.quantity).then(() =>
+            setPower(nearestPotion, nearestPotion.power + modifier.quantity)
           );
-        });
+        }
       }
     }
   });
 }
 
-function getAllPotionsInAttackRange(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
+function getNearestPotion(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
   let potions = prediction ? underworld.pickupsPrediction : underworld.pickups;
-  potions = potions.filter(p => p.name.includes("Potion") && distance(unit, p) <= unit.attackRange);
-  return potions;
+  potions = potions.filter(p => p.name.includes("Potion")).sort((a, b) => distance(a, unit) - distance(b, unit));
+  return potions[0];
 }
