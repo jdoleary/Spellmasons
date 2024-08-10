@@ -192,7 +192,7 @@ import registerHeavyImpacts from '../modifierHeavyImpact';
 import registerSecretIngredients from '../modifierSecretIngredients';
 import registerPotionEffectiveness from '../modifierPotionEffectiveness';
 import registerPotionBarrier from '../modifierPotionBarrier';
-import registerDeathFog from '../modifierDeathFog';
+import registerCreepingDeath from '../modifierCreepingDeath';
 import registerPlagueBringer from '../modifierPlagueBringer';
 import registerHeavyToxins from '../modifierHeavyToxins';
 import registerOnKillResurrect from '../modifierOnKillResurrect';
@@ -522,7 +522,7 @@ export function registerCards(overworld: Overworld) {
   registerGoodLooking();
   registerShieldBash();
   registerOnKillMana();
-  registerDeathFog();
+  registerCreepingDeath();
   registerPlagueBringer();
   registerHeavyToxins();
   registerOnKillResurrect();
