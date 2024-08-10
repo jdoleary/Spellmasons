@@ -24,7 +24,7 @@ export default function registerPotionBarrier() {
       const modifier = unit.modifiers[potionBarrierId]
       if (modifier) {
         if (pickup.name.includes("Potion")) {
-          const shieldToAdd = Math.floor(modifier.quantity * pickup.power);
+          const shieldToAdd = Math.floor(modifier.quantity);
           if (shieldToAdd > 0) {
             Unit.addModifier(unit, shieldId, underworld, prediction, shieldToAdd);
           }
