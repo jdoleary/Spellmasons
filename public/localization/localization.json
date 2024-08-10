@@ -591,7 +591,10 @@
         "add pierce": "Add Arrow Pierce",
         "cursify": "Become Curse",
         "spell_cursify": "Designates target's blessings as curses. Does not change the functionality of the blessings.",
-        "click on the spellbook in the toolbar to see the upgrade menu": "Click on the spellbook in the toolbar to see the upgrade menu"
+        "click on the spellbook in the toolbar to see the upgrade menu": "Click on the spellbook in the toolbar to see the upgrade menu",
+        "target disk": "Targeting Disk",
+        "spell_target_ricochet_arrow": "A disk that ricochets once and adds units as targets on collision",
+        "target arrow": "Targeting Arrow"
     },
     {
         "language": "Français",
@@ -1185,7 +1188,10 @@
         "add pierce": "Ajouter Pénétration de flèche",
         "cursify": "Devenir Malédiction",
         "spell_cursify": "Désigne les bénédictions de la cible comme des malédictions. Ne change pas la fonctionnalité des bénédictions.",
-        "click on the spellbook in the toolbar to see the upgrade menu": "Cliquez sur le grimoire dans la barre d'outils pour accéder au menu de mise à niveau."
+        "click on the spellbook in the toolbar to see the upgrade menu": "Cliquez sur le grimoire dans la barre d'outils pour accéder au menu de mise à niveau.",
+        "target disk": "Cible de Disque",
+        "spell_target_ricochet_arrow": "Un disque qui rebondit une fois et ajoute des unités comme cibles lors de la collision.",
+        "target arrow": "Flèche ciblée"
     },
     {
         "language": "italiano",
@@ -1779,7 +1785,10 @@
         "add pierce": "Aggiungi Punte di Freccia",
         "cursify": "Diventa Maledizione",
         "spell_cursify": "Designa le benedizioni del bersaglio come maledizioni. Non cambia la funzionalità delle benedizioni.",
-        "click on the spellbook in the toolbar to see the upgrade menu": "Clicca sul libro degli incantesimi nella barra degli strumenti per vedere il menu di aggiornamento."
+        "click on the spellbook in the toolbar to see the upgrade menu": "Clicca sul libro degli incantesimi nella barra degli strumenti per vedere il menu di aggiornamento.",
+        "target disk": "Disco di mira",
+        "spell_target_ricochet_arrow": "Un disco che rimbalza una volta e aggiunge unità come obiettivi all'impatto.",
+        "target arrow": "Freccia Mirata"
     },
     {
         "language": "Deutsche",
@@ -2373,7 +2382,10 @@
         "add pierce": "Füge Pfeil Durchbohren hinzu",
         "cursify": "Werde Fluch",
         "spell_cursify": "Bezeichnet die Segnungen des Ziels als Flüche. Ändert nicht die Funktionalität der Segnungen.",
-        "click on the spellbook in the toolbar to see the upgrade menu": "Klicke auf das Zauberbuch in der Schnellleiste, um das Upgrade-Menü zu sehen."
+        "click on the spellbook in the toolbar to see the upgrade menu": "Klicke auf das Zauberbuch in der Schnellleiste, um das Upgrade-Menü zu sehen.",
+        "target disk": "Zielfestplatte",
+        "spell_target_ricochet_arrow": "Eine Scheibe, die einmal abprallt und bei Kollision Einheiten als Ziele hinzufügt.",
+        "target arrow": "Zielpfeil"
     },
     {
         "language": "español",
@@ -2967,7 +2979,10 @@
         "add pierce": "Añadir Flecha Perforante",
         "cursify": "Conviértete en Maldición",
         "spell_cursify": "Designa las bendiciones del objetivo como maldiciones. No cambia la funcionalidad de las bendiciones.",
-        "click on the spellbook in the toolbar to see the upgrade menu": "Haz clic en el grimorio en la barra de herramientas para ver el menú de mejoras."
+        "click on the spellbook in the toolbar to see the upgrade menu": "Haz clic en el grimorio en la barra de herramientas para ver el menú de mejoras.",
+        "target disk": "Disco de Apuntado",
+        "spell_target_ricochet_arrow": "Un disco que rebota una vez y añade unidades como objetivos al colisionar.",
+        "target arrow": "Flecha de apuntado"
     },
     {
         "language": "日本",
@@ -3561,7 +3576,10 @@
         "add pierce": "矢の貫通を追加",
         "cursify": "呪いを受ける",
         "spell_cursify": "対象の祝福を呪いとして指定します。祝福の機能には変更はありません。",
-        "click on the spellbook in the toolbar to see the upgrade menu": "ツールバーの呪文書をクリックしてアップグレードメニューを表示してください。"
+        "click on the spellbook in the toolbar to see the upgrade menu": "ツールバーの呪文書をクリックしてアップグレードメニューを表示してください。",
+        "target disk": "ターゲティングディスク",
+        "spell_target_ricochet_arrow": "一度跳ね返り、衝突時にターゲットとしてユニットを追加するディスク。",
+        "target arrow": "標的矢印"
     },
     {
         "language": "Português",
@@ -4155,7 +4173,10 @@
         "add pierce": "Adicionar Flecha Penetrante",
         "cursify": "Tornar-se Maldição",
         "spell_cursify": "Designa as bênçãos do alvo como maldições. Não altera a funcionalidade das bênçãos.",
-        "click on the spellbook in the toolbar to see the upgrade menu": "Clique no grimório na barra de ferramentas para ver o menu de upgrade"
+        "click on the spellbook in the toolbar to see the upgrade menu": "Clique no grimório na barra de ferramentas para ver o menu de upgrade",
+        "target disk": "Disco de Mira",
+        "spell_target_ricochet_arrow": "Um disco que ricocheteia uma vez e adiciona unidades como alvos ao colidir.",
+        "target arrow": "Flecha de Mirar"
     },
     {
         "language": "عربى",
@@ -4749,7 +4770,10 @@
         "add pierce": "أضف سهم الاختراق",
         "cursify": "أصبح لعنة",
         "spell_cursify": "يعتبر بركات الهدف لعنات. لا يغير وظيفة البركات.",
-        "click on the spellbook in the toolbar to see the upgrade menu": "انقر على كتاب التعويذات في شريط الأدوات لرؤية قائمة الترقية"
+        "click on the spellbook in the toolbar to see the upgrade menu": "انقر على كتاب التعويذات في شريط الأدوات لرؤية قائمة الترقية",
+        "target disk": "قرص الاستهداف",
+        "spell_target_ricochet_arrow": "قرص يرتد مرة واحدة ويضيف وحدات كأهداف عند الاصطدام",
+        "target arrow": "سهم الاستهداف"
     },
     {
         "language": "한국어",
@@ -5343,7 +5367,10 @@
         "add pierce": "화살 관통 추가",
         "cursify": "저주가 되다",
         "spell_cursify": "대상의 축복을 저주로 지정합니다. 축복의 기능에는 변화를 주지 않습니다.",
-        "click on the spellbook in the toolbar to see the upgrade menu": "툴바에서 주문서 아이콘을 클릭하여 업그레이드 메뉴를 보세요."
+        "click on the spellbook in the toolbar to see the upgrade menu": "툴바에서 주문서 아이콘을 클릭하여 업그레이드 메뉴를 보세요.",
+        "target disk": "타겟 디스크",
+        "spell_target_ricochet_arrow": "한 번 튕겨서 충돌 시 목표에 단위를 추가하는 디스크",
+        "target arrow": "타겟팅 화살"
     },
     {
         "language": "Русский",
@@ -5937,7 +5964,10 @@
         "add pierce": "Добавить Проникающую Стрелу",
         "cursify": "Стать Проклятием",
         "spell_cursify": "Обращает благословения цели в проклятия. Не меняет функциональность благословений.",
-        "click on the spellbook in the toolbar to see the upgrade menu": "Нажмите на книгу заклинаний в панели инструментов, чтобы открыть меню улучшений."
+        "click on the spellbook in the toolbar to see the upgrade menu": "Нажмите на книгу заклинаний в панели инструментов, чтобы открыть меню улучшений.",
+        "target disk": "Целевой диск",
+        "spell_target_ricochet_arrow": "Диск, который отскакивает раз и добавляет юниты в качестве цели при столкновении.",
+        "target arrow": "Стрела прицеливания"
     },
     {
         "language": "中文(简)",
@@ -6531,7 +6561,10 @@
         "add pierce": "增加箭矢穿透",
         "cursify": "变成诅咒",
         "spell_cursify": "将目标的祝福标记为诅咒。不会改变祝福的功能。",
-        "click on the spellbook in the toolbar to see the upgrade menu": "点击工具栏中的法术书以查看升级菜单"
+        "click on the spellbook in the toolbar to see the upgrade menu": "点击工具栏中的法术书以查看升级菜单",
+        "target disk": "目标盘",
+        "spell_target_ricochet_arrow": "一个会反弹并在碰撞时为目标增加单位的飞碟",
+        "target arrow": "瞄准箭"
     },
     {
         "language": "中文(繁)",
@@ -7125,7 +7158,10 @@
         "add pierce": "添加箭矢穿透",
         "cursify": "成爲詛咒",
         "spell_cursify": "將目標的祝福標記為詛咒。並不改變祝福的功能性。",
-        "click on the spellbook in the toolbar to see the upgrade menu": "點擊工具欄中的魔法書以查看升級菜單"
+        "click on the spellbook in the toolbar to see the upgrade menu": "點擊工具欄中的魔法書以查看升級菜單",
+        "target disk": "目標碟",
+        "spell_target_ricochet_arrow": "一個會反彈一次並在碰撞時增加目標的單位的圓盤",
+        "target arrow": "瞄準箭"
     },
     {
         "language": "Polski",
@@ -7719,7 +7755,10 @@
         "add pierce": "Dodaj Przekłuwającą Strzałę",
         "cursify": "Zostań Klątwą",
         "spell_cursify": "Oznacza błogosławieństwa celu jako klątwy. Nie zmienia funkcjonalności błogosławieństw.",
-        "click on the spellbook in the toolbar to see the upgrade menu": "Kliknij na księgę zaklęć w pasku narzędzi, aby zobaczyć menu ulepszeń."
+        "click on the spellbook in the toolbar to see the upgrade menu": "Kliknij na księgę zaklęć w pasku narzędzi, aby zobaczyć menu ulepszeń.",
+        "target disk": "Celownik Dysku",
+        "spell_target_ricochet_arrow": "Dysk, który odbija się raz i dodaje jednostki jako cele po zderzeniu.",
+        "target arrow": "Strzała celownicza"
     },
     {
         "language": "Dutch",
@@ -8313,6 +8352,9 @@
         "add pierce": "Voeg Pijl Doorsteek toe",
         "cursify": "Word een Vloek",
         "spell_cursify": "Benoemt de zegeningen van het doelwit als vervloekingen. Verandert de functionaliteit van de zegeningen niet.",
-        "click on the spellbook in the toolbar to see the upgrade menu": "Klik op het spellensboek in de werkbalk om het upgrade-menu te zien."
+        "click on the spellbook in the toolbar to see the upgrade menu": "Klik op het spellensboek in de werkbalk om het upgrade-menu te zien.",
+        "target disk": "Doelwiel",
+        "spell_target_ricochet_arrow": "Een schijf die eenmaal terugkaatst en eenheden toevoegt als doelwitten bij botsing.",
+        "target arrow": "Doelgericht Pijl"
     }
 ]
