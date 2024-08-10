@@ -15,10 +15,7 @@ export default function registerBountyHunter() {
         Unit.addEvent(unit, bountyHunterId);
       });
 
-      const unitsWithBounty = getUnitsWithBounty(underworld, prediction);
-      if (unitsWithBounty.length == 0) {
-        placeRandomBounty(unit, underworld, prediction);
-      }
+      placeRandomBounty(unit, underworld, prediction);
     }
   });
   registerEvents(bountyHunterId, {

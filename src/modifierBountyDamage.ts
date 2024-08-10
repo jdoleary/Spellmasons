@@ -10,7 +10,7 @@ export const bountyDamageId = 'Bounty: Extra Damage';
 export default function registerBountyDamage() {
   registerModifiers(bountyDamageId, {
     description: ('rune_bounty_damage'),
-    unitOfMeasure: 'Damage',
+    unitOfMeasure: '% Damage',
     stage: "Amount Multiplier",
     costPerUpgrade: 100,
     quantityPerUpgrade: 100,
