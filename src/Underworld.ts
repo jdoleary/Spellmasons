@@ -1486,12 +1486,13 @@ export default class Underworld {
     // same polygon.  This is a lot of extra data that is repeated.  Optimize if needed
     this.pathingLineSegments = this.pathingPolygons.map(toPolygon2LineSegments).flat();
   }
-  spawnPickup(index: number, coords: Vec2, prediction?: boolean) {
+  spawnPickup(index: number, coords: Vec2, prediction?: boolean): Pickup.IPickup | undefined {
     const pickup = Pickup.pickups[index];
     if (pickup) {
-      Pickup.create({ pos: coords, pickupSource: pickup, logSource: 'spawnPickup' }, this, !!prediction);
+      return Pickup.create({ pos: coords, pickupSource: pickup, logSource: 'spawnPickup' }, this, !!prediction);
     } else {
       console.error('Could not find pickup with index', index);
+      return undefined;
     }
   }
   spawnEnemy(id: string, coords: Vec2, isMiniboss: boolean): Unit.IUnit | undefined {

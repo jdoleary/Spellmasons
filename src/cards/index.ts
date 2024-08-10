@@ -196,6 +196,7 @@ import registerCreepingDeath from '../modifierCreepingDeath';
 import registerPlagueBringer from '../modifierPlagueBringer';
 import registerHeavyToxins from '../modifierHeavyToxins';
 import registerOnKillResurrect from '../modifierOnKillResurrect';
+import registerBountyPotion from '../modifierBountyPotion';
 
 
 export interface Modifiers {
@@ -533,6 +534,7 @@ export function registerCards(overworld: Overworld) {
   registerBountyRestoreStamina();
   registerBountyRestoreMana();
   registerBountyDamage();
+  registerBountyPotion();
 
   registerSecretIngredients();
   registerPotionEffectiveness();

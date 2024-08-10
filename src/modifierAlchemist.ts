@@ -30,15 +30,15 @@ export default function registerAlchemist() {
       if (modifier && unit.alive) {
         const random = seedrandom(`${getUniqueSeedString(underworld)} - ${unit.id}`);
         if (randFloat(0, 100, random) < modifier.quantity) {
-          const coords = findRandomSummonLocation(unit, unit.attackRange / 2, underworld, prediction, random)
+          const coords = findPotionSummonLocation(unit, unit.attackRange / 2, underworld, prediction, random)
           if (coords) {
             const pickupChoice = chooseObjectWithProbability(Pickup.pickups.map((p, index) => {
               return { index, probability: p.name.includes('Potion') ? p.probability : 0 }
             }), random);
 
             if (pickupChoice && pickupChoice.index) {
-              underworld.spawnPickup(pickupChoice.index, coords, prediction);
-              if (!prediction) {
+              const pickup = underworld.spawnPickup(pickupChoice.index, coords, prediction);
+              if (pickup && !prediction) {
                 playSFXKey('spawnPotion');
                 floatingText({ coords, text: alchemistId });
               }
@@ -54,7 +54,7 @@ export default function registerAlchemist() {
   });
 }
 
-export function findRandomSummonLocation(unit: Unit.IUnit, radius: number, underworld: Underworld, prediction: boolean, seed: prng): Vec2 | undefined {
+export function findPotionSummonLocation(unit: Unit.IUnit, radius: number, underworld: Underworld, prediction: boolean, seed: prng): Vec2 | undefined {
   let randomCoord = undefined;
   for (let i = 0; i < 100; i++) {
     // Generate a random angle in radians
