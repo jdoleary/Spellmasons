@@ -25,7 +25,8 @@ export default function registerBountyRestoreStamina() {
       if (modifier) {
         // Only restore stamina if the killed unit has a bounty
         if (killedUnit.modifiers[bountyId]) {
-          unit.stamina = unit.staminaMax;
+          // This should never decrease current stamina
+          unit.stamina = Math.max(unit.stamina, unit.staminaMax);
         }
       }
     }
