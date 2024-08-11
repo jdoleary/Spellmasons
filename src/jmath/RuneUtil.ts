@@ -1,4 +1,5 @@
 import { getElementAtIndexLooped } from "./ArrayUtil";
+import { getLoopableIndex } from "./Polygon2";
 
 type WithKey = { key: string };
 export function presentRunes(allRunes: WithKey[], numOfRunesNeeded: number, startIndex: number, lockedRunes: { key: string, index: number }[]): string[] {
@@ -23,4 +24,17 @@ export function presentRunes(allRunes: WithKey[], numOfRunesNeeded: number, star
     }
     return chosenRunes;
 
+}
+export function incrementPresentedRunesIndex(index: number, incrementBy: number, allRunes: WithKey[], lockedRunes: { key: string, index: number }[]): number {
+    const unnaturallyPresentingLockedRunes = lockedRunes.filter(lr => {
+        const naturalIndex = allRunes.findIndex(ar => ar.key == lr.key);
+        for (let i = index; i < incrementBy; i++) {
+            const indexThatWillPresentNaturally = getLoopableIndex(i, allRunes);
+            if (indexThatWillPresentNaturally == naturalIndex) {
+                return false;
+            }
+        }
+        return true;
+    });
+    return index + incrementBy - unnaturallyPresentingLockedRunes.length;
 }
