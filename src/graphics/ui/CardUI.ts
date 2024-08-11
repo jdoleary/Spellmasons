@@ -5,9 +5,8 @@ import * as config from '../../config';
 import {
   clearSpellEffectProjection, runPredictions,
 } from '../PlanningView';
-import { calculateCost, calculateCostForSingleCard, levelsUntilCardIsEnabled } from '../../cards/cardUtils';
+import { calculateCostForSingleCard, levelsUntilCardIsEnabled } from '../../cards/cardUtils';
 import floatingText from '../FloatingText';
-import { copyForPredictionUnit } from '../../entity/Unit';
 import { NUMBER_OF_TOOLBAR_SLOTS } from '../../config';
 import Underworld from '../../Underworld';
 import { CardCategory, CardRarity, probabilityMap } from '../../types/commonTypes';
@@ -17,10 +16,9 @@ import { Overworld } from '../../Overworld';
 import { resetNotifiedImmune } from '../../cards/immune';
 import { keyDown } from './eventListeners';
 import { chooseBookmark } from '../../views';
-import { chooseOneOfSeeded, getUniqueSeedString, getUniqueSeedStringPerLevel } from '../../jmath/rand';
+import { getUniqueSeedStringPerLevel, shuffle } from '../../jmath/rand';
 import seedrandom from 'seedrandom';
 import { quantityWithUnit } from '../../cards/util';
-import { version } from '../../../package.json';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
@@ -485,7 +483,7 @@ export function renderRunesMenu(underworld: Underworld) {
     } else {
       return [];
     }
-  })
+  });
 
   const constantRunes: string[] = Object.entries(Cards.allModifiers).flatMap(([key, modifier]) => {
     if (modifier.costPerUpgrade && modifier.constant) {
@@ -498,19 +496,15 @@ export function renderRunesMenu(underworld: Underworld) {
   const chosenRunes: string[] = []
   // Remove old unlocked level indexes
   globalThis.player.lockedRunes = globalThis.player.lockedRunes.filter(lr => lr.levelIndexUnlocked === undefined || underworld.levelIndex == lr.levelIndexUnlocked);
+  const shuffledRunes = shuffle([...listOfRemainingRunesToChoose], seedrandom(getUniqueSeedStringPerLevel(underworld, globalThis.player)));
   for (let i = 0; i < config.RUNES_PER_LEVEL; i++) {
     let chosen: string | undefined;
-    // Give a number of attempts to find a non duplicate rune
-    for (let attempt = 0; attempt < 100; attempt++) {
-      const seed = seedrandom(getUniqueSeedStringPerLevel(underworld, globalThis.player) + `-${i}-${attempt}`);
-      // If a rune has been locked in this index, choose it; otherwise choose a seeded random rune
-      const previouslyLockedRune = globalThis.player.lockedRunes.find(lr => lr.index === i);
-      chosen = previouslyLockedRune ? previouslyLockedRune.key : chooseOneOfSeeded(listOfRemainingRunesToChoose, seed)?.key;
-      if (chosen && !chosenRunes.find(cr => cr === chosen)) {
-        // Found a unique rune
-        chosenRunes.push(chosen);
-        break;
-      }
+    // If a rune has been locked in this index, choose it; otherwise choose a seeded random rune
+    const previouslyLockedRune = globalThis.player.lockedRunes.find(lr => lr.index === i);
+    chosen = previouslyLockedRune ? previouslyLockedRune.key : shuffledRunes[i]?.key;
+    if (chosen) {
+      // Found a unique rune
+      chosenRunes.push(chosen);
     }
   }
   globalThis.cheapestAvailableRune = chosenRunes.reduce<number>((cheapest, current) => {
