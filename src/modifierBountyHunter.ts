@@ -1,7 +1,7 @@
 import { registerEvents, registerModifiers } from "./cards";
 import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
-import { bountyColor, getUnitsWithBounty, placeRandomBounty } from "./modifierBounty";
+import { bountyColor, getActiveBounties, placeRandomBounty } from "./modifierBounty";
 import Underworld from './Underworld';
 
 // This modifier should be applied in each other bounty modifier's add function
@@ -29,7 +29,7 @@ export default function registerBountyHunter() {
       const modifier = unit.modifiers[bountyHunterId];
       if (modifier) {
         // Get all units with a bounty
-        const units = getUnitsWithBounty(underworld, prediction);
+        const units = getActiveBounties(unit, underworld, prediction);
         if (units.length > 0) {
           // Draw a line to each
           const graphics = globalThis.selectedUnitGraphics;
