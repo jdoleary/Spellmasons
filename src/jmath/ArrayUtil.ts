@@ -23,3 +23,13 @@ export function vec2ToOneDimentionIndex(pos: Vec2, width: number): number {
     return pos.y * width + pos.x
 
 }
+
+// Will loop past the length of the array when finding an element at a given index
+// e.g. getElementAtIndexLooped([0,1,2,3], 5) == 1
+export function getElementAtIndexLooped<T>(array: T[], index: number): T | undefined {
+    let loopedIndex = index % array.length;
+    if (loopedIndex < 0) {
+        loopedIndex = array.length + loopedIndex;
+    }
+    return array[loopedIndex];
+}
