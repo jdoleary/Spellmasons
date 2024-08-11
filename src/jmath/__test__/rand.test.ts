@@ -79,6 +79,7 @@ describe('shuffle', () => {
         expect(result).toContain(3);
         expect(result).toContain(4);
         expect(result).not.toEqual(input); // Usually not equal due to shuffling
+        expect(result.length).toEqual(input.length);
     });
 
     it('should handle an array of strings', () => {
@@ -89,15 +90,17 @@ describe('shuffle', () => {
         expect(result).toContain('c');
         expect(result).toContain('d');
         expect(result).not.toEqual(input);
+        expect(result.length).toEqual(input.length);
     });
 
     it('should handle an array of objects', () => {
         const input = [{ id: 1 }, { id: 2 }, { id: 3 }];
         // Clone so 
-        const result = shuffle([...input], seedrandom('seedstring'));
+        const result = shuffle([...input], seedrandom('seedstring4'));
         expect(result).toHaveLength(input.length);
         expect(result).toEqual(expect.arrayContaining(input));
         expect(result).not.toEqual(input);
+        expect(result.length).toEqual(input.length);
     });
 
     it('should handle a large array efficiently', () => {
@@ -106,6 +109,7 @@ describe('shuffle', () => {
         expect(result).toHaveLength(input.length);
         expect(result).toEqual(expect.arrayContaining(input));
         expect(result).not.toEqual(input);
+        expect(result.length).toEqual(input.length);
     });
 
     it('should produce the same output given the same seed and input', () => {
@@ -113,13 +117,15 @@ describe('shuffle', () => {
         const firstShuffle = shuffle([...input], seedrandom('same-seed'));
         const secondShuffle = shuffle([...input], seedrandom('same-seed'));
         expect(firstShuffle).toEqual(secondShuffle);
+        expect(firstShuffle.length).toEqual(secondShuffle.length);
     });
 
     it('should produce different outputs with different seeds', () => {
         const input = [1, 2, 3, 4, 5];
         const firstShuffle = shuffle([...input], seedrandom('seed-one'));
-        const secondShuffle = shuffle([...input], seedrandom('seed-two'));
+        const secondShuffle = shuffle([...input], seedrandom('seed-two4'));
         expect(firstShuffle).not.toEqual(secondShuffle);
+        expect(firstShuffle.length).toEqual(secondShuffle.length);
     });
 
 });
