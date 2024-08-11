@@ -262,7 +262,7 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
                 preexistingLockedRune.levelIndexUnlocked = underworld.levelIndex;
               }
             } else {
-              fromPlayer.lockedRunes.push({ index, key });
+              fromPlayer.lockedRunes.push({ index: parseInt(index), key });
             }
             renderRunesMenu(underworld);
           } else {
