@@ -16,9 +16,8 @@ import { Overworld } from '../../Overworld';
 import { resetNotifiedImmune } from '../../cards/immune';
 import { keyDown } from './eventListeners';
 import { chooseBookmark } from '../../views';
-import { getUniqueSeedStringPerLevel, shuffle } from '../../jmath/rand';
-import seedrandom from 'seedrandom';
 import { quantityWithUnit } from '../../cards/util';
+import { presentRunes } from '../../jmath/RuneUtil';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
@@ -477,13 +476,6 @@ export function renderRunesMenu(underworld: Underworld) {
     console.error("Cannot render runesMenu, no globalThis.player");
     return;
   }
-  let listOfRemainingRunesToChoose = Object.entries(Cards.allModifiers).flatMap(([key, modifier]) => {
-    if (modifier.costPerUpgrade && !modifier.constant) {
-      return [{ key, ...modifier }];
-    } else {
-      return [];
-    }
-  });
 
   const constantRunes: string[] = Object.entries(Cards.allModifiers).flatMap(([key, modifier]) => {
     if (modifier.costPerUpgrade && modifier.constant) {
@@ -492,21 +484,9 @@ export function renderRunesMenu(underworld: Underworld) {
       return [];
     }
   });
-  // Start with lockedRunes as chosenRunes so they don't get offered in another place as a duplicate
-  const chosenRunes: string[] = []
-  // Remove old unlocked level indexes
-  globalThis.player.lockedRunes = globalThis.player.lockedRunes.filter(lr => lr.levelIndexUnlocked === undefined || underworld.levelIndex == lr.levelIndexUnlocked);
-  const shuffledRunes = shuffle([...listOfRemainingRunesToChoose], seedrandom(getUniqueSeedStringPerLevel(underworld, globalThis.player)));
-  for (let i = 0; i < config.RUNES_PER_LEVEL; i++) {
-    let chosen: string | undefined;
-    // If a rune has been locked in this index, choose it; otherwise choose a seeded random rune
-    const previouslyLockedRune = globalThis.player.lockedRunes.find(lr => lr.index === i);
-    chosen = previouslyLockedRune ? previouslyLockedRune.key : shuffledRunes[i]?.key;
-    if (chosen) {
-      // Found a unique rune
-      chosenRunes.push(chosen);
-    }
-  }
+  const shuffledRunes = underworld.getShuffledRunesForPlayer(globalThis.player);
+  const chosenRunes = presentRunes(shuffledRunes, config.RUNES_PER_LEVEL, globalThis.player?.runePresentedIndex || 0, globalThis.player.lockedRunes);
+
   globalThis.cheapestAvailableRune = chosenRunes.reduce<number>((cheapest, current) => {
     const modifier = Cards.allModifiers[current]
     if (modifier?.costPerUpgrade && modifier.costPerUpgrade < cheapest) {

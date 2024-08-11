@@ -25,10 +25,10 @@ export function presentRunes(allRunes: WithKey[], numOfRunesNeeded: number, star
     return chosenRunes;
 
 }
-export function incrementPresentedRunesIndex(index: number, incrementBy: number, allRunes: WithKey[], lockedRunes: { key: string, index: number }[]): number {
+export function incrementPresentedRunesIndex(startIndex: number, incrementBy: number, allRunes: WithKey[], lockedRunes: { key: string, index: number }[]): number {
     const unnaturallyPresentingLockedRunes = lockedRunes.filter(lr => {
         const naturalIndex = allRunes.findIndex(ar => ar.key == lr.key);
-        for (let i = index; i < incrementBy; i++) {
+        for (let i = startIndex; i < incrementBy; i++) {
             const indexThatWillPresentNaturally = getLoopableIndex(i, allRunes);
             if (indexThatWillPresentNaturally == naturalIndex) {
                 return false;
@@ -36,5 +36,5 @@ export function incrementPresentedRunesIndex(index: number, incrementBy: number,
         }
         return true;
     });
-    return index + incrementBy - unnaturallyPresentingLockedRunes.length;
+    return startIndex + incrementBy - unnaturallyPresentingLockedRunes.length;
 }

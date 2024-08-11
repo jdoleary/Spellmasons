@@ -107,6 +107,11 @@ export function getUniqueSeedStringPerLevel(underworld: Underworld, player?: IPl
   return `${underworld.seed}-${underworld.levelIndex}-${playerUniqueIdentifier}`;
 }
 
+// Unique across any game instance and any player
+export function getUniqueSeedStringPerPlayer(underworld: Underworld, player?: IPlayer): string {
+  return `${underworld.seed}-${player?.playerId || '0'}`;
+}
+
 // https://bost.ocks.org/mike/shuffle/
 // Mutates array, shuffles to random order
 export function shuffle<T>(array: T[], seedRandomInstance: prng): T[] {
