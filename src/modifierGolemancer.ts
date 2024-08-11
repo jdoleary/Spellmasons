@@ -13,7 +13,7 @@ import { UnitType } from "./types/commonTypes";
 import { makeRisingParticles } from "./graphics/ParticleCollection";
 import { BLOOD_GOLEM_ID } from "./entity/units/bloodGolem";
 
-// Summon up to [quantity] golems each turn
+// Summon up to [quantity] golems each turn and grants the player summon golem spell
 export const golemancerId = 'Golemancer';
 export default function registerGolemancer() {
   registerModifiers(golemancerId, {
