@@ -29,10 +29,10 @@ export default function registerCreepingDeath() {
         if (killedUnit) {
           let units = prediction ? underworld.unitsPrediction : underworld.units;
           // Find a random enemy unit and suffocate it
-          // Unit must be alive, in enemy faction, not a doodad, and not already suffocating
-          units = units.filter(u => u.alive && (u.faction != unit.faction) && (u.unitSubType != UnitSubType.DOODAD) && (u.modifiers[suffocateCardId] == undefined));
+          // Unit must be alive, in enemy faction, and not a doodad
+          units = units.filter(u => u.alive && (u.faction != unit.faction) && (u.unitSubType != UnitSubType.DOODAD));
           if (units.length > 0) {
-            const random = seedrandom(`${getUniqueSeedString(underworld)} - ${unit.id}`);
+            const random = seedrandom(`${getUniqueSeedString(underworld)} - ${killedUnit.id}`);
             const chosenUnit = chooseOneOfSeeded(units, random);
             if (chosenUnit) {
               if (prediction) {
