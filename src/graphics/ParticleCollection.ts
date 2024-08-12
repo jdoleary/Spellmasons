@@ -439,7 +439,7 @@ export function makeRisingHeartParticles(position: Vec2, prediction: boolean, co
       "blendMode": "normal",
       "frequency": 0.1,
       "emitterLifetime": emitterLifetime,
-      "maxParticles": 1000,
+      "maxParticles": 20,
       "pos": {
         "x": 0,
         "y": 0

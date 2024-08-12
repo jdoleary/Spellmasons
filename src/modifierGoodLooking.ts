@@ -6,6 +6,7 @@ import Underworld from './Underworld';
 import { chooseOneOfSeeded, getUniqueSeedString, randInt } from "./jmath/rand";
 import { UnitSubType } from "./types/commonTypes";
 import seedrandom from "seedrandom";
+import { makeRisingHeartParticles } from "./graphics/ParticleCollection";
 
 // Converts [quantity] random non-miniboss units to the player's faction on spawn
 export const goodLookingId = 'Good Looking';
@@ -40,6 +41,7 @@ function convertRandomUnitToMyFaction(unit: Unit.IUnit, underworld: Underworld, 
     const random = seedrandom(`${getUniqueSeedString(underworld)} - ${unit.id}`);
     const chosenUnit = chooseOneOfSeeded(units, random);
     if (chosenUnit) {
+      makeRisingHeartParticles(chosenUnit, prediction);
       Unit.changeFaction(chosenUnit, unit.faction);
     }
   }
