@@ -148,6 +148,7 @@ import registerDamageLimiter from '../modifierDamageLimiter';
 import registerTargetImmune, { targetImmuneId } from '../modifierTargetImmune';
 import registerGrowth from '../modifierGrowth';
 import registerModifierStatUpgrades from '../modifierStatUpgrades';
+import registerReroll from '../modifierReroll';
 import registerDareDevil from '../modifierDareDevil';
 import registerEndlessQuiver from '../modifierEndlessQuiver';
 import registerInexhaustible from '../modifierInexhaustible';
@@ -479,6 +480,7 @@ export function registerCards(overworld: Overworld) {
   registerGrowth();
 
   registerModifierStatUpgrades();
+  registerReroll();
   registerDareDevil();
 
   registerNecromancerRune();

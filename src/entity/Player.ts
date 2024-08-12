@@ -22,6 +22,7 @@ import { setPlayerNameUI } from '../PlayerUtils';
 import { contaminate_id } from '../cards/contaminate';
 import { cameraAutoFollow } from '../graphics/PixiUtils';
 import { allUnits } from './units';
+import { incrementPresentedRunesIndex } from '../jmath/RuneUtil';
 
 const elInGameLobby = document.getElementById('in-game-lobby') as (HTMLElement | undefined);
 const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
@@ -86,7 +87,7 @@ export interface IPlayer {
   stats: Stats;
   cursesChosen: number;
   statPointsUnspent: number;
-  lockedRunes: { index: number, key: string, levelIndexUnlocked?: number }[];
+  lockedRunes: { index: number, key: string, runePresentedIndexWhenLocked?: number }[];
   runePresentedIndex: number;
 }
 export function inPortal(player: IPlayer): boolean {
@@ -582,4 +583,12 @@ export function getFactionsOf(players: { clientConnected: boolean, unit: { facti
   const factions = players.filter(p => p.clientConnected).map(p => p.unit.faction);
   // This removes all duplicate entries from the list
   return [...new Set(factions)];
+}
+export function incrementPresentedRunesForPlayer(player: IPlayer, underworld: Underworld) {
+  // Increment runePresentedIndex for each player so they get new runes presented on the next level:
+  // Remove old unlocked level indexes
+  const shuffledRunes = underworld.getShuffledRunesForPlayer(globalThis.player);
+  player.runePresentedIndex = incrementPresentedRunesIndex(player.runePresentedIndex, config.RUNES_PER_LEVEL, shuffledRunes, player.lockedRunes);
+  player.lockedRunes = player.lockedRunes.filter(lr => lr.runePresentedIndexWhenLocked === undefined || underworld.levelIndex == lr.runePresentedIndexWhenLocked);
+
 }

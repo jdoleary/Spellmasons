@@ -2182,11 +2182,7 @@ export default class Underworld {
       for (let player of this.players) {
         const points = config.STAT_POINTS_PER_LEVEL;
         player.statPointsUnspent += points;
-        // Increment runePresentedIndex for each player so they get new runes presented on the next level:
-        // Remove old unlocked level indexes
-        const shuffledRunes = this.getShuffledRunesForPlayer(globalThis.player);
-        player.runePresentedIndex = incrementPresentedRunesIndex(player.runePresentedIndex, config.RUNES_PER_LEVEL, shuffledRunes, player.lockedRunes);
-        player.lockedRunes = player.lockedRunes.filter(lr => lr.levelIndexUnlocked === undefined || this.levelIndex == lr.levelIndexUnlocked);
+        Player.incrementPresentedRunesForPlayer(player, this);
         if (!tutorialChecklist.spendUpgradePoints.complete) {
           tutorialShowTask('spendUpgradePoints');
         }

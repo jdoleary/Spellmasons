@@ -594,7 +594,8 @@
         "click on the spellbook in the toolbar to see the upgrade menu": "Click on the spellbook in the toolbar to see the upgrade menu",
         "target disk": "Targeting Disk",
         "spell_target_ricochet_arrow": "A disk that ricochets once and adds units as targets on collision",
-        "target arrow": "Targeting Arrow"
+        "target arrow": "Targeting Arrow",
+        "reroll_rune_description": "Show a fresh selection of runes to choose from.  Locked runes will not be changed."
     },
     {
         "language": "Français",
@@ -1191,7 +1192,8 @@
         "click on the spellbook in the toolbar to see the upgrade menu": "Cliquez sur le grimoire dans la barre d'outils pour accéder au menu de mise à niveau.",
         "target disk": "Cible de Disque",
         "spell_target_ricochet_arrow": "Un disque qui rebondit une fois et ajoute des unités comme cibles lors de la collision.",
-        "target arrow": "Flèche ciblée"
+        "target arrow": "Flèche ciblée",
+        "reroll_rune_description": "Montrez une nouvelle sélection de runes à choisir. Les runes verrouillées ne seront pas modifiées."
     },
     {
         "language": "italiano",
@@ -1788,7 +1790,8 @@
         "click on the spellbook in the toolbar to see the upgrade menu": "Clicca sul libro degli incantesimi nella barra degli strumenti per vedere il menu di aggiornamento.",
         "target disk": "Disco di mira",
         "spell_target_ricochet_arrow": "Un disco che rimbalza una volta e aggiunge unità come obiettivi all'impatto.",
-        "target arrow": "Freccia Mirata"
+        "target arrow": "Freccia Mirata",
+        "reroll_rune_description": "Mostra una selezione fresca di rune da scegliere. Le rune bloccate non verranno cambiate."
     },
     {
         "language": "Deutsche",
@@ -2385,7 +2388,8 @@
         "click on the spellbook in the toolbar to see the upgrade menu": "Klicke auf das Zauberbuch in der Schnellleiste, um das Upgrade-Menü zu sehen.",
         "target disk": "Zielfestplatte",
         "spell_target_ricochet_arrow": "Eine Scheibe, die einmal abprallt und bei Kollision Einheiten als Ziele hinzufügt.",
-        "target arrow": "Zielpfeil"
+        "target arrow": "Zielpfeil",
+        "reroll_rune_description": "Zeige eine frische Auswahl an Runen zur Auswahl. Gesperrte Runen werden nicht geändert."
     },
     {
         "language": "español",
@@ -2982,7 +2986,8 @@
         "click on the spellbook in the toolbar to see the upgrade menu": "Haz clic en el grimorio en la barra de herramientas para ver el menú de mejoras.",
         "target disk": "Disco de Apuntado",
         "spell_target_ricochet_arrow": "Un disco que rebota una vez y añade unidades como objetivos al colisionar.",
-        "target arrow": "Flecha de apuntado"
+        "target arrow": "Flecha de apuntado",
+        "reroll_rune_description": "Muestra una nueva selección de runas para elegir. Las runas bloqueadas no serán cambiadas."
     },
     {
         "language": "日本",
@@ -3579,7 +3584,8 @@
         "click on the spellbook in the toolbar to see the upgrade menu": "ツールバーの呪文書をクリックしてアップグレードメニューを表示してください。",
         "target disk": "ターゲティングディスク",
         "spell_target_ricochet_arrow": "一度跳ね返り、衝突時にターゲットとしてユニットを追加するディスク。",
-        "target arrow": "標的矢印"
+        "target arrow": "標的矢印",
+        "reroll_rune_description": "選択する新しいルーンのセットを表示します。ロックされたルーンは変更されません。"
     },
     {
         "language": "Português",
@@ -4176,7 +4182,8 @@
         "click on the spellbook in the toolbar to see the upgrade menu": "Clique no grimório na barra de ferramentas para ver o menu de upgrade",
         "target disk": "Disco de Mira",
         "spell_target_ricochet_arrow": "Um disco que ricocheteia uma vez e adiciona unidades como alvos ao colidir.",
-        "target arrow": "Flecha de Mirar"
+        "target arrow": "Flecha de Mirar",
+        "reroll_rune_description": "Mostre uma nova seleção de runas para escolher. Runas trancadas não serão alteradas."
     },
     {
         "language": "عربى",
@@ -4773,7 +4780,8 @@
         "click on the spellbook in the toolbar to see the upgrade menu": "انقر على كتاب التعويذات في شريط الأدوات لرؤية قائمة الترقية",
         "target disk": "قرص الاستهداف",
         "spell_target_ricochet_arrow": "قرص يرتد مرة واحدة ويضيف وحدات كأهداف عند الاصطدام",
-        "target arrow": "سهم الاستهداف"
+        "target arrow": "سهم الاستهداف",
+        "reroll_rune_description": "اعرض مجموعة جديدة من الرون للاختيار منها. لن تتغير الرون المقفلة."
     },
     {
         "language": "한국어",
@@ -5370,7 +5378,8 @@
         "click on the spellbook in the toolbar to see the upgrade menu": "툴바에서 주문서 아이콘을 클릭하여 업그레이드 메뉴를 보세요.",
         "target disk": "타겟 디스크",
         "spell_target_ricochet_arrow": "한 번 튕겨서 충돌 시 목표에 단위를 추가하는 디스크",
-        "target arrow": "타겟팅 화살"
+        "target arrow": "타겟팅 화살",
+        "reroll_rune_description": "선택할 새로운 룬을 보여주세요. 잠금된 룬은 변경되지 않습니다."
     },
     {
         "language": "Русский",
@@ -5967,7 +5976,8 @@
         "click on the spellbook in the toolbar to see the upgrade menu": "Нажмите на книгу заклинаний в панели инструментов, чтобы открыть меню улучшений.",
         "target disk": "Целевой диск",
         "spell_target_ricochet_arrow": "Диск, который отскакивает раз и добавляет юниты в качестве цели при столкновении.",
-        "target arrow": "Стрела прицеливания"
+        "target arrow": "Стрела прицеливания",
+        "reroll_rune_description": "Покажите свежий выбор рун для выбора. Заблокированные руны не будут изменены."
     },
     {
         "language": "中文(简)",
@@ -6564,7 +6574,8 @@
         "click on the spellbook in the toolbar to see the upgrade menu": "点击工具栏中的法术书以查看升级菜单",
         "target disk": "目标盘",
         "spell_target_ricochet_arrow": "一个会反弹并在碰撞时为目标增加单位的飞碟",
-        "target arrow": "瞄准箭"
+        "target arrow": "瞄准箭",
+        "reroll_rune_description": "显示新的符文供选择。锁定的符文将不会更改。"
     },
     {
         "language": "中文(繁)",
@@ -7161,7 +7172,8 @@
         "click on the spellbook in the toolbar to see the upgrade menu": "點擊工具欄中的魔法書以查看升級菜單",
         "target disk": "目標碟",
         "spell_target_ricochet_arrow": "一個會反彈一次並在碰撞時增加目標的單位的圓盤",
-        "target arrow": "瞄準箭"
+        "target arrow": "瞄準箭",
+        "reroll_rune_description": "顯示可供選擇的新符文。鎖定的符文將不會更改。"
     },
     {
         "language": "Polski",
@@ -7758,7 +7770,8 @@
         "click on the spellbook in the toolbar to see the upgrade menu": "Kliknij na księgę zaklęć w pasku narzędzi, aby zobaczyć menu ulepszeń.",
         "target disk": "Celownik Dysku",
         "spell_target_ricochet_arrow": "Dysk, który odbija się raz i dodaje jednostki jako cele po zderzeniu.",
-        "target arrow": "Strzała celownicza"
+        "target arrow": "Strzała celownicza",
+        "reroll_rune_description": "Pokaż świeży wybór run do wyboru. Zablokowane runy nie będą zmieniane."
     },
     {
         "language": "Dutch",
@@ -8355,6 +8368,7 @@
         "click on the spellbook in the toolbar to see the upgrade menu": "Klik op het spellensboek in de werkbalk om het upgrade-menu te zien.",
         "target disk": "Doelwiel",
         "spell_target_ricochet_arrow": "Een schijf die eenmaal terugkaatst en eenheden toevoegt als doelwitten bij botsing.",
-        "target arrow": "Doelgericht Pijl"
+        "target arrow": "Doelgericht Pijl",
+        "reroll_rune_description": "Toon een verse selectie runen om uit te kiezen. Vergrendelde runen zullen niet worden gewijzigd."
     }
 ]

@@ -2709,3 +2709,8 @@ body.dragging-card .floating-card-holder .empty-slot {
   height: 16px;
   background-size: contain;
 }
+
+/* Override plus button rune icon for reroll rune */
+.stat-row[data-stat="reroll"] .plus-btn {
+  background-image: url('/ui/iconRerollUp.png');
+}

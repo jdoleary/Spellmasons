@@ -253,13 +253,13 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
             const preexistingIndex = fromPlayer.lockedRunes.findIndex(lr => lr.key === key);
             const preexistingLockedRune = fromPlayer.lockedRunes[preexistingIndex];
             if (preexistingLockedRune) {
-              if (preexistingLockedRune.levelIndexUnlocked !== undefined) {
+              if (preexistingLockedRune.runePresentedIndexWhenLocked !== undefined) {
                 // Relock it
-                delete preexistingLockedRune.levelIndexUnlocked;
+                delete preexistingLockedRune.runePresentedIndexWhenLocked;
               } else {
                 // unlocked rune will be removed after the current level.
                 // This ensures that the rune list remains stable when runes are locked and unlocked
-                preexistingLockedRune.levelIndexUnlocked = underworld.levelIndex;
+                preexistingLockedRune.runePresentedIndexWhenLocked = fromPlayer.runePresentedIndex;
               }
             } else {
               fromPlayer.lockedRunes.push({ index: parseInt(index), key });
