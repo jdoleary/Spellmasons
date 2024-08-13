@@ -459,7 +459,7 @@ export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | u
       // Explain blessings once you get a blessings card
       // UNLESS that card is last will because last will is a blessing meant to be
       // cast on enemies
-      if (card.id !== lastWill.id) {
+      if (card.id !== lastWill.lastWillId) {
         explain(EXPLAIN_BLESSINGS);
       }
     }

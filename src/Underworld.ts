@@ -110,7 +110,7 @@ import { manaBarrierId } from './modifierManaBarrier';
 import { modifierBasePierceId } from './modifierBasePierce';
 import { modifierBaseRadiusBoostId } from './modifierBaseRadiusBoost';
 import { bountyHunterId } from './modifierBountyHunter';
-import { bountyId } from './modifierBounty';
+import { bountyId, placeRandomBounty } from './modifierBounty';
 import { heavyImpactsId } from './modifierHeavyImpact';
 import { incrementPresentedRunesIndex } from './jmath/RuneUtil';
 
@@ -1087,26 +1087,26 @@ export default class Underworld {
           }
           let drainPerSecond = timemason.unit.manaMax * config.TIMEMASON_PERCENT_DRAIN / 100;
           // Drain doubles per quantity of rune
-          drainPerSecond *= Math.pow(2, modifier.quantity);
+          drainPerSecond *= Math.pow(2, modifier.quantity - 1);
 
           //@ts-ignore Special logic for timemason, does not need to be persisted
           if (!timemason.manaToDrain) {
             //@ts-ignore Special logic for timemason, does not need to be persisted
             timemason.manaToDrain = deltaTime / 1000 * drainPerSecond;
-          }
-          else {
+          } else {
             //@ts-ignore Special logic for timemason, does not need to be persisted
             timemason.manaToDrain += deltaTime / 1000 * drainPerSecond;
 
             //@ts-ignore Special logic for timemason, does not need to be persisted
             if (timemason.manaToDrain >= 1) {
               //@ts-ignore Special logic for timemason, does not need to be persisted
-              timemason.unit.mana -= Math.floor(timemason.manaToDrain);;
+              timemason.unit.mana -= Math.floor(timemason.manaToDrain);
               //@ts-ignore Special logic for timemason, does not need to be persisted
-              timemason.manaToDrain -= Math.floor(timemason.manaToDrain);;
+              timemason.manaToDrain -= Math.floor(timemason.manaToDrain);
+              timemason.unit.mana = Math.max(0, timemason.unit.mana);
+
               this.syncPlayerPredictionUnitOnly();
               Unit.syncPlayerHealthManaUI(this);
-              //floatingText({ coords: timemason.unit, text: '-1 mana' });
             }
           }
         }
@@ -1483,12 +1483,13 @@ export default class Underworld {
     // same polygon.  This is a lot of extra data that is repeated.  Optimize if needed
     this.pathingLineSegments = this.pathingPolygons.map(toPolygon2LineSegments).flat();
   }
-  spawnPickup(index: number, coords: Vec2, prediction?: boolean) {
+  spawnPickup(index: number, coords: Vec2, prediction?: boolean): Pickup.IPickup | undefined {
     const pickup = Pickup.pickups[index];
     if (pickup) {
-      Pickup.create({ pos: coords, pickupSource: pickup, logSource: 'spawnPickup' }, this, !!prediction);
+      return Pickup.create({ pos: coords, pickupSource: pickup, logSource: 'spawnPickup' }, this, !!prediction);
     } else {
       console.error('Could not find pickup with index', index);
+      return undefined;
     }
   }
   spawnEnemy(id: string, coords: Vec2, isMiniboss: boolean): Unit.IUnit | undefined {
@@ -2147,18 +2148,13 @@ export default class Underworld {
     for (let e of enemies) {
       this.spawnEnemy(e.id, e.coord, e.isMiniboss);
     }
-    // if any players have the bounty hunter modifier, add a bounty to a random unit's head at the start of level
-    // to get a bounty, a unit must be alive, in the enemy faction, not a doodad, and not yet have a bounty
-    if (this.players.some(p => p.unit.modifiers[bountyHunterId])) {
-      let units = this.units;
-      units = units.filter(u => u.alive && (u.faction == Faction.ENEMY) && (u.unitSubType != UnitSubType.DOODAD) && !u.modifiers[bountyId]);
-      if (units.length > 0) {
-        const chosenUnit = chooseOneOfSeeded(units, seedrandom(`${this.seed}-${this.levelIndex}`));
-        if (chosenUnit) {
-          Unit.addModifier(chosenUnit, bountyId, this, false);
-        }
+
+    // each bounty hunter places a bounty on a random unit in an opposing faction
+    this.units.forEach(u => {
+      if (u.modifiers[bountyHunterId]) {
+        placeRandomBounty(u, this, false);
       }
-    }
+    });
 
     // Show text in center of screen for the new level
     queueCenteredFloatingText(

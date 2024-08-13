@@ -1,18 +1,17 @@
 import { registerEvents, registerModifiers } from "./cards";
 import { getOrInitModifier } from "./cards/util";
-import { healUnit } from "./effects/heal";
 import * as Unit from './entity/Unit';
 import { bountyId } from "./modifierBounty";
 import { bountyHunterId } from "./modifierBountyHunter";
 import Underworld from './Underworld';
 
+// Claiming a bounty fully restores stamina
 export const bountyRestoreStaminaId = 'Bounty: Restore Stamina';
 export default function registerBountyRestoreStamina() {
   registerModifiers(bountyRestoreStaminaId, {
     description: ('rune_bounty_restore_stamina'),
-    unitOfMeasure: 'Stamina',
-    costPerUpgrade: 20,
-    quantityPerUpgrade: 100,
+    costPerUpgrade: 80,
+    maxUpgradeCount: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, bountyRestoreStaminaId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addModifier(unit, bountyHunterId, underworld, prediction);
@@ -26,9 +25,8 @@ export default function registerBountyRestoreStamina() {
       if (modifier) {
         // Only restore stamina if the killed unit has a bounty
         if (killedUnit.modifiers[bountyId]) {
-          // Can't restore stamina above max
-          const staminaToMax = unit.staminaMax - unit.stamina;
-          unit.stamina += Math.min(modifier.quantity, Math.max(staminaToMax, 0));
+          // This should never decrease current stamina
+          unit.stamina = Math.max(unit.stamina, unit.staminaMax);
         }
       }
     }

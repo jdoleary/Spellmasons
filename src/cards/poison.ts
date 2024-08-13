@@ -9,6 +9,8 @@ import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import floatingText from '../graphics/FloatingText';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
+import { heavyToxinsId } from '../modifierHeavyToxins';
+import { slowCardId } from './slow';
 
 export const poisonCardId = 'poison';
 const basePoisonStacks = 20;
@@ -96,6 +98,21 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
 
   if (extra && extra.sourceUnitId != undefined) {
     modifier.sourceUnitId = extra.sourceUnitId;
+
+    // If source unit has heavyToxins modifier, it should also inflict slow
+    const units = prediction ? underworld.unitsPrediction : underworld.units;
+    const sourceUnit = units.find(u => u.id == extra.sourceUnitId);
+    if (sourceUnit) {
+      const heavyToxinsModifier = sourceUnit.modifiers[heavyToxinsId];
+      if (heavyToxinsModifier) {
+        // A loop is used because different applications of slow are multiplicative
+        // For each quantity of heavy toxins
+        for (let i = 0; i < heavyToxinsModifier.quantity; i++) {
+          // Inflict a [added-poison-quantity]% slow, capped at 100%
+          Unit.addModifier(unit, slowCardId, underworld, prediction, Math.min(quantity, 100));
+        }
+      }
+    }
   }
 }
 

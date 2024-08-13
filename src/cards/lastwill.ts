@@ -10,23 +10,17 @@ import floatingText from '../graphics/FloatingText';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
-export const id = 'Last Will';
+export const lastWillId = 'Last Will';
 const imageName = 'unknown.png';
 function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number) {
-  getOrInitModifier(unit, id, { isCurse: false, quantity }, () => {
-    Unit.addEvent(unit, id);
+  getOrInitModifier(unit, lastWillId, { isCurse: false, quantity }, () => {
+    Unit.addEvent(unit, lastWillId);
   });
-}
-function remove(unit: IUnit, underworld: Underworld) {
-  if (unit.image) {
-    // reset the scale
-    unit.image.sprite.scale.x = 1.0;
-  }
 }
 
 const spell: Spell = {
   card: {
-    id,
+    id: lastWillId,
     category: CardCategory.Blessings,
     supportQuantity: true,
     manaCost: 15,
@@ -38,9 +32,9 @@ const spell: Spell = {
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       for (let unit of state.targetedUnits.filter(u => u.alive)) {
-        Unit.addModifier(unit, id, underworld, prediction, quantity);
+        Unit.addModifier(unit, lastWillId, underworld, prediction, quantity);
         if (!prediction) {
-          floatingText({ coords: unit, text: `Added ${id}` });
+          floatingText({ coords: unit, text: `Added ${lastWillId}` });
         }
       }
       return state;
@@ -48,7 +42,6 @@ const spell: Spell = {
   },
   modifiers: {
     add,
-    remove,
     subsprite: {
       imageName,
       alpha: 1.0,
@@ -67,7 +60,7 @@ const spell: Spell = {
       // Last Will should not stack for balance reasons
       const quantity = 1;
       // Unique for the unit and for quantity and same across all clients due to turn_number and unit.id
-      const seed = seedrandom(`${underworld.turn_number} -${unit.id} `);
+      const seed = seedrandom(`${underworld.turn_number} - ${unit.id}`);
       for (let i = 0; i < quantity; i++) {
         const coord = underworld.findValidSpawn({ spawnSource: unit, ringLimit: 3, prediction, radius: 32 });
         const choice = chooseObjectWithProbability(Pickup.pickups.map((p, index) => {
@@ -84,14 +77,14 @@ const spell: Spell = {
               // the visuals and the audio of the unit dying
               setTimeout(() => {
                 playSFXKey('spawnPotion');
-                floatingText({ coords: coord, text: id });
-              }, 1300);
+                floatingText({ coords: coord, text: lastWillId });
+              }, 1000);
             }
           } else {
-            console.warn(`Could not find spawn for pickup from ${id} `);
+            console.warn(`Could not find spawn for pickup from ${lastWillId} `);
           }
         } else {
-          console.warn(`Could not choose valid pickup for ${id}`);
+          console.warn(`Could not choose valid pickup for ${lastWillId}`);
 
         }
       }

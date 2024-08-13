@@ -6,6 +6,9 @@ import floatingText from "./graphics/FloatingText";
 import { bountyHunterId } from "./modifierBountyHunter";
 import Underworld from './Underworld';
 import { skyBeam } from "./VisualEffects";
+import { chooseOneOfSeeded, getUniqueSeedString } from "./jmath/rand";
+import { UnitSubType } from "./types/commonTypes";
+import seedrandom from "seedrandom";
 import * as Image from './graphics/Image';
 
 export const bountyId = 'Bounty';
@@ -70,4 +73,32 @@ export default function registerBounty() {
       }
     }
   });
+}
+
+export function placeRandomBounty(bountyHunter: Unit.IUnit, underworld: Underworld, prediction: boolean) {
+  let units = prediction ? underworld.unitsPrediction : underworld.units;
+
+  // Get existing bounty targets
+  const activeBounties = getActiveBounties(bountyHunter, underworld, prediction);
+  // Max bounties = number of bounty hunters on team
+  const maxBounties = units.filter(u => u.faction == bountyHunter.faction && u.modifiers[bountyHunterId]).length;
+  if (activeBounties.length < maxBounties) {
+    // Find a random enemy unit and give it a bounty
+    // Unit must be alive, in enemy faction, not a doodad, and not yet have a bounty
+    units = units.filter(u => u.alive && (u.faction != bountyHunter.faction) && (u.unitSubType != UnitSubType.DOODAD) && !u.modifiers[bountyId] && !u.flaggedForRemoval);
+    if (units.length > 0) {
+      const random = seedrandom(`${getUniqueSeedString(underworld)} - ${bountyHunter.id}`);
+      const chosenUnit = chooseOneOfSeeded(units, random);
+      if (chosenUnit) {
+        Unit.addModifier(chosenUnit, bountyId, underworld, prediction);
+      }
+    }
+  }
+}
+
+export function getActiveBounties(bountyHunter: Unit.IUnit, underworld: Underworld, prediction: boolean) {
+  let units = prediction ? underworld.unitsPrediction : underworld.units;
+  // returns all living bounty targets in enemy faction
+  units = units.filter(u => u.alive && u.faction != bountyHunter.faction && u.modifiers[bountyId] && !u.flaggedForRemoval);
+  return units;
 }

@@ -160,6 +160,8 @@ import registerAffinitySoul from '../modifierAffinitySoul';
 import registerAffinityTargeting from '../modifierAffinityTargeting';
 import registerFarGazerRune from '../modifierFarGazer';
 import registerGamblerRune from '../modifierGambler';
+import registerAlchemist from '../modifierAlchemist';
+import registerGolemancer from '../modifierGolemancer';
 import registerNecromancerRune from '../modifierNecromancer';
 import registerTimemasonRune from '../modifierTimemason';
 import registerWitchRune from '../modifierWitch';
@@ -177,18 +179,27 @@ import registerBasePierce from '../modifierBasePierce';
 import registerBaseRadiusBoost from '../modifierBaseRadiusBoost';
 import registerContaminateSelfOnTeleport from '../modifierContaminateSelfOnTeleport';
 import registerCloneOnSpawn from '../modifierCloneOnSpawn';
+import registerGoodLooking from '../modifierGoodLooking';
 import registerShieldBash from '../modifierShieldBash';
 import registerOnKillMana from '../modifierOnKillMana';
 import registerBounty from '../modifierBounty';
 import registerBountyHunter from '../modifierBountyHunter';
-import registerBountyRestoreHealth from '../modifierBountyRestoreHealth';
+import registerBountyRefresh from '../modifierBountyRefresh';
 import registerBountyRestoreStamina from '../modifierBountyRestoreStamina';
-import registerBountyRestoreMana from '../modifierBountyRestoreMana';
 import registerBountyDamage from '../modifierBountyDamage';
+import registerBountySuffocate from '../modifierBountySuffocate';
+import registerBountyPotion from '../modifierBountyPotion';
+import registerBountyPortal from '../modifierBountyPortal';
+import registerBountyGolem from '../modifierBountyGolem';
 import registerLiquidmancer from '../modifierLiquidmancer';
 import registerHeavyImpacts from '../modifierHeavyImpact';
+import registerSecretIngredients from '../modifierSecretIngredients';
 import registerPotionEffectiveness from '../modifierPotionEffectiveness';
 import registerPotionBarrier from '../modifierPotionBarrier';
+import registerCreepingDeath from '../modifierCreepingDeath';
+import registerPlagueBringer from '../modifierPlagueBringer';
+import registerHeavyToxins from '../modifierHeavyToxins';
+import registerOnKillResurrect from '../modifierOnKillResurrect';
 
 
 export interface Modifiers {
@@ -483,6 +494,8 @@ export function registerCards(overworld: Overworld) {
   registerReroll();
   registerDareDevil();
 
+  registerAlchemist();
+  registerGolemancer();
   registerNecromancerRune();
   registerWitchRune();
   registerEndlessQuiver();
@@ -514,16 +527,25 @@ export function registerCards(overworld: Overworld) {
   registerBaseRadiusBoost();
   registerContaminateSelfOnTeleport();
   registerCloneOnSpawn();
+  registerGoodLooking();
   registerShieldBash();
   registerOnKillMana();
+  registerCreepingDeath();
+  registerPlagueBringer();
+  registerHeavyToxins();
+  registerOnKillResurrect();
 
   registerBounty();
   registerBountyHunter();
-  registerBountyRestoreHealth();
+  registerBountyRefresh();
   registerBountyRestoreStamina();
-  registerBountyRestoreMana();
   registerBountyDamage();
+  registerBountySuffocate();
+  registerBountyPotion();
+  registerBountyPortal();
+  registerBountyGolem();
 
+  registerSecretIngredients();
   registerPotionEffectiveness();
   registerPotionBarrier();
 

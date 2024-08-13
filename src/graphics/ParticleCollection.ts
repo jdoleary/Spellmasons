@@ -6,7 +6,7 @@ import { lerp } from '../jmath/math';
 import { clone, Vec2 } from '../jmath/Vec';
 import * as config from '../config';
 import * as colors from '../graphics/ui/colors';
-import { containerParticlesUnderUnits, createHardCircleParticleTexture, createParticleTexture, logNoTextureWarning, simpleEmitter, wrappedEmitter } from './Particles';
+import { containerParticles, containerParticlesUnderUnits, createHardCircleParticleTexture, createParticleTexture, logNoTextureWarning, simpleEmitter, wrappedEmitter } from './Particles';
 import { bleedInstantKillProportion } from '../cards/bleed';
 import { containerUnits } from './PixiUtils';
 import { IUnit } from '../entity/Unit';
@@ -380,6 +380,79 @@ export function makeBleedParticles(position: Vec2, prediction: boolean, proporti
     }, [texture]);
   simpleEmitter({ x: position.x, y: position.y - config.COLLISION_MESH_RADIUS / 2 }, particleConfig, resolver);
 
+}
+export function makeRisingHeartParticles(position: Vec2, prediction: boolean, color: string = '#ffffff', emitterLifetime = 1.5) {
+  if (prediction || globalThis.headless) {
+    // Don't show if just a prediction
+    return;
+  }
+  if (!globalThis.pixi) {
+    return
+  }
+  const img = new Image();
+  img.src = './images/heart.png';
+  const base = new globalThis.pixi.BaseTexture(img);
+  const texture = new globalThis.pixi.Texture(base);
+  if (!texture) {
+    logNoTextureWarning('makeRisingHeartParticles');
+    return;
+  }
+  const particleConfig =
+    particles.upgradeConfig({
+      autoUpdate: true,
+      "alpha": {
+        "start": 1,
+        "end": 1
+      },
+      "scale": {
+        "start": 0.2,
+        "end": 0.1,
+        "minimumScaleMultiplier": 1
+      },
+      "color": {
+        "start": "#520606",
+        "end": "#e03636"
+      },
+      "speed": {
+        "start": 40,
+        "end": 20,
+        "minimumSpeedMultiplier": 1
+      },
+      "acceleration": {
+        "x": 0,
+        "y": 0
+      },
+      "maxSpeed": 0,
+      "startRotation": {
+        "min": -90,
+        "max": -90
+      },
+      "noRotation": false,
+      "rotationSpeed": {
+        "min": 0,
+        "max": 0
+      },
+      "lifetime": {
+        "min": emitterLifetime,
+        "max": emitterLifetime
+      },
+      "blendMode": "normal",
+      "frequency": 0.1,
+      "emitterLifetime": emitterLifetime,
+      "maxParticles": 20,
+      "pos": {
+        "x": 0,
+        "y": 0
+      },
+      "addAtBack": false,
+      "spawnType": "circle",
+      "spawnCircle": {
+        "x": 0,
+        "y": 0,
+        "r": 32
+      }
+    }, [texture]);
+  return simpleEmitter(position, particleConfig, undefined, containerParticles);
 }
 export function makeRisingParticles(position: Vec2, prediction: boolean, color: string = '#ffffff', emitterLifetime = 0.7) {
   if (prediction || globalThis.headless) {

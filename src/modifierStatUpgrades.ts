@@ -71,7 +71,7 @@ function modifyStatBumpAmount(statBump: number, unitStatKey: "attackRange" | "ma
     case "manaMax": {
       // Timemason gets 2x mana
       if (player.unit.modifiers[runeTimemasonId]) {
-        statBump *= 2;
+        statBump *= Math.pow(2, player.unit.modifiers[runeTimemasonId].quantity);
       }
       break;
     }

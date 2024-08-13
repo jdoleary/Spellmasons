@@ -163,7 +163,7 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
 
         // Bloodmason
         if (caster.unit.modifiers['Bloodmason']) {
-            if (card.id === lastWill.id) {
+            if (card.id === lastWill.lastWillId) {
                 // Just for fun, allow Bloodmason to still cast lastWill at a cost of 50%
                 // of their health.  it's a gamble!
                 cardCost.healthCost = Math.max(1, Math.floor(caster.unit.health / 2));
