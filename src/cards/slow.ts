@@ -72,7 +72,8 @@ const spell: Spell = {
       if (targets.length) {
         await Promise.all([playDefaultSpellAnimation(card, targets, prediction), playDefaultSpellSFX(card, prediction)]);
         for (let unit of targets) {
-          // Each application of slow is multiplicative, so we must add the modifier like this
+          // Each application of slow is multiplicative, so we must add the modifier in a loop
+          // more info: https://github.com/jdoleary/Spellmasons/pull/957#discussion_r1713032273
           for (let i = 0; i < quantity; i++) {
             Unit.addModifier(unit, slowCardId, underworld, prediction, slowPercentage);
           }
