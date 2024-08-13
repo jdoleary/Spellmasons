@@ -148,6 +148,7 @@ import registerDamageLimiter from '../modifierDamageLimiter';
 import registerTargetImmune, { targetImmuneId } from '../modifierTargetImmune';
 import registerGrowth from '../modifierGrowth';
 import registerModifierStatUpgrades from '../modifierStatUpgrades';
+import registerReroll from '../modifierReroll';
 import registerDareDevil from '../modifierDareDevil';
 import registerEndlessQuiver from '../modifierEndlessQuiver';
 import registerInexhaustible from '../modifierInexhaustible';
@@ -202,9 +203,12 @@ import registerOnKillResurrect from '../modifierOnKillResurrect';
 
 
 export interface Modifiers {
-  // modifier sthat are not attached to a spell need an explicit id set
+  // modifiers that are not attached to a spell need an explicit id set
   id?: string;
   subsprite?: Subsprite;
+  // Denotes a rune that is on the left side of the runes menu
+  // cannot be locked, and does not change 
+  constant?: boolean;
   // Controls the order in which a modifier's events trigger
   // relative to other events
   stage?: MODIFIER_STAGE;
@@ -218,7 +222,7 @@ export interface Modifiers {
   /* Quantity must be overridden special in the description so that it can change based on hover / current / next
   state in the Rune purchasing menu */
   unitOfMeasure?: string;
-  description?: string;
+  description?: Localizable;
   // If the modifier may be automatically added to minibosses
   // when the spawn, then the modifier gets a probability
   probability?: number;
@@ -367,7 +371,7 @@ export function registerCards(overworld: Overworld) {
   registerSpell(arrowTriple, overworld);
   registerSpell(arrowMulti, overworld);
   registerSpell(arrowFar, overworld);
-  registerSpell(explosive_arrow, overworld);
+  // registerSpell(explosive_arrow, overworld);
   registerSpell(phantom_arrow, overworld);
   config.IS_ANNIVERSARY_UPDATE_OUT &&
     registerSpell(bolt, overworld);
@@ -487,6 +491,7 @@ export function registerCards(overworld: Overworld) {
   registerGrowth();
 
   registerModifierStatUpgrades();
+  registerReroll();
   registerDareDevil();
 
   registerAlchemist();

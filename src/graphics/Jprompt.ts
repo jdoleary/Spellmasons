@@ -108,7 +108,7 @@ export default async function Jprompt(prompt: PromptArgs): Promise<boolean> {
 globalThis.Jprompt = Jprompt;
 
 async function JtextPrompt(prompt: PromptArgs): Promise<string> {
-    const { text, noBtnText, noBtnKey, yesText, yesKey, yesKeyText = '', imageSrc, portal, forceShow } = prompt;
+    const { gore, text, noBtnText, noBtnKey, yesText, yesKey, yesKeyText = '', imageSrc, portal, forceShow } = prompt;
     if (globalThis.headless) {
         return Promise.resolve('');
     }
@@ -126,6 +126,7 @@ async function JtextPrompt(prompt: PromptArgs): Promise<string> {
 <div class="prompt-inner ${!imageSrc ? 'thin' : ''}">
     <div class="prompt-content">
         ${imageSrc ? `<img src="${imageSrc}"/>` : ''}
+        ${gore && globalThis.noGore ? '' : imageSrc ? `<img src="${imageSrc}" onerror="this.style.display='none';"/>` : ''}
         <div class="text">
             ${globalThis.i18n(text)}
         </div>

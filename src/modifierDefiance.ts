@@ -13,7 +13,7 @@ const maxReductionProportion = 0.5;
 const subspriteImageName = 'spell-effects/shield-red.png';
 export default function registerdefiance() {
   registerModifiers(defianceId, {
-    description: `Each enemy within attack range reduces incoming damage by ${Math.floor(reductionProportion * 100)}%`,
+    description: ['defiance_description', Math.floor(reductionProportion * 100).toString()],
     stage: "Amount Multiplier",
     probability: 100,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
@@ -41,10 +41,14 @@ export default function registerdefiance() {
     onTooltip: (unit: Unit.IUnit, underworld: Underworld) => {
       const modifier = unit.modifiers[defianceId];
       if (modifier) {
-        modifier.tooltip = `${defianceId}: ${Math.floor(getReductionProportion(unit, underworld) * 100)}% ${i18n('Damage Reduction')}`;
+        modifier.tooltip = `${i18n(defianceId)}: ${i18n(['damage_reduced', Math.floor(getReductionProportion(unit, underworld) * 100).toString()])}`;
       }
     },
     onTakeDamage: (unit: Unit.IUnit, amount: number, underworld: Underworld, prediction: boolean, damageDealer?: Unit.IUnit) => {
+      // Do not affect healing
+      if (amount < 0) {
+        return amount;
+      }
       const reductionAmount = getReductionProportion(unit, underworld);
       // No effect if attackRange is 0
       // This is a special handled case for Pacified melee units
@@ -57,7 +61,7 @@ export default function registerdefiance() {
       }
       // Cannot be below 0 (must still be damage, not healing)
       const overriddenAmount = Math.max(0, amount - amount * reductionAmount);
-      floatingText({ coords: unit, text: `${defianceId}: Damage reduced by ${Math.floor(reductionAmount * 100)}%`, prediction });
+      floatingText({ coords: unit, text: `${i18n(defianceId)}: ${i18n(['damage_reduced', Math.floor(reductionAmount * 100).toString()])}`, prediction });
       return overriddenAmount;
     }
   });
@@ -66,7 +70,7 @@ export default function registerdefiance() {
 function getReductionProportion(unit: Unit.IUnit, underworld: Underworld): number {
   // Melee units have to consider maxStamina as part of their range or else this modifier would have virtually no effect
   const range = unit.unitSubType === UnitSubType.MELEE ? unit.staminaMax + unit.attackRange : unit.attackRange;
-  const nearbyEnemies = underworld.units.filter(u => u.faction !== unit.faction && distance(u, unit) <= range);
+  const nearbyEnemies = underworld.units.filter(u => u.faction !== unit.faction && u.alive && distance(u, unit) <= range);
   const reductionAmount = (nearbyEnemies.length * reductionProportion);
   return Math.min(maxReductionProportion, reductionAmount);
 }

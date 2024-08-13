@@ -6,14 +6,14 @@ import floatingText from "./graphics/FloatingText";
 import Underworld from './Underworld';
 
 export const damagelimiterId = 'Damage Limiter';
-const limit = 10;
+const limit = 30;
 const subspriteId = 'spell-effects/damage-limiter';
 function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
   Image.addSubSprite(unit.image, subspriteId);
 }
 export default function registerDamageLimiter() {
   registerModifiers(damagelimiterId, {
-    description: `Each instance of damage taken is capped at ${limit}.`,
+    description: ['damage_limiter_description', limit.toString()],
     stage: "Amount Override",
     probability: 50,
     addModifierVisuals,

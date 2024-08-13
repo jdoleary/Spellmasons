@@ -1070,9 +1070,10 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     },
     {
       label: '⭐ Give 1000 Skill Points',
-      action: () => {
-        if (globalThis.player) {
-          globalThis.player.statPointsUnspent += 1000;
+      action: ({ playerId }: { playerId?: string }) => {
+        const player = overworld.underworld?.players.find(p => p.playerId == playerId)
+        if (player) {
+          player.statPointsUnspent += 1000;
         }
       },
       supportInMultiplayer: true,
@@ -1081,8 +1082,9 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
     },
     ...Object.values(allCards).map(x => ({
       label: `Give card: ${x.id}`,
-      action: () => {
-        if (overworld.underworld) {
+      action: ({ playerId }: { playerId?: string }) => {
+        const player = overworld.underworld?.players.find(p => p.playerId == playerId)
+        if (player && overworld.underworld) {
           Player.addCardToHand(x, player, overworld.underworld);
         }
       },

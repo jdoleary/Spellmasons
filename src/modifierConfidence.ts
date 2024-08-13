@@ -14,7 +14,7 @@ const maxReductionProportion = 0.5;
 const subspriteImageName = 'spell-effects/shield-blue.png';
 export default function registerConfidence() {
   registerModifiers(confidenceId, {
-    description: `Each ally within attack range reduces incoming damage by ${Math.floor(reductionProportion * 100)}%`,
+    description: ['confidence_description', Math.floor(reductionProportion * 100).toString()],
     stage: "Amount Multiplier",
     probability: 100,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
@@ -42,10 +42,14 @@ export default function registerConfidence() {
     onTooltip: (unit: Unit.IUnit, underworld: Underworld) => {
       const modifier = unit.modifiers[confidenceId];
       if (modifier) {
-        modifier.tooltip = `${confidenceId}: ${Math.floor(getReductionProportion(unit, underworld) * 100)}% ${i18n('Damage Reduction')}`;
+        modifier.tooltip = `${i18n(confidenceId)}: ${i18n(['damage_reduced', Math.floor(getReductionProportion(unit, underworld) * 100).toString()])}`;
       }
     },
     onTakeDamage: (unit: Unit.IUnit, amount: number, underworld: Underworld, prediction: boolean, damageDealer?: Unit.IUnit) => {
+      // Do not affect healing
+      if (amount < 0) {
+        return amount;
+      }
       const reductionAmount = getReductionProportion(unit, underworld);
       // No effect if attackRange is 0
       // This is a special handled case for Pacified melee units
@@ -58,7 +62,7 @@ export default function registerConfidence() {
       }
       // Cannot be below 0 (must still be damage, not healing)
       const overriddenAmount = Math.max(0, amount - amount * reductionAmount);
-      floatingText({ coords: unit, text: `${confidenceId}: Damage reduced by ${Math.floor(reductionAmount * 100)}%`, prediction });
+      floatingText({ coords: unit, text: `${i18n(confidenceId)}: ${i18n(['damage_reduced', Math.floor(reductionAmount * 100).toString()])}`, prediction });
       return overriddenAmount;
     }
   });
@@ -67,7 +71,7 @@ export default function registerConfidence() {
 function getReductionProportion(unit: Unit.IUnit, underworld: Underworld): number {
   // Melee units have to consider maxStamina as part of their range or else this modifier would have virtually no effect
   const range = unit.unitSubType === UnitSubType.MELEE ? unit.staminaMax + unit.attackRange : unit.attackRange;
-  const nearbyAllies = underworld.units.filter(u => u.faction == unit.faction && distance(u, unit) <= range)
+  const nearbyAllies = underworld.units.filter(u => u.faction == unit.faction && u.alive && distance(u, unit) <= range)
   const reductionAmount = (nearbyAllies.length * reductionProportion);
   return Math.min(maxReductionProportion, reductionAmount);
 }

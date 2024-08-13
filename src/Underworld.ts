@@ -30,9 +30,7 @@ import {
   containerUnits,
   updateCameraPosition,
   cameraAutoFollow,
-  getCamera,
-  withinCameraBounds,
-  containerPlayerThinking,
+  getCamera, containerPlayerThinking,
   addPixiSprite,
   graphicsBloodSmear,
   containerLiquid,
@@ -43,7 +41,7 @@ import {
   setCameraToMapCenter,
   addPixiTilingSprite,
   cleanBlood,
-  cacheBlood,
+  cacheBlood
 } from './graphics/PixiUtils';
 import floatingText, { queueCenteredFloatingText, warnNoMoreSpellsToChoose } from './graphics/FloatingText';
 import { UnitType, Faction, UnitSubType, GameMode } from './types/commonTypes';
@@ -52,36 +50,35 @@ import * as Vec from "./jmath/Vec";
 import Events from './Events';
 import { UnitSource, allUnits } from './entity/units';
 import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, drawUnitMarker, isOutOfBounds, runPredictions, updatePlanningView } from './graphics/PlanningView';
-import { chooseObjectWithProbability, chooseOneOfSeeded, getUniqueSeedString, prng, randInt, SeedrandomState } from './jmath/rand';
+import { chooseObjectWithProbability, chooseOneOfSeeded, getUniqueSeedStringPerPlayer, prng, randInt, SeedrandomState, shuffle } from './jmath/rand';
 import { calculateCostForSingleCard } from './cards/cardUtils';
-import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle, closestLineSegmentIntersection } from './jmath/lineSegment';
+import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle } from './jmath/lineSegment';
 import { expandPolygon, isVec2InsidePolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './jmath/Polygon2';
 import { calculateDistanceOfVec2Array, findPath } from './jmath/Pathfinding';
 import { keyDown, useMousePosition } from './graphics/ui/eventListeners';
 import Jprompt from './graphics/Jprompt';
-import { collideWithLineSegments, reflectVelocityOnWall, projectVelocityAlongWall, ForceMove, ForceMoveType, isForceMoveProjectile, isForceMoveUnitOrPickup, isVecIntersectingVecWithCustomRadius, moveWithCollisions, handleWallCollision } from './jmath/moveWithCollision';
+import { collideWithLineSegments, reflectVelocityOnWall, ForceMove, isForceMoveProjectile, isForceMoveUnitOrPickup, isVecIntersectingVecWithCustomRadius, moveWithCollisions, handleWallCollision } from './jmath/moveWithCollision';
 import { IHostApp, hostGiveClientGameState } from './network/networkUtil';
 import { withinMeleeRange } from './entity/units/actions/meleeAction';
 import { baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLimits, Limits as Limits, makeFinalTileImages, Map, Tile, toObstacle } from './MapOrganicCave';
 import { Material } from './Conway';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndexPreventWrap } from './jmath/ArrayUtil';
-import { raceTimeout, reportIfTakingTooLong } from './Promise';
+import { raceTimeout } from './Promise';
 import { cleanUpEmitters, containerParticles, containerParticlesUnderUnits, makeManaTrail, updateParticles } from './graphics/Particles';
 import { elInstructions } from './network/networkHandler';
 import type PieClient from '@websocketpie/client';
 import { isOutOfRange, sendPlayerThinkingThrottled } from './PlayerUtils';
 import { DisplayObject, TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
-import { explain, EXPLAIN_PING, isTutorialFirstStepsComplete, isTutorialComplete, tutorialCompleteTask, tutorialChecklist } from './graphics/Explain';
+import { explain, EXPLAIN_PING, isTutorialFirstStepsComplete, isTutorialComplete, tutorialCompleteTask, tutorialChecklist, tutorialShowTask } from './graphics/Explain';
 import { makeRisingParticles, makeScrollDissapearParticles, stopAndDestroyForeverEmitter } from './graphics/ParticleCollection';
 import { ensureAllClientsHaveAssociatedPlayers, Overworld } from './Overworld';
 import { Emitter } from 'jdoleary-fork-pixi-particle-emitter';
 import { golem_unit_id } from './entity/units/golem';
-import { cleanUpPerkList, createPerkElement, generatePerks, tryTriggerPerk, showPerkList, hidePerkList, createCursePerkElement, StatCalamity, generateRandomStatCalamity } from './Perk';
+import { cleanUpPerkList, hidePerkList, createCursePerkElement, StatCalamity, generateRandomStatCalamity } from './Perk';
 import deathmason, { ORIGINAL_DEATHMASON_DEATH, bossmasonUnitId, summonUnitAtPickup } from './entity/units/deathmason';
 import goru, { GORU_UNIT_ID } from './entity/units/goru';
 import { hexToString } from './graphics/ui/colorUtil';
-import { doLiquidEffect } from './inLiquid';
 import { findRandomGroundLocation } from './entity/units/summoner';
 import { isModActive } from './registerMod';
 import { summoningSicknessId } from './modifierSummoningSickness';
@@ -91,7 +88,7 @@ import { BLOOD_GOLEM_ID } from './entity/units/bloodGolem';
 import { MANA_VAMPIRE_ID } from './entity/units/manaVampire';
 import { DARK_PRIEST_ID } from './entity/units/darkPriest';
 import { LAST_LEVEL_INDEX } from './config';
-import { calculateGameDifficulty, unavailableUntilLevelIndexDifficultyModifier } from './Difficulty';
+import { unavailableUntilLevelIndexDifficultyModifier } from './Difficulty';
 import { View } from './View';
 import { skyBeam } from './VisualEffects';
 import { urn_explosive_id } from './entity/units/urn_explosive';
@@ -107,7 +104,6 @@ import { slashCardId } from './cards/slash';
 import { pushId } from './cards/push';
 import { test_endCheckPromises, test_startCheckPromises } from './promiseSpy';
 import { targetCursedId } from './cards/target_curse';
-import { chooseBookmark } from './views';
 import { runeGamblerId } from './modifierGambler';
 import { runeTimemasonId } from './modifierTimemason';
 import { manaBarrierId } from './modifierManaBarrier';
@@ -116,6 +112,7 @@ import { modifierBaseRadiusBoostId } from './modifierBaseRadiusBoost';
 import { bountyHunterId } from './modifierBountyHunter';
 import { bountyId, placeRandomBounty } from './modifierBounty';
 import { heavyImpactsId } from './modifierHeavyImpact';
+import { incrementPresentedRunesIndex } from './jmath/RuneUtil';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -1501,7 +1498,9 @@ export default class Underworld {
       console.error('Unit with id', id, 'does not exist.  Have you registered it in src/units/index.ts?');
       return undefined;
     }
-    if (globalThis.enemyEncountered && !globalThis.enemyEncountered.includes(id)) {
+    // levelIndex >= 2: Don't show enemy introductions while the early tutorial explain popups
+    // are still coming up otherwise it gets crowded
+    if (globalThis.enemyEncountered && !globalThis.enemyEncountered.includes(id) && this.levelIndex >= 2) {
       globalThis.enemyEncountered.push(id);
       storage.set(storage.ENEMY_ENCOUNTERED_STORAGE_KEY, JSON.stringify(globalThis.enemyEncountered));
       // Slightly delay showing enemy introductions so the button doesn't flicker on for a moment before CSS has a chance
@@ -2179,6 +2178,10 @@ export default class Underworld {
       for (let player of this.players) {
         const points = config.STAT_POINTS_PER_LEVEL;
         player.statPointsUnspent += points;
+        Player.incrementPresentedRunesForPlayer(player, this);
+        if (!tutorialChecklist.spendUpgradePoints.complete) {
+          tutorialShowTask('spendUpgradePoints');
+        }
         CardUI.tryShowStatPointsSpendable();
         console.log("Setup: Gave player: [" + player.clientId + "] " + points + " upgrade points for level index: " + levelIndex);
         // If the player hasn't completed first steps, autospend stat points on health
@@ -4233,6 +4236,19 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
   updateAccessibilityOutlines() {
     this.units.forEach(u => Unit.updateAccessibilityOutline(u, false));
+  }
+  // This array remains in the same order for a given player in a given game
+  getShuffledRunesForPlayer(player?: Player.IPlayer): ({ key: string } & Cards.Modifiers)[] {
+    let listOfRemainingRunesToChoose = Object.entries(Cards.allModifiers).flatMap(([key, modifier]) => {
+      if (modifier.costPerUpgrade && !modifier.constant) {
+        return [{ key, ...modifier }];
+      } else {
+        return [];
+      }
+    });
+    const shuffledRunes = shuffle([...listOfRemainingRunesToChoose], seedrandom(getUniqueSeedStringPerPlayer(this, player)));
+    return shuffledRunes;
+
   }
 }
 

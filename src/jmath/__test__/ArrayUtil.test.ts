@@ -1,5 +1,5 @@
 
-import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex, vec2ToOneDimentionIndexPreventWrap } from '../ArrayUtil';
+import { getElementAtIndexLooped, oneDimentionIndexToVec2, vec2ToOneDimentionIndex, vec2ToOneDimentionIndexPreventWrap } from '../ArrayUtil';
 describe('should take an index and a width of a rectangle and return the x,y coordinates of the cell which is at that index if counted from left to right and top to bottom', () => {
     const testPairs = [
         {
@@ -63,3 +63,49 @@ describe('vec2ToOneDimentionIndexPreventWrap should prevent wrapping so that if 
     });
 
 })
+
+
+describe('getElementAtIndexLooped', () => {
+    it('should return the element at the given index', () => {
+        const array = ['a', 'b', 'c', 'd'];
+        expect(getElementAtIndexLooped(array, 2)).toBe('c');
+    });
+
+    it('should return the first element when the index is 0', () => {
+        const array = ['a', 'b', 'c', 'd'];
+        expect(getElementAtIndexLooped(array, 0)).toBe('a');
+    });
+
+    it('should return the last element when the index is one less than the array length', () => {
+        const array = ['a', 'b', 'c', 'd'];
+        expect(getElementAtIndexLooped(array, 3)).toBe('d');
+    });
+
+    it('should return the element at the looped index if the index is greater than the array length', () => {
+        const array = ['a', 'b', 'c', 'd'];
+        expect(getElementAtIndexLooped(array, 4)).toBe('a'); // 4 % 4 = 0
+        expect(getElementAtIndexLooped(array, 5)).toBe('b'); // 5 % 4 = 1
+        expect(getElementAtIndexLooped(array, 7)).toBe('d'); // 7 % 4 = 3
+    });
+
+    it('should return the element at the looped index if the index is negative', () => {
+        const array = ['a', 'b', 'c', 'd'];
+        expect(getElementAtIndexLooped(array, -1)).toBe('d'); // -1 % 4 = 3
+        expect(getElementAtIndexLooped(array, -2)).toBe('c'); // -2 % 4 = 2
+        expect(getElementAtIndexLooped(array, -4)).toBe('a'); // -4 % 4 = 0
+    });
+
+    it('should return undefined if the array is empty', () => {
+        const array: string[] = [];
+        expect(getElementAtIndexLooped(array, 0)).toBeUndefined();
+        expect(getElementAtIndexLooped(array, 5)).toBeUndefined();
+        expect(getElementAtIndexLooped(array, -1)).toBeUndefined();
+    });
+
+    it('should handle an array with a single element', () => {
+        const array = ['a'];
+        expect(getElementAtIndexLooped(array, 0)).toBe('a');
+        expect(getElementAtIndexLooped(array, 1)).toBe('a'); // 1 % 1 = 0
+        expect(getElementAtIndexLooped(array, -1)).toBe('a'); // -1 % 1 = 0
+    });
+});

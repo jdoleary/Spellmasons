@@ -19,7 +19,7 @@ export default function registerStatUpgradeModifiers() {
     registerModifiers(wordMap[stat] || stat, {
       description: `rune_${stat}`,
       costPerUpgrade: 30,
-      // addModifierVisuals,
+      constant: true,
       add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
         const statBumpAmount: Pick<Unit.IUnit, "attackRange" | "manaMax" | "healthMax" | "staminaMax"> = {
           attackRange: 20, //previously 8

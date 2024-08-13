@@ -2,18 +2,11 @@
 ## Regular
 - Run `npm run build_types` to keeps mods types up to date (and push the changes to github)
     - Test mods
-    - NEW: Push types to spellmasons-mods
+    - Push types to spellmasons-mods
 - Test Host Local Server, Host via Docker (run `testDockerImage.sh`)
 - Test loading a saved multiplayer game
 - Test Hotseat multiplayer basics
     - Test one player dying and next player carrying on to next level and make sure they both spawn
-- (Archived) Test liquid
-- (Archived) Test rerolling spells and perks
-- (Archived) Test all pickups in singleplayer
-- (Archived) Test all pickups in multiplayer
-- (Archived) Test allies carrying on the battle
-    - both when you kill yourself and when an enemy kills you
-- (Archived) have a multiplayer game with 1 player, beat a level, then connect with another player
 
 - Test all spells in multiplayer: ~20 minutes
     - and end turn after each to test for desyncs
@@ -22,16 +15,12 @@
 - Test loading an old save file for backwards compatibility
 - Test hosting LAN server from Electron build
 - Test tutorial ALWAYS on electron build
-- Test that F12 works in electron build
 - Test mod thumbnail paths on electron build
 
-- IMPORTANT Test sound effect volume (default) relative to music
-- TODO: Update soundtrack with theme
-- TODO: Check volume of all tracks
 
-- **NEW** Check to make sure modifier images are rendering (may not be because the loop is called too much and it's recreating elements)
+--- 
+## v1.42
 - bounty hunter - test that same bounty unit is chosen in multiplayer
-- Test modifier potion effectiveness with prediction
 
 
 # Release protocal

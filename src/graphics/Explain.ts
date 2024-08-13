@@ -66,8 +66,10 @@ export const EXPLAIN_BLESSINGS = 'Blessings';
 export const EXPLAIN_REMOVE_SPELLS = 'Remove Spells';
 export const EXPLAIN_FORGE_ORDER = 'Spell Forge Order';
 export const EXPLAIN_DEATH = 'Surviving Death';
-export const EXPLAIN_MINI_BOSSES = 'Mini Bosses';
+export const EXPLAIN_MINI_BOSSES = 'miniboss';
 export const EXPLAIN_PING = 'Pinging';
+export const EXPLAIN_BOOKMARKS = 'Bookmarks';
+export const EXPLAIN_UPGRADE_BOOKMARK = 'Upgrade Points';
 interface ExplainData {
   condition?: () => boolean;
   // Returns args to pass into Jprompt
@@ -159,9 +161,20 @@ const explainMap: { [key: string]: ExplainData } = {
       imageSrc: 'images/explain/ping.gif', text: ['explain ping', keyToHumanReadable(globalThis.controlMap.ping)], yesText: 'Cool!'
     })
   },
+  [EXPLAIN_BOOKMARKS]: {
+    prompt: () => ({
+      imageSrc: 'images/explain/bookmarks.gif', text: 'explain bookmarks', yesText: 'Got it!'
+    })
+  },
+  [EXPLAIN_UPGRADE_BOOKMARK]: {
+    prompt: () => ({
+      imageSrc: 'images/explain/skillpoints.gif', text: 'explain upgrade bookmark', yesText: 'Got it!'
+    })
+  },
 }
 globalThis.explainKeys = Object.keys(explainMap);
 export const autoExplains = [
+  EXPLAIN_UPGRADE_BOOKMARK,
   EXPLAIN_ATTENTION_MARKER_MELEE,
   EXPLAIN_MANA_COST,
   EXPLAIN_WALK_ROPE,
@@ -169,7 +182,8 @@ export const autoExplains = [
   EXPLAIN_ATTENTION_MARKER_RANGED,
   EXPLAIN_CAMERA,
   EXPLAIN_REMOVE_SPELLS,
-  EXPLAIN_FORGE_ORDER
+  EXPLAIN_FORGE_ORDER,
+  EXPLAIN_BOOKMARKS,
 ]
 export function autoExplain() {
   // @ts-ignore: This global isn't on the server
@@ -204,6 +218,7 @@ export interface TutorialChecklist {
   castMultipleInOneTurn: TutorialChecklistItem;
   camera: TutorialChecklistItem;
   recenterCamera: TutorialChecklistItem;
+  spendUpgradePoints: TutorialChecklistItem;
 }
 export const tutorialChecklist: TutorialChecklist = {
   spawn: {
@@ -226,6 +241,13 @@ export const tutorialChecklist: TutorialChecklist = {
     text: "Move into the portal to go to the next level",
     nextVisibleTasks: ['camera', 'cast'],
     showExplainPopup: [],
+  },
+  spendUpgradePoints: {
+    visible: false,
+    complete: false,
+    text: "Click on the spellbook in the toolbar to see the upgrade menu",
+    nextVisibleTasks: [],
+    showExplainPopup: [EXPLAIN_UPGRADE_BOOKMARK],
   },
   cast: {
     visible: false,
