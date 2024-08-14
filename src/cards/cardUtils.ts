@@ -1,4 +1,4 @@
-import type { ICard, Modifiers } from ".";
+import { getMaxRuneQuantity, type ICard, type Modifiers } from ".";
 import { type CardUsage, type IPlayer } from "../entity/Player";
 import { Vec2 } from "../jmath/Vec";
 import { raceTimeout } from "../Promise";
@@ -28,6 +28,14 @@ export interface CardCost {
 }
 export function isRune(m?: Modifiers): boolean {
     return !!(m && (m.costPerUpgrade || m.keepBetweenLevels));
+}
+export function isRuneMaxed(m: Modifiers, player?: IPlayer): boolean {
+    if (!player) {
+        return false;
+    }
+    const maxRuneQuantity = getMaxRuneQuantity(m);
+    const playerModifierInstance = m.id ? player.unit.modifiers[m.id] : undefined;
+    return (playerModifierInstance?.quantity || 0) >= maxRuneQuantity;
 }
 // Positive number means card is still disabled
 export function levelsUntilCardIsEnabled(cardId: string, underworld?: Underworld): number {

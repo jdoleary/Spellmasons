@@ -265,6 +265,7 @@ export interface Spell {
   events?: Events;
 }
 export function registerModifiers(id: string, modifiers: Modifiers) {
+  modifiers.id = id;
   allModifiers[id] = modifiers;
   // @ts-ignore: For dev debug viewing modifiers.
   // ts-ignored because it's not declared in global
@@ -484,6 +485,12 @@ export function registerCards(overworld: Overworld) {
   registerSummoningSickness();
   registerCorpseDecay();
   registerPrimedCorpse();
+  registerImmune();
+  registerImpendingDoom();
+  registerSoulShardOwner();
+  registerUndying();
+
+  // Champion (miniboss) modifiers
   registerSlime();
   registerConfidence();
   registerDefiance();
@@ -491,72 +498,66 @@ export function registerCards(overworld: Overworld) {
   registerTargetImmune();
   registerGrowth();
 
+  // Constant Runes
   registerModifierStatUpgrades();
   registerReroll();
-  registerDareDevil();
 
+  // Runes
+  registerDareDevil();
   registerAlchemist();
   registerGolemancer();
   registerNecromancerRune();
   registerWitchRune();
   registerEndlessQuiver();
   registerInexhaustible();
-  registerTimemasonRune();
-  registerFarGazerRune();
-  registerGamblerRune();
-  registerLiquidmancer();
-  registerHeavyImpacts();
+  // registerTimemasonRune();
+  // registerFarGazerRune();
+  // registerGamblerRune();
+  // registerLiquidmancer();
+  // registerHeavyImpacts();
+  // registerAffinityBlessing();
+  // registerAffinityCurse();
+  // registerAffinityDamage();
+  // registerAffinityMovement();
+  // registerAffinitySoul();
+  // registerAffinityTargeting();
+  // registerSelfInvulnerability();
+  // registerArmor();
+  // registerThorns();
+  // registerHealthRegen();
+  // registerShieldRegen();
+  // registerRevitalize();
+  // registerOverheal();
+  // // Temporarily disabled due to https://github.com/jdoleary/Spellmasons/issues/947
+  // // registerManaBarrier();
+  // registerOnHitHealing();
+  // registerOnHitPoison();
+  // registerBasePierce();
+  // registerBaseRadiusBoost();
+  // registerContaminateSelfOnTeleport();
+  // registerCloneOnSpawn();
+  // registerCloneOnTeleport();
+  // registerGoodLooking();
+  // registerShieldBash();
+  // registerOnKillMana();
+  // registerCreepingDeath();
+  // registerPlagueBringer();
+  // registerHeavyToxins();
+  // registerOnKillResurrect();
+  // registerBounty();
+  // registerBountyHunter();
+  // registerBountyRefresh();
+  // registerBountyRestoreStamina();
+  // registerBountyDamage();
+  // registerBountySuffocate();
+  // registerBountyPotion();
+  // registerBountyPortal();
+  // registerBountyGolem();
+  // registerSecretIngredients();
+  // registerPotionEffectiveness();
+  // registerPotionBarrier();
 
-  registerAffinityBlessing();
-  registerAffinityCurse();
-  registerAffinityDamage();
-  registerAffinityMovement();
-  registerAffinitySoul();
-  registerAffinityTargeting();
-
-  registerSelfInvulnerability();
-  registerArmor();
-  registerThorns();
-  registerHealthRegen();
-  registerShieldRegen();
-  registerRevitalize();
-  registerOverheal();
-  // Temporarily disabled due to https://github.com/jdoleary/Spellmasons/issues/947
-  // registerManaBarrier();
-  registerOnHitHealing();
-  registerOnHitPoison();
-  registerBasePierce();
-  registerBaseRadiusBoost();
-  registerContaminateSelfOnTeleport();
-  registerCloneOnSpawn();
-  registerCloneOnTeleport();
-  registerGoodLooking();
-  registerShieldBash();
-  registerOnKillMana();
-  registerCreepingDeath();
-  registerPlagueBringer();
-  registerHeavyToxins();
-  registerOnKillResurrect();
-
-  registerBounty();
-  registerBountyHunter();
-  registerBountyRefresh();
-  registerBountyRestoreStamina();
-  registerBountyDamage();
-  registerBountySuffocate();
-  registerBountyPotion();
-  registerBountyPortal();
-  registerBountyGolem();
-
-  registerSecretIngredients();
-  registerPotionEffectiveness();
-  registerPotionBarrier();
-
-  registerImmune();
-  registerImpendingDoom();
-  registerSoulShardOwner();
-  registerUndying();
-
+  // Misc
   registerUrnIceExplode();
   registerUrnPoisonExplode();
   registerUrnExplosiveExplode();

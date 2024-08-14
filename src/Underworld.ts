@@ -51,7 +51,7 @@ import Events from './Events';
 import { UnitSource, allUnits } from './entity/units';
 import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, drawUnitMarker, isOutOfBounds, runPredictions, updatePlanningView } from './graphics/PlanningView';
 import { chooseObjectWithProbability, chooseOneOfSeeded, getUniqueSeedStringPerPlayer, prng, randInt, SeedrandomState, shuffle } from './jmath/rand';
-import { calculateCostForSingleCard } from './cards/cardUtils';
+import { calculateCostForSingleCard, isRuneMaxed } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle } from './jmath/lineSegment';
 import { expandPolygon, isVec2InsidePolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './jmath/Polygon2';
 import { calculateDistanceOfVec2Array, findPath } from './jmath/Pathfinding';
@@ -4240,7 +4240,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   // This array remains in the same order for a given player in a given game
   getShuffledRunesForPlayer(player?: Player.IPlayer): ({ key: string } & Cards.Modifiers)[] {
     let listOfRemainingRunesToChoose = Object.entries(Cards.allModifiers).flatMap(([key, modifier]) => {
-      if (modifier.costPerUpgrade && !modifier.constant) {
+      if (modifier.costPerUpgrade && !modifier.constant && !isRuneMaxed(modifier, player)) {
         return [{ key, ...modifier }];
       } else {
         return [];
