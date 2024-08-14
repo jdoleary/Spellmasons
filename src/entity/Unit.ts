@@ -14,7 +14,7 @@ import Events from '../Events';
 import makeAllRedShader from '../graphics/shaders/selected';
 import { addLerpable } from '../lerpList';
 import { allUnits } from './units';
-import { allCards, allModifiers, eventsSorter } from '../cards';
+import { allCards, allModifiers, eventsSorter, Modifiers } from '../cards';
 import * as immune from '../cards/immune';
 import { checkIfNeedToClearTooltip, clearSpellEffectProjection, drawUICircle } from '../graphics/PlanningView';
 import floatingText, { queueCenteredFloatingText } from '../graphics/FloatingText';
