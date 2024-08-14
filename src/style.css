@@ -2136,6 +2136,18 @@ body.view-Game.showUpgrades #perkList.visible {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 10%;
+  /* So that the left side of the buttons doesn't overlap with the page
+  art */
+  padding: 0 18px;
+}
+
+@media screen and (max-height: 1024px) {
+
+  /* So that the left side of the buttons doesn't overlap with the page
+  art */
+  .stat-row-holder {
+    padding: 0;
+  }
 }
 
 .stat-row {
