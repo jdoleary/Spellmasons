@@ -17,6 +17,7 @@ import Events, {
   onTeleport,
   onSpawn,
   onPickup,
+  onFullTurnCycle,
 } from '../Events';
 import Subsprites, { Subsprite } from '../Subsprites';
 // Register spells:
@@ -252,6 +253,8 @@ export interface Events {
   onSpawn?: onSpawn;
   onPickup?: onPickup;
   onAgro?: onAgro;
+  // When all factions and turn phases have taken their turn.
+  onFullTurnCycle?: onFullTurnCycle;
   onTurnStart?: onTurnStart;
   onTurnEnd?: onTurnEnd;
   onDrawSelected?: onDrawSelected;
@@ -307,6 +310,9 @@ export function registerEvents(id: string, events: Events) {
   }
   if (events.onPickup) {
     Events.onPickupSource[id] = events.onPickup;
+  }
+  if (events.onFullTurnCycle) {
+    Events.onFullTurnCycleSource[id] = events.onFullTurnCycle;
   }
   if (events.onTurnStart) {
     Events.onTurnStartSource[id] = events.onTurnStart;

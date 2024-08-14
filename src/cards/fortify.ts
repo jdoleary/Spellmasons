@@ -69,9 +69,8 @@ const spell: Spell = {
         modifier.tooltip = `${CalcMult(modifier.quantity)}x ${i18n('Incoming')} ${i18n('Damage')}`;
       }
     },
-    onTurnStart: async (unit, underworld, prediction) => {
-      // Since this blessing only applies for one turn, remove it
-      // on turn start
+    onFullTurnCycle: async (unit, underworld, prediction) => {
+      // Lasts a whole turn cycle
       Unit.removeModifier(unit, id, underworld);
     },
     onTakeDamage: (unit, amount, underworld, prediction, damageDealer) => {

@@ -61,6 +61,11 @@ export type onAgro = {
 };
 const onAgroSource: { [name: string]: onAgro } = {};
 
+export type onFullTurnCycle = {
+  (unit: IUnit, underworld: Underworld, prediction: boolean): Promise<void>;
+};
+const onFullTurnCycleSource: { [name: string]: onFullTurnCycle } = {};
+
 export type onTurnStart = {
   (unit: IUnit, underworld: Underworld, prediction: boolean): Promise<void>;
 };
@@ -88,6 +93,7 @@ export default {
   onDeathSource,
   onMoveSource,
   onPickupSource,
+  onFullTurnCycleSource,
   onTurnStartSource,
   onTurnEndSource,
   onDrawSelectedSource,

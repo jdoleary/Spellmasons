@@ -3088,6 +3088,20 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       return;
     }
 
+    // Trigger full turn cycle events now that it's restarting at the playerTurn
+    if (phase == turn_phase[turn_phase.PlayerTurns]) {
+      for (let unit of this.units) {
+        await Promise.all(unit.events.map(
+          async (eventName) => {
+            const fn = Events.onFullTurnCycleSource[eventName];
+            if (fn) {
+              await fn(unit, this, false);
+            }
+          },
+        ));
+      }
+    }
+
     switch (phase) {
       case turn_phase[turn_phase.PlayerTurns]: {
         if (this.players.every(p => !p.clientConnected)) {
