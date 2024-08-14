@@ -10,6 +10,7 @@ import { findSimilar } from './target_similar';
 import { HasSpace } from '../entity/Type';
 import Underworld from '../Underworld';
 import { clone, lerpVec2, Vec2 } from '../jmath/Vec';
+import { isRune } from './cardUtils';
 
 const merge_id = 'merge';
 const spell: Spell = {
@@ -136,7 +137,7 @@ export function mergeUnits(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], under
   // such as suffocate killing the primary target mid-merge
   for (const { modifier, modifierInstance } of storedModifiers) {
     if (modifier && modifierInstance) {
-      if (modifier?.add) {
+      if (!isRune(modifier) && modifier?.add) {
         modifier.add(target, underworld, prediction, modifierInstance.quantity, modifierInstance);
       }
     } else {
