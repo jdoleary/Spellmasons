@@ -53,6 +53,7 @@ import { ANCIENT_UNIT_ID } from './units/ancient';
 import { IPickup } from './Pickup';
 import seedrandom from 'seedrandom';
 import { slimeId } from '../modifierSlime';
+import { isRune } from '../cards/cardUtils';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -392,13 +393,9 @@ export function addModifier(unit: IUnit, key: string, underworld: Underworld, pr
   }
 }
 
-export function removeModifier(unit: IUnit, key: string, underworld: Underworld) {
-  const modifier = allModifiers[key];
-  if (modifier && (modifier.costPerUpgrade || modifier.keepBetweenLevels)) {
-    // Modifier is a Rune or Persistent and should NOT be removed
-    return;
-  }
-
+// Do not call directly, only invoke via `removeRune` or `removeModifier`
+// which supply checks to ensure it isn't called on the wrong unit
+function _removeModifierInternal(unit: IUnit, modifier: Modifiers, key: string, underworld: Underworld) {
   // Call custom modifier's remove function
   const customRemoveFn = allModifiers[key]?.remove;
   if (customRemoveFn) {
@@ -410,7 +407,25 @@ export function removeModifier(unit: IUnit, key: string, underworld: Underworld)
   }
   unit.events = unit.events.filter((e) => e !== key);
   delete unit.modifiers[key];
-
+}
+export function removeRune(unit: IUnit, key: string, underworld: Underworld) {
+  const modifier = allModifiers[key];
+  if (unit.originalLife) {
+    console.error('Attempting to remove runes from player unit.  Aborted.');
+    return;
+  }
+  // Only removes rune modifiers
+  if (modifier && isRune(modifier)) {
+    _removeModifierInternal(unit, modifier, key, underworld);
+  }
+}
+export function removeModifier(unit: IUnit, key: string, underworld: Underworld) {
+  const modifier = allModifiers[key];
+  if (modifier && isRune(modifier)) {
+    // Modifier is a Rune or Persistent and should NOT be removed
+    return;
+  }
+  _removeModifierInternal(unit, modifier, key, underworld);
 }
 
 export function cleanup(unit: IUnit, maintainPosition?: boolean, forceCleanPlayerUnit?: boolean) {
@@ -510,8 +525,6 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
       // Invoke modifier.addModifierVisuals so that special init logic
       // such as there is in 'poison' will run
       modifier.addModifierVisuals(loadedunit, underworld);
-    } else {
-      console.warn('No init for modifier with key', key)
     }
   }
   // Init filters array so that the filters can be re-added

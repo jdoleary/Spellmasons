@@ -126,6 +126,13 @@ export function doCloneUnit(unit: Unit.IUnit, underworld: Underworld, prediction
     // }
     // Clones don't provide experience when killed
     clone.originalLife = false;
+
+    // Remove runes from clone:
+    // Note: This MUST be invoked after originalLife is set to false
+    // because it has a safeguard that won't operate on the player unit
+    if (clone.modifiers) {
+      Object.keys(clone.modifiers).forEach(modifierKey => Unit.removeRune(clone, modifierKey, underworld));
+    }
     return clone;
   }
   return undefined;
