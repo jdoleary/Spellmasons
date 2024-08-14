@@ -43,6 +43,12 @@ export function test_startCheckPromises(label: string) {
     testPromisesList = [];
 }
 function addToList(t: PromiseTracker) {
+    // test_ignorePromiseTracking should be a useful label to denote why promise tracking is
+    // currently disabled.
+    if (globalThis.test_ignorePromiseTracking) {
+        console.debug('Test: Ignore promise tracking due to', globalThis.test_ignorePromiseTracking);
+        return;
+    }
     if (t.prom) {
         t.prom.test_label = testPromisesLabel;
     } else {

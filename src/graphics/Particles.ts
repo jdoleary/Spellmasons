@@ -289,7 +289,13 @@ export function createParticleTexture() {
     }
     const img = new Image();
     img.src = './images/particle.png';
+    // Must ignore particle tracking because I cannot access the promise
+    // used inside pixi.BaseTexture and I don't want it to errantly report
+    // a hanging promise in my custom castCard promise tracker because this promise
+    // isn't tied to the effect of castCards
+    globalThis.test_ignorePromiseTracking = 'createParticleTexture';
     const base = new globalThis.pixi.BaseTexture(img);
+    globalThis.test_ignorePromiseTracking = undefined;
     return new globalThis.pixi.Texture(base);
 }
 export function createHardCircleParticleTexture() {

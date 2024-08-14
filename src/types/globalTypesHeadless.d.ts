@@ -371,4 +371,10 @@ declare global {
   var _queueLastPredictionMousePos: Vec2 | undefined;
   var lastPredictionMousePos: Vec2 | undefined;
   var cheapestAvailableRune: number | undefined;
+  // Set to a string to stop promises from being tracked
+  // the string should be a label explaining why tracking has stopped
+  // This is used in simpleEmitter for example, because I don't
+  // have a reference to the promise created by the library but
+  // I want it not to be tracked
+  var test_ignorePromiseTracking: string | undefined;
 }
