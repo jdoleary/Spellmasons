@@ -14,7 +14,7 @@ import Events from '../Events';
 import makeAllRedShader from '../graphics/shaders/selected';
 import { addLerpable } from '../lerpList';
 import { allUnits } from './units';
-import { allCards, allModifiers, eventsSorter } from '../cards';
+import { allCards, allModifiers, eventsSorter, Modifiers } from '../cards';
 import * as immune from '../cards/immune';
 import { checkIfNeedToClearTooltip, clearSpellEffectProjection, drawUICircle } from '../graphics/PlanningView';
 import floatingText, { queueCenteredFloatingText } from '../graphics/FloatingText';
@@ -421,11 +421,13 @@ export function removeRune(unit: IUnit, key: string, underworld: Underworld) {
 }
 export function removeModifier(unit: IUnit, key: string, underworld: Underworld) {
   const modifier = allModifiers[key];
-  if (modifier && isRune(modifier)) {
-    // Modifier is a Rune or Persistent and should NOT be removed
-    return;
+  if (modifier) {
+    if (isRune(modifier)) {
+      // Modifier is a Rune or Persistent and should NOT be removed
+      return;
+    }
+    _removeModifierInternal(unit, modifier, key, underworld);
   }
-  _removeModifierInternal(unit, modifier, key, underworld);
 }
 
 export function cleanup(unit: IUnit, maintainPosition?: boolean, forceCleanPlayerUnit?: boolean) {

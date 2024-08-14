@@ -3848,6 +3848,40 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         if (!prediction) {
           test_startCheckPromises(card.id);
         }
+        //// INCUR MANA COST ////
+        // Charge for cost of spell before spell is cast so that
+        // cards like split can trigger even tho they'll reduce your  mana
+        // when executed if self-cast
+        const spellCostTally = {
+          manaCost: 0,
+          healthCost: 0
+        };
+        let cardUsageCountPreCast = 0;
+        if (!args.castForFree) {
+          // This happens after the spell is cast so that fizzle spells can be refunded
+          // Compute spell mana/health cost and add card usage count
+          for (let i = 0; i < quantity; i++) {
+            const timesUsedSoFar = (casterCardUsage[card.id] || 0) + (quantity > 1 ? i * card.expenseScaling : i);
+            const singleCardCost = calculateCostForSingleCard(card, timesUsedSoFar, casterPlayer);
+            spellCostTally.manaCost += singleCardCost.manaCost;
+            spellCostTally.healthCost += singleCardCost.healthCost;
+          }
+          // Apply mana and health cost to caster
+          // Note: it is important that this is done BEFORE a card is actually cast because
+          // the card may affect the caster's mana
+          effectState.casterUnit.mana -= spellCostTally.manaCost;
+
+          // Increment card usage; now that the caster is using the card
+          if (casterCardUsage[cardId] === undefined) {
+            casterCardUsage[cardId] = 0;
+          }
+          cardUsageCountPreCast = casterCardUsage[cardId] || 0;
+          casterCardUsage[cardId] += card.expenseScaling * quantity;
+          if (!prediction) {
+            CardUI.updateCardBadges(this);
+          }
+        }
+        //// end INCUR MANA COST ////
         const cardEffectPromise = card.effect(effectState, card, quantity, this, prediction, outOfRange);
         await this.awaitForceMoves(prediction);
 
@@ -3871,32 +3905,28 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           test_endCheckPromises();
         }
 
-        if (!args.castForFree && !effectState.shouldRefundLastSpell) {
-          // Compute spell mana/health cost and add card usage count
-          // This happens after the spell is cast so that fizzle spells can be refunded
-          const spellCostTally = {
-            manaCost: 0,
-            healthCost: 0
-          };
-          for (let i = 0; i < quantity; i++) {
-            const timesUsedSoFar = (casterCardUsage[card.id] || 0) + (quantity > 1 ? i * card.expenseScaling : i);
-            const singleCardCost = calculateCostForSingleCard(card, timesUsedSoFar, casterPlayer);
-            spellCostTally.manaCost += singleCardCost.manaCost;
-            spellCostTally.healthCost += singleCardCost.healthCost;
-          }
-          // Apply mana and health cost to caster
-          // Note: it is important that this is done BEFORE a card is actually cast because
-          // the card may affect the caster's mana
-          effectState.casterUnit.mana -= spellCostTally.manaCost;
-
-          // Bandaid: Prevent mana from going negative to hide that mana scamming is possible
-          // This is a temporary solution, recent changes that made it possible to use mana gained
-          // from manasteal also broke the mana scamming prevention. so hiding that it's possible will
-          // have to do for now
+        //// REFUNDING ////
+        // Refund mana if necessary 
+        if (effectState.shouldRefundLastSpell) {
+          effectState.casterUnit.mana += spellCostTally.manaCost;
+        }
+        // If refund, reset cardUsageCount
+        if (effectState.shouldRefundLastSpell || args.castForFree) {
+          casterCardUsage[cardId] = cardUsageCountPreCast;
           if (!prediction) {
-            effectState.casterUnit.mana = Math.max(0, effectState.casterUnit.mana);
+            CardUI.updateCardBadges(this);
           }
+        }
+        //// end REFUNDING ////
 
+        //// INCUR HEALTH COST ////
+        // While mana cost occurs BEFORE the cards effect so that 
+        // spells like split and manasteal work well, health cost is taken
+        // after because undoing death is not trivial (modifiers, sprites, etc)
+        // Also, there are few health cost spells so having it charge after
+        // the effect, i think, won't pose the same problem that mana spells
+        // would
+        if (!args.castForFree && !effectState.shouldRefundLastSpell) {
           if (spellCostTally.healthCost !== 0) {
             Unit.takeDamage({
               unit: effectState.casterUnit,
@@ -3905,15 +3935,16 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
               fromVec2: effectState.casterUnit
             }, this, prediction);
           }
+        }
+        //// end INCUR HEALTH COST ////
 
-          // Increment card usage; now that the caster is using the card
-          if (casterCardUsage[cardId] === undefined) {
-            casterCardUsage[cardId] = 0;
-          }
-          casterCardUsage[cardId] += card.expenseScaling * quantity;
-          if (!prediction) {
-            CardUI.updateCardBadges(this);
-          }
+
+        // Bandaid: Prevent mana from going negative to hide that mana scamming is possible
+        // This is a temporary solution, recent changes that made it possible to use mana gained
+        // from manasteal also broke the mana scamming prevention. so hiding that it's possible will
+        // have to do for now
+        if (!prediction) {
+          effectState.casterUnit.mana = Math.max(0, effectState.casterUnit.mana);
         }
       }
       // Reset quantity once a card is cast
