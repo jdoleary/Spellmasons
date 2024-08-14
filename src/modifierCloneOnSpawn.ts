@@ -21,9 +21,7 @@ export default function registerContaminateSelfOnTeleport() {
       const modifier = unit.modifiers[cloneOnSpawnId];
       if (modifier) {
         for (let i = 0; i < modifier.quantity; i++) {
-          const clone = doCloneUnit(unit, underworld, prediction);
-          // No need to transfer cloneOnSpawn
-          clone && Unit.removeModifier(clone, cloneOnSpawnId, underworld)
+          doCloneUnit(unit, underworld, prediction);
         }
         // Wait a bit for floating text otherwise it gets covered by sky beam
         setTimeout(() => {

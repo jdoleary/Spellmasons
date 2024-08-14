@@ -1,6 +1,6 @@
 import Underworld from "../Underworld";
 import { HasSpace } from "../entity/Type";
-import { Vec2 } from "../jmath/Vec";
+import { clone, Vec2 } from "../jmath/Vec";
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
 import * as Obstacle from '../entity/Obstacle';
@@ -25,6 +25,7 @@ export function teleport(object: HasSpace, newLocation: Vec2, underworld: Underw
 
   if (Unit.isUnit(object)) {
     // Moves the unit to location and resets path
+    const originalLocation = clone(object);
     Unit.setLocation(object, newLocation, underworld, prediction);
 
     // Trigger onTeleport events
@@ -32,7 +33,7 @@ export function teleport(object: HasSpace, newLocation: Vec2, underworld: Underw
       if (eventName) {
         const fn = Events.onTeleportSource[eventName];
         if (fn) {
-          fn(object, newLocation, underworld, prediction);
+          fn(object, originalLocation, underworld, prediction);
         }
       }
     }

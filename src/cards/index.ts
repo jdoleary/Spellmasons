@@ -179,6 +179,7 @@ import registerBasePierce from '../modifierBasePierce';
 import registerBaseRadiusBoost from '../modifierBaseRadiusBoost';
 import registerContaminateSelfOnTeleport from '../modifierContaminateSelfOnTeleport';
 import registerCloneOnSpawn from '../modifierCloneOnSpawn';
+import registerCloneOnTeleport from '../modifierCloneOnTeleport';
 import registerGoodLooking from '../modifierGoodLooking';
 import registerShieldBash from '../modifierShieldBash';
 import registerOnKillMana from '../modifierOnKillMana';
@@ -528,6 +529,7 @@ export function registerCards(overworld: Overworld) {
   registerBaseRadiusBoost();
   registerContaminateSelfOnTeleport();
   registerCloneOnSpawn();
+  registerCloneOnTeleport();
   registerGoodLooking();
   registerShieldBash();
   registerOnKillMana();

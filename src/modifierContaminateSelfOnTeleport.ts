@@ -20,11 +20,11 @@ export default function registerContaminateSelfOnTeleport() {
     }
   });
   registerEvents(contaminateselfonteleportId, {
-    onTeleport: (unit: Unit.IUnit, newLocation: Vec2, underworld: Underworld, prediction: boolean) => {
+    onTeleport: (unit: Unit.IUnit, originalLocation: Vec2, underworld: Underworld, prediction: boolean) => {
       const player = underworld.players.find(p => p.unit == unit);
       contaminate(player, unit, 1, unit.modifiers[modifierBaseRadiusBoostId]?.quantity || 0, underworld, prediction);
       if (Object.values(unit.modifiers).filter(x => x.isCurse).length) {
-        floatingText({ coords: newLocation, text: "Contaminate on Teleport", prediction })
+        floatingText({ coords: unit, text: "Contaminate on Teleport", prediction })
       }
     }
   });
