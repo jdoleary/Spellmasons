@@ -521,8 +521,7 @@ export function registerCards(overworld: Overworld) {
   registerShieldRegen();
   registerRevitalize();
   registerOverheal();
-  // Temporarily disabled due to https://github.com/jdoleary/Spellmasons/issues/947
-  // registerManaBarrier();
+  registerManaBarrier();
   registerOnHitHealing();
   registerOnHitPoison();
   registerBasePierce();
