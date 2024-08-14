@@ -1861,11 +1861,12 @@ body.auto-camera #camera-recenter-tip {
 /* caution-box styling modified from https://codepen.io/evilpeacock/pen/OJyyBBP */
 #caution-box-positioner {
   pointer-events: none;
-  z-index: 1;
+  /* Above open inventory */
+  z-index: 3;
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 260px;
+  bottom: 330px;
 
 }
 
