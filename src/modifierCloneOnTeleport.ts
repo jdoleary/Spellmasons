@@ -27,7 +27,7 @@ export default function registerContaminateSelfOnTeleport() {
           // Attempt to put the Changling where the player was, but in the event
           // that the player is swapping that location might now be full
           let coords = originalLocation;
-          if (!underworld.isPointValidSpawn(coords, prediction)) {
+          if (!underworld.isPointValidSpawn(coords, prediction, { allowLiquid: true })) {
             coords = underworld.findValidSpawnInRadius(originalLocation, prediction, seedrandom(`${unit.id}`)) || coords;
           }
 
