@@ -9,6 +9,8 @@ import { IImageAnimated } from '../graphics/Image';
 import { raceTimeout } from '../Promise';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import Underworld from '../Underworld';
+import seedrandom from 'seedrandom';
+import { getUniqueSeedString } from '../jmath/rand';
 
 export const clone_id = 'clone';
 const spell: Spell = {
@@ -65,7 +67,8 @@ export function cloneEffect(addClonesToTargetArray: boolean): EffectFn {
               }
             } else if (Pickup.isPickup(target)) {
               const targetName = target.name;
-              const validSpawnCoords = underworld.findValidSpawn({ spawnSource: cloneSourceCoords, ringLimit: 5, prediction, radius: 15 })
+              const seed = seedrandom(`${getUniqueSeedString(underworld)}-${target.id}`);
+              const validSpawnCoords = underworld.findValidSpawnInRadius(target, prediction, seed, { allowLiquid: target.inLiquid });
               if (validSpawnCoords) {
                 let foundPickup = Pickup.pickups.find((p) => p.name == targetName);
                 if (foundPickup) {
@@ -95,7 +98,8 @@ export function cloneEffect(addClonesToTargetArray: boolean): EffectFn {
   }
 }
 export function doCloneUnit(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, spawnSource?: Vec2): Unit.IUnit | undefined {
-  const validSpawnCoords = underworld.findValidSpawn({ spawnSource: spawnSource || unit, ringLimit: 5, prediction, radius: 10 });
+  const seed = seedrandom(`${getUniqueSeedString(underworld)}-${unit.id}`);
+  const validSpawnCoords = underworld.findValidSpawnInRadius(unit, prediction, seed, { allowLiquid: unit.inLiquid });
   if (validSpawnCoords) {
     const clone = Unit.load(Unit.serialize(unit), underworld, prediction);
     if (!prediction) {

@@ -12,6 +12,8 @@ import { isPickup } from '../entity/Pickup';
 import { suffocateCardId, updateSuffocate } from './suffocate';
 import { addScaleModifier, removeScaleModifier } from '../graphics/Image';
 import floatingText from '../graphics/FloatingText';
+import seedrandom from 'seedrandom';
+import { getUniqueSeedString } from '../jmath/rand';
 
 export const splitId = 'split';
 const splitLimit = 3;
@@ -137,7 +139,8 @@ export function doSplit(target: Vec2 | undefined, underworld: Underworld, quanti
   if (target) {
     // If there is are clone coordinates to clone into
     if (Unit.isUnit(target)) {
-      const validSpawnCoords = underworld.findValidSpawn({ spawnSource: target, ringLimit: 5, prediction, radius: 10 });
+      const seed = seedrandom(`${getUniqueSeedString(underworld)}-${target.id}`);
+      const validSpawnCoords = underworld.findValidSpawnInRadius(target, prediction, seed, { allowLiquid: target.inLiquid });
       if (validSpawnCoords) {
         const clone = Unit.load(Unit.serialize(target), underworld, prediction);
         if (!prediction) {
@@ -176,7 +179,8 @@ export function doSplit(target: Vec2 | undefined, underworld: Underworld, quanti
         return clone;
       }
     } else if (Pickup.isPickup(target)) {
-      const validSpawnCoords = underworld.findValidSpawn({ spawnSource: target, ringLimit: 5, prediction, radius: 20 })
+      const seed = seedrandom(`${getUniqueSeedString(underworld)}-${target.id}`);
+      const validSpawnCoords = underworld.findValidSpawnInRadius(target, prediction, seed, { allowLiquid: target.inLiquid });
       if (validSpawnCoords) {
         // Since there is a safety for loading/creating pickups of duplicate id's
         const serializedPickup = Pickup.serialize(target);

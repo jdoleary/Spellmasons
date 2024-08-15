@@ -7,28 +7,11 @@ import { playDefaultSpellSFX } from './cardUtils';
 import { HasSpace } from '../entity/Type';
 import Underworld from '../Underworld';
 import seedrandom from 'seedrandom';
-import { prng } from '../jmath/rand';
+import { getUniqueSeedString, prng } from '../jmath/rand';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import * as config from '../config';
 import { teleport } from '../effects/teleport';
 
-export function findRandomDisplaceLocation(underworld: Underworld, radius: number, seed: prng, prediction: boolean): Vec2 | undefined {
-  let isValid = false;
-  let randomCoord;
-  const infiniteLoopLimit = 100;
-  let i = 0;
-  do {
-    i++;
-    if (i >= infiniteLoopLimit) {
-      console.warn('Could not find random displace location');
-      return undefined;
-    }
-    randomCoord = underworld.getRandomCoordsWithinBounds(underworld.limits, seed);
-    isValid = underworld.isPointValidSpawn(randomCoord, radius, prediction);
-  } while (!isValid);
-  return randomCoord
-
-}
 const id = 'displace';
 const spell: Spell = {
   card: {
@@ -48,13 +31,13 @@ const spell: Spell = {
 
       // Seed is set before targets are looped so that each target goes to a different location but
       // also so that it is consistent and seeded for a given cast
-      const seed = seedrandom(`${underworld.turn_number}-${state.casterUnit.id}`);
+      const seed = seedrandom(`${getUniqueSeedString(underworld)}`);
       for (let i = 0; i < quantity; i++) {
         // Loop through all targets and batch swap locations
         const swaps: [HasSpace, Vec2][] = [];
         for (let targetObject of targets) {
           if (targetObject) {
-            const displaceLocation = findRandomDisplaceLocation(underworld, config.COLLISION_MESH_RADIUS, seed, prediction);
+            const displaceLocation = underworld.findValidSpawnInWorldBounds(prediction, seed, { allowLiquid: true });
             swaps.push([targetObject, displaceLocation || targetObject]);
           }
         }

@@ -62,7 +62,7 @@ export async function summonerAction(unit: Unit.IUnit, ableToSummon: boolean, un
       let lastPromise = Promise.resolve();
       const seed = seedrandom(`${underworld.seed}-${underworld.turn_number}-${unit.id}`);
       for (let i = 0; i < numberOfSummons; i++) {
-        const coords = findRandomGroundLocation(underworld, unit, seed);
+        const coords = underworld.findValidSpawnInRadius(unit, false, seed, { maxRadius: unit.attackRange, unobstructedPoint: unit });
         if (coords) {
           const enemyIsClose = underworld.units.filter(u => u.faction !== unit.faction).some(u => math.distance(coords, u) <= PLAYER_BASE_ATTACK_RANGE)
           let sourceUnit = farUnit;
@@ -109,7 +109,7 @@ export async function summonerAction(unit: Unit.IUnit, ableToSummon: boolean, un
       // Teleport away
       const seed = seedrandom(`${underworld.turn_number}-${unit.id}`);
       const teleportFromLocation = clone(unit);
-      const teleportToLocation = findRandomGroundLocation(underworld, unit, seed);
+      const teleportToLocation = underworld.findValidSpawnInRadius(unit, false, seed, { maxRadius: unit.attackRange, unobstructedPoint: unit });
       if (teleportToLocation) {
         await new Promise<void>(resolveTeleport => {
           new Promise<void>(resolve => oneOffImage(unit, 'units/summonerMagic', containerUnits, resolve)).then(() => {
@@ -142,54 +142,5 @@ export function summonerGetUnitAttackTargets(unit: Unit.IUnit, underworld: Under
     return [unit];
   }
   return [];
-}
-// Similar to findRandomDisplaceLocation except it omits liquid locations and locations near other units
-// and other pickups
-export function findRandomGroundLocation(underworld: Underworld, summoner: Unit.IUnit, seed: prng): Vec2 | undefined {
-  let isValid = false;
-  let randomCoord;
-  const infiniteLoopLimit = 100;
-  let i = 0;
-  whileloop:
-  do {
-    i++;
-    if (i >= infiniteLoopLimit) {
-      console.warn('Could not find random ground location');
-      return undefined;
-    }
-    // Pick a random coord that is most likely within the unit's attack range
-    randomCoord = jitter(summoner, summoner.attackRange, seed);
-
-    // Omit location that intersects with unit
-    for (let u of underworld.units) {
-      // Note, units' radius is rather small (to allow for crowding), so
-      // this distance calculation uses neither the radius of the pickup
-      // nor the radius of the unit.  It is hard coded to 2 COLLISION_MESH_RADIUSES
-      // which is currently 64 px (or the average size of a unit);
-      if (math.distance(randomCoord, u) < config.COLLISION_MESH_RADIUS) {
-        isValid = false;
-        continue whileloop;
-      }
-    }
-    // Omit location that intersects with pickup
-    for (let pu of underworld.pickups) {
-      // Note, units' radius is rather small (to allow for crowding), so
-      // this distance calculation uses neither the radius of the pickup
-      // nor the radius of the unit.  It is hard coded to 2 COLLISION_MESH_RADIUSES
-      // which is currently 64 px (or the average size of a unit);
-      if (math.distance(randomCoord, pu) < config.COLLISION_MESH_RADIUS) {
-        isValid = false;
-        continue whileloop;
-      }
-    }
-    // Only summon with the summoner's attack range
-    isValid = math.distance(summoner, randomCoord) <= summoner.attackRange
-      // Make sure the summon point is valid
-      && underworld.isPointValidSpawn(randomCoord, config.COLLISION_MESH_RADIUS, false)
-      // Make sure the summon point isn't in water
-      && !isCoordInLiquid(randomCoord, underworld);
-  } while (!isValid);
-  return randomCoord
-
 }
 export default unit;

@@ -540,7 +540,7 @@ export const pickups: IPickupSource[] = [
           // Note: pickup MUST be removed before checking if the point is valid because
           // isPointValidSpawn returns false if it's spawning a unit on a point taken up by a pickup
           // (that isn't flagged for removal)
-          if (underworld.isPointValidSpawn(randomOtherRedPortal, config.COLLISION_MESH_RADIUS / 2, prediction)) {
+          if (underworld.isPointValidSpawn(randomOtherRedPortal, prediction)) {
             teleport(player.unit, randomOtherRedPortal, underworld, prediction);
             playSFXKey('swap');
             skyBeam(pickup);
@@ -580,7 +580,7 @@ export const pickups: IPickupSource[] = [
           // Note: pickup MUST be removed before checking if the point is valid because
           // isPointValidSpawn returns false if it's spawning a unit on a point taken up by a pickup
           // (that isn't flagged for removal)
-          if (underworld.isPointValidSpawn(randomOtherBluePortal, config.COLLISION_MESH_RADIUS / 2, prediction)) {
+          if (underworld.isPointValidSpawn(randomOtherBluePortal, prediction)) {
             teleport(player.unit, randomOtherBluePortal, underworld, prediction);
             skyBeam(pickup);
             skyBeam(randomOtherBluePortal);

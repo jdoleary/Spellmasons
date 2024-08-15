@@ -6,7 +6,7 @@ import * as Upgrade from './Upgrade';
 import { golem_unit_id } from "./entity/units/golem";
 import seedrandom from "seedrandom";
 import { Vec2 } from "./jmath/Vec";
-import { prng, randFloat } from "./jmath/rand";
+import { getUniqueSeedString, prng, randFloat } from "./jmath/rand";
 import { COLLISION_MESH_RADIUS } from "./config";
 import { allUnits } from "./entity/units";
 import { UnitType } from "./types/commonTypes";
@@ -56,11 +56,11 @@ export default function registerGolemancer() {
 function spawnGolems(unit: Unit.IUnit, quantity: number, underworld: Underworld, prediction: boolean) {
   let allyGolems = getLivingAllyGolems(unit, underworld, prediction);
   if (allyGolems.length < quantity) {
-    const seed = seedrandom(`${underworld.seed}-${underworld.turn_number}-${unit.id}`);
+    const seed = seedrandom(`${getUniqueSeedString(underworld)}-${unit.id}`);
     // Summon ally golems up to quantity
     const golemsToSummon = quantity - allyGolems.length;
     for (let i = 0; i < golemsToSummon; i++) {
-      const coords = findRandomSummonLocation(unit, unit.attackRange / 2, underworld, prediction, seed)
+      const coords = underworld.findValidSpawnInRadius(unit, prediction, seed, { allowLiquid: unit.inLiquid });
       if (coords) {
         let sourceUnit = allUnits[golem_unit_id];
         if (sourceUnit) {
@@ -85,7 +85,7 @@ function spawnGolems(unit: Unit.IUnit, quantity: number, underworld: Underworld,
           }
         }
       } else {
-        console.log("Golemancer could not find valid spawn");
+        console.error("Golemancer could not find valid spawn");
       }
     }
   }
@@ -95,31 +95,4 @@ export function getLivingAllyGolems(unit: Unit.IUnit, underworld: Underworld, pr
   let units = prediction ? underworld.unitsPrediction : underworld.units;
   units = units.filter(u => u.alive && u.faction == unit.faction && [golem_unit_id, BLOOD_GOLEM_ID].includes(u.unitSourceId));
   return units;
-}
-
-export function findRandomSummonLocation(unit: Unit.IUnit, radius: number, underworld: Underworld, prediction: boolean, seed: prng): Vec2 | undefined {
-  let randomCoord = undefined;
-  for (let i = 0; i < 100; i++) {
-    // Generate a random angle in radians
-    const angle = randFloat(0, 2 * Math.PI);
-    const distance = randFloat(COLLISION_MESH_RADIUS, radius);
-
-    // Set coordinate based on dir and distance
-    randomCoord = {
-      x: unit.x + (distance * Math.cos(angle)),
-      y: unit.y + (distance * Math.sin(angle)),
-    }
-
-    // If coordinate is a valid spawn, break loop
-    if (underworld.isPointValidSpawn(randomCoord, COLLISION_MESH_RADIUS, prediction)) {
-      break;
-    }
-  }
-
-  if (randomCoord == undefined) {
-    console.warn('Could not find valid spawn point for golem, returning summoner position');
-    randomCoord = { x: unit.x, y: unit.y }
-  }
-
-  return randomCoord;
 }

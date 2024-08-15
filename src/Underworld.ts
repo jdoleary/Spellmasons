@@ -50,7 +50,7 @@ import * as Vec from "./jmath/Vec";
 import Events from './Events';
 import { UnitSource, allUnits } from './entity/units';
 import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, drawUnitMarker, isOutOfBounds, runPredictions, updatePlanningView } from './graphics/PlanningView';
-import { chooseObjectWithProbability, chooseOneOfSeeded, getUniqueSeedStringPerPlayer, prng, randInt, SeedrandomState, shuffle } from './jmath/rand';
+import { chooseObjectWithProbability, chooseOneOfSeeded, getUniqueSeedString, getUniqueSeedStringPerPlayer, prng, randFloat, randInt, SeedrandomState, shuffle } from './jmath/rand';
 import { calculateCostForSingleCard } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle } from './jmath/lineSegment';
 import { expandPolygon, isVec2InsidePolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './jmath/Polygon2';
@@ -79,7 +79,6 @@ import { cleanUpPerkList, hidePerkList, createCursePerkElement, StatCalamity, ge
 import deathmason, { ORIGINAL_DEATHMASON_DEATH, bossmasonUnitId, summonUnitAtPickup } from './entity/units/deathmason';
 import goru, { GORU_UNIT_ID } from './entity/units/goru';
 import { hexToString } from './graphics/ui/colorUtil';
-import { findRandomGroundLocation } from './entity/units/summoner';
 import { isModActive } from './registerMod';
 import { summoningSicknessId } from './modifierSummoningSickness';
 import { ARCHER_ID } from './entity/units/archer';
@@ -1965,51 +1964,146 @@ export default class Underworld {
       }
     }
   }
-  // fromSource is used when the spawn in question is spawning FROM something else,
-  // like clone.  This prevents clones from spawning through walls
-  isPointValidSpawn(spawnPoint: Vec2, radius: number, prediction: boolean, fromSource?: Vec2): boolean {
-    if (fromSource) {
-      // Ensure attemptSpawn isn't through any walls or liquidBounds
-      if ([...this.walls, ...this.liquidBounds].some(wall => lineSegmentIntersection({ p1: fromSource, p2: spawnPoint }, wall))) {
-        return false;
-      }
+  // unobstructedPoint is used when the spawn in question is spawning FROM something else, 
+  // Ex. A summoner. This prevents summoners from creating units through walls
+  isPointValidSpawn(spawnPoint: Vec2, prediction: boolean,
+    extra?: { intersectionRadius?: number, allowLiquid?: boolean, unobstructedPoint?: Vec2, }): boolean {
+    // Setup extra args:
+    let intersectionRadius = extra?.intersectionRadius || config.COLLISION_MESH_RADIUS / 2;
+    let allowLiquid = extra?.allowLiquid || false;
+    let unobstructedPoint = extra?.unobstructedPoint || undefined;
+
+    // SpawnPoint is invalid if...
+    // ...Is out of bounds
+    if (isOutOfBounds(spawnPoint, this)) {
+      return false;
     }
-    // Ensure spawnPoint doesn't intersect any walls with radius:
-    if ([...this.walls, ...this.liquidBounds].some(wall => {
+
+    // ...Is in a wall
+    if (this.isCoordOnWallTile(spawnPoint)) {
+      return false;
+    }
+    // ...Is intersecting with a wall
+    if ([...this.walls].some(wall => {
       const rightAngleIntersection = findWherePointIntersectLineSegmentAtRightAngle(spawnPoint, wall);
-      return rightAngleIntersection && math.distance(rightAngleIntersection, spawnPoint) <= radius;
+      return rightAngleIntersection && math.distance(rightAngleIntersection, spawnPoint) < intersectionRadius;
     })) {
       return false;
     }
+
+    // Prevents spawning in liquid
+    if (!allowLiquid) {
+      // ...Is in liquid
+      if (Obstacle.isCoordInLiquid(spawnPoint, this)) {
+        return false;
+      }
+      // ...Is intersecting with liquid
+      if ([...this.liquidBounds].some(wall => {
+        const rightAngleIntersection = findWherePointIntersectLineSegmentAtRightAngle(spawnPoint, wall);
+        return rightAngleIntersection && math.distance(rightAngleIntersection, spawnPoint) < intersectionRadius;
+      })) {
+        return false;
+      }
+    }
+
+    // Prevents units from spawning directly on top of eachother
     // Ensure spawnPoint doesn't share coordinates with any other entity
-    // (This prevents units from spawning directly on top of each other)
     const entities = this.getPotentialTargets(prediction);
     if (entities.some(entity => Vec.equal(Vec.round(entity), Vec.round(spawnPoint)))) {
       return false;
     }
-    // Ensure spawnPoint isn't out of bounds
-    if (this.isCoordOnWallTile(spawnPoint) || isOutOfBounds(spawnPoint, this)) {
-      return false;
-    }
-    return true;
 
-  }
-  // ringLimit limits how far away from the spawnSource it will check for valid spawn locations
-  // same as below "findValidSpanws", but shortcircuits at the first valid spawn found and returns that
-  findValidSpawn({ spawnSource, ringLimit, radius = config.COLLISION_MESH_RADIUS / 4, prediction }: { spawnSource: Vec2, ringLimit: number, radius?: number, prediction: boolean }): Vec2 | undefined {
-    if (isNaN(spawnSource.x) || isNaN(spawnSource.y)) {
-      console.error('Attempted to findValidSpawn but spawnSource was NaN');
-      return undefined;
-    }
-    const honeycombRings = ringLimit;
-    for (let s of math.honeycombGenerator(radius, spawnSource, honeycombRings)) {
-      const attemptSpawn = { ...s, radius: config.COLLISION_MESH_RADIUS };
-      if (this.isPointValidSpawn(attemptSpawn, config.COLLISION_MESH_RADIUS, prediction, spawnSource)) {
-        return attemptSpawn
+    // If an unobstructedPoint is passed, the SpawnPoint must be connected to it,
+    // meaning the two points cannot be separated by a wall or liquid.
+    // Ex. This can be used to prevent a summoner from summoning over a wall
+    if (unobstructedPoint) {
+      // Ensure spawnPoint isn't through any walls or liquidBounds
+      if ([...this.walls, ...this.liquidBounds].some(wall => lineSegmentIntersection({ p1: unobstructedPoint, p2: spawnPoint }, wall))) {
+        return false;
       }
     }
-    return undefined;
+
+    return true;
   }
+
+  findValidSpawnInWorldBounds(prediction: boolean, seed: prng,
+    extra?: { allowLiquid?: boolean, unobstructedPoint?: Vec2 }): Vec2 | undefined {
+    // Setup extra args:
+    let allowLiquid = extra?.allowLiquid || false;
+    let unobstructedPoint = extra?.unobstructedPoint || undefined;
+
+    let spawnPoint = undefined;
+    for (let i = 0; i < 100; i++) {
+      // Get random coords within the bounding box of the map
+      spawnPoint = this.getRandomCoordsWithinBounds(this.limits, seed);
+
+      // If spawnPoint is valid, break the loop
+      if (this.isPointValidSpawn(spawnPoint, prediction, { allowLiquid, unobstructedPoint })) {
+        break;
+      }
+
+      // spawnPoint was invalid, set to undefined and continue loop
+      spawnPoint = undefined;
+    }
+
+    if (spawnPoint == undefined) {
+      console.error('Could not find valid spawn point in world bounds');
+    }
+
+    return spawnPoint;
+  }
+
+  findValidSpawnInRadius(center: Vec2, prediction: boolean, seed: prng,
+    extra?: { maxRadius?: number, minRadius?: number, allowLiquid?: boolean, unobstructedPoint?: Vec2 }): Vec2 | undefined {
+    // Setup extra args:
+    let maxRadius = extra?.maxRadius || 100;
+    let minRadius = extra?.minRadius || config.COLLISION_MESH_RADIUS;
+    let allowLiquid = extra?.allowLiquid || false;
+    let unobstructedPoint = extra?.unobstructedPoint || undefined;
+
+    let spawnPoint = undefined;
+    for (let i = 0; i < 100; i++) {
+      // Generate a random angle in radians
+      const angle = randFloat(0, 2 * Math.PI, seed);
+      const distance = randFloat(minRadius, maxRadius, seed);
+
+      // Set coordinate based on dir and distance
+      spawnPoint = {
+        x: center.x + (distance * Math.cos(angle)),
+        y: center.y + (distance * Math.sin(angle)),
+      }
+
+      // If spawnPoint is valid, break the loop
+      if (this.isPointValidSpawn(spawnPoint, prediction, { allowLiquid, unobstructedPoint })) {
+        break;
+      }
+
+      // spawnPoint was invalid, set to undefined and continue loop
+      spawnPoint = undefined;
+    }
+
+    if (spawnPoint == undefined) {
+      console.error('Could not find valid spawn point in radius');
+    }
+
+    return spawnPoint;
+  }
+  // ringLimit limits how far away from the spawnSource it will check for valid spawn locations
+  // same as below "findValidSpawns", but shortcircuits at the first valid spawn found and returns that
+  // findValidSpawn({ spawnSource, ringLimit, radius = config.COLLISION_MESH_RADIUS / 4, prediction }: { spawnSource: Vec2, ringLimit: number, radius?: number, prediction: boolean }): Vec2 | undefined {
+  //   if (isNaN(spawnSource.x) || isNaN(spawnSource.y)) {
+  //     console.error('Attempted to findValidSpawn but spawnSource was NaN');
+  //     return undefined;
+  //   }
+  //   const honeycombRings = ringLimit;
+  //   for (let s of math.honeycombGenerator(radius, spawnSource, honeycombRings)) {
+  //     const attemptSpawn = { ...s, radius: config.COLLISION_MESH_RADIUS };
+  //     if (this.isPointValidSpawn(attemptSpawn, prediction, spawnSource)) {
+  //       return attemptSpawn
+  //     }
+  //   }
+  //   return undefined;
+  // }
   // Same as above "findValidSpawn", but returns an array of valid spawns
   findValidSpawns({ spawnSource, ringLimit, radius = config.COLLISION_MESH_RADIUS / 4, prediction }: { spawnSource: Vec2, ringLimit: number, radius?: number, prediction: boolean }): Vec2[] {
     const validSpawns: Vec2[] = [];
@@ -2019,13 +2113,12 @@ export default class Underworld {
       // attemptSpawns radius must be the full config.COLLISION_MESH_RADIUS to ensure
       // that the spawning unit wont intersect something it shouldn't
       const attemptSpawn = { ...s, radius: config.COLLISION_MESH_RADIUS };
-      if (this.isPointValidSpawn(attemptSpawn, config.COLLISION_MESH_RADIUS, prediction, spawnSource)) {
+      if (this.isPointValidSpawn(attemptSpawn, prediction)) {
         // Return the first valid spawn found
         validSpawns.push(attemptSpawn);
       }
     }
     return validSpawns;
-
   }
 
   cleanUpLevel() {
@@ -2503,12 +2596,14 @@ export default class Underworld {
       Pickup.removePickup(p, this, false);
     });
 
+    const seed = seedrandom(getUniqueSeedString(this));
     // Spawn a portal near each remaining player
     for (let playerUnit of remainingPlayers) {
-      const portalSpawnLocation = this.findValidSpawn({ spawnSource: playerUnit, ringLimit: 4, radius: config.COLLISION_MESH_RADIUS * .8, prediction: false }) || playerUnit;
-      if (!isOutOfBounds(portalSpawnLocation, this)) {
+      const portalSpawnLocation = this.findValidSpawnInRadius(playerUnit, false, seed);
+      if (portalSpawnLocation) {
         spawnedPortals.push(Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup, logSource: 'Portal' }, this, false));
       }
+
       // Give all player units huge stamina when portal spawns for convenience.
       playerUnit.stamina = 1_000_000;
       // Give all players max health and mana (it will be reset anyway when they are reset for the next level
@@ -2843,8 +2938,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             // This doesn't apply to melee units since they will automatically move towards you to attack,
             // whereas without this ranged units would be content to just sit in liquid and die from the DOT
             if (u.unitSubType !== UnitSubType.MELEE && u.inLiquid) {
-              const seed = seedrandom(`${this.seed}-${this.turn_number}-${u.id}`);
-              const coords = findRandomGroundLocation(this, u, seed);
+              const seed = seedrandom(`${getUniqueSeedString(this)}-${u.id}`);
+              // Using attackRange instead of maxStamina ensures they'll eventually walk out of liquid
+              const coords = this.findValidSpawnInRadius(u, false, seed, { maxRadius: u.attackRange });
               if (coords) {
                 await Unit.moveTowards(u, coords, this);
               }
@@ -3467,7 +3563,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     const portalName = faction == Faction.ENEMY ? Pickup.RED_PORTAL : Pickup.BLUE_PORTAL;
     const deathmasons = this.units.filter(u => u.unitSourceId == bossmasonUnitId && u.faction == faction)
     for (let deathmason of deathmasons) {
-      const seed = seedrandom(deathmason.id.toString());
+      const seed = seedrandom(`${getUniqueSeedString(this)}-${deathmason.id}`);
       const deathmasonPortals = this.pickups.filter(p => p.name == portalName && !p.flaggedForRemoval);
       const deathmasonPortalTeleportIndex = randInt(0, deathmasonPortals.length, seed);
       const portal = deathmasonPortals[deathmasonPortalTeleportIndex];
@@ -4452,15 +4548,8 @@ function getEnemiesForAltitude(underworld: Underworld, levelIndex: number): stri
 async function introduceBoss(unit: UnitSource, underworld: Underworld) {
   console.log('[GAME] Spawning Boss: ', unit.id, '\n', unit);
   underworld.hasSpawnedBoss = true;
-  let coords = { x: 0, y: 0 };
-  const seed = seedrandom(`${underworld.turn_number}-${deathmason.id}`);
-  for (let player of underworld.players) {
-    const _coords = findRandomGroundLocation(underworld, player.unit, seed);
-    if (_coords) {
-      coords = _coords;
-      break;
-    }
-  }
+  const seed = seedrandom(`${getUniqueSeedString(underworld)}-${deathmason.id}`);
+  const coords = underworld.findValidSpawnInWorldBounds(false, seed) || { x: 0, y: 0 };
 
   // Play boss intro FX
   const elCinematic = unit.id == bossmasonUnitId ? document.getElementById('deathmason-cinematic') : document.getElementById('goru-cinematic');

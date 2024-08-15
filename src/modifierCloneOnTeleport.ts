@@ -1,3 +1,4 @@
+import seedrandom from "seedrandom";
 import { registerEvents, registerModifiers } from "./cards";
 import { animateMitosis, doCloneUnit } from "./cards/clone";
 import { getOrInitModifier } from "./cards/util";
@@ -25,10 +26,14 @@ export default function registerContaminateSelfOnTeleport() {
           const clone = doCloneUnit(unit, underworld, prediction);
           // Attempt to put the Changling where the player was, but in the event
           // that the player is swapping that location might now be full
-          const validSpawnCoords = underworld.findValidSpawn({ spawnSource: originalLocation, ringLimit: 5, prediction, radius: 10 });
-          if (clone && validSpawnCoords) {
-            clone.x = validSpawnCoords.x;
-            clone.y = validSpawnCoords.y;
+          let coords = originalLocation;
+          if (!underworld.isPointValidSpawn(coords, prediction)) {
+            coords = underworld.findValidSpawnInRadius(originalLocation, prediction, seedrandom(`${unit.id}`)) || coords;
+          }
+
+          if (clone && coords) {
+            clone.x = coords.x;
+            clone.y = coords.y;
             clone.name = 'Changeling';
             // Wait a bit for floating text otherwise it gets covered by sky beam
             setTimeout(() => {

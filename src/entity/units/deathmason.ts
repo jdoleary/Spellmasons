@@ -10,7 +10,6 @@ import sacrifice from '../../cards/sacrifice';
 import { calculateCost } from '../../cards/cardUtils';
 import seedrandom from 'seedrandom';
 import { makeManaTrail } from '../../graphics/Particles';
-import { findRandomGroundLocation } from './summoner';
 import { pickups, RED_PORTAL, removePickup } from '../Pickup';
 import { skyBeam } from '../../VisualEffects';
 import * as Pickup from '../Pickup';
@@ -80,7 +79,7 @@ const deathmason: UnitSource = {
           let lastPromise = Promise.resolve();
           const portalCoords = [];
           for (let i = 0; i < numberOfSummons; i++) {
-            const coords = findRandomGroundLocation(underworld, unit, seed);
+            const coords = underworld.findValidSpawnInRadius(unit, false, seed, { maxRadius: unit.attackRange, unobstructedPoint: unit });
             if (coords) {
               portalCoords.push(coords);
             } else {
@@ -209,7 +208,7 @@ export function registerDeathmasonEvents() {
             let retryAttempts = 0;
             for (let i = 0; (i < 3 && retryAttempts < 10); i++) {
               const seed = seedrandom(`${underworld.seed}-${underworld.turn_number}-${unit.id}`);
-              const coords = findRandomGroundLocation(underworld, unit, seed);
+              const coords = underworld.findValidSpawnInRadius(unit, false, seed, { maxRadius: unit.attackRange });
               if (!coords) {
                 console.warn("Deathmason onDeath() spawning failed attempt: ", retryAttempts);
                 retryAttempts++;

@@ -28,9 +28,9 @@ export default function registerAlchemist() {
     onTurnStart: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
       const modifier = unit.modifiers[alchemistId];
       if (modifier && unit.alive) {
-        const random = seedrandom(`${getUniqueSeedString(underworld)} - ${unit.id}`);
+        const random = seedrandom(`${getUniqueSeedString(underworld)}-${unit.id}`);
         if (randFloat(0, 100, random) < modifier.quantity) {
-          const coords = findPotionSummonLocation(unit, unit.attackRange / 2, underworld, prediction, random)
+          const coords = underworld.findValidSpawnInRadius(unit, prediction, random, { minRadius: COLLISION_MESH_RADIUS * 2, allowLiquid: unit.inLiquid });
           if (coords) {
             const pickupChoice = chooseObjectWithProbability(Pickup.pickups.map((p, index) => {
               return { index, probability: p.name.includes('Potion') ? p.probability : 0 }
@@ -46,37 +46,10 @@ export default function registerAlchemist() {
               console.warn(`Could not choose valid pickup for ${alchemistId}`);
             }
           } else {
-            console.log("Alchemist could not find valid spawn");
+            console.error("Alchemist could not find valid spawn");
           }
         }
       }
     }
   });
-}
-
-export function findPotionSummonLocation(unit: Unit.IUnit, radius: number, underworld: Underworld, prediction: boolean, seed: prng): Vec2 | undefined {
-  let randomCoord = undefined;
-  for (let i = 0; i < 100; i++) {
-    // Generate a random angle in radians
-    const angle = randFloat(0, 2 * Math.PI);
-    const distance = randFloat(COLLISION_MESH_RADIUS * 2, radius);
-
-    // Set coordinate based on dir and distance
-    randomCoord = {
-      x: unit.x + (distance * Math.cos(angle)),
-      y: unit.y + (distance * Math.sin(angle)),
-    }
-
-    // If coordinate is a valid spawn, break loop
-    if (underworld.isPointValidSpawn(randomCoord, COLLISION_MESH_RADIUS, prediction)) {
-      break;
-    }
-  }
-
-  if (randomCoord == undefined) {
-    console.warn('Could not find valid spawn point for golem, returning summoner position');
-    randomCoord = { x: unit.x, y: unit.y }
-  }
-
-  return randomCoord;
 }

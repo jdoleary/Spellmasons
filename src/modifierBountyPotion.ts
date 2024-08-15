@@ -7,7 +7,6 @@ import { bountyId } from "./modifierBounty";
 import { bountyHunterId } from "./modifierBountyHunter";
 import Underworld from './Underworld';
 import { chooseObjectWithProbability, getUniqueSeedString, randFloat } from "./jmath/rand";
-import { findPotionSummonLocation } from "./modifierAlchemist";
 import floatingText from "./graphics/FloatingText";
 import { COLLISION_MESH_RADIUS } from "./config";
 
@@ -31,8 +30,8 @@ export default function registerBountyPotion() {
       if (modifier) {
         // Only drop a potion if the killed unit has a bounty
         if (killedUnit.modifiers[bountyId]) {
-          const random = seedrandom(`${getUniqueSeedString(underworld)} - ${killedUnit.id}`);
-          const coords = findPotionSummonLocation(killedUnit, COLLISION_MESH_RADIUS * 2, underworld, prediction, random)
+          const random = seedrandom(`${getUniqueSeedString(underworld)}-${killedUnit.id}`);
+          const coords = underworld.findValidSpawnInRadius(killedUnit, prediction, random, { maxRadius: COLLISION_MESH_RADIUS * 2, allowLiquid: killedUnit.inLiquid });
           if (coords) {
             const pickupChoice = chooseObjectWithProbability(Pickup.pickups.map((p, index) => {
               return { index, probability: p.name.includes('Potion') ? p.probability : 0 }

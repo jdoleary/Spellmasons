@@ -4,11 +4,12 @@ import * as Pickup from '../entity/Pickup';
 import { Spell } from './index';
 import type Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
-import { chooseObjectWithProbability } from '../jmath/rand';
+import { chooseObjectWithProbability, getUniqueSeedString } from '../jmath/rand';
 import seedrandom from 'seedrandom';
 import floatingText from '../graphics/FloatingText';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
+import { COLLISION_MESH_RADIUS } from '../config';
 
 export const lastWillId = 'Last Will';
 const imageName = 'unknown.png';
@@ -60,9 +61,9 @@ const spell: Spell = {
       // Last Will should not stack for balance reasons
       const quantity = 1;
       // Unique for the unit and for quantity and same across all clients due to turn_number and unit.id
-      const seed = seedrandom(`${underworld.turn_number} - ${unit.id}`);
+      const seed = seedrandom(`${getUniqueSeedString(underworld)}-${unit.id}`);
       for (let i = 0; i < quantity; i++) {
-        const coord = underworld.findValidSpawn({ spawnSource: unit, ringLimit: 3, prediction, radius: 32 });
+        const coord = underworld.findValidSpawnInRadius(unit, prediction, seed, { maxRadius: COLLISION_MESH_RADIUS * 2, allowLiquid: unit.inLiquid });
         const choice = chooseObjectWithProbability(Pickup.pickups.map((p, index) => {
           return {
             index, probability: p.name.includes('Potion') ? p.probability : 0
