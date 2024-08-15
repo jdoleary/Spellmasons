@@ -2018,7 +2018,7 @@ export default class Underworld {
     // Ex. This can be used to prevent a summoner from summoning over a wall
     if (unobstructedPoint) {
       // Ensure spawnPoint isn't through any walls or liquidBounds
-      if ([...this.walls, ...this.liquidBounds].some(wall => lineSegmentIntersection({ p1: unobstructedPoint, p2: spawnPoint }, wall))) {
+      if ([...this.walls, ...this.liquidBounds].some(wall => unobstructedPoint != undefined && lineSegmentIntersection({ p1: unobstructedPoint, p2: spawnPoint }, wall))) {
         return false;
       }
     }
