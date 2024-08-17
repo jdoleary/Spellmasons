@@ -9,8 +9,8 @@ import { allUnits } from "./entity/units";
 import { UnitType } from "./types/commonTypes";
 import { makeRisingParticles } from "./graphics/ParticleCollection";
 import { COLLISION_MESH_RADIUS } from "./config";
-import { findRandomSummonLocation } from "./modifierGolemancer";
 import seedrandom from "seedrandom";
+import { getUniqueSeedString } from "./jmath/rand";
 
 // Spawn [quantity] golems when claiming a bounty
 export const bountyGolemId = 'Bounty: Golem';
@@ -32,11 +32,11 @@ export default function registerBountyGolem() {
       if (modifier) {
         // Create golems on kill
         if (killedUnit.modifiers[bountyId]) {
-          const seed = seedrandom(`${underworld.seed}-${underworld.turn_number}-${killedUnit.id}`);
+          const seed = seedrandom(`${getUniqueSeedString(underworld)}-${killedUnit.id}`);
           // Summon quantity ally golems
           const golemsToSummon = modifier.quantity;
           for (let i = 0; i < golemsToSummon; i++) {
-            const coords = findRandomSummonLocation(killedUnit, COLLISION_MESH_RADIUS, underworld, prediction, seed)
+            const coords = underworld.findValidSpawnInRadius(killedUnit, prediction, seed, { allowLiquid: killedUnit.inLiquid });
             if (coords) {
               let sourceUnit = allUnits[golem_unit_id];
               if (sourceUnit) {

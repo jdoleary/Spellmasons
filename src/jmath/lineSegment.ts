@@ -75,6 +75,7 @@ function findWherePointIntersectLineAtRightAngle(point: Vec.Vec2, line: LineInSt
 // the right angle point of intersection will be outside of the line segment (unless the circle is positioned at a 
 // perfect right angle to the endpoint).  So this function should be used together with other functions to account
 // for the endpoints of the line segment
+// https://github.com/jdoleary/Spellmasons/issues/983
 export function findWherePointIntersectLineSegmentAtRightAngle(point: Vec.Vec2, line: LineSegment): Vec.Vec2 | undefined {
   const lineInStandardForm = toStandardForm(line);
   const largestX = Math.max(line.p1.x, line.p2.x);

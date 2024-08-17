@@ -14,10 +14,9 @@ import { primedCorpseId } from '../../modifierPrimedCorpse';
 import { boneShrapnelCardId, boneShrapnelRadius } from '../../cards/bone_shrapnel';
 import { makeManaTrail } from '../../graphics/Particles';
 import seedrandom from 'seedrandom';
-import { findRandomGroundLocation } from './summoner';
 import { Vec2 } from '../../jmath/Vec';
 import { summoningSicknessId } from '../../modifierSummoningSickness';
-import { chooseOneOfSeeded } from '../../jmath/rand';
+import { chooseOneOfSeeded, getUniqueSeedString } from '../../jmath/rand';
 import { oneOffImage } from '../../cards/cardUtils';
 import { containerUnits } from '../../graphics/PixiUtils';
 import { BLOOD_GOLEM_ID } from './bloodGolem';
@@ -314,9 +313,9 @@ const unit: UnitSource = {
         const numberOfSummons = 4;
         const summonTypes = [allUnits[BLOOD_GOLEM_ID], allUnits[BLOOD_ARCHER_ID]];
         const summons: { coords: Vec2, sourceUnit: UnitSource }[] = [];
-        const seed = seedrandom(`${underworld.seed}-${underworld.turn_number}-${unit.id}`);
+        const seed = seedrandom(`${getUniqueSeedString(underworld)}-${unit.id}`);
         for (let i = 0; i < numberOfSummons; i++) {
-          const coords = findRandomGroundLocation(underworld, unit, seed);
+          const coords = underworld.findValidSpawnInRadius(unit, false, seed, { maxRadius: unit.attackRange, unobstructedPoint: unit });
           if (coords) {
             const sourceUnit = chooseOneOfSeeded(summonTypes, seed);
             if (sourceUnit) {
