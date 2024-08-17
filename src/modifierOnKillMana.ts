@@ -10,7 +10,7 @@ export default function registerOnKillMana() {
   registerModifiers(onKillManaId, {
     description: 'rune_on_kill_mana',
     unitOfMeasure: 'Mana',
-    costPerUpgrade: 20,
+    _costPerUpgrade: 20,
     quantityPerUpgrade: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, onKillManaId, { isCurse: false, quantity, keepOnDeath: true }, () => {

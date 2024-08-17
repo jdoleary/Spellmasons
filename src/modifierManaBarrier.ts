@@ -14,7 +14,7 @@ export default function registerManaBarrier() {
   registerModifiers(manaBarrierId, {
     description: ('rune_manabarrier'),
     unitOfMeasure: ('% effectiveness'),
-    costPerUpgrade: 100,
+    _costPerUpgrade: 100,
     quantityPerUpgrade: 50,
     addModifierVisuals: (unit: Unit.IUnit, underworld: Underworld) => {
       // Add subsprite image

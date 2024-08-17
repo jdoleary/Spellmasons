@@ -3276,12 +3276,13 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       console.error(`Failed to upgrade rune ${runeModifierId}`)
       return;
     }
+    const modifierCost = Cards.calcluateModifierCostPerUpgrade(modifier, this, player)
     // Do not allow overspend
-    if (player.statPointsUnspent < (modifier.costPerUpgrade || 0)) {
+    if (player.statPointsUnspent < modifierCost) {
       return;
     }
 
-    player.statPointsUnspent -= modifier.costPerUpgrade || 0;
+    player.statPointsUnspent -= modifierCost;
 
     if (isCurrentPlayer) {
       playSFXKey('levelUp');
@@ -4285,7 +4286,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   // This array remains in the same order for a given player in a given game
   getShuffledRunesForPlayer(player?: Player.IPlayer): ({ key: string } & Cards.Modifiers)[] {
     let listOfRemainingRunesToChoose = Object.entries(Cards.allModifiers).flatMap(([key, modifier]) => {
-      if (modifier.costPerUpgrade && !modifier.constant) {
+      if (modifier._costPerUpgrade && !modifier.constant) {
         return [{ key, ...modifier }];
       } else {
         return [];

@@ -12,7 +12,7 @@ export default function registerOnKillResurrect() {
   registerModifiers(onKillRessurectId, {
     description: 'rune_on_kill_resurrect',
     unitOfMeasure: '%',
-    costPerUpgrade: 80,
+    _costPerUpgrade: 80,
     quantityPerUpgrade: 10,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, onKillRessurectId, { isCurse: false, quantity, keepOnDeath: true }, () => {

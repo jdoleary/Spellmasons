@@ -17,7 +17,7 @@ export default function registerBountyPotion() {
   registerModifiers(bountyPotionId, {
     description: ('rune_bounty_potion'),
     unitOfMeasure: 'Potion Power',
-    costPerUpgrade: 40,
+    _costPerUpgrade: 40,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, bountyPotionId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addModifier(unit, bountyHunterId, underworld, prediction);

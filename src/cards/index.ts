@@ -202,6 +202,8 @@ import registerCreepingDeath from '../modifierCreepingDeath';
 import registerPlagueBringer from '../modifierPlagueBringer';
 import registerHeavyToxins from '../modifierHeavyToxins';
 import registerOnKillResurrect from '../modifierOnKillResurrect';
+import seedrandom from 'seedrandom';
+import { chooseObjectWithProbability, getUniqueSeedStringPerLevel } from '../jmath/rand';
 
 
 export interface Modifiers {
@@ -229,7 +231,8 @@ export interface Modifiers {
   // when the spawn, then the modifier gets a probability
   probability?: number;
   // Specifying a cost allows the modifier to be upgradable via the runes menu.
-  costPerUpgrade?: number;
+  // Should be accessed with calculateModifierCostPerUpgrade
+  _costPerUpgrade?: number;
   // Adds X quantity per purchase of the rune
   quantityPerUpgrade?: number;
   // Upgrade can be purchased X times
@@ -239,6 +242,32 @@ export interface Modifiers {
   maxUpgradeCount?: number;
   // Allows certain non-rune modifiers to persist between levels
   keepBetweenLevels?: boolean;
+}
+export function calcluateModifierCostPerUpgrade(mod: Modifiers, underworld: Underworld, player?: Player.IPlayer): number {
+  if (mod._costPerUpgrade === undefined) {
+    return 0;
+  }
+  if (mod._costPerUpgrade < 0) {
+    // Don't discount negative costs which grant extra SP
+    return mod._costPerUpgrade;
+  }
+
+  const random = seedrandom(`${getUniqueSeedStringPerLevel(underworld, player)}-${mod.description || ''}`);
+  const { discount } = chooseObjectWithProbability([
+    {
+      discount: 1,
+      probability: 80,
+    },
+    {
+      discount: 0.75,
+      probability: 15,
+    },
+    {
+      discount: 0.5,
+      probability: 5,
+    },
+  ], random) || { discount: 1 };
+  return Math.round(mod._costPerUpgrade * discount);
 }
 export interface Events {
   // events that are not attached to a spell need an explicit id set

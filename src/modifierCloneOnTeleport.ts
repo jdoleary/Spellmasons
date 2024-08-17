@@ -10,7 +10,7 @@ export const cloneOnTeleportId = 'Changeling';
 export default function registerContaminateSelfOnTeleport() {
   registerModifiers(cloneOnTeleportId, {
     description: ('rune_clone_on_tele'),
-    costPerUpgrade: 200,
+    _costPerUpgrade: 200,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, cloneOnTeleportId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, cloneOnTeleportId);

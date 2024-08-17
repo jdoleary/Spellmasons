@@ -10,7 +10,7 @@ export const runeNecromancerId = 'Necromancer';
 export default function registerNecromancer() {
   registerModifiers(runeNecromancerId, {
     description: i18n('class_necromancer'),
-    costPerUpgrade: 200,
+    _costPerUpgrade: 200,
     maxUpgradeCount: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       const player = underworld.players.find(p => p.unit == unit);

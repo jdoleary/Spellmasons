@@ -10,7 +10,7 @@ export default function registerThorns() {
   registerModifiers(thornsId, {
     unitOfMeasure: 'Damage',
     description: 'rune_thorns_description',
-    costPerUpgrade: 80,
+    _costPerUpgrade: 80,
     quantityPerUpgrade: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, thornsId, { isCurse: false, quantity, keepOnDeath: true }, () => {

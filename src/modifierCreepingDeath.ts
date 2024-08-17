@@ -15,7 +15,7 @@ export const creepingDeathId = 'Creeping Death';
 export default function registerCreepingDeath() {
   registerModifiers(creepingDeathId, {
     description: i18n('rune_creeping_death'),
-    costPerUpgrade: 100,
+    _costPerUpgrade: 100,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, creepingDeathId, { isCurse: false, quantity, keepOnDeath: false }, () => {
         Unit.addEvent(unit, creepingDeathId);

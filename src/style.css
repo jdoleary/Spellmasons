@@ -2727,3 +2727,16 @@ body.dragging-card .floating-card-holder .empty-slot {
 .stat-row[data-stat="reroll"] .plus-btn {
   background-image: url('/ui/iconRerollUp.png');
 }
+
+.rune-name-holder {
+  display: flex;
+  gap: 8px;
+}
+
+.rune-name-holder.discount-50 {
+  color: #b545ff;
+}
+
+.rune-name-holder.discount-75 {
+  color: #ff45bc;
+}

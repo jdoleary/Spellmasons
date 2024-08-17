@@ -8,7 +8,7 @@ const COST = 30;
 export default function registerDareDevil() {
   registerModifiers(dareDevilId, {
     description: `Lose half of your max health for +${COST} stat points`,
-    costPerUpgrade: -COST,
+    _costPerUpgrade: -COST,
     maxUpgradeCount: 4,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, dareDevilId, { isCurse: false, quantity, keepOnDeath: true }, () => { });

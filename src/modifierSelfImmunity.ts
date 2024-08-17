@@ -10,7 +10,7 @@ export default function registerSelfInvulnerability() {
   registerModifiers(selfInvulnerabilityId, {
     description: 'rune_self_invulnerability',
     stage: "Amount Override",
-    costPerUpgrade: 80,
+    _costPerUpgrade: 80,
     maxUpgradeCount: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, selfInvulnerabilityId, { isCurse: false, quantity, keepOnDeath: true }, () => {
