@@ -3091,7 +3091,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     // Trigger full turn cycle events now that it's restarting at the playerTurn
     if (phase == turn_phase[turn_phase.PlayerTurns]) {
       for (let unit of this.units) {
-        await Promise.all(unit.events.map(
+        const events = [...unit.events];
+        await Promise.all(events.map(
           async (eventName) => {
             const fn = Events.onFullTurnCycleSource[eventName];
             if (fn) {

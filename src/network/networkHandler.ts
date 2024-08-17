@@ -781,7 +781,8 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
           teleport(fromPlayer.unit, payload, underworld, false);
 
           // Trigger onSpawn events
-          for (let eventName of fromPlayer.unit.events) {
+          const events = [...fromPlayer.unit.events]
+          for (let eventName of events) {
             if (eventName) {
               const fn = Events.onSpawnSource[eventName];
               if (fn) {
