@@ -31,7 +31,7 @@ const spell: Spell = {
 
       // Seed is set before targets are looped so that each target goes to a different location but
       // also so that it is consistent and seeded for a given cast
-      const seed = seedrandom(`${getUniqueSeedString(underworld)}`);
+      const seed = seedrandom(`${getUniqueSeedString(underworld)}-${state.casterUnit.id}`);
       for (let i = 0; i < quantity; i++) {
         // Loop through all targets and batch swap locations
         const swaps: [HasSpace, Vec2][] = [];
