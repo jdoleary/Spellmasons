@@ -11,6 +11,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import Underworld from '../Underworld';
 import seedrandom from 'seedrandom';
 import { getUniqueSeedString } from '../jmath/rand';
+import * as config from '../config';
 
 export const clone_id = 'clone';
 const spell: Spell = {
@@ -68,7 +69,7 @@ export function cloneEffect(addClonesToTargetArray: boolean): EffectFn {
             } else if (Pickup.isPickup(target)) {
               const targetName = target.name;
               const seed = seedrandom(`${getUniqueSeedString(underworld)}-${target.id}`);
-              const validSpawnCoords = underworld.findValidSpawnInRadius(target, prediction, seed, { allowLiquid: target.inLiquid });
+              const validSpawnCoords = underworld.findValidSpawnInRadius(target, prediction, seed, { allowLiquid: target.inLiquid, maxRadius: config.COLLISION_MESH_RADIUS });
               if (validSpawnCoords) {
                 let foundPickup = Pickup.pickups.find((p) => p.name == targetName);
                 if (foundPickup) {

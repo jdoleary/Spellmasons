@@ -14,6 +14,7 @@ import { addScaleModifier, removeScaleModifier } from '../graphics/Image';
 import floatingText from '../graphics/FloatingText';
 import seedrandom from 'seedrandom';
 import { getUniqueSeedString } from '../jmath/rand';
+import * as config from '../config';
 
 export const splitId = 'split';
 const splitLimit = 3;
@@ -140,7 +141,7 @@ export function doSplit(target: Vec2 | undefined, underworld: Underworld, quanti
     // If there is are clone coordinates to clone into
     if (Unit.isUnit(target)) {
       const seed = seedrandom(`${getUniqueSeedString(underworld)}-${target.id}`);
-      const validSpawnCoords = underworld.findValidSpawnInRadius(target, prediction, seed, { allowLiquid: target.inLiquid });
+      const validSpawnCoords = underworld.findValidSpawnInRadius(target, prediction, seed, { allowLiquid: target.inLiquid, maxRadius: config.COLLISION_MESH_RADIUS });
       if (validSpawnCoords) {
         const clone = Unit.load(Unit.serialize(target), underworld, prediction);
         if (!prediction) {
