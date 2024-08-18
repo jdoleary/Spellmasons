@@ -815,7 +815,8 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean, so
   // Clear unit path to prevent further movement in case of ressurect or similar
   unit.path = undefined;
 
-  for (let eventName of unit.events) {
+  const events = [...unit.events];
+  for (let eventName of events) {
     if (eventName) {
       const fn = Events.onDeathSource[eventName];
       if (fn) {
@@ -828,7 +829,8 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean, so
   // This must occur before onDeath events are removed (Bounty)
   // Doodads don't trigger onKill effects
   if (sourceUnit && unit.unitSubType != UnitSubType.DOODAD) {
-    for (let eventName of sourceUnit.events) {
+    const events = [...sourceUnit.events];
+    for (let eventName of events) {
       if (eventName) {
         const fn = Events.onKillSource[eventName];
         if (fn) {
@@ -906,7 +908,8 @@ export function composeOnDealDamageEvents(damageArgs: damageArgs, underworld: Un
   if (!sourceUnit) return amount;
 
   // Compose onDamageEvents
-  for (let eventName of sourceUnit.events) {
+  const events = [...sourceUnit.events]
+  for (let eventName of events) {
     const fn = Events.onDealDamageSource[eventName];
     if (fn) {
       // onDamage events can trigger effects and alter damage amount
@@ -919,7 +922,8 @@ export function composeOnTakeDamageEvents(damageArgs: damageArgs, underworld: Un
   let { unit, amount, sourceUnit } = damageArgs;
 
   // Compose onDamageEvents
-  for (let eventName of unit.events) {
+  const events = [...unit.events]
+  for (let eventName of events) {
     const fn = Events.onTakeDamageSource[eventName];
     if (fn) {
       // onDamage events can trigger effects and alter damage amount
@@ -1474,7 +1478,8 @@ export async function endTurnForUnits(units: IUnit[], underworld: Underworld, pr
 }
 
 export async function runTurnStartEvents(unit: IUnit, underworld: Underworld, prediction: boolean) {
-  await Promise.all(unit.events.map(
+  const events = [...unit.events];
+  await Promise.all(events.map(
     async (eventName) => {
       const fn = Events.onTurnStartSource[eventName];
       if (fn) {
@@ -1485,7 +1490,8 @@ export async function runTurnStartEvents(unit: IUnit, underworld: Underworld, pr
 }
 
 export async function runTurnEndEvents(unit: IUnit, underworld: Underworld, prediction: boolean) {
-  await Promise.all(unit.events.map(
+  const events = [...unit.events];
+  await Promise.all(events.map(
     async (eventName) => {
       const fn = Events.onTurnEndSource[eventName];
       if (fn) {
@@ -1496,8 +1502,9 @@ export async function runTurnEndEvents(unit: IUnit, underworld: Underworld, pred
 }
 
 export async function runPickupEvents(unit: IUnit, pickup: IPickup, underworld: Underworld, prediction: boolean) {
+  const events = [...unit.events];
   await raceTimeout(3000, `RunPickupEvents (Unit: ${unit.unitSourceId} | Pickup: ${pickup.name} | Prediction: ${prediction})`,
-    Promise.all(unit.events.map(
+    Promise.all(events.map(
       async (eventName) => {
         const fn = Events.onPickupSource[eventName];
         if (fn) {
