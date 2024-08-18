@@ -260,11 +260,11 @@ export function calcluateModifierCostPerUpgrade(mod: Modifiers, underworld: Unde
       probability: 80,
     },
     {
-      discount: 0.75,
+      discount: 0.80,
       probability: 15,
     },
     {
-      discount: 0.5,
+      discount: 0.6,
       probability: 5,
     },
   ], random) || { discount: 1 };
