@@ -5,12 +5,12 @@ import { placeRandomBounty } from "./modifierBounty";
 import Underworld from './Underworld';
 
 // This modifier should be applied in each other bounty modifier's add function
-export const moreBountiesId = 'More Bounties';
+export const moreBountiesId = '+ Max Bounties';
 export default function registerBountyHunter() {
   registerModifiers(moreBountiesId, {
     description: ('rune_more_bounties'),
     maxUpgradeCount: 3,
-    _costPerUpgrade: 40,
+    _costPerUpgrade: 150,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       // Keep track of the count
       const modifier = getOrInitModifier(unit, moreBountiesId, { isCurse: false, quantity, keepOnDeath: true }, () => {
