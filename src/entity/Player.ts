@@ -326,6 +326,10 @@ export function load(player: IPlayerSerialized, index: number, underworld: Under
   if (inPortal(playerLoaded)) {
     playerLoaded.unit.x = NaN;
     playerLoaded.unit.y = NaN;
+    // Make sure that isSpawned state is properly synced.  If they are inPortal,
+    // then they must also have isSpawned == false or else they wont be able to 
+    // respawn from a NaN, NaN position
+    playerLoaded.isSpawned = false;
     Image.hide(playerLoaded.unit.image);
   }
   // Overwrite player
