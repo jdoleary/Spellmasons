@@ -85,7 +85,7 @@ export function placeRandomBounty(bountyHunter: Unit.IUnit, underworld: Underwor
   const maxBounties = underworld.players.reduce((acc, p) => {
     const isBountyHunter = p.unit.faction == bountyHunter.faction && p.unit.modifiers[bountyHunterId];
     if (isBountyHunter) {
-      return (p.unit.modifiers[moreBountiesId]?.quantity || 0) + 1;
+      return acc + (p.unit.modifiers[moreBountiesId]?.quantity || 0) + 1;
     } else {
       return acc;
     }
