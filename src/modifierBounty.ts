@@ -10,6 +10,7 @@ import { chooseOneOfSeeded, getUniqueSeedString } from "./jmath/rand";
 import { UnitSubType } from "./types/commonTypes";
 import seedrandom from "seedrandom";
 import * as Image from './graphics/Image';
+import { moreBountiesId } from "./modifierBountyMore";
 
 export const bountyId = 'Bounty';
 export const bountyColor = 0xffdc64;
@@ -81,8 +82,15 @@ export function placeRandomBounty(bountyHunter: Unit.IUnit, underworld: Underwor
   // Get existing bounty targets
   const activeBounties = getActiveBounties(bountyHunter, underworld, prediction);
   // Max bounties = number of bounty hunters on team
-  const maxBounties = units.filter(u => u.faction == bountyHunter.faction && u.modifiers[bountyHunterId]).length;
-  if (activeBounties.length < maxBounties) {
+  const maxBounties = underworld.players.reduce((acc, p) => {
+    const isBountyHunter = p.unit.faction == bountyHunter.faction && p.unit.modifiers[bountyHunterId];
+    if (isBountyHunter) {
+      return (p.unit.modifiers[moreBountiesId]?.quantity || 0) + 1;
+    } else {
+      return acc;
+    }
+  }, 0);
+  for (let i = 0; i < maxBounties - activeBounties.length; i++) {
     // Find a random enemy unit and give it a bounty
     // Unit must be alive, in enemy faction, not a doodad, and not yet have a bounty
     units = units.filter(u => u.alive && (u.faction != bountyHunter.faction) && (u.unitSubType != UnitSubType.DOODAD) && !u.modifiers[bountyId] && !u.flaggedForRemoval);
