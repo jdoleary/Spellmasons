@@ -10,7 +10,7 @@ export const runeWitchId = 'Witch';
 export default function registerWitch() {
   registerModifiers(runeWitchId, {
     description: 'rune_witch',
-    costPerUpgrade: 100,
+    _costPerUpgrade: 100,
     maxUpgradeCount: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       const player = underworld.players.find(p => p.unit == unit);

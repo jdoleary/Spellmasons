@@ -10,7 +10,7 @@ export default function registerHealthRegen() {
   registerModifiers(healthRegenId, {
     description: ('rune_health_regen'),
     unitOfMeasure: 'Health Regen',
-    costPerUpgrade: 20,
+    _costPerUpgrade: 20,
     quantityPerUpgrade: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, healthRegenId, { isCurse: false, quantity, keepOnDeath: true }, () => {

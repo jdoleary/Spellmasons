@@ -27,7 +27,7 @@ export interface CardCost {
     healthCost: number;
 }
 export function isRune(m?: Modifiers): boolean {
-    return !!(m && (m.costPerUpgrade || m.keepBetweenLevels));
+    return !!(m && (m._costPerUpgrade || m.keepBetweenLevels));
 }
 // Positive number means card is still disabled
 export function levelsUntilCardIsEnabled(cardId: string, underworld?: Underworld): number {

@@ -11,7 +11,7 @@ export default function registerShieldBash() {
     description: 'rune_shield_bash',
     unitOfMeasure: 'shield to damage',
     stage: "Amount Flat",
-    costPerUpgrade: 20,
+    _costPerUpgrade: 20,
     quantityPerUpgrade: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, shieldBashId, { isCurse: false, quantity, keepOnDeath: true }, () => {

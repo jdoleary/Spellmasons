@@ -10,7 +10,7 @@ export const bountyRestoreStaminaId = 'Bounty: Restore Stamina';
 export default function registerBountyRestoreStamina() {
   registerModifiers(bountyRestoreStaminaId, {
     description: ('rune_bounty_restore_stamina'),
-    costPerUpgrade: 80,
+    _costPerUpgrade: 80,
     maxUpgradeCount: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, bountyRestoreStaminaId, { isCurse: false, quantity, keepOnDeath: true }, () => {

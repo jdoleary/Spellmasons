@@ -12,7 +12,7 @@ export default function registerRevitalize() {
     unitOfMeasure: '%',
     description: i18n('revitalize_description'),
     stage: "Amount Multiplier",
-    costPerUpgrade: 40,
+    _costPerUpgrade: 40,
     quantityPerUpgrade: QUANTITY_PER_UPGRADE,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, revitalizeId, { isCurse: false, quantity, keepOnDeath: true }, () => {

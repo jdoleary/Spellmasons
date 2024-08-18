@@ -9,7 +9,7 @@ export default function registerAffinitySoul() {
   registerModifiers(affinitySoulId, {
     description: ('rune_affinity_soul'),
     unitOfMeasure: '% less mana',
-    costPerUpgrade: 60,
+    _costPerUpgrade: 60,
     quantityPerUpgrade: 10,
     maxUpgradeCount: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

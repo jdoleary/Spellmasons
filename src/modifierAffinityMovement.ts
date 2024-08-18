@@ -9,7 +9,7 @@ export default function registerMovementAffinity() {
   registerModifiers(affinityMovementId, {
     description: ('rune_affinity_movement'),
     unitOfMeasure: '% less mana',
-    costPerUpgrade: 60,
+    _costPerUpgrade: 60,
     quantityPerUpgrade: 10,
     maxUpgradeCount: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

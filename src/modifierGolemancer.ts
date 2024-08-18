@@ -19,7 +19,7 @@ export const golemancerId = 'Golemancer';
 export default function registerGolemancer() {
   registerModifiers(golemancerId, {
     description: 'rune_golemancer',
-    costPerUpgrade: 200,
+    _costPerUpgrade: 200,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, golemancerId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, golemancerId);

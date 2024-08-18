@@ -18,7 +18,7 @@ export default function registerBountyGolem() {
   registerModifiers(bountyGolemId, {
     description: ('rune_bounty_golem'),
     unitOfMeasure: `Golem`,
-    costPerUpgrade: 120,
+    _costPerUpgrade: 120,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, bountyGolemId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addModifier(unit, bountyHunterId, underworld, prediction);

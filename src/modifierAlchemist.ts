@@ -15,7 +15,7 @@ export default function registerAlchemist() {
   registerModifiers(alchemistId, {
     description: 'rune_alchemist',
     unitOfMeasure: '%',
-    costPerUpgrade: 80,
+    _costPerUpgrade: 80,
     quantityPerUpgrade: 25,
     maxUpgradeCount: 4,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {

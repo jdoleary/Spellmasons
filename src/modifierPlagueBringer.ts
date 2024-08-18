@@ -13,7 +13,7 @@ export const plagueBringerId = 'Plague Bringer';
 export default function registerPlagueBringer() {
   registerModifiers(plagueBringerId, {
     description: i18n('rune_plague_bringer'),
-    costPerUpgrade: 40,
+    _costPerUpgrade: 40,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, plagueBringerId, { isCurse: false, quantity, keepOnDeath: false }, () => {
         Unit.addEvent(unit, plagueBringerId);

@@ -9,7 +9,7 @@ export default function registerHeavyImpacts() {
   registerModifiers(heavyImpactsId, {
     description: ('rune_heavy_impact'),
     unitOfMeasure: 'Damage',
-    costPerUpgrade: 100,
+    _costPerUpgrade: 100,
     quantityPerUpgrade: 100,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, heavyImpactsId, { isCurse: false, quantity, keepOnDeath: true }, () => {

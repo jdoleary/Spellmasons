@@ -9,7 +9,7 @@ export default function registerLiquidmancer() {
   registerModifiers(liquidmancerId, {
     description: ('rune_liquidmancer'),
     unitOfMeasure: '% Damage',
-    costPerUpgrade: 100,
+    _costPerUpgrade: 100,
     quantityPerUpgrade: 100,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, liquidmancerId, { isCurse: false, quantity, keepOnDeath: true }, () => {

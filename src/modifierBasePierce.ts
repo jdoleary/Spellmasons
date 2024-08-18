@@ -8,7 +8,7 @@ export default function registerBasePierce() {
   registerModifiers(modifierBasePierceId, {
     description: ('rune_base_pierce'),
     unitOfMeasure: 'Units',
-    costPerUpgrade: 80,
+    _costPerUpgrade: 80,
     quantityPerUpgrade: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, modifierBasePierceId, { isCurse: false, quantity, keepOnDeath: true }, () => {

@@ -7,7 +7,7 @@ const rerollRuneId = 'reroll'
 export default function registerStatUpgradeModifiers() {
   registerModifiers(rerollRuneId, {
     description: `reroll_rune_description`,
-    costPerUpgrade: 20,
+    _costPerUpgrade: 20,
     constant: true,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       const player = underworld.players.find(p => p.unit == unit);

@@ -12,7 +12,7 @@ export default function registerBountySuffocate() {
   registerModifiers(bountyDamageId, {
     description: ('rune_bounty_suffocate'),
     unitOfMeasure: 'Suffocate',
-    costPerUpgrade: 80,
+    _costPerUpgrade: 80,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, bountyDamageId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addModifier(unit, bountyHunterId, underworld, prediction);

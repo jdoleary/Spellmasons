@@ -478,7 +478,7 @@ export function renderRunesMenu(underworld: Underworld) {
   }
 
   const constantRunes: string[] = Object.entries(Cards.allModifiers).flatMap(([key, modifier]) => {
-    if (modifier.costPerUpgrade && modifier.constant) {
+    if (modifier._costPerUpgrade && modifier.constant) {
       return [key];
     } else {
       return [];
@@ -489,8 +489,9 @@ export function renderRunesMenu(underworld: Underworld) {
 
   globalThis.cheapestAvailableRune = chosenRunes.reduce<number>((cheapest, current) => {
     const modifier = Cards.allModifiers[current]
-    if (modifier?.costPerUpgrade && modifier.costPerUpgrade < cheapest) {
-      return modifier.costPerUpgrade
+    const modifierCost = modifier && Cards.calcluateModifierCostPerUpgrade(modifier, underworld, globalThis.player)
+    if (modifierCost !== undefined && modifierCost < cheapest) {
+      return modifierCost;
     } else {
       return cheapest;
     }
@@ -501,12 +502,17 @@ export function renderRunesMenu(underworld: Underworld) {
       return '';
     }
     const modifier = Cards.allModifiers[modifierKey];
+    const modifierCost = modifier && Cards.calcluateModifierCostPerUpgrade(modifier, underworld, globalThis.player);
+    const discount = Math.floor((modifier && modifierCost && modifier._costPerUpgrade && (modifierCost / modifier._costPerUpgrade) || 0) * 100);
     const modifierInstance = globalThis.player.unit.modifiers[modifierKey];
     return `<div class="stat-row flex" data-stat="${modifierKey}">
               <div class="stat-row-left">
-                <div class="plus-btn-container" style="color:black"><div class="stat-value" style="color:black">${modifier?.costPerUpgrade !== undefined && `${modifier.costPerUpgrade < 0 ? '+' : ''}${Math.abs(modifier.costPerUpgrade)}sp` || '&nbsp;'}</div></div>
+                <div class="plus-btn-container" style="color:black"><div class="stat-value" style="color:black">${modifierCost !== undefined && `${modifierCost < 0 ? '+' : ''}${Math.abs(modifierCost)}sp` || '&nbsp;'}</div></div>
                 <div>
-                  <div class="rune-name" style="color:black"> </div>
+                  <div class="rune-name-holder discount-${discount}">
+                    <div class="rune-name" style="color:black"> </div>
+                    ${discount !== 100 ? `<div class="discount">${100 - discount}% ${i18n('on sale')}</div>` : ''}
+                  </div>
                   <div class="description" style="color:black">
                   ${modifier?.description && i18n(modifier.description)}
                   </div>
@@ -585,11 +591,12 @@ export function renderRunesMenu(underworld: Underworld) {
       elPlusBtn.style.color = 'white';
 
       elPlusBtnContainer.appendChild(elPlusBtn);
-      const modifier = Cards.allModifiers[stat]
+      const modifier = Cards.allModifiers[stat];
+      const modifierCost = modifier && Cards.calcluateModifierCostPerUpgrade(modifier, underworld, globalThis.player);
       let isDisabled = false;
       if (modifier) {
         // If cost > points, disable
-        if (modifier.costPerUpgrade && modifier.costPerUpgrade > statPoints) {
+        if (modifierCost && modifierCost > statPoints) {
           isDisabled = true;
         }
         // If player has reached max upgrade count, disable

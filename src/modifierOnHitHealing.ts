@@ -10,7 +10,7 @@ export default function registerOnHitHealing() {
   registerModifiers(onHitHealingId, {
     description: 'rune_on_hit_healing',
     unitOfMeasure: 'health',
-    costPerUpgrade: 60,
+    _costPerUpgrade: 60,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, onHitHealingId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, onHitHealingId);

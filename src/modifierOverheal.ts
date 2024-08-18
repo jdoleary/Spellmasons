@@ -11,7 +11,7 @@ export default function registerOverheal() {
   registerModifiers(overhealId, {
     description: 'rune_overheal',
     unitOfMeasure: '% effectiveness',
-    costPerUpgrade: 50,
+    _costPerUpgrade: 50,
     quantityPerUpgrade: 20,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, overhealId, { isCurse: false, quantity, keepOnDeath: true }, () => {
