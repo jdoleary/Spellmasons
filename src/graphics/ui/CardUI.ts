@@ -532,6 +532,7 @@ export function renderRunesMenu(underworld: Underworld) {
     ${constantRunes.map((key, i) => elStatUpgradeRow(key, i, true)).join('')}
   </div>
   <div class="rune-rows">
+    <h2>&nbsp;</h2>
     ${chosenRunes.flatMap((key, i) => key ? [elStatUpgradeRow(key, i)] : []).join('')}
   </div>
 </div>
