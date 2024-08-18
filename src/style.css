@@ -2162,11 +2162,11 @@ body.view-Game.showUpgrades #perkList.visible {
   display: flex;
   gap: 8px;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-end;
 }
 
 .stat-row .description {
-  font-size: 0.7em;
+  font-size: 1em;
 }
 
 .stat-row:hover .stat-lock {
@@ -2208,6 +2208,11 @@ body.view-Game.showUpgrades #perkList.visible {
 .plus-btn.small {
   width: 24px;
   height: 24px;
+}
+
+.stat-row .plus-btn {
+  width: 40px;
+  height: 40px;
 }
 
 .plus-btn {
@@ -2731,6 +2736,7 @@ body.dragging-card .floating-card-holder .empty-slot {
 .rune-name-holder {
   display: flex;
   gap: 8px;
+  align-items: baseline;
 }
 
 .rune-name-holder.discount-40 {
@@ -2739,4 +2745,8 @@ body.dragging-card .floating-card-holder .empty-slot {
 
 .rune-name-holder.discount-80 {
   color: #ff45bc;
+}
+
+.rune-name {
+  font-size: 1.8em;
 }
