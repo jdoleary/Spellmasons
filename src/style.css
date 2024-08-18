@@ -2733,10 +2733,10 @@ body.dragging-card .floating-card-holder .empty-slot {
   gap: 8px;
 }
 
-.rune-name-holder.discount-50 {
+.rune-name-holder.discount-40 {
   color: #b545ff;
 }
 
-.rune-name-holder.discount-75 {
+.rune-name-holder.discount-80 {
   color: #ff45bc;
 }
