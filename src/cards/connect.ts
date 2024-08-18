@@ -111,7 +111,7 @@ export function getConnectingEntities(
   potentialTargets: HasSpace[],
   filterFn: (x: any) => boolean, //selects which type of entities this can chain to
   prediction: boolean,
-  radiusFn?: (chainSource: HasSpace) => number,
+  radiusFn?: (chainSource: HasSpace, chainsLeft: number) => number,
 ): { chainSource: HasSpace, entity: HasSpace }[] {
 
   potentialTargets = potentialTargets
@@ -131,14 +131,14 @@ export function getNextConnectingEntities(
   chainsLeft: number,
   potentialTargets: HasSpace[],
   prediction: boolean,
-  radiusModifierFn?: (chainSource: HasSpace) => number,
+  radiusModifierFn?: (chainSource: HasSpace, chainsLeft: number) => number,
 ): { chainSource: HasSpace, entity: HasSpace }[] {
 
   potentialTargets = potentialTargets.filter(x => x != source);
 
   let adjustedRadius = baseRadius;
   if (radiusModifierFn) {
-    adjustedRadius *= radiusModifierFn(source);
+    adjustedRadius *= radiusModifierFn(source, chainsLeft);
   }
 
   if (prediction && !globalThis.isHUDHidden) {

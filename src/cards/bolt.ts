@@ -14,12 +14,13 @@ const id = 'Bolt';
 const damage = 8;
 const baseRadius = baseExplosionRadius;
 // Submerged units increase radius dramatically
-const liquidRadiusMultiplier = 2;
+const liquidRadiusMultiplier = 1.5;
+const boltAnimationTime = 1000;
 const spell: Spell = {
   card: {
     id,
     category: CardCategory.Damage,
-    manaCost: 12,
+    manaCost: 8,
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
@@ -29,18 +30,18 @@ const spell: Spell = {
     requiresFollowingCard: false,
     description: ['spell_bolt', damage.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
-      // Bolt has functionally unlimited targets
-      let limitTargetsLeft = 10_000;
+      // Bolt starts with 1 chain, and gets +1 chain per quantity
+      let chainsRemaining = quantity;
       const potentialTargets = underworld.getPotentialTargets(prediction);
-      // Note: This loop must NOT be a for..of and it must cache the length because it
-      // mutates state.targetedUnits as it iterates.  Otherwise it will continue to loop as it grows
       const targets = getCurrentTargets(state);
-      const length = targets.length;
-      if (length) {
+      if (targets.length) {
         playDefaultSpellSFX(card, prediction);
       }
-      const affected: HasSpace[] = [];
-      for (let i = 0; i < length; i++) {
+
+      // An array of bolts, or chainGroups, which is an array of affected entities;
+      const chains: { entity: HasSpace, chainsRemaining: number }[][] = [];
+      // Loop through all initial targets, and emit a bolt from each
+      for (let i = 0; i < targets.length; i++) {
         const target = targets[i];
         if (target) {
           const typeFilter = Unit.isUnit(target)
@@ -57,91 +58,135 @@ const spell: Spell = {
                 return false;
               };
 
+          // +25% base radius per radius boost
           let adjustedRadius = baseRadius * (1 + (0.25 * state.aggregator.radiusBoost))
-          // Find all units touching the spell origin
           const chained = getConnectingEntities(
             target,
             adjustedRadius,
-            limitTargetsLeft,
-            targets,
+            chainsRemaining,
+            [target], // Each bolt is individual/isolated, and can hit existing targets
             potentialTargets,
             typeFilter,
             prediction,
             ModifyBoltRadius,
           );
-          for (let entity of chained.map(x => x.entity).concat(target)) {
-            if (!affected.includes(entity)) {
-              affected.push(entity);
+
+          // Keep track of affected entities and chains remaining for each one
+          const entities = [target].concat(chained.map(x => x.entity));
+          const chainGroup: { entity: HasSpace, chainsRemaining: number }[] = [];
+          for (let i = 0; i < entities.length; i++) {
+            const entity = entities[i];
+            if (entity) {
+              chainGroup.push({ entity, chainsRemaining: chainsRemaining - i })
             }
           }
+
+          // Add this bolt, aka chain group, to the final array of chain groups
+          chains.push(chainGroup);
         }
       }
 
       if (!prediction) {
-        await raceTimeout(1000, 'bolt animate', animate(affected));
+        await raceTimeout(500 + boltAnimationTime, 'bolt animate', animate(chains));
       }
-      affected.forEach(u => {
-        if (Unit.isUnit(u)) {
-          Unit.takeDamage({
-            unit: u,
-            amount: damage * quantity * targets.length,
-            sourceUnit: state.casterUnit,
-          }, underworld, prediction);
+
+      // Loop through each bolt / chain group
+      for (let g = 0; g < chains.length; g++) {
+        // Loop through all chained entities of this bolt / chain group
+        const chainGroup = chains[g];
+        if (chainGroup) {
+          for (let i = 0; i < chainGroup.length; i++) {
+            const chainedEntity = chainGroup[i];
+            if (chainedEntity) {
+              if (Unit.isUnit(chainedEntity.entity)) {
+                // Damage is multiplied by the number of chains remaining at each entity
+                Unit.takeDamage({
+                  unit: chainedEntity.entity,
+                  amount: damage * (chainedEntity.chainsRemaining + 1),
+                  sourceUnit: state.casterUnit,
+                }, underworld, prediction);
+              }
+            }
+
+          }
         }
-      })
+      }
 
       return state;
     },
   },
 };
 
-export function ModifyBoltRadius(sourceEntity: HasSpace): number {
-  return sourceEntity.inLiquid ? liquidRadiusMultiplier : 1;
+export function ModifyBoltRadius(sourceEntity: HasSpace, chainsLeft: number): number {
+  return (1 + (chainsLeft * 0.25)) * (sourceEntity.inLiquid ? liquidRadiusMultiplier : 1);
 }
 
-async function animate(targets: HasSpace[]) {
+async function animate(chains: { entity: HasSpace, chainsRemaining: number }[][]) {
   // Animations do not occur on headless
   if (!globalThis.headless) {
     return new Promise<void>((resolve) => {
-      doDraw(resolve, targets, Date.now() + 700);
+      doDraw(resolve, chains, Date.now() + boltAnimationTime);
     }).then(() => {
       globalThis.predictionGraphics?.clear();
     });
   }
 }
-function doDraw(resolve: (value: void | PromiseLike<void>) => void, targets: HasSpace[], endTime: number) {
-  const didDraw = drawLineBetweenTargets(targets);
+function doDraw(resolve: (value: void | PromiseLike<void>) => void, chains: { entity: HasSpace, chainsRemaining: number }[][], endTime: number) {
+  const didDraw = drawLineBetweenTargets(chains, endTime);
   if (didDraw) {
     // Show the electricity for a moment
     if (Date.now() > endTime) {
       resolve();
     } else {
-      requestAnimationFrame(() => doDraw(resolve, targets, endTime))
+      requestAnimationFrame(() => doDraw(resolve, chains, endTime))
     }
   } else {
     resolve();
   }
 }
 // Returns true if it did draw
-function drawLineBetweenTargets(targets: HasSpace[]): boolean {
+function drawLineBetweenTargets(chains: { entity: HasSpace, chainsRemaining: number }[][], endTime: number): boolean {
   // Animations do not occur on headless
   if (!globalThis.headless) {
     if (globalThis.predictionGraphics) {
-      if (targets[0] === undefined) {
-        return false;
-      }
+      // Clear last animation frame
       globalThis.predictionGraphics.clear();
-      globalThis.predictionGraphics.lineStyle(2, 0xffffff, 1.0)
-      globalThis.predictionGraphics.moveTo(targets[0].x, targets[0].y);
-      let from = targets[0];
-      for (let target of targets) {
-        for (let i = 0; i < 5; i++) {
-          const intermediaryPoint = jitter(lerpVec2(from, target, 0.2 * i), 8);
-          globalThis.predictionGraphics.lineTo(intermediaryPoint.x, intermediaryPoint.y);
+
+      // All chain groups animate simultaneously
+      for (let g = 0; g < chains.length; g++) {
+        // Targets is one "chain group"
+        const targets = chains[g];
+        if (targets && targets[0]) {
+          // We want to draw all bolts within the animation time
+          // Hangtime is what % of the animation time should be spent with all bolts complete
+          const hangtime = 0.2;
+          const timePassed = boltAnimationTime - (endTime - Date.now());
+          const boltsToDraw = Math.min(targets.length * timePassed / (boltAnimationTime * (1 - hangtime)), targets.length - 1);
+
+          let from = targets[0];
+          globalThis.predictionGraphics.moveTo(from.entity.x, from.entity.y);
+
+          for (let i = 0; i <= boltsToDraw; i++) {
+            // Draw lightning to the next target if it exists, else draw lightning on self
+            let target = targets[i + 1] || from;
+            if (target) {
+              // bolt size should increase with chains remaining to
+              // emphasize mechanic of inc. damage/ranged per chain left
+              const boltSize = Math.sqrt(from.chainsRemaining) * 2;
+              globalThis.predictionGraphics.lineStyle(boltSize, 0xffffff, 1.0)
+
+              // pow function creates more impact/pause between chains hit
+              const progress = Math.pow(Math.min(boltsToDraw - i, 1), 10);
+              for (let j = 1; j <= 5; j++) {
+                const intermediaryPoint = jitter(lerpVec2(from.entity, target.entity, 0.2 * progress * j), boltSize * 3);
+                globalThis.predictionGraphics.lineTo(intermediaryPoint.x, intermediaryPoint.y);
+              }
+              from = target;
+            }
+          }
         }
-        globalThis.predictionGraphics.lineTo(target.x, target.y);
-        from = target;
       }
+
       return true;
     }
   }
