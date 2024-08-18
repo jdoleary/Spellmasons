@@ -253,7 +253,7 @@
         "spell_bleed": "Deals more damage based on how much health the target is missing.❕❕ For example:❕Target with 🍞% health will die.❕🍞% health: 🍞% of max health as damage❕Target with full health will take no damage.❕",
         "spell_bloat": "When a unit cursed with 🍞 dies, it will explode dealing 🍞 damage to all units within the explosion radius.❕Multiple stacks of 🍞 will increase the amount of damage done when the unit explodes.",
         "spell_blood_curse": "A unit cursed with Blood Curse will receive 2 times their max health but any future healing will be taken as damage.",
-        "spell_bolt": "Arcs electricity through ALL units close to each other dealing 🍞 damage to each. The radius doubles for submerged units.  Damage scales with the number of targeted units.",
+        "spell_bolt": "Arcs electricity through nearby units dealing 🍞 damage per stack.  Stacks increase number of units it arcs between and the arc radius.",
         "spell_burst": "Deals damage based how close the target is to the caster.❕The closer they are the higher the damage done.❕Maximum damage is 🍞.❕Stackable.",
         "spell_capture_soul": "Captures the soul of the targeted unit, granting you a summon card for that unit.❕Target must be alive and below 🍞 health.❕The more powerful the captured soul is, the more mana it will cost to summon.",
         "spell_clone": "Clones each target.  Cloned units maintain their current faction.",
@@ -595,7 +595,8 @@
         "target disk": "Targeting Disk",
         "spell_target_ricochet_arrow": "A disk that ricochets once and adds units as targets on collision",
         "target arrow": "Targeting Arrow",
-        "reroll_rune_description": "Show a fresh selection of runes to choose from.  Locked runes will not be changed."
+        "reroll_rune_description": "Show a fresh selection of runes to choose from.  Locked runes will not be changed.",
+        "rune_golemancer": ""
     },
     {
         "language": "Français",
@@ -851,7 +852,7 @@
         "spell_bleed": "Inflige plus de dégâts en fonction de la santé manquante de la cible.❕❕ Par exemple:❕Les cibles avec 🍞% de leur santé mourront.❕🍞% de leur santé: 🍞% de leur santé maximum en dégâts❕Les cibles qui n'ont pas perdu de santé ne subiront pas de dégâts.❕",
         "spell_bloat": "Si une unité est maudite avec 🍞, elle explosera en mourant, infligeant 🍞 dégâts à toutes les unités à portée❕Plusieurs statuts 🍞 augmentera les dégâts infligés par l'unité en mourant.",
         "spell_blood_curse": "Une unité maudite avec Malédiction du Sang aura sa santé maximale doublée, mais les soins lui infligeront désormais des dégâts.",
-        "spell_bolt": "Arcs électriques à travers TOUTES les unités à proximité, infligeant 🍞 dégâts à chacune. Le rayon double pour les unités immergées.",
+        "spell_bolt": "Des arcs d'électricité traversent les unités à proximité infligeant 🍞 dégâts par empilement. Les empilements augmentent le nombre d'unités entre lesquelles il y a des arcs et le rayon des arcs.",
         "spell_burst": "Inflige des dégâts selon la distance de la cible❕Plus la cible est proche, plus elle subira de dégâts❕Les dégâts maximum sont 🍞.❕Accumulable.",
         "spell_capture_soul": "Capture l'âme de la cible, accordant une carte d'invocation de cette unité.❕La cible doit être en vie et sa santé inférieure à 🍞.❕Plus l'âme capturée est puissante, plus l'invocation sera couteuse.",
         "spell_clone": "Clone chaque cible. Les unités clonées gardent leur affiliation.",
@@ -1193,7 +1194,8 @@
         "target disk": "Cible de Disque",
         "spell_target_ricochet_arrow": "Un disque qui rebondit une fois et ajoute des unités comme cibles lors de la collision.",
         "target arrow": "Flèche ciblée",
-        "reroll_rune_description": "Montrez une nouvelle sélection de runes à choisir. Les runes verrouillées ne seront pas modifiées."
+        "reroll_rune_description": "Montrez une nouvelle sélection de runes à choisir. Les runes verrouillées ne seront pas modifiées.",
+        "rune_golemancer": ""
     },
     {
         "language": "italiano",
@@ -1449,7 +1451,7 @@
         "spell_bleed": "Infligge più danni in base a quanta salute manca al bersaglio.❕❕ Ad esempio:❕Bersaglio con 🍞% di salute morirà.❕🍞% di salute: 🍞% della salute massima come danno❕Il bersaglio con la salute al massimo non subirà danni.❕",
         "spell_bloat": "Se un'unità è maledetta con 🍞, quando muore esploderà infliggendo 🍞 danni a tutte le unità all'interno del raggio di esplosione.❕Più copie di 🍞 aumenteranno la quantità di danni fatti quando l'unità esplode.",
         "spell_blood_curse": "Un'unità maledetta con la Maledizione del Sangue riceverà 2 volte la loro salute massima ma qualsiasi futura guarigione sarà presa come danno.",
-        "spell_bolt": "Crea un arco elettrico attraverso TUTTE le unità vicine, infliggendo 🍞 danni a ciascuna. Il raggio raddoppia per le unità sommerse.",
+        "spell_bolt": "Archi l'elettricità tra le unità vicine infliggendo 🍞 danni per ogni accumulo. Gli accumuli aumentano il numero di unità tra cui arcing e il raggio dell'arco.",
         "spell_burst": "Infligge danni in base a quanto vicino il bersaglio è al lanciatore.❕Più sono vicini, maggiore è il danno inflitto.❕Il danno massimo è 🍞.❕L'incantesimo può essere combinato. e.",
         "spell_capture_soul": "Cattura l'anima dell'unità bersaglio, dandoti una carta di evocazione per quell'unità.❕Il bersaglio deve essere vivo e al di sotto di 🍞 salute.❕Più potente è l'anima catturata, maggiore sarà il costo di mana per evocarla.❕Questo incantesimo viene distrutto nel processo.",
         "spell_clone": "Clona ogni bersaglio. Le unità clonate mantengono la loro fazione attuale.",
@@ -1791,7 +1793,8 @@
         "target disk": "Disco di mira",
         "spell_target_ricochet_arrow": "Un disco che rimbalza una volta e aggiunge unità come obiettivi all'impatto.",
         "target arrow": "Freccia Mirata",
-        "reroll_rune_description": "Mostra una selezione fresca di rune da scegliere. Le rune bloccate non verranno cambiate."
+        "reroll_rune_description": "Mostra una selezione fresca di rune da scegliere. Le rune bloccate non verranno cambiate.",
+        "rune_golemancer": ""
     },
     {
         "language": "Deutsche",
@@ -2047,7 +2050,7 @@
         "spell_bleed": "Fügt mehr Schaden zu je mehr Leben dem Ziel fehlen.❕❕ Zum Beispiel:❕Ein Ziel mit 🍞% leben wird vom Zauber getötet.❕🍞% Leben: 🍞% des maximalen Lebens als Schaden❕Ziele die noch alle Lebenspunkte übrig haben erleiden durch diesen Zauber keinen Schaden.❕",
         "spell_bloat": "Wenn eine Einheit die von 🍞 betroffen ist stirbt, explodiert sie und fügt allen Einheiten im Explosionsradius 🍞 Schaden zu.❕ Ist die Einheit mehrfach von 🍞 betroffen, nimmt der Schaden der von der Explosion zugefügt wird zu. ",
         "spell_blood_curse": "Von Blutfluch betroffene EInheiten haben doppelt so viele Maximallebenspunkte wie gewöhnlich, dafür können sie nicht geheilt werden und erleiden alle Heilung als Schaden.",
-        "spell_bolt": "Leitet Elektrizität durch ALLE in der Nähe befindlichen Einheiten und fügt jedem 🍞 Schaden zu. Bei untergetauchten Einheiten verdoppelt sich der Radius.",
+        "spell_bolt": "Bogen elektrischer Strom durch nahegelegene Einheiten und fügt 🍞 Schaden pro Stapel zu. Stacks erhöhen die Anzahl der Einheiten, zwischen denen der Strom überspringt, und den Radius des Strombogens.",
         "spell_burst": "Fügt Schaden abhängig von der Distanz zum Zauberer zu.❕ Je näher desto mehr Schaden.❕ Der Maximale Schaden beträgt 🍞.❕ Stapelbar",
         "spell_capture_soul": "Fängt die Seele des Ziels und gibt dir einen Zauber der es erlaubt, das Monster dessen Seele gefangen wurde zu beschwören.❕ Das Ziel muss am Leben sein und weniger als 🍞 Lebenspunkte übrig haben.❕ Je mächtiger die gefangene Seele, desto mehr Mana wird benötigt um das Monster wieder zu beschwören.❕ Dieser Zauber kann nur 1 mal verwendet werden.",
         "spell_clone": "Klont jedes Ziel. Geklonte Einheiten gehören zur gleichen Fraktion wie das Original",
@@ -2389,7 +2392,8 @@
         "target disk": "Zielfestplatte",
         "spell_target_ricochet_arrow": "Eine Scheibe, die einmal abprallt und bei Kollision Einheiten als Ziele hinzufügt.",
         "target arrow": "Zielpfeil",
-        "reroll_rune_description": "Zeige eine frische Auswahl an Runen zur Auswahl. Gesperrte Runen werden nicht geändert."
+        "reroll_rune_description": "Zeige eine frische Auswahl an Runen zur Auswahl. Gesperrte Runen werden nicht geändert.",
+        "rune_golemancer": ""
     },
     {
         "language": "español",
@@ -2645,7 +2649,7 @@
         "spell_bleed": "Inflige más daño en función de la cantidad de salud que falta el objetivo. Por ejemplo: ❕Target con 🍞% de salud morirá.",
         "spell_bloat": "Cuando una unidad se maldijo con 🍞 muere, explotará tratando 🍞 🍞 Daño a todas las unidades dentro del radio de explosión. Las pilas de múltiples de 🍞 aumentarán la cantidad de daño causado cuando la unidad explota.",
         "spell_blood_curse": "Una unidad maldita con la maldición de sangre recibirá 2 veces su salud máxima, pero cualquier curación futura se tomará como daño.",
-        "spell_bolt": "Envía electricidad a través de TODAS las unidades cercanas, causando 🍞 daño a cada una. El radio se duplica para las unidades sumergidas.",
+        "spell_bolt": "Arcos electricidad a las unidades cercanas causando 🍞 daño por pila. Las pilas aumentan el número de unidades entre las que arcos y el radio del arco.",
         "spell_burst": "Se basa en el daño de cuán cerca está el objetivo para el lanzador. Cuanto más cerca estén el daño causado.",
         "spell_capture_soul": "Captura el alma de la unidad objetivo, otorgándole una tarjeta de invocación para esa unidad. El objetivo debe estar vivo y debajo de la salud. La más poderosa es el alma capturada, más maná costará convocar.",
         "spell_clone": "Clones cada objetivo. Las unidades clonadas mantienen su facción actual.",
@@ -2987,7 +2991,8 @@
         "target disk": "Disco de Apuntado",
         "spell_target_ricochet_arrow": "Un disco que rebota una vez y añade unidades como objetivos al colisionar.",
         "target arrow": "Flecha de apuntado",
-        "reroll_rune_description": "Muestra una nueva selección de runas para elegir. Las runas bloqueadas no serán cambiadas."
+        "reroll_rune_description": "Muestra una nueva selección de runas para elegir. Las runas bloqueadas no serán cambiadas.",
+        "rune_golemancer": ""
     },
     {
         "language": "日本",
@@ -3243,7 +3248,7 @@
         "spell_bleed": "失った体力によってダメージ量が変わります.❕例:❕目標は BD2023 %の体力場合は死亡する❕ BD2023 %の体力:つまり BD2023 %最大体力分のダメージが発生する.❕体力がフルーの場合はダメージ受けない❕",
         "spell_bloat": "もし BD2023 の呪いを受けた場合,死亡時爆発し周囲に BD2023 のダメージを与える.❕重ねによって BD2023 のダメージが上がります",
         "spell_blood_curse": "血の呪いを受けると体力が2倍になるが、その代わりに全ての回復効果がダメージになる",
-        "spell_bolt": "互いに近いすべてのユニットに電気を放電し、それぞれに 🍞 ダメージを与えます。水没したユニットの半径は 2 倍になります。",
+        "spell_bolt": "近くのユニットに電気をアークさせ、スタックごとに🍞ダメージを与えます。スタックが増えるとアークするユニットの数とアーク半径が増加します。",
         "spell_burst": "ターゲットとプレイヤーの距離によってダメージが変わる.❕近いほどダメージが高い.❕最大ダメージは BD2023 .❕重ね可能",
         "spell_capture_soul": "ターゲットの魂を捉える,そして召喚呪文を獲得する.❕目標は生存かつ体力は BD2023 以下が条件.❕魂が強いほどマナコストが高い.",
         "spell_clone": "ターゲットをクローンする.クローンされたものは味方敵状態を維持する",
@@ -3585,7 +3590,8 @@
         "target disk": "ターゲティングディスク",
         "spell_target_ricochet_arrow": "一度跳ね返り、衝突時にターゲットとしてユニットを追加するディスク。",
         "target arrow": "標的矢印",
-        "reroll_rune_description": "選択する新しいルーンのセットを表示します。ロックされたルーンは変更されません。"
+        "reroll_rune_description": "選択する新しいルーンのセットを表示します。ロックされたルーンは変更されません。",
+        "rune_golemancer": ""
     },
     {
         "language": "Português",
@@ -3841,7 +3847,7 @@
         "spell_bleed": "Causa mais dano com base a quantidade de saúde que está faltando do alvo.",
         "spell_bloat": "Quando uma unidade amaldiçoada com 🍞 morrer, ela explodirá causar dano a todas as unidades dentro de seu raio de explosão.",
         "spell_blood_curse": "Uma unidade amaldiçoada com a maldição de sangue receberá 2 vezes sua saúde máxima, mas qualquer feitiço de cura no alvo amaldiçoado causará dano a ele.",
-        "spell_bolt": "Gera eletricidade através de TODAS as unidades próximas umas das outras, causando 🍞 de dano a cada uma. O raio dobra para unidades submersas.",
+        "spell_bolt": "Arcos eletricidade entre unidades próximas causando 🍞 dano por pilha. As pilhas aumentam o número de unidades entre as quais ele faz arco e o raio do arco.",
         "spell_burst": "Causar danos com base no quão perto do alvo está do lançador. ❕ Quanto mais próximos, maior o dano causado. ❕ O dano máximo é 🍞.❕Esse feitiço pode ser estacado.",
         "spell_capture_soul": "Você captura a alma da unidade escolhecida, concedendo a vocÊ então seu cartão de convocação. O alvo deve estar vivo e abaixo de 🍞  de saúde! Quanto mais poderosa é a alma capturada, mais mana ela vai custar para ser invocada.",
         "spell_clone": "Clona o alvo, o alvo clonado continuará no mesmo lado em que já pertencia. ( Ou seja, se for inimigo vai permanecer inimigo, se for aliado vai permanecer aliado )",
@@ -4183,7 +4189,8 @@
         "target disk": "Disco de Mira",
         "spell_target_ricochet_arrow": "Um disco que ricocheteia uma vez e adiciona unidades como alvos ao colidir.",
         "target arrow": "Flecha de Mirar",
-        "reroll_rune_description": "Mostre uma nova seleção de runas para escolher. Runas trancadas não serão alteradas."
+        "reroll_rune_description": "Mostre uma nova seleção de runas para escolher. Runas trancadas não serão alteradas.",
+        "rune_golemancer": ""
     },
     {
         "language": "عربى",
@@ -4439,7 +4446,7 @@
         "spell_bleed": "يتناول المزيد من الأضرار بناءً على مقدار الصحة التي يفقدها الهدف. على سبيل المثال: ❕ -target مع 🍞 ٪ سوف تموت.",
         "spell_bloat": "عندما تموت الوحدة مع 🍞 يموت ، ستنفجر في التعامل مع جميع الوحدات داخل دائرة نصف قطرها الانفجار. سوف تزيد مداخن multiple من 🍞 كمية الضرر الذي يحدث عندما تنفجر الوحدة.",
         "spell_blood_curse": "ستحصل وحدة لعنة الدم على صحتها على صحتها 2 أضعاف مرة ، ولكن سيتم اعتبار أي شفاء في المستقبل ضررًا.",
-        "spell_bolt": "قم بتوزيع الكهرباء من خلال جميع الوحدات القريبة من بعضها البعض مما يسبب 🍞 ضررًا لكل منها. يتضاعف نصف القطر للوحدات المغمورة.",
+        "spell_bolt": "تشحن القوس الكهرباء عبر الوحدات القريبة مسببة ضرر 🍞 لكل مجموعة. تزيد المجموعات من عدد الوحدات التي تتصل بها القوس ونصف قطر القوس.",
         "spell_burst": "الصفقات تعتمد على مدى قرب الهدف من العجلات. - كلما زاد عدد الأضرار التي حدثت.",
         "spell_capture_soul": "يلتقط روح الوحدة المستهدفة ، ومنحك بطاقة استدعاء لتلك الوحدة. يجب أن تكون الهدف على قيد الحياة وأقل من الصحة.",
         "spell_clone": "استنساخ كل هدف. الوحدات المستنسخة تحافظ على فصيلها الحالي.",
@@ -4781,7 +4788,8 @@
         "target disk": "قرص الاستهداف",
         "spell_target_ricochet_arrow": "قرص يرتد مرة واحدة ويضيف وحدات كأهداف عند الاصطدام",
         "target arrow": "سهم الاستهداف",
-        "reroll_rune_description": "اعرض مجموعة جديدة من الرون للاختيار منها. لن تتغير الرون المقفلة."
+        "reroll_rune_description": "اعرض مجموعة جديدة من الرون للاختيار منها. لن تتغير الرون المقفلة.",
+        "rune_golemancer": ""
     },
     {
         "language": "한국어",
@@ -5037,7 +5045,7 @@
         "spell_bleed": "대상이 잃은 체력에 따라 더 많은 피해를 입힙니다.❕❕ 예:❕ 체력이 🍞%인 대상은 사망합니다.❕🍞% 체력: 최대 체력의 🍞% 만큼 피해를 입습니다❕최대 체력 상태인 대상은 피해를 입지 않습니다.",
         "spell_bloat": "유닛이 🍞로 저주를 받을 경우, 장치가 사망할 때 폭발 반경 내의 모든 유닛에 🍞의 피해를 입히며 폭발합니다.❕ 🍞가 쌓이면 쌓일수록 유닛이 폭발할 때의 데미지가 증가합니다.",
         "spell_blood_curse": "피의 저주로 저주받은 유닛은 최대 체력의 2배를 받지만 향후 치료는 피해로 간주됩니다.",
-        "spell_bolt": "서로 가까이 있는 모든 유닛에 전기를 공급하여 각각 🍞 피해를 줍니다. 물에 잠긴 유닛의 반경은 두 배가 됩니다.",
+        "spell_bolt": "인근 유닛을 통해 전기를 아크로 보내며 스택당 🍞 피해를 줍니다. 스택이 증가할수록 아크가 연결되는 유닛의 수와 아크 반경이 증가합니다.",
         "spell_burst": "대상이 시전자에 얼마나 가까이 있는지에 따라 피해를 입힙니다.❕가까워질수록 피해가 커집니다.❕ 최대 피해는 🍞입니다.❕ 중첩이 가능합니다.",
         "spell_capture_soul": "유닛의 영혼을 사로잡아 해당 유닛에 대한 소환 카드를 제공합니다.❕대상이 살아있고 🍞체력 미만이어야 합니다.❕사로잡은 영혼이 강력할수록 소환하는 데 드는 마나가 커집니다.",
         "spell_clone": "각 대상을 복제합니다. 복제된 유닛은 자신의 세력에 여전히 속합니다.",
@@ -5379,7 +5387,8 @@
         "target disk": "타겟 디스크",
         "spell_target_ricochet_arrow": "한 번 튕겨서 충돌 시 목표에 단위를 추가하는 디스크",
         "target arrow": "타겟팅 화살",
-        "reroll_rune_description": "선택할 새로운 룬을 보여주세요. 잠금된 룬은 변경되지 않습니다."
+        "reroll_rune_description": "선택할 새로운 룬을 보여주세요. 잠금된 룬은 변경되지 않습니다.",
+        "rune_golemancer": ""
     },
     {
         "language": "Русский",
@@ -5635,7 +5644,7 @@
         "spell_bleed": "Наносит урон зависящий от здоровья цели.❕❕Например:❕Цель с 🍞% здоровья умрет.❕🍞% здоровья: 🍞% от максимального здоровья в качестве урона❕Цель с полным здоровьем не получит урона.",
         "spell_bloat": "Если на юнита наложено 🍞 - он взорвется. Взрыв нанесет 🍞 урона всем существам в радиусе взрыва.❕ Повторное наложение заклинания \"🍞\" увеличивает количество урона.",
         "spell_blood_curse": "Существо с \"Проклятьем Крови\" получает удвоенное здоровье, но лечение будет наносить урон.",
-        "spell_bolt": "Пропускает электричество через ВСЕ юниты, находящиеся рядом друг с другом, нанося 🍞 урона каждому. Радиус удваивается для затопленных юнитов.",
+        "spell_bolt": "Электрические дуги проходят через ближайшие юниты, нанося 🍞 урона за стек. Стеки увеличивают количество юнитов, между которыми происходит дуга, а также радиус дуги.",
         "spell_burst": "Наносит урон зависящий от расстояния.❕Чем ближе цель, тем больше урона❕Максимальный урон 🍞.",
         "spell_capture_soul": "Захватывает душу цели и дает вам карту призыва.❕Цель должна быть жива и иметь меньше 🍞 здоровья.",
         "spell_clone": "Клонирует цель. Клонированные существа сохраняют свою текущую фракцию.",
@@ -5977,7 +5986,8 @@
         "target disk": "Целевой диск",
         "spell_target_ricochet_arrow": "Диск, который отскакивает раз и добавляет юниты в качестве цели при столкновении.",
         "target arrow": "Стрела прицеливания",
-        "reroll_rune_description": "Покажите свежий выбор рун для выбора. Заблокированные руны не будут изменены."
+        "reroll_rune_description": "Покажите свежий выбор рун для выбора. Заблокированные руны не будут изменены.",
+        "rune_golemancer": ""
     },
     {
         "language": "中文(简)",
@@ -6233,7 +6243,7 @@
         "spell_bleed": "根据目标已损失的生命造成更多的伤害.❕例如:❕目标有 BD2023  %的生命将死亡 BD2023  生命值上限的 BD2023  %将成为伤害 BD2023  满生命的单位将不会受到伤害❕",
         "spell_bloat": "如果单位受到了 BD2023  的诅咒,当该单位死亡时会爆炸对范围内造成 BD2023  伤害.❕重复施加 BD2023  可以叠加造成伤害",
         "spell_blood_curse": "受到血咒的单位会加倍生命上限,但是任何恢复将会变成伤害",
-        "spell_bolt": "电弧穿过所有彼此靠近的单位，对每个单位造成 🍞 伤害。水下单位的半径加倍。",
+        "spell_bolt": "通过附近单位的电弧造成每个堆叠🍞伤害。堆叠增加电弧之间的单位数量和电弧半径。",
         "spell_burst": "根据目标与玩家之间的距离决定伤害值.❕距离越近伤害越高.❕最大伤害值为 BD2023  .❕可叠加",
         "spell_capture_soul": "捕捉目标单位的灵魂,并生成对应的召唤咒语.❕目标必须存活且生命值低于 BD2023  .❕捕获的灵魂越强,召唤时消耗的魔力越多.",
         "spell_clone": "克隆目标.被克隆的目标会维持当前敌友状态",
@@ -6575,7 +6585,8 @@
         "target disk": "目标盘",
         "spell_target_ricochet_arrow": "一个会反弹并在碰撞时为目标增加单位的飞碟",
         "target arrow": "瞄准箭",
-        "reroll_rune_description": "显示新的符文供选择。锁定的符文将不会更改。"
+        "reroll_rune_description": "显示新的符文供选择。锁定的符文将不会更改。",
+        "rune_golemancer": ""
     },
     {
         "language": "中文(繁)",
@@ -6831,7 +6842,7 @@
         "spell_bleed": "根據目標已損失的生命造成更多的傷害.❕例如:❕目標有 BD2023  %的生命將死亡 BD2023  生命值上限的 BD2023  %將成為傷害 BD2023  滿生命的單位將不會受到傷害❕",
         "spell_bloat": "如果單位受到了 BD2023  的詛咒,當該單位死亡時會爆炸對范圍內造成 BD2023  傷害.❕重複施加 BD2023  可以疊加造成傷害",
         "spell_blood_curse": "受到血咒的單位會加倍生命上限,但是任何恢復將會變成傷害",
-        "spell_bolt": "電弧穿過所有彼此靠近的單位，對每個單位造成 🍞 傷害。水下單位的半徑加倍。",
+        "spell_bolt": "在附近單位之間釋放電流，每堆疊造成 🍞 傷害。堆疊數量增加電弧之間的單位數和電弧半徑。",
         "spell_burst": "根據目標與玩家之間的距離決定傷害值.❕距離越近傷害越高.❕最大傷害值為 BD2023  .❕可疊加",
         "spell_capture_soul": "捕捉目標單位的靈魂,並生成對應的召喚咒語.❕目標必須存活且生命值低於 BD2023  .❕捕獲的靈魂越強,召喚時消耗的魔力越多.",
         "spell_clone": "克隆目標.被克隆的目標會維持當前敵友狀態",
@@ -7173,7 +7184,8 @@
         "target disk": "目標碟",
         "spell_target_ricochet_arrow": "一個會反彈一次並在碰撞時增加目標的單位的圓盤",
         "target arrow": "瞄準箭",
-        "reroll_rune_description": "顯示可供選擇的新符文。鎖定的符文將不會更改。"
+        "reroll_rune_description": "顯示可供選擇的新符文。鎖定的符文將不會更改。",
+        "rune_golemancer": ""
     },
     {
         "language": "Polski",
@@ -7429,7 +7441,7 @@
         "spell_bleed": "Zadaje większe obrażenia w oparciu o to, ile zdrowia utracił cel. ❕❕Na przykład: ❕Cel z 🍞% zdrowie umrze. ❕🍞% Zdrowia: 🍞% Maksymalnego zdrowia jako obrażenia❕Cel z pełnym zdrowiem nie otrzyma obrażeń.",
         "spell_bloat": "Gdy jednostka przeklęta 🍞 umrze, eksploduje zadając🍞 obrażeń wszystkim jednostkom w zasięgu eksplozji. ❕Wielokrotne użycie 🍞 zwiększy ilość obrażeń wyrządzonych podczas wybuchu.",
         "spell_blood_curse": "Jednostka przeklęta Klątwą Krwi podwoi swoje zdrowie, ale każde przyszłe leczenie zostanie zadane tej jednostce jako obrażenia.",
-        "spell_bolt": "Błyskawica skacze przez WSZYSTKIE jednostki znajdujące się blisko siebie, zadając 🍞 obrażeń każdej z nich. Zasięg błyskawicy podwaja się w przypadku jednostek będących w cieczy.",
+        "spell_bolt": "Łuki elektryczności przeskakują między pobliskimi jednostkami, zadając 🍞 obrażenia na stos. Stosy zwiększają liczbę jednostek, między którymi przeskakuje, oraz promień łuku.",
         "spell_burst": "Zadaje obrażenia na podstawie tego, jak blisko rzucającego jest cel. ❕im bliżej, tym zadane obrażenia są wyższe. ❕Maksymalne możliwe obrażenia to 🍞.❕Można użyć więcej niż raz.",
         "spell_capture_soul": "Przechwytuje duszę jednostki, przyznając kartę przywołania dla tej jednostki. ❕Cel musi być żywy i mieć mniej niż 🍞 życia.❕Im potężniejsza schwytana dusza, tym więcej many będzie kosztować przywołanie jej.",
         "spell_clone": "Klonuje wszystkie cele. Sklonowane jednostki nadal należą do swojej obecnej frakcji.",
@@ -7771,7 +7783,8 @@
         "target disk": "Celownik Dysku",
         "spell_target_ricochet_arrow": "Dysk, który odbija się raz i dodaje jednostki jako cele po zderzeniu.",
         "target arrow": "Strzała celownicza",
-        "reroll_rune_description": "Pokaż świeży wybór run do wyboru. Zablokowane runy nie będą zmieniane."
+        "reroll_rune_description": "Pokaż świeży wybór run do wyboru. Zablokowane runy nie będą zmieniane.",
+        "rune_golemancer": ""
     },
     {
         "language": "Dutch",
@@ -8027,7 +8040,7 @@
         "spell_bleed": "Doe meer schade aan op basis van hoeveel gezondheid het doelwit ontbreekt. ❕❕ Bijvoorbeeld: ❕target met 🍞% gezondheid zal sterven. ❕🍞% Gezondheid: 🍞% van de max gezondheid als schade ❕target met volledige gezondheid zal geen schade aanrichten. ❕",
         "spell_bloat": "Wanneer een eenheid vervloekt met 🍞 sterft, zal deze exploderen met 🍞 schade aan alle eenheden binnen de explosiestraal. ❕ Multipelstapels van 🍞 zullen de hoeveelheid schade verhogen wanneer de eenheid explodeert.",
         "spell_blood_curse": "Een eenheid vervloekt met bloedvloek ontvangt 2 keer hun maximale gezondheid, maar elke toekomstige genezing zal als schade worden beschouwd.",
-        "spell_bolt": "Leidt elektriciteit door ALLE eenheden die dicht bij elkaar staan, en veroorzaakt elk 🍞 schade. De straal verdubbelt voor ondergedompelde eenheden.",
+        "spell_bolt": "Arcs elektriciteit door nabijgelegen eenheden en doet 🍞 schade per stack. Stacks verhogen het aantal eenheden dat het tussen arceert en de boogstraal.",
         "spell_burst": "Brengt schade op basis van hoe dicht het doelwit is ten opzichte van de caster. ❕ Hoe dichterbij ze zijn, hoe hoger de schade aangericht. ❕Maximale schade is 🍞.",
         "spell_capture_soul": "Legt de ziel van de beoogde eenheid vast en verleent je een summon -kaart voor die eenheid. ❕Target moet levend en onder 🍞 gezondheid. ❕ Hoe krachtiger de gevangen ziel is, hoe meer mana het zal kosten om op te roepen.",
         "spell_clone": "Klonen elk doelwit. Gekloonde eenheden behouden hun huidige factie.",
@@ -8369,6 +8382,7 @@
         "target disk": "Doelwiel",
         "spell_target_ricochet_arrow": "Een schijf die eenmaal terugkaatst en eenheden toevoegt als doelwitten bij botsing.",
         "target arrow": "Doelgericht Pijl",
-        "reroll_rune_description": "Toon een verse selectie runen om uit te kiezen. Vergrendelde runen zullen niet worden gewijzigd."
+        "reroll_rune_description": "Toon een verse selectie runen om uit te kiezen. Vergrendelde runen zullen niet worden gewijzigd.",
+        "rune_golemancer": ""
     }
 ]
