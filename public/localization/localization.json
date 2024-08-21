@@ -511,7 +511,7 @@
         "rare": "rare",
         "forbidden": "forbidden",
         "spell_clone_2": "Clones each target.  Clones are added as a target to following spells.",
-        "revitalize_description": "Increases incoming healing by 🍞%",
+        "revitalize_description": "Increases incoming healing",
         "rune_thorns_description": "Deals damage back to the attacker when hurt",
         "rune_affinity_blessing": "Blessing spells cost less mana",
         "rune_affinity_curse": "Curse spells cost less mana",
@@ -652,7 +652,8 @@
         "rune_clone_on_tele": "Leave a clone behind whenever you teleport",
         "rune_plague_bringer": "Poisons 🍞 random enemy units each turn",
         "rune_good_looking": "Converts 🍞 random non-miniboss units to the player's faction on spawn",
-        "rune_dare_devil": "Lose half of your max health for +🍞 stat points"
+        "rune_dare_devil": "Lose half of your max health for +🍞 stat points",
+        "revitalize": "Revitalize"
     },
     {
         "language": "Français",
@@ -1166,7 +1167,7 @@
         "rare": "rare",
         "forbidden": "ultra rare",
         "spell_clone_2": "Clone chaque cible.  Les clones sont ajoutés comme cibles aux sorts suivants.",
-        "revitalize_description": "Augmente les soins reçus de 🍞%",
+        "revitalize_description": "Augmente les soins reçus",
         "rune_thorns_description": "Inflige des dégâts à l'attaquant lorsqu'il est blessé.",
         "rune_affinity_blessing": "Les sorts de bénédiction coûtent moins de mana.",
         "rune_affinity_curse": "Les sorts de malédiction coûtent moins de mana.",
@@ -1307,7 +1308,8 @@
         "rune_clone_on_tele": "Laisse un clone derrière toi chaque fois que tu te téléportes.",
         "rune_plague_bringer": "Empoisonne 🍞 les unités ennemies aléatoires à chaque tour.",
         "rune_good_looking": "Convertit 🍞 des unités non-miniboss aléatoires au faction du joueur à leur apparition.",
-        "rune_dare_devil": "Perdez la moitié de votre santé maximale pour +🍞 points de statut."
+        "rune_dare_devil": "Perdez la moitié de votre santé maximale pour +🍞 points de statut.",
+        "revitalize": "Revitaliser"
     },
     {
         "language": "italiano",
@@ -1821,7 +1823,7 @@
         "rare": "raro",
         "forbidden": "estremamente raro",
         "spell_clone_2": "Clona ciascun bersaglio.  I cloni vengono aggiunti come bersaglio agli incantesimi successivi.",
-        "revitalize_description": "Aumenta la guarigione in arrivo del 🍞%",
+        "revitalize_description": "Aumenta le cure in arrivo",
         "rune_thorns_description": "Ritorna danno all'attaccante quando ferito.",
         "rune_affinity_blessing": "Gli incantesimi di benedizione costano meno mana.",
         "rune_affinity_curse": "Le magie di maledizione costano meno mana.",
@@ -1962,7 +1964,8 @@
         "rune_clone_on_tele": "Lascia un clone dietro di te ogni volta che teletrasporti.",
         "rune_plague_bringer": "Avvelena 🍞 unità nemiche casuali ogni turno.",
         "rune_good_looking": "Converte 🍞 unità casuali non miniboss nella fazione del giocatore all'apparizione",
-        "rune_dare_devil": "Perdi metà della tua vita massima per +🍞 punti statistica."
+        "rune_dare_devil": "Perdi metà della tua vita massima per +🍞 punti statistica.",
+        "revitalize": "Rivitalizzare"
     },
     {
         "language": "Deutsche",
@@ -2476,7 +2479,7 @@
         "rare": "selten",
         "forbidden": "sehr selten",
         "spell_clone_2": "Klont jedes Ziel.  Klone werden als Ziel für folgende Zaubersprüche hinzugefügt.",
-        "revitalize_description": "Erhöht den erhaltenen Heilungseffekt um 🍞%.",
+        "revitalize_description": "Erhöht eingehende Heilung",
         "rune_thorns_description": "Fügt dem Angreifer Schaden zu, wenn man verletzt wird.",
         "rune_affinity_blessing": "Segenzauber kosten weniger Mana.",
         "rune_affinity_curse": "Fluchzauber kosten weniger Mana.",
@@ -2617,7 +2620,8 @@
         "rune_clone_on_tele": "Lass einen Klon zurück, wann immer du teleportierst.",
         "rune_plague_bringer": "Vergiftet 🍞 zufällige feindliche Einheiten jede Runde.",
         "rune_good_looking": "Konvertiert 🍞 zufällige Nicht-Miniboss-Einheiten beim Spawn in die Fraktion des Spielers.",
-        "rune_dare_devil": "Verliere die Hälfte deiner maximalen Gesundheit für +🍞 Attributspunkte."
+        "rune_dare_devil": "Verliere die Hälfte deiner maximalen Gesundheit für +🍞 Attributspunkte.",
+        "revitalize": "Beleben"
     },
     {
         "language": "español",
@@ -3131,7 +3135,7 @@
         "rare": "extraño",
         "forbidden": "ultra raro",
         "spell_clone_2": "Clona cada objetivo.  Los clones se añaden como objetivo de los siguientes hechizos.",
-        "revitalize_description": "Aumenta la curación recibida en 🍞%",
+        "revitalize_description": "Aumenta la curación recibida",
         "rune_thorns_description": "Devuelve daño al atacante cuando es herido.",
         "rune_affinity_blessing": "Los hechizos de bendición cuestan menos maná.",
         "rune_affinity_curse": "Los hechizos de maldición cuestan menos maná.",
@@ -3272,7 +3276,8 @@
         "rune_clone_on_tele": "Deja un clon atrás cada vez que te teletransportes.",
         "rune_plague_bringer": "Envenena 🍞 unidades enemigas aleatorias cada turno.",
         "rune_good_looking": "Convierte 🍞 unidades aleatorias no miniboss de la facción del jugador al momento de aparecer.",
-        "rune_dare_devil": "Pierde la mitad de tu salud máxima a cambio de +🍞 puntos de estadística."
+        "rune_dare_devil": "Pierde la mitad de tu salud máxima a cambio de +🍞 puntos de estadística.",
+        "revitalize": "Revivir"
     },
     {
         "language": "日本",
@@ -3786,7 +3791,7 @@
         "rare": "レア",
         "forbidden": "ウルトラ・レア",
         "spell_clone_2": "各ターゲットのクローンを作成します。  クローンは次の呪文の対象として追加されます。",
-        "revitalize_description": "受ける回復量が🍞%増加する",
+        "revitalize_description": "受ける治癒を増加させる",
         "rune_thorns_description": "攻撃を受けた際に、攻撃者にダメージを返す",
         "rune_affinity_blessing": "祝福の呪文は魔力が少なくて済む。",
         "rune_affinity_curse": "呪いの魔法はより少ないマナで発動できる",
@@ -3900,7 +3905,7 @@
         "self invulnerability": "自己無敵",
         "heal on attack": "攻撃時の回復",
         "overheal": "過剰回復",
-        "creeping death": "creeping death",
+        "creeping death": "忍び寄る死",
         "on kill resurrect": "殺害して復活",
         "bounty: extra damage": "報酬: 追加ダメージ",
         "affinity: movement": "親和性：移動",
@@ -3927,7 +3932,8 @@
         "rune_clone_on_tele": "テレポートするたびにクローンを残す",
         "rune_plague_bringer": "毎ターン、ランダムな敵ユニットに毒を与える🍞",
         "rune_good_looking": "スポーン時に🍞ランダムな非ミニボスユニットをプレイヤーの派閥に変換します。",
-        "rune_dare_devil": "最大健康の半分を失って、+🍞ステータスポイントを得る"
+        "rune_dare_devil": "最大健康の半分を失って、+🍞ステータスポイントを得る",
+        "revitalize": "再生する"
     },
     {
         "language": "Português",
@@ -4441,7 +4447,7 @@
         "rare": "excepcional",
         "forbidden": "Ultra raro",
         "spell_clone_2": "Clona cada alvo.  Clones são adicionados como alvo aos feitiços seguintes.",
-        "revitalize_description": "Aumenta a cura recebida em 🍞%",
+        "revitalize_description": "Aumenta a cura recebida",
         "rune_thorns_description": "Causa dano de volta ao atacante quando ferido.",
         "rune_affinity_blessing": "Feitiços de bênção custam menos mana.",
         "rune_affinity_curse": "Feitiços de maldição custam menos mana.",
@@ -4582,7 +4588,8 @@
         "rune_clone_on_tele": "Deixe um clone para trás sempre que você se teletransportar.",
         "rune_plague_bringer": "Venenos 🍞 unidades inimigas aleatórias a cada turno.",
         "rune_good_looking": "Converte 🍞 unidades aleatórias não-miniboss para a facção do jogador ao nascer.",
-        "rune_dare_devil": "Perder metade da sua saúde máxima para +🍞 pontos de estatísticas"
+        "rune_dare_devil": "Perder metade da sua saúde máxima para +🍞 pontos de estatísticas",
+        "revitalize": "Revitalizar"
     },
     {
         "language": "عربى",
@@ -5096,7 +5103,7 @@
         "rare": "نادر",
         "forbidden": "نادر جدا",
         "spell_clone_2": "استنساخ كل هدف.  تتم إضافة النسخ كهدف للتعاويذ التالية.",
-        "revitalize_description": "يزيد الشفاء الوارد بنسبة 🍞%",
+        "revitalize_description": "يزيد الشفاء الوارد",
         "rune_thorns_description": "يُعيد الضرر إلى المعتدي عند الإصابة",
         "rune_affinity_blessing": "تعاويذ البركة تكلف مانا أقل",
         "rune_affinity_curse": "تكاليف تعويذات اللعنة أقل من المانا",
@@ -5237,7 +5244,8 @@
         "rune_clone_on_tele": "اترك نسخة خلفك كلما قمت بالتنقل الفوري",
         "rune_plague_bringer": "يسمم وحدات الأعداء العشوائية كل جولة 🍞",
         "rune_good_looking": "تحول 🍞 وحدات عشوائية غير زعماء مصغرين إلى فصيل اللاعب عند الظهور",
-        "rune_dare_devil": "افقد نصف صحتك القصوى مقابل +🍞 نقاط الإحصاء"
+        "rune_dare_devil": "افقد نصف صحتك القصوى مقابل +🍞 نقاط الإحصاء",
+        "revitalize": "إحياء"
     },
     {
         "language": "한국어",
@@ -5751,7 +5759,7 @@
         "rare": "희귀한",
         "forbidden": "매우 희귀함",
         "spell_clone_2": "각 대상을 복제합니다.  클론은 다음 주문의 대상으로 추가됩니다.",
-        "revitalize_description": "받는 치유량이 🍞% 증가합니다.",
+        "revitalize_description": "받는 치유량 증가",
         "rune_thorns_description": "피해를 입으면 공격자에게 피해를 돌려줍니다.",
         "rune_affinity_blessing": "축복 마법은 마나 소모가 적다.",
         "rune_affinity_curse": "저주 마법은 더 적은 마나를 소모합니다.",
@@ -5892,7 +5900,8 @@
         "rune_clone_on_tele": "텔레포트할 때마다 복제본을 남기세요.",
         "rune_plague_bringer": "매턴마다 랜덤 적 유닛을 독살합니다.",
         "rune_good_looking": "스폰 시 🍞 랜덤 비미니보스 유닛을 플레이어의 진영으로 전환합니다.",
-        "rune_dare_devil": "최대 체력의 절반을 잃고 +🍞 스탯 포인트를 얻습니다."
+        "rune_dare_devil": "최대 체력의 절반을 잃고 +🍞 스탯 포인트를 얻습니다.",
+        "revitalize": "재생하다"
     },
     {
         "language": "Русский",
@@ -6406,7 +6415,7 @@
         "rare": "редкий",
         "forbidden": "ультра редкий",
         "spell_clone_2": "Клонирует каждую цель.  Клоны добавляются в качестве цели к следующим заклинаниям.",
-        "revitalize_description": "Увеличивает входящее исцеление на 🍞%",
+        "revitalize_description": "Увеличивает входящее исцеление.",
         "rune_thorns_description": "Возвращает урон нападающему при получении повреждений.",
         "rune_affinity_blessing": "Заклинания благословения стоят меньше маны.",
         "rune_affinity_curse": "Заклинания проклятия стоят меньше маны.",
@@ -6547,7 +6556,8 @@
         "rune_clone_on_tele": "Оставляйте клона позади каждый раз, когда телепортируетесь.",
         "rune_plague_bringer": "Отравляет 🍞 случайные вражеские юниты каждый ход.",
         "rune_good_looking": "ПриSpawn'е преобразует 🍞 случайные не-минибосс юниты в фракцию игрока.",
-        "rune_dare_devil": "Потеряйте половину своего максимального здоровья для получения +🍞 очков стата."
+        "rune_dare_devil": "Потеряйте половину своего максимального здоровья для получения +🍞 очков стата.",
+        "revitalize": "Оживить"
     },
     {
         "language": "中文(简)",
@@ -7061,7 +7071,7 @@
         "rare": "稀有的",
         "forbidden": "超稀有",
         "spell_clone_2": "克隆每个目标。  克隆体将作为目标添加到以下法术中。",
-        "revitalize_description": "增加获得的治疗效果 🍞%",
+        "revitalize_description": "增加收到的治疗效果",
         "rune_thorns_description": "受到伤害时反击攻击者造成伤害",
         "rune_affinity_blessing": "祝福法术消耗更少的法力值",
         "rune_affinity_curse": "诅咒法术消耗更少的法力。",
@@ -7202,7 +7212,8 @@
         "rune_clone_on_tele": "每当你传送时都会留下一个克隆。",
         "rune_plague_bringer": "每回合随机毒害敌方单位🍞",
         "rune_good_looking": "在生成时将随机的非小型首领单位转换为玩家的阵营。",
-        "rune_dare_devil": "失去一半的最大生命值以获得 +🍞 属性点"
+        "rune_dare_devil": "失去一半的最大生命值以获得 +🍞 属性点",
+        "revitalize": "重振"
     },
     {
         "language": "中文(繁)",
@@ -7716,7 +7727,7 @@
         "rare": "稀有的",
         "forbidden": "超稀有",
         "spell_clone_2": "克隆每個目標。  克隆體將作為目標添加到以下法術。",
-        "revitalize_description": "提高進來的治療效果 🍞%",
+        "revitalize_description": "增加受到的治療量",
         "rune_thorns_description": "受到傷害時將傷害反彈給攻擊者",
         "rune_affinity_blessing": "祝福法術耗費的法力更少",
         "rune_affinity_curse": "詛咒法術消耗的法力更少",
@@ -7857,7 +7868,8 @@
         "rune_clone_on_tele": "每當你瞬移時，留下一个克隆。",
         "rune_plague_bringer": "每回合隨機毒害敵方單位 🍞",
         "rune_good_looking": "在生成時將 🍞 隨機非小型首領單位轉換為玩家的派系。",
-        "rune_dare_devil": "失去一半的最大生命值以獲得 +🍞 能力點數"
+        "rune_dare_devil": "失去一半的最大生命值以獲得 +🍞 能力點數",
+        "revitalize": "振興"
     },
     {
         "language": "Polski",
@@ -8371,7 +8383,7 @@
         "rare": "rzadki",
         "forbidden": "bardzo rzadki",
         "spell_clone_2": "Klonuje każdy cel.  Klony są dodawane jako cel następujących zaklęć.",
-        "revitalize_description": "Zwiększa otrzymywane leczenie o 🍞%",
+        "revitalize_description": "Zwiększa otrzymywane leczenie",
         "rune_thorns_description": "Zadaje obrażenia z powrotem napastnikowi, gdy zostaje zranny.",
         "rune_affinity_blessing": "Zaklęcia błogosławieństw kosztują mniej many.",
         "rune_affinity_curse": "Czary klątwowe kosztują mniej many.",
@@ -8512,7 +8524,8 @@
         "rune_clone_on_tele": "Zostaw klona za sobą za każdym razem, gdy teleportujesz się.",
         "rune_plague_bringer": "Zatruwa 🍞 losowe jednostki wrogów co turę.",
         "rune_good_looking": "Przekształca 🍞 losowe jednostki nie-minibossów na frakcję gracza przy pojawieniu się.",
-        "rune_dare_devil": "Stracisz połowę swojego maksymalnego zdrowia za +🍞 punktów statystyk."
+        "rune_dare_devil": "Stracisz połowę swojego maksymalnego zdrowia za +🍞 punktów statystyk.",
+        "revitalize": "Ożywić"
     },
     {
         "language": "Dutch",
@@ -9026,7 +9039,7 @@
         "rare": "zeldzaam",
         "forbidden": "uiterst zeldzaam",
         "spell_clone_2": "Kloont elk doel.  Klonen worden als doelwit toegevoegd aan volgende spreuken.",
-        "revitalize_description": "Verhoogt binnenkomende genezing met 🍞%",
+        "revitalize_description": "Verhoogt binnenkomende genezing",
         "rune_thorns_description": "Doet schade terug aan de aanvaller wanneer verwond.",
         "rune_affinity_blessing": "Zegeningen kosten minder mana.",
         "rune_affinity_curse": "Vloek spreuken kosten minder mana",
@@ -9167,6 +9180,7 @@
         "rune_clone_on_tele": "Laat een kloon achter telkens wanneer je teleporteert.",
         "rune_plague_bringer": "Vergiftigt 🍞 willekeurige vijandelijke eenheden elke beurt",
         "rune_good_looking": "Zet 🍞 willekeurige niet-minibaas eenheden om naar de fractie van de speler bij het spawnen.",
-        "rune_dare_devil": "Verlies de helft van je maximale gezondheid voor +🍞 stat punten"
+        "rune_dare_devil": "Verlies de helft van je maximale gezondheid voor +🍞 stat punten",
+        "revitalize": "Verkwikken"
     }
 ]
