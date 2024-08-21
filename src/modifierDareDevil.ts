@@ -7,7 +7,7 @@ export const dareDevilId = 'Dare Devil';
 const COST = 30;
 export default function registerDareDevil() {
   registerModifiers(dareDevilId, {
-    description: `Lose half of your max health for +${COST} stat points`,
+    description: ['rune_dare_devil', COST.toString()],
     _costPerUpgrade: -COST,
     maxUpgradeCount: 4,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
