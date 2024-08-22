@@ -3397,25 +3397,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       CardUI.updateCardBadges(this);
     }
   }
-  adminShowMageTypeSelect() {
-    const player = globalThis.player;
-    if (player) {
-
-      const upgrades = Upgrade.generateUpgrades(player, 0, this);
-      if (upgrades.length) {
-        const elUpgrades = upgrades.map((upgrade) => Upgrade.createUpgradeElement(upgrade, player, this));
-        if (elUpgradePickerContent) {
-          elUpgradePickerContent.innerHTML = '';
-          for (let elUpgrade of elUpgrades) {
-            if (elUpgrade) {
-              elUpgradePickerContent.appendChild(elUpgrade);
-            }
-          }
-        }
-        document.body?.classList.toggle(showUpgradesClassName, true);
-      }
-    }
-  }
   showUpgrades() {
     const player = globalThis.player;
     if (document.body?.classList.contains(showUpgradesClassName)) {
