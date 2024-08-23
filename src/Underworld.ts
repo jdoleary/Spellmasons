@@ -4034,7 +4034,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             Unit.takeDamage({
               unit: effectState.casterUnit,
               amount: spellCostTally.healthCost,
-              sourceUnit: effectState.casterUnit,
+              // Note: sourceUnit is intentionally undefined
+              // so that heath-cost spells remain unaffected by runes
+              sourceUnit: undefined,
               fromVec2: effectState.casterUnit
             }, this, prediction);
           }
