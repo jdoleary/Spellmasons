@@ -1516,10 +1516,6 @@ export async function runPickupEvents(unit: IUnit, pickup: IPickup, underworld: 
 }
 
 export function makeMiniboss(unit: IUnit, underworld: Underworld) {
-  if (unit.unitSourceId == bossmasonUnitId) {
-    // Bossmasons is already a boss and should not be made into a miniboss
-    return;
-  }
   unit.isMiniboss = true;
   explain(EXPLAIN_MINI_BOSSES);
   unit.name = unitSourceIdToName(unit.unitSourceId, true);

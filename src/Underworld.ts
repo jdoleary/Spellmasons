@@ -2475,11 +2475,6 @@ export default class Underworld {
     return;
   }
   async trySpawnBoss(): Promise<boolean> {
-    if (this.levelIndex != config.LAST_LEVEL_INDEX && this.levelIndex != config.GORU_LEVEL_INDEX) {
-      console.debug('[GAME] Can\'t Spawn Boss\nNo boss to spawn');
-      return false;
-    }
-
     if (this.hasSpawnedBoss) {
       console.debug('[GAME] Can\'t Spawn Boss\nBoss is already spawned');
       return false;
@@ -2495,6 +2490,21 @@ export default class Underworld {
     }
     if (this.levelIndex == config.LAST_LEVEL_INDEX) {
       await introduceBoss(deathmason, this);
+    }
+
+    // For extra challenge, on loop levels spawn champion versions of the bosses
+    if (this.levelIndex == config.LAST_LEVEL_INDEX + 1) {
+      await introduceBoss(goru, this, true);
+    }
+    if (this.levelIndex == config.LAST_LEVEL_INDEX + 2) {
+      await introduceBoss(deathmason, this, true);
+    }
+    // Spawn both goru and deathmason
+    if (this.levelIndex == config.LAST_LEVEL_INDEX + 3) {
+      await introduceBoss(goru, this, true);
+      // Reset hasSpawnedBoss so it will spawn both
+      this.hasSpawnedBoss = false;
+      await introduceBoss(deathmason, this, true);
     }
     return true;
   }
@@ -4528,10 +4538,10 @@ function getEnemiesForAltitude(underworld: Underworld, levelIndex: number): stri
   return units;
 }
 
-async function introduceBoss(unit: UnitSource, underworld: Underworld) {
+async function introduceBoss(unit: UnitSource, underworld: Underworld, isMiniboss: boolean = false) {
   console.log('[GAME] Spawning Boss: ', unit.id, '\n', unit);
   underworld.hasSpawnedBoss = true;
-  const seed = seedrandom(`${getUniqueSeedString(underworld)}-${deathmason.id}`);
+  const seed = seedrandom(`${getUniqueSeedString(underworld)}-${unit.id}`);
   const coords = underworld.findValidSpawnInWorldBounds(false, seed) || { x: 0, y: 0 };
 
   // Play boss intro FX
@@ -4545,7 +4555,7 @@ async function introduceBoss(unit: UnitSource, underworld: Underworld) {
     setTimeout(resolve, 2000);
   });
 
-  const newBossUnitInstance = underworld.spawnEnemy(unit.id, coords, false);
+  const newBossUnitInstance = underworld.spawnEnemy(unit.id, coords, isMiniboss);
   if (newBossUnitInstance) {
     skyBeam(newBossUnitInstance);
 
