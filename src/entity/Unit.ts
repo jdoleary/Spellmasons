@@ -4,7 +4,7 @@ import * as config from '../config';
 import * as Image from '../graphics/Image';
 import * as math from '../jmath/math';
 import { distance } from '../jmath/math';
-import { containerUnits, PixiSpriteOptions, startBloodParticleSplatter, updateNameText } from '../graphics/PixiUtils';
+import { containerCorpses, containerUnits, PixiSpriteOptions, startBloodParticleSplatter, updateNameText } from '../graphics/PixiUtils';
 import * as colors from '../graphics/ui/colors';
 import { UnitSubType, UnitType, Faction } from '../types/commonTypes';
 import type { Vec2 } from '../jmath/Vec';
@@ -566,12 +566,20 @@ export function syncronize(unitSerialized: IUnitSerialized, originalUnit: IUnit)
 export function changeToDieSprite(unit: IUnit) {
   Image.changeSprite(
     unit.image,
-    globalThis.noGore ? 'units/tombstone' :
-      unit.animations.die,
+    globalThis.noGore
+      ? 'units/tombstone'
+      : unit.animations.die,
     containerUnits,
     // DieSprite intentionally stops animating when it is complete, therefore
     // resolver is undefined, since no promise is waiting for it.
-    undefined,
+    () => {
+      // If the unit is still dead...
+      if (!unit.alive && unit.image && containerCorpses) {
+        // Change to corpses layer so that it doesn't continue to be outlines and doesn't render in front of walls
+        containerCorpses.addChild(unit.image.sprite);
+      }
+
+    },
     { loop: false }
   );
 }
