@@ -562,7 +562,12 @@ export async function setupPixi(): Promise<void> {
     console.error('app is not defined')
     return Promise.resolve();
   }
-  await app.init({ width: globalThis.innerWidth, height: globalThis.innerHeight, resizeTo: window });
+  await app.init({
+    width: globalThis.innerWidth,
+    height: globalThis.innerHeight,
+    resizeTo: window,
+    preference: 'webgl',
+  });
   // The application will create a canvas element for you that you
   // can then insert into the DOM
   if (elPIXIHolder) {

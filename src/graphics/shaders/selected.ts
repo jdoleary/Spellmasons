@@ -1,3 +1,5 @@
+import { GlProgram } from "pixi.js";
+
 const fShader = `
 varying vec2 vTextureCoord;
 uniform sampler2D uSampler;
@@ -26,8 +28,16 @@ export default function () {
     const uniforms = {
         alpha: 0.0
     };
+    const shader = globalThis.pixi.Shader.from({
+        gl: {
+            vertex: vShader,
+            fragment: fShader
+        },
+        resources: uniforms
+    });
+    debugger;
     return {
-        filter: new globalThis.pixi.Filter(vShader, fShader, uniforms),
+        filter: new globalThis.pixi.Filter(shader),
         uniforms
     };
 }
