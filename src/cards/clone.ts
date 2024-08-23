@@ -12,6 +12,7 @@ import Underworld from '../Underworld';
 import seedrandom from 'seedrandom';
 import { getUniqueSeedString } from '../jmath/rand';
 import * as config from '../config';
+import { soulShardOwnerModifierId } from '../modifierSoulShardOwner';
 
 export const clone_id = 'clone';
 const spell: Spell = {
@@ -137,6 +138,10 @@ export function doCloneUnit(unit: Unit.IUnit, underworld: Underworld, prediction
     // because it has a safeguard that won't operate on the player unit
     if (clone.modifiers) {
       Object.keys(clone.modifiers).forEach(modifierKey => Unit.removeRune(clone, modifierKey, underworld));
+    }
+    // Soul Shard Owner should not transfer to clones
+    if (clone.modifiers[soulShardOwnerModifierId]) {
+      Unit.removeModifier(clone, soulShardOwnerModifierId, underworld)
     }
     return clone;
   }
