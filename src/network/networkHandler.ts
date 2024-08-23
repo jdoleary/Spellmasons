@@ -1410,8 +1410,8 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
       return i18n('failed to save');
     }
   };
-  globalThis.deleteSave = async (title: string) => {
-    const doDelete = await Jprompt({ text: 'Are you sure you want to delete this save file?', yesText: 'Yes', noBtnText: 'No', noBtnKey: 'Escape', forceShow: true })
+  globalThis.deleteSave = async (title: string, force: boolean = false) => {
+    const doDelete = force || await Jprompt({ text: 'Are you sure you want to delete this save file?', yesText: 'Yes', noBtnText: 'No', noBtnKey: 'Escape', forceShow: true })
     if (doDelete) {
       storage.remove(globalThis.savePrefix + title);
     }
