@@ -4370,9 +4370,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       RNGState: this.random.state(),
     };
   }
-  updateAccessibilityOutlines() {
-    this.units.forEach(u => Unit.updateAccessibilityOutline(u, false));
-  }
   // This array remains in the same order for a given player in a given game
   getShuffledRunesForPlayer(player?: Player.IPlayer): ({ key: string } & Cards.Modifiers)[] {
     let listOfRemainingRunesToChoose = Object.entries(Cards.allModifiers).flatMap(([key, modifier]) => {

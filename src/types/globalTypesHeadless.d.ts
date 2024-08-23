@@ -348,18 +348,6 @@ declare global {
   var pie: PieClient | undefined;
   var adminPowerBarIndex: number;
   var adminPowerBarSelection: string;
-  var accessibilityOutline: {
-    [Faction.ALLY]: {
-      regular: { thickness: number, color: number },
-      targeted: { thickness: number, color: number },
-      outOfRange: { thickness: number, color: number }
-    },
-    [Faction.ENEMY]: {
-      regular: { thickness: number, color: number },
-      targeted: { thickness: number, color: number },
-      outOfRange: { thickness: number, color: number }
-    },
-  } | undefined;
   // Feature flag set by spellmaons.com's server list for whether or not to send events to
   // the server hub
   var useEventLogger: boolean;
@@ -377,4 +365,5 @@ declare global {
   // have a reference to the promise created by the library but
   // I want it not to be tracked
   var test_ignorePromiseTracking: string | undefined;
+  var useAllySymbol: boolean | undefined;
 }

@@ -11,7 +11,6 @@ export const STORAGE_CONTROLS_KEY = 'controls';
 export const ENEMY_ENCOUNTERED_STORAGE_KEY = 'enemyEncountered';
 export const SPELLS_DISCOVERED_STORAGE_KEY = 'spellsDiscovered';
 export const STORAGE_PIE_CLIENTID_KEY = 'clientId';
-const ACCESSIBILITY_OUTLINE_STORAGE_KEY = 'accessibilityOutline';
 globalThis.STORAGE_ID_UI_ZOOM = STORAGE_ID_UI_ZOOM;
 globalThis.enemyEncountered = [];
 globalThis.spellsDiscovered = [];
@@ -45,6 +44,7 @@ export function getSavedData() {
       if (storedOptions !== null) {
         const options = JSON.parse(storedOptions);
         console.log('[OPTIONS] noGore', options.noGore);
+        globalThis.useAllySymbol = options.useAllySymbol;
         globalThis.noGore = options.noGore;
         if (options.fontOverride && globalThis.setFontOverride) {
           globalThis.setFontOverride(options.fontOverride);
@@ -71,18 +71,6 @@ export function getSavedData() {
         if (!!options.activeMods) {
           globalThis.activeMods = options.activeMods;
         }
-      }
-      const storedAccessibilityOutline = get(ACCESSIBILITY_OUTLINE_STORAGE_KEY);
-      console.log('Setup: Initializing outline settings', storedAccessibilityOutline);
-      if (storedAccessibilityOutline !== null) {
-        globalThis.remoteLog?.('Accessibility Outlines: Active')
-        try {
-          globalThis.accessibilityOutline = JSON.parse(storedAccessibilityOutline);
-        } catch (e) {
-          console.error('Failled to parse stored accessibility outline options', storedAccessibilityOutline)
-        }
-      } else {
-        globalThis.remoteLog?.('Accessibility Outlines: Inactive')
       }
       globalThis.playMusicIfNotAlreadyPlaying?.();
       // Default stored color if player doesn't already have one stored

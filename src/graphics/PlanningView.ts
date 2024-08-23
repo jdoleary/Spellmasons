@@ -252,7 +252,6 @@ export function clearTints(underworld: Underworld) {
   underworld.units.forEach(unit => {
     if (unit.image) {
       unit.image.sprite.tint = 0xFFFFFF;
-      Unit.updateAccessibilityOutline(unit, false);
     }
   });
   underworld.pickups.forEach(pickup => {
@@ -308,7 +307,6 @@ async function showCastCardsPrediction(underworld: Underworld, target: Vec2, cas
       const realUnit = targetedUnit.real || targetedUnit;
       // don't change tint if HUD is hidden
       if (realUnit && realUnit.image && !globalThis.isHUDHidden) {
-        Unit.updateAccessibilityOutline(realUnit, true, outOfRange);
         if (outOfRange) {
           realUnit.image.sprite.tint = 0xaaaaaa;
         } else {
@@ -466,6 +464,20 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
             fillRect.width,
             fillRect.height);
         }
+      }
+      // Ally symbol
+      if (globalThis.useAllySymbol) {
+        globalThis.unitOverlayGraphics.lineStyle(1, 0x000000, 1.0);
+        // healthBarFill = getFillRect(u, 0, healthBarMax, 0, healthBarMax, zoom);
+        // const x = healthBarFill.x + healthBarFill.width / 2;
+        // const y = healthBarFill.y - healthBarFill.height;
+        const x = u.x;
+        const y = u.y;
+        const triangleSize = 10 / zoom;
+        globalThis.unitOverlayGraphics.moveTo(x - triangleSize, y);
+        globalThis.unitOverlayGraphics.lineTo(x, y - triangleSize);
+        globalThis.unitOverlayGraphics.lineTo(x + triangleSize, y);
+        globalThis.unitOverlayGraphics.lineTo(x - triangleSize, y);
       }
 
       globalThis.unitOverlayGraphics.endFill();
