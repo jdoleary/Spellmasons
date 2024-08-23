@@ -3,7 +3,7 @@ import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import * as Unit from '../Unit';
 import * as math from '../../jmath/math';
-import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
+import { MultiColorReplaceFilter } from 'pixi-filters';
 import { bloodGripthulu } from '../../graphics/ui/colors';
 import type Underworld from '../../Underworld';
 import { containerProjectiles } from '../../graphics/PixiUtils';

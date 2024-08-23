@@ -1,6 +1,7 @@
 import { registerEvents, registerModifiers, registerSpell } from "./cards";
 import { pickups } from "./entity/Pickup";
 import { registerUnit } from "./entity/units";
+import { loadSheet } from "./graphics/PixiUtils";
 import { Overworld } from "./Overworld";
 import { Mod } from "./types/commonTypes";
 type moddedEntity = {
@@ -17,7 +18,7 @@ export function isModActive(entity: moddedEntity, underworld: { activeMods: stri
 // process itself should always have all mods registered to make them possible to use and should never
 // register a mod twice
 const registeredMods: { [modName: string]: Mod } = {};
-function registerMod(mod: Mod, overworld: Overworld) {
+async function registerMod(mod: Mod, overworld: Overworld) {
     if (registeredMods[mod.modName]) {
         console.log('Mod already registered, early return so as to not double register.', mod.modName);
         return;
@@ -78,21 +79,15 @@ function registerMod(mod: Mod, overworld: Overworld) {
         }
 
         if (globalThis.pixi && mod.spritesheet) {
-            const loader = globalThis.pixi.Loader.shared;
-            loader.add(mod.spritesheet);
+            await loadSheet(mod.spritesheet);
         }
     }
 
 }
-export default function registerAllMods(overworld: Overworld) {
+export default async function registerAllMods(overworld: Overworld) {
     for (let mod of globalThis.mods) {
         console.log('Mod: ', mod.modName);
-        registerMod(mod, overworld);
-    }
-    if (globalThis.pixi) {
-        const loader = globalThis.pixi.Loader.shared;
-        // Start loading the textures
-        loader.load();
+        await registerMod(mod, overworld);
     }
 
 }

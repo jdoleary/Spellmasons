@@ -1,0 +1,58 @@
+commit 09d759baded863de3135fbdf3ae10e977489369a
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Thu Aug 22 22:08:18 2024 -0400
+
+    1.42.4
+
+commit 283b83337af8106ae56b427741ddbae2512080fc
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Thu Aug 22 22:08:06 2024 -0400
+
+    fix: Copy on runes with toast
+    
+    and tweak styling of runes in book.
+    
+    Closes: #1011
+
+commit 4c6753bf9bae90a3debd26a1d354bb43e9c54837
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Thu Aug 22 21:32:12 2024 -0400
+
+    fix: Reorder colors for gripthulu
+    
+    to try to account for shader failure
+    
+    Closes: #1012
+
+commit fca0f040ad58d3d6d20963f7838f3fdbd45c6893
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Thu Aug 22 21:29:27 2024 -0400
+
+    fix: Rune self-immune does not affect
+    
+    health spells.
+    
+    Fixes: #1005
+
+commit c0e782eacac29f4a022254b3f65df6a493e074e0
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Thu Aug 22 21:24:34 2024 -0400
+
+    fix: Soul Shard Owner should
+    not carry over to clones
+    
+    Fixes: #1003
+
+commit bca9555c41ff4e755b93489e2cad69633f5475eb
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Thu Aug 22 21:19:11 2024 -0400
+
+    src: Spawn champion bosses for first 3 loop levels
+    
+    Closes #1009
+
+commit 8dfabd6ca87c0eca487d281c5b1c6480c9705f4a
+Author: Jordan O'Leary <jdoleary@gmail.com>
+Date:   Thu Aug 22 16:47:22 2024 -0400
+
+    admin: Remove "Pick class"

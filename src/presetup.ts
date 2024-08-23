@@ -5,9 +5,6 @@ import { version } from '../package.json';
 globalThis.SPELLMASONS_PACKAGE_VERSION = version;
 import { enableRemoteLogging } from './RemoteLogging';
 enableRemoteLogging();
-import { setupMonitoring } from './monitoring';
-// Setup monitoring as soon as possible
-setupMonitoring();
 console.log('Setup: presetup.ts')
 import './localization';
 import * as PIXI from 'pixi.js';

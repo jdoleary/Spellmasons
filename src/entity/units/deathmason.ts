@@ -1,4 +1,4 @@
-import { AdjustmentFilter } from '@pixi/filter-adjustment';
+import { AdjustmentFilter } from 'pixi-filters';
 import * as storage from "../../storage";
 import { allUnits, UnitSource } from './index';
 import { Faction, UnitSubType, UnitType } from '../../types/commonTypes';

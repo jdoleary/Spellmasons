@@ -2,7 +2,7 @@ import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { UnitSubType, UnitType } from '../../types/commonTypes';
 import { createVisualFlyingProjectile, SPEED_PER_MILLI } from '../Projectile';
-import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
+import { MultiColorReplaceFilter } from 'pixi-filters';
 import * as math from '../../jmath/math';
 import { Vec2 } from '../../jmath/Vec';
 import Underworld from '../../Underworld';

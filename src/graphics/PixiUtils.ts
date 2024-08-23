@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { clampVector, clone, equal, getAngleBetweenVec2sYInverted, isInvalid, lerpVec2, Vec2 } from '../jmath/Vec';
+import { clampVector, clone, equal, getAngleBetweenVec2sYInverted, lerpVec2, Vec2 } from '../jmath/Vec';
 import { View } from '../View';
 import * as math from '../jmath/math';
 import * as config from '../config';
@@ -13,22 +13,14 @@ import { randFloat, randInt } from '../jmath/rand';
 import { IUnit } from '../entity/Unit';
 import { isWithinRect, Rect } from '../jmath/Rect';
 import { inPortal } from '../entity/Player';
-import KeyMapping, { keyToHumanReadable } from './ui/keyMapping';
+import { keyToHumanReadable } from './ui/keyMapping';
 import { tutorialCompleteTask } from './Explain';
-import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
-import { RenderTexture } from 'pixi.js';
+import { MultiColorReplaceFilter } from 'pixi-filters';
+import { AlphaFilter } from 'pixi.js';
+
 
 // if PIXI is finished setting up
 let isReady = false;
-// Ensure textures stay pixelated when scaled:
-if (globalThis.pixi) {
-  // Copied from pixi.js so pixi.js wont have to be imported in headless
-  enum SCALE_MODES {
-    NEAREST = 0,
-    LINEAR = 1
-  }
-  globalThis.pixi.settings.SCALE_MODE = SCALE_MODES.NEAREST;
-}
 // PIXI app
 export const app = !globalThis.pixi ? undefined : new globalThis.pixi.Application();
 export const containerLiquid = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
@@ -49,7 +41,7 @@ export const containerFloatingText = !globalThis.pixi ? undefined : new globalTh
 // Graphics used for painting blood trails
 export const graphicsBloodSmear = !globalThis.pixi ? undefined : new globalThis.pixi.Graphics();
 // Container used for blood spatter particles
-export const containerBloodParticles = !globalThis.pixi ? undefined : new globalThis.pixi.ParticleContainer();
+export const containerBloodParticles = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 
 let tempBloodContainer: PIXI.Container | undefined;
 export function cleanBlood(underworld?: Underworld) {
@@ -129,13 +121,7 @@ export function cleanUpLiquidFilter() {
   }
 }
 
-export function resizePixi() {
-  // Headless does not use graphics
-  if (globalThis.headless) { return; }
-  if (app) {
-    app.renderer.resize(globalThis.innerWidth, globalThis.innerHeight);
-  }
-}
+
 interface UtilProps {
   underworldPixiContainers: PIXI.Container[] | undefined;
   elPIXIHolder: HTMLElement | undefined;
@@ -218,18 +204,10 @@ if (globalThis.pixi && containerUI && app && containerRadiusUI) {
   containerUI.addChild(globalThis.walkPathGraphics);
   globalThis.thinkingPlayerGraphics = new globalThis.pixi.Graphics();
   globalThis.radiusGraphics = new globalThis.pixi.Graphics();
-  const colorMatrix = new globalThis.pixi.filters.AlphaFilter();
+  const colorMatrix = new AlphaFilter();
   colorMatrix.alpha = 0.2;
   globalThis.radiusGraphics.filters = [colorMatrix];
   containerRadiusUI.addChild(globalThis.radiusGraphics);
-
-
-
-  globalThis.addEventListener('resize', resizePixi);
-  globalThis.addEventListener('load', () => {
-    resizePixi();
-  });
-
 }
 export function setAbyssColor(biome: Biome) {
   if (app) {
@@ -237,7 +215,6 @@ export function setAbyssColor(biome: Biome) {
     if (globalThis.UIEasyOnTheEyes) {
       color = colors.abyssEasyEyes[biome];
     }
-    app.renderer.backgroundColor = color;
   }
 
 }
@@ -578,19 +555,18 @@ export function updateNameText(nameText?: PIXI.Text, zoom?: number) {
   }
 
 }
-// PIXI textures
-let sheets: PIXI.Spritesheet[] = [];
-export function setupPixi(): Promise<void> {
+export async function setupPixi(): Promise<void> {
   // Headless does not use graphics
   if (globalThis.headless) { return Promise.resolve(); }
   if (!app) {
     console.error('app is not defined')
     return Promise.resolve();
   }
+  await app.init({ width: globalThis.innerWidth, height: globalThis.innerHeight, resizeTo: window });
   // The application will create a canvas element for you that you
   // can then insert into the DOM
   if (elPIXIHolder) {
-    elPIXIHolder.appendChild(app.view);
+    elPIXIHolder.appendChild(app.canvas);
   }
 
   return loadTextures().then(() => {
@@ -636,39 +612,19 @@ function removeContainers(containers: PIXI.Container[]) {
     app.stage.removeChild(container);
   }
 }
-function loadTextures(): Promise<void> {
+async function loadTextures() {
   // Headless does not use graphics
   if (globalThis.headless) { return Promise.resolve(); }
-  return new Promise((resolve, reject) => {
+  return new Promise<void>(async (resolve, reject) => {
     if (!globalThis.headless && globalThis.pixi) {
-      const loader = globalThis.pixi.Loader.shared;
-      loader.add('Forum', './font/Forum/Forum-Regular.ttf');
-      // loader.onProgress.add(a => console.log("onProgress", a)); // called once per loaded/errored file
-      // loader.onError.add(e => console.error("Pixi loader on error:", e)); // called once per errored file
-      // loader.onLoad.add(a => console.log("Pixi loader onLoad", a)); // called once per loaded file
-      // loader.onComplete.add(a => console.log("Pixi loader onComplete")); // called once when the queued resources all load.
-      loader.add('sheet1.json');
-      loader.onError.add(e => {
-        console.error('Pixi loader error', e)
-      })
-      loader.onComplete.add((loader, resources) => {
-        const sheetPaths = Object.keys(resources).filter(path => path.endsWith('.json'));
-        for (let sheetPath of sheetPaths) {
-          const resource = resources[sheetPath]
-          if (resource && resource.spritesheet && sheets.indexOf(resource.spritesheet) === -1) {
-            console.log('Load: register spritesheet', resource.url);
-            sheets.push(resource.spritesheet as PIXI.Spritesheet);
-            isReady = true;
-          }
-        }
-        if (sheets.length) {
-          resolve();
-        } else {
-          reject();
-        }
-      });
-      // Start loading textures
-      loader.load();
+      const Assets = globalThis.pixi.Assets;
+      Assets.addBundle('fonts', [
+        { alias: 'Forum', src: './font/Forum/Forum-Regular.ttf' }
+      ]);
+      await Assets.loadBundle('fonts');
+      await loadSheet('sheet1.json');
+      isReady = true;
+      resolve();
     } else {
       console.error('globalThis.pixi is undefined')
     }
@@ -952,4 +908,39 @@ export function toggleHUD() {
     containerRadiusUI.visible = visible;
   }
 
+}
+export async function loadSheet(sheetJsonUrl: string) {
+  try {
+    const sheetJSON = await fetchJSON(sheetJsonUrl);
+    const texture = await PIXI.Assets.load(sheetJsonUrl.replace('.json', '.png'));
+    await addSpriteSheet(texture, sheetJSON);
+  } catch (e) {
+    console.error('loadSheet: Failed to load spritesheet', e);
+  }
+}
+export async function addSpriteSheet(texture: PIXI.BindableTexture, url: PIXI.SpritesheetData): Promise<PIXI.Spritesheet<PIXI.SpritesheetData> | undefined> {
+  if (!globalThis.pixi) {
+    return undefined;
+  }
+  if (!globalThis.sheets) {
+    globalThis.sheets = [];
+  }
+  const sheet = new globalThis.pixi.Spritesheet(texture, url);
+  if (sheet) {
+    globalThis.sheets.push(sheet);
+    await sheet.parse();
+  } else {
+    console.error('addSpriteSheet: Failed to load spritesheet', url);
+  }
+  return sheet;
+
+}
+export async function fetchJSON(url: string) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    console.error('Unable to fetchJSON', url);
+    throw new Error(`Response status: ${response.status}`);
+  }
+
+  return await response.json();
 }

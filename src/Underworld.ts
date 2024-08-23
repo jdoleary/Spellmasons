@@ -20,7 +20,7 @@ import * as immune from './cards/immune';
 import * as CSSClasses from './CSSClasses';
 import * as log from './log';
 import safeStringify from 'fast-safe-stringify';
-import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
+import { MultiColorReplaceFilter } from 'pixi-filters';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import {
   app,

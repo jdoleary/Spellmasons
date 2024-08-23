@@ -2,7 +2,7 @@ import * as Unit from '../Unit';
 import { allUnits, UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import Underworld from '../../Underworld';
-import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
+import { MultiColorReplaceFilter } from 'pixi-filters';
 import { summonerAction, summonerGetUnitAttackTargets } from './summoner';
 import { DARK_PRIEST_ID } from './darkPriest';
 import { MANA_VAMPIRE_ID } from './manaVampire';

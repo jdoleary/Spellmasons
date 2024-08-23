@@ -5,24 +5,12 @@ import { prng, randFloat } from '../jmath/rand';
 import { raceTimeout } from '../Promise';
 import { BloodParticle, graphicsBloodSmear, tickParticle } from './PixiUtils';
 import type Underworld from '../Underworld';
-import { Container, ParticleContainer } from 'pixi.js';
+import { Container } from 'pixi.js';
 import { stopAndDestroyForeverEmitter } from './ParticleCollection';
 import { JEmitter } from '../types/commonTypes';
 
-export const containerParticles = !globalThis.pixi ? undefined : new globalThis.pixi.ParticleContainer(5000, {
-    scale: true,
-    position: true,
-    rotation: false,
-    uvs: false,
-    tint: true
-});
-export const containerParticlesUnderUnits = !globalThis.pixi ? undefined : new globalThis.pixi.ParticleContainer(5000, {
-    scale: true,
-    position: true,
-    rotation: false,
-    uvs: false,
-    tint: true
-});
+export const containerParticles = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
+export const containerParticlesUnderUnits = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 
 // Since emitters create particles in the same container the emitter is in, it is beneficial to have a wrapped
 // emitter that only creates particles in its own container.  Since containerUnits is always sorting itself
@@ -66,7 +54,7 @@ export function wrappedEmitter(config: particles.EmitterConfigV3, container: Con
     };
 
 }
-export function simpleEmitter(position: Vec2, config: particles.EmitterConfigV3, resolver?: () => void, container?: ParticleContainer) {
+export function simpleEmitter(position: Vec2, config: particles.EmitterConfigV3, resolver?: () => void, container?: Container) {
     if (!containerParticles) {
         if (resolver) {
             resolver();

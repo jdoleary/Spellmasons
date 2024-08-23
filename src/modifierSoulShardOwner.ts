@@ -8,7 +8,7 @@ import { makeManaTrail } from "./graphics/Particles";
 import { containerUnits, startBloodParticleSplatter } from "./graphics/PixiUtils";
 import Underworld from './Underworld';
 import { UnitType } from "./types/commonTypes";
-import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
+import { MultiColorReplaceFilter } from 'pixi-filters';
 import { IImageAnimated } from "./graphics/Image";
 import { teleport } from "./effects/teleport";
 

@@ -1,5 +1,5 @@
 import type * as PIXI from 'pixi.js';
-import { OutlineFilter } from '@pixi/filter-outline';
+import { OutlineFilter } from 'pixi-filters';
 import * as config from '../config';
 import * as Image from '../graphics/Image';
 import * as math from '../jmath/math';
@@ -360,6 +360,7 @@ function addOnDamageFilter(unit: IUnit) {
       const all_red = makeAllRedShader();
       if (all_red) {
         unit.shaderUniforms.all_red = all_red.uniforms;
+        console.log('jtest', unit.image.sprite.filters);
         unit.image.sprite.filters.push(all_red.filter);
       }
     } else {

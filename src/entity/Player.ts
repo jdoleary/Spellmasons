@@ -11,7 +11,7 @@ import { CardCategory, Faction, UnitType } from '../types/commonTypes';
 import { clearTooltipSelection } from '../graphics/PlanningView';
 import defaultPlayerUnit, { spellmasonUnitId } from './units/playerUnit';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
-import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
+import { MultiColorReplaceFilter } from 'pixi-filters';
 import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary, playerNoColor } from '../graphics/ui/colors';
 import Underworld, { turn_phase } from '../Underworld';
 import * as lastWill from '../cards/lastwill';

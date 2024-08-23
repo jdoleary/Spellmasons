@@ -1,7 +1,6 @@
 import { elPIXIHolder } from './graphics/FloatingText';
 import {
   addPixiContainersForView,
-  resizePixi,
   app,
 } from './graphics/PixiUtils';
 import { runPredictions } from './graphics/PlanningView';
@@ -100,7 +99,6 @@ export function setView(v: View) {
       }
       break;
     case View.Game:
-      resizePixi();
       // Start non-theme soundtrack
       if (playMusicIfNotAlreadyPlaying) {
         playMusicIfNotAlreadyPlaying();

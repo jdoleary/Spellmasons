@@ -377,4 +377,5 @@ declare global {
   // have a reference to the promise created by the library but
   // I want it not to be tracked
   var test_ignorePromiseTracking: string | undefined;
+  var sheets: PIXI.Spritesheet<PIXI.SpritesheetData>[];
 }

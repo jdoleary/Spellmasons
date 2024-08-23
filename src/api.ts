@@ -20,7 +20,7 @@ import * as Rect from './jmath/Rect';
 import * as Vec from './jmath/Vec';
 
 
-import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
+import { MultiColorReplaceFilter } from 'pixi-filters';
 import * as AnimationCombos from './graphics/AnimationCombos';
 import * as FloatingText from './graphics/FloatingText';
 import * as JImage from './graphics/Image';

@@ -4,7 +4,7 @@ import { meleeAction } from './actions/meleeAction';
 import * as config from '../../config'
 import * as Unit from '../Unit';
 import type Underworld from '../../Underworld';
-import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
+import { MultiColorReplaceFilter } from 'pixi-filters';
 
 export const BLOOD_GOLEM_ID = 'Blood Golem';
 const unit: UnitSource = {

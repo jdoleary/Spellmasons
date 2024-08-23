@@ -1,5 +1,5 @@
 import type * as PIXI from 'pixi.js';
-import { GlowFilter } from '@pixi/filter-glow';
+import { GlowFilter } from 'pixi-filters';
 import type { Vec2 } from '../jmath/Vec';
 import { addPixiSprite, app, containerFloatingText, withinCameraBounds } from './PixiUtils';
 

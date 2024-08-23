@@ -1,5 +1,5 @@
 import * as Unit from '../Unit';
-import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
+import { MultiColorReplaceFilter } from 'pixi-filters';
 import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import { createVisualLobbingProjectile } from '../Projectile';

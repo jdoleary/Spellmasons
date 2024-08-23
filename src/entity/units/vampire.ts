@@ -3,7 +3,7 @@ import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import * as blood_curse from '../../cards/blood_curse';
 import { meleeAction } from './actions/meleeAction';
-import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
+import { MultiColorReplaceFilter } from 'pixi-filters';
 import Underworld from '../../Underworld';
 import floatingText from '../../graphics/FloatingText';
 import * as config from '../../config';

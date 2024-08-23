@@ -2,7 +2,7 @@ import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import * as math from '../../jmath/math';
-import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
+import { MultiColorReplaceFilter } from 'pixi-filters';
 import * as config from '../../config';
 import Underworld from '../../Underworld';
 import { makeDarkPriestAttackParticles } from '../../graphics/ParticleCollection';

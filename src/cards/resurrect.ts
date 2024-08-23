@@ -1,5 +1,5 @@
 import * as Unit from '../entity/Unit';
-import { ColorOverlayFilter } from '@pixi/filter-color-overlay';
+import { ColorOverlayFilter } from 'pixi-filters';
 import { refundLastSpell, Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';

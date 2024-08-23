@@ -7,7 +7,7 @@ import { checkIfNeedToClearTooltip } from '../graphics/PlanningView';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
 import * as config from '../config';
 import { clone, Vec2 } from '../jmath/Vec';
-import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
+import { MultiColorReplaceFilter } from 'pixi-filters';
 import { manaBlue, manaDarkBlue, stamina } from '../graphics/ui/colors';
 import Underworld from '../Underworld';
 import { hasBloodCurse } from '../cards/blood_curse';
