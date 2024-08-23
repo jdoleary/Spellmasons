@@ -338,6 +338,12 @@ export function drawHealthBarAboveHead(unitIndex: number, underworld: Underworld
     //--
     // Prevent drawing unit overlay graphics when a unit is in the portal
     if (u.x !== null && u.y !== null && u.alive && predictionUnit && !predictionUnit.flaggedForRemoval && !globalThis.isHUDHidden && globalThis.unitOverlayGraphics) {
+      const skipDrawingHealthBar = u.faction != Faction.ALLY && predictionUnit.healthMax == predictionUnit.health;
+      // Only show ally healthbars and damaged unit health bars
+      // This makes the screen much less cluttered with many units
+      if (skipDrawingHealthBar) {
+        return;
+      }
       // Draw base health bar
       const healthBarColor = u.faction == Faction.ALLY ? colors.healthAllyGreen : colors.healthRed;
       const healthBarHurtColor = u.faction == Faction.ALLY ? colors.healthAllyDarkGreen : colors.healthDarkRed;
