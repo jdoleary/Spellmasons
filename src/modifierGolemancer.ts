@@ -18,7 +18,8 @@ import { BLOOD_GOLEM_ID } from "./entity/units/bloodGolem";
 export const golemancerId = 'Golemancer';
 export default function registerGolemancer() {
   registerModifiers(golemancerId, {
-    description: 'rune_golemancer',
+    description: ['rune_golemancer', `X`],
+    unitOfMeasure: 'Units',
     _costPerUpgrade: 200,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, golemancerId, { isCurse: false, quantity, keepOnDeath: true }, () => {

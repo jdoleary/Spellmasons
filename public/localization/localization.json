@@ -647,13 +647,15 @@
         "rune_on_kill_resurrect": "🍞% chance to resurrect a unit on kill",
         "rune_bounty_potion": "Claiming a bounty will drop a powerful potion",
         "rune_creeping_death": "Inflicts a random enemy with 🍞 stacks of suffocate when another enemy is killed",
-        "rune_heavy_toxins": "Inflicting poison also inflicts \"Slow\" 🍞 times",
+        "rune_heavy_toxins": "Inflicting poison also inflicts \"Slow\"",
         "rune_alchemist": "🍞% chance to summon a potion each turn",
         "rune_clone_on_tele": "Leave a clone behind whenever you teleport",
         "rune_plague_bringer": "Poisons 🍞 random enemy units each turn",
         "rune_good_looking": "Converts 🍞 random non-miniboss units to the player's faction on spawn",
         "rune_dare_devil": "Lose half of your max health for +🍞 stat points",
-        "revitalize": "Revitalize"
+        "revitalize": "Revitalize",
+        "stacks": "stacks",
+        "units": "units"
     },
     {
         "language": "Français",
@@ -1303,13 +1305,15 @@
         "rune_on_kill_resurrect": "🍞 % de chances de ressusciter une unité lorsque vous tuez un autre ennemi",
         "rune_bounty_potion": "Réclamer une prime fera tomber une puissante potion.",
         "rune_creeping_death": "Inflige à un ennemi aléatoire 🍞 charges de suffocation lorsqu'un autre ennemi est tué.",
-        "rune_heavy_toxins": "Infliger du poison inflige également \"Ralentissement\" 🍞 fois.",
+        "rune_heavy_toxins": "Infliger du poison inflige également \"Ralentissement\" ",
         "rune_alchemist": "🍞% de chance d'invoquer une potion à chaque tour",
         "rune_clone_on_tele": "Laisse un clone derrière toi chaque fois que tu te téléportes.",
         "rune_plague_bringer": "Empoisonne 🍞 les unités ennemies aléatoires à chaque tour.",
         "rune_good_looking": "Convertit 🍞 des unités non-miniboss aléatoires au faction du joueur à leur apparition.",
         "rune_dare_devil": "Perdez la moitié de votre santé maximale pour +🍞 points de statut.",
-        "revitalize": "Revitaliser"
+        "revitalize": "Revitaliser",
+        "stacks": "quantité",
+        "units": "créatures"
     },
     {
         "language": "italiano",
@@ -1959,13 +1963,15 @@
         "rune_on_kill_resurrect": "🍞% di possibilità di resuscitare un'unità quando uccidi un altro nemico",
         "rune_bounty_potion": "Rivendicare una taglia farà cadere una potente pozione.",
         "rune_creeping_death": "Infligge a un nemico casuale 🍞 stack di soffocamento quando un altro nemico viene ucciso.",
-        "rune_heavy_toxins": "Infliggere veleno infligge anche \"Rallentamento\" 🍞 volte",
+        "rune_heavy_toxins": "Infliggere veleno infligge anche \"Rallentamento\"",
         "rune_alchemist": "🍞% possibilità di evocare una pozione ogni turno",
         "rune_clone_on_tele": "Lascia un clone dietro di te ogni volta che teletrasporti.",
         "rune_plague_bringer": "Avvelena 🍞 unità nemiche casuali ogni turno.",
         "rune_good_looking": "Converte 🍞 unità casuali non miniboss nella fazione del giocatore all'apparizione",
         "rune_dare_devil": "Perdi metà della tua vita massima per +🍞 punti statistica.",
-        "revitalize": "Rivitalizzare"
+        "revitalize": "Rivitalizzare",
+        "stacks": "quantità",
+        "units": "creaturetti"
     },
     {
         "language": "Deutsche",
@@ -2615,13 +2621,15 @@
         "rune_on_kill_resurrect": "🍞% Chance, einen Einheit beim Töten wiederzubeleben",
         "rune_bounty_potion": "Das Einfordern einer Belohnung wird einen mächtigen Trank fallen lassen.",
         "rune_creeping_death": "Fügt einem zufälligen Feind 🍞 Stapel von Ersticken zu, wenn ein anderer Feind getötet wird.",
-        "rune_heavy_toxins": "Das Zufügen von Gift bewirkt auch \"Langsamkeit\" 🍞 Mal.",
+        "rune_heavy_toxins": "Das Zufügen von Gift bewirkt auch \"Langsamkeit\"",
         "rune_alchemist": "🍞% Chance, jede Runde einen Trank zu beschwören",
         "rune_clone_on_tele": "Lass einen Klon zurück, wann immer du teleportierst.",
         "rune_plague_bringer": "Vergiftet 🍞 zufällige feindliche Einheiten jede Runde.",
         "rune_good_looking": "Konvertiert 🍞 zufällige Nicht-Miniboss-Einheiten beim Spawn in die Fraktion des Spielers.",
         "rune_dare_devil": "Verliere die Hälfte deiner maximalen Gesundheit für +🍞 Attributspunkte.",
-        "revitalize": "Beleben"
+        "revitalize": "Beleben",
+        "stacks": "Menge",
+        "units": "Kreaturen"
     },
     {
         "language": "español",
@@ -3271,13 +3279,15 @@
         "rune_on_kill_resurrect": "🍞% de probabilidad de resucitar una unidad al matar",
         "rune_bounty_potion": "Reclamar una recompensa soltará una poderosa poción.",
         "rune_creeping_death": "Inflige a un enemigo aleatorio 🍞 montones de sofocación cuando otro enemigo es asesinado.",
-        "rune_heavy_toxins": "Infligir veneno también inflige \"Lento\" 🍞 veces.",
+        "rune_heavy_toxins": "Infligir veneno también inflige \"Lento\"",
         "rune_alchemist": "🍞% de probabilidad de invocar una poción cada turno",
         "rune_clone_on_tele": "Deja un clon atrás cada vez que te teletransportes.",
         "rune_plague_bringer": "Envenena 🍞 unidades enemigas aleatorias cada turno.",
         "rune_good_looking": "Convierte 🍞 unidades aleatorias no miniboss de la facción del jugador al momento de aparecer.",
         "rune_dare_devil": "Pierde la mitad de tu salud máxima a cambio de +🍞 puntos de estadística.",
-        "revitalize": "Revivir"
+        "revitalize": "Revivir",
+        "stacks": "cantidad",
+        "units": "criaturas"
     },
     {
         "language": "日本",
@@ -3927,13 +3937,15 @@
         "rune_on_kill_resurrect": "🍞%の確率で、敵を倒したときにユニットを復活させる",
         "rune_bounty_potion": "賞金を請求すると、強力なポーションが手に入ります。",
         "rune_creeping_death": "別の敵が倒されると、ランダムな敵に🍞の窒息スタックを与える。",
-        "rune_heavy_toxins": "毒を与えることで「スロー」を🍞回与える。",
+        "rune_heavy_toxins": "毒を付与すると「鈍足」も付与される",
         "rune_alchemist": "🍞毎ターンポーションを召喚する%の確率",
         "rune_clone_on_tele": "テレポートするたびにクローンを残す",
         "rune_plague_bringer": "毎ターン、ランダムな敵ユニットに毒を与える🍞",
         "rune_good_looking": "スポーン時に🍞ランダムな非ミニボスユニットをプレイヤーの派閥に変換します。",
         "rune_dare_devil": "最大健康の半分を失って、+🍞ステータスポイントを得る",
-        "revitalize": "再生する"
+        "revitalize": "再生する",
+        "stacks": "数量",
+        "units": "生物"
     },
     {
         "language": "Português",
@@ -4583,13 +4595,15 @@
         "rune_on_kill_resurrect": "🍞% de chance de ressuscitar uma unidade ao matar",
         "rune_bounty_potion": "Reclamar uma recompensa soltará uma poderosa poção.",
         "rune_creeping_death": "Inflige a um inimigo aleatório 🍞 pilhas de sufocar quando outro inimigo é eliminado.",
-        "rune_heavy_toxins": "Causar veneno também impõe \"Devagar\" 🍞 vezes.",
+        "rune_heavy_toxins": "Causar veneno também impõe \"Devagar\" ",
         "rune_alchemist": "🍞% de chance de invocar uma poção a cada turno",
         "rune_clone_on_tele": "Deixe um clone para trás sempre que você se teletransportar.",
         "rune_plague_bringer": "Venenos 🍞 unidades inimigas aleatórias a cada turno.",
         "rune_good_looking": "Converte 🍞 unidades aleatórias não-miniboss para a facção do jogador ao nascer.",
         "rune_dare_devil": "Perder metade da sua saúde máxima para +🍞 pontos de estatísticas",
-        "revitalize": "Revitalizar"
+        "revitalize": "Revitalizar",
+        "stacks": "quantidade",
+        "units": "criaturas"
     },
     {
         "language": "عربى",
@@ -5239,13 +5253,15 @@
         "rune_on_kill_resurrect": "🍞% فرصة لإعادة إحياء وحدة عند القتل",
         "rune_bounty_potion": "مطالبات المكافآت ستسقط جرعة قوية",
         "rune_creeping_death": "يُصيب عدوًا عشوائيًا بـ 🍞 كومة من الاختناق عند قتل عدو آخر",
-        "rune_heavy_toxins": "تسبب السم أيضًا في إحداث \"تباطؤ\" 🍞 مرات",
+        "rune_heavy_toxins": "إن إلحاق السم يؤدي أيضًا إلى \"البطء\"",
         "rune_alchemist": "🍞% فرصة لاستدعاء جرعة في كل دور",
         "rune_clone_on_tele": "اترك نسخة خلفك كلما قمت بالتنقل الفوري",
         "rune_plague_bringer": "يسمم وحدات الأعداء العشوائية كل جولة 🍞",
         "rune_good_looking": "تحول 🍞 وحدات عشوائية غير زعماء مصغرين إلى فصيل اللاعب عند الظهور",
         "rune_dare_devil": "افقد نصف صحتك القصوى مقابل +🍞 نقاط الإحصاء",
-        "revitalize": "إحياء"
+        "revitalize": "إحياء",
+        "stacks": "كمية",
+        "units": "مخلوقات"
     },
     {
         "language": "한국어",
@@ -5895,13 +5911,15 @@
         "rune_on_kill_resurrect": "🍞% 확률로 적을 처치할 때 유닛을 부활시킵니다.",
         "rune_bounty_potion": "보상을 청구하면 강력한 물약이 떨어집니다.",
         "rune_creeping_death": "다른 적이 처치될 때 무작위 적에게 🍞 질식 효과 스택을 부여합니다.",
-        "rune_heavy_toxins": "독을 주면 \"느림\"도 🍞 배 만큼 발생합니다.",
+        "rune_heavy_toxins": "독을 가하면 \"느림\" 효과도 적용됩니다.",
         "rune_alchemist": "매 턴마다 포션을 소환할 확률 🍞%",
         "rune_clone_on_tele": "텔레포트할 때마다 복제본을 남기세요.",
         "rune_plague_bringer": "매턴마다 랜덤 적 유닛을 독살합니다.",
         "rune_good_looking": "스폰 시 🍞 랜덤 비미니보스 유닛을 플레이어의 진영으로 전환합니다.",
         "rune_dare_devil": "최대 체력의 절반을 잃고 +🍞 스탯 포인트를 얻습니다.",
-        "revitalize": "재생하다"
+        "revitalize": "재생하다",
+        "stacks": "수량",
+        "units": "생물"
     },
     {
         "language": "Русский",
@@ -6551,13 +6569,15 @@
         "rune_on_kill_resurrect": "🍞% шанс воскресить юнита при убийстве",
         "rune_bounty_potion": "Получение награды приведет к получению мощного зелья.",
         "rune_creeping_death": "Накладывает на случайного врага 🍞 стаканов удушья, когда убивается другой враг.",
-        "rune_heavy_toxins": "Нанесение яда также накладывает эффект \"Замедление\" 🍞 раз",
+        "rune_heavy_toxins": "Нанесение яда также накладывает эффект «Замедление».",
         "rune_alchemist": "🍞% вероятность призвать зелье каждый ход",
         "rune_clone_on_tele": "Оставляйте клона позади каждый раз, когда телепортируетесь.",
         "rune_plague_bringer": "Отравляет 🍞 случайные вражеские юниты каждый ход.",
         "rune_good_looking": "ПриSpawn'е преобразует 🍞 случайные не-минибосс юниты в фракцию игрока.",
         "rune_dare_devil": "Потеряйте половину своего максимального здоровья для получения +🍞 очков стата.",
-        "revitalize": "Оживить"
+        "revitalize": "Оживить",
+        "stacks": "количество",
+        "units": "существа"
     },
     {
         "language": "中文(简)",
@@ -7207,13 +7227,15 @@
         "rune_on_kill_resurrect": "🍞% 击杀时复活一个单位的几率",
         "rune_bounty_potion": "领取赏金将掉落强力药水。",
         "rune_creeping_death": "当另一个敌人被击杀时，对随机敌人施加🍞堆叠窒息效果。",
-        "rune_heavy_toxins": "施加毒素也会施加“减速”🍞 次数",
+        "rune_heavy_toxins": "造成毒害也会造成“缓慢”",
         "rune_alchemist": "每回合有 🍞% 概率召唤一个药水",
         "rune_clone_on_tele": "每当你传送时都会留下一个克隆。",
         "rune_plague_bringer": "每回合随机毒害敌方单位🍞",
         "rune_good_looking": "在生成时将随机的非小型首领单位转换为玩家的阵营。",
         "rune_dare_devil": "失去一半的最大生命值以获得 +🍞 属性点",
-        "revitalize": "重振"
+        "revitalize": "重振",
+        "stacks": "数量",
+        "units": "生物"
     },
     {
         "language": "中文(繁)",
@@ -7863,13 +7885,15 @@
         "rune_on_kill_resurrect": "🍞% 機率在擊殺時重生單位",
         "rune_bounty_potion": "領取賞金將掉落一瓶強力藥水",
         "rune_creeping_death": "當另一隻敵人被擊殺時，對隨機敵人施加 🍞 層窒息效果。",
-        "rune_heavy_toxins": "施加毒素也會造成「減速」🍞次",
+        "rune_heavy_toxins": "造成毒害也會造成“緩慢”",
         "rune_alchemist": "每回合有 🍞% 幾率召喚藥水",
         "rune_clone_on_tele": "每當你瞬移時，留下一个克隆。",
         "rune_plague_bringer": "每回合隨機毒害敵方單位 🍞",
         "rune_good_looking": "在生成時將 🍞 隨機非小型首領單位轉換為玩家的派系。",
         "rune_dare_devil": "失去一半的最大生命值以獲得 +🍞 能力點數",
-        "revitalize": "振興"
+        "revitalize": "振興",
+        "stacks": "數量",
+        "units": "生物"
     },
     {
         "language": "Polski",
@@ -8519,13 +8543,15 @@
         "rune_on_kill_resurrect": "🍞% szansa na wskrzeszenie jednostki przy zabiciu",
         "rune_bounty_potion": "Zgłoszenie nagrody spowoduje upuszczenie potężnej mikstury.",
         "rune_creeping_death": "Zadaje losowemu wrogowi 🍞 stosów duszenia, gdy inny wróg zostaje zabity.",
-        "rune_heavy_toxins": "Zadawanie obrażeń jadem powoduje również efekt \"Spowolnienie\" 🍞 razy.",
+        "rune_heavy_toxins": "Zadawanie obrażeń jadem powoduje również efekt \"Spowolnienie\"",
         "rune_alchemist": "🍞% szans na przywołanie mikstury w każdej turze",
         "rune_clone_on_tele": "Zostaw klona za sobą za każdym razem, gdy teleportujesz się.",
         "rune_plague_bringer": "Zatruwa 🍞 losowe jednostki wrogów co turę.",
         "rune_good_looking": "Przekształca 🍞 losowe jednostki nie-minibossów na frakcję gracza przy pojawieniu się.",
         "rune_dare_devil": "Stracisz połowę swojego maksymalnego zdrowia za +🍞 punktów statystyk.",
-        "revitalize": "Ożywić"
+        "revitalize": "Ożywić",
+        "stacks": "ilość",
+        "units": "stworzenia"
     },
     {
         "language": "Dutch",
@@ -9175,12 +9201,14 @@
         "rune_on_kill_resurrect": "🍞% kans om een eenheid te resurrecten bij een kill",
         "rune_bounty_potion": "Het opeisen van een beloning zal een krachtige potion droppen.",
         "rune_creeping_death": "Brengt een willekeurige vijand 🍞 stapels verstikking toe wanneer een andere vijand wordt gedood.",
-        "rune_heavy_toxins": "Het toedienen van vergif veroorzaakt ook \"Langzaam\" 🍞 keer.",
+        "rune_heavy_toxins": "Het toedienen van vergif veroorzaakt ook \"Langzaam\" ",
         "rune_alchemist": "🍞% kans om elke beurt een potion op te roepen",
         "rune_clone_on_tele": "Laat een kloon achter telkens wanneer je teleporteert.",
         "rune_plague_bringer": "Vergiftigt 🍞 willekeurige vijandelijke eenheden elke beurt",
         "rune_good_looking": "Zet 🍞 willekeurige niet-minibaas eenheden om naar de fractie van de speler bij het spawnen.",
         "rune_dare_devil": "Verlies de helft van je maximale gezondheid voor +🍞 stat punten",
-        "revitalize": "Verkwikken"
+        "revitalize": "Verkwikken",
+        "stacks": "hoeveelheid",
+        "units": "wezens"
     }
 ]

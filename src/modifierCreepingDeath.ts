@@ -14,7 +14,8 @@ import { makeManaTrail } from "./graphics/Particles";
 export const creepingDeathId = 'Creeping Death';
 export default function registerCreepingDeath() {
   registerModifiers(creepingDeathId, {
-    description: i18n('rune_creeping_death'),
+    description: 'rune_creeping_death',
+    unitOfMeasure: 'stacks',
     _costPerUpgrade: 100,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, creepingDeathId, { isCurse: false, quantity, keepOnDeath: false }, () => {

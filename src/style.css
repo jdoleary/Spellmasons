@@ -2162,7 +2162,11 @@ body.view-Game.showUpgrades #perkList.visible {
   display: flex;
   gap: 8px;
   justify-content: flex-start;
-  align-items: flex-end;
+  /* Importantly flex-start so that if the Header wraps it won't move
+  the plus button causing jank and stuttering as moving the button will make it
+  un-hovered causing the header to un-wrap and it repeats.
+  */
+  align-items: flex-start;
 }
 
 .stat-row .description {
@@ -2743,10 +2747,12 @@ body.dragging-card .floating-card-holder .empty-slot {
   color: #b545ff;
 }
 
-.rune-name-holder.discount-80 {
+.rune-name-holder.discount-20 {
   color: #ff45bc;
 }
 
 .rune-name {
-  font-size: 1.8em;
+  /*Align with top of button*/
+  font-size: 1.3em;
+  font-weight: bold;
 }
