@@ -49,13 +49,13 @@ const unit: UnitSource = {
       unit.image.sprite.filters.unshift(
         new MultiColorReplaceFilter(
           [
+            [0x93d491, 0x90c7cf], //head
+            [0x8fce8e, 0x79b1b9], //head darker slightly
+            [0x86eb83, 0x84d5ec], // light arm
+            [0x74b675, 0x7faaba], // dark arm
             [0x859784, 0x6e868a], // cloak top
             [0x728771, 0x5f7377], // cloak medium
             [0x60775f, 0x516468], //cloak dark
-            [0x86eb83, 0x84d5ec], // light arm
-            [0x74b675, 0x7faaba], // dark arm
-            [0x93cf92, 0x90c7cf], //head
-            [0x8fce8e, 0x79b1b9], //head darker slightly
             [0x374937, 0x374849],//pants
           ],
           0.05
