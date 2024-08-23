@@ -10,7 +10,6 @@ import { getOrInitModifier } from './util';
 import { distance } from '../jmath/math';
 import { makeManaTrail } from '../graphics/Particles';
 import { Vec2, jitter, lerpVec2 } from '../jmath/Vec';
-import { addLerpable } from '../lerpList';
 import { soulShardOwnerModifierId } from '../modifierSoulShardOwner';
 import { HasSpace } from '../entity/Type';
 
@@ -177,12 +176,6 @@ function unitTakeDamageFX(unit: Unit.IUnit, underworld: Underworld, prediction: 
 
   playSFXKey(unit.sfx.damage);
   Unit.playAnimation(unit, unit.animations.hit, { loop: false, animationSpeed: 0.2 });
-  //startBloodParticleSplatter(underworld, unit, unit, { maxRotationOffset: Math.PI / 16, numberOfParticles: 30 });
-  // Use all_red shader to flash the unit to show they are taking damage
-  if (unit.shaderUniforms.all_red) {
-    unit.shaderUniforms.all_red.alpha = 1;
-    addLerpable(unit.shaderUniforms.all_red, "alpha", 0, 200);
-  }
 }
 
 function drawDiamond(target: Unit.IUnit, graphics: PIXI.Graphics) {

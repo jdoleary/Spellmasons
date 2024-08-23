@@ -11,8 +11,6 @@ import type { Vec2 } from '../jmath/Vec';
 import * as Vec from '../jmath/Vec';
 import * as CardUI from '../graphics/ui/CardUI';
 import Events from '../Events';
-import makeAllRedShader from '../graphics/shaders/selected';
-import { addLerpable } from '../lerpList';
 import { allUnits } from './units';
 import { allCards, allModifiers, eventsSorter, Modifiers } from '../cards';
 import * as immune from '../cards/immune';
@@ -259,11 +257,12 @@ export function create(
       // Initialize unit IF unit contains initialization function
       sourceUnit.init(unit, underworld);
     }
-    // Add on damage filter AFTER init.
+    // FYI: Subesequent filters must come after init.
     // init filters must come first so that
     // multi-color-replace filter is adjusting the original pixel colors
     // https://github.com/jdoleary/Spellmasons/issues/695
-    addOnDamageFilter(unit);
+    // [More filters here if needed]  Note: Filters cause a HUGE burden on rendering
+    // lag, use sparingly https://github.com/jdoleary/Spellmasons/issues/1006
 
     // Ensure all change factions logic applies when a unit is first created
     changeFaction(unit, faction);
@@ -353,19 +352,6 @@ export function adjustUnitDifficulty(unit: IUnit, oldDifficulty: number, newDiff
 
   const newStats = adjustUnitPropsDueToDifficulty(unit, newDifficultyRatio);
   Object.assign(unit, newStats);
-}
-function addOnDamageFilter(unit: IUnit) {
-  if (unit.image) {
-    if (unit.image.sprite.filters) {
-      const all_red = makeAllRedShader();
-      if (all_red) {
-        unit.shaderUniforms.all_red = all_red.uniforms;
-        unit.image.sprite.filters.push(all_red.filter);
-      }
-    } else {
-      console.error('Cannot add all_red filter')
-    }
-  }
 }
 
 export function addModifier(unit: IUnit, key: string, underworld: Underworld, prediction: boolean, quantity: number = 1, extra?: object) {
@@ -538,11 +524,14 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
     // Initialize unit IF unit contains initialization function
     sourceUnit.init(loadedunit, underworld);
   }
-  // Must come after init.
+  // FYI: Subesequent filters must come after init.
   // init filters must come first so that
   // multi-color-replace filter is adjusting the original pixel colors
   // https://github.com/jdoleary/Spellmasons/issues/695
-  addOnDamageFilter(loadedunit);
+  // [More filters here if needed]  Note: Filters cause a HUGE burden on rendering
+  // lag, use sparingly https://github.com/jdoleary/Spellmasons/issues/1006
+
+
   // Headless server doesn't need to keep track of shader uniforms
   if (!globalThis.headless) {
     // Load in shader uniforms by ONLY setting the uniforms that are saved
@@ -999,11 +988,6 @@ export function takeDamage(damageArgs: damageArgs, underworld: Underworld, predi
             startBloodParticleSplatter(underworld, fromVec2, unit);
           }
         }
-      }
-      // Use all_red shader to flash the unit to show they are taking damage
-      if (unit.shaderUniforms.all_red) {
-        unit.shaderUniforms.all_red.alpha = 1;
-        addLerpable(unit.shaderUniforms.all_red, "alpha", 0, 200);
       }
     } else if (amount < 0) {
       // - - - HEALING FX - - -
