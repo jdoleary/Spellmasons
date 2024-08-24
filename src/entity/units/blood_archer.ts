@@ -15,7 +15,7 @@ const unit: UnitSource = {
   id: BLOOD_ARCHER_ID,
   info: {
     description: ['blood_archer_copy', NUMBER_OF_UNITS_BLOOD_ARCHER_CAN_ATTACK.toString(), NUMBER_OF_UNITS_MINIBOSS_BLOOD_ARCHER_CAN_ATTACK.toString()],
-    image: 'units/archerIdle',
+    image: 'units/blood_archer/archerIdle',
     subtype: UnitSubType.RANGED_LOS,
   },
   unitProps: {

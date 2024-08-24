@@ -1,8 +1,8 @@
 const fs = require('fs');
 const { exec } = require("child_process");
 let replaces = [
-            [0x5fcde4, 0x63c572],
             [0x67c3d7, 0x58b866],
+            [0x5fcde4, 0x63c572],
 ]
 replaces = replaces.map(([from,to]) => {
     return [(componentToHex(from)), (componentToHex(to))]
@@ -23,7 +23,7 @@ fs.readdirSync('.').forEach(async file => {
         // Modify
         for(let [from, to] of replaces){
             console.log('jtest', from, to)
-            const magickCommand = `magick convert ${file} -fuzz 5% -fill ${to} -opaque ${from} ${file}`;
+            const magickCommand = `magick convert ${file} -fuzz 0% -fill ${to} -opaque ${from} ${file}`;
             await new Promise((resolve) => {
                 exec(magickCommand, (error, stdout, stderr) => {
                     console.log(file);
