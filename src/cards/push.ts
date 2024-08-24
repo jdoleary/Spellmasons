@@ -22,7 +22,7 @@ const spell: Spell = {
       playDefaultSpellSFX(card, prediction);
       const targets = getCurrentTargets(state);
       for (let entity of targets) {
-        promises.push(forcePushAwayFrom(entity, state.casterUnit, defaultPushDistance * quantity, underworld, prediction));
+        promises.push(forcePushAwayFrom(entity, state.casterUnit, defaultPushDistance * quantity, underworld, prediction, state.casterUnit));
       }
       await Promise.all(promises);
       return state;

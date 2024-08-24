@@ -33,7 +33,7 @@ const spell: Spell = {
         drawUICirclePrediction(state.casterUnit, shoveRange - config.COLLISION_MESH_RADIUS / 2, colors.targetBlue, 'Shove Range');
       }
       for (let entity of targets) {
-        promises.push(forcePushAwayFrom(entity, state.casterUnit, defaultPushDistance * 3 * quantity, underworld, prediction));
+        promises.push(forcePushAwayFrom(entity, state.casterUnit, defaultPushDistance * 3 * quantity, underworld, prediction, state.casterUnit));
       }
       // No targets to cast on. Refund mana
       if (targets.length == 0) {

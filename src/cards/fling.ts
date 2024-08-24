@@ -23,7 +23,7 @@ const spell: Spell = {
     ignoreRange: true,
     effect: async (state, card, quantity, underworld, prediction) => {
       playDefaultSpellSFX(card, prediction);
-      await forcePushTowards(state.casterUnit, state.castLocation, defaultPushDistance * quantity, underworld, prediction);
+      await forcePushTowards(state.casterUnit, state.castLocation, defaultPushDistance * quantity, underworld, prediction, state.casterUnit);
       return state;
     },
   },

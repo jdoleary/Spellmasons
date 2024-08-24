@@ -75,7 +75,7 @@ const unit: UnitSource = {
       await Unit.playComboAnimation(unit, unit.animations.attack, () => {
         return animateDrag(unit, attackTarget);
       });
-      const pullPromise = forcePushToDestination(attackTarget, unit, 1, underworld, false);
+      const pullPromise = forcePushToDestination(attackTarget, unit, 1, underworld, false, unit);
       underworld.triggerGameLoopHeadless();
       await pullPromise;
     } else {

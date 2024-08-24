@@ -36,13 +36,13 @@ export function explode(location: Vec2, radius: number, damage: number, pushDist
   if (pushDistance > 0) {
     units.forEach(u => {
       // Push units away from exploding location
-      forcePushAwayFrom(u, location, pushDistance, underworld, prediction);
+      forcePushAwayFrom(u, location, pushDistance, underworld, prediction, sourceUnit);
     })
 
     underworld.getPickupsWithinDistanceOfTarget(location, radius, prediction)
       .forEach(p => {
         // Push pickups away
-        forcePushAwayFrom(p, location, pushDistance, underworld, prediction);
+        forcePushAwayFrom(p, location, pushDistance, underworld, prediction, sourceUnit);
       })
   }
 

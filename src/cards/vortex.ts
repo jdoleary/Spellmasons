@@ -24,7 +24,7 @@ const spell: Spell = {
       playDefaultSpellSFX(card, prediction);
       const targets = getCurrentTargets(state);
       for (let entity of targets) {
-        promises.push(forcePushToDestination(entity, state.castLocation, quantity, underworld, prediction));
+        promises.push(forcePushToDestination(entity, state.castLocation, quantity, underworld, prediction, state.casterUnit));
       }
       await Promise.all(promises);
       return state;

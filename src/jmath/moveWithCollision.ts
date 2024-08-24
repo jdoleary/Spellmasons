@@ -17,6 +17,8 @@ export interface ForceMove {
   pushedObject: HasSpace;
   velocity: Vec2;
   timedOut?: boolean;
+  // The unit that caused the push (so runes work with impact damage)
+  sourceUnit?: IUnit;
 }
 export type ForceMoveUnitOrPickup = ForceMove & {
   type: ForceMoveType.UNIT_OR_PICKUP;

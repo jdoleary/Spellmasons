@@ -403,7 +403,7 @@ export default class Underworld {
   }
   // Returns true when forceMove is complete
   runForceMove(forceMoveInst: ForceMove, deltaTime: number, prediction: boolean): boolean {
-    const { pushedObject, velocity, timedOut } = forceMoveInst;
+    const { pushedObject, velocity, timedOut, sourceUnit } = forceMoveInst;
     if (timedOut) {
       return true;
     }
@@ -447,7 +447,7 @@ export default class Underworld {
           const impactDamage = Math.floor((magnitudeOfImpact - 2) * 10);
 
           if (Unit.isUnit(pushedObject)) {
-            Unit.takeDamage({ unit: pushedObject, amount: impactDamage, fromVec2: Vec.add(pushedObject, { x: velocity.x, y: velocity.y }) }, this, prediction);
+            Unit.takeDamage({ unit: pushedObject, amount: impactDamage, fromVec2: Vec.add(pushedObject, { x: velocity.x, y: velocity.y }), sourceUnit }, this, prediction);
             if (!prediction) {
               floatingText({ coords: pushedObject, text: `${impactDamage} Impact damage!` });
             }

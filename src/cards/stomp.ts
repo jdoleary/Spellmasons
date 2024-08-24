@@ -47,7 +47,7 @@ const spell: Spell = {
 
         // Dash
         const moveDistance = Math.min(distance(state.casterUnit, target), stompMoveDistance * quantity)
-        await forcePushTowards(state.casterUnit, target, moveDistance, underworld, prediction);
+        await forcePushTowards(state.casterUnit, target, moveDistance, underworld, prediction, state.casterUnit);
 
         // Stomp
         const radius = stompRadius * (1 + (0.25 * state.aggregator.radiusBoost));
@@ -87,13 +87,13 @@ async function stompExplode(caster: IUnit, radius: number, damage: number, pushD
 
   units.forEach(u => {
     // Push units away from exploding location
-    forcePushAwayFrom(u, caster, pushDistance, underworld, prediction);
+    forcePushAwayFrom(u, caster, pushDistance, underworld, prediction, caster);
   })
 
   underworld.getPickupsWithinDistanceOfTarget(caster, radius, prediction)
     .forEach(p => {
       // Push pickups away
-      forcePushAwayFrom(p, caster, pushDistance, underworld, prediction);
+      forcePushAwayFrom(p, caster, pushDistance, underworld, prediction, caster);
     })
 }
 
