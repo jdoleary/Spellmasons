@@ -13,7 +13,7 @@ import { heavyToxinsId } from '../modifierHeavyToxins';
 import { slowCardId } from './slow';
 
 export const poisonCardId = 'poison';
-const basePoisonStacks = 20;
+export const basePoisonStacks = 20;
 const subspriteImageName = 'spell-effects/modifierPoisonDrip';
 const spell: Spell = {
   card: {

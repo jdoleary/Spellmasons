@@ -5,7 +5,7 @@ import * as config from './config';
 import Underworld from './Underworld';
 import { chooseOneOfSeeded, getUniqueSeedString, randInt } from "./jmath/rand";
 import { UnitSubType } from "./types/commonTypes";
-import { poisonCardId } from "./cards/poison";
+import { basePoisonStacks, poisonCardId } from "./cards/poison";
 import seedrandom from "seedrandom";
 import floatingText from "./graphics/FloatingText";
 
@@ -50,7 +50,7 @@ function poisonRandomEnemyUnits(unit: Unit.IUnit, quantity: number, underworld: 
           },
           prediction
         });
-        Unit.addModifier(chosenUnit, poisonCardId, underworld, prediction, 1, { sourceUnitId: unit.id });
+        Unit.addModifier(chosenUnit, poisonCardId, underworld, prediction, basePoisonStacks, { sourceUnitId: unit.id });
       }
     }
   }
