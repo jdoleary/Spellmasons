@@ -31,31 +31,15 @@ const unit: UnitSource = {
     unavailableUntilLevelIndex: 6,
   },
   animations: {
-    idle: 'units/archerIdle',
-    hit: 'units/archerHit',
-    attack: 'units/archerAttack',
-    die: 'units/archerDeath',
-    walk: 'units/archerWalk',
+    idle: 'units/blood_archer/archerIdle',
+    hit: 'units/blood_archer/archerHit',
+    attack: 'units/blood_archer/archerAttack',
+    die: 'units/blood_archer/archerDeath',
+    walk: 'units/blood_archer/archerWalk',
   },
   sfx: {
     damage: 'archerHurt',
     death: 'archerDeath',
-  },
-  init: (unit: Unit.IUnit, underworld: Underworld) => {
-    if (unit.image && unit.image.sprite && unit.image.sprite.filters) {
-      unit.image.sprite.filters.unshift(
-        new MultiColorReplaceFilter(
-          [
-            [0x3fc7c2, 0xc73f53], // feathers 
-            [0x7c5353, 0x53667c], //skinMedium
-            [0x866262, 0x627386], //skinLight
-            [0x603232, 0x324860], //skinDark
-            [0x838d9f, 0x802230], //loin cloth
-          ],
-          0.15
-        )
-      );
-    }
   },
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, _canAttackTarget: boolean) => {
     // Archer just checks attackTarget, not canAttackTarget to know if it can attack because getBestRangedLOSTarget() will return undefined

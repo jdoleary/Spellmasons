@@ -4108,6 +4108,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     return unit.id == serialized.id && unit.unitSourceId == serialized.unitSourceId;
   }
   syncUnits(units: Unit.IUnitSerialized[], isClientSourceOfTruthForOwnUnit: boolean = false) {
+    return;
     // Remove units flagged for removal before syncing
     this.units = this.units.filter(u => !u.flaggedForRemoval);
 
