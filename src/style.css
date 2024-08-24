@@ -2756,3 +2756,8 @@ body.dragging-card .floating-card-holder .empty-slot {
   font-size: 1.3em;
   font-weight: bold;
 }
+
+/* Hide the "empty" that appears when rightclicking on a toolbar spell while viewing runes */
+.bookmark-runes .card {
+  display: none;
+}
