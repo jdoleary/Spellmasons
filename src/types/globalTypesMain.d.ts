@@ -283,6 +283,18 @@ declare global {
   var pie: PieClient | undefined;
   var adminPowerBarIndex: number;
   var adminPowerBarSelection: string;
+  var accessibilityOutline: {
+    [Faction.ALLY]: {
+      regular: { thickness: number, color: number },
+      targeted: { thickness: number, color: number },
+      outOfRange: { thickness: number, color: number }
+    },
+    [Faction.ENEMY]: {
+      regular: { thickness: number, color: number },
+      targeted: { thickness: number, color: number },
+      outOfRange: { thickness: number, color: number }
+    },
+  } | undefined;
   var useEventLogger: boolean;
   var resetControlMap: undefined | (() => void);
   var setFontOverride: undefined | ((font: string) => void);
@@ -298,6 +310,4 @@ declare global {
   // have a reference to the promise created by the library but
   // I want it not to be tracked
   var test_ignorePromiseTracking: string | undefined;
-  // Draw a symbol above ally units for color blind assist
-  var useAllySymbol: boolean | undefined;
 }
