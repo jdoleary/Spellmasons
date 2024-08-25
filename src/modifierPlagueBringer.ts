@@ -8,6 +8,7 @@ import { UnitSubType } from "./types/commonTypes";
 import { basePoisonStacks, poisonCardId } from "./cards/poison";
 import seedrandom from "seedrandom";
 import floatingText from "./graphics/FloatingText";
+import { animateSpell } from "./cards/cardUtils";
 
 // Poisons [quantity] random enemy units each turn
 export const plagueBringerId = 'Plague Bringer';
@@ -50,6 +51,10 @@ function poisonRandomEnemyUnits(unit: Unit.IUnit, quantity: number, underworld: 
           },
           prediction
         });
+        if (!prediction) {
+          animateSpell(chosenUnit, 'spell-effects/spellPoison');
+          playSFXKey('poison');
+        }
         Unit.addModifier(chosenUnit, poisonCardId, underworld, prediction, basePoisonStacks, { sourceUnitId: unit.id });
       }
     }
