@@ -11,13 +11,14 @@ import { makeRisingParticles } from "./graphics/ParticleCollection";
 import { COLLISION_MESH_RADIUS } from "./config";
 import seedrandom from "seedrandom";
 import { getUniqueSeedString } from "./jmath/rand";
+import { BLOOD_GOLEM_ID } from "./entity/units/bloodGolem";
 
 // Spawn [quantity] golems when claiming a bounty
 export const bountyGolemId = 'Bounty: Golem';
 export default function registerBountyGolem() {
   registerModifiers(bountyGolemId, {
     description: ('rune_bounty_golem'),
-    unitOfMeasure: `Golem`,
+    unitOfMeasure: `Blood Golem`,
     _costPerUpgrade: 120,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, bountyGolemId, { isCurse: false, quantity, keepOnDeath: true }, () => {
@@ -38,7 +39,7 @@ export default function registerBountyGolem() {
           for (let i = 0; i < golemsToSummon; i++) {
             const coords = underworld.findValidSpawnInRadius(killedUnit, prediction, seed, { allowLiquid: killedUnit.inLiquid });
             if (coords) {
-              let sourceUnit = allUnits[golem_unit_id];
+              let sourceUnit = allUnits[BLOOD_GOLEM_ID];
               if (sourceUnit) {
                 const summonedUnit = Unit.create(
                   sourceUnit.id,
