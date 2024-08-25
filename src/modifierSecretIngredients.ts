@@ -10,10 +10,11 @@ import { convertToHashColor } from "./graphics/ui/colors";
 
 // Empower the nearest potion by [quantity] each turn
 export const secretIngredientsId = 'Secret Ingredients';
+const powerScale = 0.5;
 export default function registerSecretIngredients() {
   registerModifiers(secretIngredientsId, {
     description: 'rune_secret_ingredients',
-    _costPerUpgrade: 100,
+    _costPerUpgrade: 120,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, secretIngredientsId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, secretIngredientsId);
@@ -27,7 +28,7 @@ export default function registerSecretIngredients() {
         const nearestPotion = getNearestPotion(unit, underworld, prediction);
         if (nearestPotion) {
           makeManaTrail(unit, nearestPotion, underworld, convertToHashColor(getColorFromPotion(nearestPotion)), '#ff0000', modifier.quantity).then(() =>
-            setPower(nearestPotion, nearestPotion.power + modifier.quantity)
+            setPower(nearestPotion, nearestPotion.power + (modifier.quantity * powerScale))
           );
         }
       }
