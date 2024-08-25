@@ -16,7 +16,7 @@ export default function registerAlchemist() {
     description: 'rune_alchemist',
     unitOfMeasure: '%',
     _costPerUpgrade: 80,
-    quantityPerUpgrade: 25,
+    quantityPerUpgrade: 20,
     maxUpgradeCount: 4,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, alchemistId, { isCurse: false, quantity, keepOnDeath: true }, () => {
