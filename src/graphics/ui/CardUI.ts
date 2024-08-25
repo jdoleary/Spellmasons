@@ -650,10 +650,10 @@ export function renderRunesMenu(underworld: Underworld) {
       // Exception: Show cast range when hovered
       if (stat == 'Cast Range') {
         elPlusBtn.addEventListener('mouseenter', () => {
-          keyDown.showWalkRope = true;
+          globalThis.showCastRangeForUpgrade = true;
         });
         elPlusBtn.addEventListener('mouseleave', () => {
-          keyDown.showWalkRope = false;
+          globalThis.showCastRangeForUpgrade = false;
         });
       }
     }

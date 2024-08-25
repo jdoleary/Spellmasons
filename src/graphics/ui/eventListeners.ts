@@ -523,8 +523,9 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
   }
 
   if (globalThis.player) {
-    if (keyDown.showWalkRope) {
-      drawWalkRope(mouseTarget, underworld);
+    if (keyDown.showWalkRope || globalThis.showCastRangeForUpgrade) {
+      const target = keyDown.showWalkRope ? mouseTarget : globalThis.player.unit;
+      drawWalkRope(target, underworld);
     } else {
       globalThis.walkPathGraphics?.clear();
     }
