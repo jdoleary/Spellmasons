@@ -52,6 +52,8 @@ import { IPickup } from './Pickup';
 import seedrandom from 'seedrandom';
 import { slimeId } from '../modifierSlime';
 import { isRune } from '../cards/cardUtils';
+import { VAMPIRE_ID } from './units/vampire';
+import { growthId } from '../modifierGrowth';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -1543,10 +1545,18 @@ export function makeMiniboss(unit: IUnit, underworld: Underworld) {
   ], seed) || { num: 1 };
   // Filter out modifiers with no probability and add the modifier key to the object.
   let availableSpawnModifiers = Object.entries(allModifiers).flatMap(([key, mod]) => typeof mod.probability === 'number' ? [{ ...mod, id: key }] : []);
-  // Special exception, ban "Slime" from Support classes
-  if (unit.unitSubType === UnitSubType.SUPPORT_CLASS) {
+
+  //// start: Special Modifier Exceptions
+  // ban "Slime" from Support classes and bosses
+  if (unit.unitSubType === UnitSubType.SUPPORT_CLASS || unit.unitSourceId === GORU_UNIT_ID || unit.unitSourceId === bossmasonUnitId) {
     availableSpawnModifiers = availableSpawnModifiers.filter(x => x.id !== slimeId);
   }
+  // Growth is OP on vampires because of the extra health on blood curse
+  if (unit.unitSourceId === VAMPIRE_ID) {
+    availableSpawnModifiers = availableSpawnModifiers.filter(x => x.id !== growthId);
+  }
+  //// end: Special Modifier Exceptions
+
   for (let i = 0; i < numberOfModifiers.num; i++) {
     // .map satisfies the compiler's need for certainty that probability is not undefined
     const mod = chooseObjectWithProbability(availableSpawnModifiers.map(m => ({ probability: 0, ...m })), seed);
