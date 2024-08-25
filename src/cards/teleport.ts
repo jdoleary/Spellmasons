@@ -37,7 +37,7 @@ const spell: Spell = {
       let hasTeleported = false;
       for (let target of targets) {
         if (underworld.isCoordOnWallTile(target) || isOutOfBounds(target, underworld)) continue;
-        teleport(state.casterUnit, target, underworld, prediction);
+        teleport(state.casterUnit, target, underworld, prediction, false, state.casterUnit);
         hasTeleported = true;
       }
 

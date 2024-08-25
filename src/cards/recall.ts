@@ -43,7 +43,7 @@ const spell: Spell = {
 
         // Teleport all targets to the mark
         for (let target of targets) {
-          teleport(target, mark, underworld, prediction, true);
+          teleport(target, mark, underworld, prediction, true, state.casterUnit);
         }
 
         // Remove mark

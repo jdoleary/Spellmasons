@@ -524,6 +524,10 @@ export function useMousePosition(underworld: Underworld, e?: MouseEvent) {
 
   if (globalThis.player) {
     if (keyDown.showWalkRope || globalThis.showCastRangeForUpgrade) {
+      // When showing the cast range due to hovering over the upgrade,
+      // it should be centered on the player, not the cursor.
+      // When showing cast range for the walk rope it should be centered on where
+      // you will be
       const target = keyDown.showWalkRope ? mouseTarget : globalThis.player.unit;
       drawWalkRope(target, underworld);
     } else {

@@ -48,12 +48,12 @@ const spell: Spell = {
       // pick it up
       for (let [object, newLocation] of swaps) {
         if (Pickup.isPickup(object)) {
-          teleport(object, newLocation, underworld, prediction);
+          teleport(object, newLocation, underworld, prediction, false, state.casterUnit);
         }
       }
       for (let [object, newLocation] of swaps) {
         if (Unit.isUnit(object)) {
-          teleport(object, newLocation, underworld, prediction);
+          teleport(object, newLocation, underworld, prediction, false, state.casterUnit);
         }
       }
       return state;

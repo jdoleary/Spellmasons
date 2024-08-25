@@ -9,6 +9,7 @@ import * as inLiquid from '../inLiquid';
 import { HasSpace } from './Type';
 import * as config from '../config';
 import * as math from '../jmath/math';
+import { IUnit } from './Unit';
 export interface IObstacle {
   x: number;
   y: number;
@@ -124,11 +125,12 @@ export function isCoordInLiquid(coord: Vec2, underworld: Underworld): Polygon2 |
   return undefined;
 }
 
-export function tryFallInOutOfLiquid(entity: HasSpace, underworld: Underworld, prediction: boolean) {
+// sourceUnit is the unit that caused 'entity' to fall in liquid
+export function tryFallInOutOfLiquid(entity: HasSpace, underworld: Underworld, prediction: boolean, sourceUnit?: IUnit) {
   const insideLiquidPoly = isCoordInLiquid(entity, underworld);
   if (insideLiquidPoly) {
     fallInOrOutToSafeDistanceFromEdge(entity, insideLiquidPoly, underworld);
-    inLiquid.add(entity, underworld, prediction);
+    inLiquid.add(entity, underworld, prediction, sourceUnit);
   } else {
     inLiquid.remove(entity);
   }

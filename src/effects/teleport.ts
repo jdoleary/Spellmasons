@@ -8,7 +8,8 @@ import { skyBeam } from '../VisualEffects';
 import * as colors from '../graphics/ui/colors';
 import Events from "../Events";
 
-export function teleport(object: HasSpace, newLocation: Vec2, underworld: Underworld, prediction: boolean, usePredictionLines?: boolean) {
+// sourceUnit is the unit that caused 'object' to teleport
+export function teleport(object: HasSpace, newLocation: Vec2, underworld: Underworld, prediction: boolean, usePredictionLines?: boolean, sourceUnit?: Unit.IUnit) {
   if (usePredictionLines) {
     // Show prediction lines before the move actually occurs
     if (prediction && globalThis.predictionGraphics) {
@@ -38,7 +39,7 @@ export function teleport(object: HasSpace, newLocation: Vec2, underworld: Underw
       }
     }
     // Check to see if unit interacts with liquid
-    Obstacle.tryFallInOutOfLiquid(object, underworld, prediction);
+    Obstacle.tryFallInOutOfLiquid(object, underworld, prediction, sourceUnit);
   } else if (Pickup.isPickup(object)) {
     Pickup.setPosition(object, newLocation.x, newLocation.y);
   } else {

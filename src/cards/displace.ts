@@ -43,7 +43,7 @@ const spell: Spell = {
         }
 
         for (let [object, newLocation] of swaps) {
-          teleport(object, newLocation, underworld, prediction, true);
+          teleport(object, newLocation, underworld, prediction, true, state.casterUnit);
         }
       }
       return state;

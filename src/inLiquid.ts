@@ -5,7 +5,8 @@ import { addMask, removeMask } from "./graphics/Image";
 import { liquidmancerId } from "./modifierLiquidmancer";
 import type Underworld from "./Underworld";
 
-export function doLiquidEffect(underworld: Underworld, unit: IUnit, prediction: boolean) {
+// sourceUnit is the unit that caused 'entity' to fall in liquid
+export function doLiquidEffect(underworld: Underworld, unit: IUnit, prediction: boolean, sourceUnit?: IUnit) {
   if (!underworld.lastLevelCreated) {
     return;
   }
@@ -19,16 +20,16 @@ export function doLiquidEffect(underworld: Underworld, unit: IUnit, prediction: 
 
   switch (underworld.lastLevelCreated.biome) {
     case 'water':
-      takeDamage({ unit, amount: 20 * liquidDamageMultiplier }, underworld, prediction);
+      takeDamage({ unit, amount: 20 * liquidDamageMultiplier, sourceUnit }, underworld, prediction);
       break;
     case 'lava':
-      takeDamage({ unit, amount: 30 * liquidDamageMultiplier }, underworld, prediction);
+      takeDamage({ unit, amount: 30 * liquidDamageMultiplier, sourceUnit }, underworld, prediction);
       break;
     case 'blood':
-      takeDamage({ unit, amount: 40 * liquidDamageMultiplier }, underworld, prediction);
+      takeDamage({ unit, amount: 40 * liquidDamageMultiplier, sourceUnit }, underworld, prediction);
       break;
     case 'ghost':
-      takeDamage({ unit, amount: 50 * liquidDamageMultiplier }, underworld, prediction);
+      takeDamage({ unit, amount: 50 * liquidDamageMultiplier, sourceUnit }, underworld, prediction);
       break;
     default:
       console.error('Unknown biome')
@@ -38,13 +39,14 @@ export function doLiquidEffect(underworld: Underworld, unit: IUnit, prediction: 
 }
 
 export const LIQUID_MASK = 'liquid-mask';
-export function add(entity: HasSpace, underworld: Underworld, prediction: boolean) {
+// sourceUnit is the unit that caused 'entity' to fall in liquid
+export function add(entity: HasSpace, underworld: Underworld, prediction: boolean, sourceUnit?: IUnit) {
   // Can't set inLiquid if they are already in liquid
   if (!entity.inLiquid) {
     entity.inLiquid = true;
     if (isUnit(entity)) {
       explain(EXPLAIN_LIQUID_DAMAGE);
-      doLiquidEffect(underworld, entity, prediction);
+      doLiquidEffect(underworld, entity, prediction, sourceUnit);
     }
     if (entity.image) {
       addMask(entity.image, LIQUID_MASK);

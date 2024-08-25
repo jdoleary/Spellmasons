@@ -510,7 +510,7 @@ export default class Underworld {
         })
       }
       // Check to see if unit has falled out of lava via a forcemove
-      Obstacle.tryFallInOutOfLiquid(forceMoveInst.pushedObject, this, prediction);
+      Obstacle.tryFallInOutOfLiquid(forceMoveInst.pushedObject, this, prediction, forceMoveInst.sourceUnit);
     } else if (isForceMoveProjectile(forceMoveInst)) {
       // ignoreCollisionLiftime is only set if we ignore collisions
       // so for everything else, run collision logic
