@@ -18,10 +18,6 @@
 - Test mod thumbnail paths on electron build
 
 
---- 
-## v1.42
-- bounty hunter - test that same bounty unit is chosen in multiplayer
-
 
 # Release protocal
 - QA: 1:44

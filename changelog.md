@@ -1,3 +1,33 @@
+## 1.42.9 - RUNES
+
+Major Feature: Runes
+
+You can now upgrade Runes in the spellbook.  Runes deeply expand the possibilities of your run:  For example, "Inflict Poison" adds 1 stack of poison every time you deal damage.  If you're going for an archer build this makes all of your arrows poisonous. Combine that with "Endless Quiver" which ensures that your arrow spells do not scale in cost as you use them and you've become quite deadly!  I'll leave it up to you to discover more unique and clever rune combinations to elevate your build!
+
+Major Feature: Champions
+
+Champions (quietly released in the last update) provide a novel challenge, especially to seasoned players.  They are larger, stronger units with special modifiers (like Damage Limiter, Slime, Target Immune - and more).  You'll have to be extra clever to deal with them
+
+Official Change log:
+
+- Features:
+    - Runes can be locked so that when they reroll each level (or when you manually reroll), your favorite runes will stay put so you can continue to invest in them.
+    - Runes have a chance to be discounted for 20% or 40% off
+    - Deterministic events.  Events (like poison on turn end) now trigger in deterministic order.  This means regardless of which order curses or blessings are added to a unit they will trigger in a sensible order.  This should prevent confused expectations
+    - Bosses (Goru and Deathmason) now spawn as Champions in the loop levels.  Yikes!! Good luck...
+    - Healthbars now only appear if a unit is damaged (or an ally so you can tell they're an ally).  I think this makes the game a lot prettier and less cluttered especially when there are tons of units on screen.  Please let me know what you think of this.
+- Enhancements
+    - Removed shader that was causing FPS drops
+    - Note: I have LOTS of planned FPS / Optimization improvements that will be coming in the following update.
+- Fixes:
+    - Swapping with pickups no longer triggers the pickup.  Thanks @Liese!
+    - Displace's teleport location is now unique to each player
+- Balances:
+    - Bolt has been rebalanced. It now starts with 1 chain and gets +1 chain per stack
+- UI:
+    - Fix menu buttons highlighting on hover in the main menu
+    - Fix the alignment of the caution "Self damage / will die" popup underneath queued spell
+
 ## 1.41.5
 
 - src: Temp: Disabling explosive arrow
