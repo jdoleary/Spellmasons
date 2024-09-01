@@ -80,7 +80,7 @@ export const NUMBER_OF_UNITS_TO_MERGE = 5;
 export const IS_ANNIVERSARY_UPDATE_OUT = true;
 
 // The percentage of mana Timemason drains every second
-export const TIMEMASON_PERCENT_DRAIN = 1;
+export const TIMEMASON_PERCENT_DRAIN = 1.6;
 
 // Force Moves timeout must be changable and resettable and NOT use raceTimeout
 // due to: https://github.com/jdoleary/Spellmasons/issues/352
