@@ -11,7 +11,7 @@ export default function registerPotionBarrier() {
   registerModifiers(potionBarrierId, {
     description: 'rune_potion_barrier',
     unitOfMeasure: 'Shield',
-    _costPerUpgrade: 20,
+    _costPerUpgrade: 30,
     quantityPerUpgrade: 10,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, potionBarrierId, { isCurse: false, quantity, keepOnDeath: true }, () => {
