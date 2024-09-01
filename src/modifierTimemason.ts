@@ -9,7 +9,7 @@ export default function registerTimemason() {
   registerModifiers(runeTimemasonId, {
     description: 'class_timemason',
     _costPerUpgrade: 200,
-    maxUpgradeCount: 5,
+    maxUpgradeCount: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       const player = underworld.players.find(p => p.unit == unit);
       if (player) {
