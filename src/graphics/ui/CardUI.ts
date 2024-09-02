@@ -22,6 +22,7 @@ import { presentRunes } from '../../jmath/RuneUtil';
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
 let elRunes: HTMLElement | undefined;
+let elBattleLog: HTMLElement | undefined;
 resetInventoryContent();
 export function resetInventoryContent() {
   if (globalThis.headless) {
@@ -48,6 +49,9 @@ export function resetInventoryContent() {
     elRunes.innerHTML = 'Runes';
     elRunes.id = 'runes';
     elInvContent.appendChild(elRunes);
+    elBattleLog = document.createElement('div');
+    elBattleLog.id = 'battle-log';
+    elInvContent.appendChild(elBattleLog);
   }
 
 }
@@ -73,7 +77,7 @@ const elSelectedCards = document.getElementById('selected-cards') as HTMLElement
 const dragstart = (ev: any) => {
   document.body.classList.toggle('dragging-card', true);
   const target = (ev.target as HTMLElement)
-  if (target.closest('.card')) {
+  if (target.closest && target.closest('.card')) {
     dragCard = (target.closest('.card') as HTMLElement)
   } else {
     ev.preventDefault();
@@ -369,6 +373,7 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
     // clear contents
     resetInventoryContent();
     renderRunesMenu(underworld);
+    renderBattleLog(underworld);
     // Get list of cards that have been replaced by more advanced cards to hide them in inventory
     // The reason they are not removed entirely is because the number of cards in the inventory determines
     // how many new cards the player gets to pick in the next upgrade relative to progress in the underworld,
@@ -449,6 +454,7 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
     categories.forEach(category => document.getElementById(`bookmark-${category.toLowerCase()}`)?.classList.toggle('disabled', false));
     // All bookmark is always enabled
     document.getElementById('bookmark-all')?.classList.toggle('disabled', false);
+    document.getElementById('bookmark-battle-log')?.classList.toggle('disabled', false);
     // Runes bookmark is always enabled
     document.getElementById('bookmark-runes')?.classList.toggle('disabled', false);
     // Add an inventory element to clear the currently selected toolbar item
@@ -466,6 +472,31 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
       }
     }
   }
+}
+export function renderBattleLog(underworld: Underworld) {
+  if (!elBattleLog) {
+    console.error('No elRunes for showing rune upgrades');
+    return;
+  }
+  elBattleLog.innerHTML = `
+  
+<div style="width:100%;">
+  <div class="card-inner flex" style="color:black">
+    <div class="stat-row-holder">
+      <div class="battle-log-entries">
+      <h2>Battle Log</h2>
+        ${[...underworld._battleLog].reverse().map(x => `<div>${x}</div>`).join('')}
+      </div>
+      <div class="battle-log-state">
+      <h2>Players</h2>
+      ${underworld.players.map(x => `<h3>${x.name}</h3><div><b>Ended Turn</b>: ${x.endedTurn}</div><div><b>Completed Turn</b>: ${underworld.hasCompletedTurn(x)}</div>`)}
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  `;
 }
 export function renderRunesMenu(underworld: Underworld) {
   if (!elRunes) {

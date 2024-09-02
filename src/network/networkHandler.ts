@@ -35,7 +35,7 @@ import seedrandom from 'seedrandom';
 import { getUniqueSeedString, SeedrandomState } from '../jmath/rand';
 import { setPlayerNameUI } from '../PlayerUtils';
 import { GameMode } from '../types/commonTypes';
-import { recalcPositionForCards, renderRunesMenu } from '../graphics/ui/CardUI';
+import { getSpellThumbnailPath, recalcPositionForCards, renderRunesMenu } from '../graphics/ui/CardUI';
 import { isSinglePlayer } from './wsPieSetup';
 import { elEndTurnBtn } from '../HTMLElements';
 import { sendEventToServerHub } from '../RemoteLogging';
@@ -599,7 +599,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       break;
     }
     case MESSAGE_TYPES.SET_PHASE: {
-      console.log('sync: SET_PHASE; syncs units and players')
+      console.log('sync: SET_PHASE; syncs units and players');
       const { phase, units, players, pickups, lastUnitId, lastPickupId, RNGState, currentLevelIndex } = payload as {
         phase: turn_phase,
         // Sync data for players
@@ -626,7 +626,6 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
         console.log(`Phase is already set to ${turn_phase[phase]}; Aborting SET_PHASE.`);
         break;
       }
-
       if (units) {
         underworld.syncUnits(units);
       }
@@ -893,6 +892,27 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       }
       lastSpellMessageTime = d.time;
       if (fromPlayer) {
+        // Add spell to battleLog
+        underworld.battleLog(`${fromPlayer.name || fromPlayer.clientId} cast spell: ${(payload.cards as string[])
+          // Pretty print spell
+          .reduce<{ card: string, count: number }[]>((agg, cur) => {
+            const lastIndex = agg.length - 1;
+            const lastElement = agg[lastIndex];
+            if (!lastElement) {
+              agg.push({ card: cur, count: 1 });
+              return agg;
+            } else if (lastElement.card == cur) {
+              lastElement.count++;
+              return agg;
+            } else {
+              agg.push({ card: cur, count: 1 });
+              return agg;
+            }
+          }, []).map(x => {
+            const card = Cards.allCards[x.card];
+            return `${x.count > 1 ? `${x.count}x` : ''} ${card && card.thumbnail ? `<img src="${getSpellThumbnailPath(card.thumbnail)}"></img>` : ''}` + x.card;
+          }).join(', ')}`);
+
         if (underworld.turn_phase == turn_phase.Stalled) {
           // This check shouldn't have to be here but it protects against the game getting stuck in stalled phase
           console.error('Game was in Stalled turn_phase when a player sent MESSAGE_TYPES.SPELL.');

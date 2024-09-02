@@ -1567,10 +1567,12 @@ body.open-inventory #inventory-container {
   outline: 1px solid var(--book-leather-dark);
 }
 
+body.open-inventory #inventory-container.bookmark-battle-log .card-inspect,
 body.open-inventory #inventory-container.bookmark-runes .card-inspect {
   display: none;
 }
 
+.bookmark-battle-log #inventory-content,
 .bookmark-runes #inventory-content {
   width: 100%;
 }
@@ -2121,6 +2123,7 @@ body.view-Game.showUpgrades #perkList.visible {
   display: flex;
 }
 
+#battle-log,
 #runes {
   width: 100%;
 }
@@ -2577,6 +2580,7 @@ body.dragging-card .floating-card-holder .empty-slot {
 }
 
 
+#bookmark-battle-log,
 #bookmark-runes {
   transform: scale(1, -1);
   height: unset;
@@ -2627,6 +2631,7 @@ body.dragging-card .floating-card-holder .empty-slot {
 }
 
 
+#bookmark-battle-log.active,
 #bookmark-runes.active {
   /* Override default #bookmark-id position */
   left: -16px !important;
@@ -2696,10 +2701,12 @@ body.dragging-card .floating-card-holder .empty-slot {
   display: flex;
 }
 
+#battle-log,
 #runes {
   display: none;
 }
 
+#inventory-container.bookmark-battle-log #battle-log,
 #inventory-container.bookmark-runes #runes {
   display: flex;
 }
@@ -2758,6 +2765,16 @@ body.dragging-card .floating-card-holder .empty-slot {
 }
 
 /* Hide the "empty" that appears when rightclicking on a toolbar spell while viewing runes */
+.bookmark-battle-log .card,
 .bookmark-runes .card {
   display: none;
+}
+
+/* Spell icons for battle log */
+.battle-log-entries {
+  font-size: 1.2em;
+}
+
+.battle-log-entries img {
+  height: 14px;
 }

@@ -250,11 +250,16 @@ export default class Underworld {
   startTime: number | undefined;
   winTime: number | undefined;
   headlessTimeouts: { time: number, callback: () => void }[] = [];
+  // Use the function underworld.battleLog('event string') to log
+  // significant happenings.  The battleLog is used for players to view
+  // what has happened
+  _battleLog: string[] = [];
 
   constructor(overworld: Overworld, pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     // Clean up previous underworld:
     overworld.underworld?.cleanup();
     console.log('Setup: Creating new underworld');
+    this.battleLog('New Game');
     this.pie = pie;
     this.overworld = overworld;
     this.overworld.underworld = this;
@@ -2875,6 +2880,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     CardUI.updateCardBadges(this);
   }
   async executePlayerTurn() {
+    this.battleLog(`Begin Player Turn Phase`);
     await Unit.startTurnForUnits(this.players.map(p => p.unit), this, false);
 
     for (let player of this.players) {
@@ -2924,6 +2930,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     console.log('[GAME] Turn Phase\nExecuteNPCTurn', Faction[faction]);
     this.redPortalBehavior(faction);
     const units = this.units.filter(u => u.unitType == UnitType.AI && u.faction == faction);
+    if (units.length) {
+      this.battleLog(`Begin ${faction === 0 ? 'Ally' : 'Enemy'} NPC Turn Phase`);
+    }
     await Unit.startTurnForUnits(units, this, false);
 
     // TODO - Define/Control actions and smart targeting
@@ -3115,6 +3124,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // can occur when a client disconnects when it is not their turn)
       console.info('Cannot end the turn of a player when it is not currently their turn')
       return
+    }
+    if (this.players.length > 1 && !player.endedTurn) {
+      this.battleLog(`${player.name} ended their turn`)
     }
     // Don't play turn sfx when recording or for auto-ended dead players
     if ((!globalThis.isHUDHidden && !document.body?.classList.contains('hide-card-holders')) && (player.unit.alive || (!player.unit.alive && player.endedTurn))) {
@@ -4385,6 +4397,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     const shuffledRunes = shuffle([...listOfRemainingRunesToChoose], seedrandom(getUniqueSeedStringPerPlayer(this, player)));
     return shuffledRunes;
 
+  }
+  battleLog(happening: string) {
+    this._battleLog.push(happening);
   }
 }
 
