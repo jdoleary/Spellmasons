@@ -16,7 +16,7 @@ const unit: UnitSource = {
   id: GHOST_ARCHER_ID,
   info: {
     description: 'ghost_archer_copy',
-    image: 'units/archerIdle',
+    image: 'units/ghost_archer/archerIdle',
     subtype: UnitSubType.RANGED_LOS,
   },
   unitProps: {
@@ -32,11 +32,11 @@ const unit: UnitSource = {
     unavailableUntilLevelIndex: 7,
   },
   animations: {
-    idle: 'units/archerIdle',
-    hit: 'units/archerHit',
-    attack: 'units/archerAttack',
-    die: 'units/archerDeath',
-    walk: 'units/archerWalk',
+    idle: 'units/ghost_archer/archerIdle',
+    hit: 'units/ghost_archer/archerHit',
+    attack: 'units/ghost_archer/archerAttack',
+    die: 'units/ghost_archer/archerDeath',
+    walk: 'units/ghost_archer/archerWalk',
   },
   sfx: {
     damage: 'archerHurt',
@@ -46,18 +46,6 @@ const unit: UnitSource = {
     if (unit.image && unit.image.sprite && unit.image.sprite.filters) {
       // Ghost unit is slightly transparent
       unit.image.sprite.alpha = 0.8;
-      unit.image.sprite.filters.unshift(
-        new MultiColorReplaceFilter(
-          [
-            [0x866262, 0x569769], //skinLight
-            [0x7c5353, 0x4d865e], //skinMedium
-            [0x603232, 0x376144], //skinDark
-            [0x838d9f, 0x141c17], //loin cloth
-            [0x3fc7c2, 0x141c17], // feathers 
-          ],
-          0.05
-        )
-      );
     }
   },
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, _canAttackTarget: boolean) => {
