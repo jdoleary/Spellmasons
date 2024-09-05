@@ -10,7 +10,8 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import * as config from '../config';
 import { teleport } from '../effects/teleport';
 import { distance } from '../jmath/math';
-import { isOutOfBounds } from '../graphics/PlanningView';
+import { addWarningAtMouse, isOutOfBounds } from '../graphics/PlanningView';
+import { collideWithLineSegments } from '../jmath/moveWithCollision';
 
 const recallId = 'recall';
 const spell: Spell = {
@@ -54,7 +55,11 @@ const spell: Spell = {
 
         if (underworld.isCoordOnWallTile(target) || isOutOfBounds(target, underworld)) {
           console.warn("Can't place mark out of bounds");
-          refundLastSpell(state, prediction, "Can't place mark out of bounds")
+          if (prediction) {
+            addWarningAtMouse('out of bounds');
+          } else {
+            refundLastSpell(state, prediction, "Can't place mark out of bounds")
+          }
           return state;
         } else {
           const pickupSource = Pickup.pickups.find(p => p.name == Pickup.RECALL_POINT);
@@ -64,6 +69,8 @@ const spell: Spell = {
               pickupSource,
               logSource: 'recall.ts'
             }, underworld, prediction);
+            // Ensure recall point doesn't spawn inside wall
+            collideWithLineSegments(pickupInst, underworld.walls, underworld);
             addTarget(pickupInst, state, underworld, prediction);
             if (!prediction) {
               playSFXKey('recallPlace');
