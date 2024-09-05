@@ -62,7 +62,7 @@ export function cloneEffect(addClonesToTargetArray: boolean): EffectFn {
           // If there is are clone coordinates to clone into
           if (cloneSourceCoords) {
             if (Unit.isUnit(target)) {
-              const clone = doCloneUnit(target, underworld, prediction, cloneSourceCoords);
+              const clone = doCloneUnit(target, underworld, prediction, state.casterUnit, cloneSourceCoords);
               // This is super powerful as it allows for exponential clones
               if (clone && addClonesToTargetArray) {
                 // Add clones to target list
@@ -100,11 +100,12 @@ export function cloneEffect(addClonesToTargetArray: boolean): EffectFn {
     return state;
   }
 }
-export function doCloneUnit(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, spawnSource?: Vec2): Unit.IUnit | undefined {
+export function doCloneUnit(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, summoner: Unit.IUnit, spawnSource?: Vec2): Unit.IUnit | undefined {
   const seed = seedrandom(`${getUniqueSeedString(underworld)}-${unit.id}`);
   const validSpawnCoords = underworld.findValidSpawnInRadius(unit, prediction, seed, { allowLiquid: unit.inLiquid });
   if (validSpawnCoords) {
     const clone = Unit.load(Unit.serialize(unit), underworld, prediction);
+    clone.summonedBy = summoner;
     if (!prediction) {
       // Change id of the clone so that it doesn't share the same
       // 'supposed-to-be-unique' id of the original

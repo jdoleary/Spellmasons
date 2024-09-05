@@ -39,7 +39,7 @@ export default function registerOnKillResurrect() {
             Unit.resurrect(killedUnit, underworld);
             Unit.changeFaction(killedUnit, unit.faction);
             // Can remove above after fixing onKill async
-            await resurrectWithAnimation(killedUnit, unit.faction, underworld, prediction);
+            await resurrectWithAnimation(killedUnit, unit, unit.faction, underworld, prediction);
           }
         }
       }

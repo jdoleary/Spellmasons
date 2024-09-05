@@ -23,7 +23,7 @@ export default function registerContaminateSelfOnTeleport() {
       const modifier = unit.modifiers[cloneOnTeleportId];
       if (modifier) {
         for (let i = 0; i < modifier.quantity; i++) {
-          const clone = doCloneUnit(unit, underworld, prediction);
+          const clone = doCloneUnit(unit, underworld, prediction, unit);
           // Attempt to put the Changling where the player was, but in the event
           // that the player is swapping that location might now be full
           let coords = originalLocation;

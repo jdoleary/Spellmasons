@@ -1,7 +1,7 @@
 import * as Unit from '../entity/Unit';
 import { ColorOverlayFilter } from '@pixi/filter-color-overlay';
 import { refundLastSpell, Spell } from './index';
-import { CardCategory } from '../types/commonTypes';
+import { CardCategory, UnitType } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { makeRisingParticles } from '../graphics/ParticleCollection';
@@ -47,6 +47,9 @@ const spell: Spell = {
           resurrectedUnitCount++;
           makeRisingParticles(unit, prediction);
           Unit.changeFaction(unit, state.casterUnit.faction);
+          if (unit.unitType !== UnitType.PLAYER_CONTROLLED) {
+            unit.summonedBy = state.casterUnit;
+          }
           // Resurrect animation is the die animation played backwards
           animationPromises.push(Unit.playAnimation(unit, unit.animations.die, { loop: false, animationSpeed: -0.2 }));
           if (unit.image) {

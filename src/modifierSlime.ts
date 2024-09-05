@@ -40,7 +40,7 @@ export default function registerSlime() {
         return;
       }
       await animateMitosis(unit.image);
-      const clone = doCloneUnit(unit, underworld, prediction);
+      const clone = doCloneUnit(unit, underworld, prediction, unit);
       if (clone) {
         floatingText({ coords: unit, text: slimeId, prediction });
         // Only the source unit maintains slimeId or else it gets exponential

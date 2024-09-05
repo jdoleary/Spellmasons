@@ -115,7 +115,7 @@ const spell: Spell = {
       await animationPromise;
       // Clone all the batched clone jobs
       for (let [target, cloneSourceCoords] of clonePairs) {
-        const clone = doSplit(target, underworld, quantity, prediction);
+        const clone = doSplit(target, state.casterUnit, underworld, quantity, prediction);
         if (clone) {
           // Add the clone as a target
           addTarget(clone, state, underworld, prediction);
@@ -137,7 +137,7 @@ const spell: Spell = {
   }
 };
 export default spell;
-export function doSplit(target: Vec2 | undefined, underworld: Underworld, quantity: number, prediction: boolean): Unit.IUnit | Pickup.IPickup | undefined {
+export function doSplit(target: Vec2 | undefined, summoner: Unit.IUnit, underworld: Underworld, quantity: number, prediction: boolean): Unit.IUnit | Pickup.IPickup | undefined {
   if (target) {
     // If there is are clone coordinates to clone into
     if (Unit.isUnit(target)) {
@@ -145,6 +145,7 @@ export function doSplit(target: Vec2 | undefined, underworld: Underworld, quanti
       const validSpawnCoords = underworld.findValidSpawnInRadius(target, prediction, seed, { allowLiquid: target.inLiquid, maxRadius: config.COLLISION_MESH_RADIUS });
       if (validSpawnCoords) {
         const clone = Unit.load(Unit.serialize(target), underworld, prediction);
+        clone.summonedBy = summoner;
         if (!prediction) {
           // Change id of the clone so that it doesn't share the same
           // 'supposed-to-be-unique' id of the original

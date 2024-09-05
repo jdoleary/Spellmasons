@@ -80,7 +80,7 @@ export interface UnitPath {
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
 // rehydrate the JSON into an entity
-export type IUnitSerialized = Omit<IUnit, "predictionCopy" | "resolveDoneMoving" | "image" | "animations" | "sfx"> & { image?: Image.IImageAnimatedSerialized };
+export type IUnitSerialized = Omit<IUnit, "predictionCopy" | "resolveDoneMoving" | "image" | "animations" | "sfx" | "summonedBy"> & { image?: Image.IImageAnimatedSerialized, summonedById: number | undefined };
 export interface UnitAnimations {
   idle: string;
   hit: string;
@@ -110,6 +110,8 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   // if this IUnit is a real unit, predictionCopy is a reference to the latest prediction copy.
   // used for diffing the effects of a spell to sync multiplayer
   predictionCopy?: IUnit;
+  // Used to substitute for sourceUnit in onKill
+  summonedBy?: IUnit;
   // strength is a number that affects the sprite scale of this unit
   strength: number;
   // true if the unit was spawned at the beginning of the level and not
@@ -458,9 +460,10 @@ export function serialize(unit: IUnit): IUnitSerialized {
   // the network (it would just be extra data), better to restore from the source unit
 
   // omit predictionCopy because it is a transient reference and shouldn't be serialized
-  const { resolveDoneMoving, animations, sfx, predictionCopy, events, ...rest } = unit
+  const { resolveDoneMoving, animations, sfx, predictionCopy, events, summonedBy, ...rest } = unit
   return {
     ...rest,
+    summonedById: summonedBy?.id || undefined,
     // Deep copy events so that serialized units don't share the object
     events: [...events],
     // Deep copy modifiers so that serialized units don't share the object
@@ -483,7 +486,7 @@ export function serialize(unit: IUnit): IUnitSerialized {
 // this is useful when loading game state after reconnect
 // This is the opposite of serialize
 export function load(unit: IUnitSerialized, underworld: Underworld, prediction: boolean): IUnit {
-  const { shaderUniforms, ...restUnit } = unit
+  const { shaderUniforms, summonedById, ...restUnit } = unit
   const sourceUnit = allUnits[unit.unitSourceId];
   if (!sourceUnit) {
     console.error('Source unit not found for', unit.unitSourceId);
@@ -495,6 +498,7 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
     // Load defaults for new props that old save files might not have
     ...{ strength: 1 },
     ...restUnit,
+    summonedBy: (prediction ? underworld.unitsPrediction : underworld.units).find(u => u.id == summonedById),
     shaderUniforms: {},
     resolveDoneMoving: () => { },
     animations: sourceUnit?.animations || { idle: '', hit: '', walk: '', attack: '', die: '' },
@@ -810,11 +814,12 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean, so
   unit.path = undefined;
 
   const events = [...unit.events];
+  const overriddenSourceUnit = sourceUnit?.summonedBy || sourceUnit
   for (let eventName of events) {
     if (eventName) {
       const fn = Events.onDeathSource[eventName];
       if (fn) {
-        fn(unit, underworld, prediction, sourceUnit);
+        fn(unit, underworld, prediction, overriddenSourceUnit);
       }
     }
   }
@@ -822,13 +827,13 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean, so
   // Run onKill events for the sourceUnit of the lethal damage
   // This must occur before onDeath events are removed (Bounty)
   // Doodads don't trigger onKill effects
-  if (sourceUnit && unit.unitSubType != UnitSubType.DOODAD) {
-    const events = [...sourceUnit.events];
+  if (overriddenSourceUnit && unit.unitSubType != UnitSubType.DOODAD) {
+    const events = [...overriddenSourceUnit.events];
     for (let eventName of events) {
       if (eventName) {
         const fn = Events.onKillSource[eventName];
         if (fn) {
-          fn(sourceUnit, unit, underworld, prediction);
+          fn(overriddenSourceUnit, unit, underworld, prediction);
         }
       }
     }

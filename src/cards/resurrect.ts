@@ -1,7 +1,7 @@
 import * as Unit from '../entity/Unit';
 import { ColorOverlayFilter } from '@pixi/filter-color-overlay';
 import { refundLastSpell, Spell } from './index';
-import { CardCategory, Faction } from '../types/commonTypes';
+import { CardCategory, Faction, UnitType } from '../types/commonTypes';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { makeRisingParticles } from '../graphics/ParticleCollection';
 import { resurrect_weak_id } from './resurrect_weak';
@@ -29,7 +29,7 @@ const spell: Spell = {
       for (let unit of targets) {
         if (unit && !unit.alive && !unit.flaggedForRemoval) {
           resurrectedUnitCount++;
-          animationPromises.push(resurrectWithAnimation(unit, state.casterUnit.faction, underworld, prediction));
+          animationPromises.push(resurrectWithAnimation(unit, state.casterUnit, state.casterUnit.faction, underworld, prediction));
         }
       }
       await Promise.all(animationPromises);
@@ -40,7 +40,7 @@ const spell: Spell = {
     },
   },
 };
-export function resurrectWithAnimation(unit: Unit.IUnit, faction: Faction, underworld: Underworld, prediction: boolean): Promise<void> {
+export function resurrectWithAnimation(unit: Unit.IUnit, summoner: Unit.IUnit, faction: Faction, underworld: Underworld, prediction: boolean): Promise<void> {
   let colorOverlayFilter: ColorOverlayFilter;
   if (unit.image && unit.image.sprite.filters) {
     // Overlay with white
@@ -55,6 +55,9 @@ export function resurrectWithAnimation(unit: Unit.IUnit, faction: Faction, under
 
   makeRisingParticles(unit, prediction);
   Unit.changeFaction(unit, faction);
+  if (unit.unitType !== UnitType.PLAYER_CONTROLLED) {
+    unit.summonedBy = summoner;
+  }
   // Resurrect animation is the die animation played backwards
   let promise = Unit.playAnimation(unit, unit.animations.die, { loop: false, animationSpeed: -0.2 });
   if (unit.image) {
