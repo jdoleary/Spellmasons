@@ -1452,7 +1452,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         }
         const unit = overworld.underworld.units.find(u => u.id == selectedUnitid);
         if (unit) {
-          Unit.addModifier(unit, key, overworld.underworld, false, 1);
+          Unit.addModifier(unit, key, overworld.underworld, false, value.quantityPerUpgrade || 1);
         } else {
           centeredFloatingText('You must select a unit first', 'red');
         }
