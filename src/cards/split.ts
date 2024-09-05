@@ -77,8 +77,9 @@ const spell: Spell = {
     category: CardCategory.Curses,
     manaCost: 80,
     healthCost: 0,
+    costGrowthAlgorithm: 'nlogn',
+    expenseScaling: 1,
     probability: probabilityMap[CardRarity.FORBIDDEN],
-    expenseScaling: 2,
     thumbnail: 'spellIconSplit.png',
     description: ['spell_split', splitLimit.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {

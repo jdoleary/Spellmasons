@@ -758,6 +758,7 @@ export interface ICard {
   category: CardCategory;
   manaCost: number;
   healthCost: number;
+  costGrowthAlgorithm?: "nlogn" | "log" | 'exponential';
   probability: number;
   thumbnail: string;
   // The path for the animation effect when the spell is cast
