@@ -105,12 +105,8 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     if (sourceUnit) {
       const heavyToxinsModifier = sourceUnit.modifiers[heavyToxinsId];
       if (heavyToxinsModifier) {
-        // A loop is used because different applications of slow are multiplicative
-        // For each quantity of heavy toxins
-        for (let i = 0; i < heavyToxinsModifier.quantity; i++) {
-          // Inflict a [added-poison-quantity]% slow, capped at 100%
-          Unit.addModifier(unit, slowCardId, underworld, prediction, Math.min(quantity, 100));
-        }
+        // Inflict a [added-poison-quantity]% slow, capped at 100%
+        Unit.addModifier(unit, slowCardId, underworld, prediction, Math.min(heavyToxinsModifier.quantity, 100));
       }
     }
   }
