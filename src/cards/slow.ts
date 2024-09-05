@@ -51,6 +51,9 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
   unit.moveSpeed *= addedSlowMultiplier;
   unit.staminaMax *= addedSlowMultiplier;
   unit.stamina *= addedSlowMultiplier;
+  unit.moveSpeed = Math.max(1, unit.moveSpeed);
+  unit.staminaMax = Math.max(1, unit.staminaMax);
+  unit.stamina = Math.max(1, unit.stamina);
 }
 
 const spell: Spell = {
