@@ -19,7 +19,7 @@ const spell: Spell = {
     category: CardCategory.Soul,
     manaCost: 40,
     healthCost: 0,
-    costGrowthAlgorithm: 'nlogn',
+    costGrowthAlgorithm: 'exponential',
     probability: probabilityMap[CardRarity.FORBIDDEN],
     expenseScaling: 1,
     supportQuantity: false,
