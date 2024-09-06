@@ -29,7 +29,7 @@ import Underworld, { showUpgradesClassName } from '../../Underworld';
 import { toLineSegments } from '../../jmath/Polygon2';
 import { closestLineSegmentIntersection } from '../../jmath/lineSegment';
 import { allUnits } from '../../entity/units';
-import { CardCategory, Faction, UnitType } from '../../types/commonTypes';
+import { CardCategory, Faction, UnitSubType, UnitType } from '../../types/commonTypes';
 import * as Freeze from '../../cards/freeze';
 import { collideWithLineSegments } from '../../jmath/moveWithCollision';
 import { getKeyCodeMapping } from './keyMapping';
@@ -1066,7 +1066,9 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         if (superMe && overworld.underworld) {
           const numberOfEnemiesKilledNeededForNextDrop = overworld.underworld.getNumberOfEnemyKillsNeededForNextLevelUp() - overworld.underworld.enemiesKilled;
           for (let i = 0; i < numberOfEnemiesKilledNeededForNextDrop; i++) {
-            overworld.underworld.reportEnemyKilled({ x: 0, y: 0 });
+            const fakeUnit = Unit.create('golem', 0, 0, Faction.ENEMY, 'units/gruntIdle', UnitType.AI, UnitSubType.MELEE, {}, overworld.underworld);
+            overworld.underworld.reportEnemyKilled(fakeUnit);
+            Unit.cleanup(fakeUnit);
           }
         }
       },
