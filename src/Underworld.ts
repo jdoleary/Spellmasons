@@ -305,7 +305,11 @@ export default class Underworld {
   getNumberOfEnemyKillsNeededForNextLevelUp(): number {
     return this.calculateKillsNeededForLevel(this.cardDropsDropped + 1);
   }
-  reportEnemyKilled(enemyKilledPos: Vec2) {
+  reportEnemyKilled(unit: Unit.IUnit) {
+    if (unit.unitSubType === UnitSubType.DOODAD) {
+      // Dodads do not provide EXP
+      return;
+    }
     this.enemiesKilled++;
     if (document.body?.classList.contains('HUD-hidden')) {
       console.log('HUD-hidden: Skipping dropping scroll pickup')
