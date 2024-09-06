@@ -16,7 +16,7 @@ export default function registerPlagueBringer() {
   registerModifiers(plagueBringerId, {
     description: i18n('rune_plague_bringer'),
     unitOfMeasure: 'units',
-    _costPerUpgrade: 40,
+    _costPerUpgrade: 100,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, plagueBringerId, { isCurse: false, quantity, keepOnDeath: false }, () => {
         Unit.addEvent(unit, plagueBringerId);

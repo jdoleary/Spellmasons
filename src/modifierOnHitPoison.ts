@@ -10,7 +10,8 @@ export default function registerOnHitPoison() {
   registerModifiers(onHitPoisonId, {
     description: 'rune_on_hit_poison',
     unitOfMeasure: 'poison',
-    _costPerUpgrade: 80,
+    _costPerUpgrade: 40,
+    quantityPerUpgrade: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, onHitPoisonId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, onHitPoisonId);
