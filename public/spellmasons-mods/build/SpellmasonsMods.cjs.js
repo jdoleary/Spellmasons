@@ -1596,7 +1596,11 @@ const UNITS_PER_STACK = 3;
 function generateTargetHpMultipleOfSpell(multipleOf, manaCost, requiredId, rarity) {
   let reqId;
   if (requiredId) {
-    reqId = [`TargetHp${reqId}`];
+    if (requiredId == "Prime") {
+      reqId = ["Target Health Prime"];
+    } else {
+      reqId = [`Target Health * ${requiredId}`];
+    }
   } else {
     reqId = void 0;
   }
@@ -1695,6 +1699,5 @@ const mods = [
   mod$1,
   mod
 ];
-console.log('jtest', globalThis.mods);
 globalThis.mods = globalThis.mods !== void 0 ? [...globalThis.mods, ...mods] : mods;
 console.log("Mods: Add mods", globalThis.mods);
