@@ -941,7 +941,7 @@ ${i18n(globalThis.selectedPickup.description(globalThis.selectedPickup))}
 
   }
 }
-function modifiersToText(selectedUnit: Unit.IUnit): string {
+export function modifiersToText(selectedUnit: Unit.IUnit): string {
   const { modifiers } = selectedUnit;
   if (Object.keys(modifiers).length === 0) {
     return ''

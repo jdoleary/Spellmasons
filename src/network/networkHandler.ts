@@ -893,7 +893,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       lastSpellMessageTime = d.time;
       if (fromPlayer) {
         // Add spell to battleLog
-        underworld.battleLog(`${fromPlayer.name || fromPlayer.clientId} cast spell: ${(payload.cards as string[])
+        underworld.battleLog(`${fromPlayer.name || 'Spellmason'} cast spell: ${(payload.cards as string[])
           // Pretty print spell
           .reduce<{ card: string, count: number }[]>((agg, cur) => {
             const lastIndex = agg.length - 1;

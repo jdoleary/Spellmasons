@@ -3,7 +3,7 @@ import * as colors from './colors';
 import * as Cards from '../../cards';
 import * as config from '../../config';
 import {
-  clearSpellEffectProjection, runPredictions,
+  clearSpellEffectProjection, modifiersToText, runPredictions,
 } from '../PlanningView';
 import { calculateCostForSingleCard, levelsUntilCardIsEnabled } from '../../cards/cardUtils';
 import floatingText from '../FloatingText';
@@ -488,8 +488,10 @@ export function renderBattleLog(underworld: Underworld) {
         ${[...underworld._battleLog].reverse().map(x => `<div>${x}</div>`).join('')}
       </div>
       <div class="battle-log-state">
+      <h2>Runes</h2>
+      ${globalThis.player ? modifiersToText(globalThis.player.unit) || '' : ''}
       <h2>Players</h2>
-      ${underworld.players.map(x => `<h3>${x.name}</h3><div><b>Ended Turn</b>: ${x.endedTurn}</div><div><b>Completed Turn</b>: ${underworld.hasCompletedTurn(x)}</div>`)}
+      ${underworld.players.map(x => `<h3>${x.name || "Spellmason"}</h3><div><b>Ended Turn</b>: ${x.endedTurn}</div><div><b>Completed Turn</b>: ${underworld.hasCompletedTurn(x)}</div>`)}
       </div>
     </div>
   </div>

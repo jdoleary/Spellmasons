@@ -2719,16 +2719,19 @@ body.dragging-card .floating-card-holder .empty-slot {
   margin-bottom: 4px;
 }
 
+.battle-log-state .tooltip-modifier-key,
 #inspector-tooltip-content .tooltip-modifier-key {
   line-height: 16px;
   display: flex;
   font-weight: bold;
 }
 
+.battle-log-state .tooltip-modifier-key.curse,
 #inspector-tooltip-content .tooltip-modifier-key.curse {
   color: rgb(223, 88, 223);
 }
 
+.battle-log-state .tooltip-modifier-key.blessing,
 #inspector-tooltip-content .tooltip-modifier-key.blessing {
   color: rgb(255, 232, 101);
 }
