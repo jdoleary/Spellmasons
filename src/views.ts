@@ -20,7 +20,7 @@ import {
 import { sendChatHandler } from './graphics/ui/Chat';
 import { Overworld } from './Overworld';
 import { View } from './View';
-import { renderBattleLog, renderRunesMenu } from './graphics/ui/CardUI';
+import { getSelectedCardIds, renderBattleLog, renderRunesMenu } from './graphics/ui/CardUI';
 import Underworld from './Underworld';
 
 const elUpgradePicker = document.getElementById('upgrade-picker') as HTMLElement;
@@ -240,7 +240,9 @@ export function addOverworldEventListeners(overworld: Overworld) {
             // Only run predictions if the game canvas is being hovered,
             // this will improve performance for heavy computation spells
             // when browsing the spellbook or hovering over your toolbar
-            if (e.target && (e.target as HTMLElement).tagName === 'CANVAS') {
+            const cardIds = getSelectedCardIds();
+            // cardIds: Only run predictions if there is a spell while mouse moving
+            if (e.target && (e.target as HTMLElement).tagName === 'CANVAS' && cardIds.length && !globalThis.MMBDown) {
               runPredictions(overworld.underworld);
               if (globalThis._queueLastPredictionMousePos) {
                 globalThis.lastPredictionMousePos = globalThis._queueLastPredictionMousePos;
