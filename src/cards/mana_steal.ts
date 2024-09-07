@@ -17,6 +17,7 @@ const spell: Spell = {
     requires: [manaBurnCardId],
     supportQuantity: true,
     manaCost: 0,
+    costGrowthAlgorithm: 'nlogn',
     healthCost: health_burn,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.RARE],

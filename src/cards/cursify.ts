@@ -9,6 +9,7 @@ const spell: Spell = {
     id,
     category: CardCategory.Curses,
     supportQuantity: false,
+    costGrowthAlgorithm: 'exponential',
     manaCost: 30,
     healthCost: 0,
     expenseScaling: 1,
