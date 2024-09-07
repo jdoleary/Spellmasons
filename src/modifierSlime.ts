@@ -15,6 +15,7 @@ export default function registerSlime() {
   registerModifiers(slimeId, {
     description: 'slime_description',
     probability: 100,
+    unavailableUntilLevelIndex: 9,
     addModifierVisuals,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, slimeId, { isCurse: false, quantity, keepOnDeath: true }, () => {

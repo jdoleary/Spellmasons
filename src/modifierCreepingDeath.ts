@@ -17,6 +17,9 @@ export default function registerCreepingDeath() {
     description: 'rune_creeping_death',
     unitOfMeasure: 'stacks',
     _costPerUpgrade: 100,
+    // Note: Without a max, creeping death "cascades" where it insta-kills an enemy via suffocate which triggers
+    // it again which insta kills another enemy
+    maxUpgradeCount: 3,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, creepingDeathId, { isCurse: false, quantity, keepOnDeath: false }, () => {
         Unit.addEvent(unit, creepingDeathId);

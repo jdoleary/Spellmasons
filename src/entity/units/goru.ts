@@ -98,7 +98,10 @@ const unit: UnitSource = {
         const corpsesToExplode: Unit.IUnit[] = [];
         const corpsesToResurrect: Unit.IUnit[] = [];
         for (const target of primedCorpses) {
-          if (math.distance(unit, target) < boneShrapnelRadius) {
+          if (target.unitType === UnitType.PLAYER_CONTROLLED) {
+            // If Goru primes an ally player, resurrect them
+            corpsesToResurrect.push(target);
+          } else if (math.distance(unit, target) < boneShrapnelRadius) {
             corpsesToConsume.push(target);
           } else {
             const enemyUnits = Unit.livingUnitsInDifferentFaction(unit, underworld.units);
@@ -230,7 +233,11 @@ const unit: UnitSource = {
     // - Action -
     // Prime corpses in range to trigger them next turn
     if (actionPoints >= 2 && unit.mana >= unit.manaCostToCast) {
-      const deadUnits = underworld.units.filter(u => !u.alive && u.unitType != UnitType.PLAYER_CONTROLLED && math.distance(unit, u) <= unit.attackRange);
+      const deadUnits = underworld.units.filter(u =>
+        !u.alive
+        // Only resurrect players if they are on the same faction as Goru
+        && (u.unitType != UnitType.PLAYER_CONTROLLED || u.faction === unit.faction)
+        && math.distance(unit, u) <= unit.attackRange);
       if (deadUnits.length >= 3) {
         // The corpse priming should feel like a "wind up" / channeled ability,
         // so we want the Goru to focus on it and not move after

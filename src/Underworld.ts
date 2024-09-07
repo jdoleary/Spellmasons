@@ -3606,10 +3606,21 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     }
   }
   // Smart Targeting, fn 2
-  incrementTargetsNextTurnDamage(targets: Unit.IUnit[], damage: number, canAttack: boolean) {
+  incrementTargetsNextTurnDamage(targets: Unit.IUnit[], damage: number, canAttack: boolean, sourceUnit: Unit.IUnit) {
     if (canAttack) {
       for (let target of targets) {
-        target.predictedNextTurnDamage += damage;
+        // incrementTargetsNextTurnDamage is ALWAYS triggered in a "prediction" context
+        let modifiedDamage = Unit.composeOnTakeDamageEvents({
+          unit: target,
+          amount: damage,
+          sourceUnit,
+        }, this, true);
+        modifiedDamage = Unit.composeOnDealDamageEvents({
+          unit: target,
+          amount: modifiedDamage,
+          sourceUnit,
+        }, this, true);
+        target.predictedNextTurnDamage += modifiedDamage;
       }
     }
   }
@@ -3637,11 +3648,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             const targets = unitSource.getUnitAttackTargets(u, this);
             const canAttack = this.canUnitAttackTarget(u, targets && targets[0])
             cachedTargets[u.id] = { targets, canAttack };
-            this.incrementTargetsNextTurnDamage(targets, u.damage, canAttack);
+            this.incrementTargetsNextTurnDamage(targets, u.damage, canAttack, u);
             if (unitSource.id == PRIEST_ID) {
               // Signal to other priests that this one is targeted for resurrection
               // so multiple priests don't try to ressurect the same target
-              this.incrementTargetsNextTurnDamage(targets, -u.healthMax, true);
+              this.incrementTargetsNextTurnDamage(targets, -u.healthMax, true, u);
             }
           }
         }
