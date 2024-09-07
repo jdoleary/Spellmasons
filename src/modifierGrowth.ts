@@ -17,6 +17,7 @@ export default function registerGrowth() {
   registerModifiers(growthId, {
     description: 'growth_description',
     probability: 100,
+    unavailableUntilLevelIndex: 7,
     addModifierVisuals,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, growthId, { isCurse: false, quantity, keepOnDeath: true }, () => {

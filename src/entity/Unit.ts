@@ -1552,7 +1552,10 @@ export function makeMiniboss(unit: IUnit, underworld: Underworld) {
     },
   ], seed) || { num: 1 };
   // Filter out modifiers with no probability and add the modifier key to the object.
-  let availableSpawnModifiers = Object.entries(allModifiers).flatMap(([key, mod]) => typeof mod.probability === 'number' ? [{ ...mod, id: key }] : []);
+  let availableSpawnModifiers = Object.entries(allModifiers).flatMap(([key, mod]) => typeof mod.probability === 'number' ? [{ ...mod, id: key }] : [])
+    // Remove modifiers that are unavailable until later levels
+    .filter(mod => mod.unavailableUntilLevelIndex === undefined || underworld.levelIndex >= mod.unavailableUntilLevelIndex);
+
 
   //// start: Special Modifier Exceptions
   // ban "Slime" from Support classes and bosses

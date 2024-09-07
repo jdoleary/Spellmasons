@@ -231,6 +231,9 @@ export interface Modifiers {
   // If the modifier may be automatically added to minibosses
   // when the spawn, then the modifier gets a probability
   probability?: number;
+  // For modifiers that are automatically added to minibosses,
+  // some (like Slime) are so powerful that they shouldn't appear early
+  unavailableUntilLevelIndex?: number;
   // Specifying a cost allows the modifier to be upgradable via the runes menu.
   // Should be accessed with calculateModifierCostPerUpgrade
   _costPerUpgrade?: number;
