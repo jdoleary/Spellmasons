@@ -311,4 +311,5 @@ declare global {
   // I want it not to be tracked
   var test_ignorePromiseTracking: string | undefined;
   var showCastRangeForUpgrade: boolean | undefined;
+  var alwaysDrawHealthBars: boolean | undefined;
 }

@@ -67,6 +67,9 @@ export function getSavedData() {
         if (options.limitParticleEmitters !== undefined) {
           globalThis.limitParticleEmitters = options.limitParticleEmitters;
         }
+        if (options.alwaysDrawHealthBars !== undefined) {
+          globalThis.alwaysDrawHealthBars = options.alwaysDrawHealthBars;
+        }
         globalThis.activeMods = [];
         if (!!options.activeMods) {
           globalThis.activeMods = options.activeMods;
