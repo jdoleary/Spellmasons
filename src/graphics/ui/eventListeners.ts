@@ -1170,6 +1170,8 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
               Unit.orient(justSpawnedUnit, globalThis.player.unit);
             }
           }
+          // Rerun predictions now that a new unit has been created by admin
+          runPredictions(overworld.underworld);
         }
       },
       supportInMultiplayer: true,
