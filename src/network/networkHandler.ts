@@ -1129,6 +1129,10 @@ async function handleLoadGameState(payload: {
   // backwards compatible for save state that didn't have this:
   underworld.allyNPCAttemptWinKillSwitch = loadedGameState.allyNPCAttemptWinKillSwitch || 0;
 
+  // sync difficulty.  This must occur before underworld.createLevel
+  // because difficulty determines the health of mobs
+  underworld.difficulty = loadedGameState.difficulty;
+
   // Sync Level.  Must await createLevel since it uses setTimeout to ensure that
   // the DOM can update with the "loading..." message before locking up the CPU with heavy processing.
   // This is important so that createLevel runs BEFORE loading units and syncing Players

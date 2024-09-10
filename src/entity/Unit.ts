@@ -335,7 +335,7 @@ interface DifficultyAdjustedUnitStats {
 export function adjustUnitPropsDueToDifficulty(stats: DifficultyAdjustedUnitStats, difficultyRatio: number): DifficultyAdjustedUnitStats {
   const returnStats: DifficultyAdjustedUnitStats = {
     // Max Health is multiplied by the current difficulty
-    healthMax: stats.healthMax = stats.healthMax * difficultyRatio,
+    healthMax: stats.healthMax * difficultyRatio,
     health: stats.health * difficultyRatio,
   };
   return returnStats;
