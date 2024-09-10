@@ -20,7 +20,7 @@ export default function registerGolemancer() {
   registerModifiers(golemancerId, {
     description: ['rune_golemancer', `X`],
     unitOfMeasure: 'Units',
-    _costPerUpgrade: 200,
+    _costPerUpgrade: 120,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, golemancerId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, golemancerId);
@@ -55,11 +55,11 @@ export default function registerGolemancer() {
 }
 
 function spawnGolems(unit: Unit.IUnit, quantity: number, underworld: Underworld, prediction: boolean) {
-  let allyGolems = getLivingAllyGolems(unit, underworld, prediction);
-  if (allyGolems.length < quantity) {
+  let ownGolems = getLivingAllyGolems(unit, underworld, prediction).filter(u => u.summonedBy === unit && u.unitSourceId == golem_unit_id);
+  if (ownGolems.length < quantity) {
     const seed = seedrandom(`${getUniqueSeedString(underworld)}-${unit.id}`);
     // Summon ally golems up to quantity
-    const golemsToSummon = quantity - allyGolems.length;
+    const golemsToSummon = quantity - ownGolems.length;
     for (let i = 0; i < golemsToSummon; i++) {
       const coords = underworld.findValidSpawnInRadius(unit, prediction, seed, { allowLiquid: unit.inLiquid });
       if (coords) {
@@ -77,6 +77,7 @@ function spawnGolems(unit: Unit.IUnit, quantity: number, underworld: Underworld,
             underworld,
             prediction,
           );
+          summonedUnit.summonedBy = unit;
 
           makeRisingParticles(summonedUnit, prediction);
           // Resurrect animation is the die animation played backwards
