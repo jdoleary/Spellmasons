@@ -1,3 +1,41 @@
+## 1.43 - Balancing Patch
+
+balance: Cursify cost to exponential
+    mana_steal to nlogn
+balance: Discounts from 20%/40% to 10%/20%
+balance: Creeping Death max 3 upgrades to
+    prevent cascading.
+    Thanks Wizzersquirrel for pointing this out
+balance: Enable excluding some champion modifiers
+    until later levels like slime and growth which are too hard early on
+balance: Heavy Toxins and Inflict Poison
+balance: nerf mana barrier
+    Especially since you can overflow mana this is super OP
+balance: Merge cost to "exponential"
+balance: Limit Heavy Toxins to 30% slow
+fix: Middle Mouse Camera lag
+fix: Doodads should not provide EXP
+fix: Ally units sometimes skipping attacking
+    champions with modifiers.
+fix: Quicksaving after death
+fix: Ally Goru can resurrect dead players
+    Thanks Sluethen from discord!
+fix: Run predictions when a game is loaded
+    so that everything is freshly calculated.
+fix: Summoned allies are now able to trigger bounty
+fix: Prevent slow from going to 0
+    Which messes up purification
+fix: Add animation to onKillResurrect
+fix: Prevent recall point from intersecting
+    with wall.
+    Also warn if it will fizzle due to spawning out of bounds
+mod: Fix `requires` array for target HP cards in Dai Nekolchis Tome
+menu: Add option for "alwaays on health bars"
+menu: Prevent logo from being draggable
+admin: Add Modifier hot menu
+    now correctly adds the quantity per upgrade
+
+
 ## 1.42.9 - RUNES
 
 Major Feature: Runes
