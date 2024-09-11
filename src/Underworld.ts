@@ -2693,14 +2693,19 @@ export default class Underworld {
     console.log('[GAME] isGameOver = false\nGame is not over');
     return false;
   }
+  clearGameOverModal() {
+    // Remove game-over popup
+    document.body.classList.toggle('game-over', false);
+    clearTimeout(gameOverModalTimeout);
+  }
   doGameOver() {
     console.log('- - -\nGame Over\n- - -');
+    // allowForceInitGameState so that when the game restarts
+    // it will get the full newly created underworld
+    this.allowForceInitGameState = true;
     // Show game over modal after a delay
     gameOverModalTimeout = setTimeout(() => {
       document.body.classList.toggle('game-over', true);
-      // allowForceInitGameState so that when the game restarts
-      // it will get the full newly created underworld
-      this.allowForceInitGameState = true;
     }, 2000);
 
     this.updateGameOverModal();

@@ -1090,6 +1090,8 @@ async function handleLoadGameState(payload: {
   console.log("Setup: Load game state", payload)
   const { underworld: payloadUnderworld } = payload
   const { pickups, units, players, turn_phase } = payloadUnderworld;
+
+
   console.log('Setup: activeMods', payloadUnderworld.activeMods);
   // Sync underworld properties
   const loadedGameState: IUnderworldSerialized = { ...payloadUnderworld };
@@ -1097,6 +1099,12 @@ async function handleLoadGameState(payload: {
   if (!underworld) {
     return console.error('Cannot handleLoadGameState, underworld is undefined');
   }
+
+  // For future consideration: Why isn't Underworld.cleanup called here?
+  // Might be dangerous since load game state might be used for syncronisation.
+  // For now just clear the game over screen and later do a thorough check to see
+  // if we can just Underworld.cleanup
+  underworld.clearGameOverModal();
 
   const level = loadedGameState.lastLevelCreated;
   if (!level) {
