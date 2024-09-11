@@ -634,7 +634,6 @@ export async function runPredictions(underworld: Underworld) {
       // So may sometimes lead to false positives/negatives
 
       globalThis.attentionMarkers = [];
-      underworld.clearPredictedNextTurnDamage();
       let cachedTargets = underworld.getSmartTargets(aiUnits);
 
       for (let u of aiUnits) {
