@@ -499,6 +499,10 @@ export function addOneOffAnimation(imageHaver: any, spritePath: string, oneOffOp
       if (spritePath == 'projectile/lobberProjectileHit') {
         animationSprite.anchor.set(0.5, 0.25);
       }
+      if (options?.scale) {
+        animationSprite.scale.x = options.scale;
+        animationSprite.scale.y = options.scale;
+      }
     }
     // Resolve if set to loop, since this sprite loops it will never finish animating
     // (well, until it is removed), in which case the promise shouldn't wait for it.

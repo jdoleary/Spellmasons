@@ -683,6 +683,7 @@ export interface PixiSpriteOptions {
   // Allow for passing down color replace filter params.  This is currently used to
   // customize the color of player magic layer
   colorReplace?: { colors: [number, number][], epsilon: number }
+  scale?: number;
 }
 // Allows files without access to locally scoped 'sheet' to get an 
 // animated texture from the sheet

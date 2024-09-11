@@ -203,6 +203,8 @@ import registerCreepingDeath from '../modifierCreepingDeath';
 import registerPlagueBringer from '../modifierPlagueBringer';
 import registerHeavyToxins from '../modifierHeavyToxins';
 import registerOnKillResurrect from '../modifierOnKillResurrect';
+import registerMeleeSpecialist from '../modifierMeleeSpecialist';
+import registerBlackCoin from '../modifierBlackCoin';
 import seedrandom from 'seedrandom';
 import { chooseObjectWithProbability, getUniqueSeedStringPerLevel } from '../jmath/rand';
 
@@ -577,6 +579,8 @@ export function registerCards(overworld: Overworld) {
   registerPlagueBringer();
   registerHeavyToxins();
   registerOnKillResurrect();
+  registerMeleeSpecialist();
+  registerBlackCoin();
 
   registerBounty();
   registerMoreBounties();
