@@ -657,7 +657,7 @@
         "stacks": "stacks",
         "units": "units",
         "rune_melee_specialist": "Deal extra damage to units within 🍞 of your cast range.",
-        "melee specialist": "Melee Specialist",
+        "melee specialist": "Near Sighted",
         "rune_black_coin": "Chance to instantly kill a unit when dealing damage.  Bosses excluded.",
         "black coin": "Black Coin",
         "% chance": "% chance"
@@ -1320,7 +1320,7 @@
         "stacks": "quantité",
         "units": "créatures",
         "rune_melee_specialist": "Inflige des dégâts supplémentaires aux unités situées dans un rayon de 🍞 de votre portée de lancement.",
-        "melee specialist": "Spécialiste de mêlée",
+        "melee specialist": "Presbyte",
         "rune_black_coin": "Chance d'éliminer instantanément une unité lors de l'infligenement de dégâts. Les boss sont exclus.",
         "black coin": "Pièce Noire",
         "% chance": "% de chance"
@@ -1983,7 +1983,7 @@
         "stacks": "quantità",
         "units": "creaturetti",
         "rune_melee_specialist": "Infliggi danni extra alle unità entro il 🍞 della tua portata di lancio.",
-        "melee specialist": "Specialista in combattimento corpo a corpo",
+        "melee specialist": "Miopia",
         "rune_black_coin": "Probabilità di uccidere istantaneamente un'unità infliggendo danno. Boss esclusi.",
         "black coin": "Moneta Nera",
         "% chance": "% possibilità"
@@ -2646,7 +2646,7 @@
         "stacks": "Menge",
         "units": "Kreaturen",
         "rune_melee_specialist": "Füge Einheiten im Bereich von 🍞 deiner Reichweite zusätzlichen Schaden zu.",
-        "melee specialist": "Nahkampfspezialist",
+        "melee specialist": "Kurzsichtig",
         "rune_black_coin": "Chance, einen Gegner sofort zu töten, wenn Schaden verursacht wird. Bosse ausgeschlossen.",
         "black coin": "Schwarze Münze",
         "% chance": "% Chance"
@@ -3309,7 +3309,7 @@
         "stacks": "cantidad",
         "units": "criaturas",
         "rune_melee_specialist": "Haz daño extra a las unidades dentro del 🍞 de tu rango de lanzamiento.",
-        "melee specialist": "Especialista en combate cuerpo a cuerpo",
+        "melee specialist": "Miopía",
         "rune_black_coin": "Probabilidad de matar instantáneamente a una unidad al infligir daño. Excluyendo jefes.",
         "black coin": "Moneda Negra",
         "% chance": "% de probabilidad"
@@ -3972,7 +3972,7 @@
         "stacks": "数量",
         "units": "生物",
         "rune_melee_specialist": "キャスト範囲の🍞内のユニットに追加ダメージを与える。",
-        "melee specialist": "近接専門家",
+        "melee specialist": "近視",
         "rune_black_coin": "ダメージを与えたときにユニットを即死させる確率。 ボスは除く。",
         "black coin": "黒いコイン",
         "% chance": "%の確率"
@@ -4635,7 +4635,7 @@
         "stacks": "quantidade",
         "units": "criaturas",
         "rune_melee_specialist": "Causa dano extra a unidades dentro de 🍞 do seu alcance de lançamento.",
-        "melee specialist": "Especialista em Combate Corpo a Corpo",
+        "melee specialist": "Miopia",
         "rune_black_coin": "Chance de matar instantaneamente uma unidade ao causar dano. Chefes excluídos.",
         "black coin": "Moeda Negra",
         "% chance": "% de chance"
@@ -5298,7 +5298,7 @@
         "stacks": "كمية",
         "units": "مخلوقات",
         "rune_melee_specialist": "تسبب ضررًا إضافيًا لوحدات ضمن 🍞 من نطاق سحرك.",
-        "melee specialist": "أخصائي القتال القريب",
+        "melee specialist": "قَصيرُ النَّظَر",
         "rune_black_coin": "فرصة لقتل وحدة على الفور عند إلحاق الضرر. تستثنى الرؤساء.",
         "black coin": "عملة سوداء",
         "% chance": "نسبة %"
@@ -5961,7 +5961,7 @@
         "stacks": "수량",
         "units": "생물",
         "rune_melee_specialist": "시전 범위의 🍞 이내의 유닛에게 추가 피해를 입힙니다.",
-        "melee specialist": "근접 전투 전문가",
+        "melee specialist": "근시안적인",
         "rune_black_coin": "피해를 줄 때 유닛을 즉시 처치할 확률. 보스는 제외됩니다.",
         "black coin": "검은 동전",
         "% chance": "% 확률"
@@ -6624,7 +6624,7 @@
         "stacks": "количество",
         "units": "существа",
         "rune_melee_specialist": "Наносите дополнительный урон юнитам в пределах 🍞 вашего радиуса действия.",
-        "melee specialist": "Специалист ближнего боя",
+        "melee specialist": "Невидящий вдаль",
         "rune_black_coin": "Шанс мгновенно убить юнит при нанесении урона. Боссы исключены.",
         "black coin": "Чёрная монета",
         "% chance": "% шанса"
@@ -7287,7 +7287,7 @@
         "stacks": "数量",
         "units": "生物",
         "rune_melee_specialist": "对施法范围内🍞的单位造成额外伤害。",
-        "melee specialist": "近战专家",
+        "melee specialist": "近视",
         "rune_black_coin": "造成伤害时有机会立即击杀一个单位。 Boss不包括在内。",
         "black coin": "黑币",
         "% chance": "% 概率"
@@ -7950,7 +7950,7 @@
         "stacks": "數量",
         "units": "生物",
         "rune_melee_specialist": "對於在你施法範圍🍞的單位造成額外傷害。",
-        "melee specialist": "近戰專家",
+        "melee specialist": "近視",
         "rune_black_coin": "造成傷害時有機會立即擊殺單位。boss 不算在內。",
         "black coin": "黑幣",
         "% chance": "% 機率"
@@ -8613,7 +8613,7 @@
         "stacks": "ilość",
         "units": "stworzenia",
         "rune_melee_specialist": "Zadaj dodatkowe obrażenia jednostkom w promieniu 🍞 zasięgu swojego rzucania.",
-        "melee specialist": "Specjalista w walce wręcz",
+        "melee specialist": "Krótko-wzroczny",
         "rune_black_coin": "Szansa na natychmiastowe zabicie jednostki przy zadawaniu obrażeń. Szefowie wyłączeni.",
         "black coin": "Czarny Złoty",
         "% chance": "% szansy"
@@ -9276,7 +9276,7 @@
         "stacks": "hoeveelheid",
         "units": "wezens",
         "rune_melee_specialist": "Doe extra schade aan eenheden binnen 🍞 van je castbereik.",
-        "melee specialist": "Vechtspecialist",
+        "melee specialist": "Bijziend",
         "rune_black_coin": "Kans om een eenheid onmiddellijk te doden bij het toebrengen van schade. Bazen uitgesloten.",
         "black coin": "Zwarte Munt",
         "% chance": "% kans"
