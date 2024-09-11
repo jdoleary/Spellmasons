@@ -1,5 +1,8 @@
 ## 1.43 - Balancing Patch
 
+content: Add Black Coin Rune
+content: Add Near Sighted Rune
+
 balance: Cursify cost to exponential
     mana_steal to nlogn
 balance: Discounts from 20%/40% to 10%/20%
@@ -13,6 +16,7 @@ balance: nerf mana barrier
     Especially since you can overflow mana this is super OP
 balance: Merge cost to "exponential"
 balance: Limit Heavy Toxins to 30% slow
+
 fix: Middle Mouse Camera lag
 fix: Doodads should not provide EXP
 fix: Ally units sometimes skipping attacking
@@ -29,9 +33,12 @@ fix: Add animation to onKillResurrect
 fix: Prevent recall point from intersecting
     with wall.
     Also warn if it will fizzle due to spawning out of bounds
+
 mod: Fix `requires` array for target HP cards in Dai Nekolchis Tome
-menu: Add option for "alwaays on health bars"
+
+menu: Add option for "always on health bars"
 menu: Prevent logo from being draggable
+UI: Add "·" Spacer to Runes menu between Rune name and value
 admin: Add Modifier hot menu
     now correctly adds the quantity per upgrade
 
