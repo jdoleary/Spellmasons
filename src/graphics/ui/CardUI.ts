@@ -584,6 +584,7 @@ export function renderRunesMenu(underworld: Underworld) {
     const playerModifier = globalThis.player?.unit.modifiers[stat];
 
     const elRuneName = (el as HTMLElement).querySelector('.rune-name');
+    const SPACER = '·'
     const updateRuneName = (hovered: boolean = false) => {
       if (elRuneName) {
         if (['Health', 'Mana', 'Stamina', 'Cast Range'].includes(stat)) {
@@ -603,18 +604,18 @@ export function renderRunesMenu(underworld: Underworld) {
             const maxRuneQuantity = Cards.getMaxRuneQuantity(modifier);
             // If already maxed, show maxed in black to indicate no change
             if (playerRuneQuantity >= maxRuneQuantity) {
-              elRuneName.innerHTML = `${i18n(stat) || ''} ${i18n('Maxed')}`;
+              elRuneName.innerHTML = `${i18n(stat) || ''}${SPACER}<span>${quantityWithUnit(playerRuneQuantity, modifier.unitOfMeasure)}</span>${SPACER}${i18n('Maxed')}`;
               return;
             }
             // If going to max, show maxed in green
             if (newQuantity >= maxRuneQuantity) {
-              elRuneName.innerHTML = `${i18n(stat) || ''}  <span>${quantityWithUnit(playerRuneQuantity, modifier.unitOfMeasure)}</span> <span style="color:green"> → ${i18n('Max')} </span>`;
+              elRuneName.innerHTML = `${i18n(stat) || ''} ${SPACER} <span>${quantityWithUnit(playerRuneQuantity, modifier.unitOfMeasure)}</span> <span style="color:green"> → ${i18n('Max')} </span>`;
               return;
             }
           }
 
           // If not going to max, just show new quantity (or nothing if newQuantity is 0)
-          elRuneName.innerHTML = `${i18n(stat) || ''}  ${newQuantity ? `${playerRuneQuantity === 0 ? '' : `<span>${quantityWithUnit(playerRuneQuantity, modifier.unitOfMeasure)}</span>`}<span style="color:${color}"> ${hovered ? ` + ${quantityWithUnit(modifier.quantityPerUpgrade || 1, modifier.unitOfMeasure)}` : ''}</span>` : ''}`
+          elRuneName.innerHTML = `${i18n(stat) || ''} ${newQuantity ? `${playerRuneQuantity === 0 ? '' : ` ${SPACER} <span>${quantityWithUnit(playerRuneQuantity, modifier.unitOfMeasure)}</span>`}<span style="color:${color}"> ${hovered ? ` + ${quantityWithUnit(modifier.quantityPerUpgrade || 1, modifier.unitOfMeasure)}` : ''}</span>` : ''}`
         }
       }
     }
