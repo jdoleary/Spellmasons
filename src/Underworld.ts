@@ -3610,16 +3610,21 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (canAttack) {
       for (let target of targets) {
         // incrementTargetsNextTurnDamage is ALWAYS triggered in a "prediction" context
-        let modifiedDamage = Unit.composeOnTakeDamageEvents({
-          unit: target,
-          amount: damage,
-          sourceUnit,
-        }, this, true);
-        modifiedDamage = Unit.composeOnDealDamageEvents({
-          unit: target,
-          amount: modifiedDamage,
-          sourceUnit,
-        }, this, true);
+        let modifiedDamage = damage;
+        if (target.predictionCopy && sourceUnit.predictionCopy) {
+          Unit.composeOnTakeDamageEvents({
+            unit: target.predictionCopy,
+            amount: damage,
+            sourceUnit: sourceUnit.predictionCopy,
+          }, this, true);
+          modifiedDamage = Unit.composeOnDealDamageEvents({
+            unit: target.predictionCopy,
+            amount: modifiedDamage,
+            sourceUnit: sourceUnit.predictionCopy,
+          }, this, true);
+        } else {
+          console.error('Unexpected, attempted to incrementTargetsNextTurnDamage but predictionCopies do not exist')
+        }
         target.predictedNextTurnDamage += modifiedDamage;
       }
     }
