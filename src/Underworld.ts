@@ -2942,7 +2942,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     // TODO - Define/Control actions and smart targeting
     // in Unit rather than gameLoopUnit, for more versatility?
-    this.clearPredictedNextTurnDamage();
     const cachedTargets = this.getSmartTargets(units);
 
     // Ranged units should go before melee units
@@ -3598,34 +3597,23 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       summonUnitAtPickup(faction, portal, this);
     }
   }
-  // Smart Targeting, fn 1
-  clearPredictedNextTurnDamage() {
-    // Clear all units' predictedNextTurnDamage now that is is the next turn
-    for (let u of this.units) {
-      u.predictedNextTurnDamage = 0;
-    }
-  }
-  // Smart Targeting, fn 2
   incrementTargetsNextTurnDamage(targets: Unit.IUnit[], damage: number, canAttack: boolean, sourceUnit: Unit.IUnit) {
     if (canAttack) {
       for (let target of targets) {
-        // incrementTargetsNextTurnDamage is ALWAYS triggered in a "prediction" context
-        let modifiedDamage = damage;
-        if (target.predictionCopy && sourceUnit.predictionCopy) {
-          Unit.composeOnTakeDamageEvents({
-            unit: target.predictionCopy,
-            amount: damage,
-            sourceUnit: sourceUnit.predictionCopy,
-          }, this, true);
-          modifiedDamage = Unit.composeOnDealDamageEvents({
-            unit: target.predictionCopy,
-            amount: modifiedDamage,
-            sourceUnit: sourceUnit.predictionCopy,
-          }, this, true);
-        } else {
-          console.error('Unexpected, attempted to incrementTargetsNextTurnDamage but predictionCopies do not exist')
+        if (target.isMiniboss || target.unitType == UnitType.PLAYER_CONTROLLED) {
+          // Skip calculating predictedNextTurnDamage for minibosses and players.
+          // This allows them to recieve Overkill damage which is important because
+          // this function does not use the onTakeDamage and onDealDamage events
+          // which means it is not actually calculating exact damage.
+          // It **cannot** invoke those functions because if it did it would
+          // lag the game considerably since this is called on all units every 
+          // runPrediction.
+          // So instead the solution is to just let minibosses and players (who may
+          // have onTakeDamage events that limit damage or reduce it) be overkilled
+          // so that AI don't skip over them while they are still living.
+          continue;
         }
-        target.predictedNextTurnDamage += modifiedDamage;
+        target.predictedNextTurnDamage += damage;
       }
     }
   }
@@ -3635,6 +3623,11 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   // Is there a way for us to better predict the enemy turn, in a way that considers
   // the game state and always stays in sync with the actual outcome of combat?
   getSmartTargets(units: Unit.IUnit[]): { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } {
+    // Clear all units' predictedNextTurnDamage now that is is the next turn
+    for (let u of this.units) {
+      u.predictedNextTurnDamage = 0;
+    }
+
     const cachedTargets: { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } = {};
     for (let subTypes of this.subTypesTurnOrder) {
       const readyToTakeTurnUnits = units.filter(u => Unit.canAct(u) && subTypes.includes(u.unitSubType));
