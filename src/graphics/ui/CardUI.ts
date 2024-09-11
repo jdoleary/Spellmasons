@@ -484,14 +484,12 @@ export function renderBattleLog(underworld: Underworld) {
   <div class="card-inner flex" style="color:black">
     <div class="stat-row-holder">
       <div class="battle-log-entries">
-      <h2>Battle Log</h2>
+      <h2>${i18n('Battle Log')}</h2>
         ${[...underworld._battleLog].reverse().map(x => `<div>${x}</div>`).join('')}
       </div>
       <div class="battle-log-state">
-      <h2>Runes</h2>
+      <h2>${i18n('Runes')}</h2>
       ${globalThis.player ? modifiersToText(globalThis.player.unit) || '' : ''}
-      <h2>Players</h2>
-      ${underworld.players.map(x => `<h3>${x.name || "Spellmason"}</h3><div><b>Ended Turn</b>: ${x.endedTurn}</div><div><b>Completed Turn</b>: ${underworld.hasCompletedTurn(x)}</div>`)}
       </div>
     </div>
   </div>

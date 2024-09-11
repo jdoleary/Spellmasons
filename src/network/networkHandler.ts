@@ -893,7 +893,7 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       lastSpellMessageTime = d.time;
       if (fromPlayer) {
         // Add spell to battleLog
-        underworld.battleLog(`${fromPlayer.name || 'Spellmason'} cast spell: ${(payload.cards as string[])
+        underworld.battleLog(`${fromPlayer.name || 'Spellmason'}: ${(payload.cards as string[])
           // Pretty print spell
           .reduce<{ card: string, count: number }[]>((agg, cur) => {
             const lastIndex = agg.length - 1;
@@ -910,8 +910,8 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
             }
           }, []).map(x => {
             const card = Cards.allCards[x.card];
-            return `${x.count > 1 ? `${x.count}x` : ''} ${card && card.thumbnail ? `<img src="${getSpellThumbnailPath(card.thumbnail)}"></img>` : ''}` + x.card;
-          }).join(', ')}`);
+            return `${x.count > 1 ? `${x.count}x` : ''} ${card && card.thumbnail ? `<img src="${getSpellThumbnailPath(card.thumbnail)}"></img>` : ''}` + i18n(x.card);
+          }).join(', ')}`, false);
 
         if (underworld.turn_phase == turn_phase.Stalled) {
           // This check shouldn't have to be here but it protects against the game getting stuck in stalled phase

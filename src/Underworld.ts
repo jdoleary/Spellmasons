@@ -4414,7 +4414,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     return shuffledRunes;
 
   }
-  battleLog(happening: string) {
+  battleLog(happening: string, englishOnly: boolean = true) {
+    if (englishOnly && getChosenLanguageCode() !== 'en') {
+      return;
+    }
     this._battleLog.push(happening);
   }
 }

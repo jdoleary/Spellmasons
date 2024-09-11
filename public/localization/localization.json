@@ -660,7 +660,10 @@
         "melee specialist": "Near Sighted",
         "rune_black_coin": "Chance to instantly kill a unit when dealing damage.  Bosses excluded.",
         "black coin": "Black Coin",
-        "% chance": "% chance"
+        "% chance": "% chance",
+        "runes": "Runes",
+        "battle log": "Battle Log",
+        "bounty hunter": "Bounty Hunter"
     },
     {
         "language": "Français",
@@ -1323,7 +1326,10 @@
         "melee specialist": "Presbyte",
         "rune_black_coin": "Chance d'éliminer instantanément une unité lors de l'infligenement de dégâts. Les boss sont exclus.",
         "black coin": "Pièce Noire",
-        "% chance": "% de chance"
+        "% chance": "% de chance",
+        "runes": "Runes",
+        "battle log": "Journal de bataille",
+        "bounty hunter": "Chasseur de primes"
     },
     {
         "language": "italiano",
@@ -1986,7 +1992,10 @@
         "melee specialist": "Miopia",
         "rune_black_coin": "Probabilità di uccidere istantaneamente un'unità infliggendo danno. Boss esclusi.",
         "black coin": "Moneta Nera",
-        "% chance": "% possibilità"
+        "% chance": "% possibilità",
+        "runes": "Rune",
+        "battle log": "Registro di Battaglia",
+        "bounty hunter": "Cacciatore di taglie"
     },
     {
         "language": "Deutsche",
@@ -2649,7 +2658,10 @@
         "melee specialist": "Kurzsichtig",
         "rune_black_coin": "Chance, einen Gegner sofort zu töten, wenn Schaden verursacht wird. Bosse ausgeschlossen.",
         "black coin": "Schwarze Münze",
-        "% chance": "% Chance"
+        "% chance": "% Chance",
+        "runes": "Runen",
+        "battle log": "Kampflog",
+        "bounty hunter": "Kopfgeldjäger"
     },
     {
         "language": "español",
@@ -3312,7 +3324,10 @@
         "melee specialist": "Miopía",
         "rune_black_coin": "Probabilidad de matar instantáneamente a una unidad al infligir daño. Excluyendo jefes.",
         "black coin": "Moneda Negra",
-        "% chance": "% de probabilidad"
+        "% chance": "% de probabilidad",
+        "runes": "Rúnas",
+        "battle log": "Registro de Batalla",
+        "bounty hunter": "Cazador de recompensas"
     },
     {
         "language": "日本",
@@ -3975,7 +3990,10 @@
         "melee specialist": "近視",
         "rune_black_coin": "ダメージを与えたときにユニットを即死させる確率。 ボスは除く。",
         "black coin": "黒いコイン",
-        "% chance": "%の確率"
+        "% chance": "%の確率",
+        "runes": "ルーン",
+        "battle log": "戦闘ログ",
+        "bounty hunter": "賞金稼ぎ"
     },
     {
         "language": "Português",
@@ -4638,7 +4656,10 @@
         "melee specialist": "Miopia",
         "rune_black_coin": "Chance de matar instantaneamente uma unidade ao causar dano. Chefes excluídos.",
         "black coin": "Moeda Negra",
-        "% chance": "% de chance"
+        "% chance": "% de chance",
+        "runes": "Runa",
+        "battle log": "Registro de Batalha",
+        "bounty hunter": "Caçador de Recompensas"
     },
     {
         "language": "عربى",
@@ -5301,7 +5322,10 @@
         "melee specialist": "قَصيرُ النَّظَر",
         "rune_black_coin": "فرصة لقتل وحدة على الفور عند إلحاق الضرر. تستثنى الرؤساء.",
         "black coin": "عملة سوداء",
-        "% chance": "نسبة %"
+        "% chance": "نسبة %",
+        "runes": "رموز",
+        "battle log": "سجل المعركة",
+        "bounty hunter": "صائد الجوائز"
     },
     {
         "language": "한국어",
@@ -5964,7 +5988,10 @@
         "melee specialist": "근시안적인",
         "rune_black_coin": "피해를 줄 때 유닛을 즉시 처치할 확률. 보스는 제외됩니다.",
         "black coin": "검은 동전",
-        "% chance": "% 확률"
+        "% chance": "% 확률",
+        "runes": "룬",
+        "battle log": "전투 기록",
+        "bounty hunter": "보상 사냥꾼"
     },
     {
         "language": "Русский",
@@ -6627,7 +6654,10 @@
         "melee specialist": "Невидящий вдаль",
         "rune_black_coin": "Шанс мгновенно убить юнит при нанесении урона. Боссы исключены.",
         "black coin": "Чёрная монета",
-        "% chance": "% шанса"
+        "% chance": "% шанса",
+        "runes": "Руны",
+        "battle log": "Журнал битвы",
+        "bounty hunter": "Добытчик наград"
     },
     {
         "language": "中文(简)",
@@ -7290,7 +7320,10 @@
         "melee specialist": "近视",
         "rune_black_coin": "造成伤害时有机会立即击杀一个单位。 Boss不包括在内。",
         "black coin": "黑币",
-        "% chance": "% 概率"
+        "% chance": "% 概率",
+        "runes": "符文",
+        "battle log": "战斗日志",
+        "bounty hunter": "赏金猎人"
     },
     {
         "language": "中文(繁)",
@@ -7953,7 +7986,10 @@
         "melee specialist": "近視",
         "rune_black_coin": "造成傷害時有機會立即擊殺單位。boss 不算在內。",
         "black coin": "黑幣",
-        "% chance": "% 機率"
+        "% chance": "% 機率",
+        "runes": "符文",
+        "battle log": "戰鬥紀錄",
+        "bounty hunter": "賞金獵人"
     },
     {
         "language": "Polski",
@@ -8616,7 +8652,10 @@
         "melee specialist": "Krótko-wzroczny",
         "rune_black_coin": "Szansa na natychmiastowe zabicie jednostki przy zadawaniu obrażeń. Szefowie wyłączeni.",
         "black coin": "Czarny Złoty",
-        "% chance": "% szansy"
+        "% chance": "% szansy",
+        "runes": "Runy",
+        "battle log": "Dziennik Bitwy",
+        "bounty hunter": "Łowca Nagród"
     },
     {
         "language": "Dutch",
@@ -9279,6 +9318,9 @@
         "melee specialist": "Bijziend",
         "rune_black_coin": "Kans om een eenheid onmiddellijk te doden bij het toebrengen van schade. Bazen uitgesloten.",
         "black coin": "Zwarte Munt",
-        "% chance": "% kans"
+        "% chance": "% kans",
+        "runes": "Runa's",
+        "battle log": "Slag Register",
+        "bounty hunter": "Premiejager"
     }
 ]
