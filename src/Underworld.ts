@@ -49,7 +49,7 @@ import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
 import Events from './Events';
 import { UnitSource, allUnits } from './entity/units';
-import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, drawUnitMarker, isOutOfBounds, runPredictions, updatePlanningView } from './graphics/PlanningView';
+import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, drawUnitMarker, isOutOfBounds, predictAIActions, runPredictions, updatePlanningView } from './graphics/PlanningView';
 import { chooseObjectWithProbability, chooseOneOfSeeded, getUniqueSeedString, getUniqueSeedStringPerPlayer, prng, randFloat, randInt, SeedrandomState, shuffle } from './jmath/rand';
 import { calculateCostForSingleCard } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle } from './jmath/lineSegment';
@@ -1155,6 +1155,7 @@ export default class Underworld {
         }
       }
     }
+    predictAIActions(this, false);
 
     this.queueGameLoop();
   }
@@ -2947,7 +2948,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     // TODO - Define/Control actions and smart targeting
     // in Unit rather than gameLoopUnit, for more versatility?
-    const cachedTargets = this.getSmartTargets(units);
+    const cachedTargets = this.getSmartTargets(units, true, true);
 
     // Ranged units should go before melee units
     for (let subTypes of this.subTypesTurnOrder) {
@@ -3627,17 +3628,33 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   // This also doesn't play well with units that have different actions, such as the Goru
   // Is there a way for us to better predict the enemy turn, in a way that considers
   // the game state and always stays in sync with the actual outcome of combat?
-  getSmartTargets(units: Unit.IUnit[]): { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } {
-    // Clear all units' predictedNextTurnDamage now that is is the next turn
-    for (let u of this.units) {
-      u.predictedNextTurnDamage = 0;
+  // ---
+  // This function costs lots of CPU.  It is optimized with a "chunking" strategy
+  // that calculates targets for a few at a time in chunks rather than doing all at once
+  getSmartTargets(units: Unit.IUnit[], restartChunks: boolean = true, skipChunking: boolean = false): { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } {
+    if (skipChunking || restartChunks) {
+      // Clear all units' predictedNextTurnDamage now that is is the next turn
+      for (let u of this.units) {
+        u.predictedNextTurnDamage = 0;
+      }
+      globalThis.currentChunk = 0;
     }
+
+    let startChunk = globalThis.currentChunk || 0;
+    let counter = 0;
 
     const cachedTargets: { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } = {};
     for (let subTypes of this.subTypesTurnOrder) {
       const readyToTakeTurnUnits = units.filter(u => Unit.canAct(u) && subTypes.includes(u.unitSubType));
       // Loop through planned unit actions for smart targeting
       for (let u of readyToTakeTurnUnits) {
+        counter++;
+        if (!skipChunking && counter < globalThis.currentChunk) {
+          continue;
+        }
+        if (!skipChunking && (globalThis.currentChunk || 0) >= startChunk + config.ChunkSize) {
+          return cachedTargets;
+        }
         const unitSource = allUnits[u.unitSourceId];
         if (unitSource) {
           if (unitSource.id == GORU_UNIT_ID) {
@@ -3659,9 +3676,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             }
           }
         }
+        globalThis.currentChunk = (globalThis.currentChunk || 0) + 1;
       }
     }
 
+    // Set to -1 when finished
+    globalThis.currentChunk = -1;
     return cachedTargets;
   }
   canUnitAttackTarget(u: Unit.IUnit, attackTarget?: Unit.IUnit): boolean {

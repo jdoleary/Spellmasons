@@ -556,7 +556,7 @@ export async function runPredictions(underworld: Underworld) {
   if (globalThis.currentPredictionId !== undefined) {
     globalThis.currentPredictionId++;
   }
-  const startTime = Date.now();
+  const startTime = performance.now();
   const mousePos = underworld.getMousePos();
   // Queue mousePosition from the start of runPredictions so that when
   // runPredictions is successful it can be saved to
@@ -617,53 +617,7 @@ export async function runPredictions(underworld: Underworld) {
         }
       }
 
-      const aiUnits = underworld.unitsPrediction.filter(u => u.unitType == UnitType.AI);
-
-      // Careful when making enemy predictions:
-      // Ally turn happens before Enemy turn, and some effects
-      // like bloat may not be easy to factor into predictions
-      // Issue: https://github.com/jdoleary/Spellmasons/issues/388
-
-      // TODO - Run turn start events for units that will run it?
-      //Unit.startTurnForUnits(aiUnits, underworld, true);
-
-      // We want to draw attention markers above enemies
-      // who plan to attack the player next turn.
-      // This prediction is not perfect, and does not factor in:
-      // Allies, Bloat/Effects, Debilitate/Damage Modifiers
-      // So may sometimes lead to false positives/negatives
-
-      globalThis.attentionMarkers = [];
-      let cachedTargets = underworld.getSmartTargets(aiUnits);
-
-      for (let u of aiUnits) {
-        const unitSource = allUnits[u.unitSourceId];
-        if (unitSource) {
-          const { targets, canAttack } = cachedTargets[u.id] || { targets: [], canAttack: false };
-          const pos = clone(u);
-          // Exception: Ancients are short,
-          // draw their attention marker lower
-          if (u.unitSourceId == ANCIENT_UNIT_ID) {
-            pos.y += config.HEALTH_BAR_UI_Y_POS / 2;
-          }
-          if (u.unitSubType == UnitSubType.SUPPORT_CLASS || u.unitSubType == UnitSubType.GORU_BOSS) {
-            // Draw attention marker over any support unit who is taking an action
-            if (targets.length) {
-              // use u.predictionScale here since we are dealing with prediction units
-              // prediction units don't have images, and thus sprite.scale.y
-              globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos, unitSpriteScaleY: u.predictionScale || 1, markerScale: 1 });
-            }
-          }
-          else {
-            // Draw attention marker over any unit who is attacking this player
-            if (targets.includes(globalThis.player.unit) && canAttack) {
-              // use u.predictionScale here since we are dealing with prediction units
-              // prediction units don't have images, and thus sprite.scale.y
-              globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos, unitSpriteScaleY: u.predictionScale || 1, markerScale: 1 });
-            }
-          }
-        }
-      }
+      predictAIActions(underworld, true);
 
       // Show if unit will be resurrected
       globalThis.resMarkers = [];
@@ -680,8 +634,72 @@ export async function runPredictions(underworld: Underworld) {
     }
   }
   if (globalThis.runPredictionsPanel) {
-    globalThis.runPredictionsPanel.update(Date.now() - startTime, 300);
+    globalThis.runPredictionsPanel.update(performance.now() - startTime, 300);
   }
+}
+
+// predictAIActions is expensive due to `getStartTargets`
+// the way to optimize this is to have it run on gameloop,
+// but only to process a few units (a chunk) at a time
+// and it restarts explicitly when something changes.
+export function predictAIActions(underworld: Underworld, restartChunks: boolean) {
+  if (restartChunks && globalThis.currentChunk > 0) {
+    // Don't restart until previous is finished processing
+    return;
+  }
+  if (!restartChunks && globalThis.currentChunk === -1) {
+    return;
+  }
+  if (restartChunks || globalThis.attentionMarkers === undefined) {
+    globalThis.attentionMarkers = [];
+  }
+  const aiUnits = underworld.unitsPrediction.filter(u => u.unitType == UnitType.AI);
+  // Careful when making enemy predictions:
+  // Ally turn happens before Enemy turn, and some effects
+  // like bloat may not be easy to factor into predictions
+  // Issue: https://github.com/jdoleary/Spellmasons/issues/388
+
+  // TODO - Run turn start events for units that will run it?
+  //Unit.startTurnForUnits(aiUnits, underworld, true);
+
+  // We want to draw attention markers above enemies
+  // who plan to attack the player next turn.
+  // This prediction is not perfect, and does not factor in:
+  // Allies, Bloat/Effects, Debilitate/Damage Modifiers
+  // So may sometimes lead to false positives/negatives
+
+  // Optimized: This function is FPS heavy
+  let cachedTargets = underworld.getSmartTargets(aiUnits, restartChunks);
+
+  for (let u of aiUnits) {
+    const unitSource = allUnits[u.unitSourceId];
+    if (unitSource) {
+      const { targets, canAttack } = cachedTargets[u.id] || { targets: [], canAttack: false };
+      const pos = clone(u);
+      // Exception: Ancients are short,
+      // draw their attention marker lower
+      if (u.unitSourceId == ANCIENT_UNIT_ID) {
+        pos.y += config.HEALTH_BAR_UI_Y_POS / 2;
+      }
+      if (u.unitSubType == UnitSubType.SUPPORT_CLASS || u.unitSubType == UnitSubType.GORU_BOSS) {
+        // Draw attention marker over any support unit who is taking an action
+        if (targets.length) {
+          // use u.predictionScale here since we are dealing with prediction units
+          // prediction units don't have images, and thus sprite.scale.y
+          globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos, unitSpriteScaleY: u.predictionScale || 1, markerScale: 1 });
+        }
+      }
+      else {
+        // Draw attention marker over any unit who is attacking this player
+        if (globalThis.player && targets.includes(globalThis.player.unit) && canAttack) {
+          // use u.predictionScale here since we are dealing with prediction units
+          // prediction units don't have images, and thus sprite.scale.y
+          globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos, unitSpriteScaleY: u.predictionScale || 1, markerScale: 1 });
+        }
+      }
+    }
+  }
+
 }
 
 // SpellEffectProjection are images to denote some information, such as the spell or action about to be cast/taken when clicked

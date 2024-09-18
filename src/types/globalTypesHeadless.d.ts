@@ -379,4 +379,5 @@ declare global {
   var test_ignorePromiseTracking: string | undefined;
   var showCastRangeForUpgrade: boolean | undefined;
   var alwaysDrawHealthBars: boolean | undefined;
+  var currentChunk: number | undefined;
 }
