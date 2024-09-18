@@ -11,8 +11,11 @@ import { HasSpace } from '../entity/Type';
 import Underworld from '../Underworld';
 import { clone, lerpVec2, Vec2 } from '../jmath/Vec';
 import { isRune } from './cardUtils';
+import { getOrInitModifier } from './util';
+import { addWarningAtMouse } from '../graphics/PlanningView';
 
 const merge_id = 'merge';
+const immuneForTurns = 2;
 const spell: Spell = {
   card: {
     id: merge_id,
@@ -38,6 +41,15 @@ const spell: Spell = {
         const mergePromises = []
         const target = targets[i];
         if (!target || mergedTargets.includes(target)) continue;
+
+        if (Unit.isUnit(target) && target.events.includes(merge_id)) {
+          const mergeImmuneWarningText = `${i18n(merge_id)} ${i18n('immune').toLocaleLowerCase()}`;
+          if (state.casterPlayer == globalThis.player) {
+            addWarningAtMouse(mergeImmuneWarningText);
+          }
+          refundLastSpell(state, prediction, mergeImmuneWarningText)
+          return state;
+        }
 
         // if target has not been merged already
         // find similar and merge those into target
@@ -68,6 +80,28 @@ const spell: Spell = {
         refundLastSpell(state, prediction, 'Target things of the same type!')
       }
       return state;
+    },
+  },
+  modifiers: {
+    add,
+  },
+  events: {
+    onTooltip: (unit: Unit.IUnit, underworld: Underworld) => {
+      const modifier = unit.modifiers[merge_id];
+      if (modifier) {
+        modifier.tooltip = `${i18n(merge_id)} ${i18n('immune').toLocaleLowerCase()}: ${modifier.quantity}`;
+      }
+    },
+    onTurnEnd: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
+      // Decrement how many turns left the unit is frozen
+      const modifier = unit.modifiers[merge_id];
+      if (modifier) {
+        modifier.quantity--;
+        if (modifier.quantity == 0) {
+          // Remove modifier.  This prevents a unit from being re-frozen within 2 turns
+          Unit.removeModifier(unit, merge_id, underworld);
+        }
+      }
     },
   },
 };
@@ -133,6 +167,9 @@ export function mergeUnits(target: Unit.IUnit, unitsToMerge: Unit.IUnit[], under
       Unit.cleanup(unit);
     }
   }
+
+  // Add Merge Immune
+  Unit.addModifier(target, merge_id, underworld, prediction);
 
   // Modifiers are stored and added at the end to prevent weird scenarios
   // such as suffocate killing the primary target mid-merge
@@ -202,3 +239,9 @@ export async function animateMerge(image: IImageAnimated | undefined, target: Ve
   }));
 }
 export default spell;
+
+function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
+  getOrInitModifier(unit, merge_id, { isCurse: false, quantity: immuneForTurns }, () => {
+    Unit.addEvent(unit, merge_id);
+  });
+}

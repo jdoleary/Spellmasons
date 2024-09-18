@@ -4,7 +4,7 @@ import { animateMitosis, doCloneUnit } from "./cards/clone";
 import { getOrInitModifier } from "./cards/util";
 import * as Unit from './entity/Unit';
 import floatingText from "./graphics/FloatingText";
-import { Vec2 } from "./jmath/Vec";
+import { equal, Vec2 } from "./jmath/Vec";
 import Underworld from './Underworld';
 
 export const cloneOnTeleportId = 'Changeling';
@@ -12,6 +12,7 @@ export default function registerContaminateSelfOnTeleport() {
   registerModifiers(cloneOnTeleportId, {
     description: ('rune_clone_on_tele'),
     _costPerUpgrade: 300,
+    maxUpgradeCount: 1,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, cloneOnTeleportId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, cloneOnTeleportId);
@@ -20,6 +21,10 @@ export default function registerContaminateSelfOnTeleport() {
   });
   registerEvents(cloneOnTeleportId, {
     onTeleport: (unit: Unit.IUnit, originalLocation: Vec2, underworld: Underworld, prediction: boolean) => {
+      if (equal(unit, originalLocation)) {
+        // Prevent stacking teleport to spawn a bunch of copies
+        return;
+      }
       const modifier = unit.modifiers[cloneOnTeleportId];
       if (modifier) {
         for (let i = 0; i < modifier.quantity; i++) {
