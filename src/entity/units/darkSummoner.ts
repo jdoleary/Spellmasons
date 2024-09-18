@@ -12,15 +12,15 @@ const unit: UnitSource = {
   id: DARK_SUMMONER_ID,
   info: {
     description: 'dark_summoner_copy',
-    image: 'units/dark_summoner/summonerIdle',
+    image: 'dark_summoner/summonerIdle',
     subtype: UnitSubType.SUPPORT_CLASS,
   },
   animations: {
-    idle: 'units/dark_summoner/summonerIdle',
-    hit: 'units/dark_summoner/summonerHit',
-    attack: 'units/dark_summoner/summonerAttack',
-    die: 'units/dark_summoner/summonerDeath',
-    walk: 'units/dark_summoner/summonerWalk',
+    idle: 'dark_summoner/summonerIdle',
+    hit: 'dark_summoner/summonerHit',
+    attack: 'dark_summoner/summonerAttack',
+    die: 'dark_summoner/summonerDeath',
+    walk: 'dark_summoner/summonerWalk',
   },
   sfx: {
     damage: 'summonerHurt',

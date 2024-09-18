@@ -18,7 +18,7 @@ export interface ISubsprites {
 // via registerModifiers / registerSpell
 const Subsprites: ISubsprites = {
   heavy_armor: {
-    imageName: 'units/heavy_armor.png',
+    imageName: 'heavy_armor.png',
     alpha: 1.0,
     anchor: {
       x: 0.5,

@@ -10,7 +10,7 @@ const unit: UnitSource = {
   id: BLOOD_GOLEM_ID,
   info: {
     description: 'blood_golem_copy',
-    image: 'units/blood_golem/gruntIdle',
+    image: 'blood_golem/gruntIdle',
     subtype: UnitSubType.MELEE,
   },
   unitProps: {
@@ -26,11 +26,11 @@ const unit: UnitSource = {
     unavailableUntilLevelIndex: 4,
   },
   animations: {
-    idle: 'units/blood_golem/gruntIdle',
-    hit: 'units/blood_golem/gruntHit',
-    attack: 'units/blood_golem/gruntAttack',
-    die: 'units/blood_golem/gruntDeath',
-    walk: 'units/blood_golem/gruntWalk',
+    idle: 'blood_golem/gruntIdle',
+    hit: 'blood_golem/gruntHit',
+    attack: 'blood_golem/gruntAttack',
+    die: 'blood_golem/gruntDeath',
+    walk: 'blood_golem/gruntWalk',
   },
   sfx: {
     // Golem shares hurt sfx with archer intentionally

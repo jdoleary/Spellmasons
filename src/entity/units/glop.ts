@@ -14,7 +14,7 @@ const unit: UnitSource = {
   id: GLOP_UNIT_ID,
   info: {
     description: 'glop description',
-    image: 'units/lobberIdle',
+    image: 'lobberIdle',
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
@@ -33,11 +33,11 @@ const unit: UnitSource = {
     unavailableUntilLevelIndex: 2,
   },
   animations: {
-    idle: 'units/lobberIdle',
-    hit: 'units/lobberHit',
-    attack: 'units/lobberAttack',
-    die: 'units/lobberDeath',
-    walk: 'units/lobberWalk',
+    idle: 'lobberIdle',
+    hit: 'lobberHit',
+    attack: 'lobberAttack',
+    die: 'lobberDeath',
+    walk: 'lobberWalk',
   },
   sfx: {
     damage: 'lobberHurt',

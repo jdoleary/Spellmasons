@@ -9,15 +9,15 @@ const unit: UnitSource = {
   id: 'decoy',
   info: {
     description: 'decoy_copy',
-    image: 'units/decoy',
+    image: 'decoy',
     subtype: UnitSubType.MELEE,
   },
   animations: {
-    idle: 'units/decoy',
-    hit: 'units/decoy',
-    attack: 'units/decoy',
-    die: 'units/decoy_Death',
-    walk: 'units/decoy',
+    idle: 'decoy',
+    hit: 'decoy',
+    attack: 'decoy',
+    die: 'decoy_Death',
+    walk: 'decoy',
   },
   sfx: {
     damage: 'unitDamage',

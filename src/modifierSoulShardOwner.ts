@@ -52,9 +52,9 @@ export default function registerSoulShardOwner() {
             await Promise.all(promises);
 
             // Trail from shard owner
-            await new Promise<void>(resolve => colorMagic(oneOffImage(unit, 'units/summonerMagic', containerUnits, resolve)));
+            await new Promise<void>(resolve => colorMagic(oneOffImage(unit, 'summonerMagic', containerUnits, resolve)));
             await makeManaTrail(unit, nearestShardBearer, underworld, trailColorStart, trailColorEnd);
-            await new Promise<void>(resolve => colorMagic(oneOffImage(nearestShardBearer, 'units/summonerMagic', containerUnits, resolve)));
+            await new Promise<void>(resolve => colorMagic(oneOffImage(nearestShardBearer, 'summonerMagic', containerUnits, resolve)));
             startBloodParticleSplatter(underworld, unit, nearestShardBearer, { maxRotationOffset: Math.PI * 2, numberOfParticles: 300 });
           }
 

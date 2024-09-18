@@ -9,7 +9,7 @@ const {
 const percentHeal = 0.5;
 const samplePickup: IPickupSource = {
     // The name of the animation in the sprite sheet
-    imagePath: 'pickups/healthPotion',
+    imagePath: 'healthPotion',
     // How fast the animation cycles its frames
     animationSpeed: 0.2,
     name: 'Sample Pickup',

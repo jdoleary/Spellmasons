@@ -12,63 +12,63 @@ interface AnimationCombo {
 const combos: { [spritePath: string]: AnimationCombo } = {
     'playerAttackSmall': {
         keyFrame: 11,
-        primaryAnimation: 'units/playerAttackSmall',
-        companionAnimations: ['units/playerAttackSmallMagic'],
+        primaryAnimation: 'playerAttackSmall',
+        companionAnimations: ['playerAttackSmallMagic'],
         SFX: ['playerCharacterSmallCast']
     },
     'playerAttackMedium0': {
         // At the moment the wizard's staff hits the ground
         keyFrame: 7,
-        primaryAnimation: 'units/playerAttack',
-        companionAnimations: ['units/playerAttackZap'],
+        primaryAnimation: 'playerAttack',
+        companionAnimations: ['playerAttackZap'],
         SFX: ['playerCharacterMediumCast', 'playerCharacterMediumCast2'],
     },
     'playerAttackMedium1': {
         // At the moment the wizard's staff hits the ground
         keyFrame: 7,
-        primaryAnimation: 'units/playerAttack',
-        companionAnimations: ['units/playerAttackBomb'],
+        primaryAnimation: 'playerAttack',
+        companionAnimations: ['playerAttackBomb'],
         SFX: ['playerCharacterMediumCast', 'playerCharacterMediumCast2'],
     },
     'playerAttackEpic': {
         keyFrame: 23,
-        primaryAnimation: 'units/playerAttackEpic',
-        companionAnimations: ['units/playerAttackEpicMagic'],
+        primaryAnimation: 'playerAttackEpic',
+        companionAnimations: ['playerAttackEpicMagic'],
         SFX: ['playerCharacterLargeCast', 'playerCharacterLargeCast2']
     },
-    'units/gruntAttack': {
+    'gruntAttack': {
         keyFrame: 6,
-        primaryAnimation: 'units/gruntAttack',
+        primaryAnimation: 'gruntAttack',
         companionAnimations: [],
         SFX: ['golemAttack']
     },
-    'units/lobberAttack': {
+    'lobberAttack': {
         keyFrame: 4,
-        primaryAnimation: 'units/lobberAttack',
+        primaryAnimation: 'lobberAttack',
         companionAnimations: [],
         SFX: ['lobberAttack']
     },
-    'units/guruAttack': {
+    'guruAttack': {
         keyFrame: 10,
-        primaryAnimation: 'units/guruAttack',
+        primaryAnimation: 'guruAttack',
         companionAnimations: [],
         SFX: ['goruAttack']
     },
-    'units/archerAttack': {
+    'archerAttack': {
         keyFrame: 7,
-        primaryAnimation: 'units/archerAttack',
+        primaryAnimation: 'archerAttack',
         companionAnimations: [],
         SFX: ['archerAttack']
     },
-    'units/summonerAttack': {
+    'summonerAttack': {
         keyFrame: 8,
-        primaryAnimation: 'units/summonerAttack',
+        primaryAnimation: 'summonerAttack',
         companionAnimations: [],
         SFX: ['summonerSummon']
     },
-    'units/poisAttack': {
+    'poisAttack': {
         keyFrame: 7,
-        primaryAnimation: 'units/poisAttack',
+        primaryAnimation: 'poisAttack',
         companionAnimations: [],
         SFX: []
     }

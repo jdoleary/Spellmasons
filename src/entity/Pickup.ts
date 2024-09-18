@@ -30,7 +30,7 @@ import { healManaUnit, healUnit } from '../effects/heal';
 import { teleport } from '../effects/teleport';
 
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
-export const PICKUP_IMAGE_PATH = 'pickups/scroll';
+export const PICKUP_IMAGE_PATH = 'scroll';
 export const RED_PORTAL = 'Red Portal';
 export const BLUE_PORTAL = 'Blue Portal';
 export const HEALTH_POTION = 'Health Potion';
@@ -462,7 +462,7 @@ export const PICKUP_SPIKES_NAME = 'Trap';
 export const PORTAL_PURPLE_NAME = 'Portal';
 export const pickups: IPickupSource[] = [
   {
-    imagePath: 'pickups/trap',
+    imagePath: 'trap',
     animationSpeed: -config.DEFAULT_ANIMATION_SPEED,
     playerOnly: false,
     name: PICKUP_SPIKES_NAME,
@@ -476,7 +476,7 @@ export const pickups: IPickupSource[] = [
       if (unit) {
         // Play trap spring animation
         if (!prediction) {
-          const animationSprite = addPixiSpriteAnimated('pickups/trapAttack', containerUnits, {
+          const animationSprite = addPixiSpriteAnimated('trapAttack', containerUnits, {
             loop: false,
             animationSpeed: 0.2,
             onComplete: () => {
@@ -491,7 +491,7 @@ export const pickups: IPickupSource[] = [
             animationSprite.x = pickup.x;
             animationSprite.y = pickup.y;
           }
-          const animationSprite2 = addPixiSpriteAnimated('pickups/trapAttackMagic', containerUnits, {
+          const animationSprite2 = addPixiSpriteAnimated('trapAttackMagic', containerUnits, {
             loop: false,
             animationSpeed: 0.2,
             onComplete: () => {
@@ -623,7 +623,7 @@ export const pickups: IPickupSource[] = [
     },
   },
   {
-    imagePath: 'pickups/staminaPotion',
+    imagePath: 'staminaPotion',
     animationSpeed: 0.2,
     name: STAMINA_POTION,
     description: (pickup) => ['Restores stamina to 🍞', (100 * pickup.power).toString().concat("%")],
@@ -649,7 +649,7 @@ export const pickups: IPickupSource[] = [
     },
   },
   {
-    imagePath: 'pickups/manaPotion',
+    imagePath: 'manaPotion',
     animationSpeed: 0.2,
     name: MANA_POTION,
     description: (pickup) => [`mana potion description`, (manaPotionRestoreAmount * pickup.power).toString()],
@@ -669,7 +669,7 @@ export const pickups: IPickupSource[] = [
     },
   },
   {
-    imagePath: 'pickups/healthPotion',
+    imagePath: 'healthPotion',
     animationSpeed: 0.2,
     name: HEALTH_POTION,
     probability: 80,

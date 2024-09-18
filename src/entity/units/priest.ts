@@ -53,7 +53,7 @@ const unit: UnitSource = {
   id: PRIEST_ID,
   info: {
     description: 'priest_copy',
-    image: 'units/priestIdle',
+    image: 'priestIdle',
     subtype: UnitSubType.SUPPORT_CLASS,
   },
   unitProps: {
@@ -71,11 +71,11 @@ const unit: UnitSource = {
     unavailableUntilLevelIndex: 4,
   },
   animations: {
-    idle: 'units/priestIdle',
-    hit: 'units/priestHit',
-    attack: 'units/priestAttack',
-    die: 'units/priestDeath',
-    walk: 'units/priestWalk',
+    idle: 'priestIdle',
+    hit: 'priestHit',
+    attack: 'priestAttack',
+    die: 'priestDeath',
+    walk: 'priestWalk',
   },
   sfx: {
     damage: 'priestHurt',

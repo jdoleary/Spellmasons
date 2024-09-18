@@ -10,7 +10,7 @@ const unit: UnitSource = {
   id: golem_unit_id,
   info: {
     description: 'Golem description',
-    image: 'units/gruntIdle',
+    image: 'gruntIdle',
     subtype: UnitSubType.MELEE,
   },
   unitProps: {
@@ -25,11 +25,11 @@ const unit: UnitSource = {
     unavailableUntilLevelIndex: 0,
   },
   animations: {
-    idle: 'units/gruntIdle',
-    hit: 'units/gruntHit',
-    attack: 'units/gruntAttack',
-    die: 'units/gruntDeath',
-    walk: 'units/gruntWalk',
+    idle: 'gruntIdle',
+    hit: 'gruntHit',
+    attack: 'gruntAttack',
+    die: 'gruntDeath',
+    walk: 'gruntWalk',
   },
   sfx: {
     // Golem shares hurt sfx with archer intentionally

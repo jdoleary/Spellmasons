@@ -13,7 +13,7 @@ const unit: UnitSource = {
   id: DARK_PRIEST_ID,
   info: {
     description: ['dark_priest_copy', NUMBER_OF_GEYSERS.toString()],
-    image: 'units/dark_priest/priestIdle',
+    image: 'dark_priest/priestIdle',
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
@@ -31,11 +31,11 @@ const unit: UnitSource = {
     unavailableUntilLevelIndex: 8,
   },
   animations: {
-    idle: 'units/dark_priest/priestIdle',
-    hit: 'units/dark_priest/priestHit',
-    attack: 'units/dark_priest/priestAttack',
-    die: 'units/dark_priest/priestDeath',
-    walk: 'units/dark_priest/priestWalk',
+    idle: 'dark_priest/priestIdle',
+    hit: 'dark_priest/priestHit',
+    attack: 'dark_priest/priestAttack',
+    die: 'dark_priest/priestDeath',
+    walk: 'dark_priest/priestWalk',
   },
   sfx: {
     damage: 'priestHurt',

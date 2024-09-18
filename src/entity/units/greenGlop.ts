@@ -16,7 +16,7 @@ const unit: UnitSource = {
   id: 'Green Glop',
   info: {
     description: 'green_glop_copy',
-    image: 'units/green_glop/lobberIdle',
+    image: 'green_glop/lobberIdle',
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
@@ -35,11 +35,11 @@ const unit: UnitSource = {
     unavailableUntilLevelIndex: 7,
   },
   animations: {
-    idle: 'units/green_glop/lobberIdle',
-    hit: 'units/green_glop/lobberHit',
-    attack: 'units/green_glop/lobberAttack',
-    die: 'units/green_glop/lobberDeath',
-    walk: 'units/green_glop/lobberWalk',
+    idle: 'green_glop/lobberIdle',
+    hit: 'green_glop/lobberHit',
+    attack: 'green_glop/lobberAttack',
+    die: 'green_glop/lobberDeath',
+    walk: 'green_glop/lobberWalk',
   },
   sfx: {
     damage: 'lobberHurt',

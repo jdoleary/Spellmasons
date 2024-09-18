@@ -19,15 +19,15 @@ const unit: UnitSource = {
   id: SUMMONER_ID,
   info: {
     description: 'summoner_copy',
-    image: 'units/summonerIdle',
+    image: 'summonerIdle',
     subtype: UnitSubType.SUPPORT_CLASS,
   },
   animations: {
-    idle: 'units/summonerIdle',
-    hit: 'units/summonerHit',
-    attack: 'units/summonerAttack',
-    die: 'units/summonerDeath',
-    walk: 'units/summonerWalk',
+    idle: 'summonerIdle',
+    hit: 'summonerHit',
+    attack: 'summonerAttack',
+    die: 'summonerDeath',
+    walk: 'summonerWalk',
   },
   sfx: {
     damage: 'summonerHurt',
@@ -87,7 +87,7 @@ export async function summonerAction(unit: Unit.IUnit, ableToSummon: boolean, un
               );
               // Add summoning sickeness so they can't act after they are summoned
               Unit.addModifier(summonedUnit, summoningSicknessId, underworld, false);
-              const summonPromise = new Promise<void>(resolve => oneOffImage(coords, 'units/summonerMagic', containerUnits, resolve)).then(() => {
+              const summonPromise = new Promise<void>(resolve => oneOffImage(coords, 'summonerMagic', containerUnits, resolve)).then(() => {
                 Unit.moveTowards(summonedUnit, unit, underworld);
               });
               return summonPromise;
@@ -112,11 +112,11 @@ export async function summonerAction(unit: Unit.IUnit, ableToSummon: boolean, un
       const teleportToLocation = underworld.findValidSpawnInRadius(unit, false, seed, { maxRadius: unit.attackRange, unobstructedPoint: unit });
       if (teleportToLocation) {
         await new Promise<void>(resolveTeleport => {
-          new Promise<void>(resolve => oneOffImage(unit, 'units/summonerMagic', containerUnits, resolve)).then(() => {
+          new Promise<void>(resolve => oneOffImage(unit, 'summonerMagic', containerUnits, resolve)).then(() => {
             unit.x = -1000;
             unit.y = -1000;
             makeManaTrail(teleportFromLocation, teleportToLocation, underworld, '#774772', '#5b3357').then(() => {
-              new Promise<void>(resolve => oneOffImage(teleportToLocation, 'units/summonerMagic', containerUnits, resolve)).then(() => {
+              new Promise<void>(resolve => oneOffImage(teleportToLocation, 'summonerMagic', containerUnits, resolve)).then(() => {
                 unit.x = teleportToLocation.x;
                 unit.y = teleportToLocation.y;
                 // Check to see if unit interacts with liquid

@@ -16,7 +16,7 @@ const unit: UnitSource = {
   id: GHOST_ARCHER_ID,
   info: {
     description: 'ghost_archer_copy',
-    image: 'units/ghost_archer/archerIdle',
+    image: 'ghost_archer/archerIdle',
     subtype: UnitSubType.RANGED_LOS,
   },
   unitProps: {
@@ -32,11 +32,11 @@ const unit: UnitSource = {
     unavailableUntilLevelIndex: 7,
   },
   animations: {
-    idle: 'units/ghost_archer/archerIdle',
-    hit: 'units/ghost_archer/archerHit',
-    attack: 'units/ghost_archer/archerAttack',
-    die: 'units/ghost_archer/archerDeath',
-    walk: 'units/ghost_archer/archerWalk',
+    idle: 'ghost_archer/archerIdle',
+    hit: 'ghost_archer/archerHit',
+    attack: 'ghost_archer/archerAttack',
+    die: 'ghost_archer/archerDeath',
+    walk: 'ghost_archer/archerWalk',
   },
   sfx: {
     damage: 'archerHurt',

@@ -497,12 +497,12 @@ export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | u
   }
 }
 export async function setSpellmasonsToChannellingAnimationClose(player: IPlayer) {
-  if (['units/playerBookIn', 'units/playerBookIdle'].includes(player.unit.image?.sprite.imagePath || '')) {
+  if (['playerBookIn', 'playerBookIdle'].includes(player.unit.image?.sprite.imagePath || '')) {
     await new Promise<void>((resolve) => {
       if (player.unit.image) {
         Image.changeSprite(
           player.unit.image,
-          'units/playerBookReturn',
+          'playerBookReturn',
           player.unit.image.sprite.parent,
           resolve,
           {
@@ -512,7 +512,7 @@ export async function setSpellmasonsToChannellingAnimationClose(player: IPlayer)
             animationSpeed: 0.2
           }
         );
-        Image.addOneOffAnimation(player.unit, 'units/playerBookReturnMagic', { doRemoveWhenPrimaryAnimationChanges: true }, {
+        Image.addOneOffAnimation(player.unit, 'playerBookReturnMagic', { doRemoveWhenPrimaryAnimationChanges: true }, {
           loop: false,
           // Play the book close animation a little faster than usual so
           // the player can get on with casting
@@ -530,7 +530,7 @@ export async function setSpellmasonsToChannellingAnimationClose(player: IPlayer)
 export function setSpellmasonsToChannellingAnimation(player: IPlayer) {
   if (!player.unit.alive) return;
 
-  const bookInAnimationPath = 'units/playerBookIn';
+  const bookInAnimationPath = 'playerBookIn';
   new Promise<void>((resolve) => {
     if (player.unit.image) {
       Image.changeSprite(
@@ -545,7 +545,7 @@ export function setSpellmasonsToChannellingAnimation(player: IPlayer) {
           animationSpeed: 0.2
         }
       );
-      Image.addOneOffAnimation(player.unit, 'units/playerBookInMagic', { doRemoveWhenPrimaryAnimationChanges: true }, {
+      Image.addOneOffAnimation(player.unit, 'playerBookInMagic', { doRemoveWhenPrimaryAnimationChanges: true }, {
         loop: false,
         // Play the book open animation a little faster than usual so
         // the player can get on with idling
@@ -559,14 +559,14 @@ export function setSpellmasonsToChannellingAnimation(player: IPlayer) {
     if (player.unit.image && player.unit.image.sprite.imagePath == bookInAnimationPath) {
       Image.changeSprite(
         player.unit.image,
-        'units/playerBookIdle',
+        'playerBookIdle',
         player.unit.image.sprite.parent,
         undefined,
         {
           loop: true
         }
       );
-      Image.addOneOffAnimation(player.unit, 'units/playerBookIdleMagic', { doRemoveWhenPrimaryAnimationChanges: true }, { loop: true });
+      Image.addOneOffAnimation(player.unit, 'playerBookIdleMagic', { doRemoveWhenPrimaryAnimationChanges: true }, { loop: true });
     }
   });
 }
