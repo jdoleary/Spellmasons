@@ -704,7 +704,6 @@ export function getPixiTextureAnimated(
       return animation;
     }
   }
-  console.log('jtest', sheets.map(x => console.log(x)))
   return undefined;
 }
 export function addPixiSpriteAnimated(
