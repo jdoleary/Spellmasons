@@ -26,7 +26,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconEmpower.png',
-    animationPath: 'spell-effects/spellEmpower',
+    animationPath: 'spellEmpower',
     description: ['spell_empower', (statChange).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units

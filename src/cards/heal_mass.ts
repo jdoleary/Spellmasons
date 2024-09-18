@@ -25,7 +25,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.FORBIDDEN],
     thumbnail: 'spellIconHeal3.png',
-    animationPath: 'spell-effects/potionPickup',
+    animationPath: 'potionPickup',
     description: ['spell_heal_mass', healAmount.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       const units = (prediction ? underworld.unitsPrediction : underworld.units)

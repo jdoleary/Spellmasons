@@ -52,7 +52,7 @@ function poisonRandomEnemyUnits(unit: Unit.IUnit, quantity: number, underworld: 
           prediction
         });
         if (!prediction) {
-          animateSpell(chosenUnit, 'spell-effects/spellPoison');
+          animateSpell(chosenUnit, 'spellPoison');
           playSFXKey('poison');
         }
         Unit.addModifier(chosenUnit, poisonCardId, underworld, prediction, basePoisonStacks, { sourceUnitId: unit.id });

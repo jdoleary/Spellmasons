@@ -9,7 +9,7 @@ import { manaBlue } from '../graphics/ui/colors';
 import { hexToString } from '../graphics/ui/colorUtil';
 
 export const conserveSpellId = 'conserve';
-const imageName = 'spell-effects/spellFreeze_still.png';
+const imageName = 'spellFreeze_still.png';
 const spell: Spell = {
   card: {
     id: conserveSpellId,

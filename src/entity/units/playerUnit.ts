@@ -29,7 +29,7 @@ const playerUnit: UnitSource = {
       Unit.orient(unit, attackTarget);
       const keyMoment = async () => {
         playSFXKey('hurt');
-        oneOffImage(attackTarget, 'spell-effects/spellHurtCuts', containerSpells);
+        oneOffImage(attackTarget, 'spellHurtCuts', containerSpells);
         Unit.takeDamage({
           unit: attackTarget,
           amount: unit.damage,

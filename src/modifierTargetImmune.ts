@@ -5,7 +5,7 @@ import * as Unit from './entity/Unit';
 import Underworld from './Underworld';
 
 export const targetImmuneId = 'target_immune';
-const subspriteId = 'spell-effects/targetImmune';
+const subspriteId = 'targetImmune';
 function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
   Image.addSubSprite(unit.image, subspriteId);
 }

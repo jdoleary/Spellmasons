@@ -18,7 +18,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconManaBurn.png',
-    animationPath: 'spell-effects/spellManaBurn',
+    animationPath: 'spellManaBurn',
     description: ['spell_mana_burn', mana_burnt.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
@@ -28,7 +28,7 @@ const spell: Spell = {
       // Play the animation and sfx
       for (let unit of targets) {
         playDefaultSpellSFX(card, prediction);
-        animationPromise = Image.addOneOffAnimation(unit, 'spell-effects/spellManaBurn', { keyFrame: 6 });
+        animationPromise = Image.addOneOffAnimation(unit, 'spellManaBurn', { keyFrame: 6 });
       }
       await animationPromise;
       // Take damage and remove mana AFTER the animation and sfx has finished

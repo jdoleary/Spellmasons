@@ -20,7 +20,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconSendMana.png',
-    animationPath: 'spell-effects/potionPickup',
+    animationPath: 'potionPickup',
     description: ['spell_send_mana', amount.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = state.targetedUnits.filter(u => u.alive);

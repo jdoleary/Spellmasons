@@ -15,7 +15,7 @@ export default function registerImmune() {
     remove
   });
 }
-const imageName = 'spell-effects/modifierShield.png';
+const imageName = 'modifierShield.png';
 export function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
   // Add subsprite image
   // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type

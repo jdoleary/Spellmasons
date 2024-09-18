@@ -11,7 +11,7 @@ import * as Image from './graphics/Image';
 export const confidenceId = 'Confidence';
 const reductionProportion = 0.05;
 const maxReductionProportion = 0.5;
-const subspriteImageName = 'spell-effects/shield-blue.png';
+const subspriteImageName = 'shield-blue.png';
 export default function registerConfidence() {
   registerModifiers(confidenceId, {
     description: ['confidence_description', Math.floor(reductionProportion * 100).toString()],
