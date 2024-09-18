@@ -22,7 +22,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconSoulBind.png',
-    animationPath: 'spell-effects/spellDebilitate',
+    animationPath: 'spellDebilitate',
     description: ['spell_soul_bind'],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units

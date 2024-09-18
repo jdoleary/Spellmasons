@@ -64,7 +64,7 @@ export function registerUrnPoisonExplode() {
       units.filter(u => u.alive)
         .forEach(u => {
           if (!prediction) {
-            animateSpell(u, 'spell-effects/spellPoison');
+            animateSpell(u, 'spellPoison');
           }
           // The source of the poison is considered to be the unit that killed the urn
           // Poison modifier takes in a sourceUnit ID, so convert here

@@ -40,7 +40,7 @@ const spell: Spell = {
         const promises = [];
         for (const target of targets) {
           promises.push(new Promise<void>(resolve => {
-            const animatingSpell = oneOffImage(target, 'spell-effects/spellPurify', containerProjectiles, resolve);
+            const animatingSpell = oneOffImage(target, 'spellPurify', containerProjectiles, resolve);
             if (animatingSpell) {
               animatingSpell.sprite.tint = 0x643B9F;
             }

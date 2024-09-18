@@ -19,7 +19,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconPurify.png',
-    animationPath: 'spell-effects/spellPurify',
+    animationPath: 'spellPurify',
     description: 'spell_purify',
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = state.targetedUnits;

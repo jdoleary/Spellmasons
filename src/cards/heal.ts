@@ -17,7 +17,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconHeal.png',
-    animationPath: 'spell-effects/potionPickup',
+    animationPath: 'potionPickup',
     description: ['spell_heal', healAmount.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       await healUnits(state.targetedUnits, healAmount * quantity, state.casterUnit, underworld, prediction, state);

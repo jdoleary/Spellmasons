@@ -11,7 +11,7 @@ import { getOrInitModifier } from './util';
 
 export const id = 'fortify';
 const DAMGAGE_REDUCTION_PROPORTION = 0.5;
-export const modifierImagePath = 'spell-effects/modifierShield.png';
+export const modifierImagePath = 'modifierShield.png';
 const spell: Spell = {
   card: {
     id,
@@ -24,7 +24,7 @@ const spell: Spell = {
     costGrowthAlgorithm: 'nlogn',
     probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconFortify.png',
-    animationPath: 'spell-effects/spellShield',
+    animationPath: 'spellShield',
     description: ['spell_fortify', Math.round(DAMGAGE_REDUCTION_PROPORTION * 100).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units

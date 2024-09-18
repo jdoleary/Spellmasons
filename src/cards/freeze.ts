@@ -12,7 +12,7 @@ import { getOrInitModifier } from './util';
 export const freezeCardId = 'freeze';
 // The number of turns that a unit cannot be refrozen after being frozen
 const immuneForTurns = 2;
-const imageName = 'spell-effects/spellFreeze_still.png';
+const imageName = 'spellFreeze_still.png';
 const spell: Spell = {
   card: {
     id: freezeCardId,
@@ -25,7 +25,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconFreeze.png',
-    animationPath: 'spell-effects/spellFreeze',
+    animationPath: 'spellFreeze',
     description: ['spell_freeze', immuneForTurns.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
@@ -33,7 +33,7 @@ const spell: Spell = {
       if (targets.length) {
         let spellAnimationPromise = Promise.resolve();
         targets.forEach(t => {
-          spellAnimationPromise = Image.addOneOffAnimation(t, 'spell-effects/spellFreeze');
+          spellAnimationPromise = Image.addOneOffAnimation(t, 'spellFreeze');
         })
         await Promise.all([spellAnimationPromise, playDefaultSpellSFX(card, prediction)]);
         for (let unit of targets) {

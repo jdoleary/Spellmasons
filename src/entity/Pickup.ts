@@ -640,7 +640,7 @@ export const pickups: IPickupSource[] = [
           playSFXKey('potionPickupMana');
         }
         // Animate
-        Image.addOneOffAnimation(unit, 'spell-effects/potionPickup', {}, {
+        Image.addOneOffAnimation(unit, 'potionPickup', {}, {
           loop: false,
           animationSpeed: 0.3,
           colorReplace: { colors: [[0xff0000, stamina]], epsilon: 0.15 },
@@ -692,7 +692,7 @@ export const pickups: IPickupSource[] = [
     },
   },
   {
-    imagePath: 'spell-effects/recall',
+    imagePath: 'recall',
     animationSpeed: 0,
     playerOnly: true,
     name: RECALL_POINT,

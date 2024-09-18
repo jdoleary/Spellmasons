@@ -68,8 +68,8 @@ export function oneOffHealAnimation(imageHaver: any, asMana: boolean = false): P
       animationSpeed: animationOptions.animationSpeed,
       colorReplace: { colors: manaReplaceColors, epsilon: 0.1 }
     };
-    return Image.addOneOffAnimation(imageHaver, 'spell-effects/potionPickup', {}, options);
+    return Image.addOneOffAnimation(imageHaver, 'potionPickup', {}, options);
   } else {
-    return Image.addOneOffAnimation(imageHaver, 'spell-effects/potionPickup', {}, animationOptions)
+    return Image.addOneOffAnimation(imageHaver, 'potionPickup', {}, animationOptions)
   }
 }

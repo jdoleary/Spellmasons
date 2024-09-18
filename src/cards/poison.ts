@@ -14,7 +14,7 @@ import { slowCardId } from './slow';
 
 export const poisonCardId = 'poison';
 export const basePoisonStacks = 20;
-const subspriteImageName = 'spell-effects/modifierPoisonDrip';
+const subspriteImageName = 'modifierPoisonDrip';
 const spell: Spell = {
   card: {
     id: poisonCardId,
@@ -26,7 +26,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconPoison.png',
-    animationPath: 'spell-effects/spellPoison',
+    animationPath: 'spellPoison',
     description: ['spell_poison', basePoisonStacks.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
