@@ -11,7 +11,7 @@ const unit: UnitSource = {
   id: urn_ice_id,
   info: {
     description: 'urn ice description',
-    image: 'doodads/urn_ice',
+    image: 'urn_ice',
     subtype: UnitSubType.DOODAD,
   },
   unitProps: {
@@ -28,11 +28,11 @@ const unit: UnitSource = {
     excludeMiniboss: true,
   },
   animations: {
-    idle: 'doodads/urn_ice',
-    hit: 'doodads/urn_ice',
-    attack: 'doodads/urn_ice',
-    die: 'doodads/urn_ice',
-    walk: 'doodads/urn_ice',
+    idle: 'urn_ice',
+    hit: 'urn_ice',
+    attack: 'urn_ice',
+    die: 'urn_ice',
+    walk: 'urn_ice',
   },
   sfx: {
     damage: '',

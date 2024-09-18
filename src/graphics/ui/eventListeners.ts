@@ -1066,7 +1066,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
         if (superMe && overworld.underworld) {
           const numberOfEnemiesKilledNeededForNextDrop = overworld.underworld.getNumberOfEnemyKillsNeededForNextLevelUp() - overworld.underworld.enemiesKilled;
           for (let i = 0; i < numberOfEnemiesKilledNeededForNextDrop; i++) {
-            const fakeUnit = Unit.create('golem', 0, 0, Faction.ENEMY, 'units/gruntIdle', UnitType.AI, UnitSubType.MELEE, {}, overworld.underworld);
+            const fakeUnit = Unit.create('golem', 0, 0, Faction.ENEMY, 'gruntIdle', UnitType.AI, UnitSubType.MELEE, {}, overworld.underworld);
             overworld.underworld.reportEnemyKilled(fakeUnit);
             Unit.cleanup(fakeUnit);
           }

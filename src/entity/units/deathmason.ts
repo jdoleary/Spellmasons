@@ -30,7 +30,7 @@ const deathmason: UnitSource = {
   id: bossmasonUnitId,
   info: {
     description: 'deathmason description',
-    image: 'units/playerIdle',
+    image: 'playerIdle',
     subtype: UnitSubType.SUPPORT_CLASS,
   },
   unitProps: {
@@ -154,11 +154,11 @@ const deathmason: UnitSource = {
     return [];
   },
   animations: {
-    idle: 'units/playerIdle',
-    hit: 'units/playerHit',
-    attack: 'units/playerAttack',
-    die: 'units/playerDeath',
-    walk: 'units/playerWalk',
+    idle: 'playerIdle',
+    hit: 'playerHit',
+    attack: 'playerAttack',
+    die: 'playerDeath',
+    walk: 'playerWalk',
   },
   sfx: {
     death: 'playerUnitDeath',

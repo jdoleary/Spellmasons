@@ -12,7 +12,7 @@ const unit: UnitSource = {
   id: ANCIENT_UNIT_ID,
   info: {
     description: 'ancient description',
-    image: 'units/ancient',
+    image: 'ancient',
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
@@ -32,11 +32,11 @@ const unit: UnitSource = {
     unavailableUntilLevelIndex: 4,
   },
   animations: {
-    idle: 'units/ancient',
-    hit: 'units/ancient',
-    attack: 'units/ancient',
-    die: 'units/ancient_dead',
-    walk: 'units/ancient',
+    idle: 'ancient',
+    hit: 'ancient',
+    attack: 'ancient',
+    die: 'ancient_dead',
+    walk: 'ancient',
   },
   sfx: {
     damage: 'ancientHit',

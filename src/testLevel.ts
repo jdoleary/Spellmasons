@@ -302,1202 +302,1202 @@ export const testLevelSave = {
         },
         "imageOnlyTiles": [
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 0,
                 "y": 0
             },
             {
-                "image": "tiles/water/wallN.png",
+                "image": "water/wallN.png",
                 "x": 64,
                 "y": 0
             },
             {
-                "image": "tiles/water/wallN.png",
+                "image": "water/wallN.png",
                 "x": 128,
                 "y": 0
             },
             {
-                "image": "tiles/water/wallN.png",
+                "image": "water/wallN.png",
                 "x": 192,
                 "y": 0
             },
             {
-                "image": "tiles/water/wallN.png",
+                "image": "water/wallN.png",
                 "x": 256,
                 "y": 0
             },
             {
-                "image": "tiles/water/wallN.png",
+                "image": "water/wallN.png",
                 "x": 320,
                 "y": 0
             },
             {
-                "image": "tiles/water/wallN.png",
+                "image": "water/wallN.png",
                 "x": 384,
                 "y": 0
             },
             {
-                "image": "tiles/water/wallN.png",
+                "image": "water/wallN.png",
                 "x": 448,
                 "y": 0
             },
             {
-                "image": "tiles/water/wallN.png",
+                "image": "water/wallN.png",
                 "x": 512,
                 "y": 0
             },
             {
-                "image": "tiles/water/wallN.png",
+                "image": "water/wallN.png",
                 "x": 576,
                 "y": 0
             },
             {
-                "image": "tiles/water/wallN.png",
+                "image": "water/wallN.png",
                 "x": 640,
                 "y": 0
             },
             {
-                "image": "tiles/water/wallN.png",
+                "image": "water/wallN.png",
                 "x": 704,
                 "y": 0
             },
             {
-                "image": "tiles/water/wallN.png",
+                "image": "water/wallN.png",
                 "x": 768,
                 "y": 0
             },
             {
-                "image": "tiles/water/wallN.png",
+                "image": "water/wallN.png",
                 "x": 832,
                 "y": 0
             },
             {
-                "image": "tiles/water/wallN.png",
+                "image": "water/wallN.png",
                 "x": 896,
                 "y": 0
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 960,
                 "y": 0
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 0,
                 "y": 64
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 64,
                 "y": 64
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 128,
                 "y": 64
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 192,
                 "y": 64
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 256,
                 "y": 64
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 320,
                 "y": 64
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 384,
                 "y": 64
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 448,
                 "y": 64
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 512,
                 "y": 64
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 576,
                 "y": 64
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 640,
                 "y": 64
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 704,
                 "y": 64
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 768,
                 "y": 64
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 832,
                 "y": 64
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 896,
                 "y": 64
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 960,
                 "y": 64
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 0,
                 "y": 128
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 64,
                 "y": 128
             },
             {
-                "image": "tiles/water/liquidCornerSE.png",
+                "image": "water/liquidCornerSE.png",
                 "x": 128,
                 "y": 128
             },
             {
-                "image": "tiles/water/liquidSGroundN.png",
+                "image": "water/liquidSGroundN.png",
                 "x": 192,
                 "y": 128
             },
             {
-                "image": "tiles/water/liquidCornerSW.png",
+                "image": "water/liquidCornerSW.png",
                 "x": 256,
                 "y": 128
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 320,
                 "y": 128
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 384,
                 "y": 128
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 448,
                 "y": 128
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 512,
                 "y": 128
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 576,
                 "y": 128
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 640,
                 "y": 128
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 704,
                 "y": 128
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 768,
                 "y": 128
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 832,
                 "y": 128
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 896,
                 "y": 128
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 960,
                 "y": 128
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 0,
                 "y": 192
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 64,
                 "y": 192
             },
             {
-                "image": "tiles/water/liquidEGroundW.png",
+                "image": "water/liquidEGroundW.png",
                 "x": 128,
                 "y": 192
             },
             {
-                "image": "tiles/water/all_liquid.png",
+                "image": "water/all_liquid.png",
                 "x": 192,
                 "y": 192
             },
             {
-                "image": "tiles/water/liquidWGroundE.png",
+                "image": "water/liquidWGroundE.png",
                 "x": 256,
                 "y": 192
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 320,
                 "y": 192
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 384,
                 "y": 192
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 448,
                 "y": 192
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 512,
                 "y": 192
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 576,
                 "y": 192
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 640,
                 "y": 192
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 704,
                 "y": 192
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 768,
                 "y": 192
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 832,
                 "y": 192
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 896,
                 "y": 192
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 960,
                 "y": 192
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 0,
                 "y": 256
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 64,
                 "y": 256
             },
             {
-                "image": "tiles/water/liquidCornerNE.png",
+                "image": "water/liquidCornerNE.png",
                 "x": 128,
                 "y": 256
             },
             {
-                "image": "tiles/water/liquidNGroundS.png",
+                "image": "water/liquidNGroundS.png",
                 "x": 192,
                 "y": 256
             },
             {
-                "image": "tiles/water/liquidCornerNW.png",
+                "image": "water/liquidCornerNW.png",
                 "x": 256,
                 "y": 256
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 320,
                 "y": 256
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 384,
                 "y": 256
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 448,
                 "y": 256
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 512,
                 "y": 256
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 576,
                 "y": 256
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 640,
                 "y": 256
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 704,
                 "y": 256
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 768,
                 "y": 256
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 832,
                 "y": 256
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 896,
                 "y": 256
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 960,
                 "y": 256
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 0,
                 "y": 320
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 64,
                 "y": 320
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 128,
                 "y": 320
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 192,
                 "y": 320
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 256,
                 "y": 320
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 320,
                 "y": 320
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 384,
                 "y": 320
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 448,
                 "y": 320
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 512,
                 "y": 320
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 576,
                 "y": 320
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 640,
                 "y": 320
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 704,
                 "y": 320
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 768,
                 "y": 320
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 832,
                 "y": 320
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 896,
                 "y": 320
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 960,
                 "y": 320
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 0,
                 "y": 384
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 64,
                 "y": 384
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 128,
                 "y": 384
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 192,
                 "y": 384
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 256,
                 "y": 384
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 320,
                 "y": 384
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 384,
                 "y": 384
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 448,
                 "y": 384
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 512,
                 "y": 384
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 576,
                 "y": 384
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 640,
                 "y": 384
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 704,
                 "y": 384
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 768,
                 "y": 384
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 832,
                 "y": 384
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 896,
                 "y": 384
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 960,
                 "y": 384
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 0,
                 "y": 448
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 64,
                 "y": 448
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 128,
                 "y": 448
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 192,
                 "y": 448
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 256,
                 "y": 448
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 320,
                 "y": 448
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 384,
                 "y": 448
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 448,
                 "y": 448
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 512,
                 "y": 448
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 576,
                 "y": 448
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 640,
                 "y": 448
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 704,
                 "y": 448
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 768,
                 "y": 448
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 832,
                 "y": 448
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 896,
                 "y": 448
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 960,
                 "y": 448
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 0,
                 "y": 512
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 64,
                 "y": 512
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 128,
                 "y": 512
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 192,
                 "y": 512
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 256,
                 "y": 512
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 320,
                 "y": 512
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 384,
                 "y": 512
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 448,
                 "y": 512
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 512,
                 "y": 512
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 576,
                 "y": 512
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 640,
                 "y": 512
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 704,
                 "y": 512
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 768,
                 "y": 512
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 832,
                 "y": 512
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 896,
                 "y": 512
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 960,
                 "y": 512
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 0,
                 "y": 576
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 64,
                 "y": 576
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 128,
                 "y": 576
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 192,
                 "y": 576
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 256,
                 "y": 576
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 320,
                 "y": 576
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 384,
                 "y": 576
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 448,
                 "y": 576
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 512,
                 "y": 576
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 576,
                 "y": 576
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 640,
                 "y": 576
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 704,
                 "y": 576
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 768,
                 "y": 576
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 832,
                 "y": 576
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 896,
                 "y": 576
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 960,
                 "y": 576
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 0,
                 "y": 640
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 64,
                 "y": 640
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 128,
                 "y": 640
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 192,
                 "y": 640
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 256,
                 "y": 640
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 320,
                 "y": 640
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 384,
                 "y": 640
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 448,
                 "y": 640
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 512,
                 "y": 640
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 576,
                 "y": 640
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 640,
                 "y": 640
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 704,
                 "y": 640
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 768,
                 "y": 640
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 832,
                 "y": 640
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 896,
                 "y": 640
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 960,
                 "y": 640
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 0,
                 "y": 704
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 64,
                 "y": 704
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 128,
                 "y": 704
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 192,
                 "y": 704
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 256,
                 "y": 704
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 320,
                 "y": 704
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 384,
                 "y": 704
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 448,
                 "y": 704
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 512,
                 "y": 704
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 576,
                 "y": 704
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 640,
                 "y": 704
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 704,
                 "y": 704
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 768,
                 "y": 704
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 832,
                 "y": 704
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 896,
                 "y": 704
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 960,
                 "y": 704
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 0,
                 "y": 768
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 64,
                 "y": 768
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 128,
                 "y": 768
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 192,
                 "y": 768
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 256,
                 "y": 768
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 320,
                 "y": 768
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 384,
                 "y": 768
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 448,
                 "y": 768
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 512,
                 "y": 768
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 576,
                 "y": 768
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 640,
                 "y": 768
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 704,
                 "y": 768
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 768,
                 "y": 768
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 832,
                 "y": 768
             },
             {
-                "image": "tiles/water/all_ground.png",
+                "image": "water/all_ground.png",
                 "x": 896,
                 "y": 768
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 960,
                 "y": 768
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 0,
                 "y": 832
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 64,
                 "y": 832
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 128,
                 "y": 832
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 192,
                 "y": 832
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 256,
                 "y": 832
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 320,
                 "y": 832
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 384,
                 "y": 832
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 448,
                 "y": 832
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 512,
                 "y": 832
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 576,
                 "y": 832
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 640,
                 "y": 832
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 704,
                 "y": 832
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 768,
                 "y": 832
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 832,
                 "y": 832
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 896,
                 "y": 832
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 960,
                 "y": 832
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 0,
                 "y": 896
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 64,
                 "y": 896
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 128,
                 "y": 896
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 192,
                 "y": 896
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 256,
                 "y": 896
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 320,
                 "y": 896
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 384,
                 "y": 896
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 448,
                 "y": 896
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 512,
                 "y": 896
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 576,
                 "y": 896
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 640,
                 "y": 896
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 704,
                 "y": 896
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 768,
                 "y": 896
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 832,
                 "y": 896
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 896,
                 "y": 896
             },
             {
-                "image": "tiles/water/wall.png",
+                "image": "water/wall.png",
                 "x": 960,
                 "y": 896
             }
@@ -1920,47 +1920,47 @@ export const testLevelSave = {
             },
             "liquid": [
                 {
-                    "image": "tiles/water/all_liquid.png",
+                    "image": "water/all_liquid.png",
                     "x": 128,
                     "y": 128
                 },
                 {
-                    "image": "tiles/water/all_liquid.png",
+                    "image": "water/all_liquid.png",
                     "x": 192,
                     "y": 128
                 },
                 {
-                    "image": "tiles/water/all_liquid.png",
+                    "image": "water/all_liquid.png",
                     "x": 256,
                     "y": 128
                 },
                 {
-                    "image": "tiles/water/all_liquid.png",
+                    "image": "water/all_liquid.png",
                     "x": 128,
                     "y": 192
                 },
                 {
-                    "image": "tiles/water/all_liquid.png",
+                    "image": "water/all_liquid.png",
                     "x": 192,
                     "y": 192
                 },
                 {
-                    "image": "tiles/water/all_liquid.png",
+                    "image": "water/all_liquid.png",
                     "x": 256,
                     "y": 192
                 },
                 {
-                    "image": "tiles/water/all_liquid.png",
+                    "image": "water/all_liquid.png",
                     "x": 128,
                     "y": 256
                 },
                 {
-                    "image": "tiles/water/all_liquid.png",
+                    "image": "water/all_liquid.png",
                     "x": 192,
                     "y": 256
                 },
                 {
-                    "image": "tiles/water/all_liquid.png",
+                    "image": "water/all_liquid.png",
                     "x": 256,
                     "y": 256
                 }
@@ -3832,1202 +3832,1202 @@ export const testLevelSave = {
             ],
             "imageOnlyTiles": [
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 0,
                     "y": 0
                 },
                 {
-                    "image": "tiles/water/wallN.png",
+                    "image": "water/wallN.png",
                     "x": 64,
                     "y": 0
                 },
                 {
-                    "image": "tiles/water/wallN.png",
+                    "image": "water/wallN.png",
                     "x": 128,
                     "y": 0
                 },
                 {
-                    "image": "tiles/water/wallN.png",
+                    "image": "water/wallN.png",
                     "x": 192,
                     "y": 0
                 },
                 {
-                    "image": "tiles/water/wallN.png",
+                    "image": "water/wallN.png",
                     "x": 256,
                     "y": 0
                 },
                 {
-                    "image": "tiles/water/wallN.png",
+                    "image": "water/wallN.png",
                     "x": 320,
                     "y": 0
                 },
                 {
-                    "image": "tiles/water/wallN.png",
+                    "image": "water/wallN.png",
                     "x": 384,
                     "y": 0
                 },
                 {
-                    "image": "tiles/water/wallN.png",
+                    "image": "water/wallN.png",
                     "x": 448,
                     "y": 0
                 },
                 {
-                    "image": "tiles/water/wallN.png",
+                    "image": "water/wallN.png",
                     "x": 512,
                     "y": 0
                 },
                 {
-                    "image": "tiles/water/wallN.png",
+                    "image": "water/wallN.png",
                     "x": 576,
                     "y": 0
                 },
                 {
-                    "image": "tiles/water/wallN.png",
+                    "image": "water/wallN.png",
                     "x": 640,
                     "y": 0
                 },
                 {
-                    "image": "tiles/water/wallN.png",
+                    "image": "water/wallN.png",
                     "x": 704,
                     "y": 0
                 },
                 {
-                    "image": "tiles/water/wallN.png",
+                    "image": "water/wallN.png",
                     "x": 768,
                     "y": 0
                 },
                 {
-                    "image": "tiles/water/wallN.png",
+                    "image": "water/wallN.png",
                     "x": 832,
                     "y": 0
                 },
                 {
-                    "image": "tiles/water/wallN.png",
+                    "image": "water/wallN.png",
                     "x": 896,
                     "y": 0
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 960,
                     "y": 0
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 0,
                     "y": 64
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 64,
                     "y": 64
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 128,
                     "y": 64
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 192,
                     "y": 64
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 256,
                     "y": 64
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 320,
                     "y": 64
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 384,
                     "y": 64
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 448,
                     "y": 64
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 512,
                     "y": 64
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 576,
                     "y": 64
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 640,
                     "y": 64
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 704,
                     "y": 64
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 768,
                     "y": 64
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 832,
                     "y": 64
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 896,
                     "y": 64
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 960,
                     "y": 64
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 0,
                     "y": 128
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 64,
                     "y": 128
                 },
                 {
-                    "image": "tiles/water/liquidCornerSE.png",
+                    "image": "water/liquidCornerSE.png",
                     "x": 128,
                     "y": 128
                 },
                 {
-                    "image": "tiles/water/liquidSGroundN.png",
+                    "image": "water/liquidSGroundN.png",
                     "x": 192,
                     "y": 128
                 },
                 {
-                    "image": "tiles/water/liquidCornerSW.png",
+                    "image": "water/liquidCornerSW.png",
                     "x": 256,
                     "y": 128
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 320,
                     "y": 128
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 384,
                     "y": 128
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 448,
                     "y": 128
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 512,
                     "y": 128
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 576,
                     "y": 128
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 640,
                     "y": 128
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 704,
                     "y": 128
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 768,
                     "y": 128
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 832,
                     "y": 128
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 896,
                     "y": 128
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 960,
                     "y": 128
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 0,
                     "y": 192
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 64,
                     "y": 192
                 },
                 {
-                    "image": "tiles/water/liquidEGroundW.png",
+                    "image": "water/liquidEGroundW.png",
                     "x": 128,
                     "y": 192
                 },
                 {
-                    "image": "tiles/water/all_liquid.png",
+                    "image": "water/all_liquid.png",
                     "x": 192,
                     "y": 192
                 },
                 {
-                    "image": "tiles/water/liquidWGroundE.png",
+                    "image": "water/liquidWGroundE.png",
                     "x": 256,
                     "y": 192
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 320,
                     "y": 192
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 384,
                     "y": 192
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 448,
                     "y": 192
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 512,
                     "y": 192
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 576,
                     "y": 192
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 640,
                     "y": 192
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 704,
                     "y": 192
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 768,
                     "y": 192
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 832,
                     "y": 192
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 896,
                     "y": 192
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 960,
                     "y": 192
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 0,
                     "y": 256
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 64,
                     "y": 256
                 },
                 {
-                    "image": "tiles/water/liquidCornerNE.png",
+                    "image": "water/liquidCornerNE.png",
                     "x": 128,
                     "y": 256
                 },
                 {
-                    "image": "tiles/water/liquidNGroundS.png",
+                    "image": "water/liquidNGroundS.png",
                     "x": 192,
                     "y": 256
                 },
                 {
-                    "image": "tiles/water/liquidCornerNW.png",
+                    "image": "water/liquidCornerNW.png",
                     "x": 256,
                     "y": 256
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 320,
                     "y": 256
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 384,
                     "y": 256
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 448,
                     "y": 256
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 512,
                     "y": 256
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 576,
                     "y": 256
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 640,
                     "y": 256
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 704,
                     "y": 256
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 768,
                     "y": 256
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 832,
                     "y": 256
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 896,
                     "y": 256
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 960,
                     "y": 256
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 0,
                     "y": 320
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 64,
                     "y": 320
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 128,
                     "y": 320
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 192,
                     "y": 320
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 256,
                     "y": 320
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 320,
                     "y": 320
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 384,
                     "y": 320
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 448,
                     "y": 320
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 512,
                     "y": 320
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 576,
                     "y": 320
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 640,
                     "y": 320
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 704,
                     "y": 320
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 768,
                     "y": 320
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 832,
                     "y": 320
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 896,
                     "y": 320
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 960,
                     "y": 320
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 0,
                     "y": 384
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 64,
                     "y": 384
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 128,
                     "y": 384
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 192,
                     "y": 384
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 256,
                     "y": 384
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 320,
                     "y": 384
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 384,
                     "y": 384
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 448,
                     "y": 384
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 512,
                     "y": 384
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 576,
                     "y": 384
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 640,
                     "y": 384
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 704,
                     "y": 384
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 768,
                     "y": 384
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 832,
                     "y": 384
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 896,
                     "y": 384
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 960,
                     "y": 384
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 0,
                     "y": 448
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 64,
                     "y": 448
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 128,
                     "y": 448
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 192,
                     "y": 448
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 256,
                     "y": 448
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 320,
                     "y": 448
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 384,
                     "y": 448
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 448,
                     "y": 448
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 512,
                     "y": 448
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 576,
                     "y": 448
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 640,
                     "y": 448
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 704,
                     "y": 448
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 768,
                     "y": 448
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 832,
                     "y": 448
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 896,
                     "y": 448
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 960,
                     "y": 448
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 0,
                     "y": 512
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 64,
                     "y": 512
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 128,
                     "y": 512
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 192,
                     "y": 512
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 256,
                     "y": 512
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 320,
                     "y": 512
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 384,
                     "y": 512
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 448,
                     "y": 512
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 512,
                     "y": 512
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 576,
                     "y": 512
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 640,
                     "y": 512
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 704,
                     "y": 512
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 768,
                     "y": 512
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 832,
                     "y": 512
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 896,
                     "y": 512
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 960,
                     "y": 512
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 0,
                     "y": 576
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 64,
                     "y": 576
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 128,
                     "y": 576
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 192,
                     "y": 576
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 256,
                     "y": 576
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 320,
                     "y": 576
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 384,
                     "y": 576
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 448,
                     "y": 576
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 512,
                     "y": 576
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 576,
                     "y": 576
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 640,
                     "y": 576
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 704,
                     "y": 576
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 768,
                     "y": 576
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 832,
                     "y": 576
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 896,
                     "y": 576
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 960,
                     "y": 576
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 0,
                     "y": 640
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 64,
                     "y": 640
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 128,
                     "y": 640
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 192,
                     "y": 640
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 256,
                     "y": 640
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 320,
                     "y": 640
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 384,
                     "y": 640
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 448,
                     "y": 640
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 512,
                     "y": 640
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 576,
                     "y": 640
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 640,
                     "y": 640
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 704,
                     "y": 640
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 768,
                     "y": 640
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 832,
                     "y": 640
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 896,
                     "y": 640
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 960,
                     "y": 640
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 0,
                     "y": 704
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 64,
                     "y": 704
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 128,
                     "y": 704
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 192,
                     "y": 704
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 256,
                     "y": 704
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 320,
                     "y": 704
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 384,
                     "y": 704
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 448,
                     "y": 704
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 512,
                     "y": 704
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 576,
                     "y": 704
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 640,
                     "y": 704
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 704,
                     "y": 704
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 768,
                     "y": 704
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 832,
                     "y": 704
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 896,
                     "y": 704
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 960,
                     "y": 704
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 0,
                     "y": 768
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 64,
                     "y": 768
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 128,
                     "y": 768
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 192,
                     "y": 768
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 256,
                     "y": 768
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 320,
                     "y": 768
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 384,
                     "y": 768
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 448,
                     "y": 768
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 512,
                     "y": 768
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 576,
                     "y": 768
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 640,
                     "y": 768
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 704,
                     "y": 768
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 768,
                     "y": 768
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 832,
                     "y": 768
                 },
                 {
-                    "image": "tiles/water/all_ground.png",
+                    "image": "water/all_ground.png",
                     "x": 896,
                     "y": 768
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 960,
                     "y": 768
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 0,
                     "y": 832
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 64,
                     "y": 832
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 128,
                     "y": 832
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 192,
                     "y": 832
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 256,
                     "y": 832
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 320,
                     "y": 832
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 384,
                     "y": 832
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 448,
                     "y": 832
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 512,
                     "y": 832
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 576,
                     "y": 832
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 640,
                     "y": 832
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 704,
                     "y": 832
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 768,
                     "y": 832
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 832,
                     "y": 832
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 896,
                     "y": 832
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 960,
                     "y": 832
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 0,
                     "y": 896
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 64,
                     "y": 896
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 128,
                     "y": 896
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 192,
                     "y": 896
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 256,
                     "y": 896
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 320,
                     "y": 896
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 384,
                     "y": 896
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 448,
                     "y": 896
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 512,
                     "y": 896
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 576,
                     "y": 896
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 640,
                     "y": 896
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 704,
                     "y": 896
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 768,
                     "y": 896
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 832,
                     "y": 896
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 896,
                     "y": 896
                 },
                 {
-                    "image": "tiles/water/wall.png",
+                    "image": "water/wall.png",
                     "x": 960,
                     "y": 896
                 }
@@ -5037,7 +5037,7 @@ export const testLevelSave = {
                 {
                     "index": 0,
                     "coord": {
-                        "image": "tiles/water/all_ground.png",
+                        "image": "water/all_ground.png",
                         "x": 128,
                         "y": 576
                     }
@@ -5045,7 +5045,7 @@ export const testLevelSave = {
                 {
                     "index": 0,
                     "coord": {
-                        "image": "tiles/water/all_ground.png",
+                        "image": "water/all_ground.png",
                         "x": 640,
                         "y": 192
                     }
@@ -5053,7 +5053,7 @@ export const testLevelSave = {
                 {
                     "index": 5,
                     "coord": {
-                        "image": "tiles/water/all_ground.png",
+                        "image": "water/all_ground.png",
                         "x": 832,
                         "y": 576
                     }
@@ -5061,7 +5061,7 @@ export const testLevelSave = {
                 {
                     "index": 6,
                     "coord": {
-                        "image": "tiles/water/all_ground.png",
+                        "image": "water/all_ground.png",
                         "x": 320,
                         "y": 512
                     }
@@ -5071,7 +5071,7 @@ export const testLevelSave = {
                 {
                     "id": "archer",
                     "coord": {
-                        "image": "tiles/water/all_ground.png",
+                        "image": "water/all_ground.png",
                         "x": 768,
                         "y": 192
                     },
@@ -5080,7 +5080,7 @@ export const testLevelSave = {
                 {
                     "id": "golem",
                     "coord": {
-                        "image": "tiles/water/all_ground.png",
+                        "image": "water/all_ground.png",
                         "x": 512,
                         "y": 320
                     },
@@ -5089,7 +5089,7 @@ export const testLevelSave = {
                 {
                     "id": "archer",
                     "coord": {
-                        "image": "tiles/water/all_ground.png",
+                        "image": "water/all_ground.png",
                         "x": 320,
                         "y": 704
                     },
@@ -5210,12 +5210,12 @@ export const testLevelSave = {
                             "x": 1,
                             "y": 1
                         },
-                        "imagePath": "units/playerIdle",
+                        "imagePath": "playerIdle",
                         "loop": true,
                         "children": []
                     }
                 },
-                "defaultImagePath": "units/playerIdle",
+                "defaultImagePath": "playerIdle",
                 "shaderUniforms": {
                     "all_red": {
                         "alpha": 0
@@ -5276,12 +5276,12 @@ export const testLevelSave = {
                         "x": 1,
                         "y": 1
                     },
-                    "imagePath": "units/playerIdle",
+                    "imagePath": "playerIdle",
                     "loop": true,
                     "children": []
                 }
             },
-            "defaultImagePath": "units/playerIdle",
+            "defaultImagePath": "playerIdle",
             "shaderUniforms": {
                 "all_red": {
                     "alpha": 0

@@ -13,7 +13,7 @@ const unit: UnitSource = {
   id: ARCHER_ID,
   info: {
     description: 'archer description',
-    image: 'units/archerIdle',
+    image: 'archerIdle',
     subtype: UnitSubType.RANGED_LOS,
   },
   unitProps: {
@@ -28,11 +28,11 @@ const unit: UnitSource = {
     unavailableUntilLevelIndex: 0,
   },
   animations: {
-    idle: 'units/archerIdle',
-    hit: 'units/archerHit',
-    attack: 'units/archerAttack',
-    die: 'units/archerDeath',
-    walk: 'units/archerWalk',
+    idle: 'archerIdle',
+    hit: 'archerHit',
+    attack: 'archerAttack',
+    die: 'archerDeath',
+    walk: 'archerWalk',
   },
   sfx: {
     damage: 'archerHurt',

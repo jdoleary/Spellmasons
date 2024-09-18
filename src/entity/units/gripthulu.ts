@@ -16,7 +16,7 @@ const unit: UnitSource = {
   id: gripthulu_id,
   info: {
     description: 'gripthulu copy',
-    image: 'units/poisIdle',
+    image: 'poisIdle',
     subtype: UnitSubType.SPECIAL_LOS,
   },
   unitProps: {
@@ -34,11 +34,11 @@ const unit: UnitSource = {
     unavailableUntilLevelIndex: 7,
   },
   animations: {
-    idle: 'units/poisIdle',
-    hit: 'units/poisHit',
-    attack: 'units/poisAttack',
-    die: 'units/poisDeath',
-    walk: 'units/poisWalk',
+    idle: 'poisIdle',
+    hit: 'poisHit',
+    attack: 'poisAttack',
+    die: 'poisDeath',
+    walk: 'poisWalk',
   },
   sfx: {
     damage: 'poisonerHurt',

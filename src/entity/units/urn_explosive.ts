@@ -14,7 +14,7 @@ const unit: UnitSource = {
   id: urn_explosive_id,
   info: {
     description: 'urn explosive description',
-    image: 'doodads/urn_explosive',
+    image: 'urn_explosive',
     subtype: UnitSubType.DOODAD,
   },
   unitProps: {
@@ -31,11 +31,11 @@ const unit: UnitSource = {
     excludeMiniboss: true,
   },
   animations: {
-    idle: 'doodads/urn_explosive',
-    hit: 'doodads/urn_explosive',
-    attack: 'doodads/urn_explosive',
-    die: 'doodads/urn_explosive',
-    walk: 'doodads/urn_explosive',
+    idle: 'urn_explosive',
+    hit: 'urn_explosive',
+    attack: 'urn_explosive',
+    die: 'urn_explosive',
+    walk: 'urn_explosive',
   },
   sfx: {
     damage: '',

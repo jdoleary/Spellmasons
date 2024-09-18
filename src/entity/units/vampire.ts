@@ -13,7 +13,7 @@ const unit: UnitSource = {
   id: VAMPIRE_ID,
   info: {
     description: 'vampire_copy',
-    image: 'units/vampire/vampireIdle',
+    image: 'vampire/vampireIdle',
     subtype: UnitSubType.MELEE,
   },
   unitProps: {
@@ -28,11 +28,11 @@ const unit: UnitSource = {
     unavailableUntilLevelIndex: 5,
   },
   animations: {
-    idle: 'units/vampire/vampireIdle',
-    hit: 'units/vampire/vampireHit',
-    attack: 'units/vampire/vampireAttack',
-    die: 'units/vampire/vampireDeath',
-    walk: 'units/vampire/vampireWalk',
+    idle: 'vampire/vampireIdle',
+    hit: 'vampire/vampireHit',
+    attack: 'vampire/vampireAttack',
+    die: 'vampire/vampireDeath',
+    walk: 'vampire/vampireWalk',
   },
   sfx: {
     damage: 'vampireHurt',

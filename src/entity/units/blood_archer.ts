@@ -15,7 +15,7 @@ const unit: UnitSource = {
   id: BLOOD_ARCHER_ID,
   info: {
     description: ['blood_archer_copy', NUMBER_OF_UNITS_BLOOD_ARCHER_CAN_ATTACK.toString(), NUMBER_OF_UNITS_MINIBOSS_BLOOD_ARCHER_CAN_ATTACK.toString()],
-    image: 'units/blood_archer/archerIdle',
+    image: 'blood_archer/archerIdle',
     subtype: UnitSubType.RANGED_LOS,
   },
   unitProps: {
@@ -31,11 +31,11 @@ const unit: UnitSource = {
     unavailableUntilLevelIndex: 6,
   },
   animations: {
-    idle: 'units/blood_archer/archerIdle',
-    hit: 'units/blood_archer/archerHit',
-    attack: 'units/blood_archer/archerAttack',
-    die: 'units/blood_archer/archerDeath',
-    walk: 'units/blood_archer/archerWalk',
+    idle: 'blood_archer/archerIdle',
+    hit: 'blood_archer/archerHit',
+    attack: 'blood_archer/archerAttack',
+    die: 'blood_archer/archerDeath',
+    walk: 'blood_archer/archerWalk',
   },
   sfx: {
     damage: 'archerHurt',

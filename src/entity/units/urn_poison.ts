@@ -12,7 +12,7 @@ const urnPoisonSource: UnitSource = {
   id: urn_poison_id,
   info: {
     description: 'urn poison description',
-    image: 'doodads/urn_poison',
+    image: 'urn_poison',
     subtype: UnitSubType.DOODAD,
   },
   unitProps: {
@@ -29,11 +29,11 @@ const urnPoisonSource: UnitSource = {
     excludeMiniboss: true,
   },
   animations: {
-    idle: 'doodads/urn_poison',
-    hit: 'doodads/urn_poison',
-    attack: 'doodads/urn_poison',
-    die: 'doodads/urn_poison',
-    walk: 'doodads/urn_poison',
+    idle: 'urn_poison',
+    hit: 'urn_poison',
+    attack: 'urn_poison',
+    die: 'urn_poison',
+    walk: 'urn_poison',
   },
   sfx: {
     damage: '',

@@ -600,7 +600,7 @@ export function syncronize(unitSerialized: IUnitSerialized, originalUnit: IUnit)
 export function changeToDieSprite(unit: IUnit) {
   Image.changeSprite(
     unit.image,
-    globalThis.noGore ? 'units/tombstone' :
+    globalThis.noGore ? 'tombstone' :
       unit.animations.die,
     containerUnits,
     // DieSprite intentionally stops animating when it is complete, therefore
