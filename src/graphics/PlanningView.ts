@@ -643,10 +643,15 @@ export async function runPredictions(underworld: Underworld) {
 // but only to process a few units (a chunk) at a time
 // and it restarts explicitly when something changes.
 export function predictAIActions(underworld: Underworld, restartChunks: boolean) {
+  // Optimization: if predictAIActions is invoked with restartChunks, but
+  // it is still processing, exit early so it will keep processing until finished.
+  // This ensures the attentionMarkers don't just render the first chunk over and over
   if (restartChunks && globalThis.currentChunk > 0) {
     // Don't restart until previous is finished processing
     return;
   }
+  // If all chunks have finished processing but we're not starting processing over,
+  // abort.
   if (!restartChunks && globalThis.currentChunk === -1) {
     // Done but not restarting
     return;
@@ -666,7 +671,7 @@ export function predictAIActions(underworld: Underworld, restartChunks: boolean)
   // Allies, Bloat/Effects, Debilitate/Damage Modifiers
   // So may sometimes lead to false positives/negatives
 
-  // Optimized: This function is FPS heavy
+  // Optimized: This function is FPS heavy.  See "chunks" / "chunking strategy"
   let cachedTargets = underworld.getSmartTargets(aiUnits, restartChunks);
 
   for (let u of aiUnits) {

@@ -51,3 +51,4 @@ globalThis.monitorFPS = () => {
   }
 
 }
+monitorFPS();

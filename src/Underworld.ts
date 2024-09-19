@@ -3643,7 +3643,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       globalThis.currentChunk = 0;
     }
 
+    // Optimization, search for "chunks" / "chunking strategy" to learn more
     let startChunk = globalThis.currentChunk || 0;
+    // Optimization, search for "chunks" / "chunking strategy" to learn more
     let counter = 0;
 
     const cachedTargets: { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } = {};
@@ -3651,11 +3653,15 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       const readyToTakeTurnUnits = units.filter(u => Unit.canAct(u) && subTypes.includes(u.unitSubType));
       // Loop through planned unit actions for smart targeting
       for (let u of readyToTakeTurnUnits) {
+        // Optimization; count how many units have been processed
         counter++;
+        // Optimization; if the counter hasn't yet reached the currentChunk
+        // keep going, don't reprocess units at the beginning of the array
         if (!skipChunking && counter < globalThis.currentChunk) {
           continue;
         }
-        if (!skipChunking && (globalThis.currentChunk || 0) >= startChunk + config.ChunkSize) {
+        // Optimization; Once we have processed config.ChunkSize, return what has been cached so far.
+        if (!skipChunking && (globalThis.currentChunk || 0) >= startChunk + config.getSmartTargetsChunkSize) {
           return cachedTargets;
         }
         const unitSource = allUnits[u.unitSourceId];
@@ -3681,11 +3687,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             }
           }
         }
+        // Optimization; Increment the currentChunk (one per unit processed)
         globalThis.currentChunk = (globalThis.currentChunk || 0) + 1;
       }
     }
 
-    // Set to -1 when finished
+    // Optimization; Set to -1 to denote that it has finished processing all units
     globalThis.currentChunk = -1;
     return cachedTargets;
   }
