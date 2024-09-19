@@ -147,6 +147,9 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   modifiers: { [key: string]: Modifier };
   // Used for more intelligent AI battles so many unit don't overkill a single unit and leave a bunch of others untouched
   predictedNextTurnDamage: number;
+  // Shows icons above the heads of enemies who will damage you next turn
+  // Larger units need their marker positioned higher, which is why we need scaleY
+  attentionMarker?: { imagePath: string, pos: Vec2, unitSpriteScaleY: number, markerScale: number, removalTimeout?: number };
 }
 // This does not need to be unique to underworld, it just needs to be unique
 let lastPredictionUnitId = 0;

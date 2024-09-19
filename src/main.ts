@@ -55,7 +55,6 @@ globalThis.lobbyPlayerList = [];
 
 globalThis.intentionalDisconnect = false;
 globalThis.playerWalkingPromise = Promise.resolve();
-globalThis.attentionMarkers = [];
 globalThis.resMarkers = [];
 globalThis.isSuperMe = false;
 globalThis.devAutoPickUpgrades = location.href.includes('localhost');

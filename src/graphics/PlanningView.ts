@@ -648,10 +648,8 @@ export function predictAIActions(underworld: Underworld, restartChunks: boolean)
     return;
   }
   if (!restartChunks && globalThis.currentChunk === -1) {
+    // Done but not restarting
     return;
-  }
-  if (restartChunks || globalThis.attentionMarkers === undefined) {
-    globalThis.attentionMarkers = [];
   }
   const aiUnits = underworld.unitsPrediction.filter(u => u.unitType == UnitType.AI);
   // Careful when making enemy predictions:
@@ -673,8 +671,9 @@ export function predictAIActions(underworld: Underworld, restartChunks: boolean)
 
   for (let u of aiUnits) {
     const unitSource = allUnits[u.unitSourceId];
-    if (unitSource) {
-      const { targets, canAttack } = cachedTargets[u.id] || { targets: [], canAttack: false };
+    const thisUnitsCachedTargets = cachedTargets[u.id];
+    if (unitSource && thisUnitsCachedTargets) {
+      const { targets, canAttack } = thisUnitsCachedTargets;
       const pos = clone(u);
       // Exception: Ancients are short,
       // draw their attention marker lower
@@ -686,7 +685,9 @@ export function predictAIActions(underworld: Underworld, restartChunks: boolean)
         if (targets.length) {
           // use u.predictionScale here since we are dealing with prediction units
           // prediction units don't have images, and thus sprite.scale.y
-          globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos, unitSpriteScaleY: u.predictionScale || 1, markerScale: 1 });
+          u.attentionMarker = { imagePath: Unit.subTypeToAttentionMarkerImage(u), pos, unitSpriteScaleY: u.predictionScale || 1, markerScale: 1 };
+        } else {
+          delete u.attentionMarker;
         }
       }
       else {
@@ -694,7 +695,9 @@ export function predictAIActions(underworld: Underworld, restartChunks: boolean)
         if (globalThis.player && targets.includes(globalThis.player.unit) && canAttack) {
           // use u.predictionScale here since we are dealing with prediction units
           // prediction units don't have images, and thus sprite.scale.y
-          globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos, unitSpriteScaleY: u.predictionScale || 1, markerScale: 1 });
+          u.attentionMarker = { imagePath: Unit.subTypeToAttentionMarkerImage(u), pos, unitSpriteScaleY: u.predictionScale || 1, markerScale: 1 };
+        } else {
+          delete u.attentionMarker;
         }
       }
     }

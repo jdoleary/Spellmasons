@@ -1259,7 +1259,7 @@ export default class Underworld {
   // Draw attention markers which show if an NPC will
   // attack you next turn
   drawEnemyAttentionMarkers() {
-    if (!globalThis.attentionMarkers) {
+    if (globalThis.headless) {
       return;
     }
     if (globalThis.isHUDHidden) {
@@ -1267,9 +1267,14 @@ export default class Underworld {
       return;
     }
     // Note: this block must come after updating the camera position
-    for (let marker of globalThis.attentionMarkers) {
-      // Draw Attention Icon to show the enemy will hurt you next turn
-      drawUnitMarker(marker.imagePath, marker.pos, marker.unitSpriteScaleY, marker.markerScale);
+    for (let { predictionCopy } of this.units) {
+      if (predictionCopy) {
+        const marker = predictionCopy.attentionMarker;
+        if (marker) {
+          // Draw Attention Icon to show the enemy will hurt you next turn
+          drawUnitMarker(marker.imagePath, marker.pos, marker.unitSpriteScaleY, marker.markerScale);
+        }
+      }
     }
   }
   drawPlayerThoughts() {
@@ -1395,7 +1400,6 @@ export default class Underworld {
     cleanUpPerkList();
     // Dereference underworld
     this.overworld.underworld = undefined;
-    globalThis.attentionMarkers = [];
     globalThis.resMarkers = [];
     globalThis.numberOfHotseatPlayers = 1;
     forceMoveResolver = undefined;
@@ -2936,7 +2940,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
   async executeNPCTurn(faction: Faction) {
     cleanUpEmitters(true);
-    globalThis.attentionMarkers = [];
 
     console.log('[GAME] Turn Phase\nExecuteNPCTurn', Faction[faction]);
     this.redPortalBehavior(faction);
@@ -3656,6 +3659,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
           return cachedTargets;
         }
         const unitSource = allUnits[u.unitSourceId];
+        // Initialize empty so that prediction units will clear their attentionMarker munless there are active targets
+        cachedTargets[u.id] = { targets: [], canAttack: false };
         if (unitSource) {
           if (unitSource.id == GORU_UNIT_ID) {
             // Special smart targeting for goru
