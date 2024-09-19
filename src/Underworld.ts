@@ -49,7 +49,7 @@ import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
 import Events from './Events';
 import { UnitSource, allUnits } from './entity/units';
-import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, drawUnitMarker, isOutOfBounds, runPredictions, updatePlanningView } from './graphics/PlanningView';
+import { clearSpellEffectProjection, clearTints, drawHealthBarAboveHead, drawUnitMarker, isOutOfBounds, predictAIActions, runPredictions, updatePlanningView } from './graphics/PlanningView';
 import { chooseObjectWithProbability, chooseOneOfSeeded, getUniqueSeedString, getUniqueSeedStringPerPlayer, prng, randFloat, randInt, SeedrandomState, shuffle } from './jmath/rand';
 import { calculateCostForSingleCard } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle } from './jmath/lineSegment';
@@ -1155,6 +1155,7 @@ export default class Underworld {
         }
       }
     }
+    predictAIActions(this, false);
 
     this.queueGameLoop();
   }
@@ -1258,7 +1259,7 @@ export default class Underworld {
   // Draw attention markers which show if an NPC will
   // attack you next turn
   drawEnemyAttentionMarkers() {
-    if (!globalThis.attentionMarkers) {
+    if (globalThis.headless) {
       return;
     }
     if (globalThis.isHUDHidden) {
@@ -1266,9 +1267,14 @@ export default class Underworld {
       return;
     }
     // Note: this block must come after updating the camera position
-    for (let marker of globalThis.attentionMarkers) {
-      // Draw Attention Icon to show the enemy will hurt you next turn
-      drawUnitMarker(marker.imagePath, marker.pos, marker.unitSpriteScaleY, marker.markerScale);
+    for (let { predictionCopy } of this.units) {
+      if (predictionCopy) {
+        const marker = predictionCopy.attentionMarker;
+        if (marker) {
+          // Draw Attention Icon to show the enemy will hurt you next turn
+          drawUnitMarker(marker.imagePath, marker.pos, marker.unitSpriteScaleY, marker.markerScale);
+        }
+      }
     }
   }
   drawPlayerThoughts() {
@@ -1394,7 +1400,6 @@ export default class Underworld {
     cleanUpPerkList();
     // Dereference underworld
     this.overworld.underworld = undefined;
-    globalThis.attentionMarkers = [];
     globalThis.resMarkers = [];
     globalThis.numberOfHotseatPlayers = 1;
     forceMoveResolver = undefined;
@@ -2935,7 +2940,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
   async executeNPCTurn(faction: Faction) {
     cleanUpEmitters(true);
-    globalThis.attentionMarkers = [];
 
     console.log('[GAME] Turn Phase\nExecuteNPCTurn', Faction[faction]);
     this.redPortalBehavior(faction);
@@ -2947,7 +2951,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     // TODO - Define/Control actions and smart targeting
     // in Unit rather than gameLoopUnit, for more versatility?
-    const cachedTargets = this.getSmartTargets(units);
+    const cachedTargets = this.getSmartTargets(units, true, true);
 
     // Ranged units should go before melee units
     for (let subTypes of this.subTypesTurnOrder) {
@@ -3627,18 +3631,42 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   // This also doesn't play well with units that have different actions, such as the Goru
   // Is there a way for us to better predict the enemy turn, in a way that considers
   // the game state and always stays in sync with the actual outcome of combat?
-  getSmartTargets(units: Unit.IUnit[]): { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } {
-    // Clear all units' predictedNextTurnDamage now that is is the next turn
-    for (let u of this.units) {
-      u.predictedNextTurnDamage = 0;
+  // ---
+  // This function costs lots of CPU.  It is optimized with a "chunking" strategy
+  // that calculates targets for a few at a time in chunks rather than doing all at once
+  getSmartTargets(units: Unit.IUnit[], restartChunks: boolean = true, skipChunking: boolean = false): { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } {
+    if (skipChunking || restartChunks) {
+      // Clear all units' predictedNextTurnDamage now that is is the next turn
+      for (let u of this.units) {
+        u.predictedNextTurnDamage = 0;
+      }
+      globalThis.currentChunk = 0;
     }
+
+    // Optimization, search for "chunks" / "chunking strategy" to learn more
+    let startChunk = globalThis.currentChunk || 0;
+    // Optimization, search for "chunks" / "chunking strategy" to learn more
+    let counter = 0;
 
     const cachedTargets: { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } = {};
     for (let subTypes of this.subTypesTurnOrder) {
       const readyToTakeTurnUnits = units.filter(u => Unit.canAct(u) && subTypes.includes(u.unitSubType));
       // Loop through planned unit actions for smart targeting
       for (let u of readyToTakeTurnUnits) {
+        // Optimization; count how many units have been processed
+        counter++;
+        // Optimization; if the counter hasn't yet reached the currentChunk
+        // keep going, don't reprocess units at the beginning of the array
+        if (!skipChunking && counter < globalThis.currentChunk) {
+          continue;
+        }
+        // Optimization; Once we have processed config.ChunkSize, return what has been cached so far.
+        if (!skipChunking && (globalThis.currentChunk || 0) >= startChunk + config.getSmartTargetsChunkSize) {
+          return cachedTargets;
+        }
         const unitSource = allUnits[u.unitSourceId];
+        // Initialize empty so that prediction units will clear their attentionMarker munless there are active targets
+        cachedTargets[u.id] = { targets: [], canAttack: false };
         if (unitSource) {
           if (unitSource.id == GORU_UNIT_ID) {
             // Special smart targeting for goru
@@ -3659,9 +3687,13 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             }
           }
         }
+        // Optimization; Increment the currentChunk (one per unit processed)
+        globalThis.currentChunk = (globalThis.currentChunk || 0) + 1;
       }
     }
 
+    // Optimization; Set to -1 to denote that it has finished processing all units
+    globalThis.currentChunk = -1;
     return cachedTargets;
   }
   canUnitAttackTarget(u: Unit.IUnit, attackTarget?: Unit.IUnit): boolean {

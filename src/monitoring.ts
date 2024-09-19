@@ -47,7 +47,8 @@ globalThis.monitorFPS = () => {
     stats.dom.classList.add('doob-stats');
     document.body?.appendChild(stats.dom);
     // Show the latency panel
-    stats.showPanel(3);
+    stats.showPanel(0);
   }
 
 }
+monitorFPS();
