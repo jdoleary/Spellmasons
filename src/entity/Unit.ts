@@ -302,7 +302,8 @@ export function updateAccessibilityOutline(unit: IUnit, targeted: boolean, outOf
   outlineFilter = unit.image.sprite.filters.find(f => f.__proto__ == OutlineFilter.prototype)
   if (outlineFilter) {
     if (outlineSettings.thickness) {
-      outlineFilter.thickness = outlineSettings.thickness;
+      // +1 because I want the thickness to be between 2-5 because one is way to pencil thin and looks bad
+      outlineFilter.thickness = outlineSettings.thickness + 1;
       outlineFilter.color = outlineSettings.color;
     } else {
       // If thickness is 0, remove the filter:
