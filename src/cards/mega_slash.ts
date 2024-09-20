@@ -19,7 +19,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconMegaSlash.png',
-    animationPath: 'spell-effects/spellHurtCuts',
+    animationPath: 'spellHurtCuts',
     sfx: 'hurt3',
     description: ['spell_slash', damageDone.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {

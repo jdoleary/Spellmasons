@@ -1,5 +1,4 @@
 import * as Unit from '../Unit';
-import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import { createVisualLobbingProjectile } from '../Projectile';
@@ -17,7 +16,7 @@ const unit: UnitSource = {
   id: 'Green Glop',
   info: {
     description: 'green_glop_copy',
-    image: 'units/lobberIdle',
+    image: 'green_glop/lobberIdle',
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
@@ -36,11 +35,11 @@ const unit: UnitSource = {
     unavailableUntilLevelIndex: 7,
   },
   animations: {
-    idle: 'units/lobberIdle',
-    hit: 'units/lobberHit',
-    attack: 'units/lobberAttack',
-    die: 'units/lobberDeath',
-    walk: 'units/lobberWalk',
+    idle: 'green_glop/lobberIdle',
+    hit: 'green_glop/lobberHit',
+    attack: 'green_glop/lobberAttack',
+    die: 'green_glop/lobberDeath',
+    walk: 'green_glop/lobberWalk',
   },
   sfx: {
     damage: 'lobberHurt',
@@ -49,14 +48,6 @@ const unit: UnitSource = {
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     if (unit.image) {
       unit.image.sprite.anchor.y = 0.3;
-    }
-    if (unit.image && unit.image.sprite && unit.image.sprite.filters) {
-      unit.image.sprite.filters.unshift(
-        new MultiColorReplaceFilter(
-          greenGlopColorReplaceColors,
-          0.05
-        )
-      );
     }
   },
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {

@@ -4,14 +4,13 @@ import { meleeAction } from './actions/meleeAction';
 import * as config from '../../config'
 import * as Unit from '../Unit';
 import type Underworld from '../../Underworld';
-import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 
 export const BLOOD_GOLEM_ID = 'Blood Golem';
 const unit: UnitSource = {
   id: BLOOD_GOLEM_ID,
   info: {
     description: 'blood_golem_copy',
-    image: 'units/gruntIdle',
+    image: 'blood_golem/gruntIdle',
     subtype: UnitSubType.MELEE,
   },
   unitProps: {
@@ -27,33 +26,16 @@ const unit: UnitSource = {
     unavailableUntilLevelIndex: 4,
   },
   animations: {
-    idle: 'units/gruntIdle',
-    hit: 'units/gruntHit',
-    attack: 'units/gruntAttack',
-    die: 'units/gruntDeath',
-    walk: 'units/gruntWalk',
+    idle: 'blood_golem/gruntIdle',
+    hit: 'blood_golem/gruntHit',
+    attack: 'blood_golem/gruntAttack',
+    die: 'blood_golem/gruntDeath',
+    walk: 'blood_golem/gruntWalk',
   },
   sfx: {
     // Golem shares hurt sfx with archer intentionally
     damage: 'archerHurt',
     death: 'golemDeath'
-  },
-  init: (unit: Unit.IUnit, underworld: Underworld) => {
-    if (unit.image && unit.image.sprite && unit.image.sprite.filters) {
-      unit.image.sprite.filters.unshift(
-        new MultiColorReplaceFilter(
-          [
-            [0x7c5353, 0x53667c], //skinMedium
-            [0x866262, 0x627386], //skinLight
-            [0x9a7d7d, 0x7089a6], // skin head
-            [0x603232, 0x324860], //skinDark
-            [0x838d9f, 0x802230], //loin cloth
-            [0x583131, 0x1c324b], // mouth opening
-          ],
-          0.01
-        )
-      );
-    }
   },
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     await meleeAction(unit, attackTargets, underworld, canAttackTarget, async (attackTarget: Unit.IUnit) => {

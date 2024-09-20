@@ -14,7 +14,7 @@ const unit: UnitSource = {
   id: MANA_VAMPIRE_ID,
   info: {
     description: ['mana_vampire_copy', manaToSteal.toString()],
-    image: 'units/vampireIdle',
+    image: 'vampireIdle',
     subtype: UnitSubType.MELEE,
   },
   unitProps: {
@@ -32,11 +32,11 @@ const unit: UnitSource = {
     unavailableUntilLevelIndex: 7,
   },
   animations: {
-    idle: 'units/vampireIdle',
-    hit: 'units/vampireHit',
-    attack: 'units/vampireAttack',
-    die: 'units/vampireDeath',
-    walk: 'units/vampireWalk',
+    idle: 'vampireIdle',
+    hit: 'vampireHit',
+    attack: 'vampireAttack',
+    die: 'vampireDeath',
+    walk: 'vampireWalk',
   },
   sfx: {
     damage: 'vampireHurt',

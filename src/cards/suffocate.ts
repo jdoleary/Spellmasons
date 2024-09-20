@@ -86,7 +86,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconSuffocate.png',
-    // animationPath: 'spell-effects/TODO',
+    // animationPath: 'TODO',
     description: 'spell_suffocate',
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
@@ -104,7 +104,7 @@ const spell: Spell = {
     add,
     // init,
     // subsprite: {
-    //   imageName: 'spell-effects/TODO',
+    //   imageName: 'TODO',
     //   alpha: 1.0,
     //   anchor: {
     //     x: 0.6,

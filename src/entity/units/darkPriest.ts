@@ -2,7 +2,6 @@ import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import * as math from '../../jmath/math';
-import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import * as config from '../../config';
 import Underworld from '../../Underworld';
 import { makeDarkPriestAttackParticles } from '../../graphics/ParticleCollection';
@@ -14,7 +13,7 @@ const unit: UnitSource = {
   id: DARK_PRIEST_ID,
   info: {
     description: ['dark_priest_copy', NUMBER_OF_GEYSERS.toString()],
-    image: 'units/priestIdle',
+    image: 'dark_priest/priestIdle',
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
@@ -32,31 +31,15 @@ const unit: UnitSource = {
     unavailableUntilLevelIndex: 8,
   },
   animations: {
-    idle: 'units/priestIdle',
-    hit: 'units/priestHit',
-    attack: 'units/priestAttack',
-    die: 'units/priestDeath',
-    walk: 'units/priestWalk',
+    idle: 'dark_priest/priestIdle',
+    hit: 'dark_priest/priestHit',
+    attack: 'dark_priest/priestAttack',
+    die: 'dark_priest/priestDeath',
+    walk: 'dark_priest/priestWalk',
   },
   sfx: {
     damage: 'priestHurt',
     death: 'priestDeath',
-  },
-  init: (unit: Unit.IUnit, underworld: Underworld) => {
-    if (unit.image && unit.image.sprite && unit.image.sprite.filters) {
-      unit.image.sprite.filters.unshift(
-        new MultiColorReplaceFilter(
-          [
-            [0xfcffc8, 0x705284], // light
-            [0xa6b671, 0x513b5f], // medium
-            [0xbfc280, 0x574067], // thigh
-            [0xe5e8b6, 0x6a4d7d], // face
-            [0x808344, 0x3a2b45], // dark
-          ],
-          0.11
-        )
-      );
-    }
   },
   action: async (unit: Unit.IUnit, attackTargets, underworld: Underworld) => {
     let didAction = false;

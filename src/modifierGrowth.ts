@@ -8,7 +8,7 @@ import { allUnits } from "./entity/units";
 import * as config from './config';
 
 export const growthId = 'Growth';
-const subspriteId = 'spell-effects/growth';
+const subspriteId = 'growth';
 const increase_proportion = 0.2;
 function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
   Image.addSubSprite(unit.image, subspriteId);

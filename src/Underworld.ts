@@ -1802,100 +1802,100 @@ export default class Underworld {
     } } = {
       'blood': {
         baseTiles: [
-          `tiles/${biome}/all_ground_dirt_1.png`,
-          `tiles/${biome}/all_ground_dirt_2.png`,
-          `tiles/${biome}/all_ground_dirt_3.png`,
-          `tiles/${biome}/all_ground_dirt_4.png`,
-          `tiles/${biome}/all_ground_dirt_5.png`,
-          `tiles/${biome}/all_ground_dirt_6.png`,
-          `tiles/${biome}/all_ground_dirt_7.png`,
-          `tiles/${biome}/all_ground_dirt_8.png`,
-          `tiles/${biome}/all_ground_dirt_9.png`,
+          `${biome}/all_ground_dirt_1.png`,
+          `${biome}/all_ground_dirt_2.png`,
+          `${biome}/all_ground_dirt_3.png`,
+          `${biome}/all_ground_dirt_4.png`,
+          `${biome}/all_ground_dirt_5.png`,
+          `${biome}/all_ground_dirt_6.png`,
+          `${biome}/all_ground_dirt_7.png`,
+          `${biome}/all_ground_dirt_8.png`,
+          `${biome}/all_ground_dirt_9.png`,
         ],
         layer2Tiles: [
-          `tiles/${biome}/all_ground_meat_1.png`,
-          `tiles/${biome}/all_ground_meat_2.png`,
-          `tiles/${biome}/all_ground_meat_3.png`,
-          `tiles/${biome}/all_ground_meat_4.png`,
-          `tiles/${biome}/all_ground_meat_5.png`,
-          `tiles/${biome}/all_ground_meat_6.png`,
-          `tiles/${biome}/all_ground_meat_7.png`,
-          `tiles/${biome}/all_ground_meat_8.png`,
-          `tiles/${biome}/all_ground_meat_9.png`,
+          `${biome}/all_ground_meat_1.png`,
+          `${biome}/all_ground_meat_2.png`,
+          `${biome}/all_ground_meat_3.png`,
+          `${biome}/all_ground_meat_4.png`,
+          `${biome}/all_ground_meat_5.png`,
+          `${biome}/all_ground_meat_6.png`,
+          `${biome}/all_ground_meat_7.png`,
+          `${biome}/all_ground_meat_8.png`,
+          `${biome}/all_ground_meat_9.png`,
 
         ],
         layer3Tiles: [
-          `tiles/${biome}/all_ground_moss_1.png`,
-          `tiles/${biome}/all_ground_moss_2.png`,
-          `tiles/${biome}/all_ground_moss_3.png`,
-          `tiles/${biome}/all_ground_moss_4.png`,
-          `tiles/${biome}/all_ground_moss_5.png`,
-          `tiles/${biome}/all_ground_moss_6.png`,
-          `tiles/${biome}/all_ground_moss_7.png`,
-          `tiles/${biome}/all_ground_moss_8.png`,
-          `tiles/${biome}/all_ground_moss_9.png`,
+          `${biome}/all_ground_moss_1.png`,
+          `${biome}/all_ground_moss_2.png`,
+          `${biome}/all_ground_moss_3.png`,
+          `${biome}/all_ground_moss_4.png`,
+          `${biome}/all_ground_moss_5.png`,
+          `${biome}/all_ground_moss_6.png`,
+          `${biome}/all_ground_moss_7.png`,
+          `${biome}/all_ground_moss_8.png`,
+          `${biome}/all_ground_moss_9.png`,
         ],
       },
       'lava': {
         baseTiles: [
-          `tiles/${biome}/all_ground_open_1.png`,
-          `tiles/${biome}/all_ground_open_2.png`,
-          `tiles/${biome}/all_ground_open_3.png`,
-          `tiles/${biome}/all_ground_open_4.png`,
-          `tiles/${biome}/all_ground_open_5.png`,
-          `tiles/${biome}/all_ground_open_6.png`,
-          `tiles/${biome}/all_ground_open_7.png`,
-          `tiles/${biome}/all_ground_open_8.png`,
-          `tiles/${biome}/all_ground_open_9.png`,
+          `${biome}/all_ground_open_1.png`,
+          `${biome}/all_ground_open_2.png`,
+          `${biome}/all_ground_open_3.png`,
+          `${biome}/all_ground_open_4.png`,
+          `${biome}/all_ground_open_5.png`,
+          `${biome}/all_ground_open_6.png`,
+          `${biome}/all_ground_open_7.png`,
+          `${biome}/all_ground_open_8.png`,
+          `${biome}/all_ground_open_9.png`,
         ],
         layer2Tiles: [
-          `tiles/${biome}/all_ground_flower_1.png`,
-          `tiles/${biome}/all_ground_flower_2.png`,
-          `tiles/${biome}/all_ground_flower_3.png`,
-          `tiles/${biome}/all_ground_flower_4.png`,
-          `tiles/${biome}/all_ground_flower_5.png`,
-          `tiles/${biome}/all_ground_flower_6.png`,
-          `tiles/${biome}/all_ground_flower_7.png`,
-          `tiles/${biome}/all_ground_flower_8.png`,
-          `tiles/${biome}/all_ground_flower_9.png`,
+          `${biome}/all_ground_flower_1.png`,
+          `${biome}/all_ground_flower_2.png`,
+          `${biome}/all_ground_flower_3.png`,
+          `${biome}/all_ground_flower_4.png`,
+          `${biome}/all_ground_flower_5.png`,
+          `${biome}/all_ground_flower_6.png`,
+          `${biome}/all_ground_flower_7.png`,
+          `${biome}/all_ground_flower_8.png`,
+          `${biome}/all_ground_flower_9.png`,
         ],
         layer3Tiles: [],
       },
       'water': {
         baseTiles: [
-          `tiles/${biome}/all_ground_soil_1.png`,
-          `tiles/${biome}/all_ground_soil_2.png`,
-          `tiles/${biome}/all_ground_soil_3.png`,
-          `tiles/${biome}/all_ground_soil_4.png`,
-          `tiles/${biome}/all_ground_soil_5.png`,
-          `tiles/${biome}/all_ground_soil_6.png`,
-          `tiles/${biome}/all_ground_soil_7.png`,
-          `tiles/${biome}/all_ground_soil_8.png`,
-          `tiles/${biome}/all_ground_soil_9.png`,
+          `${biome}/all_ground_soil_1.png`,
+          `${biome}/all_ground_soil_2.png`,
+          `${biome}/all_ground_soil_3.png`,
+          `${biome}/all_ground_soil_4.png`,
+          `${biome}/all_ground_soil_5.png`,
+          `${biome}/all_ground_soil_6.png`,
+          `${biome}/all_ground_soil_7.png`,
+          `${biome}/all_ground_soil_8.png`,
+          `${biome}/all_ground_soil_9.png`,
         ],
         layer2Tiles: [
-          `tiles/${biome}/all_ground_brick_1.png`,
-          `tiles/${biome}/all_ground_brick_2.png`,
-          `tiles/${biome}/all_ground_brick_3.png`,
-          `tiles/${biome}/all_ground_brick_4.png`,
-          `tiles/${biome}/all_ground_brick_5.png`,
-          `tiles/${biome}/all_ground_brick_6.png`,
-          `tiles/${biome}/all_ground_brick_7.png`,
-          `tiles/${biome}/all_ground_brick_8.png`,
+          `${biome}/all_ground_brick_1.png`,
+          `${biome}/all_ground_brick_2.png`,
+          `${biome}/all_ground_brick_3.png`,
+          `${biome}/all_ground_brick_4.png`,
+          `${biome}/all_ground_brick_5.png`,
+          `${biome}/all_ground_brick_6.png`,
+          `${biome}/all_ground_brick_7.png`,
+          `${biome}/all_ground_brick_8.png`,
           // brick_9 has too many bricks and is obviously
           // a "square tile" so I'm omitting it from possible tiles
-          // `tiles/${biome}/all_ground_brick_9.png`,
+          // `${biome}/all_ground_brick_9.png`,
         ],
         layer3Tiles: [
-          `tiles/${biome}/all_ground_shroom_1.png`,
-          `tiles/${biome}/all_ground_shroom_2.png`,
-          `tiles/${biome}/all_ground_shroom_3.png`,
-          `tiles/${biome}/all_ground_shroom_4.png`,
-          `tiles/${biome}/all_ground_shroom_5.png`,
-          `tiles/${biome}/all_ground_shroom_6.png`,
-          `tiles/${biome}/all_ground_shroom_7.png`,
-          `tiles/${biome}/all_ground_shroom_8.png`,
-          `tiles/${biome}/all_ground_shroom_9.png`,
+          `${biome}/all_ground_shroom_1.png`,
+          `${biome}/all_ground_shroom_2.png`,
+          `${biome}/all_ground_shroom_3.png`,
+          `${biome}/all_ground_shroom_4.png`,
+          `${biome}/all_ground_shroom_5.png`,
+          `${biome}/all_ground_shroom_6.png`,
+          `${biome}/all_ground_shroom_7.png`,
+          `${biome}/all_ground_shroom_8.png`,
+          `${biome}/all_ground_shroom_9.png`,
         ],
       },
       'ghost': {
@@ -1904,7 +1904,7 @@ export default class Underworld {
         layer3Tiles: [],
       },
     }
-    const baseTile = `tiles/${biome}/all_ground.png`;
+    const baseTile = `${biome}/all_ground.png`;
     const baseTiles: { path: string, probability: number }[] = [
       { path: baseTile, probability: 20 },
       ...layers[biome].baseTiles.map(path => ({ path, probability: 1 }))
@@ -1949,9 +1949,9 @@ export default class Underworld {
       return;
     }
     // Then lay down wall tiles on top of them
-    for (let tile of this.imageOnlyTiles.filter(t => !t.image.includes(`tiles/${this.lastLevelCreated?.biome}/all_ground`))) {
+    for (let tile of this.imageOnlyTiles.filter(t => !t.image.includes(`${this.lastLevelCreated?.biome}/all_ground`))) {
       if (tile.image) {
-        if (tile.image == `tiles/${this.lastLevelCreated.biome}/all_liquid.png`) {
+        if (tile.image == `${this.lastLevelCreated.biome}/all_liquid.png`) {
           // liquid tiles are rendered with a shader
           continue;
         }
@@ -1967,7 +1967,7 @@ export default class Underworld {
         }
         // Add wall shadows
         if (tile.image.endsWith('wallN.png')) {
-          const sprite = addPixiSprite('tiles/wallShadow.png', containerBoard);
+          const sprite = addPixiSprite('wallShadow.png', containerBoard);
           if (sprite) {
             sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
             // Place directly below the wall

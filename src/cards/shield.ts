@@ -10,7 +10,7 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { getOrInitModifier } from './util';
 
 export const shieldId = 'shield';
-export const modifierImagePath = 'spell-effects/modifierShield.png';
+export const modifierImagePath = 'modifierShield.png';
 const shieldToAdd = 30;
 const spell: Spell = {
   card: {
@@ -23,7 +23,7 @@ const spell: Spell = {
     expenseScaling: 3,
     probability: probabilityMap[CardRarity.SPECIAL],
     thumbnail: 'spellIconShield.png',
-    animationPath: 'spell-effects/spellShield',
+    animationPath: 'spellShield',
     description: ['spell_shield', shieldToAdd.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units

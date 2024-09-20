@@ -10,7 +10,7 @@ import Underworld from '../Underworld';
 export const slashCardId = 'Slash';
 const damageDone = 20;
 const delayBetweenAnimationsStart = 400;
-const animationPath = 'spell-effects/spellHurtCuts';
+const animationPath = 'spellHurtCuts';
 const spell: Spell = {
   card: {
     id: slashCardId,

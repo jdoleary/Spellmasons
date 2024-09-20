@@ -17,7 +17,7 @@ function calculateRendDamage(stack: number): number {
   return damage * 10;
 }
 const spellRendAnimationHeight = 10;
-const animationPath = 'spell-effects/spellRend';
+const animationPath = 'spellRend';
 const spell: Spell = {
   card: {
     id: rendCardId,

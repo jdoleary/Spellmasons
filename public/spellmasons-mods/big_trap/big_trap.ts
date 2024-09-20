@@ -11,7 +11,7 @@ const { addPixiSpriteAnimated, containerUnits } = PixiUtils;
 
 const spike_damage = 80;
 const huge_trap: IPickupSource = {
-    imagePath: 'pickups/trap',
+    imagePath: 'trap',
     animationSpeed: -config.DEFAULT_ANIMATION_SPEED,
     playerOnly: false,
     name: 'Huge Trap',
@@ -25,7 +25,7 @@ const huge_trap: IPickupSource = {
         if (unit) {
             // Play trap spring animation
             if (!prediction) {
-                const animationSprite = addPixiSpriteAnimated('pickups/trapAttack', containerUnits, {
+                const animationSprite = addPixiSpriteAnimated('trapAttack', containerUnits, {
                     loop: false,
                     animationSpeed: 0.2,
                     onComplete: () => {
@@ -40,7 +40,7 @@ const huge_trap: IPickupSource = {
                     animationSprite.x = pickup.x;
                     animationSprite.y = pickup.y;
                 }
-                const animationSprite2 = addPixiSpriteAnimated('pickups/trapAttackMagic', containerUnits, {
+                const animationSprite2 = addPixiSpriteAnimated('trapAttackMagic', containerUnits, {
                     loop: false,
                     animationSpeed: 0.2,
                     onComplete: () => {

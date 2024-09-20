@@ -43,7 +43,7 @@ const spell: Spell = {
             healthTrailPromises.push(makeManaTrail(unit, caster, underworld, '#ff6767n', '#ff0000', targets.length * quantity * NUMBER_OF_ANIMATED_TRAILS).then(() => {
               if (!prediction) {
                 playDefaultSpellSFX(card, prediction);
-                Image.addOneOffAnimation(state.casterUnit, 'spell-effects/potionPickup', {}, { loop: false });
+                Image.addOneOffAnimation(state.casterUnit, 'potionPickup', {}, { loop: false });
                 explain(EXPLAIN_OVERFILL);
               }
             })

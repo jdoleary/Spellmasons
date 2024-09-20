@@ -15,7 +15,7 @@ const unit: UnitSource = {
   id: BLOOD_ARCHER_ID,
   info: {
     description: ['blood_archer_copy', NUMBER_OF_UNITS_BLOOD_ARCHER_CAN_ATTACK.toString(), NUMBER_OF_UNITS_MINIBOSS_BLOOD_ARCHER_CAN_ATTACK.toString()],
-    image: 'units/archerIdle',
+    image: 'blood_archer/archerIdle',
     subtype: UnitSubType.RANGED_LOS,
   },
   unitProps: {
@@ -31,31 +31,15 @@ const unit: UnitSource = {
     unavailableUntilLevelIndex: 6,
   },
   animations: {
-    idle: 'units/archerIdle',
-    hit: 'units/archerHit',
-    attack: 'units/archerAttack',
-    die: 'units/archerDeath',
-    walk: 'units/archerWalk',
+    idle: 'blood_archer/archerIdle',
+    hit: 'blood_archer/archerHit',
+    attack: 'blood_archer/archerAttack',
+    die: 'blood_archer/archerDeath',
+    walk: 'blood_archer/archerWalk',
   },
   sfx: {
     damage: 'archerHurt',
     death: 'archerDeath',
-  },
-  init: (unit: Unit.IUnit, underworld: Underworld) => {
-    if (unit.image && unit.image.sprite && unit.image.sprite.filters) {
-      unit.image.sprite.filters.unshift(
-        new MultiColorReplaceFilter(
-          [
-            [0x3fc7c2, 0xc73f53], // feathers 
-            [0x7c5353, 0x53667c], //skinMedium
-            [0x866262, 0x627386], //skinLight
-            [0x603232, 0x324860], //skinDark
-            [0x838d9f, 0x802230], //loin cloth
-          ],
-          0.15
-        )
-      );
-    }
   },
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, _canAttackTarget: boolean) => {
     // Archer just checks attackTarget, not canAttackTarget to know if it can attack because getBestRangedLOSTarget() will return undefined

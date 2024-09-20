@@ -7,7 +7,7 @@ import floatingText from "./graphics/FloatingText";
 import Underworld from './Underworld';
 
 export const slimeId = 'Slime';
-const subspriteId = 'spell-effects/slime';
+const subspriteId = 'slime';
 function addModifierVisuals(unit: Unit.IUnit, underworld: Underworld) {
   Image.addSubSprite(unit.image, subspriteId);
 }

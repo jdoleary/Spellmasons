@@ -92,7 +92,7 @@ const spell: Spell = {
     add,
     remove,
     // subsprite: {
-    //   imageName: 'spell-effects/modifierPoisonDrip',
+    //   imageName: 'modifierPoisonDrip',
     //   alpha: 1.0,
     //   anchor: {
     //     x: 0.6,

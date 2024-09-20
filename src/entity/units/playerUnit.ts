@@ -13,7 +13,7 @@ const playerUnit: UnitSource = {
   id: spellmasonUnitId,
   info: {
     description: 'You and your kin are Spellmasons: mighty wizards that forge magic with nothing but a bit of ingenuity and some mana.',
-    image: 'units/playerIdle',
+    image: 'playerIdle',
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
@@ -29,7 +29,7 @@ const playerUnit: UnitSource = {
       Unit.orient(unit, attackTarget);
       const keyMoment = async () => {
         playSFXKey('hurt');
-        oneOffImage(attackTarget, 'spell-effects/spellHurtCuts', containerSpells);
+        oneOffImage(attackTarget, 'spellHurtCuts', containerSpells);
         Unit.takeDamage({
           unit: attackTarget,
           amount: unit.damage,
@@ -61,11 +61,11 @@ const playerUnit: UnitSource = {
     return [];
   },
   animations: {
-    idle: 'units/playerIdle',
-    hit: 'units/playerHit',
-    attack: 'units/playerAttack',
-    die: 'units/playerDeath',
-    walk: 'units/playerWalk',
+    idle: 'playerIdle',
+    hit: 'playerHit',
+    attack: 'playerAttack',
+    die: 'playerDeath',
+    walk: 'playerWalk',
   },
   sfx: {
     death: 'playerUnitDeath',

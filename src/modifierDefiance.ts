@@ -10,7 +10,7 @@ import * as Image from './graphics/Image';
 export const defianceId = 'Defiance';
 const reductionProportion = 0.02;
 const maxReductionProportion = 0.5;
-const subspriteImageName = 'spell-effects/shield-red.png';
+const subspriteImageName = 'shield-red.png';
 export default function registerdefiance() {
   registerModifiers(defianceId, {
     description: ['defiance_description', Math.floor(reductionProportion * 100).toString()],

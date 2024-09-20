@@ -648,6 +648,7 @@ function loadTextures(): Promise<void> {
       // loader.onLoad.add(a => console.log("Pixi loader onLoad", a)); // called once per loaded file
       // loader.onComplete.add(a => console.log("Pixi loader onComplete")); // called once when the queued resources all load.
       loader.add('sheet1.json');
+      loader.add('sheet2.json');
       loader.onError.add(e => {
         console.error('Pixi loader error', e)
       })

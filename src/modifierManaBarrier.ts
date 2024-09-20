@@ -9,7 +9,7 @@ import type { Sprite } from 'pixi.js';
 
 // Damage is taken from mana before health at [quantity]% effectiveness
 export const manaBarrierId = 'Mana Barrier';
-export const modifierImagePath = 'spell-effects/modifierShield.png';
+export const modifierImagePath = 'modifierShield.png';
 export default function registerManaBarrier() {
   registerModifiers(manaBarrierId, {
     description: ('rune_manabarrier'),

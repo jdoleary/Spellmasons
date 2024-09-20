@@ -25,7 +25,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconEnfeeble.png',
-    animationPath: 'spell-effects/spellEnfeeble',
+    animationPath: 'spellEnfeeble',
     description: ['spell_enfeeble', (statChange).toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units

@@ -22,7 +22,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconDebilitate.png',
-    animationPath: 'spell-effects/spellDebilitate',
+    animationPath: 'spellDebilitate',
     description: ['spell_debilitate', percentDamageIncrease.toString()],
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units

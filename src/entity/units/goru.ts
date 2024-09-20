@@ -31,7 +31,7 @@ const unit: UnitSource = {
   id: GORU_UNIT_ID,
   info: {
     description: 'goru description',
-    image: 'units/guruIdle',
+    image: 'guruIdle',
     subtype: UnitSubType.GORU_BOSS,
   },
   unitProps: {
@@ -52,11 +52,11 @@ const unit: UnitSource = {
     unavailableUntilLevelIndex: 9,
   },
   animations: {
-    idle: 'units/guruIdle',
-    hit: 'units/guruHit',
-    attack: 'units/guruAttack',
-    die: 'units/guruDeath',
-    walk: 'units/guruIdle',
+    idle: 'guruIdle',
+    hit: 'guruHit',
+    attack: 'guruAttack',
+    die: 'guruDeath',
+    walk: 'guruIdle',
   },
   sfx: {
     damage: 'goruHurt',
@@ -119,7 +119,7 @@ const unit: UnitSource = {
           for (const target of corpsesToConsume) {
             // Consume target
             // Adds red overlay effect on target as they get consumed
-            promises.push(new Promise<void>(resolve => oneOffImage(target, 'units/summonerMagic', containerUnits, () => {
+            promises.push(new Promise<void>(resolve => oneOffImage(target, 'summonerMagic', containerUnits, () => {
               // Trail copied from sacrifice.ts
               makeManaTrail(target, unit, underworld, '#ff6767n', '#ff0000', corpsesToConsume.length * 4)
                 .then(() => {
@@ -153,7 +153,7 @@ const unit: UnitSource = {
           Image.setScaleFromModifiers(unit.image, unit.strength);
           // TODO - Red VFX Doesn't scale with Goru sprite size
           // Adds red overlay effect to Goru
-          await new Promise<void>(resolve => oneOffImage(unit, 'units/summonerMagic', containerUnits, resolve));
+          await new Promise<void>(resolve => oneOffImage(unit, 'summonerMagic', containerUnits, resolve));
         }
 
         if (corpsesToExplode.length) {
@@ -364,7 +364,7 @@ const unit: UnitSource = {
                 // Add summoning sickeness so they can't act after they are summoned
                 Unit.addModifier(summonedUnit, summoningSicknessId, underworld, false);
                 // Adds red summon effect
-                promises.push(new Promise<void>(resolve => oneOffImage(target.coords, 'units/summonerMagic', containerUnits, resolve)));
+                promises.push(new Promise<void>(resolve => oneOffImage(target.coords, 'summonerMagic', containerUnits, resolve)));
                 resolve();
               });
             }));

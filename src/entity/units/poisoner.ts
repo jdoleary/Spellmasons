@@ -15,7 +15,7 @@ const unit: UnitSource = {
   id: POISONER_ID,
   info: {
     description: 'poisoner_copy',
-    image: 'units/poisIdle',
+    image: 'poisIdle',
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
@@ -34,11 +34,11 @@ const unit: UnitSource = {
     unavailableUntilLevelIndex: 3,
   },
   animations: {
-    idle: 'units/poisIdle',
-    hit: 'units/poisHit',
-    attack: 'units/poisAttack',
-    die: 'units/poisDeath',
-    walk: 'units/poisWalk',
+    idle: 'poisIdle',
+    hit: 'poisHit',
+    attack: 'poisAttack',
+    die: 'poisDeath',
+    walk: 'poisWalk',
   },
   sfx: {
     damage: 'poisonerHurt',
