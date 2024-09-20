@@ -219,6 +219,8 @@ export function create(
       beingPushed: false,
       predictedNextTurnDamage: 0
     }, sourceUnitProps);
+    // Randomize frame so all created units aren't "idle animating" in perfect unison
+    // it looks more organic
     if (unit.image) {
       unit.image.sprite.gotoAndPlay(randInt(0, unit.image.sprite.totalFrames - 1));
     }
@@ -515,6 +517,11 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
         ? Image.load(unit.image, containerUnits)
         : Image.create({ x: unit.x, y: unit.y }, unit.defaultImagePath, containerUnits),
   };
+  // Randomize frame so all created units aren't "idle animating" in perfect unison
+  // it looks more organic
+  if (loadedunit.image && loadedunit.image.sprite.imagePath === loadedunit.animations.idle) {
+    loadedunit.image.sprite.gotoAndPlay(randInt(0, loadedunit.image.sprite.totalFrames - 1));
+  }
 
   if (!prediction && loadedunit.id > underworld.lastUnitId) {
     underworld.lastUnitId = loadedunit.id;
