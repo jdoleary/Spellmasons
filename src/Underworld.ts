@@ -3650,9 +3650,9 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
 
     const cachedTargets: { [id: number]: { targets: Unit.IUnit[], canAttack: boolean } } = {};
     for (let subTypes of this.subTypesTurnOrder) {
-      const readyToTakeTurnUnits = units.filter(u => Unit.canAct(u) && subTypes.includes(u.unitSubType));
+      const activeTurnUnits = units.filter(u => subTypes.includes(u.unitSubType));
       // Loop through planned unit actions for smart targeting
-      for (let u of readyToTakeTurnUnits) {
+      for (let u of activeTurnUnits) {
         // Optimization; count how many units have been processed
         counter++;
         // Optimization; if the counter hasn't yet reached the currentChunk
@@ -3667,6 +3667,12 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         const unitSource = allUnits[u.unitSourceId];
         // Initialize empty so that prediction units will clear their attentionMarker munless there are active targets
         cachedTargets[u.id] = { targets: [], canAttack: false };
+        if (!Unit.canAct(u)) {
+          // After initializing to canAttack: false, return for units that cannot attack
+          // This is important to ensure that units that cannot attack get no attention marker
+          // whereas if they weren't in cachedTargets at all, they might keep one from previously
+          continue;
+        }
         if (unitSource) {
           if (unitSource.id == GORU_UNIT_ID) {
             // Special smart targeting for goru
