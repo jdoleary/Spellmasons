@@ -110,9 +110,9 @@ import { manaBarrierId } from './modifierManaBarrier';
 import { modifierBasePierceId } from './modifierBasePierce';
 import { modifierBaseRadiusBoostId } from './modifierBaseRadiusBoost';
 import { bountyHunterId } from './modifierBountyHunter';
-import { bountyId, placeRandomBounty } from './modifierBounty';
+import { placeRandomBounty } from './modifierBounty';
 import { heavyImpactsId } from './modifierHeavyImpact';
-import { incrementPresentedRunesIndex } from './jmath/RuneUtil';
+import { OutlineFilter } from '@pixi/filter-outline';
 
 const loopCountLimit = 10000;
 export enum turn_phase {
@@ -282,6 +282,7 @@ export default class Underworld {
     this.random = this.syncronizeRNG(RNGState);
 
     globalThis.spellCasting = false;
+    this.setContainerUnitsFilter();
   }
   // Returns all potentially targetable entities
   // See cards/index.ts's getCurrentTargets() for the function that returns 
@@ -4442,6 +4443,38 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
   }
   updateAccessibilityOutlines() {
     this.units.forEach(u => Unit.updateAccessibilityOutline(u, false));
+    this.setContainerUnitsFilter();
+  }
+  setContainerUnitsFilter() {
+    let isUsingManualUnitOutlines = false;
+    try {
+      (Object.values(globalThis.accessibilityOutline || {})).forEach(x => {
+        for (let type of ['targeted', 'outOfRange', 'regular']) {
+          // @ts-ignore
+          if (x[type].thickness !== 0) {
+            isUsingManualUnitOutlines = true;
+            break;
+          }
+        }
+      })
+    } catch (e) {
+      console.error('Unexpected error evaluating accessibilityOutlines');
+    }
+
+    if (containerUnits) {
+      if (isUsingManualUnitOutlines) {
+        // Disable container unit outlines since outlines are
+        //being manually managed
+        containerUnits.filters = [];
+      } else {
+        // Default to container unit outlines
+        if (!containerUnits.filters) {
+          containerUnits.filters = [];
+        }
+        const outlineFilter = new OutlineFilter(2, 0x000000, 0.1);
+        containerUnits.filters.push(outlineFilter);
+      }
+    }
   }
   // This array remains in the same order for a given player in a given game
   getShuffledRunesForPlayer(player?: Player.IPlayer): ({ key: string } & Cards.Modifiers)[] {

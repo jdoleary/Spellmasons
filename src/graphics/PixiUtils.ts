@@ -40,15 +40,6 @@ export const containerWalls = !globalThis.pixi ? undefined : new globalThis.pixi
 export const containerRadiusUI = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerDoodads = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerUnits = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
-if (containerUnits) {
-  if (!containerUnits.filters) {
-    containerUnits.filters = [];
-  }
-
-  const outlineFilter = new OutlineFilter(2, 0x000000, 0.1);
-  containerUnits.filters.push(outlineFilter);
-
-}
 export const containerSpells = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerProjectiles = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerUI = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
