@@ -1006,7 +1006,9 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
     }
     case MESSAGE_TYPES.ADMIN_COMMAND: {
       const { label } = payload;
-      triggerAdminCommand(label, fromClient, payload)
+      triggerAdminCommand(label, fromClient, payload);
+      // Recalculate attentionMarkers
+      if (overworld.underworld) runPredictions(overworld.underworld);
       break;
     }
     case MESSAGE_TYPES.ADMIN_CHANGE_STAT: {
@@ -1021,6 +1023,8 @@ async function handleOnDataMessage(d: OnDataArgs, overworld: Overworld): Promise
       } else {
         console.error('ADMIN_CHANGE_STAT failed', payload)
       }
+      // Recalculate attentionMarkers
+      if (overworld.underworld) runPredictions(overworld.underworld);
       break;
     }
   }
