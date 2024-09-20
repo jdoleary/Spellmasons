@@ -1267,9 +1267,13 @@ export default class Underworld {
       return;
     }
     // Note: this block must come after updating the camera position
-    for (let { predictionCopy } of this.units) {
-      if (predictionCopy) {
-        const marker = predictionCopy.attentionMarker;
+    // We're iterating unitsPrediction instead of units because attentionMarkers are transient
+    // and stored on the prediction units (which are accurate because they may be forceMoved or killed
+    // or cloned after the predicted spell is cast and so THAT is the unit - the prediction unit - that
+    // we want to show attentionMarkers for)
+    for (let unit of this.unitsPrediction) {
+      if (unit) {
+        const marker = unit.attentionMarker;
         if (marker) {
           // Draw Attention Icon to show the enemy will hurt you next turn
           drawUnitMarker(marker.imagePath, marker.pos, marker.unitSpriteScaleY, marker.markerScale);
