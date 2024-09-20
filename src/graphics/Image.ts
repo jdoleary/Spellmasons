@@ -496,7 +496,7 @@ export function addOneOffAnimation(imageHaver: any, spritePath: string, oneOffOp
       animationSprite.doRemoveWhenPrimaryAnimationChanges = oneOffOptions?.doRemoveWhenPrimaryAnimationChanges || false;
       animationSprite.anchor.set(0.5);
       // exception: lobberProjectile is too high to explode in center
-      if (spritePath == 'projectile/lobberProjectileHit') {
+      if (spritePath == 'lobberProjectileHit') {
         animationSprite.anchor.set(0.5, 0.25);
       }
       if (options?.scale) {

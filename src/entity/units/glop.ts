@@ -58,7 +58,7 @@ const unit: UnitSource = {
         return createVisualLobbingProjectile(
           unit,
           attackTarget,
-          'projectile/lobberProjectile',
+          'lobberProjectile',
         ).then(() => {
           if (attackTarget) {
             Unit.takeDamage({
@@ -68,7 +68,7 @@ const unit: UnitSource = {
               fromVec2: unit,
             }, underworld, false);
             // Add projectile hit animation
-            Image.addOneOffAnimation(attackTarget, 'projectile/lobberProjectileHit');
+            Image.addOneOffAnimation(attackTarget, 'lobberProjectileHit');
           }
         });
 

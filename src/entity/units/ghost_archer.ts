@@ -83,7 +83,7 @@ const unit: UnitSource = {
         flyingProjectilePromises.push(createVisualFlyingProjectile(
           unit,
           firstTarget,
-          'projectile/arrow_ghost',
+          'arrow_ghost',
         ).then(() => {
           Unit.takeDamage({
             unit: firstTarget,

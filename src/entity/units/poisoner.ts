@@ -52,10 +52,10 @@ const unit: UnitSource = {
         await createVisualLobbingProjectile(
           unit,
           chosenUnit,
-          'projectile/poisonerProjectile',
+          'poisonerProjectile',
         ).then(async () => {
           // Add projectile hit animation
-          Image.addOneOffAnimation(chosenUnit, 'projectile/poisonerProjectileHit');
+          Image.addOneOffAnimation(chosenUnit, 'poisonerProjectileHit');
           const cardsIds = [];
           // Casts one stack of poison per damage
           for (let i = 0; i < unit.damage; i++) {

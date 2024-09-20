@@ -65,7 +65,7 @@ const unit: UnitSource = {
                 createVisualLobbingProjectile(
                   unit,
                   attackTarget,
-                  'projectile/lobberProjectile',
+                  'lobberProjectile',
                   {
                     loop: true,
                     colorReplace: {
@@ -81,7 +81,7 @@ const unit: UnitSource = {
                       fromVec2: unit,
                     }, underworld, false);
                     // Add projectile hit animation
-                    Image.addOneOffAnimation(attackTarget, 'projectile/lobberProjectileHit', undefined, {
+                    Image.addOneOffAnimation(attackTarget, 'lobberProjectileHit', undefined, {
                       loop: false,
                       colorReplace: {
                         colors: greenGlopColorReplaceColors, epsilon: 0.2

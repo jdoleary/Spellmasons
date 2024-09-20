@@ -31,7 +31,7 @@ const spell: Spell = {
       if (targets.length) {
         let animationPromise = Promise.resolve();
         for (let unit of targets) {
-          animationPromise = Image.addOneOffAnimation(unit, 'projectile/priestProjectileHit', {}, { loop: false });
+          animationPromise = Image.addOneOffAnimation(unit, 'priestProjectileHit', {}, { loop: false });
         }
         playDefaultSpellSFX(card, prediction);
         // We only need to wait for one of these promises, since they all take the same amount of time to complete

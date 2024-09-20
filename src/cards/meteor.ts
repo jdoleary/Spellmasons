@@ -121,7 +121,7 @@ async function meteorProjectiles(meteorLocations: Vec2[], underworld: Underworld
     velocity = multiply(distanceOffset / meteor.travelTime, velocity);
 
     let image: Image.IImageAnimated | undefined;
-    image = Image.create(startPos, 'projectile/arrow', containerProjectiles)
+    image = Image.create(startPos, 'arrow', containerProjectiles)
     if (image) {
       image.sprite.rotation = Math.atan2(velocity.y, velocity.x);
     }
