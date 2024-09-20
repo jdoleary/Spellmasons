@@ -242,7 +242,9 @@ export function addOverworldEventListeners(overworld: Overworld) {
             // when browsing the spellbook or hovering over your toolbar
             const cardIds = getSelectedCardIds();
             // cardIds: Only run predictions if there is a spell while mouse moving
-            if (e.target && (e.target as HTMLElement).tagName === 'CANVAS' && cardIds.length && !globalThis.MMBDown) {
+            const activeSpell = cardIds.length;
+            const playerSpawning = globalThis.player && !globalThis.player.isSpawned
+            if (e.target && (e.target as HTMLElement).tagName === 'CANVAS' && (activeSpell || playerSpawning) && !globalThis.MMBDown) {
               runPredictions(overworld.underworld);
               if (globalThis._queueLastPredictionMousePos) {
                 globalThis.lastPredictionMousePos = globalThis._queueLastPredictionMousePos;
