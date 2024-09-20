@@ -51,4 +51,7 @@ globalThis.monitorFPS = () => {
   }
 
 }
-monitorFPS();
+// When doing local development always turn on monitorFPS
+if (location.href.includes('localhost') && monitorFPS) {
+  monitorFPS();
+}
