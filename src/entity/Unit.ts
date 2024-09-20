@@ -4,7 +4,7 @@ import * as config from '../config';
 import * as Image from '../graphics/Image';
 import * as math from '../jmath/math';
 import { distance } from '../jmath/math';
-import { containerUnits, PixiSpriteOptions, startBloodParticleSplatter, updateNameText } from '../graphics/PixiUtils';
+import { containerCorpses, containerUnits, PixiSpriteOptions, startBloodParticleSplatter, updateNameText } from '../graphics/PixiUtils';
 import * as colors from '../graphics/ui/colors';
 import { UnitSubType, UnitType, Faction } from '../types/commonTypes';
 import type { Vec2 } from '../jmath/Vec';
@@ -46,7 +46,7 @@ import { darkTideId } from '../cards/dark_tide';
 import { GORU_UNIT_ID } from './units/goru';
 import { undyingModifierId } from '../modifierUndying';
 import { primedCorpseId } from '../modifierPrimedCorpse';
-import { chooseObjectWithProbability, getUniqueSeedStringPerLevel } from '../jmath/rand';
+import { chooseObjectWithProbability, getUniqueSeedStringPerLevel, randInt } from '../jmath/rand';
 import { ANCIENT_UNIT_ID } from './units/ancient';
 import { IPickup } from './Pickup';
 import seedrandom from 'seedrandom';
@@ -219,6 +219,9 @@ export function create(
       beingPushed: false,
       predictedNextTurnDamage: 0
     }, sourceUnitProps);
+    if (unit.image) {
+      unit.image.sprite.gotoAndPlay(randInt(0, unit.image.sprite.totalFrames - 1));
+    }
 
     if (unit.image && !unit.image.sprite.filters) {
       unit.image.sprite.filters = [];
@@ -603,12 +606,20 @@ export function syncronize(unitSerialized: IUnitSerialized, originalUnit: IUnit)
 export function changeToDieSprite(unit: IUnit) {
   Image.changeSprite(
     unit.image,
-    globalThis.noGore ? 'tombstone' :
-      unit.animations.die,
+    globalThis.noGore
+      ? 'tombstone'
+      : unit.animations.die,
     containerUnits,
     // DieSprite intentionally stops animating when it is complete, therefore
     // resolver is undefined, since no promise is waiting for it.
-    undefined,
+    () => {
+      // If the unit is still dead...
+      if (!unit.alive && unit.image && containerCorpses) {
+        // Change to corpses layer so that it doesn't continue to be outlines and doesn't render in front of walls
+        containerCorpses.addChild(unit.image.sprite);
+      }
+
+    },
     { loop: false }
   );
 }

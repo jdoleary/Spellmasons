@@ -41,7 +41,8 @@ import {
   setCameraToMapCenter,
   addPixiTilingSprite,
   cleanBlood,
-  cacheBlood
+  cacheBlood,
+  containerWalls,
 } from './graphics/PixiUtils';
 import floatingText, { queueCenteredFloatingText, warnNoMoreSpellsToChoose } from './graphics/FloatingText';
 import { UnitType, Faction, UnitSubType, GameMode } from './types/commonTypes';
@@ -1960,11 +1961,11 @@ export default class Underworld {
           continue;
         }
         // Ground tiles that border liquid should go in containerBoard
-        // Wall tiles should go in containerUnits, yes UNITS so that they can be
-        // z-index sorted with units so that when units die behind a wall their corpse image
+        // Wall tiles should go in containerWalls, so that when units 
+        // die behind a wall their corpse image
         // doesn't get painted on top of the wall 
         const isWall = tile.image.toLowerCase().includes('wall');
-        const sprite = addPixiSprite(tile.image, isWall ? containerUnits : containerBoard);
+        const sprite = addPixiSprite(tile.image, isWall ? containerWalls : containerBoard);
         if (sprite) {
           sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
           sprite.y = tile.y - config.COLLISION_MESH_RADIUS;
@@ -2169,11 +2170,7 @@ export default class Underworld {
     // Clear pickups arrow now that all pickups have been flaggedForDeletion
     this.pickups = [];
     // Clear all wall images:
-    // Note: walls are stored in container Units so they can be sorted z-index
-    // along with units
-    // so this removes all unit images too.
-    containerUnits?.removeChildren();
-
+    containerWalls?.removeChildren();
 
     // Empty any remaining forceMoves
     this.forceMove = [];
