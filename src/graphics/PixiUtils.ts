@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { clampVector, clone, equal, getAngleBetweenVec2sYInverted, isInvalid, lerpVec2, Vec2 } from '../jmath/Vec';
+import { clampVector, clone, equal, getAngleBetweenVec2sYInverted, lerpVec2, Vec2 } from '../jmath/Vec';
 import { View } from '../View';
 import * as math from '../jmath/math';
 import * as config from '../config';
@@ -13,10 +13,10 @@ import { randFloat, randInt } from '../jmath/rand';
 import { IUnit } from '../entity/Unit';
 import { isWithinRect, Rect } from '../jmath/Rect';
 import { inPortal } from '../entity/Player';
-import KeyMapping, { keyToHumanReadable } from './ui/keyMapping';
+import { keyToHumanReadable } from './ui/keyMapping';
 import { tutorialCompleteTask } from './Explain';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
-import { RenderTexture } from 'pixi.js';
+import { OutlineFilter } from '@pixi/filter-outline';
 
 // if PIXI is finished setting up
 let isReady = false;
@@ -34,8 +34,10 @@ export const app = !globalThis.pixi ? undefined : new globalThis.pixi.Applicatio
 export const containerLiquid = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerBoard = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerBloodSmear = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
-export const containerRadiusUI = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerPlanningView = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
+export const containerCorpses = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
+export const containerWalls = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
+export const containerRadiusUI = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerDoodads = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerUnits = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerSpells = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
@@ -166,6 +168,8 @@ if (globalThis.pixi && containerUI && app && containerRadiusUI) {
   if (
     containerLiquid &&
     containerBoard &&
+    containerCorpses &&
+    containerWalls &&
     containerBloodSmear &&
     containerRadiusUI &&
     containerPlanningView &&
@@ -185,8 +189,10 @@ if (globalThis.pixi && containerUI && app && containerRadiusUI) {
       containerLiquid,
       containerBoard,
       containerBloodSmear,
-      containerRadiusUI,
       containerPlanningView,
+      containerCorpses,
+      containerWalls,
+      containerRadiusUI,
       containerDoodads,
       containerParticlesUnderUnits,
       containerUnits,

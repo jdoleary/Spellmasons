@@ -13,7 +13,7 @@ async function animatePriestProjectileAndHit(self: Unit.IUnit, target: Unit.IUni
   await createVisualFlyingProjectile(
     self,
     target,
-    'projectile/priestProjectileCenter',
+    'priestProjectileCenter',
   );
 }
 async function resurrectUnits(self: Unit.IUnit, units: Unit.IUnit[], underworld: Underworld): Promise<boolean> {

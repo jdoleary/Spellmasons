@@ -121,7 +121,7 @@ async function spreadCurses(unit: IUnit, ignore: IUnit[], curses: CurseData[], r
         animationPromise = createVisualLobbingProjectile(
           unit,
           touchingUnit,
-          'projectile/poisonerProjectile',
+          'poisonerProjectile',
         )
         promises.push(animationPromise);
       }

@@ -164,11 +164,11 @@ const unit: UnitSource = {
                 createVisualLobbingProjectile(
                   unit,
                   target,
-                  'projectile/lobberProjectile',
+                  'lobberProjectile',
                   { colorReplace: projectileColorReplace, loop: true }
                 ).then(() => {
                   // Add projectile hit animation
-                  Image.addOneOffAnimation(target, 'projectile/lobberProjectileHit');
+                  Image.addOneOffAnimation(target, 'lobberProjectileHit');
 
                   // Bone Shrapnel
                   underworld.castCards({
@@ -200,11 +200,11 @@ const unit: UnitSource = {
                 createVisualLobbingProjectile(
                   unit,
                   target,
-                  'projectile/lobberProjectile',
+                  'lobberProjectile',
                   { colorReplace: projectileColorReplace, loop: true }
                 ).then(() => {
                   // Add projectile hit animation
-                  Image.addOneOffAnimation(target, 'projectile/lobberProjectileHit');
+                  Image.addOneOffAnimation(target, 'lobberProjectileHit');
 
                   // Resurrect
                   underworld.castCards({
@@ -251,11 +251,11 @@ const unit: UnitSource = {
               createVisualLobbingProjectile(
                 unit,
                 target,
-                'projectile/lobberProjectile',
+                'lobberProjectile',
                 { colorReplace: projectileColorReplace, loop: true }
               ).then(() => {
                 // Add projectile hit animation
-                Image.addOneOffAnimation(target, 'projectile/lobberProjectileHit');
+                Image.addOneOffAnimation(target, 'lobberProjectileHit');
 
                 Unit.addModifier(target, primedCorpseId, underworld, false, 1);
                 resolve();
@@ -285,11 +285,11 @@ const unit: UnitSource = {
               createVisualLobbingProjectile(
                 unit,
                 target,
-                'projectile/lobberProjectile',
+                'lobberProjectile',
                 { colorReplace: projectileColorReplace, loop: true }
               ).then(() => {
                 // Add projectile hit animation
-                Image.addOneOffAnimation(target, 'projectile/lobberProjectileHit');
+                Image.addOneOffAnimation(target, 'lobberProjectileHit');
 
                 Unit.takeDamage({
                   unit: target,
@@ -342,11 +342,11 @@ const unit: UnitSource = {
               createVisualLobbingProjectile(
                 unit,
                 target.coords,
-                'projectile/lobberProjectile',
+                'lobberProjectile',
                 { colorReplace: projectileColorReplace, loop: true }
               ).then(() => {
                 // Add projectile hit animation
-                Image.addOneOffAnimation(target, 'projectile/lobberProjectileHit');
+                Image.addOneOffAnimation(target, 'lobberProjectileHit');
 
                 const summonedUnit = Unit.create(
                   target.sourceUnit.id,

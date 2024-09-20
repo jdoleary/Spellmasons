@@ -49,7 +49,7 @@ const spell: Spell = {
         const velocity = math.similarTriangles(target.x - startPoint.x, target.y - casterPositionAtTimeOfCast.y, math.distance(startPoint, target), config.ARROW_PROJECTILE_SPEED)
         let image: Image.IImageAnimated | undefined;
         if (!prediction) {
-          image = Image.create(casterPositionAtTimeOfCast, 'projectile/targetDisk', containerProjectiles)
+          image = Image.create(casterPositionAtTimeOfCast, 'targetDisk', containerProjectiles)
           if (image) {
             image.sprite.rotation = Math.atan2(velocity.y, velocity.x);
           }

@@ -42,9 +42,21 @@ const combos: { [spritePath: string]: AnimationCombo } = {
         companionAnimations: [],
         SFX: ['golemAttack']
     },
+    'blood_golem/gruntAttack': {
+        keyFrame: 6,
+        primaryAnimation: 'blood_golem/gruntAttack',
+        companionAnimations: [],
+        SFX: ['golemAttack']
+    },
     'lobberAttack': {
         keyFrame: 4,
         primaryAnimation: 'lobberAttack',
+        companionAnimations: [],
+        SFX: ['lobberAttack']
+    },
+    'green_glop/lobberAttack': {
+        keyFrame: 4,
+        primaryAnimation: 'green_glop/lobberAttack',
         companionAnimations: [],
         SFX: ['lobberAttack']
     },
@@ -60,9 +72,27 @@ const combos: { [spritePath: string]: AnimationCombo } = {
         companionAnimations: [],
         SFX: ['archerAttack']
     },
+    'blood_archer/archerAttack': {
+        keyFrame: 7,
+        primaryAnimation: 'blood_archer/archerAttack',
+        companionAnimations: [],
+        SFX: ['archerAttack']
+    },
+    'ghost_archer/archerAttack': {
+        keyFrame: 7,
+        primaryAnimation: 'blood_archer/archerAttack',
+        companionAnimations: [],
+        SFX: ['archerAttack']
+    },
     'summonerAttack': {
         keyFrame: 8,
         primaryAnimation: 'summonerAttack',
+        companionAnimations: [],
+        SFX: ['summonerSummon']
+    },
+    'dark_summoner/summonerAttack': {
+        keyFrame: 8,
+        primaryAnimation: 'dark_summoner/summonerAttack',
         companionAnimations: [],
         SFX: ['summonerSummon']
     },

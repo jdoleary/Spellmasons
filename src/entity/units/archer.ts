@@ -49,7 +49,7 @@ const unit: UnitSource = {
         return createVisualFlyingProjectile(
           unit,
           attackTarget,
-          'projectile/arrow',
+          'arrow',
         ).then(() => {
           Unit.takeDamage({
             unit: attackTarget,
