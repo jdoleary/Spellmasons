@@ -4468,11 +4468,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         containerUnits.filters = [];
       } else {
         // Default to container unit outlines
-        if (!containerUnits.filters) {
-          containerUnits.filters = [];
-        }
         const outlineFilter = new OutlineFilter(2, 0x000000, 0.1);
-        containerUnits.filters.push(outlineFilter);
+        containerUnits.filters = [outlineFilter];
       }
     }
   }
