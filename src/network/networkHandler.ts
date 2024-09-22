@@ -1095,7 +1095,6 @@ async function handleLoadGameState(payload: {
   const { underworld: payloadUnderworld } = payload
   const { pickups, units, players, turn_phase } = payloadUnderworld;
 
-
   console.log('Setup: activeMods', payloadUnderworld.activeMods);
   // Sync underworld properties
   const loadedGameState: IUnderworldSerialized = { ...payloadUnderworld };
@@ -1193,7 +1192,17 @@ async function handleLoadGameState(payload: {
   if (players) {
     // isClientPlayerSourceOfTruth: false; loading a new game means the player should be 
     // fully overwritten
-    underworld.syncPlayers(players, false);
+    // Since this is a LOAD it should fully overwrite and LOAD the serialized players rather than
+    // syncing
+    underworld.players = players.flatMap((p, i) => {
+      const loadedPlayer = Player.load(p, i, underworld, false);
+      if (loadedPlayer) {
+        return [loadedPlayer];
+      } else {
+        console.error('Failed to load player during handleLoadGameState')
+        return [];
+      }
+    })
   }
   // After a load always start all players with endedTurn == false so that
   // it doesn't skip the player turn if players rejoin out of order
@@ -1482,8 +1491,9 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
 
       const { underworld: savedUnderworld, version, numberOfHotseatPlayers } = fileSaveObj as SaveFile;
       const { players } = savedUnderworld;
-      if (numberOfHotseatPlayers !== undefined) {
-        globalThis.numberOfHotseatPlayers = numberOfHotseatPlayers;
+      if (numberOfHotseatPlayers !== undefined || players.length > 1) {
+        // Allow loading multiplayer games as a singleplayer hotseat game.
+        globalThis.numberOfHotseatPlayers = players.length;
         if (overworld.pie.soloMode) {
           console.log('Loading a hotseat multiplayer game into a singleplayer underworld: reassinging cliendIds and playerIds');
           // Reassign playerId's and client ids so that single player can load a hotseat multiplayer game
