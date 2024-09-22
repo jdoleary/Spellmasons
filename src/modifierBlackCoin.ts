@@ -31,7 +31,7 @@ export default function registerBlackCoin() {
       }
       const modifier = damageDealer.modifiers[blackCoinId];
       if (modifier && damageReciever && !Unit.isBoss(damageReciever.unitSourceId)) {
-        const seed = seedrandom(getUniqueSeedString(underworld, globalThis.player) + `-${damageReciever.id}-${damageReciever.health}`);
+        const seed = seedrandom(getUniqueSeedString(underworld) + `-${damageReciever.id}-${damageReciever.health}`);
         const useBlackCoin = chooseObjectWithProbability([{ useBlackCoin: true, probability: modifier.quantity }, { useBlackCoin: false, probability: 100 - modifier.quantity }], seed)?.useBlackCoin || false;
         // Do fatal damage
         if (useBlackCoin) {
