@@ -536,7 +536,7 @@ const spell$c = {
               text: `Grace +${-healing} health`,
               style: { fill: "#40a058", strokeThickness: 1 }
             });
-            JImage.addOneOffAnimation(unit, "spell-effects/potionPickup", {}, { animationSpeed: 0.3, loop: false });
+            JImage.addOneOffAnimation(unit, "potionPickup", {}, { animationSpeed: 0.3, loop: false });
             JAudio.playSFXKey("potionPickupHealth");
           }
           Unit$c.removeModifier(unit, cardId$c, underworld);
