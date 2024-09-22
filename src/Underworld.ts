@@ -3659,7 +3659,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         counter++;
         // Optimization; if the counter hasn't yet reached the currentChunk
         // keep going, don't reprocess units at the beginning of the array
-        if (!skipChunking && counter < globalThis.currentChunk) {
+        if (!skipChunking && counter < globalThis.currentChunk!) {
           continue;
         }
         // Optimization; Once we have processed config.ChunkSize, return what has been cached so far.

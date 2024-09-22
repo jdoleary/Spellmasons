@@ -646,7 +646,7 @@ export function predictAIActions(underworld: Underworld, restartChunks: boolean)
   // Optimization: if predictAIActions is invoked with restartChunks, but
   // it is still processing, exit early so it will keep processing until finished.
   // This ensures the attentionMarkers don't just render the first chunk over and over
-  if (restartChunks && globalThis.currentChunk > 0) {
+  if (restartChunks && globalThis.currentChunk! > 0) {
     // Don't restart until previous is finished processing
     return;
   }
