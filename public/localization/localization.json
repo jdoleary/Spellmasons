@@ -663,7 +663,11 @@
         "% chance": "% chance",
         "runes": "Runes",
         "battle log": "Battle Log",
-        "bounty hunter": "Bounty Hunter"
+        "bounty hunter": "Bounty Hunter",
+        "give bounty": "Set Bounty",
+        "spell_give_bounty": "Set a bounty on the target's head.  Works well with Bounty Runes.",
+        "target bounty": "Target Bounty",
+        "spell_target_bounty": "Targets units with bounties on their head. One per stack."
     },
     {
         "language": "Français",
@@ -1329,7 +1333,11 @@
         "% chance": "% de chance",
         "runes": "Runes",
         "battle log": "Journal de bataille",
-        "bounty hunter": "Chasseur de primes"
+        "bounty hunter": "Chasseur de primes",
+        "give bounty": "Marquer comme prime",
+        "spell_give_bounty": "Mettez une prime sur la tête de la cible. Fonctionne bien avec les Runes de Prime.",
+        "target bounty": "Cible de prime",
+        "spell_target_bounty": "Cible les unités avec une prime sur leur tête. Une par paquet."
     },
     {
         "language": "italiano",
@@ -1995,7 +2003,11 @@
         "% chance": "% possibilità",
         "runes": "Rune",
         "battle log": "Registro di Battaglia",
-        "bounty hunter": "Cacciatore di taglie"
+        "bounty hunter": "Cacciatore di taglie",
+        "give bounty": "Contrassegna come Taglia",
+        "spell_give_bounty": "Metti una taglia sulla testa del bersaglio. Funziona bene con le Rune di Taglia.",
+        "target bounty": "Bounty Obiettivo",
+        "spell_target_bounty": "Colpisce unità con taglie sulla testa. Una per accumulo."
     },
     {
         "language": "Deutsche",
@@ -2661,7 +2673,11 @@
         "% chance": "% Chance",
         "runes": "Runen",
         "battle log": "Kampflog",
-        "bounty hunter": "Kopfgeldjäger"
+        "bounty hunter": "Kopfgeldjäger",
+        "give bounty": "Als Kopfgeld markieren",
+        "spell_give_bounty": "Setze eine Belohnung auf den Kopf des Ziels. Funktioniert gut mit Belohnungsrunen.",
+        "target bounty": "Zielpreis",
+        "spell_target_bounty": "Zielt Einheiten mit Kopfgeldern auf ihren Köpfen an. Eins pro Stapel."
     },
     {
         "language": "español",
@@ -3327,7 +3343,11 @@
         "% chance": "% de probabilidad",
         "runes": "Rúnas",
         "battle log": "Registro de Batalla",
-        "bounty hunter": "Cazador de recompensas"
+        "bounty hunter": "Cazador de recompensas",
+        "give bounty": "Marcar como Recompensa",
+        "spell_give_bounty": "Pon una recompensa sobre la cabeza del objetivo. Funciona bien con las Runas de Recompensa.",
+        "target bounty": "Recompensa Apuntada",
+        "spell_target_bounty": "Objetivos unidades con recompensas por su cabeza. Uno por pila."
     },
     {
         "language": "日本",
@@ -3993,7 +4013,11 @@
         "% chance": "%の確率",
         "runes": "ルーン",
         "battle log": "戦闘ログ",
-        "bounty hunter": "賞金稼ぎ"
+        "bounty hunter": "賞金稼ぎ",
+        "give bounty": "報酬としてマークする",
+        "spell_give_bounty": "対象の頭に賞金をかけろ。バウンティルーンと相性が良い。",
+        "target bounty": "ターゲットバウンティ",
+        "spell_target_bounty": "首に懸賞金がかけられたユニットをターゲットにします。1スタックにつき1体。"
     },
     {
         "language": "Português",
@@ -4659,7 +4683,11 @@
         "% chance": "% de chance",
         "runes": "Runa",
         "battle log": "Registro de Batalha",
-        "bounty hunter": "Caçador de Recompensas"
+        "bounty hunter": "Caçador de Recompensas",
+        "give bounty": "Marcar como Recompensa",
+        "spell_give_bounty": "Coloque uma recompensa na cabeça do alvo. Funciona bem com Runas de Recompensa.",
+        "target bounty": "Alvo de Recompensa",
+        "spell_target_bounty": "Alvos unidades com recompensas em suas cabeças. Um por pilha."
     },
     {
         "language": "عربى",
@@ -5325,7 +5353,11 @@
         "% chance": "نسبة %",
         "runes": "رموز",
         "battle log": "سجل المعركة",
-        "bounty hunter": "صائد الجوائز"
+        "bounty hunter": "صائد الجوائز",
+        "give bounty": "علامة كمكافأة",
+        "spell_give_bounty": "حدد جائزة على رأس الهدف. تعمل بشكل جيد مع جوائز المكافآت.",
+        "target bounty": "مكافأة الهدف",
+        "spell_target_bounty": "استهداف الوحدات التي عليها مكافآت. واحدة لكل كومة."
     },
     {
         "language": "한국어",
@@ -5991,7 +6023,11 @@
         "% chance": "% 확률",
         "runes": "룬",
         "battle log": "전투 기록",
-        "bounty hunter": "보상 사냥꾼"
+        "bounty hunter": "보상 사냥꾼",
+        "give bounty": "현상금을 걸다",
+        "spell_give_bounty": "대상 머리에 현상금을 걸어라. 보상 룬과 잘 어울린다.",
+        "target bounty": "목표 현상금",
+        "spell_target_bounty": "머리 위에 현상금이 걸린 유닛을 대상으로 합니다. 스택당 하나만."
     },
     {
         "language": "Русский",
@@ -6657,7 +6693,11 @@
         "% chance": "% шанса",
         "runes": "Руны",
         "battle log": "Журнал битвы",
-        "bounty hunter": "Добытчик наград"
+        "bounty hunter": "Добытчик наград",
+        "give bounty": "Пометить как награду",
+        "spell_give_bounty": "Установите награду за голову цели. Хорошо сочетается с Наградными Рунами.",
+        "target bounty": "Целевая Награда",
+        "spell_target_bounty": "Цельтесь в юниты с наградами на их головы. По одному на стек."
     },
     {
         "language": "中文(简)",
@@ -7323,7 +7363,11 @@
         "% chance": "% 概率",
         "runes": "符文",
         "battle log": "战斗日志",
-        "bounty hunter": "赏金猎人"
+        "bounty hunter": "赏金猎人",
+        "give bounty": "标记为赏金",
+        "spell_give_bounty": "在目标的头上悬赏。与赏金符文配合得很好。",
+        "target bounty": "目标赏金",
+        "spell_target_bounty": "目标单位的赏金。每堆一个。"
     },
     {
         "language": "中文(繁)",
@@ -7989,7 +8033,11 @@
         "% chance": "% 機率",
         "runes": "符文",
         "battle log": "戰鬥紀錄",
-        "bounty hunter": "賞金獵人"
+        "bounty hunter": "賞金獵人",
+        "give bounty": "標記為賞金",
+        "spell_give_bounty": "在目標的頭上懸賞。與獵賞符文搭配效果良好。",
+        "target bounty": "目標賞金",
+        "spell_target_bounty": "針對頭上懸賞的目標單位。每堆一個。"
     },
     {
         "language": "Polski",
@@ -8655,7 +8703,11 @@
         "% chance": "% szansy",
         "runes": "Runy",
         "battle log": "Dziennik Bitwy",
-        "bounty hunter": "Łowca Nagród"
+        "bounty hunter": "Łowca Nagród",
+        "give bounty": "Oznacz jako nagrodę",
+        "spell_give_bounty": "Ustal nagrodę za głowę celu. Działa dobrze z Runami Łowców.",
+        "target bounty": "Cel bounty",
+        "spell_target_bounty": "Celuje jednostki z nagrodami na głowie. Jedna na stos."
     },
     {
         "language": "Dutch",
@@ -9321,6 +9373,10 @@
         "% chance": "% kans",
         "runes": "Runa's",
         "battle log": "Slag Register",
-        "bounty hunter": "Premiejager"
+        "bounty hunter": "Premiejager",
+        "give bounty": "Merken als Bounty",
+        "spell_give_bounty": "Stel een beloning in op het hoofd van het doelwit. Werkt goed met Bounty Runes.",
+        "target bounty": "Doelbeloning",
+        "spell_target_bounty": "Doelwitten eenheden met een beloning op hun hoofd. Eén per stapel."
     }
 ]
