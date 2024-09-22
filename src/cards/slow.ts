@@ -4,7 +4,7 @@ import * as Image from '../graphics/Image';
 import { Spell } from './index';
 import * as Unit from '../entity/Unit';
 import Underworld from '../Underworld';
-import { CardCategory } from '../types/commonTypes';
+import { CardCategory, UnitType } from '../types/commonTypes';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import floatingText from '../graphics/FloatingText';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
@@ -23,7 +23,11 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
   const slowMultiplier = (1 - (modifier.quantity / 100));
   // Prevent divide by 0
   const multiplier = 1 / (slowMultiplier || 1);
-  unit.moveSpeed *= multiplier;
+  // Don't change movespeed for player units
+  // only stamina, otherwise is causes issues in multiplayer
+  if (unit.unitType !== UnitType.PLAYER_CONTROLLED) {
+    unit.moveSpeed *= multiplier;
+  }
   unit.staminaMax *= multiplier;
   unit.stamina *= multiplier;
 }
@@ -48,10 +52,13 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
 
   // Apply the added Slow (use the newly added quantity here instead of modifier.quantity)
   const addedSlowMultiplier = (1 - (quantity / 100));
-  unit.moveSpeed *= addedSlowMultiplier;
+  // Don't change movespeed for player units
+  // only stamina, otherwise is causes issues in multiplayer
+  if (unit.unitType !== UnitType.PLAYER_CONTROLLED) {
+    unit.moveSpeed *= addedSlowMultiplier;
+  }
   unit.staminaMax *= addedSlowMultiplier;
   unit.stamina *= addedSlowMultiplier;
-  unit.moveSpeed = Math.max(1, unit.moveSpeed);
   unit.staminaMax = Math.max(1, unit.staminaMax);
   unit.stamina = Math.max(1, unit.stamina);
 }
