@@ -582,6 +582,13 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
     loadedunit.stamina = loadedunit.staminaMax || config.UNIT_BASE_STAMINA;
   }
   Image.setScaleFromModifiers(loadedunit.image, loadedunit.strength);
+
+  // Special edge case protection
+  if (loadedunit.unitType === UnitType.PLAYER_CONTROLLED && loadedunit.faction === Faction.ENEMY) {
+    // Ensure player units are always ALLY faction
+    console.error('Attempted to load a player unit in the Enemy faction');
+    loadedunit.faction = Faction.ALLY;
+  }
   return loadedunit;
 }
 // Similar but not the same as `load`, syncronize updates (mutates) a unit 
@@ -603,6 +610,12 @@ export function syncronize(unitSerialized: IUnitSerialized, originalUnit: IUnit)
   }
   if (doResetImage) {
     returnToDefaultSprite(originalUnit);
+  }
+  // Special edge case protection
+  if (originalUnit.unitType === UnitType.PLAYER_CONTROLLED && originalUnit.faction === Faction.ENEMY) {
+    // Ensure player units are always ALLY faction
+    console.error('Attempted to syncronize a player unit to the Enemy faction');
+    originalUnit.faction = Faction.ALLY;
   }
   // Note: returnToDefaultSprite must be called BEFORE Image.syncronize
   // to ensure that the originalUnit.image.sprite has a parent because
@@ -1420,13 +1433,15 @@ export function setLocation(unit: IUnit, coordinates: Vec2, underworld: Underwor
   underworld.checkPickupCollisions(unit, prediction);
 }
 export function changeFaction(unit: IUnit, faction: Faction) {
-  unit.faction = faction;
-  if (unit.faction === Faction.ALLY) {
-    // headband signifies a player ally unit
-    // Image.addSubSprite(unit.image, 'headband');
-  } else {
-    // Image.removeSubSprite(unit.image, 'headband');
+  // Special edge case: prevent changing a Player unit's faction to Enemy
+  if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
+    console.error('Attempted to change a player units faction');
+    // Ensure player units remail on the ALLY faction
+    unit.faction == Faction.ALLY;
+    return;
   }
+
+  unit.faction = faction;
 }
 
 // syncImage updates a unit's Image to match it's game state
