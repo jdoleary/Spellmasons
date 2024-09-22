@@ -784,6 +784,7 @@ function addListenersToCardElement(
       cardsSelected.push(cardId);
       selectCard(player, element, cardId, underworld);
     }
+    runPredictions(underworld);
   });
 }
 export function deselectLastCard(underworld: Underworld) {
