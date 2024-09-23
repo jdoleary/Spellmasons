@@ -1220,19 +1220,6 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       domQueryContainer: '#menu-spawn'
     },
     {
-      label: 'Merge Excess Units',
-      action: () => {
-        if (!overworld.underworld) {
-          console.error('Cannot admin merge unit, underworld does not exist');
-          return;
-        }
-        overworld.underworld.mergeExcessUnits();
-
-      },
-      supportInMultiplayer: true,
-      domQueryContainer: '#menu-global'
-    },
-    {
       label: 'Kill all Enemies',
       action: () => {
         if (!overworld.underworld) {
