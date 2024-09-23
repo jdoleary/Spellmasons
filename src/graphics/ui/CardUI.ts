@@ -764,31 +764,11 @@ function addListenersToCardElement(
       return;
     }
     if (element.classList.contains('selected')) {
-      if (!element.parentElement) {
-        console.error('Attempted to remove card with a non-parent-having element');
-        return;
-      }
-      const index = Array.from(element.parentElement.children).findIndex(x => x === element);
-      if (index !== -1) {
-        cardsSelected.splice(index, 1);
-        element.remove();
-        manageSelectedCardsParentVisibility();
-        // When a card is deselected, clear the currently shown card
-        // so that it doesn't continue to hover over the gameboard
-        // for a card that is now deselected
-        clearCurrentlyShownCard();
-      } else {
-        console.log(
-          'Attempted to remove card',
-          cardId,
-          'from selected-cards but it does not exist',
-        );
-      }
+      deselectCard(cardId, element, underworld);
     } else {
       cardsSelected.push(cardId);
       selectCard(player, element, cardId, underworld);
     }
-    runPredictions(underworld);
   });
 }
 export function deselectLastCard(underworld: Underworld) {
@@ -815,6 +795,30 @@ export function selectCardByIndex(index: number, cardHolder: HTMLElement) {
       console.warn(`Cannot select a card, no card in hand at index ${index}`)
     }
   }
+}
+async function deselectCard(cardId: string, element: HTMLElement, underworld: Underworld) {
+  if (!element.parentElement) {
+    console.error('Attempted to remove card with a non-parent-having element');
+    return;
+  }
+  const index = Array.from(element.parentElement.children).findIndex(x => x === element);
+  if (index !== -1) {
+    cardsSelected.splice(index, 1);
+    element.remove();
+    manageSelectedCardsParentVisibility();
+    // When a card is deselected, clear the currently shown card
+    // so that it doesn't continue to hover over the gameboard
+    // for a card that is now deselected
+    clearCurrentlyShownCard();
+  } else {
+    console.log(
+      'Attempted to remove card',
+      cardId,
+      'from selected-cards but it does not exist',
+    );
+  }
+  await runPredictions(underworld);
+
 }
 // Moves a card element to selected-cards div
 async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string, underworld: Underworld) {
