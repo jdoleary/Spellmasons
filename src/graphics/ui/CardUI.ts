@@ -764,7 +764,11 @@ function addListenersToCardElement(
       return;
     }
     if (element.classList.contains('selected')) {
-      const index = cardsSelected.findIndex((c) => c === cardId);
+      if (!element.parentElement) {
+        console.error('Attempted to remove card with a non-parent-having element');
+        return;
+      }
+      const index = Array.from(element.parentElement.children).findIndex(x => x === element);
       if (index !== -1) {
         cardsSelected.splice(index, 1);
         element.remove();
