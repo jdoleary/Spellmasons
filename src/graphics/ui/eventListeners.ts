@@ -1133,6 +1133,14 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       domQueryContainer: '#menu-self',
     },
     {
+      label: '📱 Recording Shorts',
+      action: () => {
+        document.body?.classList.toggle('recording-shorts');
+      },
+      supportInMultiplayer: false,
+      domQueryContainer: '#menu-self',
+    },
+    {
       label: '🃏 Toggle UI',
       action: () => {
         // Hides a portion of the UI but not all of it for recording or screenshots
