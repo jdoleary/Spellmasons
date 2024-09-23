@@ -521,6 +521,27 @@ export function drawUnitMarker(imagePath: string, pos: Vec2, unitYScale: number 
 }
 
 globalThis.currentPredictionId = 0;
+
+// Wraps _runPredictions in a check to make sure it isn't called again
+// before finishing
+let runPredictionsPromise: Promise<void> | undefined;
+// A `vital` runPredictions call must trigger and cannot be aborted, so if there is another prediction already running it will
+// wait for it to finish and then start itself.
+export async function runPredictions(underworld: Underworld, vital?: boolean) {
+  if (runPredictionsPromise) {
+    // Just await the runPrediction thats already running instead of starting a new one which can cause serious issues
+    // by operating on shared state.
+    await runPredictionsPromise;
+    if (!vital) {
+      console.log('Aborting non-vital runPredictions call because another is already running.');
+      return;
+    }
+  }
+  runPredictionsPromise = _runPredictions(underworld);
+  await runPredictionsPromise;
+  // set to undefined once finished so that runPredictions can be triggered again
+  runPredictionsPromise = undefined;
+}
 // runPredictions predicts what will happen next turn
 // via enemy attention markers (showing if they will hurt you)
 // your health and mana bar (the stripes)
@@ -537,7 +558,7 @@ globalThis.currentPredictionId = 0;
 // attributes in sync with the players, so for example after the player
 // takes damage is when syncPlayerPredictionunitOnly should be called
 // prior to runPredictions()
-export async function runPredictions(underworld: Underworld) {
+export async function _runPredictions(underworld: Underworld) {
   if (globalThis.view !== View.Game) {
     return;
   }

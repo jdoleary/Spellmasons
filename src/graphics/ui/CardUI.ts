@@ -854,7 +854,7 @@ async function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: 
     if (underworld) {
       // runPredictions to update the mana and health of predictionPlayer if the spell were to be cast
       // so that we can check in the next block if there is insufficient health or mana to cast it.
-      await runPredictions(underworld);
+      await runPredictions(underworld, true);
     }
 
     const predictionPlayerUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id);
