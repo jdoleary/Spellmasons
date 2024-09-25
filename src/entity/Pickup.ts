@@ -358,10 +358,16 @@ export function load(pickup: IPickupSerialized, underworld: Underworld, predicti
   }
 }
 export function removePickup(pickup: IPickup, underworld: Underworld, prediction: boolean) {
-  pickup.flaggedForRemoval = true;
-  Image.cleanup(pickup.image);
-  stopAndDestroyForeverEmitter(pickup.emitter);
-  checkIfNeedToClearTooltip();
+  if (prediction) {
+    if (pickup.predictionCopy) {
+      pickup.predictionCopy.flaggedForRemoval = true;
+    }
+  } else {
+    pickup.flaggedForRemoval = true;
+    Image.cleanup(pickup.image);
+    stopAndDestroyForeverEmitter(pickup.emitter);
+    checkIfNeedToClearTooltip();
+  }
   // Remove any associated forcePushs
   const fms = (prediction ? underworld.forceMovePrediction : underworld.forceMove).filter(fm => fm.pushedObject == pickup)
   if (fms.length) {
