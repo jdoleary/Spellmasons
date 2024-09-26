@@ -590,7 +590,6 @@ export async function _runPredictions(underworld: Underworld) {
   if (underworld.turn_phase == turn_phase.PlayerTurns) {
     if (globalThis.player) {
       underworld.syncPredictionEntities();
-      CardUI.updateCardBadges(underworld);
       // Dry run cast so the user can see what effect it's going to have
       const target = mousePos;
       const casterUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id)

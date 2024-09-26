@@ -818,6 +818,7 @@ async function deselectCard(cardId: string, element: HTMLElement, underworld: Un
     );
   }
   await runPredictions(underworld);
+  updateCardBadges(underworld);
 
 }
 // Moves a card element to selected-cards div
@@ -1220,7 +1221,9 @@ export function updateCardBadges(underworld: Underworld) {
       }
     }
     // Update cards in hand and inventory
-    const cards = Cards.getCardsFromIds(globalThis.player.inventory);
+    const isInventoryOpen = document.body?.classList.contains(openInvClass);
+    // If inventory is open get all cards (inventory will always include cards in toolbar), if it is not, only get cards that are in the toolbar
+    const cards = Cards.getCardsFromIds(isInventoryOpen ? globalThis.player.inventory : globalThis.player.cardsInToolbar.filter(x => !!x));
     const badgesById: { [cardId: string]: { mana: HTMLElement[], health: HTMLElement[] } } = {}
     function populateBadgesById(attr: 'mana' | 'health') {
       Array.from(document.querySelectorAll(`.card-holder .card .card-${attr}-badge, #inventory-content .card .card-${attr}-badge`)).forEach((badge) => {
