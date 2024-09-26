@@ -280,6 +280,8 @@ export function create(
     changeFaction(unit, faction);
 
     underworld.addUnitToArray(unit, prediction || false);
+    // Start with a prediction copy so that their health bars will be rendered if they are an ally
+    unit.predictionCopy = copyForPredictionUnit(unit, underworld);
     // Check to see if unit interacts with liquid
     Obstacle.tryFallInOutOfLiquid(unit, underworld, prediction || false);
 
