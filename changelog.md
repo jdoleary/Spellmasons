@@ -1,3 +1,76 @@
+## 1.44.4 - FPS Optimization
+**Backwards Compatability warning**
+Some of the optimizations in this update are not backwards compatible with
+old save files.  If you still want to play on an old save, you can do so by
+right clicking on Spellmasons in your Steam library, choosing "Properties" >
+then "Betas" then v1.43.4 and restart Steam. This will ensure your client is
+on the last update instead of this one.
+
+
+FPS Optimizations:
+The game now runs a lot better when there are tons of units on screen.
+A few notable changes went into this:
+1. Individual sprite outlines have been moved to outline the entire unit container. 
+Not only does this look much cooler in crowds but it also makes a MASSIVE difference in
+FPS when there are over 1000 units on screen.  If you still want individual unit outlines
+(optionally with different colors and custom thickness, it is still available in the Accessibility
+2. Dynamically colored sprites (such as Blood Golem, Blood Archer, Dark Priest, etc) now have their
+own sprites instead of being dynamically tinted at runtime.  This saves on FPS.
+menu but it will slow the game down when there are many units on screen.)
+3. Spellmasons is constantly predicting what will happen next turn.  When there are over 1000 units 
+on the screen, this would really bog down the FPS.  Significant prediction enhancements have
+been made for enemy unit targeting to resolve this issue. 
+
+Other changes:
+
+Content: New spells "Give bounty" and "Target bounty"
+
+fix: removePickup actually removing
+    pickup emitter and doing other cleanup even when `prediction = true`
+    
+    Thanks Hex Obsidian
+
+fix: Prevent multiple runPrediction calls from triggering simultaneously
+
+fix: Don't change player unit movespeed when slowed, only stamina
+    otherwise it makes their movement jittery due to how multiplayer handles player movement.
+    Fixes super speed when units were "slowed"
+
+    Thanks Monarch and Xulqelyat
+
+fix: conserve to not always working correctly
+
+fix: Fully overwrite players array
+    when loading a saved game.
+    This fixes the case where playing a game with more players and then loading a game with less would leave you with ghost player objects that would softlock the game.
+    Allow multiplayer saves to be played in a singleplayer context (as hotseat).
+
+fix: Add protections to prevent changing a player unit's faction to enemy
+    Thanks FfrankF, evilcuttlefish and HeyShadowPhoenix
+
+fix: Black Coin desync on Multi
+    Any time getUniqueSeedString is called with globalThis.player on the server it will desync compared to clients.
+
+fix: Show prediction markers on prediction units
+    This fixes the issue where cloned units wouldn't show
+    prediction markers because the unitsPrediction array wasn't
+    the one being iterated.
+
+fix: runPredictions while player is spawning
+    
+    Otherwise predictions don't update while choosing a spawn location
+
+fix: unit attention markers persisting after death
+
+fix: infinite mana merge exploit
+    
+    Limit changeling to 1 max.
+    Prevent stacking teleport in the same location to spawn a bunch of changelings
+    and make units that recieve merge immune for 2 turns to prevent infinite mana growth
+    
+    Closes #1108
+
+
 ## 1.43 - Balancing Patch
 
 content: Add Black Coin Rune
