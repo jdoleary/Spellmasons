@@ -1268,6 +1268,10 @@ export default class Underworld {
       // Don't draw attention markers if the hud is hidden
       return;
     }
+    // Only draw attention markers during player turn
+    if (this.turn_phase !== turn_phase.PlayerTurns) {
+      return;
+    }
     // Note: this block must come after updating the camera position
     // We're iterating unitsPrediction instead of units because attentionMarkers are transient
     // and stored on the prediction units (which are accurate because they may be forceMoved or killed
