@@ -20,6 +20,9 @@ menu but it will slow the game down when there are many units on screen.)
 3. Spellmasons is constantly predicting what will happen next turn.  When there are over 1000 units 
 on the screen, this would really bog down the FPS.  Significant prediction enhancements have
 been made for enemy unit targeting to resolve this issue. 
+4. Card mana and health badges are no longer updated when predictions run.  This was a totally superfluous
+function call left over from long ago and will improve FPS.  They are still updated when they need to
+be like when a spell is added, removed, etc.
 
 Other changes:
 
