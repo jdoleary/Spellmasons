@@ -261,7 +261,7 @@
         "spell_conserve": "Saves the rest of the targets' current mana for next turn.",
         "spell_contaminate": "Immediately spreads this unit's curses to other nearby units.",
         "spell_dash": "Pulls the caster towards the target(s).❕ Dash must be cast on a target such as a unit or pickup.",
-        "spell_death_wager": "Reset all spell costs back to their default and reduce your max health by 🍞% permanently.",
+        "spell_death_wager": "Reset all spell costs back to their default.  Sets your current health to 1.  You must be at max health to cast.  This spell must be cast alone.",
         "spell_debilitate": "Makes the target(s) take 🍞% damage whenever they receive damage.❕ Stackable.",
         "spell_displace": "Teleport the target to a random location.",
         "spell_drown": "Deal 🍞 damage only to targets submerged in liquid.",
@@ -667,7 +667,9 @@
         "give bounty": "Set Bounty",
         "spell_give_bounty": "Set a bounty on the target's head.  Works well with Bounty Runes.",
         "target bounty": "Target Bounty",
-        "spell_target_bounty": "Targets units with bounties on their head. One per stack."
+        "spell_target_bounty": "Targets units with bounties on their head. One per stack.",
+        "death_wager_error1": "You must be at max health to cast \"Death Wager\"",
+        "death_wager_error2": "Death Wager must be cast by itself"
     },
     {
         "language": "Français",
@@ -931,7 +933,7 @@
         "spell_conserve": "Garde le reste du mana de la cible pour le tour suivant.",
         "spell_contaminate": "Propage immédiatement les malédictions de cette unité aux unités proches.",
         "spell_dash": "Attire le lanceur vers la ou les cibles.❕\"Sprint\" doit être lancé sur une unité ou un collectable",
-        "spell_death_wager": "Réinitialise tous les coûts en mana des sorts et réduit votre santé maximum de 🍞% définitivement.",
+        "spell_death_wager": "Réinitialise tous les coûts de sorts à leurs valeurs par défaut. Réduit votre santé actuelle à 1. Vous devez être à pleine santé pour lancer ce sort. Ce sort doit être lancé seul.",
         "spell_debilitate": "Les cibles subiront 🍞% de dégâts.❕Accumulable.",
         "spell_displace": "Téléporte la cible vers un emplacement aléatoire.",
         "spell_drown": "Inflige 🍞 dégâts SEULEMENT si la cible est immergée.",
@@ -1337,7 +1339,9 @@
         "give bounty": "Marquer comme prime",
         "spell_give_bounty": "Mettez une prime sur la tête de la cible. Fonctionne bien avec les Runes de Prime.",
         "target bounty": "Cible de prime",
-        "spell_target_bounty": "Cible les unités avec une prime sur leur tête. Une par paquet."
+        "spell_target_bounty": "Cible les unités avec une prime sur leur tête. Une par paquet.",
+        "death_wager_error1": "Vous devez être à pleine santé pour lancer \"Pari Mortel\".",
+        "death_wager_error2": "Le Pari de la Mort doit être lancé seul."
     },
     {
         "language": "italiano",
@@ -1601,7 +1605,7 @@
         "spell_conserve": "Salva il resto dei bersagli del mana corrente per il prossimo turno.",
         "spell_contaminate": "Diffonde immediatamente le maledizioni di questa unità ad altre unità vicine.",
         "spell_dash": "Il giocatore scatta verso il bersaglio (i).❕ \"Scatto\" deve essere lanciato su un bersaglio come un'unità o un oggeto che può essere raccolto.",
-        "spell_death_wager": "Resetta i costi di tutti gli incantesimi al loro valore predefinito e riduci permanentemente la tua salute massima del 🍞%.",
+        "spell_death_wager": "Ripristina tutti i costi degli incantesimi ai loro valori di default. Imposta la tua salute attuale a 1. Devi essere a salute massima per lanciare. Questo incantesimo deve essere lanciato da solo.",
         "spell_debilitate": "Fa si che il bersaglio subisca 🍞% di danni ogni volta che subisce danni.❕L'incantesimo può essere combinato.",
         "spell_displace": "Teleporta il bersaglio in una posizione casuale.",
         "spell_drown": "Infligge 🍞 danni SOLO se il bersaglio è immerso.",
@@ -2007,7 +2011,9 @@
         "give bounty": "Contrassegna come Taglia",
         "spell_give_bounty": "Metti una taglia sulla testa del bersaglio. Funziona bene con le Rune di Taglia.",
         "target bounty": "Bounty Obiettivo",
-        "spell_target_bounty": "Colpisce unità con taglie sulla testa. Una per accumulo."
+        "spell_target_bounty": "Colpisce unità con taglie sulla testa. Una per accumulo.",
+        "death_wager_error1": "Devi essere a salute massima per lanciare \"Scommessa Mortale\"",
+        "death_wager_error2": "Death Wager deve essere lanciato da solo."
     },
     {
         "language": "Deutsche",
@@ -2271,7 +2277,7 @@
         "spell_conserve": "Bewahrt den Rest des dem Ziel zur Verfügung stehenden Manas für den nächsten Zug auf",
         "spell_contaminate": "Verteilt alle Flüche mit denen das Ziel belegt ist auf benachbarte Einheiten.",
         "spell_dash": "Bewegt den Zauberer in Richtung Ziel.❕ Muss auf eine Einheit oder einen Gegenstand gezielt werden",
-        "spell_death_wager": "Setzt alle Manakosten auf ihren Ursprungswert zurück und Reduziert die maximalen Lebenspunkte permanent um 🍞%",
+        "spell_death_wager": "Setze alle Zauberkosten auf die Standardwerte zurück. Setzt deine aktuelle Gesundheit auf 1. Du musst bei maximaler Gesundheit sein, um zu zaubern. Dieser Zauber muss alleine gewirkt werden.",
         "spell_debilitate": "Das Ziel erleidet jedes mal wenn es Schaden nimmt 🍞% Schaden.❕ Stapelbar",
         "spell_displace": "Das Ziel wird an einen zufälligen Ort teleportiert",
         "spell_drown": "Fügt dem Ziel 🍞 Schaden zu. Funktioniert nur wenn sich das Ziel in einer Flüssigkeit befindet",
@@ -2677,7 +2683,9 @@
         "give bounty": "Als Kopfgeld markieren",
         "spell_give_bounty": "Setze eine Belohnung auf den Kopf des Ziels. Funktioniert gut mit Belohnungsrunen.",
         "target bounty": "Zielpreis",
-        "spell_target_bounty": "Zielt Einheiten mit Kopfgeldern auf ihren Köpfen an. Eins pro Stapel."
+        "spell_target_bounty": "Zielt Einheiten mit Kopfgeldern auf ihren Köpfen an. Eins pro Stapel.",
+        "death_wager_error1": "Du musst bei maximaler Gesundheit sein, um \"Todswette\" zu wirken.",
+        "death_wager_error2": "Der Todeswette muss allein geworfen werden."
     },
     {
         "language": "español",
@@ -2941,7 +2949,7 @@
         "spell_conserve": "Guarda el resto del maná actual de los objetivos para el próximo turno.",
         "spell_contaminate": "Inmediatamente se extiende las maldiciones de esta unidad a otras unidades cercanas.",
         "spell_dash": "Tira del lanzador hacia el objetivo (s). El tablero debe ser fundido en un objetivo como una unidad o camioneta.",
-        "spell_death_wager": "Reinicie todos los costos del hechizo a su incumplimiento y reduzca su salud máxima en un 🍞% permanente.",
+        "spell_death_wager": "Restablece todos los costos de hechizos a su valor por defecto. Establece tu salud actual en 1. Debes estar en plena salud para lanzar. Este hechizo debe ser lanzado solo.",
         "spell_debilitate": "Hace que los objetivos reciban daños 🍞% cada vez que reciben daños. ❕ apilable.",
         "spell_displace": "Teletransporta el objetivo a una ubicación aleatoria.",
         "spell_drown": "Darga 🍞 Daño solo a los objetivos sumergidos en líquido.",
@@ -3347,7 +3355,9 @@
         "give bounty": "Marcar como Recompensa",
         "spell_give_bounty": "Pon una recompensa sobre la cabeza del objetivo. Funciona bien con las Runas de Recompensa.",
         "target bounty": "Recompensa Apuntada",
-        "spell_target_bounty": "Objetivos unidades con recompensas por su cabeza. Uno por pila."
+        "spell_target_bounty": "Objetivos unidades con recompensas por su cabeza. Uno por pila.",
+        "death_wager_error1": "Debes estar a máxima salud para lanzar \"Apuesta Mortal\".",
+        "death_wager_error2": "La Apuesta de la Muerte debe ser lanzada por sí sola."
     },
     {
         "language": "日本",
@@ -3611,7 +3621,7 @@
         "spell_conserve": "現在マナを保持するまま次のターンに入る",
         "spell_contaminate": "すぐ目標が持つ呪いを付近に拡散する",
         "spell_dash": "目標に向かってダッシュ.❕ダッシュは必ず目標がいる,ユニットとドロップもの両方可能",
-        "spell_death_wager": "呪文のコストを全部正常に戻る,同時永久に体力上限の BD2023 %を減らす",
+        "spell_death_wager": "すべての魔法コストをデフォルトにリセットします。現在の健康を1に設定します。魔法を唱えるには最大の健康でなければなりません。この呪文は単独で唱えなければなりません。",
         "spell_debilitate": "目標がダメージ受ける時,追加に BD2023 %のダメージを与える.❕重ね可能",
         "spell_displace": "ターゲットをランダムの位置にテレポートする",
         "spell_drown": "ターゲットが液体の中にいた場合 BD2023 ダメージを与える",
@@ -4017,7 +4027,9 @@
         "give bounty": "報酬としてマークする",
         "spell_give_bounty": "対象の頭に賞金をかけろ。バウンティルーンと相性が良い。",
         "target bounty": "ターゲットバウンティ",
-        "spell_target_bounty": "首に懸賞金がかけられたユニットをターゲットにします。1スタックにつき1体。"
+        "spell_target_bounty": "首に懸賞金がかけられたユニットをターゲットにします。1スタックにつき1体。",
+        "death_wager_error1": "「デスウェイジャー」を唱えるには、最大の健康状態である必要があります。",
+        "death_wager_error2": "「デス・ウェイager」は単独で唱えなければならない。"
     },
     {
         "language": "Português",
@@ -4281,7 +4293,7 @@
         "spell_conserve": "Você sacrifica parte de sua vida economizando a mana do alvo desejado para o próximo turno, o alvo atingido perderá toda sua quantia de mana naquela rodada porém será recompensado com ela novamente na próxima rodada além da mana que já receberia.",
         "spell_contaminate": "Passa imediatamente os debuffs dessa unidade para unidades próximas a ela, como maldições, envenenamento entre outros efeitos penalizantes.",
         "spell_dash": "Puxa você em direção ao(s) alvo(s) .❕ Dash deve ser lançado em um alvo como uma criatura ou até mesmo aliado.",
-        "spell_death_wager": "Redefine todos os custos dos  feitiço já utilizados uma vez de volta ao seu padrão e reduza sua saúde máxima em 🍞% de 🍞% permanentemente.",
+        "spell_death_wager": "Redefine todos os custos de feitiços para seus padrões. Define sua saúde atual para 1. Você deve estar com a saúde máxima para lançar. Este feitiço deve ser lançado sozinho.",
         "spell_debilitate": "Faz com que os alvos sofram 🍞% de dano sempre que recebem novos danos ❕ Este feitiço pode ser estacado.",
         "spell_displace": "Teleporte o alvo para um local aleatório.",
         "spell_drown": "Causa um dano 🍞 somente para os alvos que estiverem sobre uma superfície líquida.",
@@ -4687,7 +4699,9 @@
         "give bounty": "Marcar como Recompensa",
         "spell_give_bounty": "Coloque uma recompensa na cabeça do alvo. Funciona bem com Runas de Recompensa.",
         "target bounty": "Alvo de Recompensa",
-        "spell_target_bounty": "Alvos unidades com recompensas em suas cabeças. Um por pilha."
+        "spell_target_bounty": "Alvos unidades com recompensas em suas cabeças. Um por pilha.",
+        "death_wager_error1": "Você deve estar com a saúde máxima para lançar \"Aposta da Morte\".",
+        "death_wager_error2": "Aposta da Morte deve ser lançada sozinha."
     },
     {
         "language": "عربى",
@@ -4951,7 +4965,7 @@
         "spell_conserve": "يحفظ بقية المانا الحالية للأهداف للدور التالي.",
         "spell_contaminate": "ينتشر على الفور لعنات هذه الوحدة إلى وحدات أخرى قريبة.",
         "spell_dash": "يسحب العجلات نحو الهدف (الهدف). يجب أن يتم إلقاء DASH على هدف مثل وحدة أو بيك آب.",
-        "spell_death_wager": "إعادة تعيين جميع تكاليف التعويذة إلى الافتراضي وتقليل Max Health بنسبة 🍞 ٪ بشكل دائم.",
+        "spell_death_wager": "إعادة ضبط جميع تكاليف التعويذات إلى Defaults. يحدد صحتك الحالية إلى 1. يجب أن تكون عند أقصى صحة لتتمكن من السحر. يجب أن تُلقى هذه التعويذة بمفردها.",
         "spell_debilitate": "يجعل الهدف (الأهداف) يتسبب في أضرار 🍞 ٪ كلما تلقوا أضرارًا. قابلة للتكديس.",
         "spell_displace": "النقل الفضائي الهدف إلى موقع عشوائي.",
         "spell_drown": "صفقة 🍞 تلف فقط للأهداف المغمورة في السائل.",
@@ -5357,7 +5371,9 @@
         "give bounty": "علامة كمكافأة",
         "spell_give_bounty": "حدد جائزة على رأس الهدف. تعمل بشكل جيد مع جوائز المكافآت.",
         "target bounty": "مكافأة الهدف",
-        "spell_target_bounty": "استهداف الوحدات التي عليها مكافآت. واحدة لكل كومة."
+        "spell_target_bounty": "استهداف الوحدات التي عليها مكافآت. واحدة لكل كومة.",
+        "death_wager_error1": "يجب أن تكون في أقصى صحة لتلقي تعويذة \"رهان الموت\"",
+        "death_wager_error2": "يجب أن يُلقى \"رهان الموت\" بمفرده"
     },
     {
         "language": "한국어",
@@ -5621,7 +5637,7 @@
         "spell_conserve": "대상들의 현재 마나를 다음 턴에도 유지합니다.",
         "spell_contaminate": "이 유닛의 저주를 근처의 다른 유닛으로 즉시 퍼뜨립니다.",
         "spell_dash": "시전자를 대상을 향해 당깁니다.❕ \"돌진\"은 유닛이나 픽업 같은 대상에만 시전할 수 있습니다.",
-        "spell_death_wager": "모든 주문 비용을 기본값으로 재설정하고 최대 체력을 🍞%까지 영구적으로 줄입니다.",
+        "spell_death_wager": "모든 주문 비용을 기본값으로 초기화합니다. 현재 체력을 1로 설정합니다. 주문을 시전하기 위해서는 최대 체력이어야 합니다. 이 주문은 혼자서 시전해야 합니다.",
         "spell_debilitate": "대상이 피해를 입을 때마다 🍞%의 피해를 입힙니다.❕ 중첩 가능.",
         "spell_displace": "대상을 무작위 위치로 이동시킵니다.",
         "spell_drown": "대상이 잠긴 경우에만 🍞 피해를 입힙니다.",
@@ -6027,7 +6043,9 @@
         "give bounty": "현상금을 걸다",
         "spell_give_bounty": "대상 머리에 현상금을 걸어라. 보상 룬과 잘 어울린다.",
         "target bounty": "목표 현상금",
-        "spell_target_bounty": "머리 위에 현상금이 걸린 유닛을 대상으로 합니다. 스택당 하나만."
+        "spell_target_bounty": "머리 위에 현상금이 걸린 유닛을 대상으로 합니다. 스택당 하나만.",
+        "death_wager_error1": "죽음의 내기를 시전하기 위해서는 최대 체력이어야 합니다.",
+        "death_wager_error2": "“죽음의 내기”는 혼자서 시전해야 합니다."
     },
     {
         "language": "Русский",
@@ -6291,7 +6309,7 @@
         "spell_conserve": "Сохраняет остаток текущей маны цели на следующий ход.",
         "spell_contaminate": "Распространяет проклятия на существ около цели.",
         "spell_dash": "Передвигает Заклинателя к цели (целям).",
-        "spell_death_wager": "Возвращает стоимость всех заклинаний к стандартной и навсегда снижает максимальное здоровье на 🍞%",
+        "spell_death_wager": "Сбросьте все затраты маны на заклинания обратно к их значениям по умолчанию. Устанавливает ваше текущее здоровье на 1. Вы должны быть с полным здоровьем, чтобы произнести заклинание. Это заклинание должно быть произнесено в одиночку.",
         "spell_debilitate": "Цель получает 🍞% урона от любого источника.❕ Можно наложить несколько раз.",
         "spell_displace": "Телепортирует цель в случайное место.",
         "spell_drown": "Цель в воде/лаве или жидкости получит 🍞 урона. ",
@@ -6697,7 +6715,9 @@
         "give bounty": "Пометить как награду",
         "spell_give_bounty": "Установите награду за голову цели. Хорошо сочетается с Наградными Рунами.",
         "target bounty": "Целевая Награда",
-        "spell_target_bounty": "Цельтесь в юниты с наградами на их головы. По одному на стек."
+        "spell_target_bounty": "Цельтесь в юниты с наградами на их головы. По одному на стек.",
+        "death_wager_error1": "Вы должны быть на максимальном уровне здоровья, чтобы произнести \"Ставку на Смерть\".",
+        "death_wager_error2": "Ставка на смерть должна быть применена самостоятельно."
     },
     {
         "language": "中文(简)",
@@ -6961,7 +6981,7 @@
         "spell_conserve": "保留目标现有魔力添加至下一回合",
         "spell_contaminate": "立即扩散该目标的诅咒至临近单位",
         "spell_dash": "冲向目标位置.❕\"冲刺\"必须有目标,例如某个单位或者物品",
-        "spell_death_wager": "重置所有咒语消耗至默认值,同时永久减少 BD2023  %生命上限",
+        "spell_death_wager": "将所有法术费用重置为默认值。将你的当前生命值设置为1。你必须满生命值才能施法。此法术必须单独施放。",
         "spell_debilitate": "当目标受到伤害时,额外使目标受到 BD2023  %伤害.❕可叠加",
         "spell_displace": "使目标传送到随机地点",
         "spell_drown": "如果目标在水中则造成 BD2023  伤害",
@@ -7367,7 +7387,9 @@
         "give bounty": "标记为赏金",
         "spell_give_bounty": "在目标的头上悬赏。与赏金符文配合得很好。",
         "target bounty": "目标赏金",
-        "spell_target_bounty": "目标单位的赏金。每堆一个。"
+        "spell_target_bounty": "目标单位的赏金。每堆一个。",
+        "death_wager_error1": "你必须达到最大生命值才能施放“死亡赌注”。",
+        "death_wager_error2": "死亡赌注必须单独施放"
     },
     {
         "language": "中文(繁)",
@@ -7631,7 +7653,7 @@
         "spell_conserve": "保留目標現有魔力添加至下一回合",
         "spell_contaminate": "立即擴散該目標的詛咒至臨近單位",
         "spell_dash": "沖向目標位置.❕\"衝刺\"必須有目標,例如某個單位或者物品",
-        "spell_death_wager": "重置所有咒語消耗至默認值,同時永久減少 BD2023  %生命上限",
+        "spell_death_wager": "將所有法術消耗重置為預設值。將你的當前生命值設置為1。必須在滿生命值狀態下才能施法。此法術必須單獨施放。",
         "spell_debilitate": "當目標受到傷害時,額外使目標受到 BD2023  %傷害.❕可疊加",
         "spell_displace": "使目標傳送到隨機地點",
         "spell_drown": "如果目標在水中則造成 BD2023  傷害",
@@ -8037,7 +8059,9 @@
         "give bounty": "標記為賞金",
         "spell_give_bounty": "在目標的頭上懸賞。與獵賞符文搭配效果良好。",
         "target bounty": "目標賞金",
-        "spell_target_bounty": "針對頭上懸賞的目標單位。每堆一個。"
+        "spell_target_bounty": "針對頭上懸賞的目標單位。每堆一個。",
+        "death_wager_error1": "你必須在最大生命值時才能施放「死亡賭注」。",
+        "death_wager_error2": "「死亡賭注」必須單獨施放。"
     },
     {
         "language": "Polski",
@@ -8301,7 +8325,7 @@
         "spell_conserve": "Zachowuje resztę obecnej many celów do użycia w następnej turze.",
         "spell_contaminate": "Natychmiast powiela klątwy z tej jednostki na inne pobliskie jednostki.",
         "spell_dash": "Przyciąga rzucającego w kierunku celu. ❕Sprint musi być rzucany na cel, taki jak jednostka, ciało czy przedmiot.",
-        "spell_death_wager": "Zresetuj wszystkie koszty zaklęć z powrotem do ich bazowej wartości i zmniejsz swoje maksymalne zdrowie o 🍞% na stałe.",
+        "spell_death_wager": "Resetuj koszty wszystkich zaklęć do wartości domyślnych. Ustaw swoje aktualne zdrowie na 1. Musisz mieć maksymalne zdrowie, aby rzucić to zaklęcie. To zaklęcie musi być rzucone samodzielnie.",
         "spell_debilitate": "Powoduje, że cel otrzymuje 🍞% obrażeń za każdym razem, gdy zostanie zaatakowany. ❕Można użyć więcej niż raz.",
         "spell_displace": "Teleportuj cel w losowe miejsce.",
         "spell_drown": "Zadaj 🍞 obrażeń celom zanurzonym w cieczy.",
@@ -8707,7 +8731,9 @@
         "give bounty": "Oznacz jako nagrodę",
         "spell_give_bounty": "Ustal nagrodę za głowę celu. Działa dobrze z Runami Łowców.",
         "target bounty": "Cel bounty",
-        "spell_target_bounty": "Celuje jednostki z nagrodami na głowie. Jedna na stos."
+        "spell_target_bounty": "Celuje jednostki z nagrodami na głowie. Jedna na stos.",
+        "death_wager_error1": "Musisz mieć maksymalne zdrowie, aby rzucić \"Zakład na Śmierć\".",
+        "death_wager_error2": "Zakład Śmierci musi być rzucony samodzielnie."
     },
     {
         "language": "Dutch",
@@ -8971,7 +8997,7 @@
         "spell_conserve": "Saveert de rest van de huidige mana van de doelen voor de volgende beurt.",
         "spell_contaminate": "Spreidt onmiddellijk de vloeken van deze unit uit naar andere nabijgelegen eenheden.",
         "spell_dash": "Trekt de caster naar het doel (en) .❕ Dash moet op een doelwit worden geworpen, zoals een eenheid of ophalen.",
-        "spell_death_wager": "Reset alle spellingkosten terug naar hun standaard en verlagen uw maximale gezondheid met 🍞% permanent.",
+        "spell_death_wager": "Zet alle spellingskosten terug naar hun standaard. Zet je huidige gezondheid op 1. Je moet op je maximale gezondheid zijn om te kunnen casten. Deze spreuk moet alleen worden gecast.",
         "spell_debilitate": "Laat de doelwit (s) 🍞% schade aannemen wanneer ze schade krijgen. ❕ Stapelbaar.",
         "spell_displace": "Teleporteer het doelwit naar een willekeurige locatie.",
         "spell_drown": "Deal 🍞 schade alleen aan doelen ondergedompeld in vloeistof.",
@@ -9377,6 +9403,8 @@
         "give bounty": "Merken als Bounty",
         "spell_give_bounty": "Stel een beloning in op het hoofd van het doelwit. Werkt goed met Bounty Runes.",
         "target bounty": "Doelbeloning",
-        "spell_target_bounty": "Doelwitten eenheden met een beloning op hun hoofd. Eén per stapel."
+        "spell_target_bounty": "Doelwitten eenheden met een beloning op hun hoofd. Eén per stapel.",
+        "death_wager_error1": "Je moet op maximale gezondheid zijn om \"Doodsweddenschap\" te kunnen casten.",
+        "death_wager_error2": "\"Death Wager\" kan geen onderdeel zijn van een reeks spreuken."
     }
 ]

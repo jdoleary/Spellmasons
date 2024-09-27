@@ -4091,9 +4091,6 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
         // If refund, reset cardUsageCount
         if (effectState.shouldRefundLastSpell || args.castForFree) {
           casterCardUsage[cardId] = cardUsageCountPreCast;
-          if (!prediction) {
-            CardUI.updateCardBadges(this);
-          }
         }
         //// end REFUNDING ////
 
@@ -4141,6 +4138,10 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
       // We should only progress the game state if the caster is a player.
       // AI handles progress game state at the end of each entire NPC Turn.
       await this.progressGameState();
+    }
+    // Update card badges after casting
+    if (!prediction) {
+      CardUI.updateCardBadges(this);
     }
     return effectState;
   }
