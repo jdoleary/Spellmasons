@@ -2125,6 +2125,7 @@ export default class Underworld {
 
     if (spawnPoint == undefined) {
       console.error('Could not find valid spawn point in radius');
+      spawnPoint = center;
     }
 
     return spawnPoint;
