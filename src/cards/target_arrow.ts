@@ -58,7 +58,8 @@ const spell: Spell = {
           inLiquid: false,
           image,
           immovable: false,
-          beingPushed: false
+          beingPushed: false,
+          debugName: 'target arrow'
         }
         makeForceMoveProjectile({
           sourceUnit: state.casterUnit,

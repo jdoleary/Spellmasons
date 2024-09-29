@@ -81,7 +81,8 @@ export function arrowEffect(multiShotCount: number, collideFnKey: string, pierce
             inLiquid: false,
             image,
             immovable: false,
-            beingPushed: false
+            beingPushed: false,
+            debugName: 'arrow'
           }
           makeForceMoveProjectile({
             sourceUnit: state.casterUnit,

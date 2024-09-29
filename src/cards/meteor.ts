@@ -132,7 +132,8 @@ async function meteorProjectiles(meteorLocations: Vec2[], underworld: Underworld
       inLiquid: false,
       image,
       immovable: false,
-      beingPushed: false
+      beingPushed: false,
+      debugName: 'meteor'
     }
 
     emitters.push(attachMeteorParticles(pushedObject, underworld));

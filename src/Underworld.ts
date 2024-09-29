@@ -936,6 +936,23 @@ export default class Underworld {
     const stillProcessingForceMoves = this.gameLoopForceMove(EXPECTED_MILLIS_PER_GAMELOOP);
     if (loopCount > loopCountLimit && stillProcessingForceMoves) {
       console.error('_gameLoopHeadless hit limit; stillProcessingForceMoves');
+      // Extra debugging:
+      if (this.forceMove[0]?.pushedObject.debugName) {
+        console.error('headless: Stuck processing forceMove for unknown type:', this.forceMove[0]?.pushedObject.debugName);
+      } else {
+        const firstPushedObject = this.forceMove[0]?.pushedObject as any;
+        if (Unit.isUnit(firstPushedObject)) {
+          console.error('headless: Stuck processing forceMove for unit:', firstPushedObject.unitSourceId);
+        } else if (Pickup.isPickup(firstPushedObject)) {
+          console.error('headless: Stuck processing forceMove for pickup:', firstPushedObject.name);
+        } else {
+          console.error('headless: Stuck processing forceMove for unknown type:', JSON.stringify(firstPushedObject));
+        }
+      }
+      // Since there is at least one forceMove that is now broken (unending)
+      // clear them all out so that the next time _gameLoopHeadless is called
+      // it wont hit limit again and keep emergency exiting the loop
+      this.forceMove = [];
     }
     let stillProcessingUnits = 0;
     const aliveNPCs = this.units.filter(u => u.alive && u.unitType == UnitType.AI);

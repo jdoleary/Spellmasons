@@ -10,6 +10,7 @@ export interface HasSpace {
     // Currently being pushed
     beingPushed: boolean;
     flaggedForRemoval?: boolean;
+    debugName?: string;
 }
 export function hasSpace(maybe: any): maybe is HasSpace {
     return maybe && typeof maybe.x == 'number' && typeof maybe.y == 'number' && typeof maybe.radius == 'number';

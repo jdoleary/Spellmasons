@@ -61,7 +61,8 @@ const spell: Spell = {
           inLiquid: false,
           image,
           immovable: false,
-          beingPushed: false
+          beingPushed: false,
+          debugName: 'target disk'
         }
         makeForceMoveProjectile({
           sourceUnit: state.casterUnit,
