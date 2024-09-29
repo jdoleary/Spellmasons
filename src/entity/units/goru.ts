@@ -82,7 +82,9 @@ const unit: UnitSource = {
     // - Action -
     // Consume/Explode/Resurrect primed corpses
     if (actionPoints >= 2 && unit.mana >= unit.manaCostToCast) {
-      const primedCorpses = underworld.units.filter(u => u.modifiers[primedCorpseId])
+      // u.faction === unit.faction: to keep competing gorus from using each other's primed corpses, when a corpse is primed
+      // it will be converted to the gorus faction so they don't use each others if there is an ally and enemy goru.
+      const primedCorpses = underworld.units.filter(u => u.modifiers[primedCorpseId] && u.faction === unit.faction)
       if (primedCorpses.length) {
         Unit.returnToDefaultSprite(unit);
         // Triggering corpse effects should feel like a high impact action
@@ -235,6 +237,8 @@ const unit: UnitSource = {
     if (actionPoints >= 2 && unit.mana >= unit.manaCostToCast) {
       const deadUnits = underworld.units.filter(u =>
         !u.alive
+        // Not already primed
+        && !u.modifiers[primedCorpseId]
         // Only resurrect players if they are on the same faction as Goru
         && (u.unitType != UnitType.PLAYER_CONTROLLED || u.faction === unit.faction)
         && math.distance(unit, u) <= unit.attackRange);
@@ -258,6 +262,9 @@ const unit: UnitSource = {
                 Image.addOneOffAnimation(target, 'lobberProjectileHit');
 
                 Unit.addModifier(target, primedCorpseId, underworld, false, 1);
+                // When a corpse is primed, change their faction so that Gorus of differing
+                // factions won't use each other's primed corpses
+                target.faction = unit.faction;
                 resolve();
               });
             }));
