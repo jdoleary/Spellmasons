@@ -1765,6 +1765,10 @@ export function drawSelectedGraphics(unit: IUnit, prediction: boolean = false, u
   // Cleanup for AI Refactor https://github.com/jdoleary/Spellmasons/issues/388
 
   if (unit.alive) {
+    // Only use predictionCopy to draw centerpoitn on players turns so that it shows where they **will** be if
+    // you push them; however on all other turns use the unit because they may be moving and so their circle should
+    // move with them
+    const coordinates = underworld.turn_phase == turn_phase.PlayerTurns ? (unit.predictionCopy || unit) : unit;
     // If unit is an archer, draw LOS attack line
     // instead of attack range for them
     if (unit.unitSubType == UnitSubType.RANGED_LOS || unit.unitSubType == UnitSubType.SPECIAL_LOS) {
@@ -1795,7 +1799,7 @@ export function drawSelectedGraphics(unit: IUnit, prediction: boolean = false, u
           : colors.attackRangeEnemy;
 
       // Draw outer attack range circle
-      drawUICircle(globalThis.selectedUnitGraphics, unit.predictionCopy || unit, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
+      drawUICircle(globalThis.selectedUnitGraphics, coordinates, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
 
       // TODO - Consider re-implementing attack lines with AI refactor
       // https://github.com/jdoleary/Spellmasons/issues/408
@@ -1825,15 +1829,15 @@ export function drawSelectedGraphics(unit: IUnit, prediction: boolean = false, u
         globalThis.selectedUnitGraphics.lineStyle(2, rangeCircleColor, 1.0);
 
         if (unit.unitSubType === UnitSubType.RANGED_RADIUS) {
-          drawUICircle(globalThis.selectedUnitGraphics, unit.predictionCopy || unit, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
+          drawUICircle(globalThis.selectedUnitGraphics, coordinates, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
         } else if (unit.unitSubType === UnitSubType.SUPPORT_CLASS) {
-          drawUICircle(globalThis.selectedUnitGraphics, unit.predictionCopy || unit, unit.attackRange, rangeCircleColor, i18n('Support Range'));
+          drawUICircle(globalThis.selectedUnitGraphics, coordinates, unit.attackRange, rangeCircleColor, i18n('Support Range'));
         } else if (unit.unitSubType === UnitSubType.MELEE) {
-          drawUICircle(globalThis.selectedUnitGraphics, unit.predictionCopy || unit, unit.staminaMax + unit.attackRange, rangeCircleColor, i18n('Attack Range'));
+          drawUICircle(globalThis.selectedUnitGraphics, coordinates, unit.staminaMax + unit.attackRange, rangeCircleColor, i18n('Attack Range'));
         } else if (unit.unitSubType === UnitSubType.DOODAD) {
-          drawUICircle(globalThis.selectedUnitGraphics, unit.predictionCopy || unit, unit.attackRange, rangeCircleColor, i18n('Explosion Radius'));
+          drawUICircle(globalThis.selectedUnitGraphics, coordinates, unit.attackRange, rangeCircleColor, i18n('Explosion Radius'));
         } else if (unit.unitSubType === UnitSubType.GORU_BOSS) {
-          drawUICircle(globalThis.selectedUnitGraphics, unit.predictionCopy || unit, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
+          drawUICircle(globalThis.selectedUnitGraphics, coordinates, unit.attackRange, rangeCircleColor, i18n('Attack Range'));
         }
       }
     }
