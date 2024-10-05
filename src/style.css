@@ -331,15 +331,18 @@ invisibly blocked, change with caution! */
 
 .recording-shorts #inventory-container {
   /* This makes width 1080 which is recording resolution */
-  height:655px;
+  height:605px;
+  margin-bottom: 40%;
 }
 .recording-shorts #ui-positioner {
   left:0;
   width:1080px;
 }
 .recording-shorts .doob-stats {
-  right:0;
-  left:auto !important;
+  display:none;
+}
+.recording-shorts #camera-recenter-tip {
+  display: none !important;
 }
 
 #card-holders-border {
