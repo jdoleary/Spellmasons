@@ -1,3 +1,24 @@
+## 2024
+Freeze Frame: `selectedUnit.image.sprite.gotoAndStop(5)`
+
+Wizard colors matching Grass Biome:
+- Purples
+    - Eggplant `#533B4D`
+    - Russian violet `#380036`
+- Browns
+    - Cinereous `#816C61`
+    - Beaver `#967D69`
+- Blues
+    - UCLA Blue `#2274A5`
+    - Gun Metal `#16262E`
+    - Glaucous `#5C80BC`
+- Reds
+    - Light coral `#EF6F6C`
+- Blacks
+    - Rich black `#001514`
+
+Orient many units to face me:
+`devUnderworld.units.filter(x => x.unitSourceId == 'archer').forEach(archer => {          Unit.orient(archer, player.unit);})`
 ## 2023
 - Journalists
     - IGN
