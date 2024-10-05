@@ -60,9 +60,8 @@ export async function summonerAction(unit: Unit.IUnit, ableToSummon: boolean, un
     await Unit.playComboAnimation(unit, unit.animations.attack, async () => {
       let numberOfSummons = baseNumberOfSummons * (unit.isMiniboss ? 2 : 1);
       let lastPromise = Promise.resolve();
-      const seed = seedrandom(`${underworld.seed}-${underworld.turn_number}-${unit.id}`);
       for (let i = 0; i < numberOfSummons; i++) {
-        const coords = underworld.findValidSpawnInRadius(unit, false, seed, { maxRadius: unit.attackRange, unobstructedPoint: unit });
+        const coords = underworld.findValidSpawnInRadius(unit, false, { unobstructedPoint: unit });
         if (coords) {
           const enemyIsClose = underworld.units.filter(u => u.faction !== unit.faction).some(u => math.distance(coords, u) <= PLAYER_BASE_ATTACK_RANGE)
           let sourceUnit = farUnit;
@@ -107,9 +106,8 @@ export async function summonerAction(unit: Unit.IUnit, ableToSummon: boolean, un
     const enemyIsClose = underworld.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.faction !== unit.faction).some(u => math.distance(unit, u) <= PLAYER_BASE_ATTACK_RANGE)
     if (enemyIsClose) {
       // Teleport away
-      const seed = seedrandom(`${underworld.turn_number}-${unit.id}`);
       const teleportFromLocation = clone(unit);
-      const teleportToLocation = underworld.findValidSpawnInRadius(unit, false, seed, { maxRadius: unit.attackRange, unobstructedPoint: unit });
+      const teleportToLocation = underworld.findValidSpawnInRadius(unit, false, { unobstructedPoint: unit });
       if (teleportToLocation) {
         await new Promise<void>(resolveTeleport => {
           new Promise<void>(resolve => oneOffImage(unit, 'summonerMagic', containerUnits, resolve)).then(() => {

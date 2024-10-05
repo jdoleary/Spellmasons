@@ -70,8 +70,7 @@ export function cloneEffect(addClonesToTargetArray: boolean): EffectFn {
               }
             } else if (Pickup.isPickup(target)) {
               const targetName = target.name;
-              const seed = seedrandom(`${getUniqueSeedString(underworld)}-${target.id}`);
-              const validSpawnCoords = underworld.findValidSpawnInRadius(target, prediction, seed, { allowLiquid: target.inLiquid, maxRadius: config.COLLISION_MESH_RADIUS });
+              const validSpawnCoords = underworld.findValidSpawnInRadius(target, prediction, { allowLiquid: target.inLiquid });
               if (validSpawnCoords) {
                 let foundPickup = Pickup.pickups.find((p) => p.name == targetName);
                 if (foundPickup) {
@@ -101,8 +100,7 @@ export function cloneEffect(addClonesToTargetArray: boolean): EffectFn {
   }
 }
 export function doCloneUnit(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, summoner: Unit.IUnit, spawnSource?: Vec2): Unit.IUnit | undefined {
-  const seed = seedrandom(`${getUniqueSeedString(underworld)}-${unit.id}`);
-  const validSpawnCoords = underworld.findValidSpawnInRadius(unit, prediction, seed, { allowLiquid: unit.inLiquid });
+  const validSpawnCoords = underworld.findValidSpawnInRadius(unit, prediction, { allowLiquid: unit.inLiquid });
   if (validSpawnCoords) {
     const clone = Unit.load(Unit.serialize(unit), underworld, prediction);
     clone.summonedBy = summoner;

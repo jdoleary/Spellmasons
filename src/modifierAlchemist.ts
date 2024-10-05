@@ -30,7 +30,7 @@ export default function registerAlchemist() {
       if (modifier && unit.alive) {
         const random = seedrandom(`${getUniqueSeedString(underworld)}-${unit.id}`);
         if (randFloat(0, 100, random) < modifier.quantity) {
-          const coords = underworld.findValidSpawnInRadius(unit, prediction, random, { minRadius: COLLISION_MESH_RADIUS * 2, allowLiquid: unit.inLiquid });
+          const coords = underworld.findValidSpawnInRadius(unit, prediction, { allowLiquid: unit.inLiquid });
           if (coords) {
             const pickupChoice = chooseObjectWithProbability(Pickup.pickups.map((p, index) => {
               return { index, probability: p.name.includes('Potion') ? p.probability : 0 }

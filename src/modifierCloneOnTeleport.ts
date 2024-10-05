@@ -33,7 +33,7 @@ export default function registerContaminateSelfOnTeleport() {
           // that the player is swapping that location might now be full
           let coords = originalLocation;
           if (!underworld.isPointValidSpawn(coords, prediction, { allowLiquid: true })) {
-            coords = underworld.findValidSpawnInRadius(originalLocation, prediction, seedrandom(`${unit.id}`)) || coords;
+            coords = underworld.findValidSpawnInRadius(originalLocation, prediction) || coords;
           }
 
           if (clone && coords) {

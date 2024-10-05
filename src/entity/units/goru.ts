@@ -329,7 +329,7 @@ const unit: UnitSource = {
         const summons: { coords: Vec2, sourceUnit: UnitSource }[] = [];
         const seed = seedrandom(`${getUniqueSeedString(underworld)}-${unit.id}`);
         for (let i = 0; i < numberOfSummons; i++) {
-          const coords = underworld.findValidSpawnInRadius(unit, false, seed, { maxRadius: unit.attackRange, unobstructedPoint: unit });
+          const coords = underworld.findValidSpawnInRadius(unit, false, { unobstructedPoint: unit });
           if (coords) {
             const sourceUnit = chooseOneOfSeeded(summonTypes, seed);
             if (sourceUnit) {

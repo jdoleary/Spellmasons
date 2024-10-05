@@ -2094,25 +2094,14 @@ export default class Underworld {
     return spawnPoint;
   }
 
-  findValidSpawnInRadius(center: Vec2, prediction: boolean, seed: prng,
-    extra?: { maxRadius?: number, minRadius?: number, allowLiquid?: boolean, unobstructedPoint?: Vec2 }): Vec2 | undefined {
-    // Setup extra args:
-    let maxRadius = extra?.maxRadius || 100;
-    let minRadius = extra?.minRadius || config.COLLISION_MESH_RADIUS;
+  findValidSpawnInRadius(center: Vec2, prediction: boolean,
+    extra?: { allowLiquid?: boolean, unobstructedPoint?: Vec2 }): Vec2 | undefined {
     let allowLiquid = extra?.allowLiquid || false;
     let unobstructedPoint = extra?.unobstructedPoint || undefined;
 
     let spawnPoint = undefined;
-    for (let i = 0; i < 100; i++) {
-      // Generate a random angle in radians
-      const angle = randFloat(0, 2 * Math.PI, seed);
-      const distance = randFloat(minRadius, maxRadius, seed);
-
-      // Set coordinate based on dir and distance
-      spawnPoint = {
-        x: center.x + (distance * Math.cos(angle)),
-        y: center.y + (distance * Math.sin(angle)),
-      }
+    for (let s of math.honeycombGenerator(config.COLLISION_MESH_RADIUS / 4, center, 7)) {
+      spawnPoint = s;
 
       // If spawnPoint is valid, break the loop
       if (this.isPointValidSpawn(spawnPoint, prediction, { allowLiquid, unobstructedPoint })) {
@@ -2644,10 +2633,9 @@ export default class Underworld {
       Pickup.removePickup(p, this, false);
     });
 
-    const seed = seedrandom(getUniqueSeedString(this));
     // Spawn a portal near each remaining player
     for (let playerUnit of remainingPlayers) {
-      const portalSpawnLocation = this.findValidSpawnInRadius(playerUnit, false, seed);
+      const portalSpawnLocation = this.findValidSpawnInRadius(playerUnit, false);
       if (portalSpawnLocation) {
         spawnedPortals.push(Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup, logSource: 'Portal' }, this, false));
       }
@@ -2994,9 +2982,8 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             // This doesn't apply to melee units since they will automatically move towards you to attack,
             // whereas without this ranged units would be content to just sit in liquid and die from the DOT
             if (u.unitSubType !== UnitSubType.MELEE && u.inLiquid) {
-              const seed = seedrandom(`${getUniqueSeedString(this)}-${u.id}`);
               // Using attackRange instead of maxStamina ensures they'll eventually walk out of liquid
-              const coords = this.findValidSpawnInRadius(u, false, seed, { maxRadius: u.attackRange });
+              const coords = this.findValidSpawnInRadius(u, false);
               if (coords) {
                 await Unit.moveTowards(u, coords, this);
               }

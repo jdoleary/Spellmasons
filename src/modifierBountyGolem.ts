@@ -33,11 +33,10 @@ export default function registerBountyGolem() {
       if (modifier) {
         // Create golems on kill
         if (killedUnit.modifiers[bountyId]) {
-          const seed = seedrandom(`${getUniqueSeedString(underworld)}-${killedUnit.id}`);
           // Summon quantity ally golems
           const golemsToSummon = modifier.quantity;
           for (let i = 0; i < golemsToSummon; i++) {
-            const coords = underworld.findValidSpawnInRadius(killedUnit, prediction, seed, { allowLiquid: killedUnit.inLiquid, maxRadius: 150 });
+            const coords = underworld.findValidSpawnInRadius(killedUnit, prediction, { allowLiquid: killedUnit.inLiquid });
             if (coords) {
               let sourceUnit = allUnits[BLOOD_GOLEM_ID];
               if (sourceUnit) {

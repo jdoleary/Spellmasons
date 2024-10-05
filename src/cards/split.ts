@@ -141,8 +141,7 @@ export function doSplit(target: Vec2 | undefined, summoner: Unit.IUnit, underwor
   if (target) {
     // If there is are clone coordinates to clone into
     if (Unit.isUnit(target)) {
-      const seed = seedrandom(`${getUniqueSeedString(underworld)}-${target.id}`);
-      const validSpawnCoords = underworld.findValidSpawnInRadius(target, prediction, seed, { allowLiquid: target.inLiquid, maxRadius: config.COLLISION_MESH_RADIUS });
+      const validSpawnCoords = underworld.findValidSpawnInRadius(target, prediction, { allowLiquid: target.inLiquid });
       if (validSpawnCoords) {
         const clone = Unit.load(Unit.serialize(target), underworld, prediction);
         clone.summonedBy = summoner;
@@ -182,8 +181,7 @@ export function doSplit(target: Vec2 | undefined, summoner: Unit.IUnit, underwor
         return clone;
       }
     } else if (Pickup.isPickup(target)) {
-      const seed = seedrandom(`${getUniqueSeedString(underworld)}-${target.id}`);
-      const validSpawnCoords = underworld.findValidSpawnInRadius(target, prediction, seed, { allowLiquid: target.inLiquid });
+      const validSpawnCoords = underworld.findValidSpawnInRadius(target, prediction, { allowLiquid: target.inLiquid });
       if (validSpawnCoords) {
         // Since there is a safety for loading/creating pickups of duplicate id's
         const serializedPickup = Pickup.serialize(target);

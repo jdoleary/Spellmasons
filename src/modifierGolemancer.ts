@@ -57,11 +57,10 @@ export default function registerGolemancer() {
 function spawnGolems(unit: Unit.IUnit, quantity: number, underworld: Underworld, prediction: boolean) {
   let ownGolems = getLivingAllyGolems(unit, underworld, prediction).filter(u => u.summonedBy === unit && u.unitSourceId == golem_unit_id);
   if (ownGolems.length < quantity) {
-    const seed = seedrandom(`${getUniqueSeedString(underworld)}-${unit.id}`);
     // Summon ally golems up to quantity
     const golemsToSummon = quantity - ownGolems.length;
     for (let i = 0; i < golemsToSummon; i++) {
-      const coords = underworld.findValidSpawnInRadius(unit, prediction, seed, { allowLiquid: unit.inLiquid });
+      const coords = underworld.findValidSpawnInRadius(unit, prediction, { allowLiquid: unit.inLiquid });
       if (coords) {
         let sourceUnit = allUnits[golem_unit_id];
         if (sourceUnit) {

@@ -79,7 +79,7 @@ const deathmason: UnitSource = {
           let lastPromise = Promise.resolve();
           const portalCoords = [];
           for (let i = 0; i < numberOfSummons; i++) {
-            const coords = underworld.findValidSpawnInRadius(unit, false, seed, { maxRadius: unit.attackRange, unobstructedPoint: unit });
+            const coords = underworld.findValidSpawnInRadius(unit, false, { unobstructedPoint: unit });
             if (coords) {
               portalCoords.push(coords);
             } else {
@@ -207,8 +207,7 @@ export function registerDeathmasonEvents() {
           if (!prediction) {
             let retryAttempts = 0;
             for (let i = 0; (i < 3 && retryAttempts < 10); i++) {
-              const seed = seedrandom(`${underworld.seed}-${underworld.turn_number}-${unit.id}`);
-              const coords = underworld.findValidSpawnInRadius(unit, false, seed, { maxRadius: unit.attackRange });
+              const coords = underworld.findValidSpawnInRadius(unit, false);
               if (!coords) {
                 console.warn("Deathmason onDeath() spawning failed attempt: ", retryAttempts);
                 retryAttempts++;
