@@ -3427,6 +3427,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     if (remoteLog) {
       remoteLog(`Buy Rune: ${runeModifierId}`);
     }
+    console.log('CHOOSE_RUNE', runeModifierId);
     const modifier = Cards.allModifiers[runeModifierId];
     if (!modifier) {
       console.error(`Failed to upgrade rune ${runeModifierId}`)
@@ -3435,6 +3436,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
     const modifierCost = Cards.calcluateModifierCostPerUpgrade(modifier, this, player)
     // Do not allow overspend
     if (player.statPointsUnspent < modifierCost) {
+      console.error(`Failed to upgrade rune, attempted overspend`);
       return;
     }
 
