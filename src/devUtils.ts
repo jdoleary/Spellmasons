@@ -77,9 +77,9 @@ export function setupDevGlobalFunctions(overworld: Overworld) {
             globalThis.isSuperMe = true;
             player.unit.health = 10000;
             player.unit.healthMax = 10000;
-            player.unit.mana = 10000;
-            player.unit.manaPerTurn = 10000;
-            player.unit.manaMax = 10000;
+            player.unit.mana = 1000000;
+            player.unit.manaPerTurn = 1000000;
+            player.unit.manaMax = 1000000;
             // Give me all cards
             Object.keys(Cards.allCards).forEach(cardId => {
                 const card = Cards.allCards[cardId];
