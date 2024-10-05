@@ -25,7 +25,7 @@ import pingSprite from '../graphics/Ping';
 import { clearLastNonMenuView, setView } from '../views';
 import { View } from '../View';
 import { autoExplain, explain, EXPLAIN_END_TURN, tutorialCompleteTask } from '../graphics/Explain';
-import { cacheBlood, cameraAutoFollow } from '../graphics/PixiUtils';
+import { cacheBlood, cameraAutoFollow, getCameraCenterInGameSpace, getZoom, setCamera } from '../graphics/PixiUtils';
 import { ensureAllClientsHaveAssociatedPlayers, Overworld, recalculateGameDifficulty } from '../Overworld';
 import { playerCastAnimationColor, playerCastAnimationColorLighter, playerCastAnimationGlow } from '../graphics/ui/colors';
 import { lightenColor } from '../graphics/ui/colorUtil';
@@ -1090,9 +1090,10 @@ function joinGameAsPlayer(fromClient: string, asClientId: string, overworld: Ove
 }
 async function handleLoadGameState(payload: {
   underworld: IUnderworldSerialized,
+  camera: Vec2 & { zoom: number }
 }, overworld: Overworld) {
   console.log("Setup: Load game state", payload)
-  const { underworld: payloadUnderworld } = payload
+  const { underworld: payloadUnderworld, camera } = payload
   const { pickups, units, players, turn_phase } = payloadUnderworld;
 
   console.log('Setup: activeMods', payloadUnderworld.activeMods);
@@ -1204,6 +1205,13 @@ async function handleLoadGameState(payload: {
       }
     })
   }
+  // After loading players, remove instructions if...
+  if (globalThis.player?.isSpawned) {
+    // If player is already spawned, clear spawn instructions
+    if (elInstructions) {
+      elInstructions.innerText = '';
+    }
+  }
   // After a load always start all players with endedTurn == false so that
   // it doesn't skip the player turn if players rejoin out of order
   for (let p of underworld.players) {
@@ -1248,6 +1256,11 @@ async function handleLoadGameState(payload: {
     // Ensures that when loading a hotseat multiplayer saved game,
     // that the inventory is filled with the spells it had when saved
     recalcPositionForCards(globalThis.player, underworld);
+  }
+
+  // Reset camera to where it was saved
+  if (camera) {
+    setCamera(camera, camera.zoom, underworld);
   }
 
   // Now that a new gamestate has loaded in, run predictions
@@ -1438,7 +1451,8 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
     const saveObject: SaveFile = {
       version: globalThis.SPELLMASONS_PACKAGE_VERSION,
       underworld: underworld.serializeForSaving(),
-      numberOfHotseatPlayers
+      numberOfHotseatPlayers,
+      camera: { ...getCameraCenterInGameSpace(), zoom: getZoom() },
     };
     try {
       storage.set(
@@ -1489,7 +1503,7 @@ export function setupNetworkHandlerGlobalFunctions(overworld: Overworld) {
         }
       }
 
-      const { underworld: savedUnderworld, version, numberOfHotseatPlayers } = fileSaveObj as SaveFile;
+      const { underworld: savedUnderworld, version, numberOfHotseatPlayers, camera } = fileSaveObj as SaveFile;
       const { players } = savedUnderworld;
       if (numberOfHotseatPlayers !== undefined || players.length > 1) {
         // Allow loading multiplayer games as a singleplayer hotseat game.
@@ -1574,6 +1588,7 @@ Current game version: ${globalThis.SPELLMASONS_PACKAGE_VERSION}`,
       overworld.pie.sendData({
         type: MESSAGE_TYPES.LOAD_GAME_STATE,
         underworld: savedUnderworld,
+        camera
       });
       setView(View.Game);
 
@@ -1600,4 +1615,5 @@ export interface SaveFile {
   version: string;
   underworld: IUnderworldSerialized;
   numberOfHotseatPlayers: number;
+  camera: Vec2 & { zoom: number };
 }

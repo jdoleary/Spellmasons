@@ -317,8 +317,9 @@ export function moveCamera(x: number, y: number) {
   utilProps.camera.x += x;
   utilProps.camera.y += y;
 }
-export function getCameraCenterInGameSpace(): Vec2 {
-  return clone(utilProps.camera);
+export function getZoom(): number {
+  //zoom is identical on .x and .y
+  return app?.stage.scale.x || 1;
 }
 
 export function isCameraAutoFollowing(): boolean {
@@ -356,7 +357,11 @@ export function tryShowRecenterTip() {
     }
   }
 }
-
+export function getCameraCenterInGameSpace(): Vec2 {
+  return clone(utilProps.camera);
+}
+// getCamera returns the render camera, not to 
+// be confused with getCameraCenterInGameSpace
 export function getCamera() {
   return {
     x: !app ? 0 : -app.stage.x,
@@ -368,6 +373,12 @@ export function getCamera() {
 export function getMapCenter(underworld: Underworld): Vec2 {
   return { x: (underworld.limits.xMax - underworld.limits.xMin) / 2, y: (underworld.limits.yMax - underworld.limits.yMin) / 2 }
 
+}
+export function setCamera(pos: Vec2, zoom: number, underworld: Underworld) {
+  utilProps.camera.x = pos.x;
+  utilProps.camera.y = pos.y;
+  globalThis.zoomTarget = zoom;
+  updateCameraPosition(underworld, 1);
 }
 export function setCameraToMapCenter(underworld: Underworld) {
   // Set camera to the center of the map
