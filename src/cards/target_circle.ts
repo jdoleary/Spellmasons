@@ -10,6 +10,11 @@ import { easeOutCubic } from '../jmath/Easing';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { HasSpace } from '../entity/Type';
 import { sortCosestTo, } from '../jmath/math';
+interface Circle {
+  pos: Vec2;
+  radius: number;
+}
+const timeoutMsAnimation = 2000;
 
 const id = 'Target Circle';
 const baseRadius = 100;
@@ -68,7 +73,7 @@ const spell: Spell = {
     },
   },
 };
-async function animate(circles: { pos: Vec2, radius: number }[], underworld: Underworld) {
+async function animate(circles: Circle[], underworld: Underworld) {
   if (globalThis.headless) {
     // Animations do not occur on headless, so resolve immediately or else it
     // will just waste cycles on the server
@@ -78,50 +83,60 @@ async function animate(circles: { pos: Vec2, radius: number }[], underworld: Und
     // Prevent this function from running if there is nothing to animate
     return Promise.resolve();
   }
-  const iterations = 100;
-  const millisBetweenIterations = 12;
   // Keep track of which entities have been targeted so far for the sake
   // of making a new sfx when a new entity gets targeted
   const entitiesTargeted: HasSpace[] = [];
   playSFXKey('targeting');
-  // "iterations + 10" gives it a little extra time so it doesn't timeout right when the animation would finish on time
-  return raceTimeout(millisBetweenIterations * (iterations + 10), 'animatedExpand', new Promise<void>(resolve => {
-    for (let i = 0; i < iterations; i++) {
-
-      setTimeout(() => {
-        if (globalThis.predictionGraphics) {
-          globalThis.predictionGraphics.clear();
-          globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0)
-          globalThis.predictionGraphics.beginFill(colors.targetingSpellGreen, 0.2);
-          for (let circle of circles) {
-            const { pos, radius } = circle;
-
-            const animatedRadius = radius * easeOutCubic((i + 1) / iterations)
-            globalThis.predictionGraphics.drawCircle(pos.x, pos.y, animatedRadius);
-            globalThis.predictionGraphics.endFill();
-            // Draw circles around new targets
-            const withinRadius = underworld.getEntitiesWithinDistanceOfTarget(
-              pos,
-              animatedRadius,
-              false
-            );
-            withinRadius.forEach(v => {
-              if (!entitiesTargeted.includes(v)) {
-                entitiesTargeted.push(v);
-                playSFXKey('targetAquired');
-              }
-              globalThis.predictionGraphics?.drawCircle(v.x, v.y, config.COLLISION_MESH_RADIUS);
-            })
-          }
-        }
-        if (i >= iterations - 1) {
-          resolve();
-        }
-
-      }, millisBetweenIterations * i)
-    }
+  return raceTimeout(timeoutMsAnimation, 'animatedExpand', new Promise<void>(resolve => {
+    animateFrame(circles, Date.now(), entitiesTargeted, underworld, resolve)();
   })).then(() => {
     globalThis.predictionGraphics?.clear();
   });
+}
+
+const millisToGrow = 1000;
+function animateFrame(circles: Circle[], startTime: number, entitiesTargeted: HasSpace[], underworld: Underworld, resolve: (value: void | PromiseLike<void>) => void) {
+  return function animateFrameInner() {
+    if (globalThis.predictionGraphics) {
+      let done = false;
+      globalThis.predictionGraphics.clear();
+      globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0)
+      globalThis.predictionGraphics.beginFill(colors.targetingSpellGreen, 0.2);
+      const now = Date.now();
+      for (let circle of circles) {
+        const { pos, radius } = circle;
+        const timeDiff = now - startTime;
+
+        const animatedRadius = radius * easeOutCubic(Math.min(1, timeDiff / millisToGrow));
+        globalThis.predictionGraphics.drawCircle(pos.x, pos.y, animatedRadius);
+        globalThis.predictionGraphics.endFill();
+        // Draw circles around new targets
+        const withinRadius = underworld.getEntitiesWithinDistanceOfTarget(
+          pos,
+          animatedRadius,
+          false
+        );
+        withinRadius.forEach(v => {
+          if (!entitiesTargeted.includes(v)) {
+            entitiesTargeted.push(v);
+            playSFXKey('targetAquired');
+          }
+          globalThis.predictionGraphics?.drawCircle(v.x, v.y, config.COLLISION_MESH_RADIUS);
+        })
+        if (timeDiff > millisToGrow) {
+          done = true;
+        }
+      }
+      if (done) {
+        resolve();
+        return;
+      } else {
+        requestAnimationFrame(animateFrame(circles, startTime, entitiesTargeted, underworld, resolve));
+      }
+    } else {
+      resolve();
+    }
+
+  }
 }
 export default spell;
