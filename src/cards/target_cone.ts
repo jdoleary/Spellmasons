@@ -13,6 +13,7 @@ import * as config from '../config';
 import { HasSpace } from '../entity/Type';
 
 export const targetConeId = 'Target Cone';
+const timeoutMsAnimation = 2000;
 const range = 200;
 const coneAngle = Math.PI / 4
 const spell: Spell = {
@@ -84,7 +85,14 @@ function withinCone(origin: Vec2, coneStartPoint: Vec2, radius: number, startAng
     && (isAngleBetweenAngles(targetAngle, startAngle, endAngle) || Math.abs(endAngle - startAngle) >= 2 * Math.PI);
 }
 
-async function animate(cones: { origin: Vec2, coneStartPoint: Vec2, radius: number, startAngle: number, endAngle: number }[], underworld: Underworld) {
+interface Cone {
+  origin: Vec2;
+  coneStartPoint: Vec2;
+  radius: number;
+  startAngle: number;
+  endAngle: number;
+}
+async function animate(cones: Cone[], underworld: Underworld) {
   if (globalThis.headless) {
     // Animations do not occur on headless, so resolve immediately or else it
     // will just waste cycles on the server
@@ -94,51 +102,55 @@ async function animate(cones: { origin: Vec2, coneStartPoint: Vec2, radius: numb
     // Prevent this function from running if there is nothing to animate
     return Promise.resolve();
   }
-  const iterations = 100;
-  const millisBetweenIterations = 12;
   // Keep track of which entities have been targeted so far for the sake
   // of making a new sfx when a new entity gets targeted
   const entitiesTargeted: HasSpace[] = [];
   playSFXKey('targeting');
-  // "iterations + 10" gives it a little extra time so it doesn't timeout right when the animation would finish on time
-  return raceTimeout(millisBetweenIterations * (iterations + 10), 'animatedExpand', new Promise<void>(resolve => {
-    for (let i = 0; i < iterations; i++) {
-
-      setTimeout(() => {
-        if (globalThis.predictionGraphics) {
-          globalThis.predictionGraphics.clear();
-          globalThis.predictionGraphics.beginFill(colors.targetingSpellGreen, 0.2);
-          for (let cone of cones) {
-
-            const { radius, origin, coneStartPoint, startAngle, endAngle } = cone;
-
-            const animatedRadius = radius * easeOutCubic((i + 1) / iterations);
-
-            drawUICone(globalThis.predictionGraphics, coneStartPoint, animatedRadius, startAngle, endAngle, colors.targetingSpellGreen);
-            globalThis.predictionGraphics.endFill();
-            // Draw circles around new targets
-            const withinRadiusAndAngle = underworld.getPotentialTargets(
-              false
-            ).filter(t => {
-              return withinCone(origin, coneStartPoint, animatedRadius, startAngle, endAngle, t);
-            });
-            withinRadiusAndAngle.forEach(v => {
-              if (!entitiesTargeted.includes(v)) {
-                entitiesTargeted.push(v);
-                playSFXKey('targetAquired');
-              }
-              globalThis.predictionGraphics?.drawCircle(v.x, v.y, config.COLLISION_MESH_RADIUS);
-            })
-          }
-        }
-        if (i >= iterations - 1) {
-          resolve();
-        }
-
-      }, millisBetweenIterations * i)
-    }
+  return raceTimeout(timeoutMsAnimation, 'animatedExpand', new Promise<void>(resolve => {
+    animateFrame(cones, Date.now(), entitiesTargeted, underworld, resolve)();
   })).then(() => {
     globalThis.predictionGraphics?.clear();
   });
+}
+const millisToGrow = 1000;
+function animateFrame(cones: Cone[], startTime: number, entitiesTargeted: HasSpace[], underworld: Underworld, resolve: (value: void | PromiseLike<void>) => void) {
+  return function animateFrameInner() {
+    if (globalThis.predictionGraphics) {
+      globalThis.predictionGraphics.clear();
+      globalThis.predictionGraphics.beginFill(colors.targetingSpellGreen, 0.2);
+      const now = Date.now();
+      const timeDiff = now - startTime;
+      for (let cone of cones) {
+
+        const { radius, origin, coneStartPoint, startAngle, endAngle } = cone;
+
+        const animatedRadius = radius * easeOutCubic(Math.min(1, timeDiff / millisToGrow));
+
+        drawUICone(globalThis.predictionGraphics, coneStartPoint, animatedRadius, startAngle, endAngle, colors.targetingSpellGreen);
+        globalThis.predictionGraphics.endFill();
+        // Draw circles around new targets
+        const withinRadiusAndAngle = underworld.getPotentialTargets(
+          false
+        ).filter(t => {
+          return withinCone(origin, coneStartPoint, animatedRadius, startAngle, endAngle, t);
+        });
+        withinRadiusAndAngle.forEach(v => {
+          if (!entitiesTargeted.includes(v)) {
+            entitiesTargeted.push(v);
+            playSFXKey('targetAquired');
+          }
+          globalThis.predictionGraphics?.drawCircle(v.x, v.y, config.COLLISION_MESH_RADIUS);
+        })
+      }
+      if (timeDiff > millisToGrow) {
+        resolve();
+        return;
+      } else {
+        requestAnimationFrame(animateFrame(cones, startTime, entitiesTargeted, underworld, resolve));
+      }
+    } else {
+      resolve();
+    }
+  }
 }
 export default spell;

@@ -103,9 +103,9 @@ function animateFrame(circles: Circle[], startTime: number, entitiesTargeted: Ha
       globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0)
       globalThis.predictionGraphics.beginFill(colors.targetingSpellGreen, 0.2);
       const now = Date.now();
+      const timeDiff = now - startTime;
       for (let circle of circles) {
         const { pos, radius } = circle;
-        const timeDiff = now - startTime;
 
         const animatedRadius = radius * easeOutCubic(Math.min(1, timeDiff / millisToGrow));
         globalThis.predictionGraphics.drawCircle(pos.x, pos.y, animatedRadius);
@@ -123,11 +123,8 @@ function animateFrame(circles: Circle[], startTime: number, entitiesTargeted: Ha
           }
           globalThis.predictionGraphics?.drawCircle(v.x, v.y, config.COLLISION_MESH_RADIUS);
         })
-        if (timeDiff > millisToGrow) {
-          done = true;
-        }
       }
-      if (done) {
+      if (timeDiff > millisToGrow) {
         resolve();
         return;
       } else {
