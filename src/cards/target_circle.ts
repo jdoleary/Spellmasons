@@ -98,7 +98,6 @@ const millisToGrow = 1000;
 function animateFrame(circles: Circle[], startTime: number, entitiesTargeted: HasSpace[], underworld: Underworld, resolve: (value: void | PromiseLike<void>) => void) {
   return function animateFrameInner() {
     if (globalThis.predictionGraphics) {
-      let done = false;
       globalThis.predictionGraphics.clear();
       globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0)
       globalThis.predictionGraphics.beginFill(colors.targetingSpellGreen, 0.2);
