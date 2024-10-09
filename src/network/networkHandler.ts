@@ -236,6 +236,8 @@ export function onData(d: OnDataArgs, overworld: Overworld) {
             underworld.upgradeRune(stat, fromPlayer);
             if (fromPlayer === globalThis.player) {
               tutorialCompleteTask('spendUpgradePoints');
+              // Some runes may change player's stats, so sync the UI
+              Unit.syncPlayerHealthManaUI(underworld);
             }
           } else {
             console.error('CHOOSE_RUNE, missing fromPlayer', fromClient);
