@@ -73,25 +73,16 @@ const spell: Spell = {
       if (modifier) {
         const shardOwner = underworld.getUnitById(modifier.shardOwnerId, prediction);
         if (shardOwner && shardOwner.alive) {
-          // Prevents an infinite loop in the case of multiple
-          // shard owners redirecting to eachother
-          if (!modifier.hasRedirectedDamage) {
-            modifier.hasRedirectedDamage = true;
 
-            // Do lightning effect
-            if (!prediction) animateDamageRedirection(shardOwner, unit);
-            Unit.takeDamage({
-              unit: shardOwner,
-              amount: amount,
-            }, underworld, prediction);
+          // Do lightning effect
+          if (!prediction) animateDamageRedirection(shardOwner, unit);
+          Unit.takeDamage({
+            unit: shardOwner,
+            amount: amount,
+          }, underworld, prediction);
 
-            modifier.hasRedirectedDamage = false;
-            return 0;
-          } else {
-            //console.log("Breaking infinite Soul Shard loop: ", modifier.hasRedirectedDamage);
-          }
+          return 0;
         }
-        modifier.hasRedirectedDamage = false;
       }
       return amount;
     },

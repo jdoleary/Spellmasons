@@ -151,6 +151,13 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   // Shows icons above the heads of enemies who will damage you next turn
   // Larger units need their marker positioned higher, which is why we need scaleY
   attentionMarker?: { imagePath: string, pos: Vec2, unitSpriteScaleY: number, markerScale: number, removalTimeout?: number };
+  // This boolean is set to true when a unit is taking damage that should NOT
+  // be piped through onDealDamage and onTakeDamage events.  This is set to true when
+  // the events are triggering to prevent infinite recursion if a damage event does
+  // more damage.  This property is attached to the unit to ensure that it is applied
+  // regardless of where the damage comes from and is removed as soon as the events are
+  // done being processed.
+  takingPureDamage?: boolean;
 }
 // This does not need to be unique to underworld, it just needs to be unique
 let lastPredictionUnitId = 0;
@@ -1007,8 +1014,19 @@ export function takeDamage(damageArgs: damageArgs, underworld: Underworld, predi
     immune.notifyImmune(unit, false);
     return
   }
-  damageArgs.amount = composeOnDealDamageEvents(damageArgs, underworld, prediction);
-  damageArgs.amount = composeOnTakeDamageEvents(damageArgs, underworld, prediction);
+  // Prevent infinite recursion from damage events causing further damage
+  if (!unit.takingPureDamage) {
+    // Disable re-processing damage events
+    unit.takingPureDamage = true;
+
+    // Process damage events
+    damageArgs.amount = composeOnDealDamageEvents(damageArgs, underworld, prediction);
+    damageArgs.amount = composeOnTakeDamageEvents(damageArgs, underworld, prediction);
+
+    // re-enable processing damage events
+    delete unit.takingPureDamage;
+  }
+
   let amount = damageArgs.amount;
   if (amount == 0) {
     // Even though damage is 0, sync the player UI in the event that
@@ -1682,6 +1700,8 @@ export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
     // they will not update.
     flaggedForRemoval: u.flaggedForRemoval,
   });
+  // Make sure prediction units don't have a ref to themself in predictionCopy
+  delete predictionUnit.predictionCopy;
   u.predictionCopy = predictionUnit;
   return predictionUnit;
 
