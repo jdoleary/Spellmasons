@@ -924,6 +924,9 @@ export function clearSelectedCards(underworld: Underworld) {
   manageSelectedCardsParentVisibility();
   // Now that there are no more selected cards, update the spell effect projection
   clearSpellEffectProjection(underworld);
+  // Now that selected cards are cleared, update mana badges
+  updateCardBadges(underworld);
+
 }
 function manageSelectedCardsParentVisibility() {
   if (elSelectedCards.parentElement) {
