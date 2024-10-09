@@ -29,7 +29,7 @@ export default function registerSoulShardOwner() {
       if (soulShardOwnerModifier) {
         // Remove modifier from soul shard bearers or else they will become immortal
         // if the owner is dead and doens't have shardOwner
-        const shardBearers = getAllShardBearers(unit, underworld, false);
+        const shardBearers = getAllShardBearers(unit, underworld, !!unit.isPrediction);
         shardBearers.forEach(u => Unit.removeModifier(u, soulShardId, underworld));
       }
     }
