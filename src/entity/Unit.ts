@@ -794,8 +794,9 @@ export function playAnimation(unit: IUnit, spritePath: string | undefined, optio
 
 // Returns success
 export function resurrect(unit: IUnit, underworld: Underworld, preventRepeatRez?: boolean): boolean {
-  if (preventRepeatRez) {
-    if (unit.unitType == UnitType.PLAYER_CONTROLLED && unit.modifiers[resurrect_id]) {
+  // preventRepeatRez keeps players from infinite mana rez exploit: https://github.com/jdoleary/Spellmasons/issues/1140
+  if (preventRepeatRez && unit.unitType == UnitType.PLAYER_CONTROLLED) {
+    if (unit.modifiers[resurrect_id]) {
       // Currently immune to repeat resurrect, abort
       floatingText({
         coords: unit,
