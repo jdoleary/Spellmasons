@@ -8,6 +8,7 @@ import { Vec2 } from "./jmath/Vec";
 import { chooseObjectWithProbability, getUniqueSeedString, prng, randFloat } from "./jmath/rand";
 import { COLLISION_MESH_RADIUS } from "./config";
 import floatingText from "./graphics/FloatingText";
+import * as config from './config';
 
 // [quantity]% chance to summon a potion each turn
 export const alchemistId = 'Alchemist';
@@ -30,7 +31,7 @@ export default function registerAlchemist() {
       if (modifier && unit.alive) {
         const random = seedrandom(`${getUniqueSeedString(underworld)}-${unit.id}`);
         if (randFloat(0, 100, random) < modifier.quantity) {
-          const coords = underworld.findValidSpawnInRadius(unit, prediction, { allowLiquid: unit.inLiquid });
+          const coords = underworld.findValidSpawnInRadius(unit, prediction, { allowLiquid: unit.inLiquid, radiusOverride: config.COLLISION_MESH_RADIUS });
           if (coords) {
             const pickupChoice = chooseObjectWithProbability(Pickup.pickups.map((p, index) => {
               return { index, probability: p.name.includes('Potion') ? p.probability : 0 }
