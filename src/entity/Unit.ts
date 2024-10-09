@@ -815,7 +815,7 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean, so
     // If already dead, do nothing
     return;
   }
-  if (unit.name) {
+  if (unit.name && !prediction) {
     underworld.battleLog(`${unit.name} died ${sourceUnit ? `from ${sourceUnit.name || sourceUnit.unitSourceId}` : ''}`);
   }
   // Play death sfx
