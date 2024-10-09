@@ -28,7 +28,8 @@ import makeOverworld, { Overworld } from "./Overworld";
 import Underworld from "./Underworld";
 import { SERVER_HUB_URL } from "./config";
 import { MESSAGE_TYPES } from "./types/MessageTypes";
-const isUsingBun = process.env.USING_BUN === 'yes';
+// @ts-ignore Bun will be defined if using bun
+const isUsingBun = typeof Bun !== 'undefined';
 const pie = isUsingBun ? require('@websocketpie/server-bun') : require('@websocketpie/server');
 // Init underworld so that when clients join they can use it as the canonical
 // record of gamestate

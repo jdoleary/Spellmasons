@@ -12,3 +12,6 @@ IMAGE_PATH=spellmasons-server
 echo "Package Version:$PACKAGE_VERSION"
 docker build . -f Dockerfile.bun -t "$IMAGE_PATH:latest" -t "$IMAGE_PATH:$PACKAGE_VERSION"
 docker run -d -p 8080:8080 $IMAGE_PATH
+
+# run the following in console to view the image from bash
+# docker run -it $IMAGE_PATH bash

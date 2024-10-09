@@ -14,6 +14,9 @@
 - Test hosting LAN server from Electron build
 - Test tutorial ALWAYS on electron build
 
+- **new** test mods on new bun server
+
+
 --- Archived
 - Test mod thumbnail paths on electron build
 - Test loading a saved multiplayer game
