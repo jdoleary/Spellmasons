@@ -15,7 +15,7 @@ export default function registerOnKillResurrect() {
     unitOfMeasure: '%',
     maxUpgradeCount: 5,
     _costPerUpgrade: 80,
-    quantityPerUpgrade: 10,
+    quantityPerUpgrade: 5,
     add: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) => {
       getOrInitModifier(unit, onKillRessurectId, { isCurse: false, quantity, keepOnDeath: true }, () => {
         Unit.addEvent(unit, onKillRessurectId);
