@@ -14,3 +14,4 @@ update/
 .vscode/
 public/spellmasons-mods/types
 .DS_Store
+SpellmasonsMods.cjs.js

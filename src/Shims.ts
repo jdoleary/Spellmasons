@@ -11,6 +11,7 @@ const fakeElement = {
         contains: () => { }
     },
     querySelector: () => fakeElement,
+    appendChild: () => { },
     dataset: {}
 };
 global.document = {
@@ -36,8 +37,13 @@ global.requestAnimationFrame = (callback) => {
     console.error('Headless invoked requestionAnimationFrame.  How to fix: Prevent it from calling requestAnimationFrame and instead optimize like was done with fly() and lob()')
     return callback(Date.now());
 }
+// Setup for Bun runtime
+if (typeof Bun !== 'undefined') {
+    global.mods = [];
+}
 // Headless server plays no audio
 global.playSFX = (_string) => { };
+global.Audio = class Audio { };
 global.playSFXKey = (_string) => { };
 global.walkPathGraphics = undefined;
 global.debugGraphics = undefined;
