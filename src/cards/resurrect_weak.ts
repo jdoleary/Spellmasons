@@ -29,6 +29,10 @@ const spell: Spell = {
       let resurrectedUnitCount = 0;
       for (let unit of targets) {
         if (unit && !unit.alive && !unit.flaggedForRemoval) {
+          const success = Unit.resurrect(unit, underworld, true);
+          if (!success) {
+            continue;
+          }
           let colorOverlayFilter: ColorOverlayFilter;
           if (unit.image && unit.image.sprite.filters) {
             // Overlay with white
@@ -39,7 +43,6 @@ const spell: Spell = {
             unit.image.sprite.filters.push(colorOverlayFilter)
           }
           playDefaultSpellSFX(card, prediction);
-          Unit.resurrect(unit, underworld);
           // This is the distinguishing characteristic of Weak Resurrect,
           // it is weaker than Resurrect because it doesn't restore health to full.
           unit.health = Math.max(1, unit.healthMax * resStatAmount);

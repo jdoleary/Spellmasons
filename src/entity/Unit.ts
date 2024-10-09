@@ -54,6 +54,7 @@ import { slimeId } from '../modifierSlime';
 import { isRune } from '../cards/cardUtils';
 import { VAMPIRE_ID } from './units/vampire';
 import { growthId } from '../modifierGrowth';
+import { resurrect_id } from '../cards/resurrect';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -791,7 +792,22 @@ export function playAnimation(unit: IUnit, spritePath: string | undefined, optio
   }), { skipSpyPromise: true });
 }
 
-export function resurrect(unit: IUnit, underworld: Underworld) {
+// Returns success
+export function resurrect(unit: IUnit, underworld: Underworld, preventRepeatRez?: boolean): boolean {
+  if (preventRepeatRez) {
+    if (unit.unitType == UnitType.PLAYER_CONTROLLED && unit.modifiers[resurrect_id]) {
+      // Currently immune to repeat resurrect, abort
+      floatingText({
+        coords: unit,
+        text: `${i18n(resurrect_id)} ${i18n('immune').toLocaleLowerCase()}`,
+        style: { fill: 'red' }
+      })
+      return false;
+    } else {
+      // Make immune to future resurrect
+      addModifier(unit, resurrect_id, underworld, false);
+    }
+  }
   unit.alive = true;
   // Return dead units back to full health/stamina/mana
   unit.health = unit.healthMax;
@@ -809,6 +825,7 @@ export function resurrect(unit: IUnit, underworld: Underworld) {
       subsprite.visible = true;
     }
   }
+  return true;
 }
 export function die(unit: IUnit, underworld: Underworld, prediction: boolean, sourceUnit?: IUnit) {
   if (!unit.alive) {

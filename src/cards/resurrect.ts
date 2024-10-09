@@ -6,9 +6,19 @@ import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { makeRisingParticles } from '../graphics/ParticleCollection';
 import { resurrect_weak_id } from './resurrect_weak';
 import type Underworld from '../Underworld';
+import { getOrInitModifier } from './util';
 
 export const resurrect_id = 'resurrect';
 export const thumbnail = 'spellIconResurrect2.png';
+// The number of turns that a unit cannot be reresurrected after being resurrected
+const immuneForTurns = 1;
+function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
+  // Must keepOnDeath or else it won't prevent a reressurect
+  getOrInitModifier(unit, resurrect_id, { isCurse: false, quantity: immuneForTurns, keepOnDeath: true }, () => {
+    Unit.addEvent(unit, resurrect_id);
+  });
+}
+
 const spell: Spell = {
   card: {
     id: resurrect_id,
@@ -39,8 +49,35 @@ const spell: Spell = {
       return state;
     },
   },
+  modifiers: {
+    add,
+  },
+  events: {
+    onTooltip: (unit: Unit.IUnit, underworld: Underworld) => {
+      const modifier = unit.modifiers[resurrect_id];
+      if (modifier && modifier.quantity <= 0) {
+        // Set tooltip:
+        modifier.tooltip = `${i18n(resurrect_id)} ${i18n('immune').toLocaleLowerCase()}: ${modifier.quantity + immuneForTurns}`;
+      }
+    },
+    onTurnEnd: async (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => {
+      // Decrement how many turns left the unit is resurrect immune
+      const modifier = unit.modifiers[resurrect_id];
+      if (modifier) {
+        modifier.quantity--;
+        if (modifier.quantity == 0) {
+          // Remove modifier.  This prevents a unit from being re-resurrected within X turns
+          Unit.removeModifier(unit, resurrect_id, underworld);
+        }
+      }
+    },
+  }
 };
 export function resurrectWithAnimation(unit: Unit.IUnit, summoner: Unit.IUnit, faction: Faction, underworld: Underworld, prediction: boolean): Promise<void> {
+  const success = Unit.resurrect(unit, underworld, true);
+  if (!success) {
+    return Promise.resolve();
+  }
   let colorOverlayFilter: ColorOverlayFilter;
   if (unit.image && unit.image.sprite.filters) {
     // Overlay with white
@@ -51,7 +88,6 @@ export function resurrectWithAnimation(unit: Unit.IUnit, summoner: Unit.IUnit, f
   if (!prediction) {
     playSFXKey('resurrect');
   }
-  Unit.resurrect(unit, underworld);
 
   makeRisingParticles(unit, prediction);
   Unit.changeFaction(unit, faction);
@@ -72,6 +108,5 @@ export function resurrectWithAnimation(unit: Unit.IUnit, summoner: Unit.IUnit, f
     }
   })
   return promise;
-
 }
 export default spell;

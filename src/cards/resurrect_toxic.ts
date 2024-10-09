@@ -30,6 +30,10 @@ const spell: Spell = {
       for (let unit of targets) {
         if (unit && !unit.alive && !unit.flaggedForRemoval) {
           let colorOverlayFilter: ColorOverlayFilter;
+          const success = Unit.resurrect(unit, underworld, true);
+          if (!success) {
+            continue;
+          }
           if (unit.image && unit.image.sprite.filters) {
             // Overlay with white
             colorOverlayFilter = new ColorOverlayFilter(0xa1f196, 1.0);
@@ -38,7 +42,6 @@ const spell: Spell = {
             unit.image.sprite.filters.push(colorOverlayFilter)
           }
           playDefaultSpellSFX(card, prediction);
-          Unit.resurrect(unit, underworld);
           // Impending doom is added to kill units after a specified number of turns.
           // This is the distinguishing characteristic of Toxic Resurrect,
           // it is weaker than Resurrect because the resurrected unit will die in X turns.
