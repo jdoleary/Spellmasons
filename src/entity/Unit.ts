@@ -1453,7 +1453,7 @@ export function setLocation(unit: IUnit, coordinates: Vec2, underworld: Underwor
 }
 export function changeFaction(unit: IUnit, faction: Faction) {
   // Special edge case: prevent changing a Player unit's faction to Enemy
-  if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
+  if (unit.unitType === UnitType.PLAYER_CONTROLLED && faction == Faction.ENEMY) {
     console.error('Attempted to change a player units faction');
     // Ensure player units remail on the ALLY faction
     unit.faction == Faction.ALLY;
