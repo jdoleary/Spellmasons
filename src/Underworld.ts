@@ -2095,12 +2095,13 @@ export default class Underworld {
   }
 
   findValidSpawnInRadius(center: Vec2, prediction: boolean,
-    extra?: { allowLiquid?: boolean, unobstructedPoint?: Vec2 }): Vec2 | undefined {
+    extra?: { allowLiquid?: boolean, unobstructedPoint?: Vec2, radiusOverride?: number }): Vec2 | undefined {
     let allowLiquid = extra?.allowLiquid || false;
     let unobstructedPoint = extra?.unobstructedPoint || undefined;
 
     let spawnPoint = undefined;
-    for (let s of math.honeycombGenerator(config.COLLISION_MESH_RADIUS / 4, center, 7)) {
+    const radius = extra?.radiusOverride !== undefined ? extra.radiusOverride : config.COLLISION_MESH_RADIUS / 4;
+    for (let s of math.honeycombGenerator(radius, center, 7)) {
       spawnPoint = s;
 
       // If spawnPoint is valid, break the loop
@@ -2590,18 +2591,18 @@ export default class Underworld {
     // The level is complete if all enemies, waves, and bosses have been killed
     const remainingEnemies = this.getRemainingPlayerEnemies();
     if (remainingEnemies.length > 0) {
-      console.debug('[GAME] Level Incomplete...\nEnemies remain...');
+      console.log('[GAME] Level Incomplete...\nEnemies remain...');
       return false;
     }
 
     if ((this.levelIndex == config.LAST_LEVEL_INDEX || this.levelIndex == config.GORU_LEVEL_INDEX) && !this.hasSpawnedBoss) {
-      console.debug('[GAME] Level Incomplete...\nWaiting to spawn Boss...');
+      console.log('[GAME] Level Incomplete...\nWaiting to spawn Boss...');
       return false;
     }
 
     const wavesToSpawn = Math.max(1, (this.levelIndex - config.LAST_LEVEL_INDEX) + 1);
     if (this.wave < wavesToSpawn) {
-      console.debug('[GAME] Level Incomplete... \nWaiting to spawn new wave');
+      console.log('[GAME] Level Incomplete... \nWaiting to spawn new wave');
       return false;
     }
 
@@ -2635,7 +2636,7 @@ export default class Underworld {
 
     // Spawn a portal near each remaining player
     for (let playerUnit of remainingPlayers) {
-      const portalSpawnLocation = this.findValidSpawnInRadius(playerUnit, false);
+      const portalSpawnLocation = this.findValidSpawnInRadius(playerUnit, false, { radiusOverride: config.COLLISION_MESH_RADIUS });
       if (portalSpawnLocation) {
         spawnedPortals.push(Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup, logSource: 'Portal' }, this, false));
       }
@@ -2983,7 +2984,7 @@ ${CardUI.cardListToImages(player.stats.longestSpell)}
             // whereas without this ranged units would be content to just sit in liquid and die from the DOT
             if (u.unitSubType !== UnitSubType.MELEE && u.inLiquid) {
               // Using attackRange instead of maxStamina ensures they'll eventually walk out of liquid
-              const coords = this.findValidSpawnInRadius(u, false);
+              const coords = this.findValidSpawnInRadius(u, false, { radiusOverride: config.COLLISION_MESH_RADIUS });
               if (coords) {
                 await Unit.moveTowards(u, coords, this);
               }
