@@ -73,7 +73,7 @@ const spell: Spell = {
     },
   }
 };
-export function resurrectWithAnimation(unit: Unit.IUnit, summoner: Unit.IUnit, faction: Faction, underworld: Underworld, prediction: boolean): Promise<void> {
+export function resurrectWithAnimation(unit: Unit.IUnit, summoner: Unit.IUnit, faction: Faction, underworld: Underworld, prediction: boolean, color?: number): Promise<void> {
   const success = Unit.resurrect(unit, underworld, true);
   if (!success) {
     return Promise.resolve();
@@ -81,7 +81,7 @@ export function resurrectWithAnimation(unit: Unit.IUnit, summoner: Unit.IUnit, f
   let colorOverlayFilter: ColorOverlayFilter;
   if (unit.image && unit.image.sprite.filters) {
     // Overlay with white
-    colorOverlayFilter = new ColorOverlayFilter(0x96cdf1, 1.0);
+    colorOverlayFilter = new ColorOverlayFilter(color || 0x96cdf1, 1.0);
     // @ts-ignore Something is wrong with PIXI's filter types
     unit.image.sprite.filters.push(colorOverlayFilter)
   }

@@ -5,6 +5,7 @@ import { CardCategory, UnitType } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { makeRisingParticles } from '../graphics/ParticleCollection';
+import { resurrectWithAnimation } from './resurrect';
 
 export const resurrect_weak_id = 'Weak Resurrect';
 export const thumbnail = 'spellIconResurrect.png';
@@ -29,35 +30,12 @@ const spell: Spell = {
       let resurrectedUnitCount = 0;
       for (let unit of targets) {
         if (unit && !unit.alive && !unit.flaggedForRemoval) {
-          const success = Unit.resurrect(unit, underworld, true);
-          if (!success) {
-            continue;
-          }
-          let colorOverlayFilter: ColorOverlayFilter;
-          if (unit.image && unit.image.sprite.filters) {
-            // Overlay with white
-            colorOverlayFilter = new ColorOverlayFilter(0xf1eb96, 1.0);
-            // blue rez 0x96cdf1
-            // green rez 0xa1f196
-            // @ts-ignore Something is wrong with PIXI's filter types
-            unit.image.sprite.filters.push(colorOverlayFilter)
-          }
-          playDefaultSpellSFX(card, prediction);
+          animationPromises.push(resurrectWithAnimation(unit, state.casterUnit, state.casterUnit.faction, underworld, prediction, 0xf1eb96));
           // This is the distinguishing characteristic of Weak Resurrect,
           // it is weaker than Resurrect because it doesn't restore health to full.
           unit.health = Math.max(1, unit.healthMax * resStatAmount);
 
           resurrectedUnitCount++;
-          makeRisingParticles(unit, prediction);
-          Unit.changeFaction(unit, state.casterUnit.faction);
-          if (unit.unitType !== UnitType.PLAYER_CONTROLLED) {
-            unit.summonedBy = state.casterUnit;
-          }
-          // Resurrect animation is the die animation played backwards
-          animationPromises.push(Unit.playAnimation(unit, unit.animations.die, { loop: false, animationSpeed: -0.2 }));
-          if (unit.image) {
-            unit.image.sprite.gotoAndPlay(unit.image.sprite.totalFrames - 1);
-          }
         }
       }
       await Promise.all(animationPromises);

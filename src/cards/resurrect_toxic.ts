@@ -6,6 +6,7 @@ import { playDefaultSpellSFX } from './cardUtils';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 import { makeRisingParticles } from '../graphics/ParticleCollection';
 import { impendingDoomId } from '../modifierImpendingDoom';
+import { resurrectWithAnimation } from './resurrect';
 
 export const resurrect_toxic_id = 'Toxic Resurrect';
 export const thumbnail = 'spellIconResurrect3.png';
@@ -29,35 +30,13 @@ const spell: Spell = {
       let resurrectedUnitCount = 0;
       for (let unit of targets) {
         if (unit && !unit.alive && !unit.flaggedForRemoval) {
-          let colorOverlayFilter: ColorOverlayFilter;
-          const success = Unit.resurrect(unit, underworld, true);
-          if (!success) {
-            continue;
-          }
-          if (unit.image && unit.image.sprite.filters) {
-            // Overlay with white
-            colorOverlayFilter = new ColorOverlayFilter(0xa1f196, 1.0);
-            // blue rez 0x96cdf1
-            // @ts-ignore Something is wrong with PIXI's filter types
-            unit.image.sprite.filters.push(colorOverlayFilter)
-          }
-          playDefaultSpellSFX(card, prediction);
+          animationPromises.push(resurrectWithAnimation(unit, state.casterUnit, state.casterUnit.faction, underworld, prediction, 0xa1f196));
           // Impending doom is added to kill units after a specified number of turns.
           // This is the distinguishing characteristic of Toxic Resurrect,
           // it is weaker than Resurrect because the resurrected unit will die in X turns.
           Unit.addModifier(unit, impendingDoomId, underworld, prediction, turnsLeftToLive * quantity);
 
           resurrectedUnitCount++;
-          makeRisingParticles(unit, prediction);
-          Unit.changeFaction(unit, state.casterUnit.faction);
-          if (unit.unitType !== UnitType.PLAYER_CONTROLLED) {
-            unit.summonedBy = state.casterUnit;
-          }
-          // Resurrect animation is the die animation played backwards
-          animationPromises.push(Unit.playAnimation(unit, unit.animations.die, { loop: false, animationSpeed: -0.2 }));
-          if (unit.image) {
-            unit.image.sprite.gotoAndPlay(unit.image.sprite.totalFrames - 1);
-          }
         }
       }
       await Promise.all(animationPromises);
