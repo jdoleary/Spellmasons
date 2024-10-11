@@ -1131,6 +1131,7 @@ export function registerAdminContextMenuOptions(overworld: Overworld) {
       label: '📱 Recording Shorts',
       action: () => {
         document.body?.classList.toggle('recording-shorts');
+        globalThis.recordingShorts = !globalThis.recordingShorts;
       },
       supportInMultiplayer: false,
       domQueryContainer: '#menu-self',

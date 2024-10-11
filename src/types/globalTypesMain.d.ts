@@ -310,4 +310,5 @@ declare global {
   var showCastRangeForUpgrade: boolean | undefined;
   var alwaysDrawHealthBars: boolean | undefined;
   var currentChunk: number;
+  var recordingShorts: boolean;
 }

@@ -1789,7 +1789,7 @@ export function findLOSLocation(unit: IUnit, target: Vec2, underworld: Underworl
 // handles drawing attack range, bloat radius, and similar graphics each frame while a unit is selected
 export function drawSelectedGraphics(unit: IUnit, prediction: boolean = false, underworld: Underworld) {
 
-  if (globalThis.headless || prediction || !globalThis.selectedUnitGraphics) return;
+  if (globalThis.headless || prediction || !globalThis.selectedUnitGraphics || globalThis.recordingShorts) return;
 
   for (let drawEvent of unit.events) {
     const fn = Events.onDrawSelectedSource[drawEvent];

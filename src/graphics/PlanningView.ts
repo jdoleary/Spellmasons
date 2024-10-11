@@ -1063,8 +1063,7 @@ export function updateTooltipSelection(mousePos: Vec2, underworld: Underworld) {
 
 // Draws a faint circle over things that can be clicked on
 export function drawCircleUnderTarget(mousePos: Vec2, underworld: Underworld, opacity: number, graphics: PIXI.Graphics | undefined, fill?: number) {
-  if (!graphics) {
-    // For headless
+  if (!graphics || globalThis.recordingShorts) {
     return;
   }
   const targetUnit = underworld.getUnitAt(mousePos)
