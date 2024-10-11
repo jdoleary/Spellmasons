@@ -329,6 +329,9 @@ invisibly blocked, change with caution! */
   pointer-events: all;
 }
 
+.recording-shorts #inspector-tooltip {
+  top: 30%;
+}
 .recording-shorts #inventory-container {
   /* This makes width 1080 which is recording resolution */
   height:605px;
