@@ -95,20 +95,10 @@ const spell: Spell = {
       state.castLocation = targets.length ? initialCastLocation : state.castLocation;
 
       if (!prediction && !globalThis.headless && globalThis.predictionGraphics) {
-        const promises: Promise<void>[] = [];
-        targets.forEach(t => {
-          // Animations do not occur on headless
-          promises.push(new Promise<void>((resolve) => {
-            if (globalThis.predictionGraphics) {
-              globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0)
-              playSFXKey('targetAquired');
-              globalThis.predictionGraphics.drawCircle(t.x, t.y, config.COLLISION_MESH_RADIUS);
-              // Show the targeting circle for a moment
-              setTimeout(resolve, 300);
-            }
-          }));
-        });
-        await Promise.all(promises);
+        // Await long enough to show targeting circles
+        await new Promise(res => {
+          setTimeout(res, 300);
+        })
         globalThis.predictionGraphics.clear();
       }
       return state;

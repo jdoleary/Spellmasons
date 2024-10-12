@@ -1,6 +1,7 @@
 import type * as Player from '../entity/Player';
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
+import * as colors from '../graphics/ui/colors';
 import type { Vec2 } from '../jmath/Vec';
 import Events, {
   onDealDamage,
@@ -814,16 +815,17 @@ export function getCardsFromIds(cardIds: string[]): ICard[] {
   return _getCardsFromIds(cardIds, allCards);
 }
 
-export function addTarget(target: any, effectState: EffectState, underworld: Underworld, prediction: boolean) {
+// drawTargetCircle allows 
+export function addTarget(target: any, effectState: EffectState, underworld: Underworld, prediction: boolean, drawTargetCircle: boolean = true) {
   if (Unit.isUnit(target)) {
     if (underworld.players.filter(p => !p.isSpawned).map(p => p.unit.id).includes(target.id)) {
       // Do not allow targeting unspawned players
       console.warn("Tried to add an unspawned player to the targets list: ", target);
       return;
     }
-    addUnitTarget(target, effectState, prediction);
+    addUnitTarget(target, effectState, prediction, drawTargetCircle);
   } else if (Pickup.isPickup(target)) {
-    addPickupTarget(target, effectState);
+    addPickupTarget(target, effectState, prediction, drawTargetCircle);
   } else {
     console.error('addTarget unsupported for ', target);
   }
@@ -831,7 +833,10 @@ export function addTarget(target: any, effectState: EffectState, underworld: Und
 
 // Note: See related `addTarget` function above which should be used for all
 // targeting spells
-export function addUnitTarget(unit: Unit.IUnit, effectState: EffectState, prediction: boolean) {
+// Note: The unit argument will already implicitly be a prediction copy if
+// this is called during a prediction so the `prediction` argument is only for 
+// graphics purposes and doesn't need to be used otherwise
+export function addUnitTarget(unit: Unit.IUnit, effectState: EffectState, prediction: boolean, drawTargetCircle?: boolean) {
   // Exception: modifierTargetImmune prevents targeting unless targeted directly
   if (unit.modifiers[targetImmuneId] && unit.id !== effectState.initialTargetedUnitId) {
     floatingText({ coords: unit, text: targetImmuneId, prediction });
@@ -840,12 +845,26 @@ export function addUnitTarget(unit: Unit.IUnit, effectState: EffectState, predic
   // Adds a unit to effectState.targetedUnits IF it is not already in unitTargets
   if (effectState.targetedUnits.indexOf(unit) === -1) {
     effectState.targetedUnits.push(unit);
+    if (globalThis.predictionGraphics && !prediction && drawTargetCircle) {
+      globalThis.predictionGraphics.lineStyle(2, colors.errorRed, 1.0)
+      playSFXKey('targetAquired');
+      globalThis.predictionGraphics.drawCircle(unit.x, unit.y, config.COLLISION_MESH_RADIUS);
+    }
   }
 }
-export function addPickupTarget(pickup: Pickup.IPickup, effectState: EffectState) {
+
+// Note: The pickup argument will already implicitly be a prediction copy if
+// this is called during a prediction so the `prediction` argument is only for 
+// graphics purposes and doesn't need to be used otherwise
+export function addPickupTarget(pickup: Pickup.IPickup, effectState: EffectState, prediction: boolean, drawTargetCircle?: boolean) {
   // Adds a pickup to effectState.targetedPickups IF it is not already in targetedPickups
   if (effectState.targetedPickups.indexOf(pickup) === -1) {
     effectState.targetedPickups.push(pickup);
+  }
+  if (globalThis.predictionGraphics && !prediction && drawTargetCircle) {
+    globalThis.predictionGraphics.lineStyle(2, colors.errorRed, 1.0)
+    playSFXKey('targetAquired');
+    globalThis.predictionGraphics.drawCircle(pickup.x, pickup.y, config.COLLISION_MESH_RADIUS);
   }
 }
 
