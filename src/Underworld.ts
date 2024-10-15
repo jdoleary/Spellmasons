@@ -572,6 +572,11 @@ export default class Underworld {
 
         // TODO - For accuracy, we may have to predict these collisions before they happen (Needs testing)
         for (let unit of aliveUnits) {
+          // Omit the unit that triggered the projectile:
+          // Projectiles must not collide with the sourceUnit
+          if (unit == forceMoveInst.sourceUnit) {
+            continue;
+          }
           if (isVecIntersectingVecWithCustomRadius(pushedObject, unit, config.COLLISION_MESH_RADIUS)) {
             if (forceMoveInst.collidingUnitIds.includes(unit.id)) {
               // If already colliding with this unit, skip to the next one
