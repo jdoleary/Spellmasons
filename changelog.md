@@ -1,3 +1,106 @@
+## 1.45.2
+
+This patch contains LOTS of FPS optimizations and bug fixes!
+
+Optimizations:
+- Optimize: floating text so if there are more than 20 of
+    a single kind it will just aggregate a message
+    Thanks Xulqelyat!
+
+- optimize: Target Circle
+
+- optimize: Target Column
+
+- optim: Throttle skybeam
+    This massively increases efficiency for when lots of enemies are teleported to the same place all at once.
+    Hugely reduces lag.
+
+- optimization: Update server to run entirely on bun.sh
+    rather than just websocketpie (this should make many things on the server faster)
+
+Gameplay Balances:
+- balance: onKillResurrect Rune
+    to make it less high %.  It was way too high (50% max is too much)
+    and you could get there too cheaply.
+    Thanks Xulqelyat!
+
+- balance: Exploit: Repeated self rez for infinite mana
+    Prevent resurrecting player units more than once in one turn to disallow infinite mana exploit where resurrecting yourself gives you mana
+
+- balance: Change Death Wager cost
+    "Reset all spell costs back to their default.  Sets your current health to 1.  You must be at max health to cast.  This spell must be cast alone."
+    
+    So it will no longer affect max health (no permanent effect).
+    I think this will make it much more viable and strategic.
+    
+    fix: Always updateCardBadges after cast so spells like DeathWager that affect card costs will show the proper badges.
+    Thanks Jace, SquishyFish, Monarch and Xeno!
+
+
+Bug Fixes
+- fix: Un "frontload" plus radius
+    because it is in contradiction to how the spell's copy describes it and also users may want to use it more surgically.
+    Thanks Darth_Dan!
+
+- fix: last will to only notify if it's able
+    to spawn a potion.
+    Thanks Darth_Dan!
+
+- fix: prevent projectiles from colliding with caster
+    (because you can step in front of your own stream of arrows)
+    Thanks Xulqelyat!
+
+- fix: Prevent infinite recursion with takeDamage events
+    Once the takeDamage events start to process, any further damage cannot retrigger takeDamage events
+    This ensures that a unit's onDamage events can't reflect damage back on itself which would cause infinite recursion
+    Removes `hasRedirectedDamage` which is no longer necessary due to this new method of `takingPureDamage` which covers
+    that case too
+    Also fix prediction units from having a ref to themself via prediction copy, only real units should have that ref.
+    Thanks Xulqelyat!
+
+ - fix: Prediction purify from actually removing
+    soul shard haver from units when soul shard owner was hovered
+    with prediction purify.
+
+- fix: Far Gazer not showing stamina change on upgrade
+
+- fix: Res immune applies to players only
+
+- fix: Update mana badges when clearing
+    queued spell.
+
+- fix: Logging death on prediction instead of only on real
+    Thanks Darth_Dan!
+
+- fix: Increase potion spawn radius on alchemist so it
+    doesn't spawn on top of you
+
+- fix: Increase spawn radius for purple portal
+    so that it doesn't spawn too close to you causing it to trigger immediately
+    In multiplayer, this made the game advance as soon as you cast the last kill spell.
+    Thanks @Jackson
+
+- fix: findValidSpawn to use hex
+    so we don't get unexpected far-away clones
+
+- fix: Remove "Choose a place to spawn" if player is already spawned on load
+
+- fix: Prevent competing Goru's from using each other's
+    primed corpses.
+    Thanks FfrankF!
+
+- fix UI: Unit attack range circle not moving with them
+
+- fix: Server Loop: "Could not find valid spawn..."
+    To address infinite loop that reported 'Could not find valid spawn point in radius'
+    over and over, if no spawn point is found just return the center.
+    
+- fix Server Crash: If headless has to emergency exit force moves
+    clear all force moves so that they don't continue to emergency exit next time the function is called.
+
+- dev: Drastically speed up starting up headless server using bun.
+- chore: Save remembers camera location
+
 ## 1.44.4 - FPS Optimization
 **Backwards Compatability warning**
 Some of the optimizations in this update are not backwards compatible with
