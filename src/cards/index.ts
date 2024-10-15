@@ -114,6 +114,7 @@ import explosive_arrow from './explosive_arrow';
 import phantom_arrow from './phantom_arrow';
 import bolt from './bolt';
 import cursify from './cursify';
+import teach from './teach';
 // Not used as a card, for making half of looped enemies immune
 // on first turn
 import registerSummoningSickness from '../modifierSummoningSickness';
@@ -422,6 +423,7 @@ export function registerCards(overworld: Overworld) {
   config.IS_ANNIVERSARY_UPDATE_OUT &&
     registerSpell(bolt, overworld);
   registerSpell(cursify, overworld);
+  registerSpell(teach, overworld);
 
   // Blessings
   registerSpell(heal, overworld);

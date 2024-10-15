@@ -4,9 +4,13 @@ import * as Unit from '../Unit';
 import * as math from '../../jmath/math';
 import Underworld from '../../Underworld';
 import * as config from '../../config';
-import { oneOffImage } from '../../cards/cardUtils';
+import { calculateCost, oneOffImage } from '../../cards/cardUtils';
 import { containerSpells } from '../../graphics/PixiUtils';
 import { raceTimeout } from '../../Promise';
+import { clone } from '../../jmath/Vec';
+import { teachCardId } from '../../cards/teach';
+import { getCardsFromIds } from '../../cards';
+import floatingText from '../../graphics/FloatingText';
 
 export const spellmasonUnitId = 'Spellmason';
 const playerUnit: UnitSource = {
@@ -24,20 +28,36 @@ const playerUnit: UnitSource = {
   // This is how a user unit would act if controlled by AI (this can happen if you clone yourself)
   action: async (unit: Unit.IUnit, attackTargets: Unit.IUnit[] | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     const attackTarget = attackTargets && attackTargets[0];
+    const cardIds = unit.modifiers[teachCardId]?.spell || ['slash'];
+    const cost = calculateCost(getCardsFromIds(cardIds), {})
+
     // Attack
     if (attackTarget && canAttackTarget) {
-      Unit.orient(unit, attackTarget);
-      const keyMoment = async () => {
-        playSFXKey('hurt');
-        oneOffImage(attackTarget, 'spellHurtCuts', containerSpells);
-        Unit.takeDamage({
-          unit: attackTarget,
-          amount: unit.damage,
-          sourceUnit: unit,
-          fromVec2: unit,
-        }, underworld, false);
+      const sufficientMana = cost.manaCost <= unit.mana;
+      const sufficientHealth = cost.healthCost <= unit.health;
+      if (sufficientHealth && sufficientMana) {
+        Unit.orient(unit, attackTarget);
+        const keyMoment = async () => {
+          await underworld.castCards({
+            casterCardUsage: {},
+            casterUnit: unit,
+            casterPositionAtTimeOfCast: clone(unit),
+            cardIds: cardIds,
+            castLocation: attackTarget,
+            initialTargetedUnitId: attackTarget.id,
+            prediction: false,
+            outOfRange: false,
+            castForFree: true,
+          });
+        }
+        await raceTimeout(8_000, 'NPC Spellmason', Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false }));
+      } else {
+        if (!sufficientMana) {
+          floatingText({ coords: unit, text: i18n('insufficient mana'), style: { fill: 'red' } });
+        } else if (!sufficientHealth) {
+          floatingText({ coords: unit, text: i18n('insufficient health'), style: { fill: 'red' } });
+        }
       }
-      await raceTimeout(8_000, 'NPC Spellmason', Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false }));
     } else {
       // Movement:
       const closestEnemy = Unit.findClosestUnitInDifferentFactionSmartTarget(unit, underworld.units);

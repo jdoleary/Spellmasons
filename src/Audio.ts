@@ -163,6 +163,7 @@ export const sfx: { [key: string]: string[] } = {
     './sound/sfx/Target_variation-003.mp3',
     './sound/sfx/Target_variation-004.mp3'],
   targeting: ['./sound/sfx/Targeting_v3.mp3'],
+  teach: ['./sound/sfx/teach.mp3'],
   unitDamage: ['./sound/sfx/player-damage.mp3'],
   vampireAttack: [
     './sound/sfx/vampire-attack.mp3',

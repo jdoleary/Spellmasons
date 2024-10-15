@@ -669,7 +669,11 @@
         "target bounty": "Target Bounty",
         "spell_target_bounty": "Targets units with bounties on their head. One per stack.",
         "death_wager_error1": "You must be at max health to cast \"Death Wager\"",
-        "death_wager_error2": "Death Wager must be cast by itself"
+        "death_wager_error2": "Death Wager must be cast by itself",
+        "teach": "Teach Spell",
+        "spell_teach": "Teach a new spell to a clone of yourself.  The clone must have enough mana in order to cast the spell.",
+        "learned": "Learned",
+        "teach npc error": "Teach only works on a clone of yourself"
     },
     {
         "language": "Français",
@@ -1341,7 +1345,11 @@
         "target bounty": "Cible de prime",
         "spell_target_bounty": "Cible les unités avec une prime sur leur tête. Une par paquet.",
         "death_wager_error1": "Vous devez être à pleine santé pour lancer \"Pari Mortel\".",
-        "death_wager_error2": "Le Pari de la Mort doit être lancé seul."
+        "death_wager_error2": "Le Pari de la Mort doit être lancé seul.",
+        "teach": "Enseigner un sort",
+        "spell_teach": "Enseigne un nouveau sort à un clone de toi-même. Le clone doit avoir suffisamment de mana pour lancer le sort.",
+        "learned": "Appris",
+        "teach npc error": "Enseigner ne fonctionne que sur un clone de vous-même."
     },
     {
         "language": "italiano",
@@ -2013,7 +2021,11 @@
         "target bounty": "Bounty Obiettivo",
         "spell_target_bounty": "Colpisce unità con taglie sulla testa. Una per accumulo.",
         "death_wager_error1": "Devi essere a salute massima per lanciare \"Scommessa Mortale\"",
-        "death_wager_error2": "Death Wager deve essere lanciato da solo."
+        "death_wager_error2": "Death Wager deve essere lanciato da solo.",
+        "teach": "Insegnare Incantesimo",
+        "spell_teach": "Insegna un nuovo incantesimo a un clone di te stesso. Il clone deve avere abbastanza mana per lanciare l'incantesimo.",
+        "learned": "Appreso",
+        "teach npc error": "Insegnare funziona solo su un clone di te stesso."
     },
     {
         "language": "Deutsche",
@@ -2685,7 +2697,11 @@
         "target bounty": "Zielpreis",
         "spell_target_bounty": "Zielt Einheiten mit Kopfgeldern auf ihren Köpfen an. Eins pro Stapel.",
         "death_wager_error1": "Du musst bei maximaler Gesundheit sein, um \"Todswette\" zu wirken.",
-        "death_wager_error2": "Der Todeswette muss allein geworfen werden."
+        "death_wager_error2": "Der Todeswette muss allein geworfen werden.",
+        "teach": "Zauber lehren",
+        "spell_teach": "Lerne einen neuen Zauber für einen Klon von dir selbst. Der Klon muss genügend Mana haben, um den Zauber zu wirken.",
+        "learned": "Gelernt",
+        "teach npc error": "Lehren funktioniert nur auf einem Klon von dir selbst."
     },
     {
         "language": "español",
@@ -3357,7 +3373,11 @@
         "target bounty": "Recompensa Apuntada",
         "spell_target_bounty": "Objetivos unidades con recompensas por su cabeza. Uno por pila.",
         "death_wager_error1": "Debes estar a máxima salud para lanzar \"Apuesta Mortal\".",
-        "death_wager_error2": "La Apuesta de la Muerte debe ser lanzada por sí sola."
+        "death_wager_error2": "La Apuesta de la Muerte debe ser lanzada por sí sola.",
+        "teach": "Enseñar Hechizo",
+        "spell_teach": "Enseña un nuevo hechizo a un clon de ti mismo. El clon debe tener suficiente maná para poder lanzar el hechizo.",
+        "learned": "Aprendido",
+        "teach npc error": "Enseñar solo funciona en un clon de ti mismo."
     },
     {
         "language": "日本",
@@ -4029,7 +4049,11 @@
         "target bounty": "ターゲットバウンティ",
         "spell_target_bounty": "首に懸賞金がかけられたユニットをターゲットにします。1スタックにつき1体。",
         "death_wager_error1": "「デスウェイジャー」を唱えるには、最大の健康状態である必要があります。",
-        "death_wager_error2": "「デス・ウェイager」は単独で唱えなければならない。"
+        "death_wager_error2": "「デス・ウェイager」は単独で唱えなければならない。",
+        "teach": "呪文を教える",
+        "spell_teach": "自分のクローンに新しい魔法を教える。クローンは、魔法を使うために十分なマナを持っていなければならない。",
+        "learned": "習得した",
+        "teach npc error": "「教える」は自分のクローンにしか効果がない。"
     },
     {
         "language": "Português",
@@ -4701,7 +4725,11 @@
         "target bounty": "Alvo de Recompensa",
         "spell_target_bounty": "Alvos unidades com recompensas em suas cabeças. Um por pilha.",
         "death_wager_error1": "Você deve estar com a saúde máxima para lançar \"Aposta da Morte\".",
-        "death_wager_error2": "Aposta da Morte deve ser lançada sozinha."
+        "death_wager_error2": "Aposta da Morte deve ser lançada sozinha.",
+        "teach": "Ensinar Magia",
+        "spell_teach": "Ensine um novo feitiço a um clone de si mesmo. O clone deve ter mana suficiente para lançar o feitiço.",
+        "learned": "Aprendido",
+        "teach npc error": "O 'Ensinar' só funciona em um clone de si mesmo."
     },
     {
         "language": "عربى",
@@ -5373,7 +5401,11 @@
         "target bounty": "مكافأة الهدف",
         "spell_target_bounty": "استهداف الوحدات التي عليها مكافآت. واحدة لكل كومة.",
         "death_wager_error1": "يجب أن تكون في أقصى صحة لتلقي تعويذة \"رهان الموت\"",
-        "death_wager_error2": "يجب أن يُلقى \"رهان الموت\" بمفرده"
+        "death_wager_error2": "يجب أن يُلقى \"رهان الموت\" بمفرده",
+        "teach": "تعليم تعويذة",
+        "spell_teach": "علّم نسخة منك تعويذة جديدة. يجب أن تكون لدى النسخة كمية كافية من المانا ليمكنها إلقاء التعويذة.",
+        "learned": "تعلمت",
+        "teach npc error": "التعليم يعمل فقط على نسخة منك."
     },
     {
         "language": "한국어",
@@ -6045,7 +6077,11 @@
         "target bounty": "목표 현상금",
         "spell_target_bounty": "머리 위에 현상금이 걸린 유닛을 대상으로 합니다. 스택당 하나만.",
         "death_wager_error1": "죽음의 내기를 시전하기 위해서는 최대 체력이어야 합니다.",
-        "death_wager_error2": "“죽음의 내기”는 혼자서 시전해야 합니다."
+        "death_wager_error2": "“죽음의 내기”는 혼자서 시전해야 합니다.",
+        "teach": "주문 가르치기",
+        "spell_teach": "자신의 복제에게 새로운 마법을 가르쳐라. 그 복제가 마법을 시전할 만큼 충분한 마나를 가져야 한다.",
+        "learned": "배우다",
+        "teach npc error": "가르치기는 오직 당신 자신의 클론에게만 작동합니다."
     },
     {
         "language": "Русский",
@@ -6717,7 +6753,11 @@
         "target bounty": "Целевая Награда",
         "spell_target_bounty": "Цельтесь в юниты с наградами на их головы. По одному на стек.",
         "death_wager_error1": "Вы должны быть на максимальном уровне здоровья, чтобы произнести \"Ставку на Смерть\".",
-        "death_wager_error2": "Ставка на смерть должна быть применена самостоятельно."
+        "death_wager_error2": "Ставка на смерть должна быть применена самостоятельно.",
+        "teach": "Обучить заклинанию",
+        "spell_teach": "Научите нового заклинанию своего клона. Клон должен иметь достаточно маны, чтобы создать заклинание.",
+        "learned": "Ученый",
+        "teach npc error": "Обучение работает только на клоне тебя самого."
     },
     {
         "language": "中文(简)",
@@ -7389,7 +7429,11 @@
         "target bounty": "目标赏金",
         "spell_target_bounty": "目标单位的赏金。每堆一个。",
         "death_wager_error1": "你必须达到最大生命值才能施放“死亡赌注”。",
-        "death_wager_error2": "死亡赌注必须单独施放"
+        "death_wager_error2": "死亡赌注必须单独施放",
+        "teach": "教授法术",
+        "spell_teach": "教给你自己的一个克隆一个新的咒语。克隆必须有足够的法力才能施放这个咒语。",
+        "learned": "学会了",
+        "teach npc error": "“教授”只适用于你自己的克隆体"
     },
     {
         "language": "中文(繁)",
@@ -8061,7 +8105,11 @@
         "target bounty": "目標賞金",
         "spell_target_bounty": "針對頭上懸賞的目標單位。每堆一個。",
         "death_wager_error1": "你必須在最大生命值時才能施放「死亡賭注」。",
-        "death_wager_error2": "「死亡賭注」必須單獨施放。"
+        "death_wager_error2": "「死亡賭注」必須單獨施放。",
+        "teach": "教導法術",
+        "spell_teach": "教你的克隆體一個新法術。克隆体必须有足夠的魔力才能施放這個法術。",
+        "learned": "學會的",
+        "teach npc error": "「教導」只能作用於你自己的一個克隆體。"
     },
     {
         "language": "Polski",
@@ -8733,7 +8781,11 @@
         "target bounty": "Cel bounty",
         "spell_target_bounty": "Celuje jednostki z nagrodami na głowie. Jedna na stos.",
         "death_wager_error1": "Musisz mieć maksymalne zdrowie, aby rzucić \"Zakład na Śmierć\".",
-        "death_wager_error2": "Zakład Śmierci musi być rzucony samodzielnie."
+        "death_wager_error2": "Zakład Śmierci musi być rzucony samodzielnie.",
+        "teach": "Naucz Zaklęcia",
+        "spell_teach": "Naucz nowego zaklęcia swojemu klonowi. Klon musi mieć wystarczająco dużo many, aby rzucić zaklęcie.",
+        "learned": "Nauczył się",
+        "teach npc error": "Ucz działa tylko na klonie samego siebie."
     },
     {
         "language": "Dutch",
@@ -9405,6 +9457,10 @@
         "target bounty": "Doelbeloning",
         "spell_target_bounty": "Doelwitten eenheden met een beloning op hun hoofd. Eén per stapel.",
         "death_wager_error1": "Je moet op maximale gezondheid zijn om \"Doodsweddenschap\" te kunnen casten.",
-        "death_wager_error2": "\"Death Wager\" kan geen onderdeel zijn van een reeks spreuken."
+        "death_wager_error2": "\"Death Wager\" kan geen onderdeel zijn van een reeks spreuken.",
+        "teach": "Leer Spreuk",
+        "spell_teach": "Leer een nieuwe spreuk aan een kloon van jezelf. De kloon moet voldoende mana hebben om de spreuk uit te voeren.",
+        "learned": "Leren",
+        "teach npc error": "Leer werkt alleen op een kloon van jezelf."
     }
 ]

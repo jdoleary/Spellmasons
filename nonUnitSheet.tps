@@ -799,6 +799,7 @@
             <key type="filename">public/images/spell/spellIconFling.png</key>
             <key type="filename">public/images/spell/spellIconFortify.png</key>
             <key type="filename">public/images/spell/spellIconFreeze.png</key>
+            <key type="filename">public/images/spell/spellIconGiveBounty.png</key>
             <key type="filename">public/images/spell/spellIconHeal.png</key>
             <key type="filename">public/images/spell/spellIconHeal2.png</key>
             <key type="filename">public/images/spell/spellIconHeal3.png</key>
@@ -868,6 +869,7 @@
             <key type="filename">public/images/spell/spellIconSummon_toxicurn.png</key>
             <key type="filename">public/images/spell/spellIconSummon_vampire.png</key>
             <key type="filename">public/images/spell/spellIconSwap.png</key>
+            <key type="filename">public/images/spell/spellIconTargetBounty.png</key>
             <key type="filename">public/images/spell/spellIconTargetColumn.png</key>
             <key type="filename">public/images/spell/spellIconTargetCone.png</key>
             <key type="filename">public/images/spell/spellIconTargetCursed.png</key>
@@ -876,6 +878,7 @@
             <key type="filename">public/images/spell/spellIconTargetKind.png</key>
             <key type="filename">public/images/spell/spellIconTargetSimilar.png</key>
             <key type="filename">public/images/spell/spellIconTargetSimilar2.png</key>
+            <key type="filename">public/images/spell/spellIconTeach.png</key>
             <key type="filename">public/images/spell/spellIconTeleport.png</key>
             <key type="filename">public/images/spell/spellIconVortex.png</key>
             <key type="filename">public/images/spell/toolbar-slot.png</key>
