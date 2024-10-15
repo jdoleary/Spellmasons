@@ -50,6 +50,7 @@ import * as Subsprites from './Subsprites';
 import * as Underworld from './Underworld';
 import * as cardUtils from './cards/cardUtils';
 import * as cards from './cards/index';
+import * as Upgrade from './Upgrade';
 import * as cardsUtil from './cards/util';
 import * as Events from './Events';
 import { forcePushTowards, forcePushAwayFrom, forcePushToDestination, forcePushDelta } from './effects/force_move';
@@ -114,6 +115,7 @@ const SpellmasonsAPI = {
   Underworld,
   Unit,
   units,
+  Upgrade,
   Vec,
   VisualEffects,
 }
