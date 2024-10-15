@@ -1,5 +1,5 @@
 import type * as PIXI from 'pixi.js';
-import { Vec2 } from '../jmath/Vec';
+import { clone, Vec2 } from '../jmath/Vec';
 import * as config from '../config';
 import { app, containerFloatingText, containerUIFixed, withinCameraBounds } from './PixiUtils';
 import { Localizable } from '../localization';
@@ -29,6 +29,12 @@ interface FloatingTextInsructions {
   aalpha?: number;
   prediction?: boolean;
 }
+// If too many instances of floatingText with the same text occur too
+// quickly, just render one in their place
+let optimizer: { [key: string]: { count: number, startTime: number, canon?: PIXI.Text } } = {}
+// How many floatingText instances of the same text can be made before it makes a canon (aggregate)
+const optimizeThreshold = 20;
+const canonFontSize = 50;
 export default function floatingText({
   coords,
   text,
@@ -42,9 +48,35 @@ export default function floatingText({
   if (!(globalThis.pixi && app && container) || prediction) {
     return Promise.resolve();
   }
+  const localizedText = i18n(text);
+
+  // Optimize: Gather tons of floatingText of the same text into a single
+  // aggregate
+  let optim = optimizer[localizedText];
+  const now = Date.now();
+  if (optim && optim.canon && optim.canon.alpha <= 0) {
+    delete optimizer[localizedText];
+    optim = undefined;
+  }
+  if (!optim) {
+    optimizer[localizedText] = optim = {
+      count: 0,
+      startTime: now
+    }
+  }
+  optim.count++;
+  const doOptimize = optim.count > optimizeThreshold;
+  if (doOptimize) {
+    if (optim.canon) {
+      optim.canon.text = optim.canon.text.replace(/(x\d+)$/, `x${optim.count}`);
+      return Promise.resolve();
+    }
+  }
+  // End Optimize
+
   // Ensure style has drop shadow, but allow it to be overridden
   style = Object.assign({ ...config.PIXI_TEXT_DROP_SHADOW, fontFamily: 'Forum' }, style);
-  const pixiText = new globalThis.pixi.Text(i18n(text), style);
+  const pixiText = new globalThis.pixi.Text(localizedText, style);
   pixiText.x = coords.x;
   pixiText.y = coords.y;
   pixiText.anchor.x = 0.5;
@@ -53,6 +85,22 @@ export default function floatingText({
     // Keep floating text the same size regardless of camera zoom
     pixiText.scale.x = 1 / app.stage.scale.x;
     pixiText.scale.y = 1 / app.stage.scale.y;
+  }
+  // If optimizing and not short-circuited earlier, the canon text doesn't exist yet
+  // so create it
+  if (doOptimize && !optim.canon && globalThis.player) {
+    optim.canon = pixiText;
+    pixiText.style.fontSize = `${canonFontSize}px`;
+    // @ts-ignore: A special flag to show that an instance of a pixitext
+    // is an aggregate counter
+    optim.canon.isCanon = true;
+    optim.canon.text = optim.canon.text + ` x${optim.count}`;
+    coords = clone(globalThis.player.unit);
+    // Offset multiple canons so they don't overlap
+    const numberOfExistingCanons = Object.values(optimizer).filter(x => x.canon).length;
+    coords.y -= numberOfExistingCanons * canonFontSize / 2;
+    // Disappear slower if canon
+    aalpha *= 0.5;
   }
   const instance: FText = {
     startPosition: coords,
