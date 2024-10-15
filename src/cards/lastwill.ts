@@ -72,13 +72,13 @@ const spell: Spell = {
         if (choice) {
           const { index } = choice;
           if (coord) {
-            underworld.spawnPickup(index, coord, prediction);
-            if (!prediction) {
+            const pickup = underworld.spawnPickup(index, coord, prediction);
+            if (!prediction && pickup) {
               // Notify spawn after a delay so it's appearance doesn't compete with
               // the visuals and the audio of the unit dying
               setTimeout(() => {
                 playSFXKey('spawnPotion');
-                floatingText({ coords: coord, text: lastWillId });
+                floatingText({ coords: pickup, text: lastWillId });
               }, 1000);
             }
           } else {
