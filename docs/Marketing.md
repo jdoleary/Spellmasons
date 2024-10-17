@@ -1,4 +1,21 @@
 ## 2024
+```
+// animate mana
+function a(){
+    if(player.unit.mana >= 300){return;}
+    player.unit.mana += 1;
+    x(devUnderworld);
+    window.t(devUnderworld)
+    requestAnimationFrame(a);
+}
+```
+Compress gif:
+low colors:
+`ffmpeg -y -i gif1.mp4 -filter_complex "split[s0][s1];[s0]palettegen=max_colors=32[p];[s1][p]paletteuse=dither=bayer" output.gif`
+
+med colors:
+`ffmpeg -y -i gif1.mp4 -filter_complex "split[s0][s1];[s0]palettegen=max_colors=64[p];[s1][p]paletteuse=dither=bayer" output.gif`
+
 Freeze Frame: `selectedUnit.image.sprite.gotoAndStop(5)`
 
 Wizard colors matching Grass Biome:
@@ -16,7 +33,8 @@ Wizard colors matching Grass Biome:
     - Light coral `#EF6F6C`
 - Blacks
     - Rich black `#001514`
-
+- Greens
+    - `#3a9254`
 Orient many units to face me:
 `devUnderworld.units.filter(x => x.unitSourceId == 'archer').forEach(archer => {          Unit.orient(archer, player.unit);})`
 ## 2023
