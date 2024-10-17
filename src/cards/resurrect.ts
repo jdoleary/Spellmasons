@@ -7,6 +7,7 @@ import { makeRisingParticles } from '../graphics/ParticleCollection';
 import { resurrect_weak_id } from './resurrect_weak';
 import type Underworld from '../Underworld';
 import { getOrInitModifier } from './util';
+import { GlowFilter } from '@pixi/filter-glow';
 
 export const resurrect_id = 'resurrect';
 export const thumbnail = 'spellIconResurrect2.png';
@@ -39,7 +40,7 @@ const spell: Spell = {
       for (let unit of targets) {
         if (unit && !unit.alive && !unit.flaggedForRemoval) {
           resurrectedUnitCount++;
-          animationPromises.push(resurrectWithAnimation(unit, state.casterUnit, state.casterUnit.faction, underworld, prediction));
+          animationPromises.push(resurrectWithAnimation(unit, state.casterUnit, state.casterUnit.faction, underworld, prediction, 0x96cdf1));
         }
       }
       await Promise.all(animationPromises);
@@ -81,9 +82,10 @@ export function resurrectWithAnimation(unit: Unit.IUnit, summoner: Unit.IUnit, f
   let colorOverlayFilter: ColorOverlayFilter;
   if (unit.image && unit.image.sprite.filters) {
     // Overlay with white
-    colorOverlayFilter = new ColorOverlayFilter(color || 0x96cdf1, 1.0);
+    colorOverlayFilter = new ColorOverlayFilter(0xffffff, 1.0);
+    const glowFilter = new GlowFilter({ color: color || 0xffffff })
     // @ts-ignore Something is wrong with PIXI's filter types
-    unit.image.sprite.filters.push(colorOverlayFilter)
+    unit.image.sprite.filters.push(colorOverlayFilter, glowFilter)
   }
   if (!prediction) {
     playSFXKey('resurrect');
@@ -104,7 +106,7 @@ export function resurrectWithAnimation(unit: Unit.IUnit, summoner: Unit.IUnit, f
     // Remove color overlay now that the unit is done being resurrected
     if (unit.image && unit.image.sprite.filters) {
       // @ts-ignore This filter does have a __proto__ property
-      unit.image.sprite.filters = unit.image.sprite.filters.filter(f => f.__proto__ !== ColorOverlayFilter.prototype)
+      unit.image.sprite.filters = unit.image.sprite.filters.filter(f => f.__proto__ !== ColorOverlayFilter.prototype && f.__proto__ !== GlowFilter.prototype)
     }
   })
   return promise;
