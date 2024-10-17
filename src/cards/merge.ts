@@ -79,6 +79,11 @@ const spell: Spell = {
       if (!mergedTargets.length) {
         refundLastSpell(state, prediction, 'Target things of the same type!')
       }
+      if (!prediction && !globalThis.headless) {
+        await new Promise(res => {
+          setTimeout(res, 200);
+        })
+      }
       return state;
     },
   },

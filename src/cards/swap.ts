@@ -56,6 +56,11 @@ const spell: Spell = {
           teleport(object, newLocation, underworld, prediction, false, state.casterUnit);
         }
       }
+      if (!prediction && !globalThis.headless) {
+        await new Promise(res => {
+          setTimeout(res, 300);
+        })
+      }
       return state;
     },
   },
